@@ -2,54 +2,55 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D92C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3087C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9178520738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88EC520738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:38:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O9bjejEx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="av+4MrPz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbgHCNiS (ORCPT
+        id S1728310AbgHCNiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 09:38:18 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58888 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728217AbgHCNiI (ORCPT
+        Mon, 3 Aug 2020 09:38:24 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:54176 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728213AbgHCNiS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 09:38:08 -0400
+        Mon, 3 Aug 2020 09:38:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596461885;
+        s=mimecast20190719; t=1596461896;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=O9AYyf3HLHotbjqR0Lh7Csjw4RPysy9f6nhsC9omduA=;
-        b=O9bjejExa30AHBZSs3xlkL2pwYYeNiZhKJ4gCc46EwEEDzMaOeco6aD45NgSLdHeH0FG0p
-        U+4ONpj/EmyD+aErz4IjdiNXbN/Kp+9falo6dT07F8Dfeid4ijto05W6tItyNe5hdZMepy
-        da+/43eBEQygBSaNB0OqGfTA6rdCvqo=
+        bh=0604IJfk6DkSTO0UDaOBwJ+5DcWmppgwGX7qoAuG4Wk=;
+        b=av+4MrPzTRuLTKsktJ/UHZlpzHTE1ryUkeyEYPiN1n4QmRJyFOyxZsVQ/Kj6UQnGi4fqmP
+        BvB7xCUQTNyOmeEY5byR/75CQfQNvMS57v7O17heNNw4M9FLpJhCynXR3DKOIwat1kwQQP
+        +hARqTwlWDCh7RKeJE0i7/+/7IBBfJg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-483-Y2P_C0ZIPnWr2eDrSM4C2A-1; Mon, 03 Aug 2020 09:38:04 -0400
-X-MC-Unique: Y2P_C0ZIPnWr2eDrSM4C2A-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-469-ylQcf6koMN6MmGOSuoNBtQ-1; Mon, 03 Aug 2020 09:37:04 -0400
+X-MC-Unique: ylQcf6koMN6MmGOSuoNBtQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97A021902EA2;
-        Mon,  3 Aug 2020 13:38:02 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1E57B59;
+        Mon,  3 Aug 2020 13:37:03 +0000 (UTC)
 Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2526971763;
-        Mon,  3 Aug 2020 13:38:00 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BBFF660BF4;
+        Mon,  3 Aug 2020 13:37:00 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
         Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
         Kingdom.
         Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 11/18] fsinfo: sample: Mount listing program [ver #21]
+Subject: [PATCH 04/18] fsinfo: Allow retrieval of superblock devname,
+ options and stats [ver #21]
 From:   David Howells <dhowells@redhat.com>
 To:     viro@zeniv.linux.org.uk
 Cc:     dhowells@redhat.com, torvalds@linux-foundation.org,
@@ -58,353 +59,194 @@ Cc:     dhowells@redhat.com, torvalds@linux-foundation.org,
         jlayton@redhat.com, linux-api@vger.kernel.org,
         linux-fsdevel@vger.kernel.org,
         linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 03 Aug 2020 14:37:59 +0100
-Message-ID: <159646187933.1784947.10955424144341330111.stgit@warthog.procyon.org.uk>
+Date:   Mon, 03 Aug 2020 14:37:00 +0100
+Message-ID: <159646181998.1784947.15915025004856012744.stgit@warthog.procyon.org.uk>
 In-Reply-To: <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk>
 References: <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/0.23
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement a program to demonstrate mount listing using the new fsinfo()
-syscall.  For example, to dump the tree from mount 21:
+Provide fsinfo() attributes to retrieve superblock device name, options,
+and statistics in string form.  The following attributes are defined:
 
-# ./test-mntinfo -m 21
-MOUNT                            MOUNT ID   CHANGE#  AT P DEV   TYPE
--------------------------------- ---------- -------- -- - ----- --------
-21                                       21        0  e 4  0:14 sysfs
- \_ kernel/security                      24        0  e 4   0:8 securityfs
- \_ fs/cgroup                            28        4 2f 4  0:18 tmpfs
- |   \_ unified                          29        0  e 4  0:19 cgroup2
- |   \_ systemd                          30        0  e 4  0:1a cgroup
- |   \_ blkio                            34        0  e 4  0:1e cgroup
- |   \_ net_cls,net_prio                 35        0  e 4  0:1f cgroup
- |   \_ perf_event                       36        0  e 4  0:20 cgroup
- |   \_ freezer                          37        0  e 4  0:21 cgroup
- |   \_ devices                          38        0  e 4  0:22 cgroup
- |   \_ cpu,cpuacct                      39        0  e 4  0:23 cgroup
- |   \_ rdma                             40        0  e 4  0:24 cgroup
- |   \_ memory                           41        0  e 4  0:25 cgroup
- |   \_ cpuset                           42        0  e 4  0:26 cgroup
- |   \_ hugetlb                          43        0  e 4  0:27 cgroup
- \_ fs/pstore                            31        0  e 4  0:1b pstore
- \_ firmware/efi/efivars                 32        0  e 4  0:1c efivarfs
- \_ fs/bpf                               33        0  e 4  0:1d bpf
- \_ kernel/config                        92        0  0 4  0:28 configfs
- \_ fs/selinux                           44        0  0 4  0:11 selinuxfs
- \_ kernel/debug                         45        1  0 4   0:7 debugfs
+	FSINFO_ATTR_SOURCE		- Mount-specific device name
+	FSINFO_ATTR_CONFIGURATION	- Mount options
+	FSINFO_ATTR_FS_STATISTICS	- Filesystem statistics
+
+FSINFO_ATTR_SOURCE could be made indexable by params->Nth to handle the
+case where there is more than one source (e.g. the bcachefs filesystem).
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 ---
 
- samples/vfs/Makefile       |    6 +
- samples/vfs/test-mntinfo.c |  277 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 282 insertions(+), 1 deletion(-)
- create mode 100644 samples/vfs/test-mntinfo.c
+ fs/fsinfo.c                 |   39 +++++++++++++++++++++++++++++++++++++++
+ fs/internal.h               |    2 ++
+ fs/namespace.c              |   41 +++++++++++++++++++++++++++++++++++++++++
+ include/uapi/linux/fsinfo.h |    3 +++
+ samples/vfs/test-fsinfo.c   |    4 ++++
+ 5 files changed, 89 insertions(+)
 
-diff --git a/samples/vfs/Makefile b/samples/vfs/Makefile
-index d63af5106fc2..7bcdd7a2829e 100644
---- a/samples/vfs/Makefile
-+++ b/samples/vfs/Makefile
-@@ -1,5 +1,9 @@
- # SPDX-License-Identifier: GPL-2.0-only
--userprogs := test-fsinfo test-fsmount test-statx
-+userprogs := \
-+	test-fsinfo \
-+	test-fsmount \
-+	test-mntinfo \
-+	test-statx
- always-y := $(userprogs)
+diff --git a/fs/fsinfo.c b/fs/fsinfo.c
+index 79c222d465d8..aef7a736e8fc 100644
+--- a/fs/fsinfo.c
++++ b/fs/fsinfo.c
+@@ -231,6 +231,42 @@ static int fsinfo_generic_volume_id(struct path *path, struct fsinfo_context *ct
+ 	return fsinfo_string(path->dentry->d_sb->s_id, ctx);
+ }
  
- userccflags += -I usr/include
-diff --git a/samples/vfs/test-mntinfo.c b/samples/vfs/test-mntinfo.c
-new file mode 100644
-index 000000000000..a706b5e85997
---- /dev/null
-+++ b/samples/vfs/test-mntinfo.c
-@@ -0,0 +1,277 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/* Test the fsinfo() system call
-+ *
-+ * Copyright (C) 2020 Red Hat, Inc. All Rights Reserved.
-+ * Written by David Howells (dhowells@redhat.com)
++/*
++ * Retrieve the superblock configuration (mount options) as a comma-separated
++ * string.  The initial comma is stripped off and NUL termination is added.
 + */
++static int fsinfo_generic_seq_read(struct path *path, struct fsinfo_context *ctx)
++{
++	struct super_block *sb = path->dentry->d_sb;
++	struct seq_file m = {
++		.buf	= ctx->buffer,
++		.size	= ctx->buf_size - 1,
++	};
++	int ret = 0;
 +
-+#define _GNU_SOURCE
-+#define _ATFILE_SOURCE
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <stdint.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include <ctype.h>
-+#include <errno.h>
-+#include <time.h>
-+#include <math.h>
-+#include <sys/syscall.h>
++	switch (ctx->requested_attr) {
++	case FSINFO_ATTR_CONFIGURATION:
++		seq_puts(&m, sb_rdonly(sb) ? "ro" : "rw");
++		ret = security_sb_show_options(&m, sb);
++		if (!ret && sb->s_op->show_options)
++			ret = sb->s_op->show_options(&m, path->mnt->mnt_root);
++		break;
++
++	case FSINFO_ATTR_FS_STATISTICS:
++		if (sb->s_op->show_stats)
++			ret = sb->s_op->show_stats(&m, path->mnt->mnt_root);
++		break;
++	}
++
++	if (ret < 0)
++		return ret;
++	if (seq_has_overflowed(&m))
++		return ctx->buf_size + PAGE_SIZE;
++
++	((char *)ctx->buffer)[ctx->skip + m.count] = 0;
++	return m.count + 1;
++}
++
+ static const struct fsinfo_attribute fsinfo_common_attributes[] = {
+ 	FSINFO_VSTRUCT	(FSINFO_ATTR_STATFS,		fsinfo_generic_statfs),
+ 	FSINFO_VSTRUCT	(FSINFO_ATTR_IDS,		fsinfo_generic_ids),
+@@ -240,6 +276,9 @@ static const struct fsinfo_attribute fsinfo_common_attributes[] = {
+ 	FSINFO_STRING	(FSINFO_ATTR_VOLUME_ID,		fsinfo_generic_volume_id),
+ 	FSINFO_VSTRUCT	(FSINFO_ATTR_VOLUME_UUID,	fsinfo_generic_volume_uuid),
+ 	FSINFO_VSTRUCT	(FSINFO_ATTR_FEATURES,		fsinfo_generic_features),
++	FSINFO_STRING	(FSINFO_ATTR_SOURCE,		fsinfo_generic_mount_source),
++	FSINFO_STRING	(FSINFO_ATTR_CONFIGURATION,	fsinfo_generic_seq_read),
++	FSINFO_STRING	(FSINFO_ATTR_FS_STATISTICS,	fsinfo_generic_seq_read),
+ 
+ 	FSINFO_LIST	(FSINFO_ATTR_FSINFO_ATTRIBUTES,	(void *)123UL),
+ 	FSINFO_VSTRUCT_N(FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO, (void *)123UL),
+diff --git a/fs/internal.h b/fs/internal.h
+index ea60d864a8cb..0b57da498f06 100644
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -89,6 +89,8 @@ extern int __mnt_want_write_file(struct file *);
+ extern void __mnt_drop_write_file(struct file *);
+ 
+ extern void dissolve_on_fput(struct vfsmount *);
++extern int fsinfo_generic_mount_source(struct path *, struct fsinfo_context *);
++
+ /*
+  * fs_struct.c
+  */
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 73ff5bf0c9af..ead8d1a16610 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -30,6 +30,7 @@
+ #include <uapi/linux/mount.h>
+ #include <linux/fs_context.h>
+ #include <linux/shmem_fs.h>
 +#include <linux/fsinfo.h>
-+#include <linux/socket.h>
-+#include <linux/fcntl.h>
-+#include <sys/stat.h>
-+#include <arpa/inet.h>
+ 
+ #include "pnode.h"
+ #include "internal.h"
+@@ -4111,3 +4112,43 @@ const struct proc_ns_operations mntns_operations = {
+ 	.install	= mntns_install,
+ 	.owner		= mntns_owner,
+ };
 +
-+#ifndef __NR_fsinfo
-+#define __NR_fsinfo -1
-+#endif
-+
-+static __attribute__((unused))
-+ssize_t fsinfo(int dfd, const char *filename,
-+	       struct fsinfo_params *params, size_t params_size,
-+	       void *result_buffer, size_t result_buf_size)
++#ifdef CONFIG_FSINFO
++static inline void mangle(struct seq_file *m, const char *s)
 +{
-+	return syscall(__NR_fsinfo, dfd, filename,
-+		       params, params_size,
-+		       result_buffer, result_buf_size);
++	seq_escape(m, s, " \t\n\\");
 +}
 +
-+static char tree_buf[4096];
-+static char bar_buf[4096];
-+static unsigned int children_list_interval;
-+
 +/*
-+ * Get an fsinfo attribute in a statically allocated buffer.
++ * Return the mount source/device name as seen from this mountpoint.  Shared
++ * mounts may vary here and the filesystem is permitted to substitute its own
++ * rendering.
 + */
-+static void get_attr(unsigned int mnt_id, unsigned int attr, unsigned int Nth,
-+		     void *buf, size_t buf_size)
++int fsinfo_generic_mount_source(struct path *path, struct fsinfo_context *ctx)
 +{
-+	struct fsinfo_params params = {
-+		.flags		= FSINFO_FLAGS_QUERY_MOUNT,
-+		.request	= attr,
-+		.Nth		= Nth,
++	struct super_block *sb = path->mnt->mnt_sb;
++	struct mount *mnt = real_mount(path->mnt);
++	struct seq_file m = {
++		.buf	= ctx->buffer,
++		.size	= ctx->buf_size - 1,
 +	};
-+	char file[32];
-+	long ret;
++	int ret;
 +
-+	sprintf(file, "%u", mnt_id);
-+
-+	memset(buf, 0xbd, buf_size);
-+
-+	ret = fsinfo(AT_FDCWD, file, &params, sizeof(params), buf, buf_size);
-+	if (ret == -1) {
-+		fprintf(stderr, "mount-%s: %m\n", file);
-+		exit(1);
++	if (sb->s_op->show_devname) {
++		ret = sb->s_op->show_devname(&m, mnt->mnt.mnt_root);
++		if (ret < 0)
++			return ret;
++	} else {
++		if (!mnt->mnt_devname)
++			return fsinfo_string("none", ctx);
++		mangle(&m, mnt->mnt_devname);
 +	}
++
++	if (seq_has_overflowed(&m))
++		return ctx->buf_size + PAGE_SIZE;
++
++	((char *)ctx->buffer)[m.count] = 0;
++	return m.count + 1;
 +}
 +
-+/*
-+ * Get an fsinfo attribute in a dynamically allocated buffer.
-+ */
-+static void *get_attr_alloc(unsigned int mnt_id, unsigned int attr,
-+			    unsigned int Nth, size_t *_size)
-+{
-+	struct fsinfo_params params = {
-+		.flags		= FSINFO_FLAGS_QUERY_MOUNT,
-+		.request	= attr,
-+		.Nth		= Nth,
-+	};
-+	size_t buf_size = 4096;
-+	char file[32];
-+	void *r;
-+	long ret;
++#endif /* CONFIG_FSINFO */
+diff --git a/include/uapi/linux/fsinfo.h b/include/uapi/linux/fsinfo.h
+index b8b2c836267b..a27e92b68266 100644
+--- a/include/uapi/linux/fsinfo.h
++++ b/include/uapi/linux/fsinfo.h
+@@ -24,6 +24,9 @@
+ #define FSINFO_ATTR_VOLUME_UUID		0x06	/* Volume UUID (LE uuid) */
+ #define FSINFO_ATTR_VOLUME_NAME		0x07	/* Volume name (string) */
+ #define FSINFO_ATTR_FEATURES		0x08	/* Filesystem features (bits) */
++#define FSINFO_ATTR_SOURCE		0x09	/* Superblock source/device name (string) */
++#define FSINFO_ATTR_CONFIGURATION	0x0a	/* Superblock configuration/options (string) */
++#define FSINFO_ATTR_FS_STATISTICS	0x0b	/* Superblock filesystem statistics (string) */
+ 
+ #define FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO 0x100	/* Information about attr N (for path) */
+ #define FSINFO_ATTR_FSINFO_ATTRIBUTES	0x101	/* List of supported attrs (for path) */
+diff --git a/samples/vfs/test-fsinfo.c b/samples/vfs/test-fsinfo.c
+index c5932109f683..634f30b7e67f 100644
+--- a/samples/vfs/test-fsinfo.c
++++ b/samples/vfs/test-fsinfo.c
+@@ -364,6 +364,10 @@ static const struct fsinfo_attribute fsinfo_attributes[] = {
+ 	FSINFO_STRING	(FSINFO_ATTR_VOLUME_ID,		string),
+ 	FSINFO_VSTRUCT	(FSINFO_ATTR_VOLUME_UUID,	fsinfo_generic_volume_uuid),
+ 	FSINFO_STRING	(FSINFO_ATTR_VOLUME_NAME,	string),
++	FSINFO_STRING	(FSINFO_ATTR_SOURCE,		string),
++	FSINFO_STRING	(FSINFO_ATTR_CONFIGURATION,	string),
++	FSINFO_STRING	(FSINFO_ATTR_FS_STATISTICS,	string),
 +
-+	sprintf(file, "%u", mnt_id);
-+
-+	for (;;) {
-+		r = malloc(buf_size);
-+		if (!r) {
-+			perror("malloc");
-+			exit(1);
-+		}
-+		memset(r, 0xbd, buf_size);
-+
-+		ret = fsinfo(AT_FDCWD, file, &params, sizeof(params), r, buf_size);
-+		if (ret == -1) {
-+			fprintf(stderr, "mount-%s: %x,%x,%x %m\n",
-+				file, params.request, params.Nth, params.Mth);
-+			exit(1);
-+		}
-+
-+		if (ret <= buf_size) {
-+			*_size = ret;
-+			break;
-+		}
-+		buf_size = (ret + 4096 - 1) & ~(4096 - 1);
-+	}
-+
-+	return r;
-+}
-+
-+/*
-+ * Display a mount and then recurse through its children.
-+ */
-+static void display_mount(unsigned int mnt_id, unsigned int depth, char *path)
-+{
-+	struct fsinfo_mount_topology top;
-+	struct fsinfo_mount_child child;
-+	struct fsinfo_mount_info info;
-+	struct fsinfo_ids ids;
-+	void *children;
-+	unsigned int d;
-+	size_t ch_size, p_size;
-+	char dev[64];
-+	int i, n, s;
-+
-+	get_attr(mnt_id, FSINFO_ATTR_MOUNT_TOPOLOGY, 0, &top, sizeof(top));
-+	get_attr(mnt_id, FSINFO_ATTR_MOUNT_INFO, 0, &info, sizeof(info));
-+	get_attr(mnt_id, FSINFO_ATTR_IDS, 0, &ids, sizeof(ids));
-+	if (depth > 0)
-+		printf("%s", tree_buf);
-+
-+	s = strlen(path);
-+	printf("%s", !s ? "\"\"" : path);
-+	if (!s)
-+		s += 2;
-+	s += depth;
-+	if (s < 38)
-+		s = 38 - s;
-+	else
-+		s = 1;
-+	printf("%*.*s", s, s, "");
-+
-+	sprintf(dev, "%x:%x", ids.f_dev_major, ids.f_dev_minor);
-+	printf("%10u %8llx %2x %x %5s %s",
-+	       info.mnt_id,
-+	       (info.mnt_attr_changes +
-+		info.mnt_topology_changes +
-+		info.mnt_subtree_notifications),
-+	       info.attr, top.propagation_type,
-+	       dev, ids.f_fs_name);
-+	putchar('\n');
-+
-+	children = get_attr_alloc(mnt_id, FSINFO_ATTR_MOUNT_CHILDREN, 0, &ch_size);
-+	n = ch_size / children_list_interval - 1;
-+
-+	bar_buf[depth + 1] = '|';
-+	if (depth > 0) {
-+		tree_buf[depth - 4 + 1] = bar_buf[depth - 4 + 1];
-+		tree_buf[depth - 4 + 2] = ' ';
-+	}
-+
-+	tree_buf[depth + 0] = ' ';
-+	tree_buf[depth + 1] = '\\';
-+	tree_buf[depth + 2] = '_';
-+	tree_buf[depth + 3] = ' ';
-+	tree_buf[depth + 4] = 0;
-+	d = depth + 4;
-+
-+	memset(&child, 0, sizeof(child));
-+	for (i = 0; i < n; i++) {
-+		void *p = children + i * children_list_interval;
-+
-+		if (sizeof(child) >= children_list_interval)
-+			memcpy(&child, p, children_list_interval);
-+		else
-+			memcpy(&child, p, sizeof(child));
-+
-+		if (i == n - 1)
-+			bar_buf[depth + 1] = ' ';
-+		path = get_attr_alloc(child.mnt_id, FSINFO_ATTR_MOUNT_POINT,
-+				      0, &p_size);
-+		display_mount(child.mnt_id, d, path + 1);
-+		free(path);
-+	}
-+
-+	free(children);
-+	if (depth > 0) {
-+		tree_buf[depth - 4 + 1] = '\\';
-+		tree_buf[depth - 4 + 2] = '_';
-+	}
-+	tree_buf[depth] = 0;
-+}
-+
-+/*
-+ * Find the ID of whatever is at the nominated path.
-+ */
-+static unsigned int lookup_mnt_by_path(const char *path)
-+{
-+	struct fsinfo_mount_info mnt;
-+	struct fsinfo_params params = {
-+		.flags		= FSINFO_FLAGS_QUERY_PATH,
-+		.request	= FSINFO_ATTR_MOUNT_INFO,
-+	};
-+
-+	if (fsinfo(AT_FDCWD, path, &params, sizeof(params), &mnt, sizeof(mnt)) == -1) {
-+		perror(path);
-+		exit(1);
-+	}
-+
-+	return mnt.mnt_id;
-+}
-+
-+/*
-+ * Determine the element size for the mount child list.
-+ */
-+static unsigned int query_list_element_size(int mnt_id, unsigned int attr)
-+{
-+	struct fsinfo_attribute_info attr_info;
-+
-+	get_attr(mnt_id, FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO, attr,
-+		 &attr_info, sizeof(attr_info));
-+	return attr_info.size;
-+}
-+
-+/*
-+ *
-+ */
-+int main(int argc, char **argv)
-+{
-+	unsigned int mnt_id;
-+	char *path;
-+	bool use_mnt_id = false;
-+	int opt;
-+
-+	while ((opt = getopt(argc, argv, "m"))) {
-+		switch (opt) {
-+		case 'm':
-+			use_mnt_id = true;
-+			continue;
-+		}
-+		break;
-+	}
-+
-+	argc -= optind;
-+	argv += optind;
-+
-+	switch (argc) {
-+	case 0:
-+		mnt_id = lookup_mnt_by_path("/");
-+		path = "ROOT";
-+		break;
-+	case 1:
-+		path = argv[0];
-+		if (use_mnt_id) {
-+			mnt_id = strtoul(argv[0], NULL, 0);
-+			break;
-+		}
-+
-+		mnt_id = lookup_mnt_by_path(argv[0]);
-+		break;
-+	default:
-+		printf("Format: test-mntinfo\n");
-+		printf("Format: test-mntinfo <path>\n");
-+		printf("Format: test-mntinfo -m <mnt_id>\n");
-+		exit(2);
-+	}
-+
-+	children_list_interval =
-+		query_list_element_size(mnt_id, FSINFO_ATTR_MOUNT_CHILDREN);
-+
-+	printf("MOUNT                                 MOUNT ID   CHANGE#  AT P DEV   TYPE\n");
-+	printf("------------------------------------- ---------- -------- -- - ----- --------\n");
-+	display_mount(mnt_id, 0, path);
-+	return 0;
-+}
+ 	FSINFO_VSTRUCT_N(FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO, fsinfo_meta_attribute_info),
+ 	FSINFO_LIST	(FSINFO_ATTR_FSINFO_ATTRIBUTES,	fsinfo_meta_attributes),
+ 	{}
 
 
