@@ -2,53 +2,53 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB944C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9021C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA207204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:36:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A403204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:36:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458198;
-	bh=vj8lLFK0N7N8kisfDPLGzSJU8Jd3ttz7ITKOef7cXg0=;
+	s=default; t=1596458201;
+	bh=szKyfdCf1Jf/SkG9ybiPLg0SInDIfcKuTeM+JmnJMz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DvcSDGK7lrZTkpM5QlcLOZLi6/OiAz9ddgFN+oQjSIEd8xsZ/3M5re3B84a1QJOh5
-	 nnIN8LJ4a+SLOMTv+edTt+iF9pMAna3LqmEb/BEy+NM+IFQv8Xp+If1ENi57uPb72B
-	 DkeoGoa5xrqRzYHPEU2CNpUD+ivFmmcwgEPRN5Jc=
+	b=QJryXATvslohFeBTnrhwzDyISbLn8crF7jMRrZ9p9iyDKbsTOeuYYY5xCXEkwb5mK
+	 bgp4as0HdQQ1pPFvlIlbq0tUcwDsSfDxK6m6sWiRv28b8peWxoDAYqoCeK56yK4Kic
+	 eglNTf0Pv5wX42113LyIKO+S8TnuvHLu0PLptYFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729175AbgHCMgh (ORCPT
+        id S1729666AbgHCMfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:36:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36074 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:35:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729669AbgHCMfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:35:44 -0400
+        id S1728954AbgHCMfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:35:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C391204EC;
-        Mon,  3 Aug 2020 12:35:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5804120781;
+        Mon,  3 Aug 2020 12:35:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596458142;
-        bh=vj8lLFK0N7N8kisfDPLGzSJU8Jd3ttz7ITKOef7cXg0=;
+        s=default; t=1596458130;
+        bh=szKyfdCf1Jf/SkG9ybiPLg0SInDIfcKuTeM+JmnJMz0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HrFXj+oSMVPUW8x2r2F5mL0+gJkn3XREDWwW2JXq3+i/zTN0CDv0GYVSt+AZk73xO
-         iih6yzlQ9/YkTW7d5ag78+M99UfQTK1ShCp3Y6PKqMon+XSqyf3fL1XCqxuUmQUVHq
-         OMhZQUUecvaLiL7LBNPi/ng4n5EzhDki9wfy+MeA=
+        b=Hul9d9Y9EPDgItLQh3RfGNGkKptNc1PPG8bwMwdkenHFAD7XvItdc4Q6lLBVPjv1r
+         CXp8q9cm4UNzeKUUQCaQ+xWzUdwyN42SAPzF2WmBsV7duRpsCXM1KggYOLQgI8PwPJ
+         QIIwPAigrHEpVxgDIGiugUy3/ym763i0QR8APUfM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wang ShaoBo <bobo.shaobowang@huawei.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 47/51] x86/unwind/orc: Fix ORC for newly forked tasks
-Date:   Mon,  3 Aug 2020 14:20:32 +0200
-Message-Id: <20200803121851.869842453@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Emese Revfy <re.emese@gmail.com>,
+        Kees Cook <keescook@chromium.org>, Willy Tarreau <w@1wt.eu>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 19/51] random32: remove net_rand_state from the latent entropy gcc plugin
+Date:   Mon,  3 Aug 2020 14:20:04 +0200
+Message-Id: <20200803121850.423049686@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121849.488233135@linuxfoundation.org>
 References: <20200803121849.488233135@linuxfoundation.org>
@@ -61,57 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 372a8eaa05998cd45b3417d0e0ffd3a70978211a ]
+commit 83bdc7275e6206f560d247be856bceba3e1ed8f2 upstream.
 
-The ORC unwinder fails to unwind newly forked tasks which haven't yet
-run on the CPU.  It correctly reads the 'ret_from_fork' instruction
-pointer from the stack, but it incorrectly interprets that value as a
-call stack address rather than a "signal" one, so the address gets
-incorrectly decremented in the call to orc_find(), resulting in bad ORC
-data.
+It turns out that the plugin right now ends up being really unhappy
+about the change from 'static' to 'extern' storage that happened in
+commit f227e3ec3b5c ("random32: update the net random state on interrupt
+and activity").
 
-Fix it by forcing 'ret_from_fork' frames to be signal frames.
+This is probably a trivial fix for the latent_entropy plugin, but for
+now, just remove net_rand_state from the list of things the plugin
+worries about.
 
-Reported-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-Link: https://lkml.kernel.org/r/f91a8778dde8aae7f71884b5df2b16d552040441.1594994374.git.jpoimboe@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Emese Revfy <re.emese@gmail.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Willy Tarreau <w@1wt.eu>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kernel/unwind_orc.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ include/linux/random.h |    2 +-
+ lib/random32.c         |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index a9a55e76a43f9..a5e2ce931f692 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -346,8 +346,11 @@ bool unwind_next_frame(struct unwind_state *state)
- 	/*
- 	 * Find the orc_entry associated with the text address.
- 	 *
--	 * Decrement call return addresses by one so they work for sibling
--	 * calls and calls to noreturn functions.
-+	 * For a call frame (as opposed to a signal frame), state->ip points to
-+	 * the instruction after the call.  That instruction's stack layout
-+	 * could be different from the call instruction's layout, for example
-+	 * if the call was to a noreturn function.  So get the ORC data for the
-+	 * call instruction itself.
- 	 */
- 	orc = orc_find(state->signal ? state->ip : state->ip - 1);
- 	if (!orc || orc->sp_reg == ORC_REG_UNDEFINED)
-@@ -550,6 +553,7 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
- 		state->sp = task->thread.sp;
- 		state->bp = READ_ONCE_NOCHECK(frame->bp);
- 		state->ip = READ_ONCE_NOCHECK(frame->ret_addr);
-+		state->signal = (void *)state->ip == ret_from_fork;
- 	}
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -117,7 +117,7 @@ struct rnd_state {
+ 	__u32 s1, s2, s3, s4;
+ };
  
- 	if (get_stack_info((unsigned long *)state->sp, state->task,
--- 
-2.25.1
-
+-DECLARE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
++DECLARE_PER_CPU(struct rnd_state, net_rand_state);
+ 
+ u32 prandom_u32_state(struct rnd_state *state);
+ void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
+--- a/lib/random32.c
++++ b/lib/random32.c
+@@ -48,7 +48,7 @@ static inline void prandom_state_selftes
+ }
+ #endif
+ 
+-DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
++DEFINE_PER_CPU(struct rnd_state, net_rand_state);
+ 
+ /**
+  *	prandom_u32_state - seeded pseudo-random number generator.
 
 
