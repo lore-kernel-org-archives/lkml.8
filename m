@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E47D8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3004DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0545206D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F35ED20678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458832;
-	bh=8D/eoLQw6uioyrUa4daZgPAbYbH2SwbAgOK/2ZUhXjU=;
+	s=default; t=1596458835;
+	bh=2AcUtqFGt7mzEOWg9GHIzX99EIQZG+B6PjrQtevu2MU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KSRx7scc8FEFXNbBEU/iVMyLGJywPixbyCECMrHowvEA//kDB3uzuCb3P8nQN4YW+
-	 zm2A39AkGo1WND100mfoGuszS5ZyVpdawZalub/B758uegQGNiSLiyPbxbkaZfX+2I
-	 jaTIYswsytrSuQ3o3FFoeQEhNZk77/o04K/aZHO8=
+	b=EoV7o/JEiglzcGBP3VrdL+a55Hfi0AXxkoK/q8sbYlWInJsBv7rpUd7Ger3bUZ7ip
+	 SmIvV+LhRZW5GRXX4nBQByQ0gH8DGzjn1vvwQ1bC4G/gw5wXWOBAGoMtsMEkJZa4ce
+	 rMMrKAmVSTsb4VFOBOOHq0sRatM2r8PxftBlfUnI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729515AbgHCMrM (ORCPT
+        id S1729628AbgHCMrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:47:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51254 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:47:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726300AbgHCM0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:26:08 -0400
+        id S1728158AbgHCM0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:26:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA654207FC;
-        Mon,  3 Aug 2020 12:26:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC6E2207DF;
+        Mon,  3 Aug 2020 12:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457567;
-        bh=8D/eoLQw6uioyrUa4daZgPAbYbH2SwbAgOK/2ZUhXjU=;
+        s=default; t=1596457561;
+        bh=2AcUtqFGt7mzEOWg9GHIzX99EIQZG+B6PjrQtevu2MU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fg9PFtPNYgPEztmkKcVwiVZWNiUJ2NiMw8x4F4vWv/4ASC2NxxAU3vtXGnA9FI6VA
-         Qvtcjqt+Zdl3Xux2nBrc1lU2A7YVDehPdL5Pt4zM8wNl2qoGfvgj/4qx4XEF3HLfjH
-         NhUxrBv0TjPeOG7EoCdrkb6hOR6nuTQKOfvSvESA=
+        b=WqFjuFJM8MCcCAJQtdfahree/OLBi1hIAjpwHG9uG40SWUbIuuHBlB7f8vcLMutdV
+         zNzSeG0S7la+7VExLjmxeV6yTFsWQNa3F+Uvh31lPyDhs3uCC5GVYUqn2gcmlhFO2+
+         XisxUxi5Y3rtM9YnC7edsOnUJv9X6EhbF5T7cq2s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Atish Patra <atish.patra@wdc.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 114/120] RISC-V: Set maximum number of mapped pages correctly
-Date:   Mon,  3 Aug 2020 14:19:32 +0200
-Message-Id: <20200803121908.454518155@linuxfoundation.org>
+Subject: [PATCH 5.7 112/120] cxgb4: add missing release on skb in uld_send()
+Date:   Mon,  3 Aug 2020 14:19:30 +0200
+Message-Id: <20200803121908.358699131@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -60,40 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Atish Patra <atish.patra@wdc.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit d0d8aae64566b753c4330fbd5944b88af035f299 ]
+[ Upstream commit e6827d1abdc9b061a57d7b7d3019c4e99fabea2f ]
 
-Currently, maximum number of mapper pages are set to the pfn calculated
-from the memblock size of the memblock containing kernel. This will work
-until that memblock spans the entire memory. However, it will be set to
-a wrong value if there are multiple memblocks defined in kernel
-(e.g. with efi runtime services).
+In the implementation of uld_send(), the skb is consumed on all
+execution paths except one. Release skb when returning NET_XMIT_DROP.
 
-Set the the maximum value to the pfn calculated from dram size.
-
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/mm/init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/chelsio/cxgb4/sge.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 81493cee0a167..af8926777567f 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -170,9 +170,9 @@ void __init setup_bootmem(void)
- 	/* Reserve from the start of the kernel to the end of the kernel */
- 	memblock_reserve(vmlinux_start, vmlinux_end - vmlinux_start);
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/sge.c b/drivers/net/ethernet/chelsio/cxgb4/sge.c
+index 28ce9856a0784..0f5ca68c98542 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/sge.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/sge.c
+@@ -2925,6 +2925,7 @@ static inline int uld_send(struct adapter *adap, struct sk_buff *skb,
+ 	txq_info = adap->sge.uld_txq_info[tx_uld_type];
+ 	if (unlikely(!txq_info)) {
+ 		WARN_ON(true);
++		kfree_skb(skb);
+ 		return NET_XMIT_DROP;
+ 	}
  
--	set_max_mapnr(PFN_DOWN(mem_size));
- 	max_pfn = PFN_DOWN(memblock_end_of_DRAM());
- 	max_low_pfn = max_pfn;
-+	set_max_mapnr(max_low_pfn);
- 
- #ifdef CONFIG_BLK_DEV_INITRD
- 	setup_initrd();
 -- 
 2.25.1
 
