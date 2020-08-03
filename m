@@ -2,241 +2,259 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D602C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E32C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88B342076C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 299C72076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:48:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B8bb0Jwq"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="SKPIS2AE";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VdpfVhwu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728848AbgHCWrO (ORCPT
+        id S1728003AbgHCWs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 18:47:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53404 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbgHCWrN (ORCPT
+        Mon, 3 Aug 2020 18:48:56 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:46331 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726770AbgHCWs4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 18:47:13 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74328C06174A;
-        Mon,  3 Aug 2020 15:47:13 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id r11so11207793pfl.11;
-        Mon, 03 Aug 2020 15:47:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=oJ3K3tKZP+Fsa7YpSLkdOXjyHg6v6mkHsj0POw7JQZA=;
-        b=B8bb0Jwq8Fz5U61vVY+1JU8a1qV8sAvpYbcqgGeMakyh1THnkB77V1VxO5HLdPy5EU
-         Hc/M6n3WxIg4v/L3ZlHZFUy2KWo/tBs48GpG9wB9nbcJMkYB7ksz8Y0+KXFegZMqcByG
-         PmK14j0rx4QtyPOUSg/ptqhcrC+DKlVAvt7fCUYO0RKRyC1/BoM8PR+1EVl3JowjQfk8
-         9YRatMABZ7X78Ad7G98b6km/bn9tKJaomjAW950J8vXLypY3ZkxpXJjXWHUrjuKR/o+U
-         DJDw8bdS4+WmZfqUkYUZSlVKvH3XdiMnmG/nXialrKOQJWeOvzb95s7tH1t5PxFCnD/p
-         zeqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oJ3K3tKZP+Fsa7YpSLkdOXjyHg6v6mkHsj0POw7JQZA=;
-        b=OVF2pAU76k12XzL1KchtRQWl/jFIcsb5RouAfHVIOjsKhOyEMXWLBxcvloCryIEMtc
-         98mJIe8UG06q2IAxJQmRlGV+Sx7RA7U4LdGUA2r5dcpApzLTpjJQV2NR8EAL2AOiZKFi
-         ALBWUlY0scRaad/o0cvAgBWPfWiBqVZMXmK0NAQXO1LV1B8m5gug3g0lMfhsnFPm286P
-         qyF0iyFsnCDAuZmA4adhlMVunQaas1VAr/WRoMyfNl6j/45jjhy9EcTSfeKsYITiuuP7
-         2or+nhK4Xts9ZApPDsptsCgWjYpZyNTO9K/cf38UsaswZDiJVU2NDAnyL3tPbdAXL2I0
-         1ftA==
-X-Gm-Message-State: AOAM531t/fR+dpi6E+33x1c3W9xU1vv9MR2AudvwTtQ1bf1j/0rhcv9M
-        kqQ65rPVAx4ZEKg7lHM+l9A=
-X-Google-Smtp-Source: ABdhPJxOCAOvaJWarOF37mnjuEFlpe3b/PNcU7o7IZG9gKpK49i6FHtGP4CJHKZSJl7flDLeAoAmAA==
-X-Received: by 2002:a62:e202:: with SMTP id a2mr17446874pfi.140.1596494832939;
-        Mon, 03 Aug 2020 15:47:12 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id b25sm17677588pft.134.2020.08.03.15.47.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Aug 2020 15:47:11 -0700 (PDT)
-Subject: Re: [PATCH v4 2/2] net: dsa: ocelot: Add support for QinQ Operation
-To:     hongbo.wang@nxp.com, xiaoliang.yang_1@nxp.com,
-        allan.nielsen@microchip.com, po.liu@nxp.com,
-        claudiu.manoil@nxp.com, alexandru.marginean@nxp.com,
-        vladimir.oltean@nxp.com, leoyang.li@nxp.com, mingkai.hu@nxp.com,
-        andrew@lunn.ch, vivien.didelot@gmail.com, davem@davemloft.net,
-        jiri@resnulli.us, idosch@idosch.org, kuba@kernel.org,
-        vinicius.gomes@intel.com, nikolay@cumulusnetworks.com,
-        roopa@cumulusnetworks.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, horatiu.vultur@microchip.com,
-        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
-        ivecera@redhat.com
-References: <20200730102505.27039-1-hongbo.wang@nxp.com>
- <20200730102505.27039-3-hongbo.wang@nxp.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <b7021ec2-b0bb-d5bf-9b69-2e490d7191e8@gmail.com>
-Date:   Mon, 3 Aug 2020 15:47:00 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        Mon, 3 Aug 2020 18:48:56 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.nyi.internal (Postfix) with ESMTP id AF6BF5804EF;
+        Mon,  3 Aug 2020 18:48:54 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Mon, 03 Aug 2020 18:48:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        THOZEHX1IYOljNZcOu9rJ4ttNxpkzNp6II0FV+RfVmU=; b=SKPIS2AE91bKyzja
+        nWa9F0jtD3a/JAMrvcDqIfxp+e6niqvABjEHLRU7LmtA/6J1VAZ7tdHwGZY++yE/
+        QFcWt2dDEy+zsZNL50+x2WqbtVG+7SUiEdoMOt2pdlSlZWbuhR4vbe0J0h6SGoC6
+        IJ/QZ7meZXMuPE0lNdwC6Q5s65bpfrerHpCaJjBJIbFj6jZeLp/Klp7fh5U2sFU1
+        uM+ejc+J9wfvcpNMRSHOrE5JAdLPST9zjJh7ftlayVjlZfLvDOLp1SXGdReMvS8l
+        JUmQ+D/I7q2raLv3C+kGeU3pqolvgeeEIZZUBVEFDRxfDFPLFi4RE673BgnrAdvE
+        xuZHdw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=THOZEHX1IYOljNZcOu9rJ4ttNxpkzNp6II0FV+RfV
+        mU=; b=VdpfVhwuGSr+wvjIqM9NIoa+Rhg0GQ3xapsMGUZuiKG231yP3lUq7/alB
+        G5GOoa53n4nJO29GX/NZo9HKbevyMae2cYeqRchH52f/k+MhaP4US/e8uNRdOJF2
+        N9pxlxJUzHz0qwAziRmVdTCIAd8GvkmoKBXc6yblCQnOWFe1mxDLTdd6OQDlXS/h
+        X7wDtor6pDbQN6bI6ArQP2LF2Bus4XBFFd2d5y5jDJnEqxzVL26avgpTgEflDs+n
+        e3yq/2gWR4sqmSTk4naJsa2PzsgCKu0Ekg5QrKS5F1kIQh6htPwdBiPDY3pWWnaN
+        MsDVQeia9eYcMpDRHQgBq78Ih3N3A==
+X-ME-Sender: <xms:VZQoXw2a42WGwSue6AdNL6HwonUsnXw1CwXtRNbwj9JMmRF_1HKvkQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrjeehgdduhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtkeertddtreejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnheple
+    egtdelledtffetjeduteefgfeiheehkeffheeuhfekgeekueelheffheeigeejnecuffho
+    mhgrihhnpehgihhthhhusgdrtghomhdpkhgvrhhnvghlrdhorhhgnecukfhppeduudekrd
+    dvtdekrdegjedrudeiudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:VZQoX7FhQnBjq5oCrSpZkjKbXwQRF_EuXb40YIVfvAyxmcjktbKVgg>
+    <xmx:VZQoX472lPSIQDekhd503JWCWACpKo1E_S8tP8bo1UO0__QRoutdKQ>
+    <xmx:VZQoX536u6x3smkO9YZs1V3SgPwApPI2t4H5YM0-fnglTroZ2iaukQ>
+    <xmx:VpQoXy26O5xri8ckaQtxVw6APJOGfOSeVISXel41P24qXsmKL1Yccw>
+Received: from mickey.themaw.net (unknown [118.208.47.161])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A93D9328005D;
+        Mon,  3 Aug 2020 18:48:49 -0400 (EDT)
+Message-ID: <8eb2e52f1cbdbb8bcf5c5205a53bdc9aaa11a071.camel@themaw.net>
+Subject: Re: [GIT PULL] Mount notifications
+From:   Ian Kent <raven@themaw.net>
+To:     David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     viro@zeniv.linux.org.uk, kzak@redhat.com, jlayton@redhat.com,
+        mszeredi@redhat.com, nicolas.dichtel@6wind.com,
+        christian@brauner.io, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 04 Aug 2020 06:48:45 +0800
+In-Reply-To: <1842689.1596468469@warthog.procyon.org.uk>
+References: <1842689.1596468469@warthog.procyon.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <20200730102505.27039-3-hongbo.wang@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 2020-08-03 at 16:27 +0100, David Howells wrote:
+> Hi Linus,
+> 
+> Here's a set of patches to add notifications for mount topology
+> events,
+> such as mounting, unmounting, mount expiry, mount reconfiguration.
+> 
+> The first patch in the series adds a hard limit on the number of
+> watches
+> that any particular user can add.  The RLIMIT_NOFILE value for the
+> process
+> adding a watch is used as the limit.  Even if you don't take the rest
+> of
+> the series, can you at least take this one?
+> 
+> An LSM hook is included for an LSM to rule on whether or not a mount
+> watch
+> may be set on a particular path.
+> 
+> This series is intended to be taken in conjunction with the fsinfo
+> series
+> which I'll post a pull request for shortly and which is dependent on
+> it.
+> 
+> Karel Zak[*] has created preliminary patches that add support to
+> libmount
+> and Ian Kent has started working on making systemd use them.
+> 
+> [*] https://github.com/karelzak/util-linux/commits/topic/fsinfo
+> 
+> Note that there have been some last minute changes to the patchset:
+> you
+> wanted something adding and Miklós wanted some bits taking
+> out/changing.
+> I've placed a tag, fsinfo-core-20200724 on the aggregate of these two
+> patchsets that can be compared to fsinfo-core-20200803.
+> 
+> To summarise the changes: I added the limiter that you wanted;
+> removed an
+> unused symbol; made the mount ID fields in the notificaion 64-bit
+> (the
+> fsinfo patchset has a change to convey the mount uniquifier instead
+> of the
+> mount ID); removed the event counters from the mount notification and
+> moved
+> the event counters into the fsinfo patchset.
 
+I've pushed my systemd changes to a github repo.
+I haven't yet updated it with the changes above but will get to it.
 
-On 7/30/2020 3:25 AM, hongbo.wang@nxp.com wrote:
-> From: "hongbo.wang" <hongbo.wang@nxp.com>
-> 
-> This featue can be test using network test tools
+They can be found at:
+https://github.com/raven-au/systemd.git branch notifications-devel
 
-mispelled: feature, can be used to test network test tools? or can be
-used to exercise network test tool?
-
-> TX-tool -----> swp0  -----> swp1 -----> RX-tool
 > 
-> TX-tool simulates Customer that will send and receive packets with single
-> VLAN tag(CTAG), RX-tool simulates Service-Provider that will send and
-> receive packets with double VLAN tag(STAG and CTAG). This refers to
-> "4.3.3 Provider Bridges and Q-in-Q Operation" in VSC99599_1_00_TS.pdf.
 > 
-> The related test commands:
-> 1.
-> ip link add dev br0 type bridge
-> ip link set dev swp1 master br0
-> ip link set br0 type bridge vlan_protocol 802.1ad
-> ip link set dev swp0 master br0
+> ====
+> WHY?
+> ====
 > 
-> 2.
-> ip link set dev br0 type bridge vlan_filtering 1
-> bridge vlan add dev swp0 vid 100 pvid
-> bridge vlan add dev swp1 vid 100
-> Result:
-> Customer(tpid:8100 vid:111) -> swp0 -> swp1 -> ISP(STAG \
->                 tpid:88A8 vid:100, CTAG tpid:8100 vid:111)
+> Why do we want mount notifications?  Whilst /proc/mounts can be
+> polled, it
+> only tells you that something changed in your namespace.  To find
+> out, you
+> have to trawl /proc/mounts or similar to work out what changed in the
+> mount
+> object attributes and mount topology.  I'm told that the proc file
+> holding
+> the namespace_sem is a point of contention, especially as the process
+> of
+> generating the text descriptions of the mounts/superblocks can be
+> quite
+> involved.
 > 
-> 3.
-> bridge vlan del dev swp0 vid 1 pvid
-> bridge vlan add dev swp0 vid 100 pvid untagged
-> Result:
-> ISP(tpid:88A8 vid:100 tpid:8100 vid:222) -> swp1 -> swp0 ->\
-> 		Customer(tpid:8100 vid:222)
+> The notification generated here directly indicates the mounts
+> involved in
+> any particular event and gives an idea of what the change was.
 > 
-> Signed-off-by: hongbo.wang <hongbo.wang@nxp.com>
+> This is combined with a new fsinfo() system call that allows, amongst
+> other
+> things, the ability to retrieve in one go an { id, change_counter }
+> tuple
+> from all the children of a specified mount, allowing buffer overruns
+> to be
+> dealt with quickly.
+> 
+> This is of use to systemd to improve efficiency:
+> 
+> 	
+> https://lore.kernel.org/linux-fsdevel/20200227151421.3u74ijhqt6ekbiss@ws.net.home/
+> 
+> And it's not just Red Hat that's potentially interested in this:
+> 
+> 	
+> https://lore.kernel.org/linux-fsdevel/293c9bd3-f530-d75e-c353-ddeabac27cf6@6wind.com/
+> 
+> 
+> David
 > ---
->  drivers/net/dsa/ocelot/felix.c     | 12 +++++++
->  drivers/net/ethernet/mscc/ocelot.c | 53 +++++++++++++++++++++++++-----
->  include/soc/mscc/ocelot.h          |  2 ++
->  3 files changed, 59 insertions(+), 8 deletions(-)
+> The following changes since commit
+> ba47d845d715a010f7b51f6f89bae32845e6acb7:
 > 
-> diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
-> index c69d9592a2b7..72a27b61080e 100644
-> --- a/drivers/net/dsa/ocelot/felix.c
-> +++ b/drivers/net/dsa/ocelot/felix.c
-> @@ -131,10 +131,16 @@ static void felix_vlan_add(struct dsa_switch *ds, int port,
->  			   const struct switchdev_obj_port_vlan *vlan)
->  {
->  	struct ocelot *ocelot = ds->priv;
-> +	struct ocelot_port *ocelot_port = ocelot->ports[port];
->  	u16 flags = vlan->flags;
->  	u16 vid;
->  	int err;
->  
-> +	if (vlan->proto == ETH_P_8021AD) {
-> +		ocelot->enable_qinq = true;
-> +		ocelot_port->qinq_mode = true;
-> +	}
-> +
->  	if (dsa_is_cpu_port(ds, port))
->  		flags &= ~BRIDGE_VLAN_INFO_UNTAGGED;
->  
-> @@ -154,9 +160,15 @@ static int felix_vlan_del(struct dsa_switch *ds, int port,
->  			  const struct switchdev_obj_port_vlan *vlan)
->  {
->  	struct ocelot *ocelot = ds->priv;
-> +	struct ocelot_port *ocelot_port = ocelot->ports[port];
->  	u16 vid;
->  	int err;
->  
-> +	if (vlan->proto == ETH_P_8021AD) {
-> +		ocelot->enable_qinq = false;
-> +		ocelot_port->qinq_mode = false;
-> +	}
+>   Linux 5.8-rc6 (2020-07-19 15:41:18 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git 
+> tags/mount-notifications-20200803
+> 
+> for you to fetch changes up to
+> 841a0dfa511364fa9a8d67512e0643669f1f03e3:
+> 
+>   watch_queue: sample: Display mount tree change notifications (2020-
+> 08-03 12:15:38 +0100)
+> 
+> ----------------------------------------------------------------
+> Mount notifications
+> 
+> ----------------------------------------------------------------
+> David Howells (5):
+>       watch_queue: Limit the number of watches a user can hold
+>       watch_queue: Make watch_sizeof() check record size
+>       watch_queue: Add security hooks to rule on setting mount
+> watches
+>       watch_queue: Implement mount topology and attribute change
+> notifications
+>       watch_queue: sample: Display mount tree change notifications
+> 
+>  Documentation/watch_queue.rst               |  12 +-
+>  arch/alpha/kernel/syscalls/syscall.tbl      |   1 +
+>  arch/arm/tools/syscall.tbl                  |   1 +
+>  arch/arm64/include/asm/unistd.h             |   2 +-
+>  arch/arm64/include/asm/unistd32.h           |   2 +
+>  arch/ia64/kernel/syscalls/syscall.tbl       |   1 +
+>  arch/m68k/kernel/syscalls/syscall.tbl       |   1 +
+>  arch/microblaze/kernel/syscalls/syscall.tbl |   1 +
+>  arch/mips/kernel/syscalls/syscall_n32.tbl   |   1 +
+>  arch/mips/kernel/syscalls/syscall_n64.tbl   |   1 +
+>  arch/mips/kernel/syscalls/syscall_o32.tbl   |   1 +
+>  arch/parisc/kernel/syscalls/syscall.tbl     |   1 +
+>  arch/powerpc/kernel/syscalls/syscall.tbl    |   1 +
+>  arch/s390/kernel/syscalls/syscall.tbl       |   1 +
+>  arch/sh/kernel/syscalls/syscall.tbl         |   1 +
+>  arch/sparc/kernel/syscalls/syscall.tbl      |   1 +
+>  arch/x86/entry/syscalls/syscall_32.tbl      |   1 +
+>  arch/x86/entry/syscalls/syscall_64.tbl      |   1 +
+>  arch/xtensa/kernel/syscalls/syscall.tbl     |   1 +
+>  fs/Kconfig                                  |   9 ++
+>  fs/Makefile                                 |   1 +
+>  fs/mount.h                                  |  18 +++
+>  fs/mount_notify.c                           | 222
+> ++++++++++++++++++++++++++++
+>  fs/namespace.c                              |  22 +++
+>  include/linux/dcache.h                      |   1 +
+>  include/linux/lsm_hook_defs.h               |   3 +
+>  include/linux/lsm_hooks.h                   |   6 +
+>  include/linux/sched/user.h                  |   3 +
+>  include/linux/security.h                    |   8 +
+>  include/linux/syscalls.h                    |   2 +
+>  include/linux/watch_queue.h                 |   7 +-
+>  include/uapi/asm-generic/unistd.h           |   4 +-
+>  include/uapi/linux/watch_queue.h            |  31 +++-
+>  kernel/sys_ni.c                             |   3 +
+>  kernel/watch_queue.c                        |   8 +
+>  samples/watch_queue/watch_test.c            |  41 ++++-
+>  security/security.c                         |   7 +
+>  37 files changed, 422 insertions(+), 6 deletions(-)
+>  create mode 100644 fs/mount_notify.c
+> 
 
-You need the delete part to be reference counted, otherwise the first
-802.1AD VLAN delete request that comes in, regardless of whether other
-802.1AD VLAN entries are installed will disable qinq_mode and
-enable_qinq for the entire port and switch, that does not sound like
-what you want.
-
-Is not ocelot->enable_qinq the logical or of all ocelo_port instances's
-qinq_mode as well?
-
-> +
->  	for (vid = vlan->vid_begin; vid <= vlan->vid_end; vid++) {
->  		err = ocelot_vlan_del(ocelot, port, vid);
->  		if (err) {
-> diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
-> index f2d94b026d88..b5fec6855afd 100644
-> --- a/drivers/net/ethernet/mscc/ocelot.c
-> +++ b/drivers/net/ethernet/mscc/ocelot.c
-> @@ -143,6 +143,8 @@ static int ocelot_port_set_native_vlan(struct ocelot *ocelot, int port,
->  				       u16 vid)
->  {
->  	struct ocelot_port *ocelot_port = ocelot->ports[port];
-> +	u32 port_tpid = 0;
-> +	u32 tag_tpid = 0;
->  	u32 val = 0;
->  
->  	if (ocelot_port->vid != vid) {
-> @@ -156,8 +158,14 @@ static int ocelot_port_set_native_vlan(struct ocelot *ocelot, int port,
->  		ocelot_port->vid = vid;
->  	}
->  
-> -	ocelot_rmw_gix(ocelot, REW_PORT_VLAN_CFG_PORT_VID(vid),
-> -		       REW_PORT_VLAN_CFG_PORT_VID_M,
-> +	if (ocelot_port->qinq_mode)
-> +		port_tpid = REW_PORT_VLAN_CFG_PORT_TPID(ETH_P_8021AD);
-> +	else
-> +		port_tpid = REW_PORT_VLAN_CFG_PORT_TPID(ETH_P_8021Q);
-> +
-> +	ocelot_rmw_gix(ocelot, REW_PORT_VLAN_CFG_PORT_VID(vid) | port_tpid,
-> +		       REW_PORT_VLAN_CFG_PORT_VID_M |
-> +		       REW_PORT_VLAN_CFG_PORT_TPID_M,
->  		       REW_PORT_VLAN_CFG, port);
->  
->  	if (ocelot_port->vlan_aware && !ocelot_port->vid)
-> @@ -180,12 +188,28 @@ static int ocelot_port_set_native_vlan(struct ocelot *ocelot, int port,
->  		else
->  			/* Tag all frames */
->  			val = REW_TAG_CFG_TAG_CFG(3);
-> +
-> +		if (ocelot_port->qinq_mode)
-> +			tag_tpid = REW_TAG_CFG_TAG_TPID_CFG(1);
-> +		else
-> +			tag_tpid = REW_TAG_CFG_TAG_TPID_CFG(0);
->  	} else {
-> -		/* Port tagging disabled. */
-> -		val = REW_TAG_CFG_TAG_CFG(0);
-> +		if (ocelot_port->qinq_mode) {
-> +			if (ocelot_port->vid)
-> +				val = REW_TAG_CFG_TAG_CFG(1);
-> +			else
-> +				val = REW_TAG_CFG_TAG_CFG(3);
-> +> +			tag_tpid = REW_TAG_CFG_TAG_TPID_CFG(1);
-
-This is nearly the same branch as the one above, can you merge the
-conditions vlan_aware || qinq_mode and just set an appropriate TAG_CFG()
-register value based on either booleans?
-
-Are you also not possibly missing a if (untaged || qinq_mode) check in
-ocelot_vlan_add() to call into ocelot_port_set_native_vlan()?
--- 
-Florian
