@@ -2,69 +2,74 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA27C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC9EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76EAA2076C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:41:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596469269;
-	bh=vkBCBkF4ZAHZcMpJ+bypEWZ/AlvYl3GE+TSE47hokTU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=AmNrd69QPOpu+YxcIWzoLCiry49o8K+7PoQKhnBIuGMzqPjyy/1GrBGtT5do+FBjQ
-	 VxyRn/YqV7oipk2uYlxF1ZopeF+eSh7EWlS3IruoFkjYXBc4aY+gLfMCfisKyI41oK
-	 0M2n0FeIjufcH4V1gL037o5BUyxhaAfNDua4S2mk=
+	by mail.kernel.org (Postfix) with ESMTP id E940420678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:41:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rtfARZGf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgHCPlJ (ORCPT
+        id S1727812AbgHCPlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 11:41:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38000 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726478AbgHCPlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 11:41:08 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3715D20678;
-        Mon,  3 Aug 2020 15:41:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596469267;
-        bh=vkBCBkF4ZAHZcMpJ+bypEWZ/AlvYl3GE+TSE47hokTU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=V9P5zt4ff0T42yNwHk8wtCra4wrhH7MXPoXCneEMvcRqvTodILCyBxC7DhzLcBvnv
-         Cn3Heov+tA4GCb1UNZZcaO/2yQQ0v2PXksGl/AedOkvO7OTbRGTW2Oqy2vWuxIWAc+
-         oh3VM2tE++tmS+iFM7HQIC0IDlz9l6vw6kfwetxA=
-Date:   Mon, 3 Aug 2020 08:41:06 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     csully@google.com, sagis@google.com, jonolson@google.com,
-        davem@davemloft.net, lrizzo@google.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] gve: Fix the size used in a 'dma_free_coherent()' call
-Message-ID: <20200803084106.050eb7f6@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200802141523.691565-1-christophe.jaillet@wanadoo.fr>
-References: <20200802141523.691565-1-christophe.jaillet@wanadoo.fr>
+        Mon, 3 Aug 2020 11:41:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726478AbgHCPlj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 11:41:39 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5934AC06174A;
+        Mon,  3 Aug 2020 08:41:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=SnvD0ufrD36AznQ4b9NY+YAqMLCruaCYki+qndIchpQ=; b=rtfARZGfVzm85Mw0LPAVdMHYcI
+        8au74Pe9pnWPbe4ilvolD/X3pCAbm3FZNm/Ooq2L3E1dCUsDj3fWTY6kM9qBeIXzh/BpsoJ/KbqBu
+        iOqW07bf8Eom8J/hr99iQ2fc8tA+ZNmMYYG9NoLz1Ks2nIWgjL7BMRVcEWN3VIAEM0KCuNMxQo20G
+        yu8QmmQhhPJ2sd03rvaywP+ehPid/5brcexjUmluLab3IZ1jyVHjqGnBrhS9NQMk0yK/dMdlgEeCR
+        kQR4ab7/IVu4ZZ8muUCcSyl1/0QaMPgP1JmvJvQmA6kdPzCrsRjFo25GiVsOE0KEQ3oKWQ0CKPXU/
+        K+Ta2iRQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k2cab-0007Dl-Uy; Mon, 03 Aug 2020 15:41:26 +0000
+Date:   Mon, 3 Aug 2020 16:41:25 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Kalesh Singh <kaleshsingh@google.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-fsdevel@vger.kernel.org,
+        Suren Baghdasaryan <surenb@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Ioannis Ilkos <ilkos@google.com>,
+        John Stultz <john.stultz@linaro.org>, kernel-team@android.com
+Subject: Re: [PATCH 2/2] dmabuf/tracing: Add dma-buf trace events
+Message-ID: <20200803154125.GA23808@casper.infradead.org>
+References: <20200803144719.3184138-1-kaleshsingh@google.com>
+ <20200803144719.3184138-3-kaleshsingh@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200803144719.3184138-3-kaleshsingh@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  2 Aug 2020 16:15:23 +0200 Christophe JAILLET wrote:
-> Update the size used in 'dma_free_coherent()' in order to match the one
-> used in the corresponding 'dma_alloc_coherent()'.
-> 
-> Fixes: 893ce44df5 ("gve: Add basic driver framework for Compute Engine Virtual NIC")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+On Mon, Aug 03, 2020 at 02:47:19PM +0000, Kalesh Singh wrote:
+> +static void dma_buf_fd_install(int fd, struct file *filp)
+> +{
+> +	trace_dma_buf_fd_ref_inc(current, filp);
+> +}
 
-Fixes tag: Fixes: 893ce44df5 ("gve: Add basic driver framework for Compute Engine Virtual NIC")
-Has these problem(s):
-	- SHA1 should be at least 12 digits long
-	  Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-	  or later) just making sure it is not set (or set to "auto").
+You're adding a new file_operation in order to just add a new tracepoint?
+NACK.
