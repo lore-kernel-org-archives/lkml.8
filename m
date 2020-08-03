@@ -2,76 +2,107 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8332FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BF8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6818520678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:48:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F1192068F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:54:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726080AbgHCIst (ORCPT
+        id S1726119AbgHCIyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 04:48:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36886 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbgHCIst (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 04:48:49 -0400
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C983C061756
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 01:48:48 -0700 (PDT)
-Received: from ramsan ([84.195.186.194])
-        by xavier.telenet-ops.be with bizsmtp
-        id Awol2300E4C55Sk01wolnW; Mon, 03 Aug 2020 10:48:45 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1k2W9F-0006e5-C3; Mon, 03 Aug 2020 10:48:45 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1k2W9F-0006L6-A8; Mon, 03 Aug 2020 10:48:45 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        David Gow <davidgow@google.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] clk: hsdk: Fix bad dependency on IOMEM
-Date:   Mon,  3 Aug 2020 10:48:35 +0200
-Message-Id: <20200803084835.21838-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Mon, 3 Aug 2020 04:54:02 -0400
+Received: from mga06.intel.com ([134.134.136.31]:62352 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725831AbgHCIxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 04:53:52 -0400
+IronPort-SDR: novjd+V0YOHjXUHckk5+BfKgkVLGITwd0aUtORRo7Kf+3fXmGEBe7mFzJ22FDk2cacLleTn+EX
+ KWn7fOsIpTLw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9701"; a="213601102"
+X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
+   d="scan'208";a="213601102"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 01:53:51 -0700
+IronPort-SDR: z0exZezV/kfhY5z1C32Qp1TzeRoohCdwc43nzu0n3hDFu/JiPS7X8oOugCM5Zby8LSNKuDKRlp
+ Gl4a2U/shLjQ==
+X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
+   d="scan'208";a="291977024"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 01:53:50 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id E6B0D206D6; Mon,  3 Aug 2020 11:53:47 +0300 (EEST)
+Date:   Mon, 3 Aug 2020 11:53:47 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Wolfram Sang <wsa@kernel.org>
+Subject: Re: [PATCH] PM: runtime: Add kerneldoc comments to multiple helpers
+Message-ID: <20200803085347.GV13316@paasikivi.fi.intel.com>
+References: <2672940.cHDmkauF2A@kreacher>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2672940.cHDmkauF2A@kreacher>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CONFIG_IOMEM does not exist.  The correct symbol to depend on is
-CONFIG_HAS_IOMEM.
+Hi Rafael,
 
-Fixes: 1e7468bd9d30a21e ("clk: Specify IOMEM dependency for HSDK pll driver")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/clk/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for the patch.
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 326f91b2dda9fdc4..5f952e111ab5a6f8 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -50,7 +50,7 @@ source "drivers/clk/versatile/Kconfig"
- config CLK_HSDK
- 	bool "PLL Driver for HSDK platform"
- 	depends on OF || COMPILE_TEST
--	depends on IOMEM
-+	depends on HAS_IOMEM
- 	help
- 	  This driver supports the HSDK core, system, ddr, tunnel and hdmi PLLs
- 	  control.
+On Fri, Jul 31, 2020 at 07:03:26PM +0200, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Add kerneldoc comments to multiple PM-runtime helper functions
+> defined as static inline wrappers around lower-level routines to
+> provide quick reference decumentation of their behavior.
+> 
+> Some of them are similar to each other with subtle differences only
+> and the behavior of some of them may appear as counter-intuitive, so
+> clarify all that to avoid confusion.
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  include/linux/pm_runtime.h |  246 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 246 insertions(+)
+> 
+> Index: linux-pm/include/linux/pm_runtime.h
+> ===================================================================
+> --- linux-pm.orig/include/linux/pm_runtime.h
+> +++ linux-pm/include/linux/pm_runtime.h
+> @@ -60,58 +60,151 @@ extern void pm_runtime_put_suppliers(str
+>  extern void pm_runtime_new_link(struct device *dev);
+>  extern void pm_runtime_drop_link(struct device *dev);
+>  
+> +/**
+> + * pm_runtime_get_if_in_use - Conditionally bump up runtime PM usage counter.
+> + * @dev: Target device.
+> + *
+> + * Increment the runtime PM usage counter of @dev if its runtime PM status is
+> + * %RPM_ACTIVE and its runtime PM usage counter is greater than 0.
+
+The implementation of the non-runtime PM variants (used when CONFIG_PM is
+disabled) isn't here but I think it'd be nice if their behaviour was also
+documented here. pm_runtime_get_if_in_use() returns -EINVAL if CONFIG_PM is
+disabled, for instance.
+
+pm_runtime_disable() is defined here but the documentation in corresponding
+pm_runtime_enable() in drivers/base/power/runtime.c is rather terse. It'd
+be nice to improve that now (or separately).
+
 -- 
-2.17.1
+Kind regards,
 
+Sakari Ailus
