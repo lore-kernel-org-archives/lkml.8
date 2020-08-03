@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 014C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDD1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB11F206D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1011C206D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458951;
-	bh=et039MEu/JZv75gwsVathHW/qTIeunWTRegEb9QD3qs=;
+	s=default; t=1596458960;
+	bh=DJkl6V20e7slHylin2S//r7OqYf61RZP7yp8UIEI24o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kF6/+Rl0u78Ret3n02yK91Q7igNoAFf7lPvqDk+FxEhk/N9dpgpZEbdXq1LngyGuN
-	 fuE5A2hB8RRkjPXigcol2HTsFd+/60k7ngISMmKeJL3UftzN3zMGsk+AaGdJBbB/+5
-	 12zQzLqyj4x9sWue5YlVaiob6WveAsLl3pNw+dvI=
+	b=EnIAwHODZZ1Ol9iMjdzsH1N9H7emdCiBKaBbmy3TA2jyT/ntdue2+wbhc0d4/peEO
+	 nksbrKZ3dGYFmDAIM//Ez5KUIQcVXVoPSJbISqJJyC5RQrqtoOARAG0Zpp1j0cuQyV
+	 6IycuRXG5RIriexmHlHnNGkQQzIpRZhnrycI99f8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729683AbgHCMtL (ORCPT
+        id S1728453AbgHCMtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:49:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48512 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:49:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727947AbgHCMYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:24:16 -0400
+        id S1726772AbgHCMYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:24:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EAF5204EC;
-        Mon,  3 Aug 2020 12:24:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97B35207FC;
+        Mon,  3 Aug 2020 12:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457452;
-        bh=et039MEu/JZv75gwsVathHW/qTIeunWTRegEb9QD3qs=;
+        s=default; t=1596457439;
+        bh=DJkl6V20e7slHylin2S//r7OqYf61RZP7yp8UIEI24o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Es9/HtwtRPz4091GarMCNhwNmO9tii5Q38c4/kEuNnSchcQ1kb/xghFTnjHYMkETc
-         KS9J1dXKRvmN41HFg9pHylaGi3UQuIBmzdVB0wByDjGmTQ1uE3l5i1Gg5smovkomES
-         bDLnFxXOfWWMojVWQmzDAXmp1vqKCKQHnh8N8K48=
+        b=qbfBqcniZ8s0TcvmEE4b0Y87uxE3iUuSgVA2a5hHzN2q6ojD/Hmi1ceq15Iwtb+vU
+         YZo35SRVbnllK80pMmHUerIjokzAJogit6JH9l1qXDF3vD3b1HDsfuf6E4XaYgcmeP
+         mTk/AmeQ3DAylDCfpKb8Rgrj5kh9qmIDenB3WyUk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Ron Diskin <rondi@mellanox.com>,
+        Roi Dayan <roid@mellanox.com>,
+        Moshe Shemesh <moshe@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 073/120] mlxsw: spectrum_router: Fix use-after-free in router init / de-init
-Date:   Mon,  3 Aug 2020 14:18:51 +0200
-Message-Id: <20200803121906.355050324@linuxfoundation.org>
+Subject: [PATCH 5.7 060/120] net/mlx5e: Modify uplink state on interface up/down
+Date:   Mon,  3 Aug 2020 14:18:38 +0200
+Message-Id: <20200803121905.723639100@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -61,239 +62,170 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Ron Diskin <rondi@mellanox.com>
 
-[ Upstream commit 5515c3448d55bdcb5ff8a1778aa84f34e4205596 ]
+[ Upstream commit 7d0314b11cdd92bca8b89684c06953bf114605fc ]
 
-Several notifiers are registered as part of router initialization.
-Since some of these notifiers are registered before the end of the
-initialization, it is possible for them to access uninitialized or freed
-memory when processing notifications [1].
+When setting the PF interface up/down, notify the firmware to update
+uplink state via MODIFY_VPORT_STATE, when E-Switch is enabled.
 
-Additionally, some of these notifiers queue work items on a workqueue.
-If these work items are executed after the router was de-initialized,
-they will access freed memory.
+This behavior will prevent sending traffic out on uplink port when PF is
+down, such as sending traffic from a VF interface which is still up.
+Currently when calling mlx5e_open/close(), the driver only sends PAOS
+command to notify the firmware to set the physical port state to
+up/down, however, it is not sufficient. When VF is in "auto" state, it
+follows the uplink state, which was not updated on mlx5e_open/close()
+before this patch.
 
-Fix both problems by moving the registration of the notifiers to the end
-of the router initialization and flush the work queue after they are
-unregistered.
+When switchdev mode is enabled and uplink representor is first enabled,
+set the uplink port state value back to its FW default "AUTO".
 
-[1]
-BUG: KASAN: use-after-free in __mutex_lock_common kernel/locking/mutex.c:938 [inline]
-BUG: KASAN: use-after-free in __mutex_lock+0xeea/0x1340 kernel/locking/mutex.c:1103
-Read of size 8 at addr ffff888038c3a6e0 by task kworker/u4:1/61
-
-CPU: 1 PID: 61 Comm: kworker/u4:1 Not tainted 5.8.0-rc2+ #36
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-Workqueue: mlxsw_core_ordered mlxsw_sp_inet6addr_event_work
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xf6/0x16e lib/dump_stack.c:118
- print_address_description.constprop.0+0x1c/0x250 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- __mutex_lock_common kernel/locking/mutex.c:938 [inline]
- __mutex_lock+0xeea/0x1340 kernel/locking/mutex.c:1103
- mlxsw_sp_inet6addr_event_work+0xb3/0x1b0 drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c:7123
- process_one_work+0xa3e/0x17a0 kernel/workqueue.c:2269
- worker_thread+0x9e/0x1050 kernel/workqueue.c:2415
- kthread+0x355/0x470 kernel/kthread.c:291
- ret_from_fork+0x22/0x30 arch/x86/entry/entry_64.S:293
-
-Allocated by task 1298:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc mm/kasan/common.c:494 [inline]
- __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:467
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- mlxsw_sp_router_init+0xb2/0x1d20 drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c:8074
- mlxsw_sp_init+0xbd8/0x3ac0 drivers/net/ethernet/mellanox/mlxsw/spectrum.c:2932
- __mlxsw_core_bus_device_register+0x657/0x10d0 drivers/net/ethernet/mellanox/mlxsw/core.c:1375
- mlxsw_core_bus_device_register drivers/net/ethernet/mellanox/mlxsw/core.c:1436 [inline]
- mlxsw_devlink_core_bus_device_reload_up+0xcd/0x150 drivers/net/ethernet/mellanox/mlxsw/core.c:1133
- devlink_reload net/core/devlink.c:2959 [inline]
- devlink_reload+0x281/0x3b0 net/core/devlink.c:2944
- devlink_nl_cmd_reload+0x2f1/0x7c0 net/core/devlink.c:2987
- genl_family_rcv_msg_doit net/netlink/genetlink.c:691 [inline]
- genl_family_rcv_msg net/netlink/genetlink.c:736 [inline]
- genl_rcv_msg+0x611/0x9d0 net/netlink/genetlink.c:753
- netlink_rcv_skb+0x152/0x440 net/netlink/af_netlink.c:2469
- genl_rcv+0x24/0x40 net/netlink/genetlink.c:764
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x53a/0x750 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x850/0xd90 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0x150/0x190 net/socket.c:672
- ____sys_sendmsg+0x6d8/0x840 net/socket.c:2363
- ___sys_sendmsg+0xff/0x170 net/socket.c:2417
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2450
- do_syscall_64+0x56/0xa0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 1348:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0x12c/0x170 mm/kasan/common.c:455
- slab_free_hook mm/slub.c:1474 [inline]
- slab_free_freelist_hook mm/slub.c:1507 [inline]
- slab_free mm/slub.c:3072 [inline]
- kfree+0xe6/0x320 mm/slub.c:4063
- mlxsw_sp_fini+0x340/0x4e0 drivers/net/ethernet/mellanox/mlxsw/spectrum.c:3132
- mlxsw_core_bus_device_unregister+0x16c/0x6d0 drivers/net/ethernet/mellanox/mlxsw/core.c:1474
- mlxsw_devlink_core_bus_device_reload_down+0x8e/0xc0 drivers/net/ethernet/mellanox/mlxsw/core.c:1123
- devlink_reload+0xc6/0x3b0 net/core/devlink.c:2952
- devlink_nl_cmd_reload+0x2f1/0x7c0 net/core/devlink.c:2987
- genl_family_rcv_msg_doit net/netlink/genetlink.c:691 [inline]
- genl_family_rcv_msg net/netlink/genetlink.c:736 [inline]
- genl_rcv_msg+0x611/0x9d0 net/netlink/genetlink.c:753
- netlink_rcv_skb+0x152/0x440 net/netlink/af_netlink.c:2469
- genl_rcv+0x24/0x40 net/netlink/genetlink.c:764
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x53a/0x750 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x850/0xd90 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0x150/0x190 net/socket.c:672
- ____sys_sendmsg+0x6d8/0x840 net/socket.c:2363
- ___sys_sendmsg+0xff/0x170 net/socket.c:2417
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2450
- do_syscall_64+0x56/0xa0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The buggy address belongs to the object at ffff888038c3a000
- which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 1760 bytes inside of
- 2048-byte region [ffff888038c3a000, ffff888038c3a800)
-The buggy address belongs to the page:
-page:ffffea0000e30e00 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 head:ffffea0000e30e00 order:3 compound_mapcount:0 compound_pincount:0
-flags: 0x100000000010200(slab|head)
-raw: 0100000000010200 dead000000000100 dead000000000122 ffff88806c40c000
-raw: 0000000000000000 0000000000080008 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff888038c3a580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888038c3a600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff888038c3a680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                       ^
- ffff888038c3a700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888038c3a780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-
-Fixes: 965fa8e600d2 ("mlxsw: spectrum_router: Make RIF deletion more robust")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 63bfd399de55 ("net/mlx5e: Send PAOS command on interface up/down")
+Signed-off-by: Ron Diskin <rondi@mellanox.com>
+Reviewed-by: Roi Dayan <roid@mellanox.com>
+Reviewed-by: Moshe Shemesh <moshe@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../ethernet/mellanox/mlxsw/spectrum_router.c | 50 ++++++++++---------
- 1 file changed, 26 insertions(+), 24 deletions(-)
+ .../net/ethernet/mellanox/mlx5/core/en_main.c | 25 ++++++++++++++++---
+ .../net/ethernet/mellanox/mlx5/core/en_rep.c  |  2 ++
+ .../net/ethernet/mellanox/mlx5/core/eswitch.c | 16 +++++++-----
+ .../net/ethernet/mellanox/mlx5/core/eswitch.h |  2 ++
+ include/linux/mlx5/mlx5_ifc.h                 |  1 +
+ 5 files changed, 37 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-index 84b3d78a9dd84..ac1a63fe0899c 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-@@ -8072,16 +8072,6 @@ int mlxsw_sp_router_init(struct mlxsw_sp *mlxsw_sp,
- 	mlxsw_sp->router = router;
- 	router->mlxsw_sp = mlxsw_sp;
- 
--	router->inetaddr_nb.notifier_call = mlxsw_sp_inetaddr_event;
--	err = register_inetaddr_notifier(&router->inetaddr_nb);
--	if (err)
--		goto err_register_inetaddr_notifier;
--
--	router->inet6addr_nb.notifier_call = mlxsw_sp_inet6addr_event;
--	err = register_inet6addr_notifier(&router->inet6addr_nb);
--	if (err)
--		goto err_register_inet6addr_notifier;
--
- 	INIT_LIST_HEAD(&mlxsw_sp->router->nexthop_neighs_list);
- 	err = __mlxsw_sp_router_init(mlxsw_sp);
- 	if (err)
-@@ -8122,12 +8112,6 @@ int mlxsw_sp_router_init(struct mlxsw_sp *mlxsw_sp,
- 	if (err)
- 		goto err_neigh_init;
- 
--	mlxsw_sp->router->netevent_nb.notifier_call =
--		mlxsw_sp_router_netevent_event;
--	err = register_netevent_notifier(&mlxsw_sp->router->netevent_nb);
--	if (err)
--		goto err_register_netevent_notifier;
--
- 	err = mlxsw_sp_mp_hash_init(mlxsw_sp);
- 	if (err)
- 		goto err_mp_hash_init;
-@@ -8136,6 +8120,22 @@ int mlxsw_sp_router_init(struct mlxsw_sp *mlxsw_sp,
- 	if (err)
- 		goto err_dscp_init;
- 
-+	router->inetaddr_nb.notifier_call = mlxsw_sp_inetaddr_event;
-+	err = register_inetaddr_notifier(&router->inetaddr_nb);
-+	if (err)
-+		goto err_register_inetaddr_notifier;
-+
-+	router->inet6addr_nb.notifier_call = mlxsw_sp_inet6addr_event;
-+	err = register_inet6addr_notifier(&router->inet6addr_nb);
-+	if (err)
-+		goto err_register_inet6addr_notifier;
-+
-+	mlxsw_sp->router->netevent_nb.notifier_call =
-+		mlxsw_sp_router_netevent_event;
-+	err = register_netevent_notifier(&mlxsw_sp->router->netevent_nb);
-+	if (err)
-+		goto err_register_netevent_notifier;
-+
- 	mlxsw_sp->router->fib_nb.notifier_call = mlxsw_sp_router_fib_event;
- 	err = register_fib_notifier(mlxsw_sp_net(mlxsw_sp),
- 				    &mlxsw_sp->router->fib_nb,
-@@ -8146,10 +8146,15 @@ int mlxsw_sp_router_init(struct mlxsw_sp *mlxsw_sp,
- 	return 0;
- 
- err_register_fib_notifier:
--err_dscp_init:
--err_mp_hash_init:
- 	unregister_netevent_notifier(&mlxsw_sp->router->netevent_nb);
- err_register_netevent_notifier:
-+	unregister_inet6addr_notifier(&router->inet6addr_nb);
-+err_register_inet6addr_notifier:
-+	unregister_inetaddr_notifier(&router->inetaddr_nb);
-+err_register_inetaddr_notifier:
-+	mlxsw_core_flush_owq();
-+err_dscp_init:
-+err_mp_hash_init:
- 	mlxsw_sp_neigh_fini(mlxsw_sp);
- err_neigh_init:
- 	mlxsw_sp_vrs_fini(mlxsw_sp);
-@@ -8168,10 +8173,6 @@ err_ipips_init:
- err_rifs_init:
- 	__mlxsw_sp_router_fini(mlxsw_sp);
- err_router_init:
--	unregister_inet6addr_notifier(&router->inet6addr_nb);
--err_register_inet6addr_notifier:
--	unregister_inetaddr_notifier(&router->inetaddr_nb);
--err_register_inetaddr_notifier:
- 	mutex_destroy(&mlxsw_sp->router->lock);
- 	kfree(mlxsw_sp->router);
- 	return err;
-@@ -8182,6 +8183,9 @@ void mlxsw_sp_router_fini(struct mlxsw_sp *mlxsw_sp)
- 	unregister_fib_notifier(mlxsw_sp_net(mlxsw_sp),
- 				&mlxsw_sp->router->fib_nb);
- 	unregister_netevent_notifier(&mlxsw_sp->router->netevent_nb);
-+	unregister_inet6addr_notifier(&mlxsw_sp->router->inet6addr_nb);
-+	unregister_inetaddr_notifier(&mlxsw_sp->router->inetaddr_nb);
-+	mlxsw_core_flush_owq();
- 	mlxsw_sp_neigh_fini(mlxsw_sp);
- 	mlxsw_sp_vrs_fini(mlxsw_sp);
- 	mlxsw_sp_mr_fini(mlxsw_sp);
-@@ -8191,8 +8195,6 @@ void mlxsw_sp_router_fini(struct mlxsw_sp *mlxsw_sp)
- 	mlxsw_sp_ipips_fini(mlxsw_sp);
- 	mlxsw_sp_rifs_fini(mlxsw_sp);
- 	__mlxsw_sp_router_fini(mlxsw_sp);
--	unregister_inet6addr_notifier(&mlxsw_sp->router->inet6addr_nb);
--	unregister_inetaddr_notifier(&mlxsw_sp->router->inetaddr_nb);
- 	mutex_destroy(&mlxsw_sp->router->lock);
- 	kfree(mlxsw_sp->router);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+index 5f8c69ea82539..b485eec812111 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -3041,6 +3041,25 @@ void mlx5e_timestamp_init(struct mlx5e_priv *priv)
+ 	priv->tstamp.rx_filter = HWTSTAMP_FILTER_NONE;
  }
+ 
++static void mlx5e_modify_admin_state(struct mlx5_core_dev *mdev,
++				     enum mlx5_port_status state)
++{
++	struct mlx5_eswitch *esw = mdev->priv.eswitch;
++	int vport_admin_state;
++
++	mlx5_set_port_admin_status(mdev, state);
++
++	if (!MLX5_ESWITCH_MANAGER(mdev) ||  mlx5_eswitch_mode(esw) == MLX5_ESWITCH_OFFLOADS)
++		return;
++
++	if (state == MLX5_PORT_UP)
++		vport_admin_state = MLX5_VPORT_ADMIN_STATE_AUTO;
++	else
++		vport_admin_state = MLX5_VPORT_ADMIN_STATE_DOWN;
++
++	mlx5_eswitch_set_vport_state(esw, MLX5_VPORT_UPLINK, vport_admin_state);
++}
++
+ int mlx5e_open_locked(struct net_device *netdev)
+ {
+ 	struct mlx5e_priv *priv = netdev_priv(netdev);
+@@ -3073,7 +3092,7 @@ int mlx5e_open(struct net_device *netdev)
+ 	mutex_lock(&priv->state_lock);
+ 	err = mlx5e_open_locked(netdev);
+ 	if (!err)
+-		mlx5_set_port_admin_status(priv->mdev, MLX5_PORT_UP);
++		mlx5e_modify_admin_state(priv->mdev, MLX5_PORT_UP);
+ 	mutex_unlock(&priv->state_lock);
+ 
+ 	return err;
+@@ -3107,7 +3126,7 @@ int mlx5e_close(struct net_device *netdev)
+ 		return -ENODEV;
+ 
+ 	mutex_lock(&priv->state_lock);
+-	mlx5_set_port_admin_status(priv->mdev, MLX5_PORT_DOWN);
++	mlx5e_modify_admin_state(priv->mdev, MLX5_PORT_DOWN);
+ 	err = mlx5e_close_locked(netdev);
+ 	mutex_unlock(&priv->state_lock);
+ 
+@@ -5185,7 +5204,7 @@ static void mlx5e_nic_enable(struct mlx5e_priv *priv)
+ 
+ 	/* Marking the link as currently not needed by the Driver */
+ 	if (!netif_running(netdev))
+-		mlx5_set_port_admin_status(mdev, MLX5_PORT_DOWN);
++		mlx5e_modify_admin_state(mdev, MLX5_PORT_DOWN);
+ 
+ 	mlx5e_set_netdev_mtu_boundaries(priv);
+ 	mlx5e_set_dev_port_mtu(priv);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
+index 4a8e0dfdc5f2c..e93d7430c1a31 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
+@@ -1922,6 +1922,8 @@ static void mlx5e_uplink_rep_enable(struct mlx5e_priv *priv)
+ 	INIT_WORK(&rpriv->uplink_priv.reoffload_flows_work,
+ 		  mlx5e_tc_reoffload_flows_work);
+ 
++	mlx5_modify_vport_admin_state(mdev, MLX5_VPORT_STATE_OP_MOD_UPLINK,
++				      0, 0, MLX5_VPORT_ADMIN_STATE_AUTO);
+ 	mlx5_lag_add(mdev, netdev);
+ 	priv->events_nb.notifier_call = uplink_rep_async_event;
+ 	mlx5_notifier_register(mdev, &priv->events_nb);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+index 3bb4f72b76da2..577a5b3b841ed 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+@@ -2374,6 +2374,8 @@ int mlx5_eswitch_set_vport_state(struct mlx5_eswitch *esw,
+ 				 u16 vport, int link_state)
+ {
+ 	struct mlx5_vport *evport = mlx5_eswitch_get_vport(esw, vport);
++	int opmod = MLX5_VPORT_STATE_OP_MOD_ESW_VPORT;
++	int other_vport = 1;
+ 	int err = 0;
+ 
+ 	if (!ESW_ALLOWED(esw))
+@@ -2381,15 +2383,17 @@ int mlx5_eswitch_set_vport_state(struct mlx5_eswitch *esw,
+ 	if (IS_ERR(evport))
+ 		return PTR_ERR(evport);
+ 
++	if (vport == MLX5_VPORT_UPLINK) {
++		opmod = MLX5_VPORT_STATE_OP_MOD_UPLINK;
++		other_vport = 0;
++		vport = 0;
++	}
+ 	mutex_lock(&esw->state_lock);
+ 
+-	err = mlx5_modify_vport_admin_state(esw->dev,
+-					    MLX5_VPORT_STATE_OP_MOD_ESW_VPORT,
+-					    vport, 1, link_state);
++	err = mlx5_modify_vport_admin_state(esw->dev, opmod, vport, other_vport, link_state);
+ 	if (err) {
+-		mlx5_core_warn(esw->dev,
+-			       "Failed to set vport %d link state, err = %d",
+-			       vport, err);
++		mlx5_core_warn(esw->dev, "Failed to set vport %d link state, opmod = %d, err = %d",
++			       vport, opmod, err);
+ 		goto unlock;
+ 	}
+ 
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.h b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.h
+index c1848b57f61c8..56d2a1ab9378e 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.h
+@@ -684,6 +684,8 @@ static inline int mlx5_eswitch_enable(struct mlx5_eswitch *esw, int num_vfs) { r
+ static inline void mlx5_eswitch_disable(struct mlx5_eswitch *esw, bool clear_vf) {}
+ static inline bool mlx5_esw_lag_prereq(struct mlx5_core_dev *dev0, struct mlx5_core_dev *dev1) { return true; }
+ static inline bool mlx5_eswitch_is_funcs_handler(struct mlx5_core_dev *dev) { return false; }
++static inline
++int mlx5_eswitch_set_vport_state(struct mlx5_eswitch *esw, u16 vport, int link_state) { return 0; }
+ static inline const u32 *mlx5_esw_query_functions(struct mlx5_core_dev *dev)
+ {
+ 	return ERR_PTR(-EOPNOTSUPP);
+diff --git a/include/linux/mlx5/mlx5_ifc.h b/include/linux/mlx5/mlx5_ifc.h
+index 69b27c7dfc3e2..fb7fa1fc8e010 100644
+--- a/include/linux/mlx5/mlx5_ifc.h
++++ b/include/linux/mlx5/mlx5_ifc.h
+@@ -4347,6 +4347,7 @@ struct mlx5_ifc_query_vport_state_out_bits {
+ enum {
+ 	MLX5_VPORT_STATE_OP_MOD_VNIC_VPORT  = 0x0,
+ 	MLX5_VPORT_STATE_OP_MOD_ESW_VPORT   = 0x1,
++	MLX5_VPORT_STATE_OP_MOD_UPLINK      = 0x2,
+ };
+ 
+ struct mlx5_ifc_arm_monitor_counter_in_bits {
 -- 
 2.25.1
 
