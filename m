@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B2CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C2DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8E49207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8091208B3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457712;
-	bh=O2w5XOrGmoO7+E7a5f/p6umyxLNs3y72uVcyQgAU7tI=;
+	s=default; t=1596457716;
+	bh=mMaacA9vE0nsei1eQU9xoZKDWVY7ktUlsDNk0P5mmr0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YQG6Dm7T6zZCN/anc/FwOO5Q7koX/cZFRmzR4CzvdDReLh4DHLKPDNR3gsO/jsmhg
-	 UMGCQpZq72atSVa9ZH6AMPzhTzXOI32YvbKnY/XdHPEPrTP5Jis2Co37sL0nNW1ISq
-	 JwZFlcmA4XP9TzOXcfZj4hQQb59rdqY1MZl8tIB4=
+	b=J12Vwh8ftQNW6uMxzTNYqhsndTbtl4Oe2UvnypACphF9rYGTbRrnKKHNVsrSz09vK
+	 FKv5WPXX0WYba3htNv3vpJauHEGZfPsWHEqWWQakR01z57ILF6ExQbw3dqF7BpKBBg
+	 YpFqNHfF6amcF3/6B1t+r+XNhqjsiEZ3Ulb+fojA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728745AbgHCM2b (ORCPT
+        id S1728755AbgHCM2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:28:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54420 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:28:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728721AbgHCM2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:28:17 -0400
+        id S1728147AbgHCM2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:28:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EB6C204EC;
-        Mon,  3 Aug 2020 12:28:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5DE22083B;
+        Mon,  3 Aug 2020 12:28:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457696;
-        bh=O2w5XOrGmoO7+E7a5f/p6umyxLNs3y72uVcyQgAU7tI=;
+        s=default; t=1596457699;
+        bh=mMaacA9vE0nsei1eQU9xoZKDWVY7ktUlsDNk0P5mmr0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=urCsMy8IoM0mgKbeGFKJWoXYFn8PpMsIfz4tj2Gw9WG5g6jxV3j+uy0M8S9ICPqQg
-         91zjiWkw+c4Ar1IRyeQ2PYp8b1XhEXPtKxqRr8MYpI/ZuGJb6HRgQg2RPXzRdH0+Tu
-         O4vX1PWa/gEXOd0HyMs7Gq6J4XdIWgntMNn2Whqs=
+        b=oRl/tMIu7+4mSOf30WsPj9zsTLK5eMTqpZhBLFDT2G4CMmohkhgle+S7ruYK0b/Pp
+         zfMtA90M2Ue/tS6lJocn8qgAgvbpNlJT9N2BoPaL63RN7Jafqn7+3IZ+WvZduzbu8W
+         G4e80omj8lW106lf4rpPzWZ0u/Q77xuNA0frPRi8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tanner Love <tannerlove@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 42/90] selftests/net: so_txtime: fix clang issues for target arch PowerPC
-Date:   Mon,  3 Aug 2020 14:19:04 +0200
-Message-Id: <20200803121859.660789314@linuxfoundation.org>
+        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rich Felker <dalias@libc.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 43/90] sh/tlb: Fix PGTABLE_LEVELS > 2
+Date:   Mon,  3 Aug 2020 14:19:05 +0200
+Message-Id: <20200803121859.708701681@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -61,40 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tanner Love <tannerlove@google.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit b4da96ffd30bd4a305045ba5c9b0de5d4aa20dc7 ]
+[ Upstream commit c7bcbc8ab9cb20536b8f50c62a48cebda965fdba ]
 
-On powerpcle, int64_t maps to long long. Clang 9 threw:
-warning: absolute value function 'labs' given an argument of type \
-'long long' but has parameter of type 'long' which may cause \
-truncation of value [-Wabsolute-value]
-        if (labs(tstop - texpect) > cfg_variance_us)
+Geert reported that his SH7722-based Migo-R board failed to boot after
+commit:
 
-Tested: make -C tools/testing/selftests TARGETS="net" run_tests
+  c5b27a889da9 ("sh/tlb: Convert SH to generic mmu_gather")
 
-Fixes: af5136f95045 ("selftests/net: SO_TXTIME with ETF and FQ")
-Signed-off-by: Tanner Love <tannerlove@google.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+That commit fell victim to copying the wrong pattern --
+__pmd_free_tlb() used to be implemented with pmd_free().
+
+Fixes: c5b27a889da9 ("sh/tlb: Convert SH to generic mmu_gather")
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Rich Felker <dalias@libc.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/so_txtime.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/sh/include/asm/pgalloc.h | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
-diff --git a/tools/testing/selftests/net/so_txtime.c b/tools/testing/selftests/net/so_txtime.c
-index ceaad78e96674..3155fbbf644b0 100644
---- a/tools/testing/selftests/net/so_txtime.c
-+++ b/tools/testing/selftests/net/so_txtime.c
-@@ -121,7 +121,7 @@ static bool do_recv_one(int fdr, struct timed_send *ts)
- 	if (rbuf[0] != ts->data)
- 		error(1, 0, "payload mismatch. expected %c", ts->data);
+diff --git a/arch/sh/include/asm/pgalloc.h b/arch/sh/include/asm/pgalloc.h
+index 22d968bfe9bb6..d770da3f8b6fb 100644
+--- a/arch/sh/include/asm/pgalloc.h
++++ b/arch/sh/include/asm/pgalloc.h
+@@ -12,6 +12,7 @@ extern void pgd_free(struct mm_struct *mm, pgd_t *pgd);
+ extern void pud_populate(struct mm_struct *mm, pud_t *pudp, pmd_t *pmd);
+ extern pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long address);
+ extern void pmd_free(struct mm_struct *mm, pmd_t *pmd);
++#define __pmd_free_tlb(tlb, pmdp, addr)		pmd_free((tlb)->mm, (pmdp))
+ #endif
  
--	if (labs(tstop - texpect) > cfg_variance_us)
-+	if (llabs(tstop - texpect) > cfg_variance_us)
- 		error(1, 0, "exceeds variance (%d us)", cfg_variance_us);
+ static inline void pmd_populate_kernel(struct mm_struct *mm, pmd_t *pmd,
+@@ -33,13 +34,4 @@ do {							\
+ 	tlb_remove_page((tlb), (pte));			\
+ } while (0)
  
- 	return false;
+-#if CONFIG_PGTABLE_LEVELS > 2
+-#define __pmd_free_tlb(tlb, pmdp, addr)			\
+-do {							\
+-	struct page *page = virt_to_page(pmdp);		\
+-	pgtable_pmd_page_dtor(page);			\
+-	tlb_remove_page((tlb), page);			\
+-} while (0);
+-#endif
+-
+ #endif /* __ASM_SH_PGALLOC_H */
 -- 
 2.25.1
 
