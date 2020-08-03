@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E33AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B5DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DCBA20781
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E19020775
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:34:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458090;
-	bh=L1F/6Fwfm3zp3QB1tFcx0gQ0c08nOJ8xHqOebrQQdds=;
+	s=default; t=1596458097;
+	bh=kqcywWGddGmtjDrZKdet1vVd3gNVviqsHGbJfram3ys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u+3RMwvyDfUbAG2w5hPg41wso+vDPo5eP6PypwQ/AESY8tnipQH+6EuznnqqR6qkA
-	 9A5C9/XMmp+EgaMBxFmOyP2G/D/oVewHNA1ZpXwpMhi9dYe/DOdVIm2TJ1cdTgLJbb
-	 3pyS8tH8l8G6AVhJ9Pto+nM0BkUSMe00OS2H4nO0=
+	b=pROM0TcvUKlIQ1T+t+Q7WM6Y0RnYCbOcmnnthxqKcXIhH0oBVmBtQCtKJaDMHPOOt
+	 V7CZy4kuRbL2Veb6ErcQ0lZvcP686lB2ii0aGqxJuO3hq07X5DMjmd0W6WQWc80Gd1
+	 U3mxWNaRE+8QfBKNS1kKgDbLFXqiFpdoMUPFMTn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729610AbgHCMet (ORCPT
+        id S1729225AbgHCMe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:34:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34828 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:34:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729574AbgHCMei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:34:38 -0400
+        id S1728665AbgHCMex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:34:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE79F204EC;
-        Mon,  3 Aug 2020 12:34:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D1C020775;
+        Mon,  3 Aug 2020 12:34:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596458077;
-        bh=L1F/6Fwfm3zp3QB1tFcx0gQ0c08nOJ8xHqOebrQQdds=;
+        s=default; t=1596458092;
+        bh=kqcywWGddGmtjDrZKdet1vVd3gNVviqsHGbJfram3ys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wvY5J1KUdqpDmbN+Q9FH8Zkqs4Owx+wD2ddWxiuFzjd7uZrCa8hmu/GGoc2nGpKjW
-         g2xxBwAJsEPeTxabBjyuFNRn3x3xMctrCW6BCwWcXZtDa2c5fgSjeYaAa1SbB5dbBE
-         SyP522yQjoB1mh7N5jos2MbTKuKB/UC8geuxvtnw=
+        b=NJM8hvc6ey0kP3+uvnYOKrNgZemzOI8m5M6d4nwaQjZehP0wKnkox4hwp67Mq5fTD
+         vIKEnMVtlkXAH2mt7GaYTTAVPu2xPaALXC55j7DkC4feWQBtvFRaP9kcyMlBK6oCGi
+         zhAVwGMsvWJ6e2X2YlGEY2eqKCpgIopnFpeF/csw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Woojung.Huh@microchip.com" <Woojung.Huh@microchip.com>,
-        Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Thomas Falcon <tlfalcon@linux.ibm.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 31/51] net: lan78xx: fix transfer-buffer memory leak
-Date:   Mon,  3 Aug 2020 14:20:16 +0200
-Message-Id: <20200803121851.040979097@linuxfoundation.org>
+Subject: [PATCH 4.14 35/51] ibmvnic: Fix IRQ mapping disposal in error path
+Date:   Mon,  3 Aug 2020 14:20:20 +0200
+Message-Id: <20200803121851.253105600@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121849.488233135@linuxfoundation.org>
 References: <20200803121849.488233135@linuxfoundation.org>
@@ -62,34 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Thomas Falcon <tlfalcon@linux.ibm.com>
 
-[ Upstream commit 63634aa679ba8b5e306ad0727120309ae6ba8a8e ]
+[ Upstream commit 27a2145d6f826d1fad9de06ac541b1016ced3427 ]
 
-The interrupt URB transfer-buffer was never freed on disconnect or after
-probe errors.
+RX queue IRQ mappings are disposed in both the TX IRQ and RX IRQ
+error paths. Fix this and dispose of TX IRQ mappings correctly in
+case of an error.
 
-Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
-Cc: Woojung.Huh@microchip.com <Woojung.Huh@microchip.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: ea22d51a7831 ("ibmvnic: simplify and improve driver probe function")
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/lan78xx.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/ibm/ibmvnic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 3be92fff89b1a..895f307979c82 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -3658,6 +3658,7 @@ static int lan78xx_probe(struct usb_interface *intf,
- 			usb_fill_int_urb(dev->urb_intr, dev->udev,
- 					 dev->pipe_intr, buf, maxp,
- 					 intr_complete, dev, period);
-+			dev->urb_intr->transfer_flags |= URB_FREE_BUFFER;
- 		}
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index 85c11dafb4cd9..8b8a0c4fbc993 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -2324,7 +2324,7 @@ req_rx_irq_failed:
+ req_tx_irq_failed:
+ 	for (j = 0; j < i; j++) {
+ 		free_irq(adapter->tx_scrq[j]->irq, adapter->tx_scrq[j]);
+-		irq_dispose_mapping(adapter->rx_scrq[j]->irq);
++		irq_dispose_mapping(adapter->tx_scrq[j]->irq);
  	}
- 
+ 	release_sub_crqs(adapter);
+ 	return rc;
 -- 
 2.25.1
 
