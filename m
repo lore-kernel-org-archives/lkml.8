@@ -2,327 +2,137 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D11A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 380F0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3EF5206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:59:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TQRhsXhY"
+	by mail.kernel.org (Postfix) with ESMTP id 52D3E206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:59:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729472AbgHCX66 (ORCPT
+        id S1729482AbgHCX7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 19:58:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729306AbgHCX6a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 19:58:30 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 065FAC0617A4
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 16:58:30 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id c16so20863203ils.8
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 16:58:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=OJszXsIKyYU0Uv7vZpHtfIjl+uNEiIAtSeERsmAU/hw=;
-        b=TQRhsXhY4PVSvvJrMKnsUTwjSX6hVQRoUZ0VJuAJiDcM+qVfEuaSjQCDzvtwgYPhao
-         A+WQF0I2E4iWUY4jzDX4Ld1zrYCn/oMHFXxOt4NlxjkWvFixSqgnrxdJxoVg4Ybq8SGN
-         Y0Fz0D7caOq0W4OTJcMywQLLmYpTRaI9JKbu0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OJszXsIKyYU0Uv7vZpHtfIjl+uNEiIAtSeERsmAU/hw=;
-        b=I0z+Eg9mc0h/zy7+cqX775ay+wW1Igt0Es6aiukov50bFcy1rudCnnzPOewk1k2OmM
-         TWp4DBoqiN8YqZYuGzJyrcblD685ZT6hVin0H8f/Cd2PtbbVHFs1XPMNV3U+cYH7pgMD
-         59Kq2GtgogVlur3voEIBfyVfEpIFRqettwg2sUoc3sS8qK0djTfNTT6hvnWbz+sE03xt
-         MIq7G/gjuiO3onmYyszbGfzzSHpfPcehShN+FcsoamjhBa1nWXKfabbi5FRPSEPFihne
-         5KIuy4MCv5POrEkmd6nXMK7yCrchODqmdDjAHia2YPwpWtZ+KFraB4Vm4JFDyl2MGot5
-         uODw==
-X-Gm-Message-State: AOAM531Hg8nR0nYJWzTg6ONfc5rum81zSj+X85vHis0AfwpwTjop2+ZJ
-        iZAeqlPSqYTuMMMHq/tGWgr3tF5Fz8WKjQ==
-X-Google-Smtp-Source: ABdhPJzhkMxtx+2V0/8hCJSJxi7ZdMVAiVUfkGHTruG1icoU3xo6IIEf8zcPO+pFUqGXgMsW2id+HA==
-X-Received: by 2002:a05:6e02:cac:: with SMTP id 12mr2023360ilg.175.1596499109328;
-        Mon, 03 Aug 2020 16:58:29 -0700 (PDT)
-Received: from derch.Home (97-122-92-59.hlrn.qwest.net. [97.122.92.59])
-        by smtp.gmail.com with ESMTPSA id x185sm11075992iof.41.2020.08.03.16.58.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 16:58:28 -0700 (PDT)
-From:   Daniel Campello <campello@chromium.org>
-To:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Daniel Campello <campello@chromium.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org
-Subject: [PATCH v5 10/15] iio: sx9310: Simplify error return handling
-Date:   Mon,  3 Aug 2020 17:58:10 -0600
-Message-Id: <20200803175559.v5.10.I071b118136317d3ff77fc598079f21e4ed0e347f@changeid>
-X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-In-Reply-To: <20200803235815.778997-1-campello@chromium.org>
-References: <20200803235815.778997-1-campello@chromium.org>
+        Mon, 3 Aug 2020 19:59:01 -0400
+Received: from smtp.gentoo.org ([140.211.166.183]:36514 "EHLO smtp.gentoo.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729462AbgHCX67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 19:58:59 -0400
+Subject: Re: arch/mips/include/asm/mach-ip27/topology.h:19:7: error: implicit
+ declaration of function 'hub_data'
+To:     Mike Rapoport <rppt@linux.ibm.com>,
+        kernel test robot <lkp@intel.com>
+Cc:     linux-kernel@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        linux-mips@vger.kernel.org
+References: <202008040108.xTarUIe8%lkp@intel.com>
+ <20200803194910.GC72435@linux.ibm.com>
+From:   Joshua Kinard <kumba@gentoo.org>
+Openpgp: preference=signencrypt
+Message-ID: <6a37284b-cbdb-36c8-b258-1a47e6c029ef@gentoo.org>
+Date:   Mon, 3 Aug 2020 19:58:54 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200803194910.GC72435@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Checks for non-zero return values to signal error conditions.
+On 8/3/2020 15:49, Mike Rapoport wrote:
+> Hi,
+> 
+> On Tue, Aug 04, 2020 at 01:39:14AM +0800, kernel test robot wrote:
+>> Hi Mike,
+>>
+>> FYI, the error/warning still remains.
+>>
+>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+>> head:   bcf876870b95592b52519ed4aafcf9d95999bc9c
+>> commit: 397dc00e249ec64e106374565575dd0eb7e25998 mips: sgi-ip27: switch from DISCONTIGMEM to SPARSEMEM
+>> date:   10 months ago
+>> config: mips-randconfig-r032-20200803 (attached as .config)
+>> compiler: mips64-linux-gcc (GCC) 9.3.0
+>> reproduce (this is a W=1 build):
+>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>>         chmod +x ~/bin/make.cross
+>>         git checkout 397dc00e249ec64e106374565575dd0eb7e25998
+>>         # save the attached .config to linux build tree
+>>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=mips 
+>>
+>> If you fix the issue, kindly add following tag as appropriate
+>> Reported-by: kernel test robot <lkp@intel.com>
+>>
+>> All errors (new ones prefixed by >>):
+>>
+>>    In file included from arch/mips/include/asm/topology.h:11,
+>>                     from include/linux/topology.h:36,
+>>                     from include/linux/gfp.h:9,
+>>                     from include/linux/slab.h:15,
+>>                     from include/linux/crypto.h:19,
+>>                     from include/crypto/hash.h:11,
+>>                     from include/linux/uio.h:10,
+>>                     from include/linux/socket.h:8,
+>>                     from include/linux/compat.h:15,
+>>                     from arch/mips/kernel/asm-offsets.c:12:
+>>    arch/mips/include/asm/mach-ip27/topology.h:25:39: error: 'MAX_COMPACT_NODES' undeclared here (not in a function)
+>>       25 | extern unsigned char __node_distances[MAX_COMPACT_NODES][MAX_COMPACT_NODES];
+>>          |                                       ^~~~~~~~~~~~~~~~~
+>>    include/linux/topology.h: In function 'numa_node_id':
+>>>> arch/mips/include/asm/mach-ip27/topology.h:16:27: error: implicit declaration of function 'cputonasid' [-Werror=implicit-function-declaration]
+>>       16 | #define cpu_to_node(cpu) (cputonasid(cpu))
+>>          |                           ^~~~~~~~~~
+> 
+> This happens when randconfig disables NUMA and has SGI_IP27 enabled.
+> Before switch from discontigmem to sparsemem, there always was
+> CONFIG_NEED_MULTIPLE_NODES=y because it was selected by DISCONTIGMEM.
+> Without DISCONTIGMEM it is possible to have SPARSEMEM without NUMA for
+> SGI_IP27 and as many things there rely on custom node definition, the
+> build breaks.
+> 
+> I don't remember small Origin or Onyx systems so I think it would be
+> reasonable to make SGI_IP27 to select NUMA. If the below patch makes
+> sense I'll resend it formally.
+> 
+> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+> index 6fee1a133e9d..a7e40bb1e5bc 100644
+> --- a/arch/mips/Kconfig
+> +++ b/arch/mips/Kconfig
+> @@ -678,6 +678,7 @@ config SGI_IP27
+>  	select SYS_SUPPORTS_NUMA
+>  	select SYS_SUPPORTS_SMP
+>  	select MIPS_L1_CACHE_SHIFT_7
+> +	select NUMA
+>  	help
+>  	  This are the SGI Origin 200, Origin 2000 and Onyx 2 Graphics
+>  	  workstations.  To compile a Linux kernel that runs on these, say Y
 
-Signed-off-by: Daniel Campello <campello@chromium.org>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
----
+NUMA is really only needed if you have more than one nodeboard for the Onyx2
+or Origin2000 systems.  If you just have a single Origin 200 system, you
+want to turn NUMA off.  I happen to have both a single Origin 200 system and
+an Onyx2 w/ two nodeboards.  Haven't fired them up recently on modern
+kernels, though.
 
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
+I can't think of a good workaround off the top of my head for this case.
+NUMA shouldn't hurt an Origin 200, but I recall Ralf once telling me it does
+introduce slowdown at some points due to checks for other nodes being done
+when we know there can't physically be any more (exception: dual Origin
+200's hooked together via CrossTown cables).
 
- drivers/iio/proximity/sx9310.c | 56 +++++++++++++++++-----------------
- 1 file changed, 28 insertions(+), 28 deletions(-)
-
-diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-index 87b2de0d7b55a3..adb707e2d79612 100644
---- a/drivers/iio/proximity/sx9310.c
-+++ b/drivers/iio/proximity/sx9310.c
-@@ -347,7 +347,7 @@ static int sx9310_read_prox_data(struct sx9310_data *data,
- 	int ret;
- 
- 	ret = regmap_write(data->regmap, SX9310_REG_SENSOR_SEL, chan->channel);
--	if (ret < 0)
-+	if (ret)
- 		return ret;
- 
- 	return regmap_bulk_read(data->regmap, chan->address, val, sizeof(*val));
-@@ -363,7 +363,7 @@ static int sx9310_wait_for_sample(struct sx9310_data *data)
- 	unsigned int val;
- 
- 	ret = regmap_read(data->regmap, SX9310_REG_PROX_CTRL0, &val);
--	if (ret < 0)
-+	if (ret)
- 		return ret;
- 
- 	val = FIELD_GET(SX9310_REG_PROX_CTRL0_SCANPERIOD_MASK, val);
-@@ -376,17 +376,17 @@ static int sx9310_wait_for_sample(struct sx9310_data *data)
- static int sx9310_read_proximity(struct sx9310_data *data,
- 				 const struct iio_chan_spec *chan, int *val)
- {
--	int ret = 0;
-+	int ret;
- 	__be16 rawval;
- 
- 	mutex_lock(&data->mutex);
- 
- 	ret = sx9310_get_read_channel(data, chan->channel);
--	if (ret < 0)
-+	if (ret)
- 		goto out;
- 
- 	ret = sx9310_enable_irq(data, SX9310_CONVDONE_IRQ);
--	if (ret < 0)
-+	if (ret)
- 		goto out_put_channel;
- 
- 	mutex_unlock(&data->mutex);
-@@ -400,22 +400,22 @@ static int sx9310_read_proximity(struct sx9310_data *data,
- 
- 	mutex_lock(&data->mutex);
- 
--	if (ret < 0)
-+	if (ret)
- 		goto out_disable_irq;
- 
- 	ret = sx9310_read_prox_data(data, chan, &rawval);
--	if (ret < 0)
-+	if (ret)
- 		goto out_disable_irq;
- 
- 	*val = sign_extend32(be16_to_cpu(rawval),
- 			     (chan->address == SX9310_REG_DIFF_MSB ? 11 : 15));
- 
- 	ret = sx9310_disable_irq(data, SX9310_CONVDONE_IRQ);
--	if (ret < 0)
-+	if (ret)
- 		goto out_put_channel;
- 
- 	ret = sx9310_put_read_channel(data, chan->channel);
--	if (ret < 0)
-+	if (ret)
- 		goto out;
- 
- 	mutex_unlock(&data->mutex);
-@@ -437,7 +437,7 @@ static int sx9310_read_samp_freq(struct sx9310_data *data, int *val, int *val2)
- 	unsigned int regval;
- 	int ret = regmap_read(data->regmap, SX9310_REG_PROX_CTRL0, &regval);
- 
--	if (ret < 0)
-+	if (ret)
- 		return ret;
- 
- 	regval = FIELD_GET(SX9310_REG_PROX_CTRL0_SCANPERIOD_MASK, regval);
-@@ -539,7 +539,7 @@ static void sx9310_push_events(struct iio_dev *indio_dev)
- 
- 	/* Read proximity state on all channels */
- 	ret = regmap_read(data->regmap, SX9310_REG_STAT0, &val);
--	if (ret < 0) {
-+	if (ret) {
- 		dev_err(&data->client->dev, "i2c transfer error in irq\n");
- 		return;
- 	}
-@@ -573,7 +573,7 @@ static irqreturn_t sx9310_irq_thread_handler(int irq, void *private)
- 	mutex_lock(&data->mutex);
- 
- 	ret = regmap_read(data->regmap, SX9310_REG_IRQ_SRC, &val);
--	if (ret < 0) {
-+	if (ret) {
- 		dev_err(&data->client->dev, "i2c transfer error in irq\n");
- 		goto out;
- 	}
-@@ -616,20 +616,20 @@ static int sx9310_write_event_config(struct iio_dev *indio_dev,
- 	mutex_lock(&data->mutex);
- 	if (state) {
- 		ret = sx9310_get_event_channel(data, chan->channel);
--		if (ret < 0)
-+		if (ret)
- 			goto out_unlock;
- 		if (!(data->chan_event & ~BIT(chan->channel))) {
- 			ret = sx9310_enable_irq(data, eventirq);
--			if (ret < 0)
-+			if (ret)
- 				sx9310_put_event_channel(data, chan->channel);
- 		}
- 	} else {
- 		ret = sx9310_put_event_channel(data, chan->channel);
--		if (ret < 0)
-+		if (ret)
- 			goto out_unlock;
- 		if (!data->chan_event) {
- 			ret = sx9310_disable_irq(data, eventirq);
--			if (ret < 0)
-+			if (ret)
- 				sx9310_get_event_channel(data, chan->channel);
- 		}
- 	}
-@@ -668,7 +668,7 @@ static int sx9310_set_trigger_state(struct iio_trigger *trig, bool state)
- 		ret = sx9310_enable_irq(data, SX9310_CONVDONE_IRQ);
- 	else if (!data->chan_read)
- 		ret = sx9310_disable_irq(data, SX9310_CONVDONE_IRQ);
--	if (ret < 0)
-+	if (ret)
- 		goto out;
- 
- 	data->trigger_enabled = state;
-@@ -697,7 +697,7 @@ static irqreturn_t sx9310_trigger_handler(int irq, void *private)
- 			 indio_dev->masklength) {
- 		ret = sx9310_read_prox_data(data, &indio_dev->channels[bit],
- 					    &val);
--		if (ret < 0)
-+		if (ret)
- 			goto out;
- 
- 		data->buffer.channels[i++] = val;
-@@ -804,13 +804,13 @@ static int sx9310_init_compensation(struct iio_dev *indio_dev)
- 	unsigned int ctrl0;
- 
- 	ret = regmap_read(data->regmap, SX9310_REG_PROX_CTRL0, &ctrl0);
--	if (ret < 0)
-+	if (ret)
- 		return ret;
- 
- 	/* run the compensation phase on all channels */
- 	ret = regmap_write(data->regmap, SX9310_REG_PROX_CTRL0,
- 			   ctrl0 | SX9310_REG_PROX_CTRL0_SENSOREN_MASK);
--	if (ret < 0)
-+	if (ret)
- 		return ret;
- 
- 	ret = regmap_read_poll_timeout(data->regmap, SX9310_REG_STAT1, val,
-@@ -836,21 +836,21 @@ static int sx9310_init_device(struct iio_dev *indio_dev)
- 	unsigned int i, val;
- 
- 	ret = regmap_write(data->regmap, SX9310_REG_RESET, SX9310_SOFT_RESET);
--	if (ret < 0)
-+	if (ret)
- 		return ret;
- 
- 	usleep_range(1000, 2000); /* power-up time is ~1ms. */
- 
- 	/* Clear reset interrupt state by reading SX9310_REG_IRQ_SRC. */
- 	ret = regmap_read(data->regmap, SX9310_REG_IRQ_SRC, &val);
--	if (ret < 0)
-+	if (ret)
- 		return ret;
- 
- 	/* Program some sane defaults. */
- 	for (i = 0; i < ARRAY_SIZE(sx9310_default_regs); i++) {
- 		initval = &sx9310_default_regs[i];
- 		ret = regmap_write(data->regmap, initval->reg, initval->def);
--		if (ret < 0)
-+		if (ret)
- 			return ret;
- 	}
- 
-@@ -904,14 +904,14 @@ static int sx9310_probe(struct i2c_client *client)
- 		return PTR_ERR(data->regmap);
- 
- 	ret = regmap_read(data->regmap, SX9310_REG_WHOAMI, &data->whoami);
--	if (ret < 0) {
-+	if (ret) {
- 		dev_err(&client->dev, "error in reading WHOAMI register: %d",
- 			ret);
- 		return ret;
- 	}
- 
- 	ret = sx9310_set_indio_dev_name(&client->dev, indio_dev, data->whoami);
--	if (ret < 0)
-+	if (ret)
- 		return ret;
- 
- 	ACPI_COMPANION_SET(&indio_dev->dev, ACPI_COMPANION(&client->dev));
-@@ -923,7 +923,7 @@ static int sx9310_probe(struct i2c_client *client)
- 	i2c_set_clientdata(client, indio_dev);
- 
- 	ret = sx9310_init_device(indio_dev);
--	if (ret < 0)
-+	if (ret)
- 		return ret;
- 
- 	if (client->irq) {
-@@ -932,7 +932,7 @@ static int sx9310_probe(struct i2c_client *client)
- 						sx9310_irq_thread_handler,
- 						IRQF_TRIGGER_LOW | IRQF_ONESHOT,
- 						"sx9310_event", indio_dev);
--		if (ret < 0)
-+		if (ret)
- 			return ret;
- 
- 		data->trig =
-@@ -954,7 +954,7 @@ static int sx9310_probe(struct i2c_client *client)
- 					      iio_pollfunc_store_time,
- 					      sx9310_trigger_handler,
- 					      &sx9310_buffer_setup_ops);
--	if (ret < 0)
-+	if (ret)
- 		return ret;
- 
- 	return devm_iio_device_register(&client->dev, indio_dev);
 -- 
-2.28.0.163.g6104cc2f0b6-goog
+Joshua Kinard
+Gentoo/MIPS
+kumba@gentoo.org
+rsa6144/5C63F4E3F5C6C943 2015-04-27
+177C 1972 1FB8 F254 BAD0 3E72 5C63 F4E3 F5C6 C943
 
+"The past tempts us, the present confuses us, the future frightens us.  And
+our lives slip away, moment by moment, lost in that vast, terrible in-between."
+
+--Emperor Turhan, Centauri Republic
