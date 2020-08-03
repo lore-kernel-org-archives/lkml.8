@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DE2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE341C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC17C206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB869206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:57:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596459424;
-	bh=rRQsBuWultFzeA0SwrZlU9xbZ20iKD/hOXZx30bdjho=;
+	s=default; t=1596459426;
+	bh=1NJdlySNwlZG7pancpbQGVvWZeWCVGv8qXRslt06aVQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FQbhs2fDRce1xj7icTos8mV3vJvJ7NFkuNvPT1Cz4I2d1filh7EHgkZAHGz7F4bZX
-	 tQxJ0cWptOFGpQpKfCy5TdvphKiTvCmmOdsaW6j06n2UN0RJTJiUickswqNhLRwtrI
-	 gHPIIQ2rII2jd8PGaT7K6C+qVSMn2pnCKdIPqdHo=
+	b=UOVxsCK4hmVFL0j0Pr7pptFy6h0NQBfuW4+KYAKrOZjrtxdPZ8jnfGdby7Un0S8M6
+	 RB2kN6LsLIErF0KjcqD3K32OAEKgMFJDvJyiO1v/lwhTIYxzzDTB4WXBvlbjjyiDNb
+	 WZJ0KTEK4AxHQ5Ukj+IC04JqM/q+dUMbamXtxeKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729713AbgHCM5E (ORCPT
+        id S1729725AbgHCM5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:57:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45124 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:57:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbgHCMVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:21:45 -0400
+        id S1726824AbgHCMVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:21:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E04F20738;
-        Mon,  3 Aug 2020 12:21:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6027B204EC;
+        Mon,  3 Aug 2020 12:21:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457304;
-        bh=rRQsBuWultFzeA0SwrZlU9xbZ20iKD/hOXZx30bdjho=;
+        s=default; t=1596457302;
+        bh=1NJdlySNwlZG7pancpbQGVvWZeWCVGv8qXRslt06aVQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w0Q8dgNb0b8QGI5JwDQY4jDyf6nPtFbMIstuxc5kOcMl6nmriZ3tpKQyzJNJwdI2d
-         yGneSo7mSWaWa/3ANcycmbV5PxP/Eps6sKXbk6Gx4Ao1VUzbtjhL53Cba6evmf0YtI
-         EXoImPcXE6TrRAsM7xaNIpfX11Yq4aqE5eNkVXHo=
+        b=HMSyV5mDykgdQaXvGi0p03+95dj0nYE/AG7D7AFiFuNjlb0JUUdn3X9px4seGVZ64
+         A/NbE961XEOwNpkMFjJ3uJ4q8if7QYAnH0EDBB4d/qvwwvO2/4TTjQHOL+NJyiOZE6
+         eC7bZAHhghw1gkN9A/RWq06z/Bs/SUoWZip5FZMc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Hancock <hancockrwd@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5.7 002/120] PCI/ASPM: Disable ASPM on ASMedia ASM1083/1085 PCIe-to-PCI bridge
-Date:   Mon,  3 Aug 2020 14:17:40 +0200
-Message-Id: <20200803121902.984796307@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        Suniel Mahesh <sunil@amarulasolutions.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 5.7 019/120] ARM: dts: imx6qdl-icore: Fix OTG_ID pin and sdcard detect
+Date:   Mon,  3 Aug 2020 14:17:57 +0200
+Message-Id: <20200803121903.786244511@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -59,68 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Hancock <hancockrwd@gmail.com>
+From: Michael Trimarchi <michael@amarulasolutions.com>
 
-commit b361663c5a40c8bc758b7f7f2239f7a192180e7c upstream.
+commit 4a601da92c2a782e5c022680d476104586b74994 upstream.
 
-Recently ASPM handling was changed to allow ASPM on PCIe-to-PCI/PCI-X
-bridges.  Unfortunately the ASMedia ASM1083/1085 PCIe to PCI bridge device
-doesn't seem to function properly with ASPM enabled.  On an Asus PRIME
-H270-PRO motherboard, it causes errors like these:
+The current pin muxing scheme muxes GPIO_1 pad for USB_OTG_ID
+because of which when card is inserted, usb otg is enumerated
+and the card is never detected.
 
-  pcieport 0000:00:1c.0: AER: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Transmitter ID)
-  pcieport 0000:00:1c.0: AER:   device [8086:a292] error status/mask=00003000/00002000
-  pcieport 0000:00:1c.0: AER:    [12] Timeout
-  pcieport 0000:00:1c.0: AER: Corrected error received: 0000:00:1c.0
-  pcieport 0000:00:1c.0: AER: can't find device of ID00e0
+[   64.492645] cfg80211: failed to load regulatory.db
+[   64.492657] imx-sdma 20ec000.sdma: external firmware not found, using ROM firmware
+[   76.343711] ci_hdrc ci_hdrc.0: EHCI Host Controller
+[   76.349742] ci_hdrc ci_hdrc.0: new USB bus registered, assigned bus number 2
+[   76.388862] ci_hdrc ci_hdrc.0: USB 2.0 started, EHCI 1.00
+[   76.396650] usb usb2: New USB device found, idVendor=1d6b, idProduct=0002, bcdDevice= 5.08
+[   76.405412] usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[   76.412763] usb usb2: Product: EHCI Host Controller
+[   76.417666] usb usb2: Manufacturer: Linux 5.8.0-rc1-next-20200618 ehci_hcd
+[   76.424623] usb usb2: SerialNumber: ci_hdrc.0
+[   76.431755] hub 2-0:1.0: USB hub found
+[   76.435862] hub 2-0:1.0: 1 port detected
 
-In addition to flooding the kernel log, this also causes the machine to
-wake up immediately after suspend is initiated.
+The TRM mentions GPIO_1 pad should be muxed/assigned for card detect
+and ENET_RX_ER pad for USB_OTG_ID for proper operation.
 
-The device advertises ASPM L0s and L1 support in the Link Capabilities
-register, but the ASMedia web page for ASM1083 [1] claims "No PCIe ASPM
-support".
+This patch fixes pin muxing as per TRM and is tested on a
+i.Core 1.5 MX6 DL SOM.
 
-Windows 10 (build 2004) enables L0s, but it also logs correctable PCIe
-errors.
+[   22.449165] mmc0: host does not support reading read-only switch, assuming write-enable
+[   22.459992] mmc0: new high speed SDHC card at address 0001
+[   22.469725] mmcblk0: mmc0:0001 EB1QT 29.8 GiB
+[   22.478856]  mmcblk0: p1 p2
 
-Add a quirk to disable ASPM for this device.
-
-[1] https://www.asmedia.com.tw/eng/e_show_products.php?cate_index=169&item=114
-
-[bhelgaas: commit log]
-Fixes: 66ff14e59e8a ("PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges")
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=208667
-Link: https://lore.kernel.org/r/20200722021803.17958-1-hancockrwd@gmail.com
-Signed-off-by: Robert Hancock <hancockrwd@gmail.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: 6df11287f7c9 ("ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual initial support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Michael Trimarchi <michael@amarulasolutions.com>
+Signed-off-by: Suniel Mahesh <sunil@amarulasolutions.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/quirks.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm/boot/dts/imx6qdl-icore.dtsi |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -2330,6 +2330,19 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_IN
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f4, quirk_disable_aspm_l0s);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1508, quirk_disable_aspm_l0s);
+--- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+@@ -397,7 +397,7 @@
  
-+static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
-+{
-+	pci_info(dev, "Disabling ASPM L0s/L1\n");
-+	pci_disable_link_state(dev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
-+}
-+
-+/*
-+ * ASM1083/1085 PCIe-PCI bridge devices cause AER timeout errors on the
-+ * upstream PCIe root port when ASPM is enabled. At least L0s mode is affected;
-+ * disable both L0s and L1 for now to be safe.
-+ */
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
-+
- /*
-  * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
-  * Link bit cleared after starting the link retrain process to allow this
+ 	pinctrl_usbotg: usbotggrp {
+ 		fsl,pins = <
+-			MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
++			MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID 0x17059
+ 		>;
+ 	};
+ 
+@@ -409,6 +409,7 @@
+ 			MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x17070
+ 			MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x17070
+ 			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x17070
++			MX6QDL_PAD_GPIO_1__GPIO1_IO01  0x1b0b0
+ 		>;
+ 	};
+ 
 
 
