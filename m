@@ -2,169 +2,156 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 918D5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BDFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0344222BF3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:14:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LXLalZvP"
+	by mail.kernel.org (Postfix) with ESMTP id B31ED20792
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:17:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728577AbgHCSO2 (ORCPT
+        id S1728064AbgHCSRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 14:14:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39644 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgHCSO2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 14:14:28 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB37BC06174A;
-        Mon,  3 Aug 2020 11:14:27 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id 88so35048640wrh.3;
-        Mon, 03 Aug 2020 11:14:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=xYmgJ9q6WmAiysmjl1lzv94xYZ4lfXJx4yvPnQA+3M0=;
-        b=LXLalZvPCz2jqU161ucRPSMW06oGrqpvKoH27x0ATSl192G+i8fP5C3Nl9qTtXQ4B9
-         +KLA1W4n4lhfeer4dMuQq8d5LvW13W3GQvCD8TIOtUQJdVFqWajJOiS8wMMEi0fRZBJY
-         B4HMmbnZEHUtKaeMO/UOzqX+nG/czudlreN0nF7GraHW6HQ1XmgOXaatRlgUULLl9q4l
-         g6Kd5SSb8uxifr7WywcN1UwA4Af3DUcLuhUY2Bn73oRXnh+HKa4Oct2bON2rpsJQ6Qxo
-         wcm3ZWrbQ6DnPRxyAdn1cZUcVYVPVBnAWqyS7ROW9iq9XuK0N7qIIBFJYYDv9tGG1GA5
-         AuAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=xYmgJ9q6WmAiysmjl1lzv94xYZ4lfXJx4yvPnQA+3M0=;
-        b=Kj9wKYTiMjvO56ziX9Jtqa5YNhHOI/66qTELB7ZpVkiYy+bWNNfknl0urrugSe4b/a
-         3/RVAhOnt0UJ0ENRh/XuqUljMiO0hVe0/0+cJzQ488QLdg0DjEXi5oZzAyi3ASq5WKow
-         T52WTORPJPtWp5kKeUnoJIhfrYfiS9pxJCPByIHntXQrg+4Sq4A0Z8KX+hL/aMwxwn/q
-         8rkfA/yu8ly3J6K2uJRPs2cWwbwmXzjYekYlkNfCU9HmoIV7nuSvrtGZfr2rzLEri7nL
-         AMDrCQJ2OFrGfci0kWw6tCMxkKQfNOWHFwJcFAuqnkXQlGzQyii2TLDXMq0Qh0b5DJVV
-         +SUw==
-X-Gm-Message-State: AOAM532S1cKbNeC4fyIkh+H+6K6odZcUQtAuHpnbtzMxxc2FWZNsbown
-        RyqdSv9pDAIGzKTqbjzLdRg=
-X-Google-Smtp-Source: ABdhPJyMr45lC/evGy9WXmIvt25trODkkhEKUYG93zlPxp2YZMwv0I2e0z1BFB7LEAnQc7E9RBIBSQ==
-X-Received: by 2002:a05:6000:18a:: with SMTP id p10mr14970147wrx.33.1596478466650;
-        Mon, 03 Aug 2020 11:14:26 -0700 (PDT)
-Received: from ubuntu18_1.cisco.com ([173.38.220.35])
-        by smtp.gmail.com with ESMTPSA id p25sm549060wma.39.2020.08.03.11.14.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 11:14:26 -0700 (PDT)
-From:   Ahmed Abdelsalam <ahabdels@gmail.com>
-To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrea.mayer@uniroma2.it
-Cc:     Ahmed Abdelsalam <ahabdels@gmail.com>
-Subject: [net-next v2] seg6: using DSCP of inner IPv4 packets
-Date:   Mon,  3 Aug 2020 18:14:17 +0000
-Message-Id: <20200803181417.1320-1-ahabdels@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 3 Aug 2020 14:17:33 -0400
+Received: from mga12.intel.com ([192.55.52.136]:64254 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbgHCSRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 14:17:32 -0400
+IronPort-SDR: loAs93nzpjOkEnHDRT2GmaePKOyORBLTbtHOopOwbcRwogaw3wFNo1uxlSx1+Fq8iG0e8ux7fd
+ GsC3Z9InH7rQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="131747474"
+X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
+   d="scan'208";a="131747474"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 11:17:31 -0700
+IronPort-SDR: qYwWbSdY2czxF1LXhZWr+jtXPPNYNiq2mfY0YwJjC7Ot1FOGTWET09qrJQ/cqYNEbRl5rrR0bK
+ qMcClRYrJTgg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
+   d="scan'208";a="492008119"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.160])
+  by fmsmga006.fm.intel.com with ESMTP; 03 Aug 2020 11:17:31 -0700
+Date:   Mon, 3 Aug 2020 11:17:31 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH v3 2/4] KVM: SVM: Add GHCB definitions
+Message-ID: <20200803181731.GF3151@linux.intel.com>
+References: <20200803122708.5942-1-joro@8bytes.org>
+ <20200803122708.5942-3-joro@8bytes.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200803122708.5942-3-joro@8bytes.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allows copying the DSCP from inner IPv4 header to the
-outer IPv6 header, when doing SRv6 Encapsulation.
+On Mon, Aug 03, 2020 at 02:27:06PM +0200, Joerg Roedel wrote:
+> From: Tom Lendacky <thomas.lendacky@amd.com>
+> 
+> Extend the vmcb_safe_area with SEV-ES fields and add a new
+> 'struct ghcb' which will be used for guest-hypervisor communication.
+> 
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  arch/x86/include/asm/svm.h | 45 +++++++++++++++++++++++++++++++++++++-
+>  arch/x86/kvm/svm/svm.c     |  2 ++
+>  2 files changed, 46 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
+> index 8a1f5382a4ea..9a3e0b802716 100644
+> --- a/arch/x86/include/asm/svm.h
+> +++ b/arch/x86/include/asm/svm.h
+> @@ -200,13 +200,56 @@ struct __attribute__ ((__packed__)) vmcb_save_area {
+>  	u64 br_to;
+>  	u64 last_excp_from;
+>  	u64 last_excp_to;
+> +
+> +	/*
+> +	 * The following part of the save area is valid only for
+> +	 * SEV-ES guests when referenced through the GHCB.
+> +	 */
+> +	u8 reserved_7[104];
+> +	u64 reserved_8;		/* rax already available at 0x01f8 */
+> +	u64 rcx;
+> +	u64 rdx;
+> +	u64 rbx;
+> +	u64 reserved_9;		/* rsp already available at 0x01d8 */
+> +	u64 rbp;
+> +	u64 rsi;
+> +	u64 rdi;
+> +	u64 r8;
+> +	u64 r9;
+> +	u64 r10;
+> +	u64 r11;
+> +	u64 r12;
+> +	u64 r13;
+> +	u64 r14;
+> +	u64 r15;
+> +	u8 reserved_10[16];
+> +	u64 sw_exit_code;
+> +	u64 sw_exit_info_1;
+> +	u64 sw_exit_info_2;
+> +	u64 sw_scratch;
+> +	u8 reserved_11[56];
+> +	u64 xcr0;
+> +	u8 valid_bitmap[16];
+> +	u64 x87_state_gpa;
+> +};
+> +
+> +struct __attribute__ ((__packed__)) ghcb {
 
-This allows forwarding packet across the SRv6 fabric based on their
-original traffic class.
+IMO this should use __packed straightaway, but I can also appreciate the
+desire for consistency within a given snapshot in time so I'm a-ok if you
+want to keep it as is.
 
-Signed-off-by: Ahmed Abdelsalam <ahabdels@gmail.com>
----
- net/ipv6/seg6_iptunnel.c | 37 ++++++++++++++++++-------------------
- 1 file changed, 18 insertions(+), 19 deletions(-)
-
-diff --git a/net/ipv6/seg6_iptunnel.c b/net/ipv6/seg6_iptunnel.c
-index e0e9f48ab14f..79abbfc95739 100644
---- a/net/ipv6/seg6_iptunnel.c
-+++ b/net/ipv6/seg6_iptunnel.c
-@@ -87,8 +87,7 @@ static void set_tun_src(struct net *net, struct net_device *dev,
- }
- 
- /* Compute flowlabel for outer IPv6 header */
--static __be32 seg6_make_flowlabel(struct net *net, struct sk_buff *skb,
--				  struct ipv6hdr *inner_hdr)
-+static __be32 seg6_make_flowlabel(struct net *net, struct sk_buff *skb)
- {
- 	int do_flowlabel = net->ipv6.sysctl.seg6_flowlabel;
- 	__be32 flowlabel = 0;
-@@ -99,7 +98,7 @@ static __be32 seg6_make_flowlabel(struct net *net, struct sk_buff *skb,
- 		hash = rol32(hash, 16);
- 		flowlabel = (__force __be32)hash & IPV6_FLOWLABEL_MASK;
- 	} else if (!do_flowlabel && skb->protocol == htons(ETH_P_IPV6)) {
--		flowlabel = ip6_flowlabel(inner_hdr);
-+		flowlabel = ip6_flowlabel(ipv6_hdr(skb));
- 	}
- 	return flowlabel;
- }
-@@ -109,10 +108,10 @@ int seg6_do_srh_encap(struct sk_buff *skb, struct ipv6_sr_hdr *osrh, int proto)
- {
- 	struct dst_entry *dst = skb_dst(skb);
- 	struct net *net = dev_net(dst->dev);
--	struct ipv6hdr *hdr, *inner_hdr;
- 	struct ipv6_sr_hdr *isrh;
- 	int hdrlen, tot_len, err;
--	__be32 flowlabel;
-+	struct ipv6hdr *hdr;
-+	__be32 flowlabel, tos = 0;
- 
- 	hdrlen = (osrh->hdrlen + 1) << 3;
- 	tot_len = hdrlen + sizeof(*hdr);
-@@ -121,31 +120,31 @@ int seg6_do_srh_encap(struct sk_buff *skb, struct ipv6_sr_hdr *osrh, int proto)
- 	if (unlikely(err))
- 		return err;
- 
--	inner_hdr = ipv6_hdr(skb);
--	flowlabel = seg6_make_flowlabel(net, skb, inner_hdr);
--
--	skb_push(skb, tot_len);
--	skb_reset_network_header(skb);
--	skb_mac_header_rebuild(skb);
--	hdr = ipv6_hdr(skb);
--
- 	/* inherit tc, flowlabel and hlim
- 	 * hlim will be decremented in ip6_forward() afterwards and
- 	 * decapsulation will overwrite inner hlim with outer hlim
- 	 */
- 
-+	flowlabel = seg6_make_flowlabel(net, skb);
-+
- 	if (skb->protocol == htons(ETH_P_IPV6)) {
--		ip6_flow_hdr(hdr, ip6_tclass(ip6_flowinfo(inner_hdr)),
--			     flowlabel);
--		hdr->hop_limit = inner_hdr->hop_limit;
-+		tos = ip6_tclass(ip6_flowinfo(ipv6_hdr(skb)));
-+	} else if (skb->protocol == htons(ETH_P_IP)) {
-+		tos = ip_hdr(skb)->tos;
-+		memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
- 	} else {
--		ip6_flow_hdr(hdr, 0, flowlabel);
--		hdr->hop_limit = ip6_dst_hoplimit(skb_dst(skb));
--
- 		memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
- 	}
- 
-+	skb_push(skb, tot_len);
-+	skb_reset_network_header(skb);
-+	skb_mac_header_rebuild(skb);
-+	hdr = ipv6_hdr(skb);
-+
-+	ip6_flow_hdr(hdr, tos, flowlabel);
-+
- 	hdr->nexthdr = NEXTHDR_ROUTING;
-+	hdr->hop_limit = ip6_dst_hoplimit(skb_dst(skb));
- 
- 	isrh = (void *)hdr + sizeof(*hdr);
- 	memcpy(isrh, osrh, hdrlen);
--- 
-2.17.1
-
+> +	struct vmcb_save_area save;
+> +	u8 reserved_save[2048 - sizeof(struct vmcb_save_area)];
+> +
+> +	u8 shared_buffer[2032];
+> +
+> +	u8 reserved_1[10];
+> +	u16 protocol_version;	/* negotiated SEV-ES/GHCB protocol version */
+> +	u32 ghcb_usage;
+>  };
+>  
+>  
+>  static inline void __unused_size_checks(void)
+>  {
+> -	BUILD_BUG_ON(sizeof(struct vmcb_save_area) != 0x298);
+> +	BUILD_BUG_ON(sizeof(struct vmcb_save_area) != 1032);
+>  	BUILD_BUG_ON(sizeof(struct vmcb_control_area) != 256);
+> +	BUILD_BUG_ON(sizeof(struct ghcb) != 4096);
+>  }
+>  
+>  struct __attribute__ ((__packed__)) vmcb {
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index 783330d0e7b8..953cf947f022 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -4161,6 +4161,8 @@ static struct kvm_x86_init_ops svm_init_ops __initdata = {
+>  
+>  static int __init svm_init(void)
+>  {
+> +	__unused_size_checks();
+> +
+>  	return kvm_init(&svm_init_ops, sizeof(struct vcpu_svm),
+>  			__alignof__(struct vcpu_svm), THIS_MODULE);
+>  }
+> -- 
+> 2.17.1
+> 
