@@ -2,108 +2,116 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCCEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6684C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BDC5207FB
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B19E220825
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:21:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="albycSFN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ygz3a3qn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbgHCOTC (ORCPT
+        id S1726643AbgHCOVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 10:19:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59644 "EHLO
+        Mon, 3 Aug 2020 10:21:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726865AbgHCOTA (ORCPT
+        with ESMTP id S1726130AbgHCOVB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 10:19:00 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2C24C061756
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 07:18:59 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id d190so14466736wmd.4
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 07:18:59 -0700 (PDT)
+        Mon, 3 Aug 2020 10:21:01 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B05CC06174A;
+        Mon,  3 Aug 2020 07:21:01 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id l4so38728153ejd.13;
+        Mon, 03 Aug 2020 07:21:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Y/qA8gSb5L1aedrAB+cnwrMt5FiS/mFTvYHuJN7H++M=;
-        b=albycSFNZC8kfgH16k++F8/X0yCQh2L6nvlv0z/riHZdTBBLoXZIgUNGEJQJQXAWvP
-         tpnajBTPb2Hx4MZG3B3ErbNiHPfmd8VavN/W+lWdxErdIktJY8VNRRsCcl1xDan0/98r
-         lBLcz6Pr6HXl6waYqdbPaDrg+d64cAULpiD6puY9fAzRH1NgTNfQx/0fCYDGp/ncaEVe
-         vTl+aMq27RjcFqaC7O0WV9P2RiNQp+RQFbK+y9VDuiBRY+h+NpniwBnXMZYrdAq+6mEs
-         hDSXC1AvyoajqVcJDGSBjXwxJxLJ5F5zyyydA8w4XPdouOKsowFQMhW6SYqEqIJMfr0N
-         4MIg==
+        bh=l4JGanD/pW6UD3jQR56CF7ASLdVGtCCuUbSXWF5HYQw=;
+        b=Ygz3a3qnAKkYch2/zr6cBwVXYilIRFfVorb1udYyl7PL/X4xF/xeiui2wdLIVv8s5q
+         1DkNQWmFH1BKAyOdoZzVC2389PVP4BS9W2fwDH+E5NXzYkS+Y5zoe6UT6UGqQAZHmt2Z
+         zvipM6bawgFRe9vn4KCtj3YbGcR2MIqyX4JJWyQE0s8YmXZA5kJa8VBdFPR3SSUXXhuq
+         vEeMSJYB92m7NsKh2M5vmc8hYCB7qATy3DeezL6G123YIIjYSETixU1StrKofGmuHnKg
+         CjgexocKUy206wyl7i+vh11OLSEw5YNZubAEP+lC7o/9+RsC2V6ox0vkBTOj7rWLxsd+
+         cxtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=Y/qA8gSb5L1aedrAB+cnwrMt5FiS/mFTvYHuJN7H++M=;
-        b=MNlKKK2g8ufvb9ax7343sv1AE5/HURe7J4NfYPlqh6A4cRcTqEG8ZTssnFIG1oBEek
-         3NA5onqIqRs+IsE5GFBdUs/A6+vqpr+FQS9QHY7XCXYlIk064VCvnZ+SfV0/DQ0GYk4+
-         1O30z+QOLKH0Gknr9EMkHeutvFoOjQ2Y14vXlZnx9HO2zVc4D0zJAUMSRpJKGP+GburO
-         dCUtObldBgYSP/N+YGdK7CKZQq1AmcuMzxYb7P8Untgsy2sEh5agcDA02GFdYyIi8xng
-         81PWiFiBdocyPFFM+cAsck5SgeUywvpD4yVRvQqwCCRi2JHTG6O2gySzS3aO0FaoVudH
-         qt+w==
-X-Gm-Message-State: AOAM5333V29s0dYnJATffLSCGp2Mu8d7hcc5QZhjXCDIvFm5y6pasapK
-        PrDi2Xi++vDuDVwycasj9sZGqw==
-X-Google-Smtp-Source: ABdhPJzbV6bSqxztQ0RcDqfomj9eHW6XIBQxGt/q6sEjUvi4WKNFFkRXdU/aVORDBtacwX1oL8hqYQ==
-X-Received: by 2002:a1c:e382:: with SMTP id a124mr235177wmh.11.1596464338292;
-        Mon, 03 Aug 2020 07:18:58 -0700 (PDT)
-Received: from starbuck.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id t202sm24870600wmt.20.2020.08.03.07.18.57
+        bh=l4JGanD/pW6UD3jQR56CF7ASLdVGtCCuUbSXWF5HYQw=;
+        b=TACnOql0zcBQYja12hiHIHKJtwz4dR222XcA5Ur+EbsIzqMiBrKCS8Hlf4VzoLJ9pN
+         tQJXqJAVlJHDHV8C4+jZz9lvnopPPm3qufSMeo6hDoav2gGF8GGJCGvTlatRnLl0CdVR
+         Subw33r8JjQIQbFN8ku+4lUMFNwsNS9ISQ7WypgI4PeyBOLh3FaXl+kyLzPt5c8a1Um0
+         9uR4mvrSqlGDJZ8rdPjmW+fXGXZ7FjD809XQ+z/JIF6c0t9FKzbGaFxFT00wKuUO5CB2
+         mGFiPZsJi4wOWjf3spdI50nOAeEEsj3IgPLQsCARzN5mlUPHHz5OeSQ8EcafZ5wH4bxu
+         ZFkg==
+X-Gm-Message-State: AOAM533ggdAFY+IjTEaliB+/HKeZEG5NkTvMBqq2d5CDbPCJ56+HiAPk
+        nACHyoDV1ERF8K+Gf+DDAK8=
+X-Google-Smtp-Source: ABdhPJzI0nkGIfncrdAXqQp6WyKC3qlSJLVSoeH6iy2jkHamZLNShm17dVZ1nl2jvuGpmWwxeuEsQw==
+X-Received: by 2002:a17:906:1392:: with SMTP id f18mr16394990ejc.521.1596464459760;
+        Mon, 03 Aug 2020 07:20:59 -0700 (PDT)
+Received: from localhost.localdomain ([86.121.43.21])
+        by smtp.gmail.com with ESMTPSA id p3sm15608432edx.75.2020.08.03.07.20.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 07:18:57 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: meson: vim3: correct led polarity
-Date:   Mon,  3 Aug 2020 16:18:50 +0200
-Message-Id: <20200803141850.172704-1-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.25.4
+        Mon, 03 Aug 2020 07:20:58 -0700 (PDT)
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-actions@lists.infradead.org
+Subject: [PATCH v2 0/3] Add Actions Semi S500 pinctrl support
+Date:   Mon,  3 Aug 2020 17:20:53 +0300
+Message-Id: <cover.1596461275.git.cristian.ciocaltea@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LEDs on the vim3 are active when the gpio is high, not low.
+This patchset adds pinctrl support for Actions Semi S500 SoC.
 
-Fixes: c6d29c66e582 ("arm64: dts: meson-g12b-khadas-vim3: add initial device-tree")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Pinmux functions are only accessible for pin groups while pinconf
+parameters are available for both pin groups and individual pins.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-index 4510a63b0006..9e2995dc144b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-khadas-vim3.dtsi
-@@ -70,13 +70,13 @@ leds {
- 
- 		led-white {
- 			label = "vim3:white:sys";
--			gpios = <&gpio_ao GPIOAO_4 GPIO_ACTIVE_LOW>;
-+			gpios = <&gpio_ao GPIOAO_4 GPIO_ACTIVE_HIGH>;
- 			linux,default-trigger = "heartbeat";
- 		};
- 
- 		led-red {
- 			label = "vim3:red";
--			gpios = <&gpio_expander 5 GPIO_ACTIVE_LOW>;
-+			gpios = <&gpio_expander 5 GPIO_ACTIVE_HIGH>;
- 		};
- 	};
- 
+The pinctrl driver has been verified using RoseapplePi, the SBC for
+which an initial support has been provided via:
+https://lore.kernel.org/lkml/cover.1592123160.git.cristian.ciocaltea@gmail.com/
+
+The DTS related changes, including the required clock support, will be
+available in the upcoming patch series.
+
+Thanks,
+Cristi
+
+Changes in v2:
+ - Updated the pinctrl bindings according to Rob's feedback
+ - Set the pinctrl entry in MAINTAINERS according to Mani's suggestion
+ - Rebased patches on v5.8
+
+Cristian Ciocaltea (3):
+  dt-bindings: pinctrl: Add bindings for Actions S500 SoC
+  pinctrl: actions: Add Actions S500 pinctrl driver
+  MAINTAINERS: Set pinctrl binding entry for all Actions Semi Owl SoCs
+
+ .../pinctrl/actions,s500-pinctrl.yaml         |  240 +++
+ MAINTAINERS                                   |    2 +-
+ drivers/pinctrl/actions/Kconfig               |    6 +
+ drivers/pinctrl/actions/Makefile              |    1 +
+ drivers/pinctrl/actions/pinctrl-s500.c        | 1727 +++++++++++++++++
+ 5 files changed, 1975 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/actions/pinctrl-s500.c
+
 -- 
-2.25.4
+2.28.0
 
