@@ -2,52 +2,52 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB51C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B76A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1FB207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92EC7207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457577;
-	bh=f5pWZnTXWdMeH/r/P/ygyxFUvVXk7VoBwu1GlAY/Sms=;
+	s=default; t=1596457579;
+	bh=5zHcSLLgbxN6DVs+tk1bx38p2/VIMIpLVoilitKcpfc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vo5z0yx3Hm1BBNkTB/WQRh3zYq6qQFMBdEiBEmInBlLa3E35k1Oz8HXuCLOueK/fD
-	 Kf8p397hva4558TSyZ5D/1hkltdKZMdlArRs9zKY//h3cSJJRgnJVQyPhiMh7l1D1C
-	 wOg7a55BkVSMl4KNzM1EPhPvXmwHyfProGDvYMwM=
+	b=oSAAX9dvIB/ieAymzTGLVyGy95NUIy9MjKSfZJ8iED+CnwXzZCZB7FehMxbngrXn3
+	 GrwuOsppNB5TpAuQ8dnj7EqhBcLYazERRqZRaJ/T8RzWkJ2cZgneavElmJyBs/6uro
+	 Gj2iAOkF3CXtURoI9QlZ884XIX4gpeIFiXjHe5iQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgHCM0R (ORCPT
+        id S1728338AbgHCM0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:26:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51430 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:26:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728324AbgHCM0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:26:14 -0400
+        id S1728327AbgHCM0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:26:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A5D4207DF;
-        Mon,  3 Aug 2020 12:26:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01A1820829;
+        Mon,  3 Aug 2020 12:26:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457572;
-        bh=f5pWZnTXWdMeH/r/P/ygyxFUvVXk7VoBwu1GlAY/Sms=;
+        s=default; t=1596457575;
+        bh=5zHcSLLgbxN6DVs+tk1bx38p2/VIMIpLVoilitKcpfc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vqTLOlzT5axqMTXb2L7NpVvNMba8LbJ1h5zYrO/AquN5vEtRwyl2pvOT1P1eE/L6a
-         QxUFVTI8xrggToIZqGvtuEFtoyChmoK2b6fO2RmwRrtRG2XTu0L72kerOuqkWQJKT2
-         8kwqOuqCMoK7PF97ijd1IruMe+aJK69FbA6LkqBk=
+        b=jt/I3u/gxlHyk58guhmCmHIehf8YRZ96wLRRfDaq+innZzwl7Pnh2vIYAXAevhesH
+         +UlotzoHsG+QT9V+68z+jhAjPIydY37Rk2R4soBzkHaiUWf0a+RSEx9M2W4s/dhBL3
+         4Zj9x1NpPysP2e63BvifMlXiUWHEX349CUxYqc5w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Atish Patra <atish.patra@wdc.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 116/120] riscv: Parse all memory blocks to remove unusable memory
-Date:   Mon,  3 Aug 2020 14:19:34 +0200
-Message-Id: <20200803121908.549697771@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Quentin Perret <qperret@google.com>
+Subject: [PATCH 5.7 117/120] KVM: arm64: Dont inherit exec permission across page-table levels
+Date:   Mon,  3 Aug 2020 14:19:35 +0200
+Message-Id: <20200803121908.590749090@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -60,75 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Atish Patra <atish.patra@wdc.com>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit fa5a198359053c8e21dcc2b39c0e13871059bc9f ]
+commit b757b47a2fcba584d4a32fd7ee68faca510ab96f upstream.
 
-Currently, maximum physical memory allowed is equal to -PAGE_OFFSET.
-That's why we remove any memory blocks spanning beyond that size. However,
-it is done only for memblock containing linux kernel which will not work
-if there are multiple memblocks.
+If a stage-2 page-table contains an executable, read-only mapping at the
+pte level (e.g. due to dirty logging being enabled), a subsequent write
+fault to the same page which tries to install a larger block mapping
+(e.g. due to dirty logging having been disabled) will erroneously inherit
+the exec permission and consequently skip I-cache invalidation for the
+rest of the block.
 
-Process all memory blocks to figure out how much memory needs to be removed
-and remove at the end instead of updating the memblock list in place.
+Ensure that exec permission is only inherited by write faults when the
+new mapping is of the same size as the existing one. A subsequent
+instruction abort will result in I-cache invalidation for the entire
+block mapping.
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Tested-by: Quentin Perret <qperret@google.com>
+Reviewed-by: Quentin Perret <qperret@google.com>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200723101714.15873-1-will@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/riscv/mm/init.c | 31 +++++++++++++++++--------------
- 1 file changed, 17 insertions(+), 14 deletions(-)
+ virt/kvm/arm/mmu.c |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index af8926777567f..115fb9245f160 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -146,26 +146,29 @@ void __init setup_bootmem(void)
+--- a/virt/kvm/arm/mmu.c
++++ b/virt/kvm/arm/mmu.c
+@@ -1198,7 +1198,7 @@ static bool stage2_get_leaf_entry(struct
+ 	return true;
+ }
+ 
+-static bool stage2_is_exec(struct kvm *kvm, phys_addr_t addr)
++static bool stage2_is_exec(struct kvm *kvm, phys_addr_t addr, unsigned long sz)
  {
- 	struct memblock_region *reg;
- 	phys_addr_t mem_size = 0;
-+	phys_addr_t total_mem = 0;
-+	phys_addr_t mem_start, end = 0;
- 	phys_addr_t vmlinux_end = __pa_symbol(&_end);
- 	phys_addr_t vmlinux_start = __pa_symbol(&_start);
+ 	pud_t *pudp;
+ 	pmd_t *pmdp;
+@@ -1210,11 +1210,11 @@ static bool stage2_is_exec(struct kvm *k
+ 		return false;
  
- 	/* Find the memory region containing the kernel */
- 	for_each_memblock(memory, reg) {
--		phys_addr_t end = reg->base + reg->size;
--
--		if (reg->base <= vmlinux_start && vmlinux_end <= end) {
--			mem_size = min(reg->size, (phys_addr_t)-PAGE_OFFSET);
--
--			/*
--			 * Remove memblock from the end of usable area to the
--			 * end of region
--			 */
--			if (reg->base + mem_size < end)
--				memblock_remove(reg->base + mem_size,
--						end - reg->base - mem_size);
--		}
-+		end = reg->base + reg->size;
-+		if (!total_mem)
-+			mem_start = reg->base;
-+		if (reg->base <= vmlinux_start && vmlinux_end <= end)
-+			BUG_ON(reg->size == 0);
-+		total_mem = total_mem + reg->size;
- 	}
--	BUG_ON(mem_size == 0);
-+
-+	/*
-+	 * Remove memblock from the end of usable area to the
-+	 * end of region
-+	 */
-+	mem_size = min(total_mem, (phys_addr_t)-PAGE_OFFSET);
-+	if (mem_start + mem_size < end)
-+		memblock_remove(mem_start + mem_size,
-+				end - mem_start - mem_size);
+ 	if (pudp)
+-		return kvm_s2pud_exec(pudp);
++		return sz <= PUD_SIZE && kvm_s2pud_exec(pudp);
+ 	else if (pmdp)
+-		return kvm_s2pmd_exec(pmdp);
++		return sz <= PMD_SIZE && kvm_s2pmd_exec(pmdp);
+ 	else
+-		return kvm_s2pte_exec(ptep);
++		return sz == PAGE_SIZE && kvm_s2pte_exec(ptep);
+ }
  
- 	/* Reserve from the start of the kernel to the end of the kernel */
- 	memblock_reserve(vmlinux_start, vmlinux_end - vmlinux_start);
--- 
-2.25.1
-
+ static int stage2_set_pte(struct kvm *kvm, struct kvm_mmu_memory_cache *cache,
+@@ -1801,7 +1801,8 @@ static int user_mem_abort(struct kvm_vcp
+ 	 * execute permissions, and we preserve whatever we have.
+ 	 */
+ 	needs_exec = exec_fault ||
+-		(fault_status == FSC_PERM && stage2_is_exec(kvm, fault_ipa));
++		(fault_status == FSC_PERM &&
++		 stage2_is_exec(kvm, fault_ipa, vma_pagesize));
+ 
+ 	if (vma_pagesize == PUD_SIZE) {
+ 		pud_t new_pud = kvm_pfn_pud(pfn, mem_type);
 
 
