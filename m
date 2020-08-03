@@ -2,130 +2,150 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E7EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB01C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6367E207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BC56207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:04:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="lcZFQ/uh"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="zOuBCb8U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgHCUDD (ORCPT
+        id S1728152AbgHCUEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 16:03:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56394 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728229AbgHCUDC (ORCPT
+        Mon, 3 Aug 2020 16:04:55 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:59540 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726693AbgHCUEz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 16:03:02 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49A59C06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 13:03:02 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id w9so29201897qts.6
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 13:03:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6A/5RoJHIBxD93DNQBku4nNngBquUzm6++SOMVJrgBM=;
-        b=lcZFQ/uh69bDfLnH4QjtClbnbC9Wijo0Q/P/gHCCdM3fj9wpEmEMnvAE65yi9VW36F
-         Upac67ajq0iLvIlPQV1bA+0c7RRbr0o7974MNCj33dgPmZU9xomPvDXh0o5BdQYZchym
-         bh+Nkava4V15mqFrjGstx+Ng4+z5bn7clLb0TZWA6a2m1lyGh2Z1ERwlzUZKFHj66WDn
-         ZTg6CxoLfSXuTPNX/zP00UjPcthMGxNyReR0JHcFuqWD7H06I8IjWpyD6zZfJG1JOZ8g
-         w/KoBLdSkQMvrAP6FtcfqzUsyMO27/6msa3/aHctO8Gud+P6Km5Pbg+1aKUCcaiSPCVo
-         xtJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6A/5RoJHIBxD93DNQBku4nNngBquUzm6++SOMVJrgBM=;
-        b=fwYMWC2CE9yQWpaf4ghOpay5jqhyxc5lX6KyND5K1Egmcd7vATpfgxtXx2xryf4z9m
-         wjtBDjV8HFRF8qzKBQd7QVscF28eTiWZ2I77VnKv5UqUGeBmK+XIgPvwri9knjh+4DoK
-         T3sVMsbf1/ffIdJJSBQ3cZVuQFWVyAKQWYx6+cJGjJl18pg+37pl1sv4v2e4RmeMrqSB
-         Hltkw3xCljHPu+NGLQSsHZfQ60sc+5B5ben185zQeIZbPLo2hbIKhFeSeKLNnJAXNxZV
-         3YzQ1t217q9ksGPN5TAhvpWKjZFzxZUuly7PmRTz0ku6tKYFYyh74+5KAgYUUpoOsPMQ
-         v7Ig==
-X-Gm-Message-State: AOAM532hTjp6QhrqLXQ5JSg80G/QMsbE325fTVHwmKT42dOlu3yZkl1T
-        1/36fI/03dL5l68vACY5txWSKDehR8H1rWy+qVlrmw==
-X-Google-Smtp-Source: ABdhPJwQsQN+JeQXv8JCZ0M4lUDsVgP2NGa1eLmBTwt/RITNqrQ0yakErPNcRNeQsO/sDXDEeD7zJ0sY6AdMjAxJ5e0=
-X-Received: by 2002:ac8:72cc:: with SMTP id o12mr17792007qtp.27.1596484981465;
- Mon, 03 Aug 2020 13:03:01 -0700 (PDT)
+        Mon, 3 Aug 2020 16:04:55 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 073K39Jf003459;
+        Mon, 3 Aug 2020 20:04:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=7669qL3S88I58HL7dnTpCNibUM3RomZTzMGtd4cZ7RM=;
+ b=zOuBCb8UEdIuoPhRncWCn69rOkipJMyX8V2sNYL6Cry8lQttK0FjSPXZlMMEQASPy9S3
+ aOWJuLCVFmhxyevxnmAFle6RGh9njHg2ReiDZrbG/Jh8Jy6qW8NTyZQYw9b6bq9dP/QN
+ L/uG5QHGmA6H7Q6/ZA2nZ8JBCAzv2GfacJjuRawPVfWI3GvUh3uc2NWUL27B3IzD7CYo
+ Zsu6u53cqnIeVtNsHlsMUZ+fcrCC1DsQ71cvJW7xLKLeAlayax4t8ImI7N+UVRukrwfA
+ F+858wh4KseAZMSYZig35BZVgzuIYEL32dYYt1b5fMgCWFntScgLpDCC/ZhDvag55idP Xg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 32pdnq3sah-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 03 Aug 2020 20:04:09 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 073K34Zd028201;
+        Mon, 3 Aug 2020 20:04:09 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 32p5gr726j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 03 Aug 2020 20:04:09 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 073K434H002398;
+        Mon, 3 Aug 2020 20:04:03 GMT
+Received: from [10.39.192.124] (/10.39.192.124)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 03 Aug 2020 13:04:03 -0700
+Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
+        arnd@arndb.de, keescook@chromium.org, gerg@linux-m68k.org,
+        ktkhai@virtuozzo.com, christian.brauner@ubuntu.com,
+        peterz@infradead.org, esyr@redhat.com, jgg@ziepe.ca,
+        christian@kellner.me, areber@redhat.com, cyphar@cyphar.com
+References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
+ <20200730152250.GG23808@casper.infradead.org>
+ <db3bdbae-eb0f-1ae3-94dd-045e37bc94ba@oracle.com>
+ <20200730171251.GI23808@casper.infradead.org>
+ <63a7404c-e4f6-a82e-257b-217585b0277f@oracle.com>
+ <20200730174956.GK23808@casper.infradead.org>
+ <ab7a25bf-3321-77c8-9bc3-28a223a14032@oracle.com>
+ <87y2n03brx.fsf@x220.int.ebiederm.org>
+ <689d6348-6029-5396-8de7-a26bc3c017e5@oracle.com>
+ <877dufvje9.fsf@x220.int.ebiederm.org>
+ <1596469370.29091.13.camel@HansenPartnership.com>
+From:   Steven Sistare <steven.sistare@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <e4bf2e19-adc2-ad5e-f516-e8014500456d@oracle.com>
+Date:   Mon, 3 Aug 2020 16:03:59 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200725041955.9985-1-warthog618@gmail.com> <20200725041955.9985-6-warthog618@gmail.com>
- <CAHp75VcKtATPDKGAViWqjOJDqukDrgZ13aTU6rTJ1jEeB3vmVw@mail.gmail.com>
- <20200726011244.GA6587@sol> <CAMpxmJWaEVwjXSFHTYmwdfA+88upVkJ4ePSQf_ziSOa1YdOUKQ@mail.gmail.com>
- <20200802033158.GA13174@sol>
-In-Reply-To: <20200802033158.GA13174@sol>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 3 Aug 2020 22:02:50 +0200
-Message-ID: <CAMpxmJWZpMFbrMBkLiR9q7chdamVnjw0geDf-pgKrz=AWD8mNg@mail.gmail.com>
-Subject: Re: [PATCH v2 05/18] gpiolib: cdev: support GPIO_GET_LINE_IOCTL and GPIOLINE_GET_VALUES_IOCTL
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1596469370.29091.13.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9702 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
+ phishscore=0 spamscore=0 adultscore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008030139
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9702 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxscore=0
+ suspectscore=0 clxscore=1011 priorityscore=1501 bulkscore=0 adultscore=0
+ malwarescore=0 phishscore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008030139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 2, 2020 at 5:32 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Fri, Jul 31, 2020 at 06:05:10PM +0200, Bartosz Golaszewski wrote:
-> > On Sun, Jul 26, 2020 at 3:12 AM Kent Gibson <warthog618@gmail.com> wrote:
+On 8/3/2020 11:42 AM, James Bottomley wrote:
+> On Mon, 2020-08-03 at 10:28 -0500, Eric W. Biederman wrote:
+> [...]
+>> What is wrong with live migration between one qemu process and
+>> another qemu process on the same machine not work for this use case?
+>>
+>> Just reusing live migration would seem to be the simplest path of
+>> all, as the code is already implemented.  Further if something goes
+>> wrong with the live migration you can fallback to the existing
+>> process.  With exec there is no fallback if the new version does not
+>> properly support the handoff protocol of the old version.
+> 
+> Actually, could I ask this another way: the other patch set you sent to
+> the KVM list was to snapshot the VM to a PKRAM capsule preserved across
+> kexec using zero copy for extremely fast save/restore.  The original
+> idea was to use this as part of a CRIU based snapshot, kexec to new
+> system, restore.  However, why can't you do a local snapshot, restart
+> qemu, restore using the PKRAM capsule to achieve exactly the same as
+> MADV_DOEXEC does but using a system that's easy to reason about?  It
+> may be slightly slower, but I think we're still talking milliseconds.
 
-[snip!]
+Hi James, good to hear from you.  PKRAM or SysV shm could be used for
+a restart in that manner, but it would only support sriov guests if the
+guest exports an agent that supports suspend-to-ram, and if all guest
+drivers support the suspend-to-ram method.  I have done this using a linux
+guest and qemu guest agent, and IIRC the guest pause time is 500 - 1000 msec.
+With MADV_DOEXEC, pause time is 100 - 200 msec.  The pause time is a handful
+of seconds if the guest uses an nvme drive because CC.SHN takes so long
+to persist metadata to stable storage.
 
-> > > >
-> > > > > +static u64 gpioline_config_flags(struct gpioline_config *lc, int line_idx)
-> > > > > +{
-> > > > > +       int i;
-> > > > > +
-> > > > > +       for (i = lc->num_attrs - 1; i >= 0; i--) {
-> > > >
-> > > > Much better to read is
-> > > >
-> > > > unsigned int i = lc->num_attrs;
-> > > >
-> > > > while (i--) {
-> > > >  ...
-> > > > }
-> > > >
-> > >
-> > > Really? I find that the post-decrement in the while makes determining the
-> > > bounds of the loop more confusing.
-> > >
-> >
-> > Agreed, Andy: this is too much nit-picking. :)
-> >
->
-> I was actually hoping for some feedback on the direction of that loop,
-> as it relates to the handling of multiple instances of the same
-> attribute associated with a given line.
->
-> The reverse loop here implements a last in wins policy, but I'm now
-> thinking the kernel should be encouraging userspace to only associate a
-> given attribute with a line once, and that a first in wins would help do
-> that - as additional associations would be ignored.
->
-> Alternatively, the kernel should enforce that an attribute can only be
-> associated once, but that would require adding more request validation.
->
+We could instead pass vfio descriptors from the old process to a 3rd party escrow 
+process and pass  them back to the new qemu process, but the shm that vfio has 
+already registered must be remapped at the same VA as the previous process, and 
+there is no interface to guarantee that.  MAP_FIXED blows away existing mappings 
+and breaks the app. MAP_FIXED_NOREPLACE respects existing mappings but cannot map 
+the shm and breaks the app.  Adding a feature that reserves VAs would fix that, we 
+have experimnted with one.  Fixing the vfio kernel implementation to not use the 
+original VA base would also work, but I don't know how doable/difficult that would be.
 
-I guess this would result in a lot of churn to do validation which is
-largely unnecessary? To me the first in wins sounds more consistent.
+Both solutions would require a qemu instance to be stopped and relaunched using shm
+as guest ram, and its guest rebooted, so they do not let us update legacy 
+already-running instances that use anon memory.  That problem solves itself if we 
+get these rfe's into linux and qemu, and eventually users shut down the legacy
+instances, but that takes years and we need to do it sooner.
 
-Also: I just started going through the patches - nice idea with the
-GPIO attributes, I really like it. Although I need to give it a longer
-thought tomorrow - I'm wondering if we can maybe unify them and the
-flags.
-
-[snip]
-
-Bartosz
+- Steve
