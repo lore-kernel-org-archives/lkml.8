@@ -2,58 +2,52 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23675C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97742C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01E84204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 674102054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457962;
-	bh=u8PusDECc95mnoSbEKkMsdXrtKxVgtw+dC/6YfrvWzY=;
+	s=default; t=1596457965;
+	bh=t2oT0uhxQ0+DVoa3OutONu5D6FifUlSdmQ2IaDTNpbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DEXwd0Oz1gvjEW/vpH4FsuEw6Oq+SYFmIQSYDulnYDRN+/bOmaLJbQs1IG9RezYls
-	 g20y1oUykK09/6Ff+IWfv+r0yH7zYfra30kWV1Nm8GBvo+cP+pkUpqfVt0C4m6ETNh
-	 cFADnAF9qnDnUBfxD0Gw8+LUuiu8pKzrR1pIFQKs=
+	b=zWO9Ex2u74a9k5A/V3h2G+CPvYjPD6ZeDojA/+YvmE31GFdPGp/4sxUeDvfabl2GA
+	 4ikF5+4Iq3xIXni6Zrh6W5i0zVBzrj/ZJLzTCDzM32O8Q1qg2FCXM3GXb6m4WEmD0z
+	 l+ykIZalTssCDQ9GK0E4zh6FGSAGMIbL4LLAiXKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbgHCMcl (ORCPT
+        id S1728333AbgHCMcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:32:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60524 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:32:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729312AbgHCMce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:32:34 -0400
+        id S1729333AbgHCMcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:32:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E513F2076B;
-        Mon,  3 Aug 2020 12:32:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5FD6204EC;
+        Mon,  3 Aug 2020 12:32:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457952;
-        bh=u8PusDECc95mnoSbEKkMsdXrtKxVgtw+dC/6YfrvWzY=;
+        s=default; t=1596457955;
+        bh=t2oT0uhxQ0+DVoa3OutONu5D6FifUlSdmQ2IaDTNpbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cSbJIakelUnUwy5S6D8hNJNa7q1plBOU31E9Hp4IyLVz2cJV/grgi6GNhDDCF5Dtp
-         g+HgocRJcKuh/erxwYq6wYMZTvG9vfUuK1idoAqk/G3fcwSU5RLqDkWRx4jPxlsDkx
-         yMNU3M6rAhNewzM5ZVTOhgJokQqxFFonOZUtxITs=
+        b=YhSl0rV3Zn2voRDxzk4fbdvE/Z+LZxCHjW9+iZxL/O0X6J0peYsSKTRzSo9dYPGjA
+         qAvEqHNXPk0pbneyvRKETX8ybRosFjuZrs4lFlICGEnRnVLjpPRsDHFsapMkw3+6zO
+         KSogFdUbUH7j13hFeGPTqE2QKAGZEeP+r1oR+RA4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Mason <clm@fb.com>,
-        Rik van Riel <riel@surriel.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Samuel Mendoza-Jonas <samjonas@amazon.com>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Suraj Jitindar Singh <surajjs@amazon.com>,
-        Benjamin Herrenschmidt <benh@amazon.com>,
-        Anchal Agarwal <anchalag@amazon.com>
-Subject: [PATCH 4.19 24/56] xfs: fix missed wakeup on l_flush_wait
-Date:   Mon,  3 Aug 2020 14:19:39 +0200
-Message-Id: <20200803121851.506464786@linuxfoundation.org>
+        stable@vger.kernel.org, guodeqing <geffrey.guo@huawei.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 42/56] arm64: csum: Fix handling of bad packets
+Date:   Mon,  3 Aug 2020 14:19:57 +0200
+Message-Id: <20200803121852.370952603@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -66,90 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rik van Riel <riel@surriel.com>
+From: Robin Murphy <robin.murphy@arm.com>
 
-commit cdea5459ce263fbc963657a7736762ae897a8ae6 upstream.
+[ Upstream commit 05fb3dbda187bbd9cc1cd0e97e5d6595af570ac6 ]
 
-The code in xlog_wait uses the spinlock to make adding the task to
-the wait queue, and setting the task state to UNINTERRUPTIBLE atomic
-with respect to the waker.
+Although iph is expected to point to at least 20 bytes of valid memory,
+ihl may be bogus, for example on reception of a corrupt packet. If it
+happens to be less than 5, we really don't want to run away and
+dereference 16GB worth of memory until it wraps back to exactly zero...
 
-Doing the wakeup after releasing the spinlock opens up the following
-race condition:
-
-Task 1					task 2
-add task to wait queue
-					wake up task
-set task state to UNINTERRUPTIBLE
-
-This issue was found through code inspection as a result of kworkers
-being observed stuck in UNINTERRUPTIBLE state with an empty
-wait queue. It is rare and largely unreproducable.
-
-Simply moving the spin_unlock to after the wake_up_all results
-in the waker not being able to see a task on the waitqueue before
-it has set its state to UNINTERRUPTIBLE.
-
-This bug dates back to the conversion of this code to generic
-waitqueue infrastructure from a counting semaphore back in 2008
-which didn't place the wakeups consistently w.r.t. to the relevant
-spin locks.
-
-[dchinner: Also fix a similar issue in the shutdown path on
-xc_commit_wait. Update commit log with more details of the issue.]
-
-Fixes: d748c62367eb ("[XFS] Convert l_flushsema to a sv_t")
-Reported-by: Chris Mason <clm@fb.com>
-Signed-off-by: Rik van Riel <riel@surriel.com>
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Cc: stable@vger.kernel.org # 4.9.x-4.19.x
-[modified for contextual change near xlog_state_do_callback()]
-Signed-off-by: Samuel Mendoza-Jonas <samjonas@amazon.com>
-Reviewed-by: Frank van der Linden <fllinden@amazon.com>
-Reviewed-by: Suraj Jitindar Singh <surajjs@amazon.com>
-Reviewed-by: Benjamin Herrenschmidt <benh@amazon.com>
-Reviewed-by: Anchal Agarwal <anchalag@amazon.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 0e455d8e80aa ("arm64: Implement optimised IP checksum helpers")
+Reported-by: guodeqing <geffrey.guo@huawei.com>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_log.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ arch/arm64/include/asm/checksum.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/fs/xfs/xfs_log.c
-+++ b/fs/xfs/xfs_log.c
-@@ -2712,7 +2712,6 @@ xlog_state_do_callback(
- 	int		   funcdidcallbacks; /* flag: function did callbacks */
- 	int		   repeats;	/* for issuing console warnings if
- 					 * looping too many times */
--	int		   wake = 0;
+diff --git a/arch/arm64/include/asm/checksum.h b/arch/arm64/include/asm/checksum.h
+index 0b6f5a7d4027c..fd11e0d70e446 100644
+--- a/arch/arm64/include/asm/checksum.h
++++ b/arch/arm64/include/asm/checksum.h
+@@ -30,16 +30,17 @@ static inline __sum16 ip_fast_csum(const void *iph, unsigned int ihl)
+ {
+ 	__uint128_t tmp;
+ 	u64 sum;
++	int n = ihl; /* we want it signed */
  
- 	spin_lock(&log->l_icloglock);
- 	first_iclog = iclog = log->l_iclog;
-@@ -2914,11 +2913,9 @@ xlog_state_do_callback(
- #endif
+ 	tmp = *(const __uint128_t *)iph;
+ 	iph += 16;
+-	ihl -= 4;
++	n -= 4;
+ 	tmp += ((tmp >> 64) | (tmp << 64));
+ 	sum = tmp >> 64;
+ 	do {
+ 		sum += *(const u32 *)iph;
+ 		iph += 4;
+-	} while (--ihl);
++	} while (--n > 0);
  
- 	if (log->l_iclog->ic_state & (XLOG_STATE_ACTIVE|XLOG_STATE_IOERROR))
--		wake = 1;
--	spin_unlock(&log->l_icloglock);
--
--	if (wake)
- 		wake_up_all(&log->l_flush_wait);
-+
-+	spin_unlock(&log->l_icloglock);
- }
- 
- 
-@@ -4026,7 +4023,9 @@ xfs_log_force_umount(
- 	 * item committed callback functions will do this again under lock to
- 	 * avoid races.
- 	 */
-+	spin_lock(&log->l_cilp->xc_push_lock);
- 	wake_up_all(&log->l_cilp->xc_commit_wait);
-+	spin_unlock(&log->l_cilp->xc_push_lock);
- 	xlog_state_do_callback(log, XFS_LI_ABORTED, NULL);
- 
- #ifdef XFSERRORDEBUG
+ 	sum += ((sum >> 32) | (sum << 32));
+ 	return csum_fold((__force u32)(sum >> 32));
+-- 
+2.25.1
+
 
 
