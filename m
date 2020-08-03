@@ -2,92 +2,94 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 917B4C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE92CC433E0
 	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6237020678
+	by mail.kernel.org (Postfix) with ESMTP id 899B920738
 	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:18:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VBEL9t0T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eGZ0QXkM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgHCKSV (ORCPT
+        id S1726799AbgHCKSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 06:18:21 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:47234 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726752AbgHCKSU (ORCPT
+        Mon, 3 Aug 2020 06:18:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbgHCKSY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 06:18:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596449899;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=bfXMCNI/Os0PHSTlvW49y4Nr2+FnMZYDapmptaEW04U=;
-        b=VBEL9t0Tt4gA/grwTrDZ2wi4qyr/OqEpSfoE2D9y2Kriajvba9USa8C5AAl9BQWE9skC1z
-        8wwB+lHyKNKam+MzzSWaq50JzNYlxr1bEOnvOOmda5QqAf+bJHzv2HsIy2/do6YFeNJa8y
-        3CA8uOkWlP19XIBMVYNOe0HuD7R+YXc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-368-K_5LoHEKMdSlR3ZUeqZ2fw-1; Mon, 03 Aug 2020 06:18:16 -0400
-X-MC-Unique: K_5LoHEKMdSlR3ZUeqZ2fw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 449B81005504;
-        Mon,  3 Aug 2020 10:18:13 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 17FC888F20;
-        Mon,  3 Aug 2020 10:18:09 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAJfpegsT_3YqHPWCZGX7Lr+sE0NVmczWz5L6cN8CzsVz4YKLCQ@mail.gmail.com>
-References: <CAJfpegsT_3YqHPWCZGX7Lr+sE0NVmczWz5L6cN8CzsVz4YKLCQ@mail.gmail.com> <1293241.1595501326@warthog.procyon.org.uk> <CAJfpegspWA6oUtdcYvYF=3fij=Bnq03b8VMbU9RNMKc+zzjbag@mail.gmail.com> <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk> <158454391302.2863966.1884682840541676280.stgit@warthog.procyon.org.uk> <2003787.1595585999@warthog.procyon.org.uk> <865566fb800a014868a9a7e36a00a14430efb11e.camel@themaw.net> <2023286.1595590563@warthog.procyon.org.uk>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     dhowells@redhat.com, Ian Kent <raven@themaw.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>, andres@anarazel.de,
-        Jeff Layton <jlayton@redhat.com>, dray@redhat.com,
-        Karel Zak <kzak@redhat.com>, keyrings@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        LSM <linux-security-module@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 13/17] watch_queue: Implement mount topology and attribute change notifications [ver #5]
+        Mon, 3 Aug 2020 06:18:24 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A56CAC06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 03:18:24 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id d20so1206144ual.13
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 03:18:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rnGkiTDp9E3rHzKy6YghTS3W9G53uuf3g0jyIUWx/X0=;
+        b=eGZ0QXkMDfZSBr593z40Ozez0QyFSDV1hNy8UFRCYTx6p8fiM25n4T8MwpfXFskY/G
+         emzpfy/R4uHBg4EtND4UOGHWc8gNPnFyZXyC0J3CocwU2QVf/vieXAWYuWyxMIjnX7Bl
+         CRrMO7md4uUbAypGQdz6S65U0PjTqjQq9ixOT/WmKhPpdyJXseZj3E0nBvs3dB6xA8E2
+         0nXf5XY8faXUfaV7WIw7kXCPPAbKM+/6h6WTcHbBlJyc8hyZ7agReGbUAxKlPZrEnpw/
+         TrcxxBR6Mw15fvg/7WP8QyIm9F9lXF9hlGnRZ0DMmqBWtUFbmtW1BC2IdKSIk2Uf5Dpe
+         Y1IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rnGkiTDp9E3rHzKy6YghTS3W9G53uuf3g0jyIUWx/X0=;
+        b=h/Qk6QUSi0jgK/RpWWhlqyl7ty6uq27Sd2/DYJ1PFVeX3vxNoYizbgJ1COfNNih12i
+         28IHyol70+W8zPC/j9xFsq1GpB9cBdkIlmFXKY9J8ptVZq1wTQ6pBAd6ufaM+4gHdsjs
+         jskFxRcBVv/v9onbjBwVJXBCW6ZSf94/CEefRuokIJHx8vIvXXMYoNgRjWQ24f0JfcML
+         AdmLnYEqN8jAB3nyXNuJ9eivVGASA7eTg+Q7yuPYvw35eWGmyvF9f4CFG9l5BHJbDIZv
+         p/NxHwQQt1E4f8twO8mK4eQsJzzJgyQJRJ0BT+wcHTdGxoFEYryTX1MKnTgspqypeKnU
+         +O9A==
+X-Gm-Message-State: AOAM531EYDqkzqb5zBapgePZh2YY60iEkv9JhQbTnE5w0HsKa8bFqMht
+        lD8xzdk36GytppYSaEWcpC2cBWaPPjpIw6BWcTk=
+X-Google-Smtp-Source: ABdhPJzBwQ6qtnjisxk6h/1XBYxCcUnUvMtpeFdzghcFrthLpr5cK3BVOyTshFL2tGRaO01KTn7ytL8cx/hbnhdF/Io=
+X-Received: by 2002:ab0:5a6c:: with SMTP id m41mr10374387uad.61.1596449903550;
+ Mon, 03 Aug 2020 03:18:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1283474.1596449889.1@warthog.procyon.org.uk>
-Date:   Mon, 03 Aug 2020 11:18:09 +0100
-Message-ID: <1283475.1596449889@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <20200724212853.11601-1-daniel.gutson@eclypsium.com> <20200803095720.GC1375436@lahna.fi.intel.com>
+In-Reply-To: <20200803095720.GC1375436@lahna.fi.intel.com>
+From:   Richard Hughes <hughsient@gmail.com>
+Date:   Mon, 3 Aug 2020 11:18:12 +0100
+Message-ID: <CAD2FfiFt6=OueX3E0g2ckPU+7F69yCmM0+bzF_6UD1sd4E_k_A@mail.gmail.com>
+Subject: Re: [PATCH] Module argument to control whether intel-spi-pci attempts
+ to turn the SPI flash chip writeable
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Daniel Gutson <daniel.gutson@eclypsium.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        linux-mtd@lists.infradead.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Alex Bazhaniuk <alex@eclypsium.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Miklos Szeredi <miklos@szeredi.hu> wrote:
+On Mon, 3 Aug 2020 at 10:57, Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> I think instead of this we should simply make it so that the driver
+> never tries to make the chip writable.
 
-> > fsinfo() then allows you to retrieve them by path or by mount ID.
-> 
-> Shouldn't the notification interface provide the unique ID?
+I think this is a good idea, but I wasn't sure if it was an acceptable
+behaviour change. Should the driver still try to set BCR_WPD when
+writing an image (i.e. defer the setting of write enable until later),
+or just not set the BCR register at all? I think your last comment was
+the latter, but wanted to check.
 
-Hmmm...  If I'm going to do that, I have to put the fsinfo-core branch first
-otherwise you can't actually retrieve the unique ID - and thus won't be able
-to make sense of the notification record.  Such a rearrangement might make
-sense anyway since Ian and Karel have been primarily concentrating on fsinfo
-and only more recently started adding notification support.
-
-David
-
+Richard.
