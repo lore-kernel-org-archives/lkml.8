@@ -2,101 +2,76 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC58C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE7DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C6272076E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:21:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457316;
-	bh=CDmO9XrYo5F5yWtezrGi445Z+qZ86t9Xk+um3LOorFM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GPeZtH3xlzpTtfp9tzySuJ35S5iFWl4TfJd2gIvJNp6EBBFOe0FINCUHZerq4NMVp
-	 IfSIZvItFHONzXlZ7psnJBCtxJWelESwf8w1VfgsUL8m6z/Dh6pfc9ZNNsngjBhUQn
-	 DJqBjNTJI2yVO6Xx7h4jkZr//qWwX2zqE3RPYyOI=
+	by mail.kernel.org (Postfix) with ESMTP id AE72A20738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:22:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgHCMVv (ORCPT
+        id S1726901AbgHCMWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:21:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45224 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726835AbgHCMVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:21:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B7882076E;
-        Mon,  3 Aug 2020 12:21:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457308;
-        bh=CDmO9XrYo5F5yWtezrGi445Z+qZ86t9Xk+um3LOorFM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gkv9jEVgwdeve58KHqv+ZyRar5HUEvqPq+jYh2J3JUvHqxSVBwYRlJzRCXrROVvUV
-         k6ocx+GCVFDc8fPiGZbLCL3hZJ/m4X+IxwysxWm+dPKRSzI4Hqh+e8KJ+CmsVsK5Oy
-         wWKAF+2wgnaDHi4tREFw6JnYsohqgLN+kncWdGFU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Wei Wang <wei.w.wang@intel.com>,
-        David Hildenbrand <david@redhat.com>
-Subject: [PATCH 5.7 020/120] virtio_balloon: fix up endian-ness for free cmd id
-Date:   Mon,  3 Aug 2020 14:17:58 +0200
-Message-Id: <20200803121903.833733094@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
-References: <20200803121902.860751811@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 3 Aug 2020 08:22:02 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:46364 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726865AbgHCMV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:21:56 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 38172B92AFF40E07CB31;
+        Mon,  3 Aug 2020 20:21:50 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Mon, 3 Aug 2020
+ 20:21:43 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <tjoseph@cadence.com>, <lorenzo.pieralisi@arm.com>,
+        <robh@kernel.org>, <bhelgaas@google.com>, <kishon@ti.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] PCI: cadence: Make cdns_pci_map_bus stub helper inline
+Date:   Mon, 3 Aug 2020 20:21:04 +0800
+Message-ID: <20200803122104.44852-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael S. Tsirkin <mst@redhat.com>
+If CONFIG_PCIE_CADENCE_HOST is n, gcc warns:
 
-commit 168c358af2f8c5a37f8b5f877ba2cc93995606ee upstream.
+drivers/pci/controller/cadence/pcie-cadence.h:486:22:
+ warning: 'cdns_pci_map_bus' defined but not used [-Wunused-function]
 
-free cmd id is read using virtio endian, spec says all fields
-in balloon are LE. Fix it up.
+Make stub helper inline to fix this.
 
-Fixes: 86a559787e6f ("virtio-balloon: VIRTIO_BALLOON_F_FREE_PAGE_HINT")
-Cc: stable@vger.kernel.org
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
-Reviewed-by: Wei Wang <wei.w.wang@intel.com>
-Acked-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/virtio/virtio_balloon.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/pci/controller/cadence/pcie-cadence.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -578,10 +578,14 @@ static int init_vqs(struct virtio_balloo
- static u32 virtio_balloon_cmd_id_received(struct virtio_balloon *vb)
- {
- 	if (test_and_clear_bit(VIRTIO_BALLOON_CONFIG_READ_CMD_ID,
--			       &vb->config_read_bitmap))
-+			       &vb->config_read_bitmap)) {
- 		virtio_cread(vb->vdev, struct virtio_balloon_config,
- 			     free_page_hint_cmd_id,
- 			     &vb->cmd_id_received_cache);
-+		/* Legacy balloon config space is LE, unlike all other devices. */
-+		if (!virtio_has_feature(vb->vdev, VIRTIO_F_VERSION_1))
-+			vb->cmd_id_received_cache = le32_to_cpu((__force __le32)vb->cmd_id_received_cache);
-+	}
- 
- 	return vb->cmd_id_received_cache;
+diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+index 655a6b4d4964..00e44256c3e8 100644
+--- a/drivers/pci/controller/cadence/pcie-cadence.h
++++ b/drivers/pci/controller/cadence/pcie-cadence.h
+@@ -483,8 +483,8 @@ static inline int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+ 	return 0;
  }
+ 
+-static void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+-				      int where)
++static inline void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
++					     int where)
+ {
+ 	return NULL;
+ }
+-- 
+2.17.1
 
 
