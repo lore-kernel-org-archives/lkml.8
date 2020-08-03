@@ -2,101 +2,89 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B3DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E372C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2815F20792
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:32:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="LCwADhUu"
+	by mail.kernel.org (Postfix) with ESMTP id 60D0C2086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:33:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596476029;
+	bh=2naqeHvLiLtwprqSiylF2YGRkOK9THB+M7+cZVJOxCg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SMILwXuAOa0Z0cTKcWFO4hOJZhu0HhtOo/BNN/m0B1maZym/nQ67WKpGtaF1vdHCM
+	 qxuzvAfUcavXHkoOWKoQyN7yzBcGy1DiqQOVYCN1rP+ajiIXDBXRhzQUJGiSUeruJF
+	 IL0H9q7KbrTVkiadJsadlGbwQeG1G7G8eebEjCxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728467AbgHCRcd (ORCPT
+        id S1728515AbgHCRdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 13:32:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726398AbgHCRca (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 13:32:30 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B508C06174A;
-        Mon,  3 Aug 2020 10:32:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=0ZDD1ZPqsN+tFofRrEFxYutxtUgK9Ft2cc16nR6TtKQ=; b=LCwADhUujEXFWHoJ0pW3J/I5r
-        8o8K5TVpuJxvaMw2CkilXdpCncofaEBbZFdRkQQbvMWpwFI8Kclj03J2WFpO5e5n3o+sL2el9iBHw
-        WVc8l2xunrWTmC9y731AAqcvJuflejdR0JqMDiqpj+fUQBKWUruowhC3yp5b0B2sqJD6kYxrU93Cu
-        9p2ua/k9CcDM2UtkE01bACMbBkpkkw2Gke+OLNKcnGWkqpHavGU4xfPJd1rDqpiYiohWT8B/bMAmO
-        9Yq4jVHkgEIvMFdcPWfE3zrUisPn1MXHJWgEUAvAT/OlvG5pv/NSbr/r10m2hWe0DsFLzWJjvU1az
-        ip4OY4gGg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47888)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1k2eK2-0001oV-JY; Mon, 03 Aug 2020 18:32:26 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1k2eK0-0003Gp-3l; Mon, 03 Aug 2020 18:32:24 +0100
-Date:   Mon, 3 Aug 2020 18:32:24 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     syzbot <syzbot+24ebd650e20bd263ca01@syzkaller.appspotmail.com>,
-        davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: slab-out-of-bounds Read in hci_le_meta_evt
-Message-ID: <20200803173223.GS1551@shell.armlinux.org.uk>
-References: <000000000000a876b805abfa77e0@google.com>
- <20200803171232.GR1551@shell.armlinux.org.uk>
- <20200803172104.GA1644292@gmail.com>
+        Mon, 3 Aug 2020 13:33:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47432 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728488AbgHCRdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 13:33:49 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1559A20792;
+        Mon,  3 Aug 2020 17:33:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596476027;
+        bh=2naqeHvLiLtwprqSiylF2YGRkOK9THB+M7+cZVJOxCg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aatV76knd5VTEmj7cAS7DnhxV1olLGHhmxgnrIDWAQ6CWVC3tjBI1bzuWX6ofIxgz
+         xTaFVPuov+aidiuU8pyxosIZlvtAgkeNtG+1eJuXrK4qZksIP5MLvbnW5u1QsMkHPN
+         Ve4gicMEt4dONJD8U12x7K+ItfouU1lvIhsKb2CM=
+Date:   Mon, 3 Aug 2020 19:33:30 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.7 000/120] 5.7.13-rc1 review
+Message-ID: <20200803173330.GA1186998@kroah.com>
+References: <20200803121902.860751811@linuxfoundation.org>
+ <20200803155820.GA160756@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200803172104.GA1644292@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200803155820.GA160756@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 10:21:04AM -0700, Eric Biggers wrote:
-> On Mon, Aug 03, 2020 at 06:12:33PM +0100, Russell King - ARM Linux admin wrote:
-> > Dear syzbot,
+On Mon, Aug 03, 2020 at 08:58:20AM -0700, Guenter Roeck wrote:
+> On Mon, Aug 03, 2020 at 02:17:38PM +0200, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.7.13 release.  There
+> > are 120 patches in this series, all will be posted as a response to this one.
+> > If anyone has any issues with these being applied, please let me know.
 > > 
-> > Please explain why you are spamming me with all these reports - four so
-> > far.  I don't understand why you think I should be doing anything with
-> > these.
+> > Responses should be made by Wed, 05 Aug 2020 12:18:33 +0000.  Anything
+> > received after that time might be too late.
 > > 
-> > Thanks.
 > 
-> syzbot just uses get_maintainer.pl.
+> Building sparc64:allmodconfig ... failed
+> --------------
+> Error log:
+> <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+> In file included from arch/sparc/include/asm/percpu_64.h:11,
+>                  from arch/sparc/include/asm/percpu.h:5,
+>                  from include/linux/random.h:14,
+>                  from fs/crypto/policy.c:13:
+> arch/sparc/include/asm/trap_block.h:54:39: error: 'NR_CPUS' undeclared here (not in a function)
+>    54 | extern struct trap_per_cpu trap_block[NR_CPUS];
 > 
-> $ ./scripts/get_maintainer.pl net/bluetooth/hci_event.c
-> Marcel Holtmann <marcel@holtmann.org> (maintainer:BLUETOOTH SUBSYSTEM)
-> Johan Hedberg <johan.hedberg@gmail.com> (maintainer:BLUETOOTH SUBSYSTEM)
-> "David S. Miller" <davem@davemloft.net> (maintainer:NETWORKING [GENERAL])
-> Jakub Kicinski <kuba@kernel.org> (maintainer:NETWORKING [GENERAL])
-> Russell King <linux@armlinux.org.uk> (maintainer:SFF/SFP/SFP+ MODULE SUPPORT)
-> linux-bluetooth@vger.kernel.org (open list:BLUETOOTH SUBSYSTEM)
-> netdev@vger.kernel.org (open list:NETWORKING [GENERAL])
-> linux-kernel@vger.kernel.org (open list)
+> Inherited from mainline. Builds are not complete yet;
+> we may see a few more failures (powerpc:ppc64e_defconfig
+> fails to build in mainline as well).
 
-Ah, and, because the file mentions "phylink" (although it makes no use
-of the phylink code), get_maintainer spits out my address. Great.
+If it gets fixed upstream, I'll fix it here :)
 
-So how do I get get_maintainer to identify patches that are making use
-of phylink, but avoid this bluetooth code... (that's not a question.)
+thanks,
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+greg k-h
