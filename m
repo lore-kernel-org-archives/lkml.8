@@ -2,171 +2,111 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19722C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9621DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB508206F6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A08206D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:10:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="isf2aM/p"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lwzvhZsO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgHCFHR (ORCPT
+        id S1727773AbgHCFKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 01:07:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59290 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbgHCFHQ (ORCPT
+        Mon, 3 Aug 2020 01:10:20 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:44606 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726799AbgHCFKU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 01:07:16 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56568C06174A;
-        Sun,  2 Aug 2020 22:07:16 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id n141so17339636ybf.3;
-        Sun, 02 Aug 2020 22:07:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=djS5LyIwx9n0PelO0PUaubRUNqf6/nX5Lff7bitAtBc=;
-        b=isf2aM/pD9kAn+Y6j/KkkvSU0FuCeu0qae35C6bZAI8M0DUzPsN41SPRrZlocQQJ7k
-         PlDEa5MSW6xHOxhfNzgYNvL991vZg+UYGZW8x24zHfKyYxdhUC0irl85Q8ewMLuj8v4a
-         xqr0pcuyCCClCAAwReT4RlZ4vTyZmSLj8IlXKvXP+6zC2clgWUctG0y2nd0f9X35NI7e
-         +onuaQLxyWc1LmBR/BewVH69spLn0woZ2QfVmY4BibN7u3EYDJtLu0gh34PSYW5/2YI1
-         YmsmqbWsIn/hVIFtKpFL/Y7DEOXvqYwtP2OLEoWQsPE86dsgFvcBTSOHOKPu0faazoRY
-         QnrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=djS5LyIwx9n0PelO0PUaubRUNqf6/nX5Lff7bitAtBc=;
-        b=SqToEhJeBjyFUNVZ9hOgja/T8phzzzyIXSZT1/ql5pHznd+sDhuiVetRm6VmhEBAUa
-         uU2gS7SnEx1kkPgtwrbuVe2E+NAkekiiNDmblHT4Vqh8388jVwdRzyKVjpQtKwG/r4Y+
-         UU9NYyVz217/t5KQBA3AsAXcwEevC4081EorI1Y/wn12S42HNMqzaWKQRu8kUKhFwELj
-         xDP/LQfwph9+A3XicchJvh2bfAGJtiS1jel0k669r5U4HxX9YdJFrPDWkkSU1JaLlGaG
-         MO6BrEJPQZjnU2jkfh8Dq0aSHpL5sWPfE6BvcSCoVFQgzN8TJkfyp7fyMNSSaWIZR8nw
-         WcZQ==
-X-Gm-Message-State: AOAM530d3VNuZ/sTXWwRZv7Nn1IoiHqL2Nnfdv6NohNt28MNtWm3b1XP
-        SNWLO1+n2h8Z5Bj1oaoSUsonIjuRRDm8/Hu2QkU=
-X-Google-Smtp-Source: ABdhPJyD/Iri0DwQnhXGpo4GROOQguyNnL1+qUXzq6I9s48aLzlByOKuhNeU+9G//QJwp711V5gtbrFwmTgARAnxQMU=
-X-Received: by 2002:a25:37c8:: with SMTP id e191mr21556785yba.230.1596431235604;
- Sun, 02 Aug 2020 22:07:15 -0700 (PDT)
+        Mon, 3 Aug 2020 01:10:20 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596431419; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=xH2GNNEeKA5M2HSxLn3DvMsbHNeHZZGIVLaa9prWnN0=;
+ b=lwzvhZsOB/tv+pnlpPaZt7PR3bQTpKQyQ6nYf3IF3quDAh5XsnEkaFI11PqxIe4UJ3aGAlw+
+ E6gGgCCqZFcCpP635YBhE/FfpqJ4XyMXwcMf/5Y8ejtl1QP7IsxHAZXtwpo90r7pbe2h6ecY
+ gTvs+AFiCzN0q/FfYA2kWoopFF8=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n16.prod.us-west-2.postgun.com with SMTP id
+ 5f279b9c2dfc1b5cc2467d2e (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 03 Aug 2020 05:07:40
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 25F26C4339C; Mon,  3 Aug 2020 05:07:40 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 77B7BC433C6;
+        Mon,  3 Aug 2020 05:07:39 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200801084721.1812607-1-songliubraving@fb.com>
- <20200801084721.1812607-4-songliubraving@fb.com> <CAEf4BzazkFMw3LAs3M2hxSLWWZJ7ywykwte=0WDhC1zgMYw-3A@mail.gmail.com>
- <C5606E9B-D3EC-4425-82F5-DA5865836D3E@fb.com>
-In-Reply-To: <C5606E9B-D3EC-4425-82F5-DA5865836D3E@fb.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Sun, 2 Aug 2020 22:07:04 -0700
-Message-ID: <CAEf4BzZuZt52M1Ta42D=z3m5jC4gi0K=_dzWhDB8DVV5Dkxwmg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 3/5] selftests/bpf: add selftest for BPF_PROG_TYPE_USER
-To:     Song Liu <songliubraving@fb.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Xu <dlxu@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 03 Aug 2020 13:07:39 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Stanley Chu <stanley.chu@mediatek.com>,
+        Avri Altman <Avri.Altman@wdc.com>, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com, alim.akhtar@samsung.com,
+        jejb@linux.ibm.com, beanhuo@micron.com, asutoshd@codeaurora.org,
+        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
+        chaotian.jing@mediatek.com, cc.chou@mediatek.com
+Subject: Re: [PATCH v4] scsi: ufs: Cleanup completed request without interrupt
+ notification
+In-Reply-To: <80f5e213-502b-3532-e782-6f26a778274e@acm.org>
+References: <20200724140246.19434-1-stanley.chu@mediatek.com>
+ <SN6PR04MB4640B5FC06968244DDACB8BEFC720@SN6PR04MB4640.namprd04.prod.outlook.com>
+ <1596159018.17247.53.camel@mtkswgap22>
+ <97f1dfb0-41b6-0249-3e82-cae480b0efb6@acm.org>
+ <8b0a158a7c3ee2165e09290996521ffc@codeaurora.org>
+ <f45c6c47-ffc5-3f8e-3234-9e5989dbf996@acm.org>
+ <548b602daa1e15415625cb8d1f81a208@codeaurora.org>
+ <80f5e213-502b-3532-e782-6f26a778274e@acm.org>
+Message-ID: <7002ce0c5c84409cae6910675f7fe4c0@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 2, 2020 at 9:33 PM Song Liu <songliubraving@fb.com> wrote:
->
->
->
-> > On Aug 2, 2020, at 6:43 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Sat, Aug 1, 2020 at 1:50 AM Song Liu <songliubraving@fb.com> wrote:
-> >>
-> >> This test checks the correctness of BPF_PROG_TYPE_USER program, including:
-> >> running on the right cpu, passing in correct args, returning retval, and
-> >> being able to call bpf_get_stack|stackid.
-> >>
-> >> Signed-off-by: Song Liu <songliubraving@fb.com>
-> >> ---
-> >> .../selftests/bpf/prog_tests/user_prog.c      | 52 +++++++++++++++++
-> >> tools/testing/selftests/bpf/progs/user_prog.c | 56 +++++++++++++++++++
-> >> 2 files changed, 108 insertions(+)
-> >> create mode 100644 tools/testing/selftests/bpf/prog_tests/user_prog.c
-> >> create mode 100644 tools/testing/selftests/bpf/progs/user_prog.c
-> >>
-> >> diff --git a/tools/testing/selftests/bpf/prog_tests/user_prog.c b/tools/testing/selftests/bpf/prog_tests/user_prog.c
-> >> new file mode 100644
-> >> index 0000000000000..416707b3bff01
-> >> --- /dev/null
-> >> +++ b/tools/testing/selftests/bpf/prog_tests/user_prog.c
-> >> @@ -0,0 +1,52 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/* Copyright (c) 2020 Facebook */
-> >> +#include <test_progs.h>
-> >> +#include "user_prog.skel.h"
-> >> +
-> >> +static int duration;
-> >> +
-> >> +void test_user_prog(void)
-> >> +{
-> >> +       struct bpf_user_prog_args args = {{0, 1, 2, 3, 4}};
-> >> +       struct bpf_prog_test_run_attr attr = {};
-> >> +       struct user_prog *skel;
-> >> +       int i, numcpu, ret;
-> >> +
-> >> +       skel = user_prog__open_and_load();
-> >> +
-> >> +       if (CHECK(!skel, "user_prog__open_and_load",
-> >> +                 "skeleton open_and_laod failed\n"))
-> >> +               return;
-> >> +
-> >> +       numcpu = libbpf_num_possible_cpus();
-> >
-> > nit: possible doesn't mean online right now, so it will fail on
-> > offline or non-present CPUs
->
-> Just found parse_cpu_mask_file(), will use it to fix this.
->
-> [...]
->
-> >> +
-> >> +volatile int cpu_match = 1;
-> >> +volatile __u64 sum = 1;
-> >> +volatile int get_stack_success = 0;
-> >> +volatile int get_stackid_success = 0;
-> >> +volatile __u64 stacktrace[PERF_MAX_STACK_DEPTH];
-> >
-> > nit: no need for volatile for non-static variables
-> >
-> >> +
-> >> +SEC("user")
-> >> +int user_func(struct bpf_user_prog_ctx *ctx)
-> >
-> > If you put args in bpf_user_prog_ctx as a first field, you should be
-> > able to re-use the BPF_PROG macro to access those arguments in a more
-> > user-friendly way.
->
-> I am not sure I am following here. Do you mean something like:
->
-> struct bpf_user_prog_ctx {
->         __u64 args[BPF_USER_PROG_MAX_ARGS];
->         struct pt_regs *regs;
-> };
->
-> (swap args and regs)?
->
+Hi Bart,
 
-Yes, BPF_PROG assumes that context is a plain u64[5] array, so if you
-put args at the beginning, it will work nicely with BPF_PROG.
-
+On 2020-08-03 11:12, Bart Van Assche wrote:
+> On 2020-07-31 16:17, Can Guo wrote:
+>> For scsi_dma_unmap() part, that is true - we should make it serialized 
+>> with
+>> any other completion paths. I've found it during my fault injection 
+>> test, so
+>> I've made a patch to fix it, but it only comes in my next error 
+>> recovery
+>> enhancement patch series. Please check the attachment.
+> 
+> Hi Can,
+> 
+> It is not clear to me how that patch serializes scsi_dma_unmap() 
+> against
+> other completion paths? Doesn't the regular completion path call
+> __ufshcd_transfer_req_compl() without holding the host lock?
+> 
 > Thanks,
-> Song
->
->
+> 
+> Bart.
+
+FYI, ufshcd_intr() holds the host spin lock the whole time. So, to your
+question, the regular completion path from IRQ handler has the host lock 
+held.
+
+Thanks,
+
+Can Guo.
