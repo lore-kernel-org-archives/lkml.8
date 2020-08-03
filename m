@@ -2,109 +2,105 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C319C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22683C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF73C207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:38:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596483491;
-	bh=p+3byzfdILkweAsKrQ9Yt4O2JghYZujOzpv9UZtCJVY=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=rVX0bKd60rDw9k1NSeaMGFfXWjo6l3cCWdBCJZHJZI9mcPSx3faHiDFhtH9fgoZIE
-	 Suxi7DYGiEf4+NcFjmfSAFu+SIjvHzcLNSPi5kFuiVw1v00Z4j023TuOIIIxi9H3H1
-	 eG+bdd9L5CGnMrVdq3Mwgi2gelpsBKYymIeqxdUg=
+	by mail.kernel.org (Postfix) with ESMTP id AACAB207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:39:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RrRBh6Ug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728601AbgHCTiK (ORCPT
+        id S1728334AbgHCTjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 15:38:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54650 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727813AbgHCTiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 15:38:10 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 3 Aug 2020 15:39:00 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35703 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727813AbgHCTi7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 15:38:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596483538;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KwaJzAuhKp0eMDKUyFcMapFzk1bqmh48WPQrufCV124=;
+        b=RrRBh6UgHcD019r+czIwpUmisJzF5qytwTCkTGlTa75kBrco3FLA+Isi3sVG9nGVuG8GUr
+        qCUSJnt7aKs6z/bbW4I0cX9OYAqoOZOjeAw/HxmwYzbaB5eu495sArBemuNlb0JAWLUgQA
+        ZgL6TNrw2iDL+KiLvKQ/CnEINp+OpMA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-403-POlseAWyM4uGgMhDrzYE7A-1; Mon, 03 Aug 2020 15:38:54 -0400
+X-MC-Unique: POlseAWyM4uGgMhDrzYE7A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F274207DF;
-        Mon,  3 Aug 2020 19:38:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596483489;
-        bh=p+3byzfdILkweAsKrQ9Yt4O2JghYZujOzpv9UZtCJVY=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=j25T+3N/REJyCpJq6+QYcqKXJz5UVtMco4cNO9YH2S+1M81RBwL7rY1xsdoHNv+xW
-         fWHmfUSnoOJua0nFT6IX0KXaJjTjB/IY2q1ICKduYtSSGn2iPY8zMhnYLBiunnlZZU
-         Su59NeWPklJqBRHSIRkhzU+VS+U2ezxB+u4KT7Vs=
-Content-Type: text/plain; charset="utf-8"
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EB7B8106B24B;
+        Mon,  3 Aug 2020 19:38:51 +0000 (UTC)
+Received: from redhat.com (ovpn-112-64.phx2.redhat.com [10.3.112.64])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 985DA69319;
+        Mon,  3 Aug 2020 19:38:41 +0000 (UTC)
+Received: from fche by redhat.com with local (Exim 4.94)
+        (envelope-from <fche@redhat.com>)
+        id 1k2gI9-0008Bt-GP; Mon, 03 Aug 2020 15:38:37 -0400
+Date:   Mon, 3 Aug 2020 15:38:37 -0400
+From:   "Frank Ch. Eigler" <fche@redhat.com>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Miroslav Benes <mbenes@suse.cz>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, arjan@linux.intel.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com, rick.p.edgecombe@intel.com,
+        live-patching@vger.kernel.org,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jessica Yu <jeyu@kernel.org>
+Subject: Re: [PATCH v4 00/10] Function Granular KASLR
+Message-ID: <20200803193837.GB30810@redhat.com>
+References: <20200717170008.5949-1-kristen@linux.intel.com>
+ <alpine.LSU.2.21.2007221122110.10163@pobox.suse.cz>
+ <e9c4d88b-86db-47e9-4299-3fac45a7e3fd@virtuozzo.com>
+ <202008031043.FE182E9@keescook>
+ <fc6d2289-af97-5cf8-a4bb-77c2b0b8375c@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1596305615-5894-2-git-send-email-tdas@codeaurora.org>
-References: <1596305615-5894-1-git-send-email-tdas@codeaurora.org> <1596305615-5894-2-git-send-email-tdas@codeaurora.org>
-Subject: Re: [PATCH v2] arm64: dts: qcom: sc7180: Add LPASS clock controller nodes
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Taniya Das <tdas@codeaurora.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>
-Date:   Mon, 03 Aug 2020 12:38:08 -0700
-Message-ID: <159648348836.1360974.18393181327075773516@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fc6d2289-af97-5cf8-a4bb-77c2b0b8375c@redhat.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Taniya Das (2020-08-01 11:13:35)
-> Update the clock controller nodes for Low power audio subsystem
-> functionality.
->=20
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/q=
-com/sc7180.dtsi
-> index d46b383..7cf8bfe 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -8,6 +8,7 @@
->  #include <dt-bindings/clock/qcom,dispcc-sc7180.h>
->  #include <dt-bindings/clock/qcom,gcc-sc7180.h>
->  #include <dt-bindings/clock/qcom,gpucc-sc7180.h>
-> +#include <dt-bindings/clock/qcom,lpasscorecc-sc7180.h>
->  #include <dt-bindings/clock/qcom,rpmh.h>
->  #include <dt-bindings/clock/qcom,videocc-sc7180.h>
->  #include <dt-bindings/interconnect/qcom,osm-l3.h>
-> @@ -3312,6 +3313,30 @@
->                         qcom,msa-fixed-perm;
->                         status =3D "disabled";
->                 };
-> +
-> +               lpasscc: clock-controller@62d00000 {
-> +                       compatible =3D "qcom,sc7180-lpasscorecc";
-> +                       reg =3D <0 0x62d00000 0 0x50000>,
-> +                           <0 0x62780000 0 0x30000>;
+Hi -
 
-Doesn't look aligned in my MUA, but who knows!
+> > While this does seem to be the right solution for the extant problem, I
+> > do want to take a moment and ask if the function sections need to be
+> > exposed at all? What tools use this information, and do they just want
+> > to see the bounds of the code region? (i.e. the start/end of all the
+> > .text* sections) Perhaps .text.* could be excluded from the sysfs
+> > section list?
 
-> +                       reg-names =3D "lpass_core_cc", "lpass_audio_cc";
-> +                       clocks =3D <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>,
-> +                                <&rpmhcc RPMH_CXO_CLK>;
-> +                       clock-names =3D "iface", "bi_tcxo";
-> +                       power-domains =3D <&lpass_hm LPASS_CORE_HM_GDSCR>;
-> +                       #clock-cells =3D <1>;
-> +                       #power-domain-cells =3D <1>;
-> +               };
-> +
+> [[cc += FChE, see [0] for Evgenii's full mail ]]
+
+Thanks!
+
+> It looks like debugging tools like systemtap [1], gdb [2] and its
+> add-symbol-file cmd, etc. peek at the /sys/module/<MOD>/section/ info.
+> But yeah, it would be preferable if we didn't export a long sysfs
+> representation if nobody actually needs it.
+
+Systemtap needs to know base addresses of loaded text & data sections,
+in order to perform relocation of probe point PCs and context data
+addresses.  It uses /sys/module/...., kind of under protest, because
+there seems to exist no MODULE_EXPORT'd API to get at that information
+some other way.
+
+- FChE
+
