@@ -2,150 +2,174 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB01C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52430C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC56207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:04:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="zOuBCb8U"
+	by mail.kernel.org (Postfix) with ESMTP id 08B3E2075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:09:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbgHCUEz (ORCPT
+        id S1726533AbgHCUJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 16:04:55 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:59540 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726693AbgHCUEz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 16:04:55 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 073K39Jf003459;
-        Mon, 3 Aug 2020 20:04:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=7669qL3S88I58HL7dnTpCNibUM3RomZTzMGtd4cZ7RM=;
- b=zOuBCb8UEdIuoPhRncWCn69rOkipJMyX8V2sNYL6Cry8lQttK0FjSPXZlMMEQASPy9S3
- aOWJuLCVFmhxyevxnmAFle6RGh9njHg2ReiDZrbG/Jh8Jy6qW8NTyZQYw9b6bq9dP/QN
- L/uG5QHGmA6H7Q6/ZA2nZ8JBCAzv2GfacJjuRawPVfWI3GvUh3uc2NWUL27B3IzD7CYo
- Zsu6u53cqnIeVtNsHlsMUZ+fcrCC1DsQ71cvJW7xLKLeAlayax4t8ImI7N+UVRukrwfA
- F+858wh4KseAZMSYZig35BZVgzuIYEL32dYYt1b5fMgCWFntScgLpDCC/ZhDvag55idP Xg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 32pdnq3sah-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 03 Aug 2020 20:04:09 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 073K34Zd028201;
-        Mon, 3 Aug 2020 20:04:09 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 32p5gr726j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 03 Aug 2020 20:04:09 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 073K434H002398;
-        Mon, 3 Aug 2020 20:04:03 GMT
-Received: from [10.39.192.124] (/10.39.192.124)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 03 Aug 2020 13:04:03 -0700
-Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
-        arnd@arndb.de, keescook@chromium.org, gerg@linux-m68k.org,
-        ktkhai@virtuozzo.com, christian.brauner@ubuntu.com,
-        peterz@infradead.org, esyr@redhat.com, jgg@ziepe.ca,
-        christian@kellner.me, areber@redhat.com, cyphar@cyphar.com
-References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
- <20200730152250.GG23808@casper.infradead.org>
- <db3bdbae-eb0f-1ae3-94dd-045e37bc94ba@oracle.com>
- <20200730171251.GI23808@casper.infradead.org>
- <63a7404c-e4f6-a82e-257b-217585b0277f@oracle.com>
- <20200730174956.GK23808@casper.infradead.org>
- <ab7a25bf-3321-77c8-9bc3-28a223a14032@oracle.com>
- <87y2n03brx.fsf@x220.int.ebiederm.org>
- <689d6348-6029-5396-8de7-a26bc3c017e5@oracle.com>
- <877dufvje9.fsf@x220.int.ebiederm.org>
- <1596469370.29091.13.camel@HansenPartnership.com>
-From:   Steven Sistare <steven.sistare@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <e4bf2e19-adc2-ad5e-f516-e8014500456d@oracle.com>
-Date:   Mon, 3 Aug 2020 16:03:59 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Mon, 3 Aug 2020 16:09:55 -0400
+Received: from mail.ispras.ru ([83.149.199.84]:44926 "EHLO mail.ispras.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbgHCUJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 16:09:55 -0400
+X-Greylist: delayed 329 seconds by postgrey-1.27 at vger.kernel.org; Mon, 03 Aug 2020 16:09:52 EDT
+Received: from localhost.localdomain (unknown [46.188.10.168])
+        by mail.ispras.ru (Postfix) with ESMTPSA id 5060C40A206F;
+        Mon,  3 Aug 2020 20:04:22 +0000 (UTC)
+From:   Alexander Monakov <amonakov@ispras.ru>
+To:     amd-gfx@lists.freedesktop.org
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Monakov <amonakov@ispras.ru>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH] drm/amd/display: use correct scale for actual_brightness
+Date:   Mon,  3 Aug 2020 23:02:18 +0300
+Message-Id: <20200803200218.2167-1-amonakov@ispras.ru>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <1596469370.29091.13.camel@HansenPartnership.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9702 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
- phishscore=0 spamscore=0 adultscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008030139
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9702 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxscore=0
- suspectscore=0 clxscore=1011 priorityscore=1501 bulkscore=0 adultscore=0
- malwarescore=0 phishscore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008030139
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/3/2020 11:42 AM, James Bottomley wrote:
-> On Mon, 2020-08-03 at 10:28 -0500, Eric W. Biederman wrote:
-> [...]
->> What is wrong with live migration between one qemu process and
->> another qemu process on the same machine not work for this use case?
->>
->> Just reusing live migration would seem to be the simplest path of
->> all, as the code is already implemented.  Further if something goes
->> wrong with the live migration you can fallback to the existing
->> process.  With exec there is no fallback if the new version does not
->> properly support the handoff protocol of the old version.
-> 
-> Actually, could I ask this another way: the other patch set you sent to
-> the KVM list was to snapshot the VM to a PKRAM capsule preserved across
-> kexec using zero copy for extremely fast save/restore.  The original
-> idea was to use this as part of a CRIU based snapshot, kexec to new
-> system, restore.  However, why can't you do a local snapshot, restart
-> qemu, restore using the PKRAM capsule to achieve exactly the same as
-> MADV_DOEXEC does but using a system that's easy to reason about?  It
-> may be slightly slower, but I think we're still talking milliseconds.
+Documentation for sysfs backlight level interface requires that
+values in both 'brightness' and 'actual_brightness' files are
+interpreted to be in range from 0 to the value given in the
+'max_brightness' file.
 
-Hi James, good to hear from you.  PKRAM or SysV shm could be used for
-a restart in that manner, but it would only support sriov guests if the
-guest exports an agent that supports suspend-to-ram, and if all guest
-drivers support the suspend-to-ram method.  I have done this using a linux
-guest and qemu guest agent, and IIRC the guest pause time is 500 - 1000 msec.
-With MADV_DOEXEC, pause time is 100 - 200 msec.  The pause time is a handful
-of seconds if the guest uses an nvme drive because CC.SHN takes so long
-to persist metadata to stable storage.
+With amdgpu, max_brightness gives 255, and values written by the user
+into 'brightness' are internally rescaled to a wider range. However,
+reading from 'actual_brightness' gives the raw register value without
+inverse rescaling. This causes issues for various userspace tools such
+as PowerTop and systemd that expect the value to be in the correct
+range.
 
-We could instead pass vfio descriptors from the old process to a 3rd party escrow 
-process and pass  them back to the new qemu process, but the shm that vfio has 
-already registered must be remapped at the same VA as the previous process, and 
-there is no interface to guarantee that.  MAP_FIXED blows away existing mappings 
-and breaks the app. MAP_FIXED_NOREPLACE respects existing mappings but cannot map 
-the shm and breaks the app.  Adding a feature that reserves VAs would fix that, we 
-have experimnted with one.  Fixing the vfio kernel implementation to not use the 
-original VA base would also work, but I don't know how doable/difficult that would be.
+Introduce a helper to retrieve internal backlight range. Extend the
+existing 'convert_brightness' function to handle conversion in both
+directions.
 
-Both solutions would require a qemu instance to be stopped and relaunched using shm
-as guest ram, and its guest rebooted, so they do not let us update legacy 
-already-running instances that use anon memory.  That problem solves itself if we 
-get these rfe's into linux and qemu, and eventually users shut down the legacy
-instances, but that takes years and we need to do it sooner.
+Bug: https://bugzilla.kernel.org/show_bug.cgi?id=203905
+Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1242
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
+---
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 73 ++++++++-----------
+ 1 file changed, 32 insertions(+), 41 deletions(-)
 
-- Steve
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 710edc70e37e..03e21e7b7917 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -2881,51 +2881,42 @@ static int set_backlight_via_aux(struct dc_link *link, uint32_t brightness)
+ 	return rc ? 0 : 1;
+ }
+ 
+-static u32 convert_brightness(const struct amdgpu_dm_backlight_caps *caps,
+-			      const uint32_t user_brightness)
++static int get_brightness_range(const struct amdgpu_dm_backlight_caps *caps,
++				unsigned *min, unsigned *max)
+ {
+-	u32 min, max, conversion_pace;
+-	u32 brightness = user_brightness;
+-
+ 	if (!caps)
+-		goto out;
++		return 0;
+ 
+-	if (!caps->aux_support) {
+-		max = caps->max_input_signal;
+-		min = caps->min_input_signal;
+-		/*
+-		 * The brightness input is in the range 0-255
+-		 * It needs to be rescaled to be between the
+-		 * requested min and max input signal
+-		 * It also needs to be scaled up by 0x101 to
+-		 * match the DC interface which has a range of
+-		 * 0 to 0xffff
+-		 */
+-		conversion_pace = 0x101;
+-		brightness =
+-			user_brightness
+-			* conversion_pace
+-			* (max - min)
+-			/ AMDGPU_MAX_BL_LEVEL
+-			+ min * conversion_pace;
++	if (caps->aux_support) {
++		// Firmware limits are in nits, DC API wants millinits.
++		*max = 1000 * caps->aux_max_input_signal;
++		*min = 1000 * caps->aux_min_input_signal;
+ 	} else {
+-		/* TODO
+-		 * We are doing a linear interpolation here, which is OK but
+-		 * does not provide the optimal result. We probably want
+-		 * something close to the Perceptual Quantizer (PQ) curve.
+-		 */
+-		max = caps->aux_max_input_signal;
+-		min = caps->aux_min_input_signal;
+-
+-		brightness = (AMDGPU_MAX_BL_LEVEL - user_brightness) * min
+-			       + user_brightness * max;
+-		// Multiple the value by 1000 since we use millinits
+-		brightness *= 1000;
+-		brightness = DIV_ROUND_CLOSEST(brightness, AMDGPU_MAX_BL_LEVEL);
++		// Firmware limits are 8-bit, PWM control is 16-bit.
++		*max = 0x101 * caps->max_input_signal;
++		*min = 0x101 * caps->min_input_signal;
+ 	}
++	return 1;
++}
+ 
+-out:
+-	return brightness;
++static u32 convert_brightness(const struct amdgpu_dm_backlight_caps *caps,
++			      const uint32_t brightness, int from_user)
++{
++	unsigned min, max;
++
++	if (!get_brightness_range(caps, &min, &max))
++		return brightness;
++
++	if (from_user)
++		// Rescale 0..255 to min..max
++		return min + DIV_ROUND_CLOSEST((max - min) * brightness,
++					       AMDGPU_MAX_BL_LEVEL);
++
++	if (brightness < min)
++		return 0;
++	// Rescale min..max to 0..255
++	return DIV_ROUND_CLOSEST(AMDGPU_MAX_BL_LEVEL * (brightness - min),
++				 max - min);
+ }
+ 
+ static int amdgpu_dm_backlight_update_status(struct backlight_device *bd)
+@@ -2941,7 +2932,7 @@ static int amdgpu_dm_backlight_update_status(struct backlight_device *bd)
+ 
+ 	link = (struct dc_link *)dm->backlight_link;
+ 
+-	brightness = convert_brightness(&caps, bd->props.brightness);
++	brightness = convert_brightness(&caps, bd->props.brightness, 1);
+ 	// Change brightness based on AUX property
+ 	if (caps.aux_support)
+ 		return set_backlight_via_aux(link, brightness);
+@@ -2958,7 +2949,7 @@ static int amdgpu_dm_backlight_get_brightness(struct backlight_device *bd)
+ 
+ 	if (ret == DC_ERROR_UNEXPECTED)
+ 		return bd->props.brightness;
+-	return ret;
++	return convert_brightness(&dm->backlight_caps, ret, 0);
+ }
+ 
+ static const struct backlight_ops amdgpu_dm_backlight_ops = {
+
+base-commit: bcf876870b95592b52519ed4aafcf9d95999bc9c
+-- 
+2.26.2
+
