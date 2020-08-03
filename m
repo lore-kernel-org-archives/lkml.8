@@ -2,260 +2,328 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD9AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 085B9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7830320781
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB72C20775
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457922;
-	bh=GhoJwhUqFNW1/a5nctkhs7PjmOrcsypD+HOW4I0FNbM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lAdLJ+sNQMzcBcfYoAGt4P9BqpMGyRux1fW9XtHkhF34oZZSX7G+7bIx7J083kLCk
-	 I1qH+r2xjTC9Il+ZiNqK41lMe+pV8VyJt5CJZSw1G/qzN6xqmL91d3IKX/iPCj+VDK
-	 2gBfuyDLt0BVRpIne0NlDDWUD+NscT/njKaaI0T4=
+	s=default; t=1596457932;
+	bh=hHn0gAnFUoJjsMtTBUjgmd1i9Y9TUZmA0xvQJ0/arSI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=eVOaCc39w577GM4Ggad8Qpn4OtsDA46PVuSf30ixqMPLPIiJnIy/LpM84O/XF7gF/
+	 c6QxnID06pTPEjOxF4+JSNbXlVEPm0Ar0yjEM+fLWkqTy1uAcw6lVyd75oQFHbXZcw
+	 cP0ytaOmseQVWVSATTPby9/W5HQpVeNXyFiWBms8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729267AbgHCMcB (ORCPT
+        id S1729278AbgHCMcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:32:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59760 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:32:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729251AbgHCMb6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:31:58 -0400
+        id S1729265AbgHCMcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:32:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74722204EC;
-        Mon,  3 Aug 2020 12:31:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74FE42054F;
+        Mon,  3 Aug 2020 12:31:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457917;
-        bh=GhoJwhUqFNW1/a5nctkhs7PjmOrcsypD+HOW4I0FNbM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t3DSekTkN4pm7jSzwG3czl2siEjR4ZkVtAY5QqXTNtwp7iYGCFWASfj9Ai9ZvYHS4
-         1ylhu471FjDfpPlDl/lmI9tzKDwguvFbHDkS0KMeqIk0blqtI4VMsgSPHi0ZJTKq3J
-         00rADrYEqYjXwbLmmKCxdHsHKWdInqMr6mnaMutY=
+        s=default; t=1596457920;
+        bh=hHn0gAnFUoJjsMtTBUjgmd1i9Y9TUZmA0xvQJ0/arSI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=WziY99nxGHx6MVByn78sND5sE9StXEgXYMIRH7BKEB+aPKFHQ9V09PxtsvQIz0NU1
+         KSy12Nmkb2GDtpmyfxS0vb4rIhl0fn6HUfNy8Q1AmT8M0fSGNYEMiNhvHnrOTtB+kg
+         qs/UXMnlQhqMWfB5uko4FHNYL3uUOoP5ikxHMEmc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yoon Jungyeon <jungyeon@gatech.edu>,
-        Nikolay Borisov <nborisov@suse.com>, Qu Wenruo <wqu@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 09/56] btrfs: inode: Verify inode mode to avoid NULL pointer dereference
-Date:   Mon,  3 Aug 2020 14:19:24 +0200
-Message-Id: <20200803121850.766021165@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.19 00/56] 4.19.137-rc1 review
+Date:   Mon,  3 Aug 2020 14:19:15 +0200
+Message-Id: <20200803121850.306734207@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
-References: <20200803121850.306734207@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.137-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.137-rc1
+X-KernelTest-Deadline: 2020-08-05T12:18+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+This is the start of the stable review cycle for the 4.19.137 release.
+There are 56 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit 6bf9e4bd6a277840d3fe8c5d5d530a1fbd3db592 ]
+Responses should be made by Wed, 05 Aug 2020 12:18:33 +0000.
+Anything received after that time might be too late.
 
-[BUG]
-When accessing a file on a crafted image, btrfs can crash in block layer:
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.137-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+and the diffstat can be found below.
 
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
-  PGD 136501067 P4D 136501067 PUD 124519067 PMD 0
-  CPU: 3 PID: 0 Comm: swapper/3 Not tainted 5.0.0-rc8-default #252
-  RIP: 0010:end_bio_extent_readpage+0x144/0x700
-  Call Trace:
-   <IRQ>
-   blk_update_request+0x8f/0x350
-   blk_mq_end_request+0x1a/0x120
-   blk_done_softirq+0x99/0xc0
-   __do_softirq+0xc7/0x467
-   irq_exit+0xd1/0xe0
-   call_function_single_interrupt+0xf/0x20
-   </IRQ>
-  RIP: 0010:default_idle+0x1e/0x170
+thanks,
 
-[CAUSE]
-The crafted image has a tricky corruption, the INODE_ITEM has a
-different type against its parent dir:
+greg k-h
 
-        item 20 key (268 INODE_ITEM 0) itemoff 2808 itemsize 160
-                generation 13 transid 13 size 1048576 nbytes 1048576
-                block group 0 mode 121644 links 1 uid 0 gid 0 rdev 0
-                sequence 9 flags 0x0(none)
+-------------
+Pseudo-Shortlog of commits:
 
-This mode number 0120000 means it's a symlink.
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.19.137-rc1
 
-But the dir item think it's still a regular file:
+Thomas Gleixner <tglx@linutronix.de>
+    x86/i8259: Use printk_deferred() to prevent deadlock
 
-        item 8 key (264 DIR_INDEX 5) itemoff 3707 itemsize 32
-                location key (268 INODE_ITEM 0) type FILE
-                transid 13 data_len 0 name_len 2
-                name: f4
-        item 40 key (264 DIR_ITEM 51821248) itemoff 1573 itemsize 32
-                location key (268 INODE_ITEM 0) type FILE
-                transid 13 data_len 0 name_len 2
-                name: f4
+Wanpeng Li <wanpengli@tencent.com>
+    KVM: LAPIC: Prevent setting the tscdeadline timer if the lapic is hw disabled
 
-For symlink, we don't set BTRFS_I(inode)->io_tree.ops and leave it
-empty, as symlink is only designed to have inlined extent, all handled
-by tree block read.  Thus no need to trigger btrfs_submit_bio_hook() for
-inline file extent.
+Andrea Righi <andrea.righi@canonical.com>
+    xen-netfront: fix potential deadlock in xennet_remove()
 
-However end_bio_extent_readpage() expects tree->ops populated, as it's
-reading regular data extent.  This causes NULL pointer dereference.
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    cxgb4: add missing release on skb in uld_send()
 
-[FIX]
-This patch fixes the problem in two ways:
+Josh Poimboeuf <jpoimboe@redhat.com>
+    x86/unwind/orc: Fix ORC for newly forked tasks
 
-- Verify inode mode against its dir item when looking up inode
-  So in btrfs_lookup_dentry() if we find inode mode mismatch with dir
-  item, we error out so that corrupted inode will not be accessed.
+Raviteja Narayanam <raviteja.narayanam@xilinx.com>
+    Revert "i2c: cadence: Fix the hold bit setting"
 
-- Verify inode mode when getting extent mapping
-  Only regular file should have regular or preallocated extent.
-  If we found regular/preallocated file extent for symlink or
-  the rest, we error out before submitting the read bio.
+Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+    net: ethernet: ravb: exit if re-initialization fails in tx timeout
 
-With this fix that crafted image can be rejected gracefully:
+Liam Beguin <liambeguin@gmail.com>
+    parisc: add support for cmpxchg on u8 pointers
 
-  BTRFS critical (device loop0): inode mode mismatch with dir: inode mode=0121644 btrfs type=7 dir type=1
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    nfc: s3fwrn5: add missing release on skb in s3fwrn5_recv_frame
 
-Reported-by: Yoon Jungyeon <jungyeon@gatech.edu>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=202763
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/btrfs/inode.c             | 41 +++++++++++++++++++++++++++++-------
- fs/btrfs/tests/inode-tests.c |  1 +
- 2 files changed, 34 insertions(+), 8 deletions(-)
+Laurence Oberman <loberman@redhat.com>
+    qed: Disable "MFW indication via attention" SPAM every 5 minutes
 
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 8dd2702ce859e..7befb7c12bd32 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -5553,12 +5553,14 @@ no_delete:
- }
- 
- /*
-- * this returns the key found in the dir entry in the location pointer.
-+ * Return the key found in the dir entry in the location pointer, fill @type
-+ * with BTRFS_FT_*, and return 0.
-+ *
-  * If no dir entries were found, returns -ENOENT.
-  * If found a corrupted location in dir entry, returns -EUCLEAN.
-  */
- static int btrfs_inode_by_name(struct inode *dir, struct dentry *dentry,
--			       struct btrfs_key *location)
-+			       struct btrfs_key *location, u8 *type)
- {
- 	const char *name = dentry->d_name.name;
- 	int namelen = dentry->d_name.len;
-@@ -5591,6 +5593,8 @@ static int btrfs_inode_by_name(struct inode *dir, struct dentry *dentry,
- 			   __func__, name, btrfs_ino(BTRFS_I(dir)),
- 			   location->objectid, location->type, location->offset);
- 	}
-+	if (!ret)
-+		*type = btrfs_dir_type(path->nodes[0], di);
- out:
- 	btrfs_free_path(path);
- 	return ret;
-@@ -5826,6 +5830,11 @@ static struct inode *new_simple_dir(struct super_block *s,
- 	return inode;
- }
- 
-+static inline u8 btrfs_inode_type(struct inode *inode)
-+{
-+	return btrfs_type_by_mode[(inode->i_mode & S_IFMT) >> S_SHIFT];
-+}
-+
- struct inode *btrfs_lookup_dentry(struct inode *dir, struct dentry *dentry)
- {
- 	struct btrfs_fs_info *fs_info = btrfs_sb(dir->i_sb);
-@@ -5833,18 +5842,31 @@ struct inode *btrfs_lookup_dentry(struct inode *dir, struct dentry *dentry)
- 	struct btrfs_root *root = BTRFS_I(dir)->root;
- 	struct btrfs_root *sub_root = root;
- 	struct btrfs_key location;
-+	u8 di_type = 0;
- 	int index;
- 	int ret = 0;
- 
- 	if (dentry->d_name.len > BTRFS_NAME_LEN)
- 		return ERR_PTR(-ENAMETOOLONG);
- 
--	ret = btrfs_inode_by_name(dir, dentry, &location);
-+	ret = btrfs_inode_by_name(dir, dentry, &location, &di_type);
- 	if (ret < 0)
- 		return ERR_PTR(ret);
- 
- 	if (location.type == BTRFS_INODE_ITEM_KEY) {
- 		inode = btrfs_iget(dir->i_sb, &location, root, NULL);
-+		if (IS_ERR(inode))
-+			return inode;
-+
-+		/* Do extra check against inode mode with di_type */
-+		if (btrfs_inode_type(inode) != di_type) {
-+			btrfs_crit(fs_info,
-+"inode mode mismatch with dir: inode mode=0%o btrfs type=%u dir type=%u",
-+				  inode->i_mode, btrfs_inode_type(inode),
-+				  di_type);
-+			iput(inode);
-+			return ERR_PTR(-EUCLEAN);
-+		}
- 		return inode;
- 	}
- 
-@@ -6455,11 +6477,6 @@ fail:
- 	return ERR_PTR(ret);
- }
- 
--static inline u8 btrfs_inode_type(struct inode *inode)
--{
--	return btrfs_type_by_mode[(inode->i_mode & S_IFMT) >> S_SHIFT];
--}
--
- /*
-  * utility function to add 'inode' into 'parent_inode' with
-  * a give name and a given sequence number.
-@@ -6993,6 +7010,14 @@ struct extent_map *btrfs_get_extent(struct btrfs_inode *inode,
- 	extent_start = found_key.offset;
- 	if (found_type == BTRFS_FILE_EXTENT_REG ||
- 	    found_type == BTRFS_FILE_EXTENT_PREALLOC) {
-+		/* Only regular file could have regular/prealloc extent */
-+		if (!S_ISREG(inode->vfs_inode.i_mode)) {
-+			ret = -EUCLEAN;
-+			btrfs_crit(fs_info,
-+		"regular/prealloc extent found for non-regular inode %llu",
-+				   btrfs_ino(inode));
-+			goto out;
-+		}
- 		extent_end = extent_start +
- 		       btrfs_file_extent_num_bytes(leaf, item);
- 
-diff --git a/fs/btrfs/tests/inode-tests.c b/fs/btrfs/tests/inode-tests.c
-index 64043f0288206..648633aae968c 100644
---- a/fs/btrfs/tests/inode-tests.c
-+++ b/fs/btrfs/tests/inode-tests.c
-@@ -232,6 +232,7 @@ static noinline int test_btrfs_get_extent(u32 sectorsize, u32 nodesize)
- 		return ret;
- 	}
- 
-+	inode->i_mode = S_IFREG;
- 	BTRFS_I(inode)->location.type = BTRFS_INODE_ITEM_KEY;
- 	BTRFS_I(inode)->location.objectid = BTRFS_FIRST_FREE_OBJECTID;
- 	BTRFS_I(inode)->location.offset = 0;
--- 
-2.25.1
+Geert Uytterhoeven <geert@linux-m68k.org>
+    usb: hso: Fix debug compile warning on sparc32
 
+Xin Xiong <xiongx18@fudan.edu.cn>
+    net/mlx5e: fix bpf_prog reference count leaks in mlx5e_alloc_rq
+
+Wang Hai <wanghai38@huawei.com>
+    net: gemini: Fix missing clk_disable_unprepare() in error path of gemini_ethernet_port_probe()
+
+Alain Michaud <alainm@chromium.org>
+    Bluetooth: fix kernel oops in store_pending_adv_report
+
+Robin Murphy <robin.murphy@arm.com>
+    arm64: csum: Fix handling of bad packets
+
+Sami Tolvanen <samitolvanen@google.com>
+    arm64/alternatives: move length validation inside the subsection
+
+Remi Pommarel <repk@triplefau.lt>
+    mac80211: mesh: Free pending skb when destroying a mpath
+
+Remi Pommarel <repk@triplefau.lt>
+    mac80211: mesh: Free ie data when leaving mesh
+
+Andrii Nakryiko <andriin@fb.com>
+    bpf: Fix map leak in HASH_OF_MAPS map
+
+Thomas Falcon <tlfalcon@linux.ibm.com>
+    ibmvnic: Fix IRQ mapping disposal in error path
+
+Ido Schimmel <idosch@mellanox.com>
+    mlxsw: core: Free EMAD transactions using kfree_rcu()
+
+Ido Schimmel <idosch@mellanox.com>
+    mlxsw: core: Increase scope of RCU read-side critical section
+
+Jakub Kicinski <kuba@kernel.org>
+    mlx4: disable device on shutdown
+
+Johan Hovold <johan@kernel.org>
+    net: lan78xx: fix transfer-buffer memory leak
+
+Johan Hovold <johan@kernel.org>
+    net: lan78xx: add missing endpoint sanity check
+
+Eran Ben Elisha <eranbe@mellanox.com>
+    net/mlx5: Verify Hardware supports requested ptp function on a given pin
+
+Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
+    sh: Fix validation of system call number
+
+Tanner Love <tannerlove@google.com>
+    selftests/net: psock_fanout: fix clang issues for target arch PowerPC
+
+Tanner Love <tannerlove@google.com>
+    selftests/net: rxtimestamp: fix clang issues for target arch PowerPC
+
+Steffen Klassert <steffen.klassert@secunet.com>
+    xfrm: Fix crash when the hold queue is used.
+
+YueHaibing <yuehaibing@huawei.com>
+    net/x25: Fix null-ptr-deref in x25_disconnect
+
+Xiyu Yang <xiyuyang19@fudan.edu.cn>
+    net/x25: Fix x25_neigh refcnt leak when x25 disconnect
+
+Rik van Riel <riel@surriel.com>
+    xfs: fix missed wakeup on l_flush_wait
+
+Peilin Ye <yepeilin.cs@gmail.com>
+    rds: Prevent kernel-infoleak in rds_notify_queue_get()
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    random32: remove net_rand_state from the latent entropy gcc plugin
+
+Willy Tarreau <w@1wt.eu>
+    random: fix circular include dependency on arm64 after addition of percpu.h
+
+Steve Cohen <cohens@codeaurora.org>
+    drm: hold gem reference until object is no longer accessed
+
+Peilin Ye <yepeilin.cs@gmail.com>
+    drm/amdgpu: Prevent kernel-infoleak in amdgpu_info_ioctl()
+
+Alex Deucher <alexander.deucher@amd.com>
+    Revert "drm/amdgpu: Fix NULL dereference in dpm sysfs handlers"
+
+Grygorii Strashko <grygorii.strashko@ti.com>
+    ARM: percpu.h: fix build error
+
+Willy Tarreau <w@1wt.eu>
+    random32: update the net random state on interrupt and activity
+
+Will Deacon <will@kernel.org>
+    ARM: 8986/1: hw_breakpoint: Don't invoke overflow handler on uaccess watchpoints
+
+Pi-Hsun Shih <pihsun@chromium.org>
+    wireless: Use offsetof instead of custom macro.
+
+Wang Hai <wanghai38@huawei.com>
+    9p/trans_fd: Fix concurrency del of req_list in p9_fd_cancelled/p9_read_work
+
+Robert Hancock <hancockrwd@gmail.com>
+    PCI/ASPM: Disable ASPM on ASMedia ASM1083/1085 PCIe-to-PCI bridge
+
+Filipe Manana <fdmanana@suse.com>
+    Btrfs: fix selftests failure due to uninitialized i_mode in test inodes
+
+Xin Long <lucien.xin@gmail.com>
+    sctp: implement memory accounting on tx path
+
+Qu Wenruo <wqu@suse.com>
+    btrfs: inode: Verify inode mode to avoid NULL pointer dereference
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    drm/amd/display: prevent memory leak
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    ath9k: release allocated buffer if timed out
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    ath9k_htc: release allocated buffer if timed out
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    tracing: Have error path in predicate_parse() free its allocated memory
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    drm/amdgpu: fix multiple memory leaks in acp_hw_init
+
+Sasha Levin <sashal@kernel.org>
+    iio: imu: adis16400: fix memory leak
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    media: rc: prevent memory leak in cx23888_ir_probe
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    crypto: ccp - Release all allocated memory if sha type is invalid
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |  4 +-
+ arch/arm/include/asm/percpu.h                      |  2 +
+ arch/arm/kernel/hw_breakpoint.c                    | 27 +++++++--
+ arch/arm64/include/asm/alternative.h               |  4 +-
+ arch/arm64/include/asm/checksum.h                  |  5 +-
+ arch/parisc/include/asm/cmpxchg.h                  |  2 +
+ arch/parisc/lib/bitops.c                           | 12 ++++
+ arch/sh/kernel/entry-common.S                      |  6 +-
+ arch/x86/kernel/i8259.c                            |  2 +-
+ arch/x86/kernel/unwind_orc.c                       |  8 ++-
+ arch/x86/kvm/lapic.c                               |  2 +-
+ drivers/char/random.c                              |  1 +
+ drivers/crypto/ccp/ccp-ops.c                       |  3 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c            | 34 ++++++++----
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c            |  3 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c             |  9 ++-
+ .../drm/amd/display/dc/dce100/dce100_resource.c    |  1 +
+ .../drm/amd/display/dc/dce110/dce110_resource.c    |  1 +
+ .../drm/amd/display/dc/dce112/dce112_resource.c    |  1 +
+ .../drm/amd/display/dc/dce120/dce120_resource.c    |  1 +
+ .../gpu/drm/amd/display/dc/dcn10/dcn10_resource.c  |  1 +
+ drivers/gpu/drm/drm_gem.c                          | 10 ++--
+ drivers/i2c/busses/i2c-cadence.c                   |  9 +--
+ drivers/iio/imu/adis16400_buffer.c                 |  5 +-
+ drivers/media/pci/cx23885/cx23888-ir.c             |  5 +-
+ drivers/net/ethernet/chelsio/cxgb4/sge.c           |  1 +
+ drivers/net/ethernet/cortina/gemini.c              |  5 +-
+ drivers/net/ethernet/ibm/ibmvnic.c                 |  2 +-
+ drivers/net/ethernet/mellanox/mlx4/main.c          |  2 +
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c  |  4 +-
+ .../net/ethernet/mellanox/mlx5/core/lib/clock.c    | 23 +++++++-
+ drivers/net/ethernet/mellanox/mlxsw/core.c         |  8 ++-
+ drivers/net/ethernet/qlogic/qed/qed_int.c          |  3 +-
+ drivers/net/ethernet/renesas/ravb_main.c           | 26 ++++++++-
+ drivers/net/usb/hso.c                              |  5 +-
+ drivers/net/usb/lan78xx.c                          |  6 ++
+ drivers/net/wireless/ath/ath9k/htc_hst.c           |  3 +
+ drivers/net/wireless/ath/ath9k/wmi.c               |  1 +
+ drivers/net/xen-netfront.c                         | 64 ++++++++++++++--------
+ drivers/nfc/s3fwrn5/core.c                         |  1 +
+ drivers/pci/quirks.c                               | 13 +++++
+ fs/btrfs/inode.c                                   | 41 +++++++++++---
+ fs/btrfs/tests/btrfs-tests.c                       |  8 ++-
+ fs/btrfs/tests/inode-tests.c                       |  1 +
+ fs/xfs/xfs_log.c                                   |  9 ++-
+ include/linux/random.h                             |  3 +
+ include/net/xfrm.h                                 |  4 +-
+ include/uapi/linux/wireless.h                      |  5 +-
+ kernel/bpf/hashtab.c                               | 12 +++-
+ kernel/time/timer.c                                |  8 +++
+ kernel/trace/trace_events_filter.c                 |  6 +-
+ lib/random32.c                                     |  2 +-
+ net/9p/trans_fd.c                                  | 15 ++++-
+ net/bluetooth/hci_event.c                          | 26 ++++++---
+ net/mac80211/cfg.c                                 |  1 +
+ net/mac80211/mesh_pathtbl.c                        |  1 +
+ net/rds/recv.c                                     |  3 +-
+ net/sctp/socket.c                                  | 10 +++-
+ net/x25/x25_subr.c                                 |  6 ++
+ tools/testing/selftests/net/psock_fanout.c         |  3 +-
+ .../networking/timestamping/rxtimestamp.c          |  3 +-
+ 61 files changed, 369 insertions(+), 123 deletions(-)
 
 
