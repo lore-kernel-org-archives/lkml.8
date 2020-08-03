@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FABCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F108C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AA272064B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DD5F20738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596459297;
-	bh=CylSTeR6WY93qwCZ3HgKRbaRXSvDJOwC8juTa6sLDrI=;
+	s=default; t=1596459299;
+	bh=QyR66mhOB+DXFLTsZEh2HgiH7RdpdVsPW6tOdlXQPTI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=12APTyHMfJYQ2j5bXIcMhQEsqWkpqI3W11bI/MsAUluUDTwPV6oaCgShXs74q3R2F
-	 qavjMbpIQCeuh0Ri487C7qHwCyyvPCilUU3RicFVKsPXwes1qJVgyPqtsK0noYDffB
-	 da3GqoyFxQcT2uZJrq8iVMh90TF+3m8VeIW6iwQw=
+	b=QVXhaHGGicKIpOoxtcdp8zadHO/MaybpjJwJaQkdeMW6Oroxgw/0lCFVBYv7jUf5D
+	 7jYki5XzSm5pqxSkE+ZxOKzOgKzIxMa29VmtoFyNmvI5SY1I0u+m/9j37B93yRVQgU
+	 oHWQoQ5J9SsapOD5xObbCJ4fp/N9y9gfN9d35o70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728576AbgHCMyx (ORCPT
+        id S1727793AbgHCMXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:54:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47176 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:23:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726578AbgHCMXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:23:13 -0400
+        id S1727772AbgHCMWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:22:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C615520738;
-        Mon,  3 Aug 2020 12:23:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA9AE20738;
+        Mon,  3 Aug 2020 12:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457392;
-        bh=CylSTeR6WY93qwCZ3HgKRbaRXSvDJOwC8juTa6sLDrI=;
+        s=default; t=1596457372;
+        bh=QyR66mhOB+DXFLTsZEh2HgiH7RdpdVsPW6tOdlXQPTI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1AbMw9xLyRaDCIPB2UARlroSj1O2A5DOjhlp51VLd7hRWZTvMJtzTIaD+Leg2i+rw
-         E1MuBr1m1vB2Nepp7CHBF9kZoUBQxDMCK0n02BhgkX/w0hgCEhjHOgOEsCZF6hBmw7
-         YuoH6uUEaxMELLK2tBow8APL9gWJagEthxPfw/gs=
+        b=d116hgSnVwFaKZAx+b9dp1ps/w/FyoIpxuEq3gwuMKLELYlcPkN2nKCH3LFbG+dhM
+         AXhe6+5niJsgUgf1wAKYICu0qaBkL2a0vL4Ltj/eSFwhq924BqiTnHJ6TYibPjVTeM
+         nUYgbI7z8wNybGW5nHt47kwOYCjAKz5RK6XEpGCY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
+        stable@vger.kernel.org, Tanner Love <tannerlove@google.com>,
+        Willem de Bruijn <willemb@google.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 050/120] net: hns3: fix a TX timeout issue
-Date:   Mon,  3 Aug 2020 14:18:28 +0200
-Message-Id: <20200803121905.240001572@linuxfoundation.org>
+Subject: [PATCH 5.7 044/120] selftests/net: psock_fanout: fix clang issues for target arch PowerPC
+Date:   Mon,  3 Aug 2020 14:18:22 +0200
+Message-Id: <20200803121904.958715674@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -61,43 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonglong Liu <liuyonglong@huawei.com>
+From: Tanner Love <tannerlove@google.com>
 
-[ Upstream commit a7e90ee5965fafc53d36e8b3205f08c88d7bc11f ]
+[ Upstream commit 64f9ede2274980076423583683d44480909b7a40 ]
 
-When the queue depth and queue parameters are modified, there is
-a low probability that TX timeout occurs. The two operations cause
-the link to be down or up when the watchdog is still working. All
-queues are stopped when the link is down. After the carrier is on,
-all queues are woken up. If the watchdog detects the link between
-the carrier on and wakeup queues, a false TX timeout occurs.
+Clang 9 threw:
+warning: format specifies type 'unsigned short' but the argument has \
+type 'int' [-Wformat]
+                typeflags, PORT_BASE, PORT_BASE + port_off);
 
-So fix this issue by modifying the sequence of carrier on and queue
-wakeup, which is symmetrical to the link down action.
+Tested: make -C tools/testing/selftests TARGETS="net" run_tests
 
-Fixes: 76ad4f0ee747 ("net: hns3: Add support of HNS3 Ethernet Driver for hip08 SoC")
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Fixes: 77f65ebdca50 ("packet: packet fanout rollover during socket overload")
+Signed-off-by: Tanner Love <tannerlove@google.com>
+Acked-by: Willem de Bruijn <willemb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/net/psock_fanout.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 0b12425fa2845..6e186aea7a2f2 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -4170,8 +4170,8 @@ static void hns3_link_status_change(struct hnae3_handle *handle, bool linkup)
- 		return;
+diff --git a/tools/testing/selftests/net/psock_fanout.c b/tools/testing/selftests/net/psock_fanout.c
+index 8c8c7d79c38d9..2c522f7a0aeca 100644
+--- a/tools/testing/selftests/net/psock_fanout.c
++++ b/tools/testing/selftests/net/psock_fanout.c
+@@ -350,7 +350,8 @@ static int test_datapath(uint16_t typeflags, int port_off,
+ 	int fds[2], fds_udp[2][2], ret;
  
- 	if (linkup) {
--		netif_carrier_on(netdev);
- 		netif_tx_wake_all_queues(netdev);
-+		netif_carrier_on(netdev);
- 		if (netif_msg_link(handle))
- 			netdev_info(netdev, "link up\n");
- 	} else {
+ 	fprintf(stderr, "\ntest: datapath 0x%hx ports %hu,%hu\n",
+-		typeflags, PORT_BASE, PORT_BASE + port_off);
++		typeflags, (uint16_t)PORT_BASE,
++		(uint16_t)(PORT_BASE + port_off));
+ 
+ 	fds[0] = sock_fanout_open(typeflags, 0);
+ 	fds[1] = sock_fanout_open(typeflags, 0);
 -- 
 2.25.1
 
