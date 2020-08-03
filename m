@@ -2,179 +2,280 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8734DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF78C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57E4C204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:40:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="VSkxZqha"
+	by mail.kernel.org (Postfix) with ESMTP id 2AAF4204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:40:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596458444;
+	bh=8cTwBuKDDuPXiMiYysRN9Muj0ZY2IrvJy3ATZBTkxSM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=cLhFTpzBmvIx2sXgY+Q9xDXIgo9ZxxpqPNuMx0uS+SP7y+xzNNRUgJwiNtElu21eF
+	 p7mqPryRSAVrYf9+bbo1p+xhJuJV4dMFhfckpUh5shiRqUdWR8+iRWjla9dYuKA3sD
+	 k8CvplxRekC1b8PtncpzNxXuQnkdyzaOqJJOrdOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgHCMkg (ORCPT
+        id S1727045AbgHCMkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:40:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728400AbgHCMkD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:40:03 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97821C06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 05:40:03 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id o22so27777058qtt.13
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 05:40:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BmbNE1buq5pXcu816xflWCrMTaLO2MZ62sTduj5sEmM=;
-        b=VSkxZqhaTCw4jfRyyQHX5mduSPeV5UA3aoGAvElI/iRjr65POS1bMBjuPEedZWp+SO
-         C4EvSD/S2+UBh9Ns39vOKEEMt1ZyQvTmCqKxSp3ZkqIIVwqeVxi9wNRK21BunM/zL3ej
-         Qknk6EO15PutwX7PphSt6bIi7NfG8yffH+b3Nbk2Vgy6y5LmDqC8vs3MZ+U/NpRta1cu
-         sfuLDQPBLHlx69c5XaK8rxcJJXczKkmyXM/w8sUJI938iD8IyRgTtlfVBMiDqoVMAuJd
-         R+A2reXsFP1Ch9hLmrW7bY7wau6OdvCfZsTQ+zqpehQk8/lGLWmeP27daKGQ4spZaVbx
-         NftQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BmbNE1buq5pXcu816xflWCrMTaLO2MZ62sTduj5sEmM=;
-        b=rS3qVVeps8e07xhgQxMLOxgVAatkYtChEo9omznBxf4jkBSakyfibCa/rTyITz7s95
-         icQ+AC2kyS8wYUlUC3lifUGj6xi1ca0lx9hOou4cF6OOburbR454Azx+q/c4pIiIHYC3
-         5XogWV4mRQ+Os0vYa8JixNDXvL2bd/LaLYBFhyhfTKZfSPzAdO4w3ZAC5cSEg8ZCU2fw
-         AA1pt6ZecY04u5W7RN3rj24xy/c1vGBtJRw0YCChStiVQtbbREC8c4+69pMgucIXvDsM
-         uZnqjCxjkPlrhC/CxtOtfzhCkPBZ6BhRUtIgFnPMLL2d4Qb4z4NpEUN/V0JQO+NbVeMf
-         3y0A==
-X-Gm-Message-State: AOAM5335QnNewcyR+jiYr2oZf2qUqmDx9bc1H33kF6y4a7+Xjt3SfUcJ
-        prqQklCEzdc98GK/YxsWhYLq3w==
-X-Google-Smtp-Source: ABdhPJyhP67WF654Q74haL5NM8BWjv2KU6FvcKM6NkYKcXg94B+h3ml0rPibaS3+uUc0lRUK6X+r0w==
-X-Received: by 2002:ac8:22ea:: with SMTP id g39mr16595368qta.146.1596458402728;
-        Mon, 03 Aug 2020 05:40:02 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id z197sm20327163qkb.66.2020.08.03.05.40.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 05:40:01 -0700 (PDT)
-Date:   Mon, 3 Aug 2020 08:39:55 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     nao.horiguchi@gmail.com
-Cc:     linux-mm@kvack.org, mhocko@kernel.org, akpm@linux-foundation.org,
-        mike.kravetz@oracle.com, osalvador@suse.de, tony.luck@intel.com,
-        david@redhat.com, aneesh.kumar@linux.vnet.ibm.com,
-        zeil@yandex-team.ru, naoya.horiguchi@nec.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 00/16] HWPOISON: soft offline rework
-Message-ID: <20200803123954.GA4631@lca.pw>
-References: <20200731122112.11263-1-nao.horiguchi@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200731122112.11263-1-nao.horiguchi@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 3 Aug 2020 08:40:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39918 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728718AbgHCMkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:40:14 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7F9320678;
+        Mon,  3 Aug 2020 12:40:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596458411;
+        bh=8cTwBuKDDuPXiMiYysRN9Muj0ZY2IrvJy3ATZBTkxSM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=U/C4N9Rcjuo/ka+MVq+HVroS9MBoH3p7OiqIArL+f/T5aXfYHF+1M02ZEB4fZ6kcl
+         h4nP/ZoPaczWO8q4p4Q43/d3pe89gZWELps52cqAgQ5Mpnu3XyM8bM2mMuM/7JIy23
+         LRxt6ZKJunIE/Z+tD0lORSMsAmkiJ3FXXzuSRB3c=
+From:   Mark Brown <broonie@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: [GIT PULL] regulator updates for v5.9
+Date:   Mon, 03 Aug 2020 13:39:15 +0100
+Message-Id: <20200803124010.C7F9320678@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 12:20:56PM +0000, nao.horiguchi@gmail.com wrote:
-> This patchset is the latest version of soft offline rework patchset
-> targetted for v5.9.
-> 
-> Main focus of this series is to stabilize soft offline.  Historically soft
-> offlined pages have suffered from racy conditions because PageHWPoison is
-> used to a little too aggressively, which (directly or indirectly) invades
-> other mm code which cares little about hwpoison.  This results in unexpected
-> behavior or kernel panic, which is very far from soft offline's "do not
-> disturb userspace or other kernel component" policy.
-> 
-> Main point of this change set is to contain target page "via buddy allocator",
-> where we first free the target page as we do for normal pages, and remove
-> from buddy only when we confirm that it reaches free list. There is surely
-> race window of page allocation, but that's fine because someone really want
-> that page and the page is still working, so soft offline can happily give up.
-> 
-> v4 from Oscar tries to handle the race around reallocation, but that part
-> seems still work in progress, so I decide to separate it for changes into
-> v5.9.  Thank you for your contribution, Oscar.
-> 
-> The issue reported by Qian Cai is fixed by patch 16/16.
+The following changes since commit 92ed301919932f777713b9172e525674157e983d:
 
-I am still getting EIO everywhere on next-20200803 (which includes this v5).
+  Linux 5.8-rc7 (2020-07-26 14:14:06 -0700)
 
-# ./random 1
-- start: migrate_huge_offline
-- use NUMA nodes 0,8.
-- mmap and free 8388608 bytes hugepages on node 0
-- mmap and free 8388608 bytes hugepages on node 8
-madvise: Input/output error
+are available in the Git repository at:
 
-From the serial console,
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-v5.9
 
-[  637.164222][ T8357] soft offline: 0x118ee0: hugepage isolation failed: 0, page count 2, type 7fff800001000e (referenced|uptodate|dirty|head)
-[  637.164890][ T8357] Soft offlining pfn 0x20001380 at process virtual address 0x7fff9f000000
-[  637.165422][ T8357] Soft offlining pfn 0x3ba00 at process virtual address 0x7fff9f200000
-[  637.166409][ T8357] Soft offlining pfn 0x201914a0 at process virtual address 0x7fff9f000000
-[  637.166833][ T8357] Soft offlining pfn 0x12b9a0 at process virtual address 0x7fff9f200000
-[  637.168044][ T8357] Soft offlining pfn 0x1abb60 at process virtual address 0x7fff9f000000
-[  637.168557][ T8357] Soft offlining pfn 0x20014820 at process virtual address 0x7fff9f200000
-[  637.169493][ T8357] Soft offlining pfn 0x119720 at process virtual address 0x7fff9f000000
-[  637.169603][ T8357] soft offline: 0x119720: hugepage isolation failed: 0, page count 2, type 7fff800001000e (referenced|uptodate|dirty|head)
-[  637.169756][ T8357] Soft offlining pfn 0x118ee0 at process virtual address 0x7fff9f200000
-[  637.170653][ T8357] Soft offlining pfn 0x200e81e0 at process virtual address 0x7fff9f000000
-[  637.171067][ T8357] Soft offlining pfn 0x201c5f60 at process virtual address 0x7fff9f200000
-[  637.172101][ T8357] Soft offlining pfn 0x201c8f00 at process virtual address 0x7fff9f000000
-[  637.172241][ T8357] __get_any_page: 0x201c8f00: unknown zero refcount page type 87fff8000000000
+for you to fetch changes up to 3f02794888213efb224ef8e38d5d0e0f74b95416:
 
-> 
-> This patchset is based on v5.8-rc7-mmotm-2020-07-27-18-18, but I applied
-> this series after reverting previous version.
-> Maybe https://github.com/Naoya-Horiguchi/linux/commits/soft-offline-rework.v5
-> shows what I did more precisely.
-> 
-> Any other comment/suggestion/help would be appreciated.
-> 
-> Thanks,
-> Naoya Horiguchi
-> ---
-> Previous versions:
->   v1: https://lore.kernel.org/linux-mm/1541746035-13408-1-git-send-email-n-horiguchi@ah.jp.nec.com/
->   v2: https://lore.kernel.org/linux-mm/20191017142123.24245-1-osalvador@suse.de/
->   v3: https://lore.kernel.org/linux-mm/20200624150137.7052-1-nao.horiguchi@gmail.com/
->   v4: https://lore.kernel.org/linux-mm/20200716123810.25292-1-osalvador@suse.de/
-> ---
-> Summary:
-> 
-> Naoya Horiguchi (8):
->       mm,hwpoison: cleanup unused PageHuge() check
->       mm, hwpoison: remove recalculating hpage
->       mm,madvise: call soft_offline_page() without MF_COUNT_INCREASED
->       mm,hwpoison-inject: don't pin for hwpoison_filter
->       mm,hwpoison: remove MF_COUNT_INCREASED
->       mm,hwpoison: remove flag argument from soft offline functions
->       mm,hwpoison: introduce MF_MSG_UNSPLIT_THP
->       mm,hwpoison: double-check page count in __get_any_page()
-> 
-> Oscar Salvador (8):
->       mm,madvise: Refactor madvise_inject_error
->       mm,hwpoison: Un-export get_hwpoison_page and make it static
->       mm,hwpoison: Kill put_hwpoison_page
->       mm,hwpoison: Unify THP handling for hard and soft offline
->       mm,hwpoison: Rework soft offline for free pages
->       mm,hwpoison: Rework soft offline for in-use pages
->       mm,hwpoison: Refactor soft_offline_huge_page and __soft_offline_page
->       mm,hwpoison: Return 0 if the page is already poisoned in soft-offline
-> 
->  drivers/base/memory.c      |   2 +-
->  include/linux/mm.h         |  12 +-
->  include/linux/page-flags.h |   6 +-
->  include/ras/ras_event.h    |   3 +
->  mm/hwpoison-inject.c       |  18 +--
->  mm/madvise.c               |  39 +++---
->  mm/memory-failure.c        | 334 ++++++++++++++++++++-------------------------
->  mm/migrate.c               |  11 +-
->  mm/page_alloc.c            |  60 ++++++--
->  9 files changed, 233 insertions(+), 252 deletions(-)
+  Merge remote-tracking branch 'regulator/for-5.9' into regulator-next (2020-07-30 23:27:08 +0100)
+
+----------------------------------------------------------------
+regulator: Updates for v5.9
+
+This time around the bulk of the work on the regulator API has been
+cleanups of various kinds, partly but not entirely inspired by the W=1
+stuff that 0day turned on.  There's also been a fairly large crop of new
+drivers, and a few bugfixes for existing drivers.
+
+ - Mode setting support for MT6397 and DA9211.
+ - New drivers for ChromeOS embedded controllers, Fairchild FAN53880,
+   NXP PCA9450, Qualcomm LABIBB, MP5496, and VBUS booster, and Silergy
+   SY8827N
+
+----------------------------------------------------------------
+Alexander A. Klimov (1):
+      regulator: Replace HTTP links with HTTPS ones
+
+Anand K Mistry (6):
+      regulator: mt6397: Move buck modes into header file
+      regulator: mt6397: Implement of_map_mode
+      regulator: mt6397: Document valid modes
+      regulator: da9211: Move buck modes into header file
+      regulator: da9211: Implement of_map_mode
+      regulator: da9211: Document allowed modes
+
+Axel Lin (2):
+      regulator: fan53880: Add missing .owner field in regulator_desc
+      regulator: pca9450: Convert to use module_i2c_driver
+
+Chen-Yu Tsai (1):
+      regulator: gpio: Honor regulator-boot-on property
+
+Christoph Fritz (3):
+      regulator: fan53880: Add initial support
+      dt-bindings: regulator: Document bindings for fan53880
+      regulator: fan53880: Add support for COMPILE_TEST
+
+Colin Ian King (1):
+      regulator: fix null pointer check on regmap
+
+Colton Lewis (1):
+      regulator: Correct kernel-doc inconsistency
+
+Jisheng Zhang (3):
+      regulator: add support for SY8827N regulator
+      regulator: add document bindings for sy8827n
+      regulator: mp886x: use .probe_new
+
+Kathiravan T (4):
+      regulator: qcom_smd: Add MP5496 regulators
+      regulator: add MP5496 regulator compatible
+      regulator: convert QCOM SMD-RPM regulator document to YAML schema
+      regulator: add the sub node names for the MP5496 PMIC
+
+Kieran Bingham (2):
+      regulator: gpio: Fix trivial spelling
+      regulator: Fix trivial spelling
+
+Lee Jones (19):
+      regulator: consumer: Supply missing prototypes for 3 core functions
+      regulator: dbx500-prcmu: Remove unused function dbx500_regulator_testcase()
+      regulator: ab8500: Remove unused embedded struct expand_register
+      regulator: wm8350-regulator: Repair odd formatting in documentation
+      regulator: cpcap-regulator: Remove declared and set, but never used variable 'ignore'
+      regulator: cpcap-regulator: Demote kerneldoc header to standard comment
+      regulator: max14577-regulator: Demote kerneldoc header to standard comment
+      regulator: max8998: Staticify internal function max8998_get_current_limit()
+      regulator: qcom-rpmh-regulator: Repair dodgy kerneldoc header formatting
+      regulator: pwm-regulator: Demote kerneldoc header to standard comment
+      regulator: stpmic1_regulator: Properly document 'struct stpmic1_regulator_cfg'
+      regulator: tps65217-regulator: Remove pointless 'is unsigned int <0' check
+      regulator: tps65217-regulator: Use the returned value of tps65217_reg_read()
+      regulator: tps65218-regulator: Remove pointless 'is unsigned int <0' check
+      regulator: wm8400-regulator: Repair dodgy kerneldoc header formatting
+      regulator: qcom_smd-regulator: Remove unused 'struct regulator_desc pmi8994_boost'
+      regulator: devres: Fix issues with kerneldoc headers
+      regulator: of_regulator: Add missing colon for rdev kerneldoc argument
+      regulator: devres: Standardise on function documentation headers
+
+Luca Ceresoli (1):
+      regulator: lp87565: enable voltage regardless of ENx pin
+
+Mark Brown (11):
+      Merge existing fixes from regulator/for-5.8
+      Merge series "Add support for voltage regulator on ChromeOS EC." from Pi-Hsun Shih <pihsun@chromium.org>:
+      Merge series "Add frequency / voltage scaling support for IPQ6018 SoC" from Kathiravan T <kathirav@codeaurora.org>:
+      Merge series "regulator/qcom: Constify static structs" from Rikard Falkeborn <rikard.falkeborn@gmail.com>:
+      Merge series "Introduce PMIC based USB type C detection" from Wesley Cheng <wcheng@codeaurora.org>:
+      Merge series "regulator: add support for SY8827N regulator" from Jisheng Zhang <Jisheng.Zhang@synaptics.com>:
+      Merge series "regulator: da9211: support changing modes" from Anand K Mistry <amistry@google.com>:
+      Merge series "regulator: mt6397: Implement of_map_mode regulator_desc function" from Anand K Mistry <amistry@google.com>:
+      Merge series "Add pca9450 driver" from Robin Gong <yibin.gong@nxp.com>:
+      Merge series "regulator_sync_state() support" from Saravana Kannan <saravanak@google.com>:
+      Merge remote-tracking branch 'regulator/for-5.9' into regulator-next
+
+Nisha Kumari (2):
+      regulator: qcom: Add labibb driver
+      regulator: Add labibb regulator binding
+
+Pi-Hsun Shih (5):
+      dt-bindings: regulator: Add DT binding for cros-ec-regulator
+      platform/chrome: cros_ec: Add command for regulator control.
+      regulator: Add driver for cros-ec-regulator
+      platform/chrome: cros_ec: Fix host command for regulator control.
+      regulator: cros-ec-regulator: Fix double free of desc->name.
+
+Rikard Falkeborn (8):
+      regulator: anatop: Constify anatop_core_rops
+      regulator: cpcap: Constify cpcap_regulator_ops
+      regulator: ltc3676: Constify ltc3676_regulators
+      regulator: max8907: Constify static structs
+      regulator: max8997: Constify struct regulator_ops
+      regulator: qcom_rpm: Constify struct regulator_ops
+      regulator: qcom_spmi: Constify struct regulator_ops
+      regulator: cros-ec: Constify cros_ec_regulator_voltage_ops
+
+Robin Gong (3):
+      regulator: pfuze100: add condition check for 'ramp_delay = 0'
+      regulator: pca9450: add pca9450 pmic driver
+      dt-bindings: regulator: add pca9450 regulator yaml
+
+Saravana Kannan (1):
+      regulator: core: Add destroy_regulator()
+
+Sumit Semwal (1):
+      regulator: Allow regulators to verify enabled during enable()
+
+Vladimir Zapolskiy (1):
+      regulator: fix memory leak on error path of regulator_register()
+
+Wesley Cheng (2):
+      regulator: Add support for QCOM PMIC VBUS booster
+      regulator: Add dt-binding for QCOM PMIC VBUS output regulator
+
+ .../devicetree/bindings/regulator/da9211.txt       |   4 +
+ .../regulator/google,cros-ec-regulator.yaml        |  51 ++
+ .../devicetree/bindings/regulator/lp872x.txt       |   4 +-
+ .../bindings/regulator/mt6397-regulator.txt        |   3 +
+ .../bindings/regulator/nxp,pca9450-regulator.yaml  | 190 +++++
+ .../bindings/regulator/onnn,fan53880.yaml          |  85 +++
+ .../bindings/regulator/qcom,smd-rpm-regulator.txt  | 320 --------
+ .../bindings/regulator/qcom,smd-rpm-regulator.yaml | 108 +++
+ .../regulator/qcom,usb-vbus-regulator.yaml         |  41 +
+ .../bindings/regulator/qcom-labibb-regulator.yaml  |  70 ++
+ .../bindings/regulator/silergy,sy8827n.yaml        |  45 ++
+ drivers/platform/chrome/cros_ec_trace.c            |   5 +
+ drivers/regulator/Kconfig                          |  55 ++
+ drivers/regulator/Makefile                         |   6 +
+ drivers/regulator/ab8500.c                         |   7 +-
+ drivers/regulator/anatop-regulator.c               |   2 +-
+ drivers/regulator/core.c                           | 115 ++-
+ drivers/regulator/cpcap-regulator.c                |  18 +-
+ drivers/regulator/cros-ec-regulator.c              | 252 +++++++
+ drivers/regulator/da9211-regulator.c               |  30 +-
+ drivers/regulator/dbx500-prcmu.c                   |   8 -
+ drivers/regulator/devres.c                         |  54 +-
+ drivers/regulator/fan53880.c                       | 184 +++++
+ drivers/regulator/fixed.c                          |   2 +-
+ drivers/regulator/gpio-regulator.c                 |   9 +-
+ drivers/regulator/hi6421-regulator.c               |   2 +-
+ drivers/regulator/hi6421v530-regulator.c           |   2 +-
+ drivers/regulator/lp873x-regulator.c               |   2 +-
+ drivers/regulator/lp87565-regulator.c              |  23 +-
+ drivers/regulator/ltc3676.c                        |   2 +-
+ drivers/regulator/max14577-regulator.c             |   2 +-
+ drivers/regulator/max8907-regulator.c              |   6 +-
+ drivers/regulator/max8997-regulator.c              |  14 +-
+ drivers/regulator/max8998.c                        |   2 +-
+ drivers/regulator/mp886x.c                         |   5 +-
+ drivers/regulator/mt6397-regulator.c               |  17 +-
+ drivers/regulator/of_regulator.c                   |   2 +-
+ drivers/regulator/pbias-regulator.c                |   2 +-
+ drivers/regulator/pca9450-regulator.c              | 833 +++++++++++++++++++++
+ drivers/regulator/pfuze100-regulator.c             |   9 +-
+ drivers/regulator/pwm-regulator.c                  |   2 +-
+ drivers/regulator/qcom-labibb-regulator.c          | 175 +++++
+ drivers/regulator/qcom-rpmh-regulator.c            |  14 +-
+ drivers/regulator/qcom_rpm-regulator.c             |   6 +-
+ drivers/regulator/qcom_smd-regulator.c             |  43 +-
+ drivers/regulator/qcom_spmi-regulator.c            |  24 +-
+ drivers/regulator/qcom_usb_vbus-regulator.c        |  97 +++
+ drivers/regulator/stpmic1_regulator.c              |   2 +-
+ drivers/regulator/sy8827n.c                        | 185 +++++
+ drivers/regulator/tps65023-regulator.c             |   2 +-
+ drivers/regulator/tps6507x-regulator.c             |   2 +-
+ drivers/regulator/tps65086-regulator.c             |   2 +-
+ drivers/regulator/tps65217-regulator.c             |   9 +-
+ drivers/regulator/tps65218-regulator.c             |   6 +-
+ drivers/regulator/tps65912-regulator.c             |   2 +-
+ drivers/regulator/wm8350-regulator.c               |  10 +-
+ drivers/regulator/wm8400-regulator.c               |   6 +-
+ .../dt-bindings/regulator/dlg,da9211-regulator.h   |  16 +
+ .../regulator/mediatek,mt6397-regulator.h          |  15 +
+ include/linux/platform_data/cros_ec_commands.h     |  83 ++
+ include/linux/regulator/consumer.h                 |  10 +
+ include/linux/regulator/driver.h                   |   7 +-
+ include/linux/regulator/machine.h                  |   1 +
+ include/linux/regulator/pca9450.h                  | 219 ++++++
+ 64 files changed, 3042 insertions(+), 487 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/google,cros-ec-regulator.yaml
+ create mode 100644 Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml
+ create mode 100644 Documentation/devicetree/bindings/regulator/onnn,fan53880.yaml
+ delete mode 100644 Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.yaml
+ create mode 100644 Documentation/devicetree/bindings/regulator/qcom,usb-vbus-regulator.yaml
+ create mode 100644 Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.yaml
+ create mode 100644 Documentation/devicetree/bindings/regulator/silergy,sy8827n.yaml
+ create mode 100644 drivers/regulator/cros-ec-regulator.c
+ create mode 100644 drivers/regulator/fan53880.c
+ create mode 100644 drivers/regulator/pca9450-regulator.c
+ create mode 100644 drivers/regulator/qcom-labibb-regulator.c
+ create mode 100644 drivers/regulator/qcom_usb_vbus-regulator.c
+ create mode 100644 drivers/regulator/sy8827n.c
+ create mode 100644 include/dt-bindings/regulator/dlg,da9211-regulator.h
+ create mode 100644 include/dt-bindings/regulator/mediatek,mt6397-regulator.h
+ create mode 100644 include/linux/regulator/pca9450.h
