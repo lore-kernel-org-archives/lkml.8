@@ -2,49 +2,73 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CEBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29375C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17A2B207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6B3F207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:36:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="clH+fmhA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbgHCTfy (ORCPT
+        id S1728290AbgHCTgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 15:35:54 -0400
-Received: from smtprelay0052.hostedemail.com ([216.40.44.52]:52322 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726906AbgHCTfy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 15:35:54 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id DDA80180A9F5C;
-        Mon,  3 Aug 2020 19:35:52 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: silk24_410b3b026fa0
-X-Filterd-Recvd-Size: 2397
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  3 Aug 2020 19:35:51 +0000 (UTC)
-Message-ID: <69b4c4838cb743e24a79f81de487ac2e494843ef.camel@perches.com>
-Subject: Re: [PATCH] gve: Fix the size used in a 'dma_free_coherent()' call
-From:   Joe Perches <joe@perches.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     csully@google.com, sagis@google.com, jonolson@google.com,
-        davem@davemloft.net, lrizzo@google.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Date:   Mon, 03 Aug 2020 12:35:49 -0700
-In-Reply-To: <3a25ddc6-adaa-d17d-50f4-8f8ab2ed25eb@wanadoo.fr>
-References: <20200802141523.691565-1-christophe.jaillet@wanadoo.fr>
-         <20200803084106.050eb7f6@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-         <3a25ddc6-adaa-d17d-50f4-8f8ab2ed25eb@wanadoo.fr>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Mon, 3 Aug 2020 15:36:02 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:44020 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726906AbgHCTgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 15:36:01 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596483361; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=FHtW4WjaTsFoNisPqVbyXMhsG1JBUXON5dZ+qL6ZJhk=; b=clH+fmhARMkKWx/kiFBzZNzp5LC7vtDmJSqUCo6kx7cwoUBSggvFs5wWAgeWhSlBzOe0dZJu
+ dif1A77cl74e9X54aU6ahsGH42nhCMmGWqbR07p6cruYw7tILnQZvSQqc7q81zDjsX3fKtRE
+ JQgacCALpAPjHUcsHaZwExXen24=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n17.prod.us-east-1.postgun.com with SMTP id
+ 5f28672090893260dde68e68 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 03 Aug 2020 19:36:00
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1AED9C433C9; Mon,  3 Aug 2020 19:35:59 +0000 (UTC)
+Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 149CFC433CB;
+        Mon,  3 Aug 2020 19:35:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 149CFC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        freedreno@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Krishna Reddy <vdumpa@nvidia.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Pritesh Raithatha <praithatha@nvidia.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v11 01/12] iommu/arm-smmu: Pass io-pgtable config to implementation specific function
+Date:   Mon,  3 Aug 2020 13:35:36 -0600
+Message-Id: <20200803193547.305660-2-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200803193547.305660-1-jcrouse@codeaurora.org>
+References: <20200803193547.305660-1-jcrouse@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -52,34 +76,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-08-03 at 21:19 +0200, Christophe JAILLET wrote:
-> Le 03/08/2020 à 17:41, Jakub Kicinski a écrit :
-> > On Sun,  2 Aug 2020 16:15:23 +0200 Christophe JAILLET wrote:
-> > > Update the size used in 'dma_free_coherent()' in order to match the one
-> > > used in the corresponding 'dma_alloc_coherent()'.
-> > > 
-> > > Fixes: 893ce44df5 ("gve: Add basic driver framework for Compute Engine Virtual NIC")
-> > > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> > 
-> > Fixes tag: Fixes: 893ce44df5 ("gve: Add basic driver framework for Compute Engine Virtual NIC")
-> > Has these problem(s):
-> > 	- SHA1 should be at least 12 digits long
-> > 	  Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-> > 	  or later) just making sure it is not set (or set to "auto").
-> > 
-> 
-> Hi,
-> 
-> I have git 2.25.1 and core.abbrev is already 12, both in my global 
-> .gitconfig and in the specific .git/gitconfig of my repo.
-> 
-> I would have expected checkpatch to catch this kind of small issue.
-> Unless I do something wrong, it doesn't.
-> 
-> Joe, does it make sense to you and would one of the following patch help?
+Construct the io-pgtable config before calling the implementation specific
+init_context function and pass it so the implementation specific function
+can get a chance to change it before the io-pgtable is created.
 
-18 months ago I sent:
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+---
 
-https://lore.kernel.org/lkml/40bfc40958fca6e2cc9b86101153aa0715fac4f7.camel@perches.com/
+ drivers/iommu/arm/arm-smmu/arm-smmu-impl.c |  3 ++-
+ drivers/iommu/arm/arm-smmu/arm-smmu.c      | 11 ++++++-----
+ drivers/iommu/arm/arm-smmu/arm-smmu.h      |  3 ++-
+ 3 files changed, 10 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c b/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
+index f4ff124a1967..a9861dcd0884 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
+@@ -68,7 +68,8 @@ static int cavium_cfg_probe(struct arm_smmu_device *smmu)
+ 	return 0;
+ }
+ 
+-static int cavium_init_context(struct arm_smmu_domain *smmu_domain)
++static int cavium_init_context(struct arm_smmu_domain *smmu_domain,
++		struct io_pgtable_cfg *pgtbl_cfg)
+ {
+ 	struct cavium_smmu *cs = container_of(smmu_domain->smmu,
+ 					      struct cavium_smmu, smmu);
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.c b/drivers/iommu/arm/arm-smmu/arm-smmu.c
+index 09c42af9f31e..37d8d49299b4 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu.c
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu.c
+@@ -795,11 +795,6 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+ 		cfg->asid = cfg->cbndx;
+ 
+ 	smmu_domain->smmu = smmu;
+-	if (smmu->impl && smmu->impl->init_context) {
+-		ret = smmu->impl->init_context(smmu_domain);
+-		if (ret)
+-			goto out_unlock;
+-	}
+ 
+ 	pgtbl_cfg = (struct io_pgtable_cfg) {
+ 		.pgsize_bitmap	= smmu->pgsize_bitmap,
+@@ -810,6 +805,12 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+ 		.iommu_dev	= smmu->dev,
+ 	};
+ 
++	if (smmu->impl && smmu->impl->init_context) {
++		ret = smmu->impl->init_context(smmu_domain, &pgtbl_cfg);
++		if (ret)
++			goto out_clear_smmu;
++	}
++
+ 	if (smmu_domain->non_strict)
+ 		pgtbl_cfg.quirks |= IO_PGTABLE_QUIRK_NON_STRICT;
+ 
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.h b/drivers/iommu/arm/arm-smmu/arm-smmu.h
+index d890a4a968e8..83294516ac08 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu.h
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu.h
+@@ -386,7 +386,8 @@ struct arm_smmu_impl {
+ 			    u64 val);
+ 	int (*cfg_probe)(struct arm_smmu_device *smmu);
+ 	int (*reset)(struct arm_smmu_device *smmu);
+-	int (*init_context)(struct arm_smmu_domain *smmu_domain);
++	int (*init_context)(struct arm_smmu_domain *smmu_domain,
++			struct io_pgtable_cfg *cfg);
+ 	void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
+ 			 int status);
+ 	int (*def_domain_type)(struct device *dev);
+-- 
+2.25.1
 
