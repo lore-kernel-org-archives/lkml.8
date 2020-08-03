@@ -2,54 +2,57 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44B4BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E9BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1809420678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3578D20678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458537;
-	bh=ntHVsyRurvGjVshNXwBX4PbkBBTnvkshNG9V5gbHCPw=;
+	s=default; t=1596458547;
+	bh=fshGYLcQsSw3oRUdVr523hsrXJ+lrjE7n7VUtXtO3IQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SEv8JYizvJY2kBzGCAtzdJYX3J/Wm0v87eTr8ZRzAsR/zPjtETYVgdlTZ6XU7dslT
-	 0mzM/TMbZoeqRSVi4cql+Sz0qM+bAKoCcD1Xl+uq8B1GYJrTlS9BY+FMZmJCRslORD
-	 0HRAh1HWV4EN5f567ccNUN0bEEnnaYnFL14xewcI=
+	b=t0T/eeqaUhv3R7TkwD7PhqO5Ru6/l+TVw9Y53YONLUJ/VTLKwD7Y40G+htP7pNUbp
+	 B8AyrUYDuVbrESJhkAdvlNLRvlW7C0vB8eRwjSSKrKXQ6GJwGkphnBpVkyeml+8Auc
+	 apX6FOKX0QmgnqVIRM9OpDcAfGYEq0hCqdkMYxe4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729286AbgHCMmQ (ORCPT
+        id S1729324AbgHCMmZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:42:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59352 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:42:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728716AbgHCMbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:31:41 -0400
+        id S1727824AbgHCMbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:31:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 945B2207FC;
-        Mon,  3 Aug 2020 12:31:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BBFC2054F;
+        Mon,  3 Aug 2020 12:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457900;
-        bh=ntHVsyRurvGjVshNXwBX4PbkBBTnvkshNG9V5gbHCPw=;
+        s=default; t=1596457880;
+        bh=fshGYLcQsSw3oRUdVr523hsrXJ+lrjE7n7VUtXtO3IQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l93+9UycmAS4Tj7vpqaPermwA0wdIYmgyCpZ/HiwzzR2keWt084ftnWQQVvlIIVum
-         6bKNiKkR/TJEFr6neRSVhvcd2ONeUJxLVY0lfAHy9exMtbQQFwKegZUfdcoo2VJr2K
-         wf99In2NoxVbAr9JLOa1iVB0Ld+ai6jfFMLn5ArY=
+        b=lZUiqa2okaM+oQ82axL3Tf/Wk7KR1YheO3q/iC/+SLUGd02uSAF/8u0p2TD42Sgz9
+         xcJ4bOfnYJ2+u40FPDwWuE/vyvQeWq11+fY4CuAiZfcItenBO6lMHIFdXEhRnGpRa6
+         Ng/R5NMZyTyBTugcHRts0yZkoUdAP2/qBUep3bWo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 03/56] iio: imu: adis16400: fix memory leak
-Date:   Mon,  3 Aug 2020 14:19:18 +0200
-Message-Id: <20200803121850.469452687@linuxfoundation.org>
+        stable@vger.kernel.org, Amit Klein <aksecurity@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>, Willy Tarreau <w@1wt.eu>
+Subject: [PATCH 4.19 16/56] random32: update the net random state on interrupt and activity
+Date:   Mon,  3 Aug 2020 14:19:31 +0200
+Message-Id: <20200803121851.126018222@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -62,38 +65,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9c0530e898f384c5d279bfcebd8bb17af1105873 ]
+From: Willy Tarreau <w@1wt.eu>
 
-In adis_update_scan_mode_burst, if adis->buffer allocation fails release
-the adis->xfer.
+commit f227e3ec3b5cad859ad15666874405e8c1bbc1d4 upstream.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This modifies the first 32 bits out of the 128 bits of a random CPU's
+net_rand_state on interrupt or CPU activity to complicate remote
+observations that could lead to guessing the network RNG's internal
+state.
+
+Note that depending on some network devices' interrupt rate moderation
+or binding, this re-seeding might happen on every packet or even almost
+never.
+
+In addition, with NOHZ some CPUs might not even get timer interrupts,
+leaving their local state rarely updated, while they are running
+networked processes making use of the random state.  For this reason, we
+also perform this update in update_process_times() in order to at least
+update the state when there is user or system activity, since it's the
+only case we care about.
+
+Reported-by: Amit Klein <aksecurity@gmail.com>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Willy Tarreau <w@1wt.eu>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/iio/imu/adis16400_buffer.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/char/random.c  |    1 +
+ include/linux/random.h |    3 +++
+ kernel/time/timer.c    |    8 ++++++++
+ lib/random32.c         |    2 +-
+ 4 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/imu/adis16400_buffer.c b/drivers/iio/imu/adis16400_buffer.c
-index e70a5339acb19..3fc11aec98b95 100644
---- a/drivers/iio/imu/adis16400_buffer.c
-+++ b/drivers/iio/imu/adis16400_buffer.c
-@@ -38,8 +38,11 @@ int adis16400_update_scan_mode(struct iio_dev *indio_dev,
- 		return -ENOMEM;
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -1257,6 +1257,7 @@ void add_interrupt_randomness(int irq, i
  
- 	adis->buffer = kzalloc(burst_length + sizeof(u16), GFP_KERNEL);
--	if (!adis->buffer)
-+	if (!adis->buffer) {
-+		kfree(adis->xfer);
-+		adis->xfer = NULL;
- 		return -ENOMEM;
-+	}
+ 	fast_mix(fast_pool);
+ 	add_interrupt_bench(cycles);
++	this_cpu_add(net_rand_state.s1, fast_pool->pool[cycles & 3]);
  
- 	tx = adis->buffer + burst_length;
- 	tx[0] = ADIS_READ_REG(ADIS16400_GLOB_CMD);
--- 
-2.25.1
-
+ 	if (unlikely(crng_init == 0)) {
+ 		if ((fast_pool->count >= 64) &&
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -9,6 +9,7 @@
+ 
+ #include <linux/list.h>
+ #include <linux/once.h>
++#include <linux/percpu.h>
+ 
+ #include <uapi/linux/random.h>
+ 
+@@ -115,6 +116,8 @@ struct rnd_state {
+ 	__u32 s1, s2, s3, s4;
+ };
+ 
++DECLARE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
++
+ u32 prandom_u32_state(struct rnd_state *state);
+ void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
+ void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -44,6 +44,7 @@
+ #include <linux/sched/debug.h>
+ #include <linux/slab.h>
+ #include <linux/compat.h>
++#include <linux/random.h>
+ 
+ #include <linux/uaccess.h>
+ #include <asm/unistd.h>
+@@ -1654,6 +1655,13 @@ void update_process_times(int user_tick)
+ 	scheduler_tick();
+ 	if (IS_ENABLED(CONFIG_POSIX_TIMERS))
+ 		run_posix_cpu_timers(p);
++
++	/* The current CPU might make use of net randoms without receiving IRQs
++	 * to renew them often enough. Let's update the net_rand_state from a
++	 * non-constant value that's not affine to the number of calls to make
++	 * sure it's updated when there's some activity (we don't care in idle).
++	 */
++	this_cpu_add(net_rand_state.s1, rol32(jiffies, 24) + user_tick);
+ }
+ 
+ /**
+--- a/lib/random32.c
++++ b/lib/random32.c
+@@ -48,7 +48,7 @@ static inline void prandom_state_selftes
+ }
+ #endif
+ 
+-static DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
++DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
+ 
+ /**
+  *	prandom_u32_state - seeded pseudo-random number generator.
 
 
