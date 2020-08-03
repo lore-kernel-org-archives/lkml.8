@@ -5,57 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E89E8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8ECC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0118D206F6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA23B20786
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:42:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H5mu5GLE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SL4ZbGfu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbgHCXmT (ORCPT
+        id S1729075AbgHCXmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 19:42:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33758 "EHLO
+        Mon, 3 Aug 2020 19:42:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728996AbgHCXmO (ORCPT
+        with ESMTP id S1728979AbgHCXmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 19:42:14 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6876C061757
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 16:42:13 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id l17so40362117iok.7
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 16:42:13 -0700 (PDT)
+        Mon, 3 Aug 2020 19:42:13 -0400
+Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2965C06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 16:42:12 -0700 (PDT)
+Received: by mail-io1-xd2d.google.com with SMTP id q75so32211240iod.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 16:42:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Lln6JBYYKdkFr9fLVLldmukzP3b+qcX1x2upAv1i08M=;
-        b=H5mu5GLEbAav9nWv/vcrIv0kD3UYIsL3qvoKbPqU02gHbkTG0Yw4Mai4/Xsr0ZAWbA
-         zJXT4mQuuojDD1UV5GyyTD1XkLIEVCsKuSiKEPFHSeHgRmLD83RxMoV75LGx28K7RBy6
-         0Y2gAgqxnCLM0YmO/9/tMORLfLrEoEZYC8aXg=
+        bh=TlOlrlXvKy/dxP8XanrvFTIVOHJ2xsZzzW4ZNNxbqnE=;
+        b=SL4ZbGfufYoeiv5aV67FYPCP69iJJxf1kiGlEKyreAbc/PIQOChKSdcmC4ggJ9rFib
+         ORIv7vnPS6aGFJyRJK17nsfXLtm74uFk/k/xf+ANBBvONcFSCEoBLD5ajgiJnsyv2Vmq
+         4L0suo+5A4JwHYrFO4brtS0zQn8nwpp3PHaS4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Lln6JBYYKdkFr9fLVLldmukzP3b+qcX1x2upAv1i08M=;
-        b=eduyrnIbfIITcXJSkWyfRPut5FP5SxDcwdCOUwUxbUHt7u4TRwC8qSZadfsA++7+1p
-         hFhxkE8qL0sxw2S+Bb52G13PgK5+5jkdMf5DSIe+l7sXXrpS9FqlhPGAcZ4r3oqoWeLT
-         Do2rJl0+cPrJvrAyizGj5Kr/sTXK9obIHZrsOP75mjR9YwkAfPArmGfsnhlVmRIDlwMw
-         PBC4zG8Mh0sdbLgXR8mnZjPnKu/r3pTvx1+uY3Q8o7HtC4iTpnN+uKPNblBZR7pCj5Cx
-         uLa0oY+4t+efncoV4m46HHM+ZlPX2rpAlUy7QK4my2QjLGK7fGjWL2QZmPtc/3W680xI
-         3AFw==
-X-Gm-Message-State: AOAM531tgGn2a9m5lFqaqg4jk20cVYMFc1u8JHLj7WT99B7o6XAqyU5S
-        vCBTOcSguTwK8MzYcFC3p5Gh5g==
-X-Google-Smtp-Source: ABdhPJwbfKLAgwd0K36OIo7YxxvBfOar8ndgtPuTAxf05fkRkAywntsLzGTdLBgjVcA8fbm/DbBPKQ==
-X-Received: by 2002:a6b:b7ce:: with SMTP id h197mr2414554iof.60.1596498133234;
-        Mon, 03 Aug 2020 16:42:13 -0700 (PDT)
-Received: from derch.Home (97-122-92-59.hlrn.qwest.net. [97.122.92.59])
-        by smtp.gmail.com with ESMTPSA id g2sm5468435ioe.4.2020.08.03.16.42.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=TlOlrlXvKy/dxP8XanrvFTIVOHJ2xsZzzW4ZNNxbqnE=;
+        b=aCG7xJMVg5cca7BQYZgqGVrWJ63jVgGDbf4Tzs/oan2KFlxVXEJ70FAgwoyDL27ffq
+         /jJzepMrEB3jmgVCtKyakvrsNETGQuImDz5BawU55hfxsgklFdwsv5/d1wjAYvGYasr+
+         Y6VJ5ks0S9OGyEyGwOKrQnmeq8ru385a1vYC4+z7l+IBUWK3t7atKeymZ8XhiBK76daV
+         tFpeu2EZhJzD/IrqQuS266sWN4liyUbCfiCCSesLAuEPTBobMHktlijUzlUpfN1czHYz
+         ekkoRjrBisA8Dj3FVy1HosHHxqLbygb1yZ1EoFWGPjDpSVqn5xwACHLURhbuTwpE7sgC
+         3Ekg==
+X-Gm-Message-State: AOAM533ua40e3czMS2HzazhJQgK50E7LzqE8NkeNR4HGhzWX4kXYL7DL
+        ljO0gLy/qfR6zCK2/PXR3LqB4Q==
+X-Google-Smtp-Source: ABdhPJxFvy1b82IWfcWuSV5sTLUIYinGrrp2h7y5igwOEByQAXV7GORiw6dMaomMLjMkY1d8Kx/jow==
+X-Received: by 2002:a6b:8e8c:: with SMTP id q134mr2313383iod.147.1596498132308;
         Mon, 03 Aug 2020 16:42:12 -0700 (PDT)
+Received: from derch.Home (97-122-92-59.hlrn.qwest.net. [97.122.92.59])
+        by smtp.gmail.com with ESMTPSA id g2sm5468435ioe.4.2020.08.03.16.42.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 16:42:11 -0700 (PDT)
 From:   Daniel Campello <campello@chromium.org>
 To:     LKML <devicetree@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
@@ -64,13 +65,15 @@ Cc:     Jonathan Cameron <jic23@kernel.org>,
         Douglas Anderson <dianders@chromium.org>,
         Daniel Campello <campello@chromium.org>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Enrico Granata <egranata@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         linux-iio@vger.kernel.org
-Subject: [PATCH v4 14/15] iio: sx9310: Enable vdd and svdd regulators at probe
-Date:   Mon,  3 Aug 2020 17:41:53 -0600
-Message-Id: <20200803131544.v4.14.Ib7bdc8340021d8515b430498fb6686eedf22c9f2@changeid>
+Subject: [PATCH v4 13/15] iio: sx9310: Drop channel_users[]
+Date:   Mon,  3 Aug 2020 17:41:52 -0600
+Message-Id: <20200803131544.v4.13.Ia5c5fdbdfff576ab5d034cde46c25cc66a4baf50@changeid>
 X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
 In-Reply-To: <20200803234154.320400-1-campello@chromium.org>
 References: <20200803234154.320400-1-campello@chromium.org>
@@ -83,12 +86,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Stephen Boyd <swboyd@chromium.org>
 
-Enable the main power supply (vdd) and digital IO power supply (svdd)
-during probe so that the i2c communication and device works properly on
-boards that aggressively power gate these supplies.
+This struct member isn't used. Drop it.
 
+Fixes: 72ad02b15d63 ("iio: Add SEMTECH SX9310/9311 sensor driver")
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Daniel Campello <campello@chromium.org>
 Signed-off-by: Daniel Campello <campello@chromium.org>
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
@@ -97,74 +100,21 @@ Changes in v4: None
 Changes in v3: None
 Changes in v2: None
 
- drivers/iio/proximity/sx9310.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/iio/proximity/sx9310.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-index 2e0ea84dba2118..a6e345bb9ffe5c 100644
+index 6395f61b720658..2e0ea84dba2118 100644
 --- a/drivers/iio/proximity/sx9310.c
 +++ b/drivers/iio/proximity/sx9310.c
-@@ -19,6 +19,7 @@
- #include <linux/module.h>
- #include <linux/pm.h>
- #include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/slab.h>
+@@ -135,7 +135,6 @@ struct sx9310_data {
+ 	struct completion completion;
+ 	unsigned long chan_read;
+ 	unsigned long chan_event;
+-	int channel_users[SX9310_NUM_CHANNELS];
+ 	unsigned int whoami;
+ };
  
- #include <linux/iio/buffer.h>
-@@ -119,6 +120,7 @@ struct sx9310_data {
- 	struct i2c_client *client;
- 	struct iio_trigger *trig;
- 	struct regmap *regmap;
-+	struct regulator_bulk_data supplies[2];
- 	/*
- 	 * Last reading of the proximity status for each channel.
- 	 * We only send an event to user space when this changes.
-@@ -875,6 +877,13 @@ static int sx9310_set_indio_dev_name(struct device *dev,
- 	return 0;
- }
- 
-+static void sx9310_regulator_disable(void *_data)
-+{
-+	struct sx9310_data *data = _data;
-+
-+	regulator_bulk_disable(ARRAY_SIZE(data->supplies), data->supplies);
-+}
-+
- static int sx9310_probe(struct i2c_client *client)
- {
- 	int ret;
-@@ -888,6 +897,8 @@ static int sx9310_probe(struct i2c_client *client)
- 
- 	data = iio_priv(indio_dev);
- 	data->client = client;
-+	data->supplies[0].supply = "vdd";
-+	data->supplies[1].supply = "svdd";
- 	mutex_init(&data->mutex);
- 	init_completion(&data->completion);
- 
-@@ -895,6 +906,21 @@ static int sx9310_probe(struct i2c_client *client)
- 	if (IS_ERR(data->regmap))
- 		return PTR_ERR(data->regmap);
- 
-+	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(data->supplies),
-+				      data->supplies);
-+	if (ret)
-+		return ret;
-+
-+	ret = regulator_bulk_enable(ARRAY_SIZE(data->supplies), data->supplies);
-+	if (ret)
-+		return ret;
-+	/* Must wait for Tpor time after initial power up */
-+	usleep_range(1000, 1100);
-+
-+	ret = devm_add_action_or_reset(dev, sx9310_regulator_disable, data);
-+	if (ret)
-+		return ret;
-+
- 	ret = regmap_read(data->regmap, SX9310_REG_WHOAMI, &data->whoami);
- 	if (ret) {
- 		dev_err(dev, "error in reading WHOAMI register: %d\n", ret);
 -- 
 2.28.0.163.g6104cc2f0b6-goog
 
