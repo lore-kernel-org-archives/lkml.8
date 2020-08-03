@@ -2,159 +2,268 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D09C433E5
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 725B0C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03D892072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B3C72072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:43:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="i7M+yxWO";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="lbUwMAYj"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PG4hxvt/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbgHCPnA (ORCPT
+        id S1728246AbgHCPmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 11:43:00 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:5014 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728228AbgHCPm4 (ORCPT
+        Mon, 3 Aug 2020 11:42:55 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:5022 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728060AbgHCPmh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 11:42:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1596469375; x=1628005375;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=X7GhNHDNBld0ATHsHCpT4wlfpTjNxEFBBI5jSwbyCTM=;
-  b=i7M+yxWOc5tK1+oS3jA22NOOWQsr/fNIFujRkikwH6v0+WpdDZtFizzx
-   MlvyH45DhaR/2QOzahhGl98ffPv9jkB3z8em9DRyLT0V6ccZZnvqjpZmI
-   NuXxae5IE1J6/CE+ZlCcKtnfJ1iPP7hy74/ig21hbZIQUCrQvcp+xjulP
-   7R/sk0qE8n7d480/8bHTXZvHDG2HmD/jJxTgYv0HwKaPCO1QHsXitLDdx
-   a/cahOQNtwcKUcgiQvlb3RqTcQSRVNazSxXoQgpUak6Y60Pj8xpZD7Bvr
-   62SnpZnNlmlhUQDcGJEgj727/m6u5cCP1tlcni7bZsA74b5lwVAkJZgFU
-   Q==;
-IronPort-SDR: 0NE7ifo3Q032NIOl/p0cY2f986dlDk0+hxYwnCXxfuUAdSXs8frYbeoG6Zu1RhYR3BIi5RdoXc
- EAct2Vo575sK0gK02OA8rzwGEaKooRgFfRGoEFNgW7mV/UrIRRbiUdT6l9VJ2STT9dBhUcs9vj
- YZUpoIJrmLVustIxBfOZj15eIAvc7PqxVcOTJOgyw0fSQQ1uErZnVC24zLuU06eWye3O8duzvL
- 58BEU2iqVSmYpZdRD27LZSMzmE8am40WBieqBxLtyTjFsGtNGYKw9nuU3+9J1fckMDuUJcE9LF
- Dmk=
-X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
-   d="scan'208";a="90257468"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Aug 2020 08:42:54 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 3 Aug 2020 08:42:54 -0700
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3 via Frontend
- Transport; Mon, 3 Aug 2020 08:42:50 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OpjTgr2xdH5OgLAPh8WhXTh9vwv9rmlSGrPtibkDKQsKbZXRzplFyEYWUPwjq49lIHQo0B1wwGOgiVQd5tto0sIYLY1YIMIUqyHDEmF8t8KK+C+RzT9dYT/ve0EOcJ4PVdB0TyNjexAYz85gH5ZRtpc6yl4zCRcYCKM9Z35YSpWdzxAH5LUA96KfLOS8Dxh5/PfEjiqG6yEdAq3g4LVJYJE9eukkFnbOFYDEXKDS95RRtprn1yMbyvjGiKIbF73AS4+psrO10pQWGt//hkSxyHBhO7lOUSC9v9ngUr0XVdDYii7Ehes4UyjC4lwcNULQcaMIQWRu9GImHraOtFOh1w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a4hazMDevnP0aXs4MkGpT80XdIS4hMMLvFnjRrNwyxw=;
- b=SumvKF2xVjDFY6BQjQJNY9k6UhCe38Zp6hssjQA/Lhe6uhfRk8kitiNv5r52jauIb+LAKLkm/ONipl4h0Tj1jyTs1NZlev3RWDpW6d6Tv+rnzA2IIuTIh4t36Ok11N7gsRZM34qVAh5k3PjL8M1up3FS0lSopmi/XBcvH7zrblpReithgDZwsvQaPpuFR/e0j5rqvrzMTtPb62c3Y5NQmzaBpBDChkT6kvgFxStnLmDWQOnDS+JwClwzEZMBWrqqo2fgMlsAikrvnYndv5xdVXq0JMmerKdZIq6sxhNIz+0qLi7jN3u20ui5EQRbWyNFlUw4GFMxat+lqqlUWs6nOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a4hazMDevnP0aXs4MkGpT80XdIS4hMMLvFnjRrNwyxw=;
- b=lbUwMAYj69xTgX/VcQnEaYVgYxjeZTQsc7vzGQQMLiSv0C9d/zSheNGsyI1VulsNY7wGPjWT9il9KE3A1oWl0ZxGf2ZPrx3wC5338VGyapVHDGkNLap8+6BOUPcjh3ZKejpdhnpvVH+8Gt04HYxrAU9HZd6AbI3Zq4C0E2/To+o=
-Received: from SN6PR11MB3504.namprd11.prod.outlook.com (2603:10b6:805:d0::17)
- by SA0PR11MB4734.namprd11.prod.outlook.com (2603:10b6:806:99::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17; Mon, 3 Aug
- 2020 15:42:53 +0000
-Received: from SN6PR11MB3504.namprd11.prod.outlook.com
- ([fe80::c83b:2062:4e59:8ebf]) by SN6PR11MB3504.namprd11.prod.outlook.com
- ([fe80::c83b:2062:4e59:8ebf%7]) with mapi id 15.20.3239.021; Mon, 3 Aug 2020
- 15:42:52 +0000
-From:   <Codrin.Ciubotariu@microchip.com>
-To:     <wsa@kernel.org>
-CC:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <robh+dt@kernel.org>,
-        <Ludovic.Desroches@microchip.com>, <Nicolas.Ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
-        <kamel.bouhara@bootlin.com>
-Subject: Re: Re: [RFC PATCH 4/4] i2c: at91: Move to generic GPIO bus recovery
-Thread-Topic: Re: [RFC PATCH 4/4] i2c: at91: Move to generic GPIO bus recovery
-Thread-Index: AQHWRkUH28LN6vyz50q8ydS45lftAKklUoAAgAF6cgA=
-Date:   Mon, 3 Aug 2020 15:42:52 +0000
-Message-ID: <65890aab-1d19-7e7e-abff-3c6ee05c8ade@microchip.com>
-References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
- <20200619141904.910889-5-codrin.ciubotariu@microchip.com>
- <20200802170820.GC10193@kunai>
-In-Reply-To: <20200802170820.GC10193@kunai>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=microchip.com;
-x-originating-ip: [84.232.220.208]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 62fd1798-b8b0-45bd-013b-08d837c3e26b
-x-ms-traffictypediagnostic: SA0PR11MB4734:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SA0PR11MB4734ADB862052287EC3E392BE74D0@SA0PR11MB4734.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: m0NeT7BK/mdhfPrcZGmGYeNMlcl5qRK55Iw1IEscxmpuRJrw3buM3DGIWFJ5DRqRywlaxT0MNtr2Cu21gTJfP9v2yulgAn6/oZKKr02XhUP9lrvK8CE3UceJqX6SQkY8L3JvjWCbzxtwwLtvAzs3UO2nd03ewOxbvIse3JlEARbI8cWAp0v6o8NLGnjFsetf+yTTCgsYZwPb05eGsH3GyQHvraqRYeGIPW1+KDlzCmOf0ioTIRzyyfRwx84QBvjjT9BI+ONCVn+5fTMNAWBnwbMpdT5wc6DLoYD1ix19Sem7JMObP0lSGWU33pql1hVGbHV3K8W9pjpNilNysg+EEWDYzGLDldY8wHjE0kKh1C0MJqgIPBc8y6sO/8K5Zh0x6vLsscBAHHHdXgswrZ2vXw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3504.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(136003)(39860400002)(376002)(346002)(366004)(8936002)(6512007)(66946007)(6916009)(83380400001)(478600001)(4326008)(8676002)(31686004)(36756003)(66446008)(64756008)(66556008)(66476007)(2906002)(76116006)(91956017)(2616005)(26005)(316002)(86362001)(31696002)(71200400001)(54906003)(6486002)(5660300002)(6506007)(53546011)(186003)(4744005)(41533002)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: m5h5+4QPb6I9kiJSAVkzs1eFv7RYf2eLvBWIAl2+sA1cISXBNFV/lJx5f6D9v75zjtjJOOxp8Vlou9jbrPZ/7wuuzLlMj1SDznk8CiRXEkvgFC3o2ZJZ0R9LjnzRfMRUknb5EPXJe1a0Ey6ipQxJU2T7gwATvznksmK4rf0Ja0WkVlG0vTevVcO09eqx6SV+XdrDkVESEOwYQwgp2ZAzNVJT6jV2s8x8NtkXjDgjYj/P8BTNbbe3+wxvjxU3klxvCA0aaP6tOznaOgFN/YgsQ5b0DQaBZBjH/BqtxvPBYoVval6yOm39I+t2bP6EF2wRn8aEmUcU68EvyTHOpb3deGT7z3u1fTEFBlYwQQxc5BwOOOBSgwMHxIQI4EOKFLRr/9RkFY6srMfqjaPPyj+f3an5WS/a0FEhuRB6goxu60Dj4ym8CF7GbWZZsSrT2goBv47+v+hqA+4Do+gs06IhDR0EFtvbqyocZUMkTIj0/zjlVitcXNYkDLh5sEElGJmySSdXZtONPL/+g6vB26dt4ERuOzcfCX5xEXyoSkx9hAJexGkYGCslrsHv5CuPhH2/EuZpxWwPYw5OZBNC0Po9LqYqQNsyzRq7z6LpboVpDos7L+qA7E6iz5DzpxcGbvzPb2qrQcsg94E8KfG2hvY4WA==
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <69FD854A2D0B194680CD655B27C7A1B7@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 3 Aug 2020 11:42:37 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f28303c0000>; Mon, 03 Aug 2020 08:41:48 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 03 Aug 2020 08:42:37 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 03 Aug 2020 08:42:37 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Aug
+ 2020 15:42:36 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 3 Aug 2020 15:42:36 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.221]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f28306c0000>; Mon, 03 Aug 2020 08:42:36 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v8 10/10] media: tegra-video: Compute settle times based on the clock rate
+Date:   Mon, 3 Aug 2020 08:42:26 -0700
+Message-ID: <1596469346-937-11-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
+References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB3504.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62fd1798-b8b0-45bd-013b-08d837c3e26b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Aug 2020 15:42:52.8606
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: waTJSgHFbBHOr1pcjZmPq2NsFGH9BiHdJ/wEvKFaJr+nK96UM0BdbNXw5/I4wGLuHeabGvRVu4vzoLw84+pe0Z2lGI8MKDvFa/MfA4BFRyc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4734
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596469308; bh=roUn4OftC01Up9y6dlWJXGmDtepFSh32F4qmSVfXZBY=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=PG4hxvt/r6JYxOH7qwbfUR55E0zVB/0XV4jQK5z5DvTXcfFgzctqvOa0VgQkTjuT0
+         FAJTCVxBrkXP2T/ocrTNMKF3MDCLjlbXo4HaskvkftWJze7t+CuE5X6YayWpfaDeSm
+         olrYG2RRkDQbybIRhRVFMOVEkNHAcvD1YChAy+ZlZSlknDz+Zmd4ADN5keDuZAc/3K
+         84rHc3vNwblwI4kOlmz/RuFcey5T2xxcBUzHZIr90/7rq+5UmBkTocCuafoCumPiQY
+         ViO2Ww5toR53FeJn0xTkrfcOrPM8w6Jg/EcTOWxLYbGZJYUGk2XwPQsKECh1wnSa0x
+         ROhd3Lpz/KAnA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02.08.2020 20:08, Wolfram Sang wrote:
-> On Fri, Jun 19, 2020 at 05:19:04PM +0300, Codrin Ciubotariu wrote:
->> Make the Microchip at91 driver the first to use the generic GPIO bus
->> recovery support from the I2C core and discard the driver implementation=
-.
->>
->> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
->> ---
->>   drivers/i2c/busses/i2c-at91-master.c | 69 ++--------------------------
->>   drivers/i2c/busses/i2c-at91.h        |  3 --
->=20
-> Nice diffstat! I will try using this new functionality with another
-> controller next week.
->=20
+Settle time determines the number of cil clock cyles to wait after
+LP00 when moving from LP to HS.
 
-Thanks, this would be great! I tested this on a sam9x60, with the HW=20
-feature for the 9 pulses disabled, with a picky audio codec as I2C device.
-Please let me know of the result.
+This patch computes T-CLK-SETTLE and T-HS-SETTLE times based on cil
+clock rate and pixel rate from the sensor and programs them during
+streaming.
 
-Best regards,
-Codrin
+T-CLK-SETTLE time is the interval during which receiver will ignore
+any HS transitions on clock lane starting from the beginning of
+T-CLK-PREPARE.
+
+T-HS-SETTLE time is the interval during which recevier will ignore
+any HS transitions on data lane starting from the beginning of
+T-HS-PREPARE.
+
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ drivers/staging/media/tegra-video/TODO       |  1 -
+ drivers/staging/media/tegra-video/csi.c      | 55 ++++++++++++++++++++++++++++
+ drivers/staging/media/tegra-video/csi.h      |  5 +++
+ drivers/staging/media/tegra-video/tegra210.c | 17 ++++++++-
+ 4 files changed, 75 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/staging/media/tegra-video/TODO b/drivers/staging/media/tegra-video/TODO
+index 98d3c7d..c821081 100644
+--- a/drivers/staging/media/tegra-video/TODO
++++ b/drivers/staging/media/tegra-video/TODO
+@@ -1,5 +1,4 @@
+ TODO list
+-* Add MIPI clock Settle time computation based on the data rate.
+ * Add support for Ganged mode.
+ * Add RAW10 packed video format support to Tegra210 video formats.
+ * Add support for suspend and resume.
+diff --git a/drivers/staging/media/tegra-video/csi.c b/drivers/staging/media/tegra-video/csi.c
+index 76b4311..93875cb 100644
+--- a/drivers/staging/media/tegra-video/csi.c
++++ b/drivers/staging/media/tegra-video/csi.c
+@@ -19,6 +19,8 @@
+ #include "csi.h"
+ #include "video.h"
+ 
++#define MHZ			1000000
++
+ static inline struct tegra_csi *
+ host1x_client_to_csi(struct host1x_client *client)
+ {
+@@ -235,6 +237,59 @@ static int tegra_csi_g_frame_interval(struct v4l2_subdev *subdev,
+ 	return 0;
+ }
+ 
++static unsigned int csi_get_pixel_rate(struct tegra_csi_channel *csi_chan)
++{
++	struct tegra_vi_channel *chan;
++	struct v4l2_subdev *src_subdev;
++	struct v4l2_ctrl *ctrl;
++
++	chan = v4l2_get_subdev_hostdata(&csi_chan->subdev);
++	src_subdev = tegra_channel_get_remote_source_subdev(chan);
++	ctrl = v4l2_ctrl_find(src_subdev->ctrl_handler, V4L2_CID_PIXEL_RATE);
++	if (ctrl)
++		return v4l2_ctrl_g_ctrl_int64(ctrl);
++
++	return 0;
++}
++
++void tegra_csi_calc_settle_time(struct tegra_csi_channel *csi_chan,
++				u8 *clk_settle_time,
++				u8 *ths_settle_time)
++{
++	struct tegra_csi *csi = csi_chan->csi;
++	unsigned int cil_clk_mhz;
++	unsigned int pix_clk_mhz;
++	int clk_idx = (csi_chan->csi_port_num >> 1) + 1;
++
++	cil_clk_mhz = clk_get_rate(csi->clks[clk_idx].clk) / MHZ;
++	pix_clk_mhz = csi_get_pixel_rate(csi_chan) / MHZ;
++
++	/*
++	 * CLK Settle time is the interval during which HS receiver should
++	 * ignore any clock lane HS transitions, starting from the beginning
++	 * of T-CLK-PREPARE.
++	 * Per DPHY specification, T-CLK-SETTLE should be between 95ns ~ 300ns
++	 *
++	 * 95ns < (clk-settle-programmed + 7) * lp clk period < 300ns
++	 * midpoint = 197.5 ns
++	 */
++	*clk_settle_time = ((95 + 300) * cil_clk_mhz - 14000) / 2000;
++
++	/*
++	 * THS Settle time is the interval during which HS receiver should
++	 * ignore any data lane HS transitions, starting from the beginning
++	 * of THS-PREPARE.
++	 *
++	 * Per DPHY specification, T-HS-SETTLE should be between 85ns + 6UI
++	 * and 145ns+10UI.
++	 * 85ns + 6UI < (Ths-settle-prog + 5) * lp_clk_period < 145ns + 10UI
++	 * midpoint = 115ns + 8UI
++	 */
++	if (pix_clk_mhz)
++		*ths_settle_time = (115 * cil_clk_mhz + 8000 * cil_clk_mhz
++				   / (2 * pix_clk_mhz) - 5000) / 1000;
++}
++
+ static int tegra_csi_enable_stream(struct v4l2_subdev *subdev)
+ {
+ 	struct tegra_vi_channel *chan = v4l2_get_subdev_hostdata(subdev);
+diff --git a/drivers/staging/media/tegra-video/csi.h b/drivers/staging/media/tegra-video/csi.h
+index 0d50fc3..c65ff73 100644
+--- a/drivers/staging/media/tegra-video/csi.h
++++ b/drivers/staging/media/tegra-video/csi.h
+@@ -51,6 +51,7 @@ struct tegra_csi;
+  * @h_blank: horizontal blanking for TPG active format
+  * @v_blank: vertical blanking for TPG active format
+  * @mipi: mipi device for corresponding csi channel pads
++ * @pixel_rate: active pixel rate from the sensor on this channel
+  */
+ struct tegra_csi_channel {
+ 	struct list_head list;
+@@ -67,6 +68,7 @@ struct tegra_csi_channel {
+ 	unsigned int h_blank;
+ 	unsigned int v_blank;
+ 	struct tegra_mipi_device *mipi;
++	unsigned int pixel_rate;
+ };
+ 
+ /**
+@@ -147,4 +149,7 @@ extern const struct tegra_csi_soc tegra210_csi_soc;
+ #endif
+ 
+ void tegra_csi_error_recover(struct v4l2_subdev *subdev);
++void tegra_csi_calc_settle_time(struct tegra_csi_channel *csi_chan,
++				u8 *clk_settle_time,
++				u8 *ths_settle_time);
+ #endif
+diff --git a/drivers/staging/media/tegra-video/tegra210.c b/drivers/staging/media/tegra-video/tegra210.c
+index 253bf33..ac066c0 100644
+--- a/drivers/staging/media/tegra-video/tegra210.c
++++ b/drivers/staging/media/tegra-video/tegra210.c
+@@ -7,6 +7,7 @@
+  * This source file contains Tegra210 supported video formats,
+  * VI and CSI SoC specific data, operations and registers accessors.
+  */
++#include <linux/bitfield.h>
+ #include <linux/clk.h>
+ #include <linux/clk/tegra.h>
+ #include <linux/delay.h>
+@@ -98,6 +99,8 @@
+ #define   BRICK_CLOCK_B_4X				(0x2 << 16)
+ #define TEGRA_CSI_CIL_PAD_CONFIG1                       0x004
+ #define TEGRA_CSI_CIL_PHY_CONTROL                       0x008
++#define   CLK_SETTLE_MASK				GENMASK(13, 8)
++#define   THS_SETTLE_MASK				GENMASK(5, 0)
+ #define TEGRA_CSI_CIL_INTERRUPT_MASK                    0x00c
+ #define TEGRA_CSI_CIL_STATUS                            0x010
+ #define TEGRA_CSI_CILX_STATUS                           0x014
+@@ -770,8 +773,14 @@ static int tegra210_csi_start_streaming(struct tegra_csi_channel *csi_chan)
+ {
+ 	struct tegra_csi *csi = csi_chan->csi;
+ 	unsigned int portno = csi_chan->csi_port_num;
++	u8 clk_settle_time = 0;
++	u8 ths_settle_time = 10;
+ 	u32 val;
+ 
++	if (!csi_chan->pg_mode)
++		tegra_csi_calc_settle_time(csi_chan, &clk_settle_time,
++					   &ths_settle_time);
++
+ 	csi_write(csi, portno, TEGRA_CSI_CLKEN_OVERRIDE, 0);
+ 
+ 	/* clean up status */
+@@ -782,7 +791,9 @@ static int tegra210_csi_start_streaming(struct tegra_csi_channel *csi_chan)
+ 
+ 	/* CIL PHY registers setup */
+ 	cil_write(csi, portno, TEGRA_CSI_CIL_PAD_CONFIG0, 0x0);
+-	cil_write(csi, portno, TEGRA_CSI_CIL_PHY_CONTROL, 0xa);
++	cil_write(csi, portno, TEGRA_CSI_CIL_PHY_CONTROL,
++		  FIELD_PREP(CLK_SETTLE_MASK, clk_settle_time) |
++		  FIELD_PREP(THS_SETTLE_MASK, ths_settle_time));
+ 
+ 	/*
+ 	 * The CSI unit provides for connection of up to six cameras in
+@@ -801,7 +812,9 @@ static int tegra210_csi_start_streaming(struct tegra_csi_channel *csi_chan)
+ 			  BRICK_CLOCK_A_4X);
+ 		cil_write(csi, portno + 1, TEGRA_CSI_CIL_PAD_CONFIG0, 0x0);
+ 		cil_write(csi, portno + 1, TEGRA_CSI_CIL_INTERRUPT_MASK, 0x0);
+-		cil_write(csi, portno + 1, TEGRA_CSI_CIL_PHY_CONTROL, 0xa);
++		cil_write(csi, portno + 1, TEGRA_CSI_CIL_PHY_CONTROL,
++			  FIELD_PREP(CLK_SETTLE_MASK, clk_settle_time) |
++			  FIELD_PREP(THS_SETTLE_MASK, ths_settle_time));
+ 		csi_write(csi, portno, TEGRA_CSI_PHY_CIL_COMMAND,
+ 			  CSI_A_PHY_CIL_ENABLE | CSI_B_PHY_CIL_ENABLE);
+ 	} else {
+-- 
+2.7.4
+
