@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5895AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0BAC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 329B020775
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 427322177B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457817;
-	bh=+J6fOoLK985RugK/lghNk9b0GLsZJS34xZ+SIvL3Gdo=;
+	s=default; t=1596457818;
+	bh=h5rqxxYfACI8lziQ7XNfbCk2S/drUfGwBebl1x248LA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w7OD0Bz9JzgFocEUmKkDm4jAFv+jHiESUuXhMhgA+pJb5pNnT1CDljF3CB6xuGfpA
-	 oa8VPUYrG/MdaeCo256+1R397tcrEfQI5mRhpGwHLn6qGzLMvae5WhXLaljw3YJEzK
-	 6TsfBRTmDztY7WHhbu8nBQmWK1ZmYTqXG2Xinxb8=
+	b=eFkG38byiD5jC+25rtRtf0gSU9hSIBZV1IGpdP+9UgxoihTGlIk4whG5x6Gc1ew/j
+	 13mtz9+Lf4giEFzIHgy5LJaw3ZqqhuISERBPJJWgTt2dKD+4CvrsPsmF0W9vSRzcTw
+	 PQNtq6jV2Aes1LPtMXKoMPPVZ5S/YIjIOtA4bqWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbgHCMaQ (ORCPT
+        id S1729032AbgHCMaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:30:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56930 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:30:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729007AbgHCMaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:30:02 -0400
+        id S1727006AbgHCMaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:30:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F6D12086A;
-        Mon,  3 Aug 2020 12:30:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 810AB208B3;
+        Mon,  3 Aug 2020 12:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457801;
-        bh=+J6fOoLK985RugK/lghNk9b0GLsZJS34xZ+SIvL3Gdo=;
+        s=default; t=1596457807;
+        bh=h5rqxxYfACI8lziQ7XNfbCk2S/drUfGwBebl1x248LA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LgfbiCw8ipELJwgM6IqARFAPje+rdMMAsH/yv3DhCIWbei/F/vCfllX3LCcRfVeEs
-         QZ1ImOHHUxW9qlGMkGkkJJ8nY0bSroKnoajMgYuiJt8/avwFORt3K4SYNnCJpHp1bz
-         7l7jA/r9GeDMP5ny0Zuw9+w87bt0eooibCQEyjEs=
+        b=rFHNAq7fZC8tOMkPFfgNll1+OjU86hfmNqduZcxakraZfmUQBAnA4fbJQSnUgBKGv
+         kgn9yKS2G1CAauy18odK7nx451XOiQrb32JX3/pzDZqMXmI8ICFegSIVF0oYAYu01s
+         ZlZbUpwcXiCueoXIG9C+SLibieTqb0OTG08MHHD4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Raviteja Narayanam <raviteja.narayanam@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 78/90] Revert "i2c: cadence: Fix the hold bit setting"
-Date:   Mon,  3 Aug 2020 14:19:40 +0200
-Message-Id: <20200803121901.393294334@linuxfoundation.org>
+        stable@vger.kernel.org, Wang ShaoBo <bobo.shaobowang@huawei.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 80/90] x86/stacktrace: Fix reliable check for empty user task stacks
+Date:   Mon,  3 Aug 2020 14:19:42 +0200
+Message-Id: <20200803121901.482736973@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -61,72 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raviteja Narayanam <raviteja.narayanam@xilinx.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit 0db9254d6b896b587759e2c844c277fb1a6da5b9 ]
+[ Upstream commit 039a7a30ec102ec866d382a66f87f6f7654f8140 ]
 
-This reverts commit d358def706880defa4c9e87381c5bf086a97d5f9.
+If a user task's stack is empty, or if it only has user regs, ORC
+reports it as a reliable empty stack.  But arch_stack_walk_reliable()
+incorrectly treats it as unreliable.
 
-There are two issues with "i2c: cadence: Fix the hold bit setting" commit.
+That happens because the only success path for user tasks is inside the
+loop, which only iterates on non-empty stacks.  Generally, a user task
+must end in a user regs frame, but an empty stack is an exception to
+that rule.
 
-1. In case of combined message request from user space, when the HOLD
-bit is cleared in cdns_i2c_mrecv function, a STOP condition is sent
-on the bus even before the last message is started. This is because when
-the HOLD bit is cleared, the FIFOS are empty and there is no pending
-transfer. The STOP condition should occur only after the last message
-is completed.
+Thanks to commit 71c95825289f ("x86/unwind/orc: Fix error handling in
+__unwind_start()"), unwind_start() now sets state->error appropriately.
+So now for both ORC and FP unwinders, unwind_done() and !unwind_error()
+always means the end of the stack was successfully reached.  So the
+success path for kthreads is no longer needed -- it can also be used for
+empty user tasks.
 
-2. The code added by the commit is redundant. Driver is handling the
-setting/clearing of HOLD bit in right way before the commit.
-
-The setting of HOLD bit based on 'bus_hold_flag' is taken care in
-cdns_i2c_master_xfer function even before cdns_i2c_msend/cdns_i2c_recv
-functions.
-
-The clearing of HOLD bit is taken care at the end of cdns_i2c_msend and
-cdns_i2c_recv functions based on bus_hold_flag and byte count.
-Since clearing of HOLD bit is done after the slave address is written to
-the register (writing to address register triggers the message transfer),
-it is ensured that STOP condition occurs at the right time after
-completion of the pending transfer (last message).
-
-Signed-off-by: Raviteja Narayanam <raviteja.narayanam@xilinx.com>
-Acked-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Reported-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
+Link: https://lkml.kernel.org/r/f136a4e5f019219cbc4f4da33b30c2f44fa65b84.1594994374.git.jpoimboe@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-cadence.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ arch/x86/kernel/stacktrace.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
-index 9d71ce15db050..a51d3b7957701 100644
---- a/drivers/i2c/busses/i2c-cadence.c
-+++ b/drivers/i2c/busses/i2c-cadence.c
-@@ -377,10 +377,8 @@ static void cdns_i2c_mrecv(struct cdns_i2c *id)
- 	 * Check for the message size against FIFO depth and set the
- 	 * 'hold bus' bit if it is greater than FIFO depth.
- 	 */
--	if ((id->recv_count > CDNS_I2C_FIFO_DEPTH)  || id->bus_hold_flag)
-+	if (id->recv_count > CDNS_I2C_FIFO_DEPTH)
- 		ctrl_reg |= CDNS_I2C_CR_HOLD;
--	else
--		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
- 
- 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
- 
-@@ -437,11 +435,8 @@ static void cdns_i2c_msend(struct cdns_i2c *id)
- 	 * Check for the message size against FIFO depth and set the
- 	 * 'hold bus' bit if it is greater than FIFO depth.
- 	 */
--	if ((id->send_count > CDNS_I2C_FIFO_DEPTH) || id->bus_hold_flag)
-+	if (id->send_count > CDNS_I2C_FIFO_DEPTH)
- 		ctrl_reg |= CDNS_I2C_CR_HOLD;
--	else
--		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
+diff --git a/arch/x86/kernel/stacktrace.c b/arch/x86/kernel/stacktrace.c
+index 2d6898c2cb647..6d83b4b857e6a 100644
+--- a/arch/x86/kernel/stacktrace.c
++++ b/arch/x86/kernel/stacktrace.c
+@@ -58,7 +58,6 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
+ 			 * or a page fault), which can make frame pointers
+ 			 * unreliable.
+ 			 */
 -
- 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
+ 			if (IS_ENABLED(CONFIG_FRAME_POINTER))
+ 				return -EINVAL;
+ 		}
+@@ -81,10 +80,6 @@ int arch_stack_walk_reliable(stack_trace_consume_fn consume_entry,
+ 	if (unwind_error(&state))
+ 		return -EINVAL;
  
- 	/* Clear the interrupts in interrupt status register. */
+-	/* Success path for non-user tasks, i.e. kthreads and idle tasks */
+-	if (!(task->flags & (PF_KTHREAD | PF_IDLE)))
+-		return -EINVAL;
+-
+ 	return 0;
+ }
+ 
 -- 
 2.25.1
 
