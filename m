@@ -5,53 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 123FCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 092AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D736220775
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1AF5204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:23:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457427;
-	bh=slR+AYmepWH5RbfuDWkszwUVsGqLY8LvH8mAxHRHiv0=;
+	s=default; t=1596457429;
+	bh=Rxo3c6npIb6NdgDIk6bWOZC5ouNHLAYGjf7Cf5eDtmY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vms7ftLrfKAb3hVBbHUqMFd7FP/qTFgDsePylh2GAuPiGG1MVgWdTP/HbfEMDitbR
-	 PVWaJtJro6nss1L1PWDO3LraWIBqPWxLuWU7DJNHnwC612IGHDO7FKAxOMS6tOlEi6
-	 27aqOCVtVTQ1gV7Cj0XuYIOizur1SARiXiG0ZLOA=
+	b=pqZfQVqpNgV1Ge68Nr2gIRUHoI1hRcrVihs+HHVEBOFoiqVxbSwqyeEgmAwTe3Ciw
+	 fRAGSt+E3DVU5v527WLNP7jjoQ6vLrF7thoj3+ILmy9cZgsNRzqIriBV2rr4ccn4AX
+	 bMq5VykLDH1pEx7CcOBiZwdC+CZCKeD3WzFOOoJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgHCMXr (ORCPT
+        id S1727932AbgHCMXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:23:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47856 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:23:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727908AbgHCMXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:23:42 -0400
+        id S1727919AbgHCMXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:23:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C1AD2076B;
-        Mon,  3 Aug 2020 12:23:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F769204EC;
+        Mon,  3 Aug 2020 12:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457420;
-        bh=slR+AYmepWH5RbfuDWkszwUVsGqLY8LvH8mAxHRHiv0=;
+        s=default; t=1596457426;
+        bh=Rxo3c6npIb6NdgDIk6bWOZC5ouNHLAYGjf7Cf5eDtmY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aOnerVrL73xoeLKqHa8Gk1hLc7L2t3hbTL3Aw5iXQJUSAkS0obDwS51yMRGqAVQ/P
-         XqcRt3w6foXzKtmsuvVeDyowoABI+xVQ80OMxNwXnx/uT9sedHxFhzkdhyXWWP/esE
-         Bdx2J3uPLnIqT8fZE7DLqZPmMR63L3ieFG6QfpgM=
+        b=sDh6nTs7QWzTxbNjiUzcXQmtmMxU842O3h1UuOajvmwNeMpJnq65NH3L9zH/ctY+c
+         3Pn9J2CEMvpUDoVeBiytFrLXz4RmhAOdqEaWTu5ir+PjOldUq7XEA7zWQMJctsoweo
+         tZTvBePK89MbuqC2sS9h1ElWZ00BGP1n7rw21hQo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Willy Tarreau <w@1wt.eu>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.7 030/120] random: fix circular include dependency on arm64 after addition of percpu.h
-Date:   Mon,  3 Aug 2020 14:18:08 +0200
-Message-Id: <20200803121904.296327854@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Peilin Ye <yepeilin.cs@gmail.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.7 032/120] rds: Prevent kernel-infoleak in rds_notify_queue_get()
+Date:   Mon,  3 Aug 2020 14:18:10 +0200
+Message-Id: <20200803121904.391315797@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -64,55 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willy Tarreau <w@1wt.eu>
+From: Peilin Ye <yepeilin.cs@gmail.com>
 
-commit 1c9df907da83812e4f33b59d3d142c864d9da57f upstream.
+commit bbc8a99e952226c585ac17477a85ef1194501762 upstream.
 
-Daniel Díaz and Kees Cook independently reported that commit
-f227e3ec3b5c ("random32: update the net random state on interrupt and
-activity") broke arm64 due to a circular dependency on include files
-since the addition of percpu.h in random.h.
+rds_notify_queue_get() is potentially copying uninitialized kernel stack
+memory to userspace since the compiler may leave a 4-byte hole at the end
+of `cmsg`.
 
-The correct fix would definitely be to move all the prandom32 stuff out
-of random.h but for backporting, a smaller solution is preferred.
+In 2016 we tried to fix this issue by doing `= { 0 };` on `cmsg`, which
+unfortunately does not always initialize that 4-byte hole. Fix it by using
+memset() instead.
 
-This one replaces linux/percpu.h with asm/percpu.h, and this fixes the
-problem on x86_64, arm64, arm, and mips.  Note that moving percpu.h
-around didn't change anything and that removing it entirely broke
-differently.  When backporting, such options might still be considered
-if this patch fails to help.
-
-[ It turns out that an alternate fix seems to be to just remove the
-  troublesome <asm/pointer_auth.h> remove from the arm64 <asm/smp.h>
-  that causes the circular dependency.
-
-  But we might as well do the whole belt-and-suspenders thing, and
-  minimize inclusion in <linux/random.h> too. Either will fix the
-  problem, and both are good changes.   - Linus ]
-
-Reported-by: Daniel Díaz <daniel.diaz@linaro.org>
-Reported-by: Kees Cook <keescook@chromium.org>
-Tested-by: Marc Zyngier <maz@kernel.org>
-Fixes: f227e3ec3b5c
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Willy Tarreau <w@1wt.eu>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org
+Fixes: f037590fff30 ("rds: fix a leak of kernel memory")
+Fixes: bdbe6fbc6a2f ("RDS: recv.c")
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/random.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/rds/recv.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/include/linux/random.h
-+++ b/include/linux/random.h
-@@ -11,7 +11,7 @@
- #include <linux/kernel.h>
- #include <linux/list.h>
- #include <linux/once.h>
--#include <linux/percpu.h>
-+#include <asm/percpu.h>
+--- a/net/rds/recv.c
++++ b/net/rds/recv.c
+@@ -450,12 +450,13 @@ static int rds_still_queued(struct rds_s
+ int rds_notify_queue_get(struct rds_sock *rs, struct msghdr *msghdr)
+ {
+ 	struct rds_notifier *notifier;
+-	struct rds_rdma_notify cmsg = { 0 }; /* fill holes with zero */
++	struct rds_rdma_notify cmsg;
+ 	unsigned int count = 0, max_messages = ~0U;
+ 	unsigned long flags;
+ 	LIST_HEAD(copy);
+ 	int err = 0;
  
- #include <uapi/linux/random.h>
++	memset(&cmsg, 0, sizeof(cmsg));	/* fill holes with zero */
  
+ 	/* put_cmsg copies to user space and thus may sleep. We can't do this
+ 	 * with rs_lock held, so first grab as many notifications as we can stuff
 
 
