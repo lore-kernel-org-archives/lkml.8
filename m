@@ -2,139 +2,151 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52768C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CD6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5212072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 497E7206F6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:30:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o0k5n7ea"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="McYstQsF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgHCPaD (ORCPT
+        id S1726778AbgHCPad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 11:30:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbgHCPaD (ORCPT
+        Mon, 3 Aug 2020 11:30:33 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:46126 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbgHCPad (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 11:30:03 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8966C06174A;
-        Mon,  3 Aug 2020 08:30:02 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id l64so28658434qkb.8;
-        Mon, 03 Aug 2020 08:30:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OMhY71TYhIpQ58Fii8pWBwWswtVlW8CJODU9kCbY3/U=;
-        b=o0k5n7eaBR20GSUZPKeqWlBn0CweK6sVQ7UUSjeOuNQBFuw89IiGlcuaGueTxPMRPY
-         7zbyA0Z3NFkwInzGHlEFfdHYvcfAWDpZFbIlc4H1QfKHMf0lnLwgyinURc6ITKGeI6gz
-         6OB9a+J3UbjDqNvOLmViKvjXLhm6YgHgvAvxpiMZLJwZ4yLfW3nrAzgDbGn55TIX1CDp
-         SDABD4FT6a+agwVPPhOM+GHjW2NBqj0pcrxO7XEWuQwKr8AYrT3Nyaa1tTexzddwUgNI
-         OOTpPVd+VoKn5ydheEDwPbrKCUj06W56W3DOq3Nq2jDXrO0/dpyYZCpImbI5PG60sy3K
-         IlkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=OMhY71TYhIpQ58Fii8pWBwWswtVlW8CJODU9kCbY3/U=;
-        b=Y04aTo94EIgUZxKBGwn+RKH7LxjnfBdecSJo7c+A3PaLwcMhTixu2Om6W298pe0dvl
-         OZIhe+vQzdHFEytEVUfgw4a/mzPR2LFr9On7J8yItrxZHFgjvOxl5BnhHPzZKDLNzH0E
-         b3BTndQDOcOAHabbn9JvIgvrEPZ35t6UhHR6wUqIZxqtSGJaTd8kwdnD2A2yK74ts6Wi
-         HGuXAnNZu4eV/s+ckJxC6rG8nc2N0JPGMhJKx5AV512Cps92jBUMN5GLKVA7+zp2+rYs
-         nzbw85Dqhcas6oBVoFAj+99O8N4Vzex5YuhYeac8Ebt1CV4PApmCfNZFlAMptRRkqv2o
-         jmMQ==
-X-Gm-Message-State: AOAM533BFM9fXLzJD0eGcsPMUMWadi6KOck0rN8XYsZR0KorQe9xYQQ6
-        BFKiQrraGPbXWb0nQCC2oec=
-X-Google-Smtp-Source: ABdhPJzRBkzm3T5R70vwD3kXwb8PED/sN1IlSegMrVygUPMhyNSjXdIHiypE+Tei2fqltxXyDy5R6g==
-X-Received: by 2002:a37:9b15:: with SMTP id d21mr17317313qke.9.1596468601800;
-        Mon, 03 Aug 2020 08:30:01 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id l64sm18811222qkc.21.2020.08.03.08.30.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 08:30:01 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 3 Aug 2020 11:29:59 -0400
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@chromium.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 08/22] bootconfig: init: Allow admin to use bootconfig
- for init command line
-Message-ID: <20200803152959.GA1168816@rani.riverdale.lan>
-References: <157867220019.17873.13377985653744804396.stgit@devnote2>
- <157867229521.17873.654222294326542349.stgit@devnote2>
- <202002070954.C18E7F58B@keescook>
- <20200207144603.30688b94@oasis.local.home>
- <20200802023318.GA3981683@rani.riverdale.lan>
- <20200804000345.f5727ac28647aa8c092cc109@kernel.org>
+        Mon, 3 Aug 2020 11:30:33 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200803153031euoutp02719fa39ea57a178f7a496ead887972a0~ny8Me9mGG1669216692euoutp02U
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 15:30:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200803153031euoutp02719fa39ea57a178f7a496ead887972a0~ny8Me9mGG1669216692euoutp02U
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1596468631;
+        bh=Jz6tkQErBLsdV2v0wFX7a95nI5VkFFvWz7rn7bqAy1Q=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=McYstQsFMSxCGWsuBxp96VgG0398sUUSXuhSSKVvBnpi+31HfxiqKq8L07HEnI1WT
+         ihPASdzwhqgd9gtKJbJ+esbc3sCYM+9IoC6Rh9ru8XI5GRZsHcbp5UGd+wusUWC1jM
+         13cxq+1i6bsd3QH8In+Emfl6ZRBDWc5X8UJBH0FI=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200803153031eucas1p15f0cbcfe0ddfb7c18ee4566ce1dc5f00~ny8MHGGJx2152121521eucas1p1E;
+        Mon,  3 Aug 2020 15:30:31 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 5C.78.06318.79D282F5; Mon,  3
+        Aug 2020 16:30:31 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200803153030eucas1p2a28373f5e2cd3d6ae472aacbffb03c4e~ny8Lm2mRg2873728737eucas1p29;
+        Mon,  3 Aug 2020 15:30:30 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200803153030eusmtrp2bd8b688608a971563485cb1ffbe96e19~ny8LmGOdj2559225592eusmtrp2Y;
+        Mon,  3 Aug 2020 15:30:30 +0000 (GMT)
+X-AuditID: cbfec7f5-371ff700000018ae-17-5f282d97bc09
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 05.49.06314.69D282F5; Mon,  3
+        Aug 2020 16:30:30 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200803153030eusmtip22d0b2a8f9579ed8d29f0a1e38f618cf8~ny8K345ai0126701267eusmtip2K;
+        Mon,  3 Aug 2020 15:30:30 +0000 (GMT)
+Subject: Re: [PATCH v2 2/2] memory: samsung: exynos5422-dmc: Add module
+ param to control IRQ mode
+To:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Cc:     willy.mh.wolff.ml@gmail.com, k.konieczny@samsung.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com, krzk@kernel.org,
+        chanwoo@kernel.org, myungjoo.ham@samsung.com,
+        kyungmin.park@samsung.com, s.nawrocki@samsung.com, kgene@kernel.org
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <db571467-48ec-8f11-de1d-00393d8aa99b@samsung.com>
+Date:   Mon, 3 Aug 2020 17:30:30 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200804000345.f5727ac28647aa8c092cc109@kernel.org>
+In-Reply-To: <20200710191122.11029-3-lukasz.luba@arm.com>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrOKsWRmVeSWpSXmKPExsWy7djPc7rTdTXiDZ6fEbLYOGM9q8XEG1dY
+        LK5/ec5qseDTDFaL/sevmS3On9/AbnG26Q27xabH11gtLu+aw2bxufcIo8WM8/uYLBY2tbBb
+        3G5cwWZx+E07q8W3E48YHfg91sxbw+ixc9Zddo9NqzrZPDYvqffo27KK0ePzJrkAtigum5TU
+        nMyy1CJ9uwSujGMLrzAVNHBVNO5/z9zAOI2ji5GTQ0LARKL3WA9jFyMXh5DACkaJA3P7oJwv
+        jBINvxazQzifGSW+/XvO1sXIAdYy8XQJRHw5o8TJjXtYQEYJCbxnlLh5Mg/EFhZIlmjd/YIN
+        pEhEYBWjxPf3R1hBHGaQSZM+LGQGqWITMJToetvFBmLzCthJNNz6yg5iswioSLQt+8YIYosK
+        xEmsf7mdCaJGUOLkzCdg2zgFLCWuX1kDVsMsIC/RvHU2M4QtLnHryXwmiOf+skt0rKqCsF0k
+        vj6bBhUXlnh1fAs7hC0j8X8nSD0XkN3MKPHw3Fp2CKeHUeJy0wxGiCpriTvnfoH9zyygKbF+
+        lz5E2FHi1L5lzJBg4ZO48VYQ4gY+iUnbpkOFeSU62oQgqtUkZh1fB7f24IVLzBMYlWYh+WwW
+        km9mIflmFsLeBYwsqxjFU0uLc9NTi43zUsv1ihNzi0vz0vWS83M3MQKT2+l/x7/uYNz3J+kQ
+        owAHoxIP7wJWjXgh1sSy4srcQ4wSHMxKIrxOZ0/HCfGmJFZWpRblxxeV5qQWH2KU5mBREuc1
+        XvQyVkggPbEkNTs1tSC1CCbLxMEp1cAovNLyJ5fZ+1zOo7tnVMesf74kJSLonZOjtMzBw0dv
+        GLbnuLb7NG7XT3E+epA54LpaifFvs9nzw6753RZZoWVb0DGrouYro/+FWZ+m32LxT/bkuvKt
+        7KFdDUP40ZdOatN2nVdp0fW6UbU957r+xbsi+zKzhfWjKmJZG+J3zpSVvRFm2PpLW0mJpTgj
+        0VCLuag4EQAFJUrWagMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrNIsWRmVeSWpSXmKPExsVy+t/xe7rTdDXiDb4sNbbYOGM9q8XEG1dY
+        LK5/ec5qseDTDFaL/sevmS3On9/AbnG26Q27xabH11gtLu+aw2bxufcIo8WM8/uYLBY2tbBb
+        3G5cwWZx+E07q8W3E48YHfg91sxbw+ixc9Zddo9NqzrZPDYvqffo27KK0ePzJrkAtig9m6L8
+        0pJUhYz84hJbpWhDCyM9Q0sLPSMTSz1DY/NYKyNTJX07m5TUnMyy1CJ9uwS9jGMLrzAVNHBV
+        NO5/z9zAOI2ji5GDQ0LARGLi6ZIuRi4OIYGljBK//y5j6WLkBIrLSJyc1sAKYQtL/LnWxQZR
+        9JZR4vLhRUwgCWGBZIk/O06BJUQEVjFK3Lt/gx3EYRb4zCjR/mY/C0TLbkaJKRfns4G0sAkY
+        SnS97QKzeQXsJBpufWUHsVkEVCTaln1jBLFFBeIklm+Zzw5RIyhxcuYTsJs4BSwlrl9ZA1bD
+        LGAmMW/zQ2YIW16ieetsKFtc4taT+UwTGIVmIWmfhaRlFpKWWUhaFjCyrGIUSS0tzk3PLTbU
+        K07MLS7NS9dLzs/dxAiM6G3Hfm7ewXhpY/AhRgEORiUe3gWsGvFCrIllxZW5hxglOJiVRHid
+        zp6OE+JNSaysSi3Kjy8qzUktPsRoCvTcRGYp0eR8YLLJK4k3NDU0t7A0NDc2NzazUBLn7RA4
+        GCMkkJ5YkpqdmlqQWgTTx8TBKdXAaBTa2b7gRztHaOjmh8unzi6aZZP3fk2FyUe1wLkZWzN4
+        d77ZI1u67tBN9YWzHz1tYPjzaUFNddezPRyO/Z8T/qs1LuqbaazvYTzxgvK5lRJfdXdJfhBI
+        rpWfL7a88OvVYsn3DRtn/nqqcpD/45asuxen5r/bZLn+X31T5fTEo6tjzqaHiF0W3a7EUpyR
+        aKjFXFScCAARIuZi/gIAAA==
+X-CMS-MailID: 20200803153030eucas1p2a28373f5e2cd3d6ae472aacbffb03c4e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200710191154eucas1p296561f285ee0730e5040fdfe3fc7e75e
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200710191154eucas1p296561f285ee0730e5040fdfe3fc7e75e
+References: <20200710191122.11029-1-lukasz.luba@arm.com>
+        <CGME20200710191154eucas1p296561f285ee0730e5040fdfe3fc7e75e@eucas1p2.samsung.com>
+        <20200710191122.11029-3-lukasz.luba@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 12:03:45AM +0900, Masami Hiramatsu wrote:
-> On Sat, 1 Aug 2020 22:33:18 -0400
-> Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > 
-> > I came across this as I was poking around some of the command line
-> > parsing. AFAICT, initargs_found will never be set to true here, because
-> > parse_args handles "--" itself by immediately returning: it doesn't
-> > invoke the callback for it. So you'd instead have to check the return of
-> > parse_args("bootconfig"...) to detect the initargs_found case.
-> 
-> Oops, good catch!
-> Does this fixes the problem?
+Hi Lukasz,
 
-Note I found the issue by code inspection, I don't have an actual test
-case. But the change looks good to me, with one comment below.
+On 10.07.2020 21:11, Lukasz Luba wrote:
+> The driver can operate in two modes relaying on devfreq monitoring
+> mechanism which periodically checks the device status or it can use
+> interrupts when they are provided by loaded Device Tree. The newly
+> introduced module parameter can be used to choose between devfreq
+> monitoring and internal interrupts without modifying the Device Tree.
+> It also sets devfreq monitoring as default when the parameter is not set
+> (also the case for default when the driver is not built as a module).
+>
+> Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
+> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
 
-> 
->  	strlcpy(tmp_cmdline, boot_command_line, COMMAND_LINE_SIZE);
-> -	parse_args("bootconfig", tmp_cmdline, NULL, 0, 0, 0, NULL,
-> -		   bootconfig_params);
-> +	err = parse_args("bootconfig", tmp_cmdline, NULL, 0, 0, 0, NULL,
-> +			 bootconfig_params);
->  
-> -	if (!bootconfig_found)
-> +	if (IS_ERR(err) || !bootconfig_found)
->  		return;
->  
-> +	/* parse_args() stops at '--' and returns an address */
-> +	if (!IS_ERR(err) && err)
-> +		initargs_found = true;
-> +
+I've got back from my holidays and noticed that in meantime this commit 
+got merged as commit 4fc9a0470d2d. It revealed that there is a race 
+between registering exynos5422-dmc driver and exynos-ppmu driver, which 
+can be observed sometimes as the following message and freeze on Odroid 
+XU3 with multi_v7_defconfig:
 
-I think you can drop the second IS_ERR, since we already checked that.
+[    8.767708] exynos5-dmc 10c20000.memory-controller: couldn't probe 
+performance counters
 
->  	if (!data) {
->  		pr_err("'bootconfig' found on command line, but no bootconfig found\n");
->  		return;
-> -- 
-> 2.25.1
+I will check this later why the EPROBE_DEFER error is not properly 
+propagated and why it causes a freeze.
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
