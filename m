@@ -2,520 +2,298 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0FEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2309CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDF61207FC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F209208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:44:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jn/+eZrV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbgHCVlp (ORCPT
+        id S1728814AbgHCVoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 17:41:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:34728 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728038AbgHCVlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 17:41:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A163D1FB;
-        Mon,  3 Aug 2020 14:41:43 -0700 (PDT)
-Received: from [10.57.35.143] (unknown [10.57.35.143])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6BFD73F718;
-        Mon,  3 Aug 2020 14:41:42 -0700 (PDT)
-Subject: Re: [PATCH v2 3/3] arm64: dts: rockchip: add rk3318 A95X Z2 board
-To:     Johan Jonker <jbx6244@gmail.com>, heiko@sntech.de
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-References: <20200718105343.5152-1-jbx6244@gmail.com>
- <20200718105343.5152-4-jbx6244@gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <6d028007-4360-e552-3707-3dd2712f2501@arm.com>
-Date:   Mon, 3 Aug 2020 22:41:40 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Mon, 3 Aug 2020 17:44:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43720 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728038AbgHCVoX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 17:44:23 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2D42C061756
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 14:44:22 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id x5so878192wmi.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 14:44:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=yCdHtgnMm63zVeGJziowVfsBeAvNYTRHKplgeoaFkb4=;
+        b=jn/+eZrVkmkqTrg1LaN5e3FXF4+keQy4miRQb/FqHHnTqrTqQRQjKi92ZHc346xB9/
+         I8EovWTH3ibpATtjRqMu9XEuMm7XyvV8UrE0w3NYYabzVth281jSiZbfry2NtqOO49lO
+         ChzCmLcDZX7foL062faWavR4CX+R3SmRRLlhre898HMuHg4VHTqbfYvpACLUHdAHTyJJ
+         S6W8VYSU7Ea1kHLNNw58paQ3OVAji8HppEuuvzOIblXbqfSWO7K4Pp0esGYrIN2vUEfz
+         jRMY5L0D+1SYYMsoXCSzAgCtdu71JTZPAzF2oxEQM3pDZTPpoVdxvD13R+KcMjhVkjod
+         v5GQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=yCdHtgnMm63zVeGJziowVfsBeAvNYTRHKplgeoaFkb4=;
+        b=ZKzU/KGyBc9VCxDNzCMZmfEpcVRzD0Q6p0ovMuqV2qcEDPW8iN6neEPmwz32RLbVaO
+         svfVo4x3jcHyphM5gfF7DD4ZOm8J4OynCd8pWOaOHKkQHH/OD4A98mXgGoYAMk2CInZH
+         aZg1/JpEJZP3l262GuydMlmp0rD+9L5P95MvEQMq5Rf+B6F19SzzLWHdpZ5Vqvh/RWoV
+         BNl5eciiSZO5igjpDNxlB0j8+kEzsmkpim4MP7PYhe01cyiwgxSvtXYOzqGUbXcv/pZ+
+         m4HHywqJ5DemVMWkUV3BWHw05YRea+FP7ag/Db1DL8m3tuHCGXTrCGXaAwTdw9FwLJwI
+         C7Vg==
+X-Gm-Message-State: AOAM5319vXCmqqQj5XOaVb0bxFLq2nGC6M30YP8jG/+zMifV4yi6rvMz
+        k6m6ZDFtrZ/e2QAdESKkYmMIog==
+X-Google-Smtp-Source: ABdhPJz+m9iWFUQGO9pwUiDORjIkzgjwrxrfRS1hRYK3ywTh0yudh6eW0B4tWlKKekg7rZ+yTcl8vw==
+X-Received: by 2002:a1c:4e0d:: with SMTP id g13mr998387wmh.177.1596491061313;
+        Mon, 03 Aug 2020 14:44:21 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:4d35:b6a4:4754:61f2? ([2a01:e34:ed2f:f020:4d35:b6a4:4754:61f2])
+        by smtp.googlemail.com with ESMTPSA id j4sm1405436wmi.48.2020.08.03.14.44.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Aug 2020 14:44:20 -0700 (PDT)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Colin King <colin.king@canonical.com>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Lukasz Luba <Lukasz.Luba@arm.com>,
+        Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>,
+        Henry Yen <henry.yen@mediatek.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM mailing list <linux-pm@vger.kernel.org>,
+        Marian-Cristian Rotariu 
+        <marian-cristian.rotariu.rb@bp.renesas.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [GIT PULL] thermal for v5.9-rc1
+Message-ID: <0b3dd92e-0aa0-6f23-fcef-178f2bf6a1c1@linaro.org>
+Date:   Mon, 3 Aug 2020 23:44:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200718105343.5152-4-jbx6244@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-07-18 11:53, Johan Jonker wrote:
-> The rk3318 A95X Z2 boards are sold as TV box.
-> No further documentation is given, but from the dts files
-> extracted it seems that the rk3318 processor is simulair
-> to the rk3328. This dts file contains only the basic nodes
-> that have support in the mainline kernel.
-> 
-> Features:
-> 
-> CPU: RK3318 Quad-Core Cortex-A53
-> GPU: Mali-450
-> RAM: 2/4GB DDR3
-> ROM: EMMC 16/32/64GB
-> HDMI: HDMI 2.0a for 4k@60Hz
-> Ethernet: 10/100M standard RJ-45
-> WiFi: 2.4G+5G WIFI, 802.11 b/g/n
-> Bluetooth: 4.0
-> 1 x USB 3.0
-> 1 x USB 2.0
-> 1 x Micro SD card slot
-> 1 x SPDIF
-> 1 x AV
-> 1 x DC IN
-> 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> ---
->   arch/arm64/boot/dts/rockchip/Makefile           |   1 +
->   arch/arm64/boot/dts/rockchip/rk3318-a95x-z2.dts | 393 ++++++++++++++++++++++++
->   2 files changed, 394 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/rockchip/rk3318-a95x-z2.dts
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-> index b87b1f773..aa508bc4a 100644
-> --- a/arch/arm64/boot/dts/rockchip/Makefile
-> +++ b/arch/arm64/boot/dts/rockchip/Makefile
-> @@ -2,6 +2,7 @@
->   dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb.dtb
->   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-evb.dtb
->   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-roc-cc.dtb
-> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3318-a95x-z2.dtb
->   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3326-odroid-go2.dtb
->   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-a1.dtb
->   dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3318-a95x-z2.dts b/arch/arm64/boot/dts/rockchip/rk3318-a95x-z2.dts
-> new file mode 100644
-> index 000000000..413418ea1
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3318-a95x-z2.dts
-> @@ -0,0 +1,393 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +
-> +/dts-v1/;
-> +#include <dt-bindings/input/input.h>
-> +#include "rk3328.dtsi"
-> +
-> +/ {
-> +	model = "A95X Z2";
-> +	compatible = "zkmagic,a95x-z2", "rockchip,rk3318";
-> +
-> +	chosen {
-> +		stdout-path = "serial2:1500000n8";
-> +	};
-> +
-> +	adc-keys {
-> +		compatible = "adc-keys";
-> +		io-channels = <&saradc 0>;
-> +		io-channel-names = "buttons";
-> +		keyup-threshold-microvolt = <1800000>;
-> +		poll-interval = <100>;
-> +
-> +		vol-up-key {
-> +			label = "volume up";
-> +			linux,code = <KEY_VOLUMEUP>;
+The following changes since commit bcf876870b95592b52519ed4aafcf9d95999bc9c:
 
-Really? If as usual this is actually the recovery button hidden inside 
-the box, it's somewhat questionable whether it's worth describing in DT 
-at all. At the very least it should probably be presented as something 
-more realistic than half a volume control.
+  Linux 5.8 (2020-08-02 14:21:45 -0700)
 
-> +			press-threshold-microvolt = <17000>;
-> +		};
-> +	};
-> +
-> +	ir-receiver {
-> +		compatible = "gpio-ir-receiver";
-> +		gpios = <&gpio2 RK_PA2 GPIO_ACTIVE_LOW>;
-> +		pinctrl-0 = <&ir_int>;
-> +		pinctrl-names = "default";
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-0 = <&cyx_led_pin>;
-> +		pinctrl-names = "default";
-> +
-> +		cyx_led: led-0 {
+are available in the Git repository at:
 
-What needs a phandle to this node to warrant a label?
 
-> +			default-state = "on";
-> +			gpios = <&gpio2 RK_PC7 GPIO_ACTIVE_LOW>;
-> +			label = "CYX_LED";
-> +		};
-> +	};
-> +
-> +	sdio_pwrseq: sdio-pwrseq {
-> +		compatible = "mmc-pwrseq-simple";
-> +		pinctrl-0 = <&wifi_enable_h>;
-> +		pinctrl-names = "default";
-> +		reset-gpios = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
-> +	};
-> +
-> +	spdif-sound {
-> +		compatible = "simple-audio-card";
-> +		simple-audio-card,name = "spdif";
-> +
-> +		simple-audio-card,cpu {
-> +			sound-dai = <&spdif>;
-> +		};
-> +
-> +		simple-audio-card,codec {
-> +			sound-dai = <&spdif_out>;
-> +		};
-> +	};
-> +
-> +	spdif_out: spdif-out {
-> +		compatible = "linux,spdif-dit";
-> +		#sound-dai-cells = <0>;
-> +	};
-> +
-> +	/* Power tree */
-> +	regulators {
+ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git
+tags/thermal-v5.9-rc1
 
-Don't create fake "buses" for regulators, especially if they don't even 
-contain most of the regulators anyway.
+for you to fetch changes up to aac5cac9851aa6b526c6ab3acb80ec7fb6646df8:
 
-> +		compatible = "simple-mfd";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		vccio_1v8_reg: regulator@0 {
-> +			compatible = "regulator-fixed";
-> +			reg = <0>;
-> +			regulator-name = "vccio_1v8";
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +			regulator-always-on;
-> +		};
-> +
-> +		vccio_3v3_reg: regulator@1 {
-> +			compatible = "regulator-fixed";
-> +			reg = <1>;
-> +			regulator-name = "vccio_3v3";
-> +			regulator-min-microvolt = <3300000>;
-> +			regulator-max-microvolt = <3300000>;
-> +			regulator-always-on;
-> +		};
-> +	};
-> +
-> +	vcc_otg_vbus: otg-vbus-regulator {
-> +		compatible = "regulator-fixed";
-> +		gpio = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-0 = <&otg_vbus_drv>;
-> +		pinctrl-names = "default";
-> +		regulator-name = "vcc_otg_vbus";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		enable-active-high;
-> +	};
-> +
-> +	vcc_phy: vcc-phy-regulator {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc_phy";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
+  thermal: intel: intel_pch_thermal: Add Cannon Lake Low Power PCH
+support (2020-08-03 23:16:28 +0200)
 
-Is this actually a distinct regulator? The reference design has the 
-internal FEPHY block powered pretty much directly from the general 1V8 
-and 1V0 supplies that also power USB/HDMI/etc., so I'd rather expect 
-low-end boxes to follow suit. Either way there doesn't seem to be a 
-great deal of value in describing something with no controls, no voltage 
-information, and no connection to the power tree.
+----------------------------------------------------------------
+- Add support to enable/disable the thermal zones resulting on core code and
+  drivers cleanup (Andrzej Pietrasiewicz)
 
-> +
-> +	vcc_sd: sdmmc-regulator {
-> +		compatible = "regulator-fixed";
-> +		gpio = <&gpio0 RK_PD6 GPIO_ACTIVE_LOW>;
-> +		pinctrl-0 = <&sdmmc0m1_gpio>;
-> +		pinctrl-names = "default";
-> +		regulator-name = "vcc_sd";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		vin-supply = <&vccio_3v3_reg>;
-> +	};
-> +
-> +	vdd_arm: vdd-arm {
-> +		compatible = "pwm-regulator";
-> +		pwms = <&pwm0 0 5000 1>;
-> +		regulator-name = "vdd_arm";
-> +		regulator-min-microvolt = <950000>;
-> +		regulator-max-microvolt = <1400000>;
-> +		regulator-settling-time-up-us = <250>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +
-> +	vdd_log: vdd-log {
-> +		compatible = "pwm-regulator";
-> +		pwms = <&pwm1 0 5000 1>;
-> +		regulator-name = "vdd_log";
-> +		regulator-min-microvolt = <900000>;
-> +		regulator-max-microvolt = <1300000>;
-> +		regulator-settling-time-up-us = <250>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +};
-> +
-> +&analog_sound {
-> +	status = "okay";
-> +};
-> +
-> +&codec {
-> +	status = "okay";
-> +};
-> +
-> +&cpu0 {
-> +	cpu-supply = <&vdd_arm>;
-> +};
-> +
-> +&cpu1 {
-> +	cpu-supply = <&vdd_arm>;
-> +};
-> +
-> +&cpu2 {
-> +	cpu-supply = <&vdd_arm>;
-> +};
-> +
-> +&cpu3 {
-> +	cpu-supply = <&vdd_arm>;
-> +};
-> +
-> +&cpu0_opp_table {
-> +	opp-1200000000 {
-> +		status = "disabled";
-> +	};
-> +
-> +	opp-1296000000 {
-> +		status = "disabled";
-> +	};
-> +};
-> +
-> +&emmc {
-> +	bus-width = <8>;
-> +	cap-mmc-highspeed;
-> +	non-removable;
-> +	pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_bus8>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +};
-> +
-> +&gmac2phy {
-> +	assigned-clock-parents = <&cru SCLK_MAC2PHY_SRC>;
-> +	assigned-clock-rate = <50000000>;
-> +	assigned-clocks = <&cru SCLK_MAC2PHY>;
-> +	clock_in_out = "output";
-> +	phy-supply = <&vcc_phy>;
-> +	status = "okay";
-> +};
-> +
-> +&gpu {
-> +	mali-supply = <&vdd_log>;
-> +};
-> +
-> +&hdmi {
-> +	ddc-i2c-scl-high-time-ns = <9625>;
-> +	ddc-i2c-scl-low-time-ns = <10000>;
-> +	status = "okay";
-> +};
-> +
-> +&hdmiphy {
-> +	status = "okay";
-> +};
-> +
-> +&hdmi_sound {
-> +	status = "okay";
-> +};
-> +
-> +&i2s0 {
-> +	status = "okay";
-> +};
-> +
-> +&i2s1 {
-> +	status = "okay";
-> +};
-> +
-> +&io_domains {
-> +	pmuio-supply = <&vccio_3v3_reg>;
-> +	vccio1-supply = <&vccio_3v3_reg>;
-> +	vccio2-supply = <&vccio_1v8_reg>;
-> +	vccio3-supply = <&vccio_3v3_reg>;
-> +	vccio4-supply = <&vccio_1v8_reg>;
-> +	vccio5-supply = <&vccio_3v3_reg>;
-> +	vccio6-supply = <&vccio_3v3_reg>;
-> +	status = "okay";
-> +};
-> +
-> +&pinctrl {
-> +	ir {
-> +		ir_int: ir-int {
-> +			rockchip,pins = <2 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	leds {
-> +		cyx_led_pin: cyx-led-pin {
-> +			rockchip,pins = <2 RK_PC7 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	pwm0 {
-> +		pwm0_pin_pull_up: pwm0-pin-pull-up {
-> +			rockchip,pins = <2 RK_PA4 1 &pcfg_pull_up>;
-> +		};
-> +	};
-> +
-> +	pwm1 {
-> +		pwm1_pin_pull_up: pwm1-pin-pull-up {
-> +			rockchip,pins = <2 RK_PA5 1 &pcfg_pull_up>;
-> +		};
-> +	};
-> +
-> +	sdio-pwrseq {
-> +		wifi_enable_h: wifi-enable-h {
-> +			rockchip,pins = <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	sdmmc1 {
-> +		clk_32k_out: clk-32k-out {
-> +			rockchip,pins = <1 RK_PD4 1 &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	usb {
-> +		host_vbus_drv: host-vbus-drv {
-> +			rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +
-> +		otg_vbus_drv: otg-vbus-drv {
-> +			rockchip,pins = <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +};
-> +
-> +&pwm0 {
-> +	pinctrl-0 = <&pwm0_pin_pull_up>;
-> +	pinctrl-names = "active";
-> +	status = "okay";
-> +};
-> +
-> +&pwm1 {
-> +	pinctrl-0 = <&pwm1_pin_pull_up>;
-> +	pinctrl-names = "active";
-> +	status = "okay";
-> +};
-> +
-> +&saradc {
-> +	vref-supply = <&vccio_1v8_reg>;
-> +	status = "okay";
-> +};
-> +
-> +&sdio {
-> +	bus-width = <4>;
-> +	cap-sd-highspeed;
-> +	cap-sdio-irq;
-> +	keep-power-in-suspend;
-> +	max-frequency = <125000000>;
-> +	mmc-pwrseq = <&sdio_pwrseq>;
-> +	non-removable;
-> +	pinctrl-0 = <&sdmmc1_bus4 &sdmmc1_cmd &sdmmc1_clk &clk_32k_out>;
-> +	pinctrl-names = "default";
-> +	sd-uhs-sdr104;
-> +	status = "okay";
-> +};
-> +
-> +&sdmmc {
-> +	bus-width = <4>;
-> +	cap-sd-highspeed;
-> +	disable-wp;
-> +	pinctrl-0 = <&sdmmc0_clk &sdmmc0_cmd &sdmmc0_dectn &sdmmc0_bus4>;
-> +	pinctrl-names = "default";
-> +	vmmc-supply = <&vcc_sd>;
-> +	status = "okay";
-> +};
-> +
-> +&spdif {
-> +	pinctrl-0 = <&spdifm0_tx>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +};
-> +
-> +&soc_crit {
-> +	temperature = <115000>; /* millicelsius */
-> +};
-> +
-> +&target {
-> +	temperature = <105000>; /* millicelsius */
-> +};
-> +
-> +&threshold {
-> +	temperature = <90000>; /* millicelsius */
-> +};
-> +
-> +&tsadc {
-> +	rockchip,hw-tshut-temp = <120000>;
-> +	status = "okay";
-> +};
-> +
-> +&u2phy {
-> +	status = "okay";
-> +
-> +	u2phy_host: host-port {
+- Add generic netlink support for userspace notifications: events,
+temperature
+  and discovery commands (Daniel Lezcano)
 
-Just refer to the ports normally by label rather than duplicate a random 
-snippet of DTSI hierarchy - I'm not sure why this particular pattern 
-seems to get copied around so much.
+- Fix redundant initialization for a ret variable (Colin Ian King)
 
-Robin.
+- Remove the clock cooling code as it is used nowhere (Amit Kucheria)
 
-> +		status = "okay";
-> +	};
-> +
-> +	u2phy_otg: otg-port {
-> +		phy-supply = <&vcc_otg_vbus>;
-> +		status = "okay";
-> +	};
-> +};
-> +
-> +&uart0 {
-> +	pinctrl-0 = <&uart0_xfer &uart0_cts>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +};
-> +
-> +&uart2 {
-> +	status = "okay";
-> +};
-> +
-> +&usb20_otg {
-> +	dr_mode = "host";
-> +	status = "okay";
-> +};
-> +
-> +&usb_host0_ehci {
-> +	status = "okay";
-> +};
-> +
-> +&usb_host0_ohci {
-> +	status = "okay";
-> +};
-> +
-> +&vop {
-> +	status = "okay";
-> +};
-> +
-> +&vop_mmu {
-> +	status = "okay";
-> +};
-> 
+- Add the rcar_gen3_thermal's r8a774e1 support (Marian-Cristian Rotariu)
+
+- Replace all references to thermal.txt in the documentation to the
+  corresponding yaml files (Amit Kucheria)
+
+- Add maintainer entry for the IPA (Lukasz Luba)
+
+- Add support for MSM8939 for the tsens (Shawn Guo)
+
+- Update power allocator and devfreq cooling to SPDX licensing (Lukasz Luba)
+
+- Add Cannon Lake Low Power PCH support (Sumeet Pawnikar)
+
+- Add tsensor support for V2 mediatek thermal system (Henry Yen)
+
+- Fix thermal zone lookup by ID for the core code (Thierry Reding)
+
+----------------------------------------------------------------
+Amit Kucheria (2):
+      thermal/drivers/clock_cooling: Remove clock_cooling code
+      dt-bindings: thermal: Get rid of thermal.txt and replace references
+
+Andrzej Pietrasiewicz (14):
+      acpi: thermal: Fix error handling in the register function
+      thermal: Store thermal mode in a dedicated enum
+      thermal: Add current mode to thermal zone device
+      thermal: Store device mode in struct thermal_zone_device
+      thermal: remove get_mode() operation of drivers
+      thermal: Add mode helpers
+      thermal: Use mode helpers in drivers
+      thermal: Explicitly enable non-changing thermal zone devices
+      thermal: core: Stop polling DISABLED thermal devices
+      thermal: Simplify or eliminate unnecessary set_mode() methods
+      thermal: Rename set_mode() to change_mode()
+      acpi: thermal: Don't call thermal_zone_device_is_enabled()
+      thermal: imx: Use driver's local data to decide whether to run a
+measurement
+      thermal: Make thermal_zone_device_is_enabled() available to core only
+
+Anson Huang (1):
+      thermal: imx8mm: Support module autoloading
+
+Colin Ian King (1):
+      thermal: core: remove redundant initialization of variable ret
+
+Dan Carpenter (1):
+      thermal: ti-soc-thermal: Fix reversed condition in
+ti_thermal_expose_sensor()
+
+Daniel Lezcano (9):
+      thermal: core: Add helpers to browse the cdev, tz and governor list
+      thermal: core: Get thermal zone by id
+      thermal: core: genetlink support for events/cmd/sampling
+      thermal: core: Add notifications call in the framework
+      thermal: netlink: Fix compilation error when CONFIG_NET=n
+      net: genetlink: Move initialization to core_initcall
+      thermal: netlink: Improve the initcall ordering
+      thermal: core: Move initialization after core initcall
+      thermal: core: Add thermal zone enable/disable notification
+
+Henry Yen (2):
+      thermal: mediatek: Prepare to add support for other platforms
+      thermal: mediatek: Add tsensor support for V2 thermal system
+
+Konrad Dybcio (1):
+      dt-bindings: tsens: qcom: Document MSM8939 compatible
+
+Lukas Bulwahn (1):
+      MAINTAINERS: update entry to thermal governors file name prefixing
+
+Lukasz Luba (2):
+      MAINTAINERS: Add maintenance information for IPA
+      thermal: Update power allocator and devfreq cooling to SPDX licensing
+
+Marian-Cristian Rotariu (1):
+      thermal: rcar_gen3_thermal: Add r8a774e1 support
+
+Niklas Söderlund (1):
+      thermal: rcar_gen3_thermal: Do not shadow thcode variable
+
+Shawn Guo (1):
+      thermal: qcom: tsens-v0_1: Add support for MSM8939
+
+Sumeet Pawnikar (2):
+      thermal: int340x: processor_thermal: fix: update Jasper Lake PCI id
+      thermal: intel: intel_pch_thermal: Add Cannon Lake Low Power PCH
+support
+
+Thierry Reding (1):
+      thermal: core: Fix thermal zone lookup by ID
+
+ Documentation/devicetree/bindings/arm/arm,scmi.txt |   2 +-
+ Documentation/devicetree/bindings/arm/arm,scpi.txt |   2 +-
+ .../devicetree/bindings/arm/freescale/fsl,scu.txt  |   2 +-
+ .../arm/marvell/ap80x-system-controller.txt        |   2 +-
+ .../arm/marvell/cp110-system-controller.txt        |   2 +-
+ .../devicetree/bindings/cpufreq/cpufreq-dt.txt     |   3 +-
+ .../bindings/cpufreq/cpufreq-mediatek.txt          |   4 +-
+ .../bindings/cpufreq/nvidia,tegra20-cpufreq.txt    |   2 +-
+ .../devicetree/bindings/hwmon/gpio-fan.txt         |   3 +-
+ Documentation/devicetree/bindings/hwmon/lm90.txt   |   4 +-
+ .../bindings/thermal/allwinner,sun8i-a83t-ths.yaml |   2 +-
+ .../bindings/thermal/amazon,al-thermal.txt         |   2 +-
+ .../bindings/thermal/brcm,avs-ro-thermal.yaml      |   2 +-
+ .../bindings/thermal/brcm,bcm2835-thermal.txt      |   2 +-
+ .../bindings/thermal/hisilicon-thermal.txt         |   2 +-
+ .../bindings/thermal/max77620_thermal.txt          |   6 +-
+ .../bindings/thermal/mediatek-thermal.txt          |   2 +-
+ .../bindings/thermal/nvidia,tegra124-soctherm.txt  |  10 +-
+ .../thermal/nvidia,tegra186-bpmp-thermal.txt       |   2 +-
+ .../bindings/thermal/qcom-spmi-temp-alarm.txt      |   2 +-
+ .../devicetree/bindings/thermal/qcom-tsens.yaml    |   1 +
+ .../bindings/thermal/rockchip-thermal.txt          |   2 +-
+ .../devicetree/bindings/thermal/tango-thermal.txt  |   2 +-
+ .../bindings/thermal/thermal-generic-adc.txt       |   2 +-
+ .../devicetree/bindings/thermal/thermal.txt        | 586
+-------------------
+ MAINTAINERS                                        |   8 +
+ drivers/acpi/thermal.c                             |  76 +--
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_thermal.c |   8 +
+ drivers/net/ethernet/mellanox/mlxsw/core_thermal.c |  91 +--
+ drivers/net/wireless/intel/iwlwifi/mvm/tt.c        |   9 +-
+ drivers/platform/x86/acerhdf.c                     |  33 +-
+ drivers/platform/x86/intel_mid_thermal.c           |   6 +
+ drivers/power/supply/power_supply_core.c           |   9 +-
+ drivers/thermal/Kconfig                            |  20 +-
+ drivers/thermal/Makefile                           |   6 +-
+ drivers/thermal/armada_thermal.c                   |   6 +
+ drivers/thermal/clock_cooling.c                    | 445 --------------
+ drivers/thermal/da9062-thermal.c                   |  16 +-
+ drivers/thermal/devfreq_cooling.c                  |  10 +-
+ drivers/thermal/dove_thermal.c                     |   6 +
+ drivers/thermal/gov_power_allocator.c              |   9 +-
+ drivers/thermal/hisi_thermal.c                     |   6 +-
+ drivers/thermal/imx8mm_thermal.c                   |   1 +
+ drivers/thermal/imx_thermal.c                      |  60 +-
+ .../intel/int340x_thermal/int3400_thermal.c        |  38 +-
+ .../intel/int340x_thermal/int340x_thermal_zone.c   |   5 +
+ .../int340x_thermal/processor_thermal_device.c     |   2 +-
+ drivers/thermal/intel/intel_pch_thermal.c          |   8 +
+ drivers/thermal/intel/intel_quark_dts_thermal.c    |  34 +-
+ drivers/thermal/intel/intel_soc_dts_iosf.c         |   3 +
+ drivers/thermal/intel/x86_pkg_temp_thermal.c       |   6 +
+ drivers/thermal/kirkwood_thermal.c                 |   7 +
+ drivers/thermal/mtk_thermal.c                      | 234 ++++++--
+ drivers/thermal/qcom/tsens-v0_1.c                  | 144 ++++-
+ drivers/thermal/qcom/tsens.c                       |   3 +
+ drivers/thermal/qcom/tsens.h                       |   2 +-
+ drivers/thermal/rcar_gen3_thermal.c                |  10 +-
+ drivers/thermal/rcar_thermal.c                     |   9 +-
+ drivers/thermal/rockchip_thermal.c                 |   6 +-
+ drivers/thermal/spear_thermal.c                    |   7 +
+ drivers/thermal/sprd_thermal.c                     |   6 +-
+ drivers/thermal/st/st_thermal.c                    |   5 +
+ drivers/thermal/thermal_core.c                     | 174 +++++-
+ drivers/thermal/thermal_core.h                     |  15 +
+ drivers/thermal/thermal_helpers.c                  |  13 +-
+ drivers/thermal/thermal_netlink.c                  | 647
++++++++++++++++++++++
+ drivers/thermal/thermal_netlink.h                  | 104 ++++
+ drivers/thermal/thermal_of.c                       |  41 +-
+ drivers/thermal/thermal_sysfs.c                    |  52 +-
+ drivers/thermal/ti-soc-thermal/ti-thermal-common.c |   2 +-
+ include/linux/clock_cooling.h                      |  57 --
+ include/linux/devfreq_cooling.h                    |   9 +-
+ include/linux/thermal.h                            |  31 +-
+ include/uapi/linux/thermal.h                       |  89 ++-
+ net/netlink/genetlink.c                            |   2 +-
+ 75 files changed, 1632 insertions(+), 1609 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/thermal/thermal.txt
+ delete mode 100644 drivers/thermal/clock_cooling.c
+ create mode 100644 drivers/thermal/thermal_netlink.c
+ create mode 100644 drivers/thermal/thermal_netlink.h
+ delete mode 100644 include/linux/clock_cooling.h
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
