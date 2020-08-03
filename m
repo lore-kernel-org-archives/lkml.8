@@ -2,104 +2,134 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B611C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C4EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE7BD204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:38:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="t0pMPQre"
+	by mail.kernel.org (Postfix) with ESMTP id 3F49A204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:38:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596458292;
+	bh=/MNFJzkOY3OPjHdn2z1uM0k6Ta88CX9tJI06WJIu3pw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vhaBH41Qxw3Rzle6/Cn3YbKuMu85PnOY/ozjxKCapkLpD8LRNWTfjBljGNlD8Heja
+	 Jr0rPgF5u3Noz8KZtF9oe8LYGHa53LxJzdX1ZFur1sn0JgfENvJ3ifMVLdFJtyPEQg
+	 8tstoMZNfTgJU96wwKbcCEyxR4IP+9izLqN9b3FA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729592AbgHCMiB (ORCPT
+        id S1728257AbgHCMiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:38:01 -0400
-Received: from mail-am6eur05on2118.outbound.protection.outlook.com ([40.107.22.118]:45056
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727850AbgHCMhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:37:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RkJV+SD+TmWv8t5FtEch6chh6KbkeELojEV638fW9lVophjMjNZgw3CeT3P1Yn5IajoxCbyD7c4GAMXr1AObpl0h1HFjNrrL8CUyAa30EkDE3l5Kw+xzyiwRACcwc/yaIxVHKUgUHnqP/lVj9BmTiQpkxvj5JQagoNq2ewpnU7dcm82EcyflEsNt6uFDKRapCfNhF7gLWW+/nme1hJUCglkwoi9jHHyzSgzWPD9t413qcbYqNXnBTHx1gPx377lKhoDxKm4bmnBqjFio+7+aNJ9CYj066r6rfjJ9Q+jhtfJ+wJdOeS6ALamykFYqZJyMRVyhPfdlcqAZC4izZuKkfg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=asfEP+lSwg/LLxLmClZ6FlL/bbOSS78L0Ja8CsV9dtE=;
- b=J4eOnr3TMQmZ97o56cPgpLDSCqBsBTy9IRgelr4V5b5cg9ZOEmnrZWYr+ui3mKvsnBp6UQpwqw74u/wqBauTuzSp3mYiMnkEUyhsX1KrR0nsZbABZezW8ZD2CN96AlvophwQsnmD8lI2FA/D2KVmgd+Zc6SqekPslUZch4syENLdvJhPAjrxQSHFBb6/hw46oDu7yf3ZNGckM9d8GqL2muCxdrbP3GrkTN74gHRaZEAKTvsyHk3D3FJdFETtW9P2lh5p6dR3UT+JWVWH89Lxhfu4tIztKB2TxaGQSYxJkbBSs83w7RzwT81Arv5HpxxeZwY8DS4vuZScGdsRcxu2ng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
- dkim=pass header.d=habana.ai; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=asfEP+lSwg/LLxLmClZ6FlL/bbOSS78L0Ja8CsV9dtE=;
- b=t0pMPQreMpb+KxRC1lmdTSGxR0g98MAy0/GpVwx/lWpyQTCX2+T1D22lc600VwdgWUHKQcq3V/sBpYV1gZup9zSuzRzxtIshuMkgf7RB4HnsWC75Oqx7w8ReMCQmKVEjRaisY16uRHlQIEn+EEMzo250FGLMYdK38R/WVxFaAFA=
-Received: from DB8PR02MB5468.eurprd02.prod.outlook.com (2603:10a6:10:ef::22)
- by DBAPR02MB6008.eurprd02.prod.outlook.com (2603:10a6:10:179::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.21; Mon, 3 Aug
- 2020 12:37:41 +0000
-Received: from DB8PR02MB5468.eurprd02.prod.outlook.com
- ([fe80::68d4:6b:d077:19a9]) by DB8PR02MB5468.eurprd02.prod.outlook.com
- ([fe80::68d4:6b:d077:19a9%4]) with mapi id 15.20.3239.021; Mon, 3 Aug 2020
- 12:37:41 +0000
-From:   Tomer Tayar <ttayar@habana.ai>
-To:     Oded Gabbay <oded.gabbay@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        SW_Drivers <SW_Drivers@habana.ai>
-Subject: RE: [PATCH] habanalabs: increase length of ASIC name
-Thread-Topic: [PATCH] habanalabs: increase length of ASIC name
-Thread-Index: AQHWaYxqOuUUqglDB0OnEyp9iVHj0qkmUfng
-Date:   Mon, 3 Aug 2020 12:37:41 +0000
-Message-ID: <DB8PR02MB5468A881242A13126D8083FED24D0@DB8PR02MB5468.eurprd02.prod.outlook.com>
-References: <20200803115118.31211-1-oded.gabbay@gmail.com>
-In-Reply-To: <20200803115118.31211-1-oded.gabbay@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=habana.ai;
-x-originating-ip: [31.154.181.186]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d309b8e0-d6f7-4fa3-1581-08d837aa0371
-x-ms-traffictypediagnostic: DBAPR02MB6008:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DBAPR02MB6008D60355D459004BFF2617D24D0@DBAPR02MB6008.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1169;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8+hWs5LY8z4GF/8seOMgzQViPOJvpcJFepCsmkUi9jlN89HiozRBweTzwAgAgKssqaLoEaLgKOYRMvFaN2UpFkQB8i24UcaKPnCuKIEarF3ED6ySP0aUibzTa4DecEtAHc9X3z/AN5ye7KLNUJ4S1zq3xZcvzK0eUZaVYmGbEd9pCEsZFaxiA3Z+BizfHrQ9u8MtatCE9ushJ+oOf6FJDEVglqoo7HHJ5T5rRmNIxt+TR/NhMP3SvMTG5pdSOUy/QYaC+70HrnEX7jUqFjDvLqrQ5mYd6d3pd+QJeTCjQo0Y54x3wsM8S7RG9BDEi2wv
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR02MB5468.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39850400004)(136003)(366004)(346002)(376002)(396003)(478600001)(7696005)(558084003)(66946007)(6636002)(66476007)(64756008)(66446008)(66556008)(316002)(110136005)(52536014)(2906002)(55016002)(8936002)(86362001)(5660300002)(8676002)(53546011)(33656002)(76116006)(26005)(186003)(9686003)(6506007)(71200400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: /fuBl6LxTJ6f7GLrHV2owq0aHT725m/MKCQQX5qBPsTHvOzk9NxTDopgKj/MpDzrIuup/cf8iJoLRtB5cOSVJWB6Q+ffJXgL4ICNyu4NmN43hRfGTXbSucchSunhqoZAtUF3mSov0CluEwZYw012X5AQx4HUqxUSD6RDeE5994U/A/UhKUa6g0slcYpkbmt435j82IxBlDplUurQbwHSjQBPll98Tz/OH3InFw7JjQHg/Rhp/YrF1wfOM2PCpKpHVqbdTQtE69b6CanY6neCbz9b0gaLIIFFfhXBsryGvY7uIlhuwuFjI07IjJ6oQftngt7Xtue+vHb7SeEsHGeAAQlmufDAJkGyjir68Tb8H6LGlWOwbuucIj4so21vkvIwguK4wsy1bka7d4vpfZQH6cUgIbFTAL3F17u8Yt4nb11cDTwZu2grAJVZ1DE1JhdMkm8GiDvKL6uCsBpZCmyw9+lDiHp01KACjEw+Cy3uAFmSPk74UPKI9KB8DLAzH3TvAkHk0eKlvk6rq8kHvOCKy5kGHJV8Svo5Jun7B6eZu4FOVAw0Xl9IldwPdJjjVeIt3y46vZwObHX7MlEd8qoUhBBI/6tKOSFU2TJX7eGRA10kvOp9TkFQLP6YWu+542XKCfp41K+BGb986mBujvnfgA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 3 Aug 2020 08:38:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729582AbgHCMel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:34:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB71D204EC;
+        Mon,  3 Aug 2020 12:34:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596458080;
+        bh=/MNFJzkOY3OPjHdn2z1uM0k6Ta88CX9tJI06WJIu3pw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wZvRo6jYFURGGIXVy4z78oNFMpRDegjSozjL8W5yRl2EwVCX+qJjImkaG+fLrSXP9
+         uZGRe1a5APyxLAjYu/QvuaWGyJA2NTerwt9j0xoRM6J9oM0JW6/68vy1kztaofrIuU
+         ELjdSfy/1U/o4nC7A7SPVeWhenE0xZ8FEX5nZie0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jake Lawrence <lawja@fb.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 32/51] mlx4: disable device on shutdown
+Date:   Mon,  3 Aug 2020 14:20:17 +0200
+Message-Id: <20200803121851.092119670@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200803121849.488233135@linuxfoundation.org>
+References: <20200803121849.488233135@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-OriginatorOrg: habana.ai
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB8PR02MB5468.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d309b8e0-d6f7-4fa3-1581-08d837aa0371
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Aug 2020 12:37:41.3326
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: F2+UnNsCcZpplYxT/VuLFqmWgjVoB9MnEgtswZK6mmckc17Rfo3we85E/Rus2NGx5tQKtai5vBXsrnuVOcpF1Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR02MB6008
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 3, 2020 at 14:51 Oded Gabbay <oded.gabbay@gmail.com> wrote:
-> Future ASIC names are longer than 15 chars so increase the variable lengt=
-h
-> to 32 chars.
->=20
-> Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+From: Jakub Kicinski <kuba@kernel.org>
 
-Reviewed-by: Tomer Tayar <ttayar@habana.ai>
+[ Upstream commit 3cab8c65525920f00d8f4997b3e9bb73aecb3a8e ]
+
+It appears that not disabling a PCI device on .shutdown may lead to
+a Hardware Error with particular (perhaps buggy) BIOS versions:
+
+    mlx4_en: eth0: Close port called
+    mlx4_en 0000:04:00.0: removed PHC
+    reboot: Restarting system
+    {1}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 1
+    {1}[Hardware Error]: event severity: fatal
+    {1}[Hardware Error]:  Error 0, type: fatal
+    {1}[Hardware Error]:   section_type: PCIe error
+    {1}[Hardware Error]:   port_type: 4, root port
+    {1}[Hardware Error]:   version: 1.16
+    {1}[Hardware Error]:   command: 0x4010, status: 0x0143
+    {1}[Hardware Error]:   device_id: 0000:00:02.2
+    {1}[Hardware Error]:   slot: 0
+    {1}[Hardware Error]:   secondary_bus: 0x04
+    {1}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x2f06
+    {1}[Hardware Error]:   class_code: 000604
+    {1}[Hardware Error]:   bridge: secondary_status: 0x2000, control: 0x0003
+    {1}[Hardware Error]:   aer_uncor_status: 0x00100000, aer_uncor_mask: 0x00000000
+    {1}[Hardware Error]:   aer_uncor_severity: 0x00062030
+    {1}[Hardware Error]:   TLP Header: 40000018 040000ff 791f4080 00000000
+[hw error repeats]
+    Kernel panic - not syncing: Fatal hardware error!
+    CPU: 0 PID: 2189 Comm: reboot Kdump: loaded Not tainted 5.6.x-blabla #1
+    Hardware name: HP ProLiant DL380 Gen9/ProLiant DL380 Gen9, BIOS P89 05/05/2017
+
+Fix the mlx4 driver.
+
+This is a very similar problem to what had been fixed in:
+commit 0d98ba8d70b0 ("scsi: hpsa: disable device during shutdown")
+to address https://bugzilla.kernel.org/show_bug.cgi?id=199779.
+
+Fixes: 2ba5fbd62b25 ("net/mlx4_core: Handle AER flow properly")
+Reported-by: Jake Lawrence <lawja@fb.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Reviewed-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/mellanox/mlx4/main.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx4/main.c b/drivers/net/ethernet/mellanox/mlx4/main.c
+index cf9011bb6e0f1..c6660b61e8361 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/main.c
++++ b/drivers/net/ethernet/mellanox/mlx4/main.c
+@@ -4190,12 +4190,14 @@ end:
+ static void mlx4_shutdown(struct pci_dev *pdev)
+ {
+ 	struct mlx4_dev_persistent *persist = pci_get_drvdata(pdev);
++	struct mlx4_dev *dev = persist->dev;
+ 
+ 	mlx4_info(persist->dev, "mlx4_shutdown was called\n");
+ 	mutex_lock(&persist->interface_state_mutex);
+ 	if (persist->interface_state & MLX4_INTERFACE_STATE_UP)
+ 		mlx4_unload_one(pdev);
+ 	mutex_unlock(&persist->interface_state_mutex);
++	mlx4_pci_disable_device(dev);
+ }
+ 
+ static const struct pci_error_handlers mlx4_err_handler = {
+-- 
+2.25.1
+
+
+
