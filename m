@@ -2,107 +2,159 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF33C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D09C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5518420678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03D892072A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:43:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="O9JK86Tc";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="s4K2YpwD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="i7M+yxWO";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="lbUwMAYj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgHCPm5 (ORCPT
+        id S1728296AbgHCPnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 11:42:57 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:37566 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728232AbgHCPmz (ORCPT
+        Mon, 3 Aug 2020 11:43:00 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:5014 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728228AbgHCPm4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 11:42:55 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 0C8748EE1DD;
-        Mon,  3 Aug 2020 08:42:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1596469374;
-        bh=Uum3YBzktKJNuHiR6OJu5HmfTF5qQnA5gi/i5G/rXrQ=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=O9JK86TcVP7gbxm2fb/8Q61ppK2NKKQTxTKNuHlV2ceyKu1aTztA5xAoiJrD2pxW/
-         Q+qv2hXr5mwEzJ3gdctVri6mhLMR5/CHlIiEsE/4/lI+JZDaI0KDvNumWeAJkyX13U
-         OCGvKNLxJrKe8ou8wqztvVdP+b2dZwwO98fcCXtA=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id EdiLDuzcATav; Mon,  3 Aug 2020 08:42:53 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.76.230])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 81ED08EE14D;
-        Mon,  3 Aug 2020 08:42:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1596469373;
-        bh=Uum3YBzktKJNuHiR6OJu5HmfTF5qQnA5gi/i5G/rXrQ=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=s4K2YpwDLz+5kMilTgP8ZNMakkD9GePIXlmZcfIzJDFHwQHhqnSrKdXx2dgkvpwtr
-         hAqE4Wy7TqMCx3r3hCV4Hpap0/QxwKCr2EbyGneLKFgGD6GJ8mv6m1pfA0xUdlMOoP
-         UgLcD2xTWanH2eZI7HU/ES49TBMi0ZvSvbsfkml4=
-Message-ID: <1596469370.29091.13.camel@HansenPartnership.com>
-Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Steven Sistare <steven.sistare@oracle.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
-        arnd@arndb.de, keescook@chromium.org, gerg@linux-m68k.org,
-        ktkhai@virtuozzo.com, christian.brauner@ubuntu.com,
-        peterz@infradead.org, esyr@redhat.com, jgg@ziepe.ca,
-        christian@kellner.me, areber@redhat.com, cyphar@cyphar.com
-Date:   Mon, 03 Aug 2020 08:42:50 -0700
-In-Reply-To: <877dufvje9.fsf@x220.int.ebiederm.org>
-References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
-         <20200730152250.GG23808@casper.infradead.org>
-         <db3bdbae-eb0f-1ae3-94dd-045e37bc94ba@oracle.com>
-         <20200730171251.GI23808@casper.infradead.org>
-         <63a7404c-e4f6-a82e-257b-217585b0277f@oracle.com>
-         <20200730174956.GK23808@casper.infradead.org>
-         <ab7a25bf-3321-77c8-9bc3-28a223a14032@oracle.com>
-         <87y2n03brx.fsf@x220.int.ebiederm.org>
-         <689d6348-6029-5396-8de7-a26bc3c017e5@oracle.com>
-         <877dufvje9.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 3 Aug 2020 11:42:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1596469375; x=1628005375;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=X7GhNHDNBld0ATHsHCpT4wlfpTjNxEFBBI5jSwbyCTM=;
+  b=i7M+yxWOc5tK1+oS3jA22NOOWQsr/fNIFujRkikwH6v0+WpdDZtFizzx
+   MlvyH45DhaR/2QOzahhGl98ffPv9jkB3z8em9DRyLT0V6ccZZnvqjpZmI
+   NuXxae5IE1J6/CE+ZlCcKtnfJ1iPP7hy74/ig21hbZIQUCrQvcp+xjulP
+   7R/sk0qE8n7d480/8bHTXZvHDG2HmD/jJxTgYv0HwKaPCO1QHsXitLDdx
+   a/cahOQNtwcKUcgiQvlb3RqTcQSRVNazSxXoQgpUak6Y60Pj8xpZD7Bvr
+   62SnpZnNlmlhUQDcGJEgj727/m6u5cCP1tlcni7bZsA74b5lwVAkJZgFU
+   Q==;
+IronPort-SDR: 0NE7ifo3Q032NIOl/p0cY2f986dlDk0+hxYwnCXxfuUAdSXs8frYbeoG6Zu1RhYR3BIi5RdoXc
+ EAct2Vo575sK0gK02OA8rzwGEaKooRgFfRGoEFNgW7mV/UrIRRbiUdT6l9VJ2STT9dBhUcs9vj
+ YZUpoIJrmLVustIxBfOZj15eIAvc7PqxVcOTJOgyw0fSQQ1uErZnVC24zLuU06eWye3O8duzvL
+ 58BEU2iqVSmYpZdRD27LZSMzmE8am40WBieqBxLtyTjFsGtNGYKw9nuU3+9J1fckMDuUJcE9LF
+ Dmk=
+X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
+   d="scan'208";a="90257468"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Aug 2020 08:42:54 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 3 Aug 2020 08:42:54 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3 via Frontend
+ Transport; Mon, 3 Aug 2020 08:42:50 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OpjTgr2xdH5OgLAPh8WhXTh9vwv9rmlSGrPtibkDKQsKbZXRzplFyEYWUPwjq49lIHQo0B1wwGOgiVQd5tto0sIYLY1YIMIUqyHDEmF8t8KK+C+RzT9dYT/ve0EOcJ4PVdB0TyNjexAYz85gH5ZRtpc6yl4zCRcYCKM9Z35YSpWdzxAH5LUA96KfLOS8Dxh5/PfEjiqG6yEdAq3g4LVJYJE9eukkFnbOFYDEXKDS95RRtprn1yMbyvjGiKIbF73AS4+psrO10pQWGt//hkSxyHBhO7lOUSC9v9ngUr0XVdDYii7Ehes4UyjC4lwcNULQcaMIQWRu9GImHraOtFOh1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a4hazMDevnP0aXs4MkGpT80XdIS4hMMLvFnjRrNwyxw=;
+ b=SumvKF2xVjDFY6BQjQJNY9k6UhCe38Zp6hssjQA/Lhe6uhfRk8kitiNv5r52jauIb+LAKLkm/ONipl4h0Tj1jyTs1NZlev3RWDpW6d6Tv+rnzA2IIuTIh4t36Ok11N7gsRZM34qVAh5k3PjL8M1up3FS0lSopmi/XBcvH7zrblpReithgDZwsvQaPpuFR/e0j5rqvrzMTtPb62c3Y5NQmzaBpBDChkT6kvgFxStnLmDWQOnDS+JwClwzEZMBWrqqo2fgMlsAikrvnYndv5xdVXq0JMmerKdZIq6sxhNIz+0qLi7jN3u20ui5EQRbWyNFlUw4GFMxat+lqqlUWs6nOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a4hazMDevnP0aXs4MkGpT80XdIS4hMMLvFnjRrNwyxw=;
+ b=lbUwMAYj69xTgX/VcQnEaYVgYxjeZTQsc7vzGQQMLiSv0C9d/zSheNGsyI1VulsNY7wGPjWT9il9KE3A1oWl0ZxGf2ZPrx3wC5338VGyapVHDGkNLap8+6BOUPcjh3ZKejpdhnpvVH+8Gt04HYxrAU9HZd6AbI3Zq4C0E2/To+o=
+Received: from SN6PR11MB3504.namprd11.prod.outlook.com (2603:10b6:805:d0::17)
+ by SA0PR11MB4734.namprd11.prod.outlook.com (2603:10b6:806:99::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17; Mon, 3 Aug
+ 2020 15:42:53 +0000
+Received: from SN6PR11MB3504.namprd11.prod.outlook.com
+ ([fe80::c83b:2062:4e59:8ebf]) by SN6PR11MB3504.namprd11.prod.outlook.com
+ ([fe80::c83b:2062:4e59:8ebf%7]) with mapi id 15.20.3239.021; Mon, 3 Aug 2020
+ 15:42:52 +0000
+From:   <Codrin.Ciubotariu@microchip.com>
+To:     <wsa@kernel.org>
+CC:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <robh+dt@kernel.org>,
+        <Ludovic.Desroches@microchip.com>, <Nicolas.Ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
+        <kamel.bouhara@bootlin.com>
+Subject: Re: Re: [RFC PATCH 4/4] i2c: at91: Move to generic GPIO bus recovery
+Thread-Topic: Re: [RFC PATCH 4/4] i2c: at91: Move to generic GPIO bus recovery
+Thread-Index: AQHWRkUH28LN6vyz50q8ydS45lftAKklUoAAgAF6cgA=
+Date:   Mon, 3 Aug 2020 15:42:52 +0000
+Message-ID: <65890aab-1d19-7e7e-abff-3c6ee05c8ade@microchip.com>
+References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
+ <20200619141904.910889-5-codrin.ciubotariu@microchip.com>
+ <20200802170820.GC10193@kunai>
+In-Reply-To: <20200802170820.GC10193@kunai>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=microchip.com;
+x-originating-ip: [84.232.220.208]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 62fd1798-b8b0-45bd-013b-08d837c3e26b
+x-ms-traffictypediagnostic: SA0PR11MB4734:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SA0PR11MB4734ADB862052287EC3E392BE74D0@SA0PR11MB4734.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: m0NeT7BK/mdhfPrcZGmGYeNMlcl5qRK55Iw1IEscxmpuRJrw3buM3DGIWFJ5DRqRywlaxT0MNtr2Cu21gTJfP9v2yulgAn6/oZKKr02XhUP9lrvK8CE3UceJqX6SQkY8L3JvjWCbzxtwwLtvAzs3UO2nd03ewOxbvIse3JlEARbI8cWAp0v6o8NLGnjFsetf+yTTCgsYZwPb05eGsH3GyQHvraqRYeGIPW1+KDlzCmOf0ioTIRzyyfRwx84QBvjjT9BI+ONCVn+5fTMNAWBnwbMpdT5wc6DLoYD1ix19Sem7JMObP0lSGWU33pql1hVGbHV3K8W9pjpNilNysg+EEWDYzGLDldY8wHjE0kKh1C0MJqgIPBc8y6sO/8K5Zh0x6vLsscBAHHHdXgswrZ2vXw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3504.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(136003)(39860400002)(376002)(346002)(366004)(8936002)(6512007)(66946007)(6916009)(83380400001)(478600001)(4326008)(8676002)(31686004)(36756003)(66446008)(64756008)(66556008)(66476007)(2906002)(76116006)(91956017)(2616005)(26005)(316002)(86362001)(31696002)(71200400001)(54906003)(6486002)(5660300002)(6506007)(53546011)(186003)(4744005)(41533002)(43740500002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: m5h5+4QPb6I9kiJSAVkzs1eFv7RYf2eLvBWIAl2+sA1cISXBNFV/lJx5f6D9v75zjtjJOOxp8Vlou9jbrPZ/7wuuzLlMj1SDznk8CiRXEkvgFC3o2ZJZ0R9LjnzRfMRUknb5EPXJe1a0Ey6ipQxJU2T7gwATvznksmK4rf0Ja0WkVlG0vTevVcO09eqx6SV+XdrDkVESEOwYQwgp2ZAzNVJT6jV2s8x8NtkXjDgjYj/P8BTNbbe3+wxvjxU3klxvCA0aaP6tOznaOgFN/YgsQ5b0DQaBZBjH/BqtxvPBYoVval6yOm39I+t2bP6EF2wRn8aEmUcU68EvyTHOpb3deGT7z3u1fTEFBlYwQQxc5BwOOOBSgwMHxIQI4EOKFLRr/9RkFY6srMfqjaPPyj+f3an5WS/a0FEhuRB6goxu60Dj4ym8CF7GbWZZsSrT2goBv47+v+hqA+4Do+gs06IhDR0EFtvbqyocZUMkTIj0/zjlVitcXNYkDLh5sEElGJmySSdXZtONPL/+g6vB26dt4ERuOzcfCX5xEXyoSkx9hAJexGkYGCslrsHv5CuPhH2/EuZpxWwPYw5OZBNC0Po9LqYqQNsyzRq7z6LpboVpDos7L+qA7E6iz5DzpxcGbvzPb2qrQcsg94E8KfG2hvY4WA==
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <69FD854A2D0B194680CD655B27C7A1B7@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB3504.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62fd1798-b8b0-45bd-013b-08d837c3e26b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Aug 2020 15:42:52.8606
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: waTJSgHFbBHOr1pcjZmPq2NsFGH9BiHdJ/wEvKFaJr+nK96UM0BdbNXw5/I4wGLuHeabGvRVu4vzoLw84+pe0Z2lGI8MKDvFa/MfA4BFRyc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4734
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-08-03 at 10:28 -0500, Eric W. Biederman wrote:
-[...]
-> What is wrong with live migration between one qemu process and
-> another qemu process on the same machine not work for this use case?
-> 
-> Just reusing live migration would seem to be the simplest path of
-> all, as the code is already implemented.  Further if something goes
-> wrong with the live migration you can fallback to the existing
-> process.  With exec there is no fallback if the new version does not
-> properly support the handoff protocol of the old version.
+On 02.08.2020 20:08, Wolfram Sang wrote:
+> On Fri, Jun 19, 2020 at 05:19:04PM +0300, Codrin Ciubotariu wrote:
+>> Make the Microchip at91 driver the first to use the generic GPIO bus
+>> recovery support from the I2C core and discard the driver implementation=
+.
+>>
+>> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+>> ---
+>>   drivers/i2c/busses/i2c-at91-master.c | 69 ++--------------------------
+>>   drivers/i2c/busses/i2c-at91.h        |  3 --
+>=20
+> Nice diffstat! I will try using this new functionality with another
+> controller next week.
+>=20
 
-Actually, could I ask this another way: the other patch set you sent to
-the KVM list was to snapshot the VM to a PKRAM capsule preserved across
-kexec using zero copy for extremely fast save/restore.  The original
-idea was to use this as part of a CRIU based snapshot, kexec to new
-system, restore.  However, why can't you do a local snapshot, restart
-qemu, restore using the PKRAM capsule to achieve exactly the same as
-MADV_DOEXEC does but using a system that's easy to reason about?  It
-may be slightly slower, but I think we're still talking milliseconds.
+Thanks, this would be great! I tested this on a sam9x60, with the HW=20
+feature for the 9 pulses disabled, with a picky audio codec as I2C device.
+Please let me know of the result.
 
-James
-
+Best regards,
+Codrin
