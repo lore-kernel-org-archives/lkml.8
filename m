@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F108C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BB6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD5F20738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EEF12064B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596459299;
-	bh=QyR66mhOB+DXFLTsZEh2HgiH7RdpdVsPW6tOdlXQPTI=;
+	s=default; t=1596459310;
+	bh=cdtxj/ywbkVNySjD8OmBny99CKB7Y7dBkHs04XnxzZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QVXhaHGGicKIpOoxtcdp8zadHO/MaybpjJwJaQkdeMW6Oroxgw/0lCFVBYv7jUf5D
-	 7jYki5XzSm5pqxSkE+ZxOKzOgKzIxMa29VmtoFyNmvI5SY1I0u+m/9j37B93yRVQgU
-	 oHWQoQ5J9SsapOD5xObbCJ4fp/N9y9gfN9d35o70=
+	b=EktwsN8xEsvJFPhf3fjcwELV2tw/QGEntSm6y9I8k1JTojqHZl8YY7fOWwHbibs+e
+	 lqXkXdG9yPkmR3M88j+Q+V7ZWpONZUkfTmrdt9U8GuOcjJfhZneWYNvgKTRR83gfsf
+	 rLemEIlXT5kNS3mv2794me8B2hCa6ybZYWyk5dxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbgHCMXD (ORCPT
+        id S1728776AbgHCMzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:23:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46674 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:55:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727772AbgHCMWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:22:53 -0400
+        id S1726785AbgHCMXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:23:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA9AE20738;
-        Mon,  3 Aug 2020 12:22:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A1D220738;
+        Mon,  3 Aug 2020 12:23:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457372;
-        bh=QyR66mhOB+DXFLTsZEh2HgiH7RdpdVsPW6tOdlXQPTI=;
+        s=default; t=1596457381;
+        bh=cdtxj/ywbkVNySjD8OmBny99CKB7Y7dBkHs04XnxzZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d116hgSnVwFaKZAx+b9dp1ps/w/FyoIpxuEq3gwuMKLELYlcPkN2nKCH3LFbG+dhM
-         AXhe6+5niJsgUgf1wAKYICu0qaBkL2a0vL4Ltj/eSFwhq924BqiTnHJ6TYibPjVTeM
-         nUYgbI7z8wNybGW5nHt47kwOYCjAKz5RK6XEpGCY=
+        b=LH9xriZaPP34S8VLB4uBbWk1K/t6k/f9qP8TZGpFL/S02Lvu8812c3Jcj6c+f48bY
+         4YS8SPNirbtRZ9OuL93DykoLbkE1QsJBqYfz//o3D9sk/2IokshpHxDCqTmIEZNhzt
+         xNC6lkaluUhlBNUcR9ErgapidQB6Gt4RlTdnQ7ME=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Tanner Love <tannerlove@google.com>,
         Willem de Bruijn <willemb@google.com>,
+        Eric Dumazet <edumazet@google.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 044/120] selftests/net: psock_fanout: fix clang issues for target arch PowerPC
-Date:   Mon,  3 Aug 2020 14:18:22 +0200
-Message-Id: <20200803121904.958715674@linuxfoundation.org>
+Subject: [PATCH 5.7 046/120] selftests/net: tcp_mmap: fix clang warning for target arch PowerPC
+Date:   Mon,  3 Aug 2020 14:18:24 +0200
+Message-Id: <20200803121905.051526833@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -63,38 +64,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tanner Love <tannerlove@google.com>
 
-[ Upstream commit 64f9ede2274980076423583683d44480909b7a40 ]
+[ Upstream commit 94b6c13be57cdedb7cf4d33dbcd066fad133f22b ]
 
-Clang 9 threw:
-warning: format specifies type 'unsigned short' but the argument has \
-type 'int' [-Wformat]
-                typeflags, PORT_BASE, PORT_BASE + port_off);
+When size_t maps to unsigned int (e.g. on 32-bit powerpc), then the
+comparison with 1<<35 is always true. Clang 9 threw:
+warning: result of comparison of constant 34359738368 with \
+expression of type 'size_t' (aka 'unsigned int') is always true \
+[-Wtautological-constant-out-of-range-compare]
+        while (total < FILE_SZ) {
 
 Tested: make -C tools/testing/selftests TARGETS="net" run_tests
 
-Fixes: 77f65ebdca50 ("packet: packet fanout rollover during socket overload")
+Fixes: 192dc405f308 ("selftests: net: add tcp_mmap program")
 Signed-off-by: Tanner Love <tannerlove@google.com>
 Acked-by: Willem de Bruijn <willemb@google.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/psock_fanout.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/tcp_mmap.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/net/psock_fanout.c b/tools/testing/selftests/net/psock_fanout.c
-index 8c8c7d79c38d9..2c522f7a0aeca 100644
---- a/tools/testing/selftests/net/psock_fanout.c
-+++ b/tools/testing/selftests/net/psock_fanout.c
-@@ -350,7 +350,8 @@ static int test_datapath(uint16_t typeflags, int port_off,
- 	int fds[2], fds_udp[2][2], ret;
+diff --git a/tools/testing/selftests/net/tcp_mmap.c b/tools/testing/selftests/net/tcp_mmap.c
+index 4555f88252baf..a61b7b3da5496 100644
+--- a/tools/testing/selftests/net/tcp_mmap.c
++++ b/tools/testing/selftests/net/tcp_mmap.c
+@@ -344,7 +344,7 @@ int main(int argc, char *argv[])
+ {
+ 	struct sockaddr_storage listenaddr, addr;
+ 	unsigned int max_pacing_rate = 0;
+-	size_t total = 0;
++	uint64_t total = 0;
+ 	char *host = NULL;
+ 	int fd, c, on = 1;
+ 	char *buffer;
+@@ -473,12 +473,12 @@ int main(int argc, char *argv[])
+ 		zflg = 0;
+ 	}
+ 	while (total < FILE_SZ) {
+-		ssize_t wr = FILE_SZ - total;
++		int64_t wr = FILE_SZ - total;
  
- 	fprintf(stderr, "\ntest: datapath 0x%hx ports %hu,%hu\n",
--		typeflags, PORT_BASE, PORT_BASE + port_off);
-+		typeflags, (uint16_t)PORT_BASE,
-+		(uint16_t)(PORT_BASE + port_off));
- 
- 	fds[0] = sock_fanout_open(typeflags, 0);
- 	fds[1] = sock_fanout_open(typeflags, 0);
+ 		if (wr > chunk_size)
+ 			wr = chunk_size;
+ 		/* Note : we just want to fill the pipe with 0 bytes */
+-		wr = send(fd, buffer, wr, zflg ? MSG_ZEROCOPY : 0);
++		wr = send(fd, buffer, (size_t)wr, zflg ? MSG_ZEROCOPY : 0);
+ 		if (wr <= 0)
+ 			break;
+ 		total += wr;
 -- 
 2.25.1
 
