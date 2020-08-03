@@ -2,98 +2,70 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3305C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8D7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B55E206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 460ED2070A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:29:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgHCI1a convert rfc822-to-8bit (ORCPT
+        id S1726433AbgHCI3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 04:27:30 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:24997 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725867AbgHCI13 (ORCPT
+        Mon, 3 Aug 2020 04:29:09 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36803 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbgHCI3J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 04:27:29 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-238-5RDLBwWzPy-44Oq5Oxj5QQ-1; Mon, 03 Aug 2020 09:27:26 +0100
-X-MC-Unique: 5RDLBwWzPy-44Oq5Oxj5QQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 3 Aug 2020 09:27:25 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 3 Aug 2020 09:27:25 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Mark Rutland' <mark.rutland@arm.com>,
-        "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-CC:     Andy Lutomirski <luto@kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "LSM List" <linux-security-module@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
-Subject: RE: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-Thread-Topic: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-Thread-Index: AQHWZ2jYT+e4gDrzGEmP/30MMvDTCqkmD9qg
-Date:   Mon, 3 Aug 2020 08:27:25 +0000
-Message-ID: <a3068e3126a942c7a3e7ac115499deb1@AcuMS.aculab.com>
-References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
- <6540b4b7-3f70-adbf-c922-43886599713a@linux.microsoft.com>
- <CALCETrWnNR5v3ZCLfBVQGYK8M0jAvQMaAc9uuO05kfZuh-4d6w@mail.gmail.com>
- <46a1adef-65f0-bd5e-0b17-54856fb7e7ee@linux.microsoft.com>
- <20200731183146.GD67415@C02TD0UTHF1T.local>
-In-Reply-To: <20200731183146.GD67415@C02TD0UTHF1T.local>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 3 Aug 2020 04:29:09 -0400
+Received: by mail-wr1-f66.google.com with SMTP id 88so33322770wrh.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 01:29:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
+        b=cFwYlc6MgLzOICgqzwcrqr4IKLWgluUWUIdTGJ4AEUk5oW37nrCTeSm42sq0/PlT7w
+         eAZy14uIMKbRDHY4/IZwSDh6uNYTRlD21g6KjBuVsGmPu86BbmzqbP8HIDV6TPmcgaVO
+         CP4kwnXGNbxZcfu2C/jbUIIt617p59e2b3foLW8bz3Wq7ByvKg36+aNJ8MuLPnaillDK
+         RuxRP6jpD0d6FeTt37KG2IkR0eTRKgGgt4F6Ugsi4IkrG/Z1lowTNMnWynbKyJJn4Rq5
+         mXgEiwx/r3cIbRvtFZakFKz5ftZXpBI8o28+8v1WEKIlqhMe56XFDJ/bSVZRinUZNiUV
+         doaw==
+X-Gm-Message-State: AOAM531l2F7QqoZIQyEvHSx/UEZLJg/wH59X+/bsju2/Oq2WFpmiIt8+
+        XpnMHeBxwZUj41RlfI53NhETWpG8
+X-Google-Smtp-Source: ABdhPJyPx3/rVzkllsJRPSUy4Uln2/0isGBUXD0h1FIFBnnuS6eoK6QJVjYkInrN0SJMUbG3t5N2Yw==
+X-Received: by 2002:adf:f151:: with SMTP id y17mr15055163wro.179.1596443347274;
+        Mon, 03 Aug 2020 01:29:07 -0700 (PDT)
+Received: from ?IPv6:2601:647:4802:9070:6dac:e394:c378:553e? ([2601:647:4802:9070:6dac:e394:c378:553e])
+        by smtp.gmail.com with ESMTPSA id m1sm5183485wmc.28.2020.08.03.01.29.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Aug 2020 01:29:06 -0700 (PDT)
+Subject: Re: [PATCH] nvmet-passthru: Reject commands with non-sgl flags set
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
+Cc:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Stephen Bates <sbates@raithlin.com>, Jens Axboe <axboe@fb.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>
+References: <20200729191009.4485-1-logang@deltatee.com>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <4641649c-b777-b2cf-2c40-16c0c9d23cfb@grimberg.me>
+Date:   Mon, 3 Aug 2020 01:29:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200729191009.4485-1-logang@deltatee.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Rutland
-> Sent: 31 July 2020 19:32
-...
-> > It requires PC-relative data references. I have not worked on all architectures.
-> > So, I need to study this. But do all ISAs support PC-relative data references?
-> 
-> Not all do, but pretty much any recent ISA will as it's a practical
-> necessity for fast position-independent code.
-
-i386 has neither PC-relative addressing nor moves from %pc.
-The cpu architecture knows that the sequence:
-	call	1f  
-1:	pop	%reg  
-is used to get the %pc value so is treated specially so that
-it doesn't 'trash' the return stack.
-
-So PIC code isn't too bad, but you have to use the correct
-sequence.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
