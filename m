@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52705C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A503DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC4A22BEF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 778F6207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457521;
-	bh=GepQvqaBctLo+/EECXy1848guYNru9D7ZY1Ld9MYv/Y=;
+	s=default; t=1596457525;
+	bh=Q/6h68lCkWJwD+if01Y84y2vBS2h14vSLslRM3wq/sE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0gcCzxErU6l5nwijVasJ4G2SbtFHFNiXQjpyeT7+VZM48HMlwM/BadO07MEcrCgfX
-	 cZMJLHiUnchX6wOE8asebvBvYvngwP1gf9m5ZyWrfIUmoAxKNMwCG2LJpRa5VofCWH
-	 lUDrbM5I1LHhzkKTON3OAfstVcGzNiVlP9bXF7ag=
+	b=w66/IphSI96XlhqxMsCyEvQgdl+Zxl8Z2iGUz4V9kjFV2lEvcoNcY/bcn01o787cU
+	 KobA1tnl39ASdU8p1I2GTm0q4+wSAc9R1eZXmHWDSkRMsuvPMXr+wTcQyzcsZ+BiUa
+	 RQsvtJRzlCDV0gAFXi3X5VsETRZwjosuLV1ndE78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbgHCMZU (ORCPT
+        id S1728205AbgHCMZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:25:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49936 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:25:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728150AbgHCMZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:25:15 -0400
+        id S1728175AbgHCMZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:25:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8773204EC;
-        Mon,  3 Aug 2020 12:25:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C738D204EC;
+        Mon,  3 Aug 2020 12:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457513;
-        bh=GepQvqaBctLo+/EECXy1848guYNru9D7ZY1Ld9MYv/Y=;
+        s=default; t=1596457516;
+        bh=Q/6h68lCkWJwD+if01Y84y2vBS2h14vSLslRM3wq/sE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uvziriHqiq9MttVMGMopxZv5+rIwcPETGVmSxFj3P+ld8EoKC0w49wFGxbZsSp7YS
-         Z87fs1wxc0vqmWIXO9LdEVQVXG5G3bRt2tWy4P+kDUqG6y0iPcMZTcnhXY45mUrQMc
-         FSkvgzQojciDjJyThlBmQt/+gY/vW9x8xh8Zpx7I=
+        b=1y+xD96KWxDN5NETFG8SK8L0y2+Da0KDDHM43C1Ge2WTJ8rDCdPIvU9OjENZzoV57
+         tnOiLIgqrVMhUNdoYwfayNaL2zv24XOBIff3QOshwqKdKvBzTYrq3sRXogtMyb7a/N
+         qtxLeV7JVoh1NiI/1PyiVhd9tb4V3BOOO9tq+ABc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jake Lawrence <lawja@fb.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org, Subbaraya Sundeep <sbhatta@marvell.com>,
+        Sunil Goutham <sgoutham@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 065/120] mlx4: disable device on shutdown
-Date:   Mon,  3 Aug 2020 14:18:43 +0200
-Message-Id: <20200803121905.970966759@linuxfoundation.org>
+Subject: [PATCH 5.7 066/120] octeontx2-pf: Fix reset_task bugs
+Date:   Mon,  3 Aug 2020 14:18:44 +0200
+Message-Id: <20200803121906.020753689@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -62,72 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Subbaraya Sundeep <sbhatta@marvell.com>
 
-[ Upstream commit 3cab8c65525920f00d8f4997b3e9bb73aecb3a8e ]
+[ Upstream commit 948a66338f44c16f52c0f03f6ad81a6f59eb5604 ]
 
-It appears that not disabling a PCI device on .shutdown may lead to
-a Hardware Error with particular (perhaps buggy) BIOS versions:
+Two bugs exist in the code related to reset_task
+in PF driver one is the missing protection
+against network stack ndo_open and ndo_close.
+Other one is the missing cancel_work.
+This patch fixes those problems.
 
-    mlx4_en: eth0: Close port called
-    mlx4_en 0000:04:00.0: removed PHC
-    reboot: Restarting system
-    {1}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 1
-    {1}[Hardware Error]: event severity: fatal
-    {1}[Hardware Error]:  Error 0, type: fatal
-    {1}[Hardware Error]:   section_type: PCIe error
-    {1}[Hardware Error]:   port_type: 4, root port
-    {1}[Hardware Error]:   version: 1.16
-    {1}[Hardware Error]:   command: 0x4010, status: 0x0143
-    {1}[Hardware Error]:   device_id: 0000:00:02.2
-    {1}[Hardware Error]:   slot: 0
-    {1}[Hardware Error]:   secondary_bus: 0x04
-    {1}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x2f06
-    {1}[Hardware Error]:   class_code: 000604
-    {1}[Hardware Error]:   bridge: secondary_status: 0x2000, control: 0x0003
-    {1}[Hardware Error]:   aer_uncor_status: 0x00100000, aer_uncor_mask: 0x00000000
-    {1}[Hardware Error]:   aer_uncor_severity: 0x00062030
-    {1}[Hardware Error]:   TLP Header: 40000018 040000ff 791f4080 00000000
-[hw error repeats]
-    Kernel panic - not syncing: Fatal hardware error!
-    CPU: 0 PID: 2189 Comm: reboot Kdump: loaded Not tainted 5.6.x-blabla #1
-    Hardware name: HP ProLiant DL380 Gen9/ProLiant DL380 Gen9, BIOS P89 05/05/2017
-
-Fix the mlx4 driver.
-
-This is a very similar problem to what had been fixed in:
-commit 0d98ba8d70b0 ("scsi: hpsa: disable device during shutdown")
-to address https://bugzilla.kernel.org/show_bug.cgi?id=199779.
-
-Fixes: 2ba5fbd62b25 ("net/mlx4_core: Handle AER flow properly")
-Reported-by: Jake Lawrence <lawja@fb.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Reviewed-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: 4ff7d1488a84 ("octeontx2-pf: Error handling support")
+Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
+Signed-off-by: Sunil Goutham <sgoutham@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/main.c b/drivers/net/ethernet/mellanox/mlx4/main.c
-index c72c4e1ea383b..598e222e0b907 100644
---- a/drivers/net/ethernet/mellanox/mlx4/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/main.c
-@@ -4358,12 +4358,14 @@ end:
- static void mlx4_shutdown(struct pci_dev *pdev)
- {
- 	struct mlx4_dev_persistent *persist = pci_get_drvdata(pdev);
-+	struct mlx4_dev *dev = persist->dev;
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
+index 64786568af0db..75a8c407e815c 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
+@@ -1730,10 +1730,12 @@ static void otx2_reset_task(struct work_struct *work)
+ 	if (!netif_running(pf->netdev))
+ 		return;
  
- 	mlx4_info(persist->dev, "mlx4_shutdown was called\n");
- 	mutex_lock(&persist->interface_state_mutex);
- 	if (persist->interface_state & MLX4_INTERFACE_STATE_UP)
- 		mlx4_unload_one(pdev);
- 	mutex_unlock(&persist->interface_state_mutex);
-+	mlx4_pci_disable_device(dev);
++	rtnl_lock();
+ 	otx2_stop(pf->netdev);
+ 	pf->reset_count++;
+ 	otx2_open(pf->netdev);
+ 	netif_trans_update(pf->netdev);
++	rtnl_unlock();
  }
  
- static const struct pci_error_handlers mlx4_err_handler = {
+ static const struct net_device_ops otx2_netdev_ops = {
+@@ -2111,6 +2113,7 @@ static void otx2_remove(struct pci_dev *pdev)
+ 
+ 	pf = netdev_priv(netdev);
+ 
++	cancel_work_sync(&pf->reset_task);
+ 	/* Disable link notifications */
+ 	otx2_cgx_config_linkevents(pf, false);
+ 
 -- 
 2.25.1
 
