@@ -2,94 +2,150 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E85BEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 03:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8B6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 03:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFFEB20738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 03:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBF1E20738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 03:11:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fVupjEeN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbgHCDIX (ORCPT
+        id S1727922AbgHCDL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 23:08:23 -0400
-Received: from zg8tmtm5lju5ljm3lje2naaa.icoremail.net ([139.59.37.164]:55046
-        "HELO zg8tmtm5lju5ljm3lje2naaa.icoremail.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with SMTP id S1725820AbgHCDIW (ORCPT
+        Sun, 2 Aug 2020 23:11:26 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:61898 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727883AbgHCDLX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 23:08:22 -0400
-Received: from [166.111.139.118] (unknown [166.111.139.118])
-        by app-1 (Coremail) with SMTP id DwQGZQDn76OMfydfEpXxAw--.14644S2;
-        Mon, 03 Aug 2020 11:07:58 +0800 (CST)
-Subject: Re: [PATCH] scsi: esas2r: fix possible buffer overflow caused by bad
- DMA value in esas2r_process_fs_ioctl()
-To:     jejb@linux.ibm.com, linuxdrivers@attotech.com,
-        martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200802152145.4387-1-baijiaju@tsinghua.edu.cn>
- <1596383240.4087.8.camel@linux.ibm.com>
-From:   Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
-Message-ID: <81351eab-69c0-89dc-4e58-146a005b5929@tsinghua.edu.cn>
-Date:   Mon, 3 Aug 2020 11:07:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 2 Aug 2020 23:11:23 -0400
+X-UUID: 120aa51f445b4e0bbe1a4cbd9ba0d31c-20200803
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=ALLw9ZkoA1S/JkwkqnRLE4IdmraD+sOk9I6zVmWez/M=;
+        b=fVupjEeN3UxOG2tf1l65DYvFaQuKb+ayNxwRuhGCOn7ZrjEc4SfexFEbjML0e7XXNaNSypddLZdxnmvGyuz1Pb1YjeaU2skoUWex115JbiGuzu4VRt+VW4LXKf+lhtERrQ4f00c87xBlO0kS4uS69jdjx/xzq02dHM6Z+ANDHG0=;
+X-UUID: 120aa51f445b4e0bbe1a4cbd9ba0d31c-20200803
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <frankie.chang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1942870867; Mon, 03 Aug 2020 11:11:18 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 3 Aug 2020 11:11:15 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 3 Aug 2020 11:11:15 +0800
+Message-ID: <1596424276.5207.13.camel@mtkswgap22>
+Subject: Re: [PATCH v6 2/3] binder: add trace at free transaction.
+From:   Frankie Chang <Frankie.Chang@mediatek.com>
+To:     Todd Kjos <tkjos@google.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>,
+        Arve =?ISO-8859-1?Q?Hj=F8nnev=E5g?= <arve@android.com>,
+        Christian Brauner <christian@brauner.io>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Jian-Min Liu <Jian-Min.Liu@mediatek.com>
+Date:   Mon, 3 Aug 2020 11:11:16 +0800
+In-Reply-To: <CAHRSSEwqbbTZgaE-KLC0-AMHzRVU3O2AwUzW9i5u54tVmkFAQA@mail.gmail.com>
+References: <1595252430.5899.6.camel@mtkswgap22>
+         <1595906401-11985-1-git-send-email-Frankie.Chang@mediatek.com>
+         <1595906401-11985-3-git-send-email-Frankie.Chang@mediatek.com>
+         <CAHRSSEwqbbTZgaE-KLC0-AMHzRVU3O2AwUzW9i5u54tVmkFAQA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <1596383240.4087.8.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-CM-TRANSID: DwQGZQDn76OMfydfEpXxAw--.14644S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7AF4DWw1xWF15Cr1DuryDWrg_yoW8Jw1kpr
-        WF93yrKr1qyr1Iqasavw1xXa4rtFZ5tF98GF15XFyv9wn8Cr1fAryrKFs8A34UW3s7Jw45
-        WaykXr97ta9FyFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvIb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xII
-        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I
-        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCY
-        02Avz4vE14v_Gr4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-        Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r12
-        6r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-        kF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
-        14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
-        9x07jc6pPUUUUU=
-X-CM-SenderInfo: xedlyxhdmxq3pvlqwxlxdovvfxof0/
+X-TM-SNTS-SMTP: 538817EDDCF731873A891B6A7D5A4FC560716D01388453026712EC4D613164242000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020/8/2 23:47, James Bottomley wrote:
-> On Sun, 2020-08-02 at 23:21 +0800, Jia-Ju Bai wrote:
->> Because "fs" is mapped to DMA, its data can be modified at anytime by
->> malicious or malfunctioning hardware. In this case, the check
->> "if (fsc->command >= cmdcnt)" can be passed, and then "fsc->command"
->> can be modified by hardware to cause buffer overflow.
-> This threat model seems to be completely bogus.  If the device were
-> malicious it would have given the mailbox incorrect values a priori ...
-> it wouldn't give the correct value then update it.  For most systems we
-> do assume correct operation of the device but if there's a worry about
-> incorrect operation, the usual approach is to guard the device with an
-> IOMMU which, again, would make this sort of fix unnecessary because the
-> IOMMU will have removed access to the buffer after the command
-> completed.
-
-Thanks for the reply :)
-
-In my opinion, IOMMU is used to prevent the hardware from accessing 
-arbitrary memory addresses, but it cannot prevent the hardware from 
-writing a bad value into a valid memory address.
-For this reason, I think that the hardware can normally access 
-"fsc->command" and modify it into arbitrary value at any time, because 
-IOMMU considers the address of "fsc->command" is valid for the hardware.
-
-
-Best wishes,
-Jia-Ju Bai
+T24gRnJpLCAyMDIwLTA3LTMxIGF0IDExOjUwIC0wNzAwLCBUb2RkIEtqb3Mgd3JvdGU6DQo+IE9u
+IE1vbiwgSnVsIDI3LCAyMDIwIGF0IDg6MjggUE0gRnJhbmtpZSBDaGFuZw0KPiA8RnJhbmtpZS5D
+aGFuZ0BtZWRpYXRlay5jb20+IHdyb3RlOg0KPiA+DQo+ID4gRnJvbTogIkZyYW5raWUuQ2hhbmci
+IDxGcmFua2llLkNoYW5nQG1lZGlhdGVrLmNvbT4NCj4gPg0KPiA+IFNpbmNlIHRoZSBvcmlnaW5h
+bCB0cmFjZV9iaW5kZXJfdHJhbnNhY3Rpb25fcmVjZWl2ZWQgY2Fubm90DQo+ID4gcHJlY2lzZWx5
+IHByZXNlbnQgdGhlIHJlYWwgZmluaXNoZWQgdGltZSBvZiB0cmFuc2FjdGlvbiwgYWRkaW5nIGEN
+Cj4gPiB0cmFjZV9iaW5kZXJfdHhuX2xhdGVuY3lfZnJlZSBhdCB0aGUgcG9pbnQgb2YgZnJlZSB0
+cmFuc2FjdGlvbg0KPiA+IG1heSBiZSBtb3JlIGNsb3NlIHRvIGl0Lg0KPiA+DQo+ID4gU2lnbmVk
+LW9mZi1ieTogRnJhbmtpZS5DaGFuZyA8RnJhbmtpZS5DaGFuZ0BtZWRpYXRlay5jb20+DQo+ID4g
+LS0tDQo+ID4gIGRyaXZlcnMvYW5kcm9pZC9iaW5kZXIuYyAgICAgICB8ICAgIDYgKysrKysrDQo+
+ID4gIGRyaXZlcnMvYW5kcm9pZC9iaW5kZXJfdHJhY2UuaCB8ICAgMjcgKysrKysrKysrKysrKysr
+KysrKysrKysrKysrDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMzMgaW5zZXJ0aW9ucygrKQ0KPiA+
+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvYW5kcm9pZC9iaW5kZXIuYyBiL2RyaXZlcnMvYW5k
+cm9pZC9iaW5kZXIuYw0KPiA+IGluZGV4IDJkZjE0NmYuLjFlNmZjNDAgMTAwNjQ0DQo+ID4gLS0t
+IGEvZHJpdmVycy9hbmRyb2lkL2JpbmRlci5jDQo+ID4gKysrIGIvZHJpdmVycy9hbmRyb2lkL2Jp
+bmRlci5jDQo+ID4gQEAgLTE1MjIsNiArMTUyMiw5IEBAIHN0YXRpYyB2b2lkIGJpbmRlcl9mcmVl
+X3RyYW5zYWN0aW9uKHN0cnVjdCBiaW5kZXJfdHJhbnNhY3Rpb24gKnQpDQo+ID4gICAgICAgICAg
+KiBJZiB0aGUgdHJhbnNhY3Rpb24gaGFzIG5vIHRhcmdldF9wcm9jLCB0aGVuDQo+ID4gICAgICAg
+ICAgKiB0LT5idWZmZXItPnRyYW5zYWN0aW9uIGhhcyBhbHJlYWR5IGJlZW4gY2xlYXJlZC4NCj4g
+PiAgICAgICAgICAqLw0KPiA+ICsgICAgICAgc3Bpbl9sb2NrKCZ0LT5sb2NrKTsNCj4gPiArICAg
+ICAgIHRyYWNlX2JpbmRlcl90eG5fbGF0ZW5jeV9mcmVlKHQpOw0KPiA+ICsgICAgICAgc3Bpbl91
+bmxvY2soJnQtPmxvY2spOw0KPiANCj4gSG1tLiBJIGRvbid0IHByZWZlciB0YWtpbmcgdGhlIGxv
+Y2sganVzdCB0byBjYWxsIGEgdHJhY2UuIEl0IGRvZXNuJ3QNCj4gbWFrZSBjbGVhciB3aHkgdGhl
+IGxvY2sgaGFzIHRvIGJlIHRha2VuLiBJJ2QgcHJlZmVyIHNvbWV0aGluZyBsaWtlOg0KPiANCj4g
+aWYgKHRyYWNlX2JpbmRlcl90eG5fbGF0ZW5jeV9mcmVlX2VuYWJsZWQoKSkgew0KYw0KPiB9DQo+
+IA0KPiBBbmQgdGhlbiB0aGUgdHJhY2Ugd291bGQgdXNlIHRoZSBwYXNzZWQtaW4gdmFsdWVzIGlu
+c3RlYWQgb2YgYWNjZXNzaW5nDQo+IHZpYSB0LT50b19wcm9jL3RvX3RocmVhZC4NCj4gDQpUaGVu
+IHdlIHN0aWxsIGFkZCBsb2NrIHByb3RlY3Rpb24gaW4gdGhlIGhvb2sgZnVuY3Rpb24sIHdoZW4g
+dHJhY2UgaXMNCmRpc2FibGUgPw0KDQpPciB3ZSBhbHNvIHBhc3MgdGhlc2UgdG8gaG9vayBmdW5j
+dGlvbiwgbm8gbWF0dGVyIHRoZSB0cmFjZSBpcyBlbmFibGUgb3INCm5vdC5JIHRoaW5rIHRoaXMg
+d2F5IGlzIG1vcmUgY2xlYXIgdGhhdCB0aGUgbG9jayBwcm90ZWN0cyBAZnJvbSwNCkB0b19wcm9j
+IGFuZCBAdG9fdGhyZWFkLlRoZW4sIHRoZXJlIGlzIG5vIG5lZWQgdG8gYWRkIHRoZSBsb2NrIGlu
+IGhvb2sNCmZ1bmN0aW9uLg0KDQppbnQgZnJvbV9wcm9jLCBmcm9tX3RocmVhZCwgdG9fcHJvYywg
+dG9fdGhyZWFkOw0KIA0Kc3Bpbl9sb2NrKCZ0LT5sb2NrKTsNCmZyb21fcHJvYyA9IHQtPmZyb20g
+PyB0LT5mcm9tLT5wcm9jLT5waWQgOiAwOw0KZnJvbV90aHJlYWQgPSB0LT5mcm9tID8gdC0+ZnJv
+bS0+cGlkIDowOw0KdG9fcHJvYyA9IHQtPnRvX3Byb2MgPyB0LT50b19wcm9jLT5waWQgOiAwOw0K
+dG9fdGhyZWFkID0gdC0+dG9fdGhyZWFkID8gdC0+dG9fdGhyZWFkLT5waWQgOiAwOw0Kc3Bpbl91
+bmxvY2soJnQtPmxvY2spOw0KdHJhY2VfYmluZGVyX3R4bl9sYXRlbmN5X2ZyZWUodCwgZnJvbV9w
+cm9jLCBmcm9tX3RocmVhZCwgdG9fcHJvYywNCnRvX3BpZCk7DQoNCj4gPiAgICAgICAgIGJpbmRl
+cl9mcmVlX3R4bl9maXh1cHModCk7DQo+ID4gICAgICAgICBrZnJlZSh0KTsNCj4gPiAgICAgICAg
+IGJpbmRlcl9zdGF0c19kZWxldGVkKEJJTkRFUl9TVEFUX1RSQU5TQUNUSU9OKTsNCj4gPiBAQCAt
+MzA5Myw2ICszMDk2LDkgQEAgc3RhdGljIHZvaWQgYmluZGVyX3RyYW5zYWN0aW9uKHN0cnVjdCBi
+aW5kZXJfcHJvYyAqcHJvYywNCj4gPiAgICAgICAgIGtmcmVlKHRjb21wbGV0ZSk7DQo+ID4gICAg
+ICAgICBiaW5kZXJfc3RhdHNfZGVsZXRlZChCSU5ERVJfU1RBVF9UUkFOU0FDVElPTl9DT01QTEVU
+RSk7DQo+ID4gIGVycl9hbGxvY190Y29tcGxldGVfZmFpbGVkOg0KPiA+ICsgICAgICAgc3Bpbl9s
+b2NrKCZ0LT5sb2NrKTsNCj4gPiArICAgICAgIHRyYWNlX2JpbmRlcl90eG5fbGF0ZW5jeV9mcmVl
+KHQpOw0KPiA+ICsgICAgICAgc3Bpbl91bmxvY2soJnQtPmxvY2spOw0KPiA+ICAgICAgICAga2Zy
+ZWUodCk7DQo+ID4gICAgICAgICBiaW5kZXJfc3RhdHNfZGVsZXRlZChCSU5ERVJfU1RBVF9UUkFO
+U0FDVElPTik7DQo+ID4gIGVycl9hbGxvY190X2ZhaWxlZDoNCj4gPiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9hbmRyb2lkL2JpbmRlcl90cmFjZS5oIGIvZHJpdmVycy9hbmRyb2lkL2JpbmRlcl90cmFj
+ZS5oDQo+ID4gaW5kZXggNjczMWMzYy4uOGFjODdkMSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJz
+L2FuZHJvaWQvYmluZGVyX3RyYWNlLmgNCj4gPiArKysgYi9kcml2ZXJzL2FuZHJvaWQvYmluZGVy
+X3RyYWNlLmgNCj4gPiBAQCAtOTUsNiArOTUsMzMgQEANCj4gPiAgICAgICAgICAgICAgICAgICBf
+X2VudHJ5LT50aHJlYWRfdG9kbykNCj4gPiAgKTsNCj4gPg0KPiA+ICtUUkFDRV9FVkVOVChiaW5k
+ZXJfdHhuX2xhdGVuY3lfZnJlZSwNCj4gPiArICAgICAgIFRQX1BST1RPKHN0cnVjdCBiaW5kZXJf
+dHJhbnNhY3Rpb24gKnQpLA0KPiA+ICsgICAgICAgVFBfQVJHUyh0KSwNCj4gPiArICAgICAgIFRQ
+X1NUUlVDVF9fZW50cnkoDQo+ID4gKyAgICAgICAgICAgICAgIF9fZmllbGQoaW50LCBkZWJ1Z19p
+ZCkNCj4gPiArICAgICAgICAgICAgICAgX19maWVsZChpbnQsIGZyb21fcHJvYykNCj4gPiArICAg
+ICAgICAgICAgICAgX19maWVsZChpbnQsIGZyb21fdGhyZWFkKQ0KPiA+ICsgICAgICAgICAgICAg
+ICBfX2ZpZWxkKGludCwgdG9fcHJvYykNCj4gPiArICAgICAgICAgICAgICAgX19maWVsZChpbnQs
+IHRvX3RocmVhZCkNCj4gPiArICAgICAgICAgICAgICAgX19maWVsZCh1bnNpZ25lZCBpbnQsIGNv
+ZGUpDQo+ID4gKyAgICAgICAgICAgICAgIF9fZmllbGQodW5zaWduZWQgaW50LCBmbGFncykNCj4g
+PiArICAgICAgICksDQo+ID4gKyAgICAgICBUUF9mYXN0X2Fzc2lnbigNCj4gPiArICAgICAgICAg
+ICAgICAgX19lbnRyeS0+ZGVidWdfaWQgPSB0LT5kZWJ1Z19pZDsNCj4gPiArICAgICAgICAgICAg
+ICAgX19lbnRyeS0+ZnJvbV9wcm9jID0gdC0+ZnJvbSA/IHQtPmZyb20tPnByb2MtPnBpZCA6IDA7
+DQo+ID4gKyAgICAgICAgICAgICAgIF9fZW50cnktPmZyb21fdGhyZWFkID0gdC0+ZnJvbSA/IHQt
+PmZyb20tPnBpZCA6IDA7DQo+ID4gKyAgICAgICAgICAgICAgIF9fZW50cnktPnRvX3Byb2MgPSB0
+LT50b19wcm9jID8gdC0+dG9fcHJvYy0+cGlkIDogMDsNCj4gPiArICAgICAgICAgICAgICAgX19l
+bnRyeS0+dG9fdGhyZWFkID0gdC0+dG9fdGhyZWFkID8gdC0+dG9fdGhyZWFkLT5waWQgOiAwOw0K
+PiA+ICsgICAgICAgICAgICAgICBfX2VudHJ5LT5jb2RlID0gdC0+Y29kZTsNCj4gPiArICAgICAg
+ICAgICAgICAgX19lbnRyeS0+ZmxhZ3MgPSB0LT5mbGFnczsNCj4gPiArICAgICAgICksDQo+ID4g
+KyAgICAgICBUUF9wcmludGsoInRyYW5zYWN0aW9uPSVkIGZyb20gJWQ6JWQgdG8gJWQ6JWQgZmxh
+Z3M9MHgleCBjb2RlPTB4JXgiLA0KPiA+ICsgICAgICAgICAgICAgICAgIF9fZW50cnktPmRlYnVn
+X2lkLCBfX2VudHJ5LT5mcm9tX3Byb2MsIF9fZW50cnktPmZyb21fdGhyZWFkLA0KPiA+ICsgICAg
+ICAgICAgICAgICAgIF9fZW50cnktPnRvX3Byb2MsIF9fZW50cnktPnRvX3RocmVhZCwgX19lbnRy
+eS0+Y29kZSwNCj4gPiArICAgICAgICAgICAgICAgICBfX2VudHJ5LT5mbGFncykNCj4gPiArKTsN
+Cj4gPiArDQo+ID4gIFRSQUNFX0VWRU5UKGJpbmRlcl90cmFuc2FjdGlvbiwNCj4gPiAgICAgICAg
+IFRQX1BST1RPKGJvb2wgcmVwbHksIHN0cnVjdCBiaW5kZXJfdHJhbnNhY3Rpb24gKnQsDQo+ID4g
+ICAgICAgICAgICAgICAgICBzdHJ1Y3QgYmluZGVyX25vZGUgKnRhcmdldF9ub2RlKSwNCj4gPiAt
+LQ0KPiA+IDEuNy45LjUNCg0K
 
