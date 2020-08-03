@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9610C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6508C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 844A82054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858492054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458708;
-	bh=47QAnSMoOVMr8QHQNgdXK4N904/7dAfTkxp4OLgXePU=;
+	s=default; t=1596458712;
+	bh=jMTM9Awye6xGmKCtwUVQ9PWUR+npLdpUHGaUO7Onh5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LZAaX6rtgfQ3dBZcOvpjtIg7HK6HdgrxnFrSPOv1SIoqLoEGWD8nYVNs1S+MiVOwu
-	 HS1zT+PYVpSomeT2xZc5qmk5c/Q0tZxhPo+GfZ1fEGhA4lxfWFHgbLYF8IYMG2T/jl
-	 dwGkWO13Shq6mYqj0D9q3fTIju9IE2Mvnx/NiAjI=
+	b=gj8h1Mw8nwSzLdBRu78ESfGpaX4+pS0Sgg4+hw7rqjAtZrZU6R3gs+vmVyLoA12k7
+	 r2MvsSyj2N4zBkwe+zHAmVe/fCQVIGhq770wZgae4Qi/wG6FgAay/6eFfMet0BckUu
+	 jPM/L9YyZKLyrLSOakMnl8GJpyPN/Caf5WFhfH6E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728597AbgHCM1s (ORCPT
+        id S1728868AbgHCMpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:27:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53304 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:45:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728554AbgHCM13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:27:29 -0400
+        id S1728598AbgHCM1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:27:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28E83204EC;
-        Mon,  3 Aug 2020 12:27:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC38B204EC;
+        Mon,  3 Aug 2020 12:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457648;
-        bh=47QAnSMoOVMr8QHQNgdXK4N904/7dAfTkxp4OLgXePU=;
+        s=default; t=1596457667;
+        bh=jMTM9Awye6xGmKCtwUVQ9PWUR+npLdpUHGaUO7Onh5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JKbei+x42280hBGvgAegjE6x6W9hG5WJbuBo0olxj2yc6TUltUqpxt742M+ACddea
-         igCdQ3wstYF7JoCwilXHfrfH8nKXF1dK6wgEM/JQi/l9odRYGZyG+/IYYOCHLqt6Qu
-         w4+1+lrKLOzFTJzZ4uXzlrWuC3cg4fVzQTbGFTeM=
+        b=16Ouo7KUCEnq/i+wXshO8x5rLOTegum72edg/vuqoQiewmGcTHwfJvm1shUMU5sE4
+         +z6d9Md+FfpdGPk4GzyyD0B3WVQk9FnMm8ZV+IVST3H8chrWXq6Fl5pNU/1mLR3MFi
+         6B3fXs/3xctYnO8/SuW+3iCUNQwTOUB5xEL5PAOM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 23/90] ARM: percpu.h: fix build error
-Date:   Mon,  3 Aug 2020 14:18:45 +0200
-Message-Id: <20200803121858.739886161@linuxfoundation.org>
+        stable@vger.kernel.org, Armas Spann <zappel@retarded.farm>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 08/90] ALSA: hda/realtek: enable headset mic of ASUS ROG Zephyrus G15(GA502) series with ALC289
+Date:   Mon,  3 Aug 2020 14:18:30 +0200
+Message-Id: <20200803121857.948708603@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -60,43 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Armas Spann <zappel@retarded.farm>
 
-commit aa54ea903abb02303bf55855fb51e3fcee135d70 upstream.
+commit 4b43d05a1978a93a19374c6e6b817c9c1ff4ba4b upstream.
 
-Fix build error for the case:
-  defined(CONFIG_SMP) && !defined(CONFIG_CPU_V6)
+This patch adds support for headset mic to the ASUS ROG Zephyrus
+G15(GA502) notebook series by adding the corresponding
+vendor/pci_device id, as well as adding a new fixup for the used
+realtek ALC289. The fixup stets the correct pin to get the headset mic
+correctly recognized on audio-jack.
 
-config: keystone_defconfig
-
-  CC      arch/arm/kernel/signal.o
-  In file included from ../include/linux/random.h:14,
-                    from ../arch/arm/kernel/signal.c:8:
-  ../arch/arm/include/asm/percpu.h: In function ‘__my_cpu_offset’:
-  ../arch/arm/include/asm/percpu.h:29:34: error: ‘current_stack_pointer’ undeclared (first use in this function); did you mean ‘user_stack_pointer’?
-      : "Q" (*(const unsigned long *)current_stack_pointer));
-                                     ^~~~~~~~~~~~~~~~~~~~~
-                                     user_stack_pointer
-
-Fixes: f227e3ec3b5c ("random32: update the net random state on interrupt and activity")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Armas Spann <zappel@retarded.farm>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200724140616.298892-1-zappel@retarded.farm
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/include/asm/percpu.h |    2 ++
- 1 file changed, 2 insertions(+)
+ sound/pci/hda/patch_realtek.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/arch/arm/include/asm/percpu.h
-+++ b/arch/arm/include/asm/percpu.h
-@@ -5,6 +5,8 @@
- #ifndef _ASM_ARM_PERCPU_H_
- #define _ASM_ARM_PERCPU_H_
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6118,6 +6118,7 @@ enum {
+ 	ALC269VC_FIXUP_ACER_HEADSET_MIC,
+ 	ALC269VC_FIXUP_ACER_MIC_NO_PRESENCE,
+ 	ALC289_FIXUP_ASUS_G401,
++	ALC289_FIXUP_ASUS_GA502,
+ 	ALC256_FIXUP_ACER_MIC_NO_PRESENCE,
+ };
  
-+#include <asm/thread_info.h>
-+
- /*
-  * Same as asm-generic/percpu.h, except that we store the per cpu offset
-  * in the TPIDRPRW. TPIDRPRW only exists on V6K and V7
+@@ -7335,6 +7336,13 @@ static const struct hda_fixup alc269_fix
+ 			{ }
+ 		},
+ 	},
++	[ALC289_FIXUP_ASUS_GA502] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x19, 0x03a11020 }, /* headset mic with jack detect */
++			{ }
++		},
++	},
+ 	[ALC256_FIXUP_ACER_MIC_NO_PRESENCE] = {
+ 		.type = HDA_FIXUP_PINS,
+ 		.v.pins = (const struct hda_pintbl[]) {
+@@ -7526,6 +7534,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1043, 0x1bbd, "ASUS Z550MA", ALC255_FIXUP_ASUS_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1043, 0x1c23, "Asus X55U", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
+ 	SND_PCI_QUIRK(0x1043, 0x1ccd, "ASUS X555UB", ALC256_FIXUP_ASUS_MIC),
++	SND_PCI_QUIRK(0x1043, 0x1e11, "ASUS Zephyrus G15", ALC289_FIXUP_ASUS_GA502),
+ 	SND_PCI_QUIRK(0x1043, 0x1f11, "ASUS Zephyrus G14", ALC289_FIXUP_ASUS_G401),
+ 	SND_PCI_QUIRK(0x1043, 0x3030, "ASUS ZN270IE", ALC256_FIXUP_ASUS_AIO_GPIO2),
+ 	SND_PCI_QUIRK(0x1043, 0x831a, "ASUS P901", ALC269_FIXUP_STEREO_DMIC),
 
 
