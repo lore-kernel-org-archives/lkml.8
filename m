@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF73C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68140C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3096122B45
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A88222B45
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596477309;
-	bh=s6c5QfQxq1QUlzYHr4+jYy8dE8fKWC6Ch8rzwqnZxh4=;
+	s=default; t=1596477312;
+	bh=/S6sqi5du8sJcXL9oxKwqLtIS1tSebSkTHVVE1mxF4Y=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=vMlO+/Htp1sl3xVcdyrzGv/tME/IOUvAbP79f+kkVhnZFwk/Zi/WUmTt81xtzIG5A
-	 ivxyXyYTXDYpnIXhM/MSVfUxyuz1MZnLFDPTWlK9iptwXj0p4tgmWLALhEU8hMBJqk
-	 ODLPrxhk/KWDXuxrZMcYjWyNc+QBz35rWIBPiyu0=
+	b=acEKUiHc8VPEl01CFedqNxUrdL3BaL23RWwqjoFj+r7BxjMFZXE1WHKOeeRfR9kdS
+	 oNPZgU0EGmbn4JNj9SLTeVCztxN2r0FRymQw+fh4P18k0ixq9qWaO+gwSghwIR/XiF
+	 WknxewCHCN6e0z4KiJmT0uJ4g1BY+ZwISbnh0tas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgHCRzI (ORCPT
+        id S1728642AbgHCRzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 13:55:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52100 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 13:55:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728596AbgHCRzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 13:55:05 -0400
-Subject: Re: [GIT PULL] tpmdd update for Linux v5.9
+        id S1728627AbgHCRzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 13:55:08 -0400
+Subject: Re: [GIT PULL] Crypto Update for 5.9
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596477304;
-        bh=s6c5QfQxq1QUlzYHr4+jYy8dE8fKWC6Ch8rzwqnZxh4=;
+        s=default; t=1596477306;
+        bh=/S6sqi5du8sJcXL9oxKwqLtIS1tSebSkTHVVE1mxF4Y=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=inEFCAZnmIQOB0olG4H8ebdN7N1WCrVvU/Y3OrZ9VMQhoJprGANOI6TFrJP4j0TnO
-         TR0CZqHszLOCgjL9REWGNMaiqRJhZYSJqldKGouUVtxT+bknoNJU4ydyfwtpCIPWUf
-         F7DwIHlMICXDhvCMR3Ps6bl9tUcuSELHh/glXyNk=
+        b=mjR0dPJv1XdUmZMskpFMS/VEPpaELrqJOB38UHC9M+6mma4D0rumf9G3C+Zuzmoaj
+         jVhSX7UETk4fffaaVEIcO1rs8YQEWM8Z29hEmEM++KE9bMjv/eXwvVOF6TWkA6u1di
+         3ixPdvEZ0Y/D4frqOZY1JQRVwbdpxIOuYfHuALsA=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200724064212.GA1871046@linux.intel.com>
-References: <20200724064212.GA1871046@linux.intel.com>
-X-PR-Tracked-List-Id: <linux-integrity.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200724064212.GA1871046@linux.intel.com>
-X-PR-Tracked-Remote: git://git.infradead.org/users/jjs/linux-tpmdd.git
- tags/tpmdd-next-v5.9
-X-PR-Tracked-Commit-Id: 85467f63a05c43364ba0b90d0c05bb89191543fa
+In-Reply-To: <20200803044024.GA6429@gondor.apana.org.au>
+References: <20200803044024.GA6429@gondor.apana.org.au>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200803044024.GA6429@gondor.apana.org.au>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+X-PR-Tracked-Commit-Id: 3cbfe80737c18ac6e635421ab676716a393d3074
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 92b7e4923fdbeda9b86b1398127449d5353f9123
-Message-Id: <159647730393.19506.15252934479107896206.pr-tracker-bot@kernel.org>
-Date:   Mon, 03 Aug 2020 17:55:03 +0000
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, jmorris@namei.org,
-        dhowells@redhat.com, peterhuewe@gmx.de
+X-PR-Merge-Commit-Id: ab5c60b79ab6cc50b39bbb21b2f9fb55af900b84
+Message-Id: <159647730637.19506.10955731022601276417.pr-tracker-bot@kernel.org>
+Date:   Mon, 03 Aug 2020 17:55:06 +0000
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 24 Jul 2020 09:42:27 +0300:
+The pull request you sent on Mon, 3 Aug 2020 14:40:24 +1000:
 
-> git://git.infradead.org/users/jjs/linux-tpmdd.git tags/tpmdd-next-v5.9
+> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/92b7e4923fdbeda9b86b1398127449d5353f9123
+https://git.kernel.org/torvalds/c/ab5c60b79ab6cc50b39bbb21b2f9fb55af900b84
 
 Thank you!
 
