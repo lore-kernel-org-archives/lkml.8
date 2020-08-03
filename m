@@ -2,155 +2,329 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B957C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 819D9C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75855206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5851820719
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:19:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="I5SNIQPV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgHCFSz (ORCPT
+        id S1728045AbgHCFTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 01:18:55 -0400
-Received: from mga12.intel.com ([192.55.52.136]:47415 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725976AbgHCFSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 01:18:54 -0400
-IronPort-SDR: +MKXqn1yhsMhbEDf2VlBGzzqeb8HwcJAexmSQHIHIEqYXSyDKKAh8trx/9Fu+69PMkYoSjIKk5
- gSa3S70+aX6w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9701"; a="131611084"
-X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
-   d="scan'208";a="131611084"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2020 22:18:54 -0700
-IronPort-SDR: 5/uk95UVnaMbZWyxeU7dTtYZhuFlj2wOtG7bigVO/6+5nFuEJNdAXlTZNRMdq1Y362/HNuckmO
- C6sN7TVeb4PQ==
-X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
-   d="scan'208";a="466357180"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2020 22:18:53 -0700
-Subject: [PATCH v4 02/23] x86/numa: Add 'nohmat' option
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     akpm@linux-foundation.org
-Cc:     x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, vishal.l.verma@intel.com,
-        ard.biesheuvel@linaro.org, vishal.l.verma@intel.com,
-        linux-mm@kvack.org, linux-nvdimm@lists.01.org,
-        joao.m.martins@oracle.com, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, dri-devel@lists.freedesktop.org
-Date:   Sun, 02 Aug 2020 22:02:35 -0700
-Message-ID: <159643095540.4062302.732962081968036212.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <159643094279.4062302.17779410714418721328.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <159643094279.4062302.17779410714418721328.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        Mon, 3 Aug 2020 01:19:00 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:31676 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725976AbgHCFS6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 01:18:58 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0735I5rV020818;
+        Mon, 3 Aug 2020 07:18:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=ecMJDoS93OxmEeNxoy6nFQDUco6PnnNSznvXe1KNpCU=;
+ b=I5SNIQPVEeQVBjtxKlmmGTLw+VVoKhdqy17JamyKuKstL+75/GWF7OC1IvgUaN0hB7Gv
+ Nw2R7E+TQQMmMP2/j1yCUa4ut88EgcS8HlO6lTxJvgd0d+vY7MiNTWsXoDQCKvz8n4f+
+ 14i0eYEyNl5wf2pPOCRkJQci9vG4ZRXawlZpz+VHZqiwqZVHuIX/X43BO8xEvvepBReo
+ kCkNDan7cXpO/RzTUjLi83nc/V+a6UWWtfs48ZB5fHb2ZJ2pFsnXdOWdM+sLUGYKq0Rq
+ FyXlnKO31s1Xe/Nr4l8OTo2QOiCLY46pYsxKhtHzWunRll1eCTs1MVXfdNHCNVir75p4 Hw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 32n6hyd97x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 07:18:45 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 26E20100039;
+        Mon,  3 Aug 2020 07:18:44 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1BE6820F452;
+        Mon,  3 Aug 2020 07:18:44 +0200 (CEST)
+Received: from localhost (10.75.127.51) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Aug 2020 07:18:43
+ +0200
+From:   Alain Volmat <alain.volmat@st.com>
+To:     <wsa@kernel.org>, <pierre-yves.mordret@st.com>
+CC:     <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
+        <alain.volmat@st.com>
+Subject: [PATCH v3 2/2] i2c: stm32f7: Add SMBus Host-Notify protocol support
+Date:   Mon, 3 Aug 2020 07:17:56 +0200
+Message-ID: <1596431876-24115-3-git-send-email-alain.volmat@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596431876-24115-1-git-send-email-alain.volmat@st.com>
+References: <1596431876-24115-1-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-03_04:2020-07-31,2020-08-03 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Disable parsing of the HMAT for debug, to workaround broken platform
-instances, or cases where it is otherwise not wanted.
+Rely on the core functions to implement the host-notify
+protocol via the a I2C slave device.
 
-Cc: x86@kernel.org
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
 ---
- Documentation/x86/x86_64/boot-options.rst |    4 ++++
- arch/x86/mm/numa.c                        |    2 ++
- drivers/acpi/numa/hmat.c                  |    8 +++++++-
- include/acpi/acpi_numa.h                  |    8 ++++++++
- 4 files changed, 21 insertions(+), 1 deletion(-)
+ v3: identical to v2
+ v2: fix slot #0 usage condition within stm32f7_i2c_get_free_slave_id
 
-diff --git a/Documentation/x86/x86_64/boot-options.rst b/Documentation/x86/x86_64/boot-options.rst
-index 2b98efb5ba7f..324cefff92e7 100644
---- a/Documentation/x86/x86_64/boot-options.rst
-+++ b/Documentation/x86/x86_64/boot-options.rst
-@@ -173,6 +173,10 @@ NUMA
-   numa=noacpi
-     Don't parse the SRAT table for NUMA setup
+ drivers/i2c/busses/Kconfig       |   1 +
+ drivers/i2c/busses/i2c-stm32f7.c | 110 +++++++++++++++++++++++++++++++++------
+ 2 files changed, 96 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index 735bf31a3fdf..ae8671727a4c 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -1036,6 +1036,7 @@ config I2C_STM32F7
+ 	tristate "STMicroelectronics STM32F7 I2C support"
+ 	depends on ARCH_STM32 || COMPILE_TEST
+ 	select I2C_SLAVE
++	select I2C_SMBUS
+ 	help
+ 	  Enable this option to add support for STM32 I2C controller embedded
+ 	  in STM32F7 SoCs.
+diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+index bff3479fe122..223c238c3c09 100644
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -18,6 +18,7 @@
+ #include <linux/delay.h>
+ #include <linux/err.h>
+ #include <linux/i2c.h>
++#include <linux/i2c-smbus.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/iopoll.h>
+@@ -50,6 +51,7 @@
  
-+  numa=nohmat
-+    Don't parse the HMAT table for NUMA setup, or soft-reserved memory
-+    partitioning.
+ /* STM32F7 I2C control 1 */
+ #define STM32F7_I2C_CR1_PECEN			BIT(23)
++#define STM32F7_I2C_CR1_SMBHEN			BIT(20)
+ #define STM32F7_I2C_CR1_WUPEN			BIT(18)
+ #define STM32F7_I2C_CR1_SBC			BIT(16)
+ #define STM32F7_I2C_CR1_RXDMAEN			BIT(15)
+@@ -150,7 +152,7 @@
+ 
+ #define STM32F7_I2C_MAX_LEN			0xff
+ #define STM32F7_I2C_DMA_LEN_MIN			0x16
+-#define STM32F7_I2C_MAX_SLAVE			0x2
++#define STM32F7_I2C_MAX_SLAVE			0x3
+ 
+ #define STM32F7_I2C_DNF_DEFAULT			0
+ #define STM32F7_I2C_DNF_MAX			16
+@@ -301,6 +303,8 @@ struct stm32f7_i2c_msg {
+  * @fmp_creg: register address for clearing Fast Mode Plus bits
+  * @fmp_mask: mask for Fast Mode Plus bits in set register
+  * @wakeup_src: boolean to know if the device is a wakeup source
++ * @smbus_mode: states that the controller is configured in SMBus mode
++ * @host_notify_client: SMBus host-notify client
+  */
+ struct stm32f7_i2c_dev {
+ 	struct i2c_adapter adap;
+@@ -327,6 +331,8 @@ struct stm32f7_i2c_dev {
+ 	u32 fmp_creg;
+ 	u32 fmp_mask;
+ 	bool wakeup_src;
++	bool smbus_mode;
++	struct i2c_client *host_notify_client;
+ };
+ 
+ /*
+@@ -1321,10 +1327,18 @@ static int stm32f7_i2c_get_free_slave_id(struct stm32f7_i2c_dev *i2c_dev,
+ 	int i;
+ 
+ 	/*
+-	 * slave[0] supports 7-bit and 10-bit slave address
+-	 * slave[1] supports 7-bit slave address only
++	 * slave[0] support only SMBus Host address (0x8)
++	 * slave[1] supports 7-bit and 10-bit slave address
++	 * slave[2] supports 7-bit slave address only
+ 	 */
+-	for (i = STM32F7_I2C_MAX_SLAVE - 1; i >= 0; i--) {
++	if (i2c_dev->smbus_mode && (slave->addr == 0x08)) {
++		if (i2c_dev->slave[0])
++			goto fail;
++		*id = 0;
++		return 0;
++	}
 +
-   numa=fake=<size>[MG]
-     If given as a memory unit, fills all system RAM with nodes of
-     size interleaved over physical nodes.
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index 87c52822cc44..f3805bbaa784 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -41,6 +41,8 @@ static __init int numa_setup(char *opt)
- 		return numa_emu_cmdline(opt + 5);
- 	if (!strncmp(opt, "noacpi", 6))
- 		disable_srat();
-+	if (!strncmp(opt, "nohmat", 6))
-+		disable_hmat();
- 	return 0;
++	for (i = STM32F7_I2C_MAX_SLAVE - 1; i > 0; i--) {
+ 		if (i == 1 && (slave->flags & I2C_CLIENT_TEN))
+ 			continue;
+ 		if (!i2c_dev->slave[i]) {
+@@ -1333,6 +1347,7 @@ static int stm32f7_i2c_get_free_slave_id(struct stm32f7_i2c_dev *i2c_dev,
+ 		}
+ 	}
+ 
++fail:
+ 	dev_err(dev, "Slave 0x%x could not be registered\n", slave->addr);
+ 
+ 	return -EINVAL;
+@@ -1776,7 +1791,13 @@ static int stm32f7_i2c_reg_slave(struct i2c_client *slave)
+ 	if (!stm32f7_i2c_is_slave_registered(i2c_dev))
+ 		stm32f7_i2c_enable_wakeup(i2c_dev, true);
+ 
+-	if (id == 0) {
++	switch (id) {
++	case 0:
++		/* Slave SMBus Host */
++		i2c_dev->slave[id] = slave;
++		break;
++
++	case 1:
+ 		/* Configure Own Address 1 */
+ 		oar1 = readl_relaxed(i2c_dev->base + STM32F7_I2C_OAR1);
+ 		oar1 &= ~STM32F7_I2C_OAR1_MASK;
+@@ -1789,7 +1810,9 @@ static int stm32f7_i2c_reg_slave(struct i2c_client *slave)
+ 		oar1 |= STM32F7_I2C_OAR1_OA1EN;
+ 		i2c_dev->slave[id] = slave;
+ 		writel_relaxed(oar1, i2c_dev->base + STM32F7_I2C_OAR1);
+-	} else if (id == 1) {
++		break;
++
++	case 2:
+ 		/* Configure Own Address 2 */
+ 		oar2 = readl_relaxed(i2c_dev->base + STM32F7_I2C_OAR2);
+ 		oar2 &= ~STM32F7_I2C_OAR2_MASK;
+@@ -1802,7 +1825,10 @@ static int stm32f7_i2c_reg_slave(struct i2c_client *slave)
+ 		oar2 |= STM32F7_I2C_OAR2_OA2EN;
+ 		i2c_dev->slave[id] = slave;
+ 		writel_relaxed(oar2, i2c_dev->base + STM32F7_I2C_OAR2);
+-	} else {
++		break;
++
++	default:
++		dev_err(dev, "I2C slave id not supported\n");
+ 		ret = -ENODEV;
+ 		goto pm_free;
+ 	}
+@@ -1843,10 +1869,10 @@ static int stm32f7_i2c_unreg_slave(struct i2c_client *slave)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	if (id == 0) {
++	if (id == 1) {
+ 		mask = STM32F7_I2C_OAR1_OA1EN;
+ 		stm32f7_i2c_clr_bits(base + STM32F7_I2C_OAR1, mask);
+-	} else {
++	} else if (id == 2) {
+ 		mask = STM32F7_I2C_OAR2_OA2EN;
+ 		stm32f7_i2c_clr_bits(base + STM32F7_I2C_OAR2, mask);
+ 	}
+@@ -1911,14 +1937,51 @@ static int stm32f7_i2c_setup_fm_plus_bits(struct platform_device *pdev,
+ 					  &i2c_dev->fmp_mask);
  }
- early_param("numa", numa_setup);
-diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-index 2c32cfb72370..a12e36a12618 100644
---- a/drivers/acpi/numa/hmat.c
-+++ b/drivers/acpi/numa/hmat.c
-@@ -26,6 +26,12 @@
- #include <linux/sysfs.h>
  
- static u8 hmat_revision;
-+static int hmat_disable __initdata;
-+
-+void __init disable_hmat(void)
++static int stm32f7_i2c_enable_smbus_host(struct stm32f7_i2c_dev *i2c_dev)
 +{
-+	hmat_disable = 1;
++	struct i2c_adapter *adap = &i2c_dev->adap;
++	void __iomem *base = i2c_dev->base;
++	struct i2c_client *client;
++
++	client = i2c_new_slave_host_notify_device(adap);
++	if (IS_ERR(client))
++		return PTR_ERR(client);
++
++	i2c_dev->host_notify_client = client;
++
++	/* Enable SMBus Host address */
++	stm32f7_i2c_set_bits(base + STM32F7_I2C_CR1, STM32F7_I2C_CR1_SMBHEN);
++
++	return 0;
 +}
- 
- static LIST_HEAD(targets);
- static LIST_HEAD(initiators);
-@@ -814,7 +820,7 @@ static __init int hmat_init(void)
- 	enum acpi_hmat_type i;
- 	acpi_status status;
- 
--	if (srat_disabled())
-+	if (srat_disabled() || hmat_disable)
- 		return 0;
- 
- 	status = acpi_get_table(ACPI_SIG_SRAT, 0, &tbl);
-diff --git a/include/acpi/acpi_numa.h b/include/acpi/acpi_numa.h
-index 8784183b2204..0e9302285f14 100644
---- a/include/acpi/acpi_numa.h
-+++ b/include/acpi/acpi_numa.h
-@@ -27,4 +27,12 @@ static inline void disable_srat(void)
++
++static void stm32f7_i2c_disable_smbus_host(struct stm32f7_i2c_dev *i2c_dev)
++{
++	void __iomem *base = i2c_dev->base;
++
++	if (i2c_dev->host_notify_client) {
++		/* Disable SMBus Host address */
++		stm32f7_i2c_clr_bits(base + STM32F7_I2C_CR1,
++				     STM32F7_I2C_CR1_SMBHEN);
++		i2c_free_slave_host_notify_device(i2c_dev->host_notify_client);
++	}
++}
++
+ static u32 stm32f7_i2c_func(struct i2c_adapter *adap)
  {
- }
- #endif				/* CONFIG_ACPI_NUMA */
+-	return I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR | I2C_FUNC_SLAVE |
+-		I2C_FUNC_SMBUS_QUICK | I2C_FUNC_SMBUS_BYTE |
+-		I2C_FUNC_SMBUS_BYTE_DATA | I2C_FUNC_SMBUS_WORD_DATA |
+-		I2C_FUNC_SMBUS_BLOCK_DATA | I2C_FUNC_SMBUS_BLOCK_PROC_CALL |
+-		I2C_FUNC_SMBUS_PROC_CALL | I2C_FUNC_SMBUS_PEC |
+-		I2C_FUNC_SMBUS_I2C_BLOCK;
++	struct stm32f7_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
 +
-+#ifdef CONFIG_ACPI_HMAT
-+extern void disable_hmat(void);
-+#else				/* CONFIG_ACPI_HMAT */
-+static inline void disable_hmat(void)
-+{
-+}
-+#endif				/* CONFIG_ACPI_HMAT */
- #endif				/* __ACP_NUMA_H */
++	u32 func = I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR | I2C_FUNC_SLAVE |
++		   I2C_FUNC_SMBUS_QUICK | I2C_FUNC_SMBUS_BYTE |
++		   I2C_FUNC_SMBUS_BYTE_DATA | I2C_FUNC_SMBUS_WORD_DATA |
++		   I2C_FUNC_SMBUS_BLOCK_DATA | I2C_FUNC_SMBUS_BLOCK_PROC_CALL |
++		   I2C_FUNC_SMBUS_PROC_CALL | I2C_FUNC_SMBUS_PEC |
++		   I2C_FUNC_SMBUS_I2C_BLOCK;
++
++	if (i2c_dev->smbus_mode)
++		func |= I2C_FUNC_SMBUS_HOST_NOTIFY;
++
++	return func;
+ }
+ 
+ static const struct i2c_algorithm stm32f7_i2c_algo = {
+@@ -2084,10 +2147,22 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+ 
+ 	stm32f7_i2c_hw_config(i2c_dev);
+ 
++	i2c_dev->smbus_mode = of_property_read_bool(pdev->dev.of_node, "smbus");
++
+ 	ret = i2c_add_adapter(adap);
+ 	if (ret)
+ 		goto pm_disable;
+ 
++	if (i2c_dev->smbus_mode) {
++		ret = stm32f7_i2c_enable_smbus_host(i2c_dev);
++		if (ret) {
++			dev_err(i2c_dev->dev,
++				"failed to enable SMBus Host-Notify protocol (%d)\n",
++				ret);
++			goto i2c_adapter_remove;
++		}
++	}
++
+ 	dev_info(i2c_dev->dev, "STM32F7 I2C-%d bus adapter\n", adap->nr);
+ 
+ 	pm_runtime_mark_last_busy(i2c_dev->dev);
+@@ -2095,6 +2170,9 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+ 
+ 	return 0;
+ 
++i2c_adapter_remove:
++	i2c_del_adapter(adap);
++
+ pm_disable:
+ 	pm_runtime_put_noidle(i2c_dev->dev);
+ 	pm_runtime_disable(i2c_dev->dev);
+@@ -2126,6 +2204,8 @@ static int stm32f7_i2c_remove(struct platform_device *pdev)
+ {
+ 	struct stm32f7_i2c_dev *i2c_dev = platform_get_drvdata(pdev);
+ 
++	stm32f7_i2c_disable_smbus_host(i2c_dev);
++
+ 	i2c_del_adapter(&i2c_dev->adap);
+ 	pm_runtime_get_sync(i2c_dev->dev);
+ 
+-- 
+2.7.4
 
