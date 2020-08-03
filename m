@@ -2,85 +2,103 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6607C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5587C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFFDF204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD9542076B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:21:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596457288;
+	bh=2lx6fiOAnloLslFPX4dhjxc7Ol++GN7voOrLJzKi1o4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0rRSfz5fBWrJ4t3GcbksMY/QPTXnIlB5MYr6H3lC38XJEUyORD2/qDQ2EO8MGqjgy
+	 zPjaY+73wFXTZNX8J4molzRVdpkvkiyf9lbzVoyQo3FUJMcMzHz+KoRDbIvuJpNTHW
+	 R8+sB8AmIbi0ktR/bGn3ZvM4v9VuBYfPUWZrlDto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgHCMUH (ORCPT
+        id S1726630AbgHCMV2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:20:07 -0400
-Received: from vegas.theobroma-systems.com ([144.76.126.164]:44123 "EHLO
-        mail.theobroma-systems.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726504AbgHCMT5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:19:57 -0400
-X-Greylist: delayed 1238 seconds by postgrey-1.27 at vger.kernel.org; Mon, 03 Aug 2020 08:19:55 EDT
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74]:45892 helo=diego.localnet)
-        by mail.theobroma-systems.com with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <heiko.stuebner@theobroma-systems.com>)
-        id 1k2Z7Z-0003jo-J6; Mon, 03 Aug 2020 13:59:13 +0200
-From:   Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Simon Xue <xxm@rock-chips.com>
-Subject: Re: [PATCH] iio: adc: rockchip_saradc: select IIO_TRIGGERED_BUFFER
-Date:   Mon, 03 Aug 2020 13:59:12 +0200
-Message-ID: <2468442.jk0zRepj8P@diego>
-Organization: Theobroma Systems
-In-Reply-To: <20200803083001.6689-1-michael@walle.cc>
-References: <20200803083001.6689-1-michael@walle.cc>
+        Mon, 3 Aug 2020 08:21:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44578 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725948AbgHCMVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:21:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8BCC204EC;
+        Mon,  3 Aug 2020 12:21:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596457278;
+        bh=2lx6fiOAnloLslFPX4dhjxc7Ol++GN7voOrLJzKi1o4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zzD+KytRrj1/9fid5SMDY1Y4QcVfUi64oN64gla3RZf0y255sqptZGSTNCebl0hiU
+         h5s5sqhuf9UwCnPH5speB0ap8fW34VtMuukxcrMkZO7HFCGu5+wc6sct6kMaDwqc+S
+         zTAyf7cqL/W5evdBnikWQBUaJcrm4OQ3UxpxhA88=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@nvidia.com>
+Subject: [PATCH 5.7 010/120] RDMA/mlx5: Fix prefetch memory leak if get_prefetchable_mr fails
+Date:   Mon,  3 Aug 2020 14:17:48 +0200
+Message-Id: <20200803121903.359637989@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
+References: <20200803121902.860751811@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, 3. August 2020, 10:30:01 CEST schrieb Michael Walle:
-> The kernel fails to compile due to undefined reference to
-> devm_iio_triggered_buffer_setup() if IIO_TRIGGERED_BUFFER is not
-> enabled. The original patch [1] had this dependency. But somehow it
-> didn't make it into the kernel tree. Re-add it.
-> 
-> [1] https://lore.kernel.org/lkml/20200623233011.2319035-3-heiko@sntech.de/
-> 
-> Fixes: 4e130dc7b413 ("iio: adc: rockchip_saradc: Add support iio buffers")
-> Signed-off-by: Michael Walle <michael@walle.cc>
+From: Jason Gunthorpe <jgg@nvidia.com>
 
-Reviewed-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+commit 5351a56b1a4ceafd7a17ebfdf3cda430cdfd365d upstream.
 
-> ---
->  drivers/iio/adc/Kconfig | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 66d9cc073157..d94dc800b842 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -865,6 +865,8 @@ config ROCKCHIP_SARADC
->  	tristate "Rockchip SARADC driver"
->  	depends on ARCH_ROCKCHIP || (ARM && COMPILE_TEST)
->  	depends on RESET_CONTROLLER
-> +	select IIO_BUFFER
-> +	select IIO_TRIGGERED_BUFFER
->  	help
->  	  Say yes here to build support for the SARADC found in SoCs from
->  	  Rockchip.
-> 
+destroy_prefetch_work() must always be called if the work is not going
+to be queued. The num_sge also should have been set to i, not i-1
+which avoids the condition where it shouldn't have been called in the
+first place.
 
+Cc: stable@vger.kernel.org
+Fixes: fb985e278a30 ("RDMA/mlx5: Use SRCU properly in ODP prefetch")
+Link: https://lore.kernel.org/r/20200727095712.495652-1-leon@kernel.org
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
+---
+ drivers/infiniband/hw/mlx5/odp.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+--- a/drivers/infiniband/hw/mlx5/odp.c
++++ b/drivers/infiniband/hw/mlx5/odp.c
+@@ -1798,9 +1798,7 @@ static bool init_prefetch_work(struct ib
+ 		work->frags[i].mr =
+ 			get_prefetchable_mr(pd, advice, sg_list[i].lkey);
+ 		if (!work->frags[i].mr) {
+-			work->num_sge = i - 1;
+-			if (i)
+-				destroy_prefetch_work(work);
++			work->num_sge = i;
+ 			return false;
+ 		}
+ 
+@@ -1866,6 +1864,7 @@ int mlx5_ib_advise_mr_prefetch(struct ib
+ 	srcu_key = srcu_read_lock(&dev->odp_srcu);
+ 	if (!init_prefetch_work(pd, advice, pf_flags, work, sg_list, num_sge)) {
+ 		srcu_read_unlock(&dev->odp_srcu, srcu_key);
++		destroy_prefetch_work(work);
+ 		return -EINVAL;
+ 	}
+ 	queue_work(system_unbound_wq, &work->work);
 
 
