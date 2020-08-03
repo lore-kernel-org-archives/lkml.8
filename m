@@ -2,80 +2,101 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B28DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77291C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6EE6204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 487BF2083B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:27:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596457662;
+	bh=yTP/gbX7NwD9prvx9sgZEXLgLl6qKkR5XehZhqhxzfY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Er6IaJ0j921G2fWSShvUfdvcbvENYCU6Iq4zdhzldeYOgPEYVqAFHeZUvcIH8Teev
+	 SoViama+GiBoO0F3FuTChyPe5rhJ/CuIq/qFuYh9omEHzt92yijGMv51ax6d+qpV3j
+	 PUxYb3/IfhFz2OndWkPnzwFWqXDu28rHDi23E6tA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728570AbgHCM1h (ORCPT
+        id S1728057AbgHCM1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:27:37 -0400
-Received: from 8bytes.org ([81.169.241.247]:34650 "EHLO theia.8bytes.org"
+        Mon, 3 Aug 2020 08:27:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728530AbgHCM1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728511AbgHCM1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 3 Aug 2020 08:27:24 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id E244D423; Mon,  3 Aug 2020 14:27:21 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/4] KVM: SVM: SEV-ES groundwork
-Date:   Mon,  3 Aug 2020 14:27:04 +0200
-Message-Id: <20200803122708.5942-1-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB118204EC;
+        Mon,  3 Aug 2020 12:27:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596457643;
+        bh=yTP/gbX7NwD9prvx9sgZEXLgLl6qKkR5XehZhqhxzfY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=T0jzCgfgIlXiBGfv3NFIJq36d7lExLaOyGu2QuVsZDJcvCaMmpOx5l/pC/RrlX9oO
+         766ma0hJRprTqiSzuPSeZ5djjUKdsjYRza1acgKx+8Y7wOkaO8vYy2PpBOVagEwzSl
+         6A7sm/I+orSh+imcPRJfrV/NUUpSgmZh/7jQspq4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Wei Wang <wei.w.wang@intel.com>,
+        David Hildenbrand <david@redhat.com>
+Subject: [PATCH 5.4 21/90] virtio_balloon: fix up endian-ness for free cmd id
+Date:   Mon,  3 Aug 2020 14:18:43 +0200
+Message-Id: <20200803121858.644051268@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
+References: <20200803121857.546052424@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paolo,
+From: Michael S. Tsirkin <mst@redhat.com>
 
-here is v3 of the  groundwork patches for the upcoming SEV-ES support in
-the Linux kernel. They are part of both the client patch-set and the
-KVM hypervisor patches (under development).
+commit 168c358af2f8c5a37f8b5f877ba2cc93995606ee upstream.
 
-Patch 1 necesary to fix a compile warning about a stack-frame getting
-too large. The other 3 patches define the Guest Hypervisor
-Communication Block (GHCB) and accessor functions.
+free cmd id is read using virtio endian, spec says all fields
+in balloon are LE. Fix it up.
 
-This version addresses the review comments from Sean.
+Fixes: 86a559787e6f ("virtio-balloon: VIRTIO_BALLOON_F_FREE_PAGE_HINT")
+Cc: stable@vger.kernel.org
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
+Reviewed-by: Wei Wang <wei.w.wang@intel.com>
+Acked-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-It would be great if you could consider them for v5.9, so that the
-client and the hypervisor patch-sets can be developed more independently
-of each other.
+---
+ drivers/virtio/virtio_balloon.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Please let me know what you think.
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -529,10 +529,14 @@ static int init_vqs(struct virtio_balloo
+ static u32 virtio_balloon_cmd_id_received(struct virtio_balloon *vb)
+ {
+ 	if (test_and_clear_bit(VIRTIO_BALLOON_CONFIG_READ_CMD_ID,
+-			       &vb->config_read_bitmap))
++			       &vb->config_read_bitmap)) {
+ 		virtio_cread(vb->vdev, struct virtio_balloon_config,
+ 			     free_page_report_cmd_id,
+ 			     &vb->cmd_id_received_cache);
++		/* Legacy balloon config space is LE, unlike all other devices. */
++		if (!virtio_has_feature(vb->vdev, VIRTIO_F_VERSION_1))
++			vb->cmd_id_received_cache = le32_to_cpu((__force __le32)vb->cmd_id_received_cache);
++	}
+ 
+ 	return vb->cmd_id_received_cache;
+ }
 
-Regards,
-
-	Joerg
-
-Borislav Petkov (1):
-  KVM: SVM: Use __packed shorthand
-
-Joerg Roedel (2):
-  KVM: SVM: nested: Don't allocate VMCB structures on stack
-  KVM: SVM: Add GHCB Accessor functions
-
-Tom Lendacky (1):
-  KVM: SVM: Add GHCB definitions
-
- arch/x86/include/asm/svm.h | 100 ++++++++++++++++++++++++++++++++++---
- arch/x86/kvm/svm/nested.c  |  47 +++++++++++------
- arch/x86/kvm/svm/svm.c     |   2 +
- 3 files changed, 128 insertions(+), 21 deletions(-)
-
--- 
-2.17.1
 
