@@ -2,102 +2,113 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0C4C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A60F0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59F2320678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E35220678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:08:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbgHCIF7 (ORCPT
+        id S1726002AbgHCII1 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 04:05:59 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:49610 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725806AbgHCIF7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 04:05:59 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 758A11A0148;
-        Mon,  3 Aug 2020 10:05:57 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5F7981A0181;
-        Mon,  3 Aug 2020 10:05:53 +0200 (CEST)
-Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 05E47402BE;
-        Mon,  3 Aug 2020 10:05:47 +0200 (CEST)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, aisheng.dong@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] ARM: dts: imx7ulp: Correct gpio ranges
-Date:   Mon,  3 Aug 2020 16:01:24 +0800
-Message-Id: <1596441684-30127-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 3 Aug 2020 04:08:27 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:46353 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725948AbgHCII0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 04:08:26 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-111-PHrlPE41MKu5ed8gAMWPYg-1; Mon, 03 Aug 2020 09:08:22 +0100
+X-MC-Unique: PHrlPE41MKu5ed8gAMWPYg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 3 Aug 2020 09:08:21 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 3 Aug 2020 09:08:21 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Pavel Machek' <pavel@ucw.cz>
+CC:     'Andy Lutomirski' <luto@kernel.org>,
+        "madvenka@linux.microsoft.com" <madvenka@linux.microsoft.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "LSM List" <linux-security-module@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
+Subject: RE: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+Thread-Topic: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+Thread-Index: AQHWZQT/T+e4gDrzGEmP/30MMvDTCqkgFteggASWI4CAAWJTUA==
+Date:   Mon, 3 Aug 2020 08:08:21 +0000
+Message-ID: <c02fbae7a0754a58884b370657575845@AcuMS.aculab.com>
+References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
+ <b9879beef3e740c0aeb1af73485069a8@AcuMS.aculab.com>
+ <20200802115600.GB1162@bug>
+In-Reply-To: <20200802115600.GB1162@bug>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Correct gpio ranges according to i.MX7ULP pinctrl driver:
+From: Pavel Machek <pavel@ucw.cz>
+> Sent: 02 August 2020 12:56
+> Hi!
+> 
+> > > This is quite clever, but now I???m wondering just how much kernel help
+> > > is really needed. In your series, the trampoline is an non-executable
+> > > page.  I can think of at least two alternative approaches, and I'd
+> > > like to know the pros and cons.
+> > >
+> > > 1. Entirely userspace: a return trampoline would be something like:
+> > >
+> > > 1:
+> > > pushq %rax
+> > > pushq %rbc
+> > > pushq %rcx
+> > > ...
+> > > pushq %r15
+> > > movq %rsp, %rdi # pointer to saved regs
+> > > leaq 1b(%rip), %rsi # pointer to the trampoline itself
+> > > callq trampoline_handler # see below
+> >
+> > For nested calls (where the trampoline needs to pass the
+> > original stack frame to the nested function) I think you
+> > just need a page full of:
+> > 	mov	$0, scratch_reg; jmp trampoline_handler
+> 
+> I believe you could do with mov %pc, scratch_reg; jmp ...
+> 
+> That has advantage of being able to share single physical
+> page across multiple virtual pages...
 
-gpio_ptc: ONLY pin 0~19 are available;
-gpio_ptd: ONLY pin 0~11 are available;
-gpio_pte: ONLY pin 0~15 are available;
-gpio_ptf: ONLY pin 0~19 are available;
+A lot of architecture don't let you copy %pc that way so you would
+have to use 'call' - but that trashes the return address cache.
+It also needs the trampoline handler to know the addresses
+of the trampolines.
 
-Fixes: 20434dc92c05 ("ARM: dts: imx: add common imx7ulp dtsi support")
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx7ulp.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+	David
 
-diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
-index 3674396..b7ea37a 100644
---- a/arch/arm/boot/dts/imx7ulp.dtsi
-+++ b/arch/arm/boot/dts/imx7ulp.dtsi
-@@ -394,7 +394,7 @@
- 			clocks = <&pcc2 IMX7ULP_CLK_RGPIO2P1>,
- 				 <&pcc3 IMX7ULP_CLK_PCTLC>;
- 			clock-names = "gpio", "port";
--			gpio-ranges = <&iomuxc1 0 0 32>;
-+			gpio-ranges = <&iomuxc1 0 0 20>;
- 		};
- 
- 		gpio_ptd: gpio@40af0000 {
-@@ -408,7 +408,7 @@
- 			clocks = <&pcc2 IMX7ULP_CLK_RGPIO2P1>,
- 				 <&pcc3 IMX7ULP_CLK_PCTLD>;
- 			clock-names = "gpio", "port";
--			gpio-ranges = <&iomuxc1 0 32 32>;
-+			gpio-ranges = <&iomuxc1 0 32 12>;
- 		};
- 
- 		gpio_pte: gpio@40b00000 {
-@@ -422,7 +422,7 @@
- 			clocks = <&pcc2 IMX7ULP_CLK_RGPIO2P1>,
- 				 <&pcc3 IMX7ULP_CLK_PCTLE>;
- 			clock-names = "gpio", "port";
--			gpio-ranges = <&iomuxc1 0 64 32>;
-+			gpio-ranges = <&iomuxc1 0 64 16>;
- 		};
- 
- 		gpio_ptf: gpio@40b10000 {
-@@ -436,7 +436,7 @@
- 			clocks = <&pcc2 IMX7ULP_CLK_RGPIO2P1>,
- 				 <&pcc3 IMX7ULP_CLK_PCTLF>;
- 			clock-names = "gpio", "port";
--			gpio-ranges = <&iomuxc1 0 96 32>;
-+			gpio-ranges = <&iomuxc1 0 96 20>;
- 		};
- 	};
- 
--- 
-2.7.4
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
