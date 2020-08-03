@@ -2,76 +2,172 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE7DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8749C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE72A20738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9123320738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:22:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596457331;
+	bh=WyKSjpajL0Wrn6EPgmwu9jvodbEDJzLgR334xRdaG9Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jLxB/E25v09eNKrCp8fEYVfJGqLYiqMwdfq5hjdWPFwuNn2czNCO/2sPwM5N4xSFs
+	 nRNRJVS9PTxyxBZe1fK1AxplhVqijYdH7dWM1JE6F6sbUjavzIrL4j6MIcJPAAO6Rl
+	 7yLQJcov91kRC+n9t4lCwuVtJUz+YGP9rNdabqsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgHCMWC (ORCPT
+        id S1726946AbgHCMWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:22:02 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:46364 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726865AbgHCMV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:21:56 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 38172B92AFF40E07CB31;
-        Mon,  3 Aug 2020 20:21:50 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Mon, 3 Aug 2020
- 20:21:43 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <tjoseph@cadence.com>, <lorenzo.pieralisi@arm.com>,
-        <robh@kernel.org>, <bhelgaas@google.com>, <kishon@ti.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] PCI: cadence: Make cdns_pci_map_bus stub helper inline
-Date:   Mon, 3 Aug 2020 20:21:04 +0800
-Message-ID: <20200803122104.44852-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Mon, 3 Aug 2020 08:22:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45296 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726864AbgHCMVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:21:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2DAD204EC;
+        Mon,  3 Aug 2020 12:21:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596457310;
+        bh=WyKSjpajL0Wrn6EPgmwu9jvodbEDJzLgR334xRdaG9Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UF+Co8mkC219o6WlCcAIOEsUOd75KF30qrmIYnSR5VS6JjcZhwyozDFXxkkEBimbi
+         YR34oyHm46wokmb2FkbKQoFiSYoLrpTIAKkJNKoR+MR3aIuAqDqipE3Vf/4FgVY1cy
+         kHx0siLIsJBJsxTLZfxOAnv0MstWMrldAowhb0Fg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Amit Klein <aksecurity@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>, Willy Tarreau <w@1wt.eu>
+Subject: [PATCH 5.7 021/120] random32: update the net random state on interrupt and activity
+Date:   Mon,  3 Aug 2020 14:17:59 +0200
+Message-Id: <20200803121903.882259078@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
+References: <20200803121902.860751811@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.174.179.108]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_PCIE_CADENCE_HOST is n, gcc warns:
+From: Willy Tarreau <w@1wt.eu>
 
-drivers/pci/controller/cadence/pcie-cadence.h:486:22:
- warning: 'cdns_pci_map_bus' defined but not used [-Wunused-function]
+commit f227e3ec3b5cad859ad15666874405e8c1bbc1d4 upstream.
 
-Make stub helper inline to fix this.
+This modifies the first 32 bits out of the 128 bits of a random CPU's
+net_rand_state on interrupt or CPU activity to complicate remote
+observations that could lead to guessing the network RNG's internal
+state.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Note that depending on some network devices' interrupt rate moderation
+or binding, this re-seeding might happen on every packet or even almost
+never.
+
+In addition, with NOHZ some CPUs might not even get timer interrupts,
+leaving their local state rarely updated, while they are running
+networked processes making use of the random state.  For this reason, we
+also perform this update in update_process_times() in order to at least
+update the state when there is user or system activity, since it's the
+only case we care about.
+
+Reported-by: Amit Klein <aksecurity@gmail.com>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Willy Tarreau <w@1wt.eu>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/pci/controller/cadence/pcie-cadence.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/char/random.c  |    1 +
+ include/linux/random.h |    3 +++
+ kernel/time/timer.c    |    8 ++++++++
+ lib/random32.c         |    2 +-
+ 4 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index 655a6b4d4964..00e44256c3e8 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -483,8 +483,8 @@ static inline int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- 	return 0;
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -1277,6 +1277,7 @@ void add_interrupt_randomness(int irq, i
+ 
+ 	fast_mix(fast_pool);
+ 	add_interrupt_bench(cycles);
++	this_cpu_add(net_rand_state.s1, fast_pool->pool[cycles & 3]);
+ 
+ 	if (unlikely(crng_init == 0)) {
+ 		if ((fast_pool->count >= 64) &&
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -11,6 +11,7 @@
+ #include <linux/kernel.h>
+ #include <linux/list.h>
+ #include <linux/once.h>
++#include <linux/percpu.h>
+ 
+ #include <uapi/linux/random.h>
+ 
+@@ -119,6 +120,8 @@ struct rnd_state {
+ 	__u32 s1, s2, s3, s4;
+ };
+ 
++DECLARE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
++
+ u32 prandom_u32_state(struct rnd_state *state);
+ void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
+ void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -43,6 +43,7 @@
+ #include <linux/sched/debug.h>
+ #include <linux/slab.h>
+ #include <linux/compat.h>
++#include <linux/random.h>
+ 
+ #include <linux/uaccess.h>
+ #include <asm/unistd.h>
+@@ -1743,6 +1744,13 @@ void update_process_times(int user_tick)
+ 	scheduler_tick();
+ 	if (IS_ENABLED(CONFIG_POSIX_TIMERS))
+ 		run_posix_cpu_timers();
++
++	/* The current CPU might make use of net randoms without receiving IRQs
++	 * to renew them often enough. Let's update the net_rand_state from a
++	 * non-constant value that's not affine to the number of calls to make
++	 * sure it's updated when there's some activity (we don't care in idle).
++	 */
++	this_cpu_add(net_rand_state.s1, rol32(jiffies, 24) + user_tick);
  }
  
--static void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
--				      int where)
-+static inline void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
-+					     int where)
- {
- 	return NULL;
+ /**
+--- a/lib/random32.c
++++ b/lib/random32.c
+@@ -48,7 +48,7 @@ static inline void prandom_state_selftes
  }
--- 
-2.17.1
+ #endif
+ 
+-static DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
++DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
+ 
+ /**
+  *	prandom_u32_state - seeded pseudo-random number generator.
 
 
