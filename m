@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAB8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8954DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 319BC204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6109D2086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:27:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457672;
-	bh=6neVmE4RuTPyO1WwkKuIkdjl/sl5fH6UJcth+i9Zpek=;
+	s=default; t=1596457675;
+	bh=X/YvT9our1TpoFDBLPHs1qsdci4SbG8xv6ohX2HSy/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AyZz8qRhQyYcVHwcGtfcM5eDXhRkuC/P8mKOJv/WIxVUUhokklFXa0Ymz4dzFegE4
-	 hIOb9nt3DtAR3xZRCNNMggdaH9XV1O95WF3Z/Fe7Yqt3eAJ7o3/jyfrMD2BYKIlqk3
-	 IC8oRYsulZ5HPu73dZoHGTNgeFA++k9Q8HQShx5M=
+	b=z5mDWQcn1VhdIlJiYR75McMkw4DOv+1HRYCDHTwfbbEGUgcnhmCTgDl2ISC+k82nn
+	 S2NYGXPA5PYRG9xM4IUc0Fr7ZRH67Mqmg7no+HIySu54V7uHElCQx9iR/aeiteW9Kx
+	 6DWcrqVjVJ4YOAfSxj2L5RuYV4l2f8dmZxkTUaOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbgHCM1u (ORCPT
+        id S1728638AbgHCM1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:27:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53454 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:27:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728574AbgHCM1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:27:38 -0400
+        id S1728589AbgHCM1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:27:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9684A204EC;
-        Mon,  3 Aug 2020 12:27:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79F18204EC;
+        Mon,  3 Aug 2020 12:27:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457657;
-        bh=6neVmE4RuTPyO1WwkKuIkdjl/sl5fH6UJcth+i9Zpek=;
+        s=default; t=1596457665;
+        bh=X/YvT9our1TpoFDBLPHs1qsdci4SbG8xv6ohX2HSy/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=snljmb2yc4bDOubjbEqyslFjeF3rOALKIYOr/hsr/zqbLHBil6GNGvlTM1+AhYvfb
-         QqHRRmvTCPF00SbsfK+25XnwYkPaRrE5/QsTlDOSocUrlNWmcoZ8dwv5zx6LAbp+UP
-         FbBlxHRXiW466Eg/JUEoMDNDgoDUQFJx1hmoPq3o=
+        b=zJiUquheCjNY1DE7bU1XIT9b3GXYTxRR0TgFWiOBbGKc0+v2Ra6yrd/eOUQUPSt2w
+         LPN3oLrLxpmEwa7z4xkGrTbUCd0jLnMsLHIFJMHbV2Fictjuz6nYkCLZSwLANSuTeZ
+         zP5m55cAEyXDZ0OffPgbpMQSqQCbU0q0aJaHoK38=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Abhishek Ambure <aambure@codeaurora.org>,
-        Balaji Pothunoori <bpothuno@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sathishkumar Muruganandam <murugana@codeaurora.org>
-Subject: [PATCH 5.4 04/90] ath10k: enable transmit data ack RSSI for QCA9884
-Date:   Mon,  3 Aug 2020 14:18:26 +0200
-Message-Id: <20200803121857.760477726@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry <dpavlushko@gmail.com>,
+        Laurence Tratt <laurie@tratt.net>, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 07/90] ALSA: usb-audio: Add implicit feedback quirk for SSL2
+Date:   Mon,  3 Aug 2020 14:18:29 +0200
+Message-Id: <20200803121857.901126854@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -61,39 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Abhishek Ambure <aambure@codeaurora.org>
+From: Laurence Tratt <laurie@tratt.net>
 
-commit cc78dc3b790619aa05f22a86a9152986bd73698c upstream.
+commit 3da87ec67a491b9633a82045896c076b794bf938 upstream.
 
-For all data packets transmitted, host gets htt tx completion event. Some QCA9984
-firmware releases support WMI_SERVICE_TX_DATA_ACK_RSSI, which gives data
-ack rssi values to host through htt event of data tx completion. Data ack rssi
-values are valid if A0 bit is set in HTT rx message. So enable the feature also
-for QCA9884.
+As expected, this requires the same quirk as the SSL2+ in order for the
+clock to sync. This was suggested by, and tested on an SSL2, by Dmitry.
 
-Tested HW: QCA9984
-Tested FW: 10.4-3.9.0.2-00044
-
-Signed-off-by: Abhishek Ambure <aambure@codeaurora.org>
-Signed-off-by: Balaji Pothunoori <bpothuno@codeaurora.org>
-[kvalo@codeaurora.org: improve commit log]
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sathishkumar Muruganandam <murugana@codeaurora.org>
+Suggested-by: Dmitry <dpavlushko@gmail.com>
+Signed-off-by: Laurence Tratt <laurie@tratt.net>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200621075005.52mjjfc6dtdjnr3h@overdrive.tratt.net
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ath/ath10k/hw.c |    1 +
+ sound/usb/pcm.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/drivers/net/wireless/ath/ath10k/hw.c
-+++ b/drivers/net/wireless/ath/ath10k/hw.c
-@@ -1145,6 +1145,7 @@ static bool ath10k_qca99x0_rx_desc_msdu_
- const struct ath10k_hw_ops qca99x0_ops = {
- 	.rx_desc_get_l3_pad_bytes = ath10k_qca99x0_rx_desc_get_l3_pad_bytes,
- 	.rx_desc_get_msdu_limit_error = ath10k_qca99x0_rx_desc_msdu_limit_error,
-+	.is_rssi_enable = ath10k_htt_tx_rssi_enable,
- };
- 
- const struct ath10k_hw_ops qca6174_ops = {
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -354,6 +354,7 @@ static int set_sync_ep_implicit_fb_quirk
+ 		ifnum = 0;
+ 		goto add_sync_ep_from_ifnum;
+ 	case USB_ID(0x07fd, 0x0008): /* MOTU M Series */
++	case USB_ID(0x31e9, 0x0001): /* Solid State Logic SSL2 */
+ 	case USB_ID(0x31e9, 0x0002): /* Solid State Logic SSL2+ */
+ 	case USB_ID(0x0d9a, 0x00df): /* RTX6001 */
+ 		ep = 0x81;
 
 
