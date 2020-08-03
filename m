@@ -2,88 +2,108 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 444B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98362C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20FBD206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:30:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="lbSw7vyS"
+	by mail.kernel.org (Postfix) with ESMTP id 7999D206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:32:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgHCIaV (ORCPT
+        id S1726062AbgHCIcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 04:30:21 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:48367 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbgHCIaU (ORCPT
+        Mon, 3 Aug 2020 04:32:25 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:33734 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725831AbgHCIcZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 04:30:20 -0400
-Received: from mwalle01.sab.local. (unknown [213.135.10.150])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id ED4EE22EE4;
-        Mon,  3 Aug 2020 10:30:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1596443417;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=OIZj9ZscenWslEagGF3KNIIVzm1zaVR0sAtkh3SLZQc=;
-        b=lbSw7vySBDIDPmgI2Exq+wQEUihNRiC0YVXBS7x5RFKCYDWILQaf96x3/yakxTuOEFAVfx
-        s8+JSiNpZ+hl6WPXOn1ChywazptEEusZPn3fZp5ERqmfTITt2i8MMAwT7MCw6JkBz9GRZj
-        Uu2zhkA2EKLHKf2xnw9Gwjq5BmjOcwY=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Simon Xue <xxm@rock-chips.com>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH] iio: adc: rockchip_saradc: select IIO_TRIGGERED_BUFFER
-Date:   Mon,  3 Aug 2020 10:30:01 +0200
-Message-Id: <20200803083001.6689-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        Mon, 3 Aug 2020 04:32:25 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-27-9fQDUxYuOgOUDRJWjNab7Q-1; Mon, 03 Aug 2020 09:32:20 +0100
+X-MC-Unique: 9fQDUxYuOgOUDRJWjNab7Q-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 3 Aug 2020 09:32:19 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 3 Aug 2020 09:32:19 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Steven Sistare' <steven.sistare@oracle.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+CC:     Matthew Wilcox <willy@infradead.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "gerg@linux-m68k.org" <gerg@linux-m68k.org>,
+        "ktkhai@virtuozzo.com" <ktkhai@virtuozzo.com>,
+        "christian.brauner@ubuntu.com" <christian.brauner@ubuntu.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "esyr@redhat.com" <esyr@redhat.com>,
+        "christian@kellner.me" <christian@kellner.me>,
+        "areber@redhat.com" <areber@redhat.com>,
+        "cyphar@cyphar.com" <cyphar@cyphar.com>
+Subject: RE: [RFC PATCH 0/5] madvise MADV_DOEXEC
+Thread-Topic: [RFC PATCH 0/5] madvise MADV_DOEXEC
+Thread-Index: AQHWZ2PceK06OQMZZUSyBX/76a/FaakmEZEQ
+Date:   Mon, 3 Aug 2020 08:32:19 +0000
+Message-ID: <09ce47c0a97c482b95b8b521e9ee33d4@AcuMS.aculab.com>
+References: <20200730171251.GI23808@casper.infradead.org>
+ <63a7404c-e4f6-a82e-257b-217585b0277f@oracle.com>
+ <20200730174956.GK23808@casper.infradead.org>
+ <ab7a25bf-3321-77c8-9bc3-28a223a14032@oracle.com>
+ <87y2n03brx.fsf@x220.int.ebiederm.org>
+ <689d6348-6029-5396-8de7-a26bc3c017e5@oracle.com>
+ <20200731152736.GP23808@casper.infradead.org>
+ <9ba26063-0098-e796-9431-8c1d0c076ffc@oracle.com>
+ <20200731165649.GG24045@ziepe.ca>
+ <71ddd3c1-bb59-3e63-e137-99b88ace454d@oracle.com>
+ <20200731174837.GH24045@ziepe.ca>
+ <f4ce3f4a-bdee-ec43-986c-8e4d8b1d2ddc@oracle.com>
+In-Reply-To: <f4ce3f4a-bdee-ec43-986c-8e4d8b1d2ddc@oracle.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel fails to compile due to undefined reference to
-devm_iio_triggered_buffer_setup() if IIO_TRIGGERED_BUFFER is not
-enabled. The original patch [1] had this dependency. But somehow it
-didn't make it into the kernel tree. Re-add it.
-
-[1] https://lore.kernel.org/lkml/20200623233011.2319035-3-heiko@sntech.de/
-
-Fixes: 4e130dc7b413 ("iio: adc: rockchip_saradc: Add support iio buffers")
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- drivers/iio/adc/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 66d9cc073157..d94dc800b842 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -865,6 +865,8 @@ config ROCKCHIP_SARADC
- 	tristate "Rockchip SARADC driver"
- 	depends on ARCH_ROCKCHIP || (ARM && COMPILE_TEST)
- 	depends on RESET_CONTROLLER
-+	select IIO_BUFFER
-+	select IIO_TRIGGERED_BUFFER
- 	help
- 	  Say yes here to build support for the SARADC found in SoCs from
- 	  Rockchip.
--- 
-2.20.1
+PiBNYXliZS4gIFdlIHN0aWxsIG5lZWQgdG8gcHJlc2VydmUgYW4gYW5vbnltb3VzIHNlZ21lbnQs
+IHRob3VnaC4gIE1BRFZfRE9FWEVDLCBvciBtc2hhcmUsDQo+IG9yIHNvbWV0aGluZyBlbHNlLiAg
+QW5kIEkgdGhpbmsgdGhlIGFiaWxpdHkgdG8gcHJlc2VydmUgbWVtb3J5IGNvbnRhaW5pbmcgcG9p
+bnRlcnMgdG8gaXRzZWxmDQo+IGlzIGFuIGludGVyZXN0aW5nIHVzZSBjYXNlLCB0aG91Z2ggbm90
+IG91cnMuDQoNCldoeSBkb2VzIGFsbCB0aGlzIHJlbWluZCBtZSBvZiB0aGUgb2xkIHNlbmRtYWls
+IGNvZGUuDQpBZnRlciBwYXJzaW5nIHRoZSBjb25maWcgZmlsZSBpdCB1c2VkIHRvIHdyaXRlIGl0
+cyBlbnRpcmUgZGF0YQ0KYXJlYSBvdXQgdG8gYSBmaWxlLg0KT24gcmVzdGFydCwgaWYgdGhlIGNv
+bmZpZyBmaWxlIGhhZG4ndCBjaGFuZ2VkIGl0IHdvdWxkIHJlYWQgaXQgYmFjayBpdC4NCg0KSXQg
+c29ydCBvZiB3b3JrZWQgLSB1bnRpbCBzaGFyZWQgbGlicmFyaWVzIGNhbWUgYWxvbmcuDQpUaGVu
+IGl0IGhhZCBhIGhhYml0IG9mIGdlbmVyYXRpbmcgcmFuZG9tIGNyYXNoZXMuDQoNCglEYXZpZA0K
+DQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFy
+bSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAo
+V2FsZXMpDQo=
 
