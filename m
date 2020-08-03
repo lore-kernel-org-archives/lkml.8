@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF63C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2384C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ADAF20678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC5A20678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458555;
-	bh=KPEQdRBWpj2++NzmpX3wevXP1Ga9IyqWe51CLg9gI0E=;
+	s=default; t=1596458559;
+	bh=x8SQ6fLnmFmHi/7O0TIoixVz2StNQj93pC7LpaYtCec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cNnU3UWi40vOITNnJV3f7XzLH3Q97RFVvkWkF8DEQwCJpgDlIW6WTT4Eb7jvOvslk
-	 33YT4xqlZ2dosRJ3ECiAVApoZ3Mv8Tu/WuVM/lXllyhVX1QbqrKvgYSdKJ5xlHn4Lt
-	 ncOTjHrXzYyQ7XBAyLXBrqGBE6EGf5AFgY/pF0R0=
+	b=BORze4z4o4UGzRud42esVNlO2c9FykvXzaaJgLBRae4LSFisCtP70bMiQhsVRwiFf
+	 JIHkl506sFeZwQouVx9SOvLvaYm2Es37atjQ9F/1Fz6oLqgo2LUOKmWbQznrjnyR8k
+	 ysS8i3a4gxbk6fLL1Totq7h7JrmlLxISWD7odYdc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729420AbgHCMme (ORCPT
+        id S1728593AbgHCMmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:42:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58472 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:42:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728601AbgHCMbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:31:07 -0400
+        id S1729145AbgHCMbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:31:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE8E42054F;
-        Mon,  3 Aug 2020 12:31:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C169E204EC;
+        Mon,  3 Aug 2020 12:31:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457866;
-        bh=KPEQdRBWpj2++NzmpX3wevXP1Ga9IyqWe51CLg9gI0E=;
+        s=default; t=1596457863;
+        bh=x8SQ6fLnmFmHi/7O0TIoixVz2StNQj93pC7LpaYtCec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hKBZgNKGVGU/8ZE+cSZN+jN5SsWSL5IvZd5r54pUV0Gm2ehFldtzyBIEJlTVY4Ud7
-         Aej7EK8rvFev7868wOT/eiCfEAclAIfPQGVQRU93Cw4lxtxHL8YHVPJ27G60H+lhf6
-         /SurIz2l4ARWV2yL9nPfXjdpElFX+Jyfq/brFOrc=
+        b=DEUKfXjfXIrohnYXnRoqvaa7mxKFCc7JRjOFuWG9GQFa9erCy7JzG9joBRLkqw5VA
+         QNmL2rXacWu7aAF+RUd6QHQRbmcEGtrGY92IxD2HNZtjZn1M1KD0o+Fq7DyMGM9lAl
+         f2ViM4NQnf13qkeGEBKylWV+ZF+YIMgwOlHt7E6I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Matteo Croce <mcroce@redhat.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 11/56] Btrfs: fix selftests failure due to uninitialized i_mode in test inodes
-Date:   Mon,  3 Aug 2020 14:19:26 +0200
-Message-Id: <20200803121850.868864740@linuxfoundation.org>
+Subject: [PATCH 4.19 10/56] sctp: implement memory accounting on tx path
+Date:   Mon,  3 Aug 2020 14:19:25 +0200
+Message-Id: <20200803121850.821743926@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -60,85 +63,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 9f7fec0ba89108b9385f1b9fb167861224912a4a ]
+[ Upstream commit 1033990ac5b2ab6cee93734cb6d301aa3a35bcaa ]
 
-Some of the self tests create a test inode, setup some extents and then do
-calls to btrfs_get_extent() to test that the corresponding extent maps
-exist and are correct. However btrfs_get_extent(), since the 5.2 merge
-window, now errors out when it finds a regular or prealloc extent for an
-inode that does not correspond to a regular file (its ->i_mode is not
-S_IFREG). This causes the self tests to fail sometimes, specially when
-KASAN, slub_debug and page poisoning are enabled:
+Now when sending packets, sk_mem_charge() and sk_mem_uncharge() have been
+used to set sk_forward_alloc. We just need to call sk_wmem_schedule() to
+check if the allocated should be raised, and call sk_mem_reclaim() to
+check if the allocated should be reduced when it's under memory pressure.
 
-  $ modprobe btrfs
-  modprobe: ERROR: could not insert 'btrfs': Invalid argument
+If sk_wmem_schedule() returns false, which means no memory is allowed to
+allocate, it will block and wait for memory to become available.
 
-  $ dmesg
-  [ 9414.691648] Btrfs loaded, crc32c=crc32c-intel, debug=on, assert=on, integrity-checker=on, ref-verify=on
-  [ 9414.692655] BTRFS: selftest: sectorsize: 4096  nodesize: 4096
-  [ 9414.692658] BTRFS: selftest: running btrfs free space cache tests
-  [ 9414.692918] BTRFS: selftest: running extent only tests
-  [ 9414.693061] BTRFS: selftest: running bitmap only tests
-  [ 9414.693366] BTRFS: selftest: running bitmap and extent tests
-  [ 9414.696455] BTRFS: selftest: running space stealing from bitmap to extent tests
-  [ 9414.697131] BTRFS: selftest: running extent buffer operation tests
-  [ 9414.697133] BTRFS: selftest: running btrfs_split_item tests
-  [ 9414.697564] BTRFS: selftest: running extent I/O tests
-  [ 9414.697583] BTRFS: selftest: running find delalloc tests
-  [ 9415.081125] BTRFS: selftest: running find_first_clear_extent_bit test
-  [ 9415.081278] BTRFS: selftest: running extent buffer bitmap tests
-  [ 9415.124192] BTRFS: selftest: running inode tests
-  [ 9415.124195] BTRFS: selftest: running btrfs_get_extent tests
-  [ 9415.127909] BTRFS: selftest: running hole first btrfs_get_extent test
-  [ 9415.128343] BTRFS critical (device (efault)): regular/prealloc extent found for non-regular inode 256
-  [ 9415.131428] BTRFS: selftest: fs/btrfs/tests/inode-tests.c:904 expected a real extent, got 0
+Note different from tcp, sctp wait_for_buf happens before allocating any
+skb, so memory accounting check is done with the whole msg_len before it
+too.
 
-This happens because the test inodes are created without ever initializing
-the i_mode field of the inode, and neither VFS's new_inode() nor the btrfs
-callback btrfs_alloc_inode() initialize the i_mode. Initialization of the
-i_mode is done through the various callbacks used by the VFS to create
-new inodes (regular files, directories, symlinks, tmpfiles, etc), which
-all call btrfs_new_inode() which in turn calls inode_init_owner(), which
-sets the inode's i_mode. Since the tests only uses new_inode() to create
-the test inodes, the i_mode was never initialized.
-
-This always happens on a VM I used with kasan, slub_debug and many other
-debug facilities enabled. It also happened to someone who reported this
-on bugzilla (on a 5.3-rc).
-
-Fix this by setting i_mode to S_IFREG at btrfs_new_test_inode().
-
-Fixes: 6bf9e4bd6a2778 ("btrfs: inode: Verify inode mode to avoid NULL pointer dereference")
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204397
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Reported-by: Matteo Croce <mcroce@redhat.com>
+Tested-by: Matteo Croce <mcroce@redhat.com>
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/tests/btrfs-tests.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ net/sctp/socket.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/tests/btrfs-tests.c b/fs/btrfs/tests/btrfs-tests.c
-index 2eec1dd3803af..82d874b104383 100644
---- a/fs/btrfs/tests/btrfs-tests.c
-+++ b/fs/btrfs/tests/btrfs-tests.c
-@@ -38,7 +38,13 @@ static struct file_system_type test_type = {
+diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+index c93be3ba5df29..df4a7d7c5ec04 100644
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -1931,7 +1931,10 @@ static int sctp_sendmsg_to_asoc(struct sctp_association *asoc,
+ 	if (sctp_wspace(asoc) < (int)msg_len)
+ 		sctp_prsctp_prune(asoc, sinfo, msg_len - sctp_wspace(asoc));
  
- struct inode *btrfs_new_test_inode(void)
- {
--	return new_inode(test_mnt->mnt_sb);
-+	struct inode *inode;
+-	if (sctp_wspace(asoc) <= 0) {
++	if (sk_under_memory_pressure(sk))
++		sk_mem_reclaim(sk);
 +
-+	inode = new_inode(test_mnt->mnt_sb);
-+	if (inode)
-+		inode_init_owner(inode, NULL, S_IFREG);
-+
-+	return inode;
- }
++	if (sctp_wspace(asoc) <= 0 || !sk_wmem_schedule(sk, msg_len)) {
+ 		timeo = sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
+ 		err = sctp_wait_for_sndbuf(asoc, &timeo, msg_len);
+ 		if (err)
+@@ -8515,7 +8518,10 @@ static int sctp_wait_for_sndbuf(struct sctp_association *asoc, long *timeo_p,
+ 			goto do_error;
+ 		if (signal_pending(current))
+ 			goto do_interrupted;
+-		if ((int)msg_len <= sctp_wspace(asoc))
++		if (sk_under_memory_pressure(sk))
++			sk_mem_reclaim(sk);
++		if ((int)msg_len <= sctp_wspace(asoc) &&
++		    sk_wmem_schedule(sk, msg_len))
+ 			break;
  
- static int btrfs_init_test_fs(void)
+ 		/* Let another process have a go.  Since we are going
 -- 
 2.25.1
 
