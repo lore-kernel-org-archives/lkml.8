@@ -2,106 +2,118 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F96C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4F0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56FE4206D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FE5320738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:44:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728808AbgHCSlB (ORCPT
+        id S1728783AbgHCSop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 14:41:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgHCSlB (ORCPT
+        Mon, 3 Aug 2020 14:44:45 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60358 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728515AbgHCSoo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 14:41:01 -0400
-Received: from relay.felk.cvut.cz (relay.felk.cvut.cz [IPv6:2001:718:2:1611:0:1:0:70])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E2AA1C06174A;
-        Mon,  3 Aug 2020 11:41:00 -0700 (PDT)
-Received: from cmp.felk.cvut.cz (haar.felk.cvut.cz [147.32.84.19])
-        by relay.felk.cvut.cz (8.15.2/8.15.2) with ESMTP id 073IcuPL033386;
-        Mon, 3 Aug 2020 20:38:56 +0200 (CEST)
-        (envelope-from pisa@cmp.felk.cvut.cz)
-Received: from haar.felk.cvut.cz (localhost [127.0.0.1])
-        by cmp.felk.cvut.cz (8.14.0/8.12.3/SuSE Linux 0.6) with ESMTP id 073Ictfi004171;
-        Mon, 3 Aug 2020 20:38:55 +0200
-Received: (from pisa@localhost)
-        by haar.felk.cvut.cz (8.14.0/8.13.7/Submit) id 073IctFg004169;
-        Mon, 3 Aug 2020 20:38:55 +0200
-From:   pisa@cmp.felk.cvut.cz
-To:     linux-can@vger.kernel.org, devicetree@vger.kernel.org,
-        mkl@pengutronix.de, socketcan@hartkopp.net
-Cc:     wg@grandegger.com, davem@davemloft.net, robh+dt@kernel.org,
-        mark.rutland@arm.com, c.emde@osadl.org, armbru@redhat.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        martin.jerabek01@gmail.com, ondrej.ille@gmail.com,
-        jnovak@fel.cvut.cz, jara.beran@gmail.com, porazil@pikron.com,
-        Pavel Pisa <pisa@cmp.felk.cvut.cz>
-Subject: [PATCH v4 1/6] dt-bindings: vendor-prefix: add prefix for the Czech Technical University in Prague.
-Date:   Mon,  3 Aug 2020 20:34:49 +0200
-Message-Id: <3b6869aa7a48b61f8a800d141d164b70222e33af.1596408856.git.pisa@cmp.felk.cvut.cz>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1596408856.git.pisa@cmp.felk.cvut.cz>
-References: <cover.1596408856.git.pisa@cmp.felk.cvut.cz>
+        Mon, 3 Aug 2020 14:44:44 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 073Ib0ZV174990;
+        Mon, 3 Aug 2020 14:44:34 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32pqdhh08t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 14:44:34 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 073IZZvK021220;
+        Mon, 3 Aug 2020 18:44:32 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04ams.nl.ibm.com with ESMTP id 32n0182fgb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 18:44:32 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 073IiU6Q28901674
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 3 Aug 2020 18:44:30 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED73E11C050;
+        Mon,  3 Aug 2020 18:44:29 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A5C0C11C04C;
+        Mon,  3 Aug 2020 18:44:29 +0000 (GMT)
+Received: from osiris (unknown [9.171.25.113])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon,  3 Aug 2020 18:44:29 +0000 (GMT)
+Date:   Mon, 3 Aug 2020 20:44:28 +0200
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Sven Schnelle <svens@linux.ibm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH 2/2] s390: convert to GENERIC_VDSO
+Message-ID: <20200803184428.GA3973@osiris>
+References: <20200803055645.79042-1-svens@linux.ibm.com>
+ <20200803055645.79042-3-svens@linux.ibm.com>
+ <87ft93ncaa.fsf@nanos.tec.linutronix.de>
+ <yt9dmu3b3jo3.fsf@linux.ibm.com>
+ <87a6zbn29n.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-FELK-MailScanner-Information: 
-X-MailScanner-ID: 073IcuPL033386
-X-FELK-MailScanner: Found to be clean
-X-FELK-MailScanner-SpamCheck: not spam, SpamAssassin (not cached,
-        score=-0.098, required 6, BAYES_00 -0.50, KHOP_HELO_FCRDNS 0.40,
-        SPF_HELO_NONE 0.00, SPF_NONE 0.00)
-X-FELK-MailScanner-From: pisa@cmp.felk.cvut.cz
-X-FELK-MailScanner-Watermark: 1597084737.56782@nw6tP7bx/TslGXiyZRmK2Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87a6zbn29n.fsf@nanos.tec.linutronix.de>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-03_15:2020-08-03,2020-08-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
+ bulkscore=0 impostorscore=0 mlxlogscore=772 priorityscore=1501
+ clxscore=1011 suspectscore=1 phishscore=0 spamscore=0 lowpriorityscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008030130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Pisa <pisa@cmp.felk.cvut.cz>
+On Mon, Aug 03, 2020 at 06:05:24PM +0200, Thomas Gleixner wrote:
+> +/**
+> + * vdso_update_begin - Start of a VDSO update section
+> + *
+> + * Allows architecture code to safely update the architecture specific VDSO
+> + * data.
+> + */
+> +void vdso_update_begin(void)
+> +{
+> +	struct vdso_data *vdata = __arch_get_k_vdso_data();
+> +
+> +	raw_spin_lock(&timekeeper_lock);
+> +	vdso_write_begin(vdata);
+> +}
 
-Following text added to make checkpatch happy.
+I would assume that this only works if vdso_update_begin() is called
+with irqs disabled, otherwise it could deadlock, no?
 
-The Czech Technical University in Prague (CTU) is one of
-the biggest and oldest (founded 1707) technical universities
-in Europe. The abbreviation in Czech language is ČVUT according
-to official name in Czech language
+Maybe something like:
 
-  České vysoké učení technické v Praze
+void vdso_update_begin(unsigned long *flags)
+{
+	struct vdso_data *vdata = __arch_get_k_vdso_data();
 
-The English translation
+	raw_spin_lock_irqsave(&timekeeper_lock, *flags);
+	vdso_write_begin(vdata);
+}
 
-  The Czech Technical University in Prague
+void vdso_update_end(unsigned long *flags)
+{
+	struct vdso_data *vdata = __arch_get_k_vdso_data();
 
-The university pages in English
+	vdso_write_end(vdata);
+	__arch_sync_vdso_data(vdata);
+	raw_spin_unlock_irqrestore(&timekeeper_lock, *flags);
+}
 
-  https://www.cvut.cz/en
-
-Signed-off-by: Pavel Pisa <pisa@cmp.felk.cvut.cz>
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 967e78c5ec0a..dedb10f1b250 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -215,6 +215,8 @@ patternProperties:
-     description: Hangzhou C-SKY Microsystems Co., Ltd
-   "^csq,.*":
-     description: Shenzen Chuangsiqi Technology Co.,Ltd.
-+  "^ctu,.*":
-+    description: Czech Technical University in Prague
-   "^cubietech,.*":
-     description: Cubietech, Ltd.
-   "^cypress,.*":
--- 
-2.11.0
-
+? Just wondering.
