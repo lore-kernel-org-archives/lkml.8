@@ -2,116 +2,89 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2B2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C70EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50BF62086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC37C20A8B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596476066;
-	bh=8qhgGcjUGGQVPeTwcxPq6dlQrUZ46RsvbHJ1V629W2o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dcluVSwM8DJe9XHv7aMtMN5yQoBSWEEr26pWXVqRfTcprB6Jtmky/k3X5AvcFJ275
-	 Og3/6o4JmfFsuDZ8VceMoVkiYQC1wPRKtWQURCGo5UKMoV6UZSXTjIho/0xkMMVcF/
-	 R2aGYHW+vL+3SZKjOnBqXHNKxNgSJREuUJ6PdJEM=
+	s=default; t=1596476207;
+	bh=67N2tzt5DQ+tX2Tpqo7KKJqnR0/AUDmNT48UpbDpHkA=;
+	h=Subject:From:To:Date:List-ID:From;
+	b=SJp8eHg5PUBTxtdNeiRQxZ3A7HVdciAjvdTjcqiv/Cg4ePW4r5urAStUU3yIPVEbu
+	 ezo9ECm8I5Xn0Ls5JsjDaez0V1buHFSJmZAK/EhUHGm/tSSuwoprwdNyQV8rbyoiOI
+	 sQw2EJbmvdBaEhKx2bp27/hNwmN9wkzYu8uPlQPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbgHCRe0 (ORCPT
+        id S1728356AbgHCRgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 13:34:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47656 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 13:36:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726797AbgHCRe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 13:34:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726398AbgHCRgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 13:36:46 -0400
+Received: from tzanussi-mobl (c-73-211-240-131.hsd1.il.comcast.net [73.211.240.131])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FAEF20792;
-        Mon,  3 Aug 2020 17:34:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0567320775;
+        Mon,  3 Aug 2020 17:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596476064;
-        bh=8qhgGcjUGGQVPeTwcxPq6dlQrUZ46RsvbHJ1V629W2o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bJcL8ebCodkSrY0t/NQnASc0W/+RC0yt3SkPlWPkn8Xp4iV77pdxCqnIlFyGqIIRw
-         tvcowQyY0PSz3Agy1G70EMgqCxgKhARLnDejxoMobyguJfQLbN2DtOC8YZLTmL97h2
-         9BM+A6jbhNeono/kjKRkPelWYhG/vcS6uSJW0VEE=
-Date:   Mon, 3 Aug 2020 19:34:07 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     John Donnelly <John.P.donnelly@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: Re: [PATCH v3: {linux-4.14.y} ] dm cache: submit writethrough writes
- in parallel to origin and cache
-Message-ID: <20200803173407.GB1186998@kroah.com>
-References: <572f607f-be07-9dc5-fc80-b33a2653683a@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <572f607f-be07-9dc5-fc80-b33a2653683a@oracle.com>
+        s=default; t=1596476205;
+        bh=67N2tzt5DQ+tX2Tpqo7KKJqnR0/AUDmNT48UpbDpHkA=;
+        h=Subject:From:To:Date:From;
+        b=RKmvt10JQ5SXxxWKkLb4F0v8Df6kRk/3+W+cNudvaDuToGerSMn4qlcNicgYP0WN4
+         +1T/whDkPCbUQiIDzg+YvoPZgVVEguSFHNhF3Yh7JeyLYQpiReB3aTLo1Lpv2eOnyZ
+         hsadqtYCFvxaz/suTxJkqZDd9g+yvsqy/H3ob1oA=
+Message-ID: <aaf34316c15fcd4bb89767d695e7a26611790931.camel@kernel.org>
+Subject: [ANNOUNCE] 4.19.135-rt60
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Carsten Emde <C.Emde@osadl.org>,
+        John Kacur <jkacur@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Daniel Wagner <wagi@monom.org>,
+        Clark Williams <williams@redhat.com>,
+        Pavel Machek <pavel@denx.de>, Tom Zanussi <zanussi@kernel.org>
+Date:   Mon, 03 Aug 2020 12:36:43 -0500
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 12:27:31PM -0500, John Donnelly wrote:
-> From: Mike Snitzer <snitzer@redhat.com>
-> 
-> Discontinue issuing writethrough write IO in series to the origin and
-> then cache.
-> 
-> Use bio_clone_fast() to create a new origin clone bio that will be
-> mapped to the origin device and then bio_chain() it to the bio that gets
-> remapped to the cache device.  The origin clone bio does _not_ have a
-> copy of the per_bio_data -- as such check_if_tick_bio_needed() will not
-> be called.
-> 
-> The cache bio (parent bio) will not complete until the origin bio has
-> completed -- this fulfills bio_clone_fast()'s requirements as well as
-> the requirement to not complete the original IO until the write IO has
-> completed to both the origin and cache device.
-> 
-> Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-> 
-> (cherry picked from commit 2df3bae9a6543e90042291707b8db0cbfbae9ee9)
-> 
-> Fixes: 4ec34f2196d125ff781170ddc6c3058c08ec5e73 (dm bio record:
-> save/restore bi_end_io and bi_integrity )
-> 
-> 4ec34f21 introduced a mkfs.ext4 hang on a LVM device that has been
-> modified with lvconvert --cachemode=writethrough.
-> 
-> CC:stable@vger.kernel.org for 4.14.y
-> 
-> Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
-> Reviewed-by: Somasundaram Krishnasamy <somasundaram.krishnasamy@oracle.com>
-> 
-> conflicts:
-> 	drivers/md/dm-cache-target.c. -  Corrected usage of
-> 	writethrough_mode(&cache->feature) that was caught by
-> 	compiler, and removed unused static functions : writethrough_endio(),
-> 	defer_writethrough_bio(), wake_deferred_writethrough_worker()
-> 	that generated warnings.
-> ---
->  drivers/md/dm-cache-target.c | 92
-> ++++++++++++++++++--------------------------
->  1 file changed, 37 insertions(+), 55 deletions(-)
-> 
-> diff --git a/drivers/md/dm-cache-target.c b/drivers/md/dm-cache-target.c
-> index 69cdb29ef6be..2732d1df05fa 100644
-> --- a/drivers/md/dm-cache-target.c
-> +++ b/drivers/md/dm-cache-target.c
-> @@ -450,6 +450,7 @@ struct cache {
->  	struct work_struct migration_worker;
->  	struct delayed_work waker;
->  	struct dm_bio_prison_v2 *prison;
-> +	struct bio_set *bs;
->   	mempool_t *migration_pool;
->  @@ -537,11 +538,6 @@ static void wake_deferred_bio_worker(struct cache
-> *cache)
+Hello RT Folks!
 
-Line-wrapped and unable to apply :(
+I'm pleased to announce the 4.19.135-rt60 stable release.
+
+This release is just an update to the new stable 4.19.135
+version and no RT specific changes have been made.
+
+You can get this release via the git tree at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
+
+  branch: v4.19-rt
+  Head SHA1: 0d1dd4fe57de5977a6d966ec644c2668d1b01979
+
+Or to build 4.19.135-rt60 directly, the following patches should be applied:
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.19.tar.xz
+
+  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.19.135.xz
+
+  https://www.kernel.org/pub/linux/kernel/projects/rt/4.19/patch-4.19.135-rt60.patch.xz
+
+Enjoy!
+
+   Tom
 
