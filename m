@@ -2,201 +2,166 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 399A4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7937BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4BBD22BF3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE92922CA1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:31:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GuWEG31m"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jSmTnJX1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgHCTai (ORCPT
+        id S1728089AbgHCTbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 15:30:38 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:53168 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbgHCTai (ORCPT
+        Mon, 3 Aug 2020 15:31:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727813AbgHCTby (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 15:30:38 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 073JRxQi183367;
-        Mon, 3 Aug 2020 19:29:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=NA1XvUfVASuq/nbfh+DSwCBmQzdnwrjR9Pp/u/6X6sw=;
- b=GuWEG31mHQHO+APfMCxnTJfOWwMREUaRwjfjJI4BgRRbjVKW/gb985p7Agy2HrTeqOSS
- ITbr3bDdjP+rAGOpvb/4lTQI2fkVsBGKSqZ02QeaNNuCFnA0IfotSBpsJKMXsCt4CvSB
- fjF5Rvvp8pThsFYgJXqaow6RoKqdXNu6+mOHErlCdJ0NnvZwBz4hXO4Bpm6E2Ybl51eF
- Hyx+10Plnyjy58OSfCu86q0/U2SPQ72L+ukk1Ftel35Y7mAqTrmsJXFS21UUAfY71bPt
- d8y/6b+fdaweyu9bZDN+UH1b9Mhoqm3L6R9bSLcqDKL5Q3dE9+pipkNjn2BhByXZ3B+z iQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 32n11n09wf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 03 Aug 2020 19:29:45 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 073JSsEp029993;
-        Mon, 3 Aug 2020 19:29:45 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 32pdhavv2w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 03 Aug 2020 19:29:45 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 073JTUlh014737;
-        Mon, 3 Aug 2020 19:29:30 GMT
-Received: from [172.16.10.205] (/73.167.45.247)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 03 Aug 2020 12:29:30 -0700
-Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
-        arnd@arndb.de, keescook@chromium.org, gerg@linux-m68k.org,
-        ktkhai@virtuozzo.com, christian.brauner@ubuntu.com,
-        peterz@infradead.org, esyr@redhat.com, jgg@ziepe.ca,
-        christian@kellner.me, areber@redhat.com, cyphar@cyphar.com
-References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
- <20200730152250.GG23808@casper.infradead.org>
- <db3bdbae-eb0f-1ae3-94dd-045e37bc94ba@oracle.com>
- <20200730171251.GI23808@casper.infradead.org>
- <63a7404c-e4f6-a82e-257b-217585b0277f@oracle.com>
- <20200730174956.GK23808@casper.infradead.org>
- <ab7a25bf-3321-77c8-9bc3-28a223a14032@oracle.com>
- <87y2n03brx.fsf@x220.int.ebiederm.org>
- <689d6348-6029-5396-8de7-a26bc3c017e5@oracle.com>
- <877dufvje9.fsf@x220.int.ebiederm.org>
-From:   Steven Sistare <steven.sistare@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <eeec47c5-232d-fe8e-c19d-70c50c49020c@oracle.com>
-Date:   Mon, 3 Aug 2020 15:29:26 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Mon, 3 Aug 2020 15:31:54 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9BE0C06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 12:31:54 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id b25so29147272qto.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 12:31:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RvzegeXfDF+FVdvZWpUY2C/JYcGtzK0e5Km4cAoPNN8=;
+        b=jSmTnJX12hJqDm4wSS6o7mGjoyl/+MvIhk0XVP7uEzSk09YcYc0nfbe7zl7aGuS6wC
+         SZGNqDDIANha72buny9X6caEYisJ0XYhId0is+ZwGaTqeHILDvgTJPVKJvBN+9ZYXvZP
+         0/nufiyHW+XAHqa5hL6CByacEB0uNBoHAuc4Kis0WamHtXH5CUsWqOiezhW9OIyk69+N
+         oPiQemIU1078XmA59msE3KdOqcmq1SdKyAOJGFHHKvknx5m21uk7o6pQX+nWrZAsH1Oj
+         YYTBVnF2EOEmJM9paMatW2pjQOsHClWl2IDuqTaFsRERReRg3AsBTwZj2m1vAcJQ5fLE
+         ctSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RvzegeXfDF+FVdvZWpUY2C/JYcGtzK0e5Km4cAoPNN8=;
+        b=smB7qZIZM/FZI3SH8vwobv3Tl2acMtR3GbN6rtfQ9/9xofjCg/+a7CkFPQMcKd2EfD
+         PfwVBqIpOoHBbtAFi/YF4CsOI5HMZLASbNZfjYbu5SssXgcVb3o6lqYdqbFjtelwoe6n
+         mkb9UVtgmfNUCPi5becbZQlfx748yQ8/clr6+o6J2Sn7Ir8rd3f3KkzmUvjkl57Eypq9
+         h3UNBHQ6nr+V7zil+R63AIV06kh0j61wF6PkGz4jH8GmSxsTmN8k/AEcp99SDcfXSnW4
+         M4hwW5LLGi5Xwlv0NiJ925Z0nCgGfvvUGikU21N36KAaS/vA19GqDgFAdnfZrYqnkZcZ
+         4h9A==
+X-Gm-Message-State: AOAM533cL5sC4NDU11PDD8I46/bIAVGs9XmBxqu8Lv50BZ5XFdE1b8vO
+        hNgIy/h5m5S4Ey4/2Hjb7wEnIs5m8BCApEEqWiC2Aw==
+X-Google-Smtp-Source: ABdhPJyAJVak0FjVUTJi1mcLTSkaBZWjBpWRxzk7IIBX2OckQU/gStJWBE/N9Odcq/m1cUmnKTfpgZfhgTWyUcthDaU=
+X-Received: by 2002:ac8:72cc:: with SMTP id o12mr17678716qtp.27.1596483113936;
+ Mon, 03 Aug 2020 12:31:53 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <877dufvje9.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9702 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
- bulkscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999 suspectscore=2
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008030134
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9702 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0 mlxscore=0
- suspectscore=2 mlxlogscore=999 phishscore=0 adultscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008030134
+References: <20200802083458.24323-1-brgl@bgdev.pl> <20200802083458.24323-2-brgl@bgdev.pl>
+ <CAHp75Vfm_vUKZOGkNp+0uTe0b=vk8yDyjs7XPdw_1GRauTBx4g@mail.gmail.com>
+In-Reply-To: <CAHp75Vfm_vUKZOGkNp+0uTe0b=vk8yDyjs7XPdw_1GRauTBx4g@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 3 Aug 2020 21:31:42 +0200
+Message-ID: <CAMpxmJXvJRekVAbSAi7XTjmM33dN1bSDWPLjfufhwTk7KQMMDA@mail.gmail.com>
+Subject: Re: [PATCH v6 1/3] devres: provide devm_krealloc()
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/3/2020 11:28 AM, ebiederm@xmission.com wrote:
-> Steven Sistare <steven.sistare@oracle.com> writes:
->> On 7/30/2020 5:58 PM, ebiederm@xmission.com wrote:
->>> Here is another suggestion.
->>>
->>> Have a very simple program that does:
->>>
->>> 	for (;;) {
->>> 		handle = dlopen("/my/real/program");
->>> 		real_main = dlsym(handle, "main");
->>> 		real_main(argc, argv, envp);
->>> 		dlclose(handle);
->>> 	}
->>>
->>> With whatever obvious adjustments are needed to fit your usecase.
->>>
->>> That should give the same level of functionality, be portable to all
->>> unices, and not require you to duplicate code.  It belive it limits you
->>> to not upgrading libc, or librt but that is a comparatively small
->>> limitation.
->>>
->>>
->>> Given that in general the interesting work is done in userspace and that
->>> userspace has provided an interface for reusing that work already.
->>> I don't see the justification for adding anything to exec at this point. 
->>
->> Thanks for the suggestion.  That is clever, and would make a fun project,
->> but I would not trust it for production.  These few lines are just
->> the first of many that it would take to reset the environment to the
->> well-defined post-exec initial conditions that all executables expect,
->> and incrementally tearing down state will be prone to bugs.
-> 
-> Agreed.
-> 
->> Getting a clean slate from a kernel exec is a much more reliable
->> design.
-> 
-> Except you are explicitly throwing that out the window, by preserving
-> VMAs.  You very much need to have a clean bug free shutdown to pass VMAs
-> reliably.
+On Sun, Aug 2, 2020 at 12:42 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
 
-Sure.  The whole community relies on you and others to provide a bug free exec.
+[snip]
 
->> The use case is creating long-lived apps that never go down, and the
->> simplest implementation will have the fewest bugs and is the best.
->> MADV_DOEXEC is simple, and does not even require a new system call,
->> and the kernel already knows how to exec without bugs.
-> 
-> *ROFL*  I wish the kernel knew how to exec things without bugs.
+>
+> I was thinking about this bit... Shouldn't we rather issue a simple
+> dev_warn() and return the existing pointer?
+> For example in some cases we might want to have resources coming
+> either from heap or from constant. Then, if at some circumstances we
+> would like to extend that memory (only for non-constant cases) we
+> would need to manage this ourselves. Otherwise we may simply call
+> krealloc().
+> It seems that devm_kstrdup_const returns an initial pointer. Getting
+> NULL is kinda inconvenient (and actually dev_warn() might also be
+> quite a noise, however I would give a message to the user, because
+> it's something worth checking).
+>
 
-Essentially you are saying you would argue against any enhancement to exec.
-Surely that is too high a bar.  We must continue to evolve an innovate and
-balance risk against reward.  This use case matters to our business a lot,
-and to others as well, see below.  That is the reward.  I feel you are 
-overstating the risk.  Surely there is some early point in the development
-cycle of some release where this can be integrated and get enough test
-time and soak time to be proven reliable.
+But this is inconsistent behavior: if you pass a pointer to ro memory
+to devm_krealloc() it will not resize it but by returning a valid
+pointer it will make you think it did -> you end up writing to ro
+memory in good faith.
 
-> The bugs are hard to hit but the ones I am aware of are not straight
-> forward to fix.
-> 
-> MADV_DOEXEC is not conceptually simple.  It completely violates the
-> guarantees that exec is known to make about the contents of the memory
-> of the new process.  This makes it very difficult to reason about.  
+> ...
+>
+> > +       spin_lock_irqsave(&dev->devres_lock, flags);
+> > +       old_dr = find_dr(dev, devm_kmalloc_release, devm_kmalloc_match, ptr);
+> > +       spin_unlock_irqrestore(&dev->devres_lock, flags);
+>
+> > +       if (!old_dr) {
+>
+> I would have this under spin lock b/c of below.
+>
+> > +               WARN(1, "Memory chunk not managed or managed by a different device.");
+> > +               return NULL;
+> > +       }
+>
+> > +       old_head = old_dr->node.entry;
+>
+> This would be still better to be under spin lock.
+>
+> > +       new_dr = krealloc(old_dr, total_size, gfp);
+> > +       if (!new_dr)
+> > +               return NULL;
+>
+> And perhaps spin lock taken already here.
+>
+> > +       if (new_dr != old_dr) {
+> > +               spin_lock_irqsave(&dev->devres_lock, flags);
+> > +               list_replace(&old_head, &new_dr->node.entry);
+> > +               spin_unlock_irqrestore(&dev->devres_lock, flags);
+> > +       }
+>
+> Yes, I understand that covering more code under spin lock does not fix
+> any potential race, but at least it minimizes scope of the code that
+> is not under it to see exactly what is problematic.
+>
+> I probably will think more about a better approach to avoid potential races.
 
-I have having trouble see the difficulty.  Perhaps I am too familar with
-it, but the semantics are few and easy to explain, and it does not introduce
-new concepts: the post-exec process is born with a few more mappings than
-previously, and non-fixed further mmaps choose addresses in the holes.
+My thinking behind this was this: we already have users who call
+devres_find() and do something with the retrieved resources without
+holding the devres_lock - so it's assumed that users are sane enough
+to not be getting in each other's way. Now I see that the difference
+is that here we're accessing the list node and it can change if
+another thread is adding a different devres to the same device. So
+this should definitely be protected somehow.
 
-> Nor
-> will MADV_DOEXEC be tested very much as it has only one or two users.
-> Which means in the fullness of time it is likely someone will change
-> something that will break the implementation subtlely and the bug report
-> probably won't come in for 3 years, or maybe a decade.  At which point
-> it won't be clear if the bug even can be fixed as something else might
-> rely on it.
+I think that we may have to give up using real krealloc() and instead
+just reimplement its behavior in the following way:
 
-That's on us; we need to provide kernel tests and be diligent about testing
-new releases.  This matters to our business and we will do so. 
-> What is wrong with live migration between one qemu process and another
-> qemu process on the same machine not work for this use case?
-> 
-> Just reusing live migration would seem to be the simplest path of all,
-> as the code is already implemented.  Further if something goes wrong
-> with the live migration you can fallback to the existing process.  With
-> exec there is no fallback if the new version does not properly support
-> the handoff protocol of the old version.
+Still outside of spinlock check if the new total size is smaller or
+equal to the previous one. If so: return the same pointer. If not:
+allocate a new devres as if it were for devm_kmalloc() but don't add
+it to the list yet. Take the spinlock - check if we can find the
+devres - if not: kfree() the new and old chunk and return NULL. If
+yes: copy the contents of the devres node into the new chunk as well
+as the memory contents. Replace the old one on the list and free it.
+Release spinlock and return.
 
-This is less resource intensive than live migration.  The latter ties up two
-hosts, consumes lots of memory and network bandwidth, may take a long time
-to converge on a busy system, and is unfeasible for guests with a huge amount
-of local storeage (which we call dense I/O shapes).  Live update takes less than
-1 second total, and the guest pause time is 100 - 200 msecs.  It is a very
-attractive solution that other cloud vendors have implemented as well, with
-their own private modifications to exec and and fork.  We have been independently
-working in this area, and we are offering our implementation to the community.
+Does that work?
 
-- Steve
+Bart
