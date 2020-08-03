@@ -2,115 +2,110 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB94AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 04:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD46C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 04:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C63C206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 04:58:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596430726;
-	bh=0wWu/yJWcJHPmm8RbF95+DdUX5G1LnDQ23Z2blw/WnY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KolIHEmXGmjftj2rvKobfhldBk+Nh+2h5ZkaqW0dyoeBSieNXFX15CPLOdR0lJTw0
-	 1QcGcGuA2zfnjqE71cXu56VzTskQIVNljyz0qiKunHcW0YSDw87gEQRYozbgAtRN4a
-	 Bz0rfrqo8X0GBTGL02a4lr0M3G0BWsPNuAlNEYDQ=
+	by mail.kernel.org (Postfix) with ESMTP id 3C0B92068F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 04:59:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QQAcTy+N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbgHCE6p (ORCPT
+        id S1727118AbgHCE7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 00:58:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41070 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 00:59:24 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:59217 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725908AbgHCE6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 00:58:45 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725270AbgHCE7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 00:59:24 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DD062068F;
-        Mon,  3 Aug 2020 04:58:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596430724;
-        bh=0wWu/yJWcJHPmm8RbF95+DdUX5G1LnDQ23Z2blw/WnY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z6qPIEgF/UKp+AlLPVIkFocBc7mvGHOXJRP678/PMve5rmyqsVTkuz9VsKK41IZ4o
-         Bgw1F9OID013tKs7dEZEy+biN9BRct6FIt/kue+lSdWTS4UVyKh/nipQlhSjMABNEi
-         dj1i+iPxo6xTYI7gA/KPead6eBLVxHt72ONcZb9U=
-Date:   Mon, 3 Aug 2020 07:58:40 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peilin Ye <yepeilin.cs@gmail.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        rds-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH net] rds: Prevent kernel-infoleak
- in rds_notify_queue_get()
-Message-ID: <20200803045840.GM75549@unreal>
-References: <20200731053333.GB466103@kroah.com>
- <20200731140452.GE24045@ziepe.ca>
- <20200731142148.GA1718799@kroah.com>
- <20200731143604.GF24045@ziepe.ca>
- <20200731171924.GA2014207@kroah.com>
- <20200801053833.GK75549@unreal>
- <20200802221020.GN24045@ziepe.ca>
- <fb7ec4d4ed78e6ae7fa6c04abb24d1c00dc2b0f7.camel@perches.com>
- <20200802222843.GP24045@ziepe.ca>
- <60584f4c0303106b42463ddcfb108ec4a1f0b705.camel@perches.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BKlzY1RNmz9s1x;
+        Mon,  3 Aug 2020 14:59:21 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596430762;
+        bh=MPhLnoYZ1H5ZvLDWHdju+j3itySzNLNR+DZxYy9IYNw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QQAcTy+NeF/H+YtJdcgnyqiwVBl+3dAeUgIc/CElGZRCnphjUhbGe5K9KcHunBFpR
+         tCbo/SeRBBZS8I9wVXYEkjymC2cFBLpa8xcxN+zQiEopmTuVd1EXOyjbUSotq3yViw
+         AgC+AQb7rer1tNoxVwP9eX4g4qm4tJwZd6aWLqnodhNATEWxOujoVE2aVlLqoLk8Aa
+         BHqGkn3hxhM1m/i+yfc9P7MMv/MA7aq6oTXhnuqDgGdUi3IEVXPd+Bo+OuuHXwdhz1
+         tkoBoEE2oo+1S2yzA1owsIiYwg2Goev88O56jWESos4Coz9KUiGESLMcduyQLldQLZ
+         icRQJTv35wb6g==
+Date:   Mon, 3 Aug 2020 14:59:20 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Linux PowerPC List <linuxppc-dev@lists.ozlabs.org>,
+        Willy Tarreau <w@1wt.eu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] powerpc: fix up PPC_FSL_BOOK3E build
+Message-ID: <20200803145920.72a6fa4b@canb.auug.org.au>
+In-Reply-To: <20200803135447.3833067d@canb.auug.org.au>
+References: <20200803135447.3833067d@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <60584f4c0303106b42463ddcfb108ec4a1f0b705.camel@perches.com>
+Content-Type: multipart/signed; boundary="Sig_/_a6zgj=YiioLKMMN9YZ42FX";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 02, 2020 at 03:45:40PM -0700, Joe Perches wrote:
-> On Sun, 2020-08-02 at 19:28 -0300, Jason Gunthorpe wrote:
-> > On Sun, Aug 02, 2020 at 03:23:58PM -0700, Joe Perches wrote:
-> > > On Sun, 2020-08-02 at 19:10 -0300, Jason Gunthorpe wrote:
-> > > > On Sat, Aug 01, 2020 at 08:38:33AM +0300, Leon Romanovsky wrote:
-> > > >
-> > > > > I'm using {} instead of {0} because of this GCC bug.
-> > > > > https://gcc.gnu.org/bugzilla/show_bug.cgi?id=53119
-> > > >
-> > > > This is why the {} extension exists..
-> > >
-> > > There is no guarantee that the gcc struct initialization {}
-> > > extension also zeros padding.
-> >
-> > We just went over this. Yes there is, C11 requires it.
+--Sig_/_a6zgj=YiioLKMMN9YZ42FX
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+On Mon, 3 Aug 2020 13:54:47 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
 >
-> c11 is not c90.  The kernel uses c90.
+> Commit
+>=20
+>   1c9df907da83 ("random: fix circular include dependency on arm64 after a=
+ddition of percpu.h")
+>=20
+> exposed a curcular include dependency:
+>=20
+> asm/mmu.h includes asm/percpu.h, which includes asm/paca.h, which
+> includes asm/mmu.h
+>=20
+> So fix it by extracting the small part of asm/mmu.h that needs
+> asm/percu.h into a new file and including that where necessary.
+>=20
+> Cc: Willy Tarreau <w@1wt.eu>
+> Cc: <stable@kernel.org>
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 
-It is not accurate, kernel uses gnu89 dialect, which is C90 with some
-C99 features [1]. In our case, we rely on GCC extension {} that doesn't
-contradict standart [2] and fills holes with zeros too.
+I should have put:
 
-[1] Makefile:500
-   496 KBUILD_CFLAGS   := -Wall -Wundef -Werror=strict-prototypes -Wno-trigraphs \
-   497                    -fno-strict-aliasing -fno-common -fshort-wchar -fno-PIE \
-   498                    -Werror=implicit-function-declaration -Werror=implicit-int \
-   499                    -Wno-format-security \
-   500                    -std=gnu89
+Fixes: 1c9df907da83 ("random: fix circular include dependency on arm64 afte=
+r addition of percpu.h")
 
-[2] From GCC:
-https://gcc.gnu.org/onlinedocs/gcc/C-Dialect-Options.html
-"When a base standard is specified, the compiler accepts all programs
-following that standard plus those using GNU extensions that do not
-contradict it."
+--=20
+Cheers,
+Stephen Rothwell
 
-Thanks
+--Sig_/_a6zgj=YiioLKMMN9YZ42FX
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
->
->
->
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8nmagACgkQAVBC80lX
+0GzdnAf/efDjHOIC93+8ioQY0UcLlTfk9I7vm8keK3/kCYBUUFSV0y/ewUjRYz4s
+4WYVm0Xj00VX9FkiGB8lhoO0nGsf+P9O2k59Y6kQwndAldplPwcjzIgsSDSx+LBm
+/aBItNNDfabEUMp67T2ybKCfy1h08wsInmM9gl0V2z1Mo1r4ax3StistxUzQwGj5
+fScto/C2aistdWaybnT3Y8AQTMJhxBXkuZoc4s2aMEYC7JxVN/goi3ItOyC37GLL
+LR8a1XvjS3sdDZ7gGsY8PXBSB4AmDMx5UPNHAxQk0vKFOQqveoSNxoskOWUEKNrZ
+Px72hWk/2AInQqviFzFMMzsPmqw3og==
+=Ghwq
+-----END PGP SIGNATURE-----
+
+--Sig_/_a6zgj=YiioLKMMN9YZ42FX--
