@@ -2,127 +2,122 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2C0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD99DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8DAD206DA
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:35:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kn6i3PXU"
+	by mail.kernel.org (Postfix) with ESMTP id A4F6320719
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:35:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbgHCQfI (ORCPT
+        id S1726901AbgHCQfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 12:35:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52492 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbgHCQfI (ORCPT
+        Mon, 3 Aug 2020 12:35:21 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:38842 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726799AbgHCQfV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 12:35:08 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B284C06174A;
-        Mon,  3 Aug 2020 09:35:08 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id z5so20172503pgb.6;
-        Mon, 03 Aug 2020 09:35:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aRy5XNlke5IVnZt6sTMSjwcVBGjttryTgAPuHqOx9j4=;
-        b=kn6i3PXUFUQH/VqSaREbKFj2TJx+e0PLygDMv6IaDSVQfrXGBMhv6TUWQHxLltsG3B
-         wDsOB9pM3Ap+XeBiV5JNbVFAbYOFZsgRMm7hiMxiBEu6Ni5r2bhbZhSjCWqSyGdIYdYF
-         Q9XugV1ayVllr2VDlYiEqUlNqSFZQi2MSvBxf2ANCfQq36gF0LEm7oMKzv01arOnFSuX
-         dTDdYUSA5X6s4l5v8trsyS9X8PGnjTAhzXB6OhsPalc6x7rCImzB56apFixz4UYpkexH
-         /GUp3uQFriJRmfWZL9VzwXBTYTHQWn2qJhQzWPv1O0Ks4epx/gTLmlSjIrvHkUWIiY7t
-         LVMw==
+        Mon, 3 Aug 2020 12:35:21 -0400
+Received: by mail-io1-f71.google.com with SMTP id a65so17986543iog.5
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 09:35:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aRy5XNlke5IVnZt6sTMSjwcVBGjttryTgAPuHqOx9j4=;
-        b=Ig1haYh2eQRvqgiKwU4yBfZ/pFs3SlEnBuAHeWKE9ZeTcqOUCSxJ8H5VSjuBU1dzdp
-         JHdtY0tvijywjWDz5bOLrQNH7oxR+Hut23Ml618pivVXykp0vjj95y0tD0EEHaYmsUTl
-         m/JSas1q47Kwpi0X9JcU1W78na9zX1pANygroHHuYbcn/rStWsmlFUxC34oBMJhx198a
-         zKUqs6LySHX0S+/BJ+KEIioD37pNquyMNpmUo+8segUNyb8jAa2rXEGIkzu9EmJJc2U5
-         5Na+7D4CYD4lt9iGatjox4j01z3QW9GJM+2B2+dHih1nlW6Vv927dzh+HQy+F1hWLLIt
-         FcCw==
-X-Gm-Message-State: AOAM530Z8+mcCwHH1fEDwVgeZfuNQp3cEWsQRTIzO6fIv6nj5u9PMMyZ
-        6GNa+zc3J/KDs6u9srdV3lNIBv8tQvENwcZTTZA=
-X-Google-Smtp-Source: ABdhPJwc9GDQjb7z3XXCuqPV0Ya3NQgR6ya/khg6+JqrFseMeGZR5amQZ4DYFdMSFN7YS7kiQVlVnn75BsXQ7Y5XWiw=
-X-Received: by 2002:a62:758f:: with SMTP id q137mr15998175pfc.170.1596472507773;
- Mon, 03 Aug 2020 09:35:07 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=c5elw8Hy/MXGnQo6DFRKJPG1+OjMNtdWJ9iXEUEThL8=;
+        b=tBGf2rgxTU/ideNWl6lQqpwhwx9oyAiOoFgmI2e2o51XJl0zB/Qq6GSXatKdilWCDc
+         aj5PNctGN7v8t7EQa2fWG9n71X4ulS7uWsIjPCq8+dapkIWlRlctJ2cMD2ngZGrhgKT8
+         bB3M3ZiSaKWNz9vNdwvXZxf0fsPFKoerxxe77H9a5iBcb/eT5USGMCli4EBQeQY+cm3A
+         Cv44XTEyy0pHYxxjvvIM+YJ0iWHVoyQ52idnd4ESRULqd9pPQGTb+EmBeu/LdluHaZXK
+         GUWDItWub3kzicF94pfR8xX5Asp33pv/N9G0hmUwiV3ek5YRMNxllR7CZ/HV372yI/6R
+         HoHw==
+X-Gm-Message-State: AOAM531suGclrASYeVso8UaIsKcb/Lt8R5eOaSSGaIV4X153tWu7k5tQ
+        AlJprTMVUB50yZbxOjr7BR0HUptcoOvltCD5tyWSlAROrIig
+X-Google-Smtp-Source: ABdhPJxAQ4pogqsCFxARBb6YHiCgmG7IXXooic7Fwm6tvqHpmV4bMgnZhBB9mjuMwrT1Za946RlsmSdxfAS3jg35bUPTMHd5xtRd
 MIME-Version: 1.0
-References: <20200803151656.332559-1-cmo@melexis.com>
-In-Reply-To: <20200803151656.332559-1-cmo@melexis.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 3 Aug 2020 19:34:52 +0300
-Message-ID: <CAHp75VfmSfmezqwwRfHZ797Y9rYDu3hgL5vGvPwbzGjCXsKWcQ@mail.gmail.com>
-Subject: Re: [PATCH] iio:temperature:mlx90632: Reduce number of equal calulcations
-To:     Crt Mori <cmo@melexis.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+X-Received: by 2002:a05:6e02:1105:: with SMTP id u5mr215403ilk.258.1596472520520;
+ Mon, 03 Aug 2020 09:35:20 -0700 (PDT)
+Date:   Mon, 03 Aug 2020 09:35:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007ab98a05abfbb9a7@google.com>
+Subject: KMSAN: uninit-value in caif_seqpkt_sendmsg
+From:   syzbot <syzbot+09a5d591c1f98cf5efcb@syzkaller.appspotmail.com>
+To:     alexios.zavras@intel.com, allison@lohutok.net, davem@davemloft.net,
+        edumazet@google.com, glider@google.com, gregkh@linuxfoundation.org,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, swinslow@gmail.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 3, 2020 at 6:17 PM Crt Mori <cmo@melexis.com> wrote:
->
-> TAdut4 was calculated each iteration although it did not change. In light
-> of near future additions of the Extended range DSP calculations, this
-> function refactoring will help reduce unrelated changes in that series as
-> well as reduce the number of new functions needed.
+Hello,
 
-Okay!
+syzbot found the following issue on:
 
-> Also converted shifts in this function of signed integers to divisions as
-> that is less implementation-defined behavior.
+HEAD commit:    8bbbc5cf kmsan: don't compile memmove
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=11fbfe09e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cd0e9a6b0e555cc3
+dashboard link: https://syzkaller.appspot.com/bug?extid=09a5d591c1f98cf5efcb
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=150ef74ee00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=170e2109e00000
 
-This is what I'm wondering about. Why?
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+09a5d591c1f98cf5efcb@syzkaller.appspotmail.com
 
-...
+=====================================================
+BUG: KMSAN: uninit-value in caif_seqpkt_sendmsg+0x693/0xf60 net/caif/caif_socket.c:542
+CPU: 1 PID: 11244 Comm: syz-executor620 Not tainted 5.6.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ caif_seqpkt_sendmsg+0x693/0xf60 net/caif/caif_socket.c:542
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg net/socket.c:672 [inline]
+ ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2343
+ ___sys_sendmsg net/socket.c:2397 [inline]
+ __sys_sendmmsg+0x808/0xc90 net/socket.c:2480
+ __compat_sys_sendmmsg net/compat.c:656 [inline]
+ __do_compat_sys_sendmmsg net/compat.c:663 [inline]
+ __se_compat_sys_sendmmsg net/compat.c:660 [inline]
+ __ia32_compat_sys_sendmmsg+0x127/0x180 net/compat.c:660
+ do_syscall_32_irqs_on arch/x86/entry/common.c:339 [inline]
+ do_fast_syscall_32+0x3c7/0x6e0 arch/x86/entry/common.c:410
+ entry_SYSENTER_compat+0x68/0x77 arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7f79d99
+Code: 90 e8 0b 00 00 00 f3 90 0f ae e8 eb f9 8d 74 26 00 89 3c 24 c3 90 90 90 90 90 90 90 90 90 90 90 90 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000ffbf4d6c EFLAGS: 00000292 ORIG_RAX: 0000000000000159
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000020007600
+RDX: 0000000000000001 RSI: 0000000000000000 RDI: 00000000080bb508
+RBP: 0000000000000012 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
 
-> -       Ha_customer = ((s64)Ha * 1000000LL) >> 14ULL;
-> -       Hb_customer = ((s64)Hb * 100) >> 10ULL;
-> +       Ha_customer = div64_s64((s64)Ha * 1000000LL, 16384);
-> +       Hb_customer = div64_s64((s64)Hb * 100, 1024);
+Local variable ----iovstack.i@__sys_sendmmsg created at:
+ ___sys_sendmsg net/socket.c:2388 [inline]
+ __sys_sendmmsg+0x6db/0xc90 net/socket.c:2480
+ ___sys_sendmsg net/socket.c:2388 [inline]
+ __sys_sendmmsg+0x6db/0xc90 net/socket.c:2480
+=====================================================
 
-Have you checked the code on 32-bit machines?
-As far as I can see the div64_*64() do not have power of two divisor
-optimizations. I bet it will generate a bulk of unneeded code.
 
-...
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-> -       calcedKsTO = ((s64)((s64)Ga * (prev_object_temp - 25 * 1000LL)
-> -                            * 1000LL)) >> 36LL;
-> -       calcedKsTA = ((s64)(Fb * (TAdut - 25 * 1000000LL))) >> 36LL;
-> -       Alpha_corr = div64_s64((((s64)(Fa * 10000000000LL) >> 46LL)
-> -                               * Ha_customer), 1000LL);
-
-> +       calcedKsTO = div64_s64((s64)((s64)Ga * (prev_object_temp - 25 * 1000LL)
-> +                                    * 1000LL), 68719476736);
-> +       calcedKsTA = div64_s64((s64)(Fb * (TAdut - 25 * 1000000LL)), 68719476736);
-> +       Alpha_corr = div64_s64(div64_s64((s64)(Fa * 10000000000LL), 70368744177664)
-> +                              * Ha_customer, 1000LL);
-
-This is less readable and full of magic numbers in comparison to the
-above (however, also full of magics, but at least gives better hint).
-
-...
-
-> +       TAdut4 = (div64_s64(TAdut, 10000LL) + 27315) *
-> +               (div64_s64(TAdut, 10000LL) + 27315) *
-> +               (div64_s64(TAdut, 10000LL)  + 27315) *
-> +               (div64_s64(TAdut, 10000LL) + 27315);
-
-Shouldn't you switch to definitions from units.h? (perhaps as a separate change)
-
--- 
-With Best Regards,
-Andy Shevchenko
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
