@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B8FCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8FAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E47962054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CEEA20825
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457941;
-	bh=i95n0WsFW8jreM24pKk2d83Mpzoj/NmK0klcShWUGuI=;
+	s=default; t=1596457945;
+	bh=V7Inx25FIvEikDAopzfi5kQvEeEprUMdU4v0oZ/86O0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iFP01cHGtPqITzE0iZ2fDD04jKqBJ97fPvwhGyoBUcwb3jR73iR4WYtLrsxLckJmR
-	 jZjJz9Ep/1IQXf++YqeLjKEhu6aU9Qy8OAh/MWS5lQDyN+CM00eFQ/Gm0ZnEDnEd9s
-	 tYZQJJi99SVcN3RPfKefqhFePqaZVhhJsgOvvbTQ=
+	b=s4hWmHW46jMj9v2im297yqCLioOUj3miiJmwcAV7BOpRaOvT4AVu5g5POKc2YkywQ
+	 VBFKuc/p237H+iBW4Url/U5TN1m7vcotwknwywB9mBObeSfqQN3sf0CjRHKbQ5vu4g
+	 Xnxk/NMJAlvPkIlT06nmHYV6wGOWl04W3sRz300Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgHCMcU (ORCPT
+        id S1727035AbgHCMcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:32:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60106 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:32:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729265AbgHCMcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:32:14 -0400
+        id S1729296AbgHCMcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:32:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3ADEA2076B;
-        Mon,  3 Aug 2020 12:32:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C37012054F;
+        Mon,  3 Aug 2020 12:32:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457933;
-        bh=i95n0WsFW8jreM24pKk2d83Mpzoj/NmK0klcShWUGuI=;
+        s=default; t=1596457939;
+        bh=V7Inx25FIvEikDAopzfi5kQvEeEprUMdU4v0oZ/86O0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nuWEwKBhO7RAsbDZi5XEpf0vgqlHs6dUiM47++I/YtlGk9GZ1+/D3bZ6okK2dnUmF
-         Nea/r+VpKgWPPJTfJ/qyF1dagmqMEMAsQsUTiVrAMEOnQOgKuOchnNH6AOfiKsIJ9R
-         C0rU3o7rP/NziqWXGTRoMcr1yPxba8t5voWxiq1g=
+        b=RFu34zHQ98/vKCJlze06+22CBtnXjsoYHmZzsBrDc5XQE+RVyD2PQkz3fCR78gXi1
+         VeAXNEQUy2R69t84SIP3Te5CMPfQSpv2cLOZeaIAx45zQoGtZdW8YIdVJLNA9NOw0l
+         BchttlkJOJxVagG5aAtrGHc5QuthluY5KRlo5vCs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
+        stable@vger.kernel.org, Thomas Falcon <tlfalcon@linux.ibm.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 35/56] mlxsw: core: Increase scope of RCU read-side critical section
-Date:   Mon,  3 Aug 2020 14:19:50 +0200
-Message-Id: <20200803121852.041985890@linuxfoundation.org>
+Subject: [PATCH 4.19 37/56] ibmvnic: Fix IRQ mapping disposal in error path
+Date:   Mon,  3 Aug 2020 14:19:52 +0200
+Message-Id: <20200803121852.140146290@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -61,45 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Thomas Falcon <tlfalcon@linux.ibm.com>
 
-[ Upstream commit 7d8e8f3433dc8d1dc87c1aabe73a154978fb4c4d ]
+[ Upstream commit 27a2145d6f826d1fad9de06ac541b1016ced3427 ]
 
-The lifetime of the Rx listener item ('rxl_item') is managed using RCU,
-but is dereferenced outside of RCU read-side critical section, which can
-lead to a use-after-free.
+RX queue IRQ mappings are disposed in both the TX IRQ and RX IRQ
+error paths. Fix this and dispose of TX IRQ mappings correctly in
+case of an error.
 
-Fix this by increasing the scope of the RCU read-side critical section.
-
-Fixes: 93c1edb27f9e ("mlxsw: Introduce Mellanox switch driver core")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Fixes: ea22d51a7831 ("ibmvnic: simplify and improve driver probe function")
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/core.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/ibm/ibmvnic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
-index e180ec4f1a248..3cebea6f3e6ad 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/core.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
-@@ -1605,11 +1605,13 @@ void mlxsw_core_skb_receive(struct mlxsw_core *mlxsw_core, struct sk_buff *skb,
- 			break;
- 		}
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index 5e9e45befc875..d8115a9333e05 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -2926,7 +2926,7 @@ req_rx_irq_failed:
+ req_tx_irq_failed:
+ 	for (j = 0; j < i; j++) {
+ 		free_irq(adapter->tx_scrq[j]->irq, adapter->tx_scrq[j]);
+-		irq_dispose_mapping(adapter->rx_scrq[j]->irq);
++		irq_dispose_mapping(adapter->tx_scrq[j]->irq);
  	}
--	rcu_read_unlock();
--	if (!found)
-+	if (!found) {
-+		rcu_read_unlock();
- 		goto drop;
-+	}
- 
- 	rxl->func(skb, local_port, rxl_item->priv);
-+	rcu_read_unlock();
- 	return;
- 
- drop:
+ 	release_sub_crqs(adapter, 1);
+ 	return rc;
 -- 
 2.25.1
 
