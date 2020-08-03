@@ -2,51 +2,53 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 235EDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84682C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4EA420678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EC06204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:36:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458186;
-	bh=6mlTaYz/r5BjFnTgvvrOuhZAkYfGl7AE/Vx8SDbgczY=;
+	s=default; t=1596458195;
+	bh=eKu6DjY96eDrcXdrf0WG2Xm8sTccD7/FHOeOGDcFR9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tPOxbP/V2doXiXEro/UsgXj1XxBuM5+QYl9Obis1/rsfKa4WdmRwagvEOW2+nCIVI
-	 598A80W6Aw4cJ9R6zhud88Ea1sYGUuGM4qS2Mxw8lYBCxp7gGMzF2iXgL5yd7VpLLo
-	 xQ0wCovpWLazuzdqnls2l8K35agSokZL+HRxoqUc=
+	b=jqxkYys845AB3VG3ar+o3iJ8ZeNHQIrVNU3it4Zb9jagKnGhm9Ng1j+xMKDn30g32
+	 TJo1uFONQUw2huZJlv2fCSglMPY4ctAUzqlqAF9RJ+UjUjtRmmUqOcU1Qo5dOWXPBN
+	 Y9BZBBEOc9ObNbKQttQLg3oDWgm8Wce+bj4gGrDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728870AbgHCMgU (ORCPT
+        id S1729182AbgHCMge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:36:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36222 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:36:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729683AbgHCMfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:35:52 -0400
+        id S1729349AbgHCMfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:35:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 776F52054F;
-        Mon,  3 Aug 2020 12:35:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCA662054F;
+        Mon,  3 Aug 2020 12:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596458151;
-        bh=6mlTaYz/r5BjFnTgvvrOuhZAkYfGl7AE/Vx8SDbgczY=;
+        s=default; t=1596458145;
+        bh=eKu6DjY96eDrcXdrf0WG2Xm8sTccD7/FHOeOGDcFR9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QOru/3sBSPTp6Xfd0LpVertu77kCWoH1zX7GH2UAddP4ks8jmwVSK7CmgMSgveLku
-         xMX31UDvMyQqV6jsF9bng9fum7kZ7lnxxaDCQIydLws1SsEt6UZ59HMoPDDKPh+rju
-         2XdWHr1HkR4EMnZGZSM16Y1PxMWyVWvkrZhOssoY=
+        b=k700RWP6U/NG9Oe3qxuNUHU9/QveotIxMa0PxNcGdtbWdNj0PY0aZi5ZguGbKIMs4
+         02uhIHufum/+a61ECemEjHf3GgLIuwsncJv2HFnE+c+pbDLwA07JlcykPLQzDeNzgP
+         fUQ4eqj4TE4eARP5wKZwv5VSq+f54SYJHSNW1evQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wanpeng Li <wanpengli@tencent.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 50/51] KVM: LAPIC: Prevent setting the tscdeadline timer if the lapic is hw disabled
-Date:   Mon,  3 Aug 2020 14:20:35 +0200
-Message-Id: <20200803121852.014023088@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 48/51] cxgb4: add missing release on skb in uld_send()
+Date:   Mon,  3 Aug 2020 14:20:33 +0200
+Message-Id: <20200803121851.916978977@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121849.488233135@linuxfoundation.org>
 References: <20200803121849.488233135@linuxfoundation.org>
@@ -59,33 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit d2286ba7d574ba3103a421a2f9ec17cb5b0d87a1 upstream.
+[ Upstream commit e6827d1abdc9b061a57d7b7d3019c4e99fabea2f ]
 
-Prevent setting the tscdeadline timer if the lapic is hw disabled.
+In the implementation of uld_send(), the skb is consumed on all
+execution paths except one. Release skb when returning NET_XMIT_DROP.
 
-Fixes: bce87cce88 (KVM: x86: consolidate different ways to test for in-kernel LAPIC)
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-Message-Id: <1596165141-28874-1-git-send-email-wanpengli@tencent.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/lapic.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/chelsio/cxgb4/sge.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1918,7 +1918,7 @@ void kvm_set_lapic_tscdeadline_msr(struc
- {
- 	struct kvm_lapic *apic = vcpu->arch.apic;
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/sge.c b/drivers/net/ethernet/chelsio/cxgb4/sge.c
+index 0a5c4c7da5052..006f8b8aaa7dc 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/sge.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/sge.c
+@@ -1812,6 +1812,7 @@ static inline int uld_send(struct adapter *adap, struct sk_buff *skb,
+ 	txq_info = adap->sge.uld_txq_info[tx_uld_type];
+ 	if (unlikely(!txq_info)) {
+ 		WARN_ON(true);
++		kfree_skb(skb);
+ 		return NET_XMIT_DROP;
+ 	}
  
--	if (!lapic_in_kernel(vcpu) || apic_lvtt_oneshot(apic) ||
-+	if (!kvm_apic_present(vcpu) || apic_lvtt_oneshot(apic) ||
- 			apic_lvtt_period(apic))
- 		return;
- 
+-- 
+2.25.1
+
 
 
