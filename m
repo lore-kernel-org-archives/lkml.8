@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2355AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2ECC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E63AB20781
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F40BB2054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457870;
-	bh=AgABORwTNRUJplQ+d2D63qNA8DLesu9K85EcX1bW8Z0=;
+	s=default; t=1596457873;
+	bh=pJ5H1FDL3pGMiWWb7PDYD0GJzFSxTJZlGGU6fRKaFCM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B8/9I9niNPRjsEi7jBwyK0vZb3RAJ8wXxXDg4BaOH6lfVZANTck8Bj9H5jQPrJcht
-	 kcTDCJ7TsSYMn9yjFFVtI+HCUt7MDMYymCU9x+7fp0Fi9TVxrEWij0XyoeBYLo3fcB
-	 phMi/0R6iCGzBHJTZ330OYWoHwcBlf8Eu3yS5//0=
+	b=h78SDlSngKCvuvHUfQ0GbN2OkVzaRE6v32itymHv/MdarJLI8RfE8uP8M+SZVKbAJ
+	 XY4k/IYy5apnSKwZDRDipiyXOe0TVmc3IDL1ZHFJ/be0pNSxy3Qi3DhoafYFQDDIoo
+	 6ej8IJikfrq0kL/wTnRwnm+GeGTn+Kfh34hAePGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgHCMbH (ORCPT
+        id S1729154AbgHCMbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:31:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58232 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:31:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729123AbgHCMa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:30:56 -0400
+        id S1728590AbgHCMa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:30:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 878FE204EC;
-        Mon,  3 Aug 2020 12:30:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5907F2054F;
+        Mon,  3 Aug 2020 12:30:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457855;
-        bh=AgABORwTNRUJplQ+d2D63qNA8DLesu9K85EcX1bW8Z0=;
+        s=default; t=1596457857;
+        bh=pJ5H1FDL3pGMiWWb7PDYD0GJzFSxTJZlGGU6fRKaFCM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=04JKRmfRZKkevFGQKCKIjiAvzDwPNzCTWp+txcU6HuN+WU3u8W9johLu5CDqEIC1x
-         vaMBajEvUV50mbdv4yOS1tc4xhFjSgDSBXzN0izzEYM8JoRROG63Y1Bb6xXuESc4jV
-         GyDTDAfZIOp/V/PY49/4lhbglJEtM4Uh+MI3VJqE=
+        b=sRufsEvjf6+fHMn4JKZzm4TBdHQ+BF9mfeYZKGGDnnSjzutyCVbHKWpZ4rhEvplOA
+         mceT+dlNQrabtJ7kMegp6Y0sfvtmgEuxcOkwoKIXdgMWj2D1xeeYoga5yIo3Vqqf95
+         CCupPAp25uTK7RGXBoqabktLjxr5tov51BNm29SI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xin Xiong <xiongx18@fudan.edu.cn>,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org, Thomas Falcon <tlfalcon@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 67/90] net/mlx5e: fix bpf_prog reference count leaks in mlx5e_alloc_rq
-Date:   Mon,  3 Aug 2020 14:19:29 +0200
-Message-Id: <20200803121900.864413586@linuxfoundation.org>
+Subject: [PATCH 5.4 58/90] ibmvnic: Fix IRQ mapping disposal in error path
+Date:   Mon,  3 Aug 2020 14:19:20 +0200
+Message-Id: <20200803121900.431400169@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -62,53 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Xiong <xiongx18@fudan.edu.cn>
+From: Thomas Falcon <tlfalcon@linux.ibm.com>
 
-[ Upstream commit e692139e6af339a1495ef401b2d95f7f9d1c7a44 ]
+[ Upstream commit 27a2145d6f826d1fad9de06ac541b1016ced3427 ]
 
-The function invokes bpf_prog_inc(), which increases the reference
-count of a bpf_prog object "rq->xdp_prog" if the object isn't NULL.
+RX queue IRQ mappings are disposed in both the TX IRQ and RX IRQ
+error paths. Fix this and dispose of TX IRQ mappings correctly in
+case of an error.
 
-The refcount leak issues take place in two error handling paths. When
-either mlx5_wq_ll_create() or mlx5_wq_cyc_create() fails, the function
-simply returns the error code and forgets to drop the reference count
-increased earlier, causing a reference count leak of "rq->xdp_prog".
-
-Fix this issue by jumping to the error handling path err_rq_wq_destroy
-while either function fails.
-
-Fixes: 422d4c401edd ("net/mlx5e: RX, Split WQ objects for different RQ types")
-Signed-off-by: Xin Xiong <xiongx18@fudan.edu.cn>
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: ea22d51a7831 ("ibmvnic: simplify and improve driver probe function")
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/ibm/ibmvnic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index cb3dcfced89fa..ee0d78f801af5 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -432,7 +432,7 @@ static int mlx5e_alloc_rq(struct mlx5e_channel *c,
- 		err = mlx5_wq_ll_create(mdev, &rqp->wq, rqc_wq, &rq->mpwqe.wq,
- 					&rq->wq_ctrl);
- 		if (err)
--			return err;
-+			goto err_rq_wq_destroy;
- 
- 		rq->mpwqe.wq.db = &rq->mpwqe.wq.db[MLX5_RCV_DBR];
- 
-@@ -485,7 +485,7 @@ static int mlx5e_alloc_rq(struct mlx5e_channel *c,
- 		err = mlx5_wq_cyc_create(mdev, &rqp->wq, rqc_wq, &rq->wqe.wq,
- 					 &rq->wq_ctrl);
- 		if (err)
--			return err;
-+			goto err_rq_wq_destroy;
- 
- 		rq->wqe.wq.db = &rq->wqe.wq.db[MLX5_RCV_DBR];
- 
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index d585973606990..2d20a48f0ba0a 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -3086,7 +3086,7 @@ req_rx_irq_failed:
+ req_tx_irq_failed:
+ 	for (j = 0; j < i; j++) {
+ 		free_irq(adapter->tx_scrq[j]->irq, adapter->tx_scrq[j]);
+-		irq_dispose_mapping(adapter->rx_scrq[j]->irq);
++		irq_dispose_mapping(adapter->tx_scrq[j]->irq);
+ 	}
+ 	release_sub_crqs(adapter, 1);
+ 	return rc;
 -- 
 2.25.1
 
