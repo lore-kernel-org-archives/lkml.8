@@ -2,172 +2,130 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 809C1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 04:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8970EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 04:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55B672075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 04:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 621E420775
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 04:15:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DefaKfGI"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PgOd+GHW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725976AbgHCENY (ORCPT
+        id S1726075AbgHCEPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 00:13:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51070 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgHCENY (ORCPT
+        Mon, 3 Aug 2020 00:15:50 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:56642 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725268AbgHCEPt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 00:13:24 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFD8BC06174A
-        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 21:13:23 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id v6so21974363iow.11
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 21:13:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OKUq/09yys4sflqmrLiIWtDtY45NuaZPyhKbOjzDqNQ=;
-        b=DefaKfGI1MDSo2amOyXhNeK+74EnbqXJroVxkuLakvpi7bDIfG9uwfA6pJraRu/cxl
-         QYI7qZyCzzsKIycfiTLSbmngKLLuUZ34cPtvhCiJ6gIwv1xBYXpNQx7uvFfQ0kJw732a
-         l2q5UALhHB7iJI+mtunTomwrr1eA7vtODEui/zV1wsNOePlzwtDh0CMMqW8Vkdw801aO
-         +W+iNFkQA4MukuBi7WY/+/NRE9PG/A1uwxxoYK4RkzgSfS/iW76/ntTRwrHvrqHaJ4aM
-         iYrGyXEUU3yug+G9qP2rhGbru8+QgxZC0Qy3B2dOKJNjGHd019orAlVYEpEZWJ7wJURI
-         jvPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OKUq/09yys4sflqmrLiIWtDtY45NuaZPyhKbOjzDqNQ=;
-        b=BUhmVMRPqutR3typwzodzwEIGuk0UlAlkOa2w1ZhsLcpxMmPO7DV3dZpW2xXUATunc
-         vuEgdd80eOD03SvpCLVmV5tosC5ZgFnib8rM0YLZ44/NU16lqfezLwJRDujOAsmkFvSz
-         oKXJASxutDgmOn0DZ1/Y5U+J5sa0lNrJ3Jw/NDlq2KAEPBb/w4JyTEQ++aLgGy8jNiLK
-         CL5aBHaUQP422ZEPi8DAWmJvfun7ICa7S5gVAz9VFiM9b1EeSqrjI8Rdjdka0auFhok0
-         Vfq4vMAk8jOf46/7Yvmnq4+vU8GX/msr+wpEbSCTHSWdNKZKA7Vn4/u0L/c1Itmn6OrM
-         O/JQ==
-X-Gm-Message-State: AOAM532WWUjNKNU/0M62IptG6vOpKesGVKFzGzIheUmJvP4IuGEzK/34
-        vn85ZSaDY+tDzCbVdTm4/bmSFbsXLYLonrfJgA==
-X-Google-Smtp-Source: ABdhPJzBU2LEqOGgB4tXJMlQukquOs2+1BK0Opeemx0ePqtJVO7uSXjBaZKk/NzBC9DmR7ptHqtF1o96xRXkpAoAdNM=
-X-Received: by 2002:a05:6602:2246:: with SMTP id o6mr10117511ioo.35.1596428003100;
- Sun, 02 Aug 2020 21:13:23 -0700 (PDT)
+        Mon, 3 Aug 2020 00:15:49 -0400
+X-UUID: 298d602db99c4f7ea51cad75a2c366db-20200803
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=pnVyHtm1kZIK8iFHc2H0Nggm6hcXfQ0T1tugUK4dLkI=;
+        b=PgOd+GHWtTHElIt8Kj9BCXan9eCf1V+qineVTxVWU7xKGENxFXT7fJsocQyhlvB/wULQZaAK2iEXOs1rNzNYuDJPSoJcHTaIbcSCW3WZBtP+YAUowuMsqclZm3tmmqev9Z0C2AIDCnw/O8/Y6jTPQrHGJU8xAj6nbDT9g/aonHo=;
+X-UUID: 298d602db99c4f7ea51cad75a2c366db-20200803
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 103747508; Mon, 03 Aug 2020 12:15:45 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 3 Aug 2020 12:15:35 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 3 Aug 2020 12:15:36 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <bvanassche@acm.org>
+CC:     <beanhuo@micron.com>, <asutoshd@codeaurora.org>,
+        <cang@codeaurora.org>, <matthias.bgg@gmail.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, <chaotian.jing@mediatek.com>,
+        <cc.chou@mediatek.com>, <jiajie.hao@mediatek.com>,
+        Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v5] scsi: ufs: Quiesce all scsi devices before shutdown
+Date:   Mon, 3 Aug 2020 12:15:36 +0800
+Message-ID: <20200803041536.6575-1-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-References: <1596097609-14118-1-git-send-email-kernelfans@gmail.com>
- <CAKwvOdnThb=Sv2v1K3w0DAJBZFiEp2Z0Y=NbQ9kEuK1nsQqJBw@mail.gmail.com>
- <CAFgQCTsYTwpv6oCGLH5JTjt+1jPAZ7XjBm6sDoCPRnjrRPhvTQ@mail.gmail.com> <CAKwvOdn6xZV6pMUcvjH=WRk1JpQ8nAV8mhCj7jezmA=RXdV7sw@mail.gmail.com>
-In-Reply-To: <CAKwvOdn6xZV6pMUcvjH=WRk1JpQ8nAV8mhCj7jezmA=RXdV7sw@mail.gmail.com>
-From:   Pingfan Liu <kernelfans@gmail.com>
-Date:   Mon, 3 Aug 2020 12:13:11 +0800
-Message-ID: <CAFgQCTv2_fAa3w1+J+gXSuVWLLN9vv1xf_rvBg7Er3oAVm491g@mail.gmail.com>
-Subject: Re: [PATCH] x86/purgatory: strip debug info
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Steve Wahl <steve.wahl@hpe.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 1FB26CA140231F142D06814CF4C037385A0CA463E7871E07C06AEF6C4CC617842000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 1, 2020 at 2:18 AM Nick Desaulniers <ndesaulniers@google.com> wrote:
->
-> On Fri, Jul 31, 2020 at 2:36 AM Pingfan Liu <kernelfans@gmail.com> wrote:
-> >
-> > On Fri, Jul 31, 2020 at 7:11 AM Nick Desaulniers
-> > <ndesaulniers@google.com> wrote:
-> > >
-> > > On Thu, Jul 30, 2020 at 1:27 AM Pingfan Liu <kernelfans@gmail.com> wrote:
-> > > >
-> > > > It is useless to keep debug info in purgatory. And discarding them saves
-> > > > about 200K space.
-> > > >
-> > > > Original:
-> > > >   259080  kexec-purgatory.o
-> > > > Stripped:
-> > > >    29152  kexec-purgatory.o
-> > > >
-> > > > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> > > > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > > > Cc: Ingo Molnar <mingo@redhat.com>
-> > > > Cc: Borislav Petkov <bp@alien8.de>
-> > > > Cc: "H. Peter Anvin" <hpa@zytor.com>
-> > > > Cc: Hans de Goede <hdegoede@redhat.com>
-> > > > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > > > Cc: Arvind Sankar <nivedita@alum.mit.edu>
-> > > > Cc: Steve Wahl <steve.wahl@hpe.com>
-> > > > Cc: linux-kernel@vger.kernel.org
-> > > > To: x86@kernel.org
-> > >
-> > > I don't see any code in
-> > > arch/x86/purgatory/
-> > > arch/x86/include/asm/purgatory.h
-> > > include/linux/purgatory.h
-> > > include/uapi/linux/kexec.h
-> > > kernel/kexec*
-> > > include/linux/kexec.h
-> > > include/linux/crash_dump.h
-> > > kernel/crash_dump.c
-> > > arch/x86/kernel/crash*
-> > > https://github.com/horms/kexec-tools/tree/master/kexec/arch/x86_64
-> > > that mentions any kind of debug info section.  I'm not sure what you'd
-> > > do with the debug info anyway for this binary.  So I suspect this
-> > > information should ok to discard.
-> > >
-> > > This works, but it might be faster to build to not generate the
-> > > compile info in the first place via compile flag `-g0`, which could be
-> > > added `ifdef CONFIG_DEBUG_INFO` or even just unconditionally.  That
-> > > way we're not doing additional work to generate debug info, then
-> > > additional work to throw it away.
-> > What about:
-> > diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-> > index 088bd76..7e1ad9e 100644
-> > --- a/arch/x86/purgatory/Makefile
-> > +++ b/arch/x86/purgatory/Makefile
-> > @@ -32,7 +32,7 @@ KCOV_INSTRUMENT := n
-> >  # make up the standalone purgatory.ro
-> >
-> >  PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
-> > -PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
-> > +PURGATORY_CFLAGS := -mcmodel=large -ffreestanding
-> > -fno-zero-initialized-in-bss -g0
-> >  PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN) -DDISABLE_BRANCH_PROFILING
-> >  PURGATORY_CFLAGS += $(call cc-option,-fno-stack-protector)
->
-> I tested your patch but still see .debug_* sections in the .ro from a few .o.
->
-> At least on
-> * setup-x86_64.o
-> * entry64.o
->
-> If you add the following hunk to your diff:
-> ```
-> @@ -64,6 +64,9 @@ CFLAGS_sha256.o                       += $(PURGATORY_CFLAGS)
->  CFLAGS_REMOVE_string.o         += $(PURGATORY_CFLAGS_REMOVE)
->  CFLAGS_string.o                        += $(PURGATORY_CFLAGS)
->
-> +AFLAGS_REMOVE_setup-x86_$(BITS).o      += -Wa,-gdwarf-2
-> +AFLAGS_REMOVE_entry64.o                += -Wa,-gdwarf-2
-> +
-Go through man as and gcc, and can not find a simpler method than your
-suggestion.
->  $(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
->                 $(call if_changed,ld)
-> ```
-> then that should do it.  Then you can verify the .ro file via:
-> $ llvm-readelf -S arch/x86/purgatory/purgatory.ro | not grep debug_
-> (no output, should return zero)
-Thank you for your good suggestion and I will update V2
+Q3VycmVudGx5IEkvTyByZXF1ZXN0IGNvdWxkIGJlIHN0aWxsIHN1Ym1pdHRlZCB0byBVRlMgZGV2
+aWNlIHdoaWxlDQpVRlMgaXMgd29ya2luZyBvbiBzaHV0ZG93biBmbG93LiBUaGlzIG1heSBsZWFk
+IHRvIHJhY2luZyBhcyBiZWxvdw0Kc2NlbmFyaW9zIGFuZCBmaW5hbGx5IHN5c3RlbSBtYXkgY3Jh
+c2ggZHVlIHRvIHVuY2xvY2tlZCByZWdpc3Rlcg0KYWNjZXNzZXMuDQoNClRvIGZpeCB0aGlzIGtp
+bmQgb2YgaXNzdWVzLCBpbiB1ZnNoY2Rfc2h1dGRvd24oKSwNCg0KMS4gVXNlIHBtX3J1bnRpbWVf
+Z2V0X3N5bmMoKSBpbnN0ZWFkIG9mIHJlc3VtaW5nIFVGUyBkZXZpY2UgYnkNCiAgIHVmc2hjZF9y
+dW50aW1lX3Jlc3VtZSgpICJpbnRlcm5hbGx5IiB0byBsZXQgcnVudGltZSBQTSBmcmFtZXdvcmsN
+CiAgIG1hbmFnZSBhbmQgcHJldmVudCBjb25jdXJyZW50IHJ1bnRpbWUgb3BlcmF0aW9ucyBieSBp
+bmNvbWluZyBJL08NCiAgIHJlcXVlc3RzLg0KDQoyLiBTcGVjaWZpY2FsbHkgcXVpZXNjZSBhbGwg
+U0NTSSBkZXZpY2VzIHRvIGJsb2NrIGFsbCBJL08gcmVxdWVzdHMNCiAgIGFmdGVyIGRldmljZSBp
+cyByZXN1bWVkLg0KDQpFeGFtcGxlIG9mIHJhY2luZyBzY2VuYXJpbzogV2hpbGUgVUZTIGRldmlj
+ZSBpcyBydW50aW1lLXN1c3BlbmRlZA0KDQpUaHJlYWQgIzE6IEV4ZWN1dGluZyBVRlMgc2h1dGRv
+d24gZmxvdywgZS5nLiwNCiAgICAgICAgICAgdWZzaGNkX3N1c3BlbmQoVUZTX1NIVVRET1dOX1BN
+KQ0KDQpUaHJlYWQgIzI6IEV4ZWN1dGluZyBydW50aW1lIHJlc3VtZSBmbG93IHRyaWdnZXJlZCBi
+eSBJL08gcmVxdWVzdCwNCiAgICAgICAgICAgZS5nLiwgdWZzaGNkX3Jlc3VtZShVRlNfUlVOVElN
+RV9QTSkNCg0KVGhpcyBicmVha3MgdGhlIGFzc3VtcHRpb24gdGhhdCBVRlMgUE0gZmxvd3MgY2Fu
+IG5vdCBiZSBydW5uaW5nDQpjb25jdXJyZW50bHkgYW5kIHNvbWUgdW5leHBlY3RlZCByYWNpbmcg
+YmVoYXZpb3IgbWF5IGhhcHBlbi4NCg0KU2lnbmVkLW9mZi1ieTogU3RhbmxleSBDaHUgPHN0YW5s
+ZXkuY2h1QG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMgfCA0
+MCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0NCiAxIGZpbGUgY2hhbmdl
+ZCwgMzUgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvc2NzaS91ZnMvdWZzaGNkLmMgYi9kcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC5jDQppbmRleCAz
+MDc2MjIyODQyMzkuLmU1Yjk5ZjFiODI2YSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc2NzaS91ZnMv
+dWZzaGNkLmMNCisrKyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmMNCkBAIC0xNTksNiArMTU5
+LDEyIEBAIHN0cnVjdCB1ZnNfcG1fbHZsX3N0YXRlcyB1ZnNfcG1fbHZsX3N0YXRlc1tdID0gew0K
+IAl7VUZTX1BPV0VSRE9XTl9QV1JfTU9ERSwgVUlDX0xJTktfT0ZGX1NUQVRFfSwNCiB9Ow0KIA0K
+KyNkZWZpbmUgdWZzaGNkX3Njc2lfZm9yX2VhY2hfc2RldihmbikgXA0KKwlsaXN0X2Zvcl9lYWNo
+X2VudHJ5KHN0YXJnZXQsICZoYmEtPmhvc3QtPl9fdGFyZ2V0cywgc2libGluZ3MpIHsgXA0KKwkJ
+X19zdGFyZ2V0X2Zvcl9lYWNoX2RldmljZShzdGFyZ2V0LCBOVUxMLCBcDQorCQkJCQkgIGZuKTsg
+XA0KKwl9DQorDQogc3RhdGljIGlubGluZSBlbnVtIHVmc19kZXZfcHdyX21vZGUNCiB1ZnNfZ2V0
+X3BtX2x2bF90b19kZXZfcHdyX21vZGUoZW51bSB1ZnNfcG1fbGV2ZWwgbHZsKQ0KIHsNCkBAIC04
+NjI5LDYgKzg2MzUsMTMgQEAgaW50IHVmc2hjZF9ydW50aW1lX2lkbGUoc3RydWN0IHVmc19oYmEg
+KmhiYSkNCiB9DQogRVhQT1JUX1NZTUJPTCh1ZnNoY2RfcnVudGltZV9pZGxlKTsNCiANCitzdGF0
+aWMgdm9pZCB1ZnNoY2RfcXVpZXNjZV9zZGV2KHN0cnVjdCBzY3NpX2RldmljZSAqc2Rldiwgdm9p
+ZCAqZGF0YSkNCit7DQorCS8qIFN1c3BlbmRlZCBkZXZpY2VzIGFyZSBhbHJlYWR5IHF1aWVzY2Vk
+IHNvIGNhbiBiZSBza2lwcGVkICovDQorCWlmICghcG1fcnVudGltZV9zdXNwZW5kZWQoJnNkZXYt
+PnNkZXZfZ2VuZGV2KSkNCisJCXNjc2lfZGV2aWNlX3F1aWVzY2Uoc2Rldik7DQorfQ0KKw0KIC8q
+Kg0KICAqIHVmc2hjZF9zaHV0ZG93biAtIHNodXRkb3duIHJvdXRpbmUNCiAgKiBAaGJhOiBwZXIg
+YWRhcHRlciBpbnN0YW5jZQ0KQEAgLTg2NDAsNiArODY1Myw3IEBAIEVYUE9SVF9TWU1CT0wodWZz
+aGNkX3J1bnRpbWVfaWRsZSk7DQogaW50IHVmc2hjZF9zaHV0ZG93bihzdHJ1Y3QgdWZzX2hiYSAq
+aGJhKQ0KIHsNCiAJaW50IHJldCA9IDA7DQorCXN0cnVjdCBzY3NpX3RhcmdldCAqc3RhcmdldDsN
+CiANCiAJaWYgKCFoYmEtPmlzX3Bvd2VyZWQpDQogCQlnb3RvIG91dDsNCkBAIC04NjQ3LDExICs4
+NjYxLDI3IEBAIGludCB1ZnNoY2Rfc2h1dGRvd24oc3RydWN0IHVmc19oYmEgKmhiYSkNCiAJaWYg
+KHVmc2hjZF9pc191ZnNfZGV2X3Bvd2Vyb2ZmKGhiYSkgJiYgdWZzaGNkX2lzX2xpbmtfb2ZmKGhi
+YSkpDQogCQlnb3RvIG91dDsNCiANCi0JaWYgKHBtX3J1bnRpbWVfc3VzcGVuZGVkKGhiYS0+ZGV2
+KSkgew0KLQkJcmV0ID0gdWZzaGNkX3J1bnRpbWVfcmVzdW1lKGhiYSk7DQotCQlpZiAocmV0KQ0K
+LQkJCWdvdG8gb3V0Ow0KLQl9DQorCS8qDQorCSAqIExldCBydW50aW1lIFBNIGZyYW1ld29yayBt
+YW5hZ2UgYW5kIHByZXZlbnQgY29uY3VycmVudCBydW50aW1lDQorCSAqIG9wZXJhdGlvbnMgd2l0
+aCBzaHV0ZG93biBmbG93Lg0KKwkgKi8NCisJaWYgKHBtX3J1bnRpbWVfZ2V0X3N5bmMoaGJhLT5k
+ZXYpKQ0KKwkJcG1fcnVudGltZV9wdXRfbm9pZGxlKGhiYS0+ZGV2KTsNCisNCisJLyoNCisJICog
+UXVpZXNjZSBhbGwgU0NTSSBkZXZpY2VzIHRvIHByZXZlbnQgYW55IG5vbi1QTSByZXF1ZXN0cyBz
+ZW5kaW5nDQorCSAqIGZyb20gYmxvY2sgbGF5ZXIgZHVyaW5nIGFuZCBhZnRlciBzaHV0ZG93bi4N
+CisJICoNCisJICogSGVyZSB3ZSBjYW4gbm90IHVzZSBibGtfY2xlYW51cF9xdWV1ZSgpIHNpbmNl
+IFBNIHJlcXVlc3RzDQorCSAqICh3aXRoIEJMS19NUV9SRVFfUFJFRU1QVCBmbGFnKSBhcmUgc3Rp
+bGwgcmVxdWlyZWQgdG8gYmUgc2VudA0KKwkgKiB0aHJvdWdoIGJsb2NrIGxheWVyLiBUaGVyZWZv
+cmUgU0NTSSBjb21tYW5kIHF1ZXVlZCBhZnRlciB0aGUNCisJICogc2NzaV90YXJnZXRfcXVpZXNj
+ZSgpIGNhbGwgcmV0dXJuZWQgd2lsbCBibG9jayB1bnRpbA0KKwkgKiBibGtfY2xlYW51cF9xdWV1
+ZSgpIGlzIGNhbGxlZC4NCisJICoNCisJICogQmVzaWRlcywgc2NzaV90YXJnZXRfInVuInF1aWVz
+Y2UgKGUuZy4sIHNjc2lfdGFyZ2V0X3Jlc3VtZSkgY2FuDQorCSAqIGJlIGlnbm9yZWQgc2luY2Ug
+c2h1dGRvd24gaXMgb25lLXdheSBmbG93Lg0KKwkgKi8NCisJdWZzaGNkX3Njc2lfZm9yX2VhY2hf
+c2Rldih1ZnNoY2RfcXVpZXNjZV9zZGV2KTsNCiANCiAJcmV0ID0gdWZzaGNkX3N1c3BlbmQoaGJh
+LCBVRlNfU0hVVERPV05fUE0pOw0KIG91dDoNCi0tIA0KMi4xOC4wDQo=
 
-Regards,
-Pingfan
