@@ -2,170 +2,107 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C86F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45737C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A040820719
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:18:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="OokSIORh"
+	by mail.kernel.org (Postfix) with ESMTP id 21D7C20719
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:19:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596453553;
+	bh=GdPTkEEfIShYajB7XRLHRCMBDS2TUZuXOIa/M3W9Qxw=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=air9vrRPi9uMwKR+qHVzlTvasO+s5uabbqLvExK1LHecNFu0thno7YnteQpLUnPFD
+	 jjE4gHDhLdWPiI8sfXQ0JCypKIrCoEN7UsdrIZuvlLnPQ3JCdm1uDqyiod98tciUuh
+	 qrJcKGJuCLCCehmeHnX2IujJ307HG3mrlvSfbpxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbgHCLSF (ORCPT
+        id S1726497AbgHCLTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 07:18:05 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:56887 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726007AbgHCLSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 07:18:04 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BKwNW1yJpz9sPC;
-        Mon,  3 Aug 2020 21:18:01 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1596453483;
-        bh=dYeVUhR07ZAkkPPkL+OF20bNAosgm3CVfzbhC05UNb4=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=OokSIORh8TKNPBzo76jdcL0Q/6Qi63Z+vfPp+Whn+fHRlBtlTKi7r/CvmDbrNHgE5
-         Z5lXZr3PnAdNkM2hb+LVvfFdXcqMlYCYuOlN2hnBPzYvs0syZ7pdCUNoodERrMAjbj
-         qSmAjcDDP4tKPVAa6LCHY8mgOFCOQUCtwJhMqctMVrU3j6Tn/YStFOI12LPAJSsJyU
-         JaZeQl+mwVYcCri4cW0I7avpreRchGPUMbQ0k4k3ydOejMkwMs/IleJ3nKfErNFZxF
-         ZI7jRBbeVtAnKPJPm0kwSA7ER7frSNkK7IX2jslIm/orBz4DfYepK/1vlFTnm6+XB1
-         LXywizjDRUq1w==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Willy Tarreau <w@1wt.eu>, Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Linux-kernel Mailing List <linux-kernel@vger.kernel.org>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: powerpc: build failures in Linus' tree
-In-Reply-To: <20200803034547.GA15501@1wt.eu>
-References: <20200802204842.36bca162@canb.auug.org.au> <20200802172019.GB26677@1wt.eu> <20200803034547.GA15501@1wt.eu>
-Date:   Mon, 03 Aug 2020 21:18:00 +1000
-Message-ID: <87v9i0yo47.fsf@mpe.ellerman.id.au>
+        Mon, 3 Aug 2020 07:19:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60270 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgHCLTM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 07:19:12 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD30DC06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 04:19:11 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id a14so9959116edx.7
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 04:19:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=yt2CQ4mEA+v+i4qYpuZtQGRYlnkgIUzokoPIBHJuBTg=;
+        b=YlfyRotm3w5wDQfeKrKP2cdZysJN9RZw7/ANPL3wrNcg0H7JRYfv+lpBXYikfrHzlO
+         5upydISXjF9t6DkM6Hdq7sb5dC+1B/4fgbpEknjXDyT2erltiLVoS+2kkOk6mseXvaLT
+         kg7gwJ9rhJ4rvrJSUa0Ff8eKNlEQkQQ3u+PRvmHdTGm13d9XldRa3KKmobjxDb763fRf
+         YgqC8ZnJ9q0RK5x45OVIAloiUt9HBwk8tNo9CJBN3dCwRLycnY2K7JS2WIsf5fO7GgYS
+         elV+ofXO4O7RhuxHrn3/6cLgq7Pcvvol8tE7Sx5QVe1WZ2ikUG9OvhT6OUcq1wqXs3fP
+         EuYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition;
+        bh=yt2CQ4mEA+v+i4qYpuZtQGRYlnkgIUzokoPIBHJuBTg=;
+        b=AK5TLRsZSX7jsCt+TelkyejHxGjCYKAQvn5emU9eKWwr/yUAscKPyjokUq1Tjd5CqO
+         +wzQ/GBN/AaQ1wKm3a/pkLZJr8FTTpEmutU2acwTbom87TWo5OfFErQmNg9hrOiWXk3i
+         WvOANXcDg+fwG9A+4zO2KpHU9KMnbh218sCtpKGbnl31qgFOcAP/AlN9zgvt4BRn1k8K
+         VGKL0leqdwXtnM9c09gKwJr8n+mX7oTuwcLEBvvsYI5qHlEz/eqCsQ7vnFPqbUl6hdlu
+         Cls8X/I+VVshPEhrZCfcyEB/+2DLW9aNLV1CZbWFwJi6ri12sB7PD9bu5sfSF6MrZ9jd
+         b+8Q==
+X-Gm-Message-State: AOAM5326D/yxYsEyILzuqccmWIXulAjolId8UR0ZDX6MjQLBkAMlUHX2
+        A2+fqg8+FtbOA/IvXjLdQh2VLjxZ
+X-Google-Smtp-Source: ABdhPJwPd2OvjujSqF/XSczoOHpvBM4Iubz39NxYBfNWpr7i9Y8bcSSus5BXRmq6FAv1Y5pzMor3fQ==
+X-Received: by 2002:a05:6402:1591:: with SMTP id c17mr15052621edv.111.1596453550565;
+        Mon, 03 Aug 2020 04:19:10 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id i9sm16067807ejb.48.2020.08.03.04.19.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 04:19:09 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 13:19:08 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] core/headers change for v5.9
+Message-ID: <20200803111908.GA384254@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Willy Tarreau <w@1wt.eu> writes:
-> On Sun, Aug 02, 2020 at 07:20:19PM +0200, Willy Tarreau wrote:
->> On Sun, Aug 02, 2020 at 08:48:42PM +1000, Stephen Rothwell wrote:
->> > Hi all,
->> > 
->> > We are getting build failures in some PowerPC configs for Linus' tree.
->> > See e.g. http://kisskb.ellerman.id.au/kisskb/buildresult/14306515/
->> > 
->> > In file included from /kisskb/src/arch/powerpc/include/asm/paca.h:18,
->> >                  from /kisskb/src/arch/powerpc/include/asm/percpu.h:13,
->> >                  from /kisskb/src/include/linux/random.h:14,
->> >                  from /kisskb/src/include/linux/net.h:18,
->> >                  from /kisskb/src/net/ipv6/ip6_fib.c:20:
->> > /kisskb/src/arch/powerpc/include/asm/mmu.h:139:22: error: unknown type name 'next_tlbcam_idx'
->> >   139 | DECLARE_PER_CPU(int, next_tlbcam_idx);
->> > 
->> > I assume this is caused by commit
->> > 
->> >   1c9df907da83 ("random: fix circular include dependency on arm64 after addition of percpu.h")
->> > 
->> > But I can't see how, sorry.
->> 
->> So there, asm/mmu.h includes asm/percpu.h, which includes asm/paca.h, which
->> includes asm/mmu.h.
->> 
->> I suspect that we can remove asm/paca.h from asm/percpu.h as it *seems*
->> to be only used by the #define __my_cpu_offset but I don't know if anything
->> will break further, especially if this __my_cpu_offset is used anywhere
->> without this paca definition.
->
-> I tried this and it fixed 5.8 for me with your config above. I'm appending
-> a patch that does just this. I didn't test other configs as I don't know
-> which ones to test though. If it fixes the problem for you, maybe it can
-> be picked by the PPC maintainers.
->
-> Willy
-> From bcd64a7d0f3445c9a75d3b4dc4837d2ce61660c9 Mon Sep 17 00:00:00 2001
-> From: Willy Tarreau <w@1wt.eu>
-> Date: Mon, 3 Aug 2020 05:27:57 +0200
-> Subject: powerpc: fix circular dependency in percpu.h
->
-> After random.h started to include percpu.h (commit f227e3e), several
-> archs broke in circular dependencies around percpu.h.
->
-> In https://lore.kernel.org/lkml/20200802204842.36bca162@canb.auug.org.au/
-> Stephen Rothwell reported breakage for powerpc with CONFIG_PPC_FSL_BOOK3E.
->
-> It turns out that asm/percpu.h includes asm/paca.h, which itself
-> includes mmu.h, which includes percpu.h when CONFIG_PPC_FSL_BOOK3E=y.
->
-> Percpu seems to include asm/paca.h only for local_paca which is used in
-> the __my_cpu_offset macro. Removing this include solves the issue for
-> this config.
->
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Fixes: f227e3e ("random32: update the net random state on interrupt and activity")
-> Link: https://lore.kernel.org/lkml/20200802204842.36bca162@canb.auug.org.au/
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Signed-off-by: Willy Tarreau <w@1wt.eu>
-> ---
->  arch/powerpc/include/asm/percpu.h | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/arch/powerpc/include/asm/percpu.h b/arch/powerpc/include/asm/percpu.h
-> index dce863a..cd3f6e5 100644
-> --- a/arch/powerpc/include/asm/percpu.h
-> +++ b/arch/powerpc/include/asm/percpu.h
-> @@ -10,8 +10,6 @@
->  
->  #ifdef CONFIG_SMP
->  
-> -#include <asm/paca.h>
-> -
->  #define __my_cpu_offset local_paca->data_offset
->  
->  #endif /* CONFIG_SMP */
+Linus,
 
-If we just move the include of asm/paca.h below asm-generic/percpu.h
-then it avoids the bad circular dependency and we still have paca.h
-included from percpu.h as before.
+Please pull the latest core/headers git tree from:
 
-eg:
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-headers-2020-08-03
 
-diff --git a/arch/powerpc/include/asm/percpu.h b/arch/powerpc/include/asm/percpu.h
-index dce863a7635c..8e5b7d0b851c 100644
---- a/arch/powerpc/include/asm/percpu.h
-+++ b/arch/powerpc/include/asm/percpu.h
-@@ -10,8 +10,6 @@
- 
- #ifdef CONFIG_SMP
- 
--#include <asm/paca.h>
--
- #define __my_cpu_offset local_paca->data_offset
- 
- #endif /* CONFIG_SMP */
-@@ -19,4 +17,6 @@
- 
- #include <asm-generic/percpu.h>
- 
-+#include <asm/paca.h>
-+
- #endif /* _ASM_POWERPC_PERCPU_H_ */
+   # HEAD: d19e789f068b3d633cbac430764962f404198022 compiler.h: Move instrumentation_begin()/end() to new <linux/instrumentation.h> header
+
+A single commit that separates out the instrumentation_begin()/end() bits from compiler.h.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Ingo Molnar (1):
+      compiler.h: Move instrumentation_begin()/end() to new <linux/instrumentation.h> header
 
 
-So I think I'm inclined to merge that as a minimal fix that's easy to
-backport.
-
-cheers
+ arch/x86/include/asm/bug.h       |  1 +
+ include/asm-generic/bug.h        |  1 +
+ include/linux/compiler.h         | 53 -------------------------------------
+ include/linux/context_tracking.h |  2 ++
+ include/linux/instrumentation.h  | 57 ++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 61 insertions(+), 53 deletions(-)
+ create mode 100644 include/linux/instrumentation.h
