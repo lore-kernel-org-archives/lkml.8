@@ -4,59 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DB4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20455C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32BF52076C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE0C8207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596470001;
-	bh=71RlaA/oiOsU/NlJe6OnT3n6w5fGruNHnxupVgtHzpo=;
+	s=default; t=1596470007;
+	bh=MIgoWkiYyIGRvQI5hrwUdGUdvru2hp0i0DHArLtQKD0=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=Ia162YpBXQ6kx2STyoRsbJA2s9q3PYlQgPZXMTg/2wqUoPPlckwd0zFdNoOYpXuJG
-	 H4QOyqBclTdr7pn3WSf2EHV8nzFlbDDDtBw+gU8jYSoDrYYVXCqkkTtfEmVnHa5wY0
-	 VttIjhNE0irl569s+FMQf+1f+TDiBgM+elOGjn70=
+	b=IQwmvYhllWarW2xKW2WPmH9IEIBIVDQSTj/ALXlg1FuGOq+qAUtxCbTTv/S29c9Sx
+	 dJoLJtsEZX7iNga3GqWOUwEN6zz2SJQLmebKV9DEXKOPsGf2tKP+xSokJRbdTfbrXh
+	 tKr+siEyYJni5OBphDatb8GxEgmwBT5/tPWnVhhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbgHCPxV (ORCPT
+        id S1728179AbgHCPx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 11:53:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43582 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 11:53:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726772AbgHCPxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 11:53:18 -0400
+        id S1728090AbgHCPxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 11:53:24 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 022F9207FB;
-        Mon,  3 Aug 2020 15:53:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 051C2207DF;
+        Mon,  3 Aug 2020 15:53:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596469997;
-        bh=71RlaA/oiOsU/NlJe6OnT3n6w5fGruNHnxupVgtHzpo=;
+        s=default; t=1596470002;
+        bh=MIgoWkiYyIGRvQI5hrwUdGUdvru2hp0i0DHArLtQKD0=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=moKWxM3xpeRrjeXk6CUkXrvSHLqb/VSX+FXHYEaMMAfbVUtzmdhMHoG8ih6UPR5qB
-         YJYRB+Rdqz0HmOrLrDc3R9mVhch76uktHkMaBXb/PM5+axJhMt19P0E7XlVbET2ygX
-         BH8raNtY4SBNeGozRAbbUOz2PwrWLFsTySbDXLO8=
-Date:   Mon, 03 Aug 2020 16:52:57 +0100
+        b=ArRpa4eHxQPbzgZ3CM6gul71f2xv2n+MIlHo24clzxh/vrp+Ng38h6fKAQTAnuK62
+         DdKu0dGv310P+tQYTeTQoVOBOR2uVPdkSJmivjZUeaONvkGBbHOzZ4FmlUr3JqcIaF
+         p02k9U4cfbFr5f0lg8NCHU1MFAeMh5KbZaH/Qziw=
+Date:   Mon, 03 Aug 2020 16:53:02 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel@vger.kernel.org,
-        Prashant Malani <pmalani@chromium.org>,
-        Pi-Hsun Shih <pihsun@chromium.org>
-In-Reply-To: <20200802032509.305425-1-axel.lin@ingics.com>
-References: <20200802032509.305425-1-axel.lin@ingics.com>
-Subject: Re: [PATCH] regulator: cros-ec-regulator: Add NULL test for devm_kmemdup call
-Message-Id: <159646997224.2690.10343483112359968082.b4-ty@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Saravanan Sekar <sravanhome@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jisheng Zhang <jszhang3@mail.ustc.edu.cn>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20200728232327.71ab3729@xhacker>
+References: <20200728232327.71ab3729@xhacker>
+Subject: Re: [PATCH 0/4] regulator: mp886x: two features and dt json convert
+Message-Id: <159646997224.2690.15283965107669623316.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2 Aug 2020 11:25:09 +0800, Axel Lin wrote:
-> Fix possible NULL pointer dereference.
+On Tue, 28 Jul 2020 23:23:27 +0800, Jisheng Zhang wrote:
+> This is to improve the mp886x regulator driver support.
+> patch1 converts dt binding to json-schema
+> patch2 implments .set_ramp_delay
+> patch3 and patch3 support the switch freq setting
+> 
+> Jisheng Zhang (4):
+>   dt-bindings: regulator: Convert mp886x to json-schema
+>   regulator: mp886x: implement set_ramp_delay
+>   dt-bindings: regulator: mp886x: support mps,switch-frequency
+>   regulator: mp886x: support setting switch freq
+> 
+> [...]
 
 Applied to
 
@@ -64,8 +74,14 @@ Applied to
 
 Thanks!
 
-[1/1] regulator: cros-ec-regulator: Add NULL test for devm_kmemdup call
-      commit: 3eccc72b0c3462a6047aa0f85c50263a0a58b001
+[1/4] dt-bindings: regulator: Convert mp886x to json-schema
+      (no commit info)
+[2/4] regulator: mp886x: implement set_ramp_delay
+      commit: 0eddcf0267f913cb6336af64cadaf5acf6b19b7b
+[3/4] dt-bindings: regulator: mp886x: support mps,switch-frequency
+      (no commit info)
+[4/4] regulator: mp886x: support setting switch freq
+      commit: ee6ad5a24575071b66bd37ffb2d8747a64fcb45f
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
