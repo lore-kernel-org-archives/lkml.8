@@ -2,89 +2,101 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F453C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BA4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72FDF2076E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E16E220786
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:31:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iiUNiQD7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kLZPFNza"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgHCXbI (ORCPT
+        id S1728174AbgHCXbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 19:31:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60208 "EHLO
+        Mon, 3 Aug 2020 19:31:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgHCXbH (ORCPT
+        with ESMTP id S1727979AbgHCXbV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 19:31:07 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0829C06174A;
-        Mon,  3 Aug 2020 16:31:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=nY1BD+OgwGXtiyrMMaJXadzrrIDNfHmtspydZcAV3LA=; b=iiUNiQD7jhIo194MEQM6uDkUtk
-        x1kY90nRb/wKVe8+MI4AG6Iq9ZvrzrtEC1LPQ7PPW00spxgPytuNPUX2Oc9EHRBaeIUimX+m/TQVY
-        6AmPmTRfIsnKmEq9CGN1pUZTo9plsKzGNZdAO4XYiUPc2u1Tsc98dIVozn1JNAFaO670yy+x4EE9P
-        mJ0TwsG1NnYlvL+p45itpZUi0AlyIbnGp+tEwIurSwxlaSdUG3oyS81GCA0AmQHAqp3VqGKU7A6a1
-        fi1GXneSNMf3FUwEP7AaAW+BNndMxzOOcbAlx1UxGP7UVnlwr9KlUkdjBec7YFS3Huo8RTmKNlmYJ
-        hPoIVsgw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k2juy-0007ex-8O; Mon, 03 Aug 2020 23:30:57 +0000
-Subject: Re: [PATCH v3] sched: Provide USF for the portable equipment.
-To:     Dongdong Yang <contribute.kernel@gmail.com>,
-        gregkh@linuxfoundation.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-pm@vger.kernel.org, yangdongdong@xiaomi.com,
-        tanggeliang@xiaomi.com, taojun@xiaomi.com, huangqiwu@xiaomi.com,
-        rocking@linux.alibaba.com, fengwei@xiaomi.com,
-        zhangguoquan@xiaomi.com, gulinghua@xiaomi.com, duhui@xiaomi.com
-References: <cover.1596464894.git.yangdongdong@xiaomi.com>
- <23719695ee476715ec54d3310c95d535f8e1391a.1596464896.git.yangdongdong@xiaomi.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <cb8dc2cc-376a-f7e5-614b-400245204b34@infradead.org>
-Date:   Mon, 3 Aug 2020 16:30:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 3 Aug 2020 19:31:21 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31556C061757
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 16:31:21 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id c15so4057529lfi.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 16:31:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fV01at6U179YYTkypCe1mjYEuoEGSoyCBx3vei1jsL8=;
+        b=kLZPFNzaiLoIf37Ocp6yoJdmJakN2FAOgin1yWPmvyiqcRGfvkDyLIJwgFnR7SibjW
+         eDY6+V7iRkT7GmQRC7Mtk5KyBDTfuD4CL/PYuTQzAyQQrWqL/YynpbMpKEODLM1f/W4J
+         tTGBCULVUmvrDKbcEgpiT565Jo4ros0QWA0bYpY6RJDKjOiSUgsq1W+8rhBSuZCNVWm5
+         ZvesqRzD3GSrQDRSgUP2N6M9Y3PZtprj4rkT3HM4EbsoGyagbd2z8n5C7uB4Afu2c6nU
+         sWyQBZzktZkb9o84466l36KfybPylh8PrYGMkgKxsqc6rvL/aU1nDW78+MUAsnA8ldTx
+         tOog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fV01at6U179YYTkypCe1mjYEuoEGSoyCBx3vei1jsL8=;
+        b=HoZZ6stAnPvKA1eFTo7RAObN4bXibg5A+K8aY5VCBY+tDsg4LpS5G2d2D3Unygs4f+
+         /8jUzVxytBK3WF62H3FdIu6TznkySqSjoW77wAL3/pJNguEiouthdFpbBlhO6H/yv5ti
+         SDYhJjgP88HMZ4BfcD7Q2hiXwI0hHzokjcIEIba4+hv2LxIO2qhFGcSZ0lywi9B5xtgp
+         b7FxRymY6yEeWiNFjV5+xWhdJqMhQJPeva4t9FKjBqy37CrEBkdqjCzpdlSxWWxwo34f
+         /8L/HhWpl7Jkyo+06ccNRtr5vstkPYtxGsNPgeZBWXQuAjmO0CMjs/tHS6N0fbisXJwG
+         XUJQ==
+X-Gm-Message-State: AOAM5317xUZMtxiF/CNzbGsV70uRVFj0Vb17mb+I9B9U38j/T72lEgKA
+        xiDLvXq/rJxCB6pLMOC6bzw2o3FT8hECnxGFe35Xhg==
+X-Google-Smtp-Source: ABdhPJxWx+hfDk0lqptunggKbQMSvFYj4Ku0H41x8vXU6S8/mAV1QIwpU4LOkgKmpf8w7QdtsdTt1LUVSEoJbOHVisk=
+X-Received: by 2002:ac2:5e26:: with SMTP id o6mr9486395lfg.194.1596497479493;
+ Mon, 03 Aug 2020 16:31:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <23719695ee476715ec54d3310c95d535f8e1391a.1596464896.git.yangdongdong@xiaomi.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1596115816-11758-1-git-send-email-hanks.chen@mediatek.com> <1596115816-11758-2-git-send-email-hanks.chen@mediatek.com>
+In-Reply-To: <1596115816-11758-2-git-send-email-hanks.chen@mediatek.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 4 Aug 2020 01:31:08 +0200
+Message-ID: <CACRpkdYP1EGemHtqO_vrUf-wUyimAs=tXM5WNBD-NcL-h15ZhQ@mail.gmail.com>
+Subject: Re: [PATCH v10 1/3] dt-bindings: pinctrl: add bindings for MediaTek
+ MT6779 SoC
+To:     Hanks Chen <hanks.chen@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/3/20 7:31 AM, Dongdong Yang wrote:
-> diff --git a/drivers/staging/Kconfig b/drivers/staging/Kconfig
-> index 4ec5528..05b231e 100644
-> --- a/drivers/staging/Kconfig
-> +++ b/drivers/staging/Kconfig
-> @@ -120,4 +120,6 @@ source "drivers/staging/qlge/Kconfig"
->  
->  source "drivers/staging/wfx/Kconfig"
->  
-> +source "drivers/staging/fbsched/Kconfig"
+On Thu, Jul 30, 2020 at 3:30 PM Hanks Chen <hanks.chen@mediatek.com> wrote:
 
-where is this fbsched/Kconfig and its associated source files?
+> From: Andy Teng <andy.teng@mediatek.com>
+>
+> Add devicetree bindings for MediaTek MT6779 pinctrl driver.
+>
+> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
+> Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
 
-> +
->  endif # STAGING
+I pulled out the v9 version of this patch and applied v10 instead.
 
-
--- 
-~Randy
-
+Yours,
+Linus Walleij
