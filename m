@@ -2,276 +2,384 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	CHARSET_FARAWAY_HEADER,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA55C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59EFCC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E3F22076C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:37:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E0412076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:37:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=necglobal.onmicrosoft.com header.i=@necglobal.onmicrosoft.com header.b="phncpLC4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Snqp99Le"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgHCNhJ (ORCPT
+        id S1727908AbgHCNhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 09:37:09 -0400
-Received: from mail-eopbgr1400057.outbound.protection.outlook.com ([40.107.140.57]:31465
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726862AbgHCNhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 09:37:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CVLOmtIckgytvMoubv1x50LbEytmPJTqQDKspSPtgcSnhPTy3cGTUh0cxAOaHEgLjljMtKkmEv6hAXWyFy/DRuyNUKYsN8DmrVTUm9/H+VEHyXE0JSfyQxVocPeyYIJsrDVGFig5zM7ql5eQIE5RiWE09vBAb06yQjAIOLndeWjwqhmRR6k/rKrmoCF/yEmBdz5lceKJxxvI9NQVyyzlpWB5RVSUp3mwq8knMpdCvi8mZqC6fk7FlQnm2tC3/+/WvirI3BfCZWjHZchwA/Daf8dbyC4Bmqt81DTIJPS2bYjzwrkB6FCt2f8wqmpryiUdmfRnlhfe41p17cdxB72F4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HVA1U10WEJ/5JvxQKcf7plkrgzr5zwxXutpbVmpEvV4=;
- b=jYAPx3lfx9ZSurlp/LiAVlj93nWWXEx0foZ2Sxk1c+OMefFj4YnjvZjkcHT40ZPimmfymP40QkVmX7hfPYnDl4C7QITA5C7eErI71IHbccxgw+E7kiYvl2qvIGBQp8qL2hxX7lfPbqlVbsJ9gQeLkz8vrVmzCrvSwe4KcU8M3ZMOYnOrD8X3T5/tKwheeArQdNrUEhWyMck860uTSQ4kAF1Oe7m/sTTe6f4/YjC+YMUZzvYNSix3nwwdtXQw2d7INZmxf5Zn/uHWYp0tA3KmP756JYkiGOAJ0Udr2FSg/NIu5NXEv31Ay9iyEOl7wTvWX6JThNmyY0i4GZ+GFHDn2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
- header.d=nec.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=necglobal.onmicrosoft.com; s=selector1-necglobal-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HVA1U10WEJ/5JvxQKcf7plkrgzr5zwxXutpbVmpEvV4=;
- b=phncpLC4BI8ubQKmuyG9DyCzRMweIqFShWoPnYhZPVxZ0Upol6hvHw8RoDO38RYP/3BRiCKX+UFsObEav0nzUSVs5fieKE9TVItCBayehoY8OHEF+/bT5ha2pimEePzCfKKbIwghcvLs/msiC5LaDjyNbwtwy3CAm3arNBb7nMs=
-Received: from TY2PR01MB3210.jpnprd01.prod.outlook.com (2603:1096:404:74::14)
- by TYAPR01MB5053.jpnprd01.prod.outlook.com (2603:1096:404:126::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.21; Mon, 3 Aug
- 2020 13:36:58 +0000
-Received: from TY2PR01MB3210.jpnprd01.prod.outlook.com
- ([fe80::21d2:e51a:a880:2042]) by TY2PR01MB3210.jpnprd01.prod.outlook.com
- ([fe80::21d2:e51a:a880:2042%7]) with mapi id 15.20.3239.021; Mon, 3 Aug 2020
- 13:36:58 +0000
-From:   =?iso-2022-jp?B?SE9SSUdVQ0hJIE5BT1lBKBskQktZOH0hIUQ+TGkbKEIp?= 
-        <naoya.horiguchi@nec.com>
-To:     Qian Cai <cai@lca.pw>
-CC:     "nao.horiguchi@gmail.com" <nao.horiguchi@gmail.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
-        "osalvador@suse.de" <osalvador@suse.de>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "david@redhat.com" <david@redhat.com>,
-        "aneesh.kumar@linux.vnet.ibm.com" <aneesh.kumar@linux.vnet.ibm.com>,
-        "zeil@yandex-team.ru" <zeil@yandex-team.ru>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 00/16] HWPOISON: soft offline rework
-Thread-Topic: [PATCH v5 00/16] HWPOISON: soft offline rework
-Thread-Index: AQHWaZM8vhDjVzP7UUGE+zgLjtO6e6kmYyqA
-Date:   Mon, 3 Aug 2020 13:36:58 +0000
-Message-ID: <20200803133657.GA13307@hori.linux.bs1.fc.nec.co.jp>
-References: <20200731122112.11263-1-nao.horiguchi@gmail.com>
- <20200803123954.GA4631@lca.pw>
-In-Reply-To: <20200803123954.GA4631@lca.pw>
-Accept-Language: ja-JP, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lca.pw; dkim=none (message not signed)
- header.d=none;lca.pw; dmarc=none action=none header.from=nec.com;
-x-originating-ip: [165.225.110.205]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bc915d97-17b2-4cac-c74d-08d837b24b66
-x-ms-traffictypediagnostic: TYAPR01MB5053:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TYAPR01MB505360F214AA6ADE16D17616E74D0@TYAPR01MB5053.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nfwX1hk4Y0OCx28gG6vRoLkFW1SyxPy9WlOhUQi783AM65yBVDiuVDpkq6we9mnBFW+XldMyw6wIxgDpWA4kcs/6JA9MZ0++4pCBoGzeJ7ZJ5VrbPy8siAPClK9xDS48MrcTq3jWsch4Y1Q4x/jM3Tm4JElD0kdj0Uk4kCXN2MhVAQ4dLg1hmJXN5vWQtMlAh5RUkYVsgzQ6/wuNHWPOe7viOXav9WgUraUD78oqGnaZCufT4zGNQAZhtbq97DyEGDMxD6dx6k4aW4N76LthyIOtz9UAKM4H/p/bZ67kY0TqDtP4SHzCZyoe05c3QaS4UGL8Ws8cz77m85U8bWRhmg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3210.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(366004)(376002)(396003)(346002)(66446008)(55236004)(33656002)(6506007)(85182001)(53546011)(9686003)(71200400001)(76116006)(66946007)(66556008)(64756008)(6916009)(6512007)(66476007)(86362001)(478600001)(6486002)(83380400001)(8936002)(7416002)(2906002)(8676002)(1076003)(316002)(26005)(5660300002)(54906003)(186003)(4326008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: qM/GINDA4h/loEsNEQivNFnLS4pJ9gonTPHx2QfijiZL20xa74PbEa3OC8hQdQNEaLi1kTSgBbBUKHfa7Mm2/QtI99NcSppfy2Y1r4+7ysMP3bQAWjtubMCglbfLUDrJXGV5ND61PvKW6poTSh9O80hyDO1mpYae8lk0i/ZbB7BY37E+GcMR6RielXSetNEc3+uTM9JlIaeF7PWp7tL31UY3ty9fIvR27gxP9D9tGqcZBmjryozsM7z4+Ol6N3Y/4ItMwVx2FRW9amuY1Ret/FP7igRHLzimOkr7Xioly3fUf7obkW7txA67FsUf9GKYWyN8ja27B/YECM+6LP5ViM5OvbqfVua17aQ3nB7Asgki/fKe5R+5OHcKafCBTDe4pvZVpa5ZYcRoMNNWHGcz8VBx5meWy1EH24tSe9PdVtGDJNViZypE1A8vKv1GwwUi9HvQEwoxy6mb/YxuVfOFuEW1SjxabX2VJAeuazR48oOrRjHPrfauQfngCeQRtoQjkM71aMZ7B/DRyoMX5Pv3VCiCQfLDZ9fvpmODS13Sw0uerIpG70l2GhwlKnioyVE3iWzUU76UmWN/CEp+ScZ7m48jAjWUCgFW6gaed68hJo14MvCK3552fWGaNLPXWHiKK7e8GakpmiDCa2ANc3oMIw==
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <D3348E932E7B3B4FB91D1512DDCE39E9@jpnprd01.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 3 Aug 2020 09:37:14 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22030 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727889AbgHCNhN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 09:37:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596461829;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1DQiqfSzhKm/VJj/60a3tFHolg0Z1RwCdPQ7UUsoWJM=;
+        b=Snqp99LeIBfcYL2JIiuuPC0kS+LOmmUJ7cdM8wlZ7fPM6yoh9SQSGvqBpkkf1SWWoNua4U
+        s3RH2ouWRlje+rvCF9qXNp5ISOpYMGcA6wH3Yat8oNPJbGYRQ5k+1PCge8zT/WsDPWXLOo
+        A5/PIoD5ukaP47V4mU4BoQlhr/NR3Ho=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-284-eCuTqacVPMOLCAfw2dKgXA-1; Mon, 03 Aug 2020 09:36:56 -0400
+X-MC-Unique: eCuTqacVPMOLCAfw2dKgXA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BB4431005504;
+        Mon,  3 Aug 2020 13:36:54 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 23DE819D7C;
+        Mon,  3 Aug 2020 13:36:51 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 03/18] fsinfo: Provide a bitmap of the features a filesystem
+ supports [ver #21]
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     dhowells@redhat.com, torvalds@linux-foundation.org,
+        raven@themaw.net, mszeredi@redhat.com, christian@brauner.io,
+        jannh@google.com, darrick.wong@oracle.com, kzak@redhat.com,
+        jlayton@redhat.com, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 03 Aug 2020 14:36:51 +0100
+Message-ID: <159646181132.1784947.9295145006449682092.stgit@warthog.procyon.org.uk>
+In-Reply-To: <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk>
+References: <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-X-OriginatorOrg: nec.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY2PR01MB3210.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc915d97-17b2-4cac-c74d-08d837b24b66
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Aug 2020 13:36:58.0828
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Huk10hRF2WJGabLMqoM3y1u5qQiwVi4eJQuPr6IZqQZueslT453wobtnzpt4T04iFhlJxgWPmbNc/C64lSPiNg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB5053
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Provide a bitmap of features that a filesystem may provide for the path
+being queried.  Features include such things as:
 
-On Mon, Aug 03, 2020 at 08:39:55AM -0400, Qian Cai wrote:
-> On Fri, Jul 31, 2020 at 12:20:56PM +0000, nao.horiguchi@gmail.com wrote:
-> > This patchset is the latest version of soft offline rework patchset
-> > targetted for v5.9.
-> >=20
-> > Main focus of this series is to stabilize soft offline.  Historically s=
-oft
-> > offlined pages have suffered from racy conditions because PageHWPoison =
-is
-> > used to a little too aggressively, which (directly or indirectly) invad=
-es
-> > other mm code which cares little about hwpoison.  This results in unexp=
-ected
-> > behavior or kernel panic, which is very far from soft offline's "do not
-> > disturb userspace or other kernel component" policy.
-> >=20
-> > Main point of this change set is to contain target page "via buddy allo=
-cator",
-> > where we first free the target page as we do for normal pages, and remo=
-ve
-> > from buddy only when we confirm that it reaches free list. There is sur=
-ely
-> > race window of page allocation, but that's fine because someone really =
-want
-> > that page and the page is still working, so soft offline can happily gi=
-ve up.
-> >=20
-> > v4 from Oscar tries to handle the race around reallocation, but that pa=
-rt
-> > seems still work in progress, so I decide to separate it for changes in=
-to
-> > v5.9.  Thank you for your contribution, Oscar.
-> >=20
-> > The issue reported by Qian Cai is fixed by patch 16/16.
->=20
-> I am still getting EIO everywhere on next-20200803 (which includes this v=
-5).
->=20
-> # ./random 1
-> - start: migrate_huge_offline
-> - use NUMA nodes 0,8.
-> - mmap and free 8388608 bytes hugepages on node 0
-> - mmap and free 8388608 bytes hugepages on node 8
-> madvise: Input/output error
->=20
-> From the serial console,
->=20
-> [  637.164222][ T8357] soft offline: 0x118ee0: hugepage isolation failed:=
- 0, page count 2, type 7fff800001000e (referenced|uptodate|dirty|head)
-> [  637.164890][ T8357] Soft offlining pfn 0x20001380 at process virtual a=
-ddress 0x7fff9f000000
-> [  637.165422][ T8357] Soft offlining pfn 0x3ba00 at process virtual addr=
-ess 0x7fff9f200000
-> [  637.166409][ T8357] Soft offlining pfn 0x201914a0 at process virtual a=
-ddress 0x7fff9f000000
-> [  637.166833][ T8357] Soft offlining pfn 0x12b9a0 at process virtual add=
-ress 0x7fff9f200000
-> [  637.168044][ T8357] Soft offlining pfn 0x1abb60 at process virtual add=
-ress 0x7fff9f000000
-> [  637.168557][ T8357] Soft offlining pfn 0x20014820 at process virtual a=
-ddress 0x7fff9f200000
-> [  637.169493][ T8357] Soft offlining pfn 0x119720 at process virtual add=
-ress 0x7fff9f000000
-> [  637.169603][ T8357] soft offline: 0x119720: hugepage isolation failed:=
- 0, page count 2, type 7fff800001000e (referenced|uptodate|dirty|head)
-> [  637.169756][ T8357] Soft offlining pfn 0x118ee0 at process virtual add=
-ress 0x7fff9f200000
-> [  637.170653][ T8357] Soft offlining pfn 0x200e81e0 at process virtual a=
-ddress 0x7fff9f000000
-> [  637.171067][ T8357] Soft offlining pfn 0x201c5f60 at process virtual a=
-ddress 0x7fff9f200000
-> [  637.172101][ T8357] Soft offlining pfn 0x201c8f00 at process virtual a=
-ddress 0x7fff9f000000
-> [  637.172241][ T8357] __get_any_page: 0x201c8f00: unknown zero refcount =
-page type 87fff8000000000
+ (1) The general class of filesystem, such as kernel-interface,
+     block-based, flash-based, network-based.
 
-I might misjudge to skip the following patch, sorry about that.
-Could you try with it?
+ (2) Supported inode features, such as which timestamps are supported,
+     whether simple numeric user, group or project IDs are supported and
+     whether user identification is actually more complex behind the
+     scenes.
 
+ (3) Supported volume features, such as it having a UUID, a name or a
+     filesystem ID.
+
+ (4) Supported filesystem features, such as what types of file are
+     supported, whether sparse files, extended attributes and quotas are
+     supported.
+
+ (5) Supported interface features, such as whether locking and leases are
+     supported, what open flags are honoured and how i_version is managed.
+
+For some filesystems, this may be an immutable set and can just be memcpy'd
+into the reply buffer.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
 ---
-From eafe6fde94cd15e67631540f1b2b000b6e33a650 Mon Sep 17 00:00:00 2001
-From: Oscar Salvador <osalvador@suse.de>
-Date: Mon, 3 Aug 2020 22:25:10 +0900
-Subject: [PATCH] mm,hwpoison: Drain pcplists before bailing out for non-bud=
-dy
- zero-refcount page
 
-A page with 0-refcount and !PageBuddy could perfectly be a pcppage.
-Currently, we bail out with an error if we encounter such a page,
-meaning that we do not handle pcppages neither from hard-offline
-nor from soft-offline path.
+ fs/fsinfo.c                 |   34 +++++++++++++++++++++
+ include/linux/fsinfo.h      |   38 +++++++++++++++++++++++
+ include/uapi/linux/fsinfo.h |   68 ++++++++++++++++++++++++++++++++++++++++++
+ samples/vfs/test-fsinfo.c   |   70 +++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 210 insertions(+)
 
-Fix this by draining pcplists whenever we find this kind of page
-and retry the check again.
-It might be that pcplists have been spilled into the buddy allocator
-and so we can handle it.
-
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
----
- mm/memory-failure.c | 30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
-
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index b2753ce2b85b..02be529445c0 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -949,13 +949,13 @@ static int page_action(struct page_state *ps, struct =
-page *p,
+diff --git a/fs/fsinfo.c b/fs/fsinfo.c
+index 7d9c73e9cbde..79c222d465d8 100644
+--- a/fs/fsinfo.c
++++ b/fs/fsinfo.c
+@@ -131,6 +131,39 @@ int fsinfo_generic_supports(struct path *path, struct fsinfo_context *ctx)
  }
-=20
- /**
-- * get_hwpoison_page() - Get refcount for memory error handling:
-+ * __get_hwpoison_page() - Get refcount for memory error handling:
-  * @page:	raw error page (hit by memory error)
-  *
-  * Return: return 0 if failed to grab the refcount, otherwise true (some
-  * non-zero value.)
-  */
--static int get_hwpoison_page(struct page *page)
-+static int __get_hwpoison_page(struct page *page)
- {
- 	struct page *head =3D compound_head(page);
-=20
-@@ -985,6 +985,28 @@ static int get_hwpoison_page(struct page *page)
- 	return 0;
- }
-=20
-+static int get_hwpoison_page(struct page *p)
+ EXPORT_SYMBOL(fsinfo_generic_supports);
+ 
++int fsinfo_generic_features(struct path *path, struct fsinfo_context *ctx)
 +{
-+	int ret;
-+	bool drained =3D false;
++	struct fsinfo_features *p = ctx->buffer;
++	struct super_block *sb = path->dentry->d_sb;
 +
-+retry:
-+	ret =3D __get_hwpoison_page(p);
-+	if (!ret) {
-+		if (!is_free_buddy_page(p) && !page_count(p) && !drained) {
-+			/*
-+			 * The page might be in a pcplist, so try to drain
-+			 * those and see if we are lucky.
-+			 */
-+			drain_all_pages(page_zone(p));
-+			drained =3D true;
-+			goto retry;
-+		}
-+	}
++	fsinfo_init_features(p);
++	if (sb->s_mtd)
++		fsinfo_set_feature(p, FSINFO_FEAT_IS_FLASH_FS);
++	else if (sb->s_bdev)
++		fsinfo_set_feature(p, FSINFO_FEAT_IS_BLOCK_FS);
 +
-+	return ret;
++	if (sb->s_quota_types & QTYPE_MASK_USR)
++		fsinfo_set_feature(p, FSINFO_FEAT_USER_QUOTAS);
++	if (sb->s_quota_types & QTYPE_MASK_GRP)
++		fsinfo_set_feature(p, FSINFO_FEAT_GROUP_QUOTAS);
++	if (sb->s_quota_types & QTYPE_MASK_PRJ)
++		fsinfo_set_feature(p, FSINFO_FEAT_PROJECT_QUOTAS);
++	if (sb->s_d_op && sb->s_d_op->d_automount)
++		fsinfo_set_feature(p, FSINFO_FEAT_AUTOMOUNTS);
++	if (sb->s_id[0])
++		fsinfo_set_feature(p, FSINFO_FEAT_VOLUME_ID);
++	if (sb->s_flags & SB_MANDLOCK)
++		fsinfo_set_feature(p, FSINFO_FEAT_MAND_LOCKS);
++	if (sb->s_flags & SB_POSIXACL)
++		fsinfo_set_feature(p, FSINFO_FEAT_HAS_ACL);
++
++	fsinfo_set_feature(p, FSINFO_FEAT_HAS_ATIME);
++	fsinfo_set_feature(p, FSINFO_FEAT_HAS_CTIME);
++	fsinfo_set_feature(p, FSINFO_FEAT_HAS_MTIME);
++	return sizeof(*p);
++}
++EXPORT_SYMBOL(fsinfo_generic_features);
++
+ static const struct fsinfo_timestamp_info fsinfo_default_timestamp_info = {
+ 	.atime = {
+ 		.minimum	= S64_MIN,
+@@ -206,6 +239,7 @@ static const struct fsinfo_attribute fsinfo_common_attributes[] = {
+ 	FSINFO_VSTRUCT	(FSINFO_ATTR_TIMESTAMP_INFO,	fsinfo_generic_timestamp_info),
+ 	FSINFO_STRING	(FSINFO_ATTR_VOLUME_ID,		fsinfo_generic_volume_id),
+ 	FSINFO_VSTRUCT	(FSINFO_ATTR_VOLUME_UUID,	fsinfo_generic_volume_uuid),
++	FSINFO_VSTRUCT	(FSINFO_ATTR_FEATURES,		fsinfo_generic_features),
+ 
+ 	FSINFO_LIST	(FSINFO_ATTR_FSINFO_ATTRIBUTES,	(void *)123UL),
+ 	FSINFO_VSTRUCT_N(FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO, (void *)123UL),
+diff --git a/include/linux/fsinfo.h b/include/linux/fsinfo.h
+index a811d69b02ff..517edd5a2791 100644
+--- a/include/linux/fsinfo.h
++++ b/include/linux/fsinfo.h
+@@ -68,6 +68,44 @@ extern int fsinfo_generic_supports(struct path *, struct fsinfo_context *);
+ extern int fsinfo_generic_limits(struct path *, struct fsinfo_context *);
+ extern int fsinfo_get_attribute(struct path *, struct fsinfo_context *,
+ 				const struct fsinfo_attribute *);
++extern int fsinfo_generic_features(struct path *, struct fsinfo_context *);
++
++static inline void fsinfo_init_features(struct fsinfo_features *p)
++{
++	p->nr_features = FSINFO_FEAT__NR;
 +}
 +
- /*
-  * Do all that is necessary to remove user space mappings. Unmap
-  * the pages and send SIGBUS to the processes if the data was dirty.
-@@ -1683,10 +1705,6 @@ static int __get_any_page(struct page *p, unsigned l=
-ong pfn)
++static inline void fsinfo_set_feature(struct fsinfo_features *p,
++				      enum fsinfo_feature feature)
++{
++	p->features[feature / 8] |= 1 << (feature % 8);
++}
++
++static inline void fsinfo_clear_feature(struct fsinfo_features *p,
++					enum fsinfo_feature feature)
++{
++	p->features[feature / 8] &= ~(1 << (feature % 8));
++}
++
++/**
++ * fsinfo_set_unix_features - Set standard UNIX features.
++ * @f: The features mask to alter
++ */
++static inline void fsinfo_set_unix_features(struct fsinfo_features *p)
++{
++	fsinfo_set_feature(p, FSINFO_FEAT_UIDS);
++	fsinfo_set_feature(p, FSINFO_FEAT_GIDS);
++	fsinfo_set_feature(p, FSINFO_FEAT_DIRECTORIES);
++	fsinfo_set_feature(p, FSINFO_FEAT_SYMLINKS);
++	fsinfo_set_feature(p, FSINFO_FEAT_HARD_LINKS);
++	fsinfo_set_feature(p, FSINFO_FEAT_DEVICE_FILES);
++	fsinfo_set_feature(p, FSINFO_FEAT_UNIX_SPECIALS);
++	fsinfo_set_feature(p, FSINFO_FEAT_SPARSE);
++	fsinfo_set_feature(p, FSINFO_FEAT_HAS_ATIME);
++	fsinfo_set_feature(p, FSINFO_FEAT_HAS_CTIME);
++	fsinfo_set_feature(p, FSINFO_FEAT_HAS_MTIME);
++	fsinfo_set_feature(p, FSINFO_FEAT_HAS_INODE_NUMBERS);
++}
+ 
+ #endif /* CONFIG_FSINFO */
+ 
+diff --git a/include/uapi/linux/fsinfo.h b/include/uapi/linux/fsinfo.h
+index 65892239ba86..b8b2c836267b 100644
+--- a/include/uapi/linux/fsinfo.h
++++ b/include/uapi/linux/fsinfo.h
+@@ -23,6 +23,7 @@
+ #define FSINFO_ATTR_VOLUME_ID		0x05	/* Volume ID (string) */
+ #define FSINFO_ATTR_VOLUME_UUID		0x06	/* Volume UUID (LE uuid) */
+ #define FSINFO_ATTR_VOLUME_NAME		0x07	/* Volume name (string) */
++#define FSINFO_ATTR_FEATURES		0x08	/* Filesystem features (bits) */
+ 
+ #define FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO 0x100	/* Information about attr N (for path) */
+ #define FSINFO_ATTR_FSINFO_ATTRIBUTES	0x101	/* List of supported attrs (for path) */
+@@ -157,6 +158,73 @@ struct fsinfo_supports {
+ 
+ #define FSINFO_ATTR_SUPPORTS__STRUCT struct fsinfo_supports
+ 
++/*
++ * Information struct for fsinfo(FSINFO_ATTR_FEATURES).
++ *
++ * Bitmask indicating filesystem features where renderable as single bits.
++ */
++enum fsinfo_feature {
++	FSINFO_FEAT_IS_KERNEL_FS	= 0,	/* fs is kernel-special filesystem */
++	FSINFO_FEAT_IS_BLOCK_FS		= 1,	/* fs is block-based filesystem */
++	FSINFO_FEAT_IS_FLASH_FS		= 2,	/* fs is flash filesystem */
++	FSINFO_FEAT_IS_NETWORK_FS	= 3,	/* fs is network filesystem */
++	FSINFO_FEAT_IS_AUTOMOUNTER_FS	= 4,	/* fs is automounter special filesystem */
++	FSINFO_FEAT_IS_MEMORY_FS	= 5,	/* fs is memory-based filesystem */
++	FSINFO_FEAT_AUTOMOUNTS		= 6,	/* fs supports automounts */
++	FSINFO_FEAT_ADV_LOCKS		= 7,	/* fs supports advisory file locking */
++	FSINFO_FEAT_MAND_LOCKS		= 8,	/* fs supports mandatory file locking */
++	FSINFO_FEAT_LEASES		= 9,	/* fs supports file leases */
++	FSINFO_FEAT_UIDS		= 10,	/* fs supports numeric uids */
++	FSINFO_FEAT_GIDS		= 11,	/* fs supports numeric gids */
++	FSINFO_FEAT_PROJIDS		= 12,	/* fs supports numeric project ids */
++	FSINFO_FEAT_STRING_USER_IDS	= 13,	/* fs supports string user identifiers */
++	FSINFO_FEAT_GUID_USER_IDS	= 14,	/* fs supports GUID user identifiers */
++	FSINFO_FEAT_WINDOWS_ATTRS	= 15,	/* fs has windows attributes */
++	FSINFO_FEAT_USER_QUOTAS		= 16,	/* fs has per-user quotas */
++	FSINFO_FEAT_GROUP_QUOTAS	= 17,	/* fs has per-group quotas */
++	FSINFO_FEAT_PROJECT_QUOTAS	= 18,	/* fs has per-project quotas */
++	FSINFO_FEAT_XATTRS		= 19,	/* fs has xattrs */
++	FSINFO_FEAT_JOURNAL		= 20,	/* fs has a journal */
++	FSINFO_FEAT_DATA_IS_JOURNALLED	= 21,	/* fs is using data journalling */
++	FSINFO_FEAT_O_SYNC		= 22,	/* fs supports O_SYNC */
++	FSINFO_FEAT_O_DIRECT		= 23,	/* fs supports O_DIRECT */
++	FSINFO_FEAT_VOLUME_ID		= 24,	/* fs has a volume ID */
++	FSINFO_FEAT_VOLUME_UUID		= 25,	/* fs has a volume UUID */
++	FSINFO_FEAT_VOLUME_NAME		= 26,	/* fs has a volume name */
++	FSINFO_FEAT_VOLUME_FSID		= 27,	/* fs has a volume FSID */
++	FSINFO_FEAT_IVER_ALL_CHANGE	= 28,	/* i_version represents data + meta changes */
++	FSINFO_FEAT_IVER_DATA_CHANGE	= 29,	/* i_version represents data changes only */
++	FSINFO_FEAT_IVER_MONO_INCR	= 30,	/* i_version incremented monotonically */
++	FSINFO_FEAT_DIRECTORIES		= 31,	/* fs supports (sub)directories */
++	FSINFO_FEAT_SYMLINKS		= 32,	/* fs supports symlinks */
++	FSINFO_FEAT_HARD_LINKS		= 33,	/* fs supports hard links */
++	FSINFO_FEAT_HARD_LINKS_1DIR	= 34,	/* fs supports hard links in same dir only */
++	FSINFO_FEAT_DEVICE_FILES	= 35,	/* fs supports bdev, cdev */
++	FSINFO_FEAT_UNIX_SPECIALS	= 36,	/* fs supports pipe, fifo, socket */
++	FSINFO_FEAT_RESOURCE_FORKS	= 37,	/* fs supports resource forks/streams */
++	FSINFO_FEAT_NAME_CASE_INDEP	= 38,	/* Filename case independence is mandatory */
++	FSINFO_FEAT_NAME_CASE_FOLD	= 39,	/* Filename case is folded on medium */
++	FSINFO_FEAT_NAME_NON_UTF8	= 40,	/* fs has non-utf8 names */
++	FSINFO_FEAT_NAME_HAS_CODEPAGE	= 41,	/* fs has a filename codepage */
++	FSINFO_FEAT_SPARSE		= 42,	/* fs supports sparse files */
++	FSINFO_FEAT_NOT_PERSISTENT	= 43,	/* fs is not persistent */
++	FSINFO_FEAT_NO_UNIX_MODE	= 44,	/* fs does not support unix mode bits */
++	FSINFO_FEAT_HAS_ATIME		= 45,	/* fs supports access time */
++	FSINFO_FEAT_HAS_BTIME		= 46,	/* fs supports birth/creation time */
++	FSINFO_FEAT_HAS_CTIME		= 47,	/* fs supports change time */
++	FSINFO_FEAT_HAS_MTIME		= 48,	/* fs supports modification time */
++	FSINFO_FEAT_HAS_ACL		= 49,	/* fs supports ACLs of some sort */
++	FSINFO_FEAT_HAS_INODE_NUMBERS	= 50,	/* fs has inode numbers */
++	FSINFO_FEAT__NR
++};
++
++struct fsinfo_features {
++	__u32	nr_features;	/* Number of supported features (FSINFO_FEAT__NR) */
++	__u8	features[(FSINFO_FEAT__NR + 7) / 8];
++};
++
++#define FSINFO_ATTR_FEATURES__STRUCT struct fsinfo_features
++
+ struct fsinfo_timestamp_one {
+ 	__s64	minimum;	/* Minimum timestamp value in seconds */
+ 	__s64	maximum;	/* Maximum timestamp value in seconds */
+diff --git a/samples/vfs/test-fsinfo.c b/samples/vfs/test-fsinfo.c
+index 934b25399ffe..c5932109f683 100644
+--- a/samples/vfs/test-fsinfo.c
++++ b/samples/vfs/test-fsinfo.c
+@@ -190,6 +190,75 @@ static void dump_fsinfo_generic_supports(void *reply, unsigned int size)
+ 	printf("\twin_fattrs   : %x\n", f->win_file_attrs);
+ }
+ 
++#define FSINFO_FEATURE_NAME(C) [FSINFO_FEAT_##C] = #C
++static const char *fsinfo_feature_names[FSINFO_FEAT__NR] = {
++	FSINFO_FEATURE_NAME(IS_KERNEL_FS),
++	FSINFO_FEATURE_NAME(IS_BLOCK_FS),
++	FSINFO_FEATURE_NAME(IS_FLASH_FS),
++	FSINFO_FEATURE_NAME(IS_NETWORK_FS),
++	FSINFO_FEATURE_NAME(IS_AUTOMOUNTER_FS),
++	FSINFO_FEATURE_NAME(IS_MEMORY_FS),
++	FSINFO_FEATURE_NAME(AUTOMOUNTS),
++	FSINFO_FEATURE_NAME(ADV_LOCKS),
++	FSINFO_FEATURE_NAME(MAND_LOCKS),
++	FSINFO_FEATURE_NAME(LEASES),
++	FSINFO_FEATURE_NAME(UIDS),
++	FSINFO_FEATURE_NAME(GIDS),
++	FSINFO_FEATURE_NAME(PROJIDS),
++	FSINFO_FEATURE_NAME(STRING_USER_IDS),
++	FSINFO_FEATURE_NAME(GUID_USER_IDS),
++	FSINFO_FEATURE_NAME(WINDOWS_ATTRS),
++	FSINFO_FEATURE_NAME(USER_QUOTAS),
++	FSINFO_FEATURE_NAME(GROUP_QUOTAS),
++	FSINFO_FEATURE_NAME(PROJECT_QUOTAS),
++	FSINFO_FEATURE_NAME(XATTRS),
++	FSINFO_FEATURE_NAME(JOURNAL),
++	FSINFO_FEATURE_NAME(DATA_IS_JOURNALLED),
++	FSINFO_FEATURE_NAME(O_SYNC),
++	FSINFO_FEATURE_NAME(O_DIRECT),
++	FSINFO_FEATURE_NAME(VOLUME_ID),
++	FSINFO_FEATURE_NAME(VOLUME_UUID),
++	FSINFO_FEATURE_NAME(VOLUME_NAME),
++	FSINFO_FEATURE_NAME(VOLUME_FSID),
++	FSINFO_FEATURE_NAME(IVER_ALL_CHANGE),
++	FSINFO_FEATURE_NAME(IVER_DATA_CHANGE),
++	FSINFO_FEATURE_NAME(IVER_MONO_INCR),
++	FSINFO_FEATURE_NAME(DIRECTORIES),
++	FSINFO_FEATURE_NAME(SYMLINKS),
++	FSINFO_FEATURE_NAME(HARD_LINKS),
++	FSINFO_FEATURE_NAME(HARD_LINKS_1DIR),
++	FSINFO_FEATURE_NAME(DEVICE_FILES),
++	FSINFO_FEATURE_NAME(UNIX_SPECIALS),
++	FSINFO_FEATURE_NAME(RESOURCE_FORKS),
++	FSINFO_FEATURE_NAME(NAME_CASE_INDEP),
++	FSINFO_FEATURE_NAME(NAME_CASE_FOLD),
++	FSINFO_FEATURE_NAME(NAME_NON_UTF8),
++	FSINFO_FEATURE_NAME(NAME_HAS_CODEPAGE),
++	FSINFO_FEATURE_NAME(SPARSE),
++	FSINFO_FEATURE_NAME(NOT_PERSISTENT),
++	FSINFO_FEATURE_NAME(NO_UNIX_MODE),
++	FSINFO_FEATURE_NAME(HAS_ATIME),
++	FSINFO_FEATURE_NAME(HAS_BTIME),
++	FSINFO_FEATURE_NAME(HAS_CTIME),
++	FSINFO_FEATURE_NAME(HAS_MTIME),
++	FSINFO_FEATURE_NAME(HAS_ACL),
++	FSINFO_FEATURE_NAME(HAS_INODE_NUMBERS),
++};
++
++static void dump_fsinfo_generic_features(void *reply, unsigned int size)
++{
++	struct fsinfo_features *f = reply;
++	int i;
++
++	printf("\n\t");
++	for (i = 0; i < sizeof(f->features); i++)
++		printf("%02x", f->features[i]);
++	printf(" (nr=%u)\n", f->nr_features);
++	for (i = 0; i < FSINFO_FEAT__NR; i++)
++		if (f->features[i / 8] & (1 << (i % 8)))
++			printf("\t- %s\n", fsinfo_feature_names[i]);
++}
++
+ static void print_time(struct fsinfo_timestamp_one *t, char stamp)
  {
- 	int ret;
-=20
--	/*
--	 * When the target page is a free hugepage, just remove it
--	 * from free hugepage list.
--	 */
- 	if (!get_hwpoison_page(p)) {
- 		if (PageHuge(p)) {
- 			pr_info("%s: %#lx free huge page\n", __func__, pfn);
---=20
-2.25.1=
+ 	printf("\t%ctime       : gran=%uE%d range=%llx-%llx\n",
+@@ -290,6 +359,7 @@ static const struct fsinfo_attribute fsinfo_attributes[] = {
+ 	FSINFO_VSTRUCT	(FSINFO_ATTR_IDS,		fsinfo_generic_ids),
+ 	FSINFO_VSTRUCT	(FSINFO_ATTR_LIMITS,		fsinfo_generic_limits),
+ 	FSINFO_VSTRUCT	(FSINFO_ATTR_SUPPORTS,		fsinfo_generic_supports),
++	FSINFO_VSTRUCT	(FSINFO_ATTR_FEATURES,		fsinfo_generic_features),
+ 	FSINFO_VSTRUCT	(FSINFO_ATTR_TIMESTAMP_INFO,	fsinfo_generic_timestamp_info),
+ 	FSINFO_STRING	(FSINFO_ATTR_VOLUME_ID,		string),
+ 	FSINFO_VSTRUCT	(FSINFO_ATTR_VOLUME_UUID,	fsinfo_generic_volume_uuid),
+
+
