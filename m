@@ -2,133 +2,109 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D15C5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C128BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B19D2206DA
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:33:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6NQsPx1"
+	by mail.kernel.org (Postfix) with ESMTP id 9D4EF2076E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:35:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728439AbgHCOd1 (ORCPT
+        id S1728013AbgHCOfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 10:33:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33650 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbgHCOd0 (ORCPT
+        Mon, 3 Aug 2020 10:35:18 -0400
+Received: from ec2-3-21-30-127.us-east-2.compute.amazonaws.com ([3.21.30.127]:48052
+        "EHLO www.teo-en-ming.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726769AbgHCOfS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 10:33:26 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69962C06174A;
-        Mon,  3 Aug 2020 07:33:26 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id l2so11844871pff.0;
-        Mon, 03 Aug 2020 07:33:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CSryihUrOfV/QpASOmMQXnPhqAteV/tdNxvfNf+2Xfg=;
-        b=f6NQsPx1SkjRWIIzrAvw+PGh7OTrPeRIjU09/5f1HbEsEBW3tw9g0Ar8D+a8idmOb4
-         5FTeGXd2+X2YtudoVzwpciidf2SUXhlbjHbPx6B/XR3tcXvBBWcbiSoeoa46lHW2N8Hg
-         p6Kc+bkMd02lDhTNFpL3vxsLMIZkPTai+FCiRW/lVS/lTNEydmuQ7uwyaJ5JHrJVtbCb
-         LxxcQ47FRB/UgRGX11GVDSIcxnXRu0gtVOXSvaLrGUI5utT828y27TVT8gtINMCh4pOK
-         P4doXOcAx6+88uFgzha2bpxsf14ck6e/d+qZ3BVSEbEzFT0D6G9xliA+Xl72rGid/RGL
-         REFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CSryihUrOfV/QpASOmMQXnPhqAteV/tdNxvfNf+2Xfg=;
-        b=Uqs/jLCLK9BRJBlfudPaztkIv7+nbKlBP21gmCxanlmO0souvzW/cByXf1B7FqKb/9
-         4m4wvedEzTOuOxSidS4i0eZpw60nFkrd6VIy86uYpRaH9YWHWXeLA01AWMXsF6HkkqvV
-         /m6grhkZ1fOlSoLnfATeJKqXAvPaNtepCeWNipCiCgLT+s/fBlkevzwWyimUGD+k+Ll/
-         +gNmHM2a8cG98zmj4KEtWMV9oiSuwOmZhYFfkwdKGx0KenQ3Hen8TCKiEBBdPboritk7
-         oMufWZL51chu+vTbOrhtqdIli7udtCoNqA8eijM48WdnaGoUs/5Pal8pxL2boBod0Zac
-         vfsA==
-X-Gm-Message-State: AOAM533AQDkGBROuSsSLtgDf7KljDsI4GepTqQxABT1zrFD/ykA1tP6M
-        vJSs15S4Gz3hvJY0/e7maQg=
-X-Google-Smtp-Source: ABdhPJw8jUAIC6cPasGvqz562zsJjwF1GyLzlxHbXTTNNN7GXWCblmsAa3t3KFutJ5N751+aeL6uNw==
-X-Received: by 2002:a62:19c4:: with SMTP id 187mr15865681pfz.312.1596465205971;
-        Mon, 03 Aug 2020 07:33:25 -0700 (PDT)
-Received: from yangdongdo-OptiPlex-9010.mioffice.cn ([209.9.72.214])
-        by smtp.gmail.com with ESMTPSA id x20sm15849188pgc.49.2020.08.03.07.33.20
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Aug 2020 07:33:25 -0700 (PDT)
-From:   Dongdong Yang <contribute.kernel@gmail.com>
-To:     gregkh@linuxfoundation.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-pm@vger.kernel.org, yangdongdong@xiaomi.com,
-        tanggeliang@xiaomi.com, taojun@xiaomi.com, huangqiwu@xiaomi.com,
-        rocking@linux.alibaba.com, fengwei@xiaomi.com,
-        zhangguoquan@xiaomi.com, gulinghua@xiaomi.com, duhui@xiaomi.com
-Subject: [PATCH v3] Provide USF for the portable equipment.
-Date:   Mon,  3 Aug 2020 22:31:14 +0800
-Message-Id: <cover.1596464894.git.yangdongdong@xiaomi.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 3 Aug 2020 10:35:18 -0400
+Received: from localhost (localhost [IPv6:::1])
+        by www.teo-en-ming.com (Postfix) with ESMTPA id 5B18343A8BF;
+        Mon,  3 Aug 2020 22:35:17 +0800 (+08)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Date:   Mon, 03 Aug 2020 22:35:17 +0800
+From:   Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     ceo@teo-en-ming-corp.com
+Subject: Teo En Ming's Guide on Basic Configuration of Cisco ASA 5505 Firewall
+Message-ID: <5139ed4ecddea2c71db969418d0ad864@teo-en-ming.com>
+X-Sender: ceo@teo-en-ming.com
+User-Agent: Roundcube Webmail/1.2.3
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongdong Yang <yangdongdong@xiaomi.com>
+Subject: Teo En Ming's Guide on Basic Configuration of Cisco ASA 5505 
+Firewall
 
-This patch provides USF(User Sensitive Feedback factor) auxiliary
-cpufreq governor to support high level layer sysfs inodes setting
-for utils adjustment purpose from the identified scenario on portable
-equipment. Because the power consumption and UI response are more cared
-for by portable equipment users. And the "screen off" status stands for
-no request from the user, however, the kernel is still expected to
-notify the user in time on modem, network or powerkey events occur. USF
-provides "sched_usf_non_ux_r" sysfs inode to cut down the utils from
-user space tasks according to high level scenario. In addition, it
-usually hints more cpufreq demand that the preemptive counts of the
-tasks on the cpu burst and over the user expecting completed time such
-as the ratio sysctl_sched_latency to sysctl_sched_min_granularity on
-"screen on" status, which more likely with more UI. The sysfs inodes
-"sched_usf_up_l0_r" and "sched_usf_down_r" have been provided to adjust
-the utils according to high level identified scenario to alloc the
-cpufreq in time.
+Author: Mr. Turritopsis Dohrnii Teo En Ming (Targeted Individual)
+Country: Singapore
+Date Published: 3rd August 2020 Monday Singapore Time
+Type of Publication: PDF manual
 
-Changes in v3
-  - Move usf.c to kernel/sched.
-  - Remove trace_printk and debugfs.
-  - Add document draft.
-  - Update comments.
+Cisco ASA firewall appliances use open source software.
 
-Changes in v2
-  - Add adjust_task_pred_set switch.
-  - Move adjust_task_pred_demand declaration into sched.h
-  - Update comments.
+Cisco Adaptive Security Appliance Software, version 9.8
+Copyright (c) 1996-2019 by Cisco Systems, Inc.
+For licenses and notices for open source software used in this product, 
+please visit
+http://www.cisco.com/go/asa-opensource
+
+Redundant Google Drive download links for Teo En Ming's PDF manual:
+
+[1] 
+https://drive.google.com/file/d/1-YTN_PQxE5uBjuDlEsirzNETXo62H4Gc/view?usp=sharing
+
+[2] 
+https://drive.google.com/file/d/1J19bw0pV5PF_fOalaQ9QkW0uX2XlskXK/view?usp=sharing
+
+[3] 
+https://drive.google.com/file/d/12P-pVWJNIZ4BJpi044PflqoDAg8UDVl9/view?usp=sharing
+
+[4] 
+https://drive.google.com/file/d/1VNoEkdVNyIx43YkeZMM0Lrux51GyDDst/view?usp=sharing
+
+[5] 
+https://drive.google.com/file/d/1eUFHZ5MihrgSxIMfnAqRNls48ib5g3vW/view?usp=sharing
+
+[6] 
+https://drive.google.com/file/d/1Gqqn-d7sMxT7a57ItEzDwqiKxBNkXsc-/view?usp=sharing
+
+Total number of pages: 52
 
 
-Dongdong Yang (1):
-  sched: Provide USF for the portable equipment.
 
- Documentation/scheduler/sched-ufs.txt |  78 +++++++++
- drivers/cpufreq/Kconfig               |  11 ++
- drivers/staging/Kconfig               |   2 +
- drivers/staging/Makefile              |   1 +
- include/trace/events/sched.h          |  35 ++++
- kernel/sched/Makefile                 |   1 +
- kernel/sched/cpufreq_schedutil.c      |   3 +
- kernel/sched/sched.h                  |  10 ++
- kernel/sched/usf.c                    | 305 ++++++++++++++++++++++++++++++++++
- 9 files changed, 446 insertions(+)
- create mode 100644 Documentation/scheduler/sched-ufs.txt
- create mode 100644 kernel/sched/usf.c
 
--- 
-2.7.4
 
+
+
+-----BEGIN EMAIL SIGNATURE-----
+
+The Gospel for all Targeted Individuals (TIs):
+
+[The New York Times] Microwave Weapons Are Prime Suspect in Ills of
+U.S. Embassy Workers
+
+Link: 
+https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microwave.html
+
+********************************************************************************************
+
+Singaporean Mr. Turritopsis Dohrnii Teo En Ming's Academic
+Qualifications as at 14 Feb 2019 and refugee seeking attempts at the 
+United Nations Refugee Agency Bangkok (21 Mar 2017), in Taiwan (5 Aug 
+2019) and Australia (25 Dec 2019 to 9 Jan 2020):
+
+[1] https://tdtemcerts.wordpress.com/
+
+[2] https://tdtemcerts.blogspot.sg/
+
+[3] https://www.scribd.com/user/270125049/Teo-En-Ming
+
+-----END EMAIL SIGNATURE-----
