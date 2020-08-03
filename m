@@ -2,114 +2,154 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE108C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9D0A20678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:55:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596459350;
-	bh=4y2n0jy/N97pc+QEFGNpXS+JrtHgv7CaUW3acs2G54A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k9Ljpvf0an/3K2ppU0LlCNv5kt+7W+m049uGb7TR60c4+zEGCKD6nf9SFDmdLq5g1
-	 MVCGukRPUfPpE9gYEhQJ3TPveQjXsO4MXRFfKNGi2orqYQ0ZBydcrLi0flG5fSWClz
-	 uU25bS3zbv7cJBNvkbbNxteyZkc6d6+SFO/1y7Q8=
+	by mail.kernel.org (Postfix) with ESMTP id 9E06F20678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:55:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="daUCzK1l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729283AbgHCMzi (ORCPT
+        id S1728356AbgHCMzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:55:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46100 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727001AbgHCMW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:22:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FCBB2076E;
-        Mon,  3 Aug 2020 12:22:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457347;
-        bh=4y2n0jy/N97pc+QEFGNpXS+JrtHgv7CaUW3acs2G54A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Jh8i7AdZehGmf/f0EoItYD0cUHdMwhaO/nlrGSZLE5fdU7dN7Ryt6oaYxMVE7Cx0
-         u0g8D5ZnfWknBfvShI87oQ6mdxOmxE3G7dGflumGjN6MaAaLxm9jJ+dXqjU2WlTjCg
-         TCI/RUL23hes2g1ygd6eGRnqJhepFyGjCLOVtWKY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH 5.7 027/120] drm/mcde: Fix stability issue
-Date:   Mon,  3 Aug 2020 14:18:05 +0200
-Message-Id: <20200803121904.168818490@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
-References: <20200803121902.860751811@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 3 Aug 2020 08:55:53 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:52356 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729026AbgHCMze (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:55:34 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 073CtOKY110727;
+        Mon, 3 Aug 2020 07:55:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1596459324;
+        bh=WYNukEVRHfZsaR36KvZkUDOLNg6q0B0GBqASCxqL5Uk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=daUCzK1lBs5eUhC5ZhbT3vEBNO9ujIy5fs1Dd5XN26bsggte826Hi9EeASTtzpbOB
+         YsjLLADA5eXmwv5YRxUucnv8hmTs83gtIYQ1+iIQXdZ+Q+rHwhhWTKprBGuhLUtzUW
+         OIBWOe/MGIckgWZ/fWecPtyM0nupC7E+JUQscgPs=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 073CtOI9079018
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 3 Aug 2020 07:55:24 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 3 Aug
+ 2020 07:55:24 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 3 Aug 2020 07:55:24 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 073CtL4R083147;
+        Mon, 3 Aug 2020 07:55:22 -0500
+Subject: Re: [PATCH 1/2] dmaengine: ti: k3-psil: Use soc_device_match to get
+ the psil map
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <linux-arm-kernel@lists.infradead.org>, <nm@ti.com>,
+        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>, <nsekhar@ti.com>,
+        <kishon@ti.com>, <linux-kernel@vger.kernel.org>
+References: <20200803101128.20885-1-peter.ujfalusi@ti.com>
+ <20200803101128.20885-2-peter.ujfalusi@ti.com>
+ <20200803111436.GN12965@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <5ac0498e-8874-4864-c823-d9648c381411@ti.com>
+Date:   Mon, 3 Aug 2020 15:56:44 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200803111436.GN12965@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
 
-commit aa7bf898d4bf921f61fab078040e8baec3f28126 upstream.
 
-Whenever a display update was sent, apart from updating
-the memory base address, we called mcde_display_send_one_frame()
-which also sent a command to the display requesting the TE IRQ
-and enabling the FIFO.
+On 03/08/2020 14.14, Vinod Koul wrote:
+> On 03-08-20, 13:11, Peter Ujfalusi wrote:
+>> Instead of separate of_machine_is_compatible() it is better to use
+>> soc_device_match() and soc_device_attribute struct to get the PSI-L ma=
+p
+>> for the booted device.
+>>
+>> By using soc_device_match() it is easier to add support for new device=
+s.
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>>  drivers/dma/ti/k3-psil.c | 19 ++++++++++++++-----
+>>  1 file changed, 14 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/dma/ti/k3-psil.c b/drivers/dma/ti/k3-psil.c
+>> index fb7c8150b0d1..3ca29aabac93 100644
+>> --- a/drivers/dma/ti/k3-psil.c
+>> +++ b/drivers/dma/ti/k3-psil.c
+>> @@ -9,11 +9,18 @@
+>>  #include <linux/init.h>
+>>  #include <linux/mutex.h>
+>>  #include <linux/of.h>
+>> +#include <linux/sys_soc.h>
+>> =20
+>>  #include "k3-psil-priv.h"
+>> =20
+>>  static DEFINE_MUTEX(ep_map_mutex);
+>> -static struct psil_ep_map *soc_ep_map;
+>> +static const struct psil_ep_map *soc_ep_map;
+>> +
+>> +static const struct soc_device_attribute k3_soc_devices[] =3D {
+>> +	{ .family =3D "AM65X", .data =3D &am654_ep_map },
+>> +	{ .family =3D "J721E", .data =3D &j721e_ep_map },
+>> +	{ /* sentinel */ }
+>> +};
+>> =20
+>>  struct psil_endpoint_config *psil_get_ep_config(u32 thread_id)
+>>  {
+>> @@ -21,15 +28,17 @@ struct psil_endpoint_config *psil_get_ep_config(u3=
+2 thread_id)
+>> =20
+>>  	mutex_lock(&ep_map_mutex);
+>>  	if (!soc_ep_map) {
+>> -		if (of_machine_is_compatible("ti,am654")) {
+>> -			soc_ep_map =3D &am654_ep_map;
+>> -		} else if (of_machine_is_compatible("ti,j721e")) {
+>> -			soc_ep_map =3D &j721e_ep_map;
+>> +		const struct soc_device_attribute *soc;
+>> +
+>> +		soc =3D soc_device_match(k3_soc_devices);
+>> +		if (soc) {
+>> +			soc_ep_map =3D soc->data;
+>>  		} else {
+>>  			pr_err("PSIL: No compatible machine found for map\n");
+>>  			mutex_unlock(&ep_map_mutex);
+>>  			return ERR_PTR(-ENOTSUPP);
+>>  		}
+>> +
+>=20
+> not related
 
-When continuous updates are running this is wrong: we need
-to only send this to start the flow to the display on
-the very first update. This lead to the display pipeline
-locking up and crashing.
+True, I'll drop it.
 
-Check if the flow is already running and in that case
-do not call mcde_display_send_one_frame().
+>=20
+>>  		pr_debug("%s: Using map for %s\n", __func__, soc_ep_map->name);
+>>  	}
+>>  	mutex_unlock(&ep_map_mutex);
 
-This fixes crashes on the Samsung GT-S7710 (Skomer).
+Thanks,
+- P=C3=A9ter
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Acked-by: Stephan Gerhold <stephan@gerhold.net>
-Cc: Stephan Gerhold <stephan@gerhold.net>
-Cc: stable@vger.kernel.org
-Link: https://patchwork.freedesktop.org/patch/msgid/20200718233323.3407670-1-linus.walleij@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/gpu/drm/mcde/mcde_display.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
-
---- a/drivers/gpu/drm/mcde/mcde_display.c
-+++ b/drivers/gpu/drm/mcde/mcde_display.c
-@@ -1060,9 +1060,14 @@ static void mcde_display_update(struct d
- 	 */
- 	if (fb) {
- 		mcde_set_extsrc(mcde, drm_fb_cma_get_gem_addr(fb, pstate, 0));
--		if (!mcde->video_mode)
--			/* Send a single frame using software sync */
--			mcde_display_send_one_frame(mcde);
-+		if (!mcde->video_mode) {
-+			/*
-+			 * Send a single frame using software sync if the flow
-+			 * is not active yet.
-+			 */
-+			if (mcde->flow_active == 0)
-+				mcde_display_send_one_frame(mcde);
-+		}
- 		dev_info_once(mcde->dev, "sent first display update\n");
- 	} else {
- 		/*
-
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
