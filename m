@@ -2,52 +2,53 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB44C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD30FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7A122054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A160E2076B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458657;
-	bh=8dsC/cTUUWFMRDDnC5VWZkXw703a+7EhD/xyNN/90Ww=;
+	s=default; t=1596458666;
+	bh=3mwQymnSuAF7EoIQqtlTrQToDWYmmPfzGvkEd4olq2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=II5luawnoHwgrVhPaYlsJ3HCD/9qO7fFt/1dP5y92UiDlwqFDTO5LhGFIpsbpRhLa
-	 PjdvIawl9eX+KlmcWbTHaHNPqXrYeaKeoGjOCWARfMoft96LBhPm/dro6GSxfeHdy5
-	 I/h7o6MRd85NuVQk34feI7zA003jUPp3eBjUf6pQ=
+	b=BZtPHPiNv1aS02PNrrbyjN+umWHD72PhuDkYmEhN3/MU0G0vQTJ9TbXlGN9hRQBDQ
+	 AYFZJeGzacZWCvYLXiO5yw1v3kj75rCIgAPIjerYwkibq3xmEv5/nAhvK3nXD1WnRL
+	 CxrY1tDWcY/x6cRyfcO8XKWGrqGV1Ke9pfEaQ3Bk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbgHCMoQ (ORCPT
+        id S1729559AbgHCMoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:44:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54604 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:44:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728737AbgHCM20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:28:26 -0400
+        id S1728177AbgHCM2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:28:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE6E9207DF;
-        Mon,  3 Aug 2020 12:28:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13978204EC;
+        Mon,  3 Aug 2020 12:28:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457705;
-        bh=8dsC/cTUUWFMRDDnC5VWZkXw703a+7EhD/xyNN/90Ww=;
+        s=default; t=1596457702;
+        bh=3mwQymnSuAF7EoIQqtlTrQToDWYmmPfzGvkEd4olq2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BH7PDv+AnkxRaQrxojDCMNI47PdvEyBmclEMkG674W3jo9uiBwZhLs1e+NFTdoptV
-         /M2V5rk1HPD4zoABJ/ikHHApnIkLrmIsOW+QshEMkBcHdXAH71hzeq031geKKhgQiX
-         V/epuJiAl0Vb51ZCeYYPN2b0nXlj7oye+hO4Db60=
+        b=0AjX0z20UAFbZt+xK3B948GcrEmeaYzdfzqY8Rax5OpVtxHj1o5BszcdzU4g/fCQO
+         GOfzIN9AJJ/9aorRKZSzxvzaR3CpxomB7Jz9bRtq0Ox5mTOdCOknSAufMtzZE7Eq1R
+         jhF/+BDI9uoGJ1KgxudPXIwBinXIn4tbcpbFiu1w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>
-Subject: [PATCH 5.4 27/90] drm/dbi: Fix SPI Type 1 (9-bit) transfer
-Date:   Mon,  3 Aug 2020 14:18:49 +0200
-Message-Id: <20200803121858.938327468@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Rich Felker <dalias@libc.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 44/90] sh: Fix validation of system call number
+Date:   Mon,  3 Aug 2020 14:19:06 +0200
+Message-Id: <20200803121859.755761157@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -60,44 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
 
-commit 900ab59e2621053b009f707f80b2c19ce0af5dee upstream.
+[ Upstream commit 04a8a3d0a73f51c7c2da84f494db7ec1df230e69 ]
 
-The function mipi_dbi_spi1_transfer() will transfer its payload as 9-bit
-data, the 9th (MSB) bit being the data/command bit. In order to do that,
-it unpacks the 8-bit values into 16-bit values, then sets the 9th bit if
-the byte corresponds to data, clears it otherwise. The 7 MSB are
-padding. The array of now 16-bit values is then passed to the SPI core
-for transfer.
+The slow path for traced system call entries accessed a wrong memory
+location to get the number of the maximum allowed system call number.
+Renumber the numbered "local" label for the correct location to avoid
+collisions with actual local labels.
 
-This function was broken since its introduction, as the length of the
-SPI transfer was set to the payload size before its conversion, but the
-payload doubled in size due to the 8-bit -> 16-bit conversion.
-
-Fixes: 02dd95fe3169 ("drm/tinydrm: Add MIPI DBI support")
-Cc: <stable@vger.kernel.org> # 5.4+
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-Reviewed-by: Noralf Trønnes <noralf@tronnes.org>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200703141341.1266263-1-paul@crapouillou.net
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
+Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Fixes: f3a8308864f920d2 ("sh: Add a few missing irqflags tracing markers.")
+Signed-off-by: Rich Felker <dalias@libc.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_mipi_dbi.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/sh/kernel/entry-common.S | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/drm_mipi_dbi.c
-+++ b/drivers/gpu/drm/drm_mipi_dbi.c
-@@ -937,7 +937,7 @@ static int mipi_dbi_spi1_transfer(struct
- 			}
- 		}
- 
--		tr.len = chunk;
-+		tr.len = chunk * 2;
- 		len -= chunk;
- 
- 		ret = spi_sync(spi, &m);
+diff --git a/arch/sh/kernel/entry-common.S b/arch/sh/kernel/entry-common.S
+index d31f66e82ce51..4a8ec9e40cc2a 100644
+--- a/arch/sh/kernel/entry-common.S
++++ b/arch/sh/kernel/entry-common.S
+@@ -199,7 +199,7 @@ syscall_trace_entry:
+ 	mov.l	@(OFF_R7,r15), r7   ! arg3
+ 	mov.l	@(OFF_R3,r15), r3   ! syscall_nr
+ 	!
+-	mov.l	2f, r10			! Number of syscalls
++	mov.l	6f, r10			! Number of syscalls
+ 	cmp/hs	r10, r3
+ 	bf	syscall_call
+ 	mov	#-ENOSYS, r0
+@@ -353,7 +353,7 @@ ENTRY(system_call)
+ 	tst	r9, r8
+ 	bf	syscall_trace_entry
+ 	!
+-	mov.l	2f, r8			! Number of syscalls
++	mov.l	6f, r8			! Number of syscalls
+ 	cmp/hs	r8, r3
+ 	bt	syscall_badsys
+ 	!
+@@ -392,7 +392,7 @@ syscall_exit:
+ #if !defined(CONFIG_CPU_SH2)
+ 1:	.long	TRA
+ #endif
+-2:	.long	NR_syscalls
++6:	.long	NR_syscalls
+ 3:	.long	sys_call_table
+ 7:	.long	do_syscall_trace_enter
+ 8:	.long	do_syscall_trace_leave
+-- 
+2.25.1
+
 
 
