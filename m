@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC02C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08475C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02CB0204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6E8E204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458374;
-	bh=O2RC+e43R6W2CMNZ/EhI3/kEAnaUQ/baPfNH/UmDZLw=;
+	s=default; t=1596458388;
+	bh=h3F50YRu/vJdUAaf8yXaUUqx+mIxdpj9HxIcTXfF7B0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y7c0o4I4+mIRa89cYXelkGbKQBw+RdWcxNu7By01LPaRlZYZ4XoT/uUPTrIRKzFig
-	 yzrZP04UEMajeg7fOY/BSGPZ6w09XoAFrCzgqxoPKg/aQKrkJUm8Mw2vTkI/08/yxM
-	 No8xaUr6A6gSAV1lEXwMdRoWdXUoaX5H9OLVPf5w=
+	b=OBfv5QmiWKIxhQX7ID4aaJ3GOAovoon52QLcsRlA4E7fLmsuY0mNTmp+sFt4vRh54
+	 ccORplexQYdv0n6QJHuakblAsN0QT2zx/PfAoGzg8OQTzeEsdfmNKTQnTYJfAeUg+b
+	 zppsS8wsP9oGeky1a3+pSZ1udMyvRA/TdF8H2tOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729226AbgHCMjc (ORCPT
+        id S1729434AbgHCMjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:39:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33744 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:39:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729467AbgHCMdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:33:45 -0400
+        id S1729446AbgHCMdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:33:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA0C1204EC;
-        Mon,  3 Aug 2020 12:33:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F6142076B;
+        Mon,  3 Aug 2020 12:33:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596458024;
-        bh=O2RC+e43R6W2CMNZ/EhI3/kEAnaUQ/baPfNH/UmDZLw=;
+        s=default; t=1596458009;
+        bh=h3F50YRu/vJdUAaf8yXaUUqx+mIxdpj9HxIcTXfF7B0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F/q1Qnb6u8dsMQYMobgKB0nbUnFpzjVQxcqM5uTKeReFylmXMndW8sZmwi/ayoW98
-         /mSFkMrFasQCzmfdXtJCiANHlv5aIhalsJ8OVhAegC5AHWipOgT12lLFbAbOFNvggE
-         p8cqr+zHBk0WnFysWcRl9d1uP9gEpCLhUN8f4Qks=
+        b=UZbOQGlAagGARcq78DJzmAufKHR8TMZkJrBEsl136L2ShbdJPpP/pMuThFvYNfB8V
+         mdxO9k2fT+VZhF+eczv2sFYkCuJqqa/pPJv6EvlsRRuq+aeAkTQe0lVHv/wqlw80qK
+         PFmSUASDXMXZAc6hCrxGXoj+BYEhWiH42SgbZOaI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luis Machado <luis.machado@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 4.14 11/51] ARM: 8986/1: hw_breakpoint: Dont invoke overflow handler on uaccess watchpoints
-Date:   Mon,  3 Aug 2020 14:19:56 +0200
-Message-Id: <20200803121850.013665235@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Emese Revfy <re.emese@gmail.com>,
+        Kees Cook <keescook@chromium.org>, Willy Tarreau <w@1wt.eu>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 22/56] random32: remove net_rand_state from the latent entropy gcc plugin
+Date:   Mon,  3 Aug 2020 14:19:37 +0200
+Message-Id: <20200803121851.414965160@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200803121849.488233135@linuxfoundation.org>
-References: <20200803121849.488233135@linuxfoundation.org>
+In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
+References: <20200803121850.306734207@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,81 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit eec13b42d41b0f3339dcf0c4da43734427c68620 upstream.
+commit 83bdc7275e6206f560d247be856bceba3e1ed8f2 upstream.
 
-Unprivileged memory accesses generated by the so-called "translated"
-instructions (e.g. LDRT) in kernel mode can cause user watchpoints to fire
-unexpectedly. In such cases, the hw_breakpoint logic will invoke the user
-overflow handler which will typically raise a SIGTRAP back to the current
-task. This is futile when returning back to the kernel because (a) the
-signal won't have been delivered and (b) userspace can't handle the thing
-anyway.
+It turns out that the plugin right now ends up being really unhappy
+about the change from 'static' to 'extern' storage that happened in
+commit f227e3ec3b5c ("random32: update the net random state on interrupt
+and activity").
 
-Avoid invoking the user overflow handler for watchpoints triggered by
-kernel uaccess routines, and instead single-step over the faulting
-instruction as we would if no overflow handler had been installed.
+This is probably a trivial fix for the latent_entropy plugin, but for
+now, just remove net_rand_state from the list of things the plugin
+worries about.
 
-Cc: <stable@vger.kernel.org>
-Fixes: f81ef4a920c8 ("ARM: 6356/1: hw-breakpoint: add ARM backend for the hw-breakpoint framework")
-Reported-by: Luis Machado <luis.machado@linaro.org>
-Tested-by: Luis Machado <luis.machado@linaro.org>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Emese Revfy <re.emese@gmail.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Willy Tarreau <w@1wt.eu>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/kernel/hw_breakpoint.c |   27 ++++++++++++++++++++++-----
- 1 file changed, 22 insertions(+), 5 deletions(-)
+ include/linux/random.h |    2 +-
+ lib/random32.c         |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/arm/kernel/hw_breakpoint.c
-+++ b/arch/arm/kernel/hw_breakpoint.c
-@@ -688,6 +688,12 @@ static void disable_single_step(struct p
- 	arch_install_hw_breakpoint(bp);
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -116,7 +116,7 @@ struct rnd_state {
+ 	__u32 s1, s2, s3, s4;
+ };
+ 
+-DECLARE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
++DECLARE_PER_CPU(struct rnd_state, net_rand_state);
+ 
+ u32 prandom_u32_state(struct rnd_state *state);
+ void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
+--- a/lib/random32.c
++++ b/lib/random32.c
+@@ -48,7 +48,7 @@ static inline void prandom_state_selftes
  }
+ #endif
  
-+static int watchpoint_fault_on_uaccess(struct pt_regs *regs,
-+				       struct arch_hw_breakpoint *info)
-+{
-+	return !user_mode(regs) && info->ctrl.privilege == ARM_BREAKPOINT_USER;
-+}
-+
- static void watchpoint_handler(unsigned long addr, unsigned int fsr,
- 			       struct pt_regs *regs)
- {
-@@ -747,16 +753,27 @@ static void watchpoint_handler(unsigned
- 		}
+-DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
++DEFINE_PER_CPU(struct rnd_state, net_rand_state);
  
- 		pr_debug("watchpoint fired: address = 0x%x\n", info->trigger);
-+
-+		/*
-+		 * If we triggered a user watchpoint from a uaccess routine,
-+		 * then handle the stepping ourselves since userspace really
-+		 * can't help us with this.
-+		 */
-+		if (watchpoint_fault_on_uaccess(regs, info))
-+			goto step;
-+
- 		perf_bp_event(wp, regs);
- 
- 		/*
--		 * If no overflow handler is present, insert a temporary
--		 * mismatch breakpoint so we can single-step over the
--		 * watchpoint trigger.
-+		 * Defer stepping to the overflow handler if one is installed.
-+		 * Otherwise, insert a temporary mismatch breakpoint so that
-+		 * we can single-step over the watchpoint trigger.
- 		 */
--		if (is_default_overflow_handler(wp))
--			enable_single_step(wp, instruction_pointer(regs));
-+		if (!is_default_overflow_handler(wp))
-+			goto unlock;
- 
-+step:
-+		enable_single_step(wp, instruction_pointer(regs));
- unlock:
- 		rcu_read_unlock();
- 	}
+ /**
+  *	prandom_u32_state - seeded pseudo-random number generator.
 
 
