@@ -2,166 +2,98 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7937BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B556C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE92922CA1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17A6322B45
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:32:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jSmTnJX1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o3dXV7G8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgHCTbz (ORCPT
+        id S1728188AbgHCTcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 15:31:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51582 "EHLO
+        Mon, 3 Aug 2020 15:32:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727813AbgHCTby (ORCPT
+        with ESMTP id S1726906AbgHCTcv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 15:31:54 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9BE0C06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 12:31:54 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id b25so29147272qto.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 12:31:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RvzegeXfDF+FVdvZWpUY2C/JYcGtzK0e5Km4cAoPNN8=;
-        b=jSmTnJX12hJqDm4wSS6o7mGjoyl/+MvIhk0XVP7uEzSk09YcYc0nfbe7zl7aGuS6wC
-         SZGNqDDIANha72buny9X6caEYisJ0XYhId0is+ZwGaTqeHILDvgTJPVKJvBN+9ZYXvZP
-         0/nufiyHW+XAHqa5hL6CByacEB0uNBoHAuc4Kis0WamHtXH5CUsWqOiezhW9OIyk69+N
-         oPiQemIU1078XmA59msE3KdOqcmq1SdKyAOJGFHHKvknx5m21uk7o6pQX+nWrZAsH1Oj
-         YYTBVnF2EOEmJM9paMatW2pjQOsHClWl2IDuqTaFsRERReRg3AsBTwZj2m1vAcJQ5fLE
-         ctSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RvzegeXfDF+FVdvZWpUY2C/JYcGtzK0e5Km4cAoPNN8=;
-        b=smB7qZIZM/FZI3SH8vwobv3Tl2acMtR3GbN6rtfQ9/9xofjCg/+a7CkFPQMcKd2EfD
-         PfwVBqIpOoHBbtAFi/YF4CsOI5HMZLASbNZfjYbu5SssXgcVb3o6lqYdqbFjtelwoe6n
-         mkb9UVtgmfNUCPi5becbZQlfx748yQ8/clr6+o6J2Sn7Ir8rd3f3KkzmUvjkl57Eypq9
-         h3UNBHQ6nr+V7zil+R63AIV06kh0j61wF6PkGz4jH8GmSxsTmN8k/AEcp99SDcfXSnW4
-         M4hwW5LLGi5Xwlv0NiJ925Z0nCgGfvvUGikU21N36KAaS/vA19GqDgFAdnfZrYqnkZcZ
-         4h9A==
-X-Gm-Message-State: AOAM533cL5sC4NDU11PDD8I46/bIAVGs9XmBxqu8Lv50BZ5XFdE1b8vO
-        hNgIy/h5m5S4Ey4/2Hjb7wEnIs5m8BCApEEqWiC2Aw==
-X-Google-Smtp-Source: ABdhPJyAJVak0FjVUTJi1mcLTSkaBZWjBpWRxzk7IIBX2OckQU/gStJWBE/N9Odcq/m1cUmnKTfpgZfhgTWyUcthDaU=
-X-Received: by 2002:ac8:72cc:: with SMTP id o12mr17678716qtp.27.1596483113936;
- Mon, 03 Aug 2020 12:31:53 -0700 (PDT)
+        Mon, 3 Aug 2020 15:32:51 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A30B0C06174A;
+        Mon,  3 Aug 2020 12:32:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=tl6E9v7JdT5SPY6RMUgVUsix1wSI4Y22duyU2Vp5sVk=; b=o3dXV7G8FYbZAU/4Lg96+dolTO
+        DqoRG7LfpQE59kto5q1iSKTjpcj2KQjfXZvxPUY16QRZkDh7epiAhndKeQOJYEiwZDH1dLpThI/RR
+        0YXyYXpcpSyy2fQ0jAJYg9rXXvRnUnHGYc5zpTunKPoXC3O0yYG26lWEpt9G2IWLHnVvFgCSFzVcF
+        jbo+wP7Ibc7+21WihDdd6g+lxpyPGp4pvZ+8jYUpZvt70+bLfXqzb4A4vFPXTrE2EcmXq2wTl0Syo
+        qC20FgOvl8Ap6ocJcc4CrqRs6Spg1jZj35h998IC7L+Ntb6bGxopuich+GSzDEWTijX8DvWlpmqU8
+        91LjJiSg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k2gC2-0003qo-VT; Mon, 03 Aug 2020 19:32:25 +0000
+Subject: Re: [PATCH v4 4/6] can: ctucanfd: CTU CAN FD open-source IP core -
+ PCI bus support.
+To:     pisa@cmp.felk.cvut.cz, linux-can@vger.kernel.org,
+        devicetree@vger.kernel.org, mkl@pengutronix.de,
+        socketcan@hartkopp.net
+Cc:     wg@grandegger.com, davem@davemloft.net, robh+dt@kernel.org,
+        mark.rutland@arm.com, c.emde@osadl.org, armbru@redhat.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        martin.jerabek01@gmail.com, ondrej.ille@gmail.com,
+        jnovak@fel.cvut.cz, jara.beran@gmail.com, porazil@pikron.com
+References: <cover.1596408856.git.pisa@cmp.felk.cvut.cz>
+ <bad059402032f82fa63aa51d2122589a8a2cf6fd.1596408856.git.pisa@cmp.felk.cvut.cz>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <e4378bd9-6484-88bc-48d3-d7fdda62c844@infradead.org>
+Date:   Mon, 3 Aug 2020 12:32:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200802083458.24323-1-brgl@bgdev.pl> <20200802083458.24323-2-brgl@bgdev.pl>
- <CAHp75Vfm_vUKZOGkNp+0uTe0b=vk8yDyjs7XPdw_1GRauTBx4g@mail.gmail.com>
-In-Reply-To: <CAHp75Vfm_vUKZOGkNp+0uTe0b=vk8yDyjs7XPdw_1GRauTBx4g@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 3 Aug 2020 21:31:42 +0200
-Message-ID: <CAMpxmJXvJRekVAbSAi7XTjmM33dN1bSDWPLjfufhwTk7KQMMDA@mail.gmail.com>
-Subject: Re: [PATCH v6 1/3] devres: provide devm_krealloc()
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <bad059402032f82fa63aa51d2122589a8a2cf6fd.1596408856.git.pisa@cmp.felk.cvut.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 2, 2020 at 12:42 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
+On 8/3/20 11:34 AM, pisa@cmp.felk.cvut.cz wrote:
+> diff --git a/drivers/net/can/ctucanfd/Kconfig b/drivers/net/can/ctucanfd/Kconfig
+> index 0620111d57fd..8a5f5d05fa72 100644
+> --- a/drivers/net/can/ctucanfd/Kconfig
+> +++ b/drivers/net/can/ctucanfd/Kconfig
+> @@ -15,4 +15,13 @@ config CAN_CTUCANFD
+>  
+>  if CAN_CTUCANFD
+>  
+> +config CAN_CTUCANFD_PCI
+> +    tristate "CTU CAN-FD IP core PCI/PCIe driver"
+> +    depends on PCI
+> +	help
 
-[snip]
+"help" should be indented with one tab only (no spaces).
 
->
-> I was thinking about this bit... Shouldn't we rather issue a simple
-> dev_warn() and return the existing pointer?
-> For example in some cases we might want to have resources coming
-> either from heap or from constant. Then, if at some circumstances we
-> would like to extend that memory (only for non-constant cases) we
-> would need to manage this ourselves. Otherwise we may simply call
-> krealloc().
-> It seems that devm_kstrdup_const returns an initial pointer. Getting
-> NULL is kinda inconvenient (and actually dev_warn() might also be
-> quite a noise, however I would give a message to the user, because
-> it's something worth checking).
->
+> +	  This driver adds PCI/PCIe support for CTU CAN-FD IP core.
+> +	  The project providing FPGA design for Intel EP4CGX15 based DB4CGX15
+> +	  PCIe board with PiKRON.com designed transceiver riser shield is available
+> +	  at https://gitlab.fel.cvut.cz/canbus/pcie-ctu_can_fd .
 
-But this is inconsistent behavior: if you pass a pointer to ro memory
-to devm_krealloc() it will not resize it but by returning a valid
-pointer it will make you think it did -> you end up writing to ro
-memory in good faith.
+help text should be indented with one tab + 2 spaces according to
+Documentation/process/coding-style.rst.
 
-> ...
->
-> > +       spin_lock_irqsave(&dev->devres_lock, flags);
-> > +       old_dr = find_dr(dev, devm_kmalloc_release, devm_kmalloc_match, ptr);
-> > +       spin_unlock_irqrestore(&dev->devres_lock, flags);
->
-> > +       if (!old_dr) {
->
-> I would have this under spin lock b/c of below.
->
-> > +               WARN(1, "Memory chunk not managed or managed by a different device.");
-> > +               return NULL;
-> > +       }
->
-> > +       old_head = old_dr->node.entry;
->
-> This would be still better to be under spin lock.
->
-> > +       new_dr = krealloc(old_dr, total_size, gfp);
-> > +       if (!new_dr)
-> > +               return NULL;
->
-> And perhaps spin lock taken already here.
->
-> > +       if (new_dr != old_dr) {
-> > +               spin_lock_irqsave(&dev->devres_lock, flags);
-> > +               list_replace(&old_head, &new_dr->node.entry);
-> > +               spin_unlock_irqrestore(&dev->devres_lock, flags);
-> > +       }
->
-> Yes, I understand that covering more code under spin lock does not fix
-> any potential race, but at least it minimizes scope of the code that
-> is not under it to see exactly what is problematic.
->
-> I probably will think more about a better approach to avoid potential races.
+> +
+>  endif
 
-My thinking behind this was this: we already have users who call
-devres_find() and do something with the retrieved resources without
-holding the devres_lock - so it's assumed that users are sane enough
-to not be getting in each other's way. Now I see that the difference
-is that here we're accessing the list node and it can change if
-another thread is adding a different devres to the same device. So
-this should definitely be protected somehow.
+thanks.
+-- 
+~Randy
 
-I think that we may have to give up using real krealloc() and instead
-just reimplement its behavior in the following way:
-
-Still outside of spinlock check if the new total size is smaller or
-equal to the previous one. If so: return the same pointer. If not:
-allocate a new devres as if it were for devm_kmalloc() but don't add
-it to the list yet. Take the spinlock - check if we can find the
-devres - if not: kfree() the new and old chunk and return NULL. If
-yes: copy the contents of the devres node into the new chunk as well
-as the memory contents. Replace the old one on the list and free it.
-Release spinlock and return.
-
-Does that work?
-
-Bart
