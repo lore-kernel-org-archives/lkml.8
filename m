@@ -2,80 +2,93 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57950C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6799FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D82C20738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42AB820738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:49:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RGeyIuWJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgHCLtC (ORCPT
+        id S1726766AbgHCLtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 07:49:02 -0400
-Received: from out1.zte.com.cn ([202.103.147.172]:46234 "EHLO mxct.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbgHCLs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 07:48:56 -0400
-Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
-        by Forcepoint Email with ESMTPS id 6D3A3CCBE0C8360DBA6B;
-        Mon,  3 Aug 2020 19:48:47 +0800 (CST)
-Received: from notes_smtp.zte.com.cn (notessmtp.zte.com.cn [10.30.1.239])
-        by mse-fl1.zte.com.cn with ESMTP id 073BmjGR014618;
-        Mon, 3 Aug 2020 19:48:45 +0800 (GMT-8)
-        (envelope-from wang.yi59@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2020080319485078-4487275 ;
-          Mon, 3 Aug 2020 19:48:50 +0800 
-From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     mst@redhat.com
-Cc:     jasowang@redhat.com, virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.yi59@zte.com.cn, wang.liang82@zte.com.cn,
-        Liao Pingfang <liao.pingfang@zte.com.cn>
-Subject: [PATCH] virtio_pci_modern: Fix the comment of virtio_pci_find_capability()
-Date:   Mon, 3 Aug 2020 19:52:24 +0800
-Message-Id: <1596455545-43556-1-git-send-email-wang.yi59@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2020-08-03 19:48:50,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2020-08-03 19:48:46,
-        Serialize complete at 2020-08-03 19:48:46
-X-MAIL: mse-fl1.zte.com.cn 073BmjGR014618
+        Mon, 3 Aug 2020 07:49:47 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37896 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726276AbgHCLtp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 07:49:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596455383;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Y7A0KqHzsih4FN0U7UPM6hXJyI43+O97k28kO2Dcea4=;
+        b=RGeyIuWJ6ny6OOOsQZzQdPf3vI6o9lWoLFja5X7Uo5x/I1VN47vQ4k8NqK9l6bA6tQxaRC
+        MVP+kuVvAogHJWDN6lgqURxlT3vq7wrcZrRrpk+AdzSjLMaaTOazbNFqxebas0riWtQDbD
+        uHLJgFP36I6kgm/LnUHEIWUqRA2hiEo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-390-m5UBWlmIMdumhLLGKaz-Rw-1; Mon, 03 Aug 2020 07:49:42 -0400
+X-MC-Unique: m5UBWlmIMdumhLLGKaz-Rw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 066411009442;
+        Mon,  3 Aug 2020 11:49:40 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DBC3F60BF4;
+        Mon,  3 Aug 2020 11:49:36 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAJfpeguO8Qwkzx9zfGVT7W+pT5p6fgj-_8oJqJbXX_KQBpLLEQ@mail.gmail.com>
+References: <CAJfpeguO8Qwkzx9zfGVT7W+pT5p6fgj-_8oJqJbXX_KQBpLLEQ@mail.gmail.com> <1293241.1595501326@warthog.procyon.org.uk> <CAJfpegspWA6oUtdcYvYF=3fij=Bnq03b8VMbU9RNMKc+zzjbag@mail.gmail.com> <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk> <158454391302.2863966.1884682840541676280.stgit@warthog.procyon.org.uk> <2003787.1595585999@warthog.procyon.org.uk> <865566fb800a014868a9a7e36a00a14430efb11e.camel@themaw.net> <2023286.1595590563@warthog.procyon.org.uk> <CAJfpegsT_3YqHPWCZGX7Lr+sE0NVmczWz5L6cN8CzsVz4YKLCQ@mail.gmail.com> <1283475.1596449889@warthog.procyon.org.uk>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     dhowells@redhat.com, Ian Kent <raven@themaw.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>, andres@anarazel.de,
+        Jeff Layton <jlayton@redhat.com>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>, keyrings@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 13/17] watch_queue: Implement mount topology and attribute change notifications [ver #5]
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1576645.1596455376.1@warthog.procyon.org.uk>
+Date:   Mon, 03 Aug 2020 12:49:36 +0100
+Message-ID: <1576646.1596455376@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liao Pingfang <liao.pingfang@zte.com.cn>
+Miklos Szeredi <miklos@szeredi.hu> wrote:
 
-Fix the comment of virtio_pci_find_capability() by adding missing comment
-for the last parameter: bars.
+> OTOH mount notification is way smaller and IMO a more mature
+> interface.  So just picking the unique ID patch into this set might
+> make sense.
 
-Fixes: 59a5b0f7bf74 ("virtio-pci: alloc only resources actually used.")
-Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
----
- drivers/virtio/virtio_pci_modern.c | 1 +
- 1 file changed, 1 insertion(+)
+But userspace can't retrieve the unique ID without fsinfo() as things stand.
 
-diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
-index db93cedd262f..9bdc6f68221f 100644
---- a/drivers/virtio/virtio_pci_modern.c
-+++ b/drivers/virtio/virtio_pci_modern.c
-@@ -481,6 +481,7 @@ static const struct virtio_config_ops virtio_pci_config_ops = {
-  * @dev: the pci device
-  * @cfg_type: the VIRTIO_PCI_CAP_* value we seek
-  * @ioresource_types: IORESOURCE_MEM and/or IORESOURCE_IO.
-+ * @bars: the bitmask of BARs
-  *
-  * Returns offset of the capability, or 0.
-  */
--- 
-2.26.1
+I'm changing it so that the fields are 64-bit, but initialised with the
+existing mount ID in the notifications set.  The fsinfo set changes that to a
+unique ID.  I'm tempted to make the unique IDs start at UINT_MAX+1 to
+disambiguate them.
+
+David
 
