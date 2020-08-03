@@ -2,118 +2,134 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4F0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECBAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FE5320738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58D782070A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:45:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbgHCSop (ORCPT
+        id S1727786AbgHCSpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 14:44:45 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60358 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728515AbgHCSoo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 14:44:44 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 073Ib0ZV174990;
-        Mon, 3 Aug 2020 14:44:34 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32pqdhh08t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Aug 2020 14:44:34 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 073IZZvK021220;
-        Mon, 3 Aug 2020 18:44:32 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 32n0182fgb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Aug 2020 18:44:32 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 073IiU6Q28901674
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 3 Aug 2020 18:44:30 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ED73E11C050;
-        Mon,  3 Aug 2020 18:44:29 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A5C0C11C04C;
-        Mon,  3 Aug 2020 18:44:29 +0000 (GMT)
-Received: from osiris (unknown [9.171.25.113])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon,  3 Aug 2020 18:44:29 +0000 (GMT)
-Date:   Mon, 3 Aug 2020 20:44:28 +0200
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Sven Schnelle <svens@linux.ibm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH 2/2] s390: convert to GENERIC_VDSO
-Message-ID: <20200803184428.GA3973@osiris>
-References: <20200803055645.79042-1-svens@linux.ibm.com>
- <20200803055645.79042-3-svens@linux.ibm.com>
- <87ft93ncaa.fsf@nanos.tec.linutronix.de>
- <yt9dmu3b3jo3.fsf@linux.ibm.com>
- <87a6zbn29n.fsf@nanos.tec.linutronix.de>
+        Mon, 3 Aug 2020 14:45:46 -0400
+Received: from mga11.intel.com ([192.55.52.93]:61191 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726189AbgHCSpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 14:45:46 -0400
+IronPort-SDR: sjPImZ9FUQ9UMPK7NCbQV/+L5fLXpUbeHmtz3WXAdhtzGkfXu/MRilQNRtkYJEMP0fjZOazQul
+ 9IJL7hOWssJA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="149998602"
+X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
+   d="scan'208";a="149998602"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 11:45:45 -0700
+IronPort-SDR: v05y5NyC5nO9ND9wjJpF79nGhbAdMZnU8QKKkq0oUMDCx6hk4UD3LMR8eFrAgIyFC62frEydN1
+ T21NlYjhxqtw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
+   d="scan'208";a="322389770"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.160])
+  by orsmga008.jf.intel.com with ESMTP; 03 Aug 2020 11:45:45 -0700
+Date:   Mon, 3 Aug 2020 11:45:45 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH v3 3/4] KVM: SVM: Add GHCB Accessor functions
+Message-ID: <20200803184545.GG3151@linux.intel.com>
+References: <20200803122708.5942-1-joro@8bytes.org>
+ <20200803122708.5942-4-joro@8bytes.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87a6zbn29n.fsf@nanos.tec.linutronix.de>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-03_15:2020-08-03,2020-08-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- bulkscore=0 impostorscore=0 mlxlogscore=772 priorityscore=1501
- clxscore=1011 suspectscore=1 phishscore=0 spamscore=0 lowpriorityscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008030130
+In-Reply-To: <20200803122708.5942-4-joro@8bytes.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 06:05:24PM +0200, Thomas Gleixner wrote:
-> +/**
-> + * vdso_update_begin - Start of a VDSO update section
-> + *
-> + * Allows architecture code to safely update the architecture specific VDSO
-> + * data.
-> + */
-> +void vdso_update_begin(void)
-> +{
-> +	struct vdso_data *vdata = __arch_get_k_vdso_data();
+On Mon, Aug 03, 2020 at 02:27:07PM +0200, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
+> 
+> Building a correct GHCB for the hypervisor requires setting valid bits
+> in the GHCB. Simplify that process by providing accessor functions to
+> set values and to update the valid bitmap and to check the valid bitmap
+> in KVM.
+> 
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  arch/x86/include/asm/svm.h | 43 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
+> index 9a3e0b802716..71a308f1fbc8 100644
+> --- a/arch/x86/include/asm/svm.h
+> +++ b/arch/x86/include/asm/svm.h
+> @@ -341,4 +341,47 @@ struct __attribute__ ((__packed__)) vmcb {
+>  
+>  #define SVM_CR0_SELECTIVE_MASK (X86_CR0_TS | X86_CR0_MP)
+>  
+> +/* GHCB Accessor functions */
 > +
-> +	raw_spin_lock(&timekeeper_lock);
-> +	vdso_write_begin(vdata);
-> +}
+> +#define GHCB_BITMAP_IDX(field)							\
+> +        (offsetof(struct vmcb_save_area, field) / sizeof(u64))
+> +
+> +#define DEFINE_GHCB_ACCESSORS(field)						\
+> +	static inline bool ghcb_##field##_is_valid(const struct ghcb *ghcb)	\
+> +	{									\
+> +		return test_bit(GHCB_BITMAP_IDX(field),				\
+> +				(unsigned long *)&(ghcb)->save.valid_bitmap);	\
 
-I would assume that this only works if vdso_update_begin() is called
-with irqs disabled, otherwise it could deadlock, no?
+'ghcb' doesn't need to be wrapped in (), it's a parameter to a function.
 
-Maybe something like:
+> +	}									\
+> +										\
+> +	static inline void ghcb_set_##field(struct ghcb *ghcb, u64 value)	\
+> +	{									\
+> +		__set_bit(GHCB_BITMAP_IDX(field),				\
+> +			  (unsigned long *)&(ghcb)->save.valid_bitmap);		\
 
-void vdso_update_begin(unsigned long *flags)
-{
-	struct vdso_data *vdata = __arch_get_k_vdso_data();
+Same comment here.
 
-	raw_spin_lock_irqsave(&timekeeper_lock, *flags);
-	vdso_write_begin(vdata);
-}
-
-void vdso_update_end(unsigned long *flags)
-{
-	struct vdso_data *vdata = __arch_get_k_vdso_data();
-
-	vdso_write_end(vdata);
-	__arch_sync_vdso_data(vdata);
-	raw_spin_unlock_irqrestore(&timekeeper_lock, *flags);
-}
-
-? Just wondering.
+> +		ghcb->save.field = value;					\
+> +	}
+> +
+> +DEFINE_GHCB_ACCESSORS(cpl)
+> +DEFINE_GHCB_ACCESSORS(rip)
+> +DEFINE_GHCB_ACCESSORS(rsp)
+> +DEFINE_GHCB_ACCESSORS(rax)
+> +DEFINE_GHCB_ACCESSORS(rcx)
+> +DEFINE_GHCB_ACCESSORS(rdx)
+> +DEFINE_GHCB_ACCESSORS(rbx)
+> +DEFINE_GHCB_ACCESSORS(rbp)
+> +DEFINE_GHCB_ACCESSORS(rsi)
+> +DEFINE_GHCB_ACCESSORS(rdi)
+> +DEFINE_GHCB_ACCESSORS(r8)
+> +DEFINE_GHCB_ACCESSORS(r9)
+> +DEFINE_GHCB_ACCESSORS(r10)
+> +DEFINE_GHCB_ACCESSORS(r11)
+> +DEFINE_GHCB_ACCESSORS(r12)
+> +DEFINE_GHCB_ACCESSORS(r13)
+> +DEFINE_GHCB_ACCESSORS(r14)
+> +DEFINE_GHCB_ACCESSORS(r15)
+> +DEFINE_GHCB_ACCESSORS(sw_exit_code)
+> +DEFINE_GHCB_ACCESSORS(sw_exit_info_1)
+> +DEFINE_GHCB_ACCESSORS(sw_exit_info_2)
+> +DEFINE_GHCB_ACCESSORS(sw_scratch)
+> +DEFINE_GHCB_ACCESSORS(xcr0)
+> +
+>  #endif
+> -- 
+> 2.17.1
+> 
