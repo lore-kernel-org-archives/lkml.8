@@ -2,64 +2,56 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A65CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDD5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D93120825
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31555208E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458025;
-	bh=Dv0WmXuEbjZNouULXZexcbs4L4XQ2D1dPs+JzztDAFM=;
+	s=default; t=1596458028;
+	bh=x4UMX5p252GYrKJ/aCarb85LZB57EhVLYClq7cIfOP0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LVECQkKeexkc+DNS3Ay/bPMJee+BQLjqa3J1LvrUQdNwlqgFA8nE5E7ox7Oc4J2PQ
-	 f06yiySjF0tzPA7y3UBAmb7AocMq9SX9J/E0Ite5ZEjVSLgGL+bMFVa/BXYTOTlRBp
-	 UVKQcowf1cpt/+WaCkkYKpU2cHCdgyo0Ez602e8k=
+	b=RiNMJHtkWvqbO3sPVDiz9sPyUG8so5s7xJ0RCqAuLLjc3FtZzyxu0CHA4rQ7z6u2n
+	 wNOh9m1viL57rq1Sg7SWSeKa1nEbQ2ge5yUwpBxIIBo3VuCXM5CWGj+OM30RCjZ9dC
+	 h7F+JRAVqM+4Wg3tork+vmPWqsnJjTcL87+logbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbgHCMdo (ORCPT
+        id S1729486AbgHCMdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:33:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33594 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:33:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729467AbgHCMdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:33:40 -0400
+        id S1729477AbgHCMdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:33:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6CE92076E;
-        Mon,  3 Aug 2020 12:33:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74FCC20825;
+        Mon,  3 Aug 2020 12:33:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596458018;
-        bh=Dv0WmXuEbjZNouULXZexcbs4L4XQ2D1dPs+JzztDAFM=;
+        s=default; t=1596458021;
+        bh=x4UMX5p252GYrKJ/aCarb85LZB57EhVLYClq7cIfOP0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=05s9hi8M18VGz8Zg7mMTXWBWsAkMxgfDNB/7UM3Rbpx05Z76aVocRZ64BPQ57HC+i
-         C2oQd9XnZhSlVGhv3ABFB3dIbGPrI+CYc6/aTu7XwlkjaCnaGfeA7y1Bp6lqNT1dTI
-         Pmidgh/AvJdKSaVU03bKyFnvnrsqApSdSWhRGudc=
+        b=lfNh+zIa+QnMSdZb/vBdzQhqPLvzgii4CrnElbOpWul5FNkRRswP/DkdxUGmbwIbV
+         zGT5AZy1OzvPoEZgKJf8BHfjlMqOoGW4UhdrIQijJ9Oh/JLJAKrN8TEOPW4UJ5+8yH
+         +CwDkCdvhsrxqSkM85II0EEr7CVMzLnKhRe+SPB8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Yan <yanaijie@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Ewan Milne <emilne@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Tomas Henzl <thenzl@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 01/51] scsi: libsas: direct call probe and destruct
-Date:   Mon,  3 Aug 2020 14:19:46 +0200
-Message-Id: <20200803121849.564535738@linuxfoundation.org>
+        stable@vger.kernel.org, Pi-Hsun Shih <pihsun@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.14 10/51] wireless: Use offsetof instead of custom macro.
+Date:   Mon,  3 Aug 2020 14:19:55 +0200
+Message-Id: <20200803121849.964675445@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121849.488233135@linuxfoundation.org>
 References: <20200803121849.488233135@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -68,304 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Yan <yanaijie@huawei.com>
+From: Pi-Hsun Shih <pihsun@chromium.org>
 
-[ Upstream commit 0558f33c06bb910e2879e355192227a8e8f0219d ]
+commit 6989310f5d4327e8595664954edd40a7f99ddd0d upstream.
 
-In commit 87c8331fcf72 ("[SCSI] libsas: prevent domain rediscovery
-competing with ata error handling") introduced disco mutex to prevent
-rediscovery competing with ata error handling and put the whole
-revalidation in the mutex. But the rphy add/remove needs to wait for the
-error handling which also grabs the disco mutex. This may leads to dead
-lock.So the probe and destruct event were introduce to do the rphy
-add/remove asynchronously and out of the lock.
+Use offsetof to calculate offset of a field to take advantage of
+compiler built-in version when possible, and avoid UBSAN warning when
+compiling with Clang:
 
-The asynchronously processed workers makes the whole discovery process
-not atomic, the other events may interrupt the process. For example,
-if a loss of signal event inserted before the probe event, the
-sas_deform_port() is called and the port will be deleted.
+==================================================================
+UBSAN: Undefined behaviour in net/wireless/wext-core.c:525:14
+member access within null pointer of type 'struct iw_point'
+CPU: 3 PID: 165 Comm: kworker/u16:3 Tainted: G S      W         4.19.23 #43
+Workqueue: cfg80211 __cfg80211_scan_done [cfg80211]
+Call trace:
+ dump_backtrace+0x0/0x194
+ show_stack+0x20/0x2c
+ __dump_stack+0x20/0x28
+ dump_stack+0x70/0x94
+ ubsan_epilogue+0x14/0x44
+ ubsan_type_mismatch_common+0xf4/0xfc
+ __ubsan_handle_type_mismatch_v1+0x34/0x54
+ wireless_send_event+0x3cc/0x470
+ ___cfg80211_scan_done+0x13c/0x220 [cfg80211]
+ __cfg80211_scan_done+0x28/0x34 [cfg80211]
+ process_one_work+0x170/0x35c
+ worker_thread+0x254/0x380
+ kthread+0x13c/0x158
+ ret_from_fork+0x10/0x18
+===================================================================
 
-And sas_port_delete() may run before the destruct event, but the
-port-x:x is the top parent of end device or expander. This leads to
-a kernel WARNING such as:
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Link: https://lore.kernel.org/r/20191204081307.138765-1-pihsun@chromium.org
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[   82.042979] sysfs group 'power' not found for kobject 'phy-1:0:22'
-[   82.042983] ------------[ cut here ]------------
-[   82.042986] WARNING: CPU: 54 PID: 1714 at fs/sysfs/group.c:237
-sysfs_remove_group+0x94/0xa0
-[   82.043059] Call trace:
-[   82.043082] [<ffff0000082e7624>] sysfs_remove_group+0x94/0xa0
-[   82.043085] [<ffff00000864e320>] dpm_sysfs_remove+0x60/0x70
-[   82.043086] [<ffff00000863ee10>] device_del+0x138/0x308
-[   82.043089] [<ffff00000869a2d0>] sas_phy_delete+0x38/0x60
-[   82.043091] [<ffff00000869a86c>] do_sas_phy_delete+0x6c/0x80
-[   82.043093] [<ffff00000863dc20>] device_for_each_child+0x58/0xa0
-[   82.043095] [<ffff000008696f80>] sas_remove_children+0x40/0x50
-[   82.043100] [<ffff00000869d1bc>] sas_destruct_devices+0x64/0xa0
-[   82.043102] [<ffff0000080e93bc>] process_one_work+0x1fc/0x4b0
-[   82.043104] [<ffff0000080e96c0>] worker_thread+0x50/0x490
-[   82.043105] [<ffff0000080f0364>] kthread+0xfc/0x128
-[   82.043107] [<ffff0000080836c0>] ret_from_fork+0x10/0x50
-
-Make probe and destruct a direct call in the disco and revalidate function,
-but put them outside the lock. The whole discovery or revalidate won't
-be interrupted by other events. And the DISCE_PROBE and DISCE_DESTRUCT
-event are deleted as a result of the direct call.
-
-Introduce a new list to destruct the sas_port and put the port delete after
-the destruct. This makes sure the right order of destroying the sysfs
-kobject and fix the warning above.
-
-In sas_ex_revalidate_domain() have a loop to find all broadcasted
-device, and sometimes we have a chance to find the same expander twice.
-Because the sas_port will be deleted at the end of the whole revalidate
-process, sas_port with the same name cannot be added before this.
-Otherwise the sysfs will complain of creating duplicate filename. Since
-the LLDD will send broadcast for every device change, we can only
-process one expander's revalidation.
-
-[mkp: kbuild test robot warning]
-
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-CC: John Garry <john.garry@huawei.com>
-CC: Johannes Thumshirn <jthumshirn@suse.de>
-CC: Ewan Milne <emilne@redhat.com>
-CC: Christoph Hellwig <hch@lst.de>
-CC: Tomas Henzl <thenzl@redhat.com>
-CC: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libsas/sas_ata.c      |  1 -
- drivers/scsi/libsas/sas_discover.c | 32 +++++++++++++++++-------------
- drivers/scsi/libsas/sas_expander.c |  8 +++-----
- drivers/scsi/libsas/sas_internal.h |  1 +
- drivers/scsi/libsas/sas_port.c     |  3 +++
- include/scsi/libsas.h              |  3 +--
- include/scsi/scsi_transport_sas.h  |  1 +
- 7 files changed, 27 insertions(+), 22 deletions(-)
+ include/uapi/linux/wireless.h |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/libsas/sas_ata.c b/drivers/scsi/libsas/sas_ata.c
-index 70be4425ae0be..2b3637b40dde9 100644
---- a/drivers/scsi/libsas/sas_ata.c
-+++ b/drivers/scsi/libsas/sas_ata.c
-@@ -730,7 +730,6 @@ int sas_discover_sata(struct domain_device *dev)
- 	if (res)
- 		return res;
+--- a/include/uapi/linux/wireless.h
++++ b/include/uapi/linux/wireless.h
+@@ -74,6 +74,8 @@
+ #include <linux/socket.h>		/* for "struct sockaddr" et al	*/
+ #include <linux/if.h>			/* for IFNAMSIZ and co... */
  
--	sas_discover_event(dev->port, DISCE_PROBE);
- 	return 0;
- }
- 
-diff --git a/drivers/scsi/libsas/sas_discover.c b/drivers/scsi/libsas/sas_discover.c
-index b200edc665a58..d6365e2fcc603 100644
---- a/drivers/scsi/libsas/sas_discover.c
-+++ b/drivers/scsi/libsas/sas_discover.c
-@@ -221,13 +221,9 @@ void sas_notify_lldd_dev_gone(struct domain_device *dev)
- 	}
- }
- 
--static void sas_probe_devices(struct work_struct *work)
-+static void sas_probe_devices(struct asd_sas_port *port)
- {
- 	struct domain_device *dev, *n;
--	struct sas_discovery_event *ev = to_sas_discovery_event(work);
--	struct asd_sas_port *port = ev->port;
--
--	clear_bit(DISCE_PROBE, &port->disc.pending);
- 
- 	/* devices must be domain members before link recovery and probe */
- 	list_for_each_entry(dev, &port->disco_list, disco_list_node) {
-@@ -303,7 +299,6 @@ int sas_discover_end_dev(struct domain_device *dev)
- 	res = sas_notify_lldd_dev_found(dev);
- 	if (res)
- 		return res;
--	sas_discover_event(dev->port, DISCE_PROBE);
- 
- 	return 0;
- }
-@@ -362,13 +357,9 @@ static void sas_unregister_common_dev(struct asd_sas_port *port, struct domain_d
- 	sas_put_device(dev);
- }
- 
--static void sas_destruct_devices(struct work_struct *work)
-+void sas_destruct_devices(struct asd_sas_port *port)
- {
- 	struct domain_device *dev, *n;
--	struct sas_discovery_event *ev = to_sas_discovery_event(work);
--	struct asd_sas_port *port = ev->port;
--
--	clear_bit(DISCE_DESTRUCT, &port->disc.pending);
- 
- 	list_for_each_entry_safe(dev, n, &port->destroy_list, disco_list_node) {
- 		list_del_init(&dev->disco_list_node);
-@@ -379,6 +370,16 @@ static void sas_destruct_devices(struct work_struct *work)
- 	}
- }
- 
-+static void sas_destruct_ports(struct asd_sas_port *port)
-+{
-+	struct sas_port *sas_port, *p;
++#include <stddef.h>                     /* for offsetof */
 +
-+	list_for_each_entry_safe(sas_port, p, &port->sas_port_del_list, del_list) {
-+		list_del_init(&sas_port->del_list);
-+		sas_port_delete(sas_port);
-+	}
-+}
-+
- void sas_unregister_dev(struct asd_sas_port *port, struct domain_device *dev)
- {
- 	if (!test_bit(SAS_DEV_DESTROY, &dev->state) &&
-@@ -393,7 +394,6 @@ void sas_unregister_dev(struct asd_sas_port *port, struct domain_device *dev)
- 	if (!test_and_set_bit(SAS_DEV_DESTROY, &dev->state)) {
- 		sas_rphy_unlink(dev->rphy);
- 		list_move_tail(&dev->disco_list_node, &port->destroy_list);
--		sas_discover_event(dev->port, DISCE_DESTRUCT);
- 	}
- }
+ /***************************** VERSION *****************************/
+ /*
+  * This constant is used to know the availability of the wireless
+@@ -1090,8 +1092,7 @@ struct iw_event {
+ /* iw_point events are special. First, the payload (extra data) come at
+  * the end of the event, so they are bigger than IW_EV_POINT_LEN. Second,
+  * we omit the pointer, so start at an offset. */
+-#define IW_EV_POINT_OFF (((char *) &(((struct iw_point *) NULL)->length)) - \
+-			  (char *) NULL)
++#define IW_EV_POINT_OFF offsetof(struct iw_point, length)
+ #define IW_EV_POINT_LEN	(IW_EV_LCP_LEN + sizeof(struct iw_point) - \
+ 			 IW_EV_POINT_OFF)
  
-@@ -499,6 +499,8 @@ static void sas_discover_domain(struct work_struct *work)
- 		port->port_dev = NULL;
- 	}
- 
-+	sas_probe_devices(port);
-+
- 	SAS_DPRINTK("DONE DISCOVERY on port %d, pid:%d, result:%d\n", port->id,
- 		    task_pid_nr(current), error);
- }
-@@ -532,6 +534,10 @@ static void sas_revalidate_domain(struct work_struct *work)
- 		    port->id, task_pid_nr(current), res);
-  out:
- 	mutex_unlock(&ha->disco_mutex);
-+
-+	sas_destruct_devices(port);
-+	sas_destruct_ports(port);
-+	sas_probe_devices(port);
- }
- 
- /* ---------- Events ---------- */
-@@ -587,10 +593,8 @@ void sas_init_disc(struct sas_discovery *disc, struct asd_sas_port *port)
- 	static const work_func_t sas_event_fns[DISC_NUM_EVENTS] = {
- 		[DISCE_DISCOVER_DOMAIN] = sas_discover_domain,
- 		[DISCE_REVALIDATE_DOMAIN] = sas_revalidate_domain,
--		[DISCE_PROBE] = sas_probe_devices,
- 		[DISCE_SUSPEND] = sas_suspend_devices,
- 		[DISCE_RESUME] = sas_resume_devices,
--		[DISCE_DESTRUCT] = sas_destruct_devices,
- 	};
- 
- 	disc->pending = 0;
-diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
-index f77d72f01da91..84df6cf467605 100644
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -1946,7 +1946,8 @@ static void sas_unregister_devs_sas_addr(struct domain_device *parent,
- 		sas_port_delete_phy(phy->port, phy->phy);
- 		sas_device_set_phy(found, phy->port);
- 		if (phy->port->num_phys == 0)
--			sas_port_delete(phy->port);
-+			list_add_tail(&phy->port->del_list,
-+				&parent->port->sas_port_del_list);
- 		phy->port = NULL;
- 	}
- }
-@@ -2156,7 +2157,7 @@ int sas_ex_revalidate_domain(struct domain_device *port_dev)
- 	struct domain_device *dev = NULL;
- 
- 	res = sas_find_bcast_dev(port_dev, &dev);
--	while (res == 0 && dev) {
-+	if (res == 0 && dev) {
- 		struct expander_device *ex = &dev->ex_dev;
- 		int i = 0, phy_id;
- 
-@@ -2168,9 +2169,6 @@ int sas_ex_revalidate_domain(struct domain_device *port_dev)
- 			res = sas_rediscover(dev, phy_id);
- 			i = phy_id + 1;
- 		} while (i < ex->num_phys);
--
--		dev = NULL;
--		res = sas_find_bcast_dev(port_dev, &dev);
- 	}
- 	return res;
- }
-diff --git a/drivers/scsi/libsas/sas_internal.h b/drivers/scsi/libsas/sas_internal.h
-index c07e081364915..f3449fde9c5fb 100644
---- a/drivers/scsi/libsas/sas_internal.h
-+++ b/drivers/scsi/libsas/sas_internal.h
-@@ -98,6 +98,7 @@ int sas_try_ata_reset(struct asd_sas_phy *phy);
- void sas_hae_reset(struct work_struct *work);
- 
- void sas_free_device(struct kref *kref);
-+void sas_destruct_devices(struct asd_sas_port *port);
- 
- #ifdef CONFIG_SCSI_SAS_HOST_SMP
- extern void sas_smp_host_handler(struct bsg_job *job, struct Scsi_Host *shost);
-diff --git a/drivers/scsi/libsas/sas_port.c b/drivers/scsi/libsas/sas_port.c
-index d3c5297c6c89e..5d3244c8f2801 100644
---- a/drivers/scsi/libsas/sas_port.c
-+++ b/drivers/scsi/libsas/sas_port.c
-@@ -66,6 +66,7 @@ static void sas_resume_port(struct asd_sas_phy *phy)
- 		rc = sas_notify_lldd_dev_found(dev);
- 		if (rc) {
- 			sas_unregister_dev(port, dev);
-+			sas_destruct_devices(port);
- 			continue;
- 		}
- 
-@@ -219,6 +220,7 @@ void sas_deform_port(struct asd_sas_phy *phy, int gone)
- 
- 	if (port->num_phys == 1) {
- 		sas_unregister_domain_devices(port, gone);
-+		sas_destruct_devices(port);
- 		sas_port_delete(port->port);
- 		port->port = NULL;
- 	} else {
-@@ -323,6 +325,7 @@ static void sas_init_port(struct asd_sas_port *port,
- 	INIT_LIST_HEAD(&port->dev_list);
- 	INIT_LIST_HEAD(&port->disco_list);
- 	INIT_LIST_HEAD(&port->destroy_list);
-+	INIT_LIST_HEAD(&port->sas_port_del_list);
- 	spin_lock_init(&port->phy_list_lock);
- 	INIT_LIST_HEAD(&port->phy_list);
- 	port->ha = sas_ha;
-diff --git a/include/scsi/libsas.h b/include/scsi/libsas.h
-index a966d281dedc3..1b1cf9eff3b5a 100644
---- a/include/scsi/libsas.h
-+++ b/include/scsi/libsas.h
-@@ -87,10 +87,8 @@ enum discover_event {
- 	DISCE_DISCOVER_DOMAIN   = 0U,
- 	DISCE_REVALIDATE_DOMAIN = 1,
- 	DISCE_PORT_GONE         = 2,
--	DISCE_PROBE		= 3,
- 	DISCE_SUSPEND		= 4,
- 	DISCE_RESUME		= 5,
--	DISCE_DESTRUCT		= 6,
- 	DISC_NUM_EVENTS		= 7,
- };
- 
-@@ -269,6 +267,7 @@ struct asd_sas_port {
- 	struct list_head dev_list;
- 	struct list_head disco_list;
- 	struct list_head destroy_list;
-+	struct list_head sas_port_del_list;
- 	enum   sas_linkrate linkrate;
- 
- 	struct sas_work work;
-diff --git a/include/scsi/scsi_transport_sas.h b/include/scsi/scsi_transport_sas.h
-index 62895b4059330..05ec927a3c729 100644
---- a/include/scsi/scsi_transport_sas.h
-+++ b/include/scsi/scsi_transport_sas.h
-@@ -156,6 +156,7 @@ struct sas_port {
- 
- 	struct mutex		phy_list_mutex;
- 	struct list_head	phy_list;
-+	struct list_head	del_list; /* libsas only */
- };
- 
- #define dev_to_sas_port(d) \
--- 
-2.25.1
-
 
 
