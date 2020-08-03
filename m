@@ -2,131 +2,154 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EE1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB405C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58FA420678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8761520678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:53:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LYPnDAG3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgHCJvj (ORCPT
+        id S1726125AbgHCJxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 05:51:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:55020 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725965AbgHCJvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 05:51:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB3BC30E;
-        Mon,  3 Aug 2020 02:51:35 -0700 (PDT)
-Received: from [10.57.35.143] (unknown [10.57.35.143])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A83B03F6CF;
-        Mon,  3 Aug 2020 02:51:33 -0700 (PDT)
-Subject: Re: [RFC PATCH] arm64: defconfig: Disable fine-grained task level IRQ
- time accounting
-To:     Vladimir Oltean <olteanv@gmail.com>,
-        Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>
-Cc:     paulmck@kernel.org, Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        catalin.marinas@arm.com, Alison Wang <alison.wang@nxp.com>,
-        linux-kernel@vger.kernel.org, leoyang.li@nxp.com,
-        vladimir.oltean@nxp.com, Thomas Gleixner <tglx@linutronix.de>,
-        mw@semihalf.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Marc Zyngier <maz@kernel.org>,
-        Valentin Schneider <valentin.schneider@arm.com>
-References: <20200729033934.22349-1-alison.wang@nxp.com> <877dumbtoi.fsf@kurt>
- <20200729094943.lsmhsqlnl7rlnl6f@skbuf> <87mu3ho48v.fsf@kurt>
- <20200730082228.r24zgdeiofvwxijm@skbuf> <873654m9zi.fsf@kurt>
- <20200803081625.czdfwcpw5emcd4ls@skbuf>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <f61560f5-c4e0-a40b-5845-af3f6d98c7ad@arm.com>
-Date:   Mon, 3 Aug 2020 10:51:32 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Mon, 3 Aug 2020 05:53:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbgHCJxs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 05:53:48 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D707C06174A;
+        Mon,  3 Aug 2020 02:53:48 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BKtWF122Sz9sR4;
+        Mon,  3 Aug 2020 19:53:45 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596448426;
+        bh=T1hiIwhe18BEViohyPd8wdN+KMPgi+lgSdAGVLJ+gas=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LYPnDAG3ec2BwZyLNZCTXOEFbJNAp0A2xx4AbrAYdRGbQ02NQMF0zjIjvxo34ghs1
+         GTgSZikfRs1UBLe/j3KJPgQOzCybSnhlwHKTliDHU9x0wWLbPW7JkhCGd6UNh/abkh
+         GtE12fjLdjBwS1PwMzw/SAs2lzYBqskH4Q+kFnckp305r4JirypsS+OIZ1mG4NzBLK
+         YmD/Q3uxQ6UvXR8FRe79tZPPWootRe+1MXSv9LIo9pRtSZy3rFbDfJQGYMGcmbLZU4
+         I89o6NSJz2Ev1XnpMBP1BgDWByH7DhoQ9pSBqO7O4A4y8qpjIJoljUa8VH/kLnQHDG
+         wkTHw9PKCNQ/w==
+Date:   Mon, 3 Aug 2020 19:53:42 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@ZenIV.linux.org.uk>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the init tree with the block tree
+Message-ID: <20200803195342.781987c3@canb.auug.org.au>
+In-Reply-To: <20200717194221.146ab662@canb.auug.org.au>
+References: <20200717194221.146ab662@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200803081625.czdfwcpw5emcd4ls@skbuf>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/EWMb.r6q5dcMb1uac.Isdeu";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-03 09:16, Vladimir Oltean wrote:
-> On Mon, Aug 03, 2020 at 10:04:01AM +0200, Kurt Kanzenbach wrote:
->> On Thu Jul 30 2020, Vladimir Oltean wrote:
->>> On Thu, Jul 30, 2020 at 09:23:44AM +0200, Kurt Kanzenbach wrote:
->>>> On Wed Jul 29 2020, Vladimir Oltean wrote:
->>>>> For more context, here is my original report of the issue:
->>>>> https://lkml.org/lkml/2020/6/4/1062
->>>>>
->>>>> Just like you, I could not reproduce the RCU stalls and system hang on a
->>>>> 5.6-rt kernel, just on mainline and derivatives, using the plain
->>>>> defconfig.
->>>>>
->>>>> The issue is not specific to Layerscape or i.MX8, but rather I was able
->>>>> to see the same behavior on Marvell Armada 37xx as well as Qualcomm
->>>>> MSM8976.
->>>>>
->>>>> So, while of course I agree that disabling IRQ time accounting for arm64
->>>>> isn't a real solution, it isn't by far an exaggerated proposal either.
->>>>> Nonetheless, the patch is just a RFC and should be treated as such. We
->>>>> are at a loss when it comes to debugging this any further and we would
->>>>> appreciate some pointers.
->>>>
->>>> Yeah, sure. I'll try to reproduce this issue first. So it triggers with:
->>>>
->>>>   * arm64
->>>>   * mainline, not -rt kernel
->>>>   * opened serial console
->>>>   * irq accounting enabled
->>>>
->>>> Anything else?
->>>>
->>>> Thanks,
->>>> Kurt
->>>
->>> Thanks for giving a helping hand, Kurt. The defconfig should be enough.
->>> In the interest of full disclosure, the only arm64 device on which we
->>> didn't reproduce this was the 16-core LX2160A. But we did reproduce on
->>> that with maxcpus=1 though. And also on msm8976 with all 8 cores booted.
->>> Just mentioning this in case you're testing on a 16-core system, you
->>> might want to reduce the number a bit.
->>
->> OK. I've reproduced it on a Marvell Armada SoC with v5.6 mainline. See
->> splats below. Running with irq time accounting enabled, kills the
->> machine immediately. However, I'm not getting the possible deadlock
->> warnings in 8250 as you did. So that might be unrelated.
->>
-> 
-> Yes, the console lockdep warnings are unrelated. They are discussed
-> here:
-> https://lore.kernel.org/lkml/CAHQZ30BnfX+gxjPm1DUd5psOTqbyDh4EJE=2=VAMW_VDafctkA@mail.gmail.com/
-> 
->> Unfortunately I have no idea what to debug here.
->>
->> Thanks,
->> Kurt
-> 
-> So, this means we could submit a formal version of this patch? :)
+--Sig_/EWMb.r6q5dcMb1uac.Isdeu
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Defconfig is absolutely not the appropriate way to work around bugs - 
-it's merely a starting point for users and distros to set up their own 
-kernel, and if they can still enable this option and render their system 
-unusable then patching some other config that they aren't using is 
-pointless. To usefully mitigate a problem you'd need to make sure the 
-offending option cannot be selected at all (i.e. prohibit 
-HAVE_IRQ_TASK_ACCOUNTING as well).
+Hi all,
 
-Having glanced across another thread that mentions IRQ accounting 
-recently[1], I wonder if the underlying bug here might have something do 
-to with the stuff that Marc's trying to clean up.
+On Fri, 17 Jul 2020 19:42:21 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
 
-Robin.
+> Today's linux-next merge of the init tree got a conflict in:
+>=20
+>   drivers/md/md.c
+>=20
+> between commit:
+>=20
+>   a564e23f0f99 ("md: switch to ->check_events for media change notificati=
+ons")
+>=20
+> from the block tree and commit:
+>=20
+>   7e0adbfc20c5 ("md: rewrite md_setup_drive to avoid ioctls")
+>=20
+> from the init tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>=20
+> diff --cc drivers/md/md.c
+> index 5b6d46741baa,ee622b67424e..000000000000
+> --- a/drivers/md/md.c
+> +++ b/drivers/md/md.c
+> @@@ -7836,21 -7790,23 +7820,21 @@@ static void md_release(struct gendisk *
+>   	mddev_put(mddev);
+>   }
+>  =20
+>  -static int md_media_changed(struct gendisk *disk)
+>  -{
+>  -	struct mddev *mddev =3D disk->private_data;
+>  -
+>  -	return mddev->changed;
+>  -}
+>  -
+>  -static int md_revalidate(struct gendisk *disk)
+>  +static unsigned int md_check_events(struct gendisk *disk, unsigned int =
+clearing)
+>   {
+>   	struct mddev *mddev =3D disk->private_data;
+>  +	unsigned int ret =3D 0;
+>  =20
+>  +	if (mddev->changed)
+>  +		ret =3D DISK_EVENT_MEDIA_CHANGE;
+>   	mddev->changed =3D 0;
+>  -	return 0;
+>  +	return ret;
+>   }
+>  +
+> - static const struct block_device_operations md_fops =3D
+> + const struct block_device_operations md_fops =3D
+>   {
+>   	.owner		=3D THIS_MODULE,
+>  +	.submit_bio	=3D md_submit_bio,
+>   	.open		=3D md_open,
+>   	.release	=3D md_release,
+>   	.ioctl		=3D md_ioctl,
 
-[1] 
-https://lore.kernel.org/linux-arm-kernel/20200624195811.435857-16-maz@kernel.org/
+This is now a conflict between the block tree and the vfs tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/EWMb.r6q5dcMb1uac.Isdeu
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8n3qYACgkQAVBC80lX
+0Gzj+QgAlvI7u/eGcFYAZGpzbkVgp8++rH4m/kM2TnKu7fDR/+C4fqQYyNjempow
+XcZ30gfCQqnsOxYQiIdp5B63f/ewc2R4/WifcgDBBLf6goIzSjptsxg6XgnoF8m3
+3utbzm3kyuaZegtjz/YE43cXEi10qCtOJQBAkkL8Hm1oMkz78iyrvZ3GS2ef+V6U
+KRT732QIQvlenrkE8OUOFA9k0eQtfa1zqQt4bhfNjKnClj/fOG3YIQQnMRhqsQ25
+7iYssORLdQeDQ5r0vYEIPmDYGStS6OD+YB0c55QlWNgrGwWnnjPj5bl2sDUuIlL7
+BZmpN0xQ1jxckMvg0S9D1mSMeOZZeA==
+=N5bW
+-----END PGP SIGNATURE-----
+
+--Sig_/EWMb.r6q5dcMb1uac.Isdeu--
