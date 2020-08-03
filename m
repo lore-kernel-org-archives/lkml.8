@@ -2,52 +2,54 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 230B1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E7DB2054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE08720678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458581;
-	bh=+3EfgGtmCKrNepVQ0cjyTDgJi1Grs6bidEQ5QqtEGDA=;
+	s=default; t=1596458585;
+	bh=lh5kN0aZNa2kwrAZq9484r/FQcxSPMX2RaU2x6rT4S8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QJYsOhYDLfygWNSyrc4WyAKk/iOmZstNEw92KUmgQeKMY5OLbyts2nCJmEhsGaKL7
-	 rzxKPuhZ1TwU8skjP4A84ALRpheHa+n3Q0rwY/S1nPy0AQsuc2qs3+kIFCGH3WP9/m
-	 MAl259lbyZ6/qqP9yEYi5OqUQq62QuqOY7oD8QZs=
+	b=s0kukOg+pAQJyfFP2keJHKo3LdIqFmm2ktIwzLGuoAWaGlC8xkf305LTtpt2wo+qe
+	 Leidil7h9N9WIGeg7ae6gtn+5QdxGsPcUepgRqHfAJGch4WMwj8DrWo6q51iA47YHX
+	 QkYN5g/VV/h3ruu43I80T+LmTJTbnSrWG+bB3fz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729152AbgHCMnA (ORCPT
+        id S1729491AbgHCMnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:43:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57470 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:43:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729046AbgHCMa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:30:28 -0400
+        id S1729024AbgHCMaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:30:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DD372054F;
-        Mon,  3 Aug 2020 12:30:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91E0C20775;
+        Mon,  3 Aug 2020 12:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457826;
-        bh=+3EfgGtmCKrNepVQ0cjyTDgJi1Grs6bidEQ5QqtEGDA=;
+        s=default; t=1596457818;
+        bh=lh5kN0aZNa2kwrAZq9484r/FQcxSPMX2RaU2x6rT4S8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0l9nhzv2n4K6u/KdcZ86E+ePxcrT7vhR+oahdV2DtbGz2xbN36DYK/SMNfkwBbZJO
-         i4+yyH8gadtS4y9rQ3Nh0uoFTCRc2fkmST7BtKBkFyGdvrPLFPhHYsFtwXXQqeaiGo
-         xUluiK8W5I3PKxV0Odrq+tFhKUciNB0aX8lFg+hw=
+        b=TuZEJcgFfIbqH2kvYywOtnqiquxXTYxUOFnrpBmnHnzzAQCT8xGf8ZT+LLaRwHXKH
+         Kc/tbvmYeeeVbSG8LqrARJnkg/pR3s0j7ucv8rz5GmdFiEE3/wRorX19c0TjlwqMMy
+         ejbUSMfowKkGzqkTOso1AOjnYSj1g2ToRrCodpe4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.4 87/90] x86/i8259: Use printk_deferred() to prevent deadlock
-Date:   Mon,  3 Aug 2020 14:19:49 +0200
-Message-Id: <20200803121901.795797428@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Martin Schiller <ms@dev.tdt.de>,
+        Xie He <xie.he.0141@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 84/90] drivers/net/wan: lapb: Corrected the usage of skb_cow
+Date:   Mon,  3 Aug 2020 14:19:46 +0200
+Message-Id: <20200803121901.666059663@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -60,51 +62,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Xie He <xie.he.0141@gmail.com>
 
-commit bdd65589593edd79b6a12ce86b3b7a7c6dae5208 upstream.
+[ Upstream commit 8754e1379e7089516a449821f88e1fe1ebbae5e1 ]
 
-0day reported a possible circular locking dependency:
+This patch fixed 2 issues with the usage of skb_cow in LAPB drivers
+"lapbether" and "hdlc_x25":
 
-Chain exists of:
-  &irq_desc_lock_class --> console_owner --> &port_lock_key
+1) After skb_cow fails, kfree_skb should be called to drop a reference
+to the skb. But in both drivers, kfree_skb is not called.
 
- Possible unsafe locking scenario:
+2) skb_cow should be called before skb_push so that is can ensure the
+safety of skb_push. But in "lapbether", it is incorrectly called after
+skb_push.
 
-       CPU0                    CPU1
-       ----                    ----
-  lock(&port_lock_key);
-                               lock(console_owner);
-                               lock(&port_lock_key);
-  lock(&irq_desc_lock_class);
+More details about these 2 issues:
 
-The reason for this is a printk() in the i8259 interrupt chip driver
-which is invoked with the irq descriptor lock held, which reverses the
-lock operations vs. printk() from arbitrary contexts.
+1) The behavior of calling kfree_skb on failure is also the behavior of
+netif_rx, which is called by this function with "return netif_rx(skb);".
+So this function should follow this behavior, too.
 
-Switch the printk() to printk_deferred() to avoid that.
+2) In "lapbether", skb_cow is called after skb_push. This results in 2
+logical issues:
+   a) skb_push is not protected by skb_cow;
+   b) An extra headroom of 1 byte is ensured after skb_push. This extra
+      headroom has no use in this function. It also has no use in the
+      upper-layer function that this function passes the skb to
+      (x25_lapb_receive_frame in net/x25/x25_dev.c).
+So logically skb_cow should instead be called before skb_push.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/87365abt2v.fsf@nanos.tec.linutronix.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Martin Schiller <ms@dev.tdt.de>
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/i8259.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wan/hdlc_x25.c  | 4 +++-
+ drivers/net/wan/lapbether.c | 8 +++++---
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
---- a/arch/x86/kernel/i8259.c
-+++ b/arch/x86/kernel/i8259.c
-@@ -207,7 +207,7 @@ spurious_8259A_irq:
- 		 * lets ACK and report it. [once per IRQ]
- 		 */
- 		if (!(spurious_irq_mask & irqmask)) {
--			printk(KERN_DEBUG
-+			printk_deferred(KERN_DEBUG
- 			       "spurious 8259A interrupt: IRQ%d.\n", irq);
- 			spurious_irq_mask |= irqmask;
- 		}
+diff --git a/drivers/net/wan/hdlc_x25.c b/drivers/net/wan/hdlc_x25.c
+index bf78073ee7fd9..e2a83f4cd3bb6 100644
+--- a/drivers/net/wan/hdlc_x25.c
++++ b/drivers/net/wan/hdlc_x25.c
+@@ -62,8 +62,10 @@ static int x25_data_indication(struct net_device *dev, struct sk_buff *skb)
+ {
+ 	unsigned char *ptr;
+ 
+-	if (skb_cow(skb, 1))
++	if (skb_cow(skb, 1)) {
++		kfree_skb(skb);
+ 		return NET_RX_DROP;
++	}
+ 
+ 	skb_push(skb, 1);
+ 	skb_reset_network_header(skb);
+diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
+index 5a6f27298b90f..134e4dd916c1a 100644
+--- a/drivers/net/wan/lapbether.c
++++ b/drivers/net/wan/lapbether.c
+@@ -128,10 +128,12 @@ static int lapbeth_data_indication(struct net_device *dev, struct sk_buff *skb)
+ {
+ 	unsigned char *ptr;
+ 
+-	skb_push(skb, 1);
+-
+-	if (skb_cow(skb, 1))
++	if (skb_cow(skb, 1)) {
++		kfree_skb(skb);
+ 		return NET_RX_DROP;
++	}
++
++	skb_push(skb, 1);
+ 
+ 	ptr  = skb->data;
+ 	*ptr = X25_IFACE_DATA;
+-- 
+2.25.1
+
 
 
