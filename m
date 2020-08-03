@@ -2,174 +2,198 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E7FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5552FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 358B32076C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EA1B2076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:36:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YsNM689J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XwvnBEvc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgHCPf6 (ORCPT
+        id S1727113AbgHCPgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 11:35:58 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:47644 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbgHCPf5 (ORCPT
+        Mon, 3 Aug 2020 11:36:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbgHCPgq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 11:35:57 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200803153556euoutp02ac288920e5dde17bf982b9528d1fdc4b~nzA68mm1P2121921219euoutp02k
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 15:35:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200803153556euoutp02ac288920e5dde17bf982b9528d1fdc4b~nzA68mm1P2121921219euoutp02k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1596468956;
-        bh=zaaAQhHr+G5KAp1EblCYce/6XgEeLyh+tfSOVg5NPdg=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=YsNM689JcrrXW6j7FQEpk766uWvm1YmVqyrW+KC1Y/Qwx+nI4GZXJQu7l7y2LydQk
-         fWf3dr45/dr9BodFghEsU5sxL5beJP+24gvZm97jMxMWRBi8mkc9UTF3Uxm0CclPum
-         6eRBrmmuNMAUIUn35STmf4Mp0IKyhANrLfQViyyM=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200803153556eucas1p297b2224e6861b32226ea284d3c34c7eb~nzA6rUfrQ0425704257eucas1p2i;
-        Mon,  3 Aug 2020 15:35:56 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 39.5D.06456.CDE282F5; Mon,  3
-        Aug 2020 16:35:56 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200803153555eucas1p12cd471cea5b1674dfa5aa38ee669a2ac~nzA6UchAz2352423524eucas1p19;
-        Mon,  3 Aug 2020 15:35:55 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200803153555eusmtrp24b5f7ced7bad754419fa435264f2f557~nzA6TjUdZ3080930809eusmtrp2g;
-        Mon,  3 Aug 2020 15:35:55 +0000 (GMT)
-X-AuditID: cbfec7f2-809ff70000001938-62-5f282edc8bcc
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 9B.AC.06017.BDE282F5; Mon,  3
-        Aug 2020 16:35:55 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200803153555eusmtip1d8db2ec29432bb2449eca306f6bc71ee~nzA5jtebj2941329413eusmtip1S;
-        Mon,  3 Aug 2020 15:35:55 +0000 (GMT)
-Subject: Re: [PATCH v2 2/2] memory: samsung: exynos5422-dmc: Add module
- param to control IRQ mode
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Cc:     willy.mh.wolff.ml@gmail.com, k.konieczny@samsung.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com, krzk@kernel.org,
-        chanwoo@kernel.org, myungjoo.ham@samsung.com,
-        kyungmin.park@samsung.com, s.nawrocki@samsung.com, kgene@kernel.org
-Message-ID: <ceaa668e-a60b-1916-243b-145b1bc7fc76@samsung.com>
-Date:   Mon, 3 Aug 2020 17:35:55 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.10.0
+        Mon, 3 Aug 2020 11:36:46 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ECABC06174A;
+        Mon,  3 Aug 2020 08:36:46 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id z188so10433593pfc.6;
+        Mon, 03 Aug 2020 08:36:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=A8n9chNjXZx8yRgIq9A/IKyX52HyQLZ2RKjMAPXEQjY=;
+        b=XwvnBEvczGDCMON1JBaBGk3fwowRCYzG+y6fEcHVNOAsPHRIKJ6XO9VmCW6JXjVPfq
+         7ziuUjIQIhzBpM/BNIzWK4z91mQSSu1ehdxbW/2+JnwvaFCUgINwl8dhsnfqbO0RpSzy
+         CKeY99MtcHLtpQVsZupN4gLxULjQrPglFe6eWrANs+7c9u7ghqG/xLkQfY4Eya3bo1T0
+         Z1SGFFrdNNTGWoRo4B3f24vWdGhu8wMU/afvEpmY4GhBsGQyEMzgX3cPDtMjrIkeWUDC
+         /IGitPdbKrodDpa34/I5UkgKA1cZxTyUqoMnnDh+ASAThtfv+VCGu67QmV4DahFRxVxU
+         OnUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=A8n9chNjXZx8yRgIq9A/IKyX52HyQLZ2RKjMAPXEQjY=;
+        b=q7vucMjYI5c0c1S3FsCuZkpZzFQdMKVbfsiT9YNEx2xVbT/1NITRIyrfg6OjoGhZQS
+         ICcXO26oz6aEb/YCJzQ5hrrIQvkh1z1iqOXK9SIZgsQzesPJKLo42BxgMB1DCx3aGrKc
+         tGt2aUIEs83G8IlxfFW0SrsEH29eGvjtZkRFPgtCe/moU7N0qZ/hnMFIEA3QYuNveRiR
+         q+0YjPY2gAJ8NwqA2yXptnibjudelyCOC+SRcm+YsxzAVjn5aa633XzqKckgLwB9VA7B
+         OI8ftZJ5K8Kuv1QRWpUVabfExykdjJZIPuyaZwO7AwG6r8HQ6YhniiIJtJAolfmmQX0Y
+         X8hg==
+X-Gm-Message-State: AOAM530GwXhbwkL4BXUiMrbCFZR5Cxr7G4I6olNOQKB7PkxtMS4BVj+J
+        yrWY4E5Uw1Qz5atwEyrto68=
+X-Google-Smtp-Source: ABdhPJxLyUEHNEsnwG9FczSp/S4wQrvWiueLusB/H3cprPdVXVdClkbOkxBry4KttsaZyH6vSeqaMw==
+X-Received: by 2002:aa7:92cb:: with SMTP id k11mr16070346pfa.233.1596469006030;
+        Mon, 03 Aug 2020 08:36:46 -0700 (PDT)
+Received: from [10.1.10.11] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
+        by smtp.gmail.com with ESMTPSA id hi13sm6942654pjb.26.2020.08.03.08.36.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Aug 2020 08:36:45 -0700 (PDT)
+Subject: Re: KASAN: use-after-free Read in tipc_bcast_get_mode
+To:     syzbot <syzbot+6ea1f7a8df64596ef4d7@syzkaller.appspotmail.com>,
+        davem@davemloft.net, jmaloy@redhat.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
+References: <000000000000f1e88005abfab762@google.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <aa20a683-456d-686b-4bc9-a5000185d3f6@gmail.com>
+Date:   Mon, 3 Aug 2020 08:36:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <db571467-48ec-8f11-de1d-00393d8aa99b@samsung.com>
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <000000000000f1e88005abfab762@google.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SWUwTURTldVYqxaFiuKJgbIiA0SLqx0QU1JhYDYkkxmg0WgtOCqFUMgO4
-        /FiLiKCASwxlMGxxAUQqVZElbqBUJFAjRpDFDRIUF6S4EjfKgPJ3zrnnvntO8mhM2Un40nHG
-        JI436gwqUo5XN/1oW9SjDtIuflkyja2yWAn2ZOcTnO34PECwRU4Lweb0vcNYh+MKxbaa31Os
-        re8pwbbXnSXZkax7iLU4bsnYYvNhiu0+VEqyje/TCfbrg9do1XRNRUEF0tSKvZTGVp5Baq6e
-        O6jJvlaONCM2/yhym3zFbs4Ql8LxIeG75LH5HZV4opPZ13jmGGlCZs9M5E4DswzEmmd4JpLT
-        SqYUQYE5j5LIZwT12f2EREYQDN7JxyZXnKNpE4OLCGrODMgkMoSg9HIz5XLNYGIgrf4N6cIk
-        EwqZHzJJl8mbKUfwbeje+DrmevfUp+LxdxVMOGS0lY1FoWmcCQBT2UqXPJPZCda3N2SSxQua
-        8/pxF3ZnIuBNb8X4KsbMhdTr+RPYB7r6C2VS1C8UVD+PlPBacFj6JyrMgEH7NUrCc+BPbeF4
-        A2BSEbxqu0xJ5DiCdrMFSa4w6GkbJV3hMCYYrHUhkrwaHt66gLlkYDyh84OXlMETTlXnTsgK
-        OHpEKbnng2iv/Hf27qPH2AmkEqc0E6e0Eae0Ef/fLUJ4OfLhkoUEPSeEGrm9akGXICQb9eqY
-        PQk2NPbfWn7bnTXoy+PoBsTQSOWhKCKCtEpClyLsT2hAQGMqb8Wa1padSsVu3f4DHL9Hyycb
-        OKEBzaZxlY9iacnbHUpGr0vi4jkukeMnpzLa3deEYjZ2f3Xb7lPpUTV/WD1r2DB9/bxXWzbn
-        nvv1QvZ8iV93l+D/o2V5U52skQ9aN3je32T9nhOR7paclBpg2xSYN7DeyS/Uy6pTW6Oe+Hms
-        vX+6+1JcT5jgZPmTiw/Hp920blDFVry0a8Ltedas21s5D/XHMPGnPlhM1wYHRkVHUq9VuBCr
-        C12A8YLuLzupyChrAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrFIsWRmVeSWpSXmKPExsVy+t/xu7q39TTiDTpPG1lsnLGe1WLijSss
-        Fte/PGe1WPBpBqtF/+PXzBbnz29gtzjb9IbdYtPja6wWl3fNYbP43HuE0WLG+X1MFgubWtgt
-        bjeuYLM4/Kad1eLbiUeMDvwea+atYfTYOesuu8emVZ1sHpuX1Hv0bVnF6PF5k1wAW5SeTVF+
-        aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6dTUpqTmZZapG+XYJexuzr61gKPglU
-        HJ7azdbA2MTXxcjJISFgIvHpVytrFyMXh5DAUkaJxkXXWSESMhInpzVA2cISf651sUEUvWWU
-        uPf1JTtIQlggWeLPjlNsIDabgKFE11uIIhGBVUBF92+wgzjMAp8ZJdrf7GcBqRIS+MAosf20
-        FYjNK2An0XluJVCcg4NFQEWiYaUtSFhUIE5i+Zb57BAlghInZz4Ba+UUsJd4cXcNM4jNLGAm
-        MW/zQyhbXqJ562woW1zi1pP5TBMYhWYhaZ+FpGUWkpZZSFoWMLKsYhRJLS3OTc8tNtIrTswt
-        Ls1L10vOz93ECIznbcd+btnB2PUu+BCjAAejEg/vAlaNeCHWxLLiytxDjBIczEoivE5nT8cJ
-        8aYkVlalFuXHF5XmpBYfYjQF+m0is5Rocj4w1eSVxBuaGppbWBqaG5sbm1koifN2CByMERJI
-        TyxJzU5NLUgtgulj4uCUamA8f2dG3oaop/Kn64y67hzeyr51ynv+tM9u6YW+UanNG5njvBJm
-        Xq66uNUutiO3x7ZpnQ1btu9piYRP7Fdaag9ZXnx13Efr9TUdnWa9QF37Q1+t2PuuHtp5xJ9L
-        7Jpa3v3/y29b79PpfSV4+e3iDTOV+acFsMft+fvrn8oSWaWnTJZrwm6Jl75XYinOSDTUYi4q
-        TgQAf0DYDf0CAAA=
-X-CMS-MailID: 20200803153555eucas1p12cd471cea5b1674dfa5aa38ee669a2ac
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200710191154eucas1p296561f285ee0730e5040fdfe3fc7e75e
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200710191154eucas1p296561f285ee0730e5040fdfe3fc7e75e
-References: <20200710191122.11029-1-lukasz.luba@arm.com>
-        <CGME20200710191154eucas1p296561f285ee0730e5040fdfe3fc7e75e@eucas1p2.samsung.com>
-        <20200710191122.11029-3-lukasz.luba@arm.com>
-        <db571467-48ec-8f11-de1d-00393d8aa99b@samsung.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
 
-On 03.08.2020 17:30, Marek Szyprowski wrote:
-> On 10.07.2020 21:11, Lukasz Luba wrote:
->> The driver can operate in two modes relaying on devfreq monitoring
->> mechanism which periodically checks the device status or it can use
->> interrupts when they are provided by loaded Device Tree. The newly
->> introduced module parameter can be used to choose between devfreq
->> monitoring and internal interrupts without modifying the Device Tree.
->> It also sets devfreq monitoring as default when the parameter is not set
->> (also the case for default when the driver is not built as a module).
->>
->> Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
->> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
->
-> I've got back from my holidays and noticed that in meantime this 
-> commit got merged as commit 4fc9a0470d2d. It revealed that there is a 
-> race between registering exynos5422-dmc driver and exynos-ppmu driver, 
-> which can be observed sometimes as the following message and freeze on 
-> Odroid XU3 with multi_v7_defconfig:
->
-> [    8.767708] exynos5-dmc 10c20000.memory-controller: couldn't probe 
-> performance counters
->
-> I will check this later why the EPROBE_DEFER error is not properly 
-> propagated and why it causes a freeze.
 
-It looks that simply propagating return value from 
-exynos5_counters_get() in exynos5_dmc_get_status() fixes the boot:
+On 8/3/20 8:23 AM, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    bd0b33b2 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+> git tree:       net-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13f236a4900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=91a13b78c7dc258d
+> dashboard link: https://syzkaller.appspot.com/bug?extid=6ea1f7a8df64596ef4d7
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> 
+> Unfortunately, I don't have any reproducer for this issue yet.
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+6ea1f7a8df64596ef4d7@syzkaller.appspotmail.com
+> 
+> tipc: 32-bit node address hash set to fcff1eac
+> ==================================================================
+> BUG: KASAN: use-after-free in tipc_bcast_get_mode+0x3ab/0x400 net/tipc/bcast.c:759
+> Read of size 1 at addr ffff88805e6b3571 by task kworker/0:6/3850
+> 
+> CPU: 0 PID: 3850 Comm: kworker/0:6 Not tainted 5.8.0-rc7-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Workqueue: events tipc_net_finalize_work
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x18f/0x20d lib/dump_stack.c:118
+>  print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
+>  __kasan_report mm/kasan/report.c:513 [inline]
+>  kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+>  tipc_bcast_get_mode+0x3ab/0x400 net/tipc/bcast.c:759
+>  tipc_node_broadcast+0x9e/0xcc0 net/tipc/node.c:1744
+>  tipc_nametbl_publish+0x60b/0x970 net/tipc/name_table.c:752
+>  tipc_net_finalize net/tipc/net.c:141 [inline]
+>  tipc_net_finalize+0x1fa/0x310 net/tipc/net.c:131
+>  tipc_net_finalize_work+0x55/0x80 net/tipc/net.c:150
+>  process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+>  worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+>  kthread+0x3b5/0x4a0 kernel/kthread.c:291
+>  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+> 
+> Allocated by task 8062:
+>  save_stack+0x1b/0x40 mm/kasan/common.c:48
+>  set_track mm/kasan/common.c:56 [inline]
+>  __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
+>  kmem_cache_alloc_trace+0x14f/0x2d0 mm/slab.c:3551
+>  kmalloc include/linux/slab.h:555 [inline]
+>  kzalloc include/linux/slab.h:669 [inline]
+>  tipc_bcast_init+0x21e/0x7b0 net/tipc/bcast.c:689
+>  tipc_init_net+0x4f6/0x5c0 net/tipc/core.c:85
+>  ops_init+0xaf/0x470 net/core/net_namespace.c:151
+>  setup_net+0x2d8/0x850 net/core/net_namespace.c:341
+>  copy_net_ns+0x2cf/0x5e0 net/core/net_namespace.c:482
+>  create_new_namespaces+0x3f6/0xb10 kernel/nsproxy.c:110
+>  unshare_nsproxy_namespaces+0xbd/0x1f0 kernel/nsproxy.c:231
+>  ksys_unshare+0x36c/0x9a0 kernel/fork.c:2979
+>  __do_sys_unshare kernel/fork.c:3047 [inline]
+>  __se_sys_unshare kernel/fork.c:3045 [inline]
+>  __x64_sys_unshare+0x2d/0x40 kernel/fork.c:3045
+>  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> Freed by task 8843:
+>  save_stack+0x1b/0x40 mm/kasan/common.c:48
+>  set_track mm/kasan/common.c:56 [inline]
+>  kasan_set_free_info mm/kasan/common.c:316 [inline]
+>  __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
+>  __cache_free mm/slab.c:3426 [inline]
+>  kfree+0x103/0x2c0 mm/slab.c:3757
+>  tipc_bcast_stop+0x1b0/0x2f0 net/tipc/bcast.c:721
+>  tipc_exit_net+0x24/0x270 net/tipc/core.c:112
+>  ops_exit_list+0xb0/0x160 net/core/net_namespace.c:186
+>  cleanup_net+0x4ea/0xa00 net/core/net_namespace.c:603
+>  process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+>  worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+>  kthread+0x3b5/0x4a0 kernel/kthread.c:291
+>  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+> 
+> The buggy address belongs to the object at ffff88805e6b3500
+>  which belongs to the cache kmalloc-128 of size 128
+> The buggy address is located 113 bytes inside of
+>  128-byte region [ffff88805e6b3500, ffff88805e6b3580)
+> The buggy address belongs to the page:
+> page:ffffea000179acc0 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
+> flags: 0xfffe0000000200(slab)
+> raw: 00fffe0000000200 ffffea0002375c48 ffff8880aa001550 ffff8880aa000700
+> raw: 0000000000000000 ffff88805e6b3000 0000000100000010 0000000000000000
+> page dumped because: kasan: bad access detected
+> 
+> Memory state around the buggy address:
+>  ffff88805e6b3400: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>  ffff88805e6b3480: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>> ffff88805e6b3500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>                                                              ^
+>  ffff88805e6b3580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>  ffff88805e6b3600: 00 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc
+> ==================================================================
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
 
-# dmesg | grep dmc
-[    8.838754] exynos-ppmu: new PPMU device registered 10d00000.ppmu 
-(ppmu-event3-dmc0_0)
-[    8.861344] exynos-ppmu: new PPMU device registered 10d10000.ppmu 
-(ppmu-event3-dmc0_1)
-[    8.868488] exynos5-dmc 10c20000.memory-controller: couldn't probe 
-performance counters
-[    8.874417] exynos-ppmu: new PPMU device registered 10d60000.ppmu 
-(ppmu-event3-dmc1_0)
-[    8.886612] exynos-ppmu: new PPMU device registered 10d70000.ppmu 
-(ppmu-event3-dmc1_1)
-[    9.396769] exynos5-dmc 10c20000.memory-controller: DMC initialized, 
-in irq mode: 0
 
-I'm still curious why it freezes if getting performance counters is not 
-possible.
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Probably caused by commit adba75be0d23cca92a028749d92c60c8909bbdb3 tipc: fix lockdep warning when reinitilaizing sockets
 
