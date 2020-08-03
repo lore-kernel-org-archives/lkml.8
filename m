@@ -3,191 +3,650 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68511C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 02:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E40FFC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 02:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C1102070A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 02:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45F92070A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 02:28:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbgHCCUb (ORCPT
+        id S1726824AbgHCC2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 22:20:31 -0400
-Received: from mga07.intel.com ([134.134.136.100]:64772 "EHLO mga07.intel.com"
+        Sun, 2 Aug 2020 22:28:33 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:49816 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbgHCCUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 22:20:31 -0400
-IronPort-SDR: E42l+X6uc+x0susDBFNWFK1kuROhbRZF3kO2BaTfxeNNloQqv4jHWftIJG0Q3JNns724cmMvkf
- 3qegQIiWCppQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9701"; a="216461700"
-X-IronPort-AV: E=Sophos;i="5.75,428,1589266800"; 
-   d="scan'208";a="216461700"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2020 19:20:29 -0700
-IronPort-SDR: qBWMv2KDbNwROoK6QxaoQTKg3p7yCiwqOsxCFMDmeLzSALxSB3YfchntlexrlpC10igfhQ/2Jw
- Jb+scsqpJqsQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,428,1589266800"; 
-   d="scan'208";a="395909209"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Aug 2020 19:20:26 -0700
-Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Liu Yi L <yi.l.liu@intel.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] iommu: Add iommu_aux_get_domain_for_dev()
-To:     Alex Williamson <alex.williamson@redhat.com>
-References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
- <20200714055703.5510-4-baolu.lu@linux.intel.com>
- <20200729142507.182cd18a@x1.home>
- <06fd91c1-a978-d526-7e2b-fec619a458e4@linux.intel.com>
- <20200731121418.0274afb8@x1.home>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <3fd171a2-a5cc-89d7-f539-04eb2faf130f@linux.intel.com>
-Date:   Mon, 3 Aug 2020 10:15:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200731121418.0274afb8@x1.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1725820AbgHCC2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 22:28:33 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C56761A0E19;
+        Mon,  3 Aug 2020 04:28:28 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 98AF81A0E2B;
+        Mon,  3 Aug 2020 04:28:25 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B870840309;
+        Mon,  3 Aug 2020 04:28:21 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        yibin.gong@nxp.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] dt-bindings: regulator: Convert pfuze100 to json-schema
+Date:   Mon,  3 Aug 2020 10:23:59 +0800
+Message-Id: <1596421439-19591-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+Convert the pfuze100 regulator binding to DT schema format using
+json-schema.
 
-On 8/1/20 2:14 AM, Alex Williamson wrote:
-> On Fri, 31 Jul 2020 14:30:03 +0800
-> Lu Baolu <baolu.lu@linux.intel.com> wrote:
-> 
->> Hi Alex,
->>
->> On 2020/7/30 4:25, Alex Williamson wrote:
->>> On Tue, 14 Jul 2020 13:57:02 +0800
->>> Lu Baolu<baolu.lu@linux.intel.com>  wrote:
->>>    
->>>> The device driver needs an API to get its aux-domain. A typical usage
->>>> scenario is:
->>>>
->>>>           unsigned long pasid;
->>>>           struct iommu_domain *domain;
->>>>           struct device *dev = mdev_dev(mdev);
->>>>           struct device *iommu_device = vfio_mdev_get_iommu_device(dev);
->>>>
->>>>           domain = iommu_aux_get_domain_for_dev(dev);
->>>>           if (!domain)
->>>>                   return -ENODEV;
->>>>
->>>>           pasid = iommu_aux_get_pasid(domain, iommu_device);
->>>>           if (pasid <= 0)
->>>>                   return -EINVAL;
->>>>
->>>>            /* Program the device context */
->>>>            ....
->>>>
->>>> This adds an API for such use case.
->>>>
->>>> Suggested-by: Alex Williamson<alex.williamson@redhat.com>
->>>> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
->>>> ---
->>>>    drivers/iommu/iommu.c | 18 ++++++++++++++++++
->>>>    include/linux/iommu.h |  7 +++++++
->>>>    2 files changed, 25 insertions(+)
->>>>
->>>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->>>> index cad5a19ebf22..434bf42b6b9b 100644
->>>> --- a/drivers/iommu/iommu.c
->>>> +++ b/drivers/iommu/iommu.c
->>>> @@ -2817,6 +2817,24 @@ void iommu_aux_detach_group(struct iommu_domain *domain,
->>>>    }
->>>>    EXPORT_SYMBOL_GPL(iommu_aux_detach_group);
->>>>    
->>>> +struct iommu_domain *iommu_aux_get_domain_for_dev(struct device *dev)
->>>> +{
->>>> +	struct iommu_domain *domain = NULL;
->>>> +	struct iommu_group *group;
->>>> +
->>>> +	group = iommu_group_get(dev);
->>>> +	if (!group)
->>>> +		return NULL;
->>>> +
->>>> +	if (group->aux_domain_attached)
->>>> +		domain = group->domain;
->>> Why wouldn't the aux domain flag be on the domain itself rather than
->>> the group?  Then if we wanted sanity checking in patch 1/ we'd only
->>> need to test the flag on the object we're provided.
->>
->> Agreed. Given that a group may contain both non-aux and aux devices,
->> adding such flag in iommu_group doesn't make sense.
->>
->>>
->>> If we had such a flag, we could create an iommu_domain_is_aux()
->>> function and then simply use iommu_get_domain_for_dev() and test that
->>> it's an aux domain in the example use case.  It seems like that would
->>> resolve the jump from a domain to an aux-domain just as well as adding
->>> this separate iommu_aux_get_domain_for_dev() interface.  The is_aux
->>> test might also be useful in other cases too.
->>
->> Let's rehearsal our use case.
->>
->>           unsigned long pasid;
->>           struct iommu_domain *domain;
->>           struct device *dev = mdev_dev(mdev);
->>           struct device *iommu_device = vfio_mdev_get_iommu_device(dev);
->>
->> [1]     domain = iommu_get_domain_for_dev(dev);
->>           if (!domain)
->>                   return -ENODEV;
->>
->> [2]     pasid = iommu_aux_get_pasid(domain, iommu_device);
->>           if (pasid <= 0)
->>                   return -EINVAL;
->>
->>            /* Program the device context */
->>            ....
->>
->> The reason why I add this iommu_aux_get_domain_for_dev() is that we need
->> to make sure the domain got at [1] is valid to be used at [2].
->>
->> https://lore.kernel.org/linux-iommu/20200707150408.474d81f1@x1.home/
-> 
-> Yep, I thought that was a bit of a leap in logic.
-> 
->> When calling into iommu_aux_get_pasid(), the iommu driver should make
->> sure that @domain is a valid aux-domain for @iommu_device. Hence, for
->> our use case, it seems that there's no need for a is_aux_domain() api.
->>
->> Anyway, I'm not against adding a new is_aux_domain() api if there's a
->> need elsewhere.
-> 
-> I think it could work either way, we could have an
-> iommu_get_aux_domain_for_dev() which returns NULL if the domain is not
-> an aux domain, or we could use iommu_get_domain_for_dev() and the
-> caller could test the domain with iommu_is_aux_domain() if they need to
-> confirm if it's an aux domain.  The former could even be written using
-> the latter, a wrapper of iommu_get_domain_for_dev() that checks aux
-> property before returning.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../devicetree/bindings/regulator/pfuze100.txt     | 394 ---------------------
+ .../devicetree/bindings/regulator/pfuze100.yaml    | 186 ++++++++++
+ 2 files changed, 186 insertions(+), 394 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/regulator/pfuze100.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/pfuze100.yaml
 
-Okay. So iommu_get_domain_for_dev() and iommu_is_aux_domain() are what
-we wanted. The iommu_get_domain_for_dev() could be a simple wrapper of
-them.
+diff --git a/Documentation/devicetree/bindings/regulator/pfuze100.txt b/Documentation/devicetree/bindings/regulator/pfuze100.txt
+deleted file mode 100644
+index 4d3b12b..0000000
+--- a/Documentation/devicetree/bindings/regulator/pfuze100.txt
++++ /dev/null
+@@ -1,394 +0,0 @@
+-PFUZE100 family of regulators
+-
+-Required properties:
+-- compatible: "fsl,pfuze100", "fsl,pfuze200", "fsl,pfuze3000", "fsl,pfuze3001"
+-- reg: I2C slave address
+-
+-Optional properties:
+-- fsl,pfuze-support-disable-sw: Boolean, if present disable all unused switch
+-  regulators to save power consumption. Attention, ensure that all important
+-  regulators (e.g. DDR ref, DDR supply) has set the "regulator-always-on"
+-  property. If not present, the switched regulators are always on and can't be
+-  disabled. This binding is a workaround to keep backward compatibility with
+-  old dtb's which rely on the fact that the switched regulators are always on
+-  and don't mark them explicit as "regulator-always-on".
+-- fsl,pmic-stby-poweroff: if present, configure the PMIC to shutdown all
+-  power rails when PMIC_STBY_REQ line is asserted during the power off sequence.
+-  Use this option if the SoC should be powered off by external power
+-  management IC (PMIC) on PMIC_STBY_REQ signal.
+-  As opposite to PMIC_STBY_REQ boards can implement PMIC_ON_REQ signal.
+-
+-Required child node:
+-- regulators: This is the list of child nodes that specify the regulator
+-  initialization data for defined regulators. Please refer to below doc
+-  Documentation/devicetree/bindings/regulator/regulator.txt.
+-
+-  The valid names for regulators are:
+-  --PFUZE100
+-  sw1ab,sw1c,sw2,sw3a,sw3b,sw4,swbst,vsnvs,vrefddr,vgen1~vgen6
+-  --PFUZE200
+-  sw1ab,sw2,sw3a,sw3b,swbst,vsnvs,vrefddr,vgen1~vgen6,coin
+-  --PFUZE3000
+-  sw1a,sw1b,sw2,sw3,swbst,vsnvs,vrefddr,vldo1,vldo2,vccsd,v33,vldo3,vldo4
+-  --PFUZE3001
+-  sw1,sw2,sw3,vsnvs,vldo1,vldo2,vccsd,v33,vldo3,vldo4
+-
+-Each regulator is defined using the standard binding for regulators.
+-
+-Example 1: PFUZE100
+-
+-	pfuze100: pmic@8 {
+-		compatible = "fsl,pfuze100";
+-		reg = <0x08>;
+-
+-		regulators {
+-			sw1a_reg: sw1ab {
+-				regulator-min-microvolt = <300000>;
+-				regulator-max-microvolt = <1875000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-				regulator-ramp-delay = <6250>;
+-			};
+-
+-			sw1c_reg: sw1c {
+-				regulator-min-microvolt = <300000>;
+-				regulator-max-microvolt = <1875000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			sw2_reg: sw2 {
+-				regulator-min-microvolt = <800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			sw3a_reg: sw3a {
+-				regulator-min-microvolt = <400000>;
+-				regulator-max-microvolt = <1975000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			sw3b_reg: sw3b {
+-				regulator-min-microvolt = <400000>;
+-				regulator-max-microvolt = <1975000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			sw4_reg: sw4 {
+-				regulator-min-microvolt = <800000>;
+-				regulator-max-microvolt = <3300000>;
+-			};
+-
+-			swbst_reg: swbst {
+-				regulator-min-microvolt = <5000000>;
+-				regulator-max-microvolt = <5150000>;
+-			};
+-
+-			snvs_reg: vsnvs {
+-				regulator-min-microvolt = <1000000>;
+-				regulator-max-microvolt = <3000000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			vref_reg: vrefddr {
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			vgen1_reg: vgen1 {
+-				regulator-min-microvolt = <800000>;
+-				regulator-max-microvolt = <1550000>;
+-			};
+-
+-			vgen2_reg: vgen2 {
+-				regulator-min-microvolt = <800000>;
+-				regulator-max-microvolt = <1550000>;
+-			};
+-
+-			vgen3_reg: vgen3 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-			};
+-
+-			vgen4_reg: vgen4 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-
+-			vgen5_reg: vgen5 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-
+-			vgen6_reg: vgen6 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-		};
+-	};
+-
+-
+-Example 2: PFUZE200
+-
+-	pfuze200: pmic@8 {
+-		compatible = "fsl,pfuze200";
+-		reg = <0x08>;
+-
+-		regulators {
+-			sw1a_reg: sw1ab {
+-				regulator-min-microvolt = <300000>;
+-				regulator-max-microvolt = <1875000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-				regulator-ramp-delay = <6250>;
+-			};
+-
+-			sw2_reg: sw2 {
+-				regulator-min-microvolt = <800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			sw3a_reg: sw3a {
+-				regulator-min-microvolt = <400000>;
+-				regulator-max-microvolt = <1975000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			sw3b_reg: sw3b {
+-				regulator-min-microvolt = <400000>;
+-				regulator-max-microvolt = <1975000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			swbst_reg: swbst {
+-				regulator-min-microvolt = <5000000>;
+-				regulator-max-microvolt = <5150000>;
+-			};
+-
+-			snvs_reg: vsnvs {
+-				regulator-min-microvolt = <1000000>;
+-				regulator-max-microvolt = <3000000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			vref_reg: vrefddr {
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			vgen1_reg: vgen1 {
+-				regulator-min-microvolt = <800000>;
+-				regulator-max-microvolt = <1550000>;
+-			};
+-
+-			vgen2_reg: vgen2 {
+-				regulator-min-microvolt = <800000>;
+-				regulator-max-microvolt = <1550000>;
+-			};
+-
+-			vgen3_reg: vgen3 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-			};
+-
+-			vgen4_reg: vgen4 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-
+-			vgen5_reg: vgen5 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-
+-			vgen6_reg: vgen6 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-
+-			coin_reg: coin {
+-				regulator-min-microvolt = <2500000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-		};
+-	};
+-
+-Example 3: PFUZE3000
+-
+-	pfuze3000: pmic@8 {
+-		compatible = "fsl,pfuze3000";
+-		reg = <0x08>;
+-
+-		regulators {
+-			sw1a_reg: sw1a {
+-				regulator-min-microvolt = <700000>;
+-				regulator-max-microvolt = <1475000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-				regulator-ramp-delay = <6250>;
+-			};
+-			/* use sw1c_reg to align with pfuze100/pfuze200 */
+-			sw1c_reg: sw1b {
+-				regulator-min-microvolt = <700000>;
+-				regulator-max-microvolt = <1475000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-				regulator-ramp-delay = <6250>;
+-			};
+-
+-			sw2_reg: sw2 {
+-				regulator-min-microvolt = <2500000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			sw3a_reg: sw3 {
+-				regulator-min-microvolt = <900000>;
+-				regulator-max-microvolt = <1650000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			swbst_reg: swbst {
+-				regulator-min-microvolt = <5000000>;
+-				regulator-max-microvolt = <5150000>;
+-			};
+-
+-			snvs_reg: vsnvs {
+-				regulator-min-microvolt = <1000000>;
+-				regulator-max-microvolt = <3000000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			vref_reg: vrefddr {
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			vgen1_reg: vldo1 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-
+-			vgen2_reg: vldo2 {
+-				regulator-min-microvolt = <800000>;
+-				regulator-max-microvolt = <1550000>;
+-			};
+-
+-			vgen3_reg: vccsd {
+-				regulator-min-microvolt = <2850000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-
+-			vgen4_reg: v33 {
+-				regulator-min-microvolt = <2850000>;
+-				regulator-max-microvolt = <3300000>;
+-			};
+-
+-			vgen5_reg: vldo3 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-
+-			vgen6_reg: vldo4 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-		};
+-	};
+-
+-Example 4: PFUZE 3001
+-
+-	pfuze3001: pmic@8 {
+-		compatible = "fsl,pfuze3001";
+-		reg = <0x08>;
+-
+-		regulators {
+-			sw1_reg: sw1 {
+-				regulator-min-microvolt = <700000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			sw2_reg: sw2 {
+-				regulator-min-microvolt = <1500000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			sw3_reg: sw3 {
+-				regulator-min-microvolt = <900000>;
+-				regulator-max-microvolt = <1650000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			snvs_reg: vsnvs {
+-				regulator-min-microvolt = <1000000>;
+-				regulator-max-microvolt = <3000000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			vgen1_reg: vldo1 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-
+-			vgen2_reg: vldo2 {
+-				regulator-min-microvolt = <800000>;
+-				regulator-max-microvolt = <1550000>;
+-				regulator-always-on;
+-			};
+-
+-			vgen3_reg: vccsd {
+-				regulator-min-microvolt = <2850000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-
+-			vgen4_reg: v33 {
+-				regulator-min-microvolt = <2850000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-
+-			vgen5_reg: vldo3 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-
+-			vgen6_reg: vldo4 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+-			};
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/regulator/pfuze100.yaml b/Documentation/devicetree/bindings/regulator/pfuze100.yaml
+new file mode 100644
+index 0000000..c6de496
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/pfuze100.yaml
+@@ -0,0 +1,186 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/regulator/pfuze100.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: PFUZE100 family of regulators
++
++maintainers:
++  - Robin Gong <yibin.gong@nxp.com>
++
++description: |
++  The valid names for regulators are:
++  --PFUZE100
++  sw1ab,sw1c,sw2,sw3a,sw3b,sw4,swbst,vsnvs,vrefddr,vgen1~vgen6
++  --PFUZE200
++  sw1ab,sw2,sw3a,sw3b,swbst,vsnvs,vrefddr,vgen1~vgen6,coin
++  --PFUZE3000
++  sw1a,sw1b,sw2,sw3,swbst,vsnvs,vrefddr,vldo1,vldo2,vccsd,v33,vldo3,vldo4
++  --PFUZE3001
++  sw1,sw2,sw3,vsnvs,vldo1,vldo2,vccsd,v33,vldo3,vldo4
++
++  Each regulator is defined using the standard binding for regulators.
++
++properties:
++  $nodename:
++    pattern: "^pmic@[0-9]$"
++
++  compatible:
++    enum:
++      - fsl,pfuze100
++      - fsl,pfuze200
++      - fsl,pfuze3000
++      - fsl,pfuze3001
++
++  reg:
++    maxItems: 1
++
++  fsl,pfuze-support-disable-sw:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      Boolean, if present disable all unused switch regulators to save power
++      consumption. Attention, ensure that all important regulators
++      (e.g. DDR ref, DDR supply) has set the "regulator-always-on" property.
++      If not present, the switched regulators are always on and can't be
++      disabled. This binding is a workaround to keep backward compatibility
++      with old dtb's which rely on the fact that the switched regulators are
++      always on and don't mark them explicit as "regulator-always-on".
++
++  fsl,pmic-stby-poweroff:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      if present, configure the PMIC to shutdown all
++      power rails when PMIC_STBY_REQ line is asserted during the power off sequence.
++      Use this option if the SoC should be powered off by external power management
++      IC (PMIC) on PMIC_STBY_REQ signal.
++      As opposite to PMIC_STBY_REQ boards can implement PMIC_ON_REQ signal.
++
++  regulators:
++    type: object
++    description: |
++      list of regulators provided by this controller.
++
++    patternProperties:
++      "^sw([1-4]|[1-4][a-c]|[1-4][a-c][a-c])$":
++        $ref: "regulator.yaml#"
++        type: object
++
++      "^vgen[1-6]$":
++        $ref: "regulator.yaml#"
++        type: object
++
++      "^(vsnvs|vref|vrefddr|swbst|coin)$":
++        $ref: "regulator.yaml#"
++        type: object
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        pmic@8 {
++            compatible = "fsl,pfuze100";
++            reg = <0x08>;
++
++            regulators {
++                sw1a_reg: sw1ab {
++                    regulator-min-microvolt = <300000>;
++                    regulator-max-microvolt = <1875000>;
++                    regulator-boot-on;
++                    regulator-always-on;
++                    regulator-ramp-delay = <6250>;
++                };
++
++                sw1c_reg: sw1c {
++                    regulator-min-microvolt = <300000>;
++                    regulator-max-microvolt = <1875000>;
++                    regulator-boot-on;
++                    regulator-always-on;
++                };
++
++                sw2_reg: sw2 {
++                    regulator-min-microvolt = <800000>;
++                    regulator-max-microvolt = <3300000>;
++                    regulator-boot-on;
++                    regulator-always-on;
++                };
++
++                sw3a_reg: sw3a {
++                    regulator-min-microvolt = <400000>;
++                    regulator-max-microvolt = <1975000>;
++                    regulator-boot-on;
++                    regulator-always-on;
++                };
++
++                sw3b_reg: sw3b {
++                    regulator-min-microvolt = <400000>;
++                    regulator-max-microvolt = <1975000>;
++                    regulator-boot-on;
++                    regulator-always-on;
++                };
++
++                sw4_reg: sw4 {
++                    regulator-min-microvolt = <800000>;
++                    regulator-max-microvolt = <3300000>;
++                };
++
++                swbst_reg: swbst {
++                    regulator-min-microvolt = <5000000>;
++                    regulator-max-microvolt = <5150000>;
++                };
++
++                snvs_reg: vsnvs {
++                    regulator-min-microvolt = <1000000>;
++                    regulator-max-microvolt = <3000000>;
++                    regulator-boot-on;
++                    regulator-always-on;
++                };
++
++                vref_reg: vrefddr {
++                    regulator-boot-on;
++                    regulator-always-on;
++                };
++
++                vgen1_reg: vgen1 {
++                    regulator-min-microvolt = <800000>;
++                    regulator-max-microvolt = <1550000>;
++                };
++
++                vgen2_reg: vgen2 {
++                    regulator-min-microvolt = <800000>;
++                    regulator-max-microvolt = <1550000>;
++                };
++
++                vgen3_reg: vgen3 {
++                    regulator-min-microvolt = <1800000>;
++                    regulator-max-microvolt = <3300000>;
++                };
++
++                vgen4_reg: vgen4 {
++                    regulator-min-microvolt = <1800000>;
++                    regulator-max-microvolt = <3300000>;
++                    regulator-always-on;
++                };
++
++                vgen5_reg: vgen5 {
++                    regulator-min-microvolt = <1800000>;
++                    regulator-max-microvolt = <3300000>;
++                    regulator-always-on;
++                };
++
++                vgen6_reg: vgen6 {
++                    regulator-min-microvolt = <1800000>;
++                    regulator-max-microvolt = <3300000>;
++                    regulator-always-on;
++                };
++            };
++        };
++    };
+-- 
+2.7.4
 
-Thanks a lot for the guide. I will implement a new version according to
-the feedbacks.
-
-Best regards,
-baolu
