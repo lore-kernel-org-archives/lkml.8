@@ -2,187 +2,107 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC44C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF33C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95C0F20678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5518420678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:42:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BCZv90eb"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="O9JK86Tc";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="s4K2YpwD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbgHCPmj (ORCPT
+        id S1728275AbgHCPm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 11:42:39 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16623 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728048AbgHCPmg (ORCPT
+        Mon, 3 Aug 2020 11:42:57 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:37566 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728232AbgHCPmz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 11:42:36 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f28300a0003>; Mon, 03 Aug 2020 08:40:58 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 03 Aug 2020 08:42:35 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 03 Aug 2020 08:42:35 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Aug
- 2020 15:42:35 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 3 Aug 2020 15:42:35 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.221]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f28306a0005>; Mon, 03 Aug 2020 08:42:35 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <gregkh@linuxfoundation.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till calibration is done
-Date:   Mon, 3 Aug 2020 08:42:24 -0700
-Message-ID: <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
-References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
-MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596469258; bh=wDgMkeYCZVezNoEVbmypSzb8rMjS8a+LjilsX0gytzo=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=BCZv90ebln0SePLIs+xmu+/ZB3CvdH6PELpJPaiqOwnRkfao3sAU30ciwSUR7F6J3
-         In2biTD5EY8e0nNnYBtgDMHM/qntlS18P002arns6LGrMZRvSqB4pw8PlhxSQKPoj7
-         5Ol057x14GJVww2MnkdnfLgBpTN1ZBI8fKVvQYsmWexWV9SBIlRqxzZYX63am9KGkE
-         GR2H2KL5GNqM4F7bNYYLbVKB1fmBCAcgJKJKE7wcaam3208XEt6XG2JmJEk0zJJMEu
-         Ot1F6Vxhq6dmnAobIxOeISWLH+eYtd4WAl5hTSvQqeEH0ArqSs0j8byuOxwaCRabKh
-         pBPZ7bRIGp9+Q==
+        Mon, 3 Aug 2020 11:42:55 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 0C8748EE1DD;
+        Mon,  3 Aug 2020 08:42:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1596469374;
+        bh=Uum3YBzktKJNuHiR6OJu5HmfTF5qQnA5gi/i5G/rXrQ=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=O9JK86TcVP7gbxm2fb/8Q61ppK2NKKQTxTKNuHlV2ceyKu1aTztA5xAoiJrD2pxW/
+         Q+qv2hXr5mwEzJ3gdctVri6mhLMR5/CHlIiEsE/4/lI+JZDaI0KDvNumWeAJkyX13U
+         OCGvKNLxJrKe8ou8wqztvVdP+b2dZwwO98fcCXtA=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id EdiLDuzcATav; Mon,  3 Aug 2020 08:42:53 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 81ED08EE14D;
+        Mon,  3 Aug 2020 08:42:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1596469373;
+        bh=Uum3YBzktKJNuHiR6OJu5HmfTF5qQnA5gi/i5G/rXrQ=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=s4K2YpwDLz+5kMilTgP8ZNMakkD9GePIXlmZcfIzJDFHwQHhqnSrKdXx2dgkvpwtr
+         hAqE4Wy7TqMCx3r3hCV4Hpap0/QxwKCr2EbyGneLKFgGD6GJ8mv6m1pfA0xUdlMOoP
+         UgLcD2xTWanH2eZI7HU/ES49TBMi0ZvSvbsfkml4=
+Message-ID: <1596469370.29091.13.camel@HansenPartnership.com>
+Subject: Re: [RFC PATCH 0/5] madvise MADV_DOEXEC
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Steven Sistare <steven.sistare@oracle.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org, mhocko@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, viro@zeniv.linux.org.uk, akpm@linux-foundation.org,
+        arnd@arndb.de, keescook@chromium.org, gerg@linux-m68k.org,
+        ktkhai@virtuozzo.com, christian.brauner@ubuntu.com,
+        peterz@infradead.org, esyr@redhat.com, jgg@ziepe.ca,
+        christian@kellner.me, areber@redhat.com, cyphar@cyphar.com
+Date:   Mon, 03 Aug 2020 08:42:50 -0700
+In-Reply-To: <877dufvje9.fsf@x220.int.ebiederm.org>
+References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
+         <20200730152250.GG23808@casper.infradead.org>
+         <db3bdbae-eb0f-1ae3-94dd-045e37bc94ba@oracle.com>
+         <20200730171251.GI23808@casper.infradead.org>
+         <63a7404c-e4f6-a82e-257b-217585b0277f@oracle.com>
+         <20200730174956.GK23808@casper.infradead.org>
+         <ab7a25bf-3321-77c8-9bc3-28a223a14032@oracle.com>
+         <87y2n03brx.fsf@x220.int.ebiederm.org>
+         <689d6348-6029-5396-8de7-a26bc3c017e5@oracle.com>
+         <877dufvje9.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the split of MIPI calibration into tegra_mipi_calibrate() and
-tegra_mipi_wait(), MIPI clock is not kept enabled till the calibration
-is done.
+On Mon, 2020-08-03 at 10:28 -0500, Eric W. Biederman wrote:
+[...]
+> What is wrong with live migration between one qemu process and
+> another qemu process on the same machine not work for this use case?
+> 
+> Just reusing live migration would seem to be the simplest path of
+> all, as the code is already implemented.  Further if something goes
+> wrong with the live migration you can fallback to the existing
+> process.  With exec there is no fallback if the new version does not
+> properly support the handoff protocol of the old version.
 
-So, this patch skips disabling MIPI clock after triggering start of
-calibration and disables it only after waiting for done status from
-the calibration logic.
+Actually, could I ask this another way: the other patch set you sent to
+the KVM list was to snapshot the VM to a PKRAM capsule preserved across
+kexec using zero copy for extremely fast save/restore.  The original
+idea was to use this as part of a CRIU based snapshot, kexec to new
+system, restore.  However, why can't you do a local snapshot, restart
+qemu, restore using the PKRAM capsule to achieve exactly the same as
+MADV_DOEXEC does but using a system that's easy to reason about?  It
+may be slightly slower, but I think we're still talking milliseconds.
 
-This patch renames tegra_mipi_calibrate() as tegra_mipi_start_calibration()
-and tegra_mipi_wait() as tegra_mipi_finish_calibration() to be inline
-with their usage.
-
-As MIPI clock is left enabled and in case of any failures with CSI input
-streaming tegra_mipi_finish_calibration() will not get invoked.
-So added new API tegra_mipi_cancel_calibration() which disables MIPI clock
-and consumer drivers can call this in such cases.
-
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/gpu/drm/tegra/dsi.c |  4 ++--
- drivers/gpu/host1x/mipi.c   | 19 ++++++++++---------
- include/linux/host1x.h      |  5 +++--
- 3 files changed, 15 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
-index 3820e8d..a7864e9 100644
---- a/drivers/gpu/drm/tegra/dsi.c
-+++ b/drivers/gpu/drm/tegra/dsi.c
-@@ -694,11 +694,11 @@ static int tegra_dsi_pad_calibrate(struct tegra_dsi *dsi)
- 		DSI_PAD_PREEMP_PD(0x03) | DSI_PAD_PREEMP_PU(0x3);
- 	tegra_dsi_writel(dsi, value, DSI_PAD_CONTROL_3);
- 
--	err = tegra_mipi_calibrate(dsi->mipi);
-+	err = tegra_mipi_start_calibration(dsi->mipi);
- 	if (err < 0)
- 		return err;
- 
--	return tegra_mipi_wait(dsi->mipi);
-+	return tegra_mipi_finish_calibration(dsi->mipi);
- }
- 
- static void tegra_dsi_set_timeout(struct tegra_dsi *dsi, unsigned long bclk,
-diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
-index e606464..b15ab6e 100644
---- a/drivers/gpu/host1x/mipi.c
-+++ b/drivers/gpu/host1x/mipi.c
-@@ -293,17 +293,19 @@ int tegra_mipi_disable(struct tegra_mipi_device *dev)
- }
- EXPORT_SYMBOL(tegra_mipi_disable);
- 
--int tegra_mipi_wait(struct tegra_mipi_device *device)
-+void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device)
-+{
-+	clk_disable(device->mipi->clk);
-+}
-+EXPORT_SYMBOL(tegra_mipi_cancel_calibration);
-+
-+int tegra_mipi_finish_calibration(struct tegra_mipi_device *device)
- {
- 	struct tegra_mipi *mipi = device->mipi;
- 	void __iomem *status_reg = mipi->regs + (MIPI_CAL_STATUS << 2);
- 	u32 value;
- 	int err;
- 
--	err = clk_enable(device->mipi->clk);
--	if (err < 0)
--		return err;
--
- 	mutex_lock(&device->mipi->lock);
- 
- 	err = readl_relaxed_poll_timeout(status_reg, value,
-@@ -315,9 +317,9 @@ int tegra_mipi_wait(struct tegra_mipi_device *device)
- 
- 	return err;
- }
--EXPORT_SYMBOL(tegra_mipi_wait);
-+EXPORT_SYMBOL(tegra_mipi_finish_calibration);
- 
--int tegra_mipi_calibrate(struct tegra_mipi_device *device)
-+int tegra_mipi_start_calibration(struct tegra_mipi_device *device)
- {
- 	const struct tegra_mipi_soc *soc = device->mipi->soc;
- 	unsigned int i;
-@@ -382,11 +384,10 @@ int tegra_mipi_calibrate(struct tegra_mipi_device *device)
- 	tegra_mipi_writel(device->mipi, value, MIPI_CAL_CTRL);
- 
- 	mutex_unlock(&device->mipi->lock);
--	clk_disable(device->mipi->clk);
- 
- 	return 0;
- }
--EXPORT_SYMBOL(tegra_mipi_calibrate);
-+EXPORT_SYMBOL(tegra_mipi_start_calibration);
- 
- static const struct tegra_mipi_pad tegra114_mipi_pads[] = {
- 	{ .data = MIPI_CAL_CONFIG_CSIA },
-diff --git a/include/linux/host1x.h b/include/linux/host1x.h
-index 20c885d..b490dda 100644
---- a/include/linux/host1x.h
-+++ b/include/linux/host1x.h
-@@ -333,7 +333,8 @@ struct tegra_mipi_device *tegra_mipi_request(struct device *device,
- void tegra_mipi_free(struct tegra_mipi_device *device);
- int tegra_mipi_enable(struct tegra_mipi_device *device);
- int tegra_mipi_disable(struct tegra_mipi_device *device);
--int tegra_mipi_calibrate(struct tegra_mipi_device *device);
--int tegra_mipi_wait(struct tegra_mipi_device *device);
-+int tegra_mipi_start_calibration(struct tegra_mipi_device *device);
-+int tegra_mipi_finish_calibration(struct tegra_mipi_device *device);
-+void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device);
- 
- #endif
--- 
-2.7.4
+James
 
