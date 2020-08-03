@@ -2,98 +2,93 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE8BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4049C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E0802054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O2yqvXo0"
+	by mail.kernel.org (Postfix) with ESMTP id 7448420678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596458530;
+	bh=KMCezlPWr4Uv/z/QzV4v8X/jq+Y/0ojMiWgAzx5H/Vg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2Z/ydNFbHyh8C/3B6fYMuVFA6bIVF+pZ9xkBfUThbWBY32GXdBLKGhlqEbVLB6lqY
+	 7oWMdwnOJkApA0rxgSHZAoE7O/CGsqdEJPreAMHZalWK5fema2AvP3MUhU1sw1WzWI
+	 awn3cE1EbsJ3VFByOfmtZzDS1+7mXYSAa+YMhpSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729219AbgHCMl7 (ORCPT
+        id S1728941AbgHCMmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:41:59 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:40476 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729273AbgHCMcD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:32:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596457922;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+FTqyOz+KM8b1l5RbH2zS34D2EqLt9IQI9azf1e1ydg=;
-        b=O2yqvXo0igto70PGbTccw38Nvw+kQKvBUvKy0S/bLEufT+HlS0SCAyJ6cQdvtl6rc3MqFP
-        vHGonZ/MA0O51mYlIihyqjNxA17a9/Z/qbBjuBVW5AD7JczIqHl+HuKwbKP4QgaT0M5V7c
-        a9/LUyfXCO0IzGGyywCGHvR/MNDWdcg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-77-YLQh1wy0P0eZHtUDK-Mg4w-1; Mon, 03 Aug 2020 08:31:58 -0400
-X-MC-Unique: YLQh1wy0P0eZHtUDK-Mg4w-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 3 Aug 2020 08:42:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59648 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729234AbgHCMbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:31:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B7D55101C8A8;
-        Mon,  3 Aug 2020 12:31:56 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8724E7176A;
-        Mon,  3 Aug 2020 12:31:53 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <303106be4785135446e56cb606138a6e94885887.camel@themaw.net>
-References: <303106be4785135446e56cb606138a6e94885887.camel@themaw.net> <CAJfpeguO8Qwkzx9zfGVT7W+pT5p6fgj-_8oJqJbXX_KQBpLLEQ@mail.gmail.com> <1293241.1595501326@warthog.procyon.org.uk> <CAJfpegspWA6oUtdcYvYF=3fij=Bnq03b8VMbU9RNMKc+zzjbag@mail.gmail.com> <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk> <158454391302.2863966.1884682840541676280.stgit@warthog.procyon.org.uk> <2003787.1595585999@warthog.procyon.org.uk> <865566fb800a014868a9a7e36a00a14430efb11e.camel@themaw.net> <2023286.1595590563@warthog.procyon.org.uk> <CAJfpegsT_3YqHPWCZGX7Lr+sE0NVmczWz5L6cN8CzsVz4YKLCQ@mail.gmail.com> <1283475.1596449889@warthog.procyon.org.uk> <1576646.1596455376@warthog.procyon.org.uk>
-To:     Ian Kent <raven@themaw.net>
-Cc:     dhowells@redhat.com, Miklos Szeredi <miklos@szeredi.hu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>, andres@anarazel.de,
-        Jeff Layton <jlayton@redhat.com>, dray@redhat.com,
-        Karel Zak <kzak@redhat.com>, keyrings@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        LSM <linux-security-module@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 13/17] watch_queue: Implement mount topology and attribute change notifications [ver #5]
+        by mail.kernel.org (Postfix) with ESMTPSA id AEB2E2054F;
+        Mon,  3 Aug 2020 12:31:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596457911;
+        bh=KMCezlPWr4Uv/z/QzV4v8X/jq+Y/0ojMiWgAzx5H/Vg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=z2Ffk6lmvmctOIMUe/w5SCaNSG6Uj6qf8FroLQfuuV3gRxtseCONiwi/o6JFZyk70
+         fc6WFVj32UMnDqrPae0E4aTSESfj3Ir175gtBayF0McCqzv8TtKPynXvDJgNfN2AF5
+         DArKlQZ2ew4rCxEznPU/j7HdcSO5t4VIczQJnwXU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 07/56] ath9k: release allocated buffer if timed out
+Date:   Mon,  3 Aug 2020 14:19:22 +0200
+Message-Id: <20200803121850.670624156@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
+References: <20200803121850.306734207@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1692825.1596457912.1@warthog.procyon.org.uk>
-Date:   Mon, 03 Aug 2020 13:31:52 +0100
-Message-ID: <1692826.1596457912@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ian Kent <raven@themaw.net> wrote:
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-> > I'm changing it so that the fields are 64-bit, but initialised with the
-> > existing mount ID in the notifications set.  The fsinfo set changes that
-> > to a unique ID.  I'm tempted to make the unique IDs start at UINT_MAX+1 to
-> > disambiguate them.
-> 
-> Mmm ... so what would I use as a mount id that's not used, like NULL
-> for strings?
+[ Upstream commit 728c1e2a05e4b5fc52fab3421dce772a806612a2 ]
 
-Zero is skipped, so you could use that.
+In ath9k_wmi_cmd, the allocated network buffer needs to be released
+if timeout happens. Otherwise memory will be leaked.
 
-> I'm using -1 now but changing this will mean I need something
-> different.
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/ath/ath9k/wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-It's 64-bits, so you're not likely to see it reach -1, even if it does start
-at UINT_MAX+1.
+diff --git a/drivers/net/wireless/ath/ath9k/wmi.c b/drivers/net/wireless/ath/ath9k/wmi.c
+index e7a3127395be9..066677bb83eb0 100644
+--- a/drivers/net/wireless/ath/ath9k/wmi.c
++++ b/drivers/net/wireless/ath/ath9k/wmi.c
+@@ -339,6 +339,7 @@ int ath9k_wmi_cmd(struct wmi *wmi, enum wmi_cmd_id cmd_id,
+ 		ath_dbg(common, WMI, "Timeout waiting for WMI command: %s\n",
+ 			wmi_cmd_to_name(cmd_id));
+ 		mutex_unlock(&wmi->op_mutex);
++		kfree_skb(skb);
+ 		return -ETIMEDOUT;
+ 	}
+ 
+-- 
+2.25.1
 
-David
+
 
