@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAA9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16ED1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E53CC207FC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9DF3207FC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457572;
-	bh=x7YoQtupH7CiYhIjtuOqqsTxqZZSxlDcl4I1Z5TtKrI=;
+	s=default; t=1596457575;
+	bh=Ezm59BrI2xzB7EIKgvwFqNMC5HrCH6WKJKXNUOGexwc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wVnuz5QXvSBnI/4j9onxZG3FugFLGE0UgZMkEJrFDutQ9Ndt7ntRpZjGgBq9JMQie
-	 vo5m4yK7+htYGD9GDMvOfg2eT678xiV/hoBgVwU+vdEAef9wPsC9Kxl7YmuXZGAnuj
-	 YXt/sbbcSNBgOqBRTzlUeUY/qypBUjht8vttnfrc=
+	b=kZG8A8nTQXIYgLQRMSEb0xBaBd8IZyAF4d6umuFFcMl3ND10gtD2GxRvITGzVc8cB
+	 SjEpBpsFf3h2LW1+g/HF3K9I51epRqHV1tpXV5lBiyFjhTck2G/buEVzS45f3B3psf
+	 /ozEOgv6Z6q0eTrGig+4865l49VCP3IaTJVaoIso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbgHCM0L (ORCPT
+        id S1727059AbgHCM0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:26:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51090 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:26:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728298AbgHCMZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:25:59 -0400
+        id S1728312AbgHCM0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:26:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9445C204EC;
-        Mon,  3 Aug 2020 12:25:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B9F1204EC;
+        Mon,  3 Aug 2020 12:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457558;
-        bh=x7YoQtupH7CiYhIjtuOqqsTxqZZSxlDcl4I1Z5TtKrI=;
+        s=default; t=1596457564;
+        bh=Ezm59BrI2xzB7EIKgvwFqNMC5HrCH6WKJKXNUOGexwc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DnOch+yBRZJ507KhBaV1Es4aJTswLnENC3rO9sHCzWPzTiYDtxXZ+OiXdLSwYxglQ
-         SkdxBKdX1mu2cdQR6ewCRxZT1bOpAIfGeoQbkANr5za+2ec8BNcRmlUbmXRoPTpRdr
-         clFb2agKRJ8MSu/6ur+UgOOiDOnAJPxvh2ZWB67g=
+        b=s5cxgklJW2lW0HBdJMJyDQfpV9IFliGp1T1m9EoGDUL3nojkmWUdPEenO8+2+9W+g
+         xBn/qcJnKvoXW3NAzXvpkiccnPuLown2KWUs1PLqs8nD6dfrXrxXLoRqo+XsZxjtcQ
+         VzUbS6uUJCaUW5lygI7MbFgwmV5db0ULw/h1Fk58=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
-        Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 094/120] mt76: mt7615: fix lmac queue debugsfs entry
-Date:   Mon,  3 Aug 2020 14:19:12 +0200
-Message-Id: <20200803121907.494879651@linuxfoundation.org>
+        stable@vger.kernel.org, Andrea Righi <andrea.righi@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 113/120] xen-netfront: fix potential deadlock in xennet_remove()
+Date:   Mon,  3 Aug 2020 14:19:31 +0200
+Message-Id: <20200803121908.407052413@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -59,52 +60,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Andrea Righi <andrea.righi@canonical.com>
 
-[ Upstream commit d941f47caa386931c3b598ad1b43d5ddd65869aa ]
+[ Upstream commit c2c633106453611be07821f53dff9e93a9d1c3f0 ]
 
-acs and wmm index are swapped in mt7615_queues_acq respect to the hw
-design
+There's a potential race in xennet_remove(); this is what the driver is
+doing upon unregistering a network device:
 
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+  1. state = read bus state
+  2. if state is not "Closed":
+  3.    request to set state to "Closing"
+  4.    wait for state to be set to "Closing"
+  5.    request to set state to "Closed"
+  6.    wait for state to be set to "Closed"
+
+If the state changes to "Closed" immediately after step 1 we are stuck
+forever in step 4, because the state will never go back from "Closed" to
+"Closing".
+
+Make sure to check also for state == "Closed" in step 4 to prevent the
+deadlock.
+
+Also add a 5 sec timeout any time we wait for the bus state to change,
+to avoid getting stuck forever in wait_event().
+
+Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt7615/debugfs.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/net/xen-netfront.c | 64 +++++++++++++++++++++++++-------------
+ 1 file changed, 42 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/debugfs.c b/drivers/net/wireless/mediatek/mt76/mt7615/debugfs.c
-index b4d0795154e3d..a2afd1a3c51ba 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/debugfs.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/debugfs.c
-@@ -206,10 +206,11 @@ mt7615_queues_acq(struct seq_file *s, void *data)
- 	int i;
+diff --git a/drivers/net/xen-netfront.c b/drivers/net/xen-netfront.c
+index 482c6c8b0fb7e..88280057e0321 100644
+--- a/drivers/net/xen-netfront.c
++++ b/drivers/net/xen-netfront.c
+@@ -63,6 +63,8 @@ module_param_named(max_queues, xennet_max_queues, uint, 0644);
+ MODULE_PARM_DESC(max_queues,
+ 		 "Maximum number of queues per virtual interface");
  
- 	for (i = 0; i < 16; i++) {
--		int j, acs = i / 4, index = i % 4;
-+		int j, wmm_idx = i % MT7615_MAX_WMM_SETS;
-+		int acs = i / MT7615_MAX_WMM_SETS;
- 		u32 ctrl, val, qlen = 0;
++#define XENNET_TIMEOUT  (5 * HZ)
++
+ static const struct ethtool_ops xennet_ethtool_ops;
  
--		val = mt76_rr(dev, MT_PLE_AC_QEMPTY(acs, index));
-+		val = mt76_rr(dev, MT_PLE_AC_QEMPTY(acs, wmm_idx));
- 		ctrl = BIT(31) | BIT(15) | (acs << 8);
+ struct netfront_cb {
+@@ -1334,12 +1336,15 @@ static struct net_device *xennet_create_dev(struct xenbus_device *dev)
  
- 		for (j = 0; j < 32; j++) {
-@@ -217,11 +218,11 @@ mt7615_queues_acq(struct seq_file *s, void *data)
- 				continue;
+ 	netif_carrier_off(netdev);
  
- 			mt76_wr(dev, MT_PLE_FL_Q0_CTRL,
--				ctrl | (j + (index << 5)));
-+				ctrl | (j + (wmm_idx << 5)));
- 			qlen += mt76_get_field(dev, MT_PLE_FL_Q3_CTRL,
- 					       GENMASK(11, 0));
- 		}
--		seq_printf(s, "AC%d%d: queued=%d\n", acs, index, qlen);
-+		seq_printf(s, "AC%d%d: queued=%d\n", wmm_idx, acs, qlen);
- 	}
+-	xenbus_switch_state(dev, XenbusStateInitialising);
+-	wait_event(module_wq,
+-		   xenbus_read_driver_state(dev->otherend) !=
+-		   XenbusStateClosed &&
+-		   xenbus_read_driver_state(dev->otherend) !=
+-		   XenbusStateUnknown);
++	do {
++		xenbus_switch_state(dev, XenbusStateInitialising);
++		err = wait_event_timeout(module_wq,
++				 xenbus_read_driver_state(dev->otherend) !=
++				 XenbusStateClosed &&
++				 xenbus_read_driver_state(dev->otherend) !=
++				 XenbusStateUnknown, XENNET_TIMEOUT);
++	} while (!err);
++
+ 	return netdev;
  
- 	return 0;
+  exit:
+@@ -2139,28 +2144,43 @@ static const struct attribute_group xennet_dev_group = {
+ };
+ #endif /* CONFIG_SYSFS */
+ 
+-static int xennet_remove(struct xenbus_device *dev)
++static void xennet_bus_close(struct xenbus_device *dev)
+ {
+-	struct netfront_info *info = dev_get_drvdata(&dev->dev);
+-
+-	dev_dbg(&dev->dev, "%s\n", dev->nodename);
++	int ret;
+ 
+-	if (xenbus_read_driver_state(dev->otherend) != XenbusStateClosed) {
++	if (xenbus_read_driver_state(dev->otherend) == XenbusStateClosed)
++		return;
++	do {
+ 		xenbus_switch_state(dev, XenbusStateClosing);
+-		wait_event(module_wq,
+-			   xenbus_read_driver_state(dev->otherend) ==
+-			   XenbusStateClosing ||
+-			   xenbus_read_driver_state(dev->otherend) ==
+-			   XenbusStateUnknown);
++		ret = wait_event_timeout(module_wq,
++				   xenbus_read_driver_state(dev->otherend) ==
++				   XenbusStateClosing ||
++				   xenbus_read_driver_state(dev->otherend) ==
++				   XenbusStateClosed ||
++				   xenbus_read_driver_state(dev->otherend) ==
++				   XenbusStateUnknown,
++				   XENNET_TIMEOUT);
++	} while (!ret);
++
++	if (xenbus_read_driver_state(dev->otherend) == XenbusStateClosed)
++		return;
+ 
++	do {
+ 		xenbus_switch_state(dev, XenbusStateClosed);
+-		wait_event(module_wq,
+-			   xenbus_read_driver_state(dev->otherend) ==
+-			   XenbusStateClosed ||
+-			   xenbus_read_driver_state(dev->otherend) ==
+-			   XenbusStateUnknown);
+-	}
++		ret = wait_event_timeout(module_wq,
++				   xenbus_read_driver_state(dev->otherend) ==
++				   XenbusStateClosed ||
++				   xenbus_read_driver_state(dev->otherend) ==
++				   XenbusStateUnknown,
++				   XENNET_TIMEOUT);
++	} while (!ret);
++}
++
++static int xennet_remove(struct xenbus_device *dev)
++{
++	struct netfront_info *info = dev_get_drvdata(&dev->dev);
+ 
++	xennet_bus_close(dev);
+ 	xennet_disconnect_backend(info);
+ 
+ 	if (info->netdev->reg_state == NETREG_REGISTERED)
 -- 
 2.25.1
 
