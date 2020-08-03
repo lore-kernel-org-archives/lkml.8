@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70642C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3B5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 469B72083B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 166F52076B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457878;
-	bh=mmLLq4bPGESN35BigUKSGoPRpQeB72bEz7jTDimc6Fw=;
+	s=default; t=1596457884;
+	bh=x4UMX5p252GYrKJ/aCarb85LZB57EhVLYClq7cIfOP0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2B21WQdazbFZ5m9ibe9BiQ8+aABNHTx6/WuDkEcyGoq5K7QxyHdQ+X3h33Te3A8Ag
-	 tfQzljLQjjQWE+SoPSouYJaTVxrxmPQa9gLjCzTkTCnPusQB4TbaghUuiJi4Yd9Rxs
-	 2+4cQicNhAbtG3yqpc11RX4HaaAFK4NA8s/LEYlU=
+	b=rUfmcVWK3Np/wWXCgtpybUdDA8/tgj2Bx8MNkhSUPUh6nRb11TKNX1V0nm5ea3CY1
+	 5nIHFLKldM/kytIqWM9HgrAAWcfE1yA+kQJafklNfsJzEYKNKZCO+XeNAeievGstab
+	 P1+Gfn9BB9L96qcDnsb9hUCDgH3yZ10hvtrojxO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729168AbgHCMbS (ORCPT
+        id S1729169AbgHCMbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:31:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58574 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:31:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729157AbgHCMbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:31:13 -0400
+        id S1727914AbgHCMbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:31:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BB5920781;
-        Mon,  3 Aug 2020 12:31:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B9FE2054F;
+        Mon,  3 Aug 2020 12:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457871;
-        bh=mmLLq4bPGESN35BigUKSGoPRpQeB72bEz7jTDimc6Fw=;
+        s=default; t=1596457874;
+        bh=x4UMX5p252GYrKJ/aCarb85LZB57EhVLYClq7cIfOP0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ExEO0IFltRA9TyUHU9muoNsQlIpjxsPTLZInY6OZhJbaKH0AvTP9om1xiRVnTkaoe
-         olYBj33QWiSvMGbFCAHYv6P1vRlSrb3rMqMvzWQAgWZ25ZhPf+2GYAneF9Xq3Z8CKp
-         m76dEklx5GpLubzGk5+NERjU7l+V6D34uur+Xz+U=
+        b=Q7tQ9/OMrZZc+2C6DnNwudVlWueJdnzsTdaJUJ9t52mjwyHs3roGrePL3xSEp59Em
+         xD8g99Bq0VonnGAmnsEKLyGXEzBzt2lj5WwNLKauy94DPeTVzFTLDWhYCov8UU4vaa
+         C9bTNNg6cc50lY1D+g5Z4d8/0lfHz9LLaRq8V800=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+77a25acfa0382e06ab23@syzkaller.appspotmail.com,
-        Wang Hai <wanghai38@huawei.com>,
-        Dominique Martinet <asmadeus@codewreck.org>
-Subject: [PATCH 4.19 13/56] 9p/trans_fd: Fix concurrency del of req_list in p9_fd_cancelled/p9_read_work
-Date:   Mon,  3 Aug 2020 14:19:28 +0200
-Message-Id: <20200803121850.962253359@linuxfoundation.org>
+        stable@vger.kernel.org, Pi-Hsun Shih <pihsun@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.19 14/56] wireless: Use offsetof instead of custom macro.
+Date:   Mon,  3 Aug 2020 14:19:29 +0200
+Message-Id: <20200803121851.023714217@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -61,64 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Pi-Hsun Shih <pihsun@chromium.org>
 
-commit 74d6a5d5662975aed7f25952f62efbb6f6dadd29 upstream.
+commit 6989310f5d4327e8595664954edd40a7f99ddd0d upstream.
 
-p9_read_work and p9_fd_cancelled may be called concurrently.
-In some cases, req->req_list may be deleted by both p9_read_work
-and p9_fd_cancelled.
+Use offsetof to calculate offset of a field to take advantage of
+compiler built-in version when possible, and avoid UBSAN warning when
+compiling with Clang:
 
-We can fix it by ignoring replies associated with a cancelled
-request and ignoring cancelled request if message has been received
-before lock.
+==================================================================
+UBSAN: Undefined behaviour in net/wireless/wext-core.c:525:14
+member access within null pointer of type 'struct iw_point'
+CPU: 3 PID: 165 Comm: kworker/u16:3 Tainted: G S      W         4.19.23 #43
+Workqueue: cfg80211 __cfg80211_scan_done [cfg80211]
+Call trace:
+ dump_backtrace+0x0/0x194
+ show_stack+0x20/0x2c
+ __dump_stack+0x20/0x28
+ dump_stack+0x70/0x94
+ ubsan_epilogue+0x14/0x44
+ ubsan_type_mismatch_common+0xf4/0xfc
+ __ubsan_handle_type_mismatch_v1+0x34/0x54
+ wireless_send_event+0x3cc/0x470
+ ___cfg80211_scan_done+0x13c/0x220 [cfg80211]
+ __cfg80211_scan_done+0x28/0x34 [cfg80211]
+ process_one_work+0x170/0x35c
+ worker_thread+0x254/0x380
+ kthread+0x13c/0x158
+ ret_from_fork+0x10/0x18
+===================================================================
 
-Link: http://lkml.kernel.org/r/20200612090833.36149-1-wanghai38@huawei.com
-Fixes: 60ff779c4abb ("9p: client: remove unused code and any reference to "cancelled" function")
-Cc: <stable@vger.kernel.org> # v3.12+
-Reported-by: syzbot+77a25acfa0382e06ab23@syzkaller.appspotmail.com
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Link: https://lore.kernel.org/r/20191204081307.138765-1-pihsun@chromium.org
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/9p/trans_fd.c |   15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ include/uapi/linux/wireless.h |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/net/9p/trans_fd.c
-+++ b/net/9p/trans_fd.c
-@@ -377,6 +377,10 @@ static void p9_read_work(struct work_str
- 		if (m->rreq->status == REQ_STATUS_SENT) {
- 			list_del(&m->rreq->req_list);
- 			p9_client_cb(m->client, m->rreq, REQ_STATUS_RCVD);
-+		} else if (m->rreq->status == REQ_STATUS_FLSHD) {
-+			/* Ignore replies associated with a cancelled request. */
-+			p9_debug(P9_DEBUG_TRANS,
-+				 "Ignore replies associated with a cancelled request\n");
- 		} else {
- 			spin_unlock(&m->client->lock);
- 			p9_debug(P9_DEBUG_ERROR,
-@@ -718,11 +722,20 @@ static int p9_fd_cancelled(struct p9_cli
- {
- 	p9_debug(P9_DEBUG_TRANS, "client %p req %p\n", client, req);
+--- a/include/uapi/linux/wireless.h
++++ b/include/uapi/linux/wireless.h
+@@ -74,6 +74,8 @@
+ #include <linux/socket.h>		/* for "struct sockaddr" et al	*/
+ #include <linux/if.h>			/* for IFNAMSIZ and co... */
  
-+	spin_lock(&client->lock);
-+	/* Ignore cancelled request if message has been received
-+	 * before lock.
-+	 */
-+	if (req->status == REQ_STATUS_RCVD) {
-+		spin_unlock(&client->lock);
-+		return 0;
-+	}
++#include <stddef.h>                     /* for offsetof */
 +
- 	/* we haven't received a response for oldreq,
- 	 * remove it from the list.
- 	 */
--	spin_lock(&client->lock);
- 	list_del(&req->req_list);
-+	req->status = REQ_STATUS_FLSHD;
- 	spin_unlock(&client->lock);
- 	p9_req_put(req);
+ /***************************** VERSION *****************************/
+ /*
+  * This constant is used to know the availability of the wireless
+@@ -1090,8 +1092,7 @@ struct iw_event {
+ /* iw_point events are special. First, the payload (extra data) come at
+  * the end of the event, so they are bigger than IW_EV_POINT_LEN. Second,
+  * we omit the pointer, so start at an offset. */
+-#define IW_EV_POINT_OFF (((char *) &(((struct iw_point *) NULL)->length)) - \
+-			  (char *) NULL)
++#define IW_EV_POINT_OFF offsetof(struct iw_point, length)
+ #define IW_EV_POINT_LEN	(IW_EV_LCP_LEN + sizeof(struct iw_point) - \
+ 			 IW_EV_POINT_OFF)
  
 
 
