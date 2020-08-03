@@ -2,100 +2,123 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8235C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B99BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E94E20719
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:37:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZpPiDdU+"
+	by mail.kernel.org (Postfix) with ESMTP id 0EC302075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:39:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbgHCJh5 (ORCPT
+        id S1726300AbgHCJjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 05:37:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44434 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgHCJh5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 05:37:57 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DCBDC06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 02:37:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=UbRjqa0bLC9sUnNplV+mhL8Jmlbwd8SnDkco5utAUSc=; b=ZpPiDdU+LOwUbCnqWeNDxyTS3P
-        83SJlXZhJQgAAwhUfujeYkdc6b/zHYQ4yD/THmovQlRkn0XwKrT067ZiIw8wCbF06UG78SPG8DbdW
-        /6cNzRUkhcURd+0y/H1m/A5lHIp1r3RAfdUCVdc4ZrXEv4eW7gly+TRSgrQGpi+5oozDHH/M3QZDX
-        NGVY5ox+e6i2aWawk4OJRkvsEQoTupMQmLiWoIbQZsNYgNWIDNTBrUS9vHcDYKksw8Hqp5ooPWCl3
-        rDnlzx1kExokVOXpGU0vSAzIZIbwYjm7yqEPBrLI7RNv/nCrjZn6Hguh/g72gbljQ6mlwXRtsVi6O
-        TiT9gzDQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k2Wun-0007dB-9T; Mon, 03 Aug 2020 09:37:53 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A23F3301A66;
-        Mon,  3 Aug 2020 11:37:51 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 940C8236F1EB3; Mon,  3 Aug 2020 11:37:51 +0200 (CEST)
-Date:   Mon, 3 Aug 2020 11:37:51 +0200
-From:   peterz@infradead.org
-To:     Jules Irenge <jbi.octave@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 4/4] context_tracking: uninitialize static variables
-Message-ID: <20200803093751.GD2674@hirez.programming.kicks-ass.net>
-References: <0/4>
- <20200801184603.310769-1-jbi.octave@gmail.com>
- <20200801184603.310769-5-jbi.octave@gmail.com>
+        Mon, 3 Aug 2020 05:39:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34578 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725948AbgHCJjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 05:39:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 06D79AB7A;
+        Mon,  3 Aug 2020 09:39:57 +0000 (UTC)
+Subject: Re: [PATCH] btrfs: fix error value in btrfs_get_extent
+To:     Pavel Machek <pavel@denx.de>, clm@fb.com, jbacik@fb.com,
+        dsterba@suse.com, sashal@kernel.org, wqu@suse.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jungyeon@gatech.edu, stable@kernel.org
+References: <20200803093506.GA19472@amd>
+From:   Nikolay Borisov <nborisov@suse.com>
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <4e88eb32-ac7d-f0cb-d089-ec197595bce9@suse.com>
+Date:   Mon, 3 Aug 2020 12:39:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200801184603.310769-5-jbi.octave@gmail.com>
+In-Reply-To: <20200803093506.GA19472@amd>
+Content-Type: text/plain; charset=UTF-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 01, 2020 at 07:46:03PM +0100, Jules Irenge wrote:
-> Checkpatch tool reports an error at a staic variable declaration
+
+
+On 3.08.20 г. 12:35 ч., Pavel Machek wrote:
+> btrfs_get_extent() sets variable ret, but out: error path expect error
+> to be in variable err. Fix that.
 > 
-> "ERROR: do not initialise statics to false"
+> Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
+
+Good catch, this also needs:
+
+Fixes: 6bf9e4bd6a27 ("btrfs: inode: Verify inode mode to avoid NULL
+pointer dereference")
+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+
+
 > 
-> This is due to the fact that this variable is stored in the buffer
-> In the .bss section, one can not set an initial value
-> Here we can trust the compiler to automatically set them to false.
-> The variable has since been uninitialized.
-> 
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 > ---
->  kernel/context_tracking.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/kernel/context_tracking.c b/kernel/context_tracking.c
-> index 36a98c48aedc..21881c534152 100644
-> --- a/kernel/context_tracking.c
-> +++ b/kernel/context_tracking.c
-> @@ -190,7 +190,7 @@ NOKPROBE_SYMBOL(context_tracking_user_exit);
->  
->  void __init context_tracking_cpu_set(int cpu)
->  {
-> -	static __initdata bool initialized = false;
-> +	static __initdata bool initialized;
-
-So personally I prefer having the '= false' there. It used to be that
-compilers were stupid and would put any initialized static variable in
-.data, even if it was initialized with 0. But AFAIK compilers are no
-longer that stupid.
-
+> Notice that patch introducing this problem is on its way to 4.19.137-stable.
+> 
+> diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+> index 7befb7c12bd3..4aaa01540f89 100644
+> --- a/fs/btrfs/inode.c
+> +++ b/fs/btrfs/inode.c
+> @@ -7012,7 +7012,7 @@ struct extent_map *btrfs_get_extent(struct btrfs_inode *inode,
+>  	    found_type == BTRFS_FILE_EXTENT_PREALLOC) {
+>  		/* Only regular file could have regular/prealloc extent */
+>  		if (!S_ISREG(inode->vfs_inode.i_mode)) {
+> -			ret = -EUCLEAN;
+> +			err = -EUCLEAN;
+>  			btrfs_crit(fs_info,
+>  		"regular/prealloc extent found for non-regular inode %llu",
+>  				   btrfs_ino(inode));
+> 
