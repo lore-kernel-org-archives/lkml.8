@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA88C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9090EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74F56207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 600CD207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457618;
-	bh=5z5Q8QBzafP67PGyOz2etWaMlFZANqgyI5uCWFQH8cU=;
+	s=default; t=1596457620;
+	bh=Rh62DhGdoKHPCSs+kPs8e/tz6sIMTBBS7JOf5oDuEXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xv+LIs5OOw5GzTWG+GbeSgSqyAH3POHsnjx02wx4tcFuAnJhf4l1MT4FVfiZWMzqQ
-	 tidvXL/le/syhb7+jG/bvlNvRGzaFToiM67aZcjxbFJs9bo5JlefiRC3gNMLMC1qUe
-	 dOHebsjBThVsNhrgPBimkqBlotR07Kn6OL0y/iho=
+	b=Dg0bynRGb6cxH7SwrwhCVmUrRn1m5bt67St2rnnlzF23VDE1UOMV6O7B6ZyYC5kf0
+	 FFB2ua47ZgaafxDFlBFKz+IC91ywyShJvFDywyPtdtU9ASX0Mws0Uct02LZwfvfk58
+	 xr4f5cONwsjuP+DojyBfMCM9W8f6mTqHVLUfxMy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgHCM06 (ORCPT
+        id S1728473AbgHCM1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:26:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52462 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:27:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728426AbgHCM0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:26:53 -0400
+        id S1728463AbgHCM06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:26:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BEA7207FC;
-        Mon,  3 Aug 2020 12:26:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66EFD207DF;
+        Mon,  3 Aug 2020 12:26:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457611;
-        bh=5z5Q8QBzafP67PGyOz2etWaMlFZANqgyI5uCWFQH8cU=;
+        s=default; t=1596457616;
+        bh=Rh62DhGdoKHPCSs+kPs8e/tz6sIMTBBS7JOf5oDuEXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lazsnnais7CFN0W+0q6oHRTUnTKq6o/4tDxrdjiJ142O9jVGjhk2HbHvOjHBDzsnN
-         FXURMQueUDRwy3jC2s2IdtgIDMz01BXUf5i8HDiLThzvMvSbnDeNbw9p82SOvHogih
-         k/I0YFrnYXIhk93hXx43lTjtUXYHUVYNin/GZW8U=
+        b=0+SQ0XrLSB+jrAXhsUpyTUtkMLPXyTuVWwv2GsIdtPCfZJS2BqCNkRE6WOug+x3cT
+         2Oo2wd4Es5kfbWIEiVplRL1W0crRRxeDk4ghW9cObsca2GddehpF5XG/i9wlsXof9y
+         NHnRiUoL0Eyy1Lp4q74Mc7aKNKrp5U8FZH2HW6NE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, PeiSen Hou <pshou@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 10/90] ALSA: hda/realtek: Fix add a "ultra_low_power" function for intel reference board (alc256)
-Date:   Mon,  3 Aug 2020 14:18:32 +0200
-Message-Id: <20200803121858.042920784@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 12/90] ALSA: hda/hdmi: Fix keep_power assignment for non-component devices
+Date:   Mon,  3 Aug 2020 14:18:34 +0200
+Message-Id: <20200803121858.140976208@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -59,32 +58,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: PeiSen Hou <pshou@realtek.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 6fa38ef1534e7e9320aa15e329eb1404ab2f70ac upstream.
+commit c2c3657f0aedb8736a0fb7b2b1985adfb86e7802 upstream.
 
-Intel requires to enable power saving mode for intel reference board (alc256)
+It's been reported that, when neither nouveau nor Nvidia graphics
+driver is used, the screen starts flickering.  And, after comparing
+between the working case (stable 4.4.x) and the broken case, it turned
+out that the problem comes from the audio component binding.  The
+Nvidia and AMD audio binding code clears the bus->keep_power flag
+whenever snd_hdac_acomp_init() succeeds.  But this doesn't mean that
+the component is actually bound, but it merely indicates that it's
+ready for binding.  So, when both nouveau and Nvidia are blacklisted
+or not ready, the driver keeps running without the audio component but
+also with bus->keep_power = false.  This made the driver runtime PM
+kicked in and powering down when unused, which results in flickering
+in the graphics side, as it seems.
 
-Signed-off-by: PeiSen Hou <pshou@realtek.com>
+For fixing the bug, this patch moves the bus->keep_power flag change
+into generic_acomp_notifier_set() that is the function called from the
+master_bind callback of component ops; i.e. it's guaranteed that the
+binding succeeded.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=208609
+Fixes: 5a858e79c911 ("ALSA: hda - Disable audio component for legacy Nvidia HDMI codecs")
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200727115647.10967-1-tiwai@suse.de
+Link: https://lore.kernel.org/r/20200728082033.23933-1-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    2 +-
+ sound/pci/hda/patch_hdmi.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7555,7 +7555,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x10cf, 0x1629, "Lifebook U7x7", ALC255_FIXUP_LIFEBOOK_U7x7_HEADSET_MIC),
- 	SND_PCI_QUIRK(0x10cf, 0x1845, "Lifebook U904", ALC269_FIXUP_LIFEBOOK_EXTMIC),
- 	SND_PCI_QUIRK(0x10ec, 0x10f2, "Intel Reference board", ALC700_FIXUP_INTEL_REFERENCE),
--	SND_PCI_QUIRK(0x10ec, 0x1230, "Intel Reference board", ALC225_FIXUP_HEADSET_JACK),
-+	SND_PCI_QUIRK(0x10ec, 0x1230, "Intel Reference board", ALC295_FIXUP_CHROME_BOOK),
- 	SND_PCI_QUIRK(0x10f7, 0x8338, "Panasonic CF-SZ6", ALC269_FIXUP_HEADSET_MODE),
- 	SND_PCI_QUIRK(0x144d, 0xc109, "Samsung Ativ book 9 (NP900X3G)", ALC269_FIXUP_INV_DMIC),
- 	SND_PCI_QUIRK(0x144d, 0xc169, "Samsung Notebook 9 Pen (NP930SBE-K01US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -2483,6 +2483,7 @@ static void generic_acomp_notifier_set(s
+ 	mutex_lock(&spec->bind_lock);
+ 	spec->use_acomp_notifier = use_acomp;
+ 	spec->codec->relaxed_resume = use_acomp;
++	spec->codec->bus->keep_power = 0;
+ 	/* reprogram each jack detection logic depending on the notifier */
+ 	if (spec->use_jack_detect) {
+ 		for (i = 0; i < spec->num_pins; i++)
+@@ -2578,7 +2579,6 @@ static void generic_acomp_init(struct hd
+ 	if (!snd_hdac_acomp_init(&codec->bus->core, &spec->drm_audio_ops,
+ 				 match_bound_vga, 0)) {
+ 		spec->acomp_registered = true;
+-		codec->bus->keep_power = 0;
+ 	}
+ }
+ 
 
 
