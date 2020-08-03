@@ -2,62 +2,125 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1442C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED98C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A598B20678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68AF32064B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:53:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596459237;
+	bh=njF83mSDF3//qVVZKptNPOxS2Qpw7Nd2TLVr7hkNwvM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=igFgPUUBI7woAXT93k225TrJcGSgb1e2zyXuu+JGfVrfKySUg5jrk0LCzmgCVFz9O
+	 B7IYCZscOtBPmAD6uBmQYqltAvXji01aKlMep6dnKjeymywzBXAD9x07bCqRlsabQ3
+	 XuJBshojYvRJSOBeD9uHMk7uSkqX628C7bfUXQwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgHCMxj (ORCPT
+        id S1726989AbgHCMx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:53:39 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:52316 "EHLO fornost.hmeau.com"
+        Mon, 3 Aug 2020 08:53:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727933AbgHCMxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:53:13 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1k2ZxL-0006Zw-4H; Mon, 03 Aug 2020 22:52:44 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Mon, 03 Aug 2020 22:52:43 +1000
-Date:   Mon, 3 Aug 2020 22:52:43 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Liwei Song <liwei.song@windriver.com>
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary Hook <gary.hook@amd.com>, David <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: ccp - zero the cmd data after use it
-Message-ID: <20200803125242.GA7689@gondor.apana.org.au>
-References: <20200803075858.3561-1-liwei.song@windriver.com>
+        id S1727842AbgHCMXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:23:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81FEF20775;
+        Mon,  3 Aug 2020 12:23:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596457434;
+        bh=njF83mSDF3//qVVZKptNPOxS2Qpw7Nd2TLVr7hkNwvM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=modAnCngiGJu0TwodsrYEHPv8PvSfC9iPPudoZQv1VFs5ckBpIPVFfLjdV3lvmmKc
+         d1HVLPuOGUthmFBvfc4OJu+7m9GThV7CqSmK85BTIpJRunl7NRmJ1Vl96QldyNXA+C
+         NwD1+wEoqQVFYnZAWwnbHo6kP+VER7pFcXKDXhjQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+6db548b615e5aeefdce2@syzkaller.appspotmail.com,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.7 035/120] net/x25: Fix null-ptr-deref in x25_disconnect
+Date:   Mon,  3 Aug 2020 14:18:13 +0200
+Message-Id: <20200803121904.540135498@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
+References: <20200803121902.860751811@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200803075858.3561-1-liwei.song@windriver.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 03:58:58PM +0800, Liwei Song wrote:
-> exist the following assignment in ccp(ignore the force
-> convert of the struct) by list_del in ccp_dequeue_cmd():
-> req->__ctx->cmd->entry->next = LIST_POISON1;
-> 
-> after use the req, kzfree(req) can not zero the entry
-> entry->next = LIST_POISON1 of the ccp_cmd(cmd) struct
-> when this address available as slub freelist pointer, this will cause
-> the following "general protection fault" error if some process meet
-> this LIST_POISON1 value address when request memory:
+From: YueHaibing <yuehaibing@huawei.com>
 
-Your description makes no sense.  Please rewrite it and explain
-the problem properly.
+commit 8999dc89497ab1c80d0718828e838c7cd5f6bffe upstream.
 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+We should check null before do x25_neigh_put in x25_disconnect,
+otherwise may cause null-ptr-deref like this:
+
+ #include <sys/socket.h>
+ #include <linux/x25.h>
+
+ int main() {
+    int sck_x25;
+    sck_x25 = socket(AF_X25, SOCK_SEQPACKET, 0);
+    close(sck_x25);
+    return 0;
+ }
+
+BUG: kernel NULL pointer dereference, address: 00000000000000d8
+CPU: 0 PID: 4817 Comm: t2 Not tainted 5.7.0-rc3+ #159
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-
+RIP: 0010:x25_disconnect+0x91/0xe0
+Call Trace:
+ x25_release+0x18a/0x1b0
+ __sock_release+0x3d/0xc0
+ sock_close+0x13/0x20
+ __fput+0x107/0x270
+ ____fput+0x9/0x10
+ task_work_run+0x6d/0xb0
+ exit_to_usermode_loop+0x102/0x110
+ do_syscall_64+0x23c/0x260
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Reported-by: syzbot+6db548b615e5aeefdce2@syzkaller.appspotmail.com
+Fixes: 4becb7ee5b3d ("net/x25: Fix x25_neigh refcnt leak when x25 disconnect")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ net/x25/x25_subr.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+--- a/net/x25/x25_subr.c
++++ b/net/x25/x25_subr.c
+@@ -363,10 +363,12 @@ void x25_disconnect(struct sock *sk, int
+ 		x25->neighbour = NULL;
+ 		read_unlock_bh(&x25_list_lock);
+ 	}
+-	read_lock_bh(&x25_list_lock);
+-	x25_neigh_put(x25->neighbour);
+-	x25->neighbour = NULL;
+-	read_unlock_bh(&x25_list_lock);
++	if (x25->neighbour) {
++		read_lock_bh(&x25_list_lock);
++		x25_neigh_put(x25->neighbour);
++		x25->neighbour = NULL;
++		read_unlock_bh(&x25_list_lock);
++	}
+ }
+ 
+ /*
+
+
