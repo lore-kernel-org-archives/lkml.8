@@ -2,125 +2,141 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2841CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CC8C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0366820578
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A1D20578
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:30:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cF3xQPmV"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="eMfuj2cA";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="koW4Adc0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgHCOae (ORCPT
+        id S1727792AbgHCOal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 10:30:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33196 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbgHCOae (ORCPT
+        Mon, 3 Aug 2020 10:30:41 -0400
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:40355 "EHLO
+        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726358AbgHCOak (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 10:30:34 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFC69C06174A;
-        Mon,  3 Aug 2020 07:30:33 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id v4so30198518ljd.0;
-        Mon, 03 Aug 2020 07:30:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=KnzW7p0iByCA8ZSYOfr1tOM7Ju6uvbTxOgMkLeLg4TE=;
-        b=cF3xQPmVRXDdHqrAwvdenMip3tPx3TWp1GiCpdq358ne/UzxoJ1GU9SsT4CpqhfzkM
-         OY5d3jqt+WHdY+8jpwU876oqGqXNXBunHreeLZyFxMMrdyjluUKa+Rpcwof3chPAXQon
-         GMfkP24z2ED+HMEZbXsI9negmZPWkpIr5gan2jCDWIlN/2Fjw7zS5UrtmwZhqQY0veVE
-         b200/dSc2fBSAP593Pq/WZikcyHm90R1EZ3DRRcaRfmsEo+4Ueyee7jz4BlAtVgghfAB
-         ARv4jn0MEoonv5cH7r5nzJNUH1Pkx2wxuwYZo5/j/mtYxe33SZHJ05ZJlfQ6o9EruoAZ
-         /gHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KnzW7p0iByCA8ZSYOfr1tOM7Ju6uvbTxOgMkLeLg4TE=;
-        b=TwAA7Jh929abulUg4iZBsdAsuzY3qa9fVBoxw9sR/DeLBAgN233croSJ+s5NkogdrZ
-         uEksd1d0V/fMJe9arS+f55ceeAmcjyZV1qjthD8JnwIx22bQpoNaqagYNnRCH2tERnK3
-         lucuciY00HYaxqqju9n9CZ2RsgXCafU6pbfcv41CMCs37tFihH4K7IHxp40QIwNhnLI2
-         z7hHk0u0+91taNE8CujIVIj8CHt3K+KJZjgr/76Kkbge+VPC+vGvUPxroZ0XSCCiXhiL
-         4niA1DdUIAfgxQUjH7q5HEVrF1rpz7yGlvAqGevztTT3JVBwlZXGiwul0BUmjuUuU39j
-         wLRA==
-X-Gm-Message-State: AOAM531kOzJye8e2WXl0x+eDg5sFzk170PcHyRC6d0wATKBmSPq/j4ZO
-        R7WKrndnrvD07wvmgYTYF7w=
-X-Google-Smtp-Source: ABdhPJyKXl1WIje3fN3UuI7wRpj8/m8XTHYYWoYCRBSyLMBIvRtHkFzXGlLXhFq48fEHe5WxIOUEDg==
-X-Received: by 2002:a05:651c:102c:: with SMTP id w12mr8574575ljm.464.1596465032301;
-        Mon, 03 Aug 2020 07:30:32 -0700 (PDT)
-Received: from localhost.localdomain ([89.22.145.64])
-        by smtp.gmail.com with ESMTPSA id c4sm2725523ljk.70.2020.08.03.07.30.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 07:30:31 -0700 (PDT)
-From:   Alexander Kochetkov <al.kochet@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Alexander Kochetkov <akochetkov@lintech.ru>,
-        Alexander Kochetkov <al.kochet@gmail.com>
-Subject: [PATCH] arm64: dts: allwinner: replace numerical constant with CCU_CLKX
-Date:   Mon,  3 Aug 2020 17:30:22 +0300
-Message-Id: <20200803143022.25909-1-al.kochet@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 3 Aug 2020 10:30:40 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.west.internal (Postfix) with ESMTP id 7BBDB10D1;
+        Mon,  3 Aug 2020 10:30:38 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Mon, 03 Aug 2020 10:30:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        6ek7rotfn8yHr2SVRzyFzJOuazfE8xSPG939AHlpXcs=; b=eMfuj2cAVKP+mJQT
+        biNupJQwLHqaYhHLFPuUZQyX6CGdZVry0cLxvTO0phcdbXXnC+pMPkI29PiaDNuG
+        aus0TI6+71rhFFJ6BuivmuUCNYH+sJkr9LS0qGEhf58g6Kq5foxI8EqS5PQ4BNtR
+        m2Hdlp6p41lZC7lp1a58aYOyyx6HUKRh+y49rCGvH3/At3UhVpzU/LLsFFbPog+Q
+        o+YatBlPIgnd5sSWDoODyp/+5qt4iIs/KHw+Wt+p37JNiEMwKJQSodCj8DAIHgqt
+        92SGbDsncSpk0NxE6QhXTLUk7L+zUbWsu/4R0Yvsu1HaAUw9aPmQK8Z3tV+EcTxW
+        XObDxQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=6ek7rotfn8yHr2SVRzyFzJOuazfE8xSPG939AHlpX
+        cs=; b=koW4Adc0qWAHAZh5OZze593zLQ5jC/97529jgi5ZrIO85WbZaTvEqIQYr
+        FzDW3RVPNUW5x4HnrPnHyRr6XmXm9VP8iHULgGRKn+X1jvbZ6z9ptyApoH5WSadi
+        H6wQAGmPvBQ4QiQWgzvSdwzx6x0ev37TRK7ZDLqk2H9gAmJeOH4fV/UIissEABEd
+        XpLESd5lLaS64CIhyrHxFsftbia3cayePjctHkOuTYP6ZBHCYy2iaZ9Ze725oW/D
+        fNGMN5ICfcWD3u4HYrxir3Sp56lt/TXEKJNl9Bg1yJWqZp3OgM88ok7OhlCLQ3Kd
+        CIIiZfqW8kk15A5jO9EULcEaGWWYw==
+X-ME-Sender: <xms:jB8oX9DYMRIhNCgzRhkgmRWYIqvLOsYXnTdrp5z4cl9pF3Zup2mUyw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrjeeggdejjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnhepfe
+    efteetvdeguddvveefveeftedtffduudehueeihfeuvefgveehffeludeggfejnecukfhp
+    peehkedrjedrvdehtddrudekheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:jB8oX7hMug9NSJyrBx-_hsaMghqA8sU1pT1QNwHXC8iZ-PoSEBXb8A>
+    <xmx:jB8oX4lSQFRztQdi_y97W_W-WMfF73BDlC4jB3L_cbtLHrSDvH_uzw>
+    <xmx:jB8oX3ymudJ9OvqndBdAuE8iQpa_i2PpNRXb7Io4TRefSNVLy68EDw>
+    <xmx:jh8oX5JfCwhU_CdTBs5mjIgpfDFvki_ar5qP-6ciQt1_eoT-iTdbyo6YQfc>
+Received: from mickey.themaw.net (58-7-250-185.dyn.iinet.net.au [58.7.250.185])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 01829328005D;
+        Mon,  3 Aug 2020 10:30:30 -0400 (EDT)
+Message-ID: <bfba8e858885b8c507b8816d5296f7ab7f949e78.camel@themaw.net>
+Subject: Re: [PATCH 13/17] watch_queue: Implement mount topology and
+ attribute change notifications [ver #5]
+From:   Ian Kent <raven@themaw.net>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>, andres@anarazel.de,
+        Jeff Layton <jlayton@redhat.com>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>, keyrings@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 03 Aug 2020 22:30:26 +0800
+In-Reply-To: <1692826.1596457912@warthog.procyon.org.uk>
+References: <303106be4785135446e56cb606138a6e94885887.camel@themaw.net>
+         <CAJfpeguO8Qwkzx9zfGVT7W+pT5p6fgj-_8oJqJbXX_KQBpLLEQ@mail.gmail.com>
+         <1293241.1595501326@warthog.procyon.org.uk>
+         <CAJfpegspWA6oUtdcYvYF=3fij=Bnq03b8VMbU9RNMKc+zzjbag@mail.gmail.com>
+         <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk>
+         <158454391302.2863966.1884682840541676280.stgit@warthog.procyon.org.uk>
+         <2003787.1595585999@warthog.procyon.org.uk>
+         <865566fb800a014868a9a7e36a00a14430efb11e.camel@themaw.net>
+         <2023286.1595590563@warthog.procyon.org.uk>
+         <CAJfpegsT_3YqHPWCZGX7Lr+sE0NVmczWz5L6cN8CzsVz4YKLCQ@mail.gmail.com>
+         <1283475.1596449889@warthog.procyon.org.uk>
+         <1576646.1596455376@warthog.procyon.org.uk>
+         <1692826.1596457912@warthog.procyon.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Kochetkov <akochetkov@lintech.ru>
+On Mon, 2020-08-03 at 13:31 +0100, David Howells wrote:
+> Ian Kent <raven@themaw.net> wrote:
+> 
+> > > I'm changing it so that the fields are 64-bit, but initialised
+> > > with the
+> > > existing mount ID in the notifications set.  The fsinfo set
+> > > changes that
+> > > to a unique ID.  I'm tempted to make the unique IDs start at
+> > > UINT_MAX+1 to
+> > > disambiguate them.
+> > 
+> > Mmm ... so what would I use as a mount id that's not used, like
+> > NULL
+> > for strings?
+> 
+> Zero is skipped, so you could use that.
+> 
+> > I'm using -1 now but changing this will mean I need something
+> > different.
+> 
+> It's 64-bits, so you're not likely to see it reach -1, even if it
+> does start
+> at UINT_MAX+1.
 
-Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Ha, either or, I don't think it will be a problem, there's
+bound to be a few changes so the components using this will
+need to change a bit before it's finalized, shouldn't be a
+big deal I think. At least not for me and shouldn't be much
+for libmount either I think.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index c26cc1fcaffd..dfeeb7350808 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -51,7 +51,7 @@
- 			reg = <0>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2>;
--			clocks = <&ccu 21>;
-+			clocks = <&ccu CLK_CPUX>;
- 			clock-names = "cpu";
- 			#cooling-cells = <2>;
- 		};
-@@ -62,7 +62,7 @@
- 			reg = <1>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2>;
--			clocks = <&ccu 21>;
-+			clocks = <&ccu CLK_CPUX>;
- 			clock-names = "cpu";
- 			#cooling-cells = <2>;
- 		};
-@@ -73,7 +73,7 @@
- 			reg = <2>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2>;
--			clocks = <&ccu 21>;
-+			clocks = <&ccu CLK_CPUX>;
- 			clock-names = "cpu";
- 			#cooling-cells = <2>;
- 		};
-@@ -84,7 +84,7 @@
- 			reg = <3>;
- 			enable-method = "psci";
- 			next-level-cache = <&L2>;
--			clocks = <&ccu 21>;
-+			clocks = <&ccu CLK_CPUX>;
- 			clock-names = "cpu";
- 			#cooling-cells = <2>;
- 		};
--- 
-2.17.1
+Ian
 
