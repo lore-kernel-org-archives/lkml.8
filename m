@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79239C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22806C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E2002054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC8BB2054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458005;
-	bh=yi2SbEtLnpkfz+2kpqX+tuBL/mzKRqOf3TWT5F77Vno=;
+	s=default; t=1596458009;
+	bh=OtnXhp2U8pIrjCX+A+q845AQgjyLC0mf+i8t9s0aHRk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PmVCuO0zfs7yFPgJ5HYZZUCmEYqBr5UV/bmMSdKr56HSSlGSvTJGd+3bPomej20bI
-	 Z2hYucZTPutfkBmqPDBYDq0tIVAx9Pzru02hbvBFVlJfmjaiL9TjAUtFn2cUqXGhUy
-	 PojwbnVRvTRBy/V3TRHpm4N0cT0xHuZbO1jJV8NI=
+	b=bewFRw99w6gBec1Olj5rsZ7xtoy/uKchRD78i8amS30mxNxwphIQUu1PNFSfpYhpD
+	 fSWQ5GNalkGedjpFa1O1SfF2fi4dbZaBEdZD+HZ7BYELcZk2eASPoARzAyJN/DWG/H
+	 SIplY7RtY/TT9KqjqSxjux7FlrwozytaaBwoHqas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729426AbgHCMdY (ORCPT
+        id S1729442AbgHCMd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:33:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33114 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:33:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728539AbgHCMdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:33:17 -0400
+        id S1729419AbgHCMdW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:33:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FD0D2054F;
-        Mon,  3 Aug 2020 12:33:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE90C2076B;
+        Mon,  3 Aug 2020 12:33:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457995;
-        bh=yi2SbEtLnpkfz+2kpqX+tuBL/mzKRqOf3TWT5F77Vno=;
+        s=default; t=1596458001;
+        bh=OtnXhp2U8pIrjCX+A+q845AQgjyLC0mf+i8t9s0aHRk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lGuJTfJBKkvFsCl1oFb27MdocfjXOzdamVTyJ+4rJttJ4l9PVk4UwcDAS+l4vrmv6
-         dulAbOFCN7Wlx5YtLuJI6ND5LlpUxkLlhoGWHl8zTk0TfY86u/jyhzOFgKYSGV/esV
-         3aVbu47jujn7sL2yw33ng0lwYDZLLgkV+UFc1iD0=
+        b=mAY0TMwEkYW6w4SE1TZ8C7lLGqgebhzQjfvS6TKOrJPfUPEyXS58Mt/JWNL7ZY5RB
+         rLy4B1GUpGSN/9wnWgL6J27ObyvMSChUj2iltPI7GPnvXWDiXJHuKf6v0EEH0IdEZ/
+         FgQprrz7AtNr2xvKiUjHc3gINpPD4VkX3cTtHV9g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Steffen Klassert <steffen.klassert@secunet.com>,
+        stable@vger.kernel.org, Tanner Love <tannerlove@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 27/56] xfrm: Fix crash when the hold queue is used.
-Date:   Mon,  3 Aug 2020 14:19:42 +0200
-Message-Id: <20200803121851.669728405@linuxfoundation.org>
+Subject: [PATCH 4.19 29/56] selftests/net: psock_fanout: fix clang issues for target arch PowerPC
+Date:   Mon,  3 Aug 2020 14:19:44 +0200
+Message-Id: <20200803121851.757460525@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -60,52 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steffen Klassert <steffen.klassert@secunet.com>
+From: Tanner Love <tannerlove@google.com>
 
-[ Upstream commit 101dde4207f1daa1fda57d714814a03835dccc3f ]
+[ Upstream commit 64f9ede2274980076423583683d44480909b7a40 ]
 
-The commits "xfrm: Move dst->path into struct xfrm_dst"
-and "net: Create and use new helper xfrm_dst_child()."
-changed xfrm bundle handling under the assumption
-that xdst->path and dst->child are not a NULL pointer
-only if dst->xfrm is not a NULL pointer. That is true
-with one exception. If the xfrm hold queue is used
-to wait until a SA is installed by the key manager,
-we create a dummy bundle without a valid dst->xfrm
-pointer. The current xfrm bundle handling crashes
-in that case. Fix this by extending the NULL check
-of dst->xfrm with a test of the DST_XFRM_QUEUE flag.
+Clang 9 threw:
+warning: format specifies type 'unsigned short' but the argument has \
+type 'int' [-Wformat]
+                typeflags, PORT_BASE, PORT_BASE + port_off);
 
-Fixes: 0f6c480f23f4 ("xfrm: Move dst->path into struct xfrm_dst")
-Fixes: b92cf4aab8e6 ("net: Create and use new helper xfrm_dst_child().")
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Tested: make -C tools/testing/selftests TARGETS="net" run_tests
+
+Fixes: 77f65ebdca50 ("packet: packet fanout rollover during socket overload")
+Signed-off-by: Tanner Love <tannerlove@google.com>
+Acked-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/xfrm.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/psock_fanout.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/net/xfrm.h b/include/net/xfrm.h
-index f087c8d125b8f..3a0b5de742e9b 100644
---- a/include/net/xfrm.h
-+++ b/include/net/xfrm.h
-@@ -1016,7 +1016,7 @@ struct xfrm_dst {
- static inline struct dst_entry *xfrm_dst_path(const struct dst_entry *dst)
- {
- #ifdef CONFIG_XFRM
--	if (dst->xfrm) {
-+	if (dst->xfrm || (dst->flags & DST_XFRM_QUEUE)) {
- 		const struct xfrm_dst *xdst = (const struct xfrm_dst *) dst;
+diff --git a/tools/testing/selftests/net/psock_fanout.c b/tools/testing/selftests/net/psock_fanout.c
+index bd9b9632c72b0..f496ba3b1cd37 100644
+--- a/tools/testing/selftests/net/psock_fanout.c
++++ b/tools/testing/selftests/net/psock_fanout.c
+@@ -364,7 +364,8 @@ static int test_datapath(uint16_t typeflags, int port_off,
+ 	int fds[2], fds_udp[2][2], ret;
  
- 		return xdst->path;
-@@ -1028,7 +1028,7 @@ static inline struct dst_entry *xfrm_dst_path(const struct dst_entry *dst)
- static inline struct dst_entry *xfrm_dst_child(const struct dst_entry *dst)
- {
- #ifdef CONFIG_XFRM
--	if (dst->xfrm) {
-+	if (dst->xfrm || (dst->flags & DST_XFRM_QUEUE)) {
- 		struct xfrm_dst *xdst = (struct xfrm_dst *) dst;
- 		return xdst->child;
- 	}
+ 	fprintf(stderr, "\ntest: datapath 0x%hx ports %hu,%hu\n",
+-		typeflags, PORT_BASE, PORT_BASE + port_off);
++		typeflags, (uint16_t)PORT_BASE,
++		(uint16_t)(PORT_BASE + port_off));
+ 
+ 	fds[0] = sock_fanout_open(typeflags, 0);
+ 	fds[1] = sock_fanout_open(typeflags, 0);
 -- 
 2.25.1
 
