@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6517DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 916902054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41E67207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457948;
-	bh=Vs6BmE6cEpyxFsmxJNBFx3YtUtzpVXtY/843g7hCNOE=;
+	s=default; t=1596457952;
+	bh=tRCAR+29801nJlV6nn6fx12W0QoTWA6SQQ+ift7Kwg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fz3/se5ss0lvlHFLAHcgS/7FgHD0/UqnxOKMS/kXwTVu8fGjBDFLSZ7I0Jb0GllC2
-	 a+gl9KDuJbSzxhGq+HYxG9m0XHWMpYvRScIvGzLWk7sYkfvHfeFEG8yZ9V1B5Rm7kP
-	 y97gdo1Ce/E+9V1UzDrcZGd0BpgAqmTN0L37zTqQ=
+	b=Me4PRblXzciC5zoze4Tycl2d9IZusTxNrWtq4bU3dciteuApozUQioGecE6iB+5uo
+	 Exy8PHqEpuUh0O4sjXN58GvuUw6BA93ZqkCGKM6eiAib9hWckZNA7t19W6RKgjQh3l
+	 3C3DecC5rxVR+KGoyKkDb3/zquGgFBzPY4ERhcnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729313AbgHCMc2 (ORCPT
+        id S1729321AbgHCMcb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:32:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60286 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:32:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729301AbgHCMcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:32:23 -0400
+        id S1729312AbgHCMc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:32:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31A78204EC;
-        Mon,  3 Aug 2020 12:32:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B87112076B;
+        Mon,  3 Aug 2020 12:32:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457941;
-        bh=Vs6BmE6cEpyxFsmxJNBFx3YtUtzpVXtY/843g7hCNOE=;
+        s=default; t=1596457947;
+        bh=tRCAR+29801nJlV6nn6fx12W0QoTWA6SQQ+ift7Kwg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FqQNakENwnsmKexR7vje/BaBSgmILFCOmGj/e148rtZdeSNVSAqNTLKRIOsBJMol2
-         1XKJMdK8eLEBZYUmq3x9feWZW/WToLxu+j61r6ko+oNamzUDASYderp3KM+ZOpzKLU
-         J05+V2odVfceJNn8N8Zw4rsTqciDCOxgspxNsRjs=
+        b=z/kvzCSkRNpKs+xvUTUITFdHBtnwF8p2aa/jylpTxLhMIv6i9l8gtrh7nChByEk5a
+         8CU7I+S/xic20wQnzBvJiF/NsOViHG87AdDixyUHJMeQSnL0H4+rR2U7xeG0hWElbu
+         hSkisPfQX0tXlz2sJ3Kja+NCqH1HlK6w+Goda1gg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
+        stable@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 38/56] bpf: Fix map leak in HASH_OF_MAPS map
-Date:   Mon,  3 Aug 2020 14:19:53 +0200
-Message-Id: <20200803121852.186221082@linuxfoundation.org>
+Subject: [PATCH 4.19 40/56] mac80211: mesh: Free pending skb when destroying a mpath
+Date:   Mon,  3 Aug 2020 14:19:55 +0200
+Message-Id: <20200803121852.281619470@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -61,61 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Remi Pommarel <repk@triplefau.lt>
 
-[ Upstream commit 1d4e1eab456e1ee92a94987499b211db05f900ea ]
+[ Upstream commit 5e43540c2af0a0c0a18e39579b1ad49541f87506 ]
 
-Fix HASH_OF_MAPS bug of not putting inner map pointer on bpf_map_elem_update()
-operation. This is due to per-cpu extra_elems optimization, which bypassed
-free_htab_elem() logic doing proper clean ups. Make sure that inner map is put
-properly in optimized case as well.
+A mpath object can hold reference on a list of skb that are waiting for
+mpath resolution to be sent. When destroying a mpath this skb list
+should be cleaned up in order to not leak memory.
 
-Fixes: 8c290e60fa2a ("bpf: fix hashmap extra_elems logic")
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Song Liu <songliubraving@fb.com>
-Link: https://lore.kernel.org/bpf/20200729040913.2815687-1-andriin@fb.com
+Fixing that kind of leak:
+
+unreferenced object 0xffff0000181c9300 (size 1088):
+  comm "openvpn", pid 1782, jiffies 4295071698 (age 80.416s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 f9 80 36 00 00 00 00 00  ..........6.....
+    02 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
+  backtrace:
+    [<000000004bc6a443>] kmem_cache_alloc+0x1a4/0x2f0
+    [<000000002caaef13>] sk_prot_alloc.isra.39+0x34/0x178
+    [<00000000ceeaa916>] sk_alloc+0x34/0x228
+    [<00000000ca1f1d04>] inet_create+0x198/0x518
+    [<0000000035626b1c>] __sock_create+0x134/0x328
+    [<00000000a12b3a87>] __sys_socket+0xb0/0x158
+    [<00000000ff859f23>] __arm64_sys_socket+0x40/0x58
+    [<00000000263486ec>] el0_svc_handler+0xd0/0x1a0
+    [<0000000005b5157d>] el0_svc+0x8/0xc
+unreferenced object 0xffff000012973a40 (size 216):
+  comm "openvpn", pid 1782, jiffies 4295082137 (age 38.660s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 c0 06 16 00 00 ff ff 00 93 1c 18 00 00 ff ff  ................
+  backtrace:
+    [<000000004bc6a443>] kmem_cache_alloc+0x1a4/0x2f0
+    [<0000000023c8c8f9>] __alloc_skb+0xc0/0x2b8
+    [<000000007ad950bb>] alloc_skb_with_frags+0x60/0x320
+    [<00000000ef90023a>] sock_alloc_send_pskb+0x388/0x3c0
+    [<00000000104fb1a3>] sock_alloc_send_skb+0x1c/0x28
+    [<000000006919d2dd>] __ip_append_data+0xba4/0x11f0
+    [<0000000083477587>] ip_make_skb+0x14c/0x1a8
+    [<0000000024f3d592>] udp_sendmsg+0xaf0/0xcf0
+    [<000000005aabe255>] inet_sendmsg+0x5c/0x80
+    [<000000008651ea08>] __sys_sendto+0x15c/0x218
+    [<000000003505c99b>] __arm64_sys_sendto+0x74/0x90
+    [<00000000263486ec>] el0_svc_handler+0xd0/0x1a0
+    [<0000000005b5157d>] el0_svc+0x8/0xc
+
+Fixes: 2bdaf386f99c (mac80211: mesh: move path tables into if_mesh)
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+Link: https://lore.kernel.org/r/20200704135419.27703-1-repk@triplefau.lt
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/hashtab.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ net/mac80211/mesh_pathtbl.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
-index 6fe72792312d8..1b28fb006763a 100644
---- a/kernel/bpf/hashtab.c
-+++ b/kernel/bpf/hashtab.c
-@@ -678,15 +678,20 @@ static void htab_elem_free_rcu(struct rcu_head *head)
- 	preempt_enable();
+diff --git a/net/mac80211/mesh_pathtbl.c b/net/mac80211/mesh_pathtbl.c
+index ac1f5db529945..4fc720c77e37e 100644
+--- a/net/mac80211/mesh_pathtbl.c
++++ b/net/mac80211/mesh_pathtbl.c
+@@ -532,6 +532,7 @@ static void mesh_path_free_rcu(struct mesh_table *tbl,
+ 	del_timer_sync(&mpath->timer);
+ 	atomic_dec(&sdata->u.mesh.mpaths);
+ 	atomic_dec(&tbl->entries);
++	mesh_path_flush_pending(mpath);
+ 	kfree_rcu(mpath, rcu);
  }
  
--static void free_htab_elem(struct bpf_htab *htab, struct htab_elem *l)
-+static void htab_put_fd_value(struct bpf_htab *htab, struct htab_elem *l)
- {
- 	struct bpf_map *map = &htab->map;
-+	void *ptr;
- 
- 	if (map->ops->map_fd_put_ptr) {
--		void *ptr = fd_htab_map_get_ptr(map, l);
--
-+		ptr = fd_htab_map_get_ptr(map, l);
- 		map->ops->map_fd_put_ptr(ptr);
- 	}
-+}
-+
-+static void free_htab_elem(struct bpf_htab *htab, struct htab_elem *l)
-+{
-+	htab_put_fd_value(htab, l);
- 
- 	if (htab_is_prealloc(htab)) {
- 		__pcpu_freelist_push(&htab->freelist, &l->fnode);
-@@ -747,6 +752,7 @@ static struct htab_elem *alloc_htab_elem(struct bpf_htab *htab, void *key,
- 			 */
- 			pl_new = this_cpu_ptr(htab->extra_elems);
- 			l_new = *pl_new;
-+			htab_put_fd_value(htab, old_elem);
- 			*pl_new = old_elem;
- 		} else {
- 			struct pcpu_freelist_node *l;
 -- 
 2.25.1
 
