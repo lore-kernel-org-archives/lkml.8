@@ -2,56 +2,54 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CCEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3F0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 970A12054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 754422054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457903;
-	bh=gXEwiYtWJrb+EFFUrwnNNz7Jzhi9gU+IQFe3eDUXoAg=;
+	s=default; t=1596457906;
+	bh=v59zLHBmW/XwYl5cKPZsp7mFkI4UETwDCboivwR1CZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G8A+YfSsKVNztqTErnfvDo+kMe76epQBYJVdpYubfaCtpxrecN3wYCPY+M0i49teR
-	 23RfAtgQ/A3e3ij/GikJE4ihKz/gi3EvXoTqF3iFWI0H4cptg5AAkW3+EyXNr8SQqh
-	 o6bHpTK+d/ThA5QAehcMgC/PK4ZxKEA8TcyvfJRs=
+	b=nZ2/MyY7HvyuSblHSo1EZaVbP52D1ZVUk2BEkuMmPu9d/si8niygRCI1hf5i+FEMy
+	 rzyvdYuhdQ8vMyY2gJmcRWkSkcr/mtp76tL9WUvBqqbH504Uzl9L6yXGiGPiopKNbl
+	 Uk2woesb2FDVgRFJXIa+dIkPMqbYz1g++S57/4kc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729214AbgHCMbn (ORCPT
+        id S1729223AbgHCMbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:31:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59294 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:31:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729206AbgHCMbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:31:38 -0400
+        id S1729216AbgHCMbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:31:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B531022BEB;
-        Mon,  3 Aug 2020 12:31:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 296BC2054F;
+        Mon,  3 Aug 2020 12:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457897;
-        bh=gXEwiYtWJrb+EFFUrwnNNz7Jzhi9gU+IQFe3eDUXoAg=;
+        s=default; t=1596457902;
+        bh=v59zLHBmW/XwYl5cKPZsp7mFkI4UETwDCboivwR1CZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WH65WrdP/UV1ocIXHbrL1l6vD2xat7O8XRuMY//rSFMmViVHyU8SorClzRJeB++SQ
-         X48LYr76gtau9VQ0B57iWPTkr0sGmzEmA4aPzQ24cgx0FeqT36BVKyU7WcLZL4Wf8t
-         nC6hNGrUtpHBElzETD2TbCQa25VwIf8+FZtbLD+0=
+        b=Y6u0jQsc29vImYlivawux9eHNVHYwSOsPJyaC63ZEXtzp1fUOvfmewejSv51UqcYO
+         dAzOPVgKuO1Lr2hUqeQBwZUHrjo3eq187+/BixAn4xy+uC/gL0PhUie2Pfe2NVTs5o
+         HneuMZlFIvIaMFVrFNk4EERUx1beqYw8f1G5VEOc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Willy Tarreau <w@1wt.eu>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 21/56] random: fix circular include dependency on arm64 after addition of percpu.h
-Date:   Mon,  3 Aug 2020 14:19:36 +0200
-Message-Id: <20200803121851.368106736@linuxfoundation.org>
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 04/56] drm/amdgpu: fix multiple memory leaks in acp_hw_init
+Date:   Mon,  3 Aug 2020 14:19:19 +0200
+Message-Id: <20200803121850.526781250@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -64,55 +62,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willy Tarreau <w@1wt.eu>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit 1c9df907da83812e4f33b59d3d142c864d9da57f upstream.
+[ Upstream commit 57be09c6e8747bf48704136d9e3f92bfb93f5725 ]
 
-Daniel Díaz and Kees Cook independently reported that commit
-f227e3ec3b5c ("random32: update the net random state on interrupt and
-activity") broke arm64 due to a circular dependency on include files
-since the addition of percpu.h in random.h.
+In acp_hw_init there are some allocations that needs to be released in
+case of failure:
 
-The correct fix would definitely be to move all the prandom32 stuff out
-of random.h but for backporting, a smaller solution is preferred.
+1- adev->acp.acp_genpd should be released if any allocation attemp for
+adev->acp.acp_cell, adev->acp.acp_res or i2s_pdata fails.
+2- all of those allocations should be released if
+mfd_add_hotplug_devices or pm_genpd_add_device fail.
+3- Release is needed in case of time out values expire.
 
-This one replaces linux/percpu.h with asm/percpu.h, and this fixes the
-problem on x86_64, arm64, arm, and mips.  Note that moving percpu.h
-around didn't change anything and that removing it entirely broke
-differently.  When backporting, such options might still be considered
-if this patch fails to help.
-
-[ It turns out that an alternate fix seems to be to just remove the
-  troublesome <asm/pointer_auth.h> remove from the arm64 <asm/smp.h>
-  that causes the circular dependency.
-
-  But we might as well do the whole belt-and-suspenders thing, and
-  minimize inclusion in <linux/random.h> too. Either will fix the
-  problem, and both are good changes.   - Linus ]
-
-Reported-by: Daniel Díaz <daniel.diaz@linaro.org>
-Reported-by: Kees Cook <keescook@chromium.org>
-Tested-by: Marc Zyngier <maz@kernel.org>
-Fixes: f227e3ec3b5c
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Willy Tarreau <w@1wt.eu>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/random.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c | 34 ++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 12 deletions(-)
 
---- a/include/linux/random.h
-+++ b/include/linux/random.h
-@@ -9,7 +9,7 @@
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c
+index 71efcf38f11be..94cd8a2610912 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c
+@@ -276,7 +276,7 @@ static int acp_hw_init(void *handle)
+ 	u32 val = 0;
+ 	u32 count = 0;
+ 	struct device *dev;
+-	struct i2s_platform_data *i2s_pdata;
++	struct i2s_platform_data *i2s_pdata = NULL;
  
- #include <linux/list.h>
- #include <linux/once.h>
--#include <linux/percpu.h>
-+#include <asm/percpu.h>
+ 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
  
- #include <uapi/linux/random.h>
+@@ -317,20 +317,21 @@ static int acp_hw_init(void *handle)
+ 	adev->acp.acp_cell = kcalloc(ACP_DEVS, sizeof(struct mfd_cell),
+ 							GFP_KERNEL);
  
+-	if (adev->acp.acp_cell == NULL)
+-		return -ENOMEM;
++	if (adev->acp.acp_cell == NULL) {
++		r = -ENOMEM;
++		goto failure;
++	}
+ 
+ 	adev->acp.acp_res = kcalloc(5, sizeof(struct resource), GFP_KERNEL);
+ 	if (adev->acp.acp_res == NULL) {
+-		kfree(adev->acp.acp_cell);
+-		return -ENOMEM;
++		r = -ENOMEM;
++		goto failure;
+ 	}
+ 
+ 	i2s_pdata = kcalloc(3, sizeof(struct i2s_platform_data), GFP_KERNEL);
+ 	if (i2s_pdata == NULL) {
+-		kfree(adev->acp.acp_res);
+-		kfree(adev->acp.acp_cell);
+-		return -ENOMEM;
++		r = -ENOMEM;
++		goto failure;
+ 	}
+ 
+ 	switch (adev->asic_type) {
+@@ -427,7 +428,7 @@ static int acp_hw_init(void *handle)
+ 	r = mfd_add_hotplug_devices(adev->acp.parent, adev->acp.acp_cell,
+ 								ACP_DEVS);
+ 	if (r)
+-		return r;
++		goto failure;
+ 
+ 	if (adev->asic_type != CHIP_STONEY) {
+ 		for (i = 0; i < ACP_DEVS ; i++) {
+@@ -435,7 +436,7 @@ static int acp_hw_init(void *handle)
+ 			r = pm_genpd_add_device(&adev->acp.acp_genpd->gpd, dev);
+ 			if (r) {
+ 				dev_err(dev, "Failed to add dev to genpd\n");
+-				return r;
++				goto failure;
+ 			}
+ 		}
+ 	}
+@@ -454,7 +455,8 @@ static int acp_hw_init(void *handle)
+ 			break;
+ 		if (--count == 0) {
+ 			dev_err(&adev->pdev->dev, "Failed to reset ACP\n");
+-			return -ETIMEDOUT;
++			r = -ETIMEDOUT;
++			goto failure;
+ 		}
+ 		udelay(100);
+ 	}
+@@ -471,7 +473,8 @@ static int acp_hw_init(void *handle)
+ 			break;
+ 		if (--count == 0) {
+ 			dev_err(&adev->pdev->dev, "Failed to reset ACP\n");
+-			return -ETIMEDOUT;
++			r = -ETIMEDOUT;
++			goto failure;
+ 		}
+ 		udelay(100);
+ 	}
+@@ -480,6 +483,13 @@ static int acp_hw_init(void *handle)
+ 	val &= ~ACP_SOFT_RESET__SoftResetAud_MASK;
+ 	cgs_write_register(adev->acp.cgs_device, mmACP_SOFT_RESET, val);
+ 	return 0;
++
++failure:
++	kfree(i2s_pdata);
++	kfree(adev->acp.acp_res);
++	kfree(adev->acp.acp_cell);
++	kfree(adev->acp.acp_genpd);
++	return r;
+ }
+ 
+ /**
+-- 
+2.25.1
+
 
 
