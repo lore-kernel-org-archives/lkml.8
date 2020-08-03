@@ -2,187 +2,109 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A548C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C256C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0244420781
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74CC820719
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:09:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZHd/XLl5"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="ecphZuxZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726433AbgHCLHZ (ORCPT
+        id S1726189AbgHCLJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 07:07:25 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:60820 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbgHCLHW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 07:07:22 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200803110721euoutp025f0aa30c58386d76a640d14ad795b1f7~nvWaMZp8a0765807658euoutp02B
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 11:07:21 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200803110721euoutp025f0aa30c58386d76a640d14ad795b1f7~nvWaMZp8a0765807658euoutp02B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1596452841;
-        bh=YuGdyCVaKEYE24EuD7N0wpnCbtpkm39w8lrqKYdD6iY=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=ZHd/XLl5MGXDnhv3k6kfCOm0tRbeDiVyNjAaLBzCCKs6fVwUUU4AluExexMQVcwdS
-         qxs1ydjWwd2nJQ6atEYGsfYBZdrTluGO+USa/xE8e+L33hjRaYWI3+724VL/k/LoRy
-         W4UkP+OyynnZadbfk1Jks9I6uX0C7HcibnTXNWAo=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200803110720eucas1p271ddc715648770630856e629d5bd8799~nvWZ2IkWc0126901269eucas1p2F;
-        Mon,  3 Aug 2020 11:07:20 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id B2.92.06318.8EFE72F5; Mon,  3
-        Aug 2020 12:07:20 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200803110720eucas1p24d589fdd1ef2f7bc0e0629dd8cd6a7b6~nvWZdaKJ30535105351eucas1p24;
-        Mon,  3 Aug 2020 11:07:20 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200803110720eusmtrp1d85e781ca1f455426951f388e375ef9f~nvWZcjdh20426104261eusmtrp1l;
-        Mon,  3 Aug 2020 11:07:20 +0000 (GMT)
-X-AuditID: cbfec7f5-38bff700000018ae-09-5f27efe8f4c3
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id AC.66.06314.8EFE72F5; Mon,  3
-        Aug 2020 12:07:20 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200803110719eusmtip152dc41f6fc746fec13c3f3a0e45ef509~nvWY3hoZ11924719247eusmtip1q;
-        Mon,  3 Aug 2020 11:07:19 +0000 (GMT)
-Subject: Re: [PATCH] vgacon: fix out of bounds write to the scrollback
- buffer
-To:     Greg KH <greg@kroah.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, Jiri Slaby <jirislaby@kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Kyungtae Kim <kt0755@gmail.com>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        DRI devel <dri-devel@lists.freedesktop.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        Solar Designer <solar@openwall.com>,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        xiao.zhang@windriver.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        =?UTF-8?B?5byg5LqR5rW3?= <zhangyunhai@nsfocus.com>
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <86fc45ac-5bb1-50a2-5f4c-5c2da30f7c3b@samsung.com>
-Date:   Mon, 3 Aug 2020 13:07:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Mon, 3 Aug 2020 07:09:39 -0400
+Received: from ozlabs.org ([203.11.71.1]:37675 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725945AbgHCLJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 07:09:39 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BKwBn2Nw4z9s1x;
+        Mon,  3 Aug 2020 21:09:37 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1596452977;
+        bh=IWLgPiM5I4iS04rZIDQceT85UcRl8lxf9/puQ2anwzY=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=ecphZuxZTp4KL4PZQFZx3hXIVFT8iC4x4reVm8yUIMNGTiVWCDYrO5DKas7nXo/0H
+         Q667aiyV8KzSz/LQWFHXPvblMYfNtPeWbthrpuWeGwNKtpSTCNwaRPjUdpqb1mEHmu
+         BGECtuEciWPNEZmLJ5pK630dMEojbyIJjazZB3ql1nVudiaeLgaSAk52TpSHMFVXWx
+         J2N0qj8rIFr/NLEj/bmHi9hGtM2nr/nlXyM+fopB7zS8Um8CG07ZGPHuv7kDaq4hRs
+         6ZxtpNjVGaRq/D7jN85MkDbQxm2AaI3qdmG8djKbgpgbuiLblgYmFG4lVkVG7G7RQc
+         5O74oR7BcTxiQ==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geoff Levand <geoff@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Joel Stanley <joel@jms.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH] powerpc/boot: Use address-of operator on section symbols
+In-Reply-To: <CAMuHMdUmHE-KVQuo=b2rn9EPgmnqSDi4i16NPbL5rXLLSCoyKg@mail.gmail.com>
+References: <20200624035920.835571-1-natechancellor@gmail.com> <CAMuHMdU_KfQ-RT_nev5LgN=Vj_P97Fn=nwRoC6ZREFLa3Ysj7w@mail.gmail.com> <20200720210252.GO30544@gate.crashing.org> <CAMuHMdUmHE-KVQuo=b2rn9EPgmnqSDi4i16NPbL5rXLLSCoyKg@mail.gmail.com>
+Date:   Mon, 03 Aug 2020 21:09:36 +1000
+Message-ID: <87zh7cyoi7.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20200803094753.GC635660@kroah.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRjt3b27u1pXXmfig0nBCM2oVNaP2wdSFnH/hAsiKixbeZkrN21X
-        V0Y/hKJ0MyutpkvLRJdKaPmxmq0Iy48hSl9TC0UTi5Km5izoa9W8k/x3nnPO857nwEsTcq80
-        ktbqs3mDXp2hoIJJe+f3vrUfp2JS4xunFKzZ3InYP/bLBPv66xTF9lWWInayIor9Md1LsN1F
-        01L2VVs5xXZ0mgjWZVGyY0UeGVtsqiHYlpl+CTvx20JtCeFqn5uk3I3Jo9yjb5Uk57AOy7iz
-        zzxSrqm+gOI871Rcd+lPkhsxd0k47+chGff+1zDFeZuWc40trRIVsz94cxqfoTXyhrjEQ8Hp
-        NwrKJFlnQ0+629pkeaiZMaEgGvB6GPA1SE0omJbjWgTDP8uROMwi+GR3BhQvglnHU9n8StFn
-        CykKtxHUfrAHBg+CL88fk35XGE6GlvtDEj9eiqMgv9op85sI7CTh6oNvcwKFN8Ll8/X/Amma
-        wYngG9vhp0m8Em6ZLkj9OBzvhZnRp3OYwaHgKhufez8Ix8PEmZI5TOAIeDt+UyLiFXCm9Trh
-        zwJ8iwZbsY8Uz94OY+57SMRhMNHVEqgTBT0lhaS40IDgd/7HwPZ9BLdLfJTo2gRDfT8o/6UE
-        joXGtjiR3go1T/oJPw04BAY9oeIRIVBstwRoBvLPyUV3NNy13aXmY02OOuISUlgXVLMuqGNd
-        UMf6P7cSkfUogs8RdBpeUOr5E+sEtU7I0WvWHcnUNaF/X7HH1/X1AXr863A7wjRSLGHSvdGp
-        cqnaKOTq2hHQhGIpk9Tbc1DOpKlzT/GGzFRDTgYvtKNlNKmIYJRVnw7IsUadzR/j+SzeMK9K
-        6KDIPGQcSbpQcRBrD7vcSdIrL1ftvqfdqXA5BvqPO1Xuffrk5kdTvfGesUWLBU1IeJ1tmzt2
-        V4pZvWpPdYrzT0Jobp7G/LDwi/zi5jdVy1M6XtCj52MGa20bCh0xqmuLyhff4XUdNmO0UlVS
-        V+nNSjMm5k0eP2A5vXVN37Dz9YArYdSuIIV0dcJqwiCo/wJKL1MehgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphleLIzCtJLcpLzFFi42I5/e/4Xd0X79XjDZo/8Fh0dx9jtPi/bSKz
-        xZWv79kszi2YwWjxbq6Mxa8PZ5ktTvR9YLW4vGsOm8XRY13MFienG1s86nvLbjGpaymzxZZP
-        15gsXv2dzubA57HiQherx7x3WR57vy1g8dg56y67R8uRt6wem1Z1snm8fRjgcWLGbxaP+93H
-        mTw+v7nD7vH0z102j8+b5DzWb9nKFMAbpWdTlF9akqqQkV9cYqsUbWhhpGdoaaFnZGKpZ2hs
-        HmtlZKqkb2eTkpqTWZZapG+XoJcxr3MmU0GLYMXVXbvYGxg383YxcnJICJhI9L2ZztLFyMUh
-        JLCUUeJe52nmLkYOoISMxPH1ZRA1whJ/rnWxQdS8ZpS40DqVCSQhLOArsfj/DjYQWwSovmPJ
-        HnaQImaBfSwSr1d2MUJ0HGKWaH/4GqyDTcBKYmL7KkaQDbwCdhL/HrmBhFkEVCQWdvWygtii
-        AhESh3fMYgSxeQUEJU7OfMICYnMKGEi8ap4MZjMLqEv8mXeJGcIWl7j1ZD4ThC0v0bx1NvME
-        RqFZSNpnIWmZhaRlFpKWBYwsqxhFUkuLc9Nziw31ihNzi0vz0vWS83M3MQJTwLZjPzfvYLy0
-        MfgQowAHoxIPb8ZntXgh1sSy4srcQ4wSHMxKIrxOZ0/HCfGmJFZWpRblxxeV5qQWH2I0BXpu
-        IrOUaHI+MD3llcQbmhqaW1gamhubG5tZKInzdggcjBESSE8sSc1OTS1ILYLpY+LglGpg7A9Q
-        s/L3fHivZ6rtk6m7+ZS43vKujFiZ63jW8MgKIwnJwtssB5o5GbqWsMb9vSzGe7il6ZDr5SPM
-        nhUFu/cXmvIY/Enq/H5Z2urVv7sZaxa+U0448u7cdGvWCWz7PTiiktqnPZ9pwvr/ftOy/WzR
-        s1zTVRYVfxe0rXLPf2wSzON179Prr70PlViKMxINtZiLihMB+KKm1xcDAAA=
-X-CMS-MailID: 20200803110720eucas1p24d589fdd1ef2f7bc0e0629dd8cd6a7b6
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200803094820eucas1p1696af31a3c9a295b7c4a4f478a5bde8d
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200803094820eucas1p1696af31a3c9a295b7c4a4f478a5bde8d
-References: <659f8dcf-7802-1ca1-1372-eb7fefd4d8f4@kernel.org>
-        <dbcf2841-7718-2ba7-11e0-efa4b9de8de1@nsfocus.com>
-        <9fb43895-ca91-9b07-ebfd-808cf854ca95@nsfocus.com>
-        <9386c640-34dd-0a50-5694-4f87cc600e0f@kernel.org>
-        <20200803081823.GD493272@kroah.com>
-        <CAKMK7uEV+CV89-L1Y=dijOEy8DKE=juRfQDnNnbhbAJhFh1fYw@mail.gmail.com>
-        <CGME20200803094820eucas1p1696af31a3c9a295b7c4a4f478a5bde8d@eucas1p1.samsung.com>
-        <20200803094753.GC635660@kroah.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 8/3/20 11:47 AM, Greg KH wrote:
-> On Mon, Aug 03, 2020 at 10:45:07AM +0200, Daniel Vetter wrote:
->> On Mon, Aug 3, 2020 at 10:26 AM Greg KH <greg@kroah.com> wrote:
->>>
->>> On Mon, Aug 03, 2020 at 10:08:43AM +0200, Jiri Slaby wrote:
->>>> Hi,
->>>>
->>>> On 31. 07. 20, 7:22, 张云海 wrote:
->>>>> Remove whitespace at EOL
->>>>
->>>> I am fine with the patch. However it should be sent properly (inline
->>>> mail, having a PATCH subject etc. -- see
->>>> Documentation/process/submitting-patches.rst). git send-email after git
->>>> format-patch handles most of it.
->>>>
->>>> There is also question who is willing to take it?
->>>>
->>>> Bart? Greg? Should we route it via akpm, or will you Linus directly? (I
->>>> can sign off and resend the patch which was attached to the mail I am
->>>> replying to too, if need be.)
->>>
->>> I can take it, if Bart can't, just let me know.
+Geert Uytterhoeven <geert@linux-m68k.org> writes:
+> On Mon, Jul 20, 2020 at 11:03 PM Segher Boessenkool
+> <segher@kernel.crashing.org> wrote:
+>> On Sat, Jul 18, 2020 at 09:50:50AM +0200, Geert Uytterhoeven wrote:
+>> > On Wed, Jun 24, 2020 at 6:02 AM Nathan Chancellor
+>> > <natechancellor@gmail.com> wrote:
+>> > >         /* If we have an image attached to us, it overrides anything
+>> > >          * supplied by the loader. */
+>> > > -       if (_initrd_end > _initrd_start) {
+>> > > +       if (&_initrd_end > &_initrd_start) {
+>> >
+>> > Are you sure that fix is correct?
+>> >
+>> >     extern char _initrd_start[];
+>> >     extern char _initrd_end[];
+>> >     extern char _esm_blob_start[];
+>> >     extern char _esm_blob_end[];
+>> >
+>> > Of course the result of their comparison is a constant, as the addresses
+>> > are constant.  If clangs warns about it, perhaps that warning should be moved
+>> > to W=1?
+>> >
+>> > But adding "&" is not correct, according to C.
 >>
->> Yeah vt stuff and console drivers != fbcon go through Greg's tree past
->> few years ...
+>> Why not?
 >>
->> Greg, should we maybe add a MAINTAINERS entry that matches on all
->> things console? With tty/vt you definitely have the other side of that
->> coin already :-)
-> 
-> Sure, that would be good as things do fall through the cracks at times.
+>> 6.5.3.2/3
+>> The unary & operator yields the address of its operand.  [...]
+>> Otherwise, the result is a pointer to the object or function designated
+>> by its operand.
+>>
+>> This is the same as using the name of an array without anything else,
+>> yes.  It is a bit clearer if it would not be declared as array, perhaps,
+>> but it is correct just fine like this.
+>
+> Thanks, I stand corrected.
+>
+> Regardless, the comparison is still a comparison between two constant
+> addresses, so my fear is that the compiler will start generating
+> warnings for that in the near or distant future, making this change
+> futile.
 
-Since taking over fbdev in 2017 I've tried to act as the last resort
-Maintainer for console stuff (AFAIK there are no "lost" patches) but
-it really deserves its own entry.
+They're not constant at compile time though. So I don't think the
+compiler could (sensibly) warn about that? (surely!)
 
-Also most console patches make it through you nowadays anyway:
+cheers
 
-$ git log --pretty=fuller --since=2017 drivers/video/console/|grep "Commit\:"|sort|uniq -cd
-      2 Commit:     Arnd Bergmann <arnd@arndb.de>
-     11 Commit:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-      2 Commit:     Daniel Vetter <daniel.vetter@ffwll.ch>
-      3 Commit:     Dave Airlie <airlied@redhat.com>
-     12 Commit:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-      7 Commit:     Linus Torvalds <torvalds@linux-foundation.org>
-      2 Commit:     Martin Schwidefsky <schwidefsky@de.ibm.com>
-
-> If you write the patch, I'll merge it :)
-ACK from me. :)
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
