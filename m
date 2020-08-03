@@ -3,147 +3,122 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F19D6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF26CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCA42206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:36:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q3p7nbML"
+	by mail.kernel.org (Postfix) with ESMTP id C435A206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:40:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596454802;
+	bh=9a7byW0jBE71nnbl49AgFdsTEnvRK/+rKy6rjL5BX7I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BDtb5LQDiqO8CXaO8n8SCfNWrvVXBOlBWkfg9U/jZbmbMVqBMgPMsDzC3geyzwBmB
+	 vHWjw6+Bm+JZjEBXNRC2D8Fx+dyAYEYDvr6bvaqESoILyAPaKrfB95KCjhGOUZqNB0
+	 D3qD7JyAl+lN92FPDN4y/iu8CaVELuICaTEuPr18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgHCLgU (ORCPT
+        id S1726509AbgHCLjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 07:36:20 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47225 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725948AbgHCLgP (ORCPT
+        Mon, 3 Aug 2020 07:39:55 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38286 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbgHCLhI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 07:36:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596454572;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dCtVsAq27Rguno+ZBtzk38dyURdoRvH1j0hpCY8qr+g=;
-        b=Q3p7nbMLvTOEGLu0ylKNidJkvepi7d4kArthtDyfhW2SbM+oQX8oALW1cFnNsrIrK8MKiR
-        HZWlRJCBXEjjHc4wiMx2ND4Gve1BI5qPRfgqPg3oMzWouF8CHQBpf2gWDxtTTFjjaD4HtI
-        YAm+j93PYDdrFEZcCEEHQ9BvaHHptkU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-435-S1xSutV5PHGdZOCyzvj-9A-1; Mon, 03 Aug 2020 07:36:10 -0400
-X-MC-Unique: S1xSutV5PHGdZOCyzvj-9A-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B2502100A8C1;
-        Mon,  3 Aug 2020 11:36:08 +0000 (UTC)
-Received: from krava (unknown [10.40.194.212])
-        by smtp.corp.redhat.com (Postfix) with SMTP id A046971762;
-        Mon,  3 Aug 2020 11:36:03 +0000 (UTC)
-Date:   Mon, 3 Aug 2020 13:35:59 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        David Ahern <dsahern@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Ian Rogers <irogers@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        =?iso-8859-1?Q?Genevi=E8ve?= Bastien <gbastien@versatic.net>,
-        Wang Nan <wangnan0@huawei.com>,
-        Jeremie Galarneau <jgalar@efficios.com>
-Subject: Re: [PATCH 2/6] perf tools: Store clock references for -k/--clockid
- option
-Message-ID: <20200803113559.GE139381@krava>
-References: <20200730213950.1503773-1-jolsa@kernel.org>
- <20200730213950.1503773-3-jolsa@kernel.org>
- <20200803035550.GA686281@google.com>
+        Mon, 3 Aug 2020 07:37:08 -0400
+Received: by mail-ot1-f67.google.com with SMTP id q9so11986557oth.5;
+        Mon, 03 Aug 2020 04:37:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3nvENeSXjDTJ1ixr/A+p7Tzhs+JxqY29ttHHyb6V5/s=;
+        b=FPJuum4OWRZgLhZRynw0z1KUthlLL13OLiMocHS6aazW2wRCxa4/S+M6/0QbJ1jMw5
+         B920uDc7Oow+eunxOk+mVBGdnFHcMJ9nKIY1jHwFK5Eez03qHKEfcZOgQyVnnuLS04kN
+         C1dyRgy8usiYijwF9Z4nN0M5vcKKNWESm7yvpbS+l3NwkLBWZNFoHZRcU7gzPM2eNe58
+         D8Ddvr1D74tGedf2bI84rpq8xdElpjkLmvLuldPU8lGXUXLO3R9mptPgSuDYVt+kA4ul
+         EKagE9bWonI9uBG1y9b4+myGUXkLVhFR49VofCacrimaCSi8KyAFvDO9qxVngjPK6nZM
+         U+Kw==
+X-Gm-Message-State: AOAM533EWNJWcOYzPEMmop+xif6B6E05XTTLTCqMeMtxEQpbqpvpP1bB
+        IofGyIcQQAHw/DSb6Gq6tav0oyqDyEfZ5iTY94WVG5cq
+X-Google-Smtp-Source: ABdhPJy1gO8YR7YhjbNf4BGWEQg9zoUoZNKtB8AS1uO9D3Fu/RvP2a7H2BExLyzmvqxgi65Xr2S719nOguAwN6KYTh4=
+X-Received: by 2002:a05:6830:1c74:: with SMTP id s20mr12674907otg.167.1596454627644;
+ Mon, 03 Aug 2020 04:37:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200803035550.GA686281@google.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <2672940.cHDmkauF2A@kreacher> <20200803085347.GV13316@paasikivi.fi.intel.com>
+In-Reply-To: <20200803085347.GV13316@paasikivi.fi.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 3 Aug 2020 13:36:52 +0200
+Message-ID: <CAJZ5v0hRi3DZ69b1b=xes4qz2keq_aGDzX5kKQsR_rkwuFgk0w@mail.gmail.com>
+Subject: Re: [PATCH] PM: runtime: Add kerneldoc comments to multiple helpers
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Wolfram Sang <wsa@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 12:55:50PM +0900, Namhyung Kim wrote:
+Hi Sakari,
 
-SNIP
-
-> > diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
-> > index b6472e463284..c484e81987c7 100644
-> > --- a/tools/perf/Documentation/perf.data-file-format.txt
-> > +++ b/tools/perf/Documentation/perf.data-file-format.txt
-> > @@ -389,6 +389,19 @@ struct {
-> >  Example:
-> >   cpu pmu capabilities: branches=32, max_precise=3, pmu_name=icelake
-> >  
-> > +	HEADER_CLOCK_DATA = 29,
-> > +
-> > +	Contains clock id and its reference time together with wall clock
-> > +	time taken at the 'same time', both values are in nanoseconds.
-> > +	The format of data is as below.
-> > +
-> > +struct {
-> > +	u32 version;  /* version = 1 */
-> > +	u32 clockid;
-> > +	u64 clockid_time_ns;
-> > +	u64 wall_clock_ns;
-> > +};
-> > +
-> 
-> It seems that it's slightly different than what it actually write to a file.
-> Specifically the last two fields should be reversed IMHO.
-
-oops, you're right.. wil fix in new version
-
-> 
-> 
-> >  	other bits are reserved and should ignored for now
-> >  	HEADER_FEAT_BITS	= 256,
+On Mon, Aug 3, 2020 at 10:53 AM Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+>
+> Hi Rafael,
+>
+> Thanks for the patch.
+>
+> On Fri, Jul 31, 2020 at 07:03:26PM +0200, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > >
-> [SNIP]
-> 
-> > diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-> > index 1ab2682d5d2b..4098a63d5e64 100644
-> > --- a/tools/perf/util/env.h
-> > +++ b/tools/perf/util/env.h
-> > @@ -100,6 +100,18 @@ struct perf_env {
-> >  	/* For fast cpu to numa node lookup via perf_env__numa_node */
-> >  	int			*numa_map;
-> >  	int			 nr_numa_map;
-> > +
-> > +	/* For real clock time refference. */
-> 
-> typo: reference
+> > Add kerneldoc comments to multiple PM-runtime helper functions
+> > defined as static inline wrappers around lower-level routines to
+> > provide quick reference decumentation of their behavior.
+>
+> > Some of them are similar to each other with subtle differences only
+> > and the behavior of some of them may appear as counter-intuitive, so
+> > clarify all that to avoid confusion.
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >  include/linux/pm_runtime.h |  246 +++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 246 insertions(+)
+> >
+> > Index: linux-pm/include/linux/pm_runtime.h
+> > ===================================================================
+> > --- linux-pm.orig/include/linux/pm_runtime.h
+> > +++ linux-pm/include/linux/pm_runtime.h
+> > @@ -60,58 +60,151 @@ extern void pm_runtime_put_suppliers(str
+> >  extern void pm_runtime_new_link(struct device *dev);
+> >  extern void pm_runtime_drop_link(struct device *dev);
+> >
+> > +/**
+> > + * pm_runtime_get_if_in_use - Conditionally bump up runtime PM usage counter.
+> > + * @dev: Target device.
+> > + *
+> > + * Increment the runtime PM usage counter of @dev if its runtime PM status is
+> > + * %RPM_ACTIVE and its runtime PM usage counter is greater than 0.
+>
+> The implementation of the non-runtime PM variants (used when CONFIG_PM is
+> disabled) isn't here but I think it'd be nice if their behaviour was also
+> documented here. pm_runtime_get_if_in_use() returns -EINVAL if CONFIG_PM is
+> disabled, for instance.
 
-ok
+These kerneldoc comments cover the CONFIG_PM case only.  The behavior
+for !CONFIG_PM needs to be figured out from the code, if it matters.
 
-SNIP
+I'm not sure why it would matter for pm_runtime_get_if_in_use(), in particular?
 
-> > +	else {
-> > +		strftime(date, sizeof(date), "%F %T", &ltime);
-> > +		scnprintf(tstr, sizeof(tstr), "%s.%06d",
-> > +			  date, (int) tod_ns.tv_usec);
-> > +	}
-> > +
-> > +	fprintf(fp, "# clockid: %s (%u)\n", clockid_name(clockid), clockid);
-> > +	fprintf(fp, "# reference time: %s = %ld.%06d (TOD) = %ld.%ld (%s)\n",
-> 
-> Shouldn't the last one be %ld.%09ld?
+> pm_runtime_disable() is defined here but the documentation in corresponding
+> pm_runtime_enable() in drivers/base/power/runtime.c is rather terse. It'd
+> be nice to improve that now (or separately).
 
-sure, why not
+Yes, separately.
 
-thanks,
-jirka
-
+Thanks!
