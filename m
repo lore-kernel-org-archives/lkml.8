@@ -2,54 +2,52 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BED7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD69C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D1B9204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 750CB204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:38:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458316;
-	bh=N9pC0y8ia7HAFIP+qsQdo12QqCgv5yaYu1BWaAETZIE=;
+	s=default; t=1596458329;
+	bh=tujbRiMNP8VhyjSC5XmQF9JXfrHEXn0HLrVaRZJ/q+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L/TqdXrwQenPpQCem94dMP+1lEK9vZpkjh3nsWQ9/XJyxHbCpLkS5rNBQjt6jtm8K
-	 ma1FqXYqFWKk3hDZAywm5S287TZnnAwItIA55QWse1498ax3LYLKa8JCBhF1Asjcep
-	 9pxLBdcK0Nh4CE1hVJWnG4csFih4sV/fZxsICD/s=
+	b=hbF21GYtuCOWX0sP8AfvFOrLkDk+Ib17Gno/aV8GQmPQJ+KwK1YX5sRPYPjaGnFII
+	 MEw6kTIW/rGMDZ3yLkGjz98NCEZ2YhJo4bzboeuiBs0ccO0YecwPNnRtVl1ye1IFTM
+	 iOtWWGgztUDWlEpvmN7Q7pL+5Cr1qiz76C7hurtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbgHCMe1 (ORCPT
+        id S1728535AbgHCMiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:34:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34184 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:38:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729528AbgHCMeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:34:07 -0400
+        id S1729552AbgHCMeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:34:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A629204EC;
-        Mon,  3 Aug 2020 12:34:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EABF204EC;
+        Mon,  3 Aug 2020 12:34:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596458046;
-        bh=N9pC0y8ia7HAFIP+qsQdo12QqCgv5yaYu1BWaAETZIE=;
+        s=default; t=1596458064;
+        bh=tujbRiMNP8VhyjSC5XmQF9JXfrHEXn0HLrVaRZJ/q+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VBkEkNAM1C0dCe0mg/bnCkopg/XjKlAxEvnoYpJRMZs/lVC/9ISs9VaqDOA8czmIF
-         +RPKM5FCzIbOjqUTjrgzDV+K5m3SKQbOIJ74iqk0rvd5pkb6dn9zg2qmopM+Poe2aM
-         0p8Sx08aXABp9vMb94xbfZ3P2tGUIwwT5ZWSU9yM=
+        b=vOZCcuNU/oOmSwHgF8jzLLKWvXGXGHpYLJghhldao5eR9gGuBfL4stCe2pYzoH+Ug
+         +D2bIQBM35tgyfxgpzxIINzuF2txCX28eGh8uaGQ8kPf4kk+guR89J1cu+q6nh3Kck
+         EcSSvmGL7iV7dwFSQgz/NR7EvxuakdF5gSSP+2Pc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 08/51] x86/kvm: Be careful not to clear KVM_VCPU_FLUSH_TLB bit
-Date:   Mon,  3 Aug 2020 14:19:53 +0200
-Message-Id: <20200803121849.869521189@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 26/51] net/x25: Fix x25_neigh refcnt leak when x25 disconnect
+Date:   Mon,  3 Aug 2020 14:20:11 +0200
+Message-Id: <20200803121850.800444828@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121849.488233135@linuxfoundation.org>
 References: <20200803121849.488233135@linuxfoundation.org>
@@ -62,41 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8c6de56a42e0c657955e12b882a81ef07d1d073e ]
+From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
 
-kvm_steal_time_set_preempted() may accidentally clear KVM_VCPU_FLUSH_TLB
-bit if it is called more than once while VCPU is preempted.
+commit 4becb7ee5b3d2829ed7b9261a245a77d5b7de902 upstream.
 
-This is part of CVE-2019-3016.
+x25_connect() invokes x25_get_neigh(), which returns a reference of the
+specified x25_neigh object to "x25->neighbour" with increased refcnt.
 
-(This bug was also independently discovered by Jim Mattson
-<jmattson@google.com>)
+When x25 connect success and returns, the reference still be hold by
+"x25->neighbour", so the refcount should be decreased in
+x25_disconnect() to keep refcount balanced.
 
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Reviewed-by: Joao Martins <joao.m.martins@oracle.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The reference counting issue happens in x25_disconnect(), which forgets
+to decrease the refcnt increased by x25_get_neigh() in x25_connect(),
+causing a refcnt leak.
+
+Fix this issue by calling x25_neigh_put() before x25_disconnect()
+returns.
+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kvm/x86.c | 3 +++
- 1 file changed, 3 insertions(+)
+ net/x25/x25_subr.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 09f47c837c258..3aed03942d7d4 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3075,6 +3075,9 @@ static void kvm_steal_time_set_preempted(struct kvm_vcpu *vcpu)
- 	if (!(vcpu->arch.st.msr_val & KVM_MSR_ENABLED))
- 		return;
+--- a/net/x25/x25_subr.c
++++ b/net/x25/x25_subr.c
+@@ -363,6 +363,10 @@ void x25_disconnect(struct sock *sk, int
+ 		sk->sk_state_change(sk);
+ 		sock_set_flag(sk, SOCK_DEAD);
+ 	}
++	read_lock_bh(&x25_list_lock);
++	x25_neigh_put(x25->neighbour);
++	x25->neighbour = NULL;
++	read_unlock_bh(&x25_list_lock);
+ }
  
-+	if (vcpu->arch.st.steal.preempted)
-+		return;
-+
- 	vcpu->arch.st.steal.preempted = 1;
- 
- 	kvm_write_guest_offset_cached(vcpu->kvm, &vcpu->arch.st.stime,
--- 
-2.25.1
-
+ /*
 
 
