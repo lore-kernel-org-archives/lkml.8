@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12418C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09296C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23D6C206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15F7920792
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:58:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mOTd5An1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AQG8WLSU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbgHCX6a (ORCPT
+        id S1729377AbgHCX6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 19:58:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36286 "EHLO
+        Mon, 3 Aug 2020 19:58:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729240AbgHCX61 (ORCPT
+        with ESMTP id S1729287AbgHCX63 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 19:58:27 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 079EBC0617A0
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 16:58:26 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id s189so33168225iod.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 16:58:25 -0700 (PDT)
+        Mon, 3 Aug 2020 19:58:29 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8727C0617A0
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 16:58:28 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id f68so10792042ilh.12
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 16:58:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=2rN/d/4Ztn21EkbHD6dVPT8VsDxw/yLn4xET1uonrRo=;
-        b=mOTd5An1Z+sPuy/vpHw9OIndbv2Qr1Ixek2fEEqWq9M8glS/doo0hBw070w8rHtDEB
-         cJjEveE7pN/yBVmSOkC76eK0NhJJXQqkWYQNSfwPgT44M/ar/GngHyrhu5PCMf/2gTan
-         gnHaXcNPfy2yhWKG3elyNK/qzSxDMGDaK8kMg=
+        bh=2ELKF9ec+bgCGrmRBpVhFRB+v1oAdFtZBSJFoNpDtSg=;
+        b=AQG8WLSUE7F0Y7lHcTLK/jOh4FqEm2TpRLngA4PjYTe8CiScStdPZmyzqkkuB4C21D
+         HNLzSX4DSNToz51VKQfIA8n8wiZspry+1anoK/+DchHTMt6gEz1K8g5KZRq1E8jwd3vw
+         Oaoc8w+FlMUl0QsHgB3FxzhPDsJJ4v72xaF3w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2rN/d/4Ztn21EkbHD6dVPT8VsDxw/yLn4xET1uonrRo=;
-        b=qSgdfO4n9ZhFtQ9DqYKYmopFPXes0yq3euz3oVFWYjqWc8Yn89JWcpS3HU0kEEgE8B
-         ABXrI+QjGCMHDQPpMN/3hFVD/ttUS2bTglRfHrBfOS5Xudwz+z+NF7LybLFHW0wQ7btU
-         8lJtEDwDG/6Yl5N9gbkgO8/FrZo0hc8J0qcW8jbmkNxgkTPmaHk96OEIlnH6RoxVKn27
-         x1/G8UIrIwlAEDlIlF7kR1KiM1rDEGvPWbh/SAlX4unCpBZi/P/rAJzkMGReJPCpD+Ay
-         jYTBTgDNGq3DYJP7QoRBMbmvNlhZGCwzaD81x8heXQTmXpq6/CCm22evTAFUArb761XF
-         q06g==
-X-Gm-Message-State: AOAM533KhybqrXNK4rJx9yvIWqt+IUW+h7MpJPQAI56g82nnOsa8FD1D
-        18RmH3dTRY8AWKMNFYRn/h5W0Q==
-X-Google-Smtp-Source: ABdhPJyMFpx3vadGuvlAiinOybtGhpTSrLbfBcMLBRI2fj0uFKksxd/X3CrB6Za8JNA+hQZa/StRIw==
-X-Received: by 2002:a5d:9b05:: with SMTP id y5mr2415091ion.59.1596499105355;
-        Mon, 03 Aug 2020 16:58:25 -0700 (PDT)
+        bh=2ELKF9ec+bgCGrmRBpVhFRB+v1oAdFtZBSJFoNpDtSg=;
+        b=owr7OcAHP/W7eIr9qt9+Fg+YxMZNr5LNjJvZ5Wy6Fi/NRn4bRvxqngYn1gVv/mlGcg
+         ekzsq6ztnA6i57ISMFyNhaalzjv8SZq+vxGR7XLICECjYCPWA0IS4ZFkWND5Dz+yg2vS
+         KdRjh/DrUOVfKNqFzC6dOojqdpBHBlH7XxLuVSE6zBseGvPrF9CRVEhkDtrAyYrgBg5q
+         ulCCl5LPYt3YgQunTGo0CS6A6cqfqJ7p/78Wz6dldq85RvvULuzLgSBXddZlRG/Ea2KC
+         o8bbT8KBIw1VDOgPqWpHHnZhlVPbYRPqSF0tbCKO7k1tKZItErWFlUAeih/XwGH1TzxV
+         jbug==
+X-Gm-Message-State: AOAM530cvXfPPrW1W7MGu0xfaGLKsDFq1WCMMLQTuFIPKQZwrWs51/CL
+        pJvWlGDU6L+Q4Qrfv8KVtANAXA==
+X-Google-Smtp-Source: ABdhPJzM3ewapIc/I387YNT8yLabRY71+pPRS2PREUOW3neIQ0APB+WeM5kZQzDQS9hcR8lhmPjT+A==
+X-Received: by 2002:a92:c811:: with SMTP id v17mr2116473iln.46.1596499108395;
+        Mon, 03 Aug 2020 16:58:28 -0700 (PDT)
 Received: from derch.Home (97-122-92-59.hlrn.qwest.net. [97.122.92.59])
-        by smtp.gmail.com with ESMTPSA id x185sm11075992iof.41.2020.08.03.16.58.24
+        by smtp.gmail.com with ESMTPSA id x185sm11075992iof.41.2020.08.03.16.58.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 16:58:25 -0700 (PDT)
+        Mon, 03 Aug 2020 16:58:28 -0700 (PDT)
 From:   Daniel Campello <campello@chromium.org>
 To:     LKML <devicetree@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
@@ -63,14 +63,14 @@ Cc:     Jonathan Cameron <jic23@kernel.org>,
         Daniel Campello <campello@chromium.org>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Douglas Anderson <dianders@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
         Lars-Peter Clausen <lars@metafoo.de>,
         Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         Stephen Boyd <swboyd@chromium.org>, linux-iio@vger.kernel.org
-Subject: [PATCH v5 06/15] iio: sx9310: Fixes various memory handling
-Date:   Mon,  3 Aug 2020 17:58:06 -0600
-Message-Id: <20200803175559.v5.6.I8accffd77d616cb55b29bc3021cb0f5e1da3b68a@changeid>
+Subject: [PATCH v5 09/15] iio: sx9310: Update copyright
+Date:   Mon,  3 Aug 2020 17:58:09 -0600
+Message-Id: <20200803175559.v5.9.If88afce92bbc1e97a532874cca35e642a9566172@changeid>
 X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
 In-Reply-To: <20200803235815.778997-1-campello@chromium.org>
 References: <20200803235815.778997-1-campello@chromium.org>
@@ -81,70 +81,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Makes use __aligned(8) to ensure that the timestamp is correctly aligned
-when we call io_push_to_buffers_with_timestamp().
-Also makes use of sizeof() for regmap_bulk_read instead of static value.
+Fixes wrong copyright year.
 
 Signed-off-by: Daniel Campello <campello@chromium.org>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
 
-Changes in v5:
- - Really use a pointer to buffer struct on
-iio_push_to_buffers_with_timestamp().
+Changes in v5: None
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
 
-Changes in v4:
- - Use pointer to buffer struct on iio_push_to_buffers_with_timestamp().
-
-Changes in v3:
- - Changed buffer to struct type to align timestamp memory properly.
-
-Changes in v2:
- - Fixed commit message from "iio: sx9310: Align memory"
-
- drivers/iio/proximity/sx9310.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/iio/proximity/sx9310.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-index 66ecdd309e0ddc..127b1ba79e2dea 100644
+index cd7de40a55c2f6..87b2de0d7b55a3 100644
 --- a/drivers/iio/proximity/sx9310.c
 +++ b/drivers/iio/proximity/sx9310.c
-@@ -132,8 +132,11 @@ struct sx9310_data {
- 	 */
- 	bool prox_stat[SX9310_NUM_CHANNELS];
- 	bool trigger_enabled;
--	__be16 buffer[SX9310_NUM_CHANNELS +
--		      4]; /* 64-bit data + 64-bit timestamp */
-+	/* Ensure correct alignment of timestamp when present. */
-+	struct {
-+		__be16 channels[SX9310_NUM_CHANNELS];
-+		s64 ts __aligned(8);
-+	} buffer;
- 	/* Remember enabled channels and sample rate during suspend. */
- 	unsigned int suspend_ctrl0;
- 	struct completion completion;
-@@ -344,7 +347,7 @@ static int sx9310_read_prox_data(struct sx9310_data *data,
- 	if (ret < 0)
- 		return ret;
- 
--	return regmap_bulk_read(data->regmap, chan->address, val, 2);
-+	return regmap_bulk_read(data->regmap, chan->address, val, sizeof(*val));
- }
- 
+@@ -1,13 +1,13 @@
+ // SPDX-License-Identifier: GPL-2.0
  /*
-@@ -694,10 +697,10 @@ static irqreturn_t sx9310_trigger_handler(int irq, void *private)
- 		if (ret < 0)
- 			goto out;
+- * Copyright 2018 Google LLC.
++ * Copyright 2020 Google LLC.
+  *
+  * Driver for Semtech's SX9310/SX9311 capacitive proximity/button solution.
+  * Based on SX9500 driver and Semtech driver using the input framework
+  * <https://my.syncplicity.com/share/teouwsim8niiaud/
+  *          linux-driver-SX9310_NoSmartHSensing>.
+- * Reworked April 2019 by Evan Green <evgreen@chromium.org>
+- * and January 2020 by Daniel Campello <campello@chromium.org>
++ * Reworked in April 2019 by Evan Green <evgreen@chromium.org>
++ * and in January 2020 by Daniel Campello <campello@chromium.org>.
+  */
  
--		data->buffer[i++] = val;
-+		data->buffer.channels[i++] = val;
- 	}
- 
--	iio_push_to_buffers_with_timestamp(indio_dev, data->buffer,
-+	iio_push_to_buffers_with_timestamp(indio_dev, &data->buffer,
- 					   pf->timestamp);
- 
- out:
+ #include <linux/acpi.h>
 -- 
 2.28.0.163.g6104cc2f0b6-goog
 
