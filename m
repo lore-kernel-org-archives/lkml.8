@@ -2,52 +2,52 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 428DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9610C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23AA62054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 844A82054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458700;
-	bh=HkyT1WY2Jwb8f3wNOG+gg1AcitoVC2HNsjZbvGkzX9g=;
+	s=default; t=1596458708;
+	bh=47QAnSMoOVMr8QHQNgdXK4N904/7dAfTkxp4OLgXePU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mh5YJXjQDINBPXmPGk8TU12OUIyB0iJelET3l9KZAcks8yzNcCHBydI2AXjEYLpHw
-	 os8qPD9TbQe7ml6IIcrKqIGXprzyy0vmCx0v3ojKNxdDF5dXQ1OguqJYTEhEB3An4M
-	 VRTXYAiWfcAnJT+ESKpnbDSFShnGMaBCVknDCSbo=
+	b=LZAaX6rtgfQ3dBZcOvpjtIg7HK6HdgrxnFrSPOv1SIoqLoEGWD8nYVNs1S+MiVOwu
+	 HS1zT+PYVpSomeT2xZc5qmk5c/Q0tZxhPo+GfZ1fEGhA4lxfWFHgbLYF8IYMG2T/jl
+	 dwGkWO13Shq6mYqj0D9q3fTIju9IE2Mvnx/NiAjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbgHCM1t (ORCPT
+        id S1728597AbgHCM1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:27:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53394 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:27:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728560AbgHCM1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:27:35 -0400
+        id S1728554AbgHCM13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:27:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E98E207FC;
-        Mon,  3 Aug 2020 12:27:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28E83204EC;
+        Mon,  3 Aug 2020 12:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457654;
-        bh=HkyT1WY2Jwb8f3wNOG+gg1AcitoVC2HNsjZbvGkzX9g=;
+        s=default; t=1596457648;
+        bh=47QAnSMoOVMr8QHQNgdXK4N904/7dAfTkxp4OLgXePU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SxDLhYpLt8K/B2iOo0KLEagsao855YdLxZ9Cv+AfI2PVlGRmmFirCeLjUs/ymp9Yn
-         /zAWFfTR7ewZ+L+tHUvX82gPfqDkK56wFh44j9wVwtySDSKI+IbVcLb2t31nVjDpNM
-         qwpV/QNIChgyPmncKHXLQX6rYbkN/LpfY6ZVEyRg=
+        b=JKbei+x42280hBGvgAegjE6x6W9hG5WJbuBo0olxj2yc6TUltUqpxt742M+ACddea
+         igCdQ3wstYF7JoCwilXHfrfH8nKXF1dK6wgEM/JQi/l9odRYGZyG+/IYYOCHLqt6Qu
+         w4+1+lrKLOzFTJzZ4uXzlrWuC3cg4fVzQTbGFTeM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, NeilBrown <neilb@suse.de>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 03/90] sunrpc: check that domain table is empty at module unload.
-Date:   Mon,  3 Aug 2020 14:18:25 +0200
-Message-Id: <20200803121857.711453768@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 23/90] ARM: percpu.h: fix build error
+Date:   Mon,  3 Aug 2020 14:18:45 +0200
+Message-Id: <20200803121858.739886161@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -60,95 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f45db2b909c7e76f35850e78f017221f30282b8e ]
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-The domain table should be empty at module unload.  If it isn't there is
-a bug somewhere.  So check and report.
+commit aa54ea903abb02303bf55855fb51e3fcee135d70 upstream.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206651
-Signed-off-by: NeilBrown <neilb@suse.de>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix build error for the case:
+  defined(CONFIG_SMP) && !defined(CONFIG_CPU_V6)
+
+config: keystone_defconfig
+
+  CC      arch/arm/kernel/signal.o
+  In file included from ../include/linux/random.h:14,
+                    from ../arch/arm/kernel/signal.c:8:
+  ../arch/arm/include/asm/percpu.h: In function ‘__my_cpu_offset’:
+  ../arch/arm/include/asm/percpu.h:29:34: error: ‘current_stack_pointer’ undeclared (first use in this function); did you mean ‘user_stack_pointer’?
+      : "Q" (*(const unsigned long *)current_stack_pointer));
+                                     ^~~~~~~~~~~~~~~~~~~~~
+                                     user_stack_pointer
+
+Fixes: f227e3ec3b5c ("random32: update the net random state on interrupt and activity")
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/sunrpc/sunrpc.h      |  1 +
- net/sunrpc/sunrpc_syms.c |  2 ++
- net/sunrpc/svcauth.c     | 27 +++++++++++++++++++++++++++
- 3 files changed, 30 insertions(+)
+ arch/arm/include/asm/percpu.h |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/sunrpc/sunrpc.h b/net/sunrpc/sunrpc.h
-index c9bacb3c930fa..82035fa65b8f9 100644
---- a/net/sunrpc/sunrpc.h
-+++ b/net/sunrpc/sunrpc.h
-@@ -56,4 +56,5 @@ int svc_send_common(struct socket *sock, struct xdr_buf *xdr,
+--- a/arch/arm/include/asm/percpu.h
++++ b/arch/arm/include/asm/percpu.h
+@@ -5,6 +5,8 @@
+ #ifndef _ASM_ARM_PERCPU_H_
+ #define _ASM_ARM_PERCPU_H_
  
- int rpc_clients_notifier_register(void);
- void rpc_clients_notifier_unregister(void);
-+void auth_domain_cleanup(void);
- #endif /* _NET_SUNRPC_SUNRPC_H */
-diff --git a/net/sunrpc/sunrpc_syms.c b/net/sunrpc/sunrpc_syms.c
-index f9edaa9174a43..236fadc4a4399 100644
---- a/net/sunrpc/sunrpc_syms.c
-+++ b/net/sunrpc/sunrpc_syms.c
-@@ -23,6 +23,7 @@
- #include <linux/sunrpc/rpc_pipe_fs.h>
- #include <linux/sunrpc/xprtsock.h>
- 
-+#include "sunrpc.h"
- #include "netns.h"
- 
- unsigned int sunrpc_net_id;
-@@ -131,6 +132,7 @@ cleanup_sunrpc(void)
- 	unregister_rpc_pipefs();
- 	rpc_destroy_mempool();
- 	unregister_pernet_subsys(&sunrpc_net_ops);
-+	auth_domain_cleanup();
- #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
- 	rpc_unregister_sysctl();
- #endif
-diff --git a/net/sunrpc/svcauth.c b/net/sunrpc/svcauth.c
-index 550b214cb0015..998b196b61767 100644
---- a/net/sunrpc/svcauth.c
-+++ b/net/sunrpc/svcauth.c
-@@ -19,6 +19,10 @@
- #include <linux/err.h>
- #include <linux/hash.h>
- 
-+#include <trace/events/sunrpc.h>
++#include <asm/thread_info.h>
 +
-+#include "sunrpc.h"
-+
- #define RPCDBG_FACILITY	RPCDBG_AUTH
- 
- 
-@@ -203,3 +207,26 @@ struct auth_domain *auth_domain_find(char *name)
- 	return NULL;
- }
- EXPORT_SYMBOL_GPL(auth_domain_find);
-+
-+/**
-+ * auth_domain_cleanup - check that the auth_domain table is empty
-+ *
-+ * On module unload the auth_domain_table must be empty.  To make it
-+ * easier to catch bugs which don't clean up domains properly, we
-+ * warn if anything remains in the table at cleanup time.
-+ *
-+ * Note that we cannot proactively remove the domains at this stage.
-+ * The ->release() function might be in a module that has already been
-+ * unloaded.
-+ */
-+
-+void auth_domain_cleanup(void)
-+{
-+	int h;
-+	struct auth_domain *hp;
-+
-+	for (h = 0; h < DN_HASHMAX; h++)
-+		hlist_for_each_entry(hp, &auth_domain_table[h], hash)
-+			pr_warn("svc: domain %s still present at module unload.\n",
-+				hp->name);
-+}
--- 
-2.25.1
-
+ /*
+  * Same as asm-generic/percpu.h, except that we store the per cpu offset
+  * in the TPIDRPRW. TPIDRPRW only exists on V6K and V7
 
 
