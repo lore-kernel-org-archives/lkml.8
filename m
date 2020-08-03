@@ -2,158 +2,293 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D54B6C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97938C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77B7A22CAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:00:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596484852;
-	bh=WW/ReI2Lpo+10NCbAObpKYY3zIWS1mXg+dJ8PJcCqI0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=L6MBIBr4gZMB9inNiKCVJKGtR/pqB0ApjCPP6H89RrTDdCggHdyMhCPFElBuhwdnR
-	 JEHLKX7AOCWKwNokB/6arbkKuM1+ryUtrGPFjXN2c3Y82lY0WfCXqPTj5KjY+cNscu
-	 iIUXT8y4d6r0ENiweSErafg4a2Z92chqgu0ci8f8=
+	by mail.kernel.org (Postfix) with ESMTP id 358CF207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:00:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="VIt3eudO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728701AbgHCUAv (ORCPT
+        id S1728734AbgHCUA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 16:00:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34054 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 16:00:57 -0400
+Received: from vern.gendns.com ([98.142.107.122]:41804 "EHLO vern.gendns.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727091AbgHCUAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 16:00:50 -0400
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9A0222CAF;
-        Mon,  3 Aug 2020 20:00:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596484850;
-        bh=WW/ReI2Lpo+10NCbAObpKYY3zIWS1mXg+dJ8PJcCqI0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JUcqzFd4A6yl5wjgxnvJtEqMsDIiLvFPojugVgGJCT+6YI378h8bswSw/TMYJNDO/
-         vcNeg5RjtuSF7vaCWxj8I20jj1akQOQCP42jHQmzp1H1dl8HtbMQH+N85y8yfIa56S
-         /kxD3Z/HLIAr98KvZAeuRajVevjOpt3MqUm+lVFY=
-Received: by mail-oi1-f175.google.com with SMTP id l204so5573235oib.3;
-        Mon, 03 Aug 2020 13:00:49 -0700 (PDT)
-X-Gm-Message-State: AOAM5307lHMBZ7srFqBes80CwlqEoR2bs0u+LTWrCRsGBaVBrYciRyES
-        bs/kL8o4Lpg3t82IyUlZKEs7NBaCCPK19m1Twg==
-X-Google-Smtp-Source: ABdhPJyWYwSBeWPX0Ikotw5BNtaMvn06MWvQpkwp8XBO1ywypqx8qlrtD9/CrTrHCN1+zeAP+fEy8K2k1MNq4ZAB5f4=
-X-Received: by 2002:aca:190c:: with SMTP id l12mr807066oii.147.1596484849037;
- Mon, 03 Aug 2020 13:00:49 -0700 (PDT)
+        id S1727091AbgHCUA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 16:00:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=UJzRmylWfjrnipPQYAhPIalbv2nKs4dkhNDQ4EPqfk8=; b=VIt3eudOyQGyXMxI2srAD0acVT
+        nmex0VeQiBTzTbF/yLrQcFPWxmykkhOuoJcpQ8vsEvzWr6D86/s8QxweKjWzwo6XttlQy4aFn7PR7
+        nEb5y0Si9iv8CNWwFw0NHARLykuAVnROy2oWHTByLnig6NFmPzNAORY8oWLKCuxALo4A6vzfp86r3
+        qR/phht0nbWw4PqkcdEh6g6q7WQETNjhzTr3eSMfaw39FSuFlMRODZHCiw90Iu4jEbL8apMWCxTGm
+        b0BqzwrHlkGJPFntwZdLTF5bDx7gWKVvwF3rWKe321EnWTGLheru0TTMcwlHz94MBOHxEME+GU4Eo
+        tWSsQNPQ==;
+Received: from [2600:1700:4830:165f::19e] (port=34650)
+        by vern.gendns.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <david@lechnology.com>)
+        id 1k2gde-00018T-Nf; Mon, 03 Aug 2020 16:00:50 -0400
+Subject: Re: [PATCH v4 1/5] counter: Internalize sysfs interface code
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     jic23@kernel.org, kamel.bouhara@bootlin.com, gwendal@chromium.org,
+        alexandre.belloni@bootlin.com, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, syednwaris@gmail.com,
+        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        David.Laight@ACULAB.COM
+References: <cover.1595358237.git.vilhelm.gray@gmail.com>
+ <e13d43849f68af8227c6aaa0ef672b459d47e9ab.1595358237.git.vilhelm.gray@gmail.com>
+ <7209ac3d-d1ca-1b4c-b22c-8d98b13742e2@lechnology.com>
+ <20200802210415.GA606173@shinobu>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <4061c9e4-775e-b7a6-14fa-446de4fae537@lechnology.com>
+Date:   Mon, 3 Aug 2020 15:00:49 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200715142557.17115-1-marek.behun@nic.cz> <20200715142557.17115-5-marek.behun@nic.cz>
- <20200729184809.GA569408@bogus> <20200803144634.nr5cjddyvdnv3lxo@pali>
-In-Reply-To: <20200803144634.nr5cjddyvdnv3lxo@pali>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 3 Aug 2020 14:00:37 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLvqt9VneSm3Up9ib0AH7jWytA9fss_QMfJwd8xrVEp4A@mail.gmail.com>
-Message-ID: <CAL_JsqLvqt9VneSm3Up9ib0AH7jWytA9fss_QMfJwd8xrVEp4A@mail.gmail.com>
-Subject: Re: [PATCH 4/5] PCI: aardvark: Implement driver 'remove' function and
- allow to build it as module
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc:     =?UTF-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>,
-        PCI <linux-pci@vger.kernel.org>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>, Xogium <contact@xogium.me>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200802210415.GA606173@shinobu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 3, 2020 at 8:46 AM Pali Roh=C3=A1r <pali@kernel.org> wrote:
->
-> On Wednesday 29 July 2020 12:48:09 Rob Herring wrote:
-> > On Wed, Jul 15, 2020 at 04:25:56PM +0200, Marek Beh=C3=BAn wrote:
-> > > From: Pali Roh=C3=A1r <pali@kernel.org>
-> > >
-> > > Providing driver's 'remove' function allows kernel to bind and unbind=
- devices
-> > > from aardvark driver. It also allows to build aardvark driver as a mo=
-dule.
-> > >
-> > > Compiling aardvark as a module simplifies development and debugging o=
-f
-> > > this driver as it can be reloaded at runtime without the need to rebo=
-ot
-> > > to new kernel.
-> > >
-> > > Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
-> > > Reviewed-by: Marek Beh=C3=BAn <marek.behun@nic.cz>
-> > > ---
-> > >  drivers/pci/controller/Kconfig        |  2 +-
-> > >  drivers/pci/controller/pci-aardvark.c | 25 ++++++++++++++++++++++---
-> > >  2 files changed, 23 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/=
-Kconfig
-> > > index adddf21fa381..f9da5ff2c517 100644
-> > > --- a/drivers/pci/controller/Kconfig
-> > > +++ b/drivers/pci/controller/Kconfig
-> > > @@ -12,7 +12,7 @@ config PCI_MVEBU
-> > >     select PCI_BRIDGE_EMUL
-> > >
-> > >  config PCI_AARDVARK
-> > > -   bool "Aardvark PCIe controller"
-> > > +   tristate "Aardvark PCIe controller"
-> > >     depends on (ARCH_MVEBU && ARM64) || COMPILE_TEST
-> > >     depends on OF
-> > >     depends on PCI_MSI_IRQ_DOMAIN
-> > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/cont=
-roller/pci-aardvark.c
-> > > index d5f58684d962..0a5aa6d77f5d 100644
-> > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > @@ -14,6 +14,7 @@
-> > >  #include <linux/irq.h>
-> > >  #include <linux/irqdomain.h>
-> > >  #include <linux/kernel.h>
-> > > +#include <linux/module.h>
-> > >  #include <linux/pci.h>
-> > >  #include <linux/init.h>
-> > >  #include <linux/phy/phy.h>
-> > > @@ -1114,6 +1115,7 @@ static int advk_pcie_probe(struct platform_devi=
-ce *pdev)
-> > >
-> > >     pcie =3D pci_host_bridge_priv(bridge);
-> > >     pcie->pdev =3D pdev;
-> > > +   platform_set_drvdata(pdev, pcie);
-> > >
-> > >     res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > >     pcie->base =3D devm_ioremap_resource(dev, res);
-> > > @@ -1204,18 +1206,35 @@ static int advk_pcie_probe(struct platform_de=
-vice *pdev)
-> > >     return 0;
-> > >  }
-> > >
-> > > +static int advk_pcie_remove(struct platform_device *pdev)
-> > > +{
-> > > +   struct advk_pcie *pcie =3D platform_get_drvdata(pdev);
-> > > +   struct pci_host_bridge *bridge =3D pci_host_bridge_from_priv(pcie=
-);
-> > > +
-> > > +   pci_stop_root_bus(bridge->bus);
-> > > +   pci_remove_root_bus(bridge->bus);
-> >
-> > Based on pci_host_common_remove() implementation, doesn't this need a
-> > lock around it (pci_lock_rescan_remove)?
->
-> Well, I'm not sure. I looked into other pci drivers and none of
-> following drivers pci-tegra.c, pcie-altera.c, pcie-brcmstb.c,
-> pcie-iproc.c, pcie-mediatek.c, pcie-rockchip-host.c calls
-> pci_lock_rescan_remove() and pci_unlock_rescan_remove().
+On 8/2/20 4:04 PM, William Breathitt Gray wrote:
+> On Tue, Jul 28, 2020 at 05:45:53PM -0500, David Lechner wrote:
+>> On 7/21/20 2:35 PM, William Breathitt Gray wrote:
+>>> This is a reimplementation of the Generic Counter driver interface.
 
-The mutex protects the bus->devices list, so yes I believe it is needed.
+...
 
-Rob
+>>> -F:	include/linux/counter_enum.h
+>>> +F:	include/uapi/linux/counter.h
+>>
+>> Seems odd to be introducing a uapi header here since this patch doesn't
+>> make any changes to userspace.
+> 
+> These defines are needed by userspace for the character device
+> interface, but I see your point that at this point in the patchset they
+> don't need to be exposed yet.
+> 
+> I could create temporary include/linux/counter_types.h to house these
+> defines, and then later move them to include/uapi/linux/counter.h in the
+> character device interface introduction patch. Do you think I should do
+> so?
+
+Since this patch is independent of the chardev changes and probably ready
+to merge after one more round of review, I would say it probably makes
+sense to just leave them in counter.h for now and move them to uapi when
+the chardev interface is finalized. This way, we can just merge this patch
+as soon as it is ready.
+
+> 
+>>>    
+>>>    CPMAC ETHERNET DRIVER
+>>>    M:	Florian Fainelli <f.fainelli@gmail.com>
+>>> diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
+>>> index 78766b6ec271..0f20920073d6 100644
+>>> --- a/drivers/counter/104-quad-8.c
+>>> +++ b/drivers/counter/104-quad-8.c
+>>> @@ -621,7 +621,7 @@ static const struct iio_chan_spec quad8_channels[] = {
+>>>    };
+>>>    
+>>>    static int quad8_signal_read(struct counter_device *counter,
+>>> -	struct counter_signal *signal, enum counter_signal_value *val)
+>>> +			     struct counter_signal *signal, u8 *val)
+>>
+>> I'm not a fan of replacing enum types with u8 everywhere in this patch.
+>> But if we have to for technical reasons (e.g. causes compiler error if
+>> we don't) then it would be helpful to add comments giving the enum type
+>> everywhere like this instance where u8 is actually an enum value.
+>>
+>> If we use u32 as the generic type for enums instead of u8, I think the
+>> compiler will happlily let us use enum type and u32 interchangeably and
+>> not complain.
+> 
+> I switched to fixed-width types after the suggestion by David Laight:
+> https://lkml.org/lkml/2020/5/3/159. I'll CC David Laight just in case he
+> wants to chime in again.
+> 
+> Enum types would be nice for making the valid values explicit, but there
+> is one benefit I have appreciated from the move to fixed-width types:
+> there has been a significant reduction of duplicate code; before, we had
+> a different read function for each different enum type, but now we use a
+> single function to handle them all.
+
+Yes, what I was trying to explain is that by using u32 instead of u8, I
+think we can actually do both.
+
+The function pointers in struct counter_device *counter would use u32 as a
+generic enum value in the declaration, but then the actual implementations
+could still use the proper enum type.
+
+> 
+>>> +		device_del(&counter->dev);
+>>> +		counter_sysfs_free(counter);
+>>
+>> Should sysfs be freed before deleting device? I think sysfs might be
+>> using dev still.
+> 
+> I think it's the other way around isn't it? The Counter sysfs memory
+> should stay alive for the lifetime of the device. Once the device is
+> deleted, there's nothing left to access those struct attributes, so that
+> memory can now be freed. Correct me if my reasoning is wrong here.
+
+I think you are right. I was thinking that device_del() would free
+memory, but it doesn't. It also looks like other drivers call
+device_put() after this, so maybe needed here too?
+
+>>> +static ssize_t counter_data_u8_show(struct device *dev,
+>>> +				    struct device_attribute *attr, char *buf)
+>>> +{
+>>> +	const struct counter_attribute *const a = to_counter_attribute(attr);
+>>> +	struct counter_device *const counter = dev_get_drvdata(dev);
+>>> +	const struct counter_available *const avail = a->data.priv;
+>>> +	int err;
+>>> +	u8 data;
+>>> +
+>>> +	switch (a->type) {
+>>
+>> I don't understand the use of the word "owner" here. What is being "owned"?
+>>
+>> Perhaps "component" would be a better choice?
+> 
+> I wasn't too set on calling this "owner" either, but I'm not sure if
+> "component" would make sense either because I wouldn't label a device
+> attribute as belonging to any particular component (in fact it's quite
+> the opposite).
+> 
+> Perhaps the word "scope" would be better. What do you think? Or would
+> that be too vague as well.
+
+"scope" makes sense to me.
+
+>>> -/**
+>>> - * struct counter_signal_ext - Counter Signal extensions
+>>> - * @name:	attribute name
+>>> - * @read:	read callback for this attribute; may be NULL
+>>> - * @write:	write callback for this attribute; may be NULL
+>>> - * @priv:	data private to the driver
+>>> - */
+>>> -struct counter_signal_ext {
+>>> +enum counter_data_type {
+>>> +	COUNTER_DATA_TYPE_U8,
+>>> +	COUNTER_DATA_TYPE_U64,
+>>> +	COUNTER_DATA_TYPE_BOOL,
+>>> +	COUNTER_DATA_TYPE_SIGNAL,
+>>
+>> Does this mean signal name?
+> 
+> This represents the signal values "high" or "low". With the introduction
+> of this patchset, these values are no longer strings internally so I
+> gave them their own data type here.
+
+Ah, OK. So maybe COUNTER_DATA_TYPE_SIGNAL_LEVEL would be a better name.
+
+> 
+>>> +	COUNTER_DATA_TYPE_COUNT_FUNCTION,
+>>> +	COUNTER_DATA_TYPE_SYNAPSE_ACTION,
+>>> +	COUNTER_DATA_TYPE_ENUM,
+>>
+>> Why do some enums get their own type while others use a common
+>> generic ENUM type?
+> 
+> COUNTER_DATA_TYPE_ENUM is intended for driver-specific Counter enums.
+> This allows driver authors to define their own Counter enums so that we
+> don't pollute the Generic Counter interface with enums that are unique
+> to individual drivers.
+> 
+>>> +	COUNTER_DATA_TYPE_COUNT_DIRECTION,
+>>> +	COUNTER_DATA_TYPE_COUNT_MODE,
+>>
+>> Would be nice to group all COUNTER_DATA_TYPE_COUNT_* together
+> 
+> I assume you're referring to COUNTER_DATA_TYPE_COUNT_FUNCTION being
+> separate from these two. That's because a "count function" is actually
+> part of the Generic Counter paradigm: it's the trigger operation for the
+> Synapse.
+> 
+> In retrospect, I should have named it "trigger operation" or something
+> similar when I developed the paradigm originally, but hindsight is
+> 20/20 (I'd probably rename "Synapse" to something else too if I could).
+> It's unfortunately too late to rename this because we've exposed it to
+> userspace already as a named sysfs attribute.
+> 
+> Perhaps I can rename this enum constant however to
+> COUNTER_DATA_TYPE_FUNCTION, or similar, to differentiate it from the
+> Count extensions.
+> 
+
+Yes, I think COUNTER_DATA_TYPE_FUNCTION would be sufficient and avoid
+confusion.
+
+>>>    /**
+>>>     * struct counter_device - Counter data structure
+>>> - * @name:		name of the device as it appears in the datasheet
+>>> + * @name:		name of the device
+>>>     * @parent:		optional parent device providing the counters
+>>> - * @device_state:	internal device state container
+>>> - * @ops:		callbacks from driver
+>>> + * @signal_read:	optional read callback for Signals. The read value of
+>>> + *			the respective Signal should be passed back via the
+>>> + *			value parameter.
+>>> + * @count_read:		optional read callback for Counts. The read value of the
+>>> + *			respective Count should be passed back via the value
+>>> + *			parameter.
+>>> + * @count_write:	optional write callback for Counts. The write value for
+>>> + *			the respective Count is passed in via the value
+>>> + *			parameter.
+>>> + * @function_read:	optional read callback the Count function modes. The
+>>> + *			read function mode of the respective Count should be
+>>> + *			passed back via the function parameter.
+>>> + * @function_write:	option write callback for Count function modes. The
+>>> + *			function mode to write for the respective Count is
+>>> + *			passed in via the function parameter.
+>>> + * @action_read:	optional read callback the Synapse action modes. The
+>>> + *			read action mode of the respective Synapse should be
+>>> + *			passed back via the action parameter.
+>>> + * @action_write:	option write callback for Synapse action modes. The
+>>> + *			action mode to write for the respective Synapse is
+>>> + *			passed in via the action parameter.
+>>>     * @signals:		array of Signals
+>>
+>> Why not keep the ops struct?
+> 
+> Defining static ops structures in the drivers seemed to have no
+> advantage when those callbacks are always used via the counter_device
+> structure. I decided it'd be simpler to just set them directly in the
+> counter_device structure then.
+> 
+> I could reorganize them into an ops structure again if there's enough
+> interest.
+
+I've been working on really constrained systems lately where every byte
+counts, so this stuck out to me since there would be a copy of all
+functions for each counter instance. But probably not that big of a deal
+in the Linux kernel. :-)
+
