@@ -2,96 +2,113 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F14B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8077C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 008052086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:05:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596492349;
-	bh=X6WdBPxf34CLsndAxzKDBKs7P4jjlUHINtNz27tQpYc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=d52bPl5oosT6WHm8TPRAlNMtW54APKFiCYoNeZKs1v43FDBb6nmSZRijasOuv9wlI
-	 GoUXDUNDdLAEzdwsunv9rSXS681o1HPsD+7y2SISWIabe+Lh9d/pHs9ZkCYp9rn9Ck
-	 /ezLjdTjVG+ipCVhCOJYDDpTFWjfVrPq13rfJtWs=
+	by mail.kernel.org (Postfix) with ESMTP id DC00C208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:08:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="WYjnd6dI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728906AbgHCWFr (ORCPT
+        id S1729493AbgHCWIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 18:05:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726948AbgHCWFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 18:05:46 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 534B42076E;
-        Mon,  3 Aug 2020 22:05:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596492346;
-        bh=X6WdBPxf34CLsndAxzKDBKs7P4jjlUHINtNz27tQpYc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cD0oNsHzMJYFlo7NJY+14b8LFsjnY/fabss2Dp6pWOzfk4L4t6V5PKdiwN3f5wb4D
-         E5Llb/YTiPU6f1RjV4PFopEV0WWg+7XOre3O642Fo1q9zBS+BVmTy24Hepj/w0uegh
-         s9+bHNL2C1dWHp205OZBvr3rXMPVhaRfow1CDYew=
-Date:   Mon, 3 Aug 2020 15:05:44 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Luo bin <luobin9@huawei.com>
-Cc:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
-        <chiqijun@huawei.com>
-Subject: Re: [PATCH net-next v3 1/2] hinic: add generating mailbox random
- index support
-Message-ID: <20200803150544.57dbe802@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200801024935.20819-2-luobin9@huawei.com>
-References: <20200801024935.20819-1-luobin9@huawei.com>
-        <20200801024935.20819-2-luobin9@huawei.com>
+        Mon, 3 Aug 2020 18:08:10 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:60894 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728708AbgHCWIK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 18:08:10 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 3F70520B4908;
+        Mon,  3 Aug 2020 15:08:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3F70520B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1596492489;
+        bh=lOuSme48DtaAahlNbilkFH/6Rv176zUXrsFgRlysqqs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=WYjnd6dI4uoxBT0ptGFkjCRUWPUHavtt0YrQ+lPKDy6IEvcbD5UPs8HJ3W6vikKvE
+         TiEHmYJcr9dIdemFW9y/E4Z45wzY7Fcf1YQc1I/0SA/teBekYShIVQOvFhhLfizxUE
+         bX0N0toB9j6tQQ4f1YHNrFtNkSQ/72Ghl9PWNFJw=
+Subject: Re: [PATCH v5 3/4] LSM: Define SELinux function to measure state and
+ policy
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Tyler Hicks <tyhicks@linux.microsoft.com>, sashal@kernel.org,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200730034724.3298-1-nramas@linux.microsoft.com>
+ <20200730034724.3298-4-nramas@linux.microsoft.com>
+ <dfd6f9c8-d62a-d278-9b0e-6b1f5ad03d3e@gmail.com>
+ <6371efa9-5ae6-05ac-c357-3fbe1a5a93d5@linux.microsoft.com>
+ <CAEjxPJ789kmdDwy-6RaL7HuMFxKpQ9Hwxj9J-_-f62XDCNJUiA@mail.gmail.com>
+ <f992901f-6dca-7d31-3426-5a74d36c2c8c@gmail.com>
+ <d988a6d0-04e0-62f0-2705-4352b268ca55@linux.microsoft.com>
+ <5c843a3d-713c-e71f-8d4f-c6e5f51422f1@gmail.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <3e766eed-7a0b-afca-6139-ac43dea053d7@linux.microsoft.com>
+Date:   Mon, 3 Aug 2020 15:08:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <5c843a3d-713c-e71f-8d4f-c6e5f51422f1@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 1 Aug 2020 10:49:34 +0800 Luo bin wrote:
-> add support to generate mailbox random id of VF to ensure that
-> mailbox messages PF received are from the correct VF.
+On 8/3/20 2:07 PM, Stephen Smalley wrote:
+
+>>>> [   68.870715] irq event stamp: 23486085
+>>>> [   68.870715] hardirqs last  enabled at (23486085):
+>>>> [<ffffffffaa419406>] _raw_spin_unlock_irqrestore+0x46/0x60
+>>>> [   68.870715] hardirqs last disabled at (23486084):
+>>>> [<ffffffffaa419443>] _raw_spin_lock_irqsave+0x23/0x90
+>>>> [   68.870715] softirqs last  enabled at (23486074):
+>>>> [<ffffffffaa8004f3>] __do_softirq+0x4f3/0x662
+>>>> [   68.870715] softirqs last disabled at (23486067):
+>>>> [<ffffffffaa601072>] asm_call_on_stack+0x12/0x20
+>>>> [   68.870715] ---[ end trace fb02740ff6f4d0cd ]---
+>>>
+>>> I think one issue here is that systemd loads SELinux policy first, 
+>>> then IMA policy, so it doesn't know whether it needs to measure 
+>>> SELinux policy on first policy load, and another issue is that the 
+>>> policy is too large to just queue the policy data itself this way (or 
+>>> you need to use an allocator that can handle larger sizes).
+>>>
+>>
+>> The problem seems to be that a lock is held when the IMA hook to 
+>> measure the LSM state is called. So memory allocation is not allowed, 
+>> but the hook is doing an allocation. I'll address this - thanks for 
+>> catching it.
+>>
+>> I have the following CONFIGs enabled, but I still don't see the above 
+>> issue on my machine.
+>>
+> The warning has to do with the memory allocation order being above the 
+> max order supported for kmalloc.  I think the problem is that 
+> ima_alloc_data_entry() is using kmemdup() to duplicate a payload of 
+> arbitrary size.  Policies on e.g. Fedora can be quite large, so you 
+> can't assume they can be allocated with kmalloc and friends.
 > 
-> Signed-off-by: Luo bin <luobin9@huawei.com>
-> ---
-> V2~V3 fix review opinions pointed out by Jakub
 
-In the future please specify what was changed, e.g.:
+Thanks for clarifying. Yes ima_alloc_entry() does use kmemdup to save 
+the given buffer (to be measured) until IMA loads custom policy.
 
- - use get_random_u32()
- - remove unnecessary parenthesis
+On my machine the SELinux policy size is about 2MB.
 
-etc.
+Perhaps vmalloc would be better than using kmalloc? If there are better 
+options for such large buffer allocation, please let me know.
 
-> +int hinic_vf_mbox_random_id_init(struct hinic_hwdev *hwdev)
-> +{
-> +	u8 vf_in_pf;
-> +	int err = 0;
-> +
-> +	if (HINIC_IS_VF(hwdev->hwif))
-> +		return 0;
-> +
-> +	for (vf_in_pf = 1; vf_in_pf <= hwdev->nic_cap.max_vf; vf_in_pf++) {
-> +		err = set_vf_mbox_random_id(hwdev, hinic_glb_pf_vf_offset
-> +					    (hwdev->hwif) + vf_in_pf);
-
-I'm sorry but you must put the call to hinic_glb_pf_vf_offset() on a
-separate line. Perhaps take this call out of the for loop entirely?
-
-The way it's written with the parenthesis on the next line is hard to
-read.
-
-> +		if (err)
-> +			break;
-> +	}
+  -lakshmi
