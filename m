@@ -2,262 +2,451 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE01BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0711C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0A0F2076B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:33:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596450808;
-	bh=LRK9PlCCJUkY85kcKEjE7dncwH1viAnaLVZaXzBQuvM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=EQi3wUOe7hfCnFSgu6XyH2y76t5IT+eEw2X/zC3gZ9kyOdC5AA0Uc/roSA5jJdZK7
-	 t38X3l7sBjhnGkFMC5LL1j8IY68uCH6Dy8WiFFRvuUr3xpQ49jF5iEKztdwabF0gYS
-	 6UeTEnwTcNvuNOy7qAc/K4xkkX68ZNYdLLjQgJ7o=
+	by mail.kernel.org (Postfix) with ESMTP id CA9FA20719
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 10:34:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbgHCKd2 (ORCPT
+        id S1726534AbgHCKe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 06:33:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbgHCKd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 06:33:26 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 678D020719;
-        Mon,  3 Aug 2020 10:33:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596450804;
-        bh=LRK9PlCCJUkY85kcKEjE7dncwH1viAnaLVZaXzBQuvM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=raRRFGHU/ieoo3j7kiXI4Tf2xZ1nUxwrxauVjI4KGHruaplPkIMsjSb8W/0REdlCN
-         PiO8wPUEDcGaNI411auMKbrDwgciXcqynw00Kf8pV8GzZLs6JPke/G3t3JB1oz0UB/
-         AGEc0CNnCWZmYqCExTIE6AkaR8VMIcTfTUNlNxsc=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k2XmV-00H48f-HP; Mon, 03 Aug 2020 11:33:23 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Andy Gross <agross@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Hanks Chen <hanks.chen@mediatek.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Justin Chen <justinpopo6@gmail.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        kernel test robot <lkp@intel.com>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Oscar Carter <oscar.carter@gmx.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Todd Kjos <tkjos@google.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        linux-kernel@vger.kernel.org, kernel-team@android.com
-Subject: [GIT PULL] irqchip updates for 5.9
-Date:   Mon,  3 Aug 2020 11:33:12 +0100
-Message-Id: <20200803103312.151801-1-maz@kernel.org>
-X-Mailer: git-send-email 2.27.0
+        Mon, 3 Aug 2020 06:34:59 -0400
+Received: from ec2-3-21-30-127.us-east-2.compute.amazonaws.com ([3.21.30.127]:47552
+        "EHLO www.teo-en-ming.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbgHCKe7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 06:34:59 -0400
+Received: from localhost (localhost [IPv6:::1])
+        by www.teo-en-ming.com (Postfix) with ESMTPA id CD1214049CA;
+        Mon,  3 Aug 2020 18:34:57 +0800 (+08)
 MIME-Version: 1.0
+Date:   Mon, 03 Aug 2020 18:34:57 +0800
+From:   Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     ceo@teo-en-ming-corp.com
+Subject: =?UTF-8?Q?Teo_En_Ming=27s_Guide_to_Configuring_SSL_VPN_for_Cisco?=
+ =?UTF-8?Q?_ASA_5506-X_Firepower_Firewall_with_Let=E2=80=99s_Encrypt_SSL_C?=
+ =?UTF-8?Q?ertificates=2C_LDAP/Active_Directory_Primary_Authentication_and?=
+ =?UTF-8?Q?_Duo_2FA_Secondary_Authentication?=
+Message-ID: <151ee41881749de4afc3e67a967e6156@teo-en-ming.com>
+X-Sender: ceo@teo-en-ming.com
+User-Agent: Roundcube Webmail/1.2.3
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, alexandre.belloni@bootlin.com, alexandre.torgue@st.com, agross@kernel.org, bgolaszewski@baylibre.com, bjorn.andersson@linaro.org, claudiu.beznea@microchip.com, fabien.dessenne@st.com, f.fainelli@gmail.com, gregkh@linuxfoundation.org, grygorii.strashko@ti.com, gustavoars@kernel.org, hanks.chen@mediatek.com, chenhc@lemote.com, hulkci@huawei.com, jason@lakedaemon.net, lvjianmin@loongson.cn, jiaxun.yang@flygoat.com, qiangqing.zhang@nxp.com, joro@8bytes.org, john.stultz@linaro.org, justinpopo6@gmail.com, kdasu.kdev@gmail.com, lkp@intel.com, ilina@codeaurora.org, linus.walleij@linaro.org, masahiroy@kernel.org, mkshah@codeaurora.org, oscar.carter@gmx.com, rafael.j.wysocki@intel.com, rdunlap@infradead.org, saravanak@google.com, yangtiezhu@loongson.cn, tkjos@google.com, weiyongjun1@huawei.com, yuzenghui@huawei.com, linux-kernel@vger.kernel.org, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+Subject: Teo En Ming's Guide to Configuring SSL VPN for Cisco ASA 5506-X 
+Firepower Firewall with Let’s Encrypt SSL Certificates, LDAP/Active 
+Directory Primary Authentication and Duo 2FA Secondary Authentication
 
-Here's the irqchip updates for 5.9. Although it is rather large this
-time around, it is mostly a collection of random cleanups and minor
-improvements. The most notable additions is a set of helpers for
-platform irqchip drivers to be built as modules.
+Author: Mr. Turritopsis Dohrnii Teo En Ming (Targeted Individual)
+Country: Singapore
+Date Published: 3rd August 2020 Monday Singapore Time
+Type of Publication: Plain Text
 
-I may have a second pull request later if the TI folks can sort their
-dependency nightmare, but don't hold your breath.
+INTRODUCTION
+============
 
-Please pull,
+Cisco ASA firewall appliances use open source software.
 
-	M.
+Cisco Adaptive Security Appliance Software, version 9.8
+Copyright (c) 1996-2019 by Cisco Systems, Inc.
+For licenses and notices for open source software used in this product, 
+please visit
+http://www.cisco.com/go/asa-opensource
 
-The following changes since commit 48778464bb7d346b47157d21ffde2af6b2d39110:
+The basic configuration of the Cisco ASA 5506-X Firepower firewall was 
+completed by a previous IT consultant previously (date unknown), so I 
+shall not cover it here. I will cover configuration of the Cisco ASA 
+5506-X Firepower firewall from Phase 1 onwards, as described below.
 
-  Linux 5.8-rc2 (2020-06-21 15:45:29 -0700)
+The Cisco ASA 5506-X Firepower firewall costs about SGD$1000 in 
+Singapore, with refurbished units costing around SGD$500.
 
-are available in the Git repository at:
+PHASE 1: Basic Configuration of SSL VPN on Cisco ASA 5506-X Firepower 
+Firewall
+==============================================================================
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git tags/irqchip-5.9
+Reference Guide: Cisco ASA Anyconnect Remote Access VPN
+Link: 
+https://networklessons.com/cisco/asa-firewall/cisco-asa-anyconnect-remote-access-vpn
 
-for you to fetch changes up to ac62460c24126eb2442e3653a266ebbf05b004d8:
+Cisco ASA firewall CLI commands:
 
-  irqchip/loongson-pch-pic: Fix the misused irq flow handler (2020-07-30 12:58:17 +0100)
+enable
 
-----------------------------------------------------------------
-irqchip updates for Linux 5.9
+config t
 
-- Add infrastructure to allow DT irqchip platform drivers to
-  be built as modules
-- Allow qcom-pdc, mtk-cirq and mtk-sysirq to be built as module
-- Fix ACPI probing to avoid abusing function pointer casting
-- Allow bcm7120-l2 and brcmstb-l2 to be used as wake-up sources
-- Teach NXP's IMX INTMUX some power management
-- Allow stm32-exti to be used as a hierarchical irqchip
-- Let stm32-exti use the hw spinlock API in its full glory
-- A couple of GICv4.1 fixes
-- Tons of cleanups (mtk-sysirq, aic5, bcm7038-l1, imx-intmux,
-  brcmstb-l2, ativic32, ti-sci-inta, lonsoon, MIPS GIC, GICv3)
+You can download Cisco AnyConnect Secure Mobility Client version 
+3.1.03103 at the following link.
 
-----------------------------------------------------------------
-Alexandre Torgue (1):
-      irqchip/stm32-exti: Map direct event to irq parent
+http://www.firewall.cx/downloads/doc_details/98-anyconnect-secure-mobility-client-win-mac-linux.html?tmpl=component
 
-Bartosz Golaszewski (1):
-      irqchip/irq-mtk-sysirq: Replace spinlock with raw_spinlock
+Install Filezilla FTP server on the Active Directory Domain Controller.
 
-Claudiu Beznea (1):
-      irqchip/atmel-aic5: Add support for sam9x60 rtt fixup
+Create ftp username “anonymous” with empty password.
 
-Fabien Dessenne (1):
-      irqchip/stm32-exti: Use the hwspin_lock_timeout_in_atomic() API
+copy ftp://anonymous@<IP address of FTP server>/ 
+anyconnect-win-3.1.03103-k9.pkg
 
-Florian Fainelli (5):
-      dt-bindings: interrupt-controller: Document Broadcom STB HIF L2
-      dt-bindings: interrupt-controller: Document UPG auxiliary L2
-      irqchip/brcmstb-l2: Match UPG_AUX_AON_INTR2 compatible
-      irqchip/irq-bcm7038-l1: Allow building on ARM 32-bit
-      irqchip/irq-bcm7038-l1: Guard uses of cpu_logical_map
+delete flash:filename.pkg
 
-Gustavo A. R. Silva (1):
-      irqchip/imx-intmux: Use struct_size() helper in devm_kzalloc()
+config t
 
-Huacai Chen (4):
-      dt-bindings: interrupt-controller: Update Loongson HTVEC description
-      irqchip/loongson-liointc: Fix misuse of gc->mask_cache
-      irqchip/loongson-htvec: Support 8 groups of HT vectors
-      irqchip/loongson-pch-pic: Fix the misused irq flow handler
+webvpn
 
-Joakim Zhang (1):
-      irqchip/imx-intmux: Implement intmux runtime power management
+anyconnect image flash:/anyconnect-win-3.1.03103-k9.pkg
 
-John Stultz (3):
-      irqdomain: Export irq_domain_update_bus_token
-      genirq: Export irq_chip_retrigger_hierarchy and irq_chip_set_vcpu_affinity_parent
-      irqchip/qcom-pdc: Allow QCOM_PDC to be loadable as a permanent module
+enable outside
 
-Justin Chen (2):
-      irqchip/bcm7120-l2: Set controller as wake-up source
-      irqchip/brcmstb-l2: Set controller as wake-up source
+anyconnect enable
 
-Kamal Dasu (1):
-      irqchip/brcmstb-l2: Match HIF_SPI_INTR2 compatible
+sysopt connection permit-vpn
 
-Linus Walleij (2):
-      irqchip/vic: Drop cascaded intialization call
-      irqchip/vic: Cut down the external API
+http redirect OUTSIDE 80
 
-Marc Zyngier (1):
-      irqchip: Fix IRQCHIP_PLATFORM_DRIVER_* compilation by including module.h
+ip local pool VPN_POOL 192.168.168.100-192.168.168.200 mask 
+255.255.255.0
 
-Masahiro Yamada (1):
-      irqchip/ativic32: Constify irq_domain_ops
+192.168.168.0 is the VPN Pool.
 
-Oscar Carter (3):
-      drivers/acpi: Add new macro ACPI_DECLARE_SUBTABLE_PROBE_ENTRY
-      drivers/irqchip: Use new macro ACPI_DECLARE_SUBTABLE_PROBE_ENTRY
-      drivers/acpi: Remove function cast
+access-list SPLIT_TUNNEL standard permit 192.168.1.0 255.255.255.0
 
-Randy Dunlap (1):
-      irqchip: irq-bcm2836.h: drop a duplicated word
+192.168.1.0 is the inside network behind the Cisco ASA firewall.
 
-Saravana Kannan (4):
-      irqchip: Add IRQCHIP_PLATFORM_DRIVER_BEGIN/END and IRQCHIP_MATCH helper macros
-      irqchip/qcom-pdc: Switch to using IRQCHIP_PLATFORM_DRIVER helper macros
-      irqchip/mtk-sysirq: Convert to a platform driver
-      irqchip/mtk-cirq: Convert to a platform driver
+group-policy ANYCONNECT_POLICY internal
 
-Tiezhu Yang (10):
-      irqchip/ti-sci-inta: Remove dead code in ti_sci_inta_set_type()
-      irqchip/ti-sci-inta: Fix return value about devm_ioremap_resource()
-      irqchip/ti-sci-inta: Fix typo about MODULE_AUTHOR
-      irqchip/loongson-htpic: Remove redundant kfree operation
-      irqchip/loongson-htpic: Remove unneeded select of I8259
-      irqchip/loongson-htvec: Fix potential resource leak
-      irqchip/loongson-htvec: Check return value of irq_domain_translate_onecell()
-      irqchip/loongson-pch-pic: Check return value of irq_domain_translate_twocell()
-      irqchip/loongson-pch-msi: Remove unneeded variable
-      irqchip/loongson-liointc: Fix potential dead lock
+group-policy ANYCONNECT_POLICY attributes
 
-Wei Yongjun (2):
-      irqchip/mips-gic: Make local symbols static
-      irqchip/imx-intmux: Fix irqdata regs save in imx_intmux_runtime_suspend()
+vpn-tunnel-protocol ssl-client ssl-clientless
 
-Zenghui Yu (4):
-      genirq/irqdomain: Remove redundant NULL pointer check on fwnode
-      irqchip/gic-v3: Remove unused register definition
-      irqchip/gic-v4.1: Ensure accessing the correct RD when writing INVALLR
-      irqchip/gic-v4.1: Use GFP_ATOMIC flag in allocate_vpe_l1_table()
+split-tunnel-policy tunnelspecified
 
- .../bindings/interrupt-controller/brcm,l2-intc.txt |   5 +-
- .../interrupt-controller/loongson,htvec.yaml       |   4 +-
- drivers/irqchip/Kconfig                            |   3 +-
- drivers/irqchip/irq-ativic32.c                     |   2 +-
- drivers/irqchip/irq-atmel-aic5.c                   |   8 +-
- drivers/irqchip/irq-bcm7038-l1.c                   |  11 ++
- drivers/irqchip/irq-bcm7120-l2.c                   |   8 +-
- drivers/irqchip/irq-brcmstb-l2.c                   |   5 +
- drivers/irqchip/irq-gic-v3-its.c                   |  14 +-
- drivers/irqchip/irq-gic-v3.c                       |   2 +-
- drivers/irqchip/irq-gic.c                          |   2 +-
- drivers/irqchip/irq-imx-intmux.c                   |  70 ++++++++-
- drivers/irqchip/irq-loongson-htpic.c               |   6 +-
- drivers/irqchip/irq-loongson-htvec.c               |  32 ++--
- drivers/irqchip/irq-loongson-liointc.c             |  11 +-
- drivers/irqchip/irq-loongson-pch-msi.c             |   7 +-
- drivers/irqchip/irq-loongson-pch-pic.c             |  30 ++--
- drivers/irqchip/irq-mips-gic.c                     |  10 +-
- drivers/irqchip/irq-mtk-cirq.c                     |   4 +-
- drivers/irqchip/irq-mtk-sysirq.c                   |  12 +-
- drivers/irqchip/irq-stm32-exti.c                   | 166 +++++++++++----------
- drivers/irqchip/irq-ti-sci-inta.c                  |   6 +-
- drivers/irqchip/irq-vic.c                          |  26 +---
- drivers/irqchip/irqchip.c                          |  29 ++++
- drivers/irqchip/qcom-pdc.c                         |   8 +-
- include/linux/acpi.h                               |  23 ++-
- include/linux/irqchip.h                            |  29 +++-
- include/linux/irqchip/arm-gic-v3.h                 |   4 -
- include/linux/irqchip/arm-vic.h                    |  11 --
- include/linux/irqchip/irq-bcm2836.h                |   2 +-
- kernel/irq/chip.c                                  |   3 +-
- kernel/irq/irqdomain.c                             |   3 +-
- 32 files changed, 346 insertions(+), 210 deletions(-)
+split-tunnel-network-list value SPLIT_TUNNEL
+
+dns-server value 8.8.8.8
+
+webvpn
+
+anyconnect keep-installer installed
+
+anyconnect ask none default anyconnect
+
+anyconnect dpd-interval client 30
+
+exit
+
+tunnel-group MY_TUNNEL type remote-access
+
+tunnel-group MY_TUNNEL general-attributes
+
+default-group-policy ANYCONNECT_POLICY
+
+address-pool VPN_POOL
+
+exit
+
+tunnel-group MY_TUNNEL webvpn-attributes
+
+group-alias TEO_EN_MING_CORPORATION_SSL_VPN_USERS enable
+
+username teo-en-ming password password
+
+username teo-en-ming attributes
+
+service-type remote-access
+
+copy run start
+
+PHASE 2: Installing 90-day Free Let's Encrypt SSL Certificate on Cisco 
+ASA 5506-X Firepower Firewall SSL VPN
+============================================================================================================
+
+show flash
+
+Check for asdm-xxx.bin
+
+Go to https://<IP address of Cisco ASA 5506-X firewall>
+
+Install Java Web Start
+
+Install ASDM Launcher
+
+On the Cisco ASDM:
+
+Device IP address / Name: <private IP address of Cisco ASA 5506-X 
+firewall>
+Username: <empty>
+Password: cisco <default password>
+
+Follow the rest of the instructions at the following link.
+
+Reference Guide: INSTALLING A FREE CERTIFICATE ON A CISCO ASA FIREWALL 
+FOR ANYCONNECT
+Link: 
+https://www.ipconfigz.com/installing-a-free-certificate-on-a-cisco-asa-firewall-for-anyconnect/
+
+copy run start
+
+config t
+
+pager 0
+
+show run
+
+PHASE 3: Configure LDAP/Active Directory Primary Authentication for 
+Cisco ASA 5506-X SSL VPN
+============================================================================================
+
+Reference Guide: Configure LDAP Authentication for WebVPN Users
+Link: 
+https://www.cisco.com/c/en/us/support/docs/security/asa-5500-x-series-next-generation-firewalls/98625-asa-ldap-authentication.html
+
+dsquery user -samid administrator
+"CN=Administrator,CN=Users,DC=teo-en-ming-corp,DC=com"
+
+enable
+
+configure terminal
+
+aaa-server LDAP_SRV_GRP protocol ldap
+
+aaa-server LDAP_SRV_GRP (inside_1) host <private IP address of AD DC 
+server>
+
+ldap-base-dn dc=teo-en-ming-corp,dc=com
+
+ldap-login-dn cn=ldapadmin,cn=users,dc=teo-en-ming-corp,dc=com
+
+ldap-login-password password
+
+ldap-naming-attribute sAMAccountName
+
+ldap-scope subtree
+
+server-type microsoft
+
+exit
+
+tunnel-group MY_TUNNEL general-att
+
+authentication-server-group LDAP_SRV_GRP
+
+Testing LDAP Authentication in Phase 3
+======================================
+
+debug ldap 255
+
+test aaa-server authentication LDAP_SRV_GRP host <IP address of AD DC 
+server> username administrator password password
+
+Troubleshooting for Phase 3
+============================
+
+[1] Troubleshooting LDAP Connections to Active Directory Using Apache 
+Directory Studio
+Link: 
+https://www.jamf.com/jamf-nation/articles/224/troubleshooting-ldap-connections-to-active-directory-using-apache-directory-studio
+
+[2] Cisco – LDAP AAA Error ‘AAA Server has been removed”
+Link: https://www.petenetlive.com/KB/Article/0001271
+
+[3] ASA 9.8, Bridge groups, and LDAP authentication
+Link: 
+https://www.reddit.com/r/Cisco/comments/80qezi/asa_98_bridge_groups_and_ldap_authentication/
+
+In this discussion, a Cisco ASA software bug has been found which 
+prevents the Cisco ASA firewall from communicating with the LDAP 
+server/Active Directory Domain Controller. To resolve this issue, a 
+firmware upgrade is required.
+
+
+PHASE 4: How to Install Duo 2FA Secondary Authentication for Cisco ASA 
+5506-X SSL VPN
+=====================================================================================
+
+Follow the Duo Authentication setup instructions at the following link.
+
+Reference Guide: Cisco ASA SSL VPN for Browser and AnyConnect
+Link: https://duo.com/docs/ciscoasa-ldap
+
+Then follow the guide below.
+
+Reference Guide: CISCO ASA Enable DNS Lookup Problem
+Link: 
+https://community.cisco.com/t5/network-security/cisco-asa-enable-dns-lookup-problem/td-p/1764736
+
+conf t
+
+dns domain-lookup Outside
+
+dns server-group DefaultDNS
+
+name-server 8.8.8.8
+
+name-server 8.8.4.4
+
+exit
+
+Phase 5: Upgrade Firmware and ASDM of Cisco ASA 5506-X Firepower 
+Firewall
+=========================================================================
+
+copy run start
+
+Follow the rest of the instructions at the following link.
+
+Reference Guide: ASA 9.x : Upgrade a Software Image using ASDM or CLI 
+Configuration Example
+Link: 
+https://www.cisco.com/c/en/us/support/docs/security/asa-5500-x-series-next-generation-firewalls/200142-ASA-9-x-Upgrade-a-Software-Image-using.html
+
+Phase 6: Configure NAT Exemption on the Cisco ASA 5506-X Firewall
+=================================================================
+
+Why do we need to configure NAT exemption on the Cisco ASA 5506-X 
+Firepower firewall? Because otherwise, the Cisco AnyConnect Secure 
+Mobility Client cannot access the remote LAN
+behind the Cisco ASA firewall.
+
+access-list NAT-EXEMPT extended permit ip 192.168.1.0 255.255.255.0 
+192.168.168.0 255.255.255.0
+
+object network obj-vpn_ip_address_pool
+
+subnet 192.168.168.0 255.255.255.0
+
+nat (inside_1,outside) source static any any destination static 
+obj-vpn_ip_address_pool obj-vpn_ip_address_pool
+
+no access-list SPLIT_TUNNEL standard permit 192.168.1.0 255.255.255.0
+
+MUST READ ARTICLES FOR PHASE 6
+==============================
+
+[1] Quick guide: AnyConnect Client VPN on Cisco ASA 5505
+Link: 
+https://www.techrepublic.com/blog/smb-technologist/quick-guide-anyconnect-client-vpn-on-cisco-asa-5505/
+
+QUOTE:
+
+"Do not use the same subnet as your inside network. So, if you're using 
+192.168.100.0/24 for the inside, use 192.168.104.0/24 for your VPN 
+pool."
+
+[2] How to configure NAT Exemption in version 8.3 for VPN in Cisco ASA?
+Link: 
+http://networkqna.com/how-to-configure-nat-exemption-in-version-8-3-for-vpn-in-cisco-asa/
+
+Phase 7: Configuring Dynamic DNS (DDNS)
+=======================================
+
+The Cisco ASA 5506-X Firepower Firewall does not support Dynamic DNS 
+update using the HTTP POST method. The Cisco ASA only supports DDNS 
+update using the Internet Engineering Task Force (IETF) method.
+
+Since the Cisco ASA does not support the HTTP Post method, it CANNOT 
+work with NO-IP and DynDNS DDNS service providers.
+
+The following are the results of my research on the Internet:
+
+[01] With its sole reliance on the IETF method, websites such as 
+DynDns.org cannot be updated using the ASA, however support has been 
+added for HTTPS using port 443.
+
+Link: 
+https://www.globalknowledge.com/ca-en/resources/resource-library/articles/implementing-dynamic-dns-on-cisco-ios-router-and-asa/
+
+[02] If you're asking if you can get the ASA5505 to "register" with 
+dyndns, the answer is no. Howeve, it appears that someone got a feature 
+request added, though, under Cisco BugID CSCsl46782 . (If you don't have 
+a Cisco service contract, you can't view the details). However, it looks 
+like it has an extremely low priority and I wouldn't expect it to be 
+added anytime soon.
+
+Link: 
+https://serverfault.com/questions/272825/dyndns-updating-ip-address-via-cisco-asa-5505
+
+PROPOSED WORKAROUND SOLUTION FOR PHASE 7
+========================================
+
+I would propose installing Dynamic DNS updater client software on AD DC 
+server or any of your office computers which are permanently powered on.
+
+ACTUAL SOLUTION FOR PHASE 7
+===========================
+
+Sign up for free No-IP account.
+
+Create hostname teo-en-ming-corp.ddns.net, and point it to public IP 
+address of the Cisco ASA firewall.
+
+Install no-ip dynamic update client (duc) in any 24x7 computer behind 
+the Cisco ASA firewall.
+
+Create DNS CNAME record sslvpn.teo-en-ming-corp.com and point it to 
+teo-en-ming-corp.ddns.net
+
+Phase 8: Synchronizing Users from Active Directory to Duo
+=========================================================
+
+Follow the setup instructions at the following link.
+
+Reference Guide: Synchronizing Users from Active Directory
+Link: https://duo.com/docs/adsync
+
+dsquery user -samid teoenming
+"CN=Turritopsis Dohrnii Teo En 
+Ming,OU=Users,OU=Singapore,DC=teo-en-ming-corp,DC=com"
+
+Phase 9: Enrolling Users at Duo
+===============================
+
+Reference Guide: Enrolling Users at Duo
+Link: https://duo.com/docs/enrolling-users
+
+Duo Admin Panel Login
+Link: https://admin.duosecurity.com/
+
+Phase 9 is the final phase.
+
+===EOF===
+
+
+
+
+
+
+
+-----BEGIN EMAIL SIGNATURE-----
+
+The Gospel for all Targeted Individuals (TIs):
+
+[The New York Times] Microwave Weapons Are Prime Suspect in Ills of
+U.S. Embassy Workers
+
+Link: 
+https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microwave.html
+
+********************************************************************************************
+
+Singaporean Mr. Turritopsis Dohrnii Teo En Ming's Academic
+Qualifications as at 14 Feb 2019 and refugee seeking attempts at the 
+United Nations Refugee Agency Bangkok (21 Mar 2017), in Taiwan (5 Aug 
+2019) and Australia (25 Dec 2019 to 9 Jan 2020):
+
+[1] https://tdtemcerts.wordpress.com/
+
+[2] https://tdtemcerts.blogspot.sg/
+
+[3] https://www.scribd.com/user/270125049/Teo-En-Ming
+
+-----END EMAIL SIGNATURE-----
