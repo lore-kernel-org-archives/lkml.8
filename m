@@ -2,134 +2,106 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECBAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D901C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58D782070A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:45:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED4BB22B45
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:47:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V9f/uuwQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgHCSpq (ORCPT
+        id S1726688AbgHCSrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 14:45:46 -0400
-Received: from mga11.intel.com ([192.55.52.93]:61191 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726189AbgHCSpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 14:45:46 -0400
-IronPort-SDR: sjPImZ9FUQ9UMPK7NCbQV/+L5fLXpUbeHmtz3WXAdhtzGkfXu/MRilQNRtkYJEMP0fjZOazQul
- 9IJL7hOWssJA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="149998602"
-X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
-   d="scan'208";a="149998602"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 11:45:45 -0700
-IronPort-SDR: v05y5NyC5nO9ND9wjJpF79nGhbAdMZnU8QKKkq0oUMDCx6hk4UD3LMR8eFrAgIyFC62frEydN1
- T21NlYjhxqtw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
-   d="scan'208";a="322389770"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.160])
-  by orsmga008.jf.intel.com with ESMTP; 03 Aug 2020 11:45:45 -0700
-Date:   Mon, 3 Aug 2020 11:45:45 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH v3 3/4] KVM: SVM: Add GHCB Accessor functions
-Message-ID: <20200803184545.GG3151@linux.intel.com>
-References: <20200803122708.5942-1-joro@8bytes.org>
- <20200803122708.5942-4-joro@8bytes.org>
+        Mon, 3 Aug 2020 14:47:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgHCSrB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 14:47:01 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52F6CC06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 11:47:00 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id bh1so8210904plb.12
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 11:47:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=6n3yxM2sbQOf19JmVRn/nwlp/haMMMPZ936WJZaCFeA=;
+        b=V9f/uuwQlj9fmXTLUJK7VZhqWfboAi380LlqS8NXLmpSV7qDeAc66jzKQQCjcC73+F
+         ZzYCQV/ALnekWmaNhvZo5h7GuBVx8joInVPWRYhEoVl4seg9GvTipqQXyEMpvsDJ25II
+         6NrnqL8NwGiUn1OuW79sg6DVN6FC6+G7JFFQk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=6n3yxM2sbQOf19JmVRn/nwlp/haMMMPZ936WJZaCFeA=;
+        b=ShdBn+qtDcputxa+JyN21N9j3xNflwOXubkFFwdPMo6sihuJSe/YAhvURsGWV4cSsM
+         Yf/7zMGhc8nZWL+KtQpOjuoZ3ixHj7gDI73iEnJ76JgvHAwOTx7M4aLTCeR8vk4ywIfs
+         /1pCnS+7PZqSze24RVVXiChQcEpamFQ3YzTyTbi13C2JdsIIhwp40GUw8/Uq/P2K1Qjy
+         JveefvTjPFXVQ7BHrzcrLGBY70VICBayao23Um5WB06X2ChjcE0pufWDnIDNUgc44ret
+         /GTNHjPqrGFKr/aCiVKDBIg/7Cg5lBSZLcJ+j5BQDtS/dz81kHwBZGN5z2JqEz6tvoz1
+         1X+Q==
+X-Gm-Message-State: AOAM530ThKFSEwwT2AkCboSUEkvR4aBo/A8ZWNUB2SEMoOBY89k4DgFq
+        ALaQ2VgSR7zYMB/pRiUo94/A0NnrspQ=
+X-Google-Smtp-Source: ABdhPJxFQLkBSm60MgilI9ZYhyQEl3DoxwFPbsKEfX0BCIFnjwPjADe0OaYNpu2BxgtsaQaVMGP9eA==
+X-Received: by 2002:a17:902:8f8c:: with SMTP id z12mr6975373plo.53.1596480419905;
+        Mon, 03 Aug 2020 11:46:59 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v77sm17999311pfc.137.2020.08.03.11.46.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 11:46:58 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 11:46:57 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Matteo Croce <mcroce@linux.microsoft.com>
+Subject: [GIT PULL] pstore update for v5.9-rc1
+Message-ID: <202008031146.53572B446@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200803122708.5942-4-joro@8bytes.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 02:27:07PM +0200, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> Building a correct GHCB for the hypervisor requires setting valid bits
-> in the GHCB. Simplify that process by providing accessor functions to
-> set values and to update the valid bitmap and to check the valid bitmap
-> in KVM.
-> 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  arch/x86/include/asm/svm.h | 43 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-> index 9a3e0b802716..71a308f1fbc8 100644
-> --- a/arch/x86/include/asm/svm.h
-> +++ b/arch/x86/include/asm/svm.h
-> @@ -341,4 +341,47 @@ struct __attribute__ ((__packed__)) vmcb {
->  
->  #define SVM_CR0_SELECTIVE_MASK (X86_CR0_TS | X86_CR0_MP)
->  
-> +/* GHCB Accessor functions */
-> +
-> +#define GHCB_BITMAP_IDX(field)							\
-> +        (offsetof(struct vmcb_save_area, field) / sizeof(u64))
-> +
-> +#define DEFINE_GHCB_ACCESSORS(field)						\
-> +	static inline bool ghcb_##field##_is_valid(const struct ghcb *ghcb)	\
-> +	{									\
-> +		return test_bit(GHCB_BITMAP_IDX(field),				\
-> +				(unsigned long *)&(ghcb)->save.valid_bitmap);	\
+Hi Linus,
 
-'ghcb' doesn't need to be wrapped in (), it's a parameter to a function.
+Please pull this tiny pstore update for v5.9-rc1, which fixes a very
+corner-case build failure.
 
-> +	}									\
-> +										\
-> +	static inline void ghcb_set_##field(struct ghcb *ghcb, u64 value)	\
-> +	{									\
-> +		__set_bit(GHCB_BITMAP_IDX(field),				\
-> +			  (unsigned long *)&(ghcb)->save.valid_bitmap);		\
+Thanks!
 
-Same comment here.
+-Kees
 
-> +		ghcb->save.field = value;					\
-> +	}
-> +
-> +DEFINE_GHCB_ACCESSORS(cpl)
-> +DEFINE_GHCB_ACCESSORS(rip)
-> +DEFINE_GHCB_ACCESSORS(rsp)
-> +DEFINE_GHCB_ACCESSORS(rax)
-> +DEFINE_GHCB_ACCESSORS(rcx)
-> +DEFINE_GHCB_ACCESSORS(rdx)
-> +DEFINE_GHCB_ACCESSORS(rbx)
-> +DEFINE_GHCB_ACCESSORS(rbp)
-> +DEFINE_GHCB_ACCESSORS(rsi)
-> +DEFINE_GHCB_ACCESSORS(rdi)
-> +DEFINE_GHCB_ACCESSORS(r8)
-> +DEFINE_GHCB_ACCESSORS(r9)
-> +DEFINE_GHCB_ACCESSORS(r10)
-> +DEFINE_GHCB_ACCESSORS(r11)
-> +DEFINE_GHCB_ACCESSORS(r12)
-> +DEFINE_GHCB_ACCESSORS(r13)
-> +DEFINE_GHCB_ACCESSORS(r14)
-> +DEFINE_GHCB_ACCESSORS(r15)
-> +DEFINE_GHCB_ACCESSORS(sw_exit_code)
-> +DEFINE_GHCB_ACCESSORS(sw_exit_info_1)
-> +DEFINE_GHCB_ACCESSORS(sw_exit_info_2)
-> +DEFINE_GHCB_ACCESSORS(sw_scratch)
-> +DEFINE_GHCB_ACCESSORS(xcr0)
-> +
->  #endif
-> -- 
-> 2.17.1
-> 
+The following changes since commit 48778464bb7d346b47157d21ffde2af6b2d39110:
+
+  Linux 5.8-rc2 (2020-06-21 15:45:29 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/pstore-v5.9-rc1
+
+for you to fetch changes up to fd49e03280e596e54edb93a91bc96170f8e97e4a:
+
+  pstore: Fix linking when crypto API disabled (2020-07-06 19:42:31 -0700)
+
+----------------------------------------------------------------
+pstore update
+
+- Fix linking when crypto API disabled (Matteo Croce)
+
+----------------------------------------------------------------
+Matteo Croce (1):
+      pstore: Fix linking when crypto API disabled
+
+ fs/pstore/platform.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+-- 
+Kees Cook
