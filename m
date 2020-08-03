@@ -2,81 +2,123 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7EFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E281C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C93C206E9
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:07:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596438454;
-	bh=aStiuzKTnTOpXn5Co7qVE8vcvrnMgBKSnzbqQOzxF20=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=SnhDQctjAR8SYBVsZE88YjzNXMB4HPeZ6FMSovc+NU1piEh3o3k/P9vlS+X6YrRdQ
-	 I01ELU5hz2lfVZlglkOudPcZNWn+zD30/LtcHl8+b/7N+Ss1pFai/dsLplyqN/kRdB
-	 bqARq0Et2+vxER1g1cDal/tce5UHAYWgrc5PE7KQ=
+	by mail.kernel.org (Postfix) with ESMTP id E62782076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:08:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lGXoVYby"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725968AbgHCHHd (ORCPT
+        id S1726062AbgHCHIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 03:07:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725270AbgHCHHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 03:07:32 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EFF3206D7;
-        Mon,  3 Aug 2020 07:07:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596438451;
-        bh=aStiuzKTnTOpXn5Co7qVE8vcvrnMgBKSnzbqQOzxF20=;
-        h=Date:From:To:Cc:Subject:From;
-        b=BcCsL8zea7GPg2m/ieqZwlovtsHdky30BYHF1wuu7BqV4ZLnuN4Y6xM4zgUDhKE9m
-         zuomvzHyJEr0qY7zJIYNH3OXXfF9GfCSC8/wPWAcNNDKZBmx9V1Mzki1ejys2l52/t
-         j5CBsAf22nHPs7w0TDYpAHMQttavHk+Fy3DViY5g=
-Date:   Mon, 3 Aug 2020 00:07:30 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fscrypt@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Theodore Ts'o <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [GIT PULL] fsverity updates for 5.9
-Message-ID: <20200803070730.GB24480@sol.localdomain>
+        Mon, 3 Aug 2020 03:08:05 -0400
+Received: from mail-db8eur05on2079.outbound.protection.outlook.com ([40.107.20.79]:36160
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725270AbgHCHIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 03:08:04 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NmhPwUOOjRmFnMSFP+N3v/lnGebM7Hu7ZQrEfS2VeLw9Z1QBXnNncfSpI0xMIYl/Sw4ol48Ei358yzlNpc7Ib9+5jqPcUFtqPrW9ZZZLLA+dZ/q1g+rG6RaO26vKw//jj61Mx49Nv2knm3Z07A8rPTHeFTJhLE50NOVG7wbbuRIgngYORHDJBYnMjafBDPBUiLlvz56fZY4kF71AkmAElAbke/92uQ3LgmPam6Oe+PATsFK5RcgQ+BJ/CSmhQXBB1+QTuLzmM87IbxeOXpg7BGW2IqPCJITb0kXI5sE0V1x8ZN/GdnC/om3PwdsBQGg9kxjC0DWgwuYZ0bbXfpJwcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0VBu1ce8+z3lTJGHX6uJzot5JCBo57S4F028e6g4wwA=;
+ b=dfDsCl0E9X6DeY4haxS6+Aa2nLaJFfvdHsS66dAJ0rLThZIWdiIRTVVI4Ua3yQIxN9JxGE5b3U5JIpmvdwEXknSVPRMgD+sIg+ttLu+c6PMt9xYTEgwClBnhEepQlsa79FuQ3/ncl+S+VqMtya05nmhCtiklGZafcyVySKn877taOHfbiBP6BzmQPDdsAhZAFYcZZgf2Bs2Rj9cW/lXJcsm8q/Z4BTI66MnvAlZ9/tDevr/4R9B1PJXrLvARTslQbNnecSBCUnwZCRZCt5gKKXnhuzgOX8X3wpkHLfPk43YGcs4bRu6OfU79GtnByFANHIwcktblccyZLAVy8VnUqQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0VBu1ce8+z3lTJGHX6uJzot5JCBo57S4F028e6g4wwA=;
+ b=lGXoVYbyLDL825M8Kb0gfKmCKjJkXgRkxB8WMl9JyFKOtdT7yzs6mI2MChaD86ilwA8vxMWtrM+UzMAGAqOzAlJoMApXi5riN1BOrHEBJVDSsFdSKO+mb3HKosYve2oNh2eZBByEbVwAwLNce6wsjFNoVkATNJY8rNlB/9hjZ7Y=
+Authentication-Results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
+Received: from AM0PR04MB5443.eurprd04.prod.outlook.com (2603:10a6:208:119::33)
+ by AM0PR04MB5233.eurprd04.prod.outlook.com (2603:10a6:208:c9::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Mon, 3 Aug
+ 2020 07:08:02 +0000
+Received: from AM0PR04MB5443.eurprd04.prod.outlook.com
+ ([fe80::f0b7:8439:3b5a:61bd]) by AM0PR04MB5443.eurprd04.prod.outlook.com
+ ([fe80::f0b7:8439:3b5a:61bd%7]) with mapi id 15.20.3239.021; Mon, 3 Aug 2020
+ 07:08:02 +0000
+From:   Florinel Iordache <florinel.iordache@nxp.com>
+To:     madalin.bucur@nxp.com, davem@davemloft.net, kuba@kernel.org,
+        netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Florinel Iordache <florinel.iordache@nxp.com>
+Subject: [PATCH net v3 0/5] DPAA FMan driver fixes
+Date:   Mon,  3 Aug 2020 10:07:29 +0300
+Message-Id: <1596438454-4895-1-git-send-email-florinel.iordache@nxp.com>
+X-Mailer: git-send-email 1.9.1
+Reply-to: florinel.iordache@nxp.com
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR07CA0007.eurprd07.prod.outlook.com
+ (2603:10a6:208:ac::20) To AM0PR04MB5443.eurprd04.prod.outlook.com
+ (2603:10a6:208:119::33)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from fsr-ub1464-128.ea.freescale.net (83.217.231.2) by AM0PR07CA0007.eurprd07.prod.outlook.com (2603:10a6:208:ac::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3261.13 via Frontend Transport; Mon, 3 Aug 2020 07:08:01 +0000
+X-Mailer: git-send-email 1.9.1
+X-Originating-IP: [83.217.231.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: b46a67b6-a413-43e6-36fd-08d8377bf5e0
+X-MS-TrafficTypeDiagnostic: AM0PR04MB5233:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR04MB52335C789AD7E38DCDE4831FFB4D0@AM0PR04MB5233.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jiWQxzTWxNS8L1C78KXz1+UXnOWo/lBgPaGlBJGUZ+x4+/nKCx836hgB2pM6miznaABQm360YoWU9vtapNvmDjJ+hxJ6hDomlp1dUBYsMANiUkIpsp8Y2l1KFV3JuoshSK47RQUfzgdgbi1wQ3kzeUicyDGe5fVVTdEh+XH0DIGBlz47oelT6MaFYMVDemLeU7jmQdxFzeQdRACB49gE3XQ3tfI8SPUqC2K6cp79LkFYFs1UbH0uPZADEh5kktdW9VnTJWVakbUNmzIs9RegKd4xRZM2z7nhNAJuMPNFC9GKL+kKh/ncQplgonXePyE8OYA+WckUn3DsnKNJvm3NSQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB5443.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(376002)(346002)(366004)(136003)(316002)(6486002)(52116002)(16526019)(2906002)(8676002)(26005)(4326008)(6506007)(3450700001)(186003)(8936002)(478600001)(44832011)(6512007)(6666004)(83380400001)(66946007)(956004)(4744005)(5660300002)(2616005)(66476007)(36756003)(86362001)(66556008);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: mqALyOtwdT02HYagtxOspAGPuEcJoARzavAgjgn5ba7v1X/n82twm4I4IzgzOoKdFawO97UeWLOVzYVZ5IVmtyRhOFgQKiX56DYYE3857qMfa2q6colBRgWd3Elm1zMgaPrGUgCwUKMAUB0g3QOXPZA99L77kIZ1cOLGrTDj2Pe/QvuhUQDp1Srd6PKcam/WC7XhxCKmJ0oc8NCJej0G+vK9TOiaYI5lkrWhogI82v78nnYEEqZpCGUpNgSejFfKGTJeH+Ozjb7OAJJ2OjdgtHCnnwRy2ey4CJCC5TN3DjNV0UvmxHXoSvRyHzrYwNvhJGEg24zGsJv0kjQoPEoxJ14GtWvmrZWTVSmKgq7H8TYR8Q/33qR7oK1OGHfySA9aing2SELK8ou5KvH5mtsuxOoT8PPieFAhMH0heb+LuxklhDLXthKZZpAiNJteou3bghuYQJEV0Q28Bx0KXzkzJe0euGNQyM8GLtJKhnsOOKeonPlOrfUXPKKPO8eW4ntghG0pohrLbuoQPnnBzdGhtB/CCfYIcSaLBLRQFKzZgRiigI9PTMaa0q6rcBlpzuQ0+ufw1Y2HBWjdVAdQfxeiQWxehBJWcWH7wKlOePFa7X4Q0CizO8atywh2GpFvL6KiFrDK01PvdWLuNGnUIYnGkQ==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b46a67b6-a413-43e6-36fd-08d8377bf5e0
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB5443.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2020 07:08:02.0071
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ncng0z88WcWwkuYGzyrUSgzmWJ5BZjkGbNWVsM3d2kA0BHeh6z2pPjVus0r19T9zKSA8P8rJu5aidWF7pWCaD1IPwURrVOu6SjS7TUBMKt4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5233
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit ba47d845d715a010f7b51f6f89bae32845e6acb7:
+Here are several fixes for the DPAA FMan driver.
 
-  Linux 5.8-rc6 (2020-07-19 15:41:18 -0700)
+v2 changes:
+* corrected patch 4 by removing the line added by mistake
+* used longer fixes tags with the first 12 characters of the SHA-1 ID
 
-are available in the Git repository at:
+v3 changes:
+* remove the empty line inserted after fixes tag
 
-  https://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git tags/fsverity-for-linus
+Florinel Iordache (5):
+  fsl/fman: use 32-bit unsigned integer
+  fsl/fman: fix dereference null return value
+  fsl/fman: fix unreachable code
+  fsl/fman: check dereferencing null pointer
+  fsl/fman: fix eth hash table allocation
 
-for you to fetch changes up to f3db0bed458314a835ccef5ccb130270c5b2cf04:
+ drivers/net/ethernet/freescale/fman/fman.c       | 3 +--
+ drivers/net/ethernet/freescale/fman/fman_dtsec.c | 4 ++--
+ drivers/net/ethernet/freescale/fman/fman_mac.h   | 2 +-
+ drivers/net/ethernet/freescale/fman/fman_memac.c | 3 +--
+ drivers/net/ethernet/freescale/fman/fman_port.c  | 9 ++++++++-
+ drivers/net/ethernet/freescale/fman/fman_tgec.c  | 2 +-
+ 6 files changed, 14 insertions(+), 9 deletions(-)
 
-  fs-verity: use smp_load_acquire() for ->i_verity_info (2020-07-21 16:02:41 -0700)
+-- 
+1.9.1
 
-----------------------------------------------------------------
-
-One fix for fs/verity/ to strengthen a memory barrier which might be too
-weak.  This mirrors a similar fix in fs/crypto/.
-
-----------------------------------------------------------------
-Eric Biggers (1):
-      fs-verity: use smp_load_acquire() for ->i_verity_info
-
- fs/verity/open.c         | 15 ++++++++++++---
- include/linux/fsverity.h |  9 +++++++--
- 2 files changed, 19 insertions(+), 5 deletions(-)
