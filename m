@@ -2,69 +2,138 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E09C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 746BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F33FD2076C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A9BE20738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:36:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ggWo7IC1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbgHCNgj (ORCPT
+        id S1727779AbgHCNgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 09:36:39 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55658 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726630AbgHCNgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 09:36:38 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 00FFFD14CE8144C6A7DE;
-        Mon,  3 Aug 2020 21:36:36 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.24) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 3 Aug 2020 21:36:28 +0800
-From:   Qi Liu <liuqi115@huawei.com>
-To:     <gregkh@linuxfoundation.org>, <saiprakash.ranjan@codeaurora.org>,
-        <suzuki.poulose@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-Subject: [PATCH] coresight: etm4x: Add Support for HiSilicon ETM device
-Date:   Mon, 3 Aug 2020 21:35:40 +0800
-Message-ID: <1596461740-13527-1-git-send-email-liuqi115@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Mon, 3 Aug 2020 09:36:51 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20452 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727098AbgHCNgo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 09:36:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596461803;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7+vzuxe/5XjGwe/GuFGIwy7OmInPd2x4YKWYHE8bR2E=;
+        b=ggWo7IC1+REkHlG8efAX01iYW+7YEXKbmiDJBgQSWxMd5MG6PyKgZYeZQLpuuYeYnkeWSj
+        d0o4lpQyI9gtk84D6n5WsHEAZ/YoTuF+yS0ZEW5O0G8T3H5QtIiyhr3c8TgNJtWSjRlK3D
+        /8pDVj1iJiQACfS1foN8LW7Hat1owXw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-11--NZquvIRNb6g8gRSpMhrHA-1; Mon, 03 Aug 2020 09:36:39 -0400
+X-MC-Unique: -NZquvIRNb6g8gRSpMhrHA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 59EE8106B261;
+        Mon,  3 Aug 2020 13:36:37 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DC9A81002391;
+        Mon,  3 Aug 2020 13:36:34 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 01/18] fsinfo: Introduce a non-repeating system-unique
+ superblock ID [ver #21]
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     dhowells@redhat.com, torvalds@linux-foundation.org,
+        raven@themaw.net, mszeredi@redhat.com, christian@brauner.io,
+        jannh@google.com, darrick.wong@oracle.com, kzak@redhat.com,
+        jlayton@redhat.com, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 03 Aug 2020 14:36:34 +0100
+Message-ID: <159646179405.1784947.10794350637774567265.stgit@warthog.procyon.org.uk>
+In-Reply-To: <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk>
+References: <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.165.24]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add ETMv4 periperhal ID for HiSilicon Hip08 and Hip09 platform. Hip08
-contains ETMv4.2 device and Hip09 contains ETMv4.5 device.
+Introduce an (effectively) non-repeating system-unique superblock ID that
+can be used to determine that two objects are in the same superblock
+without needing to worry about the ID changing in the meantime (as is
+possible with device IDs).
 
-Signed-off-by: Qi Liu <liuqi115@huawei.com>
+The counter could also be used to tag other features, such as mount
+objects.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
 ---
- drivers/hwtracing/coresight/coresight-etm4x.c | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-index 0c35cd5e..4a4f0bd 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-@@ -1561,6 +1561,8 @@ static struct amba_cs_uci_id uci_id_etm4[] = {
- };
+ fs/internal.h      |    1 +
+ fs/super.c         |    2 ++
+ include/linux/fs.h |    3 +++
+ 3 files changed, 6 insertions(+)
 
- static const struct amba_id etm4_ids[] = {
-+	CS_AMBA_ID(0x000b6d02),			/* HiSilicon-Hip09 */
-+	CS_AMBA_ID(0x000b6d01),			/* HiSilicon-Hip08 */
- 	CS_AMBA_ID(0x000bb95d),			/* Cortex-A53 */
- 	CS_AMBA_ID(0x000bb95e),			/* Cortex-A57 */
- 	CS_AMBA_ID(0x000bb95a),			/* Cortex-A72 */
---
-2.8.1
+diff --git a/fs/internal.h b/fs/internal.h
+index 9b863a7bd708..ea60d864a8cb 100644
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -103,6 +103,7 @@ extern struct file *alloc_empty_file_noaccount(int, const struct cred *);
+ /*
+  * super.c
+  */
++extern atomic64_t vfs_unique_counter;
+ extern int reconfigure_super(struct fs_context *);
+ extern bool trylock_super(struct super_block *sb);
+ extern struct super_block *user_get_super(dev_t);
+diff --git a/fs/super.c b/fs/super.c
+index 904459b35119..21ae8afeba3a 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -44,6 +44,7 @@ static int thaw_super_locked(struct super_block *sb);
+ 
+ static LIST_HEAD(super_blocks);
+ static DEFINE_SPINLOCK(sb_lock);
++atomic64_t vfs_unique_counter; /* Unique identifier counter */
+ 
+ static char *sb_writers_name[SB_FREEZE_LEVELS] = {
+ 	"sb_writers",
+@@ -273,6 +274,7 @@ static struct super_block *alloc_super(struct file_system_type *type, int flags,
+ 		goto fail;
+ 	if (list_lru_init_memcg(&s->s_inode_lru, &s->s_shrink))
+ 		goto fail;
++	s->s_unique_id = atomic64_inc_return(&vfs_unique_counter);
+ 	return s;
+ 
+ fail:
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index f5abba86107d..28a29356eace 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1564,6 +1564,9 @@ struct super_block {
+ 
+ 	spinlock_t		s_inode_wblist_lock;
+ 	struct list_head	s_inodes_wb;	/* writeback inodes */
++
++	/* Superblock information */
++	u64			s_unique_id;
+ } __randomize_layout;
+ 
+ /* Helper functions so that in most cases filesystems will
+
 
