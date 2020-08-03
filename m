@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 751BFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3C5C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5045B2245C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A20B8206D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458790;
-	bh=5TXyn/wlwTOopHs0f1sd8GztkJl5GDHmCySOXvXNy5Y=;
+	s=default; t=1596458791;
+	bh=a7+jqbpnd8sBWZRYKOrHM91lfcH6g+4prjK5QM+D2Nc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jv4llpVoLLOzdfIHJHkSkPv9fz8Q0hYKPvzMB2kad6LZIiIGN7C06LoFsWFffgA1r
-	 ygHhOQ0yU5sUjAKaONI6Vm3cy4fJC3vp0nCs/ZRYdu6mP5AVmOWX4Pp37SdGaeoL1a
-	 vUtXVCc8tAqcRy6GJ7JvF/jaXCifRNRYs5M/7ViE=
+	b=FYcnsWx5MEqmMtxMzLFoK+44V0lByG3gf71SHVYypT9dALA/yEUt5fUPKzo+NGFAb
+	 yJTAR3aOFSpZaM/kFWj8h3xvXP8S4+nnOqOEk/0uwGsRIp0iEz12QTyeLAcY4rZoK8
+	 Hivsgh94Kxvcq0bk7Aih50myuExGRCd138oZ7yqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728433AbgHCM0y (ORCPT
+        id S1728285AbgHCM0x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:26:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52212 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:26:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728409AbgHCM0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:26:42 -0400
+        id S1728399AbgHCM0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:26:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85CA0207FC;
-        Mon,  3 Aug 2020 12:26:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20E7B207FC;
+        Mon,  3 Aug 2020 12:26:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457601;
-        bh=5TXyn/wlwTOopHs0f1sd8GztkJl5GDHmCySOXvXNy5Y=;
+        s=default; t=1596457589;
+        bh=a7+jqbpnd8sBWZRYKOrHM91lfcH6g+4prjK5QM+D2Nc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lA9y2kO4OcwqvtSM7hEet/Z+aluQnAth/WTpXrFducH1gekgCAT/gqLV/p2tP7J85
-         idzL66Kj22wK4529H5MPbL4+3T6qrOt6xqYnyoRGls7vUScBtTq18ctqoYRfpJyOTW
-         fF/LZHGTQfbaf4oT07k00ZaRrqNC8BnBJFu1JZNw=
+        b=dI0HOOxJwacySRMSie+fl13MpOT993v0Sz+ffk8A7mz85TC5XTpq8DsOCF77NVHhm
+         3x4oyH8BIMlpP52WQGWDlibopKVvrH/8Vy63MaYwkh5Y1MShiKmXdOERTvubIO/L+2
+         2ha+mP9Z0sC7cWUERwGCl0sRqS9YbEuPd/OJIvrw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniele Albano <d.albano@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 100/120] io_uring: always allow drain/link/hardlink/async sqe flags
-Date:   Mon,  3 Aug 2020 14:19:18 +0200
-Message-Id: <20200803121907.776492818@linuxfoundation.org>
+        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 096/120] usb: hso: Fix debug compile warning on sparc32
+Date:   Mon,  3 Aug 2020 14:19:14 +0200
+Message-Id: <20200803121907.589756457@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -59,62 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Albano <d.albano@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 
-[ Upstream commit 61710e437f2807e26a3402543bdbb7217a9c8620 ]
+[ Upstream commit e0484010ec05191a8edf980413fc92f28050c1cc ]
 
-We currently filter these for timeout_remove/async_cancel/files_update,
-but we only should be filtering for fixed file and buffer select. This
-also causes a second read of sqe->flags, which isn't needed.
+On sparc32, tcflag_t is "unsigned long", unlike on all other
+architectures, where it is "unsigned int":
 
-Just check req->flags for the relevant bits. This then allows these
-commands to be used in links, for example, like everything else.
+    drivers/net/usb/hso.c: In function ‘hso_serial_set_termios’:
+    include/linux/kern_levels.h:5:18: warning: format ‘%d’ expects argument of type ‘unsigned int’, but argument 4 has type ‘tcflag_t {aka long unsigned int}’ [-Wformat=]
+    drivers/net/usb/hso.c:1393:3: note: in expansion of macro ‘hso_dbg’
+       hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
+       ^~~~~~~
+    include/linux/kern_levels.h:5:18: warning: format ‘%d’ expects argument of type ‘unsigned int’, but argument 5 has type ‘tcflag_t {aka long unsigned int}’ [-Wformat=]
+    drivers/net/usb/hso.c:1393:3: note: in expansion of macro ‘hso_dbg’
+       hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
+       ^~~~~~~
 
-Signed-off-by: Daniele Albano <d.albano@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+As "unsigned long" is 32-bit on sparc32, fix this by casting all tcflag_t
+parameters to "unsigned int".
+While at it, use "%u" to format unsigned numbers.
+
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io_uring.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/net/usb/hso.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index d0d3efaaa4d4f..4e09af1d5d223 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -4808,7 +4808,9 @@ static int io_timeout_remove_prep(struct io_kiocb *req,
- {
- 	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
- 		return -EINVAL;
--	if (sqe->flags || sqe->ioprio || sqe->buf_index || sqe->len)
-+	if (unlikely(req->flags & (REQ_F_FIXED_FILE | REQ_F_BUFFER_SELECT)))
-+		return -EINVAL;
-+	if (sqe->ioprio || sqe->buf_index || sqe->len)
- 		return -EINVAL;
+diff --git a/drivers/net/usb/hso.c b/drivers/net/usb/hso.c
+index bb8c34d746ab3..5f123a8cf68ed 100644
+--- a/drivers/net/usb/hso.c
++++ b/drivers/net/usb/hso.c
+@@ -1390,8 +1390,9 @@ static void hso_serial_set_termios(struct tty_struct *tty, struct ktermios *old)
+ 	unsigned long flags;
  
- 	req->timeout.addr = READ_ONCE(sqe->addr);
-@@ -5014,8 +5016,9 @@ static int io_async_cancel_prep(struct io_kiocb *req,
- {
- 	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
- 		return -EINVAL;
--	if (sqe->flags || sqe->ioprio || sqe->off || sqe->len ||
--	    sqe->cancel_flags)
-+	if (unlikely(req->flags & (REQ_F_FIXED_FILE | REQ_F_BUFFER_SELECT)))
-+		return -EINVAL;
-+	if (sqe->ioprio || sqe->off || sqe->len || sqe->cancel_flags)
- 		return -EINVAL;
+ 	if (old)
+-		hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
+-			tty->termios.c_cflag, old->c_cflag);
++		hso_dbg(0x16, "Termios called with: cflags new[%u] - old[%u]\n",
++			(unsigned int)tty->termios.c_cflag,
++			(unsigned int)old->c_cflag);
  
- 	req->cancel.addr = READ_ONCE(sqe->addr);
-@@ -5033,7 +5036,9 @@ static int io_async_cancel(struct io_kiocb *req)
- static int io_files_update_prep(struct io_kiocb *req,
- 				const struct io_uring_sqe *sqe)
- {
--	if (sqe->flags || sqe->ioprio || sqe->rw_flags)
-+	if (unlikely(req->flags & (REQ_F_FIXED_FILE | REQ_F_BUFFER_SELECT)))
-+		return -EINVAL;
-+	if (sqe->ioprio || sqe->rw_flags)
- 		return -EINVAL;
- 
- 	req->files_update.offset = READ_ONCE(sqe->off);
+ 	/* the actual setup */
+ 	spin_lock_irqsave(&serial->serial_lock, flags);
 -- 
 2.25.1
 
