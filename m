@@ -2,156 +2,103 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0548BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 363B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBC652054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04B8C206D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596458719;
+	bh=5zeqietPhyhUpjpUe2K3zAjtmebUM/EY9MObnePZxdw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gW+RM1hLLGNrwzVHD2B7hH2DYHvph/1xM7+jyCnqvf0MrknE4xPkQs9XV1c3fr1kU
+	 bShxfdYKQnoJI89R/BTtDy8Uy1pf3wPKOR/6DjErXBykjTW0ljoU0MmzyDdQvTCoka
+	 fuvSMwVBOSghn1CIGc1nHXOFOzwK/XMlRxdttVag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbgHCM1p (ORCPT
+        id S1729262AbgHCMpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:27:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42466 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728546AbgHCM11 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:27:27 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B8A3C061756;
-        Mon,  3 Aug 2020 05:27:27 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 1F2E74CB; Mon,  3 Aug 2020 14:27:24 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v3 1/4] KVM: SVM: nested: Don't allocate VMCB structures on stack
-Date:   Mon,  3 Aug 2020 14:27:05 +0200
-Message-Id: <20200803122708.5942-2-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200803122708.5942-1-joro@8bytes.org>
-References: <20200803122708.5942-1-joro@8bytes.org>
+        Mon, 3 Aug 2020 08:45:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53596 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726725AbgHCM1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:27:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DC98207FC;
+        Mon,  3 Aug 2020 12:27:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596457662;
+        bh=5zeqietPhyhUpjpUe2K3zAjtmebUM/EY9MObnePZxdw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tC7suW3kc6NUDhSfWM2FfA2nTwpRT8xLHzDJf2s+Yxo6+HqcMffnLv2a4/HovODWF
+         4r1dug6vaRex083LFvRJBH3yHmfQd7XOlNwFfy/kFsyYIdPod4J18L8+y4+L6GdPAr
+         Q92RHI/+hSvRRk9l5/VOY/rLagSvZH7uqnBkfq/g=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Minchan Kim <minchan@kernel.org>,
+        Robert Stupp <snazy@gmx.de>, Jan Kara <jack@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        SeongJae Park <sjpark@amazon.com>
+Subject: [PATCH 5.4 06/90] mm/filemap.c: dont bother dropping mmap_sem for zero size readahead
+Date:   Mon,  3 Aug 2020 14:18:28 +0200
+Message-Id: <20200803121857.853351983@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
+References: <20200803121857.546052424@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Jan Kara <jack@suse.cz>
 
-Do not allocate a vmcb_control_area and a vmcb_save_area on the stack,
-as these structures will become larger with future extenstions of
-SVM and thus the svm_set_nested_state() function will become a too large
-stack frame.
+commit 5c72feee3e45b40a3c96c7145ec422899d0e8964 upstream.
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+When handling a page fault, we drop mmap_sem to start async readahead so
+that we don't block on IO submission with mmap_sem held.  However there's
+no point to drop mmap_sem in case readahead is disabled.  Handle that case
+to avoid pointless dropping of mmap_sem and retrying the fault.  This was
+actually reported to block mlockall(MCL_CURRENT) indefinitely.
+
+Fixes: 6b4c9f446981 ("filemap: drop the mmap_sem for all blocking operations")
+Reported-by: Minchan Kim <minchan@kernel.org>
+Reported-by: Robert Stupp <snazy@gmx.de>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Minchan Kim <minchan@kernel.org>
+Link: http://lkml.kernel.org/r/20200212101356.30759-1-jack@suse.cz
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: SeongJae Park <sjpark@amazon.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kvm/svm/nested.c | 47 +++++++++++++++++++++++++++------------
- 1 file changed, 33 insertions(+), 14 deletions(-)
+ mm/filemap.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index 61378a3c2ce4..051623b652da 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -1061,10 +1061,14 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
- 	struct vmcb *hsave = svm->nested.hsave;
- 	struct vmcb __user *user_vmcb = (struct vmcb __user *)
- 		&user_kvm_nested_state->data.svm[0];
--	struct vmcb_control_area ctl;
--	struct vmcb_save_area save;
-+	struct vmcb_control_area *ctl;
-+	struct vmcb_save_area *save;
-+	int ret;
- 	u32 cr0;
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -2438,7 +2438,7 @@ static struct file *do_async_mmap_readah
+ 	pgoff_t offset = vmf->pgoff;
  
-+	BUILD_BUG_ON(sizeof(struct vmcb_control_area) + sizeof(struct vmcb_save_area) >
-+		     KVM_STATE_NESTED_SVM_VMCB_SIZE);
-+
- 	if (kvm_state->format != KVM_STATE_NESTED_FORMAT_SVM)
- 		return -EINVAL;
- 
-@@ -1096,13 +1100,22 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
- 		return -EINVAL;
- 	if (kvm_state->size < sizeof(*kvm_state) + KVM_STATE_NESTED_SVM_VMCB_SIZE)
- 		return -EINVAL;
--	if (copy_from_user(&ctl, &user_vmcb->control, sizeof(ctl)))
--		return -EFAULT;
--	if (copy_from_user(&save, &user_vmcb->save, sizeof(save)))
--		return -EFAULT;
- 
--	if (!nested_vmcb_check_controls(&ctl))
--		return -EINVAL;
-+	ret  = -ENOMEM;
-+	ctl  = kzalloc(sizeof(*ctl),  GFP_KERNEL);
-+	save = kzalloc(sizeof(*save), GFP_KERNEL);
-+	if (!ctl || !save)
-+		goto out_free;
-+
-+	ret = -EFAULT;
-+	if (copy_from_user(ctl, &user_vmcb->control, sizeof(*ctl)))
-+		goto out_free;
-+	if (copy_from_user(save, &user_vmcb->save, sizeof(*save)))
-+		goto out_free;
-+
-+	ret = -EINVAL;
-+	if (!nested_vmcb_check_controls(ctl))
-+		goto out_free;
- 
- 	/*
- 	 * Processor state contains L2 state.  Check that it is
-@@ -1110,15 +1123,15 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
- 	 */
- 	cr0 = kvm_read_cr0(vcpu);
-         if (((cr0 & X86_CR0_CD) == 0) && (cr0 & X86_CR0_NW))
--                return -EINVAL;
-+                goto out_free;
- 
- 	/*
- 	 * Validate host state saved from before VMRUN (see
- 	 * nested_svm_check_permissions).
- 	 * TODO: validate reserved bits for all saved state.
- 	 */
--	if (!(save.cr0 & X86_CR0_PG))
--		return -EINVAL;
-+	if (!(save->cr0 & X86_CR0_PG))
-+		goto out_free;
- 
- 	/*
- 	 * All checks done, we can enter guest mode.  L1 control fields
-@@ -1127,15 +1140,21 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
- 	 * contains saved L1 state.
- 	 */
- 	copy_vmcb_control_area(&hsave->control, &svm->vmcb->control);
--	hsave->save = save;
-+	hsave->save = *save;
- 
- 	svm->nested.vmcb = kvm_state->hdr.svm.vmcb_pa;
--	load_nested_vmcb_control(svm, &ctl);
-+	load_nested_vmcb_control(svm, ctl);
- 	nested_prepare_vmcb_control(svm);
- 
- out_set_gif:
- 	svm_set_gif(svm, !!(kvm_state->flags & KVM_STATE_NESTED_GIF_SET));
--	return 0;
-+
-+	ret = 0;
-+out_free:
-+	kfree(save);
-+	kfree(ctl);
-+
-+	return ret;
- }
- 
- struct kvm_x86_nested_ops svm_nested_ops = {
--- 
-2.17.1
+ 	/* If we don't want any read-ahead, don't bother */
+-	if (vmf->vma->vm_flags & VM_RAND_READ)
++	if (vmf->vma->vm_flags & VM_RAND_READ || !ra->ra_pages)
+ 		return fpin;
+ 	if (ra->mmap_miss > 0)
+ 		ra->mmap_miss--;
+
 
