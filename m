@@ -2,154 +2,143 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7839C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E06F20678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:55:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="daUCzK1l"
+	by mail.kernel.org (Postfix) with ESMTP id A75C720738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:55:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596459357;
+	bh=4VIgQ+/YAHhQES4rT3DCbadE3AbKY8baNT3gf9iE3M4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FjSQV4KRT3la06SG9z0HykUOWzLxM9bEe0id/2mX0IULOMLFAbiPtPOPccao2Wp4r
+	 NCP5IdJCPWrFA9IRwiwERpBZG+MratoD3jkbtHtC38FcJl8kjV8NfHfi/TzmDtkvCb
+	 fy5XIqlzF6fM44CcBj6/8BPK0EpIrDZLBAixFT6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728356AbgHCMzx (ORCPT
+        id S1728650AbgHCMz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:55:53 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:52356 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729026AbgHCMze (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:55:34 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 073CtOKY110727;
-        Mon, 3 Aug 2020 07:55:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596459324;
-        bh=WYNukEVRHfZsaR36KvZkUDOLNg6q0B0GBqASCxqL5Uk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=daUCzK1lBs5eUhC5ZhbT3vEBNO9ujIy5fs1Dd5XN26bsggte826Hi9EeASTtzpbOB
-         YsjLLADA5eXmwv5YRxUucnv8hmTs83gtIYQ1+iIQXdZ+Q+rHwhhWTKprBGuhLUtzUW
-         OIBWOe/MGIckgWZ/fWecPtyM0nupC7E+JUQscgPs=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 073CtOI9079018
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 3 Aug 2020 07:55:24 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 3 Aug
- 2020 07:55:24 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 3 Aug 2020 07:55:24 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 073CtL4R083147;
-        Mon, 3 Aug 2020 07:55:22 -0500
-Subject: Re: [PATCH 1/2] dmaengine: ti: k3-psil: Use soc_device_match to get
- the psil map
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <dan.j.williams@intel.com>,
-        <linux-arm-kernel@lists.infradead.org>, <nm@ti.com>,
-        <grygorii.strashko@ti.com>, <lokeshvutla@ti.com>, <nsekhar@ti.com>,
-        <kishon@ti.com>, <linux-kernel@vger.kernel.org>
-References: <20200803101128.20885-1-peter.ujfalusi@ti.com>
- <20200803101128.20885-2-peter.ujfalusi@ti.com>
- <20200803111436.GN12965@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-X-Pep-Version: 2.0
-Message-ID: <5ac0498e-8874-4864-c823-d9648c381411@ti.com>
-Date:   Mon, 3 Aug 2020 15:56:44 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Mon, 3 Aug 2020 08:55:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45890 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726823AbgHCMWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:22:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B1262076B;
+        Mon,  3 Aug 2020 12:22:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596457338;
+        bh=4VIgQ+/YAHhQES4rT3DCbadE3AbKY8baNT3gf9iE3M4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1SJmUlcrFfhCeybpZaXWnKgqA8SyCkpDe+hQ0mccZ56O8PTFP5tXM4GSH1bXIfHNr
+         TZ8OTMCW2jvdiUP4lYqpcGWuw2BTsNAfl8IN008hctyL/u6PPEBN1X2hOqNwb44udC
+         iBUIbfHedpGh7kbBa/cqP4Cwv8vjJVOnkxFlYlCI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.7 008/120] ALSA: hda: Workaround for spurious wakeups on some Intel platforms
+Date:   Mon,  3 Aug 2020 14:17:46 +0200
+Message-Id: <20200803121903.263637082@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
+References: <20200803121902.860751811@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200803111436.GN12965@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Takashi Iwai <tiwai@suse.de>
 
+commit a6630529aecb5a3e84370c376ed658e892e6261e upstream.
 
-On 03/08/2020 14.14, Vinod Koul wrote:
-> On 03-08-20, 13:11, Peter Ujfalusi wrote:
->> Instead of separate of_machine_is_compatible() it is better to use
->> soc_device_match() and soc_device_attribute struct to get the PSI-L ma=
-p
->> for the booted device.
->>
->> By using soc_device_match() it is easier to add support for new device=
-s.
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->>  drivers/dma/ti/k3-psil.c | 19 ++++++++++++++-----
->>  1 file changed, 14 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/dma/ti/k3-psil.c b/drivers/dma/ti/k3-psil.c
->> index fb7c8150b0d1..3ca29aabac93 100644
->> --- a/drivers/dma/ti/k3-psil.c
->> +++ b/drivers/dma/ti/k3-psil.c
->> @@ -9,11 +9,18 @@
->>  #include <linux/init.h>
->>  #include <linux/mutex.h>
->>  #include <linux/of.h>
->> +#include <linux/sys_soc.h>
->> =20
->>  #include "k3-psil-priv.h"
->> =20
->>  static DEFINE_MUTEX(ep_map_mutex);
->> -static struct psil_ep_map *soc_ep_map;
->> +static const struct psil_ep_map *soc_ep_map;
->> +
->> +static const struct soc_device_attribute k3_soc_devices[] =3D {
->> +	{ .family =3D "AM65X", .data =3D &am654_ep_map },
->> +	{ .family =3D "J721E", .data =3D &j721e_ep_map },
->> +	{ /* sentinel */ }
->> +};
->> =20
->>  struct psil_endpoint_config *psil_get_ep_config(u32 thread_id)
->>  {
->> @@ -21,15 +28,17 @@ struct psil_endpoint_config *psil_get_ep_config(u3=
-2 thread_id)
->> =20
->>  	mutex_lock(&ep_map_mutex);
->>  	if (!soc_ep_map) {
->> -		if (of_machine_is_compatible("ti,am654")) {
->> -			soc_ep_map =3D &am654_ep_map;
->> -		} else if (of_machine_is_compatible("ti,j721e")) {
->> -			soc_ep_map =3D &j721e_ep_map;
->> +		const struct soc_device_attribute *soc;
->> +
->> +		soc =3D soc_device_match(k3_soc_devices);
->> +		if (soc) {
->> +			soc_ep_map =3D soc->data;
->>  		} else {
->>  			pr_err("PSIL: No compatible machine found for map\n");
->>  			mutex_unlock(&ep_map_mutex);
->>  			return ERR_PTR(-ENOTSUPP);
->>  		}
->> +
->=20
-> not related
+We've received a regression report on Intel HD-audio controller that
+wakes up immediately after S3 suspend.  The bisection leads to the
+commit c4c8dd6ef807 ("ALSA: hda: Skip controller resume if not
+needed").  This commit replaces the system-suspend to use
+pm_runtime_force_suspend() instead of the direct call of
+__azx_runtime_suspend().  However, by some really mysterious reason,
+pm_runtime_force_suspend() causes a spurious wakeup (although it calls
+the same __azx_runtime_suspend() internally).
 
-True, I'll drop it.
+As an ugly workaround for now, revert the behavior to call
+__azx_runtime_suspend() and __azx_runtime_resume() for those old Intel
+platforms that may exhibit such a problem, while keeping the new
+standard pm_runtime_force_suspend() and pm_runtime_force_resume()
+pair for the remaining chips.
 
->=20
->>  		pr_debug("%s: Using map for %s\n", __func__, soc_ep_map->name);
->>  	}
->>  	mutex_unlock(&ep_map_mutex);
+Fixes: c4c8dd6ef807 ("ALSA: hda: Skip controller resume if not needed")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=208649
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200727164443.4233-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Thanks,
-- P=C3=A9ter
+---
+ sound/pci/hda/hda_controller.h |    2 +-
+ sound/pci/hda/hda_intel.c      |   17 ++++++++++++++---
+ 2 files changed, 15 insertions(+), 4 deletions(-)
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+--- a/sound/pci/hda/hda_controller.h
++++ b/sound/pci/hda/hda_controller.h
+@@ -41,7 +41,7 @@
+ /* 24 unused */
+ #define AZX_DCAPS_COUNT_LPIB_DELAY  (1 << 25)	/* Take LPIB as delay */
+ #define AZX_DCAPS_PM_RUNTIME	(1 << 26)	/* runtime PM support */
+-/* 27 unused */
++#define AZX_DCAPS_SUSPEND_SPURIOUS_WAKEUP (1 << 27) /* Workaround for spurious wakeups after suspend */
+ #define AZX_DCAPS_CORBRP_SELF_CLEAR (1 << 28)	/* CORBRP clears itself after reset */
+ #define AZX_DCAPS_NO_MSI64      (1 << 29)	/* Stick to 32-bit MSIs */
+ #define AZX_DCAPS_SEPARATE_STREAM_TAG	(1 << 30) /* capture and playback use separate stream tag */
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -298,7 +298,8 @@ enum {
+ /* PCH for HSW/BDW; with runtime PM */
+ /* no i915 binding for this as HSW/BDW has another controller for HDMI */
+ #define AZX_DCAPS_INTEL_PCH \
+-	(AZX_DCAPS_INTEL_PCH_BASE | AZX_DCAPS_PM_RUNTIME)
++	(AZX_DCAPS_INTEL_PCH_BASE | AZX_DCAPS_PM_RUNTIME |\
++	 AZX_DCAPS_SUSPEND_SPURIOUS_WAKEUP)
+ 
+ /* HSW HDMI */
+ #define AZX_DCAPS_INTEL_HASWELL \
+@@ -1028,7 +1029,14 @@ static int azx_suspend(struct device *de
+ 	chip = card->private_data;
+ 	bus = azx_bus(chip);
+ 	snd_power_change_state(card, SNDRV_CTL_POWER_D3hot);
+-	pm_runtime_force_suspend(dev);
++	/* An ugly workaround: direct call of __azx_runtime_suspend() and
++	 * __azx_runtime_resume() for old Intel platforms that suffer from
++	 * spurious wakeups after S3 suspend
++	 */
++	if (chip->driver_caps & AZX_DCAPS_SUSPEND_SPURIOUS_WAKEUP)
++		__azx_runtime_suspend(chip);
++	else
++		pm_runtime_force_suspend(dev);
+ 	if (bus->irq >= 0) {
+ 		free_irq(bus->irq, chip);
+ 		bus->irq = -1;
+@@ -1057,7 +1065,10 @@ static int azx_resume(struct device *dev
+ 	if (azx_acquire_irq(chip, 1) < 0)
+ 		return -EIO;
+ 
+-	pm_runtime_force_resume(dev);
++	if (chip->driver_caps & AZX_DCAPS_SUSPEND_SPURIOUS_WAKEUP)
++		__azx_runtime_resume(chip, false);
++	else
++		pm_runtime_force_resume(dev);
+ 	snd_power_change_state(card, SNDRV_CTL_POWER_D0);
+ 
+ 	trace_azx_resume(chip);
+
 
