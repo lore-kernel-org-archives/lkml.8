@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F90C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC85C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74C95204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2BFF207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:28:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457694;
-	bh=ZebsgRlP8hn5P1mHLwhnSzCiMqdPoQ97ZpjFWDWGEwo=;
+	s=default; t=1596457698;
+	bh=FWvn97YmC6GDheCI0hkPsiqOIFa1+ILy9NTGVfWL8CE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DHoVTpLu+meI+ponqGXL+v05A2G2XuBDBu8sNoLmm3Y5wWBcOomuHZSvRmNKwpoNU
-	 GvzW9v5UtBG02J0CNRNII5GHeQb7cWAz3vER9uLecXF3akNVawrdRgVTNcf+Yjlxg2
-	 Ne8aWHxZT8Ps5lR/5YL9HXrketO7K6L433itw7Po=
+	b=aJ08eNvY+bGsyoDcGd1mERsQI16u+uWgH30P3B7GcpcQgn8KpI8JzyKb39tV5EvJB
+	 ujozkRXh2sYcYpEU58xhDl1Q/NqgF3rrExJHI5MqQPklySVovfF5EIxylWfcKJRouV
+	 tdlOFwobtdm4VubhYEg76PjZccAlAWKYwr9tRKqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgHCM2O (ORCPT
+        id S1728231AbgHCM2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:28:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54182 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:28:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728694AbgHCM2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:28:09 -0400
+        id S1728069AbgHCM2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:28:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84197207DF;
-        Mon,  3 Aug 2020 12:28:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 955DE204EC;
+        Mon,  3 Aug 2020 12:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457688;
-        bh=ZebsgRlP8hn5P1mHLwhnSzCiMqdPoQ97ZpjFWDWGEwo=;
+        s=default; t=1596457691;
+        bh=FWvn97YmC6GDheCI0hkPsiqOIFa1+ILy9NTGVfWL8CE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZpBjlJmHWK+JMYLQp+lmHEmOY3TcbfUWs6k3q7mKXao7/nhqUNtnYJRXpq7Mzemcp
-         q+POqLUm3veBqxy1UHmM7cCqosqppGRbJ81HKV6S9QHJCVWzrUr+MXZtoSN5Neen0Y
-         r7wvsjOWDnmkXQ7KHg76NaxqLzLhZ3OzJYw6WhpM=
+        b=x3etPOjjol30FbxDvqj37AO0acG749uH3KsbCSOPnkMZGQA57pyLnrUDHc7TWF/dV
+         cbvao3+P75Y0Tc2xjbgOp/UNQM2MaZ+03S7A+21gXopm7NgbYPpYwvKJ8Z187tFdD7
+         XzNMvwWq632sQdVNRX3ilx0h/vnaSIb3LEer2XTI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 39/90] nvme-tcp: fix possible hang waiting for icresp response
-Date:   Mon,  3 Aug 2020 14:19:01 +0200
-Message-Id: <20200803121859.509164023@linuxfoundation.org>
+        stable@vger.kernel.org, Tanner Love <tannerlove@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 40/90] selftests/net: rxtimestamp: fix clang issues for target arch PowerPC
+Date:   Mon,  3 Aug 2020 14:19:02 +0200
+Message-Id: <20200803121859.556473411@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -59,36 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+From: Tanner Love <tannerlove@google.com>
 
-[ Upstream commit adc99fd378398f4c58798a1c57889872967d56a6 ]
+[ Upstream commit 955cbe91bcf782c09afe369c95a20f0a4b6dcc3c ]
 
-If the controller died exactly when we are receiving icresp
-we hang because icresp may never return. Make sure to set a
-high finite limit.
+The signedness of char is implementation-dependent. Some systems
+(including PowerPC and ARM) use unsigned char. Clang 9 threw:
+warning: result of comparison of constant -1 with expression of type \
+'char' is always true [-Wtautological-constant-out-of-range-compare]
+                                  &arg_index)) != -1) {
 
-Fixes: 3f2304f8c6d6 ("nvme-tcp: add NVMe over TCP host driver")
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Tested: make -C tools/testing/selftests TARGETS="net" run_tests
+
+Fixes: 16e781224198 ("selftests/net: Add a test to validate behavior of rx timestamps")
+Signed-off-by: Tanner Love <tannerlove@google.com>
+Acked-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/tcp.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/testing/selftests/networking/timestamping/rxtimestamp.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index 7900814355c28..53e113a18a549 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -1319,6 +1319,9 @@ static int nvme_tcp_alloc_queue(struct nvme_ctrl *nctrl,
- 		}
- 	}
+diff --git a/tools/testing/selftests/networking/timestamping/rxtimestamp.c b/tools/testing/selftests/networking/timestamping/rxtimestamp.c
+index 422e7761254de..bcb79ba1f2143 100644
+--- a/tools/testing/selftests/networking/timestamping/rxtimestamp.c
++++ b/tools/testing/selftests/networking/timestamping/rxtimestamp.c
+@@ -329,8 +329,7 @@ int main(int argc, char **argv)
+ 	bool all_tests = true;
+ 	int arg_index = 0;
+ 	int failures = 0;
+-	int s, t;
+-	char opt;
++	int s, t, opt;
  
-+	/* Set 10 seconds timeout for icresp recvmsg */
-+	queue->sock->sk->sk_rcvtimeo = 10 * HZ;
-+
- 	queue->sock->sk->sk_allocation = GFP_ATOMIC;
- 	if (!qid)
- 		n = 0;
+ 	while ((opt = getopt_long(argc, argv, "", long_options,
+ 				  &arg_index)) != -1) {
 -- 
 2.25.1
 
