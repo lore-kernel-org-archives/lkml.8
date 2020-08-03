@@ -2,137 +2,172 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D7ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C2FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65B5020678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5266620738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596458744;
+	bh=RMz6cKYNxMZuugoaSHv0PdWbqR1GvdDtewVaDPXuXkU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UcJ1qNnqX8wE2rjnKE/PLa/J/FDYohIBt2iz0pZGYo4P9Olwg6sTiGkvACt3CLekj
+	 xFlptFVqRC3QfFmkBp1wjyDqwACgMm7rCO7z6XmB9W0zpK1on0R8Qg9HaiAP+fP8TH
+	 glckAcK+kfDH5iCgQaIcz6bZ4sDxPjs2c6bpgjNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbgHCMpj (ORCPT
+        id S1729596AbgHCMpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:45:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42462 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728540AbgHCM11 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:45:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53234 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728534AbgHCM11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 3 Aug 2020 08:27:27 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23F30C06174A;
-        Mon,  3 Aug 2020 05:27:27 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 2D99229A; Mon,  3 Aug 2020 14:27:24 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v3 2/4] KVM: SVM: Add GHCB definitions
-Date:   Mon,  3 Aug 2020 14:27:06 +0200
-Message-Id: <20200803122708.5942-3-joro@8bytes.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200803122708.5942-1-joro@8bytes.org>
-References: <20200803122708.5942-1-joro@8bytes.org>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D31E207DF;
+        Mon,  3 Aug 2020 12:27:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596457646;
+        bh=RMz6cKYNxMZuugoaSHv0PdWbqR1GvdDtewVaDPXuXkU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AAIb90Gbp/tnCH0C6BAaobkhDZm8yAGH2JdrnQ781WICVr6utFj3Li4iV3d84jmpI
+         msvaElJ9gyU/a7FisQ5UrW5qNhuXMVnf9q9IO0So981ewUAzun1UAYQTDup7NDUzsy
+         KNbGzKQXTWLybG6/fU6JqTTZf7bq/9f/s3OvYO4E=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Amit Klein <aksecurity@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>, Willy Tarreau <w@1wt.eu>
+Subject: [PATCH 5.4 22/90] random32: update the net random state on interrupt and activity
+Date:   Mon,  3 Aug 2020 14:18:44 +0200
+Message-Id: <20200803121858.692114229@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
+References: <20200803121857.546052424@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+From: Willy Tarreau <w@1wt.eu>
 
-Extend the vmcb_safe_area with SEV-ES fields and add a new
-'struct ghcb' which will be used for guest-hypervisor communication.
+commit f227e3ec3b5cad859ad15666874405e8c1bbc1d4 upstream.
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+This modifies the first 32 bits out of the 128 bits of a random CPU's
+net_rand_state on interrupt or CPU activity to complicate remote
+observations that could lead to guessing the network RNG's internal
+state.
+
+Note that depending on some network devices' interrupt rate moderation
+or binding, this re-seeding might happen on every packet or even almost
+never.
+
+In addition, with NOHZ some CPUs might not even get timer interrupts,
+leaving their local state rarely updated, while they are running
+networked processes making use of the random state.  For this reason, we
+also perform this update in update_process_times() in order to at least
+update the state when there is user or system activity, since it's the
+only case we care about.
+
+Reported-by: Amit Klein <aksecurity@gmail.com>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Willy Tarreau <w@1wt.eu>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/include/asm/svm.h | 45 +++++++++++++++++++++++++++++++++++++-
- arch/x86/kvm/svm/svm.c     |  2 ++
- 2 files changed, 46 insertions(+), 1 deletion(-)
+ drivers/char/random.c  |    1 +
+ include/linux/random.h |    3 +++
+ kernel/time/timer.c    |    8 ++++++++
+ lib/random32.c         |    2 +-
+ 4 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-index 8a1f5382a4ea..9a3e0b802716 100644
---- a/arch/x86/include/asm/svm.h
-+++ b/arch/x86/include/asm/svm.h
-@@ -200,13 +200,56 @@ struct __attribute__ ((__packed__)) vmcb_save_area {
- 	u64 br_to;
- 	u64 last_excp_from;
- 	u64 last_excp_to;
-+
-+	/*
-+	 * The following part of the save area is valid only for
-+	 * SEV-ES guests when referenced through the GHCB.
-+	 */
-+	u8 reserved_7[104];
-+	u64 reserved_8;		/* rax already available at 0x01f8 */
-+	u64 rcx;
-+	u64 rdx;
-+	u64 rbx;
-+	u64 reserved_9;		/* rsp already available at 0x01d8 */
-+	u64 rbp;
-+	u64 rsi;
-+	u64 rdi;
-+	u64 r8;
-+	u64 r9;
-+	u64 r10;
-+	u64 r11;
-+	u64 r12;
-+	u64 r13;
-+	u64 r14;
-+	u64 r15;
-+	u8 reserved_10[16];
-+	u64 sw_exit_code;
-+	u64 sw_exit_info_1;
-+	u64 sw_exit_info_2;
-+	u64 sw_scratch;
-+	u8 reserved_11[56];
-+	u64 xcr0;
-+	u8 valid_bitmap[16];
-+	u64 x87_state_gpa;
-+};
-+
-+struct __attribute__ ((__packed__)) ghcb {
-+	struct vmcb_save_area save;
-+	u8 reserved_save[2048 - sizeof(struct vmcb_save_area)];
-+
-+	u8 shared_buffer[2032];
-+
-+	u8 reserved_1[10];
-+	u16 protocol_version;	/* negotiated SEV-ES/GHCB protocol version */
-+	u32 ghcb_usage;
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -1330,6 +1330,7 @@ void add_interrupt_randomness(int irq, i
+ 
+ 	fast_mix(fast_pool);
+ 	add_interrupt_bench(cycles);
++	this_cpu_add(net_rand_state.s1, fast_pool->pool[cycles & 3]);
+ 
+ 	if (unlikely(crng_init == 0)) {
+ 		if ((fast_pool->count >= 64) &&
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -9,6 +9,7 @@
+ 
+ #include <linux/list.h>
+ #include <linux/once.h>
++#include <linux/percpu.h>
+ 
+ #include <uapi/linux/random.h>
+ 
+@@ -117,6 +118,8 @@ struct rnd_state {
+ 	__u32 s1, s2, s3, s4;
  };
  
- 
- static inline void __unused_size_checks(void)
- {
--	BUILD_BUG_ON(sizeof(struct vmcb_save_area) != 0x298);
-+	BUILD_BUG_ON(sizeof(struct vmcb_save_area) != 1032);
- 	BUILD_BUG_ON(sizeof(struct vmcb_control_area) != 256);
-+	BUILD_BUG_ON(sizeof(struct ghcb) != 4096);
- }
- 
- struct __attribute__ ((__packed__)) vmcb {
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 783330d0e7b8..953cf947f022 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -4161,6 +4161,8 @@ static struct kvm_x86_init_ops svm_init_ops __initdata = {
- 
- static int __init svm_init(void)
- {
-+	__unused_size_checks();
++DECLARE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
 +
- 	return kvm_init(&svm_init_ops, sizeof(struct vcpu_svm),
- 			__alignof__(struct vcpu_svm), THIS_MODULE);
+ u32 prandom_u32_state(struct rnd_state *state);
+ void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
+ void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -43,6 +43,7 @@
+ #include <linux/sched/debug.h>
+ #include <linux/slab.h>
+ #include <linux/compat.h>
++#include <linux/random.h>
+ 
+ #include <linux/uaccess.h>
+ #include <asm/unistd.h>
+@@ -1742,6 +1743,13 @@ void update_process_times(int user_tick)
+ 	scheduler_tick();
+ 	if (IS_ENABLED(CONFIG_POSIX_TIMERS))
+ 		run_posix_cpu_timers();
++
++	/* The current CPU might make use of net randoms without receiving IRQs
++	 * to renew them often enough. Let's update the net_rand_state from a
++	 * non-constant value that's not affine to the number of calls to make
++	 * sure it's updated when there's some activity (we don't care in idle).
++	 */
++	this_cpu_add(net_rand_state.s1, rol32(jiffies, 24) + user_tick);
  }
--- 
-2.17.1
+ 
+ /**
+--- a/lib/random32.c
++++ b/lib/random32.c
+@@ -48,7 +48,7 @@ static inline void prandom_state_selftes
+ }
+ #endif
+ 
+-static DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
++DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
+ 
+ /**
+  *	prandom_u32_state - seeded pseudo-random number generator.
+
 
