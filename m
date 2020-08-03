@@ -2,55 +2,53 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8FFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E009FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9EFE20678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B62B520678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:43:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458609;
-	bh=vuJ+vdrsK92pRbi+okBw0ZX4DDztUCvpyo3YbmCm25U=;
+	s=default; t=1596458626;
+	bh=Rxo3c6npIb6NdgDIk6bWOZC5ouNHLAYGjf7Cf5eDtmY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hZOMnGDndwlHFNKl5MEOj/MNdpPHdYAknxx1LCwIVEe5ExJD94GvfZxJomO4KdTA2
-	 hpgZ7Z2MGSMwLS/HPpjGqARqaiWsowCwf07HE2h/KQ0dV0G1vHf5jeUYFY6EWCKxGZ
-	 1RTe7gXCuTRp3zi/HR37JzSDky8SjAR8QBON5yGo=
+	b=G+nvLKg51wsbKqwxysByJqlKGXHwXvD2WN9EpNNoyi2Q8WINgckmW/tjKmSe86LGJ
+	 UPglsRd0r3g6S8C/42t0544zCVGXq4Hz1/q+idaJ0jSDR9Zr9JrhE/efkMj9FcyWQa
+	 I5qunlNMJTvMUzrkLpKQJ2QVHYMblXCAF75RLj/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbgHCMaA (ORCPT
+        id S1728991AbgHCMnp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:30:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56616 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:43:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728403AbgHCM3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:29:51 -0400
+        id S1727786AbgHCM3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:29:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 819AD2086A;
-        Mon,  3 Aug 2020 12:29:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C2972083B;
+        Mon,  3 Aug 2020 12:29:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457790;
-        bh=vuJ+vdrsK92pRbi+okBw0ZX4DDztUCvpyo3YbmCm25U=;
+        s=default; t=1596457753;
+        bh=Rxo3c6npIb6NdgDIk6bWOZC5ouNHLAYGjf7Cf5eDtmY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BV5/TLjbOmMQPTNnh3rqvm2m9sNtAGgr8Hl5NO1VB2XU82eIzibMKzqlahhxn7c5e
-         z7b3pj5OXfFwURz+MsG/UW3Jw6M/QpwVcahREnVFBHdSpOtDGPQ7VpieQry2hkTsVv
-         zzwTrXlsZUndTLCoptNCU7z6rq5fkgCBqpnWIV9w=
+        b=CbOYiNekY5RdJmqIybjT7PEYBMLYHsdhXXSwUAohEDhHrLpUqV8KgWr7w6q/tpzpX
+         vyzew2DcSfMWbBykzwIoraOR2fukKiEmzVmQ8NFJOGa6zCM4GeLZpyejX2tCw6Ue+Z
+         qqN+I5qKWorNw0O5LiVytlVEk65ZQpOhqpE+81gA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linux-block@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 75/90] scsi: core: Run queue in case of I/O resource contention failure
-Date:   Mon,  3 Aug 2020 14:19:37 +0200
-Message-Id: <20200803121901.242202603@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Peilin Ye <yepeilin.cs@gmail.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 31/90] rds: Prevent kernel-infoleak in rds_notify_queue_get()
+Date:   Mon,  3 Aug 2020 14:18:53 +0200
+Message-Id: <20200803121859.128380871@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -63,104 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Peilin Ye <yepeilin.cs@gmail.com>
 
-[ Upstream commit 3f0dcfbcd2e162fc0a11c1f59b7acd42ee45f126 ]
+commit bbc8a99e952226c585ac17477a85ef1194501762 upstream.
 
-I/O requests may be held in scheduler queue because of resource contention.
-The starvation scenario was handled properly in the regular completion
-path but we failed to account for it during I/O submission. This lead to
-the hang captured below. Make sure we run the queue when resource
-contention is encountered in the submission path.
+rds_notify_queue_get() is potentially copying uninitialized kernel stack
+memory to userspace since the compiler may leave a 4-byte hole at the end
+of `cmsg`.
 
-[   39.054963] scsi 13:0:0:0: rejecting I/O to dead device
-[   39.058700] scsi 13:0:0:0: rejecting I/O to dead device
-[   39.087855] sd 13:0:0:1: [sdd] Synchronizing SCSI cache
-[   39.088909] scsi 13:0:0:1: rejecting I/O to dead device
-[   39.095351] scsi 13:0:0:1: rejecting I/O to dead device
-[   39.096962] scsi 13:0:0:1: rejecting I/O to dead device
-[  247.021859] INFO: task scsi-stress-rem:813 blocked for more than 122 seconds.
-[  247.023258]       Not tainted 5.8.0-rc2 #8
-[  247.024069] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[  247.025331] scsi-stress-rem D    0   813    802 0x00004000
-[  247.025334] Call Trace:
-[  247.025354]  __schedule+0x504/0x55f
-[  247.027987]  schedule+0x72/0xa8
-[  247.027991]  blk_mq_freeze_queue_wait+0x63/0x8c
-[  247.027994]  ? do_wait_intr_irq+0x7a/0x7a
-[  247.027996]  blk_cleanup_queue+0x4b/0xc9
-[  247.028000]  __scsi_remove_device+0xf6/0x14e
-[  247.028002]  scsi_remove_device+0x21/0x2b
-[  247.029037]  sdev_store_delete+0x58/0x7c
-[  247.029041]  kernfs_fop_write+0x10d/0x14f
-[  247.031281]  vfs_write+0xa2/0xdf
-[  247.032670]  ksys_write+0x6b/0xb3
-[  247.032673]  do_syscall_64+0x56/0x82
-[  247.034053]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[  247.034059] RIP: 0033:0x7f69f39e9008
-[  247.036330] Code: Bad RIP value.
-[  247.036331] RSP: 002b:00007ffdd8116498 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-[  247.037613] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f69f39e9008
-[  247.039714] RDX: 0000000000000002 RSI: 000055cde92a0ab0 RDI: 0000000000000001
-[  247.039715] RBP: 000055cde92a0ab0 R08: 000000000000000a R09: 00007f69f3a79e80
-[  247.039716] R10: 000000000000000a R11: 0000000000000246 R12: 00007f69f3abb780
-[  247.039717] R13: 0000000000000002 R14: 00007f69f3ab6740 R15: 0000000000000002
+In 2016 we tried to fix this issue by doing `= { 0 };` on `cmsg`, which
+unfortunately does not always initialize that 4-byte hole. Fix it by using
+memset() instead.
 
-Link: https://lore.kernel.org/r/20200720025435.812030-1-ming.lei@redhat.com
-Cc: linux-block@vger.kernel.org
-Cc: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: f037590fff30 ("rds: fix a leak of kernel memory")
+Fixes: bdbe6fbc6a2f ("RDS: recv.c")
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/scsi_lib.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ net/rds/recv.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index 206c9f53e9e7a..e6944e1cba2ba 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -568,6 +568,15 @@ static void scsi_mq_uninit_cmd(struct scsi_cmnd *cmd)
- 	scsi_del_cmd_from_list(cmd);
- }
+--- a/net/rds/recv.c
++++ b/net/rds/recv.c
+@@ -450,12 +450,13 @@ static int rds_still_queued(struct rds_s
+ int rds_notify_queue_get(struct rds_sock *rs, struct msghdr *msghdr)
+ {
+ 	struct rds_notifier *notifier;
+-	struct rds_rdma_notify cmsg = { 0 }; /* fill holes with zero */
++	struct rds_rdma_notify cmsg;
+ 	unsigned int count = 0, max_messages = ~0U;
+ 	unsigned long flags;
+ 	LIST_HEAD(copy);
+ 	int err = 0;
  
-+static void scsi_run_queue_async(struct scsi_device *sdev)
-+{
-+	if (scsi_target(sdev)->single_lun ||
-+	    !list_empty(&sdev->host->starved_list))
-+		kblockd_schedule_work(&sdev->requeue_work);
-+	else
-+		blk_mq_run_hw_queues(sdev->request_queue, true);
-+}
-+
- /* Returns false when no more bytes to process, true if there are more */
- static bool scsi_end_request(struct request *req, blk_status_t error,
- 		unsigned int bytes)
-@@ -612,11 +621,7 @@ static bool scsi_end_request(struct request *req, blk_status_t error,
++	memset(&cmsg, 0, sizeof(cmsg));	/* fill holes with zero */
  
- 	__blk_mq_end_request(req, error);
- 
--	if (scsi_target(sdev)->single_lun ||
--	    !list_empty(&sdev->host->starved_list))
--		kblockd_schedule_work(&sdev->requeue_work);
--	else
--		blk_mq_run_hw_queues(q, true);
-+	scsi_run_queue_async(sdev);
- 
- 	percpu_ref_put(&q->q_usage_counter);
- 	return false;
-@@ -1729,6 +1734,7 @@ out_put_budget:
- 		 */
- 		if (req->rq_flags & RQF_DONTPREP)
- 			scsi_mq_uninit_cmd(cmd);
-+		scsi_run_queue_async(sdev);
- 		break;
- 	}
- 	return ret;
--- 
-2.25.1
-
+ 	/* put_cmsg copies to user space and thus may sleep. We can't do this
+ 	 * with rs_lock held, so first grab as many notifications as we can stuff
 
 
