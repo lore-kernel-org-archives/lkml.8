@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064E6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 366AAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D62B020738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12FFF207BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457461;
-	bh=EODeaBupaQIBpukJAkUzXaEpgdiYn49P6L2ybRD1oQA=;
+	s=default; t=1596457465;
+	bh=ahdMLEdPqINOYkePbEv2vrNcKY0K7lgexArhC/5J5+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c+ir0p56VI0T3HGQMPWfyBoeAgGDbw9DkalbWfleDFSeTgolvSmflNn7h1v9MJeCm
-	 1JeKATng16ddQFNPpRXcnoWXJJPbjMjYFIUTzRcxYwqHRC8LgrGTMSlylcAz9M2HOB
-	 Qc5g8eo6j0HMAmMGleGlaZu22mUJDwHX/ONuQ4xY=
+	b=lnlIE6DmZagLzvGmR6vH+j5LzGsgXIG6NR7Qy9LYKsGY+LfSZPSMHCnEXZcx+oZGK
+	 LH3H8o9ITaR5GDPLvDSmqm7J9TQQEBaq2lhDxgHZAPtr9OaWVw/qGV1Ty62Ff3zLTp
+	 5JPiKQxyI6qyU3hAxZEtYNtXZZ44SIYCHYtr7LVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbgHCMYV (ORCPT
+        id S1727995AbgHCMYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:24:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48444 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:24:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726631AbgHCMYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727889AbgHCMYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 3 Aug 2020 08:24:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 218C920829;
-        Mon,  3 Aug 2020 12:24:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA30720738;
+        Mon,  3 Aug 2020 12:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457444;
-        bh=EODeaBupaQIBpukJAkUzXaEpgdiYn49P6L2ybRD1oQA=;
+        s=default; t=1596457447;
+        bh=ahdMLEdPqINOYkePbEv2vrNcKY0K7lgexArhC/5J5+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f0B3O2dKjSFbdritV0wZuuQDwEPic12I5oU5vdMo20rAIQRQSKFZ7eSJYBDjuyUw8
-         h3IK+J15ESHf8N/AgVFxtuPt3RYgq5SZr09Ig+izR2QMbx0Dty1SbnmZ2w7ZU/Y5H/
-         nkVGMyCjwNi0uNkgfz4Emg9uS1FtzMqitHQEAYio=
+        b=WNwbLtJQvdlB1arlxizRauDddf+ZGq8YgeteSvUq62XoiOpIOCiN5X89lHtff3pov
+         oGu0Jl5jJgWEb+Sz7lBlFYXkcRYXXh5I5Iiw+gDOQyIKc1RnqYQNZmMl61Q9rsFt7n
+         hlF6H+WvAeIzt8YQTYJBiUeLf/EQxxoZySSq7Rh4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ingo Brunberg <ingo_brunberg@web.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 070/120] nvme: add a Identify Namespace Identification Descriptor list quirk
-Date:   Mon,  3 Aug 2020 14:18:48 +0200
-Message-Id: <20200803121906.209715440@linuxfoundation.org>
+Subject: [PATCH 5.7 071/120] mlxsw: core: Increase scope of RCU read-side critical section
+Date:   Mon,  3 Aug 2020 14:18:49 +0200
+Message-Id: <20200803121906.257694156@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -61,89 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 5bedd3afee8eb01ccd256f0cd2cc0fa6f841417a ]
+[ Upstream commit 7d8e8f3433dc8d1dc87c1aabe73a154978fb4c4d ]
 
-Add a quirk for a device that does not support the Identify Namespace
-Identification Descriptor list despite claiming 1.3 compliance.
+The lifetime of the Rx listener item ('rxl_item') is managed using RCU,
+but is dereferenced outside of RCU read-side critical section, which can
+lead to a use-after-free.
 
-Fixes: ea43d9709f72 ("nvme: fix identify error status silent ignore")
-Reported-by: Ingo Brunberg <ingo_brunberg@web.de>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Tested-by: Ingo Brunberg <ingo_brunberg@web.de>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Fix this by increasing the scope of the RCU read-side critical section.
+
+Fixes: 93c1edb27f9e ("mlxsw: Introduce Mellanox switch driver core")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 15 +++------------
- drivers/nvme/host/nvme.h |  7 +++++++
- drivers/nvme/host/pci.c  |  2 ++
- 3 files changed, 12 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/core.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 137d7bcc13585..f7540a9e54fd2 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1106,6 +1106,9 @@ static int nvme_identify_ns_descs(struct nvme_ctrl *ctrl, unsigned nsid,
- 	int pos;
- 	int len;
- 
-+	if (ctrl->quirks & NVME_QUIRK_NO_NS_DESC_LIST)
-+		return 0;
-+
- 	c.identify.opcode = nvme_admin_identify;
- 	c.identify.nsid = cpu_to_le32(nsid);
- 	c.identify.cns = NVME_ID_CNS_NS_DESC_LIST;
-@@ -1119,18 +1122,6 @@ static int nvme_identify_ns_descs(struct nvme_ctrl *ctrl, unsigned nsid,
- 	if (status) {
- 		dev_warn(ctrl->device,
- 			"Identify Descriptors failed (%d)\n", status);
--		 /*
--		  * Don't treat non-retryable errors as fatal, as we potentially
--		  * already have a NGUID or EUI-64.  If we failed with DNR set,
--		  * we want to silently ignore the error as we can still
--		  * identify the device, but if the status has DNR set, we want
--		  * to propagate the error back specifically for the disk
--		  * revalidation flow to make sure we don't abandon the
--		  * device just because of a temporal retry-able error (such
--		  * as path of transport errors).
--		  */
--		if (status > 0 && (status & NVME_SC_DNR))
--			status = 0;
- 		goto free_data;
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
+index d6d6fe64887b3..5e76a96a118eb 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/core.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
+@@ -2051,11 +2051,13 @@ void mlxsw_core_skb_receive(struct mlxsw_core *mlxsw_core, struct sk_buff *skb,
+ 			break;
+ 		}
  	}
+-	rcu_read_unlock();
+-	if (!found)
++	if (!found) {
++		rcu_read_unlock();
+ 		goto drop;
++	}
  
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 46f965f8c9bcd..8f1b0a30fd2a6 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -126,6 +126,13 @@ enum nvme_quirks {
- 	 * Don't change the value of the temperature threshold feature
- 	 */
- 	NVME_QUIRK_NO_TEMP_THRESH_CHANGE	= (1 << 14),
-+
-+	/*
-+	 * The controller doesn't handle the Identify Namespace
-+	 * Identification Descriptor list subcommand despite claiming
-+	 * NVMe 1.3 compliance.
-+	 */
-+	NVME_QUIRK_NO_NS_DESC_LIST		= (1 << 15),
- };
+ 	rxl->func(skb, local_port, rxl_item->priv);
++	rcu_read_unlock();
+ 	return;
  
- /*
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 4ad629eb3bc66..10d65f27879fd 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -3105,6 +3105,8 @@ static const struct pci_device_id nvme_id_table[] = {
- 	{ PCI_VDEVICE(INTEL, 0x5845),	/* Qemu emulated controller */
- 		.driver_data = NVME_QUIRK_IDENTIFY_CNS |
- 				NVME_QUIRK_DISABLE_WRITE_ZEROES, },
-+	{ PCI_DEVICE(0x126f, 0x2263),	/* Silicon Motion unidentified */
-+		.driver_data = NVME_QUIRK_NO_NS_DESC_LIST, },
- 	{ PCI_DEVICE(0x1bb1, 0x0100),   /* Seagate Nytro Flash Storage */
- 		.driver_data = NVME_QUIRK_DELAY_BEFORE_CHK_RDY, },
- 	{ PCI_DEVICE(0x1c58, 0x0003),	/* HGST adapter */
+ drop:
 -- 
 2.25.1
 
