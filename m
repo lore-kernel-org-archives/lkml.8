@@ -2,154 +2,142 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0284C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46940C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 911E320678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 236FB20678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:42:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h3lU+1ox"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OdVncMUe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgHCPl6 (ORCPT
+        id S1727893AbgHCPmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 11:41:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44328 "EHLO
+        Mon, 3 Aug 2020 11:42:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbgHCPl5 (ORCPT
+        with ESMTP id S1727070AbgHCPmL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 11:41:57 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCD19C06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 08:41:56 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id z18so31083923wrm.12
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 08:41:56 -0700 (PDT)
+        Mon, 3 Aug 2020 11:42:11 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10A04C061756
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 08:42:11 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id r2so29573573wrs.8
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 08:42:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=zDbpSdI+Kg7J21FMtDaptpRpDHvK4QQHCXQIzqF2Kt8=;
-        b=h3lU+1oxPPOe5Swh2bMYvJ8QZyr2RAeEDsNKI3Wl0DqmhQRbEmjGM9H9UUkrmZjOdw
-         l/rSdNWDp4v0+B7g2+pXgW2Wx8kp2vICMRLuNoWtWfNrzS7HUjIjvcdffOBXILgAYOgO
-         ELENyyZDMqP+Xc8OTSYTHH03K5WrobUBwa/AA=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XLXMroI9RZKFZ/jbE2T9kC6SWd2fACmZd1CP7cneKVM=;
+        b=OdVncMUe7vse9R2wbxQY1D5HUGHp3kUEjL9lIul4+4jUpyj7NUhPm3dIY25SZkfDWU
+         TBnBtFJBB+04cazx6KTj4ZYiMgLbCB8J/xWZUH6FE/5tqZIB/T6QJo74kzHdOPLfn3ws
+         RTnn1wWKM9Bmhb8a2tPmpSh77XV4XFJ//4ABySZ/UkE8AcWDE35YemtaeZfLjM8amaut
+         xU7qB7ygXSeoEeYcckTt8OcRb34gg6zDo5f6AJcPz6bdp1mX0+t9zRFboEnP+nK2fbzE
+         HHhajtdxcJFAkW+JBB4RG8yfCWsUUbtOVbUXah8oZyaxeONuzthTPfyZkF0yp9FtvtA5
+         H0FQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zDbpSdI+Kg7J21FMtDaptpRpDHvK4QQHCXQIzqF2Kt8=;
-        b=TgVPYeY0UkKMgv9CIT/jJ6ikR0AaAmf5IkE/9js0RCU91HCV6kmtyGjVqpQDcbNeP9
-         BA+G4XN47I/3ixKut2MxKMe8KZWwST4iqHIr6LjGkkXmfZ0kfB3eitxTYj4YBF5RpKig
-         4hKlbjSh5B7J5wgo5tn7MFR8Z0KVrJFBUpN0EGGe1NrVI3XlDt37uGkZZEivN2OtgfKd
-         TDyh2ZYJhhkqavDSu3Zob/WpZ3eO2VviPfAh+lRcp2u/PCzqwCOhyrLigd2J2Tn2OwLJ
-         3gG9wjbDRkoPEyk8VG7hVLqkQU9fQIDHdFp1Qb5yVdHeLm4/8q5YXSs7gyy2tqAP7P3B
-         Uzww==
-X-Gm-Message-State: AOAM532+Af9F4c61mU4rWJ01ucTjCh/YAckLj681JlDTB6ADhxy22NBb
-        /WA4RZRx+i57DKDyUToi9D306A==
-X-Google-Smtp-Source: ABdhPJxpsj//aPwb+f5tDc2RkKT8w2hW8MyYJ8torm6jn/JP7wErdFoQ472ZVtlUEzpAdIldlnSmig==
-X-Received: by 2002:adf:edd0:: with SMTP id v16mr17070883wro.271.1596469315419;
-        Mon, 03 Aug 2020 08:41:55 -0700 (PDT)
-Received: from kpsingh-macbookpro2.roam.corp.google.com ([81.6.44.51])
-        by smtp.gmail.com with ESMTPSA id q4sm25807370wme.31.2020.08.03.08.41.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Aug 2020 08:41:54 -0700 (PDT)
-Subject: Re: [PATCH bpf-next v7 5/7] bpf: Implement bpf_local_storage for
- inodes
-To:     Martin KaFai Lau <kafai@fb.com>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>
-References: <20200730140716.404558-1-kpsingh@chromium.org>
- <20200730140716.404558-6-kpsingh@chromium.org>
- <20200731010822.fctk5lawnr3p7blf@kafai-mbp.dhcp.thefacebook.com>
- <adbfc73e-bd32-d9ba-4dab-4ccc39b40fdd@chromium.org>
- <20200731190226.6ugmk6cnl2yortgt@kafai-mbp.dhcp.thefacebook.com>
-From:   KP Singh <kpsingh@chromium.org>
-Message-ID: <c376c46c-f8e9-8a4c-3f81-300faddac831@chromium.org>
-Date:   Mon, 3 Aug 2020 17:41:54 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XLXMroI9RZKFZ/jbE2T9kC6SWd2fACmZd1CP7cneKVM=;
+        b=XplvXpLTZb4/3/o/1RrvwoeAajN2zs/nF/d3Xy3UVVOtuMPOFVzSqiFhyJlryNPAEo
+         xRsMUuHV3VsqRn4pBgUVfVmtMEASdlPAfgrMSwpCTFQDHNQoCZtQZ/S5R5qxF7EKvRcL
+         2zAuR+dmroKFmfwfGTfOkKAJFhFk1d5MVZzW7BhuWKepdWi4Xt1pFAbSWMS/hWD1V9Z0
+         RWT951Ppcq5tDbxjwu5sKw0NpawdpSAkSCn9+OczCKiP7yx8Q2640poUbabmyQWG82BH
+         luGeYWQZ78HNZqD5fh3Sfi8K4xid6qZ0KuhZ3KFOgy7LdoMW2ivpP46jaxEMNTGLiFry
+         O6eA==
+X-Gm-Message-State: AOAM533DspmYg7mx/d9cEAiJV2x7yDNrXKuOQlLZy7tSAMNX1OAXRKQS
+        O4pOGJsQHUmDbMbm5VxwaMfww9Wv7LUszGVCMO8qCQ==
+X-Google-Smtp-Source: ABdhPJxys/xHIYQ42TEBs0qm6F/uMXQud1OI7PztcXotRLsUXd8i9YvqD9CnjKyTI6JekBgx1fU0BmnjuD7xKr9c1Xk=
+X-Received: by 2002:adf:fe0c:: with SMTP id n12mr15023161wrr.48.1596469329582;
+ Mon, 03 Aug 2020 08:42:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200731190226.6ugmk6cnl2yortgt@kafai-mbp.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200731114214.25654-1-bobo.shaobowang@huawei.com>
+In-Reply-To: <20200731114214.25654-1-bobo.shaobowang@huawei.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 3 Aug 2020 08:41:58 -0700
+Message-ID: <CAP-5=fWuKDt1piqnbefhungwm8tmZMFecrAqyoaq74qLP6V28w@mail.gmail.com>
+Subject: Re: [PATCH v2 -next] tools build: Check return value of
+ fwrite_unlocked in jvmti_agent.c
+To:     Wang ShaoBo <bobo.shaobowang@huawei.com>
+Cc:     cj.chengjian@huawei.com,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Li Bin <huawei.libin@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jul 31, 2020 at 4:42 AM Wang ShaoBo <bobo.shaobowang@huawei.com> wrote:
+>
+> Function jvmti_write_code called by compiled_method_load_cb may return
+> error in using fwrite_unlocked, this failure should be captured and
+> warned.
+>
+> Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
 
+Thanks, looks good now!
 
-On 31.07.20 21:02, Martin KaFai Lau wrote:
-> On Fri, Jul 31, 2020 at 02:08:55PM +0200, KP Singh wrote:
-> [ ... ]
->>>> +const struct bpf_map_ops inode_storage_map_ops = {
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-[...]
-
->>
->> btf  dump file /sys/kernel/btf/vmlinux | grep "STRUCT 'inode'"
->> "[915] STRUCT 'inode' size=984 vlen=48
->>
->> So it seems like btf_id[0] and btf_id[1] are set to the BTF ID
->> for inode. Now I think this might just be a coincidence as
->> the next helper (bpf_inode_storage_delete) 
->> also has a BTF argument of type inode.
-> It seems the next BTF_ID_LIST(bpf_inode_storage_delete_btf_ids)
-> is not needed because they are the same.  I think one
-> BTF_ID_LIST(bpf_inode_btf_ids) can be used for both helpers.
-> 
-
-Cool, yeah. I have fixed it and also for sock helpers. Will
-send a new series out.
-
-- KP
-
->>
->> and sure enough if I call:
->>
->> bpf_inode_storage_delete from my selftests program, 
->> it does not load:
-
-[...]
-
->> ./test_progs -t test_local_storage
->> [   20.577223] btf_ids[0]=0
->> [   20.577702] btf_ids[1]=915
->>
->> Thanks for noticing this! 
->>
->> - KP
->>
->>>
->>>> +
->>>> +const struct bpf_func_proto bpf_inode_storage_get_proto = {
->>>> +	.func		= bpf_inode_storage_get,
->>>> +	.gpl_only	= false,
->>>> +	.ret_type	= RET_PTR_TO_MAP_VALUE_OR_NULL,
->>>> +	.arg1_type	= ARG_CONST_MAP_PTR,
->>>> +	.arg2_type	= ARG_PTR_TO_BTF_ID,
->>>> +	.arg3_type	= ARG_PTR_TO_MAP_VALUE_OR_NULL,
->>>> +	.arg4_type	= ARG_ANYTHING,
->>>> +	.btf_id		= bpf_inode_storage_get_btf_ids,
->>>> +};
->>>> +
->>>> +BTF_ID_LIST(bpf_inode_storage_delete_btf_ids)
->>>> +BTF_ID(struct, inode)
->>>> +
->>>> +const struct bpf_func_proto bpf_inode_storage_delete_proto = {
->>>> +	.func		= bpf_inode_storage_delete,
->>>> +	.gpl_only	= false,
->>>> +	.ret_type	= RET_INTEGER,
->>>> +	.arg1_type	= ARG_CONST_MAP_PTR,
->>>> +	.arg2_type	= ARG_PTR_TO_BTF_ID,
->>>> +	.btf_id		= bpf_inode_storage_delete_btf_ids,
->>>> +};
+> ---
+>  tools/perf/jvmti/jvmti_agent.c | 25 ++++++++++++++++---------
+>  1 file changed, 16 insertions(+), 9 deletions(-)
+>
+> diff --git a/tools/perf/jvmti/jvmti_agent.c b/tools/perf/jvmti/jvmti_agent.c
+> index 88108598d6e9..dfb6cb8564cb 100644
+> --- a/tools/perf/jvmti/jvmti_agent.c
+> +++ b/tools/perf/jvmti/jvmti_agent.c
+> @@ -363,7 +363,7 @@ jvmti_write_code(void *agent, char const *sym,
+>         struct jr_code_load rec;
+>         size_t sym_len;
+>         FILE *fp = agent;
+> -       int ret = -1;
+> +       int sret;
+>
+>         /* don't care about 0 length function, no samples */
+>         if (size == 0)
+> @@ -400,17 +400,24 @@ jvmti_write_code(void *agent, char const *sym,
+>          */
+>         rec.code_index = code_generation++;
+>
+> -       ret = fwrite_unlocked(&rec, sizeof(rec), 1, fp);
+> -       fwrite_unlocked(sym, sym_len, 1, fp);
+> +       sret = fwrite_unlocked(&rec, sizeof(rec), 1, fp);
+> +       if (sret != 1)
+> +               goto error;
+> +       sret = fwrite_unlocked(sym, sym_len, 1, fp);
+> +       if (sret != 1)
+> +               goto error;
+>
+> -       if (code)
+> -               fwrite_unlocked(code, size, 1, fp);
+> +       if (code) {
+> +               sret = fwrite_unlocked(code, size, 1, fp);
+> +               if (sret != 1)
+> +                       goto error;
+> +       }
+>
+>         funlockfile(fp);
+> -
+> -       ret = 0;
+> -
+> -       return ret;
+> +       return 0;
+> +error:
+> +       funlockfile(fp);
+> +       return -1;
+>  }
+>
+>  int
+> --
+> 2.25.1
+>
