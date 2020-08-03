@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E0DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B3AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5F3A204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:39:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F27E8204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458347;
-	bh=C8PD6oRY0Isp66vleS6E1szTsB0xCyrvx6x4AqQUzOk=;
+	s=default; t=1596458359;
+	bh=dEa0AWvWOg19CrPOh7m9qvf9OgTA1IIxsH3IV00BKcI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z6tA0RONeHBbjxaAOF/fjPIEFbhdmI6guAMl67pCUuAuuemPqRG7gs+0zXo6fIRj8
-	 KPXQog1GKlRVFaA7YH8n5cQde+LtjEZEOFc63lJNmwqmORWGuhdVbsErQzZoERJfZR
-	 Rzhf4KTHl8GiwFgckhepcd7LS+UsOy27HJ0ZG8Mc=
+	b=GWC7a5HqBBK1m5WOVJu7dLY4RmlXmRgpxFX5d1Ofzz8cfowzJeKYNZTCVz+RONT3c
+	 9WxxAv5LpeRUUcSjtvdU2Vi6vFGgSgKLN8uEPRjlrAAbNn3dEuYerWbM4wV7RsaiOv
+	 hFQiYgZF68AUACAllZandvGvce/kfl+5Jb4do6d8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729511AbgHCMd7 (ORCPT
+        id S1729135AbgHCMjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:33:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33920 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:39:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729101AbgHCMdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:33:54 -0400
+        id S1729491AbgHCMdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:33:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66EE92054F;
-        Mon,  3 Aug 2020 12:33:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA6FF204EC;
+        Mon,  3 Aug 2020 12:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596458033;
-        bh=C8PD6oRY0Isp66vleS6E1szTsB0xCyrvx6x4AqQUzOk=;
+        s=default; t=1596458030;
+        bh=dEa0AWvWOg19CrPOh7m9qvf9OgTA1IIxsH3IV00BKcI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XuorgMdhxZ5x6GoI9Bk5Ycl9Ipvx5BQ4c7jkJYPpUGFmDTr3kFiDMtWpUMCYq/Ert
-         4qSghotILyZqK/SS2zdfKm/NiTy9eqBLn1N1pQ3QXrk2B0cLLGaA3onnZGqWZQ0wqt
-         H5N2qAInmvm7uAuMpubCjqyoAKbh9wpuC8EY7qIo=
+        b=CMhwe0y8RrrxAWw92y/zd8fCJwWD8cF/qD6io7v8ZqbMDsNNBsb7NjN6q+yeBeNpb
+         7zdPRIhTvNwHl+j3h3kHv09kxCgFTwJWnwWOj0uoWRr7PlTrLZgOKrXaCw7vXqHHXl
+         9hmzY8V2vsCiQnid8HVqH6mtwr94IttbsgBCTnEI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Gary R Hook <gary.hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 03/51] crypto: ccp - Release all allocated memory if sha type is invalid
-Date:   Mon,  3 Aug 2020 14:19:48 +0200
-Message-Id: <20200803121849.654696381@linuxfoundation.org>
+Subject: [PATCH 4.14 02/51] net: phy: mdio-bcm-unimac: fix potential NULL dereference in unimac_mdio_probe()
+Date:   Mon,  3 Aug 2020 14:19:47 +0200
+Message-Id: <20200803121849.606398618@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121849.488233135@linuxfoundation.org>
 References: <20200803121849.488233135@linuxfoundation.org>
@@ -62,39 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 128c66429247add5128c03dc1e144ca56f05a4e2 ]
+[ Upstream commit 297a6961ffb8ff4dc66c9fbf53b924bd1dda05d5 ]
 
-Release all allocated memory if sha type is invalid:
-In ccp_run_sha_cmd, if the type of sha is invalid, the allocated
-hmac_buf should be released.
+platform_get_resource() may fail and return NULL, so we should
+better check it's return value to avoid a NULL pointer dereference
+a bit later in the code.
 
-v2: fix the goto.
+This is detected by Coccinelle semantic patch.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Acked-by: Gary R Hook <gary.hook@amd.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+@@
+expression pdev, res, n, t, e, e1, e2;
+@@
+
+res = platform_get_resource(pdev, t, n);
++ if (!res)
++   return -EINVAL;
+... when != res == NULL
+e = devm_ioremap(e1, res->start, e2);
+
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/ccp/ccp-ops.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/phy/mdio-bcm-unimac.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/crypto/ccp/ccp-ops.c b/drivers/crypto/ccp/ccp-ops.c
-index 330853a2702f0..43b74cf0787e1 100644
---- a/drivers/crypto/ccp/ccp-ops.c
-+++ b/drivers/crypto/ccp/ccp-ops.c
-@@ -1783,8 +1783,9 @@ ccp_run_sha_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
- 			       LSB_ITEM_SIZE);
- 			break;
- 		default:
-+			kfree(hmac_buf);
- 			ret = -EINVAL;
--			goto e_ctx;
-+			goto e_data;
- 		}
+diff --git a/drivers/net/phy/mdio-bcm-unimac.c b/drivers/net/phy/mdio-bcm-unimac.c
+index 52703bbd4d666..df75efa96a7d9 100644
+--- a/drivers/net/phy/mdio-bcm-unimac.c
++++ b/drivers/net/phy/mdio-bcm-unimac.c
+@@ -237,6 +237,8 @@ static int unimac_mdio_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
  
- 		memset(&hmac_cmd, 0, sizeof(hmac_cmd));
+ 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!r)
++		return -EINVAL;
+ 
+ 	/* Just ioremap, as this MDIO block is usually integrated into an
+ 	 * Ethernet MAC controller register range
 -- 
 2.25.1
 
