@@ -2,157 +2,115 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 412C0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CACC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AE0B2072A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C715622BEA
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:57:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="El7SegGh"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GJf0dTtz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgHCPy3 (ORCPT
+        id S1727979AbgHCP5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 11:54:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46252 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726606AbgHCPy3 (ORCPT
+        Mon, 3 Aug 2020 11:57:14 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:42848 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgHCP5O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 11:54:29 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3DC0C06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 08:54:28 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id k20so59436wmi.5
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 08:54:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=slx0T/61/kBkje+VgygjK5EF0iAmWExpUdKWBN4DQu0=;
-        b=El7SegGhgmlVjZSXK9LFNbEa5SXGe5QjXxZBHpKNiLGpFUO+xyZDK4cAnp6mLgWCE8
-         DyMMwFY40ZmDAKwqZEifdcbuYqhMRLfqFg+o3kRCB1G4aK3f7SP4R2CsAiRGG9F70YhJ
-         ykfhwEEjRxUe5mApbThptFSz7PYIVL6GQsNNHwataU19jpZywK2aAX0qOU1SRVLX8h00
-         OkVQ39g6OR/wdlqZQIBV34z+LAhI/m2pobjD7J1ktyYHmxSjWK11ZlgJZpU4Whw1WxG0
-         s0tPnaN8L+nXRHCyhF9211Oz/QUXKyoHyQPoU6SXJcloNqNhJSmTj0+urvF0ofxRmgCT
-         +ZBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=slx0T/61/kBkje+VgygjK5EF0iAmWExpUdKWBN4DQu0=;
-        b=NnLlCoNBk+y6CYBxUQsS0F1EHxdN/7C3gjnMJJmUcEecM/Vk75D8b/bEVZPRYrPSGo
-         QD6VeaMuw2szfp26cB4Rrfx77un7T51o2YUItVhoFP4525FWU3QuJCrJaJ2+tfSshvFF
-         R24J/JOGKVbdTGXu8okReqRFg5LNKkArCwwUgPqfqMtj4slWtKoWmLK/SzntYQMHwotl
-         FkjUdyPwwZolf/8BsegwOzLVr26iPCZjcJEFNIregQBF0RNDxt2MVJvV6gXYrp1LEj/S
-         PJBxW2O0FJ/zbb0d6aiZ4GSVjoj3WG8zWgqHHpAVWivR16Zod4kdssNTTFj7pdbW0U7S
-         tZ/g==
-X-Gm-Message-State: AOAM532uRyA925I3BJoexag0op0l6RMcuXI6OpYg+upKaQ0Iz6RQw/3f
-        xWULFvrl69fhnNQLTsuYFYvQquMvQkBbe0LemQadOg==
-X-Google-Smtp-Source: ABdhPJzM9u8R5oum7uRM/EZlBGfcxVu+JeJDr5FqKavtE27ufcZAGJg6WDSIyIouN1kkxuy8PRBCoBPLyLt8ctEUOoU=
-X-Received: by 2002:a1c:a914:: with SMTP id s20mr579819wme.76.1596470067410;
- Mon, 03 Aug 2020 08:54:27 -0700 (PDT)
+        Mon, 3 Aug 2020 11:57:14 -0400
+Received: from [192.168.254.32] (unknown [47.187.206.220])
+        by linux.microsoft.com (Postfix) with ESMTPSA id CC1CC20B4908;
+        Mon,  3 Aug 2020 08:57:12 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CC1CC20B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1596470233;
+        bh=B84BScSs7K0//hJ9cYUzqCUYQtbCiiAWgLTuQ5Ph+RQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=GJf0dTtzCa8o8nzBmlcmO+m4jvGBEduNpvn6rNHY16DZPJb8hqSD/6aHy2OPigkFd
+         evDzXsdzFZk3yChasnyS7SjYhR4fSIf5geRNzZvB4V4J1D4UB/gYfSQTzo2+RbNkDd
+         w7n1jOQ1OCcqAgvwmAvXOwhZDHKSoOh+5vCEa2n0=
+Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+To:     David Laight <David.Laight@ACULAB.COM>,
+        'Pavel Machek' <pavel@ucw.cz>
+Cc:     'Andy Lutomirski' <luto@kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
+References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
+ <b9879beef3e740c0aeb1af73485069a8@AcuMS.aculab.com>
+ <20200802115600.GB1162@bug>
+ <c02fbae7a0754a58884b370657575845@AcuMS.aculab.com>
+From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+Message-ID: <06e4cfc7-f1d5-5311-2e1c-603cf408c9f7@linux.microsoft.com>
+Date:   Mon, 3 Aug 2020 10:57:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200729091908.1378911-1-jolsa@kernel.org> <20200801114050.GB377079@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
-In-Reply-To: <20200801114050.GB377079@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 3 Aug 2020 08:54:16 -0700
-Message-ID: <CAP-5=fUjMH-VHaLhNjBhk4pSsAGs_9kUuy1N68RRF4d6E5e5Lg@mail.gmail.com>
-Subject: Re: [PATCHv4 00/19] perf metric: Add support to reuse metric
-To:     "Paul A. Clarke" <pc@us.ibm.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <c02fbae7a0754a58884b370657575845@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 1, 2020 at 4:41 AM Paul A. Clarke <pc@us.ibm.com> wrote:
->
-> On Wed, Jul 29, 2020 at 11:18:49AM +0200, Jiri Olsa wrote:
-> > this patchset is adding the support to reused metric in
-> > another metric.
-> >
-> > For example, to define IPC by using CPI with change like:
-> >
-> >      {
-> >          "BriefDescription": "Instructions Per Cycle (per Logical Processor)",
-> > -        "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
-> > +        "MetricExpr": "1/CPI",
-> >          "MetricGroup": "TopDownL1",
-> >          "MetricName": "IPC"
-> >      },
-> >
-> > I won't be able to find all the possible places we could
-> > use this at, so I wonder you guys (who was asking for this)
-> > would try it and come up with comments if there's something
-> > missing or we could already use it at some places.
-> >
-> > It's based on Arnaldo's tmp.perf/core.
-> >
-> > v4 changes:
-> >   - removed acks from patch because it changed a bit
-> >     with the last fixes:
-> >       perf metric: Collect referenced metrics in struct metric_ref_node
-> >   - fixed runtime metrics [Kajol Jain]
-> >   - increased recursion depth [Paul A. Clarke]
-> >   - changed patches due to dependencies:
-> >       perf metric: Collect referenced metrics in struct metric_ref_node
-> >       perf metric: Add recursion check when processing nested metrics
-> >       perf metric: Rename struct egroup to metric
-> >       perf metric: Rename group_list to metric_list
-> >
-> > Also available in here:
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
-> >   perf/metric
->
-> I built and ran from the above git branch, and things seem to work.
-> Indeed, I was able to apply my changes to exploit the new capabilities
-> via modifications to tools/perf/pmu-events/arch/powerpc/power9/metrics.json,
-> as I posted earlier (and will submit once this set gets merged).
->
-> Tested-by: Paul A. Clarke <pc@us.ibm.com>
->
-> One thing I noted, but which also occurs without these patches, is that
-> the perf metrics are not computed unless run as root:
-> --
-> $ perf stat --metrics br_misprediction_percent command
->
->  Performance counter stats for 'command':
->
->      1,823,530,051      pm_br_pred:u
->          2,662,705      pm_br_mpred_cmpl:u
->
-> $ /usr/bin/sudo perf stat --metrics br_misprediction_percent command
->
->  Performance counter stats for 'command':
->
->      1,824,655,269      pm_br_pred                #     0.09 br_misprediction_percent
->          1,654,466      pm_br_mpred_cmpl
-> --
->
-> Is that expected?  I don't think it's always been that way.
 
-I agree Paul, this seems broken. I've noticed a bunch of issues with
-printing CSV, per-socket output and so on. Jiri may have a better idea
-but I plan to look at problems in this area later, and hopefully stick
-a few tests on it :-)
 
-Thanks,
-Ian
+On 8/3/20 3:08 AM, David Laight wrote:
+> From: Pavel Machek <pavel@ucw.cz>
+>> Sent: 02 August 2020 12:56
+>> Hi!
+>>
+>>>> This is quite clever, but now I???m wondering just how much kernel help
+>>>> is really needed. In your series, the trampoline is an non-executable
+>>>> page.  I can think of at least two alternative approaches, and I'd
+>>>> like to know the pros and cons.
+>>>>
+>>>> 1. Entirely userspace: a return trampoline would be something like:
+>>>>
+>>>> 1:
+>>>> pushq %rax
+>>>> pushq %rbc
+>>>> pushq %rcx
+>>>> ...
+>>>> pushq %r15
+>>>> movq %rsp, %rdi # pointer to saved regs
+>>>> leaq 1b(%rip), %rsi # pointer to the trampoline itself
+>>>> callq trampoline_handler # see below
+>>> For nested calls (where the trampoline needs to pass the
+>>> original stack frame to the nested function) I think you
+>>> just need a page full of:
+>>> 	mov	$0, scratch_reg; jmp trampoline_handler
+>> I believe you could do with mov %pc, scratch_reg; jmp ...
+>>
+>> That has advantage of being able to share single physical
+>> page across multiple virtual pages...
+> A lot of architecture don't let you copy %pc that way so you would
+> have to use 'call' - but that trashes the return address cache.
+> It also needs the trampoline handler to know the addresses
+> of the trampolines.
 
-> PC
+Do you which ones don't allow you to copy %pc?
+
+Some of the architctures do not have PC-relative data references.
+If they do not allow you to copy the PC into a general purpose
+register, then there is no way to implement the statically defined
+trampoline that has been discussed so far. In these cases, the
+trampoline has to be generate at runtime.
+
+Thanks.
+
+Madhavan
+
