@@ -2,154 +2,132 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB405C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EB2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8761520678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:53:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LYPnDAG3"
+	by mail.kernel.org (Postfix) with ESMTP id E682520678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:57:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726125AbgHCJxt (ORCPT
+        id S1726142AbgHCJ50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 05:53:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgHCJxs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 05:53:48 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D707C06174A;
-        Mon,  3 Aug 2020 02:53:48 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BKtWF122Sz9sR4;
-        Mon,  3 Aug 2020 19:53:45 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596448426;
-        bh=T1hiIwhe18BEViohyPd8wdN+KMPgi+lgSdAGVLJ+gas=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LYPnDAG3ec2BwZyLNZCTXOEFbJNAp0A2xx4AbrAYdRGbQ02NQMF0zjIjvxo34ghs1
-         GTgSZikfRs1UBLe/j3KJPgQOzCybSnhlwHKTliDHU9x0wWLbPW7JkhCGd6UNh/abkh
-         GtE12fjLdjBwS1PwMzw/SAs2lzYBqskH4Q+kFnckp305r4JirypsS+OIZ1mG4NzBLK
-         YmD/Q3uxQ6UvXR8FRe79tZPPWootRe+1MXSv9LIo9pRtSZy3rFbDfJQGYMGcmbLZU4
-         I89o6NSJz2Ev1XnpMBP1BgDWByH7DhoQ9pSBqO7O4A4y8qpjIJoljUa8VH/kLnQHDG
-         wkTHw9PKCNQ/w==
-Date:   Mon, 3 Aug 2020 19:53:42 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the init tree with the block tree
-Message-ID: <20200803195342.781987c3@canb.auug.org.au>
-In-Reply-To: <20200717194221.146ab662@canb.auug.org.au>
-References: <20200717194221.146ab662@canb.auug.org.au>
+        Mon, 3 Aug 2020 05:57:26 -0400
+Received: from mga07.intel.com ([134.134.136.100]:43518 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725965AbgHCJ5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 05:57:25 -0400
+IronPort-SDR: 0O2O0Ju5EEMwF4I0hSmpcTNJNMu1CQh9pDJ0b0TeQR9mo/hPTUm5p0DXe3qy/MCeXyhYlnq3rf
+ xf8wGg5T2F3w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9701"; a="216495737"
+X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
+   d="scan'208";a="216495737"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 02:57:24 -0700
+IronPort-SDR: MsiKdyIvj4fmPlYeIFCmVI5xosoHyyG+1kksLDAieWifeoY53aYQt2EGOqbylbRPy1hkBTV432
+ Fom/VXLNwQXA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
+   d="scan'208";a="396002736"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 03 Aug 2020 02:57:21 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 03 Aug 2020 12:57:20 +0300
+Date:   Mon, 3 Aug 2020 12:57:20 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Daniel Gutson <daniel.gutson@eclypsium.com>
+Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alex Bazhaniuk <alex@eclypsium.com>,
+        Richard Hughes <hughsient@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] Module argument to control whether intel-spi-pci
+ attempts to turn the SPI flash chip writeable
+Message-ID: <20200803095720.GC1375436@lahna.fi.intel.com>
+References: <20200724212853.11601-1-daniel.gutson@eclypsium.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/EWMb.r6q5dcMb1uac.Isdeu";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200724212853.11601-1-daniel.gutson@eclypsium.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/EWMb.r6q5dcMb1uac.Isdeu
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi all,
+Sorry for the delay, I was on vacation.
 
-On Fri, 17 Jul 2020 19:42:21 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
+On Fri, Jul 24, 2020 at 06:28:53PM -0300, Daniel Gutson wrote:
+> Currently, intel-spi has a module argument that controls whether the driver
+> attempts to turn the SPI flash chip writeable. The default value
+> is FALSE (don't try to make it writeable).
+> However, this flag applies only for a number of devices, coming from the
+> platform driver, whereas the devices detected through the PCI driver
+> (intel-spi-pci) are not subject to this check since the configuration
+> takes place in intel-spi-pci which doesn't have an argument.
+> 
+> That's why I propose this patch to add such argument to intel-spi-pci,
+> so the user can control whether the driver tries to make the chip
+> writeable or not, being the default FALSE as is the argument of
+> intel-spi.
+> 
+> Signed-off-by: Daniel Gutson <daniel.gutson@eclypsium.com>
+> ---
+>  drivers/mtd/spi-nor/controllers/intel-spi-pci.c | 16 +++++++++++-----
+>  1 file changed, 11 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/controllers/intel-spi-pci.c b/drivers/mtd/spi-nor/controllers/intel-spi-pci.c
+> index 81329f680bec..77e57450f166 100644
+> --- a/drivers/mtd/spi-nor/controllers/intel-spi-pci.c
+> +++ b/drivers/mtd/spi-nor/controllers/intel-spi-pci.c
+> @@ -24,6 +24,10 @@ static const struct intel_spi_boardinfo cnl_info = {
+>  	.type = INTEL_SPI_CNL,
+>  };
+>  
+> +static bool writeable;
+> +module_param(writeable, bool, 0);
+> +MODULE_PARM_DESC(writeable, "Enable write access to SPI flash chip (default=0)");
 
-> Today's linux-next merge of the init tree got a conflict in:
->=20
->   drivers/md/md.c
->=20
-> between commit:
->=20
->   a564e23f0f99 ("md: switch to ->check_events for media change notificati=
-ons")
->=20
-> from the block tree and commit:
->=20
->   7e0adbfc20c5 ("md: rewrite md_setup_drive to avoid ioctls")
->=20
-> from the init tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
-> diff --cc drivers/md/md.c
-> index 5b6d46741baa,ee622b67424e..000000000000
-> --- a/drivers/md/md.c
-> +++ b/drivers/md/md.c
-> @@@ -7836,21 -7790,23 +7820,21 @@@ static void md_release(struct gendisk *
->   	mddev_put(mddev);
->   }
->  =20
->  -static int md_media_changed(struct gendisk *disk)
->  -{
->  -	struct mddev *mddev =3D disk->private_data;
->  -
->  -	return mddev->changed;
->  -}
->  -
->  -static int md_revalidate(struct gendisk *disk)
->  +static unsigned int md_check_events(struct gendisk *disk, unsigned int =
-clearing)
->   {
->   	struct mddev *mddev =3D disk->private_data;
->  +	unsigned int ret =3D 0;
->  =20
->  +	if (mddev->changed)
->  +		ret =3D DISK_EVENT_MEDIA_CHANGE;
->   	mddev->changed =3D 0;
->  -	return 0;
->  +	return ret;
->   }
->  +
-> - static const struct block_device_operations md_fops =3D
-> + const struct block_device_operations md_fops =3D
->   {
->   	.owner		=3D THIS_MODULE,
->  +	.submit_bio	=3D md_submit_bio,
->   	.open		=3D md_open,
->   	.release	=3D md_release,
->   	.ioctl		=3D md_ioctl,
+I think instead of this we should simply make it so that the driver
+never tries to make the chip writable.
 
-This is now a conflict between the block tree and the vfs tree.
+> +
+>  static int intel_spi_pci_probe(struct pci_dev *pdev,
+>  			       const struct pci_device_id *id)
+>  {
+> @@ -41,12 +45,14 @@ static int intel_spi_pci_probe(struct pci_dev *pdev,
+>  	if (!info)
+>  		return -ENOMEM;
+>  
+> -	/* Try to make the chip read/write */
+> -	pci_read_config_dword(pdev, BCR, &bcr);
+> -	if (!(bcr & BCR_WPD)) {
+> -		bcr |= BCR_WPD;
+> -		pci_write_config_dword(pdev, BCR, bcr);
+> +	if (writeable) {
+> +		/* Try to make the chip read/write */
+>  		pci_read_config_dword(pdev, BCR, &bcr);
+> +		if (!(bcr & BCR_WPD)) {
+> +			bcr |= BCR_WPD;
+> +			pci_write_config_dword(pdev, BCR, bcr);
+> +			pci_read_config_dword(pdev, BCR, &bcr);
+> +		}
+>  	}
+>  	info->writeable = !!(bcr & BCR_WPD);
 
---=20
-Cheers,
-Stephen Rothwell
+So here we just read the BCR register and then set info->writeable based
+on its value.
 
---Sig_/EWMb.r6q5dcMb1uac.Isdeu
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8n3qYACgkQAVBC80lX
-0Gzj+QgAlvI7u/eGcFYAZGpzbkVgp8++rH4m/kM2TnKu7fDR/+C4fqQYyNjempow
-XcZ30gfCQqnsOxYQiIdp5B63f/ewc2R4/WifcgDBBLf6goIzSjptsxg6XgnoF8m3
-3utbzm3kyuaZegtjz/YE43cXEi10qCtOJQBAkkL8Hm1oMkz78iyrvZ3GS2ef+V6U
-KRT732QIQvlenrkE8OUOFA9k0eQtfa1zqQt4bhfNjKnClj/fOG3YIQQnMRhqsQ25
-7iYssORLdQeDQ5r0vYEIPmDYGStS6OD+YB0c55QlWNgrGwWnnjPj5bl2sDUuIlL7
-BZmpN0xQ1jxckMvg0S9D1mSMeOZZeA==
-=N5bW
------END PGP SIGNATURE-----
-
---Sig_/EWMb.r6q5dcMb1uac.Isdeu--
+Then it is up to the BIOS to enable this if it allows writing the flash
+chip from the OS side.
