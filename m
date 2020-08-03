@@ -2,106 +2,91 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB781C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7BBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED637207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:03:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596481440;
-	bh=OPk0T9kG0Gol3cqvhXjCqqC9Mxo3fC0Q9xIl/G8Wx74=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=uFoF9OvsSnsnMOlg42fS2RGlzN6/lSyr4P6myJOKkF/xwZ830raFnPRTajKb7IW2t
-	 5zDDA2DU77oG2XNk/wVxLNVPDFMVIu6j7MJBZRPOeQeGoWpOdEwvcEsVO6uTHYxc6v
-	 ho7yaBU8Ej5sBd0B/VycAaoJqKB2sbuJCqCJF810=
+	by mail.kernel.org (Postfix) with ESMTP id 9ED5122B45
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:05:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgHCTD6 (ORCPT
+        id S1727024AbgHCTFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 15:03:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbgHCTD6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 15:03:58 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DC35C06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 12:03:58 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id f24so19281692ejx.6
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 12:03:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=q1Bmecf3m8916gSeMnpXUHhv5RsH1HZnBk2G3HbWWR0=;
-        b=NCJJYg/l7RVcsAvMXnUJjOAx4Exz5UISHkqez0V6/+Dg33lGyQWcCbfJyzTkqLc9XP
-         Nc/HcresPMCd8dcKpEJvjfxte6qfNTkFnJXZDuoNZN12BHO5+8wke5HVhuNGZ7lrDZb+
-         L1HHghD7lu+eFrQspIUWKZzLcsP0S0ivZdvqL3LbJ4WlpFsgB93d5S7cUKbF+52bN+73
-         cow9fsOxxx6RyW+Pn0gBKkg9OOftkNtkwaXd7kCYl5MGPerxmSn9ksT3eXWeb4m7WJFY
-         mjZ58h4etmVPsVFIOznNG3XFVZO/XvB8kvxuDLGeOGY4e0ASUgmVxNXMf/YhaKSokwFn
-         sRUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition;
-        bh=q1Bmecf3m8916gSeMnpXUHhv5RsH1HZnBk2G3HbWWR0=;
-        b=YlmJZH5ObUO7wQve/qsyepwA3y3okjAyJa4cDPGf+596UK7BzQMB44Q+hLzVs1+tpp
-         BElAYQK2tLBwRKtifF8xVPS5f7c2Rs9I1ZN+r9cz8wQ6489ZchMn5m0uEbORo1vxy+UF
-         SHDyPXlC1vSY32k5MMlUll877/M5Pt4bH0gNqTmdFfbeTdAda2liESuqFaQk4qHH0JNX
-         rJRE5wHYnSx9y7AyLn8e3et9rVLhmqCHE+vpYY7GBu/ul8D7cpbEWZ8YFpgdf+Xc3i8Y
-         HMqcebfZyFGNY3IdCuyJVrcDw3XI7Vir94t9Tdqigi5VVTtnqTMjwqdQzBxpsHlPc2SO
-         xb6g==
-X-Gm-Message-State: AOAM532wvflpQgvpYGETwe8UQU3TEVsKCchJrTXAtThX2GU1qI/RlKqD
-        XFEslLQjJkkMAf1lix5UDBw=
-X-Google-Smtp-Source: ABdhPJxfbt2STf5YY7T8GUxrXNfJIEaAojNY62BsqINh5mnRQcftqupz4+rzGSeGL9v/Igx/vb9NHA==
-X-Received: by 2002:a17:906:15d8:: with SMTP id l24mr17540840ejd.297.1596481436858;
-        Mon, 03 Aug 2020 12:03:56 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id by3sm16788860ejb.9.2020.08.03.12.03.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 12:03:56 -0700 (PDT)
-Date:   Mon, 3 Aug 2020 21:03:54 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] x86/mm changes for v5.9
-Message-ID: <20200803190354.GA1293087@gmail.com>
+        Mon, 3 Aug 2020 15:05:17 -0400
+Received: from mga14.intel.com ([192.55.52.115]:47829 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbgHCTFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 15:05:17 -0400
+IronPort-SDR: /4xYqsQ05M2uR13ZPzMJ1t3c50JhloS2n5IOA3RaBRglrQdPd/T/gOABLq+rH3iOAQlZ5RGNok
+ iEcG37saVgCQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="151414459"
+X-IronPort-AV: E=Sophos;i="5.75,431,1589266800"; 
+   d="scan'208";a="151414459"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 12:05:07 -0700
+IronPort-SDR: oJ59usHZIo/V2XvsaaF2ffeauJiMzYoWD+G0LHQLHWJK+qHUC5lg/k5XEvs4GeYnlYUIdwSTxl
+ 25ocyzJZIrTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
+   d="scan'208";a="314888731"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by fmsmga004.fm.intel.com with ESMTP; 03 Aug 2020 12:05:07 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id E5E5E301C06; Mon,  3 Aug 2020 12:05:06 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 12:05:06 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jian Cai <jiancai@google.com>,
+        =?utf-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>,
+        Luis Lozano <llozano@google.com>,
+        Manoj Gupta <manojgupta@google.com>, stable@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: Re: [PATCH v5 13/36] vmlinux.lds.h: add PGO and AutoFDO input
+ sections
+Message-ID: <20200803190506.GE1299820@tassilo.jf.intel.com>
+References: <20200731230820.1742553-1-keescook@chromium.org>
+ <20200731230820.1742553-14-keescook@chromium.org>
+ <20200801035128.GB2800311@rani.riverdale.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200801035128.GB2800311@rani.riverdale.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+> However, the history of their being together comes from
+> 
+>   9bebe9e5b0f3 ("kbuild: Fix .text.unlikely placement")
+> 
+> which seems to indicate there was some problem with having them separated out,
+> although I don't quite understand what the issue was from the commit message.
 
-Please pull the latest x86/mm git tree from:
+Separating it out is less efficient. Gives worse packing for the hot part
+if they are not aligned to 64byte boundaries, which they are usually not. 
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-mm-2020-08-03
+It also improves packing of the cold part, but that probably doesn't matter.
 
-   # HEAD: 2b32ab031e82a109e2c5b0d30ce563db0fe286b4 x86/mm/64: Make sync_global_pgds() static
-
-The biggest change is to not sync the vmalloc and ioremap ranges for x86-64 anymore.
-
- Thanks,
-
-	Ingo
-
------------------->
-Joerg Roedel (3):
-      x86/mm: Pre-allocate P4D/PUD pages for vmalloc area
-      x86/mm/64: Do not sync vmalloc/ioremap mappings
-      x86/mm/64: Make sync_global_pgds() static
-
-
- arch/x86/include/asm/pgtable_64.h       |  2 --
- arch/x86/include/asm/pgtable_64_types.h |  2 --
- arch/x86/mm/init_64.c                   | 59 +++++++++++++++++++++++++++++----
- 3 files changed, 53 insertions(+), 10 deletions(-)
+-Andi
