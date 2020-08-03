@@ -2,117 +2,178 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB89DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA97C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C8D22075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:11:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HeAvcOEz"
+	by mail.kernel.org (Postfix) with ESMTP id B98CA22BF3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgHCULa (ORCPT
+        id S1727831AbgHCUMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 16:11:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57698 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbgHCULa (ORCPT
+        Mon, 3 Aug 2020 16:12:16 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:57630 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgHCUMQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 16:11:30 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F384AC061756
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 13:11:29 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id g19so8921814plq.0
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 13:11:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TfiyLaiiytHrMlT6oh4IsfhQ9YFyy5wx3zu6IU7BZNY=;
-        b=HeAvcOEzYgF+GPngOCTfUbepzuEHkx+8qRmbejrCRY0MMmgn7UeyBWYdJzytoGD/Ta
-         qJv07CPlJcF29ETgPuWONUktPZBp3nwXCAW6eRZRISbnRUQRb/KL+l6+49U1G00uxaJ2
-         G8Xq9iIuiiHpWvLKYqRaN87kEr5QcIdg7wdbc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TfiyLaiiytHrMlT6oh4IsfhQ9YFyy5wx3zu6IU7BZNY=;
-        b=YEa7rx7THGfkEcSk+PyVnuHk+o26UpPepgoYK8N/hSt3dtRYGmOLl9Ys7G+53LbyW2
-         6zrq7ARdkMRbULrg9TTNu0/Ag+xjOCd4YFtO8PVUJuWXL7q9Q7sJ7EXWCS6XRme04Phx
-         32tK8J2JjtTO6pBxdL+4zKsDniXt1Lf7D9flVRgbji5zmCRxQAXoe+y9KRdnTG3UU863
-         b7OICAGO7BOPw+0/0ChB2dAIa80t4IpAwAgWDyqgZRYC5I8RhbT7BrrpJ343O3Nk5k7N
-         OSWqyjsUif0aOrRzj8LjoyDoZAU/9tSvsHWRXfy7taFTu9mOcfn4HypEpX8F9XUH7yae
-         EKyQ==
-X-Gm-Message-State: AOAM530KOYDD0f+bcovi5cF8Gc2aHYabdKVlOg5ascIrIpAfYj5bEprt
-        comyjQXN2Et2EAt3rLYoAOlWjw==
-X-Google-Smtp-Source: ABdhPJx5soepBCB5jCgc7HTF/4STC+NuKiuSvs2LauZE/NK7WGz7+MhS+gn47Q/oX5PA+CVBiIyxZw==
-X-Received: by 2002:a17:90a:7f02:: with SMTP id k2mr942128pjl.196.1596485489540;
-        Mon, 03 Aug 2020 13:11:29 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d2sm18527244pgp.17.2020.08.03.13.11.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 13:11:28 -0700 (PDT)
-Date:   Mon, 3 Aug 2020 13:11:27 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Frank Ch. Eigler" <fche@redhat.com>
-Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
-        Evgenii Shatokhin <eshatokhin@virtuozzo.com>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Miroslav Benes <mbenes@suse.cz>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, arjan@linux.intel.com,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, rick.p.edgecombe@intel.com,
-        live-patching@vger.kernel.org,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: Re: [PATCH v4 00/10] Function Granular KASLR
-Message-ID: <202008031310.4F8DAA20@keescook>
-References: <20200717170008.5949-1-kristen@linux.intel.com>
- <alpine.LSU.2.21.2007221122110.10163@pobox.suse.cz>
- <e9c4d88b-86db-47e9-4299-3fac45a7e3fd@virtuozzo.com>
- <202008031043.FE182E9@keescook>
- <fc6d2289-af97-5cf8-a4bb-77c2b0b8375c@redhat.com>
- <20200803193837.GB30810@redhat.com>
+        Mon, 3 Aug 2020 16:12:16 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id D00AF20023;
+        Mon,  3 Aug 2020 22:12:10 +0200 (CEST)
+Date:   Mon, 3 Aug 2020 22:12:09 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Timur Tabi <timur@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Antonino Daplas <adaplas@gmail.com>,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH][next] fbdev: Use fallthrough pseudo-keyword
+Message-ID: <20200803201209.GA579791@ravnborg.org>
+References: <20200707210539.GA12530@embeddedor>
+ <20200803194024.GA525506@ravnborg.org>
+ <101585b1d3c2a9db8fe394c51f64115e8bfc1754.camel@perches.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200803193837.GB30810@redhat.com>
+In-Reply-To: <101585b1d3c2a9db8fe394c51f64115e8bfc1754.camel@perches.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8 a=JD9iRpnvPCjC92fAJV8A:9
+        a=CjuIK1q_8ugA:10 a=1F1461vogZIA:10 a=5kKzt1m56AEA:10
+        a=AjGcO6oz07-iQ99wixmX:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 03:38:37PM -0400, Frank Ch. Eigler wrote:
-> Hi -
+On Mon, Aug 03, 2020 at 12:52:40PM -0700, Joe Perches wrote:
+> On Mon, 2020-08-03 at 21:41 +0200, Sam Ravnborg wrote:
+> > On Tue, Jul 07, 2020 at 04:05:39PM -0500, Gustavo A. R. Silva wrote:
+> > > Replace the existing /* fall through */ comments and its variants with
+> > > the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+> > > fall-through markings when it is the case.
+> > > 
+> > > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
+> > > 
+> > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > 
+> > Thanks.
+> > 
+> > Fixed indent in arcfb.c while applying.
+> > Applied to drm-misc-next and it will appear in 5.10
 > 
-> > > While this does seem to be the right solution for the extant problem, I
-> > > do want to take a moment and ask if the function sections need to be
-> > > exposed at all? What tools use this information, and do they just want
-> > > to see the bounds of the code region? (i.e. the start/end of all the
-> > > .text* sections) Perhaps .text.* could be excluded from the sysfs
-> > > section list?
-> 
-> > [[cc += FChE, see [0] for Evgenii's full mail ]]
-> 
-> Thanks!
-> 
-> > It looks like debugging tools like systemtap [1], gdb [2] and its
-> > add-symbol-file cmd, etc. peek at the /sys/module/<MOD>/section/ info.
-> > But yeah, it would be preferable if we didn't export a long sysfs
-> > representation if nobody actually needs it.
-> 
-> Systemtap needs to know base addresses of loaded text & data sections,
-> in order to perform relocation of probe point PCs and context data
-> addresses.  It uses /sys/module/...., kind of under protest, because
-> there seems to exist no MODULE_EXPORT'd API to get at that information
-> some other way.
+> Perhaps better would be to fix all the switch / case
+> brace uses so that it looks more typical kernel style.
 
-Wouldn't /proc/kallsysms entries cover this? I must be missing
-something...
+falltrhough seems like an OK thing to do even if fbdev is in pure
+maintenance mode. Mostly so tools do not stumble upon this and
+we continue to see patches.
 
--- 
-Kees Cook
+But larger refactorings seems a little pointless.
+
+If we do this change, should we then also start to accept indent fixes
+for the other switch () cases in the fbdev drivers.
+
+My initial reaction is therefore thanks, but no thanks.
+
+	Sam
+
+> 
+> > > diff --git a/drivers/video/fbdev/arcfb.c b/drivers/video/fbdev/arcfb.c
+> > > index 6f7838979f0a..ae3d8e8b8d33 100644
+> > > --- a/drivers/video/fbdev/arcfb.c
+> > > +++ b/drivers/video/fbdev/arcfb.c
+> > > @@ -419,7 +419,7 @@ static int arcfb_ioctl(struct fb_info *info,
+> > >  			schedule();
+> > >  			finish_wait(&arcfb_waitq, &wait);
+> > >  		}
+> > > -		/* fall through */
+> > > +			fallthrough;
+> > >  
+> > >  		case FBIO_GETCONTROL2:
+> > >  		{
+> 
+> ---
+>  drivers/video/fbdev/arcfb.c | 52 ++++++++++++++++++++++-----------------------
+>  1 file changed, 25 insertions(+), 27 deletions(-)
+> 
+> diff --git a/drivers/video/fbdev/arcfb.c b/drivers/video/fbdev/arcfb.c
+> index 6f7838979f0a..4419655e3e58 100644
+> --- a/drivers/video/fbdev/arcfb.c
+> +++ b/drivers/video/fbdev/arcfb.c
+> @@ -403,35 +403,33 @@ static int arcfb_ioctl(struct fb_info *info,
+>  	unsigned long flags;
+>  
+>  	switch (cmd) {
+> -		case FBIO_WAITEVENT:
+> -		{
+> -			DEFINE_WAIT(wait);
+> -			/* illegal to wait on arc if no irq will occur */
+> -			if (!par->irq)
+> -				return -EINVAL;
+> -
+> -			/* wait until the Arc has generated an interrupt
+> -			 * which will wake us up */
+> -			spin_lock_irqsave(&par->lock, flags);
+> -			prepare_to_wait(&arcfb_waitq, &wait,
+> -					TASK_INTERRUPTIBLE);
+> -			spin_unlock_irqrestore(&par->lock, flags);
+> -			schedule();
+> -			finish_wait(&arcfb_waitq, &wait);
+> -		}
+> -		/* fall through */
+> +	case FBIO_WAITEVENT: {
+> +		DEFINE_WAIT(wait);
+> +		/* illegal to wait on arc if no irq will occur */
+> +		if (!par->irq)
+> +			return -EINVAL;
+>  
+> -		case FBIO_GETCONTROL2:
+> -		{
+> -			unsigned char ctl2;
+> +		/* wait until the Arc has generated an interrupt
+> +		 * which will wake us up */
+> +		spin_lock_irqsave(&par->lock, flags);
+> +		prepare_to_wait(&arcfb_waitq, &wait, TASK_INTERRUPTIBLE);
+> +		spin_unlock_irqrestore(&par->lock, flags);
+> +		schedule();
+> +		finish_wait(&arcfb_waitq, &wait);
+> +		fallthrough;
+> +	}
+>  
+> -			ctl2 = ks108_readb_ctl2(info->par);
+> -			if (copy_to_user(argp, &ctl2, sizeof(ctl2)))
+> -				return -EFAULT;
+> -			return 0;
+> -		}
+> -		default:
+> -			return -EINVAL;
+> +	case FBIO_GETCONTROL2: {
+> +		unsigned char ctl2;
+> +
+> +		ctl2 = ks108_readb_ctl2(info->par);
+> +		if (copy_to_user(argp, &ctl2, sizeof(ctl2)))
+> +			return -EFAULT;
+> +		return 0;
+> +	}
+> +
+> +	default:
+> +		return -EINVAL;
+>  	}
+>  }
+>  
+> 
