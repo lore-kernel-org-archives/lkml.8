@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC2BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A05C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5D60207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F84C207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457516;
-	bh=O22S31kiiQfotZ8ILAuZ9hks77MoKMu0q1cay8LAfhk=;
+	s=default; t=1596457518;
+	bh=awrWVYP5zeKpfOAYOlqjLLaaTEhgzqBcc08iqFyDZ1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D7zjuDzM+bXjYuyMhXHgL+hfc5Y/0OWFHP9d5LlNfEXODeOwFXrBeXh2XiE/sREfm
-	 Udq6Qx/Vj38mxookJUFjLhvtqkeBzemwlIQLuEJgoRm1islRu1e0v0a2qpCGEscdjE
-	 KRFFuKIeQY+EaptPmwJP+HYhmIi/35K0L5ohHsAs=
+	b=QlxTmMgDtPFDTY7V+nRdTebhWezwm9WfAHtp4bPvjErK4jas8wo/re/HpWD+Dm7mp
+	 nGxMowcj24KS893yIqSS2UFGySuYMzkGlBjVAKniGRDVRj89aGmKyQbEAztiC/UKO3
+	 Tm1MjFSdo0z2dfmTSjn/nyvTk78Rk3L/hJe/53b4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728168AbgHCMZQ (ORCPT
+        id S1728182AbgHCMZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:25:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49666 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:25:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726854AbgHCMZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:25:02 -0400
+        id S1728142AbgHCMZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:25:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EF23207BB;
-        Mon,  3 Aug 2020 12:25:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46449207FB;
+        Mon,  3 Aug 2020 12:25:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457501;
-        bh=O22S31kiiQfotZ8ILAuZ9hks77MoKMu0q1cay8LAfhk=;
+        s=default; t=1596457510;
+        bh=awrWVYP5zeKpfOAYOlqjLLaaTEhgzqBcc08iqFyDZ1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L2tWD/60p2qtgR18XKFfAbhtudReZ0ELqzc6sYx7gAps/dMkcTFzs+x32BVe2sWK4
-         Y8rYXJbHYS0+WOaCvKn3Bx8mwf1zKY0CcfOaf3UueRrwE1+FdBj13tbpx/ErXJmVsh
-         YHSmuOk7Z03JSGzpG48h1vDTFTbyFkFVo8n2LDIY=
+        b=TZBjP9D5rWRdYt18DgwVvmhO64hg+HyHMPo1EMVc4xYlNsrKHmQ4dXoVOgtEvAO18
+         +caJ75+iPz+iRcG86w33x5lpxR8WrHvB54RMZbjz8dD066nlsAYL6FX4Zqw1b7lI9r
+         sj1pTAG20mtOA/bABgdFiEK3D8LcLP6VjeLcUeDU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jianbo Liu <jianbol@mellanox.com>,
-        Chris Mi <chrism@mellanox.com>, Roi Dayan <roid@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org, "Gong, Sishuai" <sishuai@purdue.edu>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 090/120] net/mlx5e: E-Switch, Add misc bit when misc fields changed for mirroring
-Date:   Mon,  3 Aug 2020 14:19:08 +0200
-Message-Id: <20200803121907.289040406@linuxfoundation.org>
+Subject: [PATCH 5.7 064/120] rhashtable: Fix unprotected RCU dereference in __rht_ptr
+Date:   Mon,  3 Aug 2020 14:18:42 +0200
+Message-Id: <20200803121905.921667002@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -61,115 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jianbo Liu <jianbol@mellanox.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-[ Upstream commit 0faddfe6b7953e224a1283f89f671ef6a9ba73de ]
+[ Upstream commit 1748f6a2cbc4694523f16da1c892b59861045b9d ]
 
-The modified flow_context fields in FTE must be indicated in
-modify_enable bitmask. Previously, the misc bit in modify_enable is
-always set as source vport must be set for each rule. So, when parsing
-vxlan/gre/geneve/qinq rules, this bit is not set because those are all
-from the same misc fileds that source vport fields are located at, and
-we don't need to set the indicator twice.
+The rcu_dereference call in rht_ptr_rcu is completely bogus because
+we've already dereferenced the value in __rht_ptr and operated on it.
+This causes potential double readings which could be fatal.  The RCU
+dereference must occur prior to the comparison in __rht_ptr.
 
-After adding per vport tables for mirroring, misc bit is not set, then
-firmware syndrome happens. To fix it, set the bit wherever misc fileds
-are changed. This also makes it unnecessary to check misc fields and set
-the misc bit accordingly in metadata matching, so here remove it.
+This patch changes the order of RCU dereference so that it is done
+first and the result is then fed to __rht_ptr.  The RCU marking
+changes have been minimised using casts which will be removed in
+a follow-up patch.
 
-Besides, flow_source must be specified for uplink because firmware
-will check it and some actions are only allowed for packets received
-from uplink.
-
-Fixes: 96e326878fa5 ("net/mlx5e: Eswitch, Use per vport tables for mirroring")
-Signed-off-by: Jianbo Liu <jianbol@mellanox.com>
-Reviewed-by: Chris Mi <chrism@mellanox.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: ba6306e3f648 ("rhashtable: Remove RCU marking from...")
+Reported-by: "Gong, Sishuai" <sishuai@purdue.edu>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun_geneve.c | 2 ++
- drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun_gre.c    | 2 ++
- drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun_vxlan.c  | 2 ++
- drivers/net/ethernet/mellanox/mlx5/core/en_tc.c            | 1 +
- drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c | 6 +++---
- 5 files changed, 10 insertions(+), 3 deletions(-)
+ include/linux/rhashtable.h | 25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun_geneve.c b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun_geneve.c
-index 951ea26d96bc3..e472ed0eacfbc 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun_geneve.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun_geneve.c
-@@ -301,6 +301,8 @@ static int mlx5e_tc_tun_parse_geneve_params(struct mlx5e_priv *priv,
- 		MLX5_SET(fte_match_set_misc, misc_v, geneve_protocol_type, ETH_P_TEB);
- 	}
- 
-+	spec->match_criteria_enable |= MLX5_MATCH_MISC_PARAMETERS;
-+
- 	return 0;
+diff --git a/include/linux/rhashtable.h b/include/linux/rhashtable.h
+index 70ebef866cc82..e3def7bbe9323 100644
+--- a/include/linux/rhashtable.h
++++ b/include/linux/rhashtable.h
+@@ -349,11 +349,11 @@ static inline void rht_unlock(struct bucket_table *tbl,
+ 	local_bh_enable();
  }
  
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun_gre.c b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun_gre.c
-index 58b13192df239..2805416c32a3c 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun_gre.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun_gre.c
-@@ -80,6 +80,8 @@ static int mlx5e_tc_tun_parse_gretap(struct mlx5e_priv *priv,
- 			 gre_key.key, be32_to_cpu(enc_keyid.key->keyid));
- 	}
- 
-+	spec->match_criteria_enable |= MLX5_MATCH_MISC_PARAMETERS;
-+
- 	return 0;
+-static inline struct rhash_head __rcu *__rht_ptr(
+-	struct rhash_lock_head *const *bkt)
++static inline struct rhash_head *__rht_ptr(
++	struct rhash_lock_head *p, struct rhash_lock_head __rcu *const *bkt)
+ {
+-	return (struct rhash_head __rcu *)
+-		((unsigned long)*bkt & ~BIT(0) ?:
++	return (struct rhash_head *)
++		((unsigned long)p & ~BIT(0) ?:
+ 		 (unsigned long)RHT_NULLS_MARKER(bkt));
  }
  
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun_vxlan.c b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun_vxlan.c
-index 37b176801bccb..038a0f1cecec6 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun_vxlan.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun_vxlan.c
-@@ -136,6 +136,8 @@ static int mlx5e_tc_tun_parse_vxlan(struct mlx5e_priv *priv,
- 	MLX5_SET(fte_match_set_misc, misc_v, vxlan_vni,
- 		 be32_to_cpu(enc_keyid.key->keyid));
- 
-+	spec->match_criteria_enable |= MLX5_MATCH_MISC_PARAMETERS;
-+
- 	return 0;
+@@ -365,25 +365,26 @@ static inline struct rhash_head __rcu *__rht_ptr(
+  *            access is guaranteed, such as when destroying the table.
+  */
+ static inline struct rhash_head *rht_ptr_rcu(
+-	struct rhash_lock_head *const *bkt)
++	struct rhash_lock_head *const *p)
+ {
+-	struct rhash_head __rcu *p = __rht_ptr(bkt);
+-
+-	return rcu_dereference(p);
++	struct rhash_lock_head __rcu *const *bkt = (void *)p;
++	return __rht_ptr(rcu_dereference(*bkt), bkt);
  }
  
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-index 10f705761666b..c0f54d2d49258 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-@@ -2256,6 +2256,7 @@ static int __parse_cls_flower(struct mlx5e_priv *priv,
- 				 match.key->vlan_priority);
+ static inline struct rhash_head *rht_ptr(
+-	struct rhash_lock_head *const *bkt,
++	struct rhash_lock_head *const *p,
+ 	struct bucket_table *tbl,
+ 	unsigned int hash)
+ {
+-	return rht_dereference_bucket(__rht_ptr(bkt), tbl, hash);
++	struct rhash_lock_head __rcu *const *bkt = (void *)p;
++	return __rht_ptr(rht_dereference_bucket(*bkt, tbl, hash), bkt);
+ }
  
- 			*match_level = MLX5_MATCH_L2;
-+			spec->match_criteria_enable |= MLX5_MATCH_MISC_PARAMETERS;
- 		}
- 	}
+ static inline struct rhash_head *rht_ptr_exclusive(
+-	struct rhash_lock_head *const *bkt)
++	struct rhash_lock_head *const *p)
+ {
+-	return rcu_dereference_protected(__rht_ptr(bkt), 1);
++	struct rhash_lock_head __rcu *const *bkt = (void *)p;
++	return __rht_ptr(rcu_dereference_protected(*bkt, 1), bkt);
+ }
  
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-index 5d9def18ae3a7..cfc52521d7753 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-@@ -264,9 +264,6 @@ mlx5_eswitch_set_rule_source_port(struct mlx5_eswitch *esw,
- 			 mlx5_eswitch_get_vport_metadata_mask());
- 
- 		spec->match_criteria_enable |= MLX5_MATCH_MISC_PARAMETERS_2;
--		misc = MLX5_ADDR_OF(fte_match_param, spec->match_criteria, misc_parameters);
--		if (memchr_inv(misc, 0, MLX5_ST_SZ_BYTES(fte_match_set_misc)))
--			spec->match_criteria_enable |= MLX5_MATCH_MISC_PARAMETERS;
- 	} else {
- 		misc = MLX5_ADDR_OF(fte_match_param, spec->match_value, misc_parameters);
- 		MLX5_SET(fte_match_set_misc, misc, source_port, attr->in_rep->vport);
-@@ -381,6 +378,9 @@ mlx5_eswitch_add_offloaded_rule(struct mlx5_eswitch *esw,
- 		flow_act.modify_hdr = attr->modify_hdr;
- 
- 	if (split) {
-+		if (MLX5_CAP_ESW_FLOWTABLE(esw->dev, flow_source) &&
-+		    attr->in_rep->vport == MLX5_VPORT_UPLINK)
-+			spec->flow_context.flow_source = MLX5_FLOW_CONTEXT_FLOW_SOURCE_UPLINK;
- 		fdb = esw_vport_tbl_get(esw, attr);
- 	} else {
- 		if (attr->chain || attr->prio)
+ static inline void rht_assign_locked(struct rhash_lock_head **bkt,
 -- 
 2.25.1
 
