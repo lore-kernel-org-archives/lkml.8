@@ -2,187 +2,154 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E031C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AFCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E7AB20A8B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:17:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596475026;
-	bh=ZfW2vhvSScmUs7HxUE0FsgQ1dlDVdrRmbY/gG/hY7hg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Qj/UTwgzEbPhdqx3+wSEqvR5dbBtIGTtW+OewkSmd+lCSr7XRQc66iVZCNBjBxLZg
-	 xFPH7h1iSxfkEpNeZgcFsV5tdbqiImJ2nAOp7jaqdwZ3bTuy1JA2mbPjR18sd42fpp
-	 TXK+09DFhkkwaWej7AIej33noDfP9SuE6aXbdcwc=
+	by mail.kernel.org (Postfix) with ESMTP id 0877A22B40
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:17:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R0NZy6Rv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbgHCRRG (ORCPT
+        id S1728408AbgHCRRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 3 Aug 2020 13:17:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42260 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726878AbgHCRRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59054 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728038AbgHCRRF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 3 Aug 2020 13:17:05 -0400
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B70422BED
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 17:17:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596475023;
-        bh=ZfW2vhvSScmUs7HxUE0FsgQ1dlDVdrRmbY/gG/hY7hg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Np7Qal28gMw4vcH1iKZe+TCqR6WclB8Xl5dpKtQX+V2iYlgPe7V6F8enqvaZFIEk2
-         I/Mthwxs+qNrkOId4Kwi++aCgOrG1nb2jiaXJkC5c1dj2bJ7lcaLS3wS0GK5Mj1eMN
-         /F+YS18i6ApdnLrSIBlXk7GDgD7KvH9c8mG8Tmg8=
-Received: by mail-lf1-f48.google.com with SMTP id v15so16336370lfg.6
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 10:17:04 -0700 (PDT)
-X-Gm-Message-State: AOAM532nl7fMRCkhIHFalrbgGy1SGd7FW+CbYG7l98HPcrLRVdINcG8L
-        gnB1gidwDV+GoBc5SWuFw4A3od2K4QYgbzoCA9zOZg==
-X-Google-Smtp-Source: ABdhPJw3cLd2NyF1JTZLmIChK5azh663lCruYa9l5xMzdcEl0b7NT7N2OX4JjEA6xNE9eK5dDwiBzSwU4LUpGRtccrQ=
-X-Received: by 2002:a5d:65d2:: with SMTP id e18mr15622569wrw.70.1596475021990;
- Mon, 03 Aug 2020 10:17:01 -0700 (PDT)
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19904C06174A;
+        Mon,  3 Aug 2020 10:17:05 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 9so270053wmj.5;
+        Mon, 03 Aug 2020 10:17:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6V/SvPSvcydXl8vov4q/FEf8a3anRu2OXMNMMPVyZMI=;
+        b=R0NZy6RvyWdSCMisKC3VJKNbXfy8Esv/ZJQbeJ2cuUW6hIc+wt65Pijg3uaiWXwi6c
+         lufrTuTtF3jCUv6LED8TgfEkCyObIv9cWwgmZk231R0XVj9igN119wBoeLovX0HAg8Bc
+         zeQFXkW7W2R0XE5iNnlJpmre+xiYIxXj/MQq4A9x3BLH7O5FJ9PW0B7btEdzQ+TboDR0
+         /rIjVFzwBwbX7Con7q8HaFO96WyuF1YTA1RjG/f6ixqF58aroINubnbAGGtgFZ+P7LZr
+         ivvbdy+GqfD1PE6K3VBXrJpkKR10o6ncb/nd/9VKzoZ3YXDoPgwBkUGYUAjY5okpB8Gb
+         /9wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6V/SvPSvcydXl8vov4q/FEf8a3anRu2OXMNMMPVyZMI=;
+        b=Xh1RdzGlIwLrkk1Z3GDHvp/Djo8AboaIA7i7ZKR9/oUNKPghWSgChXgu2naW4En+7k
+         Tcy4onqyZwXOyPXuMDhUfJtFq6uHg4hCTrQnxunLE8p36SFoW1YO1gPshiE/JQh0qrcC
+         GNv2l1b8M+ukFpOZqTIOBtgChkY/XeKI0Wk7Iuq5vR+2oYQpOw8lRRRWcC1tlK9FmNlL
+         RvHnFQLMKI0sjY6x4/FRZWg7YHIc6Oxq8i5YL0Q/F8WxzTTIZKVGFd/S3Nf6OwE0R9Ms
+         TmqeMB/nD1UIUXrLStGyx5ZDVDey5SFdp046zxp/5HnZ05hO/nmEXRncsfagKDzYU3+/
+         6+Kw==
+X-Gm-Message-State: AOAM531xh5NI5Fg+M0ldSwKOnkDpZaW3NzLh8OvvYDpa0U1T5/kGGIng
+        Vk5urXo469fETPx+MFSj5WBPEED7
+X-Google-Smtp-Source: ABdhPJwgofQRPJKD/LVWdkbG55ngDJlBIBRd24sFtdJziWvFeBHsvJqB1R8cBpfZafZbsljU5TrGaw==
+X-Received: by 2002:a1c:6002:: with SMTP id u2mr240003wmb.170.1596475023501;
+        Mon, 03 Aug 2020 10:17:03 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id f131sm378221wme.40.2020.08.03.10.17.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Aug 2020 10:17:02 -0700 (PDT)
+Subject: Re: [PATCH] MIPS: BMIPS: Disable pref 30 for buggy CPUs
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-mips@linux-mips.org,
+        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
+        <linux-mips@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200731042401.22871-1-f.fainelli@gmail.com>
+ <21ad5472-1287-acba-5604-09f2e633c043@flygoat.com>
+ <46de49ec-cc8b-708a-0cdd-82389b041078@gmail.com>
+ <20200803113020.GA8958@alpha.franken.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <bcd3255c-bbb0-f4c0-1a33-7a16ee9f7b93@gmail.com>
+Date:   Mon, 3 Aug 2020 10:16:59 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1594684087-61184-1-git-send-email-fenghua.yu@intel.com>
- <1594684087-61184-13-git-send-email-fenghua.yu@intel.com> <CALCETrXnO4oh+WyxtSM-j_pP4QgkSg24=y76OBEHxXxAfJtPhA@mail.gmail.com>
- <f6d34d59-e6eb-ee9f-d247-8fb2f0e37549@intel.com> <CALCETrXLFwzCzoE8ZjciBO_WSK8StyTfO1yXVm4v2qFQZpfasg@mail.gmail.com>
- <12fbdc01-e444-8d10-5790-e3495fc8a837@intel.com>
-In-Reply-To: <12fbdc01-e444-8d10-5790-e3495fc8a837@intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 3 Aug 2020 10:16:50 -0700
-X-Gmail-Original-Message-ID: <CALCETrWR1hL=eXAkn=OG1vtAPvC9n1jGqyNuyXpYw8QwPENo1A@mail.gmail.com>
-Message-ID: <CALCETrWR1hL=eXAkn=OG1vtAPvC9n1jGqyNuyXpYw8QwPENo1A@mail.gmail.com>
-Subject: Re: [PATCH v6 12/12] x86/traps: Fix up invalid PASID
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joerg Roedel <joro@8bytes.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        H Peter Anvin <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Jacob Jun Pan <jacob.jun.pan@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Sohil Mehta <sohil.mehta@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, iommu <iommu@lists.linux-foundation.org>,
-        amd-gfx <amd-gfx@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200803113020.GA8958@alpha.franken.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 3, 2020 at 9:37 AM Dave Hansen <dave.hansen@intel.com> wrote:
->
-> On 8/3/20 8:12 AM, Andy Lutomirski wrote:
-> > I could easily be convinced that the PASID fixup is so trivial and so
-> > obviously free of misfiring in a way that causes an infinite loop that
-> > this code is fine.  But I think we first need to answer the bigger
-> > question of why we're doing a lazy fixup in the first place.
->
-> There was an (internal to Intel) implementation of this about a year ago
-> that used smp_call_function_many() to force the MSR state into all
-> threads of a process.  I took one look at it, decided there was a 0%
-> chance of it actually functioning and recommended we find another way.
-> While I'm sure it could be done more efficiently, the implementation I
-> looked at took ~200 lines of code and comments.  It started to look too
-> much like another instance of mm->cpumask for my comfort.
-
-If I were implementing this, I would try making switch_mm_irqs_off()
-do, roughly:
-
-void load_mm_pasid(...) {
-  if (cpu_feature_enabled(X86_FEATURE_ENQCMD))
-    tsk->xstate[offset] = READ_ONCE(next->context.pasid);
-}
-
-This costs one cache miss, although the cache line in question is
-about to be read anyway.  It might be faster to, instead, do:
-
-void load_mm_pasid(...) {
-  u32 pasid = READ_ONCE(next->context.pasid);
-
-  if (tsk->xstate[offset] != pasid)
-    tsk->state[offset] = pasid;
-}
-
-so we don't dirty the cache line in the common case.  The actual
-generated code ought to be pretty good -- surely the offset of PASID
-in XSTATE is an entry in an array somewhere that can be found with a
-single read, right?
-
-The READ_ONCE is because this could race against a write to
-context.pasid, so this code needs to be at the end of the function
-where it's protected by mm_cpumask.  With all this done, the pasid
-update is just on_each_cpu_mask(mm_cpumask(mm), load_mm_pasid, mm,
-true).
-
-This looks like maybe 20 lines of code.  As an added bonus, it lets us
-free PASIDs early if we ever decide we want to.
 
 
+On 8/3/2020 4:30 AM, Thomas Bogendoerfer wrote:
+> On Fri, Jul 31, 2020 at 03:49:28PM -0700, Florian Fainelli wrote:
+>> On 7/31/20 3:34 AM, Jiaxun Yang wrote:
+>>>
+>>>
+>>> 在 2020/7/31 下午12:24, Florian Fainelli 写道:
+>>>> Disable pref 30 by utilizing the standard quirk method and matching the
+>>>> affected SoCs: 7344, 7346, 7425.
+>>>>
+>>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>>>> ---
+>>>>   arch/mips/bmips/setup.c | 17 +++++++++++++++++
+>>>>   1 file changed, 17 insertions(+)
+>>>>
+>>>> diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
+>>>> index 19308df5f577..df0efea12611 100644
+>>>> --- a/arch/mips/bmips/setup.c
+>>>> +++ b/arch/mips/bmips/setup.c
+>>>> @@ -110,6 +110,20 @@ static void bcm6368_quirks(void)
+>>>>       bcm63xx_fixup_cpu1();
+>>>>   }
+>>>>   +static void bmips5000_pref30_quirk(void)
+>>>> +{
+>>>> +    __asm__ __volatile__(
+>>>> +    "    li    $8, 0x5a455048\n"
+>>>> +    "    .word    0x4088b00f\n"    /* mtc0 $8, $22, 15 */
+>>>> +    "    nop; nop; nop\n"
+>>>> +    "    .word    0x4008b008\n"    /* mfc0 $8, $22, 8 */
+>>>> +    /* disable "pref 30" on buggy CPUs */
+>>>> +    "    lui    $9, 0x0800\n"
+>>>> +    "    or    $8, $9\n"
+>>>> +    "    .word    0x4088b008\n"    /* mtc0 $8, $22, 8 */
+>>>> +    : : : "$8", "$9");
+>>>> +}
+>>> Hi,
+>>>
+>>> Is there any toolchain issue blocking read_c0_**** family helpers being
+>>> used?
+>>>
+>>> Use .word looks unreasonable.
+>>
+>> Yes, the assembler would be choking on the custom $22 selector, however
+> 
+> I guess you meant selector 8 and 15. If BMIPS has a 4 bit selector field
+> it might be good to do a binutils patch supporting it.
 
+Yes, sorry that is what I meant. I don't think an assembler patch makes
+sense at this point given this is an isolated use, and there is not just
+binutils these days, the Clang/LLVM integrated assembler would also need
+to be supported, and then we would need to have the kernel say: I
+require this minimum version to support the customer selectors, not
+worth the trouble if you ask me.
 
-May I take this opportunity to ask Intel to please put some real
-thought into future pieces of CPU state?  Here's a summary of some
-things we have:
+> 
+>> this patch should not be necessary given that the boot loader (CFE)
+>> should have long been updated by now to disable pref 30.
+> 
+> so, should I add it or drop it ?
 
-- Normal extended state (FPU, XMM, etc): genuinely per thread and only
-ever used explicitly.  Actually makes sense with XSAVE(C/S).
-
-- PKRU: affects CPL0-originated memory accesses, so it needs to be
-eagerly loaded in the kernel.  Does not make sense with XRSTOR(C/S),
-but it's in there anyway.
-
-- CR3: per-mm state.  Makes some sense in CR3, but it's tangled up
-with CR4 in nasty ways.
-
-- LDTR: per-mm on Linux and mostly obsolete everyone.  In it's own
-register, so it's not a big deal.
-
-- PASID: per-mm state (surely Intel always intended it to be per-mm,
-since it's for shared _virtual memory_!).  But for some reason it's in
-an MSR (which is slow), and it's cleverly, but not that cleverly,
-accessible with XSAVES/XRSTORS.  Doesn't actually make sense.  Also,
-PASID is lazy-loadable, but the mechanism for telling the kernel that
-a lazy load is needed got flubbed.
-
-- TILE: genuinely per-thread, but it's expensive so it's
-lazy-loadable.  But the lazy-load mechanism reuses #NM, and it's not
-fully disambiguated from the other use of #NM.  So it sort of works,
-but it's gross.
-
-- "KERNEL_GS_BASE", i.e. the shadow GS base.  This is logically
-per-user-thread state, but it's only accessible in MSRs.  For some
-reason this is *not* in XSAVES/XRSTORS state, nor is there any
-efficient way to access it at all.
-
-- Segment registers: can't be properly saved except by hypervisors,
-and can almost, but not quite, be properly loaded (assuming the state
-was sane to begin with) by normal kernels.  Just don't try to load 1,
-2, or 3 into any of them.
-
-Sometimes I think that this is all intended to be as confusing as
-possible and that it's all a ploy to keep context switches slow and
-complicated.  Maybe Intel doesn't actually want to compete with other
-architectures that can context switch quickly?
-
-
-It would be really nice if we had a clean way to load per-mm state
-(see my private emails about this), a clean way to load CPL3 register
-state, and a clean way to load per-user-thread *kernel* register state
-(e.g. PKRU and probably PKRS).  And there should be an exception that
-says "user code accessed a lazy-loaded resource that isn't loaded, and
-this is the resource it tried to access".
+You can drop it and I would resubmit it with feedback addressed if this
+later comes back.
+-- 
+Florian
