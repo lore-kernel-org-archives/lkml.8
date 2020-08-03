@@ -2,53 +2,56 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE14C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7184C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54EE5204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:36:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77CA5204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458204;
-	bh=cW0MevAFt8H5njALXBT6v761SRuxFMSBRNmZHnFg2CY=;
+	s=default; t=1596458211;
+	bh=gXEwiYtWJrb+EFFUrwnNNz7Jzhi9gU+IQFe3eDUXoAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ldPgaIbAklX/zT5yXHzLZ58Iid6xwNK93prsyjnNKeKfOO+POaEM/9R6bAdrtKZDS
-	 7FIYCRG9zOgEmoq9TAu2UAUA5a6g+8GUr0cCXaMp+uMG7+wuRDTJ+aOZIXdYiOXNvd
-	 ThLQM5ODiqJdyKrt45pZeZf9ytZrkXfSAp6b3Grk=
+	b=nYEvgcpjtn9FJkFwI6QTGVX4sCbwsRk6K7zOKMs9DFeZ2qwIeAG/3BgpISt2lPSbn
+	 tpc4Rb6N9uOUHIEfMm/8Hf+S8dqgT0/qSlXiynTTTjFwrGWVPApxB/csv/X2gtcnr0
+	 YH7mqhnJ6kNOaGIiZWXx/P6m3pdKjR2qMuJXEjQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729656AbgHCMfh (ORCPT
+        id S1729490AbgHCMgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:35:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35676 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:36:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729021AbgHCMfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:35:21 -0400
+        id S1729653AbgHCMf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:35:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C08D20678;
-        Mon,  3 Aug 2020 12:35:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B82D420678;
+        Mon,  3 Aug 2020 12:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596458120;
-        bh=cW0MevAFt8H5njALXBT6v761SRuxFMSBRNmZHnFg2CY=;
+        s=default; t=1596458127;
+        bh=gXEwiYtWJrb+EFFUrwnNNz7Jzhi9gU+IQFe3eDUXoAg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EmawuaEPg0ePxPJlxC7eyiWp2/4meFgHjmNIfGS7LuTcU15zsX15SYPYK4pwiLpaN
-         onUnNVKb2k5llt+U+kHnzixX0PwwFaHEbvWkr93UzilCQ+ZP6yENQTG1SddwJpD18O
-         Fw62eosKXrmDLxZi2/GIjB6uyuVc4fPHqA6fKl6s=
+        b=MB6DBxPw8oMEKG93NVIX6X33aTsqPHlCGmhB7QO28m18EUXC+NzQ5f/LEWt4/J4Qf
+         DLwPc2X1gyItHFqBdVwUXn94CYCP3jEOxppS6aXihvtp/X9GQVxN3mLCd3SQdiAxBF
+         ihs8QEX9qS1UNE9/UnFLtaiD4X+ROhgWr3pq7geo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Liam Beguin <liambeguin@gmail.com>,
-        Dave Anglin <dave.anglin@bell.net>,
-        Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 44/51] parisc: add support for cmpxchg on u8 pointers
-Date:   Mon,  3 Aug 2020 14:20:29 +0200
-Message-Id: <20200803121851.716598829@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Willy Tarreau <w@1wt.eu>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 18/51] random: fix circular include dependency on arm64 after addition of percpu.h
+Date:   Mon,  3 Aug 2020 14:20:03 +0200
+Message-Id: <20200803121850.379776706@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121849.488233135@linuxfoundation.org>
 References: <20200803121849.488233135@linuxfoundation.org>
@@ -61,74 +64,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liam Beguin <liambeguin@gmail.com>
+From: Willy Tarreau <w@1wt.eu>
 
-[ Upstream commit b344d6a83d01c52fddbefa6b3b4764da5b1022a0 ]
+commit 1c9df907da83812e4f33b59d3d142c864d9da57f upstream.
 
-The kernel test bot reported[1] that using set_mask_bits on a u8 causes
-the following issue on parisc:
+Daniel Díaz and Kees Cook independently reported that commit
+f227e3ec3b5c ("random32: update the net random state on interrupt and
+activity") broke arm64 due to a circular dependency on include files
+since the addition of percpu.h in random.h.
 
-	hppa-linux-ld: drivers/phy/ti/phy-tusb1210.o: in function `tusb1210_probe':
-	>> (.text+0x2f4): undefined reference to `__cmpxchg_called_with_bad_pointer'
-	>> hppa-linux-ld: (.text+0x324): undefined reference to `__cmpxchg_called_with_bad_pointer'
-	hppa-linux-ld: (.text+0x354): undefined reference to `__cmpxchg_called_with_bad_pointer'
+The correct fix would definitely be to move all the prandom32 stuff out
+of random.h but for backporting, a smaller solution is preferred.
 
-Add support for cmpxchg on u8 pointers.
+This one replaces linux/percpu.h with asm/percpu.h, and this fixes the
+problem on x86_64, arm64, arm, and mips.  Note that moving percpu.h
+around didn't change anything and that removing it entirely broke
+differently.  When backporting, such options might still be considered
+if this patch fails to help.
 
-[1] https://lore.kernel.org/patchwork/patch/1272617/#1468946
+[ It turns out that an alternate fix seems to be to just remove the
+  troublesome <asm/pointer_auth.h> remove from the arm64 <asm/smp.h>
+  that causes the circular dependency.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Liam Beguin <liambeguin@gmail.com>
-Tested-by: Dave Anglin <dave.anglin@bell.net>
-Signed-off-by: Helge Deller <deller@gmx.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  But we might as well do the whole belt-and-suspenders thing, and
+  minimize inclusion in <linux/random.h> too. Either will fix the
+  problem, and both are good changes.   - Linus ]
+
+Reported-by: Daniel Díaz <daniel.diaz@linaro.org>
+Reported-by: Kees Cook <keescook@chromium.org>
+Tested-by: Marc Zyngier <maz@kernel.org>
+Fixes: f227e3ec3b5c
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Willy Tarreau <w@1wt.eu>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/parisc/include/asm/cmpxchg.h |  2 ++
- arch/parisc/lib/bitops.c          | 12 ++++++++++++
- 2 files changed, 14 insertions(+)
+ include/linux/random.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/parisc/include/asm/cmpxchg.h b/arch/parisc/include/asm/cmpxchg.h
-index ab5c215cf46c3..0689585758717 100644
---- a/arch/parisc/include/asm/cmpxchg.h
-+++ b/arch/parisc/include/asm/cmpxchg.h
-@@ -60,6 +60,7 @@ extern void __cmpxchg_called_with_bad_pointer(void);
- extern unsigned long __cmpxchg_u32(volatile unsigned int *m, unsigned int old,
- 				   unsigned int new_);
- extern u64 __cmpxchg_u64(volatile u64 *ptr, u64 old, u64 new_);
-+extern u8 __cmpxchg_u8(volatile u8 *ptr, u8 old, u8 new_);
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -9,7 +9,7 @@
  
- /* don't worry...optimizer will get rid of most of this */
- static inline unsigned long
-@@ -71,6 +72,7 @@ __cmpxchg(volatile void *ptr, unsigned long old, unsigned long new_, int size)
- #endif
- 	case 4: return __cmpxchg_u32((unsigned int *)ptr,
- 				     (unsigned int)old, (unsigned int)new_);
-+	case 1: return __cmpxchg_u8((u8 *)ptr, (u8)old, (u8)new_);
- 	}
- 	__cmpxchg_called_with_bad_pointer();
- 	return old;
-diff --git a/arch/parisc/lib/bitops.c b/arch/parisc/lib/bitops.c
-index 70ffbcf889b8e..2e4d1f05a9264 100644
---- a/arch/parisc/lib/bitops.c
-+++ b/arch/parisc/lib/bitops.c
-@@ -79,3 +79,15 @@ unsigned long __cmpxchg_u32(volatile unsigned int *ptr, unsigned int old, unsign
- 	_atomic_spin_unlock_irqrestore(ptr, flags);
- 	return (unsigned long)prev;
- }
-+
-+u8 __cmpxchg_u8(volatile u8 *ptr, u8 old, u8 new)
-+{
-+	unsigned long flags;
-+	u8 prev;
-+
-+	_atomic_spin_lock_irqsave(ptr, flags);
-+	if ((prev = *ptr) == old)
-+		*ptr = new;
-+	_atomic_spin_unlock_irqrestore(ptr, flags);
-+	return prev;
-+}
--- 
-2.25.1
-
+ #include <linux/list.h>
+ #include <linux/once.h>
+-#include <linux/percpu.h>
++#include <asm/percpu.h>
+ 
+ #include <uapi/linux/random.h>
+ 
 
 
