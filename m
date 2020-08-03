@@ -2,54 +2,54 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3604C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 751BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90A2620678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5045B2245C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458786;
-	bh=xttePjRSo/HvUvQlP8Rh7kntoyB1U0ZEsi/FLPpeVlk=;
+	s=default; t=1596458790;
+	bh=5TXyn/wlwTOopHs0f1sd8GztkJl5GDHmCySOXvXNy5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=evXsMULqTJ/9Mk7pSVIILwnZ748zz2EKrb8CxzSlE3CcroFntGfipwvwUMM/nZ7r6
-	 a/tFnaZMxQ7UKHMv1DttaBJ8SWp8wmXsd0bug+CMi1n+i1V4wPLX9aqMSN9v/2JRDZ
-	 rHq0Z6R2WcRz1tFJCKf4e8D0YQ6k+gsI2Q5kTUvU=
+	b=jv4llpVoLLOzdfIHJHkSkPv9fz8Q0hYKPvzMB2kad6LZIiIGN7C06LoFsWFffgA1r
+	 ygHhOQ0yU5sUjAKaONI6Vm3cy4fJC3vp0nCs/ZRYdu6mP5AVmOWX4Pp37SdGaeoL1a
+	 vUtXVCc8tAqcRy6GJ7JvF/jaXCifRNRYs5M/7ViE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbgHCMqZ (ORCPT
+        id S1728433AbgHCM0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:46:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52504 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:26:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728439AbgHCM0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:26:55 -0400
+        id S1728409AbgHCM0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:26:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA148204EC;
-        Mon,  3 Aug 2020 12:26:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85CA0207FC;
+        Mon,  3 Aug 2020 12:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457614;
-        bh=xttePjRSo/HvUvQlP8Rh7kntoyB1U0ZEsi/FLPpeVlk=;
+        s=default; t=1596457601;
+        bh=5TXyn/wlwTOopHs0f1sd8GztkJl5GDHmCySOXvXNy5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hMedszlSbgCtqiTkLUMqqal+0Lq5iF2es7CkAsEkkQyH6D//ipA0lH3GDb44usKVv
-         s8SY8EHhT73RI2oFSGKzHG54zVGnvDjovo9TGGjFJdxoDEVfxItq4hwPGWUpFL4z9h
-         yLinv6CcHuezxiYW3xeLZuYdMURZZLGD+MavglCA=
+        b=lA9y2kO4OcwqvtSM7hEet/Z+aluQnAth/WTpXrFducH1gekgCAT/gqLV/p2tP7J85
+         idzL66Kj22wK4529H5MPbL4+3T6qrOt6xqYnyoRGls7vUScBtTq18ctqoYRfpJyOTW
+         fF/LZHGTQfbaf4oT07k00ZaRrqNC8BnBJFu1JZNw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 11/90] ALSA: hda/realtek - Fixed HP right speaker no sound
-Date:   Mon,  3 Aug 2020 14:18:33 +0200
-Message-Id: <20200803121858.093900741@linuxfoundation.org>
+        stable@vger.kernel.org, Daniele Albano <d.albano@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 100/120] io_uring: always allow drain/link/hardlink/async sqe flags
+Date:   Mon,  3 Aug 2020 14:19:18 +0200
+Message-Id: <20200803121907.776492818@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
-References: <20200803121857.546052424@linuxfoundation.org>
+In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
+References: <20200803121902.860751811@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,72 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Daniele Albano <d.albano@gmail.com>
 
-commit 5649625344fe1f4695eace7c37d011e317bf66d5 upstream.
+[ Upstream commit 61710e437f2807e26a3402543bdbb7217a9c8620 ]
 
-HP NB right speaker had no sound output.
-This platform was connected to I2S Amp for speaker out.(None Realtek I2S Amp IC)
-EC need to check codec GPIO1 pin to initial I2S Amp.
+We currently filter these for timeout_remove/async_cancel/files_update,
+but we only should be filtering for fixed file and buffer select. This
+also causes a second read of sqe->flags, which isn't needed.
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/01285f623ac7447187482fb4a8ecaa7c@realtek.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Just check req->flags for the relevant bits. This then allows these
+commands to be used in links, for example, like everything else.
 
+Signed-off-by: Daniele Albano <d.albano@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c |   19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ fs/io_uring.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5940,6 +5940,16 @@ static void alc_fixup_disable_mic_vref(s
- 		snd_hda_codec_set_pin_target(codec, 0x19, PIN_VREFHIZ);
- }
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index d0d3efaaa4d4f..4e09af1d5d223 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -4808,7 +4808,9 @@ static int io_timeout_remove_prep(struct io_kiocb *req,
+ {
+ 	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
+ 		return -EINVAL;
+-	if (sqe->flags || sqe->ioprio || sqe->buf_index || sqe->len)
++	if (unlikely(req->flags & (REQ_F_FIXED_FILE | REQ_F_BUFFER_SELECT)))
++		return -EINVAL;
++	if (sqe->ioprio || sqe->buf_index || sqe->len)
+ 		return -EINVAL;
  
-+static void  alc285_fixup_hp_gpio_amp_init(struct hda_codec *codec,
-+			      const struct hda_fixup *fix, int action)
-+{
-+	if (action != HDA_FIXUP_ACT_INIT)
-+		return;
-+
-+	msleep(100);
-+	alc_write_coef_idx(codec, 0x65, 0x0);
-+}
-+
- /* for hda_fixup_thinkpad_acpi() */
- #include "thinkpad_helper.c"
+ 	req->timeout.addr = READ_ONCE(sqe->addr);
+@@ -5014,8 +5016,9 @@ static int io_async_cancel_prep(struct io_kiocb *req,
+ {
+ 	if (unlikely(req->ctx->flags & IORING_SETUP_IOPOLL))
+ 		return -EINVAL;
+-	if (sqe->flags || sqe->ioprio || sqe->off || sqe->len ||
+-	    sqe->cancel_flags)
++	if (unlikely(req->flags & (REQ_F_FIXED_FILE | REQ_F_BUFFER_SELECT)))
++		return -EINVAL;
++	if (sqe->ioprio || sqe->off || sqe->len || sqe->cancel_flags)
+ 		return -EINVAL;
  
-@@ -6120,6 +6130,7 @@ enum {
- 	ALC289_FIXUP_ASUS_GA401,
- 	ALC289_FIXUP_ASUS_GA502,
- 	ALC256_FIXUP_ACER_MIC_NO_PRESENCE,
-+	ALC285_FIXUP_HP_GPIO_AMP_INIT,
- };
+ 	req->cancel.addr = READ_ONCE(sqe->addr);
+@@ -5033,7 +5036,9 @@ static int io_async_cancel(struct io_kiocb *req)
+ static int io_files_update_prep(struct io_kiocb *req,
+ 				const struct io_uring_sqe *sqe)
+ {
+-	if (sqe->flags || sqe->ioprio || sqe->rw_flags)
++	if (unlikely(req->flags & (REQ_F_FIXED_FILE | REQ_F_BUFFER_SELECT)))
++		return -EINVAL;
++	if (sqe->ioprio || sqe->rw_flags)
+ 		return -EINVAL;
  
- static const struct hda_fixup alc269_fixups[] = {
-@@ -7352,6 +7363,12 @@ static const struct hda_fixup alc269_fix
- 		.chained = true,
- 		.chain_id = ALC256_FIXUP_ASUS_HEADSET_MODE
- 	},
-+	[ALC285_FIXUP_HP_GPIO_AMP_INIT] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc285_fixup_hp_gpio_amp_init,
-+		.chained = true,
-+		.chain_id = ALC285_FIXUP_HP_GPIO_LED
-+	},
- };
- 
- static const struct snd_pci_quirk alc269_fixup_tbl[] = {
-@@ -7502,7 +7519,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x103c, 0x84e7, "HP Pavilion 15", ALC269_FIXUP_HP_MUTE_LED_MIC3),
- 	SND_PCI_QUIRK(0x103c, 0x869d, "HP", ALC236_FIXUP_HP_MUTE_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8729, "HP", ALC285_FIXUP_HP_GPIO_LED),
--	SND_PCI_QUIRK(0x103c, 0x8736, "HP", ALC285_FIXUP_HP_GPIO_LED),
-+	SND_PCI_QUIRK(0x103c, 0x8736, "HP", ALC285_FIXUP_HP_GPIO_AMP_INIT),
- 	SND_PCI_QUIRK(0x103c, 0x877a, "HP", ALC285_FIXUP_HP_MUTE_LED),
- 	SND_PCI_QUIRK(0x103c, 0x877d, "HP", ALC236_FIXUP_HP_MUTE_LED),
- 	SND_PCI_QUIRK(0x1043, 0x103e, "ASUS X540SA", ALC256_FIXUP_ASUS_MIC),
+ 	req->files_update.offset = READ_ONCE(sqe->off);
+-- 
+2.25.1
+
 
 
