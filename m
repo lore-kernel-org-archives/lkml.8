@@ -2,92 +2,69 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F26C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E09C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2EBD206DA
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:34:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596461686;
-	bh=lCnx6/lKKN71vDIoGZq4QZBOOZHHDefyQEvwAiDgM2M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ywPflVZ2sYytwipq0a9JZNnFW65uSlNmuEHxDji4TKlYtWAFVga6pvrEbOZc9b5Ku
-	 mZjUZxrNxzEXP55mmUT5N0i0xxH4a6nmTvd3VGawQc8WK2/JVmhmXnOLuZ4JS8hwhY
-	 c4CAQCLWEQQFykjIezHJ70ZYvxG/+etC82YH7JOY=
+	by mail.kernel.org (Postfix) with ESMTP id F33FD2076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:36:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726933AbgHCNeq (ORCPT
+        id S1727074AbgHCNgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 09:34:46 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46877 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726398AbgHCNep (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 09:34:45 -0400
-Received: by mail-ed1-f66.google.com with SMTP id q4so24008628edv.13;
-        Mon, 03 Aug 2020 06:34:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=i2n3wIwb+hcZxYRuwftBDgqPr+Mdz9q2nSbmotV8e58=;
-        b=gC/3QIUoaqK3FGyp1lVRgfHLd3X3hq6r7nS3meJD6wwWElaJCOKqDpxX8+lChbPQzS
-         j4cQRYM5g1EztdseoI1OnY17tUavY4XS9YFDpAATKrrRabiG3RJniOcWlFuMqEVbA9Zr
-         KSEeha3XR/s0DDzpt3vcrn+AlTmr75oaDq3hQFbK+zf1UyDNCA18ADMkHC4xo+Kdhw62
-         CpzBht2LRom6aSSN0dQk/yfPX4+ReL2TKk3fQdMqqqXNI2VPs+P/kCtveZ1MMR1pIAeu
-         i7/EnEFKWuz75P9+QAk11k16zq+i7d+82v1UXHhRygP+IxR5cwBI4Jy1ZrZXResZAV0C
-         ok/w==
-X-Gm-Message-State: AOAM531T47GP7SQmmMeQE2QdrWNAkjbTR70zuZF1Q5PvPcEsymmc96fY
-        61Xx8jF76kQyuxk8yC6poew/+61ZDJU=
-X-Google-Smtp-Source: ABdhPJzNijIPixZfXIS6XxW0zDL2p3v+qA9MAw0zyiUVWPbpOHV/fLTU8cMpHgpxrwN5HZNA62aBog==
-X-Received: by 2002:a05:6402:38c:: with SMTP id o12mr16286914edv.271.1596461682835;
-        Mon, 03 Aug 2020 06:34:42 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.117])
-        by smtp.googlemail.com with ESMTPSA id m20sm16177431ejk.90.2020.08.03.06.34.41
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Aug 2020 06:34:42 -0700 (PDT)
-Date:   Mon, 3 Aug 2020 15:34:39 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Guillaume Tucker <guillaume.tucker@collabora.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Kukjin Kim <kgene@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, kernel@collabora.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] ARM: exynos: clear L220_AUX_CTRL_NS_LOCKDOWN in
- default l2c_aux_val
-Message-ID: <20200803133439.GB476@kozik-lap>
-References: <860eb8a1eed879e55daf960c96acdac514cbda93.1596028601.git.guillaume.tucker@collabora.com>
+        Mon, 3 Aug 2020 09:36:39 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55658 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726630AbgHCNgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 09:36:38 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 00FFFD14CE8144C6A7DE;
+        Mon,  3 Aug 2020 21:36:36 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.24) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 3 Aug 2020 21:36:28 +0800
+From:   Qi Liu <liuqi115@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <saiprakash.ranjan@codeaurora.org>,
+        <suzuki.poulose@arm.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+Subject: [PATCH] coresight: etm4x: Add Support for HiSilicon ETM device
+Date:   Mon, 3 Aug 2020 21:35:40 +0800
+Message-ID: <1596461740-13527-1-git-send-email-liuqi115@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <860eb8a1eed879e55daf960c96acdac514cbda93.1596028601.git.guillaume.tucker@collabora.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Originating-IP: [10.67.165.24]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 02:47:31PM +0100, Guillaume Tucker wrote:
-> The L220_AUX_CTRL_NS_LOCKDOWN flag is set during the L2C enable
-> sequence.  There is no need to set it in the default register value,
-> this was done before support for it was implemented in the code.  It
-> is not set in the hardware initial value either.
-> 
-> Clean this up by removing this flag from the default l2c_aux_val, and
-> add it to the l2c_aux_mask to print an alert message if it was already
-> set before the kernel initialisation.
-> 
-> Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
-> ---
->  arch/arm/mach-exynos/exynos.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+Add ETMv4 periperhal ID for HiSilicon Hip08 and Hip09 platform. Hip08
+contains ETMv4.2 device and Hip09 contains ETMv4.5 device.
 
-Makes sense. I'll take it after the merge window.
+Signed-off-by: Qi Liu <liuqi115@huawei.com>
+---
+ drivers/hwtracing/coresight/coresight-etm4x.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Best regards,
-Krzysztof
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+index 0c35cd5e..4a4f0bd 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+@@ -1561,6 +1561,8 @@ static struct amba_cs_uci_id uci_id_etm4[] = {
+ };
+
+ static const struct amba_id etm4_ids[] = {
++	CS_AMBA_ID(0x000b6d02),			/* HiSilicon-Hip09 */
++	CS_AMBA_ID(0x000b6d01),			/* HiSilicon-Hip08 */
+ 	CS_AMBA_ID(0x000bb95d),			/* Cortex-A53 */
+ 	CS_AMBA_ID(0x000bb95e),			/* Cortex-A57 */
+ 	CS_AMBA_ID(0x000bb95a),			/* Cortex-A72 */
+--
+2.8.1
+
