@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0395C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB54C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52017207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9124D207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:36:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PtkX3M/K"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kwLEQGYn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgHCTgl (ORCPT
+        id S1728537AbgHCTgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 15:36:41 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:52552 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728511AbgHCTgj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 15:36:39 -0400
+        Mon, 3 Aug 2020 15:36:44 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:44020 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728513AbgHCTgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 15:36:42 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596483399; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1596483401; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=wYFdk4sZjkkv1anpMyFTRw+xKujsLrZ6WLap5ZC3G3k=; b=PtkX3M/KA+JG55BXykX55GIMZyHRbVh1Uqm3CiWdfMgUbEpPHQMnvuSlfm8CAsQvnZxdEjOs
- rdbHAB/miXnE33TvLzvLA0vyZ/h+l1/HOLpW86gzV9dSg/xfZFKxjbSgMkGIvkLya2l+FSSU
- c/g11cGXY2t+BRGtFJCf3yiyxJ8=
-X-Mailgun-Sending-Ip: 104.130.122.29
+ Sender; bh=Khv5W6hRlGoBvmDyC/nMnnkhxq/ZdLAoSFvvweioOuc=; b=kwLEQGYnpwNTlnW4/zcBrhKRJxZzf8xZHMqiSYviOYDmTkPC2jCyO+z9vvo2zPhlZA9azG9A
+ wCbniCc4zl8mWNP1T9owjDtb1XjJilLbn+wMHQa+KCa9OUTUZVX57abS8EIlcraYLk0ilKHV
+ dcMGJ/DTmxE4Mex5vsV133NtDIQ=
+X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
- 5f28673590893260dde6ce2c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 03 Aug 2020 19:36:21
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 5f286743849144fbcbc4e134 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 03 Aug 2020 19:36:35
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6D790C4344E; Mon,  3 Aug 2020 19:36:18 +0000 (UTC)
+        id BE653C43453; Mon,  3 Aug 2020 19:36:26 +0000 (UTC)
 Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E0C07C433B6;
-        Mon,  3 Aug 2020 19:36:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E0C07C433B6
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AB170C43454;
+        Mon,  3 Aug 2020 19:36:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AB170C43454
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
 From:   Jordan Crouse <jcrouse@codeaurora.org>
@@ -55,15 +54,16 @@ Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
         Will Deacon <will@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         freedreno@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        Brian Masney <masneyb@onstation.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
         Daniel Vetter <daniel@ffwll.ch>,
         David Airlie <airlied@linux.ie>, Eric Anholt <eric@anholt.net>,
         Jonathan Marek <jonathan@marek.ca>,
         Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Sharat Masetty <smasetty@codeaurora.org>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v11 08/12] drm/msm: Set the global virtual address range from the IOMMU domain
-Date:   Mon,  3 Aug 2020 13:35:43 -0600
-Message-Id: <20200803193547.305660-9-jcrouse@codeaurora.org>
+Subject: [PATCH v11 11/12] drm/msm/a6xx: Add support for per-instance pagetables
+Date:   Mon,  3 Aug 2020 13:35:46 -0600
+Message-Id: <20200803193547.305660-12-jcrouse@codeaurora.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200803193547.305660-1-jcrouse@codeaurora.org>
 References: <20200803193547.305660-1-jcrouse@codeaurora.org>
@@ -74,67 +74,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the aperture settings from the IOMMU domain to set up the virtual
-address range for the GPU. This allows us to transparently deal with
-IOMMU side features (like split pagetables).
+Add support for using per-instance pagetables if all the dependencies are
+available.
 
 Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 ---
 
- drivers/gpu/drm/msm/adreno/adreno_gpu.c | 13 +++++++++++--
- drivers/gpu/drm/msm/msm_iommu.c         |  7 +++++++
- 2 files changed, 18 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 53 +++++++++++++++++++++++++++
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.h |  1 +
+ drivers/gpu/drm/msm/msm_ringbuffer.h  |  1 +
+ 3 files changed, 55 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-index b38a8126541a..f9e3badf2fca 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-@@ -192,9 +192,18 @@ adreno_iommu_create_address_space(struct msm_gpu *gpu,
- 	struct iommu_domain *iommu = iommu_domain_alloc(&platform_bus_type);
- 	struct msm_mmu *mmu = msm_iommu_new(&pdev->dev, iommu);
- 	struct msm_gem_address_space *aspace;
-+	u64 start, size;
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+index 5eabb0109577..57c6cdec7e9a 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+@@ -81,6 +81,41 @@ static void get_stats_counter(struct msm_ringbuffer *ring, u32 counter,
+ 	OUT_RING(ring, upper_32_bits(iova));
+ }
  
--	aspace = msm_gem_address_space_create(mmu, "gpu", SZ_16M,
--		0xffffffff - SZ_16M);
++static void a6xx_set_pagetable(struct a6xx_gpu *a6xx_gpu,
++		struct msm_ringbuffer *ring, struct msm_file_private *ctx)
++{
++	phys_addr_t ttbr;
++	u32 asid;
++	u64 memptr = rbmemptr(ring, ttbr0);
++
++	if (ctx == a6xx_gpu->cur_ctx)
++		return;
++
++	if (msm_iommu_pagetable_params(ctx->aspace->mmu, &ttbr, &asid))
++		return;
++
++	/* Execute the table update */
++	OUT_PKT7(ring, CP_SMMU_TABLE_UPDATE, 4);
++	OUT_RING(ring, CP_SMMU_TABLE_UPDATE_0_TTBR0_LO(lower_32_bits(ttbr)));
++	OUT_RING(ring,
++		CP_SMMU_TABLE_UPDATE_1_TTBR0_HI(upper_32_bits(ttbr)) |
++		CP_SMMU_TABLE_UPDATE_1_ASID(asid));
++	OUT_RING(ring, CP_SMMU_TABLE_UPDATE_2_CONTEXTIDR(0));
++	OUT_RING(ring, CP_SMMU_TABLE_UPDATE_3_CONTEXTBANK(0));
++
 +	/*
-+	 * Use the aperture start or SZ_16M, whichever is greater. This will
-+	 * ensure that we align with the allocated pagetable range while still
-+	 * allowing room in the lower 32 bits for GMEM and whatnot
++	 * Write the new TTBR0 to the memstore. This is good for debugging.
 +	 */
-+	start = max_t(u64, SZ_16M, iommu->geometry.aperture_start);
-+	size = iommu->geometry.aperture_end - start + 1;
++	OUT_PKT7(ring, CP_MEM_WRITE, 4);
++	OUT_RING(ring, CP_MEM_WRITE_0_ADDR_LO(lower_32_bits(memptr)));
++	OUT_RING(ring, CP_MEM_WRITE_1_ADDR_HI(upper_32_bits(memptr)));
++	OUT_RING(ring, lower_32_bits(ttbr));
++	OUT_RING(ring, (asid << 16) | upper_32_bits(ttbr));
 +
-+	aspace = msm_gem_address_space_create(mmu, "gpu",
-+		start & GENMASK(48, 0), size);
- 
- 	if (IS_ERR(aspace) && !IS_ERR(mmu))
- 		mmu->funcs->destroy(mmu);
-diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-index 3a381a9674c9..1b6635504069 100644
---- a/drivers/gpu/drm/msm/msm_iommu.c
-+++ b/drivers/gpu/drm/msm/msm_iommu.c
-@@ -36,6 +36,10 @@ static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
- 	struct msm_iommu *iommu = to_msm_iommu(mmu);
- 	size_t ret;
- 
-+	/* The arm-smmu driver expects the addresses to be sign extended */
-+	if (iova & BIT_ULL(48))
-+		iova |= GENMASK_ULL(63, 49);
 +
- 	ret = iommu_map_sg(iommu->domain, iova, sgt->sgl, sgt->nents, prot);
- 	WARN_ON(!ret);
- 
-@@ -46,6 +50,9 @@ static int msm_iommu_unmap(struct msm_mmu *mmu, uint64_t iova, size_t len)
++	a6xx_gpu->cur_ctx = ctx;
++}
++
+ static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
  {
- 	struct msm_iommu *iommu = to_msm_iommu(mmu);
+ 	unsigned int index = submit->seqno % MSM_GPU_SUBMIT_STATS_COUNT;
+@@ -90,6 +125,8 @@ static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
+ 	struct msm_ringbuffer *ring = submit->ring;
+ 	unsigned int i;
  
-+	if (iova & BIT_ULL(48))
-+		iova |= GENMASK_ULL(63, 49);
++	a6xx_set_pagetable(a6xx_gpu, ring, submit->queue->ctx);
 +
- 	iommu_unmap(iommu->domain, iova, len);
+ 	get_stats_counter(ring, REG_A6XX_RBBM_PERFCTR_CP_0_LO,
+ 		rbmemptr_stats(ring, index, cpcycles_start));
  
- 	return 0;
+@@ -696,6 +733,8 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
+ 	/* Always come up on rb 0 */
+ 	a6xx_gpu->cur_ring = gpu->rb[0];
+ 
++	a6xx_gpu->cur_ctx = NULL;
++
+ 	/* Enable the SQE_to start the CP engine */
+ 	gpu_write(gpu, REG_A6XX_CP_SQE_CNTL, 1);
+ 
+@@ -1008,6 +1047,19 @@ static unsigned long a6xx_gpu_busy(struct msm_gpu *gpu)
+ 	return (unsigned long)busy_time;
+ }
+ 
++static struct msm_gem_address_space *
++a6xx_create_private_address_space(struct msm_gpu *gpu)
++{
++	struct msm_mmu *mmu;
++
++	mmu = msm_iommu_pagetable_create(gpu->aspace->mmu);
++	if (IS_ERR(mmu))
++		return msm_gem_address_space_get(gpu->aspace);
++
++	return msm_gem_address_space_create(mmu,
++		"gpu", 0x100000000ULL, 0x1ffffffffULL);
++}
++
+ static const struct adreno_gpu_funcs funcs = {
+ 	.base = {
+ 		.get_param = adreno_get_param,
+@@ -1031,6 +1083,7 @@ static const struct adreno_gpu_funcs funcs = {
+ 		.gpu_state_put = a6xx_gpu_state_put,
+ #endif
+ 		.create_address_space = adreno_iommu_create_address_space,
++		.create_private_address_space = a6xx_create_private_address_space,
+ 	},
+ 	.get_timestamp = a6xx_get_timestamp,
+ };
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
+index 03ba60d5b07f..da22d7549d9b 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
+@@ -19,6 +19,7 @@ struct a6xx_gpu {
+ 	uint64_t sqe_iova;
+ 
+ 	struct msm_ringbuffer *cur_ring;
++	struct msm_file_private *cur_ctx;
+ 
+ 	struct a6xx_gmu gmu;
+ };
+diff --git a/drivers/gpu/drm/msm/msm_ringbuffer.h b/drivers/gpu/drm/msm/msm_ringbuffer.h
+index 7764373d0ed2..0987d6bf848c 100644
+--- a/drivers/gpu/drm/msm/msm_ringbuffer.h
++++ b/drivers/gpu/drm/msm/msm_ringbuffer.h
+@@ -31,6 +31,7 @@ struct msm_rbmemptrs {
+ 	volatile uint32_t fence;
+ 
+ 	volatile struct msm_gpu_submit_stats stats[MSM_GPU_SUBMIT_STATS_COUNT];
++	volatile u64 ttbr0;
+ };
+ 
+ struct msm_ringbuffer {
 -- 
 2.25.1
 
