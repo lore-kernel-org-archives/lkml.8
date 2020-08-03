@@ -2,88 +2,140 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A3CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 06:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7DBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C127E2068F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 06:57:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Imiqwh2w"
+	by mail.kernel.org (Postfix) with ESMTP id 7C431206E9
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:05:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596438353;
+	bh=1/YYBhx6gDgPn0W0PUaqgcbPBPyOY+oUseS5B1Y5aXs=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=AnnXHV2lWkVRhOn6jmCB0z4oeMaSWr7kn4zOGXWGSI/k78B/A1znOjPDn8oUqamZ/
+	 NU8pHPmHtRf0rmEASVEkb+8PGULF/BpT9vHpb1aKH+SkfXDdR51KmeWwgxUiZks/Dj
+	 pgmUu0Zqg1Lbh7J7LG0rXm6F8FW3RggqmDzURtcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbgHCG5E (ORCPT
+        id S1725907AbgHCHFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 02:57:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47810 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgHCG5C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 02:57:02 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFBB4C06174A;
-        Sun,  2 Aug 2020 23:57:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=S81Y7/E/1KRByHOMFTAO1WQMOll7HWoP+pv/fCo/3sI=; b=Imiqwh2wh6gfO95HVgGWdIpJ7R
-        qFqJDaURIpsOiDpUCq2k3ILdHp9/G64PbhflfbfwXUHR3YCqdMM2JIr5p2HV5QlEFNjYcibq1cAwB
-        k5jcDFqNUiYh1ErghhsIpsN5baKyFw50AsjkOnyh0RkcQvG4I/FuQV4i+K4smxUlt0gQ8ZINX4zk1
-        zqYZrKBpxdTsr3nucjd2JPKqfEkufPqh/aFaSwGu2mFtFylC2a36pyZdPfsQXEbP1+7In5Kkj2kTD
-        iIuAdnnH0jCfMh5vNRvgFzTjztCURqfBsmyFjwViAe1IQB++yIvaVvpqhNNNwV/B+lmZFzbHjUNTv
-        QTu3Qcmg==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k2UOb-0005Zd-6v; Mon, 03 Aug 2020 06:56:29 +0000
-Date:   Mon, 3 Aug 2020 07:56:29 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Saheed Bolarinwa <refactormyself@gmail.com>, trix@redhat.com,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Joerg Roedel <joro@8bytes.org>, bjorn@helgaas.com,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-mtd@lists.infradead.org, iommu@lists.linux-foundation.org,
-        linux-rdma@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        linux-gpio@vger.kernel.org, linux-fpga@vger.kernel.org,
-        linux-edac@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-crypto@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net
-Subject: Re: [RFC PATCH 00/17] Drop uses of pci_read_config_*() return value
-Message-ID: <20200803065629.GA19534@infradead.org>
-References: <20200802184648.GA23190@nazgul.tnic>
- <20200802191406.GA248232@bjorn-Precision-5520>
+        Mon, 3 Aug 2020 03:05:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725826AbgHCHFu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 03:05:50 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB12A206D7;
+        Mon,  3 Aug 2020 07:05:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596438349;
+        bh=1/YYBhx6gDgPn0W0PUaqgcbPBPyOY+oUseS5B1Y5aXs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=zJFv3N8oSMbXQHLMge43sKxec8eqkF9HVvyR6GngT5yMahB7DlBsWaPzNqQKzte4+
+         eCG0tD+mZ/WqVT7u/0+LsUeWT4cMeGecpf21MhCCWB13nNqebGh/SD7R5k87vU+IcZ
+         41DHrflgqWuzyzYSdovDJh7xRxY5DiXqAVMLyU6w=
+Date:   Mon, 3 Aug 2020 00:05:47 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-fscrypt@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-mtd@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Satya Tangirala <satyat@google.com>
+Subject: [GIT PULL] fscrypt updates for 5.9
+Message-ID: <20200803070547.GA24480@sol.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200802191406.GA248232@bjorn-Precision-5520>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 02, 2020 at 02:14:06PM -0500, Bjorn Helgaas wrote:
-> But what guarantees that a PCI config register cannot contain ~0?
-> If there's something about that in the spec I'd love to know where it
-> is because it would simplify a lot of things.
+The following changes since commit dcb7fd82c75ee2d6e6f9d8cc71c52519ed52e258:
 
-There isn't.  An we even have cases like the NVMe controller memory
-buffer and persistent memory region, which are BARs that store
-abritrary values for later retreival, so it can't.  (now those
-features have a major issue with error detection, but that is another
-issue)
+  Linux 5.8-rc4 (2020-07-05 16:20:22 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git tags/fscrypt-for-linus
+
+for you to fetch changes up to 55e32c54bbd5741cad462c9ee00c453c72fa74b9:
+
+  fscrypt: don't load ->i_crypt_info before it's known to be valid (2020-07-30 14:21:50 -0700)
+
+----------------------------------------------------------------
+
+This release, we add support for inline encryption via the blk-crypto
+framework which was added in 5.8.  Now when an ext4 or f2fs filesystem
+is mounted with '-o inlinecrypt', the contents of encrypted files will
+be encrypted/decrypted via blk-crypto, instead of directly using the
+crypto API.  This model allows taking advantage of the inline encryption
+hardware that is integrated into the UFS or eMMC host controllers on
+most mobile SoCs.  Note that this is just an alternate implementation;
+the ciphertext written to disk stays the same.
+
+(This pull request does *not* include support for direct I/O on
+encrypted files, which blk-crypto makes possible, since that part is
+still being discussed.)
+
+Besides the above feature update, there are also a few fixes and
+cleanups, e.g. strengthening some memory barriers that may be too weak.
+
+All these patches have been in linux-next with no reported issues.  I've
+also tested them with the fscrypt xfstests, as usual.  It's also been
+tested that the inline encryption support works with the support for
+Qualcomm and Mediatek inline encryption hardware that will be in the
+scsi pull request for 5.9.  Also, several SoC vendors are already using
+a previous, functionally equivalent version of these patches.
+
+----------------------------------------------------------------
+Eric Biggers (9):
+      ext4: add inline encryption support
+      fscrypt: add comments that describe the HKDF info strings
+      fscrypt: rename FS_KEY_DERIVATION_NONCE_SIZE
+      fscrypt: restrict IV_INO_LBLK_* to AES-256-XTS
+      fscrypt: switch fscrypt_do_sha256() to use the SHA-256 library
+      fscrypt: use smp_load_acquire() for fscrypt_prepared_key
+      fscrypt: use smp_load_acquire() for ->s_master_keys
+      fscrypt: use smp_load_acquire() for ->i_crypt_info
+      fscrypt: don't load ->i_crypt_info before it's known to be valid
+
+Satya Tangirala (4):
+      fs: introduce SB_INLINECRYPT
+      fscrypt: add inline encryption support
+      f2fs: add inline encryption support
+      fscrypt: document inline encryption support
+
+ Documentation/admin-guide/ext4.rst    |   7 +
+ Documentation/filesystems/f2fs.rst    |   7 +
+ Documentation/filesystems/fscrypt.rst |  25 ++-
+ fs/buffer.c                           |   7 +-
+ fs/crypto/Kconfig                     |   8 +-
+ fs/crypto/Makefile                    |   1 +
+ fs/crypto/bio.c                       |  51 +++++
+ fs/crypto/crypto.c                    |   4 +-
+ fs/crypto/fname.c                     |  45 ++---
+ fs/crypto/fscrypt_private.h           | 144 ++++++++++---
+ fs/crypto/inline_crypt.c              | 367 ++++++++++++++++++++++++++++++++++
+ fs/crypto/keyring.c                   |  21 +-
+ fs/crypto/keysetup.c                  |  91 ++++++---
+ fs/crypto/keysetup_v1.c               |  20 +-
+ fs/crypto/policy.c                    |  20 +-
+ fs/ext4/inode.c                       |   4 +-
+ fs/ext4/page-io.c                     |   6 +-
+ fs/ext4/readpage.c                    |  11 +-
+ fs/ext4/super.c                       |  12 ++
+ fs/f2fs/compress.c                    |   2 +-
+ fs/f2fs/data.c                        |  79 ++++++--
+ fs/f2fs/super.c                       |  35 ++++
+ include/linux/fs.h                    |   1 +
+ include/linux/fscrypt.h               | 111 +++++++++-
+ 24 files changed, 940 insertions(+), 139 deletions(-)
+ create mode 100644 fs/crypto/inline_crypt.c
