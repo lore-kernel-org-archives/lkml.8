@@ -2,114 +2,156 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6508C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0548BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 858492054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458712;
-	bh=jMTM9Awye6xGmKCtwUVQ9PWUR+npLdpUHGaUO7Onh5Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gj8h1Mw8nwSzLdBRu78ESfGpaX4+pS0Sgg4+hw7rqjAtZrZU6R3gs+vmVyLoA12k7
-	 r2MvsSyj2N4zBkwe+zHAmVe/fCQVIGhq770wZgae4Qi/wG6FgAay/6eFfMet0BckUu
-	 jPM/L9YyZKLyrLSOakMnl8GJpyPN/Caf5WFhfH6E=
+	by mail.kernel.org (Postfix) with ESMTP id DBC652054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:45:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728868AbgHCMpM (ORCPT
+        id S1728585AbgHCM1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:45:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53682 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728598AbgHCM1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:27:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC38B204EC;
-        Mon,  3 Aug 2020 12:27:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457667;
-        bh=jMTM9Awye6xGmKCtwUVQ9PWUR+npLdpUHGaUO7Onh5Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=16Ouo7KUCEnq/i+wXshO8x5rLOTegum72edg/vuqoQiewmGcTHwfJvm1shUMU5sE4
-         +z6d9Md+FfpdGPk4GzyyD0B3WVQk9FnMm8ZV+IVST3H8chrWXq6Fl5pNU/1mLR3MFi
-         6B3fXs/3xctYnO8/SuW+3iCUNQwTOUB5xEL5PAOM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Armas Spann <zappel@retarded.farm>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 08/90] ALSA: hda/realtek: enable headset mic of ASUS ROG Zephyrus G15(GA502) series with ALC289
-Date:   Mon,  3 Aug 2020 14:18:30 +0200
-Message-Id: <20200803121857.948708603@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
-References: <20200803121857.546052424@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 3 Aug 2020 08:27:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42466 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728546AbgHCM11 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:27:27 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B8A3C061756;
+        Mon,  3 Aug 2020 05:27:27 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 1F2E74CB; Mon,  3 Aug 2020 14:27:24 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH v3 1/4] KVM: SVM: nested: Don't allocate VMCB structures on stack
+Date:   Mon,  3 Aug 2020 14:27:05 +0200
+Message-Id: <20200803122708.5942-2-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200803122708.5942-1-joro@8bytes.org>
+References: <20200803122708.5942-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Armas Spann <zappel@retarded.farm>
+From: Joerg Roedel <jroedel@suse.de>
 
-commit 4b43d05a1978a93a19374c6e6b817c9c1ff4ba4b upstream.
+Do not allocate a vmcb_control_area and a vmcb_save_area on the stack,
+as these structures will become larger with future extenstions of
+SVM and thus the svm_set_nested_state() function will become a too large
+stack frame.
 
-This patch adds support for headset mic to the ASUS ROG Zephyrus
-G15(GA502) notebook series by adding the corresponding
-vendor/pci_device id, as well as adding a new fixup for the used
-realtek ALC289. The fixup stets the correct pin to get the headset mic
-correctly recognized on audio-jack.
-
-Signed-off-by: Armas Spann <zappel@retarded.farm>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200724140616.298892-1-zappel@retarded.farm
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- sound/pci/hda/patch_realtek.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/x86/kvm/svm/nested.c | 47 +++++++++++++++++++++++++++------------
+ 1 file changed, 33 insertions(+), 14 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -6118,6 +6118,7 @@ enum {
- 	ALC269VC_FIXUP_ACER_HEADSET_MIC,
- 	ALC269VC_FIXUP_ACER_MIC_NO_PRESENCE,
- 	ALC289_FIXUP_ASUS_G401,
-+	ALC289_FIXUP_ASUS_GA502,
- 	ALC256_FIXUP_ACER_MIC_NO_PRESENCE,
- };
+diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+index 61378a3c2ce4..051623b652da 100644
+--- a/arch/x86/kvm/svm/nested.c
++++ b/arch/x86/kvm/svm/nested.c
+@@ -1061,10 +1061,14 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
+ 	struct vmcb *hsave = svm->nested.hsave;
+ 	struct vmcb __user *user_vmcb = (struct vmcb __user *)
+ 		&user_kvm_nested_state->data.svm[0];
+-	struct vmcb_control_area ctl;
+-	struct vmcb_save_area save;
++	struct vmcb_control_area *ctl;
++	struct vmcb_save_area *save;
++	int ret;
+ 	u32 cr0;
  
-@@ -7335,6 +7336,13 @@ static const struct hda_fixup alc269_fix
- 			{ }
- 		},
- 	},
-+	[ALC289_FIXUP_ASUS_GA502] = {
-+		.type = HDA_FIXUP_PINS,
-+		.v.pins = (const struct hda_pintbl[]) {
-+			{ 0x19, 0x03a11020 }, /* headset mic with jack detect */
-+			{ }
-+		},
-+	},
- 	[ALC256_FIXUP_ACER_MIC_NO_PRESENCE] = {
- 		.type = HDA_FIXUP_PINS,
- 		.v.pins = (const struct hda_pintbl[]) {
-@@ -7526,6 +7534,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x1043, 0x1bbd, "ASUS Z550MA", ALC255_FIXUP_ASUS_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1043, 0x1c23, "Asus X55U", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
- 	SND_PCI_QUIRK(0x1043, 0x1ccd, "ASUS X555UB", ALC256_FIXUP_ASUS_MIC),
-+	SND_PCI_QUIRK(0x1043, 0x1e11, "ASUS Zephyrus G15", ALC289_FIXUP_ASUS_GA502),
- 	SND_PCI_QUIRK(0x1043, 0x1f11, "ASUS Zephyrus G14", ALC289_FIXUP_ASUS_G401),
- 	SND_PCI_QUIRK(0x1043, 0x3030, "ASUS ZN270IE", ALC256_FIXUP_ASUS_AIO_GPIO2),
- 	SND_PCI_QUIRK(0x1043, 0x831a, "ASUS P901", ALC269_FIXUP_STEREO_DMIC),
-
++	BUILD_BUG_ON(sizeof(struct vmcb_control_area) + sizeof(struct vmcb_save_area) >
++		     KVM_STATE_NESTED_SVM_VMCB_SIZE);
++
+ 	if (kvm_state->format != KVM_STATE_NESTED_FORMAT_SVM)
+ 		return -EINVAL;
+ 
+@@ -1096,13 +1100,22 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
+ 		return -EINVAL;
+ 	if (kvm_state->size < sizeof(*kvm_state) + KVM_STATE_NESTED_SVM_VMCB_SIZE)
+ 		return -EINVAL;
+-	if (copy_from_user(&ctl, &user_vmcb->control, sizeof(ctl)))
+-		return -EFAULT;
+-	if (copy_from_user(&save, &user_vmcb->save, sizeof(save)))
+-		return -EFAULT;
+ 
+-	if (!nested_vmcb_check_controls(&ctl))
+-		return -EINVAL;
++	ret  = -ENOMEM;
++	ctl  = kzalloc(sizeof(*ctl),  GFP_KERNEL);
++	save = kzalloc(sizeof(*save), GFP_KERNEL);
++	if (!ctl || !save)
++		goto out_free;
++
++	ret = -EFAULT;
++	if (copy_from_user(ctl, &user_vmcb->control, sizeof(*ctl)))
++		goto out_free;
++	if (copy_from_user(save, &user_vmcb->save, sizeof(*save)))
++		goto out_free;
++
++	ret = -EINVAL;
++	if (!nested_vmcb_check_controls(ctl))
++		goto out_free;
+ 
+ 	/*
+ 	 * Processor state contains L2 state.  Check that it is
+@@ -1110,15 +1123,15 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
+ 	 */
+ 	cr0 = kvm_read_cr0(vcpu);
+         if (((cr0 & X86_CR0_CD) == 0) && (cr0 & X86_CR0_NW))
+-                return -EINVAL;
++                goto out_free;
+ 
+ 	/*
+ 	 * Validate host state saved from before VMRUN (see
+ 	 * nested_svm_check_permissions).
+ 	 * TODO: validate reserved bits for all saved state.
+ 	 */
+-	if (!(save.cr0 & X86_CR0_PG))
+-		return -EINVAL;
++	if (!(save->cr0 & X86_CR0_PG))
++		goto out_free;
+ 
+ 	/*
+ 	 * All checks done, we can enter guest mode.  L1 control fields
+@@ -1127,15 +1140,21 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
+ 	 * contains saved L1 state.
+ 	 */
+ 	copy_vmcb_control_area(&hsave->control, &svm->vmcb->control);
+-	hsave->save = save;
++	hsave->save = *save;
+ 
+ 	svm->nested.vmcb = kvm_state->hdr.svm.vmcb_pa;
+-	load_nested_vmcb_control(svm, &ctl);
++	load_nested_vmcb_control(svm, ctl);
+ 	nested_prepare_vmcb_control(svm);
+ 
+ out_set_gif:
+ 	svm_set_gif(svm, !!(kvm_state->flags & KVM_STATE_NESTED_GIF_SET));
+-	return 0;
++
++	ret = 0;
++out_free:
++	kfree(save);
++	kfree(ctl);
++
++	return ret;
+ }
+ 
+ struct kvm_x86_nested_ops svm_nested_ops = {
+-- 
+2.17.1
 
