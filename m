@@ -2,180 +2,94 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7298C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27EFCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3235206F8
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3516B206F8
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:57:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="uxCHtMGD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WrUsbEZb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbgHCX4E (ORCPT
+        id S1729004AbgHCX55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 19:56:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35900 "EHLO
+        Mon, 3 Aug 2020 19:57:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbgHCX4E (ORCPT
+        with ESMTP id S1726718AbgHCX54 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 19:56:04 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D626C061756
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 16:56:04 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id e8so21075105pgc.5
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 16:56:04 -0700 (PDT)
+        Mon, 3 Aug 2020 19:57:56 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E22AC06174A;
+        Mon,  3 Aug 2020 16:57:56 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id a26so14658780ejc.2;
+        Mon, 03 Aug 2020 16:57:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qCO0I9XODj8tcvSwCtrfb839SzPfAPZbTABsM0q9zhw=;
-        b=uxCHtMGDCPrDsexQiLlLDBwZTUIrXfXTceIkO6FI9lI3VQOB0vdPqeTq4h77KpjB73
-         VSHlpQnTxWhFZYXqdvCdXfhDufN4d0KlatMO/xUIM63TY/zrdOvPlhjznDrowD1ZKENt
-         5JfxdTrZzx3AwMtsPZDEflD7Pt6ofu2pAjL+ZxNTT5hM0RNnVeR6cf46Bzs2HSl/lioo
-         x+awvymEwJfq4CVhq+WCS3plYffZ8TiCDg5zdpRfyo2AY1sGQ4/tc5FPAXuLWlao6Ejn
-         RP/0FyzfQLGC5xQc6V8bTpCVegtIpTDj3VNoK1JHc/KJe5LBv3wjh86losl+zRlSOsGj
-         P1YQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VMA09kDi+I3IIST6piBhLUjJZLHB1GtkxXf1OiQUwTs=;
+        b=WrUsbEZbGOZEljnf7MPZ0+EI0k6MtomEbVYGqwLSE3s6AnUcQRbI8LTZ92C6KnxNYW
+         /X7cMPSkna7QFLrOkx6aO1Fu2IOmS3Va3mgvnfhnPlAm9CShkEhaZxSxgikCsmlv6L8F
+         PdVnMksaW3eafBMeWAZc17ZBNPtM6fAzrVyvl4UKwh2/5a61uzEXTpyK85N8a2BKaRnT
+         GWXMbjQI1IPHAxvhax113tYcwQzK7VnVY2o4RQKnt76Cafy2fa3OmSqjyXnhAaZK3w9u
+         byfXw628My0LWJIv8Oc8rMPddZyZvAF3uCpj3DGD2yPt4eRZhv6jlZoe7AJ0wwaxmcZ6
+         5zxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qCO0I9XODj8tcvSwCtrfb839SzPfAPZbTABsM0q9zhw=;
-        b=i22x6cr50VPuasF6gFTBidCNxLVKanDnzW9jy3vaXUugZaidlEEKzWgUN5XUBw8JPx
-         alKOUJ3FuQuq41yCCuwSHYPAxVTTuelCrKiS/ZwnrAnUus+R3I8v5dgFoL1yYWKa2hCp
-         Z3WJlGLP667m26Lskf3st+mXv+YBHILX0W75D+ml7zGhzk16eWp9uLeMugYhmRYIQnbS
-         Vmjk+zc72fH/i8PBISjR4BdMLBep49Gtpg9BA17VugzFcu0ExPAoXz7PLuYYFDjbzQPq
-         upi6RnRa/qPjVmb4v1TBuZQkQwIudvj+nlMCwzRpkVczOAgagy7JSkXFTLJTBUYrWYu2
-         un9Q==
-X-Gm-Message-State: AOAM532jc7Qyk7crjRlkAg/S2Q+hacFAWcn/KhNmg1n8OlWxFtxXH9eb
-        gcwQC8s8ZqY2zAAx0xEoUwx/DYGGKeA=
-X-Google-Smtp-Source: ABdhPJw4erZ1mLXZJquGpjZezftNibkHzY3dF38trJudjVXYiIpV9XpjXP8xH2DbTlj4B7LQvfcOtg==
-X-Received: by 2002:a65:6644:: with SMTP id z4mr17317591pgv.391.1596498963444;
-        Mon, 03 Aug 2020 16:56:03 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id x9sm22720340pfq.216.2020.08.03.16.56.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Aug 2020 16:56:02 -0700 (PDT)
-Subject: Re: [GIT PULL] io_uring changes for 5.9-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     io-uring <io-uring@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <50466810-9148-e245-7c1e-e7435b753582@kernel.dk>
- <CAHk-=wgaxWMA7DVTQq+KxqaWHPDrXDuScX9orzRgxdi7SBfmoA@mail.gmail.com>
- <cd478521-e6ec-a1aa-5f93-29ad13d2a8bb@kernel.dk>
- <56cb11b1-7943-086e-fb31-6564f4d4d089@kernel.dk>
- <025dcd45-46df-b3fa-6b4a-a8c6a73787b0@kernel.dk>
- <CAHk-=whZYCK2eNEcTvKWgBvoSL8YLT6G0dexVkFbDiVCLN3zBQ@mail.gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <af6b61c1-e98e-f312-3550-deb7972751a9@kernel.dk>
-Date:   Mon, 3 Aug 2020 17:56:01 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VMA09kDi+I3IIST6piBhLUjJZLHB1GtkxXf1OiQUwTs=;
+        b=KbFpFj+mVGhhqjn7G8s4DVem3BXIMQ7YCEJdsZWjVpE4FFbJpdqyYlzvsCO8B8avim
+         gX5rdGswHfqfKMOqo4Gzjniir5vkt0NQQuh2k7mfPUE5GFn+MJJ88NFFT+3+mVelQI9U
+         4i5hFyvhMwOudXDRV33tMWFNgt97AkjuZdJk1q+zoHJhFJxE17o6wFLzfabWNkljgyES
+         WhyRHR/dm9ei1Yp+ee4/DVHUBE00PK0kxX5OrcnUWaJgIQH2xfzcMPHKBn9tBRa+6mbP
+         lK9VCzNATjLRWdwvSZCJINz7g7eSdzzJ4bQSGdIpJtRwcaYjrCEdhJt7mHcFF/WpbyOq
+         FtVg==
+X-Gm-Message-State: AOAM533fDhUMar109kJb0njSOHROdxeoXrMiF1DJtCVhZJvmQm9sNIf8
+        +uYSC+Bz1m9RpQB/0yJM19OuBbadROQFWtkKsvg=
+X-Google-Smtp-Source: ABdhPJyQ9PQkQYqnDZgpkDFgKb26BXg8I7qq9H3w6LUADliDEzsyoI0sHJIf2u6KBx6hIP6L1K0UdUVJizMmgnZP7OM=
+X-Received: by 2002:a17:906:3e4f:: with SMTP id t15mr20173574eji.368.1596499074909;
+ Mon, 03 Aug 2020 16:57:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=whZYCK2eNEcTvKWgBvoSL8YLT6G0dexVkFbDiVCLN3zBQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200704122809.73794-1-konradybcio@gmail.com> <20200704130922.GB21333@willie-the-truck>
+ <20200705033511.GR388985@builder.lan> <CAMS8qEWO-1mNd12Zs-2WogCrgNF5=6RkF=Z1pTeOZxSuKjx+qg@mail.gmail.com>
+ <20200721154415.GA5758@jcrouse1-lnx.qualcomm.com> <CAMS8qEXNh6n9SpMkPAr8cPneasPvJPELD2TZ4gxUf0byxNePbg@mail.gmail.com>
+ <20200721235650.GN388985@builder.lan> <CAMS8qEVXGddTdbrPwK3NJMx71HH0hoVyqiJG6-g9tiBRMRYZ8w@mail.gmail.com>
+ <20200731054850.GA20825@builder.lan>
+In-Reply-To: <20200731054850.GA20825@builder.lan>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Tue, 4 Aug 2020 01:57:19 +0200
+Message-ID: <CAMS8qEVmSK=FQyTVCOkF6HX_2PAfr5oJ+Fo=QkRV1Cd15bo3Xw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] iommu/arm-smmu: Implement qcom,skip-init
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Will Deacon <will@kernel.org>, skrzynka@konradybcio.pl,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/3/20 5:49 PM, Linus Torvalds wrote:
-> On Mon, Aug 3, 2020 at 4:31 PM Jens Axboe <axboe@kernel.dk> wrote:
->>
->> Updated to honor exclusive return value as well:
-> 
-> See my previous email, You're just adding code that makes no sense,
-> because your wait entry fundamentally isn't an exclusive one.
+> Sounds like things are progressing nicely for a while there, presumably
+> until the next time the display is being refreshed.
+>
+> Would you be willing to try out the following work in progress:
+> https://lore.kernel.org/linux-arm-msm/20200717001619.325317-1-bjorn.andersson@linaro.org/
 
-Right, I get that now, it's just dead code for my use case. It was sent
-out before your previous email.
+I sure would like to if you could be kind enough to tell me which tree
+I should apply it against. Latest -next brought some changes to
+drivers/iommu/ structure which makes this not apply at all :/
 
-> So all that code is a no-op and only makes it more confusing to read.
-> 
-> Your wakeup handler has _nothing_ to do with the generic
-> wake_page_function(). There is _zero_ overlap. Your wakeup handler
-> gets called only for the wait entries _you_ created.
-> 
-> Trying to use the wakeup logic from wake_page_function() makes no
-> sense, because the rules for wake_page_function() are entirely
-> different. Yes, they are called for the same thing (somebody unlocked
-> a page and is waking up waiters), but it's using a completely
-> different sleeping logic.
-> 
-> See? When wake_page_function() does that
-> 
->         wait->flags |= WQ_FLAG_WOKEN;
-> 
-> and does something different (and returns different values) depending
-> on whether WQ_FLAG_EXCLUSIVE was set, that is all because
-> wait_on_page_bit_common() entry set yo that wait entry (on its stack)
-> with those exact rules in mind.
-> 
-> So the wakeup function is 1:1 tied to the code that registers the wait
-> entry. wait_on_page_bit_common() has one set of rules, that are then
-> honored by the wakeup function it uses. But those rules have _zero_
-> impact on your use. You can have - and you *do* have - different sets
-> of rules.
-> 
-> For example, none of your wakeups are ever exclusive. All you do is
-> make a work runnable - that doesn't mean that other people shouldn't
-> do other things when they get a "page was unlocked" wakeup
-> notification.
-> 
-> Also, for you "list_del_init()" is fine, because you never do the
-> unlocked "list_empty_careful()" on that wait entry.  All the waitqueue
-> operations run under the queue head lock.
-> 
-> So what I think you _should_ do is just something like this:
-> 
->     diff --git a/fs/io_uring.c b/fs/io_uring.c
->     index 2a3af95be4ca..1e243f99643b 100644
->     --- a/fs/io_uring.c
->     +++ b/fs/io_uring.c
->     @@ -2965,10 +2965,10 @@ static int io_async_buf_func(struct
-> wait_queue_entry *wait, unsigned mode,
->             if (!wake_page_match(wpq, key))
->                     return 0;
-> 
->     -       /* Stop waking things up if the page is locked again */
->     -       if (test_bit(key->bit_nr, &key->page->flags))
->     -              return -1;
->     -
->     +       /*
->     +        * Somebody unlocked the page. Unqueue the wait entry
->     +        * and run the task_work
->     +        */
->              list_del_init(&wait->entry);
-> 
->              init_task_work(&req->task_work, io_req_task_submit);
-> 
-> because that matches what you're actually doing.
-> 
-> There's no reason to stop waking up others because the page is locked,
-> because you don't know what others want.
-> 
-> And there's never any reason for the exclusive thing, b3ecause none of
-> what you do guarantees that you take exclusive ownership of the page
-> lock. Running the work *may* end up doing a "lock_page()", but you
-> don't actually guarantee that.
-
-What I ended up with after the last email was just removing the test
-bit:
-
-https://git.kernel.dk/cgit/linux-block/commit/?h=io_uring-5.9&id=cbd287c09351f1d3a4b3cb9167a2616a11390d32
-
-and I clarified the comments on the io_async_buf_func() to add more
-hints on how everything is triggered instead of just a vague "handler"
-reference:
-
-https://git.kernel.dk/cgit/linux-block/commit/?h=io_uring-5.9&id=c1dd91d16246b168b80af9b64c5cc35a66410455
-
--- 
-Jens Axboe
-
+Konrad
