@@ -2,53 +2,53 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B420AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F39C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F473204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27DDC2076B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:33:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457996;
-	bh=KP2S6zjMVIV//HHt0ckkmTyuYNbrWQFsrRLKQQLWScM=;
+	s=default; t=1596458000;
+	bh=UBRBwNUBAkcMQm7k4AI2Gc1Fdp/NT7POSOWwfxAQqok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eGVaYWlPUTFjjffoHQAwDQTEnvgEhy1hFuvcs6gak4UuXkol2K8C8mddfwMMZAkC/
-	 L+7xpzrJqdqEZXDkfCd92Lv5zZ7hkDdFCqRybD6gZUhLIAayPEHcpBquGiWPBaqGGj
-	 HllMgJ+51gCBdbOPvcQsMdhOcxzxZGqRO7kc7hlE=
+	b=SOtAgn4S3b4ndNBAdujJ+ZGipcyFiVl3sL8fFF3idJ/n6WlWdVkpUgdrbFfWXFHp6
+	 UVo6xhf+UfuUtCAsrgna2E231QmfC4I/anS8LkS9VhdpZan5mRTNH58jF94cE4a30E
+	 rXSc0WH5ncMWFy89F4v86Ol6CUhveAzKPer4XDSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729408AbgHCMdP (ORCPT
+        id S1729415AbgHCMdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:33:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32900 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:33:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728608AbgHCMdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:33:05 -0400
+        id S1729401AbgHCMdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:33:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E267B2076B;
-        Mon,  3 Aug 2020 12:33:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B9A6204EC;
+        Mon,  3 Aug 2020 12:33:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457984;
-        bh=KP2S6zjMVIV//HHt0ckkmTyuYNbrWQFsrRLKQQLWScM=;
+        s=default; t=1596457992;
+        bh=UBRBwNUBAkcMQm7k4AI2Gc1Fdp/NT7POSOWwfxAQqok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kp4RF5e6c4AYx0kMN8O4UyRTljlgAvRHTt272KbNkLR/8MEm7sp0T7TM4yY8e2vDg
-         1aJYLuz0uZamTmBt75kc7L6eIFnyhOqUp+modpwVmBUKyvKT7TUTemC2ML+LdvZL2o
-         2ree9cpM+LCSTAdKLipHI+ikpgq+hlb30DbTG5tc=
+        b=P8ZcQXjxGpVBoFCjiGGS01JqdaUb0oRJkSAi4+CIUFOoxeRY+qT0vb2brlMoOA76i
+         2oRdPQ+5Lj+OAJyxvkUlvNiAm/SoJuCbFKm12Kh3a8GqPNLPSm20SQV9HfZwjCYxbX
+         rWq7iGIueJ2Bto3esVG2edTI1yyeHlkJ47mZKCZg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wang ShaoBo <bobo.shaobowang@huawei.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 52/56] x86/unwind/orc: Fix ORC for newly forked tasks
-Date:   Mon,  3 Aug 2020 14:20:07 +0200
-Message-Id: <20200803121852.874529785@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+6db548b615e5aeefdce2@syzkaller.appspotmail.com,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 26/56] net/x25: Fix null-ptr-deref in x25_disconnect
+Date:   Mon,  3 Aug 2020 14:19:41 +0200
+Message-Id: <20200803121851.621479441@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -61,57 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 372a8eaa05998cd45b3417d0e0ffd3a70978211a ]
+commit 8999dc89497ab1c80d0718828e838c7cd5f6bffe upstream.
 
-The ORC unwinder fails to unwind newly forked tasks which haven't yet
-run on the CPU.  It correctly reads the 'ret_from_fork' instruction
-pointer from the stack, but it incorrectly interprets that value as a
-call stack address rather than a "signal" one, so the address gets
-incorrectly decremented in the call to orc_find(), resulting in bad ORC
-data.
+We should check null before do x25_neigh_put in x25_disconnect,
+otherwise may cause null-ptr-deref like this:
 
-Fix it by forcing 'ret_from_fork' frames to be signal frames.
+ #include <sys/socket.h>
+ #include <linux/x25.h>
 
-Reported-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-Link: https://lkml.kernel.org/r/f91a8778dde8aae7f71884b5df2b16d552040441.1594994374.git.jpoimboe@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+ int main() {
+    int sck_x25;
+    sck_x25 = socket(AF_X25, SOCK_SEQPACKET, 0);
+    close(sck_x25);
+    return 0;
+ }
+
+BUG: kernel NULL pointer dereference, address: 00000000000000d8
+CPU: 0 PID: 4817 Comm: t2 Not tainted 5.7.0-rc3+ #159
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-
+RIP: 0010:x25_disconnect+0x91/0xe0
+Call Trace:
+ x25_release+0x18a/0x1b0
+ __sock_release+0x3d/0xc0
+ sock_close+0x13/0x20
+ __fput+0x107/0x270
+ ____fput+0x9/0x10
+ task_work_run+0x6d/0xb0
+ exit_to_usermode_loop+0x102/0x110
+ do_syscall_64+0x23c/0x260
+ entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Reported-by: syzbot+6db548b615e5aeefdce2@syzkaller.appspotmail.com
+Fixes: 4becb7ee5b3d ("net/x25: Fix x25_neigh refcnt leak when x25 disconnect")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kernel/unwind_orc.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ net/x25/x25_subr.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index 2701b370e58fe..1d264ba1e56d1 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -420,8 +420,11 @@ bool unwind_next_frame(struct unwind_state *state)
- 	/*
- 	 * Find the orc_entry associated with the text address.
- 	 *
--	 * Decrement call return addresses by one so they work for sibling
--	 * calls and calls to noreturn functions.
-+	 * For a call frame (as opposed to a signal frame), state->ip points to
-+	 * the instruction after the call.  That instruction's stack layout
-+	 * could be different from the call instruction's layout, for example
-+	 * if the call was to a noreturn function.  So get the ORC data for the
-+	 * call instruction itself.
- 	 */
- 	orc = orc_find(state->signal ? state->ip : state->ip - 1);
- 	if (!orc)
-@@ -634,6 +637,7 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
- 		state->sp = task->thread.sp;
- 		state->bp = READ_ONCE_NOCHECK(frame->bp);
- 		state->ip = READ_ONCE_NOCHECK(frame->ret_addr);
-+		state->signal = (void *)state->ip == ret_from_fork;
+--- a/net/x25/x25_subr.c
++++ b/net/x25/x25_subr.c
+@@ -362,10 +362,12 @@ void x25_disconnect(struct sock *sk, int
+ 		sk->sk_state_change(sk);
+ 		sock_set_flag(sk, SOCK_DEAD);
  	}
+-	read_lock_bh(&x25_list_lock);
+-	x25_neigh_put(x25->neighbour);
+-	x25->neighbour = NULL;
+-	read_unlock_bh(&x25_list_lock);
++	if (x25->neighbour) {
++		read_lock_bh(&x25_list_lock);
++		x25_neigh_put(x25->neighbour);
++		x25->neighbour = NULL;
++		read_unlock_bh(&x25_list_lock);
++	}
+ }
  
- 	if (get_stack_info((unsigned long *)state->sp, state->task,
--- 
-2.25.1
-
+ /*
 
 
