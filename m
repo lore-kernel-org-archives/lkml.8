@@ -2,115 +2,114 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D630C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B68EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC24208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2436F208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:19:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fMlUIz0r"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D0EpRGiS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgHCQRs (ORCPT
+        id S1728146AbgHCQTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 12:17:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49810 "EHLO
+        Mon, 3 Aug 2020 12:19:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbgHCQRr (ORCPT
+        with ESMTP id S1726239AbgHCQTc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 12:17:47 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1CD6C06174A;
-        Mon,  3 Aug 2020 09:17:47 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id 2so98662pjx.5;
-        Mon, 03 Aug 2020 09:17:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=GPsrQW4vpQ6dRXyrzWsHOIAruTyA0LII1zG3YHLs52M=;
-        b=fMlUIz0rLEz3np/lgOR1J/xdo3PvyCdrkMOYNmTrImerYZd+Z0ERvgCmlU2O7XaXiN
-         /rPjHx8143fNjlGV2LmOwBz6+b4AMyK3K2t+G/vrlqRbWt/s8ECFfIYlmrYWMQtw0raE
-         S1DzcRzxmD4IHLSkpGCXUHciCUU31SBZsiZWitkeHTVLkjXV78v5JzNat5JLyDYj10eD
-         QShTyvnNM7yjM7k6zlXp4lTkX1CBtYRuEGSHwNXjeY6OTPjNDYBqQtVXc0Rb/YIjwVrI
-         uLs7ivpbkukdz6x3NNl8bVqqlMCGKzIDxU3L//Qp3uEpwMzkgJcm7wvwcT5PjHfn4vYa
-         dOhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=GPsrQW4vpQ6dRXyrzWsHOIAruTyA0LII1zG3YHLs52M=;
-        b=Uzek/6Yacyy7zrdp+wlhntVybN2k0hYeCkBffYoMiAXG0QymmTP2DIf8hS6xMUpVBM
-         WUoJLcBXyQQeE98UqJgVTcBG+dAKrEJU3qqz5PaEF6j1/j7nLcjsPMQCTKv1W/1ruu9n
-         fTyym5IFCwEYbX0P+X5kwoR8imeyqC1h39P908QMXED+zwNc3215s+OxC3i3huOEngOX
-         FRs3uESIIULfIMEzNC/8JC7yHsyagLnalrD5Qz0H542DpbobeJ+lEWJkSwbqEToFSbGS
-         jQsiyNzu/MP50NbQNGBFqrbGV0sQSs+Po3ar2+VF7U5RpboukPKpmjEDw4lbC9BpqHLw
-         WWLg==
-X-Gm-Message-State: AOAM5337r45QwI02anObOZg0WHmeyz3w6jRRF5G3hIZX1RsPYqG/3Y8i
-        vSuh191Ux1rniYcp9hxereGzYLETiwvg3Q==
-X-Google-Smtp-Source: ABdhPJw7avMZq/kZ3NOZty8xBaeBN9sb48D/0vRuTEUPmcWVWsBvmPfrnSh14aB4vO5FXDt8YNYHFw==
-X-Received: by 2002:a17:902:eb14:: with SMTP id l20mr9684125plb.104.1596471466713;
-        Mon, 03 Aug 2020 09:17:46 -0700 (PDT)
-Received: from lazar-beloica-cent7-umvm1.dev.nutanix.com ([192.146.154.242])
-        by smtp.gmail.com with ESMTPSA id d65sm19316102pfc.97.2020.08.03.09.17.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 03 Aug 2020 09:17:45 -0700 (PDT)
-From:   Lazar Beloica <lazarbeloica@gmail.com>
-X-Google-Original-From: Lazar Beloica <lazar.beloica@nutanix.com>
-To:     linux-ext4@vger.kernel.org
-Cc:     stable@vger.kernel.org, lazarbeloica@gmail.com,
-        lazar.beloica@nutanix.com, boyu.mt@taobao.com,
-        adilger.kernel@dilger.ca, linux-kernel@vger.kernel.org
-Subject: [PATCH] ext4: fix marking group trimmed if all blocks not trimmed
-Date:   Mon,  3 Aug 2020 16:17:44 +0000
-Message-Id: <1596471464-198715-1-git-send-email-lazar.beloica@nutanix.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 3 Aug 2020 12:19:32 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82677C06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 09:19:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=+X2IPA8w3AbMhwVklKrJu4k2WfkxfIz34eHAn+KBd8I=; b=D0EpRGiSVtJ6LO7Eaf7VyJ1Gek
+        3itGsR4hHeZFbtEKVRqN7OFhlauCD2RhQtS5oSJKKmnmtrZPtxtnWsiDy53XcSrIqm7OVimTzsOQD
+        j6RJLmM1JvmxmXOfxhyT55HcT9LJmny5r5FkUZS9mnaogZeKdHumyjJOOB6LvLQ30dsgQOJgVcem1
+        p5IxkQTQLplQg9U1rTuGE0W4fAvUGwHbd3iGKQYnD3wEv0BvIt/D+odDHZ0+pldDjV3n+KSlIBBLJ
+        TvJckvu3/ptgN28NAunRGiNUZ3k9IuAx7fMYv5e1WDSuu/cHT+vbek5gvGNkZw7c/4vkDvAe+j0Zg
+        waso5uOQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k2dBL-0000Lf-Vd; Mon, 03 Aug 2020 16:19:24 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0E1823010D2;
+        Mon,  3 Aug 2020 18:19:22 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E8D2B2BEFF78F; Mon,  3 Aug 2020 18:19:21 +0200 (CEST)
+Date:   Mon, 3 Aug 2020 18:19:21 +0200
+From:   peterz@infradead.org
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "mbenes@suse.de" <mbenes@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "jgross@suse.com" <jgross@suse.com>
+Subject: Re: [RFC][PATCH] objtool,x86_64,paravirt: Add pv_ops[] support
+Message-ID: <20200803161921.GG2674@hirez.programming.kicks-ass.net>
+References: <20200803143231.GE2674@hirez.programming.kicks-ass.net>
+ <MW2PR2101MB10521C4F5E19F12E174623F7D74D0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MW2PR2101MB10521C4F5E19F12E174623F7D74D0@MW2PR2101MB1052.namprd21.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When FTRIM is issued on a group, ext4 marks it as trimmed so another FTRIM
-on the same group has no effect. Ext4 marks group as trimmed if at least
-one block is trimmed, therefore it is possible that a group is marked as
-trimmed even if there are blocks in that group left untrimmed.
+On Mon, Aug 03, 2020 at 03:18:57PM +0000, Michael Kelley wrote:
+> From: peterz@infradead.org Sent: Monday, August 3, 2020 7:33 AM
 
-This patch marks group as trimmed only if there are no more blocks
-in that group to be trimmed.
+> > It requires call sites are the normal indirect call, and not mangled
+> > retpoison (slow_down_io() had those), it also requires pv_ops[]
+> > assignments are single instructions and not laundered through some
+> > pointless intermediate helper (hyperv).
 
-Fixes: 3d56b8d2c74cc3f375ce332b3ac3519e009d79ee
-Tested-by: Lazar Beloica <lazar.beloica@nutanix.com>
-Signed-off-by: Lazar Beloica <lazar.beloica@nutanix.com>
----
- fs/ext4/mballoc.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+^^^
 
-diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-index c0a331e..130936b 100644
---- a/fs/ext4/mballoc.c
-+++ b/fs/ext4/mballoc.c
-@@ -5346,6 +5346,7 @@ static int ext4_trim_extent(struct super_block *sb, int start, int count,
- {
- 	void *bitmap;
- 	ext4_grpblk_t next, count = 0, free_count = 0;
-+	ext4_fsblk_t max_blks = ext4_blocks_count(EXT4_SB(sb)->s_es);
- 	struct ext4_buddy e4b;
- 	int ret = 0;
- 
-@@ -5401,7 +5402,9 @@ static int ext4_trim_extent(struct super_block *sb, int start, int count,
- 
- 	if (!ret) {
- 		ret = count;
--		EXT4_MB_GRP_SET_TRIMMED(e4b.bd_info);
-+		next = mb_find_next_bit(bitmap, max_blks, max + 1);
-+		if (next == max_blks)
-+			EXT4_MB_GRP_SET_TRIMMED(e4b.bd_info);
- 	}
- out:
- 	ext4_unlock_group(sb, group);
--- 
-1.8.3.1
+> > diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+> > index 09aa44cb8a91..bed769a84637 100644
+> > --- a/drivers/clocksource/hyperv_timer.c
+> > +++ b/drivers/clocksource/hyperv_timer.c
+> > @@ -418,6 +418,13 @@ static struct clocksource hyperv_cs_msr = {
+> >  	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
+> >  };
+> > 
+> > +static __always_inline void hv_setup_sched_clock(void *sched_clock)
+> > +{
+> > +#ifdef CONFIG_PARAVIRT
+> > +	pv_ops.time.sched_clock = sched_clock;
+> > +#endif
+> > +}
+> > +
+> 
+> Moving this function to hyperv_timer.c is problematic because we
+> want hyperv_timer.c to be architecture independent.  We're in the
+> process of supporting Linux guests running on Hyper-V on ARM64, and
+> there's a different implementation of hv_setup_sched_clock() on ARM64.
 
+Then stick it in a header or something. The important part is that the
+compiler generates:
+
+4b737:       48 c7 05 00 00 00 00    movq   $0x0,0x0(%rip)        # 4b742 <hv_init_clocksource+0x4d>
+4b73e:       00 00 00 00
+		4b73a: R_X86_64_PC32    pv_ops
+		4b73e: R_X86_64_32S     .text+0x827880
+
+Where:
+
+96378: 0000000000827880    32 FUNC    LOCAL  DEFAULT    4 read_hv_sched_clock_msr
+
+Otherwise objtool cannot find the assignment and you get to keep the
+pieces.
