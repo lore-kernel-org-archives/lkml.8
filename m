@@ -2,137 +2,62 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A8BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B5DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 274C420781
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:19:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="SJDh8Mkh"
+	by mail.kernel.org (Postfix) with ESMTP id D13502076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:20:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729215AbgHCXTd (ORCPT
+        id S1729238AbgHCXUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 19:19:33 -0400
-Received: from mail-eopbgr30080.outbound.protection.outlook.com ([40.107.3.80]:13121
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728669AbgHCXTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 19:19:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZFTH2lNeyQ/nNmMf6TDWuGk6sgS+0+FFWWk4BTHJ15biMkbv9a7AZzTrrtewqpW4HK8slGlhAN2KfTKS3pmLqr+RjlledU6C3ftVIeeeNlCon9IIKGG/sQZwgQGBukKxYEWbv2WL6Eu0FTG8FfXKMVcAQQ/5T8Ka5/YFaYKvB5dqz2KeerznmneCbJ+j67T4/AFkI4nC8EAD3a2J5H5KfVVe56MVNpJ/FhllsPiQWF9gPjVeFJCslwjKXQO6cNxeZNbC4zqJoQQ49tNQLsAD8jIRbhZaYmLEPo9I/Jt7uyL7C9WX+7UU+HJb4Ms6qzJ3QVFbiyDstexYOA3OhW8RKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EtSJea5dq9g1BmFJOds0HV2zbUMHLd/DNWpQmyUZmrw=;
- b=g/JzjnpZWWm/mxJrAa1b6HFDW28wPEYgseLJYDTjK7hyTk376EwnbUZfsoQnBg9hMWNQMecy6XrNUe8uim+OB0g0ZDkToPwVoumaT9IB30ud3ETD/aLGT1ySx1D+eQXR68WPhEQIERwhXleiFMMJYYqyyU5K/8Qfw7g/N2tJ9BwvyJzd0JhiKYJkv71o97tlqGnFrF0ZfiToaGJE5UOQ2+UeTe7tstnXR7k6l1/hVUuQvmDJODbQNhmxd/vFzDr9o2v/CXMH4MGyRMfM7AqoDuxo5FR8Q6TmJYlWtBav/wZYXrDZSn163U7t/Ys0aZSMQhvUjZZM/AgbONsq70nz0w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EtSJea5dq9g1BmFJOds0HV2zbUMHLd/DNWpQmyUZmrw=;
- b=SJDh8Mkh+WsNMAEsa72zcen9GRhnhJy6/W51t2zQK9T0cZIrC11A+wJF0Q36nMsDKbg40xp3cjm0ehdRIY7U9ITDCH+Hc9THTlPeSy2GsgYKlFN3/TNm/ESaxMQsy3f/o+UD1wn8vLb6/ZwNucvaHIg7Dmg7gdN/rEoxoJeRCzk=
-Authentication-Results: nvidia.com; dkim=none (message not signed)
- header.d=none;nvidia.com; dmarc=none action=none header.from=mellanox.com;
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR05MB6351.eurprd05.prod.outlook.com (2603:10a6:803:fe::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.18; Mon, 3 Aug
- 2020 23:19:28 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::10b0:e5f1:adab:799a]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::10b0:e5f1:adab:799a%4]) with mapi id 15.20.3239.021; Mon, 3 Aug 2020
- 23:19:27 +0000
-Date:   Mon, 3 Aug 2020 20:19:23 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the hmm tree with the drm tree
-Message-ID: <20200803231923.GR19097@mellanox.com>
-References: <20200730192110.1466e63e@canb.auug.org.au>
- <20200730120303.GQ19097@mellanox.com>
- <cf7af4c9-592a-2143-831a-cb0f44bc768e@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cf7af4c9-592a-2143-831a-cb0f44bc768e@nvidia.com>
-X-ClientProxiedBy: MN2PR04CA0006.namprd04.prod.outlook.com
- (2603:10b6:208:d4::19) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR04CA0006.namprd04.prod.outlook.com (2603:10b6:208:d4::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Mon, 3 Aug 2020 23:19:27 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@mellanox.com>)      id 1k2jjn-003A3w-QB; Mon, 03 Aug 2020 20:19:23 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: adadbc83-1692-417f-3cc0-08d83803aac7
-X-MS-TrafficTypeDiagnostic: VI1PR05MB6351:
-X-Microsoft-Antispam-PRVS: <VI1PR05MB635163C642316B8ACC4EBC4ACF4D0@VI1PR05MB6351.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1417;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Hvn4LdvA+U7wkIdJtzCNfddm0LNjNtIhqYxVXxYDCrAeomPziHxxPCNX9z2upageIh7QiT3A9JIDTua/DDMl1ef8tnZGRo/09cLeEWYyPo3Y+4vYrJ/2tE7Uc7ZgCZUc++PDDc4ZKGpd3bl2LNCIqmiy4MRs9/+JKW1lLWIKTFgKmxXeNRDK+NRCwOlPJ7sOc943EubUgmQPWi4WQDMN3iqORZjAN8pmSEFUtM4dZDfuYTnSPJeFffc3HXsOg5Z/qJVS7JMBzPyaCAAVaxN0H1nchFQVadzonK2GeF5yboEO/q2W48Ns/VTqBlT6jnhm
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(366004)(376002)(39860400002)(136003)(478600001)(9786002)(9746002)(8676002)(316002)(2906002)(54906003)(1076003)(86362001)(5660300002)(4326008)(36756003)(6916009)(66946007)(66476007)(66556008)(26005)(426003)(186003)(33656002)(53546011)(2616005)(8936002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: q1Tv0ojeTQNENKi6jwkJd7APTQnuMtYintjXTglSAP10+OtVUnxYmbBF/2ywWQI71HDoaZPnOqWdRvOWdp6Gf6NUCkpH/WC/0X0ELBJD6GljdwhzqR43WhiSResLKFj7/P3LcS7OH/NkN5sRiMkQbMJiuTTwUKOBjK6/hs8zwGRnhyEcXclOJM1A9C4KxfgfFLzNy+tQcblxUa4llvQygAry57tqVrsDWAuKu//LOj99U8mpk2NRfU5sHvuousGvV4ovRrztcPHyugKy7UyFCAWzsI2ANDDvqUQxZolDIpIsrWZw0NWJ88m+3roWI8LAwZm1KXhIW+gPzT9SCpcdovOLJJFTYF/OCzbTxq7VTyKgbobJxXrdu63mksXvHzqsH5Sr3Qz26WfV+PTlWUr7a77VV7fZVoYso/TLo5DejsRKe9WFsPlbsTP/VjrXTXU0M7vd3oJpkAdXh1Hn2eaa7Yohx+3jUzEp2EkPD250IbVESBCsAIw2b/EAgIOrX9NO+s4pcujPTmfTiZtZfD3XIP1N1WAH6x7l7K6xCUgMvCBMBbA0VlIYCrPcUNEw9CiciQfajdkSiWcGlBanVcWgFTcM4Kz4Xxp1AWpV1+RhwQsJ8W6EzOxanPZEWVEK6T1vJZ3HoDaOF2eAMQSoL1waIA==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: adadbc83-1692-417f-3cc0-08d83803aac7
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR05MB4141.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2020 23:19:27.7334
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UaJypfXWAWFP1gwdS2Di64tLq0JISLxZViuXm7PzOf/kkaAUNSa/ApRzI5mi8LWy3eLqDhZPiuNIJfCF700i1w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6351
-X-MS-Exchange-Transport-Forked: True
+        Mon, 3 Aug 2020 19:20:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58624 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726350AbgHCXUw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 19:20:52 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33ACAC06174A;
+        Mon,  3 Aug 2020 16:20:52 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 491A61277CEBD;
+        Mon,  3 Aug 2020 16:04:06 -0700 (PDT)
+Date:   Mon, 03 Aug 2020 16:20:50 -0700 (PDT)
+Message-Id: <20200803.162050.1705020037155713533.davem@davemloft.net>
+To:     florinel.iordache@nxp.com
+Cc:     madalin.bucur@nxp.com, kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v3 0/5] DPAA FMan driver fixes
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1596438454-4895-1-git-send-email-florinel.iordache@nxp.com>
+References: <1596438454-4895-1-git-send-email-florinel.iordache@nxp.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 03 Aug 2020 16:04:06 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 10:31:45AM -0700, Ralph Campbell wrote:
-> 
-> On 7/30/20 5:03 AM, Jason Gunthorpe wrote:
-> > On Thu, Jul 30, 2020 at 07:21:10PM +1000, Stephen Rothwell wrote:
-> > > Hi all,
-> > > 
-> > > Today's linux-next merge of the hmm tree got a conflict in:
-> > > 
-> > >    drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmmgp100.c
-> > > 
-> > > between commit:
-> > > 
-> > >    7763d24f3ba0 ("drm/nouveau/vmm/gp100-: fix mapping 2MB sysmem pages")
-> > > 
-> > > from the drm tree and commits:
-> > > 
-> > >    4725c6b82a48 ("nouveau: fix mapping 2MB sysmem pages")
-> > >    1a77decd0cae ("nouveau: fix storing invalid ptes")
-> > > 
-> > > from the hmm tree.
-> > > 
-> > > 7763d24f3ba0 and 4725c6b82a48 are exactly the same patch.
-> > 
-> > Oh? Ralph? What happened here?
-> 
-> Ben did email me saying he was planning to take this patch into
-> his nouveau tree and I did reply to him saying you had also taken it
-> into your tree and that I had more nouveau/SVM patches for you on the way.
-> So, I'm not sure what happened.
+From: Florinel Iordache <florinel.iordache@nxp.com>
+Date: Mon,  3 Aug 2020 10:07:29 +0300
 
-Well no answer from Ben and it looks like it is in the main DRM tree,
-so I will drop the 4725c6b82a48 patch from hmm.
+> Here are several fixes for the DPAA FMan driver.
+> 
+> v2 changes:
+> * corrected patch 4 by removing the line added by mistake
+> * used longer fixes tags with the first 12 characters of the SHA-1 ID
+> 
+> v3 changes:
+> * remove the empty line inserted after fixes tag
 
-Jason
+Series applied, thank you.
