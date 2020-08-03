@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 312DFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A82C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3CAF204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ACC1204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458392;
-	bh=j4QwB29Ee9qxu9nA3B0US/rFh4yAG4wKdres+4bmP5I=;
+	s=default; t=1596458401;
+	bh=U+chRqPGR8rJrwHBA7q6Oj2Gm8e0BLsd3/ugWeyaAfw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TOUM5trcCThoaDe5ojt7qcJW8RMpdwj7dUyp+h1f0XNtBkBBXjmmSNiesnkQA9GHh
-	 8fpGP8Ah+rcosvu67qZkuQpdmTUq1UBiPo2xMa8ThNq8gafdq0qlVnQ1odHjv5LZFY
-	 Lyfp8qXb1mtuh6zxgsONRIn1466w0brx3r6FPIdw=
+	b=AlWZOHonsdn2EjlWc47NxGAseHpZobgPrjJUkUYe/qwDzPUR2hxbGxSpJtSxeSaFt
+	 os3saudyVd9QFLqQOSFQhND7ItzcrlvxyiH7QaeT0JWdOaTgsCh2klOwnCEfwvoxF6
+	 qRWn8EZNHhQ6SBMtqU7q1QDgNIMshdGxqGL4NKCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729430AbgHCMd1 (ORCPT
+        id S1729398AbgHCMj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:33:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33192 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:39:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729414AbgHCMdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:33:19 -0400
+        id S1728366AbgHCMdM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:33:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5A2B204EC;
-        Mon,  3 Aug 2020 12:33:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1B382076B;
+        Mon,  3 Aug 2020 12:33:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457998;
-        bh=j4QwB29Ee9qxu9nA3B0US/rFh4yAG4wKdres+4bmP5I=;
+        s=default; t=1596457990;
+        bh=U+chRqPGR8rJrwHBA7q6Oj2Gm8e0BLsd3/ugWeyaAfw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uHVePIwjQXMV8Nf0MTM0ZtIqhocyVhuhUT9O7UxtO9t66zuUVBbWVrCt/41Bu10Uq
-         o6A2IBQgIoj7w5712v9WsBrTDa+2RtmS0cBrzj5ZVGLtknc6mc6IdBNZttbYbMSuc/
-         f6+iGsKXVLPiRII9yI6KcoXIfns2pQxON3t3oerI=
+        b=Ws2yKnk4wkhScCQKX14C1y7PiOu68M+O3ST5iXvjB45OPuiCLTTCjd30srMSTkhQY
+         SEQhTmTiEcPh8bciYHEUInrawJWfr1ST7g2vp1MChO99c5XBrhg2WqeZuCTM2FcDwK
+         ytURaAJLlj5/D4u8yLrTtL1O4571LmTltwwRCg9E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tanner Love <tannerlove@google.com>,
-        Willem de Bruijn <willemb@google.com>,
+        stable@vger.kernel.org, Andrea Righi <andrea.righi@canonical.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 28/56] selftests/net: rxtimestamp: fix clang issues for target arch PowerPC
-Date:   Mon,  3 Aug 2020 14:19:43 +0200
-Message-Id: <20200803121851.709960504@linuxfoundation.org>
+Subject: [PATCH 4.19 54/56] xen-netfront: fix potential deadlock in xennet_remove()
+Date:   Mon,  3 Aug 2020 14:20:09 +0200
+Message-Id: <20200803121852.973030494@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -61,41 +60,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tanner Love <tannerlove@google.com>
+From: Andrea Righi <andrea.righi@canonical.com>
 
-[ Upstream commit 955cbe91bcf782c09afe369c95a20f0a4b6dcc3c ]
+[ Upstream commit c2c633106453611be07821f53dff9e93a9d1c3f0 ]
 
-The signedness of char is implementation-dependent. Some systems
-(including PowerPC and ARM) use unsigned char. Clang 9 threw:
-warning: result of comparison of constant -1 with expression of type \
-'char' is always true [-Wtautological-constant-out-of-range-compare]
-                                  &arg_index)) != -1) {
+There's a potential race in xennet_remove(); this is what the driver is
+doing upon unregistering a network device:
 
-Tested: make -C tools/testing/selftests TARGETS="net" run_tests
+  1. state = read bus state
+  2. if state is not "Closed":
+  3.    request to set state to "Closing"
+  4.    wait for state to be set to "Closing"
+  5.    request to set state to "Closed"
+  6.    wait for state to be set to "Closed"
 
-Fixes: 16e781224198 ("selftests/net: Add a test to validate behavior of rx timestamps")
-Signed-off-by: Tanner Love <tannerlove@google.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
+If the state changes to "Closed" immediately after step 1 we are stuck
+forever in step 4, because the state will never go back from "Closed" to
+"Closing".
+
+Make sure to check also for state == "Closed" in step 4 to prevent the
+deadlock.
+
+Also add a 5 sec timeout any time we wait for the bus state to change,
+to avoid getting stuck forever in wait_event().
+
+Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/networking/timestamping/rxtimestamp.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/xen-netfront.c | 64 +++++++++++++++++++++++++-------------
+ 1 file changed, 42 insertions(+), 22 deletions(-)
 
-diff --git a/tools/testing/selftests/networking/timestamping/rxtimestamp.c b/tools/testing/selftests/networking/timestamping/rxtimestamp.c
-index 7a573fb4c1c4e..c6428f1ac22fb 100644
---- a/tools/testing/selftests/networking/timestamping/rxtimestamp.c
-+++ b/tools/testing/selftests/networking/timestamping/rxtimestamp.c
-@@ -328,8 +328,7 @@ int main(int argc, char **argv)
- 	bool all_tests = true;
- 	int arg_index = 0;
- 	int failures = 0;
--	int s, t;
--	char opt;
-+	int s, t, opt;
+diff --git a/drivers/net/xen-netfront.c b/drivers/net/xen-netfront.c
+index 6b4675a9494b2..c8e84276e6397 100644
+--- a/drivers/net/xen-netfront.c
++++ b/drivers/net/xen-netfront.c
+@@ -63,6 +63,8 @@ module_param_named(max_queues, xennet_max_queues, uint, 0644);
+ MODULE_PARM_DESC(max_queues,
+ 		 "Maximum number of queues per virtual interface");
  
- 	while ((opt = getopt_long(argc, argv, "", long_options,
- 				  &arg_index)) != -1) {
++#define XENNET_TIMEOUT  (5 * HZ)
++
+ static const struct ethtool_ops xennet_ethtool_ops;
+ 
+ struct netfront_cb {
+@@ -1337,12 +1339,15 @@ static struct net_device *xennet_create_dev(struct xenbus_device *dev)
+ 
+ 	netif_carrier_off(netdev);
+ 
+-	xenbus_switch_state(dev, XenbusStateInitialising);
+-	wait_event(module_wq,
+-		   xenbus_read_driver_state(dev->otherend) !=
+-		   XenbusStateClosed &&
+-		   xenbus_read_driver_state(dev->otherend) !=
+-		   XenbusStateUnknown);
++	do {
++		xenbus_switch_state(dev, XenbusStateInitialising);
++		err = wait_event_timeout(module_wq,
++				 xenbus_read_driver_state(dev->otherend) !=
++				 XenbusStateClosed &&
++				 xenbus_read_driver_state(dev->otherend) !=
++				 XenbusStateUnknown, XENNET_TIMEOUT);
++	} while (!err);
++
+ 	return netdev;
+ 
+  exit:
+@@ -2142,28 +2147,43 @@ static const struct attribute_group xennet_dev_group = {
+ };
+ #endif /* CONFIG_SYSFS */
+ 
+-static int xennet_remove(struct xenbus_device *dev)
++static void xennet_bus_close(struct xenbus_device *dev)
+ {
+-	struct netfront_info *info = dev_get_drvdata(&dev->dev);
+-
+-	dev_dbg(&dev->dev, "%s\n", dev->nodename);
++	int ret;
+ 
+-	if (xenbus_read_driver_state(dev->otherend) != XenbusStateClosed) {
++	if (xenbus_read_driver_state(dev->otherend) == XenbusStateClosed)
++		return;
++	do {
+ 		xenbus_switch_state(dev, XenbusStateClosing);
+-		wait_event(module_wq,
+-			   xenbus_read_driver_state(dev->otherend) ==
+-			   XenbusStateClosing ||
+-			   xenbus_read_driver_state(dev->otherend) ==
+-			   XenbusStateUnknown);
++		ret = wait_event_timeout(module_wq,
++				   xenbus_read_driver_state(dev->otherend) ==
++				   XenbusStateClosing ||
++				   xenbus_read_driver_state(dev->otherend) ==
++				   XenbusStateClosed ||
++				   xenbus_read_driver_state(dev->otherend) ==
++				   XenbusStateUnknown,
++				   XENNET_TIMEOUT);
++	} while (!ret);
++
++	if (xenbus_read_driver_state(dev->otherend) == XenbusStateClosed)
++		return;
+ 
++	do {
+ 		xenbus_switch_state(dev, XenbusStateClosed);
+-		wait_event(module_wq,
+-			   xenbus_read_driver_state(dev->otherend) ==
+-			   XenbusStateClosed ||
+-			   xenbus_read_driver_state(dev->otherend) ==
+-			   XenbusStateUnknown);
+-	}
++		ret = wait_event_timeout(module_wq,
++				   xenbus_read_driver_state(dev->otherend) ==
++				   XenbusStateClosed ||
++				   xenbus_read_driver_state(dev->otherend) ==
++				   XenbusStateUnknown,
++				   XENNET_TIMEOUT);
++	} while (!ret);
++}
++
++static int xennet_remove(struct xenbus_device *dev)
++{
++	struct netfront_info *info = dev_get_drvdata(&dev->dev);
+ 
++	xennet_bus_close(dev);
+ 	xennet_disconnect_backend(info);
+ 
+ 	if (info->netdev->reg_state == NETREG_REGISTERED)
 -- 
 2.25.1
 
