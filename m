@@ -2,130 +2,103 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25752C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B86DAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06273207FB
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89A1E207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:42:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a7MqE6FI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IamXBlpF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbgHCQme (ORCPT
+        id S1726981AbgHCQmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 12:42:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53630 "EHLO
+        Mon, 3 Aug 2020 12:42:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbgHCQmd (ORCPT
+        with ESMTP id S1725945AbgHCQmx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 12:42:33 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56D1EC06174A;
-        Mon,  3 Aug 2020 09:42:33 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id z5so20192478pgb.6;
-        Mon, 03 Aug 2020 09:42:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Xdp/fS6+v2ditkJk+cvQMgK9TUqlS62v6zpMnXOv3Ic=;
-        b=a7MqE6FIile7iIvKc0LEMZJMZ6mV1ZL3hknPiZcAHiLJZJVxqLexKXD7MUs4PplR1k
-         32tgmF4SfgrHJDOiSxssO06fHJJU2C0I3z3YIyYXntvBRx5Y/eU7XbilTMMT6KQ65rDR
-         Fa4nsG/JJ/HRkbYr8blHKxHZ2JZ4km4rb/SInDaPLRiyac0407/0kMVuErVAGusfJ7NB
-         wLIHJ7wlCx+F2Av/UvG8cloZM9VRMUr6nuPyLZ+HcNFi8D+DV5kS6kdiOXeRYO6v+xre
-         FKbJmQ7nSvTLIvBS+5Fgn2BXAZIaEq4cQVM2Y6ch8o9/gIfZR5OSv/J4WL8Hfjwmmd6x
-         Wm0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Xdp/fS6+v2ditkJk+cvQMgK9TUqlS62v6zpMnXOv3Ic=;
-        b=rdG4jbsyrsLLgnMYuhYN9cQrOtEAakbG5hI8lYnFZIev20N93bHYAPOO81mJgC8gev
-         TSfZZw90hI0DsbDQTnaiC1np/Y/NAprvxJQzkWHqTOprTJzHzrtkuo4spYc37zhXoIvM
-         VDtvvMPPQqKAlncIA1fMY3MbaB9dKbRGY3z4wBh4UP8edUdha7LWTmev4IhlihAKD6JR
-         kqpETh9YYqvIH+J9P3Uw2mNvnuYguNsjN4oy9n16DCUuo+t46/lPh6ntiyD1w8n16hCT
-         fMwO/DBzvDUwbsUuXELkjQeMZ/ZMwHVjICLuNB5pHSLD871Gov1xS3jhRXVZZL1Dq7HY
-         vkyw==
-X-Gm-Message-State: AOAM5337igv9+Pre58yc8pKs5QvyPLs31CNulbBblo2qptlUsB690pC7
-        MV0vEgzIyj2ElOO+9u6paBtt1f7R6nTLTPsZa1I=
-X-Google-Smtp-Source: ABdhPJyLd0xKU1fFXwew/qnMkherfYLTaf5EOHygn2taxpTZTjjFC3duVTdf5UT0qujpqNr/70s7InpKhau8tw1JCjM=
-X-Received: by 2002:a62:758f:: with SMTP id q137mr16020137pfc.170.1596472952830;
- Mon, 03 Aug 2020 09:42:32 -0700 (PDT)
+        Mon, 3 Aug 2020 12:42:53 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 533B2C06174A;
+        Mon,  3 Aug 2020 09:42:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=l27bIWMUAjLIRYf3UQkWtSAARt3k0/aXVbBFGT9RZYw=; b=IamXBlpFIGN1CcG8pu64PzAtXh
+        MkJ3Ted2XBUxLFfGV2VWmjkUFwonmZcvADwkwVkPt+6MEkTy0WzsgeGKl0QGS4ERRGfULQy/BKgKb
+        xYRQSdmK/+m1N/5REHNnUw8zixEJOwdHH6zDsg1q+kkfOrPjf6WvHBavlCkaQNKRMFd8VkYxir0v1
+        Om1MM8DD4zORpurdh5DtOlHpO+/6avcA9AwTsWy44HeV+g12KUin83XzvWOxw0m+HHU+pxHTnz+6s
+        MkCUmz+dun81lVgbbt3MLhUA4MCYhRSJgBlzJToc5uxUn6KEVK0kLvk6lwc1/nD/EjLRNOUtOG5AO
+        906bAn4w==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k2dY2-0004SM-G5; Mon, 03 Aug 2020 16:42:51 +0000
+Subject: Re: [PATCH] ARM64: Setup DMA32 zone size by bootargs
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     Phil Chang <phil.chang@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Steve Capper <steve.capper@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alix Wu <alix.wu@mediatek.com>,
+        YJ Chiang <yj.chiang@mediatek.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+References: <20200803142647.16737-1-phil.chang@mediatek.com>
+ <91057296-7064-282f-9345-e1d84af78eb4@infradead.org>
+Message-ID: <50008dcf-61dd-ee1f-4f81-240c52650f95@infradead.org>
+Date:   Mon, 3 Aug 2020 09:42:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200803145055.5203-1-eajames@linux.ibm.com> <20200803145055.5203-3-eajames@linux.ibm.com>
-In-Reply-To: <20200803145055.5203-3-eajames@linux.ibm.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 3 Aug 2020 19:42:17 +0300
-Message-ID: <CAHp75VevG65uuE4Vv49tSdvpNnxE7AC7W_QR2s8twCPZ=4da_g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] leds: pca955x: Add an IBM software implementation
- of the PCA9552 chip
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Dan Murphy <dmurphy@ti.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        vishwa@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <91057296-7064-282f-9345-e1d84af78eb4@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 3, 2020 at 5:51 PM Eddie James <eajames@linux.ibm.com> wrote:
->
-> IBM created an implementation of the PCA9552 on a PIC16F
-> microcontroller. The I2C device addresses are different from the
-> hardware PCA9552, so add a new compatible string and associated
-> platform data to be able to probe this device.
+On 8/3/20 9:39 AM, Randy Dunlap wrote:
+> On 8/3/20 7:26 AM, Phil Chang wrote:
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>> index fb95fad81c79..441ad3cb8ee8 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -956,6 +956,9 @@
+>>  			The filter can be disabled or changed to another
+>>  			driver later using sysfs.
+>>  
+>> +	dma32_zone=nn	[KMG] [KNL,BOOT]
+>> +			Forces the DMA32 zone size of <nn> in mb, arm64 only.
+> 
+> Preferred:
+> 
+>> +	dma32_zone=nn	[KMG] [KNL,BOOT,ARM64]
 
-...
+Oh, I doubt that the "[KMG]" should be there at all.
 
->         pca9550,
->         pca9551,
->         pca9552,
-> +       ibm_pca9552,
->         pca9553,
+>> +			Forces the DMA32 zone size of <nn> in MB.
+> 
+>> +
+>>  	driver_async_probe=  [KNL]
+>>  			List of driver names to be probed asynchronously.
+>>  			Format: <driver_name1>,<driver_name2>...
+> 
+> thanks.
+> 
 
-I would rather not mix like this, but use alpha order, for example.
-It's better to read and see which devices are supported by vendor.
-
-...
-
->         },
-
-> +       [ibm_pca9552] = {
-
-> +       },
->         [pca9553] = {
-
-Ditto.
-
-...
-
->         { "pca9550", pca9550 },
->         { "pca9551", pca9551 },
->         { "pca9552", pca9552 },
-> +       { "ibm-pca9552", ibm_pca9552 },
->         { "pca9553", pca9553 },
-
-Ditto.
-
-...
-
->         { .compatible = "nxp,pca9550", .data = (void *)pca9550 },
->         { .compatible = "nxp,pca9551", .data = (void *)pca9551 },
->         { .compatible = "nxp,pca9552", .data = (void *)pca9552 },
-> +       { .compatible = "ibm,pca9552", .data = (void *)ibm_pca9552 },
->         { .compatible = "nxp,pca9553", .data = (void *)pca9553 },
-
-Ditto.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+~Randy
+
