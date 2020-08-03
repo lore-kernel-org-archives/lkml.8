@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79869C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED670C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B8602054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F0A20775
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457909;
-	bh=Hy8mBhV7h9SLwvg7GqfwObL1tL77wSLQh01A/CTIrhY=;
+	s=default; t=1596457914;
+	bh=Sp098mK9dW4CZGeuDCp6QtJHCUMG3PJjoVI6NAk/A5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V+GTdYy5T4ib2qGRHp9xjQ9WXC5J6DynyCxtZhwNElOACDNbxu/NM0XAeIs710FV+
-	 nCHucoORqsuDFzU7hG25zfE+PRm0ndwVMkDit8BFqHYbUOOrm7baO2q0SF5uNOKode
-	 gPw7YFn8qtK8yMM9VCczk80k8CgA9bYgxJf0vZ8o=
+	b=UiHsNS0HWJ8ynPzYO0ELTYedkN+sF1THbdO+PoQn0Tl/E9SmQwqk7OwZXheFQtEFq
+	 RR3ZUZ4rjucxT2Id2iUcSOzWv5duzUnW/P213CSYENlSANdSqK67IBFrpQBBCDg5my
+	 HIKFKDNK9a8XTvKw31UlruPn7PiCL2g8ZFxyY4t4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729230AbgHCMbt (ORCPT
+        id S1729237AbgHCMby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:31:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59498 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:31:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729224AbgHCMbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:31:46 -0400
+        id S1729229AbgHCMbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:31:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E80EF208E4;
-        Mon,  3 Aug 2020 12:31:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CAAF2054F;
+        Mon,  3 Aug 2020 12:31:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457905;
-        bh=Hy8mBhV7h9SLwvg7GqfwObL1tL77wSLQh01A/CTIrhY=;
+        s=default; t=1596457908;
+        bh=Sp098mK9dW4CZGeuDCp6QtJHCUMG3PJjoVI6NAk/A5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qq+s4C6vfk0jeZhnLAkglojCP564gH8MRuQyRgEY4eEANy6j5z+K2GdYG+yCiN/JW
-         bJQx9TGnwpFc1uvnQwDPDpvfftHHUWtdK5+wyOVL10M76AzndC1oM2lBw2CT/skMGI
-         /oYKwo1toVMtksa5Jc294nfTTgoutqTiRfA3xjxA=
+        b=SQbJUF6wJ7oC5ETJ/+ds2s+/J9/JLFo+O+njRIXUGDRl3OPwG9iPGTrcNrAEsxw+3
+         Lm6BCvvHr1yd4wMEdc+PBj42SjtSNdjxuehcKJcc0Gyxpo6USjZlPAFEvBllVKXCxV
+         EK/+0hJIWjpW4JshKKXlxfePtnB9N53DMi3fr5C8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Navid Emamdoost <navid.emamdoost@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 05/56] tracing: Have error path in predicate_parse() free its allocated memory
-Date:   Mon,  3 Aug 2020 14:19:20 +0200
-Message-Id: <20200803121850.577138860@linuxfoundation.org>
+Subject: [PATCH 4.19 06/56] ath9k_htc: release allocated buffer if timed out
+Date:   Mon,  3 Aug 2020 14:19:21 +0200
+Message-Id: <20200803121850.621312769@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -63,37 +63,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 96c5c6e6a5b6db592acae039fed54b5c8844cd35 ]
+[ Upstream commit 853acf7caf10b828102d92d05b5c101666a6142b ]
 
-In predicate_parse, there is an error path that is not going to
-out_free instead it returns directly which leads to a memory leak.
-
-Link: http://lkml.kernel.org/r/20190920225800.3870-1-navid.emamdoost@gmail.com
+In htc_config_pipe_credits, htc_setup_complete, and htc_connect_service
+if time out happens, the allocated buffer needs to be released.
+Otherwise there will be memory leak.
 
 Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events_filter.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ath/ath9k/htc_hst.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index b949c3917c679..9be3d1d1fcb47 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -451,8 +451,10 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
+diff --git a/drivers/net/wireless/ath/ath9k/htc_hst.c b/drivers/net/wireless/ath/ath9k/htc_hst.c
+index d2e062eaf5614..f705f0e1cb5be 100644
+--- a/drivers/net/wireless/ath/ath9k/htc_hst.c
++++ b/drivers/net/wireless/ath/ath9k/htc_hst.c
+@@ -173,6 +173,7 @@ static int htc_config_pipe_credits(struct htc_target *target)
+ 	time_left = wait_for_completion_timeout(&target->cmd_wait, HZ);
+ 	if (!time_left) {
+ 		dev_err(target->dev, "HTC credit config timeout\n");
++		kfree_skb(skb);
+ 		return -ETIMEDOUT;
+ 	}
  
- 		switch (*next) {
- 		case '(':					/* #2 */
--			if (top - op_stack > nr_parens)
--				return ERR_PTR(-EINVAL);
-+			if (top - op_stack > nr_parens) {
-+				ret = -EINVAL;
-+				goto out_free;
-+			}
- 			*(++top) = invert;
- 			continue;
- 		case '!':					/* #3 */
+@@ -208,6 +209,7 @@ static int htc_setup_complete(struct htc_target *target)
+ 	time_left = wait_for_completion_timeout(&target->cmd_wait, HZ);
+ 	if (!time_left) {
+ 		dev_err(target->dev, "HTC start timeout\n");
++		kfree_skb(skb);
+ 		return -ETIMEDOUT;
+ 	}
+ 
+@@ -280,6 +282,7 @@ int htc_connect_service(struct htc_target *target,
+ 	if (!time_left) {
+ 		dev_err(target->dev, "Service connection timeout for: %d\n",
+ 			service_connreq->service_id);
++		kfree_skb(skb);
+ 		return -ETIMEDOUT;
+ 	}
+ 
 -- 
 2.25.1
 
