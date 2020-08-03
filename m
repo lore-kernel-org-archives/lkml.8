@@ -5,53 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3C5C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4439FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A20B8206D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E9CB206D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458791;
-	bh=a7+jqbpnd8sBWZRYKOrHM91lfcH6g+4prjK5QM+D2Nc=;
+	s=default; t=1596458793;
+	bh=z8DB9BbECBRb+IaSNOPSwPWCqDsqjkirBR1M+COF/qQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FYcnsWx5MEqmMtxMzLFoK+44V0lByG3gf71SHVYypT9dALA/yEUt5fUPKzo+NGFAb
-	 yJTAR3aOFSpZaM/kFWj8h3xvXP8S4+nnOqOEk/0uwGsRIp0iEz12QTyeLAcY4rZoK8
-	 Hivsgh94Kxvcq0bk7Aih50myuExGRCd138oZ7yqc=
+	b=1n4nRJzdDlrR1G3APV6xeX3XPEzx90IzBsWJ9li6Mijau1j44V7eKq5CpL8TwvssY
+	 o9rZVxA1ZWYlxd3BBGN7rHAMu3MqzsAUclWOHeYevq+LW8NS+/uu4dsRWQL1kvyqlu
+	 FiaUp1taAEimt9KSQC5V/oxmonzCvfkUemm2IO5g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728285AbgHCM0x (ORCPT
+        id S1729508AbgHCMqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:26:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51980 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:46:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728399AbgHCM0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:26:31 -0400
+        id S1728422AbgHCM0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:26:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20E7B207FC;
-        Mon,  3 Aug 2020 12:26:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69443204EC;
+        Mon,  3 Aug 2020 12:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457589;
-        bh=a7+jqbpnd8sBWZRYKOrHM91lfcH6g+4prjK5QM+D2Nc=;
+        s=default; t=1596457608;
+        bh=z8DB9BbECBRb+IaSNOPSwPWCqDsqjkirBR1M+COF/qQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dI0HOOxJwacySRMSie+fl13MpOT993v0Sz+ffk8A7mz85TC5XTpq8DsOCF77NVHhm
-         3x4oyH8BIMlpP52WQGWDlibopKVvrH/8Vy63MaYwkh5Y1MShiKmXdOERTvubIO/L+2
-         2ha+mP9Z0sC7cWUERwGCl0sRqS9YbEuPd/OJIvrw=
+        b=pwW71cknxB4vRmyutIwtIJsKpIoOHoeHBAzfB2ANjDYwPAyIxtms5CVSD93jqZOG7
+         /65sX5O1D6GqsvPJ1iLFTkSNl7s5+e4edYRYEphvPXN/OC6yYFAeHepWiyzSlGwNVh
+         dwUNt7Peez2MRH68bVSejgx3+gQut5/eVjKoWxjA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Gary R Hook <gary.hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 096/120] usb: hso: Fix debug compile warning on sparc32
-Date:   Mon,  3 Aug 2020 14:19:14 +0200
-Message-Id: <20200803121907.589756457@linuxfoundation.org>
+Subject: [PATCH 5.4 01/90] crypto: ccp - Release all allocated memory if sha type is invalid
+Date:   Mon,  3 Aug 2020 14:18:23 +0200
+Message-Id: <20200803121857.614278053@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
-References: <20200803121902.860751811@linuxfoundation.org>
+In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
+References: <20200803121857.546052424@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,50 +64,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit e0484010ec05191a8edf980413fc92f28050c1cc ]
+[ Upstream commit 128c66429247add5128c03dc1e144ca56f05a4e2 ]
 
-On sparc32, tcflag_t is "unsigned long", unlike on all other
-architectures, where it is "unsigned int":
+Release all allocated memory if sha type is invalid:
+In ccp_run_sha_cmd, if the type of sha is invalid, the allocated
+hmac_buf should be released.
 
-    drivers/net/usb/hso.c: In function ‘hso_serial_set_termios’:
-    include/linux/kern_levels.h:5:18: warning: format ‘%d’ expects argument of type ‘unsigned int’, but argument 4 has type ‘tcflag_t {aka long unsigned int}’ [-Wformat=]
-    drivers/net/usb/hso.c:1393:3: note: in expansion of macro ‘hso_dbg’
-       hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
-       ^~~~~~~
-    include/linux/kern_levels.h:5:18: warning: format ‘%d’ expects argument of type ‘unsigned int’, but argument 5 has type ‘tcflag_t {aka long unsigned int}’ [-Wformat=]
-    drivers/net/usb/hso.c:1393:3: note: in expansion of macro ‘hso_dbg’
-       hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
-       ^~~~~~~
+v2: fix the goto.
 
-As "unsigned long" is 32-bit on sparc32, fix this by casting all tcflag_t
-parameters to "unsigned int".
-While at it, use "%u" to format unsigned numbers.
-
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Acked-by: Gary R Hook <gary.hook@amd.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/hso.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/crypto/ccp/ccp-ops.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/hso.c b/drivers/net/usb/hso.c
-index bb8c34d746ab3..5f123a8cf68ed 100644
---- a/drivers/net/usb/hso.c
-+++ b/drivers/net/usb/hso.c
-@@ -1390,8 +1390,9 @@ static void hso_serial_set_termios(struct tty_struct *tty, struct ktermios *old)
- 	unsigned long flags;
+diff --git a/drivers/crypto/ccp/ccp-ops.c b/drivers/crypto/ccp/ccp-ops.c
+index c8da8eb160da0..422193690fd47 100644
+--- a/drivers/crypto/ccp/ccp-ops.c
++++ b/drivers/crypto/ccp/ccp-ops.c
+@@ -1777,8 +1777,9 @@ ccp_run_sha_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ 			       LSB_ITEM_SIZE);
+ 			break;
+ 		default:
++			kfree(hmac_buf);
+ 			ret = -EINVAL;
+-			goto e_ctx;
++			goto e_data;
+ 		}
  
- 	if (old)
--		hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
--			tty->termios.c_cflag, old->c_cflag);
-+		hso_dbg(0x16, "Termios called with: cflags new[%u] - old[%u]\n",
-+			(unsigned int)tty->termios.c_cflag,
-+			(unsigned int)old->c_cflag);
- 
- 	/* the actual setup */
- 	spin_lock_irqsave(&serial->serial_lock, flags);
+ 		memset(&hmac_cmd, 0, sizeof(hmac_cmd));
 -- 
 2.25.1
 
