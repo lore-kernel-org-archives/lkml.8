@@ -2,169 +2,290 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0460C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 863DE2076B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F063220738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:33:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgHCLdu (ORCPT
+        id S1726664AbgHCLd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 07:33:50 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46394 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbgHCLdt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 07:33:49 -0400
-Received: by mail-lf1-f68.google.com with SMTP id i80so20254368lfi.13
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 04:33:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:to:cc:references:from:autocrypt:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=yLvQHbDDcDSdTAlGRE1r+Sz6maYqq+oxTf1OHc7d3mU=;
-        b=tHZue/+0fYbGrFTdGWoJIJzYH2jQPC4q+jUj6jyT/tgYYtXTgn+QL/eA42RQvvaNl8
-         On4rf4LhWsg5l60QkAPSUhV52ohTEKyzrUaZ4UjS3EKx8MQJVyqm6o63XZG0LPvKGpEN
-         cxk0blVL0rnreWtoKlN+Y4ZcpCE7KPSj4CDmjsgkien9vHvgFy1A4Cdo0YYkSd1jKVwP
-         uq0SIFCZjlQmhjEJqpHY1+UpbMspjneK+Ok5clUqIt0nKvBs0f/5DB8DlbZ0Z5jscOXO
-         Vnbhd88sJg+qZBlPmrESG7E4potnOHEGD97Erg7fuqPYW2V5N3BJKVDknaCHUyxzGoJb
-         ZLAw==
-X-Gm-Message-State: AOAM53089kTi8Fv99n0cqbIyl5Es0usfAF1j5J6CAEpN9PwKCIbSNgEK
-        eCyYm3Q2Y7+8kvn/WNB54cqfzBT+
-X-Google-Smtp-Source: ABdhPJyLfJ3AmPtgty+R2eOMJvBx7CveHovmC6L+ce6NbJ5iJFqLhoB26bxRrsswY9ZZ+2EKG168Gw==
-X-Received: by 2002:a19:4f11:: with SMTP id d17mr8314517lfb.48.1596454426749;
-        Mon, 03 Aug 2020 04:33:46 -0700 (PDT)
-Received: from [10.68.32.147] (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.gmail.com with ESMTPSA id k25sm4131981ljk.87.2020.08.03.04.33.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Aug 2020 04:33:46 -0700 (PDT)
-Reply-To: efremov@linux.com
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org
-References: <20200605204237.85055-1-efremov@linux.com>
- <20200731210026.7186-1-efremov@linux.com>
- <alpine.DEB.2.22.394.2008022142550.2531@hadrien>
-From:   Denis Efremov <efremov@linux.com>
-Autocrypt: addr=efremov@linux.com; keydata=
- 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
-Subject: Re: [PATCH v6] coccinelle: api: add kvfree script
-Message-ID: <a8d8eade-1d98-b8d9-7c66-bd05b22af751@linux.com>
-Date:   Mon, 3 Aug 2020 14:33:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 3 Aug 2020 07:33:57 -0400
+Received: from mga05.intel.com ([192.55.52.43]:17491 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725945AbgHCLdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 07:33:55 -0400
+IronPort-SDR: CyzIfQpiDxCryoZzUlHqx8/LfBuVQJAvf1NqCF9B1NR+hTQgqAUwbZxzC6zlaX7iOUju59ucru
+ 7/n7GnVR4l/A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9701"; a="236949261"
+X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
+   d="scan'208";a="236949261"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 04:33:53 -0700
+IronPort-SDR: E2xg3pSjVs+HkCh+VrRCf8P6oK3BCoStEag5YEu0o9AvL7QRvWR6JPfK/KZmshIg8ohegIPPBx
+ ru/Y4nDFXkZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
+   d="scan'208";a="324020905"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002.fm.intel.com with ESMTP; 03 Aug 2020 04:33:52 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1k2Yj2-005vnM-6m; Mon, 03 Aug 2020 14:33:52 +0300
+Date:   Mon, 3 Aug 2020 14:33:52 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Subject: [GIT PULL] platform-drivers-x86 for 5.9-1
+Message-ID: <20200803113352.GA1413788@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.22.394.2008022142550.2531@hadrien>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
+
+Rather calm cycle for PDx86 and here is PR for v5.9. No conflicts were found
+so far. It was in the Linux next for a while and no bot complains.
+
+Thanks,
+
+With Best Regards,
+Andy Shevchenko
+
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+
+are available in the Git repository at:
+
+  git://git.infradead.org/linux-platform-drivers-x86.git tags/platform-drivers-x86-v5.9-1
+
+for you to fetch changes up to 67186653c90360922e3965d0376a61dbf6c42711:
+
+  platform/x86: asus-nb-wmi: Drop duplicate DMI quirk structures (2020-08-02 14:07:04 +0300)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v5.9-1
+
+* ASUS WMI driver honors BAT1 name of the battery
+  (quite a few new laptops are using it)
+* Dell WMI driver supports new key codes and backlight events
+* ThinkPad ACPI driver now may use standard charge threshold interface,
+  it also has been updated to provide Laptop or Desktop mode to the user
+* Intel Speed Select Technology gained support on Sapphire Rapids platform
+* Regular update of Speed Select Technology tools
+* Mellanox has been updated to support complex attributes
+* PMC core driver has been fixed to show correct names for LPM0 register
+* HTTP links were replaced by HTTPS ones where it applies
+* Miscellaneous fixes and cleanups here and there
+
+The following is an automated git shortlog grouped by driver:
+
+acerhdf:
+ -  Replace HTTP links with HTTPS ones
+
+Add new intel_atomisp2_led driver:
+ - Add new intel_atomisp2_led driver
+
+apple-gmux:
+ -  Replace HTTP links with HTTPS ones
+
+asus-nb-wmi:
+ -  Drop duplicate DMI quirk structures
+ -  add support for ASUS ROG Zephyrus G14 and G15
+
+asus-wmi:
+ -  allow BAT1 battery name
+
+dell-wmi:
+ -  add new dmi mapping for keycode 0xffff
+ -  add new keymap type 0x0012
+ -  add new backlight events
+
+intel_cht_int33fe:
+ -  Drop double check for ACPI companion device
+
+intel-hid:
+ -  Fix return value check in check_acpi_dev()
+
+intel_pmc_core:
+ -  fix bound check in pmc_core_mphy_pg_show()
+ -  update TGL's LPM0 reg bit map name
+
+intel-vbtn:
+ -  Fix return value check in check_acpi_dev()
+
+ISST:
+ -  drop a duplicated word in isst_if.h
+ -  Add new PCI device ids
+
+pcengines-apuv2:
+ -  revert wiring up simswitch GPIO as LED
+
+platform/mellanox:
+ -  Introduce string_upper() and string_lower() helpers
+ -  Add string_upper() and string_lower() tests
+ -  Extend FAN platform data description
+ -  Add more definitions for system attributes
+ -  Add new attribute for mlxreg-io sysfs interfaces
+ -  Add presence register field for FAN devices
+ -  Add support for complex attributes
+ -  mlxreg-io: Add support for complex attributes
+ -  mlxreg-hotplug: Add environmental data to uevent
+ -  mlxreg-hotplug: Use capability register for attribute creation
+ -  mlxreg-hotplug: Modify module license
+
+system76-acpi:
+ -  Fix brightness_set schedule while atomic
+
+thinkpad_acpi:
+ -  Make some symbols static
+ -  add documentation for battery charge control
+ -  use standard charge control attribute names
+ -  remove unused defines
+ -  Replace HTTP links with HTTPS ones
+ -  not loading brightness_init when _BCL invalid
+ -  lap or desk mode interface
+ -  Revert "Use strndup_user() in dispatch_proc_write()"
+
+tools/power/x86/intel-speed-select:
+ -  Update version for v5.9
+ -  Add retries for mail box commands
+ -  Add option to delay mbox commands
+ -  Ignore -o option processing on error
+ -  Change path for caching topology info
+
+----------------------------------------------------------------
+Aaron Ma (1):
+      platform/x86: thinkpad_acpi: not loading brightness_init when _BCL invalid
+
+Alexander A. Klimov (3):
+      platform/x86: thinkpad_acpi: Replace HTTP links with HTTPS ones
+      platform/x86: apple-gmux: Replace HTTP links with HTTPS ones
+      platform/x86: acerhdf: Replace HTTP links with HTTPS ones
+
+Andy Shevchenko (4):
+      platform/x86: intel_cht_int33fe: Drop double check for ACPI companion device
+      platform/x86: thinkpad_acpi: Revert "Use strndup_user() in dispatch_proc_write()"
+      Merge branch 'for-next'
+      platform/x86: asus-nb-wmi: Drop duplicate DMI quirk structures
+
+Armas Spann (1):
+      platform/x86: asus-nb-wmi: add support for ASUS ROG Zephyrus G14 and G15
+
+Barnabás Pőcze (1):
+      platform/x86: thinkpad_acpi: add documentation for battery charge control
+
+Florian Eckert (1):
+      platform/x86: pcengines-apuv2: revert wiring up simswitch GPIO as LED
+
+Gaurav Singh (1):
+      platform/x86: intel_pmc_core: fix bound check in pmc_core_mphy_pg_show()
+
+Hans de Goede (1):
+      platform/x86: Add new intel_atomisp2_led driver
+
+Lu Wei (2):
+      platform/x86: intel-hid: Fix return value check in check_acpi_dev()
+      platform/x86: intel-vbtn: Fix return value check in check_acpi_dev()
+
+Mark Pearson (1):
+      platform/x86: thinkpad_acpi: lap or desk mode interface
+
+Nick Shipp (1):
+      platform/x86: system76-acpi: Fix brightness_set schedule while atomic
+
+Randy Dunlap (1):
+      platform/x86: ISST: drop a duplicated word in isst_if.h
+
+Sathyanarayana Nujella (1):
+      platform/x86: intel_pmc_core: update TGL's LPM0 reg bit map name
+
+Srinivas Pandruvada (6):
+      platform/x86: ISST: Add new PCI device ids
+      tools/power/x86/intel-speed-select: Change path for caching topology info
+      tools/power/x86/intel-speed-select: Ignore -o option processing on error
+      tools/power/x86/intel-speed-select: Add option to delay mbox commands
+      tools/power/x86/intel-speed-select: Add retries for mail box commands
+      tools/power/x86/intel-speed-select: Update version for v5.9
+
+Thomas Weißschuh (2):
+      platform/x86: thinkpad_acpi: remove unused defines
+      platform/x86: thinkpad_acpi: use standard charge control attribute names
+
+Vadim Pasternak (11):
+      lib/string_helpers: Introduce string_upper() and string_lower() helpers
+      lib/test-string_helpers.c: Add string_upper() and string_lower() tests
+      platform/mellanox: mlxreg-hotplug: Modify module license
+      platform/mellanox: mlxreg-hotplug: Use capability register for attribute creation
+      platform/mellanox: mlxreg-hotplug: Add environmental data to uevent
+      platform_data/mlxreg: Add support for complex attributes
+      platform/x86: mlx-platform: Add more definitions for system attributes
+      platform/mellanox: mlxreg-io: Add support for complex attributes
+      Documentation/ABI: Add new attribute for mlxreg-io sysfs interfaces
+      platform_data/mlxreg: Add presence register field for FAN devices
+      platform/x86: mlx-platform: Extend FAN platform data description
+
+Vasiliy Kupriakov (1):
+      platform/x86: asus-wmi: allow BAT1 battery name
+
+Wei Yongjun (1):
+      platform/x86: thinkpad_acpi: Make some symbols static
+
+Y Paritcher (3):
+      platform/x86: dell-wmi: add new backlight events
+      platform/x86: dell-wmi: add new keymap type 0x0012
+      platform/x86: dell-wmi: add new dmi mapping for keycode 0xffff
+
+ Documentation/ABI/stable/sysfs-driver-mlxreg-io    |  17 ++
+ .../admin-guide/laptops/thinkpad-acpi.rst          |  32 ++++
+ MAINTAINERS                                        |   6 +
+ drivers/platform/mellanox/mlxreg-hotplug.c         | 114 ++++++++------
+ drivers/platform/mellanox/mlxreg-io.c              |  45 ++++--
+ drivers/platform/x86/Kconfig                       |  23 ++-
+ drivers/platform/x86/Makefile                      |   1 +
+ drivers/platform/x86/acerhdf.c                     |   2 +-
+ drivers/platform/x86/apple-gmux.c                  |  16 +-
+ drivers/platform/x86/asus-nb-wmi.c                 |  77 ++++++++++
+ drivers/platform/x86/asus-wmi.c                    |   1 +
+ drivers/platform/x86/dell-wmi.c                    |  28 +++-
+ drivers/platform/x86/intel-hid.c                   |   2 +-
+ drivers/platform/x86/intel-vbtn.c                  |   2 +-
+ drivers/platform/x86/intel_atomisp2_led.c          | 116 ++++++++++++++
+ drivers/platform/x86/intel_cht_int33fe_common.c    |  14 +-
+ drivers/platform/x86/intel_pmc_core.c              |   4 +-
+ .../x86/intel_speed_select_if/isst_if_common.h     |   3 +
+ .../x86/intel_speed_select_if/isst_if_mbox_pci.c   |   1 +
+ .../x86/intel_speed_select_if/isst_if_mmio.c       |   1 +
+ drivers/platform/x86/mlx-platform.c                | 141 +++++++++++++++++
+ drivers/platform/x86/pcengines-apuv2.c             |   3 -
+ drivers/platform/x86/system76_acpi.c               |  12 +-
+ drivers/platform/x86/thinkpad_acpi.c               | 171 ++++++++++++++++++---
+ include/linux/platform_data/mlxreg.h               |   4 +
+ include/linux/string_helpers.h                     |  15 ++
+ include/uapi/linux/isst_if.h                       |   2 +-
+ lib/test-string_helpers.c                          |  67 ++++++++
+ tools/power/x86/intel-speed-select/isst-config.c   |  81 +++++++---
+ 29 files changed, 863 insertions(+), 138 deletions(-)
+ create mode 100644 drivers/platform/x86/intel_atomisp2_led.c
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-On 8/2/20 11:24 PM, Julia Lawall wrote:
->> +@initialize:python@
->> +@@
->> +# low-level memory api
->> +filter = frozenset(['__vmalloc_area_node'])
->> +
->> +def relevant(p):
->> +    return not (filter & {el.current_element for el in p})
-> 
-> Is this used?
-
-I'll remove it in v8. Or do you want me to add iterate_dir_item() in the list?
-
-> 
-> Otherwise, I think it would be good to not warn about a use of kvfree
-> if that use is reachable from a kvmalloc.  There seems to be such a false
-> positive in fs/btrfs/send.c, on line 1118.
-
-I don't know how to handle this case without position filter.
-It's too complex. In iterate_dir_item() there is:
-buf = kmalloc(buf_len, GFP_KERNEL);
-while(...) {
-	if (...) {
-		if (is_vmalloc_addr(buf)) {
-			vfree(buf);
-			...
-		} else {
-			char *tmp = krealloc(buf, ...);
-
-			if (!tmp)
-				kfree(buf);
-			...
-		}
-		if (!buf) {
-			buf = kvmalloc(buf_len, GFP_KERNEL);
-			...
-		}
-	}
-}
-kvfree(buf);
-
-Adding "when != kvfree(E)" is not enough:
-* E = \(kvmalloc\|kvzalloc\|kvcalloc\|kvzalloc_node\|kvmalloc_node\|
-*       kvmalloc_array\)(...)@k
-	... when != is_vmalloc_addr(E)
-+	when != kvfree(E)
-	when any
-* \(kfree\|kzfree\|vfree\|vfree_atomic\)(E)@p
-
-> 
-> It also seems that when there are both a kmalloc and a vmalloc, there is
-> no warning if kfree or vfree is used.  Is that intentional?
-> 
-
-No, I will try to address it in v8.
-
-Regards,
-Denis
