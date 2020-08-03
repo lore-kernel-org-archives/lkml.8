@@ -2,209 +2,94 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0334EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D310C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8AE52076C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59FA22076C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:51:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XUAmymQJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A+VjpceE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgHCLue (ORCPT
+        id S1726571AbgHCLvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 07:50:34 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:47422 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbgHCLud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 07:50:33 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596455432; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=SeFmOwx1N51AVvBTY0pLClU+gO/8xIouA4x4ny2GJKI=;
- b=XUAmymQJvKgd7ajijKMdJKTeMeu6SHpwa58prFW+Rjk6osuYpe+49I0X0QfYWRU+YSiIV+5l
- t1SF7qU6ib+7rO5qOMrRxGXcU2xt3jL3ZdXOpKFKBLfIukgoU5uQQ69x5HTVJLUiXtNcCPRW
- 2MQ0uW0ZFhofqvcZxAKWPqxF5+Q=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5f27f9f8849144fbcb995cab (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 03 Aug 2020 11:50:16
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5C567C433A0; Mon,  3 Aug 2020 11:50:15 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A93D1C433C6;
-        Mon,  3 Aug 2020 11:50:13 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 03 Aug 2020 19:50:13 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
-        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
-        bvanassche@acm.org, beanhuo@micron.com, asutoshd@codeaurora.org,
-        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
-        chaotian.jing@mediatek.com, cc.chou@mediatek.com,
-        jiajie.hao@mediatek.com
-Subject: Re: [PATCH v7] scsi: ufs: Quiesce all scsi devices before shutdown
-In-Reply-To: <20200803100448.2738-1-stanley.chu@mediatek.com>
-References: <20200803100448.2738-1-stanley.chu@mediatek.com>
-Message-ID: <ee423cd3b5c42942a8895a8f08a26e68@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Mon, 3 Aug 2020 07:51:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36954 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbgHCLv2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 07:51:28 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EB0FC06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 04:51:24 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id q76so13932434wme.4
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 04:51:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=P7Q1lJHqVkqxaTMb6WTzWQvdXN5W9ErVGDG9hkuSZsA=;
+        b=A+VjpceEPWo7QWRBeMZXJliBlAsTyax8Hb+X1BwjiugZIBxVp3lZMp6vxM6wH0PiHc
+         6soefw5/1LaWmumJ+Zd05Z1XXxGpo5O68B/+ZvIimZPnbznjh9tgmj3nXz+yaFbhWOaF
+         93/AEvcPpdjNAkq/mtGZG99VtuTPST0YnEIJl0P94BiI2sWtkzAEyjJTqL6cDvr+7ArC
+         cbVfd/PvgHWt5hBKioFXNFgy/+lKIOlxVZTKw5p+RPUvQwgzhNe/NtMUEmi5yXhqLPJU
+         FcYJ3Pm2owlbcdf8r3O2VtPHTRml3XMRo1/eQb51rM1x6uqzuxmdd5KQeRJmwENZJGNh
+         sLnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=P7Q1lJHqVkqxaTMb6WTzWQvdXN5W9ErVGDG9hkuSZsA=;
+        b=Ub7NpKFERL7DNYyE+s8YJLSgGNxrS9tAibTAqkFHVn++9ljGmFMpxr7z1Sv4iYmRHK
+         owsHiyz6A+tKVwc8n9N6JT8j3CpE33Rf5do+JEK+0pz12a7epakPaExgI4okojsT+ONj
+         ncAM2bTdJpMhpzpwrygllBvA/A2nVP8myXb8tSGmfYzJVeBbTECWpj6CyEB7MPDHJuVT
+         LU/5QGtp8b+oXhw3ZhnAEnnMCiv8P0+XeIdIdT5gaHIDNDn2jV29s6Nt62N3t0XulxfQ
+         z3z6TSWkrd+/z+z0wcVOY+kntQtUrggvT19FSjicrVxs5d2Qo4KbEKozAEwwGcGWeJoD
+         esvA==
+X-Gm-Message-State: AOAM531JIzbZiJ2T2hzebzSrtajDpnN1P2u7iNqEoQqAp6H/lNOrf06R
+        S5KtcTcrxwbP4+/SqFdb3zMgBHT5
+X-Google-Smtp-Source: ABdhPJwef8MJ3cAwq3uYCx3+hMYQYkVf1rsumONdCkv3M2QV1qPZf/zRGeLd+HrALH3nK9etqn080g==
+X-Received: by 2002:a1c:7e44:: with SMTP id z65mr16525047wmc.13.1596455482074;
+        Mon, 03 Aug 2020 04:51:22 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
+        by smtp.gmail.com with ESMTPSA id x11sm23885869wrl.28.2020.08.03.04.51.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 04:51:20 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
+Subject: [PATCH] habanalabs: increase length of ASIC name
+Date:   Mon,  3 Aug 2020 14:51:18 +0300
+Message-Id: <20200803115118.31211-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stanley,
+Future ASIC names are longer than 15 chars so increase the variable length
+to 32 chars.
 
-On 2020-08-03 18:04, Stanley Chu wrote:
-> Currently I/O request could be still submitted to UFS device while
-> UFS is working on shutdown flow. This may lead to racing as below
-> scenarios and finally system may crash due to unclocked register
-> accesses.
-> 
-> To fix this kind of issues, in ufshcd_shutdown(),
-> 
-> 1. Use pm_runtime_get_sync() instead of resuming UFS device by
->    ufshcd_runtime_resume() "internally" to let runtime PM framework
->    manage and prevent concurrent runtime operations by incoming I/O
->    requests.
-> 
-> 2. Specifically quiesce all SCSI devices to block all I/O requests
->    after device is resumed.
-> 
-> Example of racing scenario: While UFS device is runtime-suspended
-> 
-> Thread #1: Executing UFS shutdown flow, e.g.,
->            ufshcd_suspend(UFS_SHUTDOWN_PM)
-> 
-> Thread #2: Executing runtime resume flow triggered by I/O request,
->            e.g., ufshcd_resume(UFS_RUNTIME_PM)
-> 
-> This breaks the assumption that UFS PM flows can not be running
-> concurrently and some unexpected racing behavior may happen.
-> 
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-> ---
-> Changes:
->   - Since v6:
-> 	- Do quiesce to all SCSI devices.
->   - Since v4:
-> 	- Use pm_runtime_get_sync() instead of resuming UFS device by
-> ufshcd_runtime_resume() "internally".
-> ---
->  drivers/scsi/ufs/ufshcd.c | 27 ++++++++++++++++++++++-----
->  1 file changed, 22 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index 307622284239..7cb220b3fde0 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -8640,6 +8640,7 @@ EXPORT_SYMBOL(ufshcd_runtime_idle);
->  int ufshcd_shutdown(struct ufs_hba *hba)
->  {
->  	int ret = 0;
-> +	struct scsi_target *starget;
-> 
->  	if (!hba->is_powered)
->  		goto out;
-> @@ -8647,11 +8648,27 @@ int ufshcd_shutdown(struct ufs_hba *hba)
->  	if (ufshcd_is_ufs_dev_poweroff(hba) && ufshcd_is_link_off(hba))
->  		goto out;
-> 
-> -	if (pm_runtime_suspended(hba->dev)) {
-> -		ret = ufshcd_runtime_resume(hba);
-> -		if (ret)
-> -			goto out;
-> -	}
-> +	/*
-> +	 * Let runtime PM framework manage and prevent concurrent runtime
-> +	 * operations with shutdown flow.
-> +	 */
-> +	pm_runtime_get_sync(hba->dev);
-> +
-> +	/*
-> +	 * Quiesce all SCSI devices to prevent any non-PM requests sending
-> +	 * from block layer during and after shutdown.
-> +	 *
-> +	 * Here we can not use blk_cleanup_queue() since PM requests
-> +	 * (with BLK_MQ_REQ_PREEMPT flag) are still required to be sent
-> +	 * through block layer. Therefore SCSI command queued after the
-> +	 * scsi_target_quiesce() call returned will block until
-> +	 * blk_cleanup_queue() is called.
-> +	 *
-> +	 * Besides, scsi_target_"un"quiesce (e.g., scsi_target_resume) can
-> +	 * be ignored since shutdown is one-way flow.
-> +	 */
-> +	list_for_each_entry(starget, &hba->host->__targets, siblings)
-> +		scsi_target_quiesce(starget);
-> 
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+ drivers/misc/habanalabs/common/habanalabs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sorry for misleading you to scsi_target_quiesce(), maybe below is 
-better.
+diff --git a/drivers/misc/habanalabs/common/habanalabs.h b/drivers/misc/habanalabs/common/habanalabs.h
+index 942f7e52f1a2..8b5b4afe42c7 100644
+--- a/drivers/misc/habanalabs/common/habanalabs.h
++++ b/drivers/misc/habanalabs/common/habanalabs.h
+@@ -1524,7 +1524,7 @@ struct hl_device {
+ 	struct device			*dev_ctrl;
+ 	struct delayed_work		work_freq;
+ 	struct delayed_work		work_heartbeat;
+-	char				asic_name[16];
++	char				asic_name[32];
+ 	enum hl_asic_type		asic_type;
+ 	struct hl_cq			*completion_queue;
+ 	struct workqueue_struct		**cq_wq;
+-- 
+2.17.1
 
-     shost_for_each_device(sdev, hba->host)
-         scsi_device_quiesce(sdev);
-
-We may need to discuss more about this quiesce part since I missed 
-something.
-
-After we quiesce the scsi devices, only PM requests are allowed, but it
-is still not safe: [1] PM requests can still pass through, [2] there can
-be tasks/reqs present in doorbells before the devices are quiesced. So,
-these tasks/reqs in [1] and [2] can still be flying in parallel while
-ufshcd_suspend is running.
-
-How about only quiescing the UFS device well known scsi device but using
-freeze_queue to the other scsi devices? blk_mq_freeze_queue can 
-eliminate
-the risks mentioned in [1] and [2].
-
-      shost_for_each_device(sdev, hba->host) {
-          if (sdev == hba->sdev_ufs_device)
-               scsi_device_quiesce(sdev);
-          else
-               blk_mq_freeze_queue(sdev->request_queue);
-      }
-
-IF blk_mq_freeze_queue is not allowed to be used by LLD (I think we can
-use it as I recalled Bart used to use it in one of his changes to UFS 
-scaling),
-we may need to make changes like below. [1] is to make sure no more PM 
-requests
-sent to scsi devices, [2] is make sure doorbells are cleared before 
-invoke
-ufshcd_suspend.
-
-     shost_for_each_device(sdev, hba->host) {
-         scsi_autopm_get_device(sdev); [1]
-         scsi_device_quiesce(sdev);
-     }
-
-     ufshcd_wait_for_doorbell_clr(hba, U64_MAX); [2]
-
-Please let me know your ideas, thanks!
-
-Regards,
-
-Can Guo.
-
->  	ret = ufshcd_suspend(hba, UFS_SHUTDOWN_PM);
->  out:
