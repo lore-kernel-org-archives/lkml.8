@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA468C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A6AC433E5
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E826207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6480F207FB
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:24:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457483;
-	bh=znP48UUrfcieyr9M3jiX+D1fLtyBGn+wiIUsxEKDWiQ=;
+	s=default; t=1596457485;
+	bh=NocX8FRNNofFxc9quJy1/gGLORMCIGCJ/kDCDScoBrE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rjmtEQay3v3JE6EUyXfWWlpTkkQTVKDdRdnwtn8i7NeSg6FU6R+eTEz7kOV72m8My
-	 x4sG34qIPKDja/+wXc54pNKtoMMQecmwm51EXMTiCQ6Q6zLV0LlPH1r95grfwTtBcZ
-	 /cjaSsWZB1XG13nLi8+8LAiMvFNqEINTHc2w/gD8=
+	b=fCA9Za7R38JtxWHtqPC52UVgo+vT/OKxCPUKkld/QtfMDVKp2t0hE9Iw8v2w6FvS/
+	 r+PvWZYflv0D7wwAzoZNknxRzvkcs2FTnP03BUhxwlZuJbDKXycrpCD6bUS3SkVP7B
+	 CYgTG5FLf+tVGUFZ+G9iMyg/2rb/sVgQcZc0yCwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgHCMYk (ORCPT
+        id S1726979AbgHCMYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:24:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48914 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:24:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728042AbgHCMYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:24:35 -0400
+        id S1728039AbgHCMYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:24:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CA72207DF;
-        Mon,  3 Aug 2020 12:24:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C55DE207BB;
+        Mon,  3 Aug 2020 12:24:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457473;
-        bh=znP48UUrfcieyr9M3jiX+D1fLtyBGn+wiIUsxEKDWiQ=;
+        s=default; t=1596457471;
+        bh=NocX8FRNNofFxc9quJy1/gGLORMCIGCJ/kDCDScoBrE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BNKKvX7oNTqXxlR1Msi0MacyfMc4g/hboUlUW9MDJgpmG2bAbBtzJeTUQP/D0OWpK
-         VJnG8K5L/710WIRyO9fUVDEydGN+IwJ/T42rtpBd0atrJGeOCaYfWJHG0YlR4smsrh
-         Q70+75V7lyN/gJsXF5R4eZCtCyWdo2E90b6lzM5U=
+        b=dDtzTh1yXXe7QKMfy4RlJx2WHJGgagm21tXxd0a3FQNT+puQCKBMUoqMmEdTwVfVF
+         XqEtGbBBbKLFj5o6aIMA5mZVzkLRc/ziVHAbdZccu2a4vg/8BZteNv3cxaU/1wlyZB
+         DOqgYdrluBdUdGW72b5GnZ/PxwCOGOFBUeyX8z30=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Gurtovoy <maxg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
+        stable@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 080/120] RDMA/core: Stop DIM before destroying CQ
-Date:   Mon,  3 Aug 2020 14:18:58 +0200
-Message-Id: <20200803121906.748055335@linuxfoundation.org>
+Subject: [PATCH 5.7 079/120] mac80211: mesh: Free pending skb when destroying a mpath
+Date:   Mon,  3 Aug 2020 14:18:57 +0200
+Message-Id: <20200803121906.683861064@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -61,58 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+From: Remi Pommarel <repk@triplefau.lt>
 
-[ Upstream commit 5d46b289d04b98eb992b2f8b67745cc0953e16b1 ]
+[ Upstream commit 5e43540c2af0a0c0a18e39579b1ad49541f87506 ]
 
-HW destroy operation should be last operation after all possible CQ users
-completed their work, so move DIM work cancellation before such destroy
-call.
+A mpath object can hold reference on a list of skb that are waiting for
+mpath resolution to be sent. When destroying a mpath this skb list
+should be cleaned up in order to not leak memory.
 
-Fixes: da6629793aa6 ("RDMA/core: Provide RDMA DIM support for ULPs")
-Link: https://lore.kernel.org/r/20200730082719.1582397-3-leon@kernel.org
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Fixing that kind of leak:
+
+unreferenced object 0xffff0000181c9300 (size 1088):
+  comm "openvpn", pid 1782, jiffies 4295071698 (age 80.416s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 f9 80 36 00 00 00 00 00  ..........6.....
+    02 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
+  backtrace:
+    [<000000004bc6a443>] kmem_cache_alloc+0x1a4/0x2f0
+    [<000000002caaef13>] sk_prot_alloc.isra.39+0x34/0x178
+    [<00000000ceeaa916>] sk_alloc+0x34/0x228
+    [<00000000ca1f1d04>] inet_create+0x198/0x518
+    [<0000000035626b1c>] __sock_create+0x134/0x328
+    [<00000000a12b3a87>] __sys_socket+0xb0/0x158
+    [<00000000ff859f23>] __arm64_sys_socket+0x40/0x58
+    [<00000000263486ec>] el0_svc_handler+0xd0/0x1a0
+    [<0000000005b5157d>] el0_svc+0x8/0xc
+unreferenced object 0xffff000012973a40 (size 216):
+  comm "openvpn", pid 1782, jiffies 4295082137 (age 38.660s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 c0 06 16 00 00 ff ff 00 93 1c 18 00 00 ff ff  ................
+  backtrace:
+    [<000000004bc6a443>] kmem_cache_alloc+0x1a4/0x2f0
+    [<0000000023c8c8f9>] __alloc_skb+0xc0/0x2b8
+    [<000000007ad950bb>] alloc_skb_with_frags+0x60/0x320
+    [<00000000ef90023a>] sock_alloc_send_pskb+0x388/0x3c0
+    [<00000000104fb1a3>] sock_alloc_send_skb+0x1c/0x28
+    [<000000006919d2dd>] __ip_append_data+0xba4/0x11f0
+    [<0000000083477587>] ip_make_skb+0x14c/0x1a8
+    [<0000000024f3d592>] udp_sendmsg+0xaf0/0xcf0
+    [<000000005aabe255>] inet_sendmsg+0x5c/0x80
+    [<000000008651ea08>] __sys_sendto+0x15c/0x218
+    [<000000003505c99b>] __arm64_sys_sendto+0x74/0x90
+    [<00000000263486ec>] el0_svc_handler+0xd0/0x1a0
+    [<0000000005b5157d>] el0_svc+0x8/0xc
+
+Fixes: 2bdaf386f99c (mac80211: mesh: move path tables into if_mesh)
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+Link: https://lore.kernel.org/r/20200704135419.27703-1-repk@triplefau.lt
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cq.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ net/mac80211/mesh_pathtbl.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/infiniband/core/cq.c b/drivers/infiniband/core/cq.c
-index 4f25b24006945..c259f632f257f 100644
---- a/drivers/infiniband/core/cq.c
-+++ b/drivers/infiniband/core/cq.c
-@@ -68,6 +68,15 @@ static void rdma_dim_init(struct ib_cq *cq)
- 	INIT_WORK(&dim->work, ib_cq_rdma_dim_work);
+diff --git a/net/mac80211/mesh_pathtbl.c b/net/mac80211/mesh_pathtbl.c
+index 117519bf33d65..aca608ae313fe 100644
+--- a/net/mac80211/mesh_pathtbl.c
++++ b/net/mac80211/mesh_pathtbl.c
+@@ -521,6 +521,7 @@ static void mesh_path_free_rcu(struct mesh_table *tbl,
+ 	del_timer_sync(&mpath->timer);
+ 	atomic_dec(&sdata->u.mesh.mpaths);
+ 	atomic_dec(&tbl->entries);
++	mesh_path_flush_pending(mpath);
+ 	kfree_rcu(mpath, rcu);
  }
  
-+static void rdma_dim_destroy(struct ib_cq *cq)
-+{
-+	if (!cq->dim)
-+		return;
-+
-+	cancel_work_sync(&cq->dim->work);
-+	kfree(cq->dim);
-+}
-+
- static int __poll_cq(struct ib_cq *cq, int num_entries, struct ib_wc *wc)
- {
- 	int rc;
-@@ -324,12 +333,10 @@ void ib_free_cq_user(struct ib_cq *cq, struct ib_udata *udata)
- 		WARN_ON_ONCE(1);
- 	}
- 
-+	rdma_dim_destroy(cq);
- 	trace_cq_free(cq);
- 	rdma_restrack_del(&cq->res);
- 	cq->device->ops.destroy_cq(cq, udata);
--	if (cq->dim)
--		cancel_work_sync(&cq->dim->work);
--	kfree(cq->dim);
- 	kfree(cq->wc);
- 	kfree(cq);
- }
 -- 
 2.25.1
 
