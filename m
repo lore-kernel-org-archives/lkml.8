@@ -3,122 +3,129 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F8AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC033C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 304AA20719
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:12:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NaJI23k4"
+	by mail.kernel.org (Postfix) with ESMTP id A263B2076B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:14:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596453281;
+	bh=5H3v1Du5rpRSWnXSCSiCk75bAcpRhnq+T5CXif4mD28=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XZQbN/nwI3KiHt98ko3+5x5dBsQc+dWVJ/kryr+1FRhpgwxU50NYn+KQeKbo5bG6y
+	 Fb3R3SCUwfN1w/SBgaCGe9JTv/OlJjtRX0D09I1m7XGTWmlwvE81ef9mSuzVhwV+V2
+	 2bh6D02czruPCL16xZ+mNNayvqBT09N7Rrf1GTSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726222AbgHCLMu (ORCPT
+        id S1726478AbgHCLOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 07:12:50 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45645 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725945AbgHCLMu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 07:12:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596453168;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=nNHHrbCTCx1Ksr9+Xzh66LKqXmd+gI0piE1Ogw1lz60=;
-        b=NaJI23k4nUbUg3RSema/ybrNWyt5cMFhJRe9Yvz/VYPcUjwTiAQg55odx04SgdN53vPGEP
-        oB3Ny6203YilgYn0pxZpm5X259QWogQsg3EMpExCwAfeEcTbGYMdTXR/YBHgL/ZNkqw6wh
-        4icKddckSxHsRiWmM6E6riFH08GSLnU=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-196-a4gqlMUlMbOKaMh9HbSFWQ-1; Mon, 03 Aug 2020 07:12:46 -0400
-X-MC-Unique: a4gqlMUlMbOKaMh9HbSFWQ-1
-Received: by mail-qk1-f200.google.com with SMTP id z1so20305835qkg.23
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 04:12:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nNHHrbCTCx1Ksr9+Xzh66LKqXmd+gI0piE1Ogw1lz60=;
-        b=ieeH1b70nJJdpnuX+OceMnBJjvV1E/tWihVVJZKYZwEB9i6MfnjQFqsemoJpyYcGk9
-         DjhHjht8+G5J8NIEIyJmsPcFxoFg/12yy9ttrQFKJ3iOdbHva6L5b6mF+jIF4T9XbfBO
-         PSAsjjywNeJpxTJMAc+/2uU7SUmuU7Ti5QSEt8Fd6ODL4K6jcwa56fQVJ/FsKJCc6Fv2
-         fBJjOmjYNyVzxqWp3gz1h4BMJLySb7utnGAF2ljaSnMrKol9hJlwMgJSb01ZBfm+seIo
-         dM58+3d+nWquUAlT7B7lcv+Np1Ysugpo80oejxMYNi7+SVcaOHGoLwO2NvIANJECLNi+
-         4xmw==
-X-Gm-Message-State: AOAM531/JeLCzo0jcRcMMzuBKDr2QkN45gTh6c1Zw01TcUso7O56MgiA
-        BTIG2h/ZK7frS9OjOUzYVgcDJKKhmIu50Fw3taO1UrjS3gdYk3ItEIvJQ3hxD8ALNAZe7bXqsAG
-        uWMk7uj8J/eHub7mmXoatr+eF
-X-Received: by 2002:a05:620a:2230:: with SMTP id n16mr16158450qkh.268.1596453166399;
-        Mon, 03 Aug 2020 04:12:46 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxOnXvj6bTJzfcAn3Xgm8v8FvIImrrzdOdNRos/LKSb3s9y2vmMmRA2Zf4ftsdV5shz2NBN5w==
-X-Received: by 2002:a05:620a:2230:: with SMTP id n16mr16158433qkh.268.1596453166168;
-        Mon, 03 Aug 2020 04:12:46 -0700 (PDT)
-Received: from redhat.com (bzq-79-177-102-128.red.bezeqint.net. [79.177.102.128])
-        by smtp.gmail.com with ESMTPSA id d70sm16687998qkb.71.2020.08.03.04.12.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 04:12:45 -0700 (PDT)
-Date:   Mon, 3 Aug 2020 07:12:40 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Ashutosh Dixit <ashutosh.dixit@intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        sudeep.dutt@intel.com, arnd@arndb.de, vincent.whitchurch@axis.com,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] vop: Add missing __iomem annotation in vop_dc_to_vdev()
-Message-ID: <20200803071234-mutt-send-email-mst@kernel.org>
-References: <20200802232812.16794-1-ashutosh.dixit@intel.com>
+        Mon, 3 Aug 2020 07:14:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51496 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725945AbgHCLOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 07:14:41 -0400
+Received: from localhost (unknown [122.171.202.192])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12AA420719;
+        Mon,  3 Aug 2020 11:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596453280;
+        bh=5H3v1Du5rpRSWnXSCSiCk75bAcpRhnq+T5CXif4mD28=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=A3wQkcvAaAcrYqHs2CWdwYGBjxzh+8Bv3QZJ+6DfyRGG73tHlo8zhOhR+WHISnB7Z
+         l0is1udwf6mDqCHk5KUWla+ZCRZC5IuCGwzTu3pQaogw4DVeBG4n/VvQz6nNKS/W9N
+         FxApx86IozoVMOwtpMtKUA/hOwlW9sNSBnlbiBo4=
+Date:   Mon, 3 Aug 2020 16:44:36 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     dmaengine@vger.kernel.org, dan.j.williams@intel.com,
+        linux-arm-kernel@lists.infradead.org, nm@ti.com,
+        grygorii.strashko@ti.com, lokeshvutla@ti.com, nsekhar@ti.com,
+        kishon@ti.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dmaengine: ti: k3-psil: Use soc_device_match to get
+ the psil map
+Message-ID: <20200803111436.GN12965@vkoul-mobl>
+References: <20200803101128.20885-1-peter.ujfalusi@ti.com>
+ <20200803101128.20885-2-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200802232812.16794-1-ashutosh.dixit@intel.com>
+In-Reply-To: <20200803101128.20885-2-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 02, 2020 at 04:28:12PM -0700, Ashutosh Dixit wrote:
-> Fix the following sparse warnings in drivers/misc/mic/vop//vop_main.c:
+On 03-08-20, 13:11, Peter Ujfalusi wrote:
+> Instead of separate of_machine_is_compatible() it is better to use
+> soc_device_match() and soc_device_attribute struct to get the PSI-L map
+> for the booted device.
 > 
-> 551:58: warning: incorrect type in argument 1 (different address spaces)
-> 551:58:    expected void const volatile [noderef] __iomem *addr
-> 551:58:    got restricted __le64 *
-> 560:49: warning: incorrect type in argument 1 (different address spaces)
-> 560:49:    expected struct mic_device_ctrl *dc
-> 560:49:    got struct mic_device_ctrl [noderef] __iomem *dc
-> 579:49: warning: incorrect type in argument 1 (different address spaces)
-> 579:49:    expected struct mic_device_ctrl *dc
-> 579:49:    got struct mic_device_ctrl [noderef] __iomem *dc
+> By using soc_device_match() it is easier to add support for new devices.
 > 
-> Cc: Michael S. Tsirkin <mst@redhat.com>
-> Cc: Sudeep Dutt <sudeep.dutt@intel.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Vincent Whitchurch <vincent.whitchurch@axis.com>
-> Cc: stable <stable@vger.kernel.org>
-> Signed-off-by: Ashutosh Dixit <ashutosh.dixit@intel.com>
-
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 > ---
->  drivers/misc/mic/vop/vop_main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/dma/ti/k3-psil.c | 19 ++++++++++++++-----
+>  1 file changed, 14 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/misc/mic/vop/vop_main.c b/drivers/misc/mic/vop/vop_main.c
-> index 85942f6717c5..25ed7d731701 100644
-> --- a/drivers/misc/mic/vop/vop_main.c
-> +++ b/drivers/misc/mic/vop/vop_main.c
-> @@ -546,7 +546,7 @@ static int vop_match_desc(struct device *dev, void *data)
->  	return vdev->desc == (void __iomem *)data;
->  }
+> diff --git a/drivers/dma/ti/k3-psil.c b/drivers/dma/ti/k3-psil.c
+> index fb7c8150b0d1..3ca29aabac93 100644
+> --- a/drivers/dma/ti/k3-psil.c
+> +++ b/drivers/dma/ti/k3-psil.c
+> @@ -9,11 +9,18 @@
+>  #include <linux/init.h>
+>  #include <linux/mutex.h>
+>  #include <linux/of.h>
+> +#include <linux/sys_soc.h>
 >  
-> -static struct _vop_vdev *vop_dc_to_vdev(struct mic_device_ctrl *dc)
-> +static struct _vop_vdev *vop_dc_to_vdev(struct mic_device_ctrl __iomem *dc)
+>  #include "k3-psil-priv.h"
+>  
+>  static DEFINE_MUTEX(ep_map_mutex);
+> -static struct psil_ep_map *soc_ep_map;
+> +static const struct psil_ep_map *soc_ep_map;
+> +
+> +static const struct soc_device_attribute k3_soc_devices[] = {
+> +	{ .family = "AM65X", .data = &am654_ep_map },
+> +	{ .family = "J721E", .data = &j721e_ep_map },
+> +	{ /* sentinel */ }
+> +};
+>  
+>  struct psil_endpoint_config *psil_get_ep_config(u32 thread_id)
 >  {
->  	return (struct _vop_vdev *)(unsigned long)readq(&dc->vdev);
->  }
-> -- 
-> 2.26.2.108.g048abe1751
+> @@ -21,15 +28,17 @@ struct psil_endpoint_config *psil_get_ep_config(u32 thread_id)
+>  
+>  	mutex_lock(&ep_map_mutex);
+>  	if (!soc_ep_map) {
+> -		if (of_machine_is_compatible("ti,am654")) {
+> -			soc_ep_map = &am654_ep_map;
+> -		} else if (of_machine_is_compatible("ti,j721e")) {
+> -			soc_ep_map = &j721e_ep_map;
+> +		const struct soc_device_attribute *soc;
+> +
+> +		soc = soc_device_match(k3_soc_devices);
+> +		if (soc) {
+> +			soc_ep_map = soc->data;
+>  		} else {
+>  			pr_err("PSIL: No compatible machine found for map\n");
+>  			mutex_unlock(&ep_map_mutex);
+>  			return ERR_PTR(-ENOTSUPP);
+>  		}
+> +
 
+not related
+
+>  		pr_debug("%s: Using map for %s\n", __func__, soc_ep_map->name);
+>  	}
+>  	mutex_unlock(&ep_map_mutex);
+> -- 
+> Peter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+-- 
+~Vinod
