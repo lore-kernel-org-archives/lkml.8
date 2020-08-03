@@ -2,69 +2,110 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C595AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874D1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDF1522B40
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:35:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596486906;
-	bh=Qfk5WnYdFPtcHhc/68zv02GhRg6dbbSq2Q8+0Xv1INo=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=0dXgM8/2Pocq9GqFXjc1hSZSPyjnnbqa0BO//9Zcv+Scxw6GUssKHHAJ4ie7c4Jy5
-	 g1DeKFMhWX3jdensNaYE9M9Bq9F4RpmP5vhB9X3uWGM/xqX3phVXcF1dzZQdtgm2dU
-	 5+8O86FKxHtA4RUieVFV/JPd176xvAmcEIxMkGDE=
+	by mail.kernel.org (Postfix) with ESMTP id 8E20922CAD
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:36:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nZAzQ4lE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbgHCUfF (ORCPT
+        id S1728902AbgHCUgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 16:35:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54320 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727005AbgHCUfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 16:35:04 -0400
-Subject: Re: [GIT PULL] MTD fixes for 5.8 final
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596486904;
-        bh=Qfk5WnYdFPtcHhc/68zv02GhRg6dbbSq2Q8+0Xv1INo=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=cYh861z2037shc6VRzyXDYXPRhNZDMS7rb6wLisvt0pMSZxDiTjVUfzjgGUR89p4c
-         IoLMjPDtb68mzyXZ1nJSXLLyDL76KBgv5dSHNB8JFLaS9eqWVcFAHeBzrqRSNRT9ir
-         CX03fq0S5wMLO6O849Dh2Q+uYLyFQBk9FyGtcEa0=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <1401520472.201470.1596395841386.JavaMail.zimbra@nod.at>
-References: <1401520472.201470.1596395841386.JavaMail.zimbra@nod.at>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1401520472.201470.1596395841386.JavaMail.zimbra@nod.at>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git mtd/fixes
-X-PR-Tracked-Commit-Id: f7e6b19bc76471ba03725fe58e0c218a3d6266c3
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 99f6cf61f175c1239ed8e86d4a1757c380da52d1
-Message-Id: <159648690406.10543.6134196581055250233.pr-tracker-bot@kernel.org>
-Date:   Mon, 03 Aug 2020 20:35:04 +0000
-To:     Richard Weinberger <richard@nod.at>
-Cc:     torvalds <torvalds@linux-foundation.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        miquel.raynal@bootlin.com, vigneshr@ti.com
+        Mon, 3 Aug 2020 16:36:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33228 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728891AbgHCUgI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 16:36:08 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C44EC061756
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 13:36:08 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id o1so21571516plk.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 13:36:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=2F9ZF9htCdgTGnye4Ms9Eo2tsmXq4m2N8BAkR3A5B7A=;
+        b=nZAzQ4lE0whX3zEtFjMirYy1jTai9LIRNYptpFNQIjCWo8AAOs4xmbPjE47De0a5qx
+         1EsgPv4wgg6wXYETK8ViL/AzUXsH0cNoEImvMSnZiOq02tskOrt+G4T0cyrI4nLxG2b2
+         CIrG6txBS/AZZTrHr4aFKtBTbweOV0V/mcOSg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=2F9ZF9htCdgTGnye4Ms9Eo2tsmXq4m2N8BAkR3A5B7A=;
+        b=YIASgel7bJPalqHmcmfbBk1WdZ2Z+j89EWTv6k1wldfa63NeKgWKZGOxkj03OgpzVf
+         TxZvksSgLH2oOWOOYkuWzugaZVW3VP4gzg08WDYPHVPPaJXeRzT/Vm1G7pFcGNH2s4FE
+         EcGrhjTAylRyU6ilUOAWR8XvzzKVesSouoyA7ZIS5ofsfPWemNJ/om9lE4ZBoW7rNKn2
+         h5ACPRDRO9dWHnlkoWTxmPyIm15KDN06Eij2eXnEOMEz/QDcd+Ot3Ibtb/w3iZW/g0K4
+         HnaAdvEgTQ9B+xvfSfoXlshur9S6u89FyUr+tzB40OxS9wisr/7Oi+qgk9/p2OcN5wpF
+         J9lg==
+X-Gm-Message-State: AOAM530YBahDxXJ8UKE/SFAgYqUiDKYx9XDtXOUCWwzzILC1bVD3U2oa
+        NM6FZvib2DQl413+si1mse8v2Q==
+X-Google-Smtp-Source: ABdhPJz6G+AwiYfQgKC8q1npJesqLu09L06PpCrBEdD/xFikahTomo49EV8Rt3o/r93GMMO1xhUHiA==
+X-Received: by 2002:a17:90a:4488:: with SMTP id t8mr1023030pjg.191.1596486966811;
+        Mon, 03 Aug 2020 13:36:06 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id na16sm336058pjb.30.2020.08.03.13.36.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 13:36:06 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200729051310.18436-1-saiprakash.ranjan@codeaurora.org>
+References: <20200729051310.18436-1-saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCHv3] coresight: etm4x: Fix etm4_count race by moving cpuhp callbacks to init
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     coresight@lists.linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Date:   Mon, 03 Aug 2020 13:36:04 -0700
+Message-ID: <159648696483.1360974.2828241668912900602@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 2 Aug 2020 21:17:21 +0200 (CEST):
+Quoting Sai Prakash Ranjan (2020-07-28 22:13:10)
+> etm4_count keeps track of number of ETMv4 registered and on some systems,
+> a race is observed on etm4_count variable which can lead to multiple calls
+> to cpuhp_setup_state_nocalls_cpuslocked(). This function internally calls
+> cpuhp_store_callbacks() which prevents multiple registrations of callbacks
+> for a given state and due to this race, it returns -EBUSY leading to ETM
+> probe failures like below.
+>=20
+>  coresight-etm4x: probe of 7040000.etm failed with error -16
+>=20
+> This race can easily be triggered with async probe by setting probe type
+> as PROBE_PREFER_ASYNCHRONOUS and with ETM power management property
+> "arm,coresight-loses-context-with-cpu".
+>=20
+> Prevent this race by moving cpuhp callbacks to etm driver init since the
+> cpuhp callbacks doesn't have to depend on the etm4_count and can be once
+> setup during driver init. Similarly we move cpu_pm notifier registration
+> to driver init and completely remove etm4_count usage. Also now we can
+> use non cpuslocked version of cpuhp callbacks with this movement.
+>=20
+> Fixes: 9b6a3f3633a5 ("coresight: etmv4: Fix CPU power management setup in=
+ probe() function")
+> Fixes: 58eb457be028 ("hwtracing/coresight-etm4x: Convert to hotplug state=
+ machine")
+> Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git mtd/fixes
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/99f6cf61f175c1239ed8e86d4a1757c380da52d1
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Tested-by: Stephen Boyd <swboyd@chromium.org>
