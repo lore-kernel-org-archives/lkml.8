@@ -2,107 +2,80 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A61C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64324C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DF972076E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40618207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:08:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596467296;
+	bh=Lrbi2rsIAExF59EuLBc7ucnI9amz38W6mCJdKugNiSY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nAvifxSS+eRf64gv84ZOonE4WNk/lzJLtAnwaHHrf6sg+boNc/GOGZIct9rc1TAFL
+	 w3JYfeev+CbPVFIKJkWT10L8RjtB9MV379pitN3nhLvLtBu5g4n9yxOoQQdp6/q5YM
+	 MCVm7Gm5Yyke9WeEnpafUHGX2iyS/s1xKa7qgt7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbgHCPIH (ORCPT
+        id S1728031AbgHCPIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 11:08:07 -0400
-Received: from verein.lst.de ([213.95.11.211]:39081 "EHLO verein.lst.de"
+        Mon, 3 Aug 2020 11:08:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbgHCPIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 11:08:07 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id E766D68BFE; Mon,  3 Aug 2020 17:08:02 +0200 (CEST)
-Date:   Mon, 3 Aug 2020 17:08:02 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        sfr@canb.auug.org.au, linux-next@vger.kernel.org
-Subject: Re: add file system helpers that take kernel pointers for the init
- code v4
-Message-ID: <20200803150802.GA19112@lst.de>
-References: <20200728163416.556521-1-hch@lst.de> <20200803145622.GB4631@lca.pw>
+        id S1726276AbgHCPIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 11:08:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C71A12076E;
+        Mon,  3 Aug 2020 15:08:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596467294;
+        bh=Lrbi2rsIAExF59EuLBc7ucnI9amz38W6mCJdKugNiSY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ICoWVarNkJzobZx++tnhhJngFcae6r4xhlEqj89aatZag49QjN5O7mXay7bxj7NCH
+         JQE6yTT6PfFgtOkugp3ORwOlnC4/BgyQYnlSHTNw08W/1cT7W8D1WHH92PsbDVprvw
+         hGrE+qO9QSqdzq+k0XSsdZeJMweV3FqiiRp79DUg=
+Date:   Mon, 3 Aug 2020 17:07:56 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dongdong Yang <contribute.kernel@gmail.com>
+Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        devel@driverdev.osuosl.org, gulinghua@xiaomi.com,
+        tanggeliang@xiaomi.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yangdongdong@xiaomi.com,
+        duhui@xiaomi.com, zhangguoquan@xiaomi.com, fengwei@xiaomi.com,
+        taojun@xiaomi.com, rocking@linux.alibaba.com, huangqiwu@xiaomi.com
+Subject: Re: [PATCH v3] sched: Provide USF for the portable equipment.
+Message-ID: <20200803150756.GA1098726@kroah.com>
+References: <cover.1596464894.git.yangdongdong@xiaomi.com>
+ <23719695ee476715ec54d3310c95d535f8e1391a.1596464896.git.yangdongdong@xiaomi.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200803145622.GB4631@lca.pw>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <23719695ee476715ec54d3310c95d535f8e1391a.1596464896.git.yangdongdong@xiaomi.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 10:56:23AM -0400, Qian Cai wrote:
-> On Tue, Jul 28, 2020 at 06:33:53PM +0200, Christoph Hellwig wrote:
-> > Hi Al and Linus,
-> > 
-> > currently a lot of the file system calls in the early in code (and the
-> > devtmpfs kthread) rely on the implicit set_fs(KERNEL_DS) during boot.
-> > This is one of the few last remaining places we need to deal with to kill
-> > off set_fs entirely, so this series adds new helpers that take kernel
-> > pointers.  These helpers are in init/ and marked __init and thus will
-> > be discarded after bootup.  A few also need to be duplicated in devtmpfs,
-> > though unfortunately.
-> 
-> Reverting this series from next-20200803 fixed the crash below on shutdown.
+On Mon, Aug 03, 2020 at 10:31:15PM +0800, Dongdong Yang wrote:
+> +	/*
+> +	 * create a sched_usf in cpu_subsys:
+> +	 * /sys/devices/system/cpu/sched_usf/...
 
-Please try this patch:
+I thought I asked you not to use a "raw" kobject, you are making this
+much harder than it has to be.
 
----
-From 6448eebe2fe7189cedc5136ab3464517956922b7 Mon Sep 17 00:00:00 2001
-From: Christoph Hellwig <hch@lst.de>
-Date: Mon, 3 Aug 2020 15:56:18 +0200
-Subject: init: fix init_dup
+Just use a normal struct device.
 
-Don't allocate an unused fd for each call.  Also drop the extra
-reference from filp_open after the init_dup calls while we're at it.
+Also you failed to document your new sysfs files in Documentation/ABI/
+like is required :(
 
-Fixes: 36e96b411649 ("init: add an init_dup helper")
-Reported-by Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/init.c   | 2 +-
- init/main.c | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+Because of both of those things, this isn't ok as-is, sorry.
 
-diff --git a/fs/init.c b/fs/init.c
-index 730e05acda2392..e9c320a48cf157 100644
---- a/fs/init.c
-+++ b/fs/init.c
-@@ -260,6 +260,6 @@ int __init init_dup(struct file *file)
- 	fd = get_unused_fd_flags(0);
- 	if (fd < 0)
- 		return fd;
--	fd_install(get_unused_fd_flags(0), get_file(file));
-+	fd_install(fd, get_file(file));
- 	return 0;
- }
-diff --git a/init/main.c b/init/main.c
-index 089e21504b1fc1..9dae9c4f806bb9 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -1470,6 +1470,7 @@ void __init console_on_rootfs(void)
- 	init_dup(file);
- 	init_dup(file);
- 	init_dup(file);
-+	fput(file);
- }
- 
- static noinline void __init kernel_init_freeable(void)
--- 
-2.27.0
-
+greg k-h
