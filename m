@@ -2,54 +2,53 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F76C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 911D3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EC752054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CF8820678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458513;
-	bh=8OoNLzM9mef1N3xrgx4IKRdDJjPBJpJae6hwQNZo8l0=;
+	s=default; t=1596458518;
+	bh=yjdHc/3RhY1oNsnLLVQljljiujWDhRGpXIEJ97lP+S0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BhVrs2wLDPz477ln18WxxGUzHsUK+YUPr7tKm6lqBvRnENHjcyrXLu1v3AYmUIR+q
-	 zVrLwIIkUalJv5qSqBrWRGBFFfMYw9hO9QoeacApt50wjzCzk8ExXILcxHoIdouRwE
-	 8g4rSQs7hGZviiY+FFJ23FeELNCzpTtJ1h6+w8I0=
+	b=DMKY8tUsA3qfaYE+FzvYO0rocf5A935NaX9xeCNdNC9PEGPnuFr72YkdgP2rjQaWy
+	 xKq+ZfWU+lRAfXBWuclI8tS9xqICKykAGyrsT2g6Mkf2v0kU9ueqsWQcO1Yz6pZy3P
+	 tek7N+hnIGf/Y8wcvzEzIfbM6ygn6e6iO4VsNB1g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbgHCMlw (ORCPT
+        id S1729083AbgHCMl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:41:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59970 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:41:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729261AbgHCMcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:32:07 -0400
+        id S1728803AbgHCMcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:32:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 011FB204EC;
-        Mon,  3 Aug 2020 12:32:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B74120775;
+        Mon,  3 Aug 2020 12:32:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457925;
-        bh=8OoNLzM9mef1N3xrgx4IKRdDJjPBJpJae6hwQNZo8l0=;
+        s=default; t=1596457922;
+        bh=yjdHc/3RhY1oNsnLLVQljljiujWDhRGpXIEJ97lP+S0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pHHfXhcGB8ogAL0N2mICFSh7K5FGkd7mjSVYLEn3LR0YKbcFJsiFfLdAiE4bhscpN
-         x2aecNrcEDmIEHt4fwXWvzAA7M62NBaaHIrL1CBFyOJqLZPdhsnzxaBIp75QeLujDO
-         /BHR+0I2jnakj/3qOEbiDtfvMXiqXaOLANBPluDk=
+        b=OJn2oIUrAxOYrecaASbWLtxw6Q5eJf0Hx8J+4Ma8bNwKH4kOQhQmGJYNt3MQVO9R0
+         WqJeryFQmbzgnES8yveuvSo4a9li864pkaaLqBhk+r1cfBsc8ag++ujh7TFIqZU6fM
+         nDR+H+D6foUcz+aJyTEBmESX2BkebhZwqCUiWb94=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Woojung.Huh@microchip.com" <Woojung.Huh@microchip.com>,
-        Johan Hovold <johan@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 32/56] net: lan78xx: add missing endpoint sanity check
-Date:   Mon,  3 Aug 2020 14:19:47 +0200
-Message-Id: <20200803121851.898829519@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Peilin Ye <yepeilin.cs@gmail.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 23/56] rds: Prevent kernel-infoleak in rds_notify_queue_get()
+Date:   Mon,  3 Aug 2020 14:19:38 +0200
+Message-Id: <20200803121851.460373765@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -62,45 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Peilin Ye <yepeilin.cs@gmail.com>
 
-[ Upstream commit 8d8e95fd6d69d774013f51e5f2ee10c6e6d1fc14 ]
+commit bbc8a99e952226c585ac17477a85ef1194501762 upstream.
 
-Add the missing endpoint sanity check to prevent a NULL-pointer
-dereference should a malicious device lack the expected endpoints.
+rds_notify_queue_get() is potentially copying uninitialized kernel stack
+memory to userspace since the compiler may leave a 4-byte hole at the end
+of `cmsg`.
 
-Note that the driver has a broken endpoint-lookup helper,
-lan78xx_get_endpoints(), which can end up accepting interfaces in an
-altsetting without endpoints as long as *some* altsetting has a bulk-in
-and a bulk-out endpoint.
+In 2016 we tried to fix this issue by doing `= { 0 };` on `cmsg`, which
+unfortunately does not always initialize that 4-byte hole. Fix it by using
+memset() instead.
 
-Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
-Cc: Woojung.Huh@microchip.com <Woojung.Huh@microchip.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: f037590fff30 ("rds: fix a leak of kernel memory")
+Fixes: bdbe6fbc6a2f ("RDS: recv.c")
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/usb/lan78xx.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/rds/recv.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 92548887df2fe..2dff233814ea5 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -3786,6 +3786,11 @@ static int lan78xx_probe(struct usb_interface *intf,
- 	netdev->max_mtu = MAX_SINGLE_PACKET_SIZE;
- 	netif_set_gso_max_size(netdev, MAX_SINGLE_PACKET_SIZE - MAX_HEADER);
+--- a/net/rds/recv.c
++++ b/net/rds/recv.c
+@@ -455,12 +455,13 @@ static int rds_still_queued(struct rds_s
+ int rds_notify_queue_get(struct rds_sock *rs, struct msghdr *msghdr)
+ {
+ 	struct rds_notifier *notifier;
+-	struct rds_rdma_notify cmsg = { 0 }; /* fill holes with zero */
++	struct rds_rdma_notify cmsg;
+ 	unsigned int count = 0, max_messages = ~0U;
+ 	unsigned long flags;
+ 	LIST_HEAD(copy);
+ 	int err = 0;
  
-+	if (intf->cur_altsetting->desc.bNumEndpoints < 3) {
-+		ret = -ENODEV;
-+		goto out3;
-+	}
-+
- 	dev->ep_blkin = (intf->cur_altsetting)->endpoint + 0;
- 	dev->ep_blkout = (intf->cur_altsetting)->endpoint + 1;
- 	dev->ep_intr = (intf->cur_altsetting)->endpoint + 2;
--- 
-2.25.1
-
++	memset(&cmsg, 0, sizeof(cmsg));	/* fill holes with zero */
+ 
+ 	/* put_cmsg copies to user space and thus may sleep. We can't do this
+ 	 * with rs_lock held, so first grab as many notifications as we can stuff
 
 
