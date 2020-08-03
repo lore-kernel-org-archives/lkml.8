@@ -7,104 +7,96 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62DD0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C155DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75920207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D109C207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:47:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728490AbgHCUmK (ORCPT
+        id S1728613AbgHCUrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 16:42:10 -0400
-Received: from mga05.intel.com ([192.55.52.43]:12119 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726693AbgHCUmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 16:42:09 -0400
-IronPort-SDR: c38/PJc6fdxU/aC0Y6mS49sv4QoxnHtZcm9w9XRybcABrmrIxwD4GW3IySjXO0UJag4l9MCs/3
- bZ6MT4lR0hGw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="237059833"
-X-IronPort-AV: E=Sophos;i="5.75,431,1589266800"; 
-   d="scan'208";a="237059833"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 13:42:08 -0700
-IronPort-SDR: G8qehCHuJl7G+oYeLcNmtNncs+SV1quOrUt0k6EZCvNZVKFommktmxwqbgieIgWw+BfsL8TLcb
- 7N/nz6Urovhg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,431,1589266800"; 
-   d="scan'208";a="314944197"
-Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.255.79.119]) ([10.255.79.119])
-  by fmsmga004.fm.intel.com with ESMTP; 03 Aug 2020 13:42:08 -0700
-Subject: Re: [PATCH 2/2] libnvdimm/security: ensure sysfs poll thread woke up
- and fetch updated attr
-To:     Jane Chu <jane.chu@oracle.com>, dan.j.williams@intel.com,
-        vishal.l.verma@intel.com, ira.weiny@intel.com, jmoyer@redhat.com,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-References: <1595606959-8516-1-git-send-email-jane.chu@oracle.com>
- <1595606959-8516-2-git-send-email-jane.chu@oracle.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <b9957db2-c130-f2ae-14a1-e711a98c7c69@intel.com>
-Date:   Mon, 3 Aug 2020 13:42:08 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 3 Aug 2020 16:47:08 -0400
+Received: from dispatch1-us1.ppe-hosted.com ([148.163.129.52]:56636 "EHLO
+        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728515AbgHCUrI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 16:47:08 -0400
+Received: from mx1-us1.ppe-hosted.com (unknown [10.7.65.62])
+        by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 90DAE600D8;
+        Mon,  3 Aug 2020 20:47:07 +0000 (UTC)
+Received: from us4-mdac16-75.ut7.mdlocal (unknown [10.7.64.194])
+        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 8E8118009B;
+        Mon,  3 Aug 2020 20:47:07 +0000 (UTC)
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from mx1-us1.ppe-hosted.com (unknown [10.7.66.30])
+        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 0C32428004D;
+        Mon,  3 Aug 2020 20:47:07 +0000 (UTC)
+Received: from webmail.solarflare.com (uk.solarflare.com [193.34.186.16])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id A553A10008A;
+        Mon,  3 Aug 2020 20:47:06 +0000 (UTC)
+Received: from [10.17.20.203] (10.17.20.203) by ukex01.SolarFlarecom.com
+ (10.17.10.4) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 3 Aug 2020
+ 21:47:00 +0100
+Subject: Re: [PATCH] net: sfc: fix possible buffer overflow caused by bad DMA
+ value in efx_siena_sriov_vfdi()
+To:     Jia-Ju Bai <baijiaju@tsinghua.edu.cn>,
+        <linux-net-drivers@solarflare.com>, <mhabets@solarflare.com>,
+        <davem@davemloft.net>, <kuba@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200802153930.5271-1-baijiaju@tsinghua.edu.cn>
+From:   Edward Cree <ecree@solarflare.com>
+Message-ID: <48330670-63d0-dec6-f102-1936d5f05355@solarflare.com>
+Date:   Mon, 3 Aug 2020 21:46:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <1595606959-8516-2-git-send-email-jane.chu@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200802153930.5271-1-baijiaju@tsinghua.edu.cn>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-Originating-IP: [10.17.20.203]
+X-ClientProxiedBy: ocex03.SolarFlarecom.com (10.20.40.36) To
+ ukex01.SolarFlarecom.com (10.17.10.4)
+X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.6.1012-25582.002
+X-TM-AS-Result: No-0.311200-8.000000-10
+X-TMASE-MatchedRID: scwq2vQP8OHmLzc6AOD8DfHkpkyUphL9V447DNvw38Z/Z0SyQdcmEKo6
+        hcXA9s6kZz5CP6uFgj54Rs5B8MIvKEIyGZ9D/l2WUPktDdOX0fsR5c83KIxTTpA9cwIW2cWUyJN
+        a6DYLgM2XUzspP39qoBSiTGLfVnzeIeFIFB+CV+wD2WXLXdz+Adi5W7Rf+s6QSQdzZTc1JgLzPv
+        RcNNSOxmOW+f6Bz68/aOpAHcS05Hdk3PL9VnFakZ4CIKY/Hg3AcmfM3DjaQLHZs3HUcS/scCq2r
+        l3dzGQ1SERKX67t9yWwS4uk2JEc8Apmdc+SSQBabq13Wt7q2Z1y6282DgK7ie7hl+IktQoMqBPD
+        FU26PM5eCkHqPzCAfpj9s/3jjT8d2hDLTFmwtpMGxECHxaZMBwbZYBYdvap6SswcLuSaZJZzlLq
+        E1zO6+EMMprcbiest
+X-TM-AS-User-Approved-Sender: Yes
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--0.311200-8.000000
+X-TMASE-Version: SMEX-12.5.0.1300-8.6.1012-25582.002
+X-MDID: 1596487627-CBdiEFYLbdy0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 02/08/2020 16:39, Jia-Ju Bai wrote:
+> To fix this problem, "req->op" is assigned to a local variable, and then
+> the driver accesses this variable instead of "req->op".
+>
+> Signed-off-by: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+Not sure how necessary this is (or even if anyone's still usingSiena
+ SR-IOV, since it needed a specially-patched libvirt to work), but I
+ don't see any reason to refuse.
+> diff --git a/drivers/net/ethernet/sfc/siena_sriov.c b/drivers/net/ethernet/sfc/siena_sriov.c
+> index 83dcfcae3d4b..21a8482cbb3b 100644
+> --- a/drivers/net/ethernet/sfc/siena_sriov.c
+> +++ b/drivers/net/ethernet/sfc/siena_sriov.c
+> @@ -875,6 +875,7 @@ static void efx_siena_sriov_vfdi(struct work_struct *work)
+>  	struct vfdi_req *req = vf->buf.addr;
+>  	struct efx_memcpy_req copy[2];
+>  	int rc;
+> +	u32 op = req->op;
+Could you maybe fix up the xmas here, rather than making it worse?
 
+Also, you didn't specify in your Subject line which tree this is for.
 
-On 7/24/2020 9:09 AM, Jane Chu wrote:
-> commit 7d988097c546 ("acpi/nfit, libnvdimm/security: Add security DSM overwrite support")
-> adds a sysfs_notify_dirent() to wake up userspace poll thread when the "overwrite"
-> operation has completed. But the notification is issued before the internal
-> dimm security state and flags have been updated, so the userspace poll thread
-> wakes up and fetches the not-yet-updated attr and falls back to sleep, forever.
-> But if user from another terminal issue "ndctl wait-overwrite nmemX" again,
-> the command returns instantly.
-> 
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Fixes: 7d988097c546 ("acpi/nfit, libnvdimm/security: Add security DSM overwrite support")
-> Signed-off-by: Jane Chu <jane.chu@oracle.com>
-
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-
-> ---
->   drivers/nvdimm/security.c | 11 ++++++++---
->   1 file changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
-> index 8f3971c..4b80150 100644
-> --- a/drivers/nvdimm/security.c
-> +++ b/drivers/nvdimm/security.c
-> @@ -450,14 +450,19 @@ void __nvdimm_security_overwrite_query(struct nvdimm *nvdimm)
->   	else
->   		dev_dbg(&nvdimm->dev, "overwrite completed\n");
->   
-> -	if (nvdimm->sec.overwrite_state)
-> -		sysfs_notify_dirent(nvdimm->sec.overwrite_state);
-> +	/*
-> +	 * Mark the overwrite work done and update dimm security flags,
-> +	 * then send a sysfs event notification to wake up userspace
-> +	 * poll threads to picked up the changed state.
-> +	 */
->   	nvdimm->sec.overwrite_tmo = 0;
->   	clear_bit(NDD_SECURITY_OVERWRITE, &nvdimm->flags);
->   	clear_bit(NDD_WORK_PENDING, &nvdimm->flags);
-> -	put_device(&nvdimm->dev);
->   	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
->   	nvdimm->sec.ext_flags = nvdimm_security_flags(nvdimm, NVDIMM_MASTER);
-> +	if (nvdimm->sec.overwrite_state)
-> +		sysfs_notify_dirent(nvdimm->sec.overwrite_state);
-> +	put_device(&nvdimm->dev);
->   }
->   
->   void nvdimm_security_overwrite_query(struct work_struct *work)
-> 
+-ed
