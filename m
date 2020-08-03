@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B857C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B2CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D8ED207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8E49207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457702;
-	bh=QyR66mhOB+DXFLTsZEh2HgiH7RdpdVsPW6tOdlXQPTI=;
+	s=default; t=1596457712;
+	bh=O2w5XOrGmoO7+E7a5f/p6umyxLNs3y72uVcyQgAU7tI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KGNhpUWyoRMe7MKORgzvCeZ1Us8dHWhLkxKq1owC3J500mMxIKzdbBFRVXKC1S8Yn
-	 EE2VJDLwDb87L9Cdh+foI22SnGaor/AwFdCW3Mn4zvlVaMfgq9DL2xfdfLVz4IKQtq
-	 f1gWpfOGqFTSj3mtuKEujpIn4w29fwBnvHY+JJKo=
+	b=YQG6Dm7T6zZCN/anc/FwOO5Q7koX/cZFRmzR4CzvdDReLh4DHLKPDNR3gsO/jsmhg
+	 UMGCQpZq72atSVa9ZH6AMPzhTzXOI32YvbKnY/XdHPEPrTP5Jis2Co37sL0nNW1ISq
+	 JwZFlcmA4XP9TzOXcfZj4hQQb59rdqY1MZl8tIB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgHCM2W (ORCPT
+        id S1728745AbgHCM2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:28:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54354 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:28:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727834AbgHCM2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:28:15 -0400
+        id S1728721AbgHCM2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:28:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BECC207FC;
-        Mon,  3 Aug 2020 12:28:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EB6C204EC;
+        Mon,  3 Aug 2020 12:28:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457693;
-        bh=QyR66mhOB+DXFLTsZEh2HgiH7RdpdVsPW6tOdlXQPTI=;
+        s=default; t=1596457696;
+        bh=O2w5XOrGmoO7+E7a5f/p6umyxLNs3y72uVcyQgAU7tI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Snn4jhFaKhyjxVv9i0MFzhVq9aGZWmxMXBU9C+LkFtqS5RzytBBcevhgeAm8PniYV
-         4StEGnrwVPQn+kLR3nbQk3ztjQpTOgBTAlBeWVlCutZGhF7u57y8n/q7uOJEQebNbD
-         JXIxgH136Fw5E3n2LBeoI8YbrQV2W08sLzo2ACEY=
+        b=urCsMy8IoM0mgKbeGFKJWoXYFn8PpMsIfz4tj2Gw9WG5g6jxV3j+uy0M8S9ICPqQg
+         91zjiWkw+c4Ar1IRyeQ2PYp8b1XhEXPtKxqRr8MYpI/ZuGJb6HRgQg2RPXzRdH0+Tu
+         O4vX1PWa/gEXOd0HyMs7Gq6J4XdIWgntMNn2Whqs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Willem de Bruijn <willemb@google.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 41/90] selftests/net: psock_fanout: fix clang issues for target arch PowerPC
-Date:   Mon,  3 Aug 2020 14:19:03 +0200
-Message-Id: <20200803121859.613977019@linuxfoundation.org>
+Subject: [PATCH 5.4 42/90] selftests/net: so_txtime: fix clang issues for target arch PowerPC
+Date:   Mon,  3 Aug 2020 14:19:04 +0200
+Message-Id: <20200803121859.660789314@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -63,38 +63,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tanner Love <tannerlove@google.com>
 
-[ Upstream commit 64f9ede2274980076423583683d44480909b7a40 ]
+[ Upstream commit b4da96ffd30bd4a305045ba5c9b0de5d4aa20dc7 ]
 
-Clang 9 threw:
-warning: format specifies type 'unsigned short' but the argument has \
-type 'int' [-Wformat]
-                typeflags, PORT_BASE, PORT_BASE + port_off);
+On powerpcle, int64_t maps to long long. Clang 9 threw:
+warning: absolute value function 'labs' given an argument of type \
+'long long' but has parameter of type 'long' which may cause \
+truncation of value [-Wabsolute-value]
+        if (labs(tstop - texpect) > cfg_variance_us)
 
 Tested: make -C tools/testing/selftests TARGETS="net" run_tests
 
-Fixes: 77f65ebdca50 ("packet: packet fanout rollover during socket overload")
+Fixes: af5136f95045 ("selftests/net: SO_TXTIME with ETF and FQ")
 Signed-off-by: Tanner Love <tannerlove@google.com>
 Acked-by: Willem de Bruijn <willemb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/psock_fanout.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/so_txtime.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/net/psock_fanout.c b/tools/testing/selftests/net/psock_fanout.c
-index 8c8c7d79c38d9..2c522f7a0aeca 100644
---- a/tools/testing/selftests/net/psock_fanout.c
-+++ b/tools/testing/selftests/net/psock_fanout.c
-@@ -350,7 +350,8 @@ static int test_datapath(uint16_t typeflags, int port_off,
- 	int fds[2], fds_udp[2][2], ret;
+diff --git a/tools/testing/selftests/net/so_txtime.c b/tools/testing/selftests/net/so_txtime.c
+index ceaad78e96674..3155fbbf644b0 100644
+--- a/tools/testing/selftests/net/so_txtime.c
++++ b/tools/testing/selftests/net/so_txtime.c
+@@ -121,7 +121,7 @@ static bool do_recv_one(int fdr, struct timed_send *ts)
+ 	if (rbuf[0] != ts->data)
+ 		error(1, 0, "payload mismatch. expected %c", ts->data);
  
- 	fprintf(stderr, "\ntest: datapath 0x%hx ports %hu,%hu\n",
--		typeflags, PORT_BASE, PORT_BASE + port_off);
-+		typeflags, (uint16_t)PORT_BASE,
-+		(uint16_t)(PORT_BASE + port_off));
+-	if (labs(tstop - texpect) > cfg_variance_us)
++	if (llabs(tstop - texpect) > cfg_variance_us)
+ 		error(1, 0, "exceeds variance (%d us)", cfg_variance_us);
  
- 	fds[0] = sock_fanout_open(typeflags, 0);
- 	fds[1] = sock_fanout_open(typeflags, 0);
+ 	return false;
 -- 
 2.25.1
 
