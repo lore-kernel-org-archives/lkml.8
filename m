@@ -2,234 +2,94 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC16C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 03:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E85BEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 03:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F0372070A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 03:05:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="G4kNA36x"
+	by mail.kernel.org (Postfix) with ESMTP id CFFEB20738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 03:08:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726981AbgHCDFe (ORCPT
+        id S1727087AbgHCDIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 23:05:34 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58303 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbgHCDFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 23:05:34 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BKjS94QYcz9sTX;
-        Mon,  3 Aug 2020 13:05:29 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596423931;
-        bh=McqvNsZTich5yNdwdrEuQyo7JQmSsgYuQqaKmpJV98E=;
-        h=Date:From:To:Cc:Subject:From;
-        b=G4kNA36xMUznfWAEg7LY4OKz2NiDDUDY594gOBQ7szFKt7+6ROUQzynEYtU/Cj3id
-         iPVcxxlp7Ku1OFbTH9szVLt/iTDtQqm/wFGMONopArPjgZBTITW7O/PLHOsaLXr4VZ
-         kgdjY7J1zVJrNomb464qfhxDd2+tO3kOxb+W8VL9LRDQ+WNxeYnM1oMhPpjr77d6Xj
-         vn9/T2AD10d5MLZMBW0UMjmokzC2R2P///pHRPOQ4kG8cKBS7xZsZKw3HwLS7lkwDE
-         2k6M4CHBzl3pUn8uEzIz7iy8rZK1ErmQruuR8OrReUwco4DcnFdwlUODjKk9betQh3
-         Hu8WQnCb5sYEw==
-Date:   Mon, 3 Aug 2020 13:05:26 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Andrii Nakryiko <andriin@fb.com>
-Subject: linux-next: manual merge of the bpf-next tree with the net-next
- tree
-Message-ID: <20200803130526.5a1519e2@canb.auug.org.au>
+        Sun, 2 Aug 2020 23:08:23 -0400
+Received: from zg8tmtm5lju5ljm3lje2naaa.icoremail.net ([139.59.37.164]:55046
+        "HELO zg8tmtm5lju5ljm3lje2naaa.icoremail.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with SMTP id S1725820AbgHCDIW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 23:08:22 -0400
+Received: from [166.111.139.118] (unknown [166.111.139.118])
+        by app-1 (Coremail) with SMTP id DwQGZQDn76OMfydfEpXxAw--.14644S2;
+        Mon, 03 Aug 2020 11:07:58 +0800 (CST)
+Subject: Re: [PATCH] scsi: esas2r: fix possible buffer overflow caused by bad
+ DMA value in esas2r_process_fs_ioctl()
+To:     jejb@linux.ibm.com, linuxdrivers@attotech.com,
+        martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200802152145.4387-1-baijiaju@tsinghua.edu.cn>
+ <1596383240.4087.8.camel@linux.ibm.com>
+From:   Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+Message-ID: <81351eab-69c0-89dc-4e58-146a005b5929@tsinghua.edu.cn>
+Date:   Mon, 3 Aug 2020 11:07:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/2W0N1U4_IJj+gYzUQWfA8RM";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <1596383240.4087.8.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-CM-TRANSID: DwQGZQDn76OMfydfEpXxAw--.14644S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7AF4DWw1xWF15Cr1DuryDWrg_yoW8Jw1kpr
+        WF93yrKr1qyr1Iqasavw1xXa4rtFZ5tF98GF15XFyv9wn8Cr1fAryrKFs8A34UW3s7Jw45
+        WaykXr97ta9FyFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvIb7Iv0xC_tr1lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I
+        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCY
+        02Avz4vE14v_Gr4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+        Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r12
+        6r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+        kF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
+        14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+        9x07jc6pPUUUUU=
+X-CM-SenderInfo: xedlyxhdmxq3pvlqwxlxdovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/2W0N1U4_IJj+gYzUQWfA8RM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-Today's linux-next merge of the bpf-next tree got a conflict in:
+On 2020/8/2 23:47, James Bottomley wrote:
+> On Sun, 2020-08-02 at 23:21 +0800, Jia-Ju Bai wrote:
+>> Because "fs" is mapped to DMA, its data can be modified at anytime by
+>> malicious or malfunctioning hardware. In this case, the check
+>> "if (fsc->command >= cmdcnt)" can be passed, and then "fsc->command"
+>> can be modified by hardware to cause buffer overflow.
+> This threat model seems to be completely bogus.  If the device were
+> malicious it would have given the mailbox incorrect values a priori ...
+> it wouldn't give the correct value then update it.  For most systems we
+> do assume correct operation of the device but if there's a worry about
+> incorrect operation, the usual approach is to guard the device with an
+> IOMMU which, again, would make this sort of fix unnecessary because the
+> IOMMU will have removed access to the buffer after the command
+> completed.
 
-  net/core/dev.c
+Thanks for the reply :)
 
-between commit:
+In my opinion, IOMMU is used to prevent the hardware from accessing 
+arbitrary memory addresses, but it cannot prevent the hardware from 
+writing a bad value into a valid memory address.
+For this reason, I think that the hardware can normally access 
+"fsc->command" and modify it into arbitrary value at any time, because 
+IOMMU considers the address of "fsc->command" is valid for the hardware.
 
-  829eb208e80d ("rtnetlink: add support for protodown reason")
 
-from the net-next tree and commits:
+Best wishes,
+Jia-Ju Bai
 
-  7f0a838254bd ("bpf, xdp: Maintain info on attached XDP BPF programs in ne=
-t_device")
-  aa8d3a716b59 ("bpf, xdp: Add bpf_link-based XDP attachment API")
-
-from the bpf-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc net/core/dev.c
-index f7ef0f5c5569,c8b911b10187..000000000000
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@@ -8715,54 -8712,75 +8711,100 @@@ int dev_change_proto_down_generic(struc
-  }
-  EXPORT_SYMBOL(dev_change_proto_down_generic);
- =20
- +/**
- + *	dev_change_proto_down_reason - proto down reason
- + *
- + *	@dev: device
- + *	@mask: proto down mask
- + *	@value: proto down value
- + */
- +void dev_change_proto_down_reason(struct net_device *dev, unsigned long m=
-ask,
- +				  u32 value)
- +{
- +	int b;
- +
- +	if (!mask) {
- +		dev->proto_down_reason =3D value;
- +	} else {
- +		for_each_set_bit(b, &mask, 32) {
- +			if (value & (1 << b))
- +				dev->proto_down_reason |=3D BIT(b);
- +			else
- +				dev->proto_down_reason &=3D ~BIT(b);
- +		}
- +	}
- +}
- +EXPORT_SYMBOL(dev_change_proto_down_reason);
- +
-- u32 __dev_xdp_query(struct net_device *dev, bpf_op_t bpf_op,
-- 		    enum bpf_netdev_command cmd)
-+ struct bpf_xdp_link {
-+ 	struct bpf_link link;
-+ 	struct net_device *dev; /* protected by rtnl_lock, no refcnt held */
-+ 	int flags;
-+ };
-+=20
-+ static enum bpf_xdp_mode dev_xdp_mode(u32 flags)
-  {
-- 	struct netdev_bpf xdp;
-+ 	if (flags & XDP_FLAGS_HW_MODE)
-+ 		return XDP_MODE_HW;
-+ 	if (flags & XDP_FLAGS_DRV_MODE)
-+ 		return XDP_MODE_DRV;
-+ 	return XDP_MODE_SKB;
-+ }
- =20
-- 	if (!bpf_op)
-- 		return 0;
-+ static bpf_op_t dev_xdp_bpf_op(struct net_device *dev, enum bpf_xdp_mode =
-mode)
-+ {
-+ 	switch (mode) {
-+ 	case XDP_MODE_SKB:
-+ 		return generic_xdp_install;
-+ 	case XDP_MODE_DRV:
-+ 	case XDP_MODE_HW:
-+ 		return dev->netdev_ops->ndo_bpf;
-+ 	default:
-+ 		return NULL;
-+ 	};
-+ }
- =20
-- 	memset(&xdp, 0, sizeof(xdp));
-- 	xdp.command =3D cmd;
-+ static struct bpf_xdp_link *dev_xdp_link(struct net_device *dev,
-+ 					 enum bpf_xdp_mode mode)
-+ {
-+ 	return dev->xdp_state[mode].link;
-+ }
-+=20
-+ static struct bpf_prog *dev_xdp_prog(struct net_device *dev,
-+ 				     enum bpf_xdp_mode mode)
-+ {
-+ 	struct bpf_xdp_link *link =3D dev_xdp_link(dev, mode);
-+=20
-+ 	if (link)
-+ 		return link->link.prog;
-+ 	return dev->xdp_state[mode].prog;
-+ }
-+=20
-+ u32 dev_xdp_prog_id(struct net_device *dev, enum bpf_xdp_mode mode)
-+ {
-+ 	struct bpf_prog *prog =3D dev_xdp_prog(dev, mode);
- =20
-- 	/* Query must always succeed. */
-- 	WARN_ON(bpf_op(dev, &xdp) < 0 && cmd =3D=3D XDP_QUERY_PROG);
-+ 	return prog ? prog->aux->id : 0;
-+ }
- =20
-- 	return xdp.prog_id;
-+ static void dev_xdp_set_link(struct net_device *dev, enum bpf_xdp_mode mo=
-de,
-+ 			     struct bpf_xdp_link *link)
-+ {
-+ 	dev->xdp_state[mode].link =3D link;
-+ 	dev->xdp_state[mode].prog =3D NULL;
-  }
- =20
-- static int dev_xdp_install(struct net_device *dev, bpf_op_t bpf_op,
-- 			   struct netlink_ext_ack *extack, u32 flags,
-- 			   struct bpf_prog *prog)
-+ static void dev_xdp_set_prog(struct net_device *dev, enum bpf_xdp_mode mo=
-de,
-+ 			     struct bpf_prog *prog)
-+ {
-+ 	dev->xdp_state[mode].link =3D NULL;
-+ 	dev->xdp_state[mode].prog =3D prog;
-+ }
-+=20
-+ static int dev_xdp_install(struct net_device *dev, enum bpf_xdp_mode mode,
-+ 			   bpf_op_t bpf_op, struct netlink_ext_ack *extack,
-+ 			   u32 flags, struct bpf_prog *prog)
-  {
-- 	bool non_hw =3D !(flags & XDP_FLAGS_HW_MODE);
-- 	struct bpf_prog *prev_prog =3D NULL;
-  	struct netdev_bpf xdp;
-  	int err;
- =20
-
---Sig_/2W0N1U4_IJj+gYzUQWfA8RM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8nfvYACgkQAVBC80lX
-0Gz1JAgAlLGhtWva8wq9s6tJB4+eCW1XdNaXAdC7n4McmgCyb7NTsis/CpnIGzDI
-iVKOLGlm1XOIxVnYrjY5W7/TTHhAibuxmWLp/IBWwvIypsBQ4Y256PJskdqn2fJM
-Vpe3XXy796GJxwi5ea6gPPRhSyV0+2HlseckHnAETHRofb+dn30S5OzeSegn8CM6
-7CXvhq5M0PiVSQzTGlnTUEErosLZ0O9UUjkjDa1MIqW2Jlbc+U3Z2Z++H3r0C8fG
-TkgsUgD8+cyAt4eVuMp96cDMDc/2yd1JLnLzaoEUlCNImFUyR0r704WA9gyVW2mu
-/zcl6sW9B59XFw/wZK5NolGDRMlx5g==
-=hCy4
------END PGP SIGNATURE-----
-
---Sig_/2W0N1U4_IJj+gYzUQWfA8RM--
