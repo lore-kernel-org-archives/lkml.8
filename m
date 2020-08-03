@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B94C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A90C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF518204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ACDD2076B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457301;
-	bh=1JjwvQSZ4M0VBLRdBVcCv8G8o/5zetcQ2B4CQCnzuTs=;
+	s=default; t=1596457307;
+	bh=SI4guhhE2Hhs6w+Ur05GGFq95nzWVWAWKAnbRaNmCxg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0hbfTYls8j1Mmmg0RruaMLRTFhExCSceeWuJ18i+iGNBDSo4348VlRG6fvILRA4sa
-	 0rbZryMmAvqvpsManj2hLIRlfM8AVgCJ9KF09Y6saa84GLupvXCyT668BUo2OI2zNg
-	 tvFnKrQO+MtP/POrN0f6xCPJNS7QDDWzj7pOmx5U=
+	b=Xtwwtq5+cAVs+KZD3OaHjvN06rN/6zbCjZe4EP26cnEi3DeBjNWLFIEQSvjCgdO4d
+	 NDSPWXFt1oLK+OypmlXb/jVXFIxPrz8nvpyO28jvTEs85Cbko+i+0dsA4d0jRmFLSB
+	 2PSRExZZTzEYoMs3NTl5Hu+HTh/eSncVLiaZXJIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725945AbgHCMVl (ORCPT
+        id S1726821AbgHCMVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:21:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44658 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:21:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbgHCMVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:21:24 -0400
+        id S1726769AbgHCMVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:21:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEFE12076E;
-        Mon,  3 Aug 2020 12:21:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63BB72076B;
+        Mon,  3 Aug 2020 12:21:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457283;
-        bh=1JjwvQSZ4M0VBLRdBVcCv8G8o/5zetcQ2B4CQCnzuTs=;
+        s=default; t=1596457294;
+        bh=SI4guhhE2Hhs6w+Ur05GGFq95nzWVWAWKAnbRaNmCxg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IqNu7EHahpjaTuRDOZ1k/5Rng8EKEs5qaNdk75gmHR+Bn4uqj++UZQ4qpg3At5PWf
-         efCs1lUkSiNvg3s0oMSAxn+ZVW5nBwbRIIDge8Py9sJxu6mqoRxov5gsXE3VvlB2tP
-         +t6V4tu3kbRw4MsIcWY7mgcs8UDwl7oebOH1gM3I=
+        b=MnPdun6rxGy5vAm9xJxKkf9j1gATCtLKRyTfcwvfblAuBwJrLn8oXomZql91f1/Yn
+         f/v8SPRGsfZiEhbOVItpwMEdqBOvUUvO/6xAK2wCO0D87OvaXdkLnoZAb71yS9wmmJ
+         c8303Ca3RPWyNB2JdN0XHlVrirQNzWaa+23LygKY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Subject: [PATCH 5.7 012/120] vhost/scsi: fix up req type endian-ness
-Date:   Mon,  3 Aug 2020 14:17:50 +0200
-Message-Id: <20200803121903.456428318@linuxfoundation.org>
+        stable@vger.kernel.org, Jaedon Shin <jaedon.shin@gmail.com>,
+        Robin Murphy <robin.mruphy@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH 5.7 016/120] ARM: 8987/1: VDSO: Fix incorrect clock_gettime64
+Date:   Mon,  3 Aug 2020 14:17:54 +0200
+Message-Id: <20200803121903.649075309@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -60,36 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael S. Tsirkin <mst@redhat.com>
+From: Jaedon Shin <jaedon.shin@gmail.com>
 
-commit 295c1b9852d000580786375304a9800bd9634d15 upstream.
+commit 4405bdf3c57ec28d606bdf5325f1167505bfdcd4 upstream.
 
-vhost/scsi doesn't handle type conversion correctly
-for request type when using virtio 1.0 and up for BE,
-or cross-endian platforms.
-
-Fix it up using vhost_32_to_cpu.
+__vdso_*() should be removed and fallback used if CNTCVT is not
+available by cntvct_functional(). __vdso_clock_gettime64 when added
+previous commit is using the incorrect CNTCVT value in that state.
+__vdso_clock_gettime64 is also added to remove it's symbol.
 
 Cc: stable@vger.kernel.org
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Fixes: 74d06efb9c2f ("ARM: 8932/1: Add clock_gettime64 entry point")
+Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
+Tested-by: Robin Murphy <robin.mruphy@arm.com>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/vhost/scsi.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/kernel/vdso.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/vhost/scsi.c
-+++ b/drivers/vhost/scsi.c
-@@ -1215,7 +1215,7 @@ vhost_scsi_ctl_handle_vq(struct vhost_sc
- 			continue;
- 		}
+--- a/arch/arm/kernel/vdso.c
++++ b/arch/arm/kernel/vdso.c
+@@ -184,6 +184,7 @@ static void __init patch_vdso(void *ehdr
+ 	if (!cntvct_ok) {
+ 		vdso_nullpatch_one(&einfo, "__vdso_gettimeofday");
+ 		vdso_nullpatch_one(&einfo, "__vdso_clock_gettime");
++		vdso_nullpatch_one(&einfo, "__vdso_clock_gettime64");
+ 	}
+ }
  
--		switch (v_req.type) {
-+		switch (vhost32_to_cpu(vq, v_req.type)) {
- 		case VIRTIO_SCSI_T_TMF:
- 			vc.req = &v_req.tmf;
- 			vc.req_size = sizeof(struct virtio_scsi_ctrl_tmf_req);
 
 
