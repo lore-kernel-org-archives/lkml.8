@@ -6,51 +6,51 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E74C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BAEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44C9D2068F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:38:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2C5C2068F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:38:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728450AbgHCWir (ORCPT
+        id S1728557AbgHCWiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 18:38:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52090 "EHLO
+        Mon, 3 Aug 2020 18:38:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbgHCWip (ORCPT
+        with ESMTP id S1726276AbgHCWiu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 18:38:45 -0400
+        Mon, 3 Aug 2020 18:38:50 -0400
 Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE000C06174A;
-        Mon,  3 Aug 2020 15:38:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D8C5C06174A;
+        Mon,  3 Aug 2020 15:38:50 -0700 (PDT)
 Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id EE5C512777715;
-        Mon,  3 Aug 2020 15:21:59 -0700 (PDT)
-Date:   Mon, 03 Aug 2020 15:38:44 -0700 (PDT)
-Message-Id: <20200803.153844.1805709092421745601.davem@davemloft.net>
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D79C412777715;
+        Mon,  3 Aug 2020 15:22:04 -0700 (PDT)
+Date:   Mon, 03 Aug 2020 15:38:49 -0700 (PDT)
+Message-Id: <20200803.153849.62600184085381506.davem@davemloft.net>
 To:     linmiaohe@huawei.com
 Cc:     aelior@marvell.com, GR-everest-linux-l2@marvell.com,
         kuba@kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: qede: use eth_zero_addr() to clear mac address
+Subject: Re: [PATCH] net: qed: use eth_zero_addr() to clear mac address
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1596273234-24230-1-git-send-email-linmiaohe@huawei.com>
-References: <1596273234-24230-1-git-send-email-linmiaohe@huawei.com>
+In-Reply-To: <1596273281-24277-1-git-send-email-linmiaohe@huawei.com>
+References: <1596273281-24277-1-git-send-email-linmiaohe@huawei.com>
 X-Mailer: Mew version 6.8 on Emacs 26.3
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 03 Aug 2020 15:22:00 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 03 Aug 2020 15:22:05 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: linmiaohe <linmiaohe@huawei.com>
-Date: Sat, 1 Aug 2020 17:13:54 +0800
+Date: Sat, 1 Aug 2020 17:14:41 +0800
 
 > From: Miaohe Lin <linmiaohe@huawei.com>
 > 
