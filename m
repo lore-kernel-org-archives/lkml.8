@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F37C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C90C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDD5420738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1123520738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:22:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457340;
-	bh=jMTM9Awye6xGmKCtwUVQ9PWUR+npLdpUHGaUO7Onh5Y=;
+	s=default; t=1596457338;
+	bh=NR5D6eysUwhAEOc3EJ8CMwbgDVnOf+TBq5t1G37/qQI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bdUWd6BQevLGLU5RMetGPIsTo59y1jgQWpvr7SEQZUJetrBSv4q/z8iKO3iyUWhLo
-	 auwf59gUqq6dUmDh9pB5CSlGFxm41J1R1C7mRhr58RFjDtjJWYopGpQDpeiRg9Aecx
-	 GWP/5iHlZCcQd5vf22O4i2/32pOdCkLjEm0q2Lyk=
+	b=gLsumg7SmPCgjyAQ7qbPUm/0Xoela5sex9KHQUx23JD0WozpG2JmtpWIB4GUxcJUr
+	 +SAGqKRJiVQLTVGTXUwhv2WwdaP+TxQ8s3aUdbKMoqqQeLS3veKWvJ3H7gC6+O8OvW
+	 I4XEUkQGehMktF1+6f1s2Mj4sBzLE3tDSow3tR2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgHCMWT (ORCPT
+        id S1726968AbgHCMWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:22:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45664 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:22:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726823AbgHCMWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:22:08 -0400
+        id S1726918AbgHCMWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:22:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19E4B20738;
-        Mon,  3 Aug 2020 12:22:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E0C520738;
+        Mon,  3 Aug 2020 12:21:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457327;
-        bh=jMTM9Awye6xGmKCtwUVQ9PWUR+npLdpUHGaUO7Onh5Y=;
+        s=default; t=1596457319;
+        bh=NR5D6eysUwhAEOc3EJ8CMwbgDVnOf+TBq5t1G37/qQI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2H3SNZSqIFa8nTrC6+3HDY3/rIecPx6LbYBnD6oU2FDA3VPCJLUk4GhisrHD6XtNi
-         yTDHFcfOaeUHcrxUUuUOSdm4kpxUBgNq8zsPN3LXd1+QB79KGAix4Zy9Md7sztMIjm
-         3G/LC1Gx5fEBDAl4tf8QHl3eqBRUoobRjBcrYhss=
+        b=YW4g96wkHLDQRpKtepPS2keaoTpsq7fvENnWjutPsZPNqzLV0T4cq8Fes5hsnGu2W
+         uW62ZJUfb9I188BWKafSCjejFhHWeL1GoyPXJbdaarHm8TkaVXZ85wU54EgkQ3AuWQ
+         gYhnGNa0kvRAA5ktuzQFNoPBhKOCWAgMjnGuB1wg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Armas Spann <zappel@retarded.farm>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.7 004/120] ALSA: hda/realtek: enable headset mic of ASUS ROG Zephyrus G15(GA502) series with ALC289
-Date:   Mon,  3 Aug 2020 14:17:42 +0200
-Message-Id: <20200803121903.078117908@linuxfoundation.org>
+        stable@vger.kernel.org, Duncan <1i5t5.duncan@cox.net>,
+        Mazin Rezk <mnrzk@protonmail.com>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.7 024/120] drm/amd/display: Clear dm_state for fast updates
+Date:   Mon,  3 Aug 2020 14:18:02 +0200
+Message-Id: <20200803121904.022636587@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -59,57 +61,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Armas Spann <zappel@retarded.farm>
+From: Mazin Rezk <mnrzk@protonmail.com>
 
-commit 4b43d05a1978a93a19374c6e6b817c9c1ff4ba4b upstream.
+commit fde9f39ac7f1ffd799a96ffa1e06b2051f0898f1 upstream.
 
-This patch adds support for headset mic to the ASUS ROG Zephyrus
-G15(GA502) notebook series by adding the corresponding
-vendor/pci_device id, as well as adding a new fixup for the used
-realtek ALC289. The fixup stets the correct pin to get the headset mic
-correctly recognized on audio-jack.
+This patch fixes a race condition that causes a use-after-free during
+amdgpu_dm_atomic_commit_tail. This can occur when 2 non-blocking commits
+are requested and the second one finishes before the first. Essentially,
+this bug occurs when the following sequence of events happens:
 
-Signed-off-by: Armas Spann <zappel@retarded.farm>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200724140616.298892-1-zappel@retarded.farm
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+1. Non-blocking commit #1 is requested w/ a new dm_state #1 and is
+deferred to the workqueue.
+
+2. Non-blocking commit #2 is requested w/ a new dm_state #2 and is
+deferred to the workqueue.
+
+3. Commit #2 starts before commit #1, dm_state #1 is used in the
+commit_tail and commit #2 completes, freeing dm_state #1.
+
+4. Commit #1 starts after commit #2 completes, uses the freed dm_state
+1 and dereferences a freelist pointer while setting the context.
+
+Since this bug has only been spotted with fast commits, this patch fixes
+the bug by clearing the dm_state instead of using the old dc_state for
+fast updates. In addition, since dm_state is only used for its dc_state
+and amdgpu_dm_atomic_commit_tail will retain the dc_state if none is found,
+removing the dm_state should not have any consequences in fast updates.
+
+This use-after-free bug has existed for a while now, but only caused a
+noticeable issue starting from 5.7-rc1 due to 3202fa62f ("slub: relocate
+freelist pointer to middle of object") moving the freelist pointer from
+dm_state->base (which was unused) to dm_state->context (which is
+dereferenced).
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207383
+Fixes: bd200d190f45 ("drm/amd/display: Don't replace the dc_state for fast updates")
+Reported-by: Duncan <1i5t5.duncan@cox.net>
+Signed-off-by: Mazin Rezk <mnrzk@protonmail.com>
+Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |   36 ++++++++++++++++------
+ 1 file changed, 27 insertions(+), 9 deletions(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -6118,6 +6118,7 @@ enum {
- 	ALC269VC_FIXUP_ACER_HEADSET_MIC,
- 	ALC269VC_FIXUP_ACER_MIC_NO_PRESENCE,
- 	ALC289_FIXUP_ASUS_G401,
-+	ALC289_FIXUP_ASUS_GA502,
- 	ALC256_FIXUP_ACER_MIC_NO_PRESENCE,
- };
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -8489,20 +8489,38 @@ static int amdgpu_dm_atomic_check(struct
+ 		 * the same resource. If we have a new DC context as part of
+ 		 * the DM atomic state from validation we need to free it and
+ 		 * retain the existing one instead.
++		 *
++		 * Furthermore, since the DM atomic state only contains the DC
++		 * context and can safely be annulled, we can free the state
++		 * and clear the associated private object now to free
++		 * some memory and avoid a possible use-after-free later.
+ 		 */
+-		struct dm_atomic_state *new_dm_state, *old_dm_state;
  
-@@ -7335,6 +7336,13 @@ static const struct hda_fixup alc269_fix
- 			{ }
- 		},
- 	},
-+	[ALC289_FIXUP_ASUS_GA502] = {
-+		.type = HDA_FIXUP_PINS,
-+		.v.pins = (const struct hda_pintbl[]) {
-+			{ 0x19, 0x03a11020 }, /* headset mic with jack detect */
-+			{ }
-+		},
-+	},
- 	[ALC256_FIXUP_ACER_MIC_NO_PRESENCE] = {
- 		.type = HDA_FIXUP_PINS,
- 		.v.pins = (const struct hda_pintbl[]) {
-@@ -7526,6 +7534,7 @@ static const struct snd_pci_quirk alc269
- 	SND_PCI_QUIRK(0x1043, 0x1bbd, "ASUS Z550MA", ALC255_FIXUP_ASUS_MIC_NO_PRESENCE),
- 	SND_PCI_QUIRK(0x1043, 0x1c23, "Asus X55U", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
- 	SND_PCI_QUIRK(0x1043, 0x1ccd, "ASUS X555UB", ALC256_FIXUP_ASUS_MIC),
-+	SND_PCI_QUIRK(0x1043, 0x1e11, "ASUS Zephyrus G15", ALC289_FIXUP_ASUS_GA502),
- 	SND_PCI_QUIRK(0x1043, 0x1f11, "ASUS Zephyrus G14", ALC289_FIXUP_ASUS_G401),
- 	SND_PCI_QUIRK(0x1043, 0x3030, "ASUS ZN270IE", ALC256_FIXUP_ASUS_AIO_GPIO2),
- 	SND_PCI_QUIRK(0x1043, 0x831a, "ASUS P901", ALC269_FIXUP_STEREO_DMIC),
+-		new_dm_state = dm_atomic_get_new_state(state);
+-		old_dm_state = dm_atomic_get_old_state(state);
++		for (i = 0; i < state->num_private_objs; i++) {
++			struct drm_private_obj *obj = state->private_objs[i].ptr;
+ 
+-		if (new_dm_state && old_dm_state) {
+-			if (new_dm_state->context)
+-				dc_release_state(new_dm_state->context);
++			if (obj->funcs == adev->dm.atomic_obj.funcs) {
++				int j = state->num_private_objs-1;
+ 
+-			new_dm_state->context = old_dm_state->context;
++				dm_atomic_destroy_state(obj,
++						state->private_objs[i].state);
+ 
+-			if (old_dm_state->context)
+-				dc_retain_state(old_dm_state->context);
++				/* If i is not at the end of the array then the
++				 * last element needs to be moved to where i was
++				 * before the array can safely be truncated.
++				 */
++				if (i != j)
++					state->private_objs[i] =
++						state->private_objs[j];
++
++				state->private_objs[j].ptr = NULL;
++				state->private_objs[j].state = NULL;
++				state->private_objs[j].old_state = NULL;
++				state->private_objs[j].new_state = NULL;
++
++				state->num_private_objs = j;
++				break;
++			}
+ 		}
+ 	}
+ 
 
 
