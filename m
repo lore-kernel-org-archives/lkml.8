@@ -2,473 +2,223 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66132C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84462C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D15D20722
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:39:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596447589;
-	bh=A6pdrJac209oL6Jt8qw0836N9oAsZBGFJC+ecL2wqxU=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=PkDcZCvd9YQoWvZaWcSdLD3qOssInoyP2kvqriCUjeZ93linCFTq07S433C5AKqM2
-	 WXt6eFHDT97xLrN3ycBYUR7VVCFKGnsM9L0JjO9kVUqkMFU4WHddgZeTBEnkLEg0Yt
-	 hCNRWwkLakUP1KMD/5DU/MhC3Ar5zgY+at2ieLAQ=
+	by mail.kernel.org (Postfix) with ESMTP id 5C9D92075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:39:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgHCJjs (ORCPT
+        id S1726504AbgHCJj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 05:39:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbgHCJjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 05:39:47 -0400
-Received: from kernel.org (unknown [87.70.91.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4466420719;
-        Mon,  3 Aug 2020 09:39:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596447585;
-        bh=A6pdrJac209oL6Jt8qw0836N9oAsZBGFJC+ecL2wqxU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=sKup/vJQfbGwbGgkOfN9KrXVdFXun9eBJtglCOOkztrZxPI18mo4r+aEGgXITqSt2
-         pYsHLdDyH1/blW3SL7tsS9IQbCdmj9Is8CH4err4MJhkCbZ7KacDQ4z0d6r8ByplcD
-         B7I8YTibkl6xFnh9c/dt008UXWdZqXG3pYqgJJrk=
-Date:   Mon, 3 Aug 2020 12:39:39 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Guan Xuetao <gxt@pku.edu.cn>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] remove unicore32 support
-Message-ID: <20200803093939.GA8243@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Mon, 3 Aug 2020 05:39:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbgHCJj6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 05:39:58 -0400
+Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D01E9C06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 02:39:57 -0700 (PDT)
+Received: from ramsan ([84.195.186.194])
+        by baptiste.telenet-ops.be with bizsmtp
+        id Axfu2300E4C55Sk01xfuHX; Mon, 03 Aug 2020 11:39:54 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1k2Wwk-0008A4-L9
+        for linux-kernel@vger.kernel.org; Mon, 03 Aug 2020 11:39:54 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1k2Wwk-0002wA-JW
+        for linux-kernel@vger.kernel.org; Mon, 03 Aug 2020 11:39:54 +0200
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     linux-kernel@vger.kernel.org
+Subject: Build regressions/improvements in v5.8-rc7
+Date:   Mon,  3 Aug 2020 11:39:54 +0200
+Message-Id: <20200803093954.11167-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Below is the list of build error/warning regressions/improvements in
+v5.8-rc7[1] compared to v5.7[2].
 
-The following changes since commit 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68:
+Summarized:
+  - build errors: +7/-1
+  - build warnings: +35/-87
 
-  Linux 5.8-rc3 (2020-06-28 15:00:24 -0700)
+JFYI, when comparing v5.8-rc7[1] to v5.8-rc6[3], the summaries are:
+  - build errors: +0/-0
+  - build warnings: +0/-2
 
-are available in the Git repository at:
+Note that there may be false regressions, as some logs are incomplete.
+Still, they're build errors/warnings.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/rppt/linux.git/ tags/rm-unicore32
+Happy fixing! ;-)
 
-for you to fetch changes up to 3346dd99fb4cd174fdbfb68dc62cd109e4323f0f:
+Thanks to the linux-next team for providing the build service.
 
-  MAINTAINERS: remove "PKUNITY SOC DRIVERS" entry (2020-07-01 12:11:02 +0300)
+[1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/92ed301919932f777713b9172e525674157e983d/ (192 out of 194 configs)
+[2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162/ (all 194 configs)
+[3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/ba47d845d715a010f7b51f6f89bae32845e6acb7/ (192 out of 194 configs)
 
-----------------------------------------------------------------
 
-The unicore32 port do not seem maintained for a long time now, there is no
-upstream toolchain that can create unicore32 binaries and all the links to
-prebuilt toolchains for unicore32 are dead. Even compilers that were
-available are not supported by the kernel anymore.
+*** ERRORS ***
 
-Guenter Roeck says:
+7 error regressions:
+  + error: arch/sparc/kernel/head_32.o: relocation truncated to fit: R_SPARC_WDISP22 against `.init.text':  => (.head.text+0x5040), (.head.text+0x5100)
+  + error: arch/sparc/kernel/head_32.o: relocation truncated to fit: R_SPARC_WDISP22 against symbol `leon_smp_cpu_startup' defined in .text section in arch/sparc/kernel/trampoline_32.o:  => (.init.text+0xa4)
+  + error: arch/sparc/kernel/process_32.o: relocation truncated to fit: R_SPARC_WDISP22 against `.text':  => (.fixup+0x4), (.fixup+0xc)
+  + error: arch/sparc/kernel/signal_32.o: relocation truncated to fit: R_SPARC_WDISP22 against `.text':  => (.fixup+0x4), (.fixup+0x28), (.fixup+0x10), (.fixup+0x34), (.fixup+0x1c)
+  + error: modpost: "devm_platform_ioremap_resource" [drivers/iio/adc/adi-axi-adc.ko] undefined!:  => N/A
+  + error: modpost: "devm_platform_ioremap_resource" [drivers/ptp/ptp_ines.ko] undefined!:  => N/A
+  + error: modpost: "devm_platform_ioremap_resource" [drivers/staging/clocking-wizard/clk-xlnx-clock-wizard.ko] undefined!:  => N/A
 
-  I have stopped building unicore32 images since v4.19 since there is no
-  available compiler that is still supported by the kernel. I am surprised
-  that support for it has not been removed from the kernel.
+1 error improvements:
+  - error: modpost: "devm_ioremap_resource" [drivers/ptp/ptp_ines.ko] undefined!: N/A => 
 
-However, it's worth pointing out two things:
 
-- Guan Xuetao is still listed as maintainer and asked for the port to be
-  kept around the last time Arnd suggested removing it two years ago. He
-  promised that there would be compiler sources (presumably llvm), but has
-  not made those available since.
+*** WARNINGS ***
 
-- https://github.com/gxt has patches to linux-4.9 and qemu-2.7, both
-  released in 2016, with patches dated early 2019. These patches mainly
-  restore a syscall ABI that was never part of mainline Linux but apparently
-  used in production. qemu-2.8 removed support for that ABI and newer kernels
-  (4.19+) can no longer be built with the old toolchain, so apparently
-  there will not be any future updates to that git tree.
+35 warning regressions:
+  + /kisskb/src/block/genhd.c: warning: the frame size of 1160 bytes is larger than 1024 bytes [-Wframe-larger-than=]:  => 1623:1
+  + /kisskb/src/drivers/mailbox/imx-mailbox.c: warning: 'imx_mu_resume_noirq' defined but not used [-Wunused-function]:  => 611:12
+  + /kisskb/src/drivers/mailbox/imx-mailbox.c: warning: 'imx_mu_runtime_resume' defined but not used [-Wunused-function]:  => 638:12
+  + /kisskb/src/drivers/mailbox/imx-mailbox.c: warning: 'imx_mu_runtime_suspend' defined but not used [-Wunused-function]:  => 629:12
+  + /kisskb/src/drivers/mailbox/imx-mailbox.c: warning: 'imx_mu_suspend_noirq' defined but not used [-Wunused-function]:  => 601:12
+  + /kisskb/src/drivers/net/ethernet/intel/ice/ice_flow.h: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]:  => 197:33
+  + /kisskb/src/drivers/net/ethernet/intel/ice/ice_flow.h: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]:  => 198:32
+  + /kisskb/src/drivers/scsi/dc395x.c: warning: value computed is not used [-Wunused-value]:  => 155:36
+  + /kisskb/src/drivers/target/iscsi/cxgbit/cxgbit_target.c: warning: 'cxgbit_tx_datain_iso.isra.39' uses dynamic stack allocation:  => 498:1
+  + /kisskb/src/include/linux/compiler_attributes.h: warning: statement will never be executed [-Wswitch-unreachable]:  => 201:41
+  + /kisskb/src/kernel/bpf/syscall.c: warning: 'bpf_prog_get_info_by_fd.isra.24' uses dynamic stack allocation:  => 3498:1
+  + /kisskb/src/mm/slub.c: warning: 'deactivate_slab.isra.57' uses dynamic stack allocation:  => 2230:1
+  + /kisskb/src/mm/slub.c: warning: 'get_partial_node.isra.56' uses dynamic stack allocation:  => 1929:1
+  + /kisskb/src/mm/slub.c: warning: 'unfreeze_partials.isra.55' uses dynamic stack allocation:  => 2298:1
+  + /kisskb/src/net/smc/smc_llc.c: warning: (near initialization for 'add_llc.hd') [-Wmissing-braces]:  => 1199:9
+  + /kisskb/src/net/smc/smc_llc.c: warning: (near initialization for 'del_llc.hd') [-Wmissing-braces]:  => 1232:9
+  + /kisskb/src/net/smc/smc_llc.c: warning: (near initialization for 'delllc.hd') [-Wmissing-braces]:  => 1304:9
+  + /kisskb/src/net/smc/smc_llc.c: warning: missing braces around initializer [-Wmissing-braces]:  => 1304:9, 1199:9, 1232:9
+  + /kisskb/src/samples/seccomp/user-trap.c: warning: dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]:  => 50:2, 83:2
+  + modpost: WARNING: modpost: EXPORT symbol "___rw_read_enter" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "___rw_read_exit" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "___rw_read_try" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "___rw_write_enter" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__ashldi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__ashrdi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__copy_1page" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__divdi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__lshrdi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__muldi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__ndelay" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__udelay" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "bzero_1page" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "empty_zero_page" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + warning: 136 bad relocations:  => N/A
+  + warning: 148 bad relocations:  => N/A
 
-----------------------------------------------------------------
-Mike Rapoport (8):
-      arch: remove unicore32 port
-      cpufreq: remove unicore32 driver
-      i2c/buses: remove i2c-puv3  driver
-      input: i8042: remove support for 8042-unicore32io
-      pwm: remove pwm-puv3  driver
-      video: fbdev: remove fb-puv3  driver
-      rtc: remove fb-puv3  driver
-      MAINTAINERS: remove "PKUNITY SOC DRIVERS" entry
+87 warning improvements:
+  - /kisskb/src/arch/m68k/include/asm/amigahw.h: warning: this statement may fall through [-Wimplicit-fallthrough=]: 42:50 => 
+  - /kisskb/src/block/genhd.c: warning: the frame size of 1192 bytes is larger than 1024 bytes [-Wframe-larger-than=]: 1617:1 => 
+  - /kisskb/src/drivers/android/binderfs.c: warning: (near initialization for 'device_info.name') [-Wmissing-braces]: 653:9 => 
+  - /kisskb/src/drivers/android/binderfs.c: warning: missing braces around initializer [-Wmissing-braces]: 653:9 => 
+  - /kisskb/src/drivers/base/component.c: warning: format '%zu' expects argument of type 'size_t', but argument 4 has type 'unsigned int' [-Wformat=]: 195:24 => 
+  - /kisskb/src/drivers/base/regmap/regcache.c: warning: format '%zu' expects argument of type 'size_t', but argument 4 has type 'unsigned int' [-Wformat=]: 715:20 => 
+  - /kisskb/src/drivers/base/regmap/regmap.c: warning: format '%zu' expects argument of type 'size_t', but argument 5 has type 'unsigned int' [-Wformat=]: 1533:22 => 
+  - /kisskb/src/drivers/dma-buf/dma-buf.c: warning: format '%zu' expects argument of type 'size_t', but argument 3 has type 'unsigned int' [-Wformat=]: 404:26 => 
+  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/bios/command_table2.c: warning: (near initialization for 'encoder_control.header') [-Wmissing-braces]: 116:9 => 
+  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/bios/command_table2.c: warning: (near initialization for 'pixel_clock.header') [-Wmissing-braces]: 342:9 => 
+  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/bios/command_table2.c: warning: missing braces around initializer [-Wmissing-braces]: 342:9, 116:9 => 
+  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_hubp.c: warning: (near initialization for 'PLAT_54186_wa.header') [-Wmissing-braces]: 781:9 => 
+  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_hubp.c: warning: missing braces around initializer [-Wmissing-braces]: 368:9, 781:9 => 368:9
+  - /kisskb/src/drivers/gpu/drm/bridge/tc358768.c: warning: the frame size of 2224 bytes is larger than 2048 bytes [-Wframe-larger-than=]: 840:1 => 
+  - /kisskb/src/drivers/gpu/drm/drm_atomic_uapi.c: warning: format '%zu' expects argument of type 'size_t', but argument 5 has type 'unsigned int' [-Wformat=]: 131:21 => 
+  - /kisskb/src/drivers/gpu/drm/drm_dp_dual_mode_helper.c: warning: format '%zd' expects argument of type 'signed size_t', but argument 4 has type 'ssize_t {aka int}' [-Wformat=]: 222:16 => 
+  - /kisskb/src/drivers/gpu/drm/drm_dp_dual_mode_helper.c: warning: format '%zd' expects argument of type 'signed size_t', but argument 5 has type 'ssize_t {aka int}' [-Wformat=]: 203:16 => 
+  - /kisskb/src/drivers/gpu/drm/drm_dp_helper.c: warning: format '%zu' expects argument of type 'size_t', but argument 3 has type 'unsigned int' [-Wformat=]: 844:18 => 
+  - /kisskb/src/drivers/gpu/drm/drm_dp_helper.c: warning: format '%zu' expects argument of type 'size_t', but argument 4 has type 'unsigned int' [-Wformat=]: 757:18, 790:18 => 
+  - /kisskb/src/drivers/gpu/drm/drm_dp_mst_topology.c: warning: (near initialization for 'desc.ident') [-Wmissing-braces]: 5502:9 => 
+  - /kisskb/src/drivers/gpu/drm/drm_dp_mst_topology.c: warning: missing braces around initializer [-Wmissing-braces]: 5502:9 => 
+  - /kisskb/src/drivers/gpu/drm/drm_gem_cma_helper.c: warning: format '%zu' expects argument of type 'size_t', but argument 4 has type 'unsigned int' [-Wformat=]: 503:18, 108:21 => 
+  - /kisskb/src/drivers/target/iscsi/cxgbit/cxgbit_target.c: warning: 'cxgbit_tx_datain_iso.isra.34' uses dynamic stack allocation: 498:1 => 
+  - /kisskb/src/drivers/tty/n_tty.c: warning: format '%zu' expects argument of type 'size_t', but argument 3 has type 'unsigned int' [-Wformat=]: 2059:14, 2037:14 => 
+  - /kisskb/src/drivers/tty/n_tty.c: warning: format '%zu' expects argument of type 'size_t', but argument 4 has type 'unsigned int' [-Wformat=]: 2037:14 => 
+  - /kisskb/src/drivers/tty/n_tty.c: warning: format '%zu' expects argument of type 'size_t', but argument 5 has type 'unsigned int' [-Wformat=]: 2037:14, 2059:14 => 
+  - /kisskb/src/drivers/tty/n_tty.c: warning: format '%zu' expects argument of type 'size_t', but argument 6 has type 'unsigned int' [-Wformat=]: 2059:14, 2037:14 => 
+  - /kisskb/src/drivers/tty/n_tty.c: warning: format '%zu' expects argument of type 'size_t', but argument 7 has type 'unsigned int' [-Wformat=]: 2059:14 => 
+  - /kisskb/src/drivers/tty/n_tty.c: warning: format '%zu' expects argument of type 'size_t', but argument 8 has type 'unsigned int' [-Wformat=]: 2059:14 => 
+  - /kisskb/src/drivers/usb/host/ehci-q.c: warning: format '%zu' expects argument of type 'size_t', but argument 4 has type 'unsigned int' [-Wformat=]: 376:2 => 
+  - /kisskb/src/drivers/usb/host/ehci-q.c: warning: format '%zu' expects argument of type 'size_t', but argument 5 has type 'unsigned int' [-Wformat=]: 376:2 => 
+  - /kisskb/src/fs/buffer.c: warning: format '%zu' expects argument of type 'size_t', but argument 5 has type 'unsigned int' [-Wformat=]: 237:10 => 
+  - /kisskb/src/fs/ext4/xattr.c: warning: format '%zu' expects argument of type 'size_t', but argument 6 has type 'unsigned int' [-Wformat=]: 482:8 => 
+  - /kisskb/src/include/drm/drm_print.h: warning: format '%zu' expects argument of type 'size_t', but argument 5 has type 'unsigned int' [-Wformat=]: 120:24 => 
+  - /kisskb/src/include/linux/dev_printk.h: warning: format '%zu' expects argument of type 'size_t', but argument 8 has type 'unsigned int' [-Wformat=]: 232:23 => 
+  - /kisskb/src/include/linux/kern_levels.h: warning: format '%d' expects argument of type 'int', but argument 4 has type 'tcflag_t {aka long unsigned int}' [-Wformat=]: 5:18 => 
+  - /kisskb/src/include/linux/kern_levels.h: warning: format '%d' expects argument of type 'int', but argument 5 has type 'tcflag_t {aka long unsigned int}' [-Wformat=]: 5:18 => 
+  - /kisskb/src/include/linux/kern_levels.h: warning: format '%zd' expects argument of type 'signed size_t', but argument 3 has type 'size_t {aka const unsigned int}' [-Wformat=]: 5:18 => 
+  - /kisskb/src/include/linux/kern_levels.h: warning: format '%zd' expects argument of type 'signed size_t', but argument 3 has type 'size_t {aka unsigned int}' [-Wformat=]: 5:18 => 
+  - /kisskb/src/include/linux/kern_levels.h: warning: format '%zu' expects argument of type 'size_t', but argument 2 has type 'unsigned int' [-Wformat=]: 5:18 => 
+  - /kisskb/src/include/linux/kern_levels.h: warning: format '%zu' expects argument of type 'size_t', but argument 3 has type 'unsigned int' [-Wformat=]: 5:18 => 
+  - /kisskb/src/include/linux/kern_levels.h: warning: format '%zu' expects argument of type 'size_t', but argument 4 has type 'unsigned int' [-Wformat=]: 5:18 => 
+  - /kisskb/src/include/linux/kern_levels.h: warning: format '%zu' expects argument of type 'size_t', but argument 5 has type 'unsigned int' [-Wformat=]: 5:18 => 
+  - /kisskb/src/include/linux/kern_levels.h: warning: format '%zu' expects argument of type 'size_t', but argument 6 has type 'unsigned int' [-Wformat=]: 5:18 => 
+  - /kisskb/src/include/linux/kernel.h: warning: comparison of distinct pointer types lacks a cast: 842:29 => 
+  - /kisskb/src/include/linux/overflow.h: warning: comparison of distinct pointer types lacks a cast: 59:15, 60:15 => 
+  - /kisskb/src/init/main.c: warning: format '%zu' expects argument of type 'size_t', but argument 3 has type '__kernel_size_t {aka unsigned int}' [-Wformat=]: 1082:37 => 
+  - /kisskb/src/init/main.c: warning: format '%zu' expects argument of type 'size_t', but argument 3 has type 'unsigned int' [-Wformat=]: 611:35, 1280:35, 615:35 => 
+  - /kisskb/src/kernel/bpf/syscall.c: warning: 'bpf_prog_get_info_by_fd.isra.23' uses dynamic stack allocation: 3269:1 => 
+  - /kisskb/src/kernel/dma/direct.c: warning: format '%zu' expects argument of type 'size_t', but argument 4 has type 'unsigned int' [-Wformat=]: 407:9 => 
+  - /kisskb/src/lib/test_kasan.c: warning: 'kasan_alloca_oob_left' uses dynamic stack allocation: 547:1 => 
+  - /kisskb/src/lib/test_kasan.c: warning: 'kasan_alloca_oob_right' uses dynamic stack allocation: 557:1 => 
+  - /kisskb/src/mm/dmapool.c: warning: format '%zu' expects argument of type 'size_t', but argument 6 has type 'unsigned int' [-Wformat=]: 93:46 => 
+  - /kisskb/src/mm/dmapool.c: warning: format '%zu' expects argument of type 'size_t', but argument 7 has type 'unsigned int' [-Wformat=]: 93:51 => 
+  - /kisskb/src/mm/percpu.c: warning: format '%zu' expects argument of type 'size_t', but argument 3 has type 'unsigned int' [-Wformat=]: 2303:35, 2309:35, 2166:27, 1306:35, 1328:35, 2297:35, 2315:35, 1334:35, 1321:35 => 
+  - /kisskb/src/mm/percpu.c: warning: format '%zu' expects argument of type 'size_t', but argument 4 has type 'unsigned int' [-Wformat=]: 2166:32 => 
+  - /kisskb/src/mm/percpu.c: warning: format '%zu' expects argument of type 'size_t', but argument 5 has type 'unsigned int' [-Wformat=]: 2166:37, 1593:17 => 
+  - /kisskb/src/mm/percpu.c: warning: format '%zu' expects argument of type 'size_t', but argument 6 has type 'unsigned int' [-Wformat=]: 1593:17, 2166:42 => 
+  - /kisskb/src/mm/percpu.c: warning: format '%zu' expects argument of type 'size_t', but argument 7 has type 'unsigned int' [-Wformat=]: 2166:52 => 
+  - /kisskb/src/mm/percpu.c: warning: format '%zu' expects argument of type 'size_t', but argument 8 has type 'unsigned int' [-Wformat=]: 2166:56 => 
+  - /kisskb/src/mm/slub.c: warning: 'deactivate_slab.isra.42' uses dynamic stack allocation: 2203:1 => 
+  - /kisskb/src/mm/slub.c: warning: 'get_partial_node.isra.41' uses dynamic stack allocation: 1910:1 => 
+  - /kisskb/src/mm/slub.c: warning: 'unfreeze_partials.isra.40' uses dynamic stack allocation: 2271:1 => 
+  - /kisskb/src/net/sunrpc/svc.c: warning: format '%zd' expects argument of type 'signed size_t', but argument 3 has type 'size_t {aka unsigned int}' [-Wformat=]: 1440:33 => 
+  - /kisskb/src/net/sunrpc/xprtsock.c: warning: format '%zu' expects argument of type 'size_t', but argument 5 has type 'unsigned int' [-Wformat=]: 2501:16 => 
+  - /kisskb/src/security/integrity/ima/ima_crypto.c: warning: the frame size of 1032 bytes is larger than 1024 bytes [-Wframe-larger-than=]: 510:1 => 
+  - modpost: WARNING: modpost: "clear_page" [drivers/md/dm-integrity.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "clear_page" [drivers/md/raid456.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "clear_page" [drivers/scsi/sd_mod.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "clear_page" [fs/btrfs/btrfs.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "clear_page" [fs/fuse/fuse.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "clear_page" [fs/gfs2/gfs2.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "clear_page" [fs/ntfs/ntfs.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "clear_page" [fs/ocfs2/dlm/ocfs2_dlm.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "copy_page" [drivers/block/drbd/drbd.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "copy_page" [drivers/md/dm-integrity.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "copy_page" [fs/btrfs/btrfs.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "copy_page" [fs/cachefiles/cachefiles.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "copy_page" [fs/fuse/fuse.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "copy_page" [fs/nilfs2/nilfs2.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: lib/test_bitmap.o(.text.unlikely+0x58): Section mismatch in reference from the function bitmap_equal() to the variable .init.rodata:clump_exp: N/A => 
+  - modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x1a0): Section mismatch in reference from the function early_init_mmu() to the function .init.text:radix__early_init_mmu(): N/A => 
+  - modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x1ac): Section mismatch in reference from the function early_init_mmu() to the function .init.text:hash__early_init_mmu(): N/A => 
+  - modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x2b0): Section mismatch in reference from the function early_init_mmu() to the function .init.text:radix__early_init_mmu(): N/A => 
+  - modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x2bc): Section mismatch in reference from the function early_init_mmu() to the function .init.text:hash__early_init_mmu(): N/A => 
+  - warning: 12 bad relocations: N/A => 
+  - warning: unmet direct dependencies detected for SND_SOC_WM9712: N/A => 
 
- .../features/core/cBPF-JIT/arch-support.txt        |   1 -
- .../features/core/eBPF-JIT/arch-support.txt        |   1 -
- .../core/generic-idle-thread/arch-support.txt      |   1 -
- .../features/core/jump-labels/arch-support.txt     |   1 -
- .../features/core/tracehook/arch-support.txt       |   1 -
- .../features/debug/KASAN/arch-support.txt          |   1 -
- .../debug/debug-vm-pgtable/arch-support.txt        |   1 -
- .../debug/gcov-profile-all/arch-support.txt        |   1 -
- Documentation/features/debug/kgdb/arch-support.txt |   1 -
- .../debug/kprobes-on-ftrace/arch-support.txt       |   1 -
- .../features/debug/kprobes/arch-support.txt        |   1 -
- .../features/debug/kretprobes/arch-support.txt     |   1 -
- .../features/debug/optprobes/arch-support.txt      |   1 -
- .../features/debug/stackprotector/arch-support.txt |   1 -
- .../features/debug/uprobes/arch-support.txt        |   1 -
- .../debug/user-ret-profiler/arch-support.txt       |   1 -
- .../features/io/dma-contiguous/arch-support.txt    |   1 -
- .../locking/cmpxchg-local/arch-support.txt         |   1 -
- .../features/locking/lockdep/arch-support.txt      |   1 -
- .../locking/queued-rwlocks/arch-support.txt        |   1 -
- .../locking/queued-spinlocks/arch-support.txt      |   1 -
- .../features/perf/kprobes-event/arch-support.txt   |   1 -
- .../features/perf/perf-regs/arch-support.txt       |   1 -
- .../features/perf/perf-stackdump/arch-support.txt  |   1 -
- .../sched/membarrier-sync-core/arch-support.txt    |   1 -
- .../features/sched/numa-balancing/arch-support.txt |   1 -
- .../seccomp/seccomp-filter/arch-support.txt        |   1 -
- .../time/arch-tick-broadcast/arch-support.txt      |   1 -
- .../features/time/clockevents/arch-support.txt     |   1 -
- .../time/context-tracking/arch-support.txt         |   1 -
- .../features/time/irq-time-acct/arch-support.txt   |   1 -
- .../time/modern-timekeeping/arch-support.txt       |   1 -
- .../features/time/virt-cpuacct/arch-support.txt    |   1 -
- .../features/vm/ELF-ASLR/arch-support.txt          |   1 -
- .../features/vm/PG_uncached/arch-support.txt       |   1 -
- Documentation/features/vm/THP/arch-support.txt     |   1 -
- Documentation/features/vm/TLB/arch-support.txt     |   1 -
- .../features/vm/huge-vmap/arch-support.txt         |   1 -
- .../features/vm/ioremap_prot/arch-support.txt      |   1 -
- .../features/vm/pte_special/arch-support.txt       |   1 -
- MAINTAINERS                                        |  17 -
- arch/unicore32/.gitignore                          |  22 -
- arch/unicore32/Kconfig                             | 200 -----
- arch/unicore32/Kconfig.debug                       |  29 -
- arch/unicore32/Makefile                            |  59 --
- arch/unicore32/boot/Makefile                       |  39 -
- arch/unicore32/boot/compressed/Makefile            |  64 --
- arch/unicore32/boot/compressed/head.S              | 201 -----
- arch/unicore32/boot/compressed/misc.c              | 123 ---
- arch/unicore32/boot/compressed/piggy.S.in          |   6 -
- arch/unicore32/boot/compressed/vmlinux.lds.S       |  58 --
- arch/unicore32/configs/defconfig                   | 214 ------
- arch/unicore32/include/asm/Kbuild                  |   7 -
- arch/unicore32/include/asm/assembler.h             | 128 ----
- arch/unicore32/include/asm/barrier.h               |  16 -
- arch/unicore32/include/asm/bitops.h                |  46 --
- arch/unicore32/include/asm/bug.h                   |  20 -
- arch/unicore32/include/asm/cache.h                 |  24 -
- arch/unicore32/include/asm/cacheflush.h            | 186 -----
- arch/unicore32/include/asm/checksum.h              |  38 -
- arch/unicore32/include/asm/cmpxchg.h               |  58 --
- arch/unicore32/include/asm/cpu-single.h            |  42 --
- arch/unicore32/include/asm/cputype.h               |  30 -
- arch/unicore32/include/asm/delay.h                 |  49 --
- arch/unicore32/include/asm/dma.h                   |  20 -
- arch/unicore32/include/asm/elf.h                   |  90 ---
- arch/unicore32/include/asm/fpstate.h               |  23 -
- arch/unicore32/include/asm/fpu-ucf64.h             |  50 --
- arch/unicore32/include/asm/gpio.h                  | 101 ---
- arch/unicore32/include/asm/hwcap.h                 |  29 -
- arch/unicore32/include/asm/hwdef-copro.h           |  45 --
- arch/unicore32/include/asm/io.h                    |  69 --
- arch/unicore32/include/asm/irq.h                   | 102 ---
- arch/unicore32/include/asm/irqflags.h              |  50 --
- arch/unicore32/include/asm/linkage.h               |  19 -
- arch/unicore32/include/asm/memblock.h              |  43 --
- arch/unicore32/include/asm/memory.h                | 102 ---
- arch/unicore32/include/asm/mmu.h                   |  14 -
- arch/unicore32/include/asm/mmu_context.h           |  98 ---
- arch/unicore32/include/asm/page.h                  |  74 --
- arch/unicore32/include/asm/pci.h                   |  20 -
- arch/unicore32/include/asm/pgalloc.h               |  87 ---
- arch/unicore32/include/asm/pgtable-hwdef.h         |  51 --
- arch/unicore32/include/asm/pgtable.h               | 267 -------
- arch/unicore32/include/asm/processor.h             |  74 --
- arch/unicore32/include/asm/ptrace.h                |  58 --
- arch/unicore32/include/asm/stacktrace.h            |  28 -
- arch/unicore32/include/asm/string.h                |  35 -
- arch/unicore32/include/asm/suspend.h               |  26 -
- arch/unicore32/include/asm/switch_to.h             |  27 -
- arch/unicore32/include/asm/syscall.h               |  12 -
- arch/unicore32/include/asm/thread_info.h           | 133 ----
- arch/unicore32/include/asm/timex.h                 |  31 -
- arch/unicore32/include/asm/tlb.h                   |  24 -
- arch/unicore32/include/asm/tlbflush.h              | 192 -----
- arch/unicore32/include/asm/traps.h                 |  18 -
- arch/unicore32/include/asm/uaccess.h               |  38 -
- arch/unicore32/include/asm/vmalloc.h               |   4 -
- arch/unicore32/include/mach/PKUnity.h              |  95 ---
- arch/unicore32/include/mach/bitfield.h             |  21 -
- arch/unicore32/include/mach/dma.h                  |  45 --
- arch/unicore32/include/mach/hardware.h             |  30 -
- arch/unicore32/include/mach/map.h                  |  17 -
- arch/unicore32/include/mach/memory.h               |  54 --
- arch/unicore32/include/mach/ocd.h                  |  33 -
- arch/unicore32/include/mach/pm.h                   |  37 -
- arch/unicore32/include/mach/regs-ac97.h            |  33 -
- arch/unicore32/include/mach/regs-dmac.h            |  82 --
- arch/unicore32/include/mach/regs-gpio.h            |  71 --
- arch/unicore32/include/mach/regs-i2c.h             |  64 --
- arch/unicore32/include/mach/regs-intc.h            |  29 -
- arch/unicore32/include/mach/regs-nand.h            |  80 --
- arch/unicore32/include/mach/regs-ost.h             |  91 ---
- arch/unicore32/include/mach/regs-pci.h             |  95 ---
- arch/unicore32/include/mach/regs-pm.h              | 127 ----
- arch/unicore32/include/mach/regs-ps2.h             |  21 -
- arch/unicore32/include/mach/regs-resetc.h          |  35 -
- arch/unicore32/include/mach/regs-rtc.h             |  38 -
- arch/unicore32/include/mach/regs-sdc.h             | 157 ----
- arch/unicore32/include/mach/regs-spi.h             |  99 ---
- arch/unicore32/include/mach/regs-uart.h            |   3 -
- arch/unicore32/include/mach/regs-umal.h            | 230 ------
- arch/unicore32/include/mach/regs-unigfx.h          | 201 -----
- arch/unicore32/include/mach/uncompress.h           |  31 -
- arch/unicore32/include/uapi/asm/Kbuild             |   2 -
- arch/unicore32/include/uapi/asm/byteorder.h        |  25 -
- arch/unicore32/include/uapi/asm/ptrace.h           |  91 ---
- arch/unicore32/include/uapi/asm/sigcontext.h       |  30 -
- arch/unicore32/include/uapi/asm/unistd.h           |  21 -
- arch/unicore32/kernel/Makefile                     |  31 -
- arch/unicore32/kernel/asm-offsets.c                | 108 ---
- arch/unicore32/kernel/clock.c                      | 387 ----------
- arch/unicore32/kernel/debug-macro.S                |  86 ---
- arch/unicore32/kernel/debug.S                      |  82 --
- arch/unicore32/kernel/dma.c                        | 179 -----
- arch/unicore32/kernel/early_printk.c               |  46 --
- arch/unicore32/kernel/elf.c                        |  35 -
- arch/unicore32/kernel/entry.S                      | 802 --------------------
- arch/unicore32/kernel/fpu-ucf64.c                  | 117 ---
- arch/unicore32/kernel/gpio.c                       | 121 ---
- arch/unicore32/kernel/head.S                       | 249 ------
- arch/unicore32/kernel/hibernate.c                  | 159 ----
- arch/unicore32/kernel/hibernate_asm.S              | 114 ---
- arch/unicore32/kernel/irq.c                        | 371 ---------
- arch/unicore32/kernel/ksyms.c                      |  57 --
- arch/unicore32/kernel/ksyms.h                      |  14 -
- arch/unicore32/kernel/module.c                     | 105 ---
- arch/unicore32/kernel/pci.c                        | 371 ---------
- arch/unicore32/kernel/pm.c                         | 121 ---
- arch/unicore32/kernel/process.c                    | 319 --------
- arch/unicore32/kernel/ptrace.c                     | 147 ----
- arch/unicore32/kernel/puv3-core.c                  | 276 -------
- arch/unicore32/kernel/puv3-nb0916.c                | 147 ----
- arch/unicore32/kernel/setup.c                      | 352 ---------
- arch/unicore32/kernel/setup.h                      |  36 -
- arch/unicore32/kernel/signal.c                     | 424 -----------
- arch/unicore32/kernel/sleep.S                      | 199 -----
- arch/unicore32/kernel/stacktrace.c                 | 127 ----
- arch/unicore32/kernel/sys.c                        |  37 -
- arch/unicore32/kernel/time.c                       | 128 ----
- arch/unicore32/kernel/traps.c                      | 322 --------
- arch/unicore32/kernel/vmlinux.lds.S                |  59 --
- arch/unicore32/lib/Makefile                        |  28 -
- arch/unicore32/lib/backtrace.S                     | 168 -----
- arch/unicore32/lib/clear_user.S                    |  54 --
- arch/unicore32/lib/copy_from_user.S                | 101 ---
- arch/unicore32/lib/copy_page.S                     |  36 -
- arch/unicore32/lib/copy_template.S                 | 211 ------
- arch/unicore32/lib/copy_to_user.S                  |  93 ---
- arch/unicore32/lib/delay.S                         |  48 --
- arch/unicore32/lib/findbit.S                       |  97 ---
- arch/unicore32/lib/strncpy_from_user.S             |  42 --
- arch/unicore32/lib/strnlen_user.S                  |  39 -
- arch/unicore32/mm/Kconfig                          |  41 -
- arch/unicore32/mm/Makefile                         |  14 -
- arch/unicore32/mm/alignment.c                      | 524 -------------
- arch/unicore32/mm/cache-ucv2.S                     | 209 ------
- arch/unicore32/mm/extable.c                        |  21 -
- arch/unicore32/mm/fault.c                          | 481 ------------
- arch/unicore32/mm/flush.c                          |  94 ---
- arch/unicore32/mm/init.c                           | 261 -------
- arch/unicore32/mm/ioremap.c                        | 242 ------
- arch/unicore32/mm/mm.h                             |  31 -
- arch/unicore32/mm/mmu.c                            | 513 -------------
- arch/unicore32/mm/pgd.c                            | 102 ---
- arch/unicore32/mm/proc-macros.S                    | 142 ----
- arch/unicore32/mm/proc-syms.c                      |  19 -
- arch/unicore32/mm/proc-ucv2.S                      | 131 ----
- arch/unicore32/mm/tlb-ucv2.S                       |  86 ---
- drivers/cpufreq/Makefile                           |   1 -
- drivers/cpufreq/unicore2-cpufreq.c                 |  76 --
- drivers/i2c/busses/Kconfig                         |  11 -
- drivers/i2c/busses/Makefile                        |   1 -
- drivers/i2c/busses/i2c-puv3.c                      | 275 -------
- drivers/input/serio/i8042-unicore32io.h            |  70 --
- drivers/input/serio/i8042.h                        |   2 -
- drivers/pwm/Kconfig                                |   9 -
- drivers/pwm/Makefile                               |   1 -
- drivers/pwm/pwm-puv3.c                             | 150 ----
- drivers/rtc/Kconfig                                |   9 -
- drivers/rtc/Makefile                               |   1 -
- drivers/rtc/rtc-puv3.c                             | 286 -------
- drivers/video/fbdev/Kconfig                        |  11 -
- drivers/video/fbdev/Makefile                       |   1 -
- drivers/video/fbdev/fb-puv3.c                      | 836 ---------------------
- kernel/reboot.c                                    |   2 +-
- 206 files changed, 1 insertion(+), 17455 deletions(-)
- delete mode 100644 arch/unicore32/.gitignore
- delete mode 100644 arch/unicore32/Kconfig
- delete mode 100644 arch/unicore32/Kconfig.debug
- delete mode 100644 arch/unicore32/Makefile
- delete mode 100644 arch/unicore32/boot/Makefile
- delete mode 100644 arch/unicore32/boot/compressed/Makefile
- delete mode 100644 arch/unicore32/boot/compressed/head.S
- delete mode 100644 arch/unicore32/boot/compressed/misc.c
- delete mode 100644 arch/unicore32/boot/compressed/piggy.S.in
- delete mode 100644 arch/unicore32/boot/compressed/vmlinux.lds.S
- delete mode 100644 arch/unicore32/configs/defconfig
- delete mode 100644 arch/unicore32/include/asm/Kbuild
- delete mode 100644 arch/unicore32/include/asm/assembler.h
- delete mode 100644 arch/unicore32/include/asm/barrier.h
- delete mode 100644 arch/unicore32/include/asm/bitops.h
- delete mode 100644 arch/unicore32/include/asm/bug.h
- delete mode 100644 arch/unicore32/include/asm/cache.h
- delete mode 100644 arch/unicore32/include/asm/cacheflush.h
- delete mode 100644 arch/unicore32/include/asm/checksum.h
- delete mode 100644 arch/unicore32/include/asm/cmpxchg.h
- delete mode 100644 arch/unicore32/include/asm/cpu-single.h
- delete mode 100644 arch/unicore32/include/asm/cputype.h
- delete mode 100644 arch/unicore32/include/asm/delay.h
- delete mode 100644 arch/unicore32/include/asm/dma.h
- delete mode 100644 arch/unicore32/include/asm/elf.h
- delete mode 100644 arch/unicore32/include/asm/fpstate.h
- delete mode 100644 arch/unicore32/include/asm/fpu-ucf64.h
- delete mode 100644 arch/unicore32/include/asm/gpio.h
- delete mode 100644 arch/unicore32/include/asm/hwcap.h
- delete mode 100644 arch/unicore32/include/asm/hwdef-copro.h
- delete mode 100644 arch/unicore32/include/asm/io.h
- delete mode 100644 arch/unicore32/include/asm/irq.h
- delete mode 100644 arch/unicore32/include/asm/irqflags.h
- delete mode 100644 arch/unicore32/include/asm/linkage.h
- delete mode 100644 arch/unicore32/include/asm/memblock.h
- delete mode 100644 arch/unicore32/include/asm/memory.h
- delete mode 100644 arch/unicore32/include/asm/mmu.h
- delete mode 100644 arch/unicore32/include/asm/mmu_context.h
- delete mode 100644 arch/unicore32/include/asm/page.h
- delete mode 100644 arch/unicore32/include/asm/pci.h
- delete mode 100644 arch/unicore32/include/asm/pgalloc.h
- delete mode 100644 arch/unicore32/include/asm/pgtable-hwdef.h
- delete mode 100644 arch/unicore32/include/asm/pgtable.h
- delete mode 100644 arch/unicore32/include/asm/processor.h
- delete mode 100644 arch/unicore32/include/asm/ptrace.h
- delete mode 100644 arch/unicore32/include/asm/stacktrace.h
- delete mode 100644 arch/unicore32/include/asm/string.h
- delete mode 100644 arch/unicore32/include/asm/suspend.h
- delete mode 100644 arch/unicore32/include/asm/switch_to.h
- delete mode 100644 arch/unicore32/include/asm/syscall.h
- delete mode 100644 arch/unicore32/include/asm/thread_info.h
- delete mode 100644 arch/unicore32/include/asm/timex.h
- delete mode 100644 arch/unicore32/include/asm/tlb.h
- delete mode 100644 arch/unicore32/include/asm/tlbflush.h
- delete mode 100644 arch/unicore32/include/asm/traps.h
- delete mode 100644 arch/unicore32/include/asm/uaccess.h
- delete mode 100644 arch/unicore32/include/asm/vmalloc.h
- delete mode 100644 arch/unicore32/include/mach/PKUnity.h
- delete mode 100644 arch/unicore32/include/mach/bitfield.h
- delete mode 100644 arch/unicore32/include/mach/dma.h
- delete mode 100644 arch/unicore32/include/mach/hardware.h
- delete mode 100644 arch/unicore32/include/mach/map.h
- delete mode 100644 arch/unicore32/include/mach/memory.h
- delete mode 100644 arch/unicore32/include/mach/ocd.h
- delete mode 100644 arch/unicore32/include/mach/pm.h
- delete mode 100644 arch/unicore32/include/mach/regs-ac97.h
- delete mode 100644 arch/unicore32/include/mach/regs-dmac.h
- delete mode 100644 arch/unicore32/include/mach/regs-gpio.h
- delete mode 100644 arch/unicore32/include/mach/regs-i2c.h
- delete mode 100644 arch/unicore32/include/mach/regs-intc.h
- delete mode 100644 arch/unicore32/include/mach/regs-nand.h
- delete mode 100644 arch/unicore32/include/mach/regs-ost.h
- delete mode 100644 arch/unicore32/include/mach/regs-pci.h
- delete mode 100644 arch/unicore32/include/mach/regs-pm.h
- delete mode 100644 arch/unicore32/include/mach/regs-ps2.h
- delete mode 100644 arch/unicore32/include/mach/regs-resetc.h
- delete mode 100644 arch/unicore32/include/mach/regs-rtc.h
- delete mode 100644 arch/unicore32/include/mach/regs-sdc.h
- delete mode 100644 arch/unicore32/include/mach/regs-spi.h
- delete mode 100644 arch/unicore32/include/mach/regs-uart.h
- delete mode 100644 arch/unicore32/include/mach/regs-umal.h
- delete mode 100644 arch/unicore32/include/mach/regs-unigfx.h
- delete mode 100644 arch/unicore32/include/mach/uncompress.h
- delete mode 100644 arch/unicore32/include/uapi/asm/Kbuild
- delete mode 100644 arch/unicore32/include/uapi/asm/byteorder.h
- delete mode 100644 arch/unicore32/include/uapi/asm/ptrace.h
- delete mode 100644 arch/unicore32/include/uapi/asm/sigcontext.h
- delete mode 100644 arch/unicore32/include/uapi/asm/unistd.h
- delete mode 100644 arch/unicore32/kernel/Makefile
- delete mode 100644 arch/unicore32/kernel/asm-offsets.c
- delete mode 100644 arch/unicore32/kernel/clock.c
- delete mode 100644 arch/unicore32/kernel/debug-macro.S
- delete mode 100644 arch/unicore32/kernel/debug.S
- delete mode 100644 arch/unicore32/kernel/dma.c
- delete mode 100644 arch/unicore32/kernel/early_printk.c
- delete mode 100644 arch/unicore32/kernel/elf.c
- delete mode 100644 arch/unicore32/kernel/entry.S
- delete mode 100644 arch/unicore32/kernel/fpu-ucf64.c
- delete mode 100644 arch/unicore32/kernel/gpio.c
- delete mode 100644 arch/unicore32/kernel/head.S
- delete mode 100644 arch/unicore32/kernel/hibernate.c
- delete mode 100644 arch/unicore32/kernel/hibernate_asm.S
- delete mode 100644 arch/unicore32/kernel/irq.c
- delete mode 100644 arch/unicore32/kernel/ksyms.c
- delete mode 100644 arch/unicore32/kernel/ksyms.h
- delete mode 100644 arch/unicore32/kernel/module.c
- delete mode 100644 arch/unicore32/kernel/pci.c
- delete mode 100644 arch/unicore32/kernel/pm.c
- delete mode 100644 arch/unicore32/kernel/process.c
- delete mode 100644 arch/unicore32/kernel/ptrace.c
- delete mode 100644 arch/unicore32/kernel/puv3-core.c
- delete mode 100644 arch/unicore32/kernel/puv3-nb0916.c
- delete mode 100644 arch/unicore32/kernel/setup.c
- delete mode 100644 arch/unicore32/kernel/setup.h
- delete mode 100644 arch/unicore32/kernel/signal.c
- delete mode 100644 arch/unicore32/kernel/sleep.S
- delete mode 100644 arch/unicore32/kernel/stacktrace.c
- delete mode 100644 arch/unicore32/kernel/sys.c
- delete mode 100644 arch/unicore32/kernel/time.c
- delete mode 100644 arch/unicore32/kernel/traps.c
- delete mode 100644 arch/unicore32/kernel/vmlinux.lds.S
- delete mode 100644 arch/unicore32/lib/Makefile
- delete mode 100644 arch/unicore32/lib/backtrace.S
- delete mode 100644 arch/unicore32/lib/clear_user.S
- delete mode 100644 arch/unicore32/lib/copy_from_user.S
- delete mode 100644 arch/unicore32/lib/copy_page.S
- delete mode 100644 arch/unicore32/lib/copy_template.S
- delete mode 100644 arch/unicore32/lib/copy_to_user.S
- delete mode 100644 arch/unicore32/lib/delay.S
- delete mode 100644 arch/unicore32/lib/findbit.S
- delete mode 100644 arch/unicore32/lib/strncpy_from_user.S
- delete mode 100644 arch/unicore32/lib/strnlen_user.S
- delete mode 100644 arch/unicore32/mm/Kconfig
- delete mode 100644 arch/unicore32/mm/Makefile
- delete mode 100644 arch/unicore32/mm/alignment.c
- delete mode 100644 arch/unicore32/mm/cache-ucv2.S
- delete mode 100644 arch/unicore32/mm/extable.c
- delete mode 100644 arch/unicore32/mm/fault.c
- delete mode 100644 arch/unicore32/mm/flush.c
- delete mode 100644 arch/unicore32/mm/init.c
- delete mode 100644 arch/unicore32/mm/ioremap.c
- delete mode 100644 arch/unicore32/mm/mm.h
- delete mode 100644 arch/unicore32/mm/mmu.c
- delete mode 100644 arch/unicore32/mm/pgd.c
- delete mode 100644 arch/unicore32/mm/proc-macros.S
- delete mode 100644 arch/unicore32/mm/proc-syms.c
- delete mode 100644 arch/unicore32/mm/proc-ucv2.S
- delete mode 100644 arch/unicore32/mm/tlb-ucv2.S
- delete mode 100644 drivers/cpufreq/unicore2-cpufreq.c
- delete mode 100644 drivers/i2c/busses/i2c-puv3.c
- delete mode 100644 drivers/input/serio/i8042-unicore32io.h
- delete mode 100644 drivers/pwm/pwm-puv3.c
- delete mode 100644 drivers/rtc/rtc-puv3.c
- delete mode 100644 drivers/video/fbdev/fb-puv3.c
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
