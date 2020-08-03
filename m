@@ -2,53 +2,53 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CC0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C31A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B252520738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E6520738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:23:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457407;
-	bh=aSgBZZ3WxASOQs9tP6z2R1qM/vh8yYYpRtEu8M9Ki+o=;
+	s=default; t=1596457415;
+	bh=wbwrot403Bej2kBXG1WXcLb0qTZioUMIwWbSmNXGX5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XwCEgZ+e0JtAcV5+ZsdwKYwxRn43OiNQ+omBtEXtW9I9UBmoET9xyiPlKAp/2RFk1
-	 lAFcuZ4V+yrj38dkCCWZl9FVEYZ4ixpl9W14ACO1kldYtWlQciLkE+I69uNINoVwsT
-	 mrzea28/ah1cSAyS+Nkf4x4sjvES6v4qvalitqmg=
+	b=Hjx8qgTMJdNpklL6a6GJ/Hv2V98PmDEWSBDgd0UB80GW13OYRCJQaurU6PACu/eLf
+	 7tpM5fJSma672F8nxXCcJOQWz+WCgm6L3c+i6eQoS0jErVYra6JJq2gkqrdd8vldx2
+	 ZlcjgvfsYoHIK0cwSL6TJEw27ruXy5hhJwEVuVoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgHCMX1 (ORCPT
+        id S1727888AbgHCMXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:23:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47294 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:23:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727829AbgHCMXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:23:20 -0400
+        id S1727874AbgHCMXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:23:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A21C20775;
-        Mon,  3 Aug 2020 12:23:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 942A6204EC;
+        Mon,  3 Aug 2020 12:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457398;
-        bh=aSgBZZ3WxASOQs9tP6z2R1qM/vh8yYYpRtEu8M9Ki+o=;
+        s=default; t=1596457409;
+        bh=wbwrot403Bej2kBXG1WXcLb0qTZioUMIwWbSmNXGX5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VZzPg15NBibc1G59/zQKe6zpecbng+9mLGab5PrE0oN3S2e3MC7z03X2dkhlEkriB
-         UvixzY0VcgS9/E7TBoOWKcL/71LANaaDIaHRjBD9BjeAF5oRDHNWCEh0wjPtHPwfQu
-         M67TMWGKKnRC5qREkbhuhX4XdSL2Mpzl5AWzFkY0=
+        b=Tr6y4hvs/bbR8DxfdOGaeLpJcYzv0OXcnXPcrt67m13rrDx8rBlaH+uo3aPZSQua/
+         v9VJ+wUejAZTLDzGFvLOkvzuWJxgbelfoHcsCC0P3kTno090r9oWlPVuTGPBvkWs5D
+         g3dvS0cfzXU3fZwgtoBfU6PTAydIglaiIQDs3wZo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guojia Liao <liaoguojia@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 052/120] net: hns3: fix aRFS FD rules leftover after add a user FD rule
-Date:   Mon,  3 Aug 2020 14:18:30 +0200
-Message-Id: <20200803121905.331289317@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Machek <pavel@denx.de>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH 5.7 029/120] drm: of: Fix double-free bug
+Date:   Mon,  3 Aug 2020 14:18:07 +0200
+Message-Id: <20200803121904.257261085@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -61,143 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guojia Liao <liaoguojia@huawei.com>
+From: Biju Das <biju.das.jz@bp.renesas.com>
 
-[ Upstream commit efe3fa45f770f1d66e2734ee7a3523c75694ff04 ]
+commit 4ee48cc5586bf519df19894273002aa8ef7b70ad upstream.
 
-When user had created a FD rule, all the aRFS rules should be clear up.
-HNS3 process flow as below:
-1.get spin lock of fd_ruls_list
-2.clear up all aRFS rules
-3.release lock
-4.get spin lock of fd_ruls_list
-5.creat a rules
-6.release lock;
+Fix double-free bug in the error path.
 
-There is a short period of time between step 3 and step 4, which would
-creatting some new aRFS FD rules if driver was receiving packet.
-So refactor the fd_rule_lock to fix it.
+Fixes: 6529007522de ("drm: of: Add drm_of_lvds_get_dual_link_pixel_order")
+Reported-by: Pavel Machek <pavel@denx.de>
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/1595502654-40595-1-git-send-email-biju.das.jz@bp.renesas.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 441228875706 ("net: hns3: refine the flow director handle")
-Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../hisilicon/hns3/hns3pf/hclge_main.c        | 28 ++++++++++---------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+ drivers/gpu/drm/drm_of.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index b66b93f320b42..ae4c415b97e45 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -5737,9 +5737,9 @@ static int hclge_add_fd_entry(struct hnae3_handle *handle,
- 	/* to avoid rule conflict, when user configure rule by ethtool,
- 	 * we need to clear all arfs rules
- 	 */
-+	spin_lock_bh(&hdev->fd_rule_lock);
- 	hclge_clear_arfs_rules(handle);
- 
--	spin_lock_bh(&hdev->fd_rule_lock);
- 	ret = hclge_fd_config_rule(hdev, rule);
- 
- 	spin_unlock_bh(&hdev->fd_rule_lock);
-@@ -5782,6 +5782,7 @@ static int hclge_del_fd_entry(struct hnae3_handle *handle,
- 	return ret;
- }
- 
-+/* make sure being called after lock up with fd_rule_lock */
- static void hclge_del_all_fd_entries(struct hnae3_handle *handle,
- 				     bool clear_list)
- {
-@@ -5794,7 +5795,6 @@ static void hclge_del_all_fd_entries(struct hnae3_handle *handle,
- 	if (!hnae3_dev_fd_supported(hdev))
- 		return;
- 
--	spin_lock_bh(&hdev->fd_rule_lock);
- 	for_each_set_bit(location, hdev->fd_bmap,
- 			 hdev->fd_cfg.rule_num[HCLGE_FD_STAGE_1])
- 		hclge_fd_tcam_config(hdev, HCLGE_FD_STAGE_1, true, location,
-@@ -5811,8 +5811,6 @@ static void hclge_del_all_fd_entries(struct hnae3_handle *handle,
- 		bitmap_zero(hdev->fd_bmap,
- 			    hdev->fd_cfg.rule_num[HCLGE_FD_STAGE_1]);
- 	}
--
--	spin_unlock_bh(&hdev->fd_rule_lock);
- }
- 
- static int hclge_restore_fd_entries(struct hnae3_handle *handle)
-@@ -6179,7 +6177,7 @@ static int hclge_add_fd_entry_by_arfs(struct hnae3_handle *handle, u16 queue_id,
- 				      u16 flow_id, struct flow_keys *fkeys)
- {
- 	struct hclge_vport *vport = hclge_get_vport(handle);
--	struct hclge_fd_rule_tuples new_tuples;
-+	struct hclge_fd_rule_tuples new_tuples = {};
- 	struct hclge_dev *hdev = vport->back;
- 	struct hclge_fd_rule *rule;
- 	u16 tmp_queue_id;
-@@ -6189,20 +6187,18 @@ static int hclge_add_fd_entry_by_arfs(struct hnae3_handle *handle, u16 queue_id,
- 	if (!hnae3_dev_fd_supported(hdev))
- 		return -EOPNOTSUPP;
- 
--	memset(&new_tuples, 0, sizeof(new_tuples));
--	hclge_fd_get_flow_tuples(fkeys, &new_tuples);
--
--	spin_lock_bh(&hdev->fd_rule_lock);
--
- 	/* when there is already fd rule existed add by user,
- 	 * arfs should not work
- 	 */
-+	spin_lock_bh(&hdev->fd_rule_lock);
- 	if (hdev->fd_active_type == HCLGE_FD_EP_ACTIVE) {
- 		spin_unlock_bh(&hdev->fd_rule_lock);
- 
- 		return -EOPNOTSUPP;
+--- a/drivers/gpu/drm/drm_of.c
++++ b/drivers/gpu/drm/drm_of.c
+@@ -322,10 +322,8 @@ static int drm_of_lvds_get_remote_pixels
+ 		 * configurations by passing the endpoints explicitly to
+ 		 * drm_of_lvds_get_dual_link_pixel_order().
+ 		 */
+-		if (!current_pt || pixels_type != current_pt) {
+-			of_node_put(remote_port);
++		if (!current_pt || pixels_type != current_pt)
+ 			return -EINVAL;
+-		}
  	}
  
-+	hclge_fd_get_flow_tuples(fkeys, &new_tuples);
-+
- 	/* check is there flow director filter existed for this flow,
- 	 * if not, create a new filter for it;
- 	 * if filter exist with different queue id, modify the filter;
-@@ -6287,6 +6283,7 @@ static void hclge_rfs_filter_expire(struct hclge_dev *hdev)
- #endif
- }
- 
-+/* make sure being called after lock up with fd_rule_lock */
- static void hclge_clear_arfs_rules(struct hnae3_handle *handle)
- {
- #ifdef CONFIG_RFS_ACCEL
-@@ -6331,10 +6328,14 @@ static void hclge_enable_fd(struct hnae3_handle *handle, bool enable)
- 
- 	hdev->fd_en = enable;
- 	clear = hdev->fd_active_type == HCLGE_FD_ARFS_ACTIVE;
--	if (!enable)
-+
-+	if (!enable) {
-+		spin_lock_bh(&hdev->fd_rule_lock);
- 		hclge_del_all_fd_entries(handle, clear);
--	else
-+		spin_unlock_bh(&hdev->fd_rule_lock);
-+	} else {
- 		hclge_restore_fd_entries(handle);
-+	}
- }
- 
- static void hclge_cfg_mac_mode(struct hclge_dev *hdev, bool enable)
-@@ -6799,8 +6800,9 @@ static void hclge_ae_stop(struct hnae3_handle *handle)
- 	int i;
- 
- 	set_bit(HCLGE_STATE_DOWN, &hdev->state);
--
-+	spin_lock_bh(&hdev->fd_rule_lock);
- 	hclge_clear_arfs_rules(handle);
-+	spin_unlock_bh(&hdev->fd_rule_lock);
- 
- 	/* If it is not PF reset, the firmware will disable the MAC,
- 	 * so it only need to stop phy here.
--- 
-2.25.1
-
+ 	return pixels_type;
 
 
