@@ -2,283 +2,286 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3D9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8D3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7541122CAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:28:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="DcazyOdl"
+	by mail.kernel.org (Postfix) with ESMTP id ED1CA22B45
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:28:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbgHCT2F (ORCPT
+        id S1728198AbgHCT2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 15:28:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50982 "EHLO
+        Mon, 3 Aug 2020 15:28:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728107AbgHCT2F (ORCPT
+        with ESMTP id S1726913AbgHCT2U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 15:28:05 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AC62C061756
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 12:28:04 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id d2so15440401lfj.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 12:28:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=5Y2X7yaPaqpV5N7ZSBlIfeWsAsh614hvLfSmUd/sIQo=;
-        b=DcazyOdl1Cm0XVeXnwrui48N4ZaYguSdbKFvjsZ+0TYZDzyW/R3gtIpcuH/csONMfz
-         aYTj6/SOVEKvPttzCLlGJiyn3iQ0AKkLxYAQCPpu3JHEhoZ6rjT8PP6s4JIV9lZkLlHU
-         YN3/Ww5d+rDWIfMDNdMcUYL/FVe3Uo0W+cxFiOP1JXQ97KC+xQm51MiYa3YLS5APyGh3
-         c1Ms2CYLfZTIhpiMP8+ZYXdv790sAcVxvcCybG3w5Jf+iyCUBuENGyOfivXRvgW/NB/s
-         Mrh8iETSI0JmvRGwuLBOHqwLnQWZV+w+VlgdTpOU8CVGsZogn1DTifyy7URJDSEJoG7b
-         Vyjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=5Y2X7yaPaqpV5N7ZSBlIfeWsAsh614hvLfSmUd/sIQo=;
-        b=KP96hyEnkE6us9zPdAifj03adesNMt0aAc6rs1L5yIwqfQMoRmy7chizqJCIt/aywI
-         nsKHvwoxCX9yDJRYRXcLs8ZQxeAxOq7nRGGF5ciZ8ez+z4epo+zFKTH3D8iFbdLsU2NO
-         VdV3CT3SF4zHSwPf5xWdj3F/YASFVdfpbG1fjheBc1Hkz7E0jQWVfN8tYIG+cqqzdcMF
-         Zzw4NT/1LTpULEMkqdziALeWPM+kgjB9HYNsglZoIFdwpI8xu6Tzl9XpNQxheGP6vIq2
-         vNO2R+j+dTscbeGiPqQ+YFglq9vQzpUXk57ttxX2gZuR8eciFk9kmDlCihFLzcVgN4gN
-         GX5w==
-X-Gm-Message-State: AOAM530N988ytyw94sufpRS8fdFsgJK265gql6dw8UBm8mTQYel+3K9e
-        pG/nKkS0KXUJh+5df25MzfNGRg==
-X-Google-Smtp-Source: ABdhPJwIxOFPQlSCRF8+Lv+zlKyhBbbIM851bf2v4dBB9MWP5oNW/38GvNe/VM3bacLc1+ADy8quLA==
-X-Received: by 2002:ac2:4d4f:: with SMTP id 15mr9131918lfp.163.1596482882861;
-        Mon, 03 Aug 2020 12:28:02 -0700 (PDT)
-Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
-        by smtp.gmail.com with ESMTPSA id g4sm5175913lfh.13.2020.08.03.12.28.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 12:28:02 -0700 (PDT)
-Date:   Mon, 3 Aug 2020 21:28:01 +0200
-From:   Niklas <niklas.soderlund@ragnatech.se>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Subject: Re: [PATCH v2] media: rcar-vin: Add support to select data pins for
- YCbCr422-8bit input
-Message-ID: <20200803192801.GC2297236@oden.dyn.berto.se>
-References: <1596470573-15065-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200803180618.GA2297236@oden.dyn.berto.se>
- <CA+V-a8sHOqM2tB-72Z-wVJjvihycCq1zLuk7Py7uKGMxzOJyaA@mail.gmail.com>
+        Mon, 3 Aug 2020 15:28:20 -0400
+Received: from relay.felk.cvut.cz (relay.felk.cvut.cz [IPv6:2001:718:2:1611:0:1:0:70])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C07ECC06174A;
+        Mon,  3 Aug 2020 12:28:19 -0700 (PDT)
+Received: from cmp.felk.cvut.cz (haar.felk.cvut.cz [147.32.84.19])
+        by relay.felk.cvut.cz (8.15.2/8.15.2) with ESMTP id 073JQH9f035403;
+        Mon, 3 Aug 2020 21:26:17 +0200 (CEST)
+        (envelope-from pisa@cmp.felk.cvut.cz)
+Received: from haar.felk.cvut.cz (localhost [127.0.0.1])
+        by cmp.felk.cvut.cz (8.14.0/8.12.3/SuSE Linux 0.6) with ESMTP id 073JQG3l008549;
+        Mon, 3 Aug 2020 21:26:16 +0200
+Received: (from pisa@localhost)
+        by haar.felk.cvut.cz (8.14.0/8.13.7/Submit) id 073JQGCh008548;
+        Mon, 3 Aug 2020 21:26:16 +0200
+From:   pisa@cmp.felk.cvut.cz
+To:     linux-can@vger.kernel.org, devicetree@vger.kernel.org,
+        mkl@pengutronix.de, socketcan@hartkopp.net
+Cc:     wg@grandegger.com, davem@davemloft.net, robh+dt@kernel.org,
+        mark.rutland@arm.com, c.emde@osadl.org, armbru@redhat.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        martin.jerabek01@gmail.com, ondrej.ille@gmail.com,
+        jnovak@fel.cvut.cz, jara.beran@gmail.com, porazil@pikron.com,
+        Pavel Pisa <pisa@cmp.felk.cvut.cz>
+Subject: [PATCH v4 5/6] can: ctucanfd: CTU CAN FD open-source IP core - platform/SoC support.
+Date:   Mon,  3 Aug 2020 20:34:53 +0200
+Message-Id: <58ba0e9298e6c5fb20fd78f291899c955817bf13.1596408856.git.pisa@cmp.felk.cvut.cz>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <cover.1596408856.git.pisa@cmp.felk.cvut.cz>
+References: <cover.1596408856.git.pisa@cmp.felk.cvut.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+V-a8sHOqM2tB-72Z-wVJjvihycCq1zLuk7Py7uKGMxzOJyaA@mail.gmail.com>
+X-FELK-MailScanner-Information: 
+X-MailScanner-ID: 073JQH9f035403
+X-FELK-MailScanner: Found to be clean
+X-FELK-MailScanner-SpamCheck: not spam, SpamAssassin (not cached,
+        score=-0.098, required 6, BAYES_00 -0.50, KHOP_HELO_FCRDNS 0.40,
+        SPF_HELO_NONE 0.00, SPF_NONE 0.00)
+X-FELK-MailScanner-From: pisa@cmp.felk.cvut.cz
+X-FELK-MailScanner-Watermark: 1597087578.67277@RnPGAhg2NTNyB1npdVSMQQ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lad,
+From: Pavel Pisa <pisa@cmp.felk.cvut.cz>
 
-On 2020-08-03 20:17:54 +0100, Lad, Prabhakar wrote:
-> Hi Niklas,
-> 
-> Thank you for the review.
-> 
-> On Mon, Aug 3, 2020 at 7:06 PM Niklas <niklas.soderlund@ragnatech.se> wrote:
-> >
-> > Hi Lad,
-> >
-> > Thanks for your work.
-> >
-> > On 2020-08-03 17:02:53 +0100, Lad Prabhakar wrote:
-> > > Select the data pins for YCbCr422-8bit input format depending on
-> > > bus_width and data_shift passed as part of DT.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > > ---
-> > > Changes for v2:
-> > > * Dropped DT binding documentation patch
-> > > * Select the data pins depending on bus-width and data-shift
-> >
-> > I like this v2 much better then v1, nice work!
-> >
-> > >
-> > > v1 -
-> > > https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=323799
-> > > ---
-> > >  drivers/media/platform/rcar-vin/rcar-core.c | 5 +++++
-> > >  drivers/media/platform/rcar-vin/rcar-dma.c  | 7 +++++++
-> > >  drivers/media/platform/rcar-vin/rcar-vin.h  | 5 +++++
-> > >  3 files changed, 17 insertions(+)
-> > >
-> > > diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
-> > > index 7440c8965d27..55005d86928d 100644
-> > > --- a/drivers/media/platform/rcar-vin/rcar-core.c
-> > > +++ b/drivers/media/platform/rcar-vin/rcar-core.c
-> > > @@ -624,6 +624,11 @@ static int rvin_parallel_parse_v4l2(struct device *dev,
-> > >       vin->parallel = rvpe;
-> > >       vin->parallel->mbus_type = vep->bus_type;
-> > >
-> > > +     /* select VInDATA[15:8] pins for YCbCr422-8bit format */
-> > > +     if (vep->bus.parallel.bus_width == BUS_WIDTH_8 &&
-> > > +         vep->bus.parallel.data_shift == DATA_SHIFT_8)
-> > > +             vin->parallel->ycbcr_8b_g = true;
-> > > +
-> >
-> > I would store the bus_width and bus_shift values in the struct
-> > rvin_parallel_entity and evaluate them in place rater then create a flag
-> > for this specific use-case..
-> >
-> Ok will do that.
-> 
-> > Also according to the documentation is the check correct? Do we not wish
-> > to use the new mode when bus_width == 16 and bus_shift == 8. The check
-> > you have here seems to describe a 8 lane bus where 0 lanes are used.
-> >
-> bus-width is the actual data lines used, so bus_width == 16 and
-> bus_shift == 8 would mean use lines 23:8, so just check for bus_width
-> == 8 and bus_shift == 8 should be sufficient.
+Platform bus adaptation for CTU CAN FD open-source IP core.
 
-As you and Geert points out I was wrong, they should indeed both be 8.
+The core has been tested together with OpenCores SJA1000
+modified to be CAN FD frames tolerant on MicroZed Zynq based
+MZ_APO education kits designed by Petr Porazil from PiKRON.com
+company. FPGA design
 
-> 
-> > I think you should also verify that bus_shift is either 0 or 8 as that
-> > is all the driver supports.
-> >
-> Not sure if thats correct.In that case this patch wont make sense, I
-> believed we agreed upon we determine the YDS depending on both
-> bus-width and bus-shift.
+  https://gitlab.fel.cvut.cz/canbus/zynq/zynq-can-sja1000-top.
 
-I'm sorry I think I lost you :-) The driver is not capable of supporting 
-bus_width = 8 and bus_shift = 2 right? Maybe we are talking about 
-different things.
+The kit description at the Computer Architectures course pages
 
-What I tried to say (updated with the knowledge of that bus_width should 
-indeed be 8 and not 16) was that would it make sens to with bus_width=8 
-allow for a bus_shift value other then 0 or 8? What for example would 
-the driver do if the value was 2?
+  https://cw.fel.cvut.cz/b182/courses/b35apo/documentation/mz_apo/start .
 
-> 
-> On iWave G21D-Q7 for VI2 interface VI2_G* pins are connected to SoC
-> and for VIN3 interface Vi3_DATA* pins are connected. So in this case
-> the capture only works for VIN2 only if YDS bit is set for 8-bit 422,
-> and for VIN3 capture only works if YDS is 0
-> 
-> &vin2 {
->     status = "okay";
->     pinctrl-0 = <&vin2_pins>;
->     pinctrl-names = "default";
-> 
->     port {
->         #address-cells = <1>;
->         #size-cells = <0>;
-> 
->         vin2ep: endpoint {
->             remote-endpoint = <&ov7725_2>;
->             bus-width = <8>;
->             data-shift = <8>;
->         };
->     };
-> };
-> 
-> &vin3 {
->     status = "okay";
->     pinctrl-0 = <&vin3_pins>;
->     pinctrl-names = "default";
-> 
->     port {
->         #address-cells = <1>;
->         #size-cells = <0>;
-> 
->         vin3ep: endpoint {
->             remote-endpoint = <&ov7725_3>;
->             bus-width = <8>;
->         };
->     };
-> };
-> 
-> 
-> > >       switch (vin->parallel->mbus_type) {
-> > >       case V4L2_MBUS_PARALLEL:
-> > >               vin_dbg(vin, "Found PARALLEL media bus\n");
-> > > diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media/platform/rcar-vin/rcar-dma.c
-> > > index 1a30cd036371..5db483877d65 100644
-> > > --- a/drivers/media/platform/rcar-vin/rcar-dma.c
-> > > +++ b/drivers/media/platform/rcar-vin/rcar-dma.c
-> > > @@ -127,6 +127,8 @@
-> > >  #define VNDMR2_FTEV          (1 << 17)
-> > >  #define VNDMR2_VLV(n)                ((n & 0xf) << 12)
-> > >
-> > > +#define VNDMR2_YDS           BIT(22)
-> >
-> > This should be grouped with the other VNDMR2_* macros and not on its
-> > own. Also it should be sorted so it should be inserted between
-> > VNDMR2_CES and VNDMR2_FTEV.
-> >
-> > Also I know BIT() is a nice macro but the rest of the driver uses (1 <<
-> > 22), please do the same for this one.
-> >
-> Sure will take care of it.
-> 
-> > > +
-> > >  /* Video n CSI2 Interface Mode Register (Gen3) */
-> > >  #define VNCSI_IFMD_DES1              (1 << 26)
-> > >  #define VNCSI_IFMD_DES0              (1 << 25)
-> > > @@ -698,6 +700,11 @@ static int rvin_setup(struct rvin_dev *vin)
-> > >               /* Data Enable Polarity Select */
-> > >               if (vin->parallel->mbus_flags & V4L2_MBUS_DATA_ENABLE_LOW)
-> > >                       dmr2 |= VNDMR2_CES;
-> > > +
-> > > +             if (vin->parallel->ycbcr_8b_g && vin->mbus_code == MEDIA_BUS_FMT_UYVY8_2X8)
-> > > +                     dmr2 |= VNDMR2_YDS;
-> > > +             else
-> > > +                     dmr2 &= ~VNDMR2_YDS;
-> >
-> > dmr2 is already unitized and YDS is cleared, no need to clear it again
-> > if you don't wish to set it. Taking this and the comments above into
-> > account this would become something like (not tested),
-> >
-> Agreed.
-> 
-> >     switch (vin->mbus_code) {
-> >     case MEDIA_BUS_FMT_UYVY8_2X8:
-> >         if (vin->parallel->bus_width == 16 && vin->parallel->bus_shift == 8)
-> >             dmr2 |= VNDMR2_YDS;
-> >         break;
-> >     default:
-> >         break;
-> >     }
-> >
-> > >       }
-> > >
-> > >       /*
-> > > diff --git a/drivers/media/platform/rcar-vin/rcar-vin.h b/drivers/media/platform/rcar-vin/rcar-vin.h
-> > > index c19d077ce1cb..3126fee9a89b 100644
-> > > --- a/drivers/media/platform/rcar-vin/rcar-vin.h
-> > > +++ b/drivers/media/platform/rcar-vin/rcar-vin.h
-> > > @@ -87,6 +87,9 @@ struct rvin_video_format {
-> > >       u8 bpp;
-> > >  };
-> > >
-> > > +#define BUS_WIDTH_8  8
-> > > +#define DATA_SHIFT_8 8
-> >
-> > As pointed out by Geert, not so useful, use 8 in the code :-)
-> >
-> Agreed will drop it.
-> 
-> Cheers,
-> Prabhakar
+Kit carrier board and mechanics design source files
 
+  https://gitlab.com/pikron/projects/mz_apo/microzed_apo
+
+The work is documented in Martin Jeřábek's diploma theses
+Open-source and Open-hardware CAN FD Protocol Support
+
+  https://dspace.cvut.cz/handle/10467/80366
+.
+
+Signed-off-by: Pavel Pisa <pisa@cmp.felk.cvut.cz>
+Signed-off-by: Martin Jerabek <martin.jerabek01@gmail.com>
+Signed-off-by: Ondrej Ille <ondrej.ille@gmail.com>
+---
+ drivers/net/can/ctucanfd/Kconfig               |  11 ++
+ drivers/net/can/ctucanfd/Makefile              |   3 +
+ drivers/net/can/ctucanfd/ctu_can_fd_platform.c | 145 +++++++++++++++++++++++++
+ 3 files changed, 159 insertions(+)
+ create mode 100644 drivers/net/can/ctucanfd/ctu_can_fd_platform.c
+
+diff --git a/drivers/net/can/ctucanfd/Kconfig b/drivers/net/can/ctucanfd/Kconfig
+index 8a5f5d05fa72..c0155d659373 100644
+--- a/drivers/net/can/ctucanfd/Kconfig
++++ b/drivers/net/can/ctucanfd/Kconfig
+@@ -24,4 +24,15 @@ config CAN_CTUCANFD_PCI
+ 	  PCIe board with PiKRON.com designed transceiver riser shield is available
+ 	  at https://gitlab.fel.cvut.cz/canbus/pcie-ctu_can_fd .
+ 
++config CAN_CTUCANFD_PLATFORM
++	tristate "CTU CAN-FD IP core platform (FPGA, SoC) driver"
++	depends on OF
++	help
++	  The core has been tested together with OpenCores SJA1000
++	  modified to be CAN FD frames tolerant on MicroZed Zynq based
++	  MZ_APO education kits designed by Petr Porazil from PiKRON.com
++	  company. FPGA design https://gitlab.fel.cvut.cz/canbus/zynq/zynq-can-sja1000-top.
++	  The kit description at the Computer Architectures course pages
++	  https://cw.fel.cvut.cz/b182/courses/b35apo/documentation/mz_apo/start .
++
+ endif
+diff --git a/drivers/net/can/ctucanfd/Makefile b/drivers/net/can/ctucanfd/Makefile
+index eb945260952d..a77ca72d534e 100644
+--- a/drivers/net/can/ctucanfd/Makefile
++++ b/drivers/net/can/ctucanfd/Makefile
+@@ -8,3 +8,6 @@ ctucanfd-y := ctu_can_fd.o ctu_can_fd_hw.o
+ 
+ obj-$(CONFIG_CAN_CTUCANFD_PCI) += ctucanfd_pci.o
+ ctucanfd_pci-y := ctu_can_fd_pci.o
++
++obj-$(CONFIG_CAN_CTUCANFD_PLATFORM) += ctucanfd_platform.o
++ctucanfd_platform-y += ctu_can_fd_platform.o
+diff --git a/drivers/net/can/ctucanfd/ctu_can_fd_platform.c b/drivers/net/can/ctucanfd/ctu_can_fd_platform.c
+new file mode 100644
+index 000000000000..435913573403
+--- /dev/null
++++ b/drivers/net/can/ctucanfd/ctu_can_fd_platform.c
+@@ -0,0 +1,145 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*******************************************************************************
++ *
++ * CTU CAN FD IP Core
++ * Copyright (C) 2015-2018
++ *
++ * Authors:
++ *     Ondrej Ille <ondrej.ille@gmail.com>
++ *     Martin Jerabek <martin.jerabek01@gmail.com>
++ *     Jaroslav Beran <jara.beran@gmail.com>
++ *
++ * Project advisors:
++ *     Jiri Novak <jnovak@fel.cvut.cz>
++ *     Pavel Pisa <pisa@cmp.felk.cvut.cz>
++ *
++ * Department of Measurement         (http://meas.fel.cvut.cz/)
++ * Faculty of Electrical Engineering (http://www.fel.cvut.cz)
++ * Czech Technical University        (http://www.cvut.cz/)
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ ******************************************************************************/
++
++#include <linux/module.h>
++#include <linux/netdevice.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
++
++#include "ctu_can_fd.h"
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Martin Jerabek");
++MODULE_DESCRIPTION("CTU CAN FD for platform");
++
++#define DRV_NAME	"ctucanfd"
++
++static void ctucan_platform_set_drvdata(struct device *dev,
++					struct net_device *ndev)
++{
++	struct platform_device *pdev = container_of(dev, struct platform_device,
++						    dev);
++
++	platform_set_drvdata(pdev, ndev);
++}
++
++/**
++ * ctucan_platform_probe - Platform registration call
++ * @pdev:	Handle to the platform device structure
++ *
++ * This function does all the memory allocation and registration for the CAN
++ * device.
++ *
++ * Return: 0 on success and failure value on error
++ */
++static int ctucan_platform_probe(struct platform_device *pdev)
++{
++	struct resource *res; /* IO mem resources */
++	struct device	*dev = &pdev->dev;
++	void __iomem *addr;
++	int ret;
++	unsigned int ntxbufs;
++	int irq;
++
++	/* Get the virtual base address for the device */
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	addr = devm_ioremap_resource(dev, res);
++	if (IS_ERR(addr)) {
++		dev_err(dev, "Cannot remap address.\n");
++		ret = PTR_ERR(addr);
++		goto err;
++	}
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0) {
++		dev_err(dev, "Cannot find interrupt.\n");
++		ret = irq;
++		goto err;
++	}
++
++	/* Number of tx bufs might be change in HW for future. If so,
++	 * it will be passed as property via device tree
++	 */
++	ntxbufs = 4;
++	ret = ctucan_probe_common(dev, addr, irq, ntxbufs, 0,
++				  1, ctucan_platform_set_drvdata);
++
++	if (ret < 0)
++		platform_set_drvdata(pdev, NULL);
++
++err:
++	return ret;
++}
++
++/**
++ * ctucan_platform_remove - Unregister the device after releasing the resources
++ * @pdev:	Handle to the platform device structure
++ *
++ * This function frees all the resources allocated to the device.
++ * Return: 0 always
++ */
++static int ctucan_platform_remove(struct platform_device *pdev)
++{
++	struct net_device *ndev = platform_get_drvdata(pdev);
++	struct ctucan_priv *priv = netdev_priv(ndev);
++
++	netdev_dbg(ndev, "ctucan_remove");
++
++	unregister_candev(ndev);
++	pm_runtime_disable(&pdev->dev);
++	netif_napi_del(&priv->napi);
++	free_candev(ndev);
++
++	return 0;
++}
++
++static const struct dev_pm_ops ctucan_dev_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(ctucan_suspend, ctucan_resume)
++};
++
++/* Match table for OF platform binding */
++static const struct of_device_id ctucan_of_match[] = {
++	{ .compatible = "ctu,canfd-2", },
++	{ .compatible = "ctu,ctucanfd", },
++	{ /* end of list */ },
++};
++MODULE_DEVICE_TABLE(of, ctucan_of_match);
++
++static struct platform_driver ctucanfd_driver = {
++	.probe	= ctucan_platform_probe,
++	.remove	= ctucan_platform_remove,
++	.driver	= {
++		.name = DRV_NAME,
++		.pm = &ctucan_dev_pm_ops,
++		.of_match_table	= ctucan_of_match,
++	},
++};
++
++module_platform_driver(ctucanfd_driver);
 -- 
-Regards,
-Niklas S�derlund
+2.11.0
+
