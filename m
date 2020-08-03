@@ -2,55 +2,66 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADACFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F843C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8984A206D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1697C20678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:46:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458772;
-	bh=x4UMX5p252GYrKJ/aCarb85LZB57EhVLYClq7cIfOP0=;
+	s=default; t=1596458778;
+	bh=MPorudU0yKZNviFiD8N6aBXJXOyf1iQeYGVYQZrt2hs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oyobM9n4A7JCobTNPclVKbtTGmc0FzCTMcXk+ZVj9MwHYN+LIRBqkzD2+TAOdBMU4
-	 AZ0SkELJmo6CZ4JWyKGJNj7zMxJzjUCwFUc6yUs43/Qqq/cUHwRYTin/kkcMtPUKih
-	 zoiTFumEV7F/snzqkAslNvs/ASmogiOm1zG6OniY=
+	b=1oXtIoQ6wcqkc3m9UeHiCrfEyk3vWIX/xDH313+ylOGBqWnocXuEa37o7vtUubTr1
+	 goE9OP8oSogtdRtyzekc2xo7nivtzNsZoi0fjTSvIDtbhysUJVUU5+iynnvj6zJrZU
+	 FP05D7swKPUtMiWGw4caFrHe7t/BlqC1j8QaKWrQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728592AbgHCMqM (ORCPT
+        id S1728294AbgHCM04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:46:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52818 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:26:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726865AbgHCM1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:27:08 -0400
+        id S1728419AbgHCM0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:26:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0BA6207DF;
-        Mon,  3 Aug 2020 12:27:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2C13207DF;
+        Mon,  3 Aug 2020 12:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457627;
-        bh=x4UMX5p252GYrKJ/aCarb85LZB57EhVLYClq7cIfOP0=;
+        s=default; t=1596457606;
+        bh=MPorudU0yKZNviFiD8N6aBXJXOyf1iQeYGVYQZrt2hs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mv4Kgjfr70R7EjeH37qSLloEZNoJR3ixr6hIkmm1QNKMw4tEAkMTrwCImqNx75Wu+
-         q+oFHbdPK5PQm7S8xmN/9u0eZJYWWqU4Bg0fPnl5jIDMbYEvUxzjjzsJqZBFIlrS3q
-         kMesOpNjGMZtfiTUHW+3MwCGxSCJEnq6JCEAYUgU=
+        b=L96xnD8CVP/75ru3jOZ03s/0VbWIyA4cKcGFVheyVEnGfFAgT/ms63ZWJcfgWPxwq
+         bb4rDMDAi5In2+W1tJcDZc+jh4OhC+Sne2rJLr7Zobz36jqCvmtwG1s0OeQZSTpQ25
+         VQ+J/RqvKDq3kQiEZfYcdCVB/wGDCnes/UykUvoI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pi-Hsun Shih <pihsun@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.4 16/90] wireless: Use offsetof instead of custom macro.
-Date:   Mon,  3 Aug 2020 14:18:38 +0200
-Message-Id: <20200803121858.404958387@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Li <liwei391@huawei.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Kim Phillips <kim.phillips@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH 5.7 092/120] perf tools: Fix record failure when mixed with ARM SPE event
+Date:   Mon,  3 Aug 2020 14:19:10 +0200
+Message-Id: <20200803121907.394401662@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
-References: <20200803121857.546052424@linuxfoundation.org>
+In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
+References: <20200803121902.860751811@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,67 +71,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pi-Hsun Shih <pihsun@chromium.org>
+From: Wei Li <liwei391@huawei.com>
 
-commit 6989310f5d4327e8595664954edd40a7f99ddd0d upstream.
+[ Upstream commit bd3c628f8fafa6cbd6a1ca440034b841f0080160 ]
 
-Use offsetof to calculate offset of a field to take advantage of
-compiler built-in version when possible, and avoid UBSAN warning when
-compiling with Clang:
+When recording with cache-misses and arm_spe_x event, I found that it
+will just fail without showing any error info if i put cache-misses
+after 'arm_spe_x' event.
 
-==================================================================
-UBSAN: Undefined behaviour in net/wireless/wext-core.c:525:14
-member access within null pointer of type 'struct iw_point'
-CPU: 3 PID: 165 Comm: kworker/u16:3 Tainted: G S      W         4.19.23 #43
-Workqueue: cfg80211 __cfg80211_scan_done [cfg80211]
-Call trace:
- dump_backtrace+0x0/0x194
- show_stack+0x20/0x2c
- __dump_stack+0x20/0x28
- dump_stack+0x70/0x94
- ubsan_epilogue+0x14/0x44
- ubsan_type_mismatch_common+0xf4/0xfc
- __ubsan_handle_type_mismatch_v1+0x34/0x54
- wireless_send_event+0x3cc/0x470
- ___cfg80211_scan_done+0x13c/0x220 [cfg80211]
- __cfg80211_scan_done+0x28/0x34 [cfg80211]
- process_one_work+0x170/0x35c
- worker_thread+0x254/0x380
- kthread+0x13c/0x158
- ret_from_fork+0x10/0x18
-===================================================================
+  [root@localhost 0620]# perf record -e cache-misses \
+				-e arm_spe_0/ts_enable=1,pct_enable=1,pa_enable=1,load_filter=1,jitter=1,store_filter=1,min_latency=0/ sleep 1
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.067 MB perf.data ]
+  [root@localhost 0620]#
+  [root@localhost 0620]# perf record -e arm_spe_0/ts_enable=1,pct_enable=1,pa_enable=1,load_filter=1,jitter=1,store_filter=1,min_latency=0/ \
+				     -e  cache-misses sleep 1
+  [root@localhost 0620]#
 
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Link: https://lore.kernel.org/r/20191204081307.138765-1-pihsun@chromium.org
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The current code can only work if the only event to be traced is an
+'arm_spe_x', or if it is the last event to be specified. Otherwise the
+last event type will be checked against all the arm_spe_pmus[i]->types,
+none will match and an out of bound 'i' index will be used in
+arm_spe_recording_init().
 
+We don't support concurrent multiple arm_spe_x events currently, that
+is checked in arm_spe_recording_options(), and it will show the relevant
+info. So add the check and record of the first found 'arm_spe_pmu' to
+fix this issue here.
+
+Fixes: ffd3d18c20b8 ("perf tools: Add ARM Statistical Profiling Extensions (SPE) support")
+Signed-off-by: Wei Li <liwei391@huawei.com>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Tested-by-by: Leo Yan <leo.yan@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Hanjun Guo <guohanjun@huawei.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kim Phillips <kim.phillips@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mike Leach <mike.leach@linaro.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lore.kernel.org/lkml/20200724071111.35593-2-liwei391@huawei.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/linux/wireless.h |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/arch/arm/util/auxtrace.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/include/uapi/linux/wireless.h
-+++ b/include/uapi/linux/wireless.h
-@@ -74,6 +74,8 @@
- #include <linux/socket.h>		/* for "struct sockaddr" et al	*/
- #include <linux/if.h>			/* for IFNAMSIZ and co... */
+diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
+index 0a6e75b8777a6..28a5d0c18b1d2 100644
+--- a/tools/perf/arch/arm/util/auxtrace.c
++++ b/tools/perf/arch/arm/util/auxtrace.c
+@@ -56,7 +56,7 @@ struct auxtrace_record
+ 	struct perf_pmu	*cs_etm_pmu;
+ 	struct evsel *evsel;
+ 	bool found_etm = false;
+-	bool found_spe = false;
++	struct perf_pmu *found_spe = NULL;
+ 	static struct perf_pmu **arm_spe_pmus = NULL;
+ 	static int nr_spes = 0;
+ 	int i = 0;
+@@ -74,12 +74,12 @@ struct auxtrace_record
+ 		    evsel->core.attr.type == cs_etm_pmu->type)
+ 			found_etm = true;
  
-+#include <stddef.h>                     /* for offsetof */
-+
- /***************************** VERSION *****************************/
- /*
-  * This constant is used to know the availability of the wireless
-@@ -1090,8 +1092,7 @@ struct iw_event {
- /* iw_point events are special. First, the payload (extra data) come at
-  * the end of the event, so they are bigger than IW_EV_POINT_LEN. Second,
-  * we omit the pointer, so start at an offset. */
--#define IW_EV_POINT_OFF (((char *) &(((struct iw_point *) NULL)->length)) - \
--			  (char *) NULL)
-+#define IW_EV_POINT_OFF offsetof(struct iw_point, length)
- #define IW_EV_POINT_LEN	(IW_EV_LCP_LEN + sizeof(struct iw_point) - \
- 			 IW_EV_POINT_OFF)
+-		if (!nr_spes)
++		if (!nr_spes || found_spe)
+ 			continue;
  
+ 		for (i = 0; i < nr_spes; i++) {
+ 			if (evsel->core.attr.type == arm_spe_pmus[i]->type) {
+-				found_spe = true;
++				found_spe = arm_spe_pmus[i];
+ 				break;
+ 			}
+ 		}
+@@ -96,7 +96,7 @@ struct auxtrace_record
+ 
+ #if defined(__aarch64__)
+ 	if (found_spe)
+-		return arm_spe_recording_init(err, arm_spe_pmus[i]);
++		return arm_spe_recording_init(err, found_spe);
+ #endif
+ 
+ 	/*
+-- 
+2.25.1
+
 
 
