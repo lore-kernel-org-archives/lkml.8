@@ -2,142 +2,111 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE74CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4370C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0DAE2076E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C98E20775
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:42:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BzpkbIFA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgHCNlo (ORCPT
+        id S1727928AbgHCNmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 09:41:44 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:59932 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727050AbgHCNln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 09:41:43 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 8313DBA214502E009910;
-        Mon,  3 Aug 2020 21:41:40 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.24) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 3 Aug 2020 21:41:30 +0800
-From:   Qi Liu <liuqi115@huawei.com>
-To:     <gregkh@linuxfoundation.org>, <saiprakash.ranjan@codeaurora.org>,
-        <suzuki.poulose@arm.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-Subject: [PATCH] coresight: etm4x: Modify core-commit of cpu to avoid the overflow of HiSilicon ETM
-Date:   Mon, 3 Aug 2020 21:40:42 +0800
-Message-ID: <1596462042-28026-1-git-send-email-liuqi115@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Mon, 3 Aug 2020 09:42:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726785AbgHCNmD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 09:42:03 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 854FDC06174A;
+        Mon,  3 Aug 2020 06:42:03 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id z22so2660754oid.1;
+        Mon, 03 Aug 2020 06:42:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=n1O9BpBkGKm0Dn1d9dK+DgN04J7paPhI+arHj4RxQqc=;
+        b=BzpkbIFAc7As9Wym8RKGqk6I4F1OJEEtLMtRyBlh3IoB7rJNlIT1odIF3gRrxit8qx
+         EwcUmL+FGwcYKufF3XqRap+T6SRfHWDIc6vVpon7z4O/24jfujo2nrxRPCqaBQqQmDWG
+         21l6Cx/kZTiUQxDod1FFaLNpAYrg8RimD+3dp4Vpt577FqGNpy5pvEgDJ+8NNnJ6n5M5
+         SRa/DP/UjKBJZJKZspg3/M+cQWJQj0x9DpBLvShILLdzcR88gCRsT/an6BPdEVvwfleL
+         bBBdV5B73iquzgbAMHUo2bjHIoIee1a17Bn+DSpbtlwXci3SGFsvgzaTGje5KOn/bl/7
+         kTcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=n1O9BpBkGKm0Dn1d9dK+DgN04J7paPhI+arHj4RxQqc=;
+        b=mbY+qt0Y0VMs9MQ5ljdR4n6dPE2Kw5C/wjhgh9Giq8RYSCRb60SxhsDiljE9czpRxO
+         NE2uDDhswh9eL7kjlEiMHduO8iArIj1VDJckmvpp//0XOPe6IHQN199oe6SvjzAI8LYN
+         sufx6Ue0x3xvq3oOm/cL05IzSz1D/XsYx7+YSY+my0AOpMl9A2Rad8nJynfJ+9KAOouG
+         s2mOtfTt7Lr5ouXRQQVtnAGLzw/mv/wR108Ls3Mahqb3slWHMg6rAFTFbMDecaAyqySw
+         zVNfBQETfrl56sCECx/pFqE2wh0RMCxLQrR5bCSQmC8Kzxbrga7Qk7z3iwaGChjqcDXi
+         aIgw==
+X-Gm-Message-State: AOAM532V8x4YgYdVyG3HQsw8l6HIWmow5yBsG6CVc/AoT8c+Gd1Qi8xe
+        EIavaz9VhRQC4EdqP6rIi9sntDsArPM8TdxkYAc=
+X-Google-Smtp-Source: ABdhPJy2s7JnnAMZg+Xjgd7o2046/kvLCZ5lfDdRATFloMgGUURRfOJSzm3J9BVGqcakar8pvBhf+VKMRGJfuuONzlk=
+X-Received: by 2002:a05:6808:b36:: with SMTP id t22mr12769611oij.159.1596462118081;
+ Mon, 03 Aug 2020 06:41:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.165.24]
-X-CFilter-Loop: Reflected
+References: <CAKgNAkjyXcXZkEczRz2yvJRFBy2zAwTaNfyiSmskAFWN_3uY1g@mail.gmail.com>
+ <2007335.1595587534@warthog.procyon.org.uk>
+In-Reply-To: <2007335.1595587534@warthog.procyon.org.uk>
+Reply-To: mtk.manpages@gmail.com
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Date:   Mon, 3 Aug 2020 15:41:46 +0200
+Message-ID: <CAKgNAkgYZ4HrFpOW_n8BshbR8d=03wetmxX2zNv7hX4ZmeQPmg@mail.gmail.com>
+Subject: Re: Mount API manual pages
+To:     David Howells <dhowells@redhat.com>
+Cc:     Petr Vorel <pvorel@suse.cz>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When too much trace information is generated on-chip, the ETM will
-overflow, and may cause data loss. This is a common phenomenon on
-ETM devices.
+On Fri, 24 Jul 2020 at 12:45, David Howells <dhowells@redhat.com> wrote:
+>
+> Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
+>
+> > Would you be willing to do the following please:
+> >
+> > 1. Review the pages that you already wrote to see what needs to be
+> > updated. (I did take a look at some of those pages a while back, and
+> > some pieces--I don't recall the details--were out of sync with the
+> > implementation.)
+> >
+> > 2. Resend the pages, one patch per page.
+> >
+> > 3. Please CC linux-man@, linux-api@, linux-kernel@, and the folk in CC
+> > on this message.
+>
+> For this week and next, I have an online language course taking up 8-10 hours
+> a day.  I'll pick it up in August, if that's okay with you.
 
-But sometimes we do not want to lose any performance trace data, so
-we suppress the speed of instructions sent from CPU core to ETM to
-avoid the overflow of ETM.
+Hi David,
 
-Signed-off-by: Qi Liu <liuqi115@huawei.com>
----
- drivers/hwtracing/coresight/coresight-etm4x.c | 46 +++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+This is just a reminder mail :-).
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-index 4a4f0bd..ca9fb11 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-@@ -43,6 +43,11 @@ MODULE_PARM_DESC(boot_enable, "Enable tracing on boot");
- #define PARAM_PM_SAVE_NEVER	  1 /* never save any state */
- #define PARAM_PM_SAVE_SELF_HOSTED 2 /* save self-hosted state only */
+Cheers,
 
-+#define CORE_COMMIT_CLEAR	0x3000
-+#define CORE_COMMIT_SHIFT	12
-+#define HISI_ETM_AMBA_ID_V1	0x000b6d01
-+#define HISI_ETM_AMBA_ID_V2	0x000b6d02
-+
- static int pm_save_enable = PARAM_PM_SAVE_FIRMWARE;
- module_param(pm_save_enable, int, 0444);
- MODULE_PARM_DESC(pm_save_enable,
-@@ -104,11 +109,41 @@ struct etm4_enable_arg {
- 	int rc;
- };
+Michael
 
-+static void etm4_cpu_actlr1_cfg(void *info)
-+{
-+	struct etm4_enable_arg *arg = (struct etm4_enable_arg *)info;
-+	u64 val;
-+
-+	asm volatile("mrs %0,s3_1_c15_c2_5" : "=r"(val));
-+	val &= ~CORE_COMMIT_CLEAR;
-+	val |= arg->rc << CORE_COMMIT_SHIFT;
-+	asm volatile("msr s3_1_c15_c2_5,%0" : : "r"(val));
-+}
-+
-+static void etm4_config_core_commit(int cpu, int val)
-+{
-+	struct etm4_enable_arg arg = {0};
-+
-+	arg.rc = val;
-+	smp_call_function_single(cpu, etm4_cpu_actlr1_cfg, &arg, 1);
-+}
-+
- static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
- {
- 	int i, rc;
-+	struct amba_device *adev;
- 	struct etmv4_config *config = &drvdata->config;
- 	struct device *etm_dev = &drvdata->csdev->dev;
-+	struct device *dev = drvdata->csdev->dev.parent;
-+
-+	adev = container_of(dev, struct amba_device, dev);
-+	/*
-+	 * If ETM device is HiSilicon ETM device, reduce the
-+	 * core-commit to avoid ETM overflow.
-+	 */
-+	if (adev->periphid == HISI_ETM_AMBA_ID_V1 ||
-+	    adev->periphid == HISI_ETM_AMBA_ID_V2)
-+		etm4_config_core_commit(drvdata->cpu, 1);
 
- 	CS_UNLOCK(drvdata->base);
 
-@@ -469,11 +504,22 @@ static int etm4_enable(struct coresight_device *csdev,
- static void etm4_disable_hw(void *info)
- {
- 	u32 control;
-+	struct amba_device *adev;
- 	struct etmv4_drvdata *drvdata = info;
- 	struct etmv4_config *config = &drvdata->config;
- 	struct device *etm_dev = &drvdata->csdev->dev;
-+	struct device *dev = drvdata->csdev->dev.parent;
- 	int i;
-
-+	adev = container_of(dev, struct amba_device, dev);
-+	/*
-+	 * If ETM device is HiSilicon ETM device, resume the
-+	 * core-commit after ETM trace is complete.
-+	 */
-+	if (adev->periphid == HISI_ETM_AMBA_ID_V1 ||
-+	    adev->periphid == HISI_ETM_AMBA_ID_V2)
-+		etm4_config_core_commit(drvdata->cpu, 0);
-+
- 	CS_UNLOCK(drvdata->base);
-
- 	/* power can be removed from the trace unit now */
 --
-2.8.1
-
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
