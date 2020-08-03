@@ -2,282 +2,124 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D942C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E0AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F02BE206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A26C2070A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:18:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K58RlRZD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgHCJOt (ORCPT
+        id S1726571AbgHCJSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 05:14:49 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8750 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726370AbgHCJOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 05:14:49 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 01B976B9CC15A1BF2CD4;
-        Mon,  3 Aug 2020 17:14:44 +0800 (CST)
-Received: from [127.0.0.1] (10.74.185.4) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Mon, 3 Aug 2020
- 17:14:35 +0800
-Subject: Re: [PATCH] ACPI / APEI: do memory failure on the physical address
- reported by ARM processor error section
-To:     James Morse <james.morse@arm.com>
-References: <1596094348-10230-1-git-send-email-tanxiaofei@huawei.com>
- <9b340947-4fcf-30f3-f7e4-68a2753864c6@arm.com>
-CC:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <rjw@rjwysocki.net>, <lenb@kernel.org>, <tony.luck@intel.com>,
-        <bp@alien8.de>, <linuxarm@huawei.com>, <shiju.jose@huawei.com>,
-        <jonathan.cameron@huawei.com>
-From:   Xiaofei Tan <tanxiaofei@huawei.com>
-Message-ID: <5F27D57B.6000608@huawei.com>
-Date:   Mon, 3 Aug 2020 17:14:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        Mon, 3 Aug 2020 05:18:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41472 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgHCJSf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 05:18:35 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62F59C06174A;
+        Mon,  3 Aug 2020 02:18:35 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id i6so1063668edy.5;
+        Mon, 03 Aug 2020 02:18:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=46M9GTuupRoqORbP6h7ufZ9lnCPLcka6ykEe3C8miaE=;
+        b=K58RlRZDzEJdyNlkLyQ5zWl16F8RtVjEGm6rvkJV5sjSQY/5XkkadLKujpSWVvKrO/
+         ckzqiGQTKNGQD4pFRPoRcB9WOO4KBIsO1bXCo0chKtZCYa65Q/ogBqccdco5DaW5ZMwk
+         7NM1VMr/SDRjK+UrQe4uMJ2Y4DeyLxoZyCYygG050QWFXIPzwCNFGhZuY1osORHmhIGl
+         VZPMs26Pnmz8jhJUgWvSpOLGLPDMRPUPemXzpeYbBpevNcvrmEWSt2hKM3DpRct9jyzd
+         yPlRFLQKwk5egQf25jaqiu0AEFGQG4JQYkIrZvAQb+GB91O6poCUejzt8NvZlS2H0eJi
+         Qniw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=46M9GTuupRoqORbP6h7ufZ9lnCPLcka6ykEe3C8miaE=;
+        b=Cey5jNOtyq//Finpao2jfi3G2JJQw66jROvABqjYoOpj3YczNWC2sXSHlt1xJB5KNf
+         kFWkom/J537C+9WeqK+25r0vGZNxeliK5rHgf1MCQlQ1yeKAi+v3Ygqrcf11/huA9sBm
+         xwtg/UIovUHG5zff0uYskFTRxU0DU/LFdAtKdlXwqJvgqRqBEa2Z/nP0I1SDSlzDlU4J
+         Vh+YHAhCqcKaY96hyFj6gyn0ofqn14HCPujh3eKDI99zmQ8z7dfCcnirfkWDyilR3juH
+         ha06sxR+FghQxyEbOBjRt3te1J+RExbcI3gdGPTPSMKREIMRoitXN//+isJdnWaZgWxi
+         jg6A==
+X-Gm-Message-State: AOAM5300v1tdM1bjWi9bKs6qlmYBD9nfUFPFUiecyCcmvloLTfz+OrwP
+        V3TD10PW50yb7OgZIuT12IWK29XRBUpj5ETSNQkW5XYG
+X-Google-Smtp-Source: ABdhPJyyHfbD61tN/3AhYPMubo/h0lYN4jLerOOjrTGcwVq91nJgb/vCJdEHEsn+B+d3ZW/9ZCz+P3Rz+GNPWQd8ZtY=
+X-Received: by 2002:aa7:d1cc:: with SMTP id g12mr15296352edp.385.1596446313888;
+ Mon, 03 Aug 2020 02:18:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <9b340947-4fcf-30f3-f7e4-68a2753864c6@arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.74.185.4]
-X-CFilter-Loop: Reflected
+From:   Anatoly Pugachev <matorola@gmail.com>
+Date:   Mon, 3 Aug 2020 12:18:23 +0300
+Message-ID: <CADxRZqzyxzN9yC79kjhtdpL9QT6ybgTsSCb3G1U8zJHZy-W_9w@mail.gmail.com>
+Subject: [sparc64] unable to build v5.8 / master on sparc64 , bisect attached
+To:     Sparc kernel list <sparclinux@vger.kernel.org>
+Cc:     Linux Kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James，
+Hello!
 
-On 2020/7/31 21:48, James Morse wrote:
-> Hi Tan,
-> 
-> On 30/07/2020 08:32, Xiaofei Tan wrote:
->> After the following commit applied, user-mode SEA is preferentially
->> processed by APEI. Do memory failure to recover.
->>
->> But there are some problems:
->> 1) The function apei_claim_sea() has processed an CPER, does not
->> mean that memory failure handling has done. Because the firmware-first
->> RAS error is reported by both producer and consumer. Mostly SEA uses
->> ARM processor error section to report as a consumer. (The producer could
->> be DDRC and cache, and use memory error section and other error section
->> to report). But memory failure handling for ARM processor error section
->> has not been supported. We should add it.
-> 
-> I can't follow what you are saying here.
-> 
-> APEI doesn't parse the Processor Error records. This has always been true, its not a
-> regression introduced by that commit.
-> 
+I'm unable to build kernel (master git) with the following messages:
 
-The APEI parsing error didn't affect the SEA processing flow before. After that commit, it is changed.
+linux-2.6$ make
+...
+  CC      crypto/drbg.o
+In file included from ./arch/sparc/include/asm/percpu_64.h:11,
+                 from ./arch/sparc/include/asm/percpu.h:5,
+                 from ./include/linux/random.h:14,
+                 from ./include/crypto/drbg.h:43,
+                 from crypto/drbg.c:100:
+./arch/sparc/include/asm/trap_block.h:54:39: error: =E2=80=98NR_CPUS=E2=80=
+=99
+undeclared here (not in a function)
+   54 | extern struct trap_per_cpu trap_block[NR_CPUS];
+      |                                       ^~~~~~~
+make[1]: *** [scripts/Makefile.build:281: crypto/drbg.o] Error 1
+make: *** [Makefile:1756: crypto] Error 2
 
-> 
->> 2) Some hardware platforms can't record physical address each time. But
->> they could always have reported a firmware-first RAS error using ARM
->> processor error section. Such platform should update firmware. Don't
->> report the RAS error when physical address is not recorded.
-> 
-> Eh? If firmware fails to describe the error, we should carry on and pretend nothing happened?
-> 
+can someone help me please? Thanks.
 
-I mean firmware don't report RAS error in SEA process if physical address is not recorded.
-The producer RAS node can still report the error.
+git bisect log:
 
-
-> I think if the APEI code gets CPER records that have the fields linux needs to handle the
-> error, (for memory: that's the physical address), it should return an error to the caller,
-> as the work hasn't been done.
-> 
-> In the case of arm64's synchronous external abort, the response should be the
-> apei_claim_sea() code not claiming the abort, as there is a problem with the records.
-> Certainly the current behaviour can be improved.
-> 
-
-Agree.
-
-
-> 
->> Fixes: 8fcc4ae6faf8 ("arm64: acpi: Make apei_claim_sea() synchronise with APEI's irq work")
-> 
-> I don't see how parsing this extra record fixes a bug in this commit.
-> Presumably you were depending on the arch code killing the thread regardless of whether
-> APEI found work to do ... which masked the fact it finds work, but doesn't know what to do
-> with it.
-> 
-
-Hmm,it's a little far-fetched. But i don't know how to describe the relationship with that commit.
-Any idea?
-
-> 
-> I'm assuming your platform describes errors it detects in the cache as processor errors
-> for the cache, instead of memory errors.
-> 
-
-Yes.
-
-> 
->> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
->> index 81bf71b..07bfa28 100644
->> --- a/drivers/acpi/apei/ghes.c
->> +++ b/drivers/acpi/apei/ghes.c
->> @@ -466,6 +466,44 @@ static bool ghes_handle_memory_failure(struct acpi_hest_generic_data *gdata,
->>  	return false;
->>  }
->>  
->> +static bool ghes_handle_arm_hw_error(struct acpi_hest_generic_data *gdata, int sev)
->> +{
->> +	struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
->> +	struct cper_arm_err_info *err_info;
->> +	bool queued = false;
->> +	int sec_sev, i;
->> +
->> +	log_arm_hw_error(err);
->> +
->> +	if (!IS_ENABLED(CONFIG_ACPI_APEI_MEMORY_FAILURE))
->> +		return false;
-> 
->> +	sec_sev = ghes_severity(gdata->error_severity);
->> +	if (sev != GHES_SEV_RECOVERABLE || sec_sev != GHES_SEV_RECOVERABLE)
->> +		return false;
-> 
-> This is to filter out corrected errors? 
-
-Yes.
-
-What if this section is fatal?
-
-Fatal errors won't come here.
-
-> The panic on fatal code only looks as the severity in the Generic Error Status Block.
-> 
-
-Yes.
-
-> I think the right thing to do is to explicitly test each "Cache error structure"'s bits
-> for corrected/uncorrected instead.
-> 
-
-Do you mean skip TLB/Bus/Micro-architectural Error？
-
-> These top-level severities describe a group of records. You may have a corrected error
-> event that still has latent faults left in the system.
-> 
-
-Yes
-
-> 
-> This thing has multiple variable length entries in it.
-> Could we sanity test that 'err->err_info_num' doesn't take us outside err->section_length?
-> (we already do this sort of thing in the probe code)
-> 
-
-I think firmware should ensure the data is valid.
-
-> 
->> +	err_info = (struct cper_arm_err_info *) (err + 1);
->> +	for (i = 0; i < err->err_info_num; i++, err_info++) {
->> +		unsigned long pfn;
-> 
-> Please check the type of this error, and only invoke memory_failure_queue() for caches.
-> (does your firmware generate the other types too?)
-> 
-
-Our firmware only generate two types: cache error and TLB error.
-The type of TLB error is only for MMU, and it can't record physical address, but only VA.
-
-> 
-> For a bus error, why are we complaining that this isn't memory?
-
-There are two types of errors from the memory: bus error and poison error.
-CPU core RAS nodes can't record bus errors.
-It can record poison errors in some scenarios, but will be taken as cache errors with a flag "PN".
-
-> If this were a TLB error, what does the physical address mean? Is it part of the page
-> tables or the final output address? (Who knows what the physical address means for a
-> micro-architectural error!)
-
-You are right, we can't record a physical address for error types other than cache error.
-
-> 
-> I think these other types should print a ratelimited warning that this type isn't
-> understood. We shouldn't pretend they are memory and hope for the best.
-> 
-
-OK. I will add a ratelimited warning for other types here.
-
-> 
-> Please check the corrected or uncorrected bit in the type-specific u64 for caches.
-> 
-
-OK
-
-> 
->> +		if (!(err_info->validation_bits & CPER_ARM_INFO_VALID_PHYSICAL_ADDR))
->> +			continue;
-> 
-> 
->> +		pfn = PHYS_PFN(err_info->physical_fault_addr);
->> +		if (!pfn_valid(pfn)) {
-> 
->> +			pr_warn(FW_WARN GHES_PFX
-> 
-> ratelimit!
-> 
-
-OK
-
->> +				"Invalid address in generic error data: 0x%#llx\n",
->> +				err_info->physical_fault_addr);
->> +			continue;
->> +		}
->> +
->> +		memory_failure_queue(pfn, 0);
->> +		queued = true;
-> 
-> This bit is almost the same as part of ghes_handle_memory_failure(), please pull that out
-> to a common helper. I think you'll need to pass the flags for memory_failure_queue() in.
-> 
-> 
-
-OK.
-
-> 
-> Thanks,
-> 
-> James
-> 
->> +	}
->> +
->> +	return queued;
->> +}
->> +
->>  /*
->>   * PCIe AER errors need to be sent to the AER driver for reporting and
->>   * recovery. The GHES severities map to the following AER severities and
->> @@ -543,9 +581,7 @@ static bool ghes_do_proc(struct ghes *ghes,
->>  			ghes_handle_aer(gdata);
->>  		}
->>  		else if (guid_equal(sec_type, &CPER_SEC_PROC_ARM)) {
->> -			struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
->> -
->> -			log_arm_hw_error(err);
->> +			queued = ghes_handle_arm_hw_error(gdata, sev);
->>  		} else {
->>  			void *err = acpi_hest_get_payload(gdata);
->>  
->>
-> 
-> 
-> .
-> 
-
--- 
- thanks
-tanxiaofei
-
+git bisect start
+# bad: [bcf876870b95592b52519ed4aafcf9d95999bc9c] Linux 5.8
+git bisect bad bcf876870b95592b52519ed4aafcf9d95999bc9c
+# good: [92ed301919932f777713b9172e525674157e983d] Linux 5.8-rc7
+git bisect good 92ed301919932f777713b9172e525674157e983d
+# bad: [0ae3495b6502cf93634cbd027cb2f6f9f83a406f] Merge tag
+'for-linus-2020-08-01' of
+git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux
+git bisect bad 0ae3495b6502cf93634cbd027cb2f6f9f83a406f
+# bad: [aa54ea903abb02303bf55855fb51e3fcee135d70] ARM: percpu.h: fix build =
+error
+git bisect bad aa54ea903abb02303bf55855fb51e3fcee135d70
+# good: [c2f3850df7f95537e79c561f7be49df2e4ad8060] Merge tag
+'drm-fixes-2020-07-29' of git://anongit.freedesktop.org/drm/drm into
+master
+git bisect good c2f3850df7f95537e79c561f7be49df2e4ad8060
+# bad: [0513b9d75c07cbcdfda3778b636d3d131d679eb1] Merge tag
+'io_uring-5.8-2020-07-30' of git://git.kernel.dk/linux-block
+git bisect bad 0513b9d75c07cbcdfda3778b636d3d131d679eb1
+# good: [d3590ebf6f91350192737dd1d1b219c05277f067] Merge tag
+'audit-pr-20200729' of
+git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/audit
+git bisect good d3590ebf6f91350192737dd1d1b219c05277f067
+# good: [4ae6dbd683860b9edc254ea8acf5e04b5ae242e5] io_uring: fix
+lockup in io_fail_links()
+git bisect good 4ae6dbd683860b9edc254ea8acf5e04b5ae242e5
+# bad: [1c9df907da83812e4f33b59d3d142c864d9da57f] random: fix circular
+include dependency on arm64 after addition of percpu.h
+git bisect bad 1c9df907da83812e4f33b59d3d142c864d9da57f
