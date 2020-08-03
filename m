@@ -2,126 +2,173 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EB9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD64C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65C2020A8B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEEF620A8B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:16:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbgHCROQ (ORCPT
+        id S1728355AbgHCRQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 13:14:16 -0400
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:29756 "EHLO
-        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726878AbgHCROP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 13:14:15 -0400
-Received: from pps.filterd (m0150244.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 073H3jqF010632;
-        Mon, 3 Aug 2020 17:13:42 GMT
-Received: from g2t2352.austin.hpe.com (g2t2352.austin.hpe.com [15.233.44.25])
-        by mx0b-002e3701.pphosted.com with ESMTP id 32pf6tkhg4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Aug 2020 17:13:42 +0000
-Received: from g2t2360.austin.hpecorp.net (g2t2360.austin.hpecorp.net [16.196.225.135])
-        by g2t2352.austin.hpe.com (Postfix) with ESMTP id 6F96162;
-        Mon,  3 Aug 2020 17:13:41 +0000 (UTC)
-Received: from localhost.localdomain (unknown [16.214.163.7])
-        by g2t2360.austin.hpecorp.net (Postfix) with ESMTP id 1482137;
-        Mon,  3 Aug 2020 17:13:40 +0000 (UTC)
-Date:   Mon, 3 Aug 2020 12:13:39 -0500
-From:   Steve Wahl <steve.wahl@hpe.com>
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Steve Wahl <steve.wahl@hpe.com>, linux-kernel@vger.kernel.org,
-        kexec@lists.infradead.org
-Subject: Re: [PATCHv2] x86/purgatory: don't generate debug info for
- purgatory.ro
-Message-ID: <20200803171338.GX12531@localhost.localdomain>
-References: <1596433788-3784-1-git-send-email-kernelfans@gmail.com>
+        Mon, 3 Aug 2020 13:16:21 -0400
+Received: from mga14.intel.com ([192.55.52.115]:35486 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726878AbgHCRQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 13:16:21 -0400
+IronPort-SDR: F5c2XloV9mmQyA3S7wkiHgqPmw4GAlsZjW4R2+rHOemShMpbsyKg4LZr3Lza68EWjATAxJrv36
+ 8Kd9KR5hApmQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="151380040"
+X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
+   d="scan'208";a="151380040"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 10:16:20 -0700
+IronPort-SDR: T0DvdcXbtswj8yXJnYcPRihU+tQTTHY9wlLZmToGC+zKZzYyLKl1U6XNReliHIbcL9QeyD3aSr
+ VGQL9sx90v3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
+   d="scan'208";a="492469357"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.160])
+  by fmsmga005.fm.intel.com with ESMTP; 03 Aug 2020 10:16:20 -0700
+Date:   Mon, 3 Aug 2020 10:16:20 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Brijesh Singh <brijesh.singh@amd.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        eric van tassell <Eric.VanTassell@amd.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [RFC PATCH 0/8] KVM: x86/mmu: Introduce pinned SPTEs framework
+Message-ID: <20200803171620.GC3151@linux.intel.com>
+References: <20200731212323.21746-1-sean.j.christopherson@intel.com>
+ <3bf90589-8404-8bd6-925c-427f72528fc2@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1596433788-3784-1-git-send-email-kernelfans@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-03_15:2020-08-03,2020-08-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=999 bulkscore=0 lowpriorityscore=0 impostorscore=0
- priorityscore=1501 clxscore=1011 phishscore=0 adultscore=0 spamscore=0
- mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008030123
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3bf90589-8404-8bd6-925c-427f72528fc2@amd.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
+On Mon, Aug 03, 2020 at 10:52:05AM -0500, Brijesh Singh wrote:
+> Thanks for series Sean. Some thoughts
+> 
+> 
+> On 7/31/20 4:23 PM, Sean Christopherson wrote:
+> > SEV currently needs to pin guest memory as it doesn't support migrating
+> > encrypted pages.  Introduce a framework in KVM's MMU to support pinning
+> > pages on demand without requiring additional memory allocations, and with
+> > (somewhat hazy) line of sight toward supporting more advanced features for
+> > encrypted guest memory, e.g. host page migration.
+> 
+> 
+> Eric's attempt to do a lazy pinning suffers with the memory allocation
+> problem and your series seems to address it. As you have noticed,
+> currently the SEV enablement  in the KVM does not support migrating the
+> encrypted pages. But the recent SEV firmware provides a support to
+> migrate the encrypted pages (e.g host page migration). The support is
+> available in SEV FW >= 0.17.
 
-On Mon, Aug 03, 2020 at 01:49:48PM +0800, Pingfan Liu wrote:
-> Purgatory.ro is a standalone binary that is not linked against the rest of
-> the kernel.  Its image is copied into an array that is linked to the
-> kernel, and from there kexec relocates it wherever it desires.
+I assume SEV also doesn't support ballooning?  Ballooning would be a good
+first step toward page migration as I think it'd be easier for KVM to
+support, e.g. only needs to deal with the "zap" and not the "move".
+
+> > The idea is to use a software available bit in the SPTE to track that a
+> > page has been pinned.  The decision to pin a page and the actual pinning
+> > managment is handled by vendor code via kvm_x86_ops hooks.  There are
+> > intentionally two hooks (zap and unzap) introduced that are not needed for
+> > SEV.  I included them to again show how the flag (probably renamed?) could
+> > be used for more than just pin/unpin.
 > 
-> Unlike the debug info for vmlinux, which can be used for analyzing crash
-> such info is useless in purgatory.ro. And discarding them can save about
-> 200K space.
+> If using the available software bits for the tracking the pinning is
+> acceptable then it can be used for the non-SEV guests (if needed). I
+> will look through your patch more carefully but one immediate question,
+> when do we unpin the pages? In the case of the SEV, once a page is
+> pinned then it should not be unpinned until the guest terminates. If we
+> unpin the page before the VM terminates then there is a  chance the host
+> page migration will kick-in and move the pages. The KVM MMU code may
+> call to drop the spte's during the zap/unzap and this happens a lot
+> during a guest execution and it will lead us to the path where a vendor
+> specific code will unpin the pages during the guest execution and cause
+> a data corruption for the SEV guest.
+
+The pages are unpinned by:
+
+  drop_spte()
+  |
+  -> rmap_remove()
+     |
+     -> sev_drop_pinned_spte()
+
+
+The intent is to allow unpinning pages when the mm_struct dies, i.e. when
+the memory is no longer reachable (as opposed to when the last reference to
+KVM is put), but typing that out, I realize there are dependencies and
+assumptions that don't hold true for SEV as implemented.
+
+  - Parent shadow pages won't be zapped.  Recycling MMU pages and zapping
+    all SPs due to memslot updates are the two concerns.
+
+    The easy way out for recycling is to not recycle SPs with pinned
+    children, though that may or may not fly with VMM admins.
+
+    I'm trying to resolve the memslot issue[*], but confirming that there's
+    no longer an issue with not zapping everything is proving difficult as
+    we haven't yet reproduced the original bug.
+
+  - drop_large_spte() won't be invoked.  I believe the only semi-legitimate
+    scenario is if the NX huge page workaround is toggled on while a VM is
+    running.  Disallowing that if there is an SEV guest seems reasonable?
+
+    There might be an issue with the host page size changing, but I don't
+    think that can happen if the page is pinned.  That needs more
+    investigation.
+
+
+[*] https://lkml.kernel.org/r/20200703025047.13987-1-sean.j.christopherson@intel.com
+
+> > Bugs in the core implementation are pretty much guaranteed.  The basic
+> > concept has been tested, but in a fairly different incarnation.  Most
+> > notably, tagging PRESENT SPTEs as PINNED has not been tested, although
+> > using the PINNED flag to track zapped (and known to be pinned) SPTEs has
+> > been tested.  I cobbled this variation together fairly quickly to get the
+> > code out there for discussion.
+> >
+> > The last patch to pin SEV pages during sev_launch_update_data() is
+> > incomplete; it's there to show how we might leverage MMU-based pinning to
+> > support pinning pages before the guest is live.
 > 
-> Original:
->   259080  kexec-purgatory.o
-> Stripped debug info:
->    29152  kexec-purgatory.o
 > 
-> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Arvind Sankar <nivedita@alum.mit.edu>
-> Cc: Steve Wahl <steve.wahl@hpe.com>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: kexec@lists.infradead.org
-> To: x86@kernel.org
-> ---
->  arch/x86/purgatory/Makefile | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+> I will add the SEV specific bits and  give this a try.
 > 
-> diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-> index 088bd76..d24b43a 100644
-> --- a/arch/x86/purgatory/Makefile
-> +++ b/arch/x86/purgatory/Makefile
-> @@ -32,7 +32,7 @@ KCOV_INSTRUMENT := n
->  # make up the standalone purgatory.ro
->  
->  PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
-> -PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
-> +PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss -g0
->  PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN) -DDISABLE_BRANCH_PROFILING
->  PURGATORY_CFLAGS += $(call cc-option,-fno-stack-protector)
->  
-> @@ -64,6 +64,9 @@ CFLAGS_sha256.o			+= $(PURGATORY_CFLAGS)
->  CFLAGS_REMOVE_string.o		+= $(PURGATORY_CFLAGS_REMOVE)
->  CFLAGS_string.o			+= $(PURGATORY_CFLAGS)
->  
-> +AFLAGS_REMOVE_setup-x86_$(BITS).o	+= -Wa,-gdwarf-2
-> +AFLAGS_REMOVE_entry64.o			+= -Wa,-gdwarf-2
-> +
->  $(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
->  		$(call if_changed,ld)
->  
-> -- 
-> 2.7.5
-> 
+> >
+> > Sean Christopherson (8):
+> >   KVM: x86/mmu: Return old SPTE from mmu_spte_clear_track_bits()
+> >   KVM: x86/mmu: Use bits 2:0 to check for present SPTEs
+> >   KVM: x86/mmu: Refactor handling of not-present SPTEs in mmu_set_spte()
+> >   KVM: x86/mmu: Add infrastructure for pinning PFNs on demand
+> >   KVM: SVM: Use the KVM MMU SPTE pinning hooks to pin pages on demand
+> >   KVM: x86/mmu: Move 'pfn' variable to caller of direct_page_fault()
+> >   KVM: x86/mmu: Introduce kvm_mmu_map_tdp_page() for use by SEV
+> >   KVM: SVM: Pin SEV pages in MMU during sev_launch_update_data()
+> >
+> >  arch/x86/include/asm/kvm_host.h |   7 ++
+> >  arch/x86/kvm/mmu.h              |   3 +
+> >  arch/x86/kvm/mmu/mmu.c          | 186 +++++++++++++++++++++++++-------
+> >  arch/x86/kvm/mmu/paging_tmpl.h  |   3 +-
+> >  arch/x86/kvm/svm/sev.c          | 141 +++++++++++++++++++++++-
+> >  arch/x86/kvm/svm/svm.c          |   3 +
+> >  arch/x86/kvm/svm/svm.h          |   3 +
+> >  7 files changed, 302 insertions(+), 44 deletions(-)
+> >
