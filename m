@@ -6,38 +6,36 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63110C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78521C433E1
 	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 06:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CBCD2067D
+	by mail.kernel.org (Postfix) with ESMTP id 6173720672
 	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 06:16:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbgHCGMt (ORCPT
+        id S1728272AbgHCGNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 02:12:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58686 "EHLO mx2.suse.de"
+        Mon, 3 Aug 2020 02:13:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58866 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727813AbgHCGMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 02:12:49 -0400
+        id S1727813AbgHCGNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 02:13:01 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 2E12DB59E;
-        Mon,  3 Aug 2020 06:13:03 +0000 (UTC)
-Date:   Mon, 03 Aug 2020 08:12:47 +0200
-Message-ID: <s5hft946yw0.wl-tiwai@suse.de>
+        by mx2.suse.de (Postfix) with ESMTP id C2BBFB597;
+        Mon,  3 Aug 2020 06:13:14 +0000 (UTC)
+Date:   Mon, 03 Aug 2020 08:12:59 +0200
+Message-ID: <s5heeoo6yvo.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
 To:     Connor McAdams <conmanx360@gmail.com>
 Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
         =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Geoffrey Allott <geoffrey@allott.email>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        =?UTF-8?B?UGF3ZcWC?= Rekowski <p.rekowski@gmail.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        =?UTF-8?B?UGF3ZcWC?= Rekowski <p.rekowski@gmail.com>,
         alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] ALSA: hda/ca0132 - Add new quirk ID for Recon3D.
-In-Reply-To: <20200803002928.8638-2-conmanx360@gmail.com>
+Subject: Re: [PATCH 3/3] ALSA: hda/ca0132 - Fix AE-5 microphone selection commands.
+In-Reply-To: <20200803002928.8638-3-conmanx360@gmail.com>
 References: <20200803002928.8638-1-conmanx360@gmail.com>
-        <20200803002928.8638-2-conmanx360@gmail.com>
+        <20200803002928.8638-3-conmanx360@gmail.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -48,10 +46,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 03 Aug 2020 02:29:26 +0200,
+On Mon, 03 Aug 2020 02:29:27 +0200,
 Connor McAdams wrote:
 > 
-> Add a new quirk ID for the Recon3D, as tested by me.
+> The ca0113 command had the wrong group_id, 0x48 when it should've been
+> 0x30. The front microphone selection should now work.
 > 
 > Signed-off-by: Connor McAdams <conmanx360@gmail.com>
 
