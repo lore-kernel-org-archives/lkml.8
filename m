@@ -2,134 +2,132 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2304C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BBAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1759A20A8B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:09:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="EDAwaaCM";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="ekJmcvjG"
+	by mail.kernel.org (Postfix) with ESMTP id C8CB720A8B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:13:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596482037;
+	bh=eAFPHhOTT8ewuYM7h+9ksB4z3CD7yToQUetdl//RYpM=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=xmnjSNi7/hhWqNfRTyA8qUpuvrNuIlFkcTBdnMOZHdyNRU6XPvEk7jbuP9U2QUU1l
+	 7mFSKsiobjhQM0V/+UNf9G3q7WTl03GXT8L4f5iB8i7Fj/imHRZAo//pYocYOB+Ql0
+	 LDXY3UQBje4t3A9jAL1WJeWcWGpT6nm7CyJhviWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgHCTJP (ORCPT
+        id S1727044AbgHCTN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 15:09:15 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:5033 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbgHCTJP (ORCPT
+        Mon, 3 Aug 2020 15:13:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbgHCTN4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 15:09:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1596481755; x=1628017755;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=Mc2HGqcllPGRn7NMvlZ8PHb/aPWe9/k1MqmtPcDFsw4=;
-  b=EDAwaaCMm+8ZPrd0nabo5p3k6WUv4MEo0PHYMvGeJP0BPvQucFIgHdHR
-   Hj2PQlxukdZQQbEEK7yOubaSsneYhVwghrIkCd0Fa5XZOHbtBRlPDqoZG
-   D4GSJE0CYGOCypqsievM/fgefNwkYYdstKw9AVEVolnfcZNRbxmsOhdoU
-   ql6yfGvYpE/pWRW3IsEE+aWRgxAKYkRPT3g0YgzeI9pqc9mPd6wpBz4c2
-   ni9o0uE5E+w87cBPn2v5KjT1XSk73i0gzSU9MCr0ahLF9hvJYwF8DRR+O
-   9B9ZoRwfjL/LMMn2rGf/5X/RBw1942/94kgUDlBLojE804SMuXSEKqeRN
-   Q==;
-IronPort-SDR: Rl5GWXs3McN3vl1hMlbBKf+/dIYbghlhw5x0FG+x1zJjoqMF0dni/yjMfqzw/GrxE5l9NAp+0P
- 0K19t1FiUVwcLtYyfSWaXw8lstkqprBDc2vKDl9DVscVcHwjt/iuEkuF1aMv65X6Ksyxi8FT4U
- 5ojpuzgPqs3aSD6XpBaBVlHlcbmClxNLPmzUh+sjdHqDrp1dzDNCLcLD+E96dT/+WKKwDingiq
- 7XaXvWOsnzRLxXe+KKKp+5T2arAI5r0tViDOv/FO+5Wo203IA4BSSHb0mS3vMLiIu/IrclWb4A
- HmY=
-X-IronPort-AV: E=Sophos;i="5.75,431,1589212800"; 
-   d="scan'208";a="144111947"
-Received: from mail-bn7nam10lp2105.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.105])
-  by ob1.hgst.iphmx.com with ESMTP; 04 Aug 2020 03:09:13 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NDKhv1Za89aTTHJTc4tUu2sWgj2nnQZhOlJ/BM2jGq5jCvF3nDPAkxOIuo+PUwAT8HeDohyuRBEbHJFG1quaJc0GQpQtEy0n9n/5HQ/1s1MQOfZpgDtSBXU0VFrOronXkPXuRKXiSH8N835dxUurXEMcawNUopENHNEoWGFBSxXWeBm4RBNTEybN96qF4DO27kP8Pw2eYZQS5MaPSRXk2rstz0KK8qrMYu3CMHuFyl8ktRc+JAne50ZdQ408EdkbTXfkoC1Uigj8fKMkF5AOzI2haY3yB7f8Am8WdHRmsd5uH/gafCtxmyPA7eRGxzJsr37i2hP/4GMTysJBucYutg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mc2HGqcllPGRn7NMvlZ8PHb/aPWe9/k1MqmtPcDFsw4=;
- b=Qotxu8daRk6GltHYZ5Gbsbs9122K+lQFD6u0a0WtaXqkcarvJqx92I4EO0A7XHPovFW5IGXbS1fqN7YmBkMq8NBg0KOIxzWZ5hqjRSRKnLIu/XlJxsJgBFOltm1bWBEw2mvT5c4p3KblIg5ueFtEqGlHnj8W+mkbHAn9rbuJrEIH7fTIMmmTc6/fNKLprWLkF3vUZxZhhthUFKZw9209GkJ2d9RUhclv8ybw3OijEjK+GHCy8IHJ0qXEXvR89/krGQgPEA+7eiqL7iE+6wqN+k6I26lrak9JbuRF3sY4ah9dZ+p+MM+PG0GgmnqEyaSwVAusbOcVfEPwJyDtksQI1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Mon, 3 Aug 2020 15:13:56 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07D7CC06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 12:13:55 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id jp10so13240107ejb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 12:13:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mc2HGqcllPGRn7NMvlZ8PHb/aPWe9/k1MqmtPcDFsw4=;
- b=ekJmcvjGAS6Zo+XAklzGzvfESZ9Og1y/lF2xpVL8YSJOrwa8I85FpW7oGPh0rVpv9cj/27oTpFDiD0ByTpV5Ao5pW7JClPdDSn9pPWUzuzuKOv6Lszmixwdngc7J3tfDjzny7vi9Wo8YUxv8y2W/sTXRICfrtu9gYL+G+3283Ag=
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com (2603:10b6:a03:4d::25)
- by BYAPR04MB4984.namprd04.prod.outlook.com (2603:10b6:a03:4f::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.21; Mon, 3 Aug
- 2020 19:09:10 +0000
-Received: from BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::98a4:d2c9:58c5:dee4]) by BYAPR04MB4965.namprd04.prod.outlook.com
- ([fe80::98a4:d2c9:58c5:dee4%5]) with mapi id 15.20.3239.021; Mon, 3 Aug 2020
- 19:09:10 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
-CC:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>
-Subject: Re: [PATCH] nvmet-passthru: Reject commands with non-sgl flags set
-Thread-Topic: [PATCH] nvmet-passthru: Reject commands with non-sgl flags set
-Thread-Index: AQHWZdvsD55yoOyrOkWKIunX4pxYqw==
-Date:   Mon, 3 Aug 2020 19:09:10 +0000
-Message-ID: <BYAPR04MB4965818BE01F3098F1E9E6E4864D0@BYAPR04MB4965.namprd04.prod.outlook.com>
-References: <20200729191009.4485-1-logang@deltatee.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: deltatee.com; dkim=none (message not signed)
- header.d=none;deltatee.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [199.255.45.62]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b24dd8b1-dea2-43e0-5d7d-08d837e0b427
-x-ms-traffictypediagnostic: BYAPR04MB4984:
-x-microsoft-antispam-prvs: <BYAPR04MB4984BA4E756D0C44A3998EB6864D0@BYAPR04MB4984.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:428;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2MBocN9vefVKFYP7/KeWSCvNNK7PcB7aiKgt5c6z+WN1AwaS4zwtbNVCiygO8QSxPdoJD+nJ6XnhpllO4h0OegCH3SBi4PRGRnOQcuSze64+ejZIXuCl5u/QPK9OfD23Oi849kI/glubp0WqNKqTZTh1ndCHVS0dOUZTFDInAvyipLhoWVkb0S0fN3a8Z5FdV9R72XLPLWvELIg8X/bP5vcscPJSCyDs4Z4XEAW4Ud4hm9y+It/asOO8Ec5iFmHNsdnl6Dh7euz4YrQmu/15ZfLLZRVyVGguq0b8c4tG9TQlDVGfWUIE5WpJ9VY10MsCB9p9lseHwyDd1oGnl/f5Vg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR04MB4965.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(346002)(376002)(136003)(396003)(4326008)(316002)(53546011)(7696005)(33656002)(6506007)(54906003)(110136005)(478600001)(86362001)(5660300002)(55016002)(2906002)(71200400001)(26005)(8676002)(9686003)(186003)(76116006)(66946007)(66446008)(8936002)(64756008)(66476007)(52536014)(66556008)(558084003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: b16F8QgCY+xRRkSoa2nt1FYSJ60JnLvX+xyyUHrTMuFqW9BlWcqJgX+NbBt+CyHGxgGAPTCEgZTATSv9jKXpBCfasHvDr1O42e3m+R/7fJG771IVYI6fsKla8184hT1zSWRi8sql2ydZkoCeQUcxRiqaIw9SZYM4klJOvyro2lTpJVVGoTTkMkdeCfqI2tTPY9Gc/Axs5srevoGqc6nWYNVZYt9ANE3+S+CDN3TwkWi9AXVVyQCsylFOtD9bE9n/XF53vRuqUBN6SwfcMWdQGItFDrshibzK38jShc8L2FJkcSQoAQht+o8AacTWj+vV2h8v7EP7Kg7QwPC9p6fjK2P1CVJRuhTZIekRnNbH1Mzh6PWeOiIIrhOIqEZ0dmhAM2/CWr0mB8SmKWQ/ZMMPcmaJ/N6k2zJzOYLke/1fNBGzprzQosz+AjgRT+zvwa8ewy+o9NpnQ4fEaBw9AuM3bJiSr9gUPbZ1XW2s56t9IvWDnYS//zxn5lb4cio7oS6SB8+jO+l/hRG0mGQNQeyZpGPNJpCLTAXf/4GQomZEyT6Yim4xwpX8hbldt+N9H476Cp7LimEoTtv18Miukh9z/UsneUdyBjbPTVXoFVegVDofST93RNyVLVbV+jBPDK53TKBjw2IvAWqgJ5Zgggz6CQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=t98ZjRfUQ2zIDQ9pifSZAAIwbRrIcr++IX5GfcqsxGU=;
+        b=ER3VTVetOfnnIr/JsPEZv4NQoaKHz5fNbAza68iFjnusoDXZkV0S2EMvarro6I+qXI
+         +lBtx3xin+0DD61Gl3UOO5aQ6lT2n3NeRQDKbikDcyfylM0Eh27qS5GtPm8WEDecrQ1u
+         C7yTWrWfa5ysNH0NJWo7FCclnm5b6S1f/nNTPj0ceRRMx0XufcS9Mwd6fXAaEEGlT2eH
+         y+zm5KaMtrXSFYgnDIhihNhHggDetmBHBqZvGAOXrUkzexmy3WtYd4BILWRC1/fJCrG0
+         ElKCs9cZfGP11he31Ql++tpOGOKt1RAj7+lpbY4pCYIJ0E/KY6Y9C0yie57hJFpdH7F2
+         01yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition;
+        bh=t98ZjRfUQ2zIDQ9pifSZAAIwbRrIcr++IX5GfcqsxGU=;
+        b=VNoccDCUNmGTo231KH3fqGITyztASsCFlY5TD9jnCHThH9bop0rNi+eSldT7hD64uz
+         hvCVkatDV7VQoT3ggDLTy01XFWEEsN23aHQn8TpwThiKd3Ajslltpc9LjWVQUl5mzkgs
+         1fVd7qkzAPnsT5tiH0goagtX4E2cwN+gzmJ4cQbwagAPZDgkJgWosy0y/8B0kYWbVAHe
+         t2avFRtFZHVHZSYPzZzUv+zuaypbZm5ciIIEgll2DkQUh8zOPdXTmN7gqc9wiUXBVo0c
+         m3+qYMbRWSrBTA9xghpGn52TwUga4qZYVUZSXl9V1mylfZ1hOVGggwLcvz6G5IlJ+1Lm
+         /Lwg==
+X-Gm-Message-State: AOAM530rlOz3OHEBGMraAVJepTdpNtXMviJgq3BOup7FIS7SNwkYVIgt
+        jixhvzP1FZhsX4rcPmZQd0ZHoAkm
+X-Google-Smtp-Source: ABdhPJwEtVyHA8dbMM97huk+VnsIoYWKR5JNGAanv7nMxw9mfuNVJqUrwrv9CicXoYehK+Wz5c5ZIw==
+X-Received: by 2002:a17:906:60d5:: with SMTP id f21mr4462288ejk.94.1596482034673;
+        Mon, 03 Aug 2020 12:13:54 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id 92sm5373523edo.7.2020.08.03.12.13.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 12:13:54 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 21:13:52 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86/platform changes for v5.9
+Message-ID: <20200803191352.GA1352094@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR04MB4965.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b24dd8b1-dea2-43e0-5d7d-08d837e0b427
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Aug 2020 19:09:10.5963
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Keappg51iJZ2WwLo0H2XYcHKSyyFFRgeMTgWIjG9XMivpfTbr4qmhtitV6C0YJz6+Uy7P/r4c76odgmR7H6ZlOm5j+4d0gES380xY/4Ptps=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB4984
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/29/20 12:10, Logan Gunthorpe wrote:=0A=
-> Any command with a non-SGL flag set (like fuse flags) should be=0A=
-> rejected.=0A=
-> =0A=
-> Fixes: c1fef73f793b ("nvmet: add passthru code to process commands")=0A=
-> Signed-off-by: Logan Gunthorpe<logang@deltatee.com>=0A=
-=0A=
-Looks good.=0A=
-=0A=
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>=0A=
+Linus,
+
+Please pull the latest x86/platform git tree from:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-platform-2020-08-03
+
+   # HEAD: 3bcf25a40b018e632d70bb866d75746748953fbc x86/efi: Remove unused EFI_UV1_MEMMAP code
+
+The biggest change is the removal of SGI UV1 support, which allowed the
+removal of the legacy EFI old_mmap code as well.
+
+This removes quite a bunch of old code & quirks.
+
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+ Thanks,
+
+	Ingo
+
+------------------>
+steve.wahl@hpe.com (13):
+      x86/platform/uv: Remove support for UV1 platform from uv_time
+      x86/platform/uv: Remove support for UV1 platform from uv_tlb
+      x86/platform/uv: Remove support for UV1 platform from x2apic_uv_x
+      x86/platform/uv: Remove support for UV1 platform from uv_mmrs
+      x86/platform/uv: Remove support for UV1 platform from uv_bau
+      x86/platform/uv: Remove support for uv1 platform from uv_hub
+      x86/platform/uv: Remove support for UV1 platform from uv
+      x86/platform/uv: Remove vestigial mention of UV1 platform from bios header
+      x86/platform/uv: Remove efi=old_map command line option
+      x86/efi: Delete SGI UV1 detection.
+      x86/efi: Remove references to no-longer-used efi_have_uv1_memmap()
+      x86/platform/uv: Remove uv bios and efi code related to EFI_UV1_MEMMAP
+      x86/efi: Remove unused EFI_UV1_MEMMAP code
+
+
+ arch/x86/include/asm/efi.h         |  20 +-
+ arch/x86/include/asm/uv/bios.h     |   2 +-
+ arch/x86/include/asm/uv/uv.h       |   2 +-
+ arch/x86/include/asm/uv/uv_bau.h   | 118 +-----
+ arch/x86/include/asm/uv/uv_hub.h   |  34 +-
+ arch/x86/include/asm/uv/uv_mmrs.h  | 712 -------------------------------------
+ arch/x86/kernel/apic/x2apic_uv_x.c | 122 ++-----
+ arch/x86/kernel/kexec-bzimage64.c  |   9 -
+ arch/x86/platform/efi/efi.c        |  16 +-
+ arch/x86/platform/efi/efi_64.c     |  38 +-
+ arch/x86/platform/efi/quirks.c     |  31 --
+ arch/x86/platform/uv/bios_uv.c     | 173 +--------
+ arch/x86/platform/uv/tlb_uv.c      | 243 ++-----------
+ arch/x86/platform/uv/uv_time.c     |  16 +-
+ 14 files changed, 86 insertions(+), 1450 deletions(-)
