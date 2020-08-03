@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41749C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B891C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1275D2076B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:34:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D4F92076B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458051;
-	bh=ntHVsyRurvGjVshNXwBX4PbkBBTnvkshNG9V5gbHCPw=;
+	s=default; t=1596458055;
+	bh=Sp098mK9dW4CZGeuDCp6QtJHCUMG3PJjoVI6NAk/A5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xwfm8+62DcfnovGnPwQHYQvpFi+gFfL6SE83AaG9nWQc3dZF3gqsSBcrjuRE5wHhZ
-	 H+gnz0pLUs1851BrixYQo7qiXFY1oDYGwjuDxA8yPvPapL0/UA2aK4YR9PfHH3SbXq
-	 kdPtJmq2wa02Du39hwHkQiPEdupeTmkI96vnf4X4=
+	b=GZSp7ekXaLDUICeZn2r3wWJO7o5eQe/n99cJFQaYAhaVzs8G9FfnfmE0155lm1A7C
+	 7VGsaoDV63I1Z5vFmFWefagzCntdSIdnJ2GO502wb18APl/k21P/dkeyc/TJjVaExd
+	 ys3cGzPJVz6QTinODbptlO0CBSjHlDDpC+SHWYt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729529AbgHCMeI (ORCPT
+        id S1729140AbgHCMeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:34:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34040 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:34:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728227AbgHCMd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:33:59 -0400
+        id S1728802AbgHCMeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:34:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B76262054F;
-        Mon,  3 Aug 2020 12:33:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9B40204EC;
+        Mon,  3 Aug 2020 12:34:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596458038;
-        bh=ntHVsyRurvGjVshNXwBX4PbkBBTnvkshNG9V5gbHCPw=;
+        s=default; t=1596458041;
+        bh=Sp098mK9dW4CZGeuDCp6QtJHCUMG3PJjoVI6NAk/A5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wrVTXUl6OU4z4HTa8JsHSkBTTWKXYaExe1gRqiTV7gbIpnxniQq7QF3GMLKDjXr3t
-         n8mVTvt80c0NxvrHUI78ebi/1yxYecTfMpAOAQ7X3ke3PPavjHNP5xbpzg9G36ygzQ
-         /Sl90s2plaEQ4YUet2FKEHd0MQ88QOfawxM3EniA=
+        b=k69ijQjCZSU15JdYb8rvFtBxcAiiLJAfOD9ZXuhzINxg9FE+E2+Li6YctWrFv3c6y
+         An3OFr1E7biQ5qGEVAF0CjUXYnYUqlZ+QqqoiQUCqFr3Qje1jm9Dta9y+od+5vloar
+         37ki7qHxBvA9uiTszFqlTrNAAY6/41BaBEEhzdIk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 05/51] iio: imu: adis16400: fix memory leak
-Date:   Mon,  3 Aug 2020 14:19:50 +0200
-Message-Id: <20200803121849.741925258@linuxfoundation.org>
+Subject: [PATCH 4.14 06/51] ath9k_htc: release allocated buffer if timed out
+Date:   Mon,  3 Aug 2020 14:19:51 +0200
+Message-Id: <20200803121849.782993957@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121849.488233135@linuxfoundation.org>
 References: <20200803121849.488233135@linuxfoundation.org>
@@ -62,36 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9c0530e898f384c5d279bfcebd8bb17af1105873 ]
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-In adis_update_scan_mode_burst, if adis->buffer allocation fails release
-the adis->xfer.
+[ Upstream commit 853acf7caf10b828102d92d05b5c101666a6142b ]
+
+In htc_config_pipe_credits, htc_setup_complete, and htc_connect_service
+if time out happens, the allocated buffer needs to be released.
+Otherwise there will be memory leak.
 
 Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/imu/adis16400_buffer.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath9k/htc_hst.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/iio/imu/adis16400_buffer.c b/drivers/iio/imu/adis16400_buffer.c
-index e70a5339acb19..3fc11aec98b95 100644
---- a/drivers/iio/imu/adis16400_buffer.c
-+++ b/drivers/iio/imu/adis16400_buffer.c
-@@ -38,8 +38,11 @@ int adis16400_update_scan_mode(struct iio_dev *indio_dev,
- 		return -ENOMEM;
+diff --git a/drivers/net/wireless/ath/ath9k/htc_hst.c b/drivers/net/wireless/ath/ath9k/htc_hst.c
+index d2e062eaf5614..f705f0e1cb5be 100644
+--- a/drivers/net/wireless/ath/ath9k/htc_hst.c
++++ b/drivers/net/wireless/ath/ath9k/htc_hst.c
+@@ -173,6 +173,7 @@ static int htc_config_pipe_credits(struct htc_target *target)
+ 	time_left = wait_for_completion_timeout(&target->cmd_wait, HZ);
+ 	if (!time_left) {
+ 		dev_err(target->dev, "HTC credit config timeout\n");
++		kfree_skb(skb);
+ 		return -ETIMEDOUT;
+ 	}
  
- 	adis->buffer = kzalloc(burst_length + sizeof(u16), GFP_KERNEL);
--	if (!adis->buffer)
-+	if (!adis->buffer) {
-+		kfree(adis->xfer);
-+		adis->xfer = NULL;
- 		return -ENOMEM;
-+	}
+@@ -208,6 +209,7 @@ static int htc_setup_complete(struct htc_target *target)
+ 	time_left = wait_for_completion_timeout(&target->cmd_wait, HZ);
+ 	if (!time_left) {
+ 		dev_err(target->dev, "HTC start timeout\n");
++		kfree_skb(skb);
+ 		return -ETIMEDOUT;
+ 	}
  
- 	tx = adis->buffer + burst_length;
- 	tx[0] = ADIS_READ_REG(ADIS16400_GLOB_CMD);
+@@ -280,6 +282,7 @@ int htc_connect_service(struct htc_target *target,
+ 	if (!time_left) {
+ 		dev_err(target->dev, "Service connection timeout for: %d\n",
+ 			service_connreq->service_id);
++		kfree_skb(skb);
+ 		return -ETIMEDOUT;
+ 	}
+ 
 -- 
 2.25.1
 
