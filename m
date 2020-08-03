@@ -7,71 +7,70 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BB3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F0BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBCC422CAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C72CE22C9F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:59:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TwkydxG/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KsqbwsX0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbgHCU7W (ORCPT
+        id S1729099AbgHCU72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 16:59:22 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30239 "EHLO
+        Mon, 3 Aug 2020 16:59:28 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:44070 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729079AbgHCU7U (ORCPT
+        by vger.kernel.org with ESMTP id S1729079AbgHCU71 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 16:59:20 -0400
+        Mon, 3 Aug 2020 16:59:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596488360;
+        s=mimecast20190719; t=1596488365;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=or+zNAibqtaoCeVVGOGdUm20NwzQtJQIDqrZeu9+GCU=;
-        b=TwkydxG/QH72p48OLC6OaIreqgXJB38DjSy33FeNt36OWFT+QjSKpwiGD0BDC5UIgj0U4p
-        Dxo0eJtmBlw31v8zV4ew6tTBjszgizSzRzDvOhyuFWne0UfdpalRrD9rcAwK8rSGk+VUN7
-        NISfbN4+kTrisagAM/P1xlmG0QivN/8=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-138-ELpv9psMOZ6bvRehq5RZ8g-1; Mon, 03 Aug 2020 16:59:18 -0400
-X-MC-Unique: ELpv9psMOZ6bvRehq5RZ8g-1
-Received: by mail-qv1-f71.google.com with SMTP id d30so7057245qve.5
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 13:59:18 -0700 (PDT)
+        bh=pjba7UTEkMQb9cgNSFsINkPwPT47kJGCQxpArSsq/v4=;
+        b=KsqbwsX0OSBi/UozBeZItDI5uUU7UMHVs6ocbS143ebggkM6ba1HHhxr3yhN+lkTQ+CsTv
+        RAb/mvMvbCccdt73hEwlKMMjdRrGxPjTCrjlErbhm/dYFW7ZDkOBIy/KbDxUhS6xAAQPjE
+        QbocxOFGhGqcZV9oueNXM8/bZlWHFCk=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-442-c8DtTkrWNOOjovcFo3pFJA-1; Mon, 03 Aug 2020 16:59:23 -0400
+X-MC-Unique: c8DtTkrWNOOjovcFo3pFJA-1
+Received: by mail-qt1-f200.google.com with SMTP id b18so14778315qte.18
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 13:59:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=or+zNAibqtaoCeVVGOGdUm20NwzQtJQIDqrZeu9+GCU=;
-        b=pL3IexoZkdoJomJSLBSFIkGImvra5xKzbWgmkhKDVkCJ7cmHuUA95brR27HFv48b2e
-         /+78bgMH8UIf4XX0Ysdw9WSiFX1KYd0sMZYmeqRNoyUhbwWHvfs2+sV24mb3aLEmGvME
-         41iS/GpV7ksmmtr/hfPkXHz+UFpsaICW098uwe5jZkSuYx7DibS7oLujbaQOtoJuTQwO
-         Y7yZdI76tM8JGMsQyk4kj8/IC1imPisJs+1wTtrR6skVrb+fPzcLE0a91SX4QXphuM4Y
-         z3wjaWutVwvS617s+RFVXGlg39QMM8dyMXTmH0AIxSIUc9AMUdZHNlVSghn46RtOFnjS
-         O3Yg==
-X-Gm-Message-State: AOAM533+9PucmI4hk5eM/AHOAOqcGdqgLHza1b6rSgcKkpOn9t712pF6
-        zyryhY3TGtxZyC4K0vipTFEPpe7XjHcPOTRir4LErp58XVRMF6qZK1dJkKHhOyhOtzbmso24yG7
-        tvBOtGQoUjk9mo0Xa2DV60F4c
-X-Received: by 2002:ac8:1084:: with SMTP id a4mr17555984qtj.83.1596488358265;
-        Mon, 03 Aug 2020 13:59:18 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzrapOZB7Hdxu0x7Z+dBtzskHcpM/llP/zvUq8ucoKtu/KA509zj05FQ3vDOugv6knjeTkoqw==
-X-Received: by 2002:ac8:1084:: with SMTP id a4mr17555977qtj.83.1596488358075;
-        Mon, 03 Aug 2020 13:59:18 -0700 (PDT)
+        bh=pjba7UTEkMQb9cgNSFsINkPwPT47kJGCQxpArSsq/v4=;
+        b=eXe0uVM+NkWMhQNzYuQm6Y6/tTBsyrbCYHFI/lNOUkHyObav/7HeKIdbS7litHZiw6
+         twwY5swDTxKw8N0n63UQkZkOoZBxG9DC1Cn1bM1ILGZndNh/NJvsEtfrBe540sKVolkX
+         SjcO8peOcwloQn+9/aJYrpSywe/vMXJfF0wXVluXYHyuQHczL4v+eUGJTzHW9DZFxKUO
+         S7rDzbmCfZU76lLyFWXSAGyemTbyRGpuKJ5N9ds98Z0ve35uj9KUDIPr88nPf7G8xgFg
+         DqTx8SFD6ix+PmGmkFCKxEhG9FxSRn8dATP8wQ4tAVFLXfEs2RiL+XdkZfDHBJyPHZDI
+         jV3g==
+X-Gm-Message-State: AOAM53337gPBIHvCMdYX8DwEViL5QdIWOO7D0w5kDRsIcjIeR8tHmsdK
+        F20dQN0zPFSiJ7wZK6xuDseYCHoFE3AWTmEkqytg411eP3/rtscwJ/PNSf1hHyh6yyyIzESru6R
+        u3k8yKebr8uTiQ4uMakOnpkE8
+X-Received: by 2002:ac8:387b:: with SMTP id r56mr18809900qtb.353.1596488363032;
+        Mon, 03 Aug 2020 13:59:23 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwHozttQuejm//tCqktxmYXDIQpJ0ThAuBb6QUqCnnttWqM4Fv1n/r76PemaGEK2xQsqaBj5g==
+X-Received: by 2002:ac8:387b:: with SMTP id r56mr18809888qtb.353.1596488362838;
+        Mon, 03 Aug 2020 13:59:22 -0700 (PDT)
 Received: from redhat.com (bzq-79-177-102-128.red.bezeqint.net. [79.177.102.128])
-        by smtp.gmail.com with ESMTPSA id z14sm21310391qtn.92.2020.08.03.13.59.15
+        by smtp.gmail.com with ESMTPSA id p17sm19764307qkj.69.2020.08.03.13.59.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 13:59:17 -0700 (PDT)
-Date:   Mon, 3 Aug 2020 16:59:13 -0400
+        Mon, 03 Aug 2020 13:59:22 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 16:59:18 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     virtualization@lists.linux-foundation.org,
         Jason Wang <jasowang@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH v2 09/24] virtio_fs: correct tags for config space fields
-Message-ID: <20200803205814.540410-10-mst@redhat.com>
+        David Airlie <airlied@linux.ie>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH v2 10/24] virtio_gpu: correct tags for config space fields
+Message-ID: <20200803205814.540410-11-mst@redhat.com>
 References: <20200803205814.540410-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -84,27 +83,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since fs is a modern-only device,
+Since gpu is a modern-only device,
 tag config space fields as having little endian-ness.
 
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- include/uapi/linux/virtio_fs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/uapi/linux/virtio_gpu.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/include/uapi/linux/virtio_fs.h b/include/uapi/linux/virtio_fs.h
-index b02eb2ac3d99..3056b6e9f8ce 100644
---- a/include/uapi/linux/virtio_fs.h
-+++ b/include/uapi/linux/virtio_fs.h
-@@ -13,7 +13,7 @@ struct virtio_fs_config {
- 	__u8 tag[36];
+diff --git a/include/uapi/linux/virtio_gpu.h b/include/uapi/linux/virtio_gpu.h
+index 0c85914d9369..ccbd174ef321 100644
+--- a/include/uapi/linux/virtio_gpu.h
++++ b/include/uapi/linux/virtio_gpu.h
+@@ -320,10 +320,10 @@ struct virtio_gpu_resp_edid {
+ #define VIRTIO_GPU_EVENT_DISPLAY (1 << 0)
  
- 	/* Number of request queues */
--	__u32 num_request_queues;
-+	__le32 num_request_queues;
- } __attribute__((packed));
+ struct virtio_gpu_config {
+-	__u32 events_read;
+-	__u32 events_clear;
+-	__u32 num_scanouts;
+-	__u32 num_capsets;
++	__le32 events_read;
++	__le32 events_clear;
++	__le32 num_scanouts;
++	__le32 num_capsets;
+ };
  
- #endif /* _UAPI_LINUX_VIRTIO_FS_H */
+ /* simple formats for fbcon/X use */
 -- 
 MST
 
