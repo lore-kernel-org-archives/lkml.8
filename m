@@ -2,153 +2,190 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DFAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F79C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C50A722CAE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEB6420A8B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:12:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PFGpIjGn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="kqFYnOVq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbgHCRM3 (ORCPT
+        id S1728384AbgHCRMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 13:12:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58352 "EHLO
+        Mon, 3 Aug 2020 13:12:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726878AbgHCRM3 (ORCPT
+        with ESMTP id S1726878AbgHCRMo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 13:12:29 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF133C06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 10:12:28 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id w17so21069802ply.11
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 10:12:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EdcsAD52151YFyK9GV+0dTJh1rWdO1ZkWpKqDyiylxA=;
-        b=PFGpIjGn1339koZitvzVbBMuGGtmca3kJSr1WQrEN+phD/GnE9e0iYibDk906j3c3m
-         O59emUPBY55iyJ/cbZJ4Za0UuDvLGr0ObmEgp3KRW3HHQWBu1oeu9hWmgsWVtVBfA6ct
-         kMeGFen2EDnaZY2cPVQJXhM3RzqdF+22zmrJbhQuzbZwmUtsB9QCnVRAVwvWHZtRKafS
-         I0P3VVu2OzGC2fQ8qIu7Fdu3NBKdztPegrTtcydKXmVp9mQB+TBFNiruBufTlzMCNwbC
-         PeelPejcygyXnSYWML3bQjP/9dFtK4j7ljNSDe8q8J49DRBILha4+C1ShQwxFFFuCFz5
-         9Dgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EdcsAD52151YFyK9GV+0dTJh1rWdO1ZkWpKqDyiylxA=;
-        b=VWU9W+NfM292zO9rFDEbUZQeUbQ1/nuG9W7dGIS6HudAvbt6MOKQAjN8eXi3RAU0md
-         CX2Ih/AaZS3ike+/fNbMpNMasq8wf2vgJF+E2Gi5PpkNdqs2Jh+rvkvhKI0nJWboMNz+
-         Ebs4x1tqjuI8HOT8jOxJRNEO0dbSKJFnYbyJLdXEGWRaqbbfnOIOY4zIVLu7aadTGY8A
-         3gcuxP8Bzdsv0Mv6mc+PulNjjdycf45aHqTmZ1hUoyHSLl4bvz5w+vViYpS8Cei682mC
-         WKncVXsjej37KSeFLD7/pJq+CSrqCD5Dut5vZ3g5Kr5Dd3iF7cf++a9l61yWmY8o6maj
-         mZxw==
-X-Gm-Message-State: AOAM530a+aEz7aUHgcp1tbR1V9IbgqIjEfrWQWILl/tY7kZmYisObuDV
-        +FBiRdrSquy495zfVA4MwVeSyqqz3T3HsHgq5DPT6Q==
-X-Google-Smtp-Source: ABdhPJw5TW7FReeEX1APXOX/ZQatH6ra4I//9QKhkV6V5458j1Hlort4tnWu/gKD9ytnrbCaJ0lx59WW3QFNYO9VQQU=
-X-Received: by 2002:a17:90b:1103:: with SMTP id gi3mr333409pjb.32.1596474747635;
- Mon, 03 Aug 2020 10:12:27 -0700 (PDT)
+        Mon, 3 Aug 2020 13:12:44 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A36C9C06174A;
+        Mon,  3 Aug 2020 10:12:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=a4yiFZSXRsBVbohmfx7FDLAnp12OJjyh0v7RJM5PeaY=; b=kqFYnOVq8dafpmcb5NQmBTY+1
+        5hfwe97tAx/9KZ5EiuTchyF8GoIZ1wN79lbFH1lIhlZvD4jNBgKskJ+daV8eTPugKgbs5tKq122rt
+        RIyQR+dhA8CMoNn8zWCawbDQf+uzkWT0l5NI+2svvtLhqnTrUt6QetR2MKlUsplSutiT0Raa1Pe9x
+        rCBfBUDY1iWQdE8D+gpgT0RT6r3mAhwNdXzsy3Hp8X0Bj9T2g28TL3wZ3UAylAm7r73aYbGy1rxMf
+        22NtpeWKTRo9YpSh7HPMSyXce0YLOF5wPFRLnQNsLffCEdzEKCt+GtM1ZkBBYe+GocrTfilvgAgIz
+        zapLSHZiQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47878)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1k2e0q-0001mF-To; Mon, 03 Aug 2020 18:12:36 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1k2e0n-0003GQ-1C; Mon, 03 Aug 2020 18:12:33 +0100
+Date:   Mon, 3 Aug 2020 18:12:33 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     syzbot <syzbot+24ebd650e20bd263ca01@syzkaller.appspotmail.com>
+Cc:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: slab-out-of-bounds Read in hci_le_meta_evt
+Message-ID: <20200803171232.GR1551@shell.armlinux.org.uk>
+References: <000000000000a876b805abfa77e0@google.com>
 MIME-Version: 1.0
-References: <1596433788-3784-1-git-send-email-kernelfans@gmail.com>
-In-Reply-To: <1596433788-3784-1-git-send-email-kernelfans@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 3 Aug 2020 10:12:16 -0700
-Message-ID: <CAKwvOd=o0fjh3VzdHSon+JYECjyDXO552ppGk1xk5VjsvjNtvg@mail.gmail.com>
-Subject: Re: [PATCHv2] x86/purgatory: don't generate debug info for purgatory.ro
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        LKML <linux-kernel@vger.kernel.org>, kexec@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000a876b805abfa77e0@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 2, 2020 at 10:50 PM Pingfan Liu <kernelfans@gmail.com> wrote:
->
-> Purgatory.ro is a standalone binary that is not linked against the rest of
-> the kernel.  Its image is copied into an array that is linked to the
-> kernel, and from there kexec relocates it wherever it desires.
->
-> Unlike the debug info for vmlinux, which can be used for analyzing crash
-> such info is useless in purgatory.ro. And discarding them can save about
-> 200K space.
->
-> Original:
->   259080  kexec-purgatory.o
-> Stripped debug info:
->    29152  kexec-purgatory.o
->
-> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Arvind Sankar <nivedita@alum.mit.edu>
-> Cc: Steve Wahl <steve.wahl@hpe.com>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: kexec@lists.infradead.org
-> To: x86@kernel.org
+Dear syzbot,
 
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Please explain why you are spamming me with all these reports - four so
+far.  I don't understand why you think I should be doing anything with
+these.
 
+Thanks.
+
+On Mon, Aug 03, 2020 at 08:05:21AM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    5a30a789 Merge tag 'x86-urgent-2020-08-02' of git://git.ke..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11cd21cc900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=c0cfcf935bcc94d2
+> dashboard link: https://syzkaller.appspot.com/bug?extid=24ebd650e20bd263ca01
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10fd4504900000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14aa36a4900000
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+24ebd650e20bd263ca01@syzkaller.appspotmail.com
+> 
+> Bluetooth: hci0: unknown advertising packet type: 0x2b
+> ==================================================================
+> BUG: KASAN: slab-out-of-bounds in hci_le_direct_adv_report_evt net/bluetooth/hci_event.c:5850 [inline]
+> BUG: KASAN: slab-out-of-bounds in hci_le_meta_evt+0x380c/0x3eb0 net/bluetooth/hci_event.c:5914
+> Read of size 1 at addr ffff8880a727de0c by task kworker/u5:0/1535
+> 
+> CPU: 1 PID: 1535 Comm: kworker/u5:0 Not tainted 5.8.0-rc7-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Workqueue: hci0 hci_rx_work
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x18f/0x20d lib/dump_stack.c:118
+>  print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
+>  __kasan_report mm/kasan/report.c:513 [inline]
+>  kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+>  hci_le_direct_adv_report_evt net/bluetooth/hci_event.c:5850 [inline]
+>  hci_le_meta_evt+0x380c/0x3eb0 net/bluetooth/hci_event.c:5914
+>  hci_event_packet+0x245a/0x86f5 net/bluetooth/hci_event.c:6167
+>  hci_rx_work+0x22e/0xb10 net/bluetooth/hci_core.c:4705
+>  process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+>  worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+>  kthread+0x3b5/0x4a0 kernel/kthread.c:291
+>  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+> 
+> Allocated by task 6834:
+>  save_stack+0x1b/0x40 mm/kasan/common.c:48
+>  set_track mm/kasan/common.c:56 [inline]
+>  __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
+>  __kmalloc_reserve net/core/skbuff.c:142 [inline]
+>  __alloc_skb+0xae/0x550 net/core/skbuff.c:210
+>  alloc_skb include/linux/skbuff.h:1083 [inline]
+>  bt_skb_alloc include/net/bluetooth/bluetooth.h:377 [inline]
+>  vhci_get_user drivers/bluetooth/hci_vhci.c:165 [inline]
+>  vhci_write+0xbd/0x450 drivers/bluetooth/hci_vhci.c:285
+>  call_write_iter include/linux/fs.h:1908 [inline]
+>  new_sync_write+0x422/0x650 fs/read_write.c:503
+>  vfs_write+0x59d/0x6b0 fs/read_write.c:578
+>  ksys_write+0x12d/0x250 fs/read_write.c:631
+>  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> Freed by task 6627:
+>  save_stack+0x1b/0x40 mm/kasan/common.c:48
+>  set_track mm/kasan/common.c:56 [inline]
+>  kasan_set_free_info mm/kasan/common.c:316 [inline]
+>  __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
+>  __cache_free mm/slab.c:3426 [inline]
+>  kfree+0x103/0x2c0 mm/slab.c:3757
+>  tomoyo_find_next_domain+0x81d/0x1f77 security/tomoyo/domain.c:885
+>  tomoyo_bprm_check_security security/tomoyo/tomoyo.c:101 [inline]
+>  tomoyo_bprm_check_security+0x121/0x1a0 security/tomoyo/tomoyo.c:91
+>  security_bprm_check+0x45/0xa0 security/security.c:840
+>  search_binary_handler fs/exec.c:1737 [inline]
+>  exec_binprm fs/exec.c:1790 [inline]
+>  __do_execve_file+0x1577/0x2ee0 fs/exec.c:1926
+>  do_execveat_common fs/exec.c:1980 [inline]
+>  do_execve+0x35/0x50 fs/exec.c:1997
+>  __do_sys_execve fs/exec.c:2073 [inline]
+>  __se_sys_execve fs/exec.c:2068 [inline]
+>  __x64_sys_execve+0x7c/0xa0 fs/exec.c:2068
+>  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> The buggy address belongs to the object at ffff8880a727dc00
+>  which belongs to the cache kmalloc-512 of size 512
+> The buggy address is located 12 bytes to the right of
+>  512-byte region [ffff8880a727dc00, ffff8880a727de00)
+> The buggy address belongs to the page:
+> page:ffffea00029c9f40 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
+> flags: 0xfffe0000000200(slab)
+> raw: 00fffe0000000200 ffffea00029e3848 ffffea0002731b88 ffff8880aa000a80
+> raw: 0000000000000000 ffff8880a727d000 0000000100000004 0000000000000000
+> page dumped because: kasan: bad access detected
+> 
+> Memory state around the buggy address:
+>  ffff8880a727dd00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>  ffff8880a727dd80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> >ffff8880a727de00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>                       ^
+>  ffff8880a727de80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>  ffff8880a727df00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> ==================================================================
+> 
+> 
 > ---
-
-Thanks for the patch! One thing that can be handy for reviewers (but
-isn't strictly necessary) is to put a comment about what changed since
-the previous version below the above^ `---` line.  By putting comments
-"below the fold" you can pass along information to the reviewers that
-won't wind up in `git log` when committed.  Not strictly necessary,
-and less so for smaller patches, but hope this helps.  (No need for a
-v3 over that).
-
->  arch/x86/purgatory/Makefile | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-> index 088bd76..d24b43a 100644
-> --- a/arch/x86/purgatory/Makefile
-> +++ b/arch/x86/purgatory/Makefile
-> @@ -32,7 +32,7 @@ KCOV_INSTRUMENT := n
->  # make up the standalone purgatory.ro
->
->  PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
-> -PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
-> +PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss -g0
->  PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN) -DDISABLE_BRANCH_PROFILING
->  PURGATORY_CFLAGS += $(call cc-option,-fno-stack-protector)
->
-> @@ -64,6 +64,9 @@ CFLAGS_sha256.o                       += $(PURGATORY_CFLAGS)
->  CFLAGS_REMOVE_string.o         += $(PURGATORY_CFLAGS_REMOVE)
->  CFLAGS_string.o                        += $(PURGATORY_CFLAGS)
->
-> +AFLAGS_REMOVE_setup-x86_$(BITS).o      += -Wa,-gdwarf-2
-> +AFLAGS_REMOVE_entry64.o                        += -Wa,-gdwarf-2
-> +
->  $(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
->                 $(call if_changed,ld)
->
-> --
-> 2.7.5
->
-
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this issue, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+> 
 
 -- 
-Thanks,
-~Nick Desaulniers
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
