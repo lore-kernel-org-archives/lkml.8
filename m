@@ -2,319 +2,393 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A8BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0686EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8115520781
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D02F720738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:47:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="azYzpy5g"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rkaLrT2R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbgHCLqp (ORCPT
+        id S1726726AbgHCLrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 07:46:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36212 "EHLO
+        Mon, 3 Aug 2020 07:47:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbgHCLqf (ORCPT
+        with ESMTP id S1726631AbgHCLoM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 07:46:35 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4E66C06174A;
-        Mon,  3 Aug 2020 04:46:33 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id d27so27904225qtg.4;
-        Mon, 03 Aug 2020 04:46:33 -0700 (PDT)
+        Mon, 3 Aug 2020 07:44:12 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 490EEC061756
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 04:44:11 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a5so23931898wrm.6
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 04:44:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v9w9fbn7yNkef9TLs+zTkzQZ7s1zWhU0/ovW77dwUdg=;
-        b=azYzpy5gBWy177C2zEz3nN8T4CAY59qloyuh1SPx61pASUlcEu3g4Ah2btjKaENBAO
-         ktyNtc2EgorVTn3Ys2vzLcrbORPK6HckUVmWfSL7D6YlKA5WFkWGM1Kysmn51x7RrJsB
-         mRNbCggdhgHJAuzvNXtXb3jv3wsqq/Lh/Fc3Ai4hbv8v+NZ/RhWUV1BYaCKO+RCD0TsU
-         7oaGZmCN4ph2etPxyWqaFPGXsEL8f2wsXAxWCGEfSRvdc1jiisy4yeWbu4G9lN9RuZqd
-         0rEmHyQ9kVPuY9O5zToguFyU01CNyB7e8R8lq4iL95BMHkVn5j3MtxnaEFRXiIuKZ/24
-         0Deg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=wktAXltXvw+OcOM7RYbNsAn2eLrVA+oJrzBSiLVt/V0=;
+        b=rkaLrT2R+413cMnXQSy3VNCm9Nq/WBVIhwd+EDbkxcmEJY4uUXRoP1RZ9+0ROn1AcK
+         YQbElyabChQlEQ73N5zmCKTeNxPe4TlZULeCzZ2jl8OXePossA6Rq5ZJ1OVlmY5z9ET1
+         orORHgh0b77urWJ6y7CbzJqkdbGb1e5kP3CSEsUY00v3c4XNBk5JzBL+2dmHS5TvSxYc
+         MJ0elmZ6eIMiFXPLeGXV+T9B56fTO06/HHB+4hVj0j1f002EIMwIKmbXnujEISUzpOfH
+         DqxovOKa8GVmmBrXg78TZyjVO1+/ODPZof+JHXpxDQUlS9WizZQ8Fxn834l7UTn9gHIA
+         RImw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v9w9fbn7yNkef9TLs+zTkzQZ7s1zWhU0/ovW77dwUdg=;
-        b=BhdvfWo0jLecLuaHWp0I7rIWtBqGxUCdFJcN1YzpYDLyWQNAd7eQ/kkhoMT0n73Bzf
-         Uvg5HcJt5Ubnk20nRsggPhO/i2qy+vdLon6TkdOYV/KMFes4GKLoPYwmluvkvHc00SbS
-         J4UQ/XDhr7JGEZ9BEJUNciVRN7dYVI2P9Md+IX4Y4N9Fx2Hw5E+egOQ6zhlev+rcAFyt
-         ikWE73ijr6kda/z4QpRoS+R/OwTOpZtiZg4/SQfqpqxENtEdBN/go+wvlVYks/NU7+bP
-         T8g4pGzy6Q5pxV04zrtfa4SGz+58Q07694wCkrUjYKPylNRB060mDdRmI8T7Y9HsAqu+
-         afkA==
-X-Gm-Message-State: AOAM533WQQKaPGEOBFT/o57dHbGiUdih5YtpUCe5WQMN884W20pVGKm9
-        seKSbfy0E52oiKOzd9psON/h/po5mu8fUbIgg4M=
-X-Google-Smtp-Source: ABdhPJy6gn2ytTr6DFZ70N7zNh22A3+ulj9QDSMWwwPeofE/1A22C8/kgSZ6X3X+Ddv4X0eRYpIXJKAkFUV3CAgvKlk=
-X-Received: by 2002:aed:33a5:: with SMTP id v34mr16035859qtd.262.1596455192588;
- Mon, 03 Aug 2020 04:46:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200731110240.98326-2-refactormyself@gmail.com> <20200731135523.GA3717@bjorn-Precision-5520>
-In-Reply-To: <20200731135523.GA3717@bjorn-Precision-5520>
-From:   Ian Kumlien <ian.kumlien@gmail.com>
-Date:   Mon, 3 Aug 2020 13:46:21 +0200
-Message-ID: <CAA85sZt1_dwpxXMrjHc+5wEH-1w9X4km95UvCzEXqJ_o-OS6Hw@mail.gmail.com>
-Subject: Re: [PATCH v4 01/12] IB/hfi1: Check if pcie_capability_read_*() reads ~0
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, bjorn@helgaas.com,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-rdma@vger.kernel.org,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        Ashutosh Dixit <ashutosh.dixit@intel.com>,
-        Puranjay Mohan <puranjay12@gmail.com>
-Content-Type: multipart/mixed; boundary="000000000000a7ee6b05abf7b098"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=wktAXltXvw+OcOM7RYbNsAn2eLrVA+oJrzBSiLVt/V0=;
+        b=ntaq2Ga9k0qaHjWqwPwcJvE7MClfLLgb86MOB1pFc3RITJziCrKakvX+xwWPZfat5t
+         lWrDCnFHQ9pBOEUMuePzeQfgfiaupPU268AxCMn36cZtzNVrXm5HoQ/DBdLqiaXxmQPt
+         iFoegkrUr9K0N9t3oVgSNk6ago8HOrMxOsTuV9Zb3Nb4udhwwEx3FnyxevtHMPFrB/Wh
+         iZ53xtkKhCc+36BIpWg8eKA+zOfkcavJcHxQBHxWOi6Vca70QeyOk2kNjSH/0XMMnQ9F
+         0whSfQAs41buySbAsdueHezq05CeNZWvi3HT8mRaxgdQDpYmxFGZJdU23HDczb6AYmbU
+         Mmlw==
+X-Gm-Message-State: AOAM530bN1PFGhoUYmj/LX84gOA2onHxa6Da3VC90ZRQ6wGG28FlSG6v
+        lsT0OLuC7wu5GJjEjTydEtqrJHVF
+X-Google-Smtp-Source: ABdhPJzVqxe6f9eqD/c+WSr4c0lJ/wQR9BJw1a3ePbUWctwUz4KbcITx+v9/0j7vCQxjaKBHP6cVtg==
+X-Received: by 2002:a5d:6348:: with SMTP id b8mr14646045wrw.362.1596455049138;
+        Mon, 03 Aug 2020 04:44:09 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
+        by smtp.gmail.com with ESMTPSA id 128sm24155441wmz.43.2020.08.03.04.44.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 04:44:07 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
+Cc:     Ofir Bitton <obitton@habana.ai>
+Subject: [PATCH v2 2/2] habanalabs: add information about PCIe controller
+Date:   Mon,  3 Aug 2020 14:44:02 +0300
+Message-Id: <20200803114402.26013-2-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200803114402.26013-1-oded.gabbay@gmail.com>
+References: <20200803114402.26013-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---000000000000a7ee6b05abf7b098
-Content-Type: text/plain; charset="UTF-8"
+From: Ofir Bitton <obitton@habana.ai>
 
-On Fri, Jul 31, 2020 at 3:55 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc Michael, Ashutosh, Ian, Puranjay]
->
-> On Fri, Jul 31, 2020 at 01:02:29PM +0200, Saheed O. Bolarinwa wrote:
-> > On failure pcie_capability_read_dword() sets it's last parameter,
-> > val to 0. In this case dn and up will be 0, so aspm_hw_l1_supported()
-> > will return false.
-> > However, with Patch 12/12, it is possible that val is set to ~0 on
-> > failure. This would introduce a bug because (x & x) == (~0 & x). So
-> > with dn and up being 0x02, a true value is return when the read has
-> > actually failed.
-> >
-> > Since, the value ~0 is invalid here,
-> >
-> > Reset dn and up to 0 when a value of ~0 is read into them, this
-> > ensures false is returned on failure in this case.
-> >
-> > Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
-> > Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
-> > ---
-> >
-> >  drivers/infiniband/hw/hfi1/aspm.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/infiniband/hw/hfi1/aspm.c b/drivers/infiniband/hw/hfi1/aspm.c
-> > index a3c53be4072c..9605b2145d19 100644
-> > --- a/drivers/infiniband/hw/hfi1/aspm.c
-> > +++ b/drivers/infiniband/hw/hfi1/aspm.c
-> > @@ -33,13 +33,13 @@ static bool aspm_hw_l1_supported(struct hfi1_devdata *dd)
-> >               return false;
-> >
-> >       pcie_capability_read_dword(dd->pcidev, PCI_EXP_LNKCAP, &dn);
-> > -     dn = ASPM_L1_SUPPORTED(dn);
-> > +     dn = (dn == (u32)~0) ? 0 : ASPM_L1_SUPPORTED(dn);
-> >
-> >       pcie_capability_read_dword(parent, PCI_EXP_LNKCAP, &up);
-> > -     up = ASPM_L1_SUPPORTED(up);
-> > +     up = (up == (u32)~0) ? 0 : ASPM_L1_SUPPORTED(up);
->
-> I don't want to change this.  The driver shouldn't be mucking with
-> ASPM at all.  The PCI core should take care of this automatically.  If
-> it doesn't, we need to fix the core.
->
-> If the driver needs to disable ASPM to work around device errata or
-> something, the core has an interface for that.  But the driver should
-> not override the system-wide policy for managing ASPM.
->
-> Ah, some archaeology finds affa48de8417 ("staging/rdma/hfi1: Add
-> support for enabling/disabling PCIe ASPM"), which says:
->
->   hfi1 HW has a high PCIe ASPM L1 exit latency and also advertises an
->   acceptable latency less than actual ASPM latencies.
->
-> That suggests that either there is a device defect, e.g., advertising
-> incorrect ASPM latencies, or a PCI core defect, e.g., incorrectly
-> enabling ASPM when the path exit latency exceeds that hfi1 can
-> tolerate.
->
-> Coincidentally, Ian recently debugged a problem in how the PCI core
-> computes exit latencies over a path [1].
->
-> Can anybody supply details about the hfi1 ASPM parameters, e.g., the
-> output of "sudo lspci -vv"?  Any details about the configuration where
-> the problem occurs?  Is there a switch in the path?
->
-> [1] https://lore.kernel.org/r/20200727213045.2117855-1-ian.kumlien@gmail.com
->
-> >       /* ASPM works on A-step but is reported as not supported */
-> > -     return (!!dn || is_ax(dd)) && !!up;
-> > +     return (dn || is_ax(dd)) && up;
-> >  }
-> >
-> >  /* Set L1 entrance latency for slower entry to L1 */
-> > --
-> > 2.18.4
-> >
+Update firmware header with new API for getting pcie info
+such as tx/rx throughput and replay counter.
+These counters are needed by customers for monitor and maintenance
+of multiple devices.
+Add new opcodes to the INFO ioctl to retrieve these counters.
 
-My experience with pcie is very limited, but the more I look at things
-the more I get worried...
+Signed-off-by: Ofir Bitton <obitton@habana.ai>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+---
+Changes in v2:
+  - Properly cast message variables sent to device CPU when fetching
+    PCI throughput counters
 
-Anyway, I have made some changes, could you try the attached patch and
-see if it makes a difference?
+ drivers/misc/habanalabs/common/firmware_if.c  | 48 +++++++++++++++++++
+ drivers/misc/habanalabs/common/habanalabs.h   |  4 ++
+ .../misc/habanalabs/common/habanalabs_ioctl.c | 41 ++++++++++++++++
+ drivers/misc/habanalabs/gaudi/gaudi.c         |  4 ++
+ drivers/misc/habanalabs/goya/goya.c           |  4 ++
+ .../misc/habanalabs/include/common/armcp_if.h | 10 ++++
+ include/uapi/misc/habanalabs.h                | 27 +++++++++++
+ 7 files changed, 138 insertions(+)
 
-Changes:
-L0s and L1 should only apply to links that actually has it enabled,
-don't store or increase values if they don't.
-Work on L0s as well, currently it clobbers since I'm not certain about
-upstream/downstream distinctions.
-
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index b17e5ffd31b1..0d93ae065f73 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -434,7 +434,8 @@ static void pcie_get_aspm_reg(struct pci_dev *pdev,
-
- static void pcie_aspm_check_latency(struct pci_dev *endpoint)
+diff --git a/drivers/misc/habanalabs/common/firmware_if.c b/drivers/misc/habanalabs/common/firmware_if.c
+index f70302cdab1b..0842c2211475 100644
+--- a/drivers/misc/habanalabs/common/firmware_if.c
++++ b/drivers/misc/habanalabs/common/firmware_if.c
+@@ -354,6 +354,54 @@ int hl_fw_get_eeprom_data(struct hl_device *hdev, void *data, size_t max_size)
+ 	return rc;
+ }
+ 
++int hl_fw_armcp_pci_counters_get(struct hl_device *hdev,
++		struct hl_info_pci_counters *counters)
++{
++	struct armcp_packet pkt = {};
++	long result;
++	int rc;
++
++	pkt.ctl = cpu_to_le32(ARMCP_PACKET_PCIE_THROUGHPUT_GET <<
++			ARMCP_PKT_CTL_OPCODE_SHIFT);
++
++	/* Fetch PCI rx counter */
++	pkt.index = cpu_to_le32(armcp_pcie_throughput_rx);
++	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
++					HL_ARMCP_INFO_TIMEOUT_USEC, &result);
++	if (rc) {
++		dev_err(hdev->dev,
++			"Failed to handle ArmCP PCI info pkt, error %d\n", rc);
++		return rc;
++	}
++	counters->rx_throughput = result;
++
++	/* Fetch PCI tx counter */
++	pkt.index = cpu_to_le32(armcp_pcie_throughput_tx);
++	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
++					HL_ARMCP_INFO_TIMEOUT_USEC, &result);
++	if (rc) {
++		dev_err(hdev->dev,
++			"Failed to handle ArmCP PCI info pkt, error %d\n", rc);
++		return rc;
++	}
++	counters->tx_throughput = result;
++
++	/* Fetch PCI replay counter */
++	pkt.ctl = cpu_to_le32(ARMCP_PACKET_PCIE_REPLAY_CNT_GET <<
++			ARMCP_PKT_CTL_OPCODE_SHIFT);
++
++	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
++			HL_ARMCP_INFO_TIMEOUT_USEC, &result);
++	if (rc) {
++		dev_err(hdev->dev,
++			"Failed to handle ArmCP PCI info pkt, error %d\n", rc);
++		return rc;
++	}
++	counters->replay_cnt = (u32) result;
++
++	return rc;
++}
++
+ static void fw_read_errors(struct hl_device *hdev, u32 boot_err0_reg)
  {
--       u32 latency, l1_switch_latency = 0;
-+       u32 latency, l1_max_latency = 0, l1_switch_latency = 0,
-+               l0s_max_latency = 0;
-        struct aspm_latency *acceptable;
-        struct pcie_link_state *link;
-
-@@ -447,15 +448,24 @@ static void pcie_aspm_check_latency(struct
-pci_dev *endpoint)
-        acceptable = &link->acceptable[PCI_FUNC(endpoint->devfn)];
-
-        while (link) {
--               /* Check upstream direction L0s latency */
--               if ((link->aspm_capable & ASPM_STATE_L0S_UP) &&
--                   (link->latency_up.l0s > acceptable->l0s))
--                       link->aspm_capable &= ~ASPM_STATE_L0S_UP;
--
--               /* Check downstream direction L0s latency */
--               if ((link->aspm_capable & ASPM_STATE_L0S_DW) &&
--                   (link->latency_dw.l0s > acceptable->l0s))
--                       link->aspm_capable &= ~ASPM_STATE_L0S_DW;
-+               if (link->aspm_capable & ASPM_STATE_L0S) {
-+                       u32 l0s_up = 0, l0s_dw = 0;
+ 	u32 err_val;
+diff --git a/drivers/misc/habanalabs/common/habanalabs.h b/drivers/misc/habanalabs/common/habanalabs.h
+index 6df9db821a31..942f7e52f1a2 100644
+--- a/drivers/misc/habanalabs/common/habanalabs.h
++++ b/drivers/misc/habanalabs/common/habanalabs.h
+@@ -1481,6 +1481,7 @@ struct hl_device_idle_busy_ts {
+  * @soft_reset_cnt: number of soft reset since the driver was loaded.
+  * @hard_reset_cnt: number of hard reset since the driver was loaded.
+  * @idle_busy_ts_idx: index of current entry in idle_busy_ts_arr
++ * @clk_throttling_reason: bitmask represents the current clk throttling reasons
+  * @id: device minor.
+  * @id_control: minor of the control device
+  * @cpu_pci_msb_addr: 50-bit extension bits for the device CPU's 40-bit
+@@ -1584,6 +1585,7 @@ struct hl_device {
+ 	u32				soft_reset_cnt;
+ 	u32				hard_reset_cnt;
+ 	u32				idle_busy_ts_idx;
++	u32				clk_throttling_reason;
+ 	u16				id;
+ 	u16				id_control;
+ 	u16				cpu_pci_msb_addr;
+@@ -1838,6 +1840,8 @@ void hl_fw_cpu_accessible_dma_pool_free(struct hl_device *hdev, size_t size,
+ int hl_fw_send_heartbeat(struct hl_device *hdev);
+ int hl_fw_armcp_info_get(struct hl_device *hdev);
+ int hl_fw_get_eeprom_data(struct hl_device *hdev, void *data, size_t max_size);
++int hl_fw_armcp_pci_counters_get(struct hl_device *hdev,
++		struct hl_info_pci_counters *counters);
+ int hl_fw_init_cpu(struct hl_device *hdev, u32 cpu_boot_status_reg,
+ 			u32 msg_to_cpu_reg, u32 cpu_msg_status_reg,
+ 			u32 boot_err0_reg, bool skip_bmc,
+diff --git a/drivers/misc/habanalabs/common/habanalabs_ioctl.c b/drivers/misc/habanalabs/common/habanalabs_ioctl.c
+index 5af1c03da473..4d838b1a3bbe 100644
+--- a/drivers/misc/habanalabs/common/habanalabs_ioctl.c
++++ b/drivers/misc/habanalabs/common/habanalabs_ioctl.c
+@@ -276,6 +276,41 @@ static int time_sync_info(struct hl_device *hdev, struct hl_info_args *args)
+ 		min((size_t) max_size, sizeof(time_sync))) ? -EFAULT : 0;
+ }
+ 
++static int pci_counters_info(struct hl_fpriv *hpriv, struct hl_info_args *args)
++{
++	struct hl_device *hdev = hpriv->hdev;
++	struct hl_info_pci_counters pci_counters = {0};
++	u32 max_size = args->return_size;
++	void __user *out = (void __user *) (uintptr_t) args->return_pointer;
++	int rc;
 +
-+                       /* Check upstream direction L0s latency */
-+                       if (link->aspm_capable & ASPM_STATE_L0S_UP)
-+                               l0s_up = link->latency_up.l0s;
++	if ((!max_size) || (!out))
++		return -EINVAL;
 +
-+                       /* Check downstream direction L0s latency */
-+                       if (link->aspm_capable & ASPM_STATE_L0S_DW)
-+                               l0s_dw = link->latency_dw.l0s;
++	rc = hl_fw_armcp_pci_counters_get(hdev, &pci_counters);
++	if (rc)
++		return rc;
 +
-+                       l0s_max_latency += max_t(u32, l0s_up, l0s_dw);
++	return copy_to_user(out, &pci_counters,
++		min((size_t) max_size, sizeof(pci_counters))) ? -EFAULT : 0;
++}
 +
-+                       /* If the latency exceeds, disable both */
-+                       if (l0s_max_latency > acceptable->l0s)
-+                               link->aspm_capable &= ~ASPM_STATE_L0S;
-+               }
++static int clk_throttle_info(struct hl_fpriv *hpriv, struct hl_info_args *args)
++{
++	struct hl_device *hdev = hpriv->hdev;
++	struct hl_info_clk_throttle clk_throttle = {0};
++	u32 max_size = args->return_size;
++	void __user *out = (void __user *) (uintptr_t) args->return_pointer;
 +
-                /*
-                 * Check L1 latency.
-                 * Every switch on the path to root complex need 1
-@@ -469,11 +479,13 @@ static void pcie_aspm_check_latency(struct
-pci_dev *endpoint)
-                 * L1 exit latencies advertised by a device include L1
-                 * substate latencies (and hence do not do any check).
-                 */
--               latency = max_t(u32, link->latency_up.l1, link->latency_dw.l1);
--               if ((link->aspm_capable & ASPM_STATE_L1) &&
--                   (latency + l1_switch_latency > acceptable->l1))
--                       link->aspm_capable &= ~ASPM_STATE_L1;
--               l1_switch_latency += 1000;
-+               if (link->aspm_capable & ASPM_STATE_L1) {
-+                       latency = max_t(u32, link->latency_up.l1,
-link->latency_dw.l1);
-+                       l1_max_latency = max_t(u32, latency, l1_max_latency);
-+                       if (l1_max_latency + l1_switch_latency > acceptable->l1)
-+                               link->aspm_capable &= ~ASPM_STATE_L1;
-+                       l1_switch_latency += 1000;
-+               }
++	if ((!max_size) || (!out))
++		return -EINVAL;
++
++	clk_throttle.clk_throttling_reason = hdev->clk_throttling_reason;
++
++	return copy_to_user(out, &clk_throttle,
++		min((size_t) max_size, sizeof(clk_throttle))) ? -EFAULT : 0;
++}
++
+ static int cs_counters_info(struct hl_fpriv *hpriv, struct hl_info_args *args)
+ {
+ 	struct hl_device *hdev = hpriv->hdev;
+@@ -360,6 +395,12 @@ static int _hl_info_ioctl(struct hl_fpriv *hpriv, void *data,
+ 	case HL_INFO_CS_COUNTERS:
+ 		return cs_counters_info(hpriv, args);
+ 
++	case HL_INFO_PCI_COUNTERS:
++		return pci_counters_info(hpriv, args);
++
++	case HL_INFO_CLK_THROTTLE_REASON:
++		return clk_throttle_info(hpriv, args);
++
+ 	default:
+ 		dev_err(dev, "Invalid request %d\n", args->op);
+ 		rc = -ENOTTY;
+diff --git a/drivers/misc/habanalabs/gaudi/gaudi.c b/drivers/misc/habanalabs/gaudi/gaudi.c
+index 00a0a7238d81..41d55a5f7f83 100644
+--- a/drivers/misc/habanalabs/gaudi/gaudi.c
++++ b/drivers/misc/habanalabs/gaudi/gaudi.c
+@@ -5620,21 +5620,25 @@ static void gaudi_print_clk_change_info(struct hl_device *hdev,
+ {
+ 	switch (event_type) {
+ 	case GAUDI_EVENT_FIX_POWER_ENV_S:
++		hdev->clk_throttling_reason |= HL_CLK_THROTTLE_POWER;
+ 		dev_info_ratelimited(hdev->dev,
+ 			"Clock throttling due to power consumption\n");
+ 		break;
+ 
+ 	case GAUDI_EVENT_FIX_POWER_ENV_E:
++		hdev->clk_throttling_reason &= ~HL_CLK_THROTTLE_POWER;
+ 		dev_info_ratelimited(hdev->dev,
+ 			"Power envelop is safe, back to optimal clock\n");
+ 		break;
+ 
+ 	case GAUDI_EVENT_FIX_THERMAL_ENV_S:
++		hdev->clk_throttling_reason |= HL_CLK_THROTTLE_THERMAL;
+ 		dev_info_ratelimited(hdev->dev,
+ 			"Clock throttling due to overheating\n");
+ 		break;
+ 
+ 	case GAUDI_EVENT_FIX_THERMAL_ENV_E:
++		hdev->clk_throttling_reason &= ~HL_CLK_THROTTLE_THERMAL;
+ 		dev_info_ratelimited(hdev->dev,
+ 			"Thermal envelop is safe, back to optimal clock\n");
+ 		break;
+diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+index 85030759b2af..c497ae25c331 100644
+--- a/drivers/misc/habanalabs/goya/goya.c
++++ b/drivers/misc/habanalabs/goya/goya.c
+@@ -4549,18 +4549,22 @@ static void goya_print_clk_change_info(struct hl_device *hdev, u16 event_type)
+ {
+ 	switch (event_type) {
+ 	case GOYA_ASYNC_EVENT_ID_FIX_POWER_ENV_S:
++		hdev->clk_throttling_reason |= HL_CLK_THROTTLE_POWER;
+ 		dev_info_ratelimited(hdev->dev,
+ 			"Clock throttling due to power consumption\n");
+ 		break;
+ 	case GOYA_ASYNC_EVENT_ID_FIX_POWER_ENV_E:
++		hdev->clk_throttling_reason &= ~HL_CLK_THROTTLE_POWER;
+ 		dev_info_ratelimited(hdev->dev,
+ 			"Power envelop is safe, back to optimal clock\n");
+ 		break;
+ 	case GOYA_ASYNC_EVENT_ID_FIX_THERMAL_ENV_S:
++		hdev->clk_throttling_reason |= HL_CLK_THROTTLE_THERMAL;
+ 		dev_info_ratelimited(hdev->dev,
+ 			"Clock throttling due to overheating\n");
+ 		break;
+ 	case GOYA_ASYNC_EVENT_ID_FIX_THERMAL_ENV_E:
++		hdev->clk_throttling_reason &= ~HL_CLK_THROTTLE_THERMAL;
+ 		dev_info_ratelimited(hdev->dev,
+ 			"Thermal envelop is safe, back to optimal clock\n");
+ 		break;
+diff --git a/drivers/misc/habanalabs/include/common/armcp_if.h b/drivers/misc/habanalabs/include/common/armcp_if.h
+index 07f9972db28d..1403c937253c 100644
+--- a/drivers/misc/habanalabs/include/common/armcp_if.h
++++ b/drivers/misc/habanalabs/include/common/armcp_if.h
+@@ -243,6 +243,8 @@ enum armcp_packet_id {
+ 	ARMCP_PACKET_TEMPERATURE_SET,		/* sysfs */
+ 	ARMCP_PACKET_VOLTAGE_SET,		/* sysfs */
+ 	ARMCP_PACKET_CURRENT_SET,		/* sysfs */
++	ARMCP_PACKET_PCIE_THROUGHPUT_GET,	/* internal */
++	ARMCP_PACKET_PCIE_REPLAY_CNT_GET,	/* internal */
+ };
+ 
+ #define ARMCP_PACKET_FENCE_VAL	0xFE8CE7A5
+@@ -277,6 +279,9 @@ struct armcp_packet {
+ 			__u8 pad; /* unused */
+ 		};
+ 
++		/* For any general request */
++		__le32 index;
++
+ 		/* For frequency get/set */
+ 		__le32 pll_index;
+ 
+@@ -344,6 +349,11 @@ enum armcp_pwm_attributes {
+ 	armcp_pwm_enable
+ };
+ 
++enum armcp_pcie_throughput_attributes {
++	armcp_pcie_throughput_tx,
++	armcp_pcie_throughput_rx
++};
++
+ /* Event Queue Packets */
+ 
+ struct eq_generic_event {
+diff --git a/include/uapi/misc/habanalabs.h b/include/uapi/misc/habanalabs.h
+index d5c4f983b7a8..ee13b919db35 100644
+--- a/include/uapi/misc/habanalabs.h
++++ b/include/uapi/misc/habanalabs.h
+@@ -264,6 +264,8 @@ enum hl_device_status {
+  * HL_INFO_TIME_SYNC     - Retrieve the device's time alongside the host's time
+  *                         for synchronization.
+  * HL_INFO_CS_COUNTERS   - Retrieve command submission counters
++ * HL_INFO_PCI_COUNTERS  - Retrieve PCI counters
++ * HL_INFO_CLK_THROTTLE_REASON - Retrieve clock throttling reason
+  */
+ #define HL_INFO_HW_IP_INFO		0
+ #define HL_INFO_HW_EVENTS		1
+@@ -276,6 +278,8 @@ enum hl_device_status {
+ #define HL_INFO_RESET_COUNT		9
+ #define HL_INFO_TIME_SYNC		10
+ #define HL_INFO_CS_COUNTERS		11
++#define HL_INFO_PCI_COUNTERS		12
++#define HL_INFO_CLK_THROTTLE_REASON	13
+ 
+ #define HL_INFO_VERSION_MAX_LEN	128
+ #define HL_INFO_CARD_NAME_MAX_LEN	16
+@@ -340,6 +344,29 @@ struct hl_info_time_sync {
+ 	__u64 host_time;
+ };
+ 
++/**
++ * struct hl_info_pci_counters - pci counters
++ * @rx_throughput: PCI rx throughput KBps
++ * @tx_throughput: PCI tx throughput KBps
++ * @replay_cnt: PCI replay counter
++ */
++struct hl_info_pci_counters {
++	__u64 rx_throughput;
++	__u64 tx_throughput;
++	__u64 replay_cnt;
++};
++
++#define HL_CLK_THROTTLE_POWER	0x1
++#define HL_CLK_THROTTLE_THERMAL	0x2
++
++/**
++ * struct hl_info_clk_throttle - clock throttling reason
++ * @clk_throttling_reason: each bit represents a clk throttling reason
++ */
++struct hl_info_clk_throttle {
++	__u32 clk_throttling_reason;
++};
++
+ /**
+  * struct hl_info_cs_counters - command submission counters
+  * @out_of_mem_drop_cnt: dropped due to memory allocation issue
+-- 
+2.17.1
 
-                link = link->parent;
-        }
-
---000000000000a7ee6b05abf7b098
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-Use-maximum-latency-when-determining-L1-L0s-ASPM.patch"
-Content-Disposition: attachment; 
-	filename="0001-Use-maximum-latency-when-determining-L1-L0s-ASPM.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_kdeg1dxx0>
-X-Attachment-Id: f_kdeg1dxx0
-
-RnJvbSA5NzE3MzViZDMyZDdhOGNiN2NkMWE4ZDQzMTZmYzJhMmUxOTJmOGUyIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBJYW4gS3VtbGllbiA8aWFuLmt1bWxpZW5AZ21haWwuY29tPgpE
-YXRlOiBTdW4sIDI2IEp1bCAyMDIwIDE2OjAxOjE1ICswMjAwClN1YmplY3Q6IFtQQVRDSF0gVXNl
-IG1heGltdW0gbGF0ZW5jeSB3aGVuIGRldGVybWluaW5nIEwxL0wwcyBBU1BNCgpDdXJyZW50bHkg
-d2UgY2hlY2sgdGhlIG1heGltdW0gbGF0ZW5jeSBvZiB1cHN0cmVhbSBhbmQgZG93bnN0cmVhbQpw
-ZXIgbGluaywgbm90IHRoZSBtYXhpbXVtIGZvciB0aGUgcGF0aAoKVGhpcyB3b3VsZCB3b3JrIGlm
-IGFsbCBsaW5rcyBoYXZlIHRoZSBzYW1lIGxhdGVuY3ksIGJ1dDoKZW5kcG9pbnQgLT4gYyAtPiBi
-IC0+IGEgLT4gcm9vdCAgKGluIHRoZSBvcmRlciB3ZSB3YWxrIHRoZSBwYXRoKQoKSWYgYyBvciBi
-IGhhcyB0aGUgaGlnZXN0IGxhdGVuY3ksIGl0IHdpbGwgbm90IHJlZ2lzdGVyCgpGaXggdGhpcyBi
-eSBtYWludGFpbmluZyB0aGUgbWF4aW11bSBsYXRlbmN5IHZhbHVlIGZvciB0aGUgcGF0aAoKQWxz
-bywgTDBzIHNlZW1zIHRvIGJlIGEgY3VtdWxhdGl2ZSBtYXhpbXVtIG92ZXIgdGhlIHBhdGgsIGZp
-eCB0aGlzIGFzCndlbGwKClRoaXMgY2hhbmdlIGZpeGVzIGEgcmVncmVzc2lvbiBpbnRyb2R1Y2Vk
-IChidXQgbm90IGNhdXNlZCkgYnk6CjY2ZmYxNGU1OWU4YSAoUENJL0FTUE06IEFsbG93IEFTUE0g
-b24gbGlua3MgdG8gUENJZS10by1QQ0kvUENJLVggQnJpZGdlcykKClNpZ25lZC1vZmYtYnk6IElh
-biBLdW1saWVuIDxpYW4ua3VtbGllbkBnbWFpbC5jb20+Ci0tLQogZHJpdmVycy9wY2kvcGNpZS9h
-c3BtLmMgfCA0MiArKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLQogMSBm
-aWxlIGNoYW5nZWQsIDI3IGluc2VydGlvbnMoKyksIDE1IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvcGNpL3BjaWUvYXNwbS5jIGIvZHJpdmVycy9wY2kvcGNpZS9hc3BtLmMKaW5k
-ZXggYjE3ZTVmZmQzMWIxLi4wZDkzYWUwNjVmNzMgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvcGNpL3Bj
-aWUvYXNwbS5jCisrKyBiL2RyaXZlcnMvcGNpL3BjaWUvYXNwbS5jCkBAIC00MzQsNyArNDM0LDgg
-QEAgc3RhdGljIHZvaWQgcGNpZV9nZXRfYXNwbV9yZWcoc3RydWN0IHBjaV9kZXYgKnBkZXYsCiAK
-IHN0YXRpYyB2b2lkIHBjaWVfYXNwbV9jaGVja19sYXRlbmN5KHN0cnVjdCBwY2lfZGV2ICplbmRw
-b2ludCkKIHsKLQl1MzIgbGF0ZW5jeSwgbDFfc3dpdGNoX2xhdGVuY3kgPSAwOworCXUzMiBsYXRl
-bmN5LCBsMV9tYXhfbGF0ZW5jeSA9IDAsIGwxX3N3aXRjaF9sYXRlbmN5ID0gMCwKKwkJbDBzX21h
-eF9sYXRlbmN5ID0gMDsKIAlzdHJ1Y3QgYXNwbV9sYXRlbmN5ICphY2NlcHRhYmxlOwogCXN0cnVj
-dCBwY2llX2xpbmtfc3RhdGUgKmxpbms7CiAKQEAgLTQ0NywxNSArNDQ4LDI0IEBAIHN0YXRpYyB2
-b2lkIHBjaWVfYXNwbV9jaGVja19sYXRlbmN5KHN0cnVjdCBwY2lfZGV2ICplbmRwb2ludCkKIAlh
-Y2NlcHRhYmxlID0gJmxpbmstPmFjY2VwdGFibGVbUENJX0ZVTkMoZW5kcG9pbnQtPmRldmZuKV07
-CiAKIAl3aGlsZSAobGluaykgewotCQkvKiBDaGVjayB1cHN0cmVhbSBkaXJlY3Rpb24gTDBzIGxh
-dGVuY3kgKi8KLQkJaWYgKChsaW5rLT5hc3BtX2NhcGFibGUgJiBBU1BNX1NUQVRFX0wwU19VUCkg
-JiYKLQkJICAgIChsaW5rLT5sYXRlbmN5X3VwLmwwcyA+IGFjY2VwdGFibGUtPmwwcykpCi0JCQls
-aW5rLT5hc3BtX2NhcGFibGUgJj0gfkFTUE1fU1RBVEVfTDBTX1VQOwotCi0JCS8qIENoZWNrIGRv
-d25zdHJlYW0gZGlyZWN0aW9uIEwwcyBsYXRlbmN5ICovCi0JCWlmICgobGluay0+YXNwbV9jYXBh
-YmxlICYgQVNQTV9TVEFURV9MMFNfRFcpICYmCi0JCSAgICAobGluay0+bGF0ZW5jeV9kdy5sMHMg
-PiBhY2NlcHRhYmxlLT5sMHMpKQotCQkJbGluay0+YXNwbV9jYXBhYmxlICY9IH5BU1BNX1NUQVRF
-X0wwU19EVzsKKwkJaWYgKGxpbmstPmFzcG1fY2FwYWJsZSAmIEFTUE1fU1RBVEVfTDBTKSB7CisJ
-CQl1MzIgbDBzX3VwID0gMCwgbDBzX2R3ID0gMDsKKworCQkJLyogQ2hlY2sgdXBzdHJlYW0gZGly
-ZWN0aW9uIEwwcyBsYXRlbmN5ICovCisJCQlpZiAobGluay0+YXNwbV9jYXBhYmxlICYgQVNQTV9T
-VEFURV9MMFNfVVApCisJCQkJbDBzX3VwID0gbGluay0+bGF0ZW5jeV91cC5sMHM7CisKKwkJCS8q
-IENoZWNrIGRvd25zdHJlYW0gZGlyZWN0aW9uIEwwcyBsYXRlbmN5ICovCisJCQlpZiAobGluay0+
-YXNwbV9jYXBhYmxlICYgQVNQTV9TVEFURV9MMFNfRFcpCisJCQkJbDBzX2R3ID0gbGluay0+bGF0
-ZW5jeV9kdy5sMHM7CisKKwkJCWwwc19tYXhfbGF0ZW5jeSArPSBtYXhfdCh1MzIsIGwwc191cCwg
-bDBzX2R3KTsKKworCQkJLyogSWYgdGhlIGxhdGVuY3kgZXhjZWVkcywgZGlzYWJsZSBib3RoICov
-CisJCQlpZiAobDBzX21heF9sYXRlbmN5ID4gYWNjZXB0YWJsZS0+bDBzKQorCQkJCWxpbmstPmFz
-cG1fY2FwYWJsZSAmPSB+QVNQTV9TVEFURV9MMFM7CisJCX0KKwogCQkvKgogCQkgKiBDaGVjayBM
-MSBsYXRlbmN5LgogCQkgKiBFdmVyeSBzd2l0Y2ggb24gdGhlIHBhdGggdG8gcm9vdCBjb21wbGV4
-IG5lZWQgMQpAQCAtNDY5LDExICs0NzksMTMgQEAgc3RhdGljIHZvaWQgcGNpZV9hc3BtX2NoZWNr
-X2xhdGVuY3koc3RydWN0IHBjaV9kZXYgKmVuZHBvaW50KQogCQkgKiBMMSBleGl0IGxhdGVuY2ll
-cyBhZHZlcnRpc2VkIGJ5IGEgZGV2aWNlIGluY2x1ZGUgTDEKIAkJICogc3Vic3RhdGUgbGF0ZW5j
-aWVzIChhbmQgaGVuY2UgZG8gbm90IGRvIGFueSBjaGVjaykuCiAJCSAqLwotCQlsYXRlbmN5ID0g
-bWF4X3QodTMyLCBsaW5rLT5sYXRlbmN5X3VwLmwxLCBsaW5rLT5sYXRlbmN5X2R3LmwxKTsKLQkJ
-aWYgKChsaW5rLT5hc3BtX2NhcGFibGUgJiBBU1BNX1NUQVRFX0wxKSAmJgotCQkgICAgKGxhdGVu
-Y3kgKyBsMV9zd2l0Y2hfbGF0ZW5jeSA+IGFjY2VwdGFibGUtPmwxKSkKLQkJCWxpbmstPmFzcG1f
-Y2FwYWJsZSAmPSB+QVNQTV9TVEFURV9MMTsKLQkJbDFfc3dpdGNoX2xhdGVuY3kgKz0gMTAwMDsK
-KwkJaWYgKGxpbmstPmFzcG1fY2FwYWJsZSAmIEFTUE1fU1RBVEVfTDEpIHsKKwkJCWxhdGVuY3kg
-PSBtYXhfdCh1MzIsIGxpbmstPmxhdGVuY3lfdXAubDEsIGxpbmstPmxhdGVuY3lfZHcubDEpOwor
-CQkJbDFfbWF4X2xhdGVuY3kgPSBtYXhfdCh1MzIsIGxhdGVuY3ksIGwxX21heF9sYXRlbmN5KTsK
-KwkJCWlmIChsMV9tYXhfbGF0ZW5jeSArIGwxX3N3aXRjaF9sYXRlbmN5ID4gYWNjZXB0YWJsZS0+
-bDEpCisJCQkJbGluay0+YXNwbV9jYXBhYmxlICY9IH5BU1BNX1NUQVRFX0wxOworCQkJbDFfc3dp
-dGNoX2xhdGVuY3kgKz0gMTAwMDsKKwkJfQogCiAJCWxpbmsgPSBsaW5rLT5wYXJlbnQ7CiAJfQot
-LSAKMi4yOC4wCgo=
---000000000000a7ee6b05abf7b098--
