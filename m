@@ -2,148 +2,181 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F32C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C72C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85C162076E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:34:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="UNwQ3bTw"
+	by mail.kernel.org (Postfix) with ESMTP id 77DCB206F6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 23:41:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728157AbgHCXeg (ORCPT
+        id S1727885AbgHCXlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 19:34:36 -0400
-Received: from mail-vi1eur05on2087.outbound.protection.outlook.com ([40.107.21.87]:46304
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726370AbgHCXef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 19:34:35 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QIULIi7bIrX/VrL0VK48ieuSFsxOYiOPM7UYQ7yxYYsKcFLs5w00mp5wiFvZUYMuRnAZgx2rWLW/AxkAr8ksnxclNbIaFeUPuOTF1AA3htWRgpFsxHQaGkPQqLobs27Y8YQQjxLVaTrSzqHb5cxAZaO6s6tgsvdTTk1A9etihOuHObJqurgLGvDnLr0VFUmI6+8NwKG3uidMwXWFpjj0O6SRTH4GrGCndJVQQgAxtsBoWpOCwOUADE3yg7Xcn3aDefkPtxW564ZX5XR0Ujqg32WcEic+0AUahuwqbhRZSq9KR/oxi/TVaQW8d1Ess+DG4tH9JsxUgHW3/lOwwnkoow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+eaH+EFDjNL7/5j4OCMZZX4seUGPNX61bi+tebUfEVs=;
- b=P5VXQLvYOPW+IMkZc/c8aSY2eCx9410+kxw6w6Z06FP86l7NnVo00VahkgkWtQkd2kV1rOMtQ7QoQ/SuDsm/E7nUE6btiR5foBI2Nio4R90ztAWeWLtVOs8e4aftv5w0Lyspn+Olaf8ll2mU+o9lnh/aoNw7CRN1YVLzat7wH7Etnz8px7JggKQaU7eRWyU9we9JkW1ZkrFUlokg0vpu8YUPek0qYk8oRxe5TVm57lR/ZBtHpO59Pd4fN+BlBi/OatjM3cBpC5YWACDghEER3ptGRupDorIcV5DFHRks+cAyXQkxx/CpfcIUT/YVkslHV7MpW2AyZpZdJ28/SYtejQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+eaH+EFDjNL7/5j4OCMZZX4seUGPNX61bi+tebUfEVs=;
- b=UNwQ3bTwg3AN5AdhoTfV2Giu86blt3UiTLgRSQW8UipRPDVmrE3Fj/Ck81l93UW++aMwTlE/Ld26OTwNV92FiMmEgohkOEOYu2eNe0C8NtpXOrE1jpkuJw1irtWIKQK1hl4CpcwyOyM2SZB80Ereb/oSt1RxgmbJ5SHm+WvoNdU=
-Authentication-Results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=mellanox.com;
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (2603:10a6:803:44::15)
- by VI1PR05MB6720.eurprd05.prod.outlook.com (2603:10a6:800:139::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.18; Mon, 3 Aug
- 2020 23:34:30 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::10b0:e5f1:adab:799a]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::10b0:e5f1:adab:799a%4]) with mapi id 15.20.3239.021; Mon, 3 Aug 2020
- 23:34:30 +0000
-Date:   Mon, 3 Aug 2020 20:34:26 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Ben Skeggs <bskeggs@redhat.com>
-Cc:     Ralph Campbell <rcampbell@nvidia.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the hmm tree with the drm tree
-Message-ID: <20200803233426.GS19097@mellanox.com>
-References: <20200730192110.1466e63e@canb.auug.org.au>
- <20200730120303.GQ19097@mellanox.com>
- <cf7af4c9-592a-2143-831a-cb0f44bc768e@nvidia.com>
- <20200803231923.GR19097@mellanox.com>
- <CABDvA=mvks3Nrs=8wo1jomPxGjWFxwz4EWrppmmHTzsOuQO6Kg@mail.gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABDvA=mvks3Nrs=8wo1jomPxGjWFxwz4EWrppmmHTzsOuQO6Kg@mail.gmail.com>
-X-ClientProxiedBy: MN2PR14CA0029.namprd14.prod.outlook.com
- (2603:10b6:208:23e::34) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        Mon, 3 Aug 2020 19:41:55 -0400
+Received: from mga06.intel.com ([134.134.136.31]:18354 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726350AbgHCXly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 19:41:54 -0400
+IronPort-SDR: G0qOeAw7e5gzgjWnW0Eky7BUFdo9qem4qYu+xgm8HmX7nHRlFUtaRFp6gTqVIhcxJBqKfjDLt9
+ p4hMFEKe/qfg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="213761635"
+X-IronPort-AV: E=Sophos;i="5.75,431,1589266800"; 
+   d="scan'208";a="213761635"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 16:41:54 -0700
+IronPort-SDR: bmkyKFeW5lZyeKRGAe2eohz307LW6/ncv5RsbbfJXEPm8V5Vsovkc9cvkZ3TJ5/Mzayr7KRAIw
+ erqt1gCNFi/g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,431,1589266800"; 
+   d="scan'208";a="306107025"
+Received: from lkp-server02.sh.intel.com (HELO 84ccfe698a63) ([10.239.97.151])
+  by orsmga002.jf.intel.com with ESMTP; 03 Aug 2020 16:41:53 -0700
+Received: from kbuild by 84ccfe698a63 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k2k5Y-0000Ig-Dw; Mon, 03 Aug 2020 23:41:52 +0000
+Date:   Tue, 04 Aug 2020 07:41:44 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:locking/core] BUILD REGRESSION
+ 992414a18cd4de05fa3f8ff7e1c29af758bdee1a
+Message-ID: <5f28a0b8.rkypfjWH7Ix//dK8%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (156.34.48.30) by MN2PR14CA0029.namprd14.prod.outlook.com (2603:10b6:208:23e::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Mon, 3 Aug 2020 23:34:30 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@mellanox.com>)      id 1k2jyM-003ANj-Bu; Mon, 03 Aug 2020 20:34:26 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 85468d41-4aa7-443c-3753-08d83805c505
-X-MS-TrafficTypeDiagnostic: VI1PR05MB6720:
-X-Microsoft-Antispam-PRVS: <VI1PR05MB6720E3778CFD895EF28BCF36CF4D0@VI1PR05MB6720.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2803;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: IWkr1Swztp05j3H3L9AQ5Pt0ysnRth2MbS5dzJwJrAi6d0xdPnyNg8HwIA+JwsLutjHksR9he0TkKhjpIzIsIsqQQPaiFoG5g6ccfy2qOtDQ3Qu9Rm7BnB8be/saBeasSjdIVyLFPIWeGRUkPBH7IJ/KV9JlJgRR/kkqaQdwgpzTFnwmz7puOeMQMNVeHs/7B8l6f/2KEd8aNku5bw/tdcv8METdQ4pmzd7YTFIMsqsU/MmTVJs6Ua9hf/qWxBrAWryxx2KJ6f06HthewWooAm8P8Dlmsf2bemYliY/rNE09qI1lkeOC6CpNQM4l61Qm
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(136003)(346002)(366004)(396003)(1076003)(316002)(186003)(66556008)(66476007)(54906003)(8936002)(478600001)(66946007)(26005)(9786002)(36756003)(53546011)(4326008)(6916009)(2616005)(9746002)(2906002)(5660300002)(8676002)(426003)(86362001)(33656002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 2ClXS7fMHJ8HluRfoUCPr2CfRgFW/w2s0hbWUW2X52ZXbZDK/Hy3bB2tuxQlDGUYaM68AKJPYfbqbKm7hmfqs9TVr2un0AkKNJSD6yzBcwH4p6tGIMTviDUFbxZjGSxllQsKaY73xQn8CQX9j9ETSf6btncXx8vBv3CH1RN4M1T+mv9m7MEgFF24oBbcEs/0Ujc9OSOhGHc8RVbluItLq/Lovv6H6cPGQcSMAYgMAlV39m91qQs7eHtcBmsHrZUjZw2vvBdhE+hsIaJix4keIISweKt+94WeU/ZR1K4xykHRD5ihLdYNjN9u+iWGc314Xu4BPO2CSX/NtwMkEte9QxsLp+iYAUSMhFL87Mw6WwT8PxjlmVF1EqYAdD8WXkiy3CnFDQsxIwtXqJWT+4oovb34zWYFbWobtqxw2GIej6A9Bibgejg/wsODmlI5kgqKYoM+xnAE7viBNvgyKh4q7+S3bhRBW4+FCKEtnL41hqMHlxLkjqGZLDVi1GfeW+FGrR3/qtjQnOHa4RY1elcDk0s4f1RxGILAYPsBmtala6WdjZdHwXFIMqjFTVwaKdqJWKPk74OzQXifvHV0OPT9GJpcSiiai6I3svvUXiQ2Pu1uDKsM9M2UEOiL+Ed8af/fXdHw4UemPWKNAHsrpHhS9w==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85468d41-4aa7-443c-3753-08d83805c505
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR05MB4141.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2020 23:34:30.5629
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YIDTNcW1mS/S96K0cKUZrW0oZkmEIe77zROJFlXSpHa5lC34T/Qfl2o4URQukZXuIVNVs6K7nesYv/yzo4TkHQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6720
-X-MS-Exchange-Transport-Forked: True
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 09:29:30AM +1000, Ben Skeggs wrote:
-> On Tue, Aug 4, 2020 at 9:19 AM Jason Gunthorpe <jgg@mellanox.com> wrote:
-> >
-> > On Thu, Jul 30, 2020 at 10:31:45AM -0700, Ralph Campbell wrote:
-> > >
-> > > On 7/30/20 5:03 AM, Jason Gunthorpe wrote:
-> > > > On Thu, Jul 30, 2020 at 07:21:10PM +1000, Stephen Rothwell wrote:
-> > > > > Hi all,
-> > > > >
-> > > > > Today's linux-next merge of the hmm tree got a conflict in:
-> > > > >
-> > > > >    drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmmgp100.c
-> > > > >
-> > > > > between commit:
-> > > > >
-> > > > >    7763d24f3ba0 ("drm/nouveau/vmm/gp100-: fix mapping 2MB sysmem pages")
-> > > > >
-> > > > > from the drm tree and commits:
-> > > > >
-> > > > >    4725c6b82a48 ("nouveau: fix mapping 2MB sysmem pages")
-> > > > >    1a77decd0cae ("nouveau: fix storing invalid ptes")
-> > > > >
-> > > > > from the hmm tree.
-> > > > >
-> > > > > 7763d24f3ba0 and 4725c6b82a48 are exactly the same patch.
-> > > >
-> > > > Oh? Ralph? What happened here?
-> > >
-> > > Ben did email me saying he was planning to take this patch into
-> > > his nouveau tree and I did reply to him saying you had also taken it
-> > > into your tree and that I had more nouveau/SVM patches for you on the way.
-> > > So, I'm not sure what happened.
-> >
-> > Well no answer from Ben and it looks like it is in the main DRM tree,
-> > so I will drop the 4725c6b82a48 patch from hmm.
-> My apologies, both for this slipping past me, and for the trouble.  I
-> did mean to drop that patch from my tree before sending it on to Dave.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  locking/core
+branch HEAD: 992414a18cd4de05fa3f8ff7e1c29af758bdee1a  Merge branch 'locking/nmi' into locking/core, to pick up completed topic branch
 
-No worries, it looks like I can't drop it anyhow as the later
-1a77decd0cae really does thoroughly depend on it. :(
+Error/Warning in current branch:
 
-Thanks!
-Jason
+arch/mips/include/asm/smp.h:28:19: error: static declaration of 'raw_smp_processor_id' follows non-static declaration
+arch/sparc/include/asm/percpu_64.h:19:25: error: '__local_per_cpu_offset' undeclared (first use in this function); did you mean 'per_cpu_offset'?
+include/asm-generic/percpu.h:31:40: error: implicit declaration of function 'raw_smp_processor_id' [-Werror=implicit-function-declaration]
+
+Error/Warning ids grouped by kconfigs:
+
+recent_errors
+|-- arm-allmodconfig
+|   `-- include-asm-generic-percpu.h:error:implicit-declaration-of-function-raw_smp_processor_id
+|-- arm-allyesconfig
+|   `-- include-asm-generic-percpu.h:error:implicit-declaration-of-function-raw_smp_processor_id
+|-- mips-allmodconfig
+|   |-- arch-mips-include-asm-smp.h:error:static-declaration-of-raw_smp_processor_id-follows-non-static-declaration
+|   `-- include-asm-generic-percpu.h:error:implicit-declaration-of-function-raw_smp_processor_id
+|-- mips-allyesconfig
+|   |-- arch-mips-include-asm-smp.h:error:static-declaration-of-raw_smp_processor_id-follows-non-static-declaration
+|   `-- include-asm-generic-percpu.h:error:implicit-declaration-of-function-raw_smp_processor_id
+|-- openrisc-randconfig-r013-20200803
+|   `-- include-asm-generic-percpu.h:error:implicit-declaration-of-function-raw_smp_processor_id
+`-- sparc-allyesconfig
+    `-- arch-sparc-include-asm-percpu_64.h:error:__local_per_cpu_offset-undeclared-(first-use-in-this-function)
+
+elapsed time: 724m
+
+configs tested: 89
+configs skipped: 5
+
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                            lart_defconfig
+arc                 nsimosci_hs_smp_defconfig
+sparc64                             defconfig
+m68k                             allmodconfig
+arm                    vt8500_v6_v7_defconfig
+mips                        omega2p_defconfig
+mips                     loongson1c_defconfig
+m68k                       bvme6000_defconfig
+xtensa                           alldefconfig
+arm                       aspeed_g4_defconfig
+arc                          axs101_defconfig
+powerpc                    amigaone_defconfig
+sh                   sh7770_generic_defconfig
+mips                        bcm47xx_defconfig
+h8300                    h8300h-sim_defconfig
+nds32                             allnoconfig
+powerpc                          alldefconfig
+mips                      bmips_stb_defconfig
+arm                        magician_defconfig
+arm                             pxa_defconfig
+sh                             sh03_defconfig
+mips                         db1xxx_defconfig
+arm                        trizeps4_defconfig
+parisc                           alldefconfig
+mips                           ip32_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+i386                 randconfig-a004-20200803
+i386                 randconfig-a005-20200803
+i386                 randconfig-a001-20200803
+i386                 randconfig-a002-20200803
+i386                 randconfig-a003-20200803
+i386                 randconfig-a006-20200803
+x86_64               randconfig-a013-20200803
+x86_64               randconfig-a011-20200803
+x86_64               randconfig-a012-20200803
+x86_64               randconfig-a016-20200803
+x86_64               randconfig-a015-20200803
+x86_64               randconfig-a014-20200803
+i386                 randconfig-a011-20200803
+i386                 randconfig-a012-20200803
+i386                 randconfig-a015-20200803
+i386                 randconfig-a014-20200803
+i386                 randconfig-a013-20200803
+i386                 randconfig-a016-20200803
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
