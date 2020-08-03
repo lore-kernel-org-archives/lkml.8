@@ -2,52 +2,52 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A29C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF63C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18B6F20678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ADAF20678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458552;
-	bh=O2RC+e43R6W2CMNZ/EhI3/kEAnaUQ/baPfNH/UmDZLw=;
+	s=default; t=1596458555;
+	bh=KPEQdRBWpj2++NzmpX3wevXP1Ga9IyqWe51CLg9gI0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iGmQBAu44MvqFY+eQ2zTE5hbplTrp9QKByekcS6e5Z2yudNdaiU55PGVlmjf61EXk
-	 QYwVTByKzy0aD+5s5SJL9RBVfmZngwLxCJRccTaKRIN7Ml9lq37/Nmq5AF7QsCIhSu
-	 wnd4SItq2f/ARG533cr7Wl6gKGJY+mXdkG7JjG5A=
+	b=cNnU3UWi40vOITNnJV3f7XzLH3Q97RFVvkWkF8DEQwCJpgDlIW6WTT4Eb7jvOvslk
+	 33YT4xqlZ2dosRJ3ECiAVApoZ3Mv8Tu/WuVM/lXllyhVX1QbqrKvgYSdKJ5xlHn4Lt
+	 ncOTjHrXzYyQ7XBAyLXBrqGBE6EGf5AFgY/pF0R0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729367AbgHCMmb (ORCPT
+        id S1729420AbgHCMme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:42:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58718 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:42:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729170AbgHCMbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:31:19 -0400
+        id S1728601AbgHCMbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:31:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6B592076B;
-        Mon,  3 Aug 2020 12:31:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE8E42054F;
+        Mon,  3 Aug 2020 12:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457877;
-        bh=O2RC+e43R6W2CMNZ/EhI3/kEAnaUQ/baPfNH/UmDZLw=;
+        s=default; t=1596457866;
+        bh=KPEQdRBWpj2++NzmpX3wevXP1Ga9IyqWe51CLg9gI0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q8UyC26GTT13rpjJV4k9dYwB0QkcUYBJeuz+tTD+kjzUM4sJqZ/cenDcc++mp/NMK
-         tENkoQJ6pdWKv7i78KxRvHAphq2fXnnT2ttiFl8msJJFvvRdmJbX2zep7JCCmhpYBx
-         RBX2KL43+foeVQjDkFmsGpozCy7KWA59qxekv1e8=
+        b=hKBZgNKGVGU/8ZE+cSZN+jN5SsWSL5IvZd5r54pUV0Gm2ehFldtzyBIEJlTVY4Ud7
+         Aej7EK8rvFev7868wOT/eiCfEAclAIfPQGVQRU93Cw4lxtxHL8YHVPJ27G60H+lhf6
+         /SurIz2l4ARWV2yL9nPfXjdpElFX+Jyfq/brFOrc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luis Machado <luis.machado@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 4.19 15/56] ARM: 8986/1: hw_breakpoint: Dont invoke overflow handler on uaccess watchpoints
-Date:   Mon,  3 Aug 2020 14:19:30 +0200
-Message-Id: <20200803121851.076442714@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 11/56] Btrfs: fix selftests failure due to uninitialized i_mode in test inodes
+Date:   Mon,  3 Aug 2020 14:19:26 +0200
+Message-Id: <20200803121850.868864740@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -60,81 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit eec13b42d41b0f3339dcf0c4da43734427c68620 upstream.
+[ Upstream commit 9f7fec0ba89108b9385f1b9fb167861224912a4a ]
 
-Unprivileged memory accesses generated by the so-called "translated"
-instructions (e.g. LDRT) in kernel mode can cause user watchpoints to fire
-unexpectedly. In such cases, the hw_breakpoint logic will invoke the user
-overflow handler which will typically raise a SIGTRAP back to the current
-task. This is futile when returning back to the kernel because (a) the
-signal won't have been delivered and (b) userspace can't handle the thing
-anyway.
+Some of the self tests create a test inode, setup some extents and then do
+calls to btrfs_get_extent() to test that the corresponding extent maps
+exist and are correct. However btrfs_get_extent(), since the 5.2 merge
+window, now errors out when it finds a regular or prealloc extent for an
+inode that does not correspond to a regular file (its ->i_mode is not
+S_IFREG). This causes the self tests to fail sometimes, specially when
+KASAN, slub_debug and page poisoning are enabled:
 
-Avoid invoking the user overflow handler for watchpoints triggered by
-kernel uaccess routines, and instead single-step over the faulting
-instruction as we would if no overflow handler had been installed.
+  $ modprobe btrfs
+  modprobe: ERROR: could not insert 'btrfs': Invalid argument
 
-Cc: <stable@vger.kernel.org>
-Fixes: f81ef4a920c8 ("ARM: 6356/1: hw-breakpoint: add ARM backend for the hw-breakpoint framework")
-Reported-by: Luis Machado <luis.machado@linaro.org>
-Tested-by: Luis Machado <luis.machado@linaro.org>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  $ dmesg
+  [ 9414.691648] Btrfs loaded, crc32c=crc32c-intel, debug=on, assert=on, integrity-checker=on, ref-verify=on
+  [ 9414.692655] BTRFS: selftest: sectorsize: 4096  nodesize: 4096
+  [ 9414.692658] BTRFS: selftest: running btrfs free space cache tests
+  [ 9414.692918] BTRFS: selftest: running extent only tests
+  [ 9414.693061] BTRFS: selftest: running bitmap only tests
+  [ 9414.693366] BTRFS: selftest: running bitmap and extent tests
+  [ 9414.696455] BTRFS: selftest: running space stealing from bitmap to extent tests
+  [ 9414.697131] BTRFS: selftest: running extent buffer operation tests
+  [ 9414.697133] BTRFS: selftest: running btrfs_split_item tests
+  [ 9414.697564] BTRFS: selftest: running extent I/O tests
+  [ 9414.697583] BTRFS: selftest: running find delalloc tests
+  [ 9415.081125] BTRFS: selftest: running find_first_clear_extent_bit test
+  [ 9415.081278] BTRFS: selftest: running extent buffer bitmap tests
+  [ 9415.124192] BTRFS: selftest: running inode tests
+  [ 9415.124195] BTRFS: selftest: running btrfs_get_extent tests
+  [ 9415.127909] BTRFS: selftest: running hole first btrfs_get_extent test
+  [ 9415.128343] BTRFS critical (device (efault)): regular/prealloc extent found for non-regular inode 256
+  [ 9415.131428] BTRFS: selftest: fs/btrfs/tests/inode-tests.c:904 expected a real extent, got 0
 
+This happens because the test inodes are created without ever initializing
+the i_mode field of the inode, and neither VFS's new_inode() nor the btrfs
+callback btrfs_alloc_inode() initialize the i_mode. Initialization of the
+i_mode is done through the various callbacks used by the VFS to create
+new inodes (regular files, directories, symlinks, tmpfiles, etc), which
+all call btrfs_new_inode() which in turn calls inode_init_owner(), which
+sets the inode's i_mode. Since the tests only uses new_inode() to create
+the test inodes, the i_mode was never initialized.
+
+This always happens on a VM I used with kasan, slub_debug and many other
+debug facilities enabled. It also happened to someone who reported this
+on bugzilla (on a 5.3-rc).
+
+Fix this by setting i_mode to S_IFREG at btrfs_new_test_inode().
+
+Fixes: 6bf9e4bd6a2778 ("btrfs: inode: Verify inode mode to avoid NULL pointer dereference")
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204397
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/hw_breakpoint.c |   27 ++++++++++++++++++++++-----
- 1 file changed, 22 insertions(+), 5 deletions(-)
+ fs/btrfs/tests/btrfs-tests.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/arch/arm/kernel/hw_breakpoint.c
-+++ b/arch/arm/kernel/hw_breakpoint.c
-@@ -688,6 +688,12 @@ static void disable_single_step(struct p
- 	arch_install_hw_breakpoint(bp);
+diff --git a/fs/btrfs/tests/btrfs-tests.c b/fs/btrfs/tests/btrfs-tests.c
+index 2eec1dd3803af..82d874b104383 100644
+--- a/fs/btrfs/tests/btrfs-tests.c
++++ b/fs/btrfs/tests/btrfs-tests.c
+@@ -38,7 +38,13 @@ static struct file_system_type test_type = {
+ 
+ struct inode *btrfs_new_test_inode(void)
+ {
+-	return new_inode(test_mnt->mnt_sb);
++	struct inode *inode;
++
++	inode = new_inode(test_mnt->mnt_sb);
++	if (inode)
++		inode_init_owner(inode, NULL, S_IFREG);
++
++	return inode;
  }
  
-+static int watchpoint_fault_on_uaccess(struct pt_regs *regs,
-+				       struct arch_hw_breakpoint *info)
-+{
-+	return !user_mode(regs) && info->ctrl.privilege == ARM_BREAKPOINT_USER;
-+}
-+
- static void watchpoint_handler(unsigned long addr, unsigned int fsr,
- 			       struct pt_regs *regs)
- {
-@@ -747,16 +753,27 @@ static void watchpoint_handler(unsigned
- 		}
- 
- 		pr_debug("watchpoint fired: address = 0x%x\n", info->trigger);
-+
-+		/*
-+		 * If we triggered a user watchpoint from a uaccess routine,
-+		 * then handle the stepping ourselves since userspace really
-+		 * can't help us with this.
-+		 */
-+		if (watchpoint_fault_on_uaccess(regs, info))
-+			goto step;
-+
- 		perf_bp_event(wp, regs);
- 
- 		/*
--		 * If no overflow handler is present, insert a temporary
--		 * mismatch breakpoint so we can single-step over the
--		 * watchpoint trigger.
-+		 * Defer stepping to the overflow handler if one is installed.
-+		 * Otherwise, insert a temporary mismatch breakpoint so that
-+		 * we can single-step over the watchpoint trigger.
- 		 */
--		if (is_default_overflow_handler(wp))
--			enable_single_step(wp, instruction_pointer(regs));
-+		if (!is_default_overflow_handler(wp))
-+			goto unlock;
- 
-+step:
-+		enable_single_step(wp, instruction_pointer(regs));
- unlock:
- 		rcu_read_unlock();
- 	}
+ static int btrfs_init_test_fs(void)
+-- 
+2.25.1
+
 
 
