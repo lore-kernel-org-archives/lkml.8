@@ -2,257 +2,149 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45487C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5599C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE5C2064B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E46D2054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:17:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xh6Tk89e"
+	dkim=pass (2048-bit key) header.d=melexis.com header.i=@melexis.com header.b="oPm1We6B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbgHCPPf (ORCPT
+        id S1728147AbgHCPRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 11:15:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40114 "EHLO
+        Mon, 3 Aug 2020 11:17:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbgHCPPf (ORCPT
+        with ESMTP id S1726907AbgHCPRK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 11:15:35 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2B75C06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 08:15:34 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id d6so25172842ejr.5
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 08:15:34 -0700 (PDT)
+        Mon, 3 Aug 2020 11:17:10 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EBFDC061756
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 08:17:09 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id qc22so24221370ejb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 08:17:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZuffSV18EU8xXSBhhfIwDGXYr/xPk0io21XcCQbtbWg=;
-        b=Xh6Tk89eXSY7i4v3XL6YA/R//V/PF6If0rB7BsjJsL1YvBB2H6U2naNnR4xQgcVtK9
-         5NMYwXK2oHiQcbumBgSP1qBIr1C6/6/JPq0EV+XOE3xiFQZn3ZnGx02QsR3aMU/cHkxg
-         ivTK+tKnbWJ+7aVF2V+YV6Qqiv2o1MQ4lbzqk=
+        d=melexis.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dLm6RINMH46rAju8aGEaViT9JcB4pyQ99/jBApaK+S0=;
+        b=oPm1We6Bc+I97BVWffAWoHsPhvAUGjT7Kj6DIAlP5zhnNcHgLNQ9sxn8gzCh/NC3aq
+         1kDGUNHhk/91pb3z6jaJjkHHZoTTptPRf2eJQx9tSxLt8boDj/KofgbX2SJNSlUF2WGh
+         rJLpbzfqvDxgXGzDMGfLCjPAAbPqrG15gGoT39G3jgriOgUPTFA4y3NSnCmBa1MpsGhW
+         XIeDJjsDaKiJEJ2coa/hZztY8T0I1CNhKzc7biDvXguoiXVLdX0UFhlCKypx0Qp5Fa8h
+         pxUG/joDrIUxF41qCXrnLBKSlr2shQ8KTSbmybBp4LvAa/BiNaTQaIXxpS0pfWFrsOt6
+         NUjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZuffSV18EU8xXSBhhfIwDGXYr/xPk0io21XcCQbtbWg=;
-        b=mD7yayNqj0dDuoadchA9S9qJMHTHWVAhZaouLpC4JFwgf64LkXC0/1ljQtiiMKMiWs
-         918302qYDAHtmuzL6Xexq1bOpSd7FoywZgbls+ygc52yPHhxslIlrQHk1Y/3DvPqq4w/
-         EjXKz7hP9LdAWgKP0xhUHb44FXQ/FqQBgT3sSVc0MXzAaybcZYVuF4zfJs68AB9691D4
-         wLShXSnulpTLgDRdhb0KyN4t7U8GFvI20PYkkiJZXUj2UwhzMjjzFywPEedUl3yRrIF/
-         yrE4ZefPIYApEo/xjirBwfPpRe4Ehf0ZuBAh/n/UF4Py2+9nm/D6Gj9rzz/DZIUmSzIz
-         Thxg==
-X-Gm-Message-State: AOAM532e9OhKTchFOF/1xT5Pnf6e/1tVxmgU1janCJX2F/5rvna7vPuA
-        nIWZyI+HGhXfP8HijNbmCcGmSg0qLjo=
-X-Google-Smtp-Source: ABdhPJwkW/i8VZSLJaLgNf9FnIe4VpaExlRORIjHTvzAwtgVi9aJ9kEB+n9k7zcGZ7/TbrMOHitE3A==
-X-Received: by 2002:a17:906:f8d5:: with SMTP id lh21mr17735314ejb.360.1596467733548;
-        Mon, 03 Aug 2020 08:15:33 -0700 (PDT)
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com. [209.85.221.52])
-        by smtp.gmail.com with ESMTPSA id bw7sm16652955ejb.5.2020.08.03.08.15.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Aug 2020 08:15:33 -0700 (PDT)
-Received: by mail-wr1-f52.google.com with SMTP id a15so34548756wrh.10
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 08:15:33 -0700 (PDT)
-X-Received: by 2002:a5d:6744:: with SMTP id l4mr16794657wrw.105.1596467732538;
- Mon, 03 Aug 2020 08:15:32 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dLm6RINMH46rAju8aGEaViT9JcB4pyQ99/jBApaK+S0=;
+        b=mDJd4J6xnEfQSXYZEj3ot6zbMhljdhgXsTgrdkGklBNiYMcENs9aF9jMrlFna/3s2Q
+         8DFVqgG6/7L/FAR6SDcS7ICoG3ebb5RW04l2YAskm6xsbsbpzG5jsO9s1Q3O6iDoIHq7
+         wXQmf7u4MGNYMuHlQ8rZRHZzn2hI1lmTeZxQYZ3kkChUOzPY7uG7YRSFHL79Bc2rafvR
+         6zucHWws3ePUrbS63beuVn8nfGGxU/yIxSGRgpTDgwmgUpalQhRqnrN5HNPnhOlTNlC4
+         Rw+6IDgsnZZ6pwo9vASVRk9If3ZOW0DinIS2LlO+Wj+RD+nBLyY1BFWFIoxT0bEkVQDP
+         /2RQ==
+X-Gm-Message-State: AOAM532+ien3nAu1bak4N7S+w5ZSCqwEt6L6eSj8irzNfuRTvufNAiwf
+        asVJrQOVgw78t1tTsI2pWQB37g==
+X-Google-Smtp-Source: ABdhPJwIi1gfqG6PphSUak94KTiMuClqh8Huyz45Vf4y7H6tlUuZmK22I+1+y+D6T6cW9892Oisfqg==
+X-Received: by 2002:a17:906:7c86:: with SMTP id w6mr16632690ejo.178.1596467828400;
+        Mon, 03 Aug 2020 08:17:08 -0700 (PDT)
+Received: from cmo-t495.tess.elex.be ([194.150.35.21])
+        by smtp.gmail.com with ESMTPSA id g25sm16027481ejh.110.2020.08.03.08.17.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 08:17:05 -0700 (PDT)
+From:   Crt Mori <cmo@melexis.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Crt Mori <cmo@melexis.com>
+Subject: [PATCH] iio:temperature:mlx90632: Reduce number of equal calulcations
+Date:   Mon,  3 Aug 2020 17:16:56 +0200
+Message-Id: <20200803151656.332559-1-cmo@melexis.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200728050140.996974-1-tientzu@chromium.org> <20200728050140.996974-5-tientzu@chromium.org>
- <20200731205804.GB756942@bogus> <CALiNf2-BGQ+8Lm6A61oM6v+6N1zRTJYvod7LQLsCmK-ADsrMaw@mail.gmail.com>
-In-Reply-To: <CALiNf2-BGQ+8Lm6A61oM6v+6N1zRTJYvod7LQLsCmK-ADsrMaw@mail.gmail.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Mon, 3 Aug 2020 17:15:20 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5Cm+ZGx9ia2sAdvHQC6zC1U=+9AWs7iW7o-qE4g7wZgsw@mail.gmail.com>
-Message-ID: <CAAFQd5Cm+ZGx9ia2sAdvHQC6zC1U=+9AWs7iW7o-qE4g7wZgsw@mail.gmail.com>
-Subject: Re: [RFC v2 4/5] dt-bindings: of: Add plumbing for restricted DMA pool
-To:     Claire Chang <tientzu@chromium.org>, Rob Herring <robh@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>, suzuki.poulose@arm.com,
-        dan.j.williams@intel.com, heikki.krogerus@linux.intel.com,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Nicolas Boichat <drinkcat@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Claire and Rob,
+TAdut4 was calculated each iteration although it did not change. In light
+of near future additions of the Extended range DSP calculations, this
+function refactoring will help reduce unrelated changes in that series as
+well as reduce the number of new functions needed.
 
-On Mon, Aug 3, 2020 at 4:26 PM Claire Chang <tientzu@chromium.org> wrote:
->
-> On Sat, Aug 1, 2020 at 4:58 AM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Tue, Jul 28, 2020 at 01:01:39PM +0800, Claire Chang wrote:
-> > > Introduce the new compatible string, device-swiotlb-pool, for restricted
-> > > DMA. One can specify the address and length of the device swiotlb memory
-> > > region by device-swiotlb-pool in the device tree.
-> > >
-> > > Signed-off-by: Claire Chang <tientzu@chromium.org>
-> > > ---
-> > >  .../reserved-memory/reserved-memory.txt       | 35 +++++++++++++++++++
-> > >  1 file changed, 35 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-> > > index 4dd20de6977f..78850896e1d0 100644
-> > > --- a/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-> > > +++ b/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-> > > @@ -51,6 +51,24 @@ compatible (optional) - standard definition
-> > >            used as a shared pool of DMA buffers for a set of devices. It can
-> > >            be used by an operating system to instantiate the necessary pool
-> > >            management subsystem if necessary.
-> > > +        - device-swiotlb-pool: This indicates a region of memory meant to be
-> >
-> > swiotlb is a Linux thing. The binding should be independent.
-> Got it. Thanks for pointing this out.
->
-> >
-> > > +          used as a pool of device swiotlb buffers for a given device. When
-> > > +          using this, the no-map and reusable properties must not be set, so the
-> > > +          operating system can create a virtual mapping that will be used for
-> > > +          synchronization. Also, there must be a restricted-dma property in the
-> > > +          device node to specify the indexes of reserved-memory nodes. One can
-> > > +          specify two reserved-memory nodes in the device tree. One with
-> > > +          shared-dma-pool to handle the coherent DMA buffer allocation, and
-> > > +          another one with device-swiotlb-pool for regular DMA to/from system
-> > > +          memory, which would be subject to bouncing. The main purpose for
-> > > +          restricted DMA is to mitigate the lack of DMA access control on
-> > > +          systems without an IOMMU, which could result in the DMA accessing the
-> > > +          system memory at unexpected times and/or unexpected addresses,
-> > > +          possibly leading to data leakage or corruption. The feature on its own
-> > > +          provides a basic level of protection against the DMA overwriting buffer
-> > > +          contents at unexpected times. However, to protect against general data
-> > > +          leakage and system memory corruption, the system needs to provide a
-> > > +          way to restrict the DMA to a predefined memory region.
-> >
-> > I'm pretty sure we already support per device carveouts and I don't
-> > understand how this is different.
-> We use this to bounce streaming DMA in and out of a specially allocated region.
-> I'll try to merge this with the existing one (i.e., shared-dma-pool)
-> to see if that
-> makes things clearer.
->
+Also converted shifts in this function of signed integers to divisions as
+that is less implementation-defined behavior.
 
-Indeed, from the firmware point of view, this is just a carveout, for
-which we have the "shared-dma-pool" compatible string defined already.
+Signed-off-by: Crt Mori <cmo@melexis.com>
+---
+ drivers/iio/temperature/mlx90632.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-However, depending on the device and firmware setup, the way the
-carevout is used may change. I can see the following scenarios:
+diff --git a/drivers/iio/temperature/mlx90632.c b/drivers/iio/temperature/mlx90632.c
+index eaca6ba06864..d7ba0b2fe3c0 100644
+--- a/drivers/iio/temperature/mlx90632.c
++++ b/drivers/iio/temperature/mlx90632.c
+@@ -374,29 +374,25 @@ static s32 mlx90632_calc_temp_ambient(s16 ambient_new_raw, s16 ambient_old_raw,
+ }
+ 
+ static s32 mlx90632_calc_temp_object_iteration(s32 prev_object_temp, s64 object,
+-					       s64 TAdut, s32 Fa, s32 Fb,
++					       s64 TAdut, s64 TAdut4, s32 Fa, s32 Fb,
+ 					       s32 Ga, s16 Ha, s16 Hb,
+ 					       u16 emissivity)
+ {
+ 	s64 calcedKsTO, calcedKsTA, ir_Alpha, TAdut4, Alpha_corr;
+ 	s64 Ha_customer, Hb_customer;
+ 
+-	Ha_customer = ((s64)Ha * 1000000LL) >> 14ULL;
+-	Hb_customer = ((s64)Hb * 100) >> 10ULL;
++	Ha_customer = div64_s64((s64)Ha * 1000000LL, 16384);
++	Hb_customer = div64_s64((s64)Hb * 100, 1024);
+ 
+-	calcedKsTO = ((s64)((s64)Ga * (prev_object_temp - 25 * 1000LL)
+-			     * 1000LL)) >> 36LL;
+-	calcedKsTA = ((s64)(Fb * (TAdut - 25 * 1000000LL))) >> 36LL;
+-	Alpha_corr = div64_s64((((s64)(Fa * 10000000000LL) >> 46LL)
+-				* Ha_customer), 1000LL);
++	calcedKsTO = div64_s64((s64)((s64)Ga * (prev_object_temp - 25 * 1000LL)
++				     * 1000LL), 68719476736);
++	calcedKsTA = div64_s64((s64)(Fb * (TAdut - 25 * 1000000LL)), 68719476736);
++	Alpha_corr = div64_s64(div64_s64((s64)(Fa * 10000000000LL), 70368744177664)
++			       * Ha_customer, 1000LL);
+ 	Alpha_corr *= ((s64)(1 * 1000000LL + calcedKsTO + calcedKsTA));
+ 	Alpha_corr = emissivity * div64_s64(Alpha_corr, 100000LL);
+ 	Alpha_corr = div64_s64(Alpha_corr, 1000LL);
+ 	ir_Alpha = div64_s64((s64)object * 10000000LL, Alpha_corr);
+-	TAdut4 = (div64_s64(TAdut, 10000LL) + 27315) *
+-		(div64_s64(TAdut, 10000LL) + 27315) *
+-		(div64_s64(TAdut, 10000LL)  + 27315) *
+-		(div64_s64(TAdut, 10000LL) + 27315);
+ 
+ 	return (int_sqrt64(int_sqrt64(ir_Alpha * 1000000000000LL + TAdut4))
+ 		- 27315 - Hb_customer) * 10;
+@@ -413,10 +409,14 @@ static s32 mlx90632_calc_temp_object(s64 object, s64 ambient, s32 Ea, s32 Eb,
+ 	kTA = (Ea * 1000LL) >> 16LL;
+ 	kTA0 = (Eb * 1000LL) >> 8LL;
+ 	TAdut = div64_s64(((ambient - kTA0) * 1000000LL), kTA) + 25 * 1000000LL;
++	TAdut4 = (div64_s64(TAdut, 10000LL) + 27315) *
++		(div64_s64(TAdut, 10000LL) + 27315) *
++		(div64_s64(TAdut, 10000LL)  + 27315) *
++		(div64_s64(TAdut, 10000LL) + 27315);
+ 
+ 	/* Iterations of calculation as described in datasheet */
+ 	for (i = 0; i < 5; ++i) {
+-		temp = mlx90632_calc_temp_object_iteration(temp, object, TAdut,
++		temp = mlx90632_calc_temp_object_iteration(temp, object, TAdut, TAdut4,
+ 							   Fa, Fb, Ga, Ha, Hb,
+ 							   tmp_emi);
+ 	}
+-- 
+2.25.1
 
-1) coherent DMA (dma_alloc_*) within a reserved pool and no
-non-coherent DMA (dma_map_*).
-
-This is how the "memory-region" property is handled today in Linux for
-devices which can only DMA from/to the given memory region. However,
-I'm not sure if no non-coherent DMA is actually enforced in any way by
-the DMA subsystem.
-
-2) coherent DMA from a reserved pool and non-coherent DMA from system memory
-
-This is the case for the systems which have some dedicated part of
-memory which is guaranteed to be coherent with the DMA, but still can
-do non-coherent DMA to any part of the system memory. Linux handles it
-the same way as 1), which is what made me believe that 1) might not
-actually be handled correctly.
-
-3) coherent DMA and bounced non-coherent DMA within a reserved pool
-4) coherent DMA within one pool and bounced non-coherent within another pool
-
-These are the two cases we're interested in. Basically they make it
-possible for non-coherent DMA from arbitrary system memory to be
-bounced through a reserved pool, which the device has access to. The
-current series implements 4), but I'd argue that it:
-
-- is problematic from the firmware point of view, because on most of
-the systems, both pools would be just some carveouts and the fact that
-Linux would use one for coherent and the other for non-coherent DMA
-would be an OS implementation detail,
-- suffers from the static memory split between coherent and
-non-coherent DMA, which could either result in some wasted memory or
-the DMA stopped working after a kernel update if the driver changes
-its allocation pattern,
-
-and so we should rather go with 3).
-
-Now, from the firmware point of view, it doesn't matter how the OS
-uses the carveout, but I think it's still necessary to tell the OS
-about the device DMA capability. Right now we use "memory-region" for
-any kind of reserved memory, but looking at the above scenarios, there
-are 2 cases:
-
-a) the memory region is preferred for the device, e.g. it enables
-coherency, but the device can still DMA across the rest of the system
-memory. This is the case in scenario 2) and is kind of assumed in the
-Linux DMA subsystem, although it's certainly not the case for a lot of
-hardware, even if they use the "memory-region" binding.
-
-b) the memory region is the only region that the device can access.
-This is the case in scenarios 1), 3) and 4).
-
-For this, I'd like to propose a "restricted-dma-region" (feel free to
-suggest a better name) binding, which is explicitly specified to be
-the only DMA-able memory for this device and make Linux use the given
-pool for coherent DMA allocations and bouncing non-coherent DMA.
-
-What do you think?
-
-Best regards,
-Tomasz
-
-> >
-> > What is the last sentence supposed to imply? You need an IOMMU?
-> The main purpose is to mitigate the lack of DMA access control on
-> systems without an IOMMU.
-> For example, we plan to use this plus a MPU for our PCIe WiFi which is
-> not behind an IOMMU.
->
-> >
-> > >          - vendor specific string in the form <vendor>,[<device>-]<usage>
-> > >  no-map (optional) - empty property
-> > >      - Indicates the operating system must not create a virtual mapping
-> > > @@ -117,6 +135,16 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
-> > >                       compatible = "acme,multimedia-memory";
-> > >                       reg = <0x77000000 0x4000000>;
-> > >               };
-> > > +
-> > > +             wifi_coherent_mem_region: wifi_coherent_mem_region {
-> > > +                     compatible = "shared-dma-pool";
-> > > +                     reg = <0x50000000 0x400000>;
-> > > +             };
-> > > +
-> > > +             wifi_device_swiotlb_region: wifi_device_swiotlb_region {
-> > > +                     compatible = "device-swiotlb-pool";
-> > > +                     reg = <0x50400000 0x4000000>;
-> > > +             };
-> > >       };
-> > >
-> > >       /* ... */
-> > > @@ -135,4 +163,11 @@ one for multimedia processing (named multimedia-memory@77000000, 64MiB).
-> > >               memory-region = <&multimedia_reserved>;
-> > >               /* ... */
-> > >       };
-> > > +
-> > > +     pcie_wifi: pcie_wifi@0,0 {
-> > > +             memory-region = <&wifi_coherent_mem_region>,
-> > > +                      <&wifi_device_swiotlb_region>;
-> > > +             restricted-dma = <0>, <1>;
-> > > +             /* ... */
-> > > +     };
-> > >  };
-> > > --
-> > > 2.28.0.rc0.142.g3c755180ce-goog
-> > >
