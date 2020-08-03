@@ -2,115 +2,63 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9494FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B006C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DC2022BED
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:12:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UXQVIQXl"
+	by mail.kernel.org (Postfix) with ESMTP id B45BE22B40
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:13:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728705AbgHCWMv (ORCPT
+        id S1728768AbgHCWNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 18:12:51 -0400
-Received: from ozlabs.org ([203.11.71.1]:36491 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727959AbgHCWMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 18:12:51 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BLBw04ZJtz9sPB;
-        Tue,  4 Aug 2020 08:12:48 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596492769;
-        bh=/7c1j4AVqGYmetClE8dSkr5s9BZZKUzb3JXGZCUSLXw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UXQVIQXligsNwAkJjrv+PZNqrl3itX1T74vLgF0vQlTVtBfFFPUzFwTpUZRhPGb33
-         J4+8hgt2EN/WICq9O+eTjlZlA31voEp7ysYXYy20GHMwyJDXsDQ0BywF4pFhHW4ycI
-         QcIunTh6XRCOl1JIy91VVdWNzKa2LAlZUwed46n+QBcH67u91yvPxK4AJ/+o/qPe8Y
-         iC2rxbfa5KmkIH2980bVxXiIraWuD3aJYuFWERVWNyWHqAEKn9A/PzShPxqnUDweEG
-         xN5TEtuqsSN5DUopLvDjhULCO2A/GG0vUAhYtHVUDpqqlKKjO4UyBCtKMNTRC6P9rt
-         w7622acskPGfw==
-Date:   Tue, 4 Aug 2020 08:12:47 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Linux Crypto List <linux-crypto@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Waiman Long <longman@redhat.com>
-Subject: Re: linux-next: manual merge of the akpm-current tree with the
- crypto tree
-Message-ID: <20200804081247.1b686608@canb.auug.org.au>
-In-Reply-To: <20200717201411.3f1b8417@canb.auug.org.au>
-References: <20200717201411.3f1b8417@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/jZlSr4XHspbHtB=MfsVKrRi";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Mon, 3 Aug 2020 18:13:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48256 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726533AbgHCWNv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 18:13:51 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36458C06174A;
+        Mon,  3 Aug 2020 15:13:51 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 355B112771D6F;
+        Mon,  3 Aug 2020 14:57:05 -0700 (PDT)
+Date:   Mon, 03 Aug 2020 15:13:49 -0700 (PDT)
+Message-Id: <20200803.151349.926022361234213749.davem@davemloft.net>
+To:     yuehaibing@huawei.com
+Cc:     steffen.klassert@secunet.com, herbert@gondor.apana.org.au,
+        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org,
+        lucien.xin@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] ip_vti: Fix unused variable warning
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200731064952.36900-1-yuehaibing@huawei.com>
+References: <20200731064952.36900-1-yuehaibing@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 03 Aug 2020 14:57:05 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/jZlSr4XHspbHtB=MfsVKrRi
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Fri, 31 Jul 2020 14:49:52 +0800
 
-Hi all,
+> If CONFIG_INET_XFRM_TUNNEL is set but CONFIG_IPV6 is n,
+> 
+> net/ipv4/ip_vti.c:493:27: warning: 'vti_ipip6_handler' defined but not used [-Wunused-variable]
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-On Fri, 17 Jul 2020 20:14:11 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Today's linux-next merge of the akpm-current tree got a conflict in:
->=20
->   drivers/crypto/mediatek/mtk-aes.c
->=20
-> between commit:
->=20
->   f441ba2ad341 ("crypto: mediatek - use AES library for GCM key derivatio=
-n")
->=20
-> from the crypto tree and commit:
->=20
->   161f6a5cc3ea ("mm, treewide: rename kzfree() to kfree_sensitive()")
->=20
-> from the akpm-current tree.
->=20
-> I fixed it up (the former removed the code updated by the latter) and
-> can carry the fix as necessary. This is now fixed as far as linux-next
-> is concerned, but any non trivial conflicts should be mentioned to your
-> upstream maintainer when your tree is submitted for merging.  You may
-> also want to consider cooperating with the maintainer of the
-> conflicting tree to minimise any particularly complex conflicts.
+Steffen, please pick this up if you haven't already.
 
-This is now a conflict between the akmp-current tree and Linus' tre.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/jZlSr4XHspbHtB=MfsVKrRi
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8oi98ACgkQAVBC80lX
-0GyFwgf/bQNxv5tl9jMYxV++OZ52znu7RaHNtbiO+6ohloAFG9osI4KqwTrwG2SO
-cCnuUXsoJTyBn1VKTa91r8a7kXS3M2tAL23G+LUwelMYoSk2ZpaFP4ty+4XHXY5l
-zYuzrQlsKNLEWJQYDTS1cBx/jW0fgv9QTvXwI77b5LiKWubB2B+LrY3st7UR4y4b
-3g6Tg3j1Cj9DAxw44jeDFymYjd05Ffgntw3PwJVhohHAp2bhF1V78yJ3RhDghEfK
-jBnthSlHsibHTZ+PG/HmCGb+jYRCrF1yaJKTIYamLsr9qtTNKNe+aDSMgRttSnH8
-r48JP7Msi9JchND3tt9/fgkiTbm1gA==
-=tevK
------END PGP SIGNATURE-----
-
---Sig_/jZlSr4XHspbHtB=MfsVKrRi--
+Thank you.
