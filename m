@@ -2,129 +2,105 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 773ABC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 693EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50B6A207BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:24:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="urfgD943"
+	by mail.kernel.org (Postfix) with ESMTP id 45C25204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596457510;
+	bh=hWzuh5MEsC2Obx12cfyar50VxkgrpxaqoloOCSelQv4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MhV6Nv8IPFKDdi/dSYjhO+Dwo4szGPNjt/UHEdEyDGz/C25LjIH+L6wdU/Y7zY5xh
+	 JX8ASrOuDuF+KW3tLeb0d9jbVi2T+bn4DGpigXyOoepUX9V99/S+yKcAexBDq98/Qp
+	 9xpTFwICsHTEi5Rpk/+7nyh01QdEuec2UBYeCIho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbgHCMY5 (ORCPT
+        id S1727022AbgHCMZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 3 Aug 2020 08:25:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728118AbgHCMY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 3 Aug 2020 08:24:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42064 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728008AbgHCMYw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:24:52 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B72B6C06174A;
-        Mon,  3 Aug 2020 05:24:51 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id x5so14159253wmi.2;
-        Mon, 03 Aug 2020 05:24:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VR9T7sylAgjDgpJ8EDAbpDnekBXDbki41I/rzJT2SZI=;
-        b=urfgD943beDcrGJbLj2FCNbPb9kgqIFJRgJq5QP52pbmhMztzmOVoYKCfFouBt2b6b
-         +NCi1wbMfTKTy8rN80qHdIUSXR94UhPQf3K/JegAJHPZRvzIfdgun75wYKGZXM0QwTCH
-         ed3Jc4o7OGJS3WIlP3r7St+9w+LAG/nshps+PqAjmBzYVCFER2qM8qfQKuz6BhWOu5HQ
-         sxrrO7TWeX8VXQULLBE0o1bnEIGS3dha/URUx4ozePVVKUIBwrhqcUVJJ9FwfmHPJoN4
-         MD7zuddkVNQ2h4b5hBfQLykntLyFBcEHrUtb08tb0QJrI2GvFyyN1+vHeCMITguafvGt
-         eGNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VR9T7sylAgjDgpJ8EDAbpDnekBXDbki41I/rzJT2SZI=;
-        b=sG+jFulH6GEG74C35AiG0RIbxRZZxg9WdK6IQDRMyuodab/8YSFtLfrrPkDCvbMvVk
-         IYmt6onz21fmVxUKAyWhq9ZCEsNqWciFH5smIN2v01nvYj2UL27Pon96o9LPOxkqx+GE
-         nVelTKPPY9UOP59WGKnvIAXZ2Lr4kmFj9MmUbdv8vlnJNHHxJ2sUytOGOcxwjckynzg/
-         K3oUDvjqOJtUpk3+em9Jf2HxdtjkgPYiqwVsrbpW7Obp+/faSrqrU50a6pdgh9SJqY6C
-         6Hw9DldiLsJIgWV7PrgX3MxHoeNe0A/PnzyETLNWEpjvvmiYV3Iegy/eH9paYR5t9hK6
-         uLAg==
-X-Gm-Message-State: AOAM533u/G7dZzl4m6ScHcJJOZcSVy+MsJbT9+yfv1ShhPF8R4US8NHd
-        Kw/7ArpiASN3y3doz66Lm6ugxutjLQ==
-X-Google-Smtp-Source: ABdhPJxOzWCjQaTB+cJQ7jRVCWIutX9Ay2X699z2X8+4vZZyLeOr0PwCMw7b9/0acSQzT7G/3F9djw==
-X-Received: by 2002:a1c:9e11:: with SMTP id h17mr3110316wme.106.1596457490306;
-        Mon, 03 Aug 2020 05:24:50 -0700 (PDT)
-Received: from localhost.lan (host-92-25-238-49.as13285.net. [92.25.238.49])
-        by smtp.gmail.com with ESMTPSA id m1sm6559050wmc.28.2020.08.03.05.24.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 05:24:49 -0700 (PDT)
-From:   Jules Irenge <jbi.octave@gmail.com>
-To:     inux-kernel@vger.kernel.org
-Cc:     Jules Irenge <jbi.octave@gmail.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@redhat.com>,
-        linux-audit@redhat.com (moderated list:AUDIT SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 1/2] audit: change unnecessary globals into statics
-Date:   Mon,  3 Aug 2020 13:24:29 +0100
-Message-Id: <20200803122430.82364-2-jbi.octave@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200803122430.82364-1-jbi.octave@gmail.com>
-References: <0/2>
- <20200803122430.82364-1-jbi.octave@gmail.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D919207BB;
+        Mon,  3 Aug 2020 12:24:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596457496;
+        bh=hWzuh5MEsC2Obx12cfyar50VxkgrpxaqoloOCSelQv4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2YqbrXHIiDwnpWBhZKtGmSveeljgOejfO0bsN3TA5YEicYqxqjxZCpzS6KgAT+uX/
+         OARGem3yL2hZPumELLt4zfJck0xL70pfMisTkg1TAAn/cQjLb5lApllc0exh4KvKOZ
+         A5AM88zhAHQBbKrb4rx+XGjRKYro56kpS4F0MKoU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        "Woojung.Huh@microchip.com" <Woojung.Huh@microchip.com>,
+        Johan Hovold <johan@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 062/120] net: lan78xx: add missing endpoint sanity check
+Date:   Mon,  3 Aug 2020 14:18:40 +0200
+Message-Id: <20200803121905.821812290@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
+References: <20200803121902.860751811@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Variables sig_pid, audit_sig_uid and audit_sig_sid
-are only used in the audit.c file across the kernel
-Hence it appears no reason for declaring them as globals
-This patch removes their global declarations from the .h file
-and change them into static in the .c file.
+From: Johan Hovold <johan@kernel.org>
 
-Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+[ Upstream commit 8d8e95fd6d69d774013f51e5f2ee10c6e6d1fc14 ]
+
+Add the missing endpoint sanity check to prevent a NULL-pointer
+dereference should a malicious device lack the expected endpoints.
+
+Note that the driver has a broken endpoint-lookup helper,
+lan78xx_get_endpoints(), which can end up accepting interfaces in an
+altsetting without endpoints as long as *some* altsetting has a bulk-in
+and a bulk-out endpoint.
+
+Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
+Cc: Woojung.Huh@microchip.com <Woojung.Huh@microchip.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/audit.c | 6 +++---
- kernel/audit.h | 4 ----
- 2 files changed, 3 insertions(+), 7 deletions(-)
+ drivers/net/usb/lan78xx.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/kernel/audit.c b/kernel/audit.c
-index b2301bdc9773..afd7827cf6e8 100644
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -123,9 +123,9 @@ static u32	audit_backlog_limit = 64;
- static u32	audit_backlog_wait_time = AUDIT_BACKLOG_WAIT_TIME;
+diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+index eccbf4cd71496..d7162690e3f3d 100644
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -3759,6 +3759,11 @@ static int lan78xx_probe(struct usb_interface *intf,
+ 	netdev->max_mtu = MAX_SINGLE_PACKET_SIZE;
+ 	netif_set_gso_max_size(netdev, MAX_SINGLE_PACKET_SIZE - MAX_HEADER);
  
- /* The identity of the user shutting down the audit system. */
--kuid_t		audit_sig_uid = INVALID_UID;
--pid_t		audit_sig_pid = -1;
--u32		audit_sig_sid = 0;
-+static kuid_t		audit_sig_uid = INVALID_UID;
-+static pid_t		audit_sig_pid = -1;
-+static u32		audit_sig_sid = 0;
- 
- /* Records can be lost in several ways:
-    0) [suppressed in audit_alloc]
-diff --git a/kernel/audit.h b/kernel/audit.h
-index ddc22878433d..3b9c0945225a 100644
---- a/kernel/audit.h
-+++ b/kernel/audit.h
-@@ -327,10 +327,6 @@ static inline int audit_signal_info_syscall(struct task_struct *t)
- 
- extern char *audit_unpack_string(void **bufp, size_t *remain, size_t len);
- 
--extern pid_t audit_sig_pid;
--extern kuid_t audit_sig_uid;
--extern u32 audit_sig_sid;
--
- extern int audit_filter(int msgtype, unsigned int listtype);
- 
- extern void audit_ctl_lock(void);
++	if (intf->cur_altsetting->desc.bNumEndpoints < 3) {
++		ret = -ENODEV;
++		goto out3;
++	}
++
+ 	dev->ep_blkin = (intf->cur_altsetting)->endpoint + 0;
+ 	dev->ep_blkout = (intf->cur_altsetting)->endpoint + 1;
+ 	dev->ep_intr = (intf->cur_altsetting)->endpoint + 2;
 -- 
-2.26.2
+2.25.1
+
+
 
