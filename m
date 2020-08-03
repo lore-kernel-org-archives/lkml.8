@@ -2,85 +2,103 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 865BBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12483C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 644882068F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E632C206E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:47:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="JqFr5vP+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725951AbgHCHjD (ORCPT
+        id S1725926AbgHCHrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 03:39:03 -0400
-Received: from mga17.intel.com ([192.55.52.151]:42699 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725806AbgHCHjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 03:39:03 -0400
-IronPort-SDR: oDQgT4ftQIQcZrVMgrZawjt3FU+pw+nru3Qzh8NKVKRYs7TUSLKgpl4Bq1RAjWgx6Fv0+v/bi4
- ljdJjzavJb2A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9701"; a="132119042"
-X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
-   d="scan'208";a="132119042"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 00:39:02 -0700
-IronPort-SDR: sRn8YPHQGXW0yOEBBTt8qqgg4d8e+r39AI12m2c75yHXA7t36ehtFt5xAObiGkhZqVpn3QZkBz
- SSjBOtXpWWkA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
-   d="scan'208";a="491734962"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 03 Aug 2020 00:39:01 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 484CF130; Mon,  3 Aug 2020 10:39:00 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Qu Wenruo <quwenruo.btrfs@gmx.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH v1] kobject: Restore old behaviour of kobject_del(NULL)
-Date:   Mon,  3 Aug 2020 10:38:59 +0300
-Message-Id: <20200803073859.43664-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 3 Aug 2020 03:47:08 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:21874 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725844AbgHCHrH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 03:47:07 -0400
+X-UUID: 064ccda3e40d4eff9458a146b2cb9c8d-20200803
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=+eS6fkHPCzh1BpGY8IKPY4oZzmVKv5Jj0Oov80tMj8A=;
+        b=JqFr5vP+z8LsunxNDEGLdY4KezuMvR/RxJivwyS/ZoisaaAznmI7swwykZlj9ftf3a2YvyTRle4W0GXZtxxNbMVBwEdW0jXDYfFg79CNTvrcKj/YcF5RMPzGfQ3nqhhSjJxtNBfVVtuMdGHhMoqF2HHDhq79LW9h6JMUrJqmQ/Q=;
+X-UUID: 064ccda3e40d4eff9458a146b2cb9c8d-20200803
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chuanjia.liu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1035471897; Mon, 03 Aug 2020 15:46:48 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N1.mediatek.inc
+ (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 3 Aug
+ 2020 15:46:45 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 3 Aug 2020 15:46:45 +0800
+Message-ID: <1596440772.7361.35.camel@mhfsdcap03>
+Subject: Re: [PATCH v4 0/4] Split PCIe node to comply with hardware design
+From:   Chuanjia Liu <Chuanjia.Liu@mediatek.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <yong.wu@mediatek.com>,
+        <jianjun.wang@mediatek.com>
+Date:   Mon, 3 Aug 2020 15:46:12 +0800
+In-Reply-To: <20200721074915.14516-1-Chuanjia.Liu@mediatek.com>
+References: <20200721074915.14516-1-Chuanjia.Liu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-TM-SNTS-SMTP: A4DEB32D28646CC8FDB1C8300E17EFCD6B509D8446129EEA2C19BE289C9AAB672000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 079ad2fb4bf9 ("kobject: Avoid premature parent object freeing in
-kobject_cleanup()") inadvertently dropped a possibility to call kobject_del()
-with NULL pointer. Restore the old behaviour.
-
-Fixes: 079ad2fb4bf9 ("kobject: Avoid premature parent object freeing in kobject_cleanup()")
-Reported-by: Qu Wenruo <quwenruo.btrfs@gmx.com>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- lib/kobject.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/lib/kobject.c b/lib/kobject.c
-index 3afb939f2a1c..f5f5273031d2 100644
---- a/lib/kobject.c
-+++ b/lib/kobject.c
-@@ -637,7 +637,7 @@ static void __kobject_del(struct kobject *kobj)
-  */
- void kobject_del(struct kobject *kobj)
- {
--	struct kobject *parent = kobj->parent;
-+	struct kobject *parent = kobj ? kobj->parent : NULL;
- 
- 	__kobject_del(kobj);
- 	kobject_put(parent);
--- 
-2.27.0
+T24gVHVlLCAyMDIwLTA3LTIxIGF0IDE1OjQ5ICswODAwLCBjaHVhbmppYS5saXUgd3JvdGU6DQo+
+IFRoZXJlIGFyZSB0d28gaW5kZXBlbmRlbnQgUENJZSBjb250cm9sbGVycyBpbiBNVDI3MTIgYW5k
+IE1UNzYyMg0KPiBwbGF0Zm9ybSwgYW5kIGVhY2ggb2YgdGhlbSBzaG91bGQgY29udGFpbiBhbiBp
+bmRlcGVuZGVudCBNU0kNCj4gZG9tYWluLg0KPiANCj4gSW4gY3VycmVudCBhcmNoaXRlY3R1cmUs
+IE1TSSBkb21haW4gd2lsbCBiZSBpbmhlcml0ZWQgZnJvbSB0aGUNCj4gcm9vdCBicmlkZ2UsIGFu
+ZCBhbGwgb2YgdGhlIGRldmljZXMgd2lsbCBzaGFyZSB0aGUgc2FtZSBNU0kgZG9tYWluLg0KPiBI
+ZW5jZSB0aGF0LCB0aGUgUENJZSBkZXZpY2VzIHdpbGwgbm90IHdvcmsgcHJvcGVybHkgaWYgdGhl
+IGlycQ0KPiBudW1iZXIgd2hpY2ggcmVxdWlyZWQgaXMgbW9yZSB0aGFuIDMyLg0KPiANCj4gU3Bs
+aXQgdGhlIFBDSWUgbm9kZSBmb3IgTVQyNzEyIGFuZCBNVDc2MjIgcGxhdGZvcm0gdG8gZml4IE1T
+SQ0KPiBpc3N1ZSBhbmQgY29tcGx5IHdpdGggdGhlIGhhcmR3YXJlIGRlc2lnbi4NCg0KDQpIaSBM
+b3JlbnpvLA0KDQogICAgICAgZ2VudGxlIHBpbmcgZm9yIHRoaXMgcGF0Y2hzZXQuDQoNCg0KICAg
+ICAgIEJUVy4gSSBkb24ndCBzZWUgaXQgaW4gWzFdLGJ1dCBpcyBvayBpbiBbMl0sIEkgZG9uJ3Qg
+a25vdyB3aHkuDQoNClsxXWh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LXBjaS8NClsyXWh0
+dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LWFybS1rZXJuZWwvMjAyMDA3MjEwNzQ5MTUuMTQ1
+MTYtMS1DaHVhbmppYS5MaXVAbWVkaWF0ZWsuY29tLw0KDQpCZXN0IFJlZ2FyZHMsDQpDaHVhbmpp
+YQ0KDQo+IA0KPiBjaGFuZ2Ugbm90ZToNCj4gICB2NDpjaGFuZ2UgY29tbWl0IG1lc3NhZ2UgZHVl
+IHRvIGJheWVzIHN0YXRpc3RpY2FsIGJvZ29maWx0ZXINCj4gICAgICBjb25zaWRlcnMgdGhpcyBz
+ZXJpZXMgcGF0Y2ggU1BBTS4NCj4gICB2MzpyZWJhc2UgZm9yIDUuOC1yYzEuIE9ubHkgY29sbGVj
+dCBhY2sgb2YgUnlkZXIsIE5vIGNvZGUgY2hhbmdlLg0KPiAgIHYyOmNoYW5nZSB0aGUgYWxsb2Nh
+dGlvbiBvZiBNVDI3MTIgUENJZSBNTUlPIHNwYWNlIGR1ZSB0byB0aGUNCj4gICAgICBhbGxvY2F0
+aW9uIHNpemUgaXMgbm90IHJpZ2h0IGluIHYxLg0KPiANCj4gY2h1YW5qaWEubGl1ICg0KToNCj4g
+ICBkdC1iaW5kaW5nczogcGNpOiBtZWRpYXRlazogTW9kaWZpZWQgdGhlIERldmljZSB0cmVlIGJp
+bmRpbmdzDQo+ICAgUENJOiBtZWRpYXRlazogVXNlIHJlZ21hcCB0byBnZXQgc2hhcmVkIHBjaWUt
+Y2ZnIGJhc2UNCj4gICBhcm02NDogZHRzOiBtZWRpYXRlazogU3BsaXQgUENJZSBub2RlIGZvciBN
+VDI3MTIgYW5kIE1UNzYyMg0KPiAgIEFSTTogZHRzOiBtZWRpYXRlazogTW9kaWZpZWQgTVQ3NjI5
+IFBDSWUgbm9kZQ0KPiANCj4gIC4uLi9iaW5kaW5ncy9wY2kvbWVkaWF0ZWstcGNpZS1jZmcueWFt
+bCAgICAgICB8ICAzOCArKysrKw0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL21lZGlh
+dGVrLXBjaWUudHh0IHwgMTQ0ICsrKysrKysrKysrLS0tLS0tLQ0KPiAgYXJjaC9hcm0vYm9vdC9k
+dHMvbXQ3NjI5LXJmYi5kdHMgICAgICAgICAgICAgIHwgICAzICstDQo+ICBhcmNoL2FybS9ib290
+L2R0cy9tdDc2MjkuZHRzaSAgICAgICAgICAgICAgICAgfCAgMjMgKy0tDQo+ICBhcmNoL2FybTY0
+L2Jvb3QvZHRzL21lZGlhdGVrL210MjcxMmUuZHRzaSAgICAgfCAgNzUgKysrKystLS0tDQo+ICAu
+Li4vZHRzL21lZGlhdGVrL210NzYyMi1iYW5hbmFwaS1icGktcjY0LmR0cyAgfCAgMTYgKy0NCj4g
+IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ3NjIyLXJmYjEuZHRzICB8ICAgNiArLQ0K
+PiAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDc2MjIuZHRzaSAgICAgIHwgIDY4ICsr
+KysrKy0tLQ0KPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1lZGlhdGVrLmMgICAgICAg
+IHwgIDI1ICsrLQ0KPiAgOSBmaWxlcyBjaGFuZ2VkLCAyNTggaW5zZXJ0aW9ucygrKSwgMTQwIGRl
+bGV0aW9ucygtKQ0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IC4uLi9iaW5kaW5ncy9wY2kvbWVkaWF0
+ZWstcGNpZS1jZmcueWFtbA0KPiANCg0K
 
