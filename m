@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C986C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C051C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11680207FB
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE22222BF3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457542;
-	bh=2lk5uht8HIRYz3UwO/2cD6dc8jKUN8zbECfiXqIVzu0=;
+	s=default; t=1596457544;
+	bh=Ovjhqwv39e2ikIxzf1AsHlEjRi/VibezVCtApxNyKcw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oSeSvUUzqHzrSwU2lfuNd+xPyK0Wb8VUNfUWhtZZ8c6YBF3sCXAloCfkoYrPf1JsX
-	 4jYx3sArLmQQHtF8OjYwryug8ct7pDlkL3rxmGjDJmsthTXazNm5RPylMZ9B+7/pNd
-	 14ePoPlBF7wfC5SXg9em40QoWTb0BShH9Q7dC8ZQ=
+	b=ikRlYa/Uwh2fY8fNoZkvUEHPJtfUKFLJ3k6jf7wxprMQFmwhdyTqj33zO2STa7O9+
+	 AKbACaogp07rN298uyvcJCbApIQ4h9O9McUbJ/RMsBCmzesBHtIqBqMNosyLoxpPwD
+	 D/ywxW3jdXoEgGSEYXgjysTOwVRsZCPUfQ7sFM48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbgHCMZm (ORCPT
+        id S1728263AbgHCMZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:25:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50380 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:25:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728091AbgHCMZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:25:31 -0400
+        id S1727100AbgHCMZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:25:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E24F204EC;
-        Mon,  3 Aug 2020 12:25:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95A2E207DF;
+        Mon,  3 Aug 2020 12:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457530;
-        bh=2lk5uht8HIRYz3UwO/2cD6dc8jKUN8zbECfiXqIVzu0=;
+        s=default; t=1596457533;
+        bh=Ovjhqwv39e2ikIxzf1AsHlEjRi/VibezVCtApxNyKcw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xqs06UxrRx62R+bP1MnT5h1YqNiTfNyAArc7X0ufsUhIWZf85oFLweaCZPE62tnaS
-         B/6bkHWP2f0naDM76aI2lKTsdkrP6GL6Awb5nfWrOXDFwtG0j0ppCP6j8I6ozSIp+I
-         qsotuU+1EwA23XG01A6o2xbsLkib5edUN7b5cUgE=
+        b=ejM3qLrvSVZyPYtuqIr11JYbmsTKkwKcGgnF27nmy53yBezcPApRq9OBdv9m7B4eQ
+         1e2GQFYSnfZwssZ+CpMi8h4cq+Qe6RRMFf08sd6l7cKUVQFh6bSgkKJsLQhfNkW9rZ
+         JpPF7zK5yOgoi3b3ooTPyEmTeJyTijda0flb60wU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, linux-block@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 102/120] nfc: s3fwrn5: add missing release on skb in s3fwrn5_recv_frame
-Date:   Mon,  3 Aug 2020 14:19:20 +0200
-Message-Id: <20200803121907.873047135@linuxfoundation.org>
+Subject: [PATCH 5.7 103/120] scsi: core: Run queue in case of I/O resource contention failure
+Date:   Mon,  3 Aug 2020 14:19:21 +0200
+Message-Id: <20200803121907.923220422@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -61,32 +63,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit 1e8fd3a97f2d83a7197876ceb4f37b4c2b00a0f3 ]
+[ Upstream commit 3f0dcfbcd2e162fc0a11c1f59b7acd42ee45f126 ]
 
-The implementation of s3fwrn5_recv_frame() is supposed to consume skb on
-all execution paths. Release skb before returning -ENODEV.
+I/O requests may be held in scheduler queue because of resource contention.
+The starvation scenario was handled properly in the regular completion
+path but we failed to account for it during I/O submission. This lead to
+the hang captured below. Make sure we run the queue when resource
+contention is encountered in the submission path.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[   39.054963] scsi 13:0:0:0: rejecting I/O to dead device
+[   39.058700] scsi 13:0:0:0: rejecting I/O to dead device
+[   39.087855] sd 13:0:0:1: [sdd] Synchronizing SCSI cache
+[   39.088909] scsi 13:0:0:1: rejecting I/O to dead device
+[   39.095351] scsi 13:0:0:1: rejecting I/O to dead device
+[   39.096962] scsi 13:0:0:1: rejecting I/O to dead device
+[  247.021859] INFO: task scsi-stress-rem:813 blocked for more than 122 seconds.
+[  247.023258]       Not tainted 5.8.0-rc2 #8
+[  247.024069] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[  247.025331] scsi-stress-rem D    0   813    802 0x00004000
+[  247.025334] Call Trace:
+[  247.025354]  __schedule+0x504/0x55f
+[  247.027987]  schedule+0x72/0xa8
+[  247.027991]  blk_mq_freeze_queue_wait+0x63/0x8c
+[  247.027994]  ? do_wait_intr_irq+0x7a/0x7a
+[  247.027996]  blk_cleanup_queue+0x4b/0xc9
+[  247.028000]  __scsi_remove_device+0xf6/0x14e
+[  247.028002]  scsi_remove_device+0x21/0x2b
+[  247.029037]  sdev_store_delete+0x58/0x7c
+[  247.029041]  kernfs_fop_write+0x10d/0x14f
+[  247.031281]  vfs_write+0xa2/0xdf
+[  247.032670]  ksys_write+0x6b/0xb3
+[  247.032673]  do_syscall_64+0x56/0x82
+[  247.034053]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[  247.034059] RIP: 0033:0x7f69f39e9008
+[  247.036330] Code: Bad RIP value.
+[  247.036331] RSP: 002b:00007ffdd8116498 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+[  247.037613] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f69f39e9008
+[  247.039714] RDX: 0000000000000002 RSI: 000055cde92a0ab0 RDI: 0000000000000001
+[  247.039715] RBP: 000055cde92a0ab0 R08: 000000000000000a R09: 00007f69f3a79e80
+[  247.039716] R10: 000000000000000a R11: 0000000000000246 R12: 00007f69f3abb780
+[  247.039717] R13: 0000000000000002 R14: 00007f69f3ab6740 R15: 0000000000000002
+
+Link: https://lore.kernel.org/r/20200720025435.812030-1-ming.lei@redhat.com
+Cc: linux-block@vger.kernel.org
+Cc: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/s3fwrn5/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/scsi_lib.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/nfc/s3fwrn5/core.c b/drivers/nfc/s3fwrn5/core.c
-index 91d4d5b28a7d9..ba6c486d64659 100644
---- a/drivers/nfc/s3fwrn5/core.c
-+++ b/drivers/nfc/s3fwrn5/core.c
-@@ -198,6 +198,7 @@ int s3fwrn5_recv_frame(struct nci_dev *ndev, struct sk_buff *skb,
- 	case S3FWRN5_MODE_FW:
- 		return s3fwrn5_fw_recv_frame(ndev, skb);
- 	default:
-+		kfree_skb(skb);
- 		return -ENODEV;
- 	}
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index b8b4366f12001..887b6a47f5dac 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -564,6 +564,15 @@ static void scsi_mq_uninit_cmd(struct scsi_cmnd *cmd)
+ 	scsi_uninit_cmd(cmd);
  }
+ 
++static void scsi_run_queue_async(struct scsi_device *sdev)
++{
++	if (scsi_target(sdev)->single_lun ||
++	    !list_empty(&sdev->host->starved_list))
++		kblockd_schedule_work(&sdev->requeue_work);
++	else
++		blk_mq_run_hw_queues(sdev->request_queue, true);
++}
++
+ /* Returns false when no more bytes to process, true if there are more */
+ static bool scsi_end_request(struct request *req, blk_status_t error,
+ 		unsigned int bytes)
+@@ -608,11 +617,7 @@ static bool scsi_end_request(struct request *req, blk_status_t error,
+ 
+ 	__blk_mq_end_request(req, error);
+ 
+-	if (scsi_target(sdev)->single_lun ||
+-	    !list_empty(&sdev->host->starved_list))
+-		kblockd_schedule_work(&sdev->requeue_work);
+-	else
+-		blk_mq_run_hw_queues(q, true);
++	scsi_run_queue_async(sdev);
+ 
+ 	percpu_ref_put(&q->q_usage_counter);
+ 	return false;
+@@ -1706,6 +1711,7 @@ out_put_budget:
+ 		 */
+ 		if (req->rq_flags & RQF_DONTPREP)
+ 			scsi_mq_uninit_cmd(cmd);
++		scsi_run_queue_async(sdev);
+ 		break;
+ 	}
+ 	return ret;
 -- 
 2.25.1
 
