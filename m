@@ -2,119 +2,127 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD0AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1268EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B34CD20775
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E426820775
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:06:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596456413;
+	bh=7/oL800Z8/vXBnPHpCYKjZ8lyLUTxJLpeZERxjk0gOQ=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=nll0XV4w4+janRD4sZ4jkUN52QK+vLnrrs0WQrMqDxEqIA/MoywOGyRMHgxF+lNPD
+	 eTxC6LWJKwE7QIrQU5eDVcTC0lBg1FJXOOmsEfWcnIPd6WxOHm1JB45FDM2vEWjmCx
+	 KC7tlxIYXQSUui/NsgBYrrgFLzz7g+UMvsf9SoZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgHCMG1 (ORCPT
+        id S1726578AbgHCMGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:06:27 -0400
-Received: from www62.your-server.de ([213.133.104.62]:43598 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbgHCMGS (ORCPT
+        Mon, 3 Aug 2020 08:06:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726725AbgHCMGP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:06:18 -0400
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1k2ZDd-0003L5-Tm; Mon, 03 Aug 2020 14:05:29 +0200
-Received: from [178.196.57.75] (helo=pc-9.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1k2ZDd-000WOD-Mr; Mon, 03 Aug 2020 14:05:29 +0200
-Subject: Re: [PATCH bpf-next v3 00/29] bpf: switch to memcg-based memory
- accounting
-To:     Roman Gushchin <guro@fb.com>, bpf@vger.kernel.org
-Cc:     netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org
-References: <20200730212310.2609108-1-guro@fb.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <6b1777ac-cae1-fa1f-db53-f6061d9ae675@iogearbox.net>
-Date:   Mon, 3 Aug 2020 14:05:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 3 Aug 2020 08:06:15 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F8A6C06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 05:06:06 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id qc22so23548263ejb.4
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 05:06:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=tLVRbnn39DZ/h/fwOCnkgHLQFEjYDr/OlALd6BU/W2Q=;
+        b=Cz2GTN7BZe3pxLW4xdY23o+k7jsD0bv5at3sdTpFs9iNDr926mp3Mj5OnVe1bfWjEJ
+         PG0YtzDCmXrvKYfhCOP9nXSGJueHKLM4xqakDYLYdkKr+XsYMQW6TMfC9ziZEUR4glwF
+         kcjoQhmtVk4GdNR1gtSRqMPK/G8fL95Y1nNiochI9mCQCvyEJrGT/tNvhZoo6hzebbK4
+         VNhnJ3qoHNKE4I2Ac9jfRz8L1pslkP9nSKRiemJT1orudalUuuAdZ8CetMt6jf0BhFYJ
+         xOvzcKwdwW7io5PfE2Gb28oFS2oN1P/1j1RLowf89AtCXFtaqa9WlFNFk5y6vLZ/mRot
+         pT9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition;
+        bh=tLVRbnn39DZ/h/fwOCnkgHLQFEjYDr/OlALd6BU/W2Q=;
+        b=eh1cKbATxQ0Lrbi1Zmgp+kOVCyqmBVlQWiagMRskEMWBKSPolNuZN2QTkkAQ7qXFP9
+         fiaaT5LDyjT8dphUM5jPxX1CfA6owdayeDkmUX94GbD/8n0bk+m6v8vwK2XJFr36SSb6
+         pcO4fmL4cWy8MrWzk1E+1qFMOCE1AtSJ/BhOfSeOiHxqdQHOLQJqty9JBDVRtOsSwEpl
+         wD8HwOtEKfKoAs0GJezGZnDWkgP+T0iKm3wvRbWhnohvyXaHYILPnhEZmRijgFtXPsdp
+         Tq1Xin6yU2HBz+YPvZ/AuItRHK/K18nLxBU50INouqdv8iiVFJJoZU+VelRQh+PH4Edd
+         zlmQ==
+X-Gm-Message-State: AOAM533ngoai5LSHaKNbeaZeTATTGPFkdtxfLDeDqJlvU4QJJNwqZogy
+        qwhxCblwo04Z08hipnxACFs=
+X-Google-Smtp-Source: ABdhPJyC00JNGPakg98JcZsZu4+D8OIno31EcIPAGrI9OFJB6TBTWr9mHbb2EyOsFocioliAm7yptw==
+X-Received: by 2002:a17:906:7e05:: with SMTP id e5mr17160826ejr.252.1596456364625;
+        Mon, 03 Aug 2020 05:06:04 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id u4sm8783981edy.18.2020.08.03.05.06.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 05:06:03 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 14:06:02 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] objtool changes for v5.9
+Message-ID: <20200803120602.GA506993@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200730212310.2609108-1-guro@fb.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.3/25892/Sun Aug  2 17:01:36 2020)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/30/20 11:22 PM, Roman Gushchin wrote:
-> Currently bpf is using the memlock rlimit for the memory accounting.
-> This approach has its downsides and over time has created a significant
-> amount of problems:
-> 
-> 1) The limit is per-user, but because most bpf operations are performed
->     as root, the limit has a little value.
-> 
-> 2) It's hard to come up with a specific maximum value. Especially because
->     the counter is shared with non-bpf users (e.g. memlock() users).
->     Any specific value is either too low and creates false failures
->     or too high and useless.
-> 
-> 3) Charging is not connected to the actual memory allocation. Bpf code
->     should manually calculate the estimated cost and precharge the counter,
->     and then take care of uncharging, including all fail paths.
->     It adds to the code complexity and makes it easy to leak a charge.
-> 
-> 4) There is no simple way of getting the current value of the counter.
->     We've used drgn for it, but it's far from being convenient.
-> 
-> 5) Cryptic -EPERM is returned on exceeding the limit. Libbpf even had
->     a function to "explain" this case for users.
-> 
-> In order to overcome these problems let's switch to the memcg-based
-> memory accounting of bpf objects. With the recent addition of the percpu
-> memory accounting, now it's possible to provide a comprehensive accounting
-> of memory used by bpf programs and maps.
-> 
-> This approach has the following advantages:
-> 1) The limit is per-cgroup and hierarchical. It's way more flexible and allows
->     a better control over memory usage by different workloads.
-> 
-> 2) The actual memory consumption is taken into account. It happens automatically
->     on the allocation time if __GFP_ACCOUNT flags is passed. Uncharging is also
->     performed automatically on releasing the memory. So the code on the bpf side
->     becomes simpler and safer.
-> 
-> 3) There is a simple way to get the current value and statistics.
-> 
-> The patchset consists of the following parts:
-> 1) memcg-based accounting for various bpf objects: progs and maps
-> 2) removal of the rlimit-based accounting
-> 3) removal of rlimit adjustments in userspace samples
+Linus,
 
-The diff stat looks nice & agree that rlimit sucks, but I'm missing how this is set
-is supposed to work reliably, at least I currently fail to see it. Elaborating on this
-in more depth especially for the case of unprivileged users should be a /fundamental/
-part of the commit message.
+Please pull the latest objtool/core git tree from:
 
-Lets take an example: unprivileged user adds a max sized hashtable to one of its
-programs, and configures the map that it will perform runtime allocation. The load
-succeeds as it doesn't surpass the limits set for the current memcg. Kernel then
-processes packets from softirq. Given the runtime allocations, we end up mischarging
-to whoever ended up triggering __do_softirq(). If, for example, ksoftirq thread, then
-it's probably reasonable to assume that this might not be accounted e.g. limits are
-not imposed on the root cgroup. If so we would probably need to drag the context of
-/where/ this must be charged to __memcg_kmem_charge_page() to do it reliably. Otherwise
-how do you protect unprivileged users to OOM the machine?
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git objtool-core-2020-08-03
 
-Similarly, what happens to unprivileged users if kmemcg was not configured into the
-kernel or has been disabled?
+   # HEAD: d832c0051f4e9cc7d26ef3bc6e9b662bc6a90f3a Merge branch 'objtool/urgent' into objtool/core
 
-Thanks,
-Daniel
+Misc updates:
+
+- Add support for non-rela relocations, in preparation to merge 'recordmcount'
+  functionality into objtool.
+
+- Fix assumption that broke under --ffunction-sections (LTO) builds.
+
+- Misc cleanups.
+
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+ Thanks,
+
+	Ingo
+
+------------------>
+Kristen Carlson Accardi (1):
+      objtool: Do not assume order of parent/child functions
+
+Matt Helsley (2):
+      objtool: Rename rela to reloc
+      objtool: Add support for relocations without addends
+
+Sami Tolvanen (1):
+      objtool: Use sh_info to find the base for .rela sections
+
+
+ tools/objtool/arch.h            |   2 +-
+ tools/objtool/arch/x86/decode.c |   2 +-
+ tools/objtool/check.c           | 202 +++++++++++++-------------
+ tools/objtool/check.h           |   2 +-
+ tools/objtool/elf.c             | 308 ++++++++++++++++++++++++++++------------
+ tools/objtool/elf.h             |  29 ++--
+ tools/objtool/orc_gen.c         |  46 +++---
+ tools/objtool/special.c         |  28 ++--
+ 8 files changed, 375 insertions(+), 244 deletions(-)
