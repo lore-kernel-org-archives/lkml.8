@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9471DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A314C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65CC9207FC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D61C0207FC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457606;
-	bh=kbe8WXIGRrAQO4d8dZZB8ZfVPuIxlU9GkwkGd1km1gg=;
+	s=default; t=1596457617;
+	bh=ZDt/Zl6117SPnQ8nKwlwPrgsijr9OdQmhrm1hTPLeCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cSAZ0pMQRqjFMay5jMmobwHgc9IgK+wHiQQ9i/MdhEL3I7ttdCgW7VJ43MmEK900g
-	 PwZVfbZUJ9w4orkLZa9Qlb5xdJQ8G6y7nPvFq9T4K5EP7U54+ljAThoTODm6qmUxRP
-	 Tw7LMK11Y5/neHS7e3d8r3V6D8hT86QRZuhjL4+o=
+	b=fNttPuwBHnfoHXLbRfgiNmAWvZbZ5Sgwb5VyMb2CqsrBAMjqhPhyXmjQMgKViMe6U
+	 4bwmuyy+KNxt2XjbOFC8pnvWXzVG7CGxIeThWVRl1JB33jc3etcFdh/opQMnZYZrg6
+	 V6PgAYUlxPnF5l4L0wWVi/hfy4vqiHVyfcyjcXVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728418AbgHCM0p (ORCPT
+        id S1728445AbgHCM0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:26:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52086 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:26:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727873AbgHCM0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:26:36 -0400
+        id S1728415AbgHCM0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:26:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C850E207FB;
-        Mon,  3 Aug 2020 12:26:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28DF1204EC;
+        Mon,  3 Aug 2020 12:26:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457595;
-        bh=kbe8WXIGRrAQO4d8dZZB8ZfVPuIxlU9GkwkGd1km1gg=;
+        s=default; t=1596457603;
+        bh=ZDt/Zl6117SPnQ8nKwlwPrgsijr9OdQmhrm1hTPLeCU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QUIwt69o+UZynoWhXNWOjJ89zGHeFjISYDLyJArIg7XF5TbxuTUY8QhGAvvqN3OoP
-         N9xVxBPQQEBpfxr+7QkcirxUXvntpPGw1ik/qUJsTIGZIEQkFPQWWT3vrEsUnA4HCJ
-         OYYq/j/e80Dw6lMOxWpW4hpU/JDRVjQlRmABZXrY=
+        b=Y8I7HH81LCfFjfRGyaEBsGisaok2EXugZtf/pCiAYY/417jJyCfXoDRrVKXmrRxwl
+         mOXWGU2Ds2irrBxlrbYI+Lqlqq3o7FzUQGbf3UF5UtHSC0pZTR7t30iEyzQUVl6oOE
+         qRTj3cYIago51XgLlzpzcsnKIhyDZ7pu8xLXJa1s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laurence Oberman <loberman@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 098/120] qed: Disable "MFW indication via attention" SPAM every 5 minutes
-Date:   Mon,  3 Aug 2020 14:19:16 +0200
-Message-Id: <20200803121907.678159943@linuxfoundation.org>
+        stable@vger.kernel.org, Oded Gabbay <oded.gabbay@gmail.com>,
+        Tomer Tayar <ttayar@habana.ai>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 101/120] habanalabs: prevent possible out-of-bounds array access
+Date:   Mon,  3 Aug 2020 14:19:19 +0200
+Message-Id: <20200803121907.823809165@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -60,36 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurence Oberman <loberman@redhat.com>
+From: Oded Gabbay <oded.gabbay@gmail.com>
 
-[ Upstream commit 1d61e21852d3161f234b9656797669fe185c251b ]
+[ Upstream commit cea7a0449ea3fa4883bf5dc8397f000d6b67d6cd ]
 
-This is likely firmware causing this but its starting to annoy customers.
-Change the message level to verbose to prevent the spam.
-Note that this seems to only show up with ISCSI enabled on the HBA via the
-qedi driver.
+Queue index is received from the user. Therefore, we must validate it
+before using it to access the queue props array.
 
-Signed-off-by: Laurence Oberman <loberman@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+Reviewed-by: Tomer Tayar <ttayar@habana.ai>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_int.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/misc/habanalabs/command_submission.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_int.c b/drivers/net/ethernet/qlogic/qed/qed_int.c
-index 8d106063e9275..666e43748a5f4 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_int.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_int.c
-@@ -1180,7 +1180,8 @@ static int qed_int_attentions(struct qed_hwfn *p_hwfn)
- 			index, attn_bits, attn_acks, asserted_bits,
- 			deasserted_bits, p_sb_attn_sw->known_attn);
- 	} else if (asserted_bits == 0x100) {
--		DP_INFO(p_hwfn, "MFW indication via attention\n");
-+		DP_VERBOSE(p_hwfn, NETIF_MSG_INTR,
-+			   "MFW indication via attention\n");
- 	} else {
- 		DP_VERBOSE(p_hwfn, NETIF_MSG_INTR,
- 			   "MFW indication [deassertion]\n");
+diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
+index 409276b6374d7..e7c8e7473226f 100644
+--- a/drivers/misc/habanalabs/command_submission.c
++++ b/drivers/misc/habanalabs/command_submission.c
+@@ -425,11 +425,19 @@ static int validate_queue_index(struct hl_device *hdev,
+ 	struct asic_fixed_properties *asic = &hdev->asic_prop;
+ 	struct hw_queue_properties *hw_queue_prop;
+ 
++	/* This must be checked here to prevent out-of-bounds access to
++	 * hw_queues_props array
++	 */
++	if (chunk->queue_index >= HL_MAX_QUEUES) {
++		dev_err(hdev->dev, "Queue index %d is invalid\n",
++			chunk->queue_index);
++		return -EINVAL;
++	}
++
+ 	hw_queue_prop = &asic->hw_queues_props[chunk->queue_index];
+ 
+-	if ((chunk->queue_index >= HL_MAX_QUEUES) ||
+-			(hw_queue_prop->type == QUEUE_TYPE_NA)) {
+-		dev_err(hdev->dev, "Queue index %d is invalid\n",
++	if (hw_queue_prop->type == QUEUE_TYPE_NA) {
++		dev_err(hdev->dev, "Queue index %d is not applicable\n",
+ 			chunk->queue_index);
+ 		return -EINVAL;
+ 	}
 -- 
 2.25.1
 
