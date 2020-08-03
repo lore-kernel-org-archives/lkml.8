@@ -2,53 +2,51 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3987C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63091C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8704A20738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E59220678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458913;
-	bh=kTonF4eWHt52DeZ898QNeEouGbHV74JSsFJIkPdxvng=;
+	s=default; t=1596458917;
+	bh=2Rf00zb0NiJrc2Hsb0wQlosMgVlGXbTqxrdugp9D0xA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SvDUDCsN9fk5TBvUrWPHvCFQAl0c1AdFvRzS3yilEJ5tO0RVpvuoJitF6ZFN6M2WI
-	 iMrIHiQns9zuc62clV+gYQeVCMr8jrGtzsDMPGsMIeCD0+t6GV7i7CpMqXh56Nu8mF
-	 7zRmaYiYKY10z1RIihAjD6QYAEzOW2e8decxXbd8=
+	b=Op5Zp1UXPxYoJ6umur/rPwloJeMU1gZ1gS5ZW7AyXoa5aoU1PuZ2dIZoeRbeOh40P
+	 uzV9ZgPhz0RxQ9IxReG7gX9O/VjBPQYdqwXmwOCuk/GoqytMsC9ytw+acuAoqYdAVb
+	 wFkgGDltWLFshfJQVKZmWPKzCPGQ9V+KmR2xGHjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729668AbgHCMsd (ORCPT
+        id S1728078AbgHCMYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:48:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49328 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:24:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728092AbgHCMYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:24:49 -0400
+        id S1728047AbgHCMYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:24:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00A7C204EC;
-        Mon,  3 Aug 2020 12:24:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 209E4207DF;
+        Mon,  3 Aug 2020 12:24:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457488;
-        bh=kTonF4eWHt52DeZ898QNeEouGbHV74JSsFJIkPdxvng=;
+        s=default; t=1596457478;
+        bh=2Rf00zb0NiJrc2Hsb0wQlosMgVlGXbTqxrdugp9D0xA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u7hQGxyvKmhr4x3pH+WryWl3s7XYGLDc+5BouJYnxYfKOWIxF9EF8OFcv9T/tt3a0
-         2uR8KSacrxOL52YFD05GnQNCKEI1MoXLhjOGPNr47HGD6nhu90ggPMKEOde17zV3UA
-         aaBgyBFHDhaY/90NE6Dj/LzZF4by7nDL5dHI9Yec=
+        b=YL+2cZhY+RZKKIxwKLc7dfUzPIbtlU2nYPsQ3j7DVW4NpOITP0Y+eenOwWTCVZwih
+         oa4taS1G7ptI1tH/SnrHgdq2Qh9ZgflGx4F7EpPC781jXnMtlqY0XuERfyvEKtUvPo
+         8BW6uYljmuD6xj9uPFsFOibA0qWe/upjjMNWZk8k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Lu Wei <luwei32@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 086/120] net: nixge: fix potential memory leak in nixge_probe()
-Date:   Mon,  3 Aug 2020 14:19:04 +0200
-Message-Id: <20200803121907.059730829@linuxfoundation.org>
+        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 082/120] arm64/alternatives: move length validation inside the subsection
+Date:   Mon,  3 Aug 2020 14:19:00 +0200
+Message-Id: <20200803121906.864468101@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -61,52 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Wei <luwei32@huawei.com>
+From: Sami Tolvanen <samitolvanen@google.com>
 
-[ Upstream commit 366228ed01f6882cc203e3d5b40010dfae0be1c3 ]
+[ Upstream commit 966a0acce2fca776391823381dba95c40e03c339 ]
 
-If some processes in nixge_probe() fail, free_netdev(dev)
-needs to be called to aviod a memory leak.
+Commit f7b93d42945c ("arm64/alternatives: use subsections for replacement
+sequences") breaks LLVM's integrated assembler, because due to its
+one-pass design, it cannot compute instruction sequence lengths before the
+layout for the subsection has been finalized. This change fixes the build
+by moving the .org directives inside the subsection, so they are processed
+after the subsection layout is known.
 
-Fixes: 87ab207981ec ("net: nixge: Separate ctrl and dma resources")
-Fixes: abcd3d6fc640 ("net: nixge: Fix error path for obtaining mac address")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Lu Wei <luwei32@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: f7b93d42945c ("arm64/alternatives: use subsections for replacement sequences")
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/1078
+Link: https://lore.kernel.org/r/20200730153701.3892953-1-samitolvanen@google.com
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ni/nixge.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/arm64/include/asm/alternative.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/ni/nixge.c b/drivers/net/ethernet/ni/nixge.c
-index 2fdd0753b3afd..0e776131a3ef3 100644
---- a/drivers/net/ethernet/ni/nixge.c
-+++ b/drivers/net/ethernet/ni/nixge.c
-@@ -1298,19 +1298,21 @@ static int nixge_probe(struct platform_device *pdev)
- 	netif_napi_add(ndev, &priv->napi, nixge_poll, NAPI_POLL_WEIGHT);
- 	err = nixge_of_get_resources(pdev);
- 	if (err)
--		return err;
-+		goto free_netdev;
- 	__nixge_hw_set_mac_address(ndev);
+diff --git a/arch/arm64/include/asm/alternative.h b/arch/arm64/include/asm/alternative.h
+index 12f0eb56a1cc3..619db9b4c9d5c 100644
+--- a/arch/arm64/include/asm/alternative.h
++++ b/arch/arm64/include/asm/alternative.h
+@@ -77,9 +77,9 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
+ 	"663:\n\t"							\
+ 	newinstr "\n"							\
+ 	"664:\n\t"							\
+-	".previous\n\t"							\
+ 	".org	. - (664b-663b) + (662b-661b)\n\t"			\
+-	".org	. - (662b-661b) + (664b-663b)\n"			\
++	".org	. - (662b-661b) + (664b-663b)\n\t"			\
++	".previous\n"							\
+ 	".endif\n"
  
- 	priv->tx_irq = platform_get_irq_byname(pdev, "tx");
- 	if (priv->tx_irq < 0) {
- 		netdev_err(ndev, "could not find 'tx' irq");
--		return priv->tx_irq;
-+		err = priv->tx_irq;
-+		goto free_netdev;
- 	}
- 
- 	priv->rx_irq = platform_get_irq_byname(pdev, "rx");
- 	if (priv->rx_irq < 0) {
- 		netdev_err(ndev, "could not find 'rx' irq");
--		return priv->rx_irq;
-+		err = priv->rx_irq;
-+		goto free_netdev;
- 	}
- 
- 	priv->coalesce_count_rx = XAXIDMA_DFT_RX_THRESHOLD;
+ #define __ALTERNATIVE_CFG_CB(oldinstr, feature, cfg_enabled, cb)	\
 -- 
 2.25.1
 
