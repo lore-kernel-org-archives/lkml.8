@@ -2,141 +2,267 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F563C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E78E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 582DD20781
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:32:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596468768;
-	bh=neHK+x5riAs+1E8/mel3uLsfL6FldG7Ur6KqHrUvrCM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=F8p5FAktbBMza2UY1hQeGWoVbQqYzDUWc5G5cOMpcFZGmavKxRUWTt32XWp3YMGgu
-	 Xi/ihga/w6Hq8rui5uR7T81+q24SHNFM7FWgbCytyRlnbXLCpOC/DMJem+xsjoGc8O
-	 WiJ67ToBGv9I0e4f5MQyHZ5cYC57MR/lyvE1dJ58=
+	by mail.kernel.org (Postfix) with ESMTP id BF3B020775
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 15:33:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="gxeYSalN";
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="aLBdQVUh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbgHCPcs (ORCPT
+        id S1726965AbgHCPdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 11:32:48 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39501 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgHCPcq (ORCPT
+        Mon, 3 Aug 2020 11:33:45 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:28253 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgHCPdp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 11:32:46 -0400
-Received: by mail-wm1-f67.google.com with SMTP id q76so14630003wme.4
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 08:32:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aAEEBYH/RNE6F6eih4Xf8kJGXqfcNHHmi9tjJ8DCSlI=;
-        b=ZHEu9jrEGD5jfkB7KwMAUjYGFHe6d0avoeArT8Q1YCmb7TBmz/19HUwWNCgjY/HNFE
-         OIx1TArP5pGgr4hIj+O1waKxpcuzI1/+0RYXU/TM7MOIgmvff5PhS0sVC5/pGFW/HhjF
-         qrupkkiunMVjcB7m9T7rYcs9a0lbH98G7LuBNdMhOAE+iYWQiIbID0qzz1RS4Q0VGvyM
-         2CF8moP78kRTnDvjUKSvz7/1kY8K1USjOZQHHIPOLK1SnMR3n9wsbQCcaMioM7B7w15j
-         Mt5NIrA49jIMPDdkCPuDEO9zt7k3zYBBDJggms0pC70E2ZZU1qIAl7HQhfMs4ISSv/kh
-         wNCA==
-X-Gm-Message-State: AOAM532MMB0VSPGx7eLyX7rzwxQywA0H4lKJ0MphW0RRd7u3btWNQC1Z
-        DoJtrjo48NfXMX9yUDBmolY=
-X-Google-Smtp-Source: ABdhPJyjogI7x4EjysRPYcFwG3urMjXbnPLRiwE52sPayUyavtnb6nVIzYghbVaf/rmvG/kmOb0Rfg==
-X-Received: by 2002:a1c:ba83:: with SMTP id k125mr515975wmf.160.1596468764859;
-        Mon, 03 Aug 2020 08:32:44 -0700 (PDT)
-Received: from tiehlicka.suse.cz (ip-37-188-169-187.eurotel.cz. [37.188.169.187])
-        by smtp.gmail.com with ESMTPSA id w1sm25562444wmc.18.2020.08.03.08.32.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 08:32:44 -0700 (PDT)
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Koutny <mkoutny@suse.com>
-Cc:     Tejun Heo <tj@kernel.org>, <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>
-Subject: [PATCH] mm: Fix protection usage propagation
-Date:   Mon,  3 Aug 2020 17:32:31 +0200
-Message-Id: <20200803153231.15477-1-mhocko@kernel.org>
-X-Mailer: git-send-email 2.27.0
+        Mon, 3 Aug 2020 11:33:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1596468824; x=1628004824;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=ZP9zHc+RtoW/r4LN9MNnECKyPjcD3QCtYDpMMSGohgA=;
+  b=gxeYSalNa+x1I7S+Ce8V2KIesFE3dyRsKLoOEf3QmK2Rs2cAcQ5bjxih
+   nU0uvHjItrkG4/PmXQ2+Q0tah7HIadXAVgb2LaExuybAS8W82y1fsnOvi
+   W85kYVXv1LaWpxgwPepYf76u/UBfMbEbk08bKCTkup4ipW2X6BN/IHPdC
+   3wIwl8BS6Y5V3slHzNYnJvHjZLYwyM9kyPGtNveO1uOxACZKsVD5VjMia
+   wbIjZzgj/ziZf4F/dhyueiWhCPswkC53QAiNhvxWYybIBu8B5nwXgMq5O
+   NtIr16oe7xZdGyExocr9UPG0j558BGa0bdOr2zARi5fkSEVmjGfBkHy5x
+   Q==;
+IronPort-SDR: t+86kMvNcOsyW1owOM/S5oHoVYgrbN4VF6cFc4lrjMaV+RGGLA4nRppnV6llvtad93J9e/LOKh
+ nV3fkzVjuLgF//zNQ+/ORoHE9SLdf1VruxA6eXBi2MwXchNSAgrLDbLNPh+iHLEza2kNWKDrfv
+ 0Ep7bk7oAevNYcNS9NoE3Q7NyWaJIUoJUI/nApbGdKn2ARkPA+z7/l68XjjIUaYWEEXlNwi62J
+ wFCNyJTElX04ZbfvUArebCrPSs37W05WGR00NaYjITp1zHyTqh7vtyCcdkSmWjX5+BrBCs2+Pw
+ pb8=
+X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
+   d="scan'208";a="86500958"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 03 Aug 2020 08:33:43 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 3 Aug 2020 08:33:39 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Mon, 3 Aug 2020 08:33:42 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XLU+C4pHDa4ePfhZS54jpjv2ofdPg9MmJ7cIgbkJHR/1ep+wS8ulW2TpU/P96UjFFcCtshGGp6vmIJAtJOj2+yu44m0GVAL2HPiExoJ82zlkp0d8MiMRnwb+gFdUWYeVEqvCQ/r+y+JkHQ1GqCl/WG8sl2WhQSTeIS3HLkaoq8cwb3Iud9EfxhlfhKbqc/51rjxNY+KdMBtly8oJx2ymUaO/rQWTtOrvAPRhKTw0n20iB2LUARzg77lblSTj7PqfWY3tmSnPq7Sr9MjSrCxDi7v9Ww4ZcQ+L+eEv0juQkO7OGtCz2WUkpHJ/2En1m6SveZBMh4zaXyEgFbRQ5uHqHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OFie4Z6MePp8d167KBYoHXywZHUOH+lggMzRgLCZ66A=;
+ b=NFM32w5ypgZJMHx1eoUSMXG6PlsnSVA6HOGotS24MByLVCX+CZRM5k0SkD73b/FUSyibVCOBTG4LU0vdMGO11isJeM1HMnbW4y9SWNsftzb3S4BO3X+BlYHybZP37/1lmIDW1w2kFC+mMyv+aq7WZEVWwT1BAR1PD0ug0lBwM9+NVN17rK53sfP/VZ2IKUBVHDtXsOIPw7HCypjk7atofX2rH9a66JjHkYeC9JKVFQcnSzUr3eNpshf2gXG+8o+9xUTStklow4qx6X4jkg3qfilA/J7qg+o2pGNFN6WaxrlZW9uGp9SLQIvgbHD+HLp3dBmB1lU3t0xXLs6TpMjE1w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OFie4Z6MePp8d167KBYoHXywZHUOH+lggMzRgLCZ66A=;
+ b=aLBdQVUhn3gVJahROYw6h3mZjmTTs2StOmoBNbv/M0LEDEBmh6TK9GDPiJCTU+cI3OjxWuCG98B1sJFOaKPleoysSa5+KaDk3/mGJWLecC/Dy1ocl086VQpn8EEZNFhJyRsMSOC0BaprRKE5kQVZ1kYE5SfNorqcPdEYyMHuug0=
+Received: from SN6PR11MB3504.namprd11.prod.outlook.com (2603:10b6:805:d0::17)
+ by SA0PR11MB4765.namprd11.prod.outlook.com (2603:10b6:806:9b::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17; Mon, 3 Aug
+ 2020 15:33:42 +0000
+Received: from SN6PR11MB3504.namprd11.prod.outlook.com
+ ([fe80::c83b:2062:4e59:8ebf]) by SN6PR11MB3504.namprd11.prod.outlook.com
+ ([fe80::c83b:2062:4e59:8ebf%7]) with mapi id 15.20.3239.021; Mon, 3 Aug 2020
+ 15:33:42 +0000
+From:   <Codrin.Ciubotariu@microchip.com>
+To:     <wsa@kernel.org>
+CC:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <robh+dt@kernel.org>,
+        <Ludovic.Desroches@microchip.com>, <Nicolas.Ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
+        <kamel.bouhara@bootlin.com>
+Subject: Re: Re: [RFC PATCH 3/4] i2c: core: treat EPROBE_DEFER when acquiring
+ SCL/SDA GPIOs
+Thread-Topic: Re: [RFC PATCH 3/4] i2c: core: treat EPROBE_DEFER when acquiring
+ SCL/SDA GPIOs
+Thread-Index: AQHWRkTnXY0butV020yTUidEL/axqqklUZIAgAF4w4A=
+Date:   Mon, 3 Aug 2020 15:33:41 +0000
+Message-ID: <15a449fa-d649-846a-e6f2-1540f9581846@microchip.com>
+References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
+ <20200619141904.910889-4-codrin.ciubotariu@microchip.com>
+ <20200802170500.GB10193@kunai>
+In-Reply-To: <20200802170500.GB10193@kunai>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=microchip.com;
+x-originating-ip: [84.232.220.208]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1e70a0a5-d500-4095-c229-08d837c29a0e
+x-ms-traffictypediagnostic: SA0PR11MB4765:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SA0PR11MB4765CD69C2986B03026DC574E74D0@SA0PR11MB4765.namprd11.prod.outlook.com>
+x-bypassexternaltag: True
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +XQrR8ULTxhRP+0/qWNkrUAppcVLg/eJzBuX7X32d3zvEnl6Ma1poIPwgJFHURMtLm8uPmd8Rz4BAVBbNRj8k6qV//9PWkUCeTmDR7hghoi3YxR08aGEhQq1H03iOKtG+8kcdM8TZgnGWIBgELSWsKECCm+8RwQVMKnUVnOF5LhMUnfeV7ilImYUX0WIfszyBgILgn5tuNK363aFAcLLfTmCivQU54ppuQKaED6FLcFSdQKAx3A97RZEA+wv8hbXUmPZEIjeXMSAR/O/Sdl3JEHhb28Sf7yInRdhw2geGmTmmEqOP1rNqTyQBd1bQXxB7mra6TBYHRRZKCCb57KZHC0FT9aCUBR6rdhKdSJfqLmpGhSnIhRvRKMwM8ctLDSY
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3504.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(366004)(376002)(396003)(39860400002)(136003)(6512007)(91956017)(64756008)(66446008)(26005)(186003)(54906003)(76116006)(5660300002)(66946007)(66476007)(66556008)(53546011)(31686004)(6506007)(71200400001)(316002)(83380400001)(8936002)(4326008)(478600001)(86362001)(8676002)(36756003)(31696002)(2906002)(2616005)(6486002)(6916009)(43740500002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: EHvCS5bATUqWJYGI+6cZJmPVnVCuk7+sV4ifZUP4FfJ4cFEt0vwZ8/vl6WlR9Y/Fq2Hi0rkTiqUrJszt9OkX4hB4D4eSpVNMxHxxhyaN6DMvCd6znv/+85yacz5NgcsbxiirSMaI2Xxa20qM9GHO/pfAz9yP5xtNdzJjntQv9BLf7f+S2k7mI5kcDnKRAmBy9CA2VQut45rDsOr5Z9CguFAk9UQtMIxUlooNLfeqUTDcCcN6lcdo0E98QonvHPfY+76vxR9FDdMRem7rWu5pb+LfsHZudePfDShfusJxXOPgrVg+mq+7XNZh8XwLhtzTfWOppJQiUHLkIbeB1codp0HpFckdlmLR13zddH1uMfPik/6Z+7Uv8C54rT+YhmjVjkYAe/JjAgcW7sC1OjtPbL9X4mwIipklLCCJK5r528/+2cjVeWsCWYze09YxIuhdc6ub1NgFoD3rlJuTXKlTnr5IbOp1aGcjPENn1k5MLbFjrdOT7GhiMLz9nD/UoBTdaN1MZrCmGydA95xK9bcQIxy/jUIZkER+Q10pplt7eaqM2nNCHmRqukKUE2j9BUwWJ5S6ezFP1SOPhlPO57SRMYRVKVY7VaPDEe1N9BEI+nFNgSQsyvrvUX3KmQ7u9w2YUt2rQmJTCFcLVEVtXF5bVA==
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <35F793B60A5DE54AB90ADAB6C9FCEB5A@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB3504.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e70a0a5-d500-4095-c229-08d837c29a0e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Aug 2020 15:33:41.9394
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ior3wEQ6sR4Ssw2yVN4/v1IByjN6KiSeLILS0n5PIi4GFYIzFusjU1Ql3hMdpBIatOw8j/sr8DQ1laxHG2ZG1LWOOInUMz+mo9hvTSgDG24=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4765
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Koutný <mkoutny@suse.com>
+On 02.08.2020 20:05, Wolfram Sang wrote:
+> On Fri, Jun 19, 2020 at 05:19:03PM +0300, Codrin Ciubotariu wrote:
+>> Even if I2C bus GPIO recovery is optional, devm_gpiod_get() can return
+>> -EPROBE_DEFER, so we should at least treat that. This ends up with
+>> i2c_register_adapter() to be able to return -EPROBE_DEFER.
+>>
+>> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+>> ---
+>>   drivers/i2c/i2c-core-base.c | 22 ++++++++++++++++------
+>>   1 file changed, 16 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+>> index 4ee29fec4e93..f8d9f2048ca8 100644
+>> --- a/drivers/i2c/i2c-core-base.c
+>> +++ b/drivers/i2c/i2c-core-base.c
+>> @@ -368,15 +368,16 @@ static int i2c_gpio_init_recovery(struct i2c_adapt=
+er *adap)
+>>   	return i2c_gpio_init_generic_recovery(adap);
+>>   }
+>>  =20
+>> -static void i2c_init_recovery(struct i2c_adapter *adap)
+>> +static int i2c_init_recovery(struct i2c_adapter *adap)
+>>   {
+>>   	struct i2c_bus_recovery_info *bri =3D adap->bus_recovery_info;
+>>   	char *err_str;
+>>  =20
+>>   	if (!bri)
+>> -		return;
+>> +		return 0;
+>>  =20
+>> -	i2c_gpio_init_recovery(adap);
+>> +	if (i2c_gpio_init_recovery(adap) =3D=3D -EPROBE_DEFER)
+>> +		return -EPROBE_DEFER;
+>>  =20
+>>   	if (!bri->recover_bus) {
+>>   		err_str =3D "no recover_bus() found";
+>> @@ -392,7 +393,7 @@ static void i2c_init_recovery(struct i2c_adapter *ad=
+ap)
+>>   			if (gpiod_get_direction(bri->sda_gpiod) =3D=3D 0)
+>>   				bri->set_sda =3D set_sda_gpio_value;
+>>   		}
+>> -		return;
+>> +		return 0;
+>=20
+> This is correct but I think the code flow is/was confusing. Can you drop
+> this 'return' and use 'else if' for the next code block? I think this is
+> more readable.
 
-When workload runs in cgroups that aren't directly below root cgroup and
-their parent specifies reclaim protection, it may end up ineffective.
+Ok, it makes sense. Should I make a separate patch for this only?
+One more question, should we keep:
+if (!bri->set_sda && !bri->get_sda) {
+	err_str =3D "either get_sda() or set_sda() needed";
+	goto err;
+}
+?
+Without {get/set}_sda we won't be able to generate stop commands and=20
+possibly check if the bus is free, but we can still generate the SCL=20
+clock pulses.
 
-The reason is that propagate_protected_usage() is not called in all
-hierarchy up. All the protected usage is incorrectly accumulated in the
-workload's parent. This means that siblings_low_usage is overestimated
-and effective protection underestimated. Even though it is transitional
-phenomenon (uncharge path does correct propagation and fixes the wrong
-children_low_usage), it can undermine the indended protection
-unexpectedly.
+>=20
+>>   	}
+>>  =20
+>>   	if (bri->recover_bus =3D=3D i2c_generic_scl_recovery) {
+>> @@ -407,10 +408,12 @@ static void i2c_init_recovery(struct i2c_adapter *=
+adap)
+>>   		}
+>>   	}
+>>  =20
+>> -	return;
+>> +	return 0;
+>>    err:
+>>   	dev_err(&adap->dev, "Not using recovery: %s\n", err_str);
+>>   	adap->bus_recovery_info =3D NULL;
+>> +
+>> +	return 0;
+>=20
+> 'return -EINVAL;' I'd suggest.
 
-The fix is simply updating children_low_usage in respective ancestors
-also in the charging path.
+OK
 
-Fixes: 230671533d64 ("mm: memory.low hierarchical behavior")
-Cc: stable # 4.18+
-Signed-off-by: Michal Koutný <mkoutny@suse.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
----
+>=20
+>>   }
+>>  =20
+>>   static int i2c_smbus_host_notify_to_irq(const struct i2c_client *clien=
+t)
+>> @@ -1476,7 +1479,9 @@ static int i2c_register_adapter(struct i2c_adapter=
+ *adap)
+>>   			 "Failed to create compatibility class link\n");
+>>   #endif
+>>  =20
+>> -	i2c_init_recovery(adap);
+>> +	res =3D i2c_init_recovery(adap);
+>> +	if (res =3D=3D -EPROBE_DEFER)
+>> +		goto out_link;
+>=20
+> Please move 'i2c_init_recovery' above the class-link creation. It
+> shouldn't make a difference but we can skip the extra label and the
+> ifdeffery.
 
-Hi,
-I am sending this patch on behalf of Michal Koutny who is currently
-on vacation and didn't get to post it before he left.
+Ok. Perhaps I should also move the debug print with the registered=20
+adapter after calling i2c_init_recovery().
 
-We have noticed this problem while seeing a swap out in a descendant of
-a protected memcg (intermediate node) while the parent was conveniently
-under its protection limit and the memory pressure was external
-to that hierarchy. Michal has pinpointed this down to the wrong
-siblings_low_usage which led to the unwanted reclaim.
+>=20
+>>  =20
+>>   	/* create pre-declared device nodes */
+>>   	of_i2c_register_devices(adap);
+>> @@ -1493,6 +1498,11 @@ static int i2c_register_adapter(struct i2c_adapte=
+r *adap)
+>>  =20
+>>   	return 0;
+>>  =20
+>> +out_link:
+>> +#ifdef CONFIG_I2C_COMPAT
+>> +	class_compat_remove_link(i2c_adapter_compat_class, &adap->dev,
+>> +				 adap->dev.parent);
+>> +#endif
+>>   out_reg:
+>>   	init_completion(&adap->dev_released);
+>>   	device_unregister(&adap->dev);
+>> --=20
+>> 2.25.1
+>>
 
-I am adding my ack directly in this submission.
+Do you want me to integrate this patch in the previous one?
 
- mm/page_counter.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/mm/page_counter.c b/mm/page_counter.c
-index c56db2d5e159..b4663844c9b3 100644
---- a/mm/page_counter.c
-+++ b/mm/page_counter.c
-@@ -72,7 +72,7 @@ void page_counter_charge(struct page_counter *counter, unsigned long nr_pages)
- 		long new;
- 
- 		new = atomic_long_add_return(nr_pages, &c->usage);
--		propagate_protected_usage(counter, new);
-+		propagate_protected_usage(c, new);
- 		/*
- 		 * This is indeed racy, but we can live with some
- 		 * inaccuracy in the watermark.
-@@ -116,7 +116,7 @@ bool page_counter_try_charge(struct page_counter *counter,
- 		new = atomic_long_add_return(nr_pages, &c->usage);
- 		if (new > c->max) {
- 			atomic_long_sub(nr_pages, &c->usage);
--			propagate_protected_usage(counter, new);
-+			propagate_protected_usage(c, new);
- 			/*
- 			 * This is racy, but we can live with some
- 			 * inaccuracy in the failcnt.
-@@ -125,7 +125,7 @@ bool page_counter_try_charge(struct page_counter *counter,
- 			*fail = c;
- 			goto failed;
- 		}
--		propagate_protected_usage(counter, new);
-+		propagate_protected_usage(c, new);
- 		/*
- 		 * Just like with failcnt, we can live with some
- 		 * inaccuracy in the watermark.
--- 
-2.27.0
-
+Best regards,
+Codrin
