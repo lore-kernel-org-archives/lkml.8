@@ -7,211 +7,218 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86487C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 04:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFF0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 04:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CCCE206F6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 04:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CAF6206F6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 04:34:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="Uir3iOPb";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="H2iULZ75"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="XtgN32HI";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="dC4VKzvc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgHCE1q (ORCPT
+        id S1726795AbgHCEeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 00:27:46 -0400
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:51134 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725908AbgHCE1p (ORCPT
+        Mon, 3 Aug 2020 00:34:06 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:54476 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725908AbgHCEeF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 00:27:45 -0400
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0734Outp010543;
-        Sun, 2 Aug 2020 21:27:19 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=proofpoint;
- bh=8f8HKQ3lkaLpS8NPhK8wiKbn3kUBkIzujT5yJncN7LU=;
- b=Uir3iOPbBGJ+qy/NLOJjclPY38E7mjVUgY8HhBinkW3iL1HrF9dp+PTIlJnBBvReFmrt
- ANlr6WVwBaT7JBGJ6zKrvtRYIkIpAGqhZ3ZwT+tuZllSfRyrBGl8grQMiFFYpJS7cftQ
- anma+y9Ee0dUhLMVnjjpJCDANxmlS5E6zmQ7sZ8HBVu3QKbZp+xyog1rgrMCrEyiRX+g
- zSTRtoQY3gLhlBW6wNJVw9diRnEUh1Dv5nzMldjPTutzoVDg0rgzrgRZRtj4HtS7S8Cr
- 3qCP1/mvTTWrJwu8BkfW3yumHwrXIXFhncOlsfBYan/vFSNTmy1fUMSEvxjeDABpHU52 Bw== 
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2177.outbound.protection.outlook.com [104.47.58.177])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 32n8gxm691-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 02 Aug 2020 21:27:19 -0700
+        Mon, 3 Aug 2020 00:34:05 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0734TG0Y021108;
+        Sun, 2 Aug 2020 21:33:47 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=fwhUiqkBJ4oMm0olwB05c2BHVwzAPFJBwekUDL+0BYA=;
+ b=XtgN32HIkzSy1ZRwvAR1i45u/Wx8NXmUPKm0zvX+rRDvVPpKvKNpeHS3U7kGKI34YPSX
+ FsS8wjjhQB4RFlWhWdRpGcltf+vnWpfzaraSZiYG+PgwNdDm4/HT/2Xxng/jq8JFQThp
+ z5lOxMGoKuN6sYGunc9gfO5KKWK7nMuh/bY= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 32nrcs2ry6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Sun, 02 Aug 2020 21:33:47 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Sun, 2 Aug 2020 21:33:46 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PHo4wwjMPA80hQL5lkFFunLL/b6Bjtc96gXCgHliFiJsseZ6s6f/CVNwvZLgC7+Najod50gjhMtJc4l7jJNN+CvynTBz1htMKq7ZLvxvmB5Do0cYd9+XLSLCnRlOWDvQR7E/o+eV/wGlXR0ZHWVYOnyJaykDXQFlQUCJw9pluurWlYUFob6ogd61FjwH6KGIMMi3H6lTGKh2eqqEMjEHUy5tWDXKPsONw2lkEgznbaZTXNMusz/8zvVwX+FY0J0bAT0hbrYivkcNxjouQApAWQXq/d0okDEROSSbFWezye/8w7719rFQ8yvRWNIdggBo4X3EMS0zXwvmhC97Dq/aEQ==
+ b=EqpVogZGEHmEh/9inCccso/jdWRA/zx4dGOx+GWqgSCjqvp5le1C2XFkW/F7RkB83Cp0wwkjIRygcWg5OdAHUWJjCi7PpGClG0Gkst8sOs93QAYnSwtAQVLQnqgYmGysO14ah3GOJKTH0HE7ZnFHVH1OXjNy2k6rrwj9yfrk7ILCZ/2WnBhDJbpKKQqIA7DDSD42VKfCQcIPSi/ckMKT4VTSYU8fBdSExVqmyI+ltiHzqm0gjNCSTAurCMsKpPlaFheYVQyY6CKOQ8hSXyBL9kDVtfv9YHEWUpUFnDoMvH9O+eOkvvtefT3iAAq/W5wR1rTdAF1CXrB/uydLcyrnSQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8f8HKQ3lkaLpS8NPhK8wiKbn3kUBkIzujT5yJncN7LU=;
- b=V+hVM16J9amynhW5ryo9DrU4WAU7Ys5yVnV6nUAwRuNHUvay2VWB5CG+7en4cVpqOZnchW4iTs4L9xUdx1R2LW7xBrodhgtHjYsZtHDLw0ccoZgYqlx4WPb5jCcjgexUsU+G8crjmk0EzXe9s+axj0Nb71QWmBRi+8/fxrE2PEwgHpmPFXFGBhhTk77MqesmDIsm0Nf+VgybE/gc7udf3zVaxD/Ii1YuvrfLH8oZY4+onHGBAvQMqwXsG+I6bUcXNPZDN24RYKv5xaSXTNyv6ISSHrreBoeUyH5pzUGr+CAVi8+MTXTApC/c5q9y6ThLx6DJwSbrU/AieBveVhN6+w==
+ bh=fwhUiqkBJ4oMm0olwB05c2BHVwzAPFJBwekUDL+0BYA=;
+ b=JfFTRDoPE3xZ748v0kR4i9/Vn1o8FH7Y/zW/VR/rpZDgaNgL3+dBlKXI95nN5/wBK4XO9P507/81FWdtYYm40wXbjpJAwzWAchbqb0nfYbUJvQPdK7fEq42no4fv98xSsk4ZaN0nRHSu/Ctf+czJzaT9fhfLMuVBH2nAUEf8s4koAtFjSTlMxePKgsP2OEeXUunlrTFMMo5Vggq2dohsB9xputog9m3Cs0/JizZBBI66F66w2h+0A8AIn8txHGVix09D3xFCMyiLwCmHaClgHBsjl7mXXicxpSBZ6XRl6fGzQeWHQq40DYGSsxanqd1ij+kWFYkzNx/RFJ5qENF17A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
- dkim=pass header.d=cadence.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8f8HKQ3lkaLpS8NPhK8wiKbn3kUBkIzujT5yJncN7LU=;
- b=H2iULZ759Afzus/SMTxRaikHIvz4/1HFxfFhlRxs008KZyFlUn8TjIcAzCL8kVL7oxeuZC6FuNW8rvptPLE3x/97SGBV0Z4leaKd+HwyFqh/9sfYmdo0XtM1wJAxgJ8HWE4mGcpt1gzbxF3Eg7rr0CNgP8IX7+X2ORjk+2GW9EY=
-Received: from DM6PR07MB5529.namprd07.prod.outlook.com (2603:10b6:5:7a::30) by
- DM6PR07MB4460.namprd07.prod.outlook.com (2603:10b6:5:c6::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3239.19; Mon, 3 Aug 2020 04:27:17 +0000
-Received: from DM6PR07MB5529.namprd07.prod.outlook.com
- ([fe80::35cf:ffb3:3776:8362]) by DM6PR07MB5529.namprd07.prod.outlook.com
- ([fe80::35cf:ffb3:3776:8362%4]) with mapi id 15.20.3239.021; Mon, 3 Aug 2020
- 04:27:17 +0000
-From:   Pawel Laszczak <pawell@cadence.com>
-To:     Peter Chen <peter.chen@nxp.com>
-CC:     "balbi@kernel.org" <balbi@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rogerq@ti.com" <rogerq@ti.com>,
-        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>,
-        "colin.king@canonical.com" <colin.king@canonical.com>,
-        Jayshri Dajiram Pawar <jpawar@cadence.com>,
-        "ben.dooks@codethink.co.uk" <ben.dooks@codethink.co.uk>,
-        Rahul Kumar <kurahul@cadence.com>,
-        Sanket Parmar <sparmar@cadence.com>
-Subject: RE: [PATCH v2 7/9] usb: cdns3: core: removed 'goto not_otg'
-Thread-Topic: [PATCH v2 7/9] usb: cdns3: core: removed 'goto not_otg'
-Thread-Index: AQHWWP1JVS+n3WQDxkyDvzwFhNzdrqkS8ReAgBL3eFA=
-Date:   Mon, 3 Aug 2020 04:27:17 +0000
-Message-ID: <DM6PR07MB55299BC37F8BD76E2551759BDD4D0@DM6PR07MB5529.namprd07.prod.outlook.com>
-References: <20200713100554.28530-1-pawell@cadence.com>
- <20200713100554.28530-8-pawell@cadence.com>
- <20200722024051.GF5807@b29397-desktop>
-In-Reply-To: <20200722024051.GF5807@b29397-desktop>
+ bh=fwhUiqkBJ4oMm0olwB05c2BHVwzAPFJBwekUDL+0BYA=;
+ b=dC4VKzvc27NZ28fnK1VlwQZwOFL18HhYmS8sjygNOsHDHugRAD0DNQGheWMv1cR+IHUGRJK69i0oCs6K0x+TX8Nrogo0BZ1bhw0pK7pYS9PVtpDE/t3UwAqD7Ea0CcLRPayUH6bZQo7WALF49fxzUMtjjhIHz02LfJEI+kisqqg=
+Received: from BYAPR15MB2999.namprd15.prod.outlook.com (2603:10b6:a03:fa::12)
+ by BYAPR15MB3095.namprd15.prod.outlook.com (2603:10b6:a03:fe::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17; Mon, 3 Aug
+ 2020 04:33:45 +0000
+Received: from BYAPR15MB2999.namprd15.prod.outlook.com
+ ([fe80::543:b185:ef4a:7e8]) by BYAPR15MB2999.namprd15.prod.outlook.com
+ ([fe80::543:b185:ef4a:7e8%5]) with mapi id 15.20.3239.021; Mon, 3 Aug 2020
+ 04:33:45 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+CC:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <Kernel-team@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Xu <dlxu@fb.com>
+Subject: Re: [PATCH bpf-next 3/5] selftests/bpf: add selftest for
+ BPF_PROG_TYPE_USER
+Thread-Topic: [PATCH bpf-next 3/5] selftests/bpf: add selftest for
+ BPF_PROG_TYPE_USER
+Thread-Index: AQHWZ+C38TtsngeYdEmidjk+2G1vlqkln1aAgAAvdIA=
+Date:   Mon, 3 Aug 2020 04:33:45 +0000
+Message-ID: <C5606E9B-D3EC-4425-82F5-DA5865836D3E@fb.com>
+References: <20200801084721.1812607-1-songliubraving@fb.com>
+ <20200801084721.1812607-4-songliubraving@fb.com>
+ <CAEf4BzazkFMw3LAs3M2hxSLWWZJ7ywykwte=0WDhC1zgMYw-3A@mail.gmail.com>
+In-Reply-To: <CAEf4BzazkFMw3LAs3M2hxSLWWZJ7ywykwte=0WDhC1zgMYw-3A@mail.gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNccGF3ZWxsXGFwcGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEyOWUzNWJcbXNnc1xtc2ctOWFkMDA1NjItZDU0MS0xMWVhLTg3NjctMWM0ZDcwMWRmYmE0XGFtZS10ZXN0XDlhZDAwNTYzLWQ1NDEtMTFlYS04NzY3LTFjNGQ3MDFkZmJhNGJvZHkudHh0IiBzej0iMjE1NiIgdD0iMTMyNDA5MDI0MzQ1Njg5MTkyIiBoPSJmS0dxdENFOVlpcXZNQVBLemJTdm5KNnMrRGc9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
-x-dg-rorf: true
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=cadence.com;
-x-originating-ip: [185.217.253.59]
+x-mailer: Apple Mail (2.3608.80.23.2.2)
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=fb.com;
+x-originating-ip: [2620:10d:c090:400::5:8f7]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6add4d17-399a-4d47-cb0e-08d837658163
-x-ms-traffictypediagnostic: DM6PR07MB4460:
+x-ms-office365-filtering-correlation-id: dbbd6077-bb0a-4794-28b3-08d8376668c8
+x-ms-traffictypediagnostic: BYAPR15MB3095:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR07MB44602E993FA9768366B906E5DD4D0@DM6PR07MB4460.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-microsoft-antispam-prvs: <BYAPR15MB30950E4F4FA646E745BDD6DCB34D0@BYAPR15MB3095.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: DEel84c/DjIbhM+bHAmO/BkuI44oqHmtaG6z090Yr14BrpnHZkKWI2ubKnZqA7XX8RDGqmIZG5OZBbg1O43232SyYuFpuaRLYcMXzCLVKXR1gsgyNsSKyQFmx6ttXHSWbZiU+xG27cLNuowRH/pzlU4W2ZOaK3JyCB7WO62i6DnTmIwybXxea8PJMK/r+Ah8WktYiwCFkSEMaBtr6mr6sfLrawHQR9ILy0TvhhYX2SLQ8/nhzzsr/nFvwi+27YtLnVcXk09LLi5KVx6tMNTgDivVusOc77s3BvOYYmiWihPCOfRu4u3z6dz7qmfTqsGcuqb9sSRI7o9jaaNyhzZvsdj7zoKtQoYf/0KzaGRNoTh7JB4Xa0dYY2rUiAaAkuHH
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR07MB5529.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(136003)(346002)(366004)(39860400002)(36092001)(76116006)(66556008)(66946007)(66446008)(107886003)(66476007)(64756008)(6916009)(83380400001)(9686003)(4326008)(71200400001)(8676002)(186003)(7416002)(478600001)(5660300002)(7696005)(52536014)(316002)(54906003)(2906002)(86362001)(55016002)(8936002)(26005)(33656002)(6506007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 8gWf9xQqytr/9gqWSQw4Btc2dvfdLlsrX7iUkMJoiMlSEIRZJPJTYW/6JaiEc7sjrvolPA7oAJhOHSfYNwhIkOsf2zfmptQhctA/vWldwEuUeECuiFjefluMX6tT22DUWKOV+QOyT/KY1zbhmIQxYZCLRlpLUjlLAgXiSCngnV3ysST+rrnZUpc0pXcKwKr8hnH+u2vhAGNhZ94pdXW8NF7VrVe8kaFVX5h1psVPu7Pf1ZmlipcdmXs5DpdkgJoJbebt3cyOWuB/Iwhfev9nyySGGLn6GkOlijdCyyXjEVZicWuRJWmmpzMLygvnIICzCwIl5yxqV7OXSVu8QCwgKnjZ5bX8wWC+oS0bK/0ykcfSsIFSrt2YJ94mjwNBukDXVzNswZNEP4wGWR3Ck7YYgpwvbvjK1JlstA0UG+IVd3tV73zfwkHdo/D0VHawlkX+338/2R/sOA4Cf4Kz/yDVSPXyx8YTpxgASM7P5xYljNMGyvRAwenMnexfB+zJagbZtFey5/cqoRtuTOy/g4GcIyrMO+zkQK6BAj2cxT/Qon2rKZdB/J4OoB2CiAltmTdO6J2D4RNvRcNGVxhIte+bPoaX4Y3hubZrnCY95MXwFXiLi6U0Oy/lyyCndJzVfx3IhaNG6pSvf7ZF6mw0nDSk7Q==
+x-microsoft-antispam-message-info: 1RQudHAoHuPOn7E8MTBEBHmwhBNNmFLd2LK5PUTVQN8+Syl53toIv+0xT8loAzkysPyW72O5EFlT1RkE7uuU1nG0z7oX14dm8QW2oJFRpnFxMD/MGCPVzj98HS9XRjHAtKaAGHonbGftqaPEoPsua9c2nM1Lhs2oq5VKqmSfY4BoULf+5vKUnkjOVnF5W1BEn7n2i9wjnR2+6Dszj8rjoxbRF4cQnQlQva91LmCvlYVew1F47Zhij1Xa7bL+a1M9bhYhasVi9fB3wHndWxR6cds3bkPNpegz5i4pJ9iCVzUsutz8b7+MXTHAKeuEomhBu28UC2WeTJuFR0y3ewbO+Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB2999.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(39860400002)(346002)(366004)(376002)(396003)(6506007)(2906002)(53546011)(86362001)(36756003)(6486002)(6916009)(64756008)(8936002)(54906003)(66476007)(66946007)(66446008)(4326008)(76116006)(71200400001)(5660300002)(2616005)(83380400001)(6512007)(33656002)(8676002)(316002)(478600001)(186003)(66556008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: NDvMIdtL9HLUFjxWSXxBKMTDzyrh0d+pyqX+GDnot7NMMQK8Fv8+tyaxk6YiXTrzUWWpVRr48ddTvUvtcBrwcKBHUju7kzVWyU58PFBjhU4IzDwsjwZUG2F8Z27MyiR7WeyJp/WmSNqEzEDW83wCK8m7bT42MfKPz4C6ugrOLw/8mSqmAJA6nAKVc/8YGTbyO09hLmkDrWMXDHqd8DoNrpsg/gSaHDSSgsgCb/wTAXh3K7RD/bQCbfvhjFq8GOD5TS2a9dJjhf6BcB9Awcy3agEFVZ8wVEdUY7CX+7uIz+UHKi61GVtWtHfha2pusU8DJvdGfOxlbxckBIdafHbtxp73XJYDISotJSPldVsOtRRMcO0pGHyjgoeqAphW0p6Q8yzVByQY4HtaU0ksBfL27cSXKDWs55UwS9uAnR6+eKE+U+4gJ8zRFMecQcb1SXhgIz6+siGTKSCVv5tpL3Vmpi5ECPLivJoIk9K4Ne5aliRZA5lnPmPrArBQfUoqoCF0eH65oS84+vl8zHG3Gl9QzGM5O1MFZHE2efCM0cGpNFjSy0/JmdJ9HYHZVD0WkNU/7hQR+6uwh9lwRg+tjZwLOMLgXGN7gQ9T8NRlC/HBvTanuRi+V9NOf3s9573ANBAbS+vEqVMWciTnxd0nQooHQNwW2JOd4OmF6aB7iV01WKw=
 Content-Type: text/plain; charset="us-ascii"
+Content-ID: <14C719EDB93DB448ABFB99E92828758C@namprd15.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR07MB5529.namprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6add4d17-399a-4d47-cb0e-08d837658163
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Aug 2020 04:27:17.3471
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB2999.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dbbd6077-bb0a-4794-28b3-08d8376668c8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Aug 2020 04:33:45.5665
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OCyPcnfMOEjeiZspwTBF6IE20utXzl0QpBuk7xcw/v/J2lTUQ4dhPMdogrAdnrDeRVI6ySxAShaBAHadA1b/PnzmfNxN3tHnlbmBPmsKfQk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR07MB4460
+X-MS-Exchange-CrossTenant-userprincipalname: lilT/XxfkCfXt38GLtd+3eCbTWDlQs0xtRndP8ToOynIhHvuIxrkkWCh0oTeZf5xeedvYF3TxmaD4HcE9LLWeA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3095
+X-OriginatorOrg: fb.com
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-08-03_01:2020-07-31,2020-08-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 malwarescore=0
- phishscore=0 mlxlogscore=943 impostorscore=0 priorityscore=1501
- bulkscore=0 suspectscore=0 spamscore=0 mlxscore=0 clxscore=1011
- adultscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008030031
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
+ phishscore=0 clxscore=1015 adultscore=0 bulkscore=0 mlxlogscore=999
+ suspectscore=0 mlxscore=0 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008030032
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->
->On 20-07-13 12:05:52, Pawel Laszczak wrote:
->> Patch removes 'goto not_otg' instruction from
->> cdns3_hw_role_state_machine function.
->>
->> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+
+
+> On Aug 2, 2020, at 6:43 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> w=
+rote:
+>=20
+> On Sat, Aug 1, 2020 at 1:50 AM Song Liu <songliubraving@fb.com> wrote:
+>>=20
+>> This test checks the correctness of BPF_PROG_TYPE_USER program, includin=
+g:
+>> running on the right cpu, passing in correct args, returning retval, and
+>> being able to call bpf_get_stack|stackid.
+>>=20
+>> Signed-off-by: Song Liu <songliubraving@fb.com>
 >> ---
->>  drivers/usb/cdns3/core.c | 20 +++++++++-----------
->>  1 file changed, 9 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/usb/cdns3/core.c b/drivers/usb/cdns3/core.c
->> index c498b585eb13..8e3996f211a8 100644
->> --- a/drivers/usb/cdns3/core.c
->> +++ b/drivers/usb/cdns3/core.c
->> @@ -191,11 +191,17 @@ static int cdns3_core_init_role(struct cdns3 *cdns=
-)
->>   */
->>  static enum usb_role cdns3_hw_role_state_machine(struct cdns3 *cdns)
->>  {
->> -	enum usb_role role;
->> +	enum usb_role role =3D USB_ROLE_NONE;
->>  	int id, vbus;
->>
->> -	if (cdns->dr_mode !=3D USB_DR_MODE_OTG)
->> -		goto not_otg;
->> +	if (cdns->dr_mode !=3D USB_DR_MODE_OTG) {
->> +		if (cdns3_is_host(cdns))
->> +			role =3D USB_ROLE_HOST;
->> +		if (cdns3_is_device(cdns))
->> +			role =3D USB_ROLE_DEVICE;
+>> .../selftests/bpf/prog_tests/user_prog.c      | 52 +++++++++++++++++
+>> tools/testing/selftests/bpf/progs/user_prog.c | 56 +++++++++++++++++++
+>> 2 files changed, 108 insertions(+)
+>> create mode 100644 tools/testing/selftests/bpf/prog_tests/user_prog.c
+>> create mode 100644 tools/testing/selftests/bpf/progs/user_prog.c
+>>=20
+>> diff --git a/tools/testing/selftests/bpf/prog_tests/user_prog.c b/tools/=
+testing/selftests/bpf/prog_tests/user_prog.c
+>> new file mode 100644
+>> index 0000000000000..416707b3bff01
+>> --- /dev/null
+>> +++ b/tools/testing/selftests/bpf/prog_tests/user_prog.c
+>> @@ -0,0 +1,52 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/* Copyright (c) 2020 Facebook */
+>> +#include <test_progs.h>
+>> +#include "user_prog.skel.h"
 >> +
->> +		return role;
->> +	}
->
->Would you please improve it a bit like below:
->
->	if (cdns->dr_mode !=3D USB_DR_MODE_OTG) {
->		if (cdns3_is_host(cdns))
->			role =3D USB_ROLE_HOST;
->		else if (cdns3_is_device(cdns))
->			role =3D USB_ROLE_DEVICE;
->		else
->			role =3D USB_ROLE_NONE;
->
->		return role;
->	}
->
+>> +static int duration;
+>> +
+>> +void test_user_prog(void)
+>> +{
+>> +       struct bpf_user_prog_args args =3D {{0, 1, 2, 3, 4}};
+>> +       struct bpf_prog_test_run_attr attr =3D {};
+>> +       struct user_prog *skel;
+>> +       int i, numcpu, ret;
+>> +
+>> +       skel =3D user_prog__open_and_load();
+>> +
+>> +       if (CHECK(!skel, "user_prog__open_and_load",
+>> +                 "skeleton open_and_laod failed\n"))
+>> +               return;
+>> +
+>> +       numcpu =3D libbpf_num_possible_cpus();
+>=20
+> nit: possible doesn't mean online right now, so it will fail on
+> offline or non-present CPUs
 
-Sorry for delay, I had holiday.=20
-Currently this patch was added by Greg to his usb-next branch, so=20
-I don't want to change anything.  Next time I will add such changes.=20
+Just found parse_cpu_mask_file(), will use it to fix this.=20
 
->Peter
->>
->>  	id =3D cdns3_get_id(cdns);
->>  	vbus =3D cdns3_get_vbus(cdns);
->> @@ -232,14 +238,6 @@ static enum usb_role cdns3_hw_role_state_machine(st=
-ruct cdns3 *cdns)
->>  	dev_dbg(cdns->dev, "role %d -> %d\n", cdns->role, role);
->>
->>  	return role;
->> -
->> -not_otg:
->> -	if (cdns3_is_host(cdns))
->> -		role =3D USB_ROLE_HOST;
->> -	if (cdns3_is_device(cdns))
->> -		role =3D USB_ROLE_DEVICE;
->> -
->> -	return role;
->>  }
->>
->>  static int cdns3_idle_role_start(struct cdns3 *cdns)
->> --
->> 2.17.1
->>
->
->--
->
->Thanks,
->Peter Chen
+[...]
+
+>> +
+>> +volatile int cpu_match =3D 1;
+>> +volatile __u64 sum =3D 1;
+>> +volatile int get_stack_success =3D 0;
+>> +volatile int get_stackid_success =3D 0;
+>> +volatile __u64 stacktrace[PERF_MAX_STACK_DEPTH];
+>=20
+> nit: no need for volatile for non-static variables
+>=20
+>> +
+>> +SEC("user")
+>> +int user_func(struct bpf_user_prog_ctx *ctx)
+>=20
+> If you put args in bpf_user_prog_ctx as a first field, you should be
+> able to re-use the BPF_PROG macro to access those arguments in a more
+> user-friendly way.
+
+I am not sure I am following here. Do you mean something like:
+
+struct bpf_user_prog_ctx {
+        __u64 args[BPF_USER_PROG_MAX_ARGS];
+        struct pt_regs *regs;
+};
+
+(swap args and regs)?=20
 
 Thanks,
-Pawel
+Song
+
+
