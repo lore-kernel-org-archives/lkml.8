@@ -2,128 +2,125 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23EBCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0547C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 077D4206DA
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7507206DA
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:26:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbgHCN0C (ORCPT
+        id S1727064AbgHCN0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 09:26:02 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2558 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726579AbgHCN0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 09:26:02 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id C220416D292280C7490A;
-        Mon,  3 Aug 2020 14:26:00 +0100 (IST)
-Received: from [127.0.0.1] (10.210.168.55) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 3 Aug 2020
- 14:25:59 +0100
-Subject: Re: [PATCH v2 2/2] perf pmu: Improve CPU core PMU HW event list
- ordering
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-CC:     Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Mon, 3 Aug 2020 09:26:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:57636 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727021AbgHCN0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 09:26:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1740230E;
+        Mon,  3 Aug 2020 06:26:19 -0700 (PDT)
+Received: from localhost (unknown [10.1.198.53])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC5A63F71F;
+        Mon,  3 Aug 2020 06:26:18 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 14:26:17 +0100
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
         Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, <will@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linuxarm@huawei.com>,
-        Ian Rogers <irogers@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <1592384514-119954-1-git-send-email-john.garry@huawei.com>
- <1592384514-119954-3-git-send-email-john.garry@huawei.com>
- <CAM9d7cgqJzQJ7GfL6Q3VgARd1=rrkRYqOqSivZww-LOo+DvKFA@mail.gmail.com>
- <20200617121549.GA31085@kernel.org>
- <74303789-6c06-574d-674b-202cf84a2018@huawei.com>
- <20200803125423.GA3440834@kernel.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <27e46a45-9055-dbb7-324e-28a65120091d@huawei.com>
-Date:   Mon, 3 Aug 2020 14:23:56 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Subject: Re: [PATCH v2 1/7] cpufreq: move invariance setter calls in cpufreq
+ core
+Message-ID: <20200803132617.GA9512@arm.com>
+References: <20200722093732.14297-1-ionela.voinescu@arm.com>
+ <20200722093732.14297-2-ionela.voinescu@arm.com>
+ <CAJZ5v0i5Xrk6oTt81aeXDi1F8gnEspJo9e6nGf10nSvBz-Dbkw@mail.gmail.com>
+ <20200730034128.k4fmblfuwjcmqdze@vireshk-mac-ubuntu>
 MIME-Version: 1.0
-In-Reply-To: <20200803125423.GA3440834@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.168.55]
-X-ClientProxiedBy: lhreml726-chm.china.huawei.com (10.201.108.77) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200730034128.k4fmblfuwjcmqdze@vireshk-mac-ubuntu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/08/2020 13:54, Arnaldo Carvalho de Melo wrote:
->> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
->>
->> Please let me know - it would be useful for any dev during the merge window.
-> So, I'm now pushing things directly to Linus, but just the tooling part,
-> the branch to do development on is:
-> 
->    git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
-> 
-> At some point I think we'll have a git/perf-tools/perf-tools.git, just
-> like tip, but for now, please use the one above.
-> 
-> My perf/core in the past was rebaseable, I did changes in it after
-> publishing, trying to have solid bisectability, since I process patch by
-> patch doing tests on it when we noticed problems, prior to pushing to
-> Ingo for tip.
-> 
-> Now I am making perf/core non-rebaseable, I push things there
-> periodically, tagging what is there with the test results, see:
-> 
->    https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tag/?h=perf-tools-tests-2020-07-17
->    https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tag/?h=perf-tools-tests-2020-07-02
-> 
-> I'll try and tag today's state of that tree, which I did tests already
-> but since v5.8 was released, I merged it there and will retest and tag
-> the test results.
-> 
-> The tmp.perf/core one is an experiment in making what I have in my local
-> tree available for more bleeding edge things that are being done, say in
-> that metrics effort, etc, but I think I'll stop that, since, as your
-> message shows, it is causing confusion.
-> 
-> I did this because these tests take quite some time and sometimes I have
-> to fix things and restart it, rinse, repeat.
-> 
-> So please use:
-> 
->    git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
+Hi guys,
+
+On Thursday 30 Jul 2020 at 09:11:28 (+0530), Viresh Kumar wrote:
+> On 27-07-20, 15:48, Rafael J. Wysocki wrote:
+> > On Wed, Jul 22, 2020 at 11:38 AM Ionela Voinescu
+> > <ionela.voinescu@arm.com> wrote:
+> > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > > index 036f4cc42ede..bac4101546db 100644
+> > > --- a/drivers/cpufreq/cpufreq.c
+> > > +++ b/drivers/cpufreq/cpufreq.c
+> > > @@ -2058,9 +2058,16 @@ EXPORT_SYMBOL(cpufreq_unregister_notifier);
+> > >  unsigned int cpufreq_driver_fast_switch(struct cpufreq_policy *policy,
+> > >                                         unsigned int target_freq)
+> > >  {
+> > > +       unsigned int freq;
+> > > +
+> > >         target_freq = clamp_val(target_freq, policy->min, policy->max);
+> > > +       freq = cpufreq_driver->fast_switch(policy, target_freq);
+> > > +
+> > > +       if (freq)
+> > > +               arch_set_freq_scale(policy->related_cpus, freq,
+> > > +                                   policy->cpuinfo.max_freq);
+> > 
+> > Why can't arch_set_freq_scale() handle freq == 0?
 > 
 
-If it makes sense, it could be useful to have this included in the 
-MAINTAINERS file. That's for forgetful people like me :)
+Sorry, I seem to have missed this question the first time around.
 
-> I'll further automate all this so that we have a more regular cadence of
-> updates to perf/core, say every two days or so.
+arch_set_freq_scale() could handle freq == 0, but given that freq == 0
+is signaling an error here, I do believe this check is well placed, to
+prevent a useless call to arch_set_freq_scale(). Also [1]:
+
+"""
+ * If 0 is returned by the driver's ->fast_switch() callback to indicate an
+ * error condition, the hardware configuration must be preserved.
+ */
+"""
+
+> Actually there is no need to. AFAIU the freq returned by fast_switch
+> can never be 0 (yeah qcom driver does it right now and I am fixing
+> it). And so we can drop this check altogether.
 > 
-> If you have changes that touch both the kernel and userspace, the kernel
-> bits need to go via tip, the tooling via the perf tree, that for now
-> (well, it has been like that for quite a long time) is my tree.
 
-ok, thanks for the detailed response.
+It's not only the qcom driver, it's also the scmi driver that could
+return 0 [2]. But I don't think "fixing" these drivers is the solution,
+given that 0 is indicated as a valid return value of .fast_switch() to
+signal an error condition [1], while schedutil (the caller), also does
+validation that the returned frequency is !0 before setting it as
+current frequency [3].
 
-> 
-> Arch specific kernel bits have been going via the arch trees for quite a
-> while, I think.
-> 
-> - Arnaldo
-> .
+Therefore, it is know and (somewhat) documented that 0 indicates an
+error condition and it should be allowed as a return value for
+.fast_switch(). Also, I believe is a good idea to leave the option for
+drivers to return 0 (signaling error) from their implementation of
+.fast_switch().
 
-Cheers,
-john
+[1] https://elixir.bootlin.com/linux/v5.8-rc4/source/drivers/cpufreq/cpufreq.c#L2043
+[2] https://elixir.bootlin.com/linux/v5.8-rc4/source/drivers/cpufreq/scmi-cpufreq.c#L76
+[3] https://elixir.bootlin.com/linux/v5.8-rc4/source/kernel/sched/cpufreq_schedutil.c#L124
 
+Thanks,
+Ionela.
+
+> -- 
+> viresh
