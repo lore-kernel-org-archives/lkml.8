@@ -2,132 +2,190 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE64C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB74A206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5C08206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:14:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iTzcJA1R"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bT28odVq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726986AbgHCFKo (ORCPT
+        id S1727936AbgHCFOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 01:10:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59820 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbgHCFKn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 01:10:43 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 448C1C06174A;
-        Sun,  2 Aug 2020 22:10:43 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id q3so62203ybp.7;
-        Sun, 02 Aug 2020 22:10:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DBnDjn7vidDkpVU0WID8k/kuqtUn/mEBKE1Jn9YiCUg=;
-        b=iTzcJA1Rs9SjWutqGbiB+/Y0adyCk2lZYULEWoM72kmyroik/YInYByz8zbeXPTc2d
-         PUYBq7kt5w2/uAFTAPM18+T3g46xAnBmK+Sstq7z/wNM3p0Lt4x+9gzfPSc6ozLRUM2t
-         RkM9McdeoAOskWcHTcfhFTVx4K4pVTHrkULcKpIIPUkVe8TZReL53NxCF3aXxfGa4M/0
-         jlHUQ8sz364daT82VFZulbY7KBPWoNC4U1+sBPYDQvnxJ5q6GrmcVWnEtLyXYUqB/nNZ
-         8HTkVSBir0Rv0JdVnEhgnVIFGGR0+M/SYBc1Dz4tKE/kEM/ppLHBCbPtOFDv2Gzovb2O
-         mc6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DBnDjn7vidDkpVU0WID8k/kuqtUn/mEBKE1Jn9YiCUg=;
-        b=b3Z4pdrfdizo/Npro1bRHTLZXTA6sv0Q7xc6N1Ube4bVsRJM1TalGXXIHShURgfmAt
-         QOXVlpL9djl1ghr5TW/KnIbZ2MU9wvO85Gx2TIFVAg5DA6gpEdOhhfWfq/Jvw708VhcB
-         a5s5Iyff04+WMkciTNTLI/NG1ZcGnsaeengDeV++aNMnTB1HW9CF14KLRq+CSP/4qKep
-         G/ulzhuUkARy7xkH9CPBcjPGcH+FHEHbZAybsWAOQC08AKuJGN8iC569BotTrfhaeGe4
-         JO2U/WGUihQH2OvltIwNnq/CSW3JXasEijick39O3fONQmvK9J6gfzyjwCx10Zzq4P2m
-         wcOg==
-X-Gm-Message-State: AOAM530pBb0MXtGACz7ZL1qAflB2eDDXi/rHUFjLKZ37AmgkE5O4XjQV
-        kvt/lj3utzhMBPa9v9Z3WfvtNVmcbwBRDOQ3AIeEqw==
-X-Google-Smtp-Source: ABdhPJwfJPzl0UAnoeSqc1osBwiX9FKTTAbT0YGrLhc9JTx14iQc9uqlfxFP9HZDVcii6S7DtIxIKshpbeBvEpLuwDw=
-X-Received: by 2002:a25:d84a:: with SMTP id p71mr24748708ybg.347.1596431442552;
- Sun, 02 Aug 2020 22:10:42 -0700 (PDT)
+        Mon, 3 Aug 2020 01:14:08 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:64904 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726661AbgHCFOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 01:14:07 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596431646; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=2SttEpjWkPUzgGIFPGBOgS8vyJzXv+pt+lN3X+pHN84=;
+ b=bT28odVq5FY/sbyWe3cRnftgmqJtFmBCH4dny+g9beLuJfYaAQU7kBElQVNjh1AHoTos65DL
+ jL07jommm12iN87nReGplBrzcBHMnD4vpqMJvdSG1+H1SJERwczpPCCSnpq8UNkrDWW1rMNc
+ tEP4lBhpL87Fq99vUeaZjAQB8GM=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-east-1.postgun.com with SMTP id
+ 5f279d1e798b102968ef1b24 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 03 Aug 2020 05:14:06
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 2C3B9C433A0; Mon,  3 Aug 2020 05:14:04 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 01717C433C9;
+        Mon,  3 Aug 2020 05:14:02 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200801084721.1812607-1-songliubraving@fb.com>
- <20200801084721.1812607-6-songliubraving@fb.com> <CAEf4BzaP4TGF7kcmZRAKsy=oWPpFA6sUGFkctpGz-fPp+YuSOQ@mail.gmail.com>
- <DDCD362E-21D3-46BF-90A6-8F3221CBB54E@fb.com>
-In-Reply-To: <DDCD362E-21D3-46BF-90A6-8F3221CBB54E@fb.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Sun, 2 Aug 2020 22:10:31 -0700
-Message-ID: <CAEf4BzY5RYMM6w8wn3qEB3AsuKWv-TMaD5NVFj=YqbCW4DLjqA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 5/5] selftests/bpf: add benchmark for uprobe vs. user_prog
-To:     Song Liu <songliubraving@fb.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Xu <dlxu@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 03 Aug 2020 13:14:02 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Avri Altman <Avri.Altman@wdc.com>, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com, alim.akhtar@samsung.com,
+        jejb@linux.ibm.com, beanhuo@micron.com, asutoshd@codeaurora.org,
+        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
+        chaotian.jing@mediatek.com, cc.chou@mediatek.com
+Subject: Re: [PATCH v4] scsi: ufs: Cleanup completed request without interrupt
+ notification
+In-Reply-To: <1596423655.32283.7.camel@mtkswgap22>
+References: <20200724140246.19434-1-stanley.chu@mediatek.com>
+ <SN6PR04MB4640B5FC06968244DDACB8BEFC720@SN6PR04MB4640.namprd04.prod.outlook.com>
+ <1596159018.17247.53.camel@mtkswgap22>
+ <97f1dfb0-41b6-0249-3e82-cae480b0efb6@acm.org>
+ <8b0a158a7c3ee2165e09290996521ffc@codeaurora.org>
+ <f45c6c47-ffc5-3f8e-3234-9e5989dbf996@acm.org>
+ <548b602daa1e15415625cb8d1f81a208@codeaurora.org>
+ <1596423655.32283.7.camel@mtkswgap22>
+Message-ID: <3b144ed6897483d1ae3ced6de2dfc64c@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 2, 2020 at 9:47 PM Song Liu <songliubraving@fb.com> wrote:
->
->
-> > On Aug 2, 2020, at 6:51 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Sat, Aug 1, 2020 at 1:50 AM Song Liu <songliubraving@fb.com> wrote:
-> >>
-> >> Add a benchmark to compare performance of
-> >>  1) uprobe;
-> >>  2) user program w/o args;
-> >>  3) user program w/ args;
-> >>  4) user program w/ args on random cpu.
-> >>
-> >
-> > Can you please add it to the existing benchmark runner instead, e.g.,
-> > along the other bench_trigger benchmarks? No need to re-implement
-> > benchmark setup. And also that would also allow to compare existing
-> > ways of cheaply triggering a program vs this new _USER program?
->
-> Will try.
->
-> >
-> > If the performance is not significantly better than other ways, do you
-> > think it still makes sense to add a new BPF program type? I think
-> > triggering KPROBE/TRACEPOINT from bpf_prog_test_run() would be very
-> > nice, maybe it's possible to add that instead of a new program type?
-> > Either way, let's see comparison with other program triggering
-> > mechanisms first.
->
-> Triggering KPROBE and TRACEPOINT from bpf_prog_test_run() will be useful.
-> But I don't think they can be used instead of user program, for a couple
-> reasons. First, KPROBE/TRACEPOINT may be triggered by other programs
-> running in the system, so user will have to filter those noise out in
-> each program. Second, it is not easy to specify CPU for KPROBE/TRACEPOINT,
-> while this feature could be useful in many cases, e.g. get stack trace
-> on a given CPU.
->
+Hi Stanley,
 
-Right, it's not as convenient with KPROBE/TRACEPOINT as with the USER
-program you've added specifically with that feature in mind. But if
-you pin user-space thread on the needed CPU and trigger kprobe/tp,
-then you'll get what you want. As for the "noise", see how
-bench_trigger() deals with that: it records thread ID and filters
-everything not matching. You can do the same with CPU ID. It's not as
-automatic as with a special BPF program type, but still pretty simple,
-which is why I'm still deciding (for myself) whether USER program type
-is necessary :)
-
-
+On 2020-08-03 11:00, Stanley Chu wrote:
+> Hi Can,
+> 
+> On Sat, 2020-08-01 at 07:17 +0800, Can Guo wrote:
+>> Hi Bart,
+>> 
+>> On 2020-08-01 00:51, Bart Van Assche wrote:
+>> > On 2020-07-31 01:00, Can Guo wrote:
+>> >> AFAIK, sychronization of scsi_done is not a problem here, because scsi
+>> >> layer
+>> >> use the atomic state, namely SCMD_STATE_COMPLETE, of a scsi cmd to
+>> >> prevent
+>> >> the concurrency of abort and real completion of it.
+>> >>
+>> >> Check func scsi_times_out(), hope it helps.
+>> >>
+>> >> enum blk_eh_timer_return scsi_times_out(struct request *req)
+>> >> {
+>> >> ...
+>> >>         if (rtn == BLK_EH_DONE) {
+>> >>                 /*
+>> >>                  * Set the command to complete first in order to
+>> >> prevent
+>> >> a real
+>> >>                  * completion from releasing the command while error
+>> >> handling
+>> >>                  * is using it. If the command was already completed,
+>> >> then the
+>> >>                  * lower level driver beat the timeout handler, and it
+>> >> is safe
+>> >>                  * to return without escalating error recovery.
+>> >>                  *
+>> >>                  * If timeout handling lost the race to a real
+>> >> completion, the
+>> >>                  * block layer may ignore that due to a fake timeout
+>> >> injection,
+>> >>                  * so return RESET_TIMER to allow error handling
+>> >> another
+>> >> shot
+>> >>                  * at this command.
+>> >>                  */
+>> >>                 if (test_and_set_bit(SCMD_STATE_COMPLETE,
+>> >> &scmd->state))
+>> >>                         return BLK_EH_RESET_TIMER;
+>> >>                 if (scsi_abort_command(scmd) != SUCCESS) {
+>> >>                         set_host_byte(scmd, DID_TIME_OUT);
+>> >>                         scsi_eh_scmd_add(scmd);
+>> >>                 }
+>> >>         }
+>> >> }
+>> >
+>> > I am familiar with this mechanism. My concern is that both the regular
+>> > completion path and the abort handler must call scsi_dma_unmap() before
+>> > calling cmd->scsi_done(cmd). I don't see how
+>> > test_and_set_bit(SCMD_STATE_COMPLETE, &scmd->state) could prevent that
+>> > the regular completion path and the abort handler call scsi_dma_unmap()
+>> > concurrently since both calls happen before the SCMD_STATE_COMPLETE bit
+>> > is set?
+>> >
+>> > Thanks,
+>> >
+>> > Bart.
+>> 
+>> For scsi_dma_unmap() part, that is true - we should make it serialized
+>> with
+>> any other completion paths. I've found it during my fault injection
+>> test, so
+>> I've made a patch to fix it, but it only comes in my next error 
+>> recovery
+>> enhancement patch series. Please check the attachment.
+>> 
+> 
+> Your patch looks good to me.
+> 
+> I have the same idea before but I found that calling scsi_done() (by
+> __ufshcd_transfer_req_compl()) in ufshcd_abort() in old kernel (e.g.,
+> 4.14) will cause issues but it has been resolved by introduced
+> SCMD_STATE_COMPLETE flag in newer kernel. So your patch makes sense.
+> 
+> Would you mind sending out this draft patch as a formal patch together
+> with my patch to fix issues in ufshcd_abort()? Our patches are aimed to
+> fix cases that host/device reset eventually not being triggered by the
+> result of ufshcd_abort(), for example, command is aborted successfully
+> or command is not pending in device with its doorbell also cleared.
+> 
 > Thanks,
-> Song
+> Stanley Chu
+> 
+
+I don't quite actually follow your fix here and I didn't test the 
+similar
+fault injection scenario like you do here, so I am not sure if I should
+just absorb your fix into mine. How about I put my fix in my current 
+error
+recovery patch series (maybe in next version of it) and you can give 
+your
+review. So you can still go with your fix as it is. Mine will be picked 
+up
+later by Martin. What do you think?
+
+Thanks,
+
+Can Guo.
+
+>> Thanks,
+>> 
+>> Can Guo.
+>> 
