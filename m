@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77986C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 285A8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A05F20775
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFCB020775
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457888;
-	bh=ysS3LGq+470SGw6FYTetlB33DoPN5s8hyLYUhLe+03M=;
+	s=default; t=1596457890;
+	bh=Fl5DlAk/eat9xnhGSnnm4wpVPUDjVMLmzf7szweD+k0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f6EyiQbHdAMU5AWeBe4NKiiBzVyzO8PuyWihogUmrxtu9RK9eHHx3uLULSS1gKVhE
-	 TxezrVTYOD4z+DiYlRq7YpExqakkH3yHU+GfKQhh5VeXQhDdfLX6Yj0WIysjRpYh1m
-	 ddl7A62ptYDFWzsy1YDFTcb0aSqFgMijVeQm7Z9M=
+	b=NyT7zI4qveaslm3TI2l7Mc9naMvnrsw52VZaI+Dnqw5yezkIc2MzyCaMVPdPrjjFr
+	 rJLwX1h0O9l2f1Fx8eG4quMHOOLxNGESOrGImH59FVqP/zztJ36HNqU2SlZfxi7Xmn
+	 kK9Ct8DlhjXbVLwN+T+VJ6WZ6MjSNwTvCRXpcocI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbgHCMb1 (ORCPT
+        id S1728869AbgHCMb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:31:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58890 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:31:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727914AbgHCMbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:31:24 -0400
+        id S1729180AbgHCMb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:31:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9593120825;
-        Mon,  3 Aug 2020 12:31:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C2062076B;
+        Mon,  3 Aug 2020 12:31:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457883;
-        bh=ysS3LGq+470SGw6FYTetlB33DoPN5s8hyLYUhLe+03M=;
+        s=default; t=1596457885;
+        bh=Fl5DlAk/eat9xnhGSnnm4wpVPUDjVMLmzf7szweD+k0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sq36ouCZMmBdp+idhjwZBlwyJnszG7uBftzlHHIQd64lpncMFRuGtZIOpDUoecv4n
-         Hqcj1eb/gd4/uDgytATPCzl81AIh9k6D2HXmwVDAUYT47I1PJxINHbN2VA84llsZ6y
-         Mqlc/H85F2vOsDRV5McQYlisJTb9il+mRFf5/VaI=
+        b=WilgAWEp2zomJTh/oMSTGhgUdaBnGSW7yn7FY1IShK+ed6r3TiFtULW2tnoNRdXQt
+         Fktk9updQ5HXg96jgqldvNDAZ8uHeDtFbA1X/qAWopUmZs7klzwJlq44qOHkhcX52v
+         i4M+wHh5kB9cy/urY8Zog0EOO/EylTjk81Zw0SHE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 17/56] ARM: percpu.h: fix build error
-Date:   Mon,  3 Aug 2020 14:19:32 +0200
-Message-Id: <20200803121851.174649123@linuxfoundation.org>
+        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 4.19 18/56] Revert "drm/amdgpu: Fix NULL dereference in dpm sysfs handlers"
+Date:   Mon,  3 Aug 2020 14:19:33 +0200
+Message-Id: <20200803121851.226856767@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -60,43 +58,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-commit aa54ea903abb02303bf55855fb51e3fcee135d70 upstream.
+commit 87004abfbc27261edd15716515d89ab42198b405 upstream.
 
-Fix build error for the case:
-  defined(CONFIG_SMP) && !defined(CONFIG_CPU_V6)
+This regressed some working configurations so revert it.  Will
+fix this properly for 5.9 and backport then.
 
-config: keystone_defconfig
+This reverts commit 38e0c89a19fd13f28d2b4721035160a3e66e270b.
 
-  CC      arch/arm/kernel/signal.o
-  In file included from ../include/linux/random.h:14,
-                    from ../arch/arm/kernel/signal.c:8:
-  ../arch/arm/include/asm/percpu.h: In function ‘__my_cpu_offset’:
-  ../arch/arm/include/asm/percpu.h:29:34: error: ‘current_stack_pointer’ undeclared (first use in this function); did you mean ‘user_stack_pointer’?
-      : "Q" (*(const unsigned long *)current_stack_pointer));
-                                     ^~~~~~~~~~~~~~~~~~~~~
-                                     user_stack_pointer
-
-Fixes: f227e3ec3b5c ("random32: update the net random state on interrupt and activity")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/include/asm/percpu.h |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/arch/arm/include/asm/percpu.h
-+++ b/arch/arm/include/asm/percpu.h
-@@ -16,6 +16,8 @@
- #ifndef _ASM_ARM_PERCPU_H_
- #define _ASM_ARM_PERCPU_H_
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
+@@ -529,7 +529,8 @@ static ssize_t amdgpu_set_pp_od_clk_volt
  
-+#include <asm/thread_info.h>
-+
- /*
-  * Same as asm-generic/percpu.h, except that we store the per cpu offset
-  * in the TPIDRPRW. TPIDRPRW only exists on V6K and V7
+ 	while (isspace(*++tmp_str));
+ 
+-	while ((sub_str = strsep(&tmp_str, delimiter)) != NULL) {
++	while (tmp_str[0]) {
++		sub_str = strsep(&tmp_str, delimiter);
+ 		ret = kstrtol(sub_str, 0, &parameter[parameter_size]);
+ 		if (ret)
+ 			return -EINVAL;
+@@ -629,7 +630,8 @@ static ssize_t amdgpu_read_mask(const ch
+ 	memcpy(buf_cpy, buf, bytes);
+ 	buf_cpy[bytes] = '\0';
+ 	tmp = buf_cpy;
+-	while ((sub_str = strsep(&tmp, delimiter)) != NULL) {
++	while (tmp[0]) {
++		sub_str = strsep(&tmp, delimiter);
+ 		if (strlen(sub_str)) {
+ 			ret = kstrtol(sub_str, 0, &level);
+ 			if (ret)
+@@ -880,7 +882,8 @@ static ssize_t amdgpu_set_pp_power_profi
+ 			i++;
+ 		memcpy(buf_cpy, buf, count-i);
+ 		tmp_str = buf_cpy;
+-		while ((sub_str = strsep(&tmp_str, delimiter)) != NULL) {
++		while (tmp_str[0]) {
++			sub_str = strsep(&tmp_str, delimiter);
+ 			ret = kstrtol(sub_str, 0, &parameter[parameter_size]);
+ 			if (ret) {
+ 				count = -EINVAL;
 
 
