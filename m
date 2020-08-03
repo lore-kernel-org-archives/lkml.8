@@ -2,127 +2,173 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A1DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 274FDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37A1420A8B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F06E22C9F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:21:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="kh2E9KHQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgHCTTc (ORCPT
+        id S1727959AbgHCTVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 15:19:32 -0400
-Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:58135 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbgHCTTb (ORCPT
+        Mon, 3 Aug 2020 15:21:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49924 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726948AbgHCTVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 15:19:31 -0400
-Received: from [10.0.2.15] ([92.140.224.28])
-        by mwinf5d06 with ME
-        id B7KS2300F0dNxE4037KTtX; Mon, 03 Aug 2020 21:19:29 +0200
-X-ME-Helo: [10.0.2.15]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 03 Aug 2020 21:19:29 +0200
-X-ME-IP: 92.140.224.28
-Subject: Re: [PATCH] gve: Fix the size used in a 'dma_free_coherent()' call
-To:     Jakub Kicinski <kuba@kernel.org>, Joe Perches <joe@perches.com>
-Cc:     csully@google.com, sagis@google.com, jonolson@google.com,
-        davem@davemloft.net, lrizzo@google.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20200802141523.691565-1-christophe.jaillet@wanadoo.fr>
- <20200803084106.050eb7f6@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <3a25ddc6-adaa-d17d-50f4-8f8ab2ed25eb@wanadoo.fr>
-Date:   Mon, 3 Aug 2020 21:19:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 3 Aug 2020 15:21:11 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F8DCC061757
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 12:21:11 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id w25so5452811ljo.12
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 12:21:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=dq93D4eYKRlwEpphUZG+JqVe46lHekIPQvei+XVFGC0=;
+        b=kh2E9KHQE/XA0rLX/iC/gPSSg8GAI6bxQ/3ToX/6wlqrLLyzRl/IvlgX8y6idUVwvM
+         fXACsuXASck6iTy2GRLvfo30VY5Y45ulGDfEvWdR1+g7mhrIhVG5qg7WH4bhAd4Nz5P1
+         yOQmwo3u2cxAj9Z9L34d1ZVkvJG9NaWAH3lpeetGso8HH2W9RSptF3cWB8VEBiPsMaCE
+         lAnKtsrxinzo4m+lMMKSUq+0dhGeUjIK6SbXR+dAzd684ycDvPAvUKrhiujO3g5IqTkm
+         WqWoyCtBWRCYUK78icUxHyO5wq4xABKyzVPX+g9PSzlkPpMdHLggbswqeoTtW8NXYlDP
+         OcYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=dq93D4eYKRlwEpphUZG+JqVe46lHekIPQvei+XVFGC0=;
+        b=pjvIkv/CUQKCJaKXKNQtIJ4DTXTR2WqF2arS6TUuqhLa6CTE0ddTOnKtCYvKDoP9Gj
+         9fAJ9XYr38dWuDPXZfHw3KtsOsU3FdY3ZT8wo5/P6PYFbH6svdl61EFWznFnkbxg89oo
+         zY+i27hmAnstQ2MlaoE+cB8unkdCNJR/kRsL0137MwbZSOddhDItAov1UwnfSFL9uUHN
+         9vF8mwlq6av+ckdIj/7ThhxFLeTY1H4q4jj/dVZe3HeMhJcJJJsvznrrMu427cKKvsOz
+         +FD4bL+IZ89vP0y8myDaSij4fVNEaAl8+OuuyCa7N1+ZOh1ANKSGdDuokFE/NiSycaIV
+         APvg==
+X-Gm-Message-State: AOAM530YtEsTKH8Y0192cKq0Qy4Z60vVAbmLRrUntSqsQ7Lwcy/qkE3U
+        J/MY5d7HDpGqeF8n3R4uIepBZQ==
+X-Google-Smtp-Source: ABdhPJy3eRvRbj9RoqYJEWqYxIVENlU0mkGG5C5St7U52+cSn1++CTkcOhmFdfcWlotWF3Kw7Eqt8Q==
+X-Received: by 2002:a2e:5801:: with SMTP id m1mr8351358ljb.281.1596482469687;
+        Mon, 03 Aug 2020 12:21:09 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id v26sm4555934lji.65.2020.08.03.12.21.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 12:21:08 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 21:21:08 +0200
+From:   Niklas <niklas.soderlund@ragnatech.se>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [PATCH] media: rcar-vin: Update crop and compose settings for
+ every s_fmt call
+Message-ID: <20200803192108.GB2297236@oden.dyn.berto.se>
+References: <1596187745-31596-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200801090456.GB1379367@oden.dyn.berto.se>
+ <CA+V-a8sOHct_JetCsug8Z2BQpMLH2p39hj2XNw_1N5gkBQp1Gg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200803084106.050eb7f6@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+V-a8sOHct_JetCsug8Z2BQpMLH2p39hj2XNw_1N5gkBQp1Gg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 03/08/2020 Ã  17:41, Jakub Kicinski a Ã©critÂ :
-> On Sun,  2 Aug 2020 16:15:23 +0200 Christophe JAILLET wrote:
->> Update the size used in 'dma_free_coherent()' in order to match the one
->> used in the corresponding 'dma_alloc_coherent()'.
->>
->> Fixes: 893ce44df5 ("gve: Add basic driver framework for Compute Engine Virtual NIC")
->> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Hi Lad, Hans,
+
+On 2020-08-03 19:11:32 +0100, Lad, Prabhakar wrote:
+> Hi Hans,
 > 
-> Fixes tag: Fixes: 893ce44df5 ("gve: Add basic driver framework for Compute Engine Virtual NIC")
-> Has these problem(s):
-> 	- SHA1 should be at least 12 digits long
-> 	  Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-> 	  or later) just making sure it is not set (or set to "auto").
+> On Sat, Aug 1, 2020 at 10:04 AM Niklas <niklas.soderlund@ragnatech.se> wrote:
+> >
+> > Hi Lad,
+> >
+> > Thanks for your work.
+> >
+> > On 2020-07-31 10:29:05 +0100, Lad Prabhakar wrote:
+> > > The crop and compose settings for VIN in non mc mode werent updated
+> > > in s_fmt call this resulted in captured images being clipped.
+> > >
+> > > With the below sequence on the third capture where size is set to
+> > > 640x480 resulted in clipped image of size 320x240.
+> > >
+> > > high(640x480) -> low (320x240) -> high (640x480)
+> > >
+> > > This patch makes sure the VIN crop and compose settings are updated.
+> >
+> > This is clearly an inconsistency in the VIN driver that should be fixed.
+> > But I think the none-mc mode implements the correct behavior. That is
+> > that S_FMT should not modify the crop/compose rectangles other then make
+> > sure they don't go out of bounds. This is an area we tried to clarify in
+> > the past but I'm still not sure what the correct answer to.
+> >
+> What should be the exact behaviour of the bridge driver  for s_fmt
+> call. Should the crop/compose settings be updated for every s_fmt
+> callback or should they be only updated on s_selection callback.
+> Currently the non-mc rcar-vin doesnt update the crop/compose setting
+> in s_fmt callback due to which I see the above issue as mentioned.
+
+This is not entirely correct. It does update the crop and compose 
+rectangles on s_fmt, it makes sure they are not out-of-bounds for the 
+new format if it's accepted by s_fmt. See v4l2_rect_map_inside() calls 
+in the snippet bellow.
+
+That being said there is a difference how this is handled in the VIN 
+driver between it's MC and non-MC modes and I would love to learn the 
+correct mode of operation and seeing VIN being updated to doing it 
+correct in both cases. Thanks Lad for dealing with this!
+
 > 
+> Cheers,
+> Prabhakar
+> 
+> > >
+> > > Fixes: 104464f573d ("media: rcar-vin: Do not reset the crop and compose rectangles in s_fmt")
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > > ---
+> > >  drivers/media/platform/rcar-vin/rcar-v4l2.c | 6 ++++++
+> > >  1 file changed, 6 insertions(+)
+> > >
+> > > diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c b/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> > > index f421e25..a9b13d9 100644
+> > > --- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> > > +++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> > > @@ -319,6 +319,12 @@ static int rvin_s_fmt_vid_cap(struct file *file, void *priv,
+> > >       fmt_rect.width = vin->format.width;
+> > >       fmt_rect.height = vin->format.height;
+> > >
+> > > +     vin->crop.top = 0;
+> > > +     vin->crop.left = 0;
+> > > +     vin->crop.width = vin->format.width;
+> > > +     vin->crop.height = vin->format.height;
+> > > +     vin->compose = vin->crop;
+> > > +
+> > >       v4l2_rect_map_inside(&vin->crop, &src_rect);
+> > >       v4l2_rect_map_inside(&vin->compose, &fmt_rect);
+> > >       vin->src_rect = src_rect;
+> > > --
+> > > 2.7.4
+> > >
+> >
+> > --
+> > Regards,
+> > Niklas Söderlund
 
-Hi,
-
-I have git 2.25.1 and core.abbrev is already 12, both in my global 
-.gitconfig and in the specific .git/gitconfig of my repo.
-
-I would have expected checkpatch to catch this kind of small issue.
-Unless I do something wrong, it doesn't.
-
-Joe, does it make sense to you and would one of the following patch help?
-
-If I understand the regex correctly, I guess that checkpatch should 
-already spot such things. If correct, proposal 1 fix a bug.
-If I'm wrong, proposal 2 adds a new test.
-
-CJ
-
-
-
-Proposal #1 : find what looks like a commit number, with 5+ char 
-(instead of 12+), before looking if it is looks like a standard layout 
-with expected length
-===========
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index cc5542cc234f..f42b6a65f5c1 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -2828,7 +2828,7 @@ sub process {
-                     $line !~ 
-/^\s*(?:Link|Patchwork|http|https|BugLink|base-commit):/i &&
-                     $line !~ /^This reverts commit [0-9a-f]{7,40}/ &&
-                     ($line =~ /\bcommit\s+[0-9a-f]{5,}\b/i ||
--                    ($line =~ /(?:\s|^)[0-9a-f]{12,40}(?:[\s"'\(\[]|$)/i &&
-+                    ($line =~ /(?:\s|^)[0-9a-f]{5,40}(?:[\s"'\(\[]|$)/i &&
-                       $line !~ /[\<\[][0-9a-f]{12,40}[\>\]]/i &&
-                       $line !~ /\bfixes:\s*[0-9a-f]{12,40}/i))) {
-                         my $init_char = "c";
-
-
-
-
-Proposal #2 : add a specific and explicit check
-===========
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index cc5542cc234f..13ecfbd38af3 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -2989,6 +2989,12 @@ sub process {
-                         }
-                 }
-
-+# check for too short commit id
-+               if ($in_commit_log && $line =~ 
-/(^fixes:|\bcommit)\s+([0-9a-f]{0,11})\b/i) {
-+                               WARN("TOO_SHORT_COMMIT_ID",
-+                                    "\"$1\" tag should be at least 12 
-chars long. $2 is only " . length($2) . " long\n" . $herecurr);
-+               }
-+
-  # ignore non-hunk lines and lines being removed
-                 next if (!$hunk_line || $line =~ /^-/);
-
+-- 
+Regards,
+Niklas Söderlund
