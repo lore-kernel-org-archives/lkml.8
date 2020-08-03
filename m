@@ -2,118 +2,234 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D3DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 03:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC16C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 03:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC2ED206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 03:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F0372070A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 03:05:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="G4kNA36x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727062AbgHCDCZ (ORCPT
+        id S1726981AbgHCDFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 23:02:25 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:57845 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbgHCDCZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 23:02:25 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 07331uxB6017172, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 07331uxB6017172
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 3 Aug 2020 11:01:56 +0800
-Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 3 Aug 2020 11:01:56 +0800
-Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
- RTEXMB04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 3 Aug 2020 11:01:56 +0800
-Received: from RTEXMB01.realtek.com.tw ([fe80::d53a:d9a5:318:7cd8]) by
- RTEXMB01.realtek.com.tw ([fe80::d53a:d9a5:318:7cd8%5]) with mapi id
- 15.01.1779.005; Mon, 3 Aug 2020 11:01:56 +0800
-From:   =?utf-8?B?5ZCz5piK5r6EIFJpY2t5?= <ricky_wu@realtek.com>
-To:     Chris Clayton <chris2553@googlemail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "philquadra@gmail.com" <philquadra@gmail.com>,
-        "Arnd Bergmann" <arnd@arndb.de>
-Subject: RE: PATCH: rtsx_pci driver - don't disable the rts5229 card reader on Intel NUC boxes
-Thread-Topic: PATCH: rtsx_pci driver - don't disable the rts5229 card reader
- on Intel NUC boxes
-Thread-Index: AQHWaQXnJbf1udfgtku7UiOjY+d5jakktnGAgAD4T5A=
-Date:   Mon, 3 Aug 2020 03:01:55 +0000
-Message-ID: <7c3f6a03f8cc4cb1ac69ec7322fba3d3@realtek.com>
-References: <862172f0-cd23-800c-27b1-27cb49e99099@googlemail.com>
- <a9a94d7f-4873-7a10-4911-f3c760257c5c@googlemail.com>
-In-Reply-To: <a9a94d7f-4873-7a10-4911-f3c760257c5c@googlemail.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.22.88.99]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 2 Aug 2020 23:05:34 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:58303 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725820AbgHCDFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 23:05:34 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BKjS94QYcz9sTX;
+        Mon,  3 Aug 2020 13:05:29 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596423931;
+        bh=McqvNsZTich5yNdwdrEuQyo7JQmSsgYuQqaKmpJV98E=;
+        h=Date:From:To:Cc:Subject:From;
+        b=G4kNA36xMUznfWAEg7LY4OKz2NiDDUDY594gOBQ7szFKt7+6ROUQzynEYtU/Cj3id
+         iPVcxxlp7Ku1OFbTH9szVLt/iTDtQqm/wFGMONopArPjgZBTITW7O/PLHOsaLXr4VZ
+         kgdjY7J1zVJrNomb464qfhxDd2+tO3kOxb+W8VL9LRDQ+WNxeYnM1oMhPpjr77d6Xj
+         vn9/T2AD10d5MLZMBW0UMjmokzC2R2P///pHRPOQ4kG8cKBS7xZsZKw3HwLS7lkwDE
+         2k6M4CHBzl3pUn8uEzIz7iy8rZK1ErmQruuR8OrReUwco4DcnFdwlUODjKk9betQh3
+         Hu8WQnCb5sYEw==
+Date:   Mon, 3 Aug 2020 13:05:26 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Andrii Nakryiko <andriin@fb.com>
+Subject: linux-next: manual merge of the bpf-next tree with the net-next
+ tree
+Message-ID: <20200803130526.5a1519e2@canb.auug.org.au>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/2W0N1U4_IJj+gYzUQWfA8RM";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2hyaXPvvIwNCg0KV2UgZG9u4oCZdCB0aGluayB0aGlzIGlzIG91ciBidWcuLi4NClRoaXMg
-cmVnaXN0ZXIoRlBEQ1RMKSB3cml0ZSB0byBPQ19QT1dFUl9ET1dOIGlzIGZvciBvdXIgcG93ZXIg
-c2F2aW5nIGZlYXR1cmUsIG5vdCB0byBkaXNhYmxlIHRoZSByZWFkZXINCkluIHlvdXIgY2FzZSwg
-d2UgY2Fubm90IHJlcHJvZHVjZSB0aGlzIG9uIG91ciBzaWRlIHRoYXQgd2UgbWVudGlvbiBiZWZv
-cmUsIHdlIGRvbuKAmXQgaGF2ZSB0aGUgcGxhdGZvcm0oSW50ZWwgTlVDIFRhbGwgQXJjaGVzIENh
-bnlvbiBOVUM2Q0FZSCBDZWxlcm9uIEozNDUpIHRvIHNlZSB0aGlzIGlzc3VlDQpCdXQgd2UgdGhp
-bmsgdGhpcyBpc3N1ZSBtYXliZSBvbmx5IG9uIHRoaXMgcGxhdGZvcm0sIG91ciBSVFM1MjI5IHdv
-cmtzIHdlbGwgb24gdGhlIG5ldyBrZXJuZWwgYWxsIHBsYXRmb3JtIHRoYXQgd2UgaGF2ZSAgDQoN
-ClJpY2t5ICAgIA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IENocmlz
-IENsYXl0b24gW21haWx0bzpjaHJpczI1NTNAZ29vZ2xlbWFpbC5jb21dDQo+IFNlbnQ6IE1vbmRh
-eSwgQXVndXN0IDAzLCAyMDIwIDM6NTkgQU0NCj4gVG86IExLTUw7IOWQs+aYiua+hCBSaWNreTsg
-Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IHJkdW5sYXBAaW5mcmFkZWFkLm9yZzsNCj4gcGhp
-bHF1YWRyYUBnbWFpbC5jb207IEFybmQgQmVyZ21hbm4NCj4gU3ViamVjdDogUmU6IFBBVENIOiBy
-dHN4X3BjaSBkcml2ZXIgLSBkb24ndCBkaXNhYmxlIHRoZSBydHM1MjI5IGNhcmQgcmVhZGVyIG9u
-DQo+IEludGVsIE5VQyBib3hlcw0KPiANCj4gU29ycnksIEkgc2hvdWxkIGhhdmUgc2FpZCB0aGF0
-IHRoZSBwYXRjaCBpcyBhZ2FpbnN0IDUuNy4xMi4gSXQgYXBwbGllcyB0byB1cHN0cmVhbSwNCj4g
-YnV0IHdpdGggb2Zmc2V0cy4NCj4gDQo+IE9uIDAyLzA4LzIwMjAgMjA6NDgsIENocmlzIENsYXl0
-b24gd3JvdGU6DQo+ID4gYmVkZTAzYTU3OWIzIGludHJvZHVjZWQgYSBidWcgd2hpY2ggbGVhdmVz
-IHRoZSBydHM1MjI5IFBDSSBFeHByZXNzIGNhcmQNCj4gcmVhZGVyIG9uIG15IEludGVsIE5VQzZD
-QVlIIGJveC4NCj4gPg0KPiA+IFRoZSBidWcgaXMgaW4gZHJpdmVycy9taXNjL2NhcmRyZWFkZXIv
-cnRzeF9wY3IuYy4gQSBjYWxsIHRvIHJ0c3hfcGNpX2luaXRfb2NwKCkNCj4gd2FzIGFkZGVkIHRv
-IHJ0c3hfcGNpX2luaXRfaHcoKS4NCj4gPiBBdCB0aGUgY2FsbCBwb2ludCwgcGNyLT5vcHMtPmlu
-aXRfb2NwIGlzIE5VTEwgYW5kIHBjci0+b3B0aW9uLm9jcF9lbiBpcyAwLCBzbyBpbg0KPiBydHN4
-X3BjaV9pbml0X29jcCgpIHRoZSBjYXJkcmVhZGVyDQo+ID4gZ2V0cyBkaXNhYmxlZC4NCj4gPg0K
-PiA+IEkndmUgYXZvaWRlZCB0aGlzIGJ5IG1ha2luZyBleGN1dGlvbiBjb2RlIHRoYXQgcmVzdWx0
-cyBpbiB0aGUgcmVhZGVyIGJlaW5nDQo+IGRpc2FibGVkIGNvbmRpdGlvbmFsIG9uIHRoZSBkZXZp
-Y2UNCj4gPiBub3QgYmVpbmcgYW4gUlRTNTIyOS4gT2YgY291cnNlLCBvdGhlciBydHN4eHggY2Fy
-ZCByZWFkZXJzIG1heSBhbHNvIGJlDQo+IGRpc2FibGVkIGJ5IHRoaXMgYnVnLiBJIGRvbid0IGhh
-dmUgdGhlDQo+ID4ga25vd2xlZGdlIHRvIGFkZHJlc3MgdGhhdCwgc28gSSdsbCBsZWF2ZSB0byB0
-aGUgZHJpdmVyIG1haW50YWluZXJzLg0KPiA+DQo+ID4gVGhlIHBhdGNoIHRvIGF2b2lkIHRoZSBi
-dWcgaXMgYXR0YWNoZWQuDQo+ID4NCj4gPiBGaXhlczogYmVkZTAzYTU3OWIzICgibWlzYzogcnRz
-eDogRW5hYmxlIE9DUCBmb3IgcnRzNTIyYSBydHM1MjRhIHJ0czUyNWENCj4gcnRzNTI2MCIpDQo+
-ID4gTGluazogaHR0cHM6Ly9tYXJjLmluZm8vP2w9bGludXgta2VybmVsJm09MTU5MTA1OTEyODMy
-MjU3DQo+ID4gTGluazogaHR0cHM6Ly9idWd6aWxsYS5rZXJuZWwub3JnL3Nob3dfYnVnLmNnaT9p
-ZD0yMDQwMDMNCj4gPiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBDbGF5dG9uIDxjaHJpczI1NTNAZ29v
-Z2xlbWFpbC5jb20+DQo+ID4NCj4gPiBiZWRlMDNhNTc5YjMgaW50cm9kdWNlZCBhIGJ1ZyB3aGlj
-aCBsZWF2ZXMgdGhlIHJ0czUyMjkgUENJIEV4cHJlc3MgY2FyZA0KPiByZWFkZXIgb24gbXkgSW50
-ZWwgTlVDNkNBWUggYm94Lg0KPiA+DQo+ID4gVGhlIGJ1ZyBpcyBpbiBkcml2ZXJzL21pc2MvY2Fy
-ZHJlYWRlci9ydHN4X3Bjci5jLiBBIGNhbGwgdG8gcnRzeF9wY2lfaW5pdF9vY3AoKQ0KPiB3YXMg
-YWRkZWQgdG8gcnRzeF9wY2lfaW5pdF9odygpLg0KPiA+IEF0IHRoZSBjYWxsIHBvaW50LCBwY3It
-Pm9wcy0+aW5pdF9vY3AgaXMgTlVMTCBhbmQgcGNyLT5vcHRpb24ub2NwX2VuIGlzIDAsIHNvIGlu
-DQo+IHJ0c3hfcGNpX2luaXRfb2NwKCkgdGhlIGNhcmRyZWFkZXINCj4gPiBnZXRzIGRpc2FibGVk
-Lg0KPiA+DQo+ID4gSSd2ZSBhdm9pZGVkIHRoaXMgYnkgbWFraW5nIGV4Y3V0aW9uIGNvZGUgdGhh
-dCByZXN1bHRzIGluIHRoZSByZWFkZXIgYmVpbmcNCj4gZGlzYWJsZWQgY29uZGl0aW9uYWwgb24g
-dGhlIGRldmljZQ0KPiA+IG5vdCBiZWluZyBhbiBSVFM1MjI5LiBPZiBjb3Vyc2UsIG90aGVyIHJ0
-c3h4eCBjYXJkIHJlYWRlcnMgbWF5IGFsc28gYmUNCj4gZGlzYWJsZWQgYnkgdGhpcyBidWcuIEkg
-ZG9uJ3QgaGF2ZSB0aGUNCj4gPiBrbm93bGVkZ2UgdG8gYWRkcmVzcyB0aGF0LCBzbyBJJ2xsIGxl
-YXZlIHRvIHRoZSBkcml2ZXIgbWFpbnRhaW5lcnMuDQo+ID4NCj4gPiBUaGUgcGF0Y2ggdG8gYXZv
-aWQgdGhlIGJ1ZyBpcyBhdHRhY2hlZC4NCj4gPg0KPiA+IENocmlzDQo+ID4NCj4gDQo+IC0tLS0t
-LVBsZWFzZSBjb25zaWRlciB0aGUgZW52aXJvbm1lbnQgYmVmb3JlIHByaW50aW5nIHRoaXMgZS1t
-YWlsLg0K
+--Sig_/2W0N1U4_IJj+gYzUQWfA8RM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+Today's linux-next merge of the bpf-next tree got a conflict in:
+
+  net/core/dev.c
+
+between commit:
+
+  829eb208e80d ("rtnetlink: add support for protodown reason")
+
+from the net-next tree and commits:
+
+  7f0a838254bd ("bpf, xdp: Maintain info on attached XDP BPF programs in ne=
+t_device")
+  aa8d3a716b59 ("bpf, xdp: Add bpf_link-based XDP attachment API")
+
+from the bpf-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc net/core/dev.c
+index f7ef0f5c5569,c8b911b10187..000000000000
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@@ -8715,54 -8712,75 +8711,100 @@@ int dev_change_proto_down_generic(struc
+  }
+  EXPORT_SYMBOL(dev_change_proto_down_generic);
+ =20
+ +/**
+ + *	dev_change_proto_down_reason - proto down reason
+ + *
+ + *	@dev: device
+ + *	@mask: proto down mask
+ + *	@value: proto down value
+ + */
+ +void dev_change_proto_down_reason(struct net_device *dev, unsigned long m=
+ask,
+ +				  u32 value)
+ +{
+ +	int b;
+ +
+ +	if (!mask) {
+ +		dev->proto_down_reason =3D value;
+ +	} else {
+ +		for_each_set_bit(b, &mask, 32) {
+ +			if (value & (1 << b))
+ +				dev->proto_down_reason |=3D BIT(b);
+ +			else
+ +				dev->proto_down_reason &=3D ~BIT(b);
+ +		}
+ +	}
+ +}
+ +EXPORT_SYMBOL(dev_change_proto_down_reason);
+ +
+- u32 __dev_xdp_query(struct net_device *dev, bpf_op_t bpf_op,
+- 		    enum bpf_netdev_command cmd)
++ struct bpf_xdp_link {
++ 	struct bpf_link link;
++ 	struct net_device *dev; /* protected by rtnl_lock, no refcnt held */
++ 	int flags;
++ };
++=20
++ static enum bpf_xdp_mode dev_xdp_mode(u32 flags)
+  {
+- 	struct netdev_bpf xdp;
++ 	if (flags & XDP_FLAGS_HW_MODE)
++ 		return XDP_MODE_HW;
++ 	if (flags & XDP_FLAGS_DRV_MODE)
++ 		return XDP_MODE_DRV;
++ 	return XDP_MODE_SKB;
++ }
+ =20
+- 	if (!bpf_op)
+- 		return 0;
++ static bpf_op_t dev_xdp_bpf_op(struct net_device *dev, enum bpf_xdp_mode =
+mode)
++ {
++ 	switch (mode) {
++ 	case XDP_MODE_SKB:
++ 		return generic_xdp_install;
++ 	case XDP_MODE_DRV:
++ 	case XDP_MODE_HW:
++ 		return dev->netdev_ops->ndo_bpf;
++ 	default:
++ 		return NULL;
++ 	};
++ }
+ =20
+- 	memset(&xdp, 0, sizeof(xdp));
+- 	xdp.command =3D cmd;
++ static struct bpf_xdp_link *dev_xdp_link(struct net_device *dev,
++ 					 enum bpf_xdp_mode mode)
++ {
++ 	return dev->xdp_state[mode].link;
++ }
++=20
++ static struct bpf_prog *dev_xdp_prog(struct net_device *dev,
++ 				     enum bpf_xdp_mode mode)
++ {
++ 	struct bpf_xdp_link *link =3D dev_xdp_link(dev, mode);
++=20
++ 	if (link)
++ 		return link->link.prog;
++ 	return dev->xdp_state[mode].prog;
++ }
++=20
++ u32 dev_xdp_prog_id(struct net_device *dev, enum bpf_xdp_mode mode)
++ {
++ 	struct bpf_prog *prog =3D dev_xdp_prog(dev, mode);
+ =20
+- 	/* Query must always succeed. */
+- 	WARN_ON(bpf_op(dev, &xdp) < 0 && cmd =3D=3D XDP_QUERY_PROG);
++ 	return prog ? prog->aux->id : 0;
++ }
+ =20
+- 	return xdp.prog_id;
++ static void dev_xdp_set_link(struct net_device *dev, enum bpf_xdp_mode mo=
+de,
++ 			     struct bpf_xdp_link *link)
++ {
++ 	dev->xdp_state[mode].link =3D link;
++ 	dev->xdp_state[mode].prog =3D NULL;
+  }
+ =20
+- static int dev_xdp_install(struct net_device *dev, bpf_op_t bpf_op,
+- 			   struct netlink_ext_ack *extack, u32 flags,
+- 			   struct bpf_prog *prog)
++ static void dev_xdp_set_prog(struct net_device *dev, enum bpf_xdp_mode mo=
+de,
++ 			     struct bpf_prog *prog)
++ {
++ 	dev->xdp_state[mode].link =3D NULL;
++ 	dev->xdp_state[mode].prog =3D prog;
++ }
++=20
++ static int dev_xdp_install(struct net_device *dev, enum bpf_xdp_mode mode,
++ 			   bpf_op_t bpf_op, struct netlink_ext_ack *extack,
++ 			   u32 flags, struct bpf_prog *prog)
+  {
+- 	bool non_hw =3D !(flags & XDP_FLAGS_HW_MODE);
+- 	struct bpf_prog *prev_prog =3D NULL;
+  	struct netdev_bpf xdp;
+  	int err;
+ =20
+
+--Sig_/2W0N1U4_IJj+gYzUQWfA8RM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8nfvYACgkQAVBC80lX
+0Gz1JAgAlLGhtWva8wq9s6tJB4+eCW1XdNaXAdC7n4McmgCyb7NTsis/CpnIGzDI
+iVKOLGlm1XOIxVnYrjY5W7/TTHhAibuxmWLp/IBWwvIypsBQ4Y256PJskdqn2fJM
+Vpe3XXy796GJxwi5ea6gPPRhSyV0+2HlseckHnAETHRofb+dn30S5OzeSegn8CM6
+7CXvhq5M0PiVSQzTGlnTUEErosLZ0O9UUjkjDa1MIqW2Jlbc+U3Z2Z++H3r0C8fG
+TkgsUgD8+cyAt4eVuMp96cDMDc/2yd1JLnLzaoEUlCNImFUyR0r704WA9gyVW2mu
+/zcl6sW9B59XFw/wZK5NolGDRMlx5g==
+=hCy4
+-----END PGP SIGNATURE-----
+
+--Sig_/2W0N1U4_IJj+gYzUQWfA8RM--
