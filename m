@@ -2,103 +2,326 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12483C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 572CAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E632C206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 283E82070A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 07:48:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="JqFr5vP+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D2/+fPQO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725926AbgHCHrI (ORCPT
+        id S1725971AbgHCHsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 03:47:08 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:21874 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725844AbgHCHrH (ORCPT
+        Mon, 3 Aug 2020 03:48:16 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:51165 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725855AbgHCHsP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 03:47:07 -0400
-X-UUID: 064ccda3e40d4eff9458a146b2cb9c8d-20200803
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=+eS6fkHPCzh1BpGY8IKPY4oZzmVKv5Jj0Oov80tMj8A=;
-        b=JqFr5vP+z8LsunxNDEGLdY4KezuMvR/RxJivwyS/ZoisaaAznmI7swwykZlj9ftf3a2YvyTRle4W0GXZtxxNbMVBwEdW0jXDYfFg79CNTvrcKj/YcF5RMPzGfQ3nqhhSjJxtNBfVVtuMdGHhMoqF2HHDhq79LW9h6JMUrJqmQ/Q=;
-X-UUID: 064ccda3e40d4eff9458a146b2cb9c8d-20200803
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chuanjia.liu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1035471897; Mon, 03 Aug 2020 15:46:48 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 3 Aug
- 2020 15:46:45 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 3 Aug 2020 15:46:45 +0800
-Message-ID: <1596440772.7361.35.camel@mhfsdcap03>
-Subject: Re: [PATCH v4 0/4] Split PCIe node to comply with hardware design
-From:   Chuanjia Liu <Chuanjia.Liu@mediatek.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <yong.wu@mediatek.com>,
-        <jianjun.wang@mediatek.com>
-Date:   Mon, 3 Aug 2020 15:46:12 +0800
-In-Reply-To: <20200721074915.14516-1-Chuanjia.Liu@mediatek.com>
-References: <20200721074915.14516-1-Chuanjia.Liu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 3 Aug 2020 03:48:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596440891;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=+IhXjbbp3DRnwKGh7EJaRwzYvPFzXS04sIsNp19zYB0=;
+        b=D2/+fPQOR4hwCtP80CXfqtpiKId1Fk4BDtg+7FfEQt5O7M6FysgNMWmy7wy2avyjE+Vx7s
+        DpekTcQyGYEIJm5gt0UlPMAzOW5T3KzVJYaQFL9FuyrRDAupoZtjrygjaiwwHMC4k7gRXq
+        zfUahRYTkqwbl9IUPMK+gag1FycPMC4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-316-krbLoYQqMnGZ5bY33JqPIw-1; Mon, 03 Aug 2020 03:48:03 -0400
+X-MC-Unique: krbLoYQqMnGZ5bY33JqPIw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 35E24100AA29;
+        Mon,  3 Aug 2020 07:47:57 +0000 (UTC)
+Received: from [10.36.112.252] (ovpn-112-252.ams2.redhat.com [10.36.112.252])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E49075D994;
+        Mon,  3 Aug 2020 07:47:40 +0000 (UTC)
+Subject: Re: [PATCH v4 00/23] device-dax: Support sub-dividing soft-reserved
+ ranges
+To:     Dan Williams <dan.j.williams@intel.com>, akpm@linux-foundation.org
+Cc:     Ira Weiny <ira.weiny@intel.com>, Ard Biesheuvel <ardb@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        David Airlie <airlied@linux.ie>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Wei Yang <richardw.yang@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Jason Gunthorpe <jgg@mellanox.com>, Jia He <justin.he@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Brice Goglin <Brice.Goglin@inria.fr>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-mm@kvack.org,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <159643094279.4062302.17779410714418721328.stgit@dwillia2-desk3.amr.corp.intel.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <c59111f9-7c94-8b9e-2b8c-4cb96b9aa848@redhat.com>
+Date:   Mon, 3 Aug 2020 09:47:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: A4DEB32D28646CC8FDB1C8300E17EFCD6B509D8446129EEA2C19BE289C9AAB672000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <159643094279.4062302.17779410714418721328.stgit@dwillia2-desk3.amr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA3LTIxIGF0IDE1OjQ5ICswODAwLCBjaHVhbmppYS5saXUgd3JvdGU6DQo+
-IFRoZXJlIGFyZSB0d28gaW5kZXBlbmRlbnQgUENJZSBjb250cm9sbGVycyBpbiBNVDI3MTIgYW5k
-IE1UNzYyMg0KPiBwbGF0Zm9ybSwgYW5kIGVhY2ggb2YgdGhlbSBzaG91bGQgY29udGFpbiBhbiBp
-bmRlcGVuZGVudCBNU0kNCj4gZG9tYWluLg0KPiANCj4gSW4gY3VycmVudCBhcmNoaXRlY3R1cmUs
-IE1TSSBkb21haW4gd2lsbCBiZSBpbmhlcml0ZWQgZnJvbSB0aGUNCj4gcm9vdCBicmlkZ2UsIGFu
-ZCBhbGwgb2YgdGhlIGRldmljZXMgd2lsbCBzaGFyZSB0aGUgc2FtZSBNU0kgZG9tYWluLg0KPiBI
-ZW5jZSB0aGF0LCB0aGUgUENJZSBkZXZpY2VzIHdpbGwgbm90IHdvcmsgcHJvcGVybHkgaWYgdGhl
-IGlycQ0KPiBudW1iZXIgd2hpY2ggcmVxdWlyZWQgaXMgbW9yZSB0aGFuIDMyLg0KPiANCj4gU3Bs
-aXQgdGhlIFBDSWUgbm9kZSBmb3IgTVQyNzEyIGFuZCBNVDc2MjIgcGxhdGZvcm0gdG8gZml4IE1T
-SQ0KPiBpc3N1ZSBhbmQgY29tcGx5IHdpdGggdGhlIGhhcmR3YXJlIGRlc2lnbi4NCg0KDQpIaSBM
-b3JlbnpvLA0KDQogICAgICAgZ2VudGxlIHBpbmcgZm9yIHRoaXMgcGF0Y2hzZXQuDQoNCg0KICAg
-ICAgIEJUVy4gSSBkb24ndCBzZWUgaXQgaW4gWzFdLGJ1dCBpcyBvayBpbiBbMl0sIEkgZG9uJ3Qg
-a25vdyB3aHkuDQoNClsxXWh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LXBjaS8NClsyXWh0
-dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LWFybS1rZXJuZWwvMjAyMDA3MjEwNzQ5MTUuMTQ1
-MTYtMS1DaHVhbmppYS5MaXVAbWVkaWF0ZWsuY29tLw0KDQpCZXN0IFJlZ2FyZHMsDQpDaHVhbmpp
-YQ0KDQo+IA0KPiBjaGFuZ2Ugbm90ZToNCj4gICB2NDpjaGFuZ2UgY29tbWl0IG1lc3NhZ2UgZHVl
-IHRvIGJheWVzIHN0YXRpc3RpY2FsIGJvZ29maWx0ZXINCj4gICAgICBjb25zaWRlcnMgdGhpcyBz
-ZXJpZXMgcGF0Y2ggU1BBTS4NCj4gICB2MzpyZWJhc2UgZm9yIDUuOC1yYzEuIE9ubHkgY29sbGVj
-dCBhY2sgb2YgUnlkZXIsIE5vIGNvZGUgY2hhbmdlLg0KPiAgIHYyOmNoYW5nZSB0aGUgYWxsb2Nh
-dGlvbiBvZiBNVDI3MTIgUENJZSBNTUlPIHNwYWNlIGR1ZSB0byB0aGUNCj4gICAgICBhbGxvY2F0
-aW9uIHNpemUgaXMgbm90IHJpZ2h0IGluIHYxLg0KPiANCj4gY2h1YW5qaWEubGl1ICg0KToNCj4g
-ICBkdC1iaW5kaW5nczogcGNpOiBtZWRpYXRlazogTW9kaWZpZWQgdGhlIERldmljZSB0cmVlIGJp
-bmRpbmdzDQo+ICAgUENJOiBtZWRpYXRlazogVXNlIHJlZ21hcCB0byBnZXQgc2hhcmVkIHBjaWUt
-Y2ZnIGJhc2UNCj4gICBhcm02NDogZHRzOiBtZWRpYXRlazogU3BsaXQgUENJZSBub2RlIGZvciBN
-VDI3MTIgYW5kIE1UNzYyMg0KPiAgIEFSTTogZHRzOiBtZWRpYXRlazogTW9kaWZpZWQgTVQ3NjI5
-IFBDSWUgbm9kZQ0KPiANCj4gIC4uLi9iaW5kaW5ncy9wY2kvbWVkaWF0ZWstcGNpZS1jZmcueWFt
-bCAgICAgICB8ICAzOCArKysrKw0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL21lZGlh
-dGVrLXBjaWUudHh0IHwgMTQ0ICsrKysrKysrKysrLS0tLS0tLQ0KPiAgYXJjaC9hcm0vYm9vdC9k
-dHMvbXQ3NjI5LXJmYi5kdHMgICAgICAgICAgICAgIHwgICAzICstDQo+ICBhcmNoL2FybS9ib290
-L2R0cy9tdDc2MjkuZHRzaSAgICAgICAgICAgICAgICAgfCAgMjMgKy0tDQo+ICBhcmNoL2FybTY0
-L2Jvb3QvZHRzL21lZGlhdGVrL210MjcxMmUuZHRzaSAgICAgfCAgNzUgKysrKystLS0tDQo+ICAu
-Li4vZHRzL21lZGlhdGVrL210NzYyMi1iYW5hbmFwaS1icGktcjY0LmR0cyAgfCAgMTYgKy0NCj4g
-IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ3NjIyLXJmYjEuZHRzICB8ICAgNiArLQ0K
-PiAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDc2MjIuZHRzaSAgICAgIHwgIDY4ICsr
-KysrKy0tLQ0KPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1lZGlhdGVrLmMgICAgICAg
-IHwgIDI1ICsrLQ0KPiAgOSBmaWxlcyBjaGFuZ2VkLCAyNTggaW5zZXJ0aW9ucygrKSwgMTQwIGRl
-bGV0aW9ucygtKQ0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IC4uLi9iaW5kaW5ncy9wY2kvbWVkaWF0
-ZWstcGNpZS1jZmcueWFtbA0KPiANCg0K
+[...]
+
+> Well, no v5.8-rc8 to line this up for v5.9, so next best is early
+> integration into -mm before other collisions develop.
+> 
+> Chatted with Justin offline and it currently appears that the missing
+> numa information is the fault of the platform firmware to populate all
+> the necessary NUMA data in the NFIT.
+
+I'm planning on looking at some bits of this series this week, but some
+questions upfront ...
+
+> 
+> ---
+> Cover:
+> 
+> The device-dax facility allows an address range to be directly mapped
+> through a chardev, or optionally hotplugged to the core kernel page
+> allocator as System-RAM. It is the mechanism for converting persistent
+> memory (pmem) to be used as another volatile memory pool i.e. the
+> current Memory Tiering hot topic on linux-mm.
+> 
+> In the case of pmem the nvdimm-namespace-label mechanism can sub-divide
+> it, but that labeling mechanism is not available / applicable to
+> soft-reserved ("EFI specific purpose") memory [3]. This series provides
+> a sysfs-mechanism for the daxctl utility to enable provisioning of
+> volatile-soft-reserved memory ranges.
+> 
+> The motivations for this facility are:
+> 
+> 1/ Allow performance differentiated memory ranges to be split between
+>    kernel-managed and directly-accessed use cases.
+> 
+> 2/ Allow physical memory to be provisioned along performance relevant
+>    address boundaries. For example, divide a memory-side cache [4] along
+>    cache-color boundaries.
+> 
+> 3/ Parcel out soft-reserved memory to VMs using device-dax as a security
+>    / permissions boundary [5]. Specifically I have seen people (ab)using
+>    memmap=nn!ss (mark System-RAM as Persistent Memory) just to get the
+>    device-dax interface on custom address ranges. A follow-on for the VM
+>    use case is to teach device-dax to dynamically allocate 'struct page' at
+>    runtime to reduce the duplication of 'struct page' space in both the
+>    guest and the host kernel for the same physical pages.
+
+
+I think I am missing some important pieces. Bear with me.
+
+1. On x86-64, e820 indicates "soft-reserved" memory. This memory is not
+automatically used in the buddy during boot, but remains untouched
+(similar to pmem). But as it involves ACPI as well, it could also be
+used on arm64 (-e820), correct?
+
+2. Soft-reserved memory is volatile RAM with differing performance
+characteristics ("performance differentiated memory"). What would be
+examples of such memory? Like, memory that is faster than RAM (scratch
+pad), or slower (pmem)? Or both? :) Is it a valid use case to use pmem
+in a hypervisor to back this memory?
+
+3. There seem to be use cases where "soft-reserved" memory is used via
+DAX. What is an example use case? I assume it's *not* to treat it like
+PMEM but instead e.g., use it as a fast buffer inside applications or
+similar.
+
+4. There seem to be use cases where some part of "soft-reserved" memory
+is used via DAX, some other is given to the buddy. What is an example
+use case? Is this really necessary or only some theoretical use case?
+
+5. The "provisioned along performance relevant address boundaries." part
+is unclear to me. Can you give an example of how this would look like
+from user space? Like, split that memory in blocks of size X with
+alignment Y and give them to separate applications?
+
+6. If you add such memory to the buddy, is there any way the system can
+differentiate it from other memory? E.g., via fake/other NUMA nodes?
+
+
+Also, can you give examples of how kmem-added memory is represented in
+/proc/iomem for a) pmem and b) soft-resered memory after this series
+(skimming over the patches, I think there is a change for pmem, right?)?
+
+I am really wondering if it's the right approach to squeeze this into
+our pmem/nvdimm infrastructure just because it's easy to do. E.g., man
+"ndctl" - "ndctl - Manage "libnvdimm" subsystem devices (Non-volatile
+Memory)" speaks explicitly about non-volatile memory.
+
+
+> 
+> [2]: http://lore.kernel.org/r/20200713160837.13774-11-joao.m.martins@oracle.com
+> [3]: http://lore.kernel.org/r/157309097008.1579826.12818463304589384434.stgit@dwillia2-desk3.amr.corp.intel.com
+> [4]: http://lore.kernel.org/r/154899811738.3165233.12325692939590944259.stgit@dwillia2-desk3.amr.corp.intel.com
+> [5]: http://lore.kernel.org/r/20200110190313.17144-1-joao.m.martins@oracle.com
+> 
+> ---
+> 
+> Dan Williams (19):
+>       x86/numa: Cleanup configuration dependent command-line options
+>       x86/numa: Add 'nohmat' option
+>       efi/fake_mem: Arrange for a resource entry per efi_fake_mem instance
+>       ACPI: HMAT: Refactor hmat_register_target_device to hmem_register_device
+>       resource: Report parent to walk_iomem_res_desc() callback
+>       mm/memory_hotplug: Introduce default phys_to_target_node() implementation
+>       ACPI: HMAT: Attach a device for each soft-reserved range
+>       device-dax: Drop the dax_region.pfn_flags attribute
+>       device-dax: Move instance creation parameters to 'struct dev_dax_data'
+>       device-dax: Make pgmap optional for instance creation
+>       device-dax: Kill dax_kmem_res
+>       device-dax: Add an allocation interface for device-dax instances
+>       device-dax: Introduce 'seed' devices
+>       drivers/base: Make device_find_child_by_name() compatible with sysfs inputs
+>       device-dax: Add resize support
+>       mm/memremap_pages: Convert to 'struct range'
+>       mm/memremap_pages: Support multiple ranges per invocation
+>       device-dax: Add dis-contiguous resource support
+>       device-dax: Introduce 'mapping' devices
+> 
+> Joao Martins (4):
+>       device-dax: Make align a per-device property
+>       device-dax: Add an 'align' attribute
+>       dax/hmem: Introduce dax_hmem.region_idle parameter
+>       device-dax: Add a range mapping allocation attribute
+> 
+> 
+>  Documentation/x86/x86_64/boot-options.rst |    4 
+>  arch/powerpc/kvm/book3s_hv_uvmem.c        |   14 
+>  arch/x86/include/asm/numa.h               |    8 
+>  arch/x86/kernel/e820.c                    |   16 
+>  arch/x86/mm/numa.c                        |   11 
+>  arch/x86/mm/numa_emulation.c              |    3 
+>  arch/x86/xen/enlighten_pv.c               |    2 
+>  drivers/acpi/numa/hmat.c                  |   76 --
+>  drivers/acpi/numa/srat.c                  |    9 
+>  drivers/base/core.c                       |    2 
+>  drivers/dax/Kconfig                       |    4 
+>  drivers/dax/Makefile                      |    3 
+>  drivers/dax/bus.c                         | 1046 +++++++++++++++++++++++++++--
+>  drivers/dax/bus.h                         |   28 -
+>  drivers/dax/dax-private.h                 |   60 +-
+>  drivers/dax/device.c                      |  134 ++--
+>  drivers/dax/hmem.c                        |   56 --
+>  drivers/dax/hmem/Makefile                 |    6 
+>  drivers/dax/hmem/device.c                 |  100 +++
+>  drivers/dax/hmem/hmem.c                   |   65 ++
+>  drivers/dax/kmem.c                        |  199 +++---
+>  drivers/dax/pmem/compat.c                 |    2 
+>  drivers/dax/pmem/core.c                   |   22 -
+>  drivers/firmware/efi/x86_fake_mem.c       |   12 
+>  drivers/gpu/drm/nouveau/nouveau_dmem.c    |   15 
+>  drivers/nvdimm/badrange.c                 |   26 -
+>  drivers/nvdimm/claim.c                    |   13 
+>  drivers/nvdimm/nd.h                       |    3 
+>  drivers/nvdimm/pfn_devs.c                 |   13 
+>  drivers/nvdimm/pmem.c                     |   27 -
+>  drivers/nvdimm/region.c                   |   21 -
+>  drivers/pci/p2pdma.c                      |   12 
+>  include/acpi/acpi_numa.h                  |   14 
+>  include/linux/dax.h                       |    8 
+>  include/linux/memory_hotplug.h            |    5 
+>  include/linux/memremap.h                  |   11 
+>  include/linux/numa.h                      |   11 
+>  include/linux/range.h                     |    6 
+>  kernel/resource.c                         |   11 
+>  lib/test_hmm.c                            |   15 
+>  mm/memory_hotplug.c                       |   10 
+>  mm/memremap.c                             |  299 +++++---
+>  tools/testing/nvdimm/dax-dev.c            |   22 -
+>  tools/testing/nvdimm/test/iomap.c         |    2 
+>  44 files changed, 1825 insertions(+), 601 deletions(-)
+>  delete mode 100644 drivers/dax/hmem.c
+>  create mode 100644 drivers/dax/hmem/Makefile
+>  create mode 100644 drivers/dax/hmem/device.c
+>  create mode 100644 drivers/dax/hmem/hmem.c
+> 
+> base-commit: 01830e6c042e8eb6eb202e05d7df8057135b4c26
+> 
+
+
+-- 
+Thanks,
+
+David / dhildenb
 
