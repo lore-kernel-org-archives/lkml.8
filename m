@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6F9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A389C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C351D2083B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AE2B20781
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457860;
-	bh=1XyuKvmwYbLPHPN4jsoUH2TOc7R4uC09XNDVY4IuVZ4=;
+	s=default; t=1596457863;
+	bh=comM6opoALNO7vYbhHHew20FWuTAjkZExfK2qLv9Nnw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V51B2Nx7oD5zC8VV5em/X3A8Q9NlTkGIIV7oN2bfGcp+aNaDN4MCnaK+ut4SCGLDg
-	 RYYbFI2nabwRmw4mSefGLDhoPC38qlatce3HWBaH7mkYEx7eRft+QXXGOCzw5d+L7d
-	 X+pE1OL2PEH7G+FPIPLAcE2GY7OvG/2sTXggW8Ms=
+	b=lgmcosQ9bYPxARCk9xJsmD29MUUeWzlWtxKfR93nhOL9i1W3i6UCFNjXXsXDMuGEM
+	 j1NGuUErP3RY2oAAFEV9GMxofQgiiN1PL+Zt6TP516jogAKGDhaKUlyuymRUvUzRun
+	 iCJvtl/hyBTa+hXJqQUqiodr3De3PzTeLrV2lOAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729128AbgHCMa5 (ORCPT
+        id S1729138AbgHCMbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:30:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58154 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:31:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729114AbgHCMax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:30:53 -0400
+        id S1727015AbgHCMau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:30:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 764232076B;
-        Mon,  3 Aug 2020 12:30:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA152204EC;
+        Mon,  3 Aug 2020 12:30:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457852;
-        bh=1XyuKvmwYbLPHPN4jsoUH2TOc7R4uC09XNDVY4IuVZ4=;
+        s=default; t=1596457849;
+        bh=comM6opoALNO7vYbhHHew20FWuTAjkZExfK2qLv9Nnw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uEtCJlkPYKrFxZI1mLO6nmRyvM9GbM+8gHlBWdHJfit6Y6DZf2dT6GQDMGCc5BMtp
-         Yw1QucbmJzUaN1hzyE51k4VbdSXm+VTQwbmaYM8gvmhe4vECMLVRLl9/3MQSqNyZq7
-         ymaL4jMwC86reHtu5Uk/Nd1lWi1dN1qWn8mSO668=
+        b=vVYTDjWWCqYxQwWJdzK7r+eRjr+mHCkmGgbzn6wKPukFIj4fmIsmr+qPgGVkX3m8I
+         some6PofVMgM0lyQ/hAx7FkjfRBzT+zz1G0TDW+yNGqvi0Wk4vzaXWDbDWG2fpx9V3
+         Q6WYFO+atbEHHKbgxvLvpyLtu/ocCg9CgpDXD/c4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>,
+        Lu Wei <luwei32@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 66/90] net: gemini: Fix missing clk_disable_unprepare() in error path of gemini_ethernet_port_probe()
-Date:   Mon,  3 Aug 2020 14:19:28 +0200
-Message-Id: <20200803121900.814408872@linuxfoundation.org>
+Subject: [PATCH 5.4 65/90] net: nixge: fix potential memory leak in nixge_probe()
+Date:   Mon,  3 Aug 2020 14:19:27 +0200
+Message-Id: <20200803121900.765688155@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -61,46 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Lu Wei <luwei32@huawei.com>
 
-[ Upstream commit 85496a29224188051b6135eb38da8afd4c584765 ]
+[ Upstream commit 366228ed01f6882cc203e3d5b40010dfae0be1c3 ]
 
-Fix the missing clk_disable_unprepare() before return
-from gemini_ethernet_port_probe() in the error handling case.
+If some processes in nixge_probe() fail, free_netdev(dev)
+needs to be called to aviod a memory leak.
 
-Fixes: 4d5ae32f5e1e ("net: ethernet: Add a driver for Gemini gigabit ethernet")
+Fixes: 87ab207981ec ("net: nixge: Separate ctrl and dma resources")
+Fixes: abcd3d6fc640 ("net: nixge: Fix error path for obtaining mac address")
 Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Signed-off-by: Lu Wei <luwei32@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cortina/gemini.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/ni/nixge.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/cortina/gemini.c b/drivers/net/ethernet/cortina/gemini.c
-index 2814b96751b4f..01ae113f122a0 100644
---- a/drivers/net/ethernet/cortina/gemini.c
-+++ b/drivers/net/ethernet/cortina/gemini.c
-@@ -2445,6 +2445,7 @@ static int gemini_ethernet_port_probe(struct platform_device *pdev)
- 	port->reset = devm_reset_control_get_exclusive(dev, NULL);
- 	if (IS_ERR(port->reset)) {
- 		dev_err(dev, "no reset\n");
-+		clk_disable_unprepare(port->pclk);
- 		return PTR_ERR(port->reset);
- 	}
- 	reset_control_reset(port->reset);
-@@ -2500,8 +2501,10 @@ static int gemini_ethernet_port_probe(struct platform_device *pdev)
- 					IRQF_SHARED,
- 					port_names[port->id],
- 					port);
--	if (ret)
-+	if (ret) {
-+		clk_disable_unprepare(port->pclk);
- 		return ret;
-+	}
+diff --git a/drivers/net/ethernet/ni/nixge.c b/drivers/net/ethernet/ni/nixge.c
+index 2761f3a3ae508..56f285985b432 100644
+--- a/drivers/net/ethernet/ni/nixge.c
++++ b/drivers/net/ethernet/ni/nixge.c
+@@ -1318,19 +1318,21 @@ static int nixge_probe(struct platform_device *pdev)
+ 	netif_napi_add(ndev, &priv->napi, nixge_poll, NAPI_POLL_WEIGHT);
+ 	err = nixge_of_get_resources(pdev);
+ 	if (err)
+-		return err;
++		goto free_netdev;
+ 	__nixge_hw_set_mac_address(ndev);
  
- 	ret = register_netdev(netdev);
- 	if (!ret) {
+ 	priv->tx_irq = platform_get_irq_byname(pdev, "tx");
+ 	if (priv->tx_irq < 0) {
+ 		netdev_err(ndev, "could not find 'tx' irq");
+-		return priv->tx_irq;
++		err = priv->tx_irq;
++		goto free_netdev;
+ 	}
+ 
+ 	priv->rx_irq = platform_get_irq_byname(pdev, "rx");
+ 	if (priv->rx_irq < 0) {
+ 		netdev_err(ndev, "could not find 'rx' irq");
+-		return priv->rx_irq;
++		err = priv->rx_irq;
++		goto free_netdev;
+ 	}
+ 
+ 	priv->coalesce_count_rx = XAXIDMA_DFT_RX_THRESHOLD;
 -- 
 2.25.1
 
