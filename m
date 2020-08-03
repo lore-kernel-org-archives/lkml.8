@@ -2,133 +2,117 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E90C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A763C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A60C2070A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:57:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="FGHgE6y/"
+	by mail.kernel.org (Postfix) with ESMTP id 6EC1B2070A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 08:57:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbgHCI5W (ORCPT
+        id S1726504AbgHCI52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 04:57:22 -0400
-Received: from mail-eopbgr750051.outbound.protection.outlook.com ([40.107.75.51]:65205
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725806AbgHCI5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 04:57:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g8K4QE1MlGjPZinTbAdmW0yvIR6273m8yZg3asdC4yJdmoIvlxq8ybO4ottl4x1ZjfOJImIP2JEazmVxF7Ak41oDjxQrU9osFhrIOdtfuhimaZSvrKpQS6RDoCZ/IEcgZQ9D6+QMwTEKZWvgmorOJ8M/DSZXftDXfLvGs89ekjseYh28CvucOVGBcxaXgG0M3kgWZpeGzg2Nc4r0QdbcizHENd9HAcp2bc1GWFQSXEgg6p6rpy8f0P7KMNU/Ch6O883K1suVmEvYH2nKLSIaceGk/uO7RdZ1aA/xVg7y3aRZi5rxLd3qfmIfHcAJ1oiz3ajbXRARlHtU32BmKXQZgw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CydEfDRwmajU2XoV4YQmb03N8esx268Olbs2N/mk5WU=;
- b=j7hyVq0S+Xlr2sQaKNaepLdWjcCQO7TOSNSmqkF3Jmk2Q5sWyhegYoA36p8RkoFEVNTRVXzQ9Uod793HBn4PbiGvyNtYpIzr9HTLE2ea6hxvNSYyThefx1Oe9rvrXundyojLCpa7CAD7UVQu4Q1EdIAeriZ+MazLblMpqEMVv1Dj60aiwfKcuJESmh0Mq0kCGhhTGmFLCqWKJXHhnHzX1I0QPHsD0uRsOZRxQH6QYYbzhbGe5iFQx+GHOI/cmRFqPrOTcbU31rS7jJV8q63Ls9LvzEENyr4cJNGBEQOSfTvYaKhdnM/QcKBoojdjYzcM++n1OgDi4cQPAE6X2p4cjg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CydEfDRwmajU2XoV4YQmb03N8esx268Olbs2N/mk5WU=;
- b=FGHgE6y/UOqtvpdxAO4a0jI0B2tci7UhiGEYWOIjTvlcFKsi2oHAbdHlabxAHjVWDxCaz3mLNNJdBgSQgPog1Ryw6ACwBvGJ4/IwDFisHOTgaJz00GR/HydNNGLVOd5LsbvNg2uX96R2SH3gSV/z/iFLiT9kRVqYmip8sJA79o4=
-Authentication-Results: st.com; dkim=none (message not signed)
- header.d=none;st.com; dmarc=none action=none header.from=synaptics.com;
-Received: from DM6PR03MB4555.namprd03.prod.outlook.com (2603:10b6:5:102::17)
- by DM6PR03MB3498.namprd03.prod.outlook.com (2603:10b6:5:ae::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Mon, 3 Aug
- 2020 08:57:18 +0000
-Received: from DM6PR03MB4555.namprd03.prod.outlook.com
- ([fe80::d9af:b798:6945:27b]) by DM6PR03MB4555.namprd03.prod.outlook.com
- ([fe80::d9af:b798:6945:27b%3]) with mapi id 15.20.3239.021; Mon, 3 Aug 2020
- 08:57:18 +0000
-Date:   Mon, 3 Aug 2020 16:56:47 +0800
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH net-next] net: stmmac: fix failed to suspend if phy based
- WOL is enabled
-Message-ID: <20200803165647.296e6f21@xhacker.debian>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: HK2P15301CA0008.APCP153.PROD.OUTLOOK.COM
- (2603:1096:202:1::18) To DM6PR03MB4555.namprd03.prod.outlook.com
- (2603:10b6:5:102::17)
+        Mon, 3 Aug 2020 04:57:28 -0400
+Received: from mga17.intel.com ([192.55.52.151]:51372 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725806AbgHCI50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 04:57:26 -0400
+IronPort-SDR: 7fUg7uEm7MtdQAe5vwUgi0R/xAYEtx4a19YRhi5c0Eo+QXTGePYKfLE1pC1viTxF+fY2yng/Km
+ bxnPfx97SgSA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9701"; a="132126589"
+X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
+   d="scan'208";a="132126589"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 01:57:25 -0700
+IronPort-SDR: JK5u0nRI6ANficLgflI38qkeaJUkSIEq5iob74fmR3fksiXcD3CCwuq0KTyBu2bO7ciksosoe+
+ J9ZAbCPwSYbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
+   d="scan'208";a="323978428"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga002.fm.intel.com with ESMTP; 03 Aug 2020 01:57:22 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1k2WHZ-005tfH-PH; Mon, 03 Aug 2020 11:57:21 +0300
+Date:   Mon, 3 Aug 2020 11:57:21 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Vitor Massaru Iha <vitor@massaru.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, fkostenzer@live.at,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2] lib: kunit: Convert test_sort to KUnit test
+Message-ID: <20200803085721.GX3703480@smile.fi.intel.com>
+References: <20200729191151.476368-1-vitor@massaru.org>
+ <20200729191948.GZ3703480@smile.fi.intel.com>
+ <CAFd5g47MGZTo0k4s1ohRNT09D=NrsBQHOHQwLVq=uh8ezCuAQA@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from xhacker.debian (124.74.246.114) by HK2P15301CA0008.APCP153.PROD.OUTLOOK.COM (2603:1096:202:1::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.2 via Frontend Transport; Mon, 3 Aug 2020 08:57:15 +0000
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-X-Originating-IP: [124.74.246.114]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0d6f6ff9-865b-4a33-3d9b-08d8378b396c
-X-MS-TrafficTypeDiagnostic: DM6PR03MB3498:
-X-Microsoft-Antispam-PRVS: <DM6PR03MB3498CCA46C25F800F197DB4BED4D0@DM6PR03MB3498.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2CGl0osAMVqt62G2SIgSdCpSzz8Rlr5cd0L9NWvcieXUpfSjZH3mbffZRR6jKxEdfINlP7911sgNIWi6B2V5T/OQBhDXyQrnVclxr92x4NkX2HTNaumvcCu7GrwIqHWX9QRNzHw/+Ss09P+zCBghI8Rb2IFoXFu8g5FtKn0Ok/GBoXWzG1o7e9ixzkjdDWgL4N7VAATyRsDcmFK3u17yVlLwdSQrFLLTxA6NPh5tm6mtOIt2HcSXrNaAx40wBXU024IeV8hqxIGtpMC84OVyREvLlQRY+w6ryQ5Nl+ef74IUpqfdNToHmRAX/tCHTvAMQQzHKDozKn5tUF4V/oO7U1N1zBhpcsyHV04Y4duucnCvl8JlpdNc1ozswHV8Cd+e
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4555.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(39850400004)(396003)(136003)(366004)(376002)(346002)(66476007)(2906002)(66556008)(15650500001)(1076003)(6666004)(5660300002)(7696005)(55016002)(66946007)(52116002)(6506007)(8676002)(110136005)(956004)(316002)(83380400001)(9686003)(16526019)(186003)(478600001)(26005)(8936002)(86362001)(4326008)(309714004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: Kiy53CcW+JBaPpvvvmzvspSh4JTWzKps9dMXC9fbvWvZOlRHev3xDbrnDO+4+TxnOyA8JjZj2mSonibpPpvqBcH158mxrGp/p8UZuF1MigOZmbQl6qYjMHUQljawwAv04TjxblMBeYw6nuOe4yUNm37OVmgh2bZJo0MudHoYSVQZSDi/f8zyDzBkiwd4CEePXNF6VdwLQ1gbN2FkYb4acojRWA6uN4TTaZTMe6noKTgKN6Iu4QS7H2l5rZU1WLkFLv02M9JHCIPyFelienNWHAmXEPwqzTGe/gyBNw0ZwLb5bpLJwOFemhTBz+cXKE94bboduYVgNRSUGdzumS4SK9SdCNXG/WMkDFc+CZJrzI60ot6lpGSmYoYyAJrsewlNrHBSrEfHJy/8Amkzl+1vjLUS/ztdlNEFTx2/mCvpSbJoj4W0uIv6NVlEgvIrGQ7tZ3rm095JiOo29262zkhfWI2XdshysWNo/IGsX6OeSPDQj6eJsMUH9A7wtUf8ChehpZKCngSqZIPBSTJ4hux0hkxhs5/Pf3EVAFYFTkz43Aq7QDG//gta2FYhd3pB2VeEuGY9xvxDORVFJzKLjuwKcV6MxUaHIbJViqyyBy4zVZoEUAHRbh/8PZXnBZsVwyvGs8zj+kH5eH0JI6ZJdZa+OQ==
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d6f6ff9-865b-4a33-3d9b-08d8378b396c
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR03MB4555.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2020 08:57:17.9480
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 81n3XWiI4mxvssZtA6kxNy09P6n7Mqu/tEmsHq7NhSShO7Jscp1Fu2etjGoDMUn8O69Q2jfbFBOx7Zoz+hBWBg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB3498
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFd5g47MGZTo0k4s1ohRNT09D=NrsBQHOHQwLVq=uh8ezCuAQA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the latest net-next tree, if test suspend/resume after enabling
-WOL, we get error as below:
+On Wed, Jul 29, 2020 at 12:59:28PM -0700, Brendan Higgins wrote:
+> On Wed, Jul 29, 2020 at 12:19 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Wed, Jul 29, 2020 at 04:11:51PM -0300, Vitor Massaru Iha wrote:
 
-[  487.086365] dpm_run_callback(): mdio_bus_suspend+0x0/0x30 returns -16
-[  487.086375] PM: Device stmmac-0:00 failed to suspend: error -16
+...
 
--16 means -EBUSY, this is because I didn't enable wakeup of the correct
-device when implementing phy based WOL feature. To be honest, I caught
-the issue when implementing phy based WOL and then fix it locally, but
-forgot to amend the phy based wol patch. Today, I found the issue by
-testing net-next tree.
+> > >  lib/{test_sort.c => sort_kunit.c} | 31 +++++++++++++++----------------
+> >
+> > Still opened question why kunit is a suffix? Can't we leave same name? Can't we
+> > do it rather prefix?
+> 
+> Sorry to jump in now; I thought Vitor's reply with a link to the new
+> proposed documentation[1] addressed this. The naming convention issue
+> came up about a month ago[2]. The people in the discussion (including
+> myself) came to an agreement on _kunit.c. That being said, the
+> documentation hasn't been accepted yet, so if you really feel strongly
+> about it, now is the time to change it.
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+My argument is to do something like
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-index 05d63963fdb7..ac5e8cc5fb9f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-@@ -625,7 +625,7 @@ static int stmmac_set_wol(struct net_device *dev, struct ethtool_wolinfo *wol)
- 		int ret = phylink_ethtool_set_wol(priv->phylink, wol);
- 
- 		if (!ret)
--			device_set_wakeup_enable(&dev->dev, !!wol->wolopts);
-+			device_set_wakeup_enable(priv->device, !!wol->wolopts);
- 		return ret;
- 	}
- 
+  - ls .../test* vs. ls .../*_kunit.c
+
+  - use shell completion vs. no completion when looking if there is a test
+    module for something
+
+But I agree that this is matter of style.
+
+> All that being said, I would rather not discuss that issue here for
+> the benefit of the participants in the preceding discussions.
+> 
+> I posted lore links for the relevant threads, which should be easy
+> enough to In-Reply-To your way into. Nevertheless, if it makes it
+> easier, let me know and I can CC you into the discussions.
+
+No need. I think you have enough clever folks and good ideas behind this. Just
+put a reference to all these conversion patches to the summary of pros and cons
+of renaming.
+
+> [1] https://lore.kernel.org/linux-kselftest/20200620054944.167330-1-davidgow@google.com/T/#u
+> [2] https://lore.kernel.org/linux-kselftest/202006141005.BA19A9D3@keescook/t/#u
+
 -- 
-2.28.0
+With Best Regards,
+Andy Shevchenko
+
 
