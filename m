@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 850A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C304C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EB9320678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 308AD2054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458577;
-	bh=5x4VHvCv2++Zyq1VJE6H93Umf7432H6ql6zvKFs5sDg=;
+	s=default; t=1596458579;
+	bh=5pduQLlgfqUUfmXNn6eWMBtyvLAHIiItS3XnpYYz72c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zx/wANQK5pQjOTAN6RPLx06gIhgIyege6OM1sKaii2dt+kELIDXy6R1TNvPeN9auI
-	 6/qP/AN5ikViBEBXw95CE9m/RBdlQKMym3bt+oVyVM7FLDG4FBjoh7xvzcjdR1P2vr
-	 TQVfjeNASS/KMUmjkQG1JnASGspIxAMvn0JU/wp4=
+	b=P3qY8cNv+F16f1Lf/ioKcuGM5VbIiBjbebN7otWvsZQUmHYmIHiIxaOBwLpC16APz
+	 2NsSs7qorUMmgMELtqlRAcO0wwfEZw6L3dGUyAWCfQPwwdUwsSAdJ79uv/cFcUgg8p
+	 TBSRJeAAYsLgrWIbKLGV1EMrdXB2lqogplhkYsSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgHCMaa (ORCPT
+        id S1729038AbgHCMaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:30:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57026 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:30:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728409AbgHCMaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:30:05 -0400
+        id S1728132AbgHCMaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:30:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D485A204EC;
-        Mon,  3 Aug 2020 12:30:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47ECF2086A;
+        Mon,  3 Aug 2020 12:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457804;
-        bh=5x4VHvCv2++Zyq1VJE6H93Umf7432H6ql6zvKFs5sDg=;
+        s=default; t=1596457809;
+        bh=5pduQLlgfqUUfmXNn6eWMBtyvLAHIiItS3XnpYYz72c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yl1Hr4FoGDrMCOtaKC7Ip2/A5FWr8FWjkbCDRKRIZmysPr9nyNF/MnFBkvg/OA7Vy
-         OHMhZvpBDu4G68ruPmxsJZtZkwj/+KqYEsxwiBi0S81Vnsn6GPlIh/xTMCQZXAH5Yr
-         1hejOobxShGW20rxZz6jPzV6ulSjT0mpAMD8MVRA=
+        b=v3XPkN/XEz7OYp8fuqVfY3iaEHA5niQNSlXu8gJYOEnWKiRystFX8NAD3ZX8prz2g
+         AF3g/J5PnXxD4mLMHbx5SHIf6HoFnjtZdKNVrm62mKQbV2bg/LHsbp3QtVC11PauF4
+         E5+g8cXa9XZ3Zg9Ge/ybxge7pwZzfVX6VrspaP+c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wang ShaoBo <bobo.shaobowang@huawei.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 79/90] x86/unwind/orc: Fix ORC for newly forked tasks
-Date:   Mon,  3 Aug 2020 14:19:41 +0200
-Message-Id: <20200803121901.434583975@linuxfoundation.org>
+Subject: [PATCH 5.4 81/90] cxgb4: add missing release on skb in uld_send()
+Date:   Mon,  3 Aug 2020 14:19:43 +0200
+Message-Id: <20200803121901.530719207@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -61,55 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 372a8eaa05998cd45b3417d0e0ffd3a70978211a ]
+[ Upstream commit e6827d1abdc9b061a57d7b7d3019c4e99fabea2f ]
 
-The ORC unwinder fails to unwind newly forked tasks which haven't yet
-run on the CPU.  It correctly reads the 'ret_from_fork' instruction
-pointer from the stack, but it incorrectly interprets that value as a
-call stack address rather than a "signal" one, so the address gets
-incorrectly decremented in the call to orc_find(), resulting in bad ORC
-data.
+In the implementation of uld_send(), the skb is consumed on all
+execution paths except one. Release skb when returning NET_XMIT_DROP.
 
-Fix it by forcing 'ret_from_fork' frames to be signal frames.
-
-Reported-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-Link: https://lkml.kernel.org/r/f91a8778dde8aae7f71884b5df2b16d552040441.1594994374.git.jpoimboe@redhat.com
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/unwind_orc.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/sge.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index aa0f39dc81298..187a86e0e7531 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -431,8 +431,11 @@ bool unwind_next_frame(struct unwind_state *state)
- 	/*
- 	 * Find the orc_entry associated with the text address.
- 	 *
--	 * Decrement call return addresses by one so they work for sibling
--	 * calls and calls to noreturn functions.
-+	 * For a call frame (as opposed to a signal frame), state->ip points to
-+	 * the instruction after the call.  That instruction's stack layout
-+	 * could be different from the call instruction's layout, for example
-+	 * if the call was to a noreturn function.  So get the ORC data for the
-+	 * call instruction itself.
- 	 */
- 	orc = orc_find(state->signal ? state->ip : state->ip - 1);
- 	if (!orc) {
-@@ -653,6 +656,7 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
- 		state->sp = task->thread.sp;
- 		state->bp = READ_ONCE_NOCHECK(frame->bp);
- 		state->ip = READ_ONCE_NOCHECK(frame->ret_addr);
-+		state->signal = (void *)state->ip == ret_from_fork;
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/sge.c b/drivers/net/ethernet/chelsio/cxgb4/sge.c
+index 506170fe3a8b7..049f1bbe27ab3 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/sge.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/sge.c
+@@ -2441,6 +2441,7 @@ static inline int uld_send(struct adapter *adap, struct sk_buff *skb,
+ 	txq_info = adap->sge.uld_txq_info[tx_uld_type];
+ 	if (unlikely(!txq_info)) {
+ 		WARN_ON(true);
++		kfree_skb(skb);
+ 		return NET_XMIT_DROP;
  	}
  
- 	if (get_stack_info((unsigned long *)state->sp, state->task,
 -- 
 2.25.1
 
