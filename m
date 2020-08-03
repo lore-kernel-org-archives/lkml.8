@@ -2,54 +2,54 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A314C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA88C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D61C0207FC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F56207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457617;
-	bh=ZDt/Zl6117SPnQ8nKwlwPrgsijr9OdQmhrm1hTPLeCU=;
+	s=default; t=1596457618;
+	bh=5z5Q8QBzafP67PGyOz2etWaMlFZANqgyI5uCWFQH8cU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fNttPuwBHnfoHXLbRfgiNmAWvZbZ5Sgwb5VyMb2CqsrBAMjqhPhyXmjQMgKViMe6U
-	 4bwmuyy+KNxt2XjbOFC8pnvWXzVG7CGxIeThWVRl1JB33jc3etcFdh/opQMnZYZrg6
-	 V6PgAYUlxPnF5l4L0wWVi/hfy4vqiHVyfcyjcXVo=
+	b=xv+LIs5OOw5GzTWG+GbeSgSqyAH3POHsnjx02wx4tcFuAnJhf4l1MT4FVfiZWMzqQ
+	 tidvXL/le/syhb7+jG/bvlNvRGzaFToiM67aZcjxbFJs9bo5JlefiRC3gNMLMC1qUe
+	 dOHebsjBThVsNhrgPBimkqBlotR07Kn6OL0y/iho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbgHCM0z (ORCPT
+        id S1728465AbgHCM06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:26:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52288 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:26:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728415AbgHCM0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:26:45 -0400
+        id S1728426AbgHCM0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:26:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28DF1204EC;
-        Mon,  3 Aug 2020 12:26:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BEA7207FC;
+        Mon,  3 Aug 2020 12:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457603;
-        bh=ZDt/Zl6117SPnQ8nKwlwPrgsijr9OdQmhrm1hTPLeCU=;
+        s=default; t=1596457611;
+        bh=5z5Q8QBzafP67PGyOz2etWaMlFZANqgyI5uCWFQH8cU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y8I7HH81LCfFjfRGyaEBsGisaok2EXugZtf/pCiAYY/417jJyCfXoDRrVKXmrRxwl
-         mOXWGU2Ds2irrBxlrbYI+Lqlqq3o7FzUQGbf3UF5UtHSC0pZTR7t30iEyzQUVl6oOE
-         qRTj3cYIago51XgLlzpzcsnKIhyDZ7pu8xLXJa1s=
+        b=Lazsnnais7CFN0W+0q6oHRTUnTKq6o/4tDxrdjiJ142O9jVGjhk2HbHvOjHBDzsnN
+         FXURMQueUDRwy3jC2s2IdtgIDMz01BXUf5i8HDiLThzvMvSbnDeNbw9p82SOvHogih
+         k/I0YFrnYXIhk93hXx43lTjtUXYHUVYNin/GZW8U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oded Gabbay <oded.gabbay@gmail.com>,
-        Tomer Tayar <ttayar@habana.ai>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 101/120] habanalabs: prevent possible out-of-bounds array access
-Date:   Mon,  3 Aug 2020 14:19:19 +0200
-Message-Id: <20200803121907.823809165@linuxfoundation.org>
+        stable@vger.kernel.org, PeiSen Hou <pshou@realtek.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 10/90] ALSA: hda/realtek: Fix add a "ultra_low_power" function for intel reference board (alc256)
+Date:   Mon,  3 Aug 2020 14:18:32 +0200
+Message-Id: <20200803121858.042920784@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
-References: <20200803121902.860751811@linuxfoundation.org>
+In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
+References: <20200803121857.546052424@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,49 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oded Gabbay <oded.gabbay@gmail.com>
+From: PeiSen Hou <pshou@realtek.com>
 
-[ Upstream commit cea7a0449ea3fa4883bf5dc8397f000d6b67d6cd ]
+commit 6fa38ef1534e7e9320aa15e329eb1404ab2f70ac upstream.
 
-Queue index is received from the user. Therefore, we must validate it
-before using it to access the queue props array.
+Intel requires to enable power saving mode for intel reference board (alc256)
 
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
-Reviewed-by: Tomer Tayar <ttayar@habana.ai>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: PeiSen Hou <pshou@realtek.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200727115647.10967-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/misc/habanalabs/command_submission.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ sound/pci/hda/patch_realtek.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
-index 409276b6374d7..e7c8e7473226f 100644
---- a/drivers/misc/habanalabs/command_submission.c
-+++ b/drivers/misc/habanalabs/command_submission.c
-@@ -425,11 +425,19 @@ static int validate_queue_index(struct hl_device *hdev,
- 	struct asic_fixed_properties *asic = &hdev->asic_prop;
- 	struct hw_queue_properties *hw_queue_prop;
- 
-+	/* This must be checked here to prevent out-of-bounds access to
-+	 * hw_queues_props array
-+	 */
-+	if (chunk->queue_index >= HL_MAX_QUEUES) {
-+		dev_err(hdev->dev, "Queue index %d is invalid\n",
-+			chunk->queue_index);
-+		return -EINVAL;
-+	}
-+
- 	hw_queue_prop = &asic->hw_queues_props[chunk->queue_index];
- 
--	if ((chunk->queue_index >= HL_MAX_QUEUES) ||
--			(hw_queue_prop->type == QUEUE_TYPE_NA)) {
--		dev_err(hdev->dev, "Queue index %d is invalid\n",
-+	if (hw_queue_prop->type == QUEUE_TYPE_NA) {
-+		dev_err(hdev->dev, "Queue index %d is not applicable\n",
- 			chunk->queue_index);
- 		return -EINVAL;
- 	}
--- 
-2.25.1
-
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7555,7 +7555,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x10cf, 0x1629, "Lifebook U7x7", ALC255_FIXUP_LIFEBOOK_U7x7_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x10cf, 0x1845, "Lifebook U904", ALC269_FIXUP_LIFEBOOK_EXTMIC),
+ 	SND_PCI_QUIRK(0x10ec, 0x10f2, "Intel Reference board", ALC700_FIXUP_INTEL_REFERENCE),
+-	SND_PCI_QUIRK(0x10ec, 0x1230, "Intel Reference board", ALC225_FIXUP_HEADSET_JACK),
++	SND_PCI_QUIRK(0x10ec, 0x1230, "Intel Reference board", ALC295_FIXUP_CHROME_BOOK),
+ 	SND_PCI_QUIRK(0x10f7, 0x8338, "Panasonic CF-SZ6", ALC269_FIXUP_HEADSET_MODE),
+ 	SND_PCI_QUIRK(0x144d, 0xc109, "Samsung Ativ book 9 (NP900X3G)", ALC269_FIXUP_INV_DMIC),
+ 	SND_PCI_QUIRK(0x144d, 0xc169, "Samsung Notebook 9 Pen (NP930SBE-K01US)", ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET),
 
 
