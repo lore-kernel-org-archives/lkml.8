@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 693EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94792C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45C25204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 661B4207BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457510;
-	bh=hWzuh5MEsC2Obx12cfyar50VxkgrpxaqoloOCSelQv4=;
+	s=default; t=1596457512;
+	bh=6LHmk7Ht4zZ2Wj4OwJ9ygqINNShstrp45leu13E+blE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MhV6Nv8IPFKDdi/dSYjhO+Dwo4szGPNjt/UHEdEyDGz/C25LjIH+L6wdU/Y7zY5xh
-	 JX8ASrOuDuF+KW3tLeb0d9jbVi2T+bn4DGpigXyOoepUX9V99/S+yKcAexBDq98/Qp
-	 9xpTFwICsHTEi5Rpk/+7nyh01QdEuec2UBYeCIho=
+	b=SsqvLxIOz6MNb4pt91IKZyJD7WjNk2DsdsyNToKKNZdNoUdOFbyGkLZFYBcfUdwYd
+	 TD1hE7U0SupQET5Af0sHBn0Hvj7CIylEoiMvUtDX56ESXhS7gc3rKXAbT09Tyf35GI
+	 GR0G+2nhkTUbJziWBA6MK0sqQM4wYt/7uCwt61gM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgHCMZH (ORCPT
+        id S1728144AbgHCMZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:25:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49524 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:25:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728118AbgHCMY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:24:57 -0400
+        id S1727019AbgHCMZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:25:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D919207BB;
-        Mon,  3 Aug 2020 12:24:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 877A1207DF;
+        Mon,  3 Aug 2020 12:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457496;
-        bh=hWzuh5MEsC2Obx12cfyar50VxkgrpxaqoloOCSelQv4=;
+        s=default; t=1596457505;
+        bh=6LHmk7Ht4zZ2Wj4OwJ9ygqINNShstrp45leu13E+blE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2YqbrXHIiDwnpWBhZKtGmSveeljgOejfO0bsN3TA5YEicYqxqjxZCpzS6KgAT+uX/
-         OARGem3yL2hZPumELLt4zfJck0xL70pfMisTkg1TAAn/cQjLb5lApllc0exh4KvKOZ
-         A5AM88zhAHQBbKrb4rx+XGjRKYro56kpS4F0MKoU=
+        b=YTd277c2bJIfABQxcP1+5Y44CfNWgbijOZs32cmCDweVO0jfM4Fhn8+0OK3rO7HsU
+         Id56SF3+8Y/6/d4TsRpX2DQMJHqLjvYuSWmNpJVMwHoXUvljVOLOZo84AArlT2Izcw
+         p1HDtrPIOLijoqX+qzgDR9vw6ZX5RrtX4BQQ2me0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Woojung.Huh@microchip.com" <Woojung.Huh@microchip.com>,
-        Johan Hovold <johan@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Xin Xiong <xiongx18@fudan.edu.cn>,
+        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 062/120] net: lan78xx: add missing endpoint sanity check
-Date:   Mon,  3 Aug 2020 14:18:40 +0200
-Message-Id: <20200803121905.821812290@linuxfoundation.org>
+Subject: [PATCH 5.7 091/120] net/mlx5e: fix bpf_prog reference count leaks in mlx5e_alloc_rq
+Date:   Mon,  3 Aug 2020 14:19:09 +0200
+Message-Id: <20200803121907.339054458@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -62,43 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Xin Xiong <xiongx18@fudan.edu.cn>
 
-[ Upstream commit 8d8e95fd6d69d774013f51e5f2ee10c6e6d1fc14 ]
+[ Upstream commit e692139e6af339a1495ef401b2d95f7f9d1c7a44 ]
 
-Add the missing endpoint sanity check to prevent a NULL-pointer
-dereference should a malicious device lack the expected endpoints.
+The function invokes bpf_prog_inc(), which increases the reference
+count of a bpf_prog object "rq->xdp_prog" if the object isn't NULL.
 
-Note that the driver has a broken endpoint-lookup helper,
-lan78xx_get_endpoints(), which can end up accepting interfaces in an
-altsetting without endpoints as long as *some* altsetting has a bulk-in
-and a bulk-out endpoint.
+The refcount leak issues take place in two error handling paths. When
+either mlx5_wq_ll_create() or mlx5_wq_cyc_create() fails, the function
+simply returns the error code and forgets to drop the reference count
+increased earlier, causing a reference count leak of "rq->xdp_prog".
 
-Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
-Cc: Woojung.Huh@microchip.com <Woojung.Huh@microchip.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fix this issue by jumping to the error handling path err_rq_wq_destroy
+while either function fails.
+
+Fixes: 422d4c401edd ("net/mlx5e: RX, Split WQ objects for different RQ types")
+Signed-off-by: Xin Xiong <xiongx18@fudan.edu.cn>
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/lan78xx.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index eccbf4cd71496..d7162690e3f3d 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -3759,6 +3759,11 @@ static int lan78xx_probe(struct usb_interface *intf,
- 	netdev->max_mtu = MAX_SINGLE_PACKET_SIZE;
- 	netif_set_gso_max_size(netdev, MAX_SINGLE_PACKET_SIZE - MAX_HEADER);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+index b485eec812111..9861c9e42c0a7 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -422,7 +422,7 @@ static int mlx5e_alloc_rq(struct mlx5e_channel *c,
+ 		err = mlx5_wq_ll_create(mdev, &rqp->wq, rqc_wq, &rq->mpwqe.wq,
+ 					&rq->wq_ctrl);
+ 		if (err)
+-			return err;
++			goto err_rq_wq_destroy;
  
-+	if (intf->cur_altsetting->desc.bNumEndpoints < 3) {
-+		ret = -ENODEV;
-+		goto out3;
-+	}
-+
- 	dev->ep_blkin = (intf->cur_altsetting)->endpoint + 0;
- 	dev->ep_blkout = (intf->cur_altsetting)->endpoint + 1;
- 	dev->ep_intr = (intf->cur_altsetting)->endpoint + 2;
+ 		rq->mpwqe.wq.db = &rq->mpwqe.wq.db[MLX5_RCV_DBR];
+ 
+@@ -475,7 +475,7 @@ static int mlx5e_alloc_rq(struct mlx5e_channel *c,
+ 		err = mlx5_wq_cyc_create(mdev, &rqp->wq, rqc_wq, &rq->wqe.wq,
+ 					 &rq->wq_ctrl);
+ 		if (err)
+-			return err;
++			goto err_rq_wq_destroy;
+ 
+ 		rq->wqe.wq.db = &rq->wqe.wq.db[MLX5_RCV_DBR];
+ 
 -- 
 2.25.1
 
