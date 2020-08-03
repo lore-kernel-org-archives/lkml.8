@@ -2,243 +2,122 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9421C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF27CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBFFF206E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7485206F6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:40:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="RX7vALAl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K186TuiU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgHCFkH (ORCPT
+        id S1728139AbgHCFkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 01:40:07 -0400
-Received: from mx07-00178001.pphosted.com ([185.132.182.106]:8510 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727015AbgHCFkH (ORCPT
+        Mon, 3 Aug 2020 01:40:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727015AbgHCFku (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 01:40:07 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0735H6eL031639;
-        Mon, 3 Aug 2020 07:18:45 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=phmgcBwjcV7clYPigq48ZGfYIZjUmWnJrfbPJw1gODw=;
- b=RX7vALAly2808Hpr3zDVbIQuszCSeqUieC3JZRTF64opqbO0vnOlZlTdShmuJRmy2utf
- yGi4eZgDYwhc1/d645Gtah0m2j59IXN5eNtQeXBogfQIwsDvhO8H997ahjjqWFQ1Srvo
- Dh+5y4NpE211BLjGxelKXMPnnCaOchLU5U15D8P6Xt9zazuwV9dZKr9Ck9QfxZ4VgpOl
- uGtORDRnmCJKI1Tmgc2i1If1fIPCEYNd83zKLZpYHZrTLV2oRnf7MHhN1c4sVeVkrpeU
- c+oUD6DeiNt0FIqlAYBGFiUaGjOTxCaUv1tmUda3+gI9Ju7cn1CskNyAlDVLZb8N4v+c ug== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32n6th4vfg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Aug 2020 07:18:45 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BA92B100034;
-        Mon,  3 Aug 2020 07:18:43 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9EA4C20F451;
-        Mon,  3 Aug 2020 07:18:43 +0200 (CEST)
-Received: from localhost (10.75.127.50) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Aug 2020 07:18:43
- +0200
-From:   Alain Volmat <alain.volmat@st.com>
-To:     <wsa@kernel.org>, <pierre-yves.mordret@st.com>
-CC:     <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
-        <alain.volmat@st.com>
-Subject: [PATCH v3 1/2] i2c: smbus: add core function handling SMBus host-notify
-Date:   Mon, 3 Aug 2020 07:17:55 +0200
-Message-ID: <1596431876-24115-2-git-send-email-alain.volmat@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596431876-24115-1-git-send-email-alain.volmat@st.com>
-References: <1596431876-24115-1-git-send-email-alain.volmat@st.com>
+        Mon, 3 Aug 2020 01:40:50 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81AFDC06174A
+        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 22:40:50 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id d188so11524042pfd.2
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 22:40:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FhbpD1GOOiuI1h2KLYGhIc+Q4nrSHyP4h81W7KBJFqA=;
+        b=K186TuiUMKQPdqAxCXhqtmALF9pZVrrem7PSJKHN2TVp6X/DGU7ghf9/BJMgBlUhh9
+         jS5/KukDzLHwp2Tdh4NSv/i8naoGe9A3lUIZtoYE8DaWtRKIWGLC17qgWRsBuZ3JbkXD
+         oI8zW7cC4xb3BZI+vs/9AmJvJY9r0ii6/sp00L/jDAKIi60G5674s+5a07y3LVR+IYv+
+         deXVnc3aHNRNX7yQY4FFTNiSAUxBcTIDHNsWd3W3SkG+OiQQgnX8qlAqr3PJu9juma9t
+         ZOSyPHOQaDxAdPbVnDMa/p63b0pwNeNG3aWsDaeHmhNXIVHXLUvlwT1LaFoiZtLXcwQy
+         s+PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FhbpD1GOOiuI1h2KLYGhIc+Q4nrSHyP4h81W7KBJFqA=;
+        b=ibi0h9nFxXnXr0aquNnVM1+kJHMiS2IHzZJtM0jPrnzO0/vNUJB60U1aEES3T6KSLf
+         4Af23xJhG2O96p0lIRhKtdjUpXN2+LJJlKJqL6TpBucydrY2i4jCJOepUoCINV/wBWTk
+         TH51w0gx+uDxEOMhchs5beF8Ob+isV3GVnfcZ6tx/f4ZSORDn5d9Kao1owm2incFzqJM
+         mbgqkgkxGcd1ucAm/I5+Dryk6KQftGrGJQPuFKH2XwM3ngfxDmj+2FOp/Y9IyOEsJkwv
+         48LEbBGAj1p/evepzCgH25/FYweH1/SR/gX5rF4zRoZW5VJvau44LzZvhQL12W3vwnN+
+         zi/Q==
+X-Gm-Message-State: AOAM530ogVtIHnNgNRQivEFmz3h8ZuRWLv/JJxD5lymmnfn76Ns2KkCx
+        +QvtiqX4Kd8XaB5Y6alBPMQ=
+X-Google-Smtp-Source: ABdhPJwtNZAtl8+czzRAcH8w3sZ9OYQlR+w7v7GG79nlmxqjy27pa7NblOV/FHvTJ6hTl+lyzxlnOg==
+X-Received: by 2002:a63:444b:: with SMTP id t11mr13955435pgk.134.1596433249969;
+        Sun, 02 Aug 2020 22:40:49 -0700 (PDT)
+Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id m190sm16926096pfm.89.2020.08.02.22.40.48
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 02 Aug 2020 22:40:49 -0700 (PDT)
+Date:   Sun, 2 Aug 2020 22:40:37 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: fsl_sai: Clean code for synchronize mode
+Message-ID: <20200803054037.GA1056@Asurada-Nvidia>
+References: <1596424674-32127-1-git-send-email-shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-03_04:2020-07-31,2020-08-03 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1596424674-32127-1-git-send-email-shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SMBus Host-Notify protocol, from the adapter point of view
-consist of receiving a message from a client, including the
-client address and some other data.
+On Mon, Aug 03, 2020 at 11:17:54AM +0800, Shengjiu Wang wrote:
+> TX synchronous with RX: The RMR is no need to be changed when
+> Tx is enabled, the other configuration in hw_params() is enough for
 
-It can be simply handled by creating a new slave device
-and registering a callback performing the parsing of the
-message received from the client.
+Probably you should explain why RMR can be removed, like what
+it really does so as to make it clear that there's no such a
+relationship between RMR and clock generating.
 
-This commit introduces two new core functions
-  * i2c_new_slave_host_notify_device
-  * i2c_free_slave_host_notify_device
-that take care of registration of the new slave device and
-callback and will call i2c_handle_smbus_host_notify once a
-Host-Notify event is received.
+Anyway, this is against the warning comments in the driver:
+	/*
+	 * For SAI master mode, when Tx(Rx) sync with Rx(Tx) clock, Rx(Tx) will
+	 * generate bclk and frame clock for Tx(Rx), we should set RCR4(TCR4),
+	 * RCR5(TCR5) and RMR(TMR) for playback(capture), or there will be sync
+	 * error.
+	 */
 
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
----
- v3: move smbus host-notify slave code into i2c-smbus.c file
-     rework slave callback index handling
-     add sanity check in slave free function
- v2: identical to v1
- drivers/i2c/i2c-smbus.c   | 107 ++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/i2c-smbus.h |  12 ++++++
- 2 files changed, 119 insertions(+)
+So would need to update it.
 
-diff --git a/drivers/i2c/i2c-smbus.c b/drivers/i2c/i2c-smbus.c
-index dc0108287ccf..d3d06e3b4f3b 100644
---- a/drivers/i2c/i2c-smbus.c
-+++ b/drivers/i2c/i2c-smbus.c
-@@ -197,6 +197,113 @@ EXPORT_SYMBOL_GPL(i2c_handle_smbus_alert);
- 
- module_i2c_driver(smbalert_driver);
- 
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+#define SMBUS_HOST_NOTIFY_LEN	3
-+struct i2c_slave_host_notify_status {
-+	u8 index;
-+	u8 addr;
-+};
-+
-+static int i2c_slave_host_notify_cb(struct i2c_client *client,
-+				    enum i2c_slave_event event, u8 *val)
-+{
-+	struct i2c_slave_host_notify_status *status = client->dev.platform_data;
-+
-+	switch (event) {
-+	case I2C_SLAVE_WRITE_RECEIVED:
-+		/* We only retrieve the first byte received (addr)
-+		 * since there is currently no support to retrieve the data
-+		 * parameter from the client.
-+		 */
-+		if (status->index == 0)
-+			status->addr = *val;
-+		if (status->index < U8_MAX)
-+			status->index++;
-+		break;
-+	case I2C_SLAVE_STOP:
-+		if (status->index == SMBUS_HOST_NOTIFY_LEN)
-+			i2c_handle_smbus_host_notify(client->adapter,
-+						     status->addr);
-+		fallthrough;
-+	case I2C_SLAVE_WRITE_REQUESTED:
-+		status->index = 0;
-+		break;
-+	case I2C_SLAVE_READ_REQUESTED:
-+	case I2C_SLAVE_READ_PROCESSED:
-+		*val = 0xff;
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * i2c_new_slave_host_notify_device - get a client for SMBus host-notify support
-+ * @adapter: the target adapter
-+ * Context: can sleep
-+ *
-+ * Setup handling of the SMBus host-notify protocol on a given I2C bus segment.
-+ *
-+ * Handling is done by creating a device and its callback and handling data
-+ * received via the SMBus host-notify address (0x8)
-+ *
-+ * This returns the client, which should be ultimately freed using
-+ * i2c_free_slave_host_notify_device(); or an ERRPTR to indicate an error.
-+ */
-+struct i2c_client *i2c_new_slave_host_notify_device(struct i2c_adapter *adapter)
-+{
-+	struct i2c_board_info host_notify_board_info = {
-+		I2C_BOARD_INFO("smbus_host_notify", 0x08),
-+		.flags  = I2C_CLIENT_SLAVE,
-+	};
-+	struct i2c_slave_host_notify_status *status;
-+	struct i2c_client *client;
-+	int ret;
-+
-+	status = kzalloc(sizeof(struct i2c_slave_host_notify_status),
-+			 GFP_KERNEL);
-+	if (!status)
-+		return ERR_PTR(-ENOMEM);
-+
-+	host_notify_board_info.platform_data = status;
-+
-+	client = i2c_new_client_device(adapter, &host_notify_board_info);
-+	if (IS_ERR(client)) {
-+		kfree(status);
-+		return client;
-+	}
-+
-+	ret = i2c_slave_register(client, i2c_slave_host_notify_cb);
-+	if (ret) {
-+		i2c_unregister_device(client);
-+		kfree(status);
-+		return ERR_PTR(ret);
-+	}
-+
-+	return client;
-+}
-+EXPORT_SYMBOL_GPL(i2c_new_slave_host_notify_device);
-+
-+/**
-+ * i2c_free_slave_host_notify_device - free the client for SMBus host-notify
-+ * support
-+ * @client: the client to free
-+ * Context: can sleep
-+ *
-+ * Free the i2c_client allocated via i2c_new_slave_host_notify_device
-+ */
-+void i2c_free_slave_host_notify_device(struct i2c_client *client)
-+{
-+	if (IS_ERR_OR_NULL(client))
-+		return;
-+
-+	i2c_slave_unregister(client);
-+	kfree(client->dev.platform_data);
-+	i2c_unregister_device(client);
-+}
-+EXPORT_SYMBOL_GPL(i2c_free_slave_host_notify_device);
-+#endif
-+
- /*
-  * SPD is not part of SMBus but we include it here for convenience as the
-  * target systems are the same.
-diff --git a/include/linux/i2c-smbus.h b/include/linux/i2c-smbus.h
-index 1e4e0de4ef8b..1ef421818d3a 100644
---- a/include/linux/i2c-smbus.h
-+++ b/include/linux/i2c-smbus.h
-@@ -38,6 +38,18 @@ static inline int of_i2c_setup_smbus_alert(struct i2c_adapter *adap)
- 	return 0;
- }
- #endif
-+#if IS_ENABLED(CONFIG_I2C_SMBUS) && IS_ENABLED(CONFIG_I2C_SLAVE)
-+struct i2c_client *i2c_new_slave_host_notify_device(struct i2c_adapter *adapter);
-+void i2c_free_slave_host_notify_device(struct i2c_client *client);
-+#else
-+static inline struct i2c_client *i2c_new_slave_host_notify_device(struct i2c_adapter *adapter)
-+{
-+	return ERR_PTR(-ENOSYS);
-+}
-+static inline void i2c_free_slave_host_notify_device(struct i2c_client *client)
-+{
-+}
-+#endif
- 
- #if IS_ENABLED(CONFIG_I2C_SMBUS) && IS_ENABLED(CONFIG_DMI)
- void i2c_register_spd(struct i2c_adapter *adap);
--- 
-2.7.4
+> clock generation. The TCSR.TE is no need to enabled when only RX
+> is enabled.
 
+You are correct if there's only RX running without TX joining.
+However, that's something we can't guarantee. Then we'd enable
+TE after RE is enabled, which is against what RM recommends:
+
+# From 54.3.3.1 Synchronous mode in IMX6SXRM
+# If the receiver bit clock and frame sync are to be used by
+# both the transmitter and receiver, it is recommended that
+# the receiver is the last enabled and the first disabled.
+
+I remember I did this "ugly" design by strictly following what
+RM says. If hardware team has updated the RM or removed this
+limitation, please quote in the commit logs.
+
+> +		if (!sai->synchronous[TX] && sai->synchronous[RX] && !tx) {
+> +			regmap_update_bits(sai->regmap, FSL_SAI_xCSR((!tx), ofs),
+> +					   FSL_SAI_CSR_TERE, FSL_SAI_CSR_TERE);
+> +		} else if (!sai->synchronous[RX] && sai->synchronous[TX] && tx) {
+> +			regmap_update_bits(sai->regmap, FSL_SAI_xCSR((!tx), ofs),
+> +					   FSL_SAI_CSR_TERE, FSL_SAI_CSR_TERE);
+
+Two identical regmap_update_bits calls -- both on !tx (RX?)
