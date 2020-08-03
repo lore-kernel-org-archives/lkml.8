@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEE0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A28C433F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B268420738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8030206DA
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:19:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbgHCFTS (ORCPT
+        id S1728181AbgHCFTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 01:19:18 -0400
-Received: from mga02.intel.com ([134.134.136.20]:6218 "EHLO mga02.intel.com"
+        Mon, 3 Aug 2020 01:19:46 -0400
+Received: from mga14.intel.com ([192.55.52.115]:24974 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728032AbgHCFTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 01:19:17 -0400
-IronPort-SDR: v7GwaP82xsq4LjCxo4xMHuK7SWH46hyeQFif4uEv0D2S1gzAVzmV3WzgMtvnbT8oG7Ov0/HSiY
- rLSJgR71aGXQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9701"; a="139998186"
+        id S1728032AbgHCFTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 01:19:44 -0400
+IronPort-SDR: 9I1kKh1cww1JiXyYNwXcSiMvcULmWgaC/VEw2f37L/jbdCx6zHeFlcFNAdRa886wyxTP6u7n05
+ BIeHgwT+KwFQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9701"; a="151252186"
 X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
-   d="scan'208";a="139998186"
+   d="scan'208";a="151252186"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2020 22:19:16 -0700
-IronPort-SDR: tRc5FfBYtgkxrQasf2CoiKdYkaJgZ+TQxSo7NSUfVXubARTu0J1yE4qGSRKMMSvMAxCbfefDHy
- ylgtynKOm6zA==
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2020 22:19:43 -0700
+IronPort-SDR: bLloYtda4pSu3x4pqyyDVgcWg6GZlJhH3aVS2TfHdhXAgYM3WJwzPdWBECe7x1hIdnB2D9qfM/
+ xR1snx178TOg==
 X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
-   d="scan'208";a="291927658"
+   d="scan'208";a="273822863"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2020 22:19:16 -0700
-Subject: [PATCH v4 06/23] mm/memory_hotplug: Introduce default
- phys_to_target_node() implementation
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2020 22:19:43 -0700
+Subject: [PATCH v4 11/23] device-dax: Kill dax_kmem_res
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     akpm@linux-foundation.org
 Cc:     David Hildenbrand <david@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>, Jia He <justin.he@arm.com>,
-        peterz@infradead.org, vishal.l.verma@intel.com,
-        dave.hansen@linux.intel.com, ard.biesheuvel@linaro.org,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        peterz@infradead.org, ard.biesheuvel@linaro.org,
         vishal.l.verma@intel.com, linux-mm@kvack.org,
         linux-nvdimm@lists.01.org, joao.m.martins@oracle.com,
         linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
         dri-devel@lists.freedesktop.org
-Date:   Sun, 02 Aug 2020 22:02:57 -0700
-Message-ID: <159643097768.4062302.3135192588966888630.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Sun, 02 Aug 2020 22:03:24 -0700
+Message-ID: <159643100485.4062302.976628339798536960.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <159643094279.4062302.17779410714418721328.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <159643094279.4062302.17779410714418721328.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-3-g996c
@@ -60,119 +60,247 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation to set a fallback value for dev_dax->target_node,
-introduce generic fallback helpers for phys_to_target_node()
+Several related issues around this unneeded attribute:
 
-A generic implementation based on node-data or memblock was proposed,
-but as noted by Mike:
+- The dax_kmem_res property allows the kmem driver to stash the adjusted
+  resource range that was used for the hotplug operation, but that can be
+  recalculated from the original base range.
 
-    "Here again, I would prefer to add a weak default for
-     phys_to_target_node() because the "generic" implementation is not really
-     generic.
+- kmem is using an open coded release_resource() + kfree() when an
+  idiomatic release_mem_region() is sufficient.
 
-     The fallback to reserved ranges is x86 specfic because on x86 most of
-     the reserved areas is not in memblock.memory. AFAIK, no other
-     architecture does this."
+- The driver managed resource need only manage the busy flag. Other flags
+  are of no concern to the kmem driver. In fact if kmem inherits some
+  memory range that add_memory_driver_managed() rejects that is a
+  memory-hotplug-core policy that the driver is in no position to
+  override.
 
-The info message in the generic memory_add_physaddr_to_nid()
-implementation is fixed up to properly reflect that
-memory_add_physaddr_to_nid() communicates "online" node info and
-phys_to_target_node() indicates "target / to-be-onlined" node info.
+- The implementation trusts that failed remove_memory() results in the
+  entire resource range remaining pinned busy. The driver need not make
+  that layering violation assumption and just maintain the busy state in
+  its local resource.
+
+- The "Hot-remove not yet implemented." comment is stale since hotremove
+  support is now included.
 
 Cc: David Hildenbrand <david@redhat.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Jia He <justin.he@arm.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- arch/x86/mm/numa.c             |    1 -
- include/linux/memory_hotplug.h |    5 +++++
- include/linux/numa.h           |   11 -----------
- mm/memory_hotplug.c            |   10 +++++++++-
- 4 files changed, 14 insertions(+), 13 deletions(-)
+ drivers/dax/dax-private.h |    3 -
+ drivers/dax/kmem.c        |  123 +++++++++++++++++++++------------------------
+ 2 files changed, 58 insertions(+), 68 deletions(-)
 
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index f3805bbaa784..c62e274d52d0 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -917,7 +917,6 @@ int phys_to_target_node(phys_addr_t start)
+diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
+index 6779f683671d..12a2dbc43b40 100644
+--- a/drivers/dax/dax-private.h
++++ b/drivers/dax/dax-private.h
+@@ -42,8 +42,6 @@ struct dax_region {
+  * @dev - device core
+  * @pgmap - pgmap for memmap setup / lifetime (driver owned)
+  * @range: resource range for the instance
+- * @dax_mem_res: physical address range of hotadded DAX memory
+- * @dax_mem_name: name for hotadded DAX memory via add_memory_driver_managed()
+  */
+ struct dev_dax {
+ 	struct dax_region *region;
+@@ -52,7 +50,6 @@ struct dev_dax {
+ 	struct device dev;
+ 	struct dev_pagemap *pgmap;
+ 	struct range range;
+-	struct resource *dax_kmem_res;
+ };
  
- 	return meminfo_to_nid(&numa_reserved_meminfo, start);
- }
--EXPORT_SYMBOL_GPL(phys_to_target_node);
+ static inline u64 range_len(struct range *range)
+diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+index 5bb133df147d..77e25361fbeb 100644
+--- a/drivers/dax/kmem.c
++++ b/drivers/dax/kmem.c
+@@ -19,16 +19,24 @@ static const char *kmem_name;
+ /* Set if any memory will remain added when the driver will be unloaded. */
+ static bool any_hotremove_failed;
  
- int memory_add_physaddr_to_nid(u64 start)
- {
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-index 375515803cd8..dcdc7d6206d5 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -151,11 +151,16 @@ int add_pages(int nid, unsigned long start_pfn, unsigned long nr_pages,
- 
- #ifdef CONFIG_NUMA
- extern int memory_add_physaddr_to_nid(u64 start);
-+extern int phys_to_target_node(u64 start);
- #else
- static inline int memory_add_physaddr_to_nid(u64 start)
- {
- 	return 0;
- }
-+static inline int phys_to_target_node(u64 start)
++static struct range dax_kmem_range(struct dev_dax *dev_dax)
 +{
-+	return 0;
-+}
- #endif
- 
- #ifdef CONFIG_HAVE_ARCH_NODEDATA_EXTENSION
-diff --git a/include/linux/numa.h b/include/linux/numa.h
-index a42df804679e..8cb33ccfb671 100644
---- a/include/linux/numa.h
-+++ b/include/linux/numa.h
-@@ -23,22 +23,11 @@
- #ifdef CONFIG_NUMA
- /* Generic implementation available */
- int numa_map_to_online_node(int node);
--
--/*
-- * Optional architecture specific implementation, users need a "depends
-- * on $ARCH"
-- */
--int phys_to_target_node(phys_addr_t addr);
- #else
- static inline int numa_map_to_online_node(int node)
- {
- 	return NUMA_NO_NODE;
- }
--
--static inline int phys_to_target_node(phys_addr_t addr)
--{
--	return NUMA_NO_NODE;
--}
- #endif
- 
- #endif /* _LINUX_NUMA_H */
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index dcdf3271f87e..426b79adf529 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -353,11 +353,19 @@ int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
- #ifdef CONFIG_NUMA
- int __weak memory_add_physaddr_to_nid(u64 start)
- {
--	pr_info_once("Unknown target node for memory at 0x%llx, assuming node 0\n",
-+	pr_info_once("Unknown online node for memory at 0x%llx, assuming node 0\n",
- 			start);
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
++	struct range range;
 +
-+int __weak phys_to_target_node(u64 start)
++	/* memory-block align the hotplug range */
++	range.start = ALIGN(dev_dax->range.start, memory_block_size_bytes());
++	range.end = ALIGN_DOWN(dev_dax->range.end + 1,
++			memory_block_size_bytes()) - 1;
++	return range;
++}
++
+ int dev_dax_kmem_probe(struct device *dev)
+ {
+ 	struct dev_dax *dev_dax = to_dev_dax(dev);
+-	struct range *range = &dev_dax->range;
+-	resource_size_t kmem_start;
+-	resource_size_t kmem_size;
+-	resource_size_t kmem_end;
+-	struct resource *new_res;
+-	const char *new_res_name;
+-	int numa_node;
++	struct range range = dax_kmem_range(dev_dax);
++	int numa_node = dev_dax->target_node;
++	struct resource *res;
++	char *res_name;
+ 	int rc;
+ 
+ 	/*
+@@ -37,109 +45,94 @@ int dev_dax_kmem_probe(struct device *dev)
+ 	 * could be mixed in a node with faster memory, causing
+ 	 * unavoidable performance issues.
+ 	 */
+-	numa_node = dev_dax->target_node;
+ 	if (numa_node < 0) {
+ 		dev_warn(dev, "rejecting DAX region with invalid node: %d\n",
+ 				numa_node);
+ 		return -EINVAL;
+ 	}
+ 
+-	/* Hotplug starting at the beginning of the next block: */
+-	kmem_start = ALIGN(range->start, memory_block_size_bytes());
+-
+-	kmem_size = range_len(range);
+-	/* Adjust the size down to compensate for moving up kmem_start: */
+-	kmem_size -= kmem_start - range->start;
+-	/* Align the size down to cover only complete blocks: */
+-	kmem_size &= ~(memory_block_size_bytes() - 1);
+-	kmem_end = kmem_start + kmem_size;
+-
+-	new_res_name = kstrdup(dev_name(dev), GFP_KERNEL);
+-	if (!new_res_name)
++	res_name = kstrdup(dev_name(dev), GFP_KERNEL);
++	if (!res_name)
+ 		return -ENOMEM;
+ 
+-	/* Region is permanently reserved if hotremove fails. */
+-	new_res = request_mem_region(kmem_start, kmem_size, new_res_name);
+-	if (!new_res) {
+-		dev_warn(dev, "could not reserve region [%pa-%pa]\n",
+-			 &kmem_start, &kmem_end);
+-		kfree(new_res_name);
++	res = request_mem_region(range.start, range_len(&range), res_name);
++	if (!res) {
++		dev_warn(dev, "could not reserve region [%#llx-%#llx]\n",
++				range.start, range.end);
++		kfree(res_name);
+ 		return -EBUSY;
+ 	}
+ 
+ 	/*
+-	 * Set flags appropriate for System RAM.  Leave ..._BUSY clear
+-	 * so that add_memory() can add a child resource.  Do not
+-	 * inherit flags from the parent since it may set new flags
+-	 * unknown to us that will break add_memory() below.
++	 * Temporarily clear busy to allow add_memory_driver_managed()
++	 * to claim it.
+ 	 */
+-	new_res->flags = IORESOURCE_SYSTEM_RAM;
++	res->flags &= ~IORESOURCE_BUSY;
+ 
+ 	/*
+ 	 * Ensure that future kexec'd kernels will not treat this as RAM
+ 	 * automatically.
+ 	 */
+-	rc = add_memory_driver_managed(numa_node, new_res->start,
+-				       resource_size(new_res), kmem_name);
++	rc = add_memory_driver_managed(numa_node, res->start,
++				       resource_size(res), kmem_name);
++
++	res->flags |= IORESOURCE_BUSY;
+ 	if (rc) {
+-		release_resource(new_res);
+-		kfree(new_res);
+-		kfree(new_res_name);
++		release_mem_region(range.start, range_len(&range));
++		kfree(res_name);
+ 		return rc;
+ 	}
+-	dev_dax->dax_kmem_res = new_res;
++
++	dev_set_drvdata(dev, res_name);
+ 
+ 	return 0;
+ }
+ 
+ #ifdef CONFIG_MEMORY_HOTREMOVE
+-static int dev_dax_kmem_remove(struct device *dev)
++static void dax_kmem_release(struct dev_dax *dev_dax)
+ {
+-	struct dev_dax *dev_dax = to_dev_dax(dev);
+-	struct resource *res = dev_dax->dax_kmem_res;
+-	resource_size_t kmem_start = res->start;
+-	resource_size_t kmem_size = resource_size(res);
+-	const char *res_name = res->name;
+ 	int rc;
++	struct device *dev = &dev_dax->dev;
++	const char *res_name = dev_get_drvdata(dev);
++	struct range range = dax_kmem_range(dev_dax);
+ 
+ 	/*
+ 	 * We have one shot for removing memory, if some memory blocks were not
+ 	 * offline prior to calling this function remove_memory() will fail, and
+ 	 * there is no way to hotremove this memory until reboot because device
+-	 * unbind will succeed even if we return failure.
++	 * unbind will proceed regardless of the remove_memory result.
+ 	 */
+-	rc = remove_memory(dev_dax->target_node, kmem_start, kmem_size);
+-	if (rc) {
+-		any_hotremove_failed = true;
+-		dev_err(dev,
+-			"DAX region %pR cannot be hotremoved until the next reboot\n",
+-			res);
+-		return rc;
++	rc = remove_memory(dev_dax->target_node, range.start, range_len(&range));
++	if (rc == 0) {
++		release_mem_region(range.start, range_len(&range));
++		dev_set_drvdata(dev, NULL);
++		kfree(res_name);
++		return;
+ 	}
+ 
+-	/* Release and free dax resources */
+-	release_resource(res);
+-	kfree(res);
+-	kfree(res_name);
+-	dev_dax->dax_kmem_res = NULL;
+-
+-	return 0;
++	any_hotremove_failed = true;
++	dev_err(dev, "%#llx-%#llx cannot be hotremoved until the next reboot\n",
++			range.start, range.end);
+ }
+ #else
+-static int dev_dax_kmem_remove(struct device *dev)
++static void dax_kmem_release(struct dev_dax *dev_dax)
+ {
+ 	/*
+-	 * Without hotremove purposely leak the request_mem_region() for the
+-	 * device-dax range and return '0' to ->remove() attempts. The removal
+-	 * of the device from the driver always succeeds, but the region is
+-	 * permanently pinned as reserved by the unreleased
+-	 * request_mem_region().
++	 * Without hotremove purposely leak the request_mem_region() for
++	 * the device-dax range attempts. The removal of the device from
++	 * the driver always succeeds, but the region is permanently
++	 * pinned as reserved by the unreleased request_mem_region().
+ 	 */
+ 	any_hotremove_failed = true;
+-	return 0;
+ }
+ #endif /* CONFIG_MEMORY_HOTREMOVE */
+ 
++static int dev_dax_kmem_remove(struct device *dev)
 +{
-+	pr_info_once("Unknown target node for memory at 0x%llx, assuming node 0\n",
-+			start);
++	dax_kmem_release(to_dev_dax(dev));
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(phys_to_target_node);
- #endif
- 
- /* find the smallest valid pfn in the range [start_pfn, end_pfn) */
++
+ static struct dax_device_driver device_dax_kmem_driver = {
+ 	.drv = {
+ 		.probe = dev_dax_kmem_probe,
 
