@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CADC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39346C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9269F207BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A0BD207BB
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:22:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457369;
-	bh=MzvC0SzQQy0EfpmYN0ilLTsswtI6TXw1PE6HFXBRtOY=;
+	s=default; t=1596457373;
+	bh=6/KZZcuNPBEWPDe5p9X9eJ+q6DkOWYt2qsk2p6v6cMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jnczSZd8sReqw63DgxvnD1tDwbqcdcKHQh0jQYeoAggg6XI1u3YEpUJAU4A8YILTn
-	 8vV2ffqH20v4VCJrH5IVNsxrx6M1+eCmPSVBXJg8OLll4B7ofF1+nzWfpRSK87uwPC
-	 OxevSTVz8N3tWXGDRbfr3zYrvxzK4TL+vtp6kCnk=
+	b=et+iY0+SZO1+36vkYra3k/pBssNal4KFdFPFc0mld/K53ofcmMa3bXyfF6421ph8U
+	 SwLkNv2KkKDvmUwYhIv2/texfepbkRg3OLOT3Li9+rxkmwfdYlIuLi2Mz4PVWqTKFp
+	 GYCl2HwIiJHE9bdBCvvb1I55G1g1Q0QwEeNgL4ok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgHCMWr (ORCPT
+        id S1727124AbgHCMWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:22:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46402 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:22:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726986AbgHCMWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:22:39 -0400
+        id S1726999AbgHCMWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:22:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38C302076E;
-        Mon,  3 Aug 2020 12:22:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B174F204EC;
+        Mon,  3 Aug 2020 12:22:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457358;
-        bh=MzvC0SzQQy0EfpmYN0ilLTsswtI6TXw1PE6HFXBRtOY=;
+        s=default; t=1596457361;
+        bh=6/KZZcuNPBEWPDe5p9X9eJ+q6DkOWYt2qsk2p6v6cMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t5L5/BEP4eeyoFQ3t/JJ3vrctfJNowqgn3Akwr5xvPedYBwDOaO228HYS6L+D0SQ0
-         NWHiAbH2S0yGFj86w9hHVUpbRy2V1sWQZRoZbfIeAkCKYlKOGZ/kLaaG5seopcB4U2
-         pi2BoB62Fn6cuOQPkKOL9KlwOKln3jADXtWkVl4s=
+        b=EYV6+jk20tjK+4ZFt/E5QrBCh5ojP4gjg1LzOE6M7bEBa1zE22y567u0gWVKnnyW0
+         aLCQ5Iaw/TO6AgKoDOqyAoSvYf89b3Ixpsuazsc3ybDACvVsLplr71HNXnjnYPKxVV
+         qeAAVSHKmQK9RAuSMaw/33ptDkNOHXG/V4qHj4PM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Cagney <cagney@libreswan.org>,
-        Sabrina Dubroca <sd@queasysnail.net>,
+        stable@vger.kernel.org,
         Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 039/120] espintcp: recv() should return 0 when the peer socket is closed
-Date:   Mon,  3 Aug 2020 14:18:17 +0200
-Message-Id: <20200803121904.729469676@linuxfoundation.org>
+Subject: [PATCH 5.7 040/120] xfrm: Fix crash when the hold queue is used.
+Date:   Mon,  3 Aug 2020 14:18:18 +0200
+Message-Id: <20200803121904.776077829@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -61,48 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sabrina Dubroca <sd@queasysnail.net>
+From: Steffen Klassert <steffen.klassert@secunet.com>
 
-[ Upstream commit e229c877cde141a4c46cb603a341ce8c909e9a98 ]
+[ Upstream commit 101dde4207f1daa1fda57d714814a03835dccc3f ]
 
-man 2 recv says:
+The commits "xfrm: Move dst->path into struct xfrm_dst"
+and "net: Create and use new helper xfrm_dst_child()."
+changed xfrm bundle handling under the assumption
+that xdst->path and dst->child are not a NULL pointer
+only if dst->xfrm is not a NULL pointer. That is true
+with one exception. If the xfrm hold queue is used
+to wait until a SA is installed by the key manager,
+we create a dummy bundle without a valid dst->xfrm
+pointer. The current xfrm bundle handling crashes
+in that case. Fix this by extending the NULL check
+of dst->xfrm with a test of the DST_XFRM_QUEUE flag.
 
-    RETURN VALUE
-
-    When a stream socket peer has performed an orderly shutdown, the
-    return value will be 0 (the traditional "end-of-file" return).
-
-Currently, this works for blocking reads, but non-blocking reads will
-return -EAGAIN. This patch overwrites that return value when the peer
-won't send us any more data.
-
-Fixes: e27cca96cd68 ("xfrm: add espintcp (RFC 8229)")
-Reported-by: Andrew Cagney <cagney@libreswan.org>
-Tested-by: Andrew Cagney <cagney@libreswan.org>
-Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
+Fixes: 0f6c480f23f4 ("xfrm: Move dst->path into struct xfrm_dst")
+Fixes: b92cf4aab8e6 ("net: Create and use new helper xfrm_dst_child().")
 Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/espintcp.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ include/net/xfrm.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/xfrm/espintcp.c b/net/xfrm/espintcp.c
-index 5a0ff665b71a8..024470fb2d856 100644
---- a/net/xfrm/espintcp.c
-+++ b/net/xfrm/espintcp.c
-@@ -101,8 +101,11 @@ static int espintcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 	flags |= nonblock ? MSG_DONTWAIT : 0;
+diff --git a/include/net/xfrm.h b/include/net/xfrm.h
+index 31ff059b42904..7b616e45fbfcc 100644
+--- a/include/net/xfrm.h
++++ b/include/net/xfrm.h
+@@ -946,7 +946,7 @@ struct xfrm_dst {
+ static inline struct dst_entry *xfrm_dst_path(const struct dst_entry *dst)
+ {
+ #ifdef CONFIG_XFRM
+-	if (dst->xfrm) {
++	if (dst->xfrm || (dst->flags & DST_XFRM_QUEUE)) {
+ 		const struct xfrm_dst *xdst = (const struct xfrm_dst *) dst;
  
- 	skb = __skb_recv_datagram(sk, &ctx->ike_queue, flags, &off, &err);
--	if (!skb)
-+	if (!skb) {
-+		if (err == -EAGAIN && sk->sk_shutdown & RCV_SHUTDOWN)
-+			return 0;
- 		return err;
-+	}
- 
- 	copied = len;
- 	if (copied > skb->len)
+ 		return xdst->path;
+@@ -958,7 +958,7 @@ static inline struct dst_entry *xfrm_dst_path(const struct dst_entry *dst)
+ static inline struct dst_entry *xfrm_dst_child(const struct dst_entry *dst)
+ {
+ #ifdef CONFIG_XFRM
+-	if (dst->xfrm) {
++	if (dst->xfrm || (dst->flags & DST_XFRM_QUEUE)) {
+ 		struct xfrm_dst *xdst = (struct xfrm_dst *) dst;
+ 		return xdst->child;
+ 	}
 -- 
 2.25.1
 
