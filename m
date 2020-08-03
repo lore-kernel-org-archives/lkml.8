@@ -5,56 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2384C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E86C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEC5A20678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 543EF2054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:42:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458559;
-	bh=x8SQ6fLnmFmHi/7O0TIoixVz2StNQj93pC7LpaYtCec=;
+	s=default; t=1596458567;
+	bh=C8PD6oRY0Isp66vleS6E1szTsB0xCyrvx6x4AqQUzOk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BORze4z4o4UGzRud42esVNlO2c9FykvXzaaJgLBRae4LSFisCtP70bMiQhsVRwiFf
-	 JIHkl506sFeZwQouVx9SOvLvaYm2Es37atjQ9F/1Fz6oLqgo2LUOKmWbQznrjnyR8k
-	 ysS8i3a4gxbk6fLL1Totq7h7JrmlLxISWD7odYdc=
+	b=kKHD5/vJVVEXVLVn1ijtbafgSoiYFJTr55MRpbO5pPihsvSfmQlrL8PRK/O22FdSO
+	 ufrBJOnPaoYY5xA1Km+sQeoFJ94+mxaQWmYtap4aIrA9B5u3WiZG1M30YYLimlg15J
+	 W/KVQgB+KGZODKrxIpKIpwo5//AHiRlN8pQypulQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728593AbgHCMmj (ORCPT
+        id S1729476AbgHCMmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:42:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58398 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:42:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729145AbgHCMbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:31:04 -0400
+        id S1729133AbgHCMbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:31:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C169E204EC;
-        Mon,  3 Aug 2020 12:31:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06FEB2076B;
+        Mon,  3 Aug 2020 12:30:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457863;
-        bh=x8SQ6fLnmFmHi/7O0TIoixVz2StNQj93pC7LpaYtCec=;
+        s=default; t=1596457860;
+        bh=C8PD6oRY0Isp66vleS6E1szTsB0xCyrvx6x4AqQUzOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DEUKfXjfXIrohnYXnRoqvaa7mxKFCc7JRjOFuWG9GQFa9erCy7JzG9joBRLkqw5VA
-         QNmL2rXacWu7aAF+RUd6QHQRbmcEGtrGY92IxD2HNZtjZn1M1KD0o+Fq7DyMGM9lAl
-         f2ViM4NQnf13qkeGEBKylWV+ZF+YIMgwOlHt7E6I=
+        b=JTyP+dJvcLHvfHis2NYLcKnxMtXjOdgZFm9AKlmgF1QShiAsVHYf7cWzwR8mrwZ/u
+         1mAxP6EnYPL5D+PO7XlnSWOd+bjzBRgjai6wD2dSqreicYzamzk7lEpiNH3ej26s4E
+         NMtDSGYUIyfPVq0HALJ5J0oWPjPKt4ccHt99/ASw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matteo Croce <mcroce@redhat.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Gary R Hook <gary.hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 10/56] sctp: implement memory accounting on tx path
-Date:   Mon,  3 Aug 2020 14:19:25 +0200
-Message-Id: <20200803121850.821743926@linuxfoundation.org>
+Subject: [PATCH 4.19 01/56] crypto: ccp - Release all allocated memory if sha type is invalid
+Date:   Mon,  3 Aug 2020 14:19:16 +0200
+Message-Id: <20200803121850.381405558@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,61 +64,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 1033990ac5b2ab6cee93734cb6d301aa3a35bcaa ]
+[ Upstream commit 128c66429247add5128c03dc1e144ca56f05a4e2 ]
 
-Now when sending packets, sk_mem_charge() and sk_mem_uncharge() have been
-used to set sk_forward_alloc. We just need to call sk_wmem_schedule() to
-check if the allocated should be raised, and call sk_mem_reclaim() to
-check if the allocated should be reduced when it's under memory pressure.
+Release all allocated memory if sha type is invalid:
+In ccp_run_sha_cmd, if the type of sha is invalid, the allocated
+hmac_buf should be released.
 
-If sk_wmem_schedule() returns false, which means no memory is allowed to
-allocate, it will block and wait for memory to become available.
+v2: fix the goto.
 
-Note different from tcp, sctp wait_for_buf happens before allocating any
-skb, so memory accounting check is done with the whole msg_len before it
-too.
-
-Reported-by: Matteo Croce <mcroce@redhat.com>
-Tested-by: Matteo Croce <mcroce@redhat.com>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Acked-by: Gary R Hook <gary.hook@amd.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sctp/socket.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/crypto/ccp/ccp-ops.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/sctp/socket.c b/net/sctp/socket.c
-index c93be3ba5df29..df4a7d7c5ec04 100644
---- a/net/sctp/socket.c
-+++ b/net/sctp/socket.c
-@@ -1931,7 +1931,10 @@ static int sctp_sendmsg_to_asoc(struct sctp_association *asoc,
- 	if (sctp_wspace(asoc) < (int)msg_len)
- 		sctp_prsctp_prune(asoc, sinfo, msg_len - sctp_wspace(asoc));
- 
--	if (sctp_wspace(asoc) <= 0) {
-+	if (sk_under_memory_pressure(sk))
-+		sk_mem_reclaim(sk);
-+
-+	if (sctp_wspace(asoc) <= 0 || !sk_wmem_schedule(sk, msg_len)) {
- 		timeo = sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
- 		err = sctp_wait_for_sndbuf(asoc, &timeo, msg_len);
- 		if (err)
-@@ -8515,7 +8518,10 @@ static int sctp_wait_for_sndbuf(struct sctp_association *asoc, long *timeo_p,
- 			goto do_error;
- 		if (signal_pending(current))
- 			goto do_interrupted;
--		if ((int)msg_len <= sctp_wspace(asoc))
-+		if (sk_under_memory_pressure(sk))
-+			sk_mem_reclaim(sk);
-+		if ((int)msg_len <= sctp_wspace(asoc) &&
-+		    sk_wmem_schedule(sk, msg_len))
+diff --git a/drivers/crypto/ccp/ccp-ops.c b/drivers/crypto/ccp/ccp-ops.c
+index 330853a2702f0..43b74cf0787e1 100644
+--- a/drivers/crypto/ccp/ccp-ops.c
++++ b/drivers/crypto/ccp/ccp-ops.c
+@@ -1783,8 +1783,9 @@ ccp_run_sha_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
+ 			       LSB_ITEM_SIZE);
  			break;
+ 		default:
++			kfree(hmac_buf);
+ 			ret = -EINVAL;
+-			goto e_ctx;
++			goto e_data;
+ 		}
  
- 		/* Let another process have a go.  Since we are going
+ 		memset(&hmac_cmd, 0, sizeof(hmac_cmd));
 -- 
 2.25.1
 
