@@ -2,116 +2,148 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA504C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A98C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB30320678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:58:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=eclypsium.com header.i=@eclypsium.com header.b="INrGUnJr"
+	by mail.kernel.org (Postfix) with ESMTP id 5F63B20678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:59:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbgHCM6g (ORCPT
+        id S1726929AbgHCM7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:58:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47296 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727843AbgHCM6f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:58:35 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33052C06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 05:58:35 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id ed14so17257812qvb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 05:58:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eclypsium.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hMT0kXz5t1WlxhKdWYf7H/xItPGzEq+A55WtZ2+D4/I=;
-        b=INrGUnJrvvSk6e3+aV2VgzC0XESxwlRZvQcst2jXyBNpTkMHYyvuy8qp9Ut87dDQWG
-         y+aqedwp4Taqrqv94K3l9BkpYCF37e6KB/6Oj4roXPBX8SbTKWxSI8eRRlakZfCABbHv
-         /NoCR+7jDjWkKTqnC20Z+gEkUV89AAZsKMHcFOtfDeF0tEpSUhJlFUsw2q8dSaAaREX3
-         47vNOLCuofipKCY2DWZCOqF4K0DvLXMi+9BwL5eGKp+QaX1hyD9Qn6SWcnMhv7vktN2F
-         SINb5Jd0zS03FqG60FE3451vaoVPv23hkZ16Grbojnda2Tfl8EgZkyST1bijDHItC28p
-         ydtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hMT0kXz5t1WlxhKdWYf7H/xItPGzEq+A55WtZ2+D4/I=;
-        b=akjok1NPKv/dP1klMD1K5NgDH2yVFg3O9dqwJ0ZC5r+/qc8HGlgBlECIQSH4UwPGk5
-         llidx6+UQWr6Y+KIeBhhhuG/OGZz1Ebrj7idGmxQCJdjylL7I0JgrrDQP6O4fFGuL8up
-         Wrd5jEvSls7vWSakt0qw4V16M0DLEDZzV6fcEDoEvaJKMzq3XtDFs4ySHlfE3uHPsYZb
-         IWUZ2IDsm7FX+sHB8OKHJ1Ijfo1CbnXXb0GJ46t3lSqxScDK8Cq3nF6NKuaKOxYhZdV/
-         pQwuPi28EE5F49xfkPpYDcbTTar0JJdNh0DeRqKdh9UrPlMUrL5eOgBSN/zq2/+jdG0d
-         oiOw==
-X-Gm-Message-State: AOAM531oGKE9aE21C4E5KwhTre622RMdJh3g8V3va7fWEor3hYntL54m
-        24N15/X3mFjX+fBBoQA9d7V6ra/Ac3JKXo0RyeMltg==
-X-Google-Smtp-Source: ABdhPJxZmIwMOwJq4SwiSkCoJapyo5gtyYk7zA5OkjK+cKoeY/k56q8q8XGjCBAM2maXoOOquYPzasZBhozkWerzxHU=
-X-Received: by 2002:ad4:4cc9:: with SMTP id i9mr16260419qvz.131.1596459514234;
- Mon, 03 Aug 2020 05:58:34 -0700 (PDT)
+        Mon, 3 Aug 2020 08:59:20 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2557 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726478AbgHCM7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:59:19 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id A8DF816A36FAD6C13464;
+        Mon,  3 Aug 2020 13:59:18 +0100 (IST)
+Received: from [127.0.0.1] (10.210.168.55) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 3 Aug 2020
+ 13:59:17 +0100
+Subject: Re: [PATCH 4.14 01/51] scsi: libsas: direct call probe and destruct
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        yanaijie <yanaijie@huawei.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Ewan Milne <emilne@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Tomas Henzl <thenzl@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Hannes Reinecke <hare@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+References: <20200803121849.488233135@linuxfoundation.org>
+ <20200803121849.564535738@linuxfoundation.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <8743227b-adb3-ed1f-3559-e562555ac045@huawei.com>
+Date:   Mon, 3 Aug 2020 13:57:14 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-References: <20200724212853.11601-1-daniel.gutson@eclypsium.com>
- <20200803095720.GC1375436@lahna.fi.intel.com> <CAD2FfiFt6=OueX3E0g2ckPU+7F69yCmM0+bzF_6UD1sd4E_k_A@mail.gmail.com>
- <20200803102711.GK1375436@lahna.fi.intel.com>
-In-Reply-To: <20200803102711.GK1375436@lahna.fi.intel.com>
-From:   Daniel Gutson <daniel@eclypsium.com>
-Date:   Mon, 3 Aug 2020 09:58:23 -0300
-Message-ID: <CAFmMkTHSjQZJNzvUzLHHJ7sUTVX4BV6TwB=P8EO-HNk_cv8RKg@mail.gmail.com>
-Subject: Re: [PATCH] Module argument to control whether intel-spi-pci attempts
- to turn the SPI flash chip writeable
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Richard Hughes <hughsient@gmail.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Alex Bazhaniuk <alex@eclypsium.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200803121849.564535738@linuxfoundation.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.210.168.55]
+X-ClientProxiedBy: lhreml726-chm.china.huawei.com (10.201.108.77) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 3, 2020 at 7:27 AM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> On Mon, Aug 03, 2020 at 11:18:12AM +0100, Richard Hughes wrote:
-> > On Mon, 3 Aug 2020 at 10:57, Mika Westerberg
-> > <mika.westerberg@linux.intel.com> wrote:
-> > > I think instead of this we should simply make it so that the driver
-> > > never tries to make the chip writable.
-> >
-> > I think this is a good idea, but I wasn't sure if it was an acceptable
-> > behaviour change. Should the driver still try to set BCR_WPD when
-> > writing an image (i.e. defer the setting of write enable until later),
-> > or just not set the BCR register at all? I think your last comment was
-> > the latter, but wanted to check.
->
-> I would say not set it at all. I think it was (my) mistake to set it in
-> the first place.
+On 03/08/2020 13:19, Greg Kroah-Hartman wrote:
+> From: Jason Yan <yanaijie@huawei.com>
+> 
+> [ Upstream commit 0558f33c06bb910e2879e355192227a8e8f0219d ]
+> 
 
-Do you want me to remove the module parameter from intel-spi too and
-do the same?
+Hi Greg,
 
+This patch was one of a series from Jason to fix this WARN issue, below:
 
+https://lore.kernel.org/linux-scsi/8f6e3763-2b04-23e8-f1ec-8ed3c58f55d3@huawei.com/
 
--- 
-Daniel Gutson
-Argentina Site Director
-Enginieering Director
-Eclypsium
+I'm doubtful that it should be taken in isolation. Maybe 1 or 2 other 
+patches are required.
 
-Below The Surface: Get the latest threat research and insights on
-firmware and supply chain threats from the research team at Eclypsium.
-https://eclypsium.com/research/#threatreport
+The WARN was really annoying, so we could spend a bit of time to test a 
+backport of what is strictly required. Let us know.
+
+Thanks,
+John
+
+> In commit 87c8331fcf72 ("[SCSI] libsas: prevent domain rediscovery
+> competing with ata error handling") introduced disco mutex to prevent
+> rediscovery competing with ata error handling and put the whole
+> revalidation in the mutex. But the rphy add/remove needs to wait for the
+> error handling which also grabs the disco mutex. This may leads to dead
+> lock.So the probe and destruct event were introduce to do the rphy
+> add/remove asynchronously and out of the lock.
+> 
+> The asynchronously processed workers makes the whole discovery process
+> not atomic, the other events may interrupt the process. For example,
+> if a loss of signal event inserted before the probe event, the
+> sas_deform_port() is called and the port will be deleted.
+> 
+> And sas_port_delete() may run before the destruct event, but the
+> port-x:x is the top parent of end device or expander. This leads to
+> a kernel WARNING such as:
+> 
+> [   82.042979] sysfs group 'power' not found for kobject 'phy-1:0:22'
+> [   82.042983] ------------[ cut here ]------------
+> [   82.042986] WARNING: CPU: 54 PID: 1714 at fs/sysfs/group.c:237
+> sysfs_remove_group+0x94/0xa0
+> [   82.043059] Call trace:
+> [   82.043082] [<ffff0000082e7624>] sysfs_remove_group+0x94/0xa0
+> [   82.043085] [<ffff00000864e320>] dpm_sysfs_remove+0x60/0x70
+> [   82.043086] [<ffff00000863ee10>] device_del+0x138/0x308
+> [   82.043089] [<ffff00000869a2d0>] sas_phy_delete+0x38/0x60
+> [   82.043091] [<ffff00000869a86c>] do_sas_phy_delete+0x6c/0x80
+> [   82.043093] [<ffff00000863dc20>] device_for_each_child+0x58/0xa0
+> [   82.043095] [<ffff000008696f80>] sas_remove_children+0x40/0x50
+> [   82.043100] [<ffff00000869d1bc>] sas_destruct_devices+0x64/0xa0
+> [   82.043102] [<ffff0000080e93bc>] process_one_work+0x1fc/0x4b0
+> [   82.043104] [<ffff0000080e96c0>] worker_thread+0x50/0x490
+> [   82.043105] [<ffff0000080f0364>] kthread+0xfc/0x128
+> [   82.043107] [<ffff0000080836c0>] ret_from_fork+0x10/0x50
+> 
+> Make probe and destruct a direct call in the disco and revalidate function,
+> but put them outside the lock. The whole discovery or revalidate won't
+> be interrupted by other events. And the DISCE_PROBE and DISCE_DESTRUCT
+> event are deleted as a result of the direct call.
+> 
+> Introduce a new list to destruct the sas_port and put the port delete after
+> the destruct. This makes sure the right order of destroying the sysfs
+> kobject and fix the warning above.
+> 
+> In sas_ex_revalidate_domain() have a loop to find all broadcasted
+> device, and sometimes we have a chance to find the same expander twice.
+> Because the sas_port will be deleted at the end of the whole revalidate
+> process, sas_port with the same name cannot be added before this.
+> Otherwise the sysfs will complain of creating duplicate filename. Since
+> the LLDD will send broadcast for every device change, we can only
+> process one expander's revalidation.
+> 
+> [mkp: kbuild test robot warning]
+> 
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> CC: John Garry <john.garry@huawei.com>
+> CC: Johannes Thumshirn <jthumshirn@suse.de>
+> CC: Ewan Milne <emilne@redhat.com>
+> CC: Christoph Hellwig <hch@lst.de>
+> CC: Tomas Henzl <thenzl@redhat.com>
+> CC: Dan Williams <dan.j.williams@intel.com>
+> Reviewed-by: Hannes Reinecke <hare@suse.com>
+> Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+
