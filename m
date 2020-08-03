@@ -2,62 +2,67 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F329C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5F6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6995D206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 170AA2076E
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:50:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NGJ+cGs/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t1rTR360"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727808AbgHCOrp (ORCPT
+        id S1728075AbgHCOuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 10:47:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35830 "EHLO
+        Mon, 3 Aug 2020 10:50:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbgHCOrp (ORCPT
+        with ESMTP id S1727844AbgHCOrt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 10:47:45 -0400
-Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBCAFC06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 07:47:44 -0700 (PDT)
-Received: by mail-qv1-xf4a.google.com with SMTP id r12so2190303qvx.20
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 07:47:44 -0700 (PDT)
+        Mon, 3 Aug 2020 10:47:49 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E33D2C06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 07:47:48 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id a130so25410103qkg.9
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 07:47:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=jSEcpjJOquc529ZwoycPhflNQKRcL97Z3GUPK/MTFhg=;
-        b=NGJ+cGs/7Y5yanvxauvBQNlpaQtun8x5OXswBR95fjESI+Q1GyxIm26mBIJiQZlchx
-         DnHpQPnaiAYiQeJ7fbILu6QdY5Rd11V8/qKJe4l/2w1iWVLomfjMRhY7F1HbDB+a88/v
-         OxW7fJVYu/9qupGnZQbIDl8RQ39QYHWJjpj6Y7eEVD2A8NOnmSLcJvTqsh8RSUHTZPrm
-         iB78LpIkLOgboZguy+rRN/6HLRUkZASiQtIdBkfmKC7u09IfxeH6wtHsiiiO6m7p/yy5
-         JixVWy5wqO/esbMdb7V3i86xLFulz50ivT2vhoOcOZ+NFnlgeqV1YkGRMJJ5EjFVX0il
-         hJDg==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=yEtE51ZkZ89myWk79FRCGMzR6DiPPNgcqkWBItHzQ6s=;
+        b=t1rTR3609fZavoZD6hGkSsSWDr9nI1/YkdhLNf0ojphXhpqrjYtn2QmhC+W/gkvimg
+         AMTj6PP4Rr26vC5qnxMVLP8ZXj2mvSyHcLtN7NTD3GvFDmmeReFr0s4F/UMZqW82I1g+
+         Dr2Z/WzdPu1RdbA1YmGLFdz8BghYnww1NBBlSY+6I9r3aq9SpAN2yEXku55avULjgjeR
+         wbdd0+d7Js097V3esnE9Zp3yRqLvLrD/D5lAoObteLNHtFqv+wIpvThQwIPjxSfSQHJA
+         7Nvv9QfJik4hcZHlF/286VGx9pliyj8hQuAw0OzqKiZAgbFEPs15yA8D9Br8GJTj/mTJ
+         PaOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=jSEcpjJOquc529ZwoycPhflNQKRcL97Z3GUPK/MTFhg=;
-        b=seGN8mqQn+BmqVaLnL5vQaZjrJ/w8eUCG/wRy9gsNBc8ZFI2AoSi5hMqsAwNTaNXBM
-         OlhZxcO99jQuHidPo3yjE+r7v2vP4Ge8wIlUbHvdLbHWl2imz4Qmzu0N4+qdo0JN5Wn1
-         RDbJCQ+P3E3poLzuPYIjSVcgdyOp1GO9Qw0RSkd7r1b+2UKmb3zDGF1nnux3FQV1mPTd
-         dQ9h7lV+D7L1DHleZAoxX5K1lFdCRGuCRnogr2QFm64p3ubYvoHiNvmacpM8/cmB/I7L
-         fJ97H7tQneRqyMKke+vL1aIQ8HTBfTpaD7AEf/pN0FohR217zZu11Oe/oPwC7pjSRTxP
-         EIfw==
-X-Gm-Message-State: AOAM53111xWi1g/TvaKFYhrkij9j8Ovg8VZeMWjkBGefk2qfMN/XIRzs
-        6/psXXb50x+3CqnOZAiI4ckxe2dEUPeWt5HEpA==
-X-Google-Smtp-Source: ABdhPJw7sHEqkxXBQdZEh6QBRcoghAHfysqJXJXhfAsQDkKtCR//v760mqThiImnXfcrSB5dpdxJ6/pM/TKRNguNpQ==
-X-Received: by 2002:ad4:4482:: with SMTP id m2mr15332118qvt.102.1596466063346;
- Mon, 03 Aug 2020 07:47:43 -0700 (PDT)
-Date:   Mon,  3 Aug 2020 14:47:17 +0000
-Message-Id: <20200803144719.3184138-1-kaleshsingh@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=yEtE51ZkZ89myWk79FRCGMzR6DiPPNgcqkWBItHzQ6s=;
+        b=h5uowH9AgbSSIA1Hr13Zfaihck9vNSvFFJt1tyDoLBBuIJWjYZtlX/M5YIdCQXRfHw
+         vHkcvoFaGc3mPF4DyAuqV5N3m5Qnxg4q4KaNKOL9d/uQGdubq1YXohC2os264jZ9x4dM
+         hyFl/mK8dqygTyLLot4JjlsC+jgtvERkqGafHJO/SEWR70MNg6Q0GlJObUmc0MJmrSPq
+         8PIGdhnBZuMRX1x6Ul84Pi5BYH9iv8RiUaV7qdJ/SiU0sXmM2K4IbxdENafKt8iT8Svj
+         LRhiV0n6wE2qEiKtoyxnC8bQUZJKDPlL8dSH48aqaJvESHlF4/kuw7yYGniJIgRImArr
+         FP+Q==
+X-Gm-Message-State: AOAM5326hH5GnAKVKFMrED6kAWUNxywIEXh+go/v5mG954zwFVR8bR8F
+        qDfbh3TjCBHLqbPiD5/ugJaIb95KUbgEq5wYEg==
+X-Google-Smtp-Source: ABdhPJw9FuulIu0ymOE9kGuQtwFH4SdlEeYnPFzJ+4tzAm9Tdqz+V6p7Q/zMMMduM+pHUwYFb/16WTJ/nRJFAJbl1A==
+X-Received: by 2002:a0c:c3d0:: with SMTP id p16mr17210039qvi.54.1596466068074;
+ Mon, 03 Aug 2020 07:47:48 -0700 (PDT)
+Date:   Mon,  3 Aug 2020 14:47:19 +0000
+In-Reply-To: <20200803144719.3184138-1-kaleshsingh@google.com>
+Message-Id: <20200803144719.3184138-3-kaleshsingh@google.com>
 Mime-Version: 1.0
+References: <20200803144719.3184138-1-kaleshsingh@google.com>
 X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-Subject: [PATCH 0/2] Per process tracking of dma buffers
+Subject: [PATCH 2/2] dmabuf/tracing: Add dma-buf trace events
 From:   Kalesh Singh <kaleshsingh@google.com>
 To:     Jonathan Corbet <corbet@lwn.net>,
         Sumit Semwal <sumit.semwal@linaro.org>,
@@ -78,21 +83,177 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since debugfs doesn't have stable abi. This patch series enables per
-process accounting of dma buffers using trace events.
+Being able to analyze the per process usage of shared
+dma buffers prodives useful insights in situations where
+the system is experiencing high memory pressure. This would
+allow us to see exactly which processes are holding references
+to the shared buffer.
 
-Kalesh Singh (2):
-  fs: Add fd_install file operation
-  dmabuf/tracing: Add dma-buf trace events
-
- Documentation/filesystems/vfs.rst |  5 ++
- drivers/dma-buf/dma-buf.c         | 29 ++++++++++++
- fs/file.c                         |  3 ++
- include/linux/fs.h                |  1 +
- include/trace/events/dma_buf.h    | 77 +++++++++++++++++++++++++++++++
- 5 files changed, 115 insertions(+)
+Signed-off-by: Kalesh Singh <kaleshsingh@google.com>
+---
+ drivers/dma-buf/dma-buf.c      | 29 +++++++++++++
+ include/trace/events/dma_buf.h | 77 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 106 insertions(+)
  create mode 100644 include/trace/events/dma_buf.h
 
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index 1ca609f66fdf..1729191ac9ca 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -29,6 +29,9 @@
+ #include <uapi/linux/dma-buf.h>
+ #include <uapi/linux/magic.h>
+ 
++#define CREATE_TRACE_POINTS
++#include <trace/events/dma_buf.h>
++
+ static inline int is_dma_buf_file(struct file *);
+ 
+ struct dma_buf_list {
+@@ -110,6 +113,15 @@ static struct file_system_type dma_buf_fs_type = {
+ 	.kill_sb = kill_anon_super,
+ };
+ 
++static void dma_buf_vma_close(struct vm_area_struct *area)
++{
++	trace_dma_buf_map_ref_dec(current, area->vm_file);
++}
++
++static const struct vm_operations_struct dma_buf_vm_ops = {
++	.close = dma_buf_vma_close,
++};
++
+ static int dma_buf_mmap_internal(struct file *file, struct vm_area_struct *vma)
+ {
+ 	struct dma_buf *dmabuf;
+@@ -128,6 +140,9 @@ static int dma_buf_mmap_internal(struct file *file, struct vm_area_struct *vma)
+ 	    dmabuf->size >> PAGE_SHIFT)
+ 		return -EINVAL;
+ 
++	trace_dma_buf_map_ref_inc(current, file);
++	vma->vm_ops = &dma_buf_vm_ops;
++
+ 	return dmabuf->ops->mmap(dmabuf, vma);
+ }
+ 
+@@ -410,6 +425,17 @@ static void dma_buf_show_fdinfo(struct seq_file *m, struct file *file)
+ 	spin_unlock(&dmabuf->name_lock);
+ }
+ 
++static int dma_buf_flush(struct file *filp, fl_owner_t id)
++{
++	trace_dma_buf_fd_ref_dec(current, filp);
++	return 0;
++}
++
++static void dma_buf_fd_install(int fd, struct file *filp)
++{
++	trace_dma_buf_fd_ref_inc(current, filp);
++}
++
+ static const struct file_operations dma_buf_fops = {
+ 	.mmap		= dma_buf_mmap_internal,
+ 	.llseek		= dma_buf_llseek,
+@@ -417,6 +443,8 @@ static const struct file_operations dma_buf_fops = {
+ 	.unlocked_ioctl	= dma_buf_ioctl,
+ 	.compat_ioctl	= compat_ptr_ioctl,
+ 	.show_fdinfo	= dma_buf_show_fdinfo,
++	.fd_install	= dma_buf_fd_install,
++	.flush		= dma_buf_flush,
+ };
+ 
+ /*
+@@ -1177,6 +1205,7 @@ int dma_buf_mmap(struct dma_buf *dmabuf, struct vm_area_struct *vma,
+ 		if (oldfile)
+ 			fput(oldfile);
+ 	}
++
+ 	return ret;
+ 
+ }
+diff --git a/include/trace/events/dma_buf.h b/include/trace/events/dma_buf.h
+new file mode 100644
+index 000000000000..05af336cd849
+--- /dev/null
++++ b/include/trace/events/dma_buf.h
+@@ -0,0 +1,77 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM dma_buf
++
++#if !defined(_TRACE_DMA_BUF_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_DMA_BUF_H
++
++#include <linux/dma-buf.h>
++#include <linux/tracepoint.h>
++#include <linux/types.h>
++
++#define UNKNOWN "<unknown>"
++
++#ifdef CREATE_TRACE_POINTS
++static inline struct dma_buf *dma_buffer(struct file *filp)
++{
++	return filp->private_data;
++}
++#endif
++
++DECLARE_EVENT_CLASS(dma_buf_ref_template,
++
++	TP_PROTO(struct task_struct *task, struct file *filp),
++
++	TP_ARGS(task,  filp),
++
++	TP_STRUCT__entry(
++		__field(u32, tgid)
++		__field(u32, pid)
++		__field(u64, size)
++		__field(s64, count)
++		__string(exp_name, dma_buffer(filp)->exp_name)
++		__string(name, dma_buffer(filp)->name ? dma_buffer(filp)->name : UNKNOWN)
++		__field(u64, i_ino)
++	),
++
++	TP_fast_assign(
++		__entry->tgid = task->tgid;
++		__entry->pid = task->pid;
++		__entry->size = dma_buffer(filp)->size;
++		__entry->count = file_count(filp);
++		__assign_str(exp_name, dma_buffer(filp)->exp_name);
++		__assign_str(name, dma_buffer(filp)->name ? dma_buffer(filp)->name : UNKNOWN);
++		__entry->i_ino = filp->f_inode->i_ino;
++	),
++
++	TP_printk("tgid=%u pid=%u size=%llu count=%lld exp_name=%s name=%s i_ino=%llu",
++		__entry->tgid,
++		__entry->pid,
++		__entry->size,
++		__entry->count,
++		__get_str(exp_name),
++		__get_str(name),
++		__entry->i_ino
++	)
++);
++
++DEFINE_EVENT(dma_buf_ref_template, dma_buf_fd_ref_inc,
++	TP_PROTO(struct task_struct *task, struct file *filp),
++	TP_ARGS(task,  filp));
++
++DEFINE_EVENT(dma_buf_ref_template, dma_buf_fd_ref_dec,
++	TP_PROTO(struct task_struct *task, struct file *filp),
++	TP_ARGS(task,  filp));
++
++DEFINE_EVENT(dma_buf_ref_template, dma_buf_map_ref_inc,
++	TP_PROTO(struct task_struct *task, struct file *filp),
++	TP_ARGS(task,  filp));
++
++DEFINE_EVENT(dma_buf_ref_template, dma_buf_map_ref_dec,
++	TP_PROTO(struct task_struct *task, struct file *filp),
++	TP_ARGS(task,  filp));
++
++#endif /* _TRACE_DMA_BUF_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
 -- 
 2.28.0.163.g6104cc2f0b6-goog
 
