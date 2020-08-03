@@ -2,91 +2,102 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10193C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27291C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25A6720722
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:27:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596493674;
-	bh=biJ2kOlDYdY6/OLDAJ8JB5eojvMm10XWknHfh7Rdrbw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Qi/IvS3bfMSaMac3dIu5lE18NvKgLFB19+UXsVd8pU8qlS64s6hZmdd+zJEhAebv/
-	 5pVQreoDzQTxz2cImhZOT77Wk/FzQ4sv6tncs4WOQvmFwMWZJ8PZkk6Qwd7OxMQ6EO
-	 hh8Tori8WohDC6lAvKDYvLNq7IGIFejIbdZPISIs=
+	by mail.kernel.org (Postfix) with ESMTP id 45578208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:28:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgHCW1x (ORCPT
+        id S1727923AbgHCW2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 18:27:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60958 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbgHCW1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 18:27:52 -0400
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34B3720722;
-        Mon,  3 Aug 2020 22:27:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596493672;
-        bh=biJ2kOlDYdY6/OLDAJ8JB5eojvMm10XWknHfh7Rdrbw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=eoVHkOQVag6krs4G4hOfe5G/U9F8Eh7Ys8RHj4U8EuM2Ej3M7RMrHZoou78u8Odmz
-         fq5WXKDlqqOhjIQWrwEBJYmdckvI9S8NHeaQTq72eoaNVrS6Z6wGXZn68WZoFdDaTY
-         rHZSK33xF+whVobDtUwR8E11gllrlMSOKorN0ldU=
-Received: by mail-oi1-f181.google.com with SMTP id 25so11102848oir.0;
-        Mon, 03 Aug 2020 15:27:52 -0700 (PDT)
-X-Gm-Message-State: AOAM533OJ9s6+lHv4I1+PRbyjc+5KW5p8WoWmvoWR3L3FzSVY9o3tTs3
-        0B6h8hG2SC+N1uhzQyXPlq8zmydK3y21ykv3XQ==
-X-Google-Smtp-Source: ABdhPJzfbyIHX+2tZSmvIz2Nt9s/AOwqnX2gnwQT6MnE5sNL8J6Y4AMY5vGmmxRSX4u4/WbOE7kyaV+1/ltEPpe0pHc=
-X-Received: by 2002:aca:c3d8:: with SMTP id t207mr533646oif.152.1596493671416;
- Mon, 03 Aug 2020 15:27:51 -0700 (PDT)
+        Mon, 3 Aug 2020 18:28:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50552 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgHCW2o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 18:28:44 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98278C06174A;
+        Mon,  3 Aug 2020 15:28:44 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k2iwZ-008hXp-IY; Mon, 03 Aug 2020 22:28:31 +0000
+Date:   Mon, 3 Aug 2020 23:28:31 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Suren Baghdasaryan <surenb@google.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-doc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
+        Hridya Valsaraju <hridya@google.com>,
+        Ioannis Ilkos <ilkos@google.com>,
+        John Stultz <john.stultz@linaro.org>,
+        kernel-team <kernel-team@android.com>
+Subject: Re: [PATCH 2/2] dmabuf/tracing: Add dma-buf trace events
+Message-ID: <20200803222831.GI1236603@ZenIV.linux.org.uk>
+References: <20200803144719.3184138-1-kaleshsingh@google.com>
+ <20200803144719.3184138-3-kaleshsingh@google.com>
+ <20200803154125.GA23808@casper.infradead.org>
+ <CAJuCfpFLikjaoopvt+vGN3W=m9auoK+DLQNgUf-xUbYfC=83Mw@mail.gmail.com>
+ <20200803161230.GB23808@casper.infradead.org>
+ <CAJuCfpGot1Lr+eS_AU30gqrrjc0aFWikxySe0667_GTJNsGTMw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200731100248.26982-1-nsaenzjulienne@suse.de>
- <CAL_JsqKu4CB7-b_hRvu63c9jQ_S91epWMr=P__9Fu-h_WFR-_Q@mail.gmail.com> <9200970a917a9cabdc5b17483b5a8725111eb9d0.camel@suse.de>
-In-Reply-To: <9200970a917a9cabdc5b17483b5a8725111eb9d0.camel@suse.de>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 3 Aug 2020 16:27:39 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+oQyQhAaB-jP8MxKp9jTEbr4c0oxPY5FiwmQRcnqJOdg@mail.gmail.com>
-Message-ID: <CAL_Jsq+oQyQhAaB-jP8MxKp9jTEbr4c0oxPY5FiwmQRcnqJOdg@mail.gmail.com>
-Subject: Re: [PATCH] of: unittest: Use bigger address cells to catch parser regressions
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJuCfpGot1Lr+eS_AU30gqrrjc0aFWikxySe0667_GTJNsGTMw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 3, 2020 at 8:25 AM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
->
-> Getting address and size cells for dma-ranges/ranges parsing is tricky
-> and shouldn't rely on the node's count_cells() method. The function
-> starts looking for cells on the parent node, as its supposed to work
-> with device nodes, which doesn't work when input with bus nodes, as
-> generally done when parsing ranges.
->
-> Add test to catch regressions on that specific quirk as developers will
-> be tempted to edit it out in favor of the default method.
->
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
->  drivers/of/unittest-data/tests-address.dtsi | 10 +++++-----
->  drivers/of/unittest.c                       |  2 +-
->  2 files changed, 6 insertions(+), 6 deletions(-)
+On Mon, Aug 03, 2020 at 09:22:53AM -0700, Suren Baghdasaryan wrote:
+> On Mon, Aug 3, 2020 at 9:12 AM Matthew Wilcox <willy@infradead.org> wrote:
+> >
+> > On Mon, Aug 03, 2020 at 09:00:00AM -0700, Suren Baghdasaryan wrote:
+> > > On Mon, Aug 3, 2020 at 8:41 AM Matthew Wilcox <willy@infradead.org> wrote:
+> > > >
+> > > > On Mon, Aug 03, 2020 at 02:47:19PM +0000, Kalesh Singh wrote:
+> > > > > +static void dma_buf_fd_install(int fd, struct file *filp)
+> > > > > +{
+> > > > > +     trace_dma_buf_fd_ref_inc(current, filp);
+> > > > > +}
+> > > >
+> > > > You're adding a new file_operation in order to just add a new tracepoint?
+> > > > NACK.
+> > >
+> > > Hi Matthew,
+> > > The plan is to attach a BPF to this tracepoint in order to track
+> > > dma-buf users. If you feel this is an overkill, what would you suggest
+> > > as an alternative?
+> >
+> > I'm sure BPF can attach to fd_install and filter on file->f_ops belonging
+> > to dma_buf, for example.
+> 
+> Sounds like a workable solution. Will explore that direction. Thanks Matthew!
 
-Applied, thanks.
+No, it is not a solution at all.
 
-Rob
+What kind of locking would you use?  With _any_ of those approaches.
+
+How would you use the information that is hopelessly out of date/incoherent/whatnot
+at the very moment you obtain it?
+
+IOW, what the hell is that horror for?  You do realize, for example, that there's
+such thing as dup(), right?  And dup2() as well.  And while we are at it, how
+do you keep track of removals, considering the fact that you can stick a file
+reference into SCM_RIGHTS datagram sent to yourself, close descriptors and an hour
+later pick that datagram, suddenly getting descriptor back?
+
+Besides, "I have no descriptors left" != "I can't be currently sitting in the middle
+of syscall on that sucker"; close() does *NOT* terminate ongoing operations.
+
+You are looking at the drastically wrong abstraction level.  Please, describe what
+it is that you are trying to achieve.
