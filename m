@@ -2,238 +2,168 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E63C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89829C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 806C92054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62A83206DA
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:27:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="gFL1De2x"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="qcj5wBRR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbgHCF1G (ORCPT
+        id S1728023AbgHCF1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 01:27:06 -0400
-Received: from mx07-00178001.pphosted.com ([185.132.182.106]:19648 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726216AbgHCF1G (ORCPT
+        Mon, 3 Aug 2020 01:27:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726216AbgHCF1d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 01:27:06 -0400
-X-Greylist: delayed 490 seconds by postgrey-1.27 at vger.kernel.org; Mon, 03 Aug 2020 01:27:05 EDT
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0735GR6a020633;
-        Mon, 3 Aug 2020 07:26:57 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=cDA+cqjXgSwkoE7fs7oSbNh+/jtYbRrtkDdblBLNN2o=;
- b=gFL1De2x5VEJ7xQjcpo6vHRc/6tQ29mAbfp1REIjVahBFRwbGNVYDmpuHPcfOlTUVvup
- 2lw1F4Um1FzV71o3Ku6wJYdgTv1MWvWjnF33h8OQkGb9jl5LTeWKy5A8ZFTQHCGwARv5
- 7oGrYGXXX4qBlEJ0jl+AX3w7IUcUFM0ry9f+9jpoL9C9NutbH3Io2ootYpBp4scAARdk
- zVPzjPjDybN22JWDmlIEcV/CB1OO5iw75HhrvkC1rBxnsZo8i09dG1Fbx9L7cpe/euk0
- MkyckZHuDamuIrPPlO8XKEkJ6DlsuDPn+4Y2K22fVZLI6WdylqUW7q6rfzd1cEZwV/MS hA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32n6savwcm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 03 Aug 2020 07:26:57 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4D142100034;
-        Mon,  3 Aug 2020 07:26:57 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3B41920B859;
-        Mon,  3 Aug 2020 07:26:57 +0200 (CEST)
-Received: from localhost (10.75.127.50) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 3 Aug 2020 07:26:56
- +0200
-From:   Alain Volmat <alain.volmat@st.com>
-To:     <wsa@kernel.org>, <pierre-yves.mordret@st.com>
-CC:     <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
-        <alain.volmat@st.com>
-Subject: [PATCH] i2c: stm32f7: add SMBus-Alert support
-Date:   Mon, 3 Aug 2020 07:26:56 +0200
-Message-ID: <1596432416-24636-1-git-send-email-alain.volmat@st.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 3 Aug 2020 01:27:33 -0400
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2067C06174A
+        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 22:27:32 -0700 (PDT)
+Received: by mail-wm1-x329.google.com with SMTP id k20so14231887wmi.5
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 22:27:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=69cyjrW66mX1zu+gVhNvv/8lhHh7361866nLFNhNGiI=;
+        b=qcj5wBRRvKjFo6kVtZzpSdLkRSM+ierYoIfz7ZKWT+UWsytwpSW25SAlXu1Y8YDwZM
+         JIF/EyeAc2vfXf4esNGTDRCsW0lhMZFEUeEmSZPCPfAoC7P9rsQjpVPEwSb8Mki0n8QB
+         BRXU9dxzyvt/OMM+SpPod21DP2kFQv/YLL6UCPARe5yHrXdJ3DnFjEvWyLTC6Fr7LjdU
+         ZQofX8GyQHPS6FHKX8maBMg+oJ7TzMIldpgWG4GyXYC8m+o4Gq34zXURZZQ7A7epHjfl
+         ENrxTq395lDUn3jA0JJspqQrS+zWDXJBjfXGQBj+CYRzujPFJyUbIAlxIWqPEYy97RzX
+         DBAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=69cyjrW66mX1zu+gVhNvv/8lhHh7361866nLFNhNGiI=;
+        b=FDkcRn7PgSLtixZr5Vq3zJB0KoAwY4MnozYSNPbopJCRuO+YF4zkPX3Rntm3dH5XJD
+         mvDQowfY+zeVRq4s82XWkaMHkSjiOEiuSwQ+A35tkRwpFgHKMA+2SLjVkK+2UthWodI4
+         8NBBLMWadTIYJo+k0QGv1eWgxTAkQ/VFNo8y1vRzB3szEcpbxGhS2mWK1hCvJMJ7RHBg
+         yM4040rfqvkSJi+dOR6Bcz0UK7yKxRbCcUghHSCkAQxlUXMDMRKZyYGkjYXp89nUqXdI
+         H4VI+PoFl35jezZevTnA1KAvdw1QURNyYTuEJdsvb1OPAHrawgdyHX7ZikjRVB4HMHX/
+         uwLA==
+X-Gm-Message-State: AOAM531qGej6a/52cDzmVmB0FA/29ACvhDZzAN4heD9Ktiuh+/zCCqpz
+        SrABbvzzEXfMlc6PSjhAxUc=
+X-Google-Smtp-Source: ABdhPJzM6tZWf6BWLb2Asf2dXWIcOR53Z94QP6ekhDPyGdKdXRWQBjBY6Y3y4sJ2d5pPO3afg9qxkQ==
+X-Received: by 2002:a1c:c906:: with SMTP id f6mr3163640wmb.5.1596432451691;
+        Sun, 02 Aug 2020 22:27:31 -0700 (PDT)
+Received: from [192.168.1.20] ([213.122.218.185])
+        by smtp.googlemail.com with ESMTPSA id x204sm34200548wmg.2.2020.08.02.22.27.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Aug 2020 22:27:31 -0700 (PDT)
+Subject: Re: PATCH: rtsx_pci driver - don't disable the rts5229 card reader on
+ Intel NUC boxes
+To:     =?UTF-8?B?5ZCz5piK5r6EIFJpY2t5?= <ricky_wu@realtek.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "philquadra@gmail.com" <philquadra@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+References: <862172f0-cd23-800c-27b1-27cb49e99099@googlemail.com>
+ <a9a94d7f-4873-7a10-4911-f3c760257c5c@googlemail.com>
+ <7c3f6a03f8cc4cb1ac69ec7322fba3d3@realtek.com>
+From:   Chris Clayton <chris2553@googlemail.com>
+Message-ID: <96b1fe92-4199-1c9a-523e-58bdd2d3a9db@googlemail.com>
+Date:   Mon, 3 Aug 2020 06:27:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.1.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-03_04:2020-07-31,2020-08-03 signatures=0
+In-Reply-To: <7c3f6a03f8cc4cb1ac69ec7322fba3d3@realtek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the SMBus-Alert protocol.
+Hi, Ricky
 
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
----
- This patch has to be integrated on top of the patch
- 'i2c: stm32f7: Add SMBus Host-Notify protocol support' since SMBus Alert is
- enabled by the DT binding 'smbus' introduced in that patch.
+On 03/08/2020 04:01, 吳昊澄 Ricky wrote:
+> Hi Chris，
+> 
+> We don’t think this is our bug...
+> This register(FPDCTL) write to OC_POWER_DOWN is for our power saving feature, not to disable the reader
+> In your case, we cannot reproduce this on our side that we mention before, we don’t have the platform(Intel NUC Tall Arches Canyon NUC6CAYH Celeron J345) to see this issue
+> But we think this issue maybe only on this platform, our RTS5229 works well on the new kernel all platform that we have  
+> 
+> Ricky    
 
- drivers/i2c/busses/i2c-stm32f7.c | 71 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
+Perhaps I should have used the word regression rather than bug. I didn't buy the machine until earlier this year, but
+other people who have reported this problem have indicated that until bede03a579b3 was applied (during the 5.1 merge
+window), the driver supported the card reader on this on the Intel NUC boxes. I know that is true because I built and
+tested a 5.0 kernel and the card reader worked fine. I've also built and tested an 5.1-rc1 kernel and the card reader no
+longer works. Whether by design or by accident, the card reader worked and now it doesn't. That's a regression in my book!
 
-diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
-index 223c238c3c09..fe7641da54ef 100644
---- a/drivers/i2c/busses/i2c-stm32f7.c
-+++ b/drivers/i2c/busses/i2c-stm32f7.c
-@@ -51,6 +51,7 @@
- 
- /* STM32F7 I2C control 1 */
- #define STM32F7_I2C_CR1_PECEN			BIT(23)
-+#define STM32F7_I2C_CR1_ALERTEN			BIT(22)
- #define STM32F7_I2C_CR1_SMBHEN			BIT(20)
- #define STM32F7_I2C_CR1_WUPEN			BIT(18)
- #define STM32F7_I2C_CR1_SBC			BIT(16)
-@@ -123,6 +124,7 @@
- 				(((n) & STM32F7_I2C_ISR_ADDCODE_MASK) >> 17)
- #define STM32F7_I2C_ISR_DIR			BIT(16)
- #define STM32F7_I2C_ISR_BUSY			BIT(15)
-+#define STM32F7_I2C_ISR_ALERT			BIT(13)
- #define STM32F7_I2C_ISR_PECERR			BIT(11)
- #define STM32F7_I2C_ISR_ARLO			BIT(9)
- #define STM32F7_I2C_ISR_BERR			BIT(8)
-@@ -136,6 +138,7 @@
- #define STM32F7_I2C_ISR_TXE			BIT(0)
- 
- /* STM32F7 I2C Interrupt Clear */
-+#define STM32F7_I2C_ICR_ALERTCF			BIT(13)
- #define STM32F7_I2C_ICR_PECCF			BIT(11)
- #define STM32F7_I2C_ICR_ARLOCF			BIT(9)
- #define STM32F7_I2C_ICR_BERRCF			BIT(8)
-@@ -277,6 +280,17 @@ struct stm32f7_i2c_msg {
- };
- 
- /**
-+ * struct stm32f7_i2c_alert - SMBus alert specific data
-+ * @setup: platform data for the smbus_alert i2c client
-+ * @ara: I2C slave device used to respond to the SMBus Alert with Alert
-+ * Response Address
-+ */
-+struct stm32f7_i2c_alert {
-+	struct i2c_smbus_alert_setup setup;
-+	struct i2c_client *ara;
-+};
-+
-+/**
-  * struct stm32f7_i2c_dev - private data of the controller
-  * @adap: I2C adapter for this controller
-  * @dev: device for this controller
-@@ -305,6 +319,7 @@ struct stm32f7_i2c_msg {
-  * @wakeup_src: boolean to know if the device is a wakeup source
-  * @smbus_mode: states that the controller is configured in SMBus mode
-  * @host_notify_client: SMBus host-notify client
-+ * @alert: SMBus alert specific data
-  */
- struct stm32f7_i2c_dev {
- 	struct i2c_adapter adap;
-@@ -333,6 +348,7 @@ struct stm32f7_i2c_dev {
- 	bool wakeup_src;
- 	bool smbus_mode;
- 	struct i2c_client *host_notify_client;
-+	struct stm32f7_i2c_alert *alert;
- };
- 
- /*
-@@ -1601,6 +1617,13 @@ static irqreturn_t stm32f7_i2c_isr_error(int irq, void *data)
- 		f7_msg->result = -EINVAL;
- 	}
- 
-+	if (status & STM32F7_I2C_ISR_ALERT) {
-+		dev_dbg(dev, "<%s>: SMBus alert received\n", __func__);
-+		writel_relaxed(STM32F7_I2C_ICR_ALERTCF, base + STM32F7_I2C_ICR);
-+		i2c_handle_smbus_alert(i2c_dev->alert->ara);
-+		return IRQ_HANDLED;
-+	}
-+
- 	if (!i2c_dev->slave_running) {
- 		u32 mask;
- 		/* Disable interrupts */
-@@ -1967,6 +1990,42 @@ static void stm32f7_i2c_disable_smbus_host(struct stm32f7_i2c_dev *i2c_dev)
- 	}
- }
- 
-+static int stm32f7_i2c_enable_smbus_alert(struct stm32f7_i2c_dev *i2c_dev)
-+{
-+	struct stm32f7_i2c_alert *alert;
-+	struct i2c_adapter *adap = &i2c_dev->adap;
-+	struct device *dev = i2c_dev->dev;
-+	void __iomem *base = i2c_dev->base;
-+
-+	alert = devm_kzalloc(dev, sizeof(*alert), GFP_KERNEL);
-+	if (!alert)
-+		return -ENOMEM;
-+
-+	alert->ara = i2c_new_smbus_alert_device(adap, &alert->setup);
-+	if (IS_ERR(alert->ara))
-+		return PTR_ERR(alert->ara);
-+
-+	i2c_dev->alert = alert;
-+
-+	/* Enable SMBus Alert */
-+	stm32f7_i2c_set_bits(base + STM32F7_I2C_CR1, STM32F7_I2C_CR1_ALERTEN);
-+
-+	return 0;
-+}
-+
-+static void stm32f7_i2c_disable_smbus_alert(struct stm32f7_i2c_dev *i2c_dev)
-+{
-+	struct stm32f7_i2c_alert *alert = i2c_dev->alert;
-+	void __iomem *base = i2c_dev->base;
-+
-+	if (alert) {
-+		/* Disable SMBus Alert */
-+		stm32f7_i2c_clr_bits(base + STM32F7_I2C_CR1,
-+				     STM32F7_I2C_CR1_ALERTEN);
-+		i2c_unregister_device(alert->ara);
-+	}
-+}
-+
- static u32 stm32f7_i2c_func(struct i2c_adapter *adap)
- {
- 	struct stm32f7_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
-@@ -2161,6 +2220,14 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
- 				ret);
- 			goto i2c_adapter_remove;
- 		}
-+
-+		ret = stm32f7_i2c_enable_smbus_alert(i2c_dev);
-+		if (ret) {
-+			dev_err(i2c_dev->dev,
-+				"failed to enable SMBus alert protocol (%d)\n",
-+				ret);
-+			goto i2c_disable_smbus_host;
-+		}
- 	}
- 
- 	dev_info(i2c_dev->dev, "STM32F7 I2C-%d bus adapter\n", adap->nr);
-@@ -2170,6 +2237,9 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
- 
- 	return 0;
- 
-+i2c_disable_smbus_host:
-+	stm32f7_i2c_disable_smbus_host(i2c_dev);
-+
- i2c_adapter_remove:
- 	i2c_del_adapter(adap);
- 
-@@ -2204,6 +2274,7 @@ static int stm32f7_i2c_remove(struct platform_device *pdev)
- {
- 	struct stm32f7_i2c_dev *i2c_dev = platform_get_drvdata(pdev);
- 
-+	stm32f7_i2c_disable_smbus_alert(i2c_dev);
- 	stm32f7_i2c_disable_smbus_host(i2c_dev);
- 
- 	i2c_del_adapter(&i2c_dev->adap);
--- 
-2.7.4
+Since you signed off the patch that caused the regression, I believe it is your bug.
 
+Thanks.
+
+Chris
+> 
+>> -----Original Message-----
+>> From: Chris Clayton [mailto:chris2553@googlemail.com]
+>> Sent: Monday, August 03, 2020 3:59 AM
+>> To: LKML; 吳昊澄 Ricky; gregkh@linuxfoundation.org; rdunlap@infradead.org;
+>> philquadra@gmail.com; Arnd Bergmann
+>> Subject: Re: PATCH: rtsx_pci driver - don't disable the rts5229 card reader on
+>> Intel NUC boxes
+>>
+>> Sorry, I should have said that the patch is against 5.7.12. It applies to upstream,
+>> but with offsets.
+>>
+>> On 02/08/2020 20:48, Chris Clayton wrote:
+>>> bede03a579b3 introduced a bug which leaves the rts5229 PCI Express card
+>> reader on my Intel NUC6CAYH box.
+>>>
+>>> The bug is in drivers/misc/cardreader/rtsx_pcr.c. A call to rtsx_pci_init_ocp()
+>> was added to rtsx_pci_init_hw().
+>>> At the call point, pcr->ops->init_ocp is NULL and pcr->option.ocp_en is 0, so in
+>> rtsx_pci_init_ocp() the cardreader
+>>> gets disabled.
+>>>
+>>> I've avoided this by making excution code that results in the reader being
+>> disabled conditional on the device
+>>> not being an RTS5229. Of course, other rtsxxx card readers may also be
+>> disabled by this bug. I don't have the
+>>> knowledge to address that, so I'll leave to the driver maintainers.
+>>>
+>>> The patch to avoid the bug is attached.
+>>>
+>>> Fixes: bede03a579b3 ("misc: rtsx: Enable OCP for rts522a rts524a rts525a
+>> rts5260")
+>>> Link: https://marc.info/?l=linux-kernel&m=159105912832257
+>>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=204003
+>>> Signed-off-by: Chris Clayton <chris2553@googlemail.com>
+>>>
+>>> bede03a579b3 introduced a bug which leaves the rts5229 PCI Express card
+>> reader on my Intel NUC6CAYH box.
+>>>
+>>> The bug is in drivers/misc/cardreader/rtsx_pcr.c. A call to rtsx_pci_init_ocp()
+>> was added to rtsx_pci_init_hw().
+>>> At the call point, pcr->ops->init_ocp is NULL and pcr->option.ocp_en is 0, so in
+>> rtsx_pci_init_ocp() the cardreader
+>>> gets disabled.
+>>>
+>>> I've avoided this by making excution code that results in the reader being
+>> disabled conditional on the device
+>>> not being an RTS5229. Of course, other rtsxxx card readers may also be
+>> disabled by this bug. I don't have the
+>>> knowledge to address that, so I'll leave to the driver maintainers.
+>>>
+>>> The patch to avoid the bug is attached.
+>>>
+>>> Chris
+>>>
+>>
+>> ------Please consider the environment before printing this e-mail.
