@@ -2,102 +2,242 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27291C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7A3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45578208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBC09206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:30:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="lkgPlbjd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbgHCW2p (ORCPT
+        id S1726913AbgHCWaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 18:28:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50552 "EHLO
+        Mon, 3 Aug 2020 18:30:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgHCW2o (ORCPT
+        with ESMTP id S1726356AbgHCWaT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 18:28:44 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98278C06174A;
-        Mon,  3 Aug 2020 15:28:44 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k2iwZ-008hXp-IY; Mon, 03 Aug 2020 22:28:31 +0000
-Date:   Mon, 3 Aug 2020 23:28:31 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-doc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
-        Hridya Valsaraju <hridya@google.com>,
-        Ioannis Ilkos <ilkos@google.com>,
-        John Stultz <john.stultz@linaro.org>,
-        kernel-team <kernel-team@android.com>
-Subject: Re: [PATCH 2/2] dmabuf/tracing: Add dma-buf trace events
-Message-ID: <20200803222831.GI1236603@ZenIV.linux.org.uk>
-References: <20200803144719.3184138-1-kaleshsingh@google.com>
- <20200803144719.3184138-3-kaleshsingh@google.com>
- <20200803154125.GA23808@casper.infradead.org>
- <CAJuCfpFLikjaoopvt+vGN3W=m9auoK+DLQNgUf-xUbYfC=83Mw@mail.gmail.com>
- <20200803161230.GB23808@casper.infradead.org>
- <CAJuCfpGot1Lr+eS_AU30gqrrjc0aFWikxySe0667_GTJNsGTMw@mail.gmail.com>
+        Mon, 3 Aug 2020 18:30:19 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3556C06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 15:30:19 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t11so1929838plr.5
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 15:30:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=v0vJe2QQbLuLRPOMGBeOLYW9mds4pN3IYDK7FBMExww=;
+        b=lkgPlbjdA9qpgN9WtnK0CZkXcM26LDe1n29A6AZqeAl+b2maq5U9lnBF71WfT3lr57
+         TtcF48r7QTmZav0nVDc4Fsz1BtVzHMDJfRs3Daa9DW+9vtgLTop9CXglAWn3H5t0i8iU
+         SDP1+7yAoLQ7MoJQ7Kgu7lpWcNXuQZAKn1EklPLARZlwCBFiXX29TAnj/Ke9elAxP9BW
+         nybt5WprUtVc1xK4jbNPBgLZti0n05V4h2Kwl2wAFSpvYdnQZQ1pF0W0VWYSLmEdTUWq
+         56xaVVdRilMZy4TIJJ+wbSSz8d4h214DePH4ymqfTs2IsfFrwUtnFCi2mdKiaEPqcpyZ
+         GC4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=v0vJe2QQbLuLRPOMGBeOLYW9mds4pN3IYDK7FBMExww=;
+        b=ZusjOKR6Vz/9yM7l2NXq9ehNnCOamG/T5LKC/D8GPaSnDUwVwRaZybX/4U7MN0hEg3
+         wQtD0daGka2r7qpjVVRISxDimXCw0bvdtAWhzYGJGn0xad3h+qvJegI8JsH21Wj+mo7v
+         2UgggwYYh1jFE2VFLbQZBohtzdRxKCX/3qEQSUNR4qHWJu+aC5XscX68h5PDFIKX218z
+         MSS1f50n3o9jwUZNeQihhAaFioJE7ggkHjvCcXN7MTY9N4tPvPUloSRHaWE171NRtoVh
+         jZiGR+JqSVH2M6UdB4j0u0vqVzQe8CxcKt5G2K0r3c190XfOU7037+RCM62elvCO8L15
+         7rIA==
+X-Gm-Message-State: AOAM530VJIocNoMLKEvXAqD+AQ3348mommSUPZHj530EB5ABit25e0WU
+        wddb+jDFKQ0vYWXPQVkdLm5/mh6bkeo=
+X-Google-Smtp-Source: ABdhPJwqzJFDSLzh8vMl+BtoQ1u9rRN5W6ckoucu7KKVBBZ/canVIGE0ALFEnbdZx4wx45vF1M9Aeg==
+X-Received: by 2002:a17:90a:aa8f:: with SMTP id l15mr1346963pjq.123.1596493818792;
+        Mon, 03 Aug 2020 15:30:18 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id a26sm18374593pgm.20.2020.08.03.15.30.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Aug 2020 15:30:18 -0700 (PDT)
+Subject: Re: [GIT PULL] io_uring changes for 5.9-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     io-uring <io-uring@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <50466810-9148-e245-7c1e-e7435b753582@kernel.dk>
+ <CAHk-=wgaxWMA7DVTQq+KxqaWHPDrXDuScX9orzRgxdi7SBfmoA@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <cd478521-e6ec-a1aa-5f93-29ad13d2a8bb@kernel.dk>
+Date:   Mon, 3 Aug 2020 16:30:16 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJuCfpGot1Lr+eS_AU30gqrrjc0aFWikxySe0667_GTJNsGTMw@mail.gmail.com>
+In-Reply-To: <CAHk-=wgaxWMA7DVTQq+KxqaWHPDrXDuScX9orzRgxdi7SBfmoA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 09:22:53AM -0700, Suren Baghdasaryan wrote:
-> On Mon, Aug 3, 2020 at 9:12 AM Matthew Wilcox <willy@infradead.org> wrote:
-> >
-> > On Mon, Aug 03, 2020 at 09:00:00AM -0700, Suren Baghdasaryan wrote:
-> > > On Mon, Aug 3, 2020 at 8:41 AM Matthew Wilcox <willy@infradead.org> wrote:
-> > > >
-> > > > On Mon, Aug 03, 2020 at 02:47:19PM +0000, Kalesh Singh wrote:
-> > > > > +static void dma_buf_fd_install(int fd, struct file *filp)
-> > > > > +{
-> > > > > +     trace_dma_buf_fd_ref_inc(current, filp);
-> > > > > +}
-> > > >
-> > > > You're adding a new file_operation in order to just add a new tracepoint?
-> > > > NACK.
-> > >
-> > > Hi Matthew,
-> > > The plan is to attach a BPF to this tracepoint in order to track
-> > > dma-buf users. If you feel this is an overkill, what would you suggest
-> > > as an alternative?
-> >
-> > I'm sure BPF can attach to fd_install and filter on file->f_ops belonging
-> > to dma_buf, for example.
+On 8/3/20 2:48 PM, Linus Torvalds wrote:
+> On Sun, Aug 2, 2020 at 2:41 PM Jens Axboe <axboe@kernel.dk> wrote:
+>>
+>> Lots of cleanups in here, hardening the code and/or making it easier to
+>> read and fixing buts, but a core feature/change too adding support for
+>> real async buffered reads. With the latter in place, we just need
+>> buffered write async support and we're done relying on kthreads for the
+>> fast path. In detail:
 > 
-> Sounds like a workable solution. Will explore that direction. Thanks Matthew!
+> That async buffered reads handling the the page locking flag is a
+> mess, and I'm really happy I committed my page locking scalability
+> change early, so that the conflicts there caught it.
+> 
+> Re-using the page bit waitqueue types and exporting them?
+> 
+> That part is fine, I guess, particularly since it came from the
+> wait_bit_key thing and have a smell of being generic.
+> 
+> Taking a random part of wake_page_function(), and calling it
+> "wake_page_match()" even though that's not at all that it does?
+> 
+> Not ok.
 
-No, it is not a solution at all.
+OK, I actually thought it was kind of nice and better than having that
+code duplicated in two spots.
 
-What kind of locking would you use?  With _any_ of those approaches.
+> Adding random kiocb helper functions to a core header file, when they
+> are only used in one place, and when they only make sense in that one
+> place?
+> 
+> Not ok.
 
-How would you use the information that is hopelessly out of date/incoherent/whatnot
-at the very moment you obtain it?
+I'll move that into io_uring instead.
 
-IOW, what the hell is that horror for?  You do realize, for example, that there's
-such thing as dup(), right?  And dup2() as well.  And while we are at it, how
-do you keep track of removals, considering the fact that you can stick a file
-reference into SCM_RIGHTS datagram sent to yourself, close descriptors and an hour
-later pick that datagram, suddenly getting descriptor back?
+> When the function is called "wake_page_match()", you'd expect it
+> matches the wake page information, wouldn't it?
+> 
+> Yeah, it did that. And then it also checked whether the bit we're
+> waiting had been set again, because everybody ostensibly wanted that.
+> Except they don't any more, and that's not what the name really
+> implied anyway.
+> 
+> And kiocb_wait_page_queue_init() has absolutely zero business being in
+> <linux/filemap.h>. There are absolutely no valid uses of that thing
+> outside of the one place that calls it.
+> 
+> I tried to fix up the things I could.
 
-Besides, "I have no descriptors left" != "I can't be currently sitting in the middle
-of syscall on that sucker"; close() does *NOT* terminate ongoing operations.
+Thanks! As mentioned, I'll prep a cleanup patch that moves the
+kiocb_wait_page_queue_init() out of there.
 
-You are looking at the drastically wrong abstraction level.  Please, describe what
-it is that you are trying to achieve.
+> That said, like a lot of io_uring code, this is some seriously opaque
+> code. You say you've done a lot of cleanups, but I'm not convinced
+> those cleanups are in any way offsetting adding yet another union (how
+> many bugs did the last one add?) and a magic flag of "use this part of
+> the union" now.
+
+I had to think a bit about what you are referring to here, but I guess
+it's the iocb part. And yes, it's not ideal, but until we support polled
+IO with buffered IO, then there's no overlap in the use case. And I
+don't see us ever doing that.
+
+> And I don't know what loads you use for testing that thing, or what
+> happens when the "lock_page_async()" case actually fails to lock, and
+> just calls back the io_async_buf_func() wakeup function when the page
+> has unlocked...
+> 
+> That function doesn't actually lock the page either, but does the task
+> work. I hope that work then knows to do the right thing, but it's
+> really opaque and hard to follow.
+
+The task work retries the whole thing, so it'll go through the normal
+page cache read path again with all that that entails. We only really
+ever use the callback to tell us when it's a good idea to retry again,
+there's no other retained state there at all.
+
+I didn't realize that part wasn't straight forward, so I'll add some
+comments as well explaining how that code flow works.
+
+It's seen a good amount of testing, both from myself and also from
+others. The postgres IO rewrite has been putting it through its paces,
+and outside of a few initial issues months ago, it's been rock solid.
+
+> Anyway, I'm not entirely happy with doing these kinds of changes in
+> the merge resolution, but the alternative was to not do the pull at
+> all, and require you to do a lot of cleanups before I would pull it.
+> Maybe I should have done that.
+> 
+> So this is a slightly grumpy email about how io_uring is (a) still
+> making me very nervous about a very lackadaisical approach to things,
+> and having the codepaths so obscure that I'm not convinced it's not
+> horribly buggy. And (b) I fixed things up without really being able to
+> test them. I tested that the _normal_ paths still seem to work fine,
+> but..
+
+I need to do a better job at commenting these parts, obviously. And
+while nothing is perfect, and we're definitely perfect yet, the general
+trend is definitely strongly towards getting rid of odd states through
+flags and unifying more of the code, and tons of fixes/cleanups that
+make things easier to read and verify...
+
+> I really think that whole thing needs a lot of comments, particularly
+> around the whole io_rw_should_retry() area.
+>
+> A bit and legible comment about how it will be caught by the
+> generic_file_buffered_read() page locking code, how the two cases
+> differ (it might get caught by the "I'm just waiting for it to be
+> unlocked", but it could *also* get caught by the "lock page now"
+> case), and how it continues the request.
+
+Noted, I'll write that up.
+
+> As it is, it bounces between the generic code and very io_uring
+> specific code in strange and not easy to follow ways.
+> 
+> I've pushed out my merge of this thing, but you might also want to
+> take a look at commit 2a9127fcf229 ("mm: rewrite
+> wait_on_page_bit_common() logic"). I particular, the comment about how
+> there's no point in even testing the page bit any more when you get
+> woken up.
+> 
+> I left that
+> 
+>         if (test_bit(key->bit_nr, &key->page->flags))
+>                 return -1;
+> 
+> logic in io_async_buf_func() (but it's not in "wake_page_match()" any
+> more), but I suspect it's bogus and pointless, for the same reason
+> that it isn't done for normal page waits now. Maybe it's better to
+> just queue the actual work regardless, it will then be caught in the
+> _real_ lock_page() or whatever it ends up doing - and if it only
+> really wants to see the "uptodate" bit being set, and was just waiting
+> for IO to finish, then it never really cared about the page lock bit
+> at all, it just wanted to be notified about IO being done.
+
+I just did notice your rewrite commit, and I'll adjust accordingly and
+test it with that too.
+
+> So this was a really long email to tell you - again - that I'm not
+> happy  with how fragile io_uring is, and how the code seems to be
+> almost intentionally written to *be* fragile. Complex and hard to
+> understand, and as a result it has had a fairly high rate of fairly
+> nasty bugs.
+> 
+> I'm hoping this isn't going to be yet another case of "nasty bugs
+> because of complexity and a total disregard for explaining what is
+> going on".
+
+Outside of the review from Johannes, lots of other people did look over
+the async buffered bits, and Andrew as well said it look good to him. So
+while the task_work retry apparently isn't as obvious as I had hoped,
+it's definitely not fragile or intentionally trying to be obtuse.
+
+I'll make a few adjustments based on your feedback, and add a patch with
+some comments as well. Hopefully that'll make the end result easier to
+follow.
+
+-- 
+Jens Axboe
+
