@@ -2,81 +2,58 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8578DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57003C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 905082075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:25:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R/E7offS"
+	by mail.kernel.org (Postfix) with ESMTP id 72A832075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:26:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbgHCVZu (ORCPT
+        id S1729161AbgHCV0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 17:25:50 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59923 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726398AbgHCVZt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 17:25:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596489948;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Tk3Rs2qegFZypVO27BFx2r1W0ZQxCF8/+L4irxiO1hU=;
-        b=R/E7offSZUakpKP8Bffqh/i48RnIpHafaePDEgIWphFhSTxgThy6eWGwtXsgUeMmm54nDI
-        sEpBmy8mE5zjOD3MOz7MrJW99OtojBzPb/ZD/Law6tjWQuzYOlYuCJPjNlcP9Z/ldiXPcH
-        xEzJGpKARuMah55zayqGS2BlV8NbYak=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-24-7m6vDhoLPzWY1qLcugopFA-1; Mon, 03 Aug 2020 17:25:46 -0400
-X-MC-Unique: 7m6vDhoLPzWY1qLcugopFA-1
-Received: by mail-ed1-f69.google.com with SMTP id b23so11208665edj.14
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 14:25:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=Tk3Rs2qegFZypVO27BFx2r1W0ZQxCF8/+L4irxiO1hU=;
-        b=YeM54ZxwnnB+rIv/M3zh3oRkc3KKSuOQKeE2fVotigvJMUG+XBptiC6Jq9NyOQm7mD
-         Dnlk3/9hAx/QeHUyOSc9z3j2PLgITV3PWVGo3qY1fNLaHHEtiZzqrWgbTWPzOAOB9oyz
-         BoKO4lBMbpGVPU5uWsZkx6lhDVdiidz2O3LxSSDSXKnpunJb8mHw3NtVBZL2f2NZ51VR
-         uKxJ6gKLpXJ3Q58kZ4SaMPZ2Ms71xad2xyPR0Z5BFig4ApfIJKcx3EuPVJ2PBhp9I+KQ
-         DbYwJZyaPVfOZccBzoKdUw9xoY77AmCqVDwK6O7lvsUNShiL6bw1xvIdJpwTqiXKyWvp
-         HG+g==
-X-Gm-Message-State: AOAM530sZovFwg/GydQmuy1m6viLRVWLFz1htgdeao8wJntVLbJt5hKZ
-        GlOGiQA0e1wV9ZOoCrqCssEIQXZvI3frsuyfw4TQdUG7KlIbl6/XzywhVTTOTqHOMKAYD8WCehS
-        S1Z35ipLLO9At0o3UGuVYyi2N
-X-Received: by 2002:a05:6402:1c88:: with SMTP id cy8mr17907694edb.24.1596489945577;
-        Mon, 03 Aug 2020 14:25:45 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwIzMUK8S+nJcTcQT4uN8ACgajCm5UUzF876hPGAe/y0hA1rXHhbvCvLJ2m4UbiIBnQqAQZqA==
-X-Received: by 2002:a05:6402:1c88:: with SMTP id cy8mr17907686edb.24.1596489945433;
-        Mon, 03 Aug 2020 14:25:45 -0700 (PDT)
-Received: from [192.168.3.122] (p5b0c6449.dip0.t-ipconnect.de. [91.12.100.73])
-        by smtp.gmail.com with ESMTPSA id i5sm3342356edt.52.2020.08.03.14.25.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Aug 2020 14:25:45 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v2 01/24] virtio_balloon: fix sparse warning
-Date:   Mon, 3 Aug 2020 23:25:44 +0200
-Message-Id: <D9D808BB-4A2F-459D-8E2C-CC0C6E0D5C99@redhat.com>
-References: <20200803205814.540410-2-mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Jason Wang <jasowang@redhat.com>,
-        David Hildenbrand <david@redhat.com>
-In-Reply-To: <20200803205814.540410-2-mst@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-X-Mailer: iPhone Mail (17F80)
+        Mon, 3 Aug 2020 17:26:20 -0400
+Received: from mga14.intel.com ([192.55.52.115]:61897 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726398AbgHCV0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 17:26:20 -0400
+IronPort-SDR: ssX42FjQr0Xie2qeK3Sdgt3U3gQbyeCSKNemYYN9Flo7Wq2fl7JPDFhG6poFfjLVTECWUBq3LX
+ QygLZ90mVgVA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="151434420"
+X-IronPort-AV: E=Sophos;i="5.75,431,1589266800"; 
+   d="scan'208";a="151434420"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 14:26:19 -0700
+IronPort-SDR: RulXwNywhv1eI8mAx/l2FWKIOuoPQn3y862B8fRMfSTGFJVWGCJfUoaFdi2W5KFVaVNAJJW7qT
+ 9QbcAWE9RiPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,431,1589266800"; 
+   d="scan'208";a="314981446"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.255.79.119]) ([10.255.79.119])
+  by fmsmga004.fm.intel.com with ESMTP; 03 Aug 2020 14:26:19 -0700
+Subject: Re: [PATCH 1/2] libnvdimm/security: 'security' attr never show
+ 'overwrite' state
+To:     Jane Chu <jane.chu@oracle.com>, dan.j.williams@intel.com,
+        vishal.l.verma@intel.com, ira.weiny@intel.com, jmoyer@redhat.com,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+References: <1595606959-8516-1-git-send-email-jane.chu@oracle.com>
+ <cb8c1944-f72c-ecfa-bd3d-276f504542e1@intel.com>
+ <73f2eadf-3377-db62-ebd1-1eff99d4842e@oracle.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <69576669-632e-1821-2076-7bc47c0bbd85@intel.com>
+Date:   Mon, 3 Aug 2020 14:26:18 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <73f2eadf-3377-db62-ebd1-1eff99d4842e@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -84,40 +61,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> Am 03.08.2020 um 22:58 schrieb Michael S. Tsirkin <mst@redhat.com>:
->=20
-> =EF=BB=BFballoon uses virtio32_to_cpu instead of cpu_to_virtio32
-> to convert a native endian number to virtio.
-> No practical difference but makes sparse warn.
-> Fix it up.
->=20
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+On 8/3/2020 2:10 PM, Jane Chu wrote:
+> Hi, Dave,
+> 
+> On 8/3/2020 1:41 PM, Dave Jiang wrote:
+>> On 7/24/2020 9:09 AM, Jane Chu wrote:
+>>> Since
+>>> commit d78c620a2e82 ("libnvdimm/security: Introduce a 'frozen' attribute"),
+>>> when issue
+>>>   # ndctl sanitize-dimm nmem0 --overwrite
+>>> then immediately check the 'security' attribute,
+>>>   # cat /sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0012:00/ndbus0/nmem0/security
+>>>   unlocked
+>>> Actually the attribute stays 'unlocked' through out the entire overwrite
+>>> operation, never changed.  That's because 'nvdimm->sec.flags' is a bitmap
+>>> that has both bits set indicating 'overwrite' and 'unlocked'.
+>>> But security_show() checks the mutually exclusive bits before it checks
+>>> the 'overwrite' bit at last. The order should be reversed.
+>>>
+>>> The commit also has a typo: in one occasion, 'nvdimm->sec.ext_state'
+>>> assignment is replaced with 'nvdimm->sec.flags' assignment for
+>>> the NVDIMM_MASTER type.
+>>
+>> May be best to split this fix to a different patch? Just thinking git bisect 
+>> later on to track issues. Otherwise Reviewed-by: Dave Jiang 
+>> <dave.jiang@intel.com>
+> 
+> Sure. I take it you meant to separate the typo fix from the change that tests 
+> the OVERWRITE bit first?
 
-I think I acked this one already.
+Yep!
 
-Acked-by: David Hildenbrand <david@redhat.com>
-
-> ---
-> drivers/virtio/virtio_balloon.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_ballo=
-on.c
-> index 54fd989f9353..8bc1704ffdf3 100644
-> --- a/drivers/virtio/virtio_balloon.c
-> +++ b/drivers/virtio/virtio_balloon.c
-> @@ -600,7 +600,7 @@ static int send_cmd_id_start(struct virtio_balloon *vb=
-)
->    while (virtqueue_get_buf(vq, &unused))
->        ;
->=20
-> -    vb->cmd_id_active =3D virtio32_to_cpu(vb->vdev,
-> +    vb->cmd_id_active =3D cpu_to_virtio32(vb->vdev,
->                    virtio_balloon_cmd_id_received(vb));
->    sg_init_one(&sg, &vb->cmd_id_active, sizeof(vb->cmd_id_active));
->    err =3D virtqueue_add_outbuf(vq, &sg, 1, &vb->cmd_id_active, GFP_KERNEL=
-);
-> --=20
-> MST
->=20
-
+> 
+> Regards,
+> -jane
