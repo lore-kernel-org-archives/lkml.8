@@ -2,94 +2,177 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA42C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6721C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E39A20678
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94F2720678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:06:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YDlIDWHn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgHCNFq (ORCPT
+        id S1727059AbgHCNG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 09:05:46 -0400
-Received: from mga14.intel.com ([192.55.52.115]:7003 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726118AbgHCNFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 09:05:45 -0400
-IronPort-SDR: teQvRFCIq5uN5KuOH1Z1cfaI7yUY1J88mfKwESrIAKlMZNIzTn3Q/bA3nyT5uFEXhcbGg3uvp8
- 46n67bx8nX2g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9701"; a="151301958"
-X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
-   d="scan'208";a="151301958"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 06:05:37 -0700
-IronPort-SDR: 97bGbyL6YMQTKXS8v/uAnE7kejawVmtdJ7xUNwRv4412nrgH29Uv0FezDr/4/nZGZWddQ6sQa6
- TUAzMI00e65A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
-   d="scan'208";a="396051205"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 03 Aug 2020 06:05:33 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 03 Aug 2020 16:05:32 +0300
-Date:   Mon, 3 Aug 2020 16:05:32 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Daniel Gutson <daniel@eclypsium.com>
-Cc:     Richard Hughes <hughsient@gmail.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Alex Bazhaniuk <alex@eclypsium.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] Module argument to control whether intel-spi-pci
- attempts to turn the SPI flash chip writeable
-Message-ID: <20200803130532.GY1375436@lahna.fi.intel.com>
-References: <20200724212853.11601-1-daniel.gutson@eclypsium.com>
- <20200803095720.GC1375436@lahna.fi.intel.com>
- <CAD2FfiFt6=OueX3E0g2ckPU+7F69yCmM0+bzF_6UD1sd4E_k_A@mail.gmail.com>
- <20200803102711.GK1375436@lahna.fi.intel.com>
- <CAFmMkTHSjQZJNzvUzLHHJ7sUTVX4BV6TwB=P8EO-HNk_cv8RKg@mail.gmail.com>
+        Mon, 3 Aug 2020 09:06:27 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52681 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726971AbgHCNG0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 09:06:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596459985;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=pwPDTywOojI/7bsmmT70RBPy/Nqmgh7kaCKLIQz3WEI=;
+        b=YDlIDWHnwdTB+S+j+Psfyn0jaql5URTd813jKDFLoeteiYEcOO2iLoxJUD9tRArPFjUTvW
+        9IFsD8TmnHpWMOwdJlyJhGOo7m3Mwi+pCxlc8D4Ek2DIZsaOVx6zhAwXwlfyf4DKymSJt/
+        uxdAq1AmX1B2DImAExWvwAz2hC+KGHM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-225-JOtaLftLN66601CSTdmQTw-1; Mon, 03 Aug 2020 09:06:24 -0400
+X-MC-Unique: JOtaLftLN66601CSTdmQTw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 128DD8015F7;
+        Mon,  3 Aug 2020 13:06:22 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8ADEA1001B0B;
+        Mon,  3 Aug 2020 13:06:18 +0000 (UTC)
+Subject: [PATCH 0/5] Mount notifications [ver #2]
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     linux-security-module@vger.kernel.org,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        dhowells@redhat.com, torvalds@linux-foundation.org,
+        casey@schaufler-ca.com, sds@tycho.nsa.gov,
+        nicolas.dichtel@6wind.com, raven@themaw.net, christian@brauner.io,
+        jlayton@redhat.com, kzak@redhat.com, mszeredi@redhat.com,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 03 Aug 2020 14:06:17 +0100
+Message-ID: <159645997768.1779777.8286723139418624756.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFmMkTHSjQZJNzvUzLHHJ7sUTVX4BV6TwB=P8EO-HNk_cv8RKg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 09:58:23AM -0300, Daniel Gutson wrote:
-> On Mon, Aug 3, 2020 at 7:27 AM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> >
-> > On Mon, Aug 03, 2020 at 11:18:12AM +0100, Richard Hughes wrote:
-> > > On Mon, 3 Aug 2020 at 10:57, Mika Westerberg
-> > > <mika.westerberg@linux.intel.com> wrote:
-> > > > I think instead of this we should simply make it so that the driver
-> > > > never tries to make the chip writable.
-> > >
-> > > I think this is a good idea, but I wasn't sure if it was an acceptable
-> > > behaviour change. Should the driver still try to set BCR_WPD when
-> > > writing an image (i.e. defer the setting of write enable until later),
-> > > or just not set the BCR register at all? I think your last comment was
-> > > the latter, but wanted to check.
-> >
-> > I would say not set it at all. I think it was (my) mistake to set it in
-> > the first place.
-> 
-> Do you want me to remove the module parameter from intel-spi too and
-> do the same?
 
-No, I think that should still be left there. Then by default it is
-read-only and you can only enable writing if the BIOS allows it and that
-the user actually requested it.
+Here's a set of patches to add notifications for mount topology events,
+such as mounting, unmounting, mount expiry, mount reconfiguration.
+
+An LSM hook is included to an LSM to rule on whether or not a mount watch
+may be set on a particular path.
+
+Why do we want mount notifications?  Whilst /proc/mounts can be polled, it
+only tells you that something changed in your namespace.  To find out, you
+have to trawl /proc/mounts or similar to work out what changed in the mount
+object attributes and mount topology.  I'm told that the proc file holding
+the namespace_sem is a point of contention, especially as the process of
+generating the text descriptions of the mounts/superblocks can be quite
+involved.
+
+The notification generated here directly indicates the mounts involved in
+any particular event and gives an idea of what the change was.
+
+This is combined with a new fsinfo() system call that allows, amongst other
+things, the ability to retrieve in one go an { id, change_counter } tuple
+from all the children of a specified mount, allowing buffer overruns to be
+dealt with quickly.
+
+This is of use to systemd to improve efficiency:
+
+	https://lore.kernel.org/linux-fsdevel/20200227151421.3u74ijhqt6ekbiss@ws.net.home/
+
+And it's not just Red Hat that's potentially interested in this:
+
+	https://lore.kernel.org/linux-fsdevel/293c9bd3-f530-d75e-c353-ddeabac27cf6@6wind.com/
+
+The kernel patches can also be found here:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=notifications-pipe-core
+
+
+===================
+SIGNIFICANT CHANGES
+===================
+
+ ver #2:
+
+ (*) Make the ID fields in the mount notification 64-bits.  They're left
+     referring to the mount ID here, but switched to the mount unique ID in
+     the patch in fsinfo that adds that. [Requested by Miklós Szeredi]
+
+ (*) Dropped the event counters from the mount notification message.
+     [Requested by Miklós].
+
+     This can easily be added back later as the message length can be
+     increased to show it.
+
+ (*) Moved the mount event counters over to the fsinfo patchset.
+
+
+David
+---
+David Howells (5):
+      watch_queue: Limit the number of watches a user can hold
+      watch_queue: Make watch_sizeof() check record size
+      watch_queue: Add security hooks to rule on setting mount watches
+      watch_queue: Implement mount topology and attribute change notifications
+      watch_queue: sample: Display mount tree change notifications
+
+
+ Documentation/watch_queue.rst               |  12 +-
+ arch/alpha/kernel/syscalls/syscall.tbl      |   1 +
+ arch/arm/tools/syscall.tbl                  |   1 +
+ arch/arm64/include/asm/unistd.h             |   2 +-
+ arch/arm64/include/asm/unistd32.h           |   2 +
+ arch/ia64/kernel/syscalls/syscall.tbl       |   1 +
+ arch/m68k/kernel/syscalls/syscall.tbl       |   1 +
+ arch/microblaze/kernel/syscalls/syscall.tbl |   1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl   |   1 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl   |   1 +
+ arch/mips/kernel/syscalls/syscall_o32.tbl   |   1 +
+ arch/parisc/kernel/syscalls/syscall.tbl     |   1 +
+ arch/powerpc/kernel/syscalls/syscall.tbl    |   1 +
+ arch/s390/kernel/syscalls/syscall.tbl       |   1 +
+ arch/sh/kernel/syscalls/syscall.tbl         |   1 +
+ arch/sparc/kernel/syscalls/syscall.tbl      |   1 +
+ arch/x86/entry/syscalls/syscall_32.tbl      |   1 +
+ arch/x86/entry/syscalls/syscall_64.tbl      |   1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl     |   1 +
+ fs/Kconfig                                  |   9 +
+ fs/Makefile                                 |   1 +
+ fs/mount.h                                  |  18 ++
+ fs/mount_notify.c                           | 222 ++++++++++++++++++++
+ fs/namespace.c                              |  22 ++
+ include/linux/dcache.h                      |   1 +
+ include/linux/lsm_hook_defs.h               |   3 +
+ include/linux/lsm_hooks.h                   |   6 +
+ include/linux/security.h                    |   8 +
+ include/linux/syscalls.h                    |   2 +
+ include/linux/watch_queue.h                 |   7 +-
+ include/uapi/asm-generic/unistd.h           |   4 +-
+ include/uapi/linux/watch_queue.h            |  31 ++-
+ kernel/sys_ni.c                             |   3 +
+ samples/watch_queue/watch_test.c            |  41 +++-
+ security/security.c                         |   7 +
+ 35 files changed, 411 insertions(+), 6 deletions(-)
+ create mode 100644 fs/mount_notify.c
+
+
