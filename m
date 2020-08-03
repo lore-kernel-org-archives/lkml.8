@@ -2,160 +2,206 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D7BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B67C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26A5720722
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D36E4207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 16:47:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="vxoUCCtf"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TXuJnfJs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgHCQpx (ORCPT
+        id S1726965AbgHCQrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 12:45:53 -0400
-Received: from mga01.intel.com ([192.55.52.88]:50179 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbgHCQpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 12:45:53 -0400
-IronPort-SDR: KTYjsG1y31nb4nuX3VkON2Huoi7bupHFHxfv9eBfyX7foo6StAc9tLPNu1h3s2IphHJintpyxc
- rbtguGgCX9ig==
-X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="170244658"
-X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
-   d="scan'208";a="170244658"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 09:45:34 -0700
-IronPort-SDR: M6k6Bv0HwMwrud6vXVjVsSVrKdoQMAfBm6g6ayOeKhrhRstsBh8MVVPorcysdHXf401ZJ5zxvL
- mDvV4VITHROg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
-   d="scan'208";a="492456721"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga005.fm.intel.com with ESMTP; 03 Aug 2020 09:45:34 -0700
-Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 3 Aug 2020 09:45:33 -0700
-Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
- fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 3 Aug 2020 09:45:33 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.172)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Mon, 3 Aug 2020 09:45:32 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M8Ksug6jFRn8UlN5D7+2jmgxHcQa6c+IWB/dIA0Jys+jyECBdj0Qzq/BflnzsXUlslIhwy4OZMnJWnYlT/5K5Xb7SvIHAuNVRGnxwPUWUOglbY//m3wtXGTiAe3mzlSV8keSutViGWx55Aj8tc/yOYzEPmcYijarU3+yGZrciRbmM2D8Lx/jSK1GvYddwvBN6JGzDHzV4NcGShnlo68bFzLHAuzcHXkxq5YVix7W2Ue8lpiEGbQAsjhCZ7/Gb76+ZpJIW2ylyvQ1D+x+sLQrcOvFzKNPndwyNOoAyA1zdhE1M+wgDhRd5GLLIOKKUTu34l648wkZfc98/OapeSykzw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LHE5DXY6YRgEB+n8oyPufxwgDCChOC6fF0iqIfrn5W4=;
- b=lKtsbtB4Bn0Fh8tNOx6pelH85DAYjswfM4isxph3kmwuciRIvjETJ8C1OzpsZCJSwU8DV2gwKIW76XFq0TFE6jGZ3nce1mnqrpxZX99jxwdUrTOuiuSbrZRp78uD/nDLMGX4r/nF91CwbGbhVrwW9QcpT85894H38yr06Yt59JkxK1J9WpYPgI8C4PfcAkBMw155/TjuAb+CqTooLBpmkz8wL2Vmorq7D9YXJAAU1T8webPru1q3r/lpzT63Ug7OdRheKqTBJRIP/Zp6NMKBKuhuw4u/FafKXtqYOA7G13HTy3cuoPsvRYUWwNbrKtWMK/yBxkWJoU0VUp63TZMfSA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LHE5DXY6YRgEB+n8oyPufxwgDCChOC6fF0iqIfrn5W4=;
- b=vxoUCCtfWLQUPp0FbpFBqL7zPxxXectr/bCqRFsMZgrUJgSFogPEVJj5qwsb7EXrqS++L62s5labqwVkOy9p0Zg+OuiSx8J7lXP1pC51v8jVi9ubRifTRuR9fHe/Pj4EDSwEL3LFeTt3LKbiI26KxfRa6BkBV2s1/oCfWaMQaEw=
-Received: from DM6PR11MB3642.namprd11.prod.outlook.com (2603:10b6:5:138::26)
- by DM6PR11MB4529.namprd11.prod.outlook.com (2603:10b6:5:2ae::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.19; Mon, 3 Aug
- 2020 16:45:29 +0000
-Received: from DM6PR11MB3642.namprd11.prod.outlook.com
- ([fe80::f043:4bdc:ef57:1b41]) by DM6PR11MB3642.namprd11.prod.outlook.com
- ([fe80::f043:4bdc:ef57:1b41%5]) with mapi id 15.20.3239.021; Mon, 3 Aug 2020
- 16:45:29 +0000
-From:   "Lu, Brent" <brent.lu@intel.com>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>
-CC:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "Kuninori Morimoto" <kuninori.morimoto.gx@renesas.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        "Sam McNally" <sammc@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Ranjani Sridharan" <ranjani.sridharan@linux.intel.com>,
-        Daniel Stuart <daniel.stuart14@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Damian van Soelen <dj.vsoelen@gmail.com>,
-        "yuhsuan@google.com" <yuhsuan@google.com>
-Subject: RE: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago
- board
-Thread-Topic: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago
- board
-Thread-Index: AQHWZzZzIgMFwAI7HkKT1/DPVspAl6khsDgAgAFDasCAAAm3gIADX8DAgAAlz4CAABcIUA==
-Date:   Mon, 3 Aug 2020 16:45:29 +0000
-Message-ID: <DM6PR11MB3642D9BE1E5DAAB8B78B84B0974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
-References: <1596020585-11517-1-git-send-email-brent.lu@intel.com>
- <1596198365-10105-1-git-send-email-brent.lu@intel.com>
- <1596198365-10105-3-git-send-email-brent.lu@intel.com>
- <s5h5za3ajvb.wl-tiwai@suse.de>
- <DM6PR11MB3642AE90DF98956CCEDE6C2F974F0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <s5hd04a90o4.wl-tiwai@suse.de>
- <DM6PR11MB3642B5BC2E1E0708088526D8974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <63bca214-3434-16c6-1b60-adf323aec554@linux.intel.com>
-In-Reply-To: <63bca214-3434-16c6-1b60-adf323aec554@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.5.1.3
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [220.136.119.29]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8f30eade-9a0e-44ef-9e92-08d837cca14e
-x-ms-traffictypediagnostic: DM6PR11MB4529:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB4529533D4C3A19853B03A55C974D0@DM6PR11MB4529.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: A+WYmxNf4HA+qhMhl1vSb66OfgP85xFVZUOA4JzQxTARK/POQ/1nq4GVWtIXcEbYveBfupH05UI3zUq0XNJbPRdYc8M0ylxO7J3TeimCEtPhZDveUoFKikDy23ZouiP5t/RxxO6ga6xaqa3C4jXIsX+JsG5wx27eZx7VAj/nQi2/7ZIBC/DFH8I12c2k9PjfaAgZw67FRT8TGChj0fA/7fxXfaEoNOcjJyOoU/7iw0tFUT5I6GKburTk0W9lktoepN1F9EPzFRlKNG3VeTKTB2P0c4Z34igtCz4+CdVm1q1VZcHgYVaIbj73xFnLRhqb
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3642.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(376002)(366004)(39860400002)(346002)(316002)(110136005)(478600001)(6506007)(52536014)(7696005)(64756008)(186003)(8676002)(86362001)(4326008)(8936002)(66446008)(66556008)(66946007)(26005)(4744005)(76116006)(5660300002)(54906003)(71200400001)(33656002)(7416002)(2906002)(55016002)(66476007)(9686003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: oXeUbIbYir9g3U1lXf5RoMVXT4LEER7jliwRtGcAJGbo4OtyFjFDPdK1dHOvbW07ZtDWWr1fV4sFahbhWynDcPiI4tQ1SVJOwpW4moonSh0i8zpYPTb/BN0jG99CjtMJohxnrhjxHNpNymZLTUPAITiAstH8cOgmGfGG6wjW9AWlhcDRCEwhMhFHM52vV5HomMlm9TB437rmU+WHkh9Tgn5T94QMc209xczxGHAg4SXFmXyoTFSNc6VwpJwYBQBj46/jpjzejcmCTgU7nEYn5ad6S3My/oqjsualMyXUeecCCyj5JeoJpzfkLHugsE20i1tDeMiUcpZgW8GsoQ5e2gHedKzU7Hchg7JVXiL2TcjkU5reQcXmwZCFBAWngALCUqL2CtyZaHDNdcTytA+q5hnIXHeQ9q/hgcJfKbIINrcflFJmkl+R4TSmp20cqNqEV5E+OvivH3PBy58qUNUSyhSnWa/TAWu8i6MFJcaV1EeIBJH9DcRZM0lCQIYK1xXLeNiWCrRFCnqAt6+ZypyfW/ncdju91N8VbWR+3l20NPCEVB6DcStw4Ux8jBL0Tz+nF0V2rhxmDnejesApCs2qiHm4GicW0M/P2FtOGmiuzw+UYX88UhH5EuT5VIg43GH14I0HXy0Fz4gJxhQxRHhfcA==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 3 Aug 2020 12:47:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54350 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgHCQrB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 12:47:01 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21119C06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 09:47:01 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id c2so21865835edx.8
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 09:47:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+GB5MKOgUI8A7DovU8H5BzRSBkTVczydPMIAKJRE0pA=;
+        b=TXuJnfJsusmUF8ldIZxcJRu28lnCE9/0aLAturws4wKkDpEL+LHLVcZUEeKeGf0Y3e
+         LwM42Rys19UAoi/hpotmiJk9kxZfkol1eo23dfSN90N3tGk41jZV07ANqsg39sNmR200
+         fsX9Sq7VOXOHO+zZLXTH2m+04uUyzY8im9dtM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+GB5MKOgUI8A7DovU8H5BzRSBkTVczydPMIAKJRE0pA=;
+        b=A0gycl2EDDes50LTk2eTQ/pOzxxxlCvlZTKUz9UFiTxpbzg90YNq9Jkltg7GIM0iue
+         uslski6ws3dR5flRKCLuggmFIOnK6AnS93Tf0tCpfVdksOW0hToP7J/mGWctl3caiZ8C
+         CHvBKValna0jLapqOnoxHOM4wU1L7vqp9+gBfBVCWOGAXJji6oGvEOlnJszNkcoxDqmg
+         r2CHECF8hxFLVcPR36JtDUmLG4Zqlw60p8FBrtmh2U60npQMLYoNmxN/pFgmYLsPkKgW
+         RZvHENiAffeu7sw0fSN9r0mMjSk5hPPYg4aqjj2wyELUgaxglSnBawzU3ymcIcyYa3hN
+         AvOQ==
+X-Gm-Message-State: AOAM530+NZzgE7GgxA7sNr3lH7YdCMOMNyKWPO2VfMJaRVdJ5PaDHw0B
+        W9mqmbspXPxKOvS+fuAPW2Xzi8nJRH2WBA==
+X-Google-Smtp-Source: ABdhPJwykO3ByvIbUHueIQJt/TWEiYWdK0Gbm94tKO6TwXmg6eX2TRwUiBDrwBvK/FWiFYlny50Igw==
+X-Received: by 2002:a05:6402:456:: with SMTP id p22mr16137651edw.177.1596473219106;
+        Mon, 03 Aug 2020 09:46:59 -0700 (PDT)
+Received: from kpsingh.zrh.corp.google.com ([81.6.44.51])
+        by smtp.gmail.com with ESMTPSA id j7sm16385654ejb.64.2020.08.03.09.46.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 09:46:57 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>
+Subject: [PATCH bpf-next v8 0/7] Generalizing bpf_local_storage
+Date:   Mon,  3 Aug 2020 18:46:48 +0200
+Message-Id: <20200803164655.1924498-1-kpsingh@chromium.org>
+X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3642.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f30eade-9a0e-44ef-9e92-08d837cca14e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Aug 2020 16:45:29.1046
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 20kgk/xckCrEOzD4mwZN+0o1t8h+6NKawFwn1066aVIimSb3oB/K6nKwuWcrDsO0DtANEmGyr59UFHnB9Bn7eg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4529
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiA+IEhpIFRha2FzaGksDQo+ID4NCj4gPiBJJ3ZlIGRvdWJsZSBjaGVja2VkIHdpdGggZ29vZ2xl
-LiBJdCdzIGEgbXVzdCBmb3IgQ2hyb21lYm9va3MgZHVlIHRvDQo+ID4gbG93IGxhdGVuY3kgdXNl
-IGNhc2UuDQo+IA0KPiBJIHdvbmRlciBpZiB0aGVyZSdzIGEgbWlzdW5kZXJzdGFuZGluZyBoZXJl
-Pw0KPiANCj4gSSBiZWxpZXZlIFRha2FzaGkncyBxdWVzdGlvbiB3YXMgImlzIHRoaXMgYSBtdXN0
-IHRvIE9OTFkgYWNjZXB0IDI0MCBzYW1wbGVzDQo+IGZvciB0aGUgcGVyaW9kIHNpemUiLCB0aGVy
-ZSB3YXMgbm8gcHVzaGJhY2sgb24gdGhlIHZhbHVlIGl0c2VsZi4NCj4gQXJlIHRob3NlIGJvYXJk
-cyBicm9rZW4gd2l0aCBlLmcuIDk2MCBzYW1wbGVzPw0KDQpJJ3ZlIGFkZGVkIGdvb2dsZSBwZW9w
-bGUgdG8gZGlzY3VzcyBkaXJlY3RseS4NCg0KSGkgWXVoc3VhbiwNCldvdWxkIHlvdSBleHBsYWlu
-IHdoeSBDUkFTIG5lZWRzIHRvIHVzZSBzdWNoIHNob3J0IHBlcmlvZCBzaXplPyBUaGFua3MuDQoN
-Cg0KUmVnYXJkcywNCkJyZW50DQo=
+From: KP Singh <kpsingh@google.com>
+
+# v7 -> v8
+
+- Fixed an issue with BTF IDs for helpers and added
+  bpf_<>_storage_delete to selftests to catch this issue.
+- Update comments about refcounts and grabbed a refcount to the open
+  file for userspace inode helpers.
+- Rebase.
+
+# v6 -> v7
+
+- Updated the series to use Martin's POC patch:
+
+  https://lore.kernel.org/bpf/20200725013047.4006241-1-kafai@fb.com/
+
+  I added a Co-developed-by: tag, but would need Martin's Signoff
+  (was not sure of the procedure here).
+
+- Rebase.
+
+# v5 -> v6
+
+- Fixed a build warning.
+- Rebase.
+
+# v4 -> v5
+
+- Split non-functional changes into separate commits.
+- Updated the cache macros to be simpler.
+- Fixed some bugs noticed by Martin.
+- Updated the userspace map functions to use an fd for lookups, updates
+  and deletes.
+- Rebase.
+
+# v3 -> v4
+
+- Fixed a missing include to bpf_sk_storage.h in bpf_sk_storage.c
+- Fixed some functions that were not marked as static which led to
+  W=1 compilation warnings.
+
+# v2 -> v3
+
+* Restructured the code as per Martin's suggestions:
+  - Common functionality in bpf_local_storage.c
+  - bpf_sk_storage functionality remains in net/bpf_sk_storage.
+  - bpf_inode_storage is kept separate as it is enabled only with
+    CONFIG_BPF_LSM.
+* A separate cache for inode and sk storage with macros to define it.
+* Use the ops style approach as suggested by Martin instead of the
+  enum + switch style.
+* Added the inode map to bpftool bash completion and docs.
+* Rebase and indentation fixes.
+
+# v1 -> v2
+
+* Use the security blob pointer instead of dedicated member in
+  struct inode.
+* Better code re-use as suggested by Alexei.
+* Dropped the inode count arithmetic as pointed out by Alexei.
+* Minor bug fixes and rebase.
+
+bpf_sk_storage can already be used by some BPF program types to annotate
+socket objects. These annotations are managed with the life-cycle of the
+object (i.e. freed when the object is freed) which makes BPF programs
+much simpler and less prone to errors and leaks.
+
+This patch series:
+
+* Generalizes the bpf_sk_storage infrastructure to allow easy
+  implementation of local storage for other objects
+* Implements local storage for inodes
+* Makes both bpf_{sk, inode}_storage available to LSM programs.
+
+Local storage is safe to use in LSM programs as the attachment sites are
+limited and the owning object won't be freed, however, this is not the
+case for tracing. Usage in tracing is expected to follow a white-list
+based approach similar to the d_path helper
+(https://lore.kernel.org/bpf/20200506132946.2164578-1-jolsa@kernel.org).
+
+Access to local storage would allow LSM programs to implement stateful
+detections like detecting the unlink of a running executable from the
+examples shared as a part of the KRSI series
+https://lore.kernel.org/bpf/20200329004356.27286-1-kpsingh@chromium.org/
+and
+https://github.com/sinkap/linux-krsi/blob/patch/v1/examples/samples/bpf/lsm_detect_exec_unlink.c
+
+
+KP Singh (7):
+  A purely mechanical change to split the renaming from the actual
+    generalization.
+  bpf: Generalize caching for sk_storage.
+  bpf: Generalize bpf_sk_storage
+  bpf: Split bpf_local_storage to bpf_sk_storage
+  bpf: Implement bpf_local_storage for inodes
+  bpf: Allow local storage to be used from LSM programs
+  bpf: Add selftests for local_storage
+
+ include/linux/bpf.h                           |   9 +
+ include/linux/bpf_local_storage.h             | 173 ++++
+ include/linux/bpf_lsm.h                       |  21 +
+ include/linux/bpf_types.h                     |   3 +
+ include/net/bpf_sk_storage.h                  |  13 +
+ include/net/sock.h                            |   4 +-
+ include/uapi/linux/bpf.h                      |  54 +-
+ kernel/bpf/Makefile                           |   2 +
+ kernel/bpf/bpf_inode_storage.c                | 265 ++++++
+ kernel/bpf/bpf_local_storage.c                | 600 +++++++++++++
+ kernel/bpf/bpf_lsm.c                          |  21 +-
+ kernel/bpf/syscall.c                          |   3 +-
+ kernel/bpf/verifier.c                         |  10 +
+ net/core/bpf_sk_storage.c                     | 825 +++---------------
+ security/bpf/hooks.c                          |   7 +
+ .../bpf/bpftool/Documentation/bpftool-map.rst |   2 +-
+ tools/bpf/bpftool/bash-completion/bpftool     |   3 +-
+ tools/bpf/bpftool/map.c                       |   3 +-
+ tools/include/uapi/linux/bpf.h                |  54 +-
+ tools/lib/bpf/libbpf_probes.c                 |   5 +-
+ .../bpf/prog_tests/test_local_storage.c       |  60 ++
+ .../selftests/bpf/progs/local_storage.c       | 140 +++
+ 22 files changed, 1566 insertions(+), 711 deletions(-)
+ create mode 100644 include/linux/bpf_local_storage.h
+ create mode 100644 kernel/bpf/bpf_inode_storage.c
+ create mode 100644 kernel/bpf/bpf_local_storage.c
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/test_local_storage.c
+ create mode 100644 tools/testing/selftests/bpf/progs/local_storage.c
+
+-- 
+2.28.0.163.g6104cc2f0b6-goog
+
