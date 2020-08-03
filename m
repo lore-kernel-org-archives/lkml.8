@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6565CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60013C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42DD420781
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E5C204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:32:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457935;
-	bh=p/dz+IbuPkwaKp2FQ2XQx+DORgDOLu18VaROnkcbRzE=;
+	s=default; t=1596457939;
+	bh=LZWwTvS0tp1gdoXEyc79W/d6yllJPiT86ElTRyUHeQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w5vypemXl7nsxJ6N6OruPtYCUIrsw5wq3iIr/LPdYeVSaUFC0Vd27wAY5Z9Mvq8l7
-	 N5Es1sIWUJ1ieH+ppqwTpKYNCkanrMc3a1VQXK7kqwZAbF4wDeIIR84nPGplVMqLBC
-	 8A7xjoEZLiWntj9NXinBNL0SyTGGogpCOPSJVrvo=
+	b=fQXZsivktVgS/ld9Tke75VOE7d2yU2ClJEzrXtkD17a2HbSf6vmt9iQD5OLnZ9pif
+	 uU4CqFu2AxgjvhY5S9TXoRBW1XTpuGd2MSpuN7K1FDXXO3GlQWi41BN4Mwcd33J77M
+	 S2u99RmH2B3LrfiHSj+NjMwpYSQeBXEa+b1iXREk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbgHCMcO (ORCPT
+        id S1729287AbgHCMcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:32:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60030 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:32:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728268AbgHCMcM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:32:12 -0400
+        id S1728460AbgHCMcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:32:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4063B20781;
-        Mon,  3 Aug 2020 12:32:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABAF12076B;
+        Mon,  3 Aug 2020 12:32:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457930;
-        bh=p/dz+IbuPkwaKp2FQ2XQx+DORgDOLu18VaROnkcbRzE=;
+        s=default; t=1596457928;
+        bh=LZWwTvS0tp1gdoXEyc79W/d6yllJPiT86ElTRyUHeQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=16SaL6C8axa9Ng0hYnR602I/tt9y+5Dtt3P+7el+2DehSpoJ+t2KPfUr0GeYynXJs
-         loJYvaYI7BOaefqgnQoygM7w3cpEX8drr3hhdIluvKFLkK6b5SQNedGeId0jgzolfX
-         sbB4RUmQDiGJr71IYh6Q1dQ5nfpzwCzLckRR9yx4=
+        b=rUlIB0u4sryH/Y3G4t7boTSEc8XWNe6T1fT3z510RnY5KnGs/JeBEO+xc7PdmWD7C
+         +Mj3ECHsqQ1nTP3LZusUYvPkVgT/8fyCsiUBzrRwUOgb36RUWL3vL2EUHPkN6LRmu2
+         zKZANGXT7xec81YxAecM+vy+fRMYcf4YhwUCj8pQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jake Lawrence <lawja@fb.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org,
+        "Woojung.Huh@microchip.com" <Woojung.Huh@microchip.com>,
+        Johan Hovold <johan@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 34/56] mlx4: disable device on shutdown
-Date:   Mon,  3 Aug 2020 14:19:49 +0200
-Message-Id: <20200803121851.999149414@linuxfoundation.org>
+Subject: [PATCH 4.19 33/56] net: lan78xx: fix transfer-buffer memory leak
+Date:   Mon,  3 Aug 2020 14:19:48 +0200
+Message-Id: <20200803121851.938595494@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -62,72 +62,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <kuba@kernel.org>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 3cab8c65525920f00d8f4997b3e9bb73aecb3a8e ]
+[ Upstream commit 63634aa679ba8b5e306ad0727120309ae6ba8a8e ]
 
-It appears that not disabling a PCI device on .shutdown may lead to
-a Hardware Error with particular (perhaps buggy) BIOS versions:
+The interrupt URB transfer-buffer was never freed on disconnect or after
+probe errors.
 
-    mlx4_en: eth0: Close port called
-    mlx4_en 0000:04:00.0: removed PHC
-    reboot: Restarting system
-    {1}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 1
-    {1}[Hardware Error]: event severity: fatal
-    {1}[Hardware Error]:  Error 0, type: fatal
-    {1}[Hardware Error]:   section_type: PCIe error
-    {1}[Hardware Error]:   port_type: 4, root port
-    {1}[Hardware Error]:   version: 1.16
-    {1}[Hardware Error]:   command: 0x4010, status: 0x0143
-    {1}[Hardware Error]:   device_id: 0000:00:02.2
-    {1}[Hardware Error]:   slot: 0
-    {1}[Hardware Error]:   secondary_bus: 0x04
-    {1}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x2f06
-    {1}[Hardware Error]:   class_code: 000604
-    {1}[Hardware Error]:   bridge: secondary_status: 0x2000, control: 0x0003
-    {1}[Hardware Error]:   aer_uncor_status: 0x00100000, aer_uncor_mask: 0x00000000
-    {1}[Hardware Error]:   aer_uncor_severity: 0x00062030
-    {1}[Hardware Error]:   TLP Header: 40000018 040000ff 791f4080 00000000
-[hw error repeats]
-    Kernel panic - not syncing: Fatal hardware error!
-    CPU: 0 PID: 2189 Comm: reboot Kdump: loaded Not tainted 5.6.x-blabla #1
-    Hardware name: HP ProLiant DL380 Gen9/ProLiant DL380 Gen9, BIOS P89 05/05/2017
-
-Fix the mlx4 driver.
-
-This is a very similar problem to what had been fixed in:
-commit 0d98ba8d70b0 ("scsi: hpsa: disable device during shutdown")
-to address https://bugzilla.kernel.org/show_bug.cgi?id=199779.
-
-Fixes: 2ba5fbd62b25 ("net/mlx4_core: Handle AER flow properly")
-Reported-by: Jake Lawrence <lawja@fb.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Reviewed-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
+Cc: Woojung.Huh@microchip.com <Woojung.Huh@microchip.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/usb/lan78xx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/main.c b/drivers/net/ethernet/mellanox/mlx4/main.c
-index f7825c7b92fe3..8d7bb9a889677 100644
---- a/drivers/net/ethernet/mellanox/mlx4/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/main.c
-@@ -4311,12 +4311,14 @@ end:
- static void mlx4_shutdown(struct pci_dev *pdev)
- {
- 	struct mlx4_dev_persistent *persist = pci_get_drvdata(pdev);
-+	struct mlx4_dev *dev = persist->dev;
+diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+index 2dff233814ea5..d198f36785a46 100644
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -3815,6 +3815,7 @@ static int lan78xx_probe(struct usb_interface *intf,
+ 			usb_fill_int_urb(dev->urb_intr, dev->udev,
+ 					 dev->pipe_intr, buf, maxp,
+ 					 intr_complete, dev, period);
++			dev->urb_intr->transfer_flags |= URB_FREE_BUFFER;
+ 		}
+ 	}
  
- 	mlx4_info(persist->dev, "mlx4_shutdown was called\n");
- 	mutex_lock(&persist->interface_state_mutex);
- 	if (persist->interface_state & MLX4_INTERFACE_STATE_UP)
- 		mlx4_unload_one(pdev);
- 	mutex_unlock(&persist->interface_state_mutex);
-+	mlx4_pci_disable_device(dev);
- }
- 
- static const struct pci_error_handlers mlx4_err_handler = {
 -- 
 2.25.1
 
