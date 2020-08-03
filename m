@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77291C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAB8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 487BF2083B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 319BC204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457662;
-	bh=yTP/gbX7NwD9prvx9sgZEXLgLl6qKkR5XehZhqhxzfY=;
+	s=default; t=1596457672;
+	bh=6neVmE4RuTPyO1WwkKuIkdjl/sl5fH6UJcth+i9Zpek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Er6IaJ0j921G2fWSShvUfdvcbvENYCU6Iq4zdhzldeYOgPEYVqAFHeZUvcIH8Teev
-	 SoViama+GiBoO0F3FuTChyPe5rhJ/CuIq/qFuYh9omEHzt92yijGMv51ax6d+qpV3j
-	 PUxYb3/IfhFz2OndWkPnzwFWqXDu28rHDi23E6tA=
+	b=AyZz8qRhQyYcVHwcGtfcM5eDXhRkuC/P8mKOJv/WIxVUUhokklFXa0Ymz4dzFegE4
+	 hIOb9nt3DtAR3xZRCNNMggdaH9XV1O95WF3Z/Fe7Yqt3eAJ7o3/jyfrMD2BYKIlqk3
+	 IC8oRYsulZ5HPu73dZoHGTNgeFA++k9Q8HQShx5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgHCM1l (ORCPT
+        id S1728614AbgHCM1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:27:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53164 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:27:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728511AbgHCM1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:27:24 -0400
+        id S1728574AbgHCM1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:27:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB118204EC;
-        Mon,  3 Aug 2020 12:27:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9684A204EC;
+        Mon,  3 Aug 2020 12:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457643;
-        bh=yTP/gbX7NwD9prvx9sgZEXLgLl6qKkR5XehZhqhxzfY=;
+        s=default; t=1596457657;
+        bh=6neVmE4RuTPyO1WwkKuIkdjl/sl5fH6UJcth+i9Zpek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T0jzCgfgIlXiBGfv3NFIJq36d7lExLaOyGu2QuVsZDJcvCaMmpOx5l/pC/RrlX9oO
-         766ma0hJRprTqiSzuPSeZ5djjUKdsjYRza1acgKx+8Y7wOkaO8vYy2PpBOVagEwzSl
-         6A7sm/I+orSh+imcPRJfrV/NUUpSgmZh/7jQspq4=
+        b=snljmb2yc4bDOubjbEqyslFjeF3rOALKIYOr/hsr/zqbLHBil6GNGvlTM1+AhYvfb
+         QqHRRmvTCPF00SbsfK+25XnwYkPaRrE5/QsTlDOSocUrlNWmcoZ8dwv5zx6LAbp+UP
+         FbBlxHRXiW466Eg/JUEoMDNDgoDUQFJx1hmoPq3o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Wei Wang <wei.w.wang@intel.com>,
-        David Hildenbrand <david@redhat.com>
-Subject: [PATCH 5.4 21/90] virtio_balloon: fix up endian-ness for free cmd id
-Date:   Mon,  3 Aug 2020 14:18:43 +0200
-Message-Id: <20200803121858.644051268@linuxfoundation.org>
+        stable@vger.kernel.org, Abhishek Ambure <aambure@codeaurora.org>,
+        Balaji Pothunoori <bpothuno@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sathishkumar Muruganandam <murugana@codeaurora.org>
+Subject: [PATCH 5.4 04/90] ath10k: enable transmit data ack RSSI for QCA9884
+Date:   Mon,  3 Aug 2020 14:18:26 +0200
+Message-Id: <20200803121857.760477726@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -61,42 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael S. Tsirkin <mst@redhat.com>
+From: Abhishek Ambure <aambure@codeaurora.org>
 
-commit 168c358af2f8c5a37f8b5f877ba2cc93995606ee upstream.
+commit cc78dc3b790619aa05f22a86a9152986bd73698c upstream.
 
-free cmd id is read using virtio endian, spec says all fields
-in balloon are LE. Fix it up.
+For all data packets transmitted, host gets htt tx completion event. Some QCA9984
+firmware releases support WMI_SERVICE_TX_DATA_ACK_RSSI, which gives data
+ack rssi values to host through htt event of data tx completion. Data ack rssi
+values are valid if A0 bit is set in HTT rx message. So enable the feature also
+for QCA9884.
 
-Fixes: 86a559787e6f ("virtio-balloon: VIRTIO_BALLOON_F_FREE_PAGE_HINT")
-Cc: stable@vger.kernel.org
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
-Reviewed-by: Wei Wang <wei.w.wang@intel.com>
-Acked-by: David Hildenbrand <david@redhat.com>
+Tested HW: QCA9984
+Tested FW: 10.4-3.9.0.2-00044
+
+Signed-off-by: Abhishek Ambure <aambure@codeaurora.org>
+Signed-off-by: Balaji Pothunoori <bpothuno@codeaurora.org>
+[kvalo@codeaurora.org: improve commit log]
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sathishkumar Muruganandam <murugana@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/virtio/virtio_balloon.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/hw.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -529,10 +529,14 @@ static int init_vqs(struct virtio_balloo
- static u32 virtio_balloon_cmd_id_received(struct virtio_balloon *vb)
- {
- 	if (test_and_clear_bit(VIRTIO_BALLOON_CONFIG_READ_CMD_ID,
--			       &vb->config_read_bitmap))
-+			       &vb->config_read_bitmap)) {
- 		virtio_cread(vb->vdev, struct virtio_balloon_config,
- 			     free_page_report_cmd_id,
- 			     &vb->cmd_id_received_cache);
-+		/* Legacy balloon config space is LE, unlike all other devices. */
-+		if (!virtio_has_feature(vb->vdev, VIRTIO_F_VERSION_1))
-+			vb->cmd_id_received_cache = le32_to_cpu((__force __le32)vb->cmd_id_received_cache);
-+	}
+--- a/drivers/net/wireless/ath/ath10k/hw.c
++++ b/drivers/net/wireless/ath/ath10k/hw.c
+@@ -1145,6 +1145,7 @@ static bool ath10k_qca99x0_rx_desc_msdu_
+ const struct ath10k_hw_ops qca99x0_ops = {
+ 	.rx_desc_get_l3_pad_bytes = ath10k_qca99x0_rx_desc_get_l3_pad_bytes,
+ 	.rx_desc_get_msdu_limit_error = ath10k_qca99x0_rx_desc_msdu_limit_error,
++	.is_rssi_enable = ath10k_htt_tx_rssi_enable,
+ };
  
- 	return vb->cmd_id_received_cache;
- }
+ const struct ath10k_hw_ops qca6174_ops = {
 
 
