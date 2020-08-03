@@ -2,83 +2,245 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B24FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 00:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8691AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 00:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3607D206E9
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 00:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 653ED206DA
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 00:56:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="bUhTRe00"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbgHCAtI (ORCPT
+        id S1726212AbgHCA4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 20:49:08 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:47538 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727902AbgHCAtF (ORCPT
+        Sun, 2 Aug 2020 20:56:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48920 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725863AbgHCA4J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 20:49:05 -0400
-Received: by mail-io1-f69.google.com with SMTP id 18so2651608ioo.14
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 17:49:05 -0700 (PDT)
+        Sun, 2 Aug 2020 20:56:09 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 976D1C06174A
+        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 17:56:07 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 9so12840295wmj.5
+        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 17:56:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qA9bDintsX+Q8EZBsWXG8WyNthgYr4MQz6oX72nqeb4=;
+        b=bUhTRe00vl7YOj8vqszaVuYsqcGVtq4DWER9dXy7rlC3kFF0pxTrJv0z7uKhlLx1n/
+         2QNetlweCDeGLxidh+Da/Qus8uH1mT7dG0lFKz8upAfveGSn3heQjtetDloOW0O4m3uM
+         oIU7PriaJA2KZpeYqThrrU/9Ijd0NI2SCmKy4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=zjMjCpZHpZC9oX4mSp6lGsDleX+rgZUM4Hc+zQq53tE=;
-        b=lQBk87UF5B1bM1r2YbsM7UzsNXxNtONYL3cnyoig74LwLxRafupKhx18eXE/f3xTMW
-         nooN7dSI+12dHT3dtT043msbGFSxvozo2X6Fj8nDYzS/W8udKJ+nFavYohZQjfilfgg9
-         qrUrVctcrkrgHazDUw3q+d3PFuOn7MsCEZS/lg+x5kT63FEP0cRzSotp/KWmtr7wBmeA
-         wV3LtVQ+nyis806rdbgyexNgOKk1HU8edFuEqXhvJv95ZM65ktH7BfnfEFeGYoNSUakQ
-         IiXexjiORARamHVbgvTz4LhamXX51NCDukxqC4dVYOH4GEpvO/HytM1E0vk+K+FBePOO
-         zIxA==
-X-Gm-Message-State: AOAM533lYmGg1HqGTGcY+h2cOOrHVRvMdU98XrJF+bIg1c/OF6a7FtS8
-        xhvWqF6j9eau0C1QrVzcYX9RvD8VDPXqViJq4sby1r6bex/y
-X-Google-Smtp-Source: ABdhPJx51fMhfJaafxHzZAN2jjWSIrSl/b5CFIul4+GGQOi4s1mKok/hTo4u9c3s4cBgSHZ/wcwXjrq3H3VFwrd210mpw03EVfqe
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qA9bDintsX+Q8EZBsWXG8WyNthgYr4MQz6oX72nqeb4=;
+        b=Nz6GksNffvGoMbqujpqSPUMLVpxDmjccJ78lw76j7dd+nq0WdeIhMgnC9y0zpkUa+X
+         K0NWPRKKx1lP9229EnK0MCBfvqFwtgiFQ3+17sA1vEyDZd3am6OpAwHDLo/CW8FKuaX7
+         bVRPayNmwnO7AnsZR0q9gE2tLKJ4TAP/zri3CviU+SNx/zXwyg/LIEHe0Y8SOm6B5ntM
+         f9GMYh6+YiovGIxYMWNDZh5prYmueAnQu1aYA+c5gD0VbDhZdOYJYWWQ5j7gcbvN+lPB
+         DJRcsknaqcaz/0TGeMDUqTeTFiVtiwkWTdCXe6gT3p0gjyzDu63VlOq5DRK18FF3azqa
+         /pbA==
+X-Gm-Message-State: AOAM531OqNc1k5MyjzEbH/iLgm81Qvh5HtMH63D1iUahq9kTwU8q8QIw
+        VCKIrYrT2ruhZn4bifq7rOLjtZ5pPb3kpOhH0wnQ
+X-Google-Smtp-Source: ABdhPJyZ9W0Sd5f+gz87BrUQixHmSIdajqs0OlOU63PvYe+Ij4HULq8odDDUpG4V4tjANgSr5cQ98FxcLG7BYnqOw38=
+X-Received: by 2002:a1c:4d12:: with SMTP id o18mr236689wmh.55.1596416166182;
+ Sun, 02 Aug 2020 17:56:06 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:15d0:: with SMTP id f16mr168098iow.45.1596415744953;
- Sun, 02 Aug 2020 17:49:04 -0700 (PDT)
-Date:   Sun, 02 Aug 2020 17:49:04 -0700
-In-Reply-To: <000000000000ab11c505abeb19f5@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000064571305abee81ea@google.com>
-Subject: Re: KASAN: use-after-free Write in __sco_sock_close
-From:   syzbot <syzbot+077eca30d3cb7c02b273@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net,
-        devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
-        johan.hedberg@gmail.com, kaber@trash.net, kadlec@blackhole.kfki.hu,
-        kuba@kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        marcel@holtmann.org, mchehab@kernel.org, mchehab@s-opensource.com,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        pablo@netfilter.org, syzkaller-bugs@googlegroups.com
+References: <20200729233635.14406-1-atish.patra@wdc.com> <20200729233635.14406-4-atish.patra@wdc.com>
+ <20200730091440.GA534153@kernel.org>
+In-Reply-To: <20200730091440.GA534153@kernel.org>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Sun, 2 Aug 2020 17:55:55 -0700
+Message-ID: <CAOnJCUKS=QvQG5dBae96RD1CdevrXV+Jsfna2rfMWpw4Z=nDcw@mail.gmail.com>
+Subject: Re: [RFT PATCH v4 3/9] RISC-V: Implement late mapping page table
+ allocation functions
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Anup Patel <anup.patel@wdc.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Hu <nickhu@andestech.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Yash Shah <yash.shah@sifive.com>, Zong Li <zong.li@sifive.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this issue to:
+On Thu, Jul 30, 2020 at 2:14 AM Mike Rapoport <rppt@kernel.org> wrote:
+>
+> Hi,
+>
+> On Wed, Jul 29, 2020 at 04:36:29PM -0700, Atish Patra wrote:
+> > Currently, page table setup is done during setup_va_final where fixmap can
+> > be used to create the temporary mappings. The physical frame is allocated
+> > from memblock_alloc_* functions. However, this won't work if page table
+> > mapping needs to be created for a different mm context (i.e. efi mm) at
+> > a later point of time.
+>
+> TBH, I'm not very happy to see pte/pmd allocations, but I don't see a
+> way to reuse the existing routines in this case.
+>
+> As a general wild idea, maybe it's worth using something like
+>
+> struct pt_alloc_ops {
+>         pte_t *(*get_pte_virt)(phys_addr_t pa);
+>         phys_addr_t (*alloc_pte)(uintptr_t va);
+>         ...
+> };
+>
+> and add there implementations: nommu, MMU early and MMU late.
+>
 
-commit 43ea43b9d8b27b7acd443ec59319faa3cdb8a616
-Author: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Date:   Wed Oct 12 11:21:43 2016 +0000
+Yeah. That will be much cleaner. Thanks. I will change it to have
+function pointers
+instead of if else blocks.
 
-    [media] radio-bcm2048: don't ignore errors
+> Some more comments below.
+>
+> > Use generic kernel page allocation function & macros for any mapping
+> > after setup_vm_final.
+> >
+> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > ---
+> >  arch/riscv/mm/init.c | 29 ++++++++++++++++++++++++-----
+> >  1 file changed, 24 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> > index 68c608a0e91f..cba03fec08c1 100644
+> > --- a/arch/riscv/mm/init.c
+> > +++ b/arch/riscv/mm/init.c
+> > @@ -212,6 +212,7 @@ pgd_t swapper_pg_dir[PTRS_PER_PGD] __page_aligned_bss;
+> >  pgd_t trampoline_pg_dir[PTRS_PER_PGD] __page_aligned_bss;
+> >  pte_t fixmap_pte[PTRS_PER_PTE] __page_aligned_bss;
+> >  static bool mmu_enabled;
+> > +static bool late_mapping;
+> >
+> >  #define MAX_EARLY_MAPPING_SIZE       SZ_128M
+> >
+> > @@ -236,7 +237,9 @@ void __set_fixmap(enum fixed_addresses idx, phys_addr_t phys, pgprot_t prot)
+> >
+> >  static pte_t *__init get_pte_virt(phys_addr_t pa)
+> >  {
+> > -     if (mmu_enabled) {
+> > +     if (late_mapping)
+> > +             return (pte_t *) __va(pa);
+> > +     else if (mmu_enabled) {
+> >               clear_fixmap(FIX_PTE);
+> >               return (pte_t *)set_fixmap_offset(FIX_PTE, pa);
+> >       } else {
+> > @@ -246,13 +249,19 @@ static pte_t *__init get_pte_virt(phys_addr_t pa)
+> >
+> >  static phys_addr_t __init alloc_pte(uintptr_t va)
+> >  {
+> > +     unsigned long vaddr;
+> >       /*
+> >        * We only create PMD or PGD early mappings so we
+> >        * should never reach here with MMU disabled.
+> >        */
+> >       BUG_ON(!mmu_enabled);
+> > -
+> > -     return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
+> > +     if (late_mapping) {
+> > +             vaddr = __get_free_page(GFP_KERNEL);
+> > +             if (!vaddr || !pgtable_pte_page_ctor(virt_to_page(vaddr)))
+> > +                     BUG();
+>
+> Is BUG() here really necessary? If I understand correctly, this would be
+> used to enable mappings for EFI runtime services, so we probably want to
+> propagete the error to to caller and, if really necessary, BUG() there,
+> don't we?
+>
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1036e6a4900000
-start commit:   ac3a0c84 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=1236e6a4900000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1436e6a4900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e59ee776d5aa8d55
-dashboard link: https://syzkaller.appspot.com/bug?extid=077eca30d3cb7c02b273
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12cf1904900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10d52e14900000
+If __get_free_page is failing here, something is seriously wrong and
+the system should panic.
+But I agree with you that this should happen in the caller rather than
+the callee.
+We need to change the signature of each create_*_mapping function
+in order to propagate the error to the caller. Do you see any issues with that ?
+As it will affect page table allocation for all three cases, should we
+consolidate all the BUG()
+cases in caller only ?
 
-Reported-by: syzbot+077eca30d3cb7c02b273@syzkaller.appspotmail.com
-Fixes: 43ea43b9d8b2 ("[media] radio-bcm2048: don't ignore errors")
+> > +             return __pa(vaddr);
+> > +     } else
+> > +             return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
+> >  }
+> >
+> >  static void __init create_pte_mapping(pte_t *ptep,
+> > @@ -281,7 +290,9 @@ pmd_t early_pmd[PTRS_PER_PMD * NUM_EARLY_PMDS] __initdata __aligned(PAGE_SIZE);
+> >
+> >  static pmd_t *__init get_pmd_virt(phys_addr_t pa)
+> >  {
+> > -     if (mmu_enabled) {
+> > +     if (late_mapping)
+> > +             return (pmd_t *) __va(pa);
+> > +     else if (mmu_enabled) {
+> >               clear_fixmap(FIX_PMD);
+> >               return (pmd_t *)set_fixmap_offset(FIX_PMD, pa);
+> >       } else {
+> > @@ -292,8 +303,13 @@ static pmd_t *__init get_pmd_virt(phys_addr_t pa)
+> >  static phys_addr_t __init alloc_pmd(uintptr_t va)
+> >  {
+> >       uintptr_t pmd_num;
+> > +     unsigned long vaddr;
+> >
+> > -     if (mmu_enabled)
+> > +     if (late_mapping) {
+> > +             vaddr = __get_free_page(GFP_KERNEL);
+> > +             BUG_ON(!vaddr);
+> > +             return __pa(vaddr);
+>
+> Does nommu also need to allocate a page for pmd?
+>
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Not sure if I understand the question correctly. Before MMU is enabled,
+we are using statically allocated early_pmd.
+
+> > +     } else if (mmu_enabled)
+> >               return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
+> >
+> >       pmd_num = (va - PAGE_OFFSET) >> PGDIR_SHIFT;
+> > @@ -533,6 +549,9 @@ static void __init setup_vm_final(void)
+> >       /* Move to swapper page table */
+> >       csr_write(CSR_SATP, PFN_DOWN(__pa_symbol(swapper_pg_dir)) | SATP_MODE);
+> >       local_flush_tlb_all();
+> > +
+> > +     /* generic page allocation function must be used to setup page table */
+> > +     late_mapping = true;
+> >  }
+> >  #else
+> >  asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+> > --
+> > 2.24.0
+> >
+>
+> --
+> Sincerely yours,
+> Mike.
+
+
+
+-- 
+Regards,
+Atish
