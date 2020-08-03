@@ -2,111 +2,132 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9621DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE64C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74A08206D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB74A206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:10:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lwzvhZsO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iTzcJA1R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbgHCFKU (ORCPT
+        id S1726986AbgHCFKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 01:10:20 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:44606 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726799AbgHCFKU (ORCPT
+        Mon, 3 Aug 2020 01:10:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbgHCFKn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 01:10:20 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596431419; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=xH2GNNEeKA5M2HSxLn3DvMsbHNeHZZGIVLaa9prWnN0=;
- b=lwzvhZsOB/tv+pnlpPaZt7PR3bQTpKQyQ6nYf3IF3quDAh5XsnEkaFI11PqxIe4UJ3aGAlw+
- E6gGgCCqZFcCpP635YBhE/FfpqJ4XyMXwcMf/5Y8ejtl1QP7IsxHAZXtwpo90r7pbe2h6ecY
- gTvs+AFiCzN0q/FfYA2kWoopFF8=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n16.prod.us-west-2.postgun.com with SMTP id
- 5f279b9c2dfc1b5cc2467d2e (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 03 Aug 2020 05:07:40
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 25F26C4339C; Mon,  3 Aug 2020 05:07:40 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 77B7BC433C6;
-        Mon,  3 Aug 2020 05:07:39 +0000 (UTC)
+        Mon, 3 Aug 2020 01:10:43 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 448C1C06174A;
+        Sun,  2 Aug 2020 22:10:43 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id q3so62203ybp.7;
+        Sun, 02 Aug 2020 22:10:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DBnDjn7vidDkpVU0WID8k/kuqtUn/mEBKE1Jn9YiCUg=;
+        b=iTzcJA1Rs9SjWutqGbiB+/Y0adyCk2lZYULEWoM72kmyroik/YInYByz8zbeXPTc2d
+         PUYBq7kt5w2/uAFTAPM18+T3g46xAnBmK+Sstq7z/wNM3p0Lt4x+9gzfPSc6ozLRUM2t
+         RkM9McdeoAOskWcHTcfhFTVx4K4pVTHrkULcKpIIPUkVe8TZReL53NxCF3aXxfGa4M/0
+         jlHUQ8sz364daT82VFZulbY7KBPWoNC4U1+sBPYDQvnxJ5q6GrmcVWnEtLyXYUqB/nNZ
+         8HTkVSBir0Rv0JdVnEhgnVIFGGR0+M/SYBc1Dz4tKE/kEM/ppLHBCbPtOFDv2Gzovb2O
+         mc6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DBnDjn7vidDkpVU0WID8k/kuqtUn/mEBKE1Jn9YiCUg=;
+        b=b3Z4pdrfdizo/Npro1bRHTLZXTA6sv0Q7xc6N1Ube4bVsRJM1TalGXXIHShURgfmAt
+         QOXVlpL9djl1ghr5TW/KnIbZ2MU9wvO85Gx2TIFVAg5DA6gpEdOhhfWfq/Jvw708VhcB
+         a5s5Iyff04+WMkciTNTLI/NG1ZcGnsaeengDeV++aNMnTB1HW9CF14KLRq+CSP/4qKep
+         G/ulzhuUkARy7xkH9CPBcjPGcH+FHEHbZAybsWAOQC08AKuJGN8iC569BotTrfhaeGe4
+         JO2U/WGUihQH2OvltIwNnq/CSW3JXasEijick39O3fONQmvK9J6gfzyjwCx10Zzq4P2m
+         wcOg==
+X-Gm-Message-State: AOAM530pBb0MXtGACz7ZL1qAflB2eDDXi/rHUFjLKZ37AmgkE5O4XjQV
+        kvt/lj3utzhMBPa9v9Z3WfvtNVmcbwBRDOQ3AIeEqw==
+X-Google-Smtp-Source: ABdhPJwfJPzl0UAnoeSqc1osBwiX9FKTTAbT0YGrLhc9JTx14iQc9uqlfxFP9HZDVcii6S7DtIxIKshpbeBvEpLuwDw=
+X-Received: by 2002:a25:d84a:: with SMTP id p71mr24748708ybg.347.1596431442552;
+ Sun, 02 Aug 2020 22:10:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 03 Aug 2020 13:07:39 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Stanley Chu <stanley.chu@mediatek.com>,
-        Avri Altman <Avri.Altman@wdc.com>, linux-scsi@vger.kernel.org,
-        martin.petersen@oracle.com, alim.akhtar@samsung.com,
-        jejb@linux.ibm.com, beanhuo@micron.com, asutoshd@codeaurora.org,
-        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
-        chaotian.jing@mediatek.com, cc.chou@mediatek.com
-Subject: Re: [PATCH v4] scsi: ufs: Cleanup completed request without interrupt
- notification
-In-Reply-To: <80f5e213-502b-3532-e782-6f26a778274e@acm.org>
-References: <20200724140246.19434-1-stanley.chu@mediatek.com>
- <SN6PR04MB4640B5FC06968244DDACB8BEFC720@SN6PR04MB4640.namprd04.prod.outlook.com>
- <1596159018.17247.53.camel@mtkswgap22>
- <97f1dfb0-41b6-0249-3e82-cae480b0efb6@acm.org>
- <8b0a158a7c3ee2165e09290996521ffc@codeaurora.org>
- <f45c6c47-ffc5-3f8e-3234-9e5989dbf996@acm.org>
- <548b602daa1e15415625cb8d1f81a208@codeaurora.org>
- <80f5e213-502b-3532-e782-6f26a778274e@acm.org>
-Message-ID: <7002ce0c5c84409cae6910675f7fe4c0@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20200801084721.1812607-1-songliubraving@fb.com>
+ <20200801084721.1812607-6-songliubraving@fb.com> <CAEf4BzaP4TGF7kcmZRAKsy=oWPpFA6sUGFkctpGz-fPp+YuSOQ@mail.gmail.com>
+ <DDCD362E-21D3-46BF-90A6-8F3221CBB54E@fb.com>
+In-Reply-To: <DDCD362E-21D3-46BF-90A6-8F3221CBB54E@fb.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Sun, 2 Aug 2020 22:10:31 -0700
+Message-ID: <CAEf4BzY5RYMM6w8wn3qEB3AsuKWv-TMaD5NVFj=YqbCW4DLjqA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 5/5] selftests/bpf: add benchmark for uprobe vs. user_prog
+To:     Song Liu <songliubraving@fb.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <Kernel-team@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Xu <dlxu@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bart,
+On Sun, Aug 2, 2020 at 9:47 PM Song Liu <songliubraving@fb.com> wrote:
+>
+>
+> > On Aug 2, 2020, at 6:51 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+> >
+> > On Sat, Aug 1, 2020 at 1:50 AM Song Liu <songliubraving@fb.com> wrote:
+> >>
+> >> Add a benchmark to compare performance of
+> >>  1) uprobe;
+> >>  2) user program w/o args;
+> >>  3) user program w/ args;
+> >>  4) user program w/ args on random cpu.
+> >>
+> >
+> > Can you please add it to the existing benchmark runner instead, e.g.,
+> > along the other bench_trigger benchmarks? No need to re-implement
+> > benchmark setup. And also that would also allow to compare existing
+> > ways of cheaply triggering a program vs this new _USER program?
+>
+> Will try.
+>
+> >
+> > If the performance is not significantly better than other ways, do you
+> > think it still makes sense to add a new BPF program type? I think
+> > triggering KPROBE/TRACEPOINT from bpf_prog_test_run() would be very
+> > nice, maybe it's possible to add that instead of a new program type?
+> > Either way, let's see comparison with other program triggering
+> > mechanisms first.
+>
+> Triggering KPROBE and TRACEPOINT from bpf_prog_test_run() will be useful.
+> But I don't think they can be used instead of user program, for a couple
+> reasons. First, KPROBE/TRACEPOINT may be triggered by other programs
+> running in the system, so user will have to filter those noise out in
+> each program. Second, it is not easy to specify CPU for KPROBE/TRACEPOINT,
+> while this feature could be useful in many cases, e.g. get stack trace
+> on a given CPU.
+>
 
-On 2020-08-03 11:12, Bart Van Assche wrote:
-> On 2020-07-31 16:17, Can Guo wrote:
->> For scsi_dma_unmap() part, that is true - we should make it serialized 
->> with
->> any other completion paths. I've found it during my fault injection 
->> test, so
->> I've made a patch to fix it, but it only comes in my next error 
->> recovery
->> enhancement patch series. Please check the attachment.
-> 
-> Hi Can,
-> 
-> It is not clear to me how that patch serializes scsi_dma_unmap() 
-> against
-> other completion paths? Doesn't the regular completion path call
-> __ufshcd_transfer_req_compl() without holding the host lock?
-> 
+Right, it's not as convenient with KPROBE/TRACEPOINT as with the USER
+program you've added specifically with that feature in mind. But if
+you pin user-space thread on the needed CPU and trigger kprobe/tp,
+then you'll get what you want. As for the "noise", see how
+bench_trigger() deals with that: it records thread ID and filters
+everything not matching. You can do the same with CPU ID. It's not as
+automatic as with a special BPF program type, but still pretty simple,
+which is why I'm still deciding (for myself) whether USER program type
+is necessary :)
+
+
 > Thanks,
-> 
-> Bart.
-
-FYI, ufshcd_intr() holds the host spin lock the whole time. So, to your
-question, the regular completion path from IRQ handler has the host lock 
-held.
-
-Thanks,
-
-Can Guo.
+> Song
