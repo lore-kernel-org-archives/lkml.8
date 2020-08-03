@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16ED1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB51C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9DF3207FC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1FB207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457575;
-	bh=Ezm59BrI2xzB7EIKgvwFqNMC5HrCH6WKJKXNUOGexwc=;
+	s=default; t=1596457577;
+	bh=f5pWZnTXWdMeH/r/P/ygyxFUvVXk7VoBwu1GlAY/Sms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kZG8A8nTQXIYgLQRMSEb0xBaBd8IZyAF4d6umuFFcMl3ND10gtD2GxRvITGzVc8cB
-	 SjEpBpsFf3h2LW1+g/HF3K9I51epRqHV1tpXV5lBiyFjhTck2G/buEVzS45f3B3psf
-	 /ozEOgv6Z6q0eTrGig+4865l49VCP3IaTJVaoIso=
+	b=vo5z0yx3Hm1BBNkTB/WQRh3zYq6qQFMBdEiBEmInBlLa3E35k1Oz8HXuCLOueK/fD
+	 Kf8p397hva4558TSyZ5D/1hkltdKZMdlArRs9zKY//h3cSJJRgnJVQyPhiMh7l1D1C
+	 wOg7a55BkVSMl4KNzM1EPhPvXmwHyfProGDvYMwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbgHCM0O (ORCPT
+        id S1727783AbgHCM0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:26:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51214 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:26:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728312AbgHCM0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:26:05 -0400
+        id S1728324AbgHCM0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:26:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B9F1204EC;
-        Mon,  3 Aug 2020 12:26:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A5D4207DF;
+        Mon,  3 Aug 2020 12:26:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457564;
-        bh=Ezm59BrI2xzB7EIKgvwFqNMC5HrCH6WKJKXNUOGexwc=;
+        s=default; t=1596457572;
+        bh=f5pWZnTXWdMeH/r/P/ygyxFUvVXk7VoBwu1GlAY/Sms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s5cxgklJW2lW0HBdJMJyDQfpV9IFliGp1T1m9EoGDUL3nojkmWUdPEenO8+2+9W+g
-         xBn/qcJnKvoXW3NAzXvpkiccnPuLown2KWUs1PLqs8nD6dfrXrxXLoRqo+XsZxjtcQ
-         VzUbS6uUJCaUW5lygI7MbFgwmV5db0ULw/h1Fk58=
+        b=vqTLOlzT5axqMTXb2L7NpVvNMba8LbJ1h5zYrO/AquN5vEtRwyl2pvOT1P1eE/L6a
+         QxUFVTI8xrggToIZqGvtuEFtoyChmoK2b6fO2RmwRrtRG2XTu0L72kerOuqkWQJKT2
+         8kwqOuqCMoK7PF97ijd1IruMe+aJK69FbA6LkqBk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Righi <andrea.righi@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Atish Patra <atish.patra@wdc.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 113/120] xen-netfront: fix potential deadlock in xennet_remove()
-Date:   Mon,  3 Aug 2020 14:19:31 +0200
-Message-Id: <20200803121908.407052413@linuxfoundation.org>
+Subject: [PATCH 5.7 116/120] riscv: Parse all memory blocks to remove unusable memory
+Date:   Mon,  3 Aug 2020 14:19:34 +0200
+Message-Id: <20200803121908.549697771@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -60,132 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Righi <andrea.righi@canonical.com>
+From: Atish Patra <atish.patra@wdc.com>
 
-[ Upstream commit c2c633106453611be07821f53dff9e93a9d1c3f0 ]
+[ Upstream commit fa5a198359053c8e21dcc2b39c0e13871059bc9f ]
 
-There's a potential race in xennet_remove(); this is what the driver is
-doing upon unregistering a network device:
+Currently, maximum physical memory allowed is equal to -PAGE_OFFSET.
+That's why we remove any memory blocks spanning beyond that size. However,
+it is done only for memblock containing linux kernel which will not work
+if there are multiple memblocks.
 
-  1. state = read bus state
-  2. if state is not "Closed":
-  3.    request to set state to "Closing"
-  4.    wait for state to be set to "Closing"
-  5.    request to set state to "Closed"
-  6.    wait for state to be set to "Closed"
+Process all memory blocks to figure out how much memory needs to be removed
+and remove at the end instead of updating the memblock list in place.
 
-If the state changes to "Closed" immediately after step 1 we are stuck
-forever in step 4, because the state will never go back from "Closed" to
-"Closing".
-
-Make sure to check also for state == "Closed" in step 4 to prevent the
-deadlock.
-
-Also add a 5 sec timeout any time we wait for the bus state to change,
-to avoid getting stuck forever in wait_event().
-
-Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/xen-netfront.c | 64 +++++++++++++++++++++++++-------------
- 1 file changed, 42 insertions(+), 22 deletions(-)
+ arch/riscv/mm/init.c | 31 +++++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/net/xen-netfront.c b/drivers/net/xen-netfront.c
-index 482c6c8b0fb7e..88280057e0321 100644
---- a/drivers/net/xen-netfront.c
-+++ b/drivers/net/xen-netfront.c
-@@ -63,6 +63,8 @@ module_param_named(max_queues, xennet_max_queues, uint, 0644);
- MODULE_PARM_DESC(max_queues,
- 		 "Maximum number of queues per virtual interface");
- 
-+#define XENNET_TIMEOUT  (5 * HZ)
-+
- static const struct ethtool_ops xennet_ethtool_ops;
- 
- struct netfront_cb {
-@@ -1334,12 +1336,15 @@ static struct net_device *xennet_create_dev(struct xenbus_device *dev)
- 
- 	netif_carrier_off(netdev);
- 
--	xenbus_switch_state(dev, XenbusStateInitialising);
--	wait_event(module_wq,
--		   xenbus_read_driver_state(dev->otherend) !=
--		   XenbusStateClosed &&
--		   xenbus_read_driver_state(dev->otherend) !=
--		   XenbusStateUnknown);
-+	do {
-+		xenbus_switch_state(dev, XenbusStateInitialising);
-+		err = wait_event_timeout(module_wq,
-+				 xenbus_read_driver_state(dev->otherend) !=
-+				 XenbusStateClosed &&
-+				 xenbus_read_driver_state(dev->otherend) !=
-+				 XenbusStateUnknown, XENNET_TIMEOUT);
-+	} while (!err);
-+
- 	return netdev;
- 
-  exit:
-@@ -2139,28 +2144,43 @@ static const struct attribute_group xennet_dev_group = {
- };
- #endif /* CONFIG_SYSFS */
- 
--static int xennet_remove(struct xenbus_device *dev)
-+static void xennet_bus_close(struct xenbus_device *dev)
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index af8926777567f..115fb9245f160 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -146,26 +146,29 @@ void __init setup_bootmem(void)
  {
--	struct netfront_info *info = dev_get_drvdata(&dev->dev);
+ 	struct memblock_region *reg;
+ 	phys_addr_t mem_size = 0;
++	phys_addr_t total_mem = 0;
++	phys_addr_t mem_start, end = 0;
+ 	phys_addr_t vmlinux_end = __pa_symbol(&_end);
+ 	phys_addr_t vmlinux_start = __pa_symbol(&_start);
+ 
+ 	/* Find the memory region containing the kernel */
+ 	for_each_memblock(memory, reg) {
+-		phys_addr_t end = reg->base + reg->size;
 -
--	dev_dbg(&dev->dev, "%s\n", dev->nodename);
-+	int ret;
- 
--	if (xenbus_read_driver_state(dev->otherend) != XenbusStateClosed) {
-+	if (xenbus_read_driver_state(dev->otherend) == XenbusStateClosed)
-+		return;
-+	do {
- 		xenbus_switch_state(dev, XenbusStateClosing);
--		wait_event(module_wq,
--			   xenbus_read_driver_state(dev->otherend) ==
--			   XenbusStateClosing ||
--			   xenbus_read_driver_state(dev->otherend) ==
--			   XenbusStateUnknown);
-+		ret = wait_event_timeout(module_wq,
-+				   xenbus_read_driver_state(dev->otherend) ==
-+				   XenbusStateClosing ||
-+				   xenbus_read_driver_state(dev->otherend) ==
-+				   XenbusStateClosed ||
-+				   xenbus_read_driver_state(dev->otherend) ==
-+				   XenbusStateUnknown,
-+				   XENNET_TIMEOUT);
-+	} while (!ret);
+-		if (reg->base <= vmlinux_start && vmlinux_end <= end) {
+-			mem_size = min(reg->size, (phys_addr_t)-PAGE_OFFSET);
+-
+-			/*
+-			 * Remove memblock from the end of usable area to the
+-			 * end of region
+-			 */
+-			if (reg->base + mem_size < end)
+-				memblock_remove(reg->base + mem_size,
+-						end - reg->base - mem_size);
+-		}
++		end = reg->base + reg->size;
++		if (!total_mem)
++			mem_start = reg->base;
++		if (reg->base <= vmlinux_start && vmlinux_end <= end)
++			BUG_ON(reg->size == 0);
++		total_mem = total_mem + reg->size;
+ 	}
+-	BUG_ON(mem_size == 0);
 +
-+	if (xenbus_read_driver_state(dev->otherend) == XenbusStateClosed)
-+		return;
++	/*
++	 * Remove memblock from the end of usable area to the
++	 * end of region
++	 */
++	mem_size = min(total_mem, (phys_addr_t)-PAGE_OFFSET);
++	if (mem_start + mem_size < end)
++		memblock_remove(mem_start + mem_size,
++				end - mem_start - mem_size);
  
-+	do {
- 		xenbus_switch_state(dev, XenbusStateClosed);
--		wait_event(module_wq,
--			   xenbus_read_driver_state(dev->otherend) ==
--			   XenbusStateClosed ||
--			   xenbus_read_driver_state(dev->otherend) ==
--			   XenbusStateUnknown);
--	}
-+		ret = wait_event_timeout(module_wq,
-+				   xenbus_read_driver_state(dev->otherend) ==
-+				   XenbusStateClosed ||
-+				   xenbus_read_driver_state(dev->otherend) ==
-+				   XenbusStateUnknown,
-+				   XENNET_TIMEOUT);
-+	} while (!ret);
-+}
-+
-+static int xennet_remove(struct xenbus_device *dev)
-+{
-+	struct netfront_info *info = dev_get_drvdata(&dev->dev);
- 
-+	xennet_bus_close(dev);
- 	xennet_disconnect_backend(info);
- 
- 	if (info->netdev->reg_state == NETREG_REGISTERED)
+ 	/* Reserve from the start of the kernel to the end of the kernel */
+ 	memblock_reserve(vmlinux_start, vmlinux_end - vmlinux_start);
 -- 
 2.25.1
 
