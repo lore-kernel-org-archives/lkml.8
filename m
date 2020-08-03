@@ -5,51 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B2BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 177B5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C78922076B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E026A20781
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457839;
-	bh=25NRMhky5p8NZeSWlXQ16BfjITFXelalLZidKBhsFJY=;
+	s=default; t=1596457843;
+	bh=iBRlGITrjfv/S2amqM1NyQzfRh/LjyCHcWdVhCP4M0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0pGV72oj/gqOj0qttlNofk6mK+kGpLkapIFAottTjD6k3U83q80vnGjjj3BKw5jTO
-	 ZA8ryf2UVLic4tkJuQZRVNKfRSRKJ+9UyKYOIHBhRwjIN4IAnMnmhHcFLDSNv5B65M
-	 Q8xJC+ZU6EHrf8K2WxzaiioXtGx/Nr+KHiR1a20A=
+	b=GpMPRDNGwl9I8UEQnWoKHg7WDuY+y69ESEErVhJlwbwOTg5dAe3BtbWAqPAySVNB2
+	 djxed4NjhKGCsxNstbDsNvKA3lUnxlvwR0LYNH1R3JQeCVmZWo3uDaBAS1ByXI27Uw
+	 eypdRKniRDN99Mp6oXPYAoOec4jvlHDfQbP19cqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729084AbgHCMaj (ORCPT
+        id S1729096AbgHCMan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:30:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57640 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:30:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729077AbgHCMag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:30:36 -0400
+        id S1729083AbgHCMak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:30:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68C802054F;
-        Mon,  3 Aug 2020 12:30:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E9662054F;
+        Mon,  3 Aug 2020 12:30:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457834;
-        bh=25NRMhky5p8NZeSWlXQ16BfjITFXelalLZidKBhsFJY=;
+        s=default; t=1596457838;
+        bh=iBRlGITrjfv/S2amqM1NyQzfRh/LjyCHcWdVhCP4M0s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1SDmvSxkpQ8HrGGQs76MLnX6wT3B4BVOzPrqO0eG+ZQhyR1gcJkWj4FLQ/XPrqJns
-         0/V0uXMIMHKG98punpWNdJmkzErRmizyGd9Ri2Ig0fJKkHz1f1vLZyyRs2WYwwQW2N
-         EigOes3qUumqeOBY3uAd7Lhz49cuTL+Bp9lRuM58=
+        b=o5PoYMt69VaPAewoqoHaMPA1Flhl7zje2QSOdm9Ek3QLi6XGb4Y4XwcHx2OcRB3zs
+         z8xIWy3bIBNKGf3XwNNvHpxr789aPr4THlDu65BX+Fd49gHUr/qTWRSL/SBXa6oMrr
+         ICkfSXcrXetvmOVwxIu9uFjUfsYRWGwAJcTPfPPM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
         Adrian Hunter <adrian.hunter@intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 5.4 89/90] perf env: Do not return pointers to local variables
-Date:   Mon,  3 Aug 2020 14:19:51 +0200
-Message-Id: <20200803121901.890561589@linuxfoundation.org>
+Subject: [PATCH 5.4 90/90] perf bench: Share some global variables to fix build with gcc 10
+Date:   Mon,  3 Aug 2020 14:19:52 +0200
+Message-Id: <20200803121901.932193708@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -64,48 +66,228 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-commit ebcb9464a2ae3a547e97de476575c82ece0e93e2 upstream.
+commit e4d9b04b973b2dbce7b42af95ea70d07da1c936d upstream.
 
-It is possible to return a pointer to a local variable when looking up
-the architecture name for the running system and no normalization is
-done on that value, i.e. we may end up returning the uts.machine local
-variable.
+Noticed with gcc 10 (fedora rawhide) that those variables were not being
+declared as static, so end up with:
 
-While this doesn't happen on most arches, as normalization takes place,
-lets fix this by making that a static variable and optimize it a bit by
-not always running uname(), only the first time.
+  ld: /tmp/build/perf/bench/epoll-wait.o:/git/perf/tools/perf/bench/epoll-wait.c:93: multiple definition of `end'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
+  ld: /tmp/build/perf/bench/epoll-wait.o:/git/perf/tools/perf/bench/epoll-wait.c:93: multiple definition of `start'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
+  ld: /tmp/build/perf/bench/epoll-wait.o:/git/perf/tools/perf/bench/epoll-wait.c:93: multiple definition of `runtime'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
+  ld: /tmp/build/perf/bench/epoll-ctl.o:/git/perf/tools/perf/bench/epoll-ctl.c:38: multiple definition of `end'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
+  ld: /tmp/build/perf/bench/epoll-ctl.o:/git/perf/tools/perf/bench/epoll-ctl.c:38: multiple definition of `start'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
+  ld: /tmp/build/perf/bench/epoll-ctl.o:/git/perf/tools/perf/bench/epoll-ctl.c:38: multiple definition of `runtime'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
+  make[4]: *** [/git/perf/tools/build/Makefile.build:145: /tmp/build/perf/bench/perf-in.o] Error 1
 
-Noticed in fedora rawhide running with:
+Prefix those with bench__ and add them to bench/bench.h, so that we can
+share those on the tools needing to access those variables from signal
+handlers.
 
-  [perfbuilder@a5ff49d6e6e4 ~]$ gcc --version
-  gcc (GCC) 10.0.1 20200216 (Red Hat 10.0.1-0.8)
-
-Reported-by: Jiri Olsa <jolsa@kernel.org>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/20200303155811.GD13702@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/env.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/bench/bench.h         |    4 ++++
+ tools/perf/bench/epoll-ctl.c     |    7 +++----
+ tools/perf/bench/epoll-wait.c    |   11 +++++------
+ tools/perf/bench/futex-hash.c    |   12 ++++++------
+ tools/perf/bench/futex-lock-pi.c |   11 +++++------
+ 5 files changed, 23 insertions(+), 22 deletions(-)
 
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -326,11 +326,11 @@ static const char *normalize_arch(char *
+--- a/tools/perf/bench/bench.h
++++ b/tools/perf/bench/bench.h
+@@ -2,6 +2,10 @@
+ #ifndef BENCH_H
+ #define BENCH_H
  
- const char *perf_env__arch(struct perf_env *env)
++#include <sys/time.h>
++
++extern struct timeval bench__start, bench__end, bench__runtime;
++
+ /*
+  * The madvise transparent hugepage constants were added in glibc
+  * 2.13. For compatibility with older versions of glibc, define these
+--- a/tools/perf/bench/epoll-ctl.c
++++ b/tools/perf/bench/epoll-ctl.c
+@@ -35,7 +35,6 @@
+ 
+ static unsigned int nthreads = 0;
+ static unsigned int nsecs    = 8;
+-struct timeval start, end, runtime;
+ static bool done, __verbose, randomize;
+ 
+ /*
+@@ -94,8 +93,8 @@ static void toggle_done(int sig __maybe_
  {
--	struct utsname uts;
- 	char *arch_name;
+ 	/* inform all threads that we're done for the day */
+ 	done = true;
+-	gettimeofday(&end, NULL);
+-	timersub(&end, &start, &runtime);
++	gettimeofday(&bench__end, NULL);
++	timersub(&bench__end, &bench__start, &bench__runtime);
+ }
  
- 	if (!env || !env->arch) { /* Assume local operation */
--		if (uname(&uts) < 0)
-+		static struct utsname uts = { .machine[0] = '\0', };
-+		if (uts.machine[0] == '\0' && uname(&uts) < 0)
- 			return NULL;
- 		arch_name = uts.machine;
- 	} else
+ static void nest_epollfd(void)
+@@ -361,7 +360,7 @@ int bench_epoll_ctl(int argc, const char
+ 
+ 	threads_starting = nthreads;
+ 
+-	gettimeofday(&start, NULL);
++	gettimeofday(&bench__start, NULL);
+ 
+ 	do_threads(worker, cpu);
+ 
+--- a/tools/perf/bench/epoll-wait.c
++++ b/tools/perf/bench/epoll-wait.c
+@@ -90,7 +90,6 @@
+ 
+ static unsigned int nthreads = 0;
+ static unsigned int nsecs    = 8;
+-struct timeval start, end, runtime;
+ static bool wdone, done, __verbose, randomize, nonblocking;
+ 
+ /*
+@@ -276,8 +275,8 @@ static void toggle_done(int sig __maybe_
+ {
+ 	/* inform all threads that we're done for the day */
+ 	done = true;
+-	gettimeofday(&end, NULL);
+-	timersub(&end, &start, &runtime);
++	gettimeofday(&bench__end, NULL);
++	timersub(&bench__end, &bench__start, &bench__runtime);
+ }
+ 
+ static void print_summary(void)
+@@ -287,7 +286,7 @@ static void print_summary(void)
+ 
+ 	printf("\nAveraged %ld operations/sec (+- %.2f%%), total secs = %d\n",
+ 	       avg, rel_stddev_stats(stddev, avg),
+-	       (int) runtime.tv_sec);
++	       (int)bench__runtime.tv_sec);
+ }
+ 
+ static int do_threads(struct worker *worker, struct perf_cpu_map *cpu)
+@@ -479,7 +478,7 @@ int bench_epoll_wait(int argc, const cha
+ 
+ 	threads_starting = nthreads;
+ 
+-	gettimeofday(&start, NULL);
++	gettimeofday(&bench__start, NULL);
+ 
+ 	do_threads(worker, cpu);
+ 
+@@ -519,7 +518,7 @@ int bench_epoll_wait(int argc, const cha
+ 		qsort(worker, nthreads, sizeof(struct worker), cmpworker);
+ 
+ 	for (i = 0; i < nthreads; i++) {
+-		unsigned long t = worker[i].ops/runtime.tv_sec;
++		unsigned long t = worker[i].ops / bench__runtime.tv_sec;
+ 
+ 		update_stats(&throughput_stats, t);
+ 
+--- a/tools/perf/bench/futex-hash.c
++++ b/tools/perf/bench/futex-hash.c
+@@ -37,7 +37,7 @@ static unsigned int nfutexes = 1024;
+ static bool fshared = false, done = false, silent = false;
+ static int futex_flag = 0;
+ 
+-struct timeval start, end, runtime;
++struct timeval bench__start, bench__end, bench__runtime;
+ static pthread_mutex_t thread_lock;
+ static unsigned int threads_starting;
+ static struct stats throughput_stats;
+@@ -103,8 +103,8 @@ static void toggle_done(int sig __maybe_
+ {
+ 	/* inform all threads that we're done for the day */
+ 	done = true;
+-	gettimeofday(&end, NULL);
+-	timersub(&end, &start, &runtime);
++	gettimeofday(&bench__end, NULL);
++	timersub(&bench__end, &bench__start, &bench__runtime);
+ }
+ 
+ static void print_summary(void)
+@@ -114,7 +114,7 @@ static void print_summary(void)
+ 
+ 	printf("%sAveraged %ld operations/sec (+- %.2f%%), total secs = %d\n",
+ 	       !silent ? "\n" : "", avg, rel_stddev_stats(stddev, avg),
+-	       (int) runtime.tv_sec);
++	       (int)bench__runtime.tv_sec);
+ }
+ 
+ int bench_futex_hash(int argc, const char **argv)
+@@ -161,7 +161,7 @@ int bench_futex_hash(int argc, const cha
+ 
+ 	threads_starting = nthreads;
+ 	pthread_attr_init(&thread_attr);
+-	gettimeofday(&start, NULL);
++	gettimeofday(&bench__start, NULL);
+ 	for (i = 0; i < nthreads; i++) {
+ 		worker[i].tid = i;
+ 		worker[i].futex = calloc(nfutexes, sizeof(*worker[i].futex));
+@@ -204,7 +204,7 @@ int bench_futex_hash(int argc, const cha
+ 	pthread_mutex_destroy(&thread_lock);
+ 
+ 	for (i = 0; i < nthreads; i++) {
+-		unsigned long t = worker[i].ops/runtime.tv_sec;
++		unsigned long t = worker[i].ops / bench__runtime.tv_sec;
+ 		update_stats(&throughput_stats, t);
+ 		if (!silent) {
+ 			if (nfutexes == 1)
+--- a/tools/perf/bench/futex-lock-pi.c
++++ b/tools/perf/bench/futex-lock-pi.c
+@@ -37,7 +37,6 @@ static bool silent = false, multi = fals
+ static bool done = false, fshared = false;
+ static unsigned int nthreads = 0;
+ static int futex_flag = 0;
+-struct timeval start, end, runtime;
+ static pthread_mutex_t thread_lock;
+ static unsigned int threads_starting;
+ static struct stats throughput_stats;
+@@ -64,7 +63,7 @@ static void print_summary(void)
+ 
+ 	printf("%sAveraged %ld operations/sec (+- %.2f%%), total secs = %d\n",
+ 	       !silent ? "\n" : "", avg, rel_stddev_stats(stddev, avg),
+-	       (int) runtime.tv_sec);
++	       (int)bench__runtime.tv_sec);
+ }
+ 
+ static void toggle_done(int sig __maybe_unused,
+@@ -73,8 +72,8 @@ static void toggle_done(int sig __maybe_
+ {
+ 	/* inform all threads that we're done for the day */
+ 	done = true;
+-	gettimeofday(&end, NULL);
+-	timersub(&end, &start, &runtime);
++	gettimeofday(&bench__end, NULL);
++	timersub(&bench__end, &bench__start, &bench__runtime);
+ }
+ 
+ static void *workerfn(void *arg)
+@@ -185,7 +184,7 @@ int bench_futex_lock_pi(int argc, const
+ 
+ 	threads_starting = nthreads;
+ 	pthread_attr_init(&thread_attr);
+-	gettimeofday(&start, NULL);
++	gettimeofday(&bench__start, NULL);
+ 
+ 	create_threads(worker, thread_attr, cpu);
+ 	pthread_attr_destroy(&thread_attr);
+@@ -211,7 +210,7 @@ int bench_futex_lock_pi(int argc, const
+ 	pthread_mutex_destroy(&thread_lock);
+ 
+ 	for (i = 0; i < nthreads; i++) {
+-		unsigned long t = worker[i].ops/runtime.tv_sec;
++		unsigned long t = worker[i].ops / bench__runtime.tv_sec;
+ 
+ 		update_stats(&throughput_stats, t);
+ 		if (!silent)
 
 
