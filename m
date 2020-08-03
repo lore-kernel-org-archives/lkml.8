@@ -7,67 +7,68 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FB7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18545C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8E6022C9F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 259EF22C9F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:58:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WxpH72H+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B8X/HPr/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728997AbgHCU6t (ORCPT
+        id S1729026AbgHCU6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 16:58:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57777 "EHLO
+        Mon, 3 Aug 2020 16:58:52 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38790 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727003AbgHCU6t (ORCPT
+        with ESMTP id S1728605AbgHCU6t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 3 Aug 2020 16:58:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596488327;
+        s=mimecast20190719; t=1596488328;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=UIoKJgwiwHBXzqx7bTTScO5nMJSnsWEl2/CTLb7XXEY=;
-        b=WxpH72H+L3sEB6TtSnxqb7vFux0fo9ihkEyrlYNMLIus6La1k0/czg57pjXkaE2a/PNyTE
-        Y4+zBHEM3zX//ej1mB9TpKGWFTRhcpCzmzKt1kdoCoqkUmkM+FXgElXjTAMFSXYOhhsd2P
-        YOTTqGQkZZhnvxYPJwgrPt4OVVDLGnM=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-308-ViDliDEdPWKtPrFnDDPxvg-1; Mon, 03 Aug 2020 16:58:46 -0400
-X-MC-Unique: ViDliDEdPWKtPrFnDDPxvg-1
-Received: by mail-qk1-f199.google.com with SMTP id v22so11063675qkg.15
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 13:58:46 -0700 (PDT)
+        bh=/Gl2dylMgFGi0Gx2NZhfogviRtCkoLcQlgV/aPlSIlQ=;
+        b=B8X/HPr/9fUXW084Q7wnokc7u/FeHrAPETo+t6WJ370nIpn8INp7zSPmF5UvRKPUwgdPa8
+        AcEyMeIdtiXU9oYLMucELQs0p3NtLSiPglSV1HfYo/mVhKDjgVijZZCDv6iRCMmkSIQMbn
+        4zPDNbMqaow0x99gRFbf9ucCwBJmRb8=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-305-6C5xqDbQNoClozyNTuVqww-1; Mon, 03 Aug 2020 16:58:47 -0400
+X-MC-Unique: 6C5xqDbQNoClozyNTuVqww-1
+Received: by mail-qv1-f71.google.com with SMTP id j13so17877736qvi.17
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 13:58:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=UIoKJgwiwHBXzqx7bTTScO5nMJSnsWEl2/CTLb7XXEY=;
-        b=HcySLiY6456TzByVpLX5c+BNm085YLhgOVlmtcY3bYfBKwSMu7oSYLzm3/DrPTUsCt
-         HJzg9J2j1v94cpL6TP9zy3J542kpjxVzbBTgZP7s8QPC4xb0426nmF/4qRoEPZu31iBM
-         srEC/IQf+R99Buvsa48P/dKDUmPjvJObtfCEDGTJ/QVVnzI1+aNtxIgYnnsrKbgUCgfD
-         hXjiKHPOF+j7HQ7HMzl4a8Bysu/RIU0IqtGNOdX3t1an/cIptM73M5P0Wk1gE7EkwrwY
-         mh9qEsTySf5TnxnZE1hVsqxyI9fu4wmKvKdIbu5y9jK2sS8g3XYcsqvETAWUX+A848nI
-         tq/g==
-X-Gm-Message-State: AOAM533b6VJGALIxs+/ZhSZlnKPq8/h4g2xroSlsIchLbH3t3xaT2UGA
-        EMhnl0rQVFDBMryQyt55iRcXo7sb7JZ+q8Z8FkbJehuRfLyprwEFLC95wxAEoteKM8qD3EMlnk+
-        4hpeAP77L9Wx+5dATtDB8KVKR
-X-Received: by 2002:a05:620a:13cf:: with SMTP id g15mr16786168qkl.48.1596488325832;
-        Mon, 03 Aug 2020 13:58:45 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz/usVrinipJ2UNkJyBG8SnnEAzcc9qw/4hOyTpADhTf+Pw3MhloA9MKuwjt0FKT+pTufaqUQ==
-X-Received: by 2002:a05:620a:13cf:: with SMTP id g15mr16786157qkl.48.1596488325620;
-        Mon, 03 Aug 2020 13:58:45 -0700 (PDT)
+        bh=/Gl2dylMgFGi0Gx2NZhfogviRtCkoLcQlgV/aPlSIlQ=;
+        b=GeQRPc2xOgoj1O2tTH0glkCCYtWgnj/3UxItxUav5uMg0P476axDhJiTarb3Czcd14
+         Iul7eP8FKvbETQn/RcYE9xOyARL/LvqxSbFCDeY0Pg5rL4VgyXqkhmJs6mn84YjKjn/R
+         1It59Ou+o8pdX9yZtHmnf+pRVxSR61hpGygVgTeFIdaX2yFl6FU+BRK39HZieyNZddK0
+         nbzQcdNyYFKa+sTRpzkl+fiQhjYMCMTJ/3nsbaEa9BJ+yxWWka/Tn9Fo9uDjcKT6El+x
+         EQ8dl0Sbb4aYa1WOj9znBc16AMmx8kfCTbBwZYTeySYiVyYMr7Lm2LF0THFw2xM28v3O
+         QcnQ==
+X-Gm-Message-State: AOAM530xkIKzkCRGtTXudf8vaDax+4vV3tdS+SwpfSWW1PHyASyBIu8q
+        vlUyu/A9004pgW3TO1B5lwqMKcBzgq8x8XeYeAG/QTW2vzZzRBNwa/7jr+0xSfVI24hPo2tGIcK
+        v5bImK8Avn0jAoH6OB6IzdSi7
+X-Received: by 2002:a05:620a:151:: with SMTP id e17mr18106845qkn.173.1596488321785;
+        Mon, 03 Aug 2020 13:58:41 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzEzdxjjAwaWwjwF+kSAMNrLrHcU+XPWDiBIGO+tn5kBn2karRqLrbCrl8SKBeGaGBSURQVuw==
+X-Received: by 2002:a05:620a:151:: with SMTP id e17mr18106835qkn.173.1596488321605;
+        Mon, 03 Aug 2020 13:58:41 -0700 (PDT)
 Received: from redhat.com (bzq-79-177-102-128.red.bezeqint.net. [79.177.102.128])
-        by smtp.gmail.com with ESMTPSA id i19sm19925205qkk.68.2020.08.03.13.58.43
+        by smtp.gmail.com with ESMTPSA id x3sm20452087qkx.3.2020.08.03.13.58.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 13:58:45 -0700 (PDT)
-Date:   Mon, 3 Aug 2020 16:58:42 -0400
+        Mon, 03 Aug 2020 13:58:41 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 16:58:38 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     virtualization@lists.linux-foundation.org,
-        Jason Wang <jasowang@redhat.com>
-Subject: [PATCH v2 02/24] virtio_ring: sparse warning fixup
-Message-ID: <20200803205814.540410-3-mst@redhat.com>
+        Jason Wang <jasowang@redhat.com>,
+        David Hildenbrand <david@redhat.com>
+Subject: [PATCH v2 01/24] virtio_balloon: fix sparse warning
+Message-ID: <20200803205814.540410-2-mst@redhat.com>
 References: <20200803205814.540410-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -80,46 +81,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-virtio_store_mb was built with split ring in mind so it accepts
-__virtio16 arguments. Packed ring uses __le16 values, so sparse
-complains.  It's just a store with some barriers so let's convert it to
-a macro, we don't loose too much type safety by doing that.
+balloon uses virtio32_to_cpu instead of cpu_to_virtio32
+to convert a native endian number to virtio.
+No practical difference but makes sparse warn.
+Fix it up.
 
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- include/linux/virtio_ring.h | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ drivers/virtio/virtio_balloon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/virtio_ring.h b/include/linux/virtio_ring.h
-index 3dc70adfe5f5..b485b13fa50b 100644
---- a/include/linux/virtio_ring.h
-+++ b/include/linux/virtio_ring.h
-@@ -46,16 +46,15 @@ static inline void virtio_wmb(bool weak_barriers)
- 		dma_wmb();
- }
+diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+index 54fd989f9353..8bc1704ffdf3 100644
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -600,7 +600,7 @@ static int send_cmd_id_start(struct virtio_balloon *vb)
+ 	while (virtqueue_get_buf(vq, &unused))
+ 		;
  
--static inline void virtio_store_mb(bool weak_barriers,
--				   __virtio16 *p, __virtio16 v)
--{
--	if (weak_barriers) {
--		virt_store_mb(*p, v);
--	} else {
--		WRITE_ONCE(*p, v);
--		mb();
--	}
--}
-+#define virtio_store_mb(weak_barriers, p, v) \
-+do { \
-+	if (weak_barriers) { \
-+		virt_store_mb(*p, v); \
-+	} else { \
-+		WRITE_ONCE(*p, v); \
-+		mb(); \
-+	} \
-+} while (0) \
- 
- struct virtio_device;
- struct virtqueue;
+-	vb->cmd_id_active = virtio32_to_cpu(vb->vdev,
++	vb->cmd_id_active = cpu_to_virtio32(vb->vdev,
+ 					virtio_balloon_cmd_id_received(vb));
+ 	sg_init_one(&sg, &vb->cmd_id_active, sizeof(vb->cmd_id_active));
+ 	err = virtqueue_add_outbuf(vq, &sg, 1, &vb->cmd_id_active, GFP_KERNEL);
 -- 
 MST
 
