@@ -2,114 +2,147 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0079C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E7EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7C50208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AED302086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:50:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KoPTr2no"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KOiGaZJZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728936AbgHCWuN (ORCPT
+        id S1728943AbgHCWuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 18:50:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53852 "EHLO
+        Mon, 3 Aug 2020 18:50:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbgHCWuK (ORCPT
+        with ESMTP id S1726770AbgHCWuR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 18:50:10 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96D1FC06174A;
-        Mon,  3 Aug 2020 15:50:10 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id t18so32588511ilh.2;
-        Mon, 03 Aug 2020 15:50:10 -0700 (PDT)
+        Mon, 3 Aug 2020 18:50:17 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3127FC06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 15:50:17 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id f9so928866pju.4
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 15:50:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MAO+PpuYLBX0uefa2B1NpsdRhW1fJ0Gox2/GooMZOIM=;
-        b=KoPTr2noAD6XVqblQ0ZDm8p+m1GxTbJgLxmKlP6peN1JC+e0602LcrNh6gu9ebaXQ2
-         JeatTeBzUATzp79AE5HlxpKkODqdTWABRJnBgKaTw1JEK6M35cNoSvDmynZZU17JNPCd
-         qDj173WmJzHySDfVECR+KGtPR7MNNMY4YEGUCLvWzdtUO4Di7z/F4K+gMHaacHSdb/7i
-         6fRIEyaptXGL9Dai6I1u/EbsyMk/NV+sQpP6f8ifB7QfaCeZDWs8z9Ki0VaWK9WOv0l9
-         Y7hn756uAd0RcZkpy+MFgf71qbBeZGVeI33T25YFXcnpiZe9iwydIXXFJ/R7aDm0wOdh
-         XohA==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WwNg4eO7sP2LsilWkU4USYbXbucaXDAZ6g6o30FpFGE=;
+        b=KOiGaZJZjbZGHflHsSPpcBy+qaeE3nrukVys4V8FTyl+aCxbSrhzmwZD9BpxBwMkGe
+         KB4DrddqsBn3hBt/bB6SVI3Nue8tOYvMbnGfFJLrj4bkd2boG7N8Xg1qRiFX7OZQQBN1
+         QPbf6TAqiWr4pkP7keN+CwW8e7n9Lqi7jTWPxx1Uy9NvJohuEG65Bh1mgHOTvO0PWTfj
+         Qtt22ShrE6dbqgt333fqlQtVJ8ESnofq5pf5mBiZAenjtVIdD/qL4ECOt28T9mE8QTMt
+         fNl/WPxwsPaJBwDCHDxU460jHispUqFTmARBgE4elB52Ujp6lopaoiwxzID9YJiBsT+u
+         agcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MAO+PpuYLBX0uefa2B1NpsdRhW1fJ0Gox2/GooMZOIM=;
-        b=SILPbqstLXR8k1UwIRlGEwJk5p8JGMr08EFVcwo/87tl8PtokQZKXxYyFWx6UTsGOx
-         lvvqM0t4UOu4DlWkduQW2FeMnQNvXh8zJrngriVjUlVDGN8TdWVmD30tD3or0q+ZLnWn
-         axRY7OwFMsdk88eb1Vm8bwm5O+Vs6eON7S4AbyUOIW+sdBXjWbtD6dd0KOJZmKt5w1IJ
-         95p2t8nVN0a98cwTq8ysIojYzeUZAJsBoQ0wgiafUAKIZjl8wjYhH+NsmHVyZcEy7XO/
-         mqiIdVIS356g2GwWdZYAVOcYVSBY8kKX4syDweXtc+BBCMAphh17om7i5N54zfsd7LrL
-         Psig==
-X-Gm-Message-State: AOAM531xfgaKlxxjdIgAevoc1tp9P8NkDslj7c4zr1ohTxJ3+m9EXHdf
-        B59tM6xqe8gpKO0mxxuSFoHG8VkOPkBC2LiCTSA=
-X-Google-Smtp-Source: ABdhPJyzIp0mBLgEAMF9KBUD33iW7ci/UwoWCClOTift/uX4YrgooLg8UXJJ4J7qT3jcBwOKYf8c3cDy6dv0B9fT68M=
-X-Received: by 2002:a92:bd0f:: with SMTP id c15mr1705273ile.95.1596495009904;
- Mon, 03 Aug 2020 15:50:09 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WwNg4eO7sP2LsilWkU4USYbXbucaXDAZ6g6o30FpFGE=;
+        b=uDrNqZ6vZ4WSE4sbyp+lhbgfyFE8v2lMVWIUf0GA5P1jFQhzK5NGfJxqtTl/V1sluv
+         L9cg3VefLsTYzx9bNlNS+NpPgMM1aiIuDRUnu+nSBahw7sBM+T9ouMokhKtDWw295EPg
+         TGjaZ4TUGvp05lllGinxNPl3vNQP2q7ljmNF2qtErCLyeVZm4MEhOsktM41ddV9fX7PC
+         1D1vlq/Qzd0SVBasTtu3A0ycFRiQ39mr8CXIn3IayoQg7aiC9sv0hZlA8ySjV/W+JPQP
+         NEwJBKGKNiPaIcqR9miGrLiUnxD67AKu3FKVuBduwBQ/mo0COYF2Q6J6EitmEHtZp+K2
+         g1TA==
+X-Gm-Message-State: AOAM533pVtEGCJD7pQ2tvCZnqF06nUUj2Aix8nAWhWrdRO7+Ipbru6p4
+        cJDypDqDUrmXtvvWpknvUD5//d8=
+X-Google-Smtp-Source: ABdhPJxU6YmCoTiD3viViXTkhomcbFFY9g6T0kU0yjjkDmgPykXnywY1YQvNiFu9W/M73Oz58ofRNQ==
+X-Received: by 2002:a17:902:6b81:: with SMTP id p1mr16317326plk.331.1596495016681;
+        Mon, 03 Aug 2020 15:50:16 -0700 (PDT)
+Received: from madhuparna-HP-Notebook ([2402:3a80:ce2:8573:dcc2:2473:2418:32ef])
+        by smtp.gmail.com with ESMTPSA id a17sm18810672pgw.60.2020.08.03.15.50.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Aug 2020 15:50:15 -0700 (PDT)
+From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
+Date:   Tue, 4 Aug 2020 04:20:10 +0530
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     madhuparnabhowmik10@gmail.com, arnd@arndb.de,
+        linux-kernel@vger.kernel.org, andrianov@ispras.ru,
+        ldv-project@linuxtesting.org
+Subject: Re: [PATCH] drivers: char: applicom.c: Add lock for protecting
+ DeviceErrorCount
+Message-ID: <20200803225010.GA8670@madhuparna-HP-Notebook>
+References: <20200803105049.11089-1-madhuparnabhowmik10@gmail.com>
+ <20200803115328.GA955269@kroah.com>
 MIME-Version: 1.0
-References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com> <1595681998-19193-20-git-send-email-alex.shi@linux.alibaba.com>
-In-Reply-To: <1595681998-19193-20-git-send-email-alex.shi@linux.alibaba.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Mon, 3 Aug 2020 15:49:59 -0700
-Message-ID: <CAKgT0UebLfdju0Ny9ad5bigzAazqpzfwk2_JNQQ9yEHYyVm5-Q@mail.gmail.com>
-Subject: Re: [PATCH v17 19/21] mm/vmscan: use relock for move_pages_to_lru
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Rong Chen <rong.a.chen@intel.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Jann Horn <jannh@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200803115328.GA955269@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 6:00 AM Alex Shi <alex.shi@linux.alibaba.com> wrote:
+On Mon, Aug 03, 2020 at 01:53:28PM +0200, Greg KH wrote:
+> On Mon, Aug 03, 2020 at 04:20:49PM +0530, madhuparnabhowmik10@gmail.com wrote:
+> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > 
+> > The variable DeviceErrorCount is used to keep track of the number of
+> > errors in read, write and interrupt routines, however it was not
+> > protected by proper locking.
+> > Therefore, this patch adds a spinlock: error_lock to protect the
+> > variable.
+> > 
+> > Found by Linux Driver Verification project (linuxtesting.org).
+> > 
+> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> > ---
+> >  drivers/char/applicom.c | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> > 
+> > diff --git a/drivers/char/applicom.c b/drivers/char/applicom.c
+> > index 14b2d8034c51..6df7450b8b99 100644
+> > --- a/drivers/char/applicom.c
+> > +++ b/drivers/char/applicom.c
+> > @@ -106,6 +106,7 @@ static DECLARE_WAIT_QUEUE_HEAD(FlagSleepRec);
+> >  static unsigned int WriteErrorCount;	/* number of write error      */
+> >  static unsigned int ReadErrorCount;	/* number of read error       */
+> >  static unsigned int DeviceErrorCount;	/* number of device error     */
+> > +DEFINE_SPINLOCK(error_lock);		/* lock to protect error count variables */
+> 
+> That's a horrible global name, shouldn't it be static?
+> 
+> >  
+> >  static ssize_t ac_read (struct file *, char __user *, size_t, loff_t *);
+> >  static ssize_t ac_write (struct file *, const char __user *, size_t, loff_t *);
+> > @@ -428,7 +429,9 @@ static ssize_t ac_write(struct file *file, const char __user *buf, size_t count,
+> >  		spin_unlock_irqrestore(&apbs[IndexCard].mutex, flags);
+> >  		printk(KERN_WARNING "APPLICOM driver write error board %d, DataFromPcReady = %d\n",
+> >  		       IndexCard,(int)readb(apbs[IndexCard].RamIO + DATA_FROM_PC_READY));
+> > +		spin_lock_irqsave(&error_lock, flags);
+> 
+> Why all of these irqsave?
+> 
+> >  		DeviceErrorCount++;
+> 
+> Does this really matter?  Who cares if we drop one of these, or any
+> other of these debugging-only values?
 >
-> From: Hugh Dickins <hughd@google.com>
->
-> Use the relock function to replace relocking action. And try to save few
-> lock times.
->
-> Signed-off-by: Hugh Dickins <hughd@google.com>
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> Cc: Jann Horn <jannh@google.com>
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: cgroups@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-mm@kvack.org
+Yes, since the error count variables are just for debugging, it is not
+really necessary to have an exact count, but I just thought it would
+be nice if it is precise, rest it is upto you if these changes are
+required or not. Let me know, if required then I can think of a better name
+for the lock.
 
-I am assuming this is only separate from patch 18 because of the fact
-that it is from Hugh and not yourself. Otherwise I would recommend
-folding this into patch 18.
+Also, one other thing that I noticed in this code is that some of the
+variables (WriteErrorCount and ReadErrorCount) are just initialized
+and never incremented after that. So, if you could confirm that they
+were supposed to be used in ac_write and ac_read instead of
+using DeviceErrorCount, or otherwise, then I can make this change as
+well.
 
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Thanks,
+Madhuparna
+
+> thanks,
+> 
+> greg k-h
