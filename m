@@ -2,388 +2,174 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1A1C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 075C7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17B332076E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BDC320658
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:15:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=posk.io header.i=@posk.io header.b="KWTabpPp"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CB/8rrFX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729530AbgHCWP3 (ORCPT
+        id S1729551AbgHCWPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 18:15:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48494 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729490AbgHCWPV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 18:15:21 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0710C06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 15:15:21 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id z18so8647450otk.6
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 15:15:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=posk.io; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1+O+nkkqOEc9s68pkQN1CberHKdWp2eZ7SeJlNK0Bis=;
-        b=KWTabpPpzIkzwyGh0+chCWbb1Qk2h7j/XpHTVtaQK4Wl29rxQjGLVNlyCQ+TzajNVC
-         fPcjDXBl8welyTjetO5juj0Ojel1g/fPujUwdW3KxbOEZvSi27uQCMSm9cHNXm5wggzP
-         Uk4FPpa/PjlMRDJFyqKU6fJ+nDxoH4xC/F3LCBjmtuhB2FXfX5FWOPeNGsEo5D77rDN7
-         eOkqC1vD2kGZFyCvBhOPf78tKGbonTT+quCzR+etfJH4G0VoVkVhaN9hTpxuFgVvydCl
-         3ifCxKwADAsuc923DG/FcEjt8AD65biLsQrD6wUmr2iB2ZMNua82gbSFV+UGUHspc5ko
-         gkZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1+O+nkkqOEc9s68pkQN1CberHKdWp2eZ7SeJlNK0Bis=;
-        b=K5FS4wpHCSywt8AXZo6pmsIdf9cbIf6qEnAdhX9dfO0lHI3oBjl1s7B6rj4Nb8GPyz
-         eDadeNuEcC9h3Ll2TE3nfn7qdxH/PnW6a3OSl9FAtYoHIuRikcF9F4ZzwIesKvct/voE
-         jFQsy9ohsDZhbaiwPAAlABm+yiEJFXGxn1YJYhOncc1Mrlw0s3iW/uaU39jiozS3IP4+
-         EeXGxYUlUd5s3MhpTE0e52G2HPZJbmrNuuvEir4qjolAY20cOe3xlGITLhdq/bibBuWU
-         idXJ+C/eeTiV2aw2mlIhtOV/P1lGp0+TIcquBKHKzTGlm1Ez7fB9mGhZTPqbQFm6mwc1
-         gxpA==
-X-Gm-Message-State: AOAM530qB/X05PjEXJ9UcYmPlDeulhFMDB/Rm/9/dqPZKIv6+v1mPFl5
-        SE0UQOw0f5GHOgnLj+oyGliONOJmSuw=
-X-Google-Smtp-Source: ABdhPJzlnH+gW0rYlANiBNE6hoRRCdYWDopu2Sm0Jyk2+TvHbPZNG13FNi2Ni5yH4+NiyDS+Cg1aFg==
-X-Received: by 2002:a9d:2023:: with SMTP id n32mr16740173ota.280.1596492920689;
-        Mon, 03 Aug 2020 15:15:20 -0700 (PDT)
-Received: from posk-x1c.lan (23-118-52-46.lightspeed.sntcca.sbcglobal.net. [23.118.52.46])
-        by smtp.gmail.com with ESMTPSA id m8sm3026624ote.55.2020.08.03.15.15.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 15:15:20 -0700 (PDT)
-From:   Peter Oskolkov <posk@posk.io>
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Peter Oskolkov <posk@google.com>, Andrei Vagin <avagin@google.com>,
-        Paul Turner <pjt@google.com>, Ben Segall <bsegall@google.com>,
-        Aaron Lu <aaron.lwe@gmail.com>
-Subject: [PATCH for 5.9 v2 4/4] selftests/futex: add futex_swap selftest
-Date:   Mon,  3 Aug 2020 15:15:10 -0700
-Message-Id: <20200803221510.170674-5-posk@posk.io>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200803221510.170674-1-posk@posk.io>
-References: <20200803221510.170674-1-posk@posk.io>
+        Mon, 3 Aug 2020 18:15:32 -0400
+Received: from ozlabs.org ([203.11.71.1]:49561 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729522AbgHCWPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 18:15:30 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BLBz25d51z9sSG;
+        Tue,  4 Aug 2020 08:15:26 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596492927;
+        bh=uvuVyOegpY742NA+RjM/n5Nh5iAut643rh7ZW/+PTMo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CB/8rrFX9aK3b6IJfDvJ9w/EEC5bur2ODk7ojnhZUhKudC1M45Umgw+FzTlzsgPDA
+         d65CeByazbpFI4w8CEtm4Xwakmjn8cICfkJBteuPq4NLL5jzc407nayWSabzkU2wyw
+         GkjBWvWJhCvpgT/WugdXBm/oozJ1Y0qlurcaZYLoUr+9vCeXy95TLPL/v90Znbzdqn
+         wbMLnCe/2NP2z0YT2fETiPuMY/z1883pRMaFZDCcn3fo29k2olKajamKRKKkZPbkQK
+         9uomM8Wq+ZZ/l5CjIgBwWc+XwHtM8hlyUOzPoITxrpqe0nD2RyCHXlVqFV1Y9EG8FO
+         gW7u4oMxydvcA==
+Date:   Tue, 4 Aug 2020 08:15:25 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Linux Crypto List <linux-crypto@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: Re: linux-next: manual merge of the crypto tree with the jc_docs
+ tree
+Message-ID: <20200804081525.5df251b2@canb.auug.org.au>
+In-Reply-To: <20200724130951.5b99a9c9@canb.auug.org.au>
+References: <20200724130951.5b99a9c9@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/EHYpeW_/=lP3hPl7QBf58q2";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Oskolkov <posk@google.com>
+--Sig_/EHYpeW_/=lP3hPl7QBf58q2
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-This is the final patch in FUTEX_SWAP patchset. It adds a
-test/benchmark to validate the behavior and compare the
-performance of a new FUTEX_SWAP futex operation to
-a pair of FUTEX_WAKE/FUTEX_WAIT calls.
+Hi all,
 
-Detailed API design and behavior considerations are provided
-in the commit messages of the previous patches.
+On Fri, 24 Jul 2020 13:09:51 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Today's linux-next merge of the crypto tree got a conflict in:
+>=20
+>   Documentation/crypto/api-intro.rst
+>=20
+> between commit:
+>=20
+>   5846551bb147 ("docs: crypto: convert api-intro.txt to ReST format")
+>=20
+> from the jc_docs tree and commit:
+>=20
+>   9332a9e73918 ("crypto: Replace HTTP links with HTTPS ones")
+>=20
+> from the crypto tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>=20
+> --=20
+> Cheers,
+> Stephen Rothwell
+>=20
+> diff --cc Documentation/crypto/api-intro.rst
+> index bcff47d42189,40137f93e04f..000000000000
+> --- a/Documentation/crypto/api-intro.rst
+> +++ b/Documentation/crypto/api-intro.rst
+> @@@ -159,31 -146,31 +159,31 @@@ Credit
+>   The following people provided invaluable feedback during the development
+>   of the API:
+>  =20
+>  -  Alexey Kuznetzov
+>  -  Rusty Russell
+>  -  Herbert Valerio Riedel
+>  -  Jeff Garzik
+>  -  Michael Richardson
+>  -  Andrew Morton
+>  -  Ingo Oeser
+>  -  Christoph Hellwig
+>  +  - Alexey Kuznetzov
+>  +  - Rusty Russell
+>  +  - Herbert Valerio Riedel
+>  +  - Jeff Garzik
+>  +  - Michael Richardson
+>  +  - Andrew Morton
+>  +  - Ingo Oeser
+>  +  - Christoph Hellwig
+>  =20
+>   Portions of this API were derived from the following projects:
+>  - =20
+>  +
+>     Kerneli Cryptoapi (http://www.kerneli.org/)
+>  -    Alexander Kjeldaas
+>  -    Herbert Valerio Riedel
+>  -    Kyle McMartin
+>  -    Jean-Luc Cooke
+>  -    David Bryson
+>  -    Clemens Fruhwirth
+>  -    Tobias Ringstrom
+>  -    Harald Welte
+>  +   - Alexander Kjeldaas
+>  +   - Herbert Valerio Riedel
+>  +   - Kyle McMartin
+>  +   - Jean-Luc Cooke
+>  +   - David Bryson
+>  +   - Clemens Fruhwirth
+>  +   - Tobias Ringstrom
+>  +   - Harald Welte
+>  =20
+>   and;
+>  - =20
+>  +
+> -   Nettle (http://www.lysator.liu.se/~nisse/nettle/)
+> +   Nettle (https://www.lysator.liu.se/~nisse/nettle/)
+>  -    Niels M=C3=B6ller
+>  +   - Niels M=C3=B6ller
+>  =20
+>   Original developers of the crypto algorithms:
+>  =20
 
-Signed-off-by: Peter Oskolkov <posk@google.com>
----
- .../selftests/futex/functional/.gitignore     |   1 +
- .../selftests/futex/functional/Makefile       |   1 +
- .../selftests/futex/functional/futex_swap.c   | 209 ++++++++++++++++++
- .../selftests/futex/include/futextest.h       |  19 ++
- 4 files changed, 230 insertions(+)
- create mode 100644 tools/testing/selftests/futex/functional/futex_swap.c
+This is now a conflict between the jc_docs tree and Linus' tree.
 
-diff --git a/tools/testing/selftests/futex/functional/.gitignore b/tools/testing/selftests/futex/functional/.gitignore
-index 0efcd494daab..d661ef0946cc 100644
---- a/tools/testing/selftests/futex/functional/.gitignore
-+++ b/tools/testing/selftests/futex/functional/.gitignore
-@@ -2,6 +2,7 @@
- futex_requeue_pi
- futex_requeue_pi_mismatched_ops
- futex_requeue_pi_signal_restart
-+futex_swap
- futex_wait_private_mapped_file
- futex_wait_timeout
- futex_wait_uninitialized_heap
-diff --git a/tools/testing/selftests/futex/functional/Makefile b/tools/testing/selftests/futex/functional/Makefile
-index 23207829ec75..6992fac38b15 100644
---- a/tools/testing/selftests/futex/functional/Makefile
-+++ b/tools/testing/selftests/futex/functional/Makefile
-@@ -13,6 +13,7 @@ TEST_GEN_FILES := \
- 	futex_requeue_pi \
- 	futex_requeue_pi_signal_restart \
- 	futex_requeue_pi_mismatched_ops \
-+	futex_swap \
- 	futex_wait_uninitialized_heap \
- 	futex_wait_private_mapped_file
- 
-diff --git a/tools/testing/selftests/futex/functional/futex_swap.c b/tools/testing/selftests/futex/functional/futex_swap.c
-new file mode 100644
-index 000000000000..9034d04372d3
---- /dev/null
-+++ b/tools/testing/selftests/futex/functional/futex_swap.c
-@@ -0,0 +1,209 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+#include <errno.h>
-+#include <getopt.h>
-+#include <pthread.h>
-+#include <stdint.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <time.h>
-+#include "atomic.h"
-+#include "futextest.h"
-+
-+/* The futex the main thread waits on. */
-+futex_t futex_main = FUTEX_INITIALIZER;
-+/* The futex the other thread wats on. */
-+futex_t futex_other = FUTEX_INITIALIZER;
-+
-+/* The number of iterations to run (>1 => run benchmarks. */
-+static int cfg_iterations = 1;
-+
-+/* If != 0, print diagnostic messages. */
-+static int cfg_verbose;
-+
-+/* If == 0, do not use validation_counter. Useful for benchmarking. */
-+static int cfg_validate = 1;
-+
-+/* How to swap threads. */
-+#define SWAP_WAKE_WAIT 1
-+#define SWAP_SWAP 2
-+
-+/* Futex values. */
-+#define FUTEX_WAITING 0
-+#define FUTEX_WAKEUP 1
-+
-+/* An atomic counter used to validate proper swapping. */
-+static atomic_t validation_counter;
-+
-+void futex_swap_op(int mode, futex_t *futex_this, futex_t *futex_that)
-+{
-+	int ret;
-+
-+	switch (mode) {
-+	case SWAP_WAKE_WAIT:
-+		futex_set(futex_this, FUTEX_WAITING);
-+		futex_set(futex_that, FUTEX_WAKEUP);
-+		futex_wake(futex_that, 1, FUTEX_PRIVATE_FLAG);
-+		futex_wait(futex_this, FUTEX_WAITING, NULL, FUTEX_PRIVATE_FLAG);
-+		if (*futex_this != FUTEX_WAKEUP) {
-+			fprintf(stderr, "unexpected futex_this value on wakeup\n");
-+			exit(1);
-+		}
-+		break;
-+
-+	case SWAP_SWAP:
-+		futex_set(futex_this, FUTEX_WAITING);
-+		futex_set(futex_that, FUTEX_WAKEUP);
-+		ret = futex_swap(futex_this, FUTEX_WAITING, NULL,
-+				 futex_that, FUTEX_PRIVATE_FLAG);
-+		if (ret < 0 && errno == ENOSYS) {
-+			/* futex_swap not implemented */
-+			perror("futex_swap");
-+			exit(1);
-+		}
-+		if (*futex_this != FUTEX_WAKEUP) {
-+			fprintf(stderr, "unexpected futex_this value on wakeup\n");
-+			exit(1);
-+		}
-+		break;
-+
-+	default:
-+		fprintf(stderr, "unknown mode in %s\n", __func__);
-+		exit(1);
-+	}
-+}
-+
-+void *other_thread(void *arg)
-+{
-+	int mode = *((int *)arg);
-+	int counter;
-+
-+	if (cfg_verbose)
-+		printf("%s started\n", __func__);
-+
-+	futex_wait(&futex_other, 0, NULL, FUTEX_PRIVATE_FLAG);
-+
-+	for (counter = 0; counter < cfg_iterations; ++counter) {
-+		if (cfg_validate) {
-+			int prev = 2 * counter + 1;
-+
-+			if (prev != atomic_cmpxchg(&validation_counter, prev,
-+						   prev + 1)) {
-+				fprintf(stderr, "swap validation failed\n");
-+				exit(1);
-+			}
-+		}
-+		futex_swap_op(mode, &futex_other, &futex_main);
-+	}
-+
-+	if (cfg_verbose)
-+		printf("%s finished: %d iteration(s)\n", __func__, counter);
-+
-+	return NULL;
-+}
-+
-+void run_test(int mode)
-+{
-+	struct timespec start, stop;
-+	int ret, counter;
-+	pthread_t thread;
-+	uint64_t duration;
-+
-+	futex_set(&futex_other, FUTEX_WAITING);
-+	atomic_set(&validation_counter, 0);
-+	ret = pthread_create(&thread, NULL, &other_thread, &mode);
-+	if (ret) {
-+		perror("pthread_create");
-+		exit(1);
-+	}
-+
-+	ret = clock_gettime(CLOCK_MONOTONIC, &start);
-+	if (ret) {
-+		perror("clock_gettime");
-+		exit(1);
-+	}
-+
-+	for (counter = 0; counter < cfg_iterations; ++counter) {
-+		if (cfg_validate) {
-+			int prev = 2 * counter;
-+
-+			if (prev != atomic_cmpxchg(&validation_counter, prev,
-+						   prev + 1)) {
-+				fprintf(stderr, "swap validation failed\n");
-+				exit(1);
-+			}
-+		}
-+		futex_swap_op(mode, &futex_main, &futex_other);
-+	}
-+	if (cfg_validate && validation_counter.val != 2 * cfg_iterations) {
-+		fprintf(stderr, "final swap validation failed\n");
-+		exit(1);
-+	}
-+
-+	ret = clock_gettime(CLOCK_MONOTONIC, &stop);
-+	if (ret) {
-+		perror("clock_gettime");
-+		exit(1);
-+	}
-+
-+	duration = (stop.tv_sec - start.tv_sec) * 1000000000LL +
-+	stop.tv_nsec - start.tv_nsec;
-+	if (cfg_verbose || cfg_iterations > 1) {
-+		printf("completed %d swap and back iterations in %lu ns: %lu ns per swap\n",
-+			cfg_iterations, duration,
-+			duration / (cfg_iterations * 2));
-+	}
-+
-+	/* The remote thread is blocked; send it the final wake. */
-+	futex_set(&futex_other, FUTEX_WAKEUP);
-+	futex_wake(&futex_other, 1, FUTEX_PRIVATE_FLAG);
-+	if (pthread_join(thread, NULL)) {
-+		perror("pthread_join");
-+		exit(1);
-+	}
-+}
-+
-+void usage(char *prog)
-+{
-+	printf("Usage: %s\n", prog);
-+	printf("  -h    Display this help message\n");
-+	printf("  -i N  Use N iterations to benchmark\n");
-+	printf("  -n    Do not validate swapping correctness\n");
-+	printf("  -v    Print diagnostic messages\n");
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	int c;
-+
-+	while ((c = getopt(argc, argv, "hi:nv")) != -1) {
-+		switch (c) {
-+		case 'h':
-+			usage(basename(argv[0]));
-+			exit(0);
-+		case 'i':
-+			cfg_iterations = atoi(optarg);
-+			break;
-+		case 'n':
-+			cfg_validate = 0;
-+			break;
-+		case 'v':
-+			cfg_verbose = 1;
-+			break;
-+		default:
-+			usage(basename(argv[0]));
-+			exit(1);
-+		}
-+	}
-+
-+	printf("\n\n------- running SWAP_WAKE_WAIT -----------\n\n");
-+	run_test(SWAP_WAKE_WAIT);
-+	printf("PASS\n");
-+
-+	printf("\n\n------- running SWAP_SWAP -----------\n\n");
-+	run_test(SWAP_SWAP);
-+	printf("PASS\n");
-+
-+	return 0;
-+}
-diff --git a/tools/testing/selftests/futex/include/futextest.h b/tools/testing/selftests/futex/include/futextest.h
-index ddbcfc9b7bac..4d6a0a18445a 100644
---- a/tools/testing/selftests/futex/include/futextest.h
-+++ b/tools/testing/selftests/futex/include/futextest.h
-@@ -38,6 +38,9 @@ typedef volatile u_int32_t futex_t;
- #ifndef FUTEX_CMP_REQUEUE_PI
- #define FUTEX_CMP_REQUEUE_PI		12
- #endif
-+#ifndef FUTEX_SWAP
-+#define FUTEX_SWAP			13
-+#endif
- #ifndef FUTEX_WAIT_REQUEUE_PI_PRIVATE
- #define FUTEX_WAIT_REQUEUE_PI_PRIVATE	(FUTEX_WAIT_REQUEUE_PI | \
- 					 FUTEX_PRIVATE_FLAG)
-@@ -46,6 +49,9 @@ typedef volatile u_int32_t futex_t;
- #define FUTEX_CMP_REQUEUE_PI_PRIVATE	(FUTEX_CMP_REQUEUE_PI | \
- 					 FUTEX_PRIVATE_FLAG)
- #endif
-+#ifndef FUTEX_SWAP_PRIVATE
-+#define FUTEX_SWAP_PRIVATE		(FUTEX_WAIT_WAKE | FUTEX_PRIVATE_FLAG)
-+#endif
- 
- /**
-  * futex() - SYS_futex syscall wrapper
-@@ -204,6 +210,19 @@ futex_cmp_requeue_pi(futex_t *uaddr, futex_t val, futex_t *uaddr2, int nr_wake,
- 		     val, opflags);
- }
- 
-+/**
-+ * futex_swap() - block on uaddr and wake one task blocked on uaddr2.
-+ * @uaddr:	futex to block the current task on
-+ * @timeout:	relative timeout for the current task block
-+ * @uaddr2:	futex to wake tasks at (can be the same as uaddr)
-+ */
-+static inline int
-+futex_swap(futex_t *uaddr, futex_t val, struct timespec *timeout,
-+	   futex_t *uaddr2, int opflags)
-+{
-+	return futex(uaddr, FUTEX_SWAP, val, timeout, uaddr2, 0, opflags);
-+}
-+
- /**
-  * futex_cmpxchg() - atomic compare and exchange
-  * @uaddr:	The address of the futex to be modified
--- 
-2.25.1
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/EHYpeW_/=lP3hPl7QBf58q2
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8ojH0ACgkQAVBC80lX
+0GzP3QgAkvKZMbiiSfU94Gp/JbSdrD4VPT5d0SQ0Wj1HkqnrsiHiGooh6TmImD1h
+sBEpq6AqxgJNfZkYPOJuTI6BL7l7rigV4fCPknI1yZMkE1puAMG5uNuLbRV/2IxL
+AMdsKQ9f7OVnhMElPSHjZ0EYGswr2OJ05wIdPHSAbErgijnit/9DlJq+hkF8yv8s
+MJl+ntRTWQ/sdlnzmLTxEj4lVnmVDPiLjW8KIw8rlrrLzlLltpoNCG6TJ7htLqri
+QVFZ3mt3Q03+bGew6VnG+QEVrn3nSRNFf82oOkbIo9NGCIIhbiX8yuJg4stDAbUR
+fPydPas9mQ3k7TUBUNdAKSi7Nnswyg==
+=o06/
+-----END PGP SIGNATURE-----
+
+--Sig_/EHYpeW_/=lP3hPl7QBf58q2--
