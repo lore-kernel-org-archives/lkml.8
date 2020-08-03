@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A503DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60256C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 778F6207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32766207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:25:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457525;
-	bh=Q/6h68lCkWJwD+if01Y84y2vBS2h14vSLslRM3wq/sE=;
+	s=default; t=1596457529;
+	bh=dZlD/PVgBp5+oIWi/7pKGG5g4zmRd2QlmRNwA0yf2Y4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w66/IphSI96XlhqxMsCyEvQgdl+Zxl8Z2iGUz4V9kjFV2lEvcoNcY/bcn01o787cU
-	 KobA1tnl39ASdU8p1I2GTm0q4+wSAc9R1eZXmHWDSkRMsuvPMXr+wTcQyzcsZ+BiUa
-	 RQsvtJRzlCDV0gAFXi3X5VsETRZwjosuLV1ndE78=
+	b=ztF+cwmVusd8xdIq2hwy3M8OkEVWIaB7MOLD72PEZ2YBu0b/wWdpaZykALAVa8ve/
+	 sRTm0L2RexHxEKVMeDrjiSQ90GqKbDyiXXOsSlcbVrBz8clUxBxGYxd9t2WwwKJLbK
+	 HCGk/TKS7l+t7UefNRx8+apVcTsqLr6wfyNhV654=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbgHCMZY (ORCPT
+        id S1726606AbgHCMZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:25:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49978 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:25:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728175AbgHCMZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:25:17 -0400
+        id S1728191AbgHCMZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:25:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C738D204EC;
-        Mon,  3 Aug 2020 12:25:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7624B204EC;
+        Mon,  3 Aug 2020 12:25:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457516;
-        bh=Q/6h68lCkWJwD+if01Y84y2vBS2h14vSLslRM3wq/sE=;
+        s=default; t=1596457519;
+        bh=dZlD/PVgBp5+oIWi/7pKGG5g4zmRd2QlmRNwA0yf2Y4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1y+xD96KWxDN5NETFG8SK8L0y2+Da0KDDHM43C1Ge2WTJ8rDCdPIvU9OjENZzoV57
-         tnOiLIgqrVMhUNdoYwfayNaL2zv24XOBIff3QOshwqKdKvBzTYrq3sRXogtMyb7a/N
-         qtxLeV7JVoh1NiI/1PyiVhd9tb4V3BOOO9tq+ABc=
+        b=JPOw17gJh1/ipU/KhETPlzTJBsse3jJ3gjdNDysyhg5/TnO7G7d91lmApBvvjrziV
+         nJ37KY01Swd5SSH7wf4rJW6WuqntR2mlMesbgakziAkY0etYZFZP41sXFT/nL2b9OD
+         m+WYUtWv3K3TpBDKw31tA/FZaIJ5uUbItKbsoQX4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sunil Goutham <sgoutham@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 066/120] octeontx2-pf: Fix reset_task bugs
-Date:   Mon,  3 Aug 2020 14:18:44 +0200
-Message-Id: <20200803121906.020753689@linuxfoundation.org>
+Subject: [PATCH 5.7 067/120] octeontx2-pf: cancel reset_task work
+Date:   Mon,  3 Aug 2020 14:18:45 +0200
+Message-Id: <20200803121906.069395060@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121902.860751811@linuxfoundation.org>
 References: <20200803121902.860751811@linuxfoundation.org>
@@ -63,48 +63,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Subbaraya Sundeep <sbhatta@marvell.com>
 
-[ Upstream commit 948a66338f44c16f52c0f03f6ad81a6f59eb5604 ]
+[ Upstream commit c0376f473c5cc2ef94f8e1e055d173293cc3698c ]
 
-Two bugs exist in the code related to reset_task
-in PF driver one is the missing protection
-against network stack ndo_open and ndo_close.
-Other one is the missing cancel_work.
-This patch fixes those problems.
+During driver exit cancel the queued
+reset_task work in VF driver.
 
-Fixes: 4ff7d1488a84 ("octeontx2-pf: Error handling support")
+Fixes: 3184fb5ba96e ("octeontx2-vf: Virtual function driver support")
 Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
 Signed-off-by: Sunil Goutham <sgoutham@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-index 64786568af0db..75a8c407e815c 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
-@@ -1730,10 +1730,12 @@ static void otx2_reset_task(struct work_struct *work)
- 	if (!netif_running(pf->netdev))
- 		return;
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
+index f4227517dc8e0..c1c263d1ac2ec 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_vf.c
+@@ -617,6 +617,7 @@ static void otx2vf_remove(struct pci_dev *pdev)
  
-+	rtnl_lock();
- 	otx2_stop(pf->netdev);
- 	pf->reset_count++;
- 	otx2_open(pf->netdev);
- 	netif_trans_update(pf->netdev);
-+	rtnl_unlock();
- }
+ 	vf = netdev_priv(netdev);
  
- static const struct net_device_ops otx2_netdev_ops = {
-@@ -2111,6 +2113,7 @@ static void otx2_remove(struct pci_dev *pdev)
++	cancel_work_sync(&vf->reset_task);
+ 	otx2vf_disable_mbox_intr(vf);
  
- 	pf = netdev_priv(netdev);
- 
-+	cancel_work_sync(&pf->reset_task);
- 	/* Disable link notifications */
- 	otx2_cgx_config_linkevents(pf, false);
- 
+ 	otx2_detach_resources(&vf->mbox);
 -- 
 2.25.1
 
