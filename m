@@ -2,175 +2,99 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 816F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC29C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5710320775
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFB25205CB
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 13:03:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="NZgjk/+n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X1ovxLTv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgHCNAn (ORCPT
+        id S1726907AbgHCNDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 09:00:43 -0400
-Received: from mga11.intel.com ([192.55.52.93]:21532 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726643AbgHCNAi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 09:00:38 -0400
-IronPort-SDR: esZC/tv0yqS0Fi47fBkHdh0lO/HWMPSGr5ScpuqAb2gm9SsbJBdn7M5qCF/8dlqbzpNQRG7YJk
- a9htXge24V1w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9701"; a="149886839"
-X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
-   d="scan'208";a="149886839"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 06:00:37 -0700
-IronPort-SDR: PnScKTBZZYas2NTkD0AdOPHBICNNTeDQnbSaEV9xtdtaP2YZS/pYt5xZD6i5DMBzQuzVc1RF0W
- NZVEIiBoJNuw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
-   d="scan'208";a="396048553"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmsmga001.fm.intel.com with ESMTP; 03 Aug 2020 06:00:37 -0700
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 3 Aug 2020 06:00:36 -0700
-Received: from orsmsx105.amr.corp.intel.com (10.22.225.132) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 3 Aug 2020 06:00:36 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 3 Aug 2020 06:00:35 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.45) by
- edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Mon, 3 Aug 2020 06:00:35 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Srz7le03EnhI/Pl76Vo71XUxvJi77VuUZ+VYbuKKstDrf9c4uhIx5f7YgyX3f7wY9bbH0ghgdv4sseCZcXQkD1wj2cWlNSUSlgoFrCVo00juSeSJGnXKMl8bRxrGl9QcUlM0iQLMoQ2ielQee5H3Hv7ac8xt6wu8m7hlIly/jSgCDnWR4tOF9lrGOv3h+YG4swCwbf227sol5uGaXf/o/p/eXMGY8u2RtUNbvVuWJ87TzpnPch78H+H/1I2iKREj/WL8ujPQ5LfQUqdtrtsHNq0EaF/mF79M8q9+LUeFCJ+XM2o4TvSWef9XSgD7epZpz6O3HwpJaJ4mOnv6xCyjXg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qjJVn+tYLgzqh5KbUvbXMBF91/om4C85yjQELUYEFHQ=;
- b=b25ygQ9Moq6ojVzstOOTox0jhyEy/WZzZ2mV99SqgzVmmc2j+sh2scgZbsjO0FEXi08O4fFQvbPb9h8r/rDMqU0LelRD729GarGTTh4Tw0kfD8k+1qH7xamSSGP56fpo8yvUIBWtCCQhUGD9nEya8ExjjLkWQ4g7UzLlFyhWv67QNNPogP8wXYak9PJzGNCSMo7R4T00FO9vieU9iWJsyeLOR9mhqb4peU2XZEK3rmU2DGDXcy0akhQuYRcjuS2MaTzFtu7nHswtxSQ13PbYBzrAjELh7rVSI7R4Og9xYj92wuEWehycZuVbicIi1+eYtTSzTa9eM1tNLZRhAVq/PA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qjJVn+tYLgzqh5KbUvbXMBF91/om4C85yjQELUYEFHQ=;
- b=NZgjk/+n3RVAi5OeRxnnX/Pq1a1b9ysi164j6Wmd9FRYwq7aUf5cTDasv8wAeDMBMTyjhgjUN/am46+C5Db75Y2DZzOfhqwxQtNgHIeuFZMbLV4Pdg6BdSD8BoerPwfK70bMYFwC0dXxdRP2Hyvus0RgCQcqVBhBRtEkxgOBNpM=
-Received: from DM6PR11MB3642.namprd11.prod.outlook.com (2603:10b6:5:138::26)
- by DM5PR11MB0043.namprd11.prod.outlook.com (2603:10b6:4:69::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Mon, 3 Aug
- 2020 13:00:32 +0000
-Received: from DM6PR11MB3642.namprd11.prod.outlook.com
- ([fe80::f043:4bdc:ef57:1b41]) by DM6PR11MB3642.namprd11.prod.outlook.com
- ([fe80::f043:4bdc:ef57:1b41%5]) with mapi id 15.20.3239.021; Mon, 3 Aug 2020
- 13:00:32 +0000
-From:   "Lu, Brent" <brent.lu@intel.com>
-To:     Takashi Iwai <tiwai@suse.de>
-CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "Guennadi Liakhovetski" <guennadi.liakhovetski@linux.intel.com>,
-        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Sam McNally <sammc@chromium.org>,
-        "Mark Brown" <broonie@kernel.org>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Daniel Stuart <daniel.stuart14@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Damian van Soelen <dj.vsoelen@gmail.com>
-Subject: RE: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago
- board
-Thread-Topic: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago
- board
-Thread-Index: AQHWZzZzIgMFwAI7HkKT1/DPVspAl6khsDgAgAFDasCAAAm3gIADX8DA
-Date:   Mon, 3 Aug 2020 13:00:31 +0000
-Message-ID: <DM6PR11MB3642B5BC2E1E0708088526D8974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
-References: <1596020585-11517-1-git-send-email-brent.lu@intel.com>
-        <1596198365-10105-1-git-send-email-brent.lu@intel.com>
-        <1596198365-10105-3-git-send-email-brent.lu@intel.com>
-        <s5h5za3ajvb.wl-tiwai@suse.de>
-        <DM6PR11MB3642AE90DF98956CCEDE6C2F974F0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <s5hd04a90o4.wl-tiwai@suse.de>
-In-Reply-To: <s5hd04a90o4.wl-tiwai@suse.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.5.1.3
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: suse.de; dkim=none (message not signed)
- header.d=none;suse.de; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [220.136.119.29]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2e8449c9-43fb-48c4-818c-08d837ad3466
-x-ms-traffictypediagnostic: DM5PR11MB0043:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR11MB0043FF7C6FF658BBD6FF505E974D0@DM5PR11MB0043.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: H/tBrxBJ4PSSh4KIFyvxMpD+W3RkANr+pp6wnjNZTrq2GhoptZjbqIZY2ngzIAWffczWaroZeW3SdTaiGogV0wXKnJVwgA+vTL+bqrb8RZJ0PK6GfDXaiWfGsjyVBnA+8tRq8Z733hLaQDbMddBm0qzRHdv5mrT+5Sb92lotD6R1dG2N0gQ+cHhH/iZFb5sgTf0cLZjsUXz1Ov1DbYB2RqlhanAmc22vMsMECZeSxTjv3awmInyTmz0aMpHuaj2b8Oef6eeGzfH3BiJcXBrfX7P1qv+tRq0mBPfOIt7uoLvQozP3BzY+PpuHiCUGaRbWjICJzBsZnUahhzSw/oDmZg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3642.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(136003)(366004)(396003)(376002)(8936002)(2906002)(4326008)(71200400001)(8676002)(478600001)(186003)(6916009)(316002)(33656002)(86362001)(54906003)(66446008)(7416002)(4744005)(64756008)(66556008)(66476007)(66946007)(26005)(7696005)(9686003)(5660300002)(76116006)(52536014)(6506007)(55016002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: JGrX9P3mKZtI3A8j2nY6KhW1T/jVCf3vWrAZSp8YEF5GPOQkZcC0nybGZdf83Y5rSQyH7JmTptQa1wPST1q0O6x9Zc1FghCQMe+rDPyqUbeH37yOJm139vhHoTzMCscFivbuMPMbd7ABPh23iCnPK0c7cIvDFazVFnEzxz3Q63my2pVHo158d0goD/KucUPMFMQQBqk9gMs8vy5hDMGPFhseslYaL/6jCOy9ad7f1Fyw9VvjiXFv59JCmW3bEUVg+QcXcZHqGHzyO7QCH7huFmkxlx8rnOPgjWR36gkBARiNUdf4lv2zUptSw3sMcYWS5fWDREKdg+zSnufg3zMeglzdpAfVRZ+sIvwpNNqHiQlbJsHDtU32vHccPFtRnaEFnUEhOcE780rHEV+m3RUJcPIo4ngQQWoJt/x8xNrjAYDQUD7qYDmm0GWwN2NyDIQp+Vny8cQsq+cbn71CJzDnKn1BHSVppmJMrM/h77Qdf2SE9YvB6vMRExhg136189hS
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3642.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2e8449c9-43fb-48c4-818c-08d837ad3466
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Aug 2020 13:00:32.0338
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: GBm2T70VJADyNDpIpIFXMRvnGfoLyXc/FnUwFVUuFD/U9twNmGIQlSjDyzvyUIa4J9ANA6fdVTI+8/6ClumP/g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB0043
-X-OriginatorOrg: intel.com
+        Mon, 3 Aug 2020 09:03:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47978 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgHCNDA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 09:03:00 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCD1FC06174A;
+        Mon,  3 Aug 2020 06:03:00 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id f9so11282349pju.4;
+        Mon, 03 Aug 2020 06:03:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Dk1JpiJy7gpZrrgIE7T6CKQLb01ltccUvx3/3PuXm3g=;
+        b=X1ovxLTvwaJecHoNmWyxVgWLrn6k/NJ5+FA3n+x0Ols/MnQgm7rZdcoW/Q0bns+szC
+         nBE9fGGQhUv+MYz7Oc3OFeDBUoB4Yd0yNYMmlbGZSscKQeZ2E6FvdpEuw0KzAlUSiXQZ
+         BJqfYZC5w/CLngVcS5x1eNbTwv5g0vbLKSZQQjvVMXwAewzXct2SdGklfbqfk9GgTOwk
+         OOhZIXhAsCp1Uz+er9ZTz8aPE16Nv6adQc86xMHameDH3+fxyXdi2p9wIhjeNeTE0RWS
+         IWW73EkWqLql+/5pAFYsJyl3MPdmD4h6udnpoW29X78nRq4rc3oT7g0o7CYgPTiqFrwH
+         4+Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Dk1JpiJy7gpZrrgIE7T6CKQLb01ltccUvx3/3PuXm3g=;
+        b=CdK6cA/WjL0oGeHj0Nn6fk3t0IMHZxbh3P3Q1bgZKLbN4/M+IMVXHlnGv2CzK/bC/E
+         QuDSh8Zex+D2+apFWh3tJdv1sbWq6N+polwaptfzDEQadR464Ziw5n3Fm0nIvOtIFK8q
+         WtsZdojyKzrWyUJaA1wsZ57KcIm9AIcB/iVYeVshmoIxPGnKjRliYYLHBYdDvZfbtui2
+         Otzm8vssVebHS9wgbLWiGB9vQDPVhjyzQ0Q7HXfJDcVXUvkABwALZzjiSo7+yjOOSYxp
+         YMXit0VfoDyuUf4WAEPqJHKaHKIPJdPVPmZQNMI9Bqxp1qy6xZGJMhrNVAJfye/b2Jls
+         8JvQ==
+X-Gm-Message-State: AOAM53107jOee/CYkLo7OYCkSpIx2Af6+6Ltqzc1FBLyRFciBrJg3SLR
+        1j/+Tb8BuFTZ+fEsgcJBq2Q=
+X-Google-Smtp-Source: ABdhPJyH+xrxtfsr5nzk+q2fBS0ZNABUlFZvIYzjOSI5+eFaBRvkkAuEagqAgax/emM5M3A0ULEhKQ==
+X-Received: by 2002:a17:90a:4701:: with SMTP id h1mr14055276pjg.93.1596459780256;
+        Mon, 03 Aug 2020 06:03:00 -0700 (PDT)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id m24sm15316369pff.45.2020.08.03.06.02.59
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 03 Aug 2020 06:02:59 -0700 (PDT)
+From:   Geliang Tang <geliangtang@gmail.com>
+To:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Geliang Tang <geliangtang@gmail.com>, netdev@vger.kernel.org,
+        mptcp@lists.01.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] mptcp: use mptcp_for_each_subflow in mptcp_stream_accept
+Date:   Mon,  3 Aug 2020 21:00:44 +0800
+Message-Id: <fe531e58a52eae5aa46dd93d30d623f8862c3d09.1596459430.git.geliangtang@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > >
-> > > Again, is this fixed 240 is a must?  Or is this also an alignment iss=
-ue?
-> > Hi Takashi,
-> >
-> > I think it's a must for Chromebooks. Google found this value works
-> > best with their CRAS server running on their BSW products. They
-> > offered this patch for their own Chromebooks.
->=20
-> Hrm, but it's likely a worse choice on other sound backends.
->=20
-> Please double-check whether this fixed small period is a must, or it's an
-> alignment issue.
-Hi Takashi,
+Use mptcp_for_each_subflow in mptcp_stream_accept instead of
+open-coding.
 
-I've double checked with google. It's a must for Chromebooks due to low
-latency use case.
+Signed-off-by: Geliang Tang <geliangtang@gmail.com>
+---
+ net/mptcp/protocol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index d3fe7296e1c9..400824eabf73 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2249,7 +2249,7 @@ static int mptcp_stream_accept(struct socket *sock, struct socket *newsock,
+ 		 * This is needed so NOSPACE flag can be set from tcp stack.
+ 		 */
+ 		__mptcp_flush_join_list(msk);
+-		list_for_each_entry(subflow, &msk->conn_list, node) {
++		mptcp_for_each_subflow(msk, subflow) {
+ 			struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+ 
+ 			if (!ssk->sk_socket)
+-- 
+2.17.1
 
-Regards,
-Brent
-
->=20
->=20
-> Takashi
