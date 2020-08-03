@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3869DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB81C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B2A62054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 577652054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:37:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458237;
-	bh=t2oT0uhxQ0+DVoa3OutONu5D6FifUlSdmQ2IaDTNpbU=;
+	s=default; t=1596458246;
+	bh=JbkdRBM9tziVBbFuBWhmjeSF9h3LPeTf1NEzOTxkUKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ze/iUegKJxaFv5yKOmy7MABUlo3wHKKyg7kZk4QVqE1p/1B6AdPYchSngT1gwIZRU
-	 cA6h+imEqWYilj9SUDRSUiRzFUUDc5UrlSORBZeg4wmu7Zc98BOyHxLRA4vL5kLDBp
-	 Sl7FO+m5ED8WiWwNBTjp1l3pWIzni1sJGxzMkXJg=
+	b=r+u38LR7R9y98MEFUD4EW2SvU6Qn1k2eJyZYPIzzwlEN7GKkPy//28qrL8xKcjlIQ
+	 r/unUFNlspmPCB603NzLJAx0y5u6ddhSLA2L9M7qpaFm7JG82hVkz8RPduLKVxHO7K
+	 hnJvS6/kYR26TE3hu+EzTYsm0uvhjQBROoN61vfU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729605AbgHCMhQ (ORCPT
+        id S1728928AbgHCMhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:37:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35420 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:37:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729147AbgHCMfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:35:07 -0400
+        id S1728902AbgHCMfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:35:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A61662054F;
-        Mon,  3 Aug 2020 12:35:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA8FC2076B;
+        Mon,  3 Aug 2020 12:34:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596458106;
-        bh=t2oT0uhxQ0+DVoa3OutONu5D6FifUlSdmQ2IaDTNpbU=;
+        s=default; t=1596458100;
+        bh=JbkdRBM9tziVBbFuBWhmjeSF9h3LPeTf1NEzOTxkUKw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=djbg7Z6zP0Eov24GXSqIgi2U/YYxg3IXX/ne2VCCPF/gtpkLoYjHqcU2k9DlXFiu9
-         L5UhmnU4r7oCapvlw+WWQIQs6yjXtAlLe4ltJfZUrxGmAShWAFAbXx/mjaKYq3FsGS
-         pY0nV3ebXJKjIWNZnAc6xFLnjTa2d/y/rD/nzhrc=
+        b=twoTXt6tiMW1JvkohvYC5ySBOqjR6nogOgdobqTPN9Ag2Yqg1lssRKikiENIIAdYa
+         pCUnpSMo8YhaTK28yxwaP5JXwN5Y+tdhkkVpHPstOUs264sQ5dhVNVWfFouzN7v+aS
+         Pcan0DbCwBrFddWyYp3dEoLx47bc44cQ3YhSjp5o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, guodeqing <geffrey.guo@huawei.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 40/51] arm64: csum: Fix handling of bad packets
-Date:   Mon,  3 Aug 2020 14:20:25 +0200
-Message-Id: <20200803121851.507135722@linuxfoundation.org>
+        stable@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 38/51] mac80211: mesh: Free pending skb when destroying a mpath
+Date:   Mon,  3 Aug 2020 14:20:23 +0200
+Message-Id: <20200803121851.405451106@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121849.488233135@linuxfoundation.org>
 References: <20200803121849.488233135@linuxfoundation.org>
@@ -60,48 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+From: Remi Pommarel <repk@triplefau.lt>
 
-[ Upstream commit 05fb3dbda187bbd9cc1cd0e97e5d6595af570ac6 ]
+[ Upstream commit 5e43540c2af0a0c0a18e39579b1ad49541f87506 ]
 
-Although iph is expected to point to at least 20 bytes of valid memory,
-ihl may be bogus, for example on reception of a corrupt packet. If it
-happens to be less than 5, we really don't want to run away and
-dereference 16GB worth of memory until it wraps back to exactly zero...
+A mpath object can hold reference on a list of skb that are waiting for
+mpath resolution to be sent. When destroying a mpath this skb list
+should be cleaned up in order to not leak memory.
 
-Fixes: 0e455d8e80aa ("arm64: Implement optimised IP checksum helpers")
-Reported-by: guodeqing <geffrey.guo@huawei.com>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixing that kind of leak:
+
+unreferenced object 0xffff0000181c9300 (size 1088):
+  comm "openvpn", pid 1782, jiffies 4295071698 (age 80.416s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 f9 80 36 00 00 00 00 00  ..........6.....
+    02 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
+  backtrace:
+    [<000000004bc6a443>] kmem_cache_alloc+0x1a4/0x2f0
+    [<000000002caaef13>] sk_prot_alloc.isra.39+0x34/0x178
+    [<00000000ceeaa916>] sk_alloc+0x34/0x228
+    [<00000000ca1f1d04>] inet_create+0x198/0x518
+    [<0000000035626b1c>] __sock_create+0x134/0x328
+    [<00000000a12b3a87>] __sys_socket+0xb0/0x158
+    [<00000000ff859f23>] __arm64_sys_socket+0x40/0x58
+    [<00000000263486ec>] el0_svc_handler+0xd0/0x1a0
+    [<0000000005b5157d>] el0_svc+0x8/0xc
+unreferenced object 0xffff000012973a40 (size 216):
+  comm "openvpn", pid 1782, jiffies 4295082137 (age 38.660s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    00 c0 06 16 00 00 ff ff 00 93 1c 18 00 00 ff ff  ................
+  backtrace:
+    [<000000004bc6a443>] kmem_cache_alloc+0x1a4/0x2f0
+    [<0000000023c8c8f9>] __alloc_skb+0xc0/0x2b8
+    [<000000007ad950bb>] alloc_skb_with_frags+0x60/0x320
+    [<00000000ef90023a>] sock_alloc_send_pskb+0x388/0x3c0
+    [<00000000104fb1a3>] sock_alloc_send_skb+0x1c/0x28
+    [<000000006919d2dd>] __ip_append_data+0xba4/0x11f0
+    [<0000000083477587>] ip_make_skb+0x14c/0x1a8
+    [<0000000024f3d592>] udp_sendmsg+0xaf0/0xcf0
+    [<000000005aabe255>] inet_sendmsg+0x5c/0x80
+    [<000000008651ea08>] __sys_sendto+0x15c/0x218
+    [<000000003505c99b>] __arm64_sys_sendto+0x74/0x90
+    [<00000000263486ec>] el0_svc_handler+0xd0/0x1a0
+    [<0000000005b5157d>] el0_svc+0x8/0xc
+
+Fixes: 2bdaf386f99c (mac80211: mesh: move path tables into if_mesh)
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+Link: https://lore.kernel.org/r/20200704135419.27703-1-repk@triplefau.lt
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/checksum.h | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/mac80211/mesh_pathtbl.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/include/asm/checksum.h b/arch/arm64/include/asm/checksum.h
-index 0b6f5a7d4027c..fd11e0d70e446 100644
---- a/arch/arm64/include/asm/checksum.h
-+++ b/arch/arm64/include/asm/checksum.h
-@@ -30,16 +30,17 @@ static inline __sum16 ip_fast_csum(const void *iph, unsigned int ihl)
- {
- 	__uint128_t tmp;
- 	u64 sum;
-+	int n = ihl; /* we want it signed */
+diff --git a/net/mac80211/mesh_pathtbl.c b/net/mac80211/mesh_pathtbl.c
+index 1300220912051..933f26e2ff8be 100644
+--- a/net/mac80211/mesh_pathtbl.c
++++ b/net/mac80211/mesh_pathtbl.c
+@@ -554,6 +554,7 @@ static void mesh_path_free_rcu(struct mesh_table *tbl,
+ 	del_timer_sync(&mpath->timer);
+ 	atomic_dec(&sdata->u.mesh.mpaths);
+ 	atomic_dec(&tbl->entries);
++	mesh_path_flush_pending(mpath);
+ 	kfree_rcu(mpath, rcu);
+ }
  
- 	tmp = *(const __uint128_t *)iph;
- 	iph += 16;
--	ihl -= 4;
-+	n -= 4;
- 	tmp += ((tmp >> 64) | (tmp << 64));
- 	sum = tmp >> 64;
- 	do {
- 		sum += *(const u32 *)iph;
- 		iph += 4;
--	} while (--ihl);
-+	} while (--n > 0);
- 
- 	sum += ((sum >> 32) | (sum << 32));
- 	return csum_fold((__force u32)(sum >> 32));
 -- 
 2.25.1
 
