@@ -2,90 +2,137 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B04B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 04:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 04:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE672075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 04:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9867206F6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 04:10:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="LKG2P4md"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="aXXvr3Nk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725935AbgHCEFy (ORCPT
+        id S1725958AbgHCEKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 00:05:54 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:58769 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725268AbgHCEFx (ORCPT
+        Mon, 3 Aug 2020 00:10:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgHCEKX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 00:05:53 -0400
-X-UUID: 7d0932c1e96b4d15a639ca4001679444-20200803
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Zgi3EbJa/AeWx8xMnAPwVqIIwAidH8IpACy77bhI1VI=;
-        b=LKG2P4mdp9x4iZWjhLakvUIF/fYH5wLLS2tk+IuIQyxA3lRAMQT0VXEb3EOdRKdD6m669uGwaE1VAXQiQl43h4VOV3Dh8u8MBe3EZQZfE0hH0DpNQ2/kQtACaD0BkqfUnA/lm8MHMRDqF9cZC2InJ2kn0apILyPbBfxf3Qg6VSQ=;
-X-UUID: 7d0932c1e96b4d15a639ca4001679444-20200803
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1739982859; Mon, 03 Aug 2020 12:05:48 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 3 Aug 2020 12:05:45 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 3 Aug 2020 12:05:46 +0800
-Message-ID: <1596427546.22971.23.camel@mtkswgap22>
-Subject: Re: [PATCH v4 2/2] soc: mediatek: add mtk-devapc driver
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <devicetree@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Mon, 3 Aug 2020 12:05:46 +0800
-In-Reply-To: <CAAOTY_-RMT-1+-5aPxqhgLbk74j0MH8U78mibBZppt_OPPQrJA@mail.gmail.com>
-References: <1596010690-13178-1-git-send-email-neal.liu@mediatek.com>
-         <1596010690-13178-3-git-send-email-neal.liu@mediatek.com>
-         <CAAOTY_-RMT-1+-5aPxqhgLbk74j0MH8U78mibBZppt_OPPQrJA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Mon, 3 Aug 2020 00:10:23 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C2A9C06174A
+        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 21:10:22 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BKktz1RXGz9s1x;
+        Mon,  3 Aug 2020 14:10:19 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596427820;
+        bh=YhI2SWaVaWNDumeeexvmrh3MFFyaXPRDfwzsb+cIWZI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=aXXvr3NkybheAI34Dh7/+ZYft4PAnsJ9hBV3Er1bpQgKdYY+VNpQ85ZcrDUaptjPq
+         dqw969Pb+4MTgV7/WPK6d4U6f98juepVfJnHumwGi9JqyIYJhHmnwq0Vo3va8voCZI
+         4+40cqs39L3FDHHodiy8TS7DQkm1XXQVux0O+6N3vJBIRH+x7uv4LuWB8EFpOPSCum
+         I9eV9NBXdHYBbmV4LImZ3YzqdLoKYliW6M+cLj9novevfxDEYU0M9yCit+xLS1SHJN
+         cSTWPoOEUgfh2jXdEIq7rZrL5DRD/QIhK8G5Sq+okOev1VP8P7slN4XLTfOpgS72St
+         /cpqkqfbGBgKw==
+Date:   Mon, 3 Aug 2020 14:10:17 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Willy Tarreau <w@1wt.eu>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Linux-kernel Mailing List <linux-kernel@vger.kernel.org>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: powerpc: build failures in Linus' tree
+Message-ID: <20200803141017.55dd6cc7@canb.auug.org.au>
+In-Reply-To: <20200803034547.GA15501@1wt.eu>
+References: <20200802204842.36bca162@canb.auug.org.au>
+        <20200802172019.GB26677@1wt.eu>
+        <20200803034547.GA15501@1wt.eu>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; boundary="Sig_/VtS.Fz8QmP_QcKN9Y_/nvuK";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2h1bi1LdWFuZywNCg0KT24gU3VuLCAyMDIwLTA4LTAyIGF0IDA3OjUwICswODAwLCBDaHVu
-LUt1YW5nIEh1IHdyb3RlOg0KPiBIaSwgTmVhbDoNCj4gDQo+IE5lYWwgTGl1IDxuZWFsLmxpdUBt
-ZWRpYXRlay5jb20+IOaWvCAyMDIw5bm0N+aciDI55pelIOmAseS4iSDkuIvljYg0OjI55a+r6YGT
-77yaDQo+ID4NCj4gPiBNZWRpYVRlayBidXMgZmFicmljIHByb3ZpZGVzIFRydXN0Wm9uZSBzZWN1
-cml0eSBzdXBwb3J0IGFuZCBkYXRhDQo+ID4gcHJvdGVjdGlvbiB0byBwcmV2ZW50IHNsYXZlcyBm
-cm9tIGJlaW5nIGFjY2Vzc2VkIGJ5IHVuZXhwZWN0ZWQNCj4gPiBtYXN0ZXJzLg0KPiA+IFRoZSBz
-ZWN1cml0eSB2aW9sYXRpb24gaXMgbG9nZ2VkIGFuZCBzZW50IHRvIHRoZSBwcm9jZXNzb3IgZm9y
-DQo+ID4gZnVydGhlciBhbmFseXNpcyBvciBjb3VudGVybWVhc3VyZXMuDQo+ID4NCj4gPiBBbnkg
-b2NjdXJyZW5jZSBvZiBzZWN1cml0eSB2aW9sYXRpb24gd291bGQgcmFpc2UgYW4gaW50ZXJydXB0
-LCBhbmQNCj4gPiBpdCB3aWxsIGJlIGhhbmRsZWQgYnkgbXRrLWRldmFwYyBkcml2ZXIuIFRoZSB2
-aW9sYXRpb24NCj4gPiBpbmZvcm1hdGlvbiBpcyBwcmludGVkIGluIG9yZGVyIHRvIGZpbmQgdGhl
-IG11cmRlcmVyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTmVhbCBMaXUgPG5lYWwubGl1QG1l
-ZGlhdGVrLmNvbT4NCj4gPiAtLS0NCj4gDQo+IFtzbmlwXQ0KPiANCj4gPiArDQo+ID4gK3N0cnVj
-dCBtdGtfZGV2YXBjX2NvbnRleHQgew0KPiA+ICsgICAgICAgc3RydWN0IGRldmljZSAqZGV2Ow0K
-PiA+ICsgICAgICAgdTMyIHZpb19pZHhfbnVtOw0KPiA+ICsgICAgICAgdm9pZCBfX2lvbWVtICpk
-ZXZhcGNfcGRfYmFzZTsNCj4gDQo+IFRoaXMgaXMgZGV2YXBjIGNvbnRleHQsIHNvIHByZWZpeCAn
-ZGV2YXBjJyBpcyByZWR1bmRhbnQuDQo+IEFuZCwgd2hhdCBkb2VzICdwZCcgbWVhbj8NCg0KJ3Bk
-JyBtZWFucyBwb3dlciBkb3duLiBPZiBjb3Vyc2Ugd2Ugd291bGQgYWxzbyByZW1vdmUgaXQgYXMg
-d2VsbC4NCkkgc3VnZ2VzdCB0byBjaGFuZ2UgaXQgYXMgJ2luZnJhX2Jhc2UnLg0KDQo+IA0KPiBS
-ZWdhcmRzLA0KPiBDaHVuLUt1YW5nLg0KPiANCj4gPiArICAgICAgIHN0cnVjdCBtdGtfZGV2YXBj
-X3Zpb19pbmZvICp2aW9faW5mbzsNCj4gPiArICAgICAgIGNvbnN0IHN0cnVjdCBtdGtfZGV2YXBj
-X3BkX29mZnNldCAqb2Zmc2V0Ow0KPiA+ICsgICAgICAgY29uc3Qgc3RydWN0IG10a19kZXZhcGNf
-dmlvX2RiZ3MgKnZpb19kYmdzOw0KPiA+ICt9Ow0KPiA+ICsNCg0K
+--Sig_/VtS.Fz8QmP_QcKN9Y_/nvuK
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi Willy,
+
+On Mon, 3 Aug 2020 05:45:47 +0200 Willy Tarreau <w@1wt.eu> wrote:
+>
+> On Sun, Aug 02, 2020 at 07:20:19PM +0200, Willy Tarreau wrote:
+> > On Sun, Aug 02, 2020 at 08:48:42PM +1000, Stephen Rothwell wrote:
+> > >=20
+> > > We are getting build failures in some PowerPC configs for Linus' tree.
+> > > See e.g. http://kisskb.ellerman.id.au/kisskb/buildresult/14306515/
+> > >=20
+> > > In file included from /kisskb/src/arch/powerpc/include/asm/paca.h:18,
+> > >                  from /kisskb/src/arch/powerpc/include/asm/percpu.h:1=
+3,
+> > >                  from /kisskb/src/include/linux/random.h:14,
+> > >                  from /kisskb/src/include/linux/net.h:18,
+> > >                  from /kisskb/src/net/ipv6/ip6_fib.c:20:
+> > > /kisskb/src/arch/powerpc/include/asm/mmu.h:139:22: error: unknown typ=
+e name 'next_tlbcam_idx'
+> > >   139 | DECLARE_PER_CPU(int, next_tlbcam_idx);
+> > >=20
+> > > I assume this is caused by commit
+> > >=20
+> > >   1c9df907da83 ("random: fix circular include dependency on arm64 aft=
+er addition of percpu.h")
+> > >=20
+> > > But I can't see how, sorry.
+> >=20
+> > So there, asm/mmu.h includes asm/percpu.h, which includes asm/paca.h, w=
+hich
+> > includes asm/mmu.h.
+> >=20
+> > I suspect that we can remove asm/paca.h from asm/percpu.h as it *seems*
+> > to be only used by the #define __my_cpu_offset but I don't know if anyt=
+hing
+> > will break further, especially if this __my_cpu_offset is used anywhere
+> > without this paca definition.
+>=20
+> I tried this and it fixed 5.8 for me with your config above. I'm appending
+> a patch that does just this. I didn't test other configs as I don't know
+> which ones to test though. If it fixes the problem for you, maybe it can
+> be picked by the PPC maintainers.
+
+Our mails have crossed.  I just sent a more comprehensive patch.  I
+think your patch would require a lot of build testing and even then may
+fail for some CONFIG combination that we didn't test or added in the
+future (or someone just made up).
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/VtS.Fz8QmP_QcKN9Y_/nvuK
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8njikACgkQAVBC80lX
+0GxI0ggAgFHUOVKcLiTKMUDyziwTW2zq4UM2G950FogluMsm24YrfvOYeb3+u8H+
+8lsdLMcfs/IDXHTIRLa5EXmCqOwF4kQrWq0N4UDCxT3xnOUxCqDEFk/3C8XhLa1V
+dLn8YRzz6WRoaDYDdv9A+X69aBViuxfKZiuOJebL+qLvHtHjXDKtAgY+IntYaBy9
+YalXdqYVzTkFmwncatLOXcnbi4UMgHpJhWCdQv1MvA8/iPU9aJSOW0MV2auHv0Qa
+Ehwb55Mg0wBW9Nt8/A0UUSxZoacz83tS8uIwl5mebIfhkgq+xWLKOaz2LS5+UgMn
+Z+NLkYZ6JAo6qkNFiYJ0E+zRhhfTuw==
+=AS/6
+-----END PGP SIGNATURE-----
+
+--Sig_/VtS.Fz8QmP_QcKN9Y_/nvuK--
