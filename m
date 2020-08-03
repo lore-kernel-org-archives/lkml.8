@@ -2,95 +2,108 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C1FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 06:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA092C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 06:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D1C522B3F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 06:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F9AF2068F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 06:55:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Y6dX8N7Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbgHCGxb convert rfc822-to-8bit (ORCPT
+        id S1726971AbgHCGzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 02:53:31 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:55615 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbgHCGxa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 02:53:30 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 0E2DCC0002;
-        Mon,  3 Aug 2020 06:53:27 +0000 (UTC)
-Date:   Mon, 3 Aug 2020 08:53:26 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, linux-mips@vger.kernel.org,
-        MTD Maling List <linux-mtd@lists.infradead.org>
-Subject: Re: [PATCH] bcm963xx_tag.h: fix duplicated word
-Message-ID: <20200803085326.099e608d@xps13>
-In-Reply-To: <847e3e46-2fc2-daea-67f3-3aaf0f2af4ac@gmail.com>
-References: <d30c09a3-fe30-ddf1-3f21-00fc48b16443@infradead.org>
-        <847e3e46-2fc2-daea-67f3-3aaf0f2af4ac@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 3 Aug 2020 02:55:52 -0400
+Received: from ozlabs.org ([203.11.71.1]:35593 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbgHCGzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 02:55:51 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BKpYw6HYbz9sRN;
+        Mon,  3 Aug 2020 16:55:48 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596437749;
+        bh=LKuvMMPVIvA+B/kFD48oSrZiCdXwCQMwR14E2UPRJ5o=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Y6dX8N7YA0LM9DL0xsUsZNZZCF5y0RPaSlAqOH9UmPuMo8zFtiC64K0KTD8JT0NN9
+         bpng8nZ5STUygwKlhR6dFbM2q0cXP2JN7SV1H5eeq3kyGJCbI1xCt5cd5IrDsxKPq2
+         iafFVfugXz9fKAJq9mFID2jm58pEY3neCSAk7C28DKgfVaP+m2h0j/VitaVRDTDem7
+         gispg5Zw+IuiZusToa9GOSrMyJAX9/NInMThjcOgo22ujjCLx0KSPPFCewT4EuKLql
+         z2aU2LqnYJiY1Clv1bHim9+MZhF/7JEoRSWu6ySuhz2CLULCxwCBLXs7BekNe/4eZu
+         NQDwUidhnqh5Q==
+Date:   Mon, 3 Aug 2020 16:55:46 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alastair D'Silva <alastair@d-silva.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: linux-next: manual merge of the char-misc tree with the powerpc
+ tree
+Message-ID: <20200803165546.6ab5ab6f@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; boundary="Sig_/qHOjcln.v14dlTifU=wo.eC";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+--Sig_/qHOjcln.v14dlTifU=wo.eC
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Florian Fainelli <f.fainelli@gmail.com> wrote on Wed, 15 Jul 2020
-19:06:36 -0700:
+Hi all,
 
-> Le 2020-07-15 à 18:28, Randy Dunlap a écrit :
-> > From: Randy Dunlap <rdunlap@infradead.org>
-> > 
-> > Change doubled word "is" to "it is".
-> > 
-> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> > Cc: Florian Fainelli <f.fainelli@gmail.com>
-> > Cc: bcm-kernel-feedback-list@broadcom.com
-> > Cc: linux-mips@vger.kernel.org  
-> 
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-> 
-> This should probably be merged via linux-mips or linux-mtd, since we
-> have consumers of this header on both trees.
+Today's linux-next merge of the char-misc tree got a conflict in:
 
-Sorry for the delay, I was away the last weeks. I can take it through
-the MTD tree (next release cycle) or let mips folks to do it. It's
-just a comment change, so not that impacting.
+  drivers/misc/ocxl/config.c
 
-> 
-> > ---
-> >  include/linux/bcm963xx_tag.h |    2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > --- linux-next-20200714.orig/include/linux/bcm963xx_tag.h
-> > +++ linux-next-20200714/include/linux/bcm963xx_tag.h
-> > @@ -84,7 +84,7 @@ struct bcm_tag {
-> >  	char flash_layout_ver[FLASHLAYOUTVER_LEN];
-> >  	/* 196-199: kernel+rootfs CRC32 */
-> >  	__u32 fskernel_crc;
-> > -	/* 200-215: Unused except on Alice Gate where is is information */
-> > +	/* 200-215: Unused except on Alice Gate where it is information */
-> >  	char information2[TAGINFO2_LEN];
-> >  	/* 216-219: CRC32 of image less imagetag (kernel for Alice Gate) */
-> >  	__u32 image_crc;
-> >   
-> 
-> 
+between commit:
 
-Thanks,
-Miquèl
+  3591538a31af ("ocxl: Address kernel doc errors & warnings")
+
+from the powerpc tree and commit:
+
+  28fc491e9be6 ("misc: ocxl: config: Provide correct formatting to function=
+ headers")
+
+from the char-misc tree.
+
+I fixed it up (as it was just differences in comments, I just arbitrarily
+chose the latter version) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/qHOjcln.v14dlTifU=wo.eC
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8ntPIACgkQAVBC80lX
+0GwH1Qf9HjXBmc/hCbg+8mUN8HeO99NLP+3Z73rBfw04BVzR8UCN4n2Sz6gty35l
+nKxiWyIS8eccOL5RcIuR6XY+jT4uqdUOzllsytZpgf01VrBs9yLeWtQoRU5C3jyT
+EUpLDCpu/Gs3NsRmG3bFBoqV9Xv7CpAs3NFSkKckXhh0DWp6DbIXqWOTXFyE6yd3
+x1EyD3n02t9Kcq1h2lN0GchNanmaC1egu9lXK1ovPeuaGQ9+PPIpdANLBpw5HEKS
+3+fXriRx5zHVZJkPL8709HL5GCMelIol4y+XZlQI/KOnrutXY4EneugpLlepWq7M
+CcDGU9A9w3NwGLuPpOGK3i1jpVzgZQ==
+=u9Jo
+-----END PGP SIGNATURE-----
+
+--Sig_/qHOjcln.v14dlTifU=wo.eC--
