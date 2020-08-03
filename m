@@ -2,143 +2,252 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 550D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4647C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3874B206D7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82DBF20722
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 09:33:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbgHCJbs (ORCPT
+        id S1726189AbgHCJdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 05:31:48 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34917 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbgHCJbs (ORCPT
+        Mon, 3 Aug 2020 05:33:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57392 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725948AbgHCJdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 05:31:48 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 93so17274377otx.2;
-        Mon, 03 Aug 2020 02:31:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cNQhjEuMT8QktkBdiT53ZebNYf/kgY2N7FdiAWEIJE4=;
-        b=DlKWAQnOqjkK9QgfxqupuGgRa5A+/aiWLdoXyEwtT5d8ZrIkmjEozg7HOivQM05Faz
-         XtKLatZ9q11FQgNkkFhIofDdmJVX1X2QvNJe+UvhPNI8/rHshH/BRuSENwVfxJGfgCEg
-         1HXukUtXWpVjTSJlpLoav5Vq9mlr+hVIXijoxFrxZNrzzyhV5+4X+PKXAdsjcCVOH/Rr
-         iDZNww03yYgS5zh4KVIvZLHZSdvMTqbvcFU+ZfT7oPBnd60OIaNpGua8oI2rxdRKnpp5
-         s0+4F9p5cLmn72qr/0dFPTqRtNCWWSSXVlrVRqSAEFh6mC+hfe7PF4l7T5js0Emrkrap
-         JAuA==
-X-Gm-Message-State: AOAM530/OyHCS2pfZIGRIcJvzSBLUTBI6wqi4H556sMZLgUbv9IOOuFW
-        JL1Tp1JHDZ+3KWWPbSsF92vamQFC535Hgupxc54=
-X-Google-Smtp-Source: ABdhPJxWHu6bmTNcqR+flJJ2oDdPHMxmw1tynMHEul1JJgkV5TSGCfXj/5LSyfY8jhyV1OsM5EXnn9dNW/aJyDE/ox8=
-X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr12167826ote.107.1596447106515;
- Mon, 03 Aug 2020 02:31:46 -0700 (PDT)
+        Mon, 3 Aug 2020 05:33:24 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07393LSS105966;
+        Mon, 3 Aug 2020 05:33:22 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32pfgk0xvu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 05:33:22 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0739HPmO015353;
+        Mon, 3 Aug 2020 09:33:20 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma06ams.nl.ibm.com with ESMTP id 32mynh21qu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 09:33:20 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0739XHJi34472310
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 3 Aug 2020 09:33:17 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 645B311C058;
+        Mon,  3 Aug 2020 09:33:17 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 222FF11C04A;
+        Mon,  3 Aug 2020 09:33:17 +0000 (GMT)
+Received: from osiris (unknown [9.171.50.46])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon,  3 Aug 2020 09:33:17 +0000 (GMT)
+Date:   Mon, 3 Aug 2020 11:33:15 +0200
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [GIT PULL] s390 updates for 5.9 merge window
+Message-ID: <20200803093315.GA4083@osiris>
 MIME-Version: 1.0
-References: <1595602732-25582-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1595602732-25582-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200724193752.GE2729799@oden.dyn.berto.se> <CA+V-a8s7UkhCGcP8eiiH_jd8hhnpLJA6QqfL7jXo_sAgRMfy8g@mail.gmail.com>
- <20200725081146.GF2729799@oden.dyn.berto.se> <CA+V-a8sNxUaj88DDcWyc4zrmsAAGndjoQX=OmJ3u1GRJCT6TBQ@mail.gmail.com>
- <20200801091759.GC1379367@oden.dyn.berto.se>
-In-Reply-To: <20200801091759.GC1379367@oden.dyn.berto.se>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 3 Aug 2020 11:31:35 +0200
-Message-ID: <CAMuHMdUv-8v1Uqh9qU5NfCz0gr2iag_9Y28NiHU_X8nijLXRKA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: media: renesas,vin: Document
- renesas-vin-ycbcr-8b-g property
-To:     Niklas <niklas.soderlund@ragnatech.se>
-Cc:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-03_07:2020-07-31,2020-08-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ phishscore=0 mlxlogscore=999 impostorscore=0 spamscore=0 suspectscore=2
+ bulkscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008030066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Niklas,
+Hi Linus,
 
-On Sat, Aug 1, 2020 at 11:18 AM Niklas <niklas.soderlund@ragnatech.se> wrote:
-> On 2020-07-25 23:23:13 +0100, Lad, Prabhakar wrote:
-> > On Sat, Jul 25, 2020 at 9:11 AM Niklas <niklas.soderlund@ragnatech.se> wrote:
-> > > On 2020-07-24 22:11:31 +0100, Lad, Prabhakar wrote:
-> > > > On Fri, Jul 24, 2020 at 8:37 PM Niklas <niklas.soderlund@ragnatech.se> wrote:
-> > > > > On 2020-07-24 15:58:51 +0100, Lad Prabhakar wrote:
-> > > > > > Add a DT property "renesas-vin-ycbcr-8b-g" to select YCbCr422 8-bit data
-> > > > > > input pins.
+please pull s390 updates for the 5.9 merge window.
 
-> > > > > This nit apart I'm not sure a property is the right way here. Could it
-> > > > > not be possible on some designs to have two different sensors one wired
-> > > > > to DATA[7:0] and the other to DATA[15:8] and by controlling the
-> > > > > VNDRM2_YDS register at runtime switch between the two? If so adding a DT
-> > > > > property to hard-code one of the two options would prevent this. I fear
-> > > > > we need to think of a runtime way to deal with this.
-> > > > >
-> > > > Aha Gen2 and Gen3 hardware manuals have a bit different description
-> > > > about the YDS field. (I was working R8a7742 SoC so I referred Gen2
-> > > > manual)
-> > >
-> > > Ahh, I think we should use the Gen3 names as I find them overall an
-> > > improvement over the Gen2 ones.
-> > >
-> > Agreed.
-> >
-> > > >
-> > > > > The best way to do that I think is to extend the port@0 node to allow
-> > > > > for two endpoints, one for each of the two possible parallel sensors.
-> > > > > This would then have to be expressed in the media graph and selection if
-> > > > > YDS should be set or not depend on which media links are enabled.
-> > > > >
-> > > > In that case how do we handle endpoint matching each would have two
-> > > > subdevs to be matched.
-> > >
-> > > It would be handle in the same was as the multiple endpoints in port@1.
-> > >
-> > > > And in case non media-ctl cases we cannot
-> > > > switch between subdevs.
-> > >
-> > > For the Gen2 none media graph enabled mode this could be handled with
-> > > the S_INPUT ioctl. For this feature to be merged however I it needs to
-> > > be possible to select input both in Gen2 and Gen3 I'm afraid.
-> > Ohh yes S_INPUT could be used to switch inputs. But  how do we decide
-> > YDS needs to be enabled, for example with the below dts say vin3 is
-> > parallel bus split into 2x 8-bit bus one connected to a ov5640 sensor
-> > and other connected to ov7725 sensor. Should we use data-shift
-> > property for the second vin endpoint (vin3ep1) to enable YDS ?
->
-> Using data-shift is a great idea! If I understand your use-case you
-> currently only have one sensor attached on the parallel bus right? If so
-> we can postpone the multi sensor part until it's needed and just learn
-> the VIN driver about data-shift. From the documentation,
->
->   - data-shift: on the parallel data busses, if bus-width is used to
->     specify the number of data lines, data-shift can be used to specify
->     which data lines are used, e.g. "bus-width=<8>; data-shift=<2>;"
->     means, that lines 9:2 are used.
->
-> So in this case would not specifying data-shift=<8> solve the DT
-> description problem? The VIN driver still needs to learn about this tho.
+Thanks,
+Heiko
 
-And the PFC drivers need to be extended with the data8_sft8 groups
-(present in the BSP), right?
+The following changes since commit 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68:
 
-Gr{oetje,eeting}s,
+  Linux 5.8-rc3 (2020-06-28 15:00:24 -0700)
 
-                        Geert
+are available in the Git repository at:
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.9-1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+for you to fetch changes up to 9a996c67a65d937b23408e56935ef23404c9418e:
+
+  s390/vmemmap: coding style updates (2020-07-27 10:34:19 +0200)
+
+----------------------------------------------------------------
+- Add support for function error injection.
+
+- Add support for custom exception handlers, as required by BPF_PROBE_MEM.
+
+- Add support for BPF_PROBE_MEM.
+
+- Add trace events for idle enter / exit for the s390 specific idle
+  implementation.
+
+- Remove unused zcore memmmap device.
+
+- Remove unused "raw view" from s390 debug feature.
+
+- AP bus + zcrypt device driver code refactoring.
+
+- Provide cex4 cca sysfs attributes for cex3 for zcrypt device driver.
+
+- Expose only minimal interface to walk physmem for mm/memblock. This
+  is a common code change and it has been agreed on with Mike Rapoport
+  and Andrew Morton that this can go upstream via the s390 tree.
+
+- Rework of the s390 vmem/vmmemap code to allow for future memory hot
+  remove.
+
+- Get rid of FORCE_MAX_ZONEORDER to finally allow for order-10
+  allocations again, instead of only order-8 allocations.
+
+- Various small improvements and fixes.
+
+----------------------------------------------------------------
+Alexander Egorenkov (1):
+      s390/zcore: remove memmap device
+
+Christian Borntraeger (1):
+      s390: fix comment regarding interrupts in svc
+
+David Hildenbrand (13):
+      s390/vmem: get rid of memory segment list
+      s390/extmem: remove stale -ENOSPC comment and handling
+      mm/memblock: expose only miminal interface to add/walk physmem
+      s390/mm: don't set ARCH_KEEP_MEMBLOCK
+      s390/vmem: rename vmem_add_mem() to vmem_add_range()
+      s390/vmem: consolidate vmem_add_range() and vmem_remove_range()
+      s390/vmemmap: extend modify_pagetable() to handle vmemmap
+      s390/vmemmap: cleanup when vmemmap_populate() fails
+      s390/vmemmap: take the vmem_mutex when populating/freeing
+      s390/vmem: cleanup empty page tables
+      s390/vmemmap: fallback to PTEs if mapping large PMD fails
+      s390/vmemmap: remember unused sub-pmd ranges
+      s390/vmemmap: avoid memset(PAGE_UNUSED) when adding consecutive sections
+
+Gustavo A. R. Silva (1):
+      s390/appldata: use struct_size() helper
+
+Harald Freudenberger (7):
+      s390/pkey: fix smatch warning inconsistent indenting
+      s390/zcrypt: fix smatch warnings
+      s390/zcrypt: code beautification and struct field renames
+      s390/zcrypt: split ioctl function into smaller code units
+      s390/ap: rename and clarify ap state machine related stuff
+      s390/zcrypt: provide cex4 cca sysfs attributes for cex3
+      s390/ap: rework crypto config info and default domain code
+
+Heiko Carstens (11):
+      s390/debug: remove raw view
+      s390/debug: remove struct __debug_entry from uapi
+      s390/smp: move smp_cpus_done() to header file
+      s390/smp: add missing linebreak
+      s390/mm: fix typo in comment
+      s390/mm: avoid trimming to MAX_ORDER
+      s390/mm: allow order 10 allocations
+      s390/time: use CLOCKSOURCE_MASK
+      s390/time: select CLOCKSOURCE_VALIDATE_LAST_CYCLE
+      s390/time: improve comparison for tod steering
+      s390/vmemmap: coding style updates
+
+Ilya Leoshkevich (4):
+      s390/kernel: unify EX_TABLE* implementations
+      s390/kernel: expand exception table logic to allow new handling options
+      s390/bpf: implement BPF_PROBE_MEM
+      s390: enable HAVE_FUNCTION_ERROR_INJECTION
+
+Julian Wiedmann (3):
+      s390/qdio: fix statistics for 128 SBALs
+      s390/qdio: allow to scan all 128 Input SBALs
+      s390/qdio: remove internal polling in non-thinint path
+
+Niklas Schnelle (1):
+      s390/pci: clarify comment in s390_mmio_read/write
+
+Oscar Carter (1):
+      s390/tty3270: remove function callback casts
+
+Sven Schnelle (5):
+      s390: convert to msecs_to_jiffies()
+      s390/pci: remove unused functions
+      s390/time: remove unused function
+      s390/stp: allow group and users to read stp sysfs files
+      s390: add trace events for idle enter/exit
+
+ Documentation/s390/s390dbf.rst          |  17 +-
+ arch/s390/Kconfig                       |   7 +-
+ arch/s390/appldata/appldata_os.c        |   6 +-
+ arch/s390/include/asm/asm-const.h       |  12 +
+ arch/s390/include/asm/debug.h           |  18 +-
+ arch/s390/include/asm/extable.h         |  52 ++-
+ arch/s390/include/asm/linkage.h         |  35 +-
+ arch/s390/include/asm/pci_dma.h         |  11 -
+ arch/s390/include/asm/pgtable.h         |   2 +-
+ arch/s390/include/asm/ptrace.h          |   5 +
+ arch/s390/include/asm/smp.h             |   4 +
+ arch/s390/include/asm/syscall_wrapper.h |   6 +-
+ arch/s390/include/asm/timex.h           |   5 -
+ arch/s390/include/uapi/asm/debug.h      |  35 --
+ arch/s390/include/uapi/asm/zcrypt.h     | 140 +++----
+ arch/s390/kernel/crash_dump.c           |   6 +-
+ arch/s390/kernel/debug.c                |  42 --
+ arch/s390/kernel/entry.S                |   2 +-
+ arch/s390/kernel/idle.c                 |   4 +-
+ arch/s390/kernel/kprobes.c              |   4 +-
+ arch/s390/kernel/lgr.c                  |   2 +-
+ arch/s390/kernel/setup.c                |   8 -
+ arch/s390/kernel/smp.c                  |   5 +-
+ arch/s390/kernel/time.c                 |  55 ++-
+ arch/s390/kernel/topology.c             |   4 +-
+ arch/s390/kernel/traps.c                |   7 +-
+ arch/s390/lib/Makefile                  |   2 +
+ arch/s390/lib/error-inject.c            |  14 +
+ arch/s390/mm/cmm.c                      |   2 +-
+ arch/s390/mm/extmem.c                   |  32 +-
+ arch/s390/mm/fault.c                    |   6 +-
+ arch/s390/mm/vmem.c                     | 703 +++++++++++++++++++-------------
+ arch/s390/net/bpf_jit_comp.c            | 139 ++++++-
+ arch/s390/pci/pci_mmio.c                |  20 +-
+ drivers/s390/char/tty3270.c             |  12 +-
+ drivers/s390/char/zcore.c               |  57 +--
+ drivers/s390/cio/qdio.h                 |   9 +-
+ drivers/s390/cio/qdio_debug.c           |   2 +-
+ drivers/s390/cio/qdio_main.c            |  41 +-
+ drivers/s390/crypto/ap_bus.c            | 317 +++++++-------
+ drivers/s390/crypto/ap_bus.h            |  69 ++--
+ drivers/s390/crypto/ap_queue.c          | 209 +++++-----
+ drivers/s390/crypto/pkey_api.c          |   4 +-
+ drivers/s390/crypto/zcrypt_api.c        | 176 ++++----
+ drivers/s390/crypto/zcrypt_ccamisc.c    |  69 ++--
+ drivers/s390/crypto/zcrypt_cex2c.c      | 129 +++++-
+ drivers/s390/crypto/zcrypt_cex4.c       |  30 +-
+ drivers/s390/crypto/zcrypt_error.h      |   4 +-
+ drivers/s390/crypto/zcrypt_msgtype50.c  |  64 ++-
+ drivers/s390/crypto/zcrypt_msgtype6.c   | 112 +++--
+ drivers/s390/crypto/zcrypt_msgtype6.h   |   4 +-
+ drivers/s390/crypto/zcrypt_queue.c      |   8 +-
+ include/linux/memblock.h                |  28 +-
+ mm/memblock.c                           |  57 +--
+ scripts/sorttable.c                     |  41 ++
+ 55 files changed, 1595 insertions(+), 1259 deletions(-)
+ create mode 100644 arch/s390/include/asm/asm-const.h
+ delete mode 100644 arch/s390/include/uapi/asm/debug.h
+ create mode 100644 arch/s390/lib/error-inject.c
