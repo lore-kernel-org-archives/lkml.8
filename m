@@ -2,152 +2,130 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E1EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0746C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC10320738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D3A02065C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:45:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jzMX2BcU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgHCLo2 (ORCPT
+        id S1726509AbgHCLpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 07:44:28 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:27969 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726533AbgHCLj5 (ORCPT
+        Mon, 3 Aug 2020 07:45:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726433AbgHCLlX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 07:39:57 -0400
-X-IronPort-AV: E=Sophos;i="5.75,429,1589209200"; 
-   d="scan'208";a="53742349"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 03 Aug 2020 20:39:37 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 8FBC142385FF;
-        Mon,  3 Aug 2020 20:39:34 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Jacopo Mondi <jacopo@jmondi.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        linux-renesas-soc@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 2/3] media: i2c: ov772x: Add support for BT656 mode
-Date:   Mon,  3 Aug 2020 12:39:12 +0100
-Message-Id: <1596454753-13612-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596454753-13612-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <1596454753-13612-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Mon, 3 Aug 2020 07:41:23 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3AF6C06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 04:41:16 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id a21so38254505ejj.10
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 04:41:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0+NO3ztULAIrGvrz5D9Y/HzaMZX3dT9yOjYO20mJWFE=;
+        b=jzMX2BcUcYomvDCitAj65HNQx2dB7wG/CeGganhYRU7W0Sm6ACLMm040YEkm9soXV1
+         1wZ8ZjKgHe/uNZCoeb5D1nMODexXPlx3ohsylTZZqKqCMOgqmTPHxAEVaPUD7jpVI2Rm
+         DV494Tp8SsExOoAqi+pMyjs8DfMl80Zz7HP42mLmIVmPhlLvSKayu00PtNZDUlvjNow0
+         KPSfzWT3b9xSsI6Yy6vnyxR8xQ/eDGjC5ZYr2vWR+bNvPHluGZRiFzHuUnofI3u7dJyS
+         1yJrkXF8Zalcf06YxzMaz91W1RGFU5uVfjmVsZAB+CmREqL88U4yfOS9PWq3QigUc4jl
+         mZ1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0+NO3ztULAIrGvrz5D9Y/HzaMZX3dT9yOjYO20mJWFE=;
+        b=sVVA1w52MjcM8BSkC+uc4S19vmp3LR2csgYT5OIOtsJUYk2UlI4TZuAzWreyNhMqV/
+         +4u8/Uo7E/BpobYxqJFgcFSACBIicQaV7AJ3VGc5ZDHVbB5+hwT3SAs/FEp86Ny5NM3y
+         4OLqmLm2DmD/CfhmMcxvq2RsnQqtXIlhHJRQuhOz+dGt3FWykJbr9y2L0S4gBUX9PT/L
+         rCkbxqtbwC40ViF/m9A4w7nZggyD78c9dvlPpkgNj2k9+0Z0ZXV4seTtDgvP8VMA3myJ
+         V6NoJITz4p6LhHsoPbCKDRjuKcV98ENY452HVZGaCIIfdVwvHmxJikI7L4k6yiC4LauN
+         1RpQ==
+X-Gm-Message-State: AOAM532YA/QPIXwNsjW4tEASIrEFV4jxlVpAOk1vONiDvjEYGZ8x3aNC
+        P896v+Wv6G2mqScEgS+O76Y=
+X-Google-Smtp-Source: ABdhPJzJkwmJEmCwN333UYXomgbiIRREmBIPLG34327fzVLIHjLggxQ94KTrrbw/uHE/S0NcN5chQg==
+X-Received: by 2002:a17:906:a2c2:: with SMTP id by2mr15793481ejb.86.1596454875500;
+        Mon, 03 Aug 2020 04:41:15 -0700 (PDT)
+Received: from skbuf ([188.26.57.97])
+        by smtp.gmail.com with ESMTPSA id d25sm15916774edr.78.2020.08.03.04.41.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 04:41:14 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 14:41:12 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>,
+        Alison Wang <alison.wang@nxp.com>, catalin.marinas@arm.com,
+        will@kernel.org, paulmck@kernel.org, mw@semihalf.com,
+        leoyang.li@nxp.com, vladimir.oltean@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC PATCH] arm64: defconfig: Disable fine-grained task level
+ IRQ time accounting
+Message-ID: <20200803114112.mrcuupz4ir5uqlp6@skbuf>
+References: <20200729033934.22349-1-alison.wang@nxp.com>
+ <877dumbtoi.fsf@kurt>
+ <20200729094943.lsmhsqlnl7rlnl6f@skbuf>
+ <87mu3ho48v.fsf@kurt>
+ <20200730082228.r24zgdeiofvwxijm@skbuf>
+ <873654m9zi.fsf@kurt>
+ <87lfiwm2bj.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87lfiwm2bj.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support to read the bus-type and enable BT656 mode if needed.
+Hi Thomas,
 
-The driver defaults to parallel mode if bus-type is not specified in DT.
+On Mon, Aug 03, 2020 at 12:49:36PM +0200, Thomas Gleixner wrote:
+> Kurt,
+> 
+> Kurt Kanzenbach <kurt.kanzenbach@linutronix.de> writes:
+> > On Thu Jul 30 2020, Vladimir Oltean wrote:
+> > OK. I've reproduced it on a Marvell Armada SoC with v5.6 mainline. See
+> > splats below. Running with irq time accounting enabled, kills the
+> > machine immediately. However, I'm not getting the possible deadlock
+> > warnings in 8250 as you did. So that might be unrelated.
+> >
+> > Unfortunately I have no idea what to debug here.
+> 
+> lets look at the facts we have so far.
+> 
+>  1) When irq accounting is disabled, RT throttling kicks in as
+>     expected.
+> 
+>  2) With irq accounting the RT throttler does not kick in and the RCU
+>     stall/lockups happen.
+> 
+> Not much, but there is clearly interaction between irq time accounting
+> and scheduler accounting.
+> 
+> Can you please reduce /proc/sys/kernel/sched_rt_runtime_us in steps of
+> 50000? At least in theory, reduction should bring the throttling back.
+> 
+> Thanks,
+> 
+>         tglx
+> 
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
----
- drivers/media/i2c/ov772x.c | 40 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+We already know from my original report that reducing
+sched_rt_runtime_us to 80% (800000) gives us a stable system.
+https://lkml.org/lkml/2020/6/4/1062
 
-diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index 2cc6a678069a..2de9248e3689 100644
---- a/drivers/media/i2c/ov772x.c
-+++ b/drivers/media/i2c/ov772x.c
-@@ -31,6 +31,7 @@
- #include <media/v4l2-ctrls.h>
- #include <media/v4l2-device.h>
- #include <media/v4l2-event.h>
-+#include <media/v4l2-fwnode.h>
- #include <media/v4l2-image-sizes.h>
- #include <media/v4l2-subdev.h>
- 
-@@ -434,6 +435,7 @@ struct ov772x_priv {
- #ifdef CONFIG_MEDIA_CONTROLLER
- 	struct media_pad pad;
- #endif
-+	struct v4l2_fwnode_endpoint ep;
- };
- 
- /*
-@@ -574,6 +576,7 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
- {
- 	struct i2c_client *client = v4l2_get_subdevdata(sd);
- 	struct ov772x_priv *priv = to_ov772x(sd);
-+	unsigned int val;
- 	int ret = 0;
- 
- 	mutex_lock(&priv->lock);
-@@ -581,6 +584,22 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
- 	if (priv->streaming == enable)
- 		goto done;
- 
-+	if (priv->ep.bus_type == V4L2_MBUS_BT656 && enable) {
-+		ret = regmap_read(priv->regmap, COM7, &val);
-+		if (ret)
-+			goto done;
-+		val |= ITU656_ON_OFF;
-+		ret = regmap_write(priv->regmap, COM7, val);
-+	} else if (priv->ep.bus_type == V4L2_MBUS_BT656 && !enable) {
-+		ret = regmap_read(priv->regmap, COM7, &val);
-+		if (ret)
-+			goto done;
-+		val &= ~ITU656_ON_OFF;
-+		ret = regmap_write(priv->regmap, COM7, val);
-+	}
-+	if (ret)
-+		goto done;
-+
- 	ret = regmap_update_bits(priv->regmap, COM2, SOFT_SLEEP_MODE,
- 				 enable ? 0 : SOFT_SLEEP_MODE);
- 	if (ret)
-@@ -1354,6 +1373,7 @@ static const struct v4l2_subdev_ops ov772x_subdev_ops = {
- 
- static int ov772x_probe(struct i2c_client *client)
- {
-+	struct fwnode_handle *endpoint;
- 	struct ov772x_priv	*priv;
- 	int			ret;
- 	static const struct regmap_config ov772x_regmap_config = {
-@@ -1415,6 +1435,26 @@ static int ov772x_probe(struct i2c_client *client)
- 		goto error_clk_put;
- 	}
- 
-+	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
-+						  NULL);
-+	if (!endpoint) {
-+		dev_err(&client->dev, "endpoint node not found\n");
-+		ret = -EINVAL;
-+		goto error_clk_put;
-+	}
-+
-+	ret = v4l2_fwnode_endpoint_parse(endpoint, &priv->ep);
-+	fwnode_handle_put(endpoint);
-+	if (ret) {
-+		dev_err(&client->dev, "Could not parse endpoint\n");
-+		goto error_clk_put;
-+	}
-+
-+	/* fallback to parallel mode */
-+	if (priv->ep.bus_type != V4L2_MBUS_PARALLEL &&
-+	    priv->ep.bus_type != V4L2_MBUS_BT656)
-+		priv->ep.bus_type = V4L2_MBUS_PARALLEL;
-+
- 	ret = ov772x_video_probe(priv);
- 	if (ret < 0)
- 		goto error_gpio_put;
--- 
-2.17.1
+What is this telling us?
 
+Thanks,
+-Vladimir
