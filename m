@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77986C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 166F52076B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A05F20775
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457884;
-	bh=x4UMX5p252GYrKJ/aCarb85LZB57EhVLYClq7cIfOP0=;
+	s=default; t=1596457888;
+	bh=ysS3LGq+470SGw6FYTetlB33DoPN5s8hyLYUhLe+03M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rUfmcVWK3Np/wWXCgtpybUdDA8/tgj2Bx8MNkhSUPUh6nRb11TKNX1V0nm5ea3CY1
-	 5nIHFLKldM/kytIqWM9HgrAAWcfE1yA+kQJafklNfsJzEYKNKZCO+XeNAeievGstab
-	 P1+Gfn9BB9L96qcDnsb9hUCDgH3yZ10hvtrojxO8=
+	b=f6EyiQbHdAMU5AWeBe4NKiiBzVyzO8PuyWihogUmrxtu9RK9eHHx3uLULSS1gKVhE
+	 TxezrVTYOD4z+DiYlRq7YpExqakkH3yHU+GfKQhh5VeXQhDdfLX6Yj0WIysjRpYh1m
+	 ddl7A62ptYDFWzsy1YDFTcb0aSqFgMijVeQm7Z9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729169AbgHCMbW (ORCPT
+        id S1728334AbgHCMb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:31:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58658 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:31:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727914AbgHCMbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:31:15 -0400
+        id S1727914AbgHCMbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:31:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B9FE2054F;
-        Mon,  3 Aug 2020 12:31:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9593120825;
+        Mon,  3 Aug 2020 12:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457874;
-        bh=x4UMX5p252GYrKJ/aCarb85LZB57EhVLYClq7cIfOP0=;
+        s=default; t=1596457883;
+        bh=ysS3LGq+470SGw6FYTetlB33DoPN5s8hyLYUhLe+03M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q7tQ9/OMrZZc+2C6DnNwudVlWueJdnzsTdaJUJ9t52mjwyHs3roGrePL3xSEp59Em
-         xD8g99Bq0VonnGAmnsEKLyGXEzBzt2lj5WwNLKauy94DPeTVzFTLDWhYCov8UU4vaa
-         C9bTNNg6cc50lY1D+g5Z4d8/0lfHz9LLaRq8V800=
+        b=sq36ouCZMmBdp+idhjwZBlwyJnszG7uBftzlHHIQd64lpncMFRuGtZIOpDUoecv4n
+         Hqcj1eb/gd4/uDgytATPCzl81AIh9k6D2HXmwVDAUYT47I1PJxINHbN2VA84llsZ6y
+         Mqlc/H85F2vOsDRV5McQYlisJTb9il+mRFf5/VaI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pi-Hsun Shih <pihsun@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.19 14/56] wireless: Use offsetof instead of custom macro.
-Date:   Mon,  3 Aug 2020 14:19:29 +0200
-Message-Id: <20200803121851.023714217@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 17/56] ARM: percpu.h: fix build error
+Date:   Mon,  3 Aug 2020 14:19:32 +0200
+Message-Id: <20200803121851.174649123@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -60,67 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pi-Hsun Shih <pihsun@chromium.org>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-commit 6989310f5d4327e8595664954edd40a7f99ddd0d upstream.
+commit aa54ea903abb02303bf55855fb51e3fcee135d70 upstream.
 
-Use offsetof to calculate offset of a field to take advantage of
-compiler built-in version when possible, and avoid UBSAN warning when
-compiling with Clang:
+Fix build error for the case:
+  defined(CONFIG_SMP) && !defined(CONFIG_CPU_V6)
 
-==================================================================
-UBSAN: Undefined behaviour in net/wireless/wext-core.c:525:14
-member access within null pointer of type 'struct iw_point'
-CPU: 3 PID: 165 Comm: kworker/u16:3 Tainted: G S      W         4.19.23 #43
-Workqueue: cfg80211 __cfg80211_scan_done [cfg80211]
-Call trace:
- dump_backtrace+0x0/0x194
- show_stack+0x20/0x2c
- __dump_stack+0x20/0x28
- dump_stack+0x70/0x94
- ubsan_epilogue+0x14/0x44
- ubsan_type_mismatch_common+0xf4/0xfc
- __ubsan_handle_type_mismatch_v1+0x34/0x54
- wireless_send_event+0x3cc/0x470
- ___cfg80211_scan_done+0x13c/0x220 [cfg80211]
- __cfg80211_scan_done+0x28/0x34 [cfg80211]
- process_one_work+0x170/0x35c
- worker_thread+0x254/0x380
- kthread+0x13c/0x158
- ret_from_fork+0x10/0x18
-===================================================================
+config: keystone_defconfig
 
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Link: https://lore.kernel.org/r/20191204081307.138765-1-pihsun@chromium.org
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+  CC      arch/arm/kernel/signal.o
+  In file included from ../include/linux/random.h:14,
+                    from ../arch/arm/kernel/signal.c:8:
+  ../arch/arm/include/asm/percpu.h: In function ‘__my_cpu_offset’:
+  ../arch/arm/include/asm/percpu.h:29:34: error: ‘current_stack_pointer’ undeclared (first use in this function); did you mean ‘user_stack_pointer’?
+      : "Q" (*(const unsigned long *)current_stack_pointer));
+                                     ^~~~~~~~~~~~~~~~~~~~~
+                                     user_stack_pointer
+
+Fixes: f227e3ec3b5c ("random32: update the net random state on interrupt and activity")
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/uapi/linux/wireless.h |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm/include/asm/percpu.h |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/include/uapi/linux/wireless.h
-+++ b/include/uapi/linux/wireless.h
-@@ -74,6 +74,8 @@
- #include <linux/socket.h>		/* for "struct sockaddr" et al	*/
- #include <linux/if.h>			/* for IFNAMSIZ and co... */
+--- a/arch/arm/include/asm/percpu.h
++++ b/arch/arm/include/asm/percpu.h
+@@ -16,6 +16,8 @@
+ #ifndef _ASM_ARM_PERCPU_H_
+ #define _ASM_ARM_PERCPU_H_
  
-+#include <stddef.h>                     /* for offsetof */
++#include <asm/thread_info.h>
 +
- /***************************** VERSION *****************************/
  /*
-  * This constant is used to know the availability of the wireless
-@@ -1090,8 +1092,7 @@ struct iw_event {
- /* iw_point events are special. First, the payload (extra data) come at
-  * the end of the event, so they are bigger than IW_EV_POINT_LEN. Second,
-  * we omit the pointer, so start at an offset. */
--#define IW_EV_POINT_OFF (((char *) &(((struct iw_point *) NULL)->length)) - \
--			  (char *) NULL)
-+#define IW_EV_POINT_OFF offsetof(struct iw_point, length)
- #define IW_EV_POINT_LEN	(IW_EV_LCP_LEN + sizeof(struct iw_point) - \
- 			 IW_EV_POINT_OFF)
- 
+  * Same as asm-generic/percpu.h, except that we store the per cpu offset
+  * in the TPIDRPRW. TPIDRPRW only exists on V6K and V7
 
 
