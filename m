@@ -2,184 +2,304 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 06:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2073C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 06:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 727DD206E9
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 06:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D95206E9
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 06:32:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="k1bV+uth"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Dyv2NAv+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728439AbgHCGXL (ORCPT
+        id S1726971AbgHCGcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 02:23:11 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:37343 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725965AbgHCGXJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 02:23:09 -0400
-X-UUID: 6c3b5506e7c946888370b3420ff7006b-20200803
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=12BHCE2vfEXwwIMIMyUnGPJn1q3j4PEk4JE0VxRfC5M=;
-        b=k1bV+uthV83tZTeDOlxtCXzcGBG2i8py4srHEYhHbsSysHrphW2vOuqE/I+vZNvgd4DkJ0whU2T7069WmUzODtNe2h9ZtxMW2YAu6aCmofI7BtqtCswGbW4fsRB/xCohdhgMH+ZsTo3VmEDXDT99IXK2bcyQ2TvZ1lZh8dMdW4Q=;
-X-UUID: 6c3b5506e7c946888370b3420ff7006b-20200803
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <mark-pk.tsai@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1288114947; Mon, 03 Aug 2020 14:23:03 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 3 Aug 2020 14:23:00 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 3 Aug 2020 14:23:01 +0800
-From:   Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-To:     <mark-pk.tsai@mediatek.com>
-CC:     <yj.chiang@mediatek.com>, <alix.wu@mediatek.com>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>, <maz@kernel.org>,
-        <robh+dt@kernel.org>, <matthias.bgg@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Subject: [PATCH 1/2] irqchip: irq-mt58xx: Add mt58xx interrupt controller support
-Date:   Mon, 3 Aug 2020 14:22:13 +0800
-Message-ID: <20200803062214.24076-2-mark-pk.tsai@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200803062214.24076-1-mark-pk.tsai@mediatek.com>
-References: <20200803062214.24076-1-mark-pk.tsai@mediatek.com>
+        Mon, 3 Aug 2020 02:32:36 -0400
+Received: from mout.gmx.net ([212.227.15.19]:56355 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbgHCGcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 02:32:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1596436327;
+        bh=uBenratQBOOm4JsyXhshc/uU1DeC6KtxfF6adxRfV4s=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=Dyv2NAv+nZelzixVZfmJIkqjoTGKyyltzomcsKxT+HTbX15ivgT5PUyTR+gXT8g//
+         h9w5iYXzB81Za4UtOKHIXW6ujvyoFR4YyXx7lYDpgJCpfkqT1nFBkM8UmtshgAyjpK
+         9hCNNKJtek01Bl4xTFsWwPFlPXXuKTYQq3YhjAac=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [0.0.0.0] ([45.77.180.217]) by mail.gmx.com (mrgmx004
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1N5GDv-1kizsR06mj-011Dvm; Mon, 03
+ Aug 2020 08:32:06 +0200
+Subject: Re: [PATCH] kobject: Avoid premature parent object freeing in
+ kobject_cleanup()
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Guenter Roeck <guenter@roeck-us.net>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>
+References: <1908555.IiAGLGrh1Z@kreacher>
+From:   Qu Wenruo <quwenruo.btrfs@gmx.com>
+Autocrypt: addr=quwenruo.btrfs@gmx.com; prefer-encrypt=mutual; keydata=
+ mQENBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAG0IlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT6JAVQEEwEIAD4CGwMFCwkI
+ BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCWdWCnQUJCWYC
+ bgAKCRDCPZHzoSX+qAR8B/94VAsSNygx1C6dhb1u1Wp1Jr/lfO7QIOK/nf1PF0VpYjTQ2au8
+ ihf/RApTna31sVjBx3jzlmpy+lDoPdXwbI3Czx1PwDbdhAAjdRbvBmwM6cUWyqD+zjVm4RTG
+ rFTPi3E7828YJ71Vpda2qghOYdnC45xCcjmHh8FwReLzsV2A6FtXsvd87bq6Iw2axOHVUax2
+ FGSbardMsHrya1dC2jF2R6n0uxaIc1bWGweYsq0LXvLcvjWH+zDgzYCUB0cfb+6Ib/ipSCYp
+ 3i8BevMsTs62MOBmKz7til6Zdz0kkqDdSNOq8LgWGLOwUTqBh71+lqN2XBpTDu1eLZaNbxSI
+ ilaVuQENBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
+ CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
+ /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
+ GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
+ q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
+ ABEBAAGJATwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCXZw1rgUJCWpOfwAK
+ CRDCPZHzoSX+qFcEB/95cs8cM1OQdE/GgOfCGxwgckMeWyzOR7bkAWW0lDVp2hpgJuxBW/gy
+ fmtBnUaifnggx3EE3ev8HTysZU9q0h+TJwwJKGv6sUc8qcTGFDtavnnl+r6xDUY7A6GvXEsS
+ oCEEynby72byGeSovfq/4AWGNPBG1L61Exl+gbqfvbECP3ziXnob009+z9I4qXodHSYINfAk
+ ZkA523JGap12LndJeLk3gfWNZfXEWyGnuciRGbqESkhIRav8ootsCIops/SqXm0/k+Kcl4gG
+ UO/iD/T5oagaDh0QtOd8RWSMwLxwn8uIhpH84Q4X1LadJ5NCgGa6xPP5qqRuiC+9gZqbq4Nj
+Message-ID: <d1e90fa3-d978-90ae-a015-288139be3450@gmx.com>
+Date:   Mon, 3 Aug 2020 14:31:23 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <1908555.IiAGLGrh1Z@kreacher>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="v9tEawFjVDSHvbf6Mo8qDZaQm5wVdaltb"
+X-Provags-ID: V03:K1:Pdunfup7qWrwzUt5YVfdfKovEEqDaRhuVSddWqGy92o2os9xEf2
+ tEW7d7HC7ZABXUV41aNGZnIc0zdA8eBSW0kZt02m8HmNTKVAukDjuZBhPFPB2jfKdkqGNmR
+ r+X0OOl6oR7ppLob2aVu5zzzi2Ps3lYv/9S35RL0v868IuK1vUZ2T6W4krIJpUqroUnBiPq
+ 7FFxBbGMWpYK0HmziFEvw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:x4H1VJrWAB8=:spc1HPZbU+GEgFJUQlQ2zE
+ 14E+3pAQvNzvIahCv8okYfaZemkWa5qYeS+1/wgQLSLzdfkzDrt6xu3jf1Fyw7L7Wdgnm/2SE
+ douWe0T6eL5yJOK8Fe7TG9IhfcP9RmvyeLzsJL2Ks8hSLJbPpgdc9654MAq2wiKv/sdSDWNJC
+ cl/4z1UTYIzSMOjniCRBu0S3SkYIAunEyKmSxd7++WnhWPvvgOw4zLa8XzalMAm0A5IisEXpg
+ V+PY/Q9ZO5o+Z7b7yZ7r+e7NldahD2jiv5ADo8wDSsNPYjYBgbD4PvgHRwImbGoV5RzaTeB9i
+ ML5BV51Gz4mmicuxfyQEx+MUFJBQxMPn7upSwtR1K1PkKLBMRWQ6r0pea9ETGAjlOj70slHO5
+ o/bloPmCqitRWnx4tG5g6eqcO22QLKFXehITy7s+ttz+97B2vm3NItQ63s5faYsGFj6JP+tZM
+ pzs8COQBHVtcj233vo6ltt09XtVvuJWXah9vi2zTegcNBCK8VejrqbzorYyWu9DS/P4mfqUAE
+ wvMzmZ8iNGk7VaX9l72ZbiyZYI4VGwd5z/DzurkjG64oxsPRlYeyw55dQPSWdMKnm9LdA9pox
+ LhOc/hnVIqqp5m0Lv18h2QqFc3nAHWdSvGPZvIr6Ha3pKmBoZETVnVJ2qimfSLw2VTjiIBC6c
+ wg/bU4TeV++5KEeyWVUm9SOjSutGGy/mNfN/n9X+iXVcjgss8fAymw1Wzr7qwckhVd9Ch4SSO
+ MDZmrXmOGscZSSyZ+ASbjL8WVfdjDidj4e59s0xkJ0FIPGNDEPgj97OvhBaYdIKtIq4pvZYRZ
+ NsXFRvlyKwJTFxg8kfnj1mNoqsmOgULTW31S9fswaQCx7JStxqKQuLs/9u3zInK1btzU/P5hf
+ vxJguKwlfxsooyggbXOStpQXoiOhzx5XLOTwq1agCf0kpE58jne3PvP1jOAY9xDWXRjTn3M+0
+ +B1Ob08MJl5CQwolfv8JDiemf0lFbbpfoGotVyFo+FLfRqWh4H4AXP53TQOfzr9xHgPOxYUNp
+ oP8zuQIz0qT4Rhw6zC9PhITXn9nf2fF+z5uQeuGEDmlVg9mwU/wsxxNj6mObUjHiSc46xiTPW
+ dJBh3PZYc66FgHOqjm9Pu9Ez3KJSVhv2V2W1ycC/ZKD6F/u1qER79ojvBniWPgDaEqzzzPVRr
+ BSs+gZ2eS0ewU18hcv/+u++vYERGLxbnE5ZckQlwpSiFw6ranxPWUmJys72eXXXF8m81I6IQi
+ DlZYBArc6hxqe4jQssL7JUryi3K0CmK3Lsn8wjg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIG10NTh4eCBpbnRlcnJ1cHQgY29udHJvbGxlciBzdXBwb3J0IHVzaW5nIGhpZXJhcmNoeSBp
-cnENCmRvbWFpbi4NCg0KU2lnbmVkLW9mZi1ieTogTWFyay1QSyBUc2FpIDxtYXJrLXBrLnRzYWlA
-bWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9pcnFjaGlwL0tjb25maWcgICAgICB8ICAgNyAr
-Kw0KIGRyaXZlcnMvaXJxY2hpcC9NYWtlZmlsZSAgICAgfCAgIDEgKw0KIGRyaXZlcnMvaXJxY2hp
-cC9pcnEtbXQ1OHh4LmMgfCAxOTYgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysN
-CiAzIGZpbGVzIGNoYW5nZWQsIDIwNCBpbnNlcnRpb25zKCspDQogY3JlYXRlIG1vZGUgMTAwNjQ0
-IGRyaXZlcnMvaXJxY2hpcC9pcnEtbXQ1OHh4LmMNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvaXJx
-Y2hpcC9LY29uZmlnIGIvZHJpdmVycy9pcnFjaGlwL0tjb25maWcNCmluZGV4IDIxNmIzYjgzOTJi
-NS4uMDA0NTNhZjc4YmUwIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9pcnFjaGlwL0tjb25maWcNCisr
-KyBiL2RyaXZlcnMvaXJxY2hpcC9LY29uZmlnDQpAQCAtNTcyLDQgKzU3MiwxMSBAQCBjb25maWcg
-TE9PTkdTT05fUENIX01TSQ0KIAloZWxwDQogCSAgU3VwcG9ydCBmb3IgdGhlIExvb25nc29uIFBD
-SCBNU0kgQ29udHJvbGxlci4NCiANCitjb25maWcgTVQ1OFhYX0lSUQ0KKwlib29sICJNVDU4WFgg
-SVJRIg0KKwlzZWxlY3QgSVJRX0RPTUFJTg0KKwlzZWxlY3QgSVJRX0RPTUFJTl9ISUVSQVJDSFkN
-CisJaGVscA0KKwkgIFN1cHBvcnQgTWVkaWF0ZWsgTVQ1OFhYIEludGVycnVwdCBDb250cm9sbGVy
-Lg0KKw0KIGVuZG1lbnUNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2lycWNoaXAvTWFrZWZpbGUgYi9k
-cml2ZXJzL2lycWNoaXAvTWFrZWZpbGUNCmluZGV4IDEzM2Y5YzQ1NzQ0YS4uNTA2MmU5YmZhOTJk
-IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9pcnFjaGlwL01ha2VmaWxlDQorKysgYi9kcml2ZXJzL2ly
-cWNoaXAvTWFrZWZpbGUNCkBAIC0xMTEsMyArMTExLDQgQEAgb2JqLSQoQ09ORklHX0xPT05HU09O
-X0hUUElDKQkJKz0gaXJxLWxvb25nc29uLWh0cGljLm8NCiBvYmotJChDT05GSUdfTE9PTkdTT05f
-SFRWRUMpCQkrPSBpcnEtbG9vbmdzb24taHR2ZWMubw0KIG9iai0kKENPTkZJR19MT09OR1NPTl9Q
-Q0hfUElDKQkJKz0gaXJxLWxvb25nc29uLXBjaC1waWMubw0KIG9iai0kKENPTkZJR19MT09OR1NP
-Tl9QQ0hfTVNJKQkJKz0gaXJxLWxvb25nc29uLXBjaC1tc2kubw0KK29iai0kKENPTkZJR19NVDU4
-WFhfSVJRKQkJKz0gaXJxLW10NTh4eC5vDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9pcnFjaGlwL2ly
-cS1tdDU4eHguYyBiL2RyaXZlcnMvaXJxY2hpcC9pcnEtbXQ1OHh4LmMNCm5ldyBmaWxlIG1vZGUg
-MTAwNjQ0DQppbmRleCAwMDAwMDAwMDAwMDAuLmU0NWFkMDIzYWZhNg0KLS0tIC9kZXYvbnVsbA0K
-KysrIGIvZHJpdmVycy9pcnFjaGlwL2lycS1tdDU4eHguYw0KQEAgLTAsMCArMSwxOTYgQEANCisv
-LyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjAgT1IgQlNELTMtQ2xhdXNlKQ0KKy8q
-DQorICogQ29weXJpZ2h0IChjKSAyMDIwIE1lZGlhVGVrIEluYy4NCisgKiBBdXRob3IgTWFyay1Q
-SyBUc2FpIDxtYXJrLXBrLnRzYWlAbWVkaWF0ZWsuY29tPg0KKyAqLw0KKw0KKyNpbmNsdWRlIDxs
-aW51eC9pbnRlcnJ1cHQuaD4NCisjaW5jbHVkZSA8bGludXgvaW8uaD4NCisjaW5jbHVkZSA8bGlu
-dXgvaXJxLmg+DQorI2luY2x1ZGUgPGxpbnV4L2lycWNoaXAuaD4NCisjaW5jbHVkZSA8bGludXgv
-aXJxZG9tYWluLmg+DQorI2luY2x1ZGUgPGxpbnV4L29mLmg+DQorI2luY2x1ZGUgPGxpbnV4L29m
-X2FkZHJlc3MuaD4NCisjaW5jbHVkZSA8bGludXgvb2ZfaXJxLmg+DQorI2luY2x1ZGUgPGxpbnV4
-L3NsYWIuaD4NCisNCisjZGVmaW5lIElOVENfTUFTSwkweDANCisjZGVmaW5lIElOVENfRU9JCTB4
-MjANCisNCitzdHJ1Y3QgbXRrX2ludGNfY2hpcF9kYXRhIHsNCisJY2hhciAqbmFtZTsNCisJc3Ry
-dWN0IGlycV9jaGlwIGNoaXA7DQorCXVuc2lnbmVkIGludCBpcnFfc3RhcnQsIG5yX2lycXM7DQor
-CXZvaWQgX19pb21lbSAqYmFzZTsNCit9Ow0KKw0KK3N0YXRpYyB2b2lkIG10a19wb2tlX2lycShz
-dHJ1Y3QgaXJxX2RhdGEgKmQsIHUzMiBvZmZzZXQpDQorew0KKwlzdHJ1Y3QgbXRrX2ludGNfY2hp
-cF9kYXRhICpjZCA9IGlycV9kYXRhX2dldF9pcnFfY2hpcF9kYXRhKGQpOw0KKwl2b2lkIF9faW9t
-ZW0gKmJhc2UgPSBjZC0+YmFzZTsNCisJdTggaW5kZXggPSAodTgpaXJxZF90b19od2lycShkKTsN
-CisJdTE2IHZhbCwgbWFzazsNCisNCisJbWFzayA9IDEgPDwgKGluZGV4ICUgMTYpOw0KKwl2YWwg
-PSByZWFkd19yZWxheGVkKGJhc2UgKyBvZmZzZXQgKyAoaW5kZXggLyAxNikgKiA0KSB8IG1hc2s7
-DQorCXdyaXRld19yZWxheGVkKHZhbCwgYmFzZSArIG9mZnNldCArIChpbmRleCAvIDE2KSAqIDQp
-Ow0KK30NCisNCitzdGF0aWMgdm9pZCBtdGtfY2xlYXJfaXJxKHN0cnVjdCBpcnFfZGF0YSAqZCwg
-dTMyIG9mZnNldCkNCit7DQorCXN0cnVjdCBtdGtfaW50Y19jaGlwX2RhdGEgKmNkID0gaXJxX2Rh
-dGFfZ2V0X2lycV9jaGlwX2RhdGEoZCk7DQorCXZvaWQgX19pb21lbSAqYmFzZSA9IGNkLT5iYXNl
-Ow0KKwl1OCBpbmRleCA9ICh1OClpcnFkX3RvX2h3aXJxKGQpOw0KKwl1MTYgdmFsLCBtYXNrOw0K
-Kw0KKwltYXNrID0gMSA8PCAoaW5kZXggJSAxNik7DQorCXZhbCA9IHJlYWR3X3JlbGF4ZWQoYmFz
-ZSArIG9mZnNldCArIChpbmRleCAvIDE2KSAqIDQpICYgfm1hc2s7DQorCXdyaXRld19yZWxheGVk
-KHZhbCwgYmFzZSArIG9mZnNldCArIChpbmRleCAvIDE2KSAqIDQpOw0KK30NCisNCitzdGF0aWMg
-dm9pZCBtdGtfaW50Y19tYXNrX2lycShzdHJ1Y3QgaXJxX2RhdGEgKmQpDQorew0KKwltdGtfcG9r
-ZV9pcnEoZCwgSU5UQ19NQVNLKTsNCisJaXJxX2NoaXBfbWFza19wYXJlbnQoZCk7DQorfQ0KKw0K
-K3N0YXRpYyB2b2lkIG10a19pbnRjX3VubWFza19pcnEoc3RydWN0IGlycV9kYXRhICpkKQ0KK3sN
-CisJbXRrX2NsZWFyX2lycShkLCBJTlRDX01BU0spOw0KKwlpcnFfY2hpcF91bm1hc2tfcGFyZW50
-KGQpOw0KK30NCisNCitzdGF0aWMgdm9pZCBtdGtfaW50Y19lb2lfaXJxKHN0cnVjdCBpcnFfZGF0
-YSAqZCkNCit7DQorCW10a19wb2tlX2lycShkLCBJTlRDX0VPSSk7DQorCWlycV9jaGlwX2VvaV9w
-YXJlbnQoZCk7DQorfQ0KKw0KK3N0YXRpYyBzdHJ1Y3QgaXJxX2NoaXAgbXRrX2ludGNfY2hpcCA9
-IHsNCisJLmlycV9tYXNrCQk9IG10a19pbnRjX21hc2tfaXJxLA0KKwkuaXJxX3VubWFzawkJPSBt
-dGtfaW50Y191bm1hc2tfaXJxLA0KKwkuaXJxX2VvaQkJPSBtdGtfaW50Y19lb2lfaXJxLA0KKwku
-aXJxX2dldF9pcnFjaGlwX3N0YXRlCT0gaXJxX2NoaXBfZ2V0X3BhcmVudF9zdGF0ZSwNCisJLmly
-cV9zZXRfaXJxY2hpcF9zdGF0ZQk9IGlycV9jaGlwX3NldF9wYXJlbnRfc3RhdGUsDQorCS5pcnFf
-c2V0X2FmZmluaXR5CT0gaXJxX2NoaXBfc2V0X2FmZmluaXR5X3BhcmVudCwNCisJLmlycV9zZXRf
-dmNwdV9hZmZpbml0eQk9IGlycV9jaGlwX3NldF92Y3B1X2FmZmluaXR5X3BhcmVudCwNCisJLmly
-cV9zZXRfdHlwZQkJPSBpcnFfY2hpcF9zZXRfdHlwZV9wYXJlbnQsDQorCS5mbGFncwkJCT0gSVJR
-Q0hJUF9TRVRfVFlQRV9NQVNLRUQgfA0KKwkJCQkgIElSUUNISVBfU0tJUF9TRVRfV0FLRSB8DQor
-CQkJCSAgSVJRQ0hJUF9NQVNLX09OX1NVU1BFTkQsDQorfTsNCisNCitzdGF0aWMgaW50IG10NTh4
-eF9pbnRjX2RvbWFpbl90cmFuc2xhdGUoc3RydWN0IGlycV9kb21haW4gKmQsDQorCQkJCQlzdHJ1
-Y3QgaXJxX2Z3c3BlYyAqZndzcGVjLA0KKwkJCQkJdW5zaWduZWQgbG9uZyAqaHdpcnEsDQorCQkJ
-CQl1bnNpZ25lZCBpbnQgKnR5cGUpDQorew0KKwlpZiAoaXNfb2Zfbm9kZShmd3NwZWMtPmZ3bm9k
-ZSkpIHsNCisJCWlmIChmd3NwZWMtPnBhcmFtX2NvdW50ICE9IDMpDQorCQkJcmV0dXJuIC1FSU5W
-QUw7DQorDQorCQkvKiBObyBQUEkgc2hvdWxkIHBvaW50IHRvIHRoaXMgZG9tYWluICovDQorCQlp
-ZiAoZndzcGVjLT5wYXJhbVswXSAhPSAwKQ0KKwkJCXJldHVybiAtRUlOVkFMOw0KKw0KKwkJKmh3
-aXJxID0gZndzcGVjLT5wYXJhbVsxXTsNCisJCSp0eXBlID0gZndzcGVjLT5wYXJhbVsyXSAmIElS
-UV9UWVBFX1NFTlNFX01BU0s7DQorCQlyZXR1cm4gMDsNCisJfQ0KKw0KKwlyZXR1cm4gLUVJTlZB
-TDsNCit9DQorDQorc3RhdGljIGludCBtdDU4eHhfaW50Y19kb21haW5fYWxsb2Moc3RydWN0IGly
-cV9kb21haW4gKmRvbWFpbiwgdW5zaWduZWQgaW50IHZpcnEsDQorCQkJCSAgICB1bnNpZ25lZCBp
-bnQgbnJfaXJxcywgdm9pZCAqZGF0YSkNCit7DQorCWludCBpOw0KKwlpcnFfaHdfbnVtYmVyX3Qg
-aHdpcnE7DQorCXN0cnVjdCBpcnFfZndzcGVjIHBhcmVudF9md3NwZWMsICpmd3NwZWMgPSBkYXRh
-Ow0KKwlzdHJ1Y3QgbXRrX2ludGNfY2hpcF9kYXRhICpjZCA9IChzdHJ1Y3QgbXRrX2ludGNfY2hp
-cF9kYXRhICopZG9tYWluLT5ob3N0X2RhdGE7DQorDQorCS8qIE5vdCBHSUMgY29tcGxpYW50ICov
-DQorCWlmIChmd3NwZWMtPnBhcmFtX2NvdW50ICE9IDMpDQorCQlyZXR1cm4gLUVJTlZBTDsNCisN
-CisJLyogTm8gUFBJIHNob3VsZCBwb2ludCB0byB0aGlzIGRvbWFpbiAqLw0KKwlpZiAoZndzcGVj
-LT5wYXJhbVswXSkNCisJCXJldHVybiAtRUlOVkFMOw0KKw0KKwlpZiAoZndzcGVjLT5wYXJhbVsx
-XSA+PSBjZC0+bnJfaXJxcykNCisJCXJldHVybiAtRUlOVkFMOw0KKw0KKwlod2lycSA9IGZ3c3Bl
-Yy0+cGFyYW1bMV07DQorCWZvciAoaSA9IDA7IGkgPCBucl9pcnFzOyBpKyspDQorCQlpcnFfZG9t
-YWluX3NldF9od2lycV9hbmRfY2hpcChkb21haW4sIHZpcnEgKyBpLCBod2lycSArIGksDQorCQkJ
-CQkgICAgICAmY2QtPmNoaXAsDQorCQkJCQkgICAgICBkb21haW4tPmhvc3RfZGF0YSk7DQorDQor
-CXBhcmVudF9md3NwZWMgPSAqZndzcGVjOw0KKwlwYXJlbnRfZndzcGVjLmZ3bm9kZSA9IGRvbWFp
-bi0+cGFyZW50LT5md25vZGU7DQorCXBhcmVudF9md3NwZWMucGFyYW1bMV0gPSBjZC0+aXJxX3N0
-YXJ0ICsgaHdpcnE7DQorCXJldHVybiBpcnFfZG9tYWluX2FsbG9jX2lycXNfcGFyZW50KGRvbWFp
-biwgdmlycSwgbnJfaXJxcywgJnBhcmVudF9md3NwZWMpOw0KK30NCisNCitzdGF0aWMgY29uc3Qg
-c3RydWN0IGlycV9kb21haW5fb3BzIG10NTh4eF9pbnRjX2RvbWFpbl9vcHMgPSB7DQorCS50cmFu
-c2xhdGUJPSBtdDU4eHhfaW50Y19kb21haW5fdHJhbnNsYXRlLA0KKwkuYWxsb2MJCT0gbXQ1OHh4
-X2ludGNfZG9tYWluX2FsbG9jLA0KKwkuZnJlZQkJPSBpcnFfZG9tYWluX2ZyZWVfaXJxc19jb21t
-b24sDQorfTsNCisNCitpbnQgX19pbml0DQorbXQ1OHh4X2ludGNfb2ZfaW5pdChzdHJ1Y3QgZGV2
-aWNlX25vZGUgKmRuLCBzdHJ1Y3QgZGV2aWNlX25vZGUgKnBhcmVudCkNCit7DQorCXN0YXRpYyBp
-bnQgbnJfaW50YzsNCisJc3RydWN0IGlycV9kb21haW4gKmRvbWFpbiwgKmRvbWFpbl9wYXJlbnQ7
-DQorCXN0cnVjdCBtdGtfaW50Y19jaGlwX2RhdGEgKmNkOw0KKwl1bnNpZ25lZCBpbnQgaXJxX3N0
-YXJ0LCBpcnFfZW5kOw0KKw0KKwlkb21haW5fcGFyZW50ID0gaXJxX2ZpbmRfaG9zdChwYXJlbnQp
-Ow0KKwlpZiAoIWRvbWFpbl9wYXJlbnQpIHsNCisJCXByX2VycigibXQ1OHh4LWludGM6IGludGVy
-cnVwdC1wYXJlbnQgbm90IGZvdW5kXG4iKTsNCisJCXJldHVybiAtRUlOVkFMOw0KKwl9DQorDQor
-CWNkID0ga3phbGxvYyhzaXplb2YoKmNkKSwgR0ZQX0tFUk5FTCk7DQorCWlmICghY2QpDQorCQly
-ZXR1cm4gLUVOT01FTTsNCisNCisJY2QtPmNoaXAgPSBtdGtfaW50Y19jaGlwOw0KKwlpZiAob2Zf
-cHJvcGVydHlfcmVhZF91MzJfaW5kZXgoZG4sICJtZWRpYXRlayxpcnFzLW1hcC1yYW5nZSIsIDAs
-ICZpcnFfc3RhcnQpIHx8DQorCSAgICBvZl9wcm9wZXJ0eV9yZWFkX3UzMl9pbmRleChkbiwgIm1l
-ZGlhdGVrLGlycXMtbWFwLXJhbmdlIiwgMSwgJmlycV9lbmQpKSB7DQorCQlrZnJlZShjZCk7DQor
-CQlyZXR1cm4gLUVJTlZBTDsNCisJfQ0KKw0KKwlpZiAob2ZfcHJvcGVydHlfcmVhZF9ib29sKGRu
-LCAibWVkaWF0ZWssaW50Yy1uby1lb2kiKSkNCisJCWNkLT5jaGlwLmlycV9lb2kgPSBpcnFfY2hp
-cF9lb2lfcGFyZW50Ow0KKw0KKwljZC0+aXJxX3N0YXJ0ID0gaXJxX3N0YXJ0Ow0KKwljZC0+bnJf
-aXJxcyA9IGlycV9lbmQgLSBpcnFfc3RhcnQgKyAxOw0KKwljZC0+Y2hpcC5uYW1lID0ga2FzcHJp
-bnRmKEdGUF9LRVJORUwsICJtdDU4eHgtaW50Yy0lZCIsIG5yX2ludGMrKyk7DQorCWlmICghY2Qt
-PmNoaXAubmFtZSkgew0KKwkJa2ZyZWUoY2QpOw0KKwkJcmV0dXJuIC1FTk9NRU07DQorCX0NCisN
-CisJY2QtPmJhc2UgPSBvZl9pb21hcChkbiwgMCk7DQorCWlmICghY2QtPmJhc2UpIHsNCisJCWtm
-cmVlKGNkLT5jaGlwLm5hbWUpOw0KKwkJa2ZyZWUoY2QpOw0KKwkJcmV0dXJuIC1FTk9NRU07DQor
-CX0NCisNCisJZG9tYWluID0gaXJxX2RvbWFpbl9hZGRfaGllcmFyY2h5KGRvbWFpbl9wYXJlbnQs
-IDAsIGNkLT5ucl9pcnFzLA0KKwkJCQkJICBkbiwgJm10NTh4eF9pbnRjX2RvbWFpbl9vcHMsIGNk
-KTsNCisJaWYgKCFkb21haW4pIHsNCisJCWtmcmVlKGNkLT5jaGlwLm5hbWUpOw0KKwkJaW91bm1h
-cChjZC0+YmFzZSk7DQorCQlrZnJlZShjZCk7DQorCQlyZXR1cm4gLUVOT01FTTsNCisJfQ0KKw0K
-KwlyZXR1cm4gMDsNCit9DQorDQorSVJRQ0hJUF9ERUNMQVJFKG10NTh4eF9pbnRjLCAibWVkaWF0
-ZWssbXQ1OHh4LWludGMiLCBtdDU4eHhfaW50Y19vZl9pbml0KTsNCi0tIA0KMi4xOC4wDQo=
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--v9tEawFjVDSHvbf6Mo8qDZaQm5wVdaltb
+Content-Type: multipart/mixed; boundary="7oEQ2jU30zhKH5hgVNFELO0Q4qTGllBF5"
 
+--7oEQ2jU30zhKH5hgVNFELO0Q4qTGllBF5
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+
+
+On 2020/6/5 =E4=B8=8A=E5=8D=881:46, Rafael J. Wysocki wrote:
+> From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+>=20
+> If kobject_del() is invoked by kobject_cleanup() to delete the
+> target kobject, it may cause its parent kobject to be freed
+> before invoking the target kobject's ->release() method, which
+> effectively means freeing the parent before dealing with the
+> child entirely.
+>=20
+> That is confusing at best and it may also lead to functional
+> issues if the callers of kobject_cleanup() are not careful enough
+> about the order in which these calls are made, so avoid the
+> problem by making kobject_cleanup() drop the last reference to
+> the target kobject's parent at the end, after invoking the target
+> kobject's ->release() method.
+>=20
+> [ rjw: Rewrite the subject and changelog, make kobject_cleanup()
+>   drop the parent reference only when __kobject_del() has been
+>   called. ]
+>=20
+> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Reported-by: kernel test robot <rong.a.chen@intel.com>
+> Fixes: 7589238a8cf3 ("Revert "software node: Simplify software_node_rel=
+ease() function"")
+> Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>=20
+> Hi Greg,
+>=20
+> This is a replacement for commit 4ef12f719802 ("kobject: Make sure the =
+parent
+> does not get released before its children"), that you reverted, because=
+ it
+> broke things and the reason why was that it was incorrect.
+>=20
+> Namely, it called kobject_put() on the target kobject's parent in
+> kobject_cleanup() unconditionally, but it should only call it after
+> invoking __kobject_del() on the target kobject.
+>=20
+> That problem is fixed in this patch and a functionally equivalent patch=
+ has
+> been tested by Guenter without issues.
+>=20
+> The underlying issue addressed by the reverted commit is still there an=
+d
+> it may show up again even though the test that triggered it originally =
+was
+> fixed in the meantime.  IMO it is worth fixing even though it may not b=
+e
+> readily visible in the current kernel, so please consider this one for
+> applying.
+>=20
+> Cheers!
+>=20
+> ---
+>  lib/kobject.c |   33 +++++++++++++++++++++++----------
+>  1 file changed, 23 insertions(+), 10 deletions(-)
+>=20
+> Index: linux-pm/lib/kobject.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- linux-pm.orig/lib/kobject.c
+> +++ linux-pm/lib/kobject.c
+> @@ -599,14 +599,7 @@ out:
+>  }
+>  EXPORT_SYMBOL_GPL(kobject_move);
+> =20
+> -/**
+> - * kobject_del() - Unlink kobject from hierarchy.
+> - * @kobj: object.
+> - *
+> - * This is the function that should be called to delete an object
+> - * successfully added via kobject_add().
+> - */
+> -void kobject_del(struct kobject *kobj)
+> +static void __kobject_del(struct kobject *kobj)
+>  {
+>  	struct kernfs_node *sd;
+>  	const struct kobj_type *ktype;
+> @@ -625,9 +618,23 @@ void kobject_del(struct kobject *kobj)
+> =20
+>  	kobj->state_in_sysfs =3D 0;
+>  	kobj_kset_leave(kobj);
+> -	kobject_put(kobj->parent);
+>  	kobj->parent =3D NULL;
+>  }
+> +
+> +/**
+> + * kobject_del() - Unlink kobject from hierarchy.
+> + * @kobj: object.
+> + *
+> + * This is the function that should be called to delete an object
+> + * successfully added via kobject_add().
+> + */
+> +void kobject_del(struct kobject *kobj)
+> +{
+> +	struct kobject *parent =3D kobj->parent;
+> +
+> +	__kobject_del(kobj);
+> +	kobject_put(parent);
+
+Could you please add an extra check on kobj before accessing kobj->parent=
+?
+
+This patch in fact removes the ability to call kobject_del() on NULL
+pointer while not cause anything wrong.
+
+I know this is not a big deal, but such behavior change has already
+caused some problem for the incoming btrfs code.
+(Now I feels guilty just by looking into the old
+kobject_del()/kobject_put() and utilize that feature in btrfs)
+
+Since the old kobject_del() accepts NULL pointer intentionally, it would
+be much better to keep such behavior.
+
+Or at least mention we require a valid kobject pointer.
+
+Thanks,
+Qu
+
+> +}
+>  EXPORT_SYMBOL(kobject_del);
+> =20
+>  /**
+> @@ -663,6 +670,7 @@ EXPORT_SYMBOL(kobject_get_unless_zero);
+>   */
+>  static void kobject_cleanup(struct kobject *kobj)
+>  {
+> +	struct kobject *parent =3D kobj->parent;
+>  	struct kobj_type *t =3D get_ktype(kobj);
+>  	const char *name =3D kobj->name;
+> =20
+> @@ -684,7 +692,10 @@ static void kobject_cleanup(struct kobje
+>  	if (kobj->state_in_sysfs) {
+>  		pr_debug("kobject: '%s' (%p): auto cleanup kobject_del\n",
+>  			 kobject_name(kobj), kobj);
+> -		kobject_del(kobj);
+> +		__kobject_del(kobj);
+> +	} else {
+> +		/* avoid dropping the parent reference unnecessarily */
+> +		parent =3D NULL;
+>  	}
+> =20
+>  	if (t && t->release) {
+> @@ -698,6 +709,8 @@ static void kobject_cleanup(struct kobje
+>  		pr_debug("kobject: '%s': free name\n", name);
+>  		kfree_const(name);
+>  	}
+> +
+> +	kobject_put(parent);
+>  }
+> =20
+>  #ifdef CONFIG_DEBUG_KOBJECT_RELEASE
+>=20
+>=20
+>=20
+>=20
+
+
+--7oEQ2jU30zhKH5hgVNFELO0Q4qTGllBF5--
+
+--v9tEawFjVDSHvbf6Mo8qDZaQm5wVdaltb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEELd9y5aWlW6idqkLhwj2R86El/qgFAl8nrzsACgkQwj2R86El
+/qgvpwf/Ug1aFwkt5OmwteDRCY9DE9k2L37A9h82ljETuDJSNmcjCepJ13Liee4n
+D1vevyaAmgQTP3TI156tRWrY5xaO5oywQSkbazV64bnSqgyEC0hcclatFKXzrrFo
+eEWMxhA//hF2sxcEpC8osl7E44g5U/4D1cGtNkCkWYLNJhrfJ4Vg+6k3Qki1rdb9
+JpU8/sfdy1JHG4cVxgV11XEvBLae55nj0fYgtNJznYK5N5KLGkPiU04boM7AfEHi
+VVkEe6EZDmqkKScs312j8i9RBsEbgRy58n3NA0fwmBiTFb8narXYRJHo3I689xy0
+y6rp3EGVCT0Oss6H3xa1TESRUUJVzw==
+=fAy8
+-----END PGP SIGNATURE-----
+
+--v9tEawFjVDSHvbf6Mo8qDZaQm5wVdaltb--
