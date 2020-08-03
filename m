@@ -2,134 +2,131 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94262C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C62C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 740842065C
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:50:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OaHenN3Y"
+	by mail.kernel.org (Postfix) with ESMTP id 862B62065C
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 05:51:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728226AbgHCFuL (ORCPT
+        id S1728248AbgHCFvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 01:50:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37630 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727015AbgHCFuL (ORCPT
+        Mon, 3 Aug 2020 01:51:48 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60308 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728142AbgHCFvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 01:50:11 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34E24C06174A
-        for <linux-kernel@vger.kernel.org>; Sun,  2 Aug 2020 22:50:11 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id bh1so7069237plb.12
-        for <linux-kernel@vger.kernel.org>; Sun, 02 Aug 2020 22:50:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=iVhQkFEgxDVVa1k/NmDMYKiPLDUD4ULVTRaA7/u4IlM=;
-        b=OaHenN3YVA9KfZ2utjtSn+pK8YSMuWpxd1lwT6nfh+/qr4a2cdl9ninmyekQf7ix9H
-         m63at5+JvoLK6yB7V1YE4wgc6bc4aqEMiG5cs/4i9WA5rbcdsxRJKDsK3Yms+1oTqjhZ
-         40l0GDIH6qleEuL4cKyW78crhy87f4PeKTpEqT+JTquYGLkun/8W9q0+fWbi+cCrccD3
-         T+ut6CYhiJ6Zxnx1jGAKzc4fHBZ2bRXZ/t9t553F5bkFH8F2HPryY2OrUkVlHjz4lKZR
-         i4wZOeG+xaQNPoCeJjelaVz248B/MECUCCaCNMaYNisSYnGG+mpxV54CjbutGehYXxfH
-         MH+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=iVhQkFEgxDVVa1k/NmDMYKiPLDUD4ULVTRaA7/u4IlM=;
-        b=jWod+3cb6fYGx/RZ7VaxISqqYNfVlxxIBWO+Ghj9ldtHOoSdLOFUoR9uAEwLXm3WfI
-         A5j+y4LX+Zr9uev64Ig1dCyLAWBZ4WeOeAk4nvABgTnwe56BY33whWE+JhG47MxgHOqk
-         qAidC6U6wHcX11wTiSQdmUCwY2ufH2HU8ed0ssJ3ROC/6wFp4RBM5tmXLf5bHeaNhMF8
-         5Vjr9tbIf+/bxhizIw0iCNPivoqsWkpQ6JF/zESQwL8F0scLFWM5AnYEbhQ2xbBrwpUM
-         bt1JCveTQucCbSr/o9ioNMbuOZRVNEFRcQgC/3TJ2Yv/pH0UZuI0EiRbTPzcbFvN/zV6
-         g5Fg==
-X-Gm-Message-State: AOAM532bhZ+sB1YpStkUOFn9Wl/dsCq0gqZO7QSXgnlrEUWjC+8hyt3c
-        IAcL9mbls0Op9hMTyQ367Q==
-X-Google-Smtp-Source: ABdhPJyCt1EBTK6p/VlfpDw4I0dQ7ggxX38XXm1dn6OvcxPKgezYMyFyXupUaFV03mzb34XPxCmKIQ==
-X-Received: by 2002:a17:90a:bf04:: with SMTP id c4mr14636664pjs.149.1596433810763;
-        Sun, 02 Aug 2020 22:50:10 -0700 (PDT)
-Received: from mylaptop.redhat.com ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id s68sm17522651pfb.103.2020.08.02.22.50.06
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 02 Aug 2020 22:50:10 -0700 (PDT)
-From:   Pingfan Liu <kernelfans@gmail.com>
-To:     x86@kernel.org
-Cc:     Pingfan Liu <kernelfans@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Steve Wahl <steve.wahl@hpe.com>, linux-kernel@vger.kernel.org,
-        kexec@lists.infradead.org
-Subject: [PATCHv2] x86/purgatory: don't generate debug info for purgatory.ro
-Date:   Mon,  3 Aug 2020 13:49:48 +0800
-Message-Id: <1596433788-3784-1-git-send-email-kernelfans@gmail.com>
-X-Mailer: git-send-email 2.7.5
+        Mon, 3 Aug 2020 01:51:47 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0735bAta155429;
+        Mon, 3 Aug 2020 01:51:37 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32pcc30f4p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 01:51:37 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0735nsR9013882;
+        Mon, 3 Aug 2020 05:51:37 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma05wdc.us.ibm.com with ESMTP id 32nxe44gx9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 05:51:37 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0735pWT031457568
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 3 Aug 2020 05:51:32 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0E06E7805F;
+        Mon,  3 Aug 2020 05:51:36 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 079C67805C;
+        Mon,  3 Aug 2020 05:51:34 +0000 (GMT)
+Received: from [153.66.254.194] (unknown [9.85.201.133])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon,  3 Aug 2020 05:51:34 +0000 (GMT)
+Message-ID: <1596433893.4087.34.camel@linux.ibm.com>
+Subject: Re: [PATCH] scsi: esas2r: fix possible buffer overflow caused by
+ bad DMA value in esas2r_process_fs_ioctl()
+From:   James Bottomley <jejb@linux.ibm.com>
+Reply-To: jejb@linux.ibm.com
+To:     Jia-Ju Bai <baijiaju@tsinghua.edu.cn>, linuxdrivers@attotech.com,
+        martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Sun, 02 Aug 2020 22:51:33 -0700
+In-Reply-To: <81351eab-69c0-89dc-4e58-146a005b5929@tsinghua.edu.cn>
+References: <20200802152145.4387-1-baijiaju@tsinghua.edu.cn>
+         <1596383240.4087.8.camel@linux.ibm.com>
+         <81351eab-69c0-89dc-4e58-146a005b5929@tsinghua.edu.cn>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-03_04:2020-07-31,2020-08-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ priorityscore=1501 malwarescore=0 mlxscore=0 phishscore=0 spamscore=0
+ suspectscore=18 lowpriorityscore=0 impostorscore=0 bulkscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008030041
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Purgatory.ro is a standalone binary that is not linked against the rest of
-the kernel.  Its image is copied into an array that is linked to the
-kernel, and from there kexec relocates it wherever it desires.
+On Mon, 2020-08-03 at 11:07 +0800, Jia-Ju Bai wrote:
+> 
+> On 2020/8/2 23:47, James Bottomley wrote:
+> > On Sun, 2020-08-02 at 23:21 +0800, Jia-Ju Bai wrote:
+> > > Because "fs" is mapped to DMA, its data can be modified at
+> > > anytime by malicious or malfunctioning hardware. In this case,
+> > > the check "if (fsc->command >= cmdcnt)" can be passed, and then
+> > > "fsc->command" can be modified by hardware to cause buffer
+> > > overflow.
+> > 
+> > This threat model seems to be completely bogus.  If the device were
+> > malicious it would have given the mailbox incorrect values a priori
+> > ... it wouldn't give the correct value then update it.  For most
+> > systems we do assume correct operation of the device but if there's
+> > a worry about incorrect operation, the usual approach is to guard
+> > the device with an IOMMU which, again, would make this sort of fix
+> > unnecessary because the IOMMU will have removed access to the
+> > buffer after the command completed.
+> 
+> Thanks for the reply :)
+> 
+> In my opinion, IOMMU is used to prevent the hardware from accessing 
+> arbitrary memory addresses, but it cannot prevent the hardware from 
+> writing a bad value into a valid memory address.
 
-Unlike the debug info for vmlinux, which can be used for analyzing crash
-such info is useless in purgatory.ro. And discarding them can save about
-200K space.
+I think that's what I said above.  It would give us a bad a priori
+value which copying can't help with.
 
-Original:
-  259080  kexec-purgatory.o
-Stripped debug info:
-   29152  kexec-purgatory.o
+> For this reason, I think that the hardware can normally access 
+> "fsc->command" and modify it into arbitrary value at any time,
+> because IOMMU considers the address of "fsc->command" is valid for
+> the hardware.
 
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Arvind Sankar <nivedita@alum.mit.edu>
-Cc: Steve Wahl <steve.wahl@hpe.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org
-To: x86@kernel.org
----
- arch/x86/purgatory/Makefile | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Not if we suspected the device.  I think esas2r does keep the buffer
+mapped, but if we suspected the device we'd only map it for the reply
+then unmap it.
 
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index 088bd76..d24b43a 100644
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -32,7 +32,7 @@ KCOV_INSTRUMENT := n
- # make up the standalone purgatory.ro
- 
- PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
--PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
-+PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss -g0
- PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN) -DDISABLE_BRANCH_PROFILING
- PURGATORY_CFLAGS += $(call cc-option,-fno-stack-protector)
- 
-@@ -64,6 +64,9 @@ CFLAGS_sha256.o			+= $(PURGATORY_CFLAGS)
- CFLAGS_REMOVE_string.o		+= $(PURGATORY_CFLAGS_REMOVE)
- CFLAGS_string.o			+= $(PURGATORY_CFLAGS)
- 
-+AFLAGS_REMOVE_setup-x86_$(BITS).o	+= -Wa,-gdwarf-2
-+AFLAGS_REMOVE_entry64.o			+= -Wa,-gdwarf-2
-+
- $(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
- 		$(call if_changed,ld)
- 
--- 
-2.7.5
+The point I'm making is we have hardware tools at our disposal to
+corral suspect devices if need be, but they're really only used in
+exceptional VM circumstances.  Under ordinary circumstances we simply
+trust the device.  So if you had evidence that esas2r were prone to
+faults, we'd usually force the manufacturer to fix the firmware and as
+a last resort we might consider corralling it with an iommu we wouldn't
+just copy some values.
+
+If you want an example of defensive coding, we had to add a load of
+checks to TPM devices to cope with the bus interposer situation. 
+That's one case where we no longer trust the device to return correct
+information.  However, to do the same for any SCSI device we'd need a
+convincing rationale for why.
+
+James
 
