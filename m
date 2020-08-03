@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E73C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BF9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4BDC2086A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C663A2086A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457783;
-	bh=LkmYfpO8CCHqVPPYGJEJrOUiJmWXY43q7bamRMNf8qU=;
+	s=default; t=1596457786;
+	bh=kbe8WXIGRrAQO4d8dZZB8ZfVPuIxlU9GkwkGd1km1gg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bQ5Kcz6q87tMg7c/n9aadxaorQFi+H7FOYkSjCUvMUByKwoSFg8rTM9G7MGeW8tDm
-	 VBROLgAGtg/Fke2+uyF+kHtB0eWS0aYKL7UsEoNlQhhwFGJz0lUiUOfi2v9isv70Ic
-	 k7rUtDNGbAdIr+uCkkvIG9I1485FuW6DsWqyDcsQ=
+	b=p+crM/Lzb3OjWcBIBI4bnR6/URrxKdopzRfTsdXHX4boOQ8rp1rM+Vgr8w9DlnDyD
+	 zGiKJxkOXZqn5oaf0475eHQAbHXCUXSymg6wC2sdvOhMS7/bdbxzHcNPYn59djWPrH
+	 1ab+7Tm1ybkxRfxjS8utVjoX3y2tSmTSXPsuhQW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728959AbgHCM3n (ORCPT
+        id S1728968AbgHCM3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:29:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56314 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:29:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728941AbgHCM3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:29:40 -0400
+        id S1728955AbgHCM3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:29:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29EB6208B3;
-        Mon,  3 Aug 2020 12:29:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20CB1204EC;
+        Mon,  3 Aug 2020 12:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457778;
-        bh=LkmYfpO8CCHqVPPYGJEJrOUiJmWXY43q7bamRMNf8qU=;
+        s=default; t=1596457781;
+        bh=kbe8WXIGRrAQO4d8dZZB8ZfVPuIxlU9GkwkGd1km1gg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bS6ziFl+eYvnvcG4Z5QngpbWDXEId9UMkVYHGLfvyvmt1knUt53Zr8lnabtykEYkt
-         rYmu4sfIqhKph0l/YoKXf6aawIIS2aHtRoWBxbe01jQXAzt9iIJeH7O/wy23lqQR7p
-         vSM8mpnqqoM4afSn4FH54gtL6zy59i7QfXqFHfI0=
+        b=2plaoJ6wPNLrs9EptCnjtkW6N3j0gQNEx0dNL8ua6jveWymvAD6uCzCpI9TBlU7Uk
+         H0J+WzUJbjrqkgUK/yB5yJS4TY8CLp2WwVFMBIM11W8zMJw8caOzVAZWXb2vgYyTQc
+         6SF2tRKxBTiLxY/v0yUlmsg0oWHqn401ZXMJB4XE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Pisati <paolo.pisati@canonical.com>,
-        David Ahern <dsahern@gmail.com>,
+        stable@vger.kernel.org, Laurence Oberman <loberman@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 71/90] selftests: fib_nexthop_multiprefix: fix cleanup() netns deletion
-Date:   Mon,  3 Aug 2020 14:19:33 +0200
-Message-Id: <20200803121901.049058129@linuxfoundation.org>
+Subject: [PATCH 5.4 72/90] qed: Disable "MFW indication via attention" SPAM every 5 minutes
+Date:   Mon,  3 Aug 2020 14:19:34 +0200
+Message-Id: <20200803121901.098286610@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -61,64 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Pisati <paolo.pisati@canonical.com>
+From: Laurence Oberman <loberman@redhat.com>
 
-[ Upstream commit 651149f60376758a4759f761767965040f9e4464 ]
+[ Upstream commit 1d61e21852d3161f234b9656797669fe185c251b ]
 
-During setup():
-...
-        for ns in h0 r1 h1 h2 h3
-        do
-                create_ns ${ns}
-        done
-...
+This is likely firmware causing this but its starting to annoy customers.
+Change the message level to verbose to prevent the spam.
+Note that this seems to only show up with ISCSI enabled on the HBA via the
+qedi driver.
 
-while in cleanup():
-...
-        for n in h1 r1 h2 h3 h4
-        do
-                ip netns del ${n} 2>/dev/null
-        done
-...
-
-and after removing the stderr redirection in cleanup():
-
-$ sudo ./fib_nexthop_multiprefix.sh
-...
-TEST: IPv4: host 0 to host 3, mtu 1400                              [ OK ]
-TEST: IPv6: host 0 to host 3, mtu 1400                              [ OK ]
-Cannot remove namespace file "/run/netns/h4": No such file or directory
-$ echo $?
-1
-
-and a non-zero return code, make kselftests fail (even if the test
-itself is fine):
-
-...
-not ok 34 selftests: net: fib_nexthop_multiprefix.sh # exit=1
-...
-
-Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: Laurence Oberman <loberman@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/fib_nexthop_multiprefix.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/qlogic/qed/qed_int.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/net/fib_nexthop_multiprefix.sh b/tools/testing/selftests/net/fib_nexthop_multiprefix.sh
-index 9dc35a16e4159..51df5e305855a 100755
---- a/tools/testing/selftests/net/fib_nexthop_multiprefix.sh
-+++ b/tools/testing/selftests/net/fib_nexthop_multiprefix.sh
-@@ -144,7 +144,7 @@ setup()
- 
- cleanup()
- {
--	for n in h1 r1 h2 h3 h4
-+	for n in h0 r1 h1 h2 h3
- 	do
- 		ip netns del ${n} 2>/dev/null
- 	done
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_int.c b/drivers/net/ethernet/qlogic/qed/qed_int.c
+index 8d106063e9275..666e43748a5f4 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_int.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_int.c
+@@ -1180,7 +1180,8 @@ static int qed_int_attentions(struct qed_hwfn *p_hwfn)
+ 			index, attn_bits, attn_acks, asserted_bits,
+ 			deasserted_bits, p_sb_attn_sw->known_attn);
+ 	} else if (asserted_bits == 0x100) {
+-		DP_INFO(p_hwfn, "MFW indication via attention\n");
++		DP_VERBOSE(p_hwfn, NETIF_MSG_INTR,
++			   "MFW indication via attention\n");
+ 	} else {
+ 		DP_VERBOSE(p_hwfn, NETIF_MSG_INTR,
+ 			   "MFW indication [deassertion]\n");
 -- 
 2.25.1
 
