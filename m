@@ -2,115 +2,225 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BD1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08737C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EA3A207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:57:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mvVYUsR8"
+	by mail.kernel.org (Postfix) with ESMTP id 3EEF1207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:57:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgHCS5M (ORCPT
+        id S1727083AbgHCS54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 14:57:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46192 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgHCS5L (ORCPT
+        Mon, 3 Aug 2020 14:57:56 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33993 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgHCS5z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 14:57:11 -0400
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91132C06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 11:57:10 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id 189so3029223pfd.9
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 11:57:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=mBNoGK1P6y+zeGkNK3NKzb71H+HfL1lu2cYKmoiU/Hw=;
-        b=mvVYUsR8i/Ebh70vHwDyfqZV7UFmRkzpUZAkY0AFsBk3S7YK3svFa9J2vr1+NKc3rH
-         YMLTaHqm7ZMs8BD69NyiZXvm1MrAJqCrBPwZRI4Vg7s1ir3lvXyis1FqRgxbH2Fe+asJ
-         gFd0CG/MOtIXYpmTZ1gGcWVxzVtCXezKcVxHA=
+        Mon, 3 Aug 2020 14:57:55 -0400
+Received: by mail-lj1-f196.google.com with SMTP id z14so3240074ljm.1
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 11:57:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=mBNoGK1P6y+zeGkNK3NKzb71H+HfL1lu2cYKmoiU/Hw=;
-        b=aEgg5BX4RCFEbp/F4wl+buyN7fV0/YeciRBoUj3jfR110NErFZCYI046cJtJUa19Pc
-         Mp9IcINMscwPJ6KER1CeuJHUa4ySG3FcTYhjJ2Gppf5WPsZVr0a1YZfeZJFwqOggHUt6
-         sH0wjblGWfAezQWV1fhiZZsltihWTgMwIsqoZhxS1ODb5l27U8V7Y+t+BAif0ggqfHzf
-         /oWS3lReMYBNm1Hu1yu9I9GLgGIi20pqG13C676L3kTpZ3UPxEyTB117CZJBA832obag
-         LDFWnH+ZEdELhZMcMKY1jGx5FBj3cYrSe9c19ZZH0m0rnLXFUmY+r9H1UIfzmZCB7V2s
-         qjTw==
-X-Gm-Message-State: AOAM532VE3UfhX0g3lShnmAWxYXFo7ia4NeRsXE7bAcZIdzleXOt4Tci
-        EwBod//0S8dF9kltQYVg2QLi9w==
-X-Google-Smtp-Source: ABdhPJw71yX58Q/DPXq6W1gFKOHfuX6FIXcCVOabg1qaT9hCKlcFy9xIu9bV1LEoRRTkECfeogNcIg==
-X-Received: by 2002:aa7:9155:: with SMTP id 21mr16065004pfi.306.1596481030156;
-        Mon, 03 Aug 2020 11:57:10 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g8sm19769574pgr.70.2020.08.03.11.57.08
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1QdS0fy0Eqxo2sy6ZpyXla/1BB0SZsD0LwltC3usfSw=;
+        b=QTzsLSomQVybgBr4LcldoQ6b/RqYdfHQUOLgV8KwkyY1CSSUCJLYWfmAPGCimdp82s
+         r41cYdaXFnLoplGmmIovxeVn6kplXTv6rUrdvIzIHW1WQmwPGWDOTILmM0yyAuhEdgYn
+         gtf6M1CzpGi/uPgCOHl5Za+J783KjDJ0W2dG5w5+/EmBJ+x6VnctfYWlAZ8pw5pkPtix
+         UdQGIlUN/Gnoq070BvTWKlxNcomYoIIgUAuN4GOvCuK2qZfkJCammJoVAghNBb6nzxmJ
+         h5oa7O40lPhV+TEzqO7DCXbMrNtyTOwtIHncMgSLyEWGnRK/9LhhDaIxMQOJguLvXEU4
+         FB1Q==
+X-Gm-Message-State: AOAM532bNQ9ehndCVbe4CUycULG9N53qPsJgZ+/M+o7fZ1RuDSKo4lyQ
+        4dTXo8wnlnEoDhhfHYQ1jkc=
+X-Google-Smtp-Source: ABdhPJwR24ba6sf0nTdpjdIarESYwacwL6Hv7073yML11fbIURk6Uk+CPKNRuICs5SO/OBiuNQXQSQ==
+X-Received: by 2002:a2e:804b:: with SMTP id p11mr9084289ljg.221.1596481073216;
+        Mon, 03 Aug 2020 11:57:53 -0700 (PDT)
+Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
+        by smtp.googlemail.com with ESMTPSA id r8sm3042645lfm.42.2020.08.03.11.57.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 11:57:09 -0700 (PDT)
-Date:   Mon, 3 Aug 2020 11:57:08 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Potapenko <glider@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Maciej =?utf-8?Q?=C5=BBenczykowski?= <maze@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: [GIT PULL] var-init update for v5.9-rc1
-Message-ID: <202008031155.E07E37D@keescook>
+        Mon, 03 Aug 2020 11:57:52 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     Denis Efremov <efremov@linux.com>, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] coccinelle: api: add kvmalloc script
+Date:   Mon,  3 Aug 2020 21:57:49 +0300
+Message-Id: <20200803185749.39034-1-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200803105601.12162-1-efremov@linux.com>
+References: <20200803105601.12162-1-efremov@linux.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Suggest kvmalloc instead of opencoded kmalloc && vmalloc condition.
 
-Please pull this var-init update for v5.9-rc1. (This is the tree formerly
-known as "mem-init", which you correctly pointed out was not a good
-name.) This adds the "zero" init option from Clang, which is being used
-widely in production builds of Android and Chrome OS (though it keeps the
-"pattern" init, which is better for debug builds).
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+Changes in v2:
+ - binary operator cmp added
+ - NULL comparisions simplified
+ - "T x" case added to !patch mode
 
-Thanks!
+ scripts/coccinelle/api/kvmalloc.cocci | 142 ++++++++++++++++++++++++++
+ 1 file changed, 142 insertions(+)
+ create mode 100644 scripts/coccinelle/api/kvmalloc.cocci
 
--Kees
-
-The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
-
-  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/var-init-v5.9-rc1
-
-for you to fetch changes up to f0fe00d4972a8cd4b98cc2c29758615e4d51cdfe:
-
-  security: allow using Clang's zero initialization for stack variables (2020-06-16 02:06:23 -0700)
-
-----------------------------------------------------------------
-Automatic variable initialization updates for v5.9-rc1
-
-- Introduce CONFIG_INIT_STACK_ALL_ZERO (Alexander Potapenko)
-
-----------------------------------------------------------------
-glider@google.com (1):
-      security: allow using Clang's zero initialization for stack variables
-
- Makefile                   | 13 +++++++++++--
- init/main.c                | 12 +++++++-----
- security/Kconfig.hardening | 29 +++++++++++++++++++++++++----
- 3 files changed, 43 insertions(+), 11 deletions(-)
-
+diff --git a/scripts/coccinelle/api/kvmalloc.cocci b/scripts/coccinelle/api/kvmalloc.cocci
+new file mode 100644
+index 000000000000..20b22e3d0f74
+--- /dev/null
++++ b/scripts/coccinelle/api/kvmalloc.cocci
+@@ -0,0 +1,142 @@
++// SPDX-License-Identifier: GPL-2.0-only
++///
++/// Find if/else condition with kmalloc/vmalloc calls.
++/// Suggest to use kvmalloc instead.
++///
++// Confidence: High
++// Copyright: (C) 2020 Denis Efremov ISPRAS
++// Options: --no-includes --include-headers
++//
++
++virtual patch
++virtual report
++virtual org
++virtual context
++
++@opportunity depends on !patch@
++expression E, E1, size;
++binary operator cmp = {<=, <, ==, >, >=};
++identifier x;
++type T;
++position p;
++@@
++
++(
++* if (size cmp E1 || ...)@p {
++    ...
++*    E = \(kmalloc\|kzalloc\|kcalloc\|kmalloc_node\|kzalloc_node\|
++*          kmalloc_array\|kmalloc_array_node\|kcalloc_node\)(..., size, ...)
++    ...
++  } else {
++    ...
++*    E = \(vmalloc\|vzalloc\|vmalloc_node\|vzalloc_node\)(..., size, ...)
++    ...
++  }
++|
++* E = \(kmalloc\|kzalloc\|kcalloc\|kmalloc_node\|kzalloc_node\|
++*       kmalloc_array\|kmalloc_array_node\|kcalloc_node\)(..., size, ...)
++  ... when != E = E1
++      when != size = E1
++      when any
++* if (E == NULL)@p {
++    ...
++*   E = \(vmalloc\|vzalloc\|vmalloc_node\|vzalloc_node\)(..., size, ...)
++    ...
++  }
++|
++* T x = \(kmalloc\|kzalloc\|kcalloc\|kmalloc_node\|kzalloc_node\|
++*         kmalloc_array\|kmalloc_array_node\|kcalloc_node\)(..., size, ...);
++  ... when != x = E1
++      when != size = E1
++      when any
++* if (x == NULL)@p {
++    ...
++*   x = \(vmalloc\|vzalloc\|vmalloc_node\|vzalloc_node\)(..., size, ...)
++    ...
++  }
++)
++
++@depends on patch@
++expression E, E1, flags, size, node;
++binary operator cmp = {<=, <, ==, >, >=};
++identifier x;
++type T;
++@@
++
++(
++- if (size cmp E1)
++-    E = kmalloc(size, flags);
++- else
++-    E = vmalloc(size);
+++ E = kvmalloc(size, flags);
++|
++- E = kmalloc(size, flags | __GFP_NOWARN);
++- if (E == NULL)
++-   E = vmalloc(size);
+++ E = kvmalloc(size, flags);
++|
++- T x = kmalloc(size, flags | __GFP_NOWARN);
++- if (x == NULL)
++-   x = vmalloc(size);
+++ T x = kvmalloc(size, flags);
++|
++- if (size cmp E1)
++-    E = kzalloc(size, flags);
++- else
++-    E = vzalloc(size);
+++ E = kvzalloc(size, flags);
++|
++- E = kzalloc(size, flags | __GFP_NOWARN);
++- if (E == NULL)
++-   E = vzalloc(size);
+++ E = kvzalloc(size, flags);
++|
++- T x = kzalloc(size, flags | __GFP_NOWARN);
++- if (x == NULL)
++-   x = vzalloc(size);
+++ T x = kvzalloc(size, flags);
++|
++- if (size cmp E1)
++-    E = kmalloc_node(size, flags, node);
++- else
++-    E = vmalloc_node(size, node);
+++ E = kvmalloc_node(size, flags, node);
++|
++- E = kmalloc_node(size, flags | __GFP_NOWARN, node);
++- if (E == NULL)
++-   E = vmalloc_node(size, node);
+++ E = kvmalloc_node(size, flags, node);
++|
++- T x = kmalloc_node(size, flags | __GFP_NOWARN, node);
++- if (x == NULL)
++-   x = vmalloc_node(size, node);
+++ T x = kvmalloc_node(size, flags, node);
++|
++- if (size cmp E1)
++-    E = kvzalloc_node(size, flags, node);
++- else
++-    E = vzalloc_node(size, node);
+++ E = kvzalloc_node(size, flags, node);
++|
++- E = kvzalloc_node(size, flags | __GFP_NOWARN, node);
++- if (E == NULL)
++-   E = vzalloc_node(size, node);
+++ E = kvzalloc_node(size, flags, node);
++|
++- T x = kvzalloc_node(size, flags | __GFP_NOWARN, node);
++- if (x == NULL)
++-   x = vzalloc_node(size, node);
+++ T x = kvzalloc_node(size, flags, node);
++)
++
++@script: python depends on report@
++p << opportunity.p;
++@@
++
++coccilib.report.print_report(p[0], "WARNING: opportunity for kvmalloc")
++
++@script: python depends on org@
++p << opportunity.p;
++@@
++
++coccilib.org.print_todo(p[0], "WARNING: opportunity for kvmalloc")
 -- 
-Kees Cook
+2.26.2
+
