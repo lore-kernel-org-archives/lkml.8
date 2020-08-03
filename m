@@ -7,68 +7,68 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3502C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E30C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA09F22CAD
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC89122D08
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:59:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VMcBNFtV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SGjhGlnM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbgHCU7g (ORCPT
+        id S1729130AbgHCU7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 16:59:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38712 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729079AbgHCU7f (ORCPT
+        Mon, 3 Aug 2020 16:59:41 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:30800 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729079AbgHCU7k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 16:59:35 -0400
+        Mon, 3 Aug 2020 16:59:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596488374;
+        s=mimecast20190719; t=1596488379;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=1xI/ZbWF2py8QNl8K4JvYs5q6EbwT+mCnh8MoqYwvB8=;
-        b=VMcBNFtV+nO1jTQy2e51QsjVoywxbkz+G9b1y1N2xCXQzbrqIxO6LMaBCcJLos8HRXSBim
-        uCXTCY/Koiyc4WrI5csusNcB2LzIyPyPcLzHrxXw7dBFAwKfsj0A4/9IBTci1NJDeUiCfw
-        xQ7Kiwyp8lSw8xOHN87MOLGYbesc3L4=
+        bh=Rgbr3S7Op26qakIXtpfCwbs62McqD9fRJN/CcHSJJtk=;
+        b=SGjhGlnMTrVPh3t08aRafnGuO1qx7F3luuYOuqwL5+OPIhcp49W/Q2040nLPKkE83d+R+a
+        2hRkCG26ab5q7Ifk/Wmm2nJprO4iYKX4CsUzySdEut4GQk04mVUXNPvKCnSBu+ZaAPjCSB
+        qPMIcGSuvjljZv4r2GurwEZ5x+Nu650=
 Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
  [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-196-6I5sR6mdNViAEwvQz64Wtw-1; Mon, 03 Aug 2020 16:59:32 -0400
-X-MC-Unique: 6I5sR6mdNViAEwvQz64Wtw-1
-Received: by mail-qt1-f199.google.com with SMTP id e14so20007098qtm.5
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 13:59:32 -0700 (PDT)
+ us-mta-141-dwJcWuqlOqyBpZB_fAgMvg-1; Mon, 03 Aug 2020 16:59:37 -0400
+X-MC-Unique: dwJcWuqlOqyBpZB_fAgMvg-1
+Received: by mail-qt1-f199.google.com with SMTP id r9so27755113qtp.7
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 13:59:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=1xI/ZbWF2py8QNl8K4JvYs5q6EbwT+mCnh8MoqYwvB8=;
-        b=Ao4GS1RIWLh00O0OmNZboxX08/I6GwRMax/7ZU7ztFZb+waHpDyoERWfjb1bdiI85e
-         gMbPZVfUfM2Ne+57OAsnby6B0SXFylRTPD/wky9TZs5goZqlNMhLjVmzMvd3hcPEQRyK
-         yFQFsoMmJ/dOTXWuKAWil6pVzW0d63jpVDkT9meYCMyWlOalfQBHfjN6w4FYYayvXbrZ
-         loYgXj0sNiljxnMRGkFI4InwOLlLcN9s4qbtJRLEZ4IHCuG9/r7I16KhJHanggyBFalV
-         lD9kfXB8SxdFBLndNu9KmAMwl+QrgU3R3KaHtxq+pJOBBfBJ5kMrDzB9NUlOQ4YEktW1
-         q14A==
-X-Gm-Message-State: AOAM530MPBjQmyNonop1MKJGd801n2MyBb6HarXNdzEKpELMC4MSgE97
-        Hi6tlCBCe9FOmg6ilxBSfxqiz4i6Gj3v5AW3CjSmO5FlAYPD271y9OuBHXCJpNGUqJtIuMsnM/Q
-        HY61QiYDZmUhMmGbRy40hi1eP
-X-Received: by 2002:a05:6214:2a4:: with SMTP id m4mr19500143qvv.120.1596488371966;
-        Mon, 03 Aug 2020 13:59:31 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJynR48xJ6D4DOziFIFJBOXMH9jlnKkDjS+iRN3OJhEHYTDmDbmB5mxmE4Lvgl56jXzaOzntUQ==
-X-Received: by 2002:a05:6214:2a4:: with SMTP id m4mr19500129qvv.120.1596488371743;
-        Mon, 03 Aug 2020 13:59:31 -0700 (PDT)
+        bh=Rgbr3S7Op26qakIXtpfCwbs62McqD9fRJN/CcHSJJtk=;
+        b=J0U+kYJBI230S+PhTtNv6SrQEj7ck0kpNIWJAwUfTb57aReZEAFoQvNHzww4Ek8XZj
+         IkY+3Aqk4bT+rV+Z8Fi0T3aGppnvH6RWcK1pds4+qtsyE3+xUwgElCiW5goTejnrI+Hx
+         ozKmoqHCnxdDebjfa573VVczt0KZKjljFLekc1dTvXpw5BC8mxQisvQ1ITqSGH62bfGK
+         MdawgqyOJierXh0FWUqBTxsLMYbzd/teuMQfWpsENTwJY3GVMBv37bPnctDHkIdJ9ERJ
+         jNnw62CRj6Y6gKqKREHqobtFywaXnA1znf4+1+TQ62V18ASplmYTM3BFkwQ/bBt+mmYg
+         XdNQ==
+X-Gm-Message-State: AOAM533K46K8idFkvLnysj8s/5LpGiA3m5qJwrY9FQeKlKbtHTo5OV9j
+        GocNqNz+xfYQ+DS1zFafOp+v3bwHpstNo/RYwN8k2o0+AkAnQbkBUJGaZVyoFneHxoFRL+DHQHy
+        VTbvwsA2bqPqTKQzryaiBnnB9
+X-Received: by 2002:a37:e04:: with SMTP id 4mr17763984qko.269.1596488376482;
+        Mon, 03 Aug 2020 13:59:36 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJydECTgbLYKr4hjShvtJWKB8TcEkpEIhhziBGJusR6Qak9+rn18ZeFUCSzURruspK65XnYsog==
+X-Received: by 2002:a37:e04:: with SMTP id 4mr17763967qko.269.1596488376274;
+        Mon, 03 Aug 2020 13:59:36 -0700 (PDT)
 Received: from redhat.com (bzq-79-177-102-128.red.bezeqint.net. [79.177.102.128])
-        by smtp.gmail.com with ESMTPSA id b23sm19696745qtp.41.2020.08.03.13.59.29
+        by smtp.gmail.com with ESMTPSA id x13sm21991885qts.23.2020.08.03.13.59.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 13:59:31 -0700 (PDT)
-Date:   Mon, 3 Aug 2020 16:59:27 -0400
+        Mon, 03 Aug 2020 13:59:35 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 16:59:32 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     virtualization@lists.linux-foundation.org,
         Jason Wang <jasowang@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: [PATCH v2 12/24] virtio_iommu: correct tags for config space fields
-Message-ID: <20200803205814.540410-13-mst@redhat.com>
+        David Hildenbrand <david@redhat.com>
+Subject: [PATCH v2 13/24] virtio_mem: correct tags for config space fields
+Message-ID: <20200803205814.540410-14-mst@redhat.com>
 References: <20200803205814.540410-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -84,46 +84,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Since this is a modern-only device,
 tag config space fields as having little endian-ness.
 
+TODO: check other uses of __virtioXX types in this header,
+should probably be __leXX.
+
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- include/uapi/linux/virtio_iommu.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ include/uapi/linux/virtio_mem.h | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/include/uapi/linux/virtio_iommu.h b/include/uapi/linux/virtio_iommu.h
-index 48e3c29223b5..237e36a280cb 100644
---- a/include/uapi/linux/virtio_iommu.h
-+++ b/include/uapi/linux/virtio_iommu.h
-@@ -18,24 +18,24 @@
- #define VIRTIO_IOMMU_F_MMIO			5
+diff --git a/include/uapi/linux/virtio_mem.h b/include/uapi/linux/virtio_mem.h
+index a9ffe041843c..70e01c687d5e 100644
+--- a/include/uapi/linux/virtio_mem.h
++++ b/include/uapi/linux/virtio_mem.h
+@@ -185,27 +185,27 @@ struct virtio_mem_resp {
  
- struct virtio_iommu_range_64 {
--	__u64					start;
--	__u64					end;
-+	__le64					start;
-+	__le64					end;
+ struct virtio_mem_config {
+ 	/* Block size and alignment. Cannot change. */
+-	__u64 block_size;
++	__le64 block_size;
+ 	/* Valid with VIRTIO_MEM_F_ACPI_PXM. Cannot change. */
+-	__u16 node_id;
++	__le16 node_id;
+ 	__u8 padding[6];
+ 	/* Start address of the memory region. Cannot change. */
+-	__u64 addr;
++	__le64 addr;
+ 	/* Region size (maximum). Cannot change. */
+-	__u64 region_size;
++	__le64 region_size;
+ 	/*
+ 	 * Currently usable region size. Can grow up to region_size. Can
+ 	 * shrink due to VIRTIO_MEM_REQ_UNPLUG_ALL (in which case no config
+ 	 * update will be sent).
+ 	 */
+-	__u64 usable_region_size;
++	__le64 usable_region_size;
+ 	/*
+ 	 * Currently used size. Changes due to plug/unplug requests, but no
+ 	 * config updates will be sent.
+ 	 */
+-	__u64 plugged_size;
++	__le64 plugged_size;
+ 	/* Requested size. New plug requests cannot exceed it. Can change. */
+-	__u64 requested_size;
++	__le64 requested_size;
  };
  
- struct virtio_iommu_range_32 {
--	__u32					start;
--	__u32					end;
-+	__le32					start;
-+	__le32					end;
- };
- 
- struct virtio_iommu_config {
- 	/* Supported page sizes */
--	__u64					page_size_mask;
-+	__le64					page_size_mask;
- 	/* Supported IOVA range */
- 	struct virtio_iommu_range_64		input_range;
- 	/* Max domain ID size */
- 	struct virtio_iommu_range_32		domain_range;
- 	/* Probe buffer size */
--	__u32					probe_size;
-+	__le32					probe_size;
- };
- 
- /* Request types */
+ #endif /* _LINUX_VIRTIO_MEM_H */
 -- 
 MST
 
