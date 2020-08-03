@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C37C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07A0D2076B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2453F2076B
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458135;
-	bh=bTEMXvdIvyE2iqBAS9NC+cQYJQ88tOHYymR7wqxovZk=;
+	s=default; t=1596458145;
+	bh=Nr2DZ258aumtJCnTDAvnz2EoPonXjfadvG+fjwqD5Dk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kR9jKmegZ//ga84ob83mH0MdxFykfJLCZhH5hsLJ7wdulIB2NZ0ycJjzfqNxcc+Ij
-	 R34DYO+qBzmRv08mdRs1jqsOQVXdZHdq3tv7I48ZDPcSuhC3nEZAcJg39wEkQ0ZOVG
-	 +w6/rIe7DL1sGwT2m+hKNi1kWhXWoW7ZevLSVvyI=
+	b=l3FtpBkEzfKOIc9xfBSF+Tr1m4qilFs7Oj/qkLJaINEBw8vsMOqgQn7Ort5qCnUUp
+	 QtS4uwE9N9utolHN7bK7SS5dzfycRTWh1oiXo3thriavmwHuQljMyEj/mWeqXdjN/b
+	 9hZ53yCc6HW7CAVfYirgk8JVQa2GAGg9PTf2EZts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729294AbgHCMfe (ORCPT
+        id S1729673AbgHCMfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:35:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35614 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:35:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729645AbgHCMfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:35:18 -0400
+        id S1729221AbgHCMfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:35:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB59B20781;
-        Mon,  3 Aug 2020 12:35:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDB8F204EC;
+        Mon,  3 Aug 2020 12:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596458117;
-        bh=bTEMXvdIvyE2iqBAS9NC+cQYJQ88tOHYymR7wqxovZk=;
+        s=default; t=1596458132;
+        bh=Nr2DZ258aumtJCnTDAvnz2EoPonXjfadvG+fjwqD5Dk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sOFxcAjND/9jJODzu1TxLULpNDYl3hHjut/DpYoQ/mPWNMKrCkaXlOCaUqdwFhSSN
-         O9XfThhU6oU+P8f+thVn2m2qL4d/Tk5778OtcRk8WvNr5nm5WNeAOB/0jncWyPU3lL
-         EACZSzW9sdccwriazyvn1KlS9lYBBwiDsrNw8QPw=
+        b=bFpPB/9gNJ7uaBnmzE/HXLpsmgm6V3SSpqa+JdEFdRlgxcTPM1EAEg1RGUR7b0ayW
+         9fiWNaXSaGjDvuj1U5o3+d+JkMRk7DCnGoEiUqkMXEhsONWAH5BrUWg+eSD6ewGQy4
+         j26VE/azFAQ2C8xonhlSG43FjBA17rjMgglQY1oU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Dominique Martinet <dominique.martinet@cea.fr>,
+        syzbot+2222c34dc40b515f30dc@syzkaller.appspotmail.com,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 43/51] nfc: s3fwrn5: add missing release on skb in s3fwrn5_recv_frame
-Date:   Mon,  3 Aug 2020 14:20:28 +0200
-Message-Id: <20200803121851.668423841@linuxfoundation.org>
+Subject: [PATCH 4.14 20/51] 9p/trans_fd: abort p9_read_work if req status changed
+Date:   Mon,  3 Aug 2020 14:20:05 +0200
+Message-Id: <20200803121850.473168725@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121849.488233135@linuxfoundation.org>
 References: <20200803121849.488233135@linuxfoundation.org>
@@ -61,32 +63,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Dominique Martinet <dominique.martinet@cea.fr>
 
-[ Upstream commit 1e8fd3a97f2d83a7197876ceb4f37b4c2b00a0f3 ]
+[ Upstream commit e4ca13f7d075e551dc158df6af18fb412a1dba0a ]
 
-The implementation of s3fwrn5_recv_frame() is supposed to consume skb on
-all execution paths. Release skb before returning -ENODEV.
+p9_read_work would try to handle an errored req even if it got put to
+error state by another thread between the lookup (that worked) and the
+time it had been fully read.
+The request itself is safe to use because we hold a ref to it from the
+lookup (for m->rreq, so it was safe to read into the request data buffer
+until this point), but the req_list has been deleted at the same time
+status changed, and client_cb already has been called as well, so we
+should not do either.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: http://lkml.kernel.org/r/1539057956-23741-1-git-send-email-asmadeus@codewreck.org
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Reported-by: syzbot+2222c34dc40b515f30dc@syzkaller.appspotmail.com
+Cc: Eric Van Hensbergen <ericvh@gmail.com>
+Cc: Latchesar Ionkov <lucho@ionkov.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/s3fwrn5/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/9p/trans_fd.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/nfc/s3fwrn5/core.c b/drivers/nfc/s3fwrn5/core.c
-index 9d9c8d57a042d..64b58455e620b 100644
---- a/drivers/nfc/s3fwrn5/core.c
-+++ b/drivers/nfc/s3fwrn5/core.c
-@@ -209,6 +209,7 @@ int s3fwrn5_recv_frame(struct nci_dev *ndev, struct sk_buff *skb,
- 	case S3FWRN5_MODE_FW:
- 		return s3fwrn5_fw_recv_frame(ndev, skb);
- 	default:
-+		kfree_skb(skb);
- 		return -ENODEV;
- 	}
- }
+diff --git a/net/9p/trans_fd.c b/net/9p/trans_fd.c
+index a9c65f13b7f51..cbd8cfafb7940 100644
+--- a/net/9p/trans_fd.c
++++ b/net/9p/trans_fd.c
+@@ -301,7 +301,6 @@ static void p9_read_work(struct work_struct *work)
+ {
+ 	int n, err;
+ 	struct p9_conn *m;
+-	int status = REQ_STATUS_ERROR;
+ 
+ 	m = container_of(work, struct p9_conn, rq);
+ 
+@@ -381,11 +380,17 @@ static void p9_read_work(struct work_struct *work)
+ 	if ((m->req) && (m->rc.offset == m->rc.capacity)) {
+ 		p9_debug(P9_DEBUG_TRANS, "got new packet\n");
+ 		spin_lock(&m->client->lock);
+-		if (m->req->status != REQ_STATUS_ERROR)
+-			status = REQ_STATUS_RCVD;
+-		list_del(&m->req->req_list);
+-		/* update req->status while holding client->lock  */
+-		p9_client_cb(m->client, m->req, status);
++		if (m->req->status == REQ_STATUS_SENT) {
++			list_del(&m->req->req_list);
++			p9_client_cb(m->client, m->req, REQ_STATUS_RCVD);
++		} else {
++			spin_unlock(&m->client->lock);
++			p9_debug(P9_DEBUG_ERROR,
++				 "Request tag %d errored out while we were reading the reply\n",
++				 m->rc.tag);
++			err = -EIO;
++			goto error;
++		}
+ 		spin_unlock(&m->client->lock);
+ 		m->rc.sdata = NULL;
+ 		m->rc.offset = 0;
 -- 
 2.25.1
 
