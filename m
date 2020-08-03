@@ -2,118 +2,164 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D70EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FC8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF0CC22CAE
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F64207DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:02:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BH/zrsl7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GwyGimjv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgHCTA2 (ORCPT
+        id S1727012AbgHCTCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 15:00:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46716 "EHLO
+        Mon, 3 Aug 2020 15:02:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgHCTA1 (ORCPT
+        with ESMTP id S1726881AbgHCTCT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 15:00:27 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53B8AC06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 12:00:27 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id s15so8999529pgc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 12:00:27 -0700 (PDT)
+        Mon, 3 Aug 2020 15:02:19 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A4A8C061757
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 12:02:19 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id i92so384378pje.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 12:02:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=2bQwe2K0XwzuOlpiqVHsdZ/mH76OOHNTt78eXB94PDA=;
-        b=BH/zrsl7HzNzpTlN+nMwokcT3MWMfuojbLn05mlyEULmbsnBhqj4VAFvCzgrU3AhOq
-         AAPbj5DaS06efsVQIW+JpTH153H2gSJ3+rhhTTphBEVearFVbJG6wRh+fk1ppaci8sd1
-         oP5DaU5vBan2xV1jC/yq38a0U/2ZO3nHas3Yc=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O6tP2dRjUFwZbhO7kTIUZzIPSMn6S/VsoDqV/IeCHas=;
+        b=GwyGimjvlfZSm4rPZf87qz1lpYAb9Sb5zXQ8UcytIulZag6qIJXsvXyLdFFUopSqv0
+         /Fl1mCDdlrGtNOLSad2vl3ZlOQsuBisUBiYIQzm7JpDk1z9AjEBamBieoyh1KTMHOfZw
+         tTglBd2CZnJo/XvFepNNiaRJ+uKZqWJnhtQBcDQTFDZJqiFuZKGXSJHh2q0IcYen5MAj
+         +OLdSIe09Sb9neR+ZY70179YUgHipcD+bi/EBZby9k184pQbkAG1gF+JC2xh72xxod+t
+         LO7i8FjJzU+JuKl2NXKM+BD1j8+TKX7ofkLgn1K+/f0ff8iojdwSiaSlDqhIeoReXUdu
+         ODzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=2bQwe2K0XwzuOlpiqVHsdZ/mH76OOHNTt78eXB94PDA=;
-        b=oHtim/GZjZ1Yt5XnsSKivbH7LSd/k0VzBrHe1CmdTojMNQAHAl/vjoWoN7DkRcvvxn
-         Xz1zWjXArI6Ihx3Uos5oRlAsEQXUWqPJfE1tFvxeFSSHVbmF02h5oD6UUBmCp8YE9qc7
-         USp5UiOqiZ/Z27JNgo6GwK1q448SdbgB7yI0cK951P0XSt8bhxd8I4Eg5p9SXxzjraus
-         WWrKIuTKmn9YUjQC0DlC7mBXPKuw1yPXK1wJDGrOfenu6gOSJDRAyn1wATbx78h95lrd
-         +h8h/jNUpXh7QNQQ7Rm1PvhG3k1K3JRvhErLrqCI0tzZbavhXbzqe1xZLsSbD2RupOnN
-         d0/g==
-X-Gm-Message-State: AOAM531tuxIt2tRgnvk85ogLLjLN/fRtP29Ae+OH5IxzWkuEIrrg0noV
-        wjTrxR4kcNWAlXFu5R8EE3dQwg==
-X-Google-Smtp-Source: ABdhPJyAnvPLb+WX6KXXnGh4DTEpK7hgx9NQhChy0h95gy8dWIheKWnC0JPY4Et2iYOSVZLMlstGDQ==
-X-Received: by 2002:a65:6205:: with SMTP id d5mr15445995pgv.432.1596481226804;
-        Mon, 03 Aug 2020 12:00:26 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id p19sm19668907pgj.74.2020.08.03.12.00.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 12:00:25 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O6tP2dRjUFwZbhO7kTIUZzIPSMn6S/VsoDqV/IeCHas=;
+        b=RUXyP6Vvlms3rLSB9rcQYlbj744nTf4KtPJBVmMjGkefMXVzFabXNrw39ZAQYwY0vA
+         T0eQfPA+3w5NDdILl4XUuNvql3x4aOnGkVOPNUYeFWog23t3u+WMzzBTg13a7X9w0vRT
+         Dx6VJjhtem5HBZ7GA6eIo83kVX6ygS+xF3QzgiDsZjG++0ohuTejcSei+DiiYQ23WI9S
+         BA8yt+EE+ftPnlEHtGCf5Qq88GHoub3fEbDnD9ZeO3zEShSbhmswmlExgF/o/PjIr0h/
+         +J6xq83tGcKgwreLbyAd4wLwBhUM3LIjymUI3mtpyjctIsETnQg5hVzEq03hO8HIVewK
+         RtBw==
+X-Gm-Message-State: AOAM5327rxg0jjcpGCTqx2u8+nacDuIWrwxw7+qXzc7kSmMdTiYZo0B9
+        piQ2eqsDAFPRhNmzpCfD8kD8RgPUyQM0V4UcDDRYtg==
+X-Google-Smtp-Source: ABdhPJxOc/yfQNk64Iy0M39ewebcq0NAT7dVOLQV9Zog2Bi8sDwMJRwELSzWvaGVypHwF46JkoKwRl+45aGkQMpUBps=
+X-Received: by 2002:a17:90b:1103:: with SMTP id gi3mr726306pjb.32.1596481338531;
+ Mon, 03 Aug 2020 12:02:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200801160639.1410944e@archlinux>
-References: <20200731164853.3020946-1-campello@chromium.org> <20200731104555.v3.1.I0925046377211b8b6f06764857f03b4ab592bddb@changeid> <20200801160639.1410944e@archlinux>
-Subject: Re: [PATCH v3 01/15] dt-bindings: iio: Add bindings for sx9310 sensor
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-iio@vger.kernel.org
-To:     Daniel Campello <campello@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>
-Date:   Mon, 03 Aug 2020 12:00:23 -0700
-Message-ID: <159648122347.1360974.1094560524092762187@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+References: <20200731230820.1742553-1-keescook@chromium.org> <20200731230820.1742553-24-keescook@chromium.org>
+In-Reply-To: <20200731230820.1742553-24-keescook@chromium.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 3 Aug 2020 12:02:07 -0700
+Message-ID: <CAKwvOdn11z+iFQZC54JvQHC=NFX1FsoRMw2a-2P=5sQ6FKwbnw@mail.gmail.com>
+Subject: Re: [PATCH v5 23/36] arm/build: Explicitly keep .ARM.attributes sections
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jonathan Cameron (2020-08-01 08:06:39)
-> On Fri, 31 Jul 2020 10:48:38 -0600
-> Daniel Campello <campello@chromium.org> wrote:
-> > diff --git a/Documentation/devicetree/bindings/iio/proximity/semtech,sx=
-9310.yaml b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.=
-yaml
-> > new file mode 100644
-> > index 00000000000000..5739074d3592fe
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.ya=
-ml
-> > @@ -0,0 +1,65 @@
-[...]
-> > +
-> > +  "#io-channel-cells":
-> > +    const: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - "#io-channel-cells"
->=20
-> Missed this in earlier review (only noticed when I saw whilst santity
-> checking earlier versions.
->=20
-> Fairly sure we should only need #io-channel-cells if we have
-> a consumer of a channel somewhere else in DT.  So it's not
-> required as far as I can see.
->=20
+On Fri, Jul 31, 2020 at 4:18 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> In preparation for adding --orphan-handling=warn, explicitly keep the
+> .ARM.attributes section by expanding the existing ELF_DETAILS macro into
+> ARM_DETAILS.
+>
+> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Link: https://lore.kernel.org/lkml/CAKwvOdk-racgq5pxsoGS6Vtifbtrk5fmkmnoLxrQMaOvV0nPWw@mail.gmail.com/
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/arm/include/asm/vmlinux.lds.h | 4 ++++
+>  arch/arm/kernel/vmlinux-xip.lds.S  | 2 +-
+>  arch/arm/kernel/vmlinux.lds.S      | 2 +-
+>  3 files changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/include/asm/vmlinux.lds.h b/arch/arm/include/asm/vmlinux.lds.h
+> index a08f4301b718..c4af5182ab48 100644
+> --- a/arch/arm/include/asm/vmlinux.lds.h
+> +++ b/arch/arm/include/asm/vmlinux.lds.h
+> @@ -52,6 +52,10 @@
+>                 ARM_MMU_DISCARD(*(__ex_table))                          \
+>                 COMMON_DISCARDS
+>
+> +#define ARM_DETAILS                                                    \
+> +               ELF_DETAILS                                             \
+> +               .ARM.attributes 0 : { *(.ARM.attributes) }
 
-This is mostly a decision for Rob to make, but I would make it required
-because the device is always an io channel provider. It may be that it
-isn't providing anything in the DT to something else in the DT but it is
-providing this information somewhere so always having to spell that out
-is simple and doesn't hurt.
+I had to look up what the `0` meant:
+https://sourceware.org/binutils/docs/ld/Output-Section-Attributes.html#Output-Section-Attributes
+mentions it's an "address" and
+https://ftp.gnu.org/old-gnu/Manuals/ld-2.9.1/html_chapter/ld_3.html#SEC21
+mentions it as "start" (an address).
+Unless we need those, can we drop them? (Sorry for the resulting churn
+that would cause).  I think the NO_LOAD stuff makes more sense, but
+I'm curious if the kernel checks for that.
+
+> +
+>  #define ARM_STUBS_TEXT                                                 \
+>                 *(.gnu.warning)                                         \
+>                 *(.glue_7)                                              \
+> diff --git a/arch/arm/kernel/vmlinux-xip.lds.S b/arch/arm/kernel/vmlinux-xip.lds.S
+> index 904c31fa20ed..57fcbf55f913 100644
+> --- a/arch/arm/kernel/vmlinux-xip.lds.S
+> +++ b/arch/arm/kernel/vmlinux-xip.lds.S
+> @@ -150,7 +150,7 @@ SECTIONS
+>         _end = .;
+>
+>         STABS_DEBUG
+> -       ELF_DETAILS
+> +       ARM_DETAILS
+>  }
+>
+>  /*
+> diff --git a/arch/arm/kernel/vmlinux.lds.S b/arch/arm/kernel/vmlinux.lds.S
+> index bb950c896a67..1d3d3b599635 100644
+> --- a/arch/arm/kernel/vmlinux.lds.S
+> +++ b/arch/arm/kernel/vmlinux.lds.S
+> @@ -149,7 +149,7 @@ SECTIONS
+>         _end = .;
+>
+>         STABS_DEBUG
+> -       ELF_DETAILS
+> +       ARM_DETAILS
+>  }
+>
+>  #ifdef CONFIG_STRICT_KERNEL_RWX
+> --
+> 2.25.1
+>
+
+
+-- 
+Thanks,
+~Nick Desaulniers
