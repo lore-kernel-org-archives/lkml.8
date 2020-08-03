@@ -3,324 +3,191 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FD1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 02:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68511C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 02:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E4602075B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 02:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C1102070A
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 02:20:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbgHCCSJ (ORCPT
+        id S1726804AbgHCCUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 22:18:09 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:47488 "EHLO inva021.nxp.com"
+        Sun, 2 Aug 2020 22:20:31 -0400
+Received: from mga07.intel.com ([134.134.136.100]:64772 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbgHCCSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 22:18:09 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5F975201576;
-        Mon,  3 Aug 2020 04:18:06 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B1CCD201577;
-        Mon,  3 Aug 2020 04:18:01 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E5A59402BE;
-        Mon,  3 Aug 2020 04:17:55 +0200 (CEST)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-        perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] ASoC: fsl-asoc-card: Remove fsl_asoc_card_set_bias_level function
-Date:   Mon,  3 Aug 2020 10:13:31 +0800
-Message-Id: <1596420811-16690-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1725820AbgHCCUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 2 Aug 2020 22:20:31 -0400
+IronPort-SDR: E42l+X6uc+x0susDBFNWFK1kuROhbRZF3kO2BaTfxeNNloQqv4jHWftIJG0Q3JNns724cmMvkf
+ 3qegQIiWCppQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9701"; a="216461700"
+X-IronPort-AV: E=Sophos;i="5.75,428,1589266800"; 
+   d="scan'208";a="216461700"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2020 19:20:29 -0700
+IronPort-SDR: qBWMv2KDbNwROoK6QxaoQTKg3p7yCiwqOsxCFMDmeLzSALxSB3YfchntlexrlpC10igfhQ/2Jw
+ Jb+scsqpJqsQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,428,1589266800"; 
+   d="scan'208";a="395909209"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by fmsmga001.fm.intel.com with ESMTP; 02 Aug 2020 19:20:26 -0700
+Cc:     baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Liu Yi L <yi.l.liu@intel.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] iommu: Add iommu_aux_get_domain_for_dev()
+To:     Alex Williamson <alex.williamson@redhat.com>
+References: <20200714055703.5510-1-baolu.lu@linux.intel.com>
+ <20200714055703.5510-4-baolu.lu@linux.intel.com>
+ <20200729142507.182cd18a@x1.home>
+ <06fd91c1-a978-d526-7e2b-fec619a458e4@linux.intel.com>
+ <20200731121418.0274afb8@x1.home>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <3fd171a2-a5cc-89d7-f539-04eb2faf130f@linux.intel.com>
+Date:   Mon, 3 Aug 2020 10:15:27 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200731121418.0274afb8@x1.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With this case:
-aplay -Dhw:x 16khz.wav 24khz.wav
-There is sound distortion for 24khz.wav. The reason is that setting
-PLL of WM8962 with set_bias_level function, the bias level is not
-changed when 24khz.wav is played, then the PLL won't be reset, the
-clock is not correct, so distortion happens.
+Hi Alex,
 
-The resolution of this issue is to remove fsl_asoc_card_set_bias_level.
-Move PLL configuration to hw_params and hw_free.
+On 8/1/20 2:14 AM, Alex Williamson wrote:
+> On Fri, 31 Jul 2020 14:30:03 +0800
+> Lu Baolu <baolu.lu@linux.intel.com> wrote:
+> 
+>> Hi Alex,
+>>
+>> On 2020/7/30 4:25, Alex Williamson wrote:
+>>> On Tue, 14 Jul 2020 13:57:02 +0800
+>>> Lu Baolu<baolu.lu@linux.intel.com>  wrote:
+>>>    
+>>>> The device driver needs an API to get its aux-domain. A typical usage
+>>>> scenario is:
+>>>>
+>>>>           unsigned long pasid;
+>>>>           struct iommu_domain *domain;
+>>>>           struct device *dev = mdev_dev(mdev);
+>>>>           struct device *iommu_device = vfio_mdev_get_iommu_device(dev);
+>>>>
+>>>>           domain = iommu_aux_get_domain_for_dev(dev);
+>>>>           if (!domain)
+>>>>                   return -ENODEV;
+>>>>
+>>>>           pasid = iommu_aux_get_pasid(domain, iommu_device);
+>>>>           if (pasid <= 0)
+>>>>                   return -EINVAL;
+>>>>
+>>>>            /* Program the device context */
+>>>>            ....
+>>>>
+>>>> This adds an API for such use case.
+>>>>
+>>>> Suggested-by: Alex Williamson<alex.williamson@redhat.com>
+>>>> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
+>>>> ---
+>>>>    drivers/iommu/iommu.c | 18 ++++++++++++++++++
+>>>>    include/linux/iommu.h |  7 +++++++
+>>>>    2 files changed, 25 insertions(+)
+>>>>
+>>>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>>>> index cad5a19ebf22..434bf42b6b9b 100644
+>>>> --- a/drivers/iommu/iommu.c
+>>>> +++ b/drivers/iommu/iommu.c
+>>>> @@ -2817,6 +2817,24 @@ void iommu_aux_detach_group(struct iommu_domain *domain,
+>>>>    }
+>>>>    EXPORT_SYMBOL_GPL(iommu_aux_detach_group);
+>>>>    
+>>>> +struct iommu_domain *iommu_aux_get_domain_for_dev(struct device *dev)
+>>>> +{
+>>>> +	struct iommu_domain *domain = NULL;
+>>>> +	struct iommu_group *group;
+>>>> +
+>>>> +	group = iommu_group_get(dev);
+>>>> +	if (!group)
+>>>> +		return NULL;
+>>>> +
+>>>> +	if (group->aux_domain_attached)
+>>>> +		domain = group->domain;
+>>> Why wouldn't the aux domain flag be on the domain itself rather than
+>>> the group?  Then if we wanted sanity checking in patch 1/ we'd only
+>>> need to test the flag on the object we're provided.
+>>
+>> Agreed. Given that a group may contain both non-aux and aux devices,
+>> adding such flag in iommu_group doesn't make sense.
+>>
+>>>
+>>> If we had such a flag, we could create an iommu_domain_is_aux()
+>>> function and then simply use iommu_get_domain_for_dev() and test that
+>>> it's an aux domain in the example use case.  It seems like that would
+>>> resolve the jump from a domain to an aux-domain just as well as adding
+>>> this separate iommu_aux_get_domain_for_dev() interface.  The is_aux
+>>> test might also be useful in other cases too.
+>>
+>> Let's rehearsal our use case.
+>>
+>>           unsigned long pasid;
+>>           struct iommu_domain *domain;
+>>           struct device *dev = mdev_dev(mdev);
+>>           struct device *iommu_device = vfio_mdev_get_iommu_device(dev);
+>>
+>> [1]     domain = iommu_get_domain_for_dev(dev);
+>>           if (!domain)
+>>                   return -ENODEV;
+>>
+>> [2]     pasid = iommu_aux_get_pasid(domain, iommu_device);
+>>           if (pasid <= 0)
+>>                   return -EINVAL;
+>>
+>>            /* Program the device context */
+>>            ....
+>>
+>> The reason why I add this iommu_aux_get_domain_for_dev() is that we need
+>> to make sure the domain got at [1] is valid to be used at [2].
+>>
+>> https://lore.kernel.org/linux-iommu/20200707150408.474d81f1@x1.home/
+> 
+> Yep, I thought that was a bit of a leap in logic.
+> 
+>> When calling into iommu_aux_get_pasid(), the iommu driver should make
+>> sure that @domain is a valid aux-domain for @iommu_device. Hence, for
+>> our use case, it seems that there's no need for a is_aux_domain() api.
+>>
+>> Anyway, I'm not against adding a new is_aux_domain() api if there's a
+>> need elsewhere.
+> 
+> I think it could work either way, we could have an
+> iommu_get_aux_domain_for_dev() which returns NULL if the domain is not
+> an aux domain, or we could use iommu_get_domain_for_dev() and the
+> caller could test the domain with iommu_is_aux_domain() if they need to
+> confirm if it's an aux domain.  The former could even be written using
+> the latter, a wrapper of iommu_get_domain_for_dev() that checks aux
+> property before returning.
 
-After removing fsl_asoc_card_set_bias_level, also test WM8960 case,
-it can work.
+Okay. So iommu_get_domain_for_dev() and iommu_is_aux_domain() are what
+we wanted. The iommu_get_domain_for_dev() could be a simple wrapper of
+them.
 
-Fixes: 708b4351f08c ("ASoC: fsl: Add Freescale Generic ASoC Sound Card with ASRC support")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
-changes in v3
-- replace "out" with "fail"
+Thanks a lot for the guide. I will implement a new version according to
+the feedbacks.
 
-changes in v2
-- replace is_stream_in_use with streams
-- add "out" error handler in hw_params()
-
- sound/soc/fsl/fsl-asoc-card.c | 154 ++++++++++++++++------------------
- 1 file changed, 70 insertions(+), 84 deletions(-)
-
-diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
-index ee80d02b56c6..52a9fc73ceb8 100644
---- a/sound/soc/fsl/fsl-asoc-card.c
-+++ b/sound/soc/fsl/fsl-asoc-card.c
-@@ -73,6 +73,7 @@ struct cpu_priv {
-  * @codec_priv: CODEC private data
-  * @cpu_priv: CPU private data
-  * @card: ASoC card structure
-+ * @streams: Mask of current active streams
-  * @sample_rate: Current sample rate
-  * @sample_format: Current sample format
-  * @asrc_rate: ASRC sample rate used by Back-Ends
-@@ -89,6 +90,7 @@ struct fsl_asoc_card_priv {
- 	struct codec_priv codec_priv;
- 	struct cpu_priv cpu_priv;
- 	struct snd_soc_card card;
-+	u8 streams;
- 	u32 sample_rate;
- 	snd_pcm_format_t sample_format;
- 	u32 asrc_rate;
-@@ -151,21 +153,17 @@ static int fsl_asoc_card_hw_params(struct snd_pcm_substream *substream,
- 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
- 	struct fsl_asoc_card_priv *priv = snd_soc_card_get_drvdata(rtd->card);
- 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
-+	struct codec_priv *codec_priv = &priv->codec_priv;
- 	struct cpu_priv *cpu_priv = &priv->cpu_priv;
- 	struct device *dev = rtd->card->dev;
-+	unsigned int pll_out;
- 	int ret;
- 
- 	priv->sample_rate = params_rate(params);
- 	priv->sample_format = params_format(params);
-+	priv->streams |= BIT(substream->stream);
- 
--	/*
--	 * If codec-dai is DAI Master and all configurations are already in the
--	 * set_bias_level(), bypass the remaining settings in hw_params().
--	 * Note: (dai_fmt & CBM_CFM) includes CBM_CFM and CBM_CFS.
--	 */
--	if ((priv->card.set_bias_level &&
--	     priv->dai_fmt & SND_SOC_DAIFMT_CBM_CFM) ||
--	    fsl_asoc_card_is_ac97(priv))
-+	if (fsl_asoc_card_is_ac97(priv))
- 		return 0;
- 
- 	/* Specific configurations of DAIs starts from here */
-@@ -174,7 +172,7 @@ static int fsl_asoc_card_hw_params(struct snd_pcm_substream *substream,
- 				     cpu_priv->sysclk_dir[tx]);
- 	if (ret && ret != -ENOTSUPP) {
- 		dev_err(dev, "failed to set sysclk for cpu dai\n");
--		return ret;
-+		goto fail;
- 	}
- 
- 	if (cpu_priv->slot_width) {
-@@ -182,6 +180,68 @@ static int fsl_asoc_card_hw_params(struct snd_pcm_substream *substream,
- 					       cpu_priv->slot_width);
- 		if (ret && ret != -ENOTSUPP) {
- 			dev_err(dev, "failed to set TDM slot for cpu dai\n");
-+			goto fail;
-+		}
-+	}
-+
-+	/* Specific configuration for PLL */
-+	if (codec_priv->pll_id && codec_priv->fll_id) {
-+		if (priv->sample_format == SNDRV_PCM_FORMAT_S24_LE)
-+			pll_out = priv->sample_rate * 384;
-+		else
-+			pll_out = priv->sample_rate * 256;
-+
-+		ret = snd_soc_dai_set_pll(asoc_rtd_to_codec(rtd, 0),
-+					  codec_priv->pll_id,
-+					  codec_priv->mclk_id,
-+					  codec_priv->mclk_freq, pll_out);
-+		if (ret) {
-+			dev_err(dev, "failed to start FLL: %d\n", ret);
-+			goto fail;
-+		}
-+
-+		ret = snd_soc_dai_set_sysclk(asoc_rtd_to_codec(rtd, 0),
-+					     codec_priv->fll_id,
-+					     pll_out, SND_SOC_CLOCK_IN);
-+
-+		if (ret && ret != -ENOTSUPP) {
-+			dev_err(dev, "failed to set SYSCLK: %d\n", ret);
-+			goto fail;
-+		}
-+	}
-+
-+	return 0;
-+
-+fail:
-+	priv->streams &= ~BIT(substream->stream);
-+	return ret;
-+}
-+
-+static int fsl_asoc_card_hw_free(struct snd_pcm_substream *substream)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct fsl_asoc_card_priv *priv = snd_soc_card_get_drvdata(rtd->card);
-+	struct codec_priv *codec_priv = &priv->codec_priv;
-+	struct device *dev = rtd->card->dev;
-+	int ret;
-+
-+	priv->streams &= ~BIT(substream->stream);
-+
-+	if (!priv->streams && codec_priv->pll_id && codec_priv->fll_id) {
-+		/* Force freq to be 0 to avoid error message in codec */
-+		ret = snd_soc_dai_set_sysclk(asoc_rtd_to_codec(rtd, 0),
-+					     codec_priv->mclk_id,
-+					     0,
-+					     SND_SOC_CLOCK_IN);
-+		if (ret) {
-+			dev_err(dev, "failed to switch away from FLL: %d\n", ret);
-+			return ret;
-+		}
-+
-+		ret = snd_soc_dai_set_pll(asoc_rtd_to_codec(rtd, 0),
-+					  codec_priv->pll_id, 0, 0, 0);
-+		if (ret && ret != -ENOTSUPP) {
-+			dev_err(dev, "failed to stop FLL: %d\n", ret);
- 			return ret;
- 		}
- 	}
-@@ -191,6 +251,7 @@ static int fsl_asoc_card_hw_params(struct snd_pcm_substream *substream,
- 
- static const struct snd_soc_ops fsl_asoc_card_ops = {
- 	.hw_params = fsl_asoc_card_hw_params,
-+	.hw_free = fsl_asoc_card_hw_free,
- };
- 
- static int be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
-@@ -254,75 +315,6 @@ static struct snd_soc_dai_link fsl_asoc_card_dai[] = {
- 	},
- };
- 
--static int fsl_asoc_card_set_bias_level(struct snd_soc_card *card,
--					struct snd_soc_dapm_context *dapm,
--					enum snd_soc_bias_level level)
--{
--	struct fsl_asoc_card_priv *priv = snd_soc_card_get_drvdata(card);
--	struct snd_soc_pcm_runtime *rtd;
--	struct snd_soc_dai *codec_dai;
--	struct codec_priv *codec_priv = &priv->codec_priv;
--	struct device *dev = card->dev;
--	unsigned int pll_out;
--	int ret;
--
--	rtd = snd_soc_get_pcm_runtime(card, &card->dai_link[0]);
--	codec_dai = asoc_rtd_to_codec(rtd, 0);
--	if (dapm->dev != codec_dai->dev)
--		return 0;
--
--	switch (level) {
--	case SND_SOC_BIAS_PREPARE:
--		if (dapm->bias_level != SND_SOC_BIAS_STANDBY)
--			break;
--
--		if (priv->sample_format == SNDRV_PCM_FORMAT_S24_LE)
--			pll_out = priv->sample_rate * 384;
--		else
--			pll_out = priv->sample_rate * 256;
--
--		ret = snd_soc_dai_set_pll(codec_dai, codec_priv->pll_id,
--					  codec_priv->mclk_id,
--					  codec_priv->mclk_freq, pll_out);
--		if (ret) {
--			dev_err(dev, "failed to start FLL: %d\n", ret);
--			return ret;
--		}
--
--		ret = snd_soc_dai_set_sysclk(codec_dai, codec_priv->fll_id,
--					     pll_out, SND_SOC_CLOCK_IN);
--		if (ret && ret != -ENOTSUPP) {
--			dev_err(dev, "failed to set SYSCLK: %d\n", ret);
--			return ret;
--		}
--		break;
--
--	case SND_SOC_BIAS_STANDBY:
--		if (dapm->bias_level != SND_SOC_BIAS_PREPARE)
--			break;
--
--		ret = snd_soc_dai_set_sysclk(codec_dai, codec_priv->mclk_id,
--					     codec_priv->mclk_freq,
--					     SND_SOC_CLOCK_IN);
--		if (ret && ret != -ENOTSUPP) {
--			dev_err(dev, "failed to switch away from FLL: %d\n", ret);
--			return ret;
--		}
--
--		ret = snd_soc_dai_set_pll(codec_dai, codec_priv->pll_id, 0, 0, 0);
--		if (ret) {
--			dev_err(dev, "failed to stop FLL: %d\n", ret);
--			return ret;
--		}
--		break;
--
--	default:
--		break;
--	}
--
--	return 0;
--}
--
- static int fsl_asoc_card_audmux_init(struct device_node *np,
- 				     struct fsl_asoc_card_priv *priv)
- {
-@@ -608,7 +600,6 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 	/* Diversify the card configurations */
- 	if (of_device_is_compatible(np, "fsl,imx-audio-cs42888")) {
- 		codec_dai_name = "cs42888";
--		priv->card.set_bias_level = NULL;
- 		priv->cpu_priv.sysclk_freq[TX] = priv->codec_priv.mclk_freq;
- 		priv->cpu_priv.sysclk_freq[RX] = priv->codec_priv.mclk_freq;
- 		priv->cpu_priv.sysclk_dir[TX] = SND_SOC_CLOCK_OUT;
-@@ -625,26 +616,22 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
- 	} else if (of_device_is_compatible(np, "fsl,imx-audio-wm8962")) {
- 		codec_dai_name = "wm8962";
--		priv->card.set_bias_level = fsl_asoc_card_set_bias_level;
- 		priv->codec_priv.mclk_id = WM8962_SYSCLK_MCLK;
- 		priv->codec_priv.fll_id = WM8962_SYSCLK_FLL;
- 		priv->codec_priv.pll_id = WM8962_FLL;
- 		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
- 	} else if (of_device_is_compatible(np, "fsl,imx-audio-wm8960")) {
- 		codec_dai_name = "wm8960-hifi";
--		priv->card.set_bias_level = fsl_asoc_card_set_bias_level;
- 		priv->codec_priv.fll_id = WM8960_SYSCLK_AUTO;
- 		priv->codec_priv.pll_id = WM8960_SYSCLK_AUTO;
- 		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
- 	} else if (of_device_is_compatible(np, "fsl,imx-audio-ac97")) {
- 		codec_dai_name = "ac97-hifi";
--		priv->card.set_bias_level = NULL;
- 		priv->dai_fmt = SND_SOC_DAIFMT_AC97;
- 		priv->card.dapm_routes = audio_map_ac97;
- 		priv->card.num_dapm_routes = ARRAY_SIZE(audio_map_ac97);
- 	} else if (of_device_is_compatible(np, "fsl,imx-audio-mqs")) {
- 		codec_dai_name = "fsl-mqs-dai";
--		priv->card.set_bias_level = NULL;
- 		priv->dai_fmt = SND_SOC_DAIFMT_LEFT_J |
- 				SND_SOC_DAIFMT_CBS_CFS |
- 				SND_SOC_DAIFMT_NB_NF;
-@@ -654,7 +641,6 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 		priv->card.num_dapm_routes = ARRAY_SIZE(audio_map_tx);
- 	} else if (of_device_is_compatible(np, "fsl,imx-audio-wm8524")) {
- 		codec_dai_name = "wm8524-hifi";
--		priv->card.set_bias_level = NULL;
- 		priv->dai_fmt |= SND_SOC_DAIFMT_CBS_CFS;
- 		priv->dai_link[1].dpcm_capture = 0;
- 		priv->dai_link[2].dpcm_capture = 0;
--- 
-2.27.0
-
+Best regards,
+baolu
