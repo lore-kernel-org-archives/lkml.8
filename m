@@ -2,119 +2,204 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34303C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 576EDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17E6522B45
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B12222B40
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:19:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbgHCRTs (ORCPT
+        id S1728480AbgHCRTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 13:19:48 -0400
-Received: from mga12.intel.com ([192.55.52.136]:57963 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727803AbgHCRTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 13:19:47 -0400
-IronPort-SDR: fY6V27xfypH9r6Az8EPEF+QSxbLloTxwTbDmr6/9g0Jttp3F3btsrWKd9KeYMZ0CNl4zW5kiZy
- ioJTHr8widvg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="131727768"
-X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
-   d="scan'208";a="131727768"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 10:19:47 -0700
-IronPort-SDR: KtHv35ANwZ8f7TkVfEpIBacjRUfJCoFDiYIqTEtwVJn0JL3JUXRZ6F9eqNCZZWvhjuk8Saq7H4
- s4Ctke6jmV9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,430,1589266800"; 
-   d="scan'208";a="275358327"
-Received: from otcwcpicx6.sc.intel.com ([172.25.55.29])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Aug 2020 10:19:47 -0700
-Date:   Mon, 3 Aug 2020 17:19:47 +0000
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joerg Roedel <joro@8bytes.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
+        Mon, 3 Aug 2020 13:19:52 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:53208 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727803AbgHCRTv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 13:19:51 -0400
+Received: from 89-64-89-42.dynamic.chello.pl (89.64.89.42) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id 1004877ac9269e33; Mon, 3 Aug 2020 19:19:47 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Francisco Jerez <currojerez@riseup.net>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Documentation <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        H Peter Anvin <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Jacob Jun Pan <jacob.jun.pan@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Sohil Mehta <sohil.mehta@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, iommu <iommu@lists.linux-foundation.org>,
-        amd-gfx <amd-gfx@lists.freedesktop.org>
-Subject: Re: [PATCH v6 12/12] x86/traps: Fix up invalid PASID
-Message-ID: <20200803171947.GA329474@otcwcpicx6.sc.intel.com>
-References: <1594684087-61184-1-git-send-email-fenghua.yu@intel.com>
- <1594684087-61184-13-git-send-email-fenghua.yu@intel.com>
- <CALCETrV6yTjFzuTMEP8T9_QfjAXktHZcMXSqionZGJ=Lj0YdFg@mail.gmail.com>
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Doug Smythies <dsmythies@telus.net>,
+        0day robot <lkp@intel.com>, lkp@lists.01.org
+Subject: Re: [cpufreq] 48fc4efcdd: WARNING:possible_circular_locking_dependency_detected
+Date:   Mon, 03 Aug 2020 19:19:47 +0200
+Message-ID: <2379312.oHovjqWFI2@kreacher>
+In-Reply-To: <87v9i3clnh.fsf@riseup.net>
+References: <20200731115929.GQ23458@shao2-debian> <87v9i3clnh.fsf@riseup.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrV6yTjFzuTMEP8T9_QfjAXktHZcMXSqionZGJ=Lj0YdFg@mail.gmail.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Andy,
-
-On Fri, Jul 31, 2020 at 06:28:37PM -0700, Andy Lutomirski wrote:
-> On Mon, Jul 13, 2020 at 4:48 PM Fenghua Yu <fenghua.yu@intel.com> wrote:
+On Saturday, August 1, 2020 1:25:22 AM CEST Francisco Jerez wrote:
+> kernel test robot <rong.a.chen@intel.com> writes:
+> 
+> > Greeting,
 > >
-> > A #GP fault is generated when ENQCMD instruction is executed without
-> > a valid PASID value programmed in the current thread's PASID MSR. The
-> > #GP fault handler will initialize the MSR if a PASID has been allocated
-> > for this process.
+> > FYI, we noticed the following commit (built with gcc-9):
+> >
+> > commit: 48fc4efcdd584e8f04da8b195262ec38221bd6db ("[PATCH v2 2/2] cpufreq: intel_pstate: Implement passive mode with HWP enabled")
+> > url: https://github.com/0day-ci/linux/commits/Rafael-J-Wysocki/cpufreq-intel_pstate-Implement-passive-mode-with-HWP-enabled/20200717-014718
+> > base: https://git.kernel.org/cgit/linux/kernel/git/rafael/linux-pm.git linux-next
+> >
+> > in testcase: kernel-selftests
+> > with following parameters:
+> >
+> > 	group: kselftests-cpufreq
+> > 	ucode: 0x5002f01
+> >
+> > test-description: The kernel contains a set of "self tests" under the tools/testing/selftests/ directory. These are intended to be small unit tests to exercise individual code paths in the kernel.
+> > test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
+> >
+> >
+> > on test machine: 192 threads Intel(R) Xeon(R) Platinum 9242 CPU @ 2.30GHz with 192G memory
+> >
+> > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+> >
+> >
+> >
+> >
+> > If you fix the issue, kindly add following tag
+> > Reported-by: kernel test robot <rong.a.chen@intel.com>
+> >
+> >
+> > [   74.745395] WARNING: possible circular locking dependency detected
+> > [   74.752071] 5.8.0-rc5-00064-g48fc4efcdd584 #1 Not tainted
+> > [   74.757949] ------------------------------------------------------
+> > [   74.764604] main.sh/3019 is trying to acquire lock:
+> > [   74.769954] ffffffff82ec7f08 (intel_pstate_driver_lock){+.+.}-{3:3}, at: store_energy_performance_preference+0xec/0x250
+> > [   74.781228] 
+> > [   74.781228] but task is already holding lock:
+> > [   74.788017] ffff88b07b5f8380 (&policy->rwsem){++++}-{3:3}, at: store+0x69/0xa0
+> > [   74.795711] 
+> > [   74.795711] which lock already depends on the new lock.
+> > [   74.795711] 
+> > [   74.805222] 
+> > [   74.805222] the existing dependency chain (in reverse order) is:
+> > [   74.813529] 
+> > [   74.813529] -> #2 (&policy->rwsem){++++}-{3:3}:
+> > [   74.820371]        __lock_acquire+0x538/0xa90
+> > [   74.825144]        lock_acquire+0xab/0x390
+> > [   74.829660]        down_write+0x38/0x70
+> > [   74.833910]        store+0x69/0xa0
+> > [   74.837724]        kernfs_fop_write+0xdc/0x1c0
+> > [   74.842576]        vfs_write+0xee/0x220
+> > [   74.846814]        ksys_write+0x68/0xe0
+> > [   74.851039]        do_syscall_64+0x52/0xb0
+> > [   74.855512]        entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > [   74.861463] 
+> > [   74.861463] -> #1 (cpu_hotplug_lock){++++}-{0:0}:
+> > [   74.868395]        __lock_acquire+0x538/0xa90
+> > [   74.873127]        lock_acquire+0xab/0x390
+> > [   74.877597]        cpus_read_lock+0x39/0xd0
+> > [   74.882146]        cpufreq_register_driver+0xb6/0x2a0
+> > [   74.887556]        intel_pstate_register_driver+0x32/0x70
+> > [   74.893312]        intel_pstate_init+0x45d/0x4ca
+> > [   74.898281]        do_one_initcall+0x5d/0x330
+> > [   74.902984]        kernel_init_freeable+0x248/0x2c9
+> > [   74.908185]        kernel_init+0xa/0x112
+> > [   74.912430]        ret_from_fork+0x1f/0x30
+> > [   74.916850] 
+> > [   74.916850] -> #0 (intel_pstate_driver_lock){+.+.}-{3:3}:
+> > [   74.924376]        check_prev_add+0x8e/0x9f0
+> > [   74.928988]        validate_chain+0x79b/0x1080
+> > [   74.933773]        __lock_acquire+0x538/0xa90
+> > [   74.938469]        lock_acquire+0xab/0x390
+> > [   74.942896]        __mutex_lock+0xac/0x9c0
+> > [   74.947318]        store_energy_performance_preference+0xec/0x250
+> > [   74.953735]        store+0x7c/0xa0
+> > [   74.957458]        kernfs_fop_write+0xdc/0x1c0
+> > [   74.962231]        vfs_write+0xee/0x220
+> > [   74.966395]        ksys_write+0x68/0xe0
+> > [   74.970549]        do_syscall_64+0x52/0xb0
+> > [   74.974975]        entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > [   74.980859] 
+> > [   74.980859] other info that might help us debug this:
+> > [   74.980859] 
+> > [   74.989744] Chain exists of:
+> > [   74.989744]   intel_pstate_driver_lock --> cpu_hotplug_lock --> &policy->rwsem
+> > [   74.989744] 
+> > [   75.002149]  Possible unsafe locking scenario:
+> > [   75.002149] 
+> > [   75.008643]        CPU0                    CPU1
+> > [   75.013461]        ----                    ----
+> > [   75.018275]   lock(&policy->rwsem);
+> > [   75.022037]                                lock(cpu_hotplug_lock);
+> > [   75.028495]                                lock(&policy->rwsem);
+> > [   75.034773]   lock(intel_pstate_driver_lock);
+> > [   75.039427] 
+> > [   75.039427]  *** DEADLOCK ***
+> > [   75.039427] 
+> > [   75.046168] 5 locks held by main.sh/3019:
+> > [   75.050456]  #0: ffff888b9d973438 (sb_writers#4){.+.+}-{0:0}, at: vfs_write+0x1ba/0x220
+> > [   75.058750]  #1: ffff888beaaec488 (&of->mutex){+.+.}-{3:3}, at: kernfs_fop_write+0xa5/0x1c0
+> > [   75.067413]  #2: ffff8898284de890 (kn->active#163){.+.+}-{0:0}, at: kernfs_fop_write+0xad/0x1c0
+> > [   75.076422]  #3: ffffffff82c73a70 (cpu_hotplug_lock){++++}-{0:0}, at: store+0x26/0xa0
+> > [   75.084566]  #4: ffff88b07b5f8380 (&policy->rwsem){++++}-{3:3}, at: store+0x69/0xa0
+> > [   75.092528] 
+> > [   75.092528] stack backtrace:
+> > [   75.097500] CPU: 0 PID: 3019 Comm: main.sh Not tainted 5.8.0-rc5-00064-g48fc4efcdd584 #1
+> > [   75.105902] Hardware name: Intel Corporation ............/S9200WKBRD2, BIOS SE5C620.86B.0D.01.0552.060220191912 06/02/2019
+> > [   75.117274] Call Trace:
+> > [   75.120081]  dump_stack+0x96/0xd0
+> > [   75.123754]  check_noncircular+0x162/0x180
+> > [   75.128220]  check_prev_add+0x8e/0x9f0
+> > [   75.132325]  validate_chain+0x79b/0x1080
+> > [   75.136589]  __lock_acquire+0x538/0xa90
+> > [   75.140767]  lock_acquire+0xab/0x390
+> > [   75.144684]  ? store_energy_performance_preference+0xec/0x250
+> > [   75.150775]  __mutex_lock+0xac/0x9c0
+> > [   75.154697]  ? store_energy_performance_preference+0xec/0x250
+> > [   75.160786]  ? __lock_acquire+0x538/0xa90
+> > [   75.165147]  ? store_energy_performance_preference+0xec/0x250
+> > [   75.171282]  ? sscanf+0x4e/0x70
+> > [   75.174781]  ? store_energy_performance_preference+0xec/0x250
+> > [   75.180886]  store_energy_performance_preference+0xec/0x250
+> > [   75.186816]  store+0x7c/0xa0
+> > [   75.190056]  kernfs_fop_write+0xdc/0x1c0
+> > [   75.194338]  vfs_write+0xee/0x220
+> > [   75.198011]  ksys_write+0x68/0xe0
+> > [   75.201685]  do_syscall_64+0x52/0xb0
+> > [   75.205617]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > [   75.211051] RIP: 0033:0x7f2c1dfa9504
+> > [   75.214999] Code: Bad RIP value.
+> > [   75.218582] RSP: 002b:00007fffe26da068 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+> >
 > 
-> Let's take a step back here.  Why are we trying to avoid IPIs?  If you
-> call munmap(), you IPI other CPUs running tasks in the current mm.  If
-> you do perf_event_open() and thus acquire RDPMC permission, you IPI
-> other CPUs running tasks in the current mm.  If you call modify_ldt(),
-> you IPI other CPUs running tasks in the current mm.  These events can
-> all happen more than once per process.
+> Was about to review v4 of this series, but from my reading of it it
+> seems like this locking inversion situation could also occur with your
+> last revision.  Is it a legitimate concern Rafael?
 > 
-> Now we have ENQCMD.  An mm can be assigned a PASID *once* in the model
-> that these patches support.  Why not just send an IPI using
-> essentially identical code to the LDT sync or the CR4.PCE sync?
+> >[...]
+> 
 
-ldt (or the other two cases) is different from ENQCMD: the PASID MSR
-is per-task and is supported by xsaves.
+There a mistake in the patch.
 
-The per-task PASID MSR needs to updated to ALL tasks. That means IPI,
-which only updates running tasks' MSRs, is not enough. All tasks' MSRs
-need to be updated when a PASID is allocated.
+Because energy_performance_preference is a policy attribute,
+it is not valid to acquire intel_pstate_driver_lock in its "store"
+routine, but that routine can check the driver pointer without additional
+locking, because that pointer cannot change while it is running.
 
-This difference increases the complexity of sending IPI to running tasks
-and updating sleeping tasks's MSRs with locking etc.
+I've just sent a v5 to fix this problem.
 
-Of course, it's doable not to update the MSRs in all task when a new PASID
-is allocated to the mm. But that means we need to discard xsaves support
-for the MSR and create our own switch function to load the MSR. That
-increases complexity.
+Thanks!
 
-We tried similar IPI way to update the PASID in about 200 lines of code.
-As Dave Hansen pointed, it's too complex. The current lazy updating the MSR
-only takes essential 3 lines of code in #GP.
 
-Does it make sense to still use the current fix up method to update the MSR?
 
-Thanks.
-
--Fenghua
