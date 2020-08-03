@@ -2,220 +2,119 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69ED8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD0AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 475EB2076B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:06:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gvnVt/Xz"
+	by mail.kernel.org (Postfix) with ESMTP id B34CD20775
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:06:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgHCMGP (ORCPT
+        id S1726764AbgHCMG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:06:15 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:23587 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726676AbgHCMEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:04:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596456284; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=Q9ewY6f6T4tJS+bov5J8Mts7nZEqC8N1FwJDh5ZScHE=;
- b=gvnVt/XzAD08nhbLT/c0CX04DLHjSy3HzVM+O+PnQz4Bl+0oY2qKKF20uNF94NCpjUY/JvN/
- wM2u+ckINXOBkJZLoy7PTCE7HuEG4TOtBaMa93/vUvVJTr82pbABSn9Ql33O0SUv/5D2+py+
- SrutOOf1Q6Wu93Kgbgplz7FBsBw=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
- 5f27fd5bbcdc2fe4712adc3e (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 03 Aug 2020 12:04:43
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 87C20C43391; Mon,  3 Aug 2020 12:04:41 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CA541C433C9;
-        Mon,  3 Aug 2020 12:04:39 +0000 (UTC)
+        Mon, 3 Aug 2020 08:06:27 -0400
+Received: from www62.your-server.de ([213.133.104.62]:43598 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726710AbgHCMGS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:06:18 -0400
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1k2ZDd-0003L5-Tm; Mon, 03 Aug 2020 14:05:29 +0200
+Received: from [178.196.57.75] (helo=pc-9.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1k2ZDd-000WOD-Mr; Mon, 03 Aug 2020 14:05:29 +0200
+Subject: Re: [PATCH bpf-next v3 00/29] bpf: switch to memcg-based memory
+ accounting
+To:     Roman Gushchin <guro@fb.com>, bpf@vger.kernel.org
+Cc:     netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org
+References: <20200730212310.2609108-1-guro@fb.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <6b1777ac-cae1-fa1f-db53-f6061d9ae675@iogearbox.net>
+Date:   Mon, 3 Aug 2020 14:05:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200730212310.2609108-1-guro@fb.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 03 Aug 2020 20:04:39 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
-        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
-        bvanassche@acm.org, beanhuo@micron.com, asutoshd@codeaurora.org,
-        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
-        chaotian.jing@mediatek.com, cc.chou@mediatek.com,
-        jiajie.hao@mediatek.com
-Subject: Re: [PATCH v7] scsi: ufs: Quiesce all scsi devices before shutdown
-In-Reply-To: <ee423cd3b5c42942a8895a8f08a26e68@codeaurora.org>
-References: <20200803100448.2738-1-stanley.chu@mediatek.com>
- <ee423cd3b5c42942a8895a8f08a26e68@codeaurora.org>
-Message-ID: <e413ec4cf7ff317615efd74aa925356a@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.3/25892/Sun Aug  2 17:01:36 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Slightly updated my comments
+On 7/30/20 11:22 PM, Roman Gushchin wrote:
+> Currently bpf is using the memlock rlimit for the memory accounting.
+> This approach has its downsides and over time has created a significant
+> amount of problems:
+> 
+> 1) The limit is per-user, but because most bpf operations are performed
+>     as root, the limit has a little value.
+> 
+> 2) It's hard to come up with a specific maximum value. Especially because
+>     the counter is shared with non-bpf users (e.g. memlock() users).
+>     Any specific value is either too low and creates false failures
+>     or too high and useless.
+> 
+> 3) Charging is not connected to the actual memory allocation. Bpf code
+>     should manually calculate the estimated cost and precharge the counter,
+>     and then take care of uncharging, including all fail paths.
+>     It adds to the code complexity and makes it easy to leak a charge.
+> 
+> 4) There is no simple way of getting the current value of the counter.
+>     We've used drgn for it, but it's far from being convenient.
+> 
+> 5) Cryptic -EPERM is returned on exceeding the limit. Libbpf even had
+>     a function to "explain" this case for users.
+> 
+> In order to overcome these problems let's switch to the memcg-based
+> memory accounting of bpf objects. With the recent addition of the percpu
+> memory accounting, now it's possible to provide a comprehensive accounting
+> of memory used by bpf programs and maps.
+> 
+> This approach has the following advantages:
+> 1) The limit is per-cgroup and hierarchical. It's way more flexible and allows
+>     a better control over memory usage by different workloads.
+> 
+> 2) The actual memory consumption is taken into account. It happens automatically
+>     on the allocation time if __GFP_ACCOUNT flags is passed. Uncharging is also
+>     performed automatically on releasing the memory. So the code on the bpf side
+>     becomes simpler and safer.
+> 
+> 3) There is a simple way to get the current value and statistics.
+> 
+> The patchset consists of the following parts:
+> 1) memcg-based accounting for various bpf objects: progs and maps
+> 2) removal of the rlimit-based accounting
+> 3) removal of rlimit adjustments in userspace samples
 
-On 2020-08-03 19:50, Can Guo wrote:
-> Hi Stanley,
-> 
-> On 2020-08-03 18:04, Stanley Chu wrote:
->> Currently I/O request could be still submitted to UFS device while
->> UFS is working on shutdown flow. This may lead to racing as below
->> scenarios and finally system may crash due to unclocked register
->> accesses.
->> 
->> To fix this kind of issues, in ufshcd_shutdown(),
->> 
->> 1. Use pm_runtime_get_sync() instead of resuming UFS device by
->>    ufshcd_runtime_resume() "internally" to let runtime PM framework
->>    manage and prevent concurrent runtime operations by incoming I/O
->>    requests.
->> 
->> 2. Specifically quiesce all SCSI devices to block all I/O requests
->>    after device is resumed.
->> 
->> Example of racing scenario: While UFS device is runtime-suspended
->> 
->> Thread #1: Executing UFS shutdown flow, e.g.,
->>            ufshcd_suspend(UFS_SHUTDOWN_PM)
->> 
->> Thread #2: Executing runtime resume flow triggered by I/O request,
->>            e.g., ufshcd_resume(UFS_RUNTIME_PM)
->> 
->> This breaks the assumption that UFS PM flows can not be running
->> concurrently and some unexpected racing behavior may happen.
->> 
->> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
->> ---
->> Changes:
->>   - Since v6:
->> 	- Do quiesce to all SCSI devices.
->>   - Since v4:
->> 	- Use pm_runtime_get_sync() instead of resuming UFS device by
->> ufshcd_runtime_resume() "internally".
->> ---
->>  drivers/scsi/ufs/ufshcd.c | 27 ++++++++++++++++++++++-----
->>  1 file changed, 22 insertions(+), 5 deletions(-)
->> 
->> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
->> index 307622284239..7cb220b3fde0 100644
->> --- a/drivers/scsi/ufs/ufshcd.c
->> +++ b/drivers/scsi/ufs/ufshcd.c
->> @@ -8640,6 +8640,7 @@ EXPORT_SYMBOL(ufshcd_runtime_idle);
->>  int ufshcd_shutdown(struct ufs_hba *hba)
->>  {
->>  	int ret = 0;
->> +	struct scsi_target *starget;
->> 
->>  	if (!hba->is_powered)
->>  		goto out;
->> @@ -8647,11 +8648,27 @@ int ufshcd_shutdown(struct ufs_hba *hba)
->>  	if (ufshcd_is_ufs_dev_poweroff(hba) && ufshcd_is_link_off(hba))
->>  		goto out;
->> 
->> -	if (pm_runtime_suspended(hba->dev)) {
->> -		ret = ufshcd_runtime_resume(hba);
->> -		if (ret)
->> -			goto out;
->> -	}
->> +	/*
->> +	 * Let runtime PM framework manage and prevent concurrent runtime
->> +	 * operations with shutdown flow.
->> +	 */
->> +	pm_runtime_get_sync(hba->dev);
->> +
->> +	/*
->> +	 * Quiesce all SCSI devices to prevent any non-PM requests sending
->> +	 * from block layer during and after shutdown.
->> +	 *
->> +	 * Here we can not use blk_cleanup_queue() since PM requests
->> +	 * (with BLK_MQ_REQ_PREEMPT flag) are still required to be sent
->> +	 * through block layer. Therefore SCSI command queued after the
->> +	 * scsi_target_quiesce() call returned will block until
->> +	 * blk_cleanup_queue() is called.
->> +	 *
->> +	 * Besides, scsi_target_"un"quiesce (e.g., scsi_target_resume) can
->> +	 * be ignored since shutdown is one-way flow.
->> +	 */
->> +	list_for_each_entry(starget, &hba->host->__targets, siblings)
->> +		scsi_target_quiesce(starget);
->> 
-> 
-> Sorry for misleading you to scsi_target_quiesce(), maybe below is 
-> better.
-> 
->     shost_for_each_device(sdev, hba->host)
->         scsi_device_quiesce(sdev);
-> 
-> We may need to discuss more about this quiesce part since I missed 
-> something.
-> 
-> After we quiesce the scsi devices, only PM requests are allowed, but it
-> is still not safe: [1] PM requests can still pass through, [2] there 
-> can
-> be tasks/reqs present in doorbells before the devices are quiesced. So,
-> these tasks/reqs in [1] and [2] can still be flying in parallel while
-> ufshcd_suspend is running.
-> 
-> How about only quiescing the UFS device well known scsi device but 
-> using
-> freeze_queue to the other scsi devices? blk_mq_freeze_queue can 
-> eliminate
-> the risks mentioned in [1] and [2].
-> 
->      shost_for_each_device(sdev, hba->host) {
->          if (sdev == hba->sdev_ufs_device)
->               scsi_device_quiesce(sdev);
->          else
->               blk_mq_freeze_queue(sdev->request_queue);
->      }
-> 
-> IF blk_mq_freeze_queue is not allowed to be used by LLD (I think we can
-> use it as I recalled Bart used to use it in one of his changes to UFS 
-> scaling),
-> we can use scsi_remove_device instead, it changes scsi device's state 
-> to
-> SDEV_DEL and calls blk_cleanup_queue.
-> 
-> We can also make changes like below. [1] is to make sure no more PM 
-> requests
-> sent to scsi devices, [2] is make sure doorbells are cleared before 
-> invoke
-> ufshcd_suspend.
-> 
->     shost_for_each_device(sdev, hba->host) {
->         scsi_autopm_get_device(sdev); [1]
->         scsi_device_quiesce(sdev);
->     }
-> 
->     ufshcd_wait_for_doorbell_clr(hba, U64_MAX); [2]
-> 
-> Please let me know which one you prefer or if you have better idea, 
-> thanks!
-> 
-> Regards,
-> 
-> Can Guo.
-> 
->>  	ret = ufshcd_suspend(hba, UFS_SHUTDOWN_PM);
->>  out:
+The diff stat looks nice & agree that rlimit sucks, but I'm missing how this is set
+is supposed to work reliably, at least I currently fail to see it. Elaborating on this
+in more depth especially for the case of unprivileged users should be a /fundamental/
+part of the commit message.
+
+Lets take an example: unprivileged user adds a max sized hashtable to one of its
+programs, and configures the map that it will perform runtime allocation. The load
+succeeds as it doesn't surpass the limits set for the current memcg. Kernel then
+processes packets from softirq. Given the runtime allocations, we end up mischarging
+to whoever ended up triggering __do_softirq(). If, for example, ksoftirq thread, then
+it's probably reasonable to assume that this might not be accounted e.g. limits are
+not imposed on the root cgroup. If so we would probably need to drag the context of
+/where/ this must be charged to __memcg_kmem_charge_page() to do it reliably. Otherwise
+how do you protect unprivileged users to OOM the machine?
+
+Similarly, what happens to unprivileged users if kmemcg was not configured into the
+kernel or has been disabled?
+
+Thanks,
+Daniel
