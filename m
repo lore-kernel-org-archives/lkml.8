@@ -4,24 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAAAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 00:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFEFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 00:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED11720738
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 00:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CD78206E9
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 00:40:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbgHCAkp (ORCPT
+        id S1727909AbgHCAko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 20:40:45 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9313 "EHLO huawei.com"
+        Sun, 2 Aug 2020 20:40:44 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9311 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726257AbgHCAko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726988AbgHCAko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 2 Aug 2020 20:40:44 -0400
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id BD4E0F42E83C1676A573;
+        by Forcepoint Email with ESMTP id B3B1C4E8D41A1D917389;
         Mon,  3 Aug 2020 08:40:38 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
@@ -32,9 +32,9 @@ To:     <airlied@linux.ie>, <daniel@ffwll.ch>, <tzimmermann@suse.de>,
         <tglx@linutronix.de>, <dri-devel@lists.freedesktop.org>,
         <xinliang.liu@linaro.org>, <linux-kernel@vger.kernel.org>
 CC:     <linuxarm@huawei.com>
-Subject: [PATCH drm/hisilicon v2 2/3] drm/hisilicon: Code refactoring for hibmc_drv_de
-Date:   Mon, 3 Aug 2020 08:38:33 +0800
-Message-ID: <1596415114-21175-3-git-send-email-tiantao6@hisilicon.com>
+Subject: [PATCH drm/hisilicon v2 1/3] drm/hisilicon: Remove the unused include statements
+Date:   Mon, 3 Aug 2020 08:38:32 +0800
+Message-ID: <1596415114-21175-2-git-send-email-tiantao6@hisilicon.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1596415114-21175-1-git-send-email-tiantao6@hisilicon.com>
 References: <1596415114-21175-1-git-send-email-tiantao6@hisilicon.com>
@@ -47,114 +47,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The memory used to be allocated with devres helpers and released
-automatically. In rare circumstances, the memory's release could
-have happened before the DRM device got released, which would have
-caused memory corruption of some kind. Now we're embedding the data
-structures in struct hibmc_drm_private. The whole release problem
-has been resolved, because struct hibmc_drm_private is allocated
-with drmm_kzalloc and always released with the DRM device.
+Remove some unused include statements.
 
 v2:
-edit commit message.
+edit patch name and commit message.
 
 Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
 ---
- drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c  | 55 ++++++-------------------
- drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h |  2 +
- 2 files changed, 15 insertions(+), 42 deletions(-)
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c   | 3 ---
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c  | 5 -----
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c | 2 --
+ 3 files changed, 10 deletions(-)
 
 diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
-index 66132eb..af24c72 100644
+index cc70e83..66132eb 100644
 --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
 +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_de.c
-@@ -157,37 +157,6 @@ static const struct drm_plane_helper_funcs hibmc_plane_helper_funcs = {
- 	.atomic_update = hibmc_plane_atomic_update,
- };
+@@ -17,9 +17,6 @@
+ #include <drm/drm_atomic_helper.h>
+ #include <drm/drm_fourcc.h>
+ #include <drm/drm_gem_vram_helper.h>
+-#include <drm/drm_plane_helper.h>
+-#include <drm/drm_print.h>
+-#include <drm/drm_probe_helper.h>
+ #include <drm/drm_vblank.h>
  
--static struct drm_plane *hibmc_plane_init(struct hibmc_drm_private *priv)
--{
--	struct drm_device *dev = priv->dev;
--	struct drm_plane *plane;
--	int ret = 0;
--
--	plane = devm_kzalloc(dev->dev, sizeof(*plane), GFP_KERNEL);
--	if (!plane) {
--		DRM_ERROR("failed to alloc memory when init plane\n");
--		return ERR_PTR(-ENOMEM);
--	}
--	/*
--	 * plane init
--	 * TODO: Now only support primary plane, overlay planes
--	 * need to do.
--	 */
--	ret = drm_universal_plane_init(dev, plane, 1, &hibmc_plane_funcs,
--				       channel_formats1,
--				       ARRAY_SIZE(channel_formats1),
--				       NULL,
--				       DRM_PLANE_TYPE_PRIMARY,
--				       NULL);
--	if (ret) {
--		DRM_ERROR("failed to init plane: %d\n", ret);
--		return ERR_PTR(ret);
--	}
--
--	drm_plane_helper_add(plane, &hibmc_plane_helper_funcs);
--	return plane;
--}
--
- static void hibmc_crtc_dpms(struct drm_crtc *crtc, int dpms)
- {
- 	struct hibmc_drm_private *priv = crtc->dev->dev_private;
-@@ -534,22 +503,24 @@ static const struct drm_crtc_helper_funcs hibmc_crtc_helper_funcs = {
- int hibmc_de_init(struct hibmc_drm_private *priv)
- {
- 	struct drm_device *dev = priv->dev;
--	struct drm_crtc *crtc;
--	struct drm_plane *plane;
-+	struct drm_crtc *crtc = &priv->crtc;
-+	struct drm_plane *plane = &priv->plane;
- 	int ret;
+ #include "hibmc_drm_drv.h"
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+index b8d839a..54f6144 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+@@ -11,18 +11,13 @@
+  *	Jianhua Li <lijianhua@huawei.com>
+  */
  
--	plane = hibmc_plane_init(priv);
--	if (IS_ERR(plane)) {
--		DRM_ERROR("failed to create plane: %ld\n", PTR_ERR(plane));
--		return PTR_ERR(plane);
--	}
-+	ret = drm_universal_plane_init(dev, plane, 1, &hibmc_plane_funcs,
-+				       channel_formats1,
-+				       ARRAY_SIZE(channel_formats1),
-+				       NULL,
-+				       DRM_PLANE_TYPE_PRIMARY,
-+				       NULL);
+-#include <linux/console.h>
+-#include <linux/module.h>
+ #include <linux/pci.h>
  
--	crtc = devm_kzalloc(dev->dev, sizeof(*crtc), GFP_KERNEL);
--	if (!crtc) {
--		DRM_ERROR("failed to alloc memory when init crtc\n");
--		return -ENOMEM;
-+	if (ret) {
-+		DRM_ERROR("failed to init plane: %d\n", ret);
-+		return ret;
- 	}
+ #include <drm/drm_atomic_helper.h>
+ #include <drm/drm_drv.h>
+-#include <drm/drm_fb_helper.h>
+ #include <drm/drm_gem_vram_helper.h>
+ #include <drm/drm_irq.h>
+ #include <drm/drm_managed.h>
+-#include <drm/drm_print.h>
+-#include <drm/drm_probe_helper.h>
+ #include <drm/drm_vblank.h>
  
-+	drm_plane_helper_add(plane, &hibmc_plane_helper_funcs);
-+
- 	ret = drm_crtc_init_with_planes(dev, crtc, plane,
- 					NULL, &hibmc_crtc_funcs, NULL);
- 	if (ret) {
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-index a683763..91ef15c 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-@@ -28,6 +28,8 @@ struct hibmc_drm_private {
+ #include "hibmc_drm_drv.h"
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
+index 2ca69c3..ed12f61 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c
+@@ -11,10 +11,8 @@
+  *	Jianhua Li <lijianhua@huawei.com>
+  */
  
- 	/* drm */
- 	struct drm_device  *dev;
-+	struct drm_plane plane;
-+	struct drm_crtc crtc;
- 	struct drm_encoder encoder;
- 	struct drm_connector connector;
- 	bool mode_config_initialized;
+-#include <drm/drm_gem_vram_helper.h>
+ #include <drm/drm_atomic_helper.h>
+ #include <drm/drm_probe_helper.h>
+-#include <drm/drm_crtc_helper.h>
+ #include <drm/drm_print.h>
+ 
+ #include "hibmc_drm_drv.h"
 -- 
 2.7.4
 
