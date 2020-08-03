@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1110C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5895AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE3552177B
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 329B020775
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457813;
-	bh=5AEzfnHIxTUPvHwW6Aw0AZi1yRgtffEJnAoZRhY67ZU=;
+	s=default; t=1596457817;
+	bh=+J6fOoLK985RugK/lghNk9b0GLsZJS34xZ+SIvL3Gdo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yPvc+STHcHvbUan5tOQ9o9y8az4eQBg6rlwsXReKEHrRxxlE8GGpZ7jEH+8f405Jq
-	 LZVFtNu9jijCqqSDXOfWwWaGOfvYVNXev8He4aqyjquYMun0KEHjqg3WtmS2aOsMVt
-	 3FgbBAt5gC1Go7Trjv47Qdm9FGBk01IxogASj3HI=
+	b=w7OD0Bz9JzgFocEUmKkDm4jAFv+jHiESUuXhMhgA+pJb5pNnT1CDljF3CB6xuGfpA
+	 oa8VPUYrG/MdaeCo256+1R397tcrEfQI5mRhpGwHLn6qGzLMvae5WhXLaljw3YJEzK
+	 6TsfBRTmDztY7WHhbu8nBQmWK1ZmYTqXG2Xinxb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgHCMaN (ORCPT
+        id S1729025AbgHCMaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:30:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56830 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:30:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728999AbgHCM37 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:29:59 -0400
+        id S1729007AbgHCMaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:30:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED17C2086A;
-        Mon,  3 Aug 2020 12:29:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F6D12086A;
+        Mon,  3 Aug 2020 12:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457798;
-        bh=5AEzfnHIxTUPvHwW6Aw0AZi1yRgtffEJnAoZRhY67ZU=;
+        s=default; t=1596457801;
+        bh=+J6fOoLK985RugK/lghNk9b0GLsZJS34xZ+SIvL3Gdo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0TEJ8+fUWOAVH11pBuocIupi75/eDB/dqgaPmHRIh59mFxrkJ1mVTSqP6upUvxjCV
-         +CmD6pI3oChRog5fEpR2LRxK2BPHlzUuSRfwBBn+AdeBdAJs5EVQgA87w6ix9Q+qha
-         qvqHa0QSA2pMWwXNv2jAccInp81cBMHgrGYA1v64=
+        b=LgfbiCw8ipELJwgM6IqARFAPje+rdMMAsH/yv3DhCIWbei/F/vCfllX3LCcRfVeEs
+         QZ1ImOHHUxW9qlGMkGkkJJ8nY0bSroKnoajMgYuiJt8/avwFORt3K4SYNnCJpHp1bz
+         7l7jA/r9GeDMP5ny0Zuw9+w87bt0eooibCQEyjEs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 60/90] mac80211: mesh: Free ie data when leaving mesh
-Date:   Mon,  3 Aug 2020 14:19:22 +0200
-Message-Id: <20200803121900.529042698@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Raviteja Narayanam <raviteja.narayanam@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 78/90] Revert "i2c: cadence: Fix the hold bit setting"
+Date:   Mon,  3 Aug 2020 14:19:40 +0200
+Message-Id: <20200803121901.393294334@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121857.546052424@linuxfoundation.org>
 References: <20200803121857.546052424@linuxfoundation.org>
@@ -60,59 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Remi Pommarel <repk@triplefau.lt>
+From: Raviteja Narayanam <raviteja.narayanam@xilinx.com>
 
-[ Upstream commit 6a01afcf8468d3ca2bd8bbb27503f60dcf643b20 ]
+[ Upstream commit 0db9254d6b896b587759e2c844c277fb1a6da5b9 ]
 
-At ieee80211_join_mesh() some ie data could have been allocated (see
-copy_mesh_setup()) and need to be cleaned up when leaving the mesh.
+This reverts commit d358def706880defa4c9e87381c5bf086a97d5f9.
 
-This fixes the following kmemleak report:
+There are two issues with "i2c: cadence: Fix the hold bit setting" commit.
 
-unreferenced object 0xffff0000116bc600 (size 128):
-  comm "wpa_supplicant", pid 608, jiffies 4294898983 (age 293.484s)
-  hex dump (first 32 bytes):
-    30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00  0...............
-    00 0f ac 08 00 00 00 00 c4 65 40 00 00 00 00 00  .........e@.....
-  backtrace:
-    [<00000000bebe439d>] __kmalloc_track_caller+0x1c0/0x330
-    [<00000000a349dbe1>] kmemdup+0x28/0x50
-    [<0000000075d69baa>] ieee80211_join_mesh+0x6c/0x3b8 [mac80211]
-    [<00000000683bb98b>] __cfg80211_join_mesh+0x1e8/0x4f0 [cfg80211]
-    [<0000000072cb507f>] nl80211_join_mesh+0x520/0x6b8 [cfg80211]
-    [<0000000077e9bcf9>] genl_family_rcv_msg+0x374/0x680
-    [<00000000b1bd936d>] genl_rcv_msg+0x78/0x108
-    [<0000000022c53788>] netlink_rcv_skb+0xb0/0x1c0
-    [<0000000011af8ec9>] genl_rcv+0x34/0x48
-    [<0000000069e41f53>] netlink_unicast+0x268/0x2e8
-    [<00000000a7517316>] netlink_sendmsg+0x320/0x4c0
-    [<0000000069cba205>] ____sys_sendmsg+0x354/0x3a0
-    [<00000000e06bab0f>] ___sys_sendmsg+0xd8/0x120
-    [<0000000037340728>] __sys_sendmsg+0xa4/0xf8
-    [<000000004fed9776>] __arm64_sys_sendmsg+0x44/0x58
-    [<000000001c1e5647>] el0_svc_handler+0xd0/0x1a0
+1. In case of combined message request from user space, when the HOLD
+bit is cleared in cdns_i2c_mrecv function, a STOP condition is sent
+on the bus even before the last message is started. This is because when
+the HOLD bit is cleared, the FIFOS are empty and there is no pending
+transfer. The STOP condition should occur only after the last message
+is completed.
 
-Fixes: c80d545da3f7 (mac80211: Let userspace enable and configure vendor specific path selection.)
-Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-Link: https://lore.kernel.org/r/20200704135007.27292-1-repk@triplefau.lt
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+2. The code added by the commit is redundant. Driver is handling the
+setting/clearing of HOLD bit in right way before the commit.
+
+The setting of HOLD bit based on 'bus_hold_flag' is taken care in
+cdns_i2c_master_xfer function even before cdns_i2c_msend/cdns_i2c_recv
+functions.
+
+The clearing of HOLD bit is taken care at the end of cdns_i2c_msend and
+cdns_i2c_recv functions based on bus_hold_flag and byte count.
+Since clearing of HOLD bit is done after the slave address is written to
+the register (writing to address register triggers the message transfer),
+it is ensured that STOP condition occurs at the right time after
+completion of the pending transfer (last message).
+
+Signed-off-by: Raviteja Narayanam <raviteja.narayanam@xilinx.com>
+Acked-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/cfg.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/i2c/busses/i2c-cadence.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
-index 0daaf7e37a211..a9dda5c228f60 100644
---- a/net/mac80211/cfg.c
-+++ b/net/mac80211/cfg.c
-@@ -2140,6 +2140,7 @@ static int ieee80211_leave_mesh(struct wiphy *wiphy, struct net_device *dev)
- 	ieee80211_stop_mesh(sdata);
- 	mutex_lock(&sdata->local->mtx);
- 	ieee80211_vif_release_channel(sdata);
-+	kfree(sdata->u.mesh.ie);
- 	mutex_unlock(&sdata->local->mtx);
+diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
+index 9d71ce15db050..a51d3b7957701 100644
+--- a/drivers/i2c/busses/i2c-cadence.c
++++ b/drivers/i2c/busses/i2c-cadence.c
+@@ -377,10 +377,8 @@ static void cdns_i2c_mrecv(struct cdns_i2c *id)
+ 	 * Check for the message size against FIFO depth and set the
+ 	 * 'hold bus' bit if it is greater than FIFO depth.
+ 	 */
+-	if ((id->recv_count > CDNS_I2C_FIFO_DEPTH)  || id->bus_hold_flag)
++	if (id->recv_count > CDNS_I2C_FIFO_DEPTH)
+ 		ctrl_reg |= CDNS_I2C_CR_HOLD;
+-	else
+-		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
  
- 	return 0;
+ 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
+ 
+@@ -437,11 +435,8 @@ static void cdns_i2c_msend(struct cdns_i2c *id)
+ 	 * Check for the message size against FIFO depth and set the
+ 	 * 'hold bus' bit if it is greater than FIFO depth.
+ 	 */
+-	if ((id->send_count > CDNS_I2C_FIFO_DEPTH) || id->bus_hold_flag)
++	if (id->send_count > CDNS_I2C_FIFO_DEPTH)
+ 		ctrl_reg |= CDNS_I2C_CR_HOLD;
+-	else
+-		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
+-
+ 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
+ 
+ 	/* Clear the interrupts in interrupt status register. */
 -- 
 2.25.1
 
