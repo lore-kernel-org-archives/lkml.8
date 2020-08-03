@@ -4,56 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A90C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AF1422B4E
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3F8F22B45
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 17:59:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="RALJME09"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ldIiBbwi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728666AbgHCR7V (ORCPT
+        id S1728621AbgHCR7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 13:59:21 -0400
+        Mon, 3 Aug 2020 13:59:19 -0400
 Received: from esa4.hgst.iphmx.com ([216.71.154.42]:64728 "EHLO
         esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728588AbgHCR7S (ORCPT
+        with ESMTP id S1726802AbgHCR7R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 13:59:18 -0400
+        Mon, 3 Aug 2020 13:59:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1596477557; x=1628013557;
+  t=1596477556; x=1628013556;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=cdgZA81qAts7J/fCdnfoWyqZdWwyvDZqQNei0eHBaQM=;
-  b=RALJME09xHn0prPgHC8nZSPfvWgZcBfdSKKEE7kbzOgXa8LTS4MVMU1I
-   GfpnvYFy/NbkK7A643AeYuYwi5NfSHGqNzS2muPLfRjTwdIk5S4zDEThF
-   mQ+zFyl8sjkoBaoc51FksnGAgrpn6C6P8cIhYp+KdjjHP7nV17wa7SpL+
-   mqncjKj/g7EL3X4a0fA/TrlPrvXq+hmk+zsfUwQe32VYvgq62JV7ub46C
-   5TRbLl05phJFfQ9U6aWhAC3/+EWBuSqOz1jo8CPH+O+QIxlEirEHpWxq/
-   npuVOQ47J6Tq9OSGmWyOALqTop1PJTU7ECNJJnSvCjFMxm6GMcN7ajb0a
-   g==;
-IronPort-SDR: CUPhC58WMESGeFnrxNohOeQDSstbF7KbiV/jg3PzjOtHzxBvXSkzVs8dtto2DyVByKb7YANeJp
- HEaf28wK9CxbxDrSh9Zo9uyYqeBlIh8yfDTe0VIdf9FWlwR2qiLH4G0my0F03E6eShiQ8AuEgS
- /r5cocZeWspetOHdC9jSZkySX3ifZBlf7rplPtnqRzArxOb7Ev5VOkA7I5Hz3QYqbf3rjnFm4V
- XQM090RpkIqQtj6kXHWLfYSfSXe9lPRKDWwpr0QWMK3HwT4viV7p/SrbGWRnBKSHGxRyJ60DBj
- mtg=
+  bh=/WuBKKqQJ2DS9gLpxSbna82b/Rj8bNfTeDN1/MeY4to=;
+  b=ldIiBbwi01R8GjOrznEfGRVF91p35hAR0FPw2lTYTs87y9JjAOW15NkB
+   zfyVA7JENPYaSmcW78RjzjLvNySUBxiaOoM4ujX844OelayDqOVWeKNRl
+   nPr5lo7oaRjyprQrTKhrxY/7xtnIMDL3N2vz+mh9bgdtEErFB8K1J5Do5
+   qynOt+d22XVMr72LyZrMnWXiMPcWGJaavLqI4IVG4aj8ATlMOVa8j79Es
+   d6sH/IIeKr9QXm8iyiWxtNWxjiJjNSS1WFphXXwCxoJCJrbxbz0iAOxIP
+   AI61/mvIhUHuWEbaOqow0NOVuHQpDndAmt/6SD2Pv9tylBY//Gv4SULXl
+   w==;
+IronPort-SDR: hjvCoNLI7Qmdt/N/TBHIluW8PrnS1zVkC7z/tsj0dJ2B4JyjoyiVDlrc/9rm1P6iFo/UhOD0s1
+ gq81Aei+iE4DNGTNP6gdHw1g9ehNc48cB7Et9I4z4OgvxMqM8/OsIvd3QbX8DQRaegDuuhTlXu
+ QsrP7VPZEQob2+xQuVB3gipO+jY8oY6uTWGeXSC8pe2h/8db0uSSqmt91UHK0yZyg7nUChEccY
+ ObL2I/dAf5aKkZRDW97N6a9EfPnKwDB92V6JCM5bLwDBYdlG8ReMEx+lguWmqW00fkS8f2+Hrr
+ nMs=
 X-IronPort-AV: E=Sophos;i="5.75,430,1589212800"; 
-   d="scan'208";a="144033183"
+   d="scan'208";a="144033181"
 Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 04 Aug 2020 01:59:05 +0800
-IronPort-SDR: 8run6bm5bt5S9kI9/4PGd6DpXv71XbhBSDgHz69cQxfKupFGyRJOOyLyTD4G6sK2hzzoOwwF6y
- NDAxKSbjgEnA==
+  by ob1.hgst.iphmx.com with ESMTP; 04 Aug 2020 01:59:04 +0800
+IronPort-SDR: 4VAC0m8TM8E3fJxPustvPVkRIyVs3DuwvS4bCPK7ne4qP583hDFvVWsO+RdpJnSZdbnFBoifzF
+ u6y28LnvxXiw==
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 10:47:07 -0700
-IronPort-SDR: 1x2QuS0MR7qUV0C0wIlAdoyBvN9vLmVNMq5tUgACPwMS0Dp4oey0umX8iQzwMY64mB7zwtD+3B
- Hc3f8iBW1+0w==
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 10:47:06 -0700
+IronPort-SDR: b+L5ix2uhA5t3rcfUs2Aw7nrz9gwA9OaAzaqQxbJ4RQos5fVRvplQWg6A9RrXVtMjAiNbZUBpf
+ aiMRiMpi9kvA==
 WDCIronportException: Internal
 Received: from cnf007830.ad.shared (HELO jedi-01.hgst.com) ([10.86.58.196])
-  by uls-op-cesaip01.wdc.com with ESMTP; 03 Aug 2020 10:59:05 -0700
+  by uls-op-cesaip01.wdc.com with ESMTP; 03 Aug 2020 10:59:03 -0700
 From:   Atish Patra <atish.patra@wdc.com>
 To:     kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org
 Cc:     Atish Patra <atish.patra@wdc.com>,
@@ -66,9 +66,9 @@ Cc:     Atish Patra <atish.patra@wdc.com>,
         Alexander Graf <graf@amazon.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Alistair Francis <Alistair.Francis@wdc.com>
-Subject: [PATCH 3/6] RISC-V: Reorganize SBI code by moving legacy SBI to its own file
-Date:   Mon,  3 Aug 2020 10:58:43 -0700
-Message-Id: <20200803175846.26272-4-atish.patra@wdc.com>
+Subject: [PATCH 1/6] RISC-V: Add a non-void return for sbi v02 functions
+Date:   Mon,  3 Aug 2020 10:58:41 -0700
+Message-Id: <20200803175846.26272-2-atish.patra@wdc.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200803175846.26272-1-atish.patra@wdc.com>
 References: <20200803175846.26272-1-atish.patra@wdc.com>
@@ -79,333 +79,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With SBI v0.2, there may be more SBI extensions in future. It makes more
-sense to group related extensions in separate files. Guest kernel will
-choose appropriate SBI version dynamically.
+SBI v0.2 functions can return an error code from SBI implementation.
+We are already processing the SBI error code and coverts it to the Linux
+error code.
 
-Move the existing implementation to a separate file so that it can be
-removed in future without much conflict.
+Propagate to the error code to the caller as well. As of now, kvm is the
+only user of these error codes.
 
 Signed-off-by: Atish Patra <atish.patra@wdc.com>
 ---
- arch/riscv/include/asm/kvm_vcpu_sbi.h |   1 +
- arch/riscv/kvm/Makefile               |   2 +-
- arch/riscv/kvm/vcpu_sbi.c             | 126 +------------------------
- arch/riscv/kvm/vcpu_sbi_legacy.c      | 129 ++++++++++++++++++++++++++
- 4 files changed, 136 insertions(+), 122 deletions(-)
- create mode 100644 arch/riscv/kvm/vcpu_sbi_legacy.c
+ arch/riscv/include/asm/sbi.h |  8 ++++----
+ arch/riscv/kernel/sbi.c      | 32 ++++++++++++++++----------------
+ 2 files changed, 20 insertions(+), 20 deletions(-)
 
-diff --git a/arch/riscv/include/asm/kvm_vcpu_sbi.h b/arch/riscv/include/asm/kvm_vcpu_sbi.h
-index 5b3523a01bce..743c71f0c331 100644
---- a/arch/riscv/include/asm/kvm_vcpu_sbi.h
-+++ b/arch/riscv/include/asm/kvm_vcpu_sbi.h
-@@ -25,5 +25,6 @@ struct kvm_vcpu_sbi_extension {
- 		       bool *exit);
- };
+diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+index 653edb25d495..2355515785eb 100644
+--- a/arch/riscv/include/asm/sbi.h
++++ b/arch/riscv/include/asm/sbi.h
+@@ -100,13 +100,13 @@ int sbi_console_getchar(void);
+ void sbi_set_timer(uint64_t stime_value);
+ void sbi_shutdown(void);
+ void sbi_clear_ipi(void);
+-void sbi_send_ipi(const unsigned long *hart_mask);
+-void sbi_remote_fence_i(const unsigned long *hart_mask);
+-void sbi_remote_sfence_vma(const unsigned long *hart_mask,
++int sbi_send_ipi(const unsigned long *hart_mask);
++int sbi_remote_fence_i(const unsigned long *hart_mask);
++int sbi_remote_sfence_vma(const unsigned long *hart_mask,
+ 			   unsigned long start,
+ 			   unsigned long size);
  
-+void kvm_riscv_vcpu_sbi_forward(struct kvm_vcpu *vcpu, struct kvm_run *run);
- const struct kvm_vcpu_sbi_extension *kvm_vcpu_sbi_find_ext(unsigned long extid);
- #endif /* __RISCV_KVM_VCPU_SBI_H__ */
-diff --git a/arch/riscv/kvm/Makefile b/arch/riscv/kvm/Makefile
-index b56dc1650d2c..8efb78faab5a 100644
---- a/arch/riscv/kvm/Makefile
-+++ b/arch/riscv/kvm/Makefile
-@@ -9,6 +9,6 @@ ccflags-y := -Ivirt/kvm -Iarch/riscv/kvm
- kvm-objs := $(common-objs-y)
- 
- kvm-objs += main.o vm.o vmid.o tlb.o mmu.o
--kvm-objs += vcpu.o vcpu_exit.o vcpu_switch.o vcpu_timer.o vcpu_sbi.o
-+kvm-objs += vcpu.o vcpu_exit.o vcpu_switch.o vcpu_timer.o vcpu_sbi.o vcpu_sbi_legacy.o
- 
- obj-$(CONFIG_KVM)	+= kvm.o
-diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
-index efddac5362a9..85bb7491c0e0 100644
---- a/arch/riscv/kvm/vcpu_sbi.c
-+++ b/arch/riscv/kvm/vcpu_sbi.c
-@@ -9,9 +9,7 @@
- #include <linux/errno.h>
- #include <linux/err.h>
- #include <linux/kvm_host.h>
--#include <asm/csr.h>
- #include <asm/sbi.h>
--#include <asm/kvm_vcpu_timer.h>
- #include <asm/kvm_vcpu_sbi.h>
- 
- static int kvm_linux_err_map_sbi(int err)
-@@ -32,23 +30,12 @@ static int kvm_linux_err_map_sbi(int err)
- 	};
- }
- 
--static void kvm_sbi_system_shutdown(struct kvm_vcpu *vcpu,
--				    struct kvm_run *run, u32 type)
--{
--	int i;
--	struct kvm_vcpu *tmp;
--
--	kvm_for_each_vcpu(i, tmp, vcpu->kvm)
--		tmp->arch.power_off = true;
--	kvm_make_all_cpus_request(vcpu->kvm, KVM_REQ_SLEEP);
--
--	memset(&run->system_event, 0, sizeof(run->system_event));
--	run->system_event.type = type;
--	run->exit_reason = KVM_EXIT_SYSTEM_EVENT;
--}
-+extern const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_legacy;
-+static const struct kvm_vcpu_sbi_extension *sbi_ext[] = {
-+	&vcpu_sbi_ext_legacy,
-+};
- 
--static void kvm_riscv_vcpu_sbi_forward(struct kvm_vcpu *vcpu,
--				       struct kvm_run *run)
-+void kvm_riscv_vcpu_sbi_forward(struct kvm_vcpu *vcpu, struct kvm_run *run)
+-void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
++int sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
+ 				unsigned long start,
+ 				unsigned long size,
+ 				unsigned long asid);
+diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
+index f383ef5672b2..53c44c831eb8 100644
+--- a/arch/riscv/kernel/sbi.c
++++ b/arch/riscv/kernel/sbi.c
+@@ -351,7 +351,7 @@ static int __sbi_rfence_v02(int fid, const unsigned long *hart_mask,
+  * sbi_set_timer() - Program the timer for next timer event.
+  * @stime_value: The value after which next timer event should fire.
+  *
+- * Return: None
++ * Return: None.
+  */
+ void sbi_set_timer(uint64_t stime_value)
  {
- 	struct kvm_cpu_context *cp = &vcpu->arch.guest_context;
- 
-@@ -86,109 +73,6 @@ int kvm_riscv_vcpu_sbi_return(struct kvm_vcpu *vcpu, struct kvm_run *run)
- 	return 0;
- }
- 
--static int kvm_sbi_ext_legacy_handler(struct kvm_vcpu *vcpu, struct kvm_run *run,
--				      unsigned long *out_val,
--				      struct kvm_cpu_trap *utrap,
--				      bool *exit)
--{
--	ulong hmask;
--	int i, ret = 0;
--	u64 next_cycle;
--	struct kvm_vcpu *rvcpu;
--	struct cpumask cm, hm;
--	struct kvm *kvm = vcpu->kvm;
--	struct kvm_cpu_context *cp = &vcpu->arch.guest_context;
--
--	if (!cp)
--		return -EINVAL;
--
--	switch (cp->a7) {
--	case SBI_EXT_0_1_CONSOLE_GETCHAR:
--	case SBI_EXT_0_1_CONSOLE_PUTCHAR:
--		/*
--		 * The CONSOLE_GETCHAR/CONSOLE_PUTCHAR SBI calls cannot be
--		 * handled in kernel so we forward these to user-space
--		 */
--		kvm_riscv_vcpu_sbi_forward(vcpu, run);
--		*exit = true;
--		break;
--	case SBI_EXT_0_1_SET_TIMER:
--#if __riscv_xlen == 32
--		next_cycle = ((u64)cp->a1 << 32) | (u64)cp->a0;
--#else
--		next_cycle = (u64)cp->a0;
--#endif
--		ret = kvm_riscv_vcpu_timer_next_event(vcpu, next_cycle);
--		break;
--	case SBI_EXT_0_1_CLEAR_IPI:
--		ret = kvm_riscv_vcpu_unset_interrupt(vcpu, IRQ_VS_SOFT);
--		break;
--	case SBI_EXT_0_1_SEND_IPI:
--		if (cp->a0)
--			hmask = kvm_riscv_vcpu_unpriv_read(vcpu, false, cp->a0,
--							   utrap);
--		else
--			hmask = (1UL << atomic_read(&kvm->online_vcpus)) - 1;
--		if (utrap->scause)
--			break;
--
--		for_each_set_bit(i, &hmask, BITS_PER_LONG) {
--			rvcpu = kvm_get_vcpu_by_id(vcpu->kvm, i);
--			ret = kvm_riscv_vcpu_set_interrupt(rvcpu, IRQ_VS_SOFT);
--			if (ret < 0)
--				break;
--		}
--		break;
--	case SBI_EXT_0_1_SHUTDOWN:
--		kvm_sbi_system_shutdown(vcpu, run, KVM_SYSTEM_EVENT_SHUTDOWN);
--		*exit = true;
--		break;
--	case SBI_EXT_0_1_REMOTE_FENCE_I:
--	case SBI_EXT_0_1_REMOTE_SFENCE_VMA:
--	case SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID:
--		if (cp->a0)
--			hmask = kvm_riscv_vcpu_unpriv_read(vcpu, false, cp->a0,
--							   utrap);
--		else
--			hmask = (1UL << atomic_read(&kvm->online_vcpus)) - 1;
--		if (utrap->scause)
--			break;
--
--		cpumask_clear(&cm);
--		for_each_set_bit(i, &hmask, BITS_PER_LONG) {
--			rvcpu = kvm_get_vcpu_by_id(vcpu->kvm, i);
--			if (rvcpu->cpu < 0)
--				continue;
--			cpumask_set_cpu(rvcpu->cpu, &cm);
--		}
--		riscv_cpuid_to_hartid_mask(&cm, &hm);
--		if (cp->a7 == SBI_EXT_0_1_REMOTE_FENCE_I)
--			ret = sbi_remote_fence_i(cpumask_bits(&hm));
--		else if (cp->a7 == SBI_EXT_0_1_REMOTE_SFENCE_VMA)
--			ret = sbi_remote_hfence_vvma(cpumask_bits(&hm),
--						cp->a1, cp->a2);
--		else
--			ret = sbi_remote_hfence_vvma_asid(cpumask_bits(&hm),
--						cp->a1, cp->a2, cp->a3);
--		break;
--	default:
--		ret = -EINVAL;
--		break;
--	};
--
--	return ret;
--}
--
--const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_legacy = {
--	.extid_start = SBI_EXT_0_1_SET_TIMER,
--	.extid_end = SBI_EXT_0_1_SHUTDOWN,
--	.handler = kvm_sbi_ext_legacy_handler,
--};
--
--static const struct kvm_vcpu_sbi_extension *sbi_ext[] = {
--	&vcpu_sbi_ext_legacy,
--};
--
- const struct kvm_vcpu_sbi_extension *kvm_vcpu_sbi_find_ext(unsigned long extid)
+@@ -362,11 +362,11 @@ void sbi_set_timer(uint64_t stime_value)
+  * sbi_send_ipi() - Send an IPI to any hart.
+  * @hart_mask: A cpu mask containing all the target harts.
+  *
+- * Return: None
++ * Return: 0 on success, appropriate linux error code otherwise.
+  */
+-void sbi_send_ipi(const unsigned long *hart_mask)
++int sbi_send_ipi(const unsigned long *hart_mask)
  {
- 	int i = 0;
-diff --git a/arch/riscv/kvm/vcpu_sbi_legacy.c b/arch/riscv/kvm/vcpu_sbi_legacy.c
-new file mode 100644
-index 000000000000..126d97b1292d
---- /dev/null
-+++ b/arch/riscv/kvm/vcpu_sbi_legacy.c
-@@ -0,0 +1,129 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/**
-+ * Copyright (c) 2020 Western Digital Corporation or its affiliates.
-+ *
-+ * Authors:
-+ *     Atish Patra <atish.patra@wdc.com>
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/err.h>
-+#include <linux/kvm_host.h>
-+#include <asm/csr.h>
-+#include <asm/sbi.h>
-+#include <asm/kvm_vcpu_timer.h>
-+#include <asm/kvm_vcpu_sbi.h>
-+
-+static void kvm_sbi_system_shutdown(struct kvm_vcpu *vcpu,
-+				    struct kvm_run *run, u32 type)
-+{
-+	int i;
-+	struct kvm_vcpu *tmp;
-+
-+	kvm_for_each_vcpu(i, tmp, vcpu->kvm)
-+		tmp->arch.power_off = true;
-+	kvm_make_all_cpus_request(vcpu->kvm, KVM_REQ_SLEEP);
-+
-+	memset(&run->system_event, 0, sizeof(run->system_event));
-+	run->system_event.type = type;
-+	run->exit_reason = KVM_EXIT_SYSTEM_EVENT;
-+}
-+
-+static int kvm_sbi_ext_legacy_handler(struct kvm_vcpu *vcpu, struct kvm_run *run,
-+				      unsigned long *out_val,
-+				      struct kvm_cpu_trap *utrap,
-+				      bool *exit)
-+{
-+	ulong hmask;
-+	int i, ret = 0;
-+	u64 next_cycle;
-+	struct kvm_vcpu *rvcpu;
-+	struct cpumask cm, hm;
-+	struct kvm *kvm = vcpu->kvm;
-+	struct kvm_cpu_context *cp = &vcpu->arch.guest_context;
-+
-+	if (!cp)
-+		return -EINVAL;
-+
-+	switch (cp->a7) {
-+	case SBI_EXT_0_1_CONSOLE_GETCHAR:
-+	case SBI_EXT_0_1_CONSOLE_PUTCHAR:
-+		/*
-+		 * The CONSOLE_GETCHAR/CONSOLE_PUTCHAR SBI calls cannot be
-+		 * handled in kernel so we forward these to user-space
-+		 */
-+		kvm_riscv_vcpu_sbi_forward(vcpu, run);
-+		*exit = true;
-+		break;
-+	case SBI_EXT_0_1_SET_TIMER:
-+#if __riscv_xlen == 32
-+		next_cycle = ((u64)cp->a1 << 32) | (u64)cp->a0;
-+#else
-+		next_cycle = (u64)cp->a0;
-+#endif
-+		ret = kvm_riscv_vcpu_timer_next_event(vcpu, next_cycle);
-+		break;
-+	case SBI_EXT_0_1_CLEAR_IPI:
-+		ret = kvm_riscv_vcpu_unset_interrupt(vcpu, IRQ_VS_SOFT);
-+		break;
-+	case SBI_EXT_0_1_SEND_IPI:
-+		if (cp->a0)
-+			hmask = kvm_riscv_vcpu_unpriv_read(vcpu, false, cp->a0,
-+							   utrap);
-+		else
-+			hmask = (1UL << atomic_read(&kvm->online_vcpus)) - 1;
-+		if (utrap->scause)
-+			break;
-+
-+		for_each_set_bit(i, &hmask, BITS_PER_LONG) {
-+			rvcpu = kvm_get_vcpu_by_id(vcpu->kvm, i);
-+			ret = kvm_riscv_vcpu_set_interrupt(rvcpu, IRQ_VS_SOFT);
-+			if (ret < 0)
-+				break;
-+		}
-+		break;
-+	case SBI_EXT_0_1_SHUTDOWN:
-+		kvm_sbi_system_shutdown(vcpu, run, KVM_SYSTEM_EVENT_SHUTDOWN);
-+		*exit = true;
-+		break;
-+	case SBI_EXT_0_1_REMOTE_FENCE_I:
-+	case SBI_EXT_0_1_REMOTE_SFENCE_VMA:
-+	case SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID:
-+		if (cp->a0)
-+			hmask = kvm_riscv_vcpu_unpriv_read(vcpu, false, cp->a0,
-+							   utrap);
-+		else
-+			hmask = (1UL << atomic_read(&kvm->online_vcpus)) - 1;
-+		if (utrap->scause)
-+			break;
-+
-+		cpumask_clear(&cm);
-+		for_each_set_bit(i, &hmask, BITS_PER_LONG) {
-+			rvcpu = kvm_get_vcpu_by_id(vcpu->kvm, i);
-+			if (rvcpu->cpu < 0)
-+				continue;
-+			cpumask_set_cpu(rvcpu->cpu, &cm);
-+		}
-+		riscv_cpuid_to_hartid_mask(&cm, &hm);
-+		if (cp->a7 == SBI_EXT_0_1_REMOTE_FENCE_I)
-+			ret = sbi_remote_fence_i(cpumask_bits(&hm));
-+		else if (cp->a7 == SBI_EXT_0_1_REMOTE_SFENCE_VMA)
-+			ret = sbi_remote_hfence_vvma(cpumask_bits(&hm),
-+						cp->a1, cp->a2);
-+		else
-+			ret = sbi_remote_hfence_vvma_asid(cpumask_bits(&hm),
-+						cp->a1, cp->a2, cp->a3);
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	};
-+
-+	return ret;
-+}
-+
-+const struct kvm_vcpu_sbi_extension vcpu_sbi_ext_legacy = {
-+	.extid_start = SBI_EXT_0_1_SET_TIMER,
-+	.extid_end = SBI_EXT_0_1_SHUTDOWN,
-+	.handler = kvm_sbi_ext_legacy_handler,
-+};
+-	__sbi_send_ipi(hart_mask);
++	return __sbi_send_ipi(hart_mask);
+ }
+ EXPORT_SYMBOL(sbi_send_ipi);
+ 
+@@ -374,12 +374,12 @@ EXPORT_SYMBOL(sbi_send_ipi);
+  * sbi_remote_fence_i() - Execute FENCE.I instruction on given remote harts.
+  * @hart_mask: A cpu mask containing all the target harts.
+  *
+- * Return: None
++ * Return: 0 on success, appropriate linux error code otherwise.
+  */
+-void sbi_remote_fence_i(const unsigned long *hart_mask)
++int sbi_remote_fence_i(const unsigned long *hart_mask)
+ {
+-	__sbi_rfence(SBI_EXT_RFENCE_REMOTE_FENCE_I,
+-		     hart_mask, 0, 0, 0, 0);
++	return __sbi_rfence(SBI_EXT_RFENCE_REMOTE_FENCE_I,
++			    hart_mask, 0, 0, 0, 0);
+ }
+ EXPORT_SYMBOL(sbi_remote_fence_i);
+ 
+@@ -390,14 +390,14 @@ EXPORT_SYMBOL(sbi_remote_fence_i);
+  * @start: Start of the virtual address
+  * @size: Total size of the virtual address range.
+  *
+- * Return: None
++ * Return: 0 on success, appropriate linux error code otherwise.
+  */
+-void sbi_remote_sfence_vma(const unsigned long *hart_mask,
++int sbi_remote_sfence_vma(const unsigned long *hart_mask,
+ 			   unsigned long start,
+ 			   unsigned long size)
+ {
+-	__sbi_rfence(SBI_EXT_RFENCE_REMOTE_SFENCE_VMA,
+-		     hart_mask, start, size, 0, 0);
++	return __sbi_rfence(SBI_EXT_RFENCE_REMOTE_SFENCE_VMA,
++			    hart_mask, start, size, 0, 0);
+ }
+ EXPORT_SYMBOL(sbi_remote_sfence_vma);
+ 
+@@ -410,15 +410,15 @@ EXPORT_SYMBOL(sbi_remote_sfence_vma);
+  * @size: Total size of the virtual address range.
+  * @asid: The value of address space identifier (ASID).
+  *
+- * Return: None
++ * Return: 0 on success, appropriate linux error code otherwise.
+  */
+-void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
++int sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
+ 				unsigned long start,
+ 				unsigned long size,
+ 				unsigned long asid)
+ {
+-	__sbi_rfence(SBI_EXT_RFENCE_REMOTE_SFENCE_VMA_ASID,
+-		     hart_mask, start, size, asid, 0);
++	return __sbi_rfence(SBI_EXT_RFENCE_REMOTE_SFENCE_VMA_ASID,
++			    hart_mask, start, size, asid, 0);
+ }
+ EXPORT_SYMBOL(sbi_remote_sfence_vma_asid);
+ 
 -- 
 2.24.0
 
