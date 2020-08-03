@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0DDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F90C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1134A204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C5D220678
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:36:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596458162;
-	bh=ysS3LGq+470SGw6FYTetlB33DoPN5s8hyLYUhLe+03M=;
+	s=default; t=1596458163;
+	bh=++HN40KXXok4Pa/m1B5+Kdb5ESmRpFZqv7jtST+wKf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=18zlQgkFxjqs3THtIrCZbh16Gpjoj087wa/jSUyXO5Y8+kAKR3rODqe/Vm2Xvs8Ux
-	 3dr035naIAxd7mPciScrVNtYQr/jWn7A6eaa/zP2In+rIceQf7hgjqhhMXn+PMj9uG
-	 8pKYcAyThHZLJzDqxVBAn/EwChv/wRslWAE1y38Y=
+	b=Tbq3PXLPbVrl8wDasIFfpCGIsYCrSBfOr5CUwf+N6E8E8+CAXjG5BOHCPzPu8z3LA
+	 /muSSjcw52TttIhk0pz7r7w5z5VwhRCJ7PDEa7r1tZzyAF6UuUR5HOLyhCY+eqYtC+
+	 hABdaW+unO43PqaCAvH0KOclYqJ4O3yieze3a9BQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbgHCMgA (ORCPT
+        id S1728484AbgHCMgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:36:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36026 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:36:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729021AbgHCMfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:35:41 -0400
+        id S1729358AbgHCMf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:35:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 682B82054F;
-        Mon,  3 Aug 2020 12:35:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56717204EC;
+        Mon,  3 Aug 2020 12:35:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596458140;
-        bh=ysS3LGq+470SGw6FYTetlB33DoPN5s8hyLYUhLe+03M=;
+        s=default; t=1596458153;
+        bh=++HN40KXXok4Pa/m1B5+Kdb5ESmRpFZqv7jtST+wKf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ORLMjYgyOczMNOt0tibbDrC0DQNNmMZqLp9RiS/MquupTqrolCwjknpi0WqjXQdyL
-         PBhfGWzT9cUpHqMoAcRCsCFjvWCFDU5dHV6gSKUPd7eHbXaDQFBTj462jbIa1DQRCE
-         frq/leXPtrxnixf/jWGDF+lsoSjdsDnZv0C/NDaY=
+        b=cCo1XKuYsi0QkMWsLh0Z0PV44NKUpHxy12Sbk4pyvzK7DS3cXX1pO6r7W+37VroX6
+         4jCKL7fKVZ+eQetWtjaIsb6xqak48RTxI/R80iUidtuK8HbG288RkK0Sp060g0Sump
+         mu5Aq7jsFxC2D/PHFfhrT5iNilbTyOeVkoYJ2ioU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 13/51] ARM: percpu.h: fix build error
-Date:   Mon,  3 Aug 2020 14:19:58 +0200
-Message-Id: <20200803121850.129534880@linuxfoundation.org>
+        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.14 51/51] x86/i8259: Use printk_deferred() to prevent deadlock
+Date:   Mon,  3 Aug 2020 14:20:36 +0200
+Message-Id: <20200803121852.063688962@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121849.488233135@linuxfoundation.org>
 References: <20200803121849.488233135@linuxfoundation.org>
@@ -60,43 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit aa54ea903abb02303bf55855fb51e3fcee135d70 upstream.
+commit bdd65589593edd79b6a12ce86b3b7a7c6dae5208 upstream.
 
-Fix build error for the case:
-  defined(CONFIG_SMP) && !defined(CONFIG_CPU_V6)
+0day reported a possible circular locking dependency:
 
-config: keystone_defconfig
+Chain exists of:
+  &irq_desc_lock_class --> console_owner --> &port_lock_key
 
-  CC      arch/arm/kernel/signal.o
-  In file included from ../include/linux/random.h:14,
-                    from ../arch/arm/kernel/signal.c:8:
-  ../arch/arm/include/asm/percpu.h: In function ‘__my_cpu_offset’:
-  ../arch/arm/include/asm/percpu.h:29:34: error: ‘current_stack_pointer’ undeclared (first use in this function); did you mean ‘user_stack_pointer’?
-      : "Q" (*(const unsigned long *)current_stack_pointer));
-                                     ^~~~~~~~~~~~~~~~~~~~~
-                                     user_stack_pointer
+ Possible unsafe locking scenario:
 
-Fixes: f227e3ec3b5c ("random32: update the net random state on interrupt and activity")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+       CPU0                    CPU1
+       ----                    ----
+  lock(&port_lock_key);
+                               lock(console_owner);
+                               lock(&port_lock_key);
+  lock(&irq_desc_lock_class);
+
+The reason for this is a printk() in the i8259 interrupt chip driver
+which is invoked with the irq descriptor lock held, which reverses the
+lock operations vs. printk() from arbitrary contexts.
+
+Switch the printk() to printk_deferred() to avoid that.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/87365abt2v.fsf@nanos.tec.linutronix.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/include/asm/percpu.h |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kernel/i8259.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/include/asm/percpu.h
-+++ b/arch/arm/include/asm/percpu.h
-@@ -16,6 +16,8 @@
- #ifndef _ASM_ARM_PERCPU_H_
- #define _ASM_ARM_PERCPU_H_
- 
-+#include <asm/thread_info.h>
-+
- /*
-  * Same as asm-generic/percpu.h, except that we store the per cpu offset
-  * in the TPIDRPRW. TPIDRPRW only exists on V6K and V7
+--- a/arch/x86/kernel/i8259.c
++++ b/arch/x86/kernel/i8259.c
+@@ -206,7 +206,7 @@ spurious_8259A_irq:
+ 		 * lets ACK and report it. [once per IRQ]
+ 		 */
+ 		if (!(spurious_irq_mask & irqmask)) {
+-			printk(KERN_DEBUG
++			printk_deferred(KERN_DEBUG
+ 			       "spurious 8259A interrupt: IRQ%d.\n", irq);
+ 			spurious_irq_mask |= irqmask;
+ 		}
 
 
