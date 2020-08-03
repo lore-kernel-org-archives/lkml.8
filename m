@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3F0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79869C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 754422054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B8602054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 12:31:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596457906;
-	bh=v59zLHBmW/XwYl5cKPZsp7mFkI4UETwDCboivwR1CZU=;
+	s=default; t=1596457909;
+	bh=Hy8mBhV7h9SLwvg7GqfwObL1tL77wSLQh01A/CTIrhY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nZ2/MyY7HvyuSblHSo1EZaVbP52D1ZVUk2BEkuMmPu9d/si8niygRCI1hf5i+FEMy
-	 rzyvdYuhdQ8vMyY2gJmcRWkSkcr/mtp76tL9WUvBqqbH504Uzl9L6yXGiGPiopKNbl
-	 Uk2woesb2FDVgRFJXIa+dIkPMqbYz1g++S57/4kc=
+	b=V+GTdYy5T4ib2qGRHp9xjQ9WXC5J6DynyCxtZhwNElOACDNbxu/NM0XAeIs710FV+
+	 nCHucoORqsuDFzU7hG25zfE+PRm0ndwVMkDit8BFqHYbUOOrm7baO2q0SF5uNOKode
+	 gPw7YFn8qtK8yMM9VCczk80k8CgA9bYgxJf0vZ8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729223AbgHCMbq (ORCPT
+        id S1729230AbgHCMbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 08:31:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59420 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 08:31:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729216AbgHCMbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 08:31:43 -0400
+        id S1729224AbgHCMbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 08:31:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 296BC2054F;
-        Mon,  3 Aug 2020 12:31:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E80EF208E4;
+        Mon,  3 Aug 2020 12:31:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596457902;
-        bh=v59zLHBmW/XwYl5cKPZsp7mFkI4UETwDCboivwR1CZU=;
+        s=default; t=1596457905;
+        bh=Hy8mBhV7h9SLwvg7GqfwObL1tL77wSLQh01A/CTIrhY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y6u0jQsc29vImYlivawux9eHNVHYwSOsPJyaC63ZEXtzp1fUOvfmewejSv51UqcYO
-         dAzOPVgKuO1Lr2hUqeQBwZUHrjo3eq187+/BixAn4xy+uC/gL0PhUie2Pfe2NVTs5o
-         HneuMZlFIvIaMFVrFNk4EERUx1beqYw8f1G5VEOc=
+        b=Qq+s4C6vfk0jeZhnLAkglojCP564gH8MRuQyRgEY4eEANy6j5z+K2GdYG+yCiN/JW
+         bJQx9TGnwpFc1uvnQwDPDpvfftHHUWtdK5+wyOVL10M76AzndC1oM2lBw2CT/skMGI
+         /oYKwo1toVMtksa5Jc294nfTTgoutqTiRfA3xjxA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 04/56] drm/amdgpu: fix multiple memory leaks in acp_hw_init
-Date:   Mon,  3 Aug 2020 14:19:19 +0200
-Message-Id: <20200803121850.526781250@linuxfoundation.org>
+Subject: [PATCH 4.19 05/56] tracing: Have error path in predicate_parse() free its allocated memory
+Date:   Mon,  3 Aug 2020 14:19:20 +0200
+Message-Id: <20200803121850.577138860@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
 References: <20200803121850.306734207@linuxfoundation.org>
@@ -64,119 +63,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 57be09c6e8747bf48704136d9e3f92bfb93f5725 ]
+[ Upstream commit 96c5c6e6a5b6db592acae039fed54b5c8844cd35 ]
 
-In acp_hw_init there are some allocations that needs to be released in
-case of failure:
+In predicate_parse, there is an error path that is not going to
+out_free instead it returns directly which leads to a memory leak.
 
-1- adev->acp.acp_genpd should be released if any allocation attemp for
-adev->acp.acp_cell, adev->acp.acp_res or i2s_pdata fails.
-2- all of those allocations should be released if
-mfd_add_hotplug_devices or pm_genpd_add_device fail.
-3- Release is needed in case of time out values expire.
+Link: http://lkml.kernel.org/r/20190920225800.3870-1-navid.emamdoost@gmail.com
 
-Reviewed-by: Christian König <christian.koenig@amd.com>
 Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c | 34 ++++++++++++++++---------
- 1 file changed, 22 insertions(+), 12 deletions(-)
+ kernel/trace/trace_events_filter.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c
-index 71efcf38f11be..94cd8a2610912 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_acp.c
-@@ -276,7 +276,7 @@ static int acp_hw_init(void *handle)
- 	u32 val = 0;
- 	u32 count = 0;
- 	struct device *dev;
--	struct i2s_platform_data *i2s_pdata;
-+	struct i2s_platform_data *i2s_pdata = NULL;
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index b949c3917c679..9be3d1d1fcb47 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -451,8 +451,10 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
  
- 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
- 
-@@ -317,20 +317,21 @@ static int acp_hw_init(void *handle)
- 	adev->acp.acp_cell = kcalloc(ACP_DEVS, sizeof(struct mfd_cell),
- 							GFP_KERNEL);
- 
--	if (adev->acp.acp_cell == NULL)
--		return -ENOMEM;
-+	if (adev->acp.acp_cell == NULL) {
-+		r = -ENOMEM;
-+		goto failure;
-+	}
- 
- 	adev->acp.acp_res = kcalloc(5, sizeof(struct resource), GFP_KERNEL);
- 	if (adev->acp.acp_res == NULL) {
--		kfree(adev->acp.acp_cell);
--		return -ENOMEM;
-+		r = -ENOMEM;
-+		goto failure;
- 	}
- 
- 	i2s_pdata = kcalloc(3, sizeof(struct i2s_platform_data), GFP_KERNEL);
- 	if (i2s_pdata == NULL) {
--		kfree(adev->acp.acp_res);
--		kfree(adev->acp.acp_cell);
--		return -ENOMEM;
-+		r = -ENOMEM;
-+		goto failure;
- 	}
- 
- 	switch (adev->asic_type) {
-@@ -427,7 +428,7 @@ static int acp_hw_init(void *handle)
- 	r = mfd_add_hotplug_devices(adev->acp.parent, adev->acp.acp_cell,
- 								ACP_DEVS);
- 	if (r)
--		return r;
-+		goto failure;
- 
- 	if (adev->asic_type != CHIP_STONEY) {
- 		for (i = 0; i < ACP_DEVS ; i++) {
-@@ -435,7 +436,7 @@ static int acp_hw_init(void *handle)
- 			r = pm_genpd_add_device(&adev->acp.acp_genpd->gpd, dev);
- 			if (r) {
- 				dev_err(dev, "Failed to add dev to genpd\n");
--				return r;
-+				goto failure;
- 			}
- 		}
- 	}
-@@ -454,7 +455,8 @@ static int acp_hw_init(void *handle)
- 			break;
- 		if (--count == 0) {
- 			dev_err(&adev->pdev->dev, "Failed to reset ACP\n");
--			return -ETIMEDOUT;
-+			r = -ETIMEDOUT;
-+			goto failure;
- 		}
- 		udelay(100);
- 	}
-@@ -471,7 +473,8 @@ static int acp_hw_init(void *handle)
- 			break;
- 		if (--count == 0) {
- 			dev_err(&adev->pdev->dev, "Failed to reset ACP\n");
--			return -ETIMEDOUT;
-+			r = -ETIMEDOUT;
-+			goto failure;
- 		}
- 		udelay(100);
- 	}
-@@ -480,6 +483,13 @@ static int acp_hw_init(void *handle)
- 	val &= ~ACP_SOFT_RESET__SoftResetAud_MASK;
- 	cgs_write_register(adev->acp.cgs_device, mmACP_SOFT_RESET, val);
- 	return 0;
-+
-+failure:
-+	kfree(i2s_pdata);
-+	kfree(adev->acp.acp_res);
-+	kfree(adev->acp.acp_cell);
-+	kfree(adev->acp.acp_genpd);
-+	return r;
- }
- 
- /**
+ 		switch (*next) {
+ 		case '(':					/* #2 */
+-			if (top - op_stack > nr_parens)
+-				return ERR_PTR(-EINVAL);
++			if (top - op_stack > nr_parens) {
++				ret = -EINVAL;
++				goto out_free;
++			}
+ 			*(++top) = invert;
+ 			continue;
+ 		case '!':					/* #3 */
 -- 
 2.25.1
 
