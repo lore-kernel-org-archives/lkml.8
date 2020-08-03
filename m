@@ -2,193 +2,238 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9ACBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C132FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C06D820722
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C74D8207FC
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:49:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gaxxsH7C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgHCVsO (ORCPT
+        id S1728908AbgHCVtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 17:48:14 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:59415 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728038AbgHCVsN (ORCPT
+        Mon, 3 Aug 2020 17:49:09 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53818 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728038AbgHCVtI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 17:48:13 -0400
-Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MNKuK-1kN9fd3MXS-00OslT for <linux-kernel@vger.kernel.org>; Mon, 03 Aug
- 2020 23:48:12 +0200
-Received: by mail-qk1-f180.google.com with SMTP id x69so36663210qkb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 14:48:11 -0700 (PDT)
-X-Gm-Message-State: AOAM531tMTCk0PBZ+THIME2ry5h8FoKkL8YmB0uxC+CyTAItNmBLv4WM
-        2tY2T6ac4hfXqNz7D6/RSddWV13iu24lpXkLMKU=
-X-Google-Smtp-Source: ABdhPJw9ZEQK44UlwYRsKw2xvd+xTXk7tiwVBBuVW80gze2O2uwkpyhXWeiTwUN0Mo+Q3XBnfVd9g/9wSMXez0c5UyE=
-X-Received: by 2002:a37:385:: with SMTP id 127mr17213487qkd.3.1596491290681;
- Mon, 03 Aug 2020 14:48:10 -0700 (PDT)
+        Mon, 3 Aug 2020 17:49:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596491346;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=TBe9xuJKIabvqADK145HWoTUWklGVEUNGs0QDHD1zCc=;
+        b=gaxxsH7CBki9OF43QMgnoFwxfaaUDyXiRp50ywGVREKNPs/EVJnkI/p4gkGG3SUgk+0KD1
+        tN5q569mllrUdByvJE+Ly3pUqIUoE1NdOusaSTBtOwE1qRMhiUcYkLPp0FeAie2Kkk6nl4
+        CSSo0tRI9BizDuQHw72fGNyi489QVV8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-157-yFH741kKPM-gIp6b05ragQ-1; Mon, 03 Aug 2020 17:48:48 -0400
+X-MC-Unique: yFH741kKPM-gIp6b05ragQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6E36880046B;
+        Mon,  3 Aug 2020 21:48:46 +0000 (UTC)
+Received: from treble (ovpn-113-147.rdu2.redhat.com [10.10.113.147])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8D94A5C1BD;
+        Mon,  3 Aug 2020 21:48:43 +0000 (UTC)
+Date:   Mon, 3 Aug 2020 16:48:40 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     syzbot <syzbot+c05e6eff86f7a430fa73@syzkaller.appspotmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     bp@alien8.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, viro@zeniv.linux.org.uk, x86@kernel.org
+Subject: Re: BUG: stack guard page was hit in arch_stack_walk
+Message-ID: <20200803214840.mzjq4gk4o2737leo@treble>
+References: <0000000000000897ba05abd4ce25@google.com>
 MIME-Version: 1.0
-References: <CAK8P3a1vFJ+uUGPGifZGhECXvxA=2u745WrGNZb08s1nHkZQ9g@mail.gmail.com>
-In-Reply-To: <CAK8P3a1vFJ+uUGPGifZGhECXvxA=2u745WrGNZb08s1nHkZQ9g@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 3 Aug 2020 23:47:54 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2B5cxE512R0-ni6BJOnkgR7kGueqd3AU9E2PXh0unsmg@mail.gmail.com>
-Message-ID: <CAK8P3a2B5cxE512R0-ni6BJOnkgR7kGueqd3AU9E2PXh0unsmg@mail.gmail.com>
-Subject: [GIT PULL 3/5] ARM: SoC changes for v5.9
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-List-Id: <soc.lore.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        SoC Team <soc@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:kdYsnBSh32VSMYsZhnnGg6gwxlnz6DhecU0A8nRePha0cAB8Efb
- iT3zSaOQ5MI+FUyLjVpPG98PWoOZ64fBFSFjp4vpyaboglv7FE6r9p9j0oCJ/GqPK9RBFtE
- yjnTjKjXhQ1G/8qr60Okp0vxNs6uRO9jh0rtCJt90i0RRMS/unOoxfxUYUtpmgbtdn1DjSj
- p83COC22FdUbsJWo5qQmw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xWgMo5AiF4g=:q7QzhccC4KwLrB9DrrHlK5
- z2pps3G88rGVpKl7t48FYHLIpvCJ1EFwG+wkfUhL51iIKl+QLPcYzT4cVApKbPnNeWGRM7KST
- P8c+HR+cqr0hNv9Qp0A81h6FYNpVVKTfbRg1QvkkmQ6aStJtL09GMGiJfZRE+tRduYfGjV+Wt
- VXO0KXuouTDmEQOyUDLj1f89GGPg1+cxry3DLEuo5gcWRpuumA5saKENZKa6KPGaijHNrfIoB
- mb3FBElTn83sGqqo2gRJWRg33w7aEGn4q+jwNJa7QP9edXv7ifmk7xhRAn8tAZVghb4MotkaX
- OxNESOtuAV94MWZpst/gdFUSLq4EhvgAzM57jSA4lZSMGGwUbjK77FkNQ2mClMTYA+IDpbPSY
- hJAkyJ5ZtLyb4CzpNXu3fK/n90fYhtdoqxQRYei62inWrDZuhpM6jsr/ImLK28NPhoTaZJCxH
- qFvH+3hVNAc9R0bnMWxRq/jy+3KALsXPHioF8/aX0TMkHsnOLih0n5zqrfHnC+l1LYD8eoZk+
- FmCwtBaiamk2hogBEz9c8usJQDC1E5Xdi6amtWcO1VGcdAI6wZxXzXVaAaSxmx1HUEZt1gnR1
- H4UUdf86q831FlRPaRLcNdY6DyfTKmypcjz12ESp4T4p6Vr440BqwpvCvUPMhAKi96ObGbx6m
- v+04l95uEFcUuA8LihAMaX3htDxh9UPz7hqZQBrQx5p+u7NFVv+YKQ1zCOKjlhUC0W3IKYerv
- GaXjQFqOBp3Un4UXOfzXiYFUOLV0p065YpRQBBuxmYtSSJXlTkbG+CvmObGohEd7mkTNZTDpL
- H+YLYgoVbnlBRjnHGC3qVxZJgphkEpP0976LlO/weq6orrdCgyepHi5KbV0l7zAipGyEct5ed
- w4C4TgtIqtRok0bHIZIBysPGm89diC8OmltJ+zBtICp+lk2ohb+Fm7dk32xDyCDRiVa7IYMy3
- ofJlZ/WsFm1voc3lTbmBqmvRbHjRxHVuFL9cP74SL80rpN17kkQBx
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <0000000000000897ba05abd4ce25@google.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 812f5501161151f3c3f4e15f7ef250fc1c3af6a4:
+Hi Cong,
 
-  ARM: dts: socfpga: add the temperature sensor to the Arria10 devkit
-(2020-07-18 20:12:07 -0500)
+This looks similar to the stack overflow which was attempted to be fixed
+by dd912306ff00 ("net: fix a potential recursive NETDEV_FEAT_CHANGE").
 
-are available in the Git repository at:
+And another syzbot report here:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/arm-soc-5.9
+https://lkml.kernel.org/r/000000000000cb6afe05ab34e77e@google.com
 
-for you to fetch changes up to a04e84c57e9c5a98ba541f37961174ffe3abeb57:
+On Sat, Aug 01, 2020 at 11:09:21AM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    92ed3019 Linux 5.8-rc7
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=12c98f28900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=84f076779e989e69
+> dashboard link: https://syzkaller.appspot.com/bug?extid=c05e6eff86f7a430fa73
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> 
+> Unfortunately, I don't have any reproducer for this issue yet.
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+c05e6eff86f7a430fa73@syzkaller.appspotmail.com
+> 
+> BUG: stack guard page was hit at 000000009157a0b1 (stack is 000000007cb00dab..0000000055f9d23d)
+> kernel stack overflow (double-fault): 0000 [#1] PREEMPT SMP KASAN
+> CPU: 0 PID: 13871 Comm: syz-executor.4 Not tainted 5.8.0-rc7-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> RIP: 0010:arch_stack_walk+0x0/0xf0 arch/x86/kernel/stacktrace.c:17
+> Code: 8b eb c0 e6 82 89 fa ee ee 8d 57 01 ee ee eb cd e6 81 eb f1 e6 87 eb ed e6 83 eb e9 cc cc cc cc cc cc cc cc cc cc cc cc cc cc <55> 48 89 e5 41 56 49 89 d6 41 55 49 89 cd 41 54 49 89 f4 53 48 89
+> RSP: 0018:ffffc90008b18000 EFLAGS: 00010246
+> RAX: 0000000000000000 RBX: fffff52001163001 RCX: 0000000000000000
+> RDX: ffff88802b30e480 RSI: ffffc90008b18028 RDI: ffffffff8162c090
+> RBP: 0000000000000cc0 R08: ffffed1006f83078 R09: ffffed1006f83094
+> R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000cc0
+> R13: 0000000000000000 R14: ffff88821b77f8c0 R15: 00000000000000e0
+> FS:  00007f7369ba8700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: ffffc90008b17ff8 CR3: 00000000a21ec000 CR4: 00000000001426f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  stack_trace_save+0x8c/0xc0 kernel/stacktrace.c:123
+>  save_stack+0x1b/0x40 mm/kasan/common.c:48
+>  set_track mm/kasan/common.c:56 [inline]
+>  __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
+>  slab_post_alloc_hook mm/slab.h:586 [inline]
+>  slab_alloc_node mm/slab.c:3263 [inline]
+>  kmem_cache_alloc_node+0x130/0x3c0 mm/slab.c:3575
+>  __alloc_skb+0x71/0x550 net/core/skbuff.c:198
+>  alloc_skb include/linux/skbuff.h:1083 [inline]
+>  nlmsg_new include/net/netlink.h:940 [inline]
+>  rtmsg_ifinfo_build_skb+0x72/0x1a0 net/core/rtnetlink.c:3702
+>  rtmsg_ifinfo_event net/core/rtnetlink.c:3738 [inline]
+>  rtmsg_ifinfo_event net/core/rtnetlink.c:3729 [inline]
+>  rtnetlink_event+0x123/0x1d0 net/core/rtnetlink.c:5512
+>  notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
+>  call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
+>  call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
+>  call_netdevice_notifiers net/core/dev.c:2053 [inline]
+>  netdev_features_change net/core/dev.c:1443 [inline]
+>  netdev_sync_lower_features net/core/dev.c:9056 [inline]
+>  __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
+>  netdev_change_features+0x61/0xb0 net/core/dev.c:9259
+>  bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
+>  bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+>  bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
+>  notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
+>  call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
+>  call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
+>  call_netdevice_notifiers net/core/dev.c:2053 [inline]
+>  netdev_features_change net/core/dev.c:1443 [inline]
+>  netdev_sync_lower_features net/core/dev.c:9056 [inline]
+>  __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
+>  netdev_change_features+0x61/0xb0 net/core/dev.c:9259
+>  bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
+>  bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+>  bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
+>  notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
+>  call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
+>  call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
+>  call_netdevice_notifiers net/core/dev.c:2053 [inline]
+>  netdev_features_change net/core/dev.c:1443 [inline]
+>  netdev_sync_lower_features net/core/dev.c:9056 [inline]
+>  __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
+>  netdev_change_features+0x61/0xb0 net/core/dev.c:9259
+>  bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
+>  bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+>  bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
+>  notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
+>  call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
+>  call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
+>  call_netdevice_notifiers net/core/dev.c:2053 [inline]
+>  netdev_features_change net/core/dev.c:1443 [inline]
+>  netdev_sync_lower_features net/core/dev.c:9056 [inline]
+>  __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
+>  netdev_change_features+0x61/0xb0 net/core/dev.c:9259
+>  bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
+>  bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+>  bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
+>  notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
+>  call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
+>  call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
+>  call_netdevice_notifiers net/core/dev.c:2053 [inline]
+>  netdev_features_change net/core/dev.c:1443 [inline]
+>  netdev_sync_lower_features net/core/dev.c:9056 [inline]
+>  __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
+>  netdev_change_features+0x61/0xb0 net/core/dev.c:9259
+>  bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
+>  bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+>  bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
+>  notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
+>  call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
+>  call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
+>  call_netdevice_notifiers net/core/dev.c:2053 [inline]
+>  netdev_features_change net/core/dev.c:1443 [inline]
+>  netdev_sync_lower_features net/core/dev.c:9056 [inline]
+>  __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
+>  netdev_change_features+0x61/0xb0 net/core/dev.c:9259
+>  bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
+>  bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+>  bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
+>  notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
+>  call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
+>  call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
+>  call_netdevice_notifiers net/core/dev.c:2053 [inline]
+>  netdev_features_change net/core/dev.c:1443 [inline]
+>  netdev_sync_lower_features net/core/dev.c:9056 [inline]
+>  __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
+>  netdev_change_features+0x61/0xb0 net/core/dev.c:9259
+>  bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
+>  bond_slave_netdev_event drivers/net/bonding/bond_main.c:3237 [inline]
+>  bond_netdev_event+0x81f/0xb30 drivers/net/bonding/bond_main.c:3277
+>  notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
+>  call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2027
+>  call_netdevice_notifiers_extack net/core/dev.c:2039 [inline]
+>  call_netdevice_notifiers net/core/dev.c:2053 [inline]
+>  netdev_features_change net/core/dev.c:1443 [inline]
+>  netdev_sync_lower_features net/core/dev.c:9056 [inline]
+>  __netdev_update_features+0x88d/0x1360 net/core/dev.c:9187
+>  netdev_change_features+0x61/0xb0 net/core/dev.c:9259
+>  bond_compute_features+0x502/0xa00 drivers/net/bonding/bond_main.c:1188
+> Lost 536 message(s)!
+> ---[ end trace 00f7ed0d29de9cad ]---
+> RIP: 0010:arch_stack_walk+0x0/0xf0 arch/x86/kernel/stacktrace.c:17
+> Code: 8b eb c0 e6 82 89 fa ee ee 8d 57 01 ee ee eb cd e6 81 eb f1 e6 87 eb ed e6 83 eb e9 cc cc cc cc cc cc cc cc cc cc cc cc cc cc <55> 48 89 e5 41 56 49 89 d6 41 55 49 89 cd 41 54 49 89 f4 53 48 89
+> RSP: 0018:ffffc90008b18000 EFLAGS: 00010246
+> RAX: 0000000000000000 RBX: fffff52001163001 RCX: 0000000000000000
+> RDX: ffff88802b30e480 RSI: ffffc90008b18028 RDI: ffffffff8162c090
+> RBP: 0000000000000cc0 R08: ffffed1006f83078 R09: ffffed1006f83094
+> R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000cc0
+> R13: 0000000000000000 R14: ffff88821b77f8c0 R15: 00000000000000e0
+> FS:  00007f7369ba8700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: ffffc90008b17ff8 CR3: 00000000a21ec000 CR4: 00000000001426f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
 
-  Merge tag 'socfpga_update_for_v5.9' of
-git://git.kernel.org/pub/scm/linux/kernel/git/dinguyen/linux into
-arm/soc (2020-07-31 10:11:58 +0200)
+-- 
+Josh
 
-----------------------------------------------------------------
-ARM: SoC changes for v5.9
-
-These are mostly cosmetic changes and minor bugfixes for the SoC
-specific code, across the 32-bit at91, mvebu, davinci, samsung, and
-omap platforms.
-
-The main notable changes are for the Samsung s3c platform, which
-sees a rewrite of gpio handling and a change to restore and adds
-a workaround for a problem with cpuidle support.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-----------------------------------------------------------------
-Alexander A. Klimov (4):
-      ARM: OMAP: Replace HTTP links with HTTPS ones
-      ARM: at91: Replace HTTP links with HTTPS ones
-      ARM: s3c24xx: Replace HTTP links with HTTPS ones
-      ARM: davinci: Replace HTTP links with HTTPS ones
-
-Andy Shevchenko (1):
-      ARM: orion/gpio: Make use of for_each_requested_gpio()
-
-Arnd Bergmann (7):
-      udc: lpc32xx: mark local function static
-      Merge tag 'omap-for-v5.9/soc-signed' of
-git://git.kernel.org/.../tmlind/linux-omap into arm/soc
-      Merge tag 'samsung-soc-5.9' of
-git://git.kernel.org/.../krzk/linux into arm/soc
-      Merge tag 'davinci-for-v5.9/soc' of
-git://git.kernel.org/.../nsekhar/linux-davinci into arm/soc
-      Merge tag 'mvebu-arm-5.9-1' of
-git://git.kernel.org/.../gclement/mvebu into arm/soc
-      Merge tag 'at91-soc-5.9' of git://git.kernel.org/.../at91/linux
-into arm/soc
-      Merge tag 'socfpga_update_for_v5.9' of
-git://git.kernel.org/.../dinguyen/linux into arm/soc
-
-Christophe JAILLET (1):
-      ARM: davinci: dm646x-evm: Simplify error handling in 'evm_sw_setup()'
-
-Guillaume Tucker (1):
-      ARM: exynos: clear L310_AUX_CTRL_FULL_LINE_ZERO in default l2c_aux_val
-
-Kevin Hilman (1):
-      MAINTAINERS: arm/amlogic: add designated reviewers
-
-Kieran Bingham (1):
-      ARM: davinci: Fix trivial spelling
-
-Linus Walleij (1):
-      ARM: s3c24xx: leds: Convert to use GPIO descriptors
-
-Marek Szyprowski (1):
-      ARM: exynos: MCPM: Restore big.LITTLE cpuidle support
-
-Paul Schulz (1):
-      ARM: rpc: Change blacklist to quirklist in ecode.c file
-
-Yu Kuai (1):
-      ARM: socfpga: PM: add missing put_device() call in
-socfpga_setup_ocram_self_refresh()
-
-yu kuai (1):
-      ARM: at91: pm: add missing put_device() call in at91_pm_sram_init()
-
- MAINTAINERS                                        |  3 +
- arch/arm/mach-at91/Makefile.boot                   |  2 +-
- arch/arm/mach-at91/pm.c                            | 11 ++-
- arch/arm/mach-davinci/Kconfig                      |  4 +-
- arch/arm/mach-davinci/board-da830-evm.c            |  2 +-
- arch/arm/mach-davinci/board-da850-evm.c            |  2 +-
- arch/arm/mach-davinci/board-dm646x-evm.c           | 13 ++--
- arch/arm/mach-davinci/board-mityomapl138.c         |  2 +-
- arch/arm/mach-davinci/board-neuros-osd2.c          |  2 +-
- arch/arm/mach-davinci/board-omapl138-hawk.c        |  2 +-
- arch/arm/mach-davinci/cpuidle.c                    |  2 +-
- arch/arm/mach-davinci/cpuidle.h                    |  2 +-
- arch/arm/mach-davinci/da850.c                      |  2 +-
- arch/arm/mach-davinci/da8xx-dt.c                   |  2 +-
- arch/arm/mach-davinci/include/mach/pm.h            |  2 +-
- arch/arm/mach-davinci/pm.c                         |  2 +-
- arch/arm/mach-davinci/sleep.S                      |  2 +-
- arch/arm/mach-exynos/exynos.c                      |  2 +-
- arch/arm/mach-exynos/mcpm-exynos.c                 | 10 ++-
- arch/arm/mach-omap1/Kconfig                        |  2 +-
- arch/arm/mach-omap1/dma.c                          |  2 +-
- arch/arm/mach-omap1/gpio15xx.c                     |  2 +-
- arch/arm/mach-omap1/gpio16xx.c                     |  2 +-
- arch/arm/mach-omap1/gpio7xx.c                      |  2 +-
- arch/arm/mach-omap1/timer.c                        |  2 +-
- arch/arm/mach-rpc/ecard.c                          | 18 ++---
- arch/arm/mach-s3c24xx/Kconfig                      |  2 +-
- arch/arm/mach-s3c24xx/common-smdk.c                | 67 ++++++++++++------
- arch/arm/mach-s3c24xx/mach-h1940.c                 |  2 +-
- arch/arm/mach-s3c24xx/mach-mini2440.c              | 65 +++++++++++++++---
- arch/arm/mach-s3c24xx/mach-n30.c                   | 56 +++++++++++++--
- arch/arm/mach-s3c24xx/mach-qt2410.c                | 12 +++-
- arch/arm/mach-s3c24xx/mach-rx3715.c                |  2 +-
- arch/arm/mach-s3c24xx/mach-vr1000.c                | 38 ++++++++++-
- arch/arm/mach-socfpga/pm.c                         |  8 ++-
- arch/arm/plat-omap/dma.c                           |  2 +-
- arch/arm/plat-orion/gpio.c                         |  8 +--
- drivers/leds/leds-s3c24xx.c                        | 36 ++--------
- drivers/usb/gadget/udc/lpc32xx_udc.c               |  4 +-
- include/linux/platform_data/leds-s3c24xx.h         |  6 --
- 47 files changed, 365 insertions(+), 142 deletions(-)
