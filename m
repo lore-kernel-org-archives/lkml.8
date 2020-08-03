@@ -2,177 +2,100 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 327D3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CFDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06FD4207BB
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 471F220738
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 11:26:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596453989;
+	bh=VfEUaR+DnljClATusrvrxzlw5qpIgZNYBII1lFtt+3I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=JGZO+ybz7OzwD7Z2XSzWytniX/KB7Bo0jZJ9mSS/qjon4uWC7UgMhlB9FQYLFqnWC
+	 YKiIXy/FVWjVbzu2Qwr1skh0WVaOx4FFLeHjLFRVN296vK58EvBruzzABc6kNZEz3w
+	 G/eJJ/sQjTLnwp/RYRRz2U8xJXklWHkLDpgYRNmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726222AbgHCLVa (ORCPT
+        id S1726239AbgHCL01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 07:21:30 -0400
-Received: from mga11.intel.com ([192.55.52.93]:12463 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725945AbgHCLVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 07:21:30 -0400
-IronPort-SDR: mm0vXt/2hhG4D1JvfqEQ7vFozg/00hGFQwPl2dfJEaXAOu3MlJx8DyYK76MR9f3wvnflHf9//h
- jX6TzmQHK0/A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9701"; a="149877889"
-X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
-   d="scan'208";a="149877889"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 04:21:30 -0700
-IronPort-SDR: SnqrSIJj00BA7FV1MsReTVv386M/gN7L13Ume0nRNa4ujDE+fSYcyon3ms95lILWrTUzkTXTZu
- TVyrIobXk9Lw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,429,1589266800"; 
-   d="scan'208";a="273892680"
-Received: from lkp-server02.sh.intel.com (HELO 84ccfe698a63) ([10.239.97.151])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Aug 2020 04:21:28 -0700
-Received: from kbuild by 84ccfe698a63 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k2YX2-000042-BY; Mon, 03 Aug 2020 11:21:28 +0000
-Date:   Mon, 03 Aug 2020 19:20:36 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- f2d42beff39a4be70d7ce47d786e123e5407ab42
-Message-ID: <5f27f304.KyCz6HzgZ1RYTM+u%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Mon, 3 Aug 2020 07:26:27 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36784 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbgHCL01 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 07:26:27 -0400
+Received: by mail-ot1-f66.google.com with SMTP id x24so3514910otp.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 04:26:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RO5Yucl76wW0sFd9jwJpr6HDEHRRPSkSXyWk26a6p/U=;
+        b=DDKxa+UzVTlNdqZs5skS8Q1FRJK4+Rrfp0BlMqmmHuekVXDbEWxvkugWLaAn9QczJt
+         YOOwosR1Rx4y1f1Zs3FjKxg5oGpYIPBwSUkB2+1h52+0BQHlC0bOMnBGyK5dJPdB3bcU
+         PIIYVuRmfwBZfHc0+AyM7pKCCjVea+lWAT7dQK3vF8aCviX3JjJzHrcgbwHzLFCywqje
+         ZT3PCiuNPid6Eck3rSNU2wI6VWKaEBlJaucsfxkSruwfSHvtM/2GOAcfdExerO85bV3m
+         rNXcU9bFRMndqGcoRRYN1R2vsTkAhlDM/RCcvArgFYx+Kqk0dC+vS9ynGmleevoMTpNd
+         qOFQ==
+X-Gm-Message-State: AOAM531+yGqQvdpdI+w40aaL9hkg7+iNAQRf/lNJzvsc+UDnnAVJ68f0
+        Xmp5NSz7o+2szfDnULwMNMK30BxByVf4oO/7Ak0=
+X-Google-Smtp-Source: ABdhPJwctkkwmw4qwPsWwR3jIVMwJc/gK4XhSNpsfhy2UFwwZ/ZWK7E0+GMkJ/v0KyA5EHUOBdXTXRP0NlX3kqi7tKE=
+X-Received: by 2002:a9d:590a:: with SMTP id t10mr13207633oth.262.1596453986597;
+ Mon, 03 Aug 2020 04:26:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20200803083520.5460-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20200803083520.5460-1-andriy.shevchenko@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 3 Aug 2020 13:26:11 +0200
+Message-ID: <CAJZ5v0gDviFYu=m2y1Coi7Fo1bj8phM6r-BqBSB6=-VL_n-=TA@mail.gmail.com>
+Subject: Re: [PATCH v1] kobject: Drop unneeded conditional in __kobject_del()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: f2d42beff39a4be70d7ce47d786e123e5407ab42  Merge branch 'linus'
+On Mon, Aug 3, 2020 at 10:35 AM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> __kobject_del() is called from two places, in one where kobj is dereferenced
+> before and thus can't be NULL, and in the other the NULL check is done before
+> call. Drop unneeded conditional in __kobject_del().
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-elapsed time: 720m
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-configs tested: 106
-configs skipped: 9
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                         shannon_defconfig
-powerpc                    gamecube_defconfig
-microblaze                      mmu_defconfig
-arm                       aspeed_g4_defconfig
-sh                                  defconfig
-mips                     decstation_defconfig
-sh                           se7343_defconfig
-arm                        shmobile_defconfig
-arm                            pleb_defconfig
-powerpc                mpc7448_hpc2_defconfig
-arm                    vt8500_v6_v7_defconfig
-arm                            lart_defconfig
-mips                        omega2p_defconfig
-mips                     loongson1c_defconfig
-m68k                       bvme6000_defconfig
-xtensa                           alldefconfig
-powerpc                    amigaone_defconfig
-sh                   sh7770_generic_defconfig
-mips                        bcm47xx_defconfig
-h8300                    h8300h-sim_defconfig
-arm                         bcm2835_defconfig
-powerpc                     pseries_defconfig
-arm                        cerfcube_defconfig
-arm                        multi_v7_defconfig
-sh                             sh03_defconfig
-mips                         db1xxx_defconfig
-sparc                               defconfig
-arm                        trizeps4_defconfig
-parisc                           alldefconfig
-mips                           ip32_defconfig
-h8300                       h8s-sim_defconfig
-arm                        spear6xx_defconfig
-mips                          rb532_defconfig
-powerpc                     mpc83xx_defconfig
-arm                      jornada720_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-x86_64               randconfig-a006-20200802
-x86_64               randconfig-a001-20200802
-x86_64               randconfig-a004-20200802
-x86_64               randconfig-a003-20200802
-x86_64               randconfig-a002-20200802
-x86_64               randconfig-a005-20200802
-i386                 randconfig-a004-20200803
-i386                 randconfig-a005-20200803
-i386                 randconfig-a001-20200803
-i386                 randconfig-a002-20200803
-i386                 randconfig-a003-20200803
-i386                 randconfig-a006-20200803
-x86_64               randconfig-a013-20200803
-x86_64               randconfig-a011-20200803
-x86_64               randconfig-a012-20200803
-x86_64               randconfig-a016-20200803
-x86_64               randconfig-a015-20200803
-x86_64               randconfig-a014-20200803
-i386                 randconfig-a011-20200803
-i386                 randconfig-a012-20200803
-i386                 randconfig-a015-20200803
-i386                 randconfig-a014-20200803
-i386                 randconfig-a013-20200803
-i386                 randconfig-a016-20200803
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                            allmodconfig
-riscv                               defconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> ---
+>
+> It is possible after refactoring kobject_del(). Though I decided to do it in
+> a separate change (no need to backport) for better test coverage.
+>
+>  lib/kobject.c | 3 ---
+>  1 file changed, 3 deletions(-)
+>
+> diff --git a/lib/kobject.c b/lib/kobject.c
+> index 9dce68c378e6..ea53b30cf483 100644
+> --- a/lib/kobject.c
+> +++ b/lib/kobject.c
+> @@ -604,9 +604,6 @@ static void __kobject_del(struct kobject *kobj)
+>         struct kernfs_node *sd;
+>         const struct kobj_type *ktype;
+>
+> -       if (!kobj)
+> -               return;
+> -
+>         sd = kobj->sd;
+>         ktype = get_ktype(kobj);
+>
+> --
+> 2.27.0
+>
