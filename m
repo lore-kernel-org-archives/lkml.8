@@ -2,133 +2,109 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8B3C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E30A5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59A93207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:16:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="kSGrcoMk"
+	by mail.kernel.org (Postfix) with ESMTP id CD67E20781
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 14:16:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbgHCOQQ (ORCPT
+        id S1728349AbgHCOQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 10:16:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59228 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbgHCOQP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 10:16:15 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 779AAC06174A;
-        Mon,  3 Aug 2020 07:16:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Qag0mgZqT4bNueVSCcbNmY9WCf2Ib/QmqRu677bcwIw=; b=kSGrcoMkWr8Ja1keSlEfp60kY
-        P43VpVbqh45axG9v5UoRiB5LBDyE5T/C6vl4QTFD4c6VO8vx754cBGznLHIdd1GCKslyRoDjlVlJt
-        SlL/bGYkLIUXgJ44wYaTtn6EpEBwX9LOFXAifa3WsLsz1AAoQzmmNE88amEF80+feG+lTI6hQJiNl
-        /maSAJgNfJx2VOG9GdjVA0h4aMpbgwyT4QAm94N0KbjcFUZKd9JQ/IaK38Ti3BAbz5JkKEeJRkTU1
-        hjqNENuCeQEzZ4hYkPrV4/5dTp9Cg0QZcmo1TP7Abxypn66Vtj5dnQ23GmjgmgSLxTh06581vA4Kz
-        wy0UaH4WA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47822)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1k2bGA-0001as-42; Mon, 03 Aug 2020 15:16:14 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1k2bG9-00039O-M1; Mon, 03 Aug 2020 15:16:13 +0100
-Date:   Mon, 3 Aug 2020 15:16:13 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Codrin.Ciubotariu@microchip.com
-Cc:     wsa@kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org,
-        Ludovic.Desroches@microchip.com, Nicolas.Ferre@microchip.com,
-        alexandre.belloni@bootlin.com, kamel.bouhara@bootlin.com
-Subject: Re: [RFC PATCH 1/4] dt-binding: i2c: add generic properties for GPIO
- bus recovery
-Message-ID: <20200803141613.GN1551@shell.armlinux.org.uk>
-References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
- <20200619141904.910889-2-codrin.ciubotariu@microchip.com>
- <20200705211918.GB1055@kunai>
- <20200724193913.GD1227@ninjato>
- <20200724205209.GC1551@shell.armlinux.org.uk>
- <b3a04528-0053-16bf-f092-147685298ced@microchip.com>
- <20200727105029.GI1551@shell.armlinux.org.uk>
- <1e788319-c841-d1f1-b65c-d25052f7f90b@microchip.com>
+        Mon, 3 Aug 2020 10:16:37 -0400
+Received: from foss.arm.com ([217.140.110.172]:58208 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726767AbgHCOQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 10:16:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 621C130E;
+        Mon,  3 Aug 2020 07:16:36 -0700 (PDT)
+Received: from localhost (unknown [10.1.198.53])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E5F933F718;
+        Mon,  3 Aug 2020 07:16:35 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 15:16:34 +0100
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Subject: Re: [PATCH v2 1/7] cpufreq: move invariance setter calls in cpufreq
+ core
+Message-ID: <20200803141634.GA30107@arm.com>
+References: <20200722093732.14297-1-ionela.voinescu@arm.com>
+ <20200722093732.14297-2-ionela.voinescu@arm.com>
+ <CAJZ5v0i5Xrk6oTt81aeXDi1F8gnEspJo9e6nGf10nSvBz-Dbkw@mail.gmail.com>
+ <20200730034128.k4fmblfuwjcmqdze@vireshk-mac-ubuntu>
+ <20200803132617.GA9512@arm.com>
+ <CAJZ5v0gOJXtpF4iy2v+Jbv9y9QZsAtEREMQwWv0u7Zks0Fvp1A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1e788319-c841-d1f1-b65c-d25052f7f90b@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAJZ5v0gOJXtpF4iy2v+Jbv9y9QZsAtEREMQwWv0u7Zks0Fvp1A@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 09:00:36AM +0000, Codrin.Ciubotariu@microchip.com wrote:
-> On 27.07.2020 13:50, Russell King - ARM Linux admin wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> > 
-> > On Mon, Jul 27, 2020 at 10:44:57AM +0000, Codrin.Ciubotariu@microchip.com wrote:
-> >> On 24.07.2020 23:52, Russell King - ARM Linux admin wrote:
-> >>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> >>>
-> >>> On Fri, Jul 24, 2020 at 09:39:13PM +0200, Wolfram Sang wrote:
-> >>>> On Sun, Jul 05, 2020 at 11:19:18PM +0200, Wolfram Sang wrote:
-> >>>>>
-> >>>>>> +- pinctrl
-> >>>>>> + add extra pinctrl to configure SCL/SDA pins to GPIO function for bus
-> >>>>>> + recovery, call it "gpio" or "recovery" state
-> >>>>>
-> >>>>> I think we should stick with "gpio" only. That is what at91 and imx have
-> >>>>> in their bindings. pxa uses "recovery" as a pinctrl state name but I
-> >>>>> can't find any further use or documentation of that. PXA is not fully
-> >>>>> converted to the best of my knowledge, so maybe it is no problem for PXA
-> >>>>> to switch to "gpio", too? We should ask Russell King (cced).
-> >>>
-> >>> Fully converted to what?  The generic handling where the i2c core layer
-> >>> handles everything to do with recovery, including the switch between
-> >>> modes?
-> >>>
-> >>> i2c-pxa _intentionally_ carefully handles the switch between i2c mode and
-> >>> GPIO mode, and I don't see a generic driver doing that to avoid causing
-> >>> any additional glitches on the bus.  Given the use case that this recovery
-> >>> is targetted at, avoiding glitches is very important to keep.
-> >>
-> >> Why is it not possbile to handle glitches in a generic way? I guess it
-> >> depends on the pinctl, but we could treat a worst-case scenario to
-> >> assure the switch between states is done properly.
-> > 
-> > Please look at how i2c-pxa switches between the two, and decide whether
-> > the generic implementation can do the same.
+Hi Rafael,
+
+On Monday 03 Aug 2020 at 15:46:59 (+0200), Rafael J. Wysocki wrote:
+> On Mon, Aug 3, 2020 at 3:26 PM Ionela Voinescu <ionela.voinescu@arm.com> wrote:
+> >
+> > Hi guys,
+> >
+> > On Thursday 30 Jul 2020 at 09:11:28 (+0530), Viresh Kumar wrote:
+> > > On 27-07-20, 15:48, Rafael J. Wysocki wrote:
+> > > > On Wed, Jul 22, 2020 at 11:38 AM Ionela Voinescu
+> > > > <ionela.voinescu@arm.com> wrote:
+> > > > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > > > > index 036f4cc42ede..bac4101546db 100644
+> > > > > --- a/drivers/cpufreq/cpufreq.c
+> > > > > +++ b/drivers/cpufreq/cpufreq.c
+> > > > > @@ -2058,9 +2058,16 @@ EXPORT_SYMBOL(cpufreq_unregister_notifier);
+> > > > >  unsigned int cpufreq_driver_fast_switch(struct cpufreq_policy *policy,
+> > > > >                                         unsigned int target_freq)
+> > > > >  {
+> > > > > +       unsigned int freq;
+> > > > > +
+> > > > >         target_freq = clamp_val(target_freq, policy->min, policy->max);
+> > > > > +       freq = cpufreq_driver->fast_switch(policy, target_freq);
+> > > > > +
+> > > > > +       if (freq)
+> > > > > +               arch_set_freq_scale(policy->related_cpus, freq,
+> > > > > +                                   policy->cpuinfo.max_freq);
+> > > >
+> > > > Why can't arch_set_freq_scale() handle freq == 0?
+> > >
+> >
+> > Sorry, I seem to have missed this question the first time around.
+> >
+> > arch_set_freq_scale() could handle freq == 0, but given that freq == 0
+> > is signaling an error here, I do believe this check is well placed, to
+> > prevent a useless call to arch_set_freq_scale(). Also [1]:
 > 
-> The handling of glitches from initialization looks generic to me. I see 
-> that there are specific clear/reset routines that are in the 
-> (un)prepare_recovery() callbacks, but these callbacks are not replaced 
-> by the generic i2c recovery and will still be used if given by the 
-> driver. The only thing the generic recovery does is to switch the pinmux 
-> state. We can discuss whether we want to change the pinmux state first 
-> or call the (un)preapre_recovery().
+> So let me rephrase:
+> 
+> Doesn't this check add overhead in the empty arch_set_freq_scale() case?
 
-Right, the key point i2c-pxa does is that on prepare:
-- read the current state of the SCL and SDA lines and set the GPIO to
-  reflect those values.
-- then switch the pinmux state.
+Yes, you are right, I did not consider that. I can add a patch for the
+arch_topology driver's arch_set_freq_scale() to handle this and we can
+remove it from here.
 
-That must be preserved, otherwise if SCL is being held low by the I2C
-master, and we switch to GPIO mode, SCL will be released.  So the
-driver needs to be involved before the pinmux state is changed.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+Thank you for pointing this out,
+Ionela.
