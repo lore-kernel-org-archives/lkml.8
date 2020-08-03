@@ -2,225 +2,118 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08737C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D70EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EEF1207DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 18:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF0CC22CAE
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 19:00:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BH/zrsl7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgHCS54 (ORCPT
+        id S1726764AbgHCTA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 14:57:56 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33993 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgHCS5z (ORCPT
+        Mon, 3 Aug 2020 15:00:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgHCTA1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 14:57:55 -0400
-Received: by mail-lj1-f196.google.com with SMTP id z14so3240074ljm.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 11:57:54 -0700 (PDT)
+        Mon, 3 Aug 2020 15:00:27 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53B8AC06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 12:00:27 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id s15so8999529pgc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 12:00:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=2bQwe2K0XwzuOlpiqVHsdZ/mH76OOHNTt78eXB94PDA=;
+        b=BH/zrsl7HzNzpTlN+nMwokcT3MWMfuojbLn05mlyEULmbsnBhqj4VAFvCzgrU3AhOq
+         AAPbj5DaS06efsVQIW+JpTH153H2gSJ3+rhhTTphBEVearFVbJG6wRh+fk1ppaci8sd1
+         oP5DaU5vBan2xV1jC/yq38a0U/2ZO3nHas3Yc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1QdS0fy0Eqxo2sy6ZpyXla/1BB0SZsD0LwltC3usfSw=;
-        b=QTzsLSomQVybgBr4LcldoQ6b/RqYdfHQUOLgV8KwkyY1CSSUCJLYWfmAPGCimdp82s
-         r41cYdaXFnLoplGmmIovxeVn6kplXTv6rUrdvIzIHW1WQmwPGWDOTILmM0yyAuhEdgYn
-         gtf6M1CzpGi/uPgCOHl5Za+J783KjDJ0W2dG5w5+/EmBJ+x6VnctfYWlAZ8pw5pkPtix
-         UdQGIlUN/Gnoq070BvTWKlxNcomYoIIgUAuN4GOvCuK2qZfkJCammJoVAghNBb6nzxmJ
-         h5oa7O40lPhV+TEzqO7DCXbMrNtyTOwtIHncMgSLyEWGnRK/9LhhDaIxMQOJguLvXEU4
-         FB1Q==
-X-Gm-Message-State: AOAM532bNQ9ehndCVbe4CUycULG9N53qPsJgZ+/M+o7fZ1RuDSKo4lyQ
-        4dTXo8wnlnEoDhhfHYQ1jkc=
-X-Google-Smtp-Source: ABdhPJwR24ba6sf0nTdpjdIarESYwacwL6Hv7073yML11fbIURk6Uk+CPKNRuICs5SO/OBiuNQXQSQ==
-X-Received: by 2002:a2e:804b:: with SMTP id p11mr9084289ljg.221.1596481073216;
-        Mon, 03 Aug 2020 11:57:53 -0700 (PDT)
-Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.googlemail.com with ESMTPSA id r8sm3042645lfm.42.2020.08.03.11.57.52
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=2bQwe2K0XwzuOlpiqVHsdZ/mH76OOHNTt78eXB94PDA=;
+        b=oHtim/GZjZ1Yt5XnsSKivbH7LSd/k0VzBrHe1CmdTojMNQAHAl/vjoWoN7DkRcvvxn
+         Xz1zWjXArI6Ihx3Uos5oRlAsEQXUWqPJfE1tFvxeFSSHVbmF02h5oD6UUBmCp8YE9qc7
+         USp5UiOqiZ/Z27JNgo6GwK1q448SdbgB7yI0cK951P0XSt8bhxd8I4Eg5p9SXxzjraus
+         WWrKIuTKmn9YUjQC0DlC7mBXPKuw1yPXK1wJDGrOfenu6gOSJDRAyn1wATbx78h95lrd
+         +h8h/jNUpXh7QNQQ7Rm1PvhG3k1K3JRvhErLrqCI0tzZbavhXbzqe1xZLsSbD2RupOnN
+         d0/g==
+X-Gm-Message-State: AOAM531tuxIt2tRgnvk85ogLLjLN/fRtP29Ae+OH5IxzWkuEIrrg0noV
+        wjTrxR4kcNWAlXFu5R8EE3dQwg==
+X-Google-Smtp-Source: ABdhPJyAnvPLb+WX6KXXnGh4DTEpK7hgx9NQhChy0h95gy8dWIheKWnC0JPY4Et2iYOSVZLMlstGDQ==
+X-Received: by 2002:a65:6205:: with SMTP id d5mr15445995pgv.432.1596481226804;
+        Mon, 03 Aug 2020 12:00:26 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id p19sm19668907pgj.74.2020.08.03.12.00.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 11:57:52 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Julia Lawall <julia.lawall@inria.fr>
-Cc:     Denis Efremov <efremov@linux.com>, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] coccinelle: api: add kvmalloc script
-Date:   Mon,  3 Aug 2020 21:57:49 +0300
-Message-Id: <20200803185749.39034-1-efremov@linux.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200803105601.12162-1-efremov@linux.com>
-References: <20200803105601.12162-1-efremov@linux.com>
+        Mon, 03 Aug 2020 12:00:25 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200801160639.1410944e@archlinux>
+References: <20200731164853.3020946-1-campello@chromium.org> <20200731104555.v3.1.I0925046377211b8b6f06764857f03b4ab592bddb@changeid> <20200801160639.1410944e@archlinux>
+Subject: Re: [PATCH v3 01/15] dt-bindings: iio: Add bindings for sx9310 sensor
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-iio@vger.kernel.org
+To:     Daniel Campello <campello@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>
+Date:   Mon, 03 Aug 2020 12:00:23 -0700
+Message-ID: <159648122347.1360974.1094560524092762187@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Suggest kvmalloc instead of opencoded kmalloc && vmalloc condition.
+Quoting Jonathan Cameron (2020-08-01 08:06:39)
+> On Fri, 31 Jul 2020 10:48:38 -0600
+> Daniel Campello <campello@chromium.org> wrote:
+> > diff --git a/Documentation/devicetree/bindings/iio/proximity/semtech,sx=
+9310.yaml b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.=
+yaml
+> > new file mode 100644
+> > index 00000000000000..5739074d3592fe
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.ya=
+ml
+> > @@ -0,0 +1,65 @@
+[...]
+> > +
+> > +  "#io-channel-cells":
+> > +    const: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - "#io-channel-cells"
+>=20
+> Missed this in earlier review (only noticed when I saw whilst santity
+> checking earlier versions.
+>=20
+> Fairly sure we should only need #io-channel-cells if we have
+> a consumer of a channel somewhere else in DT.  So it's not
+> required as far as I can see.
+>=20
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
-Changes in v2:
- - binary operator cmp added
- - NULL comparisions simplified
- - "T x" case added to !patch mode
-
- scripts/coccinelle/api/kvmalloc.cocci | 142 ++++++++++++++++++++++++++
- 1 file changed, 142 insertions(+)
- create mode 100644 scripts/coccinelle/api/kvmalloc.cocci
-
-diff --git a/scripts/coccinelle/api/kvmalloc.cocci b/scripts/coccinelle/api/kvmalloc.cocci
-new file mode 100644
-index 000000000000..20b22e3d0f74
---- /dev/null
-+++ b/scripts/coccinelle/api/kvmalloc.cocci
-@@ -0,0 +1,142 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+///
-+/// Find if/else condition with kmalloc/vmalloc calls.
-+/// Suggest to use kvmalloc instead.
-+///
-+// Confidence: High
-+// Copyright: (C) 2020 Denis Efremov ISPRAS
-+// Options: --no-includes --include-headers
-+//
-+
-+virtual patch
-+virtual report
-+virtual org
-+virtual context
-+
-+@opportunity depends on !patch@
-+expression E, E1, size;
-+binary operator cmp = {<=, <, ==, >, >=};
-+identifier x;
-+type T;
-+position p;
-+@@
-+
-+(
-+* if (size cmp E1 || ...)@p {
-+    ...
-+*    E = \(kmalloc\|kzalloc\|kcalloc\|kmalloc_node\|kzalloc_node\|
-+*          kmalloc_array\|kmalloc_array_node\|kcalloc_node\)(..., size, ...)
-+    ...
-+  } else {
-+    ...
-+*    E = \(vmalloc\|vzalloc\|vmalloc_node\|vzalloc_node\)(..., size, ...)
-+    ...
-+  }
-+|
-+* E = \(kmalloc\|kzalloc\|kcalloc\|kmalloc_node\|kzalloc_node\|
-+*       kmalloc_array\|kmalloc_array_node\|kcalloc_node\)(..., size, ...)
-+  ... when != E = E1
-+      when != size = E1
-+      when any
-+* if (E == NULL)@p {
-+    ...
-+*   E = \(vmalloc\|vzalloc\|vmalloc_node\|vzalloc_node\)(..., size, ...)
-+    ...
-+  }
-+|
-+* T x = \(kmalloc\|kzalloc\|kcalloc\|kmalloc_node\|kzalloc_node\|
-+*         kmalloc_array\|kmalloc_array_node\|kcalloc_node\)(..., size, ...);
-+  ... when != x = E1
-+      when != size = E1
-+      when any
-+* if (x == NULL)@p {
-+    ...
-+*   x = \(vmalloc\|vzalloc\|vmalloc_node\|vzalloc_node\)(..., size, ...)
-+    ...
-+  }
-+)
-+
-+@depends on patch@
-+expression E, E1, flags, size, node;
-+binary operator cmp = {<=, <, ==, >, >=};
-+identifier x;
-+type T;
-+@@
-+
-+(
-+- if (size cmp E1)
-+-    E = kmalloc(size, flags);
-+- else
-+-    E = vmalloc(size);
-++ E = kvmalloc(size, flags);
-+|
-+- E = kmalloc(size, flags | __GFP_NOWARN);
-+- if (E == NULL)
-+-   E = vmalloc(size);
-++ E = kvmalloc(size, flags);
-+|
-+- T x = kmalloc(size, flags | __GFP_NOWARN);
-+- if (x == NULL)
-+-   x = vmalloc(size);
-++ T x = kvmalloc(size, flags);
-+|
-+- if (size cmp E1)
-+-    E = kzalloc(size, flags);
-+- else
-+-    E = vzalloc(size);
-++ E = kvzalloc(size, flags);
-+|
-+- E = kzalloc(size, flags | __GFP_NOWARN);
-+- if (E == NULL)
-+-   E = vzalloc(size);
-++ E = kvzalloc(size, flags);
-+|
-+- T x = kzalloc(size, flags | __GFP_NOWARN);
-+- if (x == NULL)
-+-   x = vzalloc(size);
-++ T x = kvzalloc(size, flags);
-+|
-+- if (size cmp E1)
-+-    E = kmalloc_node(size, flags, node);
-+- else
-+-    E = vmalloc_node(size, node);
-++ E = kvmalloc_node(size, flags, node);
-+|
-+- E = kmalloc_node(size, flags | __GFP_NOWARN, node);
-+- if (E == NULL)
-+-   E = vmalloc_node(size, node);
-++ E = kvmalloc_node(size, flags, node);
-+|
-+- T x = kmalloc_node(size, flags | __GFP_NOWARN, node);
-+- if (x == NULL)
-+-   x = vmalloc_node(size, node);
-++ T x = kvmalloc_node(size, flags, node);
-+|
-+- if (size cmp E1)
-+-    E = kvzalloc_node(size, flags, node);
-+- else
-+-    E = vzalloc_node(size, node);
-++ E = kvzalloc_node(size, flags, node);
-+|
-+- E = kvzalloc_node(size, flags | __GFP_NOWARN, node);
-+- if (E == NULL)
-+-   E = vzalloc_node(size, node);
-++ E = kvzalloc_node(size, flags, node);
-+|
-+- T x = kvzalloc_node(size, flags | __GFP_NOWARN, node);
-+- if (x == NULL)
-+-   x = vzalloc_node(size, node);
-++ T x = kvzalloc_node(size, flags, node);
-+)
-+
-+@script: python depends on report@
-+p << opportunity.p;
-+@@
-+
-+coccilib.report.print_report(p[0], "WARNING: opportunity for kvmalloc")
-+
-+@script: python depends on org@
-+p << opportunity.p;
-+@@
-+
-+coccilib.org.print_todo(p[0], "WARNING: opportunity for kvmalloc")
--- 
-2.26.2
-
+This is mostly a decision for Rob to make, but I would make it required
+because the device is always an io channel provider. It may be that it
+isn't providing anything in the DT to something else in the DT but it is
+providing this information somewhere so always having to spell that out
+is simple and doesn't hurt.
