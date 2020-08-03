@@ -2,276 +2,135 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 613E9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 03:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D94D2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 03:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9AD206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 03:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B216E206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 03:01:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ClJLtk7l"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qYEeL6Um"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgHCDAf (ORCPT
+        id S1727039AbgHCDBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 2 Aug 2020 23:00:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbgHCDAe (ORCPT
+        Sun, 2 Aug 2020 23:01:17 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:7067 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725820AbgHCDBR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 2 Aug 2020 23:00:34 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85716C06174A;
-        Sun,  2 Aug 2020 20:00:34 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id kr4so8248896pjb.2;
-        Sun, 02 Aug 2020 20:00:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SslfOAYowcSIRE7OJfXaZEhy+2zzQJIxjTX2JOfNhb0=;
-        b=ClJLtk7ld1m3Hbn7U3wLFVfTa9n9Sax2PhdyVglv8jYvKM1jE1XyUVKtIP5hZAiAJz
-         K/WRlfx6ylvKa9drNpdWB6gfkpcLcro9XFpZAVrBeC7JxLRVfEFk90mvXFQEpuBAn6vr
-         qyrFFAK3OPDJEs08ooJmUD8S7KnBgJtgf+slm10wKQBh0jXGtEv4c+Fv35Efh94ldzkC
-         XqC60Gu4mO4M8kx8XMKsdf3fuacFkrAL2CG0nnwQZUrJqmlJqa/FMFeGyj8Nk6uP9PC5
-         kVFov0WtpT6PGCn5Vy0s3oJ7W50SK4EDuToJrC41Hqa/qar9YLKecqt7zqZjLgyW5f7e
-         Svzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SslfOAYowcSIRE7OJfXaZEhy+2zzQJIxjTX2JOfNhb0=;
-        b=jjv9wuoPb0keysi8Aaw35YM3G4PoOnc4uSMR8paCqyXHTkgp7ZK7DuMAgjRpvBLfr0
-         JePEWsORyWJN6mXIlLKOFQFX262DsvL2edfOBhkz8InJDwRhcOwjhByl9SMFCF3tLaWg
-         hMRxuPi+FT+Qf0aFKwdxnYs2wOOomfnrt7svLVibpYOlF9ZqV99mZjNZmMnr2uGyIi85
-         +kIO2Lu1/uMuBbI1gPoR0hIHdP3SqNluIzCHW0cHPhIu8QuPlwugLh0rwODEZ8UsD8Zk
-         zSfmEHnS4E3s8X6zCxv0fV3+Bl9+l0z4N60hQl0s8e6O50HlSgwkapfIbBcia7NkUOox
-         0DGg==
-X-Gm-Message-State: AOAM530VdXDolVRTq2Ey1uTzb7C2iQlORFWp3i1E3b0+QBmnpVqMlX5K
-        AXviqYRndbldImtdMezVM54=
-X-Google-Smtp-Source: ABdhPJxDrt2rUig4JsB3VONcCUv3daYW3E9vL8dO56SldvOAR9QRN2kiyiXC5AXgs1t7O5oC7rUAXQ==
-X-Received: by 2002:a17:902:aa82:: with SMTP id d2mr12475796plr.336.1596423633945;
-        Sun, 02 Aug 2020 20:00:33 -0700 (PDT)
-Received: from arpitha-Inspiron-7570.lan ([49.206.12.123])
-        by smtp.gmail.com with ESMTPSA id g23sm18069768pfo.95.2020.08.02.20.00.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Aug 2020 20:00:33 -0700 (PDT)
-From:   Arpitha Raghunandan <98.arpi@gmail.com>
-To:     brendanhiggins@google.com, skhan@linuxfoundation.org,
-        andriy.shevchenko@linux.intel.com
-Cc:     Arpitha Raghunandan <98.arpi@gmail.com>,
-        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH v2] lib: Convert test_uuid.c to KUnit
-Date:   Mon,  3 Aug 2020 08:29:39 +0530
-Message-Id: <20200803025939.21106-1-98.arpi@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Sun, 2 Aug 2020 23:01:17 -0400
+X-UUID: 11a4f73b12764248aca85402975a2288-20200803
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=/kxTQE9CDzhxGuGgPlgmP9bTn/KdeKuThJByduvI1ik=;
+        b=qYEeL6UmeDwja9PEB1awHXwpS2301M1SP6niWgTjTRRQDukZABIHDMI0ipKo4zUqkYjleWDMvH/8glNbey/umuz2DpwG9akUht0Wi9WigeduCXpbRbBYWGe2pvYRNQsQweYjKwzbcjddTLuAX5Cn1822JV0Zb02jRezl0/5liXk=;
+X-UUID: 11a4f73b12764248aca85402975a2288-20200803
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2102964621; Mon, 03 Aug 2020 11:01:00 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 3 Aug 2020 11:00:54 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 3 Aug 2020 11:00:54 +0800
+Message-ID: <1596423655.32283.7.camel@mtkswgap22>
+Subject: Re: [PATCH v4] scsi: ufs: Cleanup completed request without
+ interrupt notification
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Can Guo <cang@codeaurora.org>
+CC:     Bart Van Assche <bvanassche@acm.org>,
+        Avri Altman <Avri.Altman@wdc.com>,
+        <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <alim.akhtar@samsung.com>, <jejb@linux.ibm.com>,
+        <beanhuo@micron.com>, <asutoshd@codeaurora.org>,
+        <matthias.bgg@gmail.com>, <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, <chaotian.jing@mediatek.com>,
+        <cc.chou@mediatek.com>
+Date:   Mon, 3 Aug 2020 11:00:55 +0800
+In-Reply-To: <548b602daa1e15415625cb8d1f81a208@codeaurora.org>
+References: <20200724140246.19434-1-stanley.chu@mediatek.com>
+         <SN6PR04MB4640B5FC06968244DDACB8BEFC720@SN6PR04MB4640.namprd04.prod.outlook.com>
+         <1596159018.17247.53.camel@mtkswgap22>
+         <97f1dfb0-41b6-0249-3e82-cae480b0efb6@acm.org>
+         <8b0a158a7c3ee2165e09290996521ffc@codeaurora.org>
+         <f45c6c47-ffc5-3f8e-3234-9e5989dbf996@acm.org>
+         <548b602daa1e15415625cb8d1f81a208@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-TM-SNTS-SMTP: 7BEEB55B31B76E69631748D3316DAD708D36573F0300CB39663BDF23985A638A2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Converts test lib/test_uuid.c to KUnit.
-More information about KUnit can be found at
-https://www.kernel.org/doc/html/latest/dev-tools/kunit/index.html.
-This change is beneficial as KUnit provides a common framework for
-unit tests in the kernel. KUnit is fast as well.
-
-Signed-off-by: Arpitha Raghunandan <98.arpi@gmail.com>
----
-Changes v1->v2:
-- Add a more detailed commit message
-
- lib/Kconfig.debug                 |  7 +--
- lib/Makefile                      |  2 +-
- lib/{test_uuid.c => uuid_kunit.c} | 84 +++++++++----------------------
- 3 files changed, 28 insertions(+), 65 deletions(-)
- rename lib/{test_uuid.c => uuid_kunit.c} (48%)
-
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index f174f8887ae7..330c0d1de50b 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2070,9 +2070,6 @@ config TEST_BITFIELD
- 
- 	  If unsure, say N.
- 
--config TEST_UUID
--	tristate "Test functions located in the uuid module at runtime"
--
- config TEST_XARRAY
- 	tristate "Test the XArray code at runtime"
- 
-@@ -2273,6 +2270,10 @@ config BITS_TEST
- 
- 	  If unsure, say N.
- 
-+config UUID_KUNIT_TEST
-+	tristate "KUnit test for functions located in the uuid module at runtime"
-+	depends on KUNIT
-+
- config TEST_UDELAY
- 	tristate "udelay test driver"
- 	help
-diff --git a/lib/Makefile b/lib/Makefile
-index 032cc6c71a3a..62ef383c7563 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -81,7 +81,6 @@ obj-$(CONFIG_TEST_PRINTF) += test_printf.o
- obj-$(CONFIG_TEST_BITMAP) += test_bitmap.o
- obj-$(CONFIG_TEST_STRSCPY) += test_strscpy.o
- obj-$(CONFIG_TEST_BITFIELD) += test_bitfield.o
--obj-$(CONFIG_TEST_UUID) += test_uuid.o
- obj-$(CONFIG_TEST_XARRAY) += test_xarray.o
- obj-$(CONFIG_TEST_PARMAN) += test_parman.o
- obj-$(CONFIG_TEST_KMOD) += test_kmod.o
-@@ -342,5 +341,6 @@ obj-$(CONFIG_PLDMFW) += pldmfw/
- obj-$(CONFIG_LIST_KUNIT_TEST) += list-test.o
- obj-$(CONFIG_LINEAR_RANGES_TEST) += test_linear_ranges.o
- obj-$(CONFIG_BITS_TEST) += test_bits.o
-+obj-$(CONFIG_UUID_KUNIT_TEST) += uuid_kunit.o
- 
- obj-$(CONFIG_GENERIC_LIB_DEVMEM_IS_ALLOWED) += devmem_is_allowed.o
-diff --git a/lib/test_uuid.c b/lib/uuid_kunit.c
-similarity index 48%
-rename from lib/test_uuid.c
-rename to lib/uuid_kunit.c
-index cd819c397dc7..f7f219ddecc2 100644
---- a/lib/test_uuid.c
-+++ b/lib/uuid_kunit.c
-@@ -3,6 +3,7 @@
-  */
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
-+#include <kunit/test.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -39,95 +40,56 @@ static const char * const test_uuid_wrong_data[] = {
- 	"0cb4ddff-a545-4401-9d06-688af53e",	/* not enough data */
- };
- 
--static unsigned total_tests __initdata;
--static unsigned failed_tests __initdata;
--
--static void __init test_uuid_failed(const char *prefix, bool wrong, bool be,
--				    const char *data, const char *actual)
--{
--	pr_err("%s test #%u %s %s data: '%s'\n",
--	       prefix,
--	       total_tests,
--	       wrong ? "passed on wrong" : "failed on",
--	       be ? "BE" : "LE",
--	       data);
--	if (actual && *actual)
--		pr_err("%s test #%u actual data: '%s'\n",
--		       prefix,
--		       total_tests,
--		       actual);
--	failed_tests++;
--}
--
--static void __init test_uuid_test(const struct test_uuid_data *data)
-+static void test_uuid_test(struct kunit *test, const struct test_uuid_data *data)
- {
- 	guid_t le;
- 	uuid_t be;
- 	char buf[48];
- 
- 	/* LE */
--	total_tests++;
--	if (guid_parse(data->uuid, &le))
--		test_uuid_failed("conversion", false, false, data->uuid, NULL);
--
--	total_tests++;
--	if (!guid_equal(&data->le, &le)) {
--		sprintf(buf, "%pUl", &le);
--		test_uuid_failed("cmp", false, false, data->uuid, buf);
--	}
-+	KUNIT_EXPECT_EQ(test, 0, guid_parse(data->uuid, &le));
-+	KUNIT_EXPECT_TRUE(test, guid_equal(&data->le, &le));
- 
- 	/* BE */
--	total_tests++;
--	if (uuid_parse(data->uuid, &be))
--		test_uuid_failed("conversion", false, true, data->uuid, NULL);
--
--	total_tests++;
--	if (!uuid_equal(&data->be, &be)) {
--		sprintf(buf, "%pUb", &be);
--		test_uuid_failed("cmp", false, true, data->uuid, buf);
--	}
-+	KUNIT_EXPECT_EQ(test, 0, uuid_parse(data->uuid, &be));
-+	KUNIT_EXPECT_TRUE(test, uuid_equal(&data->be, &be));
- }
- 
--static void __init test_uuid_wrong(const char *data)
-+static void test_uuid_wrong(struct kunit *test, const char *data)
- {
- 	guid_t le;
- 	uuid_t be;
- 
- 	/* LE */
--	total_tests++;
--	if (!guid_parse(data, &le))
--		test_uuid_failed("negative", true, false, data, NULL);
-+	KUNIT_EXPECT_NE(test, 0, guid_parse(data, &le));
- 
- 	/* BE */
--	total_tests++;
--	if (!uuid_parse(data, &be))
--		test_uuid_failed("negative", true, true, data, NULL);
-+	KUNIT_EXPECT_NE(test, 0, uuid_parse(data, &be));
- }
- 
--static int __init test_uuid_init(void)
-+static void test_uuid_init(struct kunit *test)
- {
- 	unsigned int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(test_uuid_test_data); i++)
--		test_uuid_test(&test_uuid_test_data[i]);
-+		test_uuid_test(test, &test_uuid_test_data[i]);
- 
- 	for (i = 0; i < ARRAY_SIZE(test_uuid_wrong_data); i++)
--		test_uuid_wrong(test_uuid_wrong_data[i]);
-+		test_uuid_wrong(test, test_uuid_wrong_data[i]);
-+}
- 
--	if (failed_tests == 0)
--		pr_info("all %u tests passed\n", total_tests);
--	else
--		pr_err("failed %u out of %u tests\n", failed_tests, total_tests);
-+static struct kunit_case uuid_test_cases[] = {
-+	KUNIT_CASE(test_uuid_init),
-+	{}
-+};
- 
--	return failed_tests ? -EINVAL : 0;
--}
--module_init(test_uuid_init);
-+static struct kunit_suite uuid_test_suite = {
-+	.name = "uuid-kunit-test",
-+	.test_cases = uuid_test_cases,
-+};
-+
-+kunit_test_suite(uuid_test_suite);
- 
--static void __exit test_uuid_exit(void)
--{
--	/* do nothing */
--}
--module_exit(test_uuid_exit);
- 
- MODULE_AUTHOR("Andy Shevchenko <andriy.shevchenko@linux.intel.com>");
- MODULE_LICENSE("Dual BSD/GPL");
--- 
-2.25.1
+SGkgQ2FuLA0KDQpPbiBTYXQsIDIwMjAtMDgtMDEgYXQgMDc6MTcgKzA4MDAsIENhbiBHdW8gd3Jv
+dGU6DQo+IEhpIEJhcnQsDQo+IA0KPiBPbiAyMDIwLTA4LTAxIDAwOjUxLCBCYXJ0IFZhbiBBc3Nj
+aGUgd3JvdGU6DQo+ID4gT24gMjAyMC0wNy0zMSAwMTowMCwgQ2FuIEd1byB3cm90ZToNCj4gPj4g
+QUZBSUssIHN5Y2hyb25pemF0aW9uIG9mIHNjc2lfZG9uZSBpcyBub3QgYSBwcm9ibGVtIGhlcmUs
+IGJlY2F1c2Ugc2NzaQ0KPiA+PiBsYXllcg0KPiA+PiB1c2UgdGhlIGF0b21pYyBzdGF0ZSwgbmFt
+ZWx5IFNDTURfU1RBVEVfQ09NUExFVEUsIG9mIGEgc2NzaSBjbWQgdG8gDQo+ID4+IHByZXZlbnQN
+Cj4gPj4gdGhlIGNvbmN1cnJlbmN5IG9mIGFib3J0IGFuZCByZWFsIGNvbXBsZXRpb24gb2YgaXQu
+DQo+ID4+IA0KPiA+PiBDaGVjayBmdW5jIHNjc2lfdGltZXNfb3V0KCksIGhvcGUgaXQgaGVscHMu
+DQo+ID4+IA0KPiA+PiBlbnVtIGJsa19laF90aW1lcl9yZXR1cm4gc2NzaV90aW1lc19vdXQoc3Ry
+dWN0IHJlcXVlc3QgKnJlcSkNCj4gPj4gew0KPiA+PiAuLi4NCj4gPj4gICAgICAgICBpZiAocnRu
+ID09IEJMS19FSF9ET05FKSB7DQo+ID4+ICAgICAgICAgICAgICAgICAvKg0KPiA+PiAgICAgICAg
+ICAgICAgICAgICogU2V0IHRoZSBjb21tYW5kIHRvIGNvbXBsZXRlIGZpcnN0IGluIG9yZGVyIHRv
+IA0KPiA+PiBwcmV2ZW50DQo+ID4+IGEgcmVhbA0KPiA+PiAgICAgICAgICAgICAgICAgICogY29t
+cGxldGlvbiBmcm9tIHJlbGVhc2luZyB0aGUgY29tbWFuZCB3aGlsZSBlcnJvcg0KPiA+PiBoYW5k
+bGluZw0KPiA+PiAgICAgICAgICAgICAgICAgICogaXMgdXNpbmcgaXQuIElmIHRoZSBjb21tYW5k
+IHdhcyBhbHJlYWR5IGNvbXBsZXRlZCwNCj4gPj4gdGhlbiB0aGUNCj4gPj4gICAgICAgICAgICAg
+ICAgICAqIGxvd2VyIGxldmVsIGRyaXZlciBiZWF0IHRoZSB0aW1lb3V0IGhhbmRsZXIsIGFuZCBp
+dA0KPiA+PiBpcyBzYWZlDQo+ID4+ICAgICAgICAgICAgICAgICAgKiB0byByZXR1cm4gd2l0aG91
+dCBlc2NhbGF0aW5nIGVycm9yIHJlY292ZXJ5Lg0KPiA+PiAgICAgICAgICAgICAgICAgICoNCj4g
+Pj4gICAgICAgICAgICAgICAgICAqIElmIHRpbWVvdXQgaGFuZGxpbmcgbG9zdCB0aGUgcmFjZSB0
+byBhIHJlYWwNCj4gPj4gY29tcGxldGlvbiwgdGhlDQo+ID4+ICAgICAgICAgICAgICAgICAgKiBi
+bG9jayBsYXllciBtYXkgaWdub3JlIHRoYXQgZHVlIHRvIGEgZmFrZSB0aW1lb3V0DQo+ID4+IGlu
+amVjdGlvbiwNCj4gPj4gICAgICAgICAgICAgICAgICAqIHNvIHJldHVybiBSRVNFVF9USU1FUiB0
+byBhbGxvdyBlcnJvciBoYW5kbGluZyANCj4gPj4gYW5vdGhlcg0KPiA+PiBzaG90DQo+ID4+ICAg
+ICAgICAgICAgICAgICAgKiBhdCB0aGlzIGNvbW1hbmQuDQo+ID4+ICAgICAgICAgICAgICAgICAg
+Ki8NCj4gPj4gICAgICAgICAgICAgICAgIGlmICh0ZXN0X2FuZF9zZXRfYml0KFNDTURfU1RBVEVf
+Q09NUExFVEUsIA0KPiA+PiAmc2NtZC0+c3RhdGUpKQ0KPiA+PiAgICAgICAgICAgICAgICAgICAg
+ICAgICByZXR1cm4gQkxLX0VIX1JFU0VUX1RJTUVSOw0KPiA+PiAgICAgICAgICAgICAgICAgaWYg
+KHNjc2lfYWJvcnRfY29tbWFuZChzY21kKSAhPSBTVUNDRVNTKSB7DQo+ID4+ICAgICAgICAgICAg
+ICAgICAgICAgICAgIHNldF9ob3N0X2J5dGUoc2NtZCwgRElEX1RJTUVfT1VUKTsNCj4gPj4gICAg
+ICAgICAgICAgICAgICAgICAgICAgc2NzaV9laF9zY21kX2FkZChzY21kKTsNCj4gPj4gICAgICAg
+ICAgICAgICAgIH0NCj4gPj4gICAgICAgICB9DQo+ID4+IH0NCj4gPiANCj4gPiBJIGFtIGZhbWls
+aWFyIHdpdGggdGhpcyBtZWNoYW5pc20uIE15IGNvbmNlcm4gaXMgdGhhdCBib3RoIHRoZSByZWd1
+bGFyDQo+ID4gY29tcGxldGlvbiBwYXRoIGFuZCB0aGUgYWJvcnQgaGFuZGxlciBtdXN0IGNhbGwg
+c2NzaV9kbWFfdW5tYXAoKSBiZWZvcmUNCj4gPiBjYWxsaW5nIGNtZC0+c2NzaV9kb25lKGNtZCku
+IEkgZG9uJ3Qgc2VlIGhvdw0KPiA+IHRlc3RfYW5kX3NldF9iaXQoU0NNRF9TVEFURV9DT01QTEVU
+RSwgJnNjbWQtPnN0YXRlKSBjb3VsZCBwcmV2ZW50IHRoYXQNCj4gPiB0aGUgcmVndWxhciBjb21w
+bGV0aW9uIHBhdGggYW5kIHRoZSBhYm9ydCBoYW5kbGVyIGNhbGwgc2NzaV9kbWFfdW5tYXAoKQ0K
+PiA+IGNvbmN1cnJlbnRseSBzaW5jZSBib3RoIGNhbGxzIGhhcHBlbiBiZWZvcmUgdGhlIFNDTURf
+U1RBVEVfQ09NUExFVEUgYml0DQo+ID4gaXMgc2V0Pw0KPiA+IA0KPiA+IFRoYW5rcywNCj4gPiAN
+Cj4gPiBCYXJ0Lg0KPiANCj4gRm9yIHNjc2lfZG1hX3VubWFwKCkgcGFydCwgdGhhdCBpcyB0cnVl
+IC0gd2Ugc2hvdWxkIG1ha2UgaXQgc2VyaWFsaXplZCANCj4gd2l0aA0KPiBhbnkgb3RoZXIgY29t
+cGxldGlvbiBwYXRocy4gSSd2ZSBmb3VuZCBpdCBkdXJpbmcgbXkgZmF1bHQgaW5qZWN0aW9uIA0K
+PiB0ZXN0LCBzbw0KPiBJJ3ZlIG1hZGUgYSBwYXRjaCB0byBmaXggaXQsIGJ1dCBpdCBvbmx5IGNv
+bWVzIGluIG15IG5leHQgZXJyb3IgcmVjb3ZlcnkNCj4gZW5oYW5jZW1lbnQgcGF0Y2ggc2VyaWVz
+LiBQbGVhc2UgY2hlY2sgdGhlIGF0dGFjaG1lbnQuDQo+IA0KDQpZb3VyIHBhdGNoIGxvb2tzIGdv
+b2QgdG8gbWUuDQoNCkkgaGF2ZSB0aGUgc2FtZSBpZGVhIGJlZm9yZSBidXQgSSBmb3VuZCB0aGF0
+IGNhbGxpbmcgc2NzaV9kb25lKCkgKGJ5DQpfX3Vmc2hjZF90cmFuc2Zlcl9yZXFfY29tcGwoKSkg
+aW4gdWZzaGNkX2Fib3J0KCkgaW4gb2xkIGtlcm5lbCAoZS5nLiwNCjQuMTQpIHdpbGwgY2F1c2Ug
+aXNzdWVzIGJ1dCBpdCBoYXMgYmVlbiByZXNvbHZlZCBieSBpbnRyb2R1Y2VkDQpTQ01EX1NUQVRF
+X0NPTVBMRVRFIGZsYWcgaW4gbmV3ZXIga2VybmVsLiBTbyB5b3VyIHBhdGNoIG1ha2VzIHNlbnNl
+Lg0KDQpXb3VsZCB5b3UgbWluZCBzZW5kaW5nIG91dCB0aGlzIGRyYWZ0IHBhdGNoIGFzIGEgZm9y
+bWFsIHBhdGNoIHRvZ2V0aGVyDQp3aXRoIG15IHBhdGNoIHRvIGZpeCBpc3N1ZXMgaW4gdWZzaGNk
+X2Fib3J0KCk/IE91ciBwYXRjaGVzIGFyZSBhaW1lZCB0bw0KZml4IGNhc2VzIHRoYXQgaG9zdC9k
+ZXZpY2UgcmVzZXQgZXZlbnR1YWxseSBub3QgYmVpbmcgdHJpZ2dlcmVkIGJ5IHRoZQ0KcmVzdWx0
+IG9mIHVmc2hjZF9hYm9ydCgpLCBmb3IgZXhhbXBsZSwgY29tbWFuZCBpcyBhYm9ydGVkIHN1Y2Nl
+c3NmdWxseQ0Kb3IgY29tbWFuZCBpcyBub3QgcGVuZGluZyBpbiBkZXZpY2Ugd2l0aCBpdHMgZG9v
+cmJlbGwgYWxzbyBjbGVhcmVkLg0KDQpUaGFua3MsDQpTdGFubGV5IENodQ0KDQo+IFRoYW5rcywN
+Cj4gDQo+IENhbiBHdW8uDQo+IA0KDQo=
 
