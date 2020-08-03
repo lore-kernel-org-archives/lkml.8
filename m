@@ -2,37 +2,73 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52430C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA63C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08B3E2075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1C38206D7
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:10:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bpgQNO5S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgHCUJz (ORCPT
+        id S1726889AbgHCUKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 16:09:55 -0400
-Received: from mail.ispras.ru ([83.149.199.84]:44926 "EHLO mail.ispras.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbgHCUJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 16:09:55 -0400
-X-Greylist: delayed 329 seconds by postgrey-1.27 at vger.kernel.org; Mon, 03 Aug 2020 16:09:52 EDT
-Received: from localhost.localdomain (unknown [46.188.10.168])
-        by mail.ispras.ru (Postfix) with ESMTPSA id 5060C40A206F;
-        Mon,  3 Aug 2020 20:04:22 +0000 (UTC)
-From:   Alexander Monakov <amonakov@ispras.ru>
-To:     amd-gfx@lists.freedesktop.org
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Monakov <amonakov@ispras.ru>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH] drm/amd/display: use correct scale for actual_brightness
-Date:   Mon,  3 Aug 2020 23:02:18 +0300
-Message-Id: <20200803200218.2167-1-amonakov@ispras.ru>
-X-Mailer: git-send-email 2.26.2
+        Mon, 3 Aug 2020 16:10:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57578 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgHCUKq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 16:10:46 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B292C06174A;
+        Mon,  3 Aug 2020 13:10:46 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id a14so11187007edx.7;
+        Mon, 03 Aug 2020 13:10:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=M3ptvbwyL3eMkXzCvwkUGi6lWLScZbjIY72Givg73RM=;
+        b=bpgQNO5SZsC9FJeljzAfeFLqU1kFreasmyaomW+z8/ZEwxp+kS3EbIsO3w5wf3dRFm
+         coTRDy1n7tCz9j3Jmj6wCnvZ4oLrU3ecEFR7kDd2vRWOEzyXSAsd3IQb0n/XnShDW9i1
+         3lcAljxFHY9DgHSO3PNVtIrkzDhRI08rk6DHZwW2gRfhTGqZyW8qE6HghZBd8G8Apd0b
+         RAY8zOcl6HyGr02KQ3kjw2jXd0zes4JjUK9yCz4iJvDSLH1fd1ODFsMdTN1M1HTZH2OO
+         zFv0rLc5LBWXAKwMAxoKbxiz/Z6fpd6rIv8Fop7BWP2PNmyb1MMkTplcqynSm5iBkaON
+         plDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=M3ptvbwyL3eMkXzCvwkUGi6lWLScZbjIY72Givg73RM=;
+        b=W+CfZF6TuHYt/+VsLOe4tQjYIzVyKkItJEKMmva5TMSjEdp7eULeQWHbrNewv/uNeg
+         ZYPUoonjC7P4Q3ZhsbQTPCNjGRUh4e8RUTujG1OfeSqNHtQA9cYsWYA5D+GYP89yLMHJ
+         BS90bSTUCtmoMbgJSKOGuPaXxL2w4pD0JNf+R0BGAHes24+DOkTEjhX8BLOhf81XSFot
+         TGLMxo2Ze3YO3XxunBF2DT6cacnzWyT42epNCHx2EOH/lz+VtgKPrGq5aJGxpZVmMcWj
+         C2QJC2YKyRAtapp0+PW8jNHKCQZ6VWpSCOOVeHTWOuMmuyofKn+eqnwMOEvlww9HOA4b
+         u5+g==
+X-Gm-Message-State: AOAM530TqXfO+83+h6z+/ohzyPePOxaFcWvI8TVppthMA8mriXY/Yuro
+        dcJfRJ/8f7KbPUe2P/BmyS0=
+X-Google-Smtp-Source: ABdhPJxiRlfNZldXm0QMgXVFE46y/hXLG0ie71qyg1SpfhOjaBsGZH3mlc0L84oI0zxroOOFKELhsw==
+X-Received: by 2002:a50:d655:: with SMTP id c21mr16881305edj.49.1596485445220;
+        Mon, 03 Aug 2020 13:10:45 -0700 (PDT)
+Received: from localhost.localdomain ([188.26.57.97])
+        by smtp.gmail.com with ESMTPSA id u8sm16664049ejm.65.2020.08.03.13.10.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 13:10:44 -0700 (PDT)
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org
+Cc:     claudiu.manoil@nxp.com, ioana.ciornei@nxp.com, Jiafei.Pan@nxp.com,
+        yangbo.lu@nxp.com, linux-kernel@vger.kernel.org,
+        linux-rt-users@vger.kernel.org
+Subject: [PATCH net-next 1/2] dpaa2-eth: use napi_schedule to be compatible with PREEMPT_RT
+Date:   Mon,  3 Aug 2020 23:10:08 +0300
+Message-Id: <20200803201009.613147-1-olteanv@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -40,136 +76,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation for sysfs backlight level interface requires that
-values in both 'brightness' and 'actual_brightness' files are
-interpreted to be in range from 0 to the value given in the
-'max_brightness' file.
+From: Jiafei Pan <Jiafei.Pan@nxp.com>
 
-With amdgpu, max_brightness gives 255, and values written by the user
-into 'brightness' are internally rescaled to a wider range. However,
-reading from 'actual_brightness' gives the raw register value without
-inverse rescaling. This causes issues for various userspace tools such
-as PowerTop and systemd that expect the value to be in the correct
-range.
+The driver calls napi_schedule_irqoff() from a context where, in RT,
+hardirqs are not disabled, since the IRQ handler is force-threaded.
 
-Introduce a helper to retrieve internal backlight range. Extend the
-existing 'convert_brightness' function to handle conversion in both
-directions.
+In the call path of this function, __raise_softirq_irqoff() is modifying
+its per-CPU mask of pending softirqs that must be processed, using
+or_softirq_pending(). The or_softirq_pending() function is not atomic,
+but since interrupts are supposed to be disabled, nobody should be
+preempting it, and the operation should be safe.
 
-Bug: https://bugzilla.kernel.org/show_bug.cgi?id=203905
-Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1242
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
+Nonetheless, when running with hardirqs on, as in the PREEMPT_RT case,
+it isn't safe, and the pending softirqs mask can get corrupted,
+resulting in softirqs being lost and never processed.
+
+To have common code that works with PREEMPT_RT and with mainline Linux,
+we can use plain napi_schedule() instead. The difference is that
+napi_schedule() (via __napi_schedule) also calls local_irq_save, which
+disables hardirqs if they aren't already. But, since they already are
+disabled in non-RT, this means that in practice we don't see any
+measurable difference in throughput or latency with this patch.
+
+Signed-off-by: Jiafei Pan <Jiafei.Pan@nxp.com>
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 ---
- .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 73 ++++++++-----------
- 1 file changed, 32 insertions(+), 41 deletions(-)
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 710edc70e37e..03e21e7b7917 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -2881,51 +2881,42 @@ static int set_backlight_via_aux(struct dc_link *link, uint32_t brightness)
- 	return rc ? 0 : 1;
+diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+index 9b4028c0e34c..50f52fe2012f 100644
+--- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
++++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+@@ -2330,7 +2330,7 @@ static void cdan_cb(struct dpaa2_io_notification_ctx *ctx)
+ 	/* Update NAPI statistics */
+ 	ch->stats.cdan++;
+ 
+-	napi_schedule_irqoff(&ch->napi);
++	napi_schedule(&ch->napi);
  }
  
--static u32 convert_brightness(const struct amdgpu_dm_backlight_caps *caps,
--			      const uint32_t user_brightness)
-+static int get_brightness_range(const struct amdgpu_dm_backlight_caps *caps,
-+				unsigned *min, unsigned *max)
- {
--	u32 min, max, conversion_pace;
--	u32 brightness = user_brightness;
--
- 	if (!caps)
--		goto out;
-+		return 0;
- 
--	if (!caps->aux_support) {
--		max = caps->max_input_signal;
--		min = caps->min_input_signal;
--		/*
--		 * The brightness input is in the range 0-255
--		 * It needs to be rescaled to be between the
--		 * requested min and max input signal
--		 * It also needs to be scaled up by 0x101 to
--		 * match the DC interface which has a range of
--		 * 0 to 0xffff
--		 */
--		conversion_pace = 0x101;
--		brightness =
--			user_brightness
--			* conversion_pace
--			* (max - min)
--			/ AMDGPU_MAX_BL_LEVEL
--			+ min * conversion_pace;
-+	if (caps->aux_support) {
-+		// Firmware limits are in nits, DC API wants millinits.
-+		*max = 1000 * caps->aux_max_input_signal;
-+		*min = 1000 * caps->aux_min_input_signal;
- 	} else {
--		/* TODO
--		 * We are doing a linear interpolation here, which is OK but
--		 * does not provide the optimal result. We probably want
--		 * something close to the Perceptual Quantizer (PQ) curve.
--		 */
--		max = caps->aux_max_input_signal;
--		min = caps->aux_min_input_signal;
--
--		brightness = (AMDGPU_MAX_BL_LEVEL - user_brightness) * min
--			       + user_brightness * max;
--		// Multiple the value by 1000 since we use millinits
--		brightness *= 1000;
--		brightness = DIV_ROUND_CLOSEST(brightness, AMDGPU_MAX_BL_LEVEL);
-+		// Firmware limits are 8-bit, PWM control is 16-bit.
-+		*max = 0x101 * caps->max_input_signal;
-+		*min = 0x101 * caps->min_input_signal;
- 	}
-+	return 1;
-+}
- 
--out:
--	return brightness;
-+static u32 convert_brightness(const struct amdgpu_dm_backlight_caps *caps,
-+			      const uint32_t brightness, int from_user)
-+{
-+	unsigned min, max;
-+
-+	if (!get_brightness_range(caps, &min, &max))
-+		return brightness;
-+
-+	if (from_user)
-+		// Rescale 0..255 to min..max
-+		return min + DIV_ROUND_CLOSEST((max - min) * brightness,
-+					       AMDGPU_MAX_BL_LEVEL);
-+
-+	if (brightness < min)
-+		return 0;
-+	// Rescale min..max to 0..255
-+	return DIV_ROUND_CLOSEST(AMDGPU_MAX_BL_LEVEL * (brightness - min),
-+				 max - min);
- }
- 
- static int amdgpu_dm_backlight_update_status(struct backlight_device *bd)
-@@ -2941,7 +2932,7 @@ static int amdgpu_dm_backlight_update_status(struct backlight_device *bd)
- 
- 	link = (struct dc_link *)dm->backlight_link;
- 
--	brightness = convert_brightness(&caps, bd->props.brightness);
-+	brightness = convert_brightness(&caps, bd->props.brightness, 1);
- 	// Change brightness based on AUX property
- 	if (caps.aux_support)
- 		return set_backlight_via_aux(link, brightness);
-@@ -2958,7 +2949,7 @@ static int amdgpu_dm_backlight_get_brightness(struct backlight_device *bd)
- 
- 	if (ret == DC_ERROR_UNEXPECTED)
- 		return bd->props.brightness;
--	return ret;
-+	return convert_brightness(&dm->backlight_caps, ret, 0);
- }
- 
- static const struct backlight_ops amdgpu_dm_backlight_ops = {
-
-base-commit: bcf876870b95592b52519ed4aafcf9d95999bc9c
+ /* Allocate and configure a DPCON object */
 -- 
-2.26.2
+2.25.1
 
