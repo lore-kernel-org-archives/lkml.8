@@ -2,113 +2,70 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8077C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CBCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC00C208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:08:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="WYjnd6dI"
+	by mail.kernel.org (Postfix) with ESMTP id E276022C9F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 22:10:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596492605;
+	bh=CYyXnvZJCUaonsd/yI5h4FGaSrFy8joVfbR7BMSsyjY=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=pzusvwYr6JoR1nS67LqXSUwuus+cM6z21nHRgyOeB/usC9/qnw894nkBvuLD9Gsow
+	 cg0avG9aCgyf2rAm9BK7TYZxxR+BrFNaIWj39OFrd83ai/4iQamx9goIdtTVTOGWbG
+	 f8wiYHdjYJQ8ay+SDjZHFmii6Oti2jTXwbruYXDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729493AbgHCWIK (ORCPT
+        id S1729214AbgHCWKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 18:08:10 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:60894 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728708AbgHCWIK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 18:08:10 -0400
-Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 3F70520B4908;
-        Mon,  3 Aug 2020 15:08:09 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3F70520B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1596492489;
-        bh=lOuSme48DtaAahlNbilkFH/6Rv176zUXrsFgRlysqqs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=WYjnd6dI4uoxBT0ptGFkjCRUWPUHavtt0YrQ+lPKDy6IEvcbD5UPs8HJ3W6vikKvE
-         TiEHmYJcr9dIdemFW9y/E4Z45wzY7Fcf1YQc1I/0SA/teBekYShIVQOvFhhLfizxUE
-         bX0N0toB9j6tQQ4f1YHNrFtNkSQ/72Ghl9PWNFJw=
-Subject: Re: [PATCH v5 3/4] LSM: Define SELinux function to measure state and
- policy
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Tyler Hicks <tyhicks@linux.microsoft.com>, sashal@kernel.org,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200730034724.3298-1-nramas@linux.microsoft.com>
- <20200730034724.3298-4-nramas@linux.microsoft.com>
- <dfd6f9c8-d62a-d278-9b0e-6b1f5ad03d3e@gmail.com>
- <6371efa9-5ae6-05ac-c357-3fbe1a5a93d5@linux.microsoft.com>
- <CAEjxPJ789kmdDwy-6RaL7HuMFxKpQ9Hwxj9J-_-f62XDCNJUiA@mail.gmail.com>
- <f992901f-6dca-7d31-3426-5a74d36c2c8c@gmail.com>
- <d988a6d0-04e0-62f0-2705-4352b268ca55@linux.microsoft.com>
- <5c843a3d-713c-e71f-8d4f-c6e5f51422f1@gmail.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <3e766eed-7a0b-afca-6139-ac43dea053d7@linux.microsoft.com>
-Date:   Mon, 3 Aug 2020 15:08:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <5c843a3d-713c-e71f-8d4f-c6e5f51422f1@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 3 Aug 2020 18:10:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56368 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbgHCWKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 18:10:04 -0400
+Subject: Re: [GIT PULL] IRQ fixes
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596492604;
+        bh=CYyXnvZJCUaonsd/yI5h4FGaSrFy8joVfbR7BMSsyjY=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=cbEDKUxvxwPLsJcN1GjojI2Z7AGelD9vHmKNrjeQxGB/Pp+qbF2/ef0I3YtOKUmLG
+         hNKXUceuI6JQwnWHtgURQlvCYahuE4NqY+tgZ7t+1T5PF7FNGgMEdH7WUT3x9C5kcI
+         ul7KkFxFUY3bIazN9jdNXRxKqgbBhx6Ny2iqNADI=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200803105419.GA256986@gmail.com>
+References: <20200803105419.GA256986@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200803105419.GA256986@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+ irq-urgent-2020-08-02
+X-PR-Tracked-Commit-Id: aa251fc5b936d3ddb4b4c4b36427eb9aa3347c82
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 3b4b84b2ea9938e44fffa356c7b95f496b4246ab
+Message-Id: <159649260392.26696.17018771519961735618.pr-tracker-bot@kernel.org>
+Date:   Mon, 03 Aug 2020 22:10:03 +0000
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/3/20 2:07 PM, Stephen Smalley wrote:
+The pull request you sent on Mon, 3 Aug 2020 12:54:19 +0200:
 
->>>> [   68.870715] irq event stamp: 23486085
->>>> [   68.870715] hardirqs last  enabled at (23486085):
->>>> [<ffffffffaa419406>] _raw_spin_unlock_irqrestore+0x46/0x60
->>>> [   68.870715] hardirqs last disabled at (23486084):
->>>> [<ffffffffaa419443>] _raw_spin_lock_irqsave+0x23/0x90
->>>> [   68.870715] softirqs last  enabled at (23486074):
->>>> [<ffffffffaa8004f3>] __do_softirq+0x4f3/0x662
->>>> [   68.870715] softirqs last disabled at (23486067):
->>>> [<ffffffffaa601072>] asm_call_on_stack+0x12/0x20
->>>> [   68.870715] ---[ end trace fb02740ff6f4d0cd ]---
->>>
->>> I think one issue here is that systemd loads SELinux policy first, 
->>> then IMA policy, so it doesn't know whether it needs to measure 
->>> SELinux policy on first policy load, and another issue is that the 
->>> policy is too large to just queue the policy data itself this way (or 
->>> you need to use an allocator that can handle larger sizes).
->>>
->>
->> The problem seems to be that a lock is held when the IMA hook to 
->> measure the LSM state is called. So memory allocation is not allowed, 
->> but the hook is doing an allocation. I'll address this - thanks for 
->> catching it.
->>
->> I have the following CONFIGs enabled, but I still don't see the above 
->> issue on my machine.
->>
-> The warning has to do with the memory allocation order being above the 
-> max order supported for kmalloc.  I think the problem is that 
-> ima_alloc_data_entry() is using kmemdup() to duplicate a payload of 
-> arbitrary size.  Policies on e.g. Fedora can be quite large, so you 
-> can't assume they can be allocated with kmalloc and friends.
-> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq-urgent-2020-08-02
 
-Thanks for clarifying. Yes ima_alloc_entry() does use kmemdup to save 
-the given buffer (to be measured) until IMA loads custom policy.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/3b4b84b2ea9938e44fffa356c7b95f496b4246ab
 
-On my machine the SELinux policy size is about 2MB.
+Thank you!
 
-Perhaps vmalloc would be better than using kmalloc? If there are better 
-options for such large buffer allocation, please let me know.
-
-  -lakshmi
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
