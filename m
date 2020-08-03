@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F06C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28703C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92B1D22C9F
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C7E122C9F
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 21:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729309AbgHCVAm (ORCPT
+        id S1729300AbgHCVAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 17:00:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36998 "EHLO
+        Mon, 3 Aug 2020 17:00:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729285AbgHCVAj (ORCPT
+        with ESMTP id S1729278AbgHCVAj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 3 Aug 2020 17:00:39 -0400
 Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED7EEC061756;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED7A4C06174A;
         Mon,  3 Aug 2020 14:00:38 -0700 (PDT)
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 21E0F1F0; Mon,  3 Aug 2020 23:00:36 +0200 (CEST)
+        id B12AD273; Mon,  3 Aug 2020 23:00:36 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -34,10 +34,11 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>,
         Tom Lendacky <thomas.lendacky@amd.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v4 1/4] KVM: SVM: nested: Don't allocate VMCB structures on stack
-Date:   Mon,  3 Aug 2020 23:00:31 +0200
-Message-Id: <20200803210034.26386-2-joro@8bytes.org>
+        linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH v4 4/4] KVM: SVM: Use __packed shorthand
+Date:   Mon,  3 Aug 2020 23:00:34 +0200
+Message-Id: <20200803210034.26386-5-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200803210034.26386-1-joro@8bytes.org>
 References: <20200803210034.26386-1-joro@8bytes.org>
@@ -46,112 +47,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Borislav Petkov <bp@alien8.de>
 
-Do not allocate a vmcb_control_area and a vmcb_save_area on the stack,
-as these structures will become larger with future extenstions of
-SVM and thus the svm_set_nested_state() function will become a too large
-stack frame.
+Use the shorthand to make it more readable.
 
+No functional changes.
+
+Signed-off-by: Borislav Petkov <bp@alien8.de>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kvm/svm/nested.c | 47 +++++++++++++++++++++++++++------------
- 1 file changed, 33 insertions(+), 14 deletions(-)
+ arch/x86/include/asm/svm.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index 61378a3c2ce4..7e4f126997ab 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -1061,10 +1061,14 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
- 	struct vmcb *hsave = svm->nested.hsave;
- 	struct vmcb __user *user_vmcb = (struct vmcb __user *)
- 		&user_kvm_nested_state->data.svm[0];
--	struct vmcb_control_area ctl;
--	struct vmcb_save_area save;
-+	struct vmcb_control_area *ctl;
-+	struct vmcb_save_area *save;
-+	int ret;
- 	u32 cr0;
+diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
+index 50e5fa8d3249..da38eb195355 100644
+--- a/arch/x86/include/asm/svm.h
++++ b/arch/x86/include/asm/svm.h
+@@ -150,14 +150,14 @@ struct __attribute__ ((__packed__)) vmcb_control_area {
+ #define SVM_NESTED_CTL_NP_ENABLE	BIT(0)
+ #define SVM_NESTED_CTL_SEV_ENABLE	BIT(1)
  
-+	BUILD_BUG_ON(sizeof(struct vmcb_control_area) + sizeof(struct vmcb_save_area) >
-+		     KVM_STATE_NESTED_SVM_VMCB_SIZE);
-+
- 	if (kvm_state->format != KVM_STATE_NESTED_FORMAT_SVM)
- 		return -EINVAL;
+-struct __attribute__ ((__packed__)) vmcb_seg {
++struct vmcb_seg {
+ 	u16 selector;
+ 	u16 attrib;
+ 	u32 limit;
+ 	u64 base;
+-};
++} __packed;
  
-@@ -1096,13 +1100,22 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
- 		return -EINVAL;
- 	if (kvm_state->size < sizeof(*kvm_state) + KVM_STATE_NESTED_SVM_VMCB_SIZE)
- 		return -EINVAL;
--	if (copy_from_user(&ctl, &user_vmcb->control, sizeof(ctl)))
--		return -EFAULT;
--	if (copy_from_user(&save, &user_vmcb->save, sizeof(save)))
--		return -EFAULT;
+-struct __attribute__ ((__packed__)) vmcb_save_area {
++struct vmcb_save_area {
+ 	struct vmcb_seg es;
+ 	struct vmcb_seg cs;
+ 	struct vmcb_seg ss;
+@@ -231,7 +231,7 @@ struct __attribute__ ((__packed__)) vmcb_save_area {
+ 	u64 xcr0;
+ 	u8 valid_bitmap[16];
+ 	u64 x87_state_gpa;
+-};
++} __packed;
  
--	if (!nested_vmcb_check_controls(&ctl))
--		return -EINVAL;
-+	ret  = -ENOMEM;
-+	ctl  = kzalloc(sizeof(*ctl),  GFP_KERNEL);
-+	save = kzalloc(sizeof(*save), GFP_KERNEL);
-+	if (!ctl || !save)
-+		goto out_free;
-+
-+	ret = -EFAULT;
-+	if (copy_from_user(ctl, &user_vmcb->control, sizeof(*ctl)))
-+		goto out_free;
-+	if (copy_from_user(save, &user_vmcb->save, sizeof(*save)))
-+		goto out_free;
-+
-+	ret = -EINVAL;
-+	if (!nested_vmcb_check_controls(ctl))
-+		goto out_free;
- 
- 	/*
- 	 * Processor state contains L2 state.  Check that it is
-@@ -1110,15 +1123,15 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
- 	 */
- 	cr0 = kvm_read_cr0(vcpu);
-         if (((cr0 & X86_CR0_CD) == 0) && (cr0 & X86_CR0_NW))
--                return -EINVAL;
-+		goto out_free;
- 
- 	/*
- 	 * Validate host state saved from before VMRUN (see
- 	 * nested_svm_check_permissions).
- 	 * TODO: validate reserved bits for all saved state.
- 	 */
--	if (!(save.cr0 & X86_CR0_PG))
--		return -EINVAL;
-+	if (!(save->cr0 & X86_CR0_PG))
-+		goto out_free;
- 
- 	/*
- 	 * All checks done, we can enter guest mode.  L1 control fields
-@@ -1127,15 +1140,21 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
- 	 * contains saved L1 state.
- 	 */
- 	copy_vmcb_control_area(&hsave->control, &svm->vmcb->control);
--	hsave->save = save;
-+	hsave->save = *save;
- 
- 	svm->nested.vmcb = kvm_state->hdr.svm.vmcb_pa;
--	load_nested_vmcb_control(svm, &ctl);
-+	load_nested_vmcb_control(svm, ctl);
- 	nested_prepare_vmcb_control(svm);
- 
- out_set_gif:
- 	svm_set_gif(svm, !!(kvm_state->flags & KVM_STATE_NESTED_GIF_SET));
--	return 0;
-+
-+	ret = 0;
-+out_free:
-+	kfree(save);
-+	kfree(ctl);
-+
-+	return ret;
+ struct ghcb {
+ 	struct vmcb_save_area save;
+@@ -252,11 +252,11 @@ static inline void __unused_size_checks(void)
+ 	BUILD_BUG_ON(sizeof(struct ghcb) != 4096);
  }
  
- struct kvm_x86_nested_ops svm_nested_ops = {
+-struct __attribute__ ((__packed__)) vmcb {
++struct vmcb {
+ 	struct vmcb_control_area control;
+ 	u8 reserved_control[1024 - sizeof(struct vmcb_control_area)];
+ 	struct vmcb_save_area save;
+-};
++} __packed;
+ 
+ #define SVM_CPUID_FUNC 0x8000000a
+ 
 -- 
 2.17.1
 
