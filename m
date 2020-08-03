@@ -2,218 +2,109 @@ Return-Path: <SRS0=5bHT=BN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9E4C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D701FC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A210322BF3
-	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:30:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SydEkbga"
+	by mail.kernel.org (Postfix) with ESMTP id E980522BF3
+	for <linux-kernel@archiver.kernel.org>; Mon,  3 Aug 2020 20:34:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728234AbgHCUaC (ORCPT
+        id S1728213AbgHCUeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 16:30:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbgHCUaA (ORCPT
+        Mon, 3 Aug 2020 16:34:13 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38691 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728038AbgHCUeL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 16:30:00 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6337BC06174A;
-        Mon,  3 Aug 2020 13:30:00 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id x69so36455210qkb.1;
-        Mon, 03 Aug 2020 13:30:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=tfdkLwUf+cyjg8/UoEnt6fcoKFuJchiVyIvRt7LCHwY=;
-        b=SydEkbga7p/0blgA22bLXNH4DDUkLCsmmfLEQna1RyjyquIPM/Nu7V6RzYcbEMnr3i
-         QN23U4wDVPDXr/6f4jlcj3R6j1h49U7BWks1yfh5Y/PVfYt7nhP+Wq5XTqBjKJtFOFQy
-         vSd1VGsuc+/OZirDHyz6/ubpgMtnCR5NQqdvisg7sQ6Qg1KBLH7weYhctGiK8yH9+oxw
-         mEPQRJF9yTR/IKqacjLQIYucVrA0M0saD90xpaLkpt+z71MbwLWnpari32+0YLtGa/ah
-         TRTUUkcBp5pjNPC+p3IOR+UYAi94ecZBSgs7rmQyYtBLdYGFAeqkOEsHy5qUfDjt6Qn+
-         6G2w==
+        Mon, 3 Aug 2020 16:34:11 -0400
+Received: by mail-ot1-f68.google.com with SMTP id q9so13267395oth.5;
+        Mon, 03 Aug 2020 13:34:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=tfdkLwUf+cyjg8/UoEnt6fcoKFuJchiVyIvRt7LCHwY=;
-        b=eXzoYsQNJphse5dnbGQ5ObQF84nI4gkfybB+gwgT/2nalYphZHIyKqtbNPuaYLhQO0
-         XgnBHZy5PVCQgIVBwHG2QydcPb1B9+XR6mCfbsC3crBeBQ0xywRSDPQdNJSvL8E6MQob
-         Um82GjTMN6NCskkLklbetseoaBkYMBfGQ23quG6vD3KFMYmvyTdXWleWobrTJjgm3eoC
-         qiSAgjwb2YSaAXIjkGhRdaSOIsXKGwUpicxdrT8KwTJdv6ZSTTTjRMwrsiifzxvYwN7t
-         f71Sm3lZeStkpNTVj68sz02Ay5E/j1XuBAwGPZWKZhxdAqY+kvWNkMpojCQcoerjM0TN
-         bRvA==
-X-Gm-Message-State: AOAM533M/Z+QQRDVDWnVNpLJj4tCSR8/xRGhYFICIaHyFV4g5XCOJjvZ
-        Oibm6Z2Drf7+L7ZrqTUjsxgtRAZUX/0=
-X-Google-Smtp-Source: ABdhPJwyilDdLP6ibL+4TYjwkg4TYPdvUENc6Ux6qU8lsQNRf5Yl1QyGXvMZtvQIOvnU5F2i0Kl7yQ==
-X-Received: by 2002:a05:620a:214e:: with SMTP id m14mr18018046qkm.339.1596486599264;
-        Mon, 03 Aug 2020 13:29:59 -0700 (PDT)
-Received: from [192.168.1.190] (pool-96-244-118-111.bltmmd.fios.verizon.net. [96.244.118.111])
-        by smtp.gmail.com with ESMTPSA id q34sm6077397qtk.32.2020.08.03.13.29.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Aug 2020 13:29:58 -0700 (PDT)
-Subject: Re: [PATCH v5 3/4] LSM: Define SELinux function to measure state and
- policy
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Tyler Hicks <tyhicks@linux.microsoft.com>, sashal@kernel.org,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200730034724.3298-1-nramas@linux.microsoft.com>
- <20200730034724.3298-4-nramas@linux.microsoft.com>
- <dfd6f9c8-d62a-d278-9b0e-6b1f5ad03d3e@gmail.com>
- <6371efa9-5ae6-05ac-c357-3fbe1a5a93d5@linux.microsoft.com>
- <CAEjxPJ789kmdDwy-6RaL7HuMFxKpQ9Hwxj9J-_-f62XDCNJUiA@mail.gmail.com>
-Message-ID: <f992901f-6dca-7d31-3426-5a74d36c2c8c@gmail.com>
-Date:   Mon, 3 Aug 2020 16:29:57 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OjA7iT6k7T3UICRKqIEcmmELA9u5uRqayG52kES09s0=;
+        b=PrPjXx4JBBbSMLlxvA202YHfSm5xoqGoLG4a/EXNBkM7UOGpA7pscjAF+h9oYmW0xW
+         WCC4WWDJBt+pYtpcz0nSONHLObIkWhiHNpO+NT7GXnHf806Ls2nPGM4UUI001VTwd2Zi
+         B8kC97ULEnuMc+Sk8Pf7qQ+mrbElxUI30ijzspSH5TVd0zrJ/lDpzucZWYa2QG9aNBMT
+         e7OUtJ8C7VrkQ1eB06QT38uuJlIxlwZRPOfqh/PcXlffjPxdmPQR2gSZcoawxUUrberG
+         84jTq+li84jJQ7QMedMup9FGeHkOLedooRHJ118QVUSIajhzbUKvlBPVIZ/vw8BfcvUc
+         KXHw==
+X-Gm-Message-State: AOAM531i204rHPk58MwmEbiOP1FNAuy3c/l86/6fuLSs52sBuUx3tlSs
+        JKsViQmRwlCens/tfFIrzGywsbeSsiEqSS0QC3BveA==
+X-Google-Smtp-Source: ABdhPJygp/6Y+Xp19D2UVJnG0yqVw6bti301myD5f15br10CxzwiyLNIBgbLDG5iBZREPkPdHaJztQr7BIU2Exoe/tA=
+X-Received: by 2002:a9d:1b0d:: with SMTP id l13mr14657662otl.145.1596486850954;
+ Mon, 03 Aug 2020 13:34:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAEjxPJ789kmdDwy-6RaL7HuMFxKpQ9Hwxj9J-_-f62XDCNJUiA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200803121902.860751811@linuxfoundation.org> <20200803155820.GA160756@roeck-us.net>
+ <20200803173330.GA1186998@kroah.com>
+In-Reply-To: <20200803173330.GA1186998@kroah.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 3 Aug 2020 22:33:59 +0200
+Message-ID: <CAMuHMdW1Cz_JJsTmssVz_0wjX_1_EEXGOvGjygPxTkcMsbR6Lw@mail.gmail.com>
+Subject: Re: [PATCH 5.7 000/120] 5.7.13-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org, stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/3/20 4:00 PM, Stephen Smalley wrote:
+Hi Greg,
 
-> On Mon, Aug 3, 2020 at 12:14 PM Lakshmi Ramasubramanian
-> <nramas@linux.microsoft.com> wrote:
->> On 8/3/20 8:11 AM, Stephen Smalley wrote:
->>> Possibly I'm missing something but with these patches applied on top of
->>> next-integrity, and the following lines added to /etc/ima/ima-policy:
->>>
->>> measure func=LSM_STATE template=ima-buf
->>> measure func=LSM_POLICY
->>>
->>> I still don't get the selinux-state or selinux-policy-hash entries in
->>> the ascii_runtime_measurements file.  No errors during loading of the
->>> ima policy as far as I can see.
->>>
->> Could you please check if the following config is set?
->> CONFIG_IMA_QUEUE_EARLY_BOOT_DATA=y
-> Yes, I have that set.
+On Mon, Aug 3, 2020 at 7:35 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> On Mon, Aug 03, 2020 at 08:58:20AM -0700, Guenter Roeck wrote:
+> > On Mon, Aug 03, 2020 at 02:17:38PM +0200, Greg Kroah-Hartman wrote:
+> > > This is the start of the stable review cycle for the 5.7.13 release.  There
+> > > are 120 patches in this series, all will be posted as a response to this one.
+> > > If anyone has any issues with these being applied, please let me know.
+> > >
+> > > Responses should be made by Wed, 05 Aug 2020 12:18:33 +0000.  Anything
+> > > received after that time might be too late.
+> > >
+> >
+> > Building sparc64:allmodconfig ... failed
+> > --------------
+> > Error log:
+> > <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+> > In file included from arch/sparc/include/asm/percpu_64.h:11,
+> >                  from arch/sparc/include/asm/percpu.h:5,
+> >                  from include/linux/random.h:14,
+> >                  from fs/crypto/policy.c:13:
+> > arch/sparc/include/asm/trap_block.h:54:39: error: 'NR_CPUS' undeclared here (not in a function)
+> >    54 | extern struct trap_per_cpu trap_block[NR_CPUS];
+> >
+> > Inherited from mainline. Builds are not complete yet;
+> > we may see a few more failures (powerpc:ppc64e_defconfig
+> > fails to build in mainline as well).
 >
->> Try changing /sys/fs/selinux/checkreqprot and check
->> ascii_runtime_measurements file again?
-> No change.  Likewise for changing enforce or running load_policy again.
->
->> Also, could you please check if
->> /sys/kernel/security/integrity/ima/policy contains LSM_STATE and
->> LSM_POLICY entries?
-> Yes, it does.  However, I noticed that if I reduce the policy to only
-> contain those entries and no others and reboot, then I get
-> measurements.  Whereas if I append them to an existing policy like the
-> one below, they seem to be ignored:
-> dont_measure fsmagic=0x9fa0
-> dont_measure fsmagic=0x62656572
-> dont_measure fsmagic=0x64626720
-> dont_measure fsmagic=0x1021994
-> dont_measure fsmagic=0x858458f6
-> dont_measure fsmagic=0x73636673
-> measure func=BPRM_CHECK
-> measure func=MMAP_CHECK mask=MAY_EXEC
-> measure func=MODULE_CHECK uid=0
-> measure func=LSM_STATE template=ima-buf
-> measure func=LSM_POLICY
->
-> Also, I noticed the following in my dmesg output:
-> [   68.870715] ------------[ cut here ]------------
-> [   68.870715] WARNING: CPU: 2 PID: 1 at mm/page_alloc.c:4826
-> __alloc_pages_nodemask+0x627/0x700
-> [   68.870715] Modules linked in: 8139too crct10dif_pclmul
-> crc32_pclmul crc32c_intel ghash_clmulni_intel qxl serio_raw
-> drm_ttm_helper ttm drm_kms_helper virtio_console cec drm 8139cp
-> ata_generic mii pata_acpi floppy qemu_fw_cfg fuse
-> [   68.870715] CPU: 2 PID: 1 Comm: systemd Not tainted 5.8.0-rc2+ #44
-> [   68.870715] RIP: 0010:__alloc_pages_nodemask+0x627/0x700
-> [   68.870715] Code: ff ff 75 6c 48 8b 85 48 ff ff ff 4c 89 c2 44 89
-> e6 44 89 ff 41 c6 45 d0 00 49 89 45 b8 e8 41 e2 ff ff 49 89 c6 e9 9d
-> fc ff ff <0f> 0b e9 d4 fd ff ff 0f 0b e9 bc fc ff ff 0f 0b e9 f9 fd ff
-> ff e8
-> [   68.870715] RSP: 0000:ffff8881e82a7a18 EFLAGS: 00010246
-> [   68.870715] RAX: ffffed103d054f48 RBX: 1ffff1103d054f48 RCX: 0000000000000000
-> [   68.870715] RDX: 0000000000000000 RSI: 000000000000000b RDI: 0000000000000000
-> [   68.870715] RBP: ffff8881e82a7ae8 R08: ffffffffaa3fe2d5 R09: 0000000000000001
-> [   68.870715] R10: fffffbfff5a88f0f R11: 0000000000000001 R12: 00000000007eef6a
-> [   68.870715] R13: 0000000000040cc0 R14: 000000000000000b R15: ffffffffadde766b
-> [   68.870715] FS:  00007fdeb168c600(0000) GS:ffff8881e9800000(0000)
-> knlGS:0000000000000000
-> [   68.870715] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   68.870715] CR2: 00007fdeb17dd1d6 CR3: 00000001cc2d2002 CR4: 00000000003606e0
-> [   68.870715] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [   68.870715] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [   68.870715] Call Trace:
-> [   68.870715]  ? sched_clock_cpu+0xf5/0x110
-> [   68.870715]  ? __alloc_pages_slowpath.constprop.0+0x17a0/0x17a0
-> [   68.870715]  ? match_held_lock+0x2e/0x240
-> [   68.870715]  ? policy_nodemask+0x1a/0xa0
-> [   68.870715]  ? policy_node+0x56/0x60
-> [   68.870715]  kmalloc_order+0x25/0xc0
-> [   68.870715]  kmalloc_order_trace+0x1d/0x140
-> [   68.870715]  kmemdup+0x1a/0x40
-> [   68.870715]  ima_queue_data+0x61/0x370
-> [   68.870715]  ima_measure_lsm_data+0x32/0x60
-> [   68.870715]  selinux_measure_state+0x2b8/0x2bd
-> [   68.870715]  ? selinux_event_name+0xe0/0xe0
-> [   68.870715]  ? rcu_is_watching+0x39/0x50
-> [   68.870715]  security_load_policy+0x44c/0x8e0
-> [   68.870715]  ? mark_lock+0xa6/0xbd0
-> [   68.870715]  ? security_change_sid+0x90/0x90
-> [   68.870715]  ? mark_held_locks+0x3e/0xa0
-> [   68.870715]  ? lockdep_hardirqs_on_prepare+0x100/0x260
-> [   68.870715]  ? asm_exc_page_fault+0x1e/0x30
-> [   68.870715]  ? lockdep_hardirqs_on+0xc5/0x1b0
-> [   68.870715]  ? asm_exc_page_fault+0x1e/0x30
-> [   68.870715]  ? copy_user_enhanced_fast_string+0xe/0x30
-> [   68.870715]  sel_write_load+0x157/0x260
-> [   68.870715]  vfs_write+0x135/0x290
-> [   68.870715]  ksys_write+0xb1/0x140
-> [   68.870715]  ? __ia32_sys_read+0x50/0x50
-> [   68.870715]  ? lockdep_hardirqs_on_prepare+0x100/0x260
-> [   68.870715]  ? do_syscall_64+0x12/0xb0
-> [   68.870715]  do_syscall_64+0x52/0xb0
-> [   68.870715]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> [   68.870715] RIP: 0033:0x7fdeb2539497
-> [   68.870715] Code: Bad RIP value.
-> [   68.870715] RSP: 002b:00007fff6352b308 EFLAGS: 00000246 ORIG_RAX:
-> 0000000000000001
-> [   68.870715] RAX: ffffffffffffffda RBX: 0000000000000020 RCX: 00007fdeb2539497
-> [   68.870715] RDX: 00000000007eef6a RSI: 00007fdeb0de1000 RDI: 0000000000000004
-> [   68.870715] RBP: 0000000000000004 R08: 00007fdeb25d0040 R09: 00007fff6352b1a0
-> [   68.870715] R10: 0000000000000000 R11: 0000000000000246 R12: 00007fdeb0de1000
-> [   68.870715] R13: 00000000007eef6a R14: 000000000000000f R15: 0000000000000003
-> [   68.870715] irq event stamp: 23486085
-> [   68.870715] hardirqs last  enabled at (23486085):
-> [<ffffffffaa419406>] _raw_spin_unlock_irqrestore+0x46/0x60
-> [   68.870715] hardirqs last disabled at (23486084):
-> [<ffffffffaa419443>] _raw_spin_lock_irqsave+0x23/0x90
-> [   68.870715] softirqs last  enabled at (23486074):
-> [<ffffffffaa8004f3>] __do_softirq+0x4f3/0x662
-> [   68.870715] softirqs last disabled at (23486067):
-> [<ffffffffaa601072>] asm_call_on_stack+0x12/0x20
-> [   68.870715] ---[ end trace fb02740ff6f4d0cd ]---
+> If it gets fixed upstream, I'll fix it here :)
 
-I think one issue here is that systemd loads SELinux policy first, then 
-IMA policy, so it doesn't know whether it needs to measure SELinux 
-policy on first policy load, and another issue is that the policy is too 
-large to just queue the policy data itself this way (or you need to use 
-an allocator that can handle larger sizes).
+And else you'll release a known-broken v5.7.13?
+
+Perhaps backporting should be a bit less aggressive?
+This breakage was introduced in between v5.8-rc7 and v5.8, and backported
+before people had the time to properly look into the v5.8 build bot logs.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
