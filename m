@@ -2,87 +2,109 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85270C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E848C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5822070A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:48:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YQRDXeVG"
+	by mail.kernel.org (Postfix) with ESMTP id 3AABD206D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:53:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596538380;
+	bh=kU0W5q1JnEgUs2gVVfpuU2jVJ3OKEciB62qWStHU8lc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=en7VyBsoMAdz0LQlOEPVOqUzh8I4OAlyBBqelHj6doc5qj9Gb+MMavPCskcZcyXi5
+	 PAjN3qQE4SyJICPOAiSZesvbvF6j+uTGm6oltkSi/aRsXXdbFYhoC3v5MY+ISrnX9O
+	 z4SQ//S5rBbY7qIneXruQ5IJajf44dMF4hwlPioU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729977AbgHDKsd (ORCPT
+        id S1729649AbgHDKw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 06:48:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729126AbgHDKq4 (ORCPT
+        Tue, 4 Aug 2020 06:52:59 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39782 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729385AbgHDKwx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 06:46:56 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F29AC06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 03:46:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=+6Tt80sUg+tg0PdE7s0Kuf5aRtc3dDNucVqs4QUfFJo=; b=YQRDXeVGnrpdvgOV9toahm8icy
-        oY5/5JySL/IwyPGKSuJ94/W3EiqpEYNbwAS2+Afrhvcq3qTwJfxbD803u4gx1jxnZ7n0/hlKb6sqJ
-        5d1+q5DC0NTdCUs2yIv4/sQQ/VOjPuaN4GqytK6eKOrLx2jtNY1DjgiurB/UcJeD/PxGqsrO1iN0R
-        qF43d+qNaJ9uw73bDhLTCXEPiltwEzF2GFgA+ErH8g1/0yQaw3QLrEmQMVABdQSBIpn8nWKz8ieRn
-        XxOK8EJOu9X+T6284ZuLrUq2Qx+QIYuXbL8/QJm4CFT+RSOJlYo0K2088DuiVxFABe87+qcezB/9+
-        aJk5+WGQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k2uSz-0001Kt-Dn; Tue, 04 Aug 2020 10:46:45 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B9F94301631;
-        Tue,  4 Aug 2020 12:46:42 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AB51A2B94E749; Tue,  4 Aug 2020 12:46:42 +0200 (CEST)
-Date:   Tue, 4 Aug 2020 12:46:42 +0200
-From:   peterz@infradead.org
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Neuling <mikey@neuling.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-Subject: Re: [PATCH 2/2] powerpc/topology: Override cpu_smt_mask
-Message-ID: <20200804104642.GC2657@hirez.programming.kicks-ass.net>
-References: <20200804033307.76111-1-srikar@linux.vnet.ibm.com>
- <20200804033307.76111-2-srikar@linux.vnet.ibm.com>
+        Tue, 4 Aug 2020 06:52:53 -0400
+Received: by mail-ot1-f67.google.com with SMTP id z18so9750816otk.6;
+        Tue, 04 Aug 2020 03:52:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2rjBo/61zITBrwF1WjzmAsT440t2d+iDU1/0VMNC1D0=;
+        b=qsGA8HiISd5O/5c48U/8JdoFfAqxnNacNtCmsuQ8V5FUhLd1vLBtKTeKykEkV45mc9
+         FdyvHz/63q9EaMeN7/wmvifMIXa6GquGA6p72/dxcFEuv1beq0Sl+MXr8MVwS5YFCWF8
+         dwajM50dtg7FmwUAbVUy55FcxWfJGr7PZmdXn+Espjz9ahC1KP3SAIY4FYwZY3dfdC9Z
+         wLIuX7UjiQAltUTl3lVCQs0R6aIatv00Ac0eWEnuNO8aon94GrCLu9XKtUcZNtR9oyt+
+         2WroQYUV4++67SL+OmTeyYCOFUuQPxmOXrqmMuJjKeMJV9KugX7I1XujUm8iF2a3GnGn
+         84tw==
+X-Gm-Message-State: AOAM533ndUMgcVcuGmsZQDiQsGlhyIYDTpe8p4mebnR+lrCvo9pi6G+p
+        bVHTSyA8BVNsbuO+yy4LvOlP4ZjQk114sSAeebnQJg==
+X-Google-Smtp-Source: ABdhPJxX+PfRpylozWROtK7IoiOeZMxqnw+Is2216jIdlCZiwKhvwJnNjIeFvS9I4lLIIDQv2hLbOydCC/HJlvrquGg=
+X-Received: by 2002:a9d:590a:: with SMTP id t10mr17136289oth.262.1596538372394;
+ Tue, 04 Aug 2020 03:52:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200804033307.76111-2-srikar@linux.vnet.ibm.com>
+References: <20200803183720.13082-1-srinivas.pandruvada@linux.intel.com>
+In-Reply-To: <20200803183720.13082-1-srinivas.pandruvada@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 4 Aug 2020 12:52:41 +0200
+Message-ID: <CAJZ5v0iaWFsD=A=sRdVGDOm6QkT==_4C0qCQ=A4iFYvjVbuyLg@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: intel_pstate: Fix cpuinfo_max_freq when
+ MSR_TURBO_RATIO_LIMIT is 0
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 09:03:07AM +0530, Srikar Dronamraju wrote:
-> On Power9 a pair of cores can be presented by the firmware as a big-core
-> for backward compatibility reasons, with 4 threads per (small) core and 8
-> threads per big-core. cpu_smt_mask() should generally point to the cpu mask
-> of the (small)core.
-> 
-> In order to maintain userspace backward compatibility (with Power8 chips in
-> case of Power9) in enterprise Linux systems, the topology_sibling_cpumask
-> has to be set to big-core. Hence override the default cpu_smt_mask() to be
-> powerpc specific allowing for better scheduling behaviour on Power.
+On Mon, Aug 3, 2020 at 8:37 PM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
+>
+> The MSR_TURBO_RATIO_LIMIT can be 0. This is not an error. User can update
+> this MSR via BIOS settings on some systems or can use msr tools to update.
+> Also some systems boot with value = 0.
+>
+> This results in display of cpufreq/cpuinfo_max_freq wrong. This value
+> will be equal to cpufreq/base_frequency, even though turbo is enabled.
+>
+> But platform will still function normally in HWP mode as we get max
+> 1-core frequency from the MSR_HWP_CAPABILITIES. This MSR is already used
+> to calculate cpu->pstate.turbo_freq, which is used for to set
+> policy->cpuinfo.max_freq. But some other places cpu->pstate.turbo_pstate
+> is used. For example to set policy->max.
+>
+> To fix this, also update cpu->pstate.turbo_pstate when updating
+> cpu->pstate.turbo_freq.
+>
+> Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-Why does Linux userspace care about this?
+Applied as a fix for 5.9-rc1, thanks!
+
+> ---
+>  drivers/cpufreq/intel_pstate.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+> index 7e0f7880b21a..c7540ad28995 100644
+> --- a/drivers/cpufreq/intel_pstate.c
+> +++ b/drivers/cpufreq/intel_pstate.c
+> @@ -1572,6 +1572,7 @@ static void intel_pstate_get_cpu_pstates(struct cpudata *cpu)
+>
+>                 intel_pstate_get_hwp_max(cpu->cpu, &phy_max, &current_max);
+>                 cpu->pstate.turbo_freq = phy_max * cpu->pstate.scaling;
+> +               cpu->pstate.turbo_pstate = phy_max;
+>         } else {
+>                 cpu->pstate.turbo_freq = cpu->pstate.turbo_pstate * cpu->pstate.scaling;
+>         }
+> --
+> 2.17.1
+>
