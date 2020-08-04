@@ -2,158 +2,183 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBD1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1146EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 110552086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:32:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ERmQBgFV"
+	by mail.kernel.org (Postfix) with ESMTP id EEB02208C7
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:32:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbgHDLcF (ORCPT
+        id S1730016AbgHDLcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 07:32:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58248 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727792AbgHDLcE (ORCPT
-        <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 07:32:04 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C09DC06174A
-        for <Linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 04:31:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=l87wDaYHWXtQSty3IMd46hLnbAORaqJGvqcZvl1gCvo=; b=ERmQBgFV4BKw53A9yaAmGT3E91
-        roKpvnLCUScSdq43eHannjc+NhwolysOHIq2FXAijiXWW5UiwwYv4XnREq36SFN8voMQY7Dd8Dw5P
-        X0Mq7VkWyOdFWRyfUrksIELXt0REXJjlhzSQqv43Dxmv4yFTqZnvPqwDSQrTyZ3gzDQR7kEl1C+pl
-        s7GXSbnS8WACYLNj398O3OPvj+XTkwe+QWUpT9aTJDvXJSaVh+x/YEAiR0oKZKD6e/r8LskIyTkB+
-        9jwokNtnMm8MdFw/80RvGAvtAVzA3CwJ7ZcFjrYSd59muZ5ALCDZQC6CQDmPpLXZCt+9Jp4/n2ioR
-        IEmp87lA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k2vAL-0006L3-NT; Tue, 04 Aug 2020 11:31:34 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 441D9301A66;
-        Tue,  4 Aug 2020 13:31:30 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DBB2E2BDB8C9C; Tue,  4 Aug 2020 13:31:30 +0200 (CEST)
-Date:   Tue, 4 Aug 2020 13:31:30 +0200
-From:   peterz@infradead.org
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     mingo@redhat.com, oleg@redhat.com, acme@kernel.org,
-        jolsa@kernel.org, Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        alexander.shishkin@linux.intel.com, mark.rutland@arm.com,
-        rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        nickhu@andestech.com, green.hu@gmail.com, chris@zankel.net,
-        jcmvbkbc@gmail.com
-Subject: Re: [PATCH v1 1/2] Missing instruction_pointer_set() instances
-Message-ID: <20200804113130.GH2657@hirez.programming.kicks-ass.net>
-References: <20200731025617.16243-1-yao.jin@linux.intel.com>
+        Tue, 4 Aug 2020 07:32:15 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:46160 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728157AbgHDLcG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 07:32:06 -0400
+Received: from ip5f5af08c.dynamic.kabel-deutschland.de ([95.90.240.140] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1k2vAp-0002Fi-Tt; Tue, 04 Aug 2020 11:32:04 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] checkpoint/restore changes for v5.9
+Date:   Tue,  4 Aug 2020 13:32:02 +0200
+Message-Id: <20200804113202.72667-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200731025617.16243-1-yao.jin@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 10:56:16AM +0800, Jin Yao wrote:
-> There is a potential security issue that perf kernel samples
-> may be leaked even though kernel sampling is disabled. For fixing
-> the potential leakage, the idea is to use instruction_pointer_set
-> to set invalid ip address in leaked perf samples in some cases.
-> 
-> But instruction_pointer_set is missing on some architectures.
-> Define instruction_pointer_set for these architectures.
-> 
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-> ---
->  arch/alpha/include/asm/ptrace.h  | 6 ++++++
->  arch/arc/include/asm/ptrace.h    | 6 ++++++
->  arch/nds32/include/asm/ptrace.h  | 7 +++++++
->  arch/xtensa/include/asm/ptrace.h | 6 ++++++
->  4 files changed, 25 insertions(+)
+Hi Linus,
 
-AFAICT you forgot to actually Cc the maintainers for all that.
+/* Summary */
+This pull request contains the changes to enable unprivileged
+checkpoint/restore of processes. Given that this work has been going on for
+quite some time the first sentence in this summary is hopefully more exciting
+than the actual final code changes required.
+Unprivileged checkpoint/restore has seen a frequent increase in interest over
+the last two years and has thus been one of the main topics for the combined
+containers & checkpoint/restore microconference since at least 2018 (cf. [1]).
 
-> diff --git a/arch/alpha/include/asm/ptrace.h b/arch/alpha/include/asm/ptrace.h
-> index df5f317ab3fc..c464d525c110 100644
-> --- a/arch/alpha/include/asm/ptrace.h
-> +++ b/arch/alpha/include/asm/ptrace.h
-> @@ -25,4 +25,10 @@ static inline unsigned long regs_return_value(struct pt_regs *regs)
->  	return regs->r0;
->  }
->  
-> +static inline void instruction_pointer_set(struct pt_regs *regs,
-> +					   unsigned long val)
-> +{
-> +	regs->pc = val;
-> +}
-> +
->  #endif
-> diff --git a/arch/arc/include/asm/ptrace.h b/arch/arc/include/asm/ptrace.h
-> index 2fdb87addadc..8869a6c0fe8c 100644
-> --- a/arch/arc/include/asm/ptrace.h
-> +++ b/arch/arc/include/asm/ptrace.h
-> @@ -154,6 +154,12 @@ static inline long regs_return_value(struct pt_regs *regs)
->  	return (long)regs->r0;
->  }
->  
-> +static inline void instruction_pointer_set(struct pt_regs *regs,
-> +					   unsigned long val)
-> +{
-> +	regs->ret = val;
-> +}
-> +
->  #endif /* !__ASSEMBLY__ */
->  
->  #endif /* __ASM_PTRACE_H */
-> diff --git a/arch/nds32/include/asm/ptrace.h b/arch/nds32/include/asm/ptrace.h
-> index 919ee223620c..19a916bef7f5 100644
-> --- a/arch/nds32/include/asm/ptrace.h
-> +++ b/arch/nds32/include/asm/ptrace.h
-> @@ -62,6 +62,13 @@ static inline unsigned long regs_return_value(struct pt_regs *regs)
->  {
->  	return regs->uregs[0];
->  }
-> +
-> +static inline void instruction_pointer_set(struct pt_regs *regs,
-> +					   unsigned long val)
-> +{
-> +	regs->ipc = val;
-> +}
-> +
->  extern void show_regs(struct pt_regs *);
->  /* Avoid circular header include via sched.h */
->  struct task_struct;
-> diff --git a/arch/xtensa/include/asm/ptrace.h b/arch/xtensa/include/asm/ptrace.h
-> index b109416dc07e..82ab1ba99259 100644
-> --- a/arch/xtensa/include/asm/ptrace.h
-> +++ b/arch/xtensa/include/asm/ptrace.h
-> @@ -90,6 +90,12 @@ struct pt_regs {
->  # define return_pointer(regs) (MAKE_PC_FROM_RA((regs)->areg[0], \
->  					       (regs)->areg[1]))
->  
-> +static inline void instruction_pointer_set(struct pt_regs *regs,
-> +					   unsigned long val)
-> +{
-> +	regs->pc = val;
-> +}
-> +
->  # ifndef CONFIG_SMP
->  #  define profile_pc(regs) instruction_pointer(regs)
->  # else
-> -- 
-> 2.17.1
-> 
+Here are just the three most frequent use-cases that were brought forward:
+1. The JVM developers are integrating checkpoint/restore into a Java VM to
+   significantly decrease the startup time.
+2. In high-performance computing environment a resource manager will typically
+   be distributing jobs where users are always running as non-root.
+   Long-running and "large" processes with significant startup times are
+   supposed to be checkpointed and restored with CRIU.
+3. Container migration as a non-root user.
+
+In all of these scenarios it is either desirable or required to run without
+CAP_SYS_ADMIN. The userspace implementation of checkpoint/restore CRIU already
+has the pull request for supporting unprivileged checkpoint/restore up (cf. [2]).
+
+To enable unprivileged checkpoint/restore a new dedicated capability
+CAP_CHECKPOINT_RESTORE is introduced. This solution has last been discussed in
+2019 in a talk by Google at Linux Plumbers (cf. [1] "Update on Task Migration
+at Google Using CRIU") with Adrian and Nicolas providing the implementation now
+over the last months. In essence, this allows the CRIU binary to be installed
+with the CAP_CHECKPOINT_RESTORE vfs capability set thereby enabling
+unprivileged users to restore processes.
+
+To make this possible the following permissions are altered:
+1. Selecting a specific PID via clone3() set_tid
+   - Relaxed from userns CAP_SYS_ADMIN to CAP_CHECKPOINT_RESTORE.
+2. Selecting a specific PID via /proc/sys/kernel/ns_last_pid
+   - Relaxed from userns CAP_SYS_ADMIN to CAP_CHECKPOINT_RESTORE.
+3. Accessing /proc/pid/map_files
+   - Relaxed from init userns CAP_SYS_ADMIN to init userns
+     CAP_CHECKPOINT_RESTORE.
+4. Changing /proc/self/exe
+   - Relaxed from userns CAP_SYS_ADMIN to userns CAP_CHECKPOINT_RESTORE.
+
+Of these four changes the /proc/self/exe change deserves a few words because
+the reasoning behind even restricting /proc/self/exe changes in the first place
+is just full of historical quirks and tracking this down was a questionable
+version of fun that I'd like to spare others.
+In short, it is trivial to change /proc/self/exe as an unprivileged user, i.e.
+without userns CAP_SYS_ADMIN right now. Either via ptrace() or by simply
+intercepting the elf loader in userspace during exec. Nicolas was nice enough
+to even provide a POC for the latter (cf. [3]) to illustrate this fact.
+The original patchset which introduced PR_SET_MM_MAP had no permissions around
+changing the exe link. They too argued that it is trivial to spoof the exe link
+already which is true. The argument brought up against this was that the Tomoyo
+LSM uses the exe link in tomoyo_manager() to detect whether the calling process
+is a policy manager. This caused changing the exe links to be guarded by userns
+CAP_SYS_ADMIN. All in all this rather seems like a "better guard it with
+something rather than nothing" argument which imho doesn't qualify as a great
+security policy. Again, because spoofing the exe link is possible for the
+calling process so even if this were security relevant it was broken back then
+and would be broken today. So technically, dropping all permissions around
+changing the exe link would probably be possible and would send a clearer
+message to any userspace that relies on /proc/self/exe for security reasons
+that they should stop doing this but for now we're only relaxing the exe link
+permissions from userns CAP_SYS_ADMIN to userns CAP_CHECKPOINT_RESTORE.
+
+There's a final uapi change in here. Changing the exe link used to accidently
+return EINVAL when the caller lacked the necessary permissions instead of
+the more correct EPERM. This pr contains a commit fixing this. I assume that
+userspace won't notice or care and if they do I will revert this commit. But
+since we are changing the permissions anyway it seems like a good opportunity
+to try this fix.
+
+With these changes merged unprivileged checkpoint/restore will be possible and
+has already been tested by various users.
+
+[1]: LPC 2018
+     1. "Task Migration at Google Using CRIU"
+        https://www.youtube.com/watch?v=yI_1cuhoDgA&t=12095
+     2. "Securely Migrating Untrusted Workloads with CRIU"
+        https://www.youtube.com/watch?v=yI_1cuhoDgA&t=14400
+     LPC 2019
+     1. "CRIU and the PID dance"
+         https://www.youtube.com/watch?v=LN2CUgp8deo&list=PLVsQ_xZBEyN30ZA3Pc9MZMFzdjwyz26dO&index=9&t=2m48s
+     2. "Update on Task Migration at Google Using CRIU"
+        https://www.youtube.com/watch?v=LN2CUgp8deo&list=PLVsQ_xZBEyN30ZA3Pc9MZMFzdjwyz26dO&index=9&t=1h2m8s
+[2]: https://github.com/checkpoint-restore/criu/pull/1155
+[3]: https://github.com/nviennot/run_as_exe
+
+/* Testing */
+All patches are based on v5.8-rc5 and have been sitting in linux-next. No build
+failures or warnings were observed. All old and new tests are passing.
+
+/* Conflicts */
+At the time of creating this PR no merge conflicts were reported from
+linux-next and no merge conflicts showed up doing a test-merge with current
+mainline bcf876870b95 ("Linux 5.8").
+
+The following changes since commit 11ba468877bb23f28956a35e896356252d63c983:
+
+  Linux 5.8-rc5 (2020-07-12 16:34:50 -0700)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/cap-checkpoint-restore-v5.9
+
+for you to fetch changes up to 1d27a0be16d6c95fd71deef34e94b40cb4411cc9:
+
+  selftests: add clone3() CAP_CHECKPOINT_RESTORE test (2020-07-20 15:47:42 +0200)
+
+Please consider pulling these changes from the signed cap-checkpoint-restore-v5.9 tag.
+
+Thanks!
+Christian
+
+----------------------------------------------------------------
+cap-checkpoint-restore-v5.9
+
+----------------------------------------------------------------
+Adrian Reber (5):
+      capabilities: Introduce CAP_CHECKPOINT_RESTORE
+      pid: use checkpoint_restore_ns_capable() for set_tid
+      pid_namespace: use checkpoint_restore_ns_capable() for ns_last_pid
+      proc: allow access in init userns for map_files with CAP_CHECKPOINT_RESTORE
+      selftests: add clone3() CAP_CHECKPOINT_RESTORE test
+
+Nicolas Viennot (2):
+      prctl: Allow local CAP_CHECKPOINT_RESTORE to change /proc/self/exe
+      prctl: exe link permission error changed from -EINVAL to -EPERM
+
+ fs/proc/base.c                                     |   8 +-
+ include/linux/capability.h                         |   6 +
+ include/uapi/linux/capability.h                    |   9 +-
+ kernel/pid.c                                       |   2 +-
+ kernel/pid_namespace.c                             |   2 +-
+ kernel/sys.c                                       |  13 +-
+ security/selinux/include/classmap.h                |   5 +-
+ tools/testing/selftests/clone3/.gitignore          |   1 +
+ tools/testing/selftests/clone3/Makefile            |   4 +-
+ .../clone3/clone3_cap_checkpoint_restore.c         | 182 +++++++++++++++++++++
+ 10 files changed, 217 insertions(+), 15 deletions(-)
+ create mode 100644 tools/testing/selftests/clone3/clone3_cap_checkpoint_restore.c
