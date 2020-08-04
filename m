@@ -2,149 +2,124 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0527C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55204C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFA5522B40
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E4FE207FC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:42:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AjZY9OLE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="esM63yMe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbgHDPlz (ORCPT
+        id S1728708AbgHDPmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 11:41:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40286 "EHLO
+        Tue, 4 Aug 2020 11:42:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgHDPlq (ORCPT
+        with ESMTP id S1726282AbgHDPmK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 11:41:46 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9BF8C06174A;
-        Tue,  4 Aug 2020 08:41:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=4HYOsiWuipXA9W4Av6msL0bg5EM4ZU//zWeqQbSSb4Y=; b=AjZY9OLE4ER6XFJ2LVIu7XnO8R
-        x/MYxLmAhfurUe1u0rvS4b04CnTUXL/Bo8iCnghvFmgeg1saQ3q1aOKmqfzE3/qgJnVV3Y5avqAod
-        lCNKowcjrhCg//YQvJxo/84zGJdiuF6goSnR2lqUDLlgi4unVpeeHwE8bwvZLTdHzYTHVIRradfmz
-        WVr7MZ+gpANvhDltZd8un/D1I0DeqhsXNaUk6mG0xRFjx4LEuVp3rzSzvkBVidFuxxbwlZ8uftgG8
-        r1CaBHAgqUttriiMtjiV2LomrsJ3kV8NtaJJwV1S8TLpAtlo6HcAA7/LWp8df3gTMVMWRkSE1kPOS
-        1W2jPmGw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k2z4H-0000fW-5v; Tue, 04 Aug 2020 15:41:34 +0000
-Subject: Re: [PATCH v4] sched: Provide USF for the portable equipment.
-To:     Dongdong Yang <contribute.kernel@gmail.com>,
-        gregkh@linuxfoundation.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-pm@vger.kernel.org, yangdongdong@xiaomi.com,
-        yanziily@xiaomi.com, rocking@linux.alibaba.com
-References: <cover.1596526941.git.yangdongdong@xiaomi.com>
- <820a185b6765d6246ac34f612faedeb35189487c.1596526941.git.yangdongdong@xiaomi.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <2a35c303-6c28-cc16-3f12-3d7b25ff4dfc@infradead.org>
-Date:   Tue, 4 Aug 2020 08:41:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 4 Aug 2020 11:42:10 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 845D3C06174A;
+        Tue,  4 Aug 2020 08:42:09 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id c2so24365495edx.8;
+        Tue, 04 Aug 2020 08:42:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=G7TWxU3RrpRjJxbp4gq/13lUnFREHVtoNcL++CjhnMk=;
+        b=esM63yMeDOa9kxDHU3HwnQXBgFY03PDyLbgTuKbQKFYMkCuVWb4LLj/+fynZ6g6SBJ
+         6eu0Gicqk0VlH6PeWt0sV+AYteVRl4mfmIxoOguGp0cCOHbbLI7xSAccIXgb6EixkACD
+         9fhBu2QD3Z5pvLxUo/rc/O/fk6jY0JJSN0Tmno+fvKhMLmopa90JY9q9q2xtAQeZpkUk
+         bIP0Brgdb4cfxmQkxLjEzeEwoMO/PvHY1MKs7BXSI4hOjvTg9laFrzrbZ+iB/EUmkR3E
+         qSn52LEWtVIsBQwRQK6RcIEwUvt1SLZPp6wX93ZVXJkVKhb1vPqXBeiEpT6COLeMMVQL
+         kBBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=G7TWxU3RrpRjJxbp4gq/13lUnFREHVtoNcL++CjhnMk=;
+        b=Y8qV0Np+ZrEDMRDEIgk8340ajfQMhnBMwTakPyNzTX5DBKnxTexQX7+8EC42ivpJOu
+         Slx8/SbBPy9J5Rv5tR1rYX1a4FPd5by+Ap6TlZ0JMi1BsLyfDhU1vKOX5ToXydEPAyV+
+         aCQ5jlMbKJDwpvhcYPzP9RN6s4F7mk9VVSfUzETx6Wnd1Q2H1qXYsHrF3daivYB0rDkh
+         PP+ztdSIU80JxN45d6lCtcxa5OyFmklyM/3C15mk3uU7Cyng86h09hfNyXO5OePe/sjM
+         K+3L+ViG0/Q+gxHG+dIEsj27+ffU8HCz881CjuAIn8CiNyIrUdfUbNcodsaB6U8k3VSa
+         LrOQ==
+X-Gm-Message-State: AOAM530dcTuCAZejI6MAYxbIdTwsLklIy4GOr9I752GPfjFfj0bUva1S
+        D0PCHDpXHcKKXBlgL+gX29Pm/+w7Ge17b58egCA=
+X-Google-Smtp-Source: ABdhPJxiSFDp4mmG/vqyuuKnvkaR7c1gRfsVdMfHLNjvZeQBwYrQ/3kBZh7BWg2AVcLM3ET4vFJCzcHQa2eAHVvewk0=
+X-Received: by 2002:a05:6402:1c10:: with SMTP id ck16mr20692925edb.151.1596555728124;
+ Tue, 04 Aug 2020 08:42:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <820a185b6765d6246ac34f612faedeb35189487c.1596526941.git.yangdongdong@xiaomi.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1594899334-19772-1-git-send-email-kalyan_t@codeaurora.org>
+In-Reply-To: <1594899334-19772-1-git-send-email-kalyan_t@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 4 Aug 2020 08:42:52 -0700
+Message-ID: <CAF6AEGuNk+bhjULnng1pNKh1yoxcXEF8jHB-1jYJuYnBos64AQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] arm64: dts: sc7180: add interconnect bindings for display
+To:     Kalyan Thota <kalyan_t@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Krishna Manikandan <mkrishn@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Raviteja Tamatam <travitej@codeaurora.org>,
+        nganji@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/4/20 12:50 AM, Dongdong Yang wrote:
-> From: Dongdong Yang <yangdongdong@xiaomi.com>
-> 
+On Thu, Jul 16, 2020 at 4:36 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
+>
+> From: Krishna Manikandan <mkrishn@codeaurora.org>
+>
+> This change adds the interconnect bindings to the
+> MDSS node. This will establish Display to DDR path
+> for bus bandwidth voting.
+>
+> Changes in v2:
+>         - Change in commit message(Matthias Kaehlcke)
+>
+> Changes in v3:
+>         - Updated commit message to include
+>           reviewer's name in v2
+>
+> Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
+
+Reviewed-by: Rob Clark <robdclark@chromium.org>
+
 > ---
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
-> index b555df8..e299418 100644
-> --- a/Documentation/ABI/testing/sysfs-devices-system-cpu
-> +++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
-> @@ -614,3 +614,51 @@ Description:	SPURR ticks for cpuX when it was idle.
->  
->  		This sysfs interface exposes the number of SPURR ticks
->  		for cpuX when it was idle.
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index 998f101..4f2c0d1 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> @@ -1522,6 +1522,9 @@
+>                         interrupt-controller;
+>                         #interrupt-cells = <1>;
+>
+> +                       interconnects = <&mmss_noc MASTER_MDP0 &mc_virt SLAVE_EBI1>;
+> +                       interconnect-names = "mdp0-mem";
 > +
-> +What:		/sys/devices/system/cpu/sched_usf
-> +		/sys/devices/system/cpu/sched_usf/sched_usf_non_ux_r
-> +		/sys/devices/system/cpu/sched_usf/sched_usf_up_l0_r
-> +		/sys/devices/system/cpu/sched_usf/sched_usf_down_r
-> +Date:		Aug 2020
-> +Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
-> +Description:	User Sensitive Feedback factor auxiliary scheduling which
-> +		is providing more utils adjustment settings to the high level
-> +		by scenario identification.
-
-what is "utils"?
-
-> +		sched_usf_non_ux_r:
-> +			The ratio of utils is cut down on screen off. The
-
-same question.
-
-> +			default value is 0, which no util is adjusted on sugov
-
-what is "sugov"?
-
-> +			calculating utils to select cpufreq. Its range is
-> +			[-100 , 0]. If its value falls into [-50, 0), the half
-> +			of utils, which	calculates cpufreq, shall be  cut down.
-> +			If its value falls into [-100, -50), only a quarter of
-> +			utils are left to continue to calculate cpufreq.
-> +			It is expected to be set [-100, 0) once enter into the
-> +			identificated scenario, such as listen to music on
-
-			^^^^^^^^^^^^^ not a word.
-
-
-> +			screen off, and recover to 0 on out of the scenario,
-> +			such as	screen on.
-> +
-> +		sched_usf_up_l0_r:
-> +			The ratio of utils is boost up on screen on. The
-> +			default value is 0, which no util is adjusted on sugov
-> +			calculates utils to select cpufreq. Its range is [0 , 100].
-> +			If its value falls into (0, 50], a quarter of extra utils,
-> +			which calculate cpufreq, shall be added. If its value
-> +			falls into (50, 100], the half of extra utils are added
-> +			to continue to	calculate cpufreq.
-> +			It is expected to be set (0, 100] once enter into the
-> +			identificated scenario, such as browsing videolet on
-
-what is "videolet"?
-
-> +			screen on, and recover to 0 on out of the scenario,
-> +			such as screen off or videolet into background.
-> +
-> +		sched_usf_down_r:
-> +			The ratio of utils is cut down on screen on. The
-> +			default	value is 0, which no util is adjusted on sugov
-> +			calculating utils to select cpufreq. Its range is
-> +			[-100 , 0]. If its value falls into [-50, 0), the half
-> +			of utils, which	calculate cpufreq, shall be  cut down.
-> +			If its value falls into [-100, -50), only a quarter of
-> +			utils are left to continue to calculate cpufreq.
-> +			It is expected to be set [-100, 0) once enter into the
-> +			identificated scenario, such as browsing videolet on
-> +			screen on, and recover to 0 on	out of the scenario,
-> +			such as screen off or vidolet into background.
-
-
--- 
-~Randy
-
+>                         iommus = <&apps_smmu 0x800 0x2>;
+>
+>                         #address-cells = <2>;
+> --
+> 1.9.1
+>
