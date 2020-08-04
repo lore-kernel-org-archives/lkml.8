@@ -2,168 +2,365 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1B4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 22:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35601C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 22:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF7922B42
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 22:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16AAC22B45
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 22:03:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DTbqMBe0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgHDWCA (ORCPT
+        id S1728414AbgHDWDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 18:02:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39772 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728305AbgHDWB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 18:01:59 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7F67207FC;
-        Tue,  4 Aug 2020 22:01:50 +0000 (UTC)
-Date:   Tue, 4 Aug 2020 18:01:47 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     SeongJae Park <sjpark@amazon.com>
-Cc:     <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.de>,
-        <Jonathan.Cameron@Huawei.com>, <aarcange@redhat.com>,
-        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <amit@kernel.org>, <benh@kernel.crashing.org>,
-        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
-        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
-        <david@redhat.com>, <dwmw@amazon.com>, <fan.du@intel.com>,
-        <foersleo@amazon.de>, <gthelen@google.com>, <irogers@google.com>,
-        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
-        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
-        <namhyung@kernel.org>, <peterz@infradead.org>,
-        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
-        <rppt@kernel.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
-        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v19 08/15] mm/damon: Add a tracepoint
-Message-ID: <20200804180147.16d34809@oasis.local.home>
-In-Reply-To: <20200804091416.31039-9-sjpark@amazon.com>
-References: <20200804091416.31039-1-sjpark@amazon.com>
-        <20200804091416.31039-9-sjpark@amazon.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 4 Aug 2020 18:03:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42650 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728299AbgHDWDl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 18:03:41 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4D2CC061756
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 15:03:40 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id v12so15034247ljc.10
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 15:03:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=T4K09t84l1nl1Ms1e5xtw8jx7SKT5a9K3CHKvr2VhgA=;
+        b=DTbqMBe0LfXKG6P9EemciPJlAW4ie1r3G0WmHuNvkbO55s4d/oTBydO7SjfYSrfcWe
+         qN7D/XjriCVQWIbaQe+nRlZm6MEzOp3LOs81oBPkuOwrb2vjBJ5OCfvvdjE+2x5GgT+m
+         IvGrq5JhUNFu3VjId67mC1dhIt37piJqpW3VfiLiADLeFDIwWFcWJBX1/d6BuOtvMaPg
+         bXM44xFkiYi5KsHfegBApnsLcDEw8LZTO1sPneYjAvfBGbRSBCGcD3OTXaUr2asGq2IM
+         FJ+TgWH3VCvh9a/81JAPZQlTrZByiak/9UyFzDlVRNprVr0Xo895Z368afn5i9p4cOYn
+         w09A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=T4K09t84l1nl1Ms1e5xtw8jx7SKT5a9K3CHKvr2VhgA=;
+        b=cuGGpwKHxUALolbaBbq+Msl+fT0iI8m42NZUMFrSI4w8ibA6L1r9xCxAd8DFIcJLdM
+         UnJkhmvYX3Ooeve18+9TfId2mHw8ZGIt0hFsOmWPDBtNy80vIUalaPGum/XMaVNGz1Qc
+         Lj/9sJ/PR6iiF95Lp4Jd+Im9nJXohGSY3nGyy0ywmnAZUtRzMmIGeKAJU5H0dMhuq0+1
+         FnqeVcIpWU9Wl8HQKX+vLHTPjvu9zi1dloEFBtdJPIbXdClCEB2+xe5/9rRSIHpph047
+         8Kyb5Oz4wushYenIqpAAOzXeizxV9IzDXTVtII1T3Wj64bG07dmA/6Om85P4ZL9/mzwH
+         M0vw==
+X-Gm-Message-State: AOAM5322FV++Z2OxkUYBBVlWkJ4cWICDRcj1C/9961x4ZVXMt0mhp5kG
+        a/5408qXDX6vc1rQ16jGbm3ygUV+Hio7MTwoKsgzwA==
+X-Google-Smtp-Source: ABdhPJyqcO1HqXvuHj2OI8bFLZu5HnKk2nZ6nYeFGI8a1XaOyUjEXSemPvu5BsET+xoE8POCSOwKSVIQD9uTStoW1/k=
+X-Received: by 2002:a2e:6a17:: with SMTP id f23mr10024403ljc.338.1596578619111;
+ Tue, 04 Aug 2020 15:03:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 5 Aug 2020 00:03:28 +0200
+Message-ID: <CACRpkdamytgQTZ60g2R0UpRk5iy=uajtDp5VhsjKaM5H_CpUFA@mail.gmail.com>
+Subject: [GIT PULL] GPIO changes for the v5.9 merge window
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Aug 2020 11:14:09 +0200
-SeongJae Park <sjpark@amazon.com> wrote:
+Hi Linus,
 
-> From: SeongJae Park <sjpark@amazon.de>
-> 
-> This commit adds a tracepoint for DAMON.  It traces the monitoring
-> results of each region for each aggregation interval.  Using this, DAMON
-> can easily integrated with tracepoints supporting tools such as perf.
-> 
-> Signed-off-by: SeongJae Park <sjpark@amazon.de>
-> Reviewed-by: Leonard Foerster <foersleo@amazon.de>
-> ---
->  include/trace/events/damon.h | 43 ++++++++++++++++++++++++++++++++++++
->  mm/damon.c                   |  4 ++++
->  2 files changed, 47 insertions(+)
->  create mode 100644 include/trace/events/damon.h
-> 
-> diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
-> new file mode 100644
-> index 000000000000..2f422f4f1fb9
-> --- /dev/null
-> +++ b/include/trace/events/damon.h
-> @@ -0,0 +1,43 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM damon
-> +
-> +#if !defined(_TRACE_DAMON_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_DAMON_H
-> +
-> +#include <linux/damon.h>
-> +#include <linux/types.h>
-> +#include <linux/tracepoint.h>
-> +
-> +TRACE_EVENT(damon_aggregated,
-> +
-> +	TP_PROTO(struct damon_target *t, struct damon_region *r,
-> +		unsigned int nr_regions),
-> +
-> +	TP_ARGS(t, r, nr_regions),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(unsigned long, target_id)
-> +		__field(unsigned int, nr_regions)
-> +		__field(unsigned long, start)
-> +		__field(unsigned long, end)
-> +		__field(unsigned int, nr_accesses)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->target_id = t->id;
-> +		__entry->nr_regions = nr_regions;
-> +		__entry->start = r->ar.start;
-> +		__entry->end = r->ar.end;
-> +		__entry->nr_accesses = r->nr_accesses;
-> +	),
-> +
-> +	TP_printk("target_id=%lu nr_regions=%u %lu-%lu: %u",
-> +			__entry->target_id, __entry->nr_regions,
-> +			__entry->start, __entry->end, __entry->nr_accesses)
-> +);
-> +
-> +#endif /* _TRACE_DAMON_H */
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
-> diff --git a/mm/damon.c b/mm/damon.c
-> index b3420ba97fd2..65e65e779313 100644
-> --- a/mm/damon.c
-> +++ b/mm/damon.c
-> @@ -20,6 +20,8 @@
->  
->  #define pr_fmt(fmt) "damon: " fmt
->  
-> +#define CREATE_TRACE_POINTS
-> +
->  #include <linux/damon.h>
->  #include <linux/delay.h>
->  #include <linux/kthread.h>
-> @@ -31,6 +33,7 @@
->  #include <linux/sched/mm.h>
->  #include <linux/sched/task.h>
->  #include <linux/slab.h>
+here is the big slew of GPIO changes for the v5.9 merge window.
 
-It's best to place the #define CREATE_TRACE_POINTS here, so that it
-doesn't cause any side effects when including the other headers.
+There is nothing too exciting in it, but a new macro that fixes a
+build failure on a minor ARM32 platform that appeared yesterday
+is part of it so we better merge it.
 
-Other than that:
+Please pull it in!
 
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Yours,
+Linus Walleij
 
--- Steve
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
 
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
 
-> +#include <trace/events/damon.h>
->  
->  /* Minimal region size.  Every damon_region is aligned by this. */
->  #define MIN_REGION PAGE_SIZE
-> @@ -856,6 +859,7 @@ static void kdamond_reset_aggregated(struct damon_ctx *c)
->  			damon_write_rbuf(c, &r->ar.end, sizeof(r->ar.end));
->  			damon_write_rbuf(c, &r->nr_accesses,
->  					sizeof(r->nr_accesses));
-> +			trace_damon_aggregated(t, r, nr);
->  			r->nr_accesses = 0;
->  		}
->  	}
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+tags/gpio-v5.9-1
+
+for you to fetch changes up to 22cc422070d9a9a399f8a70b89f1b852945444cb:
+
+  gpio: wcove: Request IRQ after all initialisation done (2020-08-04
+01:25:02 +0200)
+
+----------------------------------------------------------------
+This is the bulk of GPIO changes for the v5.9 kernel cycle:
+
+Core changes:
+
+- Introduce the for_each_requested_gpio() macro to help in
+  dependent code all over the place. Also patch a few locations
+  to use it while we are at it.
+
+- Split out the sysfs code into its own file.
+
+- Split out the character device code into its own file, then
+  make a set of refactorings and improvements to this code.
+  We are setting the stage to revamp the userspace API a bit
+  in the next cycle.
+
+- Fix a whole slew of kerneldoc that was wrong or missing.
+
+New drivers:
+
+- The PCA953x driver now supports the PCAL9535.
+
+Driver improvements:
+
+- A host of incremental modernizations and improvements to the
+  PCA953x driver.
+
+- Incremental improvements to the Xilinx Zynq driver.
+
+- Some improvements to the GPIO aggregator driver.
+
+- I ran all over the place switching all threaded and other
+  drivers requesting their own IRQ while using the core
+  GPIO IRQ helpers to pass the GPIO irq chip as a template
+  instead of calling the explicit set-up functions. Next merge
+  window we may retire the old code altogether.
+
+----------------------------------------------------------------
+Abanoub Sameh (6):
+      gpio: pch: changed every 'unsigned' to 'unsigned int'
+      gpio: pch: Add a blank line between declaration and code
+      gpio: crystalcove: changed every 'unsigned' to 'unsigned int'
+      gpio: ich: changed every 'unsigned' to 'unsigned int'
+      gpio: sch: changed every 'unsigned' to 'unsigned int'
+      gpio: sch: Add a blank line between declaration and code
+
+Ahmad Fatoum (1):
+      gpio: don't use same lockdep class for all devm_gpiochip_add_data users
+
+Andy Shevchenko (16):
+      gpio: pca953x: Synchronize interrupt handler properly
+      gpio: pca953x: Override IRQ for one of the expanders on Galileo Gen 2
+      gpio: pca953x: Fix direction setting when configure an IRQ
+      gpio: pca953x: disable regmap locking for automatic address incrementing
+      gpiolib: Introduce for_each_requested_gpio_in_range() macro
+      ARM/orion/gpio: Make use of for_each_requested_gpio()
+      gpio: mvebu: Make use of for_each_requested_gpio()
+      gpio: xra1403: Make use of for_each_requested_gpio()
+      pinctrl: at91: Make use of for_each_requested_gpio()
+      gpio: pca953x: Fix GPIO resource leak on Intel Galileo Gen 2
+      gpiolib: Deduplicate find_first_zero_bit() call
+      gpio: pch: Move IRQ status message to verbose debug level
+      gpio: mmio: replace open-coded for_each_set_bit()
+      gpio: pca953x: Request IRQ after all initialisation done
+      gpio: crystalcove: Free IRQ on error path
+      gpio: wcove: Request IRQ after all initialisation done
+
+Colton Lewis (1):
+      gpio: Correct kernel-doc inconsistency
+
+Dmitry Osipenko (6):
+      gpio: max77620: Replace 8 with MAX77620_GPIO_NR
+      gpio: max77620: Fix missing release of interrupt
+      gpio: max77620: Don't set of_node
+      gpio: max77620: Don't shadow error code of platform_get_irq()
+      gpio: max77620: Use irqchip template
+      gpio: max77620: Initialize hardware state of interrupts
+
+Drew Fustini (2):
+      gpio: omap: handle pin config bias flags
+      gpio: omap: improve coding style for pin config flags
+
+Gaurav Singh (2):
+      gpio: max732x: remove redundant check
+      gpio: max732x: remove redundant check from probe()
+
+Geert Uytterhoeven (3):
+      gpio: Drop superfluous dependencies on GPIOLIB
+      gpio: aggregator: Drop pre-initialization in get_arg()
+      gpio: aggregator: Use bitmap_parselist() for parsing GPIO offsets
+
+Glenn Langedock (1):
+      gpio: zynq: protect direction in/out with a spinlock
+
+Jan Kiszka (2):
+      dt-bindings: gpio: pca953x: add nxp,pcal9535
+      gpio: pca953x: Add support for the PCAL9535
+
+Kent Gibson (18):
+      gpiolib: split character device into gpiolib-cdev
+      gpiolib: move gpiolib-sysfs function declarations into their own header
+      gpiolib: cdev: sort includes
+      gpiolib: cdev: minor indentation fixes
+      gpiolib: cdev: refactor gpiohandle_flags_to_desc_flags
+      gpiolib: cdev: rename 'filep' and 'filp' to 'file' to be
+consistent with other use
+      gpiolib: cdev: rename numdescs to num_descs
+      gpiolib: cdev: remove pointless decrement of i
+      gpiolib: cdev: use blocking notifier call chain instead of atomic
+      gpiolib: cdev: rename priv to cdev
+      gpiolib: cdev: fix minor race in GET_LINEINFO_WATCH
+      gpiolib: cdev: remove recalculation of offset
+      gpiolib: cdev: refactor linehandle cleanup into linehandle_free
+      gpiolib: cdev: refactor lineevent cleanup into lineevent_free
+      gpio: uapi: fix misplaced comment line
+      tools: gpio: fix spurious close warning in lsgpio
+      tools: gpio: fix spurious close warning in gpio-utils
+      tools: gpio: fix spurious close warning in gpio-event-mon
+
+Kieran Bingham (1):
+      drivers: gpio: Fix trivial spelling
+
+Lee Jones (10):
+      gpio: gpio-ml-ioh: Fix missing ':' in 'struct ioh_gpio_reg_data
+      gpio: gpiolib-of: Provide documentation for of_gpio_spi_cs_get_count()
+      gpio: gpio-altera: Add missing kerneldoc entry and demote comment
+      gpio: gpio-pmic-eic-sprd: Fix incorrectly named property 'map'
+      gpio: gpio-sama5d2-piobu: Demote all kerneldoc headers to basic
+comment blocks
+      gpio: gpio-syscon: Fix formatting issues which confuse kerneldoc
+      gpio: gpio-it87: Fix formatting issues which confuse kerneldoc
+      gpio: gpio-mlxbf: Tell the compiler that ACPI functions may not be used
+      gpio: gpio-mlxbf2: Tell the compiler that ACPI functions may not be use
+      gpio: gpio-mlxbf2.c: Provide __releases() annotation to stop
+confusing Sparse
+
+Linus Walleij (27):
+      Merge branch 'ib-for-each-requested' into devel
+      Merge tag 'gpio-fixes-for-v5.8-rc3' of
+git://git.kernel.org/.../brgl/linux into fixes
+      Merge tag 'gpio-updates-for-v5.9-part1' of
+git://git.kernel.org/.../brgl/linux into devel
+      gpio: Add gpio-charger to the documentation
+      Merge branch 'lee-fixes' into devel
+      Merge branch 'devel' into for-next
+      Merge tag 'gpio-updates-for-v5.9-part2' of
+git://git.kernel.org/.../brgl/linux into devel
+      gpio: max77620: Use helper variable and clarify
+      gpio: tc35892: Use irqchip template
+      gpio: stmpe: Use irqchip template
+      gpio: adnp: Use irqchip template
+      gpio: adp5588: Use irqchip template
+      gpio: pcf857x: Use irqchip template
+      gpio: pca953x: Use irqchip template
+      gpio: crystalcove: Use irqchip template
+      gpio: wcove: Use irqchip template
+      Merge tag 'intel-gpio-v5.9-1' of
+git://git.kernel.org/.../andy/linux-gpio-intel into devel
+      gpio: dln2: Use irqchip template
+      gpio: ws16c48: Use irqchip template
+      gpio: 104-dio-48e: Use irqchip template
+      gpio: 104-idi-48: Use irqchip template
+      gpio: 104-idio-16: Use irqchip template
+      gpio: pcie-idio-24: Use irqchip template
+      gpio: pci-idio-16: Use irqchip template
+      gpio: rcar: Use irqchip template
+      gpio: stmpe: Move chip registration
+      gpio: max732x: Use irqchip template
+
+Mauro Carvalho Chehab (1):
+      gpio: driver.h: fix kernel-doc markup
+
+Michael Walle (1):
+      gpio: regmap: fix type clash
+
+Navid Emamdoost (2):
+      gpio: arizona: handle pm_runtime_get_sync failure case
+      gpio: arizona: put pm_runtime in case of failure
+
+Shubhrajyoti Datta (6):
+      dt-bindings: gpio: Add binding for Versal gpio
+      dt-bindings: gpio: Add pmc gpio node to gpio-zynq
+      gpio: zynq: Add Versal support
+      gpio: zynq: Disable the irq if it is not a wakeup source
+      gpio: zynq: Add pmc gpio support
+      gpio: zynq: Remove error prints in EPROBE_DEFER
+
+Song Hui (1):
+      gpio: mpc8xxx: change the gpio interrupt flags.
+
+Sungbo Eo (2):
+      gpio: pca9570: add GPO driver for PCA9570
+      gpio: pca9570: Add DT bindings for NXP PCA9570
+
+Tony Lindgren (1):
+      gpio: omap: Add missing PM ops for suspend
+
+Wang Qing (1):
+      gpiolib: sysfs: use kobj_to_dev
+
+ .../devicetree/bindings/gpio/gpio-pca953x.txt      |    1 +
+ .../devicetree/bindings/gpio/gpio-pca9570.yaml     |   47 +
+ .../devicetree/bindings/gpio/gpio-zynq.txt         |    4 +-
+ Documentation/driver-api/gpio/drivers-on-gpio.rst  |    7 +
+ arch/arm/plat-orion/gpio.c                         |    8 +-
+ drivers/gpio/Kconfig                               |   12 +-
+ drivers/gpio/Makefile                              |    2 +
+ drivers/gpio/TODO                                  |    2 +-
+ drivers/gpio/gpio-104-dio-48e.c                    |   35 +-
+ drivers/gpio/gpio-104-idi-48.c                     |   33 +-
+ drivers/gpio/gpio-104-idio-16.c                    |   33 +-
+ drivers/gpio/gpio-adnp.c                           |   95 +-
+ drivers/gpio/gpio-adp5588.c                        |   39 +-
+ drivers/gpio/gpio-aggregator.c                     |   63 +-
+ drivers/gpio/gpio-altera.c                         |    3 +-
+ drivers/gpio/gpio-arizona.c                        |    7 +-
+ drivers/gpio/gpio-crystalcove.c                    |   50 +-
+ drivers/gpio/gpio-dln2.c                           |   17 +-
+ drivers/gpio/gpio-ich.c                            |   26 +-
+ drivers/gpio/gpio-it87.c                           |   14 +-
+ drivers/gpio/gpio-max732x.c                        |   32 +-
+ drivers/gpio/gpio-max77620.c                       |   71 +-
+ drivers/gpio/gpio-ml-ioh.c                         |    2 +-
+ drivers/gpio/gpio-mlxbf.c                          |    2 +-
+ drivers/gpio/gpio-mlxbf2.c                         |    4 +-
+ drivers/gpio/gpio-mmio.c                           |   20 +-
+ drivers/gpio/gpio-mpc8xxx.c                        |    2 +-
+ drivers/gpio/gpio-mvebu.c                          |    8 +-
+ drivers/gpio/gpio-omap.c                           |   45 +-
+ drivers/gpio/gpio-pca953x.c                        |  142 ++-
+ drivers/gpio/gpio-pca9570.c                        |  146 +++
+ drivers/gpio/gpio-pcf857x.c                        |   47 +-
+ drivers/gpio/gpio-pch.c                            |   14 +-
+ drivers/gpio/gpio-pci-idio-16.c                    |   33 +-
+ drivers/gpio/gpio-pcie-idio-24.c                   |   17 +-
+ drivers/gpio/gpio-pmic-eic-sprd.c                  |    2 +-
+ drivers/gpio/gpio-rcar.c                           |   17 +-
+ drivers/gpio/gpio-sama5d2-piobu.c                  |   16 +-
+ drivers/gpio/gpio-sch.c                            |   23 +-
+ drivers/gpio/gpio-stmpe.c                          |   36 +-
+ drivers/gpio/gpio-syscon.c                         |   12 +-
+ drivers/gpio/gpio-tc3589x.c                        |   26 +-
+ drivers/gpio/gpio-wcove.c                          |   34 +-
+ drivers/gpio/gpio-ws16c48.c                        |   39 +-
+ drivers/gpio/gpio-xra1403.c                        |    8 +-
+ drivers/gpio/gpio-zynq.c                           |   66 +-
+ drivers/gpio/gpiolib-cdev.c                        | 1121 +++++++++++++++++++
+ drivers/gpio/gpiolib-cdev.h                        |   11 +
+ drivers/gpio/gpiolib-devres.c                      |   13 +-
+ drivers/gpio/gpiolib-of.c                          |    3 +
+ drivers/gpio/gpiolib-sysfs.c                       |    3 +-
+ drivers/gpio/gpiolib-sysfs.h                       |   24 +
+ drivers/gpio/gpiolib.c                             | 1144 +-------------------
+ drivers/gpio/gpiolib.h                             |   20 +-
+ drivers/pinctrl/pinctrl-at91.c                     |    7 +-
+ include/linux/gpio/driver.h                        |   37 +-
+ include/linux/gpio/regmap.h                        |    2 +-
+ include/uapi/linux/gpio.h                          |    2 +-
+ tools/gpio/gpio-event-mon.c                        |    3 +-
+ tools/gpio/gpio-utils.c                            |    4 +-
+ tools/gpio/lsgpio.c                                |    3 +-
+ 61 files changed, 2150 insertions(+), 1609 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
+ create mode 100644 drivers/gpio/gpio-pca9570.c
+ create mode 100644 drivers/gpio/gpiolib-cdev.c
+ create mode 100644 drivers/gpio/gpiolib-cdev.h
+ create mode 100644 drivers/gpio/gpiolib-sysfs.h
