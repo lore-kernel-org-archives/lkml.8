@@ -2,95 +2,132 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C32E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0363AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A21C12075D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E043722D00
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:45:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FvCtsbAc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729189AbgHDOpL (ORCPT
+        id S1729283AbgHDOpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:45:11 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:44157 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729143AbgHDOpB (ORCPT
+        Tue, 4 Aug 2020 10:45:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59776 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729126AbgHDOpC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:45:01 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-133-GkYdxktHPX6Hq0f1q8Z5bg-1; Tue, 04 Aug 2020 15:44:55 +0100
-X-MC-Unique: GkYdxktHPX6Hq0f1q8Z5bg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 4 Aug 2020 15:44:55 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 4 Aug 2020 15:44:55 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     David Laight <David.Laight@ACULAB.COM>,
-        'Mark Rutland' <mark.rutland@arm.com>,
-        "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-CC:     Andy Lutomirski <luto@kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "LSM List" <linux-security-module@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
-Subject: RE: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-Thread-Topic: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-Thread-Index: AQHWamb6T+e4gDrzGEmP/30MMvDTCqkoApyQgAADJ0A=
-Date:   Tue, 4 Aug 2020 14:44:55 +0000
-Message-ID: <23ded6dfcf284b15a3356c01a94029f8@AcuMS.aculab.com>
-References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
- <6540b4b7-3f70-adbf-c922-43886599713a@linux.microsoft.com>
- <CALCETrWnNR5v3ZCLfBVQGYK8M0jAvQMaAc9uuO05kfZuh-4d6w@mail.gmail.com>
- <46a1adef-65f0-bd5e-0b17-54856fb7e7ee@linux.microsoft.com>
- <20200731183146.GD67415@C02TD0UTHF1T.local>
- <86625441-80f3-2909-2f56-e18e2b60957d@linux.microsoft.com>
- <20200804135558.GA7440@C02TD0UTHF1T.local>
- <c898918d18f34fd5b004cd1549b6a99e@AcuMS.aculab.com>
-In-Reply-To: <c898918d18f34fd5b004cd1549b6a99e@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 4 Aug 2020 10:45:02 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 204B0C061756
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 07:45:02 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id k8so3204899wma.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 07:45:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=vrgymxZSQXp65WBXBttM1JLkMuaQfRe8wtjepY95tOo=;
+        b=FvCtsbAcTet/H4EtE/tlCenlm0kupTJUjVY5BAvOKP8h+7HD+fwbBGKRl+3mTUg2P3
+         AOLJFJtqhWheJUnHcvV2gRZZl/e5Hwd0KeJvJKWc6fBfuwnqM5MEHPr9l8kuKh9SEzc6
+         JwGUa13Gg4QLl+aX7y0+3wbedQ8FXbbdDg7njlKIw3vrnYglMl8Bbg0Dt8/9Xfr0mIjx
+         S7QXNV28j7r4ilqWIXx2d4FkaJUSigF4jIsFiLcXgKIAPIVfUNgI0SeLCt/aTUHz4Zqd
+         0FYNtKC4edmbJ2m6bxrgNQ0j/HY3t7uf/ktMC6ppPzM+H2oXHMrmQYNo7acLaSaE5m8W
+         VzMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version:content-transfer-encoding;
+        bh=vrgymxZSQXp65WBXBttM1JLkMuaQfRe8wtjepY95tOo=;
+        b=G/TE0ivbKDTBTkgMRAiHOSfPBUzea5HDDJQ9aciQdp7s7g+0wsFa6yR6T51V2xf24g
+         ohq8zQ041R9AfamCLasKLDJbMfBlBkxPYM4caBGschSchwi/KfK8cp8ruMVgedFR2B6d
+         OysI2iV/RYEqFJ4E6tB24yIouA4qREs7u3v8iTwD7QwzF95UNbhoqL/g7VaBN8w48MNJ
+         h8DJ9YFoxJ5IMqFXu8OrYAdhhSj37DGmcBADwlNeXQDjBeACaPyn/OXrF3AmKu/OirxW
+         1hBbXLOO16as3CWFweVTUanj4S2kggT7LmXDanaK1UlAeZc0WHV4F+JK1fBv60jqmgSp
+         OYGw==
+X-Gm-Message-State: AOAM531DAHmfWjRSIfbTBOFwargYOkl17jim2NMtKiWBsrzW4EeDKPVj
+        oDmE+o0kzKkdFBh+z5F7zaj3eQ==
+X-Google-Smtp-Source: ABdhPJw2+EzPdKAw2t92FR+NukQ9ba0kagdIlf7j4tHEEt17qfb38xGsjZPDOkvrMuYeiS4q2cG8RA==
+X-Received: by 2002:a1c:9c14:: with SMTP id f20mr4399867wme.77.1596552300706;
+        Tue, 04 Aug 2020 07:45:00 -0700 (PDT)
+Received: from zen.linaroharston ([51.148.130.216])
+        by smtp.gmail.com with ESMTPSA id z11sm29149417wrw.93.2020.08.04.07.44.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Aug 2020 07:44:59 -0700 (PDT)
+Received: from zen (localhost [127.0.0.1])
+        by zen.linaroharston (Postfix) with ESMTP id A1F311FF7E;
+        Tue,  4 Aug 2020 15:44:58 +0100 (BST)
+References: <20200804124417.27102-1-alex.bennee@linaro.org>
+ <20200804124417.27102-4-alex.bennee@linaro.org>
+ <f80cfa932a650d8f7e8fc02a1656b4c2@kernel.org>
+User-agent: mu4e 1.5.5; emacs 28.0.50
+From:   Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
+        christoffer.dall@arm.com
+Subject: Re: [PATCH  v1 3/3] kernel/configs: don't include PCI_QUIRKS in KVM
+ guest configs
+In-reply-to: <f80cfa932a650d8f7e8fc02a1656b4c2@kernel.org>
+Date:   Tue, 04 Aug 2020 15:44:58 +0100
+Message-ID: <87r1smmpw5.fsf@linaro.org>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiA+ID4gSWYgeW91IGxvb2sgYXQgdGhlIGxpYmZmaSByZWZlcmVuY2UgcGF0Y2ggSSBoYXZlIGlu
-Y2x1ZGVkLCB0aGUgYXJjaGl0ZWN0dXJlDQo+ID4gPiBzcGVjaWZpYyBjaGFuZ2VzIHRvIHVzZSB0
-cmFtcGZkIGp1c3QgaW52b2x2ZSBhIHNpbmdsZSBDIGZ1bmN0aW9uIGNhbGwgdG8NCj4gPiA+IGEg
-Y29tbW9uIGNvZGUgZnVuY3Rpb24uDQo+IA0KPiBObyBpZGVhIHdoYXQgbGliZmZpIGlzLCBidXQg
-aXQgbXVzdCBzdXJlbHkgYmUgc2ltcGxlciB0bw0KPiByZXdyaXRlIGl0IHRvIGF2b2lkIG5lc3Rl
-ZCBmdW5jdGlvbiBkZWZpbml0aW9ucy4NCj4gDQo+IE9yIGZpbmQgYSBib29rIGZyb20gdGhlIDE5
-NjBzIG9uIGhvdyB0byBkbyByZWN1cnNpdmUNCj4gY2FsbHMgYW5kIG5lc3RlZCBmdW5jdGlvbnMg
-aW4gRk9SVFJBTi1JVi4NCg0KRldJVyBpdCBpcyBwcm9iYWJseSBhcyBzaW1wbGUgYXM6DQoxKSBQ
-dXQgYWxsIHRoZSAndmFyaWFibGVzJyB0aGUgbmVzdGVkIGZ1bmN0aW9uIGFjY2Vzc2VzIGludG8g
-YSBzdHJ1Y3QuDQoyKSBBZGQgYSBmaWVsZCBmb3IgdGhlIGFkZHJlc3Mgb2YgdGhlICduZXN0ZWQn
-IGZ1bmN0aW9uLg0KMykgUGFzcyB0aGUgYWRkcmVzcyBvZiB0aGUgc3RydWN0dXJlIGRvd24gaW5z
-dGVhZCBvZiB0aGUNCiAgIGFkZHJlc3Mgb2YgdGhlIGZ1bmN0aW9uLg0KDQpJZiB5b3UgYXJlbid0
-IGluIGNvbnRyb2wgb2YgdGhlIGNhbGwgc2l0ZXMgdGhlbiBhZGQgdGhlDQpzdHJ1Y3R1cmUgdG8g
-YSBsaW5rZWQgbGlzdCBvbiBhIHRocmVhZC1sb2NhbCB2YXJpYWJsZS4NCg0KCURhdmlkDQoNCi0N
-ClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBN
-aWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxl
-cykNCg==
 
+Marc Zyngier <maz@kernel.org> writes:
+
+> On 2020-08-04 13:44, Alex Benn=C3=A9e wrote:
+>> The VIRTIO_PCI support is an idealised PCI bus, we don't need a bunch
+>> of bloat for real world hardware for a VirtIO guest.
+>
+> Who says this guest will only have virtio devices?
+
+This is true - although what is the point of kvm_guest.config? We
+certainly turn on a whole bunch of virt optimised pathways with PARAVIRT
+and HYPERVISOR_GUEST along with the rest of VirtIO.
+
+> Or even, virtio devices without bugs? Given that said device can
+> come from any VMM, I'm not sure this is the right thing to do.
+
+Perhaps this patch is one too far. I don't mind dropping it as long as I
+can still slim down the kernels I know don't need the extra bloat.
+
+>
+> Thanks,
+>
+>          M.
+>
+>>=20
+>> Signed-off-by: Alex Benn=C3=A9e <alex.bennee@linaro.org>
+>> ---
+>>  kernel/configs/kvm_guest.config | 1 +
+>>  1 file changed, 1 insertion(+)
+>>=20
+>> diff --git a/kernel/configs/kvm_guest.config=20
+>> b/kernel/configs/kvm_guest.config
+>> index 208481d91090..672863a2fdf1 100644
+>> --- a/kernel/configs/kvm_guest.config
+>> +++ b/kernel/configs/kvm_guest.config
+>> @@ -13,6 +13,7 @@ CONFIG_IP_PNP_DHCP=3Dy
+>>  CONFIG_BINFMT_ELF=3Dy
+>>  CONFIG_PCI=3Dy
+>>  CONFIG_PCI_MSI=3Dy
+>> +CONFIG_PCI_QUIRKS=3Dn
+>>  CONFIG_DEBUG_KERNEL=3Dy
+>>  CONFIG_VIRTUALIZATION=3Dy
+>>  CONFIG_HYPERVISOR_GUEST=3Dy
+
+
+--=20
+Alex Benn=C3=A9e
