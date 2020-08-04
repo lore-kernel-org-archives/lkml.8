@@ -2,156 +2,81 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5BBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D811EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BBF021744
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC22222B40
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:17:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h6MoMg8B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728818AbgHDOPs (ORCPT
+        id S1728843AbgHDORf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:15:48 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:9467 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbgHDOPG (ORCPT
+        Tue, 4 Aug 2020 10:17:35 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24923 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726948AbgHDORI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:15:06 -0400
-Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
-  by alexa-out.qualcomm.com with ESMTP; 04 Aug 2020 07:15:04 -0700
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 04 Aug 2020 07:15:03 -0700
-Received: from gkohli-linux.qualcomm.com ([10.204.78.26])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 04 Aug 2020 19:44:50 +0530
-Received: by gkohli-linux.qualcomm.com (Postfix, from userid 427023)
-        id 73D3B486B; Tue,  4 Aug 2020 19:44:49 +0530 (IST)
-From:   Gaurav Kohli <gkohli@codeaurora.org>
-To:     will@kernel.org, linux-arm-kernel@lists.infradead.org,
-        maz@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        neeraju@codeaurora.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH] nvmem: core: add support to NVMEM_NO_SYSFS_ENTRY
-Date:   Tue,  4 Aug 2020 19:44:43 +0530
-Message-Id: <1596550484-11029-2-git-send-email-gkohli@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1596550484-11029-1-git-send-email-gkohli@codeaurora.org>
-References: <1596550484-11029-1-git-send-email-gkohli@codeaurora.org>
+        Tue, 4 Aug 2020 10:17:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596550625;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0MPZ1iQ3JPjBlNMrYPSGQLxY1mun+60bwK9qZEBjRfg=;
+        b=h6MoMg8BAhoKiKoDQfqXmn5gmZeyhU7hJNam6uEKTmx7411NONyZg6do4DX0fvSeMoHI8Q
+        IpjiW9o21SMr9n7yrfoHJ7Ke54gYqGhkJ9f8DanIoI5WqHrZ0nFyMjgkk0W5E7uDXyYXBt
+        qEI4xvYI57L8mWtR8RBGa1CwC+dLxqk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-506-c2MZmszDOQSEpbXrxO_oYA-1; Tue, 04 Aug 2020 10:17:03 -0400
+X-MC-Unique: c2MZmszDOQSEpbXrxO_oYA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1E6688B1086;
+        Tue,  4 Aug 2020 14:17:02 +0000 (UTC)
+Received: from gondolin (ovpn-112-169.ams2.redhat.com [10.36.112.169])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3E4EE5C6DD;
+        Tue,  4 Aug 2020 14:16:55 +0000 (UTC)
+Date:   Tue, 4 Aug 2020 16:16:53 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v2 01/24] virtio_balloon: fix sparse warning
+Message-ID: <20200804161653.32076296.cohuck@redhat.com>
+In-Reply-To: <20200803205814.540410-2-mst@redhat.com>
+References: <20200803205814.540410-1-mst@redhat.com>
+        <20200803205814.540410-2-mst@redhat.com>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On Mon, 3 Aug 2020 16:58:38 -0400
+"Michael S. Tsirkin" <mst@redhat.com> wrote:
 
-Some users might not want to expose nvmem entry to sysfs and
-only intend to use kernel interface so add such provision.
+> balloon uses virtio32_to_cpu instead of cpu_to_virtio32
+> to convert a native endian number to virtio.
+> No practical difference but makes sparse warn.
+> Fix it up.
+> 
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> ---
+>  drivers/virtio/virtio_balloon.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
-  Documentation/ABI/stable/sysfs-bus-nvmem |  2 ++
-  drivers/nvmem/Kconfig                    |  5 +++++
-  drivers/nvmem/core.c                     | 11 ++++++-----
-  3 files changed, 13 insertions(+), 5 deletions(-)
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
-diff --git a/Documentation/ABI/stable/sysfs-bus-nvmem 
-b/Documentation/ABI/stable/sysfs-bus-nvmem
-index 5923ab4620c5..12aab0a85fea 100644
---- a/Documentation/ABI/stable/sysfs-bus-nvmem
-+++ b/Documentation/ABI/stable/sysfs-bus-nvmem
-@@ -6,6 +6,8 @@ Description:
-  		This file allows user to read/write the raw NVMEM contents.
-  		Permissions for write to this file depends on the nvmem
-  		provider configuration.
-+		Note: This file is not present if CONFIG_NVMEM_NO_SYSFS_ENTRY
-+		is enabled
-
-  		ex:
-  		hexdump /sys/bus/nvmem/devices/qfprom0/nvmem
-diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-index 0a7a470ee859..6ab3276d287c 100644
---- a/drivers/nvmem/Kconfig
-+++ b/drivers/nvmem/Kconfig
-@@ -192,4 +192,9 @@ config SC27XX_EFUSE
-  	  This driver can also be built as a module. If so, the module
-  	  will be called nvmem-sc27xx-efuse.
-
-+config NVMEM_NO_SYSFS_ENTRY
-+	bool "No nvmem sysfs entry"
-+
-+	help
-+	  Say Yes if you do not want to add nvmem entry to sysfs.
-  endif
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index b9a0270883a0..c70f183fe379 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -216,7 +216,7 @@ static const struct attribute_group 
-nvmem_bin_rw_group = {
-	.attrs		= nvmem_attrs,
-  };
-
--static const struct attribute_group *nvmem_rw_dev_groups[] = {
-+static const __maybe_unused struct attribute_group 
-*nvmem_rw_dev_groups[] = {
-  	&nvmem_bin_rw_group,
-  	NULL,
-  };
-@@ -240,7 +240,7 @@ static const struct attribute_group 
-nvmem_bin_ro_group = {
-  	.attrs		= nvmem_attrs,
-  };
-
--static const struct attribute_group *nvmem_ro_dev_groups[] = {
-+static const __maybe_unused struct attribute_group 
-*nvmem_ro_dev_groups[] = {
-  	&nvmem_bin_ro_group,
-  	NULL,
-  };
-@@ -265,7 +265,7 @@ static const struct attribute_group 
-nvmem_bin_rw_root_group = {
-  	.attrs		= nvmem_attrs,
-  };
-
--static const struct attribute_group *nvmem_rw_root_dev_groups[] = {
-+static const __maybe_unused struct attribute_group 
-*nvmem_rw_root_dev_groups[] = {
-  	&nvmem_bin_rw_root_group,
-  	NULL,
-  };
-@@ -289,7 +289,7 @@ static const struct attribute_group 
-nvmem_bin_ro_root_group = {
-  	.attrs		= nvmem_attrs,
-  };
-
--static const struct attribute_group *nvmem_ro_root_dev_groups[] = {
-+static const __maybe_unused struct attribute_group 
-*nvmem_ro_root_dev_groups[] = {
-  	&nvmem_bin_ro_root_group,
-  	NULL,
-  };
-@@ -688,6 +688,7 @@ struct nvmem_device *nvmem_register(const struct 
-nvmem_config *config)
-  	nvmem->read_only = device_property_present(config->dev, "read-only") |
-  			   config->read_only;
-
-+#if !defined(CONFIG_NVMEM_NO_SYSFS_ENTRY)
-  	if (config->root_only)
-  		nvmem->dev.groups = nvmem->read_only ?
-  			nvmem_ro_root_dev_groups :
-@@ -696,7 +697,7 @@ struct nvmem_device *nvmem_register(const struct 
-nvmem_config *config)
-  		nvmem->dev.groups = nvmem->read_only ?
-  			nvmem_ro_dev_groups :
-  			nvmem_rw_dev_groups;
--
-+#endif
-  	device_initialize(&nvmem->dev);
-
-  	dev_dbg(&nvmem->dev, "Registering nvmem device %s\n", config->name);
--- 
-2.21.0
