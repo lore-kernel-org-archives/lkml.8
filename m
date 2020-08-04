@@ -2,83 +2,80 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC071C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF023C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E16EC2076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFD312072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:21:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729270AbgHDBUC (ORCPT
+        id S1729331AbgHDBVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 21:20:02 -0400
-Received: from mga01.intel.com ([192.55.52.88]:35805 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728037AbgHDBUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 21:20:02 -0400
-IronPort-SDR: zy8bMbpY9Fzvethr/eR30k1+FUeVvB+ga+0mc5IPhUQdAY7n/g4sXqYqsClu0Fp0bBBGf0u/27
- lzWRhsYx4/0g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="170319215"
-X-IronPort-AV: E=Sophos;i="5.75,432,1589266800"; 
-   d="scan'208";a="170319215"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 18:20:01 -0700
-IronPort-SDR: ih3plJPOUr86ZaDzhUpcBpYgi4VBrU8kXxWFd/YUmtYgUzQ4V/V86OPzGbtw5XizFTJv+Ej65p
- VWUrAl5fiW1Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,432,1589266800"; 
-   d="scan'208";a="466828964"
-Received: from lkp-server02.sh.intel.com (HELO 84ccfe698a63) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 03 Aug 2020 18:19:59 -0700
-Received: from kbuild by 84ccfe698a63 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k2lcU-0000LU-FB; Tue, 04 Aug 2020 01:19:58 +0000
-Date:   Tue, 4 Aug 2020 09:19:22 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Xi Wang <xii@google.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     kbuild-all@lists.01.org, Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mel Gorman <mgorman@suse.de>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Xi Wang <xii@google.com>
-Subject: [RFC PATCH] sched: __rebuild_sched_domains() can be static
-Message-ID: <20200804011922.GA47754@cda59a0f6a5b>
-References: <20200728070131.1629670-1-xii@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200728070131.1629670-1-xii@google.com>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 3 Aug 2020 21:21:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726756AbgHDBVm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 21:21:42 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54E14C06174A;
+        Mon,  3 Aug 2020 18:21:42 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 51B341278B058;
+        Mon,  3 Aug 2020 18:04:56 -0700 (PDT)
+Date:   Mon, 03 Aug 2020 18:21:40 -0700 (PDT)
+Message-Id: <20200803.182140.1686117972461864999.davem@davemloft.net>
+To:     olteanv@gmail.com
+Cc:     kuba@kernel.org, netdev@vger.kernel.org, claudiu.manoil@nxp.com,
+        ioana.ciornei@nxp.com, Jiafei.Pan@nxp.com, yangbo.lu@nxp.com,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: [PATCH net-next 1/2] dpaa2-eth: use napi_schedule to be
+ compatible with PREEMPT_RT
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200803201009.613147-1-olteanv@gmail.com>
+References: <20200803201009.613147-1-olteanv@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 03 Aug 2020 18:04:56 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Vladimir Oltean <olteanv@gmail.com>
+Date: Mon,  3 Aug 2020 23:10:08 +0300
 
-Signed-off-by: kernel test robot <lkp@intel.com>
----
- cpuset.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> From: Jiafei Pan <Jiafei.Pan@nxp.com>
+> 
+> The driver calls napi_schedule_irqoff() from a context where, in RT,
+> hardirqs are not disabled, since the IRQ handler is force-threaded.
+> 
+> In the call path of this function, __raise_softirq_irqoff() is modifying
+> its per-CPU mask of pending softirqs that must be processed, using
+> or_softirq_pending(). The or_softirq_pending() function is not atomic,
+> but since interrupts are supposed to be disabled, nobody should be
+> preempting it, and the operation should be safe.
+> 
+> Nonetheless, when running with hardirqs on, as in the PREEMPT_RT case,
+> it isn't safe, and the pending softirqs mask can get corrupted,
+> resulting in softirqs being lost and never processed.
+> 
+> To have common code that works with PREEMPT_RT and with mainline Linux,
+> we can use plain napi_schedule() instead. The difference is that
+> napi_schedule() (via __napi_schedule) also calls local_irq_save, which
+> disables hardirqs if they aren't already. But, since they already are
+> disabled in non-RT, this means that in practice we don't see any
+> measurable difference in throughput or latency with this patch.
+> 
+> Signed-off-by: Jiafei Pan <Jiafei.Pan@nxp.com>
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index 5087b90c4c47b..c871b4f4a7a3e 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -1015,7 +1015,7 @@ static void rebuild_sched_domains_locked(int force_update)
- }
- #endif /* CONFIG_SMP */
- 
--void __rebuild_sched_domains(int force_update)
-+static void __rebuild_sched_domains(int force_update)
- {
- 	get_online_cpus();
- 	percpu_down_write(&cpuset_rwsem);
+Applied.
