@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A54C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 00:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB3FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 00:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7332D20786
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 00:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2A56206DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 00:50:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596502211;
-	bh=PdHeGqguVQqNl2iBh6HxmGsanO5DiavSPdWdC17XBw0=;
+	s=default; t=1596502212;
+	bh=Uk9RmCXWALB90xvFtuI0l/Yi7yKQhDkPwQac2KtoubA=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=f1WEScvP3jAeWgs0HLSli2ElGFEOSxuiFMqsulLmPXbVc4vIxiacw0jGwi0u83Zea
-	 iNFGswLUdqaBPf2pmM3zfHh+GfGyndtRBsux4kjbSN1tURRRW8KeUIKld4iGisyurN
-	 fcafvPBHslQYbreTbvIJWcARnhFYF4+n97RzHEao=
+	b=IBCL4zyq2yheoFLXJPxXzFBJr+L7Dne//gp7iMkuJyfjGNTax+h0grvpdsvYKvKIh
+	 QWAG8bBL/uPpwgKxvqglBLDjRqPhYZWtd39VGr95mrk8xgW9b/0K77NccWsQpQ0lQT
+	 CaY4n/2vKSpdKN+p9h3FO6lbXcVDO/cixdCXZpEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729313AbgHDAuJ (ORCPT
+        id S1729334AbgHDAuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 20:50:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60562 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 20:50:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729275AbgHDAuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729287AbgHDAuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 3 Aug 2020 20:50:08 -0400
-Subject: Re: [GIT PULL] x86/fpu change for v5.9
+Subject: Re: [GIT PULL] x86/microcode change for v5.9
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596502207;
-        bh=PdHeGqguVQqNl2iBh6HxmGsanO5DiavSPdWdC17XBw0=;
+        s=default; t=1596502208;
+        bh=Uk9RmCXWALB90xvFtuI0l/Yi7yKQhDkPwQac2KtoubA=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=e1FtxxL67IzP6U4bwtBq367zfDsolrYU4sP4J31CqtqoJmiWWY8gSwVrHabfbiYdq
-         9EAJZWzks8MoJQaOTzVskEf4rXeERJn0nNRYkRHeYLh82mopAEewk6GISiCoFzVAzV
-         KZG6xh7RQ5hXFIgrO6WPQ+VKJ8oFqrVEk4CUwveI=
+        b=dA6fLQBn/Jqczegig9ClPqxRVUgMdkZWIsMsO8NH9q44k40UykoeiaoICMRr0n5uR
+         s4rfQX4Jzq1pouTVSbDRxJ2YlWmeXWeWtzk4sZwyTifCLoFRssA0Svv0S9y/TkbF/p
+         aRNbmte7+mwF6kefN8sxMEqR4y7YKhV8qwONr8YA=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200803182335.GA1103918@gmail.com>
-References: <20200803182335.GA1103918@gmail.com>
+In-Reply-To: <20200803183256.GA1167269@gmail.com>
+References: <20200803183256.GA1167269@gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200803182335.GA1103918@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-fpu-2020-08-03
-X-PR-Tracked-Commit-Id: 4185b3b92792eaec5869266e594338343421ffb0
+X-PR-Tracked-Message-Id: <20200803183256.GA1167269@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+ x86-microcode-2020-08-03
+X-PR-Tracked-Commit-Id: c8a59a4d8e3c9e609fa915e39c3628c6dd08aeea
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0a897743ac258927dd29bb91ac663b568f53429d
-Message-Id: <159650220770.17631.15328839201396615432.pr-tracker-bot@kernel.org>
-Date:   Tue, 04 Aug 2020 00:50:07 +0000
+X-PR-Merge-Commit-Id: 69094c20323c5efff462a2e02d0bb7b6608779ad
+Message-Id: <159650220828.17631.7400212364559444723.pr-tracker-bot@kernel.org>
+Date:   Tue, 04 Aug 2020 00:50:08 +0000
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
@@ -57,12 +58,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 3 Aug 2020 20:23:35 +0200:
+The pull request you sent on Mon, 3 Aug 2020 20:32:56 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-fpu-2020-08-03
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-microcode-2020-08-03
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0a897743ac258927dd29bb91ac663b568f53429d
+https://git.kernel.org/torvalds/c/69094c20323c5efff462a2e02d0bb7b6608779ad
 
 Thank you!
 
