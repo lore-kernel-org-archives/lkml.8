@@ -2,136 +2,142 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B114C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA38C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BBCB2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4049A2086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:45:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ByLoZFy1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729954AbgHDHmb (ORCPT
+        id S1729938AbgHDHp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 03:42:31 -0400
-Received: from mailout11.rmx.de ([94.199.88.76]:37719 "EHLO mailout11.rmx.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726808AbgHDHma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 03:42:30 -0400
-Received: from kdin01.retarus.com (kdin01.dmz1.retloc [172.19.17.48])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mailout11.rmx.de (Postfix) with ESMTPS id 4BLRYF45jsz3ybM;
-        Tue,  4 Aug 2020 09:42:25 +0200 (CEST)
-Received: from mta.arri.de (unknown [217.111.95.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by kdin01.retarus.com (Postfix) with ESMTPS id 4BLRY03tZlz2xNM;
-        Tue,  4 Aug 2020 09:42:12 +0200 (CEST)
-Received: from n95hx1g2.localnet (192.168.54.102) by mta.arri.de
- (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Tue, 4 Aug
- 2020 09:40:12 +0200
-From:   Christian Eggers <ceggers@arri.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        "Hartmut Knaack" <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 2/2] iio: light: as73211: New driver
-Date:   Tue, 4 Aug 2020 09:40:11 +0200
-Message-ID: <2356337.HYKpEJ1Wej@n95hx1g2>
-Organization: Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
-In-Reply-To: <CAHp75Vev64E86OWm+eV=1o4ZDs0Xh_Y1z6V54GmpRwWmjD7=eA@mail.gmail.com>
-References: <20200802163735.76617-1-ceggers@arri.de> <20200802163735.76617-3-ceggers@arri.de> <CAHp75Vev64E86OWm+eV=1o4ZDs0Xh_Y1z6V54GmpRwWmjD7=eA@mail.gmail.com>
+        Tue, 4 Aug 2020 03:45:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51668 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729830AbgHDHp1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 03:45:27 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8039AC06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 00:45:27 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id n4so186339vsl.10
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 00:45:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=feh7RxUtSqLBph4VDa4rqiDTI4QQeVOJVHBSSi+EkrM=;
+        b=ByLoZFy1lDsP2ZYMnrJyGhZ5pqOEDGHmvmVSriCKAlqXp6Me5DEHVUJreI+OvtTKiB
+         Swb0P0if20yG15zV5I1T5h04BLnFTjkcC6JfxAKKve0GyeKUzxDLFJdRZJBTIZJSNFD5
+         ng8rgKdkfntsQq6c8ustfeK4wb3yo2lR5H1Fn0YSSLA67xLctA43YsG+az62OBLD2/VB
+         tvbcP9b7AYwvIem7UjZCsIyXBgAHvidwZCdYC3h5pLwBPaJNnSEZ2diEzZfjqTJnHBJp
+         OWlD7OtsfnofEKJRl87WGHdbH4jMnGSPBBmedegEUDCnS9UyqwyM38VcdOBufYBTmy4o
+         NMOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=feh7RxUtSqLBph4VDa4rqiDTI4QQeVOJVHBSSi+EkrM=;
+        b=cEKpE9McP/smO65KbSXucutPfE0aZY86+CJ1olLu2gY297e8OeQPblg3siwazkXg/i
+         XOhiIruFSgwS6w0j0hU0LlU/Xhv0pNWqJUT1iyP/IVxei27MOWqe4vekE/gNHgfW43Y0
+         rqgunFBKhcuOV2tTGvx2vFFsn7wKTi3X+SivTiQMVS4y3YRGYjg7uGsu4/kkADO8eKDA
+         tzJ2T/1KJ7JWjoEb5F+g9w82BOP78IDywdD80AU7wtiNLCuItP4wol3s/K96Skri8hPx
+         tQXL9Bh3plBA1YJOL0FcH1Z3m/YqMchjbjRiy7lKZ/mi8ea4XU7XaK9rI2q+vaN95FES
+         gX7A==
+X-Gm-Message-State: AOAM532Z+emw5g4qvOshRZTUoSXdvwRvF2/ED1+nJeUAafW5M1hlfKVr
+        BEfOyPdT9g1a8jyXXybxHU6oh1AV4CpNLjRC+jMqwBu7TO+7UA==
+X-Google-Smtp-Source: ABdhPJzYoqmCDolQz6cBgPMWbFtn29DKgO7L9ps4ITePL+WpAKuW8oBgmHNSSJftpZ4sacciBIStFpymtip1aV9f96c=
+X-Received: by 2002:a67:f70c:: with SMTP id m12mr12835009vso.238.1596527125331;
+ Tue, 04 Aug 2020 00:45:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Originating-IP: [192.168.54.102]
-X-RMX-ID: 20200804-094212-4BLRY03tZlz2xNM-0@kdin01
-X-RMX-SOURCE: 217.111.95.66
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 4 Aug 2020 13:15:14 +0530
+Message-ID: <CA+G9fYuvWVwvauqpfcwuJK+Zg5O=BWUG2_s1ceH-kTc9COZmHA@mail.gmail.com>
+Subject: arm64: make dtbs broken - socfpga_agilex.dtsi:313.15-16 syntax error
+ FATAL ERROR: Unable to parse input tree
+List-Id: <soc.lore.kernel.org>
+To:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        lkft-triage@lists.linaro.org, SoC Team <soc@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Cc:     dinguyen@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sunday, 2 August 2020, 20:02:35 CEST, Andy Shevchenko wrote:
-> Thanks for an update, my comments below.
+Linux mainline master build breaks on arm64 while building dtbs.
 
-Thanks for the review. Please see below for my questions.
+make -sk KBUILD_BUILD_USER=TuxBuild -C/linux ARCH=arm64
+CROSS_COMPILE=aarch64-linux-gnu- HOSTCC=gcc CC="sccache
+aarch64-linux-gnu-gcc" O=build dtbs
+#
+../arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14:
+Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges"
+property but its #address-cells (1) differs from / (2)
+../arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14:
+Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges"
+property but its #size-cells (1) differs from / (2)
+../arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14:
+Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges"
+property but its #address-cells (1) differs from / (2)
+../arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14:
+Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges"
+property but its #size-cells (1) differs from / (2)
+../arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14:
+Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges"
+property but its #address-cells (1) differs from / (2)
+../arch/arm64/boot/dts/broadcom/stingray/stingray-usb.dtsi:7.3-14:
+Warning (dma_ranges_format): /usb:dma-ranges: empty "dma-ranges"
+property but its #size-cells (1) differs from / (2)
+Error: ../arch/arm64/boot/dts/intel/socfpga_agilex.dtsi:313.15-16 syntax error
+FATAL ERROR: Unable to parse input tree
+make[3]: *** [scripts/Makefile.lib:314:
+arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dtb] Error 1
+Error: ../arch/arm64/boot/dts/intel/socfpga_agilex.dtsi:313.15-16 syntax error
+FATAL ERROR: Unable to parse input tree
+make[3]: *** [scripts/Makefile.lib:314:
+arch/arm64/boot/dts/intel/socfpga_agilex_socdk_nand.dtb] Error 1
+make[3]: Target '__build' not remade because of errors.
+make[2]: *** [../scripts/Makefile.build:497: arch/arm64/boot/dts/intel] Error 2
+../arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning
+(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but
+its #address-cells (1) differs from / (2)
+../arch/arm64/boot/dts/qcom/ipq6018.dtsi:127.3-14: Warning
+(dma_ranges_format): /soc:dma-ranges: empty "dma-ranges" property but
+its #size-cells (1) differs from / (2)
+make[2]: Target '__build' not remade because of errors.
+make[1]: *** [/linux/Makefile:1307: dtbs] Error 2
+make: *** [Makefile:185: __sub-make] Error 2
 
-Best regards
-Christian
+build url:
+https://gitlab.com/Linaro/lkft/kernel-runs/-/jobs/669607311
 
-> On Sun, Aug 2, 2020 at 7:40 PM Christian Eggers <ceggers@arri.de> wrote:
-> > Datasheet:
-> > https://ams.com/documents/20143/36005/AS73211_DS000556_3-01.pdf/a65474c0-
-> > b302-c2fd-e30a-c98df87616df
-> Do we need the UUID after the document file name?
-I have send AMS an inquiry. Not sure whether I will get an answer. I will wait
-a few days until sending v6.
+git log --oneline arch/arm64/boot/dts/intel/ | head
 
-> > +#define AS73211_OFFSET_TEMP (-66.9)
-> > +#define AS73211_SCALE_TEMP  0.05
-> 
-> In the kernel we don't do float arithmetic. How these are being used?
-Does this restriction also apply for compile time constants? I am quite 
-sure that all calculations using these defines will be evaluated at compile
-time. If found a number of other places where probably the same is done:
-
-find . -name '*.c' | xargs grep "#define.*[0-9]\.[0-9]" | grep -v '"' | grep -v "\/\*.*[0-9]\.[0-9]"
-
-> > +               *val2 = (AS73211_OFFSET_TEMP - (int)AS73211_OFFSET_TEMP) *
-> > 1000000;
-> > 
-> > +                       *val2 = (AS73211_SCALE_TEMP -
-> > (int)AS73211_SCALE_TEMP) * 1000000;
-> Magic 1000000 multiplier.
-I think that in the context of IIO_VAL_INT_PLUS_MICRO this isn't quite magic. Using
-1000000 directly seems quite usual:
-
-find drivers/iio/ -type f | xargs grep "val2 = .*1000000"
-
-> I think here you got them always 0. And to fix that you need to
-> redefine (with also units included in the name) above constants like
-> #define ..._OFFSET_TEMP_mC 66500
-> ... _SCALE_TEMP_?? 50
-a scale factor has no unit
-
-> 
-> Consider to use definitions from
-> https://elixir.bootlin.com/linux/latest/source/include/linux/units.h
-There are only definition for milli celsius. For IIO_VAL_INT_PLUS_MICRO I would
-require micro celsius.
-
-If I have the freedom, I would keep it as it is. Else I would suggest the following:
-#define AS73211_OFFSET_TEMP_INT (-66)
-#define AS73211_OFFSET_TEMP_MICRO 900000
-#define AS73211_SCALE_TEMP_INT 0
-#define AS73211_SCALE_TEMP_MICRO 50000
-
-> > +       }}
-> > +
-> > +       return -EINVAL;
-> 
-> Make it default case.
-changed. Is there any benefit? My IDE's syntax checker now complains
-"No return, in a function returning non-void". But gcc is happy with this.
-
-> > +       ret = devm_iio_device_register(dev, indio_dev);
-> > +       if (ret < 0)
-> > +               return ret;
-> > +
-> > +       return 0;
-> 
->   return devm_iio_device_register();
-changed. I prefer the original pattern as it would produce less changed lines
-if something needs to inserted later.
+60176e6be0bb arm64: dts: agilex: add status to qspi dts node
+fd0d094531db arm64: dts: agilex: correct service layer driver's compatible value
+8d6b6bbe6dde arm64: dts: agilex: correct FPGA manager driver's compatible value
+854e80bcfdaf Merge tag 'arm-dt-5.7' of
+git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+80f132d73709 arm64: dts: increase the QSPI reg address for Stratix10 and Agilex
+8c867387160e arm64: dts: socfpga: agilex: Fix gmac compatible
+1afa9c3b7c9b Merge tag 'armsoc-dt' of
+git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+210de0e996ae arm64: dts: agilex/stratix10: fix pmu interrupt numbers
+2f804ba7aa9e arm64: dts: agilex: Add SysMgr to Ethernet nodes
+a6706bd60be7 arm64: dts: agilex: Add SysMgr compatible
 
 
-
+-- 
+Linaro LKFT
+https://lkft.linaro.org
