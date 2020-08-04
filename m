@@ -2,173 +2,171 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB68C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07E752076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:31:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b22tYC6z"
+	by mail.kernel.org (Postfix) with ESMTP id C96EF2076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:32:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbgHDTbt (ORCPT
+        id S1728089AbgHDTcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 15:31:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47442 "EHLO
+        Tue, 4 Aug 2020 15:32:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbgHDTbr (ORCPT
+        with ESMTP id S1726027AbgHDTcF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 15:31:47 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B68B7C06174A;
-        Tue,  4 Aug 2020 12:31:46 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id q4so27510778edv.13;
-        Tue, 04 Aug 2020 12:31:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lPQhi2EGIWphqgXXS6/LgcuZPutzCILAsqJJu6qo/8w=;
-        b=b22tYC6z9W/pbIRO7pJWfs9ARLlciURv3Ksmck7YruC7f5u3NH1DKq5lVFgz/t3qqV
-         W/JlYe5Bl2+t9oCR8Sm1qfSKQzMujgg9Wg2C7ZkGJaLqh6A5jLqskKrWqViCYnmNo2L+
-         nv8/HgDn0+cqpExXpEniNbSJ6qBDHGZm0HQQZQT3fdWO9PhLxX8N/ASz+EutLp3lgAfl
-         ZaJExNIczPugzHIw3Mr9HKcuQzQduUi6thP4zEXv05vIbEYRCHykgfBC2e9kebRjQJfh
-         UtetO4nSPpY1RhZbbDpNiLPTTrmkAqr6t4wGjJV1NHzPoWjmNP1koKNIZD7ta2+c2X/X
-         ssQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lPQhi2EGIWphqgXXS6/LgcuZPutzCILAsqJJu6qo/8w=;
-        b=G6wZe8UNHVApQ5lwizhuL/8Bws9Zniz3zUiprdS8fNhJha/PE0+Eh+vIl6WqaklvAt
-         P8Ec6t9/Z18SCRsfDNmqgvK+ErwT9NV9JYGMBNkEsuVJ2TueAF5Jd4fcGpzJGDvSBz1U
-         7YY3ahax4t/Nfz6d95nrr7ak1YF1v+8mUZW2kmC8yQ2iS/eMRhkBJj3efJr36tktIIA+
-         NC/fFzfmtNdgkWIMxH9OcYQ/1cOzCnpv3A6colUH7aWlAdTdplYkWPkR+4KJf4YB5G/+
-         j6y0E6hBrgvAbOJaVI2gYrEq8CINFm2BYR9jGc3SCfBlyBJNXMwyx+eAYU8T4XzzELEc
-         WoNA==
-X-Gm-Message-State: AOAM533c/IBhMYXapF6XCJdcCXQvGKxKUpv45up+V4UkMC3v8h11vuZR
-        H1K0zo0Go5849YML+AKE6cz1cT1zSEVsCuY6Cyc=
-X-Google-Smtp-Source: ABdhPJyWzQIa1aqdPHfKxqQQpi7/uDtf+blsHcQxkD1HTdQTfhXqWmSKU5IaGYgFNsjgBZf8SpKdcLXhi7nHsJkqAV4=
-X-Received: by 2002:a50:fd16:: with SMTP id i22mr21981071eds.281.1596569505319;
- Tue, 04 Aug 2020 12:31:45 -0700 (PDT)
+        Tue, 4 Aug 2020 15:32:05 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A09F0C06174A;
+        Tue,  4 Aug 2020 12:32:04 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id C8D142983E8
+From:   Helen Koike <helen.koike@collabora.com>
+To:     mchehab@kernel.org, hans.verkuil@cisco.com,
+        laurent.pinchart@ideasonboard.com, sakari.ailus@iki.fi,
+        linux-media@vger.kernel.org
+Cc:     Helen Koike <helen.koike@collabora.com>, tfiga@chromium.org,
+        hiroh@chromium.org, nicolas@ndufresne.ca, Brian.Starkey@arm.com,
+        kernel@collabora.com, boris.brezillon@collabora.com,
+        narmstrong@baylibre.com, linux-kernel@vger.kernel.org,
+        frkoenig@chromium.org, mjourdan@baylibre.com,
+        stanimir.varbanov@linaro.org
+Subject: [PATCH v5 0/7] media: v4l2: Add extended fmt and buffer ioctls
+Date:   Tue,  4 Aug 2020 16:29:32 -0300
+Message-Id: <20200804192939.2251988-1-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.28.0.rc2
 MIME-Version: 1.0
-References: <1596540744-6902-1-git-send-email-kalyan_t@codeaurora.org>
-In-Reply-To: <1596540744-6902-1-git-send-email-kalyan_t@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 4 Aug 2020 12:32:29 -0700
-Message-ID: <CAF6AEGtpPU+ALcpQMuy-MpLF_ZwjD+k=aN7gkoBFjJPq1++9qQ@mail.gmail.com>
-Subject: Re: [v1] drm/msm/dpu: update reservations in commit path
-To:     Kalyan Thota <kalyan_t@codeaurora.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Krishna Manikandan <mkrishn@codeaurora.org>,
-        Raviteja Tamatam <travitej@codeaurora.org>,
-        nganji@codeaurora.org, Stephen Boyd <swboyd@chromium.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Drew Davenport <ddavenport@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 4:32 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
->
-> DPU resources reserved in the atomic_check path gets unwinded
-> during modeset operation before commit happens in a non seamless
-> transition.
->
-> Update the reservations in the commit path to avoid resource
-> failures. Secondly have dummy reservations in atomic_check path
-> so that we can gracefully fail the composition if resources are
-> not available.
->
-> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> index 63976dc..c6b8254 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> @@ -565,7 +565,7 @@ static int dpu_encoder_virt_atomic_check(
->         const struct drm_display_mode *mode;
->         struct drm_display_mode *adj_mode;
->         struct msm_display_topology topology;
-> -       struct dpu_global_state *global_state;
-> +       struct dpu_global_state tmp_resv_state;
->         int i = 0;
->         int ret = 0;
->
-> @@ -582,7 +582,7 @@ static int dpu_encoder_virt_atomic_check(
->         dpu_kms = to_dpu_kms(priv->kms);
->         mode = &crtc_state->mode;
->         adj_mode = &crtc_state->adjusted_mode;
-> -       global_state = dpu_kms_get_existing_global_state(dpu_kms);
-> +       memset(&tmp_resv_state, 0, sizeof(tmp_resv_state));
+Hello,
 
-I think what you want to do is dpu_kms_get_global_state().. that will
-clone/duplicate the existing global state (or return the already
-duplicated global state if it is called multiple times).
+This is v5 of the Extended API for formats and buffers, which introduces
+the following new ioctls:
 
-It is safe to modify this global state in the atomic_check() path.. in
-fact that is the intention.  For a TEST_ONLY atomic commit, or if any
-of the atomic_check()'s fail, this new duplicated global state is
-discarded.  If all the checks succeed and the atomic update is
-committed to hw, this new global state replaces the existing global
-state.
+int ioctl(int fd, VIDIOC_G_EXT_PIX_FMT, struct v4l2_ext_pix_format *argp)
+int ioctl(int fd, VIDIOC_S_EXT_PIX_FMT, struct v4l2_ext_pix_format *argp)
+int ioctl(int fd, VIDIOC_TRY_EXT_PIX_FMT, struct v4l2_ext_pix_format *argp)
 
-BR,
--R
+int ioctl(int fd, VIDIOC_EXT_CREATE_BUFS, struct v4l2_ext_create_buffers *argp)
+int ioctl(int fd, VIDIOC_EXT_QUERYBUF, struct v4l2_ext_buffer *argp)
+int ioctl(int fd, VIDIOC_EXT_QBUF, struct v4l2_ext_buffer *argp)
+int ioctl(int fd, VIDIOC_EXT_DQBUF, struct v4l2_ext_buffer *argp)
+int ioctl(int fd, VIDIOC_EXT_PREPARE_BUF, struct v4l2_ext_buffer *argp)
 
->         trace_dpu_enc_atomic_check(DRMID(drm_enc));
->
->         /*
-> @@ -621,7 +621,7 @@ static int dpu_encoder_virt_atomic_check(
->                  * info may not be available to complete reservation.
->                  */
->                 if (drm_atomic_crtc_needs_modeset(crtc_state)) {
-> -                       ret = dpu_rm_reserve(&dpu_kms->rm, global_state,
-> +                       ret = dpu_rm_reserve(&dpu_kms->rm, &tmp_resv_state,
->                                         drm_enc, crtc_state, topology);
->                 }
->         }
-> @@ -966,7 +966,7 @@ static void dpu_encoder_virt_mode_set(struct drm_encoder *drm_enc,
->         struct dpu_hw_blk *hw_lm[MAX_CHANNELS_PER_ENC];
->         struct dpu_hw_blk *hw_dspp[MAX_CHANNELS_PER_ENC] = { NULL };
->         int num_lm, num_ctl, num_pp, num_dspp;
-> -       int i, j;
-> +       int i, j, rc;
->
->         if (!drm_enc) {
->                 DPU_ERROR("invalid encoder\n");
-> @@ -1006,6 +1006,13 @@ static void dpu_encoder_virt_mode_set(struct drm_encoder *drm_enc,
->
->         topology = dpu_encoder_get_topology(dpu_enc, dpu_kms, adj_mode);
->
-> +       rc = dpu_rm_reserve(&dpu_kms->rm, global_state, drm_enc,
-> +               drm_crtc->state, topology);
-> +       if (rc) {
-> +               DPU_ERROR_ENC(dpu_enc, "Failed to reserve resources\n");
-> +               return;
-> +       }
-> +
->         /* Query resource that have been reserved in atomic check step. */
->         num_pp = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
->                 drm_enc->base.id, DPU_HW_BLK_PINGPONG, hw_pp,
-> --
-> 1.9.1
->
+Please check v4 cover letter specific topic past discussions
+https://patchwork.linuxtv.org/project/linux-media/cover/20200717115435.2632623-1-helen.koike@collabora.com/
+
+Documentation
+=============
+I added a first version of the documentation.
+I would appreciate some tips in how to organize this better, since there are
+several parts of the docs which reference the "old" API, and for now
+I just added a note pointing to the Extended API.
+
+Instead of duplicating documentation from the code to the Docs (as used by
+most part of v4l2 documentation), I just added a reference to let Sphinx get
+the structs documentation from the code, so we can avoid duplicating.
+
+For reviewing convenience, I uploaded the generated html docs at
+https://people.collabora.com/~koike/ext-doc-v5/userspace-api/media/v4l/ext-api.html
+
+There is room for improvements, it would be great to get your suggestions.
+
+uAPI
+====
+This version have some minor changes in the uAPI structs, highlight to the
+mem_offset that was returned to struct v4l2_ext_plane, memory field that now
+is per plane, and some adjustments in field sizes and re-ordering to make
+structs the same for 32 and 64 bits (which I verified with pahole tool).
+
+I also updated v4l2-compliance:
+https://gitlab.collabora.com/koike/v4l-utils/-/tree/ext-api/wip
+
+We need to decide the size of the reserved fields left, how much reserved
+fields do you think we should leave for each struct?
+
+What is next
+============
+I would like to improve implementation (for the kernel and v4l2-compliane) and
+drop the RFC tag for next version, so please review the uAPI.
+
+
+List of changes in v5:
+======================
+* first version of Documentation
+* migrate memory from v4l2_ext_buffer to v4l2_ext_plane
+* return mem_offset to struct v4l2_ext_plane
+* change sizes and reorder fields to avoid holes in the struct and make it
+  the same for 32 and 64 bits
+* removed __attribute__ ((packed)) from uapi structs
+* set request_fd to signed
+* add documentation
+* updated some commit messages
+
+Hans Verkuil (1):
+  media: v4l2: Add extended buffer operations
+
+Helen Koike (6):
+  media: v4l2: Extend pixel formats to unify single/multi-planar
+    handling (and more)
+  media: videobuf2: Expose helpers to implement the _ext_fmt and
+    _ext_buf hooks
+  media: mediabus: Add helpers to convert a ext_pix format to/from a
+    mbus_fmt
+  media: vivid: Convert the capture and output drivers to
+    EXT_FMT/EXT_BUF
+  media: vimc: Implement the ext_fmt and ext_buf hooks
+  media: docs: add documentation for the Extended API
+
+ .../userspace-api/media/v4l/buffer.rst        |   5 +
+ .../userspace-api/media/v4l/common.rst        |   1 +
+ .../userspace-api/media/v4l/dev-capture.rst   |   5 +
+ .../userspace-api/media/v4l/dev-output.rst    |   5 +
+ .../userspace-api/media/v4l/ext-api.rst       | 107 ++
+ .../userspace-api/media/v4l/format.rst        |  16 +-
+ .../userspace-api/media/v4l/user-func.rst     |   5 +
+ .../media/v4l/vidioc-ext-create-bufs.rst      |  95 ++
+ .../media/v4l/vidioc-ext-prepare-buf.rst      |  62 ++
+ .../media/v4l/vidioc-ext-qbuf.rst             | 204 ++++
+ .../media/v4l/vidioc-ext-querybuf.rst         |  79 ++
+ .../media/v4l/vidioc-g-ext-pix-fmt.rst        | 117 +++
+ .../media/common/videobuf2/videobuf2-core.c   |   2 +
+ .../media/common/videobuf2/videobuf2-v4l2.c   | 560 ++++++-----
+ .../media/test-drivers/vimc/vimc-capture.c    |  61 +-
+ drivers/media/test-drivers/vimc/vimc-common.c |   6 +-
+ drivers/media/test-drivers/vimc/vimc-common.h |   2 +-
+ drivers/media/test-drivers/vivid/vivid-core.c |  70 +-
+ .../test-drivers/vivid/vivid-touch-cap.c      |  26 +-
+ .../test-drivers/vivid/vivid-touch-cap.h      |   3 +-
+ .../media/test-drivers/vivid/vivid-vid-cap.c  | 169 +---
+ .../media/test-drivers/vivid/vivid-vid-cap.h  |  15 +-
+ .../media/test-drivers/vivid/vivid-vid-out.c  | 193 ++--
+ .../media/test-drivers/vivid/vivid-vid-out.h  |  15 +-
+ drivers/media/v4l2-core/v4l2-dev.c            |  50 +-
+ drivers/media/v4l2-core/v4l2-ioctl.c          | 938 ++++++++++++++++--
+ include/media/v4l2-ioctl.h                    |  60 ++
+ include/media/v4l2-mediabus.h                 |  42 +
+ include/media/videobuf2-core.h                |   6 +-
+ include/media/videobuf2-v4l2.h                |  21 +-
+ include/uapi/linux/videodev2.h                | 146 +++
+ 31 files changed, 2363 insertions(+), 723 deletions(-)
+ create mode 100644 Documentation/userspace-api/media/v4l/ext-api.rst
+ create mode 100644 Documentation/userspace-api/media/v4l/vidioc-ext-create-bufs.rst
+ create mode 100644 Documentation/userspace-api/media/v4l/vidioc-ext-prepare-buf.rst
+ create mode 100644 Documentation/userspace-api/media/v4l/vidioc-ext-qbuf.rst
+ create mode 100644 Documentation/userspace-api/media/v4l/vidioc-ext-querybuf.rst
+ create mode 100644 Documentation/userspace-api/media/v4l/vidioc-g-ext-pix-fmt.rst
+
+-- 
+2.28.0.rc2
+
