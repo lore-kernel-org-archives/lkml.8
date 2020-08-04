@@ -2,187 +2,131 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF88C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E926C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E9DF2076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45E0E206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:25:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="P7CesnaA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SafJSNqu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728200AbgHDFSH (ORCPT
+        id S1727949AbgHDFZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 01:18:07 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:34280 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgHDFSG (ORCPT
+        Tue, 4 Aug 2020 01:25:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgHDFZO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 01:18:06 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id D31DB891B1;
-        Tue,  4 Aug 2020 17:18:02 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1596518282;
-        bh=zfP6/sULj//NkhxeKY3miXAqSNhqQ7vcIbwQEGAnxsI=;
-        h=From:To:Cc:Subject:Date;
-        b=P7CesnaAw5GuaaeryCdRqBDPv30qaqyxUihnGTchvgetugrC0eL3ZuDhy6+L0A2/d
-         nOYJaVOz7ZuSvUWtf30cDb2ijbF8P9cCX5bOENx1iH+4YvrxEWBH8uT6Tickwe0URJ
-         W6vonvs3HefW1y0VkkdX+plBqC9CnaPIpvJwAD2jBtq61EpnT57U4UE7yb0YpJ4W7r
-         1XIUnZSwQ0jWzn/eyjU6VB1W4NaxpIbU9KM3tFDE33V+Q7/4/mTQ3VZa5NrNyk/REc
-         eFAH+NOOhTjfjdcHByf6qzz6G5dspEAqM7nzLsOt+3Ro6nsWrP4kIcugqYGSYHp/0q
-         dD5uR3tbLFMgQ==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f28ef860000>; Tue, 04 Aug 2020 17:18:03 +1200
-Received: from markto-dl.ws.atlnz.lc (markto-dl.ws.atlnz.lc [10.33.23.25])
-        by smtp (Postfix) with ESMTP id 4CFB313EEBA;
-        Tue,  4 Aug 2020 17:17:57 +1200 (NZST)
-Received: by markto-dl.ws.atlnz.lc (Postfix, from userid 1155)
-        id 9416434108A; Tue,  4 Aug 2020 17:17:57 +1200 (NZST)
-From:   Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-Subject: [PATCH] RTC: Implement pretimeout watchdog for DS1307
-Date:   Tue,  4 Aug 2020 17:17:43 +1200
-Message-Id: <20200804051743.19115-1-mark.tomlinson@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.28.0
+        Tue, 4 Aug 2020 01:25:14 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84C94C06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 22:25:14 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id m8so12698806pfh.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 22:25:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VyvJTV65QYrZba9SIfzf3Qah/NqVWDrTLrkNojuqHV0=;
+        b=SafJSNqu2HzopBQNzSMzXgtQyoN95IoHlxuM48onRYrNr0jx5X5Yx4nbz7n1qxZTaz
+         BBLmwCHy6ILOfFAj4CVMMmylSVMacwrWKkcJQHwIk7vN5K3c9K4FBhLNWH2UDK0qjPuR
+         YGUpqI6YFRmyyfYhhfJDeZht6Y+jZjY7iT5DkLaaNJe5xOHeoArcGLnKyrwUVYgWgrzO
+         j1kh4lVdzME9oNVocVV+RTxxFppvbtEuHgVfDLkCKZT8qhtbHe7/vfLu2r0h/KLji4uj
+         RI5P+HSeGJFYjBdWLInTEPaOTXwpLsJZ2dkncuYuY/PF5XAQYjUlZEzY0oCevMx0Arni
+         uAoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VyvJTV65QYrZba9SIfzf3Qah/NqVWDrTLrkNojuqHV0=;
+        b=sm+pveNm/3mpfe3fW2KmQkGwxOcYtq1OQQdjK01INUgj8nogeLR3J2ZM5kAVuhXGJS
+         PWUbnErkR0Y2FKDMQpSWJfvsj/3AxLxML8Q/X1zWNkLGUvPzcliYJvkCzOFEsJ8E03sr
+         KZ7TeuSUWQISkybFHGmP1Lpt82F3d6COXfjSlqBw3zHEBj897gznIBoFybIqU3vePXjR
+         1sBKMKMGP3HGu5tU2mpkwfz/hkYL0RywgkhmeBpSTJqheD2wJLJM6JgzrpqN1mPLldgX
+         SIJk9iBqVGvXa4TZ40Ouj6Fji72HZEz+7eNtx2mfyQ98omA7KVwd0/YD4hkq8ncNYBwm
+         5mFA==
+X-Gm-Message-State: AOAM533f8Ed19OCCdkmNg7qnIeAD+dpQmdX+Wih2ISli5rcouG4vtLWP
+        kY5vpStn2Eh51UyWhYuAIwL/YQ==
+X-Google-Smtp-Source: ABdhPJzQBa7GAz/BaRtEtdELU/h9ZsuAAyasELfzNQnsQprm5zGlYxyfDe3Uz3t1K1kJ/+YPjsWlhg==
+X-Received: by 2002:a63:5d11:: with SMTP id r17mr17546649pgb.146.1596518713836;
+        Mon, 03 Aug 2020 22:25:13 -0700 (PDT)
+Received: from localhost ([122.162.244.227])
+        by smtp.gmail.com with ESMTPSA id v11sm19518479pgs.22.2020.08.03.22.25.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Aug 2020 22:25:12 -0700 (PDT)
+Date:   Tue, 4 Aug 2020 10:55:09 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] cpufreq: tegra186: Fix initial frequency
+Message-ID: <20200804052509.24en7voy2bg6vdbc@vireshk-mac-ubuntu>
+References: <20200712100645.13927-1-jonathanh@nvidia.com>
+ <20200713032554.cykywnygxln6ukrl@vireshk-i7>
+ <3d6091f2-6b04-185f-6c23-e39a34b87877@nvidia.com>
+ <20200714034635.2zdv3wzmftjg2t4a@vireshk-i7>
+ <8c6d3c32-c142-3981-3a52-6560e885f4c9@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8c6d3c32-c142-3981-3a52-6560e885f4c9@nvidia.com>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the hardware watchdog in the clock chip simply pulls the reset line
-of the CPU, then there is no chance to write a stack trace to help
-determine what may have been blocking the CPU.
+On 31-07-20, 13:14, Jon Hunter wrote:
+> I have been doing some more testing on Tegra, I noticed that when
+> reading the current CPU frequency via the sysfs scaling_cur_freq entry,
+> this always returns the cached value (at least for Tegra). Looking at
+> the implementation of scaling_cur_freq I see ...
+> 
+> static ssize_t show_scaling_cur_freq(struct cpufreq_policy *policy, char *buf)
+> {
+>         ssize_t ret; 
+>         unsigned int freq;
+> 
+>         freq = arch_freq_get_on_cpu(policy->cpu);
+>         if (freq)
+>                 ret = sprintf(buf, "%u\n", freq);
+>         else if (cpufreq_driver && cpufreq_driver->setpolicy &&
+>                         cpufreq_driver->get)
+>                 ret = sprintf(buf, "%u\n", cpufreq_driver->get(policy->cpu));
+>         else
+>                 ret = sprintf(buf, "%u\n", policy->cur);
+>         return ret; 
+> }
+> 
+> The various Tegra CPU frequency drivers do not implement the
+> set_policy callback and hence why we always get the cached value. I
+> see the following commit added this and before it simply return the
+> cached value ...
+> 
+> commit c034b02e213d271b98c45c4a7b54af8f69aaac1e
+> Author: Dirk Brandewie <dirk.j.brandewie@intel.com>
+> Date:   Mon Oct 13 08:37:40 2014 -0700
+> 
+>     cpufreq: expose scaling_cur_freq sysfs file for set_policy() drivers
+> 
+> Is this intentional? 
 
-This patch adds a pretimeout to the watchdog, which, if enabled, sets
-a timer to go off before the hardware watchdog kicks in, and calls
-the standard pretimeout function, which can (for example) call panic.
+Yes, it is.
 
-Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
----
- drivers/rtc/rtc-ds1307.c | 35 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 34 insertions(+), 1 deletion(-)
+There are two sysfs files to read the current frequency.
 
-diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
-index 49702942bb08..647f8659d0bd 100644
---- a/drivers/rtc/rtc-ds1307.c
-+++ b/drivers/rtc/rtc-ds1307.c
-@@ -23,6 +23,7 @@
- #include <linux/clk-provider.h>
- #include <linux/regmap.h>
- #include <linux/watchdog.h>
-+#include <linux/timer.h>
-=20
- /*
-  * We can't determine type by probing, but if we expect pre-Linux code
-@@ -174,6 +175,10 @@ struct ds1307 {
- #ifdef CONFIG_COMMON_CLK
- 	struct clk_hw		clks[2];
- #endif
-+#ifdef CONFIG_WATCHDOG_CORE
-+	struct timer_list	soft_timer;
-+	struct watchdog_device	*wdt;
-+#endif
- };
-=20
- struct chip_desc {
-@@ -863,12 +868,34 @@ static int m41txx_rtc_set_offset(struct device *dev=
-, long offset)
- }
-=20
- #ifdef CONFIG_WATCHDOG_CORE
-+static void ds1388_soft_wdt_expire(struct timer_list *soft_timer)
-+{
-+	struct ds1307 *ds1307 =3D container_of(soft_timer, struct ds1307, soft_=
-timer);
-+
-+	watchdog_notify_pretimeout(ds1307->wdt);
-+}
-+
-+static void ds1388_soft_timer_set(struct watchdog_device *wdt_dev)
-+{
-+	struct ds1307 *ds1307 =3D watchdog_get_drvdata(wdt_dev);
-+	int soft_timeout;
-+
-+	if (wdt_dev->pretimeout > 0) {
-+		soft_timeout =3D wdt_dev->timeout - wdt_dev->pretimeout;
-+		mod_timer(&ds1307->soft_timer, jiffies + soft_timeout * HZ);
-+	} else {
-+		del_timer(&ds1307->soft_timer);
-+	}
-+}
-+
- static int ds1388_wdt_start(struct watchdog_device *wdt_dev)
- {
- 	struct ds1307 *ds1307 =3D watchdog_get_drvdata(wdt_dev);
- 	u8 regs[2];
- 	int ret;
-=20
-+	ds1388_soft_timer_set(wdt_dev);
-+
- 	ret =3D regmap_update_bits(ds1307->regmap, DS1388_REG_FLAG,
- 				 DS1388_BIT_WF, 0);
- 	if (ret)
-@@ -900,6 +927,7 @@ static int ds1388_wdt_stop(struct watchdog_device *wd=
-t_dev)
- {
- 	struct ds1307 *ds1307 =3D watchdog_get_drvdata(wdt_dev);
-=20
-+	del_timer(&ds1307->soft_timer);
- 	return regmap_update_bits(ds1307->regmap, DS1388_REG_CONTROL,
- 				  DS1388_BIT_WDE | DS1388_BIT_RST, 0);
- }
-@@ -909,6 +937,7 @@ static int ds1388_wdt_ping(struct watchdog_device *wd=
-t_dev)
- 	struct ds1307 *ds1307 =3D watchdog_get_drvdata(wdt_dev);
- 	u8 regs[2];
-=20
-+	ds1388_soft_timer_set(wdt_dev);
- 	return regmap_bulk_read(ds1307->regmap, DS1388_REG_WDOG_HUN_SECS, regs,
- 				sizeof(regs));
- }
-@@ -923,6 +952,7 @@ static int ds1388_wdt_set_timeout(struct watchdog_dev=
-ice *wdt_dev,
- 	regs[0] =3D 0;
- 	regs[1] =3D bin2bcd(wdt_dev->timeout);
-=20
-+	ds1388_soft_timer_set(wdt_dev);
- 	return regmap_bulk_write(ds1307->regmap, DS1388_REG_WDOG_HUN_SECS, regs=
-,
- 				 sizeof(regs));
- }
-@@ -1652,7 +1682,8 @@ static void ds1307_clks_register(struct ds1307 *ds1=
-307)
-=20
- #ifdef CONFIG_WATCHDOG_CORE
- static const struct watchdog_info ds1388_wdt_info =3D {
--	.options =3D WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+	.options =3D WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
-+		   WDIOF_MAGICCLOSE | WDIOF_PRETIMEOUT,
- 	.identity =3D "DS1388 watchdog",
- };
-=20
-@@ -1681,6 +1712,8 @@ static void ds1307_wdt_register(struct ds1307 *ds13=
-07)
- 	wdt->timeout =3D 99;
- 	wdt->max_timeout =3D 99;
- 	wdt->min_timeout =3D 1;
-+	ds1307->wdt =3D wdt;
-+	timer_setup(&ds1307->soft_timer, ds1388_soft_wdt_expire, 0);
-=20
- 	watchdog_init_timeout(wdt, 0, ds1307->dev);
- 	watchdog_set_drvdata(wdt, ds1307);
---=20
-2.28.0
+- scaling_cur_freq: as you noticed it returns cached value unless it is for
+  setpolicy drivers in whose case cpufreq core doesn't control the frequency and
+  so doesn't cache any values.
 
+- cpuinfo_cur_freq: This will return the value as read from hardware using
+  ->get() callback.
+
+-- 
+viresh
