@@ -2,236 +2,388 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA73EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DEAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D575D20842
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24A0D2065E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:35:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZsAVKnqc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgHDVeZ (ORCPT
+        id S1728115AbgHDVfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 17:34:25 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49122 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726472AbgHDVeZ (ORCPT
+        Tue, 4 Aug 2020 17:35:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38336 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgHDVfj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 17:34:25 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 074LX7Gw168084;
-        Tue, 4 Aug 2020 17:34:06 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32qeb8j1u6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Aug 2020 17:34:06 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 074LY5Ri171379;
-        Tue, 4 Aug 2020 17:34:06 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32qeb8j1tu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Aug 2020 17:34:05 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 074LEupV005691;
-        Tue, 4 Aug 2020 21:34:05 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma02dal.us.ibm.com with ESMTP id 32n019abdg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Aug 2020 21:34:05 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 074LY38155247302
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 4 Aug 2020 21:34:03 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B68FAC605D;
-        Tue,  4 Aug 2020 21:34:03 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 530C0C6059;
-        Tue,  4 Aug 2020 21:34:02 +0000 (GMT)
-Received: from oc3560204572.ibm.com (unknown [9.85.148.242])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue,  4 Aug 2020 21:34:02 +0000 (GMT)
-Message-ID: <62eb0c86eaad6e8c23ca99d011ca58cdebd53b44.camel@linux.vnet.ibm.com>
-Subject: Re: [PATCH v4 1/7] powerpc/pseries/iommu: Create defines for
- operations in ibm, ddw-applicable
-From:   David Dai <zdai@linux.vnet.ibm.com>
-To:     Leonardo Bras <leobras.c@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Joel Stanley <joel@jms.id.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Brian King <brking@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Tue, 04 Aug 2020 16:34:01 -0500
-In-Reply-To: <20200716071658.467820-2-leobras.c@gmail.com>
-References: <20200716071658.467820-1-leobras.c@gmail.com>
-         <20200716071658.467820-2-leobras.c@gmail.com>
+        Tue, 4 Aug 2020 17:35:39 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BD4FC06174A;
+        Tue,  4 Aug 2020 14:35:38 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id g14so6297435iom.0;
+        Tue, 04 Aug 2020 14:35:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lIiAQymO5SiCLTvDBrxGf0tYJKgHszQcOVXFrDh6/HY=;
+        b=ZsAVKnqcSum9Pch+dDnbayqsSt8UQiKsD6VpBuv/aEZKONnVGjqik2WUHwQ5+ADZkj
+         YQl5IhBJYkjBdQ0Bwv6Ba0mAIq/JPGSwvPLbB8Mh+FdCvKSlAuOPeNeAXioD+VBNbPhv
+         VMUUT/DKw98eTURZb30zTdoiEtPVyIrCxzXDf791lkNwE6i1YT8zMElX6Gai8I9dV3ll
+         xkUyNhxXn+dRFplJ717wCrpAuZmBX0+G/Ucjfl3cFNNNdpdBH7CEmyrvjtjemw5L3o6x
+         p1wbiM7CvYXUrK5uv0z08nF6KBVKACkioDbBAHLZNrNTY6s93kXMikuw8rYnvuBA3E7U
+         7oIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lIiAQymO5SiCLTvDBrxGf0tYJKgHszQcOVXFrDh6/HY=;
+        b=im+eoOXBSBHXOv86dkWewUxOMtKI+gnGZlBkImXy8ujU8vd1KN7UxM38rlSNXUFyoD
+         mILq5i3RO8aNh4Z8vue6wJk5phyA/ee0HuROUhgasqk1nb/a2OLbEmQ8MBgNhjFEkCa6
+         6X9TXl1bn479VLcv/Lap/yy4U6h5MRpGDKC5gtAik1r1i1fi2V7SU3TYB1STM/d4+eQ1
+         26bnWdtA5skZo44xkWTuNmNHbchnAj99/CulrNrA7NLc5ucItxls7T+ezKq7PpWs8J6N
+         VvRQ0t4gm+6Mjb+7IiHDHTSM1HjhGQKCVpdoTMUTM5YVtxl2JubvE2RE80KaZFg1KHuo
+         tm/A==
+X-Gm-Message-State: AOAM531NNq9KCaVyxpQqWiocyWL6R2UFjnpsKD7OmUMIBdhDUhCNTL2X
+        v58fnmCTbSDYw+trxzjvmrSApJOPtW0MoeI56eQ4ycvRsJE=
+X-Google-Smtp-Source: ABdhPJxAw8IesO2jde1iX08p2CE8bidlvWzOAuXXjEvjMENRCT25cmjHQ4D2DSD8FMnnamjG++KFAWinQEzWmV0ndFM=
+X-Received: by 2002:a05:6602:2e83:: with SMTP id m3mr38281iow.38.1596576937556;
+ Tue, 04 Aug 2020 14:35:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com> <1595681998-19193-15-git-send-email-alex.shi@linux.alibaba.com>
+In-Reply-To: <1595681998-19193-15-git-send-email-alex.shi@linux.alibaba.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 4 Aug 2020 14:35:26 -0700
+Message-ID: <CAKgT0Ud5Rqx+fm+9ZHMxARhShrDKR8F7djAGrjG7ZEbwY_2TcA@mail.gmail.com>
+Subject: Re: [PATCH v17 14/21] mm/compaction: do page isolation first in compaction
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Rong Chen <rong.a.chen@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-8.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-04_04:2020-08-03,2020-08-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 impostorscore=0 mlxscore=0 suspectscore=0 bulkscore=0
- spamscore=0 mlxlogscore=999 lowpriorityscore=0 clxscore=1015 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008040147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-07-16 at 04:16 -0300, Leonardo Bras wrote:
-> Create defines to help handling ibm,ddw-applicable values, avoiding
-> confusion about the index of given operations.
-> 
-> Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
+On Sat, Jul 25, 2020 at 6:00 AM Alex Shi <alex.shi@linux.alibaba.com> wrote:
+>
+> Currently, compaction would get the lru_lock and then do page isolation
+> which works fine with pgdat->lru_lock, since any page isoltion would
+> compete for the lru_lock. If we want to change to memcg lru_lock, we
+> have to isolate the page before getting lru_lock, thus isoltion would
+> block page's memcg change which relay on page isoltion too. Then we
+> could safely use per memcg lru_lock later.
+>
+> The new page isolation use previous introduced TestClearPageLRU() +
+> pgdat lru locking which will be changed to memcg lru lock later.
+>
+> Hugh Dickins <hughd@google.com> fixed following bugs in this patch's
+> early version:
+>
+> Fix lots of crashes under compaction load: isolate_migratepages_block()
+> must clean up appropriately when rejecting a page, setting PageLRU again
+> if it had been cleared; and a put_page() after get_page_unless_zero()
+> cannot safely be done while holding locked_lruvec - it may turn out to
+> be the final put_page(), which will take an lruvec lock when PageLRU.
+> And move __isolate_lru_page_prepare back after get_page_unless_zero to
+> make trylock_page() safe:
+> trylock_page() is not safe to use at this time: its setting PG_locked
+> can race with the page being freed or allocated ("Bad page"), and can
+> also erase flags being set by one of those "sole owners" of a freshly
+> allocated page who use non-atomic __SetPageFlag().
+>
+> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Hugh Dickins <hughd@google.com>
+> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-mm@kvack.org
 > ---
->  arch/powerpc/platforms/pseries/iommu.c | 43 ++++++++++++++++------
-> ----
->  1 file changed, 26 insertions(+), 17 deletions(-)
-> 
-> diff --git a/arch/powerpc/platforms/pseries/iommu.c
-> b/arch/powerpc/platforms/pseries/iommu.c
-> index 6d47b4a3ce39..ac0d6376bdad 100644
-> --- a/arch/powerpc/platforms/pseries/iommu.c
-> +++ b/arch/powerpc/platforms/pseries/iommu.c
-> @@ -39,6 +39,14 @@
->  
->  #include "pseries.h"
->  
-> +enum {
-> +	DDW_QUERY_PE_DMA_WIN  = 0,
-> +	DDW_CREATE_PE_DMA_WIN = 1,
-> +	DDW_REMOVE_PE_DMA_WIN = 2,
+>  include/linux/swap.h |  2 +-
+>  mm/compaction.c      | 42 +++++++++++++++++++++++++++++++++---------
+>  mm/vmscan.c          | 46 ++++++++++++++++++++++++++--------------------
+>  3 files changed, 60 insertions(+), 30 deletions(-)
+>
+> diff --git a/include/linux/swap.h b/include/linux/swap.h
+> index 2c29399b29a0..6d23d3beeff7 100644
+> --- a/include/linux/swap.h
+> +++ b/include/linux/swap.h
+> @@ -358,7 +358,7 @@ extern void lru_cache_add_active_or_unevictable(struct page *page,
+>  extern unsigned long zone_reclaimable_pages(struct zone *zone);
+>  extern unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
+>                                         gfp_t gfp_mask, nodemask_t *mask);
+> -extern int __isolate_lru_page(struct page *page, isolate_mode_t mode);
+> +extern int __isolate_lru_page_prepare(struct page *page, isolate_mode_t mode);
+>  extern unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
+>                                                   unsigned long nr_pages,
+>                                                   gfp_t gfp_mask,
+> diff --git a/mm/compaction.c b/mm/compaction.c
+> index f14780fc296a..2da2933fe56b 100644
+> --- a/mm/compaction.c
+> +++ b/mm/compaction.c
+> @@ -869,6 +869,7 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>                 if (!valid_page && IS_ALIGNED(low_pfn, pageblock_nr_pages)) {
+>                         if (!cc->ignore_skip_hint && get_pageblock_skip(page)) {
+>                                 low_pfn = end_pfn;
+> +                               page = NULL;
+>                                 goto isolate_abort;
+>                         }
+>                         valid_page = page;
+> @@ -950,6 +951,21 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>                 if (!(cc->gfp_mask & __GFP_FS) && page_mapping(page))
+>                         goto isolate_fail;
+>
+> +               /*
+> +                * Be careful not to clear PageLRU until after we're
+> +                * sure the page is not being freed elsewhere -- the
+> +                * page release code relies on it.
+> +                */
+> +               if (unlikely(!get_page_unless_zero(page)))
+> +                       goto isolate_fail;
 > +
-> +	DDW_APPLICABLE_SIZE
-> +};
+> +               if (__isolate_lru_page_prepare(page, isolate_mode) != 0)
+> +                       goto isolate_fail_put;
 > +
->  static struct iommu_table_group *iommu_pseries_alloc_group(int node)
->  {
->  	struct iommu_table_group *table_group;
-> @@ -771,12 +779,12 @@ static void remove_ddw(struct device_node *np,
-> bool remove_prop)
->  {
->  	struct dynamic_dma_window_prop *dwp;
->  	struct property *win64;
-> -	u32 ddw_avail[3];
-> +	u32 ddw_avail[DDW_APPLICABLE_SIZE];
->  	u64 liobn;
->  	int ret = 0;
->  
->  	ret = of_property_read_u32_array(np, "ibm,ddw-applicable",
-> -					 &ddw_avail[0], 3);
-> +					 &ddw_avail[0],
-> DDW_APPLICABLE_SIZE);
->  
->  	win64 = of_find_property(np, DIRECT64_PROPNAME, NULL);
->  	if (!win64)
-> @@ -798,15 +806,15 @@ static void remove_ddw(struct device_node *np,
-> bool remove_prop)
->  		pr_debug("%pOF successfully cleared tces in window.\n",
->  			 np);
->  
-> -	ret = rtas_call(ddw_avail[2], 1, 1, NULL, liobn);
-> +	ret = rtas_call(ddw_avail[DDW_REMOVE_PE_DMA_WIN], 1, 1, NULL,
-> liobn);
->  	if (ret)
->  		pr_warn("%pOF: failed to remove direct window: rtas
-> returned "
->  			"%d to ibm,remove-pe-dma-window(%x) %llx\n",
-> -			np, ret, ddw_avail[2], liobn);
-> +			np, ret, ddw_avail[DDW_REMOVE_PE_DMA_WIN],
-> liobn);
->  	else
->  		pr_debug("%pOF: successfully removed direct window:
-> rtas returned "
->  			"%d to ibm,remove-pe-dma-window(%x) %llx\n",
-> -			np, ret, ddw_avail[2], liobn);
-> +			np, ret, ddw_avail[DDW_REMOVE_PE_DMA_WIN],
-> liobn);
->  
->  delprop:
->  	if (remove_prop)
-> @@ -889,11 +897,11 @@ static int query_ddw(struct pci_dev *dev, const
-> u32 *ddw_avail,
->  	buid = pdn->phb->buid;
->  	cfg_addr = ((pdn->busno << 16) | (pdn->devfn << 8));
->  
-> -	ret = rtas_call(ddw_avail[0], 3, 5, (u32 *)query,
-> -		  cfg_addr, BUID_HI(buid), BUID_LO(buid));
-> +	ret = rtas_call(ddw_avail[DDW_QUERY_PE_DMA_WIN], 3, 5, (u32
-> *)query,
-> +			cfg_addr, BUID_HI(buid), BUID_LO(buid));
->  	dev_info(&dev->dev, "ibm,query-pe-dma-windows(%x) %x %x %x"
-> -		" returned %d\n", ddw_avail[0], cfg_addr,
-> BUID_HI(buid),
-> -		BUID_LO(buid), ret);
-> +		" returned %d\n", ddw_avail[DDW_QUERY_PE_DMA_WIN],
-> cfg_addr,
-> +		 BUID_HI(buid), BUID_LO(buid), ret);
->  	return ret;
->  }
->  
-> @@ -920,15 +928,16 @@ static int create_ddw(struct pci_dev *dev,
-> const u32 *ddw_avail,
->  
->  	do {
->  		/* extra outputs are LIOBN and dma-addr (hi, lo) */
-> -		ret = rtas_call(ddw_avail[1], 5, 4, (u32 *)create,
-> -				cfg_addr, BUID_HI(buid), BUID_LO(buid),
-> -				page_shift, window_shift);
-> +		ret = rtas_call(ddw_avail[DDW_CREATE_PE_DMA_WIN], 5, 4,
-> +				(u32 *)create, cfg_addr, BUID_HI(buid),
-> +				BUID_LO(buid), page_shift,
-> window_shift);
->  	} while (rtas_busy_delay(ret));
->  	dev_info(&dev->dev,
->  		"ibm,create-pe-dma-window(%x) %x %x %x %x %x returned
-> %d "
-> -		"(liobn = 0x%x starting addr = %x %x)\n", ddw_avail[1],
-> -		 cfg_addr, BUID_HI(buid), BUID_LO(buid), page_shift,
-> -		 window_shift, ret, create->liobn, create->addr_hi,
-> create->addr_lo);
-> +		"(liobn = 0x%x starting addr = %x %x)\n",
-> +		 ddw_avail[DDW_CREATE_PE_DMA_WIN], cfg_addr,
-> BUID_HI(buid),
-> +		 BUID_LO(buid), page_shift, window_shift, ret, create-
-> >liobn,
-> +		 create->addr_hi, create->addr_lo);
->  
->  	return ret;
->  }
-> @@ -996,7 +1005,7 @@ static u64 enable_ddw(struct pci_dev *dev,
-> struct device_node *pdn)
->  	int page_shift;
->  	u64 dma_addr, max_addr;
->  	struct device_node *dn;
-> -	u32 ddw_avail[3];
-> +	u32 ddw_avail[DDW_APPLICABLE_SIZE];
->  	struct direct_window *window;
->  	struct property *win64;
->  	struct dynamic_dma_window_prop *ddwprop;
-> @@ -1029,7 +1038,7 @@ static u64 enable_ddw(struct pci_dev *dev,
-> struct device_node *pdn)
->  	 * the property is actually in the parent, not the PE
->  	 */
->  	ret = of_property_read_u32_array(pdn, "ibm,ddw-applicable",
-> -					 &ddw_avail[0], 3);
-> +					 &ddw_avail[0],
-> DDW_APPLICABLE_SIZE);
->  	if (ret)
->  		goto out_failed;
->  
-Tested-by: David Dai <zdai@linux.vnet.ibm.com>
+> +               /* Try isolate the page */
+> +               if (!TestClearPageLRU(page))
+> +                       goto isolate_fail_put;
+> +
+>                 /* If we already hold the lock, we can skip some rechecking */
+>                 if (!locked) {
+>                         locked = compact_lock_irqsave(&pgdat->lru_lock,
 
+So the fact that this flow doesn't match what we have below in
+isolate_lru_pages(). I went digging through the history and realize I
+brought this up before and you referenced the following patch from
+hugh:
+https://lore.kernel.org/lkml/alpine.LSU.2.11.2006111529010.10801@eggly.anvils/
+
+As such I am assuming this flow is needed because we aren't holding an
+LRU lock, and the flow in mm/vmscan.c works because that is being
+called while holding an LRU lock. I am wondering if we are
+overcomplicating things by keeping the LRU check in
+__isolate_lru_page_prepare(). If we were to pull it out then you could
+just perform the get_page_unless_zero and TestClearPageLRU check
+before you call the function and you could consolidate the code so
+that it could be combined into a single function as below. So for
+example you could combine them into:
+static inline bool get_lru_page_unless_zero(struct page *page)
+{
+    /*
+     * Be careful not to clear PageLRU until after we're
+     * sure the page is not being freed elsewhere -- the
+     * page release code relies on it.
+     */
+   if (unlikely(!get_page_unless_zero(page))
+        return false;
+    if(TestClearPageLRU(page))
+        return true;
+    put_page(page);
+    return false;
+}
+
+Then the logic becomes that you have to either call
+get_lru_page_unless_zero before calling __isolate_lru_page_prepare or
+you have to be holding the LRU lock.
+
+> @@ -962,10 +978,6 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>                                         goto isolate_abort;
+>                         }
+>
+> -                       /* Recheck PageLRU and PageCompound under lock */
+> -                       if (!PageLRU(page))
+> -                               goto isolate_fail;
+> -
+>                         /*
+>                          * Page become compound since the non-locked check,
+>                          * and it's on LRU. It can only be a THP so the order
+> @@ -973,16 +985,13 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>                          */
+>                         if (unlikely(PageCompound(page) && !cc->alloc_contig)) {
+>                                 low_pfn += compound_nr(page) - 1;
+> -                               goto isolate_fail;
+> +                               SetPageLRU(page);
+> +                               goto isolate_fail_put;
+>                         }
+>                 }
+>
+>                 lruvec = mem_cgroup_page_lruvec(page, pgdat);
+>
+> -               /* Try isolate the page */
+> -               if (__isolate_lru_page(page, isolate_mode) != 0)
+> -                       goto isolate_fail;
+> -
+>                 /* The whole page is taken off the LRU; skip the tail pages. */
+>                 if (PageCompound(page))
+>                         low_pfn += compound_nr(page) - 1;
+> @@ -1011,6 +1020,15 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>                 }
+>
+>                 continue;
+> +
+> +isolate_fail_put:
+> +               /* Avoid potential deadlock in freeing page under lru_lock */
+> +               if (locked) {
+> +                       spin_unlock_irqrestore(&pgdat->lru_lock, flags);
+> +                       locked = false;
+> +               }
+> +               put_page(page);
+> +
+>  isolate_fail:
+>                 if (!skip_on_failure)
+>                         continue;
+> @@ -1047,9 +1065,15 @@ static bool too_many_isolated(pg_data_t *pgdat)
+>         if (unlikely(low_pfn > end_pfn))
+>                 low_pfn = end_pfn;
+>
+> +       page = NULL;
+> +
+>  isolate_abort:
+>         if (locked)
+>                 spin_unlock_irqrestore(&pgdat->lru_lock, flags);
+> +       if (page) {
+> +               SetPageLRU(page);
+> +               put_page(page);
+> +       }
+>
+>         /*
+>          * Updated the cached scanner pfn once the pageblock has been scanned
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index 4183ae6b54b5..f77748adc340 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -1544,20 +1544,20 @@ unsigned int reclaim_clean_pages_from_list(struct zone *zone,
+>   *
+>   * returns 0 on success, -ve errno on failure.
+>   */
+> -int __isolate_lru_page(struct page *page, isolate_mode_t mode)
+> +int __isolate_lru_page_prepare(struct page *page, isolate_mode_t mode)
+>  {
+>         int ret = -EINVAL;
+>
+> -       /* Only take pages on the LRU. */
+> -       if (!PageLRU(page))
+> -               return ret;
+> -
+>         /* Compaction should not handle unevictable pages but CMA can do so */
+>         if (PageUnevictable(page) && !(mode & ISOLATE_UNEVICTABLE))
+>                 return ret;
+>
+>         ret = -EBUSY;
+>
+> +       /* Only take pages on the LRU. */
+> +       if (!PageLRU(page))
+> +               return ret;
+> +
+>         /*
+>          * To minimise LRU disruption, the caller can indicate that it only
+>          * wants to isolate pages it will be able to operate on without
+
+So the question I would have is if we really need to be checking
+PageLRU here? I wonder if this isn't another spot where we would be
+better served by just assuming that PageLRU has been checked while
+holding the lock, or tested and cleared while holding a page
+reference. The original patch from Hugh referenced above mentions a
+desire to do away with __isolate_lru_page_prepare entirely, so I
+wonder if it wouldn't be good to be proactive and pull out the bits we
+think we might need versus the ones we don't.
+
+> @@ -1598,20 +1598,9 @@ int __isolate_lru_page(struct page *page, isolate_mode_t mode)
+>         if ((mode & ISOLATE_UNMAPPED) && page_mapped(page))
+>                 return ret;
+>
+> -       if (likely(get_page_unless_zero(page))) {
+> -               /*
+> -                * Be careful not to clear PageLRU until after we're
+> -                * sure the page is not being freed elsewhere -- the
+> -                * page release code relies on it.
+> -                */
+> -               ClearPageLRU(page);
+> -               ret = 0;
+> -       }
+> -
+> -       return ret;
+> +       return 0;
+>  }
+>
+> -
+>  /*
+>   * Update LRU sizes after isolating pages. The LRU size updates must
+>   * be complete before mem_cgroup_update_lru_size due to a sanity check.
+> @@ -1691,17 +1680,34 @@ static unsigned long isolate_lru_pages(unsigned long nr_to_scan,
+>                  * only when the page is being freed somewhere else.
+>                  */
+>                 scan += nr_pages;
+> -               switch (__isolate_lru_page(page, mode)) {
+> +               switch (__isolate_lru_page_prepare(page, mode)) {
+
+So after looking through the code I realized that "mode" here will
+always be either 0 or ISOLATE_UNMAPPED. I assume this is why we aren't
+worried about the trylock_page call messing things up. With that said
+it looks like the function just breaks down to three tests, first for
+PageUnevictable(), then PageLRU(), and then possibly page_mapped(). As
+such I believe dropping the PageLRU check from the function as I
+suggested above should be safe since we are at risk for the test of it
+racing anyway since it could be cleared out from under us, and the bit
+isn't really protecting anything anyway since we are holding the LRU
+lock and anyhow.
+
+>                 case 0:
+> +                       /*
+> +                        * Be careful not to clear PageLRU until after we're
+> +                        * sure the page is not being freed elsewhere -- the
+> +                        * page release code relies on it.
+> +                        */
+> +                       if (unlikely(!get_page_unless_zero(page)))
+> +                               goto busy;
+> +
+> +                       if (!TestClearPageLRU(page)) {
+> +                               /*
+> +                                * This page may in other isolation path,
+> +                                * but we still hold lru_lock.
+> +                                */
+> +                               put_page(page);
+> +                               goto busy;
+> +                       }
+> +
+
+This piece could be consolidated via the single function I called out above.
+
+>                         nr_taken += nr_pages;
+>                         nr_zone_taken[page_zonenum(page)] += nr_pages;
+>                         list_move(&page->lru, dst);
+>                         break;
+> -
+> +busy:
+>                 case -EBUSY:
+>                         /* else it is being freed elsewhere */
+>                         list_move(&page->lru, src);
+> -                       continue;
+> +                       break;
+>                 default:
+>                         BUG();
+> --
+> 1.8.3.1
+>
