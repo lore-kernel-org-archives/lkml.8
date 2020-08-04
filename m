@@ -2,194 +2,354 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBFEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C74A9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21CFF21744
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:00:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="CkttCXQD"
+	by mail.kernel.org (Postfix) with ESMTP id A35FB207FC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:00:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596553257;
+	bh=UGKz0laAMAeoRRMQ/WBIHLisQCLwq1BVQrmk9x1SlPo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hpNBwnIUiZzpvAa1fDrvGXSRuKcvYFWtn4RnZGOzD8glGWYsgAOgOzn0cJ/mxJuIk
+	 v+xG/V4Rc3AMtt7ysCRrQQB/87JzefVu26SvqcrWhQrdbd+58hiXrWK2izJynCmLaV
+	 WHUGL0qMluOzveWe6RRr4hW4SC/qP3FLETDILqlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729482AbgHDO7u (ORCPT
+        id S1729507AbgHDPAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:59:50 -0400
-Received: from mail.efficios.com ([167.114.26.124]:53520 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729460AbgHDO7r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:59:47 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 1E42A2D7D34;
-        Tue,  4 Aug 2020 10:59:34 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id j61pavjEfe_F; Tue,  4 Aug 2020 10:59:33 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id B03592D7F9E;
-        Tue,  4 Aug 2020 10:59:33 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com B03592D7F9E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1596553173;
-        bh=586Ig9PSGc+yUdvJdgfaWqOjTOAoEQnYWTHs3H8Yne0=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=CkttCXQD9FRdNGn7iULE/tJLO/t6zHskeRY1FOwmBj1MyGdHm6b0Gt9ReEF18JE+7
-         QDDko8g1YDTSH3gwl4I5azfszwfaisF/rprwUmPSVA0QphpcSjCZxm0pN81gW4IZBH
-         cMHZ1IQh/XzSy/pGgw32qdYvbzhRF7FlKEjtzJAdjAlXaF73b3h5bvmkiqnl8LINlW
-         bMxAbwpN5UHIQ0xD82jm+9uiIfPDjJAuRYR8Dy3jsH+G4Paw/vcflZd+lz2G2YyVMj
-         Rl05/jmJjDyW82cNGW3MO1r+fuk5Ge9nm6a4kTExscBReBAWstBEJLtjFS60pmJt7f
-         qLdsYDbVPuY0Q==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id AykP_FOrFIgL; Tue,  4 Aug 2020 10:59:33 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 689A02D7C5A;
-        Tue,  4 Aug 2020 10:59:33 -0400 (EDT)
-Date:   Tue, 4 Aug 2020 10:59:33 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>, paulmck <paulmck@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andrew Morton <akpm@linux-foundation.org>
-Message-ID: <1708074166.39992.1596553173337.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200804145145.GM2657@hirez.programming.kicks-ass.net>
-References: <20200728160010.3314-1-mathieu.desnoyers@efficios.com> <20200728160010.3314-2-mathieu.desnoyers@efficios.com> <20200804145145.GM2657@hirez.programming.kicks-ass.net>
-Subject: Re: [RFC PATCH 2/2] sched: membarrier: cover kthread_use_mm
+        Tue, 4 Aug 2020 11:00:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41230 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729113AbgHDPAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 11:00:19 -0400
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CA9D22CB2
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 15:00:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596553218;
+        bh=UGKz0laAMAeoRRMQ/WBIHLisQCLwq1BVQrmk9x1SlPo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hBmXwqbAD0aEV/RyYT8DMQykRoxAtVj0av0RbXEIsl6QY6lW7RRWsYvqXC4zuixUB
+         X2f1x6fQHOTI40vGFC2qD6o3lMRBfLWEaT3I/gTEJytRbbOlhQr7iIlvO/wCitSdeN
+         bKIYMjAiqMcnBEddhlDUeoUuBM1o+SJ4K1IBHZ04=
+Received: by mail-ed1-f42.google.com with SMTP id a14so13147403edx.7
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 08:00:18 -0700 (PDT)
+X-Gm-Message-State: AOAM532FpzgAcWoFRC0zjqeVATkIzEbAMAitoCRG60FM1An2SxLWIPV1
+        opAZnYfRXvNfCfNiuZy31vyaqRm0+7TRIgjsUw==
+X-Google-Smtp-Source: ABdhPJwunoyDTQhiThZnToQGxQmEkNellltv3DDrPfUVrB3+uPJo4Mn8HeFaGnvA7CheyZl6LWSmvuv4dbDt9K7/sas=
+X-Received: by 2002:aa7:c606:: with SMTP id h6mr8396427edq.288.1596553216689;
+ Tue, 04 Aug 2020 08:00:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF79 (Linux)/8.8.15_GA_3953)
-Thread-Topic: sched: membarrier: cover kthread_use_mm
-Thread-Index: lJz/+qFGsVsWXklE3aHMpWTYdfNHyw==
+References: <20200804105849.70876-1-linux@fw-web.de> <20200804105849.70876-6-linux@fw-web.de>
+In-Reply-To: <20200804105849.70876-6-linux@fw-web.de>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Tue, 4 Aug 2020 23:00:05 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9aDqz3muo6ynqX9r0VjW7tD5vvZOiQyR8UZOTUct8oVA@mail.gmail.com>
+Message-ID: <CAAOTY_9aDqz3muo6ynqX9r0VjW7tD5vvZOiQyR8UZOTUct8oVA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] arm: dts: mt7623: add display subsystem related
+ device nodes
+To:     Frank Wunderlich <linux@fw-web.de>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        David Airlie <airlied@linux.ie>,
+        chunhui dai <chunhui.dai@mediatek.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        CK Hu <ck.hu@mediatek.com>, Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Aug 4, 2020, at 10:51 AM, Peter Zijlstra peterz@infradead.org wrote:
+Hi, Frank:
 
-> On Tue, Jul 28, 2020 at 12:00:10PM -0400, Mathieu Desnoyers wrote:
->> Add comments and memory barrier to kthread_use_mm and kthread_unuse_mm
->> to allow the effect of membarrier(2) to apply to kthreads accessing
->> user-space memory as well.
->> 
->> Given that no prior kthread use this guarantee and that it only affects
->> kthreads, adding this guarantee does not affect user-space ABI.
->> 
->> Refine the check in membarrier_global_expedited to exclude runqueues
->> running the idle thread rather than all kthreads from the IPI cpumask.
->> 
->> This patch applies on top of this patch from Peter Zijlstra:
->> "mm: fix kthread_use_mm() vs TLB invalidate" currently in Andrew
->> Morton's tree.
->> 
->> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
->> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Paul E. McKenney <paulmck@kernel.org>
->> Cc: Nicholas Piggin <npiggin@gmail.com>
->> Cc: Andy Lutomirski <luto@amacapital.net>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> ---
->>  kernel/kthread.c          | 19 +++++++++++++++++++
->>  kernel/sched/membarrier.c |  8 ++------
->>  2 files changed, 21 insertions(+), 6 deletions(-)
->> 
->> diff --git a/kernel/kthread.c b/kernel/kthread.c
->> index 48925b17920e..ef2435517f14 100644
->> --- a/kernel/kthread.c
->> +++ b/kernel/kthread.c
->> @@ -1258,8 +1258,19 @@ void kthread_use_mm(struct mm_struct *mm)
->>  	finish_arch_post_lock_switch();
->>  #endif
->>  
->> +	/*
->> +	 * When a kthread starts operating on an address space, the loop
->> +	 * in membarrier_{private,global}_expedited() may not observe
->> +	 * that tsk->mm, and not issue an IPI. Membarrier requires a
->> +	 * memory barrier after storing to tsk->mm, before accessing
->> +	 * user-space memory. A full memory barrier for membarrier
->> +	 * {PRIVATE,GLOBAL}_EXPEDITED is implicitly provided by
->> +	 * mmdrop().
->> +	 */
->>  	if (active_mm != mm)
->>  		mmdrop(active_mm);
->> +	else
->> +		smp_mb();
->>  
->>  	to_kthread(tsk)->oldfs = get_fs();
->>  	set_fs(USER_DS);
->> @@ -1280,6 +1291,14 @@ void kthread_unuse_mm(struct mm_struct *mm)
->>  	set_fs(to_kthread(tsk)->oldfs);
->>  
->>  	task_lock(tsk);
->> +	/*
->> +	 * When a kthread stops operating on an address space, the loop
->> +	 * in membarrier_{private,global}_expedited() may not observe
->> +	 * that tsk->mm, and not issue an IPI. Membarrier requires a
->> +	 * memory barrier after accessing user-space memory, before
->> +	 * clearing tsk->mm.
->> +	 */
->> +	smp_mb();
->>  	sync_mm_rss(mm);
->>  	local_irq_disable();
-> 
-> Would it make sense to put the smp_mb() inside the IRQ disable region?
+Frank Wunderlich <linux@fw-web.de> =E6=96=BC 2020=E5=B9=B48=E6=9C=884=E6=97=
+=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=887:00=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> From: Ryder Lee <ryder.lee@mediatek.com>
+>
+> Add display subsystem related device nodes for MT7623.
+>
+> Cc: CK Hu <ck.hu@mediatek.com>
+> Signed-off-by: chunhui dai <chunhui.dai@mediatek.com>
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> Tested-by: Frank Wunderlich <frank-w@public-files.de>
+> ---
+> changed v2->v3:
+>   drop bls to dpi routing
+> ---
+>  arch/arm/boot/dts/mt7623.dtsi                 | 177 ++++++++++++++++++
+>  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  72 +++++++
+>  arch/arm/boot/dts/mt7623n-rfb-emmc.dts        |  72 +++++++
+>  3 files changed, 321 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dts=
+i
+> index a106c0d90a52..d584a3d678ba 100644
+> --- a/arch/arm/boot/dts/mt7623.dtsi
+> +++ b/arch/arm/boot/dts/mt7623.dtsi
+> @@ -24,6 +24,11 @@ / {
+>         #address-cells =3D <2>;
+>         #size-cells =3D <2>;
+>
+> +       aliases {
+> +               rdma0 =3D &rdma0;
+> +               rdma1 =3D &rdma1;
+> +       };
+> +
+>         cpu_opp_table: opp-table {
+>                 compatible =3D "operating-points-v2";
+>                 opp-shared;
+> @@ -321,6 +326,25 @@ pwrap: pwrap@1000d000 {
+>                 clock-names =3D "spi", "wrap";
+>         };
+>
+> +       mipi_tx0: mipi-dphy@10010000 {
+> +               compatible =3D "mediatek,mt7623-mipi-tx",
 
-I've initially placed it right after task_lock so we could eventually
-have a smp_mb__after_non_raw_spinlock or something with a much better naming,
-which would allow removing the extra barrier when it is implied by the
-spinlock.
+In mediatek,dsi.txt [1], "mediatek,mt7623-mipi-tx" is undefined.
 
-I don't see moving the barrier inside the irq off region as having any
-significant effect as far as membarrier is concern. Is it something you
-need for tlb flush ?
+[1] https://www.kernel.org/doc/Documentation/devicetree/bindings/display/me=
+diatek/mediatek%2Cdsi.txt
 
-> 
->>  	tsk->mm = NULL;
->> diff --git a/kernel/sched/membarrier.c b/kernel/sched/membarrier.c
->> index 168479a7d61b..8a294483074d 100644
->> --- a/kernel/sched/membarrier.c
->> +++ b/kernel/sched/membarrier.c
->> @@ -100,13 +100,9 @@ static int membarrier_global_expedited(void)
->>  		    MEMBARRIER_STATE_GLOBAL_EXPEDITED))
->>  			continue;
->>  
->> -		/*
->> -		 * Skip the CPU if it runs a kernel thread. The scheduler
->> -		 * leaves the prior task mm in place as an optimization when
->> -		 * scheduling a kthread.
->> -		 */
->> +		/* Skip the CPU if it runs the idle thread. */
->>  		p = rcu_dereference(cpu_rq(cpu)->curr);
->> -		if (p->flags & PF_KTHREAD)
->> +		if (is_idle_task(p))
->>  			continue;
-> 
-> Do we want to add a:
-> 
->	WARN_ON_ONCE(current->mm);
-> 
-> in play_idle_precise() ?
-> 
-> Because, if I read this right, we rely on the idle thread not having an
-> mm.
+> +                            "mediatek,mt2701-mipi-tx";
+> +               reg =3D <0 0x10010000 0 0x90>;
+> +               clocks =3D <&clk26m>;
+> +               clock-output-names =3D "mipi_tx0_pll";
+> +               #clock-cells =3D <0>;
+> +               #phy-cells =3D <0>;
+> +       };
+> +
+> +       cec: cec@10012000 {
+> +               compatible =3D "mediatek,mt7623-cec",
 
-Yes, that's a good idea.
+Please explicitly define "mediatek,mt7623-cec" in mediatek,hdmi.txt [2].
 
-Thanks,
+[2] https://www.kernel.org/doc/Documentation/devicetree/bindings/display/me=
+diatek/mediatek%2Chdmi.txt
 
-Mathieu
+> +                            "mediatek,mt8173-cec";
+> +               reg =3D <0 0x10012000 0 0xbc>;
+> +               interrupts =3D <GIC_SPI 182 IRQ_TYPE_LEVEL_LOW>;
+> +               clocks =3D <&infracfg CLK_INFRA_CEC>;
+> +               status =3D "disabled";
+> +       };
+> +
+>         cir: cir@10013000 {
+>                 compatible =3D "mediatek,mt7623-cir";
+>                 reg =3D <0 0x10013000 0 0x1000>;
+> @@ -369,6 +393,18 @@ apmixedsys: syscon@10209000 {
+>                 #clock-cells =3D <1>;
+>         };
+>
+> +       hdmi_phy: phy@10209100 {
+> +               compatible =3D "mediatek,mt7623-hdmi-phy",
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Ditto.
+
+> +                            "mediatek,mt2701-hdmi-phy";
+> +               reg =3D <0 0x10209100 0 0x24>;
+> +               clocks =3D <&apmixedsys CLK_APMIXED_HDMI_REF>;
+> +               clock-names =3D "pll_ref";
+> +               clock-output-names =3D "hdmitx_dig_cts";
+> +               #clock-cells =3D <0>;
+> +               #phy-cells =3D <0>;
+> +               status =3D "disabled";
+> +       };
+> +
+>         rng: rng@1020f000 {
+>                 compatible =3D "mediatek,mt7623-rng";
+>                 reg =3D <0 0x1020f000 0 0x1000>;
+> @@ -568,6 +604,16 @@ bch: ecc@1100e000 {
+>                 status =3D "disabled";
+>         };
+>
+> +       hdmiddc0: i2c@11013000 {
+> +               compatible =3D "mediatek,mt7623-hdmi-ddc",
+
+Ditto.
+
+> +                            "mediatek,mt8173-hdmi-ddc";
+> +               interrupts =3D <GIC_SPI 81 IRQ_TYPE_LEVEL_LOW>;
+> +               reg =3D <0 0x11013000 0 0x1C>;
+> +               clocks =3D <&pericfg CLK_PERI_I2C3>;
+> +               clock-names =3D "ddc-i2c";
+> +               status =3D "disabled";
+> +       };
+> +
+>         nor_flash: spi@11014000 {
+>                 compatible =3D "mediatek,mt7623-nor",
+>                              "mediatek,mt8173-nor";
+> @@ -766,6 +812,84 @@ mmsys: syscon@14000000 {
+>                 #clock-cells =3D <1>;
+>         };
+>
+> +       display_components: dispsys@14000000 {
+> +               compatible =3D "mediatek,mt7623-mmsys",
+> +                            "mediatek,mt2701-mmsys";
+
+In mediatek,mmsys.txt [3], this should be:
+
+mmsys: syscon@14000000 {
+        compatible =3D "mediatek,mt7623-mmsys", "mediatek,mt2701-mmsys", "s=
+yscon"
+
+[3] https://www.kernel.org/doc/Documentation/devicetree/bindings/arm/mediat=
+ek/mediatek%2Cmmsys.txt
+
+> +               reg =3D <0 0x14000000 0 0x1000>;
+> +               power-domains =3D <&scpsys MT2701_POWER_DOMAIN_DISP>;
+> +       };
+> +
+> +       ovl@14007000 {
+> +               compatible =3D "mediatek,mt7623-disp-ovl",
+
+This is not defined in mediatek,disp.txt [4].
+
+[4] https://www.kernel.org/doc/Documentation/devicetree/bindings/display/me=
+diatek/mediatek%2Cdisp.txt
+
+> +                            "mediatek,mt2701-disp-ovl";
+> +               reg =3D <0 0x14007000 0 0x1000>;
+> +               interrupts =3D <GIC_SPI 153 IRQ_TYPE_LEVEL_LOW>;
+> +               clocks =3D <&mmsys CLK_MM_DISP_OVL>;
+> +               iommus =3D <&iommu MT2701_M4U_PORT_DISP_OVL_0>;
+> +               mediatek,larb =3D <&larb0>;
+> +       };
+> +
+> +       rdma0: rdma@14008000 {
+> +               compatible =3D "mediatek,mt7623-disp-rdma",
+> +                            "mediatek,mt2701-disp-rdma";
+> +               reg =3D <0 0x14008000 0 0x1000>;
+> +               interrupts =3D <GIC_SPI 152 IRQ_TYPE_LEVEL_LOW>;
+> +               clocks =3D <&mmsys CLK_MM_DISP_RDMA>;
+> +               iommus =3D <&iommu MT2701_M4U_PORT_DISP_RDMA>;
+> +               mediatek,larb =3D <&larb0>;
+> +       };
+> +
+> +       wdma@14009000 {
+> +               compatible =3D "mediatek,mt7623-disp-wdma",
+> +                            "mediatek,mt2701-disp-wdma";
+> +               reg =3D <0 0x14009000 0 0x1000>;
+> +               interrupts =3D <GIC_SPI 154 IRQ_TYPE_LEVEL_LOW>;
+> +               clocks =3D <&mmsys CLK_MM_DISP_WDMA>;
+> +               iommus =3D <&iommu MT2701_M4U_PORT_DISP_WDMA>;
+> +               mediatek,larb =3D <&larb0>;
+> +       };
+> +
+> +       bls: pwm@1400a000 {
+> +               compatible =3D "mediatek,mt7623-disp-pwm",
+> +                            "mediatek,mt2701-disp-pwm";
+> +               reg =3D <0 0x1400a000 0 0x1000>;
+> +               #pwm-cells =3D <2>;
+> +               clocks =3D <&mmsys CLK_MM_MDP_BLS_26M>,
+> +                        <&mmsys CLK_MM_DISP_BLS>;
+> +               clock-names =3D "main", "mm";
+> +               status =3D "disabled";
+> +       };
+> +
+> +       color@1400b000 {
+> +               compatible =3D "mediatek,mt7623-disp-color",
+> +                            "mediatek,mt2701-disp-color";
+> +               reg =3D <0 0x1400b000 0 0x1000>;
+> +               interrupts =3D <GIC_SPI 156 IRQ_TYPE_LEVEL_LOW>;
+> +               clocks =3D <&mmsys CLK_MM_DISP_COLOR>;
+> +       };
+> +
+> +       dsi: dsi@1400c000 {
+> +               compatible =3D "mediatek,mt7623-dsi",
+
+This is not defined in mediatek,dsi.txt [1].
+
+> +                            "mediatek,mt2701-dsi";
+> +               reg =3D <0 0x1400c000 0 0x1000>;
+> +               interrupts =3D <GIC_SPI 157 IRQ_TYPE_LEVEL_LOW>;
+> +               clocks =3D <&mmsys CLK_MM_DSI_ENGINE>,
+> +                        <&mmsys CLK_MM_DSI_DIG>,
+> +                        <&mipi_tx0>;
+> +               clock-names =3D "engine", "digital", "hs";
+> +               phys =3D <&mipi_tx0>;
+> +               phy-names =3D "dphy";
+> +               status =3D "disabled";
+> +       };
+> +
+> +       mutex: mutex@1400e000 {
+> +               compatible =3D "mediatek,mt7623-disp-mutex",
+> +                            "mediatek,mt2701-disp-mutex";
+> +               reg =3D <0 0x1400e000 0 0x1000>;
+> +               interrupts =3D <GIC_SPI 161 IRQ_TYPE_LEVEL_LOW>;
+> +               clocks =3D <&mmsys CLK_MM_MUTEX_32K>;
+> +       };
+> +
+>         larb0: larb@14010000 {
+>                 compatible =3D "mediatek,mt7623-smi-larb",
+>                              "mediatek,mt2701-smi-larb";
+> @@ -778,6 +902,44 @@ larb0: larb@14010000 {
+>                 power-domains =3D <&scpsys MT2701_POWER_DOMAIN_DISP>;
+>         };
+>
+> +       rdma1: rdma@14012000 {
+> +               compatible =3D "mediatek,mt7623-disp-rdma",
+> +                            "mediatek,mt2701-disp-rdma";
+> +               reg =3D <0 0x14012000 0 0x1000>;
+> +               interrupts =3D <GIC_SPI 164 IRQ_TYPE_LEVEL_LOW>;
+> +               clocks =3D <&mmsys CLK_MM_DISP_RDMA1>;
+> +               iommus =3D <&iommu MT2701_M4U_PORT_DISP_RDMA1>;
+> +               mediatek,larb =3D <&larb0>;
+> +       };
+> +
+> +       dpi0: dpi@14014000 {
+> +               compatible =3D "mediatek,mt7623-dpi",
+
+This is not defined in mediatek,dpi.txt [5].
+
+[5] https://www.kernel.org/doc/Documentation/devicetree/bindings/display/me=
+diatek/mediatek%2Cdpi.txt
+
+Regards,
+Chun-Kuang.
+
+> +                            "mediatek,mt2701-dpi";
+> +               reg =3D <0 0x14014000 0 0x1000>;
+> +               interrupts =3D <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
+> +               clocks =3D <&mmsys CLK_MM_DPI1_DIGL>,
+> +                        <&mmsys CLK_MM_DPI1_ENGINE>,
+> +                        <&apmixedsys CLK_APMIXED_TVDPLL>;
+> +               clock-names =3D "pixel", "engine", "pll";
+> +               status =3D "disabled";
+> +       };
+> +
+> +       hdmi0: hdmi@14015000 {
+> +               compatible =3D "mediatek,mt7623-hdmi",
+> +                            "mediatek,mt8173-hdmi";
+> +               reg =3D <0 0x14015000 0 0x400>;
+> +               clocks =3D <&mmsys CLK_MM_HDMI_PIXEL>,
+> +                        <&mmsys CLK_MM_HDMI_PLL>,
+> +                        <&mmsys CLK_MM_HDMI_AUDIO>,
+> +                        <&mmsys CLK_MM_HDMI_SPDIF>;
+> +               clock-names =3D "pixel", "pll", "bclk", "spdif";
+> +               phys =3D <&hdmi_phy>;
+> +               phy-names =3D "hdmi";
+> +               mediatek,syscon-hdmi =3D <&mmsys 0x900>;
+> +               cec =3D <&cec>;
+> +               status =3D "disabled";
+> +       };
+> +
