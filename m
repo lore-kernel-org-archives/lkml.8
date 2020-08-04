@@ -2,151 +2,154 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0984EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A50C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E060722BED
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:23:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IbGQs4Yh"
+	by mail.kernel.org (Postfix) with ESMTP id 3D76222BED
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:23:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgHDMX1 (ORCPT
+        id S1726923AbgHDMX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 08:23:27 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22024 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726202AbgHDMWr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 08:22:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596543754;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Cfhrqb6pBBQzVJy0vxTB4jGpyV61Q7QFxMfhI7EBCL4=;
-        b=IbGQs4YhkjDnXQxk1QUKGa65mGFOdX4pIiXMdpRgP96hQFxHVDC0yF2Yy3byoYPGgofhP1
-        sj76o54Xz7UM7tUs05bXbF+Ua4X+RmNgfSvLtWlX2LWaRFnFdGSzl6cqxBglioItWbDox0
-        pag+5O3F0HXoHvVzlFuzUq+4kR/eo7w=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-404-LdrI7GNRMZKj1AQbDXc42A-1; Tue, 04 Aug 2020 08:22:14 -0400
-X-MC-Unique: LdrI7GNRMZKj1AQbDXc42A-1
-Received: by mail-qt1-f198.google.com with SMTP id q19so19562925qtp.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 05:22:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Cfhrqb6pBBQzVJy0vxTB4jGpyV61Q7QFxMfhI7EBCL4=;
-        b=tPc/YB0qTpvsx5KsbgN00zwSNN8dl3lzzvO9QhvwFdUJiBH8Dx2aR6PJ1SZHE0RUow
-         ZM/GjvFssy1iddqntjDyhxyORN4ztVONJK5KvMBVyPt7HffiaOBSsXyt6nVCf0qF95I6
-         xNxQ6UD3TDLPJCX3CMWG7GVp+Doyst7Te04gaKG+xs5BhUiakve2cA6Xl0rfrgOrfvNQ
-         FrLUcf4zeYMPFf1lrZMNwECD1JnmlgXKGrHxP8BUYpL1UdkU5g4wDLnAhjO5OgKGWRKL
-         oLY0DNd6wV2CYu5AsynqaAyqgSI07elpHZDMFWfp++WsjJaJZrcqlG3eGNgpHXl5otmh
-         A53Q==
-X-Gm-Message-State: AOAM531br4r615P5hLksOmn9uNrDTrU2Nz/74shMYX5qu2olqwcQJjIj
-        q5/+KAY0rjeO2mwthIZa9rjmdJQ9LfPYDKzOoCGD+n4D67kYEsSaZuDMY+lFMrC7d0ftjhA1qGi
-        GJbELxc+P7MzfdWJByO0WO28+
-X-Received: by 2002:ac8:4c9a:: with SMTP id j26mr20753979qtv.373.1596543734014;
-        Tue, 04 Aug 2020 05:22:14 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy1VSzNyJdnAOf5o8b1wWZrFayNX+EyfmsmRxHvnhM/cQRo+DnGnJjhUuY1MZ5p7Z/aKPVM7Q==
-X-Received: by 2002:ac8:4c9a:: with SMTP id j26mr20753950qtv.373.1596543733713;
-        Tue, 04 Aug 2020 05:22:13 -0700 (PDT)
-Received: from redhat.com (bzq-79-177-102-128.red.bezeqint.net. [79.177.102.128])
-        by smtp.gmail.com with ESMTPSA id p123sm20548192qkd.26.2020.08.04.05.22.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 05:22:12 -0700 (PDT)
-Date:   Tue, 4 Aug 2020 08:22:07 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Eli Cohen <eli@mellanox.com>
-Cc:     kernel test robot <lkp@intel.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
-        Shahaf Shuler <shahafs@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Parav Pandit <parav@mellanox.com>
-Subject: Re: [PATCH V3 vhost next 10/10] vdpa/mlx5: Add VDPA driver for
- supported mlx5 devices
-Message-ID: <20200804081501-mutt-send-email-mst@kernel.org>
-References: <20200728060539.4163-11-eli@mellanox.com>
- <202007282108.S8MkTrap%lkp@intel.com>
- <20200804115419.GA6326@nps-server-21.mtl.labs.mlnx>
+        Tue, 4 Aug 2020 08:23:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46628 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726533AbgHDMXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 08:23:50 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 796B0AD1E;
+        Tue,  4 Aug 2020 12:06:10 +0000 (UTC)
+Subject: Re: [PATCH v3 1/3] mm/gup: restrict CMA region by using allocation
+ scope API
+To:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-team@lge.com, Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <1596180906-8442-1-git-send-email-iamjoonsoo.kim@lge.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <370b1f3c-98ea-421a-d4a2-621bab5a5eec@suse.cz>
+Date:   Tue, 4 Aug 2020 14:05:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200804115419.GA6326@nps-server-21.mtl.labs.mlnx>
+In-Reply-To: <1596180906-8442-1-git-send-email-iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 02:54:19PM +0300, Eli Cohen wrote:
-> On Tue, Jul 28, 2020 at 04:43:00PM +0300, kernel test robot wrote:
-> > Hi Eli,
-> > 
-> > Thank you for the patch! Yet something to improve:
-> > 
-> > [auto build test ERROR on next-20200727]
-> > 
-> > url:    https://github.com/0day-ci/linux/commits/Eli-Cohen/VDPA-support-for-Mellanox-ConnectX-devices/20200728-140938
-> > base:    e9a523ff8f76de0768857f02ea76437d3b39d151
-> > config: mips-allmodconfig (attached as .config)
-> > compiler: mips-linux-gcc (GCC) 9.3.0
-> > reproduce (this is a W=1 build):
-> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >         chmod +x ~/bin/make.cross
-> >         # save the attached .config to linux build tree
-> >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=mips 
-> > 
-> > If you fix the issue, kindly add following tag as appropriate
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > 
-> > All errors (new ones prefixed by >>, old ones prefixed by <<):
-> > 
-> > ERROR: modpost: "fw_arg3" [drivers/mtd/parsers/bcm63xxpart.ko] undefined!
-> > >> ERROR: modpost: "__udivdi3" [drivers/vdpa/mlx5/mlx5_vdpa.ko] undefined!
+On 7/31/20 9:35 AM, js1304@gmail.com wrote:
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 > 
-> I don't know where this complaint comes from. When I follow the steps
-> above to reproduce, I find myself failing on code unrelated to my patch
-> set so I can get my code compiled:
+> We have well defined scope API to exclude CMA region.
+> Use it rather than manipulating gfp_mask manually. With this change,
+> we can now restore __GFP_MOVABLE for gfp_mask like as usual migration
+> target allocation. It would result in that the ZONE_MOVABLE is also
+> searched by page allocator. For hugetlb, gfp_mask is redefined since
+> it has a regular allocation mask filter for migration target.
+> __GPF_NOWARN is added to hugetlb gfp_mask filter since a new user for
+> gfp_mask filter, gup, want to be silent when allocation fails.
 > 
-> drivers/rpmsg/virtio_rpmsg_bus.c:88:8: error: redefinition of 'struct rpmsg_hdr'
->    88 | struct rpmsg_hdr {
->       |        ^~~~~~~~~
-> In file included from drivers/rpmsg/virtio_rpmsg_bus.c:28:
-> ./include/linux/virtio_rpmsg.h:21:8: note: originally defined here
->    21 | struct rpmsg_hdr {
->       |        ^~~~~~~~~
-> drivers/rpmsg/virtio_rpmsg_bus.c:109:8: error: redefinition of 'struct
-> rpmsg_ns_msg'
->   109 | struct rpmsg_ns_msg {
->       |        ^~~~~~~~~~~~
-> In file included from drivers/rpmsg/virtio_rpmsg_bus.c:28:
-> ./include/linux/virtio_rpmsg.h:42:8: note: originally defined here
->    42 | struct rpmsg_ns_msg {
->       |        ^~~~~~~~~~~~
+> Note that this can be considered as a fix for the commit 9a4e9f3b2d73
+> ("mm: update get_user_pages_longterm to migrate pages allocated from
+> CMA region"). However, "Fixes" tag isn't added here since it is just
+> suboptimal but it doesn't cause any problem.
 > 
+> Suggested-by: Michal Hocko <mhocko@suse.com>
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-Hmm more conflicts. My bad :(
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-
-> I think the reason for the complaint comes from usage of DIV_ROUND_UP()
-> which somehow does not work on mips.
+> ---
+>  include/linux/hugetlb.h |  2 ++
+>  mm/gup.c                | 17 ++++++++---------
+>  2 files changed, 10 insertions(+), 9 deletions(-)
 > 
-> I can try to avoid using this macro and implement something of my own,
-> unless someone has a better idea what's going on here.
-> 
-> > 
-> > ---
-> > 0-DAY CI Kernel Test Service, Intel Corporation
-> > https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+> index 6b9508d..2660b04 100644
+> --- a/include/linux/hugetlb.h
+> +++ b/include/linux/hugetlb.h
+> @@ -708,6 +708,8 @@ static inline gfp_t htlb_modify_alloc_mask(struct hstate *h, gfp_t gfp_mask)
+>  	/* Some callers might want to enfoce node */
+>  	modified_mask |= (gfp_mask & __GFP_THISNODE);
+>  
+> +	modified_mask |= (gfp_mask & __GFP_NOWARN);
+> +
+>  	return modified_mask;
+>  }
+>  
+> diff --git a/mm/gup.c b/mm/gup.c
+> index a55f1ec..3990ddc 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -1601,10 +1601,12 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
+>  	 * Trying to allocate a page for migration. Ignore allocation
+>  	 * failure warnings. We don't force __GFP_THISNODE here because
+>  	 * this node here is the node where we have CMA reservation and
+> -	 * in some case these nodes will have really less non movable
+> +	 * in some case these nodes will have really less non CMA
+>  	 * allocation memory.
+> +	 *
+> +	 * Note that CMA region is prohibited by allocation scope.
+>  	 */
+> -	gfp_t gfp_mask = GFP_USER | __GFP_NOWARN;
+> +	gfp_t gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_NOWARN;
+>  
+>  	if (PageHighMem(page))
+>  		gfp_mask |= __GFP_HIGHMEM;
+> @@ -1612,6 +1614,8 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
+>  #ifdef CONFIG_HUGETLB_PAGE
+>  	if (PageHuge(page)) {
+>  		struct hstate *h = page_hstate(page);
+> +
+> +		gfp_mask = htlb_modify_alloc_mask(h, gfp_mask);
+>  		/*
+>  		 * We don't want to dequeue from the pool because pool pages will
+>  		 * mostly be from the CMA region.
+> @@ -1626,11 +1630,6 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
+>  		 */
+>  		gfp_t thp_gfpmask = GFP_TRANSHUGE | __GFP_NOWARN;
+>  
+> -		/*
+> -		 * Remove the movable mask so that we don't allocate from
+> -		 * CMA area again.
+> -		 */
+> -		thp_gfpmask &= ~__GFP_MOVABLE;
+>  		thp = __alloc_pages_node(nid, thp_gfpmask, HPAGE_PMD_ORDER);
+>  		if (!thp)
+>  			return NULL;
+> @@ -1773,7 +1772,6 @@ static long __gup_longterm_locked(struct mm_struct *mm,
+>  				     vmas_tmp, NULL, gup_flags);
+>  
+>  	if (gup_flags & FOLL_LONGTERM) {
+> -		memalloc_nocma_restore(flags);
+>  		if (rc < 0)
+>  			goto out;
+>  
+> @@ -1786,9 +1784,10 @@ static long __gup_longterm_locked(struct mm_struct *mm,
+>  
+>  		rc = check_and_migrate_cma_pages(mm, start, rc, pages,
+>  						 vmas_tmp, gup_flags);
+> +out:
+> +		memalloc_nocma_restore(flags);
+>  	}
+>  
+> -out:
+>  	if (vmas_tmp != vmas)
+>  		kfree(vmas_tmp);
+>  	return rc;
 > 
 
