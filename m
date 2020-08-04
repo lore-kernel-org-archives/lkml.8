@@ -2,80 +2,87 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20624C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44894C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0557622B42
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31D652067D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:28:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728703AbgHDNZ5 (ORCPT
+        id S1726149AbgHDN2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 09:25:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47376 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728287AbgHDNZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 09:25:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 71531B5FB;
-        Tue,  4 Aug 2020 13:26:04 +0000 (UTC)
-Date:   Tue, 4 Aug 2020 15:25:47 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 2/2][next] mm: memcontrol: Use the preferred form for
- passing the size of a structure type
-Message-ID: <20200804132547.GD7306@dhcp22.suse.cz>
-References: <cover.1596214831.git.gustavoars@kernel.org>
- <773e013ff2f07fe2a0b47153f14dea054c0c04f1.1596214831.git.gustavoars@kernel.org>
+        Tue, 4 Aug 2020 09:28:34 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56400 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725811AbgHDN2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 09:28:34 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 56585A9BC0901C135BB1;
+        Tue,  4 Aug 2020 21:28:24 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Tue, 4 Aug 2020
+ 21:28:13 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <ioana.ciornei@nxp.com>, <ruxandra.radulescu@nxp.com>,
+        <davem@davemloft.net>, <kuba@kernel.org>, <andrew@lunn.ch>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] dpaa2-eth: Fix passing zero to 'PTR_ERR' warning
+Date:   Tue, 4 Aug 2020 21:26:43 +0800
+Message-ID: <20200804132643.42104-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <773e013ff2f07fe2a0b47153f14dea054c0c04f1.1596214831.git.gustavoars@kernel.org>
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 31-07-20 12:13:14, Gustavo A. R. Silva wrote:
-> Use the preferred form for passing the size of a structure type. The
-> alternative form where the structure type is spelled out hurts
-> readability and introduces an opportunity for a bug when the object
-> type is changed but the corresponding object identifier to which the
-> sizeof operator is applied is not.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Fix smatch warning:
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c:2419
+ alloc_channel() warn: passing zero to 'ERR_PTR'
 
-> ---
->  mm/memcontrol.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index bd7f972ceea4..bd0f56785841 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -4255,7 +4255,7 @@ static int __mem_cgroup_usage_register_event(struct mem_cgroup *memcg,
->  	new->entries[size - 1].threshold = threshold;
->  
->  	/* Sort thresholds. Registering of new threshold isn't time-critical */
-> -	sort(new->entries, size, sizeof(struct mem_cgroup_threshold),
-> +	sort(new->entries, size, sizeof(*new->entries),
->  			compare_thresholds, NULL);
->  
->  	/* Find current threshold */
-> -- 
-> 2.27.0
+setup_dpcon() should return ERR_PTR(err) instead of zero in error
+handling case.
 
+Fixes: d7f5a9d89a55 ("dpaa2-eth: defer probe on object allocate")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+index 9b4028c0e34c..5f680b953a90 100644
+--- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
++++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
+@@ -2375,7 +2375,7 @@ static struct fsl_mc_device *setup_dpcon(struct dpaa2_eth_priv *priv)
+ free:
+ 	fsl_mc_object_free(dpcon);
+ 
+-	return NULL;
++	return ERR_PTR(err);
+ }
+ 
+ static void free_dpcon(struct dpaa2_eth_priv *priv,
+@@ -2399,8 +2399,8 @@ alloc_channel(struct dpaa2_eth_priv *priv)
+ 		return NULL;
+ 
+ 	channel->dpcon = setup_dpcon(priv);
+-	if (IS_ERR_OR_NULL(channel->dpcon)) {
+-		err = PTR_ERR_OR_ZERO(channel->dpcon);
++	if (IS_ERR(channel->dpcon)) {
++		err = PTR_ERR(channel->dpcon);
+ 		goto err_setup;
+ 	}
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.17.1
+
+
