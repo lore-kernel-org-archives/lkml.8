@@ -2,135 +2,144 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7879FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FE0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63F5222CBB
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C0E620738
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:47:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="O/5/46ug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730138AbgHDLrE (ORCPT
+        id S1730297AbgHDLrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 07:47:04 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60586 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728028AbgHDLrB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 07:47:01 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 074BX2UW089118;
-        Tue, 4 Aug 2020 07:46:56 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32q4wsm246-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Aug 2020 07:46:55 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 074BfGB1029221;
-        Tue, 4 Aug 2020 11:46:53 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03fra.de.ibm.com with ESMTP id 32nyyd16sb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Aug 2020 11:46:53 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 074BkpnQ23331110
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 4 Aug 2020 11:46:51 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F0A8742042;
-        Tue,  4 Aug 2020 11:46:50 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B86D34204D;
-        Tue,  4 Aug 2020 11:46:50 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  4 Aug 2020 11:46:50 +0000 (GMT)
-From:   Sven Schnelle <svens@linux.ibm.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        hca@linux.ibm.com
-Subject: Re: [PATCH 1/3] vdso: allow to add architecture-specific vdso data
-References: <20200804093607.69841-1-svens@linux.ibm.com>
-        <20200804093607.69841-2-svens@linux.ibm.com>
-Date:   Tue, 04 Aug 2020 13:46:50 +0200
-In-Reply-To: <20200804093607.69841-2-svens@linux.ibm.com> (Sven Schnelle's
-        message of "Tue, 4 Aug 2020 11:36:05 +0200")
-Message-ID: <yt9dk0yed45x.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-04_03:2020-08-03,2020-08-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- clxscore=1015 suspectscore=0 mlxlogscore=999 lowpriorityscore=0
- phishscore=0 priorityscore=1501 adultscore=0 spamscore=0 mlxscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008040086
+        Tue, 4 Aug 2020 07:47:15 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:55884 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728028AbgHDLrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 07:47:13 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596541632; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=MVVxVLGT/4i7t0OGDZF+z4Ih6RcEKsys29N0Lo9AUmo=; b=O/5/46ugf33SP2G1Cw5u3zlGL5LXOS0/dZharuslyxTHdEmP63hFFjOCH0MqN1QmK1XTaqYL
+ AxH1VHzGvEoXRxHzwTi3xee+ZggsnyyEFUmtzOR0Immq+yZJF4vRBEKpA5Bujavss5PRN+aW
+ /Gqv+iWiSvwepwZ3H1HrLbw0B/I=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n16.prod.us-west-2.postgun.com with SMTP id
+ 5f294ac08ecb2754f903bc2a (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 04 Aug 2020 11:47:12
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E83F9C43395; Tue,  4 Aug 2020 11:47:11 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DA59EC433C9;
+        Tue,  4 Aug 2020 11:47:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DA59EC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     ulf.hansson@linaro.org, robh+dt@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH 1/3] dt-bindings: power: Introduce 'assigned-performance-states' property
+Date:   Tue,  4 Aug 2020 17:16:54 +0530
+Message-Id: <1596541616-27688-2-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596541616-27688-1-git-send-email-rnayak@codeaurora.org>
+References: <1596541616-27688-1-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+While most devices within power-domains which support performance states,
+scale the performance state dynamically, some devices might want to
+set a static/default performance state while the device is active.
+These devices typically would also run of a fixed clock and not support
+dyamically scaling the device's performance, also known as DVFS techniques.
+Add a property 'assigned-performance-states' which client devices can
+use to set this default performance state on their power-domains.
 
-Sven Schnelle <svens@linux.ibm.com> writes:
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+---
+ .../devicetree/bindings/power/power-domain.yaml    | 47 ++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-> Add the possibility to add architecture specific vDSO
-> data to struct vdso_data. This is useful if the arch specific
-> user space VDSO code needs additional data during execution.
-> If CONFIG_ARCH_HAS_VDSO_DATA is defined, the generic code will
-> include asm/vdso/data.h which should contain 'struct arch_vdso_data'.
-> This structure will be embedded in the generic vDSO data.
->
-> Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-> ---
->  arch/Kconfig            | 3 +++
->  include/vdso/datapage.h | 7 +++++++
->  2 files changed, 10 insertions(+)
->
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index 8cc35dc556c7..e1017ce979e2 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -979,6 +979,9 @@ config HAVE_SPARSE_SYSCALL_NR
->  	  entries at 4000, 5000 and 6000 locations. This option turns on syscall
->  	  related optimizations for a given architecture.
->  
-> +config ARCH_HAS_VDSO_DATA
-> +	bool
-> +
->  source "kernel/gcov/Kconfig"
->  
->  source "scripts/gcc-plugins/Kconfig"
-> diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
-> index 7955c56d6b3c..74e730238ce6 100644
-> --- a/include/vdso/datapage.h
-> +++ b/include/vdso/datapage.h
-> @@ -19,6 +19,10 @@
->  #include <vdso/time32.h>
->  #include <vdso/time64.h>
->  
-> +#ifdef CONFIG_ARCH_HAS_VDSO_DATA
-> +#include <asm/vdso/data.h>
-> +#endif
-> +
->  #define VDSO_BASES	(CLOCK_TAI + 1)
->  #define VDSO_HRES	(BIT(CLOCK_REALTIME)		| \
->  			 BIT(CLOCK_MONOTONIC)		| \
-> @@ -97,6 +101,9 @@ struct vdso_data {
->  	s32			tz_dsttime;
->  	u32			hrtimer_res;
->  	u32			__unused;
-> +#ifdef CONFIG_ARCH_HAS_VDSO_DATA
-> +	struct arch_vdso_data arch;
-> +#endif
->  };
->  
->  /*
+diff --git a/Documentation/devicetree/bindings/power/power-domain.yaml b/Documentation/devicetree/bindings/power/power-domain.yaml
+index ff5936e..48e9319 100644
+--- a/Documentation/devicetree/bindings/power/power-domain.yaml
++++ b/Documentation/devicetree/bindings/power/power-domain.yaml
+@@ -66,6 +66,16 @@ properties:
+        by the given provider should be subdomains of the domain specified
+        by this binding.
+ 
++  assigned-performance-states:
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    description:
++       Some devices might need to configure their power domains in a default
++       performance state while the device is active. These devices typcially
++       would also run of a fixed clock and not support dyamically scaling the
++       device's performance, also known as DVFS techniques. The list of performance
++       state values should correspond to the list of power domains specified as part
++       of the power-domains property.
++
+ required:
+   - "#power-domain-cells"
+ 
+@@ -129,3 +139,40 @@ examples:
+             min-residency-us = <7000>;
+         };
+     };
++
++  - |
++    parent4: power-controller@12340000 {
++        compatible = "foo,power-controller";
++        reg = <0x12340000 0x1000>;
++        #power-domain-cells = <0>;
++    };
++
++    parent5: power-controller@43210000 {
++        compatible = "foo,power-controller";
++        reg = <0x43210000 0x1000>;
++        #power-domain-cells = <0>;
++        operating-points-v2 = <&power_opp_table>;
++
++        power_opp_table: opp-table {
++            compatible = "operating-points-v2";
++
++            power_opp_low: opp1 {
++                opp-level = <16>;
++            };
++
++            rpmpd_opp_ret: opp2 {
++                opp-level = <64>;
++            };
++
++            rpmpd_opp_svs: opp3 {
++                opp-level = <256>;
++            };
++        };
++    };
++
++    child4: consumer@12341000 {
++        compatible = "foo,consumer";
++        reg = <0x12341000 0x1000>;
++        power-domains = <&parent4>, <&parent5>;
++        assigned-performance-states = <0>, <256>;
++    };
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
-I've sent the wrong version of this patch. I'll send a revised version
-with the requested changes later.
