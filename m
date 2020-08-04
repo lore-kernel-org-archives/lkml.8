@@ -2,101 +2,132 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C766DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B43C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2D7C22B45
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C9822B45
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:15:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BS+33gy1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pZim17LZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbgHDKPk (ORCPT
+        id S1728507AbgHDKPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 06:15:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46514 "EHLO
+        Tue, 4 Aug 2020 06:15:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbgHDKPi (ORCPT
+        with ESMTP id S1726086AbgHDKPx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 06:15:38 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D9A6C06174A;
-        Tue,  4 Aug 2020 03:15:37 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id a14so36873385wra.5;
-        Tue, 04 Aug 2020 03:15:37 -0700 (PDT)
+        Tue, 4 Aug 2020 06:15:53 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FDA1C061756
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 03:15:53 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id x6so6661133pgx.12
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 03:15:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=H5j9+8nmnJdMppGosOvhVeg5yrEmi0eTTjC4+FGQAik=;
-        b=BS+33gy1+UWjVpsrRC0ldxaeHxg/C4gBtng4EeueLwXw0sy2QDce6cJpcgyoxY/vkp
-         a9ZTANWhYBqIHwlfjTZ4lF/R/2O2HpoD6kbltM7DaXlig3417ljr7sp4CIh63ayDLZoD
-         txUvmJ3I298UXaWq1VDrpIviq6O/D3fVSSSyEZIPXG1ZdppUtAVSkvgsnvSWhs3Slz2U
-         5f/51V5eq4JUauN/FVlsaLjHM7xF0rSlEy8BzOGnZ3sZfvHBXJbv8+2w3x33bQZVuD0N
-         RdV6HC720pOV2wUyCxGhR2W6iXJYkABHqXXhhC1O/MG9HsYqTliaRqz3MceI1bTmcJ08
-         OYiw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Um50ihNeDQB6+aszuU29p3PtU3YChYqBX24eKbUCnk4=;
+        b=pZim17LZBM3wySRRMsF6aDmyq+TSxKMls5RRiOlHrx1HkgutXpacGITAj6dI/LphCb
+         jVe/BNGTr5hHcXLSxPZtt45ODz7iZHuIvC/ByuYsn+YuSQ9NwwzJ8q8mbZ0XU7RKLUIM
+         24IIL+8g/baiTpt3peKEqAeQ1xkm4s3nSybu8VAWBo8y+zxyPFtsXm5zVAOKEp0jxYji
+         QZsFMGpvVbmYg5QZCQdatPuON7jc81vj6rLbYjnMEJYfIphhc0pziOMArjvkFPeSWQl8
+         yTTydXJFISPKsKpEGrm4GIoVoEVdAQaexl87Mw9Jls1zXmxBwbHIjRF4seYCvQ1JtQLd
+         te3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=H5j9+8nmnJdMppGosOvhVeg5yrEmi0eTTjC4+FGQAik=;
-        b=VYMZsf8ej5QrZ/wEfG6+8Oef4m8SUAO3438T1oqOenWw/XTQwEyeaVrZupozvdZ0SF
-         7XlHltmUrR2embDS1AyTHNW9TcSwCCjZQdFkhUh/RbU1NLLNZgYNwA4wY1mJdWquP0LW
-         si9whf0n8U6PVYM4yPH7HsfqARhw7gORYDOZXDMDg5AGwUcWgoFuaLh5x9n3xq0IgVQ6
-         2yJ+N4b46K8rE/y+ZeNnqIeiFpLn99RHZOl5Bd4mQH1epXiGYfC0ynVh+8//SYqkywTw
-         J0xVO2eyRtBiZ0eeGBNGoF0BmvtUKeNn4n0yIG+mFFgy5S/hlb+WR3U6lVhCYwCJ06om
-         ic7g==
-X-Gm-Message-State: AOAM533llEPpS/P+dcie2JXzVfXmedPXx9V7mxZBXnfzknA/iOJGx/Ko
-        MOj3j1nSKzHnm+i/i0iJoGEibN/5
-X-Google-Smtp-Source: ABdhPJyLndcJDNVINUqMwrCG8DEJ+692FT0GVMQnAm9+wiAJLeWnjQL2AtfSV0+Ychlnc9EXD5J+Kg==
-X-Received: by 2002:adf:e68f:: with SMTP id r15mr18465693wrm.196.1596536135580;
-        Tue, 04 Aug 2020 03:15:35 -0700 (PDT)
-Received: from myhost.home ([2a01:110f:b59:fd00:14b7:411e:74a4:708d])
-        by smtp.gmail.com with ESMTPSA id 111sm30428728wrc.53.2020.08.04.03.15.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Aug 2020 03:15:35 -0700 (PDT)
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-To:     linux-leds@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, pavel@ucw.cz,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: [PATCH] MAINTAINERS: Remove myself as LED subsystem maintainer
-Date:   Tue,  4 Aug 2020 12:15:25 +0200
-Message-Id: <20200804101525.7235-1-jacek.anaszewski@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Um50ihNeDQB6+aszuU29p3PtU3YChYqBX24eKbUCnk4=;
+        b=JsJYltcpVuHXRJQsyS1QURilTd5j5Nbyr58XUGeMJz7qpD4yHTnXlBH2Uh5WTZJ9r3
+         fuX6gX1vvS799inMRnDqPKAhoHHxUTxdClp0pTe6lpsbfUTVJdAB0HAjJ7IV2G0AYUMw
+         L9F68C/Wb64hY4sx7UJk4meOAPBpjEbvE2M18r7GI+kqq0f/322k+HWen8dgUHrN8e+1
+         5lamQUIHIYbqullXqS3z2JKO2NoIA8qqgt7+ZA6WwCCXjokhdh7FtcgfUdIfhL7vIlXk
+         2KgiRrp8i9sv98B5LnAU69PckZNbQcMxU4YU+TfTrskaxNu6XaaG2DiqjpaJyP2BDFAs
+         PyBg==
+X-Gm-Message-State: AOAM533prIDdSnXDqmzTdwVnN7INKO348REOOr0msLuPm/tZUBKx5fO2
+        spe44+Nt1MNpFMdFYgKIRe9j6OIzhMmCK+3H9yfCpg==
+X-Google-Smtp-Source: ABdhPJzjggbXC4YGvbft2HUHTlUOAC+uoBbsxLwKnczJcYAnFCGvifYIj1HmkZJoFQJZY6aPHRtETw1voDVz6xBbn+E=
+X-Received: by 2002:aa7:97a3:: with SMTP id d3mr19768182pfq.178.1596536152759;
+ Tue, 04 Aug 2020 03:15:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200801070924.1786166-1-davidgow@google.com> <20200801070924.1786166-4-davidgow@google.com>
+ <CABVgOSnpsnYw=0mAks4Xr2rGe07ER1041TKCCY1izeCfT8TcBQ@mail.gmail.com>
+In-Reply-To: <CABVgOSnpsnYw=0mAks4Xr2rGe07ER1041TKCCY1izeCfT8TcBQ@mail.gmail.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 4 Aug 2020 12:15:41 +0200
+Message-ID: <CAAeHK+y5KBuAfpeO90X0rxyZmPj4OQGUF=L-q3GAgQUTFNxdsQ@mail.gmail.com>
+Subject: Re: [PATCH v10 3/5] KASAN: Port KASAN Tests to KUnit
+To:     David Gow <davidgow@google.com>
+Cc:     Patricia Alfonso <trishalfonso@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It don't have enough time for reviewing patches and thus don't
-want to be listed as regular LED maintainer. Nonetheless I may still
-give a review from time to time.
+On Tue, Aug 4, 2020 at 12:59 AM David Gow <davidgow@google.com> wrote:
+>
+> On Sat, Aug 1, 2020 at 3:10 PM David Gow <davidgow@google.com> wrote:
+> >
+> > From: Patricia Alfonso <trishalfonso@google.com>
+> >
+> > Transfer all previous tests for KASAN to KUnit so they can be run
+> > more easily. Using kunit_tool, developers can run these tests with their
+> > other KUnit tests and see "pass" or "fail" with the appropriate KASAN
+> > report instead of needing to parse each KASAN report to test KASAN
+> > functionalities. All KASAN reports are still printed to dmesg.
+> >
+> > Stack tests do not work properly when KASAN_STACK is enabled so
+> > those tests use a check for "if IS_ENABLED(CONFIG_KASAN_STACK)" so they
+> > only run if stack instrumentation is enabled. If KASAN_STACK is not
+> > enabled, KUnit will print a statement to let the user know this test
+> > was not run with KASAN_STACK enabled.
+> >
+> > copy_user_test and kasan_rcu_uaf cannot be run in KUnit so there is a
+> > separate test file for those tests, which can be run as before as a
+> > module.
+> >
+> > Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
+> > Signed-off-by: David Gow <davidgow@google.com>
+> > Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+> > Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
+> > Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+> > ---
+> >  lib/Kconfig.kasan       |  22 +-
+> >  lib/Makefile            |   7 +-
+> >  lib/kasan_kunit.c       | 770 ++++++++++++++++++++++++++++++++
+> >  lib/test_kasan.c        | 946 ----------------------------------------
+> >  lib/test_kasan_module.c | 111 +++++
+> >  5 files changed, 902 insertions(+), 954 deletions(-)
+> >  create mode 100644 lib/kasan_kunit.c
+> >  delete mode 100644 lib/test_kasan.c
+> >  create mode 100644 lib/test_kasan_module.c
+>
+> Whoops -- this patch had a few nasty whitespace issues make it
+> through. I'll send out a new version with those fixed.
+>
+> I'm pondering splitting it up to do the file rename
+> (test_kasan.c->kasan_kunit.c) separately as well, as git's rename
+> detection is not particularly happy with it.
 
-Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
----
- MAINTAINERS | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4e2698cc7e23..71e16ba36048 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9681,12 +9681,10 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tobin/leaks.git
- F:	scripts/leaking_addresses.pl
- 
- LED SUBSYSTEM
--M:	Jacek Anaszewski <jacek.anaszewski@gmail.com>
- M:	Pavel Machek <pavel@ucw.cz>
- R:	Dan Murphy <dmurphy@ti.com>
- L:	linux-leds@vger.kernel.org
- S:	Maintained
--T:	git git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git
- F:	Documentation/devicetree/bindings/leds/
- F:	drivers/leds/
--- 
-2.11.0
-
+Maybe also name it kunit_kasan.c? Probably in the future we'll have
+kunit_kmsan.c, etc.
