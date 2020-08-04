@@ -2,129 +2,89 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E52C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7808EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 038EF2076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 821662076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgHDGwv (ORCPT
+        id S1726877AbgHDGxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 02:52:51 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:40070 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgHDGwv (ORCPT
+        Tue, 4 Aug 2020 02:53:23 -0400
+Received: from host-88-217-225-28.customer.m-online.net ([88.217.225.28]:50164
+        "EHLO mail.dev.tdt.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725904AbgHDGxW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 02:52:51 -0400
-Received: by mail-oi1-f194.google.com with SMTP id u24so25599100oiv.7;
-        Mon, 03 Aug 2020 23:52:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YjoIFzh9jDU8UWoCt7/Wn0DBpRmUwyFzM9/YPPK7imw=;
-        b=STgyjJJVqnqx3ixwHe52rNq4BumDhAjgmSgLW/O52KUqRvRoDpSSIgtMU+dN+mIYYw
-         e6lmneuTy0w3cSPwpZNye18su3IaXFTiZ7+sGpHoEdiXHOmF/3Invd46j82Jwm8VGcJ3
-         emTAAA2eSmyCmb3SPtVvEfAvRC/zdiknjXZLHRyeIJdlOrhJLm9LGeH/Tkf1Kd9kT0bw
-         YylSbW1MGqVJO142Wk7a4jAQrGdKs/3jQzp+YJ8CLSB05Ph7IesuC4NtrwwjsyinGOhy
-         Nq/rPD2Ky7+ubRfo6h211NNnjeOCMq+Lf9a+mdBX6AoyUC/geaF2H98C+TehRtdOVpuW
-         7P6w==
-X-Gm-Message-State: AOAM532j2pTBQXrAcPK77+Wd+x14mnAsqbmB6j41mpKlqUm9wnh2WjGI
-        TN5HC7O2bKrHn/yFnk9aD4/qwnXq1t3uRzIuGTA=
-X-Google-Smtp-Source: ABdhPJxFTAkjpZMVeiV3uuc77tz+ACjHfNblvrN7DrWnLuH3m4wUZZRm1qoHrkEuv4rBUUxZpjMT02uM5m/KDrmwPHs=
-X-Received: by 2002:aca:adc4:: with SMTP id w187mr2146263oie.153.1596523970050;
- Mon, 03 Aug 2020 23:52:50 -0700 (PDT)
+        Tue, 4 Aug 2020 02:53:22 -0400
+Received: from mail.dev.tdt.de (localhost [IPv6:::1])
+        by mail.dev.tdt.de (Postfix) with ESMTP id 03F3620084;
+        Tue,  4 Aug 2020 06:53:15 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200730190841.2071656-1-nickrterrell@gmail.com> <20200730190841.2071656-5-nickrterrell@gmail.com>
-In-Reply-To: <20200730190841.2071656-5-nickrterrell@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 4 Aug 2020 08:52:38 +0200
-Message-ID: <CAMuHMdUo5tfcEUaq4x_b9HJy25HXWmBZ3GPfqJy491zDsct5Rg@mail.gmail.com>
-Subject: Re: [PATCH v10 4/8] usr: add support for zstd compressed initramfs
-To:     Nick Terrell <nickrterrell@gmail.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chris Mason <clm@fb.com>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
-        Ingo Molnar <mingo@kernel.org>,
-        Patrick Williams <patrick@stwcx.xyz>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Norbert Lange <nolange79@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alex Xu <alex_y_xu@yahoo.ca>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Terrell <terrelln@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 04 Aug 2020 08:53:15 +0200
+From:   Martin Schiller <ms@dev.tdt.de>
+To:     Xie He <xie.he.0141@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux X25 <linux-x25@vger.kernel.org>
+Subject: Re: [PATCH v2] drivers/net/wan/lapbether: Use needed_headroom instead
+ of hard_header_len
+Organization: TDT AG
+In-Reply-To: <CAJht_EO1srhh68DifK61+hpY+zBRU8oOAbJOSpjOqePithc7gw@mail.gmail.com>
+References: <20200730073702.16887-1-xie.he.0141@gmail.com>
+ <CAJht_EO1srhh68DifK61+hpY+zBRU8oOAbJOSpjOqePithc7gw@mail.gmail.com>
+Message-ID: <c88c0acc63cbc64383811193c5e1b184@dev.tdt.de>
+X-Sender: ms@dev.tdt.de
+User-Agent: Roundcube Webmail/1.1.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nick,
 
-On Thu, Jul 30, 2020 at 9:13 PM Nick Terrell <nickrterrell@gmail.com> wrote:
-> From: Nick Terrell <terrelln@fb.com>
->
-> * Add support for a zstd compressed initramfs.
-> * Add compression for compressing built-in initramfs with zstd.
->
-> I have tested this patch by boot testing with buildroot and QEMU.
-> Specifically, I booted the kernel with both a zstd and gzip compressed
-> initramfs, both built into the kernel and separate. I ensured that the
-> correct compression algorithm was used. I tested on arm, aarch64, i386,
-> and x86_64.
->
-> This patch has been tested in production on aarch64 and x86_64 devices.
->
-> Additionally, I have performance measurements from internal use in
-> production. On an aarch64 device we saw 19 second boot time improvement
-> from switching from lzma to zstd (27 seconds to 8 seconds). On an x86_64
-> device we saw a 9 second boot time reduction from switching from xz to
-> zstd.
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-> Signed-off-by: Nick Terrell <terrelln@fb.com>
+On 2020-07-30 10:02, Xie He wrote:
+> Hi Martin,
+> 
+> I'm currently working on a plan to make all X.25 drivers (lapbether.c,
+> x25_asy.c, hdlc_x25.c) to set dev->hard_header_len /
+> dev->needed_headroom correctly. So that upper layers no longer need to
+> guess how much headroom a X.25 device needs with a constant value (as
+> they currently do).
+> 
+> After studying af_packet.c, I found that X.25 drivers needed to set
+> needed_headroom to reserve the headroom instead of using
+> hard_header_len. Because hard_header_len should be the length of the
+> header that would be created by dev_hard_header, and in this case it
+> should be 0, according to the logic of af_packet.c.
+> 
+> So my first step is to fix the settings in lapbether.c. Could you
+> review this patch and extend your support via a "Reviewed-by" tag? If
+> this can be fixed, I'll go on and fix other X.25 drivers. Thanks!
+> 
+> It's very hard to find reviewers for X.25 code because it is
+> relatively unmaintained by people. I hope I can do some of the
+> maintenance work. I greatly appreciate your support!
 
-Thanks for your patch, which is now commit a30d8a39f0571425 ("usr: Add
-support for zstd compressed initramfs").
+I don't like the idea to get rid of the 1-byte header.
+This header is also used in userspace, for example when using a tun/tap
+interface for an XoT (X.25 over TCP) application. A change would
+therefore have very far-reaching consequences.
 
-> --- a/usr/Kconfig
-> +++ b/usr/Kconfig
-> @@ -100,6 +100,15 @@ config RD_LZ4
->           Support loading of a LZ4 encoded initial ramdisk or cpio buffer
->           If unsure, say N.
->
-> +config RD_ZSTD
-> +       bool "Support initial ramdisk/ramfs compressed using ZSTD"
-> +       default y
-> +       depends on BLK_DEV_INITRD
-> +       select DECOMPRESS_ZSTD
-> +       help
-> +         Support loading of a ZSTD encoded initial ramdisk or cpio buffer.
-> +         If unsure, say N.
+BTW: The linux x25 mailing list does not seem to work anymore. I've been
+on it for some time now, but haven't received a single email from it.
+I've tried to contact owner-linux-x25@vger.kernel.org, but only got an
+"undeliverable" email back.
 
-I'm aware you copied this from the other entries, but IMHO "default y",
-and "If unsure, say N" are not a good combination.
+It would be great if you could add me to CC list of all versions of your
+patches, so I don't need to "google" for any further related mails.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+So, what's the latest version of the patch now, which you want me to
+review?
