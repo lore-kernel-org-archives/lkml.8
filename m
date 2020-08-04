@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5486C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1778C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1821208A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D33A022CF7
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:42:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e/emAKRK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ea5YjJ7o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbgHDMmF (ORCPT
+        id S1728132AbgHDMmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 08:42:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40728 "EHLO
+        Tue, 4 Aug 2020 08:42:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgHDMlh (ORCPT
+        with ESMTP id S1727862AbgHDMl6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 08:41:37 -0400
-Received: from mail-wr1-x44a.google.com (mail-wr1-x44a.google.com [IPv6:2a00:1450:4864:20::44a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E59FC061756
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 05:41:37 -0700 (PDT)
-Received: by mail-wr1-x44a.google.com with SMTP id w1so10620302wro.4
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 05:41:37 -0700 (PDT)
+        Tue, 4 Aug 2020 08:41:58 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7FFBC0617A5
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 05:41:45 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id w15so27704383qtv.11
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 05:41:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=FcKp4QRyFHBBCVHpXykl5mFo5C8EtuBz90+P1+03xoY=;
-        b=e/emAKRKbJkdBeq2q9WKmzagPJvb8gdtqflMVkfA9U+GObzCW9ZK8iDv+fm06/lNOH
-         ajIRbU5BrRbTrBBREu3uaJou2xzNyaOCp+XZbidInFpetFzQFW1x8pTzoRCyj341z+Lk
-         wq4m5lWgeLtpP7STH34Cb53cG+ae0e77L4MzJmeQ/HMqzyEcxWEcW0LZlOw/BlZk7uoa
-         dO5RcM67ErBDoGmZ9vvLhQ54jnpx36h7CmzrXwZGP0KVeFdh2JE5X6xOlJdqsCGf3JGH
-         qx57794JnfkOQH/j1i6yWfIbZmc2qfK2k0FRmQtkn8Nc1oWCF+4s0O93QqCimgEugC/p
-         C7cQ==
+        bh=OJV+wFsSuBAEdua9Kpud4j6ZGzVdRXqmU9/PZhjVLdc=;
+        b=Ea5YjJ7o620kZq8eHnshiekvC4wpoxtU/m2L83KMHr56wGFqcLIiluwTTPIuK6jPtz
+         NIbahZxx/kLpiZOWX4LifN1sYL8ve+GY+nJ4uXKX/NwgeJ66FB0oBHFDCJ7CnFI+jXp5
+         YfjHAXZMMGH3A1RBkM5ekVG/ygZ56FsWNDeUBLLVL1ABwVsRZPV6DZg8v5EyPdnyI/8q
+         u9+woephvoS6hP7AP7QtlnSDcnrQ3oLlLY/jprakwQVQNuaNzYsx0faunrqjJ1Rwi828
+         vpjJ63tAJJETQeQAfpWW300WdlbW294wpGLA7b0wjZ0R/4TF1hESmC/l3kgC9ReY8bHQ
+         oJZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=FcKp4QRyFHBBCVHpXykl5mFo5C8EtuBz90+P1+03xoY=;
-        b=T+E/nviJblbUEV0Prx70Xsgx1ApBJNpPd0uj9w40v1NDUwb5NmaYxHxJ4hjTy7Ld6M
-         kxxSIJekb7wEotJ+fng+ZVtIeKoCVK7Rr/eu/YM5Qa4QdA+X+pFY66T51qTtEHZn0uxH
-         n3PL0GSvSYMdKG3TxnnDp2wVdkpUVC/wy8lVCd1v84yco5hKMfkAJ0JowOiH+hQ6lTj6
-         z+BvpdX3MDs6zcaz5LpoU4JbnZqc98en5dTkufW0RYKjZMh5d1TphNlbeR/k4I0UVdDf
-         OOkz0LtdC6kyTeFLxSUwacYtG2qyjTybbS0FxN5s2MH78Jqvmg1tIDHOTfpN/odRcs1L
-         izdw==
-X-Gm-Message-State: AOAM531AnbhpC7JoP6aDHoFdxQ7GRVvd2JLqFGgM6+Ridp9bPbtnvv/2
-        mCzE4mQDchj1FwzpQ4I8wLfVCKdjcAygg/L6
-X-Google-Smtp-Source: ABdhPJysUQ4oDqsJhy6xq9sHQOykVWtKsRJrE3eJ3umL4PptPqQvdYk0j95C1HF2RsOBJ7cfXSW95HsjwlUjMNSy
-X-Received: by 2002:a1c:b443:: with SMTP id d64mr4329306wmf.68.1596544895842;
- Tue, 04 Aug 2020 05:41:35 -0700 (PDT)
-Date:   Tue,  4 Aug 2020 14:41:24 +0200
+        bh=OJV+wFsSuBAEdua9Kpud4j6ZGzVdRXqmU9/PZhjVLdc=;
+        b=Q6Z64Cb0jCT7y0pFuaXELg6izRM6RTnbt+H4RX1kzO/h+q951UH9eUqzlNLevLzsq+
+         w3CjSLJv2NYCK0e7qMKWaswEjBhKAdfDP9+Msb0XdSusufZ/ZIhIYpgnME/P+9RxxRhp
+         sKF5FYGUG+96G5HZo9EBy/JJiuOsRRKUfyYva5CSKJ3gz2yASXoQaGDTHxi4r/agHZXe
+         9RExN7trUexfsaukLueIgGBBM+LZcDEyMLvm/4lJMbaDq1bmz2+F6Agksl6nCU96E5kX
+         qwDApqBn2XyfxGlQDkyfZFNWdrdM/SMSPcErmNjmcYCcih9lTPEXUEN+JorFyy53wzYQ
+         blVQ==
+X-Gm-Message-State: AOAM533B1yRdvSjZcsN/HybUy+wMAzRr3qgr5eTpREMsFKzkQ87LWrlR
+        eDiUWFEF91Q/laDYOgVP/cMAgwubnIf3lCte
+X-Google-Smtp-Source: ABdhPJxMCD1uy5OtH/rfQcGvmBrhxSjZNftrKmDoPQf463mdE8fRrlNv8GbsPVw+FCZ38SV1RL/Err4XbOOp0GEM
+X-Received: by 2002:a0c:b604:: with SMTP id f4mr15297001qve.68.1596544904936;
+ Tue, 04 Aug 2020 05:41:44 -0700 (PDT)
+Date:   Tue,  4 Aug 2020 14:41:28 +0200
 In-Reply-To: <cover.1596544734.git.andreyknvl@google.com>
-Message-Id: <12d8c678869268dd0884b01271ab592f30792abf.1596544734.git.andreyknvl@google.com>
+Message-Id: <3063ab1411e92bce36061a96e25b651212e70ba6.1596544734.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1596544734.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-Subject: [PATCH v2 1/5] kasan: don't tag stacks allocated with pagealloc
+Subject: [PATCH v2 5/5] kasan: adjust kasan_stack_oob for tag-based mode
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
@@ -84,41 +84,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch prepares Software Tag-Based KASAN for stack tagging support.
+Use OOB_TAG_OFF as access offset to land the access into the next granule.
 
-With Tag-Based KASAN when kernel stacks are allocated via pagealloc
-(which happens when CONFIG_VMAP_STACK is not enabled), they get tagged.
-KASAN instrumentation doesn't expect the sp register to be tagged, and
-this leads to false-positive reports.
-
-Fix by resetting the tag of kernel stack pointers after allocation.
-
+Suggested-by: Walter Wu <walter-zh.wu@mediatek.com>
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- kernel/fork.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ lib/test_kasan.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index efc5493203ae..75415f5e647c 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -261,7 +261,7 @@ static unsigned long *alloc_thread_stack_node(struct task_struct *tsk, int node)
- 					     THREAD_SIZE_ORDER);
- 
- 	if (likely(page)) {
--		tsk->stack = page_address(page);
-+		tsk->stack = kasan_reset_tag(page_address(page));
- 		return tsk->stack;
- 	}
- 	return NULL;
-@@ -307,6 +307,7 @@ static unsigned long *alloc_thread_stack_node(struct task_struct *tsk,
+diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+index 7674616d0c37..5d3f496893ef 100644
+--- a/lib/test_kasan.c
++++ b/lib/test_kasan.c
+@@ -488,7 +488,7 @@ static noinline void __init kasan_global_oob(void)
+ static noinline void __init kasan_stack_oob(void)
  {
- 	unsigned long *stack;
- 	stack = kmem_cache_alloc_node(thread_stack_cache, THREADINFO_GFP, node);
-+	stack = kasan_reset_tag(stack);
- 	tsk->stack = stack;
- 	return stack;
- }
+ 	char stack_array[10];
+-	volatile int i = 0;
++	volatile int i = OOB_TAG_OFF;
+ 	char *p = &stack_array[ARRAY_SIZE(stack_array) + i];
+ 
+ 	pr_info("out-of-bounds on stack\n");
 -- 
 2.28.0.163.g6104cc2f0b6-goog
 
