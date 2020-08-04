@@ -2,238 +2,112 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA783C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD2E9207FC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 317D42065E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:21:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596572495;
+	bh=RHxzAooxVzWMMMOp6MyFJ/ge43TDEwU2Gqz1u6NooLw=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=txHhJ3nIH4wTShjW2H0DX2Xcy+dTauPMOwGR9Azp0MKLMIdqHg7CJxguI0NK6ltna
+	 Xk6m5uU1OWizteWTah0nbV5Dmf63r3b4XRcSRdiQ97cSzN2CvKUT0AiIBhd71Ys+bw
+	 7h2+TRbsM4HFqql3SPYnZ5hn6Pp2/fWGWkJv0VEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgHDUTa (ORCPT
+        id S1727038AbgHDUVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 16:19:30 -0400
-Received: from smtp13.smtpout.orange.fr ([80.12.242.135]:58736 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727064AbgHDUT3 (ORCPT
+        Tue, 4 Aug 2020 16:21:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55164 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726578AbgHDUVd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 16:19:29 -0400
-Received: from localhost.localdomain ([93.23.13.33])
-        by mwinf5d72 with ME
-        id BYKS230060in9Tx03YKStB; Tue, 04 Aug 2020 22:19:27 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 04 Aug 2020 22:19:27 +0200
-X-ME-IP: 93.23.13.33
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     kevin.curtis@farsite.co.uk, davem@davemloft.net, kuba@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] farsync: switch from 'pci_' to 'dma_' API
-Date:   Tue,  4 Aug 2020 22:19:24 +0200
-Message-Id: <20200804201924.717142-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Tue, 4 Aug 2020 16:21:33 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C4AAC06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 13:21:33 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id e6so17291308oii.4
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 13:21:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=p6aJjp2qwX9qzaME2ZzUSooW3XI7kCVJYMRCSmKVaKE=;
+        b=gasbSYx0Bh+N0bu6QixSfOcMWVOI5WJPNSXFO4/paUMTOvKjVBgHgcVAdoX6y5aEGE
+         3p/Na1k11+wAzoOLyBmMVuSKroxR//bs4WHIFQaAWyZLuPs+lycHlFZ6MTHhIuRbk463
+         HyY+0RTVbSXSEUybHhDPPcszZGzPGqrByHcbA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=p6aJjp2qwX9qzaME2ZzUSooW3XI7kCVJYMRCSmKVaKE=;
+        b=qoAKIClPobEWuAL1oHRtu58g5gIDZ2nkN/8vW+cZ5Y5FG4Gjyht9sjCvVIGJhMzfQV
+         ypIdWy583V1qzaJtcgKThgaXx/wyqoXM37zXtEEcSpyfq+juzfezhMeZBi7b2oqPxZ0h
+         0B2M5VLFJxsCNNnDaoMxSZW5Vjyh1RBVJGkADtcltxSxDz0E6NL48DlHFyeqVjr+tPC9
+         QIg5fqjFIEd85ExihNFUCee8S9vyryUnAScmEiOZpcpFsmEvE9OgSo0mcyfb8m2+GFd2
+         ioHXxTOA34eRYRrTERiTafgKVOugYo7IrCkBF+8R86ZovDkrOpRFp7YxYTbROcgDGntN
+         WdRQ==
+X-Gm-Message-State: AOAM530smez5B3XbgV6AUxIdxfCxH+4HKWmjNNwHQ7hEcV6v+bY6jlqa
+        uigqJD4mnq2mS0g+9PHuGDbszw==
+X-Google-Smtp-Source: ABdhPJy+sldgfYbBIL2+o8GACk6j3smlqXK1I76rGan+9LOPt/UQ802RqnCvYXOC8Y9feI19zBZ1uw==
+X-Received: by 2002:a05:6808:256:: with SMTP id m22mr87151oie.103.1596572492788;
+        Tue, 04 Aug 2020 13:21:32 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id u20sm576273ots.0.2020.08.04.13.21.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Aug 2020 13:21:32 -0700 (PDT)
+Subject: Re: [PATCH 5.7 000/116] 5.7.13-rc3 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, skhan@linuxfoundation.org
+References: <20200804085233.484875373@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <5770087e-992e-39ac-61c1-5fc23fdee22f@linuxfoundation.org>
+Date:   Tue, 4 Aug 2020 14:21:31 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200804085233.484875373@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The wrappers in include/linux/pci-dma-compat.h should go away.
+On 8/4/20 2:53 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.7.13 release.
+> There are 116 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 06 Aug 2020 08:51:59 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.13-rc3.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-The patch has been generated with the coccinelle script below and has been
-hand modified to replace GFP_ with a correct flag.
-It has been compile tested.
+Compiled and booted on my test system. No dmesg regressions.
 
-When memory is allocated in 'fst_add_one()', GFP_KERNEL can be used
-because it is a probe function and no lock is acquired.
+Tested-by: Shuah Khan <skhan@linuxfoundation.org>
 
-
-@@
-@@
--    PCI_DMA_BIDIRECTIONAL
-+    DMA_BIDIRECTIONAL
-
-@@
-@@
--    PCI_DMA_TODEVICE
-+    DMA_TO_DEVICE
-
-@@
-@@
--    PCI_DMA_FROMDEVICE
-+    DMA_FROM_DEVICE
-
-@@
-@@
--    PCI_DMA_NONE
-+    DMA_NONE
-
-@@
-expression e1, e2, e3;
-@@
--    pci_alloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3;
-@@
--    pci_zalloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_free_consistent(e1, e2, e3, e4)
-+    dma_free_coherent(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_single(e1, e2, e3, e4)
-+    dma_map_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_single(e1, e2, e3, e4)
-+    dma_unmap_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4, e5;
-@@
--    pci_map_page(e1, e2, e3, e4, e5)
-+    dma_map_page(&e1->dev, e2, e3, e4, e5)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_page(e1, e2, e3, e4)
-+    dma_unmap_page(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_sg(e1, e2, e3, e4)
-+    dma_map_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_sg(e1, e2, e3, e4)
-+    dma_unmap_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
-+    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_device(e1, e2, e3, e4)
-+    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
-+    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
-+    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2;
-@@
--    pci_dma_mapping_error(e1, e2)
-+    dma_mapping_error(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_dma_mask(e1, e2)
-+    dma_set_mask(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_consistent_dma_mask(e1, e2)
-+    dma_set_coherent_mask(&e1->dev, e2)
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-If needed, see post from Christoph Hellwig on the kernel-janitors ML:
-   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
----
- drivers/net/wan/farsync.c | 25 ++++++++++++-------------
- 1 file changed, 12 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/net/wan/farsync.c b/drivers/net/wan/farsync.c
-index 5ff249b76525..b50cf11d197d 100644
---- a/drivers/net/wan/farsync.c
-+++ b/drivers/net/wan/farsync.c
-@@ -2553,16 +2553,16 @@ fst_add_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 		 * Allocate a dma buffer for transmit and receives
- 		 */
- 		card->rx_dma_handle_host =
--		    pci_alloc_consistent(card->device, FST_MAX_MTU,
--					 &card->rx_dma_handle_card);
-+		    dma_alloc_coherent(&card->device->dev, FST_MAX_MTU,
-+				       &card->rx_dma_handle_card, GFP_KERNEL);
- 		if (card->rx_dma_handle_host == NULL) {
- 			pr_err("Could not allocate rx dma buffer\n");
- 			err = -ENOMEM;
- 			goto rx_dma_fail;
- 		}
- 		card->tx_dma_handle_host =
--		    pci_alloc_consistent(card->device, FST_MAX_MTU,
--					 &card->tx_dma_handle_card);
-+		    dma_alloc_coherent(&card->device->dev, FST_MAX_MTU,
-+				       &card->tx_dma_handle_card, GFP_KERNEL);
- 		if (card->tx_dma_handle_host == NULL) {
- 			pr_err("Could not allocate tx dma buffer\n");
- 			err = -ENOMEM;
-@@ -2572,9 +2572,8 @@ fst_add_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	return 0;		/* Success */
- 
- tx_dma_fail:
--	pci_free_consistent(card->device, FST_MAX_MTU,
--			    card->rx_dma_handle_host,
--			    card->rx_dma_handle_card);
-+	dma_free_coherent(&card->device->dev, FST_MAX_MTU,
-+			  card->rx_dma_handle_host, card->rx_dma_handle_card);
- rx_dma_fail:
- 	fst_disable_intr(card);
- 	for (i = 0 ; i < card->nports ; i++)
-@@ -2625,12 +2624,12 @@ fst_remove_one(struct pci_dev *pdev)
- 		/*
- 		 * Free dma buffers
- 		 */
--		pci_free_consistent(card->device, FST_MAX_MTU,
--				    card->rx_dma_handle_host,
--				    card->rx_dma_handle_card);
--		pci_free_consistent(card->device, FST_MAX_MTU,
--				    card->tx_dma_handle_host,
--				    card->tx_dma_handle_card);
-+		dma_free_coherent(&card->device->dev, FST_MAX_MTU,
-+				  card->rx_dma_handle_host,
-+				  card->rx_dma_handle_card);
-+		dma_free_coherent(&card->device->dev, FST_MAX_MTU,
-+				  card->tx_dma_handle_host,
-+				  card->tx_dma_handle_card);
- 	}
- 	fst_card_array[card->card_no] = NULL;
- }
--- 
-2.25.1
-
+thanks,
+-- Shuah
