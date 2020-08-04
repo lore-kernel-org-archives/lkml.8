@@ -2,143 +2,242 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9CEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D619A2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA8022086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:18:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pG0jCMIo"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="k0UUQGaN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729494AbgHDQPv (ORCPT
+        id S1728945AbgHDQS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 12:15:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45526 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729113AbgHDQPt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 12:15:49 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7CFDC06174A;
-        Tue,  4 Aug 2020 09:15:49 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id r11so12731949pfl.11;
-        Tue, 04 Aug 2020 09:15:49 -0700 (PDT)
+        Tue, 4 Aug 2020 12:18:28 -0400
+Received: from mail-mw2nam10on2045.outbound.protection.outlook.com ([40.107.94.45]:26369
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728271AbgHDQSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 12:18:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ec/c63t4dcYjm6c7ykudn/di/RBXWutYU5cdER/1BbZbJ6sn0tqALthNXBeLyG6ZcAo0ueV1iVc8fTfSV1vfa6vwjQ+Osd2OGn+Cd4I0LWFAwxRnEPlNSIbqBLhkl3QHD7S6794i7wlJF/FRXUoLtkHx0OdXfKFWdqq39iZj3Z/Ua/ApkpUeQPfLg9hgE1rGTBqooKh/ZHEv1zFODkAUtPThfRjghjiLwMqNnOnzNBMgqJ7b7TsnTzARVie6hcvDFvYJOS3WKhxDtqNEyN9yBZqo4WhTL1S4Eu98bTwgkDxQC5HYi09scX1t8zxbSsQ1yCQULwmNc7vGeh+83H8LKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vfd94lMqUs5pZhvwnisUhLwtasfM7T1LBvVYia5xzHw=;
+ b=N1U2m++EXwfjYSq4VE8ad/iYXK+Q44nn6NFJpyJTrHonm2hhHpYmeuwUiTUzGVXBUmlfeSO5te3+MLicKddJTtG8Bk3uJWQ1AiF6X+CF6HNCMj20kDyz4eHoL7qKzobX+rx4VUd22xBTeK7n4M25TSEWqhIwiOhGaukp/wYP0P6WHv1vhn34EALxqGqzvi8Dd9qO26ool+9IpyBxm90rHXD6NFmj8KggiuSbPH8V7J1LqidlLuGR9GrMiZG8K0DbdEEXTj5tvQOQibp/DnDWB7qXzZC6ngd/6XbpUEZge6ZoDMvT4Xc2SG3Y08jTjU1tLwW7gT6duJcUjXPDETKNMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ifa1Sf5JVi9oCmkaN4c6tM4lb9sWyd44pu8itIPPE24=;
-        b=pG0jCMIo84SguX9aJ8CdxD7K2fP86tjhQiHlo7KBzD0MzSM5OB1qO/RtywZn5NJbNi
-         W4CYqmVCzDxbT0deU/pYUtSUrsSEVrynVWGXjesIyA/QmUHCbm8UhbbrZUiKS4Q17M9W
-         4+BIGVT/qnrIcKgbmog0tNDB6hG7oPhAkVeTrKwSBk6Q+JBXQc3wxaF519quq+8MXVWy
-         O9QR5BtbNZ/Ea5fTsm+OAu5vzd6s0R3oob9PKalRSNtWLl88hB/rcsjmPiAXcveNXuy4
-         dt9IRFQBXGCoBvXTLnGmaa/5+yAHAc0dYrxhKSkJCQVRKoYyk/sFKo3MwujRM6QRmDi4
-         Zc4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ifa1Sf5JVi9oCmkaN4c6tM4lb9sWyd44pu8itIPPE24=;
-        b=U0Mv5KpwIfWPn8lLYLEWQDkc49Ef/9iC5dAXMX+zC4ySdtoEPCWlKfxwjKn+WrKW4m
-         uPZfQ5Hass+VHkh3nDWSa/ko+q18Qc2Lm8qqLp1N582J6PcovMnNXWL4ubsTM+U5i+l1
-         kuAOJWHFZYF1Dy37GfgRWSGyeCFeD2BtjqwCiqV+suno3P6o2rZGpV7TOtiHOgqoANaS
-         dZAuhOrilRNHJQzm7XQ8EQN3ArHE/3k/h7hJDu8ZQaFhcOniSUhafCUjjMgcBRHxCg/j
-         OkzJjux3g1oSKF3+3RwVKi7bD4/P4tsuXv+x/XY7D4RhvRw2sTll5WxAEdu1v82F95aM
-         x1DQ==
-X-Gm-Message-State: AOAM533mQa0u5xynS6Hkm6je47bDm0fOGkU0WQuzZFj7278m5YsSKgnL
-        619a1ZygDMmqPuVSlXTw+IotTGUi
-X-Google-Smtp-Source: ABdhPJyEMpN1ZW4nGpn1VoTpxw/DZotUMxKLS1QcQ6v7qRoOzqHsFajsVdlTmV88plE1JoezC3SWRw==
-X-Received: by 2002:aa7:9f92:: with SMTP id z18mr20824868pfr.260.1596557748304;
-        Tue, 04 Aug 2020 09:15:48 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 207sm23436359pfz.203.2020.08.04.09.15.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Aug 2020 09:15:47 -0700 (PDT)
-Subject: Re: iTCO watchdog last reboot reason?
-To:     Naveen Kumar P <naveenkumar.parna@gmail.com>,
-        linux-watchdog@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <CAMciSVWzH3fuo8eStwRUwGJ+VsJjctLucOZo-EVx07ktXzObFA@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <83ff62ab-42c8-df6c-32c1-c1df2f8cda7a@roeck-us.net>
-Date:   Tue, 4 Aug 2020 09:15:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <CAMciSVWzH3fuo8eStwRUwGJ+VsJjctLucOZo-EVx07ktXzObFA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vfd94lMqUs5pZhvwnisUhLwtasfM7T1LBvVYia5xzHw=;
+ b=k0UUQGaNlXtcBKPDBR1NEXMP8REXlyrHks5Lx7u2EjVHzL6N5buGCXen1Q109nDULvZqFl0Wqf4W7C3tNrDeVxV8Hgw9PokvjdTJVrrlCw+ur0ewmZ+/Az9TGtArV3Pqq3PF6TMdtUNcuXcpb3O8k3zcFOOE2AQRvhXc8CJqBUE=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from BYAPR12MB3560.namprd12.prod.outlook.com (2603:10b6:a03:ae::10)
+ by BYAPR12MB3575.namprd12.prod.outlook.com (2603:10b6:a03:ab::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17; Tue, 4 Aug
+ 2020 16:18:18 +0000
+Received: from BYAPR12MB3560.namprd12.prod.outlook.com
+ ([fe80::7d42:c932:e35f:71b1]) by BYAPR12MB3560.namprd12.prod.outlook.com
+ ([fe80::7d42:c932:e35f:71b1%7]) with mapi id 15.20.3239.021; Tue, 4 Aug 2020
+ 16:18:18 +0000
+Subject: Re: [PATCH] drm/amd/display: use correct scale for actual_brightness
+To:     Alexander Monakov <amonakov@ispras.ru>,
+        amd-gfx@lists.freedesktop.org
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        linux-kernel@vger.kernel.org
+References: <20200803200218.2167-1-amonakov@ispras.ru>
+From:   "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>
+Message-ID: <35b551fe-7c14-3d8e-4056-39975bd75105@amd.com>
+Date:   Tue, 4 Aug 2020 12:18:11 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+In-Reply-To: <20200803200218.2167-1-amonakov@ispras.ru>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YT1PR01CA0002.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::15)
+ To BYAPR12MB3560.namprd12.prod.outlook.com (2603:10b6:a03:ae::10)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [172.31.148.234] (165.204.55.211) by YT1PR01CA0002.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Tue, 4 Aug 2020 16:18:17 +0000
+X-Originating-IP: [165.204.55.211]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 6b012456-7d34-40bc-d131-08d83891ff55
+X-MS-TrafficTypeDiagnostic: BYAPR12MB3575:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR12MB357544FDB2478F31CE53C01CEC4A0@BYAPR12MB3575.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hSrCVOuKf7XdBEjxZCD2aGgwxkdmqYSEzbdLay9dcoRaM6Z7eQpsFgf9Kpx3IhrzgUlAO7B6l78pQEBhqsa+BqtDpeGhq16Yi7JDMtMfssmWqM5KY4lNF95KFNXJGONtU3DxAB4cOVS7bkZhPHJlj+AHn+s8tLV4ZBIBz0j5oIS7ipPWbXhvTFfxu1fIxHUyJ6lnmexqSPPio85vgBAkTcVaK+a1wtzyChJshtiHm4u7sgarh8oOJYTvZl4F+SdcYWtCuAhjaxFPTSeV11fLhViQb/tT0TQbsVcXEo9/xTpQNYdCYziPdSnn5/s5y+uMfHe3uQl9Hig1Dcjlbelb7aw2gBjr2moGToixhFJUnJWyYjfixn+73eMUnTpf1Jjxps+CPt/50OHXpTVRkRwoZhuGzYyrJxl1tFNB2AUt01ftUZaITKTH8YgHQvaiil8cLinCgK/oP3pG6RGoqBJ/ow==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(376002)(396003)(136003)(366004)(6666004)(31686004)(31696002)(16576012)(8676002)(5660300002)(478600001)(966005)(316002)(8936002)(6486002)(86362001)(66556008)(66946007)(66476007)(53546011)(36756003)(26005)(4326008)(52116002)(956004)(16526019)(2616005)(186003)(83380400001)(2906002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 4vOZarAZ5s8u7gC+YygzMPmPEwFJVsf9E9enD9ogyb53OZl41Ku1yuU5uBV0QD+nr154vLXrBER0n12EdiDiWRVygE2tQ764B/Nrm1kePK4tTAwDqW7HZFn4U8LzOEGzaa4l3R8rrxb1SQHy1PS+oh3YCxiUNJn8KhLwp7ikcyYb/0LNKpp1MNHtEEPZGyslchwOz/QnKQaLa24kOl8x8g8qEt5usWrnbe1mmNQrHaDNiyBCzAKnQvnpP0i3f+qCMtaRL73M76UOYUSV0+/pFZ58zvpZfR+9v97rSF9XixOgkJy9Wefiav3LeBBY+/MgoUZNb5R8UpfrDJS6C3ZheXFTTTdf61NvuOqT5xrbNOyOcVm7e6JHH1RZ5qiW3ITCGICf/wiLMduC+/G2b/Y3HDcu4igFfvkfFfNE4mW12XXzTbaVYk+c9Q/pG7GyJMw3UIx9ny5K1YOblIM1KiCeoRo6h8t+65NM2cQQYMdk/PZILKHR2K2ASLwtC/j6YbAfSrDTy5dVur4M+QgkbVjLORlZC7AW73rpDC4HyBY7bcNRdnyW7R3mUp2TW5xcdoH5Bw9EpRQjj8UIUSV1CqEIP5fnxOWCet3dRFu4n0HKGDUt+Yz1SJwz2GYH3IEYFZYZWZnMtvtx4Uc01rLPRv5WiQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b012456-7d34-40bc-d131-08d83891ff55
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB3560.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Aug 2020 16:18:18.1560
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MxS2+1/Y8wShdfzkOKL6kx1Kz0JRD5or/SuYX1CZWfFuf3zJ2NvmcJGPoZDIZtlXZxkFayTi+jnno8lRaXCE7g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3575
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/4/20 7:41 AM, Naveen Kumar P wrote:
-> [ Please keep me in CC as I'm not subscribed to the list]
+This is a cleaner change the other proposed patch since it doesn't need 
+to modify the exist conversion functions but I'd be worried about broken 
+userspace relying on 0-255 as the only acceptable range.
+
+Not an expert on existing implementations to point out a specific one 
+though.
+
+Regards,
+Nicholas Kazlauskas
+
+On 2020-08-03 4:02 p.m., Alexander Monakov wrote:
+> Documentation for sysfs backlight level interface requires that
+> values in both 'brightness' and 'actual_brightness' files are
+> interpreted to be in range from 0 to the value given in the
+> 'max_brightness' file.
 > 
-> Hi everyone,
+> With amdgpu, max_brightness gives 255, and values written by the user
+> into 'brightness' are internally rescaled to a wider range. However,
+> reading from 'actual_brightness' gives the raw register value without
+> inverse rescaling. This causes issues for various userspace tools such
+> as PowerTop and systemd that expect the value to be in the correct
+> range.
 > 
-> I enabled the iTCO watchdog in my Linux system.
+> Introduce a helper to retrieve internal backlight range. Extend the
+> existing 'convert_brightness' function to handle conversion in both
+> directions.
 > 
-> sudo cat /dev/watchdog perfectly reboots my system. But, is there a
-> way to find out on each boot if the machine was rebooted due to a
-> watchdog timeout or not?
+> Bug: https://bugzilla.kernel.org/show_bug.cgi?id=203905
+> Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1242
+> Cc: Alex Deucher <alexander.deucher@amd.com>
+> Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
+> ---
+>   .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 73 ++++++++-----------
+>   1 file changed, 32 insertions(+), 41 deletions(-)
 > 
-> Any ideas?
+> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> index 710edc70e37e..03e21e7b7917 100644
+> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> @@ -2881,51 +2881,42 @@ static int set_backlight_via_aux(struct dc_link *link, uint32_t brightness)
+>   	return rc ? 0 : 1;
+>   }
+>   
+> -static u32 convert_brightness(const struct amdgpu_dm_backlight_caps *caps,
+> -			      const uint32_t user_brightness)
+> +static int get_brightness_range(const struct amdgpu_dm_backlight_caps *caps,
+> +				unsigned *min, unsigned *max)
+>   {
+> -	u32 min, max, conversion_pace;
+> -	u32 brightness = user_brightness;
+> -
+>   	if (!caps)
+> -		goto out;
+> +		return 0;
+>   
+> -	if (!caps->aux_support) {
+> -		max = caps->max_input_signal;
+> -		min = caps->min_input_signal;
+> -		/*
+> -		 * The brightness input is in the range 0-255
+> -		 * It needs to be rescaled to be between the
+> -		 * requested min and max input signal
+> -		 * It also needs to be scaled up by 0x101 to
+> -		 * match the DC interface which has a range of
+> -		 * 0 to 0xffff
+> -		 */
+> -		conversion_pace = 0x101;
+> -		brightness =
+> -			user_brightness
+> -			* conversion_pace
+> -			* (max - min)
+> -			/ AMDGPU_MAX_BL_LEVEL
+> -			+ min * conversion_pace;
+> +	if (caps->aux_support) {
+> +		// Firmware limits are in nits, DC API wants millinits.
+> +		*max = 1000 * caps->aux_max_input_signal;
+> +		*min = 1000 * caps->aux_min_input_signal;
+>   	} else {
+> -		/* TODO
+> -		 * We are doing a linear interpolation here, which is OK but
+> -		 * does not provide the optimal result. We probably want
+> -		 * something close to the Perceptual Quantizer (PQ) curve.
+> -		 */
+> -		max = caps->aux_max_input_signal;
+> -		min = caps->aux_min_input_signal;
+> -
+> -		brightness = (AMDGPU_MAX_BL_LEVEL - user_brightness) * min
+> -			       + user_brightness * max;
+> -		// Multiple the value by 1000 since we use millinits
+> -		brightness *= 1000;
+> -		brightness = DIV_ROUND_CLOSEST(brightness, AMDGPU_MAX_BL_LEVEL);
+> +		// Firmware limits are 8-bit, PWM control is 16-bit.
+> +		*max = 0x101 * caps->max_input_signal;
+> +		*min = 0x101 * caps->min_input_signal;
+>   	}
+> +	return 1;
+> +}
+>   
+> -out:
+> -	return brightness;
+> +static u32 convert_brightness(const struct amdgpu_dm_backlight_caps *caps,
+> +			      const uint32_t brightness, int from_user)
+> +{
+> +	unsigned min, max;
+> +
+> +	if (!get_brightness_range(caps, &min, &max))
+> +		return brightness;
+> +
+> +	if (from_user)
+> +		// Rescale 0..255 to min..max
+> +		return min + DIV_ROUND_CLOSEST((max - min) * brightness,
+> +					       AMDGPU_MAX_BL_LEVEL);
+> +
+> +	if (brightness < min)
+> +		return 0;
+> +	// Rescale min..max to 0..255
+> +	return DIV_ROUND_CLOSEST(AMDGPU_MAX_BL_LEVEL * (brightness - min),
+> +				 max - min);
+>   }
+>   
+>   static int amdgpu_dm_backlight_update_status(struct backlight_device *bd)
+> @@ -2941,7 +2932,7 @@ static int amdgpu_dm_backlight_update_status(struct backlight_device *bd)
+>   
+>   	link = (struct dc_link *)dm->backlight_link;
+>   
+> -	brightness = convert_brightness(&caps, bd->props.brightness);
+> +	brightness = convert_brightness(&caps, bd->props.brightness, 1);
+>   	// Change brightness based on AUX property
+>   	if (caps.aux_support)
+>   		return set_backlight_via_aux(link, brightness);
+> @@ -2958,7 +2949,7 @@ static int amdgpu_dm_backlight_get_brightness(struct backlight_device *bd)
+>   
+>   	if (ret == DC_ERROR_UNEXPECTED)
+>   		return bd->props.brightness;
+> -	return ret;
+> +	return convert_brightness(&dm->backlight_caps, ret, 0);
+>   }
+>   
+>   static const struct backlight_ops amdgpu_dm_backlight_ops = {
+> 
+> base-commit: bcf876870b95592b52519ed4aafcf9d95999bc9c
 > 
 
-If the hardware supports it, the driver could set the reboot reason
-in its probe function.
-
-Guenter
