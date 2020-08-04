@@ -2,202 +2,169 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFA9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E235C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4096D2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17D0F207FC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:35:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbgHDPcy (ORCPT
+        id S1729684AbgHDPfc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 11:32:54 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34941 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728467AbgHDPcv (ORCPT
+        Tue, 4 Aug 2020 11:35:32 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:51538 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729532AbgHDPfc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 11:32:51 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 93so20717527otx.2;
-        Tue, 04 Aug 2020 08:32:50 -0700 (PDT)
+        Tue, 4 Aug 2020 11:35:32 -0400
+Received: by mail-io1-f71.google.com with SMTP id l1so29318391ioh.18
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 08:35:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qatmt//JPwi1mbsIxWPddiiFHQBPfl2gDmEQQ2hQzbk=;
-        b=YA1Qznd5+F1T39Y2zv1RpHi9h5odWgMhBgFCc9PDI2ibE53PnqOH0HoYEjC+f3bfqE
-         OGyANJaBGsv88DkEhWmBIm1OEMXh+gjgd7sov5Yp871RQQzvGgFQh8HO/VOMvBTjhTv5
-         CBFevSd2FxSN5BWy8ishbpRk7nrIpigbGNp0FvDHsWk4hv/hbUZW6d420Z5UkRsP2zMP
-         KzUCW6Cqt9JXs4HpNTvqpRBDO+GlvLidBsyOko7oGcERirhZVlEZQ0QPVBbYS1v2m9GX
-         vriqRJdm90bZ9pHq5kXwHHwQSn85ZpqkVo8mZe7WA5P48P5qKXHIwPa58Ea73pMjecMI
-         T1PA==
-X-Gm-Message-State: AOAM531rgO/5P6oLmo20pr0xI+v4H7qI3hxzHuWlvr+iTzmzkK6121Lv
-        MgATkAjqowaPFF9T1uSYzO3+9vb89S0xk1ERXHusPMd8
-X-Google-Smtp-Source: ABdhPJzG7qI4RyhxG3B6hNJToEp2pigrJTkEwQ9m+um6GnPexUVKm9D/BBSXTUG5n4P1l2cmstIa98lE/PWPwbb3fg8=
-X-Received: by 2002:a9d:1b0d:: with SMTP id l13mr17641241otl.145.1596555170237;
- Tue, 04 Aug 2020 08:32:50 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=0mPnjUUuN3ds2LVQMSGunGLdZdt70gHEdjnpz4HRJfM=;
+        b=gvynSeCP8C8fiDDMx85o3DNOMkJ9efObcfkvEw/d2obCFaEmxl5kIG5IiD+I6tKYzF
+         rXR8Ggkl/vBZSXdGviviMEwCQK/l1RfVXahHm8rDn+dL7sM+aHFe7aPFhiusKsazSq8J
+         fxSuutKYDT3sija0lu4nAKf54qBNIdmjFAEmWeOBTmUdZtDMv7wH+IdcxLUHjqRFBy7F
+         XkiGUQM+DJ+FX3ugF1HaeYTFah5nvsS18p8pxAlrMJemCjBZA63bZ1eTRdEs+xNgzUxF
+         62TM37LUAPRT8cX8IymjBqFHQ/Qa2UVjbDBz7yNPngz1s0tcsNtF4OK4fxl8CGr6ia8U
+         x/mA==
+X-Gm-Message-State: AOAM531OgwMuiGvzU/prM41jA027Z3m3Icjn5nnPXnBX1TBO8s6On7FA
+        FPVJTGAYgAwivyR3R+DXCL0p0tbVnS6G9JbPPOsIWgTOXihB
+X-Google-Smtp-Source: ABdhPJwthYKqwD7lg4/N0+Gzk2jLwwTK3ieOdfqC9/iF/tSjNJDptXV9jjCw8IhzYLb6AIAjH9QItWIS8Sdbd6VBN3n8wKDdLnva
 MIME-Version: 1.0
-References: <1596470573-15065-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200803180618.GA2297236@oden.dyn.berto.se> <CA+V-a8sHOqM2tB-72Z-wVJjvihycCq1zLuk7Py7uKGMxzOJyaA@mail.gmail.com>
- <20200803192801.GC2297236@oden.dyn.berto.se> <CA+V-a8v0fr9jKMEdOHfDV+DSTqd57NRyQs1phC8nPTcNLR-PfQ@mail.gmail.com>
- <20200804100510.GA2566810@oden.dyn.berto.se> <CAMuHMdW6DtbBUdEPi1DiCUv1n6dxCjvD3b1vVY7tnJq-R+vyiw@mail.gmail.com>
- <CA+V-a8tEdrap_kaDk+K+KuA8_WWndwn4KbqD5i9n0YPVnbJ5Tg@mail.gmail.com>
-In-Reply-To: <CA+V-a8tEdrap_kaDk+K+KuA8_WWndwn4KbqD5i9n0YPVnbJ5Tg@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 4 Aug 2020 17:32:38 +0200
-Message-ID: <CAMuHMdU2N30vn-SO-AAEf34uW81pqEjfBiCN6pBLZChNucd34g@mail.gmail.com>
-Subject: Re: [PATCH v2] media: rcar-vin: Add support to select data pins for
- YCbCr422-8bit input
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Niklas <niklas.soderlund@ragnatech.se>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Chris Paterson <Chris.Paterson2@renesas.com>
+X-Received: by 2002:a92:85d6:: with SMTP id f205mr5664062ilh.238.1596555330420;
+ Tue, 04 Aug 2020 08:35:30 -0700 (PDT)
+Date:   Tue, 04 Aug 2020 08:35:30 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000055881a05ac0f0122@google.com>
+Subject: WARNING: suspicious RCU usage in ovs_flow_tbl_destroy
+From:   syzbot <syzbot+c0eb9e7cdde04e4eb4be@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dev@openvswitch.org, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        pshelar@ovn.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+Hello,
 
-On Tue, Aug 4, 2020 at 5:12 PM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
-> On Tue, Aug 4, 2020 at 11:17 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Tue, Aug 4, 2020 at 12:05 PM Niklas <niklas.soderlund@ragnatech.se> wrote:
-> > > On 2020-08-04 09:04:25 +0100, Lad, Prabhakar wrote:
-> > > > On Mon, Aug 3, 2020 at 8:28 PM Niklas <niklas.soderlund@ragnatech.se> wrote:
-> > > > > On 2020-08-03 20:17:54 +0100, Lad, Prabhakar wrote:
-> > > > > > On Mon, Aug 3, 2020 at 7:06 PM Niklas <niklas.soderlund@ragnatech.se> wrote:
-> > > > > > > On 2020-08-03 17:02:53 +0100, Lad Prabhakar wrote:
-> > > > > > > > Select the data pins for YCbCr422-8bit input format depending on
-> > > > > > > > bus_width and data_shift passed as part of DT.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > > > > > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> >
-> > > > > > > > --- a/drivers/media/platform/rcar-vin/rcar-core.c
-> > > > > > > > +++ b/drivers/media/platform/rcar-vin/rcar-core.c
-> > > > > > > > @@ -624,6 +624,11 @@ static int rvin_parallel_parse_v4l2(struct device *dev,
-> > > > > > > >       vin->parallel = rvpe;
-> > > > > > > >       vin->parallel->mbus_type = vep->bus_type;
-> > > > > > > >
-> > > > > > > > +     /* select VInDATA[15:8] pins for YCbCr422-8bit format */
-> > > > > > > > +     if (vep->bus.parallel.bus_width == BUS_WIDTH_8 &&
-> > > > > > > > +         vep->bus.parallel.data_shift == DATA_SHIFT_8)
-> > > > > > > > +             vin->parallel->ycbcr_8b_g = true;
-> > > > > > > > +
-> > > > > > >
-> > > > > > > I would store the bus_width and bus_shift values in the struct
-> > > > > > > rvin_parallel_entity and evaluate them in place rater then create a flag
-> > > > > > > for this specific use-case..
-> > > > > > >
-> > > > > > Ok will do that.
-> > > > > >
-> > > > > > > Also according to the documentation is the check correct? Do we not wish
-> > > > > > > to use the new mode when bus_width == 16 and bus_shift == 8. The check
-> > > > > > > you have here seems to describe a 8 lane bus where 0 lanes are used.
-> > > > > > >
-> > > > > > bus-width is the actual data lines used, so bus_width == 16 and
-> > > > > > bus_shift == 8 would mean use lines 23:8, so just check for bus_width
-> > > > > > == 8 and bus_shift == 8 should be sufficient.
-> > > > >
-> > > > > As you and Geert points out I was wrong, they should indeed both be 8.
-> > > > >
-> > > > > >
-> > > > > > > I think you should also verify that bus_shift is either 0 or 8 as that
-> > > > > > > is all the driver supports.
-> > > > > > >
-> > > > > > Not sure if thats correct.In that case this patch wont make sense, I
-> > > > > > believed we agreed upon we determine the YDS depending on both
-> > > > > > bus-width and bus-shift.
-> > > > >
-> > > > > I'm sorry I think I lost you :-) The driver is not capable of supporting
-> > > > > bus_width = 8 and bus_shift = 2 right? Maybe we are talking about
-> > > > > different things.
-> > > > >
-> > > > > What I tried to say (updated with the knowledge of that bus_width should
-> > > > > indeed be 8 and not 16) was that would it make sens to with bus_width=8
-> > > > > allow for a bus_shift value other then 0 or 8? What for example would
-> > > > > the driver do if the value was 2?
-> > > > >
-> > > > I think this should be possible but I am not sure how this will work.
-> > > > For example on iWave G21D-Q7 platform with 16-bit wired bus say we
-> > > > connect a 8-bit camera as below:
-> > > >
-> > > > bus-width = 8 and bus-shift = 2
-> > > > VI1_G0_B        -> Not connected
-> > > > VI1_G1_B        -> Not connected
-> > > > VI1_G2_B_16        -> Connected
-> > > > VI1_G3_B        -> Connected
-> > > > VI1_G4_B        -> Connected
-> > > > VI1_G5_B        -> Connected
-> > > > VI1_G6_B        -> Connected
-> > > > VI1_G7_B        -> Connected
-> > > > VI1_DATA7_B/VI1_B7_B_16    -> Connected
-> > > > VI1_DATA6_B/VI1_B6_B_16    -> Connected
-> > > > VI1_DATA5_B/VI1_B5_B_16    -> Not connected
-> > > > VI1_DATA4_B/VI1_B4_B_16    -> Not connected
-> > > > VI1_DATA3_B/VI1_B3_B_16    -> Not connected
-> > > > VI1_DATA2_B/VI1_B2_B_16    -> Not connected
-> > > > VI1_DATA1_B/VI1_B1_B_16    -> Not connected
-> > > > VI1_DATA0_B/VI1_B0_B_16    -> Not connected
-> > >
-> > > I agree this is how I would imagine bus-width = 8 and bus-shift = 2 to
-> > > be wired.
-> > >
-> > > > So in this case for 8-bit YCbCr422 format should YDS be set I am not
-> > > > sure. Or is this not a valid case at all ?
-> > >
-> > > That is my question :-)
-> > >
-> > > I can't find anything int the documentation that would allow is to do
-> > > anything other then bus-width = 8 together with bus-shift = 0 (do not
-> > > set YDS) or bus-shift = 8 (set YDS). So that is why I suggested you
-> > > check for this and print a warning if bus-shift is anything else :-)
-> > >
-> > > But if you can figured out how we can do a bus-shift = 2 as in your
-> > > example then of course the check is wrong. I have not read the docs
-> > > carefully enough about this to rule it out as impossible.
-> >
-> > IIUIC, this is a completely different scenario than "low" or "high" wiring
-> > of 8-bit YCbCr-422, hence YDS does not apply?
-> >
-> I tend to agree. We only enable YDS if bus-width = 8 and bus-shift=8
-> as done by this patch. (Although there isn't enough documentation to
-> prove it)
->
-> > The iWave G21D-Q7 wiring seems to be 10-bit YCbCr-422 with the 2 LSB
-> > bits unconnected?
-> >
-> B-8bit/ BG-16 bit for VI0 and  B-8bit/ BG-16 bit for VI0
->
-> > Interestingly, that mode is supported on all RZ/G1 SoCs, on most R-Car
-> > Gen3 SoCs, but only on a single R-Car Gen2 SoC (V2H).
-> >
-> YDS mode ?
+syzbot found the following issue on:
 
-No, 10-bit YCbCr-422. But please forget my comment, I was looking at
-the wrong table.
+HEAD commit:    2f631133 net: Pass NULL to skb_network_protocol() when we ..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=12daae2a900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=91a13b78c7dc258d
+dashboard link: https://syzkaller.appspot.com/bug?extid=c0eb9e7cdde04e4eb4be
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=172cd3d4900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11fbd342900000
 
-VI1_G[7:2] plus VI1_DATA[7:6] is not even a contiguous subset (I had
-misread the used subset to be G[1:0] and B[7:2]), so it cannot be represented
-using just bus-width and bus-shift properties?
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+c0eb9e7cdde04e4eb4be@syzkaller.appspotmail.com
 
-Gr{oetje,eeting}s,
+netlink: 'syz-executor399': attribute type 2 has an invalid length.
+=============================
+WARNING: suspicious RCU usage
+5.8.0-rc7-syzkaller #0 Not tainted
+-----------------------------
+net/openvswitch/flow_table.c:521 suspicious rcu_dereference_check() usage!
 
-                        Geert
+other info that might help us debug this:
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+rcu_scheduler_active = 2, debug_locks = 1
+1 lock held by syz-executor399/6802:
+ #0: ffffffff8a8319b0 (cb_lock){++++}-{3:3}, at: genl_rcv+0x15/0x40 net/netlink/genetlink.c:741
+
+stack backtrace:
+CPU: 0 PID: 6802 Comm: syz-executor399 Not tainted 5.8.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ ovs_flow_tbl_destroy+0x1d6/0x210 net/openvswitch/flow_table.c:521
+ ovs_dp_cmd_new+0x8ca/0xea0 net/openvswitch/datapath.c:1747
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:669 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:714 [inline]
+ genl_rcv_msg+0x61d/0x980 net/netlink/genetlink.c:731
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2470
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:742
+ netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1330
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1919
+ sock_sendmsg_nosec net/socket.c:651 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:671
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2359
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2413
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2446
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x4402d9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffdfda722f8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004402d9
+RDX: 0000000000000000 RSI: 00000000200000c0 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401ae0
+R13: 0000000000401b70 R14: 0000000000000000 R15: 0000000000000000
+
+=============================
+WARNING: suspicious RCU usage
+5.8.0-rc7-syzkaller #0 Not tainted
+-----------------------------
+net/openvswitch/flow_table.c:522 suspicious rcu_dereference_check() usage!
+
+other info that might help us debug this:
+
+
+rcu_scheduler_active = 2, debug_locks = 1
+1 lock held by syz-executor399/6802:
+ #0: ffffffff8a8319b0 (cb_lock){++++}-{3:3}, at: genl_rcv+0x15/0x40 net/netlink/genetlink.c:741
+
+stack backtrace:
+CPU: 0 PID: 6802 Comm: syz-executor399 Not tainted 5.8.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ ovs_flow_tbl_destroy+0x190/0x210 net/openvswitch/flow_table.c:522
+ ovs_dp_cmd_new+0x8ca/0xea0 net/openvswitch/datapath.c:1747
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:669 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:714 [inline]
+ genl_rcv_msg+0x61d/0x980 net/netlink/genetlink.c:731
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2470
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:742
+ netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1330
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1919
+ sock_sendmsg_nosec net/socket.c:651 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:671
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2359
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2413
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2446
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x4402d9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffdfda722f8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004402d9
+RDX: 0000000000000000 RSI: 00000000200000c0 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 0000000000400
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
