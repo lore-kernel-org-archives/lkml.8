@@ -2,203 +2,594 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55164C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 09:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49959C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 09:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F8BF206D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 09:55:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e+gxgcRf"
+	by mail.kernel.org (Postfix) with ESMTP id 4D389206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 09:57:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729565AbgHDJzZ (ORCPT
+        id S1729897AbgHDJ5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 05:55:25 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:27180 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726844AbgHDJzY (ORCPT
+        Tue, 4 Aug 2020 05:57:24 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:60716 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726844AbgHDJ5W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 05:55:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596534922;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=AYtBkHdsq8844gq2EZ0Iszz7yUjWZo1nxRQ835rbqmk=;
-        b=e+gxgcRfECPF22a0xMhBq8EC5Zr6eGIerGg0M4OyBjFEDddyQaVnMW2i67Ry88rgmLgk/z
-        pBXSK8F2biVOrbAXKXfZ4aDJxyN2+uTP6CMMCzHqVUfQXgSjEfAhQZVWTF2pQT7vXtXgZC
-        0Nu0H1G8AzFaFDWWVZHHquoAwpCxMqY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-15-tMkYF3e9MK-mS8oUAzQZmw-1; Tue, 04 Aug 2020 05:55:17 -0400
-X-MC-Unique: tMkYF3e9MK-mS8oUAzQZmw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4ABE1800473;
-        Tue,  4 Aug 2020 09:55:16 +0000 (UTC)
-Received: from [10.36.113.95] (ovpn-113-95.ams2.redhat.com [10.36.113.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 598AC71764;
-        Tue,  4 Aug 2020 09:55:11 +0000 (UTC)
-Subject: Re: [PATCH v3 6/6] mm: document semantics of ZONE_MOVABLE
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Baoquan He <bhe@redhat.com>
-References: <20200804072408.5481-1-david@redhat.com>
- <20200804072408.5481-7-david@redhat.com> <20200804093323.GB8243@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <65deeb21-63fe-d1c1-bb87-74a08035f79a@redhat.com>
-Date:   Tue, 4 Aug 2020 11:55:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 4 Aug 2020 05:57:22 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id D493F1C0BDD; Tue,  4 Aug 2020 11:57:17 +0200 (CEST)
+Date:   Tue, 4 Aug 2020 11:57:17 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     pisa@cmp.felk.cvut.cz
+Cc:     linux-can@vger.kernel.org, devicetree@vger.kernel.org,
+        mkl@pengutronix.de, socketcan@hartkopp.net, wg@grandegger.com,
+        davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        c.emde@osadl.org, armbru@redhat.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, martin.jerabek01@gmail.com,
+        ondrej.ille@gmail.com, jnovak@fel.cvut.cz, jara.beran@gmail.com,
+        porazil@pikron.com
+Subject: Re: [PATCH v4 3/6] can: ctucanfd: add support for CTU CAN FD
+ open-source IP core - bus independent part.
+Message-ID: <20200804095717.irnchkz2imw7tdf7@duo.ucw.cz>
+References: <cover.1596408856.git.pisa@cmp.felk.cvut.cz>
+ <7360abc6087f63c34acdef6a2bf4b8c8cdbe9aa1.1596408856.git.pisa@cmp.felk.cvut.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200804093323.GB8243@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="lf7ydybhil42shnj"
+Content-Disposition: inline
+In-Reply-To: <7360abc6087f63c34acdef6a2bf4b8c8cdbe9aa1.1596408856.git.pisa@cmp.felk.cvut.cz>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.08.20 11:33, Mike Rapoport wrote:
-> On Tue, Aug 04, 2020 at 09:24:08AM +0200, David Hildenbrand wrote:
->> Let's document what ZONE_MOVABLE means, how it's used, and which special
->> cases we have regarding unmovable pages (memory offlining vs. migration /
->> allocations).
->>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Michael S. Tsirkin <mst@redhat.com>
->> Cc: Mike Kravetz <mike.kravetz@oracle.com>
->> Cc: Mike Rapoport <rppt@kernel.org>
->> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
->> Cc: Baoquan He <bhe@redhat.com>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
-> 
-> Several nits below, othersize
-> 
-> Acked-by: Mike Rapoport <rppt@linux.ibm.com>
-> 
->> ---
->>  include/linux/mmzone.h | 34 ++++++++++++++++++++++++++++++++++
->>  1 file changed, 34 insertions(+)
->>
->> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
->> index f6f884970511d..600d449e7d9e9 100644
->> --- a/include/linux/mmzone.h
->> +++ b/include/linux/mmzone.h
->> @@ -372,6 +372,40 @@ enum zone_type {
->>  	 */
->>  	ZONE_HIGHMEM,
->>  #endif
->> +	/*
->> +	 * ZONE_MOVABLE is similar to ZONE_NORMAL, except that it *primarily*
->> +	 * only contains movable pages. Main use cases are to make memory
-> 
-> "Primarily only" sounds awkward. Maybe
-> 
-> 	... except that it only contains movable pages with few exceptional
-> 	cases described below. 
-> 
-> And then 
-> 
-> 	Main use cases for ZONE_MOVABLE are ...
 
-Ack!
+--lf7ydybhil42shnj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
->> +	 * offlining more likely to succeed, and to locally limit unmovable
->> +	 * allocations - e.g., to increase the number of THP/huge pages.
->> +	 * Notable special cases are:
->> +	 *
->> +	 * 1. Pinned pages: (Long-term) pinning of movable pages might
-> 
-> 		            ^long, capital L looked out of place for me
+Hi!
 
-Ack!
+> More about CAN related projects used and developed at the Faculty
+> of the Electrical Engineering (http://www.fel.cvut.cz/en/)
+> of Czech Technical University (https://www.cvut.cz/en)
+> in at Prague http://canbus.pages.fel.cvut.cz/ .
 
-> 
->> +	 *    essentially turn such pages unmovable. Memory offlining might
->> +	 *    retry a long time.
->> +	 * 2. memblock allocations: kernelcore/movablecore setups might create
->> +	 *    situations where ZONE_MOVABLE contains unmovable allocations
->> +	 *    after boot. Memory offlining and allocations fail early.
->> +	 * 3. Memory holes: Such pages cannot be allocated. Applies only to
->> +	 *    boot memory, not hotplugged memory. Memory offlining and
->> +	 *    allocations fail early.
-> 
-> I would clarify where page struct for abscent memory come from
+Should this go to Documentation, not a changelog?
 
-Something like:
+> +	help
+> +	  This driver adds support for the CTU CAN FD open-source IP core.
+> +	  More documentation and core sources at project page
+> +	  (https://gitlab.fel.cvut.cz/canbus/ctucanfd_ip_core).
+> +	  The core integration to Xilinx Zynq system as platform driver
+> +	  is available (https://gitlab.fel.cvut.cz/canbus/zynq/zynq-can-sja1000=
+-top).
+> +	  Implementation on Intel FGA based PCI Express board is available
+> +	  from project (https://gitlab.fel.cvut.cz/canbus/pcie-ctu_can_fd).
+> +	  More about CAN related projects used and developed at the Faculty
+> +	  of the Electrical Engineering (http://www.fel.cvut.cz/en/)
+> +	  of Czech Technical University in Prague (https://www.cvut.cz/en)
+> +	  at http://canbus.pages.fel.cvut.cz/ .
 
-Memory holes: We might have a memmap for memory holes, for example, if
-we have sections that are only partially System RAM. Such pages cannot
-be ...
+Again, links to university main mage here are little bit excessive.
 
-?
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/***********************************************************************=
+********
+> + *
+> + * CTU CAN FD IP Core
+> + * Copyright (C) 2015-2018
+> + *
+> + * Authors:
+> + *     Ondrej Ille <ondrej.ille@gmail.com>
+> + *     Martin Jerabek <martin.jerabek01@gmail.com>
+> + *     Jaroslav Beran <jara.beran@gmail.com>
+> + *
+> + * Project advisors:
+> + *     Jiri Novak <jnovak@fel.cvut.cz>
+> + *     Pavel Pisa <pisa@cmp.felk.cvut.cz>
+> + *
+> + * Department of Measurement         (http://meas.fel.cvut.cz/)
+> + * Faculty of Electrical Engineering (http://www.fel.cvut.cz)
+> + * Czech Technical University        (http://www.cvut.cz/)
 
-Thanks!
+Again, a bit too many links... and important information is missing:
+who is the copyright holder?
 
--- 
-Thanks,
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version 2
+> + * of the License, or (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
 
-David / dhildenb
+With SPDX, this should be removed.
 
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Martin Jerabek");
+> +MODULE_DESCRIPTION("CTU CAN FD interface");
+
+This normally goes to end of the file, MODULE_AUTHOR usually has <>
+section with email address.
+
+> +/* TX buffer rotation:
+> + * - when a buffer transitions to empty state, rotate order and prioriti=
+es
+> + * - if more buffers seem to transition at the same time, rotate
+> + *   by the number of buffers
+> + * - it may be assumed that buffers transition to empty state in FIFO or=
+der
+> + *   (because we manage priorities that way)
+> + * - at frame filling, do not rotate anything, just increment buffer mod=
+ulo
+> + *   counter
+> + */
+> +
+> +#define CTUCAN_FLAG_RX_FFW_BUFFERED	1
+> +
+> +static int ctucan_reset(struct net_device *ndev)
+> +{
+> +	int i;
+> +	struct ctucan_priv *priv =3D netdev_priv(ndev);
+> +
+> +	netdev_dbg(ndev, "ctucan_reset");
+> +
+> +	ctucan_hw_reset(&priv->p);
+> +	for (i =3D 0; i < 100; ++i) {
+
+i++ would be usual kernel style.
+
+> +		if (ctucan_hw_check_access(&priv->p))
+> +			return 0;
+> +		usleep_range(100, 200);
+> +	}
+> +
+> +	netdev_warn(ndev, "device did not leave reset\n");
+> +	return -ETIMEDOUT;
+> +}
+
+This does extra sleep after last check_access... but I doubt that
+matters.
+
+> +static int ctucan_set_bittiming(struct net_device *ndev)
+> +{
+> +	struct ctucan_priv *priv =3D netdev_priv(ndev);
+> +	struct can_bittiming *bt =3D &priv->can.bittiming;
+> +
+> +	netdev_dbg(ndev, "ctucan_set_bittiming");
+> +
+> +	if (ctucan_hw_is_enabled(&priv->p)) {
+> +		netdev_alert(ndev,
+> +			     "BUG! Cannot set bittiming - CAN is enabled\n");
+> +		return -EPERM;
+> +	}
+
+alert is normally reserved for .. way higher severity.
+
+
+> +	/* Note that bt may be modified here */
+> +	ctucan_hw_set_nom_bittiming(&priv->p, bt);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * ctucan_set_data_bittiming - CAN set data bit timing routine
+> + * @ndev:	Pointer to net_device structure
+> + *
+> + * This is the driver set data bittiming routine.
+> + * Return: 0 on success and failure value on error
+> + */
+> +static int ctucan_set_data_bittiming(struct net_device *ndev)
+> +{
+> +	struct ctucan_priv *priv =3D netdev_priv(ndev);
+> +	struct can_bittiming *dbt =3D &priv->can.data_bittiming;
+> +
+> +	netdev_dbg(ndev, "ctucan_set_data_bittiming");
+> +
+> +	if (ctucan_hw_is_enabled(&priv->p)) {
+> +		netdev_alert(ndev,
+> +			     "BUG! Cannot set bittiming - CAN is enabled\n");
+> +		return -EPERM;
+> +	}
+> +
+> +	/* Note that dbt may be modified here */
+> +	ctucan_hw_set_data_bittiming(&priv->p, dbt);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * ctucan_set_secondary_sample_point - CAN set secondary sample point ro=
+utine
+> + * @ndev:	Pointer to net_device structure
+> + *
+> + * Return: 0 on success and failure value on error
+> + */
+> +static int ctucan_set_secondary_sample_point(struct net_device *ndev)
+> +{
+> +	struct ctucan_priv *priv =3D netdev_priv(ndev);
+> +	struct can_bittiming *dbt =3D &priv->can.data_bittiming;
+> +	int ssp_offset =3D 0;
+> +	bool ssp_ena;
+> +
+> +	netdev_dbg(ndev, "ctucan_set_secondary_sample_point");
+> +
+> +	if (ctucan_hw_is_enabled(&priv->p)) {
+> +		netdev_alert(ndev,
+> +			     "BUG! Cannot set SSP - CAN is enabled\n");
+> +		return -EPERM;
+> +	}
+> +
+> +	// Use for bit-rates above 1 Mbits/s
+
+/* */ style comment would be more common here.
+
+> +	if (dbt->bitrate > 1000000) {
+> +		ssp_ena =3D true;
+> +
+> +		// Calculate SSP in minimal time quanta
+> +		ssp_offset =3D (priv->can.clock.freq / 1000) *
+> +			      dbt->sample_point / dbt->bitrate;
+> +
+> +		if (ssp_offset > 127) {
+> +			netdev_warn(ndev, "SSP offset saturated to 127\n");
+> +			ssp_offset =3D 127;
+> +		}
+> +	} else {
+> +		ssp_ena =3D false;
+> +	}
+
+Init ssp_ena to false, and you can get rid of else branch?
+
+> +/**
+> + * ctucan_chip_start - This the drivers start routine
+> + * @ndev:	Pointer to net_device structure
+> + *
+> + * This is the drivers start routine.
+
+driver's?
+
+> +/**
+> + * ctucan_start_xmit - Starts the transmission
+=2E..
+> + * Return: 0 on success and failure value on error
+
+Umm, no, AFAICT.
+
+> +static int ctucan_start_xmit(struct sk_buff *skb, struct net_device *nde=
+v)
+
+Should it return netdev_tx_t ?
+
+> +/**
+> + * xcan_rx -  Is called from CAN isr to complete the received
+> + *		frame  processing
+
+Double space.
+
+> +static const char *ctucan_state_to_str(enum can_state state)
+> +{
+> +	if (state >=3D CAN_STATE_MAX)
+> +		return "UNKNOWN";
+> +	return ctucan_state_strings[state];
+> +}
+
+Is enum always unsigned?
+
+> +/**
+> + * ctucan_err_interrupt - error frame Isr
+> + * @ndev:	net_device pointer
+> + * @isr:	interrupt status register value
+> + *
+> + * This is the CAN error interrupt and it will
+> + * check the the type of error and forward the error
+> + * frame to upper layers.
+> + */
+
+You are free to use 80 columns...
+
+> +	skb =3D alloc_can_err_skb(ndev, &cf);
+> +
+> +	/* EWLI:  error warning limit condition met
+> +	 * FCSI: Fault confinement State changed
+> +	 * ALI:  arbitration lost (just informative)
+> +	 * BEI:  bus error interrupt
+> +	 */
+
+Extra space before "error"... and something is wrong with big letters there.
+
+> +		if (state =3D=3D CAN_STATE_BUS_OFF) {
+> +			priv->can.can_stats.bus_off++;
+> +			can_bus_off(ndev);
+> +			if (skb)
+> +				cf->can_id |=3D CAN_ERR_BUSOFF;
+> +		} else if (state =3D=3D CAN_STATE_ERROR_PASSIVE) {
+> +			priv->can.can_stats.error_passive++;
+> +			if (skb) {
+> +				cf->can_id |=3D CAN_ERR_CRTL;
+> +				cf->data[1] =3D (berr.rxerr > 127) ?
+> +						CAN_ERR_CRTL_RX_PASSIVE :
+> +						CAN_ERR_CRTL_TX_PASSIVE;
+> +				cf->data[6] =3D berr.txerr;
+> +				cf->data[7] =3D berr.rxerr;
+> +			}
+> +		} else if (state =3D=3D CAN_STATE_ERROR_WARNING) {
+> +			priv->can.can_stats.error_warning++;
+> +			if (skb) {
+> +				cf->can_id |=3D CAN_ERR_CRTL;
+> +				cf->data[1] |=3D (berr.txerr > berr.rxerr) ?
+> +					CAN_ERR_CRTL_TX_WARNING :
+> +					CAN_ERR_CRTL_RX_WARNING;
+> +				cf->data[6] =3D berr.txerr;
+> +				cf->data[7] =3D berr.rxerr;
+> +			}
+> +		} else if (state =3D=3D CAN_STATE_ERROR_ACTIVE) {
+> +			cf->data[1] =3D CAN_ERR_CRTL_ACTIVE;
+> +			cf->data[6] =3D berr.txerr;
+> +			cf->data[7] =3D berr.rxerr;
+> +		} else {
+> +			netdev_warn(ndev, "    unhandled error state (%d:%s)!",
+> +				    state, ctucan_state_to_str(state));
+> +		}
+
+This sounds like switch (state) to me?
+
+
+> +	/* Check for Bus Error interrupt */
+> +	if (isr.s.bei) {
+> +		netdev_info(ndev, "  bus error");
+> +		priv->can.can_stats.bus_error++;
+> +		stats->tx_errors++; // TODO: really?
+
+really? :-).
+
+> +		some_buffers_processed =3D false;
+> +		while ((int)(priv->txb_head - priv->txb_tail) > 0) {
+> +			u32 txb_idx =3D priv->txb_tail & priv->txb_mask;
+> +			u32 status =3D ctucan_hw_get_tx_status(&priv->p, txb_idx);
+> +
+> +			netdev_dbg(ndev, "TXI: TXB#%u: status 0x%x",
+> +				   txb_idx, status);
+> +
+> +			switch (status) {
+> +			case TXT_TOK:
+> +				netdev_dbg(ndev, "TXT_OK");
+> +				can_get_echo_skb(ndev, txb_idx);
+> +				stats->tx_packets++;
+> +				break;
+> +			case TXT_ERR:
+> +				/* This indicated that retransmit limit has been
+> +				 * reached. Obviously we should not echo the
+> +				 * frame, but also not indicate any kind
+> +				 * of error. If desired, it was already reported
+> +				 * (possible multiple times) on each arbitration
+> +				 * lost.
+> +				 */
+> +				netdev_warn(ndev, "TXB in Error state");
+> +				can_free_echo_skb(ndev, txb_idx);
+> +				stats->tx_dropped++;
+> +				break;
+> +			case TXT_ABT:
+> +				/* Same as for TXT_ERR, only with different
+> +				 * cause. We *could* re-queue the frame, but
+> +				 * multiqueue/abort is not supported yet anyway.
+> +				 */
+> +				netdev_warn(ndev, "TXB in Aborted state");
+> +				can_free_echo_skb(ndev, txb_idx);
+> +				stats->tx_dropped++;
+> +				break;
+> +			default:
+> +				/* Bug only if the first buffer is not finished,
+> +				 * otherwise it is pretty much expected
+> +				 */
+> +				if (first) {
+> +					netdev_err(ndev, "BUG: TXB#%u not in a finished state (0x%x)!",
+> +						   txb_idx, status);
+> +					spin_unlock_irqrestore(&priv->tx_lock,
+> +							       flags);
+> +					/* do not clear nor wake */
+> +					return;
+> +				}
+> +				goto clear;
+> +			}
+> +			priv->txb_tail++;
+> +			first =3D false;
+> +			some_buffers_processed =3D true;
+> +			/* Adjust priorities *before* marking the buffer
+> +			 * as empty.
+> +			 */
+> +			ctucan_rotate_txb_prio(ndev);
+> +			ctucan_hw_txt_set_empty(&priv->p, txb_idx);
+> +		}
+> +clear:
+> +		spin_unlock_irqrestore(&priv->tx_lock, flags);
+
+Could some part of this be split into separate function?
+
+> +		/* If no buffers were processed this time, wa cannot
+
+we
+
+> +		 * clear - that would introduce a race condition.
+> +		 */
+> +		if (some_buffers_processed) {
+> +			/* Clear the interrupt again as not to receive it again
+> +			 * for a buffer we already handled (possibly causing
+> +			 * the bug log)
+> +			 */
+
+Not sure this is correct english.
+
+> +static irqreturn_t ctucan_interrupt(int irq, void *dev_id)
+> +{
+> +	struct net_device *ndev =3D (struct net_device *)dev_id;
+> +	struct ctucan_priv *priv =3D netdev_priv(ndev);
+> +	union ctu_can_fd_int_stat isr, icr;
+> +	int irq_loops =3D 0;
+> +
+> +	netdev_dbg(ndev, "ctucan_interrupt");
+> +
+> +	do {
+> +		/* Get the interrupt status */
+> +		isr =3D ctu_can_fd_int_sts(&priv->p);
+
+> +		}
+> +		/* Ignore RI, TI, LFI, RFI, BSI */
+> +	} while (irq_loops++ < 10000);
+
+For loop would be more usual here.
+
+> +static void ctucan_chip_stop(struct net_device *ndev)
+> +{
+> +	struct ctucan_priv *priv =3D netdev_priv(ndev);
+> +	union ctu_can_fd_int_stat mask;
+> +
+> +	netdev_dbg(ndev, "ctucan_chip_stop");
+> +
+> +	mask.u32 =3D 0xffffffff;
+> +
+> +	/* Disable interrupts and disable can */
+
+can->CAN?
+
+> +	netdev_dbg(ndev, "ctucan_open");
+> +
+> +	ret =3D pm_runtime_get_sync(priv->dev);
+> +	if (ret < 0) {
+> +		netdev_err(ndev, "%s: pm_runtime_get failed(%d)\n",
+> +			   __func__, ret);
+> +		return ret;
+> +	}
+
+IIRC pm_runtime_get... is special, and you need to put even in the
+error case.
+
+> +	ret =3D pm_runtime_get_sync(priv->dev);
+> +	if (ret < 0) {
+> +		netdev_err(ndev, "%s: pm_runtime_get failed(%d)\n",
+> +			   __func__, ret);
+> +		return ret;
+
+Same here.
+
+
+> +int ctucan_suspend(struct device *dev)
+> +EXPORT_SYMBOL(ctucan_suspend);
+> +int ctucan_resume(struct device *dev)
+> +EXPORT_SYMBOL(ctucan_resume);
+
+Exporting these is quite unusual.
+
+> +int ctucan_probe_common(struct device *dev, void __iomem *addr,
+> +			int irq, unsigned int ntxbufs, unsigned long can_clk_rate,
+> +			int pm_enable_call, void (*set_drvdata_fnc)(struct device *dev,
+> +			struct net_device *ndev))
+
+At least format it so that set_drvdata_fnc is on single line?
+
+> +{
+=2E..
+> +	if (set_drvdata_fnc !=3D NULL)
+> +		set_drvdata_fnc(dev, ndev);
+
+No need for !=3D NULL.
+
+> +	SET_NETDEV_DEV(ndev, dev);
+> +	ndev->netdev_ops =3D &ctucan_netdev_ops;
+> +
+> +	/* Getting the CAN can_clk info */
+> +	if (can_clk_rate =3D=3D 0) {
+
+!can_clk_rate would work, too.
+
+> +		priv->can_clk =3D devm_clk_get(dev, NULL);
+> +		if (IS_ERR(priv->can_clk)) {
+> +			dev_err(dev, "Device clock not found.\n");
+> +			ret =3D PTR_ERR(priv->can_clk);
+> +			goto err_free;
+> +		}
+> +		can_clk_rate =3D clk_get_rate(priv->can_clk);
+> +	}
+> +
+> +	priv->p.write_reg =3D ctucan_hw_write32;
+> +	priv->p.read_reg =3D ctucan_hw_read32;
+> +
+> +	if (pm_enable_call)
+> +		pm_runtime_enable(dev);
+> +	ret =3D pm_runtime_get_sync(dev);
+> +	if (ret < 0) {
+
+put?
+
+> +	if ((priv->p.read_reg(&priv->p, CTU_CAN_FD_DEVICE_ID) &
+> +			    0xFFFF) !=3D CTU_CAN_FD_ID) {
+> +		priv->p.write_reg =3D ctucan_hw_write32_be;
+> +		priv->p.read_reg =3D ctucan_hw_read32_be;
+> +		if ((priv->p.read_reg(&priv->p, CTU_CAN_FD_DEVICE_ID) &
+> +			      0xFFFF) !=3D CTU_CAN_FD_ID) {
+> +			netdev_err(ndev, "CTU_CAN_FD signature not found\n");
+> +			ret =3D -ENODEV;
+> +			goto err_disableclks;
+> +		}
+> +	}
+> +
+> +	ret =3D ctucan_reset(ndev);
+> +	if (ret < 0)
+> +		goto err_pmdisable;
+
+Should be goto err_disableclks, AFAICT. Plus that label is quite confusing.
+
+> +static __init int ctucan_init(void)
+> +{
+> +	pr_info("%s CAN netdevice driver\n", DRV_NAME);
+> +
+> +	return 0;
+> +}
+> +
+> +module_init(ctucan_init);
+
+> +static __exit void ctucan_exit(void)
+> +{
+> +	pr_info("%s: driver removed\n", DRV_NAME);
+> +}
+> +
+> +module_exit(ctucan_exit);
+
+Remove?
+
+> +#ifndef __KERNEL__
+> +# include "ctu_can_fd_linux_defs.h"
+> +#else
+> +# include <linux/can/dev.h>
+> +#endif
+
+Should always assume kernel?
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--lf7ydybhil42shnj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXykw/QAKCRAw5/Bqldv6
+8hjLAJ9NpyEfZvBP5a2AeZYr0dwN1Q4PawCgq1JN0ymZVT9m7Ovloub9NAqPPKo=
+=L+bf
+-----END PGP SIGNATURE-----
+
+--lf7ydybhil42shnj--
