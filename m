@@ -2,228 +2,193 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB26C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C8AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A62E2076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:41:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="P5XPf+q7"
+	by mail.kernel.org (Postfix) with ESMTP id E34EE2076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:41:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgHDTk7 (ORCPT
+        id S1728202AbgHDTlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 15:40:59 -0400
-Received: from mail-eopbgr690087.outbound.protection.outlook.com ([40.107.69.87]:41511
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726090AbgHDTk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 15:40:59 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H0XqhSWUCPO8qJa7v500mQN3d1Cq7kyheJ2yRK11V5uyDRaSW92enLb6ja6tzE5QnPuPynR1aC/UqiGRNcsl/nO3nrqHg4GBVHf1H5oMQTakSj+EdPfM6u/A3ILCGuBIm9Ys0unNqtq/qOw26pkS+y+noM9Xal1I30QMx7AUHjZkEPCnhJe+WEQZFuQ+990i7sTGxca467o8X3SGq9RBC+03lPGgx7Aj1J1kptKZ/AirZ4kEMGfVACwXy3GV4P/J/gvWFAQDuKhuNYqevoFz3PDP/M0N3RW7JpagAcireHdnEC50AbWtEFehCxi8VaRt2iiFn46h5iD7qY1e4EvSVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xwh+eH8pyNG28SsBh+XUIzm0T0ad2IRYkZYpAtq1Umw=;
- b=eA8CDg7PQEsAzevnd4laScFxiGqy30rQk7EnrMz510+LDn/XAXnfZB0NpuZ5jwd0xq16bT/rdzTIpCJJXanSmmUzxJ228yD30q6hhVPIsVbpjZhGdZMlRS9rqzxdNN1sSa8uXualSsftiCKiB36NNJ5mtn1PG8nGgdq8CJBiaqhX7I/han9/d/Nco01IQd9J2XmOPK9tNt6G0Wa22wWexqYd2xxJhqv3dVv+rL+b7viuP6gLT5cZhi2obenD/Z29r5hI759yEZpdQiwkohkWloola1+fhEBmqKYiIDjxB6zYOm/jXbElbxzHx63Vt6OyZG/vHPEUqnEDyp9wij0b1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xwh+eH8pyNG28SsBh+XUIzm0T0ad2IRYkZYpAtq1Umw=;
- b=P5XPf+q7esfcyIQFumn4Mv5nBaj8ERS7Ig7PSeyLZ+R+4CVujs448yEPiyNJwcMlCgP0oDOuU2PsswCGeVXc8PwdmPkLeVcneOY86smit0+vveROKHVikZn9Ec6wt+sMN5+ZpSwUSS9ACTWH3YPxVLBjuZT2Ezx88rhyByZbzHo=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22)
- by SN1PR12MB2365.namprd12.prod.outlook.com (2603:10b6:802:2e::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.21; Tue, 4 Aug
- 2020 19:40:56 +0000
-Received: from SN6PR12MB2718.namprd12.prod.outlook.com
- ([fe80::a8ae:5626:2bf5:3624]) by SN6PR12MB2718.namprd12.prod.outlook.com
- ([fe80::a8ae:5626:2bf5:3624%7]) with mapi id 15.20.3239.022; Tue, 4 Aug 2020
- 19:40:56 +0000
-Cc:     brijesh.singh@amd.com, Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        eric van tassell <Eric.VanTassell@amd.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [RFC PATCH 0/8] KVM: x86/mmu: Introduce pinned SPTEs framework
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-References: <20200731212323.21746-1-sean.j.christopherson@intel.com>
- <3bf90589-8404-8bd6-925c-427f72528fc2@amd.com>
- <20200803171620.GC3151@linux.intel.com>
-From:   Brijesh Singh <brijesh.singh@amd.com>
-Message-ID: <16ef9998-84a9-1db4-d9a3-a0cab055a8a2@amd.com>
-Date:   Tue, 4 Aug 2020 14:40:49 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
-In-Reply-To: <20200803171620.GC3151@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: DM6PR12CA0036.namprd12.prod.outlook.com
- (2603:10b6:5:1c0::49) To SN6PR12MB2718.namprd12.prod.outlook.com
- (2603:10b6:805:6f::22)
+        Tue, 4 Aug 2020 15:41:06 -0400
+Received: from mga18.intel.com ([134.134.136.126]:29261 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726090AbgHDTlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 15:41:03 -0400
+IronPort-SDR: QHVZO2rEdmvI191fCAIifYPmz1suzK5RDaF2X8AF551YGkbjaizNY5+Co1ZUtOMPfZ7yI2gfLX
+ tut9q96JtLOg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="139991083"
+X-IronPort-AV: E=Sophos;i="5.75,434,1589266800"; 
+   d="scan'208";a="139991083"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 12:41:03 -0700
+IronPort-SDR: FmmFAJk/DK9xN2F8YZq9q+CCjbMXS9iOHXJoznESNHqhGC8sYuKrqowOP5gLl2rGKHVfYjQuZM
+ os2+Gwy0xFIQ==
+X-IronPort-AV: E=Sophos;i="5.75,434,1589266800"; 
+   d="scan'208";a="467199212"
+Received: from viveksh1-mobl.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.255.83.117])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 12:41:01 -0700
+From:   Sean V Kelley <sean.v.kelley@intel.com>
+To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        rjw@rjwysocki.net, ashok.raj@intel.com, tony.luck@intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sean V Kelley <sean.v.kelley@linux.intel.com>
+Subject: [PATCH V2 0/9] Add RCEC handling to PCI/AER
+Date:   Tue,  4 Aug 2020 12:40:43 -0700
+Message-Id: <20200804194052.193272-1-sean.v.kelley@intel.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from Brijeshs-MacBook-Pro.local (165.204.77.11) by DM6PR12CA0036.namprd12.prod.outlook.com (2603:10b6:5:1c0::49) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.18 via Frontend Transport; Tue, 4 Aug 2020 19:40:54 +0000
-X-Originating-IP: [165.204.77.11]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: c8e9d964-913a-47b7-b984-08d838ae4e09
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2365:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN1PR12MB23650C7BDBB8022E74D17684E54A0@SN1PR12MB2365.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +lW4SbrFwGLu6BPXD9PRmTt6lOwjgDeVQh1RGDiBL+EK0fo42enSEvCKJyQ+ZRZB1adCD3KaRGBdGCYGdv0abhVQX0N2qE3jAIgCOd87zqN858sS2at2FZ4HBoNFlkkwey6vK40RvUD0eZsKhweyoqFHKw/ZLs4vppQLGiTN2pTW8xvyRar/ptHnJ1JHEDL6/pOb1QboZ4c/FLFE6BxHJoLvqcGr4Dx5p1itNqRi6894kUTl+BKJIibC9e+MOU6v1DEdRJwubrg75tWxqGpNHMgDp+47qrd2NVUg1B6Rx3Eaogr8gtDpFnF6NZWWxj3Ceys4qXOAkm5ALGEYVSfdIspvgoUlFmcNt6xxbbCiIKXwneIsSQkMQbR3jUoeX2V7WusUbCOL5rtZOF1z1sIlaBbvrNK1Ny/RQc3HklcXk+SuGooC/Cf9l1JRykkqsHrMONZBMxJj4FwlijXh2tHiZQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2718.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(376002)(136003)(396003)(346002)(966005)(478600001)(5660300002)(66476007)(83380400001)(66946007)(8936002)(66556008)(31696002)(8676002)(6666004)(86362001)(36756003)(31686004)(2906002)(44832011)(956004)(2616005)(16526019)(186003)(26005)(6512007)(6486002)(6506007)(52116002)(53546011)(6916009)(54906003)(4326008)(45080400002)(316002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: TpS8YLdKhODbV/MZnkHhpdSraj7Nw6qHAX9tBVzIbqkuvlKQVDUhfkArD1v/3EzIMfaP8DcPJrCZxbma+vmNwqBc+QrQwL9IQuoasTPVhiD2TUx8cyfg63wXrUcWM5T38F886PxekDibyAg0XphyNgnK5UEkyD71vqxvGelvWPs7W6FNUGw64GX0t/DhyFee74dPlB3PluoI5iaeU2SdvQ/dcqwKNLVy00r6nKhVkgeH0VGBJtjopa2TPM/Rp8dbOoyVCgrA+7VMTGo0Sm2yFQXGwhhplYDE4GIm46tV7+rWISqk5e2ed1VWYR0kLHJ/HfZs3tl8VftNzbKrMC2mFbVwZ04QQxmdPWNr2juhYL980jelGR3zvdo7IVlWZDtY3PqnAPcnH1/XR4iZdconfNykTh+RRE9m79I4tF+dagi8g4/rdWFUxoyBolRUzKYVUxM9NnB4O3zH7bN/100PjcdOxncRcr6liv8HDu5oPRv4oAVqRf9PEIP4Ujx3frJ+iqurfZmCfYo+xNpTrr73SLren3tMDMmAIS/lXiCs0uOY8nPDvXwrdUXWE0kROIuRMtOx0QXYwu5CIFO4oE/Up6Ocma5fzwKoVZaxTjWVM6Uz6cEvKLFL3zt5d88t1enn+qdt6I7i3EEf4xqd/S6YBg==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8e9d964-913a-47b7-b984-08d838ae4e09
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2718.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Aug 2020 19:40:55.9099
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wFxaN1xknqArP9O82YT14QceBy3t+67DWC5a4wb80NKlq9opd6QVj0PU/gpNIt49GP14hGjA4ljLP1WpUTqhiQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2365
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Sean V Kelley <sean.v.kelley@linux.intel.com>
 
-On 8/3/20 12:16 PM, Sean Christopherson wrote:
-> On Mon, Aug 03, 2020 at 10:52:05AM -0500, Brijesh Singh wrote:
->> Thanks for series Sean. Some thoughts
->>
->>
->> On 7/31/20 4:23 PM, Sean Christopherson wrote:
->>> SEV currently needs to pin guest memory as it doesn't support migrating
->>> encrypted pages.  Introduce a framework in KVM's MMU to support pinning
->>> pages on demand without requiring additional memory allocations, and with
->>> (somewhat hazy) line of sight toward supporting more advanced features for
->>> encrypted guest memory, e.g. host page migration.
->>
->> Eric's attempt to do a lazy pinning suffers with the memory allocation
->> problem and your series seems to address it. As you have noticed,
->> currently the SEV enablement  in the KVM does not support migrating the
->> encrypted pages. But the recent SEV firmware provides a support to
->> migrate the encrypted pages (e.g host page migration). The support is
->> available in SEV FW >= 0.17.
-> I assume SEV also doesn't support ballooning?  Ballooning would be a good
-> first step toward page migration as I think it'd be easier for KVM to
-> support, e.g. only needs to deal with the "zap" and not the "move".
+On the use of FLR on RCiEPs for the fatal case, still interested in more
+feedback from the earlier discussion here [1]:
+
+[1] https://lore.kernel.org/linux-pci/C21C050B-48B1-4429-B019-C81F3AB8E843@intel.com/
+
+There is also the question of the absence of an FLR for non-fatal error.
+If the device driver tells us that it needs "PCI_ERS_RESULT_NEED_RESET" by
+the callback report_normal_detected() then we should try FLR on the device
+as well.
+
+On the use of variables with RP centric names such as the attributes
+dev_attr_aer_rootport_total_err_..., one concern is the ripple effect on code
+churn due to renaming. Open to suggestions, but trying to co-habitate so to
+speak RCECs with RPs in the same drivers has trade-offs.
+
+Changes since v1 [2]:
+
+- Make PME capability of RCEC discoverable in get_port_device_capability().
+- Replace the check on bnr with <= lastbusn in pcie_walk_rcec().
+- Fix comment header for pcie_walk_rcec().
+- Fix comment header for pci_walk_dev_affected().
+- Fix spurious newline.
+- Add sanity checks on dev->rcec.
+- Use pci_dbg() in place of pci_info() for discovered RCiEPs.
+- Remove AER RCEC AP FOUND message (accidently left in previously).
+- Remove the check for RC_END from set_device_error_reporting() since
+only Ports and RCECs are being passed.
+(Jonathan Cameron)
+- Fix the return type for flr_on_rciep().
+(reported by lkp on DEC Alpha arch.)
+
+[1] https://lore.kernel.org/linux-pci/20200724172223.145608-1-sean.v.kelley@intel.com/
+
+Root Complex Event Collectors (RCEC) provide support for terminating error
+and PME messages from Root Complex Integrated Endpoints (RCiEPs).  An RCEC
+resides on a Bus in the Root Complex. Multiple RCECs can in fact reside on
+a single bus. An RCEC will explicitly declare supported RCiEPs through the
+Root Complex Endpoint Association Extended Capability.
+
+(See PCIe 5.0-1, sections 1.3.2.3 (RCiEP), and 7.9.10 (RCEC Ext. Cap.))
+
+The kernel lacks handling for these RCECs and the error messages received
+from their respective associated RCiEPs. More recently, a new CPU
+interconnect, Compute eXpress Link (CXL) depends on RCEC capabilities for
+purposes of error messaging from CXL 1.1 supported RCiEP devices.
+
+DocLink: https://www.computeexpresslink.org/
+
+This use case is not limited to CXL. Existing hardware today includes
+support for RCECs, such as the Denverton microserver product
+family. Future hardware will be forthcoming.
+
+(See Intel Document, Order number: 33061-003US)
+
+So services such as AER or PME could be associated with an RCEC driver.
+In the case of CXL, if an RCiEP (i.e., CXL 1.1 device) is associated with a
+platform's RCEC it shall signal PME and AER error conditions through that
+RCEC.
+
+Towards the above use cases, add the missing RCEC class and extend the
+PCIe Root Port and service drivers to allow association of RCiEPs to their
+respective parent RCEC and facilitate handling of terminating error and PME
+messages.
 
 
-Yes, the ballooning does not work with the SEV.
+AER Test Results:
+1) Inject a correctable error to the RCiEP 0000:e9:00.0
+    Run ./aer_inject <a parameter file as below>:
+    AER
+    PCI_ID 0000:e9:00.0
+    COR_STATUS BAD_TLP
+    HEADER_LOG 0 1 2 3
 
+    Log:
+[   76.155963] pcieport 0000:e8:00.4: aer_inject: Injecting errors 00000040/00000000 into device 0000:e9:00.0
+[   76.166966] pcieport 0000:e8:00.4: AER: Corrected error received: 0000:e9:00.0
+[   76.175253] pci 0000:e9:00.0: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Receiver ID)
+[   76.185633] pci 0000:e9:00.0:   device [8086:4940] error status/mask=00000040/00002000
+[   76.194604] pci 0000:e9:00.0:    [ 6] BadTLP
 
->
->>> The idea is to use a software available bit in the SPTE to track that a
->>> page has been pinned.  The decision to pin a page and the actual pinning
->>> managment is handled by vendor code via kvm_x86_ops hooks.  There are
->>> intentionally two hooks (zap and unzap) introduced that are not needed for
->>> SEV.  I included them to again show how the flag (probably renamed?) could
->>> be used for more than just pin/unpin.
->> If using the available software bits for the tracking the pinning is
->> acceptable then it can be used for the non-SEV guests (if needed). I
->> will look through your patch more carefully but one immediate question,
->> when do we unpin the pages? In the case of the SEV, once a page is
->> pinned then it should not be unpinned until the guest terminates. If we
->> unpin the page before the VM terminates then there is a  chance the host
->> page migration will kick-in and move the pages. The KVM MMU code may
->> call to drop the spte's during the zap/unzap and this happens a lot
->> during a guest execution and it will lead us to the path where a vendor
->> specific code will unpin the pages during the guest execution and cause
->> a data corruption for the SEV guest.
-> The pages are unpinned by:
->
->   drop_spte()
->   |
->   -> rmap_remove()
->      |
->      -> sev_drop_pinned_spte()
->
->
-> The intent is to allow unpinning pages when the mm_struct dies, i.e. when
-> the memory is no longer reachable (as opposed to when the last reference to
-> KVM is put), but typing that out, I realize there are dependencies and
-> assumptions that don't hold true for SEV as implemented.
+2) Inject a non-fatal error to the RCiEP 0000:e8:01.0
+    Run ./aer_inject <a parameter file as below>:
+    AER
+    PCI_ID 0000:e8:01.0
+    UNCOR_STATUS COMP_ABORT
+    HEADER_LOG 0 1 2 3
 
+    Log:
+[  117.791854] pcieport 0000:e8:00.4: aer_inject: Injecting errors 00000000/00008000 into device 0000:e8:01.0
+[  117.804244] pcieport 0000:e8:00.4: AER: Uncorrected (Non-Fatal) error received: 0000:e8:01.0
+[  117.814652] igen6_edac 0000:e8:01.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Completer ID)
+[  117.828511] igen6_edac 0000:e8:01.0:   device [8086:0b25] error status/mask=00008000/00100000
+[  117.839189] igen6_edac 0000:e8:01.0:    [15] CmpltAbrt
+[  117.847365] igen6_edac 0000:e8:01.0: AER:   TLP Header: 00000000 00000001 00000002 00000003
+[  117.857775] igen6_edac 0000:e8:01.0: AER: device recovery successful
 
-So, I tried this RFC with the SEV guest (of course after adding some of
-the stuff you highlighted below), the guest fails randomly. I have seen
-a two to three type of failures 1) boot 2) kernbench execution and 3)
-device addition/removal, the failure signature is not consistent. I
-believe after addressing some of the dependencies we may able to make
-some progress but it will add new restriction which did not existed before.
+3) Inject a fatal error to the RCiEP 0000:ed:01.0
+    Run ./aer_inject <a parameter file as below>:
+    AER
+    PCI_ID 0000:ed:01.0
+    UNCOR_STATUS MALF_TLP
+    HEADER_LOG 0 1 2 3
 
->
->   - Parent shadow pages won't be zapped.  Recycling MMU pages and zapping
->     all SPs due to memslot updates are the two concerns.
->
->     The easy way out for recycling is to not recycle SPs with pinned
->     children, though that may or may not fly with VMM admins.
->
->     I'm trying to resolve the memslot issue[*], but confirming that there's
->     no longer an issue with not zapping everything is proving difficult as
->     we haven't yet reproduced the original bug.
->
->   - drop_large_spte() won't be invoked.  I believe the only semi-legitimate
->     scenario is if the NX huge page workaround is toggled on while a VM is
->     running.  Disallowing that if there is an SEV guest seems reasonable?
->
->     There might be an issue with the host page size changing, but I don't
->     think that can happen if the page is pinned.  That needs more
->     investigation.
->
->
-> [*] https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.kernel.org%2Fr%2F20200703025047.13987-1-sean.j.christopherson%40intel.com&amp;data=02%7C01%7Cbrijesh.singh%40amd.com%7C8d0dd94297ff4d24e54108d837d0f1dc%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637320717832773086&amp;sdata=yAHvMptxstoczXBZkFCpNC4AbADOJOgluwAtIYCuNVo%3D&amp;reserved=0
->
->>> Bugs in the core implementation are pretty much guaranteed.  The basic
->>> concept has been tested, but in a fairly different incarnation.  Most
->>> notably, tagging PRESENT SPTEs as PINNED has not been tested, although
->>> using the PINNED flag to track zapped (and known to be pinned) SPTEs has
->>> been tested.  I cobbled this variation together fairly quickly to get the
->>> code out there for discussion.
->>>
->>> The last patch to pin SEV pages during sev_launch_update_data() is
->>> incomplete; it's there to show how we might leverage MMU-based pinning to
->>> support pinning pages before the guest is live.
->>
->> I will add the SEV specific bits and  give this a try.
->>
->>> Sean Christopherson (8):
->>>   KVM: x86/mmu: Return old SPTE from mmu_spte_clear_track_bits()
->>>   KVM: x86/mmu: Use bits 2:0 to check for present SPTEs
->>>   KVM: x86/mmu: Refactor handling of not-present SPTEs in mmu_set_spte()
->>>   KVM: x86/mmu: Add infrastructure for pinning PFNs on demand
->>>   KVM: SVM: Use the KVM MMU SPTE pinning hooks to pin pages on demand
->>>   KVM: x86/mmu: Move 'pfn' variable to caller of direct_page_fault()
->>>   KVM: x86/mmu: Introduce kvm_mmu_map_tdp_page() for use by SEV
->>>   KVM: SVM: Pin SEV pages in MMU during sev_launch_update_data()
->>>
->>>  arch/x86/include/asm/kvm_host.h |   7 ++
->>>  arch/x86/kvm/mmu.h              |   3 +
->>>  arch/x86/kvm/mmu/mmu.c          | 186 +++++++++++++++++++++++++-------
->>>  arch/x86/kvm/mmu/paging_tmpl.h  |   3 +-
->>>  arch/x86/kvm/svm/sev.c          | 141 +++++++++++++++++++++++-
->>>  arch/x86/kvm/svm/svm.c          |   3 +
->>>  arch/x86/kvm/svm/svm.h          |   3 +
->>>  7 files changed, 302 insertions(+), 44 deletions(-)
->>>
+    Log:
+[  131.511623] pcieport 0000:ed:00.4: aer_inject: Injecting errors 00000000/00040000 into device 0000:ed:01.0
+[  131.523259] pcieport 0000:ed:00.4: AER: Uncorrected (Fatal) error received: 0000:ed:01.0
+[  131.533842] igen6_edac 0000:ed:01.0: AER: PCIe Bus Error: severity=Uncorrected (Fatal), type=Inaccessible, (Unregistered Agent ID)
+[  131.655618] igen6_edac 0000:ed:01.0: AER: device recovery successful
+
+Jonathan Cameron (1):
+  PCI/AER: Extend AER error handling to RCECs
+
+Qiuxu Zhuo (6):
+  pci_ids: Add class code and extended capability for RCEC
+  PCI: Extend Root Port Driver to support RCEC
+  PCI/portdrv: Add pcie_walk_rcec() to walk RCiEPs associated with RCEC
+  PCI/AER: Apply function level reset to RCiEP on fatal error
+  PCI: Add 'rcec' field to pci_dev for associated RCiEPs
+  PCI/AER: Add RCEC AER error injection support
+
+Sean V Kelley (2):
+  PCI/AER: Add RCEC AER handling
+  PCI/PME: Add RCEC PME handling
+
+ drivers/pci/pcie/aer.c          | 36 +++++++++----
+ drivers/pci/pcie/aer_inject.c   |  5 +-
+ drivers/pci/pcie/err.c          | 90 +++++++++++++++++++++++++++------
+ drivers/pci/pcie/pme.c          | 15 ++++--
+ drivers/pci/pcie/portdrv.h      |  2 +
+ drivers/pci/pcie/portdrv_core.c | 90 +++++++++++++++++++++++++++++++--
+ drivers/pci/pcie/portdrv_pci.c  | 20 +++++++-
+ include/linux/pci.h             |  3 ++
+ include/linux/pci_ids.h         |  1 +
+ include/uapi/linux/pci_regs.h   |  7 +++
+ 10 files changed, 233 insertions(+), 36 deletions(-)
+
+--
+2.27.0
+
