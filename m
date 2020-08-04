@@ -2,186 +2,147 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA96C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DC7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAC2C2070A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C48622C9F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:39:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="tVOyiAxq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oN3IV5bZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729414AbgHDKiC (ORCPT
+        id S1729463AbgHDKjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 06:38:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49950 "EHLO
+        Tue, 4 Aug 2020 06:39:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727932AbgHDKhz (ORCPT
+        with ESMTP id S1726386AbgHDKjB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 06:37:55 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C02F0C061756
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 03:37:54 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id o1so22615112plk.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 03:37:54 -0700 (PDT)
+        Tue, 4 Aug 2020 06:39:01 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 821E7C061756
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 03:39:01 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id o1so22616136plk.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 03:39:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=TrGEaYPfboBme7/3DoLWFjARbSazHOu+ZX3YP4jS2LM=;
-        b=tVOyiAxqQeaz4Zp1olnli2run6VKajC63s99euiLDqt3qyLkyPCNvoVt6Q89XAMx+s
-         9Clgh38xQqdvyTfEDgvDqMF2t/XdhUmFkxl5UgzLATd19K0gASJxkYEgj7cfN5SMHT9T
-         qKBfvuw7o5JqEox6Rx7sWptEahLdCoaYGe8KaAW192mGOADVfx4lysiEvNRgHy4GbBhK
-         HgNn6Bedq3ZhwIFbBbGz64h9Sw7ZdpamuV9mHBa8albVhY7Ng5LLoALiZFJZIh3plSnr
-         v16yBWuo/yxsvLd/ZO4RPKpLDyNQz76xywNx9FnC8SmKy5MwY/hKf5AR0aaGK6fdLPny
-         5TWg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BNGGP8nI26QQvsEtdjfefrmhKzpQ5Kf8DvxYjmO6N1s=;
+        b=oN3IV5bZB9RdAEY0bOaOOp2T+d5/UxbxRkvHrrDySh0FyMAgmapRgFPBrbmz3kBrl3
+         RjLXUUB09TekcAgaiuL7IhpYURnG5+ogt0T5d55cO5B3bxRQ+Haq0vcnjmA0cA1Du3EC
+         VAiRThtJOmBJbcflkdN5ujxsX6OKjoc1VsD/eZs5Dm0OLV0C/CoprrYF94u6PP/uXQxN
+         +Y6YRe98pTIl6+gjhgYyKUw28/HgNrZKLziwHC6jpFzjn9v73DL79pxYkSAbtt7tDpj3
+         x+OY5KwvKlj4foIyD9AFeM0I/oqdPMkhDo8BHerWfZbrIRxGlMBNlJfuEM5nr9z/aCed
+         HJSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=TrGEaYPfboBme7/3DoLWFjARbSazHOu+ZX3YP4jS2LM=;
-        b=AA+hXTcCgUWIuEoTfoNXGx7xCBvQD4A8VGu5Qhvbsx7T/67i1gJ5vHYhr7il8XVJPz
-         dgiCKY+oGt3Zr1IMBvzqP5Zk3CNsjESCCKzBbDoM/BNeCCuU45rk+W+LSuTPUjvKQUI1
-         v6afScS5a9HUlgP665YLe2vKlYZPpKWsZSKqfb4GCkimWrbXZafVl63zh7h6bEU+mL1y
-         QULbbNiWLkry45P8tNHT8bEzuIIaa3mZLxjix/GFhndjinQe38CH9CuI7jXWQnE22/yD
-         4oWL6rtA77X8GqQFjzGSI4puOlSYvuM59Ie/STCqU5iPGjSUQyujiTeYs8OPMaHYnbuV
-         mDYA==
-X-Gm-Message-State: AOAM531HHzRWy5G7wJHZz2vPvawXncQs2j2dP8xkM8JGTuxoAAVoVCOZ
-        uY2xkD5OsTAsG+d13CKSvUgDUaxnULzOTA==
-X-Google-Smtp-Source: ABdhPJxkbp0IoHVjGFqmPKRrRGLBzVketfBA+lNgd4XesVb6wRLOIZG48iFclG1B7Rm89Bj3fVNtsw==
-X-Received: by 2002:a17:90a:6e0c:: with SMTP id b12mr3879170pjk.141.1596537473111;
-        Tue, 04 Aug 2020 03:37:53 -0700 (PDT)
-Received: from [192.168.10.94] (124-171-83-152.dyn.iinet.net.au. [124.171.83.152])
-        by smtp.gmail.com with ESMTPSA id s8sm23183642pfc.122.2020.08.04.03.37.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Aug 2020 03:37:50 -0700 (PDT)
-Subject: Re: [RFC PATCH kernel] serial_core: Check for port state when tty is
- in error state
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
-        linux-kernel@vger.kernel.org
-References: <20200728124359.980-1-aik@ozlabs.ru>
- <eb3cf1b2-8519-1722-22aa-6182ee734a27@ozlabs.ru>
- <20200804100912.GA2671027@kroah.com>
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-Autocrypt: addr=aik@ozlabs.ru; keydata=
- mQINBE+rT0sBEADFEI2UtPRsLLvnRf+tI9nA8T91+jDK3NLkqV+2DKHkTGPP5qzDZpRSH6mD
- EePO1JqpVuIow/wGud9xaPA5uvuVgRS1q7RU8otD+7VLDFzPRiRE4Jfr2CW89Ox6BF+q5ZPV
- /pS4v4G9eOrw1v09lEKHB9WtiBVhhxKK1LnUjPEH3ifkOkgW7jFfoYgTdtB3XaXVgYnNPDFo
- PTBYsJy+wr89XfyHr2Ev7BB3Xaf7qICXdBF8MEVY8t/UFsesg4wFWOuzCfqxFmKEaPDZlTuR
- tfLAeVpslNfWCi5ybPlowLx6KJqOsI9R2a9o4qRXWGP7IwiMRAC3iiPyk9cknt8ee6EUIxI6
- t847eFaVKI/6WcxhszI0R6Cj+N4y+1rHfkGWYWupCiHwj9DjILW9iEAncVgQmkNPpUsZECLT
- WQzMuVSxjuXW4nJ6f4OFHqL2dU//qR+BM/eJ0TT3OnfLcPqfucGxubhT7n/CXUxEy+mvWwnm
- s9p4uqVpTfEuzQ0/bE6t7dZdPBua7eYox1AQnk8JQDwC3Rn9kZq2O7u5KuJP5MfludMmQevm
- pHYEMF4vZuIpWcOrrSctJfIIEyhDoDmR34bCXAZfNJ4p4H6TPqPh671uMQV82CfTxTrMhGFq
- 8WYU2AH86FrVQfWoH09z1WqhlOm/KZhAV5FndwVjQJs1MRXD8QARAQABtCRBbGV4ZXkgS2Fy
- ZGFzaGV2c2tpeSA8YWlrQG96bGFicy5ydT6JAjgEEwECACIFAk+rT0sCGwMGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheAAAoJEIYTPdgrwSC5fAIP/0wf/oSYaCq9PhO0UP9zLSEz66SSZUf7
- AM9O1rau1lJpT8RoNa0hXFXIVbqPPKPZgorQV8SVmYRLr0oSmPnTiZC82x2dJGOR8x4E01gK
- TanY53J/Z6+CpYykqcIpOlGsytUTBA+AFOpdaFxnJ9a8p2wA586fhCZHVpV7W6EtUPH1SFTQ
- q5xvBmr3KkWGjz1FSLH4FeB70zP6uyuf/B2KPmdlPkyuoafl2UrU8LBADi/efc53PZUAREih
- sm3ch4AxaL4QIWOmlE93S+9nHZSRo9jgGXB1LzAiMRII3/2Leg7O4hBHZ9Nki8/fbDo5///+
- kD4L7UNbSUM/ACWHhd4m1zkzTbyRzvL8NAVQ3rckLOmju7Eu9whiPueGMi5sihy9VQKHmEOx
- OMEhxLRQbzj4ypRLS9a+oxk1BMMu9cd/TccNy0uwx2UUjDQw/cXw2rRWTRCxoKmUsQ+eNWEd
- iYLW6TCfl9CfHlT6A7Zmeqx2DCeFafqEd69DqR9A8W5rx6LQcl0iOlkNqJxxbbW3ddDsLU/Y
- r4cY20++WwOhSNghhtrroP+gouTOIrNE/tvG16jHs8nrYBZuc02nfX1/gd8eguNfVX/ZTHiR
- gHBWe40xBKwBEK2UeqSpeVTohYWGBkcd64naGtK9qHdo1zY1P55lHEc5Uhlk743PgAnOi27Q
- ns5zuQINBE+rT0sBEACnV6GBSm+25ACT+XAE0t6HHAwDy+UKfPNaQBNTTt31GIk5aXb2Kl/p
- AgwZhQFEjZwDbl9D/f2GtmUHWKcCmWsYd5M/6Ljnbp0Ti5/xi6FyfqnO+G/wD2VhGcKBId1X
- Em/B5y1kZVbzcGVjgD3HiRTqE63UPld45bgK2XVbi2+x8lFvzuFq56E3ZsJZ+WrXpArQXib2
- hzNFwQleq/KLBDOqTT7H+NpjPFR09Qzfa7wIU6pMNF2uFg5ihb+KatxgRDHg70+BzQfa6PPA
- o1xioKXW1eHeRGMmULM0Eweuvpc7/STD3K7EJ5bBq8svoXKuRxoWRkAp9Ll65KTUXgfS+c0x
- gkzJAn8aTG0z/oEJCKPJ08CtYQ5j7AgWJBIqG+PpYrEkhjzSn+DZ5Yl8r+JnZ2cJlYsUHAB9
- jwBnWmLCR3gfop65q84zLXRQKWkASRhBp4JK3IS2Zz7Nd/Sqsowwh8x+3/IUxVEIMaVoUaxk
- Wt8kx40h3VrnLTFRQwQChm/TBtXqVFIuv7/Mhvvcq11xnzKjm2FCnTvCh6T2wJw3de6kYjCO
- 7wsaQ2y3i1Gkad45S0hzag/AuhQJbieowKecuI7WSeV8AOFVHmgfhKti8t4Ff758Z0tw5Fpc
- BFDngh6Lty9yR/fKrbkkp6ux1gJ2QncwK1v5kFks82Cgj+DSXK6GUQARAQABiQIfBBgBAgAJ
- BQJPq09LAhsMAAoJEIYTPdgrwSC5NYEP/2DmcEa7K9A+BT2+G5GXaaiFa098DeDrnjmRvumJ
- BhA1UdZRdfqICBADmKHlJjj2xYo387sZpS6ABbhrFxM6s37g/pGPvFUFn49C47SqkoGcbeDz
- Ha7JHyYUC+Tz1dpB8EQDh5xHMXj7t59mRDgsZ2uVBKtXj2ZkbizSHlyoeCfs1gZKQgQE8Ffc
- F8eWKoqAQtn3j4nE3RXbxzTJJfExjFB53vy2wV48fUBdyoXKwE85fiPglQ8bU++0XdOr9oyy
- j1llZlB9t3tKVv401JAdX8EN0++ETiOovQdzE1m+6ioDCtKEx84ObZJM0yGSEGEanrWjiwsa
- nzeK0pJQM9EwoEYi8TBGhHC9ksaAAQipSH7F2OHSYIlYtd91QoiemgclZcSgrxKSJhyFhmLr
- QEiEILTKn/pqJfhHU/7R7UtlDAmFMUp7ByywB4JLcyD10lTmrEJ0iyRRTVfDrfVP82aMBXgF
- tKQaCxcmLCaEtrSrYGzd1sSPwJne9ssfq0SE/LM1J7VdCjm6OWV33SwKrfd6rOtvOzgadrG6
- 3bgUVBw+bsXhWDd8tvuCXmdY4bnUblxF2B6GOwSY43v6suugBttIyW5Bl2tXSTwP+zQisOJo
- +dpVG2pRr39h+buHB3NY83NEPXm1kUOhduJUA17XUY6QQCAaN4sdwPqHq938S3EmtVhsuQIN
- BFq54uIBEACtPWrRdrvqfwQF+KMieDAMGdWKGSYSfoEGGJ+iNR8v255IyCMkty+yaHafvzpl
- PFtBQ/D7Fjv+PoHdFq1BnNTk8u2ngfbre9wd9MvTDsyP/TmpF0wyyTXhhtYvE267Av4X/BQT
- lT9IXKyAf1fP4BGYdTNgQZmAjrRsVUW0j6gFDrN0rq2J9emkGIPvt9rQt6xGzrd6aXonbg5V
- j6Uac1F42ESOZkIh5cN6cgnGdqAQb8CgLK92Yc8eiCVCH3cGowtzQ2m6U32qf30cBWmzfSH0
- HeYmTP9+5L8qSTA9s3z0228vlaY0cFGcXjdodBeVbhqQYseMF9FXiEyRs28uHAJEyvVZwI49
- CnAgVV/n1eZa5qOBpBL+ZSURm8Ii0vgfvGSijPGbvc32UAeAmBWISm7QOmc6sWa1tobCiVmY
- SNzj5MCNk8z4cddoKIc7Wt197+X/X5JPUF5nQRvg3SEHvfjkS4uEst9GwQBpsbQYH9MYWq2P
- PdxZ+xQE6v7cNB/pGGyXqKjYCm6v70JOzJFmheuUq0Ljnfhfs15DmZaLCGSMC0Amr+rtefpA
- y9FO5KaARgdhVjP2svc1F9KmTUGinSfuFm3quadGcQbJw+lJNYIfM7PMS9fftq6vCUBoGu3L
- j4xlgA/uQl/LPneu9mcvit8JqcWGS3fO+YeagUOon1TRqQARAQABiQRsBBgBCAAgFiEEZSrP
- ibrORRTHQ99dhhM92CvBILkFAlq54uICGwICQAkQhhM92CvBILnBdCAEGQEIAB0WIQQIhvWx
- rCU+BGX+nH3N7sq0YorTbQUCWrni4gAKCRDN7sq0YorTbVVSD/9V1xkVFyUCZfWlRuryBRZm
- S4GVaNtiV2nfUfcThQBfF0sSW/aFkLP6y+35wlOGJE65Riw1C2Ca9WQYk0xKvcZrmuYkK3DZ
- 0M9/Ikkj5/2v0vxz5Z5w/9+IaCrnk7pTnHZuZqOh23NeVZGBls/IDIvvLEjpD5UYicH0wxv+
- X6cl1RoP2Kiyvenf0cS73O22qSEw0Qb9SId8wh0+ClWet2E7hkjWFkQfgJ3hujR/JtwDT/8h
- 3oCZFR0KuMPHRDsCepaqb/k7VSGTLBjVDOmr6/C9FHSjq0WrVB9LGOkdnr/xcISDZcMIpbRm
- EkIQ91LkT/HYIImL33ynPB0SmA+1TyMgOMZ4bakFCEn1vxB8Ir8qx5O0lHMOiWMJAp/PAZB2
- r4XSSHNlXUaWUg1w3SG2CQKMFX7vzA31ZeEiWO8tj/c2ZjQmYjTLlfDK04WpOy1vTeP45LG2
- wwtMA1pKvQ9UdbYbovz92oyZXHq81+k5Fj/YA1y2PI4MdHO4QobzgREoPGDkn6QlbJUBf4To
- pEbIGgW5LRPLuFlOPWHmIS/sdXDrllPc29aX2P7zdD/ivHABslHmt7vN3QY+hG0xgsCO1JG5
- pLORF2N5XpM95zxkZqvYfC5tS/qhKyMcn1kC0fcRySVVeR3tUkU8/caCqxOqeMe2B6yTiU1P
- aNDq25qYFLeYxg67D/4w/P6BvNxNxk8hx6oQ10TOlnmeWp1q0cuutccblU3ryRFLDJSngTEu
- ZgnOt5dUFuOZxmMkqXGPHP1iOb+YDznHmC0FYZFG2KAc9pO0WuO7uT70lL6larTQrEneTDxQ
- CMQLP3qAJ/2aBH6SzHIQ7sfbsxy/63jAiHiT3cOaxAKsWkoV2HQpnmPOJ9u02TPjYmdpeIfa
- X2tXyeBixa3i/6dWJ4nIp3vGQicQkut1YBwR7dJq67/FCV3Mlj94jI0myHT5PIrCS2S8LtWX
- ikTJSxWUKmh7OP5mrqhwNe0ezgGiWxxvyNwThOHc5JvpzJLd32VDFilbxgu4Hhnf6LcgZJ2c
- Zd44XWqUu7FzVOYaSgIvTP0hNrBYm/E6M7yrLbs3JY74fGzPWGRbBUHTZXQEqQnZglXaVB5V
- ZhSFtHopZnBSCUSNDbB+QGy4B/E++Bb02IBTGl/JxmOwG+kZUnymsPvTtnNIeTLHxN/H/ae0
- c7E5M+/NpslPCmYnDjs5qg0/3ihh6XuOGggZQOqrYPC3PnsNs3NxirwOkVPQgO6mXxpuifvJ
- DG9EMkK8IBXnLulqVk54kf7fE0jT/d8RTtJIA92GzsgdK2rpT1MBKKVffjRFGwN7nQVOzi4T
- XrB5p+6ML7Bd84xOEGsj/vdaXmz1esuH7BOZAGEZfLRCHJ0GVCSssg==
-Message-ID: <aec59f64-7c84-d341-64ee-9e9f18161ac9@ozlabs.ru>
-Date:   Tue, 4 Aug 2020 20:37:19 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BNGGP8nI26QQvsEtdjfefrmhKzpQ5Kf8DvxYjmO6N1s=;
+        b=SCRf4KRghl+WzFtjCFLhdieF/yErhcjcmRa8Uq/KvwA7aDpKqwwLBN/oEAVtl2SA2V
+         MVvkCwk2NjlzRmQjOCNyZ7hFSChcZkhGDDteSrUiFwBFVvFCIG7mMRZlBLZGtRbORA1h
+         VQnFH4HQkbPw1A9pp5nsLKDEqbffxIbieCNw/ZLth2A/yQ0SgYS/YsHHx5SFvGRF5PkB
+         YeAO0RRdJiVIK6AHgU25ciBd88xxdRAS62vxS1Czx+qOXkAwqhznmmGkMSxFl/ICdtwO
+         QX/UgOVctBgISQlLjoBdlHutFm/aDy+Wdoq/VLdvYACXkok7gvRO/t7feNm+9VqDKuQr
+         0Cvg==
+X-Gm-Message-State: AOAM532DNAC/UP7OUq9OV16yfm856sVLEZmOhmEjrUoUY0B8ZzPp6p+i
+        ufJOhFUyE2OC+Qi0iN6eQEIddQ==
+X-Google-Smtp-Source: ABdhPJyScsX2xR+pwN0T13dS1iijdQ58el2pg9EUEaeim5L9Peixs0Tx8EVJ5/wuCjT7xdedYbcYBg==
+X-Received: by 2002:a17:902:b20e:: with SMTP id t14mr851080plr.58.1596537540953;
+        Tue, 04 Aug 2020 03:39:00 -0700 (PDT)
+Received: from localhost ([122.162.173.150])
+        by smtp.gmail.com with ESMTPSA id t19sm23230670pfq.179.2020.08.04.03.38.59
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 04 Aug 2020 03:38:59 -0700 (PDT)
+Date:   Tue, 4 Aug 2020 16:08:57 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        cristian.marussi@arm.com, rjw@rjwysocki.net
+Subject: Re: [PATCH 0/4] CPUFreq statistics retrieved by drivers
+Message-ID: <20200804103857.mxgkmt6qmmzejuzb@vireshk-mac-ubuntu>
+References: <20200729151208.27737-1-lukasz.luba@arm.com>
+ <20200730085333.qubrsv7ufqninihd@vireshk-mac-ubuntu>
+ <20200730091014.GA13158@bogus>
+ <3b3a56e9-29ec-958f-fb3b-c689a9389d2f@arm.com>
+ <20200804053502.35d3x3vnb3mggtqs@vireshk-mac-ubuntu>
+ <f784bf30-83a6-55ff-8fa6-f7bd2d4399b9@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200804100912.GA2671027@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f784bf30-83a6-55ff-8fa6-f7bd2d4399b9@arm.com>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 04/08/2020 20:09, Greg Kroah-Hartman wrote:
-> On Tue, Aug 04, 2020 at 08:02:27PM +1000, Alexey Kardashevskiy wrote:
->> Ping?
->>
->> ps. Greg, your name came up in "git format-patch -M --stdout -1 HEAD |
->> ./scripts/get_maintainer.pl --norolestats --l" ;)
+On 04-08-20, 11:29, Lukasz Luba wrote:
+> On 8/4/20 6:35 AM, Viresh Kumar wrote:
+> > IIUC, the only concern right now is to capture stats with fast switch ? Maybe we
+> > can do something else in that case and brainstorm a bit..
 > 
-> It's in my queue to review, but can't do anything now that the merge
-> window is open.
-
-Ah ok. No hurry.
-
-> Also, as it's an RFC, that means you don't think it should be merged, so
-> perhaps do some work to verify that you think this is correct and resend
-> it?
-
-It is correct, I am just not too sure if I should add such checks
-everywhere, that's all. Thanks,
-
+> Correct, the fast switch is the only concern right now and not tracked. We
+> could fill in that information with statistics data from firmware
+> with a cpufreq driver help.
 > 
-> thanks,
+> I could make the if from patch 1/4 covering narrowed case, when
+> fast switch is present, check for drivers stats.
+> Something like:
+> -----------8<------------------------------------------------------------
+> if (policy->fast_switch_enabled)
+> 	if (policy->has_driver_stats)
+> 		return cpufreq_stats_present_driver_data(policy, buf);
+> 	else
+> 		return 0;
+> -------------->8----------------------------------------------------------
+
+I don't think doing it with help of firmware is the right thing to do
+here then. For another platform we may not have a firmware which can
+help us, we need something in the opp core itself for that. Lemme see
+if I can do something about it.
+
+> > Why is firmware the governor here ? Aren't you talking about the simple fast
+> > switch case only ?
 > 
-> greg k-h
+> I used a term 'governor' for the firmware because it makes the final
+> set for the frequency. It (FW) should respect the frequency value
+> set using the fast switch. I don't know how other firmware (e.g. Intel)
+> treats this fast switch value or if they even expose FW stats, though.
+
+For Intel I think, Linux is one of the entities that vote for deciding
+the frequency of the CPUs and the firmware (after taking all such
+factors into account) chooses a frequency by its own, which must be >=
+the frequency requested by Linux.
+
+> You can read about this statistics region in [1] at:
+> 4.5.5 Performance domain statistics shared memory region
 > 
+> > 
+> > Over that, I think this cpufreq stats information isn't parsed by any tool right
+> > now and tweaking it a bit won't hurt anyone (like if we start capturing things a
+> > bit differently). So we may not want to worry about breaking userspace ABI here,
+> > if what we are looking to do is the right thing to do.
+> 
+> So, there is some hope... IMHO it would be better to have this cpufreq
+> stats in normal location, rather then in scmi debugfs.
+
+I agree.
+
+> > I am not sure what notifications are we talking about here.
+> 
+> There is a notification mechanism described in the SCMI spec [1] at
+> 4.5.4 Notifications.
+> We were referring to that mechanism.
+
+Ahh, I see. All I was thinking was about the cpufreq specific
+notifiers :)
 
 -- 
-Alexey
+viresh
