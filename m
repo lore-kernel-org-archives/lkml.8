@@ -2,81 +2,70 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14BAEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E560C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FA412076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25E9A2076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:10:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596503406;
+	bh=I6PD5Cvd9NZnMudYPuSB0csBKRSn2TvJXVEH3qDmFy8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=vWHagbJfraGa0CVRA3A7kVphHox0aXCDCHlmRfHhIk8RGjiWDKQB6U2WTVCaOnfWB
+	 VTImVmDy/EsXy9SowkjVLxKsmd7lkHsuSl47sn/qO+5bnqcas2dPYMo3OUj+HtFfxa
+	 mZ9WS7oIiRKNzOpp2x4suoc+Kciz3Vtqz62E1IGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbgHDBJ1 (ORCPT
+        id S1728629AbgHDBKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 21:09:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47244 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbgHDBJ1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 21:09:27 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37E2AC06174A;
-        Mon,  3 Aug 2020 18:09:27 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k2lS5-008ndS-Kd; Tue, 04 Aug 2020 01:09:13 +0000
-Date:   Tue, 4 Aug 2020 02:09:13 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-doc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
-        Hridya Valsaraju <hridya@google.com>,
-        Ioannis Ilkos <ilkos@google.com>,
-        John Stultz <john.stultz@linaro.org>,
-        kernel-team <kernel-team@android.com>
-Subject: Re: [PATCH 2/2] dmabuf/tracing: Add dma-buf trace events
-Message-ID: <20200804010913.GA2096725@ZenIV.linux.org.uk>
-References: <20200803144719.3184138-1-kaleshsingh@google.com>
- <20200803144719.3184138-3-kaleshsingh@google.com>
- <20200803154125.GA23808@casper.infradead.org>
- <CAJuCfpFLikjaoopvt+vGN3W=m9auoK+DLQNgUf-xUbYfC=83Mw@mail.gmail.com>
- <20200803161230.GB23808@casper.infradead.org>
- <CAJuCfpGot1Lr+eS_AU30gqrrjc0aFWikxySe0667_GTJNsGTMw@mail.gmail.com>
- <20200803222831.GI1236603@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200803222831.GI1236603@ZenIV.linux.org.uk>
+        Mon, 3 Aug 2020 21:10:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37928 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726276AbgHDBKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 21:10:04 -0400
+Subject: Re: [GIT PULL] platform-drivers-x86 for 5.9-1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596503404;
+        bh=I6PD5Cvd9NZnMudYPuSB0csBKRSn2TvJXVEH3qDmFy8=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=kHl9bRHxx+YW8j/A3qv/a6Dty82G7yeyb2Kcw0TSXQgpSdski5yz0jSOdu1B1ykaQ
+         9+yy7pS0iWnpT4aM1ZejO98nnghQYRUNhkHnoLv0QO2dEiuguy3e4gNRnIVGPheIGk
+         gbjDcWmvm4RBwaGkgA2F80vnHlPTSahFU+way604=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200803113352.GA1413788@smile.fi.intel.com>
+References: <20200803113352.GA1413788@smile.fi.intel.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200803113352.GA1413788@smile.fi.intel.com>
+X-PR-Tracked-Remote: git://git.infradead.org/linux-platform-drivers-x86.git
+ tags/platform-drivers-x86-v5.9-1
+X-PR-Tracked-Commit-Id: 67186653c90360922e3965d0376a61dbf6c42711
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 09a0bd07764359650d41dbcb723f81321e523217
+Message-Id: <159650340427.9528.1715576343141241987.pr-tracker-bot@kernel.org>
+Date:   Tue, 04 Aug 2020 01:10:04 +0000
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 11:28:31PM +0100, Al Viro wrote:
+The pull request you sent on Mon, 3 Aug 2020 14:33:52 +0300:
 
-> IOW, what the hell is that horror for?  You do realize, for example, that there's
-> such thing as dup(), right?  And dup2() as well.  And while we are at it, how
-> do you keep track of removals, considering the fact that you can stick a file
-> reference into SCM_RIGHTS datagram sent to yourself, close descriptors and an hour
-> later pick that datagram, suddenly getting descriptor back?
-> 
-> Besides, "I have no descriptors left" != "I can't be currently sitting in the middle
-> of syscall on that sucker"; close() does *NOT* terminate ongoing operations.
-> 
-> You are looking at the drastically wrong abstraction level.  Please, describe what
-> it is that you are trying to achieve.
+> git://git.infradead.org/linux-platform-drivers-x86.git tags/platform-drivers-x86-v5.9-1
 
-_IF_ it's "who keeps a particularly long-lived sucker pinned", I would suggest
-fuser(1) run when you detect that kind of long-lived dmabuf.  With events generated
-by their constructors and destructors, and detection of longevity done based on
-that.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/09a0bd07764359650d41dbcb723f81321e523217
 
-But that's only a semi-blind guess at the things you are trying to achieve; please,
-describe what it really is.
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
