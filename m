@@ -2,139 +2,137 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A74C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DDD62070A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 711432075A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:50:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="NtPMZgXb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730010AbgHDItp (ORCPT
+        id S1730016AbgHDIut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 04:49:45 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:35136 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726233AbgHDItp (ORCPT
+        Tue, 4 Aug 2020 04:50:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33458 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729586AbgHDIut (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 04:49:45 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0U4jVMG6_1596530971;
-Received: from B-J2UMLVDL-1650.local(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0U4jVMG6_1596530971)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 04 Aug 2020 16:49:39 +0800
-Subject: Re: [PATCH v2] virtio_ring: use alloc_pages_node for NUMA-aware
- allocation
-From:   Shile Zhang <shile.zhang@linux.alibaba.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Jiang Liu <liuj97@gmail.com>, linux-pci@vger.kernel.org,
-        bhelgaas@google.com
-References: <20200721070013.62894-1-shile.zhang@linux.alibaba.com>
- <20200721041550-mutt-send-email-mst@kernel.org>
- <d16c8191-3837-8734-8cdf-ae6dd75725f7@linux.alibaba.com>
- <222b40f1-a36c-0375-e965-cd949e8b9eeb@linux.alibaba.com>
-Message-ID: <d01f138c-9ec7-1740-77f1-6577f7f0b7d4@linux.alibaba.com>
-Date:   Tue, 4 Aug 2020 16:49:31 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        Tue, 4 Aug 2020 04:50:49 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2626BC06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 01:50:49 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id p14so1921175wmg.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 01:50:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2ZcJP9tlcrLa5x4h1C/bOIZ/fSEfOKvm1WToVJD+VSA=;
+        b=NtPMZgXbZfVJMTejbKLRZ0vN5MYf8LOukWY7RxFBgD3scEGI8tBTHAoaCsvP3DE/Sm
+         IOYDy1hDRU7C0uUxjEzRcpoW/IxF1ja+ZOVFKHvpqYmumHNUKQ1z178sRRzGrJtWK0Bc
+         TRL2Tpj7Q05COmQmWZa/HUM8LsrklhPkbFqlN3gssbLAWtIFhxtnf9vVL2J82cJ0G+CY
+         BAN7r7+YTfjdcEcvwRMwmXFHWl0gy6AKFJzSIYSvpTF/4HXYVuRE8tTYCsTu4WdWfLvK
+         V+nHiL3PBvEPf5ffMtkuUdywaW8AK2fvzVopVjIefNesj/xeIqRxSX6K0SpHVydv9Zs3
+         Jisg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2ZcJP9tlcrLa5x4h1C/bOIZ/fSEfOKvm1WToVJD+VSA=;
+        b=MmTTkDDI6e3zgG7oUfpLLFQtQiyFiDSLjzTb0Z42LIwwnogqaFN7HAxTdNjtKpfRbP
+         6ehJIyxk18DOucLpAwQJZeOK+AtnEMnPAKhORI5BJtyoRKMJsWmWLtB5QyDRpDnvuQiy
+         rThfSxuD0UCFGUytuI0/YBbYNBgo45uVjXBPfIPe4H3fkK7fcD0Sum3VRX6sdMJHQ1i8
+         IbHV62ooaSxmDb0TMyO4bT3PGfBq3Ytt8Yg32S8EgO9hagSlXfi361QUiF+E+xlnziLU
+         xjC24/Ke7XmPcVugnTJdE1OGbI8gJZiOX0XyuOxdEUKUQ0p540sHwO1Tph/W4EotX5yn
+         oqFg==
+X-Gm-Message-State: AOAM533UHpOTWtjOOD8MFJjuYijevTVrtGHOThuIWo3w+flHFZfF9pUS
+        62LauYPQj02CUpzihvD/e5I=
+X-Google-Smtp-Source: ABdhPJxYzSIsXp1kd7dXZ7jJ2jad04Z07RAKMcXJlFXwD9kayX+qxpgT7Pr4jN683ayBDXZzSvJxZw==
+X-Received: by 2002:a1c:ddc3:: with SMTP id u186mr2937757wmg.72.1596531047104;
+        Tue, 04 Aug 2020 01:50:47 -0700 (PDT)
+Received: from [192.168.1.20] ([213.122.218.185])
+        by smtp.googlemail.com with ESMTPSA id g7sm29636251wrv.82.2020.08.04.01.50.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Aug 2020 01:50:46 -0700 (PDT)
+Subject: Re: PATCH: rtsx_pci driver - don't disable the rts5229 card reader on
+ Intel NUC boxes
+To:     =?UTF-8?B?5ZCz5piK5r6EIFJpY2t5?= <ricky_wu@realtek.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "philquadra@gmail.com" <philquadra@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+References: <862172f0-cd23-800c-27b1-27cb49e99099@googlemail.com>
+ <a9a94d7f-4873-7a10-4911-f3c760257c5c@googlemail.com>
+ <5729c72bbc2740d3917619c85e2fde58@realtek.com>
+ <20200804074831.GB1761483@kroah.com>
+ <11e224ca299b48f1bea07082f2ff7c00@realtek.com>
+From:   Chris Clayton <chris2553@googlemail.com>
+Message-ID: <0afbd711-0bda-d9a3-138d-5c713b4e2ed9@googlemail.com>
+Date:   Tue, 4 Aug 2020 09:50:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <222b40f1-a36c-0375-e965-cd949e8b9eeb@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <11e224ca299b48f1bea07082f2ff7c00@realtek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael & Bjorn,
 
-Sorry for the ping,
-but how about this patch/issue? any comments/suggestions?
 
-Thanks!
+On 04/08/2020 09:08, 吳昊澄 Ricky wrote:
+>> -----Original Message-----
+>> From: gregkh@linuxfoundation.org [mailto:gregkh@linuxfoundation.org]
+>> Sent: Tuesday, August 04, 2020 3:49 PM
+>> To: 吳昊澄 Ricky
+>> Cc: Chris Clayton; LKML; rdunlap@infradead.org; philquadra@gmail.com; Arnd
+>> Bergmann
+>> Subject: Re: PATCH: rtsx_pci driver - don't disable the rts5229 card reader on
+>> Intel NUC boxes
+>>
+>> On Tue, Aug 04, 2020 at 02:44:41AM +0000, 吳昊澄 Ricky wrote:
+>>> Hi Chris,
+>>>
+>>> rtsx_pci_write_register(pcr, FPDTL, OC_POWER_DOWN, OC_POWER_DOWN);
+>>> This register operation saved power under 1mA, so if do not care the 1mA
+>> power we can have a patch to remove it, make compatible with NUC6
+>>> We tested others our card reader that remove it, we did not see any side effect
+>>>
+>>> Hi Greg k-h,
+>>>
+>>> Do you have any comments?
+>>
+>> comments on what?  I don't know what you are responding to here, sorry.
+>>
+> Can we have a patch to kernel for NUC6? It may cause more power(1mA) but it will have more compatibility
+> 
 
-On 2020/7/27 21:10, Shile Zhang wrote:
-> 
-> 
-> On 2020/7/21 19:28, Shile Zhang wrote:
+Ricky,
+
+I don't understand why you want to completely remove the code that sets up the 1mA power saving. That code was there
+even before your patch (bede03a579b3b4a036003c4862cc1baa4ddc351f), so I assume it benefits some of the Realtek card
+readers. Before your patch however, rtsx_pci_init_ocp() was not called for the rts5229 reader, but the patch introduced
+an unconditional call to that function into rtsx_pci_init_hw(), which is run for the rts5229. That is what now disables
+the card reader.
+
+Now, I don't know whether other cards are affected, although I don't recall seeing any reported as I searched the kernel
+and ubuntu bugzillas for any analysis of the problem. I know this is not what the patch I sent does, but having thought
+about it more, seems to me that the simplest fix is to skip the new call to rtsx_pci_init_ocp() if the reader is an rts5229.
+
+If you agree, I can prepare a patch and send it to you. Whatever the solution is, it will also be needed in the stable
+kernels later than 5.0.
+
+Chris
+>> greg k-h
 >>
->>
->> On 2020/7/21 16:18, Michael S. Tsirkin wrote:
->>> On Tue, Jul 21, 2020 at 03:00:13PM +0800, Shile Zhang wrote:
->>>> Use alloc_pages_node() allocate memory for vring queue with proper
->>>> NUMA affinity.
->>>>
->>>> Reported-by: kernel test robot <lkp@intel.com>
->>>> Suggested-by: Jiang Liu <liuj97@gmail.com>
->>>> Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
->>>
->>> Do you observe any performance gains from this patch?
->>
->> Thanks for your comments!
->> Yes, the bandwidth can boost more than doubled (from 30Gbps to 80GBps) 
->> with this changes in my test env (8 numa nodes), with netperf test.
->>
->>>
->>> I also wonder why isn't the probe code run on the correct numa node?
->>> That would fix a wide class of issues like this without need to tweak
->>> drivers.
->>
->> Good point, I'll check this, thanks!
-> 
-> Sorry, I have no idea about how the probe code to grab the appropriate 
-> NUMA node.
-> 
->>
->>>
->>> Bjorn, what do you think? Was this considered?
-> 
-> Hi Bjorn, Could you please give any comments about this issue?
-> Thanks!
-> 
->>>
->>>> ---
->>>> Changelog
->>>> v1 -> v2:
->>>> - fixed compile warning reported by LKP.
->>>> ---
->>>>   drivers/virtio/virtio_ring.c | 10 ++++++----
->>>>   1 file changed, 6 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/virtio/virtio_ring.c 
->>>> b/drivers/virtio/virtio_ring.c
->>>> index 58b96baa8d48..d38fd6872c8c 100644
->>>> --- a/drivers/virtio/virtio_ring.c
->>>> +++ b/drivers/virtio/virtio_ring.c
->>>> @@ -276,9 +276,11 @@ static void *vring_alloc_queue(struct 
->>>> virtio_device *vdev, size_t size,
->>>>           return dma_alloc_coherent(vdev->dev.parent, size,
->>>>                         dma_handle, flag);
->>>>       } else {
->>>> -        void *queue = alloc_pages_exact(PAGE_ALIGN(size), flag);
->>>> -
->>>> -        if (queue) {
->>>> +        void *queue = NULL;
->>>> +        struct page *page = 
->>>> alloc_pages_node(dev_to_node(vdev->dev.parent),
->>>> +                             flag, get_order(size));
->>>> +        if (page) {
->>>> +            queue = page_address(page);
->>>>               phys_addr_t phys_addr = virt_to_phys(queue);
->>>>               *dma_handle = (dma_addr_t)phys_addr;
->>>> @@ -308,7 +310,7 @@ static void vring_free_queue(struct 
->>>> virtio_device *vdev, size_t size,
->>>>       if (vring_use_dma_api(vdev))
->>>>           dma_free_coherent(vdev->dev.parent, size, queue, dma_handle);
->>>>       else
->>>> -        free_pages_exact(queue, PAGE_ALIGN(size));
->>>> +        free_pages((unsigned long)queue, get_order(size));
->>>>   }
->>>>   /*
->>>> -- 
->>>> 2.24.0.rc2
+>> ------Please consider the environment before printing this e-mail.
