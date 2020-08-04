@@ -2,275 +2,116 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F13C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA16C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC50122B40
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:49:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MxG/dpyM"
+	by mail.kernel.org (Postfix) with ESMTP id 046352177B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:49:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596556194;
+	bh=QsTMC6SLev6ciXKGAQQLQoUY0jFy36C74ksPMkq7COk=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=lQ9yJKXBvOESVxpRTUi5bJvyyhPc6rKW2SGzD2tDKfmGS9A22n6JErsHI1mIhmCay
+	 cK/0A+LTKmOGMJC9lNWcztlW9LeZB3QLE7D8cx6HIgfLPFcfYCzpgrbKs1KbWq8LXJ
+	 l99Geu8ct8FiDPUs3MA1jhMnFaAktzi/z2F7Wzzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbgHDPtT (ORCPT
+        id S1728751AbgHDPtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 11:49:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgHDPsz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 11:48:55 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ED3BC06174A;
-        Tue,  4 Aug 2020 08:48:55 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id kq25so30025502ejb.3;
-        Tue, 04 Aug 2020 08:48:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=aHpL707Nss711rXrUizpThLuemDkqB5ODmR6Us/BMpc=;
-        b=MxG/dpyMaF6vYnVh6cmGFs2sWeiZm+D1y5e+wPKRIQHAckDajxPdgAPQWawbopVVZC
-         731wC5XDRn8ehsL4GKW6TgjYQ3S+Rnl/MRVDB2d3w7KM8hcGjH5s1s49jzGYJLTIfT2L
-         +jPDLE1woC+77z3Pnk4cxhOsNxA+vH1Pvkeaj9Lzu3PXtLlr8kZdtcONi17AkXOqLwoK
-         kY/4EANA3lBd0/8ZRubKxgdaGarZ0XR7g27zO4UGCgJ+g0tI7z99TDlc1U/5U/2CxZSN
-         ktcB8EareRzLEbU+g4P0CLxKgPnsYM4GejeJg954pD5GHK2+ScB3Ye1gWWCT9VFJRoLi
-         mrSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=aHpL707Nss711rXrUizpThLuemDkqB5ODmR6Us/BMpc=;
-        b=dUVy/YswA3Y04gCrh3T+gSlua22Z4R7PN773/Kch9r0EYBHNtbD9ACkJi0Kmstketo
-         Gu77DP2mQl8vrrISJsToeYfskJfJXdETUJZpSmmCASH+2Bq/wDUf4ykNF3NiVXJMECy5
-         CwkEARdigPvAloqwMdD10bfXwaLIhCFpN4OeEAVPq41ON0W1P385OPCnaxJ9C9I8v6Tl
-         BV886P30w68OUqb5LjL541sjyze/AUIXyzjgrxGwChZ3Jv+cIbm6Mvqr+36HkUoCDVWJ
-         ZFmeCZ5Mf9DVu0XrKr5eHxXsZaqTcfm7/inaf/M8gOQ5XkAm50U3xKftXpsV1uiptU/k
-         Gj1g==
-X-Gm-Message-State: AOAM532qFVkCu/qIUBGwVEySC2f8GQw6kJTRPPl4ND69P7DxKUysReZL
-        GxLQB9pq1RvCQn240iVdAXI=
-X-Google-Smtp-Source: ABdhPJx2ys+HLh3jETOmrP6+gdnOSBsONXpK15a0Qi+Y2ZO5ZSSbKWg6FJqq9i71dQgv/BSsF4LqiQ==
-X-Received: by 2002:a17:907:398:: with SMTP id ss24mr5841408ejb.311.1596556133900;
-        Tue, 04 Aug 2020 08:48:53 -0700 (PDT)
-Received: from localhost.localdomain ([185.200.214.168])
-        by smtp.gmail.com with ESMTPSA id m24sm18686780eje.80.2020.08.04.08.48.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 08:48:53 -0700 (PDT)
-From:   izabela.bakollari@gmail.com
-To:     nhorman@tuxdriver.com, davem@davemloft.net, kuba@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        izabela.bakollari@gmail.com
-Subject: [PATCHv2 net-next--in-reply-to=<20200707171515.110818-1-izabela.bakollari@gmail.com>]  dropwatch: Support monitoring of dropped frames
-Date:   Tue,  4 Aug 2020 17:48:51 +0200
-Message-Id: <20200804154851.44141-1-izabela.bakollari@gmail.com>
-X-Mailer: git-send-email 2.18.4
+        Tue, 4 Aug 2020 11:49:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55082 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728880AbgHDPtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 11:49:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AF6421744;
+        Tue,  4 Aug 2020 15:49:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596556172;
+        bh=QsTMC6SLev6ciXKGAQQLQoUY0jFy36C74ksPMkq7COk=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=HLYhnrNCP+LU+0Z7YJBOjhOf5u6gP45nqyYoZxh0fUnqECOE0ZJsJkDhZ1DOIeuJh
+         3Z0jfjTITF80mzZqnG19XomRa0Su0varVijd0J0vHIROLImnW1BGwaiL76s44i08/P
+         B0CA+7vHMdl176RsN13IxUxd1v0Y087cocISFRG0=
+Date:   Tue, 4 Aug 2020 17:49:52 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org, speakup@linux-speakup.org
+Subject: Re: [PATCH 2/2] speakup: only build serialio when ISA is enabled
+Message-ID: <20200804154952.GB495852@kroah.com>
+References: <20200804111332.dex7jobmabifdzw5@function>
+ <20200804113413.GA181242@kroah.com>
+ <20200804114951.ijs3hnezi4f64nll@function>
+ <20200804115817.GC203147@kroah.com>
+ <20200804153542.zowupa4ygdgxnciu@function>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200804153542.zowupa4ygdgxnciu@function>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Izabela Bakollari <izabela.bakollari@gmail.com>
+On Tue, Aug 04, 2020 at 05:35:42PM +0200, Samuel Thibault wrote:
+> Greg KH, le mar. 04 août 2020 13:58:17 +0200, a ecrit:
+> > 	ERROR: modpost: "spk_serial_io_ops" [drivers/accessibility/speakup/speakup_keypc.ko] undefined!
+> > 	ERROR: modpost: "spk_stop_serial_interrupt" [drivers/accessibility/speakup/speakup_keypc.ko] undefined!
+> 
+> Oh, indeed, these are not covered by the first patch.
+> 
+> I realize that KEYPC depends on ISA, but with COMPILE_TEST as
+> alternative. We can build serialio in the COMPILE_TEST case too, I'll
+> update the patches.
+> 
+> But then we'll still have:
+> 
+> > the riscv build issues.
+> 
+> Actually I was surprised by the riscv build issue: the issue is within
+> riscv's inb() implementation, serialio.c is only calling it.
+> arch/riscv/include/asm/io.h says:
+> 
+> #define PCI_IOBASE		((void __iomem *)PCI_IO_START)
+> [...]
+> #define inb(c)		({ u8  __v; __io_pbr(); __v = readb_cpu((void*)(PCI_IOBASE + (c))); __io_par(__v); __v; })
+> 
+> and thus yes it's arithmetic over a (void*) pointer, the caller cannot
+> do anything about it.
 
-Dropwatch is a utility that monitors dropped frames by having userspace
-record them over the dropwatch protocol over a file. This augument
-allows live monitoring of dropped frames using tools like tcpdump.
+And that's fine, math with pointers, even void ones, is ok.
 
-With this feature, dropwatch allows two additional commands (start and
-stop interface) which allows the assignment of a net_device to the
-dropwatch protocol. When assinged, dropwatch will clone dropped frames,
-and receive them on the assigned interface, allowing tools like tcpdump
-to monitor for them.
+I wonder why riscv was complaining about that.  It's not nice, but it is
+valid C.
 
-With this feature, create a dummy ethernet interface (ip link add dev
-dummy0 type dummy), assign it to the dropwatch kernel subsystem, by using
-these new commands, and then monitor dropped frames in real time by
-running tcpdump -i dummy0.
+> 8250_port.c itself uses inb(), doesn't it get a warning as well? Or is
+> it getting compiled-out on riscv because of some Kconfig condition?
 
-Signed-off-by: Izabela Bakollari <izabela.bakollari@gmail.com>
----
-Changes in v2:
-- protect the dummy ethernet interface from being changed by another
-thread/cpu
----
- include/uapi/linux/net_dropmon.h |  3 ++
- net/core/drop_monitor.c          | 84 ++++++++++++++++++++++++++++++++
- 2 files changed, 87 insertions(+)
+Probably this.
 
-diff --git a/include/uapi/linux/net_dropmon.h b/include/uapi/linux/net_dropmon.h
-index 67e31f329190..e8e861e03a8a 100644
---- a/include/uapi/linux/net_dropmon.h
-+++ b/include/uapi/linux/net_dropmon.h
-@@ -58,6 +58,8 @@ enum {
- 	NET_DM_CMD_CONFIG_NEW,
- 	NET_DM_CMD_STATS_GET,
- 	NET_DM_CMD_STATS_NEW,
-+	NET_DM_CMD_START_IFC,
-+	NET_DM_CMD_STOP_IFC,
- 	_NET_DM_CMD_MAX,
- };
- 
-@@ -93,6 +95,7 @@ enum net_dm_attr {
- 	NET_DM_ATTR_SW_DROPS,			/* flag */
- 	NET_DM_ATTR_HW_DROPS,			/* flag */
- 	NET_DM_ATTR_FLOW_ACTION_COOKIE,		/* binary */
-+	NET_DM_ATTR_IFNAME,			/* string */
- 
- 	__NET_DM_ATTR_MAX,
- 	NET_DM_ATTR_MAX = __NET_DM_ATTR_MAX - 1
-diff --git a/net/core/drop_monitor.c b/net/core/drop_monitor.c
-index 8e33cec9fc4e..781e69876d2f 100644
---- a/net/core/drop_monitor.c
-+++ b/net/core/drop_monitor.c
-@@ -30,6 +30,7 @@
- #include <net/genetlink.h>
- #include <net/netevent.h>
- #include <net/flow_offload.h>
-+#include <net/sock.h>
- 
- #include <trace/events/skb.h>
- #include <trace/events/napi.h>
-@@ -46,6 +47,7 @@
-  */
- static int trace_state = TRACE_OFF;
- static bool monitor_hw;
-+struct net_device *interface;
- 
- /* net_dm_mutex
-  *
-@@ -54,6 +56,8 @@ static bool monitor_hw;
-  */
- static DEFINE_MUTEX(net_dm_mutex);
- 
-+static DEFINE_SPINLOCK(interface_lock);
-+
- struct net_dm_stats {
- 	u64 dropped;
- 	struct u64_stats_sync syncp;
-@@ -255,6 +259,21 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
- 
- out:
- 	spin_unlock_irqrestore(&data->lock, flags);
-+	spin_lock_irqsave(&interface_lock, flags);
-+	if (interface && interface != skb->dev) {
-+		skb = skb_clone(skb, GFP_ATOMIC);
-+		if (skb) {
-+			skb->dev = interface;
-+			spin_unlock_irqrestore(&interface_lock, flags);
-+			netif_receive_skb(skb);
-+		} else {
-+			spin_unlock_irqrestore(&interface_lock, flags);
-+			pr_err("dropwatch: Not enough memory to clone dropped skb\n");
-+			return;
-+		}
-+	} else {
-+		spin_unlock_irqrestore(&interface_lock, flags);
-+	}
- }
- 
- static void trace_kfree_skb_hit(void *ignore, struct sk_buff *skb, void *location)
-@@ -1315,6 +1334,53 @@ static int net_dm_cmd_trace(struct sk_buff *skb,
- 	return -EOPNOTSUPP;
- }
- 
-+static int net_dm_interface_start(struct net *net, const char *ifname)
-+{
-+	struct net_device *nd = dev_get_by_name(net, ifname);
-+
-+	if (nd)
-+		interface = nd;
-+	else
-+		return -ENODEV;
-+
-+	return 0;
-+}
-+
-+static int net_dm_interface_stop(struct net *net, const char *ifname)
-+{
-+	dev_put(interface);
-+	interface = NULL;
-+
-+	return 0;
-+}
-+
-+static int net_dm_cmd_ifc_trace(struct sk_buff *skb, struct genl_info *info)
-+{
-+	struct net *net = sock_net(skb->sk);
-+	char ifname[IFNAMSIZ];
-+
-+	if (net_dm_is_monitoring())
-+		return -EBUSY;
-+
-+	memset(ifname, 0, IFNAMSIZ);
-+	nla_strlcpy(ifname, info->attrs[NET_DM_ATTR_IFNAME], IFNAMSIZ - 1);
-+
-+	switch (info->genlhdr->cmd) {
-+	case NET_DM_CMD_START_IFC:
-+		if (!interface)
-+			return net_dm_interface_start(net, ifname);
-+		else
-+			return -EBUSY;
-+	case NET_DM_CMD_STOP_IFC:
-+		if (interface)
-+			return net_dm_interface_stop(net, interface->name);
-+		else
-+			return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
- static int net_dm_config_fill(struct sk_buff *msg, struct genl_info *info)
- {
- 	void *hdr;
-@@ -1503,6 +1569,7 @@ static int dropmon_net_event(struct notifier_block *ev_block,
- 	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
- 	struct dm_hw_stat_delta *new_stat = NULL;
- 	struct dm_hw_stat_delta *tmp;
-+	unsigned long flags;
- 
- 	switch (event) {
- 	case NETDEV_REGISTER:
-@@ -1529,6 +1596,12 @@ static int dropmon_net_event(struct notifier_block *ev_block,
- 				}
- 			}
- 		}
-+		spin_lock_irqsave(&interface_lock, flags);
-+		if (interface && interface == dev) {
-+			dev_put(interface);
-+			interface = NULL;
-+		}
-+		spin_unlock_irqrestore(&interface_lock, flags);
- 		mutex_unlock(&net_dm_mutex);
- 		break;
- 	}
-@@ -1543,6 +1616,7 @@ static const struct nla_policy net_dm_nl_policy[NET_DM_ATTR_MAX + 1] = {
- 	[NET_DM_ATTR_QUEUE_LEN] = { .type = NLA_U32 },
- 	[NET_DM_ATTR_SW_DROPS]	= {. type = NLA_FLAG },
- 	[NET_DM_ATTR_HW_DROPS]	= {. type = NLA_FLAG },
-+	[NET_DM_ATTR_IFNAME] = {. type = NLA_STRING, .len = IFNAMSIZ },
- };
- 
- static const struct genl_ops dropmon_ops[] = {
-@@ -1570,6 +1644,16 @@ static const struct genl_ops dropmon_ops[] = {
- 		.cmd = NET_DM_CMD_STATS_GET,
- 		.doit = net_dm_cmd_stats_get,
- 	},
-+	{
-+		.cmd = NET_DM_CMD_START_IFC,
-+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
-+		.doit = net_dm_cmd_ifc_trace,
-+	},
-+	{
-+		.cmd = NET_DM_CMD_STOP_IFC,
-+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
-+		.doit = net_dm_cmd_ifc_trace,
-+	},
- };
- 
- static int net_dm_nl_pre_doit(const struct genl_ops *ops,
--- 
-2.18.4
+> I
+> see that the whole drivers/tty/serial is under HAS_IOMEM, and that's the
+> only condition I can see for 8250_port.c (except SERIAL_8250 of course),
+> is that it, or is SERIAL_8250 just not enabled in the riscv bot?
+> 
+> Actually the warning seems new, when looking at the Debian build log:
+> 
+> https://buildd.debian.org/status/fetch.php?pkg=linux&arch=riscv64&ver=5.7.10-1&stamp=1595803499&raw=0
+> 
+> and looking for serialio.c, I do not see a warning, and its code hasn't
+> changed. Is the build bot compiler just more talkative?
 
+It's more talkative at times, and maybe the riscv code changed too.
+
+Let's see if any of their developers care about it :)
+
+thanks,
+
+greg k-h
