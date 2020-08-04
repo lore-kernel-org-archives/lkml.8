@@ -2,152 +2,166 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D62C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C0B220738
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC8120738
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:39:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="kgmfeQ16";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SuTtTF54"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730239AbgHDLiz (ORCPT
+        id S1730267AbgHDLjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 07:38:55 -0400
-Received: from foss.arm.com ([217.140.110.172]:43024 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729799AbgHDLiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 07:38:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D089030E;
-        Tue,  4 Aug 2020 04:38:54 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.54])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CDA833F6CF;
-        Tue,  4 Aug 2020 04:38:52 -0700 (PDT)
-Date:   Tue, 4 Aug 2020 12:38:50 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Jason Liu <jason.hui.liu@nxp.com>, catalin.marinas@arm.com,
-        will@kernel.org, linux-kernel@vger.kernel.org,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/1] arm64: kexec: no need to do irq_chip->irq_mask if it
- already masked
-Message-ID: <20200804113850.GB15199@bogus>
-References: <20200804085657.10776-1-jason.hui.liu@nxp.com>
- <b4444c737f9d6fd8fd99dbb809d35a0f@kernel.org>
+        Tue, 4 Aug 2020 07:39:12 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:55241 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730114AbgHDLjL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 07:39:11 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.nyi.internal (Postfix) with ESMTP id DB1925804D6;
+        Tue,  4 Aug 2020 07:39:09 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Tue, 04 Aug 2020 07:39:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        GQ35A9QLvt3V3tS5rPqimLchSew/FSuuzCyzXhgfQ1A=; b=kgmfeQ16/whTJorz
+        oDXKB2tNiHs4zASSvo8rupSnw6le9xoRXka0xaj7eV1wl3KlXxBhK9jvlsTpW2I5
+        xsqmOgAxEZ04mc47DOuGlA4WLwH8ReSGT3CX0oWl0cPaE9WRB0c2N5PNFPwImKjp
+        UzO2vax/wxc0UYA6hmwLJxwZrqt5pa4iUidvhF6dqCQK426CwvYxw555f30uYIvR
+        5H59ywR/VBrOYplxFR96RIqaR1p3Kpveny5vknoRtvERGVbcu6gcbZSXfoNGICLf
+        JSUc+2qau2R1fVjOXNFZ5Wse4yAxvWD38Gjvifzg2oiXG9T4x8N2VfojR17r6pCH
+        aNJubw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=GQ35A9QLvt3V3tS5rPqimLchSew/FSuuzCyzXhgfQ
+        1A=; b=SuTtTF54ZVjtLRGZxW/mCEyxi8WJ79N7TT0VougsywuI0KnekAV1lIaze
+        Mx1dJTOV5LinaEM9B5OTBio4cyf+3MoG0+iQnJj+ueVaURezbQgrwYwqk/kjPkNc
+        YqS8C6ENPzYQ3Ym50YC0gOcx/LETOp+69CC//o2YoAMmr/E+f7i4ojaapVtSI6SH
+        Zp93f+pg0914IfG1V/AgFvOs8e+RYREM3C/TI0SzgWmbOTDPR/4l1Z1h+n1qUu22
+        5ui/Ha//jDx8ms2B66MAeki0JL+UEbsOPON1qFpCa8eHEiYGFzONdv+6DCO1m6y7
+        zvN+SH0dYq0xvo4S75gUgveK5q8yg==
+X-ME-Sender: <xms:3EgpX400z3VYmHzvXLn-oWTZ1iL2u1k5Etyw-8b3mvwLK_HyCvjXew>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrjeeigdeggecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnhepfe
+    efteetvdeguddvveefveeftedtffduudehueeihfeuvefgveehffeludeggfejnecukfhp
+    peduudekrddvtdekrdegjedrudeiudenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:3EgpXzEqYlIuPLrgIGwJdakWHmizB75srQO8z2eYXH5NDgNKEgOzmA>
+    <xmx:3EgpXw5VQKDqee8BLKXJOzLC_HOH9vQlxbfxh6OuHS9C1VUnONq_OA>
+    <xmx:3EgpXx03mtl9O9w5GDGW8D_W8prLa__CUW0Sw40CfzWxL_07Mloh9Q>
+    <xmx:3UgpX6cESCXEwV8tzUkYv1s_c-6OOit-Sn19G8ePNtnYk8yaV_5zcw>
+Received: from mickey.themaw.net (unknown [118.208.47.161])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 61C5D30600A6;
+        Tue,  4 Aug 2020 07:39:03 -0400 (EDT)
+Message-ID: <43c061d26ddef2aa3ca1ac726da7db9ab461e7be.camel@themaw.net>
+Subject: Re: [PATCH 13/17] watch_queue: Implement mount topology and
+ attribute change notifications [ver #5]
+From:   Ian Kent <raven@themaw.net>
+To:     Miklos Szeredi <miklos@szeredi.hu>,
+        David Howells <dhowells@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>, andres@anarazel.de,
+        Jeff Layton <jlayton@redhat.com>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>, keyrings@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 04 Aug 2020 19:38:59 +0800
+In-Reply-To: <CAJfpeguvLMCw1H8+DPsfZE_k0sEiRtA17pD9HjnceSsAvqqAZw@mail.gmail.com>
+References: <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk>
+         <158454391302.2863966.1884682840541676280.stgit@warthog.procyon.org.uk>
+         <CAJfpegspWA6oUtdcYvYF=3fij=Bnq03b8VMbU9RNMKc+zzjbag@mail.gmail.com>
+         <1293241.1595501326@warthog.procyon.org.uk>
+         <CAJfpeguvLMCw1H8+DPsfZE_k0sEiRtA17pD9HjnceSsAvqqAZw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b4444c737f9d6fd8fd99dbb809d35a0f@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 11:58:47AM +0100, Marc Zyngier wrote:
-> On 2020-08-04 09:56, Jason Liu wrote:
-> > No need to do the irq_chip->irq_mask() if it already masked.
-> > BTW, unconditionally do the irq_chip->irq_mask() will also bring issues
-> > when the irq_chip in the runtime PM suspend. Accessing registers of the
-> > irq_chip will bring in the exceptions. For example on the i.MX:
+On Mon, 2020-08-03 at 11:29 +0200, Miklos Szeredi wrote:
+> On Thu, Jul 23, 2020 at 12:48 PM David Howells <dhowells@redhat.com>
+> wrote:
+> 
+> > > >                 __u32   topology_changes;
+> > > >                 __u32   attr_changes;
+> > > >                 __u32   aux_topology_changes;
+> > > 
+> > > Being 32bit this introduces wraparound effects.  Is that really
+> > > worth it?
 > > 
-> > root@imx8qmmek:~# echo c > /proc/sysrq-trigger
-> > [  177.796182] sysrq: Trigger a crash
-> > [  177.799596] Kernel panic - not syncing: sysrq triggered crash
-> > [  177.875616] SMP: stopping secondary CPUs
-> > [  177.891936] Internal error: synchronous external abort: 96000210
-> > [#1] PREEMPT SMP
-> > [  177.899429] Modules linked in: crct10dif_ce mxc_jpeg_encdec
-> > [  177.905018] CPU: 1 PID: 944 Comm: sh Kdump: loaded Not tainted
-> > [  177.913457] Hardware name: Freescale i.MX8QM MEK (DT)
-> > [  177.918517] pstate: a0000085 (NzCv daIf -PAN -UAO)
-> > [  177.923318] pc : imx_irqsteer_irq_mask+0x50/0x80
-> > [  177.927944] lr : imx_irqsteer_irq_mask+0x38/0x80
-> > [  177.932561] sp : ffff800011fe3a50
-> > [  177.935880] x29: ffff800011fe3a50 x28: ffff0008f7708e00
-> > [  177.941196] x27: 0000000000000000 x26: 0000000000000000
-> > [  177.946513] x25: ffff800011a30c80 x24: 0000000000000000
-> > [  177.951830] x23: ffff800011fe3af8 x22: ffff0008f24469d4
-> > [  177.957147] x21: ffff0008f2446880 x20: ffff0008f25f5658
-> > [  177.962463] x19: ffff800012611004 x18: 0000000000000001
-> > [  177.967780] x17: 0000000000000000 x16: 0000000000000000
-> > [  177.973097] x15: ffff0008f7709270 x14: 0000000060000085
-> > [  177.978414] x13: ffff800010177570 x12: ffff800011fe3ab0
-> > [  177.983730] x11: ffff80001017749c x10: 0000000000000040
-> > [  177.989047] x9 : ffff8000119f1c80 x8 : ffff8000119f1c78
-> > [  177.994364] x7 : ffff0008f46bedf8 x6 : 0000000000000000
-> > [  177.999681] x5 : ffff0008f46beda0 x4 : 0000000000000000
-> > [  178.004997] x3 : ffff0008f24469d4 x2 : ffff800012611000
-> > [  178.010314] x1 : 0000000000000080 x0 : 0000000000000080
-> > [  178.015630] Call trace:
-> > [  178.018077]  imx_irqsteer_irq_mask+0x50/0x80
-> > [  178.022352]  machine_crash_shutdown+0xa8/0x100
-> > [  178.026802]  __crash_kexec+0x6c/0x118
-> > [  178.030464]  panic+0x19c/0x324
-> > [  178.033524]  sysrq_handle_reboot+0x0/0x20
-> > [  178.037537]  __handle_sysrq+0x88/0x180
-> > [  178.041290]  write_sysrq_trigger+0x8c/0xb0
-> > [  178.045389]  proc_reg_write+0x78/0xb0
-> > [  178.049055]  __vfs_write+0x18/0x40
-> > [  178.052461]  vfs_write+0xdc/0x1c8
-> > [  178.055779]  ksys_write+0x68/0xf0
-> > [  178.059098]  __arm64_sys_write+0x18/0x20
-> > [  178.063027]  el0_svc_common.constprop.0+0x68/0x160
-> > [  178.067821]  el0_svc_handler+0x20/0x80
-> > [  178.071573]  el0_svc+0x8/0xc
-> > [  178.074463] Code: 93407e73 91001273 aa0003e1 8b130053 (b9400260)
-> > [  178.080567] ---[ end trace 652333f6c6d6b05d ]---
+> > You'd have to make 2 billion changes without whoever's monitoring
+> > getting a
+> > chance to update their counters.  But maybe it's not worth it
+> > putting them
+> > here.  If you'd prefer, I can make the counters all 64-bit and just
+> > retrieve
+> > them with fsinfo().
+> 
+> Yes, I think that would be preferable.
+
+I think this is the source of the recommendation for removing the
+change counters from the notification message, correct?
+
+While it looks like I may not need those counters for systemd message
+buffer overflow handling myself I think removing them from the
+notification message isn't a sensible thing to do.
+
+If you need to detect missing messages, perhaps due to message buffer
+overflow, then you need change counters that are relevant to the
+notification message itself. That's so the next time you get a message
+for that object you can be sure that change counter comparisons you
+you make relate to object notifications you have processed.
+
+Yes, I know it isn't quite that simple, but tallying up what you have
+processed in the current batch of messages (or in multiple batches of
+messages if more than one read has been possible) to perform the check
+is a user space responsibility. And it simply can't be done if the
+counters consistency is in question which it would be if you need to
+perform another system call to get it.
+
+It's way more useful to have these in the notification than obtainable
+via fsinfo() IMHO.
+
+> 
+> > > >         n->watch.info & NOTIFY_MOUNT_IS_RECURSIVE if true
+> > > > indicates that
+> > > >         the notifcation was generated by an event (eg. SETATTR)
+> > > > that was
+> > > >         applied recursively.  The notification is only
+> > > > generated for the
+> > > >         object that initially triggered it.
+> > > 
+> > > Unused in this patchset.  Please don't add things to the API
+> > > which are not
+> > > used.
 > > 
-> > Signed-off-by: Jason Liu <jason.hui.liu@nxp.com>
-> > Cc: <stable@vger.kernel.org>
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Sasha Levin <sashal@kernel.org>
-> > ---
-> >  arch/arm64/kernel/machine_kexec.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/arm64/kernel/machine_kexec.c
-> > b/arch/arm64/kernel/machine_kexec.c
-> > index a0b144cfaea7..8ab263c733bf 100644
-> > --- a/arch/arm64/kernel/machine_kexec.c
-> > +++ b/arch/arm64/kernel/machine_kexec.c
-> > @@ -236,7 +236,7 @@ static void machine_kexec_mask_interrupts(void)
-> >  		    chip->irq_eoi)
-> >  			chip->irq_eoi(&desc->irq_data);
-> > 
-> > -		if (chip->irq_mask)
-> > +		if (chip->irq_mask && !irqd_irq_masked(&desc->irq_data))
-> >  			chip->irq_mask(&desc->irq_data);
-> > 
-> >  		if (chip->irq_disable && !irqd_irq_disabled(&desc->irq_data))
->
-> This is pretty dodgy. irq_mask() should be an idempotent action
-> (masking twice must not be harmful).
->
+> > Christian Brauner has patches for mount_setattr() that will need to
+> > use this.
+> 
+> Fine, then that patch can add the flag.
+> 
+> Thanks,
+> Miklos
 
-That was my understanding too, but was not totally against adding
-it here.
-
-> Even more, it really isn't obvious to me how this can work at all,
-> as even if the interrupt isn't masked, the irqsteer could well be
-> suspended.
->
-
-Indeed, the runtime PM ops in that driver looks dodgy. Any calls to
-mask_irq from drivers or anywhere with irqchip suspended with just
-blows up the system.
-
-> So as is, this change is just papering over a much deeper issue
-> in your driver.
->
-
-Thanks for confirming
-
---
-Regards,
-Sudeep
