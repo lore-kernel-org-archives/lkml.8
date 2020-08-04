@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A86C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8915C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B295A2076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8C7622D02
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:41:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728579AbgHDTlP (ORCPT
+        id S1728643AbgHDTlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 15:41:15 -0400
-Received: from mga18.intel.com ([134.134.136.126]:29261 "EHLO mga18.intel.com"
+        Tue, 4 Aug 2020 15:41:21 -0400
+Received: from mga18.intel.com ([134.134.136.126]:29273 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728270AbgHDTlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 15:41:07 -0400
-IronPort-SDR: y/KTXzLmttNAz3ogHcO7pGL8zLaFDjyzJqjQakWadhhTt+tgk98S0cnRzfTb7rgIGAqanoCXd6
- sSPyogW3C/GQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="139991100"
+        id S1728409AbgHDTlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 15:41:11 -0400
+IronPort-SDR: gSJ9uhVGs1EGwbbldooy2vwSXP8rlCPQPbnQxiplZLAKYA5OTj1Tft2CppNgc/5pgvswNX4I4B
+ FFjgU67kw5Aw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="139991112"
 X-IronPort-AV: E=Sophos;i="5.75,434,1589266800"; 
-   d="scan'208";a="139991100"
+   d="scan'208";a="139991112"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 12:41:07 -0700
-IronPort-SDR: s2P1ls1ValU185pYYZ5NlKXOyc7Fi0qp+U9ywdFlaUOpv/mMdNhalzhgyg2zuEEX4/VLtbZkl7
- ZLpQy2nnbByg==
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 12:41:10 -0700
+IronPort-SDR: bQNNIpu6Uc1hJHn/WQypAhs7qz1dtAZYNzVxyBoE3v2PDy9vHyak0hKSHCUJRZx5r1UyC3bmhO
+ GBJtkhmNe3og==
 X-IronPort-AV: E=Sophos;i="5.75,434,1589266800"; 
-   d="scan'208";a="467199230"
+   d="scan'208";a="467199267"
 Received: from viveksh1-mobl.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.255.83.117])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 12:41:06 -0700
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 12:41:09 -0700
 From:   Sean V Kelley <sean.v.kelley@intel.com>
 To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
         rjw@rjwysocki.net, ashok.raj@intel.com, tony.luck@intel.com,
@@ -42,9 +42,9 @@ To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
         Sean V Kelley <sean.v.kelley@intel.com>
-Subject: [PATCH V2 3/9] PCI/portdrv: Add pcie_walk_rcec() to walk RCiEPs associated with RCEC
-Date:   Tue,  4 Aug 2020 12:40:46 -0700
-Message-Id: <20200804194052.193272-4-sean.v.kelley@intel.com>
+Subject: [PATCH V2 6/9] PCI: Add 'rcec' field to pci_dev for associated RCiEPs
+Date:   Tue,  4 Aug 2020 12:40:49 -0700
+Message-Id: <20200804194052.193272-7-sean.v.kelley@intel.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200804194052.193272-1-sean.v.kelley@intel.com>
 References: <20200804194052.193272-1-sean.v.kelley@intel.com>
@@ -57,133 +57,127 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 
-When an RCEC device signals error(s) to a CPU core, the CPU core
-needs to walk all the RCiEPs associated with that RCEC to check
-errors. So add the function pcie_walk_rcec() to walk all RCiEPs
-associated with the RCEC device.
+When attempting error recovery for an RCiEP associated with an RCEC device,
+there needs to be a way to update the Root Error Status, the Uncorrectable
+Error Status and the Uncorrectable Error Severity of the parent RCEC.
+So add the 'rcec' field to the pci_dev structure and provide a hook for the
+Root Port Driver to associate RCiEPs with their respective parent RCEC.
 
 Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
 Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- drivers/pci/pcie/portdrv.h      |  2 +
- drivers/pci/pcie/portdrv_core.c | 82 +++++++++++++++++++++++++++++++++
- 2 files changed, 84 insertions(+)
+ drivers/pci/pcie/aer.c         |  9 +++++----
+ drivers/pci/pcie/err.c         | 12 ++++++++++++
+ drivers/pci/pcie/portdrv_pci.c | 15 +++++++++++++++
+ include/linux/pci.h            |  3 +++
+ 4 files changed, 35 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-index af7cf237432a..c11d5ecbad76 100644
---- a/drivers/pci/pcie/portdrv.h
-+++ b/drivers/pci/pcie/portdrv.h
-@@ -116,6 +116,8 @@ void pcie_port_service_unregister(struct pcie_port_service_driver *new);
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 87283cda3990..f658607e8e00 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -1358,17 +1358,18 @@ static int aer_probe(struct pcie_device *dev)
+ static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
+ {
+ 	int aer = dev->aer_cap;
++	int rc = 0;
+ 	u32 reg32;
+-	int rc;
+-
  
- extern struct bus_type pcie_port_bus_type;
- int pcie_port_device_register(struct pci_dev *dev);
-+void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
-+		    void *userdata);
- #ifdef CONFIG_PM
- int pcie_port_device_suspend(struct device *dev);
- int pcie_port_device_resume_noirq(struct device *dev);
-diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-index 5d4a400094fc..daa2dfa83a0b 100644
---- a/drivers/pci/pcie/portdrv_core.c
-+++ b/drivers/pci/pcie/portdrv_core.c
-@@ -14,6 +14,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/string.h>
- #include <linux/slab.h>
-+#include <linux/bitops.h>
- #include <linux/aer.h>
+ 	/* Disable Root's interrupt in response to error messages */
+ 	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
+ 	reg32 &= ~ROOT_PORT_INTR_ON_MESG_MASK;
+ 	pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
  
- #include "../pci.h"
-@@ -365,6 +366,87 @@ int pcie_port_device_register(struct pci_dev *dev)
- 	return status;
- }
- 
-+static int pcie_walk_rciep_devfn(struct pci_bus *pbus, int (*cb)(struct pci_dev *, void *),
-+				 void *userdata, unsigned long bitmap)
-+{
-+	unsigned int dev, fn;
-+	struct pci_dev *pdev;
-+	int retval;
-+
-+	for_each_set_bit(dev, &bitmap, 32) {
-+		for (fn = 0; fn < 8; fn++) {
-+			pdev = pci_get_slot(pbus, PCI_DEVFN(dev, fn));
-+
-+			if (!pdev || pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_END)
-+				continue;
-+
-+			retval = cb(pdev, userdata);
-+			if (retval)
-+				return retval;
-+		}
+-	rc = pci_bus_error_reset(dev);
+-	pci_info(dev, "Root Port link has been reset\n");
++	if (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC) {
++		rc = pci_bus_error_reset(dev);
++		pci_info(dev, "Root Port link has been reset\n");
 +	}
+ 
+ 	/* Clear Root Error Status */
+ 	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &reg32);
+diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+index 4812aa678eff..43f1c55c76db 100644
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -203,6 +203,12 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 		pci_walk_dev_affected(dev, report_frozen_detected, &status);
+ 		if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
+ 			status = flr_on_rciep(dev);
++			/*
++			 * The callback only clears the Root Error Status
++			 * of the RCEC (see aer.c).
++			 */
++			if (pcie_aer_is_native(dev) && dev->rcec)
++				reset_link(dev->rcec);
+ 			if (status != PCI_ERS_RESULT_RECOVERED) {
+ 				pci_warn(dev, "function level reset failed\n");
+ 				goto failed;
+@@ -247,7 +253,13 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+ 		if (pcie_aer_is_native(dev))
+ 			pcie_clear_device_status(dev);
+ 		pci_aer_clear_nonfatal_status(dev);
++	} else if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
++		if (pcie_aer_is_native(dev) && dev->rcec)
++			pcie_clear_device_status(dev->rcec);
++		if (dev->rcec)
++			pci_aer_clear_nonfatal_status(dev->rcec);
+ 	}
++
+ 	pci_info(dev, "device recovery successful\n");
+ 	return status;
+ 
+diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
+index 4d880679b9b1..dff5c9e13412 100644
+--- a/drivers/pci/pcie/portdrv_pci.c
++++ b/drivers/pci/pcie/portdrv_pci.c
+@@ -90,6 +90,18 @@ static const struct dev_pm_ops pcie_portdrv_pm_ops = {
+ #define PCIE_PORTDRV_PM_OPS	NULL
+ #endif /* !PM */
+ 
++static int pcie_hook_rcec(struct pci_dev *pdev, void *data)
++{
++	struct pci_dev *rcec = (struct pci_dev *)data;
++
++	pdev->rcec = rcec;
++	pci_dbg(rcec, "RCiEP(under an RCEC) %04x:%02x:%02x.%d\n",
++		pci_domain_nr(pdev->bus), pdev->bus->number,
++		PCI_SLOT(pdev->devfn), PCI_FUNC(pdev->devfn));
 +
 +	return 0;
 +}
 +
-+/**
-+ * pcie_walk_rcec - Walk RCiEP devices associating with RCEC and call callback.
-+ * @rcec     RCEC whose RCiEP devices should be walked.
-+ * @cb       Callback to be called for each RCiEP device found.
-+ * @userdata Arbitrary pointer to be passed to callback.
-+ *
-+ * Walk the given RCEC. Call the provided callback on each RCiEP device found.
-+ *
-+ * We check the return of @cb each time. If it returns anything
-+ * other than 0, we break out.
-+ */
-+void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
-+		    void *userdata)
-+{
-+	u32 pos, bitmap, hdr, busn;
-+	u8 ver, nextbusn, lastbusn;
-+	struct pci_bus *pbus;
-+	unsigned int bnr;
-+
-+	pos = pci_find_ext_capability(rcec, PCI_EXT_CAP_ID_RCEC);
-+	if (!pos)
-+		return;
-+
-+	pbus = pci_find_bus(pci_domain_nr(rcec->bus), rcec->bus->number);
-+	if (!pbus)
-+		return;
-+
-+	pci_read_config_dword(rcec, pos + PCI_RCEC_RCIEP_BITMAP, &bitmap);
-+
-+	/* Find RCiEP devices on the same bus as the RCEC */
-+	if (pcie_walk_rciep_devfn(pbus, cb, userdata, (unsigned long)bitmap))
-+		return;
-+
-+	/* Check whether RCEC BUSN register is present */
-+	pci_read_config_dword(rcec, pos, &hdr);
-+	ver = PCI_EXT_CAP_VER(hdr);
-+	if (ver < PCI_RCEC_BUSN_REG_VER)
-+		return;
-+
-+	pci_read_config_dword(rcec, pos + PCI_RCEC_BUSN, &busn);
-+	nextbusn = PCI_RCEC_BUSN_NEXT(busn);
-+	lastbusn = PCI_RCEC_BUSN_LAST(busn);
-+
-+	/* All RCiEP devices are on the same bus as the RCEC */
-+	if (nextbusn == 0xff && lastbusn == 0x00)
-+		return;
-+
-+	for (bnr = nextbusn; bnr <= lastbusn; bnr++) {
-+		pbus = pci_find_bus(pci_domain_nr(rcec->bus), bnr);
-+		if (!pbus)
-+			continue;
-+
-+		/* Find RCiEP devices on the given bus */
-+		if (pcie_walk_rciep_devfn(pbus, cb, userdata, 0xffffffff))
-+			return;
-+	}
-+}
-+
- #ifdef CONFIG_PM
- typedef int (*pcie_pm_callback_t)(struct pcie_device *);
+ /*
+  * pcie_portdrv_probe - Probe PCI-Express port devices
+  * @dev: PCI-Express port device being probed
+@@ -110,6 +122,9 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
+ 	     (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)))
+ 		return -ENODEV;
  
++	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
++		pcie_walk_rcec(dev, pcie_hook_rcec, dev);
++
+ 	status = pcie_port_device_register(dev);
+ 	if (status)
+ 		return status;
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index ee49469bd2b5..d5f7dbbf5e2f 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -326,6 +326,9 @@ struct pci_dev {
+ #ifdef CONFIG_PCIEAER
+ 	u16		aer_cap;	/* AER capability offset */
+ 	struct aer_stats *aer_stats;	/* AER stats for this device */
++#endif
++#ifdef CONFIG_PCIEPORTBUS
++	struct pci_dev	*rcec;		/* Associated RCEC device */
+ #endif
+ 	u8		pcie_cap;	/* PCIe capability offset */
+ 	u8		msi_cap;	/* MSI capability offset */
 -- 
 2.27.0
 
