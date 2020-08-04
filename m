@@ -2,128 +2,318 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2032C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0420CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C04A92073E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 058562073E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:59:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j512w+pi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kcFPor72"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729869AbgHDF60 (ORCPT
+        id S1729875AbgHDF7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 01:58:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34982 "EHLO
+        Tue, 4 Aug 2020 01:59:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbgHDF60 (ORCPT
+        with ESMTP id S1727113AbgHDF7A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 01:58:26 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDDA4C06174A;
-        Mon,  3 Aug 2020 22:58:25 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id g6so29565973ljn.11;
-        Mon, 03 Aug 2020 22:58:25 -0700 (PDT)
+        Tue, 4 Aug 2020 01:59:00 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EF6FC06174A;
+        Mon,  3 Aug 2020 22:59:00 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id k13so14432854plk.13;
+        Mon, 03 Aug 2020 22:59:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PovWtt/hyyq7GqZJhadvZnSefeeWx2retmil7K8DBl0=;
-        b=j512w+piXkOClqZwk8PPWIIwmv0LZ2ToLx2E5QqSFqoaeD8Z210SHobH0nWqZ457K6
-         37EtTc5wYusFkJcn1CXIOuJFGrldIzv38iLCWPhavlPqOmjjQ1AV7t02LJhB0llWOuD8
-         PXpY45pb4tskFB9KonqhdxBL//A0ASC5mkelYHe4BtAt7ichpEF5SingqlUZLUHVGclZ
-         rW4+Z6zePywYsuwkHH2QF+OCzTGGZGlaxmI7R+31SSUeGC9Mjpaca05Lf9QL7p5BkLpt
-         omzrh6yFiKSIOAJXpO7jP/htzke0kGvBi6eeDRCXNkiAyLhXFE2V40g3sr4dni2+dSxu
-         iDtA==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GYIRPWu1+RXNtTv+6/2vW+rM1Dz8G3uUTyxXnTJAPW8=;
+        b=kcFPor72EKkfd/pLvfCuhLMFIG/ObCDlDNbi0hLOBeC+tBkg0AU0akxD/sgDGjFM6V
+         2W+3ET9nXv823CMVVLKKAsOkIOXlCN/HaBv07F4bG5LfnJk2hvO0NVRHXciB4BBJ2owM
+         5lyill+DG8W+UkUd7daFCtuN0Zk16UVgPnavEyhg9P1B76FEwOtpzc2bQE6meqwu7uQk
+         LPtUjgBxTNGZNNCJjsUwpyk0oIrZNucXF/+eFtAlciNkJowp/D5uA1b0tNNgxXxxS+xY
+         lBsFjxhYME5KmQe75ad30RUGICh/uHEtYAnqiSA4EEUn6OLbK37sTz8TNS7YwpoNFW/l
+         Xo3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PovWtt/hyyq7GqZJhadvZnSefeeWx2retmil7K8DBl0=;
-        b=VrpmcQ7B/7PsxIGd9mCPxu1siXuXtuvCP5q/C5gddfAFCiDvC03qzEFMRBjIjgyImG
-         acj+m5t2mYIXf6WiBzOZY5aMPokbKii4I8PHqE4A8r0cw3G3mmVxVAd/bJIFkz6/jASY
-         w3MIPN3jgbxCzAAfLK0wnH8fkxiV1o3nv4NZsOIzpyhvxhTLfj8alj4m9sjwj+/auDra
-         1IJ8XXELtqpuVxMcgkbru115UliThRXLhzs2anVg8pltEHtLnA8Bh1TFcFChlVd6eYXI
-         2cbcF8OAYormQfK7IpWNzLqKEAoiOLH+o0qaT2WPVCnXLMuA7TJ2YL4LD5GLk6RfglkZ
-         nu6A==
-X-Gm-Message-State: AOAM533GkIzDtRH7yc4Y0DhnJL4ZRGMPCNSFeIawsZ/bVqpUFxJ9DdOc
-        nvuaH9Cx2+ypHiPStaeKEN3zAWfR
-X-Google-Smtp-Source: ABdhPJw+sd1rKTXZJUSBPB0N65PD6421E06QjDff/C5/PXiL1pCUKBh5p9a8YKXRX13MwMy3rIgcRA==
-X-Received: by 2002:a2e:b55c:: with SMTP id a28mr981400ljn.107.1596520704054;
-        Mon, 03 Aug 2020 22:58:24 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
-        by smtp.googlemail.com with ESMTPSA id m20sm6546686lfb.72.2020.08.03.22.58.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Aug 2020 22:58:23 -0700 (PDT)
-Subject: Re: [PATCH v2 -next] media: staging: tegra-vde: Mark
- tegra_vde_runtime_suspend/resume as __maybe_unused
-To:     YueHaibing <yuehaibing@huawei.com>, mchehab@kernel.org,
-        gregkh@linuxfoundation.org, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, hverkuil-cisco@xs4all.nl
-Cc:     linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-References: <20200803115901.44068-1-yuehaibing@huawei.com>
- <20200804014137.45444-1-yuehaibing@huawei.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <709889ed-7757-ab5b-53c9-a061ae062d08@gmail.com>
-Date:   Tue, 4 Aug 2020 08:58:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GYIRPWu1+RXNtTv+6/2vW+rM1Dz8G3uUTyxXnTJAPW8=;
+        b=DNil5zNuj4wDafsRgm6LdMdU6Isz0NyWUwvfIiAWdOnU+X9K30KpiolQXxWja22hPv
+         mFYuPZHyZbd1IeePLyw1MWCJPiifKXYVBCh0/LHERTWkfNYBL0D//MozMZu/RmReSN2N
+         24oOooRCZf86QtmUpQDPsTWTXnKr07C9XWJw9s5K8enVIxGij3kNfSIiQgJ8SGNTRZbZ
+         JDiNdu5SmDFlL64Q2kBOGW3Xpo9nQrxQTT+xiDcqj3a9KA8ubN7nSGjz7/XLX9EtC5PP
+         MgD4Hl4/h/6rNeGX+6MUapTnW/ginLN3R0O6egKJZtKRlcMXM6sUR0NY3pcbHBTbt8mo
+         +TvQ==
+X-Gm-Message-State: AOAM531yUbXBGdM3KsW5KiIaIvPPFhXIgkddGpXH/tWfPmEDiH5gi2AF
+        L1R81aqOMfODwua/hItKtgNsSJRB
+X-Google-Smtp-Source: ABdhPJwdBNAJ9tRXA2tNDCCu6b45bf/7hrxCbxIzmRcLgvFUngbU/fSe3PXX+OYykKjwA/3nLcTD/g==
+X-Received: by 2002:a17:902:8498:: with SMTP id c24mr18068078plo.332.1596520739974;
+        Mon, 03 Aug 2020 22:58:59 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k4sm1229258pjg.48.2020.08.03.22.58.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Aug 2020 22:58:58 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 22:58:55 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org, stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 5.7 000/120] 5.7.13-rc1 review
+Message-ID: <20200804055855.GA114969@roeck-us.net>
+References: <20200803121902.860751811@linuxfoundation.org>
+ <20200803155820.GA160756@roeck-us.net>
+ <20200803173330.GA1186998@kroah.com>
+ <CAMuHMdW1Cz_JJsTmssVz_0wjX_1_EEXGOvGjygPxTkcMsbR6Lw@mail.gmail.com>
+ <20200804030107.GA220454@roeck-us.net>
+ <CAHk-=wi-WH0vTEVb=yTuWv=3RrGC2T28dHxqc=QXKkRMz3N3-g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200804014137.45444-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wi-WH0vTEVb=yTuWv=3RrGC2T28dHxqc=QXKkRMz3N3-g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-04.08.2020 04:41, YueHaibing пишет:
-> If CONFIG_PM is not set, gcc warns:
+On Mon, Aug 03, 2020 at 08:12:51PM -0700, Linus Torvalds wrote:
+> On Mon, Aug 3, 2020 at 8:01 PM Guenter Roeck <linux@roeck-us.net> wrote:
+> >
+> > The bisect log below applies to both the sparc and the powerpc build
+> > failures.
 > 
-> drivers/staging/media/tegra-vde/vde.c:916:12:
->  warning: 'tegra_vde_runtime_suspend' defined but not used [-Wunused-function]
+> Does the attached fix it?
 > 
-> Make it __maybe_unused to fix this.
+>                  Linus
+
+> From 780c8591bce09bbdd2908b7c07b3baba883a1ce6 Mon Sep 17 00:00:00 2001
+> From: Linus Torvalds <torvalds@linux-foundation.org>
+> Date: Fri, 31 Jul 2020 07:51:14 +0200
+> Subject: [PATCH] random32: move the pseudo-random 32-bit definitions to prandom.h
 > 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> The addition of percpu.h to the list of includes in random.h revealed
+> some circular dependencies on arm64 and possibly other platforms.  This
+> include was added solely for the pseudo-random definitions, which have
+> nothing to do with the rest of the definitions in this file but are
+> still there for legacy reasons.
+> 
+> This patch moves the pseudo-random parts to linux/prandom.h and the
+> percpu.h include with it, which is now guarded by _LINUX_PRANDOM_H and
+> protected against recursive inclusion.
+> 
+> A further cleanup step would be to remove this from <linux/random.h>
+> entirely, and make people who use the prandom infrastructure include
+> just the new header file.  That's a bit of a churn patch, but grepping
+> for "prandom_" and "next_pseudo_random32" should catch most users.
+> 
+> Acked-by: Willy Tarreau <w@1wt.eu>
+> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+With this patch applied on top of v5.8:
+
+Build results:
+	total: 151 pass: 151 fail: 0
+Qemu test results:
+	total: 430 pass: 430 fail: 0
+
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+
+Thanks,
+Guenter
+
 > ---
-> v2: both suspend and resume functions marked
-> ---
->  drivers/staging/media/tegra-vde/vde.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  include/linux/prandom.h | 78 +++++++++++++++++++++++++++++++++++++++++
+>  include/linux/random.h  | 66 +++-------------------------------
+>  2 files changed, 82 insertions(+), 62 deletions(-)
+>  create mode 100644 include/linux/prandom.h
 > 
-> diff --git a/drivers/staging/media/tegra-vde/vde.c b/drivers/staging/media/tegra-vde/vde.c
-> index a3c24d96d5b9..28845b5bafaf 100644
-> --- a/drivers/staging/media/tegra-vde/vde.c
-> +++ b/drivers/staging/media/tegra-vde/vde.c
-> @@ -913,7 +913,7 @@ static irqreturn_t tegra_vde_isr(int irq, void *data)
->  	return IRQ_HANDLED;
->  }
+> diff --git a/include/linux/prandom.h b/include/linux/prandom.h
+> new file mode 100644
+> index 000000000000..968c4287a277
+> --- /dev/null
+> +++ b/include/linux/prandom.h
+> @@ -0,0 +1,78 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * include/linux/prandom.h
+> + *
+> + * Include file for the fast pseudo-random 32-bit
+> + * generation.
+> + */
+> +#ifndef _LINUX_PRANDOM_H
+> +#define _LINUX_PRANDOM_H
+> +
+> +#include <linux/types.h>
+> +#include <linux/percpu.h>
+> +
+> +u32 prandom_u32(void);
+> +void prandom_bytes(void *buf, size_t nbytes);
+> +void prandom_seed(u32 seed);
+> +void prandom_reseed_late(void);
+> +
+> +struct rnd_state {
+> +	__u32 s1, s2, s3, s4;
+> +};
+> +
+> +DECLARE_PER_CPU(struct rnd_state, net_rand_state);
+> +
+> +u32 prandom_u32_state(struct rnd_state *state);
+> +void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
+> +void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
+> +
+> +#define prandom_init_once(pcpu_state)			\
+> +	DO_ONCE(prandom_seed_full_state, (pcpu_state))
+> +
+> +/**
+> + * prandom_u32_max - returns a pseudo-random number in interval [0, ep_ro)
+> + * @ep_ro: right open interval endpoint
+> + *
+> + * Returns a pseudo-random number that is in interval [0, ep_ro). Note
+> + * that the result depends on PRNG being well distributed in [0, ~0U]
+> + * u32 space. Here we use maximally equidistributed combined Tausworthe
+> + * generator, that is, prandom_u32(). This is useful when requesting a
+> + * random index of an array containing ep_ro elements, for example.
+> + *
+> + * Returns: pseudo-random number in interval [0, ep_ro)
+> + */
+> +static inline u32 prandom_u32_max(u32 ep_ro)
+> +{
+> +	return (u32)(((u64) prandom_u32() * ep_ro) >> 32);
+> +}
+> +
+> +/*
+> + * Handle minimum values for seeds
+> + */
+> +static inline u32 __seed(u32 x, u32 m)
+> +{
+> +	return (x < m) ? x + m : x;
+> +}
+> +
+> +/**
+> + * prandom_seed_state - set seed for prandom_u32_state().
+> + * @state: pointer to state structure to receive the seed.
+> + * @seed: arbitrary 64-bit value to use as a seed.
+> + */
+> +static inline void prandom_seed_state(struct rnd_state *state, u64 seed)
+> +{
+> +	u32 i = (seed >> 32) ^ (seed << 10) ^ seed;
+> +
+> +	state->s1 = __seed(i,   2U);
+> +	state->s2 = __seed(i,   8U);
+> +	state->s3 = __seed(i,  16U);
+> +	state->s4 = __seed(i, 128U);
+> +}
+> +
+> +/* Pseudo random number generator from numerical recipes. */
+> +static inline u32 next_pseudo_random32(u32 seed)
+> +{
+> +	return seed * 1664525 + 1013904223;
+> +}
+> +
+> +#endif
+> diff --git a/include/linux/random.h b/include/linux/random.h
+> index 9ab7443bd91b..f45b8be3e3c4 100644
+> --- a/include/linux/random.h
+> +++ b/include/linux/random.h
+> @@ -11,7 +11,6 @@
+>  #include <linux/kernel.h>
+>  #include <linux/list.h>
+>  #include <linux/once.h>
+> -#include <asm/percpu.h>
 >  
-> -static int tegra_vde_runtime_suspend(struct device *dev)
-> +static __maybe_unused int tegra_vde_runtime_suspend(struct device *dev)
->  {
->  	struct tegra_vde *vde = dev_get_drvdata(dev);
->  	int err;
-> @@ -929,7 +929,7 @@ static int tegra_vde_runtime_suspend(struct device *dev)
->  	return 0;
->  }
+>  #include <uapi/linux/random.h>
 >  
-> -static int tegra_vde_runtime_resume(struct device *dev)
-> +static __maybe_unused int tegra_vde_runtime_resume(struct device *dev)
->  {
->  	struct tegra_vde *vde = dev_get_drvdata(dev);
->  	int err;
+> @@ -111,63 +110,12 @@ declare_get_random_var_wait(long)
+>  
+>  unsigned long randomize_page(unsigned long start, unsigned long range);
+>  
+> -u32 prandom_u32(void);
+> -void prandom_bytes(void *buf, size_t nbytes);
+> -void prandom_seed(u32 seed);
+> -void prandom_reseed_late(void);
+> -
+> -struct rnd_state {
+> -	__u32 s1, s2, s3, s4;
+> -};
+> -
+> -DECLARE_PER_CPU(struct rnd_state, net_rand_state);
+> -
+> -u32 prandom_u32_state(struct rnd_state *state);
+> -void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
+> -void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
+> -
+> -#define prandom_init_once(pcpu_state)			\
+> -	DO_ONCE(prandom_seed_full_state, (pcpu_state))
+> -
+> -/**
+> - * prandom_u32_max - returns a pseudo-random number in interval [0, ep_ro)
+> - * @ep_ro: right open interval endpoint
+> - *
+> - * Returns a pseudo-random number that is in interval [0, ep_ro). Note
+> - * that the result depends on PRNG being well distributed in [0, ~0U]
+> - * u32 space. Here we use maximally equidistributed combined Tausworthe
+> - * generator, that is, prandom_u32(). This is useful when requesting a
+> - * random index of an array containing ep_ro elements, for example.
+> - *
+> - * Returns: pseudo-random number in interval [0, ep_ro)
+> - */
+> -static inline u32 prandom_u32_max(u32 ep_ro)
+> -{
+> -	return (u32)(((u64) prandom_u32() * ep_ro) >> 32);
+> -}
+> -
+>  /*
+> - * Handle minimum values for seeds
+> - */
+> -static inline u32 __seed(u32 x, u32 m)
+> -{
+> -	return (x < m) ? x + m : x;
+> -}
+> -
+> -/**
+> - * prandom_seed_state - set seed for prandom_u32_state().
+> - * @state: pointer to state structure to receive the seed.
+> - * @seed: arbitrary 64-bit value to use as a seed.
+> + * This is designed to be standalone for just prandom
+> + * users, but for now we include it from <linux/random.h>
+> + * for legacy reasons.
+>   */
+> -static inline void prandom_seed_state(struct rnd_state *state, u64 seed)
+> -{
+> -	u32 i = (seed >> 32) ^ (seed << 10) ^ seed;
+> -
+> -	state->s1 = __seed(i,   2U);
+> -	state->s2 = __seed(i,   8U);
+> -	state->s3 = __seed(i,  16U);
+> -	state->s4 = __seed(i, 128U);
+> -}
+> +#include <linux/prandom.h>
+>  
+>  #ifdef CONFIG_ARCH_RANDOM
+>  # include <asm/archrandom.h>
+> @@ -210,10 +158,4 @@ static inline bool __init arch_get_random_long_early(unsigned long *v)
+>  }
+>  #endif
+>  
+> -/* Pseudo random number generator from numerical recipes. */
+> -static inline u32 next_pseudo_random32(u32 seed)
+> -{
+> -	return seed * 1664525 + 1013904223;
+> -}
+> -
+>  #endif /* _LINUX_RANDOM_H */
+> -- 
+> 2.28.0.4.g1bac1770cd
 > 
 
-Thanks!
-
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
