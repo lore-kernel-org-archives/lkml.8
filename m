@@ -2,231 +2,143 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9586C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A31C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF68F2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78AC22076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:51:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="eiRVZLer"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aaf257HY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbgHDBtr (ORCPT
+        id S1728122AbgHDBvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 21:49:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53442 "EHLO
+        Mon, 3 Aug 2020 21:51:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgHDBtq (ORCPT
+        with ESMTP id S1726615AbgHDBvP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 21:49:46 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEDD3C06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 18:49:46 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id o2so18302486qvk.6
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 18:49:46 -0700 (PDT)
+        Mon, 3 Aug 2020 21:51:15 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 233DBC061756
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 18:51:14 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id j186so20254363vsd.10
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 18:51:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=p8aoxtBKjpKezj0Xn3lJSuTf8xWXnxhNxmcUMANtU70=;
-        b=eiRVZLerPMoajkB+s8SV6MJOuEFepX37u9gdFSD7tTDSLZCH6UiCaGomdDPi4aH+D4
-         I1YJl2aQAVY1McIOo03pBEerWULuBbfafKLAPPb1elQHUmlLs+hTy5XxZrUvitCtXzoq
-         X2kHhYBzK91YtZVg1TKj9PdcGhtE4fpfI9a/RAhkmHSN1fOp/0HYGuAzy4wFXHaNH7j/
-         /ZpSwCZyMPEFQr0v2R5ARdKuOQnBFYfI52lPariD/SiSGIhrbkB+4m4WiC8aw4PXbaGI
-         mF4TZzCyeH5vKBbcflbXPIeD1oa7DjVCFN0xe2MAZybfe9CD6eEBhEsXOpghVfpyINvD
-         jsHw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZjddNGXz3YzU7Pvdk0bKn7EGChBBYHNzVV19el9GvN4=;
+        b=aaf257HYCPeWHrjBXePaOYS8VFb1Q/czqyneX50WCTw9iwZoobQcG+o1I1MWB7iKJs
+         smazrjiW0L6F2JZ72ElWTxCb5NTLzF2eL/KqMeWC9AHOwb9tlBgjdHwOTBLnOa+PAG0y
+         GzfieF4oG1m72F66pbXCb9LhKUeoz73OImW5s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=p8aoxtBKjpKezj0Xn3lJSuTf8xWXnxhNxmcUMANtU70=;
-        b=riwgS6dLDOmCdi3UyzWU4RU8eeFHzr/gOUudT17E20PhP7Ae8aIYWckuwnwpCDINVv
-         HVi9Bv3aQRuBrzS3yjdbALzaBzLCWQE2St8TRsaTabv/TeaRzbvKPneRc+kw06lfV4hP
-         WTNOiYoUAHGRo5vFvlKYVqwoxfww0ufAnsSsjh5puOYV+jY6Oal3owoNTJdWrJBiwBX4
-         WAT6zkRVIUiRHHtqISJbVZVvvCZDTs3mWmKZsRsssv5+23YAsR4lfLOf494edZb1Ubue
-         Wy49yK+vIHrF6zQxlhPdDtF9HNkJYojRnn+UqDz0Ks2cbkKRUfsCbAojFC1pJOYHJQTc
-         bh/A==
-X-Gm-Message-State: AOAM533Uz0djeSpaq2WUbSWS7EMBOc7K1i+WMSJHR66SkGBmtuaBY/kT
-        lMa+3VEEUj7GAKedkgL0QRO2Gg==
-X-Google-Smtp-Source: ABdhPJz+q1p2Tcfz3PzNsRFqQCW+MOXpujrRVRj8ngTDyJOShCooC24Z+RT39b2eYMvg0FzdS7QXIA==
-X-Received: by 2002:a0c:8f12:: with SMTP id z18mr4130541qvd.153.1596505785818;
-        Mon, 03 Aug 2020 18:49:45 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id 78sm22222716qke.81.2020.08.03.18.49.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 18:49:45 -0700 (PDT)
-Date:   Mon, 3 Aug 2020 21:49:42 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     HORIGUCHI =?utf-8?B?TkFPWUEo5aCA5Y+j44CA55u05LmfKQ==?= 
-        <naoya.horiguchi@nec.com>
-Cc:     "nao.horiguchi@gmail.com" <nao.horiguchi@gmail.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
-        "osalvador@suse.de" <osalvador@suse.de>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "david@redhat.com" <david@redhat.com>,
-        "aneesh.kumar@linux.vnet.ibm.com" <aneesh.kumar@linux.vnet.ibm.com>,
-        "zeil@yandex-team.ru" <zeil@yandex-team.ru>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 00/16] HWPOISON: soft offline rework
-Message-ID: <20200804014942.GC8894@lca.pw>
-References: <20200731122112.11263-1-nao.horiguchi@gmail.com>
- <20200803190709.GB8894@lca.pw>
- <20200804011644.GA25028@hori.linux.bs1.fc.nec.co.jp>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZjddNGXz3YzU7Pvdk0bKn7EGChBBYHNzVV19el9GvN4=;
+        b=JZYuRO/bhn6PUpM66cVLOUiqRQ9jEz5l0gF74P/2MR1hxAa4FABe2HNz7x9c/hbthF
+         Htm1vDs9kLBsmd8UYioj8MOr7LvYzVVPwjqqazCjU3lUrNde5xHYBq8XqZncJiR/BClG
+         Q6KqFTDlAbWmxqM/T50ldHZGNDzbc98QgeXzK5n1dSLnipdoLFF/iqq2ICkv337fDGak
+         tSEWJX/ntIMzQfLRrxGjOfOWqaYNbGO01WjArxdlndxMsnDkxUUVer6tBnKa4XsOVVUM
+         8PBLZPXctLDfO9Z5OMj/EPjfhKThDcZv8EBwheQgMj5jUqnY0PM2P1YacX+74kdIH8P1
+         hCbA==
+X-Gm-Message-State: AOAM530867HEIV6kahHEgf0BU2X+00Nk0bExAkRih0USu6LxbAzmgKxo
+        LjWmTDZzlP/IFBR/hHM25r/l8f7fKzvoOOZJaYbcZw==
+X-Google-Smtp-Source: ABdhPJy1lRFt2xIEK6BlHw92IYkKS9uhFUQMHmq60wCSuWixqVxrgiG9sOnX8EEpNmGgC5HX8UN7Ug7KXZjZv9nKfx8=
+X-Received: by 2002:a67:bb06:: with SMTP id m6mr13785000vsn.54.1596505874070;
+ Mon, 03 Aug 2020 18:51:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200804011644.GA25028@hori.linux.bs1.fc.nec.co.jp>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1596445047-2975-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1596445047-2975-2-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <1596445047-2975-2-git-send-email-hsin-hsiung.wang@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Tue, 4 Aug 2020 09:51:03 +0800
+Message-ID: <CANMq1KCSiRwCvPcbdA-g4Xwm5Jwk7VLDNpsR-_zoxEOv9ZFHWQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] spmi: Add driver shutdown support
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 01:16:45AM +0000, HORIGUCHI NAOYA(堀口 直也) wrote:
-> On Mon, Aug 03, 2020 at 03:07:09PM -0400, Qian Cai wrote:
-> > On Fri, Jul 31, 2020 at 12:20:56PM +0000, nao.horiguchi@gmail.com wrote:
-> > > This patchset is the latest version of soft offline rework patchset
-> > > targetted for v5.9.
-> > > 
-> > > Main focus of this series is to stabilize soft offline.  Historically soft
-> > > offlined pages have suffered from racy conditions because PageHWPoison is
-> > > used to a little too aggressively, which (directly or indirectly) invades
-> > > other mm code which cares little about hwpoison.  This results in unexpected
-> > > behavior or kernel panic, which is very far from soft offline's "do not
-> > > disturb userspace or other kernel component" policy.
-> > > 
-> > > Main point of this change set is to contain target page "via buddy allocator",
-> > > where we first free the target page as we do for normal pages, and remove
-> > > from buddy only when we confirm that it reaches free list. There is surely
-> > > race window of page allocation, but that's fine because someone really want
-> > > that page and the page is still working, so soft offline can happily give up.
-> > > 
-> > > v4 from Oscar tries to handle the race around reallocation, but that part
-> > > seems still work in progress, so I decide to separate it for changes into
-> > > v5.9.  Thank you for your contribution, Oscar.
-> > > 
-> > > The issue reported by Qian Cai is fixed by patch 16/16.
-> > > 
-> > > This patchset is based on v5.8-rc7-mmotm-2020-07-27-18-18, but I applied
-> > > this series after reverting previous version.
-> > > Maybe https://github.com/Naoya-Horiguchi/linux/commits/soft-offline-rework.v5
-> > > shows what I did more precisely.
-> > > 
-> > > Any other comment/suggestion/help would be appreciated.
-> > 
-> > There is another issue with this patchset (with and without the patch [1]).
-> > 
-> > [1] https://lore.kernel.org/lkml/20200803133657.GA13307@hori.linux.bs1.fc.nec.co.jp/
-> > 
-> > Arm64 using 512M-size hugepages starts to fail allocations prematurely.
-> > 
-> > # ./random 1
-> > - start: migrate_huge_offline
-> > - use NUMA nodes 0,1.
-> > - mmap and free 2147483648 bytes hugepages on node 0
-> > - mmap and free 2147483648 bytes hugepages on node 1
-> > madvise: Cannot allocate memory
-> > 
-> > [  284.388061][ T3706] soft offline: 0x956000: hugepage isolation failed: 0, page count 2, type 17ffff80001000e (referenced|uptodate|dirty|head)
-> > [  284.400777][ T3706] Soft offlining pfn 0x8e000 at process virtual address 0xffff80000000
-> > [  284.893412][ T3706] Soft offlining pfn 0x8a000 at process virtual address 0xffff60000000
-> > [  284.901539][ T3706] soft offline: 0x8a000: hugepage isolation failed: 0, page count 2, type 7ffff80001000e (referenced|uptodate|dirty|head)
-> > [  284.914129][ T3706] Soft offlining pfn 0x8c000 at process virtual address 0xffff80000000
-> > [  285.433497][ T3706] Soft offlining pfn 0x88000 at process virtual address 0xffff60000000
-> > [  285.720377][ T3706] Soft offlining pfn 0x8a000 at process virtual address 0xffff80000000
-> > [  286.281620][ T3706] Soft offlining pfn 0xa000 at process virtual address 0xffff60000000
-> > [  286.290065][ T3706] soft offline: 0xa000: hugepage migration failed -12, type 7ffff80001000e (referenced|uptodate|dirty|head)
-> 
-> I think that this is due to the lack of contiguous memory.
-> This test program iterates soft offlining many times for hugepages,
-> so finally one page in every 512MB will be removed from buddy, then we
-> can't allocate hugepage any more even if we have enough free pages.
-> This is not good for heavy hugepage users, but that should be intended.
-> 
-> It seems that random.c calls madvise(MADV_SOFT_OFFLINE) for 2 hugepages,
-> and iterates it 1000 (==NR_LOOP) times, so if the system doesn't have
-> enough memory to cover the range of 2000 hugepages (1000GB in the Arm64
-> system), this ENOMEM should reproduce as expected.
+On Mon, Aug 3, 2020 at 4:57 PM Hsin-Hsiung Wang
+<hsin-hsiung.wang@mediatek.com> wrote:
+>
+> Add new shutdown() method.  Use it in the standard driver model style.
+>
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  drivers/spmi/spmi.c  | 12 ++++++++++++
+>  drivers/spmi/spmi.c  | 12 ++++++++++++
+>  include/linux/spmi.h |  1 +
+>  2 files changed, 13 insertions(+)
+>
+> diff --git a/drivers/spmi/spmi.c b/drivers/spmi/spmi.c
+> index c16b60f..5fde024 100644
+> --- a/drivers/spmi/spmi.c
+> +++ b/drivers/spmi/spmi.c
+> @@ -357,6 +357,17 @@ static int spmi_drv_remove(struct device *dev)
+>         return 0;
+>  }
+>
+> +static void spmi_drv_shutdown(struct device *dev)
+> +{
+> +       const struct spmi_driver *sdrv = to_spmi_driver(dev->driver);
+> +
+> +       if (!sdrv)
+> +               return;
+> +
+> +
+> +       if (sdrv->shutdown)
+> +               sdrv->shutdown(to_spmi_device(dev));
 
-Well, each iteration will mmap/munmap, so there should be no leaking. 
+Slight more succinct (assuming sdrv _can_ actually be NULL, I'm not
+sure about that)
 
-https://gitlab.com/cailca/linux-mm/-/blob/master/random.c#L376
+if (srdv && sdrv->shutdown)
 
-It also seem to me madvise(MADV_SOFT_OFFLINE) does start to fragment memory
-somehow, because after this "madvise: Cannot allocate memory" happened, I
-immediately checked /proc/meminfo and then found no hugepage usage at all.
-
-> 
-> > 
-> > Reverting this patchset and its dependency patchset [2] (reverting the
-> > dependency alone did not help) fixed it,
-> 
-> But it's still not clear to me why this was not visible before this
-> patchset, so I need more check for it.
-> 
-> Thanks,
-> Naoya Horiguchi
-> 
-> > 
-> > # ./random 1
-> > - start: migrate_huge_offline
-> > - use NUMA nodes 0,1.
-> > - mmap and free 2147483648 bytes hugepages on node 0
-> > - mmap and free 2147483648 bytes hugepages on node 1
-> > - pass: mmap_offline_node_huge
-> > 
-> > [2] https://lore.kernel.org/linux-mm/1594622517-20681-1-git-send-email-iamjoonsoo.kim@lge.com/ 
-> > 
-> > > 
-> > > Thanks,
-> > > Naoya Horiguchi
-> > > ---
-> > > Previous versions:
-> > >   v1: https://lore.kernel.org/linux-mm/1541746035-13408-1-git-send-email-n-horiguchi@ah.jp.nec.com/
-> > >   v2: https://lore.kernel.org/linux-mm/20191017142123.24245-1-osalvador@suse.de/
-> > >   v3: https://lore.kernel.org/linux-mm/20200624150137.7052-1-nao.horiguchi@gmail.com/
-> > >   v4: https://lore.kernel.org/linux-mm/20200716123810.25292-1-osalvador@suse.de/
-> > > ---
-> > > Summary:
-> > > 
-> > > Naoya Horiguchi (8):
-> > >       mm,hwpoison: cleanup unused PageHuge() check
-> > >       mm, hwpoison: remove recalculating hpage
-> > >       mm,madvise: call soft_offline_page() without MF_COUNT_INCREASED
-> > >       mm,hwpoison-inject: don't pin for hwpoison_filter
-> > >       mm,hwpoison: remove MF_COUNT_INCREASED
-> > >       mm,hwpoison: remove flag argument from soft offline functions
-> > >       mm,hwpoison: introduce MF_MSG_UNSPLIT_THP
-> > >       mm,hwpoison: double-check page count in __get_any_page()
-> > > 
-> > > Oscar Salvador (8):
-> > >       mm,madvise: Refactor madvise_inject_error
-> > >       mm,hwpoison: Un-export get_hwpoison_page and make it static
-> > >       mm,hwpoison: Kill put_hwpoison_page
-> > >       mm,hwpoison: Unify THP handling for hard and soft offline
-> > >       mm,hwpoison: Rework soft offline for free pages
-> > >       mm,hwpoison: Rework soft offline for in-use pages
-> > >       mm,hwpoison: Refactor soft_offline_huge_page and __soft_offline_page
-> > >       mm,hwpoison: Return 0 if the page is already poisoned in soft-offline
-> > > 
-> > >  drivers/base/memory.c      |   2 +-
-> > >  include/linux/mm.h         |  12 +-
-> > >  include/linux/page-flags.h |   6 +-
-> > >  include/ras/ras_event.h    |   3 +
-> > >  mm/hwpoison-inject.c       |  18 +--
-> > >  mm/madvise.c               |  39 +++---
-> > >  mm/memory-failure.c        | 334 ++++++++++++++++++++-------------------------
-> > >  mm/migrate.c               |  11 +-
-> > >  mm/page_alloc.c            |  60 ++++++--
-> > >  9 files changed, 233 insertions(+), 252 deletions(-)
-> > 
+> +}
+> +}
+> +
+>  static int spmi_drv_uevent(struct device *dev, struct kobj_uevent_env *env)
+>  {
+>         int ret;
+> @@ -373,6 +384,7 @@ static struct bus_type spmi_bus_type = {
+> @@ -373,6 +384,7 @@ static struct bus_type spmi_bus_type = {
+>         .match          = spmi_device_match,
+>         .probe          = spmi_drv_probe,
+>         .remove         = spmi_drv_remove,
+> +       .shutdown       = spmi_drv_shutdown,
+>         .uevent         = spmi_drv_uevent,
+>  };
+>
+> diff --git a/include/linux/spmi.h b/include/linux/spmi.h
+> index 394a3f6..729bcbf 100644
+> --- a/include/linux/spmi.h
+> +++ b/include/linux/spmi.h
+> @@ -138,6 +138,7 @@ struct spmi_driver {
+>         struct device_driver driver;
+>         int     (*probe)(struct spmi_device *sdev);
+>         void    (*remove)(struct spmi_device *sdev);
+> +       void    (*shutdown)(struct spmi_device *sdev);
+>  };
+>
+>  static inline struct spmi_driver *to_spmi_driver(struct device_driver *d)
+> --
+> 2.6.4
