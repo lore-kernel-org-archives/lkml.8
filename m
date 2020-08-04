@@ -2,86 +2,124 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92699C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E2BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 944B720781
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:46:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596523594;
-	bh=awvfd3eHrxyvJ4bymRiRBVgeB1uHuXhPbFH7qDVmFgo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZXTU5zdffUM08u+1K1c9hYZWb/VoLzBGMyc9DARXYytDAvoUVTnwnWTBoTXeDIlEL
-	 M9wA498UplUPuOj5t8HChnsurigj+XJAb3U2zl7c385SzwxwpFIaMfPQxLtTYdHjmS
-	 faOuglvt4AVbn0AFMz0VkM0x4aB38URCbGrTCIsM=
+	by mail.kernel.org (Postfix) with ESMTP id 097012086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:47:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UueG+3z1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728771AbgHDGqd (ORCPT
+        id S1726429AbgHDGrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 02:46:33 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:43350 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbgHDGqc (ORCPT
+        Tue, 4 Aug 2020 02:47:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbgHDGrA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 02:46:32 -0400
-Received: by mail-ed1-f65.google.com with SMTP id o18so14595393eds.10;
-        Mon, 03 Aug 2020 23:46:31 -0700 (PDT)
+        Tue, 4 Aug 2020 02:47:00 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 481B5C06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 23:47:00 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t10so16973995plz.10
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 23:47:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DnhGljgxfzJeLlq9y9e/7VwoaSWViejckL3W26FCQPY=;
+        b=UueG+3z15qVK2BxckVCRjepMJOMHSHdHWYx8MT/s56DT3z3RtFe/nSLY6u9tf2ZzJ8
+         eMXgwJqof8xUczI7iHjHGThgYrEfWavNmoupNofQO6/R2wsJm1NzglZgMAwhp+yknPDK
+         wXa2CW0UqNzxav/1My/2A6rIXJ5YKQXFsJsuko0rDuZ26pwovnAbcbt36OQOSjbSt8LR
+         aCN8S7hG5dMZHcRB84/FG46LoCP6ZDI525Awim5YurR0M1wKIXOen6IsIg7ArGlt0LBm
+         5KuKYW03vVO0btus6/4Yg3chKAwddsyu2AFaisM3kjURSRe048PgLImAUFCF8knh+LE1
+         H01Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=k/tXUse0K8rn7kKPagXhtuRhgALRu8y3NAavrcsnwyE=;
-        b=PrLT5Z+JwGP2HBXzun6qo/tVkaIh/gjgtvItoYamBbS3aTh3qQ1TVGmXWAgeAxK0uF
-         fTq7ezp8agFgD0iixLNqgs6lu2dMtxLUKXOlcF3TupT+JHfONLPUZwPDLxyWBn84yavm
-         f22wL2MxWBG8RA4ZgHSOoTxzuvNorS9R6vxuOL8H2hod0AjuGCE/GQJaQgHx1Mw2lTMx
-         YGCNR7jACsa5YdYzlpdUNXvcxUhmCeOUpiQco2+/V4ojhMx+Fw7HHxQ1aQM5B9WrgM/q
-         n97kcm4pIu2W75wv4WRGWnXoF+1lX8djT2pHJICsLSU2GQzYCKBAKPm6vNLap+4n9js/
-         52qQ==
-X-Gm-Message-State: AOAM532T/HdtzPcU84qU84JQss0bg6KClVap1xqN25SEqY5oLh1vc7G6
-        LOF7zXb76tpbRc3uNsc0tzI=
-X-Google-Smtp-Source: ABdhPJxbMviXp7Ec9tGH19+u+gR70Y0Ham8OANYERZLnLjbLs59nJKkipXI0EndPxKdJzbj5ysMhkw==
-X-Received: by 2002:aa7:ce0b:: with SMTP id d11mr18475007edv.357.1596523590498;
-        Mon, 03 Aug 2020 23:46:30 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.117])
-        by smtp.googlemail.com with ESMTPSA id y14sm16588349ejr.35.2020.08.03.23.46.29
+        bh=DnhGljgxfzJeLlq9y9e/7VwoaSWViejckL3W26FCQPY=;
+        b=qGgj68FMMs/duVfrQYYcMCizBrgnH5KPpGf0d8BEcVip5Gsl2hvlFj3OllTOKogL5+
+         ds5j352usioreRfFkZsjwW2YXojpQwp/Y4/rhnfK01G3fwnsbs91juobZ2JDUFIQWwCk
+         fUshQkeDi08Aw0gGTQQ/SkLsMHG3wPRdZPK9gCLPvSdi5fGTwDLsf5mOFszCTMeGgzYg
+         ekqrWL+OGfcrD1YNojxnI/ADhTDvgiXrdXtQilP6ed1WQBLQYd+Tf+WyLcvIKkv0zGU+
+         sRs9NI+S/8HNXc3J97HnukUnIP2O02Zi8gBTQoJVLFydJk+YxKHyVziaTlNnEAd/Ykrg
+         LZmA==
+X-Gm-Message-State: AOAM533071DY1dMtCHit4dLLM0eaM4efW8AZ+FBXaXrTMhQWNn53g+ce
+        Bx/dhJeIGHkxI3GpQD7tFcrV0g==
+X-Google-Smtp-Source: ABdhPJwJkKqdgXZJK1wqpAHnVHCHlWOIav+LLGoSZfd5dZ34R0P644MLXYy4TL5d6mUKKMaqtgjCVQ==
+X-Received: by 2002:a17:902:6bc2:: with SMTP id m2mr18395916plt.158.1596523619660;
+        Mon, 03 Aug 2020 23:46:59 -0700 (PDT)
+Received: from localhost ([122.162.244.227])
+        by smtp.gmail.com with ESMTPSA id u26sm20550893pgo.71.2020.08.03.23.46.58
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Aug 2020 23:46:29 -0700 (PDT)
-Date:   Tue, 4 Aug 2020 08:46:27 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] memory: jz4780_nemc: Fix an error pointer vs NULL check
- in probe()
-Message-ID: <20200804064627.GB10089@kozik-lap>
-References: <20200803143607.GC346925@mwanda>
+        Mon, 03 Aug 2020 23:46:58 -0700 (PDT)
+Date:   Tue, 4 Aug 2020 12:16:56 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     rjw@rjwysocki.net, dietmar.eggemann@arm.com,
+        catalin.marinas@arm.com, sudeep.holla@arm.com, will@kernel.org,
+        linux@armlinux.org.uk, mingo@redhat.com, peterz@infradead.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/7] cpufreq: report whether cpufreq supports
+ Frequency Invariance (FI)
+Message-ID: <20200804064656.h25yapthuumdxjw7@vireshk-mac-ubuntu>
+References: <20200722093732.14297-1-ionela.voinescu@arm.com>
+ <20200722093732.14297-5-ionela.voinescu@arm.com>
+ <20200730044346.rgtaikotkgwdpc3m@vireshk-mac-ubuntu>
+ <20200803152400.GB20312@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200803143607.GC346925@mwanda>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200803152400.GB20312@arm.com>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 05:36:07PM +0300, Dan Carpenter wrote:
-> The devm_ioremap() function returns NULL on error, it doesn't return
-> error pointers.  This bug could lead to an Oops during probe.
+On 03-08-20, 16:24, Ionela Voinescu wrote:
+> Right, cpufreq_register_driver() should check that at least one of them
+> is present
+
+> (although currently cpufreq_register_driver() will return
+> -EINVAL if .fast_switch() alone is present - something to be fixed).
+
+I think it is fine as there is no guarantee from cpufreq core if
+.fast_switch() will get called and so target/target_index must be
+present. We can't do fast-switch today without schedutil (as only that
+enables it) and if a notifier gets registered before the driver, then
+we are gone again.
+
+> Will do, on both accounts.
 > 
-> Fixes: f046e4a3f0b9 ("memory: jz4780_nemc: Only request IO memory the driver will use")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
->  drivers/memory/jz4780-nemc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> > > +		static_branch_enable_cpuslocked(&cpufreq_set_freq_scale);
+> > > +		pr_debug("%s: Driver %s can provide frequency invariance.",
+> > > +			 __func__, driver->name);
+> > 
+> > I think a simpler print will work well too.
+> > 
+> >                 pr_debug("Freq invariance enabled");
+> > 
+> 
+> I think the right way of reporting this support is important here.
 
-Thanks, good patch. The pull request with offending patch was merged
-into arm-soc so I expect soon will be merged to Linus' tree. Therefore
-I'll apply this after merge window to current fixes.
+Yeah, we can't say it is enabled as you explained, though I meant
+something else here then, i.e. getting rid of driver name and
+unimportant stuff. What about this now:
 
-Best regards,
-Krzysztof
+pr_debug("supports frequency invariance");
+
+This shall get printed as this finally:
+
+cpufreq: supports frequency invariance
+
+-- 
+viresh
