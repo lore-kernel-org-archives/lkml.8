@@ -2,105 +2,196 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB977C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF19A2076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:54:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596513282;
-	bh=1wIRTKIibHj2cuI0fbbKzQxUIbvtAf6aPbLlnn72kQE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OHT7Ix08s3xRmsxqhj9kEuXkS/U1J2Dsh+Lq5+qA07bP5QQ/39lp/nTs/bacjPp4r
-	 67wkfX8/aWAklpsWPKDKYVglYmKfvxzP4bgD31vVGE9o0nsa93tkYZTSEszErxiaG6
-	 TAtzmU2Y0OHCZ39V2Ce53oQ3gTsqXX+mV+scIOEw=
+	by mail.kernel.org (Postfix) with ESMTP id D718C2076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:54:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F//qhSFz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729668AbgHDDyk (ORCPT
+        id S1729694AbgHDDyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 23:54:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50878 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728867AbgHDDyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 23:54:40 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB9DD206F6;
-        Tue,  4 Aug 2020 03:54:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596513280;
-        bh=1wIRTKIibHj2cuI0fbbKzQxUIbvtAf6aPbLlnn72kQE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qEbXUgW3AcpI2xod1XByY6z3bwg8Y/HzIsjplM1wVG4q6mFuvd1L2OpV6Lnza4GpY
-         +1tgSWn0K6UAVPxO0/NMjLZRxD38usgw0MvkfHrpzeDM+qTH/uEchteYXOu4xotkSv
-         GuCwsksVXLhfcmLfkXVamKL3a/P4sHSVUaddoUmQ=
-Date:   Mon, 3 Aug 2020 20:54:39 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
-        Daeho Jeong <daehojeong@google.com>
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix deadlock between quota writes and
- checkpoint
-Message-ID: <20200804035439.GA903802@google.com>
-References: <20200729070244.584518-1-jaegeuk@kernel.org>
- <670f35e1-872b-6602-320c-dd73bcb62510@huawei.com>
+        Mon, 3 Aug 2020 23:54:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44310 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728867AbgHDDyo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 23:54:44 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BDD7C06174A;
+        Mon,  3 Aug 2020 20:54:44 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id y206so9174198pfb.10;
+        Mon, 03 Aug 2020 20:54:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Cb9Zf+T+lG+gtOsk1owLoMWY7pZE0H1RQHusNF38Jhs=;
+        b=F//qhSFz9rhFOAXIqS9/SxQIIy18/1Q6ns+M1drCY0SW8JP2RayRGoraq9td9YRq0r
+         ka4W3OiyZEKlLv2BuyUT/qS0v6GHAzR46l3SC4/2anJi3Gf4HfTqudGwz3weIvpTOFVr
+         aDlLrsehQVn0e15rJKuLR/IjcjDJHQzqlZntFMsdZuBCkJX6UNh4Hq+HTahjucMzjMon
+         RRgbD+4VHxq215tFRbD9R9DxfdSIl9WGV2ruz5hF+chfFdi8VBIkwRyGD6gLTi2fViu+
+         xfH/Zjfyb9PycKrp16u9o0722VT31RPUKsrUtQaxJrh0UBpB3OWoX29IjrAjnv9D0a9S
+         jN8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Cb9Zf+T+lG+gtOsk1owLoMWY7pZE0H1RQHusNF38Jhs=;
+        b=Rzy29/zjPaOv4nHrPctUfevwIFmtoX2Kh4hQTYRHl0z/0PIj/yQZzGBlb/mdNlxDnX
+         E281m1m19W8A7PjBHp+mUJnHXuwDH0HLmzVf/aoj4jukN4+bLJLB6qdRdv5fntTmO1OO
+         t+C2Yz0593i1YGc6CfrNRok6/w4cgoTsvGnrRZpU0adnKd9kFjI9udpdhTfofD+i3EPf
+         xWbr3YNGrDQkFpbELxb0OJ+XqxLV8S8ScarTzwXfroNIHT/IWy4MWOng1PrTemKzyNeI
+         EAiNr0e3rDoy6hbWkFujfichP0yieaBNuZSNTgpjitCQOZy6VJetB582ZglykxNjw8Ao
+         2dkA==
+X-Gm-Message-State: AOAM530AA48fbT77dVaxj8Gb7EHR7IvM/C51QwiKMsU1WWxJXGbfgilZ
+        ugTkkqxGqyc51fCAfmJper5dkjxH
+X-Google-Smtp-Source: ABdhPJyNir5/+dPsOXoH2aCi7bHT7fl4iNTAfWgtcklV1vG1vXnC1xvKLLTqJb1MWV5cRnOtuT+rpA==
+X-Received: by 2002:a62:2b85:: with SMTP id r127mr17658193pfr.239.1596513282975;
+        Mon, 03 Aug 2020 20:54:42 -0700 (PDT)
+Received: from localhost (g223.115-65-55.ppp.wakwak.ne.jp. [115.65.55.223])
+        by smtp.gmail.com with ESMTPSA id z19sm21797941pfa.9.2020.08.03.20.54.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 20:54:42 -0700 (PDT)
+From:   Stafford Horne <shorne@gmail.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Stafford Horne <shorne@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        linux-arch@vger.kernel.org
+Subject: [PATCH v2] asm-generic/io.h: Fix sparse warnings on big-endian architectures
+Date:   Tue,  4 Aug 2020 12:54:37 +0900
+Message-Id: <20200804035437.3920009-1-shorne@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <670f35e1-872b-6602-320c-dd73bcb62510@huawei.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/04, Chao Yu wrote:
-> On 2020/7/29 15:02, Jaegeuk Kim wrote:
-> > f2fs_write_data_pages(quota_mapping)
-> >   __f2fs_write_data_pages             f2fs_write_checkpoint
-> >    * blk_start_plug(&plug);
-> >    * add bio in write_io[DATA]
-> >                                        - block_operations
-> >                                        - skip syncing quota by
-> >                                                  >DEFAULT_RETRY_QUOTA_FLUSH_COUNT
-> >                                        - down_write(&sbi->node_write);
-> 
-> f2fs_flush_merged_writes() will be called after block_operations(), why this doesn't
-> help?
+On big-endian architectures like OpenRISC, sparse outputs below warnings on
+asm-generic/io.h.  This is due to io statements like:
 
-Well, I think bio can be added after f2fs_flush_merged_writes() as well.
+  __raw_writel(cpu_to_le32(value), PCI_IOBASE + addr);
 
-> 
-> >    - f2fs_write_single_data_page
-> >      - f2fs_do_write_data_page
-> >        - f2fs_outplace_write_data
-> >          - do_write_page
-> >             - f2fs_allocate_data_block
-> >              - down_write(node_write)
-> >                                        - f2fs_wait_on_all_pages(F2FS_WB_CP_DATA);
-> > 
-> > Signed-off-by: Daeho Jeong <daehojeong@google.com>
-> > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> > ---
-> >   fs/f2fs/checkpoint.c | 2 ++
-> >   1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> > index 8c782d3f324f0..99c8061da55b9 100644
-> > --- a/fs/f2fs/checkpoint.c
-> > +++ b/fs/f2fs/checkpoint.c
-> > @@ -1269,6 +1269,8 @@ void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type)
-> >   		if (type == F2FS_DIRTY_META)
-> >   			f2fs_sync_meta_pages(sbi, META, LONG_MAX,
-> >   							FS_CP_META_IO);
-> > +		else if (type == F2FS_WB_CP_DATA)
-> > +			f2fs_submit_merged_write(sbi, DATA);
-> >   		io_schedule_timeout(DEFAULT_IO_TIMEOUT);
-> >   	}
-> >   	finish_wait(&sbi->cp_wait, &wait);
-> > 
+The __raw_writel() function expects native endianness, however
+cpu_to_le32() returns __le32.  On little-endian machines these match up
+and there is no issue.  However, on big-endian we get warnings, for IO
+that is defined as little-endian the mismatch is expected.
+
+The fix I propose is to __force to native endian.
+
+Warnings:
+
+./include/asm-generic/io.h:166:15: warning: cast to restricted __le16
+./include/asm-generic/io.h:166:15: warning: cast to restricted __le16
+./include/asm-generic/io.h:166:15: warning: cast to restricted __le16
+./include/asm-generic/io.h:166:15: warning: cast to restricted __le16
+./include/asm-generic/io.h:179:15: warning: cast to restricted __le32
+./include/asm-generic/io.h:179:15: warning: cast to restricted __le32
+./include/asm-generic/io.h:179:15: warning: cast to restricted __le32
+./include/asm-generic/io.h:179:15: warning: cast to restricted __le32
+./include/asm-generic/io.h:179:15: warning: cast to restricted __le32
+./include/asm-generic/io.h:179:15: warning: cast to restricted __le32
+./include/asm-generic/io.h:215:22: warning: incorrect type in argument 1 (different base types)
+./include/asm-generic/io.h:215:22:    expected unsigned short [usertype] value
+./include/asm-generic/io.h:215:22:    got restricted __le16 [usertype]
+./include/asm-generic/io.h:225:22: warning: incorrect type in argument 1 (different base types)
+./include/asm-generic/io.h:225:22:    expected unsigned int [usertype] value
+./include/asm-generic/io.h:225:22:    got restricted __le32 [usertype]
+
+Signed-off-by: Stafford Horne <shorne@gmail.com>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+---
+Changes since v1:
+ - Remove white space between casts and right hand value. That matches all of
+   the other casts.
+
+ include/asm-generic/io.h | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
+index 30a3aab312e6..dabf8cb7203b 100644
+--- a/include/asm-generic/io.h
++++ b/include/asm-generic/io.h
+@@ -163,7 +163,7 @@ static inline u16 readw(const volatile void __iomem *addr)
+ 	u16 val;
+ 
+ 	__io_br();
+-	val = __le16_to_cpu(__raw_readw(addr));
++	val = __le16_to_cpu((__le16 __force)__raw_readw(addr));
+ 	__io_ar(val);
+ 	return val;
+ }
+@@ -176,7 +176,7 @@ static inline u32 readl(const volatile void __iomem *addr)
+ 	u32 val;
+ 
+ 	__io_br();
+-	val = __le32_to_cpu(__raw_readl(addr));
++	val = __le32_to_cpu((__le32 __force)__raw_readl(addr));
+ 	__io_ar(val);
+ 	return val;
+ }
+@@ -212,7 +212,7 @@ static inline void writeb(u8 value, volatile void __iomem *addr)
+ static inline void writew(u16 value, volatile void __iomem *addr)
+ {
+ 	__io_bw();
+-	__raw_writew(cpu_to_le16(value), addr);
++	__raw_writew((u16 __force)cpu_to_le16(value), addr);
+ 	__io_aw();
+ }
+ #endif
+@@ -222,7 +222,7 @@ static inline void writew(u16 value, volatile void __iomem *addr)
+ static inline void writel(u32 value, volatile void __iomem *addr)
+ {
+ 	__io_bw();
+-	__raw_writel(__cpu_to_le32(value), addr);
++	__raw_writel((u32 __force)__cpu_to_le32(value), addr);
+ 	__io_aw();
+ }
+ #endif
+@@ -474,7 +474,7 @@ static inline u16 _inw(unsigned long addr)
+ 	u16 val;
+ 
+ 	__io_pbr();
+-	val = __le16_to_cpu(__raw_readw(PCI_IOBASE + addr));
++	val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+ 	__io_par(val);
+ 	return val;
+ }
+@@ -487,7 +487,7 @@ static inline u32 _inl(unsigned long addr)
+ 	u32 val;
+ 
+ 	__io_pbr();
+-	val = __le32_to_cpu(__raw_readl(PCI_IOBASE + addr));
++	val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+ 	__io_par(val);
+ 	return val;
+ }
+@@ -508,7 +508,7 @@ static inline void _outb(u8 value, unsigned long addr)
+ static inline void _outw(u16 value, unsigned long addr)
+ {
+ 	__io_pbw();
+-	__raw_writew(cpu_to_le16(value), PCI_IOBASE + addr);
++	__raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+ 	__io_paw();
+ }
+ #endif
+@@ -518,7 +518,7 @@ static inline void _outw(u16 value, unsigned long addr)
+ static inline void _outl(u32 value, unsigned long addr)
+ {
+ 	__io_pbw();
+-	__raw_writel(cpu_to_le32(value), PCI_IOBASE + addr);
++	__raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+ 	__io_paw();
+ }
+ #endif
+-- 
+2.26.2
+
