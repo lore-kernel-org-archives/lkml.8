@@ -2,139 +2,109 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 158D5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8C5C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0607D2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52DBE2067D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:41:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qRIWjL/a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgHDMiR (ORCPT
+        id S1726871AbgHDMlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 08:38:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:43436 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726724AbgHDMiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 08:38:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A242F30E;
-        Tue,  4 Aug 2020 05:38:15 -0700 (PDT)
-Received: from [10.37.12.45] (unknown [10.37.12.45])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 010543F71F;
-        Tue,  4 Aug 2020 05:38:13 -0700 (PDT)
-Subject: Re: [PATCH] memory: samsung: exynos5422-dmc: propagate error from
- exynos5_counters_get()
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>
-References: <CGME20200804061225eucas1p283c1e0dc404bc420a2184480fdfd2b0d@eucas1p2.samsung.com>
- <20200804061210.5415-1-m.szyprowski@samsung.com>
- <24675559-b807-5b80-1318-805c1530ffb3@arm.com>
- <78c95f58-8142-7607-6d74-5cfa6a7ffb77@samsung.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <f3f416ac-0d63-b4e5-676f-8801b4166c11@arm.com>
-Date:   Tue, 4 Aug 2020 13:38:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <78c95f58-8142-7607-6d74-5cfa6a7ffb77@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 4 Aug 2020 08:41:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40712 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725864AbgHDMle (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 08:41:34 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF881C06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 05:41:34 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id v65so4880244ybv.9
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 05:41:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=EW4ws3cnCq+yc75UdLo6m+LVSSHzgz4WkI84lcOYn3g=;
+        b=qRIWjL/aEST9Bgmmx1TReXVYXWMihOsuP+mAYj0qjuyBiTphgrU8vG2kDlWWLDxxZc
+         Jg/LIbVqWQjdvN5QE8h4YxR5/B9yyZrsWE8c8qZW41jeLrHYTrlw9Cgi5XREl8IxDRfC
+         co///64tOPGz+FN54l2XLrTcKdQjbLgUiQfL0z3QjR2C4z46DUpqY7w/AgukOpoxYc3p
+         CD9+UVlpekMWPXavUVNf5FWgoZzMzg5BltVr5+w/viNnAaKQBsKSXLhBzBu/rH/ShMam
+         93k5taOEn8vzxT+jZUIfKqfUVPR7WK1vFT7PcRQ0StCmtlNMT8Nh+075v3BYofndZUtW
+         VoeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=EW4ws3cnCq+yc75UdLo6m+LVSSHzgz4WkI84lcOYn3g=;
+        b=L3F+jw3AK83WjkOSQXEdRDzLmbNJ3ArcuCRh8t8qt1lGT6h0tNED0nEVV0jrEnNBNX
+         hDAgkkcxyVw5KWRAYvI2wnljtBJJl3nxGCuUaDWBsUFUWBr8OWY0GkmEAG7u+pNJVwbL
+         PbwkIJXuuIsFOVW0Tp+T3SY+7k7aYtUUYW8DWiMCZ4cIXA65Yugllem5a9uhIVoPscxo
+         dROdLso8HxdMl17n+zl1s34uo507tauQem2aYaR2oKgW0mhSI7fLCZkxGCFP49QC1vUT
+         ti+goAoxjCIlmErb/dZhbqRLXA7nPn2/KpS0vZNi1pPEm+DLf84UyXcICyeXDJUBwdEq
+         YjJw==
+X-Gm-Message-State: AOAM531gKWB9pfHuuJjwwuku+uQk7x+azkDrcolB+K92BEowH52VWzDi
+        TF0gfAMhOD3gTnW9xVDkM9BTSEHrlTx/QqSi
+X-Google-Smtp-Source: ABdhPJzh3yXfnlrh952yFi751mKOqrTYGBJNP8FaBO9bCdmzHWrwFtNMq9Jua++VtvKtWW7vV9nXY4rjJmmS8ewv
+X-Received: by 2002:a25:cc07:: with SMTP id l7mr33304214ybf.440.1596544893505;
+ Tue, 04 Aug 2020 05:41:33 -0700 (PDT)
+Date:   Tue,  4 Aug 2020 14:41:23 +0200
+Message-Id: <cover.1596544734.git.andreyknvl@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+Subject: [PATCH v2 0/5] kasan: support stack instrumentation for tag-based mode
+From:   Andrey Konovalov <andreyknvl@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Marco Elver <elver@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org,
+        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Walter Wu <walter-zh.wu@mediatek.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This goes on top of Walter's patch titled "kasan: fix KASAN unit tests
+for tag-based KASAN" (already in mm tree).
 
+Bugzilla link: https://bugzilla.kernel.org/show_bug.cgi?id=203497
 
-On 8/4/20 1:19 PM, Marek Szyprowski wrote:
-> Hi Lukasz,
-> 
-> On 04.08.2020 11:11, Lukasz Luba wrote:
->> Hi Marek,
->>
->> On 8/4/20 7:12 AM, Marek Szyprowski wrote:
->>> exynos5_counters_get() might fail with -EPROBE_DEFER if the driver for
->>> devfreq event counter is not yet probed. Propagate that error value to
->>> the caller to ensure that the exynos5422-dmc driver will be probed again
->>> when devfreq event contuner is available.
->>>
->>> This fixes boot hang if both exynos5422-dmc and exynos-ppmu drivers are
->>> compiled as modules.
->>>
->>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->>> ---
->>>    drivers/memory/samsung/exynos5422-dmc.c | 2 +-
->>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/memory/samsung/exynos5422-dmc.c
->>> b/drivers/memory/samsung/exynos5422-dmc.c
->>> index b9c7956e5031..639811a3eecb 100644
->>> --- a/drivers/memory/samsung/exynos5422-dmc.c
->>> +++ b/drivers/memory/samsung/exynos5422-dmc.c
->>> @@ -914,7 +914,7 @@ static int exynos5_dmc_get_status(struct device
->>> *dev,
->>>        } else {
->>>            ret = exynos5_counters_get(dmc, &load, &total);
->>>            if (ret < 0)
->>> -            return -EINVAL;
->>> +            return ret;
->>>              /* To protect from overflow, divide by 1024 */
->>>            stat->busy_time = load >> 10;
->>>
->>
->> Thank you for the patch, LGTM.
->> Some questions are still there, though. The function
->> exynos5_performance_counters_init() should capture that the counters
->> couldn't be enabled or set. So the functions:
->> exynos5_counters_enable_edev() and exynos5_counters_set_event()
->> must pass gently because devfreq device is registered.
->> Then devfreq checks device status, and reaches the state when
->> counters 'get' function returns that they are not ready...
->>
->> If that is a kind of 2-stage initialization, maybe we should add
->> another 'check' in the exynos5_performance_counters_init() and call
->> the devfreq_event_get_event() to make sure that we are ready to go,
->> otherwise return ret from that function (which is probably EPROBE_DEFER)
->> and not register the devfreq device.
-> 
-> I've finally investigated this further and it turned out that the issue
-> is elsewhere. The $subject patch can be discarded, as it doesn't fix
-> anything. The -EPROBE_DEFER is properly returned by
-> exynos5_performance_counters_init(), which redirects exynos5_dmc_probe()
-> to remove_clocks label. This causes disabling mout_bpll/fout_bpll clocks
-> what in turn *sometimes* causes boot hang. This random behavior mislead
-> me that the $subject patch fixes the issue, but then longer tests
-> revealed that it didn't change anything.
+Thanks to Walter Wu for debugging and testing.
 
-Really good investigation, great work Marek!
+Changes v1 -> v2:
+- Add efi patch to undefined reference to `efi_enter_virtual_mode'.
+- Reorder attributes for start_kernel().
 
-> 
-> It looks that the proper fix would be to keep fout_bpll enabled all the
-> time.
+Andrey Konovalov (5):
+  kasan: don't tag stacks allocated with pagealloc
+  efi: provide empty efi_enter_virtual_mode implementation
+  kasan, arm64: don't instrument functions that enable kasan
+  kasan: allow enabling stack tagging for tag-based mode
+  kasan: adjust kasan_stack_oob for tag-based mode
 
-Yes, I agree. I am looking for your next patch to test it then.
+ arch/arm64/kernel/setup.c | 2 +-
+ include/linux/efi.h       | 4 ++++
+ init/main.c               | 2 +-
+ kernel/fork.c             | 3 ++-
+ lib/test_kasan.c          | 2 +-
+ scripts/Makefile.kasan    | 3 ++-
+ 6 files changed, 11 insertions(+), 5 deletions(-)
 
-> 
->>
->> Marek do want to submit such patch or I should bake it and submit on top
->> of this patch?
->>
->> Could you tell me how I can reproduce this? Do you simply load one
->> module after another (exynos-ppmu than exynos5422-dmc) or in parallel?
-> 
-> I've just boot zImage built from multi_v7_defconfig with modules
-> installed. Modules are automatically loaded by udev during boot.
+-- 
+2.28.0.163.g6104cc2f0b6-goog
 
-Thank you sharing this test procedure.
-
-Regards,
-Lukasz
