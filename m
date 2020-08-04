@@ -2,117 +2,101 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF6EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03816C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8621C22B45
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:49:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZiibNN8S"
+	by mail.kernel.org (Postfix) with ESMTP id F3E9E22C9F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:49:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596527375;
+	bh=8p+XCJZnz+9HnH0A9r61I2MYnTcinVNhhgF+AKtpNpg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=a5gITOCM3ccDAKjLlFNmT6/250YlR62BHrnBQUNJZ5zhlJZLCOQkSUhpjfYomxbF3
+	 GaBoyycligwv1y7FhW18D7vIZdgIsTe0aLRga6IXnLxNJqyN/qBwXcdm248Bl11pOV
+	 lQ71cqc4Xj5koMqyOurfCb0Z983suD9Ue2A6hQkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbgHDHtZ (ORCPT
+        id S1729113AbgHDHtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 03:49:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgHDHtY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 03:49:24 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D7C4C06174A;
-        Tue,  4 Aug 2020 00:49:24 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id k13so14573169plk.13;
-        Tue, 04 Aug 2020 00:49:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=4lUb1UDGtIibOehfsGOpj3d1F0eGCARLUemjRhAopo4=;
-        b=ZiibNN8Sjxcp1HIHuEaLVJfUxGcJ7w6XHP+IdD5Zy5ctaJrRP2lsbQGyOybdf6qYcv
-         4wfu/so9vVxhUtrHI24F/dkcYhD0/vD9qtG9yRlxV0JAPgWBJ4IuODgG0a5ZaCxCMXyz
-         vdtU0yI40y3qbB1BheU1pWTOh3TkpDKcub1szRcGoYZUZRR8KiyRY3bHAldHVpR7SIT4
-         PdecyM8LOF0GKlpy6qP3SSj8u3FOCin3I4FT3O+Ec3tEWk+XHGd6dmpIchFsgusnbxjC
-         0hXqaPgHBLWXb7naGKLV5WirN7JdnRAQwLiybUOlm/8uxUwcLl8+btaqt1oLLpx/R2II
-         p2bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=4lUb1UDGtIibOehfsGOpj3d1F0eGCARLUemjRhAopo4=;
-        b=pcFn8IuuSJdwPhM5175ojzT3sE0TmH3cCqqy/3r+kWyNl4zMc6WJEn/cFGYKpwRUou
-         wj5x8Z+SUWAd9H9mPf17sZlT8aH6gr7nttWZSLYMFUuaLUGGTNbcfPF+eXfk9+IN24e2
-         Oon3fvWtXn+sCvuqAq8YmDWNdT6I7bQmkA3kQKGqo4NLTBJrfa0+TJBoTYJDmPO7/Wg0
-         XzP0fkX4LCD2288dm16cpdigzDbaXiLt0syY8lcXJcfsKK8/rzivBuKv4wjsaIU3BmKz
-         7sAy1C+PNlMkYRp5XCDEl2klGIXcPeI5Jw2L/TDtyQ9MPnYa6GhMgg8KbGq2z4W6iiq7
-         mh0g==
-X-Gm-Message-State: AOAM531oHW84w/wrCVxqLOJfTifMX5uT00UJgiyC8fQJseIPacwg9Ap5
-        MFrxgzLDhvGi9KipWga/PVgByxlx9/Q=
-X-Google-Smtp-Source: ABdhPJxzAJE/ZkD3Su8IXKsD+lGk6tNMUV3r8nMIof4uJv+YxoUbAU8B6Cuv9P0Bj9rdEQe3WGdlUg==
-X-Received: by 2002:a17:902:d303:: with SMTP id b3mr18596539plc.101.1596527364077;
-        Tue, 04 Aug 2020 00:49:24 -0700 (PDT)
-Received: from [127.0.0.1] ([203.205.141.45])
-        by smtp.gmail.com with ESMTPSA id q5sm2746455pfg.89.2020.08.04.00.49.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Aug 2020 00:49:23 -0700 (PDT)
-To:     tytso@mit.edu, adilger.kernel@dilger.ca
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   brookxu <brookxu.cn@gmail.com>
-Subject: [PATCH] ext4: delete invalid ac_b_extent backup inside
- ext4_mb_use_best_found()
-Message-ID: <ab2231e8-584a-c55b-38b3-5b5f6d02c9b8@gmail.com>
-Date:   Tue, 4 Aug 2020 15:49:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 4 Aug 2020 03:49:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54540 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbgHDHtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 03:49:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C37722B40;
+        Tue,  4 Aug 2020 07:49:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596527372;
+        bh=8p+XCJZnz+9HnH0A9r61I2MYnTcinVNhhgF+AKtpNpg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QEL7Ges95rD4FR5z0wQEU5DzHET9Wk0ntPfdgYF1QGb6pg+pTc/cxEXsOesX9z9b0
+         Kvl1wyaVyXgowih1ziv7uWRTg7o7qYi3oDRRYwhWiR52hhIchpByEHyMFIRYlrgbte
+         0PmNiV4WD6VTWfLuKlTns/SzYSokjI1e9OeNMeMw=
+Date:   Tue, 4 Aug 2020 09:49:13 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     ivan <yanziily@gmail.com>
+Cc:     Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@denx.de>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jiangfei1@xiaomi.com, Qiwu Huang <huangqiwu@xiaomi.com>
+Subject: Re: [PATCH v4 1/4] power: supply: core: add quick charge type
+ property
+Message-ID: <20200804074913.GC1761483@kroah.com>
+References: <cover.1595214246.git.huangqiwu@xiaomi.com>
+ <c9d3199ec18625f9cc4448c3b2049ea2ae80358b.1595214246.git.huangqiwu@xiaomi.com>
+ <20200802120015.GA1289@bug>
+ <20200802123742.GA257810@kroah.com>
+ <20200802142825.GA20261@amd>
+ <20200802165738.GA293244@kroah.com>
+ <20200803114950.oyb3gzyiccybah3u@earth.universe>
+ <20200803115644.GC955269@kroah.com>
+ <CAPtXDt1hMrgJ_9Zs6Zmkzf4b1-QfEcZPp7dKG26G6ZEqBxCgBw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPtXDt1hMrgJ_9Zs6Zmkzf4b1-QfEcZPp7dKG26G6ZEqBxCgBw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Delete invalid ac_b_extent backup inside ext4_mb_use_best_found(),
-we have done this operation in ext4_mb_new_group_pa() and
-ext4_mb_new_inode_pa().
+On Tue, Aug 04, 2020 at 10:11:19AM +0800, ivan wrote:
+> On Mon, Aug 3, 2020 at 7:57 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Mon, Aug 03, 2020 at 01:49:50PM +0200, Sebastian Reichel wrote:
+> > > More importantely I prefer not to merge new APIs without any users
+> > > (i.e. a driver making use of those values). Having a reference
+> > > driver means, that there is an example how to use the values
+> > > correctly and proves it is actually needed upstream. Right now
+> > > this looks like "let's modify the upstream kernel, so that we can
+> > > easily maintain our out of tree driver".
+> >
+> > Agreed.  Qiwu, can you also submit your driver so we can see these
+> > values be used?
+> 
+> Our driver is based on qualcomm's driver secondary development.
+> 
+> The driver code is for mi 10.
+> 
+> https://github.com/MiCode/Xiaomi_Kernel_OpenSource/blob/umi-q-oss/drivers/power/supply/qcom/qpnp-smb5.c#L1434
+> 
+> + case POWER_SUPPLY_PROP_QUICK_CHARGE_TYPE:
+> +     val->intval = smblib_get_quick_charge_type(chg);
+> +     break;
+> 
+> https://github.com/MiCode/Xiaomi_Kernel_OpenSource/blob/umi-q-oss/drivers/power/supply/qcom/smb5-lib.c#L7713
 
-Signed-off-by: Chunguang Xu <brookxu@tencent.com>
----
- fs/ext4/mballoc.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+<snip>
 
-diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-index 9b1c3ad..fb63e9f 100644
---- a/fs/ext4/mballoc.c
-+++ b/fs/ext4/mballoc.c
-@@ -1704,10 +1704,6 @@ static void ext4_mb_use_best_found(struct ext4_allocation_context *ac,
-     ac->ac_b_ex.fe_logical = ac->ac_g_ex.fe_logical;
-     ret = mb_mark_used(e4b, &ac->ac_b_ex);
- 
--    /* preallocation can change ac_b_ex, thus we store actually
--     * allocated blocks for history */
--    ac->ac_f_ex = ac->ac_b_ex;
--
-     ac->ac_status = AC_STATUS_FOUND;
-     ac->ac_tail = ret & 0xffff;
-     ac->ac_buddy = ret >> 16;
-@@ -1726,8 +1722,8 @@ static void ext4_mb_use_best_found(struct ext4_allocation_context *ac,
-     /* store last allocated for subsequent stream allocation */
-     if (ac->ac_flags & EXT4_MB_STREAM_ALLOC) {
-         spin_lock(&sbi->s_md_lock);
--        sbi->s_mb_last_group = ac->ac_f_ex.fe_group;
--        sbi->s_mb_last_start = ac->ac_f_ex.fe_start;
-+        sbi->s_mb_last_group = ac->ac_b_ex.fe_group;
-+        sbi->s_mb_last_start = ac->ac_b_ex.fe_start;
-         spin_unlock(&sbi->s_md_lock);
-     }
-     /*
--- 
-1.8.3.1
+Great, can you submit these drivers as patches as part of this series?
+That's the best way for all of this to be integrated.
 
+thanks,
+
+greg k-h
