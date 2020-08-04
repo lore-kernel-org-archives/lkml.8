@@ -2,132 +2,100 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E75D9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17812C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D61722177B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E94DA208A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:57:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="siiuYorx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729092AbgHDP4q (ORCPT
+        id S1729300AbgHDP50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 11:56:46 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:47795 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729022AbgHDP4p (ORCPT
+        Tue, 4 Aug 2020 11:57:26 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:54906 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729022AbgHDP5H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 11:56:45 -0400
-Received: from localhost (lfbn-lyo-1-23-225.w86-202.abo.wanadoo.fr [86.202.118.225])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id AE1C610000A;
-        Tue,  4 Aug 2020 15:56:36 +0000 (UTC)
-Date:   Tue, 4 Aug 2020 17:56:36 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Claudiu.Beznea@microchip.com
-Cc:     Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com,
-        wenyou.yang@atmel.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] ARM: at91: pm: add per soc validation of pm modes
-Message-ID: <20200804155636.GC10725@piout.net>
-References: <1596539258-20719-1-git-send-email-claudiu.beznea@microchip.com>
- <1596539258-20719-3-git-send-email-claudiu.beznea@microchip.com>
- <20200804114223.GC7836@piout.net>
- <f9e1d923-225e-7a18-ed48-c8c7e7d4d8cf@microchip.com>
- <20200804150841.GA10725@piout.net>
- <5c00c0f9-dc73-fb8d-aef8-88f4bc923295@microchip.com>
+        Tue, 4 Aug 2020 11:57:07 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 3CE6520B4908;
+        Tue,  4 Aug 2020 08:57:06 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3CE6520B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1596556626;
+        bh=VpAp+gwtX80StpLhWTSeWeTMwUZ22EUYNIZ2mT0WBts=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=siiuYorxFApiTutRO1Fq7FQ6URRgVvncZmVb1M/+HCPfxlM1sq1xVO/vR+KyX8BNQ
+         7JSsbMLQy5Oj0jTbSONyrTgqXXo70xkMqsXXTt+G0HS4sTYu2Hvd+zVu5oSwXNpaIY
+         DGOwjAUXj7JHYqoZw00cWBAMJFnxw5OPqArnMdvY=
+Subject: Re: [PATCH v5 3/4] LSM: Define SELinux function to measure state and
+ policy
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     Mimi Zohar <zohar@linux.ibm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Tyler Hicks <tyhicks@linux.microsoft.com>, sashal@kernel.org,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200730034724.3298-1-nramas@linux.microsoft.com>
+ <20200730034724.3298-4-nramas@linux.microsoft.com>
+ <dfd6f9c8-d62a-d278-9b0e-6b1f5ad03d3e@gmail.com>
+ <6371efa9-5ae6-05ac-c357-3fbe1a5a93d5@linux.microsoft.com>
+ <CAEjxPJ789kmdDwy-6RaL7HuMFxKpQ9Hwxj9J-_-f62XDCNJUiA@mail.gmail.com>
+ <f992901f-6dca-7d31-3426-5a74d36c2c8c@gmail.com>
+ <d988a6d0-04e0-62f0-2705-4352b268ca55@linux.microsoft.com>
+ <5c843a3d-713c-e71f-8d4f-c6e5f51422f1@gmail.com>
+ <3e766eed-7a0b-afca-6139-ac43dea053d7@linux.microsoft.com>
+ <0fa0b1f3-6226-c307-0f11-8b3a881a070e@gmail.com>
+ <32da0a4a-252a-67d8-5dc8-173959f6ddb4@gmail.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <a66155ea-151d-cfd7-01f0-15ed6f18e26b@linux.microsoft.com>
+Date:   Tue, 4 Aug 2020 08:57:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5c00c0f9-dc73-fb8d-aef8-88f4bc923295@microchip.com>
+In-Reply-To: <32da0a4a-252a-67d8-5dc8-173959f6ddb4@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/08/2020 15:45:40+0000, Claudiu.Beznea@microchip.com wrote:
+On 8/4/20 8:29 AM, Stephen Smalley wrote:
+
+>>> Perhaps vmalloc would be better than using kmalloc? If there are 
+>>> better options for such large buffer allocation, please let me know.
+>>
+>> kvmalloc() can be used to select whichever one is most appropriate.
 > 
-> 
-> On 04.08.2020 18:08, Alexandre Belloni wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> > 
-> > On 04/08/2020 15:00:38+0000, Claudiu.Beznea@microchip.com wrote:
-> >>
-> >>
-> >> On 04.08.2020 14:42, Alexandre Belloni wrote:
-> >>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> >>>
-> >>> Hello,
-> >>>
-> >>> On 04/08/2020 14:07:37+0300, Claudiu Beznea wrote:
-> >>>>  void __init at91rm9200_pm_init(void)
-> >>>>  {
-> >>>> +     static const int modes[] __initconst = {
-> >>>
-> >>> You don't need that to be static as it is now local to the function.
-> >>>
-> >>>> +             AT91_PM_STANDBY, AT91_PM_ULP0
-> >>>> +     };
-> >>>> +
-> >>>>       if (!IS_ENABLED(CONFIG_SOC_AT91RM9200))
-> >>>>               return;
-> >>>>
-> >>>> +     at91_pm_modes_validate(modes, ARRAY_SIZE(modes));
-> >>>
-> >>> For rm9200 and at91sam9, I would not allow changing the pm_modes and
-> >>> simply enforce standby_mode = AT91_PM_STANDBY and suspend_mode =
-> >>> AT91_PM_ULP0.I don't think you have any user that ever changed that
-> >>> behaviour also that avoids increasing the boot time for those slow SoCs.
-> >>
-> >> OK, but bootargs is parsed at a moment when there is no information about
-> >> the machine that is running the code. And enforcing this in *_pm_init()
-> >> functions for rm9200 and at91sam9 may change suspend and standby mode that
-> >> user selected. If there is no user up to this moment there is still the
-> >> possibility of being one in the future.
-> >>
-> > 
-> > So let's prevent users from doing that. Unused arguments are silently
-> > ignored which is exactly what we want to do.
-> 
-> Can you share what are you thinking about? You want to not parse
-> atmel.pm_modes for this machines?
+> Other option would be for ima to compute and save the hash(es) of the 
+> payload and not the payload itself for later use.  I guess you won't 
+> know at that point which hash algorithm is desired?
 > 
 
-Well, as you said, when parsing we don't know on which machine we are
-running so let's keep parsing it anyway.
+I think IMA hash algorithm would be known at that point, but IMA policy 
+is not loaded yet (which is why I need to queue up the buffer and 
+process when policy is loaded).
 
-> > You won't make me believe
-> > there is actually a use case for swapping the standby and suspend
-> > meanings.
-> What i want to say is this:
-> bootargs contains atmel.pm_modes=ulp0,standby
-> 
-> this leads to
-> standby_mode=ulp0
-> suspend_mode=standby
-> 
-> But you want in code to force
-> standby_mode=standby
-> suspend_mode=ulp0
-> 
-> The question is: is this what you are thinking this should be done?
-> 
+I tried vmalloc and tested it with upto 16MB buffer (just made up a 
+SELinux policy buffer of size 16MB) - that works fine.
 
-Yes, I think we need to enforce standby_mode=standby and
-suspend_mode=ulp0 for rm9200 and at91sam9. This is how it always have
-been.
+I will try kvmalloc().
 
-You have two ways of doing that:
+Also, I fixed the issue with LSM data not measured when using the IMA 
+policy you had. Good catch.
 
-Etiher you enforce the values after parsing, in at91rm9200_pm_init and
-at91sam9_pm_init. Or, when parsing your store the values in a different
-location than soc_pm.data and update soc_pm.data only in sama5_pm_init,
-sama5d2_pm_init and sam9x60_pm_init. I feel like the first solution is
-easier.
+Will post the updated patches today.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+thanks,
+  -lakshmi
