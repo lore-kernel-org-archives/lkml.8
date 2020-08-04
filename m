@@ -2,100 +2,58 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD22C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D45B2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89116206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA160206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:47:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729760AbgHDEpf (ORCPT
+        id S1729769AbgHDEr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 00:45:35 -0400
-Received: from mga14.intel.com ([192.55.52.115]:39845 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726000AbgHDEpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 00:45:33 -0400
-IronPort-SDR: kfL1hhR3qfjjTNV8hfCpcsrQLwfs0AIYwjw1nvIbAcvD/VvqQ936dkHnrblIdVV/CwIN+AP2fc
- ooqeyh1UxnVw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="151475754"
-X-IronPort-AV: E=Sophos;i="5.75,432,1589266800"; 
-   d="scan'208";a="151475754"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 21:45:32 -0700
-IronPort-SDR: yT+NnfDzkBBqZocXS5Cm5LSqUA6iXDA0PdiYx2LJzMwyVMnoKnfAmSFyjlrUPndNHDPKGRzR/+
- LEl1MtaDPn8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,432,1589266800"; 
-   d="scan'208";a="292419767"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga006.jf.intel.com with ESMTP; 03 Aug 2020 21:45:32 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 40984301C06; Mon,  3 Aug 2020 21:45:32 -0700 (PDT)
-Date:   Mon, 3 Aug 2020 21:45:32 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jian Cai <jiancai@google.com>,
-        =?utf-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>,
-        Luis Lozano <llozano@google.com>,
-        Manoj Gupta <manojgupta@google.com>, stable@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: Re: [PATCH v5 13/36] vmlinux.lds.h: add PGO and AutoFDO input
- sections
-Message-ID: <20200804044532.GC1321588@tassilo.jf.intel.com>
-References: <20200731230820.1742553-1-keescook@chromium.org>
- <20200731230820.1742553-14-keescook@chromium.org>
- <20200801035128.GB2800311@rani.riverdale.lan>
- <20200803190506.GE1299820@tassilo.jf.intel.com>
- <20200803201525.GA1351390@rani.riverdale.lan>
+        Tue, 4 Aug 2020 00:47:57 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:44281 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726000AbgHDEr5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 00:47:57 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R931e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=xhao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0U4iAlcc_1596516457;
+Received: from IT-C02ZL2E9LVDL.local(mailfrom:xhao@linux.alibaba.com fp:SMTPD_---0U4iAlcc_1596516457)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 04 Aug 2020 12:47:54 +0800
+Subject: Re: [PATCH v3] cpufreq: CPPC: simply the code access 'highest_perf'
+ value in cppc_perf_caps struct
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     rjw@rjwysocki.net, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200701042007.13333-1-xhao@linux.alibaba.com>
+ <8643d122-c069-192e-8f3a-dc18f84eed9a@linux.alibaba.com>
+ <20200804043740.cde3ij2uk4xczemh@vireshk-mac-ubuntu>
+From:   Xin Hao <xhao@linux.alibaba.com>
+Message-ID: <5f1f469d-4920-2d57-cb7c-0fea45e837c2@linux.alibaba.com>
+Date:   Tue, 4 Aug 2020 12:47:37 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200803201525.GA1351390@rani.riverdale.lan>
+In-Reply-To: <20200804043740.cde3ij2uk4xczemh@vireshk-mac-ubuntu>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Why is that? Both .text and .text.hot have alignment of 2^4 (default
-> function alignment on x86) by default, so it doesn't seem like it should
-> matter for packing density.  Avoiding interspersing cold text among
+Thanks
 
-You may lose part of a cache line on each unit boundary. Linux has 
-a lot of units, some of them small. All these bytes add up.
-
-It's bad for TLB locality too. Sadly with all the fine grained protection
-changes the 2MB coverage is eroding anyways, but this makes it even worse.
-
-> regular/hot text seems like it should be a net win.
-
-> 
-> That old commit doesn't reference efficiency -- it says there was some
-> problem with matching when they were separated out, but there were no
-> wildcard section names back then.
-
-It was about efficiency.
-
--Andi
+ÔÚ 2020/8/4 ÏÂÎç12:37, Viresh Kumar Ð´µÀ:
+> On 04-08-20, 10:37, Xin Hao wrote:
+>> Hi everyone:
+>>
+>> I want to know why my patch didn't merge into upstream ?
+> I have sent a pull request earlier today to Rafael and this will get
+> merged in the next pull request Rafael will send to Linus.
+>
