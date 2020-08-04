@@ -2,110 +2,128 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BD8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6422622BED
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:15:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9400222B45
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:16:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596575707;
-	bh=tbCDeBlFPTN3tR2opupaPgmE296pCaRtjKYPZNrKFxY=;
+	s=default; t=1596575773;
+	bh=6y7RE+hgDgrNRFsLnMe7+1bqyOR9ko768+Vm0y40/zM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V2NG1py+fpUETnUwl69qQyC51p57RGc8ThTrv9sU29F8zy+L1+ABQCERxJkapTktx
-	 zm8of69iz1eX/nocmMsOVRdxj7+t45ShgnWJfRmCkQNY2XXS2w7lLHlo6rhlwLqezA
-	 Mkm2QonuUmPngFOIedRS3YqVUGynpGtF8Agl6C1Y=
+	b=ybGCzdkoAv7jLVRE3gAw8xqhZIQlErMfa0gjL0+rUj41kTDvUYCfZGRcILfhuYtom
+	 3HJBXuMY5n2wAgQN2K1c+aFFEj9WgnXsP+XS62/5sUsqOtqX9GoPLOJ0ZSatgsoMRS
+	 1NeBUukIiF1h2mJbcn9pxvnTKHF8Te4NbyLo+Jfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgHDVPG (ORCPT
+        id S1726935AbgHDVQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 17:15:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51282 "EHLO mail.kernel.org"
+        Tue, 4 Aug 2020 17:16:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbgHDVPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 17:15:05 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1725999AbgHDVQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 17:16:10 -0400
+Received: from gmail.com (unknown [104.132.1.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6DE22075A;
-        Tue,  4 Aug 2020 21:15:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1F9C20792;
+        Tue,  4 Aug 2020 21:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596575705;
-        bh=tbCDeBlFPTN3tR2opupaPgmE296pCaRtjKYPZNrKFxY=;
+        s=default; t=1596575770;
+        bh=6y7RE+hgDgrNRFsLnMe7+1bqyOR9ko768+Vm0y40/zM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tk4CLVIc/F98FWYpkvEKaxb5qTlpa1/kmW4bFZjBWySL4/Oa1FKan5BnJJQzCcAcs
-         zHQOD+s0GZHqjPvCktBrqyPWsfcQLFOOsbS1T0MpI8rN0E50bkY8iPqC0ZImcK9wtv
-         wQhIHqAnwKP6Nj4rVEA0gq2oQkjOAzleJhyGyJWY=
-Date:   Tue, 4 Aug 2020 22:14:43 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Feng Tang <feng.tang@intel.com>, Vinod Koul <vkoul@kernel.org>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/8] spi: dw-dma: Add max SG entries burst capability
- support
-Message-ID: <20200804211443.GE5249@sirena.org.uk>
-References: <20200731075953.14416-1-Sergey.Semin@baikalelectronics.ru>
- <20200731092612.GK3703480@smile.fi.intel.com>
- <20200731125954.jeeqmccnknqllwxh@mobilestation>
+        b=M2dGU1wdwMijDDQjOhfIgAuo8XXz6zJkha4owe9yHW7H84Vw9FkNIGAfD5N+iOuPq
+         2DhtL2Bn3pyGZZTgVRsrQ8g3DXPFqSpftVVfSGHjN24kNHIrFMwkPilNS4mrwEP4l0
+         IOv43Qv7qCRti04OcpT9ta5lHI05EPA7eqtDWvjM=
+Date:   Tue, 4 Aug 2020 14:16:08 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     timmurray@google.com, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, viro@zeniv.linux.org.uk, paul@paul-moore.com,
+        nnk@google.com, sds@tycho.nsa.gov, lokeshgidra@google.com,
+        jmorris@namei.org
+Subject: Re: [PATCH v5 3/3] Wire UFFD up to SELinux
+Message-ID: <20200804211608.GC1992048@gmail.com>
+References: <20200326200634.222009-1-dancol@google.com>
+ <20200401213903.182112-1-dancol@google.com>
+ <20200401213903.182112-4-dancol@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="G6nVm6DDWH/FONJq"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200731125954.jeeqmccnknqllwxh@mobilestation>
-X-Cookie: Every solution breeds new problems.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200401213903.182112-4-dancol@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 01, 2020 at 02:39:03PM -0700, Daniel Colascione wrote:
+> This change gives userfaultfd file descriptors a real security
+> context, allowing policy to act on them.
+> 
+> Signed-off-by: Daniel Colascione <dancol@google.com>
+> ---
+>  fs/userfaultfd.c | 30 ++++++++++++++++++++++++++----
+>  1 file changed, 26 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+> index 37df7c9eedb1..78ff5d898733 100644
+> --- a/fs/userfaultfd.c
+> +++ b/fs/userfaultfd.c
+> @@ -76,6 +76,8 @@ struct userfaultfd_ctx {
+>  	bool mmap_changing;
+>  	/* mm with one ore more vmas attached to this userfaultfd_ctx */
+>  	struct mm_struct *mm;
+> +	/* The inode that owns this context --- not a strong reference.  */
+> +	const struct inode *owner;
+>  };
 
---G6nVm6DDWH/FONJq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Adding this field seems wrong.  There's no reference held to it, so it can only
+be used if the caller holds a reference to the inode anyway.  The only user of
+this field is via userfafultfd_read(), so why not just use the inode of the
+struct file passed to userfaultfd_read()?
 
-On Fri, Jul 31, 2020 at 03:59:54PM +0300, Serge Semin wrote:
-> On Fri, Jul 31, 2020 at 12:26:12PM +0300, Andy Shevchenko wrote:
-> > On Fri, Jul 31, 2020 at 10:59:45AM +0300, Serge Semin wrote:
+>  SYSCALL_DEFINE1(userfaultfd, int, flags)
+>  {
+> +	struct file *file;
+>  	struct userfaultfd_ctx *ctx;
+>  	int fd;
+>  
+> @@ -1974,8 +1979,25 @@ SYSCALL_DEFINE1(userfaultfd, int, flags)
+>  	/* prevent the mm struct to be freed */
+>  	mmgrab(ctx->mm);
+>  
+> -	fd = anon_inode_getfd("[userfaultfd]", &userfaultfd_fops, ctx,
+> -			      O_RDWR | (flags & UFFD_SHARED_FCNTL_FLAGS));
+> +	file = anon_inode_getfile_secure(
+> +		"[userfaultfd]", &userfaultfd_fops, ctx,
+> +		O_RDWR | (flags & UFFD_SHARED_FCNTL_FLAGS),
+> +		NULL);
+> +	if (IS_ERR(file)) {
+> +		fd = PTR_ERR(file);
+> +		goto out;
+> +	}
+> +
+> +	fd = get_unused_fd_flags(O_RDONLY | O_CLOEXEC);
+> +	if (fd < 0) {
+> +		fput(file);
+> +		goto out;
+> +	}
+> +
+> +	ctx->owner = file_inode(file);
+> +	fd_install(fd, file);
+> +
+> +out:
+>  	if (fd < 0) {
+>  		mmdrop(ctx->mm);
+>  		kmem_cache_free(userfaultfd_ctx_cachep, ctx);
 
-> > > Note since the DMA-engine subsystem in kernel 5.8-rcX doesn't have the
-> > > max_sg_burst capability supported, this series is intended to be applied
-> > > only after the "next"-branch of the DMA-engine repository is merged into
-> > > the mainline repo. Alternatively the series could be merged in through the
-> > > DMA-engine repo.
+What's the point of anon_inode_getfile_secure()?  anon_inode_getfd_secure()
+would work here too.
 
-> > This needs to be thought through...
-
-> There is nothing to think about: either Mark completes review/accepts the series
-> and Vinod agrees to merge it in through the DMA-engine repo, or we'll have to
-> wait until the next merge window is closed and then merge the series in
-> traditionally through the SPI repo.
-
-Well, the merge window is open now so this won't get applied till -rc1
-anyway.
-
---G6nVm6DDWH/FONJq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8pz8IACgkQJNaLcl1U
-h9AYKgf9HNtd2FGIEieYPkuzAQcSJQLGew4KZucymrWjbuTvb5SMMej/oB9leesx
-GfKcCECfT73+aZrNC8QQHPkjRvmX7ciK5qtHuNMQ8H+ewnXF/vPsonvirE4RuskD
-bhAXbs2ZZxU6eOvigw4+hDleEJ+xtsuyk3D7PggkrtQ+3S0hBlhfuXJVN8SnVrzf
-Z33AHm+uHWCOTKODQiZdY/LsVYgeFbU11rMrujdc0UbXKa616aLa/PMTqGHGOIJV
-tVu6hT5jGnKxABexOzXGeKqQKExVCIKg94MLUpcj75pcTnm6plesfAaCDxO18Ufo
-/G6U4/JDVcfZjfiwn/MzeE8YPoWfMA==
-=JKrs
------END PGP SIGNATURE-----
-
---G6nVm6DDWH/FONJq--
+- Eric
