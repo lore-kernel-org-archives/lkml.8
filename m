@@ -2,107 +2,112 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30507C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CBBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FF7E22D03
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:24:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YaID0GqX"
+	by mail.kernel.org (Postfix) with ESMTP id 7C0F7208A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:24:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596551081;
+	bh=5Z8Kopbxi7aEpHCihK5wFEwoJps5FrOJMRK80kP90m0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sBBhTvdHPXiqkaeegwkKoBSilWwwzOiCQCl39DS5NeWtrBkk03gheRdMbZ61v4oXv
+	 4jPOaMDZHIWUUZp/B2xEr/rvJnYod2ysCY8iLAl1HYBOxQZduisTYGybt5X6oKxDRv
+	 6CiSMOIv405+gQeWIx1/lumXL8wFH8dnNJqvxhsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbgHDOYY (ORCPT
+        id S1729017AbgHDOYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:24:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56512 "EHLO
+        Tue, 4 Aug 2020 10:24:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728903AbgHDOX6 (ORCPT
+        with ESMTP id S1728948AbgHDOYM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:23:58 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80364C06174A;
-        Tue,  4 Aug 2020 07:23:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=k3hHT8hBP3vIg+5n2HC1ywURgKIRKUgYzqnMS2vhhdM=; b=YaID0GqXpy1LpLRHHrlA5ZgUdz
-        YRGNR6WocYcAEBMUYF6t2biBQQZsEFcHxoQjE9fZYjLOXGJvpnh17wTBwaWVviPibgVhjtzD1VpNl
-        CXYJfWd6M0ExGPid892N2ilOazv9V15LYR0KDCJcB58l52fAtPISo6oZohbygZn1JD6R8o3EvvKJ0
-        Mht2Ln7RQbdCwW6RIIT8QRChYwE6jcSTh01gvuhnDUVvaKgrbVrfETGDK9EsEGiZovSfSYX3GVzmO
-        shjByq9fco8EqvTIr1/L1omF4lOkIZVQX82BF7paNS2+MsJFJuBPh/3IvmeI8gWNmTqqKPz4bK0qP
-        LEmOq8jQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k2xr0-0004yR-9p; Tue, 04 Aug 2020 14:23:46 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3F2F730477A;
-        Tue,  4 Aug 2020 16:23:44 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 281592B7C12A3; Tue,  4 Aug 2020 16:23:44 +0200 (CEST)
-Date:   Tue, 4 Aug 2020 16:23:44 +0200
-From:   peterz@infradead.org
-To:     Vitor Massaru Iha <vitor@massaru.org>
-Cc:     KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Ian Rogers <irogers@google.com>, mingo@kernel.org
-Subject: Re: [PATCH] lib: kunit: add test_min_heap test conversion to KUnit
-Message-ID: <20200804142344.GM2674@hirez.programming.kicks-ass.net>
-References: <20200729201146.537433-1-vitor@massaru.org>
- <20200729203908.GD2655@hirez.programming.kicks-ass.net>
- <CADQ6JjW-=SNjV-abGpGA9NfHD4yGG_bD5FmvW99W-Vo06twkbw@mail.gmail.com>
- <20200804132517.GK2657@hirez.programming.kicks-ass.net>
- <CADQ6JjWzze-VAmg_b9EkS4iVySt5pw8V4FSxYpDFAj8jvBxuGA@mail.gmail.com>
+        Tue, 4 Aug 2020 10:24:12 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 324ABC06174A;
+        Tue,  4 Aug 2020 07:24:12 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id q128so6152343qkd.2;
+        Tue, 04 Aug 2020 07:24:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dd6Yl/t8idEhFl//6BuOYRHIHDUL8327gbR9zAH7VII=;
+        b=PbNtTay4aqskHx+9NdhxFZehseF/nhdVcF1l3LZK2X9Y8rjBIVIVTDfdX8+RRTLJeA
+         BEn0NuZaG0ByYr4U3wvLnPB7jioK1XTMQ6VXC8FaMiqEl/YUDMz+n+HkmOx+vfb2ERLw
+         Bsxz656teytYovIbCIZhVSQF7E27WRL1BclCtwCXKXV7OUnCwsJgfbtH0opD9dyDoQds
+         vce0WCBMuT6d7fOOWazK3E9sDVc/K0ofrF2lx5G9fO6IrKNQzDrFaybad62VDPcb2zjT
+         RhgOjhM/0TMCDzmyYDzb4id3XkOqE5xdYWcc82BnHGJTZwGPT5MiRm+LLr7Xlvhzjl6W
+         F0wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=dd6Yl/t8idEhFl//6BuOYRHIHDUL8327gbR9zAH7VII=;
+        b=jMbijD4ZNTudqGrRuyjSUvjfBhcocYkX+HG/OPkLDYaPr8HvPlRSXXsZA5GMTx0nX5
+         ph9fIji7S/teC8B4AtgaQsYzPddvVbFFuFqM+s+n5b9QjUQSKTn0SrEBXNMCYOVEE3J2
+         f/iKdYYfcTPEjqvTVSLe0uvjTKe0jHaqRO0p/LRuwNzTwa2CGMHIvuY9WTjGeDlsV2Iv
+         Tj+Rxdjaw+fOhe0OEwUdHHnap38Q7KW9q3kebi4NUJeaojvRpTBmk2kye9lN/3A6HrrR
+         l9CZAxLeAd1bQVqC7XweWCOHgvG7u2kkyTYQSxIgRe9hWSbgBMwnA0FU9x6HFd6bNyIC
+         opHA==
+X-Gm-Message-State: AOAM530k5Btlehzp8TbnWqprwPFrGbgwJPzvu/i3WHXXDUedJ9sSPamv
+        0T9Cts1PhxOATGS3esqomuw=
+X-Google-Smtp-Source: ABdhPJzQmpUK1CGTt/9F7/7OOwbjOHmbsjZjrMdamoMxD7JzhRhkXt/EzrnWxr2DlJs+sh5kwNLiNw==
+X-Received: by 2002:a37:614:: with SMTP id 20mr20958000qkg.456.1596551051224;
+        Tue, 04 Aug 2020 07:24:11 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:d024])
+        by smtp.gmail.com with ESMTPSA id d8sm25642978qtr.12.2020.08.04.07.24.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Aug 2020 07:24:10 -0700 (PDT)
+Date:   Tue, 4 Aug 2020 10:24:09 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Chengming Zhou <zhouchengming@bytedance.com>
+Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iocost: Only inc nr_shortages when have io waited
+Message-ID: <20200804142409.GB4819@mtj.thefacebook.com>
+References: <20200801170021.76756-1-zhouchengming@bytedance.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CADQ6JjWzze-VAmg_b9EkS4iVySt5pw8V4FSxYpDFAj8jvBxuGA@mail.gmail.com>
+In-Reply-To: <20200801170021.76756-1-zhouchengming@bytedance.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 10:46:21AM -0300, Vitor Massaru Iha wrote:
-> On Tue, Aug 4, 2020 at 10:25 AM <peterz@infradead.org> wrote:
-> > On Wed, Jul 29, 2020 at 06:57:17PM -0300, Vitor Massaru Iha wrote:
-> >
-> > > The results can be seen this way:
-> > >
-> > > This is an excerpt from the test.log with the result in TAP format:
-> > > [snip]
-> > > ok 5 - example
-> > >     # Subtest: min-heap
-> > >     1..6
-> > >     ok 1 - test_heapify_all_true
-> > >     ok 2 - test_heapify_all_false
-> > >     ok 3 - test_heap_push_true
-> > >     ok 4 - test_heap_push_false
-> > >     ok 5 - test_heap_pop_push_true
-> > >     ok 6 - test_heap_pop_push_false
-> > > [snip]
-
-So ^ is TAP format?
-
-> > I don't care or care to use either; what does dmesg do? It used to be
-> > that just building the self-tests was sufficient and any error would
-> > show in dmesg when you boot the machine.
-> >
-> > But if I now have to use some damn tool, this is a regression.
+On Sun, Aug 02, 2020 at 01:00:21AM +0800, Chengming Zhou wrote:
+> The last else branch of current code may have not io waited in iocg,
+> in which case we should not inc nr_shortages, or the device vrate
+> will speed up even this iocg is not shortage of vtime.
 > 
-> If you don't want to, you don't need to use the kunit-tool. If you
-> compile the tests as builtin and run the Kernel on your machine
-> the test result will be shown in dmesg in TAP format.
+> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+> ---
+>  block/blk-iocost.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/block/blk-iocost.c b/block/blk-iocost.c
+> index 86ba6fd254e1..ce68b5749364 100644
+> --- a/block/blk-iocost.c
+> +++ b/block/blk-iocost.c
+> @@ -1485,7 +1485,7 @@ static void ioc_timer_fn(struct timer_list *timer)
+>  				__propagate_active_weight(iocg, iocg->weight,
+>  							  new_inuse);
+>  			}
+> -		} else {
+> +		} else if (waitqueue_active(&iocg->waitq)) {
 
-That's seems a lot more verbose than it is now. I've recently even done
-a bunch of tests that don't print anything on success, dmesg is clutter
-enough already.
+This is intentional. Shortage doesn't necessarily mean that there are
+waiters right now. If there are cgroups which don't have enough headroom to
+donate and the device is hitting the latency targets, it makes sense to ramp
+up vrate as those cgroups are likely to get throttled.
+
+Thanks.
+
+-- 
+tejun
