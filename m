@@ -2,84 +2,154 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E66BCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03ADDC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF67020656
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF4FE20656
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729830AbgHDKmo (ORCPT
+        id S1729844AbgHDKni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 06:42:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:42388 "EHLO foss.arm.com"
+        Tue, 4 Aug 2020 06:43:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:42406 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728170AbgHDKmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 06:42:43 -0400
+        id S1728170AbgHDKni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 06:43:38 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 721951FB;
-        Tue,  4 Aug 2020 03:42:43 -0700 (PDT)
-Received: from [10.37.12.82] (unknown [10.37.12.82])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C52E3F718;
-        Tue,  4 Aug 2020 03:42:41 -0700 (PDT)
-Subject: Re: [PATCH] coresight: etm4x: Add Support for HiSilicon ETM device
-To:     liuqi115@huawei.com, gregkh@linuxfoundation.org,
-        saiprakash.ranjan@codeaurora.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com
-References: <1596461740-13527-1-git-send-email-liuqi115@huawei.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <d7271f87-719a-cc3b-6306-bb07f24fe070@arm.com>
-Date:   Tue, 4 Aug 2020 11:47:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0389E1FB;
+        Tue,  4 Aug 2020 03:43:37 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B6B7B3F718;
+        Tue,  4 Aug 2020 03:43:34 -0700 (PDT)
+Date:   Tue, 4 Aug 2020 11:43:32 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Dongdong Yang <contribute.kernel@gmail.com>
+Cc:     gregkh@linuxfoundation.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-pm@vger.kernel.org,
+        yangdongdong@xiaomi.com, yanziily@xiaomi.com,
+        rocking@linux.alibaba.com
+Subject: Re: [PATCH v4] sched: Provide USF for the portable equipment.
+Message-ID: <20200804104331.6vphb2iclwz3buig@e107158-lin.cambridge.arm.com>
+References: <cover.1596526941.git.yangdongdong@xiaomi.com>
+ <820a185b6765d6246ac34f612faedeb35189487c.1596526941.git.yangdongdong@xiaomi.com>
 MIME-Version: 1.0
-In-Reply-To: <1596461740-13527-1-git-send-email-liuqi115@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <820a185b6765d6246ac34f612faedeb35189487c.1596526941.git.yangdongdong@xiaomi.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Qi
+Hi Dongdong
 
-On 08/03/2020 02:35 PM, Qi Liu wrote:
-> Add ETMv4 periperhal ID for HiSilicon Hip08 and Hip09 platform. Hip08
-> contains ETMv4.2 device and Hip09 contains ETMv4.5 device.
+On 08/04/20 15:50, Dongdong Yang wrote:
+> +What:		/sys/devices/system/cpu/sched_usf
+> +		/sys/devices/system/cpu/sched_usf/sched_usf_non_ux_r
+> +		/sys/devices/system/cpu/sched_usf/sched_usf_up_l0_r
+> +		/sys/devices/system/cpu/sched_usf/sched_usf_down_r
+> +Date:		Aug 2020
+> +Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
+> +Description:	User Sensitive Feedback factor auxiliary scheduling which
+> +		is providing more utils adjustment settings to the high level
+> +		by scenario identification.
+> +		sched_usf_non_ux_r:
+> +			The ratio of utils is cut down on screen off. The
+> +			default value is 0, which no util is adjusted on sugov
+> +			calculating utils to select cpufreq. Its range is
+> +			[-100 , 0]. If its value falls into [-50, 0), the half
+> +			of utils, which	calculates cpufreq, shall be  cut down.
+> +			If its value falls into [-100, -50), only a quarter of
+> +			utils are left to continue to calculate cpufreq.
+> +			It is expected to be set [-100, 0) once enter into the
+> +			identificated scenario, such as listen to music on
+> +			screen off, and recover to 0 on out of the scenario,
+> +			such as	screen on.
+> +
+> +		sched_usf_up_l0_r:
+> +			The ratio of utils is boost up on screen on. The
+> +			default value is 0, which no util is adjusted on sugov
+> +			calculates utils to select cpufreq. Its range is [0 , 100].
+> +			If its value falls into (0, 50], a quarter of extra utils,
+> +			which calculate cpufreq, shall be added. If its value
+> +			falls into (50, 100], the half of extra utils are added
+> +			to continue to	calculate cpufreq.
+> +			It is expected to be set (0, 100] once enter into the
+> +			identificated scenario, such as browsing videolet on
+> +			screen on, and recover to 0 on out of the scenario,
+> +			such as screen off or videolet into background.
+> +
+> +		sched_usf_down_r:
+> +			The ratio of utils is cut down on screen on. The
+> +			default	value is 0, which no util is adjusted on sugov
+> +			calculating utils to select cpufreq. Its range is
+> +			[-100 , 0]. If its value falls into [-50, 0), the half
+> +			of utils, which	calculate cpufreq, shall be  cut down.
+> +			If its value falls into [-100, -50), only a quarter of
+> +			utils are left to continue to calculate cpufreq.
+> +			It is expected to be set [-100, 0) once enter into the
+> +			identificated scenario, such as browsing videolet on
+> +			screen on, and recover to 0 on	out of the scenario,
+> +			such as screen off or vidolet into background.
 
-Does the ETMv4.5 on your system implement system instructions to access
-the ETMs ? If so, please could you give the following series on your
-board ?
+AFACS you're duplicating util clamp functionality here. You can already use
+util clamp to boost tasks on screen on, and cap them on screen off. And extra
+brownie points; you can already use that on android 4.19 and 5.4 kernels (I'm
+assuming the battery device is android based, sorry).
 
-http://lists.infradead.org/pipermail/linux-arm-kernel/2020-July/587745.html
+Any reason why util clamp isn't giving you what you want?
 
+To cap the system on screen off you need to
 
-> 
-> Signed-off-by: Qi Liu <liuqi115@huawei.com>
-> ---
->   drivers/hwtracing/coresight/coresight-etm4x.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-> index 0c35cd5e..4a4f0bd 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-> @@ -1561,6 +1561,8 @@ static struct amba_cs_uci_id uci_id_etm4[] = {
->   };
-> 
->   static const struct amba_id etm4_ids[] = {
-> +	CS_AMBA_ID(0x000b6d02),			/* HiSilicon-Hip09 */
-> +	CS_AMBA_ID(0x000b6d01),			/* HiSilicon-Hip08 */
+	# Don't allow the util to go above 512
+	echo  512 > /proc/sys/kernel/sched_util_clamp_min
+	echo  512 > /proc/sys/kernel/sched_util_clamp_max
 
-Please use CS_AMBA_UCI_ID() instead.
-
-We should stop using the CS_AMBA_ID()
+To boost the system on screen on, you need first to lift the capping done above
 
 
-Suzuki
+	# Allow util to use the full range again
+	echo  1024 > /proc/sys/kernel/sched_util_clamp_min
+	echo  1024 > /proc/sys/kernel/sched_util_clamp_max
+
+	# This is pseudo C code
+	for_each_important_task(p) {
+
+		/*
+		 * boost the task utilization to start from 512.
+		 */
+		sched_attr attr = {
+			.util_min = 512,
+			.util_max = 1024
+		};
+		sched_setattr(p, attr);
+	}
+
+	/* undo boosting once system has settled down */
+	for_each_important_task(p) {
+
+		/*
+		 * reset util_min back to 0, or whatever value you want.
+		 */
+		sched_attr attr = {
+			.util_min = 0,
+			.util_max = 1024
+		};
+		sched_setattr(p, attr);
+	}
+
+There's a cgroup API for util clamp too.
+
+Thanks
+
+--
+Qais Yousef
