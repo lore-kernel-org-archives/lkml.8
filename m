@@ -2,118 +2,150 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1889C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 18:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A493BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 18:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAF872086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 18:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8451221744
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 18:30:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dCRcZcl9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgHDS1m (ORCPT
+        id S1726773AbgHDSaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 14:27:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37582 "EHLO
+        Tue, 4 Aug 2020 14:30:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbgHDS1m (ORCPT
+        with ESMTP id S1726101AbgHDSaT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 14:27:42 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89AA0C06174A;
-        Tue,  4 Aug 2020 11:27:41 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k31em-009HhW-2E; Tue, 04 Aug 2020 18:27:24 +0000
-Date:   Tue, 4 Aug 2020 19:27:24 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Kalesh Singh <kaleshsingh@google.com>
-Cc:     Suren Baghdasaryan <surenb@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-doc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
-        Hridya Valsaraju <hridya@google.com>,
-        Ioannis Ilkos <ilkos@google.com>,
-        John Stultz <john.stultz@linaro.org>,
-        kernel-team <kernel-team@android.com>
-Subject: Re: [PATCH 2/2] dmabuf/tracing: Add dma-buf trace events
-Message-ID: <20200804182724.GK1236603@ZenIV.linux.org.uk>
-References: <20200803144719.3184138-1-kaleshsingh@google.com>
- <20200803144719.3184138-3-kaleshsingh@google.com>
- <20200803154125.GA23808@casper.infradead.org>
- <CAJuCfpFLikjaoopvt+vGN3W=m9auoK+DLQNgUf-xUbYfC=83Mw@mail.gmail.com>
- <20200803161230.GB23808@casper.infradead.org>
- <CAJuCfpGot1Lr+eS_AU30gqrrjc0aFWikxySe0667_GTJNsGTMw@mail.gmail.com>
- <20200803222831.GI1236603@ZenIV.linux.org.uk>
- <20200804010913.GA2096725@ZenIV.linux.org.uk>
- <20200804154451.GA948167@google.com>
+        Tue, 4 Aug 2020 14:30:19 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A1B5C06174A;
+        Tue,  4 Aug 2020 11:30:19 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id q75so35108557iod.1;
+        Tue, 04 Aug 2020 11:30:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zjB/bse/AIG3ec5CH7lkmfaqywcsn17p5QYWsN0kQJw=;
+        b=dCRcZcl935xER4Rf59nQmFnexVv4UViEqV9aZJ2xyWAs38weoDxfzlosh8SsGr6mdj
+         C9sCDBRY8EonQdh2gB6H1Qj1P3z4Gzlgc9FqJ+eDebeKm2rVWZ3hXYgTdhuoIqJR6g2h
+         bfFEvVxD/8SfvyLR2rIPctE+rtmHIuPZT5yJn8xCNA12o9lIdt38gJa8L/OQdNaE4GB+
+         v+NtRGPuTApH/UazFOWT5Dzywn4pGjihzeJv/7jclqR4hpQ3fOTBHIvgt5riFIHZIFB4
+         UCPJsRDcFeymaJKBwDTrFmKmMPsg7U5lGqRAawt6R2zTNNgvgTbJ+mtRMb5dCwON/yKf
+         2Pqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zjB/bse/AIG3ec5CH7lkmfaqywcsn17p5QYWsN0kQJw=;
+        b=iMAQxeJc1JgxqQ488UkURkovBb+OqH6Q648VUzbEasa6N3l6Vsj+Uqgj51PLi8TCzD
+         ypWVP7egJPyRyOZaia6OiZQP+qIcFivLbZVmCYMj6JJuO8tMTv8EU5nIEOMFemhMq4SN
+         uLNkZ7QimTj2j4dvYJ7V4ygElgE45suOwhHlFJ2wf4oGfwFvqpwIQbNDE+hA8CvslK9Y
+         0g1Y41X1QZuuQ3GbFcHIqK/+rxgzwGqMFQWNQBp3oRudBTe1G8JpBleMA61Jsl0n83k8
+         kvra7B/yXZI03Ez3wdK0edLUAsgiMWxrqFJVbrl/T4G7Gsa5gV9wLtxLKebtIV/IfAYb
+         LCeQ==
+X-Gm-Message-State: AOAM532LgNZXo+1Q5Q9dc7AjAsIdPtWXlaW1OFD4Bp17yymEpaMPsXDc
+        LBRoSs6KSq3Tbv/2BzlDhz2OMrnz/d8=
+X-Google-Smtp-Source: ABdhPJxE48uCTrCDf4/g2gDlwTt02WrWwBMyxZk4Wkht9gX32sBeqmTHI3Q1i0yO2RLnxyv6ErMfCA==
+X-Received: by 2002:a6b:15c2:: with SMTP id 185mr6327964iov.207.1596565818447;
+        Tue, 04 Aug 2020 11:30:18 -0700 (PDT)
+Received: from aford-IdeaCentre-A730.lan (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id q70sm13399267ili.49.2020.08.04.11.30.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Aug 2020 11:30:17 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-input@vger.kernel.org
+Cc:     dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org,
+        Adam Ford <aford173@gmail.com>
+Subject: [PATCH] Input: ili210x: Fix potential memory leaks
+Date:   Tue,  4 Aug 2020 13:30:07 -0500
+Message-Id: <20200804183007.117125-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200804154451.GA948167@google.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 03:44:51PM +0000, Kalesh Singh wrote:
+This driver requests, memory twice and requests a threaded irq, but
+it doesn't free any of them if something fails.
 
-> Hi Al. Thank you for the comments. Ultimately what we need is to identify processes
-> that hold a file reference to the dma-buf. Unfortunately we can't use only
-> explicit dma_buf_get/dma_buf_put to track them because when an FD is being shared
-> between processes the file references are taken implicitly.
-> 
-> For example, on the sender side:
->    unix_dgram_sendmsg -> send_scm -> __send_scm -> scm_fp_copy -> fget_raw
-> and on the receiver side:
->    unix_dgram_recvmsg -> scm_recv -> scm_detach_fds -> __scm_install_fd -> get_file
-> 
-> I understand now that fd_install is not an appropriate abstraction level to track these.
-> Is there a more appropriate alternative where we could use to track these implicit file
-> references?
+This patch attempts to identify areas where a return was issued
+without freeing allocated memory or IRQ's.
 
-There is no single lock that would stabilize the descriptor tables of all
-processes.  And there's not going to be one, ever - it would be a contention
-point from hell, since that would've been a system-wide lock that would have
-to be taken by *ALL* syscalls modifying any descriptor table.  Not going to
-happen, for obvious reasons.  Moreover, you would have to have fork(2) take
-the same lock, since it does copy descriptor table.  And clone(2) either does
-the same, or has the child share the descriptor table of parent.
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
-What's more, a reference to struct file can bloody well survive without
-a single descriptor refering to that file.  In the example you've mentioned
-above, sender has ever right to close all descriptors it has sent.   Files
-will stay opened as long as the references are held in the datagram; when
-that datagram is received, the references will be inserted into recepient's
-descriptor table.  At that point you again have descriptors refering to
-that file, can do any IO on it, etc.
+diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscreen/ili210x.c
+index 199cf3daec10..967329fbdde3 100644
+--- a/drivers/input/touchscreen/ili210x.c
++++ b/drivers/input/touchscreen/ili210x.c
+@@ -421,7 +421,7 @@ static int ili210x_i2c_probe(struct i2c_client *client,
+ 
+ 	input = devm_input_allocate_device(dev);
+ 	if (!input)
+-		return -ENOMEM;
++		goto free_priv;
+ 
+ 	priv->client = client;
+ 	priv->input = input;
+@@ -443,7 +443,7 @@ static int ili210x_i2c_probe(struct i2c_client *client,
+ 				    INPUT_MT_DIRECT);
+ 	if (error) {
+ 		dev_err(dev, "Unable to set up slots, err: %d\n", error);
+-		return error;
++		goto free_input;
+ 	}
+ 
+ 	error = devm_request_threaded_irq(dev, client->irq, NULL, ili210x_irq,
+@@ -451,27 +451,36 @@ static int ili210x_i2c_probe(struct i2c_client *client,
+ 	if (error) {
+ 		dev_err(dev, "Unable to request touchscreen IRQ, err: %d\n",
+ 			error);
+-		return error;
++		goto free_input;
+ 	}
+ 
+ 	error = devm_add_action_or_reset(dev, ili210x_stop, priv);
+ 	if (error)
+-		return error;
++		goto free_irq;
+ 
+ 	error = devm_device_add_group(dev, &ili210x_attr_group);
+ 	if (error) {
+ 		dev_err(dev, "Unable to create sysfs attributes, err: %d\n",
+ 			error);
+-		return error;
++		goto free_irq;
+ 	}
+ 
+ 	error = input_register_device(priv->input);
+ 	if (error) {
+ 		dev_err(dev, "Cannot register input device, err: %d\n", error);
+-		return error;
++		goto free_irq;
+ 	}
+ 
+ 	return 0;
++
++free_irq:
++	free_irq(client->irq, client);
++free_input:
++	input_free_device(input);
++free_priv:
++	kfree(priv);
++
++	return error;
+ }
+ 
+ static const struct i2c_device_id ili210x_i2c_id[] = {
+-- 
+2.25.1
 
-So "the set of processes that hold a file reference to the dma-buf" is
-	* inherently unstable, unless you are willing to freeze every
-process in the system except for the one trying to find that set.
-	* can remain empty for any amount of time (hours, weeks, whatever),
-only to get non-empty later, with syscalls affecting the object in question
-done afterwards.
-
-So... what were you going to do with that set if you could calculate it?
-If it's really "how do we debug a leak?", it's one thing; in that case
-I would suggest keeping track of creation/destruction of objects (not
-gaining/dropping references - actual constructors and destructors) to
-see what gets stuck around for too long and use fuser(1) to try and locate
-the culprits if you see that something *was* living for too long.  "Try"
-since the only reference might indeed have been stashed into an SCM_RIGHTS
-datagram sitting in a queue of some AF_UNIX socket.  Note that "fuser
-needs elevated priveleges" is not a strong argument - the ability to
-do that sort of tracking does imply elevated priveleges anyway, and
-having a root process taking requests along the lines of "gimme the
-list of PIDs that have such-and-such dma_buf in their descriptor table"
-is not much of an attack surface.
-
-If you want to use it for something else, you'll need to describe that
-intended use; there might be sane ways to do that, but it's hard to
-come up with one without knowing what's being attempted...
