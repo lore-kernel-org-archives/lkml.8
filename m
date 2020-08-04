@@ -2,74 +2,100 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7698CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD22C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF4622CF6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89116206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:45:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729663AbgHDEpa (ORCPT
+        id S1729760AbgHDEpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 00:45:30 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:55664 "EHLO mail5.wrs.com"
+        Tue, 4 Aug 2020 00:45:35 -0400
+Received: from mga14.intel.com ([192.55.52.115]:39845 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726000AbgHDEpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 00:45:30 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 0744hTcB002937
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Mon, 3 Aug 2020 21:43:50 -0700
-Received: from [128.224.162.157] (128.224.162.157) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server id 14.3.487.0; Mon, 3 Aug 2020
- 21:43:24 -0700
-Subject: Re: [PATCH] crypto: ccp - zero the cmd data after use it
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-CC:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary Hook <gary.hook@amd.com>, David <davem@davemloft.net>,
-        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200803075858.3561-1-liwei.song@windriver.com>
- <20200803125242.GA7689@gondor.apana.org.au>
- <87ae939b-4983-4e96-cc3d-1aa1d1b3d3ae@windriver.com>
- <20200804040420.GA10850@gondor.apana.org.au>
- <1b6be879-8449-b519-046f-0312e57aa9a4@windriver.com>
- <20200804042215.GA10939@gondor.apana.org.au>
-From:   Liwei Song <liwei.song@windriver.com>
-Message-ID: <7f5e38f8-c7a4-65c7-647b-749f66ccc48b@windriver.com>
-Date:   Tue, 4 Aug 2020 12:43:21 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1726000AbgHDEpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 00:45:33 -0400
+IronPort-SDR: kfL1hhR3qfjjTNV8hfCpcsrQLwfs0AIYwjw1nvIbAcvD/VvqQ936dkHnrblIdVV/CwIN+AP2fc
+ ooqeyh1UxnVw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="151475754"
+X-IronPort-AV: E=Sophos;i="5.75,432,1589266800"; 
+   d="scan'208";a="151475754"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 21:45:32 -0700
+IronPort-SDR: yT+NnfDzkBBqZocXS5Cm5LSqUA6iXDA0PdiYx2LJzMwyVMnoKnfAmSFyjlrUPndNHDPKGRzR/+
+ LEl1MtaDPn8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,432,1589266800"; 
+   d="scan'208";a="292419767"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by orsmga006.jf.intel.com with ESMTP; 03 Aug 2020 21:45:32 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 40984301C06; Mon,  3 Aug 2020 21:45:32 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 21:45:32 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jian Cai <jiancai@google.com>,
+        =?utf-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>,
+        Luis Lozano <llozano@google.com>,
+        Manoj Gupta <manojgupta@google.com>, stable@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: Re: [PATCH v5 13/36] vmlinux.lds.h: add PGO and AutoFDO input
+ sections
+Message-ID: <20200804044532.GC1321588@tassilo.jf.intel.com>
+References: <20200731230820.1742553-1-keescook@chromium.org>
+ <20200731230820.1742553-14-keescook@chromium.org>
+ <20200801035128.GB2800311@rani.riverdale.lan>
+ <20200803190506.GE1299820@tassilo.jf.intel.com>
+ <20200803201525.GA1351390@rani.riverdale.lan>
 MIME-Version: 1.0
-In-Reply-To: <20200804042215.GA10939@gondor.apana.org.au>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200803201525.GA1351390@rani.riverdale.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> Why is that? Both .text and .text.hot have alignment of 2^4 (default
+> function alignment on x86) by default, so it doesn't seem like it should
+> matter for packing density.  Avoiding interspersing cold text among
 
+You may lose part of a cache line on each unit boundary. Linux has 
+a lot of units, some of them small. All these bytes add up.
 
-On 8/4/20 12:22, Herbert Xu wrote:
-> On Tue, Aug 04, 2020 at 12:20:21PM +0800, Liwei Song wrote:
->>
->> Yes, the other process should do this zero work, but the case I met is
->> this address will appear in the slab_alloc_node() as freelist pointer of slub,
->> and before slub do zero wrok, even kzalloc() doesn't work with this address.
-> 
-> That would be memory corruption which has nothing to do with your
-> patch.  If it is occurring then you should fix the place that is
-> corrupting the memory and not work around it like this.
+It's bad for TLB locality too. Sadly with all the fine grained protection
+changes the 2MB coverage is eroding anyways, but this makes it even worse.
 
-OK, understand, thanks for your suggestion.
-
-Liwei.
-
+> regular/hot text seems like it should be a net win.
 
 > 
-> Cheers,
-> 
+> That old commit doesn't reference efficiency -- it says there was some
+> problem with matching when they were separated out, but there were no
+> wildcard section names back then.
+
+It was about efficiency.
+
+-Andi
