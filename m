@@ -2,106 +2,135 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA82C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FCFCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B50D02076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5E5122CA1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:42:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ODGNBQm6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbgHDTlk (ORCPT
+        id S1728754AbgHDTmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 15:41:40 -0400
-Received: from mga18.intel.com ([134.134.136.126]:29261 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728045AbgHDTlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 15:41:04 -0400
-IronPort-SDR: iWOw+dNoMUMQGZS8UzErNg0cbEoLo3ThZqOO34UH5ubWwUH76P/eArjtMwwLWxc8QVpqOS0x2M
- 6cXsj+evZXOw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="139991089"
-X-IronPort-AV: E=Sophos;i="5.75,434,1589266800"; 
-   d="scan'208";a="139991089"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 12:41:04 -0700
-IronPort-SDR: 0o+Z6doTjfr4NKPokwycz/HNBv3/ux+4RTqavSWoDWgGHwItObTrBxcy1FJ/SRslSqQWvaHfdN
- DMymbwFDMsNw==
-X-IronPort-AV: E=Sophos;i="5.75,434,1589266800"; 
-   d="scan'208";a="467199220"
-Received: from viveksh1-mobl.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.255.83.117])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 12:41:04 -0700
-From:   Sean V Kelley <sean.v.kelley@intel.com>
-To:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
-        rjw@rjwysocki.net, ashok.raj@intel.com, tony.luck@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: [PATCH V2 1/9] pci_ids: Add class code and extended capability for RCEC
-Date:   Tue,  4 Aug 2020 12:40:44 -0700
-Message-Id: <20200804194052.193272-2-sean.v.kelley@intel.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200804194052.193272-1-sean.v.kelley@intel.com>
-References: <20200804194052.193272-1-sean.v.kelley@intel.com>
+        Tue, 4 Aug 2020 15:42:02 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:23467 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728038AbgHDTmB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 15:42:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596570119;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=pa4qNJzeWyr5swO/Fgzdcp9uwaMLEtjwjzZ0NY9JDmI=;
+        b=ODGNBQm6tSnRGF5AyQBrCH4APBByAWq+T313miDu9An/rcyjBdJEOBillqbTkgL9FNsz+/
+        oW2chYN03dQq+wdueuRDJdwkmpuF2HPnK+4cS1UcBTJIPzCuFYPnEtdVlnmJN4KMnNgSLV
+        rqrxumnPwVKWB6B2917j5fQ/nn7FL+w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-435-6RGpfs2yNAmXmZGGCCkU8g-1; Tue, 04 Aug 2020 15:41:56 -0400
+X-MC-Unique: 6RGpfs2yNAmXmZGGCCkU8g-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6F94B1DE1;
+        Tue,  4 Aug 2020 19:41:54 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-113-95.ams2.redhat.com [10.36.113.95])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EB10D88D71;
+        Tue,  4 Aug 2020 19:41:42 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>, Jason Wang <jasowang@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH v4 0/6] mm / virtio-mem: support ZONE_MOVABLE
+Date:   Tue,  4 Aug 2020 21:41:36 +0200
+Message-Id: <20200804194142.28279-1-david@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+@Andrew can we give this a churn and consider it for v5.9 in case there
+are no more comments?
 
-A PCIe Root Complex Event Collector(RCEC) has the base class 0x08,
-sub-class 0x07, and programming interface 0x00. Add the class code
-0x0807 to identify RCEC devices and add the defines for the RCEC
-Endpoint Association Extended Capability.
+Patch #1-#4,#6 have RBss or ACKs, patch #5 is virtio-mem stuff maintained
+by me (and MST is aware).
 
-See PCI Express Base Specification, version 5.0-1, section "1.3.4
-Root Complex Event Collector" and section "7.9.10 Root Complex
-Event Collector Endpoint Association Extended Capability"
-
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- include/linux/pci_ids.h       | 1 +
- include/uapi/linux/pci_regs.h | 7 +++++++
- 2 files changed, 8 insertions(+)
 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 5c709a1450b1..bc6d1a4ca02d 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -81,6 +81,7 @@
- #define PCI_CLASS_SYSTEM_RTC		0x0803
- #define PCI_CLASS_SYSTEM_PCI_HOTPLUG	0x0804
- #define PCI_CLASS_SYSTEM_SDHCI		0x0805
-+#define PCI_CLASS_SYSTEM_RCEC		0x0807
- #define PCI_CLASS_SYSTEM_OTHER		0x0880
- 
- #define PCI_BASE_CLASS_INPUT		0x09
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index f9701410d3b5..f335f65f65d6 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -828,6 +828,13 @@
- #define  PCI_PWR_CAP_BUDGET(x)	((x) & 1)	/* Included in system budget */
- #define PCI_EXT_CAP_PWR_SIZEOF	16
- 
-+/* Root Complex Event Collector Endpoint Association  */
-+#define PCI_RCEC_RCIEP_BITMAP	4	/* Associated Bitmap for RCiEPs */
-+#define PCI_RCEC_BUSN		8	/* RCEC Associated Bus Numbers */
-+#define  PCI_RCEC_BUSN_REG_VER	0x02	/* Least capability version that BUSN present */
-+#define  PCI_RCEC_BUSN_NEXT(x)	(((x) >> 8) & 0xff)
-+#define  PCI_RCEC_BUSN_LAST(x)	(((x) >> 16) & 0xff)
-+
- /* Vendor-Specific (VSEC, PCI_EXT_CAP_ID_VNDR) */
- #define PCI_VNDR_HEADER		4	/* Vendor-Specific Header */
- #define  PCI_VNDR_HEADER_ID(x)	((x) & 0xffff)
+When introducing virtio-mem, the semantics of ZONE_MOVABLE were rather
+unclear, which is why we special-cased ZONE_MOVABLE such that partially
+plugged blocks would never end up in ZONE_MOVABLE.
+
+Now that the semantics are much clearer (and are documented in patch #6),
+let's support partially plugged memory blocks in ZONE_MOVABLE, allowing
+partially plugged memory blocks to be online to ZONE_MOVABLE and also
+unplugging from such memory blocks. This avoids surprises when onlining
+of memory blocks suddenly fails, just because they are not completely
+populated by virtio-mem (yet).
+
+This is especially helpful for testing, but also paves the way for
+virtio-mem optimizations, allowing more memory to get reliably unplugged.
+
+Cleanup has_unmovable_pages() and set_migratetype_isolate(), providing
+better documentation of how ZONE_MOVABLE interacts with different kind of
+unmovable pages (memory offlining vs. alloc_contig_range()).
+
+v3 -> v4:
+- "mm/page_isolation: drop WARN_ON_ONCE() in set_migratetype_isolate()"
+-- Fix typo in description
+- "virtio-mem: don't special-case ZONE_MOVABLE"
+-- Add more details why we initialli special-cased ZONE_MOVABLE (via MST)
+- "mm: document semantics of ZONE_MOVABLE"
+-- Rephrase some parts of documentation (via Mike)
+
+v2 -> v3:
+- "mm: document semantics of ZONE_MOVABLE"
+-- Fix a typo
+
+v1 -> v2:
+- "mm/page_isolation: don't dump_page(NULL) in set_migratetype_isolate()"
+-- Move to position 1, add Fixes: tag
+-- Drop unused "out:" label
+- "mm/page_isolation: drop WARN_ON_ONCE() in set_migratetype_isolate()"
+-- Keep curly braces on "else" case
+- Replace "[PATCH v1 5/6] mm/page_alloc: restrict ZONE_MOVABLE optimization
+           in has_unmovable_pages() to memory offlining"
+  by "mm: document semantics of ZONE_MOVABLE"
+-- Brain dump of what I know about ZONE_MOVABLE
+
+David Hildenbrand (6):
+  mm/page_isolation: don't dump_page(NULL) in set_migratetype_isolate()
+  mm/page_alloc: tweak comments in has_unmovable_pages()
+  mm/page_isolation: drop WARN_ON_ONCE() in set_migratetype_isolate()
+  mm/page_isolation: cleanup set_migratetype_isolate()
+  virtio-mem: don't special-case ZONE_MOVABLE
+  mm: document semantics of ZONE_MOVABLE
+
+ drivers/virtio/virtio_mem.c | 47 +++++++------------------------------
+ include/linux/mmzone.h      | 35 +++++++++++++++++++++++++++
+ mm/page_alloc.c             | 22 +++++------------
+ mm/page_isolation.c         | 39 ++++++++++++++----------------
+ 4 files changed, 66 insertions(+), 77 deletions(-)
+
 -- 
-2.27.0
+2.26.2
 
