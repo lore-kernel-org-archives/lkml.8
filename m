@@ -2,418 +2,138 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD9DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF00C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E9532065C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C73992065C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:34:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="ADWwdFbG"
+	dkim=pass (2048-bit key) header.d=epam.com header.i=@epam.com header.b="ZdqmafcC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729084AbgHDKdl (ORCPT
+        id S1729346AbgHDKed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 06:33:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49292 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728048AbgHDKdj (ORCPT
+        Tue, 4 Aug 2020 06:34:33 -0400
+Received: from mx0a-0039f301.pphosted.com ([148.163.133.242]:10658 "EHLO
+        mx0a-0039f301.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725996AbgHDKec (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 06:33:39 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AC2DC061756
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 03:33:39 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id jp10so15282549ejb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 03:33:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7OdZPdzwSvHqm7g1yE57slREGh+EjSxFCsqpvTzonbk=;
-        b=ADWwdFbGWs4B/ikeUd3/W3NjqmaGTrpwY2+qPXtasVwoEydz3WHJxkYqeQsEvrSLT5
-         BpsHhDs719A33JO9W123zhpsOHv8eWh98CSfIfmdxsBpN/6RUpaOEypJLwFHZ/8PyoXf
-         zYLxSQmcy4jgUCeZKSYMdg97iheD2DqNjfQ2A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7OdZPdzwSvHqm7g1yE57slREGh+EjSxFCsqpvTzonbk=;
-        b=DlLiluoUqp4aspOhsJjtrDLn1b5YPpOvFuMpVULQ1sGtbbUt0L1jdD7hPyv/rYRirA
-         m4DxtgQHkEiSClQr43fTUHwxARfmPKvNCytrlSZKMIKEl9hmBvtN2C2Ei2K76cxecM+S
-         dARWJboWCzW10IfPcfpn0SGY5EzTtJLISTMaYOda/Q8bpQ214O0JlQKcCSArmUBEJtlz
-         bXQ4oTUUZBDAb3kNbhhN2uMKpxNtCbvg0wHBSSbdv3yKdOGICoyKGAAVbQzi2lq4D9C/
-         X0m2wttXnEbqke683jvPwGMMQITSv3BbZtTNZosf3BSAwPlw9/LfnTQynsvgKHQ/sMzS
-         3TDQ==
-X-Gm-Message-State: AOAM531VO9YbVCKwqRam6rXYKEPnynq30NUZxPIWbHOKI7s8Xvz9n0C/
-        W9iIbqwdjiaT5Wl3NbzK98dZxQ==
-X-Google-Smtp-Source: ABdhPJwVqE32WvMqnbbzWhUokykbnLig/Ij4fLqiT+LpYqVwVytsRaB4rbhqvyAT2rGIY81cpLkLoQ==
-X-Received: by 2002:a17:906:95d4:: with SMTP id n20mr21851381ejy.485.1596537218076;
-        Tue, 04 Aug 2020 03:33:38 -0700 (PDT)
-Received: from miu.piliscsaba.redhat.com (94-21-100-63.pool.digikabel.hu. [94.21.100.63])
-        by smtp.gmail.com with ESMTPSA id lj26sm7464319ejb.26.2020.08.04.03.33.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 03:33:37 -0700 (PDT)
-Date:   Tue, 4 Aug 2020 12:33:35 +0200
-From:   Miklos Szeredi <miklos@szeredi.hu>
-To:     David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
-        raven@themaw.net, mszeredi@redhat.com, christian@brauner.io,
-        jannh@google.com, darrick.wong@oracle.com, kzak@redhat.com,
-        jlayton@redhat.com, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/18] fsinfo: Allow fsinfo() to look up a mount object
- by ID [ver #21]
-Message-ID: <20200804103335.GB32719@miu.piliscsaba.redhat.com>
-References: <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk>
- <159646182832.1784947.10440560370840683639.stgit@warthog.procyon.org.uk>
+        Tue, 4 Aug 2020 06:34:32 -0400
+X-Greylist: delayed 14404 seconds by postgrey-1.27 at vger.kernel.org; Tue, 04 Aug 2020 06:34:32 EDT
+Received: from pps.filterd (m0174677.ppops.net [127.0.0.1])
+        by mx0a-0039f301.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0746F4Tm030157;
+        Tue, 4 Aug 2020 06:34:13 GMT
+Received: from eur04-vi1-obe.outbound.protection.outlook.com (mail-vi1eur04lp2058.outbound.protection.outlook.com [104.47.14.58])
+        by mx0a-0039f301.pphosted.com with ESMTP id 32pxbn0b4s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Aug 2020 06:34:13 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I2qMPqEkxAZfZ0d0HW79twlwuxkCI5Eo1wrgrhtUjErGfvOuzhYpK7wVCILinRMYlhz36CJZZi2CBmwMFrbZjAQLZfTfWHUgnKryrYdEKhdkI6ZjVZg5GLfmxYE0RNKsFXoW/+/HdZXJhvi+/St7CjVDExl530VLulyGplLD7fVV/PpB+Cmvvi/tVcufNrF4rL0rhq2u47PtY/4jG0FWsoT4/EjyA+g1Y+f3rdXxovEw3xv2YxVerFmlAY9R4iSfMapA2wHpzizGOdBwlsJqlecFR1rwhpiIFzlVCsk/qFwXSBeICyD2QSJktcrqqtZgbGUHqY6iEKIQf1xCA0uN4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dt7A68HQ6gnedq5sqGeegGqbUhQ1pFj77ot3E81bgeg=;
+ b=E7c5szBumkGIc5bbhtrksE13bqVScpWRvKU2kS8U8VEOwqQvLrpd70M34blJVzxqlvIjei4fd+Xx2GGLb90hljXtfLkNSNqo53UQru/sq9TdEbLHA9OsxlfHGNw5GjeWQhbTFQ17yEl7OiUnNWgtw1+Fg7S5WGm335ciAPnIF7eYlEIs4ZdSJ1SNi2fhhwWefcorouDxepiuh91fFjXwe2hFDpM16q6BXKDleb3Rq1VGmr8m0yNS+Q4vc3t0LJn6nG38cBYdxKWY/GptEXI3rtCG2PJji7LY3DUs/Mq3tkJ8XAE0Tw4Pi19ZdkYY8yT+m3BvgAsjQcXMLJ4+cmMATw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=epam.com; dmarc=pass action=none header.from=epam.com;
+ dkim=pass header.d=epam.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=epam.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dt7A68HQ6gnedq5sqGeegGqbUhQ1pFj77ot3E81bgeg=;
+ b=ZdqmafcCcvAnNy5j2aw2FTlcDKcS4AEP8FokdC4D6MUA71zIXTocU7UUt+EOp4w3g1eOQJPKq8AAdXYAotRVwW0yy1qXHVpC0qNSROHVi/zHmu+bYdB9xEZdfr/ses9/A9w/Ddiwnp58C1Vvst7kY52porwneLV+LMo68WPUHI92XrHL5wdJaQ6u/wY3mYD8wkAI0GzlVMTyFwYIw/+36NWVWmvN1Tr7PpckEkRxy+YPtuImPc345ljkA6z+/gDeBB/7DkNcrw1pGS7cRBW7kl1m7b3tDyrtm+bsZ37DLuzHhaW4jTxujMNIOWYvjNAPZrazy2RrsGsaXO30GS5vsQ==
+Received: from AM0PR03MB6324.eurprd03.prod.outlook.com (2603:10a6:20b:153::17)
+ by AM0PR03MB6242.eurprd03.prod.outlook.com (2603:10a6:20b:15c::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Tue, 4 Aug
+ 2020 06:34:10 +0000
+Received: from AM0PR03MB6324.eurprd03.prod.outlook.com
+ ([fe80::21e5:6d27:5ba0:f508]) by AM0PR03MB6324.eurprd03.prod.outlook.com
+ ([fe80::21e5:6d27:5ba0:f508%9]) with mapi id 15.20.3239.022; Tue, 4 Aug 2020
+ 06:34:10 +0000
+From:   Oleksandr Andrushchenko <Oleksandr_Andrushchenko@epam.com>
+To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        Oleksandr Andrushchenko <andr2000@gmail.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>
+CC:     "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>
+Subject: Re: [PATCH 1/6] xen/gntdev: Fix dmabuf import with non-zero sgt
+ offset
+Thread-Topic: [PATCH 1/6] xen/gntdev: Fix dmabuf import with non-zero sgt
+ offset
+Thread-Index: AQHWZzlJKFE4UhNAbk+yHV1cN0npaaknfdGAgAAGQIA=
+Date:   Tue, 4 Aug 2020 06:34:10 +0000
+Message-ID: <df1a02e7-e0e2-cbb1-3d30-9b17c44be6a6@epam.com>
+References: <20200731125109.18666-1-andr2000@gmail.com>
+ <20200731125109.18666-2-andr2000@gmail.com>
+ <acf507b8-462a-1fa0-c54f-cc5c44d3cc55@suse.com>
+In-Reply-To: <acf507b8-462a-1fa0-c54f-cc5c44d3cc55@suse.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: suse.com; dkim=none (message not signed)
+ header.d=none;suse.com; dmarc=none action=none header.from=epam.com;
+x-originating-ip: [185.199.97.5]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8da35b25-f110-4d4c-cf95-08d838406574
+x-ms-traffictypediagnostic: AM0PR03MB6242:
+x-microsoft-antispam-prvs: <AM0PR03MB6242D3D1695690390E429EA9E74A0@AM0PR03MB6242.eurprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:265;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YGxIjuTcC1ym7LSNcIU6NVRpoTZ9yA4Foa8hdQkd8aqwmrmlbStFhQm/C2N7cNHrJzG0ua3qH5OByx7SQW6q8tQSntu1b420l6+aPC7mlXps6gsGxTCp6wsaftmMv5IvCgdIQwBgChLSvgAFqLOkSgofMoaPsDcMnm454rAL/UL78pZlJNtU+Z/nKzzmGAAOVt7eWf5N5pBQf5WXqAjGIvFxm+fsevfn6oEjBK0CMb5r6AN4LVw0JAObMIH3nUC+BmYtFOfkiz+0LljG80CMJPvThh5EtLlPFyFduzaudykOv/lDw0Y5UepytCaGgAnzHjMwDyB8rXIPZ5vxMHaywA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR03MB6324.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(136003)(376002)(346002)(39860400002)(8676002)(316002)(7416002)(8936002)(478600001)(2616005)(31686004)(66556008)(66476007)(2906002)(4744005)(4326008)(91956017)(76116006)(66446008)(64756008)(6512007)(6486002)(71200400001)(5660300002)(31696002)(6506007)(66574015)(110136005)(54906003)(83380400001)(26005)(66946007)(36756003)(53546011)(86362001)(186003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: INSR6J7iTUjY9XyKgBhBiirH/eEJSoTgHGW43dLM5sbH4OWEp71/BLqouEecEzd981Fshf40pJZAFUCRQxN/ctPEuWRRI1nWA1zha3L5gHb0pzTQR0dAa4oEwYE0T0yqvM1R27kJwYc+1PgeSZ9KR3y1sg4HW2qWLkdxE3nrIRPlnd7zJDEY64X93gY1PgJcZ/N0sI53weARP/is7kcRJN00Baz32wCFHpTSG3qLLyMbpHNkN+pZtO13UkeaMC2i9yL6S+5I0fEZFnjKWvfn+UfWuYtQ/JCscA3+hgktwk7Rs3MfcwExkGxFGx57cRCddVC/MOxxd/p5ivlXWA35KnVIvXRzzojDdBv9PtcP9YSnYjbDIAagbhrCZM002A2spncp4ARbfDDBtOYikaP0q0OzbhaNovdy5bBnqZCJYT+lH6OmUXSoMFmDXxVV7w8NHRphaZUhJBnYG3UfZM3LaWU/yr/gIEgOhpi61o8bSY7TPEvXLAl0q4A/qLVZnJ3pxLhFZOCdfT4p5YLJii2BcjWJ3C04O6h33Q6wKJamnUTwoRKau+lwZXS9rWSBvm7afbhRoW23aQNCtd6NvAbAnuG9hcpw4D27QPZz4FHgYFijMw5s0+ZfvzjkybirmTRNR754dAwYYc8h51FUW1t3ZA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <44D1CE254150BE4D8C6C2DEB066AFF88@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159646182832.1784947.10440560370840683639.stgit@warthog.procyon.org.uk>
+X-OriginatorOrg: epam.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR03MB6324.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8da35b25-f110-4d4c-cf95-08d838406574
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Aug 2020 06:34:10.3016
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b41b72d0-4e9f-4c26-8a69-f949f367c91d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hV6Qrp8GB499WVSSD4JV2S2HYxmCfiV8zl3Sl3nW00RX9xOrT4QxFJD4I0FwGBpcx6A2UBbjdChwrBP03UnUjiH7BiMDvjJiAoUkBwsw/ZXYwsLgbPx/efolMd8QANRy
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR03MB6242
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-04_02:2020-08-03,2020-08-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 impostorscore=0 spamscore=0 mlxscore=0 phishscore=0
+ malwarescore=0 bulkscore=0 adultscore=0 clxscore=1011 mlxlogscore=999
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008040047
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 02:37:08PM +0100, David Howells wrote:
-> Allow the fsinfo() syscall to look up a mount object by ID rather than by
-> pathname.  This is necessary as there can be multiple mounts stacked up at
-> the same pathname and there's no way to look through them otherwise.
-> 
-> This is done by passing FSINFO_FLAGS_QUERY_MOUNT to fsinfo() in the
-> parameters and then passing the mount ID as a string to fsinfo() in place
-> of the filename:
-> 
-> 	struct fsinfo_params params = {
-> 		.flags	 = FSINFO_FLAGS_QUERY_MOUNT,
-> 		.request = FSINFO_ATTR_IDS,
-> 	};
-> 
-> 	ret = fsinfo(AT_FDCWD, "21", &params, buffer, sizeof(buffer));
-> 
-> The caller is only permitted to query a mount object if the root directory
-> of that mount connects directly to the current chroot if dfd == AT_FDCWD[*]
-> or the directory specified by dfd otherwise.  Note that this is not
-> available to the pathwalk of any other syscall.
-> 
-> [*] This needs to be something other than AT_FDCWD, perhaps AT_FDROOT.
-> 
-> [!] This probably needs an LSM hook.
-> 
-> [!] This might want to check the permissions on all the intervening dirs -
->     but it would have to do that under RCU conditions.
-> 
-> [!] This might want to check a CAP_* flag.
-
-Was this reviewed by security folks?
-
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> ---
-> 
->  fs/fsinfo.c                 |   53 +++++++++++++++++++
->  fs/internal.h               |    1 
->  fs/namespace.c              |  117 ++++++++++++++++++++++++++++++++++++++++++-
->  include/uapi/linux/fsinfo.h |    1 
->  samples/vfs/test-fsinfo.c   |    7 ++-
->  5 files changed, 175 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/fsinfo.c b/fs/fsinfo.c
-> index aef7a736e8fc..8ccbcddb4f16 100644
-> --- a/fs/fsinfo.c
-> +++ b/fs/fsinfo.c
-> @@ -563,6 +563,56 @@ static int vfs_fsinfo_fd(unsigned int fd, struct fsinfo_context *ctx)
->  	return ret;
->  }
->  
-> +/*
-> + * Look up the root of a mount object.  This allows access to mount objects
-> + * (and their attached superblocks) that can't be retrieved by path because
-> + * they're entirely covered.
-> + *
-> + * We only permit access to a mount that has a direct path between either the
-> + * dentry pointed to by dfd or to our chroot (if dfd is AT_FDCWD).
-> + */
-> +static int vfs_fsinfo_mount(int dfd, const char __user *filename,
-> +			    struct fsinfo_context *ctx)
-> +{
-> +	struct path path;
-> +	struct fd f = {};
-> +	char *name;
-> +	unsigned long mnt_id;
-> +	int ret;
-> +
-> +	if (!filename)
-> +		return -EINVAL;
-> +
-> +	name = strndup_user(filename, 32);
-> +	if (IS_ERR(name))
-> +		return PTR_ERR(name);
-> +	ret = kstrtoul(name, 0, &mnt_id);
-> +	if (ret < 0)
-> +		goto out_name;
-> +	if (mnt_id > INT_MAX)
-> +		goto out_name;
-> +
-> +	if (dfd != AT_FDCWD) {
-> +		ret = -EBADF;
-> +		f = fdget_raw(dfd);
-> +		if (!f.file)
-> +			goto out_name;
-> +	}
-> +
-> +	ret = lookup_mount_object(f.file ? &f.file->f_path : NULL,
-> +				  mnt_id, &path);
-> +	if (ret < 0)
-> +		goto out_fd;
-> +
-> +	ret = vfs_fsinfo(&path, ctx);
-> +	path_put(&path);
-> +out_fd:
-> +	fdput(f);
-> +out_name:
-> +	kfree(name);
-> +	return ret;
-> +}
-> +
->  /**
->   * sys_fsinfo - System call to get filesystem information
->   * @dfd: Base directory to pathwalk from or fd referring to filesystem.
-> @@ -636,6 +686,9 @@ SYSCALL_DEFINE6(fsinfo,
->  			return -EINVAL;
->  		ret = vfs_fsinfo_fd(dfd, &ctx);
->  		break;
-> +	case FSINFO_FLAGS_QUERY_MOUNT:
-> +		ret = vfs_fsinfo_mount(dfd, pathname, &ctx);
-> +		break;
->  	default:
->  		return -EINVAL;
->  	}
-> diff --git a/fs/internal.h b/fs/internal.h
-> index 0b57da498f06..84bbb743a5ac 100644
-> --- a/fs/internal.h
-> +++ b/fs/internal.h
-> @@ -89,6 +89,7 @@ extern int __mnt_want_write_file(struct file *);
->  extern void __mnt_drop_write_file(struct file *);
->  
->  extern void dissolve_on_fput(struct vfsmount *);
-> +extern int lookup_mount_object(struct path *, unsigned int, struct path *);
->  extern int fsinfo_generic_mount_source(struct path *, struct fsinfo_context *);
->  
->  /*
-> diff --git a/fs/namespace.c b/fs/namespace.c
-> index ead8d1a16610..b2b9920ffd3c 100644
-> --- a/fs/namespace.c
-> +++ b/fs/namespace.c
-> @@ -64,7 +64,7 @@ static int __init set_mphash_entries(char *str)
->  __setup("mphash_entries=", set_mphash_entries);
->  
->  static u64 event;
-> -static DEFINE_IDA(mnt_id_ida);
-> +static DEFINE_IDR(mnt_id_ida);
->  static DEFINE_IDA(mnt_group_ida);
->  
->  static struct hlist_head *mount_hashtable __read_mostly;
-> @@ -105,17 +105,27 @@ static inline struct hlist_head *mp_hash(struct dentry *dentry)
->  
->  static int mnt_alloc_id(struct mount *mnt)
->  {
-> -	int res = ida_alloc(&mnt_id_ida, GFP_KERNEL);
-> +	int res;
->  
-> +	/* Allocate an ID, but don't set the pointer back to the mount until
-> +	 * later, as once we do that, we have to follow RCU protocols to get
-> +	 * rid of the mount struct.
-> +	 */
-> +	res = idr_alloc(&mnt_id_ida, NULL, 0, INT_MAX, GFP_KERNEL);
-
-This needs to be a separate patch.
-
->  	if (res < 0)
->  		return res;
->  	mnt->mnt_id = res;
->  	return 0;
->  }
->  
-> +static void mnt_publish_id(struct mount *mnt)
-> +{
-> +	idr_replace(&mnt_id_ida, mnt, mnt->mnt_id);
-> +}
-> +
->  static void mnt_free_id(struct mount *mnt)
->  {
-> -	ida_free(&mnt_id_ida, mnt->mnt_id);
-> +	idr_remove(&mnt_id_ida, mnt->mnt_id);
->  }
->  
->  /*
-> @@ -975,6 +985,7 @@ struct vfsmount *vfs_create_mount(struct fs_context *fc)
->  	lock_mount_hash();
->  	list_add_tail(&mnt->mnt_instance, &mnt->mnt.mnt_sb->s_mounts);
->  	unlock_mount_hash();
-> +	mnt_publish_id(mnt);
->  	return &mnt->mnt;
->  }
->  EXPORT_SYMBOL(vfs_create_mount);
-> @@ -1068,6 +1079,7 @@ static struct mount *clone_mnt(struct mount *old, struct dentry *root,
->  	lock_mount_hash();
->  	list_add_tail(&mnt->mnt_instance, &sb->s_mounts);
->  	unlock_mount_hash();
-> +	mnt_publish_id(mnt);
->  
->  	if ((flag & CL_SLAVE) ||
->  	    ((flag & CL_SHARED_TO_SLAVE) && IS_MNT_SHARED(old))) {
-> @@ -4151,4 +4163,103 @@ int fsinfo_generic_mount_source(struct path *path, struct fsinfo_context *ctx)
->  	return m.count + 1;
->  }
->  
-> +/*
-> + * See if one path point connects directly to another by ancestral relationship
-> + * across mountpoints.  Must call with the RCU read lock held.
-> + */
-> +static bool are_paths_connected(struct path *ancestor, struct path *to_check)
-> +{
-> +	struct mount *mnt, *parent;
-> +	struct path cursor;
-> +	unsigned seq;
-> +	bool connected;
-> +
-> +	seq = 0;
-> +restart:
-> +	cursor = *to_check;
-> +
-> +	read_seqbegin_or_lock(&rename_lock, &seq);
-> +	while (cursor.mnt != ancestor->mnt) {
-> +		mnt = real_mount(cursor.mnt);
-> +		parent = READ_ONCE(mnt->mnt_parent);
-> +		if (mnt == parent)
-> +			goto failed;
-> +		cursor.dentry = READ_ONCE(mnt->mnt_mountpoint);
-> +		cursor.mnt = &parent->mnt;
-> +	}
-> +
-> +	while (cursor.dentry != ancestor->dentry) {
-> +		if (cursor.dentry == cursor.mnt->mnt_root ||
-> +		    IS_ROOT(cursor.dentry))
-> +			goto failed;
-> +		cursor.dentry = READ_ONCE(cursor.dentry->d_parent);
-> +	}
-> +
-> +	connected = true;
-> +out:
-> +	done_seqretry(&rename_lock, seq);
-> +	return connected;
-> +
-> +failed:
-> +	if (need_seqretry(&rename_lock, seq)) {
-> +		seq = 1;
-> +		goto restart;
-> +	}
-> +	connected = false;
-> +	goto out;
-> +}
-> +
-> +/**
-> + * lookup_mount_object - Look up a vfsmount object by ID
-> + * @root: The mount root must connect backwards to this point (or chroot if NULL).
-> + * @id: The ID of the mountpoint.
-> + * @_mntpt: Where to return the resulting mountpoint path.
-> + *
-> + * Look up the root of the mount with the corresponding ID.  This is only
-> + * permitted if that mount connects directly to the specified root/chroot.
-> + */
-> +int lookup_mount_object(struct path *root, unsigned int mnt_id, struct path *_mntpt)
-> +{
-> +	struct mount *mnt;
-> +	struct path stop, mntpt = {};
-> +	int ret = -EPERM;
-> +
-> +	if (!root)
-> +		get_fs_root(current->fs, &stop);
-> +	else
-> +		stop = *root;
-> +
-> +	rcu_read_lock();
-> +	lock_mount_hash();
-> +	mnt = idr_find(&mnt_id_ida, mnt_id);
-> +	if (!mnt)
-> +		goto out_unlock_mh;
-> +	if (mnt->mnt.mnt_flags & (MNT_SYNC_UMOUNT | MNT_UMOUNT | MNT_DOOMED))
-> +		goto out_unlock_mh;
-> +	if (mnt_get_count(mnt) == 0)
-> +		goto out_unlock_mh;
-> +	mnt_add_count(mnt, 1);
-> +	mntpt.mnt = &mnt->mnt;
-> +	mntpt.dentry = dget(mnt->mnt.mnt_root);
-> +	unlock_mount_hash();
-> +
-> +	if (are_paths_connected(&stop, &mntpt)) {
-> +		*_mntpt = mntpt;
-> +		mntpt.mnt = NULL;
-> +		mntpt.dentry = NULL;
-> +		ret = 0;
-> +	}
-> +
-> +out_unlock:
-> +	rcu_read_unlock();
-> +	if (!root)
-> +		path_put(&stop);
-> +	path_put(&mntpt);
-> +	return ret;
-> +
-> +out_unlock_mh:
-> +	unlock_mount_hash();
-> +	goto out_unlock;
-> +}
-> +
->  #endif /* CONFIG_FSINFO */
-> diff --git a/include/uapi/linux/fsinfo.h b/include/uapi/linux/fsinfo.h
-> index a27e92b68266..d24e47762a07 100644
-> --- a/include/uapi/linux/fsinfo.h
-> +++ b/include/uapi/linux/fsinfo.h
-> @@ -44,6 +44,7 @@ struct fsinfo_params {
->  #define FSINFO_FLAGS_QUERY_MASK	0x0007 /* What object should fsinfo() query? */
->  #define FSINFO_FLAGS_QUERY_PATH	0x0000 /* - path, specified by dirfd,pathname,AT_EMPTY_PATH */
->  #define FSINFO_FLAGS_QUERY_FD	0x0001 /* - fd specified by dirfd */
-> +#define FSINFO_FLAGS_QUERY_MOUNT 0x0002	/* - mount object (path=>mount_id, dirfd=>subtree) */
->  	__u32	request;	/* ID of requested attribute */
->  	__u32	Nth;		/* Instance of it (some may have multiple) */
->  	__u32	Mth;		/* Subinstance of Nth instance */
-> diff --git a/samples/vfs/test-fsinfo.c b/samples/vfs/test-fsinfo.c
-> index 634f30b7e67f..dfa44bba8bbd 100644
-> --- a/samples/vfs/test-fsinfo.c
-> +++ b/samples/vfs/test-fsinfo.c
-> @@ -593,7 +593,7 @@ int main(int argc, char **argv)
->  	bool meta = false;
->  	int raw = 0, opt, Nth, Mth;
->  
-> -	while ((opt = getopt(argc, argv, "Madlr"))) {
-> +	while ((opt = getopt(argc, argv, "Madmlr"))) {
->  		switch (opt) {
->  		case 'M':
->  			meta = true;
-> @@ -609,6 +609,10 @@ int main(int argc, char **argv)
->  			params.at_flags &= ~AT_SYMLINK_NOFOLLOW;
->  			params.flags = FSINFO_FLAGS_QUERY_PATH;
->  			continue;
-> +		case 'm':
-> +			params.resolve_flags = 0;
-> +			params.flags = FSINFO_FLAGS_QUERY_MOUNT;
-> +			continue;
->  		case 'r':
->  			raw = 1;
->  			continue;
-> @@ -621,6 +625,7 @@ int main(int argc, char **argv)
->  
->  	if (argc != 1) {
->  		printf("Format: test-fsinfo [-Madlr] <path>\n");
-> +		printf("Format: test-fsinfo [-Mdr] -m <mnt_id>\n");
->  		exit(2);
->  	}
->  
-> 
-> 
+DQpPbiA4LzQvMjAgOToxMSBBTSwgSsO8cmdlbiBHcm/DnyB3cm90ZToNCj4gT24gMzEuMDcuMjAg
+MTQ6NTEsIE9sZWtzYW5kciBBbmRydXNoY2hlbmtvIHdyb3RlOg0KPj4gRnJvbTogT2xla3NhbmRy
+IEFuZHJ1c2hjaGVua28gPG9sZWtzYW5kcl9hbmRydXNoY2hlbmtvQGVwYW0uY29tPg0KPj4NCj4+
+IEl0IGlzIHBvc3NpYmxlIHRoYXQgdGhlIHNjYXR0ZXItZ2F0aGVyIHRhYmxlIGR1cmluZyBkbWFi
+dWYgaW1wb3J0IGhhcw0KPj4gbm9uLXplcm8gb2Zmc2V0IG9mIHRoZSBkYXRhLCBidXQgdXNlci1z
+cGFjZSBkb2Vzbid0IGV4cGVjdCB0aGF0Lg0KPj4gRml4IHRoaXMgYnkgZmFpbGluZyB0aGUgaW1w
+b3J0LCBzbyB1c2VyLXNwYWNlIGRvZXNuJ3QgYWNjZXNzIHdyb25nIGRhdGEuDQo+Pg0KPj4gRml4
+ZXM6IDM3Y2NiNDRkMGIwMCAoInhlbi9nbnRkZXY6IEltcGxlbWVudCBkbWEtYnVmIGltcG9ydCBm
+dW5jdGlvbmFsaXR5IikNCj4NCj4gSSBjYW4ndCBmaW5kIHRoaXMgY29tbWl0IGluIHRoZSB0cmVl
+LiBEaWQgeW91IG1lYW4gYmY4ZGM1NWIxMzU4Pw0KSSdsbCBkb3VibGUtY2hlY2ssIHRoYW5rIHlv
+dQ0KPg0KPiBBbmQgZG9uJ3QgeW91IHdhbnQgdG8gQ2Mgc3RhYmxlIGZvciB0aGlzIHBhdGNoLCB0
+b28/DQpIbSwgeWVzLCBzb3VuZHMgcmVhc29uYWJsZQ0KPg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6
+IE9sZWtzYW5kciBBbmRydXNoY2hlbmtvIDxvbGVrc2FuZHJfYW5kcnVzaGNoZW5rb0BlcGFtLmNv
+bT4NCj4NCj4gQWNrZWQtYnk6IEp1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT4NCj4NCj4N
+Cj4gSnVlcmdlbg==
