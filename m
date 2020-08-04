@@ -2,104 +2,132 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E403C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A35C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46602207FC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:03:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CwCGk+Hs"
+	by mail.kernel.org (Postfix) with ESMTP id A30F220842
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:03:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbgHDRDg (ORCPT
+        id S1729577AbgHDRDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 13:03:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52642 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728412AbgHDRCA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 13:02:00 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBA6FC06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 10:01:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ZJzXwOxbCfW8r8F6D6OIBH2hwsyGZnD1BkGyF7iIWDw=; b=CwCGk+Hs8UrOvgV3xxite97qfY
-        PQAryBv0z8bbjhJ0/ylCabUh7eBXLJx3/xTWSb9Sj04b2mmOrMfn0ZDhN+b+W2t+OoOowvFJNzvc1
-        DiDEuHL3GqviNbY6ZKk5BPHtuD/r5itHHrF3UBzSdUsk4nAmYawx45aM1j3+4PQS0UKQTOM9mM8Ta
-        d6WtctMWpFZCZK8pmrO/WivExlSrj+cGaOi739Zt85BR0VzpvRZW4AGOHDgophJR2uVGiyo21q1Sy
-        GMQbRKqx6Qe7xzIi5iup6AcN+9xpp6s+ltu4XMS1r+lam8+Mmhqx1J7H3W+dXAAyKVW1xMvJc8qm2
-        yRjUs5mA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k30K2-000535-UI; Tue, 04 Aug 2020 17:01:55 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AAC1E301A66;
-        Tue,  4 Aug 2020 19:01:53 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 81A032B90EB46; Tue,  4 Aug 2020 19:01:53 +0200 (CEST)
-Date:   Tue, 4 Aug 2020 19:01:53 +0200
-From:   peterz@infradead.org
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>, paulmck <paulmck@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [RFC PATCH 2/2] sched: membarrier: cover kthread_use_mm
-Message-ID: <20200804170153.GO2657@hirez.programming.kicks-ass.net>
-References: <20200728160010.3314-1-mathieu.desnoyers@efficios.com>
- <20200728160010.3314-2-mathieu.desnoyers@efficios.com>
- <20200804145145.GM2657@hirez.programming.kicks-ass.net>
- <1708074166.39992.1596553173337.JavaMail.zimbra@efficios.com>
+        Tue, 4 Aug 2020 13:03:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51346 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728880AbgHDRCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 13:02:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 22F21B588;
+        Tue,  4 Aug 2020 17:02:30 +0000 (UTC)
+Subject: Re: [RFC-PROTOTYPE 1/1] mm: Add __GFP_FAST_TRY flag
+To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+References: <20200803163029.1997-1-urezki@gmail.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <1d50a46a-b97f-96b2-8a5c-21075f022f01@suse.cz>
+Date:   Tue, 4 Aug 2020 19:02:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1708074166.39992.1596553173337.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200803163029.1997-1-urezki@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 10:59:33AM -0400, Mathieu Desnoyers wrote:
-> ----- On Aug 4, 2020, at 10:51 AM, Peter Zijlstra peterz@infradead.org wrote:
-> > On Tue, Jul 28, 2020 at 12:00:10PM -0400, Mathieu Desnoyers wrote:
-
-> >>  	task_lock(tsk);
-> >> +	/*
-> >> +	 * When a kthread stops operating on an address space, the loop
-> >> +	 * in membarrier_{private,global}_expedited() may not observe
-> >> +	 * that tsk->mm, and not issue an IPI. Membarrier requires a
-> >> +	 * memory barrier after accessing user-space memory, before
-> >> +	 * clearing tsk->mm.
-> >> +	 */
-> >> +	smp_mb();
-> >>  	sync_mm_rss(mm);
-> >>  	local_irq_disable();
-> > 
-> > Would it make sense to put the smp_mb() inside the IRQ disable region?
+On 8/3/20 6:30 PM, Uladzislau Rezki (Sony) wrote:
+> Some background and kfree_rcu()
+> ===============================
+> The pointers to be freed are stored in the per-cpu array to improve
+> performance, to enable an easier-to-use API, to accommodate vmalloc
+> memmory and to support a single argument of the kfree_rcu() when only
+> a pointer is passed. More details are below.
 > 
-> I've initially placed it right after task_lock so we could eventually
-> have a smp_mb__after_non_raw_spinlock or something with a much better naming,
-> which would allow removing the extra barrier when it is implied by the
-> spinlock.
+> In order to maintain such per-CPU arrays there is a need in dynamic
+> allocation when a current array is fully populated and a new block is
+> required. See below the example:
+> 
+>  0 1 2 3      0 1 2 3
+> |p|p|p|p| -> |p|p|p|p| -> NULL
+> 
+> there are two pointer-blocks, each one can store 4 addresses
+> which will be freed after a grace period is passed. In reality
+> we store PAGE_SIZE / sizeof(void *).
 
-Oh, right, fair enough. I'll go think about if smp_mb__after_spinlock()
-will work for mutexes too.
+So what do you actually have without the dynamic allocation, 8 addresses or
+PAGE_SIZE / sizeof(void *) addresses? And how many dynamically allocated pages
+did you observe you might need in practice? Can it be somehow quantified the
+benefit that you are able to allocate up to X pages dynamically from the
+pcplists, vs a fixed number of pages held just for that purpose + fallback?
 
-It basically needs to upgrade atomic*_acquire() to smp_mb(). So that's
-all architectures that have their own _acquire() and an actual
-smp_mb__after_atomic().
+...
 
-Which, from the top of my head are only arm64, power and possibly riscv.
-And if I then git-grep smp_mb__after_spinlock, all those seem to be
-covered.
+> A number of pre-fetched elements seems does not depend on amount of the
+> physical memory in a system. In my case it is 63 pages. This step is not
 
-But let me do a better audit..
+It may depend, if you tune vm.percpu_pagelist_fraction sysctl. But I wouldn't
+know the exact formulas immediately. See pageset_set_high_and_batch(). In any
+case for your purpose the 'high' value (in e.g. /proc/zoneinfo) is more relevant
+(it means the maximum pages you might find cached) for you than the 'batch' (how
+much is cached in one refill).
+
+> lock-less. It uses spinlock_t for accessing to the body's zone. This
+> step is fully covered in the rmqueue_bulk() function.
+> 
+> Summarizing. The __GFP_FAST_TRY covers only [1] and can not do step [2],
+> due to the fact that [2] acquires spinlock_t. It implies that it is super
+> fast, but a higher rate of fails is also expected.
+> 
+> Usage: __get_free_page(__GFP_FAST_TRY);
+> 
+> 2) There was a proposal from Matthew Wilcox: https://lkml.org/lkml/2020/7/31/1015
+> 
+> <snip>
+> On non-RT, we could make that lock a raw spinlock.  On RT, we could
+> decline to take the lock.  We'd need to abstract the spin_lock() away
+> behind zone_lock(zone), but that should be OK.
+> <snip>
+> 
+> It would be great to use any existing flag, say GFP_NOWAIT. Suppose we
+> decline to take the lock across the page allocator for RT. But there is
+> at least one path that does it outside of the page allocator. GFP_NOWAIT
+> can wakeup the kswapd, whereas a "wake-up path" uses sleepable lock:
+> 
+> wakeup_kswapd() -> wake_up_interruptible(&pgdat->kswapd_wait).
+> 
+> Probably it can be fixed by the excluding of waking of the kswapd process
+> defining something like below:
+
+Is something missing here?
+
+> what is equal to zero and i am not sure if __get_free_page(0) handles
+> all that correctly, though it allocates and seems working on my test
+> machine! Please note it is related to "if we can reuse existing flags".
+> 
+> In the meantime, please see below for a patch that adds a __GFP_FAST_TRY,
+> which can at least serve as a baseline against which other proposals can
+> be compared. The patch is based on the 5.8.0-rc3.
+> 
+> Please RFC.
+
+At first glance __GFP_FAST_TRY (more descriptive name? __GFP_NO_LOCKS?) seems
+better than doing weird things with GFP_NOWAIT, but depends on the real benefits
+(hence my first questions).
+
+Thanks,
+Vlastimil
