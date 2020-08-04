@@ -2,95 +2,74 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F4FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E99FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E87D422B42
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:24:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h09FAqNM"
+	by mail.kernel.org (Postfix) with ESMTP id 5E8F022B42
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:24:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbgHDTYU (ORCPT
+        id S1728080AbgHDTYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 15:24:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbgHDTYU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 15:24:20 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46F70C06174A;
-        Tue,  4 Aug 2020 12:24:20 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t11so3958139plr.5;
-        Tue, 04 Aug 2020 12:24:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=iq2aYfhJ5sJs77/hPx3FMr3YTRxCtfhdhT9zx8Qv3yg=;
-        b=h09FAqNMyBUWkeGKmzOTjFfMGvrbMg7upPYBms7YkhKhtHSVTbqSDZEMdcJZv1KW+9
-         iWXERt4ej+FOpf2SolwJ+cG61NAxrtv+fUIgk0ltZlTDkQWdLxWwxfKbJ065jYo716SO
-         WK53JIRHx8poRXi7C3Q3GoYI6HF7Rhcn1Xzaf+yfJ1/jVlhyg+OtJFifmZl9MZrEdES6
-         6vNUaNgnEpm/IfEZ8zGjoDOH2DfOF60PeC2bOXK+pRP2OJB3orPpjVzzF9BsoKdPXxNq
-         PzXvEqy8s2fkMjgFjITHL/3ehl8+caVRiYDeRD6t/KpHbyd3lNTddmpFYxRxm6+rAElv
-         vQBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iq2aYfhJ5sJs77/hPx3FMr3YTRxCtfhdhT9zx8Qv3yg=;
-        b=XFAz19qwdYMSuZ7r0yu3hhdoazPtdi8Lrukh8gg5+buhll0pRO8ZyMlboy4IzPCbaw
-         KJYkhdZ6Hpd2GLb+Rykv28l9nW2+v2ooPiSCG/aSPZjgIo4CWjy1mMBJkNgtP23ZYnSI
-         eNHL58NDlEB6wSF+l1Jj3jDif5ViqwmxsWD4ezT9r8GzJZRr6WYua8U2DwyT/a00Luo/
-         EV2o8GXjDX/qLzr/otULyi5SepR6uyodC79r9bMC1Nb54bOofSY/avBycFCA0COth1mY
-         FKQ7OJAfBum4T3ZhLfugOrrkanO2lD2u/woMCbix/rnxhkTOM3VsiTZPaOrfxjYrOBJS
-         jvaw==
-X-Gm-Message-State: AOAM5320iaCUSMAqjS7v4Jv9zZcn0XRISh67K2KYEuRBYMrVHewUXKY5
-        YhDReGFDJjvLUIRRo2TPMdU=
-X-Google-Smtp-Source: ABdhPJx4gGcSVdoJWOaGdjTpS0w0DViuNaRPZd2s4fR9qCzvP9W0eOOB3lzkr1lpkBxDhCiXqr/B2g==
-X-Received: by 2002:a17:90a:884:: with SMTP id v4mr5493506pjc.27.1596569059764;
-        Tue, 04 Aug 2020 12:24:19 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x6sm18420473pfd.53.2020.08.04.12.24.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Aug 2020 12:24:19 -0700 (PDT)
-Date:   Tue, 4 Aug 2020 12:24:18 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.7 000/116] 5.7.13-rc3 review
-Message-ID: <20200804192418.GD186129@roeck-us.net>
-References: <20200804085233.484875373@linuxfoundation.org>
+        Tue, 4 Aug 2020 15:24:49 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:42642 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726027AbgHDTYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 15:24:48 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1k32Y7-008GVn-Cq; Tue, 04 Aug 2020 21:24:35 +0200
+Date:   Tue, 4 Aug 2020 21:24:35 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Ilia Lin <ilia.lin@gmail.com>
+Cc:     David Miller <davem@davemloft.net>, ilial@codeaurora.org,
+        kuba@kernel.org, jiri@mellanox.com, edumazet@google.com,
+        ap420073@gmail.com, xiyou.wangcong@gmail.com, maximmi@mellanox.com,
+        Ilia Lin <ilia.lin@kernel.org>, netdev@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: dev: Add API to check net_dev readiness
+Message-ID: <20200804192435.GG1919070@lunn.ch>
+References: <1595792274-28580-1-git-send-email-ilial@codeaurora.org>
+ <20200726194528.GC1661457@lunn.ch>
+ <20200727.103233.2024296985848607297.davem@davemloft.net>
+ <CA+5LGR1KwePssqhCkZ6qT_W87fO2o1XPze53mJwjkTWtphiWrA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200804085233.484875373@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CA+5LGR1KwePssqhCkZ6qT_W87fO2o1XPze53mJwjkTWtphiWrA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 10:53:53AM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.7.13 release.
-> There are 116 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 06 Aug 2020 08:51:59 +0000.
-> Anything received after that time might be too late.
-> 
+On Tue, Aug 04, 2020 at 08:47:18PM +0300, Ilia Lin wrote:
+> Hi Andrew and David,
 
-Build results:
-	total: 155 pass: 155 fail: 0
-Qemu test results:
-	total: 431 pass: 431 fail: 0
+Hi Ilia
 
-Guenter
+Please don't top post.
+
+> 
+> Thank you for your comments!
+> 
+> The client driver is still work in progress, but it can be seen here:
+> https://source.codeaurora.org/quic/la/kernel/msm-4.19/tree/drivers/platform/msm/ipa/ipa_api.c#n3842
+> 
+> For HW performance reasons, it has to be in subsys_initcall.
+
+Well, until the user of this new API is ready, we will not accept the
+patch.
+
+You also need to explain "For HW performance reasons". Why is this
+driver special that it can do things which no over driver does?
+
+And you should really be working on net-next, not this dead kernel
+version, if you want to get merged into mainline.
+
+Network drivers do not belong is drivers/platform. There is also ready
+a drivers/net/ipa, so i assume you will move there.
+
+  Andrew
