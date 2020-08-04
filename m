@@ -2,106 +2,95 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58554C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34A412076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E0F72076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:11:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NiOcZHdm"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HpWCJ03q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbgHDFKf (ORCPT
+        id S1729197AbgHDFLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 01:10:35 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:20337 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726000AbgHDFKf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 01:10:35 -0400
-X-UUID: 797e73bc974747c88fe1266d237f519d-20200804
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=HcqTMCQTc6cS8wLmYpdxtIBv3OwMvyeVXOAl4pmbLwo=;
-        b=NiOcZHdmhwCnv5eyaxQnmjiYjRDCQJtzmsCfSPczEPVplRmKlP/5HmJzdKMEmaRMUH6UfR8JSRxL/wAaOAXoe9BWqznSYzUzICRxs/+a9mj5AeMecoMLOmpzlkgoGIfO8ncfDQmtQMA12VoCSNhhw9U1Ile45DfPSo8K6gPJ2Fw=;
-X-UUID: 797e73bc974747c88fe1266d237f519d-20200804
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 391500231; Tue, 04 Aug 2020 13:10:32 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 4 Aug 2020 13:10:30 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 4 Aug 2020 13:10:32 +0800
-Message-ID: <1596517831.27829.3.camel@mtkswgap22>
-Subject: Re: [v2,4/6] reset-controller: ti: introduce a new reset handler
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Crystal Guo <crystal.guo@mediatek.com>
-CC:     <p.zabel@pengutronix.de>, <robh+dt@kernel.org>,
-        <matthias.bgg@gmail.com>, <srv_heupstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <seiya.wang@mediatek.com>,
-        <yingjoe.chen@mediatek.com>, <fan.chen@mediatek.com>,
-        <yong.liang@mediatek.com>
-Date:   Tue, 4 Aug 2020 13:10:31 +0800
-In-Reply-To: <20200803061511.29555-5-crystal.guo@mediatek.com>
-References: <20200803061511.29555-1-crystal.guo@mediatek.com>
-         <20200803061511.29555-5-crystal.guo@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 4 Aug 2020 01:11:22 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:50289 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726000AbgHDFLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 01:11:21 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BLNBt0zDRz9sSt;
+        Tue,  4 Aug 2020 15:11:18 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596517879;
+        bh=h/uuom2Oyk1hCVfSGLv/GSqI8b2sa7tipFZELOZiKd4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=HpWCJ03q8QRjMxFJMoSlhMmBQFZfd6ME4NM8QMrd0M9p51A2Q8o4WazxBNBuKzqXK
+         7qYG+I2uajIUZKR3kSvmVWrwHhIex1tU99f2zsc9OrKyqj/IYCr6yhr6kemh/Eyb4U
+         RgnxmqO6TA04Dy6hR2tfeqvxo8Pt2El7c9g/zf9Tjr9K3EXcXwcbILXwttoD6z6osh
+         Cnypbi/4cw3f/FsxbfsRdfjzjcyALenM/wNEmbzJxb2SmPyjoTeav2vwOcb+Atzb2B
+         NJUCqxObs7dDDn5citWJU7zGt1ztmg3/T+Qfve8pu6Elr9RBI/0XGDzG3mCFZJ+E7e
+         xz8eji0O+SxOQ==
+Date:   Tue, 4 Aug 2020 15:11:17 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+Subject: linux-next: build failure after merge of the vhost tree
+Message-ID: <20200804151117.232dfef4@canb.auug.org.au>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; boundary="Sig_/j1GTDJzT4/6ee=s5zw975+M";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA4LTAzIGF0IDE0OjE1ICswODAwLCBDcnlzdGFsIEd1byB3cm90ZToNCj4g
-QWRkIHRpX3N5c2Nvbl9yZXNldCgpIHRvIGludGVncmF0ZSBhc3NlcnQgYW5kIGRlYXNzZXJ0IHRv
-Z2V0aGVyLg0KPiBJZiBzb21lIG1vZHVsZXMgbmVlZCBkbyBzZXJpYWxpemVkIGFzc2VydCBhbmQg
-ZGVhc3NlcnQgb3BlcmF0aW9ucw0KPiB0byByZXNldCBpdHNlbGYsIHJlc2V0X2NvbnRyb2xfcmVz
-ZXQgY2FuIGJlIGNhbGxlZCBmb3IgY29udmVuaWVuY2UuDQo+IA0KPiBDaGFuZ2UtSWQ6IEk5MDQ2
-OTkyYjExNWE0NmYzNTk0ZGU1N2ZhODljNmEyZGU5OTU3ZDQ5DQoNClBsZWFzZSBkcm9wICJDaGFu
-Z2UtSWQiIHRhZ3MuDQoNCj4gLS0tDQo+ICBkcml2ZXJzL3Jlc2V0L3Jlc2V0LXRpLXN5c2Nvbi5j
-IHwgMjAgKysrKysrKysrKysrKysrKysrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRp
-b25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9yZXNldC9yZXNldC10aS1zeXNjb24u
-YyBiL2RyaXZlcnMvcmVzZXQvcmVzZXQtdGktc3lzY29uLmMNCj4gaW5kZXggYTI2MzVjMjFkYjdm
-Li4xYzc0YmNiOWE2YzMgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcmVzZXQvcmVzZXQtdGktc3lz
-Y29uLmMNCj4gKysrIGIvZHJpdmVycy9yZXNldC9yZXNldC10aS1zeXNjb24uYw0KPiBAQCAtNTYs
-NiArNTYsNyBAQCBzdHJ1Y3QgdGlfc3lzY29uX3Jlc2V0X2RhdGEgew0KPiAgCXN0cnVjdCByZWdt
-YXAgKnJlZ21hcDsNCj4gIAlzdHJ1Y3QgdGlfc3lzY29uX3Jlc2V0X2NvbnRyb2wgKmNvbnRyb2xz
-Ow0KPiAgCXVuc2lnbmVkIGludCBucl9jb250cm9sczsNCj4gKwlib29sIGFzc2VydF9kZWFzc2Vy
-dF90b2dldGhlcjsNCj4gIH07DQo+ICANCj4gICNkZWZpbmUgdG9fdGlfc3lzY29uX3Jlc2V0X2Rh
-dGEocmNkZXYpCVwNCj4gQEAgLTE1OCwxMCArMTU5LDI0IEBAIHN0YXRpYyBpbnQgdGlfc3lzY29u
-X3Jlc2V0X3N0YXR1cyhzdHJ1Y3QgcmVzZXRfY29udHJvbGxlcl9kZXYgKnJjZGV2LA0KPiAgCQkh
-KGNvbnRyb2wtPmZsYWdzICYgU1RBVFVTX1NFVCk7DQo+ICB9DQo+ICANCj4gK3N0YXRpYyBpbnQg
-dGlfc3lzY29uX3Jlc2V0KHN0cnVjdCByZXNldF9jb250cm9sbGVyX2RldiAqcmNkZXYsDQo+ICsJ
-CQkgIHVuc2lnbmVkIGxvbmcgaWQpDQo+ICt7DQo+ICsJc3RydWN0IHRpX3N5c2Nvbl9yZXNldF9k
-YXRhICpkYXRhID0gdG9fdGlfc3lzY29uX3Jlc2V0X2RhdGEocmNkZXYpOw0KPiArDQo+ICsJaWYg
-KGRhdGEtPmFzc2VydF9kZWFzc2VydF90b2dldGhlcikgew0KPiArCQl0aV9zeXNjb25fcmVzZXRf
-YXNzZXJ0KHJjZGV2LCBpZCk7DQo+ICsJCXJldHVybiB0aV9zeXNjb25fcmVzZXRfZGVhc3NlcnQo
-cmNkZXYsIGlkKTsNCj4gKwl9IGVsc2Ugew0KPiArCQlyZXR1cm4gLUVOT1RTVVBQOw0KPiArCX0N
-Cj4gK30NCj4gKw0KPiAgc3RhdGljIGNvbnN0IHN0cnVjdCByZXNldF9jb250cm9sX29wcyB0aV9z
-eXNjb25fcmVzZXRfb3BzID0gew0KPiAgCS5hc3NlcnQJCT0gdGlfc3lzY29uX3Jlc2V0X2Fzc2Vy
-dCwNCj4gIAkuZGVhc3NlcnQJPSB0aV9zeXNjb25fcmVzZXRfZGVhc3NlcnQsDQo+ICAJLnN0YXR1
-cwkJPSB0aV9zeXNjb25fcmVzZXRfc3RhdHVzLA0KPiArCS5yZXNldAkJPSB0aV9zeXNjb25fcmVz
-ZXQsDQo+ICB9Ow0KPiAgDQo+ICBzdGF0aWMgaW50IHRpX3N5c2Nvbl9yZXNldF9wcm9iZShzdHJ1
-Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiBAQCAtMjA0LDYgKzIxOSwxMSBAQCBzdGF0aWMg
-aW50IHRpX3N5c2Nvbl9yZXNldF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0K
-PiAgCQljb250cm9sc1tpXS5mbGFncyA9IGJlMzJfdG9fY3B1cChsaXN0KyspOw0KPiAgCX0NCj4g
-IA0KPiArCWlmIChvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wobnAsICJhc3NlcnQtZGVhc3NlcnQtdG9n
-ZXRoZXIiKSkNCj4gKwkJZGF0YS0+YXNzZXJ0X2RlYXNzZXJ0X3RvZ2V0aGVyID0gdHJ1ZTsNCj4g
-KwllbHNlDQo+ICsJCWRhdGEtPmFzc2VydF9kZWFzc2VydF90b2dldGhlciA9IGZhbHNlOw0KPiAr
-DQo+ICAJZGF0YS0+cmNkZXYub3BzID0gJnRpX3N5c2Nvbl9yZXNldF9vcHM7DQo+ICAJZGF0YS0+
-cmNkZXYub3duZXIgPSBUSElTX01PRFVMRTsNCj4gIAlkYXRhLT5yY2Rldi5vZl9ub2RlID0gbnA7
-DQoNClBlcmhhcHMgcGxlYXNlIHByb3ZpZGUgdGhlIHJlYXNvbiB3aHkgeW91IHNoYWxsIGFkZCB0
-aGlzIG5ldyBtZXRob2Q/IEFueQ0KZXhpc3RlZCBvciB1cGNvbWluZyB1c2Vycz8NCg0KVGhhbmtz
-LA0KDQpTdGFubGV5IENodQ0KDQoNCg==
+--Sig_/j1GTDJzT4/6ee=s5zw975+M
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
+
+After merging the vhost tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
+
+drivers/rpmsg/virtio_rpmsg_bus.c:28:10: fatal error: linux/virtio_rpmsg.h: =
+No such file or directory
+   28 | #include <linux/virtio_rpmsg.h>
+      |          ^~~~~~~~~~~~~~~~~~~~~~
+
+Caused by commit
+
+  bba6f4f52c31 ("rpmsg: move common structures and defines to headers")
+
+I have used the vhost tree from next-20200803 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/j1GTDJzT4/6ee=s5zw975+M
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8o7fUACgkQAVBC80lX
+0GzDSAf+ITf6o2wbYvsklrJdBFXUiYqYZYAxSmxK18TePgWWwMXyvmsZppKxi/NW
+UKvYjx7DspoT2BUUrjPlDdSMf+njwgAIs/OUDM3P1H4jPAYky6iDOy4MQXhOfGiT
+/RzTbtXmThHJnudLj+PyyNUxtqJLlHDQI7PHSJhzsI9E2MblAf05UVPa/Ih8X44g
+x8YFmeiTkWQtViym3/3SHxRuWEH3HLQWw/IxOcFPbTcFqx7FF5KQn7xO+c3y2Y3u
+ywIpREsLu1K7vISLLMZE3D7JjtSvoBf59t4Mng6f09/F5lOxq0VayYgWFIwEVAfa
+jwHfQ1jjVtK0kn9e5bXvGnJ82Muomw==
+=NLw3
+-----END PGP SIGNATURE-----
+
+--Sig_/j1GTDJzT4/6ee=s5zw975+M--
