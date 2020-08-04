@@ -2,197 +2,93 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F1AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00355C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5701206DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E63206DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:49:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="qtxEzZCu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729373AbgHDOs6 (ORCPT
+        id S1729422AbgHDOtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:48:58 -0400
-Received: from mga04.intel.com ([192.55.52.120]:46371 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729289AbgHDOs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:48:56 -0400
-IronPort-SDR: tsVZ/tjcKwsoxZgJuff7q/SM3d6XUIw56F2RHxSPBILGzF7fpsz5a3ChOCp6W7ckrGtvOZ5ZSH
- WwTV+vZiaJIg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="149767250"
-X-IronPort-AV: E=Sophos;i="5.75,434,1589266800"; 
-   d="scan'208";a="149767250"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 07:48:55 -0700
-IronPort-SDR: 6DZxYlE1bs/rSa4hs8oiEQ56aoyt3MJIAYK6vqhTugUjtPXoKO++yNMEsfd226X65H46AnaOv9
- uDeI3Z2sIcPA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,434,1589266800"; 
-   d="scan'208";a="492923456"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
-  by fmsmga005.fm.intel.com with ESMTP; 04 Aug 2020 07:48:50 -0700
-Subject: Re: [PATCH v2 4/5] perf record: Don't clear event's period if set by
- a term
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-References: <20200728085734.609930-1-irogers@google.com>
- <20200728085734.609930-5-irogers@google.com>
- <969ef797-59ea-69d0-24b9-33bcdff106a1@intel.com>
- <CAP-5=fUCnBGX0L0Tt3_gmVnt+hvaouJMx6XFErFKk72+xuw9fw@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <86324041-aafb-f556-eda7-6250ba678f24@intel.com>
-Date:   Tue, 4 Aug 2020 17:48:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 4 Aug 2020 10:49:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729289AbgHDOtA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 10:49:00 -0400
+Received: from forward500p.mail.yandex.net (forward500p.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:110])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26891C06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 07:48:59 -0700 (PDT)
+Received: from mxback5g.mail.yandex.net (mxback5g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:166])
+        by forward500p.mail.yandex.net (Yandex) with ESMTP id 423E6940350;
+        Tue,  4 Aug 2020 17:48:49 +0300 (MSK)
+Received: from localhost (localhost [::1])
+        by mxback5g.mail.yandex.net (mxback/Yandex) with ESMTP id rSFBIL9Fqs-mmIW95H6;
+        Tue, 04 Aug 2020 17:48:48 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1596552528;
+        bh=rS/+6n/koFWKSBys6+6aWID9TEc0lcxKA4Nv1F6EDF0=;
+        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
+        b=qtxEzZCu0A7cbwJIUikJA3ukGT/DD5Px3H4fZVFvDGYFa8VIRw8V8Uv82F7AT3Tb8
+         uydEkCvkihjV5Ll0vRHn5QdOKIcJtvHB4lUFHaJF9Sua/OLusutYPkHmi9HtFKcD+Z
+         BJXwcB2Qm3vr4ZS6SYZDLdo6BVLJusYdGY6VJLQQ=
+Authentication-Results: mxback5g.mail.yandex.net; dkim=pass header.i=@yandex.ru
+Received: by iva5-64778ce1ba26.qloud-c.yandex.net with HTTP;
+        Tue, 04 Aug 2020 17:48:48 +0300
+From:   Evgeny Novikov <novikov@ispras.ru>
+Envelope-From: eugenenovikov@yandex.ru
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>
+Cc:     "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        ldv-project-org <ldv-project@linuxtesting.org>
+In-Reply-To: <23dceaac-526d-4ee3-40de-cf354b0aeabd@roeck-us.net>
+References: <856951596540762@mail.yandex.ru> <23dceaac-526d-4ee3-40de-cf354b0aeabd@roeck-us.net>
+Subject: Re: hwmon: (sis5595) potential null pointer dereference in probe
 MIME-Version: 1.0
-In-Reply-To: <CAP-5=fUCnBGX0L0Tt3_gmVnt+hvaouJMx6XFErFKk72+xuw9fw@mail.gmail.com>
+X-Mailer: Yamail [ http://yandex.ru ] 5.0
+Date:   Tue, 04 Aug 2020 17:48:48 +0300
+Message-Id: <4831596552157@mail.yandex.ru>
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/08/20 4:33 pm, Ian Rogers wrote:
-> On Tue, Aug 4, 2020 at 3:08 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>
->> On 28/07/20 11:57 am, Ian Rogers wrote:
->>> If events in a group explicitly set a frequency or period with leader
->>> sampling, don't disable the samples on those events.
->>>
->>> Prior to 5.8:
->>> perf record -e '{cycles/period=12345000/,instructions/period=6789000/}:S'
->>
->> Might be worth explaining this use-case some more.
->> Perhaps add it to the leader sampling documentation for perf-list.
->>
->>> would clear the attributes then apply the config terms. In commit
->>> 5f34278867b7 leader sampling configuration was moved to after applying the
->>> config terms, in the example, making the instructions' event have its period
->>> cleared.
->>> This change makes it so that sampling is only disabled if configuration
->>> terms aren't present.
->>>
->>> Fixes: 5f34278867b7 ("perf evlist: Move leader-sampling configuration")
->>> Signed-off-by: Ian Rogers <irogers@google.com>
->>> ---
->>>  tools/perf/util/record.c | 28 ++++++++++++++++++++--------
->>>  1 file changed, 20 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
->>> index a4cc11592f6b..01d1c6c613f7 100644
->>> --- a/tools/perf/util/record.c
->>> +++ b/tools/perf/util/record.c
->>> @@ -2,6 +2,7 @@
->>>  #include "debug.h"
->>>  #include "evlist.h"
->>>  #include "evsel.h"
->>> +#include "evsel_config.h"
->>>  #include "parse-events.h"
->>>  #include <errno.h>
->>>  #include <limits.h>
->>> @@ -38,6 +39,9 @@ static void evsel__config_leader_sampling(struct evsel *evsel, struct evlist *ev
->>>       struct perf_event_attr *attr = &evsel->core.attr;
->>>       struct evsel *leader = evsel->leader;
->>>       struct evsel *read_sampler;
->>> +     struct evsel_config_term *term;
->>> +     struct list_head *config_terms = &evsel->config_terms;
->>> +     int term_types, freq_mask;
->>>
->>>       if (!leader->sample_read)
->>>               return;
->>> @@ -47,16 +51,24 @@ static void evsel__config_leader_sampling(struct evsel *evsel, struct evlist *ev
->>>       if (evsel == read_sampler)
->>>               return;
->>>
->>> +     /* Determine the evsel's config term types. */
->>> +     term_types = 0;
->>> +     list_for_each_entry(term, config_terms, list) {
->>> +             term_types |= 1 << term->type;
->>> +     }
->>>       /*
->>> -      * Disable sampling for all group members other than the leader in
->>> -      * case the leader 'leads' the sampling, except when the leader is an
->>> -      * AUX area event, in which case the 2nd event in the group is the one
->>> -      * that 'leads' the sampling.
->>> +      * Disable sampling for all group members except those with explicit
->>> +      * config terms or the leader. In the case of an AUX area event, the 2nd
->>> +      * event in the group is the one that 'leads' the sampling.
->>>        */
->>> -     attr->freq           = 0;
->>> -     attr->sample_freq    = 0;
->>> -     attr->sample_period  = 0;
->>> -     attr->write_backward = 0;
->>> +     freq_mask = (1 << EVSEL__CONFIG_TERM_FREQ) | (1 << EVSEL__CONFIG_TERM_PERIOD);
->>> +     if ((term_types & freq_mask) == 0) {
->>
->> It would be nicer to have a helper e.g.
->>
->>         if (!evsel__have_config_term(evsel, FREQ) &&
->>             !evsel__have_config_term(evsel, PERIOD)) {
-> 
-> Sure. The point of doing it this way was to avoid repeatedly iterating
-> over the config term list.
+04.08.2020, 17:33, "Guenter Roeck" <linux@roeck-us.net>:
+> On 8/4/20 4:50 AM, Evgeny Novikov wrote:
+>>  sis5595_pci_probe() registers platform driver callbacks and just then
+>>  initializes global pointer variable s_bridge. sis5595_probe() may
+>>  dereference it before this happens that can result in null pointer
+>>  dereference.
+>
+> sis5595_probe() is only called after the device is registered,
+> which happens in sis5595_device_add() after s_bridge is set. This is
+> a southbridge, so there won't be any hot insertion/removal events.
+>
 
-But perhaps it is premature optimization
+Thank you for this hint. We need to tune our models appropriately.
 
-> 
->>> +             attr->freq           = 0;
->>> +             attr->sample_freq    = 0;
->>> +             attr->sample_period  = 0;
->>
->> If we are not sampling, then maybe we should also put here:
->>
->>                 attr->write_backward = 0;
->>
->>> +     }
->>
->> Then, if we are sampling this evsel shouldn't the backward setting
->> match the leader? e.g.
->>
->>         if (attr->sample_freq)
->>                 attr->write_backward = leader->core.attr.write_backward;
-> 
-> Perhaps that should be a follow up change? This change is trying to
-> make the behavior match the previous behavior.
+>>  We can not swap registration of platform driver callbacks with
+>>  initialization of s_bridge since sm_sis5595_exit() assumes the
+>>  current order. Perhaps it has sense to implement a pci_driver.remove
+>>  callback that will take care about deregistration of platform driver
+>>  callbacks.
+>
+> Agreed regarding the remove function. However, given the age of the chip,
+> I'd rather remove the driver than spending time on cleanup efforts.
+> This looks like a perfect candidate for depreciation.
+>
 
-Sure
+This is completely up to you. Anyway the driver does not have the bug.
 
-> 
-> Thanks,
-> Ian
-> 
->>> +     if ((term_types & (1 << EVSEL__CONFIG_TERM_OVERWRITE)) == 0)
->>> +             attr->write_backward = 0;
->>>
->>>       /*
->>>        * We don't get a sample for slave events, we make them when delivering
->>>
->>
+Best regards,
+Evgeny
 
+> Guenter
