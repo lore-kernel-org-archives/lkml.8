@@ -2,287 +2,132 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFA1C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 623A8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39D3E20786
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 637AA20781
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:08:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KyVEKGwG"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Lz5xpKJ+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgHDCDt (ORCPT
+        id S1726766AbgHDCIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 22:03:49 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:57030 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbgHDCDs (ORCPT
+        Mon, 3 Aug 2020 22:08:20 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:53493 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725877AbgHDCIT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 22:03:48 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07423QYp005096;
-        Tue, 4 Aug 2020 02:03:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=X1HWxyJHRbd5gFbo7p28vx8i25sPsY5Sa9ZULHMcc78=;
- b=KyVEKGwGclmBtjO5X+zfQjhOYEBeXZFoRUIUcGHF2ODrRpjtBi44Dxf8BBnmSfi+ecUJ
- kzKyZQ5kbFrC5HxcU8IiQCAhrGa4/QG/ou6/xkwzfsdYvY2ck4a+adD+oy5E4zSPtD3x
- 3kygSo8GMZIJVp1PpGQDWPP+OB+eP2jPArwaEBR7k5JYlLuZDDso11sv64b7OqpT/kY4
- JszZRk4k4HXTbJwpHlW2Zdgo81XuhCjWwD866J0cC58S+OpdH1SUEG7Tfk7261jsF52y
- 3nPaw9FUwjGqtBT+eZk+POUpZ9ZbBNcoDpTWKPz408mqeS9ShmJ3W5z7nCOlQUM/zzI3 wQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 32pdnq4wcv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 04 Aug 2020 02:03:26 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07422nTx085923;
-        Tue, 4 Aug 2020 02:03:25 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 32pdnp5m8n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 04 Aug 2020 02:03:25 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07423Jqm013107;
-        Tue, 4 Aug 2020 02:03:19 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 03 Aug 2020 19:03:19 -0700
-Subject: Re: [PATCH] hugetlbfs: remove call to huge_pte_alloc without
- i_mmap_rwsem
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "Kirill A.Shutemov" <kirill.shutemov@linux.intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Prakash Sangappa <prakash.sangappa@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        stable@vger.kernel.org
-References: <20200803224335.55794-1-mike.kravetz@oracle.com>
- <20200803225234.GD23808@casper.infradead.org>
- <9072d352-7a07-aac7-3439-3f524fc465ed@oracle.com>
-Message-ID: <e670f327-5cf9-1959-96e4-6dc7cc30d3d5@oracle.com>
-Date:   Mon, 3 Aug 2020 19:03:17 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 3 Aug 2020 22:08:19 -0400
+X-UUID: d56bcd55be65427baf041fcbb342cc98-20200804
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=fgyIQ7DsULlTTKIxA3Jlyx2v6bU2W2sQc//rLVyQcYE=;
+        b=Lz5xpKJ+f85TAWAFi4aRa830BUJDuzh8wcnYLAHoehkgjDIyPbSoTJSqau/rRx2gorfIAbBs6dsz4ISHxViTXhjLl2Wj++dUERIj3thL9kkne97EF2iJzvV1i0kzBvRAxaa0EnQxcvWgiiWgKe5OATdx6sCy4EpOS9029R13peM=;
+X-UUID: d56bcd55be65427baf041fcbb342cc98-20200804
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1559518393; Tue, 04 Aug 2020 10:08:14 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 4 Aug 2020 10:08:12 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 4 Aug 2020 10:08:13 +0800
+Message-ID: <1596506892.17917.2.camel@mtkswgap22>
+Subject: Re: [PATCH v4 2/2] soc: mediatek: add mtk-devapc driver
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
+CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <devicetree@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 4 Aug 2020 10:08:12 +0800
+In-Reply-To: <CAAOTY__VPXMGcR9w8EdnGbJyVbxbLQY+SRAqLbOcTy0D_WLM0w@mail.gmail.com>
+References: <1596010690-13178-1-git-send-email-neal.liu@mediatek.com>
+         <1596010690-13178-3-git-send-email-neal.liu@mediatek.com>
+         <CAAOTY_8aw=6E7bMJwz5jDLXUxYHpy9_Avbwc90osQGckzANNcg@mail.gmail.com>
+         <1596427295.22971.20.camel@mtkswgap22>
+         <CAAOTY__VPXMGcR9w8EdnGbJyVbxbLQY+SRAqLbOcTy0D_WLM0w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <9072d352-7a07-aac7-3439-3f524fc465ed@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9702 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 mlxscore=0
- bulkscore=0 adultscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008040013
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9702 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxscore=0
- suspectscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 adultscore=0
- malwarescore=0 phishscore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008040013
+X-TM-SNTS-SMTP: A1D2B56BE3B7D7DFFE750BB73D1DE48D8AD510E630AE667407D111F587BA25032000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/3/20 4:00 PM, Mike Kravetz wrote:
-> On 8/3/20 3:52 PM, Matthew Wilcox wrote:
->> On Mon, Aug 03, 2020 at 03:43:35PM -0700, Mike Kravetz wrote:
->>> Commit c0d0381ade79 ("hugetlbfs: use i_mmap_rwsem for more pmd sharing
->>> synchronization") requires callers of huge_pte_alloc to hold i_mmap_rwsem
->>> in at least read mode.  This is because the explicit locking in
->>> huge_pmd_share (called by huge_pte_alloc) was removed.  When restructuring
->>> the code, the call to huge_pte_alloc in the else block at the beginning
->>> of hugetlb_fault was missed.
->>
->> Should we have a call to mmap_assert_locked() in huge_pte_alloc(),
->> at least the generic one?
-> 
-> That is the wrong semaphore.
-> 
-> However, I was not aware of the checks for a semaphore being held as is
-> done in rwsem_is_locked().  That would have caught this when the original
-> code was changed.  Thanks for pointing this out.
-> 
-> Let me update the patch and add checks to huge_pmd_share().
-
-Here is an updated version.
-
-I added routines to assert that i_mmap_rwsem is held as required.  This
-requires changing the parameters passed to huge_pmd_unshare.  Verified
-that the problematic call to huge_pte_alloc (that this patch also removes)
-will generate WARNINGs.
-
-Not sure if the fix should be separated from the verification code for
-sending to stable?
-
-From 8d1d4f858da7a593a04ce8dc06b067bf0075903f Mon Sep 17 00:00:00 2001
-From: Mike Kravetz <mike.kravetz@oracle.com>
-Date: Mon, 3 Aug 2020 14:38:06 -0700
-Subject: [PATCH v2] hugetlbfs: remove call to huge_pte_alloc without
- i_mmap_rwsem
-
-Commit c0d0381ade79 ("hugetlbfs: use i_mmap_rwsem for more pmd sharing
-synchronization") requires callers of huge_pte_alloc to hold i_mmap_rwsem
-in at least read mode.  This is because the explicit locking in
-huge_pmd_share (called by huge_pte_alloc) was removed.  When restructuring
-the code, the call to huge_pte_alloc in the else block at the beginning
-of hugetlb_fault was missed.
-
-Unfortunately, that else clause is exercised when there is no page table
-entry.  This will likely lead to a call to huge_pmd_share.  If
-huge_pmd_share thinks pmd sharing is possible, it will traverse the mapping
-tree (i_mmap) without holding i_mmap_rwsem.  If someone else is modifying
-the tree, bad things such as addressing exceptions or worse could happen.
-
-Simply remove the else clause.  It should have been removed previously.
-The code following the else will call huge_pte_alloc with the appropriate
-locking.
-
-To prevent this type of issue in the future, add routines to assert that
-i_mmap_rwsem is held, and call these routines in huge pmd sharing routines.
-
-Fixes: c0d0381ade79 ("hugetlbfs: use i_mmap_rwsem for more pmd sharing synchronization")
-Cc: <stable@vger.kernel.org>
-Suggested-by: Matthew Wilcox <willy@infradead.org>
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
----
- include/linux/fs.h      | 10 ++++++++++
- include/linux/hugetlb.h |  8 +++++---
- mm/hugetlb.c            | 15 +++++++--------
- mm/rmap.c               |  2 +-
- 4 files changed, 23 insertions(+), 12 deletions(-)
-
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index f5abba86107d..2dab217c6047 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -549,6 +549,16 @@ static inline void i_mmap_unlock_read(struct address_space *mapping)
- 	up_read(&mapping->i_mmap_rwsem);
- }
- 
-+static inline void i_mmap_assert_locked(struct address_space *mapping)
-+{
-+	lockdep_assert_held(&mapping->i_mmap_rwsem);
-+}
-+
-+static inline void i_mmap_assert_write_locked(struct address_space *mapping)
-+{
-+	lockdep_assert_held_write(&mapping->i_mmap_rwsem);
-+}
-+
- /*
-  * Might pages of this file be mapped into userspace?
-  */
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 50650d0d01b9..a520bf26e5d8 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -164,7 +164,8 @@ pte_t *huge_pte_alloc(struct mm_struct *mm,
- 			unsigned long addr, unsigned long sz);
- pte_t *huge_pte_offset(struct mm_struct *mm,
- 		       unsigned long addr, unsigned long sz);
--int huge_pmd_unshare(struct mm_struct *mm, unsigned long *addr, pte_t *ptep);
-+int huge_pmd_unshare(struct mm_struct *mm, struct vm_area_struct *vma,
-+				unsigned long *addr, pte_t *ptep);
- void adjust_range_if_pmd_sharing_possible(struct vm_area_struct *vma,
- 				unsigned long *start, unsigned long *end);
- struct page *follow_huge_addr(struct mm_struct *mm, unsigned long address,
-@@ -203,8 +204,9 @@ static inline struct address_space *hugetlb_page_mapping_lock_write(
- 	return NULL;
- }
- 
--static inline int huge_pmd_unshare(struct mm_struct *mm, unsigned long *addr,
--					pte_t *ptep)
-+static inline int huge_pmd_unshare(struct mm_struct *mm,
-+					struct vm_area_struct *vma,
-+					unsigned long *addr, pte_t *ptep)
- {
- 	return 0;
- }
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 590111ea6975..6ac686b09bb6 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -3952,7 +3952,7 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
- 			continue;
- 
- 		ptl = huge_pte_lock(h, mm, ptep);
--		if (huge_pmd_unshare(mm, &address, ptep)) {
-+		if (huge_pmd_unshare(mm, vma, &address, ptep)) {
- 			spin_unlock(ptl);
- 			/*
- 			 * We just unmapped a page of PMDs by clearing a PUD.
-@@ -4539,10 +4539,6 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
- 		} else if (unlikely(is_hugetlb_entry_hwpoisoned(entry)))
- 			return VM_FAULT_HWPOISON_LARGE |
- 				VM_FAULT_SET_HINDEX(hstate_index(h));
--	} else {
--		ptep = huge_pte_alloc(mm, haddr, huge_page_size(h));
--		if (!ptep)
--			return VM_FAULT_OOM;
- 	}
- 
- 	/*
-@@ -5019,7 +5015,7 @@ unsigned long hugetlb_change_protection(struct vm_area_struct *vma,
- 		if (!ptep)
- 			continue;
- 		ptl = huge_pte_lock(h, mm, ptep);
--		if (huge_pmd_unshare(mm, &address, ptep)) {
-+		if (huge_pmd_unshare(mm, vma, &address, ptep)) {
- 			pages++;
- 			spin_unlock(ptl);
- 			shared_pmd = true;
-@@ -5404,12 +5400,14 @@ pte_t *huge_pmd_share(struct mm_struct *mm, unsigned long addr, pud_t *pud)
-  * returns: 1 successfully unmapped a shared pte page
-  *	    0 the underlying pte page is not shared, or it is the last user
-  */
--int huge_pmd_unshare(struct mm_struct *mm, unsigned long *addr, pte_t *ptep)
-+int huge_pmd_unshare(struct mm_struct *mm, struct vm_area_struct *vma,
-+					unsigned long *addr, pte_t *ptep)
- {
- 	pgd_t *pgd = pgd_offset(mm, *addr);
- 	p4d_t *p4d = p4d_offset(pgd, *addr);
- 	pud_t *pud = pud_offset(p4d, *addr);
- 
-+	i_mmap_assert_write_locked(vma->vm_file->f_mapping);
- 	BUG_ON(page_count(virt_to_page(ptep)) == 0);
- 	if (page_count(virt_to_page(ptep)) == 1)
- 		return 0;
-@@ -5427,7 +5425,8 @@ pte_t *huge_pmd_share(struct mm_struct *mm, unsigned long addr, pud_t *pud)
- 	return NULL;
- }
- 
--int huge_pmd_unshare(struct mm_struct *mm, unsigned long *addr, pte_t *ptep)
-+int huge_pmd_unshare(struct mm_struct *mm, struct vm_area_struct *vma,
-+				unsigned long *addr, pte_t *ptep)
- {
- 	return 0;
- }
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 5fe2dedce1fc..6cce9ef06753 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1469,7 +1469,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
- 			 * do this outside rmap routines.
- 			 */
- 			VM_BUG_ON(!(flags & TTU_RMAP_LOCKED));
--			if (huge_pmd_unshare(mm, &address, pvmw.pte)) {
-+			if (huge_pmd_unshare(mm, vma, &address, pvmw.pte)) {
- 				/*
- 				 * huge_pmd_unshare unmapped an entire PMD
- 				 * page.  There is no way of knowing exactly
--- 
-2.25.4
+T24gVHVlLCAyMDIwLTA4LTA0IGF0IDAwOjA0ICswODAwLCBDaHVuLUt1YW5nIEh1IHdyb3RlOg0K
+PiBIaSwgTmVhbDoNCj4gDQo+IE5lYWwgTGl1IDxuZWFsLmxpdUBtZWRpYXRlay5jb20+IOaWvCAy
+MDIw5bm0OOaciDPml6Ug6YCx5LiAIOS4i+WNiDEyOjAx5a+r6YGT77yaDQo+ID4NCj4gPiBIaSBD
+aHVuLUt1YW5nLA0KPiA+DQo+ID4gT24gU2F0LCAyMDIwLTA4LTAxIGF0IDA4OjEyICswODAwLCBD
+aHVuLUt1YW5nIEh1IHdyb3RlOg0KPiA+ID4gSGksIE5lYWw6DQo+ID4gPg0KPiA+ID4gVGhpcyBw
+YXRjaCBpcyBmb3IgIm1lZGlhdGVrLG10Njc3OS1kZXZhcGMiLCBzbyBJIHRoaW5rIGNvbW1pdCB0
+aXRsZQ0KPiA+ID4gc2hvdWxkIHNob3cgdGhlIFNvQyBJRC4NCj4gPg0KPiA+IE9rYXksIEknbGwg
+Y2hhbmdlIHRpdGxlIHRvICdzb2M6bWVkaWF0ZWs6IGFkZCBtdDY3NzkgZGV2YXBjIGRyaXZlcicu
+DQo+ID4NCj4gPiA+DQo+ID4gPiBOZWFsIExpdSA8bmVhbC5saXVAbWVkaWF0ZWsuY29tPiDmlrwg
+MjAyMOW5tDfmnIgyOeaXpSDpgLHkuIkg5LiL5Y2INDoyOeWvq+mBk++8mg0KPiA+ID4gPg0KPiA+
+ID4gPiBNZWRpYVRlayBidXMgZmFicmljIHByb3ZpZGVzIFRydXN0Wm9uZSBzZWN1cml0eSBzdXBw
+b3J0IGFuZCBkYXRhDQo+ID4gPiA+IHByb3RlY3Rpb24gdG8gcHJldmVudCBzbGF2ZXMgZnJvbSBi
+ZWluZyBhY2Nlc3NlZCBieSB1bmV4cGVjdGVkDQo+ID4gPiA+IG1hc3RlcnMuDQo+ID4gPiA+IFRo
+ZSBzZWN1cml0eSB2aW9sYXRpb24gaXMgbG9nZ2VkIGFuZCBzZW50IHRvIHRoZSBwcm9jZXNzb3Ig
+Zm9yDQo+ID4gPiA+IGZ1cnRoZXIgYW5hbHlzaXMgb3IgY291bnRlcm1lYXN1cmVzLg0KPiA+ID4g
+Pg0KPiA+ID4gPiBBbnkgb2NjdXJyZW5jZSBvZiBzZWN1cml0eSB2aW9sYXRpb24gd291bGQgcmFp
+c2UgYW4gaW50ZXJydXB0LCBhbmQNCj4gPiA+ID4gaXQgd2lsbCBiZSBoYW5kbGVkIGJ5IG10ay1k
+ZXZhcGMgZHJpdmVyLiBUaGUgdmlvbGF0aW9uDQo+ID4gPiA+IGluZm9ybWF0aW9uIGlzIHByaW50
+ZWQgaW4gb3JkZXIgdG8gZmluZCB0aGUgbXVyZGVyZXIuDQo+ID4gPiA+DQo+ID4gPiA+IFNpZ25l
+ZC1vZmYtYnk6IE5lYWwgTGl1IDxuZWFsLmxpdUBtZWRpYXRlay5jb20+DQo+ID4gPiA+IC0tLQ0K
+PiA+ID4NCj4gPiA+IFtzbmlwXQ0KPiA+ID4NCj4gPiA+ID4gKw0KPiA+ID4gPiArc3RydWN0IG10
+a19kZXZhcGNfY29udGV4dCB7DQo+ID4gPiA+ICsgICAgICAgc3RydWN0IGRldmljZSAqZGV2Ow0K
+PiA+ID4gPiArICAgICAgIHUzMiB2aW9faWR4X251bTsNCj4gPiA+ID4gKyAgICAgICB2b2lkIF9f
+aW9tZW0gKmRldmFwY19wZF9iYXNlOw0KPiA+ID4gPiArICAgICAgIHN0cnVjdCBtdGtfZGV2YXBj
+X3Zpb19pbmZvICp2aW9faW5mbzsNCj4gPiA+ID4gKyAgICAgICBjb25zdCBzdHJ1Y3QgbXRrX2Rl
+dmFwY19wZF9vZmZzZXQgKm9mZnNldDsNCj4gPiA+ID4gKyAgICAgICBjb25zdCBzdHJ1Y3QgbXRr
+X2RldmFwY192aW9fZGJncyAqdmlvX2RiZ3M7DQo+ID4gPiA+ICt9Ow0KPiA+ID4NCj4gPiA+IEkg
+dGhpbmsgdGhpcyBzdHJ1Y3R1cmUgc2hvdWxkIHNlcGFyYXRlIHRoZSBjb25zdGFudCBwYXJ0LiBU
+aGUgY29uc3RhbnQgcGFydCBpczoNCj4gPiA+DQo+ID4gPiBzdHJ1Y3QgbXRrX2RldmFwY19kYXRh
+IHsNCj4gPiA+ICAgICBjb25zdCB1MzIgdmlvX2lkeF9udW07DQo+ID4gPiAgICAgY29uc3Qgc3Ry
+dWN0IG10a19kZXZhcGNfcGRfb2Zmc2V0ICpvZmZzZXQ7IC8qIEkgd291bGQgbGlrZSB0bw0KPiA+
+ID4gcmVtb3ZlIHN0cnVjdCBtdGtfZGV2YXBjX3BkX29mZnNldCBhbmQgZGlyZWN0bHkgcHV0IGl0
+cyBtZW1iZXIgaW50bw0KPiA+ID4gdGhpcyBzdHJ1Y3R1cmUgKi8NCj4gPiA+ICAgICBjb25zdCBz
+dHJ1Y3QgbXRrX2RldmFwY192aW9fZGJncyAqdmlvX2RiZ3M7IC8qIFRoaXMgbWF5IGRpc2FwcGVh
+ciAqLw0KPiA+ID4gfTsNCj4gPiA+DQo+ID4gPiBBbmQgdGhlIGNvbnRleHQgaXM6DQo+ID4gPg0K
+PiA+ID4gc3RydWN0IG10a19kZXZhcGNfY29udGV4dCB7DQo+ID4gPiAgICAgc3RydWN0IGRldmlj
+ZSAqZGV2Ow0KPiA+ID4gICAgIHZvaWQgX19pb21lbSAqZGV2YXBjX3BkX2Jhc2U7DQo+ID4gPiAg
+ICAgY29uc3Qgc3RydWN0IG10a19kZXZhcGNfZGF0YSAqZGF0YTsNCj4gPiA+IH07DQo+ID4gPg0K
+PiA+ID4gU28gd2hlbiB5b3UgZGVmaW5lIHRoaXMsIHlvdSB3b3VsZCBub3Qgd2FzdGUgbWVtb3J5
+IHRvIHN0b3JlIG5vbi1jb25zdGFudCBkYXRhLg0KPiA+ID4NCj4gPiA+IHN0YXRpYyBjb25zdCBz
+dHJ1Y3QgbXRrX2RldmFwY19kYXRhIGRldmFwY19tdDY3NzkgPSB7DQo+ID4gPiAgLnZpb19pZHhf
+bnVtID0gNTEwLA0KPiA+ID4gIC5vZmZzZXQgPSAmbXQ2Nzc5X3BkX29mZnNldCwNCj4gPiA+ICAu
+dmlvX2RiZ3MgPSAmbXQ2Nzc5X3Zpb19kYmdzLA0KPiA+ID4gfTsNCj4gPiA+DQo+ID4NCj4gPiBT
+b3JyeSwgSSBzdGlsbCBkb24ndCB1bmRlcnN0YW5kIHdoeSB0aGlzIHJlZmFjdG9yaW5nIHdpbGwg
+bm90IHdhc3RlDQo+ID4gbWVtb3J5IHRvIHN0b3JlIG5vbi1jb25zdGFudCBkYXRhLiBDb3VsZCB5
+b3UgZXhwbGFpbiBtb3JlIGRldGFpbHM/DQo+ID4gVG8gbXkgdW5kZXJzdGFuZGluZywgd2Ugc3Rp
+bGwgYWxzbyBoYXZlIHRvIGFsbG9jYXRlIG1lbW9yeSB0byBzdG9yZSBkZXYNCj4gPiAmIGRldmFw
+Y19wZF9iYXNlLg0KPiANCj4gSW4gc29tZSBzaXR1YXRpb24sIGl0IGlzLiBZb3UgbWFrZSB0aGUg
+bm9uLWNvbnN0YW50IGRhdGEgYSBnbG9iYWwNCj4gdmFyaWFibGUuIEkgdGhpbmsgdGhlIGNvbnRl
+eHQgZGF0YSBzaG91bGQgYmUgZHluYW1pYyBhbGxvY2F0ZWQuIElmDQo+IHRoaXMgZHJpdmVyIGlz
+IG5vdCBwcm9iZWQsIHRoZSBub24tY29uc3RhbnQgZGF0YSBvY2N1cHkgdGhlIG1lbW9yeS4NCj4g
+DQoNCkkgZ290IHlvdXIgcG9pbnQhIEluIHRoaXMgY2FzZSwgd2UgY2FuIHNhdmUgdGhlc2UgMiBk
+YXRhIHN0cnVjdHVyZQ0Kc3BhY2UsIHJpZ2h0Pw0KDQpzdHJ1Y3QgZGV2aWNlICpkZXY7DQp2b2lk
+IF9faW9tZW0gKmRldmFwY19wZF9iYXNlOw0KDQpJJ2xsIHJlZmFjdG9yaW5nIHRoaXMgZGF0YSBz
+dHJ1Y3R1cmVzIG9uIG5leHQgcGF0Y2guIFRoYW5rcyAhDQoNCj4gUmVnYXJkcywNCj4gQ2h1bi1L
+dWFuZy4NCj4gDQo+ID4NCj4gPiA+IFJlZ2FyZHMsDQo+ID4gPiBDaHVuLUt1YW5nLg0KPiA+ID4N
+Cj4gPiA+ID4gKw0KPiA+ID4gPiArI2VuZGlmIC8qIF9fTVRLX0RFVkFQQ19IX18gKi8NCj4gPiA+
+ID4gLS0NCj4gPiA+ID4gMS43LjkuNQ0KPiA+ID4gPiBfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXw0KPiA+ID4gPiBMaW51eC1tZWRpYXRlayBtYWlsaW5nIGxp
+c3QNCj4gPiA+ID4gTGludXgtbWVkaWF0ZWtAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiA+ID4gPiBo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LW1lZGlhdGVr
+DQo+ID4NCg0K
 
