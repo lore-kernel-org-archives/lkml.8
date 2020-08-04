@@ -2,88 +2,81 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D6CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 22:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01EDBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 22:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41F642086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 22:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD75020842
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 22:45:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JPK1eueY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fFSpiFi/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbgHDW3m (ORCPT
+        id S1726916AbgHDWpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 18:29:42 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:48147 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbgHDW3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 18:29:41 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BLqDz0ZqKz9sRK;
-        Wed,  5 Aug 2020 08:29:39 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596580179;
-        bh=WoofWK6zkGi4H6IHzt499LN7kOmRiarBusIWwUY5Z/o=;
-        h=Date:From:To:Cc:Subject:From;
-        b=JPK1eueYnJRZDa1+2G8efUrd8Ox4SRGyHjJTB08U07Vf2UriaxA76tmhSDTLqpZ5r
-         KUxXMsR1vVfGNzZPn3hrYFvd4ra2s1FF2sF1Y0f7eWa/XexJNmq1xF/0bqgs/YT9gd
-         U9RBeK5JVWTKyMRt2KUOxY846jIjYKChq1Kyx6RJZ5rq9mBlcrjCmwhr1Ioa1VONP2
-         QCes0ypCmD6NjGyEiErtw0x16YWyEvXJmzMB5J9tNUESgCdjmTsJLO530vfT9eiERF
-         pqHjZp1rtEh/p5F/w35eRs4DH3UhJwsq/7Holaq+fkRxj5F9Be5uK+7hEWwoVwNfq7
-         DxCI7+KHZ62cw==
-Date:   Wed, 5 Aug 2020 08:29:38 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mohammed Gamal <mgamal@redhat.com>
-Subject: linux-next: Signed-off-by missing for commit in the kvm tree
-Message-ID: <20200805082938.32f248e8@canb.auug.org.au>
+        Tue, 4 Aug 2020 18:45:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgHDWpt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 18:45:49 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB85CC06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 15:45:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=UveKBYDbIZyIjh6ZPjOv5UQRCvtyfkU8x2EftZkViyE=; b=fFSpiFi/AMgkfAVlAg1gz8Lovv
+        wknbgJJDGNkFpBxfe0qi+Ue73w6sgRM7wQaROnxaNYjc+aWAYlFcyrH07uLsKeMGuxhu9giRlAnyz
+        aTVv6J41koFtbUaMem8UHjzBa0hJQeQQmpEy2So1FXEK8WiBx7n2wL7m+FCpn5kTFiTLr166/s1mG
+        oF6c8p7cbV3KllUCY0toiT8PYBe66OAbufWPr9nVF16CUmVL8mYK9qada0Z3fMorh20eafrP0Gpdr
+        1r1lS9WNOg6cCuLQ0XJkMWT40x1ZBVY1UsnLGyKglE66JM73d6Ruviw3Er7hFtvL4zHSXxYg4VoSP
+        07JwMXGQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k35gm-0004rW-MJ; Tue, 04 Aug 2020 22:45:44 +0000
+Date:   Tue, 4 Aug 2020 23:45:44 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
+Subject: Re: [RFC] saturate check_*_overflow() output?
+Message-ID: <20200804224544.GK23808@casper.infradead.org>
+References: <202008031118.36756FAD04@keescook>
+ <f177a821-74a3-e868-81d3-55accfb5b161@rasmusvillemoes.dk>
+ <202008041137.02D231B@keescook>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Sv.ebZX6FhRJQ2UIKrPRp0r";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202008041137.02D231B@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Sv.ebZX6FhRJQ2UIKrPRp0r
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Aug 04, 2020 at 12:23:03PM -0700, Kees Cook wrote:
+> > What we might do, to deal with the "caller fails to check the result",
+> > is to add a
+> > 
+> > static inline bool __must_check must_check_overflow(bool b) { return
+> > unlikely(b); }
+> > 
+> > and wrap all the final "did it overflow" results in that one - perhaps
+> > also for the __builtin_* cases, I don't know if those are automatically
+> > equipped with that attribute. [I also don't know if gcc propagates
+> > likely/unlikely out to the caller, but it shouldn't hurt to have it
+> > there and might improve code gen if it does.]
+> 
+> (What is the formal name for the ({ ...; return_value; }) C construct?)
 
-Hi all,
+'Statement Exprs'.
 
-Commit
+A compound statement enclosed in parentheses may appear as an expression
+in GNU C.  This allows you to use loops, switches, and local variables
+within an expression.
 
-  1dbf5d68af6f ("KVM: VMX: Add guest physical address check in EPT violatio=
-n and misconfig")
-
-is missing a Signed-off-by from its author.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Sv.ebZX6FhRJQ2UIKrPRp0r
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8p4VIACgkQAVBC80lX
-0GzM+Qf7B8FXNsjEOtBNevQ6UOlERRA/SzXTAg8Dw9HUhJhIwkb5hHMX+JmtLaHd
-tQtUQY6fZ0LMF6FTqFtbqMja4M4MTsjx8bN5FQo0jAWUtywRkvkjChVRp17itcpJ
-NP4QNp2o2QmFfQI4Qe8I4MF1Y7Ckq1uiFYtW27eXmVha1gQCCZjL35VtdXn0jK9Z
-04BYylurv9pzR4GghflCjjz5ipMLrZZEd8JI5pMLAPOcvOXzGOloQkbIAusxLGv9
-D6NkIE14pOHygnvzCEiEQKGN4pd14iexnRfQZsHHMWOS7ZhjmUB8//Rqe8IO/qDx
-nq5QWiCbfSzfjodPlpnTHdkILJw4Aw==
-=cpTl
------END PGP SIGNATURE-----
-
---Sig_/Sv.ebZX6FhRJQ2UIKrPRp0r--
