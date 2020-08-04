@@ -2,117 +2,104 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D7AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2DFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5941C207FC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3DCD207FC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:12:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SoyMHVPk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bWwAh9CP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729940AbgHDRMC (ORCPT
+        id S1730007AbgHDRMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 13:12:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54220 "EHLO
+        Tue, 4 Aug 2020 13:12:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729388AbgHDRL6 (ORCPT
+        with ESMTP id S1729391AbgHDRMH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 13:11:58 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4135C061756
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 10:11:57 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id q68so10057535uaq.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 10:11:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NDe2U+JQQtlm6PkmOwl5fjQfHoZ0o3DW3eDHCm6kTvQ=;
-        b=SoyMHVPkgxHGIyVFghEqt+dz76dWygdZK5qv96mgYHIB8BQDfnDSdlwicrCousdePt
-         6kFYSc0n7RSJRhh/WbIBfAW1Mu0Sap9jaMdg6UlhNdK0k672HQpR0CmBGVutHlwlHgV+
-         jMC83l8tqgA+ALlv4CakhMvyvvf1kF8Uhx/7c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NDe2U+JQQtlm6PkmOwl5fjQfHoZ0o3DW3eDHCm6kTvQ=;
-        b=qq8mMetVoNQwh5a5QCic3D88EjVk+qrGIbxafeHcxTzXAAY3PS1aanz8Md1RnY8e4e
-         EeN105JAsXzxbP+Fr8r9dn4UZ7bpOUBjgo9XE50SG5RyJgDfoOJUj287u5JwubctIU3Q
-         v78tvL/PyKiA4pIjZkRneF5A/IGHO8nV7/UUNkBibqVfSSu04UAMcZfKmnvKiTjLm0Kd
-         vU6UbHDRva7Cl2z2v+G6NC2B7O3R/jerwwEdRVgFbsKO9jkndqPZVzhafo0u3QASYaCO
-         Cddfq5dRTnSPyo5Rgiqu01n+aqyfUO5ECIN5hnXBLne4Mu623KPVQCaoR1OmeX19k7VB
-         ys4g==
-X-Gm-Message-State: AOAM530MHHJEB8nCftH7tuwc2qVw16hFRWF98CA2Ik9gAq62XAe7Mhfw
-        ZnN+xhm+SYZDPUREOLMZaYT9otxp9KipIb1AcWeYbQ==
-X-Google-Smtp-Source: ABdhPJzdxejwD5qJ3tvpESkSc0h2CyPb4WDolKHYh5SfDmcf4Fg5xK3WK/bLFsJz2MfIniAOjYF53pvHQqw0ach4VHA=
-X-Received: by 2002:a9f:2197:: with SMTP id 23mr15629203uac.60.1596561115676;
- Tue, 04 Aug 2020 10:11:55 -0700 (PDT)
+        Tue, 4 Aug 2020 13:12:07 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2C4EC06174A;
+        Tue,  4 Aug 2020 10:12:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=sz6jtQ7L4VaLq7/Zit/IDyT8kBbwLII2WidR1CC1WfI=; b=bWwAh9CPNLSZESZOk5mCBF84LR
+        9G4Rkga1BN+Q/i9uTjCCzAFKiEE/ddXKwU9ehE08ObW3iKCRBvCqIyZQNDF34n8ztv4PtfHHIj5EF
+        ZkSBuiQyL6Pupl3waNCJBT3m7Ipc+kslqhKGyUfa/XsN2xQuZBpYSi4F3fyyHbugzrWO35ipVXBs4
+        Ghtxq1FpSS8wiV3pGldLpKHgQ5EwS81jPj1y64lfGHiXRRUrIGVWeqpiY6loTYejTHhx/1flj+XDc
+        MGtvaLjaQjZaojasrsT6gSyGcUSFImp5U8BApfYQcrXjAcP455Gv6qfoKgLdf7KYUGvjKWwQW8gY/
+        88blmvMQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k30Tr-0005XU-AD; Tue, 04 Aug 2020 17:12:03 +0000
+Date:   Tue, 4 Aug 2020 18:12:03 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
+Subject: Re: [RFC-PROTOTYPE 1/1] mm: Add __GFP_FAST_TRY flag
+Message-ID: <20200804171203.GH23808@casper.infradead.org>
+References: <20200803163029.1997-1-urezki@gmail.com>
+ <1d50a46a-b97f-96b2-8a5c-21075f022f01@suse.cz>
 MIME-Version: 1.0
-References: <20200729014225.1842177-1-abhishekpandit@chromium.org>
-In-Reply-To: <20200729014225.1842177-1-abhishekpandit@chromium.org>
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-Date:   Tue, 4 Aug 2020 10:11:44 -0700
-Message-ID: <CANFp7mV0TP-WbBWGSpduERaf9-KBXevhG7xKvjkMrqrtWWkZ5w@mail.gmail.com>
-Subject: Re: [PATCH 0/3] Bluetooth: Emit events for suspend/resume
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc:     ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1d50a46a-b97f-96b2-8a5c-21075f022f01@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Aug 04, 2020 at 07:02:14PM +0200, Vlastimil Babka wrote:
+> > 2) There was a proposal from Matthew Wilcox: https://lkml.org/lkml/2020/7/31/1015
+> > 
+> > <snip>
+> > On non-RT, we could make that lock a raw spinlock.  On RT, we could
+> > decline to take the lock.  We'd need to abstract the spin_lock() away
+> > behind zone_lock(zone), but that should be OK.
+> > <snip>
+> > 
+> > It would be great to use any existing flag, say GFP_NOWAIT. Suppose we
+> > decline to take the lock across the page allocator for RT. But there is
+> > at least one path that does it outside of the page allocator. GFP_NOWAIT
+> > can wakeup the kswapd, whereas a "wake-up path" uses sleepable lock:
+> > 
+> > wakeup_kswapd() -> wake_up_interruptible(&pgdat->kswapd_wait).
+> > 
+> > Probably it can be fixed by the excluding of waking of the kswapd process
+> > defining something like below:
+> 
+> Is something missing here?
+> 
+> > what is equal to zero and i am not sure if __get_free_page(0) handles
+> > all that correctly, though it allocates and seems working on my test
+> > machine! Please note it is related to "if we can reuse existing flags".
+> > 
+> > In the meantime, please see below for a patch that adds a __GFP_FAST_TRY,
+> > which can at least serve as a baseline against which other proposals can
+> > be compared. The patch is based on the 5.8.0-rc3.
+> > 
+> > Please RFC.
+> 
+> At first glance __GFP_FAST_TRY (more descriptive name? __GFP_NO_LOCKS?) seems
+> better than doing weird things with GFP_NOWAIT, but depends on the real benefits
+> (hence my first questions).
 
-Gentle reminder that this is waiting for feedback. Related userspace
-changes are here to see how we plan on using it:
-https://patchwork.kernel.org/project/bluetooth/list/?series=325777
+I think what Vlad is trying to say is that even GFP_NOWAIT will wake
+kswapd, which involves taking a spinlock.  If you specify 0 in your GFP
+flags, then we won't wake kswapd.  So a simple:
 
-Thanks
-Abhishek
+#define GFP_NOLOCKS	0
 
-On Tue, Jul 28, 2020 at 6:42 PM Abhishek Pandit-Subedi
-<abhishekpandit@chromium.org> wrote:
->
->
-> Hi Marcel,
->
-> This series adds the suspend/resume events suggested in
-> https://patchwork.kernel.org/patch/11663455/.
->
-> I have tested it with some userspace changes that monitors the
-> controller resumed event to trigger audio device reconnection and
-> verified that the events are correctly emitted.
->
-> Please take a look.
-> Abhishek
->
->
-> Abhishek Pandit-Subedi (3):
->   Bluetooth: Add mgmt suspend and resume events
->   Bluetooth: Add suspend reason for device disconnect
->   Bluetooth: Emit controller suspend and resume events
->
->  include/net/bluetooth/hci_core.h |  6 +++
->  include/net/bluetooth/mgmt.h     | 16 +++++++
->  net/bluetooth/hci_core.c         | 26 +++++++++++-
->  net/bluetooth/hci_event.c        | 73 ++++++++++++++++++++++++++++++++
->  net/bluetooth/mgmt.c             | 28 ++++++++++++
->  5 files changed, 148 insertions(+), 1 deletion(-)
->
-> --
-> 2.28.0.rc0.142.g3c755180ce-goog
->
+should do the trick (modulo various casting, blah blah blah)
