@@ -2,116 +2,216 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4586C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 438572070A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6A2B22B45
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:04:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="qQ/w6vAt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AQpkWMwP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730164AbgHDKEW (ORCPT
+        id S1730176AbgHDKEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 06:04:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44766 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728332AbgHDKEV (ORCPT
+        Tue, 4 Aug 2020 06:04:31 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22313 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728332AbgHDKEa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 06:04:21 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D029C06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 03:04:21 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id x5so2118688wmi.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 03:04:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Pegb0ogFlCOGFMDWVKjVJSjrV23uFfG+68FKgoAHUYg=;
-        b=qQ/w6vAtQCyNq/N4PY2sly/z47Hs2FmYbLoaFwozntW55ABMjsTts2O+Es0m+jaOyG
-         ndtUKCdb1yI2DENSgvww2GO8gUK9+zwzLZsL/5tXQOHh7buHn0aN1mb42LcU96AwSlOU
-         PUhRcvOjTh3gr+RqpKJhaCIb6gKkvEXoRy5KrT3L+8Dhd6Q86WoDNtvU3T/LhpBFexCq
-         g4Nd4JtUMXVXPWTZ04C2ZDXxzik3XgVOQXl/dbMhM/jOZHYP0hB0m0ajaC6T2Xwf8GcY
-         xPSSpTuhFtOoR9wZN5cXyunYxhySi3pw/P4B3DFJ/Iqd5aaYi6PZ2M+j1cROPpCEiCgq
-         wgBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Pegb0ogFlCOGFMDWVKjVJSjrV23uFfG+68FKgoAHUYg=;
-        b=CzyFUnZSicXoPXjHUUPVVEowPv4AcHYvYgy2tKq5bHVIsphuKuSffHbjaUtfNzVtwo
-         45+dqyQ1PixZQ4CLsasNt/vYv2VB/JP7Vfk8OIkxDXUzW69UEfFTwCF7vyztA5tL4CLY
-         Rv1Mm8e/spMHEQELAxWpjDKfoVAceJ9fbY12dIyYW7V8DyPBt6A+FIZXrdcEElCE2jC/
-         kFESuMh1BEnevPHB6bHSPyFq2TZUbnogxj4majVG+e/9VvQnevKN6ofWPpNP9qIYQeBZ
-         EWf04egU70Tw/JJU0zoKKGIH5KwsZ1bI2G3lJ4LlAoeOdBgITo+we8d7l15Xps/U7qwr
-         Ib2w==
-X-Gm-Message-State: AOAM533yplUB7SdcJy4TIiCvA7zSA9EliDhVFpvUPOfRh6CXO4v1u24A
-        aGDcqYWW3jz5r7QTln6e00WXCg==
-X-Google-Smtp-Source: ABdhPJwPnDHvQ5rfJ7GM0+ImQIFOM19YzN0zd70NhwTMWU/JLhOpoZSqNUQXGrlv00D6sRZCPVyXWw==
-X-Received: by 2002:a1c:e107:: with SMTP id y7mr3143467wmg.99.1596535460198;
-        Tue, 04 Aug 2020 03:04:20 -0700 (PDT)
-Received: from localhost (jirka.pirko.cz. [84.16.102.26])
-        by smtp.gmail.com with ESMTPSA id z15sm28680490wrn.89.2020.08.04.03.04.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 03:04:19 -0700 (PDT)
-Date:   Tue, 4 Aug 2020 12:04:18 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Moshe Shemesh <moshe@mellanox.com>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Subject: Re: [PATCH net-next RFC 01/13] devlink: Add reload level option to
- devlink reload command
-Message-ID: <20200804100418.GA2210@nanopsycho>
-References: <20200728114458.762b5396@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <d6fbfedd-9022-ff67-23ed-418607beecc2@intel.com>
- <20200728130653.7ce2f013@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <04f00024-758c-bc19-c187-49847c24a5a4@mellanox.com>
- <20200729140708.5f914c15@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <3352bd96-d10e-6961-079d-5c913a967513@mellanox.com>
- <20200730161101.48f42c5b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <0f2467fd-ee2e-1a51-f9c1-02f8a579d542@mellanox.com>
- <20200803141442.GB2290@nanopsycho>
- <20200803135703.16967635@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        Tue, 4 Aug 2020 06:04:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596535468;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=pe+hNlBlJokGLROd+OkEWWry9BPX/DPDTBCU01H/1hU=;
+        b=AQpkWMwP5WUWbk2f655hi1PaAcdq/OPD48PiBLnRXAwvsrfkvp0G7SEGiH58Iif+1j6xiz
+        MojdGss2G9G0rM5hdmkbHGkWsYZkdFwoKBzbCV8+IvkNwNdmkp8JPY0AmsmsP3TOzz+5An
+        xFGGQSBBxhxa1rLuxz6N+kgOwOqY2m4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-330-o-0RnCYpO9iZCunD2zEs-Q-1; Tue, 04 Aug 2020 06:04:24 -0400
+X-MC-Unique: o-0RnCYpO9iZCunD2zEs-Q-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A4059100CCC8;
+        Tue,  4 Aug 2020 10:04:22 +0000 (UTC)
+Received: from [10.36.113.95] (ovpn-113-95.ams2.redhat.com [10.36.113.95])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7FC1C5D9F7;
+        Tue,  4 Aug 2020 10:04:15 +0000 (UTC)
+Subject: Re: [PATCH v3 6/6] mm: document semantics of ZONE_MOVABLE
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Baoquan He <bhe@redhat.com>
+References: <20200804072408.5481-1-david@redhat.com>
+ <20200804072408.5481-7-david@redhat.com> <20200804093323.GB8243@kernel.org>
+ <65deeb21-63fe-d1c1-bb87-74a08035f79a@redhat.com>
+ <20200804100333.GC8243@kernel.org>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <dbca0807-7bd0-02cc-fe5a-920d5524a9b0@redhat.com>
+Date:   Tue, 4 Aug 2020 12:04:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200803135703.16967635@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200804100333.GC8243@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mon, Aug 03, 2020 at 10:57:03PM CEST, kuba@kernel.org wrote:
->On Mon, 3 Aug 2020 16:14:42 +0200 Jiri Pirko wrote:
->> >devlink dev reload [ net-ns-respawn { PID | NAME | ID } ] [ driver-param-init
->> >] [ fw-activate [ --live] ]  
->> 
->> Jakub, why do you prefer to have another extra level-specific option
->> "live"? I think it is clear to have it as a separate level. The behaviour
->> of the operation is quite different.
->
->I was trying to avoid having to provide a Cartesian product of
->operation and system disruption level, if any other action can
->be done "live" at some point.
->
->But no strong feelings about that one.
->
->Really, as long as there is no driver-specific defaults (or as 
->little driver-specific anything as possible) and user actions 
->are clearly expressed (fw-reset does not necessarily imply
->fw-activation) - the API will be fine IMO.
+On 04.08.20 12:03, Mike Rapoport wrote:
+> On Tue, Aug 04, 2020 at 11:55:10AM +0200, David Hildenbrand wrote:
+>> On 04.08.20 11:33, Mike Rapoport wrote:
+>>> On Tue, Aug 04, 2020 at 09:24:08AM +0200, David Hildenbrand wrote:
+>>>> Let's document what ZONE_MOVABLE means, how it's used, and which special
+>>>> cases we have regarding unmovable pages (memory offlining vs. migration /
+>>>> allocations).
+>>>>
+>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>>> Cc: Michal Hocko <mhocko@suse.com>
+>>>> Cc: Michael S. Tsirkin <mst@redhat.com>
+>>>> Cc: Mike Kravetz <mike.kravetz@oracle.com>
+>>>> Cc: Mike Rapoport <rppt@kernel.org>
+>>>> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+>>>> Cc: Baoquan He <bhe@redhat.com>
+>>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>>
+>>> Several nits below, othersize
+>>>
+>>> Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+>>>
+>>>> ---
+>>>>  include/linux/mmzone.h | 34 ++++++++++++++++++++++++++++++++++
+>>>>  1 file changed, 34 insertions(+)
+>>>>
+>>>> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+>>>> index f6f884970511d..600d449e7d9e9 100644
+>>>> --- a/include/linux/mmzone.h
+>>>> +++ b/include/linux/mmzone.h
+>>>> @@ -372,6 +372,40 @@ enum zone_type {
+>>>>  	 */
+>>>>  	ZONE_HIGHMEM,
+>>>>  #endif
+>>>> +	/*
+>>>> +	 * ZONE_MOVABLE is similar to ZONE_NORMAL, except that it *primarily*
+>>>> +	 * only contains movable pages. Main use cases are to make memory
+>>>
+>>> "Primarily only" sounds awkward. Maybe
+>>>
+>>> 	... except that it only contains movable pages with few exceptional
+>>> 	cases described below. 
+>>>
+>>> And then 
+>>>
+>>> 	Main use cases for ZONE_MOVABLE are ...
+>>
+>> Ack!
+>>
+>>>
+>>>> +	 * offlining more likely to succeed, and to locally limit unmovable
+>>>> +	 * allocations - e.g., to increase the number of THP/huge pages.
+>>>> +	 * Notable special cases are:
+>>>> +	 *
+>>>> +	 * 1. Pinned pages: (Long-term) pinning of movable pages might
+>>>
+>>> 		            ^long, capital L looked out of place for me
+>>
+>> Ack!
+>>
+>>>
+>>>> +	 *    essentially turn such pages unmovable. Memory offlining might
+>>>> +	 *    retry a long time.
+>>>> +	 * 2. memblock allocations: kernelcore/movablecore setups might create
+>>>> +	 *    situations where ZONE_MOVABLE contains unmovable allocations
+>>>> +	 *    after boot. Memory offlining and allocations fail early.
+>>>> +	 * 3. Memory holes: Such pages cannot be allocated. Applies only to
+>>>> +	 *    boot memory, not hotplugged memory. Memory offlining and
+>>>> +	 *    allocations fail early.
+>>>
+>>> I would clarify where page struct for abscent memory come from
+>>
+>> Something like:
+>>
+>> Memory holes: We might have a memmap for memory holes, for example, if
+> 
+>                ^w ;-)
+> 
+>> we have sections that are only partially System RAM. Such pages cannot
+>> be ...
+> 
+> How about
+> 
+> ... sections that are only partially populated 
+> 
+> ?
 
-Clear actions, that is what I'm fine with.
+Yeah, shorter. Thanks!
 
-But not sure how you think we can achieve no driver-specific defaults.
-We have them already :/ I don't think we can easily remove them and not
-break user expectations.
+
+-- 
+Thanks,
+
+David / dhildenb
 
