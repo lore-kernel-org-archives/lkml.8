@@ -2,219 +2,216 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 380C0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F23C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15190208A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:50:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JFF7QVQy"
+	by mail.kernel.org (Postfix) with ESMTP id 3F058208A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:51:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596556276;
+	bh=OtA0EW8iaXuoVIFAIgh1KuT3uEjn0AAO/2QdeC/r5FA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=k8zlLOtEIK619H+DYQVl4zBAkJdhBXc3aUz+6FZuO8NttMA3hk7n8csvZKeI1rb80
+	 nDRsuqsEtYu3Nfr1JjBBSDIUx2oibhPJw4Ab1mHaulkJyKhl5StNnjQ5Bvy1dNvdwK
+	 AlPXoxxmXuu/PFadnQ9F/0/xVhajfBMuEoC4Zkg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbgHDPuw (ORCPT
+        id S1729206AbgHDPvH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 11:50:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbgHDPup (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 11:50:45 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F1C2C061756
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 08:50:45 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id a5so27918550wrm.6
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 08:50:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3+kDmABO3rORHPwyb6sHqLUmmymRS95vgwyEtBMcMyg=;
-        b=JFF7QVQyo4djCeIjI0TZsWKm0xy9hl4F2LYNI76B1IfQ9Q8vvUsqaU7dsKDTseMQkb
-         xoH3l8HVsLIDwOyqUztd/YG4xE+0KTLgSIgLZ6VxD8vsCOEDpzBv6u2DZeu1nfki81Qk
-         eXpBI2cdtpOCpByZO4hPlu0NZYiKnz70NQV9sUY2nN6bw7ZB+Eb/YRSC5emWUNQsDfTR
-         sh+ay9Fs6mffL/888Br7Y4R1l337QjRxMqdLcTroxzmmfAvvMAMAB+P4OH54OtO8i1i4
-         q/e5+KPxclDydu1TzLbOCekbq9Ykx1W8aVtDxHuyPPBGR3p+IZ84jMuMEkaK6pD+/98/
-         vJ0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3+kDmABO3rORHPwyb6sHqLUmmymRS95vgwyEtBMcMyg=;
-        b=uh3K1zQ6Lx2MIs6TvZjf+EYrH6ovB2D3f4Kt0Di9HvBdNpl+PYAf9VeCpJaBkXiV2g
-         a38dgIUDwtHCzWRiLlMlpkx1k89CCFQdn9pTOAuMak7x4gB0ndh6SxSsn8IwINfh73Xl
-         w9X+b2e3gOiaMmGRYijODVHFPKukfEe5oadRRwFXpSbVAgaz3jBFFseHLSAPl5mikk/E
-         pqvQamLgrL3mry55c/1n5FS4xoUwL/wX5NuHVZEAS1HElFdBi11qy29sCxzobDiZ6Eg5
-         U8Q7DgUh+XGkXY2x/viAwVVy3nb+W5R/9UgUMBR6unYyJn+cq485sK8iQ1ZaYV1NhIEY
-         npDQ==
-X-Gm-Message-State: AOAM5304NYRDxpLWo9Z5lI2Hfmm6mafGtrOrbfl0jNk0SjrlCKyi9CHg
-        SOKn04FL0EVD/R0EHZMub/2xd3j3QaBenu/dPHamVQ==
-X-Google-Smtp-Source: ABdhPJzl78nlmcwoiguIAxOzKCihxpKfHKYModWH7inw5tJRI0S8DABgAyCXprE34msfJKwMKL62DXsgABNqJDTBYtg=
-X-Received: by 2002:adf:82d5:: with SMTP id 79mr19406166wrc.282.1596556243438;
- Tue, 04 Aug 2020 08:50:43 -0700 (PDT)
+        Tue, 4 Aug 2020 11:51:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728157AbgHDPvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 11:51:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38C4F208A9;
+        Tue,  4 Aug 2020 15:51:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596556260;
+        bh=OtA0EW8iaXuoVIFAIgh1KuT3uEjn0AAO/2QdeC/r5FA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rdNvOcx/C/QBAmmNbx2kEz7HV7AG9W6G/LHdx67gZbzUj6EBVIXA+Xzl5Ln9iwRol
+         Dk/vWrU+PEqGDGTGOxxue63JHVdSYIM7lKHgBq1XL9wW/63bp4g3MYScoDdlnSkNGr
+         xzTh1LQol6MghcQajeEM7cJ4eudzb584hPevBoXM=
+Date:   Tue, 4 Aug 2020 17:51:20 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Daniel Gutson <daniel@eclypsium.com>
+Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Richard Hughes <hughsient@gmail.com>,
+        Alex Bazhaniuk <alex@eclypsium.com>
+Subject: Re: [PATCH] Platform lockdown information in SYSFS
+Message-ID: <20200804155120.GA496635@kroah.com>
+References: <20200731070053.GC1518178@kroah.com>
+ <CAFmMkTGdzjjrvitY8fT+RcXFqHG1JGMB-3w1hi1c8CD0FH34Tw@mail.gmail.com>
+ <20200731141503.GA1717752@kroah.com>
+ <CAFmMkTG7tkFzwwo_WNe2EFFRVijvGm+NLaeN3qX6CVzTViWBag@mail.gmail.com>
+ <20200804064154.GE696690@kroah.com>
+ <CAFmMkTE1PHPrZwnH7DKFW145dn01LhydTbL7HPTO+_zKA+P61Q@mail.gmail.com>
+ <20200804142250.GA247448@kroah.com>
+ <CAFmMkTFEWrMsigabvE2HtmpFXMe0qb8QZJHzMzQ=wZXE1G3fbQ@mail.gmail.com>
+ <20200804144414.GA50022@kroah.com>
+ <CAFmMkTG342Thq+H-om+3mCog5Yh3ZzqO_HYnR-Jv-b1utojk0g@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200728085734.609930-1-irogers@google.com> <20200728085734.609930-5-irogers@google.com>
- <969ef797-59ea-69d0-24b9-33bcdff106a1@intel.com> <CAP-5=fUCnBGX0L0Tt3_gmVnt+hvaouJMx6XFErFKk72+xuw9fw@mail.gmail.com>
- <86324041-aafb-f556-eda7-6250ba678f24@intel.com>
-In-Reply-To: <86324041-aafb-f556-eda7-6250ba678f24@intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 4 Aug 2020 08:50:32 -0700
-Message-ID: <CAP-5=fXfBkXovaK3DuSCnwfsnxqW7ZR8-LigtGATgs4gMpZP9A@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] perf record: Don't clear event's period if set by
- a term
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFmMkTG342Thq+H-om+3mCog5Yh3ZzqO_HYnR-Jv-b1utojk0g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 7:49 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 4/08/20 4:33 pm, Ian Rogers wrote:
-> > On Tue, Aug 4, 2020 at 3:08 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
-> >>
-> >> On 28/07/20 11:57 am, Ian Rogers wrote:
-> >>> If events in a group explicitly set a frequency or period with leader
-> >>> sampling, don't disable the samples on those events.
-> >>>
-> >>> Prior to 5.8:
-> >>> perf record -e '{cycles/period=12345000/,instructions/period=6789000/}:S'
-> >>
-> >> Might be worth explaining this use-case some more.
-> >> Perhaps add it to the leader sampling documentation for perf-list.
-> >>
-> >>> would clear the attributes then apply the config terms. In commit
-> >>> 5f34278867b7 leader sampling configuration was moved to after applying the
-> >>> config terms, in the example, making the instructions' event have its period
-> >>> cleared.
-> >>> This change makes it so that sampling is only disabled if configuration
-> >>> terms aren't present.
-> >>>
-> >>> Fixes: 5f34278867b7 ("perf evlist: Move leader-sampling configuration")
-> >>> Signed-off-by: Ian Rogers <irogers@google.com>
-> >>> ---
-> >>>  tools/perf/util/record.c | 28 ++++++++++++++++++++--------
-> >>>  1 file changed, 20 insertions(+), 8 deletions(-)
-> >>>
-> >>> diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
-> >>> index a4cc11592f6b..01d1c6c613f7 100644
-> >>> --- a/tools/perf/util/record.c
-> >>> +++ b/tools/perf/util/record.c
-> >>> @@ -2,6 +2,7 @@
-> >>>  #include "debug.h"
-> >>>  #include "evlist.h"
-> >>>  #include "evsel.h"
-> >>> +#include "evsel_config.h"
-> >>>  #include "parse-events.h"
-> >>>  #include <errno.h>
-> >>>  #include <limits.h>
-> >>> @@ -38,6 +39,9 @@ static void evsel__config_leader_sampling(struct evsel *evsel, struct evlist *ev
-> >>>       struct perf_event_attr *attr = &evsel->core.attr;
-> >>>       struct evsel *leader = evsel->leader;
-> >>>       struct evsel *read_sampler;
-> >>> +     struct evsel_config_term *term;
-> >>> +     struct list_head *config_terms = &evsel->config_terms;
-> >>> +     int term_types, freq_mask;
-> >>>
-> >>>       if (!leader->sample_read)
-> >>>               return;
-> >>> @@ -47,16 +51,24 @@ static void evsel__config_leader_sampling(struct evsel *evsel, struct evlist *ev
-> >>>       if (evsel == read_sampler)
-> >>>               return;
-> >>>
-> >>> +     /* Determine the evsel's config term types. */
-> >>> +     term_types = 0;
-> >>> +     list_for_each_entry(term, config_terms, list) {
-> >>> +             term_types |= 1 << term->type;
-> >>> +     }
-> >>>       /*
-> >>> -      * Disable sampling for all group members other than the leader in
-> >>> -      * case the leader 'leads' the sampling, except when the leader is an
-> >>> -      * AUX area event, in which case the 2nd event in the group is the one
-> >>> -      * that 'leads' the sampling.
-> >>> +      * Disable sampling for all group members except those with explicit
-> >>> +      * config terms or the leader. In the case of an AUX area event, the 2nd
-> >>> +      * event in the group is the one that 'leads' the sampling.
-> >>>        */
-> >>> -     attr->freq           = 0;
-> >>> -     attr->sample_freq    = 0;
-> >>> -     attr->sample_period  = 0;
-> >>> -     attr->write_backward = 0;
-> >>> +     freq_mask = (1 << EVSEL__CONFIG_TERM_FREQ) | (1 << EVSEL__CONFIG_TERM_PERIOD);
-> >>> +     if ((term_types & freq_mask) == 0) {
-> >>
-> >> It would be nicer to have a helper e.g.
-> >>
-> >>         if (!evsel__have_config_term(evsel, FREQ) &&
-> >>             !evsel__have_config_term(evsel, PERIOD)) {
+On Tue, Aug 04, 2020 at 12:05:25PM -0300, Daniel Gutson wrote:
+> On Tue, Aug 4, 2020 at 11:43 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
 > >
-> > Sure. The point of doing it this way was to avoid repeatedly iterating
-> > over the config term list.
->
-> But perhaps it is premature optimization
+> > On Tue, Aug 04, 2020 at 11:37:02AM -0300, Daniel Gutson wrote:
+> > > On Tue, Aug 4, 2020 at 11:23 AM Greg Kroah-Hartman <
+> > > gregkh@linuxfoundation.org> wrote:
+> > > >
+> > > > On Tue, Aug 04, 2020 at 10:50:13AM -0300, Daniel Gutson wrote:
+> > > > > On Tue, Aug 4, 2020 at 3:41 AM Greg Kroah-Hartman
+> > > > > <gregkh@linuxfoundation.org> wrote:
+> > > > > >
+> > > > > > On Mon, Aug 03, 2020 at 07:04:56PM -0300, Daniel Gutson wrote:
+> > > > > > > > > > Think of this as an input device.  You don't put the random
+> > > input
+> > > > > > > > > > attributes all in one place, you create a new device that
+> > > represents the
+> > > > > > > > > > input interface and register that.
+> > > > > > >
+> > > > > > > I'm having trouble with this. What's the dev_t for the child
+> > > devices?
+> > > > > > > I'm doing
+> > > > > > >     child_device = device_create(&my_class, &pdev->dev, MKDEV(0, 0),
+> > > > > > > NULL, "child");
+> > > > > > > pdev is the pci_device (intel-spi-pci)
+> > > > > > > dmesg shows
+> > > > > > >
+> > > > > > >     sysfs: cannot create duplicate filename '/class/my-class'
+> > > > > > >     (call trace)
+> > > > > > >     kobject_add_internal failed for my-class with -EEXIST, don't try
+> > > > > > > to register things with the same name in the same directory.
+> > > > > >
+> > > > > > Without seeing all of your code, I can't tell you what you are doing
+> > > > > > wrong, but the kernel should be giving you a huge hint here...
+> > > > > >
+> > > > > > Don't create duplicate names in the same subdirectory.
+> > > > >
+> > > > > I'm not doing that. One of my questions is if MKDEV(0, 0) is valid for
+> > > > > create_device, which I inferred so from the documentation.
+> > > >
+> > > > Yes it is, but that's not the error given to you :)
+> > > >
+> > > > Many in-kernel users call device_create() with MKDEV(0, 0)
+> > > >
+> > > > > Here is the listing
+> > > >
+> > > > <snip>
+> > > >
+> > > > It's not in any format to read, please never strip leading whitespace,
+> > > > it hurts my brain...
+> > >
+> > > (trying again)
+> > > Also, this is in pastebin:  https://pastebin.com/8Ye9eUm5
+> > >
+> > > #include <linux/kobject.h>
+> > > #include <linux/sysfs.h>
+> > > #include <linux/module.h>
+> > > #include <linux/init.h>
+> > > #include <linux/list.h>
+> > > #include <linux/slab.h>
+> > > #include <linux/device.h>
+> > > #include <linux/pci.h>
+> > >
+> > > static ssize_t howareyou_show(struct class *class, struct class_attribute
+> > > *attr,
+> > >    char *buf)
+> > > {
+> > >         return sprintf(buf, "%s\n", "How are you?");
+> > > }
+> > > static CLASS_ATTR_RO(howareyou);
+> >
+> > These are rare, as they are "global" for a class, are you sure you want
+> > that?
+> 
+> I'm no longer using class attributes, this is from my previous
+> experiment. Sorry for the confusion.
+> In the "real" code I'll use DEVICE_ATTR_RO.
+> 
+> >
+> > >
+> > > static struct class my_class = {
+> > >         .name =         "my-class",
+> > >         .owner =        THIS_MODULE,
+> > > };
+> > >
+> > > struct device* child_device;
+> > >
+> > > static int mypci_probe(struct pci_dev *pdev,
+> > >       const struct pci_device_id *id)
+> > > {
+> > >         int ret;
+> > >
+> > >         ret = pcim_enable_device(pdev);
+> > >         if (ret)
+> > >                 return ret;
+> > >
+> > >         ret = class_register(&my_class);
+> > >         if (ret < 0)
+> > >                 return ret;
+> > >
+> > >
+> > >         pr_info("DFG: Recognized. DID: %lx\n", (unsigned long
+> > > int)id->driver_data);
+> > >         pr_info("DFG: device DID: %lx\n", (unsigned long int)pdev->device);
+> > >
+> > >         ret = class_create_file(&my_class, &class_attr_howareyou);
+> > >         if (ret != 0) {
+> > >                pr_err("DFG class create file error: %d\n", ret);
+> > >                class_unregister(&my_class);
+> > >                return ret;
+> > >        }
+> > >
+> > >        child_device = device_create(&my_class, &pdev->dev, MKDEV(0, 0),
+> > > NULL, "child");
+> > >         if (child_device == NULL) {
+> > >                pr_err("DFG error child device NULL");
+> > >         }
+> > >
+> > >         return ret;
+> > > }
+> > >
+> >
+> >
+> > Looks sane, what does your kernel log say when you load this?
+> first insmod, OK.
+> rmmod, OK.
+> Second insmod:
+> 
+> [ 4149.389133] sysfs: cannot create duplicate filename
+> '/devices/pci0000:00/0000:00:1f.0/my-class'
 
-The alternative is more loc. I think we can bike shed on this but it's
-not really changing the substance of the change. I'm keen to try to be
-efficient where we can as we see issues at scale.
+Ok, that means you did not clean up properly.
 
-Thanks,
-Ian
+After rmmod see if you really did clean up all of the directories/files
+you created.
 
-> >
-> >>> +             attr->freq           = 0;
-> >>> +             attr->sample_freq    = 0;
-> >>> +             attr->sample_period  = 0;
-> >>
-> >> If we are not sampling, then maybe we should also put here:
-> >>
-> >>                 attr->write_backward = 0;
-> >>
-> >>> +     }
-> >>
-> >> Then, if we are sampling this evsel shouldn't the backward setting
-> >> match the leader? e.g.
-> >>
-> >>         if (attr->sample_freq)
-> >>                 attr->write_backward = leader->core.attr.write_backward;
-> >
-> > Perhaps that should be a follow up change? This change is trying to
-> > make the behavior match the previous behavior.
->
-> Sure
->
-> >
-> > Thanks,
-> > Ian
-> >
-> >>> +     if ((term_types & (1 << EVSEL__CONFIG_TERM_OVERWRITE)) == 0)
-> >>> +             attr->write_backward = 0;
-> >>>
-> >>>       /*
-> >>>        * We don't get a sample for slave events, we make them when delivering
-> >>>
-> >>
->
+The kernel is trying to be nice and give you a hint here :)
+
+thanks,
+
+greg k-h
