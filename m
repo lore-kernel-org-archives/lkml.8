@@ -2,86 +2,185 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B0FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0843DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99B8B22D03
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB61E2065C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:39:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b8Su4rtD"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="MGzOwyvu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726200AbgHDOjV (ORCPT
+        id S1729121AbgHDOj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:39:21 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42036 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728170AbgHDOht (ORCPT
+        Tue, 4 Aug 2020 10:39:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58526 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727016AbgHDOhD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:37:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596551869;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PwNkT0v8I/HHisER5czdNP2hJZSZK/ZRB/AxXoRcFSE=;
-        b=b8Su4rtDcevbF2GoAD+23DdxFiWHW/st/vnYbnu1bLQCwmn+ZPQUd/hojI0Hi/wl5jzev2
-        2INQwe0IWpkzioA6R5IDtXcaK2l7bKnV9hZUfuxAZfnefJKvtWUb0RiXAXehrzEbEHDry1
-        gUdsNnLE/uO3AS8/0Ad5stYDY2/cQys=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-416-Fejl2NDNNi-q-Qb4q66WXQ-1; Tue, 04 Aug 2020 10:37:47 -0400
-X-MC-Unique: Fejl2NDNNi-q-Qb4q66WXQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3EF9C800685;
-        Tue,  4 Aug 2020 14:37:46 +0000 (UTC)
-Received: from gondolin (ovpn-112-169.ams2.redhat.com [10.36.112.169])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5DCE261983;
-        Tue,  4 Aug 2020 14:37:39 +0000 (UTC)
-Date:   Tue, 4 Aug 2020 16:37:37 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v2 13/24] virtio_mem: correct tags for config space
- fields
-Message-ID: <20200804163737.0b8e6ea7.cohuck@redhat.com>
-In-Reply-To: <20200803205814.540410-14-mst@redhat.com>
-References: <20200803205814.540410-1-mst@redhat.com>
-        <20200803205814.540410-14-mst@redhat.com>
-Organization: Red Hat GmbH
+        Tue, 4 Aug 2020 10:37:03 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2B8DC06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 07:37:02 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id q4so26816750edv.13
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 07:37:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GO/PaZjgiFmbIuDRQzdv2wEQ6v47brbCE/X/qo+KGSI=;
+        b=MGzOwyvudquI7+thXiAsvTjduPmqjSU+8Jg6qbo7Hm6IpMNgUd3ikSIr6D06QgaZna
+         7Jf9ZKzPaRpkYpXfUnQmdC0A1myZp2zEJg9WyuiLwti06vtSHx2MffTqzYijOIG3dO+S
+         wq+dyltnrBdKrjDuxsS6rTu9Kv1j7ITrSwn3w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GO/PaZjgiFmbIuDRQzdv2wEQ6v47brbCE/X/qo+KGSI=;
+        b=a/NO0vlXSoUgXAYaJ9/4SFD7pUIdLRCDS251VFJxvVyv2n0gBsx0hxBoy0Pk4Pwuso
+         6wo8rsYXPf5iT4OoaAKkFJipFxmtjd+TGxl5iSa9fmDoRj38H6sITnIbQTg3IjY5qmNo
+         z2CjjbalOttB/sf3QEUpeLoExAWknR1VbFi1nS2chNSIWQ8QvOIAR+zlxrPonW9M8/Q8
+         JXExHUJ7IR2AY2pA6srZDKILUqUkKn0o0rywBa5o5blFT/jQIrjnXNlDbI9elCc8hUoz
+         JwU7f9oOeRyXGWpIq+uEWgC7elkdm2VpCl1r6npZQ++JdsCkMORSRPRerdSUvpivw287
+         7AOA==
+X-Gm-Message-State: AOAM532SVyH4t/tEdHwQ549AkQHuaRVk+tduvynx5v0stFu0FxrIwU4Y
+        yT9AbIY6rjLOxp1/DAKdK1zABKpeum6DuO8+eTKowQ==
+X-Google-Smtp-Source: ABdhPJw8dVKolbYySKTpAVDj8Qqnrnk5bHQe6836go+X2Mkbuxqboankiu/s4QrpC7g8HyY1lZnZFgsI4Gl9xJDkvQs=
+X-Received: by 2002:a05:6402:12c4:: with SMTP id k4mr20551403edx.358.1596551821283;
+ Tue, 04 Aug 2020 07:37:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <1842689.1596468469@warthog.procyon.org.uk> <1845353.1596469795@warthog.procyon.org.uk>
+ <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com> <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
+In-Reply-To: <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 4 Aug 2020 16:36:50 +0200
+Message-ID: <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
+Subject: Re: [GIT PULL] Filesystem Information
+To:     Ian Kent <raven@themaw.net>
+Cc:     David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>,
+        Lennart Poettering <lennart@poettering.net>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 3 Aug 2020 16:59:32 -0400
-"Michael S. Tsirkin" <mst@redhat.com> wrote:
+On Tue, Aug 4, 2020 at 4:15 AM Ian Kent <raven@themaw.net> wrote:
+>
+> On Mon, 2020-08-03 at 18:42 +0200, Miklos Szeredi wrote:
+> > On Mon, Aug 3, 2020 at 5:50 PM David Howells <dhowells@redhat.com>
+> > wrote:
+> > >
+> > > Hi Linus,
+> > >
+> > > Here's a set of patches that adds a system call, fsinfo(), that
+> > > allows
+> > > information about the VFS, mount topology, superblock and files to
+> > > be
+> > > retrieved.
+> > >
+> > > The patchset is based on top of the mount notifications patchset so
+> > > that
+> > > the mount notification mechanism can be hooked to provide event
+> > > counters
+> > > that can be retrieved with fsinfo(), thereby making it a lot faster
+> > > to work
+> > > out which mounts have changed.
+> > >
+> > > Note that there was a last minute change requested by Mikl=C3=B3s: th=
+e
+> > > event
+> > > counter bits got moved from the mount notification patchset to this
+> > > one.
+> > > The counters got made atomic_long_t inside the kernel and __u64 in
+> > > the
+> > > UAPI.  The aggregate changes can be assessed by comparing pre-
+> > > change tag,
+> > > fsinfo-core-20200724 to the requested pull tag.
+> > >
+> > > Karel Zak has created preliminary patches that add support to
+> > > libmount[*]
+> > > and Ian Kent has started working on making systemd use these and
+> > > mount
+> > > notifications[**].
+> >
+> > So why are you asking to pull at this stage?
+> >
+> > Has anyone done a review of the patchset?
+>
+> I have been working with the patch set as it has evolved for quite a
+> while now.
+>
+> I've been reading the kernel code quite a bit and forwarded questions
+> and minor changes to David as they arose.
+>
+> As for a review, not specifically, but while the series implements a
+> rather large change it's surprisingly straight forward to read.
+>
+> In the time I have been working with it I haven't noticed any problems
+> except for those few minor things that I reported to David early on (in
+> some cases accompanied by simple patches).
+>
+> And more recently (obviously) I've been working with the mount
+> notifications changes and, from a readability POV, I find it's the
+> same as the fsinfo() code.
+>
+> >
+> > I think it's obvious that this API needs more work.  The integration
+> > work done by Ian is a good direction, but it's not quite the full
+> > validation and review that a complex new API needs.
+>
+> Maybe but the system call is fundamental to making notifications useful
+> and, as I say, after working with it for quite a while I don't fell
+> there's missing features (that David hasn't added along the way) and
+> have found it provides what's needed for what I'm doing (for mount
+> notifications at least).
 
-> Since this is a modern-only device,
-> tag config space fields as having little endian-ness.
-> 
-> TODO: check other uses of __virtioXX types in this header,
-> should probably be __leXX.
+Apart from the various issues related to the various mount ID's and
+their sizes, my general comment is (and was always): why are we adding
+a multiplexer for retrieval of mostly unrelated binary structures?
 
-Yes, I think so.
+<linux/fsinfo.h> is 345 lines.  This is not a simple and clean API.
 
-> 
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->  include/uapi/linux/virtio_mem.h | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
+A simple and clean replacement API would be:
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+int get_mount_attribute(int dfd, const char *path, const char
+*attr_name, char *value_buf, size_t buf_size, int flags);
 
+No header file needed with dubiously sized binary values.
+
+The only argument was performance, but apart from purely synthetic
+microbenchmarks that hasn't been proven to be an issue.
+
+And notice how similar the above interface is to getxattr(), or the
+proposed readfile().  Where has the "everything is  a file" philosophy
+gone?
+
+I think we already lost that with the xattr API, that should have been
+done in a way that fits this philosophy.  But given that we  have "/"
+as the only special purpose char in filenames, and even repetitions
+are allowed, it's hard to think of a good way to do that.  Pity.
+
+Still I think it would be nice to have a general purpose attribute
+retrieval API instead of the multiplicity of binary ioctls, xattrs,
+etc.
+
+Is that totally crazy?  Nobody missing the beauty in recently introduced AP=
+Is?
+
+Thanks,
+Miklos
