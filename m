@@ -2,68 +2,97 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 22:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 890C7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 22:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D70E222B45
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 22:25:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596579918;
-	bh=kusxYU43EZ5r4r3uSHQpemHyx4JJswqloQDOdpqnn6M=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=BhvrvgU4E+26xVGudRojEbNj6OwPRhTZuuw3dRjJNexw2LlZdjZsjDF+U/SF78NYx
-	 /16YYE3K2VN7WUPSeVj+3YxmDIZiDVZ/BF9RjrurKAxJRAgK1/SpGgx+AKPUiGHFST
-	 8eBVDSLYY2k9ope+82GHvoBEPxupg+ftDiiE/Nik=
+	by mail.kernel.org (Postfix) with ESMTP id 6ADA12086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 22:26:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ko7SWMqB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726941AbgHDWZK (ORCPT
+        id S1727042AbgHDW0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 18:25:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43748 "EHLO mail.kernel.org"
+        Tue, 4 Aug 2020 18:26:43 -0400
+Received: from ozlabs.org ([203.11.71.1]:57247 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726764AbgHDWZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 18:25:09 -0400
-Subject: Re: [GIT PULL] thread changes for v5.9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596579908;
-        bh=kusxYU43EZ5r4r3uSHQpemHyx4JJswqloQDOdpqnn6M=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Owu65JEuY9jPkfswno34ITq0CY6yPAyefGfyPxAqjbipedSJbRTunJMnb9f60t48l
-         sT6KS96Jqz631gqMY62+ePphUmqVqZFWC6YwBtNrLmMvJvlQP8RqL0pZQnHzva96BZ
-         XmGG4Z58U0V0KzqXiwlfn5Ha/mNc67Y1O6/u2v4A=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200804112445.72138-1-christian.brauner@ubuntu.com>
-References: <20200804112445.72138-1-christian.brauner@ubuntu.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200804112445.72138-1-christian.brauner@ubuntu.com>
-X-PR-Tracked-Remote: git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux
- tags/threads-v5.9
-X-PR-Tracked-Commit-Id: 55d9ad97e417cc2604654913e902d26f942bde00
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0a72761b27fe3b10e3f336bf2f2aa22635504cdd
-Message-Id: <159657990812.8406.17387508782905344116.pr-tracker-bot@kernel.org>
-Date:   Tue, 04 Aug 2020 22:25:08 +0000
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        id S1726282AbgHDW0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 18:26:42 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BLq9S632vz9sR4;
+        Wed,  5 Aug 2020 08:26:36 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596579997;
+        bh=SDxUt3jLGE+9ERQ0nln2YTixtJIxts89+JgXVcjR1aI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ko7SWMqBWyTCGyfEuZ2kY/YUjyOTfBdueIFT/cgbtTYbQMTX4X362d26G5fEsPtsv
+         eoLoulBU87y54HU/nEz1RUQeL1RC43GMkW5Nm1TMOoIOBv21hjnrkCYIcov116tZUF
+         KWUpFUYanu/K+l3/YyJKznIOAhJuYgHEJS1h8nukqL/w0M2U64r+YJMekrY/7PGZwN
+         KhnUaqiKH0jwQx1zB4JrRVDlHT7tZZs8SKADrWd3Kpd2zJwmuetxjEvZkOxTXFX+h7
+         EA+j3+yJ0gOsrzBq1t+KXYMr+Qf5GeGEI1DQzPB7UnsR8MqTCYHnL8RNe6ou9yKQp+
+         keRjLoqoQ2jKg==
+Date:   Wed, 5 Aug 2020 08:26:35 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Wim Van Sebroeck <wim@iguana.be>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ahmad Fatoum <a.fatoum@pengutronix.de>
+Subject: linux-next: Fixes tag needs some work in the watchdog tree
+Message-ID: <20200805082635.6cbf7f2d@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/6ydXZ6d7W_6yPnSzdud_eU2";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue,  4 Aug 2020 13:24:45 +0200:
+--Sig_/6ydXZ6d7W_6yPnSzdud_eU2
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/threads-v5.9
+Hi all,
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0a72761b27fe3b10e3f336bf2f2aa22635504cdd
+In commit
 
-Thank you!
+  95d0c04e0cf9 ("watchdog: f71808e_wdt: remove use of wrong watchdog_info o=
+ption")
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Fixes tag
+
+  Fixes: 96cb4eb019ce ("watchdog: f71808e_wdt: new watchdog driver for
+
+has these problem(s):
+
+  - Subject has leading but no trailing parentheses
+  - Subject has leading but no trailing quotes
+
+Please do not split Fixes tags over more than one line.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/6ydXZ6d7W_6yPnSzdud_eU2
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8p4JsACgkQAVBC80lX
+0Gyx7wgAhBvxVC1rfRqDUampfqyaD9fJcSGcmD3vS3fpYXI/XjTAWm9heks06gfu
+TDklpM27bhO6Tvha1Kh9beq84SWl2cIQN2Iuf7smL7TlpZtqHvVBbpU8XqBoCaXX
+eDffmRfeZfnrlHMgh5HWeOmbt4jAF7e/gh7EGH0mzvv5W5snATAybwdWDh20CfU7
+2CoCFbjMieptQVmGJ+ckFx7PEdpYhnjFpLNbMJGYLGZpCs20NV1K2UznjTwPzGdM
+YCteCo0RcAJYdiDN3GnWkzHJ63WS3U3zXdDq62hBNuvbxcy3S81cWvo255FDplAm
+8qQXANflphdtqE+VXSPdB4F0VQCMJw==
+=0pBm
+-----END PGP SIGNATURE-----
+
+--Sig_/6ydXZ6d7W_6yPnSzdud_eU2--
