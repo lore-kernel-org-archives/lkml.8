@@ -2,72 +2,99 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EAD4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11896C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B6222076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 072432076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:41:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UPHJTVxS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729983AbgHDIh6 (ORCPT
+        id S1729916AbgHDIlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 04:37:58 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:46676 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726058AbgHDIh5 (ORCPT
+        Tue, 4 Aug 2020 04:41:11 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:38159 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726233AbgHDIlK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 04:37:57 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R601e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0U4jk5H4_1596530273;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U4jk5H4_1596530273)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 04 Aug 2020 16:37:54 +0800
-Subject: Re: [PATCH v17 00/21] per memcg lru lock
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
-        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
-        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, shakeelb@google.com,
-        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
-        kirill@shutemov.name, alexander.duyck@gmail.com,
-        rong.a.chen@intel.com, Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Michal Hocko <mhocko@kernel.org>
-References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
-Message-ID: <7c4395f3-56c0-c2ed-67fc-43e1f5f0c3eb@linux.alibaba.com>
-Date:   Tue, 4 Aug 2020 16:37:37 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Tue, 4 Aug 2020 04:41:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596530469;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=UPWrZPY2tCatq3YfkH4vc2wJlD6QQa6/byy70189PQ0=;
+        b=UPHJTVxSwH334H5yudUD+ojoHU4s7Rc2yOG3PeCzJfDwy8vbdaudMfCoHhAY894CJV7XHw
+        rK+X/xmD2ukVSJu2r+eugNwen2UdhsJQ6Tk7lCYZJY+7AXvwzk4E3VpbHZGNZlkk1R+7Wh
+        re8tOz6kIRl6Spo+RT/iQmx1FzN5afw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-242-kZw6m6UZOKqF8QBlq6GAqQ-1; Tue, 04 Aug 2020 04:41:04 -0400
+X-MC-Unique: kZw6m6UZOKqF8QBlq6GAqQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6662D80BCBC;
+        Tue,  4 Aug 2020 08:41:03 +0000 (UTC)
+Received: from T590 (ovpn-13-169.pek2.redhat.com [10.72.13.169])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7895388D58;
+        Tue,  4 Aug 2020 08:40:46 +0000 (UTC)
+Date:   Tue, 4 Aug 2020 16:40:41 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Wang Qing <wangqing@vivo.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers\block: Use kobj_to_dev() API
+Message-ID: <20200804084041.GB1958244@T590>
+References: <1591945856-14749-1-git-send-email-wangqing@vivo.com>
 MIME-Version: 1.0
-In-Reply-To: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1591945856-14749-1-git-send-email-wangqing@vivo.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From e2918c8fa741442255a2f12659f95dae94fdfe5d Mon Sep 17 00:00:00 2001
-From: Alex Shi <alex.shi@linux.alibaba.com>
-Date: Tue, 4 Aug 2020 16:20:02 +0800
-Subject: [PATCH 0/3] optimzing following per memcg lru_lock
+On Fri, Jun 12, 2020 at 03:10:56PM +0800, Wang Qing wrote:
+> Use kobj_to_dev() API instead of container_of().
+> 
+> Signed-off-by: Wang Qing <wangqing@vivo.com>
+> ---
+>  drivers/block/virtio_blk.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>  mode change 100644 => 100755 drivers/block/virtio_blk.c
+> 
+> diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+> index 9d21bf0..c808405
+> --- a/drivers/block/virtio_blk.c
+> +++ b/drivers/block/virtio_blk.c
+> @@ -630,7 +630,7 @@ static struct attribute *virtblk_attrs[] = {
+>  static umode_t virtblk_attrs_are_visible(struct kobject *kobj,
+>  		struct attribute *a, int n)
+>  {
+> -	struct device *dev = container_of(kobj, struct device, kobj);
+> +	struct device *dev = kobj_to_dev(kobj);
+>  	struct gendisk *disk = dev_to_disk(dev);
+>  	struct virtio_blk *vblk = disk->private_data;
+>  	struct virtio_device *vdev = vblk->vdev;
+> -- 
+> 2.7.4
+> 
 
-The first 2 patches are code clean up. And the 3rd one is a lru_add optimize.
-
-
-Alex Shi (3):
-  mm/mlock: remove lru_lock on TestClearPageMlocked in munlock_vma_page
-  mm/mlock: remove __munlock_isolate_lru_page
-  mm/swap.c: optimizing __pagevec_lru_add lru_lock
-
- mm/mlock.c | 63 +++++++++++++++++++-------------------------------------------
- mm/swap.c  | 57 ++++++++++++++++++++++++++++++++++++++++++++++++++------
- 2 files changed, 70 insertions(+), 50 deletions(-)
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
 -- 
-1.8.3.1
+Ming
 
