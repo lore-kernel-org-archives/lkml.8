@@ -2,278 +2,397 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE70C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E8FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA4962177B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C8952086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:11:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RKCtVolN"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="p1dDToMr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729756AbgHDQLL (ORCPT
+        id S1729766AbgHDQLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 12:11:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728766AbgHDQJQ (ORCPT
+        Tue, 4 Aug 2020 12:11:45 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:15992 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729752AbgHDQLL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 12:09:16 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D494AC06174A;
-        Tue,  4 Aug 2020 09:09:13 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id m19so2549010ejd.8;
-        Tue, 04 Aug 2020 09:09:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=aHpL707Nss711rXrUizpThLuemDkqB5ODmR6Us/BMpc=;
-        b=RKCtVolN1PDxb8f8DAAlQGFnsZB9sx/M6YI5o8M9ezRPbYAoilaubmC9LXgvQj85xQ
-         qBR14pamadnbHGCQwFj1sQV0M2CLHe2KsyN/KdJgHzfNtNp1wCoYZTMjlrZ4KJQX8c7/
-         r5dJOSvThAD7I2jxY0eiJoAOjd3gHWsGoBRqIpNJrPHMWPCYoZd9JecE9WmSblVpB2I5
-         PBjsmpZIkecclgeIDvk2llNeWwDI781nxShwPkWnezpUqoZRFHhEbOTqWF6egLJByK2R
-         KoPUV2zAtlX5POBQEHkJlAEYCqPZV9CJfraVAANj/VtS4cgHkEjw/sspRB5MniAOznXY
-         cM8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=aHpL707Nss711rXrUizpThLuemDkqB5ODmR6Us/BMpc=;
-        b=cJsnr3XC/lx+aRjhwVPUbl/AZ6fsKwM/7y/UyDgRpF1w1z4LuDkM5OYYmD5zbLnrcA
-         X2o+fPrH5qzPe6DkxC60vRfzr5LnzqgoycmYy3VbW0T97tEPprDDaZcDb6aR80fICe8G
-         E8N39wm4MMZJvJcct2J4w4pmU3t0n8pGAB3G/Wht0WPS4o5wDfRb/wFZBJIV147R3Vl0
-         ZANTiI1IM2a3osUqKap+/q3bf3TM7DB+BBxEG8I4ov+5/MO7K/MT7AXclcGVUb8hf7yo
-         kFadbXVP/OElRmZ8kJwwxyMQgmedbvp6zByuSdSsYS926f6MNAnbnvvCfVOLqaUA8Qzf
-         l94Q==
-X-Gm-Message-State: AOAM533Dxcui1aGgxDAnxx8gp1nnJbL8rhSULMli6D3onNsWj61Y+3Fe
-        7Smpvdykd8d2xkZ6Wjyw4ao=
-X-Google-Smtp-Source: ABdhPJzbLBiMYA5MJdi6LAEI6mCPAp1yBqX0h73JQ5aVcDHYwq8GptQyMXf84h1/xiNrOgyr+5SVVQ==
-X-Received: by 2002:a17:906:841:: with SMTP id f1mr22756793ejd.158.1596557351011;
-        Tue, 04 Aug 2020 09:09:11 -0700 (PDT)
-Received: from localhost.localdomain ([185.200.214.168])
-        by smtp.gmail.com with ESMTPSA id ov10sm18502616ejb.6.2020.08.04.09.09.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 09:09:10 -0700 (PDT)
-From:   izabela.bakollari@gmail.com
-To:     nhorman@tuxdriver.com, davem@davemloft.net, kuba@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        izabela.bakollari@gmail.com
-Subject: [PATCHv2 net-next] dropwatch: Support monitoring of dropped frames
-Date:   Tue,  4 Aug 2020 18:09:08 +0200
-Message-Id: <20200804160908.46193-1-izabela.bakollari@gmail.com>
-X-Mailer: git-send-email 2.18.4
-In-Reply-To: <20200707171515.110818-1-izabela.bakollari@gmail.com>
-References: <20200707171515.110818-1-izabela.bakollari@gmail.com>
+        Tue, 4 Aug 2020 12:11:11 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596557464; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=8y0jLshA9qpRvTkRjJMpImoGmv56AYBmPOWWXjPR3Lw=; b=p1dDToMr7BwirFweRZ3Tn2t4d5cdXDvEnw5FNQiBQni5mVDk4niwx2IUshWapknIKgjn3FGN
+ nu1i57Y3bMZzpckYMH1OyOmwk7edgvG8Xbb+8dKHtcAnBT1dIqdC5hTJlespwRIvUnC8z9MR
+ GVAko2q6HHcZ/iIOZhm2vzZ9WFY=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5f298888781ba1c5e2a3e479 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 04 Aug 2020 16:10:48
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DD412C4339C; Tue,  4 Aug 2020 16:10:47 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7EC43C433C6;
+        Tue,  4 Aug 2020 16:10:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7EC43C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>
+Cc:     Asutosh Das <asutoshd@codeaurora.org>,
+        Can Guo <cang@codeaurora.org>, linux-scsi@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCH] scsi: ufs-qcom: Remove unused msm bus scaling apis
+Date:   Tue,  4 Aug 2020 21:40:33 +0530
+Message-Id: <20200804161033.15586-1-saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Izabela Bakollari <izabela.bakollari@gmail.com>
+MSM bus scaling has moved on to use interconnect framework
+and downstream bus scaling apis like msm_bus_scale*() does
+not exist anymore in the kernel. Currently they are guarded
+by a config which also does not exist and hence there are no
+build failures reported. Remove these unused apis as they
+are currently no-op anyways and the scaling support that may
+be added in future will use interconnect apis.
 
-Dropwatch is a utility that monitors dropped frames by having userspace
-record them over the dropwatch protocol over a file. This augument
-allows live monitoring of dropped frames using tools like tcpdump.
-
-With this feature, dropwatch allows two additional commands (start and
-stop interface) which allows the assignment of a net_device to the
-dropwatch protocol. When assinged, dropwatch will clone dropped frames,
-and receive them on the assigned interface, allowing tools like tcpdump
-to monitor for them.
-
-With this feature, create a dummy ethernet interface (ip link add dev
-dummy0 type dummy), assign it to the dropwatch kernel subsystem, by using
-these new commands, and then monitor dropped frames in real time by
-running tcpdump -i dummy0.
-
-Signed-off-by: Izabela Bakollari <izabela.bakollari@gmail.com>
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 ---
-Changes in v2:
-- protect the dummy ethernet interface from being changed by another
-thread/cpu
----
- include/uapi/linux/net_dropmon.h |  3 ++
- net/core/drop_monitor.c          | 84 ++++++++++++++++++++++++++++++++
- 2 files changed, 87 insertions(+)
+ drivers/scsi/ufs/ufs-qcom.c | 225 +-----------------------------------
+ drivers/scsi/ufs/ufs-qcom.h |  11 --
+ 2 files changed, 1 insertion(+), 235 deletions(-)
 
-diff --git a/include/uapi/linux/net_dropmon.h b/include/uapi/linux/net_dropmon.h
-index 67e31f329190..e8e861e03a8a 100644
---- a/include/uapi/linux/net_dropmon.h
-+++ b/include/uapi/linux/net_dropmon.h
-@@ -58,6 +58,8 @@ enum {
- 	NET_DM_CMD_CONFIG_NEW,
- 	NET_DM_CMD_STATS_GET,
- 	NET_DM_CMD_STATS_NEW,
-+	NET_DM_CMD_START_IFC,
-+	NET_DM_CMD_STOP_IFC,
- 	_NET_DM_CMD_MAX,
- };
- 
-@@ -93,6 +95,7 @@ enum net_dm_attr {
- 	NET_DM_ATTR_SW_DROPS,			/* flag */
- 	NET_DM_ATTR_HW_DROPS,			/* flag */
- 	NET_DM_ATTR_FLOW_ACTION_COOKIE,		/* binary */
-+	NET_DM_ATTR_IFNAME,			/* string */
- 
- 	__NET_DM_ATTR_MAX,
- 	NET_DM_ATTR_MAX = __NET_DM_ATTR_MAX - 1
-diff --git a/net/core/drop_monitor.c b/net/core/drop_monitor.c
-index 8e33cec9fc4e..781e69876d2f 100644
---- a/net/core/drop_monitor.c
-+++ b/net/core/drop_monitor.c
-@@ -30,6 +30,7 @@
- #include <net/genetlink.h>
- #include <net/netevent.h>
- #include <net/flow_offload.h>
-+#include <net/sock.h>
- 
- #include <trace/events/skb.h>
- #include <trace/events/napi.h>
-@@ -46,6 +47,7 @@
-  */
- static int trace_state = TRACE_OFF;
- static bool monitor_hw;
-+struct net_device *interface;
- 
- /* net_dm_mutex
-  *
-@@ -54,6 +56,8 @@ static bool monitor_hw;
-  */
- static DEFINE_MUTEX(net_dm_mutex);
- 
-+static DEFINE_SPINLOCK(interface_lock);
-+
- struct net_dm_stats {
- 	u64 dropped;
- 	struct u64_stats_sync syncp;
-@@ -255,6 +259,21 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
- 
- out:
- 	spin_unlock_irqrestore(&data->lock, flags);
-+	spin_lock_irqsave(&interface_lock, flags);
-+	if (interface && interface != skb->dev) {
-+		skb = skb_clone(skb, GFP_ATOMIC);
-+		if (skb) {
-+			skb->dev = interface;
-+			spin_unlock_irqrestore(&interface_lock, flags);
-+			netif_receive_skb(skb);
-+		} else {
-+			spin_unlock_irqrestore(&interface_lock, flags);
-+			pr_err("dropwatch: Not enough memory to clone dropped skb\n");
-+			return;
-+		}
-+	} else {
-+		spin_unlock_irqrestore(&interface_lock, flags);
-+	}
+diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+index d0d75527830e..d78f2f8181e8 100644
+--- a/drivers/scsi/ufs/ufs-qcom.c
++++ b/drivers/scsi/ufs/ufs-qcom.c
+@@ -621,218 +621,6 @@ static int ufs_qcom_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
+ 	return 0;
  }
  
- static void trace_kfree_skb_hit(void *ignore, struct sk_buff *skb, void *location)
-@@ -1315,6 +1334,53 @@ static int net_dm_cmd_trace(struct sk_buff *skb,
- 	return -EOPNOTSUPP;
- }
- 
-+static int net_dm_interface_start(struct net *net, const char *ifname)
-+{
-+	struct net_device *nd = dev_get_by_name(net, ifname);
-+
-+	if (nd)
-+		interface = nd;
-+	else
-+		return -ENODEV;
-+
-+	return 0;
-+}
-+
-+static int net_dm_interface_stop(struct net *net, const char *ifname)
-+{
-+	dev_put(interface);
-+	interface = NULL;
-+
-+	return 0;
-+}
-+
-+static int net_dm_cmd_ifc_trace(struct sk_buff *skb, struct genl_info *info)
-+{
-+	struct net *net = sock_net(skb->sk);
-+	char ifname[IFNAMSIZ];
-+
-+	if (net_dm_is_monitoring())
-+		return -EBUSY;
-+
-+	memset(ifname, 0, IFNAMSIZ);
-+	nla_strlcpy(ifname, info->attrs[NET_DM_ATTR_IFNAME], IFNAMSIZ - 1);
-+
-+	switch (info->genlhdr->cmd) {
-+	case NET_DM_CMD_START_IFC:
-+		if (!interface)
-+			return net_dm_interface_start(net, ifname);
-+		else
-+			return -EBUSY;
-+	case NET_DM_CMD_STOP_IFC:
-+		if (interface)
-+			return net_dm_interface_stop(net, interface->name);
-+		else
-+			return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
- static int net_dm_config_fill(struct sk_buff *msg, struct genl_info *info)
+-#ifdef CONFIG_MSM_BUS_SCALING
+-static int ufs_qcom_get_bus_vote(struct ufs_qcom_host *host,
+-		const char *speed_mode)
+-{
+-	struct device *dev = host->hba->dev;
+-	struct device_node *np = dev->of_node;
+-	int err;
+-	const char *key = "qcom,bus-vector-names";
+-
+-	if (!speed_mode) {
+-		err = -EINVAL;
+-		goto out;
+-	}
+-
+-	if (host->bus_vote.is_max_bw_needed && !!strcmp(speed_mode, "MIN"))
+-		err = of_property_match_string(np, key, "MAX");
+-	else
+-		err = of_property_match_string(np, key, speed_mode);
+-
+-out:
+-	if (err < 0)
+-		dev_err(dev, "%s: Invalid %s mode %d\n",
+-				__func__, speed_mode, err);
+-	return err;
+-}
+-
+-static void ufs_qcom_get_speed_mode(struct ufs_pa_layer_attr *p, char *result)
+-{
+-	int gear = max_t(u32, p->gear_rx, p->gear_tx);
+-	int lanes = max_t(u32, p->lane_rx, p->lane_tx);
+-	int pwr;
+-
+-	/* default to PWM Gear 1, Lane 1 if power mode is not initialized */
+-	if (!gear)
+-		gear = 1;
+-
+-	if (!lanes)
+-		lanes = 1;
+-
+-	if (!p->pwr_rx && !p->pwr_tx) {
+-		pwr = SLOWAUTO_MODE;
+-		snprintf(result, BUS_VECTOR_NAME_LEN, "MIN");
+-	} else if (p->pwr_rx == FAST_MODE || p->pwr_rx == FASTAUTO_MODE ||
+-		 p->pwr_tx == FAST_MODE || p->pwr_tx == FASTAUTO_MODE) {
+-		pwr = FAST_MODE;
+-		snprintf(result, BUS_VECTOR_NAME_LEN, "%s_R%s_G%d_L%d", "HS",
+-			 p->hs_rate == PA_HS_MODE_B ? "B" : "A", gear, lanes);
+-	} else {
+-		pwr = SLOW_MODE;
+-		snprintf(result, BUS_VECTOR_NAME_LEN, "%s_G%d_L%d",
+-			 "PWM", gear, lanes);
+-	}
+-}
+-
+-static int __ufs_qcom_set_bus_vote(struct ufs_qcom_host *host, int vote)
+-{
+-	int err = 0;
+-
+-	if (vote != host->bus_vote.curr_vote) {
+-		err = msm_bus_scale_client_update_request(
+-				host->bus_vote.client_handle, vote);
+-		if (err) {
+-			dev_err(host->hba->dev,
+-				"%s: msm_bus_scale_client_update_request() failed: bus_client_handle=0x%x, vote=%d, err=%d\n",
+-				__func__, host->bus_vote.client_handle,
+-				vote, err);
+-			goto out;
+-		}
+-
+-		host->bus_vote.curr_vote = vote;
+-	}
+-out:
+-	return err;
+-}
+-
+-static int ufs_qcom_update_bus_bw_vote(struct ufs_qcom_host *host)
+-{
+-	int vote;
+-	int err = 0;
+-	char mode[BUS_VECTOR_NAME_LEN];
+-
+-	ufs_qcom_get_speed_mode(&host->dev_req_params, mode);
+-
+-	vote = ufs_qcom_get_bus_vote(host, mode);
+-	if (vote >= 0)
+-		err = __ufs_qcom_set_bus_vote(host, vote);
+-	else
+-		err = vote;
+-
+-	if (err)
+-		dev_err(host->hba->dev, "%s: failed %d\n", __func__, err);
+-	else
+-		host->bus_vote.saved_vote = vote;
+-	return err;
+-}
+-
+-static int ufs_qcom_set_bus_vote(struct ufs_hba *hba, bool on)
+-{
+-	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+-	int vote, err;
+-
+-	/*
+-	 * In case ufs_qcom_init() is not yet done, simply ignore.
+-	 * This ufs_qcom_set_bus_vote() shall be called from
+-	 * ufs_qcom_init() after init is done.
+-	 */
+-	if (!host)
+-		return 0;
+-
+-	if (on) {
+-		vote = host->bus_vote.saved_vote;
+-		if (vote == host->bus_vote.min_bw_vote)
+-			ufs_qcom_update_bus_bw_vote(host);
+-	} else {
+-		vote = host->bus_vote.min_bw_vote;
+-	}
+-
+-	err = __ufs_qcom_set_bus_vote(host, vote);
+-	if (err)
+-		dev_err(hba->dev, "%s: set bus vote failed %d\n",
+-				 __func__, err);
+-
+-	return err;
+-}
+-
+-static ssize_t
+-show_ufs_to_mem_max_bus_bw(struct device *dev, struct device_attribute *attr,
+-			char *buf)
+-{
+-	struct ufs_hba *hba = dev_get_drvdata(dev);
+-	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+-
+-	return snprintf(buf, PAGE_SIZE, "%u\n",
+-			host->bus_vote.is_max_bw_needed);
+-}
+-
+-static ssize_t
+-store_ufs_to_mem_max_bus_bw(struct device *dev, struct device_attribute *attr,
+-		const char *buf, size_t count)
+-{
+-	struct ufs_hba *hba = dev_get_drvdata(dev);
+-	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+-	uint32_t value;
+-
+-	if (!kstrtou32(buf, 0, &value)) {
+-		host->bus_vote.is_max_bw_needed = !!value;
+-		ufs_qcom_update_bus_bw_vote(host);
+-	}
+-
+-	return count;
+-}
+-
+-static int ufs_qcom_bus_register(struct ufs_qcom_host *host)
+-{
+-	int err;
+-	struct msm_bus_scale_pdata *bus_pdata;
+-	struct device *dev = host->hba->dev;
+-	struct platform_device *pdev = to_platform_device(dev);
+-	struct device_node *np = dev->of_node;
+-
+-	bus_pdata = msm_bus_cl_get_pdata(pdev);
+-	if (!bus_pdata) {
+-		dev_err(dev, "%s: failed to get bus vectors\n", __func__);
+-		err = -ENODATA;
+-		goto out;
+-	}
+-
+-	err = of_property_count_strings(np, "qcom,bus-vector-names");
+-	if (err < 0 || err != bus_pdata->num_usecases) {
+-		dev_err(dev, "%s: qcom,bus-vector-names not specified correctly %d\n",
+-				__func__, err);
+-		goto out;
+-	}
+-
+-	host->bus_vote.client_handle = msm_bus_scale_register_client(bus_pdata);
+-	if (!host->bus_vote.client_handle) {
+-		dev_err(dev, "%s: msm_bus_scale_register_client failed\n",
+-				__func__);
+-		err = -EFAULT;
+-		goto out;
+-	}
+-
+-	/* cache the vote index for minimum and maximum bandwidth */
+-	host->bus_vote.min_bw_vote = ufs_qcom_get_bus_vote(host, "MIN");
+-	host->bus_vote.max_bw_vote = ufs_qcom_get_bus_vote(host, "MAX");
+-
+-	host->bus_vote.max_bus_bw.show = show_ufs_to_mem_max_bus_bw;
+-	host->bus_vote.max_bus_bw.store = store_ufs_to_mem_max_bus_bw;
+-	sysfs_attr_init(&host->bus_vote.max_bus_bw.attr);
+-	host->bus_vote.max_bus_bw.attr.name = "max_bus_bw";
+-	host->bus_vote.max_bus_bw.attr.mode = S_IRUGO | S_IWUSR;
+-	err = device_create_file(dev, &host->bus_vote.max_bus_bw);
+-out:
+-	return err;
+-}
+-#else /* CONFIG_MSM_BUS_SCALING */
+-static int ufs_qcom_update_bus_bw_vote(struct ufs_qcom_host *host)
+-{
+-	return 0;
+-}
+-
+-static int ufs_qcom_set_bus_vote(struct ufs_hba *host, bool on)
+-{
+-	return 0;
+-}
+-
+-static int ufs_qcom_bus_register(struct ufs_qcom_host *host)
+-{
+-	return 0;
+-}
+-#endif /* CONFIG_MSM_BUS_SCALING */
+-
+ static void ufs_qcom_dev_ref_clk_ctrl(struct ufs_qcom_host *host, bool enable)
  {
- 	void *hdr;
-@@ -1503,6 +1569,7 @@ static int dropmon_net_event(struct notifier_block *ev_block,
- 	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
- 	struct dm_hw_stat_delta *new_stat = NULL;
- 	struct dm_hw_stat_delta *tmp;
-+	unsigned long flags;
+ 	if (host->dev_ref_clk_ctrl_mmio &&
+@@ -976,7 +764,6 @@ static int ufs_qcom_pwr_change_notify(struct ufs_hba *hba,
+ 		/* cache the power mode parameters to use internally */
+ 		memcpy(&host->dev_req_params,
+ 				dev_req_params, sizeof(*dev_req_params));
+-		ufs_qcom_update_bus_bw_vote(host);
  
- 	switch (event) {
- 	case NETDEV_REGISTER:
-@@ -1529,6 +1596,12 @@ static int dropmon_net_event(struct notifier_block *ev_block,
- 				}
- 			}
+ 		/* disable the device ref clock if entered PWM mode */
+ 		if (ufshcd_is_hs_mode(&hba->pwr_info) &&
+@@ -1107,9 +894,7 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
+ 
+ 	switch (status) {
+ 	case PRE_CHANGE:
+-		if (on) {
+-			err = ufs_qcom_set_bus_vote(hba, true);
+-		} else {
++		if (!on) {
+ 			if (!ufs_qcom_is_link_active(hba)) {
+ 				/* disable device ref_clk */
+ 				ufs_qcom_dev_ref_clk_ctrl(host, false);
+@@ -1121,8 +906,6 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
+ 			/* enable the device ref clock for HS mode*/
+ 			if (ufshcd_is_hs_mode(&hba->pwr_info))
+ 				ufs_qcom_dev_ref_clk_ctrl(host, true);
+-		} else {
+-			err = ufs_qcom_set_bus_vote(hba, false);
  		}
-+		spin_lock_irqsave(&interface_lock, flags);
-+		if (interface && interface == dev) {
-+			dev_put(interface);
-+			interface = NULL;
-+		}
-+		spin_unlock_irqrestore(&interface_lock, flags);
- 		mutex_unlock(&net_dm_mutex);
  		break;
  	}
-@@ -1543,6 +1616,7 @@ static const struct nla_policy net_dm_nl_policy[NET_DM_ATTR_MAX + 1] = {
- 	[NET_DM_ATTR_QUEUE_LEN] = { .type = NLA_U32 },
- 	[NET_DM_ATTR_SW_DROPS]	= {. type = NLA_FLAG },
- 	[NET_DM_ATTR_HW_DROPS]	= {. type = NLA_FLAG },
-+	[NET_DM_ATTR_IFNAME] = {. type = NLA_STRING, .len = IFNAMSIZ },
- };
+@@ -1264,10 +1047,6 @@ static int ufs_qcom_init(struct ufs_hba *hba)
+ 		goto out_variant_clear;
+ 	}
  
- static const struct genl_ops dropmon_ops[] = {
-@@ -1570,6 +1644,16 @@ static const struct genl_ops dropmon_ops[] = {
- 		.cmd = NET_DM_CMD_STATS_GET,
- 		.doit = net_dm_cmd_stats_get,
- 	},
-+	{
-+		.cmd = NET_DM_CMD_START_IFC,
-+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
-+		.doit = net_dm_cmd_ifc_trace,
-+	},
-+	{
-+		.cmd = NET_DM_CMD_STOP_IFC,
-+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
-+		.doit = net_dm_cmd_ifc_trace,
-+	},
- };
+-	err = ufs_qcom_bus_register(host);
+-	if (err)
+-		goto out_variant_clear;
+-
+ 	ufs_qcom_get_controller_revision(hba, &host->hw_ver.major,
+ 		&host->hw_ver.minor, &host->hw_ver.step);
  
- static int net_dm_nl_pre_doit(const struct genl_ops *ops,
+@@ -1307,7 +1086,6 @@ static int ufs_qcom_init(struct ufs_hba *hba)
+ 	if (err)
+ 		goto out_variant_clear;
+ 
+-	ufs_qcom_set_bus_vote(hba, true);
+ 	ufs_qcom_setup_clocks(hba, true, POST_CHANGE);
+ 
+ 	if (hba->dev->id < MAX_UFS_QCOM_HOSTS)
+@@ -1446,7 +1224,6 @@ static int ufs_qcom_clk_scale_notify(struct ufs_hba *hba,
+ 				    dev_req_params->pwr_rx,
+ 				    dev_req_params->hs_rate,
+ 				    false);
+-		ufs_qcom_update_bus_bw_vote(host);
+ 	}
+ 
+ out:
+diff --git a/drivers/scsi/ufs/ufs-qcom.h b/drivers/scsi/ufs/ufs-qcom.h
+index 97247d17e258..3f4922743b3e 100644
+--- a/drivers/scsi/ufs/ufs-qcom.h
++++ b/drivers/scsi/ufs/ufs-qcom.h
+@@ -174,16 +174,6 @@ static inline void ufs_qcom_deassert_reset(struct ufs_hba *hba)
+ 	mb();
+ }
+ 
+-struct ufs_qcom_bus_vote {
+-	uint32_t client_handle;
+-	uint32_t curr_vote;
+-	int min_bw_vote;
+-	int max_bw_vote;
+-	int saved_vote;
+-	bool is_max_bw_needed;
+-	struct device_attribute max_bus_bw;
+-};
+-
+ /* Host controller hardware version: major.minor.step */
+ struct ufs_hw_version {
+ 	u16 step;
+@@ -216,7 +206,6 @@ struct ufs_qcom_host {
+ 
+ 	struct phy *generic_phy;
+ 	struct ufs_hba *hba;
+-	struct ufs_qcom_bus_vote bus_vote;
+ 	struct ufs_pa_layer_attr dev_req_params;
+ 	struct clk *rx_l0_sync_clk;
+ 	struct clk *tx_l0_sync_clk;
 -- 
-2.18.4
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
