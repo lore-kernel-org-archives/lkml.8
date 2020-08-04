@@ -2,116 +2,219 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FA16C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 380C0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 046352177B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:49:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596556194;
-	bh=QsTMC6SLev6ciXKGAQQLQoUY0jFy36C74ksPMkq7COk=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=lQ9yJKXBvOESVxpRTUi5bJvyyhPc6rKW2SGzD2tDKfmGS9A22n6JErsHI1mIhmCay
-	 cK/0A+LTKmOGMJC9lNWcztlW9LeZB3QLE7D8cx6HIgfLPFcfYCzpgrbKs1KbWq8LXJ
-	 l99Geu8ct8FiDPUs3MA1jhMnFaAktzi/z2F7Wzzg=
+	by mail.kernel.org (Postfix) with ESMTP id 15190208A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:50:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JFF7QVQy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728751AbgHDPtw (ORCPT
+        id S1726167AbgHDPuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 11:49:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728880AbgHDPtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 11:49:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AF6421744;
-        Tue,  4 Aug 2020 15:49:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596556172;
-        bh=QsTMC6SLev6ciXKGAQQLQoUY0jFy36C74ksPMkq7COk=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=HLYhnrNCP+LU+0Z7YJBOjhOf5u6gP45nqyYoZxh0fUnqECOE0ZJsJkDhZ1DOIeuJh
-         3Z0jfjTITF80mzZqnG19XomRa0Su0varVijd0J0vHIROLImnW1BGwaiL76s44i08/P
-         B0CA+7vHMdl176RsN13IxUxd1v0Y087cocISFRG0=
-Date:   Tue, 4 Aug 2020 17:49:52 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org, speakup@linux-speakup.org
-Subject: Re: [PATCH 2/2] speakup: only build serialio when ISA is enabled
-Message-ID: <20200804154952.GB495852@kroah.com>
-References: <20200804111332.dex7jobmabifdzw5@function>
- <20200804113413.GA181242@kroah.com>
- <20200804114951.ijs3hnezi4f64nll@function>
- <20200804115817.GC203147@kroah.com>
- <20200804153542.zowupa4ygdgxnciu@function>
+        Tue, 4 Aug 2020 11:50:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41672 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbgHDPup (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 11:50:45 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F1C2C061756
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 08:50:45 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id a5so27918550wrm.6
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 08:50:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3+kDmABO3rORHPwyb6sHqLUmmymRS95vgwyEtBMcMyg=;
+        b=JFF7QVQyo4djCeIjI0TZsWKm0xy9hl4F2LYNI76B1IfQ9Q8vvUsqaU7dsKDTseMQkb
+         xoH3l8HVsLIDwOyqUztd/YG4xE+0KTLgSIgLZ6VxD8vsCOEDpzBv6u2DZeu1nfki81Qk
+         eXpBI2cdtpOCpByZO4hPlu0NZYiKnz70NQV9sUY2nN6bw7ZB+Eb/YRSC5emWUNQsDfTR
+         sh+ay9Fs6mffL/888Br7Y4R1l337QjRxMqdLcTroxzmmfAvvMAMAB+P4OH54OtO8i1i4
+         q/e5+KPxclDydu1TzLbOCekbq9Ykx1W8aVtDxHuyPPBGR3p+IZ84jMuMEkaK6pD+/98/
+         vJ0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3+kDmABO3rORHPwyb6sHqLUmmymRS95vgwyEtBMcMyg=;
+        b=uh3K1zQ6Lx2MIs6TvZjf+EYrH6ovB2D3f4Kt0Di9HvBdNpl+PYAf9VeCpJaBkXiV2g
+         a38dgIUDwtHCzWRiLlMlpkx1k89CCFQdn9pTOAuMak7x4gB0ndh6SxSsn8IwINfh73Xl
+         w9X+b2e3gOiaMmGRYijODVHFPKukfEe5oadRRwFXpSbVAgaz3jBFFseHLSAPl5mikk/E
+         pqvQamLgrL3mry55c/1n5FS4xoUwL/wX5NuHVZEAS1HElFdBi11qy29sCxzobDiZ6Eg5
+         U8Q7DgUh+XGkXY2x/viAwVVy3nb+W5R/9UgUMBR6unYyJn+cq485sK8iQ1ZaYV1NhIEY
+         npDQ==
+X-Gm-Message-State: AOAM5304NYRDxpLWo9Z5lI2Hfmm6mafGtrOrbfl0jNk0SjrlCKyi9CHg
+        SOKn04FL0EVD/R0EHZMub/2xd3j3QaBenu/dPHamVQ==
+X-Google-Smtp-Source: ABdhPJzl78nlmcwoiguIAxOzKCihxpKfHKYModWH7inw5tJRI0S8DABgAyCXprE34msfJKwMKL62DXsgABNqJDTBYtg=
+X-Received: by 2002:adf:82d5:: with SMTP id 79mr19406166wrc.282.1596556243438;
+ Tue, 04 Aug 2020 08:50:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200804153542.zowupa4ygdgxnciu@function>
+References: <20200728085734.609930-1-irogers@google.com> <20200728085734.609930-5-irogers@google.com>
+ <969ef797-59ea-69d0-24b9-33bcdff106a1@intel.com> <CAP-5=fUCnBGX0L0Tt3_gmVnt+hvaouJMx6XFErFKk72+xuw9fw@mail.gmail.com>
+ <86324041-aafb-f556-eda7-6250ba678f24@intel.com>
+In-Reply-To: <86324041-aafb-f556-eda7-6250ba678f24@intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 4 Aug 2020 08:50:32 -0700
+Message-ID: <CAP-5=fXfBkXovaK3DuSCnwfsnxqW7ZR8-LigtGATgs4gMpZP9A@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] perf record: Don't clear event's period if set by
+ a term
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 05:35:42PM +0200, Samuel Thibault wrote:
-> Greg KH, le mar. 04 août 2020 13:58:17 +0200, a ecrit:
-> > 	ERROR: modpost: "spk_serial_io_ops" [drivers/accessibility/speakup/speakup_keypc.ko] undefined!
-> > 	ERROR: modpost: "spk_stop_serial_interrupt" [drivers/accessibility/speakup/speakup_keypc.ko] undefined!
-> 
-> Oh, indeed, these are not covered by the first patch.
-> 
-> I realize that KEYPC depends on ISA, but with COMPILE_TEST as
-> alternative. We can build serialio in the COMPILE_TEST case too, I'll
-> update the patches.
-> 
-> But then we'll still have:
-> 
-> > the riscv build issues.
-> 
-> Actually I was surprised by the riscv build issue: the issue is within
-> riscv's inb() implementation, serialio.c is only calling it.
-> arch/riscv/include/asm/io.h says:
-> 
-> #define PCI_IOBASE		((void __iomem *)PCI_IO_START)
-> [...]
-> #define inb(c)		({ u8  __v; __io_pbr(); __v = readb_cpu((void*)(PCI_IOBASE + (c))); __io_par(__v); __v; })
-> 
-> and thus yes it's arithmetic over a (void*) pointer, the caller cannot
-> do anything about it.
+On Tue, Aug 4, 2020 at 7:49 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>
+> On 4/08/20 4:33 pm, Ian Rogers wrote:
+> > On Tue, Aug 4, 2020 at 3:08 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+> >>
+> >> On 28/07/20 11:57 am, Ian Rogers wrote:
+> >>> If events in a group explicitly set a frequency or period with leader
+> >>> sampling, don't disable the samples on those events.
+> >>>
+> >>> Prior to 5.8:
+> >>> perf record -e '{cycles/period=12345000/,instructions/period=6789000/}:S'
+> >>
+> >> Might be worth explaining this use-case some more.
+> >> Perhaps add it to the leader sampling documentation for perf-list.
+> >>
+> >>> would clear the attributes then apply the config terms. In commit
+> >>> 5f34278867b7 leader sampling configuration was moved to after applying the
+> >>> config terms, in the example, making the instructions' event have its period
+> >>> cleared.
+> >>> This change makes it so that sampling is only disabled if configuration
+> >>> terms aren't present.
+> >>>
+> >>> Fixes: 5f34278867b7 ("perf evlist: Move leader-sampling configuration")
+> >>> Signed-off-by: Ian Rogers <irogers@google.com>
+> >>> ---
+> >>>  tools/perf/util/record.c | 28 ++++++++++++++++++++--------
+> >>>  1 file changed, 20 insertions(+), 8 deletions(-)
+> >>>
+> >>> diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
+> >>> index a4cc11592f6b..01d1c6c613f7 100644
+> >>> --- a/tools/perf/util/record.c
+> >>> +++ b/tools/perf/util/record.c
+> >>> @@ -2,6 +2,7 @@
+> >>>  #include "debug.h"
+> >>>  #include "evlist.h"
+> >>>  #include "evsel.h"
+> >>> +#include "evsel_config.h"
+> >>>  #include "parse-events.h"
+> >>>  #include <errno.h>
+> >>>  #include <limits.h>
+> >>> @@ -38,6 +39,9 @@ static void evsel__config_leader_sampling(struct evsel *evsel, struct evlist *ev
+> >>>       struct perf_event_attr *attr = &evsel->core.attr;
+> >>>       struct evsel *leader = evsel->leader;
+> >>>       struct evsel *read_sampler;
+> >>> +     struct evsel_config_term *term;
+> >>> +     struct list_head *config_terms = &evsel->config_terms;
+> >>> +     int term_types, freq_mask;
+> >>>
+> >>>       if (!leader->sample_read)
+> >>>               return;
+> >>> @@ -47,16 +51,24 @@ static void evsel__config_leader_sampling(struct evsel *evsel, struct evlist *ev
+> >>>       if (evsel == read_sampler)
+> >>>               return;
+> >>>
+> >>> +     /* Determine the evsel's config term types. */
+> >>> +     term_types = 0;
+> >>> +     list_for_each_entry(term, config_terms, list) {
+> >>> +             term_types |= 1 << term->type;
+> >>> +     }
+> >>>       /*
+> >>> -      * Disable sampling for all group members other than the leader in
+> >>> -      * case the leader 'leads' the sampling, except when the leader is an
+> >>> -      * AUX area event, in which case the 2nd event in the group is the one
+> >>> -      * that 'leads' the sampling.
+> >>> +      * Disable sampling for all group members except those with explicit
+> >>> +      * config terms or the leader. In the case of an AUX area event, the 2nd
+> >>> +      * event in the group is the one that 'leads' the sampling.
+> >>>        */
+> >>> -     attr->freq           = 0;
+> >>> -     attr->sample_freq    = 0;
+> >>> -     attr->sample_period  = 0;
+> >>> -     attr->write_backward = 0;
+> >>> +     freq_mask = (1 << EVSEL__CONFIG_TERM_FREQ) | (1 << EVSEL__CONFIG_TERM_PERIOD);
+> >>> +     if ((term_types & freq_mask) == 0) {
+> >>
+> >> It would be nicer to have a helper e.g.
+> >>
+> >>         if (!evsel__have_config_term(evsel, FREQ) &&
+> >>             !evsel__have_config_term(evsel, PERIOD)) {
+> >
+> > Sure. The point of doing it this way was to avoid repeatedly iterating
+> > over the config term list.
+>
+> But perhaps it is premature optimization
 
-And that's fine, math with pointers, even void ones, is ok.
+The alternative is more loc. I think we can bike shed on this but it's
+not really changing the substance of the change. I'm keen to try to be
+efficient where we can as we see issues at scale.
 
-I wonder why riscv was complaining about that.  It's not nice, but it is
-valid C.
+Thanks,
+Ian
 
-> 8250_port.c itself uses inb(), doesn't it get a warning as well? Or is
-> it getting compiled-out on riscv because of some Kconfig condition?
-
-Probably this.
-
-> I
-> see that the whole drivers/tty/serial is under HAS_IOMEM, and that's the
-> only condition I can see for 8250_port.c (except SERIAL_8250 of course),
-> is that it, or is SERIAL_8250 just not enabled in the riscv bot?
-> 
-> Actually the warning seems new, when looking at the Debian build log:
-> 
-> https://buildd.debian.org/status/fetch.php?pkg=linux&arch=riscv64&ver=5.7.10-1&stamp=1595803499&raw=0
-> 
-> and looking for serialio.c, I do not see a warning, and its code hasn't
-> changed. Is the build bot compiler just more talkative?
-
-It's more talkative at times, and maybe the riscv code changed too.
-
-Let's see if any of their developers care about it :)
-
-thanks,
-
-greg k-h
+> >
+> >>> +             attr->freq           = 0;
+> >>> +             attr->sample_freq    = 0;
+> >>> +             attr->sample_period  = 0;
+> >>
+> >> If we are not sampling, then maybe we should also put here:
+> >>
+> >>                 attr->write_backward = 0;
+> >>
+> >>> +     }
+> >>
+> >> Then, if we are sampling this evsel shouldn't the backward setting
+> >> match the leader? e.g.
+> >>
+> >>         if (attr->sample_freq)
+> >>                 attr->write_backward = leader->core.attr.write_backward;
+> >
+> > Perhaps that should be a follow up change? This change is trying to
+> > make the behavior match the previous behavior.
+>
+> Sure
+>
+> >
+> > Thanks,
+> > Ian
+> >
+> >>> +     if ((term_types & (1 << EVSEL__CONFIG_TERM_OVERWRITE)) == 0)
+> >>> +             attr->write_backward = 0;
+> >>>
+> >>>       /*
+> >>>        * We don't get a sample for slave events, we make them when delivering
+> >>>
+> >>
+>
