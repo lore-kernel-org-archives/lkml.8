@@ -2,244 +2,560 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE88DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7161EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92E4F208A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:05:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ge9UqJPS"
+	by mail.kernel.org (Postfix) with ESMTP id 52D32208A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:05:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbgHDOAt (ORCPT
+        id S1728555AbgHDOFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:00:49 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:7851 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728597AbgHDN7q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 09:59:46 -0400
-X-UUID: e4562c5bdbd14db0b319ca7c9679c739-20200804
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Yx4HCWr1f+i1DBTueM+N+J+0iXXSsNZuujWJU9F3g2I=;
-        b=ge9UqJPSopFQZzVgR9kN6Hav0R0yUQIBXRwS0kxx7IJrvCpuczjofnioqtWwFgUkK8CnFHozDx9TahgHihHd9HqLnCemErhBMz/+8ZVXHgW7pmfSsn0qhdZ2tpforQg59Gbv3IxarG4hItVv3inJNV92hBkvAVlY0kEeYIDtNOE=;
-X-UUID: e4562c5bdbd14db0b319ca7c9679c739-20200804
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <frankie.chang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1730393852; Tue, 04 Aug 2020 21:59:16 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 4 Aug 2020 21:59:13 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 4 Aug 2020 21:59:14 +0800
-From:   Frankie Chang <Frankie.Chang@mediatek.com>
-To:     Todd Kjos <tkjos@google.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Martijn Coenen <maco@android.com>,
-        =?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
-        Christian Brauner <christian@brauner.io>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
-        Jian-Min Liu <Jian-Min.Liu@mediatek.com>,
-        Frankie Chang <Frankie.Chang@mediatek.com>
-Subject: [PATCH v7 3/3] binder: add transaction latency tracer
-Date:   Tue, 4 Aug 2020 21:59:12 +0800
-Message-ID: <1596549552-5466-4-git-send-email-Frankie.Chang@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1596549552-5466-1-git-send-email-Frankie.Chang@mediatek.com>
-References: <1596509145.5207.21.camel@mtkswgap22>
- <1596549552-5466-1-git-send-email-Frankie.Chang@mediatek.com>
+        Tue, 4 Aug 2020 10:05:05 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60924 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728774AbgHDOAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 10:00:50 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 957443E8E38E39619461;
+        Tue,  4 Aug 2020 22:00:43 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 4 Aug 2020 22:00:32 +0800
+From:   Yang Shen <shenyang39@huawei.com>
+To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>
+CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+        <xuzaibo@huawei.com>, <wangzhou1@hisilicon.com>
+Subject: [PATCH v4 10/10] crypto: hisilicon/qm - fix the process of register algorithms to crypto
+Date:   Tue, 4 Aug 2020 21:58:30 +0800
+Message-ID: <1596549510-2373-11-git-send-email-shenyang39@huawei.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596549510-2373-1-git-send-email-shenyang39@huawei.com>
+References: <1596549510-2373-1-git-send-email-shenyang39@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 83725FC3C3ABA99B0B4DEC5FCE50DA796ADA8D99ED0FFF08440C52EE7C9A6F072000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogIkZyYW5raWUuQ2hhbmciIDxGcmFua2llLkNoYW5nQG1lZGlhdGVrLmNvbT4NCg0KUmVj
-b3JkIHN0YXJ0L2VuZCB0aW1lc3RhbXAgZm9yIGJpbmRlciB0cmFuc2FjdGlvbi4NCldoZW4gdHJh
-bnNhY3Rpb24gaXMgY29tcGxldGVkIG9yIHRyYW5zYWN0aW9uIGlzIGZyZWUsDQppdCB3b3VsZCBi
-ZSBjaGVja2VkIGlmIHRyYW5zYWN0aW9uIGxhdGVuY3kgb3ZlciB0aHJlc2hvbGQNCihkZWZhdWx0
-IDIgc2VjKSwgaWYgeWVzLCBwcmludGluZyByZWxhdGVkIGluZm9ybWF0aW9uIGZvciB0cmFjaW5n
-Lg0KDQovKiBJbXBsZW1lbnQgZGV0YWlscyAqLw0KLSBBZGQgbGF0ZW5jeSB0cmFjZXIgbW9kdWxl
-IHRvIG1vbml0b3IgdHJhbnNhY3Rpb24NCiAgYnkgYXR0YWNoaW5nIHRvIG5ldyB0cmFjZXBvaW50
-cyBpbnRyb2R1Y2VkDQogIHdoZW4gdHJhbnNhY3Rpb25zIGFyZSBhbGxvY2F0ZWQgYW5kIGZyZWVk
-Lg0KICBUaGUgdHJhY2VfYmluZGVyX3R4bl9sYXRlbmN5X2ZyZWUgd291bGQgbm90IGJlIGVuYWJs
-ZWQNCiAgYnkgZGVmYXVsdC4gTW9uaXRvcmluZyB3aGljaCB0cmFuc2FjdGlvbiBpcyB0b28gc2xv
-dyB0bw0KICBjYXVzZSBzb21lIG9mIGV4Y2VwdGlvbnMgaXMgaW1wb3J0YW50LiBTbyB3ZSBob29r
-IHRoZQ0KICB0cmFjZXBvaW50IHRvIGNhbGwgdGhlIG1vbml0b3IgZnVuY3Rpb24uDQoNCi0gU2lu
-Y2Ugc29tZSBvZiBtb2R1bGVzIHdvdWxkIHRyaWdnZXIgdGltZW91dCBORQ0KICBpZiB0aGVpciBi
-aW5kZXIgdHJhbnNhY3Rpb24gZG9uJ3QgZmluaXNoIGluIHRpbWUsDQogIHN1Y2ggYXMgYXVkaW8g
-dGltZW91dCAoNSBzZWMpLCBldmVuIEJUIGNvbW1hbmQNCiAgdGltZW91dCAoMiBzZWMpLCBldGMu
-DQogIFRoZXJlZm9yZSwgc2V0dGluZyB0aGUgdGltZW91dCB0aHJlc2hvbGQgYXMgZGVmYXVsdA0K
-ICAyIHNlY29uZHMgY291bGQgYmUgaGVscGZ1bCB0byBkZWJ1Zy4NCiAgQnV0IHRoaXMgdGltZW91
-dCB0aHJlc2hvbGQgaXMgY29uZmlndXJhYmxlLCB0byBsZXQNCiAgYWxsIHVzZXJzIGRldGVybWlu
-ZSB0aGUgbW9yZSBzdWl0YWJsZSB0aHJlc2hvbGQuDQoNCi0gVGhlIHJlYXNvbiB3aHkgcHJpbnRp
-bmcgdGhlIHJlbGF0ZWQgaW5mb3JtYXRpb24gdG8NCiAga2VybmVsIGluZm9ybWF0aW9uIGxvZyBi
-dXQgbm90IHRyYWNlIGJ1ZmZlciBpcyB0aGF0DQogIHNvbWUgYWJub3JtYWwgdHJhbnNhY3Rpb25z
-IG1heSBiZSBwZW5kaW5nIGZvciBhIGxvbmcNCiAgdGltZSBhZ28sIHRoZXkgY291bGQgbm90IGJl
-IHJlY29yZGVkIGR1ZSB0byBidWZmZXINCiAgbGltaXRlZC4NCg0KU2lnbmVkLW9mZi1ieTogRnJh
-bmtpZS5DaGFuZyA8RnJhbmtpZS5DaGFuZ0BtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL2Fu
-ZHJvaWQvS2NvbmZpZyAgICAgICAgICAgICAgICAgfCAgICA4ICsrKw0KIGRyaXZlcnMvYW5kcm9p
-ZC9NYWtlZmlsZSAgICAgICAgICAgICAgICB8ICAgIDEgKw0KIGRyaXZlcnMvYW5kcm9pZC9iaW5k
-ZXIuYyAgICAgICAgICAgICAgICB8ICAgIDIgKw0KIGRyaXZlcnMvYW5kcm9pZC9iaW5kZXJfaW50
-ZXJuYWwuaCAgICAgICB8ICAgMTMgKysrKw0KIGRyaXZlcnMvYW5kcm9pZC9iaW5kZXJfbGF0ZW5j
-eV90cmFjZXIuYyB8ICAxMTIgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KIGRyaXZl
-cnMvYW5kcm9pZC9iaW5kZXJfdHJhY2UuaCAgICAgICAgICB8ICAgMjYgKysrKysrLQ0KIDYgZmls
-ZXMgY2hhbmdlZCwgMTU5IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQogY3JlYXRlIG1v
-ZGUgMTAwNjQ0IGRyaXZlcnMvYW5kcm9pZC9iaW5kZXJfbGF0ZW5jeV90cmFjZXIuYw0KDQpkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9hbmRyb2lkL0tjb25maWcgYi9kcml2ZXJzL2FuZHJvaWQvS2NvbmZp
-Zw0KaW5kZXggNmZkZjJhYi4uOTFmZmYxZSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvYW5kcm9pZC9L
-Y29uZmlnDQorKysgYi9kcml2ZXJzL2FuZHJvaWQvS2NvbmZpZw0KQEAgLTU0LDYgKzU0LDE0IEBA
-IGNvbmZpZyBBTkRST0lEX0JJTkRFUl9JUENfU0VMRlRFU1QNCiAJICBleGhhdXN0aXZlbHkgd2l0
-aCBjb21iaW5hdGlvbnMgb2YgdmFyaW91cyBidWZmZXIgc2l6ZXMgYW5kDQogCSAgYWxpZ25tZW50
-cy4NCiANCitjb25maWcgQklOREVSX1RSQU5TQUNUSU9OX0xBVEVOQ1lfVFJBQ0tJTkcNCisJdHJp
-c3RhdGUgIkFuZHJvaWQgQmluZGVyIHRyYW5zYWN0aW9uIHRyYWNraW5nIg0KKwloZWxwDQorCSAg
-VXNlZCBmb3IgdHJhY2sgYWJub3JtYWwgYmluZGVyIHRyYW5zYWN0aW9uIHdoaWNoIGlzIG92ZXIg
-dGhyZXNob2xkLA0KKwkgIHdoZW4gdGhlIHRyYW5zYWN0aW9uIGlzIGRvbmUgb3IgYmUgZnJlZSwg
-dGhpcyB0cmFuc2FjdGlvbiB3b3VsZCBiZQ0KKwkgIGNoZWNrZWQgd2hldGhlciBpdCBleGVjdXRl
-ZCBvdmVydGltZS4NCisJICBJZiB5ZXMsIHByaW50aW5nIG91dCB0aGUgZGV0YWlsZWQgaW5mby4N
-CisNCiBlbmRpZiAjIGlmIEFORFJPSUQNCiANCiBlbmRtZW51DQpkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9hbmRyb2lkL01ha2VmaWxlIGIvZHJpdmVycy9hbmRyb2lkL01ha2VmaWxlDQppbmRleCBjOWQz
-ZDBjOS4uYzJmZmRiNiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvYW5kcm9pZC9NYWtlZmlsZQ0KKysr
-IGIvZHJpdmVycy9hbmRyb2lkL01ha2VmaWxlDQpAQCAtNCwzICs0LDQgQEAgY2NmbGFncy15ICs9
-IC1JJChzcmMpCQkJIyBuZWVkZWQgZm9yIHRyYWNlIGV2ZW50cw0KIG9iai0kKENPTkZJR19BTkRS
-T0lEX0JJTkRFUkZTKQkJKz0gYmluZGVyZnMubw0KIG9iai0kKENPTkZJR19BTkRST0lEX0JJTkRF
-Ul9JUEMpCSs9IGJpbmRlci5vIGJpbmRlcl9hbGxvYy5vDQogb2JqLSQoQ09ORklHX0FORFJPSURf
-QklOREVSX0lQQ19TRUxGVEVTVCkgKz0gYmluZGVyX2FsbG9jX3NlbGZ0ZXN0Lm8NCitvYmotJChD
-T05GSUdfQklOREVSX1RSQU5TQUNUSU9OX0xBVEVOQ1lfVFJBQ0tJTkcpCSs9IGJpbmRlcl9sYXRl
-bmN5X3RyYWNlci5vDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9hbmRyb2lkL2JpbmRlci5jIGIvZHJp
-dmVycy9hbmRyb2lkL2JpbmRlci5jDQppbmRleCAxYmZhZGMyLi4yMmY3Y2M2IDEwMDY0NA0KLS0t
-IGEvZHJpdmVycy9hbmRyb2lkL2JpbmRlci5jDQorKysgYi9kcml2ZXJzL2FuZHJvaWQvYmluZGVy
-LmMNCkBAIC0yNjcxLDYgKzI2NzEsNyBAQCBzdGF0aWMgdm9pZCBiaW5kZXJfdHJhbnNhY3Rpb24o
-c3RydWN0IGJpbmRlcl9wcm9jICpwcm9jLA0KIAkJcmV0dXJuX2Vycm9yX2xpbmUgPSBfX0xJTkVf
-XzsNCiAJCWdvdG8gZXJyX2FsbG9jX3RfZmFpbGVkOw0KIAl9DQorCXRyYWNlX2JpbmRlcl90eG5f
-bGF0ZW5jeV9hbGxvYyh0KTsNCiAJSU5JVF9MSVNUX0hFQUQoJnQtPmZkX2ZpeHVwcyk7DQogCWJp
-bmRlcl9zdGF0c19jcmVhdGVkKEJJTkRFUl9TVEFUX1RSQU5TQUNUSU9OKTsNCiAJc3Bpbl9sb2Nr
-X2luaXQoJnQtPmxvY2spOw0KQEAgLTUxNTksNiArNTE2MCw3IEBAIHN0YXRpYyB2b2lkIHByaW50
-X2JpbmRlcl90cmFuc2FjdGlvbl9pbG9ja2VkKHN0cnVjdCBzZXFfZmlsZSAqbSwNCiAJCSAgIHRv
-X3Byb2MgPyB0b19wcm9jLT5waWQgOiAwLA0KIAkJICAgdC0+dG9fdGhyZWFkID8gdC0+dG9fdGhy
-ZWFkLT5waWQgOiAwLA0KIAkJICAgdC0+Y29kZSwgdC0+ZmxhZ3MsIHQtPnByaW9yaXR5LCB0LT5u
-ZWVkX3JlcGx5KTsNCisJdHJhY2VfYmluZGVyX3R4bl9sYXRlbmN5X2luZm8obSwgdCk7DQogCXNw
-aW5fdW5sb2NrKCZ0LT5sb2NrKTsNCiANCiAJaWYgKHByb2MgIT0gdG9fcHJvYykgew0KZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvYW5kcm9pZC9iaW5kZXJfaW50ZXJuYWwuaCBiL2RyaXZlcnMvYW5kcm9p
-ZC9iaW5kZXJfaW50ZXJuYWwuaA0KaW5kZXggNWI2NTQxMy4uNTk2ZGIwMCAxMDA2NDQNCi0tLSBh
-L2RyaXZlcnMvYW5kcm9pZC9iaW5kZXJfaW50ZXJuYWwuaA0KKysrIGIvZHJpdmVycy9hbmRyb2lk
-L2JpbmRlcl9pbnRlcm5hbC5oDQpAQCAtMTMsNiArMTMsMTEgQEANCiAjaW5jbHVkZSA8bGludXgv
-dWlkZ2lkLmg+DQogI2luY2x1ZGUgImJpbmRlcl9hbGxvYy5oIg0KIA0KKyNpZiBJU19FTkFCTEVE
-KENPTkZJR19CSU5ERVJfVFJBTlNBQ1RJT05fTEFURU5DWV9UUkFDS0lORykNCisjaW5jbHVkZSA8
-bGludXgvcnRjLmg+DQorI2luY2x1ZGUgPGxpbnV4L3RpbWUuaD4NCisjZW5kaWYNCisNCiBzdHJ1
-Y3QgYmluZGVyX2NvbnRleHQgew0KIAlzdHJ1Y3QgYmluZGVyX25vZGUgKmJpbmRlcl9jb250ZXh0
-X21ncl9ub2RlOw0KIAlzdHJ1Y3QgbXV0ZXggY29udGV4dF9tZ3Jfbm9kZV9sb2NrOw0KQEAgLTUy
-MSw2ICs1MjYsMTQgQEAgc3RydWN0IGJpbmRlcl90cmFuc2FjdGlvbiB7DQogCSAqIGR1cmluZyB0
-aHJlYWQgdGVhcmRvd24NCiAJICovDQogCXNwaW5sb2NrX3QgbG9jazsNCisJLyoqDQorCSAqIEB0
-aW1lc3RhbXAgYW5kIEB0diBhcmUgdXNlZCB0byByZWNvcmQgdGhlIHRpbWUNCisJICogdGhhdCB0
-aGUgYmluZGVyIHRyYW5zYWN0aW9uIHN0YXJ0dXANCisJICovDQorI2lmIElTX0VOQUJMRUQoQ09O
-RklHX0JJTkRFUl9UUkFOU0FDVElPTl9MQVRFTkNZX1RSQUNLSU5HKQ0KKwlzdHJ1Y3QgdGltZXNw
-ZWM2NCB0aW1lc3RhbXA7DQorCXN0cnVjdCB0aW1ldmFsIHR2Ow0KKyNlbmRpZg0KIH07DQogDQog
-LyoqDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9hbmRyb2lkL2JpbmRlcl9sYXRlbmN5X3RyYWNlci5j
-IGIvZHJpdmVycy9hbmRyb2lkL2JpbmRlcl9sYXRlbmN5X3RyYWNlci5jDQpuZXcgZmlsZSBtb2Rl
-IDEwMDY0NA0KaW5kZXggMDAwMDAwMC4uNjFhZTc1Zg0KLS0tIC9kZXYvbnVsbA0KKysrIGIvZHJp
-dmVycy9hbmRyb2lkL2JpbmRlcl9sYXRlbmN5X3RyYWNlci5jDQpAQCAtMCwwICsxLDExMiBAQA0K
-Ky8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQorLyoNCisgKiBDb3B5cmlnaHQg
-KEMpIDIwMTkgTWVkaWFUZWsgSW5jLg0KKyAqLw0KKw0KKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUu
-aD4NCisjaW5jbHVkZSA8dWFwaS9saW51eC9hbmRyb2lkL2JpbmRlci5oPg0KKyNpbmNsdWRlICJi
-aW5kZXJfaW50ZXJuYWwuaCINCisjaW5jbHVkZSAiYmluZGVyX3RyYWNlLmgiDQorDQorLyoqDQor
-ICogVGhlIHJlYXNvbiBzZXR0aW5nIHRoZSBiaW5kZXJfdHhuX2xhdGVuY3lfdGhyZXNob2xkIHRv
-IDIgc2VjDQorICogaXMgdGhhdCBtb3N0IG9mIHRpbWVvdXQgYWJvcnQgaXMgZ3JlYXRlciBvciBl
-cXVhbCB0byAyIHNlYy4NCisgKiBNYWtpbmcgaXQgY29uZmlndXJhYmxlIHRvIGxldCBhbGwgdXNl
-cnMgZGV0ZXJtaW5lIHdoaWNoDQorICogdGhyZXNob2xkIGlzIG1vcmUgc3VpdGFibGUuDQorICov
-DQorc3RhdGljIHVpbnQzMl90IGJpbmRlcl90eG5fbGF0ZW5jeV90aHJlc2hvbGQgPSAyOw0KK21v
-ZHVsZV9wYXJhbV9uYW1lZCh0aHJlc2hvbGQsIGJpbmRlcl90eG5fbGF0ZW5jeV90aHJlc2hvbGQs
-DQorCQkJdWludCwgMDY0NCk7DQorDQorLyoNCisgKiBwcm9iZV9iaW5kZXJfdHhuX2xhdGVuY3lf
-ZnJlZSAtIE91dHB1dCBpbmZvIG9mIGEgZGVsYXkgdHJhbnNhY3Rpb24NCisgKiBAdDogICAgICAg
-ICAgcG9pbnRlciB0byB0aGUgb3Zlci10aW1lIHRyYW5zYWN0aW9uDQorICovDQordm9pZCBwcm9i
-ZV9iaW5kZXJfdHhuX2xhdGVuY3lfZnJlZSh2b2lkICppZ25vcmUsIHN0cnVjdCBiaW5kZXJfdHJh
-bnNhY3Rpb24gKnQsDQorCQkJCQlpbnQgZnJvbV9wcm9jLCBpbnQgZnJvbV90aHJlYWQsDQorCQkJ
-CQlpbnQgdG9fcHJvYywgaW50IHRvX3RocmVhZCkNCit7DQorCXN0cnVjdCBydGNfdGltZSB0bTsN
-CisJc3RydWN0IHRpbWVzcGVjNjQgKnN0YXJ0aW1lOw0KKwlzdHJ1Y3QgdGltZXNwZWM2NCBjdXIs
-IHN1Yl90Ow0KKw0KKwlrdGltZV9nZXRfdHM2NCgmY3VyKTsNCisJc3RhcnRpbWUgPSAmdC0+dGlt
-ZXN0YW1wOw0KKwlzdWJfdCA9IHRpbWVzcGVjNjRfc3ViKGN1ciwgKnN0YXJ0aW1lKTsNCisNCisJ
-LyogaWYgdHJhbnNhY3Rpb24gdGltZSBpcyBvdmVyIHRoYW4gYmluZGVyX3R4bl9sYXRlbmN5X3Ro
-cmVzaG9sZCAoc2VjKSwNCisJICogc2hvdyB0aW1lb3V0IHdhcm5pbmcgbG9nLg0KKwkgKi8NCisJ
-aWYgKHN1Yl90LnR2X3NlYyA8IGJpbmRlcl90eG5fbGF0ZW5jeV90aHJlc2hvbGQpDQorCQlyZXR1
-cm47DQorDQorCXJ0Y190aW1lX3RvX3RtKHQtPnR2LnR2X3NlYywgJnRtKTsNCisNCisJcHJfaW5m
-b19yYXRlbGltaXRlZCgiJWQ6IGZyb20gJWQ6JWQgdG8gJWQ6JWQiLA0KKwkJCXQtPmRlYnVnX2lk
-LCBmcm9tX3Byb2MsIGZyb21fdGhyZWFkLA0KKwkJCXRvX3Byb2MsIHRvX3RocmVhZCk7DQorDQor
-CXByX2luZm9fcmF0ZWxpbWl0ZWQoIiB0b3RhbCAldS4lMDNsZCBzIGNvZGUgJXUgc3RhcnQgJWx1
-LiUwM2xkIGFuZHJvaWQgJWQtJTAyZC0lMDJkICUwMmQ6JTAyZDolMDJkLiUwM2x1XG4iLA0KKwkJ
-CSh1bnNpZ25lZCBpbnQpc3ViX3QudHZfc2VjLA0KKwkJCShzdWJfdC50dl9uc2VjIC8gTlNFQ19Q
-RVJfTVNFQyksDQorCQkJdC0+Y29kZSwNCisJCQkodW5zaWduZWQgbG9uZylzdGFydGltZS0+dHZf
-c2VjLA0KKwkJCShzdGFydGltZS0+dHZfbnNlYyAvIE5TRUNfUEVSX01TRUMpLA0KKwkJCSh0bS50
-bV95ZWFyICsgMTkwMCksICh0bS50bV9tb24gKyAxKSwgdG0udG1fbWRheSwNCisJCQl0bS50bV9o
-b3VyLCB0bS50bV9taW4sIHRtLnRtX3NlYywNCisJCQkodW5zaWduZWQgbG9uZykodC0+dHYudHZf
-dXNlYyAvIFVTRUNfUEVSX01TRUMpKTsNCit9DQorDQorc3RhdGljIHZvaWQgcHJvYmVfYmluZGVy
-X3R4bl9sYXRlbmN5X2FsbG9jKHZvaWQgKmlnbm9yZSwNCisJCQkJCXN0cnVjdCBiaW5kZXJfdHJh
-bnNhY3Rpb24gKnQpDQorew0KKwlzdHJ1Y3QgdGltZXNwZWM2NCBub3c7DQorDQorCWt0aW1lX2dl
-dF90czY0KCZ0LT50aW1lc3RhbXApOw0KKwlrdGltZV9nZXRfcmVhbF90czY0KCZub3cpOw0KKwl0
-LT50di50dl9zZWMgPSBub3cudHZfc2VjOw0KKwl0LT50di50dl9zZWMgLT0gKHN5c190ei50el9t
-aW51dGVzd2VzdCAqIDYwKTsNCisJdC0+dHYudHZfdXNlYyA9IG5vdy50dl9uc2VjLzEwMDA7DQor
-fQ0KKw0KK3N0YXRpYyB2b2lkIHByb2JlX2JpbmRlcl90eG5fbGF0ZW5jeV9pbmZvKHZvaWQgKmln
-bm9yZSwgc3RydWN0IHNlcV9maWxlICptLA0KKwkJCQkJc3RydWN0IGJpbmRlcl90cmFuc2FjdGlv
-biAqdCkNCit7DQorCXN0cnVjdCBydGNfdGltZSB0bTsNCisNCisJcnRjX3RpbWVfdG9fdG0odC0+
-dHYudHZfc2VjLCAmdG0pOw0KKwlzZXFfcHJpbnRmKG0sDQorCQkgICAiIHN0YXJ0ICVsdS4lMDZs
-dSBhbmRyb2lkICVkLSUwMmQtJTAyZCAlMDJkOiUwMmQ6JTAyZC4lMDNsdSIsDQorCQkgICAodW5z
-aWduZWQgbG9uZyl0LT50aW1lc3RhbXAudHZfc2VjLA0KKwkJICAgKHQtPnRpbWVzdGFtcC50dl9u
-c2VjIC8gTlNFQ19QRVJfVVNFQyksDQorCQkgICAodG0udG1feWVhciArIDE5MDApLCAodG0udG1f
-bW9uICsgMSksIHRtLnRtX21kYXksDQorCQkgICB0bS50bV9ob3VyLCB0bS50bV9taW4sIHRtLnRt
-X3NlYywNCisJCSAgICh1bnNpZ25lZCBsb25nKSh0LT50di50dl91c2VjIC8gVVNFQ19QRVJfTVNF
-QykpOw0KK30NCisNCitzdGF0aWMgaW50IF9faW5pdCBpbml0X2JpbmRlcl9sYXRlbmN5X3RyYWNl
-cih2b2lkKQ0KK3sNCisJcmVnaXN0ZXJfdHJhY2VfYmluZGVyX3R4bl9sYXRlbmN5X2ZyZWUoDQor
-CQkJcHJvYmVfYmluZGVyX3R4bl9sYXRlbmN5X2ZyZWUsIE5VTEwpOw0KKwlyZWdpc3Rlcl90cmFj
-ZV9iaW5kZXJfdHhuX2xhdGVuY3lfYWxsb2MoDQorCQkJcHJvYmVfYmluZGVyX3R4bl9sYXRlbmN5
-X2FsbG9jLCBOVUxMKTsNCisJcmVnaXN0ZXJfdHJhY2VfYmluZGVyX3R4bl9sYXRlbmN5X2luZm8o
-DQorCQkJcHJvYmVfYmluZGVyX3R4bl9sYXRlbmN5X2luZm8sIE5VTEwpOw0KKw0KKwlyZXR1cm4g
-MDsNCit9DQorDQorc3RhdGljIHZvaWQgZXhpdF9iaW5kZXJfbGF0ZW5jeV90cmFjZXIodm9pZCkN
-Cit7DQorCXVucmVnaXN0ZXJfdHJhY2VfYmluZGVyX3R4bl9sYXRlbmN5X2ZyZWUoDQorCQkJcHJv
-YmVfYmluZGVyX3R4bl9sYXRlbmN5X2ZyZWUsIE5VTEwpOw0KKwl1bnJlZ2lzdGVyX3RyYWNlX2Jp
-bmRlcl90eG5fbGF0ZW5jeV9hbGxvYygNCisJCQlwcm9iZV9iaW5kZXJfdHhuX2xhdGVuY3lfYWxs
-b2MsIE5VTEwpOw0KKwl1bnJlZ2lzdGVyX3RyYWNlX2JpbmRlcl90eG5fbGF0ZW5jeV9pbmZvKA0K
-KwkJCXByb2JlX2JpbmRlcl90eG5fbGF0ZW5jeV9pbmZvLCBOVUxMKTsNCit9DQorDQorbW9kdWxl
-X2luaXQoaW5pdF9iaW5kZXJfbGF0ZW5jeV90cmFjZXIpOw0KK21vZHVsZV9leGl0KGV4aXRfYmlu
-ZGVyX2xhdGVuY3lfdHJhY2VyKTsNCisNCitNT0RVTEVfTElDRU5TRSgiR1BMIHYyIik7DQpkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9hbmRyb2lkL2JpbmRlcl90cmFjZS5oIGIvZHJpdmVycy9hbmRyb2lk
-L2JpbmRlcl90cmFjZS5oDQppbmRleCBlYjJjNTNjLi5iZTRmZTRjIDEwMDY0NA0KLS0tIGEvZHJp
-dmVycy9hbmRyb2lkL2JpbmRlcl90cmFjZS5oDQorKysgYi9kcml2ZXJzL2FuZHJvaWQvYmluZGVy
-X3RyYWNlLmgNCkBAIC05NSw2ICs5NSwxNyBAQA0KIAkJICBfX2VudHJ5LT50aHJlYWRfdG9kbykN
-CiApOw0KIA0KK0RFQ0xBUkVfVFJBQ0UoYmluZGVyX3R4bl9sYXRlbmN5X2FsbG9jLA0KKwlUUF9Q
-Uk9UTyhzdHJ1Y3QgYmluZGVyX3RyYW5zYWN0aW9uICp0KSwNCisJVFBfQVJHUyh0LCBlKQ0KKyk7
-DQorDQorREVDTEFSRV9UUkFDRShiaW5kZXJfdHhuX2xhdGVuY3lfaW5mbywNCisJVFBfUFJPVE8o
-c3RydWN0IHNlcV9maWxlICptLA0KKwkJIHN0cnVjdCBiaW5kZXJfdHJhbnNhY3Rpb24gKnQpLA0K
-KwlUUF9BUkdTKG0sIHQpDQorKTsNCisNCiBUUkFDRV9FVkVOVChiaW5kZXJfdHhuX2xhdGVuY3lf
-ZnJlZSwNCiAJVFBfUFJPVE8oc3RydWN0IGJpbmRlcl90cmFuc2FjdGlvbiAqdA0KIAkJIGludCBm
-cm9tX3Byb2MsIGludCBmcm9tX3RocmVhZA0KQEAgLTEwOCw2ICsxMTksOCBAQA0KIAkJX19maWVs
-ZChpbnQsIHRvX3RocmVhZCkNCiAJCV9fZmllbGQodW5zaWduZWQgaW50LCBjb2RlKQ0KIAkJX19m
-aWVsZCh1bnNpZ25lZCBpbnQsIGZsYWdzKQ0KKwkJX19maWVsZCh1bnNpZ25lZCBsb25nLCBzdGFy
-dF9zZWMpDQorCQlfX2ZpZWxkKHVuc2lnbmVkIGxvbmcsIHN0YXJ0X25zZWMpDQogCSksDQogCVRQ
-X2Zhc3RfYXNzaWduKA0KIAkJX19lbnRyeS0+ZGVidWdfaWQgPSB0LT5kZWJ1Z19pZDsNCkBAIC0x
-MTcsMTEgKzEzMCwxOCBAQA0KIAkJX19lbnRyeS0+dG9fdGhyZWFkID0gdG9fdGhyZWFkOw0KIAkJ
-X19lbnRyeS0+Y29kZSA9IHQtPmNvZGU7DQogCQlfX2VudHJ5LT5mbGFncyA9IHQtPmZsYWdzOw0K
-LQkpLA0KLQlUUF9wcmludGsoInRyYW5zYWN0aW9uPSVkIGZyb20gJWQ6JWQgdG8gJWQ6JWQgZmxh
-Z3M9MHgleCBjb2RlPTB4JXgiLA0KKyNpZiBJU19FTkFCTEVEKENPTkZJR19CSU5ERVJfVFJBTlNB
-Q1RJT05fTEFURU5DWV9UUkFDS0lORykNCisJCV9fZW50cnktPnN0YXJ0X3NlYyA9IHQtPnRpbWVz
-dGFtcC50dl9zZWM7DQorCQlfX2VudHJ5LT5zdGFydF9uc2VjID0gdC0+dGltZXN0YW1wLnR2X25z
-ZWMgLyBOU0VDX1BFUl9NU0VDOw0KKyNlbHNlDQorCQlfX2VudHJ5LT5zdGFydF9zZWMgPSAwOw0K
-KwkJX19lbnRyeS0+c3RhcnRfbnNlYyA9IDA7DQorI2VuZGlmDQorCSksDQorCVRQX3ByaW50aygi
-dHJhbnNhY3Rpb249JWQgZnJvbSAlZDolZCB0byAlZDolZCBmbGFncz0weCV4IGNvZGU9MHgleCBz
-dGFydCAlbHUuJTAzbGQiLA0KIAkJICBfX2VudHJ5LT5kZWJ1Z19pZCwgX19lbnRyeS0+ZnJvbV9w
-cm9jLCBfX2VudHJ5LT5mcm9tX3RocmVhZCwNCiAJCSAgX19lbnRyeS0+dG9fcHJvYywgX19lbnRy
-eS0+dG9fdGhyZWFkLCBfX2VudHJ5LT5jb2RlLA0KLQkJICBfX2VudHJ5LT5mbGFncykNCisJCSAg
-X19lbnRyeS0+ZmxhZ3MsIF9fZW50cnktPnN0YXJ0X3NlYywgX19lbnRyeS0+c3RhcnRfbnNlYykN
-CiApOw0KIA0KIFRSQUNFX0VWRU5UKGJpbmRlcl90cmFuc2FjdGlvbiwNCi0tIA0KMS43LjkuNQ0K
+When the devices are removed or not existing, the corresponding algorithms
+which are registered by 'hisi-zip' driver can't be used.
+
+Move 'hisi_zip_register_to_crypto' from 'hisi_zip_init' to
+'hisi_zip_probe'. The algorithms will be registered to crypto only when
+there is device bind on the driver. And when the devices are removed,
+the algorithms will be unregistered.
+
+In the previous process, the function 'xxx_register_to_crypto' need a lock
+and a static variable to judge if the registration is the first time.
+Move this action into the function 'hisi_qm_alg_register'. Each device
+will call 'hisi_qm_alg_register' to add itself to qm list in probe process
+and registering algs when the qm list is empty.
+
+Signed-off-by: Yang Shen <shenyang39@huawei.com>
+Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
+---
+ drivers/crypto/hisilicon/hpre/hpre_crypto.c | 36 ++++++--------------
+ drivers/crypto/hisilicon/hpre/hpre_main.c   | 20 +++++------
+ drivers/crypto/hisilicon/qm.c               | 52 +++++++++++++++++++++++++++++
+ drivers/crypto/hisilicon/qm.h               | 20 +++--------
+ drivers/crypto/hisilicon/sec2/sec_crypto.c  | 35 +++++++------------
+ drivers/crypto/hisilicon/sec2/sec_main.c    | 26 +++++++--------
+ drivers/crypto/hisilicon/zip/zip_crypto.c   |  2 +-
+ drivers/crypto/hisilicon/zip/zip_main.c     | 41 +++++++++++++----------
+ 8 files changed, 125 insertions(+), 107 deletions(-)
+
+diff --git a/drivers/crypto/hisilicon/hpre/hpre_crypto.c b/drivers/crypto/hisilicon/hpre/hpre_crypto.c
+index 7b5cb27..d685992 100644
+--- a/drivers/crypto/hisilicon/hpre/hpre_crypto.c
++++ b/drivers/crypto/hisilicon/hpre/hpre_crypto.c
+@@ -98,9 +98,6 @@ struct hpre_asym_request {
+ 	struct timespec64 req_time;
+ };
+ 
+-static DEFINE_MUTEX(hpre_alg_lock);
+-static unsigned int hpre_active_devs;
+-
+ static int hpre_alloc_req_id(struct hpre_ctx *ctx)
+ {
+ 	unsigned long flags;
+@@ -1160,36 +1157,25 @@ static struct kpp_alg dh = {
+ 
+ int hpre_algs_register(void)
+ {
+-	int ret = 0;
+-
+-	mutex_lock(&hpre_alg_lock);
+-	if (++hpre_active_devs == 1) {
+-		rsa.base.cra_flags = 0;
+-		ret = crypto_register_akcipher(&rsa);
+-		if (ret)
+-			goto unlock;
++	int ret;
++
++	rsa.base.cra_flags = 0;
++	ret = crypto_register_akcipher(&rsa);
++	if (ret)
++		return ret;
+ #ifdef CONFIG_CRYPTO_DH
+-		ret = crypto_register_kpp(&dh);
+-		if (ret) {
+-			crypto_unregister_akcipher(&rsa);
+-			goto unlock;
+-		}
++	ret = crypto_register_kpp(&dh);
++	if (ret)
++		crypto_unregister_akcipher(&rsa);
+ #endif
+-	}
+ 
+-unlock:
+-	mutex_unlock(&hpre_alg_lock);
+ 	return ret;
+ }
+ 
+ void hpre_algs_unregister(void)
+ {
+-	mutex_lock(&hpre_alg_lock);
+-	if (--hpre_active_devs == 0) {
+-		crypto_unregister_akcipher(&rsa);
++	crypto_unregister_akcipher(&rsa);
+ #ifdef CONFIG_CRYPTO_DH
+-		crypto_unregister_kpp(&dh);
++	crypto_unregister_kpp(&dh);
+ #endif
+-	}
+-	mutex_unlock(&hpre_alg_lock);
+ }
+diff --git a/drivers/crypto/hisilicon/hpre/hpre_main.c b/drivers/crypto/hisilicon/hpre/hpre_main.c
+index fc06770..45741d2 100644
+--- a/drivers/crypto/hisilicon/hpre/hpre_main.c
++++ b/drivers/crypto/hisilicon/hpre/hpre_main.c
+@@ -90,7 +90,6 @@
+ #define HPRE_SQE_MASK_OFFSET		8
+ #define HPRE_SQE_MASK_LEN		24
+ 
+-static struct hisi_qm_list hpre_devices;
+ static const char hpre_name[] = "hisi_hpre";
+ static struct dentry *hpre_debugfs_root;
+ static const struct pci_device_id hpre_dev_ids[] = {
+@@ -106,6 +105,11 @@ struct hpre_hw_error {
+ 	const char *msg;
+ };
+ 
++static struct hisi_qm_list hpre_devices = {
++	.register_to_crypto	= hpre_algs_register,
++	.unregister_from_crypto	= hpre_algs_unregister,
++};
++
+ static const char * const hpre_debug_file_name[] = {
+ 	[HPRE_CURRENT_QM]   = "current_qm",
+ 	[HPRE_CLEAR_ENABLE] = "rdclr_en",
+@@ -864,9 +868,7 @@ static int hpre_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (ret)
+ 		dev_warn(&pdev->dev, "init debugfs fail!\n");
+ 
+-	hisi_qm_add_to_list(qm, &hpre_devices);
+-
+-	ret = hpre_algs_register();
++	ret = hisi_qm_alg_register(qm, &hpre_devices);
+ 	if (ret < 0) {
+ 		pci_err(pdev, "fail to register algs to crypto!\n");
+ 		goto err_with_qm_start;
+@@ -875,16 +877,15 @@ static int hpre_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (qm->fun_type == QM_HW_PF && vfs_num) {
+ 		ret = hisi_qm_sriov_enable(pdev, vfs_num);
+ 		if (ret < 0)
+-			goto err_with_crypto_register;
++			goto err_with_alg_register;
+ 	}
+ 
+ 	return 0;
+ 
+-err_with_crypto_register:
+-	hpre_algs_unregister();
++err_with_alg_register:
++	hisi_qm_alg_unregister(qm, &hpre_devices);
+ 
+ err_with_qm_start:
+-	hisi_qm_del_from_list(qm, &hpre_devices);
+ 	hpre_debugfs_exit(qm);
+ 	hisi_qm_stop(qm, QM_NORMAL);
+ 
+@@ -904,8 +905,7 @@ static void hpre_remove(struct pci_dev *pdev)
+ 	int ret;
+ 
+ 	hisi_qm_wait_task_finish(qm, &hpre_devices);
+-	hpre_algs_unregister();
+-	hisi_qm_del_from_list(qm, &hpre_devices);
++	hisi_qm_alg_unregister(qm, &hpre_devices);
+ 	if (qm->fun_type == QM_HW_PF && qm->vfs_num) {
+ 		ret = hisi_qm_sriov_disable(pdev, qm->is_frozen);
+ 		if (ret) {
+diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
+index 9ee973a..0724474 100644
+--- a/drivers/crypto/hisilicon/qm.c
++++ b/drivers/crypto/hisilicon/qm.c
+@@ -3951,6 +3951,58 @@ static void hisi_qm_controller_reset(struct work_struct *rst_work)
+ }
+ 
+ /**
++ * hisi_qm_alg_register() - Register alg to crypto and add qm to qm_list.
++ * @qm: The qm needs add.
++ * @qm_list: The qm list.
++ *
++ * This function adds qm to qm list, and will register algorithm to
++ * crypto when the qm list is empty.
++ */
++int hisi_qm_alg_register(struct hisi_qm *qm, struct hisi_qm_list *qm_list)
++{
++	int flag = 0;
++	int ret = 0;
++
++	mutex_lock(&qm_list->lock);
++	if (list_empty(&qm_list->list))
++		flag = 1;
++	list_add_tail(&qm->list, &qm_list->list);
++	mutex_unlock(&qm_list->lock);
++
++	if (flag) {
++		ret = qm_list->register_to_crypto();
++		if (ret) {
++			mutex_lock(&qm_list->lock);
++			list_del(&qm->list);
++			mutex_unlock(&qm_list->lock);
++		}
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(hisi_qm_alg_register);
++
++/**
++ * hisi_qm_alg_unregister() - Unregister alg from crypto and delete qm from
++ * qm list.
++ * @qm: The qm needs delete.
++ * @qm_list: The qm list.
++ *
++ * This function deletes qm from qm list, and will unregister algorithm
++ * from crypto when the qm list is empty.
++ */
++void hisi_qm_alg_unregister(struct hisi_qm *qm, struct hisi_qm_list *qm_list)
++{
++	mutex_lock(&qm_list->lock);
++	list_del(&qm->list);
++	mutex_unlock(&qm_list->lock);
++
++	if (list_empty(&qm_list->list))
++		qm_list->unregister_from_crypto();
++}
++EXPORT_SYMBOL_GPL(hisi_qm_alg_unregister);
++
++/**
+  * hisi_qm_init() - Initialize configures about qm.
+  * @qm: The qm needing init.
+  *
+diff --git a/drivers/crypto/hisilicon/qm.h b/drivers/crypto/hisilicon/qm.h
+index 5c07cfe..6773f44 100644
+--- a/drivers/crypto/hisilicon/qm.h
++++ b/drivers/crypto/hisilicon/qm.h
+@@ -193,6 +193,8 @@ struct hisi_qm_err_ini {
+ struct hisi_qm_list {
+ 	struct mutex lock;
+ 	struct list_head list;
++	int (*register_to_crypto)(void);
++	void (*unregister_from_crypto)(void);
+ };
+ 
+ struct hisi_qm {
+@@ -337,22 +339,6 @@ static inline void hisi_qm_init_list(struct hisi_qm_list *qm_list)
+ 	mutex_init(&qm_list->lock);
+ }
+ 
+-static inline void hisi_qm_add_to_list(struct hisi_qm *qm,
+-				       struct hisi_qm_list *qm_list)
+-{
+-	mutex_lock(&qm_list->lock);
+-	list_add_tail(&qm->list, &qm_list->list);
+-	mutex_unlock(&qm_list->lock);
+-}
+-
+-static inline void hisi_qm_del_from_list(struct hisi_qm *qm,
+-					 struct hisi_qm_list *qm_list)
+-{
+-	mutex_lock(&qm_list->lock);
+-	list_del(&qm->list);
+-	mutex_unlock(&qm_list->lock);
+-}
+-
+ int hisi_qm_init(struct hisi_qm *qm);
+ void hisi_qm_uninit(struct hisi_qm *qm);
+ int hisi_qm_start(struct hisi_qm *qm);
+@@ -393,4 +379,6 @@ int hisi_qm_alloc_qps_node(struct hisi_qm_list *qm_list, int qp_num,
+ void hisi_qm_free_qps(struct hisi_qp **qps, int qp_num);
+ void hisi_qm_dev_shutdown(struct pci_dev *pdev);
+ void hisi_qm_wait_task_finish(struct hisi_qm *qm, struct hisi_qm_list *qm_list);
++int hisi_qm_alg_register(struct hisi_qm *qm, struct hisi_qm_list *qm_list);
++void hisi_qm_alg_unregister(struct hisi_qm *qm, struct hisi_qm_list *qm_list);
+ #endif
+diff --git a/drivers/crypto/hisilicon/sec2/sec_crypto.c b/drivers/crypto/hisilicon/sec2/sec_crypto.c
+index 497969a..543d9ee 100644
+--- a/drivers/crypto/hisilicon/sec2/sec_crypto.c
++++ b/drivers/crypto/hisilicon/sec2/sec_crypto.c
+@@ -66,8 +66,6 @@
+ #define SEC_SQE_AEAD_FLAG	3
+ #define SEC_SQE_DONE		0x1
+ 
+-static atomic_t sec_active_devs;
+-
+ /* Get an en/de-cipher queue cyclically to balance load over queues of TFM */
+ static inline int sec_alloc_queue_id(struct sec_ctx *ctx, struct sec_req *req)
+ {
+@@ -1633,33 +1631,24 @@ static struct aead_alg sec_aeads[] = {
+ 
+ int sec_register_to_crypto(void)
+ {
+-	int ret = 0;
++	int ret;
+ 
+ 	/* To avoid repeat register */
+-	if (atomic_add_return(1, &sec_active_devs) == 1) {
+-		ret = crypto_register_skciphers(sec_skciphers,
+-						ARRAY_SIZE(sec_skciphers));
+-		if (ret)
+-			return ret;
+-
+-		ret = crypto_register_aeads(sec_aeads, ARRAY_SIZE(sec_aeads));
+-		if (ret)
+-			goto reg_aead_fail;
+-	}
+-
+-	return ret;
+-
+-reg_aead_fail:
+-	crypto_unregister_skciphers(sec_skciphers, ARRAY_SIZE(sec_skciphers));
++	ret = crypto_register_skciphers(sec_skciphers,
++					ARRAY_SIZE(sec_skciphers));
++	if (ret)
++		return ret;
+ 
++	ret = crypto_register_aeads(sec_aeads, ARRAY_SIZE(sec_aeads));
++	if (ret)
++		crypto_unregister_skciphers(sec_skciphers,
++					    ARRAY_SIZE(sec_skciphers));
+ 	return ret;
+ }
+ 
+ void sec_unregister_from_crypto(void)
+ {
+-	if (atomic_sub_return(1, &sec_active_devs) == 0) {
+-		crypto_unregister_skciphers(sec_skciphers,
+-					    ARRAY_SIZE(sec_skciphers));
+-		crypto_unregister_aeads(sec_aeads, ARRAY_SIZE(sec_aeads));
+-	}
++	crypto_unregister_skciphers(sec_skciphers,
++				    ARRAY_SIZE(sec_skciphers));
++	crypto_unregister_aeads(sec_aeads, ARRAY_SIZE(sec_aeads));
+ }
+diff --git a/drivers/crypto/hisilicon/sec2/sec_main.c b/drivers/crypto/hisilicon/sec2/sec_main.c
+index 629344c..f912e57 100644
+--- a/drivers/crypto/hisilicon/sec2/sec_main.c
++++ b/drivers/crypto/hisilicon/sec2/sec_main.c
+@@ -99,7 +99,11 @@ struct sec_dfx_item {
+ 
+ static const char sec_name[] = "hisi_sec2";
+ static struct dentry *sec_debugfs_root;
+-static struct hisi_qm_list sec_devices;
++
++static struct hisi_qm_list sec_devices = {
++	.register_to_crypto	= sec_register_to_crypto,
++	.unregister_from_crypto	= sec_unregister_from_crypto,
++};
+ 
+ static const struct sec_hw_error sec_hw_errors[] = {
+ 	{.int_msk = BIT(0), .msg = "sec_axi_rresp_err_rint"},
+@@ -879,27 +883,24 @@ static int sec_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (ret)
+ 		pci_warn(pdev, "Failed to init debugfs!\n");
+ 
+-	hisi_qm_add_to_list(qm, &sec_devices);
+-
+-	ret = sec_register_to_crypto();
++	ret = hisi_qm_alg_register(qm, &sec_devices);
+ 	if (ret < 0) {
+ 		pr_err("Failed to register driver to crypto.\n");
+-		goto err_remove_from_list;
++		goto err_qm_stop;
+ 	}
+ 
+ 	if (qm->fun_type == QM_HW_PF && vfs_num) {
+ 		ret = hisi_qm_sriov_enable(pdev, vfs_num);
+ 		if (ret < 0)
+-			goto err_crypto_unregister;
++			goto err_alg_unregister;
+ 	}
+ 
+ 	return 0;
+ 
+-err_crypto_unregister:
+-	sec_unregister_from_crypto();
++err_alg_unregister:
++	hisi_qm_alg_unregister(qm, &sec_devices);
+ 
+-err_remove_from_list:
+-	hisi_qm_del_from_list(qm, &sec_devices);
++err_qm_stop:
+ 	sec_debugfs_exit(qm);
+ 	hisi_qm_stop(qm, QM_NORMAL);
+ 
+@@ -918,10 +919,7 @@ static void sec_remove(struct pci_dev *pdev)
+ 	struct hisi_qm *qm = &sec->qm;
+ 
+ 	hisi_qm_wait_task_finish(qm, &sec_devices);
+-	sec_unregister_from_crypto();
+-
+-	hisi_qm_del_from_list(qm, &sec_devices);
+-
++	hisi_qm_alg_unregister(qm, &sec_devices);
+ 	if (qm->fun_type == QM_HW_PF && qm->vfs_num)
+ 		hisi_qm_sriov_disable(pdev, qm->is_frozen);
+ 
+diff --git a/drivers/crypto/hisilicon/zip/zip_crypto.c b/drivers/crypto/hisilicon/zip/zip_crypto.c
+index 01fd6a7..aba1600 100644
+--- a/drivers/crypto/hisilicon/zip/zip_crypto.c
++++ b/drivers/crypto/hisilicon/zip/zip_crypto.c
+@@ -611,7 +611,7 @@ static struct acomp_alg hisi_zip_acomp_gzip = {
+ 
+ int hisi_zip_register_to_crypto(void)
+ {
+-	int ret = 0;
++	int ret;
+ 
+ 	ret = crypto_register_acomp(&hisi_zip_acomp_zlib);
+ 	if (ret) {
+diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
+index f13e520..7e86b0f 100644
+--- a/drivers/crypto/hisilicon/zip/zip_main.c
++++ b/drivers/crypto/hisilicon/zip/zip_main.c
+@@ -94,7 +94,6 @@
+ 
+ static const char hisi_zip_name[] = "hisi_zip";
+ static struct dentry *hzip_debugfs_root;
+-static struct hisi_qm_list zip_devices;
+ 
+ struct hisi_zip_hw_error {
+ 	u32 int_msk;
+@@ -106,6 +105,11 @@ struct zip_dfx_item {
+ 	u32 offset;
+ };
+ 
++static struct hisi_qm_list zip_devices = {
++	.register_to_crypto	= hisi_zip_register_to_crypto,
++	.unregister_from_crypto	= hisi_zip_unregister_from_crypto,
++};
++
+ static struct zip_dfx_item zip_dfx_files[] = {
+ 	{"send_cnt", offsetof(struct hisi_zip_dfx, send_cnt)},
+ 	{"recv_cnt", offsetof(struct hisi_zip_dfx, recv_cnt)},
+@@ -803,32 +807,42 @@ static int hisi_zip_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 
+ 	ret = hisi_qm_start(qm);
+ 	if (ret)
+-		goto err_qm_uninit;
++		goto err_dev_err_uninit;
+ 
+ 	ret = hisi_zip_debugfs_init(hisi_zip);
+ 	if (ret)
+ 		dev_err(&pdev->dev, "Failed to init debugfs (%d)!\n", ret);
+ 
+-	hisi_qm_add_to_list(qm, &zip_devices);
++	ret = hisi_qm_alg_register(qm, &zip_devices);
++	if (ret < 0) {
++		pci_err(pdev, "Failed to register driver to crypto.\n");
++		goto err_qm_stop;
++	}
+ 
+ 	if (qm->uacce) {
+ 		ret = uacce_register(qm->uacce);
+ 		if (ret)
+-			goto err_qm_uninit;
++			goto err_qm_alg_unregister;
+ 	}
+ 
+ 	if (qm->fun_type == QM_HW_PF && vfs_num > 0) {
+ 		ret = hisi_qm_sriov_enable(pdev, vfs_num);
+ 		if (ret < 0)
+-			goto err_remove_from_list;
++			goto err_qm_alg_unregister;
+ 	}
+ 
+ 	return 0;
+ 
+-err_remove_from_list:
+-	hisi_qm_del_from_list(qm, &zip_devices);
++err_qm_alg_unregister:
++	hisi_qm_alg_unregister(qm, &zip_devices);
++
++err_qm_stop:
+ 	hisi_zip_debugfs_exit(hisi_zip);
+ 	hisi_qm_stop(qm, QM_NORMAL);
++
++err_dev_err_uninit:
++	hisi_qm_dev_err_uninit(qm);
++
+ err_qm_uninit:
+ 	hisi_qm_uninit(qm);
+ 
+@@ -841,15 +855,15 @@ static void hisi_zip_remove(struct pci_dev *pdev)
+ 	struct hisi_qm *qm = &hisi_zip->qm;
+ 
+ 	hisi_qm_wait_task_finish(qm, &zip_devices);
++	hisi_qm_alg_unregister(qm, &zip_devices);
++
+ 	if (qm->fun_type == QM_HW_PF && qm->vfs_num)
+ 		hisi_qm_sriov_disable(pdev, qm->is_frozen);
+ 
+ 	hisi_zip_debugfs_exit(hisi_zip);
+ 	hisi_qm_stop(qm, QM_NORMAL);
+-
+ 	hisi_qm_dev_err_uninit(qm);
+ 	hisi_qm_uninit(qm);
+-	hisi_qm_del_from_list(qm, &zip_devices);
+ }
+ 
+ static const struct pci_error_handlers hisi_zip_err_handler = {
+@@ -896,16 +910,8 @@ static int __init hisi_zip_init(void)
+ 		goto err_pci;
+ 	}
+ 
+-	ret = hisi_zip_register_to_crypto();
+-	if (ret < 0) {
+-		pr_err("Failed to register driver to crypto.\n");
+-		goto err_crypto;
+-	}
+-
+ 	return 0;
+ 
+-err_crypto:
+-	pci_unregister_driver(&hisi_zip_pci_driver);
+ err_pci:
+ 	hisi_zip_unregister_debugfs();
+ 
+@@ -914,7 +920,6 @@ static int __init hisi_zip_init(void)
+ 
+ static void __exit hisi_zip_exit(void)
+ {
+-	hisi_zip_unregister_from_crypto();
+ 	pci_unregister_driver(&hisi_zip_pci_driver);
+ 	hisi_zip_unregister_debugfs();
+ }
+-- 
+2.7.4
 
