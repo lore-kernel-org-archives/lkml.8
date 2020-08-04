@@ -2,108 +2,155 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D01C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0844C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 843FA208A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91C0A2086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596542334;
-	bh=Ws9mTM9hLH76bfhcMTDlEjXSJGOZ+kmUZwL41/jkJvs=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=iQ9cIzKqzp4cyS1eequl2pp8xmn3NUp2Ihr3Sl7fBDN+ahFIB/VJaFZzMj7ZOurs6
-	 lbVh0lT9UzdYhCamDY0fa/vdH/s+pj2Hd3KMrPUey+ZKYGRKccSV6NL+zLMbWjxcX2
-	 NK13xeVpE3PnOGdLOBBDNi8Y3WZiTRoCgOUdEW3w=
+	s=default; t=1596542350;
+	bh=CkaRHwXCd4oRoqBa/zxZnS1iAu+aHPNNEYM3Zs6/bo4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lzGoFu9cnALQADwyrU1o+pteAi+91MLGCxjIDtZKDMd5g9I4SGVh2dMLwhWbn5QUb
+	 2FEfumxFO1A2jfEpx01C4egyrKsCzcgAeftbLzrlSNL0nd92bNnSiYbdCppR/G+nFL
+	 8mY8PNwO/XCzDliWQuJCleSnWdVreOcll6m20YTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730456AbgHDL6w (ORCPT
+        id S1730467AbgHDL67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 07:58:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40458 "EHLO mail.kernel.org"
+        Tue, 4 Aug 2020 07:58:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730356AbgHDL6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 07:58:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1730440AbgHDL63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 07:58:29 -0400
+Received: from pali.im (pali.im [31.31.79.79])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57DD82086A;
-        Tue,  4 Aug 2020 11:58:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2320D22B42;
+        Tue,  4 Aug 2020 11:58:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596542316;
-        bh=Ws9mTM9hLH76bfhcMTDlEjXSJGOZ+kmUZwL41/jkJvs=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=CIaDeLzet63ckJ2uON4/mDPUc7KGHW3WSk0gncq4u7vyzIJFuXgdOPeGJ6yI6QjEG
-         +9aYTIGzE+oZgnnyjaQnfOL0FYDAOkOaoI34zUJ9Q2CnvQhQQKy64F8lXa3jr4c5aQ
-         SM3w3WsDEieWhTkXewHYOTkyYcnMI+uc6FE9s4Ro=
-Date:   Tue, 4 Aug 2020 13:58:17 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        linux-kernel@vger.kernel.org, speakup@linux-speakup.org
-Subject: Re: [PATCH 2/2] speakup: only build serialio when ISA is enabled
-Message-ID: <20200804115817.GC203147@kroah.com>
-References: <20200804111332.dex7jobmabifdzw5@function>
- <20200804113413.GA181242@kroah.com>
- <20200804114951.ijs3hnezi4f64nll@function>
+        s=default; t=1596542289;
+        bh=CkaRHwXCd4oRoqBa/zxZnS1iAu+aHPNNEYM3Zs6/bo4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Xjzc7MuCNWnmAM6Jsk4ZBAGTWxLAPZ8xnAeaG7S9IbCgiF2U76bjhp61JgYGJG1YV
+         rHabv0E2JbAf2ZIS9T6obs7k3jtBBqo1RsfhYqPXLONHsfaR6TV9mOXtBoFD8HH+J0
+         nrsH0AmTInoA2YG+012K8M+F/EHDCxKxASubUBPw=
+Received: by pali.im (Postfix)
+        id 718E27FD; Tue,  4 Aug 2020 13:58:07 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Xogium <contact@xogium.me>, marek.behun@nic.cz
+Subject: [PATCH v2 4/5] PCI: aardvark: Implement driver 'remove' function and allow to build it as module
+Date:   Tue,  4 Aug 2020 13:57:46 +0200
+Message-Id: <20200804115747.7078-5-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200804115747.7078-1-pali@kernel.org>
+References: <20200804115747.7078-1-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200804114951.ijs3hnezi4f64nll@function>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 01:49:51PM +0200, Samuel Thibault wrote:
-> Greg KH, le mar. 04 ao�t 2020 13:34:13 +0200, a ecrit:
-> > On Tue, Aug 04, 2020 at 01:13:32PM +0200, Samuel Thibault wrote:
-> > > Drivers using serialio are already made available in Kconfig only under
-> > > the ISA condition.
-> > > 
-> > > This solves warnings in inb/outb macros on platform that do not have 
-> > > support for ISA.
-> > > 
-> > > Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
-> > > 
-> > > Index: linux-2.6/drivers/accessibility/speakup/Makefile
-> > > ===================================================================
-> > > --- linux-2.6.orig/drivers/accessibility/speakup/Makefile
-> > > +++ linux-2.6/drivers/accessibility/speakup/Makefile
-> > > @@ -16,6 +16,7 @@ obj-$(CONFIG_SPEAKUP_SYNTH_TXPRT) += spe
-> > >  obj-$(CONFIG_SPEAKUP_SYNTH_DUMMY) += speakup_dummy.o
-> > >  
-> > >  obj-$(CONFIG_SPEAKUP) += speakup.o
-> > > +obj-$(CONFIG_ISA) += serialio.o
-> > >  speakup-y := \
-> > >  	buffers.o \
-> > >  	devsynth.o \
-> > > @@ -25,7 +26,6 @@ speakup-y := \
-> > >  	keyhelp.o \
-> > >  	kobjects.o \
-> > >  	selection.o \
-> > > -	serialio.o \
-> > >  	spk_ttyio.o \
-> > >  	synth.o \
-> > >  	thread.o \
-> > 
-> > Oops, no, I get the following build errors with this patch:
-> > 
-> > ERROR: modpost: "spk_wait_for_xmitr" [drivers/accessibility/speakup/speakup.ko] undefined!
-> 
-> Yes, it depends on the first of the queue.
+Providing driver's 'remove' function allows kernel to bind and unbind devices
+from aardvark driver. It also allows to build aardvark driver as a module.
 
-Nope, different errors with both patches applied:
-	ERROR: modpost: "spk_serial_io_ops" [drivers/accessibility/speakup/speakup_keypc.ko] undefined!
-	ERROR: modpost: "spk_stop_serial_interrupt" [drivers/accessibility/speakup/speakup_keypc.ko] undefined!
-	ERROR: modpost: "spk_serial_io_ops" [drivers/accessibility/speakup/speakup_dtlk.ko] undefined!
-	ERROR: modpost: "spk_stop_serial_interrupt" [drivers/accessibility/speakup/speakup_dtlk.ko] undefined!
-	ERROR: modpost: "spk_serial_io_ops" [drivers/accessibility/speakup/speakup_decpc.ko] undefined!
-	ERROR: modpost: "spk_stop_serial_interrupt" [drivers/accessibility/speakup/speakup_decpc.ko] undefined!
-	ERROR: modpost: "spk_serial_io_ops" [drivers/accessibility/speakup/speakup_acntpc.ko] undefined!
-	ERROR: modpost: "spk_stop_serial_interrupt" [drivers/accessibility/speakup/speakup_acntpc.ko] undefined
+Compiling aardvark as a module simplifies development and debugging of
+this driver as it can be reloaded at runtime without the need to reboot
+to new kernel.
 
-:(
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Reviewed-by: Marek Behún <marek.behun@nic.cz>
+---
+ drivers/pci/controller/Kconfig        |  2 +-
+ drivers/pci/controller/pci-aardvark.c | 27 ++++++++++++++++++++++++---
+ 2 files changed, 25 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+index adddf21fa381..f9da5ff2c517 100644
+--- a/drivers/pci/controller/Kconfig
++++ b/drivers/pci/controller/Kconfig
+@@ -12,7 +12,7 @@ config PCI_MVEBU
+ 	select PCI_BRIDGE_EMUL
+ 
+ config PCI_AARDVARK
+-	bool "Aardvark PCIe controller"
++	tristate "Aardvark PCIe controller"
+ 	depends on (ARCH_MVEBU && ARM64) || COMPILE_TEST
+ 	depends on OF
+ 	depends on PCI_MSI_IRQ_DOMAIN
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index d5f58684d962..f5c1d231b0e2 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -14,6 +14,7 @@
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
+ #include <linux/kernel.h>
++#include <linux/module.h>
+ #include <linux/pci.h>
+ #include <linux/init.h>
+ #include <linux/phy/phy.h>
+@@ -1114,6 +1115,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ 
+ 	pcie = pci_host_bridge_priv(bridge);
+ 	pcie->pdev = pdev;
++	platform_set_drvdata(pdev, pcie);
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	pcie->base = devm_ioremap_resource(dev, res);
+@@ -1204,18 +1206,37 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static int advk_pcie_remove(struct platform_device *pdev)
++{
++	struct advk_pcie *pcie = platform_get_drvdata(pdev);
++	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
++
++	pci_lock_rescan_remove();
++	pci_stop_root_bus(bridge->bus);
++	pci_remove_root_bus(bridge->bus);
++	pci_unlock_rescan_remove();
++
++	advk_pcie_remove_msi_irq_domain(pcie);
++	advk_pcie_remove_irq_domain(pcie);
++
++	return 0;
++}
++
+ static const struct of_device_id advk_pcie_of_match_table[] = {
+ 	{ .compatible = "marvell,armada-3700-pcie", },
+ 	{},
+ };
++MODULE_DEVICE_TABLE(of, advk_pcie_of_match_table);
+ 
+ static struct platform_driver advk_pcie_driver = {
+ 	.driver = {
+ 		.name = "advk-pcie",
+ 		.of_match_table = advk_pcie_of_match_table,
+-		/* Driver unloading/unbinding currently not supported */
+-		.suppress_bind_attrs = true,
+ 	},
+ 	.probe = advk_pcie_probe,
++	.remove = advk_pcie_remove,
+ };
+-builtin_platform_driver(advk_pcie_driver);
++module_platform_driver(advk_pcie_driver);
++
++MODULE_DESCRIPTION("Aardvark PCIe controller");
++MODULE_LICENSE("GPL v2");
+-- 
+2.20.1
+
