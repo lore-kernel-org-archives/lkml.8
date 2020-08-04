@@ -2,770 +2,1593 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 418E9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E81EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF2D2073E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D48A2073E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:51:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgHDFu7 (ORCPT
+        id S1728587AbgHDFvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 01:50:59 -0400
-Received: from mga02.intel.com ([134.134.136.20]:34626 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726797AbgHDFu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 01:50:59 -0400
-IronPort-SDR: 7u/opiy6sLWutAD/anK8/EB5TIU98trCbTz5zHamTcHZbUwt83PfJwF8RevFfOeZswP/GjsBO7
- aG3VHNw3KJlw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="140173920"
-X-IronPort-AV: E=Sophos;i="5.75,433,1589266800"; 
-   d="gz'50?scan'50,208,50";a="140173920"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 22:41:24 -0700
-IronPort-SDR: DARpGiLP/NRIqVne6NHxzgrckUuMHLTwTgtXF0rCv4xUO9FpRNKoCwZXvqaNrQUI0OIztEuzmH
- 8keI6HLi0/vw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,433,1589266800"; 
-   d="gz'50?scan'50,208,50";a="315199010"
-Received: from lkp-server02.sh.intel.com (HELO 84ccfe698a63) ([10.239.97.151])
-  by fmsmga004.fm.intel.com with ESMTP; 03 Aug 2020 22:41:22 -0700
-Received: from kbuild by 84ccfe698a63 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k2phR-0000Rv-QM; Tue, 04 Aug 2020 05:41:21 +0000
-Date:   Tue, 4 Aug 2020 13:40:56 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: drivers/mailbox/pcc.c:575:3-8: No need to set .owner here. The core
- will do it.
-Message-ID: <202008041345.W4BUAFSo%lkp@intel.com>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="bg08WKrSYDhXBjb5"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 4 Aug 2020 01:51:52 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:38051 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728213AbgHDFvv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 01:51:51 -0400
+Received: from Internal Mail-Server by MTLPINE1 (envelope-from sramani@mellanox.com)
+        with SMTP; 4 Aug 2020 08:51:42 +0300
+Received: from farm-0002.mtbu.labs.mlnx (farm-0002.mtbu.labs.mlnx [10.15.2.32])
+        by mtbu-labmailer.labs.mlnx (8.14.4/8.14.4) with ESMTP id 0745pfmf021157;
+        Tue, 4 Aug 2020 01:51:41 -0400
+Received: (from sramani@localhost)
+        by farm-0002.mtbu.labs.mlnx (8.14.7/8.13.8/Submit) id 0745peWM019626;
+        Tue, 4 Aug 2020 01:51:40 -0400
+From:   Shravan Kumar Ramani <sramani@mellanox.com>
+To:     Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Vadim Pasternak <vadimp@mellanox.com>
+Cc:     Shravan Kumar Ramani <sramani@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] platform/mellanox: mlxbf-pmc: Add Mellanox BlueField PMC driver
+Date:   Tue,  4 Aug 2020 01:51:32 -0400
+Message-Id: <43e5f701519c8f7e374504effa9506c2849a1b47.1596520153.git.sramani@mellanox.com>
+X-Mailer: git-send-email 2.1.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The performance modules in BlueField are present in several hardware
+blocks and each block provides access to these stats either through
+counters that can be programmed to monitor supported events or
+through memory-mapped registers that hold the relevant information.
+The hardware blocks that include a performance module are:
+ * Tile (block containing 2 cores and a shared L2 cache)
+ * TRIO (PCIe root complex)
+ * MSS (Memory Sub-system containing the Memory Controller and L3 cache)
+ * GIC (Interrupt controller)
+ * SMMU (System Memory Management Unit)
+The mlx_pmc driver provides access to all of these performance modules
+through a hwmon sysfs interface.
 
---bg08WKrSYDhXBjb5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+v1 --> v2
+Remove unused headers.
+Add comma to arrays where last line is not a termination.
+Use kstrtoint in place of sscanf.
+UUID manipulation follows drivers/platform/mellanox/mlxbf-bootctl.c
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   09a0bd07764359650d41dbcb723f81321e523217
-commit: 00d9990acb23c4319a1dc961d4e29a9213923b67 mailbox: pcc: make pcc_mbox_driver static
-date:   9 weeks ago
-config: x86_64-randconfig-c002-20200803 (attached as .config)
-compiler: gcc-9 (Debian 9.3.0-14) 9.3.0
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-
-coccinelle warnings: (new ones prefixed by >>)
-
->> drivers/mailbox/pcc.c:575:3-8: No need to set .owner here. The core will do it.
-
-Please review and possibly fold the followup patch.
-
+Signed-off-by: Shravan Kumar Ramani <sramani@mellanox.com>
+Reviewed-by: Vadim Pasternak <vadimp@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/platform/mellanox/Kconfig     |   10 +
+ drivers/platform/mellanox/Makefile    |    1 +
+ drivers/platform/mellanox/mlxbf-pmc.c | 1478 +++++++++++++++++++++++++++++++++
+ 3 files changed, 1489 insertions(+)
+ create mode 100644 drivers/platform/mellanox/mlxbf-pmc.c
 
---bg08WKrSYDhXBjb5
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
+diff --git a/drivers/platform/mellanox/Kconfig b/drivers/platform/mellanox/Kconfig
+index 916b39d..edd17e1 100644
+--- a/drivers/platform/mellanox/Kconfig
++++ b/drivers/platform/mellanox/Kconfig
+@@ -56,4 +56,14 @@ config MLXBF_BOOTCTL
+ 	  to the userspace tools, to be used in conjunction with the eMMC
+ 	  device driver to do necessary initial swap of the boot partition.
+ 
++config MLXBF_PMC
++	tristate "Mellanox BlueField Performance Monitoring Counters driver"
++	depends on ARM64
++	depends on HWMON
++	depends on ACPI
++	help
++	  Say y here to enable PMC support. The PMC driver provides access
++	  to performance monitoring counters within various blocks in the
++	  Mellanox BlueField SoC via a sysfs interface.
++
+ endif # MELLANOX_PLATFORM
+diff --git a/drivers/platform/mellanox/Makefile b/drivers/platform/mellanox/Makefile
+index 499623c..000ddaa 100644
+--- a/drivers/platform/mellanox/Makefile
++++ b/drivers/platform/mellanox/Makefile
+@@ -4,6 +4,7 @@
+ # Mellanox Platform-Specific Drivers
+ #
+ obj-$(CONFIG_MLXBF_BOOTCTL)	+= mlxbf-bootctl.o
++obj-$(CONFIG_MLXBF_PMC)		+= mlxbf-pmc.o
+ obj-$(CONFIG_MLXBF_TMFIFO)	+= mlxbf-tmfifo.o
+ obj-$(CONFIG_MLXREG_HOTPLUG)	+= mlxreg-hotplug.o
+ obj-$(CONFIG_MLXREG_IO) += mlxreg-io.o
+diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
+new file mode 100644
+index 0000000..24e558c
+--- /dev/null
++++ b/drivers/platform/mellanox/mlxbf-pmc.c
+@@ -0,0 +1,1478 @@
++// SPDX-License-Identifier: GPL-2.0-only OR Linux-OpenIB
++/*
++ * Mellanox BlueField Performance Monitoring Counters driver
++ *
++ * This driver provides a sysfs interface for monitoring
++ * performance statistics in BlueField SoC.
++ *
++ * Copyright (C) 2020 Mellanox Technologies Ltd.
++ */
++
++#include <linux/acpi.h>
++#include <linux/arm-smccc.h>
++#include <linux/bitfield.h>
++#include <linux/errno.h>
++#include <linux/hwmon.h>
++#include <linux/platform_device.h>
++#include <linux/string.h>
++#include <uapi/linux/psci.h>
++
++#define MLXBF_PMC_WRITE_REG_32 0x82000009
++#define MLXBF_PMC_READ_REG_32 0x8200000A
++#define MLXBF_PMC_WRITE_REG_64 0x8200000B
++#define MLXBF_PMC_READ_REG_64 0x8200000C
++#define MLXBF_PMC_SIP_SVC_UID 0x8200ff01
++#define MLXBF_PMC_SIP_SVC_VERSION 0x8200ff03
++#define MLXBF_PMC_SVC_REQ_MAJOR 0
++#define MLXBF_PMC_SVC_MIN_MINOR 3
++
++#define MLXBF_PMC_SMCCC_ACCESS_VIOLATION -4
++
++#define MLXBF_PMC_EVENT_SET_BF1 0
++#define MLXBF_PMC_EVENT_SET_BF2 1
++#define MLXBF_PMC_EVENT_INFO_LEN 100
++
++#define MLXBF_PMC_MAX_BLOCKS 30
++#define MLXBF_PMC_MAX_ATTRS 30
++#define MLXBF_PMC_INFO_SZ 4
++#define MLXBF_PMC_REG_SIZE 8
++#define MLXBF_PMC_L3C_REG_SIZE 4
++
++#define MLXBF_PMC_TYPE_COUNTER 1
++#define MLXBF_PMC_TYPE_REGISTER 0
++
++#define MLXBF_PMC_PERFCTL 0
++#define MLXBF_PMC_PERFEVT 1
++#define MLXBF_PMC_PERFACC0 4
++
++#define MLXBF_PMC_PERFMON_CONFIG_WR_R_B BIT(0)
++#define MLXBF_PMC_PERFMON_CONFIG_STROBE BIT(1)
++#define MLXBF_PMC_PERFMON_CONFIG_ADDR GENMASK_ULL(4, 2)
++#define MLXBF_PMC_PERFMON_CONFIG_WDATA GENMASK_ULL(60, 5)
++
++#define MLXBF_PMC_PERFCTL_FM0 GENMASK_ULL(18, 16)
++#define MLXBF_PMC_PERFCTL_MS0 GENMASK_ULL(21, 20)
++#define MLXBF_PMC_PERFCTL_ACCM0 GENMASK_ULL(26, 24)
++#define MLXBF_PMC_PERFCTL_AD0 BIT(27)
++#define MLXBF_PMC_PERFCTL_ETRIG0 GENMASK_ULL(29, 28)
++#define MLXBF_PMC_PERFCTL_EB0 BIT(30)
++#define MLXBF_PMC_PERFCTL_EN0 BIT(31)
++
++#define MLXBF_PMC_PERFEVT_EVTSEL GENMASK_ULL(31, 24)
++
++#define MLXBF_PMC_L3C_PERF_CNT_CFG 0x0
++#define MLXBF_PMC_L3C_PERF_CNT_SEL 0x10
++#define MLXBF_PMC_L3C_PERF_CNT_SEL_1 0x14
++#define MLXBF_PMC_L3C_PERF_CNT_LOW 0x40
++#define MLXBF_PMC_L3C_PERF_CNT_HIGH 0x60
++
++#define MLXBF_PMC_L3C_PERF_CNT_CFG_EN BIT(0)
++#define MLXBF_PMC_L3C_PERF_CNT_CFG_RST BIT(1)
++#define MLXBF_PMC_L3C_PERF_CNT_SEL_CNT_0 GENMASK(5, 0)
++#define MLXBF_PMC_L3C_PERF_CNT_SEL_CNT_1 GENMASK(13, 8)
++#define MLXBF_PMC_L3C_PERF_CNT_SEL_CNT_2 GENMASK(21, 16)
++#define MLXBF_PMC_L3C_PERF_CNT_SEL_CNT_3 GENMASK(29, 24)
++
++#define MLXBF_PMC_L3C_PERF_CNT_SEL_1_CNT_4 GENMASK(5, 0)
++
++#define MLXBF_PMC_L3C_PERF_CNT_LOW_VAL GENMASK(31, 0)
++#define MLXBF_PMC_L3C_PERF_CNT_HIGH_VAL GENMASK(24, 0)
++
++/**
++ * Structure to hold attribute and block info for each sysfs entry
++ * @dev_attr: Device attribute struct
++ * @index: index to identify counter number within a block
++ * @nr: block number to which the sysfs belongs
++ */
++struct mlxbf_pmc_attribute {
++	struct device_attribute dev_attr;
++	int index;
++	int nr;
++};
++
++/**
++ * Structure to hold info for each HW block
++ *
++ * @mmio_base: The VA at which the PMC block is mapped
++ * @blk_size: Size of each mapped region
++ * @counters: Number of counters in the block
++ * @type: Type of counters in the block
++ * @attr_counter: Attributes for "counter" sysfs files
++ * @attr_event: Attributes for "event" sysfs files
++ * @attr_event_list: Attributes for "event_list" sysfs files
++ * @attr_enable: Attributes for "enable" sysfs files
++ * @block_attr: All attributes needed for the block
++ * @blcok_attr_grp: Attribute group for the block
++ */
++struct mlxbf_pmc_block_info {
++	void __iomem *mmio_base;
++	size_t blk_size;
++	size_t counters;
++	int type;
++	struct mlxbf_pmc_attribute *attr_counter;
++	struct mlxbf_pmc_attribute *attr_event;
++	struct mlxbf_pmc_attribute attr_event_list;
++	struct mlxbf_pmc_attribute attr_enable;
++	struct attribute *block_attr[MLXBF_PMC_MAX_ATTRS];
++	struct attribute_group block_attr_grp;
++};
++
++/**
++ * Structure to hold PMC context info
++ *
++ * @pdev: The kernel structure representing the device
++ * @total_blocks: Total number of blocks
++ * @tile_count: Number of tiles in the system
++ * @hwmon_dev: Hwmon device for bfperf
++ * @block_name: Block name
++ * @block:  Block info
++ * @groups:  Attribute groups from each block
++ * @sv_sreg_support: Whether SMCs are used to access performance registers
++ * @sreg_tbl_perf: Secure register access table number
++ * @event_set: Event set to use
++ */
++struct mlxbf_pmc_context {
++	struct platform_device *pdev;
++	uint32_t total_blocks;
++	uint32_t tile_count;
++	struct device *hwmon_dev;
++	const char *block_name[MLXBF_PMC_MAX_BLOCKS];
++	struct mlxbf_pmc_block_info block[MLXBF_PMC_MAX_BLOCKS];
++	const struct attribute_group *groups[MLXBF_PMC_MAX_BLOCKS];
++	bool svc_sreg_support;
++	uint32_t sreg_tbl_perf;
++	unsigned int event_set;
++};
++
++/**
++ * Structure to hold supported events for each block
++ * @evt_num: Event number used to program counters
++ * @evt_name: Name of the event
++ */
++struct mlxbf_pmc_events {
++	int evt_num;
++	char *evt_name;
++};
++
++static const struct mlxbf_pmc_events mlxbf_pmc_pcie_events[] = {
++	{ 0x0, "IN_P_PKT_CNT" },
++	{ 0x10, "IN_NP_PKT_CNT" },
++	{ 0x18, "IN_C_PKT_CNT" },
++	{ 0x20, "OUT_P_PKT_CNT" },
++	{ 0x28, "OUT_NP_PKT_CNT" },
++	{ 0x30, "OUT_C_PKT_CNT" },
++	{ 0x38, "IN_P_BYTE_CNT" },
++	{ 0x40, "IN_NP_BYTE_CNT" },
++	{ 0x48, "IN_C_BYTE_CNT" },
++	{ 0x50, "OUT_P_BYTE_CNT" },
++	{ 0x58, "OUT_NP_BYTE_CNT" },
++	{ 0x60, "OUT_C_BYTE_CNT" },
++};
++
++static const struct mlxbf_pmc_events mlxbf_pmc_smgen_events[] = {
++	{ 0x0, "AW_REQ" },
++	{ 0x1, "AW_BEATS" },
++	{ 0x2, "AW_TRANS" },
++	{ 0x3, "AW_RESP" },
++	{ 0x4, "AW_STL" },
++	{ 0x5, "AW_LAT" },
++	{ 0x6, "AW_REQ_TBU" },
++	{ 0x8, "AR_REQ" },
++	{ 0x9, "AR_BEATS" },
++	{ 0xa, "AR_TRANS" },
++	{ 0xb, "AR_STL" },
++	{ 0xc, "AR_LAT" },
++	{ 0xd, "AR_REQ_TBU" },
++	{ 0xe, "TBU_MISS" },
++	{ 0xf, "TX_DAT_AF" },
++	{ 0x10, "RX_DAT_AF" },
++	{ 0x11, "RETRYQ_CRED" },
++};
++
++static const struct mlxbf_pmc_events mlxbf_pmc_trio_events_1[] = {
++	{ 0xa0, "TPIO_DATA_BEAT" },
++	{ 0xa1, "TDMA_DATA_BEAT" },
++	{ 0xa2, "MAP_DATA_BEAT" },
++	{ 0xa3, "TXMSG_DATA_BEAT" },
++	{ 0xa4, "TPIO_DATA_PACKET" },
++	{ 0xa5, "TDMA_DATA_PACKET" },
++	{ 0xa6, "MAP_DATA_PACKET" },
++	{ 0xa7, "TXMSG_DATA_PACKET" },
++	{ 0xa8, "TDMA_RT_AF" },
++	{ 0xa9, "TDMA_PBUF_MAC_AF" },
++	{ 0xaa, "TRIO_MAP_WRQ_BUF_EMPTY" },
++	{ 0xab, "TRIO_MAP_CPL_BUF_EMPTY" },
++	{ 0xac, "TRIO_MAP_RDQ0_BUF_EMPTY" },
++	{ 0xad, "TRIO_MAP_RDQ1_BUF_EMPTY" },
++	{ 0xae, "TRIO_MAP_RDQ2_BUF_EMPTY" },
++	{ 0xaf, "TRIO_MAP_RDQ3_BUF_EMPTY" },
++	{ 0xb0, "TRIO_MAP_RDQ4_BUF_EMPTY" },
++	{ 0xb1, "TRIO_MAP_RDQ5_BUF_EMPTY" },
++	{ 0xb2, "TRIO_MAP_RDQ6_BUF_EMPTY" },
++	{ 0xb3, "TRIO_MAP_RDQ7_BUF_EMPTY" },
++};
++
++static const struct mlxbf_pmc_events mlxbf_pmc_trio_events_2[] = {
++	{ 0xa0, "TPIO_DATA_BEAT" },
++	{ 0xa1, "TDMA_DATA_BEAT" },
++	{ 0xa2, "MAP_DATA_BEAT" },
++	{ 0xa3, "TXMSG_DATA_BEAT" },
++	{ 0xa4, "TPIO_DATA_PACKET" },
++	{ 0xa5, "TDMA_DATA_PACKET" },
++	{ 0xa6, "MAP_DATA_PACKET" },
++	{ 0xa7, "TXMSG_DATA_PACKET" },
++	{ 0xa8, "TDMA_RT_AF" },
++	{ 0xa9, "TDMA_PBUF_MAC_AF" },
++	{ 0xaa, "TRIO_MAP_WRQ_BUF_EMPTY" },
++	{ 0xab, "TRIO_MAP_CPL_BUF_EMPTY" },
++	{ 0xac, "TRIO_MAP_RDQ0_BUF_EMPTY" },
++	{ 0xad, "TRIO_MAP_RDQ1_BUF_EMPTY" },
++	{ 0xae, "TRIO_MAP_RDQ2_BUF_EMPTY" },
++	{ 0xaf, "TRIO_MAP_RDQ3_BUF_EMPTY" },
++	{ 0xb0, "TRIO_MAP_RDQ4_BUF_EMPTY" },
++	{ 0xb1, "TRIO_MAP_RDQ5_BUF_EMPTY" },
++	{ 0xb2, "TRIO_MAP_RDQ6_BUF_EMPTY" },
++	{ 0xb3, "TRIO_MAP_RDQ7_BUF_EMPTY" },
++	{ 0xb4, "TRIO_RING_TX_FLIT_CH0" },
++	{ 0xb5, "TRIO_RING_TX_FLIT_CH1" },
++	{ 0xb6, "TRIO_RING_TX_FLIT_CH2" },
++	{ 0xb7, "TRIO_RING_TX_FLIT_CH3" },
++	{ 0xb8, "TRIO_RING_TX_FLIT_CH4" },
++	{ 0xb9, "TRIO_RING_RX_FLIT_CH0" },
++	{ 0xba, "TRIO_RING_RX_FLIT_CH1" },
++	{ 0xbb, "TRIO_RING_RX_FLIT_CH2" },
++	{ 0xbc, "TRIO_RING_RX_FLIT_CH3" },
++};
++
++static const struct mlxbf_pmc_events mlxbf_pmc_ecc_events[] = {
++	{ 0x100, "ECC_SINGLE_ERROR_CNT" },
++	{ 0x104, "ECC_DOUBLE_ERROR_CNT" },
++	{ 0x114, "SERR_INJ" },
++	{ 0x118, "DERR_INJ" },
++	{ 0x124, "ECC_SINGLE_ERROR_0" },
++	{ 0x164, "ECC_DOUBLE_ERROR_0" },
++	{ 0x340, "DRAM_ECC_COUNT" },
++	{ 0x344, "DRAM_ECC_INJECT" },
++	{ 0x348, "DRAM_ECC_ERROR" },
++};
++
++static const struct mlxbf_pmc_events mlxbf_pmc_mss_events[] = {
++	{ 0xc0, "RXREQ_MSS" },
++	{ 0xc1, "RXDAT_MSS" },
++	{ 0xc2, "TXRSP_MSS" },
++	{ 0xc3, "TXDAT_MSS" },
++};
++
++static const struct mlxbf_pmc_events mlxbf_pmc_hnf_events[] = {
++	{ 0x45, "HNF_REQUESTS" },
++	{ 0x46, "HNF_REJECTS" },
++	{ 0x47, "ALL_BUSY" },
++	{ 0x48, "MAF_BUSY" },
++	{ 0x49, "MAF_REQUESTS" },
++	{ 0x4a, "RNF_REQUESTS" },
++	{ 0x4b, "REQUEST_TYPE" },
++	{ 0x4c, "MEMORY_READS" },
++	{ 0x4d, "MEMORY_WRITES" },
++	{ 0x4e, "VICTIM_WRITE" },
++	{ 0x4f, "POC_FULL" },
++	{ 0x50, "POC_FAIL" },
++	{ 0x51, "POC_SUCCESS" },
++	{ 0x52, "POC_WRITES" },
++	{ 0x53, "POC_READS" },
++	{ 0x54, "FORWARD" },
++	{ 0x55, "RXREQ_HNF" },
++	{ 0x56, "RXRSP_HNF" },
++	{ 0x57, "RXDAT_HNF" },
++	{ 0x58, "TXREQ_HNF" },
++	{ 0x59, "TXRSP_HNF" },
++	{ 0x5a, "TXDAT_HNF" },
++	{ 0x5b, "TXSNP_HNF" },
++	{ 0x5c, "INDEX_MATCH" },
++	{ 0x5d, "A72_ACCESS" },
++	{ 0x5e, "IO_ACCESS" },
++	{ 0x5f, "TSO_WRITE" },
++	{ 0x60, "TSO_CONFLICT" },
++	{ 0x61, "DIR_HIT" },
++	{ 0x62, "HNF_ACCEPTS" },
++	{ 0x63, "REQ_BUF_EMPTY" },
++	{ 0x64, "REQ_BUF_IDLE_MAF" },
++	{ 0x65, "TSO_NOARB" },
++	{ 0x66, "TSO_NOARB_CYCLES" },
++	{ 0x67, "MSS_NO_CREDIT" },
++	{ 0x68, "TXDAT_NO_LCRD" },
++	{ 0x69, "TXSNP_NO_LCRD" },
++	{ 0x6a, "TXRSP_NO_LCRD" },
++	{ 0x6b, "TXREQ_NO_LCRD" },
++	{ 0x6c, "TSO_CL_MATCH" },
++	{ 0x6d, "MEMORY_READS_BYPASS" },
++	{ 0x6e, "TSO_NOARB_TIMEOUT" },
++	{ 0x6f, "ALLOCATE" },
++	{ 0x70, "VICTIM" },
++	{ 0x71, "A72_WRITE" },
++	{ 0x72, "A72_READ" },
++	{ 0x73, "IO_WRITE" },
++	{ 0x74, "IO_READ" },
++	{ 0x75, "TSO_REJECT" },
++	{ 0x80, "TXREQ_RN" },
++	{ 0x81, "TXRSP_RN" },
++	{ 0x82, "TXDAT_RN" },
++	{ 0x83, "RXSNP_RN" },
++	{ 0x84, "RXRSP_RN" },
++	{ 0x85, "RXDAT_RN" },
++};
++
++static const struct mlxbf_pmc_events mlxbf_pmc_hnfnet_events[] = {
++	{ 0x12, "CDN_REQ" },
++	{ 0x13, "DDN_REQ" },
++	{ 0x14, "NDN_REQ" },
++	{ 0x15, "CDN_DIAG_N_OUT_OF_CRED" },
++	{ 0x16, "CDN_DIAG_S_OUT_OF_CRED" },
++	{ 0x17, "CDN_DIAG_E_OUT_OF_CRED" },
++	{ 0x18, "CDN_DIAG_W_OUT_OF_CRED" },
++	{ 0x19, "CDN_DIAG_C_OUT_OF_CRED" },
++	{ 0x1a, "CDN_DIAG_N_EGRESS" },
++	{ 0x1b, "CDN_DIAG_S_EGRESS" },
++	{ 0x1c, "CDN_DIAG_E_EGRESS" },
++	{ 0x1d, "CDN_DIAG_W_EGRESS" },
++	{ 0x1e, "CDN_DIAG_C_EGRESS" },
++	{ 0x1f, "CDN_DIAG_N_INGRESS" },
++	{ 0x20, "CDN_DIAG_S_INGRESS" },
++	{ 0x21, "CDN_DIAG_E_INGRESS" },
++	{ 0x22, "CDN_DIAG_W_INGRESS" },
++	{ 0x23, "CDN_DIAG_C_INGRESS" },
++	{ 0x24, "CDN_DIAG_CORE_SENT" },
++	{ 0x25, "DDN_DIAG_N_OUT_OF_CRED" },
++	{ 0x26, "DDN_DIAG_S_OUT_OF_CRED" },
++	{ 0x27, "DDN_DIAG_E_OUT_OF_CRED" },
++	{ 0x28, "DDN_DIAG_W_OUT_OF_CRED" },
++	{ 0x29, "DDN_DIAG_C_OUT_OF_CRED" },
++	{ 0x2a, "DDN_DIAG_N_EGRESS" },
++	{ 0x2b, "DDN_DIAG_S_EGRESS" },
++	{ 0x2c, "DDN_DIAG_E_EGRESS" },
++	{ 0x2d, "DDN_DIAG_W_EGRESS" },
++	{ 0x2e, "DDN_DIAG_C_EGRESS" },
++	{ 0x2f, "DDN_DIAG_N_INGRESS" },
++	{ 0x30, "DDN_DIAG_S_INGRESS" },
++	{ 0x31, "DDN_DIAG_E_INGRESS" },
++	{ 0x32, "DDN_DIAG_W_INGRESS" },
++	{ 0x33, "DDN_DIAG_C_INGRESS" },
++	{ 0x34, "DDN_DIAG_CORE_SENT" },
++	{ 0x35, "NDN_DIAG_S_OUT_OF_CRED" },
++	{ 0x36, "NDN_DIAG_S_OUT_OF_CRED" },
++	{ 0x37, "NDN_DIAG_E_OUT_OF_CRED" },
++	{ 0x38, "NDN_DIAG_W_OUT_OF_CRED" },
++	{ 0x39, "NDN_DIAG_C_OUT_OF_CRED" },
++	{ 0x3a, "NDN_DIAG_N_EGRESS" },
++	{ 0x3b, "NDN_DIAG_S_EGRESS" },
++	{ 0x3c, "NDN_DIAG_E_EGRESS" },
++	{ 0x3d, "NDN_DIAG_W_EGRESS" },
++	{ 0x3e, "NDN_DIAG_C_EGRESS" },
++	{ 0x3f, "NDN_DIAG_N_INGRESS" },
++	{ 0x40, "NDN_DIAG_S_INGRESS" },
++	{ 0x41, "NDN_DIAG_E_INGRESS" },
++	{ 0x42, "NDN_DIAG_W_INGRESS" },
++	{ 0x43, "NDN_DIAG_C_INGRESS" },
++	{ 0x44, "NDN_DIAG_CORE_SENT" },
++};
++
++static const struct mlxbf_pmc_events mlxbf_pmc_l3c_events[] = {
++	{ 0x00, "DISABLE" },
++	{ 0x01, "CYCLES" },
++	{ 0x02, "TOTAL_RD_REQ_IN" },
++	{ 0x03, "TOTAL_WR_REQ_IN" },
++	{ 0x04, "TOTAL_WR_DBID_ACK" },
++	{ 0x05, "TOTAL_WR_DATA_IN" },
++	{ 0x06, "TOTAL_WR_COMP" },
++	{ 0x07, "TOTAL_RD_DATA_OUT" },
++	{ 0x08, "TOTAL_CDN_REQ_IN_BANK0" },
++	{ 0x09, "TOTAL_CDN_REQ_IN_BANK1" },
++	{ 0x0a, "TOTAL_DDN_REQ_IN_BANK0" },
++	{ 0x0b, "TOTAL_DDN_REQ_IN_BANK1" },
++	{ 0x0c, "TOTAL_EMEM_RD_RES_IN_BANK0" },
++	{ 0x0d, "TOTAL_EMEM_RD_RES_IN_BANK1" },
++	{ 0x0e, "TOTAL_CACHE_RD_RES_IN_BANK0" },
++	{ 0x0f, "TOTAL_CACHE_RD_RES_IN_BANK1" },
++	{ 0x10, "TOTAL_EMEM_RD_REQ_BANK0" },
++	{ 0x11, "TOTAL_EMEM_RD_REQ_BANK1" },
++	{ 0x12, "TOTAL_EMEM_WR_REQ_BANK0" },
++	{ 0x13, "TOTAL_EMEM_WR_REQ_BANK1" },
++	{ 0x14, "TOTAL_RD_REQ_OUT" },
++	{ 0x15, "TOTAL_WR_REQ_OUT" },
++	{ 0x16, "TOTAL_RD_RES_IN" },
++	{ 0x17, "HITS_BANK0" },
++	{ 0x18, "HITS_BANK1" },
++	{ 0x19, "MISSES_BANK0" },
++	{ 0x1a, "MISSES_BANK1" },
++	{ 0x1b, "ALLOCATIONS_BANK0" },
++	{ 0x1c, "ALLOCATIONS_BANK1" },
++	{ 0x1d, "EVICTIONS_BANK0" },
++	{ 0x1e, "EVICTIONS_BANK1" },
++	{ 0x1f, "DBID_REJECT" },
++	{ 0x20, "WRDB_REJECT_BANK0" },
++	{ 0x21, "WRDB_REJECT_BANK1" },
++	{ 0x22, "CMDQ_REJECT_BANK0" },
++	{ 0x23, "CMDQ_REJECT_BANK1" },
++	{ 0x24, "COB_REJECT_BANK0" },
++	{ 0x25, "COB_REJECT_BANK1" },
++	{ 0x26, "TRB_REJECT_BANK0" },
++	{ 0x27, "TRB_REJECT_BANK1" },
++	{ 0x28, "TAG_REJECT_BANK0" },
++	{ 0x29, "TAG_REJECT_BANK1" },
++	{ 0x2a, "ANY_REJECT_BANK0" },
++	{ 0x2b, "ANY_REJECT_BANK1" },
++};
++
++static struct mlxbf_pmc_context *pmc;
++
++/* UUID used to probe ATF service. */
++static const char *mlxbf_pmc_svc_uuid_str = "89c036b4-e7d7-11e6-8797-001aca00bfc4";
++
++/* Calls an SMC to access a performance register */
++static int mlxbf_pmc_secure_read(void __iomem *addr, uint32_t command,
++				 uint64_t *result)
++{
++	struct arm_smccc_res res;
++	int status, err = 0;
++
++	arm_smccc_smc(command, pmc->sreg_tbl_perf, (uintptr_t)addr, 0, 0, 0, 0,
++		      0, &res);
++
++	status = res.a0;
++
++	switch (status) {
++	case PSCI_RET_NOT_SUPPORTED:
++		err = -EINVAL;
++		break;
++	case MLXBF_PMC_SMCCC_ACCESS_VIOLATION:
++		err = -EACCES;
++		break;
++	default:
++		*result = res.a1;
++		break;
++	}
++
++	return err;
++}
++
++/* Read from a performance counter */
++static int mlxbf_pmc_read(void __iomem *addr, uint32_t command,
++			  uint64_t *result)
++{
++	if (pmc->svc_sreg_support)
++		return mlxbf_pmc_secure_read(addr, command, result);
++
++	if (command == MLXBF_PMC_READ_REG_32)
++		*result = readl(addr);
++	else
++		*result = readq(addr);
++
++	return 0;
++}
++
++/* Convenience function for 32-bit reads */
++static int mlxbf_pmc_readl(void __iomem *addr, uint32_t *result)
++{
++	uint64_t read_out;
++	int status;
++
++	status = mlxbf_pmc_read(addr, MLXBF_PMC_READ_REG_32, &read_out);
++	if (status)
++		return status;
++	*result = (uint32_t)read_out;
++
++	return 0;
++}
++
++/* Calls an SMC to access a performance register */
++static int mlxbf_pmc_secure_write(void __iomem *addr, uint32_t command,
++				  uint64_t value)
++{
++	struct arm_smccc_res res;
++	int status, err = 0;
++
++	arm_smccc_smc(command, pmc->sreg_tbl_perf, value, (uintptr_t)addr, 0, 0,
++		      0, 0, &res);
++
++	status = res.a0;
++
++	switch (status) {
++	case PSCI_RET_NOT_SUPPORTED:
++		err = -EINVAL;
++		break;
++	case MLXBF_PMC_SMCCC_ACCESS_VIOLATION:
++		err = -EACCES;
++		break;
++	}
++
++	return err;
++}
++
++/* Write to a performance counter */
++static int mlxbf_pmc_write(void __iomem *addr, int command, uint64_t value)
++{
++	if (pmc->svc_sreg_support)
++		return mlxbf_pmc_secure_write(addr, command, value);
++
++	if (command == MLXBF_PMC_WRITE_REG_32)
++		writel(value, addr);
++	else
++		writeq(value, addr);
++
++	return 0;
++}
++
++/* Check if the register offset is within the mapped region for the block */
++static bool mlxbf_pmc_valid_range(int blk_num, uint32_t offset)
++{
++	if ((offset >= 0) && !(offset % MLXBF_PMC_REG_SIZE) &&
++	    (offset + MLXBF_PMC_REG_SIZE <= pmc->block[blk_num].blk_size))
++		return true; /* inside the mapped PMC space */
++
++	return false;
++}
++
++/* Get the event list corresponding to a certain block */
++static const struct mlxbf_pmc_events *mlxbf_pmc_event_list(const char *blk,
++							   int *size)
++{
++	const struct mlxbf_pmc_events *events;
++
++	if (strstr(blk, "tilenet")) {
++		events = mlxbf_pmc_hnfnet_events;
++		*size = ARRAY_SIZE(mlxbf_pmc_hnfnet_events);
++	} else if (strstr(blk, "tile")) {
++		events = mlxbf_pmc_hnf_events;
++		*size = ARRAY_SIZE(mlxbf_pmc_hnf_events);
++	} else if (strstr(blk, "triogen")) {
++		events = mlxbf_pmc_smgen_events;
++		*size = ARRAY_SIZE(mlxbf_pmc_smgen_events);
++	} else if (strstr(blk, "trio")) {
++		switch (pmc->event_set) {
++		case MLXBF_PMC_EVENT_SET_BF1:
++			events = mlxbf_pmc_trio_events_1;
++			*size = ARRAY_SIZE(mlxbf_pmc_trio_events_1);
++			break;
++		case MLXBF_PMC_EVENT_SET_BF2:
++			events = mlxbf_pmc_trio_events_2;
++			*size = ARRAY_SIZE(mlxbf_pmc_trio_events_2);
++			break;
++		default:
++			events = NULL;
++			*size = 0;
++			break;
++		}
++	} else if (strstr(blk, "mss")) {
++		events = mlxbf_pmc_mss_events;
++		*size = ARRAY_SIZE(mlxbf_pmc_mss_events);
++	} else if (strstr(blk, "ecc")) {
++		events = mlxbf_pmc_ecc_events;
++		*size = ARRAY_SIZE(mlxbf_pmc_ecc_events);
++	} else if (strstr(blk, "pcie")) {
++		events = mlxbf_pmc_pcie_events;
++		*size = ARRAY_SIZE(mlxbf_pmc_pcie_events);
++	} else if (strstr(blk, "l3cache")) {
++		events = mlxbf_pmc_l3c_events;
++		*size = ARRAY_SIZE(mlxbf_pmc_l3c_events);
++	} else if (strstr(blk, "gic")) {
++		events = mlxbf_pmc_smgen_events;
++		*size = ARRAY_SIZE(mlxbf_pmc_smgen_events);
++	} else if (strstr(blk, "smmu")) {
++		events = mlxbf_pmc_smgen_events;
++		*size = ARRAY_SIZE(mlxbf_pmc_smgen_events);
++	} else {
++		events = NULL;
++		*size = 0;
++	}
++
++	return events;
++}
++
++/* Get the event number given the name */
++static int mlxbf_pmc_get_event_num(const char *blk, const char *evt)
++{
++	const struct mlxbf_pmc_events *events;
++	int i, size;
++
++	events = mlxbf_pmc_event_list(blk, &size);
++	if (!events)
++		return -EINVAL;
++
++	for (i = 0; i < size; ++i) {
++		if (!strcmp(evt, events[i].evt_name))
++			return events[i].evt_num;
++	}
++
++	return -ENODEV;
++}
++
++/* Get the event number given the name */
++static char *mlxbf_pmc_get_event_name(const char *blk, int evt)
++{
++	const struct mlxbf_pmc_events *events;
++	int i, size;
++
++	events = mlxbf_pmc_event_list(blk, &size);
++	if (!events)
++		return NULL;
++
++	for (i = 0; i < size; ++i) {
++		if (evt == events[i].evt_num)
++			return events[i].evt_name;
++	}
++
++	return NULL;
++}
++
++/* Method to enable/disable/reset l3cache counters */
++static int mlxbf_pmc_config_l3_counters(int blk_num, bool enable, bool reset)
++{
++	uint32_t perfcnt_cfg = 0;
++
++	if (enable)
++		perfcnt_cfg |= MLXBF_PMC_L3C_PERF_CNT_CFG_EN;
++	if (reset)
++		perfcnt_cfg |= MLXBF_PMC_L3C_PERF_CNT_CFG_RST;
++
++	return mlxbf_pmc_write(pmc->block[blk_num].mmio_base +
++				       MLXBF_PMC_L3C_PERF_CNT_CFG,
++			       MLXBF_PMC_WRITE_REG_32, perfcnt_cfg);
++}
++
++/* Method to handle l3cache counter programming */
++static int mlxbf_pmc_program_l3_counter(int blk_num, uint32_t cnt_num,
++					uint32_t evt)
++{
++	uint32_t perfcnt_sel_1 = 0;
++	uint32_t perfcnt_sel = 0;
++	uint32_t *wordaddr;
++	void __iomem *pmcaddr;
++	int ret;
++
++	/* Disable all counters before programming them */
++	if (mlxbf_pmc_config_l3_counters(blk_num, false, false))
++		return -EINVAL;
++
++	/* Select appropriate register information */
++	switch (cnt_num) {
++	case 0 ... 3:
++		pmcaddr = pmc->block[blk_num].mmio_base +
++			  MLXBF_PMC_L3C_PERF_CNT_SEL;
++		wordaddr = &perfcnt_sel;
++		break;
++	case 4:
++		pmcaddr = pmc->block[blk_num].mmio_base +
++			  MLXBF_PMC_L3C_PERF_CNT_SEL_1;
++		wordaddr = &perfcnt_sel_1;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	ret = mlxbf_pmc_readl(pmcaddr, wordaddr);
++	if (ret)
++		return ret;
++
++	switch (cnt_num) {
++	case 0:
++		perfcnt_sel &= ~MLXBF_PMC_L3C_PERF_CNT_SEL_CNT_0;
++		perfcnt_sel |= FIELD_PREP(MLXBF_PMC_L3C_PERF_CNT_SEL_CNT_0,
++					  evt);
++		break;
++	case 1:
++		perfcnt_sel &= ~MLXBF_PMC_L3C_PERF_CNT_SEL_CNT_1;
++		perfcnt_sel |= FIELD_PREP(MLXBF_PMC_L3C_PERF_CNT_SEL_CNT_1,
++					  evt);
++		break;
++	case 2:
++		perfcnt_sel &= ~MLXBF_PMC_L3C_PERF_CNT_SEL_CNT_2;
++		perfcnt_sel |= FIELD_PREP(MLXBF_PMC_L3C_PERF_CNT_SEL_CNT_2,
++					  evt);
++		break;
++	case 3:
++		perfcnt_sel &= ~MLXBF_PMC_L3C_PERF_CNT_SEL_CNT_3;
++		perfcnt_sel |= FIELD_PREP(MLXBF_PMC_L3C_PERF_CNT_SEL_CNT_3,
++					  evt);
++		break;
++	case 4:
++		perfcnt_sel_1 &= ~MLXBF_PMC_L3C_PERF_CNT_SEL_1_CNT_4;
++		perfcnt_sel_1 |= FIELD_PREP(MLXBF_PMC_L3C_PERF_CNT_SEL_1_CNT_4,
++					    evt);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return mlxbf_pmc_write(pmcaddr, MLXBF_PMC_WRITE_REG_32, *wordaddr);
++}
++
++/* Method to program a counter to monitor an event */
++static int mlxbf_pmc_program_counter(int blk_num, uint32_t cnt_num,
++				     uint32_t evt, bool is_l3)
++{
++	uint64_t perfctl, perfevt, perfmon_cfg;
++
++	if (cnt_num >= pmc->block[blk_num].counters)
++		return -ENODEV;
++
++	if (is_l3)
++		return mlxbf_pmc_program_l3_counter(blk_num, cnt_num, evt);
++
++	/* Configure the counter */
++	perfctl = FIELD_PREP(MLXBF_PMC_PERFCTL_EN0, 1);
++	perfctl |= FIELD_PREP(MLXBF_PMC_PERFCTL_EB0, 0);
++	perfctl |= FIELD_PREP(MLXBF_PMC_PERFCTL_ETRIG0, 1);
++	perfctl |= FIELD_PREP(MLXBF_PMC_PERFCTL_AD0, 0);
++	perfctl |= FIELD_PREP(MLXBF_PMC_PERFCTL_ACCM0, 0);
++	perfctl |= FIELD_PREP(MLXBF_PMC_PERFCTL_MS0, 0);
++	perfctl |= FIELD_PREP(MLXBF_PMC_PERFCTL_FM0, 0);
++
++	perfmon_cfg = FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_WDATA, perfctl);
++	perfmon_cfg |= FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_ADDR,
++				  MLXBF_PMC_PERFCTL);
++	perfmon_cfg |= FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_STROBE, 1);
++	perfmon_cfg |= FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_WR_R_B, 1);
++
++	if (mlxbf_pmc_write(pmc->block[blk_num].mmio_base +
++				    cnt_num * MLXBF_PMC_REG_SIZE,
++			    MLXBF_PMC_WRITE_REG_64, perfmon_cfg))
++		return -EFAULT;
++
++	/* Select the event */
++	perfevt = FIELD_PREP(MLXBF_PMC_PERFEVT_EVTSEL, evt);
++
++	perfmon_cfg = FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_WDATA, perfevt);
++	perfmon_cfg |= FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_ADDR,
++				  MLXBF_PMC_PERFEVT);
++	perfmon_cfg |= FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_STROBE, 1);
++	perfmon_cfg |= FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_WR_R_B, 1);
++
++	if (mlxbf_pmc_write(pmc->block[blk_num].mmio_base +
++				    cnt_num * MLXBF_PMC_REG_SIZE,
++			    MLXBF_PMC_WRITE_REG_64, perfmon_cfg))
++		return -EFAULT;
++
++	/* Clear the accumulator */
++	perfmon_cfg = FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_ADDR,
++				 MLXBF_PMC_PERFACC0);
++	perfmon_cfg |= FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_STROBE, 1);
++	perfmon_cfg |= FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_WR_R_B, 1);
++
++	if (mlxbf_pmc_write(pmc->block[blk_num].mmio_base +
++				    cnt_num * MLXBF_PMC_REG_SIZE,
++			    MLXBF_PMC_WRITE_REG_64, perfmon_cfg))
++		return -EFAULT;
++
++	return 0;
++}
++
++/* Method to handle l3 counter reads */
++static int mlxbf_pmc_read_l3_counter(int blk_num, uint32_t cnt_num,
++				     uint64_t *result)
++{
++	uint32_t perfcnt_low = 0, perfcnt_high = 0;
++	uint64_t value;
++	int status = 0;
++
++	status = mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
++					 MLXBF_PMC_L3C_PERF_CNT_LOW +
++					 cnt_num * MLXBF_PMC_L3C_REG_SIZE,
++				 &perfcnt_low);
++
++	if (status)
++		return status;
++
++	status = mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
++					 MLXBF_PMC_L3C_PERF_CNT_HIGH +
++					 cnt_num * MLXBF_PMC_L3C_REG_SIZE,
++				 &perfcnt_high);
++
++	if (status)
++		return status;
++
++	value = perfcnt_high;
++	value = value << 32;
++	value |= perfcnt_low;
++	*result = value;
++
++	return 0;
++}
++
++/* Method to read the counter value */
++static int mlxbf_pmc_read_counter(int blk_num, uint32_t cnt_num, bool is_l3,
++				  uint64_t *result)
++{
++	uint32_t perfcfg_offset, perfval_offset;
++	uint64_t perfmon_cfg;
++	int status;
++
++	if (cnt_num >= pmc->block[blk_num].counters)
++		return -EINVAL;
++
++	if (is_l3)
++		return mlxbf_pmc_read_l3_counter(blk_num, cnt_num, result);
++
++	perfcfg_offset = cnt_num * MLXBF_PMC_REG_SIZE;
++	perfval_offset = perfcfg_offset +
++			 pmc->block[blk_num].counters * MLXBF_PMC_REG_SIZE;
++
++	/* Set counter in "read" mode */
++	perfmon_cfg = FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_ADDR,
++				 MLXBF_PMC_PERFACC0);
++	perfmon_cfg |= FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_STROBE, 1);
++	perfmon_cfg |= FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_WR_R_B, 0);
++
++	status = mlxbf_pmc_write(pmc->block[blk_num].mmio_base + perfcfg_offset,
++				 MLXBF_PMC_WRITE_REG_64, perfmon_cfg);
++
++	if (status)
++		return status;
++
++	/* Get the counter value */
++	return mlxbf_pmc_read(pmc->block[blk_num].mmio_base + perfval_offset,
++			      MLXBF_PMC_READ_REG_64, result);
++}
++
++/* Method to read L3 block event */
++static int mlxbf_pmc_read_l3_event(int blk_num, uint32_t cnt_num,
++				   uint64_t *result)
++{
++	uint32_t perfcnt_sel = 0, perfcnt_sel_1 = 0;
++	uint32_t *wordaddr;
++	void __iomem *pmcaddr;
++	uint64_t evt;
++
++	/* Select appropriate register information */
++	switch (cnt_num) {
++	case 0 ... 3:
++		pmcaddr = pmc->block[blk_num].mmio_base +
++			  MLXBF_PMC_L3C_PERF_CNT_SEL;
++		wordaddr = &perfcnt_sel;
++		break;
++	case 4:
++		pmcaddr = pmc->block[blk_num].mmio_base +
++			  MLXBF_PMC_L3C_PERF_CNT_SEL_1;
++		wordaddr = &perfcnt_sel_1;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	if (mlxbf_pmc_readl(pmcaddr, wordaddr))
++		return -EINVAL;
++
++	/* Read from appropriate register field for the counter */
++	switch (cnt_num) {
++	case 0:
++		evt = FIELD_GET(MLXBF_PMC_L3C_PERF_CNT_SEL_CNT_0, perfcnt_sel);
++		break;
++	case 1:
++		evt = FIELD_GET(MLXBF_PMC_L3C_PERF_CNT_SEL_CNT_1, perfcnt_sel);
++		break;
++	case 2:
++		evt = FIELD_GET(MLXBF_PMC_L3C_PERF_CNT_SEL_CNT_2, perfcnt_sel);
++		break;
++	case 3:
++		evt = FIELD_GET(MLXBF_PMC_L3C_PERF_CNT_SEL_CNT_3, perfcnt_sel);
++		break;
++	case 4:
++		evt = FIELD_GET(MLXBF_PMC_L3C_PERF_CNT_SEL_1_CNT_4,
++				perfcnt_sel_1);
++		break;
++	default:
++		return -EINVAL;
++	}
++	*result = evt;
++
++	return 0;
++}
++
++/* Method to find the event currently being monitored by a counter */
++static int mlxbf_pmc_read_event(int blk_num, uint32_t cnt_num, bool is_l3,
++				uint64_t *result)
++{
++	uint32_t perfcfg_offset, perfval_offset;
++	uint64_t perfmon_cfg, perfevt, perfctl;
++
++	if (cnt_num >= pmc->block[blk_num].counters)
++		return -EINVAL;
++
++	if (is_l3)
++		return mlxbf_pmc_read_l3_event(blk_num, cnt_num, result);
++
++	perfcfg_offset = cnt_num * MLXBF_PMC_REG_SIZE;
++	perfval_offset = perfcfg_offset +
++			 pmc->block[blk_num].counters * MLXBF_PMC_REG_SIZE;
++
++	/* Set counter in "read" mode */
++	perfmon_cfg = FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_ADDR,
++				 MLXBF_PMC_PERFCTL);
++	perfmon_cfg |= FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_STROBE, 1);
++	perfmon_cfg |= FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_WR_R_B, 0);
++
++	if (mlxbf_pmc_write(pmc->block[blk_num].mmio_base + perfcfg_offset,
++			    MLXBF_PMC_WRITE_REG_64, perfmon_cfg))
++		return -EFAULT;
++
++	/* Check if the counter is enabled */
++
++	if (mlxbf_pmc_read(pmc->block[blk_num].mmio_base + perfval_offset,
++			   MLXBF_PMC_READ_REG_64, &perfctl))
++		return -EFAULT;
++
++	if (!FIELD_GET(MLXBF_PMC_PERFCTL_EN0, perfctl))
++		return -EINVAL;
++
++	/* Set counter in "read" mode */
++	perfmon_cfg = FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_ADDR,
++				 MLXBF_PMC_PERFEVT);
++	perfmon_cfg |= FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_STROBE, 1);
++	perfmon_cfg |= FIELD_PREP(MLXBF_PMC_PERFMON_CONFIG_WR_R_B, 0);
++
++	if (mlxbf_pmc_write(pmc->block[blk_num].mmio_base + perfcfg_offset,
++			    MLXBF_PMC_WRITE_REG_64, perfmon_cfg))
++		return -EFAULT;
++
++	/* Get the event number */
++	if (mlxbf_pmc_read(pmc->block[blk_num].mmio_base + perfval_offset,
++			   MLXBF_PMC_READ_REG_64, &perfevt))
++		return -EFAULT;
++
++	*result = FIELD_GET(MLXBF_PMC_PERFEVT_EVTSEL, perfevt);
++
++	return 0;
++}
++
++/* Method to read a register */
++static int mlxbf_pmc_read_reg(int blk_num, uint32_t offset, uint64_t *result)
++{
++	uint32_t ecc_out;
++
++	if (strstr(pmc->block_name[blk_num], "ecc")) {
++		if (mlxbf_pmc_readl(pmc->block[blk_num].mmio_base + offset,
++				    &ecc_out))
++			return -EFAULT;
++
++		*result = ecc_out;
++		return 0;
++	}
++
++	if (mlxbf_pmc_valid_range(blk_num, offset))
++		return mlxbf_pmc_read(pmc->block[blk_num].mmio_base + offset,
++				      MLXBF_PMC_READ_REG_64, result);
++
++	return -EINVAL;
++}
++
++/* Method to write to a register */
++static int mlxbf_pmc_write_reg(int blk_num, uint32_t offset, uint64_t data)
++{
++	if (strstr(pmc->block_name[blk_num], "ecc")) {
++		return mlxbf_pmc_write(pmc->block[blk_num].mmio_base + offset,
++				       MLXBF_PMC_WRITE_REG_32, data);
++	}
++
++	if (mlxbf_pmc_valid_range(blk_num, offset))
++		return mlxbf_pmc_write(pmc->block[blk_num].mmio_base + offset,
++				       MLXBF_PMC_WRITE_REG_64, data);
++
++	return -EINVAL;
++}
++
++/* Show function for "counter" sysfs files */
++static ssize_t mlxbf_pmc_counter_show(struct device *dev,
++				      struct device_attribute *attr, char *buf)
++{
++	struct mlxbf_pmc_attribute *attr_counter = container_of(
++		attr, struct mlxbf_pmc_attribute, dev_attr);
++	int blk_num, cnt_num, offset;
++	bool is_l3 = false;
++	uint64_t value;
++
++	blk_num = attr_counter->nr;
++	cnt_num = attr_counter->index;
++
++	if (strstr(pmc->block_name[blk_num], "l3cache"))
++		is_l3 = true;
++
++	if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_COUNTER) {
++		if (mlxbf_pmc_read_counter(blk_num, cnt_num, is_l3, &value))
++			return -EINVAL;
++	} else if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_REGISTER) {
++		offset = mlxbf_pmc_get_event_num(pmc->block_name[blk_num],
++						 attr->attr.name);
++		if (offset < 0)
++			return -EINVAL;
++		if (mlxbf_pmc_read_reg(blk_num, offset, &value))
++			return -EINVAL;
++	} else
++		return -EINVAL;
++
++	return sprintf(buf, "0x%llx\n", value);
++}
++
++/* Store function for "counter" sysfs files */
++static ssize_t mlxbf_pmc_counter_store(struct device *dev,
++				       struct device_attribute *attr,
++				       const char *buf, size_t count)
++{
++	struct mlxbf_pmc_attribute *attr_counter = container_of(
++		attr, struct mlxbf_pmc_attribute, dev_attr);
++	int blk_num, cnt_num, offset, err, data;
++	bool is_l3 = false;
++	uint64_t evt_num;
++
++	blk_num = attr_counter->nr;
++	cnt_num = attr_counter->index;
++
++	err = kstrtoint(buf, 0, &data);
++	if (err < 0)
++		return err;
++
++	/* Allow non-zero writes only to the ecc regs */
++	if (!(strstr(pmc->block_name[blk_num], "ecc")) && data)
++		return -EINVAL;
++
++	/* Do not allow writes to the L3C regs */
++	if (strstr(pmc->block_name[blk_num], "l3cache"))
++		return -EINVAL;
++
++	if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_COUNTER) {
++		err = mlxbf_pmc_read_event(blk_num, cnt_num, is_l3, &evt_num);
++		if (err)
++			return err;
++		err = mlxbf_pmc_program_counter(blk_num, cnt_num, evt_num,
++						is_l3);
++		if (err)
++			return err;
++	} else if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_REGISTER) {
++		offset = mlxbf_pmc_get_event_num(pmc->block_name[blk_num],
++						 attr->attr.name);
++		if (offset < 0)
++			return -EINVAL;
++		err = mlxbf_pmc_write_reg(blk_num, offset, data);
++		if (err)
++			return err;
++	} else
++		return -EINVAL;
++
++	return count;
++}
++
++/* Show function for "event" sysfs files */
++static ssize_t mlxbf_pmc_event_show(struct device *dev,
++				    struct device_attribute *attr, char *buf)
++{
++	struct mlxbf_pmc_attribute *attr_event = container_of(
++		attr, struct mlxbf_pmc_attribute, dev_attr);
++	int blk_num, cnt_num, err;
++	bool is_l3 = false;
++	uint64_t evt_num;
++	char *evt_name;
++
++	blk_num = attr_event->nr;
++	cnt_num = attr_event->index;
++
++	if (strstr(pmc->block_name[blk_num], "l3cache"))
++		is_l3 = true;
++
++	err = mlxbf_pmc_read_event(blk_num, cnt_num, is_l3, &evt_num);
++	if (err)
++		return sprintf(buf, "No event being monitored\n");
++
++	evt_name = mlxbf_pmc_get_event_name(pmc->block_name[blk_num], evt_num);
++	if (!evt_name)
++		return -EINVAL;
++
++	return sprintf(buf, "0x%llx: %s\n", evt_num, evt_name);
++}
++
++/* Store function for "event" sysfs files */
++static ssize_t mlxbf_pmc_event_store(struct device *dev,
++				     struct device_attribute *attr,
++				     const char *buf, size_t count)
++{
++	struct mlxbf_pmc_attribute *attr_event = container_of(
++		attr, struct mlxbf_pmc_attribute, dev_attr);
++	int blk_num, cnt_num, evt_num, err;
++	bool is_l3 = false;
++
++	blk_num = attr_event->nr;
++	cnt_num = attr_event->index;
++
++	if (isalpha(buf[0])) {
++		evt_num = mlxbf_pmc_get_event_num(pmc->block_name[blk_num],
++						  buf);
++		if (evt_num < 0)
++			return -EINVAL;
++	} else {
++		err = kstrtoint(buf, 0, &evt_num);
++		if (err < 0)
++			return err;
++	}
++
++	if (strstr(pmc->block_name[blk_num], "l3cache"))
++		is_l3 = true;
++
++	err = mlxbf_pmc_program_counter(blk_num, cnt_num, evt_num, is_l3);
++	if (err)
++		return err;
++
++	return count;
++}
++
++/* Show function for "event_list" sysfs files */
++static ssize_t mlxbf_pmc_event_list_show(struct device *dev,
++					 struct device_attribute *attr,
++					 char *buf)
++{
++	struct mlxbf_pmc_attribute *attr_event_list = container_of(
++		attr, struct mlxbf_pmc_attribute, dev_attr);
++	int blk_num, i, size, len = 0, ret = 0;
++	const struct mlxbf_pmc_events *events;
++	char e_info[MLXBF_PMC_EVENT_INFO_LEN];
++
++	blk_num = attr_event_list->nr;
++
++	events = mlxbf_pmc_event_list(pmc->block_name[blk_num], &size);
++	if (!events)
++		return -EINVAL;
++
++	for (i = 0, buf[0] = '\0'; i < size; ++i) {
++		len += sprintf(e_info, "0x%x: %s\n", events[i].evt_num,
++			       events[i].evt_name);
++		if (len > PAGE_SIZE)
++			break;
++		strcat(buf, e_info);
++		ret = len;
++	}
++
++	return ret;
++}
++
++/* Show function for "enable" sysfs files - only for l3cache */
++static ssize_t mlxbf_pmc_enable_show(struct device *dev,
++				     struct device_attribute *attr, char *buf)
++{
++	struct mlxbf_pmc_attribute *attr_enable = container_of(
++		attr, struct mlxbf_pmc_attribute, dev_attr);
++	uint32_t perfcnt_cfg;
++	int blk_num, value;
++
++	blk_num = attr_enable->nr;
++
++	if (mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
++				    MLXBF_PMC_L3C_PERF_CNT_CFG,
++			    &perfcnt_cfg))
++		return -EINVAL;
++
++	value = FIELD_GET(MLXBF_PMC_L3C_PERF_CNT_CFG_EN, perfcnt_cfg);
++
++	return sprintf(buf, "%d\n", value);
++}
++
++/* Store function for "enable" sysfs files - only for l3cache */
++static ssize_t mlxbf_pmc_enable_store(struct device *dev,
++				      struct device_attribute *attr,
++				      const char *buf, size_t count)
++{
++	struct mlxbf_pmc_attribute *attr_enable = container_of(
++		attr, struct mlxbf_pmc_attribute, dev_attr);
++	int err, en, blk_num;
++
++	blk_num = attr_enable->nr;
++
++	err = kstrtoint(buf, 0, &en);
++	if (err < 0)
++		return err;
++
++	if (!en) {
++		err = mlxbf_pmc_config_l3_counters(blk_num, false, false);
++		if (err)
++			return err;
++	} else if (en == 1) {
++		err = mlxbf_pmc_config_l3_counters(blk_num, false, true);
++		if (err)
++			return err;
++		err = mlxbf_pmc_config_l3_counters(blk_num, true, false);
++		if (err)
++			return err;
++	} else
++		return -EINVAL;
++
++	return count;
++}
++
++/* Populate attributes for blocks with counters to monitor performance */
++static int mlxbf_pmc_init_perftype_counter(struct device *dev, int blk_num)
++{
++	struct mlxbf_pmc_attribute *attr;
++	int i = 0, j = 0;
++
++	/* "event_list" sysfs to list events supported by the block */
++	attr = &pmc->block[blk_num].attr_event_list;
++	attr->dev_attr.attr.mode = 0444;
++	attr->dev_attr.show = mlxbf_pmc_event_list_show;
++	attr->nr = blk_num;
++	attr->dev_attr.attr.name = devm_kasprintf(dev, GFP_KERNEL, "event_list");
++	pmc->block[blk_num].block_attr[i] = &attr->dev_attr.attr;
++	attr = NULL;
++
++	/* "enable" sysfs to start/stop the counters. Only in L3C blocks */
++	if (strstr(pmc->block_name[blk_num], "l3cache")) {
++		attr = &pmc->block[blk_num].attr_enable;
++		attr->dev_attr.attr.mode = 0644;
++		attr->dev_attr.show = mlxbf_pmc_enable_show;
++		attr->dev_attr.store = mlxbf_pmc_enable_store;
++		attr->nr = blk_num;
++		attr->dev_attr.attr.name = devm_kasprintf(dev, GFP_KERNEL,
++							  "enable");
++		pmc->block[blk_num].block_attr[++i] = &attr->dev_attr.attr;
++		attr = NULL;
++	}
++
++	pmc->block[blk_num].attr_counter = devm_kcalloc(
++		dev, pmc->block[blk_num].counters,
++		sizeof(struct mlxbf_pmc_attribute), GFP_KERNEL);
++	if (!pmc->block[blk_num].attr_counter)
++		return -ENOMEM;
++
++	pmc->block[blk_num].attr_event = devm_kcalloc(
++		dev, pmc->block[blk_num].counters,
++		sizeof(struct mlxbf_pmc_attribute), GFP_KERNEL);
++	if (!pmc->block[blk_num].attr_event)
++		return -ENOMEM;
++
++	/* "eventX" and "counterX" sysfs to program and read counter values */
++	for (j = 0; j < pmc->block[blk_num].counters; ++j) {
++		attr = &pmc->block[blk_num].attr_counter[j];
++		attr->dev_attr.attr.mode = 0644;
++		attr->dev_attr.show = mlxbf_pmc_counter_show;
++		attr->dev_attr.store = mlxbf_pmc_counter_store;
++		attr->index = j;
++		attr->nr = blk_num;
++		attr->dev_attr.attr.name = devm_kasprintf(dev, GFP_KERNEL,
++							  "counter%d", j);
++		pmc->block[blk_num].block_attr[++i] = &attr->dev_attr.attr;
++		attr = NULL;
++
++		attr = &pmc->block[blk_num].attr_event[j];
++		attr->dev_attr.attr.mode = 0644;
++		attr->dev_attr.show = mlxbf_pmc_event_show;
++		attr->dev_attr.store = mlxbf_pmc_event_store;
++		attr->index = j;
++		attr->nr = blk_num;
++		attr->dev_attr.attr.name = devm_kasprintf(dev, GFP_KERNEL,
++							  "event%d", j);
++		pmc->block[blk_num].block_attr[++i] = &attr->dev_attr.attr;
++		attr = NULL;
++	}
++
++	return 0;
++}
++
++/* Populate attributes for blocks with registers to monitor performance */
++static int mlxbf_pmc_init_perftype_reg(struct device *dev, int blk_num)
++{
++	struct mlxbf_pmc_attribute *attr;
++	const struct mlxbf_pmc_events *events;
++	int i = 0, j = 0;
++
++	events = mlxbf_pmc_event_list(pmc->block_name[blk_num], &j);
++	if (!events)
++		return -EINVAL;
++
++	pmc->block[blk_num].attr_event = devm_kcalloc(
++		dev, j, sizeof(struct mlxbf_pmc_attribute), GFP_KERNEL);
++	if (!pmc->block[blk_num].attr_event)
++		return -ENOMEM;
++
++	while (j > 0) {
++		--j;
++		attr = &pmc->block[blk_num].attr_event[j];
++		attr->dev_attr.attr.mode = 0644;
++		attr->dev_attr.show = mlxbf_pmc_counter_show;
++		attr->dev_attr.store = mlxbf_pmc_counter_store;
++		attr->nr = blk_num;
++		attr->dev_attr.attr.name = devm_kasprintf(dev, GFP_KERNEL,
++							  events[j].evt_name);
++		pmc->block[blk_num].block_attr[i] = &attr->dev_attr.attr;
++		attr = NULL;
++		i++;
++	}
++
++	return 0;
++}
++
++/* Helper to create the bfperf sysfs sub-directories and files */
++static int mlxbf_pmc_create_groups(struct device *dev, int blk_num)
++{
++	int err;
++
++	/* Populate attributes based on counter type */
++	if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_COUNTER)
++		err = mlxbf_pmc_init_perftype_counter(dev, blk_num);
++	else if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_REGISTER)
++		err = mlxbf_pmc_init_perftype_reg(dev, blk_num);
++	else
++		err = -EINVAL;
++
++	if (err)
++		return err;
++
++	/* Add a new attribute_group for the block */
++	pmc->block[blk_num].block_attr_grp.attrs = pmc->block[blk_num].block_attr;
++	pmc->block[blk_num].block_attr_grp.name = devm_kasprintf(
++		dev, GFP_KERNEL, pmc->block_name[blk_num]);
++	pmc->groups[blk_num] = &pmc->block[blk_num].block_attr_grp;
++
++	return 0;
++}
++
++static bool mlxbf_pmc_guid_match(const guid_t *guid,
++				 const struct arm_smccc_res *res)
++{
++	guid_t id = GUID_INIT(res->a0, res->a1, res->a1 >> 16, res->a2,
++			      res->a2 >> 8, res->a2 >> 16, res->a2 >> 24,
++			      res->a3, res->a3 >> 8, res->a3 >> 16,
++			      res->a3 >> 24);
++
++	return guid_equal(guid, &id);
++}
++
++/* Helper to map the Performance Counters from the varios blocks */
++static int mlxbf_pmc_map_counters(struct device *dev)
++{
++	uint64_t info[MLXBF_PMC_INFO_SZ];
++	int i, tile_num, ret;
++
++	for (i = 0; i < pmc->total_blocks; ++i) {
++		if (strstr(pmc->block_name[i], "tile")) {
++			ret = sscanf(pmc->block_name[i], "tile%d", &tile_num);
++			if (ret < 0)
++				return ret;
++
++			if (tile_num >= pmc->tile_count)
++				continue;
++		}
++		ret = device_property_read_u64_array(dev, pmc->block_name[i],
++						     info, MLXBF_PMC_INFO_SZ);
++		if (ret)
++			return ret;
++
++		/*
++		 * Do not remap if the proper SMC calls are supported,
++		 * since the SMC calls expect physical addresses.
++		 */
++		if (pmc->svc_sreg_support)
++			pmc->block[i].mmio_base = (void __iomem *)info[0];
++		else
++			pmc->block[i].mmio_base =
++				devm_ioremap(dev, info[0], info[1]);
++
++		pmc->block[i].blk_size = info[1];
++		pmc->block[i].counters = info[2];
++		pmc->block[i].type = info[3];
++
++		if (IS_ERR(pmc->block[i].mmio_base))
++			return PTR_ERR(pmc->block[i].mmio_base);
++
++		ret = mlxbf_pmc_create_groups(dev, i);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++static int mlxbf_pmc_probe(struct platform_device *pdev)
++{
++	struct acpi_device *acpi_dev = ACPI_COMPANION(&pdev->dev);
++	const char *hid = acpi_device_hid(acpi_dev);
++	struct device *dev = &pdev->dev;
++	struct arm_smccc_res res;
++	guid_t guid;
++	int ret;
++
++	/* Ensure we have the UUID we expect for this service. */
++	arm_smccc_smc(MLXBF_PMC_SIP_SVC_UID, 0, 0, 0, 0, 0, 0, 0, &res);
++	guid_parse(mlxbf_pmc_svc_uuid_str, &guid);
++	if (!mlxbf_pmc_guid_match(&guid, &res))
++		return -ENODEV;
++
++	pmc = devm_kzalloc(dev, sizeof(struct mlxbf_pmc_context), GFP_KERNEL);
++	if (!pmc)
++		return -ENOMEM;
++
++	/*
++	 * ACPI indicates whether we use SMCs to access registers or not.
++	 * If sreg_tbl_perf is not present, just assume we're not using SMCs.
++	 */
++	ret = device_property_read_u32(dev, "sec_reg_block",
++				       &pmc->sreg_tbl_perf);
++	if (ret) {
++		pmc->svc_sreg_support = false;
++	} else {
++		/*
++		 * Check service version to see if we actually do support the
++		 * needed SMCs. If we have the calls we need, mark support for
++		 * them in the pmc struct.
++		 */
++		arm_smccc_smc(MLXBF_PMC_SIP_SVC_VERSION, 0, 0, 0, 0, 0, 0, 0,
++			      &res);
++		if (res.a0 == MLXBF_PMC_SVC_REQ_MAJOR &&
++		    res.a1 >= MLXBF_PMC_SVC_MIN_MINOR)
++			pmc->svc_sreg_support = true;
++		else
++			return -EINVAL;
++	}
++
++	if (!strcmp(hid, "MLNXBFD0"))
++		pmc->event_set = MLXBF_PMC_EVENT_SET_BF1;
++	else if (!strcmp(hid, "MLNXBFD1"))
++		pmc->event_set = MLXBF_PMC_EVENT_SET_BF2;
++	else
++		return -ENODEV;
++
++	ret = device_property_read_u32(dev, "block_num", &pmc->total_blocks);
++	if (ret)
++		return ret;
++
++	ret = device_property_read_string_array(dev, "block_name",
++						pmc->block_name,
++						pmc->total_blocks);
++	if (ret != pmc->total_blocks)
++		return -EFAULT;
++
++	ret = device_property_read_u32(dev, "tile_num", &pmc->tile_count);
++	if (ret)
++		return ret;
++
++	pmc->pdev = pdev;
++
++	ret = mlxbf_pmc_map_counters(dev);
++	if (ret)
++		return ret;
++
++	pmc->hwmon_dev = devm_hwmon_device_register_with_groups(
++		dev, "bfperf", pmc, pmc->groups);
++	platform_set_drvdata(pdev, pmc);
++
++	return 0;
++}
++
++static const struct acpi_device_id mlxbf_pmc_acpi_ids[] = { { "MLNXBFD0", 0 },
++							    { "MLNXBFD1", 0 },
++							    {}, };
++
++MODULE_DEVICE_TABLE(acpi, mlxbf_pmc_acpi_ids);
++static struct platform_driver pmc_driver = {
++	.driver = { .name = "mlxbf-pmc",
++		    .acpi_match_table = ACPI_PTR(mlxbf_pmc_acpi_ids), },
++	.probe = mlxbf_pmc_probe,
++};
++
++module_platform_driver(pmc_driver);
++
++MODULE_AUTHOR("Shravan Kumar Ramani <sramani@mellanox.com>");
++MODULE_DESCRIPTION("Mellanox PMC driver");
++MODULE_LICENSE("Dual BSD/GPL");
+-- 
+2.1.2
 
-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
-
---bg08WKrSYDhXBjb5--
