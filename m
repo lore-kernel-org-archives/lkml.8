@@ -2,221 +2,237 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D73C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4310BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD3F8206D4
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:22:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596561762;
-	bh=Xoip3bOYIImGhy7ogd9kynyso6cxechck06IVDrtLW4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BrUOzdKWSJ3jUpd7aBlYR9SmirtGJYGOrZer1g63xI3Y4zYN1gDjwphqSxeuaBEuf
-	 n+NEtFzkwuMEYEyjNkTTGYlBnydYLLz4WuLPksPQKgqkGuyjOmshF2LUzBBZqj+rvP
-	 c2fz5xbAMJA8l1B7fDgz0c9MAJxG5zVm7g9ngSQs=
+	by mail.kernel.org (Postfix) with ESMTP id 17224206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:25:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3VQ6ZMIS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730062AbgHDRWl (ORCPT
+        id S1729925AbgHDRZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 13:22:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35352 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729391AbgHDRWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 13:22:40 -0400
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E51121744;
-        Tue,  4 Aug 2020 17:22:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596561759;
-        bh=Xoip3bOYIImGhy7ogd9kynyso6cxechck06IVDrtLW4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=z+7sr2ZWgk+EKMuu+lTtzdVoIX9WLhXg2tgNLJo08WroVrlO10uHXblY4NKS/vZb1
-         Q7vxKuyAMR8TACbBPMc23u8Qbpsli3avO2zBd5Vxdtt9f0QgBGe+kpYHhGtILJfg3c
-         dhOJRJ2wdu/MsQRautvAfLtzmPJT7Dl9z802SUEg=
-Received: by mail-oi1-f181.google.com with SMTP id u24so27146500oiv.7;
-        Tue, 04 Aug 2020 10:22:39 -0700 (PDT)
-X-Gm-Message-State: AOAM532R8LhVZuHggLcH5jGIeovghw0lk8PvOADfpVOvF/mDNOZlZsvW
-        atCJEaxmsA+YfUuIT9ADWqcYC7Z0sCcquyRIyA==
-X-Google-Smtp-Source: ABdhPJwkisncqagQYnRqj5kYxbVToGGengOKjQOWBvV6rwXKDIFKaESd49zyc6uwCxQY+hCjnV7BMm8OuxgHZCg7q+E=
-X-Received: by 2002:aca:bb82:: with SMTP id l124mr4339078oif.106.1596561758805;
- Tue, 04 Aug 2020 10:22:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200804165555.75159-1-linux@fw-web.de> <20200804165555.75159-2-linux@fw-web.de>
- <trinity-aa434d4a-b151-4595-93cc-a222bf12522d-1596561528040@3c-app-gmx-bap28>
-In-Reply-To: <trinity-aa434d4a-b151-4595-93cc-a222bf12522d-1596561528040@3c-app-gmx-bap28>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 4 Aug 2020 11:22:27 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+bQccA5u8ohh24oUSmhPA_+kE9Q_S_yUL-8nizVWK4-A@mail.gmail.com>
-Message-ID: <CAL_Jsq+bQccA5u8ohh24oUSmhPA_+kE9Q_S_yUL-8nizVWK4-A@mail.gmail.com>
-Subject: Re: [PATCH v4 1/6] dt-bindings: mediatek: add mt7623 display-nodes
-To:     Frank Wunderlich <frank-w@public-files.de>
-Cc:     Frank Wunderlich <linux@fw-web.de>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Tue, 4 Aug 2020 13:25:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56270 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726580AbgHDRZQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 13:25:16 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8332FC06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 10:25:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Mime-Version:Content-Type:References:
+        In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=tDw+MgUigTmlREL/3fmF6UrAeCMOHyKTwNyTFyop0W4=; b=3VQ6ZMIScVsdzUm/zQb60qUvtJ
+        mSMif9jDrpiVyS4QnPwPxX6KdFndEFYsQ5y8QVXJPiergMNnGF59buk1tI1zjmfokkl4pMhN5pikH
+        U29S2E0hmw0oIFumkAjf2L1wyGiVCROsSMW0Blu1xlE7LjYNNNlXdL089mRDd21m7AMd3b+JMZJCs
+        QwKA1+IDtGmpUs86/JN24fjC6ujCSzKHeJTVwxJ9RZgwVL1h7U9xxq5VNdszs3qtQU7Yj+Obe/snH
+        EDUAZWOkkd6Gfo+wsw6VLWvA9Cp2bWQiEtjRloLUgwr575hJv9vGt1mh9BH5q00JhOOqHmLWIlIKp
+        N4FXCsrA==;
+Received: from 54-240-197-235.amazon.com ([54.240.197.235] helo=freeip.amazon.com)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k30gQ-0001OI-2x; Tue, 04 Aug 2020 17:25:02 +0000
+Message-ID: <3966b4f687f2fabf9041059dd5f39165177a6ef6.camel@infradead.org>
+Subject: Re: [PATCH v4 6/6] arm: dts: mt7623: add display subsystem related
+ device nodes
+From:   David Woodhouse <dwmw2@infradead.org>
+To:     Frank Wunderlich <linux@fw-web.de>,
+        linux-mediatek@lists.infradead.org
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
+        Frank Wunderlich <frank-w@public-files.de>,
         David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        chunhui dai <chunhui.dai@mediatek.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        CK Hu <ck.hu@mediatek.com>, Daniel Vetter <daniel@ffwll.ch>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org
+Date:   Tue, 04 Aug 2020 18:24:58 +0100
+In-Reply-To: <20200804165555.75159-8-linux@fw-web.de>
+References: <20200804165555.75159-1-linux@fw-web.de>
+         <20200804165555.75159-8-linux@fw-web.de>
+Content-Type: multipart/signed; micalg="sha-256";
+        protocol="application/x-pkcs7-signature";
+        boundary="=-xBSnslGKtBLSUetbNVni"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by merlin.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 11:19 AM Frank Wunderlich
-<frank-w@public-files.de> wrote:
->
-> CC Rob Herring and devicetree-list
 
-Resend or it is not in my patchwork queue.
+--=-xBSnslGKtBLSUetbNVni
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-But this is simple enough:
+On Tue, 2020-08-04 at 18:55 +0200, Frank Wunderlich wrote:
+> From: Ryder Lee <ryder.lee@mediatek.com>
+>=20
+> Add display subsystem related device nodes for MT7623.
+>=20
+> Cc: CK Hu <ck.hu@mediatek.com>
+> Signed-off-by: chunhui dai <chunhui.dai@mediatek.com>
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> Tested-by: Frank Wunderlich <frank-w@public-files.de>
+> ---
+> changed
+> v3->v4:
+>   drop display_components which is duplicate of existing mmsys
+> v2->v3:
+>   drop bls to dpi routing
+> ---
+>  arch/arm/boot/dts/mt7623.dtsi                 | 170 ++++++++++++++++++
+>  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  72 ++++++++
+>  arch/arm/boot/dts/mt7623n-rfb-emmc.dts        |  72 ++++++++
+>  3 files changed, 314 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dts=
+i
+> index a106c0d90a52..f2cb44a69454 100644
+> --- a/arch/arm/boot/dts/mt7623.dtsi
+> +++ b/arch/arm/boot/dts/mt7623.dtsi
+> @@ -24,6 +24,11 @@ / {
+>  	#address-cells =3D <2>;
+>  	#size-cells =3D <2>;
+> =20
+> +	aliases {
+> +		rdma0 =3D &rdma0;
+> +		rdma1 =3D &rdma1;
+> +	};
+> +
+>  	cpu_opp_table: opp-table {
+>  		compatible =3D "operating-points-v2";
+>  		opp-shared;
+> @@ -321,6 +326,25 @@ pwrap: pwrap@1000d000 {
+>  		clock-names =3D "spi", "wrap";
+>  	};
+> =20
+> +	mipi_tx0: mipi-dphy@10010000 {
+> +		compatible =3D "mediatek,mt7623-mipi-tx",
+> +			     "mediatek,mt2701-mipi-tx";
+> +		reg =3D <0 0x10010000 0 0x90>;
+> +		clocks =3D <&clk26m>;
+> +		clock-output-names =3D "mipi_tx0_pll";
+> +		#clock-cells =3D <0>;
+> +		#phy-cells =3D <0>;
+> +	};
 
-Acked-by: Rob Herring <robh@kernel.org>
+Doesn't this (and some others) also need status=3D"disabled" since
+they're not present on MT7623A? Or maybe it's time to split mt7623.dtsi
+into a mt7623n.dtsi which includes mt7623a.dtsi and adds the extra
+components?
 
->
-> > Gesendet: Dienstag, 04. August 2020 um 18:55 Uhr
-> > Von: "Frank Wunderlich" <linux@fw-web.de>
-> > An: linux-mediatek@lists.infradead.org
-> > Cc: "Frank Wunderlich" <frank-w@public-files.de>, "Chun-Kuang Hu" <chun=
-kuang.hu@kernel.org>, "Philipp Zabel" <p.zabel@pengutronix.de>, "David Airl=
-ie" <airlied@linux.ie>, "Daniel Vetter" <daniel@ffwll.ch>, "Matthias Brugge=
-r" <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, linux-arm-ker=
-nel@lists.infradead.org, linux-kernel@vger.kernel.org
-> > Betreff: [PATCH v4 1/6] dt-bindings: mediatek: add mt7623 display-nodes
-> >
-> > From: Frank Wunderlich <frank-w@public-files.de>
-> >
-> > mt7623 uses mt2701/mt8173 for drm, but have own compatibles
-> >
-> > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> > ---
-> >  .../devicetree/bindings/display/mediatek/mediatek,disp.txt    | 2 +-
-> >  .../devicetree/bindings/display/mediatek/mediatek,dpi.txt     | 2 +-
-> >  .../devicetree/bindings/display/mediatek/mediatek,dsi.txt     | 4 ++--
-> >  .../devicetree/bindings/display/mediatek/mediatek,hdmi.txt    | 4 ++++
-> >  4 files changed, 8 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/mediatek/mediate=
-k,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,di=
-sp.txt
-> > index b91e709db7a4..121220745d46 100644
-> > --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.=
-txt
-> > +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.=
-txt
-> > @@ -43,7 +43,7 @@ Required properties (all function blocks):
-> >       "mediatek,<chip>-dpi"                   - DPI controller, see med=
-iatek,dpi.txt
-> >       "mediatek,<chip>-disp-mutex"            - display mutex
-> >       "mediatek,<chip>-disp-od"               - overdrive
-> > -  the supported chips are mt2701, mt2712 and mt8173.
-> > +  the supported chips are mt2701, mt7623, mt2712 and mt8173.
-> >  - reg: Physical base address and length of the function block register=
- space
-> >  - interrupts: The interrupt signal from the function block (required, =
-except for
-> >    merge and split function blocks).
-> > diff --git a/Documentation/devicetree/bindings/display/mediatek/mediate=
-k,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi=
-.txt
-> > index 77def4456706..dc1ebd13cc88 100644
-> > --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.t=
-xt
-> > +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.t=
-xt
-> > @@ -7,7 +7,7 @@ output bus.
-> >
-> >  Required properties:
-> >  - compatible: "mediatek,<chip>-dpi"
-> > -  the supported chips are mt2701 , mt8173 and mt8183.
-> > +  the supported chips are mt2701, mt7623, mt8173 and mt8183.
-> >  - reg: Physical base address and length of the controller's registers
-> >  - interrupts: The interrupt signal from the function block.
-> >  - clocks: device clocks
-> > diff --git a/Documentation/devicetree/bindings/display/mediatek/mediate=
-k,dsi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi=
-.txt
-> > index 8e4729de8c85..f06f24d405a5 100644
-> > --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.t=
-xt
-> > +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.t=
-xt
-> > @@ -7,7 +7,7 @@ channel output.
-> >
-> >  Required properties:
-> >  - compatible: "mediatek,<chip>-dsi"
-> > -  the supported chips are mt2701, mt8173 and mt8183.
-> > +- the supported chips are mt2701, mt7623, mt8173 and mt8183.
-> >  - reg: Physical base address and length of the controller's registers
-> >  - interrupts: The interrupt signal from the function block.
-> >  - clocks: device clocks
-> > @@ -26,7 +26,7 @@ The MIPI TX configuration module controls the MIPI D-=
-PHY.
-> >
-> >  Required properties:
-> >  - compatible: "mediatek,<chip>-mipi-tx"
-> > -  the supported chips are mt2701, mt8173 and mt8183.
-> > +- the supported chips are mt2701, 7623, mt8173 and mt8183.
-> >  - reg: Physical base address and length of the controller's registers
-> >  - clocks: PLL reference clock
-> >  - clock-output-names: name of the output clock line to the DSI encoder
-> > diff --git a/Documentation/devicetree/bindings/display/mediatek/mediate=
-k,hdmi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,hd=
-mi.txt
-> > index 7b124242b0c5..6b1c586403e4 100644
-> > --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.=
-txt
-> > +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.=
-txt
-> > @@ -6,6 +6,7 @@ its parallel input.
-> >
-> >  Required properties:
-> >  - compatible: Should be "mediatek,<chip>-hdmi".
-> > +- the supported chips are mt2701, mt7623 and mt8173
-> >  - reg: Physical base address and length of the controller's registers
-> >  - interrupts: The interrupt signal from the function block.
-> >  - clocks: device clocks
-> > @@ -32,6 +33,7 @@ The HDMI CEC controller handles hotplug detection and=
- CEC communication.
-> >
-> >  Required properties:
-> >  - compatible: Should be "mediatek,<chip>-cec"
-> > +- the supported chips are mt7623 and mt8173
-> >  - reg: Physical base address and length of the controller's registers
-> >  - interrupts: The interrupt signal from the function block.
-> >  - clocks: device clock
-> > @@ -44,6 +46,7 @@ The Mediatek's I2C controller is used to interface wi=
-th I2C devices.
-> >
-> >  Required properties:
-> >  - compatible: Should be "mediatek,<chip>-hdmi-ddc"
-> > +- the supported chips are mt7623 and mt8173
-> >  - reg: Physical base address and length of the controller's registers
-> >  - clocks: device clock
-> >  - clock-names: Should be "ddc-i2c".
-> > @@ -56,6 +59,7 @@ output and drives the HDMI pads.
-> >
-> >  Required properties:
-> >  - compatible: "mediatek,<chip>-hdmi-phy"
-> > +- the supported chips are mt2701, mt7623 and mt8173
-> >  - reg: Physical base address and length of the module's registers
-> >  - clocks: PLL reference clock
-> >  - clock-names: must contain "pll_ref"
-> > --
-> > 2.25.1
-> >
-> >
+
+--=-xBSnslGKtBLSUetbNVni
+Content-Type: application/x-pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCECow
+ggUcMIIEBKADAgECAhEA4rtJSHkq7AnpxKUY8ZlYZjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
+A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
+bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTkwMTAyMDAwMDAwWhcNMjIwMTAxMjM1
+OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRlYWQub3JnMIIBIjANBgkqhkiG9w0B
+AQEFAAOCAQ8AMIIBCgKCAQEAsv3wObLTCbUA7GJqKj9vHGf+Fa+tpkO+ZRVve9EpNsMsfXhvFpb8
+RgL8vD+L133wK6csYoDU7zKiAo92FMUWaY1Hy6HqvVr9oevfTV3xhB5rQO1RHJoAfkvhy+wpjo7Q
+cXuzkOpibq2YurVStHAiGqAOMGMXhcVGqPuGhcVcVzVUjsvEzAV9Po9K2rpZ52FE4rDkpDK1pBK+
+uOAyOkgIg/cD8Kugav5tyapydeWMZRJQH1vMQ6OVT24CyAn2yXm2NgTQMS1mpzStP2ioPtTnszIQ
+Ih7ASVzhV6csHb8Yrkx8mgllOyrt9Y2kWRRJFm/FPRNEurOeNV6lnYAXOymVJwIDAQABo4IB0zCC
+Ac8wHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFLfuNf820LvaT4AK
+xrGK3EKx1DE7MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
+BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
+dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
+LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
+Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
+Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
+KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAeBgNVHREEFzAVgRNkd213MkBpbmZy
+YWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQALbSykFusvvVkSIWttcEeifOGGKs7Wx2f5f45b
+nv2ghcxK5URjUvCnJhg+soxOMoQLG6+nbhzzb2rLTdRVGbvjZH0fOOzq0LShq0EXsqnJbbuwJhK+
+PnBtqX5O23PMHutP1l88AtVN+Rb72oSvnD+dK6708JqqUx2MAFLMevrhJRXLjKb2Mm+/8XBpEw+B
+7DisN4TMlLB/d55WnT9UPNHmQ+3KFL7QrTO8hYExkU849g58Dn3Nw3oCbMUgny81ocrLlB2Z5fFG
+Qu1AdNiBA+kg/UxzyJZpFbKfCITd5yX49bOriL692aMVDyqUvh8fP+T99PqorH4cIJP6OxSTdxKM
+MIIFHDCCBASgAwIBAgIRAOK7SUh5KuwJ6cSlGPGZWGYwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
+ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTE5MDEwMjAwMDAwMFoXDTIyMDEwMTIz
+NTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCASIwDQYJKoZIhvcN
+AQEBBQADggEPADCCAQoCggEBALL98Dmy0wm1AOxiaio/bxxn/hWvraZDvmUVb3vRKTbDLH14bxaW
+/EYC/Lw/i9d98CunLGKA1O8yogKPdhTFFmmNR8uh6r1a/aHr301d8YQea0DtURyaAH5L4cvsKY6O
+0HF7s5DqYm6tmLq1UrRwIhqgDjBjF4XFRqj7hoXFXFc1VI7LxMwFfT6PStq6WedhROKw5KQytaQS
+vrjgMjpICIP3A/CroGr+bcmqcnXljGUSUB9bzEOjlU9uAsgJ9sl5tjYE0DEtZqc0rT9oqD7U57My
+ECIewElc4VenLB2/GK5MfJoJZTsq7fWNpFkUSRZvxT0TRLqznjVepZ2AFzsplScCAwEAAaOCAdMw
+ggHPMB8GA1UdIwQYMBaAFIKvbIz4xf6WYXzoHz0rcUhexIvAMB0GA1UdDgQWBBS37jX/NtC72k+A
+CsaxitxCsdQxOzAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEF
+BQcDBAYIKwYBBQUHAwIwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAwUwKzApBggrBgEFBQcCARYd
+aHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2Ny
+bC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
+bENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2Nh
+LmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQG
+CCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
+cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAC20spBbrL71ZEiFrbXBHonzhhirO1sdn+X+O
+W579oIXMSuVEY1LwpyYYPrKMTjKECxuvp24c829qy03UVRm742R9Hzjs6tC0oatBF7KpyW27sCYS
+vj5wbal+TttzzB7rT9ZfPALVTfkW+9qEr5w/nSuu9PCaqlMdjABSzHr64SUVy4ym9jJvv/FwaRMP
+gew4rDeEzJSwf3eeVp0/VDzR5kPtyhS+0K0zvIWBMZFPOPYOfA59zcN6AmzFIJ8vNaHKy5QdmeXx
+RkLtQHTYgQPpIP1Mc8iWaRWynwiE3ecl+PWzq4i+vdmjFQ8qlL4fHz/k/fT6qKx+HCCT+jsUk3cS
+jDCCBeYwggPOoAMCAQICEGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRp
+b24gQXV0aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYT
+AkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
+BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50
+aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf
++bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcf
+WlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqza
+aPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDK
+CMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAU
+u69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1Ud
+DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8E
+RTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9u
+QXV0aG9yaXR5LmNybDBxBggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29t
+b2RvY2EuY29tL0NPTU9ET1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2Nz
+cC5jb21vZG9jYS5jb20wDQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2
+SQgG1NgvNc3fQP7TcePo7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs
+0j8CGpfb+SJA3GaBQ+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDM
+KVmU/PUWNMKSTvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+
+E2pvOUtY+hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfH
+M5tdhYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
+jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1t
+yZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4o
+gnzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAb
+R9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIDyjCCA8YCAQEwga0wgZcxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
+ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
+ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjAw
+ODA0MTcyNDU4WjAvBgkqhkiG9w0BCQQxIgQgQw4EhljujO/epy7QrjP7THVzMm2SGOOudseMl9Gp
+ZNUwgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
+TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
+PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
+aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
+A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
+bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
+DQEBAQUABIIBAEkqTTqwEupb/Bx5Jv7wDSj+PSh2IPLZ2dRUrZyCc/VFOcM+MNp2RAMcQOa3uXxc
+02XWKvaUQSoLRFepQt3Swau5VDoOUa7YgL6vEdTR7A8JZfIt47TrQ7Z1d67C7Mh1GGzGfmxf+IDC
+jk+AI124WP9nLljMEF9YN4SbnyP08gcr3RdqADwI7Go/dH7Rcqp7QHjycqSGJ6s4nsXQnjZH5/JK
+SqgKDvmZBbLDyebYNTweIDgnkMcdfpCTeRMuuALrFgcxii+1D3UTC75cljDw6OJCylAWhC6fb/Zt
+Y7GRHUH6e1PV94DBKfIASLc9eGPhARrjOR4z3Mg04E3D9pD+P34AAAAAAAA=
+
+
+--=-xBSnslGKtBLSUetbNVni--
+
