@@ -7,150 +7,130 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9836BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E197FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BE3C20722
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8A8F20722
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:30:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zxYJy5St"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sg+mW7y8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbgHDG0R (ORCPT
+        id S1726036AbgHDGau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 02:26:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39530 "EHLO
+        Tue, 4 Aug 2020 02:30:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728466AbgHDG0R (ORCPT
+        with ESMTP id S1725300AbgHDGau (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 02:26:17 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA6DDC061756
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 23:26:16 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t10so16949541plz.10
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 23:26:16 -0700 (PDT)
+        Tue, 4 Aug 2020 02:30:50 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06975C06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 23:30:49 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id a79so3863239pfa.8
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 23:30:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=A9XNvvJrivb8JTq4QeaRMps6wdVFfMtg1N723IohrT8=;
-        b=zxYJy5Stx156yltLhRTP9GhksOd2MBnMjQpwNHIWQHQ+Bp0htv+64wpe8tUrSf0uZs
-         hVkgWk9tJ4efrQQwpZQYthBB3iRztK6b2ZapTTKQO4YHrYqaEeyEKFB5uy06yJtm+8+o
-         fqvcdq+db54bYb0vstHJl+Sc//Nqkzq6bskXZ1FO8n70gd3tlL/HzOh2fOFycF4zjNEN
-         e1EgUUW9riQTWujTLwvwcmPSzDqntaiYxvyDIpaB0Z2tm789PN2WgcLE1j1ussb/jF1T
-         Ck0QfuEI3IVeM9jBBUAD3THtIPMYfKdzdHjs1MSuZxzPQ4Dj0T7+SgJVNOy3UYtYY5En
-         uw/Q==
+        bh=BS92Sq6q7n94/aHq6JQ3yd1cYmx3gIjRwBJOL6Tqt7s=;
+        b=Sg+mW7y8iDCWNlMIqjCofkFAn8mmYpoI5p05fB1k9dPbzPV3dP967l+i1WPVmM9iJj
+         L4HItDLcwRP7gn3rhzhNEfUeZAFCKCJg0tyMOKEUOeceu0BBKs/7ZalGZOFe7FuNeHeo
+         DLN6Epa2z6pXgYW/HyLtUOpKfLxC1w6PdQ453O7Z70PAkSqKGlxIAjb+b7Bj0Wbuy71k
+         yV5X1a6KGtx2qtB0Og0sbYmbDVFaJVJI+07q7OPCelzrT4OmKwo3TKCdLhJO9EjadUB2
+         mPmBWTbyLkkuGPlzOhVFNfvDRo6ofK4soaj0bjHN5KFcdPDG4L6Rd2dF/9P3hlWb7kga
+         hr7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=A9XNvvJrivb8JTq4QeaRMps6wdVFfMtg1N723IohrT8=;
-        b=tPE3mV1PQhhx7btih6L4arQJoK+z/ZqhyXTvVQrn9q7REA0vFcX8Be/R42IaUiQ/Dw
-         wnZ6u+RHNJzrX+m0xa1tuFqCGLbW9UXyOOOVOGU2HtYc1UvibUoWDeyITLOXt96X26t4
-         LieWQluzZLEtyorycSy5X/EikrgT0tB4P1dqW8gQaUwgaRWOHIhwBmaxt6bdk663p6FQ
-         KYT3tfIR3ikGiVEsIxYJoli22akwra41Yt75bMMBYdkQFxEtARnrgnywstcA0lffvN56
-         eFiN3n8a+MlPcY0z9hGK4D2uj5/uvVL3Za+iTsfY9k45ND3UDItqaqQC0GBwG7/HO+1K
-         KSDw==
-X-Gm-Message-State: AOAM532W2db7y5hN69MCd40UAXwN94GCaxxa1crp+oAzRWbHIL/eZYuU
-        wPKSTbRn+6sXpSDfiLeGSa2fEefFyyE=
-X-Google-Smtp-Source: ABdhPJwuBFWBOL0wZlYQZdtR9A7iPgxvlw2yl0HtQ9dIfmTb4jJy6WHJGuE2cnhX9J0PSHYJUr+dPw==
-X-Received: by 2002:a17:90a:bc04:: with SMTP id w4mr2645937pjr.99.1596522376172;
-        Mon, 03 Aug 2020 23:26:16 -0700 (PDT)
+        bh=BS92Sq6q7n94/aHq6JQ3yd1cYmx3gIjRwBJOL6Tqt7s=;
+        b=bbL5br2ZWAyKTeb1OfixBHAsV4/WqIodiRRz553+9m+y9OLu4WSDAnQGl07kVrEioZ
+         tr/8M5on0j774QFaFL1zKSh/QAt1dGht/xeVCfTBAphFYJ7IZyKce3uU3FZfDYuSDBOE
+         bRd6FYmV5MiPso9Y+ADj+JF/raN7uwx41FyqbhdjHUIlmhLIetkuODPPFHy9407oTu0/
+         Iu9BWTAJoZW9kPvcVKXBZ9kWiw/naorL1WNubIG6anemsbg9WvPkVzehi3yV7/LHn/kn
+         Fb39UhUXVylnj1UqJCBOBC02wkv9YUBlkOC9iWkWCSGIUhu2iD3VhdVb5RMk6iXYCIo9
+         8LzQ==
+X-Gm-Message-State: AOAM5335Q9E4lnUFxbPDk1i+gyOHzH/gw8kU++B+eGF4r5CRSyhT/kaX
+        84Nq0ZBtT96DHjUthw5i4cBTZs5IRus=
+X-Google-Smtp-Source: ABdhPJyGa9ah22zuDQgf0Ditcuq0XQOapNoNRHgrXa/42Bm+te+ZwAEHhvV26wUUZTLHQtWR54mL+Q==
+X-Received: by 2002:a62:647:: with SMTP id 68mr20097776pfg.45.1596522649293;
+        Mon, 03 Aug 2020 23:30:49 -0700 (PDT)
 Received: from localhost ([122.162.244.227])
-        by smtp.gmail.com with ESMTPSA id z29sm6992161pfj.182.2020.08.03.23.26.14
+        by smtp.gmail.com with ESMTPSA id k21sm17731086pgl.0.2020.08.03.23.30.48
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Aug 2020 23:26:15 -0700 (PDT)
-Date:   Tue, 4 Aug 2020 11:56:11 +0530
+        Mon, 03 Aug 2020 23:30:48 -0700 (PDT)
+Date:   Tue, 4 Aug 2020 12:00:46 +0530
 From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     rjw@rjwysocki.net, dietmar.eggemann@arm.com,
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Ionela Voinescu <ionela.voinescu@arm.com>, rjw@rjwysocki.net,
         catalin.marinas@arm.com, sudeep.holla@arm.com, will@kernel.org,
         linux@armlinux.org.uk, mingo@redhat.com, peterz@infradead.org,
         linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/7] cpufreq: set invariance scale factor on
- transition end
-Message-ID: <20200804062611.6jpra73hmhybdw3i@vireshk-mac-ubuntu>
+Subject: Re: [PATCH v2 3/7] arch_topology: disable frequency invariance for
+ CONFIG_BL_SWITCHER
+Message-ID: <20200804063046.a2hw5cxwiewhb3aw@vireshk-mac-ubuntu>
 References: <20200722093732.14297-1-ionela.voinescu@arm.com>
- <20200722093732.14297-3-ionela.voinescu@arm.com>
- <20200730041334.cjg5mc5xpopd2lst@vireshk-mac-ubuntu>
- <20200803135838.GB9512@arm.com>
+ <20200722093732.14297-4-ionela.voinescu@arm.com>
+ <20200730042423.4j22udejluis7blw@vireshk-mac-ubuntu>
+ <1db4317a-0018-1590-f0ae-ed5e235b174f@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200803135838.GB9512@arm.com>
+In-Reply-To: <1db4317a-0018-1590-f0ae-ed5e235b174f@arm.com>
 User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-08-20, 14:58, Ionela Voinescu wrote:
-> Hi Viresh,
-> 
-> On Thursday 30 Jul 2020 at 09:43:34 (+0530), Viresh Kumar wrote:
+On 30-07-20, 12:29, Dietmar Eggemann wrote:
+> On 30/07/2020 06:24, Viresh Kumar wrote:
 > > On 22-07-20, 10:37, Ionela Voinescu wrote:
-> > > While the move of the invariance setter calls (arch_set_freq_scale())
-> > > from cpufreq drivers to cpufreq core maintained the previous
-> > > functionality for existing drivers that use target_index() and
-> > > fast_switch() for frequency switching, it also gives the possibility
-> > > of adding support for users of the target() callback, which is exploited
-> > > here.
-> > > 
-> > > To be noted that the target() callback has been flagged as deprecated
-> > > since:
-> > > 
-> > > commit 9c0ebcf78fde ("cpufreq: Implement light weight ->target_index() routine")
-> > > 
-> > > It also doesn't have that many users:
-> > > 
-> > >   cpufreq-nforce2.c:371:2:      .target = nforce2_target,
-> > >   cppc_cpufreq.c:416:2:         .target = cppc_cpufreq_set_target,
-> > >   gx-suspmod.c:439:2:           .target = cpufreq_gx_target,
-> > >   pcc-cpufreq.c:573:2:          .target = pcc_cpufreq_target,
-> > > 
-> > > Similarly to the path taken for target_index() calls in the cpufreq core
-> > > during a frequency change, all of the drivers above will mark the end of a
-> > > frequency change by a call to cpufreq_freq_transition_end().
-> > > 
-> > > Therefore, cpufreq_freq_transition_end() can be used as the location for
-> > > the arch_set_freq_scale() call to potentially inform the scheduler of the
-> > > frequency change.
-> > > 
-> > > This change maintains the previous functionality for the drivers that
-> > > implement the target_index() callback, while also adding support for the
-> > > few drivers that implement the deprecated target() callback.
-> > > 
-> > > Two notes are worthwhile here:
-> > >  - In __target_index(), cpufreq_freq_transition_end() is called only for
-> > >    drivers that have synchronous notifications enabled. There is only one
-> > >    driver that disables them,
-> > > 
-> > >    drivers/cpufreq/powernow-k8.c:1142: .flags = CPUFREQ_ASYNC_NOTIFICATION,
-> > > 
-> > >    which is deprecated.
+> >> +++ b/drivers/base/arch_topology.c
+> >> @@ -27,6 +27,7 @@ __weak bool arch_freq_counters_available(struct cpumask *cpus)
+> >>  }
+> >>  DEFINE_PER_CPU(unsigned long, freq_scale) = SCHED_CAPACITY_SCALE;
+> >>  
+> >> +#ifndef CONFIG_BL_SWITCHER
+> >>  void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
+> >>  			 unsigned long max_freq)
+> >>  {
+> >> @@ -46,6 +47,7 @@ void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
+> >>  	for_each_cpu(i, cpus)
+> >>  		per_cpu(freq_scale, i) = scale;
+> >>  }
+> >> +#endif
 > > 
-> > I don't think this is deprecated.
-
-Heh, maybe I misunderstood. I thought you are talking about the flag,
-while you were talking about the driver.
-
-> Sorry, possibly 'deprecated' is a strong word.
+> > I don't really like this change, the ifdef hackery is disgusting and
+> > then we are putting that in a completely different part of the kernel.
+> > 
+> > There are at least these two ways of solving this, maybe more:
+> > 
+> > - Fix the bl switcher driver and add the complexity in it (which you
+> >   tried to do earlier).
+> > 
+> > - Add a cpufreq flag to skip arch-set-freq-scale call.
 > 
-> As far as I knew acpi_cpufreq was recommended more recently for K8/K10
-> CPUs so that's why I decided not to create a special case for it, also
-> considering that it was not supporting cpufreq-based frequency
-> invariance to begin with.
+> I agree it's not nice but IMHO the cpufreq flag is worse since we would
+> introduce new infrastructure only for a deprecated feature. I'm assuming
+> that BL SWITCHER is the only feature needing this CPUfreq flag extension.
 > 
-> We could support this as well by having a call to arch_set_freq_scale()
-> on the else path in __target_index(). But given that there was only this
-> one user of CPUFREQ_ASYNC_NOTIFICATION, I thought I'd propose this simpler
-> version first.
+> #ifdef CONFIG_BL_SWITCHER is already in drivers/irqchip/irq-gic.c so
+> it's ugly already.
 > 
-> Let me know if my reasoning is wrong.
+> Runtime detecting (via bL_switching_enabled) of BL SWITCHER is right now
+> also only handled inside vexpress-spc-cpufreq.c via a
+> bL_switcher_notifier. A mechanism which also sits behind a #ifdef
+> CONFIG_BL_SWITCHER.
 
-Nevertheless, I don't think you need to mention this detail in
-changelog for powernow-k8 as cpufreq_freq_transition_end() does get
-called for it as well, by the driver instead of the core.
+Vexpress one is a driver and so ugliness could be ignored here :)
+
+So here is option number 3 (in continuation of the earlier two
+options):
+- Don't do anything for bL switcher, just add a TODO/NOTE in the
+  driver that FIE is broken for switcher. And I don't think anyone
+  will care about FIE for the switcher anyway :)
 
 -- 
 viresh
