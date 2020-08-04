@@ -2,95 +2,187 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58554C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF88C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E0F72076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E9DF2076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:18:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HpWCJ03q"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="P7CesnaA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729197AbgHDFLW (ORCPT
+        id S1728200AbgHDFSH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 01:11:22 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:50289 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726000AbgHDFLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 01:11:21 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BLNBt0zDRz9sSt;
-        Tue,  4 Aug 2020 15:11:18 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596517879;
-        bh=h/uuom2Oyk1hCVfSGLv/GSqI8b2sa7tipFZELOZiKd4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=HpWCJ03q8QRjMxFJMoSlhMmBQFZfd6ME4NM8QMrd0M9p51A2Q8o4WazxBNBuKzqXK
-         7qYG+I2uajIUZKR3kSvmVWrwHhIex1tU99f2zsc9OrKyqj/IYCr6yhr6kemh/Eyb4U
-         RgnxmqO6TA04Dy6hR2tfeqvxo8Pt2El7c9g/zf9Tjr9K3EXcXwcbILXwttoD6z6osh
-         Cnypbi/4cw3f/FsxbfsRdfjzjcyALenM/wNEmbzJxb2SmPyjoTeav2vwOcb+Atzb2B
-         NJUCqxObs7dDDn5citWJU7zGt1ztmg3/T+Qfve8pu6Elr9RBI/0XGDzG3mCFZJ+E7e
-         xz8eji0O+SxOQ==
-Date:   Tue, 4 Aug 2020 15:11:17 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-Subject: linux-next: build failure after merge of the vhost tree
-Message-ID: <20200804151117.232dfef4@canb.auug.org.au>
+        Tue, 4 Aug 2020 01:18:07 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:34280 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgHDFSG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 01:18:06 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id D31DB891B1;
+        Tue,  4 Aug 2020 17:18:02 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1596518282;
+        bh=zfP6/sULj//NkhxeKY3miXAqSNhqQ7vcIbwQEGAnxsI=;
+        h=From:To:Cc:Subject:Date;
+        b=P7CesnaAw5GuaaeryCdRqBDPv30qaqyxUihnGTchvgetugrC0eL3ZuDhy6+L0A2/d
+         nOYJaVOz7ZuSvUWtf30cDb2ijbF8P9cCX5bOENx1iH+4YvrxEWBH8uT6Tickwe0URJ
+         W6vonvs3HefW1y0VkkdX+plBqC9CnaPIpvJwAD2jBtq61EpnT57U4UE7yb0YpJ4W7r
+         1XIUnZSwQ0jWzn/eyjU6VB1W4NaxpIbU9KM3tFDE33V+Q7/4/mTQ3VZa5NrNyk/REc
+         eFAH+NOOhTjfjdcHByf6qzz6G5dspEAqM7nzLsOt+3Ro6nsWrP4kIcugqYGSYHp/0q
+         dD5uR3tbLFMgQ==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f28ef860000>; Tue, 04 Aug 2020 17:18:03 +1200
+Received: from markto-dl.ws.atlnz.lc (markto-dl.ws.atlnz.lc [10.33.23.25])
+        by smtp (Postfix) with ESMTP id 4CFB313EEBA;
+        Tue,  4 Aug 2020 17:17:57 +1200 (NZST)
+Received: by markto-dl.ws.atlnz.lc (Postfix, from userid 1155)
+        id 9416434108A; Tue,  4 Aug 2020 17:17:57 +1200 (NZST)
+From:   Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+Subject: [PATCH] RTC: Implement pretimeout watchdog for DS1307
+Date:   Tue,  4 Aug 2020 17:17:43 +1200
+Message-Id: <20200804051743.19115-1-mark.tomlinson@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/j1GTDJzT4/6ee=s5zw975+M";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/j1GTDJzT4/6ee=s5zw975+M
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+If the hardware watchdog in the clock chip simply pulls the reset line
+of the CPU, then there is no chance to write a stack trace to help
+determine what may have been blocking the CPU.
 
-Hi all,
+This patch adds a pretimeout to the watchdog, which, if enabled, sets
+a timer to go off before the hardware watchdog kicks in, and calls
+the standard pretimeout function, which can (for example) call panic.
 
-After merging the vhost tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+---
+ drivers/rtc/rtc-ds1307.c | 35 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
 
-drivers/rpmsg/virtio_rpmsg_bus.c:28:10: fatal error: linux/virtio_rpmsg.h: =
-No such file or directory
-   28 | #include <linux/virtio_rpmsg.h>
-      |          ^~~~~~~~~~~~~~~~~~~~~~
-
-Caused by commit
-
-  bba6f4f52c31 ("rpmsg: move common structures and defines to headers")
-
-I have used the vhost tree from next-20200803 for today.
-
+diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
+index 49702942bb08..647f8659d0bd 100644
+--- a/drivers/rtc/rtc-ds1307.c
++++ b/drivers/rtc/rtc-ds1307.c
+@@ -23,6 +23,7 @@
+ #include <linux/clk-provider.h>
+ #include <linux/regmap.h>
+ #include <linux/watchdog.h>
++#include <linux/timer.h>
+=20
+ /*
+  * We can't determine type by probing, but if we expect pre-Linux code
+@@ -174,6 +175,10 @@ struct ds1307 {
+ #ifdef CONFIG_COMMON_CLK
+ 	struct clk_hw		clks[2];
+ #endif
++#ifdef CONFIG_WATCHDOG_CORE
++	struct timer_list	soft_timer;
++	struct watchdog_device	*wdt;
++#endif
+ };
+=20
+ struct chip_desc {
+@@ -863,12 +868,34 @@ static int m41txx_rtc_set_offset(struct device *dev=
+, long offset)
+ }
+=20
+ #ifdef CONFIG_WATCHDOG_CORE
++static void ds1388_soft_wdt_expire(struct timer_list *soft_timer)
++{
++	struct ds1307 *ds1307 =3D container_of(soft_timer, struct ds1307, soft_=
+timer);
++
++	watchdog_notify_pretimeout(ds1307->wdt);
++}
++
++static void ds1388_soft_timer_set(struct watchdog_device *wdt_dev)
++{
++	struct ds1307 *ds1307 =3D watchdog_get_drvdata(wdt_dev);
++	int soft_timeout;
++
++	if (wdt_dev->pretimeout > 0) {
++		soft_timeout =3D wdt_dev->timeout - wdt_dev->pretimeout;
++		mod_timer(&ds1307->soft_timer, jiffies + soft_timeout * HZ);
++	} else {
++		del_timer(&ds1307->soft_timer);
++	}
++}
++
+ static int ds1388_wdt_start(struct watchdog_device *wdt_dev)
+ {
+ 	struct ds1307 *ds1307 =3D watchdog_get_drvdata(wdt_dev);
+ 	u8 regs[2];
+ 	int ret;
+=20
++	ds1388_soft_timer_set(wdt_dev);
++
+ 	ret =3D regmap_update_bits(ds1307->regmap, DS1388_REG_FLAG,
+ 				 DS1388_BIT_WF, 0);
+ 	if (ret)
+@@ -900,6 +927,7 @@ static int ds1388_wdt_stop(struct watchdog_device *wd=
+t_dev)
+ {
+ 	struct ds1307 *ds1307 =3D watchdog_get_drvdata(wdt_dev);
+=20
++	del_timer(&ds1307->soft_timer);
+ 	return regmap_update_bits(ds1307->regmap, DS1388_REG_CONTROL,
+ 				  DS1388_BIT_WDE | DS1388_BIT_RST, 0);
+ }
+@@ -909,6 +937,7 @@ static int ds1388_wdt_ping(struct watchdog_device *wd=
+t_dev)
+ 	struct ds1307 *ds1307 =3D watchdog_get_drvdata(wdt_dev);
+ 	u8 regs[2];
+=20
++	ds1388_soft_timer_set(wdt_dev);
+ 	return regmap_bulk_read(ds1307->regmap, DS1388_REG_WDOG_HUN_SECS, regs,
+ 				sizeof(regs));
+ }
+@@ -923,6 +952,7 @@ static int ds1388_wdt_set_timeout(struct watchdog_dev=
+ice *wdt_dev,
+ 	regs[0] =3D 0;
+ 	regs[1] =3D bin2bcd(wdt_dev->timeout);
+=20
++	ds1388_soft_timer_set(wdt_dev);
+ 	return regmap_bulk_write(ds1307->regmap, DS1388_REG_WDOG_HUN_SECS, regs=
+,
+ 				 sizeof(regs));
+ }
+@@ -1652,7 +1682,8 @@ static void ds1307_clks_register(struct ds1307 *ds1=
+307)
+=20
+ #ifdef CONFIG_WATCHDOG_CORE
+ static const struct watchdog_info ds1388_wdt_info =3D {
+-	.options =3D WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
++	.options =3D WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
++		   WDIOF_MAGICCLOSE | WDIOF_PRETIMEOUT,
+ 	.identity =3D "DS1388 watchdog",
+ };
+=20
+@@ -1681,6 +1712,8 @@ static void ds1307_wdt_register(struct ds1307 *ds13=
+07)
+ 	wdt->timeout =3D 99;
+ 	wdt->max_timeout =3D 99;
+ 	wdt->min_timeout =3D 1;
++	ds1307->wdt =3D wdt;
++	timer_setup(&ds1307->soft_timer, ds1388_soft_wdt_expire, 0);
+=20
+ 	watchdog_init_timeout(wdt, 0, ds1307->dev);
+ 	watchdog_set_drvdata(wdt, ds1307);
 --=20
-Cheers,
-Stephen Rothwell
+2.28.0
 
---Sig_/j1GTDJzT4/6ee=s5zw975+M
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8o7fUACgkQAVBC80lX
-0GzDSAf+ITf6o2wbYvsklrJdBFXUiYqYZYAxSmxK18TePgWWwMXyvmsZppKxi/NW
-UKvYjx7DspoT2BUUrjPlDdSMf+njwgAIs/OUDM3P1H4jPAYky6iDOy4MQXhOfGiT
-/RzTbtXmThHJnudLj+PyyNUxtqJLlHDQI7PHSJhzsI9E2MblAf05UVPa/Ih8X44g
-x8YFmeiTkWQtViym3/3SHxRuWEH3HLQWw/IxOcFPbTcFqx7FF5KQn7xO+c3y2Y3u
-ywIpREsLu1K7vISLLMZE3D7JjtSvoBf59t4Mng6f09/F5lOxq0VayYgWFIwEVAfa
-jwHfQ1jjVtK0kn9e5bXvGnJ82Muomw==
-=NLw3
------END PGP SIGNATURE-----
-
---Sig_/j1GTDJzT4/6ee=s5zw975+M--
