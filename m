@@ -2,86 +2,116 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D45F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 18:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F3AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 18:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1C2E206DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 18:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8874206DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 18:48:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G8ZdWUEj"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hg7DVeAu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbgHDSrL (ORCPT
+        id S1728043AbgHDSsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 14:47:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40542 "EHLO
+        Tue, 4 Aug 2020 14:48:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbgHDSrK (ORCPT
+        with ESMTP id S1727812AbgHDSsq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 14:47:10 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70EBAC06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 11:47:10 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id l17so43296862iok.7
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 11:47:10 -0700 (PDT)
+        Tue, 4 Aug 2020 14:48:46 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CF6EC061756
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 11:48:45 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id kq25so30650824ejb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 11:48:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LeVbzIBEA3JOaGe5Ny64vb+/3rlySwvGG6S0dU+z+gY=;
-        b=G8ZdWUEjxxyHgWzCQe0B1ecAHZLk61NFOtDkk9m2clW3KnV5q2QOH2uzn4EervoKWP
-         kcibGnUOV/LrvKpwtTWQpnlSk6EglvK2qrnADqmESgCBgb4CZdsXNrT1H0avWeD1LmFo
-         85/wFyyIp6Ap5IDOkR/n8vooOtrYyaEcU7n8QI+8fVyqeqSDtNzDJU0sn9hmjhx6+MfI
-         MhEsbJzU5BXrgaJbR92ZTRkdRpH5Pu8uIhTcen1Ld/laoaCf7PH46J5qgt9COr3uiV/t
-         partRNOaoamryeI1wR8OauRcPhHfbIpLxVkf9uDEYwSQQa6VwdDmcueeakaKF779Hcco
-         PObA==
+        d=broadcom.com; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=k6n9Bx3dS7/rl5+hEQcop2J6ordeV//9xvdRouOCTy8=;
+        b=hg7DVeAuoJ8QIOV9tq9Uk8NDmJQs7QY+/+0GaEmeFug3QJKKIl9TecClodaq5ryqwX
+         bQCilQCYYffU16LTepCDIh+agVs9uQUSAQV6Zx4EpcaBJyd6yRu2vZkKqAjc+V8p6wD1
+         sVeMAe3SNpy6Kx7H/NJxH6bmXtKpYRJfAls1E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LeVbzIBEA3JOaGe5Ny64vb+/3rlySwvGG6S0dU+z+gY=;
-        b=cyEMT8OtjofZ6iKrLmEJH1OEganblpy6GFsRzovCxIMiv3dPHQ51d9/1q6JYYjp6gw
-         zTSmZOy18nRXsSolNsg8EazsNwOVN9tscHcoxee5Ns8fIYujGJ7Qn7W3TjnlJCEs3Ng0
-         JJqRPpXKzO6tAsLGQXsr8m3FFw2e0ffsruUdedPqte95WkqFR/qIi8U+MjXNzx4Hg+Ur
-         5ZclHliKpth04p4Zo5dTZLNVrbN4chpeXb7XEf9x7ijFMhM4unBayk/eQyWl3MTY98ij
-         fvYSs74q+vTydcVqjps8QCBxkkFqj8n+v84VplN0F6VKVKiEjfFkqi4DFh1+T9PDSnFP
-         zrvQ==
-X-Gm-Message-State: AOAM530kVo06dTdEoba23osxxYOGcATSd+wegixE8+S8UQqAlf3j5Vjc
-        tRwQBhqSir0rfrWp1833fC8vKQUb6spUyUANjH7lTw==
-X-Google-Smtp-Source: ABdhPJxHnlBlIg2y23Vk8YRGymkBF+ZKaZSs9iYjqD9jaNATOvINcmXJQoQGshzeLXGR+Y6Qz7mSWpgkBGBZx6373PQ=
-X-Received: by 2002:a02:394c:: with SMTP id w12mr7393543jae.18.1596566829493;
- Tue, 04 Aug 2020 11:47:09 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=k6n9Bx3dS7/rl5+hEQcop2J6ordeV//9xvdRouOCTy8=;
+        b=l9OehUeYWi949iloqQSwAmpOqZuE/n6SEkiMlW51k3bROsMzb2gtvZ+eU7JFRZ5Z2T
+         K57BvpV+REFE+hDVhKL972SkkyzB9e5yphy0Idj089+dvWgkmcvw78aqn5w1tLS2YMNr
+         R/0kvxmwfduFaD3c233BkjZdWMFakRDax7IYzuFQRRI04McDtQrOrCVBfPIBy8YxP8Du
+         moSh/HWjKZ+saQlYNYxd2vuYKUrbekS5owYskkpnxFtKOvTImYcXH+oghTaLR0y5nbj2
+         FZqLEJLaeWzeRWry0Nv6hwUuza3C+O58qVzgD7Oktxt/53Fl9shY7KAXpdlkBszcrUNQ
+         jQ0A==
+X-Gm-Message-State: AOAM533pScn/znTUwM3mzW6xpPxhJTuE4JsadZnP1DQa+5b7Zxf0A4Bt
+        Xs5wgHkZNtFmzrVCDOt3ULXtrj0dM0a/M5haPKCjHg==
+X-Google-Smtp-Source: ABdhPJzErpOyOvNE+rPIf2h1XLHlZ/Z9OnqOzuXaEJHun6C5kwQFsKbupJpAwtgn1WjEhgl1H9J/a3e/s+vx+8dRcCU=
+X-Received: by 2002:a17:906:d187:: with SMTP id c7mr23685263ejz.196.1596566924085;
+ Tue, 04 Aug 2020 11:48:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200714015732.32426-1-sean.j.christopherson@intel.com> <20200804184146.GA16023@linux.intel.com>
-In-Reply-To: <20200804184146.GA16023@linux.intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Tue, 4 Aug 2020 11:46:58 -0700
-Message-ID: <CALMp9eQb32UB_tLowkr5T+Rt9SBdJbTkjHWyWFg+6ruJ_OuaKw@mail.gmail.com>
-Subject: Re: [PATCH] KVM: x86: Don't attempt to load PDPTRs when 64-bit mode
- is enabled
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Oliver Upton <oupton@google.com>,
-        Peter Shier <pshier@google.com>
+From:   Markus Mayer <mmayer@broadcom.com>
+Date:   Tue, 4 Aug 2020 11:48:32 -0700
+Message-ID: <CAGt4E5tMdG9gZbx43MeXpiPnqe0sy9bYKQmZ1oJCSwTL=Xf7Dg@mail.gmail.com>
+Subject: Build error caused by "arm64: dts: agilex: add nand clocks"
+To:     Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc:     Device Tree <devicetree@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 11:41 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
+Hi,
 
-> Ping.  This really needs to be in the initial pull for 5.9, as is kvm/queue
-> has a 100% fatality rate for me.
+I don't know if anybody else is seeing this, but for me the commit
+"arm64: dts: agilex: add nand clocks"[1] is causing a build error
+while generating DTS files for ARM64.
 
-I agree completely, but I am curious what guest you have that toggles
-CD/NW in 64-bit mode.
+The error goes away when I drop the commit.
+
+$ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make defconfig dtbs
+  HOSTCC  scripts/basic/fixdep
+  HOSTCC  scripts/kconfig/conf.o
+  HOSTCC  scripts/kconfig/confdata.o
+  HOSTCC  scripts/kconfig/expr.o
+  LEX     scripts/kconfig/lexer.lex.c
+  YACC    scripts/kconfig/parser.tab.[ch]
+  HOSTCC  scripts/kconfig/lexer.lex.o
+  HOSTCC  scripts/kconfig/parser.tab.o
+  HOSTCC  scripts/kconfig/preprocess.o
+  HOSTCC  scripts/kconfig/symbol.o
+  HOSTCC  scripts/kconfig/util.o
+  HOSTLD  scripts/kconfig/conf
+*** Default configuration is based on 'defconfig'
+[...]
+  DTC     arch/arm64/boot/dts/freescale/imx8mq-pico-pi.dtb
+  DTC     arch/arm64/boot/dts/freescale/imx8mq-thor96.dtb
+  DTC     arch/arm64/boot/dts/freescale/imx8mq-zii-ultra-rmb3.dtb
+  DTC     arch/arm64/boot/dts/freescale/imx8mq-zii-ultra-zest.dtb
+  DTC     arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dtb
+  DTC     arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dtb
+  DTC     arch/arm64/boot/dts/freescale/imx8qxp-mek.dtb
+  DTC     arch/arm64/boot/dts/freescale/s32v234-evb.dtb
+  DTC     arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dtb
+  DTC     arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dtb
+  DTC     arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dtb
+  DTC     arch/arm64/boot/dts/hisilicon/hi6220-hikey.dtb
+  DTC     arch/arm64/boot/dts/hisilicon/hip05-d02.dtb
+  DTC     arch/arm64/boot/dts/hisilicon/hip06-d03.dtb
+  DTC     arch/arm64/boot/dts/hisilicon/hip07-d05.dtb
+  DTC     arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dtb
+Error: arch/arm64/boot/dts/intel/socfpga_agilex.dtsi:313.15-16 syntax error
+FATAL ERROR: Unable to parse input tree
+make[3]: *** [scripts/Makefile.lib:309:
+arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dtb] Error 1
+make[2]: *** [scripts/Makefile.build:497: arch/arm64/boot/dts/intel] Error 2
+make[1]: *** [Makefile:1306: dtbs] Error 2
+make: *** [Makefile:336: __build_one_by_one] Error 2
+
+Regards,
+-Markus
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d4ae4dd346cd49302d157b129ead2f60d3a82534
