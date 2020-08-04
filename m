@@ -2,138 +2,79 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE74C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E459BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31AEA2076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:12:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="vEY7jUoQ"
+	by mail.kernel.org (Postfix) with ESMTP id F04D92076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:12:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729381AbgHDGM3 (ORCPT
+        id S1729412AbgHDGMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 02:12:29 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:36162 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728793AbgHDGM2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 02:12:28 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200804061226euoutp02e53984e67fcde15991696e9d6f4d1f28~n__M4RdB83169331693euoutp02h
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 06:12:26 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200804061226euoutp02e53984e67fcde15991696e9d6f4d1f28~n__M4RdB83169331693euoutp02h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1596521546;
-        bh=h1MIe7+guqaF7sFDMh4fJlyTfxy7EDF7dzFmjh9wV8w=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=vEY7jUoQk+C2zGaMinQgVPU2BqGZzJwHWP9GUir948hqICNKmj6yCVOeNNn7OzFTW
-         WDDxWqXWLQTkln5gj5FNiMdrn0VgWy71yFZ7W5P8QugBIVzeiRESOsBOTlddFhDLcT
-         G/2v/LO7rh5LFGhw5Vst3xtMzHlj9W64apsG1Jw4=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200804061226eucas1p1f69e5befcc49f7fe6b4db4dddd841b2f~n__Mu4wO82756627566eucas1p1S;
-        Tue,  4 Aug 2020 06:12:26 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 13.8F.06318.94CF82F5; Tue,  4
-        Aug 2020 07:12:26 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200804061225eucas1p283c1e0dc404bc420a2184480fdfd2b0d~n__MBUbYS2676826768eucas1p2q;
-        Tue,  4 Aug 2020 06:12:25 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200804061225eusmtrp12c203f5ad76b778325fddfedf6fc66e1~n__MAqmPJ0612206122eusmtrp10;
-        Tue,  4 Aug 2020 06:12:25 +0000 (GMT)
-X-AuditID: cbfec7f5-371ff700000018ae-0a-5f28fc4960f3
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 9B.DB.06314.94CF82F5; Tue,  4
-        Aug 2020 07:12:25 +0100 (BST)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200804061224eusmtip26b15d686a10db96dc73b8ed4fb28abd7~n__Lh-wUq0707607076eusmtip2Q;
-        Tue,  4 Aug 2020 06:12:24 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Lukasz Luba <lukasz.luba@arm.com>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH] memory: samsung: exynos5422-dmc: propagate error from
- exynos5_counters_get()
-Date:   Tue,  4 Aug 2020 08:12:10 +0200
-Message-Id: <20200804061210.5415-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLIsWRmVeSWpSXmKPExsWy7djP87pefzTiDd69Z7TYOGM9q8X1L89Z
-        Lc6f38BucXnXHDaLz71HGC1mnN/HZLGwqYXdYu2Ru+wOHB5r5q1h9Ni0qpPNo2/LKkaPz5vk
-        AliiuGxSUnMyy1KL9O0SuDJ6V01mKpjDUbF882/mBsaXbF2MnBwSAiYSrateM3UxcnEICaxg
-        lHi4fBsLhPOFUeL8v6nMEM5nRolDa14ww7Qcn3IbqmU5o0R/Vw8LSAKsZfcFCRCbTcBQoutt
-        F9gOEYF4ia0/u5lAbGaBm4wSS84adTFycAgDxfsPloOEWQRUJQ4e+c0KYvMK2EgcXneIBWKX
-        vMTqDQfAjpAQuM4mseXMaUaIhIvEtneLmSBsYYlXx7ewQ9gyEqcn97BANDQD/XNuLTuE08Mo
-        cblpBlS3tcSdc7/YQK5gFtCUWL9LHyLsKNF/6AczSFhCgE/ixltBiJv5JCZtmw4V5pXoaBOC
-        qFaTmHV8HdzagxcuQZV4SNy4VQQJkViJhQueM09glJuFsGoBI+MqRvHU0uLc9NRi47zUcr3i
-        xNzi0rx0veT83E2MwERw+t/xrzsY9/1JOsQowMGoxMO7gFUjXog1say4MvcQowQHs5IIr9PZ
-        03FCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeY0XvYwVEkhPLEnNTk0tSC2CyTJxcEo1MMZynPs1
-        efLf3uT9903n9C9ucSoryj6sKF/w+rItW/ieu5YPtj+s1v3Au9Sk6+vCyr79pVtN811XLW6N
-        nF8yqdnllu3rut01G7n9hGborw7Qmc/Bvid05iej+ktPov7/D/5Tk+tc9FVBaL/jIXXhg9kb
-        5l2pXXrj33vNO5kv7RZaFM2fcuxP5jYlluKMREMt5qLiRADPZ3xDAAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKLMWRmVeSWpSXmKPExsVy+t/xe7qefzTiDRZu5LXYOGM9q8X1L89Z
-        Lc6f38BucXnXHDaLz71HGC1mnN/HZLGwqYXdYu2Ru+wOHB5r5q1h9Ni0qpPNo2/LKkaPz5vk
-        Alii9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX07WxSUnMyy1KL9O0S9DJ6
-        V01mKpjDUbF882/mBsaXbF2MnBwSAiYSx6fcZupi5OIQEljKKHHv5WtmiISMxMlpDawQtrDE
-        n2tdYA1CAp8YJXZs4QSx2QQMJbreQsRFBBIlvm1cyAgyiFngLqPElH0tLCAJYYFYifcHpzCB
-        2CwCqhIHj/wGG8orYCNxeN0hFogF8hKrNxxgnsDIs4CRYRWjSGppcW56brGhXnFibnFpXrpe
-        cn7uJkZgEG479nPzDsZLG4MPMQpwMCrx8C5g1YgXYk0sK67MPcQowcGsJMLrdPZ0nBBvSmJl
-        VWpRfnxRaU5q8SFGU6DlE5mlRJPzgRGSVxJvaGpobmFpaG5sbmxmoSTO2yFwMEZIID2xJDU7
-        NbUgtQimj4mDU6qBMfOcrVnDlrsLny7UO8BgxZ/8jeNDI6tA2t+5R1W+FPRb+T/sM3u+IDnl
-        icSqm65cB+LPXvZYpse5qU+SdcblqZMafYwONzGob8mVv75J+fgffjkdxtzE63MM5xQLnfJL
-        cvmpvjJM8JyCofOBj/K7mqzP3ug8VrLnXfEtHs1LhZVX2Ro5hSSFlFiKMxINtZiLihMBA8M6
-        TVgCAAA=
-X-CMS-MailID: 20200804061225eucas1p283c1e0dc404bc420a2184480fdfd2b0d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200804061225eucas1p283c1e0dc404bc420a2184480fdfd2b0d
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200804061225eucas1p283c1e0dc404bc420a2184480fdfd2b0d
-References: <CGME20200804061225eucas1p283c1e0dc404bc420a2184480fdfd2b0d@eucas1p2.samsung.com>
+        Tue, 4 Aug 2020 02:12:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33500 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727076AbgHDGMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 02:12:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id E76D7AC7D;
+        Tue,  4 Aug 2020 06:13:02 +0000 (UTC)
+Subject: Re: [PATCH 2/6] drm/xen-front: Fix misused IS_ERR_OR_NULL checks
+To:     Oleksandr Andrushchenko <andr2000@gmail.com>,
+        xen-devel@lists.xenproject.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, boris.ostrovsky@oracle.com,
+        airlied@linux.ie, daniel@ffwll.ch
+Cc:     sstabellini@kernel.org, dan.carpenter@oracle.com,
+        intel-gfx@lists.freedesktop.org,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+References: <20200731125109.18666-1-andr2000@gmail.com>
+ <20200731125109.18666-3-andr2000@gmail.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <6d719ab2-d9f6-2c3c-8979-b12a4d10b96d@suse.com>
+Date:   Tue, 4 Aug 2020 08:12:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200731125109.18666-3-andr2000@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-exynos5_counters_get() might fail with -EPROBE_DEFER if the driver for
-devfreq event counter is not yet probed. Propagate that error value to
-the caller to ensure that the exynos5422-dmc driver will be probed again
-when devfreq event contuner is available.
+On 31.07.20 14:51, Oleksandr Andrushchenko wrote:
+> From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+> 
+> The patch c575b7eeb89f: "drm/xen-front: Add support for Xen PV
+> display frontend" from Apr 3, 2018, leads to the following static
+> checker warning:
+> 
+> 	drivers/gpu/drm/xen/xen_drm_front_gem.c:140 xen_drm_front_gem_create()
+> 	warn: passing zero to 'ERR_CAST'
+> 
+> drivers/gpu/drm/xen/xen_drm_front_gem.c
+>     133  struct drm_gem_object *xen_drm_front_gem_create(struct drm_device *dev,
+>     134                                                  size_t size)
+>     135  {
+>     136          struct xen_gem_object *xen_obj;
+>     137
+>     138          xen_obj = gem_create(dev, size);
+>     139          if (IS_ERR_OR_NULL(xen_obj))
+>     140                  return ERR_CAST(xen_obj);
+> 
+> Fix this and the rest of misused places with IS_ERR_OR_NULL in the
+> driver.
+> 
+> Fixes:  c575b7eeb89f: "drm/xen-front: Add support for Xen PV display frontend"
 
-This fixes boot hang if both exynos5422-dmc and exynos-ppmu drivers are
-compiled as modules.
+Again forgot to Cc stable?
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- drivers/memory/samsung/exynos5422-dmc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
-index b9c7956e5031..639811a3eecb 100644
---- a/drivers/memory/samsung/exynos5422-dmc.c
-+++ b/drivers/memory/samsung/exynos5422-dmc.c
-@@ -914,7 +914,7 @@ static int exynos5_dmc_get_status(struct device *dev,
- 	} else {
- 		ret = exynos5_counters_get(dmc, &load, &total);
- 		if (ret < 0)
--			return -EINVAL;
-+			return ret;
- 
- 		/* To protect from overflow, divide by 1024 */
- 		stat->busy_time = load >> 10;
--- 
-2.17.1
-
+Juergen
