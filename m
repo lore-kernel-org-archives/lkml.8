@@ -2,77 +2,128 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FD1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C99DBC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABC32177B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFF2022B40
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:21:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596529312;
+	bh=yHshFQTi7X9tbhZouHzBQeXdvJY2DlleNpabUG8FjaI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BRRYyxTk54AFuow5Hothu3qx8fMNaFzoB80mVVgJ2qduwqN/nj2vP5W7XgSFNhGlo
+	 +hWoYEzlFk5mbLJM2/N24tLJxqt/4oGsv5D8hvpTaZpLkMBlaTKIFtKaLOGvRgwmZ6
+	 ufjl0SunzUEFnRFCzpdOw5qbJe1fYpVOb8H9RNBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbgHDIVR (ORCPT
+        id S1729577AbgHDIVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 04:21:17 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:39790 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726276AbgHDIVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 04:21:17 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CF172A16A63BE924F049;
-        Tue,  4 Aug 2020 16:21:14 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 4 Aug 2020 16:21:03 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     Paul Cercueil <paul@crapouillou.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH] memory: jz4780-nemc: Fix return value check in jz4780_nemc_probe()
-Date:   Tue, 4 Aug 2020 08:24:03 +0000
-Message-ID: <20200804082403.76297-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 4 Aug 2020 04:21:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42954 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726276AbgHDIVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 04:21:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A45B2177B;
+        Tue,  4 Aug 2020 08:21:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596529310;
+        bh=yHshFQTi7X9tbhZouHzBQeXdvJY2DlleNpabUG8FjaI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FZ9qmCsVt7qSCuPmQDFZPrKgb4532pL0NxZXI+1/Wbn7Yj7maW4Fcp1/X00FmB+fu
+         cX8aOl+UxTthB3k15IAJUXI/iK6Qg+u/RZDy08V450BadaFCuzWk4q4t6Q1/6+5DME
+         oZu78065UZLeQ+4trscJqr8fn952N8oeZAx62JrE=
+Date:   Tue, 4 Aug 2020 10:21:30 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH 5.7 000/121] 5.7.13-rc2 review
+Message-ID: <20200804082130.GA1768075@kroah.com>
+References: <20200804072435.385370289@linuxfoundation.org>
+ <CA+G9fYs35Eiq1QFM0MOj6Y7gC=YKaiknCPgcJpJ5NMW4Y7qnYQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYs35Eiq1QFM0MOj6Y7gC=YKaiknCPgcJpJ5NMW4Y7qnYQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of error, the function devm_ioremap() returns NULL pointer not
-ERR_PTR(). The IS_ERR() test in the return value check should be
-replaced with NULL test.
+On Tue, Aug 04, 2020 at 01:46:31PM +0530, Naresh Kamboju wrote:
+> On Tue, 4 Aug 2020 at 13:03, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 5.7.13 release.
+> > There are 121 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Thu, 06 Aug 2020 07:23:45 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.13-rc2.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+> 
+> arm64 build broken.
+> 
+> make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=arm64
+> CROSS_COMPILE=aarch64-linux-gnu- HOSTCC=gcc CC="sccache
+> aarch64-linux-gnu-gcc" O=build Image
+> #
+> In file included from ../include/linux/smp.h:67,
+>                  from ../include/linux/percpu.h:7,
+>                  from ../include/linux/prandom.h:12,
+>                  from ../include/linux/random.h:118,
+>                  from ../arch/arm64/include/asm/pointer_auth.h:6,
+>                  from ../arch/arm64/include/asm/processor.h:39,
+>                  from ../include/linux/mutex.h:19,
+>                  from ../include/linux/kernfs.h:12,
+>                  from ../include/linux/sysfs.h:16,
+>                  from ../include/linux/kobject.h:20,
+>                  from ../include/linux/of.h:17,
+>                  from ../include/linux/irqdomain.h:35,
+>                  from ../include/linux/acpi.h:13,
+>                  from ../include/acpi/apei.h:9,
+>                  from ../include/acpi/ghes.h:5,
+>                  from ../include/linux/arm_sdei.h:8,
+>                  from ../arch/arm64/kernel/asm-offsets.c:10:
+> ../arch/arm64/include/asm/smp.h:100:29: error: field ‘ptrauth_key’ has
+> incomplete type
+>   100 |  struct ptrauth_keys_kernel ptrauth_key;
+>       |                             ^~~~~~~~~~~
+> make[2]: *** [../scripts/Makefile.build:100:
+> arch/arm64/kernel/asm-offsets.s] Error 1
 
-Fixes: f046e4a3f0b9 ("memory: jz4780_nemc: Only request IO memory the driver will use")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- drivers/memory/jz4780-nemc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Wow that was fast :(
 
-diff --git a/drivers/memory/jz4780-nemc.c b/drivers/memory/jz4780-nemc.c
-index 3ec5cb0fce1e..608ae925e641 100644
---- a/drivers/memory/jz4780-nemc.c
-+++ b/drivers/memory/jz4780-nemc.c
-@@ -304,9 +304,9 @@ static int jz4780_nemc_probe(struct platform_device *pdev)
- 	}
- 
- 	nemc->base = devm_ioremap(dev, res->start, NEMC_REG_LEN);
--	if (IS_ERR(nemc->base)) {
-+	if (!nemc->base) {
- 		dev_err(dev, "failed to get I/O memory\n");
--		return PTR_ERR(nemc->base);
-+		return -ENOMEM;
- 	}
- 
- 	writel(0, nemc->base + NEMC_NFCSR);
+So Linus's tree is also broken here.  I think it's time I just removed
+all of these patches from now until we get this all fixed up properly...
 
+thanks,
 
-
+greg k-h
