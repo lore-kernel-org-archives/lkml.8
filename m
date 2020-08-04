@@ -2,91 +2,112 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BFAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD520C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE4720738
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB13420738
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:02:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="U2lpAylM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgHDDBS (ORCPT
+        id S1728334AbgHDDCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 23:01:18 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8757 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725840AbgHDDBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 23:01:18 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 5090750F53C9FB1E9DF8;
-        Tue,  4 Aug 2020 11:01:17 +0800 (CST)
-Received: from [10.164.122.247] (10.164.122.247) by smtp.huawei.com
- (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 4 Aug 2020
- 11:01:10 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix deadlock between quota writes and
- checkpoint
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>, <kernel-team@android.com>
-CC:     Daeho Jeong <daehojeong@google.com>
-References: <20200729070244.584518-1-jaegeuk@kernel.org>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <670f35e1-872b-6602-320c-dd73bcb62510@huawei.com>
-Date:   Tue, 4 Aug 2020 11:01:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 3 Aug 2020 23:02:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbgHDDCN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 23:02:13 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED0D7C06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 20:02:12 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id i92so897357pje.0
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 20:02:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZTAatZWZ0GlXiEm9GiJYu4NMJeGV2u8v2fu1nTAIzio=;
+        b=U2lpAylM/0OnEjFRijGhvgd7ONcjlUmJbYh5pUB+FDETfYHPB8eimJYKMUKD+Lsqss
+         ix+CXbFa6SfmC9EveDxMv681ft3f5TLU2GkaZpvt0BBfHck3GY6NdW0wlhEmE09o+eOc
+         4RXSAPG5oB/jVZnHiiXPM2IrEnMozx43zdc0q5Wz2zmKj8EYMltIY29U/mzxACvtqoRr
+         CXQGHcyZB8a0SBIZfzuEQ92TwFlo4SgQgzjiPINYN/0HIw1LPMpfbVZx2eNPh+YLEFpB
+         tngNAO8tbcvxNgmxiUpxaOgFX+y+HByISIOYZx4P+vsRYj9vTcObM2mJTM584VGnd162
+         rpZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZTAatZWZ0GlXiEm9GiJYu4NMJeGV2u8v2fu1nTAIzio=;
+        b=PS0pZI5zo4T6BtV0T9oL4yOToZeOR7DLvzIGrYMV5WOelisO7R5ZKeHSmmBNpoS8ej
+         Nnn/P2Np6DMGiFhdnyuQmNoKmR0AwCKifkbf1v6Ie1qTvi5i59Bsab0ZjfMp1j9u9sV3
+         TH/qn3QAucf5UlshROO9cUELy7dz7Yvdc98t0cvgm/M+WTdalBMAMcxdOKijDfpUrdS8
+         tRpk853QewBPTLrKOfitb/RSPJCaPV4EMUPIXGj+Qiabd6s2MdLU3trGAZLbXlxZsG3l
+         nz0NuF56OMdYHx7CU8Bhi3y1QDCEddBi7TU7mdDcM1cm/97wAbPRDd3gYr/NCVyfsF4C
+         8JHQ==
+X-Gm-Message-State: AOAM5332Jhj5TdUAYZTTJw3DmWBn1VFBz4/8+3TBVzXmhwptRQVpXsiB
+        /kLjFc3Ahx1RwHOJn67j+VKjlw==
+X-Google-Smtp-Source: ABdhPJw7mixIQ1U1MltIEHSHX8Kz3GsNmNG6C8BEexFvbJ/XQ+lPmZYZ3/wP/fjYNU1s8cIbpcgtMQ==
+X-Received: by 2002:a17:90a:ff07:: with SMTP id ce7mr2303816pjb.192.1596510132416;
+        Mon, 03 Aug 2020 20:02:12 -0700 (PDT)
+Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
+        by smtp.gmail.com with ESMTPSA id x15sm20396240pfr.208.2020.08.03.20.02.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 20:02:11 -0700 (PDT)
+From:   Greentime Hu <greentime.hu@sifive.com>
+To:     greentime.hu@sifive.com, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu,
+        palmer@dabbelt.com, paul.walmsley@sifive.com, syven.wang@sifive.com
+Subject: [PATCH] riscv: Add sfence.vma after page table changed
+Date:   Tue,  4 Aug 2020 11:02:05 +0800
+Message-Id: <20200804030205.91656-1-greentime.hu@sifive.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <20200729070244.584518-1-jaegeuk@kernel.org>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.164.122.247]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/7/29 15:02, Jaegeuk Kim wrote:
-> f2fs_write_data_pages(quota_mapping)
->   __f2fs_write_data_pages             f2fs_write_checkpoint
->    * blk_start_plug(&plug);
->    * add bio in write_io[DATA]
->                                        - block_operations
->                                        - skip syncing quota by
->                                                  >DEFAULT_RETRY_QUOTA_FLUSH_COUNT
->                                        - down_write(&sbi->node_write);
+This patch addes local_flush_tlb_page(addr) to use sfence.vma after the
+page table changed. That address will be used immediately in
+memset(nextp, 0, PAGE_SIZE) to cause this issue so we should add the
+sfence.vma before we use it.
 
-f2fs_flush_merged_writes() will be called after block_operations(), why this doesn't
-help?
+Fixes: f2c17aabc917 ("RISC-V: Implement compile-time fixed mappings")
 
->    - f2fs_write_single_data_page
->      - f2fs_do_write_data_page
->        - f2fs_outplace_write_data
->          - do_write_page
->             - f2fs_allocate_data_block
->              - down_write(node_write)
->                                        - f2fs_wait_on_all_pages(F2FS_WB_CP_DATA);
-> 
-> Signed-off-by: Daeho Jeong <daehojeong@google.com>
-> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> ---
->   fs/f2fs/checkpoint.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> index 8c782d3f324f0..99c8061da55b9 100644
-> --- a/fs/f2fs/checkpoint.c
-> +++ b/fs/f2fs/checkpoint.c
-> @@ -1269,6 +1269,8 @@ void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type)
->   		if (type == F2FS_DIRTY_META)
->   			f2fs_sync_meta_pages(sbi, META, LONG_MAX,
->   							FS_CP_META_IO);
-> +		else if (type == F2FS_WB_CP_DATA)
-> +			f2fs_submit_merged_write(sbi, DATA);
->   		io_schedule_timeout(DEFAULT_IO_TIMEOUT);
->   	}
->   	finish_wait(&sbi->cp_wait, &wait);
-> 
+Reported-by: Syven Wang <syven.wang@sifive.com>
+Signed-off-by: Syven Wang <syven.wang@sifive.com>
+Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+---
+ arch/riscv/mm/init.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index f4adb3684f3d..29b0f7108054 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -202,12 +202,11 @@ void __set_fixmap(enum fixed_addresses idx, phys_addr_t phys, pgprot_t prot)
+ 
+ 	ptep = &fixmap_pte[pte_index(addr)];
+ 
+-	if (pgprot_val(prot)) {
++	if (pgprot_val(prot))
+ 		set_pte(ptep, pfn_pte(phys >> PAGE_SHIFT, prot));
+-	} else {
++	else
+ 		pte_clear(&init_mm, addr, ptep);
+-		local_flush_tlb_page(addr);
+-	}
++	local_flush_tlb_page(addr);
+ }
+ 
+ static pte_t *__init get_pte_virt(phys_addr_t pa)
+-- 
+2.28.0
+
