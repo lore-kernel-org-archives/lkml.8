@@ -2,221 +2,101 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDACC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 992D120792
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA99E20792
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:14:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n0tp/hA4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PLdUNGvt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbgHDCNB (ORCPT
+        id S1727977AbgHDCOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 22:13:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57034 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbgHDCNB (ORCPT
+        Mon, 3 Aug 2020 22:14:12 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43556 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725975AbgHDCOM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 22:13:01 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F27C5C061757
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 19:13:00 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id n2so5018669uan.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 19:13:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ek5IwSL+ashZL9KTOZdz56TvgUVWfpkvY3pBa7EzP2A=;
-        b=n0tp/hA48FqUCnJQSr6N0Wcwa/cJmyK+gKVLEMeh/2VJb5aP7fHr3/7KKZjGS8Ipad
-         cqhcBps/kGqgbW1ttxwbhSgAoFgq9fppfYPqf0fGv+DyPKHd/w6YwgZUB7CTKqTISkN1
-         nRX+PT8O2EH1LOoXschOC9MaFkSn35tNphz5Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ek5IwSL+ashZL9KTOZdz56TvgUVWfpkvY3pBa7EzP2A=;
-        b=VmJ4OlVldNgwymVBfgubbfTbrKz5POsdkEWQZTiLsQz+dU4fUbdvmJIIxktRxqhIsn
-         UY1JygBpkJNSOFJaiGIqnTGxVIf38pCsLGCVw8+9LtCAqg7C5y+squnUk5TqdIOfKPLX
-         tDRQQH6zTIjqsJk5ANSXThXl05XoLR/a/N3EzASybtjNLux0MUE2NpYmLRwfEwa9zj4g
-         E3CmgCe1vrrPUGLX8fGWWmpthple+HrUAUy/qm9BR1ybxmLqy2oxlPNEZGWJWZTxsYig
-         9pLiiyk0jvQ7oFNar21l27voGs2TwbHpo+9wa4F6/59jwj+dLza/RxTtmV7eM1M4pYRF
-         wtIg==
-X-Gm-Message-State: AOAM532+AL9rl1AjYScK9j2FbfmTuyz+CCFRn9Ev9D6hhQc1vndBl7Xf
-        OP2coeUYGXWuVtfnYLPJPGsmWNm3IY0Jo4cT9zesew==
-X-Google-Smtp-Source: ABdhPJwghGSLbe8ZU4D96mdziHWtR9hqw1MkwSUkRpmFW/D404GQmjvXpH25/+Xs6ReDM3GKg6kZtrzus7DmgAVTxUk=
-X-Received: by 2002:ab0:20b6:: with SMTP id y22mr13153458ual.77.1596507180138;
- Mon, 03 Aug 2020 19:13:00 -0700 (PDT)
+        Mon, 3 Aug 2020 22:14:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596507251;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dinaWVnkMHZ+VIU43BHevlr8tggRrHlhVfqluBTGxHE=;
+        b=PLdUNGvtJhWeW0jt2oif4pkOHeFprHC1GAznY6HBrh5aQdNDxZYaon6qUGr8Gefn162ASs
+        dPzgeTxHgJPvk9+Cp6zbyDMY70adLuGDTOm9Wu6IDBD2XrUsGjgHgoAzLyOQl0WUXBcA5a
+        k6+8Ttj/jAMQ2AxZp/HBp86qQ0YvMPw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-144-KpE0kHG8NU2ucALeTek8wA-1; Mon, 03 Aug 2020 22:14:07 -0400
+X-MC-Unique: KpE0kHG8NU2ucALeTek8wA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 27836106B246;
+        Tue,  4 Aug 2020 02:14:06 +0000 (UTC)
+Received: from [10.72.13.197] (ovpn-13-197.pek2.redhat.com [10.72.13.197])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 07A5C5C6DD;
+        Tue,  4 Aug 2020 02:13:51 +0000 (UTC)
+Subject: Re: [PATCH] virtio_pci_modern: Fix the comment of
+ virtio_pci_find_capability()
+To:     Yi Wang <wang.yi59@zte.com.cn>, mst@redhat.com
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.liang82@zte.com.cn, Liao Pingfang <liao.pingfang@zte.com.cn>
+References: <1596455545-43556-1-git-send-email-wang.yi59@zte.com.cn>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <75b74fe2-a025-7f31-cc14-61605e00aad5@redhat.com>
+Date:   Tue, 4 Aug 2020 10:13:50 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1596445047-2975-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1596445047-2975-3-git-send-email-hsin-hsiung.wang@mediatek.com>
-In-Reply-To: <1596445047-2975-3-git-send-email-hsin-hsiung.wang@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Tue, 4 Aug 2020 10:12:49 +0800
-Message-ID: <CANMq1KDDbPBsnxPHvPTcTreW7OrTwC_=8GyM=rrU2QOLPKp2Bg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] regulator: bindings: Add document for MT6315 regulator
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Fei Shao <fshao@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1596455545-43556-1-git-send-email-wang.yi59@zte.com.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hsin-Hsiung,
 
-On Mon, Aug 3, 2020 at 4:57 PM Hsin-Hsiung Wang
-<hsin-hsiung.wang@mediatek.com> wrote:
+On 2020/8/3 下午7:52, Yi Wang wrote:
+> From: Liao Pingfang <liao.pingfang@zte.com.cn>
 >
-> Add device tree binding information for mt6315 regulator driver.
-> Example bindings for mt6315 are added.
+> Fix the comment of virtio_pci_find_capability() by adding missing comment
+> for the last parameter: bars.
 >
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> Fixes: 59a5b0f7bf74 ("virtio-pci: alloc only resources actually used.")
+> Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
+> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+
+
+Acked-by: Jason Wang <jasowang@redhat.com>
+
+
 > ---
->  .../bindings/regulator/mt6315-regulator.txt        | 45 ++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/mt6315-regulator.txt
+>   drivers/virtio/virtio_pci_modern.c | 1 +
+>   1 file changed, 1 insertion(+)
 >
-> diff --git a/Documentation/devicetree/bindings/regulator/mt6315-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6315-regulator.txt
-> new file mode 100644
-> index 0000000..1c14537
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/mt6315-regulator.txt
-> @@ -0,0 +1,45 @@
-> +Mediatek MT6315 Regulator
-> +
-> +Required properties:
-> +- compatible: Must be one of the following.
-> +       "mediatek,mt6315_3-regulator"
-> +       "mediatek,mt6315_6-regulator"
-> +       "mediatek,mt6315_7-regulator"
+> diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
+> index db93cedd262f..9bdc6f68221f 100644
+> --- a/drivers/virtio/virtio_pci_modern.c
+> +++ b/drivers/virtio/virtio_pci_modern.c
+> @@ -481,6 +481,7 @@ static const struct virtio_config_ops virtio_pci_config_ops = {
+>    * @dev: the pci device
+>    * @cfg_type: the VIRTIO_PCI_CAP_* value we seek
+>    * @ioresource_types: IORESOURCE_MEM and/or IORESOURCE_IO.
+> + * @bars: the bitmask of BARs
+>    *
+>    * Returns offset of the capability, or 0.
+>    */
 
-As highlighted on Gerrit [1], I think this is wrong. The device tree
-compatible should focus on actual hardware differences, _not_ the way
-the device is used.
-
-So I looked at the datasheet, and there are 5 variants of the MT6315.
-They all have the same number of VBUCKs, just with different _default_
-voltages, Imax, and sequencing. Since the regulator range is the same,
-I don't think you need to care about any of this, so I'd have a single
-compatible "mediatek,mt6315-regulator".
-
-The one thing that is special here, though, is that you want to
-combine regulators for BUCK1, right?
-
-That is, for MT6315PP (id 6), you want to combine BUCK1/2/4 to power
-the big cores (hence 0xb = "1011" in patch 3/3), and for MT6315SP (id
-7), you want to combine BUCK1/2 (hence 0x3 = 0011).
-
-So, instead of a table here, what I'd do is to figure out a way to
-indicate, in the device tree, that bucks 1, 2, 4 need to be combined.
-
-I think the correct way to handle this is to add a
-`regulator-coupled-with` property. That is you'd have a device tree
-that looks like this:
-
-mt6315_6: mt6315@6 {
-    compatible = "mediatek,mt6315-regulator";
-    reg = <0x6 0 0xb 1>;
-    mt6315_6_vbuck1: vbuck1 {
-        regulator-compatible = "vbuck1";
-        ...
-        regulator-coupled-with = <&mt6315_6_vbuck2, mt6315_6_vbuck4>;
-    };
-
-    mt6315_6_vbuck2: vbuck2 {
-        regulator-compatible = "vbuck2";
-        ...
-    };
-
-    mt6315_6_vbuck3: vbuck3 {
-        regulator-compatible = "vbuck3";
-        ...
-    };
-
-    mt6315_6_vbuck4: vbuck4 {
-        regulator-compatible = "vbuck4";
-        ...
-    };
-};
-
-Then, at probe time, you can figure out which regulators are coupled
-with another one, and only provide controls for the first regulator in
-the list (with the proper mask).
-
-Another, simpler way, may look like this:
-
-mt6315_6: mt6315@6 {
-    compatible = "mediatek,mt6315-regulator";
-    reg = <0x6 0 0xb 1>;
-    mt6315_6_vbuck1: vbuck1 {
-        regulator-compatible = "vbuck1";
-        regulator-mask = <0xb>;
-    };
-    mt6315_6_vbuck3: vbuck3 {
-        regulator-compatible = "vbuck3";
-        regulator-mask = <0x8>;
-    };
-};
-
-But then it's a bit weird, because 0x8 = 1 << 3, which we can already
-infer from "vbuck3" compatible...
-
-[1] https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/2229019/13/drivers/regulator/mt6315-regulator.c#283
-
-
-> +- reg: SPMI slave id.
-> +- regulators: List of regulators provided by this controller.
-> +  The definition for each of these nodes is defined using the standard binding
-> +  for regulators at Documentation/devicetree/bindings/regulator/regulator.txt.
-> +
-> +The valid names for regulators are:
-> +BUCK:
-> +  vbuck1, vbuck3, vbuck4
-> +
-> +Example:
-> +       mt6315_3: mt6315@3 {
-> +               compatible = "mediatek,mt6315_3-regulator";
-> +               reg = <0x3 0 0xb 1>;
-> +
-> +               mt6315_3_vbuck1: vbuck1 {
-> +                       regulator-compatible = "vbuck1";
-> +                       regulator-min-microvolt = <300000>;
-> +                       regulator-max-microvolt = <1193750>;
-> +                       regulator-enable-ramp-delay = <256>;
-> +                       regulator-allowed-modes = <0 1 2 4>;
-> +               };
-> +
-> +               mt6315_3_vbuck3: vbuck3 {
-> +                       regulator-compatible = "vbuck3";
-> +                       regulator-min-microvolt = <300000>;
-> +                       regulator-max-microvolt = <1193750>;
-> +                       regulator-enable-ramp-delay = <256>;
-> +                       regulator-allowed-modes = <0 1 2 4>;
-> +               };
-> +
-> +               mt6315_3_vbuck3: vbuck3 {
-> +                       regulator-compatible = "vbuck3";
-> +                       regulator-min-microvolt = <300000>;
-> +                       regulator-max-microvolt = <1193750>;
-> +                       regulator-enable-ramp-delay = <256>;
-> +                       regulator-allowed-modes = <0 1 2 4>;
-> +               };
-> +       };
-> --
-> 2.6.4
