@@ -2,169 +2,221 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4A5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B93E2177B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 992D120792
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:13:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWK1Rhvx"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n0tp/hA4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbgHDCLd (ORCPT
+        id S1728391AbgHDCNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 22:11:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56804 "EHLO
+        Mon, 3 Aug 2020 22:13:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbgHDCLc (ORCPT
+        with ESMTP id S1725877AbgHDCNB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 22:11:32 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29485C06174A;
-        Mon,  3 Aug 2020 19:11:32 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id x5so1237069wmi.2;
-        Mon, 03 Aug 2020 19:11:32 -0700 (PDT)
+        Mon, 3 Aug 2020 22:13:01 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F27C5C061757
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 19:13:00 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id n2so5018669uan.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 19:13:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=bt5UFgIVNzgSToTOgOgFgr6yhak9k0sKa89zXpBPQ/o=;
-        b=YWK1Rhvx3dGueqYNAcG/nGaRyZZiUP/gaijNg+STgAuFO5r0jP74xHMHKBkRs/08jz
-         Npm2RU8T23pWw9ijnJqtMV5LLaKbKy5GhnSQXyTvwsGseW5cJa5xt4SxhtgsxaJsdtzb
-         +GQc7Nry2KIPkPR12EDkgk+Qu3nae6pQjRgSQbswTRs2AFM7PHHkeU+xJlujHKXJgvat
-         MBzd2XtmP+5Cmt+LFuFt6K84QZG0TGjy66E2XaM/+YZQq+MA6R+1Zxemr7mR1PwSx8IL
-         QRAwN1UpNJ2qkqaq9fVIl2uKM0kaO/gArXvdXlkMWC067hUjLQltV/P0T6bk5eoEor0g
-         5DUA==
+        bh=ek5IwSL+ashZL9KTOZdz56TvgUVWfpkvY3pBa7EzP2A=;
+        b=n0tp/hA48FqUCnJQSr6N0Wcwa/cJmyK+gKVLEMeh/2VJb5aP7fHr3/7KKZjGS8Ipad
+         cqhcBps/kGqgbW1ttxwbhSgAoFgq9fppfYPqf0fGv+DyPKHd/w6YwgZUB7CTKqTISkN1
+         nRX+PT8O2EH1LOoXschOC9MaFkSn35tNphz5Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=bt5UFgIVNzgSToTOgOgFgr6yhak9k0sKa89zXpBPQ/o=;
-        b=gzjtH4JDnfA3pfoFmVSKUBsJRBqqKTTeZhNm+c+CkXoCSf3gkiDYm3Y2wfdQ2SEsLN
-         seoUnx22pc+L0LE6t+X4zu0+WHDDodHh8zhYL7ZnUNzOgYWr6ZIq3/zAAjLv7srrY4Ae
-         M3t1iTKHFyeEKHwy1jkovLiGFlhjOooWf22TkWgV9yQiDknIhpXTDMTRdJaIpeCZvPYt
-         ZM4C3s1dwOa9oGi3/31PwQqBa/d7gs0Pwtr6KkkvCIu26nywYaAGg8n9Bt3LKUPK1fJj
-         xdqxA308XuSQRi/fUgv0tZ2Oss+RWAreSZT3niWLIUu/3FcOqJ26rFblYWKgd+3cD8RZ
-         z+Iw==
-X-Gm-Message-State: AOAM531hqvq7cMMltkMv5G9iB40NkDfH2twvNBsNcg1wFJFwUF3W2FbG
-        jyDAePJtS/TdJZeWhZZEx2LZS3nBmiXK3gpHikQ=
-X-Google-Smtp-Source: ABdhPJygM5XTxa4zb95ozIqOuJmCLISli03/sCKeqfp97aweoLOeBsV4PebEwTm8AHk0BUK/6k7Ahkk6FqIBjuehjSI=
-X-Received: by 2002:a05:600c:230e:: with SMTP id 14mr1654632wmo.3.1596507090954;
- Mon, 03 Aug 2020 19:11:30 -0700 (PDT)
+        bh=ek5IwSL+ashZL9KTOZdz56TvgUVWfpkvY3pBa7EzP2A=;
+        b=VmJ4OlVldNgwymVBfgubbfTbrKz5POsdkEWQZTiLsQz+dU4fUbdvmJIIxktRxqhIsn
+         UY1JygBpkJNSOFJaiGIqnTGxVIf38pCsLGCVw8+9LtCAqg7C5y+squnUk5TqdIOfKPLX
+         tDRQQH6zTIjqsJk5ANSXThXl05XoLR/a/N3EzASybtjNLux0MUE2NpYmLRwfEwa9zj4g
+         E3CmgCe1vrrPUGLX8fGWWmpthple+HrUAUy/qm9BR1ybxmLqy2oxlPNEZGWJWZTxsYig
+         9pLiiyk0jvQ7oFNar21l27voGs2TwbHpo+9wa4F6/59jwj+dLza/RxTtmV7eM1M4pYRF
+         wtIg==
+X-Gm-Message-State: AOAM532+AL9rl1AjYScK9j2FbfmTuyz+CCFRn9Ev9D6hhQc1vndBl7Xf
+        OP2coeUYGXWuVtfnYLPJPGsmWNm3IY0Jo4cT9zesew==
+X-Google-Smtp-Source: ABdhPJwghGSLbe8ZU4D96mdziHWtR9hqw1MkwSUkRpmFW/D404GQmjvXpH25/+Xs6ReDM3GKg6kZtrzus7DmgAVTxUk=
+X-Received: by 2002:ab0:20b6:: with SMTP id y22mr13153458ual.77.1596507180138;
+ Mon, 03 Aug 2020 19:13:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1595214246.git.huangqiwu@xiaomi.com> <c9d3199ec18625f9cc4448c3b2049ea2ae80358b.1595214246.git.huangqiwu@xiaomi.com>
- <20200802120015.GA1289@bug> <20200802123742.GA257810@kroah.com>
- <20200802142825.GA20261@amd> <20200802165738.GA293244@kroah.com>
- <20200803114950.oyb3gzyiccybah3u@earth.universe> <20200803115644.GC955269@kroah.com>
-In-Reply-To: <20200803115644.GC955269@kroah.com>
-From:   ivan <yanziily@gmail.com>
-Date:   Tue, 4 Aug 2020 10:11:19 +0800
-Message-ID: <CAPtXDt1hMrgJ_9Zs6Zmkzf4b1-QfEcZPp7dKG26G6ZEqBxCgBw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] power: supply: core: add quick charge type property
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@denx.de>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jiangfei1@xiaomi.com, Qiwu Huang <huangqiwu@xiaomi.com>
+References: <1596445047-2975-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1596445047-2975-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <1596445047-2975-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Tue, 4 Aug 2020 10:12:49 +0800
+Message-ID: <CANMq1KDDbPBsnxPHvPTcTreW7OrTwC_=8GyM=rrU2QOLPKp2Bg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] regulator: bindings: Add document for MT6315 regulator
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Fei Shao <fshao@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 3, 2020 at 7:57 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+Hi Hsin-Hsiung,
+
+On Mon, Aug 3, 2020 at 4:57 PM Hsin-Hsiung Wang
+<hsin-hsiung.wang@mediatek.com> wrote:
 >
-> On Mon, Aug 03, 2020 at 01:49:50PM +0200, Sebastian Reichel wrote:
-> > More importantely I prefer not to merge new APIs without any users
-> > (i.e. a driver making use of those values). Having a reference
-> > driver means, that there is an example how to use the values
-> > correctly and proves it is actually needed upstream. Right now
-> > this looks like "let's modify the upstream kernel, so that we can
-> > easily maintain our out of tree driver".
+> Add device tree binding information for mt6315 regulator driver.
+> Example bindings for mt6315 are added.
 >
-> Agreed.  Qiwu, can you also submit your driver so we can see these
-> values be used?
-
-Our driver is based on qualcomm's driver secondary development.
-
-The driver code is for mi 10.
-
-https://github.com/MiCode/Xiaomi_Kernel_OpenSource/blob/umi-q-oss/drivers/power/supply/qcom/qpnp-smb5.c#L1434
-
-+ case POWER_SUPPLY_PROP_QUICK_CHARGE_TYPE:
-+     val->intval = smblib_get_quick_charge_type(chg);
-+     break;
-
-https://github.com/MiCode/Xiaomi_Kernel_OpenSource/blob/umi-q-oss/drivers/power/supply/qcom/smb5-lib.c#L7713
-
-+struct quick_charge adapter_cap[10] = {
-+       { POWER_SUPPLY_TYPE_USB,        QUICK_CHARGE_NORMAL },
-+       { POWER_SUPPLY_TYPE_USB_DCP,    QUICK_CHARGE_NORMAL },
-+       { POWER_SUPPLY_TYPE_USB_CDP,    QUICK_CHARGE_NORMAL },
-+       { POWER_SUPPLY_TYPE_USB_ACA,    QUICK_CHARGE_NORMAL },
-+       { POWER_SUPPLY_TYPE_USB_FLOAT,  QUICK_CHARGE_NORMAL },
-+       { POWER_SUPPLY_TYPE_USB_PD,       QUICK_CHARGE_FAST },
-+       { POWER_SUPPLY_TYPE_USB_HVDCP,    QUICK_CHARGE_FAST },
-+       { POWER_SUPPLY_TYPE_USB_HVDCP_3,  QUICK_CHARGE_FAST },
-+       { POWER_SUPPLY_TYPE_WIRELESS,     QUICK_CHARGE_FAST },
-+       {0, 0},
-+};
-+
-+int smblib_get_quick_charge_type(struct smb_charger *chg)
-+{
-+       int i = 0, rc;
-+       union power_supply_propval pval = {0, };
-+
-+       if (!chg) {
-+               dev_err(chg->dev, "get quick charge type faied\n");
-+               return -EINVAL;
-+       }
-+
-+       rc = smblib_get_prop_batt_health(chg, &pval);
-+       if (rc < 0)
-+               smblib_err(chg, "Couldn't get batt health rc=%d\n", rc);
-+
-+       if ((pval.intval == POWER_SUPPLY_HEALTH_COLD) || (pval.intval
-== POWER_SUPPLY_HEALTH_HOT))
-+               return 0;
-+
-+       if ((chg->real_charger_type == POWER_SUPPLY_TYPE_USB_PD) &&
-chg->pd_verifed) {
-+               return QUICK_CHARGE_TURBE;
-+       }
-+
-+       if (chg->is_qc_class_b)
-+               return QUICK_CHARGE_FLASH;
-+
-+       if ((chg->real_charger_type == POWER_SUPPLY_TYPE_USB_DCP) &&
-+                      (chg->hvdcp_recheck_status ||
-chg->fake_plug_out == true))
-+               return QUICK_CHARGE_FLASH;
-+
-+       while (adapter_cap[i].adap_type != 0) {
-+               if (chg->real_charger_type == adapter_cap[i].adap_type) {
-+                       return adapter_cap[i].adap_cap;
-+               }
-+               i++;
-+       }
-+
-+       return 0;
-+}
-
-
-
+> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> ---
+>  .../bindings/regulator/mt6315-regulator.txt        | 45 ++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/mt6315-regulator.txt
 >
-> thanks,
->
-> greg k-h
+> diff --git a/Documentation/devicetree/bindings/regulator/mt6315-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6315-regulator.txt
+> new file mode 100644
+> index 0000000..1c14537
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/mt6315-regulator.txt
+> @@ -0,0 +1,45 @@
+> +Mediatek MT6315 Regulator
+> +
+> +Required properties:
+> +- compatible: Must be one of the following.
+> +       "mediatek,mt6315_3-regulator"
+> +       "mediatek,mt6315_6-regulator"
+> +       "mediatek,mt6315_7-regulator"
+
+As highlighted on Gerrit [1], I think this is wrong. The device tree
+compatible should focus on actual hardware differences, _not_ the way
+the device is used.
+
+So I looked at the datasheet, and there are 5 variants of the MT6315.
+They all have the same number of VBUCKs, just with different _default_
+voltages, Imax, and sequencing. Since the regulator range is the same,
+I don't think you need to care about any of this, so I'd have a single
+compatible "mediatek,mt6315-regulator".
+
+The one thing that is special here, though, is that you want to
+combine regulators for BUCK1, right?
+
+That is, for MT6315PP (id 6), you want to combine BUCK1/2/4 to power
+the big cores (hence 0xb = "1011" in patch 3/3), and for MT6315SP (id
+7), you want to combine BUCK1/2 (hence 0x3 = 0011).
+
+So, instead of a table here, what I'd do is to figure out a way to
+indicate, in the device tree, that bucks 1, 2, 4 need to be combined.
+
+I think the correct way to handle this is to add a
+`regulator-coupled-with` property. That is you'd have a device tree
+that looks like this:
+
+mt6315_6: mt6315@6 {
+    compatible = "mediatek,mt6315-regulator";
+    reg = <0x6 0 0xb 1>;
+    mt6315_6_vbuck1: vbuck1 {
+        regulator-compatible = "vbuck1";
+        ...
+        regulator-coupled-with = <&mt6315_6_vbuck2, mt6315_6_vbuck4>;
+    };
+
+    mt6315_6_vbuck2: vbuck2 {
+        regulator-compatible = "vbuck2";
+        ...
+    };
+
+    mt6315_6_vbuck3: vbuck3 {
+        regulator-compatible = "vbuck3";
+        ...
+    };
+
+    mt6315_6_vbuck4: vbuck4 {
+        regulator-compatible = "vbuck4";
+        ...
+    };
+};
+
+Then, at probe time, you can figure out which regulators are coupled
+with another one, and only provide controls for the first regulator in
+the list (with the proper mask).
+
+Another, simpler way, may look like this:
+
+mt6315_6: mt6315@6 {
+    compatible = "mediatek,mt6315-regulator";
+    reg = <0x6 0 0xb 1>;
+    mt6315_6_vbuck1: vbuck1 {
+        regulator-compatible = "vbuck1";
+        regulator-mask = <0xb>;
+    };
+    mt6315_6_vbuck3: vbuck3 {
+        regulator-compatible = "vbuck3";
+        regulator-mask = <0x8>;
+    };
+};
+
+But then it's a bit weird, because 0x8 = 1 << 3, which we can already
+infer from "vbuck3" compatible...
+
+[1] https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/2229019/13/drivers/regulator/mt6315-regulator.c#283
 
 
-
--- 
-Thanks
-
-Qiwu
+> +- reg: SPMI slave id.
+> +- regulators: List of regulators provided by this controller.
+> +  The definition for each of these nodes is defined using the standard binding
+> +  for regulators at Documentation/devicetree/bindings/regulator/regulator.txt.
+> +
+> +The valid names for regulators are:
+> +BUCK:
+> +  vbuck1, vbuck3, vbuck4
+> +
+> +Example:
+> +       mt6315_3: mt6315@3 {
+> +               compatible = "mediatek,mt6315_3-regulator";
+> +               reg = <0x3 0 0xb 1>;
+> +
+> +               mt6315_3_vbuck1: vbuck1 {
+> +                       regulator-compatible = "vbuck1";
+> +                       regulator-min-microvolt = <300000>;
+> +                       regulator-max-microvolt = <1193750>;
+> +                       regulator-enable-ramp-delay = <256>;
+> +                       regulator-allowed-modes = <0 1 2 4>;
+> +               };
+> +
+> +               mt6315_3_vbuck3: vbuck3 {
+> +                       regulator-compatible = "vbuck3";
+> +                       regulator-min-microvolt = <300000>;
+> +                       regulator-max-microvolt = <1193750>;
+> +                       regulator-enable-ramp-delay = <256>;
+> +                       regulator-allowed-modes = <0 1 2 4>;
+> +               };
+> +
+> +               mt6315_3_vbuck3: vbuck3 {
+> +                       regulator-compatible = "vbuck3";
+> +                       regulator-min-microvolt = <300000>;
+> +                       regulator-max-microvolt = <1193750>;
+> +                       regulator-enable-ramp-delay = <256>;
+> +                       regulator-allowed-modes = <0 1 2 4>;
+> +               };
+> +       };
+> --
+> 2.6.4
