@@ -2,104 +2,121 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57099C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C55C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35E352086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3640D2086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:56:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZQl0UP9U"
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="nrCQShCU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbgHDQvk (ORCPT
+        id S1729217AbgHDQ4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 12:51:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726925AbgHDQvd (ORCPT
+        Tue, 4 Aug 2020 12:56:31 -0400
+Received: from mxwww.masterlogin.de ([95.129.51.220]:46152 "EHLO
+        mxwww.masterlogin.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728048AbgHDQ4P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 12:51:33 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 704CFC061756
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 09:51:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=e2zja8aZ6SqYiYvPmFBqBslRk1AjgMR07SNX1tomLLY=; b=ZQl0UP9U3hZZSLGmPhwR2IDjEN
-        OTKWAt5UQ/XwCj5q0cvAToEEMo87oSFCGdexQQcnDteGoO3pYeWi4ra/R+xuWP8kVE1cj9udtyidm
-        q5M0Bea8oanJBu6P9uIDytTE9x4LReoF08Ir5I0QZ4mKZUM2pou4u8KB9MQunQ+tgnvCvZeofx6RL
-        laCMk33SlDLC2wyvqc8wCgr7XchkX8Pm3BEMgvV92XdvW3/gGC8YawQi5+YVEojs5xxMypEMtPZJt
-        0nOi2SbL+kDOjF67QBTGFsRqckQyhiG+fCEudoFDfrl7NSVXf2x1/wr++6areRHJayaT2b6dwfPzM
-        ZxECoGEg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k309p-0004Ra-Ak; Tue, 04 Aug 2020 16:51:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6ED96301E02;
-        Tue,  4 Aug 2020 18:51:18 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 533302B90EB46; Tue,  4 Aug 2020 18:51:18 +0200 (CEST)
-Date:   Tue, 4 Aug 2020 18:51:18 +0200
-From:   peterz@infradead.org
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>, paulmck <paulmck@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        linux-mm <linux-mm@kvack.org>
-Subject: Re: [RFC PATCH 1/2] sched: Fix exit_mm vs membarrier
-Message-ID: <20200804165118.GN2657@hirez.programming.kicks-ass.net>
-References: <20200728160010.3314-1-mathieu.desnoyers@efficios.com>
- <20200804143419.GL2657@hirez.programming.kicks-ass.net>
- <709073430.39864.1596552521779.JavaMail.zimbra@efficios.com>
+        Tue, 4 Aug 2020 12:56:15 -0400
+Received: from mxout4.routing.net (unknown [192.168.10.112])
+        by forward.mxwww.masterlogin.de (Postfix) with ESMTPS id EA78E9614F;
+        Tue,  4 Aug 2020 16:56:11 +0000 (UTC)
+Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
+        by mxout4.routing.net (Postfix) with ESMTP id BD9671014A6;
+        Tue,  4 Aug 2020 16:56:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+        s=20200217; t=1596560171;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Tvt7koxlgmMWFSYlV9RwSNCWybA13LVEGNqsglV8N/o=;
+        b=nrCQShCUiKb/bluJS6ekx73gjPCb+mpkwkkU5P+PfWHmgBVsxxsXKL3hNG2OaQ3ducby0z
+        e4TFVfo0fVZjUSPVbS/eUfzYOKK3M2zroiH0lxYsVBG/Qk/2MKpSyY8we6WwPZfDGBhtJX
+        0bKJ29FNQtGffNrUIiOCdv4LYD5LxmI=
+Received: from localhost.localdomain (fttx-pool-217.61.144.119.bambit.de [217.61.144.119])
+        by mxbox3.masterlogin.de (Postfix) with ESMTPSA id 1124E3603C2;
+        Tue,  4 Aug 2020 16:56:11 +0000 (UTC)
+From:   Frank Wunderlich <linux@fw-web.de>
+To:     linux-mediatek@lists.infradead.org
+Cc:     Frank Wunderlich <frank-w@public-files.de>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        chunhui dai <chunhui.dai@mediatek.com>
+Subject: [PATCH v4 3/6] drm/mediatek: disable tmds on mt2701
+Date:   Tue,  4 Aug 2020 18:55:52 +0200
+Message-Id: <20200804165555.75159-5-linux@fw-web.de>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200804165555.75159-1-linux@fw-web.de>
+References: <20200804165555.75159-1-linux@fw-web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <709073430.39864.1596552521779.JavaMail.zimbra@efficios.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 10:48:41AM -0400, Mathieu Desnoyers wrote:
-> Here is the scenario I have in mind:
+From: chunhui dai <chunhui.dai@mediatek.com>
 
-> Userspace variables:
-> 
-> int x = 0, y = 0;
-> 
-> CPU 0                   CPU 1
-> Thread A                Thread B
-> (in thread group A)     (in thread group B)
-> 
-> x = 1
-> barrier()
-> y = 1
-> exit()
-> exit_mm()
-> current->mm = NULL;
->                         r1 = load y
->                         membarrier()
->                           skips CPU 0 (no IPI) because its current mm is NULL
->                         r2 = load x
->                         BUG_ON(r1 == 1 && r2 == 0)
-> 
+disable tmds on phy on mt2701 to support other resolutions like 1280x1024
 
-Ah, yes of course.
+Signed-off-by: chunhui dai <chunhui.dai@mediatek.com>
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Tested-by: Frank Wunderlich <frank-w@public-files.de>
+---
+ drivers/gpu/drm/mediatek/mtk_hdmi_phy.c        | 3 +++
+ drivers/gpu/drm/mediatek/mtk_hdmi_phy.h        | 1 +
+ drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c | 1 +
+ 3 files changed, 5 insertions(+)
 
-We really should have a bunch of these scenarios in membarrier.c.
+diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
+index 5223498502c4..edadb7a700f1 100644
+--- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
++++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
+@@ -184,6 +184,9 @@ static int mtk_hdmi_phy_probe(struct platform_device *pdev)
+ 		return PTR_ERR(phy_provider);
+ 	}
+ 
++	if (hdmi_phy->conf->pll_default_off)
++		hdmi_phy->conf->hdmi_phy_disable_tmds(hdmi_phy);
++
+ 	return of_clk_add_provider(dev->of_node, of_clk_src_simple_get,
+ 				   hdmi_phy->pll);
+ }
+diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
+index 2d8b3182470d..f472fdeb63dc 100644
+--- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
++++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
+@@ -22,6 +22,7 @@ struct mtk_hdmi_phy;
+ struct mtk_hdmi_phy_conf {
+ 	bool tz_disabled;
+ 	unsigned long flags;
++	bool pll_default_off;
+ 	const struct clk_ops *hdmi_phy_clk_ops;
+ 	void (*hdmi_phy_enable_tmds)(struct mtk_hdmi_phy *hdmi_phy);
+ 	void (*hdmi_phy_disable_tmds)(struct mtk_hdmi_phy *hdmi_phy);
+diff --git a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
+index d3cc4022e988..6fbedacfc1e8 100644
+--- a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
++++ b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
+@@ -239,6 +239,7 @@ static void mtk_hdmi_phy_disable_tmds(struct mtk_hdmi_phy *hdmi_phy)
+ struct mtk_hdmi_phy_conf mtk_hdmi_phy_2701_conf = {
+ 	.tz_disabled = true,
+ 	.flags = CLK_SET_RATE_GATE,
++	.pll_default_off = true,
+ 	.hdmi_phy_clk_ops = &mtk_hdmi_phy_pll_ops,
+ 	.hdmi_phy_enable_tmds = mtk_hdmi_phy_enable_tmds,
+ 	.hdmi_phy_disable_tmds = mtk_hdmi_phy_disable_tmds,
+-- 
+2.25.1
 
-
-
-Now, the above cannot happen because we have an unconditional
-atomic_dec_and_test() in do_exit() before exit_mm(), but I'm sure
-relying on that is a wee bit dodgy.
