@@ -2,102 +2,113 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C3CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 452FD2065C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:35:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i4UavkhN"
+	by mail.kernel.org (Postfix) with ESMTP id 934D22065C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:35:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbgHDOfz (ORCPT
+        id S1728808AbgHDOfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:35:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58112 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgHDOe2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:34:28 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 972C9C06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 07:34:20 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id y18so25923647ilp.10
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 07:34:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5Mz7Dz4HhN27ky7XInjg78tahh1Tb1kaHJSAvyuhPZI=;
-        b=i4UavkhNSo6QPSaRE6hxSLJ+6F/G4lelA0CiGp6bzKeEamYkxGdo6G8aSdhcGOknSp
-         uSeehMryIFLQ5/PIVFsLEqG0whteXirWnqr+iobjI5jXiKjc9NrLfvjtIzN91su38GN7
-         olOEZsjcLwR/KmjJpRx50bJd22OXG7STLBGX7xSwF1qV+fhvBDs/YKKRfbimFfuryCjo
-         g8v3A7eCk+EzfiiAccNp67TYeYs5OQ16gEXyTYt60Fojyz7b6VZjBBziTGGrQU8lNS1g
-         /UBJjy+AeEPaxczip54KE84qJz1JHuHP/3ck1Z/mUxsMLp1tiWkDsUxAG/hWi0usSIW6
-         B56A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5Mz7Dz4HhN27ky7XInjg78tahh1Tb1kaHJSAvyuhPZI=;
-        b=ZWFSmRAsIdrmvHYO4YjWR4/BMd1zgFhhMum45clRbO+tGQPfcUmPmmpOYBypJvJlcX
-         9z/N0uyC1KQqjZa0TxL5y3WrgFlilXyxnzIFQ8kHM1sf9DN+qbgu9QYn1phkX3JWlYEd
-         L5eXjme7iiYXTcnsbzC3uTIdmxLRq1KJE9cVryABmhlnHOFnlylZv1Hjgazs7QpaSToZ
-         i5GDVL3pv/cnVwRvNZXKgf+swKwfGUMaKi7xq+tmWOIGDGoO/+ZB+Qx/5XbNczXFMSB6
-         5i9jijFqH8HkICP4b/cOL/0yy7r/R1LwGrI27TQ2rbt8A5rKug1xRU3zhPB0268r7S0e
-         dP1A==
-X-Gm-Message-State: AOAM531mjdUp6ApWzJjfx/W3TV3DFDjxG3hyyWVz+ZCJui6G1bx1irQZ
-        h1u5g9G0SZxAdmwUsCxjF03W/ymovCyyJBVj6mkuIQ==
-X-Google-Smtp-Source: ABdhPJzvAOv2+6wj7DYgW/bjoRT1xIlwrACuCpPpw1/wcu+H/Ta7pklvxHWABPSeHi1fkpXgHfcXMfo58Lf9XiTcPz0=
-X-Received: by 2002:a92:d781:: with SMTP id d1mr4625475iln.68.1596551659736;
- Tue, 04 Aug 2020 07:34:19 -0700 (PDT)
+        Tue, 4 Aug 2020 10:35:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53746 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726058AbgHDOeb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 10:34:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 34DD0B71B;
+        Tue,  4 Aug 2020 14:34:46 +0000 (UTC)
+Subject: Re: [PATCH] block: tolerate 0 byte discard_granularity in
+ __blkdev_issue_discard()
+To:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Cc:     "linux-bcache@vger.kernel.org" <linux-bcache@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Hannes Reinecke <hare@suse.com>, Xiao Ni <xni@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Enzo Matsumiya <ematsumiya@suse.com>,
+        Jens Axboe <axboe@kernel.dk>, Evan Green <evgreen@chromium.org>
+References: <20200804142332.29961-1-colyli@suse.de>
+ <SN4PR0401MB3598033FF16A5AE1D375EDD69B4A0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+From:   Coly Li <colyli@suse.de>
+Autocrypt: addr=colyli@suse.de; keydata=
+ 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
+Message-ID: <b469f0ec-0185-c624-b967-5080d805040c@suse.de>
+Date:   Tue, 4 Aug 2020 22:34:25 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <1596541698-18938-1-git-send-email-linmiaohe@huawei.com>
-In-Reply-To: <1596541698-18938-1-git-send-email-linmiaohe@huawei.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Tue, 4 Aug 2020 07:34:07 -0700
-Message-ID: <CANn89iK_NVBWwT4QNrb3EpahG3zOQS-Dh68Qdhrm2_xAs7Yu=Q@mail.gmail.com>
-Subject: Re: [PATCH] net: Fix potential out of bound write in skb_try_coalesce()
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Pravin B Shelar <pshelar@ovn.org>,
-        Florian Westphal <fw@strlen.de>, martin.varghese@nokia.com,
-        Willem de Bruijn <willemb@google.com>,
-        Davide Caratti <dcaratti@redhat.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Paolo Abeni <pabeni@redhat.com>, shmulik@metanetworks.com,
-        kyk.segfault@gmail.com, netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <SN4PR0401MB3598033FF16A5AE1D375EDD69B4A0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 4:46 AM linmiaohe <linmiaohe@huawei.com> wrote:
->
-> From: Miaohe Lin <linmiaohe@huawei.com>
->
-> The head_frag of skb would occupy one extra skb_frag_t. Take it into
-> account or out of bound write to skb frags may happen.
->
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+On 2020/8/4 22:31, Johannes Thumshirn wrote:
+> On 04/08/2020 16:23, Coly Li wrote:
+>> This is the procedure to reproduce the panic,
+>>   # modprobe scsi_debug delay=0 dev_size_mb=2048 max_queue=1
+>>   # losetup -f /dev/nvme0n1 --direct-io=on
+>>   # blkdiscard /dev/loop0 -o 0 -l 0x200
+> 
+> losetup -f /dev/sdX isn't it?
+> 
 
-Please share a stack trace if this was a real bug spotted in the wild.
+In my case, I use a NVMe SSD as the backing device of the loop device.
+Because I don't have a scsi lun.
 
-I do not believe this patch is correct.
+And loading scsi_debug module seems necessary, otherwise the discard
+process just hang and I cannot see the kernel panic (I don't know why yet).
 
-if (A + B >= MAX)   is equivalent to  if (A + B + 1 > MAX)
-
-Note how the other condition (when there is no bytes in skb header) is coded :
-
-if (A + B > MAX) return false;
-
-In anycase, please always provide a Fixes: tag for any bug fix.
-
-Thanks.
+Coly Li
