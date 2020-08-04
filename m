@@ -2,89 +2,200 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,
-	DATE_IN_FUTURE_06_12,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E545C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CE4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DF2822B40
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4154D22B40
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:48:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596527284;
+	bh=pS1WPK1i6yro2DLNjCjUZpZoNv0ByMmOkSSvxn+6F1o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FmKxKdUMwUsPHeO619soivhzw4K/VE7NY3owwXLkfIcjzq/BtsUFQIAuC8x7qpz7j
+	 /U5isKi3tq3Co6vK0EjOQ2iUgeuaszhBtcBzJhiuAUAsBdZPql38Fo2Ct7mtIVfgJV
+	 WzFc8191Z4XSdNfglLmYS6CVOMPOJQpAVrJpXOeE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729636AbgHDHq7 (ORCPT
+        id S1726547AbgHDHsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 03:46:59 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:53438 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727887AbgHDHq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 03:46:59 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 11CC1270000FDC330E46;
-        Tue,  4 Aug 2020 15:46:57 +0800 (CST)
-Received: from huawei.com (10.175.124.27) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Tue, 4 Aug 2020
- 15:46:47 +0800
-From:   Yang Yingliang <yangyingliang@huawei.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
-CC:     <mcgrof@kernel.org>, <keescook@chromium.org>, <yzaikin@google.com>,
-        <willy@infradead.org>, <hch@lst.de>, <yangyingliang@huawei.com>
-Subject: [PATCH -next] sysctl: fix memleak in proc_sys_call_handler()
-Date:   Tue, 4 Aug 2020 15:45:03 +0000
-Message-ID: <20200804154503.3863200-1-yangyingliang@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 4 Aug 2020 03:48:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54016 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726036AbgHDHsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 03:48:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FB172086A;
+        Tue,  4 Aug 2020 07:48:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596527281;
+        bh=pS1WPK1i6yro2DLNjCjUZpZoNv0ByMmOkSSvxn+6F1o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QR3Hg6B44CqSd0jBaGgC7l8EdzRxprSXs/tZkN+GLYXwGA0QXuHoiQay1oVd7+7iT
+         Qgog646pCVwry06e6Eb2tN1DdP9YaEKOTWpKbMGJiWdIrXaTABImI5q4i9tSZK1hUj
+         LGHwlw5aKnCqbsvuj9AeANPuw29rbzUcZwlOm7Rs=
+Date:   Tue, 4 Aug 2020 09:47:41 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dongdong Yang <contribute.kernel@gmail.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, rjw@rjwysocki.net,
+        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Benjamin Segall <bsegall@google.com>, mgorman@suse.de,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-pm@vger.kernel.org, yangdongdong@xiaomi.com,
+        tanggeliang@xiaomi.com, taojun@xiaomi.com, huangqiwu@xiaomi.com,
+        rocking@linux.alibaba.com, fengwei@xiaomi.com,
+        zhangguoquan@xiaomi.com, gulinghua@xiaomi.com, duhui@xiaomi.com
+Subject: Re: [PATCH v3] Provide USF for the portable equipment.
+Message-ID: <20200804074741.GA1761483@kroah.com>
+References: <cover.1596464894.git.yangdongdong@xiaomi.com>
+ <20200804054728.ojudxu5fmd54lar5@vireshk-mac-ubuntu>
+ <CADhdXfri8L6763ifBFMtP-cFSOuXO4isXhxZ4qF6M4vE=eeEjA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.27]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADhdXfri8L6763ifBFMtP-cFSOuXO4isXhxZ4qF6M4vE=eeEjA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I got a memleak report when doing some fuzz test:
+A: http://en.wikipedia.org/wiki/Top_post
+Q: Were do I find info about this thing called top-posting?
+A: Because it messes up the order in which people normally read text.
+Q: Why is top-posting such a bad thing?
+A: Top-posting.
+Q: What is the most annoying thing in e-mail?
 
-BUG: memory leak
-unreferenced object 0xffff888103f3da00 (size 64):
-comm "syz-executor.0", pid 2270, jiffies 4295404698 (age 46.593s)
-hex dump (first 32 bytes):
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
-backtrace:
-[<000000004f2c0607>] kmalloc include/linux/slab.h:559 [inline]
-[<000000004f2c0607>] kzalloc include/linux/slab.h:666 [inline]
-[<000000004f2c0607>] proc_sys_call_handler+0x1d4/0x480 fs/proc/proc_sysctl.c:574
-[<000000005ec6a16b>] call_write_iter include/linux/fs.h:1876 [inline]
-[<000000005ec6a16b>] new_sync_write+0x3c5/0x5b0 fs/read_write.c:515
-[<00000000bbeebb83>] vfs_write+0x4e8/0x670 fs/read_write.c:595
-[<000000009d967c93>] ksys_write+0x10c/0x220 fs/read_write.c:648
-[<00000000139f6002>] do_syscall_64+0x33/0x40 arch/x86/entry/common.c:46
-[<00000000b7d61f44>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+A: No.
+Q: Should I include quotations after my reply?
 
-Go to free buff when copy_from_iter_full() is failed.
+http://daringfireball.net/2007/07/on_top
 
-Fixes: 1dea05cbc0d7 ("sysctl: Convert to iter interfaces")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
----
- fs/proc/proc_sysctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Aug 04, 2020 at 03:34:25PM +0800, Dongdong Yang wrote:
+> Appreciate Viresh for your help. I thought Peter's NAK was only for the
+> initial version. I am going to upload the verified version 4. Could you
+> please kindly help to further review?
+> 
+> 1. Motivation
+> =============
+> 
+> The power consumption and UI response are more cared for by the portable
+> equipment users.
 
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index 9f6b9c3e3fda..a4a3122f8a58 100644
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -578,7 +578,7 @@ static ssize_t proc_sys_call_handler(struct kiocb *iocb, struct iov_iter *iter,
- 	if (write) {
- 		error = -EFAULT;
- 		if (!copy_from_iter_full(kbuf, count, iter))
--			goto out;
-+			goto out_free_buf;
- 		kbuf[count] = '\0';
- 	}
- 
--- 
-2.25.1
+That's not true, everyone cares about this.
 
+> USF(User Sensitive Feedback factor) auxiliary cpufreq
+> governor
+> is providing more utils adjustment settings to the high level by scenario
+> identification.
+
+Odd line-wrapping :(
+
+And what do you mean by "more utils adjustment settings to the high
+level by scenario identification"?  I can not parse that at all.
+
+> 2. Introduction
+> ===============
+> 
+> The USF auxiliary scheduling is based on FrameBuffer and schdeutil cpufreq
+> governor to adjust utils by the identificated scenario from User Space.
+
+What is "adjust utils"?
+
+And why is "User Space" in caps?
+
+> It is for portable equipment which "screen off" status stands for no request
+> from the user, however, the kernel is still expected to notify the user for
+> UI in
+> time on modem, network or powerkey events occur. In order to save power, the
+> sysfs inode nonux is provided to set the utils down level on userspace
+> tasks.
+
+Having custom sysfs apis is almost never a good idea.  Do other cpufreq
+governers do this?
+
+> In addition, the portable equipment users usually heavily interact with
+> devices
+> by touch, and other peripherals. On "screen on" status, The boost preemptive
+> counts are marking the load requirement urgent, vice versa. USF provides up
+> and
+> down sysfs inodes to adjust utils according to such feedback factor and the
+> level setting from the user space identified scenario.
+> 
+> adjust_task_pred_set is as the switch to enable or disable the adjustment.
+> If no USF sysfs inodes is set and no screen on or off event be received,
+> adjust_task_pred_demand shall not be executed.
+> 
+> 3. System wide settings
+> =======================
+> 
+> sched_usf_non_ux_r:
+>         The ratio of utils is cut down on screen off. The default value is
+> 0,
+
+The line-wrapping makes it almost impossible to read here, can you fix
+that up?
+
+>         which no util be adjusted on sugov calculating utils to select
+
+"sugov"?
+
+> cpufreq.
+>         Its range is [-100 , 0]. If its value falls into [-50, 0), the half
+> of
+>         utils, which calculates cpufreq, shall be  cut down. If its value
+> falls
+>         into [-100, -50), only a quarter of utils be left to continue to
+>         calculates cpufreq.
+>         It is expected to be set [-100, 0) once enter into the identificated
+>         scenario, such as listen to music on screen off, and recover to 0 on
+>         out of the scenario, such as screen on.
+
+sysfs files are "one value per file", please do not parse such complex
+things in the kernel.
+
+> 
+> sched_usf_up_l0_r:
+>         The ratio of utils is boosted up on screen on. The default value is
+> 0,
+>         which no util be adjusted on sugov calculates utils to select
+> cpufreq.
+>         Its range is [0 , 100]. If its value falls into (0, 50], a quarter
+> of
+>         extra utils, which calculates cpufreq, shall be added. If its value
+>         falls into (50, 100], the half of extra utils be added to continue
+> to
+>         calculates cpufreq.
+>         It is expected to be set (0, 100] once enter into the identificated
+>         scenario, such as browsing videolet on screen on, and recover to 0
+> on
+>         out of the scenario, such as screen off or videolet into background.
+> 
+> sched_usf_down_r:
+>         The ratio of utils is cut down on screen on. The default value is 0,
+>         which no util be adjusted on sugov calculating utils to select
+> cpufreq.
+>         Its range is [-100 , 0]. If its value falls into [-50, 0), the half
+> of
+>         utils, which calculates cpufreq, shall be  cut down. If its value
+> falls
+>         into [-100, -50), only a quarter of utils be left to continue to
+>         calculates cpufreq.
+>         It is expected to be set [-100, 0) once enter into the identificated
+>         scenario, such as browsing videolet on screen on, and recover to 0
+> on
+>         out of the scenario, such as screen off or vidolet into background.
+
+Why can't all of these work automatically?  Why do you need userspace
+interaction here?
+
+thanks,
+
+greg k-h
