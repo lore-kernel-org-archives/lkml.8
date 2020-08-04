@@ -2,206 +2,215 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB37EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 18:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B159DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 18:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 882B3206DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 18:00:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8101121744
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 18:02:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="rGblPsO3";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="dN3+Z61l"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mErZWVtq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725996AbgHDSA4 (ORCPT
+        id S1726238AbgHDSC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 14:00:56 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:41424 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725826AbgHDSAx (ORCPT
+        Tue, 4 Aug 2020 14:02:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725826AbgHDSC2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 14:00:53 -0400
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 074HnLI4009249;
-        Tue, 4 Aug 2020 10:59:51 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=pa8u/GKLY4RbyaexJihD8zu2qgRcBQY18akMNg3FhhY=;
- b=rGblPsO3KfnaB5TPykulwB7GreR4tE2makZsPSiOxgB1hsF5yCmj2qqbl4Rd/vlvhp51
- 9YjNUVBRecUpfJL3chela06KisI4MGX4fFsLARsb6yDUrrflkElizoE93XiyRfILP0sS
- U0+kPzUotlTy5ZFVw6hOFEpC4uIcUyWaZqQ= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 32n80tdu9j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 04 Aug 2020 10:59:51 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 4 Aug 2020 10:59:50 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PWWIPtp8GIM2CI84w9p4tDunzMK1nJUU+bcMm2/mk4IW6NWKgg1LhTxlvqfLwyHHpmUx60rGuLAmhC3RwjntEJRHro+vhCaUgV9gYka7A55Bk3f+6njt6jtUlNeIPzj50M3eJP3CPb7nC/fwyI0eGJPH1cVcbxvx+Ip2vgUEs6/yNT9IfpPFDDrx8Jbb85DQDYZ0ro1co50maCEa3dxGinlMwD/1mYqSLqRK/YycRhJQoe+fJeWLor9o67l++/D849T1QO5HPhrLlP/jvMf6dr/jIBmcmQctFD7RkMQAEOHqflnE4IubUkHv9sb8F7/xjyURv1RsXha+Nkpm7bndlw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pa8u/GKLY4RbyaexJihD8zu2qgRcBQY18akMNg3FhhY=;
- b=icYNgTM+XKexu7EO5IWPHHurc0mp6fPuDqD2nZQVUZfKV86jezDtQ1o1OmZmBynjn6ZwulPTh+nEUswwH/sct/fcN83sEtZIiSQ5+EMyYWdjlCbTG024fSgAGxNcPQaLP/XG7Ud+xwiLBGSI20+yhZ+A48ErD/h+OEVje3ZUfvwnRAS3gPcdogwckJt601vZNtaaMckDBFeJQnIc0Qzd1RRS1sQqokUNRsf5irJCJsQDPLu/AFDPEoCRydd3cobkCWBmBIgq7Cunjtsam7jVBHdAXhTqg4KaDcdPc1m/nF+j1QtKA9zcEI0LcnGJKKyJ70Ld8oZxmewt5f13NlW68w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pa8u/GKLY4RbyaexJihD8zu2qgRcBQY18akMNg3FhhY=;
- b=dN3+Z61lOFWVawQt+/Shz+69C4cZccGLb2bJBEpf4jPU+Hvt3SEaQoLiBbVOiRqwfNiZ7YMcr90UKypGGPrSdhmHbPAzfF/eUqId2QEZUzJJU0mS1EPzJP26kWtUARywoMS91SdSmysqxYub77eIpQh/Qa/EFCY1VstJzcKaw3s=
-Received: from BY5PR15MB3667.namprd15.prod.outlook.com (2603:10b6:a03:1f9::18)
- by BY5PR15MB3569.namprd15.prod.outlook.com (2603:10b6:a03:1ff::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17; Tue, 4 Aug
- 2020 17:59:49 +0000
-Received: from BY5PR15MB3667.namprd15.prod.outlook.com
- ([fe80::f4b9:8011:9aaa:e4ea]) by BY5PR15MB3667.namprd15.prod.outlook.com
- ([fe80::f4b9:8011:9aaa:e4ea%3]) with mapi id 15.20.3239.022; Tue, 4 Aug 2020
- 17:59:49 +0000
-From:   Nick Terrell <terrelln@fb.com>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-CC:     Nick Terrell <nickrterrell@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, Kernel Team <Kernel-team@fb.com>,
-        Yann Collet <yann.collet.73@gmail.com>,
-        Gao Xiang <gaoxiang25@huawei.com>,
-        Sven Schmidt <4sschmid@informatik.uni-hamburg.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] lz4: Fix kernel decompression speed
-Thread-Topic: [PATCH] lz4: Fix kernel decompression speed
-Thread-Index: AQHWac5eBX2DbmatdkS0UNeom8wg5qkm7qKAgAAP/ACAADLTAIABDQgA
-Date:   Tue, 4 Aug 2020 17:59:49 +0000
-Message-ID: <9753118F-84DD-44C4-8B8C-F45B8EE0FC14@fb.com>
-References: <20200803194022.2966806-1-nickrterrell@gmail.com>
- <20200803215747.GA1644409@rani.riverdale.lan>
- <3961E1BD-8F58-4240-A3B3-B7032A405B42@fb.com>
- <20200804015654.GA1943218@rani.riverdale.lan>
-In-Reply-To: <20200804015654.GA1943218@rani.riverdale.lan>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: alum.mit.edu; dkim=none (message not signed)
- header.d=none;alum.mit.edu; dmarc=none action=none header.from=fb.com;
-x-originating-ip: [2620:10d:c090:400::5:9999]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f4f4e021-9c92-4804-593c-08d838a02e1a
-x-ms-traffictypediagnostic: BY5PR15MB3569:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR15MB35698A86F306B0D49D13BD21AB4A0@BY5PR15MB3569.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: lH0n4+VUAOu+ZAUkK9stXsmjls+zD54QWr9b+iMUsPzYxKcmgHm5ARlsweMEeWqx28VUVDKIm4+0qp+bR3X6xHG4dAJ6aYdz5QCWjg42QQGRfAhvuKTIdgEf2XKwSnDkJlT0ClAuxA24a6Xt9jjss6fphuVYltNl/RcXpLBEWQ7JRYc0isQ1b25uHbSavCHoWblhMtEeoTgt5CHunqxyOyXFZ6QI1GDPg9ljKzu9KeNVONFKghmSSFNuOdQESko7NwqH7raOzsNt4uJEdX/xWjiP4hOFsXEK2uvO1c+51vxk+oujR1GsPrdfs+c9soCs4avw6DkUzQ+1KcsQRjroqUEBFxBCVImfA9X6HhvQ78HUlB7rRaAdMRFy69ZCgbI5+NGPWDI1iwOleMzqNF9O0A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR15MB3667.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(136003)(366004)(346002)(376002)(39860400002)(2906002)(6486002)(66556008)(478600001)(966005)(66446008)(71200400001)(64756008)(66946007)(66476007)(33656002)(2616005)(6512007)(76116006)(86362001)(8936002)(8676002)(4326008)(6506007)(5660300002)(53546011)(83380400001)(54906003)(316002)(186003)(36756003)(7416002)(6916009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: Ya3lbs6WjmHPxKeA2qEgaJFk1W8WMDxeGt+9duLfLU9bkTsT0wyzL65IEbslZ7aTv++Q6wPDBtPuXJhzIvYNVV7Kl9j/vPggrKm9y9xIXr8dB7co6OS5kJAu2ngdDxLeSWymWPvd9Yji4/bL/mPm54YKos+SnXdWOBXe7FveiUTgf7lo8/6dGcC82b9Mx7FI7l65wK62IysJX6s18x0p8MFP5DV7Jo+moOHkeC79jhQeO/3c1oB1RzmOyxyvk4iRoclGTOm0ClnXf5jVKCOiRV66FVWLRGgXlJBi/Tn44HDgTDmwfNBexJQysLgui4w1km2yvDYqy57mESyUVMdv6h60N37PEpUrpWBMywkIi9j4TYcsidCz4W41lkKBtKv9cjw7BSzuRwqY7qtPAEbGZnYcBx7zUeMdH4Xrv1BGQgE06Zz8myPdoP6JiUj5W/LHy/m6fOx9sHFyatw7phznrWdfUGxXOBRovD0yZmQq0YiK7s+EJ4Ob0gx0EKqAax9auIf2lmx5vgzEb4w1UThTM4VAhd5WVYKOtQbns/FdhWy6ZUHe7a0r04Qr9l7FloRRQRfbg5ZlYc9e0puXB75LVtj7csQfbBFdSzKVov5gt1kyVR8duMt6CO1Mso1+JFE/9n9qmqqKfWKtrcHS/fcBm8kZz6cHwpwG4zw2DupqMEHWpVIkoJZAW4Seaa2FmQVu
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <39F0AC20E99A4E4F95D2504E8AE871BB@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR15MB3667.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f4f4e021-9c92-4804-593c-08d838a02e1a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Aug 2020 17:59:49.0857
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: F7qmsQQAIbNYAgwG5Z7HyZ/bJ29Ux/P9lLrxyBuFeZgxfDs6ViQ2WNfeU1ymp/NL
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR15MB3569
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-04_04:2020-08-03,2020-08-04 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
- suspectscore=0 bulkscore=0 priorityscore=1501 spamscore=0 clxscore=1015
- mlxscore=0 phishscore=0 impostorscore=0 lowpriorityscore=0 mlxlogscore=999
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008040131
-X-FB-Internal: deliver
+        Tue, 4 Aug 2020 14:02:28 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D345C06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 11:02:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Mime-Version:Content-Type:References:
+        In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=q3kwgKMLW1j/yVXCoKqGWl3BaXMqFYr0IRLkYYW9Z9Y=; b=mErZWVtqjFnBrZN6cvCbrakP6a
+        bb4UaYYD4vHmqN4+KM19EVyB7oazYQmZU+YWALi2/IF1I8h5NLtgY92FoE9o8+HcMXOR614Pd1TLu
+        yJv7u3DpwZlXNHukinMvnb+BCHu24w16utZrOuQrPteksGc67lwZXgBAqHPo6tOrnOP3QbKt5hT8a
+        iMudoK82K4MXPHVVXQ7ni9uK6p9JgTKXh97MsXEdru6zju6cZJ4gwWWsohdgOGIhPRYWWp+Njg2ex
+        s6r7gvjBWDkmhzIIzqmUwvwutuO0FaF+ksdEmnxuPYrKyHYYgPEi5gAiNvyb3tfenuCM7fSgMJRjM
+        NGlgWh6w==;
+Received: from 54-240-197-235.amazon.com ([54.240.197.235] helo=freeip.amazon.com)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k31GO-0005Ae-71; Tue, 04 Aug 2020 18:02:12 +0000
+Message-ID: <45d34c6cc19c2e5c13f9e88a8e04bdae9259ffdc.camel@infradead.org>
+Subject: Re: Aw: Re: [PATCH v4 6/6] arm: dts: mt7623: add display subsystem
+ related device nodes
+From:   David Woodhouse <dwmw2@infradead.org>
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        chunhui dai <chunhui.dai@mediatek.com>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, CK Hu <ck.hu@mediatek.com>,
+        linux-mediatek@lists.infradead.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Frank Wunderlich <linux@fw-web.de>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org
+Date:   Tue, 04 Aug 2020 19:02:08 +0100
+In-Reply-To: <trinity-5335a61e-b8f0-4441-9fe9-0827cdd67ce4-1596562816887@3c-app-gmx-bap28>
+References: <20200804165555.75159-1-linux@fw-web.de>
+         <20200804165555.75159-8-linux@fw-web.de>
+         <3966b4f687f2fabf9041059dd5f39165177a6ef6.camel@infradead.org>
+         <trinity-5335a61e-b8f0-4441-9fe9-0827cdd67ce4-1596562816887@3c-app-gmx-bap28>
+Content-Type: multipart/signed; micalg="sha-256";
+        protocol="application/x-pkcs7-signature";
+        boundary="=-KY5yR/ebxvCtlKc28xLb"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by merlin.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--=-KY5yR/ebxvCtlKc28xLb
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> On Aug 3, 2020, at 6:56 PM, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+On Tue, 2020-08-04 at 19:40 +0200, Frank Wunderlich wrote:
+> > Gesendet: Dienstag, 04. August 2020 um 19:24 Uhr
+> > Von: "David Woodhouse" <dwmw2@infradead.org>
+> > > +	mipi_tx0: mipi-dphy@10010000 {
+> > > +		compatible =3D "mediatek,mt7623-mipi-tx",
+> > > +			     "mediatek,mt2701-mipi-tx";
+> > > +		reg =3D <0 0x10010000 0 0x90>;
+> > > +		clocks =3D <&clk26m>;
+> > > +		clock-output-names =3D "mipi_tx0_pll";
+> > > +		#clock-cells =3D <0>;
+> > > +		#phy-cells =3D <0>;
+> > > +	};
+> >=20
+> > Doesn't this (and some others) also need status=3D"disabled" since
+> > they're not present on MT7623A? Or maybe it's time to split
+> > mt7623.dtsi
+> > into a mt7623n.dtsi which includes mt7623a.dtsi and adds the extra
+> > components?
 >=20
-> On Mon, Aug 03, 2020 at 10:55:01PM +0000, Nick Terrell wrote:
->>=20
->>=20
->>> On Aug 3, 2020, at 2:57 PM, Arvind Sankar <nivedita@alum.mit.edu> wrote=
-:
->>>=20
->>> On Mon, Aug 03, 2020 at 12:40:22PM -0700, Nick Terrell wrote:
->>>> From: Nick Terrell <terrelln@fb.com>
->>>>=20
->>>> This patch replaces all memcpy() calls with LZ4_memcpy() which calls
->>>> __builtin_memcpy() so the compiler can inline it.
->>>>=20
->>>> LZ4 relies heavily on memcpy() with a constant size being inlined. In
->>>> x86 and i386 pre-boot environments memcpy() cannot be inlined because
->>>> memcpy() doesn't get defined as __builtin_memcpy().
->>>>=20
->>>> An equivalent patch has been applied upstream so that the next import
->>>> won't lose this change [1].
->>>>=20
->>>> I've measured the kernel decompression speed using QEMU before and aft=
-er
->>>> this patch for the x86_64 and i386 architectures. The speed-up is abou=
-t
->>>> 10x as shown below.
->>>>=20
->>>> Code	Arch	Kernel Size	Time	Speed
->>>> v5.8	x86_64	11504832 B	148 ms	 79 MB/s
->>>> patch	x86_64	11503872 B	 13 ms	885 MB/s
->>>> v5.8	i386	 9621216 B	 91 ms	106 MB/s
->>>> patch	i386	 9620224 B	 10 ms	962 MB/s
->>>>=20
->>>> I also measured the time to decompress the initramfs on x86_64, i386,
->>>> and arm. All three show the same decompression speed before and after,
->>>> as expected.
->>>>=20
->>>> [1] https://github.com/lz4/lz4/pull/890
->>>>=20
->>>=20
->>> Hi Nick, would you be able to test the below patch's performance to
->>> verify it gives the same speedup? It removes the #undef in misc.c which
->>> causes the decompressors to not use the builtin version. It should be
->>> equivalent to yours except for applying it to all the decompressors.
->>>=20
->>> Thanks.
->>=20
->> I will measure it. I would expect it to provide the same speed up. It wo=
-uld be great to fix
->> the problem for x86/i386 in general.
->=20
-> Thanks. I tried using RDTSC to get some timings under QEMU, and I get
-> similar speedup as you have for LZ4, and around 15-20% or so for ZSTD
-> (on 64-bit) -- I see that ZSTD_copy8 is already using __builtin_memcpy,
-> but there must be more that can be optimized? There's a couple 1/2-byte
-> sized copies in huf_decompress.c.
+> do you have a MT7623A board for testing? is there any list which
+> components are existing on mt7623a? or should i disable all of them
+> and re-enable them in bpi-r2 dts?
 
-I tested your patch. I saw the same performance as my patch for LZ4, as exp=
-ected.
-I saw that zstd decompression time went from 84 ms -> 63 ms, a 25% improvem=
-ent.
+The UniElec U7623 board (which is supported in OpenWrt) is MT7623A.
 
-I will get started on a zstd patch. I look forward to your x86 patch gettin=
-g merged!
+I was told that MT7623N has GPU and HDMI, while the MT7623A has a
+built-in mt7530 switch. Does that imply the switch on the MT7623N
+boards is *external*?=20
 
-Thanks,
-Nick
+If so, that means that mt7623n.dtsi maybe shouldn't just include
+mt7623a.dtsi because it's not a strict superset; maybe they should both
+include a common mt7623.dtsi that has the parts that are truly common?
+
+I also suspect the switch definition from the UniElec U7623 dts should
+probably move to this new mt7623a.dtsi? That's not upstream yet though.
+
+--=-KY5yR/ebxvCtlKc28xLb
+Content-Type: application/x-pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCECow
+ggUcMIIEBKADAgECAhEA4rtJSHkq7AnpxKUY8ZlYZjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
+A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
+bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTkwMTAyMDAwMDAwWhcNMjIwMTAxMjM1
+OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRlYWQub3JnMIIBIjANBgkqhkiG9w0B
+AQEFAAOCAQ8AMIIBCgKCAQEAsv3wObLTCbUA7GJqKj9vHGf+Fa+tpkO+ZRVve9EpNsMsfXhvFpb8
+RgL8vD+L133wK6csYoDU7zKiAo92FMUWaY1Hy6HqvVr9oevfTV3xhB5rQO1RHJoAfkvhy+wpjo7Q
+cXuzkOpibq2YurVStHAiGqAOMGMXhcVGqPuGhcVcVzVUjsvEzAV9Po9K2rpZ52FE4rDkpDK1pBK+
+uOAyOkgIg/cD8Kugav5tyapydeWMZRJQH1vMQ6OVT24CyAn2yXm2NgTQMS1mpzStP2ioPtTnszIQ
+Ih7ASVzhV6csHb8Yrkx8mgllOyrt9Y2kWRRJFm/FPRNEurOeNV6lnYAXOymVJwIDAQABo4IB0zCC
+Ac8wHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFLfuNf820LvaT4AK
+xrGK3EKx1DE7MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
+BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
+dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
+LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
+Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
+Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
+KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAeBgNVHREEFzAVgRNkd213MkBpbmZy
+YWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQALbSykFusvvVkSIWttcEeifOGGKs7Wx2f5f45b
+nv2ghcxK5URjUvCnJhg+soxOMoQLG6+nbhzzb2rLTdRVGbvjZH0fOOzq0LShq0EXsqnJbbuwJhK+
+PnBtqX5O23PMHutP1l88AtVN+Rb72oSvnD+dK6708JqqUx2MAFLMevrhJRXLjKb2Mm+/8XBpEw+B
+7DisN4TMlLB/d55WnT9UPNHmQ+3KFL7QrTO8hYExkU849g58Dn3Nw3oCbMUgny81ocrLlB2Z5fFG
+Qu1AdNiBA+kg/UxzyJZpFbKfCITd5yX49bOriL692aMVDyqUvh8fP+T99PqorH4cIJP6OxSTdxKM
+MIIFHDCCBASgAwIBAgIRAOK7SUh5KuwJ6cSlGPGZWGYwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
+ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTE5MDEwMjAwMDAwMFoXDTIyMDEwMTIz
+NTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCASIwDQYJKoZIhvcN
+AQEBBQADggEPADCCAQoCggEBALL98Dmy0wm1AOxiaio/bxxn/hWvraZDvmUVb3vRKTbDLH14bxaW
+/EYC/Lw/i9d98CunLGKA1O8yogKPdhTFFmmNR8uh6r1a/aHr301d8YQea0DtURyaAH5L4cvsKY6O
+0HF7s5DqYm6tmLq1UrRwIhqgDjBjF4XFRqj7hoXFXFc1VI7LxMwFfT6PStq6WedhROKw5KQytaQS
+vrjgMjpICIP3A/CroGr+bcmqcnXljGUSUB9bzEOjlU9uAsgJ9sl5tjYE0DEtZqc0rT9oqD7U57My
+ECIewElc4VenLB2/GK5MfJoJZTsq7fWNpFkUSRZvxT0TRLqznjVepZ2AFzsplScCAwEAAaOCAdMw
+ggHPMB8GA1UdIwQYMBaAFIKvbIz4xf6WYXzoHz0rcUhexIvAMB0GA1UdDgQWBBS37jX/NtC72k+A
+CsaxitxCsdQxOzAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEF
+BQcDBAYIKwYBBQUHAwIwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAwUwKzApBggrBgEFBQcCARYd
+aHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2Ny
+bC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
+bENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2Nh
+LmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQG
+CCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
+cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAC20spBbrL71ZEiFrbXBHonzhhirO1sdn+X+O
+W579oIXMSuVEY1LwpyYYPrKMTjKECxuvp24c829qy03UVRm742R9Hzjs6tC0oatBF7KpyW27sCYS
+vj5wbal+TttzzB7rT9ZfPALVTfkW+9qEr5w/nSuu9PCaqlMdjABSzHr64SUVy4ym9jJvv/FwaRMP
+gew4rDeEzJSwf3eeVp0/VDzR5kPtyhS+0K0zvIWBMZFPOPYOfA59zcN6AmzFIJ8vNaHKy5QdmeXx
+RkLtQHTYgQPpIP1Mc8iWaRWynwiE3ecl+PWzq4i+vdmjFQ8qlL4fHz/k/fT6qKx+HCCT+jsUk3cS
+jDCCBeYwggPOoAMCAQICEGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRp
+b24gQXV0aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYT
+AkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
+BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50
+aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf
++bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcf
+WlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqza
+aPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDK
+CMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAU
+u69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1Ud
+DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8E
+RTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9u
+QXV0aG9yaXR5LmNybDBxBggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29t
+b2RvY2EuY29tL0NPTU9ET1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2Nz
+cC5jb21vZG9jYS5jb20wDQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2
+SQgG1NgvNc3fQP7TcePo7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs
+0j8CGpfb+SJA3GaBQ+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDM
+KVmU/PUWNMKSTvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+
+E2pvOUtY+hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfH
+M5tdhYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
+jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1t
+yZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4o
+gnzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAb
+R9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIDyjCCA8YCAQEwga0wgZcxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
+ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
+ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjAw
+ODA0MTgwMjA4WjAvBgkqhkiG9w0BCQQxIgQg7044XyeMJihcAJJT1NTE+bGufWN/Q7rvEzgVzRJ7
+QRowgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
+TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
+PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
+aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
+A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
+bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
+DQEBAQUABIIBAK9yVKJ8HHEWvHvMU8qb4solFzfmtgTDeWAJEIKW7WBITCiY2dJg2VRfW7mxUwq4
+CnBwUKpbv1pCCngvNcuypA/Pfn8blWSZok3S1AzDfMhyF3yMEJdbHxSuIT2onaX28olmuZzimd4y
+sxOPRjMV43f8UKNrztAK3K2TTSFHwSrAE36Ggmf/bHewFvBXi7d0dNR4lJFXlv/OmkCiJoXsAe9q
+ckSGyVDkutCjHUK8k/XrxdxBViYkQUfhpCDWwPgpPB18BiFjDSTzPkb5iXt384hYc263A6+Oae0Y
+tV0FwclONxEQEmmOcVF03pgNnqlFwcoTuDCcIyrwoChNlfYo5K8AAAAAAAA=
+
+
+--=-KY5yR/ebxvCtlKc28xLb--
 
