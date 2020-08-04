@@ -2,100 +2,84 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA430C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5192BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C81E5206DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FAE22086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:48:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Zd9gPm9P"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BdCi+cl0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbgHDOsQ (ORCPT
+        id S1729357AbgHDOsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:48:16 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:46302 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729009AbgHDOsN (ORCPT
+        Tue, 4 Aug 2020 10:48:30 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51660 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726580AbgHDOsV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:48:13 -0400
-Received: from [192.168.254.32] (unknown [47.187.206.220])
-        by linux.microsoft.com (Postfix) with ESMTPSA id C779220B4908;
-        Tue,  4 Aug 2020 07:48:11 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C779220B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1596552492;
-        bh=WWoZU5hW4wXDmLDqxKWgVjJhEBnDZrlL0eZeSoA1M0E=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Zd9gPm9PZos91WvJOt0oayxz099VIuOsWoBZIXUJDFjP7lCj1dlQONa0QNp25lwdY
-         dsm1r5OpjOcAXzNUDHh+nWWnMfnxq0oL6LMUtoVLftLBOD3ttlLrNDioYA+AS/vahh
-         DP92H/rykDhIN5jKmVDwqf9m4OvMWrU04m/O4Ps0=
-Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-To:     David Laight <David.Laight@ACULAB.COM>,
-        'Mark Rutland' <mark.rutland@arm.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
-References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
- <6540b4b7-3f70-adbf-c922-43886599713a@linux.microsoft.com>
- <CALCETrWnNR5v3ZCLfBVQGYK8M0jAvQMaAc9uuO05kfZuh-4d6w@mail.gmail.com>
- <46a1adef-65f0-bd5e-0b17-54856fb7e7ee@linux.microsoft.com>
- <20200731183146.GD67415@C02TD0UTHF1T.local>
- <86625441-80f3-2909-2f56-e18e2b60957d@linux.microsoft.com>
- <20200804135558.GA7440@C02TD0UTHF1T.local>
- <c898918d18f34fd5b004cd1549b6a99e@AcuMS.aculab.com>
-From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Message-ID: <5f3c9616-52f5-f539-a39f-3fd3ada4f0aa@linux.microsoft.com>
-Date:   Tue, 4 Aug 2020 09:48:11 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 4 Aug 2020 10:48:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596552500;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YBIyByaoXzguOGwDoIHrGafwWHoBGZfxem7IPfKZXe8=;
+        b=BdCi+cl00JNn6vKCePouBQUecugwbKBvcuZ5wkdsyimXiSD0ML3crgr0Id3sx6hiCGUo+F
+        1qBOKnmP0D/CLTGDVT/++KcY82/wfWSZeUYyaUznIqI2L+n+NSDeCVZu8rJL4nDXiOzRY2
+        z6nWGDWTnM0/Rt7dkkL+03/9K28n5gg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-4-RaUk-LvzPUWyQ7VHi_vXow-1; Tue, 04 Aug 2020 10:48:16 -0400
+X-MC-Unique: RaUk-LvzPUWyQ7VHi_vXow-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 86D97800474;
+        Tue,  4 Aug 2020 14:48:15 +0000 (UTC)
+Received: from gondolin (ovpn-112-169.ams2.redhat.com [10.36.112.169])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B56528559;
+        Tue,  4 Aug 2020 14:48:08 +0000 (UTC)
+Date:   Tue, 4 Aug 2020 16:48:05 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        virtualization@lists.linux-foundation.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>
+Subject: Re: [PATCH v2 16/24] virtio_scsi: correct tags for config space
+ fields
+Message-ID: <20200804164805.656bf752.cohuck@redhat.com>
+In-Reply-To: <20200803205814.540410-17-mst@redhat.com>
+References: <20200803205814.540410-1-mst@redhat.com>
+        <20200803205814.540410-17-mst@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <c898918d18f34fd5b004cd1549b6a99e@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 3 Aug 2020 16:59:45 -0400
+"Michael S. Tsirkin" <mst@redhat.com> wrote:
 
+> Tag config space fields as having virtio endian-ness.
+> 
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> ---
+>  drivers/scsi/virtio_scsi.c       |  4 ++--
+>  include/uapi/linux/virtio_scsi.h | 20 ++++++++++----------
+>  2 files changed, 12 insertions(+), 12 deletions(-)
 
-On 8/4/20 9:33 AM, David Laight wrote:
->>> If you look at the libffi reference patch I have included, the architecture
->>> specific changes to use trampfd just involve a single C function call to
->>> a common code function.
-> No idea what libffi is, but it must surely be simpler to
-> rewrite it to avoid nested function definitions.
-
-Sorry if I wasn't clear.
-
-libffi is a separate use case and GCC nested functions is a separate one.
-libffi is not used to solve the nested function stuff.
-
-For nested functions, GCC generates trampoline code and arranges to
-place it on the stack and execute it.
-
-I agree with your other points about nested function implementation.
-
-Madhavan
-> Or find a book from the 1960s on how to do recursive
-> calls and nested functions in FORTRAN-IV.
->
-> 	David
->
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
