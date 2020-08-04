@@ -2,107 +2,127 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD189C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD06C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD582075F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:46:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596548790;
-	bh=roMCFNmPPkY9aOtB8mbdYYu8t78Z3ZS0O3Rhws1u9uE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=piUzoqxoWx3DPmQM3VUUC0Wwx2dvPrFVgUJLhGm5NQQHAjbLvsFTpVVFfh1s8DNOj
-	 oo7T1jTtsRxIezXhJybtCaWDYfoUrI2a9izrhO/napf2uYHmiVbyJfPkd2KYFPo8ac
-	 DK2Dg0kgQgmAaqjUAzDNsnCgYImRCI6tlfJWwC9Q=
+	by mail.kernel.org (Postfix) with ESMTP id F08492075D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:47:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=massaru-org.20150623.gappssmtp.com header.i=@massaru-org.20150623.gappssmtp.com header.b="G3zRJ+LK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgHDNq3 (ORCPT
+        id S1728287AbgHDNrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 09:46:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51222 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725826AbgHDNq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 09:46:29 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EE162075D;
-        Tue,  4 Aug 2020 13:46:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596548788;
-        bh=roMCFNmPPkY9aOtB8mbdYYu8t78Z3ZS0O3Rhws1u9uE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ebOiwiw6ObunrZDT7PrvjzIBqiWke7wA41Iayk6OkmK6KmXuDxquLSr6joJ6RQz6D
-         9zdmERHtU5Z+zeY4147ZiponZGJgLvcc98Y+Nzaargz1rPGaZMCR1UrttQMh1Jun8c
-         aDQFAOYaJRFhnGNldBQbEEjc2jAiqKKBlbxvNxZk=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k2xGs-00HOpC-P7; Tue, 04 Aug 2020 14:46:26 +0100
+        Tue, 4 Aug 2020 09:47:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50826 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728157AbgHDNq7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 09:46:59 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA30BC061757
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 06:46:58 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id e14so8105254ybf.4
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 06:46:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=massaru-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LrNhj1Agg0SHP12xm0hT7igSJHpcqAu4hLHMIrMVovc=;
+        b=G3zRJ+LKHYQQmQiEDLgcscZ2UUOj3wnQ+W1Ni+ec/JMwsPKzwklZyd072ljtj+nVO6
+         DjIkXeHLgdqAKIKMjpAkUPNVqcm6ySl63YS2p8R0uhI3oxgnwnOXtMI+cEpr5VIYpRt8
+         iTo4JJFxDadosfOFWdP4bXgOp5r7YNffY4SkmaE14plPbAP6zeSPq9XWT74uhdcY3k0s
+         c/oukbwmveqPyIF0QZ71Mv82UlY0dhrqEY4/h7FYFBsrapCPezpnG5O6FengjYzBPho1
+         S1XNizrVbhTLpKayFkFX3MMdKazNk7DvJdqz+Rmgq5kcCZ2QuXL6Ry9Cb2Zrl0VWepjr
+         0k+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LrNhj1Agg0SHP12xm0hT7igSJHpcqAu4hLHMIrMVovc=;
+        b=k4oN8g0ijSjrMQHi68OFkenDcZR+fJeqT3i3bGJgUOuX/BF3MpPeJousRZGKKxzG02
+         pyog5Pwcn+0/gXWOHAS7WLsDHMSKJAAI23xCRCaTwUyo5suzZ07yDhJBU5PVJdxDbYwf
+         ShOiqyukM9q4Ta0gDFgjqX4qwN8HstzInY5B+eQIEyv36icOaeNoP/mhm2riLJtMD/qy
+         mBbqi0f+ZyFeDoLPtU+ESIl0RHHC7RnQA+/GXpc2B2xfr53E5ksd/T0sSoiNx5NvhIGw
+         UeYnfXj/iiCB4IvgoPgzulFb/99Jf/Tc4lHM7lb5/l8eJW0yRAObqMMCY8C8D9tRu3tl
+         i+aw==
+X-Gm-Message-State: AOAM533PdGcBU7yQksHzCRohCHe74eYhYcJREbcTrdCNp4OfHQQvACtx
+        kwlDkQk6VlYJ7nIuleZ/X5+vu3W/HuYakW8VlM5JmQ==
+X-Google-Smtp-Source: ABdhPJyOumCE9cxEnt0Ldc35X4Mj17jEYTCzkeETyZ7RjgfcQmd5geR9G2CuZLBYmTQ42LfeW667+pNFxkOXD8eQY8U=
+X-Received: by 2002:a25:843:: with SMTP id 64mr17548617ybi.311.1596548818054;
+ Tue, 04 Aug 2020 06:46:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Tue, 04 Aug 2020 14:46:26 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>
-Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
-        christoffer.dall@arm.com
-Subject: Re: [PATCH  v1 3/3] kernel/configs: don't include PCI_QUIRKS in KVM
- guest configs
-In-Reply-To: <20200804124417.27102-4-alex.bennee@linaro.org>
-References: <20200804124417.27102-1-alex.bennee@linaro.org>
- <20200804124417.27102-4-alex.bennee@linaro.org>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <f80cfa932a650d8f7e8fc02a1656b4c2@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: alex.bennee@linaro.org, kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu, christoffer.dall@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20200729201146.537433-1-vitor@massaru.org> <20200729203908.GD2655@hirez.programming.kicks-ass.net>
+ <CADQ6JjW-=SNjV-abGpGA9NfHD4yGG_bD5FmvW99W-Vo06twkbw@mail.gmail.com> <20200804132517.GK2657@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200804132517.GK2657@hirez.programming.kicks-ass.net>
+From:   Vitor Massaru Iha <vitor@massaru.org>
+Date:   Tue, 4 Aug 2020 10:46:21 -0300
+Message-ID: <CADQ6JjWzze-VAmg_b9EkS4iVySt5pw8V4FSxYpDFAj8jvBxuGA@mail.gmail.com>
+Subject: Re: [PATCH] lib: kunit: add test_min_heap test conversion to KUnit
+To:     peterz@infradead.org
+Cc:     KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Ian Rogers <irogers@google.com>, mingo@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-04 13:44, Alex Bennée wrote:
-> The VIRTIO_PCI support is an idealised PCI bus, we don't need a bunch
-> of bloat for real world hardware for a VirtIO guest.
+Hi Peter,
 
-Who says this guest will only have virtio devices?
+On Tue, Aug 4, 2020 at 10:25 AM <peterz@infradead.org> wrote:
+>
+> On Wed, Jul 29, 2020 at 06:57:17PM -0300, Vitor Massaru Iha wrote:
+>
+> > The results can be seen this way:
+> >
+> > This is an excerpt from the test.log with the result in TAP format:
+> > [snip]
+> > ok 5 - example
+> >     # Subtest: min-heap
+> >     1..6
+> >     ok 1 - test_heapify_all_true
+> >     ok 2 - test_heapify_all_false
+> >     ok 3 - test_heap_push_true
+> >     ok 4 - test_heap_push_false
+> >     ok 5 - test_heap_pop_push_true
+> >     ok 6 - test_heap_pop_push_false
+> > [snip]
+> >
+> > And this from kunit-tool:
+> > [snip]
+> > [18:43:32] ============================================================
+> > [18:43:32] ======== [PASSED] min-heap ========
+> > [18:43:32] [PASSED] test_heapify_all_true
+> > [18:43:32] [PASSED] test_heapify_all_false
+> > [18:43:32] [PASSED] test_heap_push_true
+> > [18:43:32] [PASSED] test_heap_push_false
+> > [18:43:32] [PASSED] test_heap_pop_push_true
+> > [18:43:32] [PASSED] test_heap_pop_push_false
+> > [18:43:32] ============================================================
+> > [18:43:32] Testing complete. 20 tests run. 0 failed. 0 crashed.
+> > [18:43:32] Elapsed time: 9.758s total, 0.001s configuring, 6.012s
+> > building, 0.000s running
+> > [snip]
+>
+> I don't care or care to use either; what does dmesg do? It used to be
+> that just building the self-tests was sufficient and any error would
+> show in dmesg when you boot the machine.
+>
+> But if I now have to use some damn tool, this is a regression.
 
-Or even, virtio devices without bugs? Given that said device can
-come from any VMM, I'm not sure this is the right thing to do.
+If you don't want to, you don't need to use the kunit-tool. If you
+compile the tests as builtin and run the Kernel on your machine
+the test result will be shown in dmesg in TAP format.
 
-Thanks,
-
-         M.
-
-> 
-> Signed-off-by: Alex Bennée <alex.bennee@linaro.org>
-> ---
->  kernel/configs/kvm_guest.config | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/kernel/configs/kvm_guest.config 
-> b/kernel/configs/kvm_guest.config
-> index 208481d91090..672863a2fdf1 100644
-> --- a/kernel/configs/kvm_guest.config
-> +++ b/kernel/configs/kvm_guest.config
-> @@ -13,6 +13,7 @@ CONFIG_IP_PNP_DHCP=y
->  CONFIG_BINFMT_ELF=y
->  CONFIG_PCI=y
->  CONFIG_PCI_MSI=y
-> +CONFIG_PCI_QUIRKS=n
->  CONFIG_DEBUG_KERNEL=y
->  CONFIG_VIRTUALIZATION=y
->  CONFIG_HYPERVISOR_GUEST=y
-
--- 
-Jazz is not dead. It just smells funny...
+BR,
+Vitor
