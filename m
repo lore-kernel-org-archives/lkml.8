@@ -2,140 +2,204 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D4D7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32044C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03663204EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17AF3204EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:39:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oPBAZ1Z3"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="IN6t6bbE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729959AbgHDQij (ORCPT
+        id S1729781AbgHDQjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 12:38:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49022 "EHLO
+        Tue, 4 Aug 2020 12:39:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729147AbgHDQia (ORCPT
+        with ESMTP id S1728678AbgHDQjq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 12:38:30 -0400
-Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 795FCC06174A;
-        Tue,  4 Aug 2020 09:38:29 -0700 (PDT)
-Received: by mail-qv1-xf2b.google.com with SMTP id b2so8744083qvp.9;
-        Tue, 04 Aug 2020 09:38:29 -0700 (PDT)
+        Tue, 4 Aug 2020 12:39:46 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B676C06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 09:39:43 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id 88so38001020wrh.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 09:39:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vo5CBTxynn6OI5pj/G92x3kgRqO2haV0tH8JKjkkGxQ=;
-        b=oPBAZ1Z3XEyeMcetYb7Hx3O9tLIzSyyi8YhxQA6FdZhng8kx1xUqv9tA7B9boO8J7P
-         VXnDbsEQez/axS9w1hh4b/eqyz3POAh41TfA+BwlKRv3WgWytKqvm8n8+shZPYOQZDuJ
-         UclNz7ckC9ZO4k9GyZZNnRAKYqprvlLyDXAEwaMd4+SmEA8NazA2u0SNYKvmea+UXG0V
-         Jbzj2QstWPkCiopdbE0hH9usXr8qw83QwIPwE5l7mYr2xvyciDObuWH3CQCbYV6I5haR
-         agr+y0wcg4BsN2EG3LdQgbQZ9VOjC5eMWYUxjgsQCUFVC7z8v1h0Zxn4mV+Zqy305Q7B
-         t4gw==
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JuoBRwybPo1fWFUEbP61Iiw0shO0ZWJeZNUhHhFFSik=;
+        b=IN6t6bbEriwy5B0+cBII5zTqrUsLuw6IiJLJi2iTwX+xkmzib/8A99wXPIkBQz4/XZ
+         2tqqV+1l9ZxR1VkXrgfcVD8Og8PouW4mMGocWHGph7kYSh15Aw4CGCkO08b3P+pMmqi6
+         Z/so2jerKEmn7prTPEkGDVeJraZlFBOTNAYJo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vo5CBTxynn6OI5pj/G92x3kgRqO2haV0tH8JKjkkGxQ=;
-        b=ggFV2+tkogXBkquD9ePMaIE5FlBVtpEw/6AEdOlHgVC9JSeNdeWCbwQORqKOi3ISGR
-         yT9y9RoAqszaVGx+jhietDbudJk1lqzf2CU7aYi+Gg0YiQ8ryoLkVIzwuOQa0pc4+0Hu
-         mambCSQSlL4uzGGJsV8MwZCo8tCjNFoXaVp4iMUORhIROTC8+k4DmHDTczIegr//me5G
-         4NyXaNscpSHj0D3eioMrqkUuvU6PuqmH9a46ad7TY/nIUt1wbNmAMl4p1skP8e7CYVZ1
-         2PmXpxpUBBIO4ITFKRUW+h2UfAIKkVTylxwfu0exGmB3eI5xlsIeqGS+YuDD1A6oc3EY
-         Uv0w==
-X-Gm-Message-State: AOAM530CN5CNU3JLikNQKSYBeYuG5U0G4DBLcc6CelQC6radw6NgEJV8
-        EIgTEkpjQc4CIc+ns75Q0VA=
-X-Google-Smtp-Source: ABdhPJyTA3Hqz8Ea0WQ/6iDDJL3/EzVtXGW5gXKjTsk8vuaDOwsjhwZoQ3QcP50gwug572g+AXsemA==
-X-Received: by 2002:ad4:470f:: with SMTP id k15mr22795613qvz.216.1596559106978;
-        Tue, 04 Aug 2020 09:38:26 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id f31sm26567863qte.35.2020.08.04.09.38.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Aug 2020 09:38:26 -0700 (PDT)
-Subject: Re: [EXT] Re: [PATCH v4 2/2] net: dsa: ocelot: Add support for QinQ
- Operation
-To:     Hongbo Wang <hongbo.wang@nxp.com>,
-        David Miller <davem@davemloft.net>
-Cc:     Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>,
-        Po Liu <po.liu@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Leo Li <leoyang.li@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "vivien.didelot@gmail.com" <vivien.didelot@gmail.com>,
-        "jiri@resnulli.us" <jiri@resnulli.us>,
-        "idosch@idosch.org" <idosch@idosch.org>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
-        "nikolay@cumulusnetworks.com" <nikolay@cumulusnetworks.com>,
-        "roopa@cumulusnetworks.com" <roopa@cumulusnetworks.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "horatiu.vultur@microchip.com" <horatiu.vultur@microchip.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-        "ivecera@redhat.com" <ivecera@redhat.com>
-References: <20200730102505.27039-1-hongbo.wang@nxp.com>
- <20200730102505.27039-3-hongbo.wang@nxp.com>
- <20200803.145843.2285407129021498421.davem@davemloft.net>
- <VI1PR04MB51039B32C580321D99B8DEE8E14A0@VI1PR04MB5103.eurprd04.prod.outlook.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <2906dc1e-fe37-e9d8-984d-2630549f0462@gmail.com>
-Date:   Tue, 4 Aug 2020 09:38:21 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=JuoBRwybPo1fWFUEbP61Iiw0shO0ZWJeZNUhHhFFSik=;
+        b=byBOkEM13Ycjrdhx1rCqbhucEq4pfnQZTexjka3q/zx8CFIsFyTxLEObPVzKlEwkA3
+         g1BSRLi3xPuvgePSLuWmmyVbD09W1SCCecfl9zURVsNhHTbGLCxuL82dBIQO+cehBygw
+         V6sBIh2an7EMYeY6sYGV47SKnFd0KXBtc0irWLQpz/NwAwOhEuIszqC/sHYqRp0NjhgX
+         OUzWCbPC2gn/Pto1pzhH/CczDepMm6i3UTL1O98iKGOaupEfPnvuocLSmv4BN/EtPVYp
+         9NKXmoFu+5gQt/LD1gHIAh+dkPUcO8JGTHIEOe8jiaD4MHEDynCFm5KgfChMg3HKF5OW
+         Ws5w==
+X-Gm-Message-State: AOAM533+CCHCHldcqbJMlocJYMdyOaaHPoQJzoP9fpiD7K+BcYMT16Dp
+        3BldYpkMhadojZbT5H1R8HzXxQ==
+X-Google-Smtp-Source: ABdhPJyndQxukD3h1NEdBq4GcWX84ZlX51VAfBQMBVVX9HzgwhENu/HdYjrzvFisAeSIPiJXaAhr/Q==
+X-Received: by 2002:a5d:6a4a:: with SMTP id t10mr21416131wrw.360.1596559181804;
+        Tue, 04 Aug 2020 09:39:41 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id v12sm31197854wrs.2.2020.08.04.09.39.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Aug 2020 09:39:41 -0700 (PDT)
+Date:   Tue, 4 Aug 2020 18:39:39 +0200
+From:   daniel@ffwll.ch
+Cc:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Sidong Yang <realwakka@gmail.com>, twoerner@gmail.com,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        kernel-usp@googlegroups.com
+Subject: Re: [PATCH] drm/vkms: guarantee vblank when capturing crc
+Message-ID: <20200804163939.GK6419@phenom.ffwll.local>
+Mail-Followup-To: Melissa Wen <melissa.srw@gmail.com>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        Sidong Yang <realwakka@gmail.com>, twoerner@gmail.com,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        kernel-usp@googlegroups.com
+References: <20200801184929.2eaxyoq6fm3nk4ey@smtp.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <VI1PR04MB51039B32C580321D99B8DEE8E14A0@VI1PR04MB5103.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200801184929.2eaxyoq6fm3nk4ey@smtp.gmail.com>
+X-Operating-System: Linux phenom 5.7.0-1-amd64 
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/3/2020 11:36 PM, Hongbo Wang wrote:
->>> +     if (vlan->proto == ETH_P_8021AD) {
->>> +             ocelot->enable_qinq = true;
->>> +             ocelot_port->qinq_mode = true;
->>> +     }
->>  ...
->>> +     if (vlan->proto == ETH_P_8021AD) {
->>> +             ocelot->enable_qinq = false;
->>> +             ocelot_port->qinq_mode = false;
->>> +     }
->>> +
->>
->> I don't understand how this can work just by using a boolean to track the
->> state.
->>
->> This won't work properly if you are handling multiple QinQ VLAN entries.
->>
->> Also, I need Andrew and Florian to review and ACK the DSA layer changes that
->> add the protocol value to the device notifier block.
+On Sat, Aug 01, 2020 at 03:49:29PM -0300, Melissa Wen wrote:
+> VKMS needs vblank interrupts enabled to capture CRC. When vblank is
+> disabled, tests like kms_cursor_crc and kms_pipe_crc_basic getting stuck
+> waiting for a capture that will not occur until vkms wakes up. This
+> patch ensures that vblank remains enabled as long as the CRC capture is
+> needed.
 > 
-> Hi David,
-> Thanks for reply.
+> It clears the execution of the following kms_cursor_crc subtests:
+> 1. pipe-A-cursor-[size,alpha-opaque, NxN-(on-screen, off-screen, sliding,
+> random, fast-moving])] - successful when running individually.
+> 2. pipe-A-cursor-dpms passes again
+> 3. pipe-A-cursor-suspend also passes
 > 
-> When setting bridge's VLAN protocol to 802.1AD by the command "ip link set br0 type bridge vlan_protocol 802.1ad", it will call dsa_slave_vlan_rx_add(dev, proto, vid) for every port in the bridge, the parameter vid is port's pvid 1,
-> if pvid's proto is 802.1AD, I will enable switch's enable_qinq, and the related port's qinq_mode,
+> The issue was initially tracked in the sequential execution of IGT
+> kms_cursor_crc subtest: when running the test sequence or one of its
+> subtests twice, the odd execs complete and the pairs get stuck in an
+> endless wait. In the IGT code, calling a wait_for_vblank on preparing
+> for CRC capture prevented the busy-wait. But the problem persisted in
+> the pipe-A-cursor-dpms and -suspend subtests.
 > 
-> When there are multiple QinQ VLAN entries, If one VLAN's proto is 802.1AD, I will enable switch and the related port into QinQ mode.
+> Checking the history, the pipe-A-cursor-dpms subtest was successful
+> when, in vkms_atomic_commit_tail, instead of using the flip_done op, it
+> used wait_for_vblanks. Another way to prevent blocking was
+> wait_one_vblank when enabling crtc. However, in both cases,
+> pipe-A-cursor-suspend persisted blocking in the 2nd start of CRC
+> capture, which may indicate that something got stuck in the step of CRC
+> setup. Indeed, wait_one_vblank in the crc setup was able to sync things
+> and free all kms_cursor_crc subtests.
+> 
+> Besides, other alternatives to force enabling vblanks or prevent
+> disabling them such as calling drm_crtc_put_vblank or modeset_enables
+> before commit_planes + offdelay = 0, also unlock all subtests
+> executions. These facts together converge on the lack of vblank to
+> unblock the crc capture.
+> 
+> Finally, considering the vkms's dependence on vblank interruptions to
+> perform tasks, this patch acquires a vblank ref when setup CRC source
+> and releases ref when disabling crc capture, ensuring vblanks happen to
+> compute CRC.
+> 
+> Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+> Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
+> Co-developed-by: Sidong Yang <realwakka@gmail.com>
+> Signed-off-by: Sidong Yang <realwakka@gmail.com>
+> Co-developed-by: Daniel Vetter <daniel@ffwll.ch>
+> Signed-off-by: Daniel Vetter <daniel@ffwll.ch>
+> Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
 
-The enabling appears fine, the problem is the disabling, the first
-802.1AD VLAN entry that gets deleted will lead to the port and switch no
-longer being in QinQ mode, and this does not look intended.
+Excellent summary of the debug story.
+
+> ---
+>  drivers/gpu/drm/vkms/vkms_composer.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
+> index 4af2f19480f4..1161eaa383f1 100644
+> --- a/drivers/gpu/drm/vkms/vkms_composer.c
+> +++ b/drivers/gpu/drm/vkms/vkms_composer.c
+> @@ -241,6 +241,14 @@ int vkms_set_crc_source(struct drm_crtc *crtc, const char *src_name)
+>  
+>  	ret = vkms_crc_parse_source(src_name, &enabled);
+>  
+> +	/* Ensure that vblank interruptions are enabled for crc capture */
+> +	/* Enabling CRC: acquire vblank ref */
+
+This comment just explains what the code does, that's not needed. The
+first comment I think can be replaced if we create a little helper
+function like
+
+void vkms_set_composer(struct vkms_output, bool enable) {
+	bool old_state;
+
+	if (enabled)
+		drm_crtc_vblank_get(crtc);
+
+	spin_lock_irq(&out->lock);
+	old_enable = out->composer_enabled;
+	out->composer_enabled = enabled;
+	spin_unlock_irq(&out->lock);
+
+	if (old_enabled)
+		drm_crtc_vblank_put(crtc);
+
+}
+
+This should also help as prep for the writeback work, where we have a 2nd
+user that might need to enable the composer (maybe even need to switch to
+refcounting the composer state then).
+
+> +	if (enabled)
+> +		drm_crtc_vblank_get(crtc);
+> +	/* Disabling CRC: release vblank ref */
+> +	if (!src_name)
+> +		drm_crtc_vblank_put(crtc);
+
+I'm not sure this correctly releases the vblank reference in all cases, I
+think the suggestion in the helper function pseudo code should work
+better. It does mean we temporarily elevate the vblank refcount if we go
+enabled -> enabled, but that's not a problem since it's refcounted.
+
+Cheers, Daniel
+
+> +
+>  	spin_lock_irq(&out->lock);
+>  	out->composer_enabled = enabled;
+>  	spin_unlock_irq(&out->lock);
+> -- 
+> 2.27.0
+> 
+
 -- 
-Florian
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
