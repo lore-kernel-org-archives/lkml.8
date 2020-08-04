@@ -2,145 +2,83 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F93C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E17622C9F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:28:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hj7/DHXK"
+	by mail.kernel.org (Postfix) with ESMTP id C463222C9F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:29:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbgHDM25 (ORCPT
+        id S1726351AbgHDM3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 08:28:57 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:53614 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbgHDM24 (ORCPT
+        Tue, 4 Aug 2020 08:29:16 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:43328 "EHLO
+        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726027AbgHDM3P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 08:28:56 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 074CDuMw074502;
-        Tue, 4 Aug 2020 07:13:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596543236;
-        bh=JOfyqeir6ARFogRylpwG98UmFIW6NsPI8sn/W2c7nS8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=hj7/DHXKrmzVI+81eoPWOx67pkrZ07i6xAfDurwE2vytkUnzGK9jL7UoZikxWfHHy
-         671kzWzaLfE/0ARN2opsVHNIFrItvNQT9x7iomlTKSBWOLYEupGF0elk7zWidN6o8O
-         mIX2RO/ePMFWeY1riI1da0xC3RFvJg7/0UbNrJZQ=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 074CDuTT086662
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 4 Aug 2020 07:13:56 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 4 Aug
- 2020 07:13:55 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 4 Aug 2020 07:13:55 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 074CDsOf094163;
-        Tue, 4 Aug 2020 07:13:54 -0500
-Subject: Re: [REGRESSION] omapdrm/N900 display broken
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200728181412.GA49617@darkstar.musicnaut.iki.fi>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <660b2fe1-343d-b83e-11d2-5a5eb530b83f@ti.com>
-Date:   Tue, 4 Aug 2020 15:13:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 4 Aug 2020 08:29:15 -0400
+X-Greylist: delayed 1109 seconds by postgrey-1.27 at vger.kernel.org; Tue, 04 Aug 2020 08:29:15 EDT
+Received: from relay9-d.mail.gandi.net (unknown [217.70.183.199])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id BA5D53AD4D8
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 11:57:54 +0000 (UTC)
+X-Originating-IP: 90.66.108.79
+Received: from localhost (lfbn-lyo-1-1932-79.w90-66.abo.wanadoo.fr [90.66.108.79])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 4EC79FF805;
+        Tue,  4 Aug 2020 11:56:31 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH] ARM: at91: pm: remove unnecessary at91sam9x60_idle
+Date:   Tue,  4 Aug 2020 13:56:22 +0200
+Message-Id: <20200804115622.63232-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200728181412.GA49617@darkstar.musicnaut.iki.fi>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/07/2020 21:14, Aaro Koskinen wrote:
-> Hi,
-> 
-> Looks like N900 display support has broken after v5.6.
-> 
-> When using v5.7, or the current mainline (v5.8-rc7), the boot hangs at:
-> 
-> [    6.269500] omapdss_dss 48050000.dss: 48050000.dss supply vdda_video not found, using dummy regulator
-> [    6.321685] DSS: OMAP DSS rev 2.0
-> [    6.328002] omapdss_dss 48050000.dss: bound 48050400.dispc (ops dispc_component_ops)
-> [    6.336364] omapdss_dss 48050000.dss: bound 48050c00.encoder (ops venc_component_ops)
-> [    6.345153] omapdrm omapdrm.0: DMM not available, disable DMM support
-> [    6.352447] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-> 
-> with a blank display.
-> 
-> I tried to bisect this, and the first commit that breaks the display is:
-> 
-> 2f004792adadcf017fde50339b432a26039fff0c is the first bad commit
-> commit 2f004792adadcf017fde50339b432a26039fff0c
-> Author: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Date:   Wed Feb 26 13:24:57 2020 +0200
-> 
->     drm/omap: venc: Register a drm_bridge
-> 
-> This commit does not yet hang the kernel, but the display is blank and
-> the probe fails:
-> 
-> [    6.290100] omapdss_dss 48050000.dss: 48050000.dss supply vdda_video not foun
-> d, using dummy regulator
-> [    6.342346] DSS: OMAP DSS rev 2.0
-> [    6.348663] omapdss_dss 48050000.dss: bound 48050400.dispc (ops dispc_component_ops)
-> [    6.357025] omapdss_dss 48050000.dss: bound 48050c00.encoder (ops venc_component_ops)
-> [    6.365814] omapdrm omapdrm.0: DMM not available, disable DMM support
-> [    6.372863] omapdrm omapdrm.0: omap_modeset_init failed: ret=-22
-> [    6.414611] omapdrm: probe of omapdrm.0 failed with error -22
+cpu_do_idle() is already the default action for arm_pm_idle, there is no
+need to open code it.
 
-Afaics, this is caused by the patch doing
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ arch/arm/mach-at91/pm.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-	if (!venc->output.next_bridge)
-
-instead of
-
-	if (venc->output.next_bridge)
-
-Fixing that removes the error on beagle xm, but for some reason I don't see TV-out as a DRM output
-(but HDMI output works).
-
-> The hang seems to start with this commit:
-> 
-> commit 8bef8a6d5da81b909a190822b96805a47348146f (HEAD -> master)
-> Author: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Date:   Wed Feb 26 13:25:10 2020 +0200
-> 
->     drm/omap: sdi: Register a drm_bridge
-> 
-> Confusingly, some of the commits between these two commits do provide a
-> working display, e.g. 13d2d52f59c0c79398d9c9e2ea3d661a0e5b6bbc ("drm/omap:
-> sdi: Sort includes alphabetically") works...
-
-The venc issue is fixed in "Switch the HDMI and VENC outputs to drm_bridge", which is a few commits
-after the "venc: Register a drm_bridge".
-
-So I'm guessing SDI works until "sdi: Register a drm_bridge", but as omapdrm doesn't probe, you get
-no displays.
-
-Can you try to pinpoint a bit where the hang happens? Maybe add DRM/omapdrm debug prints, or perhaps
-sysrq works and it shows a lock that's in deadlock.
-
- Tomi
-
+diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
+index 074bde64064e..19cc0d5b149b 100644
+--- a/arch/arm/mach-at91/pm.c
++++ b/arch/arm/mach-at91/pm.c
+@@ -557,11 +557,6 @@ static void at91rm9200_idle(void)
+ 	writel(AT91_PMC_PCK, soc_pm.data.pmc + AT91_PMC_SCDR);
+ }
+ 
+-static void at91sam9x60_idle(void)
+-{
+-	cpu_do_idle();
+-}
+-
+ static void at91sam9_idle(void)
+ {
+ 	writel(AT91_PMC_PCK, soc_pm.data.pmc + AT91_PMC_SCDR);
+@@ -842,7 +837,7 @@ void __init sam9x60_pm_init(void)
+ 
+ 	at91_pm_modes_init();
+ 	at91_dt_ramc();
+-	at91_pm_init(at91sam9x60_idle);
++	at91_pm_init(NULL);
+ 
+ 	soc_pm.ws_ids = sam9x60_ws_ids;
+ 	soc_pm.config_pmc_ws = at91_sam9x60_config_pmc_ws;
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.26.2
+
