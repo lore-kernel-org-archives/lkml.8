@@ -2,156 +2,105 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A1FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0657C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5258B2067D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF352067D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:45:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Riv8iutg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbgHDMnv (ORCPT
+        id S1728298AbgHDMol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 08:43:51 -0400
-Received: from host-88-217-225-28.customer.m-online.net ([88.217.225.28]:56536
-        "EHLO mail.dev.tdt.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726210AbgHDMnu (ORCPT
+        Tue, 4 Aug 2020 08:44:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41160 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbgHDMoV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 08:43:50 -0400
-Received: from mail.dev.tdt.de (localhost [IPv6:::1])
-        by mail.dev.tdt.de (Postfix) with ESMTP id 94668200F9;
-        Tue,  4 Aug 2020 12:43:46 +0000 (UTC)
+        Tue, 4 Aug 2020 08:44:21 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6BDBC061756
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 05:44:20 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id r4so34288132wrx.9
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 05:44:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=CYDox3KQ1JETO7R6nCajEi5q9XM0wuEKwlQrdfldtzE=;
+        b=Riv8iutgfQUgNDMN92DtQvb/ueHJ6AIreMGAIsPCtm4ILvbZOn+PBNFru/JxFRQn+a
+         9TfiKx4DTAO1/mtV9wsMqag4ynofuu+qJ8KcnT0H01tQepbNaqDTZvqQvMuZtPQBOduf
+         CxLDVXhPdqFLT0zbGguTGrJKZfH+S/lGnAzhvNTBi0FcUKC5HJp/+r/qZDgMqCN1u61M
+         ZIBRfcVMUR48Uz0nrWv/JeBjsaFxjG5I/w8jfhHReJuMa+Pm25oX2mloao7+N1Yr/e42
+         uovU2IyFUipCeXc7bYv0WjUNANHbOH3ka4foDQ5we7li93TpmE8H4yyBhs21Q8mbmEQA
+         00PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=CYDox3KQ1JETO7R6nCajEi5q9XM0wuEKwlQrdfldtzE=;
+        b=ZZLHpWiZHlxokTjOmhwFzqxUrMAqY7L93vNrv4xnYkR7/uJG21ylZ0PWJ4yG4oABig
+         DUyitS1jFkP8MO+CQlEc9vEYjR6Lpem1IRnrIFfLi5L/Y83qMgOMLXVIiCLsQJ659bbA
+         PHegsnQuV8xXWOZjuM/3lnt+/mP1kxlLNFmEMhBoXo+5rr1eolahCSb61hxEI+H4z/6W
+         VVVg9VKe9Xf9AmP18NlfbphuGk54WFAUGdcTZxmstdjQ9yv0u7s3GR8c2qXkJ8OMHDEH
+         tMDf4pX5vY6TuI9b1ADRnHmk4IIhsUu4Z3srWH5OdPOqmSTDHz8lpCCalLjdYsaLd6ob
+         CCxA==
+X-Gm-Message-State: AOAM532lRmgG7eL5yi9zpQEgux7nQwzyJySjQlUWbnqBDFkil3lK7EPU
+        U7RoFwyR7SjAj6L7SQttyiWzPg==
+X-Google-Smtp-Source: ABdhPJy369HvI22rb0UHPSZq9AsVjFavkg1pT+b1lsUC4Du192zTR5pC4Bv0+KzFRIkrLbZspUmmgg==
+X-Received: by 2002:a5d:6a4a:: with SMTP id t10mr20525689wrw.360.1596545059657;
+        Tue, 04 Aug 2020 05:44:19 -0700 (PDT)
+Received: from zen.linaroharston ([51.148.130.216])
+        by smtp.gmail.com with ESMTPSA id z207sm4576048wmc.2.2020.08.04.05.44.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Aug 2020 05:44:18 -0700 (PDT)
+Received: from zen.lan (localhost [127.0.0.1])
+        by zen.linaroharston (Postfix) with ESMTP id 9DC9E1FF8F;
+        Tue,  4 Aug 2020 13:44:17 +0100 (BST)
+From:   =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>
+To:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
+        christoffer.dall@arm.com, maz@kernel.org,
+        =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>
+Subject: [PATCH  v1 3/3] kernel/configs: don't include PCI_QUIRKS in KVM guest configs
+Date:   Tue,  4 Aug 2020 13:44:17 +0100
+Message-Id: <20200804124417.27102-4-alex.bennee@linaro.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200804124417.27102-1-alex.bennee@linaro.org>
+References: <20200804124417.27102-1-alex.bennee@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 04 Aug 2020 14:43:46 +0200
-From:   Martin Schiller <ms@dev.tdt.de>
-To:     Xie He <xie.he.0141@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Brian Norris <briannorris@chromium.org>,
-        netdev-owner@vger.kernel.org
-Subject: Re: [net v3] drivers/net/wan/lapbether: Use needed_headroom instead
- of hard_header_len
-Organization: TDT AG
-In-Reply-To: <20200802195046.402539-1-xie.he.0141@gmail.com>
-References: <20200802195046.402539-1-xie.he.0141@gmail.com>
-Message-ID: <d02996f90f64d55d5c5e349560bfde46@dev.tdt.de>
-X-Sender: ms@dev.tdt.de
-User-Agent: Roundcube Webmail/1.1.5
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-02 21:50, Xie He wrote:
-> In net/packet/af_packet.c, the function packet_snd first reserves a
-> headroom of length (dev->hard_header_len + dev->needed_headroom).
-> Then if the socket is a SOCK_DGRAM socket, it calls dev_hard_header,
-> which calls dev->header_ops->create, to create the link layer header.
-> If the socket is a SOCK_RAW socket, it "un-reserves" a headroom of
-> length (dev->hard_header_len), and assumes the user to provide the
-> appropriate link layer header.
-> 
-> So according to the logic of af_packet.c, dev->hard_header_len should
-> be the length of the header that would be created by
-> dev->header_ops->create.
-> 
-> However, this driver doesn't provide dev->header_ops, so logically
-> dev->hard_header_len should be 0.
-> 
-> So we should use dev->needed_headroom instead of dev->hard_header_len
-> to request necessary headroom to be allocated.
+The VIRTIO_PCI support is an idealised PCI bus, we don't need a bunch
+of bloat for real world hardware for a VirtIO guest.
 
-I'm not an expert in the field, but after reading the commit message and
-the previous comments, I'd say that makes sense.
+Signed-off-by: Alex Bennée <alex.bennee@linaro.org>
+---
+ kernel/configs/kvm_guest.config | 1 +
+ 1 file changed, 1 insertion(+)
 
-> 
-> This change fixes kernel panic when this driver is used with AF_PACKET
-> SOCK_RAW sockets. Call stack when panic:
-> 
-> [  168.399197] skbuff: skb_under_panic: text:ffffffff819d95fb len:20
-> put:14 head:ffff8882704c0a00 data:ffff8882704c09fd tail:0x11 end:0xc0
-> dev:veth0
-> ...
-> [  168.399255] Call Trace:
-> [  168.399259]  skb_push.cold+0x14/0x24
-> [  168.399262]  eth_header+0x2b/0xc0
-> [  168.399267]  lapbeth_data_transmit+0x9a/0xb0 [lapbether]
-> [  168.399275]  lapb_data_transmit+0x22/0x2c [lapb]
-> [  168.399277]  lapb_transmit_buffer+0x71/0xb0 [lapb]
-> [  168.399279]  lapb_kick+0xe3/0x1c0 [lapb]
-> [  168.399281]  lapb_data_request+0x76/0xc0 [lapb]
-> [  168.399283]  lapbeth_xmit+0x56/0x90 [lapbether]
-> [  168.399286]  dev_hard_start_xmit+0x91/0x1f0
-> [  168.399289]  ? irq_init_percpu_irqstack+0xc0/0x100
-> [  168.399291]  __dev_queue_xmit+0x721/0x8e0
-> [  168.399295]  ? packet_parse_headers.isra.0+0xd2/0x110
-> [  168.399297]  dev_queue_xmit+0x10/0x20
-> [  168.399298]  packet_sendmsg+0xbf0/0x19b0
-> ......
-
-Shouldn't this kernel panic be intercepted by a skb_cow() before the
-skb_push() in lapbeth_data_transmit()?
-
-> 
-> Additional change:
-> When sending, check skb->len to ensure the 1-byte pseudo header is
-> present before reading it.
-> 
-> Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-> Cc: Brian Norris <briannorris@chromium.org>
-> Signed-off-by: Xie He <xie.he.0141@gmail.com>
-> ---
-> 
-> Change from v2:
-> Added skb->len check when sending.
-> 
-> Change from v1:
-> None
-> 
-> ---
->  drivers/net/wan/lapbether.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
-> index b2868433718f..8a3f7ba36f7e 100644
-> --- a/drivers/net/wan/lapbether.c
-> +++ b/drivers/net/wan/lapbether.c
-> @@ -157,6 +157,9 @@ static netdev_tx_t lapbeth_xmit(struct sk_buff 
-> *skb,
->  	if (!netif_running(dev))
->  		goto drop;
-> 
-> +	if (skb->len < 1)
-> +		goto drop;
-> +
->  	switch (skb->data[0]) {
->  	case X25_IFACE_DATA:
->  		break;
-> @@ -305,6 +308,7 @@ static void lapbeth_setup(struct net_device *dev)
->  	dev->netdev_ops	     = &lapbeth_netdev_ops;
->  	dev->needs_free_netdev = true;
->  	dev->type            = ARPHRD_X25;
-> +	dev->hard_header_len = 0;
->  	dev->mtu             = 1000;
->  	dev->addr_len        = 0;
->  }
-> @@ -331,7 +335,8 @@ static int lapbeth_new_device(struct net_device 
-> *dev)
->  	 * then this driver prepends a length field of 2 bytes,
->  	 * then the underlying Ethernet device prepends its own header.
->  	 */
-> -	ndev->hard_header_len = -1 + 3 + 2 + dev->hard_header_len;
-> +	ndev->needed_headroom = -1 + 3 + 2 + dev->hard_header_len
-> +					   + dev->needed_headroom;
-> 
->  	lapbeth = netdev_priv(ndev);
->  	lapbeth->axdev = ndev;
+diff --git a/kernel/configs/kvm_guest.config b/kernel/configs/kvm_guest.config
+index 208481d91090..672863a2fdf1 100644
+--- a/kernel/configs/kvm_guest.config
++++ b/kernel/configs/kvm_guest.config
+@@ -13,6 +13,7 @@ CONFIG_IP_PNP_DHCP=y
+ CONFIG_BINFMT_ELF=y
+ CONFIG_PCI=y
+ CONFIG_PCI_MSI=y
++CONFIG_PCI_QUIRKS=n
+ CONFIG_DEBUG_KERNEL=y
+ CONFIG_VIRTUALIZATION=y
+ CONFIG_HYPERVISOR_GUEST=y
+-- 
+2.20.1
 
