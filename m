@@ -2,110 +2,185 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 768C6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 09:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F1EC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 09:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B52222D01
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 09:49:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LMbQEkRc"
+	by mail.kernel.org (Postfix) with ESMTP id 2E58E22C9F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 09:50:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596534652;
+	bh=td5J9Vxgk+gTO+L9zbaF5BaPjjiLjmM4vrr/SBOLFKU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=yMb/LHAIs0MU0ortS0reDnEco+P5Jgkeb0AuYJXEtIhWMhQZEqwTTNhoD6SU4BOf+
+	 qXNHhXg9IGTQ72uSgPF67bwW79GwP7m77GRdOdQVglcpW8dRYjYuwANaZ5hJT23WWm
+	 cTQbqGTxtIlDZUB/5il+UzXqGALLyE9ZgRyXAFXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729385AbgHDJsy (ORCPT
+        id S1729414AbgHDJuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 05:48:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726844AbgHDJsx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 05:48:53 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73FE9C06174A;
-        Tue,  4 Aug 2020 02:48:53 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id o13so21831458pgf.0;
-        Tue, 04 Aug 2020 02:48:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hg8Qv9n5WNyPEJBzVokQio7quoYDQddeKfpiH64yPFA=;
-        b=LMbQEkRcjUfHXw8ytwWW0WO3GgVrO+i3HjZUS94+ApzAkYhajuff/4eZFLZmbSK4bC
-         d/rT8MUtyRDXp/FQCikE48qmLGZOY66FZGnzVa6NpN5/9VocD8dS/DwSCwzzw96XAx/C
-         CR+oEZC7RAROP2FRut9Zv42SjP9g0OVKnm0IJD0+oG10HEaeYuBARF9MTNnReS3sM3PK
-         Uc/6K11QUi1bdbCGFSF34Dv04lcHQOcn1nfuJ0Ts9NrcSxYkXAurIO3l1tXTKUp8VJs8
-         dUjWK3xu7O7PT7JwOKEb/Tjydd2ogN5DyqU3RpsFdCA4zImBN9xCZW6GX16CScHBPdBF
-         bgbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hg8Qv9n5WNyPEJBzVokQio7quoYDQddeKfpiH64yPFA=;
-        b=sCOmCWqkjk8XJBhiw2TRBWaSSom1PVaDHI/C/u+PTa/wRRw8K7TqjZhsQJJXjxHZA8
-         M09W9gAq3OEJYT8PLajZRXUFdCwOXmstI/X5v8VTWUW+Yq/OJIHUxK2o+9ekNantrWL6
-         2TwQ/hZ1fEyqYnbBlZGn+WzottZYLO15I2R/YiOkkDg0T+ynycRP3wgbThWCwHbKmPan
-         XhRNAGpP02FCiJaYDak01+SRQnhA60m1WmPGAuHT+7954U8byV91fAKG3qXIYc1TRCrJ
-         buZ7tMptLT9yGGBY7oKkfIpFj79EbokxRIJkPEEk52ldEvarza+fUs32C3Bi+vYNkedt
-         9wMA==
-X-Gm-Message-State: AOAM533/8buaA1eUsj9u512KRlCe2QIK9d5f0Cnd1k7Ghv8gV5kHqqeJ
-        tZUG/02ZWNruutyqSny682ejPoJPxEHRrhGPLi8=
-X-Google-Smtp-Source: ABdhPJybKXGbFap3TKijT0dD+vkqRoMpV6l290J8k1gLIvrXI37lgTvMzyVNLS6WMV0DvFfrSVCtimlE2ICcyBhJOYE=
-X-Received: by 2002:a63:5412:: with SMTP id i18mr19103370pgb.63.1596534533069;
- Tue, 04 Aug 2020 02:48:53 -0700 (PDT)
+        Tue, 4 Aug 2020 05:50:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726844AbgHDJut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 05:50:49 -0400
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A61D206DA;
+        Tue,  4 Aug 2020 09:50:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596534648;
+        bh=td5J9Vxgk+gTO+L9zbaF5BaPjjiLjmM4vrr/SBOLFKU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RmFywTyRGmjSjjTGim05to90O8GVoSHviD+l0nIkYuIaFtl1JVO+6upwcXnWdTUQX
+         lkiRQ6AbRc5Y05F6PO7WjYZU9ibrAtxRMsRsAfzikpflcCJKMWGPzYp8AwUTqpVpkc
+         YWncexe8pS1r0ZZ6v4SxAIyNUNyGQ+9cOkXZRy8k=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-nvdimm@lists.01.org, linux-riscv@lists.infradead.org,
+        x86@kernel.org
+Subject: [PATCH v3 0/6] mm: introduce memfd_secret system call to create "secret" memory areas
+Date:   Tue,  4 Aug 2020 12:50:29 +0300
+Message-Id: <20200804095035.18778-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200730073702.16887-1-xie.he.0141@gmail.com> <CAJht_EO1srhh68DifK61+hpY+zBRU8oOAbJOSpjOqePithc7gw@mail.gmail.com>
- <c88c0acc63cbc64383811193c5e1b184@dev.tdt.de>
-In-Reply-To: <c88c0acc63cbc64383811193c5e1b184@dev.tdt.de>
-From:   Xie He <xie.he.0141@gmail.com>
-Date:   Tue, 4 Aug 2020 02:48:42 -0700
-Message-ID: <CAJht_ENFwn82PEr=dtCzB=0QU=4pstNyGr_nFBb6Xjhg4fLGXg@mail.gmail.com>
-Subject: Re: [PATCH v2] drivers/net/wan/lapbether: Use needed_headroom instead
- of hard_header_len
-To:     Martin Schiller <ms@dev.tdt.de>,
-        Willem de Bruijn <willemb@google.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux X25 <linux-x25@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 3, 2020 at 11:53 PM Martin Schiller <ms@dev.tdt.de> wrote:
->
-> I don't like the idea to get rid of the 1-byte header.
-> This header is also used in userspace, for example when using a tun/tap
-> interface for an XoT (X.25 over TCP) application. A change would
-> therefore have very far-reaching consequences.
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-Thank you for your comment! This is very important information to me.
-Now I think it may be the best to keep the 1-byte header so that the
-kernel interface can be kept unchanged.
+Hi,
 
-> BTW: The linux x25 mailing list does not seem to work anymore. I've been
-> on it for some time now, but haven't received a single email from it.
-> I've tried to contact owner-linux-x25@vger.kernel.org, but only got an
-> "undeliverable" email back.
+This is an implementation of "secret" mappings backed by a file descriptor. 
 
-I was suspecting that it was not working, too. I CC'd all my patches
-to the mail list but got no response from it. It appears that you were
-not able to receive my emails through it, too.
+v3 changes:
+* Squash kernel-parameters.txt update into the commit that added the
+  command line option.
+* Make uncached mode explicitly selectable by architectures. For now enable
+  it only on x86.
 
-> It would be great if you could add me to CC list of all versions of your
-> patches, so I don't need to "google" for any further related mails.
+v2 changes:
+* Follow Michael's suggestion and name the new system call 'memfd_secret'
+* Add kernel-parameters documentation about the boot option
+* Fix i386-tinyconfig regression reported by the kbuild bot.
+  CONFIG_SECRETMEM now depends on !EMBEDDED to disable it on small systems
+  from one side and still make it available unconditionally on
+  architectures that support SET_DIRECT_MAP.
 
-OK. I'll surely do that! Thank you for taking time to review my patches!
+The file descriptor backing secret memory mappings is created using a
+dedicated memfd_secret system call The desired protection mode for the
+memory is configured using flags parameter of the system call. The mmap()
+of the file descriptor created with memfd_secret() will create a "secret"
+memory mapping. The pages in that mapping will be marked as not present in
+the direct map and will have desired protection bits set in the user page
+table. For instance, current implementation allows uncached mappings.
 
-> So, what's the latest version of the patch now, which you want me to
-> review?
+Although normally Linux userspace mappings are protected from other users, 
+such secret mappings are useful for environments where a hostile tenant is
+trying to trick the kernel into giving them access to other tenants
+mappings.
 
-It is at:
-http://patchwork.ozlabs.org/project/netdev/patch/20200802195046.402539-1-xie.he.0141@gmail.com/
+Additionally, the secret mappings may be used as a mean to protect guest
+memory in a virtual machine host.
 
-Thank you so much for your review!
+For demonstration of secret memory usage we've created a userspace library
+[1] that does two things: the first is act as a preloader for openssl to
+redirect all the OPENSSL_malloc calls to secret memory meaning any secret
+keys get automatically protected this way and the other thing it does is
+expose the API to the user who needs it. We anticipate that a lot of the
+use cases would be like the openssl one: many toolkits that deal with
+secret keys already have special handling for the memory to try to give
+them greater protection, so this would simply be pluggable into the
+toolkits without any need for user application modification.
+
+I've hesitated whether to continue to use new flags to memfd_create() or to
+add a new system call and I've decided to use a new system call after I've
+started to look into man pages update. There would have been two completely
+independent descriptions and I think it would have been very confusing.
+
+Hiding secret memory mappings behind an anonymous file allows (ab)use of
+the page cache for tracking pages allocated for the "secret" mappings as
+well as using address_space_operations for e.g. page migration callbacks.
+
+The anonymous file may be also used implicitly, like hugetlb files, to
+implement mmap(MAP_SECRET) and use the secret memory areas with "native" mm
+ABIs in the future.
+
+As the fragmentation of the direct map was one of the major concerns raised
+during the previous postings, I've added an amortizing cache of PMD-size
+pages to each file descriptor and an ability to reserve large chunks of the
+physical memory at boot time and then use this memory as an allocation pool
+for the secret memory areas.
+
+v2: https://lore.kernel.org/lkml/20200727162935.31714-1-rppt@kernel.org
+v1: https://lore.kernel.org/lkml/20200720092435.17469-1-rppt@kernel.org/
+rfc-v2: https://lore.kernel.org/lkml/20200706172051.19465-1-rppt@kernel.org/
+rfc-v1: https://lore.kernel.org/lkml/20200130162340.GA14232@rapoport-lnx/
+
+Mike Rapoport (6):
+  mm: add definition of PMD_PAGE_ORDER
+  mmap: make mlock_future_check() global
+  mm: introduce memfd_secret system call to create "secret" memory areas
+  arch, mm: wire up memfd_secret system call were relevant
+  mm: secretmem: use PMD-size pages to amortize direct map fragmentation
+  mm: secretmem: add ability to reserve memory at boot
+
+ arch/Kconfig                           |   7 +
+ arch/arm64/include/asm/unistd.h        |   2 +-
+ arch/arm64/include/asm/unistd32.h      |   2 +
+ arch/arm64/include/uapi/asm/unistd.h   |   1 +
+ arch/riscv/include/asm/unistd.h        |   1 +
+ arch/x86/Kconfig                       |   1 +
+ arch/x86/entry/syscalls/syscall_32.tbl |   1 +
+ arch/x86/entry/syscalls/syscall_64.tbl |   1 +
+ fs/dax.c                               |  10 +-
+ include/linux/pgtable.h                |   3 +
+ include/linux/syscalls.h               |   1 +
+ include/uapi/asm-generic/unistd.h      |   7 +-
+ include/uapi/linux/magic.h             |   1 +
+ include/uapi/linux/secretmem.h         |   9 +
+ kernel/sys_ni.c                        |   2 +
+ mm/Kconfig                             |   4 +
+ mm/Makefile                            |   1 +
+ mm/internal.h                          |   3 +
+ mm/mmap.c                              |   5 +-
+ mm/secretmem.c                         | 458 +++++++++++++++++++++++++
+ 20 files changed, 510 insertions(+), 10 deletions(-)
+ create mode 100644 include/uapi/linux/secretmem.h
+ create mode 100644 mm/secretmem.c
+
+-- 
+2.26.2
+
