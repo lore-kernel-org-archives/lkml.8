@@ -2,201 +2,236 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE2DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C6CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1595A20842
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:29:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="USDNhC1z"
+	by mail.kernel.org (Postfix) with ESMTP id D36E020842
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:30:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbgHDV3V (ORCPT
+        id S1728127AbgHDVaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 17:29:21 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44449 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727773AbgHDV3U (ORCPT
+        Tue, 4 Aug 2020 17:30:01 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16788 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727773AbgHDVaA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 17:29:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596576558;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mp8oPykQbFI3PCYtU3bJ6U6U1V5IO9G5ow6aH0G/PE4=;
-        b=USDNhC1zgRuXegBTlRJjp5eZCFCn/RJKEKiuhNezhHtL++JQP/+2SoNQbLOTMfjKLAaygL
-        AA5KActVkUT1Jq30DpNyWCfxCxoO54Y/UnqCvqrr1vDFGbsovjTJdCTnAicp4GDFxW63N1
-        wZXBFZsurw3DZVrOq71OqqcrMOu5/Ig=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-113-Z2rBBekqPyqb7lcF_Dh7fA-1; Tue, 04 Aug 2020 17:29:15 -0400
-X-MC-Unique: Z2rBBekqPyqb7lcF_Dh7fA-1
-Received: by mail-qt1-f200.google.com with SMTP id w15so28780967qtv.11
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 14:29:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mp8oPykQbFI3PCYtU3bJ6U6U1V5IO9G5ow6aH0G/PE4=;
-        b=FItqj55p3CUU/Hf1v4XFRTHyI14jXrQH5n9oEUVzfw3l7Hw5WvjqYgpG1ToXW7cXO6
-         dBHwC1geZ/86E/WVD4GlHz099SxFmB7YaL+F2aADzCGvu2mCPnsfNGuyOaMFVZZPpy/g
-         5L2Pz+xvh/ZboXMF8Ddkj4hzwmXqA8cP6j9Jcs+G2xLDKb+eCTDWYUMRFKz2hRHMWuci
-         5SWWHvKUEBNjL/g+TIAE2/nBUVmbXo3qlMUQQ51ActvBRY9ssqXAT1jYpm2eZxYB+F55
-         GSjLdVAIn8HZLD8MZE2S4NGXMIIeyDGjVQYcjrJiMKmoSn65YgMEJUxIILSKETMT9lAX
-         hePw==
-X-Gm-Message-State: AOAM531dNh0K6uUkxcpFhu2hwsxI8JXUEnEdDGyV0frAf4CJusYujhze
-        xfaOF2Au2h7YiTRRlwBvcukjN4DG80vj3i5mlF8eBKHND9cpaI0X/sZdOR3zNN1ZZxtQ5SbeBTX
-        IuhdCRPP1gfuuktFo0UJKmxgl
-X-Received: by 2002:aed:38c3:: with SMTP id k61mr83720qte.11.1596576555023;
-        Tue, 04 Aug 2020 14:29:15 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzrZQvRXXmOImw3ZNin/9p58rw3YAMvyB6SPFfMvQL7L/uzQmZg02eL1z+mLAWH0ljJoCYKTA==
-X-Received: by 2002:aed:38c3:: with SMTP id k61mr83705qte.11.1596576554750;
-        Tue, 04 Aug 2020 14:29:14 -0700 (PDT)
-Received: from redhat.com (bzq-79-177-102-128.red.bezeqint.net. [79.177.102.128])
-        by smtp.gmail.com with ESMTPSA id c42sm256143qte.5.2020.08.04.14.29.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 14:29:14 -0700 (PDT)
-Date:   Tue, 4 Aug 2020 17:29:09 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Eli Cohen <eli@mellanox.com>
-Cc:     jasowang@redhat.com, virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, shahafs@mellanox.com,
-        saeedm@mellanox.com, parav@mellanox.com
-Subject: Re: [PATCH V4 linux-next 00/12] VDPA support for Mellanox ConnectX
- devices
-Message-ID: <20200804172726-mutt-send-email-mst@kernel.org>
-References: <20200804162048.22587-1-eli@mellanox.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200804162048.22587-1-eli@mellanox.com>
+        Tue, 4 Aug 2020 17:30:00 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 074L2Epd193418;
+        Tue, 4 Aug 2020 17:29:33 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32qcaed7j4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Aug 2020 17:29:32 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 074L2CwG193219;
+        Tue, 4 Aug 2020 17:29:32 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32qcaed7hu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Aug 2020 17:29:32 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 074LFmEi017538;
+        Tue, 4 Aug 2020 21:29:31 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma01dal.us.ibm.com with ESMTP id 32n019aaj1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Aug 2020 21:29:31 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 074LTQDY58786138
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 4 Aug 2020 21:29:26 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 20AA1136053;
+        Tue,  4 Aug 2020 21:29:30 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8903B136055;
+        Tue,  4 Aug 2020 21:29:28 +0000 (GMT)
+Received: from oc3560204572.ibm.com (unknown [9.85.148.242])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue,  4 Aug 2020 21:29:28 +0000 (GMT)
+Message-ID: <c55250b704d6012413b5b36fea34bc57c98756ce.camel@linux.vnet.ibm.com>
+Subject: Re: [PATCH v4 1/7] powerpc/pseries/iommu: Create defines for
+ operations in ibm, ddw-applicable
+From:   David Dai <zdai@linux.vnet.ibm.com>
+To:     Leonardo Bras <leobras.c@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Joel Stanley <joel@jms.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Brian King <brking@linux.vnet.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Tue, 04 Aug 2020 16:27:45 -0500
+In-Reply-To: <20200716071658.467820-2-leobras.c@gmail.com>
+References: <20200716071658.467820-1-leobras.c@gmail.com>
+         <20200716071658.467820-2-leobras.c@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-8.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-04_04:2020-08-03,2020-08-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
+ impostorscore=0 suspectscore=0 adultscore=0 mlxscore=0 priorityscore=1501
+ malwarescore=0 bulkscore=0 spamscore=0 lowpriorityscore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008040142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 07:20:36PM +0300, Eli Cohen wrote:
-> Hi Michael,
-> please note that this series depends on mlx5 core device driver patches
-> in mlx5-next branch in
-> git://git.kernel.org/pub/scm/linux/kernel/git/mellanox/linux.git.
-
-Thanks! OK so what's the plan for merging this?
-Do patches at least build well enough that I can push them
-upstream? Or do they have to go on top of the mellanox tree?
-
-
-> git pull git://git.kernel.org/pub/scm/linux/kernel/git/mellanox/linux.git mlx5-next 
+On Thu, 2020-07-16 at 04:16 -0300, Leonardo Bras wrote:
+> Create defines to help handling ibm,ddw-applicable values, avoiding
+> confusion about the index of given operations.
 > 
-> They also depend Jason Wang's patches: https://lkml.org/lkml/2020/7/1/301
-
-The ones you included, right?
-
-> Jason, I had to resolve some conflicts so I would appreciate of you can verify
-> that it is ok.
+> Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
+> ---
+>  arch/powerpc/platforms/pseries/iommu.c | 43 ++++++++++++++++------
+> ----
+>  1 file changed, 26 insertions(+), 17 deletions(-)
 > 
-> The following series of patches provide VDPA support for Mellanox
-> devices. The supported devices are ConnectX6 DX and newer.
-> 
-> Currently, only a network driver is implemented; future patches will
-> introduce a block device driver. iperf performance on a single queue is
-> around 12 Gbps.  Future patches will introduce multi queue support.
-> 
-> The files are organized in such a way that code that can be used by
-> different VDPA implementations will be placed in a common are resides in
-> drivers/vdpa/mlx5/core.
-> 
-> Only virtual functions are currently supported. Also, certain firmware
-> capabilities must be set to enable the driver. Physical functions (PFs)
-> are skipped by the driver.
-> 
-> To make use of the VDPA net driver, one must load mlx5_vdpa. In such
-> case, VFs will be operated by the VDPA driver. Although one can see a
-> regular instance of a network driver on the VF, the VDPA driver takes
-> precedence over the NIC driver, steering-wize.
-> 
-> Currently, the device/interface infrastructure in mlx5_core is used to
-> probe drivers. Future patches will introduce virtbus as a means to
-> register devices and drivers and VDPA will be adapted to it.
-> 
-> The mlx5 mode of operation required to support VDPA is switchdev mode.
-> Once can use Linux or OVS bridge to take care of layer 2 switching.
-> 
-> In order to provide virtio networking to a guest, an updated version of
-> qemu is required. This version has been tested by the following quemu
-> version:
-> 
-> url: https://github.com/jasowang/qemu.git
-> branch: vdpa
-> Commit ID: 6f4e59b807db
-> 
-> 
-> V2->V3
-> Fix makefile to use include path relative to the root of the kernel
-> 
-> V3-V4
-> Rebase Jason's patches on linux-next branch
-> Fix krobot error on mips arch
-> Make use of the free callback to destroy resoruces on unload
-> Use VIRTIO_F_ACCESS_PLATFORM instead of legacy VIRTIO_F_IOMMU_PLATFORM
-> Add empty implementations for get_vq_notification() and get_vq_irq()
-> 
-> 
-> Eli Cohen (6):
->   net/vdpa: Use struct for set/get vq state
->   vdpa: Modify get_vq_state() to return error code
->   vdpa/mlx5: Add hardware descriptive header file
->   vdpa/mlx5: Add support library for mlx5 VDPA implementation
->   vdpa/mlx5: Add shared memory registration code
->   vdpa/mlx5: Add VDPA driver for supported mlx5 devices
-> 
-> Jason Wang (5):
->   vhost-vdpa: refine ioctl pre-processing
->   vhost: generialize backend features setting/getting
->   vhost-vdpa: support get/set backend features
->   vhost-vdpa: support IOTLB batching hints
->   vdpasim: support batch updating
-> 
-> Max Gurtovoy (1):
->   vdpa: remove hard coded virtq num
-> 
->  drivers/vdpa/Kconfig                   |   19 +
->  drivers/vdpa/Makefile                  |    1 +
->  drivers/vdpa/ifcvf/ifcvf_base.c        |    4 +-
->  drivers/vdpa/ifcvf/ifcvf_base.h        |    4 +-
->  drivers/vdpa/ifcvf/ifcvf_main.c        |   13 +-
->  drivers/vdpa/mlx5/Makefile             |    4 +
->  drivers/vdpa/mlx5/core/mlx5_vdpa.h     |   91 ++
->  drivers/vdpa/mlx5/core/mlx5_vdpa_ifc.h |  168 ++
->  drivers/vdpa/mlx5/core/mr.c            |  484 ++++++
->  drivers/vdpa/mlx5/core/resources.c     |  284 ++++
->  drivers/vdpa/mlx5/net/main.c           |   76 +
->  drivers/vdpa/mlx5/net/mlx5_vnet.c      | 1965 ++++++++++++++++++++++++
->  drivers/vdpa/mlx5/net/mlx5_vnet.h      |   24 +
->  drivers/vdpa/vdpa.c                    |    3 +
->  drivers/vdpa/vdpa_sim/vdpa_sim.c       |   53 +-
->  drivers/vhost/net.c                    |   18 +-
->  drivers/vhost/vdpa.c                   |   76 +-
->  drivers/vhost/vhost.c                  |   15 +
->  drivers/vhost/vhost.h                  |    2 +
->  include/linux/vdpa.h                   |   24 +-
->  include/uapi/linux/vhost.h             |    2 +
->  include/uapi/linux/vhost_types.h       |   11 +
->  22 files changed, 3284 insertions(+), 57 deletions(-)
->  create mode 100644 drivers/vdpa/mlx5/Makefile
->  create mode 100644 drivers/vdpa/mlx5/core/mlx5_vdpa.h
->  create mode 100644 drivers/vdpa/mlx5/core/mlx5_vdpa_ifc.h
->  create mode 100644 drivers/vdpa/mlx5/core/mr.c
->  create mode 100644 drivers/vdpa/mlx5/core/resources.c
->  create mode 100644 drivers/vdpa/mlx5/net/main.c
->  create mode 100644 drivers/vdpa/mlx5/net/mlx5_vnet.c
->  create mode 100644 drivers/vdpa/mlx5/net/mlx5_vnet.h
-> 
-> -- 
-> 2.26.0
+> diff --git a/arch/powerpc/platforms/pseries/iommu.c
+> b/arch/powerpc/platforms/pseries/iommu.c
+> index 6d47b4a3ce39..ac0d6376bdad 100644
+> --- a/arch/powerpc/platforms/pseries/iommu.c
+> +++ b/arch/powerpc/platforms/pseries/iommu.c
+> @@ -39,6 +39,14 @@
+>  
+>  #include "pseries.h"
+>  
+> +enum {
+> +	DDW_QUERY_PE_DMA_WIN  = 0,
+> +	DDW_CREATE_PE_DMA_WIN = 1,
+> +	DDW_REMOVE_PE_DMA_WIN = 2,
+> +
+> +	DDW_APPLICABLE_SIZE
+> +};
+> +
+>  static struct iommu_table_group *iommu_pseries_alloc_group(int node)
+>  {
+>  	struct iommu_table_group *table_group;
+> @@ -771,12 +779,12 @@ static void remove_ddw(struct device_node *np,
+> bool remove_prop)
+>  {
+>  	struct dynamic_dma_window_prop *dwp;
+>  	struct property *win64;
+> -	u32 ddw_avail[3];
+> +	u32 ddw_avail[DDW_APPLICABLE_SIZE];
+>  	u64 liobn;
+>  	int ret = 0;
+>  
+>  	ret = of_property_read_u32_array(np, "ibm,ddw-applicable",
+> -					 &ddw_avail[0], 3);
+> +					 &ddw_avail[0],
+> DDW_APPLICABLE_SIZE);
+>  
+>  	win64 = of_find_property(np, DIRECT64_PROPNAME, NULL);
+>  	if (!win64)
+> @@ -798,15 +806,15 @@ static void remove_ddw(struct device_node *np,
+> bool remove_prop)
+>  		pr_debug("%pOF successfully cleared tces in window.\n",
+>  			 np);
+>  
+> -	ret = rtas_call(ddw_avail[2], 1, 1, NULL, liobn);
+> +	ret = rtas_call(ddw_avail[DDW_REMOVE_PE_DMA_WIN], 1, 1, NULL,
+> liobn);
+>  	if (ret)
+>  		pr_warn("%pOF: failed to remove direct window: rtas
+> returned "
+>  			"%d to ibm,remove-pe-dma-window(%x) %llx\n",
+> -			np, ret, ddw_avail[2], liobn);
+> +			np, ret, ddw_avail[DDW_REMOVE_PE_DMA_WIN],
+> liobn);
+>  	else
+>  		pr_debug("%pOF: successfully removed direct window:
+> rtas returned "
+>  			"%d to ibm,remove-pe-dma-window(%x) %llx\n",
+> -			np, ret, ddw_avail[2], liobn);
+> +			np, ret, ddw_avail[DDW_REMOVE_PE_DMA_WIN],
+> liobn);
+>  
+>  delprop:
+>  	if (remove_prop)
+> @@ -889,11 +897,11 @@ static int query_ddw(struct pci_dev *dev, const
+> u32 *ddw_avail,
+>  	buid = pdn->phb->buid;
+>  	cfg_addr = ((pdn->busno << 16) | (pdn->devfn << 8));
+>  
+> -	ret = rtas_call(ddw_avail[0], 3, 5, (u32 *)query,
+> -		  cfg_addr, BUID_HI(buid), BUID_LO(buid));
+> +	ret = rtas_call(ddw_avail[DDW_QUERY_PE_DMA_WIN], 3, 5, (u32
+> *)query,
+> +			cfg_addr, BUID_HI(buid), BUID_LO(buid));
+>  	dev_info(&dev->dev, "ibm,query-pe-dma-windows(%x) %x %x %x"
+> -		" returned %d\n", ddw_avail[0], cfg_addr,
+> BUID_HI(buid),
+> -		BUID_LO(buid), ret);
+> +		" returned %d\n", ddw_avail[DDW_QUERY_PE_DMA_WIN],
+> cfg_addr,
+> +		 BUID_HI(buid), BUID_LO(buid), ret);
+>  	return ret;
+>  }
+>  
+> @@ -920,15 +928,16 @@ static int create_ddw(struct pci_dev *dev,
+> const u32 *ddw_avail,
+>  
+>  	do {
+>  		/* extra outputs are LIOBN and dma-addr (hi, lo) */
+> -		ret = rtas_call(ddw_avail[1], 5, 4, (u32 *)create,
+> -				cfg_addr, BUID_HI(buid), BUID_LO(buid),
+> -				page_shift, window_shift);
+> +		ret = rtas_call(ddw_avail[DDW_CREATE_PE_DMA_WIN], 5, 4,
+> +				(u32 *)create, cfg_addr, BUID_HI(buid),
+> +				BUID_LO(buid), page_shift,
+> window_shift);
+>  	} while (rtas_busy_delay(ret));
+>  	dev_info(&dev->dev,
+>  		"ibm,create-pe-dma-window(%x) %x %x %x %x %x returned
+> %d "
+> -		"(liobn = 0x%x starting addr = %x %x)\n", ddw_avail[1],
+> -		 cfg_addr, BUID_HI(buid), BUID_LO(buid), page_shift,
+> -		 window_shift, ret, create->liobn, create->addr_hi,
+> create->addr_lo);
+> +		"(liobn = 0x%x starting addr = %x %x)\n",
+> +		 ddw_avail[DDW_CREATE_PE_DMA_WIN], cfg_addr,
+> BUID_HI(buid),
+> +		 BUID_LO(buid), page_shift, window_shift, ret, create-
+> >liobn,
+> +		 create->addr_hi, create->addr_lo);
+>  
+>  	return ret;
+>  }
+> @@ -996,7 +1005,7 @@ static u64 enable_ddw(struct pci_dev *dev,
+> struct device_node *pdn)
+>  	int page_shift;
+>  	u64 dma_addr, max_addr;
+>  	struct device_node *dn;
+> -	u32 ddw_avail[3];
+> +	u32 ddw_avail[DDW_APPLICABLE_SIZE];
+>  	struct direct_window *window;
+>  	struct property *win64;
+>  	struct dynamic_dma_window_prop *ddwprop;
+> @@ -1029,7 +1038,7 @@ static u64 enable_ddw(struct pci_dev *dev,
+> struct device_node *pdn)
+>  	 * the property is actually in the parent, not the PE
+>  	 */
+>  	ret = of_property_read_u32_array(pdn, "ibm,ddw-applicable",
+> -					 &ddw_avail[0], 3);
+> +					 &ddw_avail[0],
+> DDW_APPLICABLE_SIZE);
+>  	if (ret)
+>  		goto out_failed;
+>  
+Tested-by: David Dai <zdai@linux.vnet.ibm.com>
 
