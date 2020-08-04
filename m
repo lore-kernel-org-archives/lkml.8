@@ -2,67 +2,65 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB41C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 00:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D85FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 00:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AA53206DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 00:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E37206DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 00:57:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728906AbgHDA5g (ORCPT
+        id S1728961AbgHDA5x convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 20:57:36 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:47576 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727858AbgHDA5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 20:57:36 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 82BDEFE8FF83CD2F15D5;
-        Tue,  4 Aug 2020 08:57:34 +0800 (CST)
-Received: from [10.164.122.247] (10.164.122.247) by smtp.huawei.com
- (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 4 Aug 2020
- 08:57:27 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: update_sit_entry: Make the judgment
- condition of f2fs_bug_on more intuitive
-To:     Zhihao Cheng <chengzhihao1@huawei.com>, <jaegeuk@kernel.org>,
-        <chao@kernel.org>, <yi.zhang@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20200801032450.3028986-1-chengzhihao1@huawei.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <213c79b1-39cc-1b22-f2d9-d6b5ee3dbdab@huawei.com>
-Date:   Tue, 4 Aug 2020 08:57:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20200801032450.3028986-1-chengzhihao1@huawei.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.164.122.247]
-X-CFilter-Loop: Reflected
+        Mon, 3 Aug 2020 20:57:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45454 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727858AbgHDA5x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 20:57:53 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60D5EC06174A;
+        Mon,  3 Aug 2020 17:57:53 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1EA07127874A4;
+        Mon,  3 Aug 2020 17:41:07 -0700 (PDT)
+Date:   Mon, 03 Aug 2020 17:57:51 -0700 (PDT)
+Message-Id: <20200803.175751.288490176619838107.davem@davemloft.net>
+To:     ioanaruxandra.stancioi@gmail.com
+Cc:     david.lebrun@uclouvain.be, kuznet@ms2.inr.ac.ru,
+        yoshfuji@linux-ipv6.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, elver@google.com, glider@google.com,
+        stancioi@google.com
+Subject: Re: [PATCH v3] seg6_iptunnel: Refactor seg6_lwt_headroom out of
+ uapi header
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200803073333.1998786-1-ioanaruxandra.stancioi@gmail.com>
+References: <20200803073333.1998786-1-ioanaruxandra.stancioi@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-8859-2
+Content-Transfer-Encoding: 8BIT
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 03 Aug 2020 17:41:07 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/1 11:24, Zhihao Cheng wrote:
-> Current judgment condition of f2fs_bug_on in function update_sit_entry():
->    new_vblocks >> (sizeof(unsigned short) << 3) ||
-> 	new_vblocks > sbi->blocks_per_seg
-> 
-> which equivalents to:
->    new_vblocks < 0 || new_vblocks > sbi->blocks_per_seg
-> 
-> The latter is more intuitive.
-> 
-> Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
-> Reported-by: Jack Qiu <jack.qiu@huawei.com>
+From: Ioana-Ruxandra Stancioi <ioanaruxandra.stancioi@gmail.com>
+Date: Mon,  3 Aug 2020 07:33:33 +0000
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
+> From: Ioana-Ruxandra Stãncioi <stancioi@google.com>
+> 
+> Refactor the function seg6_lwt_headroom out of the seg6_iptunnel.h uapi
+> header, because it is only used in seg6_iptunnel.c. Moreover, it is only
+> used in the kernel code, as indicated by the "#ifdef __KERNEL__".
+> 
+> Suggested-by: David Miller <davem@davemloft.net>
+> Signed-off-by: Ioana-Ruxandra Stãncioi <stancioi@google.com>
 
-Thanks,
+Applied, thank you.
