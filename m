@@ -2,131 +2,251 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F336C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE8CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 629462067D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:48:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F8aZlF4L"
+	by mail.kernel.org (Postfix) with ESMTP id 25AC82067D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:49:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728163AbgHDMs0 (ORCPT
+        id S1727060AbgHDMtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 08:48:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41804 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726058AbgHDMsV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 08:48:21 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54551C06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 05:48:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=vNu8jH7CfZCZghBH6Gb2x7F+2wKxDLAxRVOeoOs8VzY=; b=F8aZlF4L14jsBmodix7PwQGYqd
-        V8/Xc9+OQR02QITvEpu+fYBjVFraifoNbS+FzDA2NNQuKy4emxGJLedIiZsESfiw/9laGnblINPhi
-        fqXETQbpDJ2HAfdVQ7Z2DdtjubNTxnQLS5r4cPW34Q9wiFectjrncTdwTtDzNsCfjgo4nMcblkhNQ
-        E3blt2fMkaCaqUpO/BrD8GLeuQVjCJ7Z0p9ClnLwWOGV2r06zj+xmn4rj7mTVFF+dBnEdHbUYiHvZ
-        puSUzdXHYpfx4+ZBqTfYewnKWu6d4nQxpjIIpQ5AmLnIAgPnt+sRe494n84oRgs6Sm0L/AKd9DcUH
-        FdlIUyzg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k2wMH-0000WT-Ry; Tue, 04 Aug 2020 12:47:58 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DBC9D301E02;
-        Tue,  4 Aug 2020 14:47:55 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A66B9235CDBD2; Tue,  4 Aug 2020 14:47:55 +0200 (CEST)
-Date:   Tue, 4 Aug 2020 14:47:55 +0200
-From:   peterz@infradead.org
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Neuling <mikey@neuling.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-Subject: Re: [PATCH 1/2] sched/topology: Allow archs to override cpu_smt_mask
-Message-ID: <20200804124755.GJ2674@hirez.programming.kicks-ass.net>
-References: <20200804033307.76111-1-srikar@linux.vnet.ibm.com>
- <20200804104520.GB2657@hirez.programming.kicks-ass.net>
- <20200804121007.GJ24375@linux.vnet.ibm.com>
+        Tue, 4 Aug 2020 08:49:05 -0400
+Received: from relay.sw.ru ([185.231.240.75]:42228 "EHLO relay3.sw.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725830AbgHDMso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 08:48:44 -0400
+Received: from [192.168.15.159]
+        by relay3.sw.ru with esmtp (Exim 4.93)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1k2wMW-0004oS-B6; Tue, 04 Aug 2020 15:48:12 +0300
+Subject: Re: [PATCH 1/8] ns: Add common refcount into ns_common add use it as
+ counter for net_ns
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     christian.brauner@ubuntu.com, akpm@linux-foundation.org,
+        viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
+References: <159644958332.604812.13004003379291842292.stgit@localhost.localdomain>
+ <159644977635.604812.1319877322927063560.stgit@localhost.localdomain>
+ <875z9ysit5.fsf@x220.int.ebiederm.org>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <49106051-be26-7b89-f9e8-7c441dbda18a@virtuozzo.com>
+Date:   Tue, 4 Aug 2020 15:48:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200804121007.GJ24375@linux.vnet.ibm.com>
+In-Reply-To: <875z9ysit5.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 05:40:07PM +0530, Srikar Dronamraju wrote:
-> * peterz@infradead.org <peterz@infradead.org> [2020-08-04 12:45:20]:
+On 04.08.2020 15:21, Eric W. Biederman wrote:
+> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
 > 
-> > On Tue, Aug 04, 2020 at 09:03:06AM +0530, Srikar Dronamraju wrote:
-> > > cpu_smt_mask tracks topology_sibling_cpumask. This would be good for
-> > > most architectures. One of the users of cpu_smt_mask(), would be to
-> > > identify idle-cores. On Power9, a pair of cores can be presented by the
-> > > firmware as a big-core for backward compatibility reasons.
-> > > 
-> > > In order to maintain userspace backward compatibility with previous
-> > > versions of processor, (since Power8 had SMT8 cores), Power9 onwards there
-> > > is option to the firmware to advertise a pair of SMT4 cores as a fused
-> > > cores (referred to as the big_core mode in the Linux Kernel). On Power9
-> > > this pair shares the L2 cache as well. However, from the scheduler's point
-> > > of view, a core should be determined by SMT4. The load-balancer already
-> > > does this. Hence allow PowerPc architecture to override the default
-> > > cpu_smt_mask() to point to the SMT4 cores in a big_core mode.
-> > 
-> > I'm utterly confused.
-> > 
-> > Why can't you set your regular siblings mask to the smt4 thing? Who
-> > cares about the compat stuff, I thought that was an LPAR/AIX thing.
+>> Currently, every type of namespaces has its own counter,
+>> which is stored in ns-specific part. Say, @net has
+>> struct net::count, @pid has struct pid_namespace::kref, etc.
+>>
+>> This patchset introduces unified counter for all types
+>> of namespaces, and converts net namespace to use it first.
 > 
-> There are no technical challenges to set the sibling mask to SMT4.
-> This is for Linux running on PowerVM. When these Power9 boxes are sold /
-> marketed as X core boxes (where X stand for SMT8 cores).  Since on PowerVM
-> world, everything is in SMT8 mode, the device tree properties still mark
-> the system to be running on 8 thread core. There are a number of utilities
-> like ppc64_cpu that directly read from device-tree. They would get core
-> count and thread count which is SMT8 based.
+> And the other refcounts on struct net?
 > 
-> If the sibling_mask is set to small core, then same user when looking at
+> How do they play into what you are trying to do?
 
-FWIW, I find the small/big core naming utterly confusing vs the
-big/little naming from ARM. When you say small, I'm thinking of
-asymmetric cores, not SMT4/SMT8.
+I just don't understand you. Different refcounters are related to different
+problems, they are introduced to solve. This patchset changes only one refcounter,
+and it does not touch other of them. What do you want to know about others?
 
-> output from lscpu and other utilities that look at sysfs will start seeing
-> 2x number of cores to what he had provisioned and what the utilities from
-> the device-tree show. This can gets users confused.
+> For the lack of an explanation.
 
-One will report SMT8 and the other SMT4, right? So only users that
-cannot read will be confused, but if you can't read, confusion is
-guaranteed anyway.
+What is unclear for you?
 
-Also, by exposing the true (SMT4) topology to userspace, userspace
-applications could behave better -- for those few that actually parse
-the topology information.
+> Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> 
+> 
+>> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+>> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+>> ---
+>>  include/linux/ns_common.h     |    3 +++
+>>  include/net/net_namespace.h   |   11 ++++-------
+>>  net/core/net-sysfs.c          |    6 +++---
+>>  net/core/net_namespace.c      |    6 +++---
+>>  net/ipv4/inet_timewait_sock.c |    4 ++--
+>>  net/ipv4/tcp_metrics.c        |    2 +-
+>>  6 files changed, 16 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/include/linux/ns_common.h b/include/linux/ns_common.h
+>> index 5fbc4000358f..0f1d024bd958 100644
+>> --- a/include/linux/ns_common.h
+>> +++ b/include/linux/ns_common.h
+>> @@ -2,12 +2,15 @@
+>>  #ifndef _LINUX_NS_COMMON_H
+>>  #define _LINUX_NS_COMMON_H
+>>  
+>> +#include <linux/refcount.h>
+>> +
+>>  struct proc_ns_operations;
+>>  
+>>  struct ns_common {
+>>  	atomic_long_t stashed;
+>>  	const struct proc_ns_operations *ops;
+>>  	unsigned int inum;
+>> +	refcount_t count;
+>>  };
+>>  
+>>  #endif
+>> diff --git a/include/net/net_namespace.h b/include/net/net_namespace.h
+>> index 2ee5901bec7a..cb4b33d7834b 100644
+>> --- a/include/net/net_namespace.h
+>> +++ b/include/net/net_namespace.h
+>> @@ -60,9 +60,6 @@ struct net {
+>>  	refcount_t		passive;	/* To decide when the network
+>>  						 * namespace should be freed.
+>>  						 */
+>> -	refcount_t		count;		/* To decided when the network
+>> -						 *  namespace should be shut down.
+>> -						 */
+>>  	spinlock_t		rules_mod_lock;
+>>  
+>>  	unsigned int		dev_unreg_count;
+>> @@ -245,7 +242,7 @@ void __put_net(struct net *net);
+>>  
+>>  static inline struct net *get_net(struct net *net)
+>>  {
+>> -	refcount_inc(&net->count);
+>> +	refcount_inc(&net->ns.count);
+>>  	return net;
+>>  }
+>>  
+>> @@ -256,14 +253,14 @@ static inline struct net *maybe_get_net(struct net *net)
+>>  	 * exists.  If the reference count is zero this
+>>  	 * function fails and returns NULL.
+>>  	 */
+>> -	if (!refcount_inc_not_zero(&net->count))
+>> +	if (!refcount_inc_not_zero(&net->ns.count))
+>>  		net = NULL;
+>>  	return net;
+>>  }
+>>  
+>>  static inline void put_net(struct net *net)
+>>  {
+>> -	if (refcount_dec_and_test(&net->count))
+>> +	if (refcount_dec_and_test(&net->ns.count))
+>>  		__put_net(net);
+>>  }
+>>  
+>> @@ -275,7 +272,7 @@ int net_eq(const struct net *net1, const struct net *net2)
+>>  
+>>  static inline int check_net(const struct net *net)
+>>  {
+>> -	return refcount_read(&net->count) != 0;
+>> +	return refcount_read(&net->ns.count) != 0;
+>>  }
+>>  
+>>  void net_drop_ns(void *);
+>> diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+>> index 9de33b594ff2..655a88b0071c 100644
+>> --- a/net/core/net-sysfs.c
+>> +++ b/net/core/net-sysfs.c
+>> @@ -1025,7 +1025,7 @@ net_rx_queue_update_kobjects(struct net_device *dev, int old_num, int new_num)
+>>  	while (--i >= new_num) {
+>>  		struct kobject *kobj = &dev->_rx[i].kobj;
+>>  
+>> -		if (!refcount_read(&dev_net(dev)->count))
+>> +		if (!refcount_read(&dev_net(dev)->ns.count))
+>>  			kobj->uevent_suppress = 1;
+>>  		if (dev->sysfs_rx_queue_group)
+>>  			sysfs_remove_group(kobj, dev->sysfs_rx_queue_group);
+>> @@ -1603,7 +1603,7 @@ netdev_queue_update_kobjects(struct net_device *dev, int old_num, int new_num)
+>>  	while (--i >= new_num) {
+>>  		struct netdev_queue *queue = dev->_tx + i;
+>>  
+>> -		if (!refcount_read(&dev_net(dev)->count))
+>> +		if (!refcount_read(&dev_net(dev)->ns.count))
+>>  			queue->kobj.uevent_suppress = 1;
+>>  #ifdef CONFIG_BQL
+>>  		sysfs_remove_group(&queue->kobj, &dql_group);
+>> @@ -1850,7 +1850,7 @@ void netdev_unregister_kobject(struct net_device *ndev)
+>>  {
+>>  	struct device *dev = &ndev->dev;
+>>  
+>> -	if (!refcount_read(&dev_net(ndev)->count))
+>> +	if (!refcount_read(&dev_net(ndev)->ns.count))
+>>  		dev_set_uevent_suppress(dev, 1);
+>>  
+>>  	kobject_get(&dev->kobj);
+>> diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
+>> index dcd61aca343e..5f658cbedd34 100644
+>> --- a/net/core/net_namespace.c
+>> +++ b/net/core/net_namespace.c
+>> @@ -44,7 +44,7 @@ static struct key_tag init_net_key_domain = { .usage = REFCOUNT_INIT(1) };
+>>  #endif
+>>  
+>>  struct net init_net = {
+>> -	.count		= REFCOUNT_INIT(1),
+>> +	.ns.count	= REFCOUNT_INIT(1),
+>>  	.dev_base_head	= LIST_HEAD_INIT(init_net.dev_base_head),
+>>  #ifdef CONFIG_KEYS
+>>  	.key_domain	= &init_net_key_domain,
+>> @@ -248,7 +248,7 @@ int peernet2id_alloc(struct net *net, struct net *peer, gfp_t gfp)
+>>  {
+>>  	int id;
+>>  
+>> -	if (refcount_read(&net->count) == 0)
+>> +	if (refcount_read(&net->ns.count) == 0)
+>>  		return NETNSA_NSID_NOT_ASSIGNED;
+>>  
+>>  	spin_lock(&net->nsid_lock);
+>> @@ -328,7 +328,7 @@ static __net_init int setup_net(struct net *net, struct user_namespace *user_ns)
+>>  	int error = 0;
+>>  	LIST_HEAD(net_exit_list);
+>>  
+>> -	refcount_set(&net->count, 1);
+>> +	refcount_set(&net->ns.count, 1);
+>>  	refcount_set(&net->passive, 1);
+>>  	get_random_bytes(&net->hash_mix, sizeof(u32));
+>>  	net->dev_base_seq = 1;
+>> diff --git a/net/ipv4/inet_timewait_sock.c b/net/ipv4/inet_timewait_sock.c
+>> index c411c87ae865..437afe392e66 100644
+>> --- a/net/ipv4/inet_timewait_sock.c
+>> +++ b/net/ipv4/inet_timewait_sock.c
+>> @@ -272,14 +272,14 @@ void inet_twsk_purge(struct inet_hashinfo *hashinfo, int family)
+>>  				continue;
+>>  			tw = inet_twsk(sk);
+>>  			if ((tw->tw_family != family) ||
+>> -				refcount_read(&twsk_net(tw)->count))
+>> +				refcount_read(&twsk_net(tw)->ns.count))
+>>  				continue;
+>>  
+>>  			if (unlikely(!refcount_inc_not_zero(&tw->tw_refcnt)))
+>>  				continue;
+>>  
+>>  			if (unlikely((tw->tw_family != family) ||
+>> -				     refcount_read(&twsk_net(tw)->count))) {
+>> +				     refcount_read(&twsk_net(tw)->ns.count))) {
+>>  				inet_twsk_put(tw);
+>>  				goto restart;
+>>  			}
+>> diff --git a/net/ipv4/tcp_metrics.c b/net/ipv4/tcp_metrics.c
+>> index 279db8822439..39710c417565 100644
+>> --- a/net/ipv4/tcp_metrics.c
+>> +++ b/net/ipv4/tcp_metrics.c
+>> @@ -887,7 +887,7 @@ static void tcp_metrics_flush_all(struct net *net)
+>>  		pp = &hb->chain;
+>>  		for (tm = deref_locked(*pp); tm; tm = deref_locked(*pp)) {
+>>  			match = net ? net_eq(tm_net(tm), net) :
+>> -				!refcount_read(&tm_net(tm)->count);
+>> +				!refcount_read(&tm_net(tm)->ns.count);
+>>  			if (match) {
+>>  				*pp = tm->tcpm_next;
+>>  				kfree_rcu(tm, rcu_head);
 
-> So to keep the device-tree properties, utilities depending on device-tree,
-> sysfs and utilities depending on sysfs on the same page, userspace are only
-> exposed as SMT8.
-
-I'm not convinced it makes sense to lie to userspace just to accomodate
-a few users that cannot read.
