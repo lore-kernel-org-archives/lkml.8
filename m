@@ -2,74 +2,116 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E99FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E4CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E8F022B42
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6510022B42
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:24:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pxfZMucz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgHDTYt (ORCPT
+        id S1728121AbgHDTY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 15:24:49 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:42642 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbgHDTYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 15:24:48 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1k32Y7-008GVn-Cq; Tue, 04 Aug 2020 21:24:35 +0200
-Date:   Tue, 4 Aug 2020 21:24:35 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Ilia Lin <ilia.lin@gmail.com>
-Cc:     David Miller <davem@davemloft.net>, ilial@codeaurora.org,
-        kuba@kernel.org, jiri@mellanox.com, edumazet@google.com,
-        ap420073@gmail.com, xiyou.wangcong@gmail.com, maximmi@mellanox.com,
-        Ilia Lin <ilia.lin@kernel.org>, netdev@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: dev: Add API to check net_dev readiness
-Message-ID: <20200804192435.GG1919070@lunn.ch>
-References: <1595792274-28580-1-git-send-email-ilial@codeaurora.org>
- <20200726194528.GC1661457@lunn.ch>
- <20200727.103233.2024296985848607297.davem@davemloft.net>
- <CA+5LGR1KwePssqhCkZ6qT_W87fO2o1XPze53mJwjkTWtphiWrA@mail.gmail.com>
+        Tue, 4 Aug 2020 15:24:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46378 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726027AbgHDTYz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 15:24:55 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DFAFC06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 12:24:55 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id h7so39464420qkk.7
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 12:24:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pzsHuz3jz2KjqjbdXSlm4QZoLu4U8KSe5A09SXjkgoM=;
+        b=pxfZMuczjhW/F8JFU7DtDbRoeILs3IStkDcNky/fJGelBVVhrK6RDX/i8xekFGTQLM
+         8aEGWH690sudIfYarn+0BOFjl6eO96prLV0OppiwlmxGDHdIenQFHdXAFK+jYYTsyg40
+         PuRh4BRc2RoJ5uMYVGBfIsW1RoJwmcZG3S1GNjK6uAIZUE1XXSXubWOHeNZFFHnWWNM7
+         REcZ5peEYawXrcYglST5UMJ82do8tM7DN8/BhW7fw1HXzqBb6u7bOGvZ7hNK4D70/hdX
+         qu8POu2iJ04zAxE8f/TJDfjm/St+52WnUHaPeUpqhGKaTGWcMJvf35VKUVVGm9PskSal
+         9hew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pzsHuz3jz2KjqjbdXSlm4QZoLu4U8KSe5A09SXjkgoM=;
+        b=C7xGAlOHgEeh2veD6lv/7V83Dlg7+XYjqAfQJZF/ksU8gTocYYNsHPrPTdMcR/BJ6M
+         uKfyLjPntcUMFUB4y5KuGlLie1Jua31rcGQLkBi6pXb13e/2SSl6AvvELR3lw9jpg1pE
+         TOIaiMXWjzn64CnYY1otLDoFnTCc17UemFpV/7GM5HxXsWx8GArQbukAsrIV0epvM6aw
+         vsqiHf/OelBeu2oWBiaXXumhBAxNQ4xpCB2DRhjU/ykEyqktvo/Je594tU4BTPgkHUiY
+         ymddd5zeYVe8v1yQkjSgjNvPECweHkexkezXvNPe/EMtObrlefrIXFi3C9LUShCwSOZD
+         8M3w==
+X-Gm-Message-State: AOAM532+abmOfc4vR2y3tyMNzrbfsmruXy/FMwz/PNqtKtGV9YTEX7pe
+        ToTCQGQ2q++QVygdzuit2wwxT6gVv/LpeHj5f5eJjQ==
+X-Google-Smtp-Source: ABdhPJwXWvCIO8Y8R/+lIlTuLCsmrpuS6BKzpZJHHVUHLJbb4ZaN2z9pD5qQ8Cogh5sEA6/8nK1FaweDpNFgdH55DN4=
+X-Received: by 2002:a05:620a:15e8:: with SMTP id p8mr22024185qkm.182.1596569094262;
+ Tue, 04 Aug 2020 12:24:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+5LGR1KwePssqhCkZ6qT_W87fO2o1XPze53mJwjkTWtphiWrA@mail.gmail.com>
+References: <20200804000614.4176212-1-joshdon@google.com> <20200804105619.GE2657@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200804105619.GE2657@hirez.programming.kicks-ass.net>
+From:   Josh Don <joshdon@google.com>
+Date:   Tue, 4 Aug 2020 12:24:43 -0700
+Message-ID: <CABk29NuN4n9bzi9YzBf7=6HyXn1uTTTiFE3NiVRQ0AOYfiADhA@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: ignore cache hotness for SMT migration
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 08:47:18PM +0300, Ilia Lin wrote:
-> Hi Andrew and David,
+On Tue, Aug 4, 2020 at 3:56 AM <peterz@infradead.org> wrote:
+>
+> On Mon, Aug 03, 2020 at 05:06:14PM -0700, Josh Don wrote:
+> > SMT siblings share caches, so cache hotness should be irrelevant for
+> > cross-sibling migration.
+> >
+> > Proposed-by: Venkatesh Pallipadi <venki@google.com>
+> > Signed-off-by: Josh Don <joshdon@google.com>
+> > ---
+> >  kernel/sched/fair.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 2ba8f230feb9..5b203b55bcb2 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -7402,6 +7402,9 @@ static int task_hot(struct task_struct *p, struct lb_env *env)
+> >       if (unlikely(task_has_idle_policy(p)))
+> >               return 0;
+> >
+> > +     if ((env->sd->flags & cpu_smt_flags()) == cpu_smt_flags())
+> > +             return 0;
+>
+> I think that wants to be:
+>
+>         if (env->sd->flags & SD_SHARE_CPUCAPACITY)
+>
 
-Hi Ilia
+Agreed
 
-Please don't top post.
-
-> 
-> Thank you for your comments!
-> 
-> The client driver is still work in progress, but it can be seen here:
-> https://source.codeaurora.org/quic/la/kernel/msm-4.19/tree/drivers/platform/msm/ipa/ipa_api.c#n3842
-> 
-> For HW performance reasons, it has to be in subsys_initcall.
-
-Well, until the user of this new API is ready, we will not accept the
-patch.
-
-You also need to explain "For HW performance reasons". Why is this
-driver special that it can do things which no over driver does?
-
-And you should really be working on net-next, not this dead kernel
-version, if you want to get merged into mainline.
-
-Network drivers do not belong is drivers/platform. There is also ready
-a drivers/net/ipa, so i assume you will move there.
-
-  Andrew
+> Also, perhaps stick a comment on top with the rationale for this.
+>
+> > +
+> >       /*
+> >        * Buddy candidates are cache hot:
+> >        */
+> > --
+> > 2.28.0.163.g6104cc2f0b6-goog
+> >
