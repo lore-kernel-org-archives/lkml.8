@@ -2,251 +2,216 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE8CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BA4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25AC82067D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 442CC2075A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:50:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgHDMtF (ORCPT
+        id S1727819AbgHDMup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 08:49:05 -0400
-Received: from relay.sw.ru ([185.231.240.75]:42228 "EHLO relay3.sw.ru"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725830AbgHDMso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 08:48:44 -0400
-Received: from [192.168.15.159]
-        by relay3.sw.ru with esmtp (Exim 4.93)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1k2wMW-0004oS-B6; Tue, 04 Aug 2020 15:48:12 +0300
-Subject: Re: [PATCH 1/8] ns: Add common refcount into ns_common add use it as
- counter for net_ns
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     christian.brauner@ubuntu.com, akpm@linux-foundation.org,
-        viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org
-References: <159644958332.604812.13004003379291842292.stgit@localhost.localdomain>
- <159644977635.604812.1319877322927063560.stgit@localhost.localdomain>
- <875z9ysit5.fsf@x220.int.ebiederm.org>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <49106051-be26-7b89-f9e8-7c441dbda18a@virtuozzo.com>
-Date:   Tue, 4 Aug 2020 15:48:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 4 Aug 2020 08:50:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58210 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725830AbgHDMuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 08:50:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 485F9ACC5;
+        Tue,  4 Aug 2020 12:50:53 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 047361E12CB; Tue,  4 Aug 2020 14:50:36 +0200 (CEST)
+Date:   Tue, 4 Aug 2020 14:50:35 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     =?utf-8?B?5aec6L+O?= <jiangying8582@126.com>
+Cc:     Markus.Elfring@web.de, tytso@mit.edu, adilger.kernel@dilger.ca,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wanglong19@meituan.com, heguanjun@meituan.com
+Subject: Re: [PATCH v3] ext4: fix direct I/O read error
+Message-ID: <20200804125035.GA21667@quack2.suse.cz>
+References: <1593423930-5576-1-git-send-email-jiangying8582@126.com>
+ <13A548B3-C71D-4637-B194-CC405991AFC4@126.com>
 MIME-Version: 1.0
-In-Reply-To: <875z9ysit5.fsf@x220.int.ebiederm.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <13A548B3-C71D-4637-B194-CC405991AFC4@126.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.08.2020 15:21, Eric W. Biederman wrote:
-> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
+On Wed 01-07-20 23:25:26, 姜迎 wrote:
+> Does anyone else have any comments on the PATCH v3？Suggestions are welcome.
 > 
->> Currently, every type of namespaces has its own counter,
->> which is stored in ns-specific part. Say, @net has
->> struct net::count, @pid has struct pid_namespace::kref, etc.
->>
->> This patchset introduces unified counter for all types
->> of namespaces, and converts net namespace to use it first.
+> Thanks！
+
+The patch looks good to me FWIW. But as Jiang properly notes current
+upstream doesn't need this at all so it's only for -stable kernel releases.
+Since there was no report of this problem so far I'm not convinced this is
+serious enough to warrant non-upstream patch in -stable but if this bug
+indeed breaks some application, please add that info to the changelog and
+send the patch to stable@vger.kernel.org for inclusion. In that case also
+feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
 > 
-> And the other refcounts on struct net?
+> 发自我的iPhone
 > 
-> How do they play into what you are trying to do?
-
-I just don't understand you. Different refcounters are related to different
-problems, they are introduced to solve. This patchset changes only one refcounter,
-and it does not touch other of them. What do you want to know about others?
-
-> For the lack of an explanation.
-
-What is unclear for you?
-
-> Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> > 在 2020年6月29日，下午5:45，Jiang Ying <jiangying8582@126.com> 写道：
+> > 
+> > ﻿This patch is used to fix ext4 direct I/O read error when
+> > the read size is not aligned with block size.
+> > 
+> > Then, I will use a test to explain the error.
+> > 
+> > (1) Make a file that is not aligned with block size:
+> >    $dd if=/dev/zero of=./test.jar bs=1000 count=3
+> > 
+> > (2) I wrote a source file named "direct_io_read_file.c" as following:
+> > 
+> >    #include <stdio.h>
+> >    #include <stdlib.h>
+> >    #include <unistd.h>
+> >    #include <sys/file.h>
+> >    #include <sys/types.h>
+> >    #include <sys/stat.h>
+> >    #include <string.h>
+> >    #define BUF_SIZE 1024
+> > 
+> >    int main()
+> >    {
+> >        int fd;
+> >        int ret;
+> > 
+> >        unsigned char *buf;
+> >        ret = posix_memalign((void **)&buf, 512, BUF_SIZE);
+> >        if (ret) {
+> >            perror("posix_memalign failed");
+> >            exit(1);
+> >        }
+> >        fd = open("./test.jar", O_RDONLY | O_DIRECT, 0755);
+> >        if (fd < 0){
+> >            perror("open ./test.jar failed");
+> >            exit(1);
+> >        }
+> > 
+> >        do {
+> >            ret = read(fd, buf, BUF_SIZE);
+> >            printf("ret=%d\n",ret);
+> >            if (ret < 0) {
+> >                perror("write test.jar failed");
+> >            }
+> >        } while (ret > 0);
+> > 
+> >        free(buf);
+> >        close(fd);
+> >    }
+> > 
+> > (3) Compile the source file:
+> >    $gcc direct_io_read_file.c -D_GNU_SOURCE
+> > 
+> > (4) Run the test program:
+> >    $./a.out
+> > 
+> >    The result is as following:
+> >    ret=1024
+> >    ret=1024
+> >    ret=952
+> >    ret=-1
+> >    write test.jar failed: Invalid argument.
+> > 
+> > I have tested this program on XFS filesystem, XFS does not have
+> > this problem, because XFS use iomap_dio_rw() to do direct I/O
+> > read. And the comparing between read offset and file size is done
+> > in iomap_dio_rw(), the code is as following:
+> > 
+> >    if (pos < size) {
+> >        retval = filemap_write_and_wait_range(mapping, pos,
+> >                pos + iov_length(iov, nr_segs) - 1);
+> > 
+> >        if (!retval) {
+> >            retval = mapping->a_ops->direct_IO(READ, iocb,
+> >                        iov, pos, nr_segs);
+> >        }
+> >        ...
+> >    }
+> > 
+> > ...only when "pos < size", direct I/O can be done, or 0 will be return.
+> > 
+> > I have tested the fix patch on Ext4, it is up to the mustard of
+> > EINVAL in man2(read) as following:
+> >    #include <unistd.h>
+> >    ssize_t read(int fd, void *buf, size_t count);
+> > 
+> >    EINVAL
+> >        fd is attached to an object which is unsuitable for reading;
+> >        or the file was opened with the O_DIRECT flag, and either the
+> >        address specified in buf, the value specified in count, or the
+> >        current file offset is not suitably aligned.
+> > 
+> > So I think this patch can be applied to fix ext4 direct I/O error.
+> > 
+> > However Ext4 introduces direct I/O read using iomap infrastructure
+> > on kernel 5.5, the patch is commit <b1b4705d54ab>
+> > ("ext4: introduce direct I/O read using iomap infrastructure"),
+> > then Ext4 will be the same as XFS, they all use iomap_dio_rw() to do direct
+> > I/O read. So this problem does not exist on kernel 5.5 for Ext4.
+> > 
+> > From above description, we can see this problem exists on all the kernel
+> > versions between kernel 3.14 and kernel 5.4. Please apply this patch
+> > on these kernel versions, or please use the method on kernel 5.5 to fix
+> > this problem.
+> > 
+> > Fixes: 9fe55eea7e4b ("Fix race when checking i_size on direct i/o read")
+> > Co-developed-by: Wang Long <wanglong19@meituan.com>
+> > Signed-off-by: Wang Long <wanglong19@meituan.com>
+> > Signed-off-by: Jiang Ying <jiangying8582@126.com>
+> > 
+> > Changes since V2:
+> >    Optimize the description of the commit message and make a variation for
+> >    the patch, e.g. with:
+> > 
+> >        Before:
+> >            loff_t size;
+> >            size = i_size_read(inode);
+> >        After:
+> >            loff_t size = i_size_read(inode);
+> > 
+> > Changes since V1:
+> >    Signed-off use real name and add "Fixes:" flag
+> > 
+> > ---
+> > fs/ext4/inode.c | 5 +++++
+> > 1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> > index 516faa2..a66b0ac 100644
+> > --- a/fs/ext4/inode.c
+> > +++ b/fs/ext4/inode.c
+> > @@ -3821,6 +3821,11 @@ static ssize_t ext4_direct_IO_read(struct kiocb *iocb, struct iov_iter *iter)
+> >    struct inode *inode = mapping->host;
+> >    size_t count = iov_iter_count(iter);
+> >    ssize_t ret;
+> > +    loff_t offset = iocb->ki_pos;
+> > +    loff_t size = i_size_read(inode);
+> > +
+> > +    if (offset >= size)
+> > +        return 0;
+> > 
+> >    /*
+> >     * Shared inode_lock is enough for us - it protects against concurrent
+> > -- 
+> > 1.8.3.1
 > 
-> 
->> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
->> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
->> ---
->>  include/linux/ns_common.h     |    3 +++
->>  include/net/net_namespace.h   |   11 ++++-------
->>  net/core/net-sysfs.c          |    6 +++---
->>  net/core/net_namespace.c      |    6 +++---
->>  net/ipv4/inet_timewait_sock.c |    4 ++--
->>  net/ipv4/tcp_metrics.c        |    2 +-
->>  6 files changed, 16 insertions(+), 16 deletions(-)
->>
->> diff --git a/include/linux/ns_common.h b/include/linux/ns_common.h
->> index 5fbc4000358f..0f1d024bd958 100644
->> --- a/include/linux/ns_common.h
->> +++ b/include/linux/ns_common.h
->> @@ -2,12 +2,15 @@
->>  #ifndef _LINUX_NS_COMMON_H
->>  #define _LINUX_NS_COMMON_H
->>  
->> +#include <linux/refcount.h>
->> +
->>  struct proc_ns_operations;
->>  
->>  struct ns_common {
->>  	atomic_long_t stashed;
->>  	const struct proc_ns_operations *ops;
->>  	unsigned int inum;
->> +	refcount_t count;
->>  };
->>  
->>  #endif
->> diff --git a/include/net/net_namespace.h b/include/net/net_namespace.h
->> index 2ee5901bec7a..cb4b33d7834b 100644
->> --- a/include/net/net_namespace.h
->> +++ b/include/net/net_namespace.h
->> @@ -60,9 +60,6 @@ struct net {
->>  	refcount_t		passive;	/* To decide when the network
->>  						 * namespace should be freed.
->>  						 */
->> -	refcount_t		count;		/* To decided when the network
->> -						 *  namespace should be shut down.
->> -						 */
->>  	spinlock_t		rules_mod_lock;
->>  
->>  	unsigned int		dev_unreg_count;
->> @@ -245,7 +242,7 @@ void __put_net(struct net *net);
->>  
->>  static inline struct net *get_net(struct net *net)
->>  {
->> -	refcount_inc(&net->count);
->> +	refcount_inc(&net->ns.count);
->>  	return net;
->>  }
->>  
->> @@ -256,14 +253,14 @@ static inline struct net *maybe_get_net(struct net *net)
->>  	 * exists.  If the reference count is zero this
->>  	 * function fails and returns NULL.
->>  	 */
->> -	if (!refcount_inc_not_zero(&net->count))
->> +	if (!refcount_inc_not_zero(&net->ns.count))
->>  		net = NULL;
->>  	return net;
->>  }
->>  
->>  static inline void put_net(struct net *net)
->>  {
->> -	if (refcount_dec_and_test(&net->count))
->> +	if (refcount_dec_and_test(&net->ns.count))
->>  		__put_net(net);
->>  }
->>  
->> @@ -275,7 +272,7 @@ int net_eq(const struct net *net1, const struct net *net2)
->>  
->>  static inline int check_net(const struct net *net)
->>  {
->> -	return refcount_read(&net->count) != 0;
->> +	return refcount_read(&net->ns.count) != 0;
->>  }
->>  
->>  void net_drop_ns(void *);
->> diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
->> index 9de33b594ff2..655a88b0071c 100644
->> --- a/net/core/net-sysfs.c
->> +++ b/net/core/net-sysfs.c
->> @@ -1025,7 +1025,7 @@ net_rx_queue_update_kobjects(struct net_device *dev, int old_num, int new_num)
->>  	while (--i >= new_num) {
->>  		struct kobject *kobj = &dev->_rx[i].kobj;
->>  
->> -		if (!refcount_read(&dev_net(dev)->count))
->> +		if (!refcount_read(&dev_net(dev)->ns.count))
->>  			kobj->uevent_suppress = 1;
->>  		if (dev->sysfs_rx_queue_group)
->>  			sysfs_remove_group(kobj, dev->sysfs_rx_queue_group);
->> @@ -1603,7 +1603,7 @@ netdev_queue_update_kobjects(struct net_device *dev, int old_num, int new_num)
->>  	while (--i >= new_num) {
->>  		struct netdev_queue *queue = dev->_tx + i;
->>  
->> -		if (!refcount_read(&dev_net(dev)->count))
->> +		if (!refcount_read(&dev_net(dev)->ns.count))
->>  			queue->kobj.uevent_suppress = 1;
->>  #ifdef CONFIG_BQL
->>  		sysfs_remove_group(&queue->kobj, &dql_group);
->> @@ -1850,7 +1850,7 @@ void netdev_unregister_kobject(struct net_device *ndev)
->>  {
->>  	struct device *dev = &ndev->dev;
->>  
->> -	if (!refcount_read(&dev_net(ndev)->count))
->> +	if (!refcount_read(&dev_net(ndev)->ns.count))
->>  		dev_set_uevent_suppress(dev, 1);
->>  
->>  	kobject_get(&dev->kobj);
->> diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
->> index dcd61aca343e..5f658cbedd34 100644
->> --- a/net/core/net_namespace.c
->> +++ b/net/core/net_namespace.c
->> @@ -44,7 +44,7 @@ static struct key_tag init_net_key_domain = { .usage = REFCOUNT_INIT(1) };
->>  #endif
->>  
->>  struct net init_net = {
->> -	.count		= REFCOUNT_INIT(1),
->> +	.ns.count	= REFCOUNT_INIT(1),
->>  	.dev_base_head	= LIST_HEAD_INIT(init_net.dev_base_head),
->>  #ifdef CONFIG_KEYS
->>  	.key_domain	= &init_net_key_domain,
->> @@ -248,7 +248,7 @@ int peernet2id_alloc(struct net *net, struct net *peer, gfp_t gfp)
->>  {
->>  	int id;
->>  
->> -	if (refcount_read(&net->count) == 0)
->> +	if (refcount_read(&net->ns.count) == 0)
->>  		return NETNSA_NSID_NOT_ASSIGNED;
->>  
->>  	spin_lock(&net->nsid_lock);
->> @@ -328,7 +328,7 @@ static __net_init int setup_net(struct net *net, struct user_namespace *user_ns)
->>  	int error = 0;
->>  	LIST_HEAD(net_exit_list);
->>  
->> -	refcount_set(&net->count, 1);
->> +	refcount_set(&net->ns.count, 1);
->>  	refcount_set(&net->passive, 1);
->>  	get_random_bytes(&net->hash_mix, sizeof(u32));
->>  	net->dev_base_seq = 1;
->> diff --git a/net/ipv4/inet_timewait_sock.c b/net/ipv4/inet_timewait_sock.c
->> index c411c87ae865..437afe392e66 100644
->> --- a/net/ipv4/inet_timewait_sock.c
->> +++ b/net/ipv4/inet_timewait_sock.c
->> @@ -272,14 +272,14 @@ void inet_twsk_purge(struct inet_hashinfo *hashinfo, int family)
->>  				continue;
->>  			tw = inet_twsk(sk);
->>  			if ((tw->tw_family != family) ||
->> -				refcount_read(&twsk_net(tw)->count))
->> +				refcount_read(&twsk_net(tw)->ns.count))
->>  				continue;
->>  
->>  			if (unlikely(!refcount_inc_not_zero(&tw->tw_refcnt)))
->>  				continue;
->>  
->>  			if (unlikely((tw->tw_family != family) ||
->> -				     refcount_read(&twsk_net(tw)->count))) {
->> +				     refcount_read(&twsk_net(tw)->ns.count))) {
->>  				inet_twsk_put(tw);
->>  				goto restart;
->>  			}
->> diff --git a/net/ipv4/tcp_metrics.c b/net/ipv4/tcp_metrics.c
->> index 279db8822439..39710c417565 100644
->> --- a/net/ipv4/tcp_metrics.c
->> +++ b/net/ipv4/tcp_metrics.c
->> @@ -887,7 +887,7 @@ static void tcp_metrics_flush_all(struct net *net)
->>  		pp = &hb->chain;
->>  		for (tm = deref_locked(*pp); tm; tm = deref_locked(*pp)) {
->>  			match = net ? net_eq(tm_net(tm), net) :
->> -				!refcount_read(&tm_net(tm)->count);
->> +				!refcount_read(&tm_net(tm)->ns.count);
->>  			if (match) {
->>  				*pp = tm->tcpm_next;
->>  				kfree_rcu(tm, rcu_head);
-
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
