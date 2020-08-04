@@ -2,150 +2,110 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B42FC433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 768C6C433E0
 	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 09:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 640C72177B
+	by mail.kernel.org (Postfix) with ESMTP id 7B52222D01
 	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 09:49:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LMbQEkRc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729103AbgHDJsk (ORCPT
+        id S1729385AbgHDJsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 05:48:40 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2565 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726844AbgHDJsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 05:48:40 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id A7CEA2CFDA64335D3338;
-        Tue,  4 Aug 2020 10:48:38 +0100 (IST)
-Received: from localhost (10.52.124.224) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Tue, 4 Aug 2020
- 10:48:38 +0100
-Date:   Tue, 4 Aug 2020 10:47:13 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Jay Fang <f.fangjian@huawei.com>
-CC:     Sean V Kelley <sean.v.kelley@intel.com>, <bhelgaas@google.com>,
-        <rjw@rjwysocki.net>, <ashok.raj@kernel.org>, <tony.luck@intel.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [RFC PATCH 8/9] PCI/PME: Add RCEC PME handling
-Message-ID: <20200804104713.0000767f@Huawei.com>
-In-Reply-To: <edbcf3da-a1d5-e1b6-6a1a-a286429fc4e3@huawei.com>
-References: <20200724172223.145608-1-sean.v.kelley@intel.com>
-        <20200724172223.145608-9-sean.v.kelley@intel.com>
-        <edbcf3da-a1d5-e1b6-6a1a-a286429fc4e3@huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 4 Aug 2020 05:48:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42390 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726844AbgHDJsx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 05:48:53 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73FE9C06174A;
+        Tue,  4 Aug 2020 02:48:53 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id o13so21831458pgf.0;
+        Tue, 04 Aug 2020 02:48:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hg8Qv9n5WNyPEJBzVokQio7quoYDQddeKfpiH64yPFA=;
+        b=LMbQEkRcjUfHXw8ytwWW0WO3GgVrO+i3HjZUS94+ApzAkYhajuff/4eZFLZmbSK4bC
+         d/rT8MUtyRDXp/FQCikE48qmLGZOY66FZGnzVa6NpN5/9VocD8dS/DwSCwzzw96XAx/C
+         CR+oEZC7RAROP2FRut9Zv42SjP9g0OVKnm0IJD0+oG10HEaeYuBARF9MTNnReS3sM3PK
+         Uc/6K11QUi1bdbCGFSF34Dv04lcHQOcn1nfuJ0Ts9NrcSxYkXAurIO3l1tXTKUp8VJs8
+         dUjWK3xu7O7PT7JwOKEb/Tjydd2ogN5DyqU3RpsFdCA4zImBN9xCZW6GX16CScHBPdBF
+         bgbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hg8Qv9n5WNyPEJBzVokQio7quoYDQddeKfpiH64yPFA=;
+        b=sCOmCWqkjk8XJBhiw2TRBWaSSom1PVaDHI/C/u+PTa/wRRw8K7TqjZhsQJJXjxHZA8
+         M09W9gAq3OEJYT8PLajZRXUFdCwOXmstI/X5v8VTWUW+Yq/OJIHUxK2o+9ekNantrWL6
+         2TwQ/hZ1fEyqYnbBlZGn+WzottZYLO15I2R/YiOkkDg0T+ynycRP3wgbThWCwHbKmPan
+         XhRNAGpP02FCiJaYDak01+SRQnhA60m1WmPGAuHT+7954U8byV91fAKG3qXIYc1TRCrJ
+         buZ7tMptLT9yGGBY7oKkfIpFj79EbokxRIJkPEEk52ldEvarza+fUs32C3Bi+vYNkedt
+         9wMA==
+X-Gm-Message-State: AOAM533/8buaA1eUsj9u512KRlCe2QIK9d5f0Cnd1k7Ghv8gV5kHqqeJ
+        tZUG/02ZWNruutyqSny682ejPoJPxEHRrhGPLi8=
+X-Google-Smtp-Source: ABdhPJybKXGbFap3TKijT0dD+vkqRoMpV6l290J8k1gLIvrXI37lgTvMzyVNLS6WMV0DvFfrSVCtimlE2ICcyBhJOYE=
+X-Received: by 2002:a63:5412:: with SMTP id i18mr19103370pgb.63.1596534533069;
+ Tue, 04 Aug 2020 02:48:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.52.124.224]
-X-ClientProxiedBy: lhreml701-chm.china.huawei.com (10.201.108.50) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <20200730073702.16887-1-xie.he.0141@gmail.com> <CAJht_EO1srhh68DifK61+hpY+zBRU8oOAbJOSpjOqePithc7gw@mail.gmail.com>
+ <c88c0acc63cbc64383811193c5e1b184@dev.tdt.de>
+In-Reply-To: <c88c0acc63cbc64383811193c5e1b184@dev.tdt.de>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Tue, 4 Aug 2020 02:48:42 -0700
+Message-ID: <CAJht_ENFwn82PEr=dtCzB=0QU=4pstNyGr_nFBb6Xjhg4fLGXg@mail.gmail.com>
+Subject: Re: [PATCH v2] drivers/net/wan/lapbether: Use needed_headroom instead
+ of hard_header_len
+To:     Martin Schiller <ms@dev.tdt.de>,
+        Willem de Bruijn <willemb@google.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux X25 <linux-x25@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Aug 2020 16:35:59 +0800
-Jay Fang <f.fangjian@huawei.com> wrote:
+On Mon, Aug 3, 2020 at 11:53 PM Martin Schiller <ms@dev.tdt.de> wrote:
+>
+> I don't like the idea to get rid of the 1-byte header.
+> This header is also used in userspace, for example when using a tun/tap
+> interface for an XoT (X.25 over TCP) application. A change would
+> therefore have very far-reaching consequences.
 
-> ÔÚ 2020/7/25 1:22, Sean V Kelley Ð´µÀ:
-> > The Root Complex Event Collectors(RCEC) appear as peers of Root Ports
-> > and also have the PME capability. So add RCEC support to the current PME
-> > service driver and attach the PME service driver to the RCEC device.
-> > 
-> > Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> > Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-> > Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> > ---
-> >  drivers/pci/pcie/pme.c | 15 +++++++++++----
-> >  1 file changed, 11 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
-> > index 6a32970bb731..87799166c96a 100644
-> > --- a/drivers/pci/pcie/pme.c
-> > +++ b/drivers/pci/pcie/pme.c
-> > @@ -310,7 +310,10 @@ static int pcie_pme_can_wakeup(struct pci_dev *dev, void *ign)
-> >  static void pcie_pme_mark_devices(struct pci_dev *port)
-> >  {
-> >  	pcie_pme_can_wakeup(port, NULL);
-> > -	if (port->subordinate)
-> > +
-> > +	if (pci_pcie_type(port) == PCI_EXP_TYPE_RC_EC)
-> > +		pcie_walk_rcec(port, pcie_pme_can_wakeup, NULL);
-> > +	else if (port->subordinate)
-> >  		pci_walk_bus(port->subordinate, pcie_pme_can_wakeup, NULL);
-> >  }
-> >  
-> > @@ -320,10 +323,15 @@ static void pcie_pme_mark_devices(struct pci_dev *port)
-> >   */
-> >  static int pcie_pme_probe(struct pcie_device *srv)
-> >  {
-> > -	struct pci_dev *port;
-> > +	struct pci_dev *port = srv->port;
-> >  	struct pcie_pme_service_data *data;
-> >  	int ret;
-> >  
-> > +	/* Limit to Root Ports or Root Complex Event Collectors */
-> > +	if ((pci_pcie_type(port) != PCI_EXP_TYPE_RC_EC) &&
-> > +	    (pci_pcie_type(port) != PCI_EXP_TYPE_ROOT_PORT))
-> > +		return -ENODEV;
-> > +
-> >  	data = kzalloc(sizeof(*data), GFP_KERNEL);
-> >  	if (!data)
-> >  		return -ENOMEM;
-> > @@ -333,7 +341,6 @@ static int pcie_pme_probe(struct pcie_device *srv)
-> >  	data->srv = srv;
-> >  	set_service_data(srv, data);
-> >  
-> > -	port = srv->port;
-> >  	pcie_pme_interrupt_enable(port, false);
-> >  	pcie_clear_root_pme_status(port);
-> >  
-> > @@ -445,7 +452,7 @@ static void pcie_pme_remove(struct pcie_device *srv)
-> >  
-> >  static struct pcie_port_service_driver pcie_pme_driver = {
-> >  	.name		= "pcie_pme",
-> > -	.port_type	= PCI_EXP_TYPE_ROOT_PORT,
-> > +	.port_type	= PCIE_ANY_PORT,  
-> Maybe we can use port_type for driver matching. There is no need
-> to check the type of port in pcie_pme_probe function.
-> 
+Thank you for your comment! This is very important information to me.
+Now I think it may be the best to keep the 1-byte header so that the
+kernel interface can be kept unchanged.
 
-I walked into the same hole for the AER case.  
-port_type is effectively an enum so there is no way of specifying several
-types unless you want to register different instances of pcie_port_service_driver
-and that isn't currently possible.
+> BTW: The linux x25 mailing list does not seem to work anymore. I've been
+> on it for some time now, but haven't received a single email from it.
+> I've tried to contact owner-linux-x25@vger.kernel.org, but only got an
+> "undeliverable" email back.
 
-The PCIE_ANY_PORT is a special case value.
+I was suspecting that it was not working, too. I CC'd all my patches
+to the mail list but got no response from it. It appears that you were
+not able to receive my emails through it, too.
 
-https://elixir.bootlin.com/linux/latest/source/include/uapi/linux/pci_regs.h#L477
-https://elixir.bootlin.com/linux/latest/source/drivers/pci/pci-driver.c#L1651
+> It would be great if you could add me to CC list of all versions of your
+> patches, so I don't need to "google" for any further related mails.
 
-So odd corner case, but I think this is the right solution. Anything better
-would require a lot more code to change.
+OK. I'll surely do that! Thank you for taking time to review my patches!
 
-Jonathan
+> So, what's the latest version of the patch now, which you want me to
+> review?
 
+It is at:
+http://patchwork.ozlabs.org/project/netdev/patch/20200802195046.402539-1-xie.he.0141@gmail.com/
 
-
-
-
-> 
-> Jay
-> 
-> >  	.service	= PCIE_PORT_SERVICE_PME,
-> >  
-> >  	.probe		= pcie_pme_probe,
-> >   
-
-
+Thank you so much for your review!
