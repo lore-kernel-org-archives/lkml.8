@@ -2,244 +2,465 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FD6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13331C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3101B208A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:23:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="uRSImO4+"
+	by mail.kernel.org (Postfix) with ESMTP id ECD56208A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:23:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729815AbgHDQXK (ORCPT
+        id S1729825AbgHDQX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 12:23:10 -0400
-Received: from mail-mw2nam12on2079.outbound.protection.outlook.com ([40.107.244.79]:4321
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729720AbgHDQVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 12:21:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mcqijRejEuODjm5bJGgIIvQtGO1yAZRFFY6ZFsF+4Fgq5i7l08FYpmYN/lYJ6RC4UHKYBbwgkU+OXSF76BTz9m1yAzZKUQtFnMA2xoHYK297NoreWjwfw9rTMAHgNCpdFCTtnVfZzpmNTKktYRUeIzsWqO0Cna6rUQngI75G4OzxNgORljnFNd0mC9h3/yrD8XRXrKrNqY51CeqLCQUfqO7OBqwdgA6dXzKViUfW0rQkgl5Yx9klwkPW5ZjxS3KnOYUMS+U5HgO2lnvIsfEoAPhzX5yOxExuwK+6Z31qFKUW7RxHZ8/XHgQEP0OXT/8u9mza7kYWo9b4k6CJAKa1og==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hv8coRyrgi3+34EaHkGH4iPHYKOflG1bdul2wCtpuMc=;
- b=U3gJ25S3nU7pUDV9NAIpR0YzJHpYNOtH5L94OCBvEj24RvyWLv8VYkpspH74LSnfjWq8lHTzo0QlIpCnkJIjvLkFR6hihfcE4QCDODQlCKPg+JNqTzOBM7qmqW1IZFS9epF6RWSwMuQrBMIRNtv/9i+ZqFjGcsgnIz7AhHUdkPr6iZGKDcFkseiXr7QVwOMi6Zhd/tgMd7d0Q3qKFZ4WHxO2Z8xTmv0Ur8GZSsQGyp03lDiHq/ObiwQ8QOvlgw1kePfKYgLOcqfiGV2S2G86aqT2LfFUF4w8xa4RRaG/P9BsfT8qUAgBLDZkEoZoNIM8/R+MfulHhx/N/vV/lEQSrg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hv8coRyrgi3+34EaHkGH4iPHYKOflG1bdul2wCtpuMc=;
- b=uRSImO4+nKV0dgkvskRXOgHDmdKGuPLkgaob1gorB13dDa/q3+B5UORw0h/O0tmllHwZ0AlVWHKjs6CEYvSmWTs6qlZX7JARI9gQZ79wfoGs3+SFqELSZYIG3Uciei/9zg+nyYD0zSDacnrYp0XyrQgIK7MFps7e7S+h2lrY7Y4=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from BYAPR12MB3560.namprd12.prod.outlook.com (2603:10b6:a03:ae::10)
- by BY5PR12MB3796.namprd12.prod.outlook.com (2603:10b6:a03:1ae::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17; Tue, 4 Aug
- 2020 16:21:14 +0000
-Received: from BYAPR12MB3560.namprd12.prod.outlook.com
- ([fe80::7d42:c932:e35f:71b1]) by BYAPR12MB3560.namprd12.prod.outlook.com
- ([fe80::7d42:c932:e35f:71b1%7]) with mapi id 15.20.3239.021; Tue, 4 Aug 2020
- 16:21:14 +0000
-Subject: Re: [PATCH] drm/amd/display: use correct scale for actual_brightness
-To:     Alexander Monakov <amonakov@ispras.ru>,
-        amd-gfx@lists.freedesktop.org
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        Tue, 4 Aug 2020 12:23:26 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:43929 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729677AbgHDQVX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 12:21:23 -0400
+Received: from Internal Mail-Server by MTLPINE1 (envelope-from eli@mellanox.com)
+        with SMTP; 4 Aug 2020 19:20:54 +0300
+Received: from nps-server-21.mtl.labs.mlnx (nps-server-21.mtl.labs.mlnx [10.237.240.120])
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 074GKsm8024060;
+        Tue, 4 Aug 2020 19:20:54 +0300
+Received: from nps-server-21.mtl.labs.mlnx (localhost [127.0.0.1])
+        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 074GKsA9022653;
+        Tue, 4 Aug 2020 19:20:54 +0300
+Received: (from eli@localhost)
+        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 074GKsnH022652;
+        Tue, 4 Aug 2020 19:20:54 +0300
+From:   Eli Cohen <eli@mellanox.com>
+To:     mst@redhat.com, jasowang@redhat.com,
+        virtualization@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org
-References: <20200803200218.2167-1-amonakov@ispras.ru>
-From:   "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>
-Message-ID: <a3a167d9-9117-edc1-c761-b31fa3194f8b@amd.com>
-Date:   Tue, 4 Aug 2020 12:21:08 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-In-Reply-To: <20200803200218.2167-1-amonakov@ispras.ru>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YT1PR01CA0125.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:2c::34) To BYAPR12MB3560.namprd12.prod.outlook.com
- (2603:10b6:a03:ae::10)
+Cc:     shahafs@mellanox.com, saeedm@mellanox.com, parav@mellanox.com,
+        Eli Cohen <eli@mellanox.com>
+Subject: [PATCH V4 linux-next 10/12] vdpa/mlx5: Add support library for mlx5 VDPA implementation
+Date:   Tue,  4 Aug 2020 19:20:46 +0300
+Message-Id: <20200804162048.22587-11-eli@mellanox.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200804162048.22587-1-eli@mellanox.com>
+References: <20200804162048.22587-1-eli@mellanox.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [172.31.148.234] (165.204.55.211) by YT1PR01CA0125.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:2c::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Tue, 4 Aug 2020 16:21:13 +0000
-X-Originating-IP: [165.204.55.211]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 74d8b8b5-394a-415f-8258-08d838926862
-X-MS-TrafficTypeDiagnostic: BY5PR12MB3796:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BY5PR12MB37963932C70781C3FC794289EC4A0@BY5PR12MB3796.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: WnFF/SRf0xb1o9PezCJhD0pcIqkHWHWwsmCLgaXF4JtptXTX/TjTLz5pEc9SSxNlzIZwpQvXs56xA29YE3oqIc/YfkudBRzBOqf5+aeAlj2SlDSFHarZ89C93ffuHE+kx8OCUu/EMcpa8GYdadQMerjBMdVB8LsGu/UP9Plwox1Kqe7b/BFe/HktlTaXBZWrMMpa/in0o4hjMjPLbSfG2DkP6fV7l6B7srrw4cqYVaMrGtI9VEtNKXjnF+J8fLDOjwstplHhxkySMVCdCNlQtCq3qRo/RPoVLttejMsbiAp1i42WUatNv+ViAFse7JI4ijsLQH0oJirLicglxMmNLp1dEAI1fV3bQx+7FVMpdUrX01+yPwhntARBo9nsDAONS7ZozrYyfmN/4yCKKshc3LmL5IMglVXPN+N0Phc+/k0VNho1vLuYwceB1y3AbNhPoB9dEtKO9QBMsE04ziCO9A==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(39860400002)(366004)(136003)(396003)(966005)(52116002)(36756003)(316002)(5660300002)(6486002)(31686004)(53546011)(16576012)(86362001)(66946007)(83380400001)(956004)(2616005)(6666004)(31696002)(26005)(478600001)(8936002)(66556008)(66476007)(16526019)(2906002)(186003)(8676002)(4326008)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: BsSLaNVcIP0hjapCgn5bqdw7Rgudigodi50riakIYO1HF3NWMub+Ec4hwa1hXHSwA8nt4Jw1psfbg5KMojnXbi4YXibI7ybvUHTXio/DwyIb8zcKytto4iub3MdMHwfXwZyHs3Km8QY9qSd+Pv1mmF4OcxNL1+eB4udm1O2e/1sKkBUeWxA1tbR+UnVKN/MxxA6D97jQZEe5B2v9JwPFW6Bw0hJqiX4k0yr1Z1fiWKCo1PLArLXaBRXDVWx+hidEj13b6cds3b5WFspJXRqjyxA4dwpFigInoFHnFMETp7TOGdC9ahEeFvm2GfESnKd17lBcWvaeYtCIrKH+PZ54Mo3H3l4GB5HHXtTPfhXru1ezj5BmH8G1/CLnVXFQVn8965ewulMsgjvGuwgIzEYxSgeRbdirwvO35xXvu7Av1n7iKp0DiLTtvkw3F5QDvtmePZL7elpPKKZP32Rdu9sBtOF/eaIfFdZx6sxf7Bt/FyDgceM1zgGsFS71jM8Efeg59clSHcpFZC1150lSBsR9ksJ9qUMZ5gqa7SirZrxY0d5F2pgGSRWCoX97r5QcM6CdkrDTOIJJURlVfich7C2h4Q2HyTpRUzsStY860kDQqImuq4GINc0qCh3BpAVxdrBPHWmsz+AjLx5kfzhXLGQEHw==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 74d8b8b5-394a-415f-8258-08d838926862
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB3560.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Aug 2020 16:21:14.3860
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 985WGD26JGGec8Qi57yXt/DB8VPis6SdHI+N0PUDLw3hYcG403ohtvHIcbX/F6rBBVsqzxL8sVqRAUUc1NNWbQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB3796
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-03 4:02 p.m., Alexander Monakov wrote:
-> Documentation for sysfs backlight level interface requires that
-> values in both 'brightness' and 'actual_brightness' files are
-> interpreted to be in range from 0 to the value given in the
-> 'max_brightness' file.
-> 
-> With amdgpu, max_brightness gives 255, and values written by the user
-> into 'brightness' are internally rescaled to a wider range. However,
-> reading from 'actual_brightness' gives the raw register value without
-> inverse rescaling. This causes issues for various userspace tools such
-> as PowerTop and systemd that expect the value to be in the correct
-> range.
-> 
-> Introduce a helper to retrieve internal backlight range. Extend the
-> existing 'convert_brightness' function to handle conversion in both
-> directions.
-> 
-> Bug: https://bugzilla.kernel.org/show_bug.cgi?id=203905
-> Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1242
-> Cc: Alex Deucher <alexander.deucher@amd.com>
-> Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
+Following patches introduce VDPA network driver for Mellanox Connectx6
+devices. This patch provides functionality that will be used by those
+patches.
 
-Overall approach seems reasonable, nice catch.
+Reviewed-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Eli Cohen <eli@mellanox.com>
+---
+ drivers/vdpa/Kconfig               |   9 +
+ drivers/vdpa/Makefile              |   1 +
+ drivers/vdpa/mlx5/Makefile         |   1 +
+ drivers/vdpa/mlx5/core/Makefile    |   1 +
+ drivers/vdpa/mlx5/core/mlx5_vdpa.h |  57 ++++++
+ drivers/vdpa/mlx5/core/resources.c | 281 +++++++++++++++++++++++++++++
+ 6 files changed, 350 insertions(+)
+ create mode 100644 drivers/vdpa/mlx5/Makefile
+ create mode 100644 drivers/vdpa/mlx5/core/Makefile
+ create mode 100644 drivers/vdpa/mlx5/core/mlx5_vdpa.h
+ create mode 100644 drivers/vdpa/mlx5/core/resources.c
 
-I suggest to add convert_to_user_brightness() instead of making 
-from_user a flag and extending the current functionality though. It 
-makes it more clear from the call site what's happening.
-
-Regards,
-Nicholas Kazlauskas
-
-> ---
->   .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 73 ++++++++-----------
->   1 file changed, 32 insertions(+), 41 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> index 710edc70e37e..03e21e7b7917 100644
-> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> @@ -2881,51 +2881,42 @@ static int set_backlight_via_aux(struct dc_link *link, uint32_t brightness)
->   	return rc ? 0 : 1;
->   }
->   
-> -static u32 convert_brightness(const struct amdgpu_dm_backlight_caps *caps,
-> -			      const uint32_t user_brightness)
-> +static int get_brightness_range(const struct amdgpu_dm_backlight_caps *caps,
-> +				unsigned *min, unsigned *max)
->   {
-> -	u32 min, max, conversion_pace;
-> -	u32 brightness = user_brightness;
-> -
->   	if (!caps)
-> -		goto out;
-> +		return 0;
->   
-> -	if (!caps->aux_support) {
-> -		max = caps->max_input_signal;
-> -		min = caps->min_input_signal;
-> -		/*
-> -		 * The brightness input is in the range 0-255
-> -		 * It needs to be rescaled to be between the
-> -		 * requested min and max input signal
-> -		 * It also needs to be scaled up by 0x101 to
-> -		 * match the DC interface which has a range of
-> -		 * 0 to 0xffff
-> -		 */
-> -		conversion_pace = 0x101;
-> -		brightness =
-> -			user_brightness
-> -			* conversion_pace
-> -			* (max - min)
-> -			/ AMDGPU_MAX_BL_LEVEL
-> -			+ min * conversion_pace;
-> +	if (caps->aux_support) {
-> +		// Firmware limits are in nits, DC API wants millinits.
-> +		*max = 1000 * caps->aux_max_input_signal;
-> +		*min = 1000 * caps->aux_min_input_signal;
->   	} else {
-> -		/* TODO
-> -		 * We are doing a linear interpolation here, which is OK but
-> -		 * does not provide the optimal result. We probably want
-> -		 * something close to the Perceptual Quantizer (PQ) curve.
-> -		 */
-> -		max = caps->aux_max_input_signal;
-> -		min = caps->aux_min_input_signal;
-> -
-> -		brightness = (AMDGPU_MAX_BL_LEVEL - user_brightness) * min
-> -			       + user_brightness * max;
-> -		// Multiple the value by 1000 since we use millinits
-> -		brightness *= 1000;
-> -		brightness = DIV_ROUND_CLOSEST(brightness, AMDGPU_MAX_BL_LEVEL);
-> +		// Firmware limits are 8-bit, PWM control is 16-bit.
-> +		*max = 0x101 * caps->max_input_signal;
-> +		*min = 0x101 * caps->min_input_signal;
->   	}
-> +	return 1;
-> +}
->   
-> -out:
-> -	return brightness;
-> +static u32 convert_brightness(const struct amdgpu_dm_backlight_caps *caps,
-> +			      const uint32_t brightness, int from_user)
-> +{
-> +	unsigned min, max;
-> +
-> +	if (!get_brightness_range(caps, &min, &max))
-> +		return brightness;
-> +
-> +	if (from_user)
-> +		// Rescale 0..255 to min..max
-> +		return min + DIV_ROUND_CLOSEST((max - min) * brightness,
-> +					       AMDGPU_MAX_BL_LEVEL);
-> +
-> +	if (brightness < min)
-> +		return 0;
-> +	// Rescale min..max to 0..255
-> +	return DIV_ROUND_CLOSEST(AMDGPU_MAX_BL_LEVEL * (brightness - min),
-> +				 max - min);
->   }
->   
->   static int amdgpu_dm_backlight_update_status(struct backlight_device *bd)
-> @@ -2941,7 +2932,7 @@ static int amdgpu_dm_backlight_update_status(struct backlight_device *bd)
->   
->   	link = (struct dc_link *)dm->backlight_link;
->   
-> -	brightness = convert_brightness(&caps, bd->props.brightness);
-> +	brightness = convert_brightness(&caps, bd->props.brightness, 1);
->   	// Change brightness based on AUX property
->   	if (caps.aux_support)
->   		return set_backlight_via_aux(link, brightness);
-> @@ -2958,7 +2949,7 @@ static int amdgpu_dm_backlight_get_brightness(struct backlight_device *bd)
->   
->   	if (ret == DC_ERROR_UNEXPECTED)
->   		return bd->props.brightness;
-> -	return ret;
-> +	return convert_brightness(&dm->backlight_caps, ret, 0);
->   }
->   
->   static const struct backlight_ops amdgpu_dm_backlight_ops = {
-> 
-> base-commit: bcf876870b95592b52519ed4aafcf9d95999bc9c
-> 
+diff --git a/drivers/vdpa/Kconfig b/drivers/vdpa/Kconfig
+index 3e1ceb8e9f2b..7cb84f82feba 100644
+--- a/drivers/vdpa/Kconfig
++++ b/drivers/vdpa/Kconfig
+@@ -28,4 +28,13 @@ config IFCVF
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called ifcvf.
+ 
++config MLX5_VDPA
++	bool "MLX5 VDPA support library for ConnectX devices"
++	depends on MLX5_CORE
++	default n
++	help
++	  Support library for Mellanox VDPA drivers. Provides code that is
++	  common for all types of VDPA drivers. The following drivers are planned:
++	  net, block.
++
+ endif # VDPA
+diff --git a/drivers/vdpa/Makefile b/drivers/vdpa/Makefile
+index 8bbb686ca7a2..d160e9b63a66 100644
+--- a/drivers/vdpa/Makefile
++++ b/drivers/vdpa/Makefile
+@@ -2,3 +2,4 @@
+ obj-$(CONFIG_VDPA) += vdpa.o
+ obj-$(CONFIG_VDPA_SIM) += vdpa_sim/
+ obj-$(CONFIG_IFCVF)    += ifcvf/
++obj-$(CONFIG_MLX5_VDPA) += mlx5/
+diff --git a/drivers/vdpa/mlx5/Makefile b/drivers/vdpa/mlx5/Makefile
+new file mode 100644
+index 000000000000..d552abb1d126
+--- /dev/null
++++ b/drivers/vdpa/mlx5/Makefile
+@@ -0,0 +1 @@
++obj-$(CONFIG_MLX5_VDPA) += core/resources.o
+diff --git a/drivers/vdpa/mlx5/core/Makefile b/drivers/vdpa/mlx5/core/Makefile
+new file mode 100644
+index 000000000000..7070f8c8680d
+--- /dev/null
++++ b/drivers/vdpa/mlx5/core/Makefile
+@@ -0,0 +1 @@
++obj-y += resources.o
+diff --git a/drivers/vdpa/mlx5/core/mlx5_vdpa.h b/drivers/vdpa/mlx5/core/mlx5_vdpa.h
+new file mode 100644
+index 000000000000..f3571c8b257e
+--- /dev/null
++++ b/drivers/vdpa/mlx5/core/mlx5_vdpa.h
+@@ -0,0 +1,57 @@
++/* SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB */
++/* Copyright (c) 2020 Mellanox Technologies Ltd. */
++
++#ifndef __MLX5_VDPA_H__
++#define __MLX5_VDPA_H__
++
++#include <linux/vdpa.h>
++#include <linux/mlx5/driver.h>
++
++struct mlx5_vdpa_resources {
++	u32 pdn;
++	struct mlx5_uars_page *uar;
++	void __iomem *kick_addr;
++	u16 uid;
++	u32 null_mkey;
++	bool valid;
++};
++
++struct mlx5_vdpa_dev {
++	struct vdpa_device vdev;
++	struct mlx5_core_dev *mdev;
++	struct mlx5_vdpa_resources res;
++
++	u64 mlx_features;
++	u64 actual_features;
++	u8 status;
++	u32 max_vqs;
++	u32 generation;
++};
++
++int mlx5_vdpa_alloc_pd(struct mlx5_vdpa_dev *dev, u32 *pdn, u16 uid);
++int mlx5_vdpa_dealloc_pd(struct mlx5_vdpa_dev *dev, u32 pdn, u16 uid);
++int mlx5_vdpa_get_null_mkey(struct mlx5_vdpa_dev *dev, u32 *null_mkey);
++int mlx5_vdpa_create_tis(struct mlx5_vdpa_dev *mvdev, void *in, u32 *tisn);
++void mlx5_vdpa_destroy_tis(struct mlx5_vdpa_dev *mvdev, u32 tisn);
++int mlx5_vdpa_create_rqt(struct mlx5_vdpa_dev *mvdev, void *in, int inlen, u32 *rqtn);
++void mlx5_vdpa_destroy_rqt(struct mlx5_vdpa_dev *mvdev, u32 rqtn);
++int mlx5_vdpa_create_tir(struct mlx5_vdpa_dev *mvdev, void *in, u32 *tirn);
++void mlx5_vdpa_destroy_tir(struct mlx5_vdpa_dev *mvdev, u32 tirn);
++int mlx5_vdpa_alloc_transport_domain(struct mlx5_vdpa_dev *mvdev, u32 *tdn);
++void mlx5_vdpa_dealloc_transport_domain(struct mlx5_vdpa_dev *mvdev, u32 tdn);
++int mlx5_vdpa_alloc_resources(struct mlx5_vdpa_dev *mvdev);
++void mlx5_vdpa_free_resources(struct mlx5_vdpa_dev *mvdev);
++
++#define mlx5_vdpa_warn(__dev, format, ...)                                                         \
++	dev_warn((__dev)->mdev->device, "%s:%d:(pid %d) warning: " format, __func__, __LINE__,     \
++		 current->pid, ##__VA_ARGS__)
++
++#define mlx5_vdpa_info(__dev, format, ...)                                                         \
++	dev_info((__dev)->mdev->device, "%s:%d:(pid %d): " format, __func__, __LINE__,             \
++		 current->pid, ##__VA_ARGS__)
++
++#define mlx5_vdpa_dbg(__dev, format, ...)                                                          \
++	dev_debug((__dev)->mdev->device, "%s:%d:(pid %d): " format, __func__, __LINE__,            \
++		  current->pid, ##__VA_ARGS__)
++
++#endif /* __MLX5_VDPA_H__ */
+diff --git a/drivers/vdpa/mlx5/core/resources.c b/drivers/vdpa/mlx5/core/resources.c
+new file mode 100644
+index 000000000000..6c6552b7e9b5
+--- /dev/null
++++ b/drivers/vdpa/mlx5/core/resources.c
+@@ -0,0 +1,281 @@
++// SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB
++/* Copyright (c) 2020 Mellanox Technologies Ltd. */
++
++#include <linux/mlx5/driver.h>
++#include "mlx5_vdpa.h"
++
++static int alloc_pd(struct mlx5_vdpa_dev *dev, u32 *pdn, u16 uid)
++{
++	struct mlx5_core_dev *mdev = dev->mdev;
++
++	u32 out[MLX5_ST_SZ_DW(alloc_pd_out)] = {};
++	u32 in[MLX5_ST_SZ_DW(alloc_pd_in)] = {};
++	int err;
++
++	MLX5_SET(alloc_pd_in, in, opcode, MLX5_CMD_OP_ALLOC_PD);
++	MLX5_SET(alloc_pd_in, in, uid, uid);
++
++	err = mlx5_cmd_exec_inout(mdev, alloc_pd, in, out);
++	if (!err)
++		*pdn = MLX5_GET(alloc_pd_out, out, pd);
++
++	return err;
++}
++
++static int dealloc_pd(struct mlx5_vdpa_dev *dev, u32 pdn, u16 uid)
++{
++	u32 in[MLX5_ST_SZ_DW(dealloc_pd_in)] = {};
++	struct mlx5_core_dev *mdev = dev->mdev;
++
++	MLX5_SET(dealloc_pd_in, in, opcode, MLX5_CMD_OP_DEALLOC_PD);
++	MLX5_SET(dealloc_pd_in, in, pd, pdn);
++	MLX5_SET(dealloc_pd_in, in, uid, uid);
++	return mlx5_cmd_exec_in(mdev, dealloc_pd, in);
++}
++
++static int get_null_mkey(struct mlx5_vdpa_dev *dev, u32 *null_mkey)
++{
++	u32 out[MLX5_ST_SZ_DW(query_special_contexts_out)] = {};
++	u32 in[MLX5_ST_SZ_DW(query_special_contexts_in)] = {};
++	struct mlx5_core_dev *mdev = dev->mdev;
++	int err;
++
++	MLX5_SET(query_special_contexts_in, in, opcode, MLX5_CMD_OP_QUERY_SPECIAL_CONTEXTS);
++	err = mlx5_cmd_exec_inout(mdev, query_special_contexts, in, out);
++	if (!err)
++		*null_mkey = MLX5_GET(query_special_contexts_out, out, null_mkey);
++	return err;
++}
++
++static int create_uctx(struct mlx5_vdpa_dev *mvdev, u16 *uid)
++{
++	u32 out[MLX5_ST_SZ_DW(create_uctx_out)] = {};
++	int inlen;
++	void *in;
++	int err;
++
++	/* 0 means not supported */
++	if (!MLX5_CAP_GEN(mvdev->mdev, log_max_uctx))
++		return -EOPNOTSUPP;
++
++	inlen = MLX5_ST_SZ_BYTES(create_uctx_in);
++	in = kzalloc(inlen, GFP_KERNEL);
++	if (!in)
++		return -ENOMEM;
++
++	MLX5_SET(create_uctx_in, in, opcode, MLX5_CMD_OP_CREATE_UCTX);
++	MLX5_SET(create_uctx_in, in, uctx.cap, MLX5_UCTX_CAP_RAW_TX);
++
++	err = mlx5_cmd_exec(mvdev->mdev, in, inlen, out, sizeof(out));
++	kfree(in);
++	if (!err)
++		*uid = MLX5_GET(create_uctx_out, out, uid);
++
++	return err;
++}
++
++static void destroy_uctx(struct mlx5_vdpa_dev *mvdev, u32 uid)
++{
++	u32 out[MLX5_ST_SZ_DW(destroy_uctx_out)] = {};
++	u32 in[MLX5_ST_SZ_DW(destroy_uctx_in)] = {};
++
++	MLX5_SET(destroy_uctx_in, in, opcode, MLX5_CMD_OP_DESTROY_UCTX);
++	MLX5_SET(destroy_uctx_in, in, uid, uid);
++
++	mlx5_cmd_exec(mvdev->mdev, in, sizeof(in), out, sizeof(out));
++}
++
++int mlx5_vdpa_create_tis(struct mlx5_vdpa_dev *mvdev, void *in, u32 *tisn)
++{
++	u32 out[MLX5_ST_SZ_DW(create_tis_out)] = {};
++	int err;
++
++	MLX5_SET(create_tis_in, in, opcode, MLX5_CMD_OP_CREATE_TIS);
++	MLX5_SET(create_tis_in, in, uid, mvdev->res.uid);
++	err = mlx5_cmd_exec_inout(mvdev->mdev, create_tis, in, out);
++	if (!err)
++		*tisn = MLX5_GET(create_tis_out, out, tisn);
++
++	return err;
++}
++
++void mlx5_vdpa_destroy_tis(struct mlx5_vdpa_dev *mvdev, u32 tisn)
++{
++	u32 in[MLX5_ST_SZ_DW(destroy_tis_in)] = {};
++
++	MLX5_SET(destroy_tis_in, in, opcode, MLX5_CMD_OP_DESTROY_TIS);
++	MLX5_SET(destroy_tis_in, in, uid, mvdev->res.uid);
++	MLX5_SET(destroy_tis_in, in, tisn, tisn);
++	mlx5_cmd_exec_in(mvdev->mdev, destroy_tis, in);
++}
++
++int mlx5_vdpa_create_rqt(struct mlx5_vdpa_dev *mvdev, void *in, int inlen, u32 *rqtn)
++{
++	u32 out[MLX5_ST_SZ_DW(create_rqt_out)] = {};
++	int err;
++
++	MLX5_SET(create_rqt_in, in, opcode, MLX5_CMD_OP_CREATE_RQT);
++	err = mlx5_cmd_exec(mvdev->mdev, in, inlen, out, sizeof(out));
++	if (!err)
++		*rqtn = MLX5_GET(create_rqt_out, out, rqtn);
++
++	return err;
++}
++
++void mlx5_vdpa_destroy_rqt(struct mlx5_vdpa_dev *mvdev, u32 rqtn)
++{
++	u32 in[MLX5_ST_SZ_DW(destroy_rqt_in)] = {};
++
++	MLX5_SET(destroy_rqt_in, in, opcode, MLX5_CMD_OP_DESTROY_RQT);
++	MLX5_SET(destroy_rqt_in, in, uid, mvdev->res.uid);
++	MLX5_SET(destroy_rqt_in, in, rqtn, rqtn);
++	mlx5_cmd_exec_in(mvdev->mdev, destroy_rqt, in);
++}
++
++int mlx5_vdpa_create_tir(struct mlx5_vdpa_dev *mvdev, void *in, u32 *tirn)
++{
++	u32 out[MLX5_ST_SZ_DW(create_tir_out)] = {};
++	int err;
++
++	MLX5_SET(create_tir_in, in, opcode, MLX5_CMD_OP_CREATE_TIR);
++	err = mlx5_cmd_exec_inout(mvdev->mdev, create_tir, in, out);
++	if (!err)
++		*tirn = MLX5_GET(create_tir_out, out, tirn);
++
++	return err;
++}
++
++void mlx5_vdpa_destroy_tir(struct mlx5_vdpa_dev *mvdev, u32 tirn)
++{
++	u32 in[MLX5_ST_SZ_DW(destroy_tir_in)] = {};
++
++	MLX5_SET(destroy_tir_in, in, opcode, MLX5_CMD_OP_DESTROY_TIR);
++	MLX5_SET(destroy_tir_in, in, uid, mvdev->res.uid);
++	MLX5_SET(destroy_tir_in, in, tirn, tirn);
++	mlx5_cmd_exec_in(mvdev->mdev, destroy_tir, in);
++}
++
++int mlx5_vdpa_alloc_transport_domain(struct mlx5_vdpa_dev *mvdev, u32 *tdn)
++{
++	u32 out[MLX5_ST_SZ_DW(alloc_transport_domain_out)] = {};
++	u32 in[MLX5_ST_SZ_DW(alloc_transport_domain_in)] = {};
++	int err;
++
++	MLX5_SET(alloc_transport_domain_in, in, opcode, MLX5_CMD_OP_ALLOC_TRANSPORT_DOMAIN);
++	MLX5_SET(alloc_transport_domain_in, in, uid, mvdev->res.uid);
++
++	err = mlx5_cmd_exec_inout(mvdev->mdev, alloc_transport_domain, in, out);
++	if (!err)
++		*tdn = MLX5_GET(alloc_transport_domain_out, out, transport_domain);
++
++	return err;
++}
++
++void mlx5_vdpa_dealloc_transport_domain(struct mlx5_vdpa_dev *mvdev, u32 tdn)
++{
++	u32 in[MLX5_ST_SZ_DW(dealloc_transport_domain_in)] = {};
++
++	MLX5_SET(dealloc_transport_domain_in, in, opcode, MLX5_CMD_OP_DEALLOC_TRANSPORT_DOMAIN);
++	MLX5_SET(dealloc_transport_domain_in, in, uid, mvdev->res.uid);
++	MLX5_SET(dealloc_transport_domain_in, in, transport_domain, tdn);
++	mlx5_cmd_exec_in(mvdev->mdev, dealloc_transport_domain, in);
++}
++
++int mlx5_vdpa_create_mkey(struct mlx5_vdpa_dev *mvdev, struct mlx5_core_mkey *mkey, u32 *in,
++			  int inlen)
++{
++	u32 lout[MLX5_ST_SZ_DW(create_mkey_out)] = {};
++	u32 mkey_index;
++	void *mkc;
++	int err;
++
++	MLX5_SET(create_mkey_in, in, opcode, MLX5_CMD_OP_CREATE_MKEY);
++	MLX5_SET(create_mkey_in, in, uid, mvdev->res.uid);
++
++	err = mlx5_cmd_exec(mvdev->mdev, in, inlen, lout, sizeof(lout));
++	if (err)
++		return err;
++
++	mkc = MLX5_ADDR_OF(create_mkey_in, in, memory_key_mkey_entry);
++	mkey_index = MLX5_GET(create_mkey_out, lout, mkey_index);
++	mkey->iova = MLX5_GET64(mkc, mkc, start_addr);
++	mkey->size = MLX5_GET64(mkc, mkc, len);
++	mkey->key |= mlx5_idx_to_mkey(mkey_index);
++	mkey->pd = MLX5_GET(mkc, mkc, pd);
++	return 0;
++}
++
++int mlx5_vdpa_destroy_mkey(struct mlx5_vdpa_dev *mvdev, struct mlx5_core_mkey *mkey)
++{
++	u32 in[MLX5_ST_SZ_DW(destroy_mkey_in)] = {};
++
++	MLX5_SET(destroy_mkey_in, in, uid, mvdev->res.uid);
++	MLX5_SET(destroy_mkey_in, in, opcode, MLX5_CMD_OP_DESTROY_MKEY);
++	MLX5_SET(destroy_mkey_in, in, mkey_index, mlx5_mkey_to_idx(mkey->key));
++	return mlx5_cmd_exec_in(mvdev->mdev, destroy_mkey, in);
++}
++
++int mlx5_vdpa_alloc_resources(struct mlx5_vdpa_dev *mvdev)
++{
++	u64 offset = MLX5_CAP64_DEV_VDPA_EMULATION(mvdev->mdev, doorbell_bar_offset);
++	struct mlx5_vdpa_resources *res = &mvdev->res;
++	struct mlx5_core_dev *mdev = mvdev->mdev;
++	u64 kick_addr;
++	int err;
++
++	if (res->valid) {
++		mlx5_vdpa_warn(mvdev, "resources already allocated\n");
++		return -EINVAL;
++	}
++	res->uar = mlx5_get_uars_page(mdev);
++	if (IS_ERR(res->uar)) {
++		err = PTR_ERR(res->uar);
++		goto err_uars;
++	}
++
++	err = create_uctx(mvdev, &res->uid);
++	if (err)
++		goto err_uctx;
++
++	err = alloc_pd(mvdev, &res->pdn, res->uid);
++	if (err)
++		goto err_pd;
++
++	err = get_null_mkey(mvdev, &res->null_mkey);
++	if (err)
++		goto err_key;
++
++	kick_addr = pci_resource_start(mdev->pdev, 0) + offset;
++	res->kick_addr = ioremap(kick_addr, PAGE_SIZE);
++	if (!res->kick_addr) {
++		err = -ENOMEM;
++		goto err_key;
++	}
++	res->valid = true;
++
++	return 0;
++
++err_key:
++	dealloc_pd(mvdev, res->pdn, res->uid);
++err_pd:
++	destroy_uctx(mvdev, res->uid);
++err_uctx:
++	mlx5_put_uars_page(mdev, res->uar);
++err_uars:
++	return err;
++}
++
++void mlx5_vdpa_free_resources(struct mlx5_vdpa_dev *mvdev)
++{
++	struct mlx5_vdpa_resources *res = &mvdev->res;
++
++	if (!res->valid)
++		return;
++
++	iounmap(res->kick_addr);
++	res->kick_addr = NULL;
++	dealloc_pd(mvdev, res->pdn, res->uid);
++	destroy_uctx(mvdev, res->uid);
++	mlx5_put_uars_page(mvdev->mdev, res->uar);
++	res->valid = false;
++}
+-- 
+2.26.0
 
