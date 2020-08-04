@@ -2,110 +2,95 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 607F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C32E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 433952075D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:44:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Axx4j12o"
+	by mail.kernel.org (Postfix) with ESMTP id A21C12075D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:45:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgHDOoy (ORCPT
+        id S1729189AbgHDOpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:44:54 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36535 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725932AbgHDOox (ORCPT
+        Tue, 4 Aug 2020 10:45:11 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:44157 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729143AbgHDOpB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:44:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596552291;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=i0qQRP6FVPdcWxTvN3l6bnjm2x6UvPqdNJFTqbZG61E=;
-        b=Axx4j12onfDhJZsOfVnKjbtVCasuL9DxopB/YTSYkNdXsB0l7ekRLPYwy6RM9gyC19XLMt
-        sT4cuTnWQjJ/sFraWxZrQ6Owe6+/GTNommOP/IZsJjAhciVPhBgUCLZ+f9t8YYNHCsq1G1
-        7lLdW/NUrQigRd99mp2UHFg2tniCYMY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-141-zTJjV6pBNTK9yFuI5a2tmQ-1; Tue, 04 Aug 2020 10:44:49 -0400
-X-MC-Unique: zTJjV6pBNTK9yFuI5a2tmQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 564DB8BB686;
-        Tue,  4 Aug 2020 14:44:48 +0000 (UTC)
-Received: from gondolin (ovpn-112-169.ams2.redhat.com [10.36.112.169])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 731771001B2B;
-        Tue,  4 Aug 2020 14:44:47 +0000 (UTC)
-Date:   Tue, 4 Aug 2020 16:44:44 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v2 14/24] virtio_net: correct tags for config space
- fields
-Message-ID: <20200804164444.5174452d.cohuck@redhat.com>
-In-Reply-To: <20200803205814.540410-15-mst@redhat.com>
-References: <20200803205814.540410-1-mst@redhat.com>
-        <20200803205814.540410-15-mst@redhat.com>
-Organization: Red Hat GmbH
+        Tue, 4 Aug 2020 10:45:01 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-133-GkYdxktHPX6Hq0f1q8Z5bg-1; Tue, 04 Aug 2020 15:44:55 +0100
+X-MC-Unique: GkYdxktHPX6Hq0f1q8Z5bg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 4 Aug 2020 15:44:55 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 4 Aug 2020 15:44:55 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     David Laight <David.Laight@ACULAB.COM>,
+        'Mark Rutland' <mark.rutland@arm.com>,
+        "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+CC:     Andy Lutomirski <luto@kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "LSM List" <linux-security-module@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
+Subject: RE: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+Thread-Topic: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+Thread-Index: AQHWamb6T+e4gDrzGEmP/30MMvDTCqkoApyQgAADJ0A=
+Date:   Tue, 4 Aug 2020 14:44:55 +0000
+Message-ID: <23ded6dfcf284b15a3356c01a94029f8@AcuMS.aculab.com>
+References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
+ <6540b4b7-3f70-adbf-c922-43886599713a@linux.microsoft.com>
+ <CALCETrWnNR5v3ZCLfBVQGYK8M0jAvQMaAc9uuO05kfZuh-4d6w@mail.gmail.com>
+ <46a1adef-65f0-bd5e-0b17-54856fb7e7ee@linux.microsoft.com>
+ <20200731183146.GD67415@C02TD0UTHF1T.local>
+ <86625441-80f3-2909-2f56-e18e2b60957d@linux.microsoft.com>
+ <20200804135558.GA7440@C02TD0UTHF1T.local>
+ <c898918d18f34fd5b004cd1549b6a99e@AcuMS.aculab.com>
+In-Reply-To: <c898918d18f34fd5b004cd1549b6a99e@AcuMS.aculab.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 3 Aug 2020 16:59:37 -0400
-"Michael S. Tsirkin" <mst@redhat.com> wrote:
-
-> Tag config space fields as having virtio endian-ness.
-> 
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->  include/uapi/linux/virtio_net.h | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/uapi/linux/virtio_net.h b/include/uapi/linux/virtio_net.h
-> index 19d23e5baa4e..27d996f29dd1 100644
-> --- a/include/uapi/linux/virtio_net.h
-> +++ b/include/uapi/linux/virtio_net.h
-> @@ -87,19 +87,19 @@ struct virtio_net_config {
->  	/* The config defining mac address (if VIRTIO_NET_F_MAC) */
->  	__u8 mac[ETH_ALEN];
->  	/* See VIRTIO_NET_F_STATUS and VIRTIO_NET_S_* above */
-> -	__u16 status;
-> +	__virtio16 status;
->  	/* Maximum number of each of transmit and receive queues;
->  	 * see VIRTIO_NET_F_MQ and VIRTIO_NET_CTRL_MQ.
->  	 * Legal values are between 1 and 0x8000
->  	 */
-> -	__u16 max_virtqueue_pairs;
-> +	__virtio16 max_virtqueue_pairs;
->  	/* Default maximum transmit unit advice */
-> -	__u16 mtu;
-> +	__virtio16 mtu;
->  	/*
->  	 * speed, in units of 1Mb. All values 0 to INT_MAX are legal.
->  	 * Any other value stands for unknown.
->  	 */
-> -	__u32 speed;
-> +	__virtio32 speed;
-
-Hm... VIRTIO_NET_F_SPEED_DUPLEX can only be negotiated if VERSION_1 has
-also been negotiated; I think this should be __le32?
-
->  	/*
->  	 * 0x00 - half duplex
->  	 * 0x01 - full duplex
+PiA+ID4gSWYgeW91IGxvb2sgYXQgdGhlIGxpYmZmaSByZWZlcmVuY2UgcGF0Y2ggSSBoYXZlIGlu
+Y2x1ZGVkLCB0aGUgYXJjaGl0ZWN0dXJlDQo+ID4gPiBzcGVjaWZpYyBjaGFuZ2VzIHRvIHVzZSB0
+cmFtcGZkIGp1c3QgaW52b2x2ZSBhIHNpbmdsZSBDIGZ1bmN0aW9uIGNhbGwgdG8NCj4gPiA+IGEg
+Y29tbW9uIGNvZGUgZnVuY3Rpb24uDQo+IA0KPiBObyBpZGVhIHdoYXQgbGliZmZpIGlzLCBidXQg
+aXQgbXVzdCBzdXJlbHkgYmUgc2ltcGxlciB0bw0KPiByZXdyaXRlIGl0IHRvIGF2b2lkIG5lc3Rl
+ZCBmdW5jdGlvbiBkZWZpbml0aW9ucy4NCj4gDQo+IE9yIGZpbmQgYSBib29rIGZyb20gdGhlIDE5
+NjBzIG9uIGhvdyB0byBkbyByZWN1cnNpdmUNCj4gY2FsbHMgYW5kIG5lc3RlZCBmdW5jdGlvbnMg
+aW4gRk9SVFJBTi1JVi4NCg0KRldJVyBpdCBpcyBwcm9iYWJseSBhcyBzaW1wbGUgYXM6DQoxKSBQ
+dXQgYWxsIHRoZSAndmFyaWFibGVzJyB0aGUgbmVzdGVkIGZ1bmN0aW9uIGFjY2Vzc2VzIGludG8g
+YSBzdHJ1Y3QuDQoyKSBBZGQgYSBmaWVsZCBmb3IgdGhlIGFkZHJlc3Mgb2YgdGhlICduZXN0ZWQn
+IGZ1bmN0aW9uLg0KMykgUGFzcyB0aGUgYWRkcmVzcyBvZiB0aGUgc3RydWN0dXJlIGRvd24gaW5z
+dGVhZCBvZiB0aGUNCiAgIGFkZHJlc3Mgb2YgdGhlIGZ1bmN0aW9uLg0KDQpJZiB5b3UgYXJlbid0
+IGluIGNvbnRyb2wgb2YgdGhlIGNhbGwgc2l0ZXMgdGhlbiBhZGQgdGhlDQpzdHJ1Y3R1cmUgdG8g
+YSBsaW5rZWQgbGlzdCBvbiBhIHRocmVhZC1sb2NhbCB2YXJpYWJsZS4NCg0KCURhdmlkDQoNCi0N
+ClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBN
+aWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxl
+cykNCg==
 
