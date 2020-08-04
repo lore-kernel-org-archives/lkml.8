@@ -2,99 +2,172 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93786C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1912C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C45222B42
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:23:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596576191;
-	bh=FUi79Z6g4j3LKocBOkO8y606YrmtOIbAhq+x5CTTBNo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=cMTM+cwQoBXQHuB5sIAAwh5ETgUEk989NeEVLW3OPR+9ePvyIRHbv/Zj1Pu7A21Mo
-	 g/vh9N/tRKQRtvU0oaZ/NmFGs60e7r3z3ZqZ2fPZIIzUzI6h7QnNzhmlR/HAJMcXz0
-	 1jpmnjhOY/oB2gKtJYcWo42QAcNAbEdO5j+bl6v0=
+	by mail.kernel.org (Postfix) with ESMTP id 9722420842
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:26:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T7fS5brM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbgHDVXK (ORCPT
+        id S1727840AbgHDV0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 17:23:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49560 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbgHDVXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 17:23:09 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A099520842;
-        Tue,  4 Aug 2020 21:23:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596576188;
-        bh=FUi79Z6g4j3LKocBOkO8y606YrmtOIbAhq+x5CTTBNo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nzPunqSGCcvCWrOS3UfFNLt+3r9GiHXOMQtWHfEax2kra8aOA4Uz1DLLHhkhRZqnK
-         LPFNed+wKnuUOmyY2tB2Bi/Jr0htuIvLF5+m6T8pXHsQYJc+1IDtiVp+pVUVHlGEoW
-         0Rmp+whXq5OFgLIh97TNxExjxQWgCPQfhaUDOwpc=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k34Op-00HUEC-2X; Tue, 04 Aug 2020 22:23:07 +0100
+        Tue, 4 Aug 2020 17:26:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbgHDV0I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 17:26:08 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED63DC06174A;
+        Tue,  4 Aug 2020 14:26:07 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id r11so13514964pfl.11;
+        Tue, 04 Aug 2020 14:26:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=H53lbBysrvDenqcyvIC5UIxfvFKGaXbtjEmFJwaxIpE=;
+        b=T7fS5brMmb4wsPGHicKEipC/YARUq/fZUJQbVJ+Xk4BTkzZ9GzfejLGEQPEBcZ7tAq
+         f4tgYSeSMSqesC9fJTzH37W+mPN5bA15tpvb7fttWSh/rIQXEdSWbSK0ZHQ39DFHtaEO
+         IdAvLeQZu3/LLvABjTqO53RvtXGps7eAuOMvzLaA9lEMfUqme0I6MfqEBbDREDWHRcYT
+         G5if5wjnu51vBKn+XfiPXaNCo0J6Wx1Kzh63dCvaf6CThNqef/BCWLpH5UTNMPP3d2rY
+         nmqofLZ7F4cty7/B8i/xsWuZrAUts3iHqTtgQqwkPM0E3hh0ZbWL+4COSDa6WsibYTmj
+         lIRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=H53lbBysrvDenqcyvIC5UIxfvFKGaXbtjEmFJwaxIpE=;
+        b=aT/mdz97hKM5MLgRybq3GxtXrzr8DpPfYkbxoRen8+qPf6E+3N+PFR7saJS48Ck8ru
+         mWgflwT/LWUA9w0S+rjLc5ODyBtlzNBe94YiayJXGOje5pVeoPNYXny/8N/1k6RZSxmB
+         JAJkTHXNeKgcblsBtIWoHUbPRSf/EvybTj3TLAblS/jfC+Mpr9DD+VgV5jSv8jxPJjLj
+         g9gaATsXuWrEQuqeIn1AAK8cgM1snRiVabMfOfukdCmpHAap41TjYxISLRHTj7hpfgM2
+         a7cLPIIy05Mz/SSRRJcrZNrS7DGHB3A23wu1KhPChMNMHrtQAzoFwktFd2nYVEjYlOMq
+         RDqw==
+X-Gm-Message-State: AOAM533p4KpAOGxLj+Thjx+ucfx8P9z3Z89wqFltzRVFR8p5dtE7I8+C
+        1vaZcgINkUL/gwZz52al+Us=
+X-Google-Smtp-Source: ABdhPJxillOY5cbn2FINKGZ40mF2Q8aHqizsQ7EqXczJv8PwJnzXaEl1BvDabEeUkMzRY7cIaHCkGA==
+X-Received: by 2002:a63:1a04:: with SMTP id a4mr297213pga.95.1596576367419;
+        Tue, 04 Aug 2020 14:26:07 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 63sm8759439pfu.196.2020.08.04.14.26.06
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 04 Aug 2020 14:26:06 -0700 (PDT)
+Date:   Tue, 4 Aug 2020 14:26:05 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     "Saheed O. Bolarinwa" <refactormyself@gmail.com>
+Cc:     helgaas@kernel.org, Jean Delvare <jdelvare@suse.com>,
+        bjorn@helgaas.com, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org
+Subject: Re: [RFC PATCH 10/17] hwmon: Drop uses of pci_read_config_*() return
+ value
+Message-ID: <20200804212605.GA218592@roeck-us.net>
+References: <20200801112446.149549-1-refactormyself@gmail.com>
+ <20200801112446.149549-11-refactormyself@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 04 Aug 2020 22:23:06 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH 5.7 000/121] 5.7.13-rc2 review
-In-Reply-To: <CAHk-=whJ=shbf-guMGZkGvxh9fVmbrvUuiWO48+PDFG7J9A9qw@mail.gmail.com>
-References: <20200804072435.385370289@linuxfoundation.org>
- <CA+G9fYs35Eiq1QFM0MOj6Y7gC=YKaiknCPgcJpJ5NMW4Y7qnYQ@mail.gmail.com>
- <20200804082130.GA1768075@kroah.com>
- <CAHk-=whJ=shbf-guMGZkGvxh9fVmbrvUuiWO48+PDFG7J9A9qw@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <c32ad2216ca3dd83d6d3d740512db9de@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: torvalds@linux-foundation.org, gregkh@linuxfoundation.org, naresh.kamboju@linaro.org, linux-kernel@vger.kernel.org, akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org, stable@vger.kernel.org, arnd@arndb.de, will@kernel.org, catalin.marinas@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200801112446.149549-11-refactormyself@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-04 19:33, Linus Torvalds wrote:
-> On Tue, Aug 4, 2020 at 1:21 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
->> 
->> So Linus's tree is also broken here.
+On Sat, Aug 01, 2020 at 01:24:39PM +0200, Saheed O. Bolarinwa wrote:
+> The return value of pci_read_config_*() may not indicate a device error.
+> However, the value read by these functions is more likely to indicate
+> this kind of error. This presents two overlapping ways of reporting
+> errors and complicates error checking.
 > 
-> No, there's 835d1c3a9879 ("arm64: Drop unnecessary include from
-> asm/smp.h") upstream.
+> It is possible to move to one single way of checking for error if the
+> dependency on the return value of these functions is removed, then it
+> can later be made to return void.
+> 
+> Remove all uses of the return value of pci_read_config_*().
+> Check the actual value read for ~0. In this case, ~0 is an invalid
+> value thus it indicates some kind of error.
+> 
+> Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
+> Signed-off-by: Saheed O. Bolarinwa <refactormyself@gmail.com>
 
-My bet is that Greg ended up with this patch backported to
-5.7, but doesn't have 62a679cb2825 ("arm64: simplify ptrauth
-initialization") as the latter isn't a fix.
+Applied.
 
-I don't think any of these two patches are worth backporting,
-to be honest.
+Thanks,
+Guenter
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+> ---
+>  drivers/hwmon/i5k_amb.c | 12 ++++++++----
+>  drivers/hwmon/vt8231.c  |  8 ++++----
+>  2 files changed, 12 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/hwmon/i5k_amb.c b/drivers/hwmon/i5k_amb.c
+> index eeac4b04df27..b7497510323c 100644
+> --- a/drivers/hwmon/i5k_amb.c
+> +++ b/drivers/hwmon/i5k_amb.c
+> @@ -427,11 +427,13 @@ static int i5k_find_amb_registers(struct i5k_amb_data *data,
+>  	if (!pcidev)
+>  		return -ENODEV;
+>  
+> -	if (pci_read_config_dword(pcidev, I5K_REG_AMB_BASE_ADDR, &val32))
+> +	pci_read_config_dword(pcidev, I5K_REG_AMB_BASE_ADDR, &val32);
+> +	if (val32 == (u32)~0)
+>  		goto out;
+>  	data->amb_base = val32;
+>  
+> -	if (pci_read_config_dword(pcidev, I5K_REG_AMB_LEN_ADDR, &val32))
+> +	pci_read_config_dword(pcidev, I5K_REG_AMB_LEN_ADDR, &val32);
+> +	if (val32 == (u32)~0)
+>  		goto out;
+>  	data->amb_len = val32;
+>  
+> @@ -458,11 +460,13 @@ static int i5k_channel_probe(u16 *amb_present, unsigned long dev_id)
+>  	if (!pcidev)
+>  		return -ENODEV;
+>  
+> -	if (pci_read_config_word(pcidev, I5K_REG_CHAN0_PRESENCE_ADDR, &val16))
+> +	pci_read_config_word(pcidev, I5K_REG_CHAN0_PRESENCE_ADDR, &val16);
+> +	if (val16 == (u16)~0)
+>  		goto out;
+>  	amb_present[0] = val16;
+>  
+> -	if (pci_read_config_word(pcidev, I5K_REG_CHAN1_PRESENCE_ADDR, &val16))
+> +	pci_read_config_word(pcidev, I5K_REG_CHAN1_PRESENCE_ADDR, &val16);
+> +	if (val16 == (u16)~0)
+>  		goto out;
+>  	amb_present[1] = val16;
+>  
+> diff --git a/drivers/hwmon/vt8231.c b/drivers/hwmon/vt8231.c
+> index 2335d440f72d..6603727e15a0 100644
+> --- a/drivers/hwmon/vt8231.c
+> +++ b/drivers/hwmon/vt8231.c
+> @@ -992,8 +992,8 @@ static int vt8231_pci_probe(struct pci_dev *dev,
+>  			return -ENODEV;
+>  	}
+>  
+> -	if (PCIBIOS_SUCCESSFUL != pci_read_config_word(dev, VT8231_BASE_REG,
+> -							&val))
+> +	pci_read_config_word(dev, VT8231_BASE_REG, &val);
+> +	if (val == (u16)~0)
+>  		return -ENODEV;
+>  
+>  	address = val & ~(VT8231_EXTENT - 1);
+> @@ -1002,8 +1002,8 @@ static int vt8231_pci_probe(struct pci_dev *dev,
+>  		return -ENODEV;
+>  	}
+>  
+> -	if (PCIBIOS_SUCCESSFUL != pci_read_config_word(dev, VT8231_ENABLE_REG,
+> -							&val))
+> +	pci_read_config_word(dev, VT8231_ENABLE_REG, &val);
+> +	if (val == (u16)~0)
+>  		return -ENODEV;
+>  
+>  	if (!(val & 0x0001)) {
