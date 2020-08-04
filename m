@@ -2,87 +2,201 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44894C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 009F6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31D652067D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D429C206DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:34:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g2//3kmY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726149AbgHDN2e (ORCPT
+        id S1726533AbgHDNeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 09:28:34 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56400 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725811AbgHDN2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 09:28:34 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 56585A9BC0901C135BB1;
-        Tue,  4 Aug 2020 21:28:24 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Tue, 4 Aug 2020
- 21:28:13 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <ioana.ciornei@nxp.com>, <ruxandra.radulescu@nxp.com>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <andrew@lunn.ch>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] dpaa2-eth: Fix passing zero to 'PTR_ERR' warning
-Date:   Tue, 4 Aug 2020 21:26:43 +0800
-Message-ID: <20200804132643.42104-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 4 Aug 2020 09:34:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbgHDNeB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 09:34:01 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1C3FC061756
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 06:34:00 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id d190so2691744wmd.4
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 06:34:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=J1/mYzIP2hMyjkq4qwIx7vKFLfGV8E9+xnljo9oNBug=;
+        b=g2//3kmYqQevKfe9SCxyV6EZhOfaU+P+Cy9nDkqvNsV+5/24wqAVcu/5670F9bItAF
+         kZ+KpSx8MmOK7MWb1gK9gTffVBJKT3jM2ZYsXwG+DAgcDPTTCOWQuj/I5vNUXZthINh0
+         xHNQzGNUPZHfw/KK7oFFwG2obkokd6owf3M6AJiffKH4bsQYpX+DpisRtrdhYpxeR84P
+         QDR1ZTwEsRgQ+EGJmjqhRRBjqaSsk7rK9/1z0oYSCbxox9ByTlQKYcyRhu4/RhiRuV4T
+         btE6hTKn6Qd1gaziphYJ3e1eH3H7jANcKyBQJXIDcnYdDcwxDRPdrxcXVA8bcUYL69l/
+         VVSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J1/mYzIP2hMyjkq4qwIx7vKFLfGV8E9+xnljo9oNBug=;
+        b=L9LhrFp6X5YEJlYDd8iSyNmNwh3jL+ZtO5KbjSVUeXfgvZi7LAA8Y9BJaCJa5betmv
+         8U4LNZFO2Meizy1pD2wECinXfIJ8tqQYryp7EpPjvtdPEtGA9GTE0nW8NNlW/qL53TNi
+         +ABlGtokPrjGGwFC4iMZVoseQNNLlg8FGwqwrSQBrwG1+kkUW/nOmwYIZgFZxjO/wlP8
+         bwSe2EKRBQYl37QWJn8c7DIbAzYCZRBvtIQpNSODw4/u8kxGnD9/LG/3Fxc6BGfgkbBP
+         iR8yeQKX1xiiwFMQte6LsJMMn4tpHFegMmzpuLUUMo5liEx9xu2ehh6m1BUkW7kuLO09
+         tbvA==
+X-Gm-Message-State: AOAM533Rh8frBwRiew7x/IsVw1nZ2WPsx3qSekSuqDUuroVLBXwwuULZ
+        vu/4WQF0/BrJyUTxSvwUSHCjjiy8hlbB7VkC5ezd7g==
+X-Google-Smtp-Source: ABdhPJxAjw5E9Gzy3aeP53ZI+pqeCPa5gfx7N9vxRRtQkTi2sm8CbIjAo67QAvYWwoPiNQ7r1jW389h/z4hP4PYpkxw=
+X-Received: by 2002:a1c:e0c2:: with SMTP id x185mr4073668wmg.124.1596548039304;
+ Tue, 04 Aug 2020 06:33:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.174.179.108]
-X-CFilter-Loop: Reflected
+References: <20200728085734.609930-1-irogers@google.com> <20200728085734.609930-5-irogers@google.com>
+ <969ef797-59ea-69d0-24b9-33bcdff106a1@intel.com>
+In-Reply-To: <969ef797-59ea-69d0-24b9-33bcdff106a1@intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 4 Aug 2020 06:33:47 -0700
+Message-ID: <CAP-5=fUCnBGX0L0Tt3_gmVnt+hvaouJMx6XFErFKk72+xuw9fw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] perf record: Don't clear event's period if set by
+ a term
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix smatch warning:
+On Tue, Aug 4, 2020 at 3:08 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>
+> On 28/07/20 11:57 am, Ian Rogers wrote:
+> > If events in a group explicitly set a frequency or period with leader
+> > sampling, don't disable the samples on those events.
+> >
+> > Prior to 5.8:
+> > perf record -e '{cycles/period=12345000/,instructions/period=6789000/}:S'
+>
+> Might be worth explaining this use-case some more.
+> Perhaps add it to the leader sampling documentation for perf-list.
+>
+> > would clear the attributes then apply the config terms. In commit
+> > 5f34278867b7 leader sampling configuration was moved to after applying the
+> > config terms, in the example, making the instructions' event have its period
+> > cleared.
+> > This change makes it so that sampling is only disabled if configuration
+> > terms aren't present.
+> >
+> > Fixes: 5f34278867b7 ("perf evlist: Move leader-sampling configuration")
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/record.c | 28 ++++++++++++++++++++--------
+> >  1 file changed, 20 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
+> > index a4cc11592f6b..01d1c6c613f7 100644
+> > --- a/tools/perf/util/record.c
+> > +++ b/tools/perf/util/record.c
+> > @@ -2,6 +2,7 @@
+> >  #include "debug.h"
+> >  #include "evlist.h"
+> >  #include "evsel.h"
+> > +#include "evsel_config.h"
+> >  #include "parse-events.h"
+> >  #include <errno.h>
+> >  #include <limits.h>
+> > @@ -38,6 +39,9 @@ static void evsel__config_leader_sampling(struct evsel *evsel, struct evlist *ev
+> >       struct perf_event_attr *attr = &evsel->core.attr;
+> >       struct evsel *leader = evsel->leader;
+> >       struct evsel *read_sampler;
+> > +     struct evsel_config_term *term;
+> > +     struct list_head *config_terms = &evsel->config_terms;
+> > +     int term_types, freq_mask;
+> >
+> >       if (!leader->sample_read)
+> >               return;
+> > @@ -47,16 +51,24 @@ static void evsel__config_leader_sampling(struct evsel *evsel, struct evlist *ev
+> >       if (evsel == read_sampler)
+> >               return;
+> >
+> > +     /* Determine the evsel's config term types. */
+> > +     term_types = 0;
+> > +     list_for_each_entry(term, config_terms, list) {
+> > +             term_types |= 1 << term->type;
+> > +     }
+> >       /*
+> > -      * Disable sampling for all group members other than the leader in
+> > -      * case the leader 'leads' the sampling, except when the leader is an
+> > -      * AUX area event, in which case the 2nd event in the group is the one
+> > -      * that 'leads' the sampling.
+> > +      * Disable sampling for all group members except those with explicit
+> > +      * config terms or the leader. In the case of an AUX area event, the 2nd
+> > +      * event in the group is the one that 'leads' the sampling.
+> >        */
+> > -     attr->freq           = 0;
+> > -     attr->sample_freq    = 0;
+> > -     attr->sample_period  = 0;
+> > -     attr->write_backward = 0;
+> > +     freq_mask = (1 << EVSEL__CONFIG_TERM_FREQ) | (1 << EVSEL__CONFIG_TERM_PERIOD);
+> > +     if ((term_types & freq_mask) == 0) {
+>
+> It would be nicer to have a helper e.g.
+>
+>         if (!evsel__have_config_term(evsel, FREQ) &&
+>             !evsel__have_config_term(evsel, PERIOD)) {
 
-drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c:2419
- alloc_channel() warn: passing zero to 'ERR_PTR'
+Sure. The point of doing it this way was to avoid repeatedly iterating
+over the config term list.
 
-setup_dpcon() should return ERR_PTR(err) instead of zero in error
-handling case.
+> > +             attr->freq           = 0;
+> > +             attr->sample_freq    = 0;
+> > +             attr->sample_period  = 0;
+>
+> If we are not sampling, then maybe we should also put here:
+>
+>                 attr->write_backward = 0;
+>
+> > +     }
+>
+> Then, if we are sampling this evsel shouldn't the backward setting
+> match the leader? e.g.
+>
+>         if (attr->sample_freq)
+>                 attr->write_backward = leader->core.attr.write_backward;
 
-Fixes: d7f5a9d89a55 ("dpaa2-eth: defer probe on object allocate")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Perhaps that should be a follow up change? This change is trying to
+make the behavior match the previous behavior.
 
-diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
-index 9b4028c0e34c..5f680b953a90 100644
---- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-eth.c
-@@ -2375,7 +2375,7 @@ static struct fsl_mc_device *setup_dpcon(struct dpaa2_eth_priv *priv)
- free:
- 	fsl_mc_object_free(dpcon);
- 
--	return NULL;
-+	return ERR_PTR(err);
- }
- 
- static void free_dpcon(struct dpaa2_eth_priv *priv,
-@@ -2399,8 +2399,8 @@ alloc_channel(struct dpaa2_eth_priv *priv)
- 		return NULL;
- 
- 	channel->dpcon = setup_dpcon(priv);
--	if (IS_ERR_OR_NULL(channel->dpcon)) {
--		err = PTR_ERR_OR_ZERO(channel->dpcon);
-+	if (IS_ERR(channel->dpcon)) {
-+		err = PTR_ERR(channel->dpcon);
- 		goto err_setup;
- 	}
- 
--- 
-2.17.1
+Thanks,
+Ian
 
-
+> > +     if ((term_types & (1 << EVSEL__CONFIG_TERM_OVERWRITE)) == 0)
+> > +             attr->write_backward = 0;
+> >
+> >       /*
+> >        * We don't get a sample for slave events, we make them when delivering
+> >
+>
