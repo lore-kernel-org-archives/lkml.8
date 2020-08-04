@@ -2,168 +2,190 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1B7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 130CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6CD9207FC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04C9D207FC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:33:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qT3j1Gng"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="UWxg39Sz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729794AbgHDE3u (ORCPT
+        id S1729682AbgHDEdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 00:29:50 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9710 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727999AbgHDE3b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 00:29:31 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f28e3c80001>; Mon, 03 Aug 2020 21:27:53 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 03 Aug 2020 21:29:30 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 03 Aug 2020 21:29:30 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Aug
- 2020 04:29:29 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 4 Aug 2020 04:29:29 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.167.221]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f28e4280005>; Mon, 03 Aug 2020 21:29:29 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <robh+dt@kernel.org>
-CC:     <skomatineni@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>
-Subject: [PATCH v2 6/6] sdhci: tegra: Add missing TMCLK for data timeout
-Date:   Mon, 3 Aug 2020 21:29:23 -0700
-Message-ID: <1596515363-27235-7-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596515363-27235-1-git-send-email-skomatineni@nvidia.com>
-References: <1596515363-27235-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Tue, 4 Aug 2020 00:33:49 -0400
+Received: from mga06.intel.com ([134.134.136.31]:45833 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726000AbgHDEdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 00:33:49 -0400
+IronPort-SDR: HHbs5ey35h8zau/qgWfGNI9GekD2mcGPYOVl+JNNd7MzC39PezgxURjqAv0BlD2GMcj4vzG2/p
+ a9lmfV+9avNQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="213788131"
+X-IronPort-AV: E=Sophos;i="5.75,432,1589266800"; 
+   d="scan'208";a="213788131"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 21:33:48 -0700
+IronPort-SDR: zb1MMxTIKP77s7vRzdTUEIE05QpGbu2kmF6SVzI0XPEniaeVlri38foCUD9V5cojzqsZ8BjcHN
+ zwkOg2ctkkZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,432,1589266800"; 
+   d="scan'208";a="292415901"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orsmga006.jf.intel.com with ESMTP; 03 Aug 2020 21:33:47 -0700
+Received: from fmsmsx604.amr.corp.intel.com (10.18.126.84) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 3 Aug 2020 21:33:39 -0700
+Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 3 Aug 2020 21:33:39 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.103)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Mon, 3 Aug 2020 21:33:38 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Scm7KgVoeJpSz2C3oHMR5/mrdYQjZ7Zslzwz6IOifg9xaCsYk3hJmE86Esq+goA/MK70Wqp+8NWSEtbmNYO16x+Mzjsizph1vEJ45slMdMTi+SuiudXY93dcJIYLYCBgitTjhdVKZA5F+5o725t4sSZZ4tcs2aRckF45X+3APasMuv4IX6CNeI7dY77mN4BAwixXvCVDREZ32JRAKtbzGVUjuZpOVzSx6Y5TWu6zpOwkhBsR0aU7YxR+VMhhtSerHM31mus86IGietI5QkCp/+TKm57wubbGa/Eisp334vwKBWTvvUbefC7AL3x0OQRZn/oAs1VpdV0Kl0pnYgRUZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5FS39ASQuzjMIN603E/mdqgPHG8opqi6wVYJEuy1F0g=;
+ b=LqD/RdjICBg7z+A2nd/j0fSnPbID2gtkFf4eEYhGwLbBTZpCm6Az6yM2BV6k2XnAAmmnWcMQm6pAniLz6oeLNVY4IiacbDdrAD4oGV8fYgho0Dp+02SFwQueOur5oAy4pwFTub43WsC720Nmr7l6rvd6NgebzbyBQskh1CfrHH4ZSARLuT1kEYeUfBxkbghFM+vWAHrkaMVY9GfwmlHmjZdiTkUIPNtO36IF3ggqGlu9kp+9dsLAghL+BDPjqwOGOSe1Ly8480zdlqIvM3pmvxZestglETa9+RCvpojG3v7HvyVHbrTa9AQSwReQzoVoOd68WwKQlvDjutJwsL7YqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5FS39ASQuzjMIN603E/mdqgPHG8opqi6wVYJEuy1F0g=;
+ b=UWxg39SzoiGT7GTdNnniEXKbmqbvwisSEphNuBDE55CxJzu1yzHXWOQXBcDciS+0mZ8aqt0o9fRPB+JJN48iWQioEPPqE0o6xu6UV+UIMOyWIG3UZophH4cox/6hsB3gqQICdfJ/0t5ngxD4y+bwum9hizp93okE5b1mDHY1IrM=
+Received: from DM6PR11MB3642.namprd11.prod.outlook.com (2603:10b6:5:138::26)
+ by DM6PR11MB3561.namprd11.prod.outlook.com (2603:10b6:5:136::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Tue, 4 Aug
+ 2020 04:33:31 +0000
+Received: from DM6PR11MB3642.namprd11.prod.outlook.com
+ ([fe80::f043:4bdc:ef57:1b41]) by DM6PR11MB3642.namprd11.prod.outlook.com
+ ([fe80::f043:4bdc:ef57:1b41%5]) with mapi id 15.20.3239.021; Tue, 4 Aug 2020
+ 04:33:31 +0000
+From:   "Lu, Brent" <brent.lu@intel.com>
+To:     Takashi Iwai <tiwai@suse.de>
+CC:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        "Guennadi Liakhovetski" <guennadi.liakhovetski@linux.intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "Kuninori Morimoto" <kuninori.morimoto.gx@renesas.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        "Sam McNally" <sammc@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Ranjani Sridharan" <ranjani.sridharan@linux.intel.com>,
+        Daniel Stuart <daniel.stuart14@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Damian van Soelen <dj.vsoelen@gmail.com>,
+        "yuhsuan@google.com" <yuhsuan@google.com>
+Subject: RE: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago
+ board
+Thread-Topic: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago
+ board
+Thread-Index: AQHWZzZzIgMFwAI7HkKT1/DPVspAl6khsDgAgAFDasCAAAm3gIADX8DAgAAlz4CAABcIUIAABbiAgACx9iA=
+Date:   Tue, 4 Aug 2020 04:33:31 +0000
+Message-ID: <DM6PR11MB36423A9D28134811AD5A911F974A0@DM6PR11MB3642.namprd11.prod.outlook.com>
+References: <1596020585-11517-1-git-send-email-brent.lu@intel.com>
+        <1596198365-10105-1-git-send-email-brent.lu@intel.com>
+        <1596198365-10105-3-git-send-email-brent.lu@intel.com>
+        <s5h5za3ajvb.wl-tiwai@suse.de>
+        <DM6PR11MB3642AE90DF98956CCEDE6C2F974F0@DM6PR11MB3642.namprd11.prod.outlook.com>
+        <s5hd04a90o4.wl-tiwai@suse.de>
+        <DM6PR11MB3642B5BC2E1E0708088526D8974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
+        <63bca214-3434-16c6-1b60-adf323aec554@linux.intel.com>
+        <DM6PR11MB3642D9BE1E5DAAB8B78B84B0974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
+ <s5hpn873by6.wl-tiwai@suse.de>
+In-Reply-To: <s5hpn873by6.wl-tiwai@suse.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.5.1.3
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: suse.de; dkim=none (message not signed)
+ header.d=none;suse.de; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [220.136.119.29]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b18be5fb-4a2d-4dda-db95-08d8382f8acf
+x-ms-traffictypediagnostic: DM6PR11MB3561:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB3561616D50FB5BFAF2304693974A0@DM6PR11MB3561.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 49aylfAjcULRWKqRUFOIlbqyRe2QpAfqPxpjnXVVrTwhR6LSfBqn9bTAQALS9FLpdYCayDryPsQKE0TccRUp7yvwpGYITzZtHL+myNQMPlQN4ruleinX0xeAuPZt266OJrrrjUNY5zMLmtPlXx9vUqmZkwE1pW9XJB+LObr+TBVBUNa4LNp7VUjiCSjPuLrFZ9xdNVx0nWuXx2BVGK0K3wYM92pfevrhoxv2EnlW61CsBTDe+bLfvae+2zNxYTgrbbs9CND4Hbn4LGhZWeOgUn0BrBLCvX2UH4iG8KPE0PUwYYYd1ancObCEwmdCm2OkcAtIjwYWcf8oukPEx/VTzw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3642.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(366004)(396003)(136003)(39860400002)(186003)(26005)(6506007)(52536014)(66476007)(64756008)(66556008)(76116006)(66946007)(71200400001)(66446008)(5660300002)(83380400001)(54906003)(316002)(33656002)(86362001)(4326008)(2906002)(8936002)(55016002)(8676002)(6916009)(9686003)(7696005)(7416002)(478600001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: hNn9BKQ/WRAV6Qofbrc2FkxBYXYW1yoMvPmhoCS0pq8cGRRAoxhxg7cKDqdoHht0h2EszIg923YktrmSnh66S/BXLaKetRAg7b2jU9qkP00C3z8wwj5Pd/QB3/oAkk/X39gOeyaHpwwEFK0UDSQsIW31mGbeHZjvPXVsFNa0j8rnJPCkJoHvkrYmshUdfjj5QMqf6teo8LXJVPoz6oXVW2qk33qt2+/qCLU5GIFGP4RIMab6/nEn0powidHvsQNDfqJNvlkuuuyO8FB4IWPeRF+pF0pJ8w5r9jwSIWaoO038l4WriP4g5kCPvsKCMWFF2VI6l6/QmzOMlXpRnuIvOGK4Lz0ctxmkoR3ykMMHnwfc3QDaHFm//WpwSRPVxD08+9oGT3icEuix8111UPHHRpvvvS64AEM1K1qz1AusbQ2n806W+y6b+cv58K9kPpbCxcPvu2QihxoncOALkmP5I/JCMI6XR6tRclSq5r+2v3DeBrhuEWvdWJfi8fxyxBwMmc9ogxL1mWFGRsQQ03wuqDWDs07BP/SKRSQjtywgeVd34d/Xc4v19P7wOHxbEDqNJMOIRdJspeqLkL5cxicsTHBHUFaH7VlPrDw/g0ad5kt9iRkH3VZnCGvv2HsqmlBT3fqJwIGoIT9lDiZaESRdVA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596515273; bh=r6u0HMf6o4jPz5Nwr4/5GJuqlW/cC/VMT34/Nxbq+OY=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=qT3j1GngoQhOEm0eg8syrfDVFk+k2WTrcxtTBbfa16DrnWvS0VUuuYrsBNVqbOWcf
-         S2b5wueGc2EET20lSsiMDEdczbXiCQFQo/3jESjqtDiX/WwPHnehitnnzGZIm0We2r
-         qjq/byxS1Q0sNHCYa7nd4KthXM7Vik4JTTiliz7ZhbNCn+O2CPc6IU7+pmUv6FnPsP
-         VY8BLEuV70i1L1Ym+J6hkcgdYwbs/6fL2LAmoRFCKEOaSPlcMksW0+yoMq94BKDoLG
-         6ADLg+1Bopc2UgDHmYJvS4iBX8DifYnTVlfSU+XCPNnH3nLMujKrPFMCSo+iR4c8sM
-         cYmXzDzIFMRQg==
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3642.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b18be5fb-4a2d-4dda-db95-08d8382f8acf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Aug 2020 04:33:31.4652
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YBH4EFAZuP30c2WlNZwnksGOUZw+20rEDvxzQehiE2geQtA3RoMUuVltTWOqWxSosgmFlhCCoGKRpLpIMjA/zw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3561
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
+>=20
+> For avoid further misunderstanding: it's fine that CRAS *uses* such a sho=
+rt
+> period.  It's often required for achieving a short latency.
+>=20
+> However, the question is whether the driver can set *only* this value for
+> making it working.  IOW, if we don't have this constraint, what actually
+> happens?  If the driver gives the period size alignment, wouldn't CRAS
+> choose 240?
 
-Tegra210 and later has a separate sdmmc_legacy_tm (TMCLK) used by Tegra
-SDMMC hawdware for data timeout to achive better timeout than using
-SDCLK and using TMCLK is recommended.
+It won't. Without the constraint it becomes 432. Actually CRAS does not set
+period size specifically so the value depends on the constraint rules.
 
-USE_TMCLK_FOR_DATA_TIMEOUT bit in Tegra SDMMC register
-SDHCI_TEGRA_VENDOR_SYS_SW_CTRL can be used to choose either TMCLK or
-SDCLK for data timeout.
+[   52.011146] sound pcmC1D0p: hw_param
+[   52.011152] sound pcmC1D0p:   ACCESS 0x1
+[   52.011155] sound pcmC1D0p:   FORMAT 0x4
+[   52.011158] sound pcmC1D0p:   SUBFORMAT 0x1
+[   52.011161] sound pcmC1D0p:   SAMPLE_BITS [16:16]
+[   52.011164] sound pcmC1D0p:   FRAME_BITS [32:32]
+[   52.011167] sound pcmC1D0p:   CHANNELS [2:2]
+[   52.011170] sound pcmC1D0p:   RATE [48000:48000]
+[   52.011173] sound pcmC1D0p:   PERIOD_TIME [9000:9000]
+[   52.011176] sound pcmC1D0p:   PERIOD_SIZE [432:432]
+[   52.011179] sound pcmC1D0p:   PERIOD_BYTES [1728:1728]
+[   52.011182] sound pcmC1D0p:   PERIODS [474:474]
+[   52.011185] sound pcmC1D0p:   BUFFER_TIME [4266000:4266000]
+[   52.011188] sound pcmC1D0p:   BUFFER_SIZE [204768:204768]
+[   52.011191] sound pcmC1D0p:   BUFFER_BYTES [819072:819072]
+[   52.011194] sound pcmC1D0p:   TICK_TIME [0:0]
 
-Default USE_TMCLK_FOR_DATA_TIMEOUT bit is set to 1 and TMCLK is used
-for data timeout by Tegra SDMMC hardware and having TMCLK not enabled
-is not recommended.
+Regards,
+Brent
 
-So, this patch fixes it.
+>=20
+>=20
+> Takashi
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/mmc/host/sdhci-tegra.c | 41 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
-
-diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-index 31ed321..c0b9405 100644
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -140,6 +140,7 @@ struct sdhci_tegra_autocal_offsets {
- struct sdhci_tegra {
- 	const struct sdhci_tegra_soc_data *soc_data;
- 	struct gpio_desc *power_gpio;
-+	struct clk *tmclk;
- 	bool ddr_signaling;
- 	bool pad_calib_required;
- 	bool pad_control_available;
-@@ -1611,6 +1612,44 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
- 		goto err_power_req;
- 	}
- 
-+	/*
-+	 * Tegra210 has a separate SDMMC_LEGACY_TM clock used for host
-+	 * timeout clock and SW can choose TMCLK or SDCLK for hardware
-+	 * data timeout through the bit USE_TMCLK_FOR_DATA_TIMEOUT of
-+	 * the register SDHCI_TEGRA_VENDOR_SYS_SW_CTRL.
-+	 *
-+	 * USE_TMCLK_FOR_DATA_TIMEOUT bit default is set to 1 and SDMMC uses
-+	 * 12Mhz TMCLK which is advertised in host capability register.
-+	 * With TMCLK of 12Mhz provides maximum data timeout period that can
-+	 * be achieved is 11s better than using SDCLK for data timeout.
-+	 *
-+	 * So, TMCLK is set to 12Mhz and kept enabled all the time on SoC's
-+	 * supporting SDR104 mode and when not using SDCLK for data timeout.
-+	 */
-+
-+	if ((soc_data->nvquirks & NVQUIRK_ENABLE_SDR104) &&
-+	    !(soc_data->pdata->quirks & SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK)) {
-+		clk = devm_clk_get(&pdev->dev, "tmclk");
-+		if (IS_ERR(clk)) {
-+			rc = PTR_ERR(clk);
-+			if (rc == -EPROBE_DEFER)
-+				goto err_power_req;
-+
-+			dev_warn(&pdev->dev, "failed to get tmclk: %d\n", rc);
-+			clk = NULL;
-+		}
-+
-+		clk_set_rate(clk, 12000000);
-+		rc = clk_prepare_enable(clk);
-+		if (rc) {
-+			dev_err(&pdev->dev,
-+				"failed to enable tmclk: %d\n", rc);
-+			goto err_power_req;
-+		}
-+
-+		tegra_host->tmclk = clk;
-+	}
-+
- 	clk = devm_clk_get(mmc_dev(host->mmc), NULL);
- 	if (IS_ERR(clk)) {
- 		rc = PTR_ERR(clk);
-@@ -1654,6 +1693,7 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
- err_rst_get:
- 	clk_disable_unprepare(pltfm_host->clk);
- err_clk_get:
-+	clk_disable_unprepare(tegra_host->tmclk);
- err_power_req:
- err_parse_dt:
- 	sdhci_pltfm_free(pdev);
-@@ -1671,6 +1711,7 @@ static int sdhci_tegra_remove(struct platform_device *pdev)
- 	reset_control_assert(tegra_host->rst);
- 	usleep_range(2000, 4000);
- 	clk_disable_unprepare(pltfm_host->clk);
-+	clk_disable_unprepare(tegra_host->tmclk);
- 
- 	sdhci_pltfm_free(pdev);
- 
--- 
-2.7.4
 
