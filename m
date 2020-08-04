@@ -2,158 +2,116 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33212C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1789EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E8972086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:45:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="uFmebfHG"
+	by mail.kernel.org (Postfix) with ESMTP id 2175F20786
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:45:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730173AbgHDCpF (ORCPT
+        id S1730202AbgHDCpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 22:45:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730167AbgHDCpE (ORCPT
+        Mon, 3 Aug 2020 22:45:08 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:42194 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730178AbgHDCpG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 22:45:04 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2943EC06174A;
-        Mon,  3 Aug 2020 19:45:04 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BLJy46hTWz9sRR;
-        Tue,  4 Aug 2020 12:45:00 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596509101;
-        bh=lu2TmnDTRH3CP1zKMovkbNm+m7M9SAsGg5M7dMOb8OI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uFmebfHGkInmDrmP85RkLHHusiw/nMIbXNmovArLTl1yiZggIYB3NG3Sht/3mQ6zZ
-         5vDZDt7qL8iLY6Ju7+DabUNrLOX8Wvyvm5ApeNOTRrn5H6QF14GTyWbSr3UUzbUpZB
-         qO6+UC8OY0dhqIFaOVD7buyV5bD9TJxxJmjsW1IBoTao8Ds0ucHMxQl6fQLnauHVP9
-         dwSuMGunBKVQ0q9GyAdoSyOONswHpPA9tbx1mln/WllcJP4WZShxLt4fDIwE3f3z9a
-         le3PU2ifUtZ8xAsloMS9b00awnjjfBOGpoPvitO4vyev7g42AOCYwVm+++XAid1ALi
-         xecu28JR7a8EA==
-Date:   Tue, 4 Aug 2020 12:44:57 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the init tree with the block tree
-Message-ID: <20200804124457.5cf2783a@canb.auug.org.au>
-In-Reply-To: <20200803195342.781987c3@canb.auug.org.au>
-References: <20200717194221.146ab662@canb.auug.org.au>
-        <20200803195342.781987c3@canb.auug.org.au>
+        Mon, 3 Aug 2020 22:45:06 -0400
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 0742iguX7030284, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 0742iguX7030284
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 4 Aug 2020 10:44:42 +0800
+Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 4 Aug 2020 10:44:42 +0800
+Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
+ RTEXDAG01.realtek.com.tw (172.21.6.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 4 Aug 2020 10:44:42 +0800
+Received: from RTEXMB01.realtek.com.tw ([fe80::d53a:d9a5:318:7cd8]) by
+ RTEXMB01.realtek.com.tw ([fe80::d53a:d9a5:318:7cd8%5]) with mapi id
+ 15.01.1779.005; Tue, 4 Aug 2020 10:44:42 +0800
+From:   =?utf-8?B?5ZCz5piK5r6EIFJpY2t5?= <ricky_wu@realtek.com>
+To:     Chris Clayton <chris2553@googlemail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "philquadra@gmail.com" <philquadra@gmail.com>,
+        "Arnd Bergmann" <arnd@arndb.de>
+Subject: RE: PATCH: rtsx_pci driver - don't disable the rts5229 card reader on Intel NUC boxes
+Thread-Topic: PATCH: rtsx_pci driver - don't disable the rts5229 card reader
+ on Intel NUC boxes
+Thread-Index: AQHWaQXnJbf1udfgtku7UiOjY+d5jakktnGAgAKFU9A=
+Date:   Tue, 4 Aug 2020 02:44:41 +0000
+Message-ID: <5729c72bbc2740d3917619c85e2fde58@realtek.com>
+References: <862172f0-cd23-800c-27b1-27cb49e99099@googlemail.com>
+ <a9a94d7f-4873-7a10-4911-f3c760257c5c@googlemail.com>
+In-Reply-To: <a9a94d7f-4873-7a10-4911-f3c760257c5c@googlemail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.22.88.99]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/tnDU2AZAZiUYSoDd=oGN1RW";
- protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/tnDU2AZAZiUYSoDd=oGN1RW
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Mon, 3 Aug 2020 19:53:42 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
->
-> On Fri, 17 Jul 2020 19:42:21 +1000 Stephen Rothwell <sfr@canb.auug.org.au=
-> wrote:
-> > =20
-> > Today's linux-next merge of the init tree got a conflict in:
-> >=20
-> >   drivers/md/md.c
-> >=20
-> > between commit:
-> >=20
-> >   a564e23f0f99 ("md: switch to ->check_events for media change notifica=
-tions")
-> >=20
-> > from the block tree and commit:
-> >=20
-> >   7e0adbfc20c5 ("md: rewrite md_setup_drive to avoid ioctls")
-> >=20
-> > from the init tree.
-> >=20
-> > I fixed it up (see below) and can carry the fix as necessary. This
-> > is now fixed as far as linux-next is concerned, but any non trivial
-> > conflicts should be mentioned to your upstream maintainer when your tree
-> > is submitted for merging.  You may also want to consider cooperating
-> > with the maintainer of the conflicting tree to minimise any particularly
-> > complex conflicts.
-> >=20
-> > diff --cc drivers/md/md.c
-> > index 5b6d46741baa,ee622b67424e..000000000000
-> > --- a/drivers/md/md.c
-> > +++ b/drivers/md/md.c
-> > @@@ -7836,21 -7790,23 +7820,21 @@@ static void md_release(struct gendis=
-k *
-> >   	mddev_put(mddev);
-> >   }
-> >  =20
-> >  -static int md_media_changed(struct gendisk *disk)
-> >  -{
-> >  -	struct mddev *mddev =3D disk->private_data;
-> >  -
-> >  -	return mddev->changed;
-> >  -}
-> >  -
-> >  -static int md_revalidate(struct gendisk *disk)
-> >  +static unsigned int md_check_events(struct gendisk *disk, unsigned in=
-t clearing)
-> >   {
-> >   	struct mddev *mddev =3D disk->private_data;
-> >  +	unsigned int ret =3D 0;
-> >  =20
-> >  +	if (mddev->changed)
-> >  +		ret =3D DISK_EVENT_MEDIA_CHANGE;
-> >   	mddev->changed =3D 0;
-> >  -	return 0;
-> >  +	return ret;
-> >   }
-> >  +
-> > - static const struct block_device_operations md_fops =3D
-> > + const struct block_device_operations md_fops =3D
-> >   {
-> >   	.owner		=3D THIS_MODULE,
-> >  +	.submit_bio	=3D md_submit_bio,
-> >   	.open		=3D md_open,
-> >   	.release	=3D md_release,
-> >   	.ioctl		=3D md_ioctl, =20
->=20
-> This is now a conflict between the block tree and the vfs tree.
-
-This is now a conflict between the vfs tree and Linus' tree.
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/tnDU2AZAZiUYSoDd=oGN1RW
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8oy6oACgkQAVBC80lX
-0Gz7kQf/X5QwiAPHyK7bYlksUQHSRGLY4mSn2LtuT6aKxWc0jx9fb2tZEAlDogfE
-blOcxyr4C5ui+OFjV0Gy0Y8m6DGR3Mqwws2d1y87d40RcnmdzSzUjEVQ1yxDdeXt
-GhOuys910vo4KW1t69qzcQrtr3LJ4rUr0dUp63Z6lLSLjYkyu0cBc/QEiNfTjdWJ
-zfrqA/lRXa0GGtrWox66nvb4C1CyUVvJzn8ffcxEG8+vkBl79XIUfd6yd+ShY+1H
-Nd7gfssuFs3/G1EQ66b03+MGTuZIXxqCuiuqs78oma62UePWKIzzvcACbhNtwEFT
-4HAAGNl/35YP19BKuQvH4RgY7hxWrA==
-=ASaE
------END PGP SIGNATURE-----
-
---Sig_/tnDU2AZAZiUYSoDd=oGN1RW--
+SGkgQ2hyaXMsDQoNCnJ0c3hfcGNpX3dyaXRlX3JlZ2lzdGVyKHBjciwgRlBEVEwsIE9DX1BPV0VS
+X0RPV04sIE9DX1BPV0VSX0RPV04pOw0KVGhpcyByZWdpc3RlciBvcGVyYXRpb24gc2F2ZWQgcG93
+ZXIgdW5kZXIgMW1BLCBzbyBpZiBkbyBub3QgY2FyZSB0aGUgMW1BIHBvd2VyIHdlIGNhbiBoYXZl
+IGEgcGF0Y2ggdG8gcmVtb3ZlIGl0LCBtYWtlIGNvbXBhdGlibGUgd2l0aCBOVUM2DQpXZSB0ZXN0
+ZWQgb3RoZXJzIG91ciBjYXJkIHJlYWRlciB0aGF0IHJlbW92ZSBpdCwgd2UgZGlkIG5vdCBzZWUg
+YW55IHNpZGUgZWZmZWN0IA0KDQpIaSBHcmVnIGstaCwNCg0KRG8geW91IGhhdmUgYW55IGNvbW1l
+bnRzPyANCg0KdGhhbmtzDQoNClJpY2t5DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+
+IEZyb206IENocmlzIENsYXl0b24gW21haWx0bzpjaHJpczI1NTNAZ29vZ2xlbWFpbC5jb21dDQo+
+IFNlbnQ6IE1vbmRheSwgQXVndXN0IDAzLCAyMDIwIDM6NTkgQU0NCj4gVG86IExLTUw7IOWQs+aY
+iua+hCBSaWNreTsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IHJkdW5sYXBAaW5mcmFkZWFk
+Lm9yZzsNCj4gcGhpbHF1YWRyYUBnbWFpbC5jb207IEFybmQgQmVyZ21hbm4NCj4gU3ViamVjdDog
+UmU6IFBBVENIOiBydHN4X3BjaSBkcml2ZXIgLSBkb24ndCBkaXNhYmxlIHRoZSBydHM1MjI5IGNh
+cmQgcmVhZGVyIG9uDQo+IEludGVsIE5VQyBib3hlcw0KPiANCj4gU29ycnksIEkgc2hvdWxkIGhh
+dmUgc2FpZCB0aGF0IHRoZSBwYXRjaCBpcyBhZ2FpbnN0IDUuNy4xMi4gSXQgYXBwbGllcyB0byB1
+cHN0cmVhbSwNCj4gYnV0IHdpdGggb2Zmc2V0cy4NCj4gDQo+IE9uIDAyLzA4LzIwMjAgMjA6NDgs
+IENocmlzIENsYXl0b24gd3JvdGU6DQo+ID4gYmVkZTAzYTU3OWIzIGludHJvZHVjZWQgYSBidWcg
+d2hpY2ggbGVhdmVzIHRoZSBydHM1MjI5IFBDSSBFeHByZXNzIGNhcmQNCj4gcmVhZGVyIG9uIG15
+IEludGVsIE5VQzZDQVlIIGJveC4NCj4gPg0KPiA+IFRoZSBidWcgaXMgaW4gZHJpdmVycy9taXNj
+L2NhcmRyZWFkZXIvcnRzeF9wY3IuYy4gQSBjYWxsIHRvIHJ0c3hfcGNpX2luaXRfb2NwKCkNCj4g
+d2FzIGFkZGVkIHRvIHJ0c3hfcGNpX2luaXRfaHcoKS4NCj4gPiBBdCB0aGUgY2FsbCBwb2ludCwg
+cGNyLT5vcHMtPmluaXRfb2NwIGlzIE5VTEwgYW5kIHBjci0+b3B0aW9uLm9jcF9lbiBpcyAwLCBz
+byBpbg0KPiBydHN4X3BjaV9pbml0X29jcCgpIHRoZSBjYXJkcmVhZGVyDQo+ID4gZ2V0cyBkaXNh
+YmxlZC4NCj4gPg0KPiA+IEkndmUgYXZvaWRlZCB0aGlzIGJ5IG1ha2luZyBleGN1dGlvbiBjb2Rl
+IHRoYXQgcmVzdWx0cyBpbiB0aGUgcmVhZGVyIGJlaW5nDQo+IGRpc2FibGVkIGNvbmRpdGlvbmFs
+IG9uIHRoZSBkZXZpY2UNCj4gPiBub3QgYmVpbmcgYW4gUlRTNTIyOS4gT2YgY291cnNlLCBvdGhl
+ciBydHN4eHggY2FyZCByZWFkZXJzIG1heSBhbHNvIGJlDQo+IGRpc2FibGVkIGJ5IHRoaXMgYnVn
+LiBJIGRvbid0IGhhdmUgdGhlDQo+ID4ga25vd2xlZGdlIHRvIGFkZHJlc3MgdGhhdCwgc28gSSds
+bCBsZWF2ZSB0byB0aGUgZHJpdmVyIG1haW50YWluZXJzLg0KPiA+DQo+ID4gVGhlIHBhdGNoIHRv
+IGF2b2lkIHRoZSBidWcgaXMgYXR0YWNoZWQuDQo+ID4NCj4gPiBGaXhlczogYmVkZTAzYTU3OWIz
+ICgibWlzYzogcnRzeDogRW5hYmxlIE9DUCBmb3IgcnRzNTIyYSBydHM1MjRhIHJ0czUyNWENCj4g
+cnRzNTI2MCIpDQo+ID4gTGluazogaHR0cHM6Ly9tYXJjLmluZm8vP2w9bGludXgta2VybmVsJm09
+MTU5MTA1OTEyODMyMjU3DQo+ID4gTGluazogaHR0cHM6Ly9idWd6aWxsYS5rZXJuZWwub3JnL3No
+b3dfYnVnLmNnaT9pZD0yMDQwMDMNCj4gPiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBDbGF5dG9uIDxj
+aHJpczI1NTNAZ29vZ2xlbWFpbC5jb20+DQo+ID4NCj4gPiBiZWRlMDNhNTc5YjMgaW50cm9kdWNl
+ZCBhIGJ1ZyB3aGljaCBsZWF2ZXMgdGhlIHJ0czUyMjkgUENJIEV4cHJlc3MgY2FyZA0KPiByZWFk
+ZXIgb24gbXkgSW50ZWwgTlVDNkNBWUggYm94Lg0KPiA+DQo+ID4gVGhlIGJ1ZyBpcyBpbiBkcml2
+ZXJzL21pc2MvY2FyZHJlYWRlci9ydHN4X3Bjci5jLiBBIGNhbGwgdG8gcnRzeF9wY2lfaW5pdF9v
+Y3AoKQ0KPiB3YXMgYWRkZWQgdG8gcnRzeF9wY2lfaW5pdF9odygpLg0KPiA+IEF0IHRoZSBjYWxs
+IHBvaW50LCBwY3ItPm9wcy0+aW5pdF9vY3AgaXMgTlVMTCBhbmQgcGNyLT5vcHRpb24ub2NwX2Vu
+IGlzIDAsIHNvIGluDQo+IHJ0c3hfcGNpX2luaXRfb2NwKCkgdGhlIGNhcmRyZWFkZXINCj4gPiBn
+ZXRzIGRpc2FibGVkLg0KPiA+DQo+ID4gSSd2ZSBhdm9pZGVkIHRoaXMgYnkgbWFraW5nIGV4Y3V0
+aW9uIGNvZGUgdGhhdCByZXN1bHRzIGluIHRoZSByZWFkZXIgYmVpbmcNCj4gZGlzYWJsZWQgY29u
+ZGl0aW9uYWwgb24gdGhlIGRldmljZQ0KPiA+IG5vdCBiZWluZyBhbiBSVFM1MjI5LiBPZiBjb3Vy
+c2UsIG90aGVyIHJ0c3h4eCBjYXJkIHJlYWRlcnMgbWF5IGFsc28gYmUNCj4gZGlzYWJsZWQgYnkg
+dGhpcyBidWcuIEkgZG9uJ3QgaGF2ZSB0aGUNCj4gPiBrbm93bGVkZ2UgdG8gYWRkcmVzcyB0aGF0
+LCBzbyBJJ2xsIGxlYXZlIHRvIHRoZSBkcml2ZXIgbWFpbnRhaW5lcnMuDQo+ID4NCj4gPiBUaGUg
+cGF0Y2ggdG8gYXZvaWQgdGhlIGJ1ZyBpcyBhdHRhY2hlZC4NCj4gPg0KPiA+IENocmlzDQo+ID4N
+Cj4gDQo+IC0tLS0tLVBsZWFzZSBjb25zaWRlciB0aGUgZW52aXJvbm1lbnQgYmVmb3JlIHByaW50
+aW5nIHRoaXMgZS1tYWlsLg0K
