@@ -2,155 +2,91 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70F6C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC023C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A984D2076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:27:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JL08f7Ni"
+	by mail.kernel.org (Postfix) with ESMTP id AB1052076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:29:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729619AbgHDH1M (ORCPT
+        id S1729599AbgHDH3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 03:27:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48844 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbgHDH1M (ORCPT
+        Tue, 4 Aug 2020 03:29:48 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40144 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727085AbgHDH3s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 03:27:12 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDF9DC06174A;
-        Tue,  4 Aug 2020 00:27:11 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id r11so11799876pfl.11;
-        Tue, 04 Aug 2020 00:27:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S+LWBeYipq+ceid3K3seSlGlVrJ1K4pI/42TN0sWehM=;
-        b=JL08f7NiIwAPdUelKgqXR0B33MheFeRJI2WxYAJofyVdCfC/wW2Z8UWmk43icFOjrN
-         f1xFqzNHo1ZDlqreI/BGgSBpy2TuAFquBxDw5Vb1Zx9uCl9U/K1a8ZFJvXhIPR+5TYzJ
-         wNbmd/VlchFsykZFKf1XFM84zth0vkwPx5TMJiWiFWzYKUT5XAgS5jpgXIjGQ9vgRsfp
-         A5xpP58DMDAH02oVsbH1ObeYJKF+iY0KDopRgizKqhdSTXZ/bGqDwmt+ralJgh7gIICt
-         6y9URjcvaK+YyRsUxiT14u4DvM0WsmtkeWPomewNv4AmHk4gEXWy04dxanF4Hh7cdQ0j
-         peHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S+LWBeYipq+ceid3K3seSlGlVrJ1K4pI/42TN0sWehM=;
-        b=XxG4dDRgaaCf2xUXc5Y/5Rl+kLD8bfN989aL9uJmGxVrgx4+2G4EwOqcro0LnXyKCW
-         pVRZNwhGOEvTSF0944t8z5TBSH2sl+Tw899rbAlya2hUxUhelSrMDSHiQjaURxq0d0la
-         Nxs5duMbpH5CHxAKK/dEvItNOlHM8aKS7qmfvxTWPfzOADgY2E+cyx6mtxjQHkAUeH2B
-         gy3DZ23pQ5hw6WXNFCqAq55SkarHBqeDHoj0T59HDDn7ypPbGijhiFgpysJIreiPvfzP
-         SeO/fEM/GaTOmW/3yg9MA7QBsRX7yPq94BPy8nWl86+mEspwfmI0MWgcZDgrMCTsgCxt
-         jxyA==
-X-Gm-Message-State: AOAM532ZJMC6HIWYr8ceASht80tdK4bPgMBJ5VdfLaJRQarLFcabpDqe
-        KCqmY+V1/mu7Jhu2Qk5b0anEf5uUsPmgc2P0X3w=
-X-Google-Smtp-Source: ABdhPJwzkKwmjuOmrKa2yDmLHcCsZM911YiteZxUD/AfoRcnOeuCKtwXibuHF4fQqWoUrs+KckSZ815VcF7ExP+mVPE=
-X-Received: by 2002:a63:924b:: with SMTP id s11mr17633349pgn.74.1596526031371;
- Tue, 04 Aug 2020 00:27:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200803235815.778997-1-campello@chromium.org> <20200803175559.v5.3.Idbfcd2e92d2fd89b6ed2e83211bd3e6c06852c33@changeid>
-In-Reply-To: <20200803175559.v5.3.Idbfcd2e92d2fd89b6ed2e83211bd3e6c06852c33@changeid>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 4 Aug 2020 10:26:55 +0300
-Message-ID: <CAHp75VcftUCi-4w=NWXUb=zPYL9zz6BEHw6y1wUKPD8vXcX9zA@mail.gmail.com>
-Subject: Re: [PATCH v5 03/15] iio: sx9310: Fix irq handling
-To:     Daniel Campello <campello@chromium.org>
-Cc:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 4 Aug 2020 03:29:48 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1k2rOB-0004Fj-W7; Tue, 04 Aug 2020 07:29:36 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     tiwai@suse.com
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Nikhil Mahale <nmahale@nvidia.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Aaron Plattner <aplattner@nvidia.com>,
+        alsa-devel@alsa-project.org (moderated list:SOUND),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] ALSA: hda/hdmi: Add pins with jack detection support
+Date:   Tue,  4 Aug 2020 15:29:25 +0800
+Message-Id: <20200804072926.16897-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 2:58 AM Daniel Campello <campello@chromium.org> wrote:
->
-> Fixes enable/disable irq handling at various points. The driver needs to
-> only enable/disable irqs if there is an actual irq handler installed.
+HDMI on some platforms doesn't enable audio support because its Port
+Connectivity [31:30] is set to AC_JACK_PORT_NONE:
+Node 0x05 [Pin Complex] wcaps 0x40778d: 8-Channels Digital Amp-Out CP
+  Amp-Out caps: ofs=0x00, nsteps=0x00, stepsize=0x00, mute=1
+  Amp-Out vals:  [0x00 0x00]
+  Pincap 0x0b000094: OUT Detect HBR HDMI DP
+  Pin Default 0x58560010: [N/A] Digital Out at Int HDMI
+    Conn = Digital, Color = Unknown
+    DefAssociation = 0x1, Sequence = 0x0
+  Pin-ctls: 0x40: OUT
+  Unsolicited: tag=00, enabled=0
+  Power states:  D0 D3 EPSS
+  Power: setting=D0, actual=D0
+  Devices: 0
+  Connection: 3
+     0x02 0x03* 0x04
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Those pins were filtered out by commit 116dcde63806 ("ALSA: HDA: Remove
+unconnected PCM devices for Intel HDMI"). However, jacks that support
+detection won't have the issues the commit addresses.
 
-> Signed-off-by: Daniel Campello <campello@chromium.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->
-> Changes in v5: None
-> Changes in v4:
->  - Reverted condition check logic on enable/disable_irq methods.
->
-> Changes in v3:
->  - Moved irq presence check down to lower methods
->
-> Changes in v2:
->  - Reordered error handling on sx9310_resume()
->
->  drivers/iio/proximity/sx9310.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
-> index d7c77fc661ba86..dafee85018aa6d 100644
-> --- a/drivers/iio/proximity/sx9310.c
-> +++ b/drivers/iio/proximity/sx9310.c
-> @@ -323,11 +323,15 @@ static int sx9310_put_event_channel(struct sx9310_data *data, int channel)
->
->  static int sx9310_enable_irq(struct sx9310_data *data, unsigned int irq)
->  {
-> +       if (!data->client->irq)
-> +               return 0;
->         return regmap_update_bits(data->regmap, SX9310_REG_IRQ_MSK, irq, irq);
->  }
->
->  static int sx9310_disable_irq(struct sx9310_data *data, unsigned int irq)
->  {
-> +       if (!data->client->irq)
-> +               return 0;
->         return regmap_update_bits(data->regmap, SX9310_REG_IRQ_MSK, irq, 0);
->  }
->
-> @@ -381,7 +385,7 @@ static int sx9310_read_proximity(struct sx9310_data *data,
->
->         mutex_unlock(&data->mutex);
->
-> -       if (data->client->irq > 0) {
-> +       if (data->client->irq) {
->                 ret = wait_for_completion_interruptible(&data->completion);
->                 reinit_completion(&data->completion);
->         } else {
-> @@ -1010,10 +1014,11 @@ static int __maybe_unused sx9310_resume(struct device *dev)
->
->  out:
->         mutex_unlock(&data->mutex);
-> +       if (ret)
-> +               return ret;
->
->         enable_irq(data->client->irq);
-> -
-> -       return ret;
-> +       return 0;
->  }
->
->  static const struct dev_pm_ops sx9310_pm_ops = {
-> --
-> 2.28.0.163.g6104cc2f0b6-goog
->
+So still add the pin if it supports jack detection.
 
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ sound/pci/hda/patch_hdmi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index cd46247988e4..db3a5148bd40 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -1701,7 +1701,8 @@ static int hdmi_add_pin(struct hda_codec *codec, hda_nid_t pin_nid)
+ 	 * all device entries on the same pin
+ 	 */
+ 	config = snd_hda_codec_get_pincfg(codec, pin_nid);
+-	if (get_defcfg_connect(config) == AC_JACK_PORT_NONE)
++	if ((get_defcfg_connect(config) == AC_JACK_PORT_NONE) &&
++	    !(caps & AC_PINCAP_PRES_DETECT))
+ 		return 0;
+ 
+ 	/*
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
