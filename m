@@ -2,155 +2,103 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB9AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 469EB2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF41B207FC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:51:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jARuo43f"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xx6uBbNh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729432AbgHDOtS (ORCPT
+        id S1729004AbgHDOu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:49:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60402 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728478AbgHDOtC (ORCPT
+        Tue, 4 Aug 2020 10:50:59 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49736 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725904AbgHDOuw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:49:02 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D025C06174A;
-        Tue,  4 Aug 2020 07:49:01 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id c10so367736edk.6;
-        Tue, 04 Aug 2020 07:49:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g4HmwOYH2FipfU55YwXNgn+/KWI9nU6qQar00eEKnTI=;
-        b=jARuo43f4imeZbHxuoML4wNyRPTOwuEdSxdGaGmmEjiQMf0k+ARZ+35S8UliQueShq
-         eP0wC8Ag/bCp+Zrr1kaAC9ZuZGyh2J/cqvk1OBx0WpDyelZgZdAiRCd0WFo8tZmYqo0Y
-         7PiuhEGNILTeXGo46kKTLVePah8v3wCgRDJum0EXMPbocMpUleVTqO0Y272GXbjUyPH5
-         lYGAdiePK9a28RHry1cVndmlMfgRO4RvoJjBqJJDQK0K4ygPlXwB8/yGPyFFCbWItV6u
-         UQ9oavX098EpyXsAOA9V3NiotNgRWXOY0NuVucJnh4q/wfX2aBpvyy4qCt4UMFYOlEUY
-         KpZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g4HmwOYH2FipfU55YwXNgn+/KWI9nU6qQar00eEKnTI=;
-        b=uR4s7fc9k2GygDjZrzGQfdgslSJPqYUsMsgudBI6P6JrHsSCjsqa3ghYclKZsbviIs
-         maHrjwbUOu+MX6+bfmZxTyCKwnUKgYrV5Q0HQUfHXm67e7VVaV9TswcPioa5SnVLzJmI
-         +Mha3XjMjfIeOcTXUs1du3EV0h10LJjy2wej36TiqFAf4wpG0ICs0ofpCE98ootnAyce
-         ZQQHB05KaLvAXixjn4RmJt2PQ2Pi7zZ7jgYv5WcjMKM0xDYkgJBNu+duwgWIDEHGuunH
-         ViEfzHSZGoPE5yOduI3fOC9g9n0q4Mixzn2/fwMG0zEx/KD3LSfW1gplJfxBsGmhQDdt
-         d9hw==
-X-Gm-Message-State: AOAM530/c0gq4NONL6YrIlnQtKdGFPv+LIHPB0KgPRrAUsjwlPWOSH8Q
-        IEjjoyONn2j0TZCGH2XC+Txd05ALmpuSVHq7BI0=
-X-Google-Smtp-Source: ABdhPJzvDZkA05JzMe/6DGwbz7nTKib7xTiBIdtvgBQrjNjFlefh8ZT9iPjGtuAI7EG71+3trm7KlYtgLwGlIRjAHP0=
-X-Received: by 2002:aa7:da46:: with SMTP id w6mr17536741eds.7.1596552540239;
- Tue, 04 Aug 2020 07:49:00 -0700 (PDT)
+        Tue, 4 Aug 2020 10:50:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596552651;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6YxLRfbCPvEp7fds9gJqZErapKvRhVFigGRNQsWtgis=;
+        b=Xx6uBbNh0iJDgOpH48suyP+DkGDzF5B2iPqMLg2jNJe9xc2ix0T1zQi0R4IQMlUysxhYf+
+        WOsmwQfcRrw9ei7yFq1Iz/ZokP889w2luZ/TJgutQyFpKAs32qmg+rDG3aRh8LbLsD4kl0
+        MSEfoWI8IbbmUGUx41GnNOk6LwMumT4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-456-OMCkbzNkO12miiPFRDkg0A-1; Tue, 04 Aug 2020 10:50:48 -0400
+X-MC-Unique: OMCkbzNkO12miiPFRDkg0A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8E08580BCB2;
+        Tue,  4 Aug 2020 14:50:46 +0000 (UTC)
+Received: from gondolin (ovpn-112-169.ams2.redhat.com [10.36.112.169])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A960069317;
+        Tue,  4 Aug 2020 14:50:41 +0000 (UTC)
+Date:   Tue, 4 Aug 2020 16:50:39 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v2 17/24] virtio_config: disallow native type fields
+Message-ID: <20200804165039.58dcb29e.cohuck@redhat.com>
+In-Reply-To: <20200803205814.540410-18-mst@redhat.com>
+References: <20200803205814.540410-1-mst@redhat.com>
+        <20200803205814.540410-18-mst@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-References: <20200726111215.22361-1-konradybcio@gmail.com> <20200726111215.22361-5-konradybcio@gmail.com>
- <20200803110016.GL12965@vkoul-mobl> <CAF6AEGtW29BtJPq1xDEtvtkPHFVWEd_QJk5FpJEQPbmofnS64Q@mail.gmail.com>
- <20200804120946.GQ12965@vkoul-mobl>
-In-Reply-To: <20200804120946.GQ12965@vkoul-mobl>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 4 Aug 2020 07:49:44 -0700
-Message-ID: <CAF6AEGttPJSy+PcspPgxj2OELEyh2Xj-Gm2Uiv7Pcv6JMDE-tg@mail.gmail.com>
-Subject: Re: [PATCH 4/9] drm/msm/dsi: Add phy configuration for SDM630/636/660
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        martin.botka1@gmail.com, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        zhengbin <zhengbin13@huawei.com>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Harigovindan P <harigovi@codeaurora.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Xiaozhe Shi <xiaozhes@codeaurora.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 5:09 AM Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 03-08-20, 09:06, Rob Clark wrote:
-> > On Mon, Aug 3, 2020 at 4:00 AM Vinod Koul <vkoul@kernel.org> wrote:
-> > >
-> > > On 26-07-20, 13:12, Konrad Dybcio wrote:
-> > > > These SoCs make use of the 14nm phy, but at different
-> > > > addresses than other 14nm units.
-> > > >
-> > > > Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> > > > ---
-> > > >  .../devicetree/bindings/display/msm/dsi.txt    |  1 +
-> > > >  drivers/gpu/drm/msm/dsi/phy/dsi_phy.c          |  2 ++
-> > > >  drivers/gpu/drm/msm/dsi/phy/dsi_phy.h          |  1 +
-> > > >  drivers/gpu/drm/msm/dsi/phy/dsi_phy_14nm.c     | 18 ++++++++++++++++++
-> > >
-> > > Is there a reason why dsi phy needs to be here and not in phy subsystem
-> > > drivers/phy/ ?
-> >
-> > *maybe* it would be possible to split out all of the dsi (and hdmi)
-> > phy to drivers/phy.  But splitting out just the new ones wouldn't be
-> > practical (it would duplicate a lot of code, and make the rest of the
-> > dsi code have to deal with both cases).  And unlike dp/usb-c I'm not
-> > really sure I see an advantage to justify the churn.
->
-> So the question would be if it helps in reuse if we do that and does it
-> result in a better solution than dsi code managing the phy. The
-> advantage of framework (like phy) is that different subsystems can use
-> a (phy) driver and common framework helps reduce duplicates.
+On Mon, 3 Aug 2020 16:59:57 -0400
+"Michael S. Tsirkin" <mst@redhat.com> wrote:
 
-I'm not aware of any re-use that would be possible by splitting it
-out.. if there were, it would be a more compelling argument.
+> Transitional devices should all use __virtioXX types.
 
-It does increase the complexity and possibilities for getting kernel
-config wrong.  There are devices like the aarch64 laptops which do not
-have a debug serial port, where debugging issues like that can be a
-pain when you get no display.  OTOH that might be balanced out a bit
-by using a common framework/api that others are familiar with.
+I think they should use __leXX for those fields that are not present
+with legacy devices?
 
-Overall, nowhere near high enough on my priority list to spend time
-on.. there are bigger fires.  If someone was really motivated about
-this and wanted to send (tested) patches, then I'd take a look and see
-how it turned out.
+> Modern ones should use __leXX.
+> _uXX type would be a bug.
+> Let's prevent that.
 
-BR,
--R
+That sounds right, though.
 
-> Yes sure the question was not for a new phy but about the whole
-> msm/dsi/phy code and future for it.
->
-> --
-> ~Vinod
+> 
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> ---
+>  include/linux/virtio_config.h | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
+> index 64da491936f7..c68f58f3bf34 100644
+> --- a/include/linux/virtio_config.h
+> +++ b/include/linux/virtio_config.h
+> @@ -319,9 +319,8 @@ static inline __virtio64 cpu_to_virtio64(struct virtio_device *vdev, u64 val)
+>  	__virtio_pick_type(x, __u8, __u8,					\
+>  		__virtio_pick_endian(x, __virtio16, __virtio32, __virtio64,	\
+>  			__virtio_pick_endian(x, __le16, __le32, __le64,		\
+> -				__virtio_pick_endian(x, __u16, __u32, __u64,	\
+> -					/* No other type allowed */		\
+> -					(void)0)))))
+> +				/* No other type allowed */			\
+> +				(void)0))))
+>  
+>  #endif
+>  
+
