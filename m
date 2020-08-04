@@ -2,105 +2,145 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0828EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F22C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEA6D2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:34:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596540876;
-	bh=PdL7dmBcGVuTWu4ybcpV6t4DvW7WSlxwwBQKJaRjvBg=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=YY51Ws7+Vstdtsx1lpToCivec8lj/NVpywrbUhbsuhJgTuHJGvow3WMa01o8z8ENa
-	 AZz8XfoIcdfBhCIOdXTgluc0UpnTIPrDH+dpusRwTcUu+E5SsB4ZfavSNaJHH16O9B
-	 0zp+3kGD62snHlT5qE/6IbMfLQJBryhprDpceQKg=
+	by mail.kernel.org (Postfix) with ESMTP id E3BEF208C7
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:35:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZySsi+t7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730196AbgHDLef (ORCPT
+        id S1730221AbgHDLe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 07:34:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58168 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726400AbgHDLed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 07:34:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 4 Aug 2020 07:34:58 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51676 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729789AbgHDLev (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 07:34:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596540888;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=etjlVeN4UH1qO9OU1bYP1CrExEJDSItCGo2UFGYinfY=;
+        b=ZySsi+t7LQe8pn3C4JPSzc0CimRZKRNhht5dpsc6IF+U9CQ7uRWhyPoQMES5tAjcuCHV42
+        esJ8LCZmFiP56t0fHJeBewYQroKvdc3okzyKfJvORDbdB8IgEfMp/rDkOSz7nU45G53ArM
+        hxh7gkxv6wwZuMikliuYXMI4EPXt5uM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-362--PWjaPm2NvK-pYOXQjXF9w-1; Tue, 04 Aug 2020 07:34:47 -0400
+X-MC-Unique: -PWjaPm2NvK-pYOXQjXF9w-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 653182086A;
-        Tue,  4 Aug 2020 11:34:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596540873;
-        bh=PdL7dmBcGVuTWu4ybcpV6t4DvW7WSlxwwBQKJaRjvBg=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=QxCfIxE4JI3HoeOCBjew2jm2grr9RL1ZWpwzTwpn4OV+o4IH335ItqMKfOQy440Uh
-         LMF2MmzShTVtP6PJk+z43xl9tTGkT5ZAlaynPNI3t+dSKsge3OxDWqkncWckxWLieM
-         bm/l2Ls9ff6IxvbTTfH+qggloAKYc9Z8JKkAc/QE=
-Date:   Tue, 4 Aug 2020 13:34:13 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        linux-kernel@vger.kernel.org, speakup@linux-speakup.org
-Subject: Re: [PATCH 2/2] speakup: only build serialio when ISA is enabled
-Message-ID: <20200804113413.GA181242@kroah.com>
-References: <20200804111332.dex7jobmabifdzw5@function>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7591D10059A9;
+        Tue,  4 Aug 2020 11:34:45 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3D2C771764;
+        Tue,  4 Aug 2020 11:34:42 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200804101659.GA32719@miu.piliscsaba.redhat.com>
+References: <20200804101659.GA32719@miu.piliscsaba.redhat.com> <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk> <159646180259.1784947.223853053048725752.stgit@warthog.procyon.org.uk>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
+        linux-api@vger.kernel.org, torvalds@linux-foundation.org,
+        raven@themaw.net, mszeredi@redhat.com, christian@brauner.io,
+        jannh@google.com, darrick.wong@oracle.com, kzak@redhat.com,
+        jlayton@redhat.com, linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/18] fsinfo: Add fsinfo() syscall to query filesystem information [ver #21]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200804111332.dex7jobmabifdzw5@function>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2041167.1596540881.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Tue, 04 Aug 2020 12:34:41 +0100
+Message-ID: <2041168.1596540881@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 01:13:32PM +0200, Samuel Thibault wrote:
-> Drivers using serialio are already made available in Kconfig only under
-> the ISA condition.
-> 
-> This solves warnings in inb/outb macros on platform that do not have 
-> support for ISA.
-> 
-> Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
-> 
-> Index: linux-2.6/drivers/accessibility/speakup/Makefile
-> ===================================================================
-> --- linux-2.6.orig/drivers/accessibility/speakup/Makefile
-> +++ linux-2.6/drivers/accessibility/speakup/Makefile
-> @@ -16,6 +16,7 @@ obj-$(CONFIG_SPEAKUP_SYNTH_TXPRT) += spe
->  obj-$(CONFIG_SPEAKUP_SYNTH_DUMMY) += speakup_dummy.o
->  
->  obj-$(CONFIG_SPEAKUP) += speakup.o
-> +obj-$(CONFIG_ISA) += serialio.o
->  speakup-y := \
->  	buffers.o \
->  	devsynth.o \
-> @@ -25,7 +26,6 @@ speakup-y := \
->  	keyhelp.o \
->  	kobjects.o \
->  	selection.o \
-> -	serialio.o \
->  	spk_ttyio.o \
->  	synth.o \
->  	thread.o \
+Miklos Szeredi <miklos@szeredi.hu> wrote:
 
-Oops, no, I get the following build errors with this patch:
+> > 		__u32	Mth;
+> =
 
-ERROR: modpost: "spk_wait_for_xmitr" [drivers/accessibility/speakup/speakup.ko] undefined!
-ERROR: modpost: "spk_serial_io_ops" [drivers/accessibility/speakup/speakup_keypc.ko] undefined!
-ERROR: modpost: "spk_stop_serial_interrupt" [drivers/accessibility/speakup/speakup_keypc.ko] undefined!
-ERROR: modpost: "spk_serial_io_ops" [drivers/accessibility/speakup/speakup_dtlk.ko] undefined!
-ERROR: modpost: "spk_stop_serial_interrupt" [drivers/accessibility/speakup/speakup_dtlk.ko] undefined!
-ERROR: modpost: "spk_serial_io_ops" [drivers/accessibility/speakup/speakup_decpc.ko] undefined!
-ERROR: modpost: "spk_stop_serial_interrupt" [drivers/accessibility/speakup/speakup_decpc.ko] undefined!
-ERROR: modpost: "spk_serial_io_ops" [drivers/accessibility/speakup/speakup_acntpc.ko] undefined!
-ERROR: modpost: "spk_stop_serial_interrupt" [drivers/accessibility/speakup/speakup_acntpc.ko] undefined!
+> The Mth field seems to be unused in this patchset.  Since the struct is
+> extensible, I guess there's no point in adding it now.
 
+Yeah - I was using it to index through the server address lists for networ=
+k
+filesystems (ie. the Mth address of the Nth server), but I've dropped the =
+nfs
+patch and made afs return an array of addresses for the Nth server since t=
+he
+address list can get reordered.
 
-So something else needs to change here, sorry, dropping this patch for
-now.
+Ordinarily, I'd just take it out, but I don't want to cause the patchset t=
+o
+get dropped for yet another merge cycle :-/
 
-thanks,
+> > +#define FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO 0x100	/* Information about =
+attr N (for path) */
+> > +#define FSINFO_ATTR_FSINFO_ATTRIBUTES	0x101	/* List of supported attr=
+s (for path) */
+> =
 
-greg k-h
+> I think it would make sense to move the actual attributes to a separate =
+patch
+> and leave this just being the infrastructure.
+
+Maybe.  If there are no attributes, then it makes it a bit hard to test.
+
+> > +struct fsinfo_u128 {
+> ...
+> =
+
+> Shouldn't this belong in <linux/types.h>?
+
+Maybe.  Ideally, I'd use a proper C type rather than a struct.
+
+> Is there a reason these are 128 wide fields?  Are we approaching the lim=
+its of
+> 64bits?
+
+Dave Chinner was talking at LSF a couple of years ago, IIRC, about looking
+beyond the 16 Exa limit in XFS.  I've occasionally talked to people who ha=
+ve
+multi-Peta data sets in AFS or whatever they were using, streamed from sci=
+ence
+experiments, so the limit isn't necessarily all *that* far off.
+
+> > +struct fsinfo_limits {
+> > +	struct fsinfo_u128 max_file_size;	/* Maximum file size */
+> > +	struct fsinfo_u128 max_ino;		/* Maximum inode number */
+> =
+
+> Again, what's the reason.  AFACT we are not yet worried about overflowin=
+g 64
+> bits.  Future proofing is good, but there has to be some rules and reaso=
+ns
+> behind the decisions.
+
+This is cheap to do.  This information is expected to be static for the
+lifetime a superblock and, for most filesystems, of the running kernel, so
+simply copying it with memcpy() from rodata is going to suffice most of th=
+e
+time.
+
+But don't worry - 640K is sufficient for everyone ;-)
+
+David
+
