@@ -5,71 +5,73 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF17C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B28C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7322067D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A707A2067D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:47:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nMnqkLp9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T8YDxwS+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbgHDMrP (ORCPT
+        id S1728361AbgHDMql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 08:47:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41166 "EHLO
+        Tue, 4 Aug 2020 08:46:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726660AbgHDMoW (ORCPT
+        with ESMTP id S1728295AbgHDMoY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 08:44:22 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16174C06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 05:44:22 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id d190so2537606wmd.4
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 05:44:22 -0700 (PDT)
+        Tue, 4 Aug 2020 08:44:24 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A559C06179F
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 05:44:24 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id 3so2784666wmi.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 05:44:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kh3fLdhtAK8iltYl6aGsCpfSwDzQcJQDII6+Lr3Ir4w=;
-        b=nMnqkLp9MyaD7mVBWPOdpipOJAA/A+eqGB2+7v2AnGvajHcTmtJGzfEa8AObnk3OGO
-         X6yzj+zqibdmVd52uW6BsVLE1twlWOD8iHOgBNZ4VGgtFVF3pWYXGAqPfb8l+53YHRNG
-         fkEUw2haM1Xyld8Y5Y4NGy7cZi9KRdEu+s1yEngpns9vBqo+5u5vyUfrDXyt3ivwb/rB
-         clg/7E3xKGUCx24uRr1RBdN9jkogBMFaY3KQRg6bWxxmOvo5fYHBnXt+k0Nf+/PDBu2f
-         s6HexrWOx4jElhs7Dd34qf7UdiQd6LCDGnCq2XOnNawU9uylFjuZkOHE2fgbsJFmSbff
-         SnFA==
+        bh=bN3d8Ia77BH2nBiHDQ6zBNPByWQO01hAGf1Nc3k/FjU=;
+        b=T8YDxwS+GAi/l87EqEDVnHA6L2vWdoJLRomogp4zswguktwRhtfY6a3S80oC+la+7Y
+         uBOGZPkWUazcUyhEPQsfO3QZ16muTbOfxNxa4uXdYwfXdmkfVzoMRSW4m/T7f0i4RLf7
+         dX+k8C7kUSi09yoGq/WkXRUuQWQIUOu80qSJ8B9K9QLhl5toYoFUrNUqUcTwdRw8GrmH
+         fMUA0SnmjEveRBv57i02a+TxYyxNXCrEDBzYs7JuFuOONWrjDdCFY0ND5r47wpeLc24V
+         fJMl0bur8BNgusZj++pQeoEnXBDmf1q7b4PbFj3Wzq0ri29fof8CCFp8ai4icK9pDdY1
+         JhtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kh3fLdhtAK8iltYl6aGsCpfSwDzQcJQDII6+Lr3Ir4w=;
-        b=oabJUsKn5bJ2yODlvSjnFk3AXQq0Db2WFFcHmyOb6/4qP7EmXEv6M4Yn3qx/F9UwBI
-         D8Eay7LxmU6U3HXa3WcOLACUIND9ya+JMasCVTlasEuF2X8CYKVaDFRiH1hjPxrACL2B
-         YrB7Giy4sEhYqdKjnh9wNVeOqY6NVKX+XFPuS3HY7sgGPLcfYu+Tt6as1g1nukhmgL6R
-         s6eV0YYMpFuu5xXvSI4nhY8AxqJmqavqL7/QDRuPXPQne3BnF53kPZL3xMZKmfrVz7Us
-         LIe+Rf3jk0S//u/8ED4s1aK/o2P5DMkXBzhDWrb/aEB5STQDGlADXnhAMhDU61b9XVLT
-         hw5Q==
-X-Gm-Message-State: AOAM53253db4DT6Zgzj8Bw1LsCONeP8A2mEI7mmvy9aDd7uvWoGbjc+P
-        TC+RMDsQDo1pc2E5qKJEULmrDw==
-X-Google-Smtp-Source: ABdhPJxlETqHM58ekeF7YRtlEWgL6bu7W0dZE0N/3gry/XAbgEfMhCjsPaytXate5VOSsOPSdbiQrg==
-X-Received: by 2002:a1c:7702:: with SMTP id t2mr3859731wmi.169.1596545060810;
-        Tue, 04 Aug 2020 05:44:20 -0700 (PDT)
+        bh=bN3d8Ia77BH2nBiHDQ6zBNPByWQO01hAGf1Nc3k/FjU=;
+        b=KUsBdWJ2QrMAPA0yD/3NmtY5fNC4BiWqLmt3XjJ4ecZliP0wQypSYbDgLEtXFV9VES
+         U3SxFQCjg9nQZDZFCB97PMDFD4Q4tPhl9KBh0IdquOjdgAdBq9EcO4xlcj+hFMeW4zAA
+         3AfZG0+x4zIH60vLaKCUUfvbxHqaHz8zACbzLrHU/fjRarIGYpEef9bzLqeCSgkEEdud
+         T6pODHcSk0XuT6vvBdDHLhteK6ulJCs0TFbc2/L4gbfDcCRx1kafyUv1DJy+88aondMu
+         +5eHsCzoAYsdaqJItUjiL6zdDdSFaVHUyVWnG+g220p1T9oAvCez8tOo65CBJmTLqtXU
+         KeTQ==
+X-Gm-Message-State: AOAM530nLvT741FkKJ9aJxtaWrf9xlbp9I0mhEIktmDXpg06zxIyUNE9
+        c8Uyc9gUML3P0zvdASfNiO9zzQ==
+X-Google-Smtp-Source: ABdhPJz9A0fUr0s+57vaSQaPT8GQEVwMIBWtT6cib6RQGYxAGZypLJ4R2NHV8/yEEKGRo0R1n0bqCQ==
+X-Received: by 2002:a7b:c257:: with SMTP id b23mr3829607wmj.164.1596545062751;
+        Tue, 04 Aug 2020 05:44:22 -0700 (PDT)
 Received: from zen.linaroharston ([51.148.130.216])
-        by smtp.gmail.com with ESMTPSA id r206sm4554096wma.6.2020.08.04.05.44.18
+        by smtp.gmail.com with ESMTPSA id b137sm4843577wmb.9.2020.08.04.05.44.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 04 Aug 2020 05:44:18 -0700 (PDT)
 Received: from zen.lan (localhost [127.0.0.1])
-        by zen.linaroharston (Postfix) with ESMTP id 9218B1FF8C;
+        by zen.linaroharston (Postfix) with ESMTP id 860581FF87;
         Tue,  4 Aug 2020 13:44:17 +0100 (BST)
 From:   =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>
 To:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
         christoffer.dall@arm.com, maz@kernel.org,
-        =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>
-Subject: [PATCH  v1 2/3] arm64: gate the whole of pci-xgene on CONFIG_PCI_XGENE
-Date:   Tue,  4 Aug 2020 13:44:16 +0100
-Message-Id: <20200804124417.27102-3-alex.bennee@linaro.org>
+        =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        Robert Richter <rrichter@marvell.com>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH  v1 1/3] arm64: allow de-selection of ThunderX PCI controllers
+Date:   Tue,  4 Aug 2020 13:44:15 +0100
+Message-Id: <20200804124417.27102-2-alex.bennee@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200804124417.27102-1-alex.bennee@linaro.org>
 References: <20200804124417.27102-1-alex.bennee@linaro.org>
@@ -81,31 +83,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a little weirder as bits of the file are already conditioned
-on the exiting symbol. Either way they are not actually needed for
-non-xgene machines saving another 12k:
+For a pure VirtIO guest bringing in all the PCI quirk handling adds a
+significant amount of bloat to kernel we don't need. Solve this by
+adding a CONFIG symbol for the ThunderX PCI devices and allowing it to
+be turned off. Saving over 300k from the uncompressed vmlinux:
 
--rwxr-xr-x 1 alex alex  86033880 Aug  3 16:39 vmlinux.orig*
--rwxr-xr-x 1 alex alex  85652472 Aug  3 16:54 vmlinux.rm-thunder*
--rwxr-xr-x 1 alex alex  85639808 Aug  3 17:12 vmlinux*
+  -rwxr-xr-x 1 alex alex  85652472 Aug  3 16:48 vmlinux*
+  -rwxr-xr-x 1 alex alex  86033880 Aug  3 16:39 vmlinux.orig*
 
 Signed-off-by: Alex Bennée <alex.bennee@linaro.org>
+Cc: Robert Richter <rrichter@marvell.com>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
 ---
- drivers/pci/controller/Makefile | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/arm64/Kconfig.platforms    | 2 ++
+ arch/arm64/configs/defconfig    | 1 +
+ drivers/pci/controller/Kconfig  | 7 +++++++
+ drivers/pci/controller/Makefile | 4 ++--
+ 4 files changed, 12 insertions(+), 2 deletions(-)
 
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 8dd05b2a925c..a328eebdaa59 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -253,12 +253,14 @@ config ARCH_SPRD
+ 
+ config ARCH_THUNDER
+ 	bool "Cavium Inc. Thunder SoC Family"
++        select PCI_THUNDER
+ 	help
+ 	  This enables support for Cavium's Thunder Family of SoCs.
+ 
+ config ARCH_THUNDER2
+ 	bool "Cavium ThunderX2 Server Processors"
+ 	select GPIOLIB
++        select PCI_THUNDER
+ 	help
+ 	  This enables support for Cavium's ThunderX2 CN99XX family of
+ 	  server processors.
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 2ca7ba69c318..d840cba99941 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -199,6 +199,7 @@ CONFIG_PCI_HOST_GENERIC=y
+ CONFIG_PCI_XGENE=y
+ CONFIG_PCIE_ALTERA=y
+ CONFIG_PCIE_ALTERA_MSI=y
++CONFIG_PCI_THUNDER=y
+ CONFIG_PCI_HOST_THUNDER_PEM=y
+ CONFIG_PCI_HOST_THUNDER_ECAM=y
+ CONFIG_PCIE_ROCKCHIP_HOST=m
+diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+index adddf21fa381..28335ffa5d48 100644
+--- a/drivers/pci/controller/Kconfig
++++ b/drivers/pci/controller/Kconfig
+@@ -286,6 +286,13 @@ config PCI_LOONGSON
+ 	  Say Y here if you want to enable PCI controller support on
+ 	  Loongson systems.
+ 
++config PCI_THUNDER
++       bool "Thunder X PCIE controllers"
++       depends on ARM64
++       select PCI_QUIRKS
++       help
++          Say Y here to enable ThunderX ECAM and PEM PCI controllers.
++
+ source "drivers/pci/controller/dwc/Kconfig"
+ source "drivers/pci/controller/mobiveil/Kconfig"
+ source "drivers/pci/controller/cadence/Kconfig"
 diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-index 8fad4781a5d3..3b9b72f5773a 100644
+index efd9733ead26..8fad4781a5d3 100644
 --- a/drivers/pci/controller/Makefile
 +++ b/drivers/pci/controller/Makefile
-@@ -47,6 +47,4 @@ obj-y				+= mobiveil/
+@@ -45,8 +45,8 @@ obj-y				+= mobiveil/
+ # ARM64 and use internal ifdefs to only build the pieces we need
+ # depending on whether ACPI, the DT driver, or both are enabled.
  
- obj-$(CONFIG_PCI_THUNDER) += pci-thunder-ecam.o
- obj-$(CONFIG_PCI_THUNDER) += pci-thunder-pem.o
--ifdef CONFIG_PCI
--obj-$(CONFIG_ARM64) += pci-xgene.o
--endif
-+obj-$(CONFIG_PCI_XGENE) += pci-xgene.o
++obj-$(CONFIG_PCI_THUNDER) += pci-thunder-ecam.o
++obj-$(CONFIG_PCI_THUNDER) += pci-thunder-pem.o
+ ifdef CONFIG_PCI
+-obj-$(CONFIG_ARM64) += pci-thunder-ecam.o
+-obj-$(CONFIG_ARM64) += pci-thunder-pem.o
+ obj-$(CONFIG_ARM64) += pci-xgene.o
+ endif
 -- 
 2.20.1
 
