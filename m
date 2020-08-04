@@ -2,112 +2,126 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9F4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 166F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE7E20738
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:35:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="PjOXiOw7"
+	by mail.kernel.org (Postfix) with ESMTP id 271652075D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:35:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729889AbgHDIfD (ORCPT
+        id S1729941AbgHDIfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 04:35:03 -0400
-Received: from www381.your-server.de ([78.46.137.84]:33268 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729654AbgHDIfC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 04:35:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID;
-        bh=S5HW9YqmHmV1Y/k3CNQcKpnE6tmv04nycPktPNyk1BY=; b=PjOXiOw7/ykfaOcQjQdMrJkjM6
-        I39GnTow0nG6T6T/u7lxrm6gEVrStXbsD+tKkwy9OjDvESf3fH0nXsfEoxyWq3WX4GRJ8/3OEkXq9
-        /qgTTPU7ebjy6JI9b4olZfRALbrfwKIKhTgVX6ji49b5AipxL5IWdk26l7ldozFZ81l7zGsW8Wrr2
-        jf/UMYRYpohaMlBGNd3einTt6apXdzUZHO0c+HDJkeNp6Z70wJkTFofuaAgSPtuleCvzU0lFGtRw3
-        IeF3KCa9JKk7UO946Zf7NOF1eHgA9RTWKD7eaDaao9u+Jch3L0Q99OvsMrqRMJ8pTaR9l5O5zIoLS
-        m5iG12Hg==;
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www381.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <lars@metafoo.de>)
-        id 1k2sPM-0001M6-0A; Tue, 04 Aug 2020 10:34:52 +0200
-Received: from [2001:a61:2517:6d01:9e5c:8eff:fe01:8578]
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1k2sPL-0003rl-P0; Tue, 04 Aug 2020 10:34:51 +0200
-Subject: Re: [PATCH v5 2/2] iio: light: as73211: New driver
-To:     Christian Eggers <ceggers@arri.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200802163735.76617-1-ceggers@arri.de>
- <20200802163735.76617-3-ceggers@arri.de>
- <CAHp75Vev64E86OWm+eV=1o4ZDs0Xh_Y1z6V54GmpRwWmjD7=eA@mail.gmail.com>
- <2356337.HYKpEJ1Wej@n95hx1g2>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <2e5f6884-66a4-f8e7-6579-247599183d9e@metafoo.de>
-Date:   Tue, 4 Aug 2020 10:34:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 4 Aug 2020 04:35:47 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2601 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728163AbgHDIfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 04:35:47 -0400
+Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 97260A2700479B0058EC;
+        Tue,  4 Aug 2020 16:35:44 +0800 (CST)
+Received: from [10.40.49.11] (10.40.49.11) by dggeme758-chm.china.huawei.com
+ (10.3.19.104) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1913.5; Tue, 4 Aug
+ 2020 16:35:44 +0800
+Subject: Re: [RFC PATCH 8/9] PCI/PME: Add RCEC PME handling
+To:     Sean V Kelley <sean.v.kelley@intel.com>, <bhelgaas@google.com>,
+        <Jonathan.Cameron@huawei.com>, <rjw@rjwysocki.net>,
+        <ashok.raj@kernel.org>, <tony.luck@intel.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+References: <20200724172223.145608-1-sean.v.kelley@intel.com>
+ <20200724172223.145608-9-sean.v.kelley@intel.com>
+From:   Jay Fang <f.fangjian@huawei.com>
+Message-ID: <edbcf3da-a1d5-e1b6-6a1a-a286429fc4e3@huawei.com>
+Date:   Tue, 4 Aug 2020 16:35:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.0.1
 MIME-Version: 1.0
-In-Reply-To: <2356337.HYKpEJ1Wej@n95hx1g2>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.4/25893/Mon Aug  3 17:01:47 2020)
+In-Reply-To: <20200724172223.145608-9-sean.v.kelley@intel.com>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.40.49.11]
+X-ClientProxiedBy: dggeme718-chm.china.huawei.com (10.1.199.114) To
+ dggeme758-chm.china.huawei.com (10.3.19.104)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/4/20 9:40 AM, Christian Eggers wrote:
-> On Sunday, 2 August 2020, 20:02:35 CEST, Andy Shevchenko wrote:
->> Thanks for an update, my comments below.
-> Thanks for the review. Please see below for my questions.
->
-> Best regards
-> Christian
->
->> On Sun, Aug 2, 2020 at 7:40 PM Christian Eggers <ceggers@arri.de> wrote:
->>> Datasheet:
->>> https://ams.com/documents/20143/36005/AS73211_DS000556_3-01.pdf/a65474c0-
->>> b302-c2fd-e30a-c98df87616df
->> Do we need the UUID after the document file name?
-> I have send AMS an inquiry. Not sure whether I will get an answer. I will wait
-> a few days until sending v6.
->
->>> +#define AS73211_OFFSET_TEMP (-66.9)
->>> +#define AS73211_SCALE_TEMP  0.05
->> In the kernel we don't do float arithmetic. How these are being used?
-> Does this restriction also apply for compile time constants? I am quite
-> sure that all calculations using these defines will be evaluated at compile
-> time. If found a number of other places where probably the same is done:
->
-> find . -name '*.c' | xargs grep "#define.*[0-9]\.[0-9]" | grep -v '"' | grep -v "\/\*.*[0-9]\.[0-9]"
 
-I believe it is implementation defined. The compiler is free to generate 
-floating math and do the conversion at runtime. Although it is probably 
-safe to assume that no reasonable compiler will do this for your code. 
-If only we had constexpr in C, then there was a way to make it 
-guaranteed that the conversion happens during compile time.
 
-But I agree with you, it would be nice to have a cleaner way of 
-declaring fixed point numbers without having to pay attention to how 
-many 0s you have to put after the least significant digit.
+ÔÚ 2020/7/25 1:22, Sean V Kelley Ð´µÀ:
+> The Root Complex Event Collectors(RCEC) appear as peers of Root Ports
+> and also have the PME capability. So add RCEC support to the current PME
+> service driver and attach the PME service driver to the RCEC device.
+> 
+> Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> ---
+>  drivers/pci/pcie/pme.c | 15 +++++++++++----
+>  1 file changed, 11 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
+> index 6a32970bb731..87799166c96a 100644
+> --- a/drivers/pci/pcie/pme.c
+> +++ b/drivers/pci/pcie/pme.c
+> @@ -310,7 +310,10 @@ static int pcie_pme_can_wakeup(struct pci_dev *dev, void *ign)
+>  static void pcie_pme_mark_devices(struct pci_dev *port)
+>  {
+>  	pcie_pme_can_wakeup(port, NULL);
+> -	if (port->subordinate)
+> +
+> +	if (pci_pcie_type(port) == PCI_EXP_TYPE_RC_EC)
+> +		pcie_walk_rcec(port, pcie_pme_can_wakeup, NULL);
+> +	else if (port->subordinate)
+>  		pci_walk_bus(port->subordinate, pcie_pme_can_wakeup, NULL);
+>  }
+>  
+> @@ -320,10 +323,15 @@ static void pcie_pme_mark_devices(struct pci_dev *port)
+>   */
+>  static int pcie_pme_probe(struct pcie_device *srv)
+>  {
+> -	struct pci_dev *port;
+> +	struct pci_dev *port = srv->port;
+>  	struct pcie_pme_service_data *data;
+>  	int ret;
+>  
+> +	/* Limit to Root Ports or Root Complex Event Collectors */
+> +	if ((pci_pcie_type(port) != PCI_EXP_TYPE_RC_EC) &&
+> +	    (pci_pcie_type(port) != PCI_EXP_TYPE_ROOT_PORT))
+> +		return -ENODEV;
+> +
+>  	data = kzalloc(sizeof(*data), GFP_KERNEL);
+>  	if (!data)
+>  		return -ENOMEM;
+> @@ -333,7 +341,6 @@ static int pcie_pme_probe(struct pcie_device *srv)
+>  	data->srv = srv;
+>  	set_service_data(srv, data);
+>  
+> -	port = srv->port;
+>  	pcie_pme_interrupt_enable(port, false);
+>  	pcie_clear_root_pme_status(port);
+>  
+> @@ -445,7 +452,7 @@ static void pcie_pme_remove(struct pcie_device *srv)
+>  
+>  static struct pcie_port_service_driver pcie_pme_driver = {
+>  	.name		= "pcie_pme",
+> -	.port_type	= PCI_EXP_TYPE_ROOT_PORT,
+> +	.port_type	= PCIE_ANY_PORT,
+Maybe we can use port_type for driver matching. There is no need
+to check the type of port in pcie_pme_probe function.
 
+
+Jay
+
+>  	.service	= PCIE_PORT_SERVICE_PME,
+>  
+>  	.probe		= pcie_pme_probe,
+> 
