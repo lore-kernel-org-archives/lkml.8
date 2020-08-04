@@ -2,121 +2,170 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E94DAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D52C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB22D20738
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:21:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596543672;
-	bh=gey3esvl8wxAFJQ2OBCATSygwLbCiyTXxmuo4omuQjo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kCPP3huj8VKmr+RK0YQ25FMZZeLv2VO3iYPsUIj490px+Wy5x8fPtu0ref+rI2/ES
-	 7FVnSCFMjVlsm7BQ3WCaCx55LPplxi6u2OFqrABzcUx52xFaqCETDd7QgvZp6Dngzw
-	 t3mkcUX3RqRVV/d/oGsr583bB14T0kC3fvZiuFhI=
+	by mail.kernel.org (Postfix) with ESMTP id DC25B22BED
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:22:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="k7CDNKMQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbgHDMSB (ORCPT
+        id S1726105AbgHDMVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 08:18:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44392 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726198AbgHDMLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 08:11:02 -0400
-Received: from localhost (unknown [122.171.202.192])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E70462177B;
-        Tue,  4 Aug 2020 12:09:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596542990;
-        bh=gey3esvl8wxAFJQ2OBCATSygwLbCiyTXxmuo4omuQjo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZZOJqEZ7ULpCVvpaR+mEa6S1b07HmtrWcayO6oiJVvACUiM9YU99kR+7yCx509uj+
-         PqVDfLqST8/x5f9kYzlfz0llp8qz2n58fvd10CVoYrBGEspn96gmX4MXk1wNHuwGG3
-         oWqka7+RyZxNSFDocwiL3Av/TJINQWNRcXQbUhdc=
-Date:   Tue, 4 Aug 2020 17:39:46 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        martin.botka1@gmail.com, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        zhengbin <zhengbin13@huawei.com>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Harigovindan P <harigovi@codeaurora.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Xiaozhe Shi <xiaozhes@codeaurora.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH 4/9] drm/msm/dsi: Add phy configuration for SDM630/636/660
-Message-ID: <20200804120946.GQ12965@vkoul-mobl>
-References: <20200726111215.22361-1-konradybcio@gmail.com>
- <20200726111215.22361-5-konradybcio@gmail.com>
- <20200803110016.GL12965@vkoul-mobl>
- <CAF6AEGtW29BtJPq1xDEtvtkPHFVWEd_QJk5FpJEQPbmofnS64Q@mail.gmail.com>
+        Tue, 4 Aug 2020 08:21:40 -0400
+Received: from mail-am6eur05on2112.outbound.protection.outlook.com ([40.107.22.112]:23041
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727786AbgHDMMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 08:12:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NdY7qdjXIIZVuTFEQKFaqlcLd9ABr2+gbcVplMk3b6XUnPix9tvBetJ/uHKRVHSzHMJfQbrk5reKsCaeaQpFTUTHV7wZOmMJxGhnq3pVQnsF7Gd44bN9JHr6bQCz1bVySDoU32gvyXagMUnpf6AS919fN7Tm99pYykkmxX+hjghwEF7UrdQb+kAX/ooZ4STesLqcY1LX3LP1cG8x9d1L2UpAs5umlpZ/AsxlHtcoFKTmgNlYVAyiTY7DPRMsY4EZ2JTJt5UC5BFLsdyhaAcvLKQ2AH1kBgOv6+GEEZJ3RlxcVrOr3KxieumUdNySeu+u2dMG2RTCM+2tVg0hSccqLQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GYSw/81WJ60WUOG4hg8wHvqm75XTPjGA8HgDvG+R3MM=;
+ b=G64YpfDevFTI1EoROlFJQ2WYHZjttW8gkNcUYIkZYynOYVgm1xE+gm3reJmrX+J29JjNPK1JN5aYdJZD6aIjALoLtD7rzfjRNpH2QoYkJmD75zc1A2x3aUZtRXLGr4yPvkd6cHWk1u5F8bHNqK46s4JioeILPks7vXPMNBgwxpL7aKhf7cpyp9lDbomXgr85tZzIzGOeDdCfNOZu/MVt8kLRYdG7nJK1n6YDiC2ZpVqEB7UOmyyT5SvJZ2vvuy7TuPC3QsRV5C5mb+RJ915EkFHOgpZ6dUYaZEDki5VKF2kwjfjrtrsQThcL/fQhLvII7XPdeXQJnXrKj39rqzycjg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
+ header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GYSw/81WJ60WUOG4hg8wHvqm75XTPjGA8HgDvG+R3MM=;
+ b=k7CDNKMQh7Lj24HCblb3qKBfvBZ1cRRcQ6bDMkJ4ZUXL1rodOs5mS5/b0q2FPM1Y0dMKXkW97dNe3pZ4GuzqAGmc23fmz9mnO8TDS/SdrfOZYjKNnqKo55qcl45ZA3vSDFYepjBk8i7ZeD8QUAuA8pgiScJD+GSPuKwjQeAppOU=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=virtuozzo.com;
+Received: from AM6PR08MB4756.eurprd08.prod.outlook.com (2603:10a6:20b:cd::17)
+ by AM7PR08MB5366.eurprd08.prod.outlook.com (2603:10a6:20b:10b::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17; Tue, 4 Aug
+ 2020 12:11:58 +0000
+Received: from AM6PR08MB4756.eurprd08.prod.outlook.com
+ ([fe80::bc7a:376d:e743:f295]) by AM6PR08MB4756.eurprd08.prod.outlook.com
+ ([fe80::bc7a:376d:e743:f295%5]) with mapi id 15.20.3239.022; Tue, 4 Aug 2020
+ 12:11:58 +0000
+Subject: Re: [PATCH 00/23] proc: Introduce /proc/namespaces/ directory to
+ expose namespaces lineary
+To:     Andrei Vagin <avagin@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>, viro@zeniv.linux.org.uk,
+        adobriyan@gmail.com, davem@davemloft.net,
+        akpm@linux-foundation.org, christian.brauner@ubuntu.com,
+        areber@redhat.com, serge@hallyn.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
+ <87k0yl5axy.fsf@x220.int.ebiederm.org>
+ <56928404-f194-4194-5f2a-59acb15b1a04@virtuozzo.com>
+ <20200804054313.GA100819@gmail.com>
+From:   Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+Message-ID: <b64dc485-de42-cd42-a0d6-b9962d9ca4fd@virtuozzo.com>
+Date:   Tue, 4 Aug 2020 15:11:55 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+In-Reply-To: <20200804054313.GA100819@gmail.com>
+Content-Type: text/plain; charset=koi8-r; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM0PR10CA0077.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:15::30) To AM6PR08MB4756.eurprd08.prod.outlook.com
+ (2603:10a6:20b:cd::17)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGtW29BtJPq1xDEtvtkPHFVWEd_QJk5FpJEQPbmofnS64Q@mail.gmail.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.39] (178.234.188.22) by AM0PR10CA0077.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:15::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.18 via Frontend Transport; Tue, 4 Aug 2020 12:11:56 +0000
+X-Originating-IP: [178.234.188.22]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: aeb16269-bc0b-4f79-5faf-08d8386f95af
+X-MS-TrafficTypeDiagnostic: AM7PR08MB5366:
+X-LD-Processed: 0bc7f26d-0264-416e-a6fc-8352af79c58f,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM7PR08MB53661FB5E3DC5D1E8745A8C3B74A0@AM7PR08MB5366.eurprd08.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: JBUKY2ih6fbG6wxFJRusEuN8cDKmwMI4n4Pa/++D7JHAZOpqdDjoaKMNy4CKbDU30r6clHQfj+7gP9wWEv3IQUDUaYpjxo9jtSd5QXo0kOHeu3G6hHHJRw/R2QHoYT4vxWJlrTtkSutpBdUrN0QNbPy0NH8ixcK4mZtscZAo0XaG+vRmnPVm/e4p6VrZYE8wmbXRW2+6nH4S1f+Vl/qtsYUzjXC8Zeo8q8CtFzLsgU/hKo4YFscRq6s2Zw+eNItMLwt7i59PM7eAUnsaIv+x9DuMCWI0s3nXCKJohZr0b7baRwFaDu9tPZIIWDzUISkMfDNPx0lfURNGXvBzArjpkXkRu0WQOLSzdb6swW3TBmYrhC6kDkI2yXYxNacAqLrF
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB4756.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(376002)(366004)(136003)(39840400004)(66476007)(66556008)(66946007)(16526019)(478600001)(7416002)(86362001)(4326008)(83380400001)(5660300002)(52116002)(31696002)(8936002)(186003)(8676002)(6486002)(53546011)(16576012)(316002)(36756003)(2906002)(26005)(110136005)(2616005)(956004)(31686004)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: ulxsMShXsJroLakDmaK2Ag/inlKVL2o7YqmT1+P8qg/0+mjxHidkLuRhWVj6WAiX3j+P5ihggCqmGIQXInI3C5PaO0O8qF58APN4dlUlsN4x0OUbmBbu2YDYYga1nCU7MbJWagHx12awQQX+ApW6gqb04cU+lsnP2jyYp9tS42m2qxQ+iPgYaZmorbz8ZzYAU50Kb7OODh4wY5rFotynwTJVKQOi1RRmVr41RqTg/fjWolSNsiKSidW90EtVpL/PHwJFwxIMa1T4BtPIAG8h4XyXXx4Dcfay45+OlmHgHFMEIsk5KXUhAnztklHvZmGZ7MNOyt/ge9Fh/c+JOU2/Xfd3eSzih3wTeYEERv2xwyJQ/z9sr+3XIEQFDhNv6yh/o+mzVKXfy3JpINEtIy1YIEyWzialrw6aj8sKpDFKbpjN75/9DfXQ/yQvyP6u4dCITd/FTX8TvCpTjsMeppIo06kdyvaK4NJNFbsjZr4O1uR7iJ/vnwqD8g2PjpHUDBcYkvzjetyjKWD5sp3qzhwJaBXgL/U4gSfZqAf89pj+loJV7SvsWCu22NUdyZhP8EBpXe21/iCURB0myrXlavlzgv+dn0qR+0t/Us3IqJvfWMCg7p9yJCbVBuuOC+AGfRIY1HkVbMdxu3HC7bL4Mrbx7Q==
+X-OriginatorOrg: virtuozzo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aeb16269-bc0b-4f79-5faf-08d8386f95af
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR08MB4756.eurprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Aug 2020 12:11:57.9457
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xt5UJefHWrxhtagfDkvrnzcHwrqtLrAu057WRSARGXZGthj5j8SArIWdCBd6GoJzUxiUJbSP5YYpKFgg4ezHPjHL2t+F0+92cyVZTjPTtFI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR08MB5366
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-08-20, 09:06, Rob Clark wrote:
-> On Mon, Aug 3, 2020 at 4:00 AM Vinod Koul <vkoul@kernel.org> wrote:
-> >
-> > On 26-07-20, 13:12, Konrad Dybcio wrote:
-> > > These SoCs make use of the 14nm phy, but at different
-> > > addresses than other 14nm units.
-> > >
-> > > Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
-> > > ---
-> > >  .../devicetree/bindings/display/msm/dsi.txt    |  1 +
-> > >  drivers/gpu/drm/msm/dsi/phy/dsi_phy.c          |  2 ++
-> > >  drivers/gpu/drm/msm/dsi/phy/dsi_phy.h          |  1 +
-> > >  drivers/gpu/drm/msm/dsi/phy/dsi_phy_14nm.c     | 18 ++++++++++++++++++
-> >
-> > Is there a reason why dsi phy needs to be here and not in phy subsystem
-> > drivers/phy/ ?
+
+
+On 8/4/20 8:43 AM, Andrei Vagin wrote:
+> On Thu, Jul 30, 2020 at 06:01:20PM +0300, Kirill Tkhai wrote:
+>> On 30.07.2020 17:34, Eric W. Biederman wrote:
+>>> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
+>>>
+>>>> Currently, there is no a way to list or iterate all or subset of namespaces
+>>>> in the system. Some namespaces are exposed in /proc/[pid]/ns/ directories,
+>>>> but some also may be as open files, which are not attached to a process.
+>>>> When a namespace open fd is sent over unix socket and then closed, it is
+>>>> impossible to know whether the namespace exists or not.
+>>>>
+>>>> Also, even if namespace is exposed as attached to a process or as open file,
+>>>> iteration over /proc/*/ns/* or /proc/*/fd/* namespaces is not fast, because
+>>>> this multiplies at tasks and fds number.
 > 
-> *maybe* it would be possible to split out all of the dsi (and hdmi)
-> phy to drivers/phy.  But splitting out just the new ones wouldn't be
-> practical (it would duplicate a lot of code, and make the rest of the
-> dsi code have to deal with both cases).  And unlike dp/usb-c I'm not
-> really sure I see an advantage to justify the churn.
+> Could you describe with more details when you need to iterate
+> namespaces?
+> 
+> There are three ways to hold namespaces.
+> 
+> * processes
+> * bind-mounts
+> * file descriptors
+> 
+> When CRIU dumps a container, it enumirates all processes, collects file
+> descriptors and mounts. This means that we will be able to collect all
+> namespaces, doesn't it?
 
-So the question would be if it helps in reuse if we do that and does it
-result in a better solution than dsi code managing the phy. The
-advantage of framework (like phy) is that different subsystems can use
-a (phy) driver and common framework helps reduce duplicates.
+Yes we can. But it would be much easier for us to have all namespaces in 
+one place isn't it?
 
-Yes sure the question was not for a new phy but about the whole
-msm/dsi/phy code and future for it.
+And this patch-set has another non-CRIU use case. It can simplify a view 
+to namespaces for a normal user. Lets consider some cases:
+
+Lets assume we have an empty (no processes) mount namespace M which is 
+held by single open fd, which was put in a unix socket and closed, unix 
+socket has single open fd to it which was in it's turn put to another 
+unix socket and again and again until we reach unix socket max depth... 
+How should normal user find this mount namespace M?
+
+Lets assume that M also has a nsfs bindmount which helds some empty 
+network namespace N... How should normal user find N?
+
+Lets also assume that M has overmounted "/":
+
+mount -t tmpfs tmpfs /
+
+Now if you would enter M you would see single tmpfs (because of implicit 
+chroot to overmount on setns) in mountinfo and there is no way to see 
+full mountinfo if you does not know real root dentry... How should 
+normal user (or even CRIU) find N?
+
+So my personal opinion is that we need this interface, maybe it should 
+be done somehow different but we need it.
+
+> 
 
 -- 
-~Vinod
+Best regards, Tikhomirov Pavel
+Software Developer, Virtuozzo.
