@@ -2,119 +2,307 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3752C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF07C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB0BD20842
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:39:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596573591;
-	bh=fwBmY9dgQYH4vZnWhrqR3ofWDj2807uG5uWKustVE04=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=BpkQmIZb5NDG7pMQrKPVZqDv0zZvEgwSvuNDLEwoze/GS4t/NdJ/ECLNbhWvdufWs
-	 SDN9yWXyuXSU5aQQGBGzGpZ63RUyieXdY3KkkblO850Ovi1Z+PGSNaxYUHbal7gfi8
-	 1WcwiSXJJC/hVnAhPirQwdzJQ6zuJ14lEO1aGx4E=
+	by mail.kernel.org (Postfix) with ESMTP id 9BB9A21744
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:41:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="STcx0Q2I";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ilplFyix"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgHDUju (ORCPT
+        id S1727913AbgHDUlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 16:39:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35710 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726859AbgHDUjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 16:39:49 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E5C220842;
-        Tue,  4 Aug 2020 20:39:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596573588;
-        bh=fwBmY9dgQYH4vZnWhrqR3ofWDj2807uG5uWKustVE04=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=vuQDUdyDj9mot5TWZAsK48WWfz+H4Hm/SYYEA4/+vJLbCkhgOXd38EemwWJ3F3Jyg
-         0/JoTq0Pn1Yr0+DLLtruFovmSbvzl7o8EdTerHIgf2EevMcKp4s9fBNo0JMYf4nxq5
-         5NMbKCQJpk3Yp/tiNehfe2Qqfut0juyswLlfRmqQ=
-Date:   Tue, 4 Aug 2020 13:39:46 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Jiri Pirko <jiri@resnulli.us>
-Cc:     Moshe Shemesh <moshe@mellanox.com>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Subject: Re: [PATCH net-next RFC 01/13] devlink: Add reload level option to
- devlink reload command
-Message-ID: <20200804133946.7246514e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200804100418.GA2210@nanopsycho>
-References: <20200728114458.762b5396@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <d6fbfedd-9022-ff67-23ed-418607beecc2@intel.com>
-        <20200728130653.7ce2f013@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <04f00024-758c-bc19-c187-49847c24a5a4@mellanox.com>
-        <20200729140708.5f914c15@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <3352bd96-d10e-6961-079d-5c913a967513@mellanox.com>
-        <20200730161101.48f42c5b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <0f2467fd-ee2e-1a51-f9c1-02f8a579d542@mellanox.com>
-        <20200803141442.GB2290@nanopsycho>
-        <20200803135703.16967635@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <20200804100418.GA2210@nanopsycho>
+        Tue, 4 Aug 2020 16:41:06 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47510 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726807AbgHDUlF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 16:41:05 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1596573661;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mNmAmiejVUb8O5lX/7R9+mNhNa6UJvKW+fNNp/5TLU0=;
+        b=STcx0Q2ITipPM64lbMXi7mbEh/ZoIpJkxz8Xu9DTEJDZNVbLFq4wJw7SzF7UGEYVqgInQL
+        Q8ocTuKzaD7vmP1vTMrNw8JBh3GQsyL1TAN2lne92M+OBD0MOW7riib6e73ayrdwWw/WQY
+        MVd7UaEsMYY8nToF230DrZyM83VQYCZJcDuVIER4Kk3jRKbw7EyGYnTiwDZNmPEJbqaq+C
+        +y689J27EQYIeLmm8NA335XJrm9O39k4nS7UJ8EUv86tFGl2uIq6MiuV/4GP2wPaymhOG1
+        bbpMQ5i22dM4BAjEPNeZoQgLh81GAIOopgBJFtOIY/THDlBl8Frjrsg4rAj8Fw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1596573661;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mNmAmiejVUb8O5lX/7R9+mNhNa6UJvKW+fNNp/5TLU0=;
+        b=ilplFyix5nrOQRPF/39WvM+rUGh9hnSdn4zrhM0uFw0A6RpHz059tiftYeebuQT61ZsCGg
+        lYs3dkc/5pDCWfDA==
+To:     Sven Schnelle <svens@linux.ibm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        hca@linux.ibm.com, Sven Schnelle <svens@linux.ibm.com>
+Subject: Re: [PATCH v3 3/3] s390: convert to GENERIC_VDSO
+In-Reply-To: <20200804150124.41692-4-svens@linux.ibm.com>
+References: <20200804150124.41692-1-svens@linux.ibm.com> <20200804150124.41692-4-svens@linux.ibm.com>
+Date:   Tue, 04 Aug 2020 22:41:00 +0200
+Message-ID: <87tuxikuub.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Aug 2020 12:04:18 +0200 Jiri Pirko wrote:
-> Mon, Aug 03, 2020 at 10:57:03PM CEST, kuba@kernel.org wrote:
-> >I was trying to avoid having to provide a Cartesian product of
-> >operation and system disruption level, if any other action can
-> >be done "live" at some point.
-> >
-> >But no strong feelings about that one.
-> >
-> >Really, as long as there is no driver-specific defaults (or as 
-> >little driver-specific anything as possible) and user actions 
-> >are clearly expressed (fw-reset does not necessarily imply
-> >fw-activation) - the API will be fine IMO.  
-> 
-> Clear actions, that is what I'm fine with.
-> 
-> But not sure how you think we can achieve no driver-specific defaults.
-> We have them already :/ I don't think we can easily remove them and not
-> break user expectations.
+Sven,
 
-AFAIU the per-driver default is needed because we went too low 
-level with what the action constitutes. We need maintain the higher
-level actions.
+Sven Schnelle <svens@linux.ibm.com> writes:
+> --- /dev/null
+> +++ b/arch/s390/include/asm/vdso/data.h
+> @@ -0,0 +1,13 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __S390_ASM_VDSO_DATA_H
+> +#define __S390_ASM_VDSO_DATA_H
+> +
+> +#include <linux/types.h>
+> +#include <vdso/datapage.h>
 
-The user clearly did not care if FW was reset during devlink reload
-before this set, so what has changed? The objective user has is to
-activate their config / FW / move to different net ns. 
+I don't think this header needs vdso/datapage.h
 
-Reloading the driver or resetting FW is a low level detail which
-achieves different things for different implementations. So it's 
-not a suitable abstraction -> IOW we need the driver default.
+> +struct arch_vdso_data {
+> +	__u64 tod_steering_delta;
+> +	__u64 tod_steering_end;
+> +};
+> +
+> +#endif /* __S390_ASM_VDSO_DATA_H */
+
+> --- /dev/null
+> +++ b/arch/s390/include/asm/vdso/gettimeofday.h
+
+> +static inline u64 __arch_get_hw_counter(s32 clock_mode)
+> +{
+> +	const struct vdso_data *vdso = __arch_get_vdso_data();
+
+If you go and implement time namespace support for VDSO then this
+becomes a problem. See do_hres_timens().
+
+As we did not expect that this function needs vdso_data we should just
+add a vdso_data pointer argument to __arch_get_hw_counter(). And while
+looking at it you're not the first one. MIPS already uses it and because
+it does not support time namespaces so far nobody noticed yet.
+
+That's fine for all others because the compiler will optimize it
+out when it's unused. If the compiler fails to do so, then this is the
+least of our worries :)
+
+As there is no new VDSO conversion pending in next, I can just queue
+that (see below) along with #1 and #2 of this series and send it to
+Linus by end of the week.
+
+> +	u64 adj, now;
+> +
+> +	now = get_tod_clock();
+> +	adj = vdso->arch.tod_steering_end - now;
+> +	if (unlikely((s64) adj > 0))
+> +		now += (vdso->arch.tod_steering_delta < 0) ? (adj >> 15) : -(adj >> 15);
+> +	return now;
+> +}
 
 
-The work flow for the user is:
+> --- /dev/null
+> +++ b/arch/s390/include/asm/vdso/processor.h
+> @@ -0,0 +1,5 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +#ifndef __ASM_VDSO_PROCESSOR_H
+> +#define __ASM_VDSO_PROCESSOR_H
+> +
+> +#endif /* __ASM_VDSO_PROCESSOR_H */
 
-0. download fw to /lib/firmware
-1. devlink flash $dev $fw
-2. if live activation is enabled
-   yes - devlink reload $dev $live-activate
-   no - report machine has to be drained for reboot
+The idea of this file was to provide cpu_relax() self contained without
+pulling in tons of other things from asm/processor.h.
 
-fw-reset can't be $live-activate, because as Jake said fw-reset does
-not activate the new image for Intel. So will we end up per-driver
-defaults in the kernel space, and user space maintaining a mapping from
-a driver to what a "level" of reset implies.
+> diff --git a/arch/s390/include/asm/vdso/vdso.h b/arch/s390/include/asm/vdso/vdso.h
+> new file mode 100644
+> index 000000000000..e69de29bb2d1
+> diff --git a/arch/s390/include/asm/vdso/vsyscall.h b/arch/s390/include/asm/vdso/vsyscall.h
+> new file mode 100644
+> index 000000000000..6c67c08cefdd
+> --- /dev/null
+> +++ b/arch/s390/include/asm/vdso/vsyscall.h
+> @@ -0,0 +1,26 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __ASM_VDSO_VSYSCALL_H
+> +#define __ASM_VDSO_VSYSCALL_H
+> +
+> +#ifndef __ASSEMBLY__
+> +
+> +#include <linux/hrtimer.h>
+> +#include <linux/timekeeper_internal.h>
 
-I hope this makes things crystal clear. Please explain what problems
-you're seeing and extensions you're expecting. A list of user scenarios
-you foresee would be v. useful.
+I know you copied that from x86 or some other architecture, but thinking
+about the above these two includes are not required for building VDSO
+itself. Only the kernel update side needs them and they are included
+already there. I'm going to remove them from x86 as well.
+
+> @@ -443,9 +396,8 @@ static void clock_sync_global(unsigned long long delta)
+>  		panic("TOD clock sync offset %lli is too large to drift\n",
+>  		      tod_steering_delta);
+>  	tod_steering_end = now + (abs(tod_steering_delta) << 15);
+> -	vdso_data->ts_dir = (tod_steering_delta < 0) ? 0 : 1;
+> -	vdso_data->ts_end = tod_steering_end;
+> -	vdso_data->tb_update_count++;
+> +	vdso_data->arch.tod_steering_end = tod_steering_end;
+
+Leftover from the previous version. Should be arch_data.tod....
+
+Heiko, do you consider this 5.9 material or am I right to assume that
+this targets 5.10?
+
+Thanks,
+
+        tglx
+-----
+Subject: vdso/treewide: Add vdso_data pointer argument to __arch_get_hw_counter()
+From: Thomas Gleixner <tglx@linutronix.de>
+Date: Tue, 04 Aug 2020 22:17:44 +0200
+
+MIPS already uses and S390 will need the vdso data pointer in
+__arch_get_hw_counter().
+
+This works nicely as long as the architecture does not support time
+namespaces in the VDSO. With time namespaces enabled the regular
+accessor to the vdso data pointer __arch_get_vdso_data() will return the
+namespace specific VDSO data page for tasks which are part of a
+non-root time namespace. This would cause the architectures which need
+the vdso data pointer in __arch_get_hw_counter() to access the wrong
+vdso data page.
+
+Add a vdso_data pointer argument to __arch_get_hw_counter() and hand it
+in from the call sites in the core code. For architectures which do not
+need the data pointer in their counter accessor inline function the
+compiler will just optimize it out.
+
+Fix up all existing architecture implementations and make MIPS utilize the
+pointer instead of invoking the accessor function.
+
+No functional change and no change in the resulting object code (except
+MIPS).
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/arm/include/asm/vdso/gettimeofday.h          |    3 ++-
+ arch/arm64/include/asm/vdso/compat_gettimeofday.h |    3 ++-
+ arch/arm64/include/asm/vdso/gettimeofday.h        |    3 ++-
+ arch/mips/include/asm/vdso/gettimeofday.h         |    5 +++--
+ arch/riscv/include/asm/vdso/gettimeofday.h        |    3 ++-
+ arch/x86/include/asm/vdso/gettimeofday.h          |    3 ++-
+ lib/vdso/gettimeofday.c                           |    4 ++--
+ 7 files changed, 15 insertions(+), 9 deletions(-)
+
+--- a/arch/arm/include/asm/vdso/gettimeofday.h
++++ b/arch/arm/include/asm/vdso/gettimeofday.h
+@@ -112,7 +112,8 @@ static inline bool arm_vdso_hres_capable
+ }
+ #define __arch_vdso_hres_capable arm_vdso_hres_capable
+ 
+-static __always_inline u64 __arch_get_hw_counter(int clock_mode)
++static __always_inline u64 __arch_get_hw_counter(int clock_mode,
++						 const struct vdso_data *vd)
+ {
+ #ifdef CONFIG_ARM_ARCH_TIMER
+ 	u64 cycle_now;
+--- a/arch/arm64/include/asm/vdso/compat_gettimeofday.h
++++ b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
+@@ -102,7 +102,8 @@ int clock_getres32_fallback(clockid_t _c
+ 	return ret;
+ }
+ 
+-static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
++static __always_inline u64 __arch_get_hw_counter(s32 clock_mode,
++						 const struct vdso_data *vd)
+ {
+ 	u64 res;
+ 
+--- a/arch/arm64/include/asm/vdso/gettimeofday.h
++++ b/arch/arm64/include/asm/vdso/gettimeofday.h
+@@ -63,7 +63,8 @@ int clock_getres_fallback(clockid_t _clk
+ 	return ret;
+ }
+ 
+-static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
++static __always_inline u64 __arch_get_hw_counter(s32 clock_mode,
++						 const struct vdso_data *vd)
+ {
+ 	u64 res;
+ 
+--- a/arch/mips/include/asm/vdso/gettimeofday.h
++++ b/arch/mips/include/asm/vdso/gettimeofday.h
+@@ -167,7 +167,8 @@ static __always_inline u64 read_gic_coun
+ 
+ #endif
+ 
+-static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
++static __always_inline u64 __arch_get_hw_counter(s32 clock_mode,
++						 const struct vdso_data *vd)
+ {
+ #ifdef CONFIG_CSRC_R4K
+ 	if (clock_mode == VDSO_CLOCKMODE_R4K)
+@@ -175,7 +176,7 @@ static __always_inline u64 __arch_get_hw
+ #endif
+ #ifdef CONFIG_CLKSRC_MIPS_GIC
+ 	if (clock_mode == VDSO_CLOCKMODE_GIC)
+-		return read_gic_count(get_vdso_data());
++		return read_gic_count(vd);
+ #endif
+ 	/*
+ 	 * Core checks mode already. So this raced against a concurrent
+--- a/arch/riscv/include/asm/vdso/gettimeofday.h
++++ b/arch/riscv/include/asm/vdso/gettimeofday.h
+@@ -59,7 +59,8 @@ int clock_getres_fallback(clockid_t _clk
+ 	return ret;
+ }
+ 
+-static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
++static __always_inline u64 __arch_get_hw_counter(s32 clock_mode,
++						 const struct vdso_data *vd)
+ {
+ 	/*
+ 	 * The purpose of csr_read(CSR_TIME) is to trap the system into
+--- a/arch/x86/include/asm/vdso/gettimeofday.h
++++ b/arch/x86/include/asm/vdso/gettimeofday.h
+@@ -241,7 +241,8 @@ static u64 vread_hvclock(void)
+ }
+ #endif
+ 
+-static inline u64 __arch_get_hw_counter(s32 clock_mode)
++static inline u64 __arch_get_hw_counter(s32 clock_mode,
++					const struct vdso_data *vd)
+ {
+ 	if (likely(clock_mode == VDSO_CLOCKMODE_TSC))
+ 		return (u64)rdtsc_ordered();
+--- a/lib/vdso/gettimeofday.c
++++ b/lib/vdso/gettimeofday.c
+@@ -68,7 +68,7 @@ static int do_hres_timens(const struct v
+ 		if (unlikely(!vdso_clocksource_ok(vd)))
+ 			return -1;
+ 
+-		cycles = __arch_get_hw_counter(vd->clock_mode);
++		cycles = __arch_get_hw_counter(vd->clock_mode, vd);
+ 		if (unlikely(!vdso_cycles_ok(cycles)))
+ 			return -1;
+ 		ns = vdso_ts->nsec;
+@@ -138,7 +138,7 @@ static __always_inline int do_hres(const
+ 		if (unlikely(!vdso_clocksource_ok(vd)))
+ 			return -1;
+ 
+-		cycles = __arch_get_hw_counter(vd->clock_mode);
++		cycles = __arch_get_hw_counter(vd->clock_mode, vd);
+ 		if (unlikely(!vdso_cycles_ok(cycles)))
+ 			return -1;
+ 		ns = vdso_ts->nsec;
