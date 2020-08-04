@@ -2,194 +2,106 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLACK,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1651C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46292C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B600A22B42
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DFF22086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:48:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Tq+6LFpl"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="sbys9aic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgHDVsV (ORCPT
+        id S1728099AbgHDVs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 17:48:21 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19643 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727015AbgHDVsV (ORCPT
+        Tue, 4 Aug 2020 17:48:58 -0400
+Received: from sonic304-28.consmr.mail.ne1.yahoo.com ([66.163.191.154]:34010
+        "EHLO sonic304-28.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727015AbgHDVs5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 17:48:21 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f29d7970001>; Tue, 04 Aug 2020 14:48:07 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 04 Aug 2020 14:48:20 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 04 Aug 2020 14:48:20 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Aug
- 2020 21:48:17 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 4 Aug 2020 21:48:16 +0000
-Received: from sandstorm.nvidia.com (Not Verified[10.2.56.157]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f29d7a00005>; Tue, 04 Aug 2020 14:48:16 -0700
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     LKML <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <willy@infradead.org>, <cai@lca.pw>, <kirill@shutemov.name>,
-        <rppt@linux.ibm.com>, <vbabka@suse.cz>,
-        <william.kucharski@oracle.com>,
-        "John Hubbard" <jhubbard@nvidia.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH v2] mm, dump_page: do not crash with bad compound_mapcount()
-Date:   Tue, 4 Aug 2020 14:48:07 -0700
-Message-ID: <20200804214807.169256-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.28.0
+        Tue, 4 Aug 2020 17:48:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1596577735; bh=0L27Uq8ZrsYi22gP4kjh4ixcW31fg5B0yfsMY3ayTaM=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=sbys9aicF+5bXJrltrn9ucCHo8U1Q+2cp8or60KpTSLSgKCO31ve5s+FMjycEEQiNiQ/8/ltBsmF5vmiqpsb7HCGNydRR5IFCaxwZmuDSUiQooix+VwgnR8KXRyRTABi0Xb+v7uSER31DM7vrJX+EPTHZmBI5eRt5sxvlm8NZl22qKccn0/PpTAedIC5JpyIk+bvKP3GorEvw6EKm+w+n+T3bPjtWJpv1vzoBTnxEixPl4MmHhG94JFMl1TrXSYkN319fQtrOfC2tUFe1k39yAmeoIkJWQCiNNncZmp8tELwBT6humAnjv49CGmdkSFY73u/M+cRXMKb8GMzOUj1VA==
+X-YMail-OSG: Qgh8100VM1ngycjbd1S.nfM6w0dGp7YvvO15Nf0I9gK7HXc9qFP6rX517qEtTkk
+ uoWOhvT9h5dwBbniYQxeteRwIZtJ0okru2SRsKM3NgaxFA1eOPN_sSJJaSGWdZODa5HvlBuQKuaf
+ Sx14cQCspNsp9DwQJ3TvShGxKpsqQH_Eyy5ij.jGJULszl4xOB8VnAmSNlnFeksnpR2DikROwqQ4
+ ycucRYImc70zc_DFBSOymVq16nVavAgAAlEW802ypXVaAgQoplNOsWAOLoc6zdxR1CLq9LKuQmIi
+ CBWV8FgFN3uOba6wd0Kj3o8pcgW0.qOfNBpCzooL5KPyauEDmtw_BmJzrZiM5lA778.cNdaazp6v
+ 3r0_C9U1aaARjkz..rFph3UG5nx.AAZqqE8zCVZaXzBY5qYzRDIkcaaCOEwz5zfdHzW5_Kxgh5OH
+ M3THxuotf1ditrVnx1mFHdG9CZbcifKWsINMdGvmnX4DidYXGRwZqe0QjDjuByfablLiemX.yDvC
+ vXvw3lZIkNRCu4FyA54p3heHfgCEOqvkreMnhE_DzVeaw2twJvIcrSldBSS.Es0C3.vlzk8TU23s
+ LDLFYrRsfEEltDWvs8.attysc6yGWPl_w1dSPVHlm6e5zr_6Nyb6kszkz_tGkX9XXKdcpSa_DlKz
+ KHgjj7GW.x6PLIM2A4ucBGRBDCF8Py53CtawJ_s0dSDe7bBdHA8u.T4YBT5mB7YqZnl2UU7SCOHc
+ rSxnIUtIJKUiY1kijL.nkKSHxyg_M_i_Er7h6HuR2OncQXqsj4n4KtgQH17pyA8lQVHfV17dRheY
+ epCEngcGFAgfDEq8069vwIkUgucurDip_k8O3JuXuQTGS.fwNAkCAkBCzelc9rXQuzoAqSM0ag7e
+ XoPt95.Yjb6_2xgly.HYdBU.nP2E8BHswsW2LVR89f6Ke55FGcb9hev1zu7mmQSadGsQAu4L35sx
+ Q.Ogj35RiFx.I4r8IuyexAVLnwintkep0Y8Vv4bWpVplWHW9blE12lNFIWmJSAgGiwhWZauyTX48
+ TWy8aoRj.jd4lZe.992jS76W8mZfUzC2gS_dovI8PVINbc4EPnRM2V3fNPqdE66n7_6VCjqzVlTM
+ d9vKk6NUKo4orFMWo0lpy.BYQTjKr0PJ4bH7a0Umjex7cjAGturt.634PC7hphYRFZjTRaZTTu9H
+ 4nxE.FQWG40AKkedTJ_wGZowtzrQQ0oKOdWHOEJDOQ0tdcnzeqy5mmS0zo5UuIaPf90xum3YbhuZ
+ KtdZMCiW45HBuMWROpCcVF.GXBgmmcLefYPouw_5T0jq1mshm50kZYgVimnA4xWmRPsT7igjygdZ
+ Fz34dMtRwVeZ4ogIIDjT__i.mMo3YuoVGbVdStILSzzkh
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.ne1.yahoo.com with HTTP; Tue, 4 Aug 2020 21:48:55 +0000
+Received: by smtp402.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 01b7835d11afa0d3bb48b983b86ef450;
+          Tue, 04 Aug 2020 21:48:52 +0000 (UTC)
+Subject: [GIT PULL] Smack patches for v5.9
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>
+References: <8ce85723-5656-0ee8-67a7-35597d9df0dd.ref@schaufler-ca.com>
+ <8ce85723-5656-0ee8-67a7-35597d9df0dd@schaufler-ca.com>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Message-ID: <38f418d7-ec77-255b-2bf2-dd73ebfc615c@schaufler-ca.com>
+Date:   Tue, 4 Aug 2020 14:48:50 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596577687; bh=Ott22dEKyPzKHXaU24WZCFZK+o8PEJC4KK56yLCYqeo=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
-         Content-Type;
-        b=Tq+6LFplcMvjUhQVmrwLIXDkpFmMsjKL3HrQgxUbvOKyGQ2ZuODKRhrFEh/TF+ilr
-         nIFCSl4VH21pJ7EGs8/im/YXpt5svwNcKq2Gzfg4F5ctdLLTVEsRroigKnKSEN2Kr7
-         QlKARf1YQ0Cb3ZMpBLENx98L2Nn36PAW3FaJ4LsQU7pCyibfWh+chLvLMpe1JH6cO/
-         Ha4yAVdj6NezDvMLXZz1qwwUg1Gz0PnAq7YE9fMyFW5d4if7i6QxIqp9vLvwhnNA/u
-         /Xuz6KVF4Dsk+dcF2aM9NkKXqALsIdxfMSM+OE9KgG49keNmYR0i0al9U0fwYEfT6L
-         dr2zIh3nSDQVQ==
+In-Reply-To: <8ce85723-5656-0ee8-67a7-35597d9df0dd@schaufler-ca.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Mailer: WebService/1.1.16436 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.7)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a compound page is being split while dump_page() is being run on that
-page, we can end up calling compound_mapcount() on a page that is no
-longer compound. This leads to a crash (already seen at least once in
-the field), due to the VM_BUG_ON_PAGE() assertion inside
-compound_mapcount().
+Hello Linus
 
-(The above is from Matthew Wilcox's analysis of Qian Cai's bug report.)
+I have corrected the tagging for the pull request.
 
-A similar problem is possible, via compound_pincount() instead of
-compound_mapcount().
+Here are three minor fixes to Smack for the v5.9 release.
+All were found by automated checkers and have straight forward
+resolution.
 
-In order to avoid this kind of crash, make dump_page() slightly more
-robust, by providing a pair of simpler routines that don't contain
-assertions: head_mapcount() and head_pincount().
+--
+The following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
 
-For debug tools, we don't want to go *too* far in this direction, but
-this is a simple small fix, and the crash has already been seen, so it's
-a good trade-off.
+  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
 
-Reported-by: Qian Cai <cai@lca.pw>
-Suggested-by: Matthew Wilcox <willy@infradead.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
-Hi,
+are available in the Git repository at:
 
-I'm assuming that a fix is not required for -stable, but let me know if
-others feel differently. The dump_page() code has changed a lot in that
-area.
+  https://github.com/cschaufler/smack-next tags/Smack-for-5.9
 
-Changes since v1 [1]:
+for you to fetch changes up to 42a2df3e829f3c5562090391b33714b2e2e5ad4a:
 
-1) Rebased onto mmotm
+  Smack: prevent underflow in smk_set_cipso() (2020-07-27 13:35:12 -0700)
 
-2) Used a simpler head_*count() approach.
+----------------------------------------------------------------
+Smack fixes for 5.9
 
-3) Added Matthew's Suggested-by: tag
+----------------------------------------------------------------
+Dan Carpenter (2):
+      Smack: fix another vsscanf out of bounds
+      Smack: prevent underflow in smk_set_cipso()
 
-4) Support pincount as well as mapcount.
+Eric Biggers (1):
+      Smack: fix use-after-free in smk_write_relabel_self()
 
-[1] https://lore.kernel.org/linux-mm/20200804183943.1244828-1-jhubbard@nvid=
-ia.com/
-
-thanks,
-John Hubbard
-
- include/linux/mm.h | 14 ++++++++++++--
- mm/debug.c         |  6 +++---
- 2 files changed, 15 insertions(+), 5 deletions(-)
-
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 4f12b2465e80..8ab941cf73f4 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -776,6 +776,11 @@ static inline void *kvcalloc(size_t n, size_t size, gf=
-p_t flags)
- extern void kvfree(const void *addr);
- extern void kvfree_sensitive(const void *addr, size_t len);
-=20
-+static inline int head_mapcount(struct page *head)
-+{
-+	return atomic_read(compound_mapcount_ptr(head)) + 1;
-+}
-+
- /*
-  * Mapcount of compound page as a whole, does not include mapped sub-pages=
-.
-  *
-@@ -785,7 +790,7 @@ static inline int compound_mapcount(struct page *page)
- {
- 	VM_BUG_ON_PAGE(!PageCompound(page), page);
- 	page =3D compound_head(page);
--	return atomic_read(compound_mapcount_ptr(page)) + 1;
-+	return head_mapcount(page);
- }
-=20
- /*
-@@ -898,11 +903,16 @@ static inline bool hpage_pincount_available(struct pa=
-ge *page)
- 	return PageCompound(page) && compound_order(page) > 1;
- }
-=20
-+static inline int head_pincount(struct page *head)
-+{
-+	return atomic_read(compound_pincount_ptr(head));
-+}
-+
- static inline int compound_pincount(struct page *page)
- {
- 	VM_BUG_ON_PAGE(!hpage_pincount_available(page), page);
- 	page =3D compound_head(page);
--	return atomic_read(compound_pincount_ptr(page));
-+	return head_pincount(page);
- }
-=20
- static inline void set_compound_order(struct page *page, unsigned int orde=
-r)
-diff --git a/mm/debug.c b/mm/debug.c
-index c27fff1e3ca8..69b60637112b 100644
---- a/mm/debug.c
-+++ b/mm/debug.c
-@@ -102,12 +102,12 @@ void __dump_page(struct page *page, const char *reaso=
-n)
- 		if (hpage_pincount_available(page)) {
- 			pr_warn("head:%p order:%u compound_mapcount:%d compound_pincount:%d\n",
- 					head, compound_order(head),
--					compound_mapcount(head),
--					compound_pincount(head));
-+					head_mapcount(head),
-+					head_pincount(head));
- 		} else {
- 			pr_warn("head:%p order:%u compound_mapcount:%d\n",
- 					head, compound_order(head),
--					compound_mapcount(head));
-+					head_mapcount(head));
- 		}
- 	}
- 	if (PageKsm(page))
---=20
-2.28.0
+ security/smack/smackfs.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
