@@ -7,140 +7,94 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5836C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13503C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA5582076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F76622B45
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:02:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=epam.com header.i=@epam.com header.b="W1yKdZ3x"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="Bn0GSK1X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbgHDGyZ (ORCPT
+        id S1726398AbgHDHCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 02:54:25 -0400
-Received: from mx0b-0039f301.pphosted.com ([148.163.137.242]:41814 "EHLO
-        mx0b-0039f301.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725811AbgHDGyY (ORCPT
+        Tue, 4 Aug 2020 03:02:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725300AbgHDHCp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 02:54:24 -0400
-X-Greylist: delayed 1122 seconds by postgrey-1.27 at vger.kernel.org; Tue, 04 Aug 2020 02:54:23 EDT
-Received: from pps.filterd (m0174682.ppops.net [127.0.0.1])
-        by mx0b-0039f301.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0746ZVhp008400;
-        Tue, 4 Aug 2020 06:35:31 GMT
-Received: from eur05-vi1-obe.outbound.protection.outlook.com (mail-vi1eur05lp2170.outbound.protection.outlook.com [104.47.17.170])
-        by mx0b-0039f301.pphosted.com with ESMTP id 32n6tpwcm1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 04 Aug 2020 06:35:31 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CeAFWw1N8FMLvd6BjNQnvnM5GdsTvmZ1cmiMLHI+i2FOoWa+nUngMNOfW1nZ0CRrWmdc2d5iuYLRxBaAx5abb6nq3xn9jZCUfh1y5nMTAvTkfslrK+shhl/Al4Pe1rF5dV1vW8CvUUSORBeC0kB2kx37c3gumRTgbtkh2bQ5X/Y8YBraD/I7tQrN/JxGFw+lVCwrAjPvENgc7veZ9l4bzVSbtSVp9B2ConrPpxknG3UeHmi2wnbhqUVYDhzuPfvM1BL/qrUrS4j/Xv5EcRvfm/z7kXI/vzWREEq1+Rs3qXEMbMKEwZPw3kDjzjXcRRu2l/1YIkX3WQ54QFFh73llmg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lc4bC+XGhCr1+jTG6XrTRAZNK53WspKNeV6btNcHLOQ=;
- b=Fh8C+9D3jY8xg8DY5Vw5G7iO9/yNOj8BIkPiRjbh9PohbGhnPqgUfecL5tWSd2Yn01ZSMTvSCukP9H/eUinIj/kFQNL5uYoytZry9WJhlkMzarGz0IyQZli1sxs82Ap8cTNRn32MXbW8ZWRHQLJQ7OgcBrmGCryqRJ0YNUzdN8+UXgzgwmgG6QshI4BI6Y9YjBJN2RH/I1/Mu6OZGsYDtB7gB4LTBQcXB1kfBRf577E94pWwY4xPuMJrtfg30Fpk9kRPi2QHQzbhyaDwjhfhT1qK+LJmkcjVBf8lXhYzUbGb5YNfYYSLjLPvxple9ZZAphNE+SrTqaf6Gy1O96ifyA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=epam.com; dmarc=pass action=none header.from=epam.com;
- dkim=pass header.d=epam.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=epam.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lc4bC+XGhCr1+jTG6XrTRAZNK53WspKNeV6btNcHLOQ=;
- b=W1yKdZ3xXeFkNfbDw0Mw8vicuaylfoLjpGSFJ36M9uzzFArpOOrEcpcFpqZBvHE9JvlkdRe8THPAdCvq+wmDqbe3Mv9ZCtYCd9OJwOGoE+2jBkjX2j9aNvvLivM0bANzCduMvuk204g7u7orZi0AVmgr9gSCXv6iq1YPm7bmKyovE50VbQVeOSvWz43ELuZzmrFcJpP20IHOALSNSH/iXa+Rbe9jmA3brDUuMIl0p9ScmoUj6XPKUP8XZn3rNxjoOUL9hbf6/p5sfYAujpSAftj55WHQYoY2pSjwPzJs4/NTlTB5IRYD6CLwbe6mD5KQvp7HSrq55ZShQ4BAYASVmA==
-Received: from AM0PR03MB6324.eurprd03.prod.outlook.com (2603:10a6:20b:153::17)
- by AM0PR03MB4018.eurprd03.prod.outlook.com (2603:10a6:208:73::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Tue, 4 Aug
- 2020 06:35:20 +0000
-Received: from AM0PR03MB6324.eurprd03.prod.outlook.com
- ([fe80::21e5:6d27:5ba0:f508]) by AM0PR03MB6324.eurprd03.prod.outlook.com
- ([fe80::21e5:6d27:5ba0:f508%9]) with mapi id 15.20.3239.022; Tue, 4 Aug 2020
- 06:35:20 +0000
-From:   Oleksandr Andrushchenko <Oleksandr_Andrushchenko@epam.com>
-To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        Oleksandr Andrushchenko <andr2000@gmail.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>
-CC:     "sstabellini@kernel.org" <sstabellini@kernel.org>,
-        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>
-Subject: Re: [PATCH 2/6] drm/xen-front: Fix misused IS_ERR_OR_NULL checks
-Thread-Topic: [PATCH 2/6] drm/xen-front: Fix misused IS_ERR_OR_NULL checks
-Thread-Index: AQHWZzlL0sSwpF/GAkKOn1bzUQtIbaknfhgAgAAGTYA=
-Date:   Tue, 4 Aug 2020 06:35:20 +0000
-Message-ID: <0ed5082f-0280-16c0-7410-f6a90262bcee@epam.com>
-References: <20200731125109.18666-1-andr2000@gmail.com>
- <20200731125109.18666-3-andr2000@gmail.com>
- <6d719ab2-d9f6-2c3c-8979-b12a4d10b96d@suse.com>
-In-Reply-To: <6d719ab2-d9f6-2c3c-8979-b12a4d10b96d@suse.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: suse.com; dkim=none (message not signed)
- header.d=none;suse.com; dmarc=none action=none header.from=epam.com;
-x-originating-ip: [185.199.97.5]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bacc23d0-ea50-4283-2028-08d838408f3a
-x-ms-traffictypediagnostic: AM0PR03MB4018:
-x-microsoft-antispam-prvs: <AM0PR03MB4018A320EF9328C686A18CC1E74A0@AM0PR03MB4018.eurprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: sqyyZXAPZ/z3H/Ly6eF9f8KwJNrs3gHUd7BkzkMkooK993gYHTEATALdExOL6H9QMcfJh1tDL2F2gwXEZ0ME7/72z7KqgNkXvoTmiDLlx5bTRl+ZP16OVYb0lrrMHo1eyUxSTCJq3eIy6/Dsks54lUK3XTaFimEAKBd0jZaRh2P84kzti5xVgu6/ZcT8RxVM6hwlwe0DoQpLkW/V/IXpXDvpfq/Lns6qRLTneUgA11tahXTc2sCHWrJ9EsUlHc1V2p9Im/D2U/BpvZ8NCFsccFDhCq1OK2HF0NLKlj679PC3ECOf+81fWOdbJVEoP6SylEsJdb16FTFtdKuDtrrGEw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR03MB6324.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(39860400002)(376002)(366004)(346002)(66574015)(6506007)(6512007)(8676002)(53546011)(4326008)(186003)(26005)(83380400001)(36756003)(31686004)(8936002)(5660300002)(316002)(91956017)(66946007)(66476007)(86362001)(66556008)(2906002)(64756008)(7416002)(478600001)(31696002)(110136005)(6486002)(2616005)(71200400001)(54906003)(66446008)(76116006);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: QhMR69WQhyMQBpqeJiEZEx3t6YQfRYIHmcl9/oJQ/HDt4ZL3N+44TRYBCNnSIpLxDYIQSw0S5kIlIyqqePFeblBo8NkLY7Cf5pdFsUpKe300DENnQ5ZJ7gmILqCvA9rgn6afos3kr/OLASAShgamTSZZcVNFTgfO9UjUz20464hy6mpgQ+cljP/al8X4dOVSJrTMm4qJuSJve63M9Q/+Ev2iPQtDUw1efwrofG6IhBb6eJKdtMzjW1phYKSxZ3Qikm/w/azdvKxxXvC3ygYg9gNrd6eXb/wnuSS7FSZfSCDo4gJgV3S5Rnpl5kIGy/O0kJ73dd7yUansAwehyR4kr6STB4ZkJoQagqEzVxosgv3Ske/p1Pw+V1Cyyclm2lniAkuR+nmOGLJRb2gzYhJfBIwJAjqrWVZ3NwETooCK2l11zbOiLNL7sH1AFGuKmdNG/pejZJse0a1QybQAYtkFGwq1YJ7wmiTrEavtc7O4Urm9feUSZ1L7eQI10ZF1JvsUJPtratVDP8SR8o/S0VS728f3BH/r23Ep/yd/5lJ/D5o64U63zZ/sAr0eUuJfS/f33YwzFCqOlVd7nz4jvvOgm+80i1M+a9HOA0sz0UsIGsnpeHwZP0by9EO7qb/ZP+D9vSi4SUt4MhrVrRT/U4mvGQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5ABBA776A8DB0E4FA17CEE06E29E6409@eurprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 4 Aug 2020 03:02:45 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B08AFC06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 00:02:44 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id bo3so18604391ejb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 00:02:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CxNe4ekXK41HFrNyZNvqPeZW/VoZh3/7r8r8cDnp0R8=;
+        b=Bn0GSK1XcbmY+FoSvGDiUY7XGgREUzvTuUFPwbE1eFIhb6ly7cFu8zM613uRg92vWu
+         HNr4+C4pEMDykrOfkOQmA1poSdBsVMiD0mkRbZXk+ADcW7ESiw/0YOWf/7uieZo3Uq93
+         +ljUpnJl8Aa2tf/CyU8LvMEE7bTnbDgOE94RU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CxNe4ekXK41HFrNyZNvqPeZW/VoZh3/7r8r8cDnp0R8=;
+        b=gpmUVN8zoh17Tyr5ytWQeToXEGwQ9+HKCowmV2vPohvZIt+j0f06zf02eOraLwf+ON
+         qMMFSuCezZ8K7qIXkJko3cWIp8JwMCrjwmxkbD2/V2Up8N4lYIgGVVH4KsYN6OLqevPH
+         p89yVmjXlXStzpHkSGlaivIczRQLueiYY6qbvT2A2V8DIBKBEt+5Cnfx1QcD4mjgFd5m
+         OvnG855v9xxy8sRoSYDBDMQeVsSbqQUV8hOYFnW8rKILvByWTeAlQQvK5GVxd1xu8ICC
+         QO90ePu+ywMPHrn8T+s+rZ25yf6zs+/uDQCMhq1FqUmkxVYiY41RYZrKynPwVPDbidpu
+         Tjdg==
+X-Gm-Message-State: AOAM532zy3y5owO7/NcpAudfrBk7YDQaA0Z065knCc8cYTP7CEMCYk/k
+        Y2LbSiCeGJ+BLT/eJeGNTyPfAxSSYmz33zu0+jk=
+X-Google-Smtp-Source: ABdhPJyJwXFz9Q1N+i2iFCmBib0OII/RMvUKVgX86nV1xasykdNKD2DUbvo6UjX0XcATxyxY2TUlzLpWZ2XenUTauHc=
+X-Received: by 2002:a17:906:1ed3:: with SMTP id m19mr19155545ejj.396.1596524563420;
+ Tue, 04 Aug 2020 00:02:43 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: epam.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR03MB6324.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bacc23d0-ea50-4283-2028-08d838408f3a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Aug 2020 06:35:20.3465
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b41b72d0-4e9f-4c26-8a69-f949f367c91d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eWW9QHSAhzV90syBmS6r/Z9p4/KgvXA0vEqEkQWozdMl3VOe2ymlHHY9Nfl97BEU53Knv0qBk4HcSN5cf6Tr8jBETyEVY2WLegbTT8kNbuOsKC6ByeJxghM8NwIZyVgh
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR03MB4018
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-04_02:2020-08-03,2020-08-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 malwarescore=0 mlxlogscore=999 priorityscore=1501
- impostorscore=0 bulkscore=0 spamscore=0 phishscore=0 mlxscore=0
- adultscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008040048
+References: <CAK8P3a1vFJ+uUGPGifZGhECXvxA=2u745WrGNZb08s1nHkZQ9g@mail.gmail.com>
+ <CAK8P3a2B5cxE512R0-ni6BJOnkgR7kGueqd3AU9E2PXh0unsmg@mail.gmail.com>
+In-Reply-To: <CAK8P3a2B5cxE512R0-ni6BJOnkgR7kGueqd3AU9E2PXh0unsmg@mail.gmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Tue, 4 Aug 2020 07:02:31 +0000
+Message-ID: <CACPK8Xd++ZQx9hh21dV6qn73aoWvoFsOHq8Pmgbtpi-GD3ShmA@mail.gmail.com>
+Subject: Re: [GIT PULL 3/5] ARM: SoC changes for v5.9
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+List-Id: <soc.lore.kernel.org>
+Cc:     SoC Team <soc@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiA4LzQvMjAgOToxMiBBTSwgSsO8cmdlbiBHcm/DnyB3cm90ZToNCj4gT24gMzEuMDcuMjAg
-MTQ6NTEsIE9sZWtzYW5kciBBbmRydXNoY2hlbmtvIHdyb3RlOg0KPj4gRnJvbTogT2xla3NhbmRy
-IEFuZHJ1c2hjaGVua28gPG9sZWtzYW5kcl9hbmRydXNoY2hlbmtvQGVwYW0uY29tPg0KPj4NCj4+
-IFRoZSBwYXRjaCBjNTc1YjdlZWI4OWY6ICJkcm0veGVuLWZyb250OiBBZGQgc3VwcG9ydCBmb3Ig
-WGVuIFBWDQo+PiBkaXNwbGF5IGZyb250ZW5kIiBmcm9tIEFwciAzLCAyMDE4LCBsZWFkcyB0byB0
-aGUgZm9sbG93aW5nIHN0YXRpYw0KPj4gY2hlY2tlciB3YXJuaW5nOg0KPj4NCj4+IMKgwqDCoMKg
-ZHJpdmVycy9ncHUvZHJtL3hlbi94ZW5fZHJtX2Zyb250X2dlbS5jOjE0MCB4ZW5fZHJtX2Zyb250
-X2dlbV9jcmVhdGUoKQ0KPj4gwqDCoMKgwqB3YXJuOiBwYXNzaW5nIHplcm8gdG8gJ0VSUl9DQVNU
-Jw0KPj4NCj4+IGRyaXZlcnMvZ3B1L2RybS94ZW4veGVuX2RybV9mcm9udF9nZW0uYw0KPj4gwqDC
-oMKgIDEzM8KgIHN0cnVjdCBkcm1fZ2VtX29iamVjdCAqeGVuX2RybV9mcm9udF9nZW1fY3JlYXRl
-KHN0cnVjdCBkcm1fZGV2aWNlICpkZXYsDQo+PiDCoMKgwqAgMTM0wqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2l6ZV90IHNpemUpDQo+PiDCoMKgwqAgMTM1wqAgew0K
-Pj4gwqDCoMKgIDEzNsKgwqDCoMKgwqDCoMKgwqDCoCBzdHJ1Y3QgeGVuX2dlbV9vYmplY3QgKnhl
-bl9vYmo7DQo+PiDCoMKgwqAgMTM3DQo+PiDCoMKgwqAgMTM4wqDCoMKgwqDCoMKgwqDCoMKgIHhl
-bl9vYmogPSBnZW1fY3JlYXRlKGRldiwgc2l6ZSk7DQo+PiDCoMKgwqAgMTM5wqDCoMKgwqDCoMKg
-wqDCoMKgIGlmIChJU19FUlJfT1JfTlVMTCh4ZW5fb2JqKSkNCj4+IMKgwqDCoCAxNDDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiBFUlJfQ0FTVCh4ZW5fb2JqKTsNCj4+
-DQo+PiBGaXggdGhpcyBhbmQgdGhlIHJlc3Qgb2YgbWlzdXNlZCBwbGFjZXMgd2l0aCBJU19FUlJf
-T1JfTlVMTCBpbiB0aGUNCj4+IGRyaXZlci4NCj4+DQo+PiBGaXhlczrCoCBjNTc1YjdlZWI4OWY6
-ICJkcm0veGVuLWZyb250OiBBZGQgc3VwcG9ydCBmb3IgWGVuIFBWIGRpc3BsYXkgZnJvbnRlbmQi
-DQo+DQo+IEFnYWluIGZvcmdvdCB0byBDYyBzdGFibGU/DQoNCkkgd2FzIGp1c3Qgbm90IHN1cmUg
-aWYgdGhlc2UgbWlub3IgZml4ZXMgbmVlZCB0byBnbyB0aGUgc3RhYmxlLCBidXQgSSB3aWxsIGFk
-ZA0KDQpUaGFuayB5b3UNCg0KPg0KPg0KPiBKdWVyZ2Vu
+On Mon, 3 Aug 2020 at 21:49, Arnd Bergmann <arnd@arndb.de> wrote:
+> ARM: SoC changes for v5.9
+
+> Andy Shevchenko (1):
+>       ARM: orion/gpio: Make use of for_each_requested_gpio()
+
+This change broke the arm build (I noticed it when building multi_v5_defcon=
+fig):
+
+../arch/arm/plat-orion/gpio.c:457:2: error: implicit declaration of
+function =E2=80=98for_each_requested_gpio=E2=80=99
+[-Werror=3Dimplicit-function-declaration]
+  457 |  for_each_requested_gpio(chip, i, label) {
+      |  ^~~~~~~~~~~~~~~~~~~~~~~
+
+for_each_requested_gpio isn't in Linus (Torvalds) tree yet. It will be
+fixed when he pulls Linus Walleij's GPIO tree which has the commit:
+
+ b3337eb24831 gpiolib: Introduce for_each_requested_gpio_in_range() macro
+
+Cheers,
+
+Joel
