@@ -2,204 +2,99 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C87C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7D9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67DE02070A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4A8A2177B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:33:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GfVX7JRF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729779AbgHDQ2i (ORCPT
+        id S1729819AbgHDQdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 12:28:38 -0400
-Received: from mail.ispras.ru ([83.149.199.84]:57754 "EHLO mail.ispras.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbgHDQ2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 12:28:38 -0400
-Received: from monopod.intra.ispras.ru (unknown [10.10.3.121])
-        by mail.ispras.ru (Postfix) with ESMTPS id 9337A40A2070;
-        Tue,  4 Aug 2020 16:28:33 +0000 (UTC)
-Date:   Tue, 4 Aug 2020 19:28:33 +0300 (MSK)
-From:   Alexander Monakov <amonakov@ispras.ru>
-To:     "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>
-cc:     amd-gfx@lists.freedesktop.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/amd/display: use correct scale for
- actual_brightness
-In-Reply-To: <35b551fe-7c14-3d8e-4056-39975bd75105@amd.com>
-Message-ID: <alpine.LNX.2.20.13.2008041922170.2454@monopod.intra.ispras.ru>
-References: <20200803200218.2167-1-amonakov@ispras.ru> <35b551fe-7c14-3d8e-4056-39975bd75105@amd.com>
-User-Agent: Alpine 2.20.13 (LNX 116 2015-12-14)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 4 Aug 2020 12:33:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729761AbgHDQdK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 12:33:10 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E2D5C06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 09:33:10 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id h12so11178013pgf.7
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 09:33:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=HB1DkkB09qWrt8yrL+0cExf6RI1ifp17/l8uSNxk2h8=;
+        b=GfVX7JRFiyydVuUHwuRkSVoi9Dt0M5wctuGo85UGu0V2/Bj7Iw8ZwXXGeO4G4xDYUp
+         np+vuVGQa5uJtQ5C31c4dZJiLgWfpIur8koDCTklGFO8cTy0AblmPIrtFv+x6zbUWlOT
+         neQsgY/KR+u4llcwlXhihfz4YjLhQp/XBRiNHkyCviUJh4FS3bKQ85+LznC6fEfIuEQ/
+         52IL5umBBsFcVVp+irJlf3fP1BZ6XHeSONtKK0VkFxNYwYw7ZtTT1HgL6z3nGzejUQT0
+         unemmPAeku7yf65PcsNx6ewsfJ02kcUyFGBedcDqotM0QDLi8b2Zs/YUuV8LFCSLj/lj
+         sKVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=HB1DkkB09qWrt8yrL+0cExf6RI1ifp17/l8uSNxk2h8=;
+        b=T8pbQR2kywCasNaUd9bu7vj+vbZPsxtqALavvxZESNF0/fZ6FMt/FuUpngqHu/XuqG
+         wP+98UsZXFdKRPfR5bjWDGTe315l/W56r2mXmU7a5XbSWR9ktnPBLKnwNkFDp7kn4FrW
+         VmIxtJC1SeqCMw3EVwtdYfoBph0Geka+1M5TsIE4wK7EexZCDtFbesyiLnsOjVmrUsjG
+         g3wEJZ6ugFqk1jXdAt3uaLYVQGOqJ8fH+7ICPA+Lkw/d7RsodKvyMqC4kt7LTZujsR1r
+         +7JFIq4Wg419hDmn/dt1J5KsJg0aCABa/hlf1M4peeRzmxZwRkqF8lgsAPtx7smqKer3
+         6H9g==
+X-Gm-Message-State: AOAM531+6JQg0UwlAJQtww4NkaoCsRtPk28QNf6ITuSxtv5B18MRjQSn
+        ZAnk4lTKg8clz/kuqTOqw+k=
+X-Google-Smtp-Source: ABdhPJyuQ7eqMONZEolc8ZLYWfB5jUxqOVUQhl5ZrHz4/DSZc3qM9xhnweID1yjp3OR1tkJPH+s7BQ==
+X-Received: by 2002:a62:7bc5:: with SMTP id w188mr12600475pfc.192.1596558790085;
+        Tue, 04 Aug 2020 09:33:10 -0700 (PDT)
+Received: from localhost.localdomain ([123.110.251.138])
+        by smtp.gmail.com with ESMTPSA id m16sm657253pjz.47.2020.08.04.09.33.07
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Aug 2020 09:33:09 -0700 (PDT)
+From:   Gene Chen <gene.chen.richtek@gmail.com>
+To:     lee.jones@linaro.org, matthias.bgg@gmail.com, rafael@kernel.org
+Cc:     broonie@kernel.org, gregkh@linuxfoundation.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gene_chen@richtek.com, benjamin.chao@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com
+Subject: [PATCH v3 0/9] mfd: mt6360: Merge different sub-devices I2C read/write
+Date:   Wed,  5 Aug 2020 00:32:52 +0800
+Message-Id: <1596558782-3415-1-git-send-email-gene.chen.richtek@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch series merge different sub-device I2C read/write into one Regmap and
+fix coding style for well-organized.
 
+Gene Chen (9)
+  mfd: mt6360: Rearrange include file
+  mfd: mt6360: Remove redundant brackets around raw numbers
+  mfd: mt6360: Indicate sub-dev compatible name by using
+  mfd: mt6360: Combine mt6360 pmic/ldo resources into mt6360
+  mfd: mt6360: Rename mt6360_pmu_data by mt6360_ddata
+  mfd: mt6360: Rename mt6360_pmu by mt6360
+  mfd: mt6360: Remove handle_post_irq callback function
+  mfd: mt6360: Fix flow which is used to check ic exist
+  mfd: mt6360: Merge different sub-devices I2C read/write
 
-On Tue, 4 Aug 2020, Kazlauskas, Nicholas wrote:
+ drivers/base/regmap/Kconfig         |    3 
+ drivers/base/regmap/Makefile        |    1 
+ drivers/base/regmap/regmap-mt6360.c |  163 ++++++++++++++
+ drivers/mfd/Kconfig                 |    2 
+ drivers/mfd/mt6360-core.c           |  394 +++++++++++++++++++-----------------
+ include/linux/mfd/mt6360.h          |  225 --------------------
 
-> This is a cleaner change the other proposed patch since it doesn't need to
+changelogs between v2 & v3
+- Replace mt6360_data to mt6360_ddata
+- Split I2C read/write to regmap driver
 
-Can you give a URL to the other patch please?
-
-> modify the exist conversion functions but I'd be worried about broken
-> userspace relying on 0-255 as the only acceptable range.
-
-Not sure what you mean by this. Userspace simply reads the maximum value from
-max_brightness sysfs file. On other gpu/firmware combinations it can be 7 or 9
-for example, it just happens to be 255 with modern amdgpu. Minimum value is
-always zero.
-
-Value seen in max_brightness remains 255 with this patch, so as far as userspace
-is concerned nothing is changed apart from value given by actual_brightness file.
-
-Alexander
-
-> 
-> Not an expert on existing implementations to point out a specific one though.
-> 
-> Regards,
-> Nicholas Kazlauskas
-> 
-> On 2020-08-03 4:02 p.m., Alexander Monakov wrote:
-> > Documentation for sysfs backlight level interface requires that
-> > values in both 'brightness' and 'actual_brightness' files are
-> > interpreted to be in range from 0 to the value given in the
-> > 'max_brightness' file.
-> > 
-> > With amdgpu, max_brightness gives 255, and values written by the user
-> > into 'brightness' are internally rescaled to a wider range. However,
-> > reading from 'actual_brightness' gives the raw register value without
-> > inverse rescaling. This causes issues for various userspace tools such
-> > as PowerTop and systemd that expect the value to be in the correct
-> > range.
-> > 
-> > Introduce a helper to retrieve internal backlight range. Extend the
-> > existing 'convert_brightness' function to handle conversion in both
-> > directions.
-> > 
-> > Bug: https://bugzilla.kernel.org/show_bug.cgi?id=203905
-> > Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1242
-> > Cc: Alex Deucher <alexander.deucher@amd.com>
-> > Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
-> > ---
-> >   .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 73 ++++++++-----------
-> >   1 file changed, 32 insertions(+), 41 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > index 710edc70e37e..03e21e7b7917 100644
-> > --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > @@ -2881,51 +2881,42 @@ static int set_backlight_via_aux(struct dc_link
-> > *link, uint32_t brightness)
-> >   	return rc ? 0 : 1;
-> >   }
-> >   -static u32 convert_brightness(const struct amdgpu_dm_backlight_caps
-> > *caps,
-> > -			      const uint32_t user_brightness)
-> > +static int get_brightness_range(const struct amdgpu_dm_backlight_caps
-> > *caps,
-> > +				unsigned *min, unsigned *max)
-> >   {
-> > -	u32 min, max, conversion_pace;
-> > -	u32 brightness = user_brightness;
-> > -
-> >   	if (!caps)
-> > -		goto out;
-> > +		return 0;
-> >   -	if (!caps->aux_support) {
-> > -		max = caps->max_input_signal;
-> > -		min = caps->min_input_signal;
-> > -		/*
-> > -		 * The brightness input is in the range 0-255
-> > -		 * It needs to be rescaled to be between the
-> > -		 * requested min and max input signal
-> > -		 * It also needs to be scaled up by 0x101 to
-> > -		 * match the DC interface which has a range of
-> > -		 * 0 to 0xffff
-> > -		 */
-> > -		conversion_pace = 0x101;
-> > -		brightness =
-> > -			user_brightness
-> > -			* conversion_pace
-> > -			* (max - min)
-> > -			/ AMDGPU_MAX_BL_LEVEL
-> > -			+ min * conversion_pace;
-> > +	if (caps->aux_support) {
-> > +		// Firmware limits are in nits, DC API wants millinits.
-> > +		*max = 1000 * caps->aux_max_input_signal;
-> > +		*min = 1000 * caps->aux_min_input_signal;
-> >   	} else {
-> > -		/* TODO
-> > -		 * We are doing a linear interpolation here, which is OK but
-> > -		 * does not provide the optimal result. We probably want
-> > -		 * something close to the Perceptual Quantizer (PQ) curve.
-> > -		 */
-> > -		max = caps->aux_max_input_signal;
-> > -		min = caps->aux_min_input_signal;
-> > -
-> > -		brightness = (AMDGPU_MAX_BL_LEVEL - user_brightness) * min
-> > -			       + user_brightness * max;
-> > -		// Multiple the value by 1000 since we use millinits
-> > -		brightness *= 1000;
-> > -		brightness = DIV_ROUND_CLOSEST(brightness,
-> > AMDGPU_MAX_BL_LEVEL);
-> > +		// Firmware limits are 8-bit, PWM control is 16-bit.
-> > +		*max = 0x101 * caps->max_input_signal;
-> > +		*min = 0x101 * caps->min_input_signal;
-> >   	}
-> > +	return 1;
-> > +}
-> >   -out:
-> > -	return brightness;
-> > +static u32 convert_brightness(const struct amdgpu_dm_backlight_caps *caps,
-> > +			      const uint32_t brightness, int from_user)
-> > +{
-> > +	unsigned min, max;
-> > +
-> > +	if (!get_brightness_range(caps, &min, &max))
-> > +		return brightness;
-> > +
-> > +	if (from_user)
-> > +		// Rescale 0..255 to min..max
-> > +		return min + DIV_ROUND_CLOSEST((max - min) * brightness,
-> > +					       AMDGPU_MAX_BL_LEVEL);
-> > +
-> > +	if (brightness < min)
-> > +		return 0;
-> > +	// Rescale min..max to 0..255
-> > +	return DIV_ROUND_CLOSEST(AMDGPU_MAX_BL_LEVEL * (brightness - min),
-> > +				 max - min);
-> >   }
-> >     static int amdgpu_dm_backlight_update_status(struct backlight_device
-> > *bd)
-> > @@ -2941,7 +2932,7 @@ static int amdgpu_dm_backlight_update_status(struct
-> > backlight_device *bd)
-> >     	link = (struct dc_link *)dm->backlight_link;
-> >   -	brightness = convert_brightness(&caps, bd->props.brightness);
-> > +	brightness = convert_brightness(&caps, bd->props.brightness, 1);
-> >   	// Change brightness based on AUX property
-> >   	if (caps.aux_support)
-> >   		return set_backlight_via_aux(link, brightness);
-> > @@ -2958,7 +2949,7 @@ static int amdgpu_dm_backlight_get_brightness(struct
-> > backlight_device *bd)
-> >     	if (ret == DC_ERROR_UNEXPECTED)
-> >   		return bd->props.brightness;
-> > -	return ret;
-> > +	return convert_brightness(&dm->backlight_caps, ret, 0);
-> >   }
-> >     static const struct backlight_ops amdgpu_dm_backlight_ops = {
-> > 
-> > base-commit: bcf876870b95592b52519ed4aafcf9d95999bc9c
-> > 
-> 
-> 
