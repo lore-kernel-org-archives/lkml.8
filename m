@@ -2,143 +2,88 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D692C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0F3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33028206DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:47:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aVExCt4o"
+	by mail.kernel.org (Postfix) with ESMTP id 6DC8D206DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:47:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729314AbgHDOri (ORCPT
+        id S1729334AbgHDOro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:47:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60114 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728408AbgHDOrM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:47:12 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B92A2C06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 07:47:11 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id k8so3212431wma.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 07:47:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=r6kGfPE/KsV7nTfH/d4o6yMleyqMBQteeLYhE/uXEe8=;
-        b=aVExCt4oLxLR9aFvpeWEL25FVcXyMBmA32sEnExxpKELRADyd/9R8grqfipU4KCnal
-         xw/mDJ1vB99SSCGocIuUpjfn/n+6sq37uzwOBd9mLMKkVAI+lqriN5bX9rydaC5fOnbj
-         0JtNaK5ZOpnv/jS7GrAf3KIXRvmO0w8y8UIlljMRS32B26TgTdXAdQygC7MBMHn5lvoP
-         AxItZMMHNLnLZ4HD7gvVz87UAMtI4b+WfUKZPyuyAhPhQZn3H0V7TXQuP4XID2r4pBE8
-         0WVBskw0itNLwIU1bhZ/+0X4da9muIyp02S9F8OzsA8dAJ6ZSM4dlKp55if4+eS/15qd
-         3g0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version:content-transfer-encoding;
-        bh=r6kGfPE/KsV7nTfH/d4o6yMleyqMBQteeLYhE/uXEe8=;
-        b=JykkNRri3vqwOp2AeQ/Y3xMt7tCimskGHb0utOpoUPrRkub+xmD8z8LjYuezw5Xwb2
-         bMPI5srlRdPcmzPjD5YFg3iqLSuTleGMq76QARniD9fqgeBcHmtzoaUhJJN+W2JdxbSU
-         TFqcD57VhfXo2ecbCk8Nc98lgIi/rLKUOl6G8kG34NAZmafgjEBrRNWkNea8/rPzYI/L
-         SOtb2lkwHnEUzVesgl0iZyRBnH7/95Aa6hngYTJhMdVmT3grDpxJBbfU9WICfJWKRtZ8
-         kHPnVAN6Yi/mlB3umHQmQhu+xoFitlsqJNjwvUgVqx+PDera4PQ81Vf8tvy9Y6zvH/Cy
-         SSkw==
-X-Gm-Message-State: AOAM530ci28JkLyRyBbLxoY6OKiGIMGG4lxLawtk8oVnPpZiZQf3wEp5
-        lIKbpzOErXseygjRE97YyvQ4ew==
-X-Google-Smtp-Source: ABdhPJygwsnCNO92emQNPWtLheZnx+hxAUxJL5JREQ4YEEZj8ftsQfnryzZlL6jATdGaMqcJvVKRKw==
-X-Received: by 2002:a1c:f605:: with SMTP id w5mr4306747wmc.26.1596552430480;
-        Tue, 04 Aug 2020 07:47:10 -0700 (PDT)
-Received: from zen.linaroharston ([51.148.130.216])
-        by smtp.gmail.com with ESMTPSA id t25sm4403673wmj.18.2020.08.04.07.47.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 07:47:09 -0700 (PDT)
-Received: from zen (localhost [127.0.0.1])
-        by zen.linaroharston (Postfix) with ESMTP id 48B801FF7E;
-        Tue,  4 Aug 2020 15:47:08 +0100 (BST)
-References: <20200804124417.27102-1-alex.bennee@linaro.org>
- <CAMj1kXErSf7sQ4pPu-1em4AM=9JejA_-w3iwv4Wt=dgbQHxp-g@mail.gmail.com>
-User-agent: mu4e 1.5.5; emacs 28.0.50
-From:   Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     kvm@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kvmarm <kvmarm@lists.cs.columbia.edu>
-Subject: Re: [RFC PATCH v1 0/3] put arm64 kvm_config on a diet
-In-reply-to: <CAMj1kXErSf7sQ4pPu-1em4AM=9JejA_-w3iwv4Wt=dgbQHxp-g@mail.gmail.com>
-Date:   Tue, 04 Aug 2020 15:47:08 +0100
-Message-ID: <87o8nqmpsj.fsf@linaro.org>
+        Tue, 4 Aug 2020 10:47:44 -0400
+Received: from relay.sw.ru ([185.231.240.75]:44750 "EHLO relay3.sw.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729287AbgHDOrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 10:47:37 -0400
+Received: from [192.168.15.159]
+        by relay3.sw.ru with esmtp (Exim 4.93)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1k2yDV-00067i-Pa; Tue, 04 Aug 2020 17:47:01 +0300
+Subject: Re: [PATCH 00/23] proc: Introduce /proc/namespaces/ directory to
+ expose namespaces lineary
+To:     Andrei Vagin <avagin@gmail.com>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
+        akpm@linux-foundation.org, christian.brauner@ubuntu.com,
+        areber@redhat.com, serge@hallyn.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
+ <87k0yl5axy.fsf@x220.int.ebiederm.org>
+ <56928404-f194-4194-5f2a-59acb15b1a04@virtuozzo.com>
+ <20200804054313.GA100819@gmail.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <5f040969-b3b6-8174-7f8e-c8f9db6b80ea@virtuozzo.com>
+Date:   Tue, 4 Aug 2020 17:47:23 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200804054313.GA100819@gmail.com>
+Content-Type: text/plain; charset=koi8-r
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 04.08.2020 08:43, Andrei Vagin wrote:
+> On Thu, Jul 30, 2020 at 06:01:20PM +0300, Kirill Tkhai wrote:
+>> On 30.07.2020 17:34, Eric W. Biederman wrote:
+>>> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
+>>>
+>>>> Currently, there is no a way to list or iterate all or subset of namespaces
+>>>> in the system. Some namespaces are exposed in /proc/[pid]/ns/ directories,
+>>>> but some also may be as open files, which are not attached to a process.
+>>>> When a namespace open fd is sent over unix socket and then closed, it is
+>>>> impossible to know whether the namespace exists or not.
+>>>>
+>>>> Also, even if namespace is exposed as attached to a process or as open file,
+>>>> iteration over /proc/*/ns/* or /proc/*/fd/* namespaces is not fast, because
+>>>> this multiplies at tasks and fds number.
+> 
+> Could you describe with more details when you need to iterate
+> namespaces?
+> 
+> There are three ways to hold namespaces.
+> 
+> * processes
+> * bind-mounts
+> * file descriptors
+> 
+> When CRIU dumps a container, it enumirates all processes, collects file
+> descriptors and mounts. This means that we will be able to collect all
+> namespaces, doesn't it?
 
-Ard Biesheuvel <ardb@kernel.org> writes:
-
-> On Tue, 4 Aug 2020 at 14:45, Alex Benn=C3=A9e <alex.bennee@linaro.org> wr=
-ote:
->>
->> Hi,
->>
->> When building guest kernels for virtualisation we were bringing in a
->> bunch of stuff from physical hardware which we don't need for our
->> idealised fixable virtual PCI devices. This series makes some Kconfig
->> changes to allow the ThunderX and XGene PCI drivers to be compiled
->> out. It also drops PCI_QUIRKS from the KVM guest build as a virtual
->> PCI device should be quirk free.
->>
->
-> What about PCI passthrough?
-
-That is a good point - how much of the host PCI controller is visible to
-a pass-through guest?
-
-AIUI in passthrough the driver only interacts with the particular cards
-IO window. How many quirks are visible just at the device level (rather
-than the bus itself)?
-
-That said I think the last patch might get dropped as long as the user
-has the option to slim down their kernel with the first two.
-
->
->> This is my first time hacking around Kconfig so I hope I've got the
->> balance between depends and selects right but please let be know if it
->> could be specified in a cleaner way.
->>
->> Alex Benn=C3=A9e (3):
->>   arm64: allow de-selection of ThunderX PCI controllers
->>   arm64: gate the whole of pci-xgene on CONFIG_PCI_XGENE
->>   kernel/configs: don't include PCI_QUIRKS in KVM guest configs
->>
->>  arch/arm64/Kconfig.platforms    | 2 ++
->>  arch/arm64/configs/defconfig    | 1 +
->>  drivers/pci/controller/Kconfig  | 7 +++++++
->>  drivers/pci/controller/Makefile | 8 +++-----
->>  kernel/configs/kvm_guest.config | 1 +
->>  5 files changed, 14 insertions(+), 5 deletions(-)
->>
->> --
->> 2.20.1
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
---=20
-Alex Benn=C3=A9e
+1)It's not only for CRIU. No one util can read content of another task unix socket like CRIU does.
+  Sometimes we may just want to see all mount namespaces to found a mount, which owns a reference on
+  a device.
+2)In case of CRIU, recursive dump (when you iterate unix socket content, then you find another
+  namespace and iterate another unix socket content, then you find one more namespace) is less
+  effective and less fast, then dumping different types sequentially: first namespaces, second fds, etc.
+3)It's still impossible to collect all namespaces like Pasha wrote.
