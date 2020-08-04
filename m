@@ -2,101 +2,174 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCDACC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E6FAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA99E20792
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45B1120792
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:16:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PLdUNGvt"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="c6z5GPuR";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nFx19OQY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgHDCOM (ORCPT
+        id S1728371AbgHDCP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 22:14:12 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43556 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725975AbgHDCOM (ORCPT
+        Mon, 3 Aug 2020 22:15:59 -0400
+Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:49735 "EHLO
+        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725975AbgHDCP6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 22:14:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596507251;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dinaWVnkMHZ+VIU43BHevlr8tggRrHlhVfqluBTGxHE=;
-        b=PLdUNGvtJhWeW0jt2oif4pkOHeFprHC1GAznY6HBrh5aQdNDxZYaon6qUGr8Gefn162ASs
-        dPzgeTxHgJPvk9+Cp6zbyDMY70adLuGDTOm9Wu6IDBD2XrUsGjgHgoAzLyOQl0WUXBcA5a
-        k6+8Ttj/jAMQ2AxZp/HBp86qQ0YvMPw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-144-KpE0kHG8NU2ucALeTek8wA-1; Mon, 03 Aug 2020 22:14:07 -0400
-X-MC-Unique: KpE0kHG8NU2ucALeTek8wA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 27836106B246;
-        Tue,  4 Aug 2020 02:14:06 +0000 (UTC)
-Received: from [10.72.13.197] (ovpn-13-197.pek2.redhat.com [10.72.13.197])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 07A5C5C6DD;
-        Tue,  4 Aug 2020 02:13:51 +0000 (UTC)
-Subject: Re: [PATCH] virtio_pci_modern: Fix the comment of
- virtio_pci_find_capability()
-To:     Yi Wang <wang.yi59@zte.com.cn>, mst@redhat.com
-Cc:     virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.liang82@zte.com.cn, Liao Pingfang <liao.pingfang@zte.com.cn>
-References: <1596455545-43556-1-git-send-email-wang.yi59@zte.com.cn>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <75b74fe2-a025-7f31-cc14-61605e00aad5@redhat.com>
-Date:   Tue, 4 Aug 2020 10:13:50 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 3 Aug 2020 22:15:58 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.west.internal (Postfix) with ESMTP id D0BE1109E;
+        Mon,  3 Aug 2020 22:15:56 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Mon, 03 Aug 2020 22:15:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        Yf5WKRO+L01e+K0gQ+L/XIx6I13Eu/IhzjwnU3V5dgc=; b=c6z5GPuRxHtsPtGY
+        P2POfINNzW66vYofIVzYVwHi13eTDhiL2WxSOKOvbymdtptV7Mp+qlpNOL9tHc83
+        7fmMAA6LyGKVnsT+O8LfiHvywmCyYJ3iVdZ1rVggs1J82fMbth7pQPw/4iZoZYZ6
+        j4FhANVoVoqR3fzOjngPvn7ypuMd2gIFNfr4RUpoq6owEo8lQi9zNjuAgaoZtPC5
+        z3uLb7fxv8OvYiSlmnwoCPCmR1WNcVH0VvhxPaLgvMa52OaYzMJp5MJ4nBo97rAp
+        FtbgtlMsub9XfboFIqq8Z2Fn7ztP3CRkAFrIIoirO/xa4bMWi8UN8ya2RaYt9xlQ
+        msCcEA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=Yf5WKRO+L01e+K0gQ+L/XIx6I13Eu/IhzjwnU3V5d
+        gc=; b=nFx19OQYzzZpwIHK6HpTDDfgmz5APlzGRIrPXSKbMKbCjhJLMd9hjYCV/
+        nt/IqfJaZ3H6oCg9XzUyPcdbUAggHTBBdSkT2kwwlHk+xoR9jPRg17l0gHFJ9VOW
+        ENJnDcKVKCq0pPnLHq4WNa+Hw5O5KS3RGu/0+G10QClUN5jMgG1uJg6EMj5JsP7Y
+        2suqHnujWz3a5aeQN27H22ipANuVkaGJ4m50iCQo6g7Y0OhSM/jt5VvU4tDFhcEp
+        4DLT/n/3Oh2N3lLE22sLsRoPPnplqJWHlKJxasVXH+OSSTKi82THesNcef9ixwqP
+        U4QcPM9C10N9mJOycOn3BR7LLrfVg==
+X-ME-Sender: <xms:28QoX9kfHU6I_-P-KFh2NCyyMhNxO0Wy56iSBdkKI5_54YoL7qltNg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrjeehgdehjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtkeertddtreejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnhepgf
+    elleekteehleegheeujeeuudfhueffgfelhefgvedthefhhffhhfdtudfgfeehnecukfhp
+    peduudekrddvtdekrdegjedrudeiudenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:28QoX42hBT_u_f-GDrU9bAY2IwY1BIl1uRaOxGt1nlKBi0UyIUYeaQ>
+    <xmx:28QoXzrP5g94gMa__7eHy5VgGK6VG041qEheMqb1HaU1RwJDQiX3hA>
+    <xmx:28QoX9nDz72gVMjYcV8Caf9p_0KxKhaSeU7w54d29-HZHR65WMi5Cw>
+    <xmx:3MQoX9yMsQy_Sa6iqa0KFI5VWNpxAgWRegW3V-tKjokRuAyJAk3yIh4uc0w>
+Received: from mickey.themaw.net (unknown [118.208.47.161])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D9CA2328005E;
+        Mon,  3 Aug 2020 22:15:50 -0400 (EDT)
+Message-ID: <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
+Subject: Re: [GIT PULL] Filesystem Information
+From:   Ian Kent <raven@themaw.net>
+To:     Miklos Szeredi <miklos@szeredi.hu>,
+        David Howells <dhowells@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>,
+        Lennart Poettering <lennart@poettering.net>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 04 Aug 2020 10:15:47 +0800
+In-Reply-To: <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
+References: <1842689.1596468469@warthog.procyon.org.uk>
+         <1845353.1596469795@warthog.procyon.org.uk>
+         <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <1596455545-43556-1-git-send-email-wang.yi59@zte.com.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 2020-08-03 at 18:42 +0200, Miklos Szeredi wrote:
+> On Mon, Aug 3, 2020 at 5:50 PM David Howells <dhowells@redhat.com>
+> wrote:
+> > 
+> > Hi Linus,
+> > 
+> > Here's a set of patches that adds a system call, fsinfo(), that
+> > allows
+> > information about the VFS, mount topology, superblock and files to
+> > be
+> > retrieved.
+> > 
+> > The patchset is based on top of the mount notifications patchset so
+> > that
+> > the mount notification mechanism can be hooked to provide event
+> > counters
+> > that can be retrieved with fsinfo(), thereby making it a lot faster
+> > to work
+> > out which mounts have changed.
+> > 
+> > Note that there was a last minute change requested by Miklós: the
+> > event
+> > counter bits got moved from the mount notification patchset to this
+> > one.
+> > The counters got made atomic_long_t inside the kernel and __u64 in
+> > the
+> > UAPI.  The aggregate changes can be assessed by comparing pre-
+> > change tag,
+> > fsinfo-core-20200724 to the requested pull tag.
+> > 
+> > Karel Zak has created preliminary patches that add support to
+> > libmount[*]
+> > and Ian Kent has started working on making systemd use these and
+> > mount
+> > notifications[**].
+> 
+> So why are you asking to pull at this stage?
+> 
+> Has anyone done a review of the patchset?
 
-On 2020/8/3 下午7:52, Yi Wang wrote:
-> From: Liao Pingfang <liao.pingfang@zte.com.cn>
->
-> Fix the comment of virtio_pci_find_capability() by adding missing comment
-> for the last parameter: bars.
->
-> Fixes: 59a5b0f7bf74 ("virtio-pci: alloc only resources actually used.")
-> Signed-off-by: Liao Pingfang <liao.pingfang@zte.com.cn>
-> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+I have been working with the patch set as it has evolved for quite a
+while now.
 
+I've been reading the kernel code quite a bit and forwarded questions
+and minor changes to David as they arose.
 
-Acked-by: Jason Wang <jasowang@redhat.com>
+As for a review, not specifically, but while the series implements a
+rather large change it's surprisingly straight forward to read.
 
+In the time I have been working with it I haven't noticed any problems
+except for those few minor things that I reported to David early on (in
+some cases accompanied by simple patches).
 
-> ---
->   drivers/virtio/virtio_pci_modern.c | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
-> index db93cedd262f..9bdc6f68221f 100644
-> --- a/drivers/virtio/virtio_pci_modern.c
-> +++ b/drivers/virtio/virtio_pci_modern.c
-> @@ -481,6 +481,7 @@ static const struct virtio_config_ops virtio_pci_config_ops = {
->    * @dev: the pci device
->    * @cfg_type: the VIRTIO_PCI_CAP_* value we seek
->    * @ioresource_types: IORESOURCE_MEM and/or IORESOURCE_IO.
-> + * @bars: the bitmask of BARs
->    *
->    * Returns offset of the capability, or 0.
->    */
+And more recently (obviously) I've been working with the mount
+notifications changes and, from a readability POV, I find it's the
+same as the fsinfo() code.
+
+> 
+> I think it's obvious that this API needs more work.  The integration
+> work done by Ian is a good direction, but it's not quite the full
+> validation and review that a complex new API needs.
+
+Maybe but the system call is fundamental to making notifications useful
+and, as I say, after working with it for quite a while I don't fell
+there's missing features (that David hasn't added along the way) and
+have found it provides what's needed for what I'm doing (for mount
+notifications at least).
+
+I'll be posting a github PR for systemd for discussion soon while I
+get on with completing the systemd change. Like overflow handling and
+meson build system changes to allow building with and without the
+util-linux libmount changes.
+
+So, ideally, I'd like to see the series merged, we've been working on
+it for quite a considerable time now.
+
+Ian
 
