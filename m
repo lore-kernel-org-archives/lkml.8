@@ -2,109 +2,136 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E380C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B114C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BAD122B45
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:42:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pPBk/pq7"
+	by mail.kernel.org (Postfix) with ESMTP id 2BBCB2086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:42:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729947AbgHDHmL (ORCPT
+        id S1729954AbgHDHmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 03:42:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbgHDHmL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 03:42:11 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6A8BC06174A;
-        Tue,  4 Aug 2020 00:42:10 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id f7so36447538wrw.1;
-        Tue, 04 Aug 2020 00:42:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oCXgLsgWbZCbyr3KPP51MnphTqhD3dbi1xLbjo5qgUw=;
-        b=pPBk/pq765sG+BX2ASJVVDKk3hdht1AvcAhGySAHN5qiPg3ZIBcbxpIYB+PzpFwkp7
-         XfXDeA6Io4RxHXDRE7SDx2jcJnsdS+0W64eVBTudh8NsVnAj86kffUvPTaB7oL7FL/iY
-         YiTqM9VGVRWhppFju3BPI+jtEmiMvl6DCCFrbFNFBJA0o/oW3vhcKX3i9JGmIrrwjwfl
-         LUI7Uv2jq/FOkllQGoUZa66Aw9X9YNua6Npv8l5cqOC6QveDgz5ai2BuzOU1IfQ4ZAXG
-         BkMR3TC5P/iqJXsR8lDpXUEFm3topseHo4/qNeIcjCo30wD207pqaFcviHzwCtvgL+f+
-         5XqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oCXgLsgWbZCbyr3KPP51MnphTqhD3dbi1xLbjo5qgUw=;
-        b=AhJR65H6j9j4M3tyrG3cb4eh1Fj3vnBCVltvUjAojz9isQdp2jn6DE+BlEu42qEwHz
-         qhLTguCPx+I5oXAVBqB/k5/N+6hb2B8oFYe4F1tOZkoFbvnJ1y6kx86IyrBkkzMoVi5g
-         ef7EQUmBUWgZrf89aEgNWesL86ede0+HNl3HRJ9eYscCc19mZKghTI2WK1z084guxd91
-         V3tDH6Vvup0rM0p0B9QFRsYrNnQnINc1+1rcQdURYrWeekrDj0Aq18Q85+H89ImdKa/J
-         svpAVSVZOeesYLUjRkRvZ7/iBefGqADaMqocxDNFWkRcWr6Oh4cPDDnJ+khvZ5SIuerC
-         NqZw==
-X-Gm-Message-State: AOAM530VDA3Gl14OaOyBlTIeshKbf9Oh5Ieqszh6CUZAZL+IdbWm68H1
-        XHa5Q2PsR5/Bg6e/zp7ClFc=
-X-Google-Smtp-Source: ABdhPJxBVh6kS4sYJbaFdvCZlDfGQsTPSi7bhe7SM+TPnA1jxSlmGcmB9HNCP3wZpUj5HCOFu649IA==
-X-Received: by 2002:adf:ba05:: with SMTP id o5mr884422wrg.7.1596526929473;
-        Tue, 04 Aug 2020 00:42:09 -0700 (PDT)
-Received: from [10.55.3.148] ([173.38.220.44])
-        by smtp.gmail.com with ESMTPSA id l1sm30748857wrb.12.2020.08.04.00.42.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Aug 2020 00:42:08 -0700 (PDT)
-Subject: Re: [net-next v2] seg6: using DSCP of inner IPv4 packets
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrea.mayer@uniroma2.it
-References: <20200803181417.1320-1-ahabdels@gmail.com>
- <20200803124817.5068e06d@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Ahmed Abdelsalam <ahabdels@gmail.com>
-Message-ID: <01738166-f784-09f3-2286-150442ffa237@gmail.com>
-Date:   Tue, 4 Aug 2020 09:42:07 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        Tue, 4 Aug 2020 03:42:31 -0400
+Received: from mailout11.rmx.de ([94.199.88.76]:37719 "EHLO mailout11.rmx.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726808AbgHDHma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 03:42:30 -0400
+Received: from kdin01.retarus.com (kdin01.dmz1.retloc [172.19.17.48])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mailout11.rmx.de (Postfix) with ESMTPS id 4BLRYF45jsz3ybM;
+        Tue,  4 Aug 2020 09:42:25 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin01.retarus.com (Postfix) with ESMTPS id 4BLRY03tZlz2xNM;
+        Tue,  4 Aug 2020 09:42:12 +0200 (CEST)
+Received: from n95hx1g2.localnet (192.168.54.102) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Tue, 4 Aug
+ 2020 09:40:12 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        "Hartmut Knaack" <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "Peter Meerwald-Stadler" <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 2/2] iio: light: as73211: New driver
+Date:   Tue, 4 Aug 2020 09:40:11 +0200
+Message-ID: <2356337.HYKpEJ1Wej@n95hx1g2>
+Organization: Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+In-Reply-To: <CAHp75Vev64E86OWm+eV=1o4ZDs0Xh_Y1z6V54GmpRwWmjD7=eA@mail.gmail.com>
+References: <20200802163735.76617-1-ceggers@arri.de> <20200802163735.76617-3-ceggers@arri.de> <CAHp75Vev64E86OWm+eV=1o4ZDs0Xh_Y1z6V54GmpRwWmjD7=eA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200803124817.5068e06d@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Originating-IP: [192.168.54.102]
+X-RMX-ID: 20200804-094212-4BLRY03tZlz2xNM-0@kdin01
+X-RMX-SOURCE: 217.111.95.66
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The problem was the declaration of tos.
-Fixed and new patch is sent.
+On Sunday, 2 August 2020, 20:02:35 CEST, Andy Shevchenko wrote:
+> Thanks for an update, my comments below.
 
-On 03/08/2020 21:48, Jakub Kicinski wrote:
-> On Mon,  3 Aug 2020 18:14:17 +0000 Ahmed Abdelsalam wrote:
->> This patch allows copying the DSCP from inner IPv4 header to the
->> outer IPv6 header, when doing SRv6 Encapsulation.
->>
->> This allows forwarding packet across the SRv6 fabric based on their
->> original traffic class.
->>
->> Signed-off-by: Ahmed Abdelsalam <ahabdels@gmail.com>
+Thanks for the review. Please see below for my questions.
+
+Best regards
+Christian
+
+> On Sun, Aug 2, 2020 at 7:40 PM Christian Eggers <ceggers@arri.de> wrote:
+> > Datasheet:
+> > https://ams.com/documents/20143/36005/AS73211_DS000556_3-01.pdf/a65474c0-
+> > b302-c2fd-e30a-c98df87616df
+> Do we need the UUID after the document file name?
+I have send AMS an inquiry. Not sure whether I will get an answer. I will wait
+a few days until sending v6.
+
+> > +#define AS73211_OFFSET_TEMP (-66.9)
+> > +#define AS73211_SCALE_TEMP  0.05
 > 
-> Please make sure it builds cleanly with W=1 C=1:
+> In the kernel we don't do float arithmetic. How these are being used?
+Does this restriction also apply for compile time constants? I am quite 
+sure that all calculations using these defines will be evaluated at compile
+time. If found a number of other places where probably the same is done:
+
+find . -name '*.c' | xargs grep "#define.*[0-9]\.[0-9]" | grep -v '"' | grep -v "\/\*.*[0-9]\.[0-9]"
+
+> > +               *val2 = (AS73211_OFFSET_TEMP - (int)AS73211_OFFSET_TEMP) *
+> > 1000000;
+> > 
+> > +                       *val2 = (AS73211_SCALE_TEMP -
+> > (int)AS73211_SCALE_TEMP) * 1000000;
+> Magic 1000000 multiplier.
+I think that in the context of IIO_VAL_INT_PLUS_MICRO this isn't quite magic. Using
+1000000 directly seems quite usual:
+
+find drivers/iio/ -type f | xargs grep "val2 = .*1000000"
+
+> I think here you got them always 0. And to fix that you need to
+> redefine (with also units included in the name) above constants like
+> #define ..._OFFSET_TEMP_mC 66500
+> ... _SCALE_TEMP_?? 50
+a scale factor has no unit
+
 > 
-> net/ipv6/seg6_iptunnel.c:131:21: warning: incorrect type in assignment (different base types)
-> net/ipv6/seg6_iptunnel.c:131:21:    expected restricted __be32 [usertype] tos
-> net/ipv6/seg6_iptunnel.c:131:21:    got unsigned char
-> net/ipv6/seg6_iptunnel.c:133:21: warning: incorrect type in assignment (different base types)
-> net/ipv6/seg6_iptunnel.c:133:21:    expected restricted __be32 [usertype] tos
-> net/ipv6/seg6_iptunnel.c:133:21:    got unsigned char [usertype] tos
-> net/ipv6/seg6_iptunnel.c:144:27: warning: incorrect type in argument 2 (different base types)
-> net/ipv6/seg6_iptunnel.c:144:27:    expected unsigned int tclass
-> net/ipv6/seg6_iptunnel.c:144:27:    got restricted __be32 [usertype] tos
+> Consider to use definitions from
+> https://elixir.bootlin.com/linux/latest/source/include/linux/units.h
+There are only definition for milli celsius. For IIO_VAL_INT_PLUS_MICRO I would
+require micro celsius.
+
+If I have the freedom, I would keep it as it is. Else I would suggest the following:
+#define AS73211_OFFSET_TEMP_INT (-66)
+#define AS73211_OFFSET_TEMP_MICRO 900000
+#define AS73211_SCALE_TEMP_INT 0
+#define AS73211_SCALE_TEMP_MICRO 50000
+
+> > +       }}
+> > +
+> > +       return -EINVAL;
 > 
+> Make it default case.
+changed. Is there any benefit? My IDE's syntax checker now complains
+"No return, in a function returning non-void". But gcc is happy with this.
+
+> > +       ret = devm_iio_device_register(dev, indio_dev);
+> > +       if (ret < 0)
+> > +               return ret;
+> > +
+> > +       return 0;
+> 
+>   return devm_iio_device_register();
+changed. I prefer the original pattern as it would produce less changed lines
+if something needs to inserted later.
+
+
+
