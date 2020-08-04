@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB83C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B06C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8522C2075D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1291020792
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:58:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="klXxKvjR"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="flx/HtjA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730005AbgHDI6U (ORCPT
+        id S1730025AbgHDI6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 04:58:20 -0400
-Received: from mail.codeweavers.com ([50.203.203.244]:46886 "EHLO
+        Tue, 4 Aug 2020 04:58:24 -0400
+Received: from mail.codeweavers.com ([50.203.203.244]:46920 "EHLO
         mail.codeweavers.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729961AbgHDI6U (ORCPT
+        with ESMTP id S1729961AbgHDI6Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 04:58:20 -0400
+        Tue, 4 Aug 2020 04:58:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=codeweavers.com; s=6377696661; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=kWk7YYX9ivhMeMTk14oHtz92dzVrGFitqhbxv9qx8lI=; b=klXxKvjR7JMntS6GV03asjacwN
-        xWhjXGbUJUvlsWCgSHs7GiC0Pv1FywhjOXIlv/9JRi/LjopdSS5e3iSD6vtbyk1a0U6Itx4J/SpJi
-        t1aqTgmbcg6xQRQ1D2yJH7Ed9kVzPl2fb6eOXjicVFhcmSVCw0ijzCIoTkazXa2PNgck=;
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=YZQNC7TRKh4lL6N70djAMsopZDXXJIe03aYYjxhw/4M=; b=flx/HtjAKF/JFDUo4apuAMbXsq
+        cq0GeUeFzvJSxDg6A50kydqSMQN9A9aELkZ3IzU/daddp+Gaq2plCy7v/SH5xv1R6LXgZn37bKg95
+        xxz6/T3YilIGscBvyb5Jge/ZLAjS1LzV1873WTt7qXhXx3qOwCP68uDCeriYD97QpHfI=;
 Received: from lmontsouris-657-1-153-95.w82-127.abo.wanadoo.fr ([82.127.191.95] helo=xps9380.mn.codeweavers.com)
         by mail.codeweavers.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <rbernon@codeweavers.com>)
-        id 1k2sm0-00028I-9f; Tue, 04 Aug 2020 03:58:18 -0500
+        id 1k2sm3-00028I-O9; Tue, 04 Aug 2020 03:58:21 -0500
 From:   Remi Bernon <rbernon@codeweavers.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Remi Bernon <rbernon@codeweavers.com>,
@@ -47,10 +47,12 @@ Cc:     Remi Bernon <rbernon@codeweavers.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Jacek Caban <jacek@codeweavers.com>
-Subject: [PATCH v2 1/3] perf dso: Use libbfd to read build_id and .gnu_debuglink section
-Date:   Tue,  4 Aug 2020 10:57:34 +0200
-Message-Id: <20200804085736.385232-1-rbernon@codeweavers.com>
+Subject: [PATCH v2 2/3] perf symbols: Try reading the symbol table with libbfd
+Date:   Tue,  4 Aug 2020 10:57:35 +0200
+Message-Id: <20200804085736.385232-2-rbernon@codeweavers.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200804085736.385232-1-rbernon@codeweavers.com>
+References: <20200804085736.385232-1-rbernon@codeweavers.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,11 +60,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wine generates PE binaries for most of its modules and perf is unable
-to parse these to get build_id or .gnu_debuglink section.
+Wine generates PE or PDB binaries for its debug files and perf is unable
+to parse these to get the list of symbols and their locations.
 
-Using libbfd when available, instead of libelf, makes it possible to
-resolve debug file location regardless of the dso binary format.
+Trying to read symbols on non-ELF binaries with libbfd, when supported,
+makes it possible for perf to report symbols and annotations for Windows
+applications running under Wine.
+
+Because libbfd doesn't provide symbol size (probably because of some
+backends not supporting it), we compute it by first sorting the symbols
+by addresses and then we consider that they are sequential in a given
+section.
 
 Signed-off-by: Remi Bernon <rbernon@codeweavers.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -75,137 +83,187 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Jacek Caban <jacek@codeweavers.com>
 ---
 
-v2: Commit message reword.
+v2: Updated commit message to match the code and a bit of rewording.
 
- tools/perf/util/symbol-elf.c | 80 ++++++++++++++++++++++++++++++++++--
- 1 file changed, 77 insertions(+), 3 deletions(-)
+ tools/perf/util/symbol.c | 129 +++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/symbol.h |   4 ++
+ 2 files changed, 133 insertions(+)
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 5e43054bffea..2489ca5a2284 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -50,6 +50,10 @@ typedef Elf64_Nhdr GElf_Nhdr;
- #define DMGL_ANSI        (1 << 1)       /* Include const, volatile, etc */
- #endif
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 5ddf84dcbae7..4bece3543ce4 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1523,6 +1523,127 @@ static int dso__load_perf_map(const char *map_path, struct dso *dso)
+ 	return -1;
+ }
  
 +#ifdef HAVE_LIBBFD_SUPPORT
 +#define PACKAGE 'perf'
 +#include <bfd.h>
-+#else
- #ifdef HAVE_CPLUS_DEMANGLE_SUPPORT
- extern char *cplus_demangle(const char *, int);
- 
-@@ -65,9 +69,7 @@ static inline char *bfd_demangle(void __maybe_unused *v,
- {
- 	return NULL;
- }
--#else
--#define PACKAGE 'perf'
--#include <bfd.h>
-+#endif
- #endif
- #endif
- 
-@@ -530,6 +532,36 @@ static int elf_read_build_id(Elf *elf, void *bf, size_t size)
- 	return err;
- }
- 
-+#ifdef HAVE_LIBBFD_SUPPORT
 +
-+int filename__read_build_id(const char *filename, void *bf, size_t size)
++static int bfd_symbols__cmpvalue(const void *a, const void *b)
 +{
-+	int err = -1;
-+	bfd *abfd;
++	const asymbol *as = *(const asymbol **)a, *bs = *(const asymbol **)b;
 +
-+	abfd = bfd_openr(filename, NULL);
-+	if (!abfd)
-+		return -1;
++	if (bfd_asymbol_value(as) != bfd_asymbol_value(bs))
++		return bfd_asymbol_value(as) - bfd_asymbol_value(bs);
 +
-+	if (!bfd_check_format(abfd, bfd_object)) {
-+		pr_debug2("%s: cannot read %s bfd file.\n", __func__, filename);
-+		goto out_close;
-+	}
-+
-+	if (!abfd->build_id || abfd->build_id->size > size)
-+		goto out_close;
-+
-+	memcpy(bf, abfd->build_id->data, abfd->build_id->size);
-+	memset(bf + abfd->build_id->size, 0, size - abfd->build_id->size);
-+	err = abfd->build_id->size;
-+
-+out_close:
-+	bfd_close(abfd);
-+	return err;
++	return bfd_asymbol_name(as)[0] - bfd_asymbol_name(bs)[0];
 +}
 +
-+#else
-+
- int filename__read_build_id(const char *filename, void *bf, size_t size)
- {
- 	int fd, err = -1;
-@@ -557,6 +589,8 @@ int filename__read_build_id(const char *filename, void *bf, size_t size)
- 	return err;
- }
- 
-+#endif
-+
- int sysfs__read_build_id(const char *filename, void *build_id, size_t size)
- {
- 	int fd, err = -1;
-@@ -608,6 +642,44 @@ int sysfs__read_build_id(const char *filename, void *build_id, size_t size)
- 	return err;
- }
- 
-+#ifdef HAVE_LIBBFD_SUPPORT
-+
-+int filename__read_debuglink(const char *filename, char *debuglink,
-+			     size_t size)
++int dso__load_bfd_symbols(struct dso *dso, const char *debugfile)
 +{
 +	int err = -1;
++	long symbols_size, symbols_count;
 +	asection *section;
++	asymbol **symbols, *sym;
++	struct symbol *symbol;
 +	bfd *abfd;
++	u_int i;
++	u64 start, len;
 +
-+	abfd = bfd_openr(filename, NULL);
++	abfd = bfd_openr(dso->long_name, NULL);
 +	if (!abfd)
 +		return -1;
 +
 +	if (!bfd_check_format(abfd, bfd_object)) {
-+		pr_debug2("%s: cannot read %s bfd file.\n", __func__, filename);
++		pr_debug2("%s: cannot read %s bfd file.\n", __func__,
++			  dso->long_name);
 +		goto out_close;
 +	}
 +
-+	section = bfd_get_section_by_name(abfd, ".gnu_debuglink");
-+	if (!section)
++	if (bfd_get_flavour(abfd) == bfd_target_elf_flavour)
 +		goto out_close;
 +
-+	if (section->size > size)
++	section = bfd_get_section_by_name(abfd, ".text");
++	if (section)
++		dso->text_offset = section->vma - section->filepos;
++
++	bfd_close(abfd);
++
++	abfd = bfd_openr(debugfile, NULL);
++	if (!abfd)
++		return -1;
++
++	if (!bfd_check_format(abfd, bfd_object)) {
++		pr_debug2("%s: cannot read %s bfd file.\n", __func__,
++			  debugfile);
++		goto out_close;
++	}
++
++	if (bfd_get_flavour(abfd) == bfd_target_elf_flavour)
 +		goto out_close;
 +
-+	if (!bfd_get_section_contents(abfd, section, debuglink, 0,
-+				      section->size))
++	symbols_size = bfd_get_symtab_upper_bound(abfd);
++	if (symbols_size == 0) {
++		bfd_close(abfd);
++		return 0;
++	}
++
++	if (symbols_size < 0)
 +		goto out_close;
++
++	symbols = malloc(symbols_size);
++	if (!symbols)
++		goto out_close;
++
++	symbols_count = bfd_canonicalize_symtab(abfd, symbols);
++	if (symbols_count < 0)
++		goto out_free;
++
++	qsort(symbols, symbols_count, sizeof(asymbol *), bfd_symbols__cmpvalue);
++
++#ifdef bfd_get_section
++#define bfd_asymbol_section bfd_get_section
++#endif
++	for (i = 0; i < symbols_count; ++i) {
++		sym = symbols[i];
++		section = bfd_asymbol_section(sym);
++		if (!(sym->flags & (BSF_GLOBAL)))
++			continue;
++
++		while (i + 1 < symbols_count &&
++		       bfd_asymbol_section(symbols[i + 1]) == section &&
++		       !(symbols[i + 1]->flags & BSF_GLOBAL))
++			i++;
++
++		if (i + 1 < symbols_count &&
++		    bfd_asymbol_section(symbols[i + 1]) == section)
++			len = symbols[i + 1]->value - sym->value;
++		else
++			len = section->size - sym->value;
++
++		start = bfd_asymbol_value(sym) - dso->text_offset;
++		symbol = symbol__new(start, len, STB_GLOBAL, STT_FUNC,
++				     bfd_asymbol_name(sym));
++		if (!symbol)
++			goto out_free;
++
++		symbols__insert(&dso->symbols, symbol);
++	}
++#ifdef bfd_get_section
++#undef bfd_asymbol_section
++#endif
++
++	symbols__fixup_end(&dso->symbols);
++	symbols__fixup_duplicate(&dso->symbols);
++	dso->adjust_symbols = 1;
 +
 +	err = 0;
-+
++out_free:
++	free(symbols);
 +out_close:
 +	bfd_close(abfd);
 +	return err;
 +}
-+
-+#else
-+
- int filename__read_debuglink(const char *filename, char *debuglink,
- 			     size_t size)
- {
-@@ -660,6 +732,8 @@ int filename__read_debuglink(const char *filename, char *debuglink,
- 	return err;
- }
- 
 +#endif
 +
- static int dso__swap_init(struct dso *dso, unsigned char eidata)
+ static bool dso__is_compatible_symtab_type(struct dso *dso, bool kmod,
+ 					   enum dso_binary_type type)
  {
- 	static unsigned int const endian = 1;
+@@ -1695,6 +1816,7 @@ int dso__load(struct dso *dso, struct map *map)
+ 		bool next_slot = false;
+ 		bool is_reg;
+ 		bool nsexit;
++		int bfdrc = -1;
+ 		int sirc = -1;
+ 
+ 		enum dso_binary_type symtab_type = binary_type_symtab[i];
+@@ -1713,12 +1835,19 @@ int dso__load(struct dso *dso, struct map *map)
+ 			nsinfo__mountns_exit(&nsc);
+ 
+ 		is_reg = is_regular_file(name);
++#ifdef HAVE_LIBBFD_SUPPORT
+ 		if (is_reg)
++			bfdrc = dso__load_bfd_symbols(dso, name);
++#endif
++		if (is_reg && bfdrc < 0)
+ 			sirc = symsrc__init(ss, dso, name, symtab_type);
+ 
+ 		if (nsexit)
+ 			nsinfo__mountns_enter(dso->nsinfo, &nsc);
+ 
++		if (bfdrc == 0)
++			break;
++
+ 		if (!is_reg || sirc < 0)
+ 			continue;
+ 
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index ff4f4c47e148..11fe71f46d14 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -175,6 +175,10 @@ int symbol__config_symfs(const struct option *opt __maybe_unused,
+ 
+ struct symsrc;
+ 
++#ifdef HAVE_LIBBFD_SUPPORT
++int dso__load_bfd_symbols(struct dso *dso, const char *debugfile);
++#endif
++
+ int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 		  struct symsrc *runtime_ss, int kmodule);
+ int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss);
 -- 
 2.27.0
 
