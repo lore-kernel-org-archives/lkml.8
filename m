@@ -2,138 +2,144 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E884C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D34B2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD2C22B45
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBC3A20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:47:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KwW8r91A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbgHDUqy (ORCPT
+        id S1728090AbgHDUrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 16:46:54 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:34757 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgHDUqy (ORCPT
+        Tue, 4 Aug 2020 16:47:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgHDUrx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 16:46:54 -0400
-Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M4rkF-1k4RPY1btf-002313 for <linux-kernel@vger.kernel.org>; Tue, 04 Aug
- 2020 22:46:51 +0200
-Received: by mail-qt1-f181.google.com with SMTP id s23so32044309qtq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 13:46:51 -0700 (PDT)
-X-Gm-Message-State: AOAM533lzrJu/Di3qgol87upK+4KjAVJ/O7ZTGh6N8oCEhozwWDq7/kP
-        DQfpv6pbfSj/LxBnec91x8Rq7lKbn04hK+OpH00=
-X-Google-Smtp-Source: ABdhPJyfKXtZ9bJdr5vNevE8picmWjXgaqtGeRUJwUyWZhYZoWFf+rYjINp1Q7InTjlAu2JhmVavHTYiCQ3CxRC9qDM=
-X-Received: by 2002:ac8:688e:: with SMTP id m14mr23733224qtq.7.1596574010244;
- Tue, 04 Aug 2020 13:46:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200804135817.5495-1-daniel.gutson@eclypsium.com>
- <CAK8P3a0_fJ0BfD5Qvxdo0s7CbjPWaGA8QTgYhbXR=omafOHH4Q@mail.gmail.com>
- <CAFmMkTHEm8k+5GZkVJbDZMEhMwpsqVKRb-hGskSpBstdLRuFyA@mail.gmail.com>
- <CAK8P3a27bTYyn3N+tX=i_6f4KrQkOmkUA1zUQfvCW7qw6smSkQ@mail.gmail.com> <CAFmMkTF9eVm0tpOKEy2rzdX=Scr3RwqHDFy_i24R3F5ok-4=eA@mail.gmail.com>
-In-Reply-To: <CAFmMkTF9eVm0tpOKEy2rzdX=Scr3RwqHDFy_i24R3F5ok-4=eA@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 4 Aug 2020 22:46:34 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3mf8_Y4DWe3WuBO-Xo0N4Jj=-rrtFzD6w0TriGZPu1_g@mail.gmail.com>
-Message-ID: <CAK8P3a3mf8_Y4DWe3WuBO-Xo0N4Jj=-rrtFzD6w0TriGZPu1_g@mail.gmail.com>
-Subject: Re: [PATCH] mtd: spi-nor: intel-spi: Do not try to make the SPI flash
- chip writable
-To:     Daniel Gutson <daniel@eclypsium.com>
-Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alex Bazhaniuk <alex@eclypsium.com>,
-        Richard Hughes <hughsient@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        Tue, 4 Aug 2020 16:47:53 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46699C06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 13:47:53 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id b127so36478192ybh.21
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 13:47:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=bdWZwbCIT3bffqBHb6yQ2UmqBVzTTDxDz7sK3Dmf5r4=;
+        b=KwW8r91AHMUBg5mbfjpRjTR0cf8DPX1yH2l3+2XlygGEQCNkBkp2T2avLdbvlR2jc5
+         ZQm2c//EyKWM6yPtV07c6G5etRYsRM9DZ2B75umwcvYj/eSDCb/0pmH3ChoVnbPee3sb
+         9Nad960qcZ7Pntd3PNRvjToJEh98i1sw+0BoWjYtw9qBBjJ/OGfyiru1BE6QPWoaurg7
+         u3xRcgLuUVZ44ozwU2hkrDxmjUESSDaE6J28cl2lPisJzKQK0i2ZR1wuI+4/SybCfSy6
+         4co+aJUXzsaFTtcH1WE9aHdxc0jxWuPbUzb8KHakh/FPkJ210Kk3i2DBCdADP7ALt38o
+         f3KA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=bdWZwbCIT3bffqBHb6yQ2UmqBVzTTDxDz7sK3Dmf5r4=;
+        b=sF4ZJ8vECU84HAZQyrLZLome5Pp2gV/dlYtZ9oPbYRG40ZNf58D1TzNpwoagjyaAub
+         cNVBLbxibwEi1neyyW6Ud19vbmUzwk11c1LmbOHgfiZLL8wK2yLw7gqYiyJvO9DRsVHs
+         d/QjiBy5hVypl1xDe8ITNC5SFtnEl0rYVwr5dPgwlsYky4yW0l8icbrx9XVLZX40Y7o3
+         Oy6T4uge+1+z/avBQ7RJG9aF+d0ZGZOBcGlDN9cMFo1FR6DWm/UO6GIOkUAVcTY9XXvQ
+         vuTastlnaMnPdx1AGdx0raLAckwazu/sloVXAzypUBFMb1JMhOGpNiJ9nChn8sUOPTgi
+         S32w==
+X-Gm-Message-State: AOAM5336F8l4iICLtFK0gIlDb7NOxp8QvGgEJZdvk9tCSTd9piUfkvei
+        sBmxHxqGKiCgd22RZJEjaJ92ZcINdSzmFArDpbitMg==
+X-Google-Smtp-Source: ABdhPJwYimCKG7zFBoA8l8yiip0nr1b5jytYj7cr6BxJOxfhLVlpZg6kC8ksmiseCKfq3ISGowf5zR5F1rWu8FFPMWnf3Q==
+X-Received: by 2002:a25:5887:: with SMTP id m129mr39203687ybb.11.1596574072436;
+ Tue, 04 Aug 2020 13:47:52 -0700 (PDT)
+Date:   Tue,  4 Aug 2020 13:47:40 -0700
+Message-Id: <20200804204745.987648-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+Subject: [PATCH v6 0/5] kunit: create a centralized executor to dispatch all
+ KUnit tests
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
+        arnd@arndb.de, keescook@chromium.org, skhan@linuxfoundation.org,
+        alan.maguire@oracle.com, yzaikin@google.com, davidgow@google.com,
+        akpm@linux-foundation.org, rppt@linux.ibm.com,
+        frowand.list@gmail.com
+Cc:     gregkh@linuxfoundation.org, sboyd@kernel.org, logang@deltatee.com,
+        mcgrof@kernel.org, linux-arch@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Brendan Higgins <brendanhiggins@google.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:0S9TMgZo/mnlFxy49h/RbsO1Aq1qoNkWDjat11AnV1WQiXl0kBQ
- jHs8uUbp6BwQXfT8HS+G/LDsdFxB8u9r5bYc8S+zvPscW5Vd/VHd6j9sO6GRC6KcrenDZQH
- +euTWcfIdLVNEUor1sToNC0f7xu7kGXyBeZ2LEK6ZObDqeeJPguGMIwLtSfo0+f5A5y4VEW
- H+lID/jNrKeMjBmKeYBZw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0Ty7GXGzy5U=:VgmdVWutpR1O235UZIRn1L
- Kx4oby2OzgVA6aMDm10Lj0p/rijOSPRbqVeNvBwtc57D9Yg3QBYfmX5NLH6GDUQf7RITNh7L/
- c1WPZIfsF2XwJYWc5S8TyE7WgzdOS1AFfoS7lTxm56NCYq3ck8hGZDB2NkbAKJpz72T5mOB7R
- fW6EofHzA/IeVSYEBaAyhzm7uLzQNroP1Z+YZ7dNN+Kl7Xw2arzWmF1uvITW3RXHqemVZbSsj
- KfdFRzD+Wa2Ic3j6wfhRiqtrod0I49zdt+G8h107xBbm2EsE05dYILWd9HKjJg4dV607hfA8g
- gmJOHrl/6ffUYYyNUVMeNQ+oAF8D+nMZ2sDm4j+QkMRxfM6HLF3LosfHA9JWjdwT00gRc0gdb
- Q5FfxaYjdxlhVjfcD2KPqXvNoKDegaiGlCCtgnRRk12iDzvqnDv45utor0ksSEeFDJ5EIc6rO
- CNSfYE7e2XRhIlKSiV8Wb66gbCdQV3JL5CZ2TRBb7r2v3RkBt8N5BLOFhTbAm1UTy5wQllErF
- 3Y3cr6IalcKHt1AVlp+CLLhVPE94LU3rDmv0QCQYl1BIoIXoMYdq8bg0FJbNOYr0GXmTQt05V
- dJGSAP/lBE7JAoWEj8GvzxSzmQ7N7ayOLEOQXrc8ZIhtCVr2i0Tf6LM9GJGrAx/i6gDH+tFvl
- Y9BXxoJAD00NHNLIWBoW00MpU92IhyHgymh3auWLwqNasaMRRNmYjWKgwUBSvGhYnwarYOmwM
- GF3g4nKF7/mi0AnSW7CLW6g934bVdVhG48PW1GWYMf1dh5XZJrdYF9hWEtH4+qoSgF54qCyq2
- dmpjZyTDNUo54XyUCD3b2EHrdbyuRamxf0WDFWF1ztBwfgy8iVAwqBPn5P99sAnAOuqH+Z4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 9:57 PM Daniel Gutson <daniel@eclypsium.com> wrote:
-> On Tue, Aug 4, 2020 at 4:06 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Tue, Aug 4, 2020 at 5:49 PM Daniel Gutson <daniel@eclypsium.com> wrote:
-> > > On Tue, Aug 4, 2020 at 12:21 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > >> On Tue, Aug 4, 2020 at 3:58 PM Daniel Gutson
-> > >> <daniel.gutson@eclypsium.com> wrote:
-> > >
-> > > What about just saying
-> > >
-> > > "This patch removes the attempt by the intel-spi-pci driver to
-> > > make the chip always writable."
-> >
-> > Yes, that is much better, though it still sounds like it would at the
-> > moment allow writing to the device from software without also
-> > setting the module parameter. I would say something like
-> >
-> > "Disallow overriding the write protection in the PCI driver
-> > with a module parameter and instead honor the current
-> > state of the write protection as set by the firmware."
->
-> But wait, Mika, the author of the file, asked earlier not to remove
-> the module parameter of intel-spi, and just remove the unconditional
-> attempt to turn the chip writable in intle-spi-pci.
+## TL;DR
 
-Yes, and I think that is fine (aside from the inconsistency with bay trail
-that you have not commented on), but that only touches the hardware
-write-protection, which doesn't really have any effect unless user
-space also configures the driver module to allow writing to the
-mtd device.
+This patchset adds a centralized executor to dispatch tests rather than
+relying on late_initcall to schedule each test suite separately along
+with a couple of new features that depend on it.
 
-> So I'm not touching intel-pci, just removing that code from
-> intel-spi-pci without adding a new module parameter.
->
-> Are you aligned on this?
+## What am I trying to do?
 
-One of us is still very confused about what the driver does.
-You seem to have gone back to saying that without the
-change a user could just write to the device even without
-passing the module parameter to intel-spi.ko?
+Conceptually, I am trying to provide a mechanism by which test suites
+can be grouped together so that they can be reasoned about collectively.
+The second to last patch in this series add features which depend on
+this:
 
-Maybe you should start by explaining what scenario you
-actually want to prevent here. Is it
+PATCH 04/05 Prints out a test plan[1] right before KUnit tests are run;
+            this is valuable because it makes it possible for a test
+            harness to detect whether the number of tests run matches
+            the number of tests expected to be run, ensuring that no
+            tests silently failed. The test plan includes a count of
+            tests that will run. With the centralized executor, the
+            tests are located in a single data structure and thus can be
+            counted.
 
-a) the hardware write-protect bit getting changed, which
-    introduces the possibility of corrupting the flash even
-    if nothing tries to write to it,
+In addition, by dispatching tests from a single location, we can
+guarantee that all KUnit tests run after late_init is complete, which
+was a concern during the initial KUnit patchset review (this has not
+been a problem in practice, but resolving with certainty is nevertheless
+desirable).
 
-b) root users setting the device writable with the intention
-   of writing to it even though firmware has politely asked
-   for this not to be done (by setting the write-protect bit
-   but not preventing it from being disabled again), or
+Other use cases for this exist, but the above features should provide an
+idea of the value that this could provide.
 
-c) a writeable mtd device showing up even without
-    the module parameter being set at all?
+## Changes since last revision:
+ - Renamed the KUNIT_TEST_SUITES the KUNIT_TABLE section and moved it
+   from INIT_DATA_SECTION to INIT_DATA; this had the additional
+   consequence of making the first several architecture specific patches
+   unnecessary - suggested by Kees.
+ - Dropped the kunit_shutdown patches; I think it makes more sense to
+   reintroduce them in a later patchset.
 
-I thought the initial patch was about c) which turned out
-to be a non-issue, and then the later patch being about b).
+Alan Maguire (1):
+  kunit: test: create a single centralized executor for all tests
 
-     Arnd
+Brendan Higgins (4):
+  vmlinux.lds.h: add linker section for KUnit test suites
+  init: main: add KUnit to kernel init
+  kunit: test: add test plan to KUnit TAP format
+  Documentation: kunit: add a brief blurb about kunit_test_suite
+
+ Documentation/dev-tools/kunit/usage.rst       |   5 ++
+ include/asm-generic/vmlinux.lds.h             |  10 ++-
+ include/kunit/test.h                          |  76 +++++++++++++-----
+ init/main.c                                   |   4 +
+ lib/kunit/Makefile                            |   3 +-
+ lib/kunit/executor.c                          |  43 ++++++++++
+ lib/kunit/test.c                              |  13 +--
+ tools/testing/kunit/kunit_parser.py           |  76 ++++++++++++++----
+ .../test_is_test_passed-all_passed.log        | Bin 1562 -> 1567 bytes
+ .../test_data/test_is_test_passed-crash.log   | Bin 3016 -> 3021 bytes
+ .../test_data/test_is_test_passed-failure.log | Bin 1700 -> 1705 bytes
+ 11 files changed, 180 insertions(+), 50 deletions(-)
+ create mode 100644 lib/kunit/executor.c
+
+
+base-commit: 145ff1ec090dce9beb5a9590b5dc288e7bb2e65d
+-- 
+2.28.0.163.g6104cc2f0b6-goog
+
