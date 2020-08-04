@@ -2,81 +2,112 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C03BCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9443C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97AA522B42
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:37:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AEwBaiSq"
+	by mail.kernel.org (Postfix) with ESMTP id A74912065C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:38:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgHDOhJ (ORCPT
+        id S1729163AbgHDOhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:37:09 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34775 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728560AbgHDOgV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:36:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596551780;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=P7efH4yIOHHW4g8YMjqbBd8yHqYmQidXMPn5y6gvFuc=;
-        b=AEwBaiSqMEAvbF65zMguCsg1imeM/Bjt24gJH74gadh8QX/GJEYGXNvSdVXoQd2D4D+MfP
-        PVa4JfMVt0vJh6jDLeSnE0qPwckc+YxySiaBqXiU6qWu0cGMWZqjfP9C9sY5KF9CCK8ICm
-        EIqh/mkCv5Gjk3yar4LytoMODrrfigg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-136-Trw6BIZsOj27-smuFfkV2Q-1; Tue, 04 Aug 2020 10:36:18 -0400
-X-MC-Unique: Trw6BIZsOj27-smuFfkV2Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1CA0C193F565;
-        Tue,  4 Aug 2020 14:36:17 +0000 (UTC)
-Received: from gondolin (ovpn-112-169.ams2.redhat.com [10.36.112.169])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 18BF461176;
-        Tue,  4 Aug 2020 14:36:13 +0000 (UTC)
-Date:   Tue, 4 Aug 2020 16:36:10 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v2 12/24] virtio_iommu: correct tags for config space
- fields
-Message-ID: <20200804163610.48bb7947.cohuck@redhat.com>
-In-Reply-To: <20200803205814.540410-13-mst@redhat.com>
-References: <20200803205814.540410-1-mst@redhat.com>
-        <20200803205814.540410-13-mst@redhat.com>
-Organization: Red Hat GmbH
+        Tue, 4 Aug 2020 10:37:20 -0400
+Received: from relay.sw.ru ([185.231.240.75]:42122 "EHLO relay3.sw.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729100AbgHDOhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 10:37:02 -0400
+Received: from [192.168.15.159]
+        by relay3.sw.ru with esmtp (Exim 4.93)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1k2y3L-00062b-9B; Tue, 04 Aug 2020 17:36:31 +0300
+Subject: Re: [PATCH 1/8] ns: Add common refcount into ns_common add use it as
+ counter for net_ns
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     christian.brauner@ubuntu.com, akpm@linux-foundation.org,
+        viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
+References: <159644958332.604812.13004003379291842292.stgit@localhost.localdomain>
+ <159644977635.604812.1319877322927063560.stgit@localhost.localdomain>
+ <875z9ysit5.fsf@x220.int.ebiederm.org>
+ <49106051-be26-7b89-f9e8-7c441dbda18a@virtuozzo.com>
+ <87sgd2o6vt.fsf@x220.int.ebiederm.org>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <6f6f9989-9cde-f93a-ad0a-311f264398f0@virtuozzo.com>
+Date:   Tue, 4 Aug 2020 17:36:52 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <87sgd2o6vt.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 3 Aug 2020 16:59:27 -0400
-"Michael S. Tsirkin" <mst@redhat.com> wrote:
-
-> Since this is a modern-only device,
-> tag config space fields as having little endian-ness.
+On 04.08.2020 16:52, Eric W. Biederman wrote:
+> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
 > 
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->  include/uapi/linux/virtio_iommu.h | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+>> On 04.08.2020 15:21, Eric W. Biederman wrote:
+>>> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
+>>>
+>>>> Currently, every type of namespaces has its own counter,
+>>>> which is stored in ns-specific part. Say, @net has
+>>>> struct net::count, @pid has struct pid_namespace::kref, etc.
+>>>>
+>>>> This patchset introduces unified counter for all types
+>>>> of namespaces, and converts net namespace to use it first.
+>>>
+>>> And the other refcounts on struct net?
+>>>
+>>> How do they play into what you are trying to do?
+>>
+>> I just don't understand you. Different refcounters are related to different
+>> problems, they are introduced to solve. This patchset changes only one refcounter,
+>> and it does not touch other of them. What do you want to know about others?
+>>
+> 
+> Why net::count not net::passive?  What problem are you trying to solve?
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+net::count is a counter, which indicates whether net is alive and still
+initilized. net::passive does not guarantees that net has not been
+deinitialized yet.
 
+The same with another namespaces. All of merged counters indicate
+that a namespace is alive and initialized. So, we merge them by this property.
+
+> They both are reference counts on the network namespace.
+> 
+> I don't understand what you are trying to do, other than take a bunch of
+> things that look similar and squash them all together.
+> 
+> What semantics does this magical common reference count have?
+> Why is it better for the count to live in ns_common rather than it
+> it's own dedicated field of struct net?
+
+The only visible current effect is better readability and better
+debugability with, say, crash on kernel dump.
+
+> Given that decrementing still requires code per namespace to handle
+> the count going to zero.  How does this benefit anyone?
+
+Since namespaces are different by type, they require different destructors.
+Generic counter can't solve any problem, the namespaces can address.
+
+> Has the effect of cache line placement of the move of the reference
+> count been considered?
+
+I don't see any performance impact during namespace creation/destruction
+test.
+
+> All I see in the patch in question is switching a location that the
+> count lives.  Which does not seem useful to me.
+> 
+> I am not fundamentally oppossed but I don't see the point.  At this
+> point it looks like you are making things harder to maintain by making
+> things common that are merely similar
