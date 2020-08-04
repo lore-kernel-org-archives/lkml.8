@@ -2,197 +2,260 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1348C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 23:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2344FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 23:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B576720842
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 23:28:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596583683;
-	bh=rJGKAU6a1vzNuxXQY0o9qKI5eBpyPrG8L2if9FYJihk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JTmFOkmMWRWA5YNFK2GWnBCi11rs0KaE5PqZ71ZI87NsEOfgZNSqcKrFMAs1dcxCv
-	 SHDx6DweB9i7HJV9j7fBsAMUh5aRVUF/93bGF3hpns0HTGeP4Yr3JXBBsE6XE3K7rD
-	 XtBrOmwnPajNCPtoj+atLllZJ9WlbMW85IBmJrpo=
+	by mail.kernel.org (Postfix) with ESMTP id 0278220842
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 23:30:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m4Ra0Sg9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgHDX2C (ORCPT
+        id S1726809AbgHDXaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 19:28:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725300AbgHDX2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 19:28:01 -0400
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAC9E2177B
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 23:28:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596583681;
-        bh=rJGKAU6a1vzNuxXQY0o9qKI5eBpyPrG8L2if9FYJihk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WntteR60Vu4o3yv/DQqCFvGs/UkMiveYHDMpO2/We1IMPK/3hJ36Scc+gCYNHO2Sg
-         PoASieKQP3pkJyerhWvKIJzI0OBOdMjGV7P2IvfXaBRRWWh6B49LvyFf2Qjgqe7Xc7
-         FCAN7uOU4sMdbMwZxLc5h6AlyoRc3LBokhADh/EU=
-Received: by mail-ej1-f42.google.com with SMTP id g19so30496798ejc.9
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 16:28:00 -0700 (PDT)
-X-Gm-Message-State: AOAM530ia4SJPuYsqNTM1391lN+LDOZzaGiHA3ER25TekZoE9V1l6s5D
-        WZf2JfrhDh4Xay6iI+3sLY2qR3au/HIyZ1GlEg==
-X-Google-Smtp-Source: ABdhPJxhbuNd1k98tAHaLGm0Jd5RqlzV6OlBiVekuIBcntzql1W1cBK2/N+vIybzOkyo7GJwfzhqcUft9Dq8+VB6xZM=
-X-Received: by 2002:a17:906:f14f:: with SMTP id gw15mr466293ejb.245.1596583679325;
- Tue, 04 Aug 2020 16:27:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200804165555.75159-1-linux@fw-web.de> <20200804165555.75159-2-linux@fw-web.de>
-In-Reply-To: <20200804165555.75159-2-linux@fw-web.de>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Wed, 5 Aug 2020 07:27:48 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_-zetZmpTjHJuEr-qrQWP8Rykj3s=Kx6M+U3TO44MNr2Q@mail.gmail.com>
-Message-ID: <CAAOTY_-zetZmpTjHJuEr-qrQWP8Rykj3s=Kx6M+U3TO44MNr2Q@mail.gmail.com>
-Subject: Re: [PATCH v4 1/6] dt-bindings: mediatek: add mt7623 display-nodes
-To:     Frank Wunderlich <linux@fw-web.de>
-Cc:     "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 4 Aug 2020 19:30:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55840 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbgHDXaG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 19:30:06 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CCF9C06174A;
+        Tue,  4 Aug 2020 16:30:06 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id d188so15556173pfd.2;
+        Tue, 04 Aug 2020 16:30:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=/PLnMdZ7nugbg5r5613ggouSlqIxD3KRDXk4wXbo0h8=;
+        b=m4Ra0Sg96mN49VmAFMbb9sdTG4FyPW5i7EKH6ntsNYe5lXz3vu5L3PPngA9CsLf6O6
+         GP02ksheTYm5WCrCv/Wxxan3koy+6mI8pQ1iu3cB58YdiHp1Z8HIiGZ4ZTVMmV0UFPfu
+         eFhhRMJz0J57z4P6ikLGiF82U1suQwfYD/2T+0dg6w1CWBYesTA6m/TESy2Wugzh3IYc
+         eAKj9MrboIsYRk4ZBQAJGlVxVxcW59tt8npiXkXKotVAYnW+D1ud93fGs3T8F7aK3suX
+         hLuV/lks+h0MSeirMk3av0IsdMyN0nq6r0KBTrMT5c6cPFWnQsLb2PyUdovPPqRh2jKR
+         oCKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=/PLnMdZ7nugbg5r5613ggouSlqIxD3KRDXk4wXbo0h8=;
+        b=GDgDkPVCfFP9zFAWkABUeknrD6eOIMTqweBPPUw1fpaPDPDk+fgeQLwgkXHXl2P02d
+         znHa9FhiAhpdPtPVjZ57yTjXfE5XpwBWewuumEHiHBsk0ao+rMjWEdoXPZzm4+kiRTQq
+         2nIELZiIVSLsTJ1QZqvGoa80vRJDUmZUh0fhXnm0lYTMr7tNQQODaSmEb4c5kLJ7OOXM
+         CepAjArrWQED2oqfbnqGelN84pmi24obJn1VnaXThcRadnOPPefqjH1SyliS7LMnG/HE
+         h/n2pESkd+5/pFESrMe6xLfd6ZoQr5SDnUt87YCJ4X5gBi0s9FO+a8CSf9/miycprh8O
+         ycag==
+X-Gm-Message-State: AOAM533ddrHzCVAnI93UkJ5n9l1fC588fXNJpsau4S9O1pISXw+7nOxv
+        0g9RAHPyxztZabmcoBl06Mycnw4X
+X-Google-Smtp-Source: ABdhPJy3r3XXlEpAesRT+kn/ee/VrvecVGLa+pN+m+a4PvxAMOhcDNer1I6L/hEc7esd1phjP49NCA==
+X-Received: by 2002:a63:eb42:: with SMTP id b2mr649842pgk.173.1596583805422;
+        Tue, 04 Aug 2020 16:30:05 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y10sm208383pff.177.2020.08.04.16.30.03
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 04 Aug 2020 16:30:04 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] hwmon updates for v5.9
+Date:   Tue,  4 Aug 2020 16:30:02 -0700
+Message-Id: <20200804233002.230586-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Frank Wunderlich <linux@fw-web.de> =E6=96=BC 2020=E5=B9=B48=E6=9C=885=E6=97=
-=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=8812:56=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> From: Frank Wunderlich <frank-w@public-files.de>
->
-> mt7623 uses mt2701/mt8173 for drm, but have own compatibles
+Hi Linus,
 
-Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Please pull hwmon updates for Linux v5.9 from signed tag:
 
->
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> ---
->  .../devicetree/bindings/display/mediatek/mediatek,disp.txt    | 2 +-
->  .../devicetree/bindings/display/mediatek/mediatek,dpi.txt     | 2 +-
->  .../devicetree/bindings/display/mediatek/mediatek,dsi.txt     | 4 ++--
->  .../devicetree/bindings/display/mediatek/mediatek,hdmi.txt    | 4 ++++
->  4 files changed, 8 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
-disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp=
-.txt
-> index b91e709db7a4..121220745d46 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.tx=
-t
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.tx=
-t
-> @@ -43,7 +43,7 @@ Required properties (all function blocks):
->         "mediatek,<chip>-dpi"                   - DPI controller, see med=
-iatek,dpi.txt
->         "mediatek,<chip>-disp-mutex"            - display mutex
->         "mediatek,<chip>-disp-od"               - overdrive
-> -  the supported chips are mt2701, mt2712 and mt8173.
-> +  the supported chips are mt2701, mt7623, mt2712 and mt8173.
->  - reg: Physical base address and length of the function block register s=
-pace
->  - interrupts: The interrupt signal from the function block (required, ex=
-cept for
->    merge and split function blocks).
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
-dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.t=
-xt
-> index 77def4456706..dc1ebd13cc88 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-> @@ -7,7 +7,7 @@ output bus.
->
->  Required properties:
->  - compatible: "mediatek,<chip>-dpi"
-> -  the supported chips are mt2701 , mt8173 and mt8183.
-> +  the supported chips are mt2701, mt7623, mt8173 and mt8183.
->  - reg: Physical base address and length of the controller's registers
->  - interrupts: The interrupt signal from the function block.
->  - clocks: device clocks
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
-dsi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.t=
-xt
-> index 8e4729de8c85..f06f24d405a5 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
-> @@ -7,7 +7,7 @@ channel output.
->
->  Required properties:
->  - compatible: "mediatek,<chip>-dsi"
-> -  the supported chips are mt2701, mt8173 and mt8183.
-> +- the supported chips are mt2701, mt7623, mt8173 and mt8183.
->  - reg: Physical base address and length of the controller's registers
->  - interrupts: The interrupt signal from the function block.
->  - clocks: device clocks
-> @@ -26,7 +26,7 @@ The MIPI TX configuration module controls the MIPI D-PH=
-Y.
->
->  Required properties:
->  - compatible: "mediatek,<chip>-mipi-tx"
-> -  the supported chips are mt2701, mt8173 and mt8183.
-> +- the supported chips are mt2701, 7623, mt8173 and mt8183.
->  - reg: Physical base address and length of the controller's registers
->  - clocks: PLL reference clock
->  - clock-output-names: name of the output clock line to the DSI encoder
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,=
-hdmi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi=
-.txt
-> index 7b124242b0c5..6b1c586403e4 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.tx=
-t
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.tx=
-t
-> @@ -6,6 +6,7 @@ its parallel input.
->
->  Required properties:
->  - compatible: Should be "mediatek,<chip>-hdmi".
-> +- the supported chips are mt2701, mt7623 and mt8173
->  - reg: Physical base address and length of the controller's registers
->  - interrupts: The interrupt signal from the function block.
->  - clocks: device clocks
-> @@ -32,6 +33,7 @@ The HDMI CEC controller handles hotplug detection and C=
-EC communication.
->
->  Required properties:
->  - compatible: Should be "mediatek,<chip>-cec"
-> +- the supported chips are mt7623 and mt8173
->  - reg: Physical base address and length of the controller's registers
->  - interrupts: The interrupt signal from the function block.
->  - clocks: device clock
-> @@ -44,6 +46,7 @@ The Mediatek's I2C controller is used to interface with=
- I2C devices.
->
->  Required properties:
->  - compatible: Should be "mediatek,<chip>-hdmi-ddc"
-> +- the supported chips are mt7623 and mt8173
->  - reg: Physical base address and length of the controller's registers
->  - clocks: device clock
->  - clock-names: Should be "ddc-i2c".
-> @@ -56,6 +59,7 @@ output and drives the HDMI pads.
->
->  Required properties:
->  - compatible: "mediatek,<chip>-hdmi-phy"
-> +- the supported chips are mt2701, mt7623 and mt8173
->  - reg: Physical base address and length of the module's registers
->  - clocks: PLL reference clock
->  - clock-names: must contain "pll_ref"
-> --
-> 2.25.1
->
+    git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v5.9
+
+Thanks,
+Guenter
+------
+
+The following changes since commit ba47d845d715a010f7b51f6f89bae32845e6acb7:
+
+  Linux 5.8-rc6 (2020-07-19 15:41:18 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git tags/hwmon-for-v5.9
+
+for you to fetch changes up to e2f75e6b5d766195d2ca584d92995a0dfe467fc7:
+
+  hwmon: (adc128d818) Fix advanced configuration register init (2020-08-04 14:28:03 -0700)
+
+----------------------------------------------------------------
+hwmon updates for v5.9
+
+Highlights:
+- New driver for Sparx5 SoC temperature sensot
+- New driver for Corsair Commander Pro
+- MAX20710 support added to max20730 driver
+
+Enhancements:
+- max6697: Allow max6581 to create tempX_offset attributes
+- gsc (Gateworks System Controller): add 16bit pre-scaled voltage mode
+- adm1275: Enable adm1278 ADM1278_TEMP1_EN
+- dell-smm: Add Latitude 5480 to fan control whitelist
+
+Fixes:
+- adc128d818: Fix advanced configuration register init
+- pmbus/core: Use s64 instead of long for calculations
+              to fix overflow issues with 32-bit architectures
+
+Plus various cleanups in several drivers.
+
+----------------------------------------------------------------
+Alexander A. Klimov (11):
+      hwmon: (tmmp513) Replace HTTP links with HTTPS links
+      hwmon: (adm1025) Replace HTTP links with HTTPS ones
+      docs: hwmon: Replace HTTP links with HTTPS ones
+      hwmon: Replace HTTP links with HTTPS ones
+      hwmon: (ina209) Replace HTTP links with HTTPS ones
+      hwmon: (ina2xx) Replace HTTP links with HTTPS ones
+      hwmon: (jc42) Replace HTTP links with HTTPS ones
+      hwmon: (k8temp) Replace HTTP links with HTTPS ones
+      hwmon: (lm90) Replace HTTP links with HTTPS ones
+      hwmon: (lm95234) Replace HTTP links with HTTPS ones
+      hwmon: (tmp401) Replace HTTP links with HTTPS ones
+
+Alexandru Ardelean (1):
+      hwmon: (axi-fan-control) remove duplicate macros
+
+Chu Lin (1):
+      hwmon: (max6697) Allow max6581 to create tempX_offset
+
+Colin Ian King (1):
+      hwmon: (i5k_amb) remove redundant assignment to variable res
+
+Jeffrey Lin (1):
+      hwmon: (dell-smm) Add Latitude 5480 to fan control whitelist
+
+Josh Lehan (1):
+      hwmon: (pmbus/core) Use s64 instead of long for calculations
+
+Lars Povlsen (2):
+      dt-bindings: hwmon: Add Sparx5 temperature sensor
+      hwmon: sparx5: Add Sparx5 SoC temperature driver
+
+Manikandan Elumalai (1):
+      hwmon: (adm1275) Enable adm1278 ADM1278_TEMP1_EN
+
+Marius Zachmann (2):
+      hwmon: add Corsair Commander Pro driver
+      hwmon: (corsair-cpro) add reading pwm values
+
+Randy Dunlap (5):
+      Documentation: hwmon/f71882fg: drop duplicate words
+      Documentation: hwmon/lm93: drop duplicate words
+      Documentation: hwmon/nct7665: drop duplicate words
+      Documentation: hwmon/w83627ehf: drop duplicate words
+      Documentation: hwmon/w83l786ng: drop duplicate words
+
+Roy van Doormaal (1):
+      hwmon: (adc128d818) Fix advanced configuration register init
+
+Saheed O. Bolarinwa (1):
+      hwmon: (i5k_amb, vt8231) Drop uses of pci_read_config_*() return value
+
+Tim Harvey (1):
+      hwmon: (gsc) add 16bit pre-scaled voltage mode
+
+Ugur Usug (1):
+      hwmon: (pmbus/max20730) Add max20710 support
+
+Wang Qing (1):
+      hwmon: (nct6683) Replace container_of() with  kobj_to_dev()
+
+Wei Yongjun (1):
+      hwmon: (sparx5) Make symbol 's5_temp_match' static
+
+ .../bindings/hwmon/microchip,sparx5-temp.yaml      |  44 ++
+ .../devicetree/bindings/hwmon/ti,tmp513.yaml       |   4 +-
+ Documentation/hwmon/adc128d818.rst                 |   2 +-
+ Documentation/hwmon/adm1026.rst                    |   2 +-
+ Documentation/hwmon/adm1031.rst                    |   4 +-
+ Documentation/hwmon/adm1275.rst                    |   2 +-
+ Documentation/hwmon/adt7410.rst                    |   8 +-
+ Documentation/hwmon/corsair-cpro.rst               |  41 ++
+ Documentation/hwmon/emc1403.rst                    |   6 +-
+ Documentation/hwmon/f71882fg.rst                   |   2 +-
+ Documentation/hwmon/ina209.rst                     |   2 +-
+ Documentation/hwmon/ina2xx.rst                     |  10 +-
+ Documentation/hwmon/ina3221.rst                    |   2 +-
+ Documentation/hwmon/index.rst                      |   1 +
+ Documentation/hwmon/jc42.rst                       |  26 +-
+ Documentation/hwmon/k8temp.rst                     |   2 +-
+ Documentation/hwmon/lm25066.rst                    |   6 +-
+ Documentation/hwmon/lm63.rst                       |   2 +-
+ Documentation/hwmon/lm70.rst                       |   6 +-
+ Documentation/hwmon/lm73.rst                       |   2 +-
+ Documentation/hwmon/lm75.rst                       |  26 +-
+ Documentation/hwmon/lm85.rst                       |   8 +-
+ Documentation/hwmon/lm87.rst                       |   2 +-
+ Documentation/hwmon/lm90.rst                       |  10 +-
+ Documentation/hwmon/lm93.rst                       |   2 +-
+ Documentation/hwmon/lm95234.rst                    |   4 +-
+ Documentation/hwmon/lm95245.rst                    |   4 +-
+ Documentation/hwmon/ltc2978.rst                    |   6 +-
+ Documentation/hwmon/max20730.rst                   |  10 +-
+ Documentation/hwmon/max20751.rst                   |   4 +-
+ Documentation/hwmon/max31790.rst                   |   2 +-
+ Documentation/hwmon/max34440.rst                   |  12 +-
+ Documentation/hwmon/nct6775.rst                    |   2 +-
+ Documentation/hwmon/pmbus.rst                      |  16 +-
+ Documentation/hwmon/sht21.rst                      |   4 +-
+ Documentation/hwmon/shtc1.rst                      |   6 +-
+ Documentation/hwmon/sparx5-temp.rst                |  33 ++
+ Documentation/hwmon/thmc50.rst                     |   2 +-
+ Documentation/hwmon/tmp103.rst                     |   2 +-
+ Documentation/hwmon/tmp108.rst                     |   2 +-
+ Documentation/hwmon/tmp401.rst                     |   2 +-
+ Documentation/hwmon/tmp421.rst                     |   4 +-
+ Documentation/hwmon/tmp513.rst                     |   4 +-
+ Documentation/hwmon/tps40422.rst                   |   2 +-
+ Documentation/hwmon/tps53679.rst                   |   8 +-
+ Documentation/hwmon/w83627ehf.rst                  |   2 +-
+ Documentation/hwmon/w83781d.rst                    |   2 +-
+ Documentation/hwmon/w83l786ng.rst                  |   2 +-
+ MAINTAINERS                                        |   6 +
+ drivers/hwmon/Kconfig                              |  20 +
+ drivers/hwmon/Makefile                             |   2 +
+ drivers/hwmon/adc128d818.c                         |  24 +-
+ drivers/hwmon/adm1025.c                            |   2 +-
+ drivers/hwmon/adm1026.c                            |   2 +-
+ drivers/hwmon/axi-fan-control.c                    |   4 -
+ drivers/hwmon/corsair-cpro.c                       | 582 +++++++++++++++++++++
+ drivers/hwmon/dell-smm-hwmon.c                     |   8 +
+ drivers/hwmon/gsc-hwmon.c                          |   8 +-
+ drivers/hwmon/hwmon-vid.c                          |   6 +-
+ drivers/hwmon/i5k_amb.c                            |  14 +-
+ drivers/hwmon/ina209.c                             |   2 +-
+ drivers/hwmon/ina2xx.c                             |  10 +-
+ drivers/hwmon/ina3221.c                            |   2 +-
+ drivers/hwmon/lm87.c                               |   2 +-
+ drivers/hwmon/max6697.c                            |  96 +++-
+ drivers/hwmon/nct6683.c                            |   8 +-
+ drivers/hwmon/pmbus/Kconfig                        |   4 +-
+ drivers/hwmon/pmbus/adm1275.c                      |  13 +-
+ drivers/hwmon/pmbus/max20730.c                     |  49 +-
+ drivers/hwmon/pmbus/pmbus_core.c                   |  66 ++-
+ drivers/hwmon/powr1220.c                           |   2 +-
+ drivers/hwmon/sht21.c                              |   2 +-
+ drivers/hwmon/sparx5-temp.c                        | 168 ++++++
+ drivers/hwmon/tmp513.c                             |   4 +-
+ drivers/hwmon/vt8231.c                             |   8 +-
+ include/linux/platform_data/gsc_hwmon.h            |   3 +-
+ 76 files changed, 1257 insertions(+), 217 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/microchip,sparx5-temp.yaml
+ create mode 100644 Documentation/hwmon/corsair-cpro.rst
+ create mode 100644 Documentation/hwmon/sparx5-temp.rst
+ create mode 100644 drivers/hwmon/corsair-cpro.c
+ create mode 100644 drivers/hwmon/sparx5-temp.c
