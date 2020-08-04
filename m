@@ -2,365 +2,164 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BA3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 497DEC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6940622B45
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4888B22B45
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:03:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596535414;
-	bh=IR5UvtgMUCE54UW8zPMuEGU972vLrOtZ1wfr6F+7h5U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HbXUAOF8BwHy4avgn2EN0gtX3ydYcXY0WCVBin+1y5uDQwwA5nK6bB7YDD4SSZpGR
-	 1eQwyk38ddIqa/QE/KYLob7+hp9NsfFFhcBRmUOpg+9gRa2Jk7SiYJWEeqackw42rc
-	 2RKwV/XOiOYwYs1BdcmFmx088HqrAs4Pmq11WeYA=
+	s=default; t=1596535422;
+	bh=B9xrpei0Bo8lOQ4/GpWeP/lLc0dF8lSZjAbEwyC8Z/8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aUn7T/ZOwLHP42PPUJR1OYtcgsTX++7maWTw3TthyLUXsJ9XC6p9G5LBUyKNssXY6
+	 dgG1npgbiQH45kfn+/u5dyCN4okcI/wosCHajMwNnsSp3GjlfAZCnJLdw9kUeULNvF
+	 K6K5XTDibkefYAmDB2fxYNmNbjaZ/WW97m0BAXfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730146AbgHDKDd (ORCPT
+        id S1730156AbgHDKDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 06:03:33 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:47094 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730132AbgHDKDb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 06:03:31 -0400
-Received: by mail-oi1-f195.google.com with SMTP id v13so19213284oiv.13;
-        Tue, 04 Aug 2020 03:03:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7SpZpAeU3AgAf8NDtR2fQzh8H7YzuPFd8ga8GTyjj8M=;
-        b=uC4a9c50znuWsCauIUOiCw9OgL4zhtQOK8EpCj+U2+nDIGTO2bEMBSt5SQN7/wzYEB
-         vxoJzseDY3LJaaDLENTrj+an7YAgoo3L4NVbdWnZLxs6wHpkwoi5XOuw4KFxF02OEF60
-         zoH1xFDhadlwXQ9R4F025nsRbx3OK/lMSzW+Fp8/+4MQ5MwXT2OKmv0dHIABdkrAsH00
-         pcFvFnVpPUM8EDN8M5gCsUtotP5FlHE9h37XKtpZO3iiLFACPEuRobQdRw5zd7OUaq3g
-         v1RBSU16coaQMFY3OUFkN+8eqPkv3wTHZsB+iY8af8UzWHfE7hXW/BgSVRjpGB1JM7Kr
-         o8DA==
-X-Gm-Message-State: AOAM53299/1v3N8LJDAJnP+fR2cPUa1JUQk9bpF9CrQQiCCCl4mckx/k
-        2nCkqA5TVxeSJyCNN6lBW8JPui5qxmduz5E1bt4=
-X-Google-Smtp-Source: ABdhPJyCIEWOUBvSl7yXuBs7ESoUhpQzcgPnU2SSmNLIddex6Ta9AuU3h1FarJBhTa0HIdscAyqreq6hQc7taT+IcY4=
-X-Received: by 2002:a54:4f14:: with SMTP id e20mr2791008oiy.103.1596535409346;
- Tue, 04 Aug 2020 03:03:29 -0700 (PDT)
+        Tue, 4 Aug 2020 06:03:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50628 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730132AbgHDKDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 06:03:40 -0400
+Received: from kernel.org (unknown [87.70.91.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A96622B40;
+        Tue,  4 Aug 2020 10:03:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596535419;
+        bh=B9xrpei0Bo8lOQ4/GpWeP/lLc0dF8lSZjAbEwyC8Z/8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LIitEWRZ2r6vfSgRGOd9L45wg9k1zY+ZcZ2/Bag8vTG2bBPAAcebfqAYi/86NL+1j
+         LRhkZnXXomYhcDx7rWkEWtC5DGrdyOqeD9pUQH26pophFeLizz+vNYqDUSXR1idqhM
+         qklDRDhzgJpiCrJ5brl7b4lOCISiLmnbfvLwlqEw=
+Date:   Tue, 4 Aug 2020 13:03:33 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v3 6/6] mm: document semantics of ZONE_MOVABLE
+Message-ID: <20200804100333.GC8243@kernel.org>
+References: <20200804072408.5481-1-david@redhat.com>
+ <20200804072408.5481-7-david@redhat.com>
+ <20200804093323.GB8243@kernel.org>
+ <65deeb21-63fe-d1c1-bb87-74a08035f79a@redhat.com>
 MIME-Version: 1.0
-References: <2672940.cHDmkauF2A@kreacher> <20200803230323.GA13316@paasikivi.fi.intel.com>
-In-Reply-To: <20200803230323.GA13316@paasikivi.fi.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 4 Aug 2020 12:03:15 +0200
-Message-ID: <CAJZ5v0jHcHv5+6FSFV69Siji9TZTUP_4jRj9VsHMaBiPJ938ag@mail.gmail.com>
-Subject: Re: [PATCH] PM: runtime: Add kerneldoc comments to multiple helpers
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Wolfram Sang <wsa@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65deeb21-63fe-d1c1-bb87-74a08035f79a@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sakari,
+On Tue, Aug 04, 2020 at 11:55:10AM +0200, David Hildenbrand wrote:
+> On 04.08.20 11:33, Mike Rapoport wrote:
+> > On Tue, Aug 04, 2020 at 09:24:08AM +0200, David Hildenbrand wrote:
+> >> Let's document what ZONE_MOVABLE means, how it's used, and which special
+> >> cases we have regarding unmovable pages (memory offlining vs. migration /
+> >> allocations).
+> >>
+> >> Cc: Andrew Morton <akpm@linux-foundation.org>
+> >> Cc: Michal Hocko <mhocko@suse.com>
+> >> Cc: Michael S. Tsirkin <mst@redhat.com>
+> >> Cc: Mike Kravetz <mike.kravetz@oracle.com>
+> >> Cc: Mike Rapoport <rppt@kernel.org>
+> >> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> >> Cc: Baoquan He <bhe@redhat.com>
+> >> Signed-off-by: David Hildenbrand <david@redhat.com>
+> > 
+> > Several nits below, othersize
+> > 
+> > Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+> > 
+> >> ---
+> >>  include/linux/mmzone.h | 34 ++++++++++++++++++++++++++++++++++
+> >>  1 file changed, 34 insertions(+)
+> >>
+> >> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> >> index f6f884970511d..600d449e7d9e9 100644
+> >> --- a/include/linux/mmzone.h
+> >> +++ b/include/linux/mmzone.h
+> >> @@ -372,6 +372,40 @@ enum zone_type {
+> >>  	 */
+> >>  	ZONE_HIGHMEM,
+> >>  #endif
+> >> +	/*
+> >> +	 * ZONE_MOVABLE is similar to ZONE_NORMAL, except that it *primarily*
+> >> +	 * only contains movable pages. Main use cases are to make memory
+> > 
+> > "Primarily only" sounds awkward. Maybe
+> > 
+> > 	... except that it only contains movable pages with few exceptional
+> > 	cases described below. 
+> > 
+> > And then 
+> > 
+> > 	Main use cases for ZONE_MOVABLE are ...
+> 
+> Ack!
+> 
+> > 
+> >> +	 * offlining more likely to succeed, and to locally limit unmovable
+> >> +	 * allocations - e.g., to increase the number of THP/huge pages.
+> >> +	 * Notable special cases are:
+> >> +	 *
+> >> +	 * 1. Pinned pages: (Long-term) pinning of movable pages might
+> > 
+> > 		            ^long, capital L looked out of place for me
+> 
+> Ack!
+> 
+> > 
+> >> +	 *    essentially turn such pages unmovable. Memory offlining might
+> >> +	 *    retry a long time.
+> >> +	 * 2. memblock allocations: kernelcore/movablecore setups might create
+> >> +	 *    situations where ZONE_MOVABLE contains unmovable allocations
+> >> +	 *    after boot. Memory offlining and allocations fail early.
+> >> +	 * 3. Memory holes: Such pages cannot be allocated. Applies only to
+> >> +	 *    boot memory, not hotplugged memory. Memory offlining and
+> >> +	 *    allocations fail early.
+> > 
+> > I would clarify where page struct for abscent memory come from
+> 
+> Something like:
+> 
+> Memory holes: We might have a memmap for memory holes, for example, if
 
-On Tue, Aug 4, 2020 at 1:03 AM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
->
-> Hi Rafael,
->
-> One more comment below.
->
-> On Fri, Jul 31, 2020 at 07:03:26PM +0200, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > Add kerneldoc comments to multiple PM-runtime helper functions
-> > defined as static inline wrappers around lower-level routines to
-> > provide quick reference decumentation of their behavior.
-> >
-> > Some of them are similar to each other with subtle differences only
-> > and the behavior of some of them may appear as counter-intuitive, so
-> > clarify all that to avoid confusion.
-> >
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >  include/linux/pm_runtime.h |  246 +++++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 246 insertions(+)
-> >
-> > Index: linux-pm/include/linux/pm_runtime.h
-> > ===================================================================
-> > --- linux-pm.orig/include/linux/pm_runtime.h
-> > +++ linux-pm/include/linux/pm_runtime.h
-> > @@ -60,58 +60,151 @@ extern void pm_runtime_put_suppliers(str
-> >  extern void pm_runtime_new_link(struct device *dev);
-> >  extern void pm_runtime_drop_link(struct device *dev);
-> >
-> > +/**
-> > + * pm_runtime_get_if_in_use - Conditionally bump up runtime PM usage counter.
-> > + * @dev: Target device.
-> > + *
-> > + * Increment the runtime PM usage counter of @dev if its runtime PM status is
-> > + * %RPM_ACTIVE and its runtime PM usage counter is greater than 0.
-> > + */
-> >  static inline int pm_runtime_get_if_in_use(struct device *dev)
-> >  {
-> >       return pm_runtime_get_if_active(dev, false);
-> >  }
-> >
-> > +/**
-> > + * pm_suspend_ignore_children - Set runtime PM behavior regarding children.
-> > + * @dev: Target device.
-> > + * @enable: Whether or not to ignore possible dependencies on children.
-> > + *
-> > + * The dependencies of @dev on its children will not be taken into account by
-> > + * the runtime PM framework going forward if @enable is %true, or they will
-> > + * be taken into account otherwise.
-> > + */
-> >  static inline void pm_suspend_ignore_children(struct device *dev, bool enable)
-> >  {
-> >       dev->power.ignore_children = enable;
-> >  }
-> >
-> > +/**
-> > + * pm_runtime_get_noresume - Bump up runtime PM usage counter of a device.
-> > + * @dev: Target device.
-> > + */
-> >  static inline void pm_runtime_get_noresume(struct device *dev)
-> >  {
-> >       atomic_inc(&dev->power.usage_count);
-> >  }
-> >
-> > +/**
-> > + * pm_runtime_put_noidle - Drop runtime PM usage counter of a device.
-> > + * @dev: Target device.
-> > + *
-> > + * Decrement the runtime PM usage counter of @dev unless it is 0 already.
-> > + */
-> >  static inline void pm_runtime_put_noidle(struct device *dev)
-> >  {
-> >       atomic_add_unless(&dev->power.usage_count, -1, 0);
-> >  }
-> >
-> > +/**
-> > + * pm_runtime_suspended - Check whether or not a device is runtime-suspended.
-> > + * @dev: Target device.
-> > + *
-> > + * Return %true if runtime PM is enabled for @dev and its runtime PM status is
-> > + * %RPM_SUSPENDED, or %false otherwise.
-> > + *
-> > + * Note that the return value of this function can only be trusted if it is
-> > + * called under the runtime PM lock of @dev or under conditions in which
-> > + * runtime PM cannot be either disabled or enabled for @dev and its runtime PM
-> > + * status cannot change.
-> > + */
-> >  static inline bool pm_runtime_suspended(struct device *dev)
-> >  {
-> >       return dev->power.runtime_status == RPM_SUSPENDED
-> >               && !dev->power.disable_depth;
-> >  }
-> >
-> > +/**
-> > + * pm_runtime_active - Check whether or not a device is runtime-active.
-> > + * @dev: Target device.
-> > + *
-> > + * Return %true if runtime PM is enabled for @dev and its runtime PM status is
-> > + * %RPM_ACTIVE, or %false otherwise.
-> > + *
-> > + * Note that the return value of this function can only be trusted if it is
-> > + * called under the runtime PM lock of @dev or under conditions in which
-> > + * runtime PM cannot be either disabled or enabled for @dev and its runtime PM
-> > + * status cannot change.
-> > + */
-> >  static inline bool pm_runtime_active(struct device *dev)
-> >  {
-> >       return dev->power.runtime_status == RPM_ACTIVE
-> >               || dev->power.disable_depth;
-> >  }
-> >
-> > +/**
-> > + * pm_runtime_status_suspended - Check if runtime PM status is "suspended".
-> > + * @dev: Target device.
-> > + *
-> > + * Return %true if the runtime PM status of @dev is %RPM_SUSPENDED, or %false
-> > + * otherwise, regardless of whether or not runtime PM has been enabled for @dev.
-> > + *
-> > + * Note that the return value of this function can only be trusted if it is
-> > + * called under the runtime PM lock of @dev or under conditions in which the
-> > + * runtime PM status of @dev cannot change.
-> > + */
-> >  static inline bool pm_runtime_status_suspended(struct device *dev)
-> >  {
-> >       return dev->power.runtime_status == RPM_SUSPENDED;
-> >  }
-> >
-> > +/**
-> > + * pm_runtime_enabled - Check if runtime PM is enabled.
-> > + * @dev: Target device.
-> > + *
-> > + * Return %true if runtime PM is enabled for @dev or %false otherwise.
-> > + *
-> > + * Note that the return value of this function can only be trusted if it is
-> > + * called under the runtime PM lock of @dev or under conditions in which
-> > + * runtime PM cannot be either disabled or enabled for @dev.
-> > + */
-> >  static inline bool pm_runtime_enabled(struct device *dev)
-> >  {
-> >       return !dev->power.disable_depth;
-> >  }
-> >
-> > +/**
-> > + * pm_runtime_has_no_callbacks - Check if runtime PM callbacks may be present.
-> > + * @dev: Target device.
-> > + *
-> > + * Return %true if @dev is a special device without runtime PM callbacks or
-> > + * %false otherwise.
-> > + */
-> >  static inline bool pm_runtime_has_no_callbacks(struct device *dev)
-> >  {
-> >       return dev->power.no_callbacks;
-> >  }
-> >
-> > +/**
-> > + * pm_runtime_mark_last_busy - Update the last access time of a device.
-> > + * @dev: Target device.
-> > + *
-> > + * Update the last access time of @dev used by the runtime PM autosuspend
-> > + * mechanism to the current time as returned by ktime_get_mono_fast_ns().
-> > + */
-> >  static inline void pm_runtime_mark_last_busy(struct device *dev)
-> >  {
-> >       WRITE_ONCE(dev->power.last_busy, ktime_get_mono_fast_ns());
-> >  }
-> >
-> > +/**
-> > + * pm_runtime_is_irq_safe - Check if runtime PM can work in interrupt context.
-> > + * @dev: Target device.
-> > + *
-> > + * Return %true if @dev has been marked as an "IRQ-safe" device (with respect
-> > + * to runtime PM), in which case its runtime PM callabcks can be expected to
-> > + * work correctly when invoked from interrupt handlers.
-> > + */
-> >  static inline bool pm_runtime_is_irq_safe(struct device *dev)
-> >  {
-> >       return dev->power.irq_safe;
-> > @@ -191,97 +284,250 @@ static inline void pm_runtime_drop_link(
-> >
-> >  #endif /* !CONFIG_PM */
-> >
-> > +/**
-> > + * pm_runtime_idle - Conditionally set up autosuspend of a device or suspend it.
-> > + * @dev: Target device.
-> > + *
-> > + * Invoke the "idle check" callback of @dev and, depending on its return value,
-> > + * set up autosuspend of @dev or suspend it (depending on whether or not
-> > + * autosuspend has been enabled for it).
-> > + */
-> >  static inline int pm_runtime_idle(struct device *dev)
-> >  {
-> >       return __pm_runtime_idle(dev, 0);
-> >  }
-> >
-> > +/**
-> > + * pm_runtime_suspend - Suspend a device synchronously.
-> > + * @dev: Target device.
-> > + */
-> >  static inline int pm_runtime_suspend(struct device *dev)
-> >  {
-> >       return __pm_runtime_suspend(dev, 0);
-> >  }
-> >
-> > +/**
-> > + * pm_runtime_autosuspend - Set up autosuspend of a device or suspend it.
-> > + * @dev: Target device.
-> > + *
-> > + * Set up autosuspend of @dev or suspend it (depending on whether or not
-> > + * autosuspend is enabled for it) without engaging its "idle check" callback.
-> > + */
-> >  static inline int pm_runtime_autosuspend(struct device *dev)
-> >  {
-> >       return __pm_runtime_suspend(dev, RPM_AUTO);
-> >  }
-> >
-> > +/**
-> > + * pm_runtime_resume - Resume a device synchronously.
-> > + * @dev: Target device.
-> > + */
-> >  static inline int pm_runtime_resume(struct device *dev)
-> >  {
-> >       return __pm_runtime_resume(dev, 0);
-> >  }
-> >
-> > +/**
-> > + * pm_request_idle - Queue up "idle check" execution for a device.
-> > + * @dev: Target device.
-> > + *
-> > + * Queue up a work item to run an equivalent of pm_runtime_idle() for @dev
-> > + * asynchronously.
-> > + */
-> >  static inline int pm_request_idle(struct device *dev)
-> >  {
-> >       return __pm_runtime_idle(dev, RPM_ASYNC);
-> >  }
-> >
-> > +/**
-> > + * pm_request_resume - Queue up runtime-resume of a device.
-> > + * @dev: Target device.
-> > + */
-> >  static inline int pm_request_resume(struct device *dev)
-> >  {
-> >       return __pm_runtime_resume(dev, RPM_ASYNC);
-> >  }
-> >
-> > +/**
-> > + * pm_request_autosuspend - Queue up autosuspend of a device.
-> > + * @dev: Target device.
-> > + *
-> > + * Queue up a work item to run an equivalent pm_runtime_autosuspend() for @dev
-> > + * asynchronously.
-> > + */
-> >  static inline int pm_request_autosuspend(struct device *dev)
-> >  {
-> >       return __pm_runtime_suspend(dev, RPM_ASYNC | RPM_AUTO);
-> >  }
-> >
-> > +/**
-> > + * pm_runtime_get - Bump up usage counter and queue up resume of a device.
-> > + * @dev: Target device.
-> > + *
-> > + * Bump up the runtime PM usage counter of @dev and queue up a work item to
-> > + * carry out runtime-resume of it.
-> > + */
-> >  static inline int pm_runtime_get(struct device *dev)
-> >  {
-> >       return __pm_runtime_resume(dev, RPM_GET_PUT | RPM_ASYNC);
-> >  }
-> >
-> > +/**
-> > + * pm_runtime_get_sync - Bump up usage counter of a device and resume it.
-> > + * @dev: Target device.
-> > + *
-> > + * Bump up the runtime PM usage counter of @dev and carry out runtime-resume of
-> > + * it synchronously.
-> > + *
-> > + * The possible return values of this function are the same as for
-> > + * pm_runtime_resume() and the runtime PM usage counter of @dev remains
->
-> I think it's fine to refer to return values of pm_runtime_resume(), but the
-> return values of pm_runtime_resume() are not documented above.
+               ^w ;-)
 
-Yes, because it is a wrapper around __pm_runtime_resume() and the
-return values of that should be documented in its kerneldoc.
+> we have sections that are only partially System RAM. Such pages cannot
+> be ...
 
-Documenting them in two places would require manual synchronization of
-the kerneldoc comments on every future update of them.
+How about
 
-> Could you add them?
+... sections that are only partially populated 
 
-I'm going to update the __pm_runtime_resume() kerneldoc to list all of them.
+?
+ 
+> ?
+> 
+> Thanks!
+> 
+> -- 
+> Thanks,
+> 
+> David / dhildenb
+> 
 
-> Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-
-Thank you!
+-- 
+Sincerely yours,
+Mike.
