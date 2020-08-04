@@ -4,234 +4,139 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F411EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F13AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB8772070A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EB262070A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:25:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729785AbgHDQZd (ORCPT
+        id S1729993AbgHDQZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 12:25:33 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:34188 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729884AbgHDQYL (ORCPT
+        Tue, 4 Aug 2020 12:25:53 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:43867 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729610AbgHDQU6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 12:24:11 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: andrzej.p)
-        with ESMTPSA id 51D2C2950FD
-From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        linux-input@vger.kernel.org, kernel@collabora.com
-Subject: [PATCH 2/2] tty/sysrq: Add configurable handler to execute a compound action
-Date:   Tue,  4 Aug 2020 18:24:02 +0200
-Message-Id: <20200804162402.2087-3-andrzej.p@collabora.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200804162402.2087-1-andrzej.p@collabora.com>
-References: <20200804162402.2087-1-andrzej.p@collabora.com>
+        Tue, 4 Aug 2020 12:20:58 -0400
+Received: from Internal Mail-Server by MTLPINE1 (envelope-from eli@mellanox.com)
+        with SMTP; 4 Aug 2020 19:20:52 +0300
+Received: from nps-server-21.mtl.labs.mlnx (nps-server-21.mtl.labs.mlnx [10.237.240.120])
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 074GKqTE023997;
+        Tue, 4 Aug 2020 19:20:52 +0300
+Received: from nps-server-21.mtl.labs.mlnx (localhost [127.0.0.1])
+        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 074GKq0N022636;
+        Tue, 4 Aug 2020 19:20:52 +0300
+Received: (from eli@localhost)
+        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 074GKqKD022635;
+        Tue, 4 Aug 2020 19:20:52 +0300
+From:   Eli Cohen <eli@mellanox.com>
+To:     mst@redhat.com, jasowang@redhat.com,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     shahafs@mellanox.com, saeedm@mellanox.com, parav@mellanox.com
+Subject: [PATCH V4 linux-next 02/12] vhost: generialize backend features setting/getting
+Date:   Tue,  4 Aug 2020 19:20:38 +0300
+Message-Id: <20200804162048.22587-3-eli@mellanox.com>
+X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200804162048.22587-1-eli@mellanox.com>
+References: <20200804162048.22587-1-eli@mellanox.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Userland might want to execute e.g. 'w' (show blocked tasks), followed
-by 's' (sync), followed by 1000 ms delay and then followed by 'c' (crash)
-upon a single magic SysRq. Or one might want to execute the famous "Raising
-Elephants Is So Utterly Boring" action. This patch adds a configurable
-handler, triggered with 'C', for this exact purpose. The user specifies the
-composition of the compound action using syntax similar to getopt, where
-each letter corresponds to an individual action and a colon followed by a
-number corresponds to a delay of that many milliseconds, e.g.:
+From: Jason Wang <jasowang@redhat.com>
 
-ws:1000c
+Move the backend features setting/getting from net.c to vhost.c to be
+reused by vhost-vdpa.
 
-or
-
-r:100eis:1000ub
-
-Signed-off-by: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Signed-off-by: Jason Wang <jasowang@redhat.com>
 ---
- Documentation/admin-guide/sysrq.rst |  9 ++++
- drivers/tty/sysrq.c                 | 81 ++++++++++++++++++++++++++++-
- include/linux/sysrq.h               |  1 +
- 3 files changed, 90 insertions(+), 1 deletion(-)
+ drivers/vhost/net.c   | 18 ++----------------
+ drivers/vhost/vhost.c | 15 +++++++++++++++
+ drivers/vhost/vhost.h |  2 ++
+ 3 files changed, 19 insertions(+), 16 deletions(-)
 
-diff --git a/Documentation/admin-guide/sysrq.rst b/Documentation/admin-guide/sysrq.rst
-index 67dfa4c29093..80bdd8bf9636 100644
---- a/Documentation/admin-guide/sysrq.rst
-+++ b/Documentation/admin-guide/sysrq.rst
-@@ -32,6 +32,7 @@ to 1. Here is the list of possible values in /proc/sys/kernel/sysrq:
-          64 =  0x40 - enable signalling of processes (term, kill, oom-kill)
-         128 =  0x80 - allow reboot/poweroff
-         256 = 0x100 - allow nicing of all RT tasks
-+        512 = 0x200 - allow compound action
- 
- You can set the value in the file by the following command::
- 
-@@ -148,6 +149,14 @@ Command	    Function
- 
- ``z``	    Dump the ftrace buffer
- 
-+``C``	    Execute a predefined, compound action. The action is defined with
-+	    sysrq.sysrq_compound_action module parameter, whose value contains known
-+	    command keys (except ``C`` to prevent recursion). The command keys can
-+	    be optionally followed by a colon and a number of milliseconds to wait
-+	    after executing the last action. For example:
-+
-+	    sysrq.sysrq_compound_action=r:100eis:1000ub
-+
- ``0``-``9`` Sets the console log level, controlling which kernel messages
-             will be printed to your console. (``0``, for example would make
-             it so that only emergency messages like PANICs or OOPSes would
-diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-index 52e344bfe8c0..ffcda1316675 100644
---- a/drivers/tty/sysrq.c
-+++ b/drivers/tty/sysrq.c
-@@ -19,6 +19,7 @@
- #include <linux/sched/rt.h>
- #include <linux/sched/debug.h>
- #include <linux/sched/task.h>
-+#include <linux/delay.h>
- #include <linux/interrupt.h>
- #include <linux/mm.h>
- #include <linux/fs.h>
-@@ -439,6 +440,15 @@ static const struct sysrq_key_op sysrq_unrt_op = {
- 	.enable_mask	= SYSRQ_ENABLE_RTNICE,
- };
- 
-+static void sysrq_action_compound(int key);
-+
-+static struct sysrq_key_op sysrq_action_compound_op = {
-+	.handler	= sysrq_action_compound,
-+	.help_msg	= "execute-compound-action(C)",
-+	.action_msg	= "Execute compound action",
-+	.enable_mask	= SYSRQ_ENABLE_COMPOUND,
-+};
-+
- /* Key Operations table and lock */
- static DEFINE_SPINLOCK(sysrq_key_table_lock);
- 
-@@ -501,7 +511,7 @@ static const struct sysrq_key_op *sysrq_key_table[62] = {
- 	&sysrq_ftrace_dump_op,		/* z */
- 	NULL,				/* A */
- 	NULL,				/* B */
--	NULL,				/* C */
-+	&sysrq_action_compound_op,	/* C */
- 	NULL,				/* D */
- 	NULL,				/* E */
- 	NULL,				/* F */
-@@ -634,6 +644,7 @@ EXPORT_SYMBOL(handle_sysrq);
- 
- #ifdef CONFIG_INPUT
- static int sysrq_reset_downtime_ms;
-+static char *sysrq_compound_action;
- 
- /* Simple translation table for the SysRq keys */
- static const unsigned char sysrq_xlate[KEY_CNT] =
-@@ -787,6 +798,61 @@ static void sysrq_of_get_keyreset_config(void)
- {
+diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+index 8e0921d3805d..bfbbe5c876f9 100644
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -1615,21 +1615,6 @@ static long vhost_net_reset_owner(struct vhost_net *n)
+ 	return err;
  }
- #endif
-+#define SYSRQ_COMPOUND_ACTION_VALIDATE	0
-+#define SYSRQ_COMPOUND_ACTION_RUN	1
-+
-+static int sysrq_process_compound_action(int pass)
-+{
-+	const char *action = sysrq_compound_action;
-+	const struct sysrq_key_op *op_p;
-+	int ret, delay;
-+
-+	while (*action) {
-+		op_p = __sysrq_get_key_op(*action);
-+		if (!op_p)
-+			return -EINVAL;
-+
-+		/* Don't allow calling ourselves recursively */
-+		if (op_p == &sysrq_action_compound_op)
-+			return -EINVAL;
-+
-+		if (pass == SYSRQ_COMPOUND_ACTION_RUN)
-+			__handle_sysrq(*action, false);
-+
-+		if (*++action == ':') {
-+			ret = sscanf(action++, ":%d", &delay);
-+			if (ret < 1) /* we want at least ":[0-9]" => 1 item */
-+				return -EINVAL;
-+
-+			while (*action >= '0' && *action <= '9')
-+				++action;
-+			if (pass == SYSRQ_COMPOUND_ACTION_RUN)
-+				mdelay(delay);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void sysrq_action_compound(int key)
-+{
-+	if (!sysrq_compound_action) {
-+		pr_err("Unconfigured compound action for %s",
-+		       sysrq_action_compound_op.help_msg);
-+
-+		return;
-+	}
-+
-+	if (sysrq_process_compound_action(SYSRQ_COMPOUND_ACTION_VALIDATE)) {
-+		pr_err("Incorrect compound action %s for %s",
-+		       sysrq_compound_action,
-+		       sysrq_action_compound_op.help_msg);
-+
-+		return;
-+	}
-+
-+	sysrq_process_compound_action(SYSRQ_COMPOUND_ACTION_RUN);
-+}
  
- static void sysrq_reinject_alt_sysrq(struct work_struct *work)
+-static int vhost_net_set_backend_features(struct vhost_net *n, u64 features)
+-{
+-	int i;
+-
+-	mutex_lock(&n->dev.mutex);
+-	for (i = 0; i < VHOST_NET_VQ_MAX; ++i) {
+-		mutex_lock(&n->vqs[i].vq.mutex);
+-		n->vqs[i].vq.acked_backend_features = features;
+-		mutex_unlock(&n->vqs[i].vq.mutex);
+-	}
+-	mutex_unlock(&n->dev.mutex);
+-
+-	return 0;
+-}
+-
+ static int vhost_net_set_features(struct vhost_net *n, u64 features)
  {
-@@ -1079,8 +1145,21 @@ module_param_array_named(reset_seq, sysrq_reset_seq, sysrq_reset_seq,
- 
- module_param_named(sysrq_downtime_ms, sysrq_reset_downtime_ms, int, 0644);
- 
-+module_param(sysrq_compound_action, charp, 0644);
-+MODULE_PARM_DESC(sysrq_compound_action,
-+	"Compound sysrq action to be executed on Alt-Shift-SysRq-C\n"
-+	"The compound action definition consists of known SysRq action letters except 'C',\n"
-+	"each letter can be optionally followed by a colon and a number of milliseconds to wait\n"
-+	"after executing the last action.\n"
-+	"Example:\n"
-+	"To unRaw, wait 100ms, tErminate, kIll, Sync, wait 1000ms, Unmount, Boot\n"
-+	"sysrq.sysrq_compound_action=r:100eis:1000ub");
- #else
- 
-+{
-+}
-+
-+static void sysrq_action_compound(int key)
- static inline void sysrq_register_handler(void)
- {
+ 	size_t vhost_hlen, sock_hlen, hdr_len;
+@@ -1730,7 +1715,8 @@ static long vhost_net_ioctl(struct file *f, unsigned int ioctl,
+ 			return -EFAULT;
+ 		if (features & ~VHOST_NET_BACKEND_FEATURES)
+ 			return -EOPNOTSUPP;
+-		return vhost_net_set_backend_features(n, features);
++		vhost_set_backend_features(&n->dev, features);
++		return 0;
+ 	case VHOST_RESET_OWNER:
+ 		return vhost_net_reset_owner(n);
+ 	case VHOST_SET_OWNER:
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index 8f622064b3e8..5e5cc3dd983e 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -2591,6 +2591,21 @@ struct vhost_msg_node *vhost_dequeue_msg(struct vhost_dev *dev,
  }
-diff --git a/include/linux/sysrq.h b/include/linux/sysrq.h
-index 3a582ec7a2f1..6df4442f12a9 100644
---- a/include/linux/sysrq.h
-+++ b/include/linux/sysrq.h
-@@ -28,6 +28,7 @@
- #define SYSRQ_ENABLE_SIGNAL	0x0040
- #define SYSRQ_ENABLE_BOOT	0x0080
- #define SYSRQ_ENABLE_RTNICE	0x0100
-+#define SYSRQ_ENABLE_COMPOUND	0x0200
+ EXPORT_SYMBOL_GPL(vhost_dequeue_msg);
  
- struct sysrq_key_op {
- 	void (* const handler)(int);
++void vhost_set_backend_features(struct vhost_dev *dev, u64 features)
++{
++	struct vhost_virtqueue *vq;
++	int i;
++
++	mutex_lock(&dev->mutex);
++	for (i = 0; i < dev->nvqs; ++i) {
++		vq = dev->vqs[i];
++		mutex_lock(&vq->mutex);
++		vq->acked_backend_features = features;
++		mutex_unlock(&vq->mutex);
++	}
++	mutex_unlock(&dev->mutex);
++}
++EXPORT_SYMBOL_GPL(vhost_set_backend_features);
+ 
+ static int __init vhost_init(void)
+ {
+diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+index 38eb1aa3b68d..9032d3c2a9f4 100644
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -214,6 +214,8 @@ void vhost_enqueue_msg(struct vhost_dev *dev,
+ 		       struct vhost_msg_node *node);
+ struct vhost_msg_node *vhost_dequeue_msg(struct vhost_dev *dev,
+ 					 struct list_head *head);
++void vhost_set_backend_features(struct vhost_dev *dev, u64 features);
++
+ __poll_t vhost_chr_poll(struct file *file, struct vhost_dev *dev,
+ 			    poll_table *wait);
+ ssize_t vhost_chr_read_iter(struct vhost_dev *dev, struct iov_iter *to,
 -- 
-2.17.1
+2.26.0
 
