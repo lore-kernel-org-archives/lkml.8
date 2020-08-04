@@ -2,100 +2,89 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,
+	DATE_IN_FUTURE_06_12,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9048EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E545C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 949322086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DF2822B40
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:47:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729959AbgHDHqZ (ORCPT
+        id S1729636AbgHDHq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 03:46:25 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:49098 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729515AbgHDHqZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 03:46:25 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 9C2991C0BDE; Tue,  4 Aug 2020 09:46:23 +0200 (CEST)
-Date:   Tue, 4 Aug 2020 09:46:23 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        chris.paterson2@renesas.com
-Subject: Re: [PATCH 4.19 00/56] 4.19.137-rc1 review
-Message-ID: <20200804074623.6nhrryvq46zi7qkv@duo.ucw.cz>
-References: <20200803121850.306734207@linuxfoundation.org>
+        Tue, 4 Aug 2020 03:46:59 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:53438 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727887AbgHDHq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 03:46:59 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 11CC1270000FDC330E46;
+        Tue,  4 Aug 2020 15:46:57 +0800 (CST)
+Received: from huawei.com (10.175.124.27) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Tue, 4 Aug 2020
+ 15:46:47 +0800
+From:   Yang Yingliang <yangyingliang@huawei.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
+CC:     <mcgrof@kernel.org>, <keescook@chromium.org>, <yzaikin@google.com>,
+        <willy@infradead.org>, <hch@lst.de>, <yangyingliang@huawei.com>
+Subject: [PATCH -next] sysctl: fix memleak in proc_sys_call_handler()
+Date:   Tue, 4 Aug 2020 15:45:03 +0000
+Message-ID: <20200804154503.3863200-1-yangyingliang@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="takxjhi3fjugbesm"
-Content-Disposition: inline
-In-Reply-To: <20200803121850.306734207@linuxfoundation.org>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.124.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+I got a memleak report when doing some fuzz test:
 
---takxjhi3fjugbesm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+BUG: memory leak
+unreferenced object 0xffff888103f3da00 (size 64):
+comm "syz-executor.0", pid 2270, jiffies 4295404698 (age 46.593s)
+hex dump (first 32 bytes):
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+backtrace:
+[<000000004f2c0607>] kmalloc include/linux/slab.h:559 [inline]
+[<000000004f2c0607>] kzalloc include/linux/slab.h:666 [inline]
+[<000000004f2c0607>] proc_sys_call_handler+0x1d4/0x480 fs/proc/proc_sysctl.c:574
+[<000000005ec6a16b>] call_write_iter include/linux/fs.h:1876 [inline]
+[<000000005ec6a16b>] new_sync_write+0x3c5/0x5b0 fs/read_write.c:515
+[<00000000bbeebb83>] vfs_write+0x4e8/0x670 fs/read_write.c:595
+[<000000009d967c93>] ksys_write+0x10c/0x220 fs/read_write.c:648
+[<00000000139f6002>] do_syscall_64+0x33/0x40 arch/x86/entry/common.c:46
+[<00000000b7d61f44>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Hi!
+Go to free buff when copy_from_iter_full() is failed.
 
-> This is the start of the stable review cycle for the 4.19.137 release.
-> There are 56 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->=20
-> Responses should be made by Wed, 05 Aug 2020 12:18:33 +0000.
-> Anything received after that time might be too late.
->=20
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.13=
-7-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git=
- linux-4.19.y
-> and the diffstat can be found below.
+Fixes: 1dea05cbc0d7 ("sysctl: Convert to iter interfaces")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+---
+ fs/proc/proc_sysctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-CIP test farm does not see any problems...
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index 9f6b9c3e3fda..a4a3122f8a58 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -578,7 +578,7 @@ static ssize_t proc_sys_call_handler(struct kiocb *iocb, struct iov_iter *iter,
+ 	if (write) {
+ 		error = -EFAULT;
+ 		if (!copy_from_iter_full(kbuf, count, iter))
+-			goto out;
++			goto out_free_buf;
+ 		kbuf[count] = '\0';
+ 	}
+ 
+-- 
+2.25.1
 
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/pipelines/1=
-73700523
-
-=2E..except that one of the targets is unavailable.
-
-Chris, could we get distinction between "we ran a test and it failed"
-and "we could not run a test because mice ate the cables"?
-
-Best regards,
-									Pavel
-
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---takxjhi3fjugbesm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXykSTwAKCRAw5/Bqldv6
-8i12AJ4+lO2WxlN6arO0fq8P17UgZk5kHACcCDkSpm2ToY7ljzFkKK8OCgtDPCE=
-=vNmG
------END PGP SIGNATURE-----
-
---takxjhi3fjugbesm--
