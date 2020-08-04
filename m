@@ -2,155 +2,94 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE0BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3787C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC14A2177B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:36:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="b4wVgE0z"
+	by mail.kernel.org (Postfix) with ESMTP id B44B322B40
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:39:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgHDGgP (ORCPT
+        id S1726210AbgHDGjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 02:36:15 -0400
-Received: from mail-eopbgr140073.outbound.protection.outlook.com ([40.107.14.73]:27778
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725300AbgHDGgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 02:36:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n3OVUlov3Iu8MgVh+PTyOCqrnVTNCqPyNlAhiDtQrdyW1Jepz/gcT3u+CrJxLIpXEsVvYIFLZcFzb2ceSH57ytO9Rhu6yxaJWwUYDrBLqNIqnEPZb70qonb01suu4HCXg5ndfJ7HCF5QLskSwIYMoBq0R3SWopycgBIc07rtJM8KWMeilXhA3ZuwYQdQgCntb/XNgFp0FLBH4Dz/BHxVkv1dMYwmLnoyHTiqYciIDBo4FP8z9pza6J95/X7v18i/P99nw3v1fjYPWafm1qzy0Fx2ODvo/ldN6Hdhqd30I9HGShpnDVn2h+pRifIE2ZoAgNhfRdsuFruzjgAj1tMErA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WBgRgYhXuWUBpjtbOI0hy7g5HoeulDhj+jpR0lmXINk=;
- b=TG26LZ+SnI85dFeG2ciXb+H/K+2oDp3aGduqTeLzAadaATrMeN2vicDkT+TYsYy89wEIoK1u9lIaT0yBvBhdPlb7UempYDBWbReN6dF+B3NeibU4zdK6EbTjBMOkQN8+fsfkvZLe9KTkDufOdRf4SAdcI5s/F2japZddEIQsJ7MvxQrdN7+M4OywdvQq6oqI8RhiS4K1qIL11QszoZYrIVGqu2CGKeuaE2ZO8CONG6TsUzewrIur5rbAXcK2vzmSdjwnsq8SubRgHBNdLZOHl3ORbshcxNMGNxhp7YnZj/PPmok7IOK0rYq8/jcGQ9YOAU2XD+j0WOJJG2LLQoclgQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WBgRgYhXuWUBpjtbOI0hy7g5HoeulDhj+jpR0lmXINk=;
- b=b4wVgE0z04+ysZiwJ8cjrwslv65C2RACxHXtdLqjuUn5c0tkhemt1qmHcDvfN6DRUbfOxKiF62SR6VCHn28w/IxH/Sm1LlAT8yw83zPkDoUAJL6fWfsgft0ilVOCGDgtnaVkDfosY8qOXSMprNk9cAEinAhldCkLNy91aWrSmm8=
-Received: from VI1PR04MB5103.eurprd04.prod.outlook.com (2603:10a6:803:51::19)
- by VE1PR04MB6592.eurprd04.prod.outlook.com (2603:10a6:803:124::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.21; Tue, 4 Aug
- 2020 06:36:10 +0000
-Received: from VI1PR04MB5103.eurprd04.prod.outlook.com
- ([fe80::2c2c:20a4:38cd:73c3]) by VI1PR04MB5103.eurprd04.prod.outlook.com
- ([fe80::2c2c:20a4:38cd:73c3%7]) with mapi id 15.20.3239.022; Tue, 4 Aug 2020
- 06:36:10 +0000
-From:   Hongbo Wang <hongbo.wang@nxp.com>
-To:     David Miller <davem@davemloft.net>
-CC:     Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>,
-        Po Liu <po.liu@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Leo Li <leoyang.li@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "vivien.didelot@gmail.com" <vivien.didelot@gmail.com>,
-        "jiri@resnulli.us" <jiri@resnulli.us>,
-        "idosch@idosch.org" <idosch@idosch.org>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
-        "nikolay@cumulusnetworks.com" <nikolay@cumulusnetworks.com>,
-        "roopa@cumulusnetworks.com" <roopa@cumulusnetworks.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Tue, 4 Aug 2020 02:39:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42806 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725300AbgHDGjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 02:39:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 2CA57AC20;
+        Tue,  4 Aug 2020 06:39:58 +0000 (UTC)
+Subject: Re: [PATCH 2/6] drm/xen-front: Fix misused IS_ERR_OR_NULL checks
+To:     Oleksandr Andrushchenko <Oleksandr_Andrushchenko@epam.com>,
+        Oleksandr Andrushchenko <andr2000@gmail.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "horatiu.vultur@microchip.com" <horatiu.vultur@microchip.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-        "ivecera@redhat.com" <ivecera@redhat.com>
-Subject: RE: [EXT] Re: [PATCH v4 2/2] net: dsa: ocelot: Add support for QinQ
- Operation
-Thread-Topic: [EXT] Re: [PATCH v4 2/2] net: dsa: ocelot: Add support for QinQ
- Operation
-Thread-Index: AQHWZltTjJoiQZyRB0ahxfHbav3IXakm9cqAgACG/8A=
-Date:   Tue, 4 Aug 2020 06:36:10 +0000
-Message-ID: <VI1PR04MB51039B32C580321D99B8DEE8E14A0@VI1PR04MB5103.eurprd04.prod.outlook.com>
-References: <20200730102505.27039-1-hongbo.wang@nxp.com>
-        <20200730102505.27039-3-hongbo.wang@nxp.com>
- <20200803.145843.2285407129021498421.davem@davemloft.net>
-In-Reply-To: <20200803.145843.2285407129021498421.davem@davemloft.net>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: davemloft.net; dkim=none (message not signed)
- header.d=none;davemloft.net; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 9dc8e492-3ecf-4291-f3a3-08d83840ad06
-x-ms-traffictypediagnostic: VE1PR04MB6592:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB65925EC42434E4E924BA5811E14A0@VE1PR04MB6592.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: cTukOEO4xRdU7RDvCoDuFCYYbSgRqyg2s4/eFbGWbsdJVyoPcZi+Ub5atCtbPSE/YTbQVTQgSV9yrWh6Z5L5bk5eBwTgjDH66X29GCGMxdMzYwrv3bfuNBDHWx/h19BNtLLmAXMbtLB6NZYT6Hq8CZHsLW2tMr2hz7D4e2I7N3ZYj7BRj39h1B7SMkTNJinCM2oqym/B84hsf0bhih1Mdmbho3H710SzClTZ/sWRZ4n0uYEv4wCgdS3Vo9NGc4TuJTrGpZ++vgIyzHRZGicnQ3iw++ebdI6WTLBy2gfInHK81qNd4xeHAOi2lBG8l4TiFlMWYS/vaJLLHwJIRc1NJg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5103.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(396003)(39860400002)(376002)(366004)(83380400001)(55016002)(26005)(6506007)(33656002)(5660300002)(7696005)(2906002)(52536014)(6916009)(7416002)(86362001)(9686003)(478600001)(186003)(71200400001)(316002)(66476007)(76116006)(64756008)(66946007)(8936002)(54906003)(8676002)(4326008)(44832011)(66556008)(66446008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: xf+v+lTOY1dCALEwXpyqWT/peRY9rZ88W8zm+JTM1Dgcs98tdrdt9IDsXFEBwRu1/i7/B8ydTOjmhPxepQeWbEessrPQzg5tZtzYTHmMXGce7+ahHBCvdMUpnz33+TUGtQk1c84K55KFAU1Rcasu6yYlFtNyOhmWQ78gyPd4Vh4/+w0dVH4FBZgOhOkb5EcUvVY+vnWYcWfg5VYusGTQjEwyaeehzTbldjksF9YQNLE+BLq+c4U79W8l2gxzMIuG6wwVjMKGBg7NCHSfRFTxCBtdhi9uO0c7MBw14IQGD5M9dnJswl9oKAO+fI/4qKghZoBgtV9/CZKZLP2RMLqLLDETu3H/2k9bJydF0zdAjpZiFCNV+31pkKR4K77UEM1BG+0LVA9988X6OWufP+cXMPNdGQe1+sO8V218DVLrOiKbGQqKovsgIj40umxOOf9NF4Mp9sCrYsMBGoaaEZyyBjrbATykoqNPpLDhVcNuvz8WgAvtLmQ9GAMPDhLUvHQH6qM8zqxseOV1NFaTVyXCOo6O7A53Jx54Z524VxrSG93mtltUm53ayM8Dj1L9hkPcIq0me33upxF8oX/3xg2JkmFLrdbxKIrAdJ12jKezmD8+UzKfvrYZSzgOj0ov4kNZg+KgM0I3TT9tXY7+iais9w==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>
+Cc:     "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>
+References: <20200731125109.18666-1-andr2000@gmail.com>
+ <20200731125109.18666-3-andr2000@gmail.com>
+ <6d719ab2-d9f6-2c3c-8979-b12a4d10b96d@suse.com>
+ <0ed5082f-0280-16c0-7410-f6a90262bcee@epam.com>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <1ae2e8b4-eea3-e68b-2897-5e376a688881@suse.com>
+Date:   Tue, 4 Aug 2020 08:39:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5103.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9dc8e492-3ecf-4291-f3a3-08d83840ad06
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Aug 2020 06:36:10.2882
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +WF1xHJTG+taBEkXl5oGe9IuQ6+nWGeJT1zbAiwpJxks5RpmJ8McS4FKyo0RUmBn9jVHUU9InyXpBvJFsVsbaw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6592
+In-Reply-To: <0ed5082f-0280-16c0-7410-f6a90262bcee@epam.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > +     if (vlan->proto =3D=3D ETH_P_8021AD) {
-> > +             ocelot->enable_qinq =3D true;
-> > +             ocelot_port->qinq_mode =3D true;
-> > +     }
->  ...
-> > +     if (vlan->proto =3D=3D ETH_P_8021AD) {
-> > +             ocelot->enable_qinq =3D false;
-> > +             ocelot_port->qinq_mode =3D false;
-> > +     }
-> > +
->=20
-> I don't understand how this can work just by using a boolean to track the
-> state.
->=20
-> This won't work properly if you are handling multiple QinQ VLAN entries.
->=20
-> Also, I need Andrew and Florian to review and ACK the DSA layer changes t=
-hat
-> add the protocol value to the device notifier block.
+On 04.08.20 08:35, Oleksandr Andrushchenko wrote:
+> 
+> On 8/4/20 9:12 AM, Jürgen Groß wrote:
+>> On 31.07.20 14:51, Oleksandr Andrushchenko wrote:
+>>> From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+>>>
+>>> The patch c575b7eeb89f: "drm/xen-front: Add support for Xen PV
+>>> display frontend" from Apr 3, 2018, leads to the following static
+>>> checker warning:
+>>>
+>>>      drivers/gpu/drm/xen/xen_drm_front_gem.c:140 xen_drm_front_gem_create()
+>>>      warn: passing zero to 'ERR_CAST'
+>>>
+>>> drivers/gpu/drm/xen/xen_drm_front_gem.c
+>>>      133  struct drm_gem_object *xen_drm_front_gem_create(struct drm_device *dev,
+>>>      134                                                  size_t size)
+>>>      135  {
+>>>      136          struct xen_gem_object *xen_obj;
+>>>      137
+>>>      138          xen_obj = gem_create(dev, size);
+>>>      139          if (IS_ERR_OR_NULL(xen_obj))
+>>>      140                  return ERR_CAST(xen_obj);
+>>>
+>>> Fix this and the rest of misused places with IS_ERR_OR_NULL in the
+>>> driver.
+>>>
+>>> Fixes:  c575b7eeb89f: "drm/xen-front: Add support for Xen PV display frontend"
+>>
+>> Again forgot to Cc stable?
+> 
+> I was just not sure if these minor fixes need to go the stable, but I will add
 
-Hi David,
-Thanks for reply.
+I'm fine both ways.
 
-When setting bridge's VLAN protocol to 802.1AD by the command "ip link set =
-br0 type bridge vlan_protocol 802.1ad", it will call dsa_slave_vlan_rx_add(=
-dev, proto, vid) for every port in the bridge, the parameter vid is port's =
-pvid 1,
-if pvid's proto is 802.1AD, I will enable switch's enable_qinq, and the rel=
-ated port's qinq_mode,
+Its just a reflex when I'm seeing a Fixes: tag but no Cc: stable. :-)
 
-When there are multiple QinQ VLAN entries, If one VLAN's proto is 802.1AD, =
-I will enable switch and the related port into QinQ mode.
 
-Thanks,
-hongbo
-
+Juergen
