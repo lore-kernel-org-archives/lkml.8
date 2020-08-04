@@ -2,226 +2,540 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0E0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDCF8206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 994BF208A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:20:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Q9RW7YFc"
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="Hb1O4MZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730217AbgHDLUF (ORCPT
+        id S1730224AbgHDLUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 07:20:05 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:16170 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729921AbgHDLMw (ORCPT
+        Tue, 4 Aug 2020 07:20:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730213AbgHDLUF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 07:12:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1596539572; x=1628075572;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=9MZm1UgGj5YfcCP0VMF+3w2gb07kbO63MeiK9RsdE18=;
-  b=Q9RW7YFcoZSAr7IyST9jap+x7suQW0jl73IRHoW22f5C7+/6EH7Wyxhr
-   ntwyGWcXfmd7dGtnMkdbL5YgOGrOEDk/6b9i52X72E8GuY54F8AxaErux
-   SSwY6HXyDiaKL7Ds/weguhmQeuwkQ1d7vxMVhrcaBWWEt1i3dv0KB/ZS7
-   8vXI3Oq1xSXuT1/h6nHozzgV0MkOhLvnBlgDJZeSCONbkdjDLeE5iSFXX
-   HYKKL1OvTtLNx7HOqbHLballP2QYhMKh6kFCD/D7deyaOCROdAtEq5+Xw
-   SiEjHmEF9wcBVh3deTLTwR3OX6E9uMW9fprR4etW9k+kwJuUpLF8KVE5w
-   A==;
-IronPort-SDR: G3RFLD4EIj2ByIIYUM/qul8oVr4dLrl8smZ9sJ2fxGNhlgkYj6Hh/5xl1NOCTjzib826OwVtEU
- FMOikc+ZuwiahmdbARcnDwbniYe0OXZzISYXBI2+BaXev6IbRDxmcHF23CRrYFBgYyftBXqi5Q
- abDWKyVQqPa94z4ebWAsQ4lKLJkSEQpEEbuQGuiQ9crLFTcOKdZCePY/QUmBBbW9I5TGT5gcxB
- lJALgRJqMVg9Pn4Y8++8Qyfv5kjpi/K1vVLU63rb+dQRBzQfxIbnLAbN1v3T5y90Yf044lvCD8
- 7p0=
-X-IronPort-AV: E=Sophos;i="5.75,433,1589266800"; 
-   d="scan'208";a="85764513"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Aug 2020 04:07:50 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 4 Aug 2020 04:07:46 -0700
-Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Tue, 4 Aug 2020 04:07:44 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>, <wenyou.yang@atmel.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v2 2/3] ARM: at91: pm: add per soc validation of pm modes
-Date:   Tue, 4 Aug 2020 14:07:37 +0300
-Message-ID: <1596539258-20719-3-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596539258-20719-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1596539258-20719-1-git-send-email-claudiu.beznea@microchip.com>
+        Tue, 4 Aug 2020 07:20:05 -0400
+Received: from mxwww.masterlogin.de (mxwww.masterlogin.de [IPv6:2a03:2900:1:1::b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CB84C061757
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 04:10:12 -0700 (PDT)
+Received: from mxout2.routing.net (unknown [192.168.10.82])
+        by forward.mxwww.masterlogin.de (Postfix) with ESMTPS id 8ABB796322;
+        Tue,  4 Aug 2020 10:59:25 +0000 (UTC)
+Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
+        by mxout2.routing.net (Postfix) with ESMTP id 3D7085FD0A;
+        Tue,  4 Aug 2020 10:59:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+        s=20200217; t=1596538765;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5EufThn+e6A4LFUrYsVU2L4Dl0/CjKPU30OUpaBgnpw=;
+        b=Hb1O4MZLIA61m5w7gUWqmzXOyA83JfCus5uq6LWsBnf+UtfQ+lhCkGxOYbqOM6SuXGH7Ae
+        KQyfDxgBFmvdpsz3qqXK8uJy3IGvDY6AuUerSXGbxecE1+Tv4DF6BZdzJrA5q2hWigA7ei
+        SAX+JBUd147dZ21jhfmfSwEeEgSATwI=
+Received: from localhost.localdomain (fttx-pool-217.61.144.119.bambit.de [217.61.144.119])
+        by mxbox3.masterlogin.de (Postfix) with ESMTPSA id 65C5C3603F1;
+        Tue,  4 Aug 2020 10:59:24 +0000 (UTC)
+From:   Frank Wunderlich <linux@fw-web.de>
+To:     linux-mediatek@lists.infradead.org
+Cc:     Frank Wunderlich <frank-w@public-files.de>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Ryder Lee <ryder.lee@mediatek.com>, CK Hu <ck.hu@mediatek.com>,
+        chunhui dai <chunhui.dai@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>
+Subject: [PATCH v3 5/5] arm: dts: mt7623: add display subsystem related device nodes
+Date:   Tue,  4 Aug 2020 12:58:49 +0200
+Message-Id: <20200804105849.70876-6-linux@fw-web.de>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200804105849.70876-1-linux@fw-web.de>
+References: <20200804105849.70876-1-linux@fw-web.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not all SoCs supports all the PM mode. User may end up settings,
-e.g. backup mode, on a non SAMA5D2 device, but the mode to not be valid.
-If backup mode is used on a devices not supporting it there will be no
-way of resuming other than rebooting.
+From: Ryder Lee <ryder.lee@mediatek.com>
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Add display subsystem related device nodes for MT7623.
+
+Cc: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: chunhui dai <chunhui.dai@mediatek.com>
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Tested-by: Frank Wunderlich <frank-w@public-files.de>
 ---
- arch/arm/mach-at91/pm.c | 83 +++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 81 insertions(+), 2 deletions(-)
+changed v2->v3:
+  drop bls to dpi routing
+---
+ arch/arm/boot/dts/mt7623.dtsi                 | 177 ++++++++++++++++++
+ arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  72 +++++++
+ arch/arm/boot/dts/mt7623n-rfb-emmc.dts        |  72 +++++++
+ 3 files changed, 321 insertions(+)
 
-diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
-index 04fdcbd57100..51902c4c9bb4 100644
---- a/arch/arm/mach-at91/pm.c
-+++ b/arch/arm/mach-at91/pm.c
-@@ -785,6 +785,51 @@ static const struct of_device_id atmel_pmc_ids[] __initconst = {
- 	{ /* sentinel */ },
+diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+index a106c0d90a52..d584a3d678ba 100644
+--- a/arch/arm/boot/dts/mt7623.dtsi
++++ b/arch/arm/boot/dts/mt7623.dtsi
+@@ -24,6 +24,11 @@ / {
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 
++	aliases {
++		rdma0 = &rdma0;
++		rdma1 = &rdma1;
++	};
++
+ 	cpu_opp_table: opp-table {
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
+@@ -321,6 +326,25 @@ pwrap: pwrap@1000d000 {
+ 		clock-names = "spi", "wrap";
+ 	};
+ 
++	mipi_tx0: mipi-dphy@10010000 {
++		compatible = "mediatek,mt7623-mipi-tx",
++			     "mediatek,mt2701-mipi-tx";
++		reg = <0 0x10010000 0 0x90>;
++		clocks = <&clk26m>;
++		clock-output-names = "mipi_tx0_pll";
++		#clock-cells = <0>;
++		#phy-cells = <0>;
++	};
++
++	cec: cec@10012000 {
++		compatible = "mediatek,mt7623-cec",
++			     "mediatek,mt8173-cec";
++		reg = <0 0x10012000 0 0xbc>;
++		interrupts = <GIC_SPI 182 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&infracfg CLK_INFRA_CEC>;
++		status = "disabled";
++	};
++
+ 	cir: cir@10013000 {
+ 		compatible = "mediatek,mt7623-cir";
+ 		reg = <0 0x10013000 0 0x1000>;
+@@ -369,6 +393,18 @@ apmixedsys: syscon@10209000 {
+ 		#clock-cells = <1>;
+ 	};
+ 
++	hdmi_phy: phy@10209100 {
++		compatible = "mediatek,mt7623-hdmi-phy",
++			     "mediatek,mt2701-hdmi-phy";
++		reg = <0 0x10209100 0 0x24>;
++		clocks = <&apmixedsys CLK_APMIXED_HDMI_REF>;
++		clock-names = "pll_ref";
++		clock-output-names = "hdmitx_dig_cts";
++		#clock-cells = <0>;
++		#phy-cells = <0>;
++		status = "disabled";
++	};
++
+ 	rng: rng@1020f000 {
+ 		compatible = "mediatek,mt7623-rng";
+ 		reg = <0 0x1020f000 0 0x1000>;
+@@ -568,6 +604,16 @@ bch: ecc@1100e000 {
+ 		status = "disabled";
+ 	};
+ 
++	hdmiddc0: i2c@11013000 {
++		compatible = "mediatek,mt7623-hdmi-ddc",
++			     "mediatek,mt8173-hdmi-ddc";
++		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_LOW>;
++		reg = <0 0x11013000 0 0x1C>;
++		clocks = <&pericfg CLK_PERI_I2C3>;
++		clock-names = "ddc-i2c";
++		status = "disabled";
++	};
++
+ 	nor_flash: spi@11014000 {
+ 		compatible = "mediatek,mt7623-nor",
+ 			     "mediatek,mt8173-nor";
+@@ -766,6 +812,84 @@ mmsys: syscon@14000000 {
+ 		#clock-cells = <1>;
+ 	};
+ 
++	display_components: dispsys@14000000 {
++		compatible = "mediatek,mt7623-mmsys",
++			     "mediatek,mt2701-mmsys";
++		reg = <0 0x14000000 0 0x1000>;
++		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
++	};
++
++	ovl@14007000 {
++		compatible = "mediatek,mt7623-disp-ovl",
++			     "mediatek,mt2701-disp-ovl";
++		reg = <0 0x14007000 0 0x1000>;
++		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_DISP_OVL>;
++		iommus = <&iommu MT2701_M4U_PORT_DISP_OVL_0>;
++		mediatek,larb = <&larb0>;
++	};
++
++	rdma0: rdma@14008000 {
++		compatible = "mediatek,mt7623-disp-rdma",
++			     "mediatek,mt2701-disp-rdma";
++		reg = <0 0x14008000 0 0x1000>;
++		interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_DISP_RDMA>;
++		iommus = <&iommu MT2701_M4U_PORT_DISP_RDMA>;
++		mediatek,larb = <&larb0>;
++	};
++
++	wdma@14009000 {
++		compatible = "mediatek,mt7623-disp-wdma",
++			     "mediatek,mt2701-disp-wdma";
++		reg = <0 0x14009000 0 0x1000>;
++		interrupts = <GIC_SPI 154 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_DISP_WDMA>;
++		iommus = <&iommu MT2701_M4U_PORT_DISP_WDMA>;
++		mediatek,larb = <&larb0>;
++	};
++
++	bls: pwm@1400a000 {
++		compatible = "mediatek,mt7623-disp-pwm",
++			     "mediatek,mt2701-disp-pwm";
++		reg = <0 0x1400a000 0 0x1000>;
++		#pwm-cells = <2>;
++		clocks = <&mmsys CLK_MM_MDP_BLS_26M>,
++			 <&mmsys CLK_MM_DISP_BLS>;
++		clock-names = "main", "mm";
++		status = "disabled";
++	};
++
++	color@1400b000 {
++		compatible = "mediatek,mt7623-disp-color",
++			     "mediatek,mt2701-disp-color";
++		reg = <0 0x1400b000 0 0x1000>;
++		interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_DISP_COLOR>;
++	};
++
++	dsi: dsi@1400c000 {
++		compatible = "mediatek,mt7623-dsi",
++			     "mediatek,mt2701-dsi";
++		reg = <0 0x1400c000 0 0x1000>;
++		interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_DSI_ENGINE>,
++			 <&mmsys CLK_MM_DSI_DIG>,
++			 <&mipi_tx0>;
++		clock-names = "engine", "digital", "hs";
++		phys = <&mipi_tx0>;
++		phy-names = "dphy";
++		status = "disabled";
++	};
++
++	mutex: mutex@1400e000 {
++		compatible = "mediatek,mt7623-disp-mutex",
++			     "mediatek,mt2701-disp-mutex";
++		reg = <0 0x1400e000 0 0x1000>;
++		interrupts = <GIC_SPI 161 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_MUTEX_32K>;
++	};
++
+ 	larb0: larb@14010000 {
+ 		compatible = "mediatek,mt7623-smi-larb",
+ 			     "mediatek,mt2701-smi-larb";
+@@ -778,6 +902,44 @@ larb0: larb@14010000 {
+ 		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
+ 	};
+ 
++	rdma1: rdma@14012000 {
++		compatible = "mediatek,mt7623-disp-rdma",
++			     "mediatek,mt2701-disp-rdma";
++		reg = <0 0x14012000 0 0x1000>;
++		interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_DISP_RDMA1>;
++		iommus = <&iommu MT2701_M4U_PORT_DISP_RDMA1>;
++		mediatek,larb = <&larb0>;
++	};
++
++	dpi0: dpi@14014000 {
++		compatible = "mediatek,mt7623-dpi",
++			     "mediatek,mt2701-dpi";
++		reg = <0 0x14014000 0 0x1000>;
++		interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_DPI1_DIGL>,
++			 <&mmsys CLK_MM_DPI1_ENGINE>,
++			 <&apmixedsys CLK_APMIXED_TVDPLL>;
++		clock-names = "pixel", "engine", "pll";
++		status = "disabled";
++	};
++
++	hdmi0: hdmi@14015000 {
++		compatible = "mediatek,mt7623-hdmi",
++			     "mediatek,mt8173-hdmi";
++		reg = <0 0x14015000 0 0x400>;
++		clocks = <&mmsys CLK_MM_HDMI_PIXEL>,
++			 <&mmsys CLK_MM_HDMI_PLL>,
++			 <&mmsys CLK_MM_HDMI_AUDIO>,
++			 <&mmsys CLK_MM_HDMI_SPDIF>;
++		clock-names = "pixel", "pll", "bclk", "spdif";
++		phys = <&hdmi_phy>;
++		phy-names = "hdmi";
++		mediatek,syscon-hdmi = <&mmsys 0x900>;
++		cec = <&cec>;
++		status = "disabled";
++	};
++
+ 	imgsys: syscon@15000000 {
+ 		compatible = "mediatek,mt7623-imgsys",
+ 			     "mediatek,mt2701-imgsys",
+@@ -1102,6 +1264,21 @@ pins-cir {
+ 		};
+ 	};
+ 
++	hdmi_pins_a: hdmi-default {
++		pins-hdmi {
++			pinmux = <MT7623_PIN_123_HTPLG_FUNC_HTPLG>;
++			input-enable;
++			bias-pull-down;
++		};
++	};
++
++	hdmi_ddc_pins_a: hdmi_ddc-default {
++		pins-hdmi-ddc {
++			pinmux = <MT7623_PIN_124_GPIO124_FUNC_HDMISCK>,
++				 <MT7623_PIN_125_GPIO125_FUNC_HDMISD>;
++		};
++	};
++
+ 	i2c0_pins_a: i2c0-default {
+ 		pins-i2c0 {
+ 			pinmux = <MT7623_PIN_75_SDA0_FUNC_SDA0>,
+diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+index 2b760f90f38c..b1c83e919015 100644
+--- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
++++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+@@ -21,6 +21,19 @@ chosen {
+ 		stdout-path = "serial2:115200n8";
+ 	};
+ 
++	connector {
++		compatible = "hdmi-connector";
++		label = "hdmi";
++		type = "d";
++		ddc-i2c-bus = <&hdmiddc0>;
++
++		port {
++			hdmi_connector_in: endpoint {
++				remote-endpoint = <&hdmi0_out>;
++			};
++		};
++	};
++
+ 	cpus {
+ 		cpu@0 {
+ 			proc-supply = <&mt6323_vproc_reg>;
+@@ -114,10 +127,18 @@ memory@80000000 {
+ 	};
  };
  
-+static void __init at91_pm_modes_validate(const int *modes, int len)
-+{
-+	u8 i, standby = 0, suspend = 0;
-+	int mode;
++&bls {
++	status = "okay";
++};
 +
-+	for (i = 0; i < len; i++) {
-+		if (standby && suspend)
-+			break;
-+
-+		if (modes[i] == soc_pm.data.standby_mode && !standby) {
-+			standby = 1;
-+			continue;
-+		}
-+
-+		if (modes[i] == soc_pm.data.suspend_mode && !suspend) {
-+			suspend = 1;
-+			continue;
-+		}
-+	}
-+
-+	if (!standby) {
-+		if (soc_pm.data.suspend_mode == AT91_PM_STANDBY)
-+			mode = AT91_PM_ULP0;
-+		else
-+			mode = AT91_PM_STANDBY;
-+
-+		pr_warn("AT91: PM: %s mode not supported! Using %s.\n",
-+			pm_modes[soc_pm.data.standby_mode].pattern,
-+			pm_modes[mode].pattern);
-+		soc_pm.data.standby_mode = mode;
-+	}
-+
-+	if (!suspend) {
-+		if (soc_pm.data.standby_mode == AT91_PM_ULP0)
-+			mode = AT91_PM_STANDBY;
-+		else
-+			mode = AT91_PM_ULP0;
-+
-+		pr_warn("AT91: PM: %s mode not supported! Using %s.\n",
-+			pm_modes[soc_pm.data.suspend_mode].pattern,
-+			pm_modes[mode].pattern);
-+		soc_pm.data.suspend_mode = mode;
-+	}
-+}
-+
- static void __init at91_pm_init(void (*pm_idle)(void))
- {
- 	struct device_node *pmc_np;
-@@ -823,9 +868,14 @@ static void __init at91_pm_init(void (*pm_idle)(void))
+ &btif {
+ 	status = "okay";
+ };
  
- void __init at91rm9200_pm_init(void)
- {
-+	static const int modes[] __initconst = {
-+		AT91_PM_STANDBY, AT91_PM_ULP0
++&cec {
++	status = "okay";
++};
++
+ &cir {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&cir_pins_a>;
+@@ -128,6 +149,21 @@ &crypto {
+ 	status = "okay";
+ };
+ 
++&dpi0 {
++	status = "okay";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		port@0 {
++			reg = <0>;
++			dpi0_out: endpoint {
++				remote-endpoint = <&hdmi0_in>;
++			};
++		};
++	};
++};
++
+ &eth {
+ 	status = "okay";
+ 
+@@ -199,6 +235,42 @@ fixed-link {
+ 	};
+ };
+ 
++&hdmi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&hdmi_pins_a>;
++	status = "okay";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		port@0 {
++			reg = <0>;
++			hdmi0_in: endpoint {
++				remote-endpoint = <&dpi0_out>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++			hdmi0_out: endpoint {
++				remote-endpoint = <&hdmi_connector_in>;
++			};
++		};
++	};
++};
++
++&hdmiddc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&hdmi_ddc_pins_a>;
++	status = "okay";
++};
++
++&hdmi_phy {
++	mediatek,ibias = <0xa>;
++	mediatek,ibias_up = <0x1c>;
++	status = "okay";
++};
++
+ &i2c0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c0_pins_a>;
+diff --git a/arch/arm/boot/dts/mt7623n-rfb-emmc.dts b/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
+index 0447748f9fa0..7e3ded7d9e7d 100644
+--- a/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
++++ b/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
+@@ -24,6 +24,19 @@ chosen {
+ 		stdout-path = "serial2:115200n8";
+ 	};
+ 
++	connector {
++		compatible = "hdmi-connector";
++		label = "hdmi";
++		type = "d";
++		ddc-i2c-bus = <&hdmiddc0>;
++
++		port {
++			hdmi_connector_in: endpoint {
++				remote-endpoint = <&hdmi0_out>;
++			};
++		};
 +	};
 +
- 	if (!IS_ENABLED(CONFIG_SOC_AT91RM9200))
- 		return;
+ 	cpus {
+ 		cpu@0 {
+ 			proc-supply = <&mt6323_vproc_reg>;
+@@ -106,10 +119,18 @@ sound {
+ 	};
+ };
  
-+	at91_pm_modes_validate(modes, ARRAY_SIZE(modes));
- 	at91_dt_ramc();
++&bls {
++	status = "okay";
++};
++
+ &btif {
+ 	status = "okay";
+ };
  
- 	/*
-@@ -838,9 +888,14 @@ void __init at91rm9200_pm_init(void)
++&cec {
++	status = "okay";
++};
++
+ &cir {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&cir_pins_a>;
+@@ -120,6 +141,21 @@ &crypto {
+ 	status = "okay";
+ };
  
- void __init sam9x60_pm_init(void)
- {
-+	static const int modes[] __initconst = {
-+		AT91_PM_STANDBY, AT91_PM_ULP0, AT91_PM_ULP0_FAST, AT91_PM_ULP1,
++&dpi0 {
++	status = "okay";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		port@0 {
++			reg = <0>;
++			dpi0_out: endpoint {
++				remote-endpoint = <&hdmi0_in>;
++			};
++		};
 +	};
++};
 +
- 	if (!IS_ENABLED(CONFIG_SOC_SAM9X60))
- 		return;
+ &eth {
+ 	status = "okay";
  
-+	at91_pm_modes_validate(modes, ARRAY_SIZE(modes));
- 	at91_pm_modes_init();
- 	at91_dt_ramc();
- 	at91_pm_init(at91sam9x60_idle);
-@@ -851,14 +906,19 @@ void __init sam9x60_pm_init(void)
+@@ -203,6 +239,42 @@ fixed-link {
+ 	};
+ };
  
- void __init at91sam9_pm_init(void)
- {
-+	static const int modes[] __initconst = {
-+		AT91_PM_STANDBY, AT91_PM_ULP0,
++&hdmi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&hdmi_pins_a>;
++	status = "okay";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		port@0 {
++			reg = <0>;
++			hdmi0_in: endpoint {
++				remote-endpoint = <&dpi0_out>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++			hdmi0_out: endpoint {
++				remote-endpoint = <&hdmi_connector_in>;
++			};
++		};
 +	};
++};
 +
- 	if (!IS_ENABLED(CONFIG_SOC_AT91SAM9))
- 		return;
- 
-+	at91_pm_modes_validate(modes, ARRAY_SIZE(modes));
- 	at91_dt_ramc();
- 	at91_pm_init(at91sam9_idle);
- }
- 
--void __init sama5_pm_init(void)
-+static void __init sama5_pm(void)
- {
- 	if (!IS_ENABLED(CONFIG_SOC_SAMA5))
- 		return;
-@@ -867,13 +927,32 @@ void __init sama5_pm_init(void)
- 	at91_pm_init(NULL);
- }
- 
-+void __init sama5_pm_init(void)
-+{
-+	static const int modes[] __initconst = {
-+		AT91_PM_STANDBY, AT91_PM_ULP0, AT91_PM_ULP0_FAST,
-+	};
++&hdmiddc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&hdmi_ddc_pins_a>;
++	status = "okay";
++};
 +
-+	if (!IS_ENABLED(CONFIG_SOC_SAMA5))
-+		return;
++&hdmi_phy {
++	mediatek,ibias = <0xa>;
++	mediatek,ibias_up = <0x1c>;
++	status = "okay";
++};
 +
-+	at91_pm_modes_validate(modes, ARRAY_SIZE(modes));
-+	sama5_pm();
-+}
-+
- void __init sama5d2_pm_init(void)
- {
-+	static const int modes[] __initconst = {
-+		AT91_PM_STANDBY, AT91_PM_ULP0, AT91_PM_ULP0_FAST, AT91_PM_ULP1,
-+		AT91_PM_BACKUP,
-+	};
-+
- 	if (!IS_ENABLED(CONFIG_SOC_SAMA5D2))
- 		return;
- 
-+	at91_pm_modes_validate(modes, ARRAY_SIZE(modes));
- 	at91_pm_modes_init();
--	sama5_pm_init();
-+	sama5_pm();
- 
- 	soc_pm.ws_ids = sama5d2_ws_ids;
- 	soc_pm.config_shdwc_ws = at91_sama5d2_config_shdwc_ws;
+ &i2c0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c0_pins_a>;
 -- 
-2.7.4
+2.25.1
 
