@@ -8,67 +8,67 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 932FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7E0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF20207FC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 037C8207FC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:07:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ouoh3vaN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s9xx/Duk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbgHDUHM (ORCPT
+        id S1726878AbgHDUHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 16:07:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52908 "EHLO
+        Tue, 4 Aug 2020 16:07:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgHDUHJ (ORCPT
+        with ESMTP id S1726432AbgHDUHL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 16:07:09 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21B9CC06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 13:07:09 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id 185so34804587ljj.7
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 13:07:09 -0700 (PDT)
+        Tue, 4 Aug 2020 16:07:11 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6419C061757
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 13:07:10 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id i10so10267150ljn.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 13:07:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=8X1vD9iMjbD58TZPHKwb4ye5PBWIjmiaZvRTOJ3otNU=;
-        b=Ouoh3vaNcVVGD7H1kVwnvrVgU+wwepgvDoAEKRlV+AQ4Tf2O+YsRYKYjqgvyFNQB2o
-         eROYCzwN/1rJZ+FMCt2vFYPMrt4X0Rmk9LoreTDEZAGNnFKT6V2YRSqWNc14awRYiFn7
-         jEUkw6GM3xGAEjf3AXKOIgEMI3vjKawi3ItOG4+6Jl80xw80/Alin70MWgu/wjlM7d94
-         c3jshDgkCYxxIq7vcFA18eAH30zhEryIJTkQW4bINYC9f/+SEEdxx8P4ZJ1UiSuqHgJU
-         gVywg7cQU1OOxLn4t8RJCuKJx36zrpwywX8nIm3XL/Rs3oOwMK2kM33iP3Lm8D1toPPn
-         YBQA==
+        bh=u8vVd3eNYQguySxvKcCaV5W8ooNVhtOP1CKm/UC6A7I=;
+        b=s9xx/Duk98DAB0+L8vFJMaT7WWygK0TAVyP8WfoNoaFx3f2OxDMsQm34eFo1UqG5Xr
+         d9dpxhegHqwtwtW6evsWeDD9utm7jF5dneGl3JlS/3ERywgRsNOPa5o0gke2M+69aSwY
+         O9wZPw8E8PiOT0Mo3LmYhFOdJvbUlxHqUTdcU3XwO1/LAH8DVBMbxlw8SIkK30Hdz+Za
+         KXs8UGhnHkIcTbM9q/sVxhDjpXK/r1vgmHsLL3AO8VYtuijNNqWECRksnrVnZ4x/i53X
+         KoS7hM2sZgmiDw2nxwUeo6qssL0XXACOrQKM150LTEUabBJ/VC+boW6XHPfAwM/xQEZR
+         mtDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=8X1vD9iMjbD58TZPHKwb4ye5PBWIjmiaZvRTOJ3otNU=;
-        b=ZLFZ6c+NjRJlwzyXFK41Ar4FYp/q2yfJuRxaA7jZ5nLqJAe4oUrC8qsHizAAl0dT2k
-         /5Ap3E+xB/DubGFwtJksGtRw3rBXv0ytkRt65g/tdY75B8aHWJPsUawqRAYb0ysNYNXf
-         1PcbIWoI42UC7Th7WIJ8qYZWComivGYimbst9GorhiCfKlc8oUMBq44C2fsJ0DL6ulG3
-         FnZvSRu8Ib9njFD5KepIgjoEgJe/qToOnWO2ThFeSZn7cZIK1rWLxsmH9VI+2SBd85Y3
-         xubomYsKVsd9d5pEbQQil3jepoQVKQlinADd8GVKOvlRMxmauS5vFw2JEJ7qiib06OHB
-         sdAw==
-X-Gm-Message-State: AOAM533zqP/pRemIqkze87ELqkoF1FxtP1yoSLlR5wmVfAyhYGjzWgSn
-        Y606EOMAhScyqax+JIMH34k=
-X-Google-Smtp-Source: ABdhPJx1Y3+zg8EQVx5eowP9zlLeEH4mmso+i3MTOfkpYRGj2nf76AZey+5T5A6YD2go2MiFTnmiCg==
-X-Received: by 2002:a2e:a179:: with SMTP id u25mr11596380ljl.101.1596571626718;
-        Tue, 04 Aug 2020 13:07:06 -0700 (PDT)
+        bh=u8vVd3eNYQguySxvKcCaV5W8ooNVhtOP1CKm/UC6A7I=;
+        b=b03qLapsImdLysKjEm66lNJw5XthRjsJEPbmBJXkrWt5Z4ro24qcSU/LCycyA+dT9D
+         gCdMHvWKk/0YZarbFjPJHcv2eZnHPap9fz4FNddBRy9TRifEyWuDtPrCecJ0xiu9TjxU
+         TB/u9svjqUMwlv7WbiwTbnbzubxSaE53d/gFc4pRhDqEDS0DikOOnaTpVmf2fpCCvbCZ
+         MlZClC8oWdtYIquUMqiKtxR9u6PDP17NitnuHb6bc4q6UZEmRSeMDBL3mnHizQ5Klau8
+         j2szkBlSR09v5+mSbQdx5PZSInV4Kux2B4++U/oSjjaXCzESPmQTGvJHqZD+A6GXgZ7t
+         zx3w==
+X-Gm-Message-State: AOAM530TPUcxn6feWUPjY5xTEkmfXadOOuG7F+lPul9KTX13ORtQK49x
+        K4w8JKoOIZ85cgsdSivc1Ls=
+X-Google-Smtp-Source: ABdhPJyBRrbSBhdu9xngj5VBMCOa3dus0RevnDqkrLCpPxaq4pkyHzKmzy8Eur5swB9DFOpFQqCLPg==
+X-Received: by 2002:a05:651c:c6:: with SMTP id 6mr10769338ljr.237.1596571629160;
+        Tue, 04 Aug 2020 13:07:09 -0700 (PDT)
 Received: from localhost.localdomain (h-82-196-111-59.NA.cust.bahnhof.se. [82.196.111.59])
-        by smtp.gmail.com with ESMTPSA id g21sm3080020ljh.103.2020.08.04.13.07.05
+        by smtp.gmail.com with ESMTPSA id g21sm3080020ljh.103.2020.08.04.13.07.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 13:07:06 -0700 (PDT)
+        Tue, 04 Aug 2020 13:07:08 -0700 (PDT)
 From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
 To:     harry.wentland@amd.com, sunpeng.li@amd.com,
         alexander.deucher@amd.com, christian.koenig@amd.com
 Cc:     airlied@linux.ie, daniel@ffwll.ch, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Subject: [PATCH 1/3] drm/amd/display: Constify dcn20_res_pool_funcs
-Date:   Tue,  4 Aug 2020 22:06:53 +0200
-Message-Id: <20200804200655.30495-2-rikard.falkeborn@gmail.com>
+Subject: [PATCH 3/3] drm/amd/display: Constify dcn30_res_pool_funcs
+Date:   Tue,  4 Aug 2020 22:06:55 +0200
+Message-Id: <20200804200655.30495-4-rikard.falkeborn@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200804200655.30495-1-rikard.falkeborn@gmail.com>
 References: <20200804200655.30495-1-rikard.falkeborn@gmail.com>
@@ -79,28 +79,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only usage of dcn20_res_pool_funcs is to assign its address to a
+The only usage of dcn30_res_pool_funcs is to assign its address to a
 const pointer. Make it const to allow the compiler to put it in
 read-only memory.
 
 Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 ---
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c | 2 +-
+ drivers/gpu/drm/amd/display/dc/dcn30/dcn30_resource.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-index 2a5e7175926a..d7ce984a2ce3 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_resource.c
-@@ -3320,7 +3320,7 @@ enum dc_status dcn20_patch_unknown_plane_state(struct dc_plane_state *plane_stat
- 	return DC_OK;
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_resource.c b/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_resource.c
+index 653a571e366d..d474a6188445 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn30/dcn30_resource.c
+@@ -2412,7 +2412,7 @@ static void dcn30_update_bw_bounding_box(struct dc *dc, struct clk_bw_params *bw
+ 		dml_init_instance(&dc->current_state->bw_ctx.dml, &dcn3_0_soc, &dcn3_0_ip, DML_PROJECT_DCN30);
  }
  
--static struct resource_funcs dcn20_res_pool_funcs = {
-+static const struct resource_funcs dcn20_res_pool_funcs = {
- 	.destroy = dcn20_destroy_resource_pool,
- 	.link_enc_create = dcn20_link_encoder_create,
- 	.panel_cntl_create = dcn20_panel_cntl_create,
+-static struct resource_funcs dcn30_res_pool_funcs = {
++static const struct resource_funcs dcn30_res_pool_funcs = {
+ 	.destroy = dcn30_destroy_resource_pool,
+ 	.link_enc_create = dcn30_link_encoder_create,
+ 	.panel_cntl_create = dcn30_panel_cntl_create,
 -- 
 2.28.0
 
