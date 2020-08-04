@@ -2,88 +2,100 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0F3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA430C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC8D206DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C81E5206DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:48:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Zd9gPm9P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbgHDOro (ORCPT
+        id S1729337AbgHDOsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:47:44 -0400
-Received: from relay.sw.ru ([185.231.240.75]:44750 "EHLO relay3.sw.ru"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729287AbgHDOrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:47:37 -0400
-Received: from [192.168.15.159]
-        by relay3.sw.ru with esmtp (Exim 4.93)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1k2yDV-00067i-Pa; Tue, 04 Aug 2020 17:47:01 +0300
-Subject: Re: [PATCH 00/23] proc: Introduce /proc/namespaces/ directory to
- expose namespaces lineary
-To:     Andrei Vagin <avagin@gmail.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
-        akpm@linux-foundation.org, christian.brauner@ubuntu.com,
-        areber@redhat.com, serge@hallyn.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
- <87k0yl5axy.fsf@x220.int.ebiederm.org>
- <56928404-f194-4194-5f2a-59acb15b1a04@virtuozzo.com>
- <20200804054313.GA100819@gmail.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <5f040969-b3b6-8174-7f8e-c8f9db6b80ea@virtuozzo.com>
-Date:   Tue, 4 Aug 2020 17:47:23 +0300
+        Tue, 4 Aug 2020 10:48:16 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:46302 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729009AbgHDOsN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 10:48:13 -0400
+Received: from [192.168.254.32] (unknown [47.187.206.220])
+        by linux.microsoft.com (Postfix) with ESMTPSA id C779220B4908;
+        Tue,  4 Aug 2020 07:48:11 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C779220B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1596552492;
+        bh=WWoZU5hW4wXDmLDqxKWgVjJhEBnDZrlL0eZeSoA1M0E=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Zd9gPm9PZos91WvJOt0oayxz099VIuOsWoBZIXUJDFjP7lCj1dlQONa0QNp25lwdY
+         dsm1r5OpjOcAXzNUDHh+nWWnMfnxq0oL6LMUtoVLftLBOD3ttlLrNDioYA+AS/vahh
+         DP92H/rykDhIN5jKmVDwqf9m4OvMWrU04m/O4Ps0=
+Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+To:     David Laight <David.Laight@ACULAB.COM>,
+        'Mark Rutland' <mark.rutland@arm.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
+References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
+ <6540b4b7-3f70-adbf-c922-43886599713a@linux.microsoft.com>
+ <CALCETrWnNR5v3ZCLfBVQGYK8M0jAvQMaAc9uuO05kfZuh-4d6w@mail.gmail.com>
+ <46a1adef-65f0-bd5e-0b17-54856fb7e7ee@linux.microsoft.com>
+ <20200731183146.GD67415@C02TD0UTHF1T.local>
+ <86625441-80f3-2909-2f56-e18e2b60957d@linux.microsoft.com>
+ <20200804135558.GA7440@C02TD0UTHF1T.local>
+ <c898918d18f34fd5b004cd1549b6a99e@AcuMS.aculab.com>
+From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+Message-ID: <5f3c9616-52f5-f539-a39f-3fd3ada4f0aa@linux.microsoft.com>
+Date:   Tue, 4 Aug 2020 09:48:11 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200804054313.GA100819@gmail.com>
-Content-Type: text/plain; charset=koi8-r
-Content-Language: en-US
+In-Reply-To: <c898918d18f34fd5b004cd1549b6a99e@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04.08.2020 08:43, Andrei Vagin wrote:
-> On Thu, Jul 30, 2020 at 06:01:20PM +0300, Kirill Tkhai wrote:
->> On 30.07.2020 17:34, Eric W. Biederman wrote:
->>> Kirill Tkhai <ktkhai@virtuozzo.com> writes:
->>>
->>>> Currently, there is no a way to list or iterate all or subset of namespaces
->>>> in the system. Some namespaces are exposed in /proc/[pid]/ns/ directories,
->>>> but some also may be as open files, which are not attached to a process.
->>>> When a namespace open fd is sent over unix socket and then closed, it is
->>>> impossible to know whether the namespace exists or not.
->>>>
->>>> Also, even if namespace is exposed as attached to a process or as open file,
->>>> iteration over /proc/*/ns/* or /proc/*/fd/* namespaces is not fast, because
->>>> this multiplies at tasks and fds number.
-> 
-> Could you describe with more details when you need to iterate
-> namespaces?
-> 
-> There are three ways to hold namespaces.
-> 
-> * processes
-> * bind-mounts
-> * file descriptors
-> 
-> When CRIU dumps a container, it enumirates all processes, collects file
-> descriptors and mounts. This means that we will be able to collect all
-> namespaces, doesn't it?
 
-1)It's not only for CRIU. No one util can read content of another task unix socket like CRIU does.
-  Sometimes we may just want to see all mount namespaces to found a mount, which owns a reference on
-  a device.
-2)In case of CRIU, recursive dump (when you iterate unix socket content, then you find another
-  namespace and iterate another unix socket content, then you find one more namespace) is less
-  effective and less fast, then dumping different types sequentially: first namespaces, second fds, etc.
-3)It's still impossible to collect all namespaces like Pasha wrote.
+
+On 8/4/20 9:33 AM, David Laight wrote:
+>>> If you look at the libffi reference patch I have included, the architecture
+>>> specific changes to use trampfd just involve a single C function call to
+>>> a common code function.
+> No idea what libffi is, but it must surely be simpler to
+> rewrite it to avoid nested function definitions.
+
+Sorry if I wasn't clear.
+
+libffi is a separate use case and GCC nested functions is a separate one.
+libffi is not used to solve the nested function stuff.
+
+For nested functions, GCC generates trampoline code and arranges to
+place it on the stack and execute it.
+
+I agree with your other points about nested function implementation.
+
+Madhavan
+> Or find a book from the 1960s on how to do recursive
+> calls and nested functions in FORTRAN-IV.
+>
+> 	David
+>
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> Registration No: 1397386 (Wales)
+
