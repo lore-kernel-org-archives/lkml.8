@@ -4,123 +4,180 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB596C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B786C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A46272075F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD832075F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:49:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730397AbgHDLtD (ORCPT
+        id S1730408AbgHDLtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 07:49:03 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:36669 "EHLO pegase1.c-s.fr"
+        Tue, 4 Aug 2020 07:49:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54172 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730242AbgHDLsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 07:48:16 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BLY0R3gCnz9tyRq;
-        Tue,  4 Aug 2020 13:47:51 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Jup3KUwuPW94; Tue,  4 Aug 2020 13:47:51 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BLY0R2vf8z9tyRh;
-        Tue,  4 Aug 2020 13:47:51 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 350258B7A5;
-        Tue,  4 Aug 2020 13:47:53 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id ckh2gzc1q3le; Tue,  4 Aug 2020 13:47:53 +0200 (CEST)
-Received: from po16052vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.103])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0F2A98B767;
-        Tue,  4 Aug 2020 13:47:53 +0200 (CEST)
-Received: by po16052vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 0644F65BBB; Tue,  4 Aug 2020 11:47:52 +0000 (UTC)
-Message-Id: <21e46e2f81e5db4675be113ef00edbf398398dc9.1596541334.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <cover.1596541334.git.christophe.leroy@csgroup.eu>
-References: <cover.1596541334.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v9 5/5] powerpc/vdso: Provide __kernel_clock_gettime64() on
- vdso32
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
-        anton@ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        arnd@arndb.de, tglx@linutronix.de, vincenzo.frascino@arm.com,
-        luto@kernel.org, linux-arch@vger.kernel.org
-Date:   Tue,  4 Aug 2020 11:47:52 +0000 (UTC)
+        id S1730228AbgHDLsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 07:48:14 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id E83F6AC50;
+        Tue,  4 Aug 2020 11:48:16 +0000 (UTC)
+Date:   Tue, 04 Aug 2020 13:48:00 +0200
+Message-ID: <s5htuxizl73.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     tiwai@suse.com, Jaroslav Kysela <perex@perex.cz>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Nikhil Mahale <nmahale@nvidia.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Aaron Plattner <aplattner@nvidia.com>,
+        "moderated list:SOUND" <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ALSA: hda/hdmi: Add pins with jack detection support
+In-Reply-To: <21676100-4D83-44F6-BB39-4FDFBDEAF462@canonical.com>
+References: <20200804072926.16897-1-kai.heng.feng@canonical.com>
+        <s5hv9hy235r.wl-tiwai@suse.de>
+        <41E2234E-451C-4C14-833A-E24C650EDEE1@canonical.com>
+        <s5hpn86213w.wl-tiwai@suse.de>
+        <21676100-4D83-44F6-BB39-4FDFBDEAF462@canonical.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provides __kernel_clock_gettime64() on vdso32. This is the
-64 bits version of __kernel_clock_gettime() which is
-y2038 compliant.
+On Tue, 04 Aug 2020 13:42:03 +0200,
+Kai-Heng Feng wrote:
+> 
+> 
+> 
+> > On Aug 4, 2020, at 17:48, Takashi Iwai <tiwai@suse.de> wrote:
+> > 
+> > On Tue, 04 Aug 2020 11:31:59 +0200,
+> > Kai-Heng Feng wrote:
+> >> 
+> >> 
+> >> 
+> >>> On Aug 4, 2020, at 17:04, Takashi Iwai <tiwai@suse.de> wrote:
+> >>> 
+> >>> On Tue, 04 Aug 2020 09:29:25 +0200,
+> >>> Kai-Heng Feng wrote:
+> >>>> 
+> >>>> HDMI on some platforms doesn't enable audio support because its Port
+> >>>> Connectivity [31:30] is set to AC_JACK_PORT_NONE:
+> >>>> Node 0x05 [Pin Complex] wcaps 0x40778d: 8-Channels Digital Amp-Out CP
+> >>>> Amp-Out caps: ofs=0x00, nsteps=0x00, stepsize=0x00, mute=1
+> >>>> Amp-Out vals:  [0x00 0x00]
+> >>>> Pincap 0x0b000094: OUT Detect HBR HDMI DP
+> >>>> Pin Default 0x58560010: [N/A] Digital Out at Int HDMI
+> >>>>   Conn = Digital, Color = Unknown
+> >>>>   DefAssociation = 0x1, Sequence = 0x0
+> >>>> Pin-ctls: 0x40: OUT
+> >>>> Unsolicited: tag=00, enabled=0
+> >>>> Power states:  D0 D3 EPSS
+> >>>> Power: setting=D0, actual=D0
+> >>>> Devices: 0
+> >>>> Connection: 3
+> >>>>    0x02 0x03* 0x04
+> >>>> 
+> >>>> Those pins were filtered out by commit 116dcde63806 ("ALSA: HDA: Remove
+> >>>> unconnected PCM devices for Intel HDMI"). However, jacks that support
+> >>>> detection won't have the issues the commit addresses.
+> >>>> 
+> >>>> So still add the pin if it supports jack detection.
+> >>>> 
+> >>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> >>> 
+> >>> Which platform did show the problem?
+> >> 
+> >> An HP desktop.
+> > 
+> > Well, what I meant was about which codec.  And now I see it in the
+> > below.
+> > 
+> >>> I'm reluctant to apply this change as it would potentially break the
+> >>> existing system.  If we must to apply, maybe it's safer to apply it
+> >>> conditionally to the limited devices.
+> >> 
+> >> Hmm, I find it's a bit hard to match a specific device, because the ID seems to be rather generic:
+> >> Codec: Intel Kabylake HDMI
+> >> Address: 2                      
+> >> AFG Function Id: 0x1 (unsol 0)
+> >> Vendor Id: 0x8086280b         
+> >> Subsystem Id: 0x80860101
+> >> Revision Id: 0x100000
+> >> 
+> >> Should we use DMI string instead?
+> > 
+> > So it's a Kabylake, and I presume that it's rather an old machine.
+> > Is this for docking station or anything else?
+> 
+> The system is Comet Lake CPU so it's fairly recent. I think most Comet Lake platforms still use "Kabylake HDMI".
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/kernel/vdso32/gettimeofday.S  | 9 +++++++++
- arch/powerpc/kernel/vdso32/vdso32.lds.S    | 1 +
- arch/powerpc/kernel/vdso32/vgettimeofday.c | 6 ++++++
- 3 files changed, 16 insertions(+)
+OK.
 
-diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
-index fd7b01c51281..a6e29f880e0e 100644
---- a/arch/powerpc/kernel/vdso32/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
-@@ -35,6 +35,15 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
- 	cvdso_call __c_kernel_clock_gettime
- V_FUNCTION_END(__kernel_clock_gettime)
- 
-+/*
-+ * Exact prototype of clock_gettime64()
-+ *
-+ * int __kernel_clock_gettime64(clockid_t clock_id, struct __timespec64 *ts);
-+ *
-+ */
-+V_FUNCTION_BEGIN(__kernel_clock_gettime64)
-+	cvdso_call __c_kernel_clock_gettime64
-+V_FUNCTION_END(__kernel_clock_gettime64)
- 
- /*
-  * Exact prototype of clock_getres()
-diff --git a/arch/powerpc/kernel/vdso32/vdso32.lds.S b/arch/powerpc/kernel/vdso32/vdso32.lds.S
-index 4c985467a668..582c5b046cc9 100644
---- a/arch/powerpc/kernel/vdso32/vdso32.lds.S
-+++ b/arch/powerpc/kernel/vdso32/vdso32.lds.S
-@@ -148,6 +148,7 @@ VERSION
- #ifndef CONFIG_PPC_BOOK3S_601
- 		__kernel_gettimeofday;
- 		__kernel_clock_gettime;
-+		__kernel_clock_gettime64;
- 		__kernel_clock_getres;
- 		__kernel_time;
- 		__kernel_get_tbfreq;
-diff --git a/arch/powerpc/kernel/vdso32/vgettimeofday.c b/arch/powerpc/kernel/vdso32/vgettimeofday.c
-index 0b9ab4c22ef2..f7f71fecf4ed 100644
---- a/arch/powerpc/kernel/vdso32/vgettimeofday.c
-+++ b/arch/powerpc/kernel/vdso32/vgettimeofday.c
-@@ -11,6 +11,12 @@ int __c_kernel_clock_gettime(clockid_t clock, struct old_timespec32 *ts,
- 	return __cvdso_clock_gettime32_data(vd, clock, ts);
- }
- 
-+int __c_kernel_clock_gettime64(clockid_t clock, struct __kernel_timespec *ts,
-+			       const struct vdso_data *vd)
-+{
-+	return __cvdso_clock_gettime_data(vd, clock, ts);
-+}
-+
- int __c_kernel_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz,
- 			    const struct vdso_data *vd)
- {
--- 
-2.25.0
+> > Basically the pin capability is rather fixed by the chip design while
+> > the pin configuration is set by BIOS.  And we follow the BIOS setup
+> > for determining which pins are actually alive.  That said, the bug is
+> > a BIOS bug.
+> 
+> Yes but sometimes vendors are reluctant to fix it because "Windows doesn't have this issue".
 
+Yes, and BIOS is always buggy, it's a fundamental rule of the world :)
+So I'm not against adding the workaround itself.  The problem is that
+applying the workaround globally would cause another regression.
+
+> > Note that PCI SSID bound with this codec might have a different
+> > number, so we might be still able to use the standard quirk table to
+> > pick up.
+> 
+> Ok. Will send v2 with a quirk list.
+
+Thanks.  We can reconsider to widen the application of the workaround
+once when we see the requirement (i.e. more machines with buggy BIOS
+setup.)
+
+
+Takashi
+
+
+> Kai-Heng
+> 
+> > 
+> > 
+> > thanks,
+> > 
+> > Takashi
+> > 
+> >>> 
+> >>> thanks,
+> >>> 
+> >>> Takashi
+> >>> 
+> >>>> ---
+> >>>> sound/pci/hda/patch_hdmi.c | 3 ++-
+> >>>> 1 file changed, 2 insertions(+), 1 deletion(-)
+> >>>> 
+> >>>> diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+> >>>> index cd46247988e4..db3a5148bd40 100644
+> >>>> --- a/sound/pci/hda/patch_hdmi.c
+> >>>> +++ b/sound/pci/hda/patch_hdmi.c
+> >>>> @@ -1701,7 +1701,8 @@ static int hdmi_add_pin(struct hda_codec *codec, hda_nid_t pin_nid)
+> >>>> 	 * all device entries on the same pin
+> >>>> 	 */
+> >>>> 	config = snd_hda_codec_get_pincfg(codec, pin_nid);
+> >>>> -	if (get_defcfg_connect(config) == AC_JACK_PORT_NONE)
+> >>>> +	if ((get_defcfg_connect(config) == AC_JACK_PORT_NONE) &&
+> >>>> +	    !(caps & AC_PINCAP_PRES_DETECT))
+> >>>> 		return 0;
+> >>>> 
+> >>>> 	/*
+> >>>> -- 
+> >>>> 2.17.1
+> 
