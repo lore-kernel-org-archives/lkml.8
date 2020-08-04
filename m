@@ -2,125 +2,106 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CD2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2810C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64B302086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA538208A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:20:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VriJCAZk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L+a6QtSa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729436AbgHDQS4 (ORCPT
+        id S1729560AbgHDQUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 12:18:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46002 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728271AbgHDQSv (ORCPT
+        Tue, 4 Aug 2020 12:20:32 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36498 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728271AbgHDQU1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 12:18:51 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A595C06174A;
-        Tue,  4 Aug 2020 09:18:51 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id a14so13351002edx.7;
-        Tue, 04 Aug 2020 09:18:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iw73O7zxTtWlECCxBVTbs3K0lH4NxmMjnyOEyQVNmnY=;
-        b=VriJCAZkBFkRHCN582PoHkkOpqw/g6OLh9IQ1Sus5cSS8CSyYcwUCQw3kRurT34Tc/
-         pA6moefJLXEIUuhKzPIFwbScJZZa3C4NGzkT7d0AbOATYC2ZF+IIC3e2Pkh+KGIep2nm
-         vXQRBGj0OJkWBCs7EmVtjJvapBZ/KSWhHKWdxPmcsqdqfsHTkja+32tWE1mIgjNVTV6I
-         zL1EworxqHJfFRuLSgG+QbyYpHL9lZU6wPx1aZuWWAS2tGtNpt0MMeccSdRFpLh6hWxm
-         78oufE7OuWZ+CsTBTq3OPKh4h/lPTtYiIR3XWxTBCtLqWlW3xHYCgcgFblcFSaRNimJ/
-         D3hQ==
+        Tue, 4 Aug 2020 12:20:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596558026;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=39irOBPTe9Z0kK4c/lNul+h0tOKXYZQuoF/1ateEpJQ=;
+        b=L+a6QtSaN21JsxXUru8K3bQMWaLZaL5U2HDnyI292PT1MGVuO2HYUwnqRhB6SaNJWMNWFa
+        I8RKRhdgShwdU0xjzO2NmJsNfJEeqKGIxhDwGngiT0BPTUPMZzkH5YWbGazbaz99chypmx
+        ej+K20KiewT1oMoK5F3nUDzsdXcqK+Q=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-370--cIYaTCtNeu-_INzFhzz3w-1; Tue, 04 Aug 2020 12:20:20 -0400
+X-MC-Unique: -cIYaTCtNeu-_INzFhzz3w-1
+Received: by mail-qv1-f69.google.com with SMTP id z10so5577145qvm.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 09:20:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iw73O7zxTtWlECCxBVTbs3K0lH4NxmMjnyOEyQVNmnY=;
-        b=m1wHL06uqR6EGw+F/Khm+icn3izxPZWch/TnIvBOexKQ3F66pXLMoLO5Jb4mdgcMVo
-         3f1dFsBxweYCMKg1jlBJw4QjrIKZ5kxK+2/OnxbsMnqIwI5oZ01Ra8ryTu63dHBPpLvx
-         fUy0sD2ti0tPavHYTfAQuj0Vxr1L8xSpY1OQyWfpciWcb8tOI8W8sGfL/sTHEfmh60na
-         nrbV+ZAUbABw1QGy8TEdJCX8AGfSA7IGor68NWoSFUjA/c88w/lz6Kn7QmBCXCmZi35r
-         rJvJLj1NBRejztMlamuEbhVxMUG0P2uo+149kbnRUq6P91KH4PnXVU8jpYpieOtVtPLu
-         CRBg==
-X-Gm-Message-State: AOAM530eLTgTHKmHNdul2kxlGdRoH2IcKybUpanPsfKovAm9rAGpULoE
-        xz1cidG5W6hRXPBkMjWYRfM=
-X-Google-Smtp-Source: ABdhPJwzbzFpdu4i50fVtxewCe8ZmPJbN9uCHcWI6UYessAZzsIkeoX13JGdttLZ0pBoMFUATs7+Zw==
-X-Received: by 2002:a05:6402:c81:: with SMTP id cm1mr20534593edb.256.1596557929841;
-        Tue, 04 Aug 2020 09:18:49 -0700 (PDT)
-Received: from luca020400-arch.lan ([2001:b07:5d33:19f:d537:6bdb:9442:dd28])
-        by smtp.googlemail.com with ESMTPSA id sd8sm19224438ejb.58.2020.08.04.09.18.49
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=39irOBPTe9Z0kK4c/lNul+h0tOKXYZQuoF/1ateEpJQ=;
+        b=c2Nlr5reW40wrcXaG/Up/zhqAD9bnXVnZ7bXx8Py8rPZD6V7UAmA3+70vktAKUmDcv
+         xClVawoVZc1ZCM5193n2MnG5xy/68Gv5CF0bKQRiN94jv+9yrIymXQyUmDb002uUFWSm
+         hhaOL0mMDy5Gj70C7asln4lU9QLZO7NcUK+lH6NzTCQ6Sh5IyUqmDezdp6XXNsm8KrZl
+         JDoKG71ihWOCq8BP2OMmf64vJ/LjaqYC7OIz0sZgv/xinIYi1dxAISs3X0386wNqrAQm
+         RvoLEK9OYljAQQOfVzJfeuSn6QLUDB+bWnhy+e1TEsWPmK16YlYS/BZp3WrKDiE1MPK2
+         ArQw==
+X-Gm-Message-State: AOAM530U4vyLwedEIu6RPljopZJzqG+bKi+lok+kLPZ8n0SbOl2kRPkz
+        0c5Yo1rjNwU65VTn/IAj+aMsp4lsIJQkJzmuyBlsH28gooVu1uVRut+StGb9v7Vi/G5pvyw8Fzz
+        /Wk9RETpCZV075GIpqZZK7CJW
+X-Received: by 2002:a37:7245:: with SMTP id n66mr10663983qkc.83.1596558019724;
+        Tue, 04 Aug 2020 09:20:19 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxB2lI38hkDboBDEtEVKpNlRUIDwbzgotiwqvt2H3cRPNRNgNz0BxpvsW5JbymjJ6lMBaoT3g==
+X-Received: by 2002:a37:7245:: with SMTP id n66mr10663944qkc.83.1596558019290;
+        Tue, 04 Aug 2020 09:20:19 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id q4sm21922585qkm.78.2020.08.04.09.20.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 09:18:49 -0700 (PDT)
-From:   Luca Stefani <luca.stefani.ge1@gmail.com>
-Cc:     Luca Stefani <luca.stefani.ge1@gmail.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Borislav Petkov <bp@alien8.de>, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] RAS/CEC: Fix cec_init prototype
-Date:   Tue,  4 Aug 2020 18:18:47 +0200
-Message-Id: <20200804161847.825391-1-luca.stefani.ge1@gmail.com>
-X-Mailer: git-send-email 2.28.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        Tue, 04 Aug 2020 09:20:18 -0700 (PDT)
+From:   trix@redhat.com
+To:     hao.wu@intel.com, mdf@kernel.org
+Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH] MAINTAINERS: Add Tom Rix as fpga reviewer
+Date:   Tue,  4 Aug 2020 09:20:03 -0700
+Message-Id: <20200804162003.19402-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* late_initcall expects a function to return an integer
+From: Tom Rix <trix@redhat.com>
 
-Signed-off-by: Luca Stefani <luca.stefani.ge1@gmail.com>
+I take care of fpga kernel and userspace for Red Hat and would
+like help out more with the mainline kernel.
+
+Signed-off-by: Tom Rix <trix@redhat.com>
 ---
- drivers/ras/cec.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
-index 569d9ad2c594..e048e0e3949a 100644
---- a/drivers/ras/cec.c
-+++ b/drivers/ras/cec.c
-@@ -553,20 +553,20 @@ static struct notifier_block cec_nb = {
- 	.priority	= MCE_PRIO_CEC,
- };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ce2737b1feb5..6fdb01776413 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6805,6 +6805,7 @@ F:	drivers/net/ethernet/nvidia/*
  
--static void __init cec_init(void)
-+static int __init cec_init(void)
- {
- 	if (ce_arr.disabled)
--		return;
-+		return 0;
+ FPGA DFL DRIVERS
+ M:	Wu Hao <hao.wu@intel.com>
++R:	Tom Rix <trix@redhat.com>
+ L:	linux-fpga@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/fpga/dfl.rst
+@@ -6813,6 +6814,7 @@ F:	include/uapi/linux/fpga-dfl.h
  
- 	ce_arr.array = (void *)get_zeroed_page(GFP_KERNEL);
- 	if (!ce_arr.array) {
- 		pr_err("Error allocating CE array page!\n");
--		return;
-+		return 1;
- 	}
- 
- 	if (create_debugfs_nodes()) {
- 		free_page((unsigned long)ce_arr.array);
--		return;
-+		return 1;
- 	}
- 
- 	INIT_DELAYED_WORK(&cec_work, cec_work_fn);
-@@ -575,6 +575,7 @@ static void __init cec_init(void)
- 	mce_register_decode_chain(&cec_nb);
- 
- 	pr_info("Correctable Errors collector initialized.\n");
-+	return 0;
- }
- late_initcall(cec_init);
- 
+ FPGA MANAGER FRAMEWORK
+ M:	Moritz Fischer <mdf@kernel.org>
++R:	Tom Rix <trix@redhat.com>
+ L:	linux-fpga@vger.kernel.org
+ S:	Maintained
+ W:	http://www.rocketboards.org
 -- 
-2.28.0
+2.18.1
 
