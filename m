@@ -2,143 +2,132 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 558AAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3972C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BFA622C9F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A45802086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:00:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=melexis.com header.i=@melexis.com header.b="gTJwN5BL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GVctKqeE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729752AbgHDH6Q (ORCPT
+        id S1729698AbgHDIAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 03:58:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53642 "EHLO
+        Tue, 4 Aug 2020 04:00:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728629AbgHDH6P (ORCPT
+        with ESMTP id S1728629AbgHDIAu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 03:58:15 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2491DC061756
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 00:58:15 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id z6so41314817iow.6
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 00:58:15 -0700 (PDT)
+        Tue, 4 Aug 2020 04:00:50 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D40CC06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 01:00:49 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id g19so27575643ejc.9
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 01:00:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=melexis.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kMZf2t9EcjlJ4jvHRNWow+fwJFtPbegbegr9EI3Rn3I=;
-        b=gTJwN5BL9ze+SRbn2vAaVUOswNTugj2bAhZr/Y0GfGZkFZLVvt5l5nRZjN88rsS2Nz
-         05WVcCBG27/xPlsb/hjPo5Iau0aPcwp2sDMNp2E2M8K9L+WHLmY3UchhwKlXf49mHZMO
-         nCIA9IoAk0+dtyF+nAVFVRirPeX8s7dZ2ol5+ojbfn5odwrsgzioTkOszEd+6F747u/t
-         AH8FWX1WzRmhfnXTaKLYoIzNrgLxpeUM0FZiRhB6BTyQL7XqOWfDOUrWyNFTHzRNC4V7
-         b4n1AxP2TBKZmV9re43OZ495tglmvaler52wLc6TNvLhND+x881+JLv6iTGSRFBiCh5V
-         gNxA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Ka4ursZWzHeHcUfmCrEOqwNJhgydKg059CXG4PMpUJs=;
+        b=GVctKqeEnzKv6JRsSZhMZ2HE6w6h79tHOaCY1SYi03CdT4HFUPh3sdxTNEKwQLRLLD
+         faOVMHGokNejpY9ge0Bi83TyNLyLghDLHPAWPCeEjDauGZkzDNJRp3919MugXe4nW11X
+         rLA0SN4Uc8b825rKOKODkOUWijYRgih9cnG4PkXHSeVhAtPG/gq/udGOn3xJcVs2YblA
+         9EFZsHbANwiYMpQfwPXYTYdwHQZHaOwcwWShTp3sAbnUUjG/vIlWYeweONtTtTDELaE+
+         vhd8VIhCfQec0Qoz+9YcFoMNsigWfuSPeESXwOOYdEYrQo0DkJPMn5SzcO9lEe/5NsA7
+         XQqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kMZf2t9EcjlJ4jvHRNWow+fwJFtPbegbegr9EI3Rn3I=;
-        b=THKmUdczbzRslr4AQf/Adg1Yk4vrQCk/KiwFQ9V9RXAZQhx47qvHWjoTw+nTV99ojR
-         3kiBY2CfRSF9gjn5mtOYZ2Vy6+s58CnQoIZFOh3360kyHBRz1h6hYsn0fdxdyK6zoO1f
-         q2DAow/U84Bm5NN2yNdM/GPydCgDWGck/mRr6V09Xwb+YNxwA5EDXiiV6Jpkcxw3EAQe
-         2wkMdx7Ta48O39VOBMS2n/uOMWYS9qrtlO8lKJ3OkhR1MCXHWg3HacfqB+MAjJv5ijJZ
-         uxviwQ+NTNy/qxppK+y7cO+reaPGirapf2Z9AVhwPAgkoffFrOTMd+GnvVZR9c+AlTlk
-         zy1w==
-X-Gm-Message-State: AOAM533W6T0Qqfqpws4Of2H5z7IIjqGUJGasF9eXQMaQjxaYnf4Sbjoq
-        KDSuKDnXoK5l0McaA9rbnGmc57xTxB7MUARR79W93Q==
-X-Google-Smtp-Source: ABdhPJy1L3R+qgiqlRzr8WKIrpgTbp+M9wSv7fjCzoXuZEvcxj/HVoDdZcPtPcQltAlCaNi4V/ltgb7GuNBIk1UBBGM=
-X-Received: by 2002:a6b:ba89:: with SMTP id k131mr3815610iof.133.1596527893889;
- Tue, 04 Aug 2020 00:58:13 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ka4ursZWzHeHcUfmCrEOqwNJhgydKg059CXG4PMpUJs=;
+        b=nCQaegK3lQ0bwHL8L9CVSGUEXfIU4lk8XfjHsiUeWyJU3KjCXQ067frL5eokwId5YM
+         k0aoD33/OXR20tNqtxEDyftZCsWPl1YWB7g7Sdaukww0Sb7lVp3q5+0sctMyoDDhjEvK
+         F1ELqtzCRvxoqxBReXrsi7qBUkn3aP64LRhf0+zsUQikH1yxzvLoEVRD8Z9g5eazT3xv
+         kWCV4bkz/J0+Y+pursHaqJWS0M9pOmXbY9sxdw23KAonlZmq86hVI2uIX6hz6JAxfna4
+         bpP9hIv2v4r/x+4Rj5k91dA9Wc5495WQP9FWTDtpHUznThqL70/fLa3a+/eYsFav8FIJ
+         MD0A==
+X-Gm-Message-State: AOAM532rvcBK/uUpeZzq3OagrpQY6Gh4bkWeK/2uzRfqUcbqKlZw6NBZ
+        FaydXvU5qhA27Qq/pbL9YEA5tg==
+X-Google-Smtp-Source: ABdhPJxrlGJh09BGvoR0QWYGdbnyOOjs0CW/dihPJP8QgqlGuW4JhFWaUSVZDKlIm9nZikFhSK1kww==
+X-Received: by 2002:a17:906:990c:: with SMTP id zl12mr19610454ejb.488.1596528048284;
+        Tue, 04 Aug 2020 01:00:48 -0700 (PDT)
+Received: from myrica ([2001:1715:4e26:a7e0:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id 32sm9260296edf.83.2020.08.04.01.00.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Aug 2020 01:00:47 -0700 (PDT)
+Date:   Tue, 4 Aug 2020 10:00:26 +0200
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>
+Subject: Re: [PATCH v2 12/24] virtio_iommu: correct tags for config space
+ fields
+Message-ID: <20200804080026.GA284384@myrica>
+References: <20200803205814.540410-1-mst@redhat.com>
+ <20200803205814.540410-13-mst@redhat.com>
 MIME-Version: 1.0
-References: <20200803151656.332559-1-cmo@melexis.com> <CAHp75VfmSfmezqwwRfHZ797Y9rYDu3hgL5vGvPwbzGjCXsKWcQ@mail.gmail.com>
-In-Reply-To: <CAHp75VfmSfmezqwwRfHZ797Y9rYDu3hgL5vGvPwbzGjCXsKWcQ@mail.gmail.com>
-From:   Crt Mori <cmo@melexis.com>
-Date:   Tue, 4 Aug 2020 09:57:38 +0200
-Message-ID: <CAKv63uuFNOksmDUKEapvX60gg9QE+32Dak_2=M2cYeueFiHjPg@mail.gmail.com>
-Subject: Re: [PATCH] iio:temperature:mlx90632: Reduce number of equal calulcations
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200803205814.540410-13-mst@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
-Thanks for the comments. This is indeed a cut-out section of what I
-wanted to submit next.
+On Mon, Aug 03, 2020 at 04:59:27PM -0400, Michael S. Tsirkin wrote:
+> Since this is a modern-only device,
+> tag config space fields as having little endian-ness.
+> 
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 
-On Mon, 3 Aug 2020 at 18:35, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
->
-> On Mon, Aug 3, 2020 at 6:17 PM Crt Mori <cmo@melexis.com> wrote:
-> >
-> > TAdut4 was calculated each iteration although it did not change. In light
-> > of near future additions of the Extended range DSP calculations, this
-> > function refactoring will help reduce unrelated changes in that series as
-> > well as reduce the number of new functions needed.
->
-> Okay!
->
-> > Also converted shifts in this function of signed integers to divisions as
-> > that is less implementation-defined behavior.
->
-> This is what I'm wondering about. Why?
->
-> ...
+Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-The reason for this is that whenever something is wrong with the
-calculation I am looking into the shifts which are
-implementation-defined and might not keep the signed bit. Division
-however would.
+And tested with the latest sparse
 
->
-> > -       Ha_customer = ((s64)Ha * 1000000LL) >> 14ULL;
-> > -       Hb_customer = ((s64)Hb * 100) >> 10ULL;
-> > +       Ha_customer = div64_s64((s64)Ha * 1000000LL, 16384);
-> > +       Hb_customer = div64_s64((s64)Hb * 100, 1024);
->
-> Have you checked the code on 32-bit machines?
-> As far as I can see the div64_*64() do not have power of two divisor
-> optimizations. I bet it will generate a bulk of unneeded code.
->
-> ...
->
-> > -       calcedKsTO = ((s64)((s64)Ga * (prev_object_temp - 25 * 1000LL)
-> > -                            * 1000LL)) >> 36LL;
-> > -       calcedKsTA = ((s64)(Fb * (TAdut - 25 * 1000000LL))) >> 36LL;
-> > -       Alpha_corr = div64_s64((((s64)(Fa * 10000000000LL) >> 46LL)
-> > -                               * Ha_customer), 1000LL);
->
-> > +       calcedKsTO = div64_s64((s64)((s64)Ga * (prev_object_temp - 25 * 1000LL)
-> > +                                    * 1000LL), 68719476736);
-> > +       calcedKsTA = div64_s64((s64)(Fb * (TAdut - 25 * 1000000LL)), 68719476736);
-> > +       Alpha_corr = div64_s64(div64_s64((s64)(Fa * 10000000000LL), 70368744177664)
-> > +                              * Ha_customer, 1000LL);
->
-> This is less readable and full of magic numbers in comparison to the
-> above (however, also full of magics, but at least gives better hint).
->
-> ...
-
-These are coefficients so there is not much to unmagic. I can keep the
-shifts, if you think that is more readable or add comments after lines
-with 2^46 or something?
->
-> > +       TAdut4 = (div64_s64(TAdut, 10000LL) + 27315) *
-> > +               (div64_s64(TAdut, 10000LL) + 27315) *
-> > +               (div64_s64(TAdut, 10000LL)  + 27315) *
-> > +               (div64_s64(TAdut, 10000LL) + 27315);
->
-> Shouldn't you switch to definitions from units.h? (perhaps as a separate change)
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+> ---
+>  include/uapi/linux/virtio_iommu.h | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/uapi/linux/virtio_iommu.h b/include/uapi/linux/virtio_iommu.h
+> index 48e3c29223b5..237e36a280cb 100644
+> --- a/include/uapi/linux/virtio_iommu.h
+> +++ b/include/uapi/linux/virtio_iommu.h
+> @@ -18,24 +18,24 @@
+>  #define VIRTIO_IOMMU_F_MMIO			5
+>  
+>  struct virtio_iommu_range_64 {
+> -	__u64					start;
+> -	__u64					end;
+> +	__le64					start;
+> +	__le64					end;
+>  };
+>  
+>  struct virtio_iommu_range_32 {
+> -	__u32					start;
+> -	__u32					end;
+> +	__le32					start;
+> +	__le32					end;
+>  };
+>  
+>  struct virtio_iommu_config {
+>  	/* Supported page sizes */
+> -	__u64					page_size_mask;
+> +	__le64					page_size_mask;
+>  	/* Supported IOVA range */
+>  	struct virtio_iommu_range_64		input_range;
+>  	/* Max domain ID size */
+>  	struct virtio_iommu_range_32		domain_range;
+>  	/* Probe buffer size */
+> -	__u32					probe_size;
+> +	__le32					probe_size;
+>  };
+>  
+>  /* Request types */
+> -- 
+> MST
+> 
