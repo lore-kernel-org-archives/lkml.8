@@ -2,172 +2,153 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FC7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E816C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD4220738
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A57420738
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:00:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E6lz/F0l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgHDDAJ (ORCPT
+        id S1727862AbgHDDAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 23:00:09 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9324 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725840AbgHDDAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 23:00:08 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2119C2BC0355340BEDBF;
-        Tue,  4 Aug 2020 11:00:06 +0800 (CST)
-Received: from [10.164.122.247] (10.164.122.247) by smtp.huawei.com
- (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 4 Aug 2020
- 11:00:01 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: remove a waiter for checkpoint
- completion
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <kernel-team@android.com>, Eric Biggers <ebiggers@kernel.org>
-References: <20200803172825.4077289-1-jaegeuk@kernel.org>
- <9638d2c5-cfd0-359f-187a-8e23bc6d822d@huawei.com>
- <20200804010412.GA866340@google.com>
- <98ac9355-bb6c-5109-da73-4ab7cdbbf8d5@huawei.com>
- <20200804024317.GA884736@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <6d84bfea-13a3-af84-16ad-5d0c7eedeb67@huawei.com>
-Date:   Tue, 4 Aug 2020 11:00:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 3 Aug 2020 23:00:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36010 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbgHDDAT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 23:00:19 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15FF2C06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 20:00:19 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id r4so11442468pls.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 20:00:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=I/S5vrlNulwp45H+XxtQvmflrkKxTEGHdqIBJtU71UM=;
+        b=E6lz/F0loOMWpzwzL9EL5uI8uRE19tRQP8x66a03pEQA0uuyi7toqSi6AoaweZG9K5
+         kdGBp5YQODii2KyuK6QSITM5ArS23MuRPv9wtCeM+iFwogJdPooAtuBAD3kl7rBkul3Z
+         R574Ut7X2gu4Fp4ggfuY4Tp19hbBgM/cyON+33LrsuHrhR+DMqGp+4VaFCINEnqz63ZH
+         SU+QivAajBxArpmeh+oDTzNtjVD6xiliQbWJhcg1lb1tGoBPXM4m1lMUKH4lk3a7Um20
+         bqFef/sVT2SphtvqJRmrZQ/S1K9XhN5acH4havK7QeGCXf7JFUlZS1upKs7BOrgz7HLI
+         yqYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=I/S5vrlNulwp45H+XxtQvmflrkKxTEGHdqIBJtU71UM=;
+        b=sog5IPcjR3w6sL0ApbpgGz3NEOxae/FgmjhRex7AzRW2WFKGe30OR/r4OzmEgqnEuK
+         c6ww3X7kL1KYCV7XixQg9P2gIbIq+qcO/yYqDeM/92aHjBlj61ygwpbvTBf6m+q4cSr6
+         0W6dA872qWvBEprhvegVKYvR5lq9PBplVf2/TDaRIQV8Zj394KoXe+S5cgexemIwJ9/U
+         w1k6Ew3oHq7pDMUJYg6godSCRI3EaIunnh+1l+/9IoeQ6y15RIKJt1+/lqqpB/UY43xz
+         qvBM0p157Y0qKPN+ZNBwqgDHRqKDtEalomPwKGX0xQH4gKbjPI3FP5hY/LD5Udoa44EN
+         BAAQ==
+X-Gm-Message-State: AOAM5320bCIcSHC7xOVkqPhbNyj1botXXQDJuAg5ji/IkA1JiI8ayTYC
+        02p9rn3mCcHxdv8YD/WMxgg=
+X-Google-Smtp-Source: ABdhPJx1+9OQ1P10b47ZvUn/LDad5t2VFaOqWhE2dXRFv7b+mWMz8VgTzGFprojAaDIAxuyGHT5M3Q==
+X-Received: by 2002:a17:90b:3652:: with SMTP id nh18mr2298790pjb.30.1596510017980;
+        Mon, 03 Aug 2020 20:00:17 -0700 (PDT)
+Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id j142sm21055148pfd.100.2020.08.03.20.00.17
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Aug 2020 20:00:17 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 20:00:05 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@gmail.com>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: fsl_sai: Clean code for synchronize mode
+Message-ID: <20200804030004.GA27028@Asurada-Nvidia>
+References: <1596424674-32127-1-git-send-email-shengjiu.wang@nxp.com>
+ <20200803054037.GA1056@Asurada-Nvidia>
+ <CAA+D8AOGF44UUq=P1S-M5TUwDUaOnqVmHJKPDBM9DAzt1nVzmQ@mail.gmail.com>
+ <20200803215735.GA5461@Asurada-Nvidia>
+ <CAA+D8ANQxnvR2bOyHVRs5h2NJhMeVh4gjLPknaz7aQ86MtL0sQ@mail.gmail.com>
+ <20200804021114.GA15390@Asurada-Nvidia>
+ <CAA+D8ANagfMXPAkK4-vBDY9rZMukVUXs8FfBCHS0avXt57pekA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200804024317.GA884736@google.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.164.122.247]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA+D8ANagfMXPAkK4-vBDY9rZMukVUXs8FfBCHS0avXt57pekA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/4 10:43, Jaegeuk Kim wrote:
-> On 08/04, Chao Yu wrote:
->> On 2020/8/4 9:04, Jaegeuk Kim wrote:
->>> On 08/04, Chao Yu wrote:
->>>> On 2020/8/4 1:28, Jaegeuk Kim wrote:
->>>>> It doesn't need to wait for checkpoint being completed triggered by end_io.
->>>>>
->>>>> [   20.157753] ------------[ cut here ]------------
->>>>> [   20.158393] do not call blocking ops when !TASK_RUNNING; state=2 set at [<0000000096354225>] prepare_to_wait+0xcd/0x430
->>>>> [   20.159858] WARNING: CPU: 1 PID: 1152 at kernel/sched/core.c:7142 __might_sleep+0x149/0x1a0
->>>>> ...
->>>>> [   20.176110]  __submit_merged_write_cond+0x191/0x310
->>>>> [   20.176739]  f2fs_submit_merged_write+0x18/0x20
->>>>> [   20.177323]  f2fs_wait_on_all_pages+0x269/0x2d0
->>>>> [   20.177899]  ? block_operations+0x980/0x980
->>>>> [   20.178441]  ? __kasan_check_read+0x11/0x20
->>>>> [   20.178975]  ? finish_wait+0x260/0x260
->>>>> [   20.179488]  ? percpu_counter_set+0x147/0x230
->>>>> [   20.180049]  do_checkpoint+0x1757/0x2a50
->>>>> [   20.180558]  f2fs_write_checkpoint+0x840/0xaf0
->>>>> [   20.181126]  f2fs_sync_fs+0x287/0x4a0
->>>>>
->>>>> Reported-by: Eric Biggers <ebiggers@kernel.org>
->>>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
->>>>> ---
->>>>>     fs/f2fs/checkpoint.c | 6 +-----
->>>>>     fs/f2fs/data.c       | 4 ----
->>>>>     fs/f2fs/f2fs.h       | 1 -
->>>>>     fs/f2fs/super.c      | 1 -
->>>>>     4 files changed, 1 insertion(+), 11 deletions(-)
->>>>>
->>>>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
->>>>> index 99c8061da55b9..2bdddc725e677 100644
->>>>> --- a/fs/f2fs/checkpoint.c
->>>>> +++ b/fs/f2fs/checkpoint.c
->>>>> @@ -1255,11 +1255,7 @@ static void unblock_operations(struct f2fs_sb_info *sbi)
->>>>>     void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type)
->>>>>     {
->>>>> -	DEFINE_WAIT(wait);
->>>>> -
->>>>>     	for (;;) {
->>>>> -		prepare_to_wait(&sbi->cp_wait, &wait, TASK_UNINTERRUPTIBLE);
->>>>
->>>> Wouldn't that case high cpu usage before io end?
->>>
->>> This is a critical path to wait for IO completion in checkpoint, which would be
->>> better to wait for it to avoid long latency to continue filesystem operations.
->>
->> Yup, in previous implementation, last end_io wakes up checkpoint() waiter, we
->> didn't waste any time there.
->>
->>> Moreover, I expect io_schedule_timeout() can mitigate such the CPU overhead and
->>> actually we don't need to make there-in context switches as well.
->>
->> Then io_schedule_timeout() in this loop may give CPU time slice to other thread
->> until scheduler reselect checkpoint(), that would cause longer latency?
+On Tue, Aug 04, 2020 at 10:35:12AM +0800, Shengjiu Wang wrote:
+> On Tue, Aug 4, 2020 at 10:11 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+> >
+> > On Tue, Aug 04, 2020 at 09:39:44AM +0800, Shengjiu Wang wrote:
+> > > On Tue, Aug 4, 2020 at 5:57 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+> > > >
+> > > > On Mon, Aug 03, 2020 at 04:04:23PM +0800, Shengjiu Wang wrote:
+> > > >
+> > > > > > > clock generation. The TCSR.TE is no need to enabled when only RX
+> > > > > > > is enabled.
+> > > > > >
+> > > > > > You are correct if there's only RX running without TX joining.
+> > > > > > However, that's something we can't guarantee. Then we'd enable
+> > > > > > TE after RE is enabled, which is against what RM recommends:
+> > > > > >
+> > > > > > # From 54.3.3.1 Synchronous mode in IMX6SXRM
+> > > > > > # If the receiver bit clock and frame sync are to be used by
+> > > > > > # both the transmitter and receiver, it is recommended that
+> > > > > > # the receiver is the last enabled and the first disabled.
+> > > > > >
+> > > > > > I remember I did this "ugly" design by strictly following what
+> > > > > > RM says. If hardware team has updated the RM or removed this
+> > > > > > limitation, please quote in the commit logs.
+> > > > >
+> > > > > There is no change in RM and same recommandation.
+> > > > >
+> > > > > My change does not violate the RM. The direction which generates
+> > > > > the clock is still last enabled.
+> > > >
+> > > > Using Tx syncing with Rx clock for example,
+> > > > T1: arecord (non-stop) => set RE
+> > > > T2: aplay => set TE then RE (but RE is already set at T1)
+> > > >
+> > > > Anything that I am missing?
+> > >
+> > > This is a good example.
+> > > We have used this change locally for a long time, so I think it is
+> > > safe to do this change, a little different with the recommandation.
+> >
+> > Any reason for we have to go against the recommendation?
 > 
-> Hmm, how about this then?
-> 
->>From 4956afa1cedc019cabf6e8bff7bc48d3bcf7a3f5 Mon Sep 17 00:00:00 2001
-> From: Jaegeuk Kim <jaegeuk@kernel.org>
-> Date: Mon, 3 Aug 2020 19:37:12 -0700
-> Subject: [PATCH] f2fs: prepare a waiter before entering io_schedule
-> 
-> This is to avoid sleep() in the waiter thread.
-> 
-> [   20.157753] ------------[ cut here ]------------
-> [   20.158393] do not call blocking ops when !TASK_RUNNING; state=2 set at [<0000000096354225>] prepare_to_wait+0xcd/0x430
-> [   20.159858] WARNING: CPU: 1 PID: 1152 at kernel/sched/core.c:7142 __might_sleep+0x149/0x1a0
-> ...
-> [   20.176110]  __submit_merged_write_cond+0x191/0x310
-> [   20.176739]  f2fs_submit_merged_write+0x18/0x20
-> [   20.177323]  f2fs_wait_on_all_pages+0x269/0x2d0
-> [   20.177899]  ? block_operations+0x980/0x980
-> [   20.178441]  ? __kasan_check_read+0x11/0x20
-> [   20.178975]  ? finish_wait+0x260/0x260
-> [   20.179488]  ? percpu_counter_set+0x147/0x230
-> [   20.180049]  do_checkpoint+0x1757/0x2a50
-> [   20.180558]  f2fs_write_checkpoint+0x840/0xaf0
-> [   20.181126]  f2fs_sync_fs+0x287/0x4a0
-> 
-> Reported-by: Eric Biggers <ebiggers@kernel.org>
-> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> Previous code will enable TE and RE  together even for asynchronous
+> mode.
+> And for recommendation, previous code just consider the RX sync with
+> TX, but still violates the recommendation for TX sync with RX case.
+> So at least this new change is some kind of improvement.
 
-Better,
+Okay. Let's change it then. Please make sure to update/remove
+those old comments in the trigger(). And it's probably better
+to mention that what we do now is a bit different from RM:
+	/*
+	 * Enable the opposite direction for synchronous mode
+	 * 1. Tx sync with Rx: only set RE for Rx; set TE & RE for Tx
+	 * 2. Rx sync with Tx: only set TE for Tx; set RE & TE for Rx
+	 *
+	 * RM recommends to enable RE after TE for case 1 and to enable
+	 * TE after RE for case 2, but we here may not always guarantee
+	 * that happens: "arecord 1.wav; aplay 2.wav" in case 1 enables
+	 * TE after RE, which is against what RM recommends but should
+	 * be safe to do, judging by years of testing results.
+	 */
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-
-Thanks,
-
-> ---
->   fs/f2fs/checkpoint.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> index 99c8061da55b9..ff807e14c8911 100644
-> --- a/fs/f2fs/checkpoint.c
-> +++ b/fs/f2fs/checkpoint.c
-> @@ -1258,8 +1258,6 @@ void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type)
->   	DEFINE_WAIT(wait);
->   
->   	for (;;) {
-> -		prepare_to_wait(&sbi->cp_wait, &wait, TASK_UNINTERRUPTIBLE);
-> -
->   		if (!get_pages(sbi, type))
->   			break;
->   
-> @@ -1271,6 +1269,8 @@ void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type)
->   							FS_CP_META_IO);
->   		else if (type == F2FS_WB_CP_DATA)
->   			f2fs_submit_merged_write(sbi, DATA);
-> +
-> +		prepare_to_wait(&sbi->cp_wait, &wait, TASK_UNINTERRUPTIBLE);
->   		io_schedule_timeout(DEFAULT_IO_TIMEOUT);
->   	}
->   	finish_wait(&sbi->cp_wait, &wait);
-> 
+Btw, do we need similar change for TRIGGER_STOP?
