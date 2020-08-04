@@ -4,63 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF54C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F184E2075D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDCF8206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:20:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="v4JBJI/J"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Q9RW7YFc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730168AbgHDLTy (ORCPT
+        id S1730217AbgHDLUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 07:19:54 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:63410 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729935AbgHDLMx (ORCPT
+        Tue, 4 Aug 2020 07:20:05 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:16170 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729921AbgHDLMw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 07:12:53 -0400
+        Tue, 4 Aug 2020 07:12:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1596539573; x=1628075573;
+  t=1596539572; x=1628075572;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=gzaQqXpc5xoNczZO0vYLciqB0KCCTpW7igvgI29mYeM=;
-  b=v4JBJI/JNd5ym8JJfI2Bk52FwCLTYfM0rVm/guVaGi87+HrWRCcIyfmH
-   xRE6HL284MJ7RymGlASEtfAZ3alL7I6u7bUgv8yUW5lD5O/rkutNX+mxi
-   obTn3z0QUfO2D92ayNIEF4i8HMRlKK+vYUanjp5tjlFkjqhT7uXNrl4K0
-   5QJCLKDJAIvZ3wp3kdFjiS8eKUoJDn1l5iPZ972QvkvEkZJDknFywsg7D
-   HPb8Qr+jYtXgjwsADlpn/4stjA244M40WiyyVKhuPDsx/jc7DK9wz9LT7
-   yhUS5bPytpwsgImHhPkrT5NOpFbfA2OxB30n32DCXWBcY5sWH9Sfh2WyD
-   Q==;
-IronPort-SDR: DO28IYxIPdyOZNEpHZhQvc00vFAUYwKh+8RNxLZUCLyNJzC6BZi732EE80XiAYJAdM54R9qJM+
- JQ3QCjB73d5GGN2baumXn1bcu9PMiyOaUpO8y/QT/Ubs0peQgErX9tb7DVVBQL+Llpo1xGK3yb
- QZtUuk2Fut643hM5HkJITWHN6kER/LLwH5JrN/mronoRZ5f1NEMe/GqPhc4cYtVv6PcHlVCVf/
- 3hKbheA3ixhwRMWbIP9H5PUq8lmtB69Fu1H6DlYtbad0bdCUKSojLmMHN8Wi/NleCXGGgf8dWO
- TT8=
+  bh=9MZm1UgGj5YfcCP0VMF+3w2gb07kbO63MeiK9RsdE18=;
+  b=Q9RW7YFcoZSAr7IyST9jap+x7suQW0jl73IRHoW22f5C7+/6EH7Wyxhr
+   ntwyGWcXfmd7dGtnMkdbL5YgOGrOEDk/6b9i52X72E8GuY54F8AxaErux
+   SSwY6HXyDiaKL7Ds/weguhmQeuwkQ1d7vxMVhrcaBWWEt1i3dv0KB/ZS7
+   8vXI3Oq1xSXuT1/h6nHozzgV0MkOhLvnBlgDJZeSCONbkdjDLeE5iSFXX
+   HYKKL1OvTtLNx7HOqbHLballP2QYhMKh6kFCD/D7deyaOCROdAtEq5+Xw
+   SiEjHmEF9wcBVh3deTLTwR3OX6E9uMW9fprR4etW9k+kwJuUpLF8KVE5w
+   A==;
+IronPort-SDR: G3RFLD4EIj2ByIIYUM/qul8oVr4dLrl8smZ9sJ2fxGNhlgkYj6Hh/5xl1NOCTjzib826OwVtEU
+ FMOikc+ZuwiahmdbARcnDwbniYe0OXZzISYXBI2+BaXev6IbRDxmcHF23CRrYFBgYyftBXqi5Q
+ abDWKyVQqPa94z4ebWAsQ4lKLJkSEQpEEbuQGuiQ9crLFTcOKdZCePY/QUmBBbW9I5TGT5gcxB
+ lJALgRJqMVg9Pn4Y8++8Qyfv5kjpi/K1vVLU63rb+dQRBzQfxIbnLAbN1v3T5y90Yf044lvCD8
+ 7p0=
 X-IronPort-AV: E=Sophos;i="5.75,433,1589266800"; 
-   d="scan'208";a="21673291"
+   d="scan'208";a="85764513"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Aug 2020 04:07:46 -0700
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Aug 2020 04:07:50 -0700
 Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 4 Aug 2020 04:07:43 -0700
+ 15.1.1979.3; Tue, 4 Aug 2020 04:07:46 -0700
 Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Tue, 4 Aug 2020 04:07:40 -0700
+ 15.1.1979.3 via Frontend Transport; Tue, 4 Aug 2020 04:07:44 -0700
 From:   Claudiu Beznea <claudiu.beznea@microchip.com>
 To:     <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
         <ludovic.desroches@microchip.com>, <wenyou.yang@atmel.com>
 CC:     <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>,
         Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v2 1/3] ARM: at91: pm: add support for ULP0 fast wakeup
-Date:   Tue, 4 Aug 2020 14:07:36 +0300
-Message-ID: <1596539258-20719-2-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH v2 2/3] ARM: at91: pm: add per soc validation of pm modes
+Date:   Tue, 4 Aug 2020 14:07:37 +0300
+Message-ID: <1596539258-20719-3-git-send-email-claudiu.beznea@microchip.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1596539258-20719-1-git-send-email-claudiu.beznea@microchip.com>
 References: <1596539258-20719-1-git-send-email-claudiu.beznea@microchip.com>
@@ -71,148 +71,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ULP0 fast improves suspend/resume time with few milliseconds the drawback
-being the power consumption. The mean values measured for suspend/resume
-time are as follows (measured on SAMA5D2 Xplained board), ULP0 compared
-with fast ULP0:
-- ulp0 fast: suspend time: 169 ms, resume time: 216 ms
-- ulp0     : suspend time: 197 ms, resume time: 258 ms
-
-Current consumption while suspended (measured on SAMA5D2 Xplained board):
-- ulp0 fast: 730uA
-- ulp0     : 270uA
+Not all SoCs supports all the PM mode. User may end up settings,
+e.g. backup mode, on a non SAMA5D2 device, but the mode to not be valid.
+If backup mode is used on a devices not supporting it there will be no
+way of resuming other than rebooting.
 
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 ---
- arch/arm/mach-at91/pm.c         |  9 +++++----
- arch/arm/mach-at91/pm.h         |  5 +++--
- arch/arm/mach-at91/pm_suspend.S | 41 +++++++++++++++++++++++++++++++++++++----
- 3 files changed, 45 insertions(+), 10 deletions(-)
+ arch/arm/mach-at91/pm.c | 83 +++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 81 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
-index 074bde64064e..04fdcbd57100 100644
+index 04fdcbd57100..51902c4c9bb4 100644
 --- a/arch/arm/mach-at91/pm.c
 +++ b/arch/arm/mach-at91/pm.c
-@@ -51,10 +51,11 @@ static struct at91_soc_pm soc_pm = {
+@@ -785,6 +785,51 @@ static const struct of_device_id atmel_pmc_ids[] __initconst = {
+ 	{ /* sentinel */ },
  };
  
- static const match_table_t pm_modes __initconst = {
--	{ AT91_PM_STANDBY, "standby" },
--	{ AT91_PM_ULP0, "ulp0" },
--	{ AT91_PM_ULP1, "ulp1" },
--	{ AT91_PM_BACKUP, "backup" },
-+	{ AT91_PM_STANDBY,	"standby" },
-+	{ AT91_PM_ULP0,		"ulp0" },
-+	{ AT91_PM_ULP0_FAST,    "ulp0-fast" },
-+	{ AT91_PM_ULP1,		"ulp1" },
-+	{ AT91_PM_BACKUP,	"backup" },
- 	{ -1, NULL },
- };
- 
-diff --git a/arch/arm/mach-at91/pm.h b/arch/arm/mach-at91/pm.h
-index 218e8d1a30fb..bfb260be371e 100644
---- a/arch/arm/mach-at91/pm.h
-+++ b/arch/arm/mach-at91/pm.h
-@@ -19,8 +19,9 @@
- 
- #define	AT91_PM_STANDBY		0x00
- #define AT91_PM_ULP0		0x01
--#define AT91_PM_ULP1		0x02
--#define	AT91_PM_BACKUP		0x03
-+#define AT91_PM_ULP0_FAST	0x02
-+#define AT91_PM_ULP1		0x03
-+#define	AT91_PM_BACKUP		0x04
- 
- #ifndef __ASSEMBLY__
- struct at91_pm_data {
-diff --git a/arch/arm/mach-at91/pm_suspend.S b/arch/arm/mach-at91/pm_suspend.S
-index be9764e8d3fa..0184de05c1be 100644
---- a/arch/arm/mach-at91/pm_suspend.S
-+++ b/arch/arm/mach-at91/pm_suspend.S
-@@ -164,7 +164,22 @@ ENDPROC(at91_backup_mode)
- 
- .macro at91_pm_ulp0_mode
- 	ldr	pmc, .pmc_base
-+	ldr	tmp2, .pm_mode
-+	ldr	tmp3, .mckr_offset
++static void __init at91_pm_modes_validate(const int *modes, int len)
++{
++	u8 i, standby = 0, suspend = 0;
++	int mode;
 +
-+	/* Check if ULP0 fast variant has been requested. */
-+	cmp	tmp2, #AT91_PM_ULP0_FAST
-+	bne	0f
++	for (i = 0; i < len; i++) {
++		if (standby && suspend)
++			break;
 +
-+	/* Set highest prescaler for power saving */
-+	ldr	tmp1, [pmc, tmp3]
-+	bic	tmp1, tmp1, #AT91_PMC_PRES
-+	orr	tmp1, tmp1, #AT91_PMC_PRES_64
-+	str	tmp1, [pmc, tmp3]
-+	wait_mckrdy
-+	b	1f
- 
-+0:
- 	/* Turn off the crystal oscillator */
- 	ldr	tmp1, [pmc, #AT91_CKGR_MOR]
- 	bic	tmp1, tmp1, #AT91_PMC_MOSCEN
-@@ -192,7 +207,18 @@ ENDPROC(at91_backup_mode)
- 	/* Wait for interrupt */
- 1:	at91_cpu_idle
- 
--	/* Restore RC oscillator state */
-+	/* Check if ULP0 fast variant has been requested. */
-+	cmp	tmp2, #AT91_PM_ULP0_FAST
-+	bne	5f
++		if (modes[i] == soc_pm.data.standby_mode && !standby) {
++			standby = 1;
++			continue;
++		}
 +
-+	/* Set lowest prescaler for fast resume. */
-+	ldr	tmp1, [pmc, tmp3]
-+	bic	tmp1, tmp1, #AT91_PMC_PRES
-+	str	tmp1, [pmc, tmp3]
-+	wait_mckrdy
-+	b	6f
++		if (modes[i] == soc_pm.data.suspend_mode && !suspend) {
++			suspend = 1;
++			continue;
++		}
++	}
 +
-+5:	/* Restore RC oscillator state */
- 	ldr	tmp1, .saved_osc_status
- 	tst	tmp1, #AT91_PMC_MOSCRCS
- 	beq	4f
-@@ -216,6 +242,7 @@ ENDPROC(at91_backup_mode)
- 	str	tmp1, [pmc, #AT91_CKGR_MOR]
++	if (!standby) {
++		if (soc_pm.data.suspend_mode == AT91_PM_STANDBY)
++			mode = AT91_PM_ULP0;
++		else
++			mode = AT91_PM_STANDBY;
++
++		pr_warn("AT91: PM: %s mode not supported! Using %s.\n",
++			pm_modes[soc_pm.data.standby_mode].pattern,
++			pm_modes[mode].pattern);
++		soc_pm.data.standby_mode = mode;
++	}
++
++	if (!suspend) {
++		if (soc_pm.data.standby_mode == AT91_PM_ULP0)
++			mode = AT91_PM_STANDBY;
++		else
++			mode = AT91_PM_ULP0;
++
++		pr_warn("AT91: PM: %s mode not supported! Using %s.\n",
++			pm_modes[soc_pm.data.suspend_mode].pattern,
++			pm_modes[mode].pattern);
++		soc_pm.data.suspend_mode = mode;
++	}
++}
++
+ static void __init at91_pm_init(void (*pm_idle)(void))
+ {
+ 	struct device_node *pmc_np;
+@@ -823,9 +868,14 @@ static void __init at91_pm_init(void (*pm_idle)(void))
  
- 	wait_moscrdy
-+6:
- .endm
+ void __init at91rm9200_pm_init(void)
+ {
++	static const int modes[] __initconst = {
++		AT91_PM_STANDBY, AT91_PM_ULP0
++	};
++
+ 	if (!IS_ENABLED(CONFIG_SOC_AT91RM9200))
+ 		return;
  
- /**
-@@ -473,23 +500,29 @@ ENDPROC(at91_backup_mode)
- ENTRY(at91_ulp_mode)
- 	ldr	pmc, .pmc_base
- 	ldr	tmp2, .mckr_offset
-+	ldr	tmp3, .pm_mode
- 
- 	/* Save Master clock setting */
- 	ldr	tmp1, [pmc, tmp2]
- 	str	tmp1, .saved_mckr
++	at91_pm_modes_validate(modes, ARRAY_SIZE(modes));
+ 	at91_dt_ramc();
  
  	/*
--	 * Set the Master clock source to slow clock
-+	 * Set master clock source to:
-+	 * - MAINCK if using ULP0 fast variant
-+	 * - slow clock, otherwise
- 	 */
- 	bic	tmp1, tmp1, #AT91_PMC_CSS
-+	cmp	tmp3, #AT91_PM_ULP0_FAST
-+	bne	save_mck
-+	orr	tmp1, tmp1, #AT91_PMC_CSS_MAIN
-+save_mck:
- 	str	tmp1, [pmc, tmp2]
+@@ -838,9 +888,14 @@ void __init at91rm9200_pm_init(void)
  
- 	wait_mckrdy
+ void __init sam9x60_pm_init(void)
+ {
++	static const int modes[] __initconst = {
++		AT91_PM_STANDBY, AT91_PM_ULP0, AT91_PM_ULP0_FAST, AT91_PM_ULP1,
++	};
++
+ 	if (!IS_ENABLED(CONFIG_SOC_SAM9X60))
+ 		return;
  
- 	at91_plla_disable
++	at91_pm_modes_validate(modes, ARRAY_SIZE(modes));
+ 	at91_pm_modes_init();
+ 	at91_dt_ramc();
+ 	at91_pm_init(at91sam9x60_idle);
+@@ -851,14 +906,19 @@ void __init sam9x60_pm_init(void)
  
--	ldr	r0, .pm_mode
--	cmp	r0, #AT91_PM_ULP1
-+	cmp	tmp3, #AT91_PM_ULP1
- 	beq	ulp1_mode
+ void __init at91sam9_pm_init(void)
+ {
++	static const int modes[] __initconst = {
++		AT91_PM_STANDBY, AT91_PM_ULP0,
++	};
++
+ 	if (!IS_ENABLED(CONFIG_SOC_AT91SAM9))
+ 		return;
  
- 	at91_pm_ulp0_mode
++	at91_pm_modes_validate(modes, ARRAY_SIZE(modes));
+ 	at91_dt_ramc();
+ 	at91_pm_init(at91sam9_idle);
+ }
+ 
+-void __init sama5_pm_init(void)
++static void __init sama5_pm(void)
+ {
+ 	if (!IS_ENABLED(CONFIG_SOC_SAMA5))
+ 		return;
+@@ -867,13 +927,32 @@ void __init sama5_pm_init(void)
+ 	at91_pm_init(NULL);
+ }
+ 
++void __init sama5_pm_init(void)
++{
++	static const int modes[] __initconst = {
++		AT91_PM_STANDBY, AT91_PM_ULP0, AT91_PM_ULP0_FAST,
++	};
++
++	if (!IS_ENABLED(CONFIG_SOC_SAMA5))
++		return;
++
++	at91_pm_modes_validate(modes, ARRAY_SIZE(modes));
++	sama5_pm();
++}
++
+ void __init sama5d2_pm_init(void)
+ {
++	static const int modes[] __initconst = {
++		AT91_PM_STANDBY, AT91_PM_ULP0, AT91_PM_ULP0_FAST, AT91_PM_ULP1,
++		AT91_PM_BACKUP,
++	};
++
+ 	if (!IS_ENABLED(CONFIG_SOC_SAMA5D2))
+ 		return;
+ 
++	at91_pm_modes_validate(modes, ARRAY_SIZE(modes));
+ 	at91_pm_modes_init();
+-	sama5_pm_init();
++	sama5_pm();
+ 
+ 	soc_pm.ws_ids = sama5d2_ws_ids;
+ 	soc_pm.config_shdwc_ws = at91_sama5d2_config_shdwc_ws;
 -- 
 2.7.4
 
