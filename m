@@ -2,86 +2,148 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF14C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDE8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 874E622B42
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E56B2065C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:39:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s+I6eBLw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbgHDOjx (ORCPT
+        id S1725830AbgHDOj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:39:53 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:26176 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727887AbgHDOd2 (ORCPT
+        Tue, 4 Aug 2020 10:39:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57954 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728295AbgHDOd1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:33:28 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-248-oxN4WAsRPH-FrBjdql4G-A-1; Tue, 04 Aug 2020 15:33:07 +0100
-X-MC-Unique: oxN4WAsRPH-FrBjdql4G-A-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 4 Aug 2020 15:33:06 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 4 Aug 2020 15:33:06 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Mark Rutland' <mark.rutland@arm.com>,
-        "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-CC:     Andy Lutomirski <luto@kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "LSM List" <linux-security-module@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
-Subject: RE: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-Thread-Topic: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-Thread-Index: AQHWamb6T+e4gDrzGEmP/30MMvDTCqkoApyQ
-Date:   Tue, 4 Aug 2020 14:33:06 +0000
-Message-ID: <c898918d18f34fd5b004cd1549b6a99e@AcuMS.aculab.com>
-References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
- <6540b4b7-3f70-adbf-c922-43886599713a@linux.microsoft.com>
- <CALCETrWnNR5v3ZCLfBVQGYK8M0jAvQMaAc9uuO05kfZuh-4d6w@mail.gmail.com>
- <46a1adef-65f0-bd5e-0b17-54856fb7e7ee@linux.microsoft.com>
- <20200731183146.GD67415@C02TD0UTHF1T.local>
- <86625441-80f3-2909-2f56-e18e2b60957d@linux.microsoft.com>
- <20200804135558.GA7440@C02TD0UTHF1T.local>
-In-Reply-To: <20200804135558.GA7440@C02TD0UTHF1T.local>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 4 Aug 2020 10:33:27 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86082C06174A;
+        Tue,  4 Aug 2020 07:33:20 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k13so15168909plk.13;
+        Tue, 04 Aug 2020 07:33:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TXLBuAQ2F7R4mjLK40J5Jjdx28v+ofP9cm1DsbbWHrM=;
+        b=s+I6eBLwW5dahv00BbqRJ4eLtJKtDqyyK8n/SuhyPN7p1P3uvEfjwr/Kc57vsWExSJ
+         P8cDyNzbwgEKwPcBwpXUnen47yJLtUJtlZX3z5+BhMejuuFvSGA/wPSp3G9Yzo1X6lOs
+         5tJRjInvixxMmo1WIQs1ERDLwgxWyVyrdBewt0mEOgN+1K0nfvXwMcQEKHz4GMPl/1Sd
+         +ymsRd+t+iuBuqNTW3t08RyUj/jwmS/hg31xAgNylM8zoHvJKbB5hYpiOwIvp5VdIU7O
+         c92JZduS2kCn1+pyV8f/8C+vkvyc1UmZI062iWfYTJ40aeRvnd+BQhQRQ0StzTvEB+u4
+         gM3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=TXLBuAQ2F7R4mjLK40J5Jjdx28v+ofP9cm1DsbbWHrM=;
+        b=CG+U99OMeZPqVtOx6i8mIgixwyQXo3xvRDBmuMe91K3uB8htbl46V5tvwXRL3rs99l
+         MYzPsoH8PE/V+iRtQO6qve7v//k3mJNSAh366ryapu9SUjQiGd13zYfVXwD7S3C9MkK5
+         pGF3tMuhY/3IXIB0xplJylJGLDR6KoAzhGLFG3OZQqaAKZ3liVg1vlre4NSd18/+ZhZo
+         dvcYu76eDr9i50wL4jANeJ+ZEOPtmeySWNu8mfkRztdkABbJm6a1056c/fX4vC61EkFo
+         +v4qyamzNPPpkFp5z8UPz/3bh/5JCnZJdm10S1Lr+XwkSxjZNyl0L4poMjULSV/EVGKq
+         +U1g==
+X-Gm-Message-State: AOAM530r54Fyv2hQzeqBIvTd5+W7JMEyawbsm7Q2gpr14PWKpK42jfWT
+        X2XTqvQ2MtAJ1HpGJ2SnbFoxJopb
+X-Google-Smtp-Source: ABdhPJw+9n/g3EHeDe4mIV11FDpJnP7flT98BNOcKdnYLMRvhTh1PE2etBpLb4s53vRP9eU+hJKGwg==
+X-Received: by 2002:a17:90a:e292:: with SMTP id d18mr4846293pjz.181.1596551598495;
+        Tue, 04 Aug 2020 07:33:18 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l17sm651416pff.126.2020.08.04.07.33.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Aug 2020 07:33:17 -0700 (PDT)
+Subject: Re: hwmon: (sis5595) potential null pointer dereference in probe
+To:     Evgeny Novikov <novikov@ispras.ru>,
+        Jean Delvare <jdelvare@suse.com>
+Cc:     linux-hwmon@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <856951596540762@mail.yandex.ru>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <23dceaac-526d-4ee3-40de-cf354b0aeabd@roeck-us.net>
+Date:   Tue, 4 Aug 2020 07:33:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+In-Reply-To: <856951596540762@mail.yandex.ru>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiA+IElmIHlvdSBsb29rIGF0IHRoZSBsaWJmZmkgcmVmZXJlbmNlIHBhdGNoIEkgaGF2ZSBpbmNs
-dWRlZCwgdGhlIGFyY2hpdGVjdHVyZQ0KPiA+IHNwZWNpZmljIGNoYW5nZXMgdG8gdXNlIHRyYW1w
-ZmQganVzdCBpbnZvbHZlIGEgc2luZ2xlIEMgZnVuY3Rpb24gY2FsbCB0bw0KPiA+IGEgY29tbW9u
-IGNvZGUgZnVuY3Rpb24uDQoNCk5vIGlkZWEgd2hhdCBsaWJmZmkgaXMsIGJ1dCBpdCBtdXN0IHN1
-cmVseSBiZSBzaW1wbGVyIHRvDQpyZXdyaXRlIGl0IHRvIGF2b2lkIG5lc3RlZCBmdW5jdGlvbiBk
-ZWZpbml0aW9ucy4NCg0KT3IgZmluZCBhIGJvb2sgZnJvbSB0aGUgMTk2MHMgb24gaG93IHRvIGRv
-IHJlY3Vyc2l2ZQ0KY2FsbHMgYW5kIG5lc3RlZCBmdW5jdGlvbnMgaW4gRk9SVFJBTi1JVi4NCg0K
-CURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBN
-b3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAx
-Mzk3Mzg2IChXYWxlcykNCg==
+On 8/4/20 4:50 AM, Evgeny Novikov wrote:
+> sis5595_pci_probe() registers platform driver callbacks and just then
+> initializes global pointer variable s_bridge. sis5595_probe() may
+> dereference it before this happens that can result in null pointer
+> dereference.
+> 
+sis5595_probe() is only called after the device is registered,
+which happens in sis5595_device_add() after s_bridge is set. This is
+a southbridge, so there won't be any hot insertion/removal events.
 
+> We can not swap registration of platform driver callbacks with
+> initialization of s_bridge since sm_sis5595_exit() assumes the
+> current order. Perhaps it has sense to implement a pci_driver.remove
+> callback that will take care about deregistration of platform driver
+> callbacks.
+>
+
+Agreed regarding the remove function. However, given the age of the chip,
+I'd rather remove the driver than spending time on cleanup efforts.
+This looks like a perfect candidate for depreciation.
+
+Guenter
