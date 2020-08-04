@@ -2,94 +2,126 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9794EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B7CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E4D3208A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38FFD2086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:59:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="AEHps8rn"
+	dkim=pass (2048-bit key) header.d=eclypsium.com header.i=@eclypsium.com header.b="NmSO8dxB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728701AbgHDN45 (ORCPT
+        id S1728578AbgHDN7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 09:56:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52354 "EHLO
+        Tue, 4 Aug 2020 09:59:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728535AbgHDN4q (ORCPT
+        with ESMTP id S1728303AbgHDN6l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 09:56:46 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB0B9C061757
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 06:56:45 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id d6so28676133ejr.5
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 06:56:45 -0700 (PDT)
+        Tue, 4 Aug 2020 09:58:41 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF9FBC06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 06:58:26 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id j10so12336155qvo.13
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 06:58:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Nir289YmvLvB9cYHD+WrMlDkgzY7IXddotY7RZ5kJuw=;
-        b=AEHps8rnJNYWjEsEPmsNrngg9TrZ3KWI5HcB4+HHRs9di0+/ESZLPa6/JKEXxXRDtU
-         j0ZA7GgeP7mT12IX5LxV4n0BWV70/alU7ADPeaFlcj67EWL5F74zxF5tjSOVXXhgCu3N
-         g/f2upIq2fhT1dR8LKBd75so90/Gkfjyd4Eik=
+        d=eclypsium.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=v//52S0oWqF0q/pvhHFNNBHFoWzKUF/wuj38r6SqPoQ=;
+        b=NmSO8dxBPaU+APGuwDQiFe+kBY/TLdbQbVnSiP6W1ot8o8tXBd0uEtKb9uokPDMqXB
+         hDUtallKiMZmQmSe2lSKO/mNUkeE9HnCX6yLVClEhifcAH7MqyfLD1LCnDRPcILxQneN
+         PeUUNfy4LZBd27L/d0sL4vC9RShHYsZUilMaslQTQ3Qy22c3M/VYscd6D2tnIgvBHclM
+         J0v4CNKmpgd1Qu6nqLHEXMGP518uEiVqnrlGxm2eAKrwsd7nNL8xX5YJG5qf8EBdVfxb
+         rB0Ykb/cd/vaceNna27I3VGMIO7EplBiUZnrUsT/lMZmCkrFE8euWUr+zhTRgFoS+MR6
+         2C2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Nir289YmvLvB9cYHD+WrMlDkgzY7IXddotY7RZ5kJuw=;
-        b=VduLHr+TDECg1xrzPyt+hlZeYkgAncROIgyE83mr6AuJ0U/g6DG4rleMGi4MCTTzXx
-         HNiM43p1klcmeVkCX3fBC4ztiBrKatk/zpx1J/wzDfIZ6xUh4xxHpVm0Ut46H75HeNnr
-         NOeZGu6hMUeqNLDl5vO8WX2CzDxKzZI9MytfqUppJv8ZrcNIerZfO1OpbVniLaaENBQp
-         h7Q16isRtxFR8SSYkf/TsoBBll4OYznq4FNVzzzNm/26YDKZXldQgVZ4l/78PRtoDaCC
-         5/S2Tw+LThcVIZdiXA9DX6GYllOBAFSYGU+GgpqdunneF2NlA+U7QtYN7kxaiiCl+9VS
-         2mLg==
-X-Gm-Message-State: AOAM530c5vQhXkFqKqxUVTxmgRglMYZ3PGrudZlokDJplZlipEN3sYm4
-        diHLlwa+VEPqly8FRuG0exdhRg==
-X-Google-Smtp-Source: ABdhPJyvdxPxUWj7x824NLh/G3TC6fG7Nwu5sJ/FqR59hOHVzeefde3nECyeC40mMapaTamORKbAkg==
-X-Received: by 2002:a17:906:f905:: with SMTP id lc5mr20891718ejb.340.1596549404630;
-        Tue, 04 Aug 2020 06:56:44 -0700 (PDT)
-Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
-        by smtp.gmail.com with ESMTPSA id 4sm18404381ejn.84.2020.08.04.06.56.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 06:56:44 -0700 (PDT)
-Date:   Tue, 4 Aug 2020 15:56:41 +0200
-From:   Miklos Szeredi <miklos@szeredi.hu>
-To:     David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
-        raven@themaw.net, mszeredi@redhat.com, christian@brauner.io,
-        jannh@google.com, darrick.wong@oracle.com, kzak@redhat.com,
-        jlayton@redhat.com, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 10/18] fsinfo: Provide notification overrun handling
- support [ver #21]
-Message-ID: <20200804135641.GE32719@miu.piliscsaba.redhat.com>
-References: <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk>
- <159646187082.1784947.4293611877413578847.stgit@warthog.procyon.org.uk>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=v//52S0oWqF0q/pvhHFNNBHFoWzKUF/wuj38r6SqPoQ=;
+        b=Tigxe+M3uheLjiGJ2h8tkqjZxxjEpGVid80sK7o8GJK1SMSo8MZZYOl7D+ItWbUVSr
+         0QK7idRmV055aS2x4vwL8UxXDQ2XzIrJSR7h1YcDsgMfhJBwqalu2Js7EjROqoTm1S/K
+         3KCN+uSl3mTVb6wlD3udGFKHlyirS+pGLoWcaMN/lnSX2r8TgSMZVFJoO2HBXRnZtzZs
+         BMMSi+2mTTdvYR8ceA4w1N5bzDBxRRIvSavepcQaziFRSOx4Oo3/cHGAYip61CosXIfw
+         mRx3nmbcriCsMFpJ9JDY5ygZcb00kpJvndYctBROAGp4/h8KoL8iiHjq5P/p4SqcotsI
+         Zl7w==
+X-Gm-Message-State: AOAM5310mwfyL4XCiL74G1LI20/6ShqS8GnQ9NLnKaW1zY7HIVZe958J
+        VbXHVZLsOpwMiDioZ+Ac2ROq4w==
+X-Google-Smtp-Source: ABdhPJxQ0oF4/D4p6FW7hD76hNivUtUBUtuUhxt3B5tN5owha1nvT9xeuaSSq8pj5PtFqI/A8uA4pg==
+X-Received: by 2002:a0c:9e4e:: with SMTP id z14mr22039852qve.71.1596549505898;
+        Tue, 04 Aug 2020 06:58:25 -0700 (PDT)
+Received: from localhost ([190.190.138.51])
+        by smtp.gmail.com with ESMTPSA id c7sm20637736qkd.92.2020.08.04.06.58.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Aug 2020 06:58:25 -0700 (PDT)
+From:   Daniel Gutson <daniel.gutson@eclypsium.com>
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Daniel Gutson <daniel.gutson@eclypsium.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alex Bazhaniuk <alex@eclypsium.com>,
+        Richard Hughes <hughsient@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH] mtd: spi-nor: intel-spi: Do not try to make the SPI flash chip writable
+Date:   Tue,  4 Aug 2020 10:58:17 -0300
+Message-Id: <20200804135817.5495-1-daniel.gutson@eclypsium.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159646187082.1784947.4293611877413578847.stgit@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 02:37:50PM +0100, David Howells wrote:
-> Provide support for the handling of an overrun in a watch queue.  In the
-> event that an overrun occurs, the watcher needs to be able to find out what
-> it was that they missed.  To this end, previous patches added event
-> counters to struct mount.
+Currently, the intel-spi-pci driver tries to unconditionally set
+the SPI chip writeable. After discussing in the LKML, the original
+author decided that it was better  to remove the attempt.
 
-So this is optimizing the buffer overrun case?
+Context, the intel-spi has a module argument that controls
+whether the driver attempts to turn the SPI flash chip writeable.
+The default value is FALSE (don't try to make it writeable).
+However, this flag applies only for a number of devices, coming from the
+platform driver, whereas the devices detected through the PCI driver
+(intel-spi-pci) are not subject to this check since the configuration
+takes place in intel-spi-pci which doesn't have an argument.
 
-Shoun't we just make sure that the likelyhood of overruns is low and if it
-happens, just reinitialize everthing from scratch (shouldn't be *that*
-expensive).
+This patch removes the code that attempts to turn the SPI chip writeable.
 
-Trying to find out what was missed seems like just adding complexity for no good
-reason.
+Signed-off-by: Daniel Gutson <daniel.gutson@eclypsium.com>
+---
+ drivers/mtd/spi-nor/controllers/intel-spi-pci.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/drivers/mtd/spi-nor/controllers/intel-spi-pci.c b/drivers/mtd/spi-nor/controllers/intel-spi-pci.c
+index 81329f680bec..2b071da804e7 100644
+--- a/drivers/mtd/spi-nor/controllers/intel-spi-pci.c
++++ b/drivers/mtd/spi-nor/controllers/intel-spi-pci.c
+@@ -41,14 +41,9 @@ static int intel_spi_pci_probe(struct pci_dev *pdev,
+ 	if (!info)
+ 		return -ENOMEM;
+ 
+-	/* Try to make the chip read/write */
+ 	pci_read_config_dword(pdev, BCR, &bcr);
+-	if (!(bcr & BCR_WPD)) {
+-		bcr |= BCR_WPD;
+-		pci_write_config_dword(pdev, BCR, bcr);
+-		pci_read_config_dword(pdev, BCR, &bcr);
+-	}
+ 	info->writeable = !!(bcr & BCR_WPD);
++	dev_dbg(&pdev->dev, "device is writeable: %d\n", (int)info->writeable);
+ 
+ 	ispi = intel_spi_probe(&pdev->dev, &pdev->resource[0], info);
+ 	if (IS_ERR(ispi))
+-- 
+2.25.1
 
