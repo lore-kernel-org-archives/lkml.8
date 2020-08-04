@@ -2,78 +2,105 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C23C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB977C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74947206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF19A2076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:54:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596513282;
+	bh=1wIRTKIibHj2cuI0fbbKzQxUIbvtAf6aPbLlnn72kQE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OHT7Ix08s3xRmsxqhj9kEuXkS/U1J2Dsh+Lq5+qA07bP5QQ/39lp/nTs/bacjPp4r
+	 67wkfX8/aWAklpsWPKDKYVglYmKfvxzP4bgD31vVGE9o0nsa93tkYZTSEszErxiaG6
+	 TAtzmU2Y0OHCZ39V2Ce53oQ3gTsqXX+mV+scIOEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729677AbgHDDwE (ORCPT
+        id S1729668AbgHDDyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 23:52:04 -0400
-Received: from mail.windriver.com ([147.11.1.11]:53294 "EHLO
-        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728713AbgHDDwE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 23:52:04 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail.windriver.com (8.15.2/8.15.2) with ESMTPS id 0743poUu003488
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Mon, 3 Aug 2020 20:51:50 -0700 (PDT)
-Received: from [128.224.162.157] (128.224.162.157) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server id 14.3.487.0; Mon, 3 Aug 2020
- 20:51:49 -0700
-Subject: Re: [PATCH] crypto: ccp - zero the cmd data after use it
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-CC:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary Hook <gary.hook@amd.com>, David <davem@davemloft.net>,
-        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200803075858.3561-1-liwei.song@windriver.com>
- <20200803125242.GA7689@gondor.apana.org.au>
-From:   Liwei Song <liwei.song@windriver.com>
-Message-ID: <87ae939b-4983-4e96-cc3d-1aa1d1b3d3ae@windriver.com>
-Date:   Tue, 4 Aug 2020 11:51:47 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Mon, 3 Aug 2020 23:54:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50878 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728867AbgHDDyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 23:54:40 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB9DD206F6;
+        Tue,  4 Aug 2020 03:54:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596513280;
+        bh=1wIRTKIibHj2cuI0fbbKzQxUIbvtAf6aPbLlnn72kQE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qEbXUgW3AcpI2xod1XByY6z3bwg8Y/HzIsjplM1wVG4q6mFuvd1L2OpV6Lnza4GpY
+         +1tgSWn0K6UAVPxO0/NMjLZRxD38usgw0MvkfHrpzeDM+qTH/uEchteYXOu4xotkSv
+         GuCwsksVXLhfcmLfkXVamKL3a/P4sHSVUaddoUmQ=
+Date:   Mon, 3 Aug 2020 20:54:39 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com,
+        Daeho Jeong <daehojeong@google.com>
+Subject: Re: [f2fs-dev] [PATCH] f2fs: fix deadlock between quota writes and
+ checkpoint
+Message-ID: <20200804035439.GA903802@google.com>
+References: <20200729070244.584518-1-jaegeuk@kernel.org>
+ <670f35e1-872b-6602-320c-dd73bcb62510@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200803125242.GA7689@gondor.apana.org.au>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <670f35e1-872b-6602-320c-dd73bcb62510@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/3/20 20:52, Herbert Xu wrote:
-> On Mon, Aug 03, 2020 at 03:58:58PM +0800, Liwei Song wrote:
->> exist the following assignment in ccp(ignore the force
->> convert of the struct) by list_del in ccp_dequeue_cmd():
->> req->__ctx->cmd->entry->next = LIST_POISON1;
->>
->> after use the req, kzfree(req) can not zero the entry
->> entry->next = LIST_POISON1 of the ccp_cmd(cmd) struct
->> when this address available as slub freelist pointer, this will cause
->> the following "general protection fault" error if some process meet
->> this LIST_POISON1 value address when request memory:
+On 08/04, Chao Yu wrote:
+> On 2020/7/29 15:02, Jaegeuk Kim wrote:
+> > f2fs_write_data_pages(quota_mapping)
+> >   __f2fs_write_data_pages             f2fs_write_checkpoint
+> >    * blk_start_plug(&plug);
+> >    * add bio in write_io[DATA]
+> >                                        - block_operations
+> >                                        - skip syncing quota by
+> >                                                  >DEFAULT_RETRY_QUOTA_FLUSH_COUNT
+> >                                        - down_write(&sbi->node_write);
 > 
-> Your description makes no sense.  Please rewrite it and explain
-> the problem properly.
+> f2fs_flush_merged_writes() will be called after block_operations(), why this doesn't
+> help?
 
-The problem here is that the entry of struct ccp_cmd is not zeroed after we use it,
-If the other process got this address by kmalloc(), this illegal value "LIST_POISON1"
-will cause "general protection fault" error.
-
-Thanks,
-Liwei.
-
+Well, I think bio can be added after f2fs_flush_merged_writes() as well.
 
 > 
-> Thanks,
-> 
+> >    - f2fs_write_single_data_page
+> >      - f2fs_do_write_data_page
+> >        - f2fs_outplace_write_data
+> >          - do_write_page
+> >             - f2fs_allocate_data_block
+> >              - down_write(node_write)
+> >                                        - f2fs_wait_on_all_pages(F2FS_WB_CP_DATA);
+> > 
+> > Signed-off-by: Daeho Jeong <daehojeong@google.com>
+> > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> > ---
+> >   fs/f2fs/checkpoint.c | 2 ++
+> >   1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+> > index 8c782d3f324f0..99c8061da55b9 100644
+> > --- a/fs/f2fs/checkpoint.c
+> > +++ b/fs/f2fs/checkpoint.c
+> > @@ -1269,6 +1269,8 @@ void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type)
+> >   		if (type == F2FS_DIRTY_META)
+> >   			f2fs_sync_meta_pages(sbi, META, LONG_MAX,
+> >   							FS_CP_META_IO);
+> > +		else if (type == F2FS_WB_CP_DATA)
+> > +			f2fs_submit_merged_write(sbi, DATA);
+> >   		io_schedule_timeout(DEFAULT_IO_TIMEOUT);
+> >   	}
+> >   	finish_wait(&sbi->cp_wait, &wait);
+> > 
