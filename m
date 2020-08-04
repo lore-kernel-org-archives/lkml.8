@@ -4,44 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7CDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE26AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 392102086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1CB522CAE
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:59:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbgHDU7E (ORCPT
+        id S1728566AbgHDU7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 16:59:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42174 "EHLO mail.kernel.org"
+        Tue, 4 Aug 2020 16:59:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728095AbgHDU6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728148AbgHDU6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 4 Aug 2020 16:58:16 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 539FA22CB2;
-        Tue,  4 Aug 2020 20:58:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0726B22D04;
+        Tue,  4 Aug 2020 20:58:15 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1k340j-006HDS-Af; Tue, 04 Aug 2020 16:58:13 -0400
-Message-ID: <20200804205813.223522602@goodmis.org>
+        id 1k340k-006HG2-0w; Tue, 04 Aug 2020 16:58:14 -0400
+Message-ID: <20200804205813.904386422@goodmis.org>
 User-Agent: quilt/0.66
-Date:   Tue, 04 Aug 2020 16:57:52 -0400
+Date:   Tue, 04 Aug 2020 16:57:57 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        stable@vger.kernel.org, Tim Murray <timmurray@google.com>,
-        Simon MacMullen <simonmacm@google.com>,
-        Greg Hackmann <ghackmann@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: [for-linus][PATCH 09/17] tracepoint: Mark __tracepoint_strings __used
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [for-linus][PATCH 14/17] kprobes: Remove show_registers() function prototype
 References: <20200804205743.419135730@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -50,49 +45,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Desaulniers <ndesaulniers@google.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-__tracepoint_string's have their string data stored in .rodata, and an
-address to that data stored in the "__tracepoint_str" section. Functions
-that refer to those strings refer to the symbol of the address. Compiler
-optimization can replace those address references with references
-directly to the string data. If the address doesn't appear to have other
-uses, then it appears dead to the compiler and is removed. This can
-break the /tracing/printk_formats sysfs node which iterates the
-addresses stored in the "__tracepoint_str" section.
+Remove show_registers() function prototype because this function
+has been renamed by commit 57da8b960b9a ("x86: Avoid double stack
+traces with show_regs()"), and commit 80006dbee674 ("kprobes/x86:
+Remove jprobe implementation") has removed the caller in kprobes.
+So this doesn't exist anymore.
 
-Like other strings stored in custom sections in this header, mark these
-__used to inform the compiler that there are other non-obvious users of
-the address, so they should still be emitted.
-
-Link: https://lkml.kernel.org/r/20200730224555.2142154-2-ndesaulniers@google.com
-
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: stable@vger.kernel.org
-Fixes: 102c9323c35a8 ("tracing: Add __tracepoint_string() to export string pointers")
-Reported-by: Tim Murray <timmurray@google.com>
-Reported-by: Simon MacMullen <simonmacm@google.com>
-Suggested-by: Greg Hackmann <ghackmann@google.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- include/linux/tracepoint.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/kprobes.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-index a1fecf311621..3a5b717d92e8 100644
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -361,7 +361,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 		static const char *___tp_str __tracepoint_string = str; \
- 		___tp_str;						\
- 	})
--#define __tracepoint_string	__attribute__((section("__tracepoint_str")))
-+#define __tracepoint_string	__attribute__((section("__tracepoint_str"), used))
- #else
- /*
-  * tracepoint_string() is used to save the string address for userspace
+diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+index 6adf90f248d7..81cb7e00ccdc 100644
+--- a/include/linux/kprobes.h
++++ b/include/linux/kprobes.h
+@@ -227,7 +227,6 @@ extern int arch_prepare_kprobe(struct kprobe *p);
+ extern void arch_arm_kprobe(struct kprobe *p);
+ extern void arch_disarm_kprobe(struct kprobe *p);
+ extern int arch_init_kprobes(void);
+-extern void show_registers(struct pt_regs *regs);
+ extern void kprobes_inc_nmissed_count(struct kprobe *p);
+ extern bool arch_within_kprobe_blacklist(unsigned long addr);
+ extern int arch_populate_kprobe_blacklist(void);
 -- 
 2.26.2
 
