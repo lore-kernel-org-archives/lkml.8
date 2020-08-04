@@ -2,120 +2,153 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1ABFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6E6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE9CC2064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D6F0206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:32:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ph8ZuBGU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbgHDF3a (ORCPT
+        id S1728918AbgHDFce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 01:29:30 -0400
-Received: from mga05.intel.com ([192.55.52.43]:62694 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727035AbgHDF33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 01:29:29 -0400
-IronPort-SDR: wOoSP/RLVSVEWHG2BxbZcGETmWmpGlb/FXRmoZdH5ZHkH6KvUHtEuJ9ZyL3MoSLuFuOWO/oZuQ
- gN6MPyslrtJA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="237113084"
-X-IronPort-AV: E=Sophos;i="5.75,433,1589266800"; 
-   d="scan'208";a="237113084"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 22:29:28 -0700
-IronPort-SDR: Z8iqhYn++WufcKhSFIRurRKwOsdQH/yF+J5w7TlJp1oymsnYKRD5uGkMvu7j8j3vG0PTbUTF1e
- xeIsCzEzBVCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,433,1589266800"; 
-   d="scan'208";a="330486541"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
-  by FMSMGA003.fm.intel.com with ESMTP; 03 Aug 2020 22:29:27 -0700
-Subject: Re: [PATCH V1 1/2] mmc: sdhci-pci-o2micro: Bug fix for O2 host
- controller Seabird1
-To:     "Shirley Her (SC)" <shirley.her@bayhubtech.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200721011733.8416-1-shirley.her@bayhubtech.com>
- <BY5PR16MB33196E3E0FB7C2143BE7D73F8B4D0@BY5PR16MB3319.namprd16.prod.outlook.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <fc572647-9a51-ee38-c1a7-71f62c1edad0@intel.com>
-Date:   Tue, 4 Aug 2020 08:29:03 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 4 Aug 2020 01:32:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59276 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727812AbgHDFcc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 01:32:32 -0400
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A575C06179E
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 22:32:32 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id e8so21461154pgc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 22:32:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=SYIRLxV49LREgpupMxZqNaA5o9fHAoeWk6pTwu6HNpo=;
+        b=Ph8ZuBGUk+/4Umvi3tBIzf/QoNeRTzEty93PfC99H5oKffGm5XPBIYydB/2qEjwx+J
+         SZlumfSOoM+FB4ii86QCn1PTMJ9NjJY1FZUj2o/u1krMTrrJozPlGsMuZcNXIvRjpPcJ
+         +81DI4YxL4IU6lFGb0Pbpc9mW8IlwPMik2dCyLkBcwktamtjKAinHZrEX//ZHUbKngp2
+         MSXGzP8/tmQLmOFB7W5dB+57aIme9PO1DVII/zySdREQiWkYF7MCpIOIHFgUVx2svIar
+         11zh2B8Q9ICjj9GH1pCF3bU70VMzSX8LQhVIliff5lguiHIeRZXh+NE4la6L3y3/ChSK
+         Id9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SYIRLxV49LREgpupMxZqNaA5o9fHAoeWk6pTwu6HNpo=;
+        b=FOZ+BCoqFhAcft39kDi7Etk7bYDtboeO+Wzix07AszhHyKrPdxUFcF0K0kA8GGHuIR
+         adxSagTEbsoCY32/JdbUFupNng0xerVZ60Yn7I8rFefY8VZCGZ/eb2QQMu5X/grJ/8ba
+         FlH3VdLmTxCJys412BmGOItyOKkmwPqIH0XjRsXM+WDCDedEM8iD3nvGchP/OT03BHIF
+         lPQbdif/G/9qsr9s5lGzkNTjg/DLtuYBio8aTvguDHTRbyhGzIQvK2jYCf7AEeaKDsyb
+         KwgpYIxIKry8BjsW/rRozEYIx7p7oB6pmcif0djMQ8xAMg3Ytb1ldhvNRm6DwVSivfse
+         oSGA==
+X-Gm-Message-State: AOAM531hTAgOgf4KmbuLPC26tp7SA9JbKDWwHNKO/a4qpum78QKEnwRr
+        o+5TXgPOzl6jTNFlcEMStP64Sw==
+X-Google-Smtp-Source: ABdhPJxWvObT/t8li1vTJ4ytGrVaTvI1LGmfrOyEDh3/xDuiqI+q1VkKOlVYIQvexku7wtDA6xXYXw==
+X-Received: by 2002:a63:cf0e:: with SMTP id j14mr10344966pgg.119.1596519151489;
+        Mon, 03 Aug 2020 22:32:31 -0700 (PDT)
+Received: from google.com ([2620:15c:2ce:0:a6ae:11ff:fe11:4abb])
+        by smtp.gmail.com with ESMTPSA id go12sm1117217pjb.2.2020.08.03.22.32.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 22:32:30 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 22:32:27 -0700
+From:   =?utf-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jian Cai <jiancai@google.com>,
+        Luis Lozano <llozano@google.com>,
+        Manoj Gupta <manojgupta@google.com>, stable@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: Re: [PATCH v5 13/36] vmlinux.lds.h: add PGO and AutoFDO input
+ sections
+Message-ID: <20200804053227.k7zyozzrw5mhv6qi@google.com>
+References: <20200731230820.1742553-1-keescook@chromium.org>
+ <20200731230820.1742553-14-keescook@chromium.org>
+ <20200801035128.GB2800311@rani.riverdale.lan>
+ <20200803190506.GE1299820@tassilo.jf.intel.com>
+ <20200803201525.GA1351390@rani.riverdale.lan>
+ <20200804044532.GC1321588@tassilo.jf.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <BY5PR16MB33196E3E0FB7C2143BE7D73F8B4D0@BY5PR16MB3319.namprd16.prod.outlook.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200804044532.GC1321588@tassilo.jf.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry, I have been away for a while, but I will look at it shortly.
+On 2020-08-03, Andi Kleen wrote:
+>> Why is that? Both .text and .text.hot have alignment of 2^4 (default
+>> function alignment on x86) by default, so it doesn't seem like it should
+>> matter for packing density.  Avoiding interspersing cold text among
+>
+>You may lose part of a cache line on each unit boundary. Linux has
+>a lot of units, some of them small. All these bytes add up.
+>
+>It's bad for TLB locality too. Sadly with all the fine grained protection
+>changes the 2MB coverage is eroding anyways, but this makes it even worse.
 
-On 3/08/20 10:23 pm, Shirley Her (SC) wrote:
-> Hi, Adrian:
-> 
-> Do you have chance to review the patched code?
-> 
-> Thanks,
-> Shirley
-> 
-> ----------------------------------------------------------------------------
-> *From:* Shirley Her (SC) <shirley.her@bayhubtech.com>
-> *Sent:* Monday, July 20, 2020 6:18 PM
-> *To:* adrian.hunter@intel.com <adrian.hunter@intel.com>;
-> ulf.hansson@linaro.org <ulf.hansson@linaro.org>; linux-mmc@vger.kernel.org
-> <linux-mmc@vger.kernel.org>; linux-kernel@vger.kernel.org
-> <linux-kernel@vger.kernel.org>
-> *Cc:* Shaper Liu (WH) <shaper.liu@bayhubtech.com>; Chevron Li (WH)
-> <chevron.li@bayhubtech.com>; Xiaoguang Yu (WH)
-> <xiaoguang.yu@bayhubtech.com>; Max Huang (SC) <max.huang@bayhubtech.com>;
-> Shirley Her (SC) <shirley.her@bayhubtech.com>
-> *Subject:* [PATCH V1 1/2] mmc: sdhci-pci-o2micro: Bug fix for O2 host
-> controller Seabird1
->  
-> Add bug fix for O2 host controller Seabird1
-> 
-> Signed-off-by: Shirley Her <shirley.her@bayhubtech.com>
-> ---
-> change in V1:
-> 1. Add quriks2 and mmc->caps2 for Seabird1
-> 2. Add get_cd support for Seabird1
-> ---
->  drivers/mmc/host/sdhci-pci-o2micro.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c
-> b/drivers/mmc/host/sdhci-pci-o2micro.c
-> index e2a846885902..ed3c605fcf0c 100644
-> --- a/drivers/mmc/host/sdhci-pci-o2micro.c
-> +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
-> @@ -561,6 +561,12 @@ static int sdhci_pci_o2_probe_slot(struct
-> sdhci_pci_slot *slot)
->                          slot->host->mmc_host_ops.get_cd = sdhci_o2_get_cd;
->                  }
->  
-> +               if (chip->pdev->device == PCI_DEVICE_ID_O2_SEABIRD1) {
-> +                       slot->host->mmc_host_ops.get_cd = sdhci_o2_get_cd;
-> +                       host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
-> +                       host->quirks2 |= SDHCI_QUIRK2_PRESET_VALUE_BROKEN;
-> +               }
-> +
->                  host->mmc_host_ops.execute_tuning = sdhci_o2_execute_tuning;
->  
->                  if (chip->pdev->device != PCI_DEVICE_ID_O2_FUJIN2)
-> -- 
-> 2.25.1
-> 
+> Gives worse packing for the hot part
+> if they are not aligned to 64byte boundaries, which they are usually
+> not.
 
+I do not see how the 64-byte argument is related to this patch.
+If a function requires 64-byte alignment to be efficient, the compiler
+should communicate this fact by setting the alignment of its containing
+section to 64 bytes or above.
+
+If a text section has a 16-byte alignment, the linker can reorder it to
+an address which is a multiple of 16 but not a multiple of 64.
+
+I agree with your other statement that having a single input section
+description might be helpful. With more than one input section
+descrition, the linker has to respect the ordering requirement. With
+just one input section description, the linker has more freedom ordering
+sections if profitable. For example, LLD performs two ordering
+heuristics as my previous reply mentions.
+
+It'd be good if someone can measure the benefit. Personally I don't
+think this kind of ordering has significant benefit. (For
+arm/aarch64/powerpc there might be some size benefit due to fewer range
+extension thunks)
+
+>> regular/hot text seems like it should be a net win.
+>
+>>
+>> That old commit doesn't reference efficiency -- it says there was some
+>> problem with matching when they were separated out, but there were no
+>> wildcard section names back then.
+>
+>It was about efficiency.
+>
+>-Andi
+>
+>-- 
+>You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+>To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+>To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200804044532.GC1321588%40tassilo.jf.intel.com.
