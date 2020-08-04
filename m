@@ -2,226 +2,275 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF9BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F13C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01CCE21744
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC50122B40
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:49:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EutcuYNA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MxG/dpyM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbgHDPqr (ORCPT
+        id S1728845AbgHDPtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 11:46:47 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:53610 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728295AbgHDPqo (ORCPT
+        Tue, 4 Aug 2020 11:49:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41390 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725864AbgHDPsz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 11:46:44 -0400
-Received: from [192.168.254.32] (unknown [47.187.206.220])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 9B23A20B4908;
-        Tue,  4 Aug 2020 08:46:41 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9B23A20B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1596556002;
-        bh=wHC31skMgFt/ebqHymj769kGPOKXA4hyoGb1xMjf0fI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=EutcuYNAeGhOfkiO8T1sIvfJSLcvl24ddG2j+NfgLnwZCraC2VozjLawrJmUJlmea
-         uMTlKW22ne7ngBbcz+KuCNluoJpU8MvjXq4d9Zax32BecuA0bRhi+seD3ikjWvtxPt
-         m71EidTy92505Hg9DsZNgxuxfBJvroeKJTm5VwQk=
-Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
-References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
- <6540b4b7-3f70-adbf-c922-43886599713a@linux.microsoft.com>
- <CALCETrWnNR5v3ZCLfBVQGYK8M0jAvQMaAc9uuO05kfZuh-4d6w@mail.gmail.com>
- <46a1adef-65f0-bd5e-0b17-54856fb7e7ee@linux.microsoft.com>
- <20200731183146.GD67415@C02TD0UTHF1T.local>
- <86625441-80f3-2909-2f56-e18e2b60957d@linux.microsoft.com>
- <20200804135558.GA7440@C02TD0UTHF1T.local>
-From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Message-ID: <874ec700-405f-bad8-175f-884b4f6f66f2@linux.microsoft.com>
-Date:   Tue, 4 Aug 2020 10:46:40 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200804135558.GA7440@C02TD0UTHF1T.local>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Tue, 4 Aug 2020 11:48:55 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ED3BC06174A;
+        Tue,  4 Aug 2020 08:48:55 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id kq25so30025502ejb.3;
+        Tue, 04 Aug 2020 08:48:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=aHpL707Nss711rXrUizpThLuemDkqB5ODmR6Us/BMpc=;
+        b=MxG/dpyMaF6vYnVh6cmGFs2sWeiZm+D1y5e+wPKRIQHAckDajxPdgAPQWawbopVVZC
+         731wC5XDRn8ehsL4GKW6TgjYQ3S+Rnl/MRVDB2d3w7KM8hcGjH5s1s49jzGYJLTIfT2L
+         +jPDLE1woC+77z3Pnk4cxhOsNxA+vH1Pvkeaj9Lzu3PXtLlr8kZdtcONi17AkXOqLwoK
+         kY/4EANA3lBd0/8ZRubKxgdaGarZ0XR7g27zO4UGCgJ+g0tI7z99TDlc1U/5U/2CxZSN
+         ktcB8EareRzLEbU+g4P0CLxKgPnsYM4GejeJg954pD5GHK2+ScB3Ye1gWWCT9VFJRoLi
+         mrSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=aHpL707Nss711rXrUizpThLuemDkqB5ODmR6Us/BMpc=;
+        b=dUVy/YswA3Y04gCrh3T+gSlua22Z4R7PN773/Kch9r0EYBHNtbD9ACkJi0Kmstketo
+         Gu77DP2mQl8vrrISJsToeYfskJfJXdETUJZpSmmCASH+2Bq/wDUf4ykNF3NiVXJMECy5
+         CwkEARdigPvAloqwMdD10bfXwaLIhCFpN4OeEAVPq41ON0W1P385OPCnaxJ9C9I8v6Tl
+         BV886P30w68OUqb5LjL541sjyze/AUIXyzjgrxGwChZ3Jv+cIbm6Mvqr+36HkUoCDVWJ
+         ZFmeCZ5Mf9DVu0XrKr5eHxXsZaqTcfm7/inaf/M8gOQ5XkAm50U3xKftXpsV1uiptU/k
+         Gj1g==
+X-Gm-Message-State: AOAM532qFVkCu/qIUBGwVEySC2f8GQw6kJTRPPl4ND69P7DxKUysReZL
+        GxLQB9pq1RvCQn240iVdAXI=
+X-Google-Smtp-Source: ABdhPJx2ys+HLh3jETOmrP6+gdnOSBsONXpK15a0Qi+Y2ZO5ZSSbKWg6FJqq9i71dQgv/BSsF4LqiQ==
+X-Received: by 2002:a17:907:398:: with SMTP id ss24mr5841408ejb.311.1596556133900;
+        Tue, 04 Aug 2020 08:48:53 -0700 (PDT)
+Received: from localhost.localdomain ([185.200.214.168])
+        by smtp.gmail.com with ESMTPSA id m24sm18686780eje.80.2020.08.04.08.48.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Aug 2020 08:48:53 -0700 (PDT)
+From:   izabela.bakollari@gmail.com
+To:     nhorman@tuxdriver.com, davem@davemloft.net, kuba@kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        izabela.bakollari@gmail.com
+Subject: [PATCHv2 net-next--in-reply-to=<20200707171515.110818-1-izabela.bakollari@gmail.com>]  dropwatch: Support monitoring of dropped frames
+Date:   Tue,  4 Aug 2020 17:48:51 +0200
+Message-Id: <20200804154851.44141-1-izabela.bakollari@gmail.com>
+X-Mailer: git-send-email 2.18.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Mark,
+From: Izabela Bakollari <izabela.bakollari@gmail.com>
 
-I am working on putting together an improved definition of trampfd per
-Andy's comment. I will try to address your comments in that improved
-definition. Once I send that out, I will respond to your emails as well.
+Dropwatch is a utility that monitors dropped frames by having userspace
+record them over the dropwatch protocol over a file. This augument
+allows live monitoring of dropped frames using tools like tcpdump.
 
-Thanks.
+With this feature, dropwatch allows two additional commands (start and
+stop interface) which allows the assignment of a net_device to the
+dropwatch protocol. When assinged, dropwatch will clone dropped frames,
+and receive them on the assigned interface, allowing tools like tcpdump
+to monitor for them.
 
-Madhavan
+With this feature, create a dummy ethernet interface (ip link add dev
+dummy0 type dummy), assign it to the dropwatch kernel subsystem, by using
+these new commands, and then monitor dropped frames in real time by
+running tcpdump -i dummy0.
 
-On 8/4/20 8:55 AM, Mark Rutland wrote:
-> On Mon, Aug 03, 2020 at 12:58:04PM -0500, Madhavan T. Venkataraman wrote:
->> On 7/31/20 1:31 PM, Mark Rutland wrote:
->>> On Fri, Jul 31, 2020 at 12:13:49PM -0500, Madhavan T. Venkataraman wrote:
->>>> On 7/30/20 3:54 PM, Andy Lutomirski wrote:
->>>>> On Thu, Jul 30, 2020 at 7:24 AM Madhavan T. Venkataraman
->>>>> <madvenka@linux.microsoft.com> wrote:
->>>>> When the kernel generates the code for a trampoline, it can hard code data values
->>>> in the generated code itself so it does not need PC-relative data referencing.
->>>>
->>>> And, for ISAs that do support the large offset, we do have to implement and
->>>> maintain the code page stuff for different ISAs for each application and library
->>>> if we did not use trampfd.
->>> Trampoline code is architecture specific today, so I don't see that as a
->>> major issue. Common structural bits can probably be shared even if the
->>> specifid machine code cannot.
->> True. But an implementor may prefer a standard mechanism provided by
->> the kernel so all of his architectures can be supported easily with less
->> effort.
->>
->> If you look at the libffi reference patch I have included, the architecture
->> specific changes to use trampfd just involve a single C function call to
->> a common code function.
-> Sure but in addition to that each architecture backend had to define a
-> set of arguments to that. I view the C function is analagous to the
-> "common structural bits".
->
-> I appreciate that your patch is small today (and architectures seem to
-> largely align on what they need), but I don't think it's necessarily
-> true that things will remain so simple as architecture are extended and
-> their calling conventions evolve, and I also don't think it's clear that
-> this will work for more complex cases elsewhere.
->
-> [...]
->
->>>> With the user level trampoline table approach, the data part of the trampoline table
->>>> can be hacked by an attacker if an application has a vulnerability. Specifically, the
->>>> target PC can be altered to some arbitrary location. Trampfd implements an
->>>> "Allowed PCS" context. In the libffi changes, I have created a read-only array of
->>>> all ABI handlers used in closures for each architecture. This read-only array
->>>> can be used to restrict the PC values for libffi trampolines to prevent hacking.
->>>>
->>>> To generalize, we can implement security rules/features if the trampoline
->>>> object is in the kernel.
->>> I don't follow this argument. If it's possible to statically define that
->>> in the kernel, it's also possible to do that in userspace without any
->>> new kernel support.
->> It is not statically defined in the kernel.
->>
->> Let us take the libffi example. In the 64-bit X86 arch code, there are 3
->> ABI handlers:
->>
->>     ffi_closure_unix64_sse
->>     ffi_closure_unix64
->>     ffi_closure_win64
->>
->> I could create an "Allowed PCs" context like this:
->>
->> struct my_allowed_pcs {
->>     struct trampfd_values    pcs;
->>     __u64                             pc_values[3];
->> };
->>
->> const struct my_allowed_pcs    my_allowed_pcs = {
->>     { 3, 0 },
->>     (uintptr_t) ffi_closure_unix64_sse,
->>     (uintptr_t) ffi_closure_unix64,
->>     (uintptr_t) ffi_closure_win64,
->> };
->>
->> I have created a read-only array of allowed ABI handlers that closures use.
->>
->> When I set up the context for a closure trampoline, I could do this:
->>
->>     pwrite(trampfd, &my_allowed_pcs, sizeof(my_allowed_pcs), TRAMPFD_ALLOWED_PCS_OFFSET);
->>    
->> This copies the array into the trampoline object in the kernel.
->> When the register context is set for the trampoline, the kernel checks
->> the PC register value against allowed PCs.
->>
->> Because my_allowed_pcs is read-only, a hacker cannot modify it. So, the only
->> permitted target PCs enforced by the kernel are the ABI handlers.
-> Sorry, when I said "statically define" meant when you knew legitimate
-> targets ahead of time when you create the trampoline (i.e. whether you
-> could enumerate those and know they would not change dynamically).
->
-> My point was that you can achieve the same in userspace if the
-> trampoline and array of legitimate targets are in read-only memory,
-> without having to trap to the kernel.
->
-> I think the key point here is that an adversary must be prevented from
-> altering a trampoline and any associated metadata, and I think that
-> there are ways of achieving that without having to trap into the kernel,
-> and without the kernel having to be intimately aware of the calling
-> conventions used in userspace.
->
-> [...]
->
->>>> Trampfd is a framework that can be used to implement multiple things. May be,
->>>> a few of those things can also be implemented in user land itself. But I think having
->>>> just one mechanism to execute dynamic code objects is preferable to having
->>>> multiple mechanisms not standardized across all applications.
->>> In abstract, having a common interface sounds nice, but in practice
->>> elements of this are always architecture-specific (e.g. interactiosn
->>> with HW CFI), and that common interface can result in more pain as it
->>> doesn't fit naturally into the context that ISAs were designed for (e.g. 
->>> where control-flow instructions are extended with new semantics).
->> In the case of trampfd, the code generation is indeed architecture
->> specific. But that is in the kernel. The application is not affected by it.
-> As an ABI detail, applications are *definitely* affected by this, and it
-> is wrong to suggest they are not even if you don't have a specific case
-> in mind today. As this forms a contract between userspace and the kernel
-> it's overly simplistic to say that it's the kernel's problem
->
-> For example, in the case of BTI on arm64, what should the trampoline
-> set PSTATE.BTYPE to? Different use-cases *will* want different values,
-> and not necessarily the value of PSTATE at the instant the call to the
-> trampoline was made. In the case of libffi specifically using the
-> original value of PSTATE.BTYPE probably is sound, but other code
-> sequences may need to restrict/broaden or entirely change that.
->
->> Again, referring to the libffi reference patch, I have defined wrapper
->> functions for trampfd in common code. The architecture specific code
->> in libffi only calls the set_context function defined in common code.
->> Even this is required only because register names are specific to each
->> architecture and the target PC (to the ABI handler) is specific to
->> each architecture-ABI combo.
->>
->>> It also meass that you can't share the rough approach across OSs which
->>> do not implement an identical mechanism, so for code abstracting by ISA
->>> first, then by platform/ABI, there isn't much saving.
->> Why can you not share the same approach across OSes? In fact,
->> I have tried to design it so that other OSes can use the same
->> mechanism.
-> Sure, but where they *don't*, you must fall back to the existing
-> purely-userspace mechanisms, and so a codebase now has the burden of
-> maintaining two distinct mechanisms.
->
-> Whereas if there's a way of doing this in userspace with (stronger)
-> enforcement of memory permissions the trampoline code can be common for
-> when this is present or absent, which is much easier for a codebase rto
-> maintain, and could make use of weaker existing mechanisms to improve
-> the situation on systems without the new functionality.
->
-> Thanks,
-> Mark.
+Signed-off-by: Izabela Bakollari <izabela.bakollari@gmail.com>
+---
+Changes in v2:
+- protect the dummy ethernet interface from being changed by another
+thread/cpu
+---
+ include/uapi/linux/net_dropmon.h |  3 ++
+ net/core/drop_monitor.c          | 84 ++++++++++++++++++++++++++++++++
+ 2 files changed, 87 insertions(+)
+
+diff --git a/include/uapi/linux/net_dropmon.h b/include/uapi/linux/net_dropmon.h
+index 67e31f329190..e8e861e03a8a 100644
+--- a/include/uapi/linux/net_dropmon.h
++++ b/include/uapi/linux/net_dropmon.h
+@@ -58,6 +58,8 @@ enum {
+ 	NET_DM_CMD_CONFIG_NEW,
+ 	NET_DM_CMD_STATS_GET,
+ 	NET_DM_CMD_STATS_NEW,
++	NET_DM_CMD_START_IFC,
++	NET_DM_CMD_STOP_IFC,
+ 	_NET_DM_CMD_MAX,
+ };
+ 
+@@ -93,6 +95,7 @@ enum net_dm_attr {
+ 	NET_DM_ATTR_SW_DROPS,			/* flag */
+ 	NET_DM_ATTR_HW_DROPS,			/* flag */
+ 	NET_DM_ATTR_FLOW_ACTION_COOKIE,		/* binary */
++	NET_DM_ATTR_IFNAME,			/* string */
+ 
+ 	__NET_DM_ATTR_MAX,
+ 	NET_DM_ATTR_MAX = __NET_DM_ATTR_MAX - 1
+diff --git a/net/core/drop_monitor.c b/net/core/drop_monitor.c
+index 8e33cec9fc4e..781e69876d2f 100644
+--- a/net/core/drop_monitor.c
++++ b/net/core/drop_monitor.c
+@@ -30,6 +30,7 @@
+ #include <net/genetlink.h>
+ #include <net/netevent.h>
+ #include <net/flow_offload.h>
++#include <net/sock.h>
+ 
+ #include <trace/events/skb.h>
+ #include <trace/events/napi.h>
+@@ -46,6 +47,7 @@
+  */
+ static int trace_state = TRACE_OFF;
+ static bool monitor_hw;
++struct net_device *interface;
+ 
+ /* net_dm_mutex
+  *
+@@ -54,6 +56,8 @@ static bool monitor_hw;
+  */
+ static DEFINE_MUTEX(net_dm_mutex);
+ 
++static DEFINE_SPINLOCK(interface_lock);
++
+ struct net_dm_stats {
+ 	u64 dropped;
+ 	struct u64_stats_sync syncp;
+@@ -255,6 +259,21 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
+ 
+ out:
+ 	spin_unlock_irqrestore(&data->lock, flags);
++	spin_lock_irqsave(&interface_lock, flags);
++	if (interface && interface != skb->dev) {
++		skb = skb_clone(skb, GFP_ATOMIC);
++		if (skb) {
++			skb->dev = interface;
++			spin_unlock_irqrestore(&interface_lock, flags);
++			netif_receive_skb(skb);
++		} else {
++			spin_unlock_irqrestore(&interface_lock, flags);
++			pr_err("dropwatch: Not enough memory to clone dropped skb\n");
++			return;
++		}
++	} else {
++		spin_unlock_irqrestore(&interface_lock, flags);
++	}
+ }
+ 
+ static void trace_kfree_skb_hit(void *ignore, struct sk_buff *skb, void *location)
+@@ -1315,6 +1334,53 @@ static int net_dm_cmd_trace(struct sk_buff *skb,
+ 	return -EOPNOTSUPP;
+ }
+ 
++static int net_dm_interface_start(struct net *net, const char *ifname)
++{
++	struct net_device *nd = dev_get_by_name(net, ifname);
++
++	if (nd)
++		interface = nd;
++	else
++		return -ENODEV;
++
++	return 0;
++}
++
++static int net_dm_interface_stop(struct net *net, const char *ifname)
++{
++	dev_put(interface);
++	interface = NULL;
++
++	return 0;
++}
++
++static int net_dm_cmd_ifc_trace(struct sk_buff *skb, struct genl_info *info)
++{
++	struct net *net = sock_net(skb->sk);
++	char ifname[IFNAMSIZ];
++
++	if (net_dm_is_monitoring())
++		return -EBUSY;
++
++	memset(ifname, 0, IFNAMSIZ);
++	nla_strlcpy(ifname, info->attrs[NET_DM_ATTR_IFNAME], IFNAMSIZ - 1);
++
++	switch (info->genlhdr->cmd) {
++	case NET_DM_CMD_START_IFC:
++		if (!interface)
++			return net_dm_interface_start(net, ifname);
++		else
++			return -EBUSY;
++	case NET_DM_CMD_STOP_IFC:
++		if (interface)
++			return net_dm_interface_stop(net, interface->name);
++		else
++			return -ENODEV;
++	}
++
++	return 0;
++}
++
+ static int net_dm_config_fill(struct sk_buff *msg, struct genl_info *info)
+ {
+ 	void *hdr;
+@@ -1503,6 +1569,7 @@ static int dropmon_net_event(struct notifier_block *ev_block,
+ 	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
+ 	struct dm_hw_stat_delta *new_stat = NULL;
+ 	struct dm_hw_stat_delta *tmp;
++	unsigned long flags;
+ 
+ 	switch (event) {
+ 	case NETDEV_REGISTER:
+@@ -1529,6 +1596,12 @@ static int dropmon_net_event(struct notifier_block *ev_block,
+ 				}
+ 			}
+ 		}
++		spin_lock_irqsave(&interface_lock, flags);
++		if (interface && interface == dev) {
++			dev_put(interface);
++			interface = NULL;
++		}
++		spin_unlock_irqrestore(&interface_lock, flags);
+ 		mutex_unlock(&net_dm_mutex);
+ 		break;
+ 	}
+@@ -1543,6 +1616,7 @@ static const struct nla_policy net_dm_nl_policy[NET_DM_ATTR_MAX + 1] = {
+ 	[NET_DM_ATTR_QUEUE_LEN] = { .type = NLA_U32 },
+ 	[NET_DM_ATTR_SW_DROPS]	= {. type = NLA_FLAG },
+ 	[NET_DM_ATTR_HW_DROPS]	= {. type = NLA_FLAG },
++	[NET_DM_ATTR_IFNAME] = {. type = NLA_STRING, .len = IFNAMSIZ },
+ };
+ 
+ static const struct genl_ops dropmon_ops[] = {
+@@ -1570,6 +1644,16 @@ static const struct genl_ops dropmon_ops[] = {
+ 		.cmd = NET_DM_CMD_STATS_GET,
+ 		.doit = net_dm_cmd_stats_get,
+ 	},
++	{
++		.cmd = NET_DM_CMD_START_IFC,
++		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
++		.doit = net_dm_cmd_ifc_trace,
++	},
++	{
++		.cmd = NET_DM_CMD_STOP_IFC,
++		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
++		.doit = net_dm_cmd_ifc_trace,
++	},
+ };
+ 
+ static int net_dm_nl_pre_doit(const struct genl_ops *ops,
+-- 
+2.18.4
 
