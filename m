@@ -2,73 +2,74 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B994C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:43:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE13C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E903D20738
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 788952075F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:46:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730258AbgHDLna convert rfc822-to-8bit (ORCPT
+        id S1730278AbgHDLqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 07:43:30 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2602 "EHLO huawei.com"
+        Tue, 4 Aug 2020 07:46:00 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8758 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726086AbgHDLn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 07:43:29 -0400
-Received: from dggeme704-chm.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 53A3C4D7CF9D23A0DFB2;
-        Tue,  4 Aug 2020 19:43:25 +0800 (CST)
-Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
- dggeme704-chm.china.huawei.com (10.1.199.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Tue, 4 Aug 2020 19:43:24 +0800
-Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
- dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1913.007;
- Tue, 4 Aug 2020 19:43:25 +0800
+        id S1728157AbgHDLp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 07:45:59 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id F22B52BADDED43D36394;
+        Tue,  4 Aug 2020 19:45:55 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Tue, 4 Aug 2020
+ 19:45:46 +0800
 From:   linmiaohe <linmiaohe@huawei.com>
-To:     David Miller <davem@davemloft.net>
-CC:     "johannes@sipsolutions.net" <johannes@sipsolutions.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mac80211: use eth_zero_addr() to clear mac address
-Thread-Topic: [PATCH] mac80211: use eth_zero_addr() to clear mac address
-Thread-Index: AdZp/oZEl8jyk1WSTI2ToHiijIYl0A==
-Date:   Tue, 4 Aug 2020 11:43:24 +0000
-Message-ID: <0def73ad11944166a0a01391627cc02d@huawei.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.174.177.143]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <pshelar@ovn.org>,
+        <fw@strlen.de>, <martin.varghese@nokia.com>, <willemb@google.com>,
+        <edumazet@google.com>, <dcaratti@redhat.com>,
+        <steffen.klassert@secunet.com>, <pabeni@redhat.com>,
+        <shmulik@metanetworks.com>, <kyk.segfault@gmail.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linmiaohe@huawei.com>
+Subject: [PATCH] net: Fix potential out of bound write in skb_try_coalesce()
+Date:   Tue, 4 Aug 2020 19:48:18 +0800
+Message-ID: <1596541698-18938-1-git-send-email-linmiaohe@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.101.6]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> David Miller wrote:
->>From: linmiaohe <linmiaohe@huawei.com>
->>Date: Sat, 1 Aug 2020 17:12:38 +0800
->>
->> From: Miaohe Lin <linmiaohe@huawei.com>
->> 
->> Use eth_zero_addr() to clear mac address instead of memset().
->> 
->> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
->
->If you're going to make this change, you should probably convert this macro to use eth_addr_copy() at the same time.
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-Many thanks for your reply. I think we should not convert this macro to use ether_addr_copy (). Because ether_addr_copy() required
-@dst and @src must both be aligned to u16 and we may not always meet this condition.
+The head_frag of skb would occupy one extra skb_frag_t. Take it into
+account or out of bound write to skb frags may happen.
 
-Thanks again.
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ net/core/skbuff.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 8a0c39e4ab0a..b489ba201fac 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -5154,7 +5154,7 @@ bool skb_try_coalesce(struct sk_buff *to, struct sk_buff *from,
+ 		unsigned int offset;
+ 
+ 		if (to_shinfo->nr_frags +
+-		    from_shinfo->nr_frags >= MAX_SKB_FRAGS)
++		    from_shinfo->nr_frags + 1 >= MAX_SKB_FRAGS)
+ 			return false;
+ 
+ 		if (skb_head_is_locked(from))
+-- 
+2.19.1
 
