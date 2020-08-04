@@ -2,134 +2,170 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A97C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C80C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D9EC22B45
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77FD722CA1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:14:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Li8yWgFg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725996AbgHDKOD (ORCPT
+        id S1726351AbgHDKOG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 06:14:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47284 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbgHDKOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 06:14:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 059FEB595;
-        Tue,  4 Aug 2020 10:14:17 +0000 (UTC)
-Date:   Tue, 4 Aug 2020 12:14:00 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marco Elver <elver@google.com>, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2][next] printk: ringbuffer: support dataless records
-Message-ID: <20200804101400.GB24529@alley>
-References: <20200721132528.9661-1-john.ogness@linutronix.de>
+        Tue, 4 Aug 2020 06:14:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726041AbgHDKOF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 06:14:05 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5630AC061756
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 03:14:05 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id j22so16167349lfm.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 03:14:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LktSD0GDAmnkBmBwptIgps9F92P71iAP/NC7BG6uhsw=;
+        b=Li8yWgFgXSfBF5hINl+KxWV+Orl1QmxwKDUgyXW2Im9OvkncU8s0Se8k1lgzBNnNH4
+         +U6GBYpDgWBqYIWOgfqCBb4bDMOcsh2k4oRBcpAj3YhsIW7bFGZ6HOk/qqab6ei352Hh
+         b8vYTpBNyC/irtMdq7omLR9P/9Z4S0TJLdy/I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LktSD0GDAmnkBmBwptIgps9F92P71iAP/NC7BG6uhsw=;
+        b=qZbpzDmafyctj7aZfXPUlWVD3bt9pyCTnbBcooxT3lCDswvkFv/UvRd+yKa485+BnH
+         NdhK1fZbJNsQwQNViIWc3mC2V8xkNKTYfrxchTN9fcE7z3HeZ8CX6KEEsUerVy7zmGy3
+         JTLjjI+cD5tFL5G21k2E8JuIPu6h8cS/5szk8BZQBgMsF67WhpluGnsiHEjjhzjOUuky
+         DVGMIoLG6EKciVaEN49NR+Z8LfSlnO7XQg6oVBeq2iBCcLOvRXcSO88/lehJRr6pkL/J
+         CJOiMMfdeGcRBVPc5F8g9Tlj5lcT7UIG2ax82jKramFIULnawnceaPl1T7yFUc4P97FI
+         MscA==
+X-Gm-Message-State: AOAM531/tTD9QHwDukmFyZqTs1dlbt0pNYHPCBMoNBcq3jlYysiu+agv
+        hAJHrOcywIREDcZ8JVh9efNiDXtfchUl1ulZ5Vnpqg==
+X-Google-Smtp-Source: ABdhPJyW+uYQRJhhgXAVBvh6Tu9btpAQM4uWbOhrNdM2FOnO8dZkjhsRmorOBZCbjSH5c6gF4bRQND7acKgtweih4OY=
+X-Received: by 2002:a19:4c57:: with SMTP id z84mr10945520lfa.92.1596536043506;
+ Tue, 04 Aug 2020 03:14:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200721132528.9661-1-john.ogness@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
+ <CAACQVJqNXh0B=oe5W7psiMGc6LzNPujNe2sypWi_SvH5sY=F3Q@mail.gmail.com>
+ <a3e20b44-9399-93c1-210f-e3c1172bf60d@intel.com> <CAACQVJo+bAr_k=LjgdTKbOxFEkpbYAsaWbkSDjUepgO7_XQfNA@mail.gmail.com>
+ <7a9c315f-fa29-7bd5-31be-3748b8841b29@mellanox.com> <CAACQVJpZZPfiWszZ36E0Awuo2Ad1w5=4C1rgG=d4qPiWVP609Q@mail.gmail.com>
+ <7fd63d16-f9fa-9d55-0b30-fe190d0fb1cb@mellanox.com>
+In-Reply-To: <7fd63d16-f9fa-9d55-0b30-fe190d0fb1cb@mellanox.com>
+From:   Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Date:   Tue, 4 Aug 2020 15:43:52 +0530
+Message-ID: <CAACQVJqXa-8v4TU+M1DWA2Tfv3ayrAobiH9Fajd=5MCgsfAA6A@mail.gmail.com>
+Subject: Re: [PATCH net-next RFC 00/13] Add devlink reload level option
+To:     Moshe Shemesh <moshe@mellanox.com>
+Cc:     Jacob Keller <jacob.e.keller@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Netdev <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2020-07-21 15:31:28, John Ogness wrote:
-> With commit ("printk: use the lockless ringbuffer"), printk()
-> started silently dropping messages without text because such
-> records are not supported by the new printk ringbuffer.
-> 
-> Add support for such records.
-> 
-> Currently dataless records are denoted by INVALID_LPOS in order
-> to recognize failed prb_reserve() calls. Change the ringbuffer
-> to instead use two different identifiers (FAILED_LPOS and
-> NO_LPOS) to distinguish between failed prb_reserve() records and
-> successful dataless records, respectively.
-> 
-> diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-> index 7355ca99e852..0659b50872b5 100644
-> --- a/kernel/printk/printk_ringbuffer.c
-> +++ b/kernel/printk/printk_ringbuffer.c
->  static bool data_check_size(struct prb_data_ring *data_ring, unsigned int size)
->  {
->  	struct prb_data_block *db = NULL;
->  
-> -	/*
-> -	 * Writers are not allowed to write data-less records. Such records
-> -	 * are used only internally by the ringbuffer to denote records where
-> -	 * their data failed to allocate or have been lost.
-> -	 */
->  	if (size == 0)
-> -		return false;
-> +		return true;
+On Mon, Aug 3, 2020 at 7:23 PM Moshe Shemesh <moshe@mellanox.com> wrote:
+>
+>
+> On 8/3/2020 3:47 PM, Vasundhara Volam wrote:
+> > On Mon, Aug 3, 2020 at 5:47 PM Moshe Shemesh <moshe@mellanox.com> wrote:
+> >>
+> >> On 8/3/2020 1:24 PM, Vasundhara Volam wrote:
+> >>> On Tue, Jul 28, 2020 at 10:13 PM Jacob Keller <jacob.e.keller@intel.com> wrote:
+> >>>>
+> >>>> On 7/27/2020 10:25 PM, Vasundhara Volam wrote:
+> >>>>> On Mon, Jul 27, 2020 at 4:36 PM Moshe Shemesh <moshe@mellanox.com> wrote:
+> >>>>>> Introduce new option on devlink reload API to enable the user to select the
+> >>>>>> reload level required. Complete support for all levels in mlx5.
+> >>>>>> The following reload levels are supported:
+> >>>>>>     driver: Driver entities re-instantiation only.
+> >>>>>>     fw_reset: Firmware reset and driver entities re-instantiation.
+> >>>>> The Name is a little confusing. I think it should be renamed to
+> >>>>> fw_live_reset (in which both firmware and driver entities are
+> >>>>> re-instantiated).  For only fw_reset, the driver should not undergo
+> >>>>> reset (it requires a driver reload for firmware to undergo reset).
+> >>>>>
+> >>>> So, I think the differentiation here is that "live_patch" doesn't reset
+> >>>> anything.
+> >>> This seems similar to flashing the firmware and does not reset anything.
+> >>
+> >> The live patch is activating fw change without reset.
+> >>
+> >> It is not suitable for any fw change but fw gaps which don't require reset.
+> >>
+> >> I can query the fw to check if the pending image change is suitable or
+> >> require fw reset.
+> > Okay.
+> >>>>>>     fw_live_patch: Firmware live patching only.
+> >>>>> This level is not clear. Is this similar to flashing??
+> >>>>>
+> >>>>> Also I have a basic query. The reload command is split into
+> >>>>> reload_up/reload_down handlers (Please correct me if this behaviour is
+> >>>>> changed with this patchset). What if the vendor specific driver does
+> >>>>> not support up/down and needs only a single handler to fire a firmware
+> >>>>> reset or firmware live reset command?
+> >>>> In the "reload_down" handler, they would trigger the appropriate reset,
+> >>>> and quiesce anything that needs to be done. Then on reload up, it would
+> >>>> restore and bring up anything quiesced in the first stage.
+> >>> Yes, I got the "reload_down" and "reload_up". Similar to the device
+> >>> "remove" and "re-probe" respectively.
+> >>>
+> >>> But our requirement is a similar "ethtool reset" command, where
+> >>> ethtool calls a single callback in driver and driver just sends a
+> >>> firmware command for doing the reset. Once firmware receives the
+> >>> command, it will initiate the reset of driver and firmware entities
+> >>> asynchronously.
+> >>
+> >> It is similar to mlx5 case here for fw_reset. The driver triggers the fw
+> >> command to reset and all PFs drivers gets events to handle and do
+> >> re-initialization.  To fit it to the devlink reload_down and reload_up,
+> >> I wait for the event handler to complete and it stops at driver unload
+> >> to have the driver up by devlink reload_up. See patch 8 in this patchset.
+> >>
+> > Yes, I see reload_down is triggering the reset. In our driver, after
+> > triggering the reset through a firmware command, reset is done in
+> > another context as the driver initiates the reset only after receiving
+> > an ASYNC event from the firmware.
+>
+>
+> Same here.
+>
+> >
+> > Probably, we have to use reload_down() to send firmware command to
+> > trigger reset and do nothing in reload_up.
+> I had that in previous version, but its wrong to use devlink reload this
+> way, so I added wait with timeout for the event handling to complete
+> before unload_down function ends. See mlx5_fw_wait_fw_reset_done(). Also
+> the event handler stops before load back to have that done by devlink
+> reload_up.
+But "devlink dev reload" will be invoked by the user only on a single
+dev handler and all function drivers will be re-instantiated upon the
+ASYNC event. reload_down and reload_up are invoked only the function
+which the user invoked.
 
-Nit: This might deserve a comment why size == 0 is handled
-     a special way.specially. I think about something like:
+Take an example of a 2-port (PF0 and PF1) adapter on a single host and
+with some VFs loaded on the device. User invokes "devlink dev reload"
+on PF0, ASYNC event is received on 2 PFs and VFs for reset. All the
+function drivers will be re-instantiated including PF0.
 
-	/*
-	 * Empty data blocks are handled by special lpos values in
-	 * the record descriptor. No space is needed in the data ring.
-	 */
+If we wait for some time in reload_down() of PF0 and then call load in
+reload_up(), this code will be different from other function drivers.
 
-or simply
-
-	/* Data-less records take no space in the data ring. */
-
->  	/*
->  	 * Ensure the alignment padded size could possibly fit in the data
-
-> @@ -1025,6 +1020,10 @@ static char *data_alloc(struct printk_ringbuffer *rb,
->  static unsigned int space_used(struct prb_data_ring *data_ring,
->  			       struct prb_data_blk_lpos *blk_lpos)
->  {
-> +	/* Data-less blocks take no space. */
-> +	if (LPOS_DATALESS(blk_lpos->begin))
-> +		return 0;
-
-Nit: It seems that all the other locations check also blk_lpos->next,
-     for example, get_data() does:
-
-	if (LPOS_DATALESS(blk_lpos->begin) && LPOS_DATALESS(blk_lpos->next)) {
-
-
-     Both approaches are error prone. I would either simplify the
-     other locations and check only lpos->begin. But better might
-     be to be on the safe side do a paranoid check, like:
-
-bool is_dataless(struct prb_data_blk_lpos *blk_lpos)
-{
-	if (LPOS_DATALESS(blk_lpos->begin) || LPOS_DATALESS(blk_lpos->next)) {
-		WARN_ON_ONCE(blk_lpos->begin != blk_lpos->next);
-		return true;
-	}
-
-	return false;
-}
-
-> +
->  	if (DATA_WRAPS(data_ring, blk_lpos->begin) == DATA_WRAPS(data_ring, blk_lpos->next)) {
->  		/* Data block does not wrap. */
->  		return (DATA_INDEX(data_ring, blk_lpos->next) -
-
-Anyway, the patch looks fine. It is already pushed in
-printk/linux.git. So, if you agree with my nits, we should
-solve them with separate patches on top of the existing ones.
-
-Best Regards,
-Petr
+> >   And returning from reload
+> > does not mean that reset is complete as it is done in another context
+> > and the driver notifies the health reporter once the reset is
+> > complete. devlink framework may have to allow drivers to implement
+> > reload_down only to look more clean or call reload_up only if the
+> > driver notifies the devlink once reset is completed from another
+> > context. Please suggest.
