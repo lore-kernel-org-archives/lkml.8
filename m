@@ -2,102 +2,125 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CFFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 00:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95134C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 00:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE0A32086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 00:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9973F20656
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 00:15:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cDorCLzb"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XinFr6mm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbgHDAOn (ORCPT
+        id S1728893AbgHDAPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 20:14:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38832 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728329AbgHDAOm (ORCPT
+        Mon, 3 Aug 2020 20:15:23 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:36653 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728329AbgHDAPW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 20:14:42 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53EDDC06174A;
-        Mon,  3 Aug 2020 17:14:42 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id 88so35713528wrh.3;
-        Mon, 03 Aug 2020 17:14:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pLqa6iIagQjdsqMYxByjjjyKCkbWqHO5m3vOPF/8+wU=;
-        b=cDorCLzbE0Mncpqq+Tg1mP3VivfjCvwGyaEizymXnx/LbHd5cQ8A7SHR015B1w2fNg
-         JHg2+TaD68iHuuCTzsTy54O/ng49d6Fqq/PN9OMlhfAeaioqJQL6ORcedDdUPaO9Np7J
-         nwF7SEacmVdWecgetwUTpDwVIWS9Q006PRgxPMxtnUrvJhYPOrhSBOBXA7AxqkbC/EYw
-         W/QFt17yPz9CnRdWNj8mj17qzLNAMLdCtr8bQjFa0BwnyoAv91ivhuRFozvR2Zy0f+0b
-         5PclOAew8eNUGu30g4D9NpZnRjyrhzwaFS31WzOcBP9GhIbIPEJqS3NyyAux/WP9azSq
-         XSyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pLqa6iIagQjdsqMYxByjjjyKCkbWqHO5m3vOPF/8+wU=;
-        b=mQNVDT4EH6JHmOpWzrVQLDly9swljhrDECgEYRdcDPnbLlZSmoUqFrnh2By/+vJTBT
-         INIRR8YvXRnNHnHcjn2lSrpshCVBsZAbVZwr09kuzxFhWL0dJOBo5vlg5HhaB4QK457t
-         K06Sg0KPt2hs/4Pg9XiWUNFTmWSp0MP2HsFZALkgfc5giy2YcpY3LHElxbIlL1h2EVpQ
-         PUyKImrpM3oEAeqvNjuqsLnxKinQOnxFQezH+IDaAu/Uh5AoL07rAB8Fg7LfLC0/0SGs
-         VpnGD4dCt6vS9l4IeXE2/Py2j0uldklb2rPtVjEFEd1eH3jp+w0UsnFAsUABQ3RjUeUq
-         uuug==
-X-Gm-Message-State: AOAM531NB5K3t4YOkqbp8Ae9xxg2w5IxAONlyfg4eyJ8uTTD9IrQDg+K
-        436egyKmDNwJaxidI5TADkU=
-X-Google-Smtp-Source: ABdhPJwdsH0pMYRMGanAKEVY9CpKqzquGlGl+O7Q0vlHq/3gfASusHGCqhrWnnyEMu7Sd3KigtzhwA==
-X-Received: by 2002:adf:de91:: with SMTP id w17mr16979218wrl.108.1596500080802;
-        Mon, 03 Aug 2020 17:14:40 -0700 (PDT)
-Received: from localhost (55d43e89.access.ecotel.net. [85.212.62.137])
-        by smtp.gmail.com with ESMTPSA id f63sm2064620wmf.9.2020.08.03.17.14.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 17:14:40 -0700 (PDT)
-From:   Timo Witte <timo.witte@gmail.com>
-To:     timo.witte@gmail.com
-Cc:     jlee@suse.com, Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org (open list:ACER WMI LAPTOP EXTRAS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] platform/x86: acer-wmi: add automatic keyboard background light toggle key as KEY_LIGHTS_TOGGLE
-Date:   Tue,  4 Aug 2020 02:14:23 +0200
-Message-Id: <20200804001423.36778-1-timo.witte@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 3 Aug 2020 20:15:22 -0400
+X-UUID: ef7542779436431f80815dec5f03a96e-20200804
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=3spY01kwf4O6wv7cicumcVELIxjbsq4/eTGUCLDHWqw=;
+        b=XinFr6mmrVN0Q5O7bKYQJPJO8TT9FPpJ0Gy02/VbSxVKidrAchUt5dSoPu1FGIp+L7KEZPSSwFSH8kw4yV1J9XQruu8OSwk+OVKYSbF0Fwd4Bt7TkG8xAsKoOjeQ5B3zDpSbrwTOov3CwZRHM2VCZGaW8pS84ofNl4KUdS2VAEg=;
+X-UUID: ef7542779436431f80815dec5f03a96e-20200804
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <zhiyong.tao@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 50072949; Tue, 04 Aug 2020 08:15:12 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
+ (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 4 Aug
+ 2020 08:15:04 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 4 Aug 2020 08:15:05 +0800
+Message-ID: <1596500071.20778.0.camel@mhfsdcap03>
+Subject: Re: [PATCH v2 2/3] dt-bindings: pinctrl: mt8192: add binding
+ document
+From:   zhiyong tao <zhiyong.tao@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     <seiya.wang@mediatek.com>, <linux-arm-kernel@lists.infradead.org>,
+        <jg_poxu@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <chuanjia.liu@mediatek.com>,
+        <sean.wang@kernel.org>, <srv_heupstream@mediatek.com>,
+        <biao.huang@mediatek.com>, <erin.lo@mediatek.com>,
+        <mark.rutland@arm.com>, <hongzhou.yang@mediatek.com>,
+        <matthias.bgg@gmail.com>, <devicetree@vger.kernel.org>,
+        <robh+dt@kernel.org>, <hui.liu@mediatek.com>,
+        <eddie.huang@mediatek.com>, <sean.wang@mediatek.com>,
+        <linux-gpio@vger.kernel.org>, <sj.huang@mediatek.com>,
+        <linus.walleij@linaro.org>
+Date:   Tue, 4 Aug 2020 08:14:31 +0800
+In-Reply-To: <20200803214054.GA3184946@bogus>
+References: <20200801043303.32149-1-zhiyong.tao@mediatek.com>
+         <20200801043303.32149-3-zhiyong.tao@mediatek.com>
+         <20200803214054.GA3184946@bogus>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-TM-SNTS-SMTP: 7534D64DA8CF1C4E84B2CC352E2ADD1F41974CB8CC880301656CE46078BDEF9C2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Got a dmesg message on my AMD Renoir based Acer laptop:
-"acer_wmi: Unknown key number - 0x84" when toggling keyboard
-background light
-
-Signed-off-by: Timo Witte <timo.witte@gmail.com>
----
- drivers/platform/x86/acer-wmi.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/platform/x86/acer-wmi.c b/drivers/platform/x86/acer-wmi.c
-index 60c18f21588d..87797f785d6a 100644
---- a/drivers/platform/x86/acer-wmi.c
-+++ b/drivers/platform/x86/acer-wmi.c
-@@ -111,6 +111,7 @@ static const struct key_entry acer_wmi_keymap[] __initconst = {
- 	{KE_KEY, 0x64, {KEY_SWITCHVIDEOMODE} },	/* Display Switch */
- 	{KE_IGNORE, 0x81, {KEY_SLEEP} },
- 	{KE_KEY, 0x82, {KEY_TOUCHPAD_TOGGLE} },	/* Touch Pad Toggle */
-+	{KE_IGNORE, 0x84, {KEY_LIGHTS_TOGGLE} }, /* Automatic Keyboard background light toggle */
- 	{KE_KEY, KEY_TOUCHPAD_ON, {KEY_TOUCHPAD_ON} },
- 	{KE_KEY, KEY_TOUCHPAD_OFF, {KEY_TOUCHPAD_OFF} },
- 	{KE_IGNORE, 0x83, {KEY_TOUCHPAD_TOGGLE} },
--- 
-2.27.0
+T24gTW9uLCAyMDIwLTA4LTAzIGF0IDE1OjQwIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gU2F0LCAwMSBBdWcgMjAyMCAxMjozMzowMiArMDgwMCwgWmhpeW9uZyBUYW8gd3JvdGU6DQo+
+ID4gVGhlIGNvbW1pdCBhZGRzIG10ODE5MiBjb21wYXRpYmxlIG5vZGUgaW4gYmluZGluZyBkb2N1
+bWVudC4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBaaGl5b25nIFRhbyA8emhpeW9uZy50YW9A
+bWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vYmluZGluZ3MvcGluY3RybC9waW5jdHJs
+LW10ODE5Mi55YW1sICAgICAgfCAxNzUgKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBj
+aGFuZ2VkLCAxNzUgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA3NTUgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvcGluY3RybC1tdDgxOTIueWFtbA0K
+PiA+IA0KPiANCj4gDQo+IE15IGJvdCBmb3VuZCBlcnJvcnMgcnVubmluZyAnbWFrZSBkdF9iaW5k
+aW5nX2NoZWNrJyBvbiB5b3VyIHBhdGNoOg0KDQo9PT4gRGVhciBSb2IsDQpJIHdpbGwgZml4IGl0
+IGluIHYzLiBUaGFua3MuDQo+IA0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtbXQ4MTky
+LmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzowOiBbMCwg
+MjY4NDU1OTM2LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGlu
+dXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3Bp
+bmN0cmwtbXQ4MTkyLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAw
+OnJlZzoxOiBbMCwgMjk3OTI2NjU2LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3Jv
+YmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9waW5jdHJsL3BpbmN0cmwtbXQ4MTkyLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5j
+dHJsQDEwMDA1MDAwOnJlZzoyOiBbMCwgMjk4OTA5Njk2LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0K
+PiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtbXQ4MTkyLmV4YW1wbGUuZHQueWFtbDogZXhh
+bXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzozOiBbMCwgMjk5MDQwNzY4LCAwLCA0MDk2XSBp
+cyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtbXQ4MTkyLmV4YW1wbGUu
+ZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo0OiBbMCwgMjk5MTA2MzA0
+LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2
+aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtbXQ4
+MTkyLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo1OiBb
+MCwgMzAwMDIzODA4LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcv
+bGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJs
+L3BpbmN0cmwtbXQ4MTkyLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1
+MDAwOnJlZzo2OiBbMCwgMzAwMzUxNDg4LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRz
+L3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9waW5jdHJsL3BpbmN0cmwtbXQ4MTkyLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBw
+aW5jdHJsQDEwMDA1MDAwOnJlZzo3OiBbMCwgMzAwNTQ4MDk2LCAwLCA0MDk2XSBpcyB0b28gbG9u
+Zw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtbXQ4MTkyLmV4YW1wbGUuZHQueWFtbDog
+ZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo4OiBbMCwgMzAxMDcyMzg0LCAwLCA0MDk2
+XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtbXQ4MTkyLmV4YW1w
+bGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo5OiBbMCwgMzAxMTM3
+OTIwLCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQt
+cmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwt
+bXQ4MTkyLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzox
+MDogWzAsIDI2ODQ4MDUxMiwgMCwgNDA5Nl0gaXMgdG9vIGxvbmcNCj4gDQo+IA0KPiBTZWUgaHR0
+cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC8xMzM5NjYxDQo+IA0KPiBJZiB5b3UgYWxy
+ZWFkeSByYW4gJ21ha2UgZHRfYmluZGluZ19jaGVjaycgYW5kIGRpZG4ndCBzZWUgdGhlIGFib3Zl
+DQo+IGVycm9yKHMpLCB0aGVuIG1ha2Ugc3VyZSBkdC1zY2hlbWEgaXMgdXAgdG8gZGF0ZToNCj4g
+DQo+IHBpcDMgaW5zdGFsbCBnaXQraHR0cHM6Ly9naXRodWIuY29tL2RldmljZXRyZWUtb3JnL2R0
+LXNjaGVtYS5naXRAbWFzdGVyIC0tdXBncmFkZQ0KPiANCj4gUGxlYXNlIGNoZWNrIGFuZCByZS1z
+dWJtaXQuDQo+IA0KDQo=
 
