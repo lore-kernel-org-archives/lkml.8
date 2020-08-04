@@ -2,177 +2,75 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC15C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03068C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0240B2177B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05EA122B40
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:09:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596535775;
+	bh=BDVRKWhd/ahtDaxAjQb6ui5srULsGQG8iPjKOzeDYao=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UeysFoDAXFTF3PTc1KWqX63mFufzQXG4rQxmMoT+VS2Z9fxynFHT0gT947o0dyCi6
+	 7OvwS3TMvXUnHpMaDIG4CT6HPAPWl6w3n5EwP0yWalUkJPssamyd/9rKyQb72pTmNC
+	 WGH9/ABhnsHl2R6X6AjtmE49Mh9Etj5snHY9GFlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730116AbgHDKIi (ORCPT
+        id S1730136AbgHDKJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 06:08:38 -0400
-Received: from mga05.intel.com ([192.55.52.43]:27813 "EHLO mga05.intel.com"
+        Tue, 4 Aug 2020 06:09:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728311AbgHDKIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 06:08:36 -0400
-IronPort-SDR: YvfCLoP76/WchcUK3mqhku/G18fwOtBbKndIzu9cGfE2Tv9YEVQlIyKxwliQciIsMQyaxGX3S7
- GUoSADAQWhsQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="237144713"
-X-IronPort-AV: E=Sophos;i="5.75,433,1589266800"; 
-   d="scan'208";a="237144713"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 03:08:36 -0700
-IronPort-SDR: be8eyJZeFVeLLnafcVjQTCVfiLuUnKwBuaLmEDk1u04eTWawCpv5/52FWWS2iMAhRKLRXbDhhy
- lKz17Fe5ktQQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,433,1589266800"; 
-   d="scan'208";a="330557050"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
-  by FMSMGA003.fm.intel.com with ESMTP; 04 Aug 2020 03:08:31 -0700
-Subject: Re: [PATCH v2 4/5] perf record: Don't clear event's period if set by
- a term
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>
-References: <20200728085734.609930-1-irogers@google.com>
- <20200728085734.609930-5-irogers@google.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <969ef797-59ea-69d0-24b9-33bcdff106a1@intel.com>
-Date:   Tue, 4 Aug 2020 13:08:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1728472AbgHDKJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 06:09:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F59D2177B;
+        Tue,  4 Aug 2020 10:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596535773;
+        bh=BDVRKWhd/ahtDaxAjQb6ui5srULsGQG8iPjKOzeDYao=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BW3ipZV+5YAVRX5Mn3sd2PMkK5RfgdNxEPEBVHalyf3pdxQYUpoQ/aWmu9g8OVNO/
+         UHSDj/TmDBH1ny1fFVAMNTwHr5UsZ7dS/yOWnOaDiYecJ7q8FF5dJTSGn5ZQDWDsxP
+         X+OXH8O94E8uZsnuiSeS4+o2q23ICjydFY0+r/Xc=
+Date:   Tue, 4 Aug 2020 12:09:12 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc:     linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH kernel] serial_core: Check for port state when tty is
+ in error state
+Message-ID: <20200804100912.GA2671027@kroah.com>
+References: <20200728124359.980-1-aik@ozlabs.ru>
+ <eb3cf1b2-8519-1722-22aa-6182ee734a27@ozlabs.ru>
 MIME-Version: 1.0
-In-Reply-To: <20200728085734.609930-5-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eb3cf1b2-8519-1722-22aa-6182ee734a27@ozlabs.ru>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28/07/20 11:57 am, Ian Rogers wrote:
-> If events in a group explicitly set a frequency or period with leader
-> sampling, don't disable the samples on those events.
+On Tue, Aug 04, 2020 at 08:02:27PM +1000, Alexey Kardashevskiy wrote:
+> Ping?
 > 
-> Prior to 5.8:
-> perf record -e '{cycles/period=12345000/,instructions/period=6789000/}:S'
+> ps. Greg, your name came up in "git format-patch -M --stdout -1 HEAD |
+> ./scripts/get_maintainer.pl --norolestats --l" ;)
 
-Might be worth explaining this use-case some more.
-Perhaps add it to the leader sampling documentation for perf-list.
+It's in my queue to review, but can't do anything now that the merge
+window is open.
 
-> would clear the attributes then apply the config terms. In commit
-> 5f34278867b7 leader sampling configuration was moved to after applying the
-> config terms, in the example, making the instructions' event have its period
-> cleared.
-> This change makes it so that sampling is only disabled if configuration
-> terms aren't present.
-> 
-> Fixes: 5f34278867b7 ("perf evlist: Move leader-sampling configuration")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/record.c | 28 ++++++++++++++++++++--------
->  1 file changed, 20 insertions(+), 8 deletions(-)
-> 
-> diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
-> index a4cc11592f6b..01d1c6c613f7 100644
-> --- a/tools/perf/util/record.c
-> +++ b/tools/perf/util/record.c
-> @@ -2,6 +2,7 @@
->  #include "debug.h"
->  #include "evlist.h"
->  #include "evsel.h"
-> +#include "evsel_config.h"
->  #include "parse-events.h"
->  #include <errno.h>
->  #include <limits.h>
-> @@ -38,6 +39,9 @@ static void evsel__config_leader_sampling(struct evsel *evsel, struct evlist *ev
->  	struct perf_event_attr *attr = &evsel->core.attr;
->  	struct evsel *leader = evsel->leader;
->  	struct evsel *read_sampler;
-> +	struct evsel_config_term *term;
-> +	struct list_head *config_terms = &evsel->config_terms;
-> +	int term_types, freq_mask;
->  
->  	if (!leader->sample_read)
->  		return;
-> @@ -47,16 +51,24 @@ static void evsel__config_leader_sampling(struct evsel *evsel, struct evlist *ev
->  	if (evsel == read_sampler)
->  		return;
->  
-> +	/* Determine the evsel's config term types. */
-> +	term_types = 0;
-> +	list_for_each_entry(term, config_terms, list) {
-> +		term_types |= 1 << term->type;
-> +	}
->  	/*
-> -	 * Disable sampling for all group members other than the leader in
-> -	 * case the leader 'leads' the sampling, except when the leader is an
-> -	 * AUX area event, in which case the 2nd event in the group is the one
-> -	 * that 'leads' the sampling.
-> +	 * Disable sampling for all group members except those with explicit
-> +	 * config terms or the leader. In the case of an AUX area event, the 2nd
-> +	 * event in the group is the one that 'leads' the sampling.
->  	 */
-> -	attr->freq           = 0;
-> -	attr->sample_freq    = 0;
-> -	attr->sample_period  = 0;
-> -	attr->write_backward = 0;
-> +	freq_mask = (1 << EVSEL__CONFIG_TERM_FREQ) | (1 << EVSEL__CONFIG_TERM_PERIOD);
-> +	if ((term_types & freq_mask) == 0) {
+Also, as it's an RFC, that means you don't think it should be merged, so
+perhaps do some work to verify that you think this is correct and resend
+it?
 
-It would be nicer to have a helper e.g.
+thanks,
 
-	if (!evsel__have_config_term(evsel, FREQ) &&
-	    !evsel__have_config_term(evsel, PERIOD)) {
-
-> +		attr->freq           = 0;
-> +		attr->sample_freq    = 0;
-> +		attr->sample_period  = 0;
-
-If we are not sampling, then maybe we should also put here:
-
-		attr->write_backward = 0;
-
-> +	}
-
-Then, if we are sampling this evsel shouldn't the backward setting
-match the leader? e.g.
-
-	if (attr->sample_freq)
-		attr->write_backward = leader->core.attr.write_backward;
-
-
-> +	if ((term_types & (1 << EVSEL__CONFIG_TERM_OVERWRITE)) == 0)
-> +		attr->write_backward = 0;
->  
->  	/*
->  	 * We don't get a sample for slave events, we make them when delivering
-> 
-
+greg k-h
