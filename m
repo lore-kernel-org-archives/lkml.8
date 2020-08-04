@@ -5,47 +5,46 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D52C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5607CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72D962076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59C0D2076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:09:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uyGtFrlD"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="l3uN03NI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729752AbgHDIIv (ORCPT
+        id S1729814AbgHDIJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 04:08:51 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:22741 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726788AbgHDIIu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 04:08:50 -0400
+        Tue, 4 Aug 2020 04:09:05 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:47524 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729605AbgHDIJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 04:09:04 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596528529; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1596528543; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=MFq5q/nvUA4Da5minLQ/5WQKxE6K5fjxfakeD/Ulegg=; b=uyGtFrlDq2q3htu9p2JL2LuC+KAOiSb7iuhHqIqpNXvROb7PVazF8+gQW74kePQjtkIRJZEj
- WZdOoHzVx/V/DJ2k/1BTXK+E+h8Xfx8DucAv3k5DbGtpK7u90SVqMqDYqspEi/YVWlzZfeH3
- 8HfkyBiIoCGW0bPuxF3ou+lHwAc=
-X-Mailgun-Sending-Ip: 104.130.122.29
+ bh=GZkjDkpKTKSPxQOn1C6nl629XIJ2Lx9Les5Owq+DC0A=; b=l3uN03NI652vd3dZQq7fw9iEOilfWUe58KlEcBNVJYBqQcwVkymaKKISErzeIXxYdjugspQn
+ pPRpg6AX3tFHYtXrIAySTOLSaah2FCq5iuSUNyFpjpU8VVCzQZjqOVo2i1iE/VmZrDxSMv/d
+ 3Elx1a29zQZxJlbATnmJO5WABgs=
+X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
- 5f29178537790be1d0c5951c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 04 Aug 2020 08:08:37
+ smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
+ 5f2917939fdcd87189b5b5a1 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 04 Aug 2020 08:08:51
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0F943C43395; Tue,  4 Aug 2020 08:08:36 +0000 (UTC)
+        id 50FDFC433B2; Tue,  4 Aug 2020 08:08:50 +0000 (UTC)
 Received: from rohkumar-linux.qualcomm.com (unknown [202.46.22.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: rohitkr)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 86B44C433CB;
-        Tue,  4 Aug 2020 08:08:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 86B44C433CB
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 70AEAC433B2;
+        Tue,  4 Aug 2020 08:08:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 70AEAC433B2
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
 From:   Rohit kumar <rohitkr@codeaurora.org>
@@ -55,10 +54,11 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
         srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org,
         alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Rohit kumar <rohitkr@codeaurora.org>
-Subject: [PATCH v5 06/12] ASoC: qcom: lpass-cpu: fix concurrency issue
-Date:   Tue,  4 Aug 2020 13:37:27 +0530
-Message-Id: <1596528453-11437-7-git-send-email-rohitkr@codeaurora.org>
+Cc:     Ajit Pandey <ajitp@codeaurora.org>,
+        Rohit kumar <rohitkr@codeaurora.org>
+Subject: [PATCH v5 08/12] include: dt-bindings: sound: Add sc7180-lpass bindings header
+Date:   Tue,  4 Aug 2020 13:37:29 +0530
+Message-Id: <1596528453-11437-9-git-send-email-rohitkr@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1596528453-11437-1-git-send-email-rohitkr@codeaurora.org>
 References: <1596528453-11437-1-git-send-email-rohitkr@codeaurora.org>
@@ -67,53 +67,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i2sctl register value is set to 0 during hw_free(). This
-impacts any ongoing concurrent session on the same i2s
-port. As trigger() stop already resets enable bit to 0,
-there is no need of explicit hw_free. Removing it to
-fix the issue.
+From: Ajit Pandey <ajitp@codeaurora.org>
 
-Fixes: 80beab8e1d86 ("ASoC: qcom: Add LPASS CPU DAI driver")
+Add header defining dai-id and mclk id for SC7180 lpass soc.
+
+Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
 Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- sound/soc/qcom/lpass-cpu.c | 16 ----------------
- 1 file changed, 16 deletions(-)
+ include/dt-bindings/sound/sc7180-lpass.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+ create mode 100644 include/dt-bindings/sound/sc7180-lpass.h
 
-diff --git a/sound/soc/qcom/lpass-cpu.c b/sound/soc/qcom/lpass-cpu.c
-index 6b86f16..5d84f63 100644
---- a/sound/soc/qcom/lpass-cpu.c
-+++ b/sound/soc/qcom/lpass-cpu.c
-@@ -266,21 +266,6 @@ static int lpass_cpu_daiops_hw_params(struct snd_pcm_substream *substream,
- 	return 0;
- }
- 
--static int lpass_cpu_daiops_hw_free(struct snd_pcm_substream *substream,
--		struct snd_soc_dai *dai)
--{
--	struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
--	int ret;
--
--	ret = regmap_write(drvdata->lpaif_map,
--			   LPAIF_I2SCTL_REG(drvdata->variant, dai->driver->id),
--			   0);
--	if (ret)
--		dev_err(dai->dev, "error writing to i2sctl reg: %d\n", ret);
--
--	return ret;
--}
--
- static int lpass_cpu_daiops_prepare(struct snd_pcm_substream *substream,
- 		struct snd_soc_dai *dai)
- {
-@@ -350,7 +335,6 @@ const struct snd_soc_dai_ops asoc_qcom_lpass_cpu_dai_ops = {
- 	.startup	= lpass_cpu_daiops_startup,
- 	.shutdown	= lpass_cpu_daiops_shutdown,
- 	.hw_params	= lpass_cpu_daiops_hw_params,
--	.hw_free	= lpass_cpu_daiops_hw_free,
- 	.prepare	= lpass_cpu_daiops_prepare,
- 	.trigger	= lpass_cpu_daiops_trigger,
- };
+diff --git a/include/dt-bindings/sound/sc7180-lpass.h b/include/dt-bindings/sound/sc7180-lpass.h
+new file mode 100644
+index 00000000..7d988f6
+--- /dev/null
++++ b/include/dt-bindings/sound/sc7180-lpass.h
+@@ -0,0 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __DT_SC7180_LPASS_H
++#define __DT_SC7180_LPASS_H
++
++#define MI2S_PRIMARY	0
++#define MI2S_SECONDARY	1
++
++#define LPASS_MCLK0	0
++
++#endif /* __DT_APQ8016_LPASS_H */
 -- 
 Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
 is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
