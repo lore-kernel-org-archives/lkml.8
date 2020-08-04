@@ -2,137 +2,290 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A74C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EB8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 711432075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:50:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="NtPMZgXb"
+	by mail.kernel.org (Postfix) with ESMTP id 82A4E2075D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:53:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596531219;
+	bh=t0mk9cNIb/0COvakGYrIvms/4YHLyI1U62Idnmu22hI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=XJO/ArE6SkrcJoyRFT+iAhe3le1S8ZhpJqIkNvJMTKiIjhFz6sEdsxH2OB2pfC8YF
+	 P7/oFWUvN4q/+sPSDamNM/HA6K/VoL86gGwGOY5LntcWl46581PKfW01Hfj7Pq7En7
+	 53NPGiV6TAI+ESY/1TvpZeZ8t8Yj3RKCXAgG9FkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730016AbgHDIut (ORCPT
+        id S1729992AbgHDIxi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 04:50:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33458 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729586AbgHDIut (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 04:50:49 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2626BC06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 01:50:49 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id p14so1921175wmg.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 01:50:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2ZcJP9tlcrLa5x4h1C/bOIZ/fSEfOKvm1WToVJD+VSA=;
-        b=NtPMZgXbZfVJMTejbKLRZ0vN5MYf8LOukWY7RxFBgD3scEGI8tBTHAoaCsvP3DE/Sm
-         IOYDy1hDRU7C0uUxjEzRcpoW/IxF1ja+ZOVFKHvpqYmumHNUKQ1z178sRRzGrJtWK0Bc
-         TRL2Tpj7Q05COmQmWZa/HUM8LsrklhPkbFqlN3gssbLAWtIFhxtnf9vVL2J82cJ0G+CY
-         BAN7r7+YTfjdcEcvwRMwmXFHWl0gy6AKFJzSIYSvpTF/4HXYVuRE8tTYCsTu4WdWfLvK
-         V+nHiL3PBvEPf5ffMtkuUdywaW8AK2fvzVopVjIefNesj/xeIqRxSX6K0SpHVydv9Zs3
-         Jisg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2ZcJP9tlcrLa5x4h1C/bOIZ/fSEfOKvm1WToVJD+VSA=;
-        b=MmTTkDDI6e3zgG7oUfpLLFQtQiyFiDSLjzTb0Z42LIwwnogqaFN7HAxTdNjtKpfRbP
-         6ehJIyxk18DOucLpAwQJZeOK+AtnEMnPAKhORI5BJtyoRKMJsWmWLtB5QyDRpDnvuQiy
-         rThfSxuD0UCFGUytuI0/YBbYNBgo45uVjXBPfIPe4H3fkK7fcD0Sum3VRX6sdMJHQ1i8
-         IbHV62ooaSxmDb0TMyO4bT3PGfBq3Ytt8Yg32S8EgO9hagSlXfi361QUiF+E+xlnziLU
-         xjC24/Ke7XmPcVugnTJdE1OGbI8gJZiOX0XyuOxdEUKUQ0p540sHwO1Tph/W4EotX5yn
-         oqFg==
-X-Gm-Message-State: AOAM533UHpOTWtjOOD8MFJjuYijevTVrtGHOThuIWo3w+flHFZfF9pUS
-        62LauYPQj02CUpzihvD/e5I=
-X-Google-Smtp-Source: ABdhPJxYzSIsXp1kd7dXZ7jJ2jad04Z07RAKMcXJlFXwD9kayX+qxpgT7Pr4jN683ayBDXZzSvJxZw==
-X-Received: by 2002:a1c:ddc3:: with SMTP id u186mr2937757wmg.72.1596531047104;
-        Tue, 04 Aug 2020 01:50:47 -0700 (PDT)
-Received: from [192.168.1.20] ([213.122.218.185])
-        by smtp.googlemail.com with ESMTPSA id g7sm29636251wrv.82.2020.08.04.01.50.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Aug 2020 01:50:46 -0700 (PDT)
-Subject: Re: PATCH: rtsx_pci driver - don't disable the rts5229 card reader on
- Intel NUC boxes
-To:     =?UTF-8?B?5ZCz5piK5r6EIFJpY2t5?= <ricky_wu@realtek.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "philquadra@gmail.com" <philquadra@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>
-References: <862172f0-cd23-800c-27b1-27cb49e99099@googlemail.com>
- <a9a94d7f-4873-7a10-4911-f3c760257c5c@googlemail.com>
- <5729c72bbc2740d3917619c85e2fde58@realtek.com>
- <20200804074831.GB1761483@kroah.com>
- <11e224ca299b48f1bea07082f2ff7c00@realtek.com>
-From:   Chris Clayton <chris2553@googlemail.com>
-Message-ID: <0afbd711-0bda-d9a3-138d-5c713b4e2ed9@googlemail.com>
-Date:   Tue, 4 Aug 2020 09:50:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 4 Aug 2020 04:53:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53500 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729856AbgHDIxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 04:53:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAD2A2075A;
+        Tue,  4 Aug 2020 08:53:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596531217;
+        bh=t0mk9cNIb/0COvakGYrIvms/4YHLyI1U62Idnmu22hI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kVyoEq1KiHvcoEATAVCpW46LHdPp3Jysrs9DFFbJ5XVZqd87B/6SYRIteIpwbPDNa
+         jDZ4Q7N81J8t9xU79HUanwUakNNszNSOeftuMw5sINN+0ItE15qamH7z0OXpRAfBR4
+         ovw9Vg4DYaPUNF7JXfGJRyAHMdNxOlTXu0LlfFmU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.14 00/47] 4.14.192-rc3 review
+Date:   Tue,  4 Aug 2020 10:53:16 +0200
+Message-Id: <20200804085215.362760089@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <11e224ca299b48f1bea07082f2ff7c00@realtek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.192-rc3.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.14.192-rc3
+X-KernelTest-Deadline: 2020-08-06T08:52+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is the start of the stable review cycle for the 4.14.192 release.
+There are 47 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
+
+Responses should be made by Thu, 06 Aug 2020 08:51:59 +0000.
+Anything received after that time might be too late.
+
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.192-rc3.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+and the diffstat can be found below.
+
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.14.192-rc3
+
+Thomas Gleixner <tglx@linutronix.de>
+    x86/i8259: Use printk_deferred() to prevent deadlock
+
+Wanpeng Li <wanpengli@tencent.com>
+    KVM: LAPIC: Prevent setting the tscdeadline timer if the lapic is hw disabled
+
+Andrea Righi <andrea.righi@canonical.com>
+    xen-netfront: fix potential deadlock in xennet_remove()
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    cxgb4: add missing release on skb in uld_send()
+
+Josh Poimboeuf <jpoimboe@redhat.com>
+    x86/unwind/orc: Fix ORC for newly forked tasks
+
+Raviteja Narayanam <raviteja.narayanam@xilinx.com>
+    Revert "i2c: cadence: Fix the hold bit setting"
+
+Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+    net: ethernet: ravb: exit if re-initialization fails in tx timeout
+
+Liam Beguin <liambeguin@gmail.com>
+    parisc: add support for cmpxchg on u8 pointers
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    nfc: s3fwrn5: add missing release on skb in s3fwrn5_recv_frame
+
+Laurence Oberman <loberman@redhat.com>
+    qed: Disable "MFW indication via attention" SPAM every 5 minutes
+
+Geert Uytterhoeven <geert@linux-m68k.org>
+    usb: hso: Fix debug compile warning on sparc32
+
+Robin Murphy <robin.murphy@arm.com>
+    arm64: csum: Fix handling of bad packets
+
+Sami Tolvanen <samitolvanen@google.com>
+    arm64/alternatives: move length validation inside the subsection
+
+Remi Pommarel <repk@triplefau.lt>
+    mac80211: mesh: Free pending skb when destroying a mpath
+
+Remi Pommarel <repk@triplefau.lt>
+    mac80211: mesh: Free ie data when leaving mesh
+
+Andrii Nakryiko <andriin@fb.com>
+    bpf: Fix map leak in HASH_OF_MAPS map
+
+Thomas Falcon <tlfalcon@linux.ibm.com>
+    ibmvnic: Fix IRQ mapping disposal in error path
+
+Ido Schimmel <idosch@mellanox.com>
+    mlxsw: core: Free EMAD transactions using kfree_rcu()
+
+Ido Schimmel <idosch@mellanox.com>
+    mlxsw: core: Increase scope of RCU read-side critical section
+
+Jakub Kicinski <kuba@kernel.org>
+    mlx4: disable device on shutdown
+
+Johan Hovold <johan@kernel.org>
+    net: lan78xx: fix transfer-buffer memory leak
+
+Johan Hovold <johan@kernel.org>
+    net: lan78xx: add missing endpoint sanity check
+
+Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
+    sh: Fix validation of system call number
+
+Tanner Love <tannerlove@google.com>
+    selftests/net: rxtimestamp: fix clang issues for target arch PowerPC
+
+YueHaibing <yuehaibing@huawei.com>
+    net/x25: Fix null-ptr-deref in x25_disconnect
+
+Xiyu Yang <xiyuyang19@fudan.edu.cn>
+    net/x25: Fix x25_neigh refcnt leak when x25 disconnect
+
+Rik van Riel <riel@surriel.com>
+    xfs: fix missed wakeup on l_flush_wait
+
+Peilin Ye <yepeilin.cs@gmail.com>
+    rds: Prevent kernel-infoleak in rds_notify_queue_get()
+
+Joerg Roedel <jroedel@suse.de>
+    x86, vmlinux.lds: Page-align end of ..page_aligned sections
+
+Sami Tolvanen <samitolvanen@google.com>
+    x86/build/lto: Fix truncated .bss with -fdata-sections
+
+Wang Hai <wanghai38@huawei.com>
+    9p/trans_fd: Fix concurrency del of req_list in p9_fd_cancelled/p9_read_work
+
+Dominique Martinet <dominique.martinet@cea.fr>
+    9p/trans_fd: abort p9_read_work if req status changed
+
+Sheng Yong <shengyong1@huawei.com>
+    f2fs: check if file namelen exceeds max value
+
+Jaegeuk Kim <jaegeuk@kernel.org>
+    f2fs: check memory boundary by insane namelen
+
+Steve Cohen <cohens@codeaurora.org>
+    drm: hold gem reference until object is no longer accessed
+
+Peilin Ye <yepeilin.cs@gmail.com>
+    drm/amdgpu: Prevent kernel-infoleak in amdgpu_info_ioctl()
+
+Will Deacon <will@kernel.org>
+    ARM: 8986/1: hw_breakpoint: Don't invoke overflow handler on uaccess watchpoints
+
+Pi-Hsun Shih <pihsun@chromium.org>
+    wireless: Use offsetof instead of custom macro.
+
+Robert Hancock <hancockrwd@gmail.com>
+    PCI/ASPM: Disable ASPM on ASMedia ASM1083/1085 PCIe-to-PCI bridge
+
+Sasha Levin <sashal@kernel.org>
+    x86/kvm: Be careful not to clear KVM_VCPU_FLUSH_TLB bit
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    ath9k: release allocated buffer if timed out
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    ath9k_htc: release allocated buffer if timed out
+
+Sasha Levin <sashal@kernel.org>
+    iio: imu: adis16400: fix memory leak
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    media: rc: prevent memory leak in cx23888_ir_probe
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    crypto: ccp - Release all allocated memory if sha type is invalid
+
+Wei Yongjun <weiyongjun1@huawei.com>
+    net: phy: mdio-bcm-unimac: fix potential NULL dereference in unimac_mdio_probe()
+
+Jason Yan <yanaijie@huawei.com>
+    scsi: libsas: direct call probe and destruct
 
 
-On 04/08/2020 09:08, 吳昊澄 Ricky wrote:
->> -----Original Message-----
->> From: gregkh@linuxfoundation.org [mailto:gregkh@linuxfoundation.org]
->> Sent: Tuesday, August 04, 2020 3:49 PM
->> To: 吳昊澄 Ricky
->> Cc: Chris Clayton; LKML; rdunlap@infradead.org; philquadra@gmail.com; Arnd
->> Bergmann
->> Subject: Re: PATCH: rtsx_pci driver - don't disable the rts5229 card reader on
->> Intel NUC boxes
->>
->> On Tue, Aug 04, 2020 at 02:44:41AM +0000, 吳昊澄 Ricky wrote:
->>> Hi Chris,
->>>
->>> rtsx_pci_write_register(pcr, FPDTL, OC_POWER_DOWN, OC_POWER_DOWN);
->>> This register operation saved power under 1mA, so if do not care the 1mA
->> power we can have a patch to remove it, make compatible with NUC6
->>> We tested others our card reader that remove it, we did not see any side effect
->>>
->>> Hi Greg k-h,
->>>
->>> Do you have any comments?
->>
->> comments on what?  I don't know what you are responding to here, sorry.
->>
-> Can we have a patch to kernel for NUC6? It may cause more power(1mA) but it will have more compatibility
-> 
+-------------
 
-Ricky,
+Diffstat:
 
-I don't understand why you want to completely remove the code that sets up the 1mA power saving. That code was there
-even before your patch (bede03a579b3b4a036003c4862cc1baa4ddc351f), so I assume it benefits some of the Realtek card
-readers. Before your patch however, rtsx_pci_init_ocp() was not called for the rts5229 reader, but the patch introduced
-an unconditional call to that function into rtsx_pci_init_hw(), which is run for the rts5229. That is what now disables
-the card reader.
+ Makefile                                           |  4 +-
+ arch/arm/kernel/hw_breakpoint.c                    | 27 +++++++--
+ arch/arm64/include/asm/alternative.h               |  4 +-
+ arch/arm64/include/asm/checksum.h                  |  5 +-
+ arch/parisc/include/asm/cmpxchg.h                  |  2 +
+ arch/parisc/lib/bitops.c                           | 12 ++++
+ arch/sh/kernel/entry-common.S                      |  6 +-
+ arch/x86/kernel/i8259.c                            |  2 +-
+ arch/x86/kernel/unwind_orc.c                       |  8 ++-
+ arch/x86/kernel/vmlinux.lds.S                      |  3 +-
+ arch/x86/kvm/lapic.c                               |  2 +-
+ arch/x86/kvm/x86.c                                 |  3 +
+ drivers/crypto/ccp/ccp-ops.c                       |  3 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c            |  3 +-
+ drivers/gpu/drm/drm_gem.c                          | 10 ++--
+ drivers/i2c/busses/i2c-cadence.c                   |  9 +--
+ drivers/iio/imu/adis16400_buffer.c                 |  5 +-
+ drivers/media/pci/cx23885/cx23888-ir.c             |  5 +-
+ drivers/net/ethernet/chelsio/cxgb4/sge.c           |  1 +
+ drivers/net/ethernet/ibm/ibmvnic.c                 |  2 +-
+ drivers/net/ethernet/mellanox/mlx4/main.c          |  2 +
+ drivers/net/ethernet/mellanox/mlxsw/core.c         |  8 ++-
+ drivers/net/ethernet/qlogic/qed/qed_int.c          |  3 +-
+ drivers/net/ethernet/renesas/ravb_main.c           | 26 ++++++++-
+ drivers/net/phy/mdio-bcm-unimac.c                  |  2 +
+ drivers/net/usb/hso.c                              |  5 +-
+ drivers/net/usb/lan78xx.c                          |  6 ++
+ drivers/net/wireless/ath/ath9k/htc_hst.c           |  3 +
+ drivers/net/wireless/ath/ath9k/wmi.c               |  1 +
+ drivers/net/xen-netfront.c                         | 64 ++++++++++++++--------
+ drivers/nfc/s3fwrn5/core.c                         |  1 +
+ drivers/pci/quirks.c                               | 13 +++++
+ drivers/scsi/libsas/sas_ata.c                      |  1 -
+ drivers/scsi/libsas/sas_discover.c                 | 32 ++++++-----
+ drivers/scsi/libsas/sas_expander.c                 |  8 +--
+ drivers/scsi/libsas/sas_internal.h                 |  1 +
+ drivers/scsi/libsas/sas_port.c                     |  3 +
+ fs/f2fs/dir.c                                      | 12 +++-
+ fs/xfs/xfs_log.c                                   |  9 ++-
+ include/asm-generic/vmlinux.lds.h                  |  5 +-
+ include/scsi/libsas.h                              |  3 +-
+ include/scsi/scsi_transport_sas.h                  |  1 +
+ include/uapi/linux/wireless.h                      |  5 +-
+ kernel/bpf/hashtab.c                               | 12 +++-
+ net/9p/trans_fd.c                                  | 32 ++++++++---
+ net/mac80211/cfg.c                                 |  1 +
+ net/mac80211/mesh_pathtbl.c                        |  1 +
+ net/rds/recv.c                                     |  3 +-
+ net/x25/x25_subr.c                                 |  6 ++
+ .../networking/timestamping/rxtimestamp.c          |  3 +-
+ 50 files changed, 277 insertions(+), 111 deletions(-)
 
-Now, I don't know whether other cards are affected, although I don't recall seeing any reported as I searched the kernel
-and ubuntu bugzillas for any analysis of the problem. I know this is not what the patch I sent does, but having thought
-about it more, seems to me that the simplest fix is to skip the new call to rtsx_pci_init_ocp() if the reader is an rts5229.
 
-If you agree, I can prepare a patch and send it to you. Whatever the solution is, it will also be needed in the stable
-kernels later than 5.0.
-
-Chris
->> greg k-h
->>
->> ------Please consider the environment before printing this e-mail.
