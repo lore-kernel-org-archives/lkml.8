@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DADC7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B41ADC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC7E122CA1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EAC620842
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:48:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a+wy7+3F"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mmVoL/AM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728141AbgHDUr7 (ORCPT
+        id S1728207AbgHDUsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 16:47:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59214 "EHLO
+        Tue, 4 Aug 2020 16:48:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgHDUrz (ORCPT
+        with ESMTP id S1728146AbgHDUr7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 16:47:55 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FDAAC06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 13:47:55 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id d24so22773511qtg.23
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 13:47:55 -0700 (PDT)
+        Tue, 4 Aug 2020 16:47:59 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA6BCC06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 13:47:58 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id k1so16304428qtp.20
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 13:47:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=l0j4SXLxck80GLdHUQry5KIFoZtv4r8IlcuWa364DVs=;
-        b=a+wy7+3FtUG0JFCfIgR9qrCZywwrw0V7CNU6FJdQAvp5UG3v0AxVcm5uBR7mxm1b5+
-         SZ09Llj2URMzjmakMQ945Aqcf9IB/vh6C/OYrNrUzfUTk8HSVsL6nngFKojrbe1LIJdY
-         unjWAzObZAWiiHERXa/5+uXD8DwGtMGDrTcsTqkz9v1PfzEkcvExsunEqQoi96jv6jEY
-         qcVgy72yz2Mo7Eh+TpcH3gDQVzPv5wd4+JFy5sMtwt9U+7i8nJ4jh3TJNezObyMUnh0v
-         eVxJYeCEVX7g2g98mkxo/9n7BGp2bjO+Jrzkufw0O5QBpUGaTCBVmJIiFGMT8DIrUCaW
-         H+zA==
+        bh=y+u4fKeYaqBEutQX9Z0HQ6z4AVHLFsJy68c6azG+EzI=;
+        b=mmVoL/AM2WzN83wudXZcQBbAARV3/CCAsweI2kvE34swVGEjEGDTyGhs8TzIqLB2Jy
+         J9ABiX5LWXRTIPPouIHnVNKoYjuyneQCYAgTO8KCID1l2KHt6VpCwyEzaiH8GMYHHSAP
+         pAKKxa6sHVCqjWlYiJDPfltmJlj9UARbuMIfuynhlkZCTu3T2byGo6yjWRh7wYptj6+F
+         mxLVmMmQ1JcXWjY9BlBuvIqBQTAQ5Qns34/Ua/GQqqfrrwC70rdtH+cE2oUv5YMBChi8
+         q0GDV3HsB+RnB1CaxSgFWDfYEZTZRgyIfKv99NnIUyGt7dQ+fLYy0HlBAl7VvqYdxVrd
+         X3pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=l0j4SXLxck80GLdHUQry5KIFoZtv4r8IlcuWa364DVs=;
-        b=acnipy2GQ2M5v1KhNIGZjMb0Z4EK6jdl0i3OHwYmi9RYhT0rAyme/ZZKfNi9HRrBWd
-         PCcdN3pcc0Ky4kIRnpFfcsgZ5jeQZmpxJNgonLZFNK71oXfyKI++srIv0IVqOHwBRYtt
-         gkgUAaISvpOEz7CE+c7Ko3yd4VFhAmzPY7aXFOUPsSeEwb13JfQyZNcmi9EGJ7JjykwY
-         koIcywE5Yk+Y2yTCajqh8wVis2pNojXrA5SdkgmwUTYRgI9XQNbIB41oiabG+877pUUf
-         B4VFKtUUlnbrWxjP+KF9r824HhY7pOLKtGlZHUrZXLKFkxDqopgY6wBnzsp9Ee5kdela
-         e/Ug==
-X-Gm-Message-State: AOAM530oU+WCHE9L8thyCdLAUYTcXGxhseMyI9zYM0UisncNnGXQbKoP
-        Vq4o9rHtHOkfzhY/a3aqFqxTnG8G8FX6iB0k5GzTXg==
-X-Google-Smtp-Source: ABdhPJzJLSr+jiO03PdspEcRzr8pHmSLzfuYlQ3t76a3c3nKUzZC+S5krHnvMMjyGnBJ6cKJmIV9sm8B56R2oFlU/Ep/WA==
-X-Received: by 2002:a0c:b712:: with SMTP id t18mr180439qvd.205.1596574074175;
- Tue, 04 Aug 2020 13:47:54 -0700 (PDT)
-Date:   Tue,  4 Aug 2020 13:47:41 -0700
+        bh=y+u4fKeYaqBEutQX9Z0HQ6z4AVHLFsJy68c6azG+EzI=;
+        b=a1WDX4EkBt15/mSDuiHTa06EOc3UU0VubV2wlWHen0N4SRGDA90+gyV2JmWy/ATrlX
+         dq5yoG3Z8Xxu1cRzqw/rfJ/SabeI5PzMSqaBbM28UaVOPxyXDx8vglr4gkbYj9oICMIW
+         2Bynrc4PDICVW0Xucmb/lMsmcInXd5ATMtX3MwXJqJPKL786aytyRee1SLOMyjJrmJnj
+         MM5/9M0qM9ddFo2v5gpboj7dIH6XAxcU5fxKZGNCo6sxxUIXYfpM7mKRpHI3GmSYzpkk
+         ME7KzatiAHjDB3CGSrstaw0iD04J5/szqpmavJ05WxwNUoOyhgohDzjBZTLS56fFFYwg
+         XSSQ==
+X-Gm-Message-State: AOAM533RfRtpKatDGoei67jHvtinqQ4dPyGyj5exnkEM6nP3HfQuMTin
+        oAFyciHiVmAq52k5QUvlk4Rlx9UnXCRAhYNhIQ8QFQ==
+X-Google-Smtp-Source: ABdhPJxyDKJxFIl1my851ZIf2fCKwWG52mp7Blh2CoLZwkoZ/cs5K9FEc2P1jO16v9PTh/QU/Kvpjz4/2OkY4LqBZmlnmQ==
+X-Received: by 2002:a0c:806b:: with SMTP id 98mr238468qva.38.1596574077956;
+ Tue, 04 Aug 2020 13:47:57 -0700 (PDT)
+Date:   Tue,  4 Aug 2020 13:47:43 -0700
 In-Reply-To: <20200804204745.987648-1-brendanhiggins@google.com>
-Message-Id: <20200804204745.987648-2-brendanhiggins@google.com>
+Message-Id: <20200804204745.987648-4-brendanhiggins@google.com>
 Mime-Version: 1.0
 References: <20200804204745.987648-1-brendanhiggins@google.com>
 X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-Subject: [PATCH v6 1/5] vmlinux.lds.h: add linker section for KUnit test suites
+Subject: [PATCH v6 3/5] init: main: add KUnit to kernel init
 From:   Brendan Higgins <brendanhiggins@google.com>
 To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
         arnd@arndb.de, keescook@chromium.org, skhan@linuxfoundation.org,
@@ -80,47 +80,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a linker section where KUnit can put references to its test suites.
-This patch is the first step in transitioning to dispatching all KUnit
-tests from a centralized executor rather than having each as its own
-separate late_initcall.
+Although we have not seen any actual examples where KUnit doesn't work
+because it runs in the late init phase of the kernel, it has been a
+concern for some time that this could potentially be an issue in the
+future. So, remove KUnit from init calls entirely, instead call directly
+from kernel_init() so that KUnit runs after late init.
 
-Co-developed-by: Iurii Zaikin <yzaikin@google.com>
-Signed-off-by: Iurii Zaikin <yzaikin@google.com>
+Co-developed-by: Alan Maguire <alan.maguire@oracle.com>
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
 Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
 Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
 ---
- include/asm-generic/vmlinux.lds.h | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ include/kunit/test.h | 9 +++++++++
+ init/main.c          | 4 ++++
+ lib/kunit/executor.c | 4 +---
+ 3 files changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 052e0f05a9841..75130a4d92ef0 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -692,7 +692,8 @@
- 	THERMAL_TABLE(governor)						\
- 	EARLYCON_TABLE()						\
- 	LSM_TABLE()							\
--	EARLY_LSM_TABLE()
-+	EARLY_LSM_TABLE()						\
-+	KUNIT_TABLE()
+diff --git a/include/kunit/test.h b/include/kunit/test.h
+index f3e86c3953a2b..795039d9f1917 100644
+--- a/include/kunit/test.h
++++ b/include/kunit/test.h
+@@ -228,6 +228,15 @@ int __kunit_test_suites_init(struct kunit_suite * const * const suites);
  
- #define INIT_TEXT							\
- 	*(.init.text .init.text.*)					\
-@@ -884,6 +885,13 @@
- 		KEEP(*(.con_initcall.init))				\
- 		__con_initcall_end = .;
+ void __kunit_test_suites_exit(struct kunit_suite **suites);
  
-+/* Alignment must be consistent with (kunit_suite *) in include/kunit/test.h */
-+#define KUNIT_TABLE()							\
-+		. = ALIGN(8);						\
-+		__kunit_suites_start = .;				\
-+		KEEP(*(.kunit_test_suites))				\
-+		__kunit_suites_end = .;
++#if IS_BUILTIN(CONFIG_KUNIT)
++int kunit_run_all_tests(void);
++#else
++static inline int kunit_run_all_tests(void)
++{
++	return 0;
++}
++#endif /* IS_BUILTIN(CONFIG_KUNIT) */
 +
- #ifdef CONFIG_BLK_DEV_INITRD
- #define INIT_RAM_FS							\
- 	. = ALIGN(4);							\
+ /**
+  * kunit_test_suites() - used to register one or more &struct kunit_suite
+  *			 with KUnit.
+diff --git a/init/main.c b/init/main.c
+index 0ead83e86b5aa..d3101d8874dea 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -106,6 +106,8 @@
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/initcall.h>
+ 
++#include <kunit/test.h>
++
+ static int kernel_init(void *);
+ 
+ extern void init_IRQ(void);
+@@ -1504,6 +1506,8 @@ static noinline void __init kernel_init_freeable(void)
+ 
+ 	do_basic_setup();
+ 
++	kunit_run_all_tests();
++
+ 	console_on_rootfs();
+ 
+ 	/*
+diff --git a/lib/kunit/executor.c b/lib/kunit/executor.c
+index 7015e7328dce7..4aab7f70a88c3 100644
+--- a/lib/kunit/executor.c
++++ b/lib/kunit/executor.c
+@@ -11,7 +11,7 @@ extern struct kunit_suite * const * const __kunit_suites_end[];
+ 
+ #if IS_BUILTIN(CONFIG_KUNIT)
+ 
+-static int kunit_run_all_tests(void)
++int kunit_run_all_tests(void)
+ {
+ 	struct kunit_suite * const * const *suites;
+ 
+@@ -23,6 +23,4 @@ static int kunit_run_all_tests(void)
+ 	return 0;
+ }
+ 
+-late_initcall(kunit_run_all_tests);
+-
+ #endif /* IS_BUILTIN(CONFIG_KUNIT) */
 -- 
 2.28.0.163.g6104cc2f0b6-goog
 
