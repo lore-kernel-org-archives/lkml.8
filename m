@@ -2,149 +2,111 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A16F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9B5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 838762067D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:45:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SUphjhFH"
+	by mail.kernel.org (Postfix) with ESMTP id 729152067D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:46:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596545169;
+	bh=uOzlt5bua2472/dKyBwUpGHM2fobEm8gRY1VfCC7ZhU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=py6Cz9VSWOkqHlSwQwUj1T+TV6DGwKG+RAJCdI8aY1oG3tom2RUOgYocPdXGTWKCw
+	 xQ8SUgjo+2gB1R7R2qu2EDir8Y1JOuSBDK3yHgKodhI3sDSFykeFMXkb+6rEKaFGJy
+	 iIx+Jy9EKu7RYs58bYYb7P1L/X1vVx29Qki75VNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbgHDMps (ORCPT
+        id S1728334AbgHDMqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 08:45:48 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:58112 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728323AbgHDMom (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 08:44:42 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 074CdeRQ110777;
-        Tue, 4 Aug 2020 07:39:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596544780;
-        bh=q1N2A/Pp9sT+eaD7QF1h9hN8wK3QPQGffVRsrPfYn0s=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=SUphjhFHaOzvR6K1tL7OHdQJ2lgxg11mkoEanxhYXKPwCxluoEny9jrbtYcKaVstt
-         GsHsDgD7xEx3g/JufOOvDxUR/GtsworcnbLiP/vSnHUOLP1AAGhwQJzZRbC5e7Cn5Y
-         DZ7MWTLUn5Ay0pcL4tfwniCs4BRzELhiIAzAjX20=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 074Cdecp117005
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 4 Aug 2020 07:39:40 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 4 Aug
- 2020 07:39:39 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 4 Aug 2020 07:39:39 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 074CdcUO003160;
-        Tue, 4 Aug 2020 07:39:38 -0500
-Subject: Re: [REGRESSION] omapdrm/N900 display broken
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200728181412.GA49617@darkstar.musicnaut.iki.fi>
- <660b2fe1-343d-b83e-11d2-5a5eb530b83f@ti.com>
-Message-ID: <448c1441-2cac-44ef-95ef-bb28b512297b@ti.com>
-Date:   Tue, 4 Aug 2020 15:39:37 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 4 Aug 2020 08:46:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59082 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbgHDMpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 08:45:39 -0400
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0C57208C7;
+        Tue,  4 Aug 2020 12:45:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596545139;
+        bh=uOzlt5bua2472/dKyBwUpGHM2fobEm8gRY1VfCC7ZhU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=kyt2DYaBLfqTCaZlJgJ8Vbx122bqzT/j51oqmKziP6RX5mpCy0YMKPU/QvoKb3Vtz
+         Gt4XiWphb6qvRzhdGGS+lXl/JDosXUMyTIsUlx3LlieMoIKc4xX6QCia7VjiXj0V4o
+         xzHb/RVyFUWXmWcA3QJSQVH8s8QGutfKk/yHfplY=
+Received: by mail-oi1-f181.google.com with SMTP id e6so15981322oii.4;
+        Tue, 04 Aug 2020 05:45:38 -0700 (PDT)
+X-Gm-Message-State: AOAM530RQW+Xei2SgoZC6ywX2QN56aE3GL7RQBDVOBXefm96MIvMi5Al
+        HIi/1phKUwkr3+iXl1LU9UsDAUFL+Xks4MQkLD8=
+X-Google-Smtp-Source: ABdhPJxb8MesMRb416e8kTI8ZauUqLqB/eVjRnHNd8WuqjCzShGF5XRXreP3TOHqe4CfYkGp36dN9g+66PkSaUVXJjU=
+X-Received: by 2002:a05:6808:b37:: with SMTP id t23mr3331033oij.174.1596545138345;
+ Tue, 04 Aug 2020 05:45:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <660b2fe1-343d-b83e-11d2-5a5eb530b83f@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <cover.1596544734.git.andreyknvl@google.com> <6514652d3a32d3ed33d6eb5c91d0af63bf0d1a0c.1596544734.git.andreyknvl@google.com>
+In-Reply-To: <6514652d3a32d3ed33d6eb5c91d0af63bf0d1a0c.1596544734.git.andreyknvl@google.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Tue, 4 Aug 2020 14:45:25 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFua3LuoD=-7rkS1UuBXXCppsc32tZryyu2GoS4mpwzVQ@mail.gmail.com>
+Message-ID: <CAMj1kXFua3LuoD=-7rkS1UuBXXCppsc32tZryyu2GoS4mpwzVQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] efi: provide empty efi_enter_virtual_mode implementation
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Marco Elver <elver@google.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        kasan-dev <kasan-dev@googlegroups.com>, linux-mm@kvack.org,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Walter Wu <walter-zh.wu@mediatek.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/08/2020 15:13, Tomi Valkeinen wrote:
-> On 28/07/2020 21:14, Aaro Koskinen wrote:
->> Hi,
->>
->> Looks like N900 display support has broken after v5.6.
->>
->> When using v5.7, or the current mainline (v5.8-rc7), the boot hangs at:
->>
->> [    6.269500] omapdss_dss 48050000.dss: 48050000.dss supply vdda_video not found, using dummy regulator
->> [    6.321685] DSS: OMAP DSS rev 2.0
->> [    6.328002] omapdss_dss 48050000.dss: bound 48050400.dispc (ops dispc_component_ops)
->> [    6.336364] omapdss_dss 48050000.dss: bound 48050c00.encoder (ops venc_component_ops)
->> [    6.345153] omapdrm omapdrm.0: DMM not available, disable DMM support
->> [    6.352447] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
->>
->> with a blank display.
->>
->> I tried to bisect this, and the first commit that breaks the display is:
->>
->> 2f004792adadcf017fde50339b432a26039fff0c is the first bad commit
->> commit 2f004792adadcf017fde50339b432a26039fff0c
->> Author: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->> Date:   Wed Feb 26 13:24:57 2020 +0200
->>
->>     drm/omap: venc: Register a drm_bridge
->>
->> This commit does not yet hang the kernel, but the display is blank and
->> the probe fails:
->>
->> [    6.290100] omapdss_dss 48050000.dss: 48050000.dss supply vdda_video not foun
->> d, using dummy regulator
->> [    6.342346] DSS: OMAP DSS rev 2.0
->> [    6.348663] omapdss_dss 48050000.dss: bound 48050400.dispc (ops dispc_component_ops)
->> [    6.357025] omapdss_dss 48050000.dss: bound 48050c00.encoder (ops venc_component_ops)
->> [    6.365814] omapdrm omapdrm.0: DMM not available, disable DMM support
->> [    6.372863] omapdrm omapdrm.0: omap_modeset_init failed: ret=-22
->> [    6.414611] omapdrm: probe of omapdrm.0 failed with error -22
-> 
-> Afaics, this is caused by the patch doing
-> 
-> 	if (!venc->output.next_bridge)
-> 
-> instead of
-> 
-> 	if (venc->output.next_bridge)
-> 
-> Fixing that removes the error on beagle xm, but for some reason I don't see TV-out as a DRM output
-> (but HDMI output works).
-> 
->> The hang seems to start with this commit:
->>
->> commit 8bef8a6d5da81b909a190822b96805a47348146f (HEAD -> master)
->> Author: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->> Date:   Wed Feb 26 13:25:10 2020 +0200
->>
->>     drm/omap: sdi: Register a drm_bridge
->>
->> Confusingly, some of the commits between these two commits do provide a
->> working display, e.g. 13d2d52f59c0c79398d9c9e2ea3d661a0e5b6bbc ("drm/omap:
->> sdi: Sort includes alphabetically") works...
-> 
-> The venc issue is fixed in "Switch the HDMI and VENC outputs to drm_bridge", which is a few commits
-> after the "venc: Register a drm_bridge".
-> 
-> So I'm guessing SDI works until "sdi: Register a drm_bridge", but as omapdrm doesn't probe, you get
-> no displays.
-> 
-> Can you try to pinpoint a bit where the hang happens? Maybe add DRM/omapdrm debug prints, or perhaps
-> sysrq works and it shows a lock that's in deadlock.
+On Tue, 4 Aug 2020 at 14:41, Andrey Konovalov <andreyknvl@google.com> wrote:
+>
+> When CONFIG_EFI is not enabled, we might get an undefined reference
+> to efi_enter_virtual_mode() error, if this efi_enabled() call isn't
+> inlined into start_kernel(). This happens in particular, if start_kernel()
+> is annodated with __no_sanitize_address.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 
-Also, one data point would be to disable venc, e.g. set venc status to "disabled" in dts.
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
 
- Tomi
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> ---
+>  include/linux/efi.h | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/include/linux/efi.h b/include/linux/efi.h
+> index 05c47f857383..73db1ae04cef 100644
+> --- a/include/linux/efi.h
+> +++ b/include/linux/efi.h
+> @@ -606,7 +606,11 @@ extern void *efi_get_pal_addr (void);
+>  extern void efi_map_pal_code (void);
+>  extern void efi_memmap_walk (efi_freemem_callback_t callback, void *arg);
+>  extern void efi_gettimeofday (struct timespec64 *ts);
+> +#ifdef CONFIG_EFI
+>  extern void efi_enter_virtual_mode (void);     /* switch EFI to virtual mode, if possible */
+> +#else
+> +static inline void efi_enter_virtual_mode (void) {}
+> +#endif
+>  #ifdef CONFIG_X86
+>  extern efi_status_t efi_query_variable_store(u32 attributes,
+>                                              unsigned long size,
+> --
+> 2.28.0.163.g6104cc2f0b6-goog
+>
