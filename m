@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE1FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A26702075D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A33582086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596509524;
+	s=default; t=1596509538;
 	bh=omu5bgYLt7XzcbFBfJMzrYKS2aJGyBRDwaAWcy8Cj58=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=q5CydIt5UcdPWIZO5sSlcahWw1+Yg0Vp9FN3uZO1OYOXVgNc4rk8BkfRB1JD8/I5C
-	 uOgNBf9oUypVOtDVOuEMgQV3Oddq/vtLTVuik2J60hfVJ3MNBUGW4gSN0qWP/gsawo
-	 uuXxCr+USpzXuV4+I86Q6f3cpjE0aFRbjRQ5hArg=
+	b=lAOJVPLUeDaYubnaIzikhE1qxd7DNEbOgOCsnMTHVXoZHmdqiSXsXekTqZR11b3GH
+	 PmjHajlzKBeBGw8D5EGD9xlPLaBUIorvzOdoDT4n+JMCc2Hryu289jCq25I9THJHJj
+	 11Ony/Ix8mmQ8D930m/zZQGlTSTnK09Z7L8mx2Mc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730176AbgHDCwD (ORCPT
+        id S1729326AbgHDCwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 22:52:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34842 "EHLO mail.kernel.org"
+        Mon, 3 Aug 2020 22:52:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729834AbgHDCwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 22:52:03 -0400
+        id S1728463AbgHDCwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 22:52:16 -0400
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 811B72063A;
-        Tue,  4 Aug 2020 02:52:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 533C02075D;
+        Tue,  4 Aug 2020 02:52:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596509522;
+        s=default; t=1596509536;
         bh=omu5bgYLt7XzcbFBfJMzrYKS2aJGyBRDwaAWcy8Cj58=;
         h=From:To:Cc:Subject:Date:From;
-        b=l07Vi8/5XT0DsYVMy4gsf+snwf720+niC+SAfv6kl8Ia5oQduI1KW0uWcWcB7SshH
-         lhYN6whGf/dYwDHRYnzEYNi1z7xjIW38uE9nBiVZ7KmpZqJp4Yv4aL16PUA44SUM27
-         fkI2ugcKOpyRR351pwsEpkbtxzsRtESUF12bKap0=
+        b=fIYRagPZ6zqYAR6X8Hhk/2TsWe8esSONonwQuToaTjoMLyUr19zC4H+ZEXiTIGP23
+         QfqNiObYUOI0RYUt9K/GuBG6di6WiQ6BibzH611GXYiMVgLBqEOzT28IYMHFLV6DSn
+         Arr0eQaXlxxTzn1RDWSJ5X9YUGTUNHm9b3+Cm3mk=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         linux-kernel@vger.kernel.org
 Subject: [PATCH v2] bootconfig: Fix to find the initargs correctly
-Date:   Tue,  4 Aug 2020 11:51:58 +0900
-Message-Id: <159650951869.270211.10637251161987385862.stgit@devnote2>
+Date:   Tue,  4 Aug 2020 11:52:13 +0900
+Message-Id: <159650953285.270383.14822353843556363851.stgit@devnote2>
 X-Mailer: git-send-email 2.25.1
 User-Agent: StGit/0.19
 MIME-Version: 1.0
