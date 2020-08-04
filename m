@@ -2,95 +2,110 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD5FEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 607F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5BB52075D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 433952075D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:44:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="dYrylRTK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Axx4j12o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbgHDOol (ORCPT
+        id S1729100AbgHDOoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:44:41 -0400
-Received: from mout.gmx.net ([212.227.17.20]:39535 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbgHDOoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:44:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1596552262;
-        bh=M74RPzCRuh0utMrP2KavnbtPD979HoMyUkUEHnxdnJs=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=dYrylRTKVRIaRg43Q7R8dFGXyUIuT65S2ps9pSJ4yruv+Jj3pkeAH4uh7lQ3AiF5J
-         RZY5f5j8oZLknIonBki5iU8pX8szlaQZHqJrh0eoZf430MnNzgt2PevIm7M8B2Z/rk
-         kucm7ikTNfyF7pyzfBBdHb7KJrw9fpXiacUOMQXw=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [217.61.144.119] ([217.61.144.119]) by web-mail.gmx.net
- (3c-app-gmx-bap28.server.lan [172.19.172.98]) (via HTTP); Tue, 4 Aug 2020
- 16:44:22 +0200
+        Tue, 4 Aug 2020 10:44:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36535 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725932AbgHDOox (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 10:44:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596552291;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=i0qQRP6FVPdcWxTvN3l6bnjm2x6UvPqdNJFTqbZG61E=;
+        b=Axx4j12onfDhJZsOfVnKjbtVCasuL9DxopB/YTSYkNdXsB0l7ekRLPYwy6RM9gyC19XLMt
+        sT4cuTnWQjJ/sFraWxZrQ6Owe6+/GTNommOP/IZsJjAhciVPhBgUCLZ+f9t8YYNHCsq1G1
+        7lLdW/NUrQigRd99mp2UHFg2tniCYMY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-141-zTJjV6pBNTK9yFuI5a2tmQ-1; Tue, 04 Aug 2020 10:44:49 -0400
+X-MC-Unique: zTJjV6pBNTK9yFuI5a2tmQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 564DB8BB686;
+        Tue,  4 Aug 2020 14:44:48 +0000 (UTC)
+Received: from gondolin (ovpn-112-169.ams2.redhat.com [10.36.112.169])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 731771001B2B;
+        Tue,  4 Aug 2020 14:44:47 +0000 (UTC)
+Date:   Tue, 4 Aug 2020 16:44:44 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v2 14/24] virtio_net: correct tags for config space
+ fields
+Message-ID: <20200804164444.5174452d.cohuck@redhat.com>
+In-Reply-To: <20200803205814.540410-15-mst@redhat.com>
+References: <20200803205814.540410-1-mst@redhat.com>
+        <20200803205814.540410-15-mst@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Message-ID: <trinity-5e5aa82a-c026-4138-9f33-d3776710eb47-1596552262328@3c-app-gmx-bap28>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc:     Frank Wunderlich <linux@fw-web.de>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Aw: Re: [PATCH v3 1/5] drm: mediatek: add ddp routing for mt7623
-Content-Type: text/plain; charset=UTF-8
-Date:   Tue, 4 Aug 2020 16:44:22 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <CAAOTY_94Kt3Z4FhB+1Chca-tanzY1Xwun8D2ZQ09Y7p7+Jw40Q@mail.gmail.com>
-References: <20200804105849.70876-1-linux@fw-web.de>
- <20200804105849.70876-2-linux@fw-web.de>
- <CAAOTY_94Kt3Z4FhB+1Chca-tanzY1Xwun8D2ZQ09Y7p7+Jw40Q@mail.gmail.com>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:K4vr5xLllernAPYxqzkou0b7G3SwErhkjcivj32wkp1hhhjwRwbRXU4j/Bnwcf5k5o44V
- fsU3r3SIxaDuuJpR4PyfEoLEzHoXnaAyzRA8Tu+cILYk7+t+UiHnn0KvLmJdN6igayqfcQE6XJTg
- JwRCXhLqPRdkwKLIo/RcogO0U3xXRKiMhCJZ7afFIIgokPJ9TUrZZJyZBPiFjdk6ZCcnHunNUSip
- kLsOMsNzIukx5LMmkNfHryQwKkcp9Ed/Pe4ioIs36Vjxj2zSdUfHqI3Qbdnni1PJrvnD2OLCMI3r
- KE=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:49jcVtSXYUo=:DnAfsV9jgGCpqHD/1MAphF
- hYDUK8odWLBafkI6/tiA/6/C/AOvtCBjZPxJ8SwaQDLBoUjTDioKsGr8dykcCu1vfJh5uPoz1
- JQxyOT9C+JlN4cdP4EyjbG+Mk9CSDBNNJZe0wFI66xx/TotpXuYXgjdoZL/gCb+7vOOZhsOs3
- C0TsuGjF6oz6UVbpWQ0b6ht4H5cc+redjzkrzA/IQF+ZAE991FUb1NWvu1Dqdg4gNUNK4TJxg
- l1oJ7KXNSWzg/syEbOiF18opnTiuIdbSZM5Mj5TwOTw++8V6Rp6swHdRtBnBVuFbMzUnEmI/G
- 9aZrLD0oeJsOt/GDancoHAJkzptPKlAUsSjCRdgrZBGbNW/GZB8zNp1P9Q6+SKbjEiujlQpIK
- 8VqiJSUXmuVcKjDa381e27es8qbxEh4iTDKT58m5Y0zRZtk6+6eiuSeZJLcpMQOaOv0esbK2p
- MJqvwYhbwrB464E8dJmf3xFJFmBQe0aOg50D2shEcJ57UVUmCDnD/p2z4vCZEJPtmZMnKCgNo
- UnNI3xIvdjp/vmKHUpDPzWMrqdxIBoAhsaJH1jPmr7QnCEoiES2Ku0vCyjvULGkhNb/cTd3vn
- ECawz2iJJJzz12wPpGAEz0S4Iytm1dgiYFDEtfKC7oYrNOX7fu2argrmV1tzDOLN7UcinTaHV
- oIL7Iy8c9qOb/YpbBfCo0DC0C/eTMNxYZsjLy0AOg14NRCRyi42ZIOrJi4VSrodip04Q=
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, 3 Aug 2020 16:59:37 -0400
+"Michael S. Tsirkin" <mst@redhat.com> wrote:
 
-> Gesendet: Dienstag, 04. August 2020 um 16:34 Uhr
-> Von: "Chun-Kuang Hu" <chunkuang.hu@kernel.org>
+> Tag config space fields as having virtio endian-ness.
+> 
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> ---
+>  include/uapi/linux/virtio_net.h | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/uapi/linux/virtio_net.h b/include/uapi/linux/virtio_net.h
+> index 19d23e5baa4e..27d996f29dd1 100644
+> --- a/include/uapi/linux/virtio_net.h
+> +++ b/include/uapi/linux/virtio_net.h
+> @@ -87,19 +87,19 @@ struct virtio_net_config {
+>  	/* The config defining mac address (if VIRTIO_NET_F_MAC) */
+>  	__u8 mac[ETH_ALEN];
+>  	/* See VIRTIO_NET_F_STATUS and VIRTIO_NET_S_* above */
+> -	__u16 status;
+> +	__virtio16 status;
+>  	/* Maximum number of each of transmit and receive queues;
+>  	 * see VIRTIO_NET_F_MQ and VIRTIO_NET_CTRL_MQ.
+>  	 * Legal values are between 1 and 0x8000
+>  	 */
+> -	__u16 max_virtqueue_pairs;
+> +	__virtio16 max_virtqueue_pairs;
+>  	/* Default maximum transmit unit advice */
+> -	__u16 mtu;
+> +	__virtio16 mtu;
+>  	/*
+>  	 * speed, in units of 1Mb. All values 0 to INT_MAX are legal.
+>  	 * Any other value stands for unknown.
+>  	 */
+> -	__u32 speed;
+> +	__virtio32 speed;
 
-> > -static const enum mtk_ddp_comp_id mt2712_mtk_ddp_main[] =3D {
-> > +static enum mtk_ddp_comp_id mt2712_mtk_ddp_main[] =3D {
->
-> Why do you remove 'const'?
+Hm... VIRTIO_NET_F_SPEED_DUPLEX can only be negotiated if VERSION_1 has
+also been negotiated; I think this should be __le32?
 
-was removed by previous patch and not re-added (revert failed), sorry. wil=
-l fix in next version, if all other is ok.
+>  	/*
+>  	 * 0x00 - half duplex
+>  	 * 0x01 - full duplex
 
-regards Frank
