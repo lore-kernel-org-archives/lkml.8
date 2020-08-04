@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F8E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:03:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7C7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F04F82086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C814D208A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:04:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728873AbgHDODz (ORCPT
+        id S1728918AbgHDOEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:03:55 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60700 "EHLO huawei.com"
+        Tue, 4 Aug 2020 10:04:05 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60722 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728740AbgHDOAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:00:42 -0400
+        id S1728722AbgHDOAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 10:00:41 -0400
 Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A3CEA81ADB8BCB1E0240;
+        by Forcepoint Email with ESMTP id A78B34DB814B1AEAB362;
         Tue,  4 Aug 2020 22:00:38 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 4 Aug 2020 22:00:31 +0800
+ 14.3.487.0; Tue, 4 Aug 2020 22:00:30 +0800
 From:   Yang Shen <shenyang39@huawei.com>
 To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>
 CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
         <xuzaibo@huawei.com>, <wangzhou1@hisilicon.com>
-Subject: [PATCH v4 04/10] crypto: hisilicon/qm - fix judgement of queue is full
-Date:   Tue, 4 Aug 2020 21:58:24 +0800
-Message-ID: <1596549510-2373-5-git-send-email-shenyang39@huawei.com>
+Subject: [PATCH v4 02/10] crypto: hisilicon/qm - clear used reference count when start qp
+Date:   Tue, 4 Aug 2020 21:58:22 +0800
+Message-ID: <1596549510-2373-3-git-send-email-shenyang39@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1596549510-2373-1-git-send-email-shenyang39@huawei.com>
 References: <1596549510-2373-1-git-send-email-shenyang39@huawei.com>
@@ -45,33 +45,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Tang <tanghui20@huawei.com>
+From: Shukun Tan <tanshukun1@huawei.com>
 
-The queue depth is 1024, so the condition for judging the queue full
-should be 1023, otherwise the hardware cannot judge whether the queue
-is empty or full.
+The used reference count is used for counting the number of 'sqe' which
+is under processing. This reference count should be cleared as starting
+'qp', otherwise the 'used' will be messy when allocating this 'qp' again.
 
-Fixes: 263c9959c937("crypto: hisilicon - add queue management driver...")
-Signed-off-by: Hui Tang <tanghui20@huawei.com>
+Fixes: 5308f6600a39("crypto: hisilicon - QM memory management...")
+Signed-off-by: Shukun Tan <tanshukun1@huawei.com>
 Signed-off-by: Yang Shen <shenyang39@huawei.com>
 Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
 ---
- drivers/crypto/hisilicon/qm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/hisilicon/qm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
-index 406fca3..9a5a114 100644
+index ffb28cc..e89d9b6 100644
 --- a/drivers/crypto/hisilicon/qm.c
 +++ b/drivers/crypto/hisilicon/qm.c
-@@ -1646,7 +1646,7 @@ static void *qm_get_avail_sqe(struct hisi_qp *qp)
- 	struct hisi_qp_status *qp_status = &qp->qp_status;
- 	u16 sq_tail = qp_status->sq_tail;
+@@ -755,6 +755,7 @@ static void qm_init_qp_status(struct hisi_qp *qp)
+ 	qp_status->cq_head = 0;
+ 	qp_status->cqc_phase = true;
+ 	atomic_set(&qp_status->flags, 0);
++	atomic_set(&qp_status->used, 0);
+ }
  
--	if (unlikely(atomic_read(&qp->qp_status.used) == QM_Q_DEPTH))
-+	if (unlikely(atomic_read(&qp->qp_status.used) == QM_Q_DEPTH - 1))
- 		return NULL;
- 
- 	return qp->sqe + sq_tail * qp->qm->sqe_size;
+ static void qm_vft_data_cfg(struct hisi_qm *qm, enum vft_type type, u32 base,
 -- 
 2.7.4
 
