@@ -2,95 +2,116 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E6DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4889C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4770F21744
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:58:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jru5qnT7"
+	by mail.kernel.org (Postfix) with ESMTP id C570221744
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:59:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596553155;
+	bh=m/XhRdnVL7H+dxQP7FTMHFl64txEHb+4AnXJNh0yLck=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=a6q13ZKKFNBCpUPpPIN33vuzIl27HiXTpeoMXT7TYBFRALibfACz96xoljneQ8SfT
+	 ZGb8g9QkU8uu5vKzlcQflYV6MZB1eCA3WQznhrxOdoxDpgAU4q3VRF8NDIeSDASn6s
+	 s5UF2eTaD7TiEgmWoOn6fzYhwspdGS8p9C77Tgj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729427AbgHDO6Y (ORCPT
+        id S1729428AbgHDO7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:58:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728157AbgHDO6W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:58:22 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E78ADC06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 07:58:21 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id a79so4667315pfa.8
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 07:58:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=CxN7Czk8Q/fjw3b2OK/Eu1Y95h805YTwH9VxKqGhCAo=;
-        b=jru5qnT7fx9ST2x/KOLl/kvsCn/g45/ledxil45Vl4N+Ge/ny9q5E5mgRPmVmFLXxW
-         fbngSWkODodtOID37BCP6yMPvZvPA9qsxnnlc/Xuc51KAIOAf7SgpmFgp+YjylD1c3Do
-         zAYZhXAX0OtsnfWwCy/mDSSAER3RBBgg7qhKPVqkFjrI5CnqYU9DnSo1I/Difx6LS+1O
-         MuxRPHyjkVyp6bFhSCcn3l+/vuKizYJXrnQsP9Hn24jXE+XgGB5QrYa8w3ceKt5UdHzN
-         kcH925AQ/1GyoVladVbuqO3B6Lb3aVrBfdqWxgY3/xMkHmz1mHnztJxw1RK4ueU+7Py9
-         F6hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=CxN7Czk8Q/fjw3b2OK/Eu1Y95h805YTwH9VxKqGhCAo=;
-        b=oscophDWq3cuJe4rCUXGBorxvfGU1znaiCK813kG3sh8Fl4/4x+Gt3EP8+hxSf6qVO
-         6N2NxdAhNMxe1UHU8ZsSWrt0Bz/0llRBlLHATJWV+4HLc7p4Y77mA4plWKrWvNLWZ/aa
-         Xk9BBe2vzByJBXQrZLWxHPq8Yu4/reLdCgSI8s8GnIifuObeS1Vfu/SYHVRPW3c4T/mI
-         uyyQ6jdsAC9UP8ZZGTjWTeTDGGaPXWrS+FsCu5iJlUrKdwWGktNy/bywpVRATil0o2Of
-         vPiA0BV6UTJWTiyujte2CRAuvpHIoYNdy1wtAMeFkh4bm2oA+1s9ZcylzI6yGlpnlaGE
-         E37g==
-X-Gm-Message-State: AOAM532LAJmeVAsL/K2Ihj3qXmmMnQOOFxbWmsUPbWmv+8UIXA1IBcam
-        99XX+lb1ie+gGd2ROglp3Mw=
-X-Google-Smtp-Source: ABdhPJwuhINGBfY5nsK2kvG0IomWiTrH6vzMJ6AcEutNSoXYsinQjejRyHJem+tIrvh3h/wq9pLSlw==
-X-Received: by 2002:aa7:9493:: with SMTP id z19mr20942709pfk.190.1596553101344;
-        Tue, 04 Aug 2020 07:58:21 -0700 (PDT)
-Received: from aditya ([49.14.130.231])
-        by smtp.gmail.com with ESMTPSA id na14sm2518023pjb.6.2020.08.04.07.58.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 07:58:20 -0700 (PDT)
-Date:   Tue, 4 Aug 2020 20:28:16 +0530
-From:   Aditya Bansal <adbansal99@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: wfx: fixed misspelled word in comment
-Message-ID: <20200804145816.GA3823@aditya>
+        Tue, 4 Aug 2020 10:59:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40786 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728157AbgHDO7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 10:59:08 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 161F821744;
+        Tue,  4 Aug 2020 14:59:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596553148;
+        bh=m/XhRdnVL7H+dxQP7FTMHFl64txEHb+4AnXJNh0yLck=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=idbCl9zyYdUMi+iYtEAoZXwlyuRGzpLVoczEaRU9ma2eEnnvUOeJrBegWCBA73k+x
+         Jk2BTV7bXIxwpZkiG82hiSX+jkBlOPxOu7IEfrfolnJjD3GStmHORMsfyHwo7KW/BE
+         8LmzQHys1AOTZZARokpeW24kXkXeq80xD4bdFSrg=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 6241D40C7C; Tue,  4 Aug 2020 11:59:05 -0300 (-03)
+Date:   Tue, 4 Aug 2020 11:59:05 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 00/12] perf intel-pt: Add support for decoding FUP/TIP
+ only
+Message-ID: <20200804145905.GH3440834@kernel.org>
+References: <20200710151104.15137-1-adrian.hunter@intel.com>
+ <f0a4f89f-f642-f75f-a390-da16d0a058d0@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <f0a4f89f-f642-f75f-a390-da16d0a058d0@intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Bansal <adbansal99@gmail.com>
+Em Tue, Aug 04, 2020 at 04:34:36PM +0300, Adrian Hunter escreveu:
+> On 10/07/20 6:10 pm, Adrian Hunter wrote:
+> > Hi
+> > 
+> > Here are some fixes and small improvements for Intel PT.
+> 
+> Andi added his "Reviewed-by" with 2 comments to tweak the
+> documentation.
+> 
+> The patches still apply, so do you want me to send a V3?
 
-Subject: [PATCH] fixed typo in driver/staging/wfx/hif_tx.c file
+Thanks for the reminder, will apply and test build,
 
-Correct the spelling of function
-
-Signed-off-by: Aditya Bansal <adbansal99@gmail.com>
----
-
-diff --git a/drivers/staging/wfx/hif_tx.c b/drivers/staging/wfx/hif_tx.c
-index 5110f9b93762..6a485fa5b72b 100644
---- a/drivers/staging/wfx/hif_tx.c
-+++ b/drivers/staging/wfx/hif_tx.c
-@@ -125,7 +125,7 @@ int wfx_cmd_send(struct wfx_dev *wdev, struct hif_msg *request,
+- Arnaldo
  
- // This function is special. After HIF_REQ_ID_SHUT_DOWN, chip won't reply to any
- // request anymore. We need to slightly hack struct wfx_hif_cmd for that job. Be
--// carefull to only call this funcion during device unregister.
-+// carefull to only call this function during device unregister.
- int hif_shutdown(struct wfx_dev *wdev)
- {
- 	int ret;
+> > 
+> > Changes in V2:
+> > 	For d/e flags, use +/- alphabetic options instead of numbers
+> > 	Update help text
+> > 	Improve documentation
+> > 
+> > 
+> > Adrian Hunter (12):
+> >       perf intel-pt: Fix FUP packet state
+> >       perf intel-pt: Fix duplicate branch after CBR
+> >       perf tools: Improve aux_output not supported error
+> >       perf auxtrace: Add missing itrace options to help text
+> >       perf auxtrace: Add optional error flags to the itrace 'e' option
+> >       perf intel-pt: Use itrace error flags to suppress some errors
+> >       perf auxtrace: Add optional log flags to the itrace 'd' option
+> >       perf intel-pt: Use itrace debug log flags to suppress some messages
+> >       perf intel-pt: Time filter logged perf events
+> >       perf auxtrace: Add itrace 'q' option for quicker, less detailed decoding
+> >       perf intel-pt: Add support for decoding FUP/TIP only
+> >       perf intel-pt: Add support for decoding PSB+ only
+> > 
+> >  tools/perf/Documentation/itrace.txt                |  14 ++
+> >  tools/perf/Documentation/perf-intel-pt.txt         |  63 +++++-
+> >  tools/perf/util/auxtrace.c                         |  50 +++++
+> >  tools/perf/util/auxtrace.h                         |  31 ++-
+> >  tools/perf/util/evsel.c                            |   4 +
+> >  .../perf/util/intel-pt-decoder/intel-pt-decoder.c  | 214 +++++++++++++++++++--
+> >  .../perf/util/intel-pt-decoder/intel-pt-decoder.h  |   1 +
+> >  tools/perf/util/intel-pt.c                         |  45 ++++-
+> >  8 files changed, 389 insertions(+), 33 deletions(-)
+> > 
+> > 
+> > Regards
+> > Adrian
+> > 
+> 
+
+-- 
+
+- Arnaldo
