@@ -2,104 +2,104 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E6C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CCFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0231C2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B2F322D74
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:58:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbgHDU6R (ORCPT
+        id S1728199AbgHDU6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 4 Aug 2020 16:58:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41792 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:41810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727045AbgHDU6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728039AbgHDU6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 4 Aug 2020 16:58:13 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18DF42086A;
+        by mail.kernel.org (Postfix) with ESMTPSA id 31C8E22B42;
         Tue,  4 Aug 2020 20:58:13 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1k340i-006H8j-0g; Tue, 04 Aug 2020 16:58:12 -0400
-Message-ID: <20200804205743.419135730@goodmis.org>
+        id 1k340i-006H9J-6K; Tue, 04 Aug 2020 16:58:12 -0400
+Message-ID: <20200804205812.055623798@goodmis.org>
 User-Agent: quilt/0.66
-Date:   Tue, 04 Aug 2020 16:57:43 -0400
+Date:   Tue, 04 Aug 2020 16:57:44 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-linus][PATCH 00/17] tracing: Last minute fixes for this merge window
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>
+Subject: [for-linus][PATCH 01/17] tracing: Simplify defining of the next event id
+References: <20200804205743.419135730@goodmis.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
-for-next
+From: Wei Yang <richard.weiyang@linux.alibaba.com>
 
-Head SHA1: c58b46cba71750c6e969625abb1cf3ddabb15e06
+The value to be used and compared in trace_search_list() is "last + 1".
+Let's just define next to be "last + 1" instead of doing the addition
+each time.
+
+Link: https://lkml.kernel.org/r/20200703020612.12930-2-richard.weiyang@linux.alibaba.com
+
+Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_output.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index 73976de7f8cc..a35232d61601 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -675,11 +675,11 @@ static LIST_HEAD(ftrace_event_list);
+ static int trace_search_list(struct list_head **list)
+ {
+ 	struct trace_event *e;
+-	int last = __TRACE_LAST_TYPE;
++	int next = __TRACE_LAST_TYPE + 1;
+ 
+ 	if (list_empty(&ftrace_event_list)) {
+ 		*list = &ftrace_event_list;
+-		return last + 1;
++		return next;
+ 	}
+ 
+ 	/*
+@@ -687,17 +687,17 @@ static int trace_search_list(struct list_head **list)
+ 	 * lets see if somebody freed one.
+ 	 */
+ 	list_for_each_entry(e, &ftrace_event_list, list) {
+-		if (e->type != last + 1)
++		if (e->type != next)
+ 			break;
+-		last++;
++		next++;
+ 	}
+ 
+ 	/* Did we used up all 65 thousand events??? */
+-	if ((last + 1) > TRACE_EVENT_TYPE_MAX)
++	if (next > TRACE_EVENT_TYPE_MAX)
+ 		return 0;
+ 
+ 	*list = &e->list;
+-	return last + 1;
++	return next;
+ }
+ 
+ void trace_event_read_lock(void)
+-- 
+2.26.2
 
 
-Chengming Zhou (2):
-      ftrace: Setup correct FTRACE_FL_REGS flags for module
-      ftrace: Do not let direct or IPMODIFY ftrace_ops be added to module and set trampolines
-
-Josef Bacik (1):
-      ftrace: Fix ftrace_trace_task return value
-
-Kevin Hao (2):
-      tracing/hwlat: Drop the duplicate assignment in start_kthread()
-      tracing/hwlat: Honor the tracing_cpumask
-
-Masami Hiramatsu (4):
-      kprobes: Remove show_registers() function prototype
-      lib/bootconfig: Add override operator support
-      tools/bootconfig: Add testcases for value override operator
-      Documentation: bootconfig: Add bootconfig override operator
-
-Muchun Song (1):
-      kprobes: Fix NULL pointer dereference at kprobe_ftrace_handler
-
-Nick Desaulniers (2):
-      tracepoint: Mark __tracepoint_string's __used
-      tracepoint: Use __used attribute definitions from compiler_attributes.h
-
-Peng Fan (1):
-      tracing/uprobe: Remove dead code in trace_uprobe_register()
-
-Vincent Whitchurch (1):
-      tracing: Remove outdated comment in stack handling
-
-Wei Yang (2):
-      tracing: Simplify defining of the next event id
-      tracing: Save one trace_event->type by using __TRACE_LAST_TYPE
-
-Zhaoyang Huang (1):
-      trace : Have tracing buffer info use kvzalloc instead of kzalloc
-
-----
- Documentation/admin-guide/bootconfig.rst     | 11 ++++++++++
- include/linux/kprobes.h                      |  1 -
- include/linux/tracepoint.h                   | 11 +++++-----
- kernel/kprobes.c                             |  7 ++++++
- kernel/trace/ftrace.c                        | 22 +++++++++++++------
- kernel/trace/trace.c                         | 10 ++-------
- kernel/trace/trace.h                         |  7 +++++-
- kernel/trace/trace_hwlat.c                   |  6 ++---
- kernel/trace/trace_output.c                  | 14 ++++++------
- kernel/trace/trace_uprobe.c                  |  1 -
- lib/bootconfig.c                             | 33 +++++++++++++++++++---------
- tools/bootconfig/samples/bad-override.bconf  |  3 +++
- tools/bootconfig/samples/bad-override2.bconf |  3 +++
- tools/bootconfig/samples/good-override.bconf |  6 +++++
- tools/bootconfig/test-bootconfig.sh          | 13 +++++++++++
- 15 files changed, 104 insertions(+), 44 deletions(-)
- create mode 100644 tools/bootconfig/samples/bad-override.bconf
- create mode 100644 tools/bootconfig/samples/bad-override2.bconf
- create mode 100644 tools/bootconfig/samples/good-override.bconf
