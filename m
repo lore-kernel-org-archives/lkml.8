@@ -2,141 +2,204 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F13AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C87C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB262070A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67DE02070A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729993AbgHDQZx (ORCPT
+        id S1729779AbgHDQ2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 12:25:53 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:43867 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729610AbgHDQU6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 12:20:58 -0400
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from eli@mellanox.com)
-        with SMTP; 4 Aug 2020 19:20:52 +0300
-Received: from nps-server-21.mtl.labs.mlnx (nps-server-21.mtl.labs.mlnx [10.237.240.120])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 074GKqTE023997;
-        Tue, 4 Aug 2020 19:20:52 +0300
-Received: from nps-server-21.mtl.labs.mlnx (localhost [127.0.0.1])
-        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 074GKq0N022636;
-        Tue, 4 Aug 2020 19:20:52 +0300
-Received: (from eli@localhost)
-        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 074GKqKD022635;
-        Tue, 4 Aug 2020 19:20:52 +0300
-From:   Eli Cohen <eli@mellanox.com>
-To:     mst@redhat.com, jasowang@redhat.com,
-        virtualization@lists.linux-foundation.org,
+        Tue, 4 Aug 2020 12:28:38 -0400
+Received: from mail.ispras.ru ([83.149.199.84]:57754 "EHLO mail.ispras.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726027AbgHDQ2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 12:28:38 -0400
+Received: from monopod.intra.ispras.ru (unknown [10.10.3.121])
+        by mail.ispras.ru (Postfix) with ESMTPS id 9337A40A2070;
+        Tue,  4 Aug 2020 16:28:33 +0000 (UTC)
+Date:   Tue, 4 Aug 2020 19:28:33 +0300 (MSK)
+From:   Alexander Monakov <amonakov@ispras.ru>
+To:     "Kazlauskas, Nicholas" <nicholas.kazlauskas@amd.com>
+cc:     amd-gfx@lists.freedesktop.org,
+        Alex Deucher <alexander.deucher@amd.com>,
         linux-kernel@vger.kernel.org
-Cc:     shahafs@mellanox.com, saeedm@mellanox.com, parav@mellanox.com
-Subject: [PATCH V4 linux-next 02/12] vhost: generialize backend features setting/getting
-Date:   Tue,  4 Aug 2020 19:20:38 +0300
-Message-Id: <20200804162048.22587-3-eli@mellanox.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200804162048.22587-1-eli@mellanox.com>
-References: <20200804162048.22587-1-eli@mellanox.com>
+Subject: Re: [PATCH] drm/amd/display: use correct scale for
+ actual_brightness
+In-Reply-To: <35b551fe-7c14-3d8e-4056-39975bd75105@amd.com>
+Message-ID: <alpine.LNX.2.20.13.2008041922170.2454@monopod.intra.ispras.ru>
+References: <20200803200218.2167-1-amonakov@ispras.ru> <35b551fe-7c14-3d8e-4056-39975bd75105@amd.com>
+User-Agent: Alpine 2.20.13 (LNX 116 2015-12-14)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Wang <jasowang@redhat.com>
 
-Move the backend features setting/getting from net.c to vhost.c to be
-reused by vhost-vdpa.
 
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- drivers/vhost/net.c   | 18 ++----------------
- drivers/vhost/vhost.c | 15 +++++++++++++++
- drivers/vhost/vhost.h |  2 ++
- 3 files changed, 19 insertions(+), 16 deletions(-)
+On Tue, 4 Aug 2020, Kazlauskas, Nicholas wrote:
 
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index 8e0921d3805d..bfbbe5c876f9 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -1615,21 +1615,6 @@ static long vhost_net_reset_owner(struct vhost_net *n)
- 	return err;
- }
- 
--static int vhost_net_set_backend_features(struct vhost_net *n, u64 features)
--{
--	int i;
--
--	mutex_lock(&n->dev.mutex);
--	for (i = 0; i < VHOST_NET_VQ_MAX; ++i) {
--		mutex_lock(&n->vqs[i].vq.mutex);
--		n->vqs[i].vq.acked_backend_features = features;
--		mutex_unlock(&n->vqs[i].vq.mutex);
--	}
--	mutex_unlock(&n->dev.mutex);
--
--	return 0;
--}
--
- static int vhost_net_set_features(struct vhost_net *n, u64 features)
- {
- 	size_t vhost_hlen, sock_hlen, hdr_len;
-@@ -1730,7 +1715,8 @@ static long vhost_net_ioctl(struct file *f, unsigned int ioctl,
- 			return -EFAULT;
- 		if (features & ~VHOST_NET_BACKEND_FEATURES)
- 			return -EOPNOTSUPP;
--		return vhost_net_set_backend_features(n, features);
-+		vhost_set_backend_features(&n->dev, features);
-+		return 0;
- 	case VHOST_RESET_OWNER:
- 		return vhost_net_reset_owner(n);
- 	case VHOST_SET_OWNER:
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index 8f622064b3e8..5e5cc3dd983e 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -2591,6 +2591,21 @@ struct vhost_msg_node *vhost_dequeue_msg(struct vhost_dev *dev,
- }
- EXPORT_SYMBOL_GPL(vhost_dequeue_msg);
- 
-+void vhost_set_backend_features(struct vhost_dev *dev, u64 features)
-+{
-+	struct vhost_virtqueue *vq;
-+	int i;
-+
-+	mutex_lock(&dev->mutex);
-+	for (i = 0; i < dev->nvqs; ++i) {
-+		vq = dev->vqs[i];
-+		mutex_lock(&vq->mutex);
-+		vq->acked_backend_features = features;
-+		mutex_unlock(&vq->mutex);
-+	}
-+	mutex_unlock(&dev->mutex);
-+}
-+EXPORT_SYMBOL_GPL(vhost_set_backend_features);
- 
- static int __init vhost_init(void)
- {
-diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
-index 38eb1aa3b68d..9032d3c2a9f4 100644
---- a/drivers/vhost/vhost.h
-+++ b/drivers/vhost/vhost.h
-@@ -214,6 +214,8 @@ void vhost_enqueue_msg(struct vhost_dev *dev,
- 		       struct vhost_msg_node *node);
- struct vhost_msg_node *vhost_dequeue_msg(struct vhost_dev *dev,
- 					 struct list_head *head);
-+void vhost_set_backend_features(struct vhost_dev *dev, u64 features);
-+
- __poll_t vhost_chr_poll(struct file *file, struct vhost_dev *dev,
- 			    poll_table *wait);
- ssize_t vhost_chr_read_iter(struct vhost_dev *dev, struct iov_iter *to,
--- 
-2.26.0
+> This is a cleaner change the other proposed patch since it doesn't need to
 
+Can you give a URL to the other patch please?
+
+> modify the exist conversion functions but I'd be worried about broken
+> userspace relying on 0-255 as the only acceptable range.
+
+Not sure what you mean by this. Userspace simply reads the maximum value from
+max_brightness sysfs file. On other gpu/firmware combinations it can be 7 or 9
+for example, it just happens to be 255 with modern amdgpu. Minimum value is
+always zero.
+
+Value seen in max_brightness remains 255 with this patch, so as far as userspace
+is concerned nothing is changed apart from value given by actual_brightness file.
+
+Alexander
+
+> 
+> Not an expert on existing implementations to point out a specific one though.
+> 
+> Regards,
+> Nicholas Kazlauskas
+> 
+> On 2020-08-03 4:02 p.m., Alexander Monakov wrote:
+> > Documentation for sysfs backlight level interface requires that
+> > values in both 'brightness' and 'actual_brightness' files are
+> > interpreted to be in range from 0 to the value given in the
+> > 'max_brightness' file.
+> > 
+> > With amdgpu, max_brightness gives 255, and values written by the user
+> > into 'brightness' are internally rescaled to a wider range. However,
+> > reading from 'actual_brightness' gives the raw register value without
+> > inverse rescaling. This causes issues for various userspace tools such
+> > as PowerTop and systemd that expect the value to be in the correct
+> > range.
+> > 
+> > Introduce a helper to retrieve internal backlight range. Extend the
+> > existing 'convert_brightness' function to handle conversion in both
+> > directions.
+> > 
+> > Bug: https://bugzilla.kernel.org/show_bug.cgi?id=203905
+> > Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1242
+> > Cc: Alex Deucher <alexander.deucher@amd.com>
+> > Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
+> > ---
+> >   .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 73 ++++++++-----------
+> >   1 file changed, 32 insertions(+), 41 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > index 710edc70e37e..03e21e7b7917 100644
+> > --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+> > @@ -2881,51 +2881,42 @@ static int set_backlight_via_aux(struct dc_link
+> > *link, uint32_t brightness)
+> >   	return rc ? 0 : 1;
+> >   }
+> >   -static u32 convert_brightness(const struct amdgpu_dm_backlight_caps
+> > *caps,
+> > -			      const uint32_t user_brightness)
+> > +static int get_brightness_range(const struct amdgpu_dm_backlight_caps
+> > *caps,
+> > +				unsigned *min, unsigned *max)
+> >   {
+> > -	u32 min, max, conversion_pace;
+> > -	u32 brightness = user_brightness;
+> > -
+> >   	if (!caps)
+> > -		goto out;
+> > +		return 0;
+> >   -	if (!caps->aux_support) {
+> > -		max = caps->max_input_signal;
+> > -		min = caps->min_input_signal;
+> > -		/*
+> > -		 * The brightness input is in the range 0-255
+> > -		 * It needs to be rescaled to be between the
+> > -		 * requested min and max input signal
+> > -		 * It also needs to be scaled up by 0x101 to
+> > -		 * match the DC interface which has a range of
+> > -		 * 0 to 0xffff
+> > -		 */
+> > -		conversion_pace = 0x101;
+> > -		brightness =
+> > -			user_brightness
+> > -			* conversion_pace
+> > -			* (max - min)
+> > -			/ AMDGPU_MAX_BL_LEVEL
+> > -			+ min * conversion_pace;
+> > +	if (caps->aux_support) {
+> > +		// Firmware limits are in nits, DC API wants millinits.
+> > +		*max = 1000 * caps->aux_max_input_signal;
+> > +		*min = 1000 * caps->aux_min_input_signal;
+> >   	} else {
+> > -		/* TODO
+> > -		 * We are doing a linear interpolation here, which is OK but
+> > -		 * does not provide the optimal result. We probably want
+> > -		 * something close to the Perceptual Quantizer (PQ) curve.
+> > -		 */
+> > -		max = caps->aux_max_input_signal;
+> > -		min = caps->aux_min_input_signal;
+> > -
+> > -		brightness = (AMDGPU_MAX_BL_LEVEL - user_brightness) * min
+> > -			       + user_brightness * max;
+> > -		// Multiple the value by 1000 since we use millinits
+> > -		brightness *= 1000;
+> > -		brightness = DIV_ROUND_CLOSEST(brightness,
+> > AMDGPU_MAX_BL_LEVEL);
+> > +		// Firmware limits are 8-bit, PWM control is 16-bit.
+> > +		*max = 0x101 * caps->max_input_signal;
+> > +		*min = 0x101 * caps->min_input_signal;
+> >   	}
+> > +	return 1;
+> > +}
+> >   -out:
+> > -	return brightness;
+> > +static u32 convert_brightness(const struct amdgpu_dm_backlight_caps *caps,
+> > +			      const uint32_t brightness, int from_user)
+> > +{
+> > +	unsigned min, max;
+> > +
+> > +	if (!get_brightness_range(caps, &min, &max))
+> > +		return brightness;
+> > +
+> > +	if (from_user)
+> > +		// Rescale 0..255 to min..max
+> > +		return min + DIV_ROUND_CLOSEST((max - min) * brightness,
+> > +					       AMDGPU_MAX_BL_LEVEL);
+> > +
+> > +	if (brightness < min)
+> > +		return 0;
+> > +	// Rescale min..max to 0..255
+> > +	return DIV_ROUND_CLOSEST(AMDGPU_MAX_BL_LEVEL * (brightness - min),
+> > +				 max - min);
+> >   }
+> >     static int amdgpu_dm_backlight_update_status(struct backlight_device
+> > *bd)
+> > @@ -2941,7 +2932,7 @@ static int amdgpu_dm_backlight_update_status(struct
+> > backlight_device *bd)
+> >     	link = (struct dc_link *)dm->backlight_link;
+> >   -	brightness = convert_brightness(&caps, bd->props.brightness);
+> > +	brightness = convert_brightness(&caps, bd->props.brightness, 1);
+> >   	// Change brightness based on AUX property
+> >   	if (caps.aux_support)
+> >   		return set_backlight_via_aux(link, brightness);
+> > @@ -2958,7 +2949,7 @@ static int amdgpu_dm_backlight_get_brightness(struct
+> > backlight_device *bd)
+> >     	if (ret == DC_ERROR_UNEXPECTED)
+> >   		return bd->props.brightness;
+> > -	return ret;
+> > +	return convert_brightness(&dm->backlight_caps, ret, 0);
+> >   }
+> >     static const struct backlight_ops amdgpu_dm_backlight_ops = {
+> > 
+> > base-commit: bcf876870b95592b52519ed4aafcf9d95999bc9c
+> > 
+> 
+> 
