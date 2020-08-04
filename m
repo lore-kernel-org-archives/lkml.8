@@ -2,153 +2,99 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E4DAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D629C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 591E32086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:18:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 418CB206DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:20:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="nQ4grv0/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r+ll7Pmo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgHDTSw (ORCPT
+        id S1727791AbgHDTU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 15:18:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45382 "EHLO
+        Tue, 4 Aug 2020 15:20:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbgHDTSv (ORCPT
+        with ESMTP id S1726090AbgHDTU2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 15:18:51 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 836B6C06179E
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 12:18:51 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id g19so29877873ejc.9
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 12:18:51 -0700 (PDT)
+        Tue, 4 Aug 2020 15:20:28 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0377C06174A;
+        Tue,  4 Aug 2020 12:20:28 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id r4so13153802pls.2;
+        Tue, 04 Aug 2020 12:20:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=iECZKbCttisI32R5vOBuQe0LHnglBF7s4axnvjSdNlk=;
-        b=nQ4grv0/FGhjcX/X9Q+kj/w809eT436vH2U+X4EgTlnaRGNA7g8vikX3m+zfSmYRaT
-         i6cmBUlwtVL6LQdpbpBz3ozbnlKtLwkowabhGu0920duv5F6NKDItb0IoNMhvkRdBd2i
-         gIIVodOYdnVzl0Ma8TCtUfhW97EQEZHXDBBfE=
+        bh=dSFdfyvPC6qN3rDv8TbLIdSVXhfqaFQjHz20FwFT6s4=;
+        b=r+ll7PmoizKu9XtmZtkGbq0jNGXN8IMG93WMrz/7IgmKIkrdXI06yIwr33K3Jcfn79
+         jh+nwyPHw0AgsBAbvWkVTtlI0F1bMzE+QjGZXtB40gjgnuT40zzUHqPUC2GMHCs4iCfD
+         fkTkVfQg2loFF9ElRGanOwxucIZAG0CR8Nf7rfVI7zuBi4Mph5QV51eXSAF46gINmFL8
+         bLO06cSdW/HDOOujKoumRS5T7xHAE9kzV/rXqmnmlhYYjDKCKIAUuG7cQX5C6P/nTCJS
+         IjW7rhe8W17Wh++0hBPOToL2tFO7pynMD1NgRi4crXwE/LyHFADYbeNbv2VoJBmlLaR2
+         MjLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=iECZKbCttisI32R5vOBuQe0LHnglBF7s4axnvjSdNlk=;
-        b=ALqL8neCeoNow0DN8+Ms7S5I3S0iTpTjmgXNmqVgjsHSSL1BVAmTWFne3xrAu1jgSe
-         bo8yWEEZrJaFx68C4ul+T6Tk5xl8ETXhfwn4U4i4+c5U7DWjGkhuPckZzpvErvNgfIDt
-         dinTPTlBby37a3EoFbwLiXscEIBuwhIOeTKhGTPeE7HMzhtMe7Iv4fIpQwuYr/zMKqEc
-         FIwFDo05LvL1gffVLAn0gQsrynXsYvEfyV0YpFGbOdbFfj8/Zs41Cq9JvVz62CGiZUda
-         7rexlXarjSiCmbxAQ1U81GXYpFFqOtkdbF5RYlB1yrUAE9tdxGcD9OSuR/J5QgMwSMqv
-         cZAA==
-X-Gm-Message-State: AOAM532hUkxlGBFbaxOdFPx9KPnjJqCOnlbsPFrxTpzj18+2vE7wCly2
-        4mi7kLm9BG1y7q/mtBFC1gqWqbEeeqXLMljX1ruGMA==
-X-Google-Smtp-Source: ABdhPJxzCVu2FMIuLxYbxYX+UMEg7zT277U5zuZN2lWf6qdwT1ZHQkTlmDhsVnKdcF178T6jfpPcrpCd3ySV7qJkuu8=
-X-Received: by 2002:a17:906:4aca:: with SMTP id u10mr20883333ejt.320.1596568729975;
- Tue, 04 Aug 2020 12:18:49 -0700 (PDT)
+        bh=dSFdfyvPC6qN3rDv8TbLIdSVXhfqaFQjHz20FwFT6s4=;
+        b=dHL139Fyp2y/AF2zieaVw4bOXQc1AKWiUTgeXanWItTsLvBnhApWjzhDwcqs9nw0Vo
+         9bE99nh+QlOTzRv43oNy+xjgOJMIo4qtGf2TaAzi7BxkOlBhFvBtwUHm0t6YAe5dKxtd
+         r/1SpwGIUr/SBdJCYaC7JfZP9YBJw8jWABr4SSNeVJSghll9AyuVYpaQLtNPR96ntYhO
+         RYuFvPaqvlDyqYSeduydytfuygfDLgruo2Nmv7DuHIXjJfLJL3PtgH8j2h/Anky1ehs8
+         uqIZHMid55lIehKanRhrt3Z0Gyid7CSDoAIFUOKJEA6mcDXDkKoWCgGfpBQG7qWUNF9Q
+         MKbQ==
+X-Gm-Message-State: AOAM533O9JFSXoW9gXCQW34KcZ7bHZaRUhTm+/FPoXXXLdi4HVAZy0uE
+        /mcbadFngJL3t8Hvxe0e7pfbHBf2UXzU9AdjHQE=
+X-Google-Smtp-Source: ABdhPJzhOoYnzQNlSb3CDxdjRi1S4lk3uOnUvLdZUZa3f8bxI07qa5iX1j49wdYivrj6t4D5oCc7OVzDtLOFPLa4oyc=
+X-Received: by 2002:a17:90b:11c4:: with SMTP id gv4mr5861511pjb.198.1596568828216;
+ Tue, 04 Aug 2020 12:20:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk>
- <1596555579.10158.23.camel@HansenPartnership.com>
-In-Reply-To: <1596555579.10158.23.camel@HansenPartnership.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 4 Aug 2020 21:18:38 +0200
-Message-ID: <CAJfpegtbX4DZcEuyF1oBatP__jRc_=HFmcJE8XUHjy1rwtqdOg@mail.gmail.com>
-Subject: Re: [PATCH 00/18] VFS: Filesystem information [ver #21]
-To:     James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Jeff Layton <jlayton@kernel.org>, linux-ext4@vger.kernel.org,
-        Carlos Maiolino <cmaiolino@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ian Kent <raven@themaw.net>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>, Karel Zak <kzak@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        linux-fsdevel@vger.kernel.org,
-        LSM <linux-security-module@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
+References: <20200802195046.402539-1-xie.he.0141@gmail.com> <d02996f90f64d55d5c5e349560bfde46@dev.tdt.de>
+In-Reply-To: <d02996f90f64d55d5c5e349560bfde46@dev.tdt.de>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Tue, 4 Aug 2020 12:20:17 -0700
+Message-ID: <CAJht_ENuzbyYesYtP0703xgRwRBTY9SySe3oXLEtkyL_H_yTSQ@mail.gmail.com>
+Subject: Re: [net v3] drivers/net/wan/lapbether: Use needed_headroom instead
+ of hard_header_len
+To:     Martin Schiller <ms@dev.tdt.de>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux X25 <linux-x25@vger.kernel.org>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Brian Norris <briannorris@chromium.org>,
+        netdev-owner@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 5:40 PM James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
+On Tue, Aug 4, 2020 at 5:43 AM Martin Schiller <ms@dev.tdt.de> wrote:
 >
-> On Mon, 2020-08-03 at 14:36 +0100, David Howells wrote:
-> > Here's a set of patches that adds a system call, fsinfo(), that
-> > allows information about the VFS, mount topology, superblock and
-> > files to be retrieved.
-> >
-> > The patchset is based on top of the notifications patchset and allows
-> > event counters implemented in the latter to be retrieved to allow
-> > overruns to be efficiently managed.
->
-> Could I repeat the question I asked about six months back that never
-> got answered:
->
-> https://lore.kernel.org/linux-api/1582316494.3376.45.camel@HansenPartnership.com/
->
-> It sort of petered out into a long winding thread about why not use
-> sysfs instead, which really doesn't look like a good idea to me.
->
-> I'll repeat the information for those who want to quote it easily on
-> reply without having to use a web interface:
->
-> ---
-> Could I make a suggestion about how this should be done in a way that
-> doesn't actually require the fsinfo syscall at all: it could just be
-> done with fsconfig.  The idea is based on something I've wanted to do
-> for configfd but couldn't because otherwise it wouldn't substitute for
-> fsconfig, but Christian made me think it was actually essential to the
-> ability of the seccomp and other verifier tools in the critique of
-> configfd and I belive the same critique applies here.
->
-> Instead of making fsconfig functionally configure ... as in you pass
-> the attribute name, type and parameters down into the fs specific
-> handler and the handler does a string match and then verifies the
-> parameters and then acts on them, make it table configured, so what
-> each fstype does is register a table of attributes which can be got and
-> optionally set (with each attribute having a get and optional set
-> function).  We'd have multiple tables per fstype, so the generic VFS
-> can register a table of attributes it understands for every fstype
-> (things like name, uuid and the like) and then each fs type would
-> register a table of fs specific attributes following the same pattern.
-> The system would examine the fs specific table before the generic one,
-> allowing overrides.  fsconfig would have the ability to both get and
-> set attributes, permitting retrieval as well as setting (which is how I
-> get rid of the fsinfo syscall), we'd have a global parameter, which
-> would retrieve the entire table by name and type so the whole thing is
-> introspectable because the upper layer knows a-priori all the
-> attributes which can be set for a given fs type and what type they are
-> (so we can make more of the parsing generic).  Any attribute which
-> doesn't have a set routine would be read only and all attributes would
-> have to have a get routine meaning everything is queryable.
+> I'm not an expert in the field, but after reading the commit message and
+> the previous comments, I'd say that makes sense.
 
-fsconfig(2) takes an fd referring to an fs_context, that in turn
-refers to a super_block.
+Thanks!
 
-So using fsconfig() for retrieving super_block attributes would be
-fine (modulo value being const, and lack of buffer size).
+> Shouldn't this kernel panic be intercepted by a skb_cow() before the
+> skb_push() in lapbeth_data_transmit()?
 
-But what about mount attributes?
-
-I don't buy the argument that an API needs to be designed around the
-requirements of seccomp and the like.  It should be the other way
-round.  In that, I think your configfd idea was fine, and would answer
-the above question.
-
-Thanks,
-Miklos
+When a skb is passing down a protocol stack for transmission, there
+might be several different skb_push calls to prepend different
+headers. It would be the best (in terms of performance) if we can
+allocate the needed header space in advance, so that we don't need to
+reallocate the skb every time a new header needs to be prepended.
+Adding skb_cow before these skb_push calls would indeed help
+preventing kernel panics, but that might not be the essential issue
+here, and it might also prevent us from discovering the real issue. (I
+guess this is also the reason skb_cow is not included in skb_push
+itself.)
