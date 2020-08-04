@@ -2,100 +2,133 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17812C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E94DA208A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:57:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="siiuYorx"
+	by mail.kernel.org (Postfix) with ESMTP id C2F2A208A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:59:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729300AbgHDP50 (ORCPT
+        id S1728846AbgHDP7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 11:57:26 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:54906 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729022AbgHDP5H (ORCPT
+        Tue, 4 Aug 2020 11:59:49 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53622 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726394AbgHDP6y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 11:57:07 -0400
-Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 3CE6520B4908;
-        Tue,  4 Aug 2020 08:57:06 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3CE6520B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1596556626;
-        bh=VpAp+gwtX80StpLhWTSeWeTMwUZ22EUYNIZ2mT0WBts=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=siiuYorxFApiTutRO1Fq7FQ6URRgVvncZmVb1M/+HCPfxlM1sq1xVO/vR+KyX8BNQ
-         7JSsbMLQy5Oj0jTbSONyrTgqXXo70xkMqsXXTt+G0HS4sTYu2Hvd+zVu5oSwXNpaIY
-         DGOwjAUXj7JHYqoZw00cWBAMJFnxw5OPqArnMdvY=
-Subject: Re: [PATCH v5 3/4] LSM: Define SELinux function to measure state and
- policy
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Tyler Hicks <tyhicks@linux.microsoft.com>, sashal@kernel.org,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200730034724.3298-1-nramas@linux.microsoft.com>
- <20200730034724.3298-4-nramas@linux.microsoft.com>
- <dfd6f9c8-d62a-d278-9b0e-6b1f5ad03d3e@gmail.com>
- <6371efa9-5ae6-05ac-c357-3fbe1a5a93d5@linux.microsoft.com>
- <CAEjxPJ789kmdDwy-6RaL7HuMFxKpQ9Hwxj9J-_-f62XDCNJUiA@mail.gmail.com>
- <f992901f-6dca-7d31-3426-5a74d36c2c8c@gmail.com>
- <d988a6d0-04e0-62f0-2705-4352b268ca55@linux.microsoft.com>
- <5c843a3d-713c-e71f-8d4f-c6e5f51422f1@gmail.com>
- <3e766eed-7a0b-afca-6139-ac43dea053d7@linux.microsoft.com>
- <0fa0b1f3-6226-c307-0f11-8b3a881a070e@gmail.com>
- <32da0a4a-252a-67d8-5dc8-173959f6ddb4@gmail.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <a66155ea-151d-cfd7-01f0-15ed6f18e26b@linux.microsoft.com>
-Date:   Tue, 4 Aug 2020 08:57:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <32da0a4a-252a-67d8-5dc8-173959f6ddb4@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 4 Aug 2020 11:58:54 -0400
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1k2zKs-0004U5-7b; Tue, 04 Aug 2020 15:58:42 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     tiwai@suse.com
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Nikhil Mahale <nmahale@nvidia.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Aaron Plattner <aplattner@nvidia.com>,
+        alsa-devel@alsa-project.org (moderated list:SOUND),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3] ALSA: hda/hdmi: Add quirk to force connectivity
+Date:   Tue,  4 Aug 2020 23:58:34 +0800
+Message-Id: <20200804155836.16252-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/4/20 8:29 AM, Stephen Smalley wrote:
+HDMI on some platforms doesn't enable audio support because its Port
+Connectivity [31:30] is set to AC_JACK_PORT_NONE:
+Node 0x05 [Pin Complex] wcaps 0x40778d: 8-Channels Digital Amp-Out CP
+  Amp-Out caps: ofs=0x00, nsteps=0x00, stepsize=0x00, mute=1
+  Amp-Out vals:  [0x00 0x00]
+  Pincap 0x0b000094: OUT Detect HBR HDMI DP
+  Pin Default 0x58560010: [N/A] Digital Out at Int HDMI
+    Conn = Digital, Color = Unknown
+    DefAssociation = 0x1, Sequence = 0x0
+  Pin-ctls: 0x40: OUT
+  Unsolicited: tag=00, enabled=0
+  Power states:  D0 D3 EPSS
+  Power: setting=D0, actual=D0
+  Devices: 0
+  Connection: 3
+     0x02 0x03* 0x04
 
->>> Perhaps vmalloc would be better than using kmalloc? If there are 
->>> better options for such large buffer allocation, please let me know.
->>
->> kvmalloc() can be used to select whichever one is most appropriate.
-> 
-> Other option would be for ima to compute and save the hash(es) of the 
-> payload and not the payload itself for later use.  I guess you won't 
-> know at that point which hash algorithm is desired?
-> 
+For now, use a quirk to force connectivity based on SSID. If there are
+more platforms affected by the same issue, we can eye for a more generic
+solution.
 
-I think IMA hash algorithm would be known at that point, but IMA policy 
-is not loaded yet (which is why I need to queue up the buffer and 
-process when policy is loaded).
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+v3:
+ - Move the flag into hdmi_spec.
+v2:
+ - Use a quirk list instead.
 
-I tried vmalloc and tested it with upto 16MB buffer (just made up a 
-SELinux policy buffer of size 16MB) - that works fine.
+ sound/pci/hda/patch_hdmi.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-I will try kvmalloc().
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index cd46247988e4..b62cd3abb827 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -160,6 +160,7 @@ struct hdmi_spec {
+ 
+ 	bool use_acomp_notifier; /* use eld_notify callback for hotplug */
+ 	bool acomp_registered; /* audio component registered in this driver */
++	bool force_connect; /* force connectivity */
+ 	struct drm_audio_component_audio_ops drm_audio_ops;
+ 	int (*port2pin)(struct hda_codec *, int); /* reverse port/pin mapping */
+ 
+@@ -1701,7 +1702,8 @@ static int hdmi_add_pin(struct hda_codec *codec, hda_nid_t pin_nid)
+ 	 * all device entries on the same pin
+ 	 */
+ 	config = snd_hda_codec_get_pincfg(codec, pin_nid);
+-	if (get_defcfg_connect(config) == AC_JACK_PORT_NONE)
++	if (get_defcfg_connect(config) == AC_JACK_PORT_NONE &&
++	    !spec->force_connect)
+ 		return 0;
+ 
+ 	/*
+@@ -1803,11 +1805,18 @@ static int hdmi_add_cvt(struct hda_codec *codec, hda_nid_t cvt_nid)
+ 	return 0;
+ }
+ 
++static const struct snd_pci_quirk force_connect_list[] = {
++	SND_PCI_QUIRK(0x103c, 0x871a, "HP", 1),
++	{}
++};
++
+ static int hdmi_parse_codec(struct hda_codec *codec)
+ {
++	struct hdmi_spec *spec = codec->spec;
+ 	hda_nid_t start_nid;
+ 	unsigned int caps;
+ 	int i, nodes;
++	const struct snd_pci_quirk *q;
+ 
+ 	nodes = snd_hda_get_sub_nodes(codec, codec->core.afg, &start_nid);
+ 	if (!start_nid || nodes < 0) {
+@@ -1815,6 +1824,11 @@ static int hdmi_parse_codec(struct hda_codec *codec)
+ 		return -EINVAL;
+ 	}
+ 
++	q = snd_pci_quirk_lookup(codec->bus->pci, force_connect_list);
++
++	if (q && q->value)
++		spec->force_connect = true;
++
+ 	/*
+ 	 * hdmi_add_pin() assumes total amount of converters to
+ 	 * be known, so first discover all converters
+-- 
+2.17.1
 
-Also, I fixed the issue with LSM data not measured when using the IMA 
-policy you had. Good catch.
-
-Will post the updated patches today.
-
-thanks,
-  -lakshmi
