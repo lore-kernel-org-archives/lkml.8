@@ -2,101 +2,71 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03816C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A13C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3E9E22C9F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:49:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596527375;
-	bh=8p+XCJZnz+9HnH0A9r61I2MYnTcinVNhhgF+AKtpNpg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=a5gITOCM3ccDAKjLlFNmT6/250YlR62BHrnBQUNJZ5zhlJZLCOQkSUhpjfYomxbF3
-	 GaBoyycligwv1y7FhW18D7vIZdgIsTe0aLRga6IXnLxNJqyN/qBwXcdm248Bl11pOV
-	 lQ71cqc4Xj5koMqyOurfCb0Z983suD9Ue2A6hQkE=
+	by mail.kernel.org (Postfix) with ESMTP id D5BD522CA1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:49:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729113AbgHDHtd (ORCPT
+        id S1729334AbgHDHty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 03:49:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbgHDHtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 03:49:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C37722B40;
-        Tue,  4 Aug 2020 07:49:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596527372;
-        bh=8p+XCJZnz+9HnH0A9r61I2MYnTcinVNhhgF+AKtpNpg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QEL7Ges95rD4FR5z0wQEU5DzHET9Wk0ntPfdgYF1QGb6pg+pTc/cxEXsOesX9z9b0
-         Kvl1wyaVyXgowih1ziv7uWRTg7o7qYi3oDRRYwhWiR52hhIchpByEHyMFIRYlrgbte
-         0PmNiV4WD6VTWfLuKlTns/SzYSokjI1e9OeNMeMw=
-Date:   Tue, 4 Aug 2020 09:49:13 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     ivan <yanziily@gmail.com>
-Cc:     Sebastian Reichel <sre@kernel.org>, Pavel Machek <pavel@denx.de>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jiangfei1@xiaomi.com, Qiwu Huang <huangqiwu@xiaomi.com>
-Subject: Re: [PATCH v4 1/4] power: supply: core: add quick charge type
- property
-Message-ID: <20200804074913.GC1761483@kroah.com>
-References: <cover.1595214246.git.huangqiwu@xiaomi.com>
- <c9d3199ec18625f9cc4448c3b2049ea2ae80358b.1595214246.git.huangqiwu@xiaomi.com>
- <20200802120015.GA1289@bug>
- <20200802123742.GA257810@kroah.com>
- <20200802142825.GA20261@amd>
- <20200802165738.GA293244@kroah.com>
- <20200803114950.oyb3gzyiccybah3u@earth.universe>
- <20200803115644.GC955269@kroah.com>
- <CAPtXDt1hMrgJ_9Zs6Zmkzf4b1-QfEcZPp7dKG26G6ZEqBxCgBw@mail.gmail.com>
+        Tue, 4 Aug 2020 03:49:54 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:25031 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725932AbgHDHty (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 03:49:54 -0400
+X-IronPort-AV: E=Sophos;i="5.75,433,1589234400"; 
+   d="scan'208";a="462364097"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 09:49:52 +0200
+Date:   Tue, 4 Aug 2020 09:49:52 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     Denis Efremov <efremov@linux.com>,
+        Coccinelle <cocci@systeme.lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH v3] coccinelle: api: add kvmalloc script
+In-Reply-To: <12b09b8f-7c73-1827-8bf3-63e6041b63fd@web.de>
+Message-ID: <alpine.DEB.2.22.394.2008040949360.2575@hadrien>
+References: <12b09b8f-7c73-1827-8bf3-63e6041b63fd@web.de>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPtXDt1hMrgJ_9Zs6Zmkzf4b1-QfEcZPp7dKG26G6ZEqBxCgBw@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 10:11:19AM +0800, ivan wrote:
-> On Mon, Aug 3, 2020 at 7:57 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Mon, Aug 03, 2020 at 01:49:50PM +0200, Sebastian Reichel wrote:
-> > > More importantely I prefer not to merge new APIs without any users
-> > > (i.e. a driver making use of those values). Having a reference
-> > > driver means, that there is an example how to use the values
-> > > correctly and proves it is actually needed upstream. Right now
-> > > this looks like "let's modify the upstream kernel, so that we can
-> > > easily maintain our out of tree driver".
-> >
-> > Agreed.  Qiwu, can you also submit your driver so we can see these
-> > values be used?
-> 
-> Our driver is based on qualcomm's driver secondary development.
-> 
-> The driver code is for mi 10.
-> 
-> https://github.com/MiCode/Xiaomi_Kernel_OpenSource/blob/umi-q-oss/drivers/power/supply/qcom/qpnp-smb5.c#L1434
-> 
-> + case POWER_SUPPLY_PROP_QUICK_CHARGE_TYPE:
-> +     val->intval = smblib_get_quick_charge_type(chg);
-> +     break;
-> 
-> https://github.com/MiCode/Xiaomi_Kernel_OpenSource/blob/umi-q-oss/drivers/power/supply/qcom/smb5-lib.c#L7713
 
-<snip>
 
-Great, can you submit these drivers as patches as part of this series?
-That's the best way for all of this to be integrated.
+On Tue, 4 Aug 2020, Markus Elfring wrote:
 
-thanks,
+> > Changes in v3:
+> > - kvfree rules added
+>
+> I find it interesting to you found such an addition needed for this SmPL script.
+> I imagine that it can be helpful to support such a source code search by
+> a separate script for the semantic patch language.
+>
+> I am curious if my patch review comments for the second version got also a bit
+> of your software development attention.
+>
+> Another implementation detail is relevant for further clarification.
+> The SmPL rules for patch generation differ in search functionality
+> which is provided for other operation modes.
+> Can these deviations influence the confidence level?
 
-greg k-h
+I see no useful information in this review, nor in the v2 review.
+
+julia
