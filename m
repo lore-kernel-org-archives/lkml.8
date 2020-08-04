@@ -2,135 +2,131 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B4AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F336C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A07C2067D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:47:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596545279;
-	bh=HQdWsBUMcWk0XAvFfhB9slWoCiSqMyM9l3UqhNyhGKM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Bo6Do9ihdmV2bArseUERbbH5zLv3oY+jeLPkn7GKExlYj7ZY7IsBe2UWvylyDPELS
-	 d5d4mFr0cvBPSC7Z2QQ+wodfVFNqXTN6OcAfc++8eCbfjPyfq+htcpPiwJya/aZUTm
-	 aGAQNNT1y5d1VSZVGfjj5JnZfowxpCPlLwCFpffA=
+	by mail.kernel.org (Postfix) with ESMTP id 629462067D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:48:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F8aZlF4L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbgHDMr5 (ORCPT
+        id S1728163AbgHDMs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 08:47:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59832 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbgHDMrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 08:47:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Tue, 4 Aug 2020 08:48:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41804 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726058AbgHDMsV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 08:48:21 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54551C06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 05:48:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=vNu8jH7CfZCZghBH6Gb2x7F+2wKxDLAxRVOeoOs8VzY=; b=F8aZlF4L14jsBmodix7PwQGYqd
+        V8/Xc9+OQR02QITvEpu+fYBjVFraifoNbS+FzDA2NNQuKy4emxGJLedIiZsESfiw/9laGnblINPhi
+        fqXETQbpDJ2HAfdVQ7Z2DdtjubNTxnQLS5r4cPW34Q9wiFectjrncTdwTtDzNsCfjgo4nMcblkhNQ
+        E3blt2fMkaCaqUpO/BrD8GLeuQVjCJ7Z0p9ClnLwWOGV2r06zj+xmn4rj7mTVFF+dBnEdHbUYiHvZ
+        puSUzdXHYpfx4+ZBqTfYewnKWu6d4nQxpjIIpQ5AmLnIAgPnt+sRe494n84oRgs6Sm0L/AKd9DcUH
+        FdlIUyzg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k2wMH-0000WT-Ry; Tue, 04 Aug 2020 12:47:58 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60B862067D;
-        Tue,  4 Aug 2020 12:47:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596545275;
-        bh=HQdWsBUMcWk0XAvFfhB9slWoCiSqMyM9l3UqhNyhGKM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QvgHeKpoKhPkVMhNF+slMOCNRLYusfHQ7oFeHTxJ+KFq8TM4iQrBk2JnTuLCoHJeL
-         oga/wcPaJXanVl0kCPlpB0cd/vT0kUzKSLAWsgFdbiSwnpt3BCf4Sj21xbFbr21D9k
-         7gJvltixRePRmm67bFUVDR+2rPwv9TupeC7HqH2Q=
-Date:   Tue, 4 Aug 2020 14:47:35 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     John Donnelly <john.p.donnelly@oracle.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org, Mike Snitzer <snitzer@redhat.com>
-Subject: Re: [(resend) PATCH v3: {linux-4.14.y} ] dm cache: submit
- writethrough writes in parallel to origin and cache
-Message-ID: <20200804124735.GA219143@kroah.com>
-References: <8CFF8DA9-C105-461C-8F5A-DA2BF448A135@oracle.com>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DBC9D301E02;
+        Tue,  4 Aug 2020 14:47:55 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A66B9235CDBD2; Tue,  4 Aug 2020 14:47:55 +0200 (CEST)
+Date:   Tue, 4 Aug 2020 14:47:55 +0200
+From:   peterz@infradead.org
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Neuling <mikey@neuling.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
+Subject: Re: [PATCH 1/2] sched/topology: Allow archs to override cpu_smt_mask
+Message-ID: <20200804124755.GJ2674@hirez.programming.kicks-ass.net>
+References: <20200804033307.76111-1-srikar@linux.vnet.ibm.com>
+ <20200804104520.GB2657@hirez.programming.kicks-ass.net>
+ <20200804121007.GJ24375@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8CFF8DA9-C105-461C-8F5A-DA2BF448A135@oracle.com>
+In-Reply-To: <20200804121007.GJ24375@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 07:33:05AM -0500, John Donnelly wrote:
-> From: Mike Snitzer <snitzer@redhat.com>
+On Tue, Aug 04, 2020 at 05:40:07PM +0530, Srikar Dronamraju wrote:
+> * peterz@infradead.org <peterz@infradead.org> [2020-08-04 12:45:20]:
 > 
-> Discontinue issuing writethrough write IO in series to the origin and
-> then cache.
+> > On Tue, Aug 04, 2020 at 09:03:06AM +0530, Srikar Dronamraju wrote:
+> > > cpu_smt_mask tracks topology_sibling_cpumask. This would be good for
+> > > most architectures. One of the users of cpu_smt_mask(), would be to
+> > > identify idle-cores. On Power9, a pair of cores can be presented by the
+> > > firmware as a big-core for backward compatibility reasons.
+> > > 
+> > > In order to maintain userspace backward compatibility with previous
+> > > versions of processor, (since Power8 had SMT8 cores), Power9 onwards there
+> > > is option to the firmware to advertise a pair of SMT4 cores as a fused
+> > > cores (referred to as the big_core mode in the Linux Kernel). On Power9
+> > > this pair shares the L2 cache as well. However, from the scheduler's point
+> > > of view, a core should be determined by SMT4. The load-balancer already
+> > > does this. Hence allow PowerPc architecture to override the default
+> > > cpu_smt_mask() to point to the SMT4 cores in a big_core mode.
+> > 
+> > I'm utterly confused.
+> > 
+> > Why can't you set your regular siblings mask to the smt4 thing? Who
+> > cares about the compat stuff, I thought that was an LPAR/AIX thing.
 > 
-> Use bio_clone_fast() to create a new origin clone bio that will be
-> mapped to the origin device and then bio_chain() it to the bio that gets
-> remapped to the cache device.  The origin clone bio does _not_ have a
-> copy of the per_bio_data -- as such check_if_tick_bio_needed() will not
-> be called.
+> There are no technical challenges to set the sibling mask to SMT4.
+> This is for Linux running on PowerVM. When these Power9 boxes are sold /
+> marketed as X core boxes (where X stand for SMT8 cores).  Since on PowerVM
+> world, everything is in SMT8 mode, the device tree properties still mark
+> the system to be running on 8 thread core. There are a number of utilities
+> like ppc64_cpu that directly read from device-tree. They would get core
+> count and thread count which is SMT8 based.
 > 
-> The cache bio (parent bio) will not complete until the origin bio has
-> completed -- this fulfills bio_clone_fast()'s requirements as well as
-> the requirement to not complete the original IO until the write IO has
-> completed to both the origin and cache device.
-> 
-> Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-> 
-> (cherry picked from commit 2df3bae9a6543e90042291707b8db0cbfbae9ee9)
-> 
-> Fixes: 4ec34f2196d125ff781170ddc6c3058c08ec5e73 (dm bio record:
-> save/restore bi_end_io and bi_integrity )
-> 
-> 4ec34f21 introduced a mkfs.ext4 hang on a LVM device that has been
-> modified with lvconvert --cachemode=writethrough.
-> 
-> CC:stable@vger.kernel.org for 4.14.y
-> 
-> Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
-> Reviewed-by: Somasundaram Krishnasamy <somasundaram.krishnasamy@oracle.com>
-> 
-> conflicts:
-> 	drivers/md/dm-cache-target.c. -  Corrected usage of
-> 	writethrough_mode(&cache->feature) that was caught by
-> 	compiler, and removed unused static functions : writethrough_endio(),
-> 	defer_writethrough_bio(), wake_deferred_writethrough_worker()
-> 	that generated warnings.
+> If the sibling_mask is set to small core, then same user when looking at
 
-What is this "conflicts nonsense"?  You don't see that in any other
-kernel patch changelog, do you?
+FWIW, I find the small/big core naming utterly confusing vs the
+big/little naming from ARM. When you say small, I'm thinking of
+asymmetric cores, not SMT4/SMT8.
 
-> ---
-> drivers/md/dm-cache-target.c | 92 ++++++++++++++++++--------------------------
-> 1 file changed, 37 insertions(+), 55 deletions(-)
+> output from lscpu and other utilities that look at sysfs will start seeing
+> 2x number of cores to what he had provisioned and what the utilities from
+> the device-tree show. This can gets users confused.
 
-Please fix your email client up, it's totally broken and this does not
-work at all and is getting frustrating from my side here.
+One will report SMT8 and the other SMT4, right? So only users that
+cannot read will be confused, but if you can't read, confusion is
+guaranteed anyway.
 
-Try sending emails to yourself and see if you can apply the patches, as
-the one you sent here does not work, again:
+Also, by exposing the true (SMT4) topology to userspace, userspace
+applications could behave better -- for those few that actually parse
+the topology information.
 
-------------
-~/linux/stable/linux-4.14.y $ b4 am https://lore.kernel.org/r/8CFF8DA9-C105-461C-8F5A-DA2BF448A135@oracle.com
-Looking up https://lore.kernel.org/r/8CFF8DA9-C105-461C-8F5A-DA2BF448A135%40oracle.com
-Grabbing thread from lore.kernel.org/lkml
-Analyzing 1 messages in the thread
----
-Writing ./20200804_john_p_donnelly_dm_cache_submit_writethrough_writes_in_parallel_to_origin_and_cache.mbx
-  [(resend) PATCH v3: {linux-4.14.y} ] dm cache: submit writethrough writes in parallel to origin and cache
----
-Total patches: 1
----
- Link: https://lore.kernel.org/r/8CFF8DA9-C105-461C-8F5A-DA2BF448A135@oracle.com
- Base: not found (applies clean to current tree)
-       git am ./20200804_john_p_donnelly_dm_cache_submit_writethrough_writes_in_parallel_to_origin_and_cache.mbx
-~/linux/stable/linux-4.14.y $ patch -p1 < 20200804_john_p_donnelly_dm_cache_submit_writethrough_writes_in_parallel_to_origin_and_cache.mbx
-checking file drivers/md/dm-cache-target.c
-patch: **** malformed patch at line 70: }
+> So to keep the device-tree properties, utilities depending on device-tree,
+> sysfs and utilities depending on sysfs on the same page, userspace are only
+> exposed as SMT8.
 
-------------
-
-{sigh}
-
-You can do better.
-
-greg k-h
+I'm not convinced it makes sense to lie to userspace just to accomodate
+a few users that cannot read.
