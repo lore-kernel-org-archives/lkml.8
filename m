@@ -2,89 +2,119 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A89C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 617EDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D06A5206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7458C206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbgHDFlU (ORCPT
+        id S1729636AbgHDFmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 01:41:20 -0400
-Received: from mga01.intel.com ([192.55.52.88]:61029 "EHLO mga01.intel.com"
+        Tue, 4 Aug 2020 01:42:42 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:47602 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726797AbgHDFlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 01:41:20 -0400
-IronPort-SDR: FGmgDEEHsO5R7m8cVx4woo27VO6LymPJDDIe48lvLvcG7tjslBdRGMFzcoaj+QRuauBsPsg57V
- vB25vzkcap4w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="170339134"
-X-IronPort-AV: E=Sophos;i="5.75,433,1589266800"; 
-   d="scan'208";a="170339134"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 22:41:20 -0700
-IronPort-SDR: EZ9X93dvm+w2zmJhVHcxj9z7ad/P1o+jq2SE59XtMbCKhZ9jcRjuDw9LQXeI1Mtkc5B1KKXrSO
- W7SKLqPwMd6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,433,1589266800"; 
-   d="scan'208";a="322630966"
-Received: from lkp-server02.sh.intel.com (HELO 84ccfe698a63) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 03 Aug 2020 22:41:18 -0700
-Received: from kbuild by 84ccfe698a63 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k2phN-0000Rs-Te; Tue, 04 Aug 2020 05:41:17 +0000
-Date:   Tue, 4 Aug 2020 13:40:57 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: [PATCH] mailbox: pcc: fix platform_no_drv_owner.cocci warnings
-Message-ID: <20200804054057.GA14574@ae86df0c824e>
-References: <202008041345.W4BUAFSo%lkp@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202008041345.W4BUAFSo%lkp@intel.com>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1728811AbgHDFml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 01:42:41 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BDA862011A2;
+        Tue,  4 Aug 2020 07:42:39 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 70C75201194;
+        Tue,  4 Aug 2020 07:42:34 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A0D70402DE;
+        Tue,  4 Aug 2020 07:42:27 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     hongxing.zhu@nxp.com, l.stach@pengutronix.de,
+        lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] PCI: imx6: Do not output error message when devm_clk_get() failed with -EPROBE_DEFER
+Date:   Tue,  4 Aug 2020 13:38:01 +0800
+Message-Id: <1596519481-28072-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kernel test robot <lkp@intel.com>
+When devm_clk_get() returns -EPROBE_DEFER, i.MX6 PCI driver should
+NOT print error message, just return -EPROBE_DEFER is enough.
 
-drivers/mailbox/pcc.c:575:3-8: No need to set .owner here. The core will do it.
-
- Remove .owner field if calls are used which set it automatically
-
-Generated by: scripts/coccinelle/api/platform_no_drv_owner.cocci
-
-Fixes: 00d9990acb23 ("mailbox: pcc: make pcc_mbox_driver static")
-CC: Jason Yan <yanaijie@huawei.com>
-Signed-off-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
+ drivers/pci/controller/dwc/pci-imx6.c | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   09a0bd07764359650d41dbcb723f81321e523217
-commit: 00d9990acb23c4319a1dc961d4e29a9213923b67 mailbox: pcc: make pcc_mbox_driver static
-
- pcc.c |    1 -
- 1 file changed, 1 deletion(-)
-
---- a/drivers/mailbox/pcc.c
-+++ b/drivers/mailbox/pcc.c
-@@ -572,7 +572,6 @@ static struct platform_driver pcc_mbox_d
- 	.probe = pcc_mbox_probe,
- 	.driver = {
- 		.name = "PCCT",
--		.owner = THIS_MODULE,
- 	},
- };
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 4e5c379..ee75d35 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -1076,20 +1076,26 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 	/* Fetch clocks */
+ 	imx6_pcie->pcie_phy = devm_clk_get(dev, "pcie_phy");
+ 	if (IS_ERR(imx6_pcie->pcie_phy)) {
+-		dev_err(dev, "pcie_phy clock source missing or invalid\n");
+-		return PTR_ERR(imx6_pcie->pcie_phy);
++		ret = PTR_ERR(imx6_pcie->pcie_phy);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "pcie_phy clock source missing or invalid\n");
++		return ret;
+ 	}
  
+ 	imx6_pcie->pcie_bus = devm_clk_get(dev, "pcie_bus");
+ 	if (IS_ERR(imx6_pcie->pcie_bus)) {
+-		dev_err(dev, "pcie_bus clock source missing or invalid\n");
+-		return PTR_ERR(imx6_pcie->pcie_bus);
++		ret = PTR_ERR(imx6_pcie->pcie_bus);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "pcie_bus clock source missing or invalid\n");
++		return ret;
+ 	}
+ 
+ 	imx6_pcie->pcie = devm_clk_get(dev, "pcie");
+ 	if (IS_ERR(imx6_pcie->pcie)) {
+-		dev_err(dev, "pcie clock source missing or invalid\n");
+-		return PTR_ERR(imx6_pcie->pcie);
++		ret = PTR_ERR(imx6_pcie->pcie);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "pcie clock source missing or invalid\n");
++		return ret;
+ 	}
+ 
+ 	switch (imx6_pcie->drvdata->variant) {
+@@ -1097,15 +1103,19 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 		imx6_pcie->pcie_inbound_axi = devm_clk_get(dev,
+ 							   "pcie_inbound_axi");
+ 		if (IS_ERR(imx6_pcie->pcie_inbound_axi)) {
+-			dev_err(dev, "pcie_inbound_axi clock missing or invalid\n");
+-			return PTR_ERR(imx6_pcie->pcie_inbound_axi);
++			ret = PTR_ERR(imx6_pcie->pcie_inbound_axi);
++			if (ret != -EPROBE_DEFER)
++				dev_err(dev, "pcie_inbound_axi clock missing or invalid\n");
++			return ret;
+ 		}
+ 		break;
+ 	case IMX8MQ:
+ 		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
+ 		if (IS_ERR(imx6_pcie->pcie_aux)) {
+-			dev_err(dev, "pcie_aux clock source missing or invalid\n");
+-			return PTR_ERR(imx6_pcie->pcie_aux);
++			ret = PTR_ERR(imx6_pcie->pcie_aux);
++			if (ret != -EPROBE_DEFER)
++				dev_err(dev, "pcie_aux clock source missing or invalid\n");
++			return ret;
+ 		}
+ 		/* fall through */
+ 	case IMX7D:
+-- 
+2.7.4
+
