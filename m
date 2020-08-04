@@ -2,161 +2,147 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F80C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94017C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10CB8208A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76BB32086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:17:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="31hAGbUK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8KTiOFA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729602AbgHDPQa (ORCPT
+        id S1729609AbgHDPRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 11:16:30 -0400
-Received: from mail-eopbgr760079.outbound.protection.outlook.com ([40.107.76.79]:6720
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729391AbgHDPQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 11:16:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZW78Wv/2rF8FFhwyhALUZz+XOF1BpzgnODLklW7wTWqNUbiNcazI2kQz4YPjGTGldHEB+Ur5bjgbtTsj8dNw3Mvx32ZbgSIgXLRA2Mn5xDTCHSfxpAdiNRetMf3Xtn0io1UYr35+eV0mEFJ9k0qYQydpBVFFKRz0xJfv9MQ+xAfNwUwj/WN4119tB39+M/aqzVA7rAlXdFV92RxeatVnGioE7iOJTmK5ZU4hErcrzxNtFRR44jyyPOH20NkLYAnAz2DIEuUNfEzAEkq65U+aB4FI6lAt7D8Fx8lOaKsxrWNp4tk9+UWzoEKIu9IbTQoNeIRr3SDoJe7Uo9KTeX1iVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DHhBiE+RBQVxdCwuvN0VZhLmB1YGcOvw1+touWcV7ok=;
- b=ZBeEzHPmtettEkq98bt2Hq5woK9bd5RBvkD2e1vC7dFjRb7rSwKmi+Bq45OP+6zTeCVr8Y4HlZGEuamE1Op7lgOakb0NkynhKPoYCyq4rgVWroLVvX0eXBdU1lsZPweM+BNYiEcMeGfSwLaO7dGfw5tb9snOyss6RDLh8vFc5ypDWeDeXrKlKGuQyMzD7s/wOnz+zX+MiNUY/tdJPDItO8mWneoSbiOAX3dLcKMPv05esJYUf/Xjsf4hhUluHJXUgT2sgbvyFtQ0gcjVJOWn03JpEd5yqU7yP26IB6vhQGoTtBXc5zpef2HlItOFDMYYJffK//E5scuyT9IjWLTF1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Tue, 4 Aug 2020 11:17:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36472 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729009AbgHDPRA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 11:17:00 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE2D2C06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 08:16:59 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id x69so38732576qkb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 08:16:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DHhBiE+RBQVxdCwuvN0VZhLmB1YGcOvw1+touWcV7ok=;
- b=31hAGbUKqp+sqMDqCw9GXZ+7vIKFUgG/moSweHFvWZN0ZD4IvYd+EgLYUzYmc0oJUROmx7XlYEEWrpvbtG1qn1W6S/HfW1b6nqO8HL3xrdI+RvDo64sqEgUVNylmHJmZI3AqYSJIbtdjFDAUHhLuVXuiE9Lz14VrOy0wBKA1pZA=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from SN6PR12MB2718.namprd12.prod.outlook.com (2603:10b6:805:6f::22)
- by SA0PR12MB4495.namprd12.prod.outlook.com (2603:10b6:806:70::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Tue, 4 Aug
- 2020 15:16:21 +0000
-Received: from SN6PR12MB2718.namprd12.prod.outlook.com
- ([fe80::a8ae:5626:2bf5:3624]) by SN6PR12MB2718.namprd12.prod.outlook.com
- ([fe80::a8ae:5626:2bf5:3624%7]) with mapi id 15.20.3239.022; Tue, 4 Aug 2020
- 15:16:21 +0000
-Cc:     brijesh.singh@amd.com, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [RFC PATCH] KVM: SVM: Disallow SEV if NPT is disabled
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <20200731205116.14891-1-sean.j.christopherson@intel.com>
-From:   Brijesh Singh <brijesh.singh@amd.com>
-Message-ID: <c1ae98a9-beeb-c58e-4623-bf25374330e4@amd.com>
-Date:   Tue, 4 Aug 2020 10:16:18 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
-In-Reply-To: <20200731205116.14891-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: DM5PR06CA0072.namprd06.prod.outlook.com
- (2603:10b6:3:37::34) To SN6PR12MB2718.namprd12.prod.outlook.com
- (2603:10b6:805:6f::22)
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=LPySzTKUVWScjTIN3cHIfKZzXT4OE86By7kU7hXJQxA=;
+        b=X8KTiOFAbSLv2lUM5zEmyLuJ/WrCjl4JDEdDTPrMqThh8xSdY2a6HpCjh4cur4+Ssn
+         OqePKqqkWB2W4EHRFlYUzsL1U2BrZC2A2rMxGvQFAs1nPFyFuGp+pyD16sofodKJ39gr
+         zTxP+2lBf3r7q8vddytiwbya0G0QlV1bbIV5Nl3eSoWUpsAyviakDdK6P0PVqMxoMhE8
+         HJuQwfa08mu5CyxLoAiqWo289C+CrWTOT34h57BPgvOvRG1AZcL/snaUaAyLJdvSZT5y
+         5SPATYGLIhVQjg/sDUXDBmHY6vrwAaIQ4GhczhOvFGXmj9VYY5H9qXyzlv6hjGbPAgqS
+         erkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=LPySzTKUVWScjTIN3cHIfKZzXT4OE86By7kU7hXJQxA=;
+        b=R2JMB7qV0OPphxQ+rlqB+keADNJOjWYFWq7HrpKBJ6Q8YwYSKFt5dKxOGQL/bXJXes
+         0/+gR8PWL7P7jnhEtN2e9tL3v/GmouN0Cbb6lZSuYk7IoGFUNDxRx4PJuU+nKW7fCLZv
+         pTUYiLF5pyAoUxSS3vuAkr4aI7+8evXD446/0O6VWrcj8wiE0PP4hgrZ3rYLWRKnIo+Z
+         UNllmuXsqgH5JGn51klCAGzyzR8ZgAMYS6WUkTfcRo+pdeJ8UfNIWu30hi8HEYTk6N4f
+         ddUj0q9upWwPuzo5npwGxkaTVkxlrLICobUZ7zx5oT/sxR50k32Wbp7qEIS8ovGzuNVc
+         JaWQ==
+X-Gm-Message-State: AOAM533yPSJyBS2403SYArrI0tQoR9OjQLgL3u6yz1bz3FHX0xd8sFc7
+        sbeR6KvC9rW/sGvHz2NLPhI=
+X-Google-Smtp-Source: ABdhPJxoaX+mmG63xjVdS+ySITiWYt5W/SEz2JCIZFozrUfjLOZbEzaxCztI8bDs8uIa+LZp1fdYdw==
+X-Received: by 2002:a37:8047:: with SMTP id b68mr20146223qkd.299.1596554218832;
+        Tue, 04 Aug 2020 08:16:58 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id 6sm21098319qkj.134.2020.08.04.08.16.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Aug 2020 08:16:57 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 4 Aug 2020 11:16:54 -0400
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Nick Terrell <terrelln@fb.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Terrell <nickrterrell@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, Kernel Team <Kernel-team@fb.com>,
+        Yann Collet <yann.collet.73@gmail.com>,
+        Gao Xiang <gaoxiang25@huawei.com>,
+        Sven Schmidt <4sschmid@informatik.uni-hamburg.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] lz4: Fix kernel decompression speed
+Message-ID: <20200804151654.GA2326348@rani.riverdale.lan>
+References: <20200803194022.2966806-1-nickrterrell@gmail.com>
+ <20200803215747.GA1644409@rani.riverdale.lan>
+ <3961E1BD-8F58-4240-A3B3-B7032A405B42@fb.com>
+ <20200804083236.zjkmfer37z5rn3r4@duo.ucw.cz>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from Brijeshs-MacBook-Pro.local (70.112.153.56) by DM5PR06CA0072.namprd06.prod.outlook.com (2603:10b6:3:37::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17 via Frontend Transport; Tue, 4 Aug 2020 15:16:20 +0000
-X-Originating-IP: [70.112.153.56]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: c07cdbff-f5d8-47e7-51ed-08d838895809
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4495:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SA0PR12MB4495E922B9FE6E150E323D36E54A0@SA0PR12MB4495.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:302;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aJuIDg8PnYq5l2Dcf/nT1NEGvyp5RAtY7ZYs9n6ezjcRAHqZzWYZQhaXbwpk6qqrSHgtvYjERcmatLYHN0U1ukoMp4HjFPEKdTP0yIXAQlt6n9M5xZOYiaIfy//d223nC4toQ/Zv1fTCsdhknF824PbGEEDqnRm7gRz+4anz+0nHWnCzI30JHkNXs9b69x9aDGAsp2+AN/1joOW1hYgly34vLHA+UYvioZvAsNbGWS58UGesFrwDGivim6nHAUcBT5+6TonkR0RiyMgyZY1fc+cucFhLkSLBw80isBKpHIebSJkScVoW9AzFR6AR8tRSyER/s/m7d8PWIkR6bKScwm81zkflUrK1aB8WGQtVS8UErH5JxQj6mG/xSh6FJBLD
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2718.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(376002)(366004)(346002)(136003)(53546011)(36756003)(4326008)(6506007)(26005)(31696002)(31686004)(86362001)(6512007)(16526019)(2906002)(54906003)(83380400001)(186003)(52116002)(110136005)(66946007)(5660300002)(44832011)(66476007)(8936002)(2616005)(956004)(6486002)(316002)(478600001)(8676002)(66556008)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: iQEkmEXYp+nSxR07TFJsmYAoCcQMIH1IO2nNZeoYzh0KU4C0Hr4LVutlnDM9LruWCy6uWI4yPb+v8vuo683qCJgESQLqWSiXfz/1WvnDHeuoEpW3vW60XSYTwtGzOOYNyglc7PqAIXnKGqojGWKbDHpMGK38Y8BiWbpJPymy3jvue5M7ozlvRFbL/vt3uKHtByE7mEb0ZfvNOfSPeWlHiuPGM63xEjYZB2Cwe/fworLT0gIgRys2mw56pynImpK5Kbsm6YojzRV8/tC4eIm0/+Dpj6XJn/zJdGdSSMFJQhKD6EsUd+CKv86RsRdLJymvnZmGuS4EY9W5gilrJejESLxQUAXbwyaSqlHQCGs1+WEhvST60eTnnOUGzrUrlP+IO7ASoLF2X0ALFDbWp7qK6VwJvWghemu9048McLsh6SUuUeWtGtpPn3pNqWBenlwy+25W2K0RWok0oaQO8B5+jtCJy26/1Wckk+uxXndomphRqeiWwWyQTTc/xLXXZAgqrmfU8SiFcwSHUO0S+M7GwBr5HREu4BLRLobJlw+IPgZjggeJCh3a22rExCuPbm2XO4nOuF9SOAOrewxBCBiD38JN2zuGxiQnnmY66ng2PoZeGNvpsjXe+YC0IpvF1uHK8ujWCip3kj+jOLALMZC6tQ==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c07cdbff-f5d8-47e7-51ed-08d838895809
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2718.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Aug 2020 15:16:21.5123
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +G9Yp+TUC9ortzRykLMJ39hS+b8T10FBgOZJ17iixe+Ch2fggif0ixOWhT04ooy9tsmduWDtlxDJPUI2TnYJ0g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4495
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200804083236.zjkmfer37z5rn3r4@duo.ucw.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 04, 2020 at 10:32:36AM +0200, Pavel Machek wrote:
+> Hi!
+> 
+> > >> I've measured the kernel decompression speed using QEMU before and after
+> > >> this patch for the x86_64 and i386 architectures. The speed-up is about
+> > >> 10x as shown below.
+> > >> 
+> > >> Code	Arch	Kernel Size	Time	Speed
+> > >> v5.8	x86_64	11504832 B	148 ms	 79 MB/s
+> > >> patch	x86_64	11503872 B	 13 ms	885 MB/s
+> > >> v5.8	i386	 9621216 B	 91 ms	106 MB/s
+> > >> patch	i386	 9620224 B	 10 ms	962 MB/s
+> > >> 
+> > >> I also measured the time to decompress the initramfs on x86_64, i386,
+> > >> and arm. All three show the same decompression speed before and after,
+> > >> as expected.
+> > >> 
+> > >> [1] https://github.com/lz4/lz4/pull/890
+> > >> 
+> > > 
+> > > Hi Nick, would you be able to test the below patch's performance to
+> > > verify it gives the same speedup? It removes the #undef in misc.c which
+> > > causes the decompressors to not use the builtin version. It should be
+> > > equivalent to yours except for applying it to all the decompressors.
+> > > 
+> > > Thanks.
+> > 
+> > I will measure it. I would expect it to provide the same speed up. It would be great to fix
+> > the problem for x86/i386 in general.
+> > 
+> > But, I believe that this is also a problem for ARM, though I have a hard time measuring
+> > because I can’t get pre-boot print statements in QEMU. I will attempt to take a look at the
+> > assembly, because I’m fairly certain that memcpy() isn’t inlined in master.
+> > 
+> > Even if we fix all the architectures, I would still like to merge the LZ4 patch. It seems like it
+> > is pretty easy to merge a patch that is a boot speed regression, because people aren’t
+> > actively measuring it. So I prefer a layered defense.
+> 
+> 
+> Layered defense against performance-only problem, happening on
+> emulation-only?
+> 
+> IMO that's a bit of overkill.
+> 
+> Best regards,
+> 									Pavel
+> -- 
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 
-On 7/31/20 3:51 PM, Sean Christopherson wrote:
-> Forcefully turn off SEV if NPT is disabled, e.g. via module param.  SEV
-> requires NPT as the C-bit only exists if NPT is active.
->
-> Fixes: e9df09428996f ("KVM: SVM: Add sev module_param")
-> Cc: stable@vger.kernel.org
-> Cc: Tom Lendacky <thomas.lendacky@amd.com>
-> Cc: Brijesh Singh <brijesh.singh@amd.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->
-> RFC as it's entirely possible that I am completely misunderstanding how
-> SEV works.  Compile tested only.
+Why would it be emulation-only? QEMU is just being used for ease of
+testing, but the performance impact should be similar on bare metal.
 
-
-Reviewed-By: Brijesh Singh <brijesh.singh@amd.com>
-
-
->
->  arch/x86/kvm/svm/svm.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 783330d0e7b88..e30629593458b 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -860,8 +860,14 @@ static __init int svm_hardware_setup(void)
->  		kvm_enable_efer_bits(EFER_SVME | EFER_LMSLE);
->  	}
->  
-> +	if (!boot_cpu_has(X86_FEATURE_NPT))
-> +		npt_enabled = false;
-> +
-> +	if (npt_enabled && !npt)
-> +		npt_enabled = false;
-> +
->  	if (sev) {
-> -		if (boot_cpu_has(X86_FEATURE_SEV) &&
-> +		if (boot_cpu_has(X86_FEATURE_SEV) && npt_enabled &&
->  		    IS_ENABLED(CONFIG_KVM_AMD_SEV)) {
->  			r = sev_hardware_setup();
->  			if (r)
-> @@ -879,12 +885,6 @@ static __init int svm_hardware_setup(void)
->  			goto err;
->  	}
->  
-> -	if (!boot_cpu_has(X86_FEATURE_NPT))
-> -		npt_enabled = false;
-> -
-> -	if (npt_enabled && !npt)
-> -		npt_enabled = false;
-> -
->  	kvm_configure_mmu(npt_enabled, PG_LEVEL_1G);
->  	pr_info("kvm: Nested Paging %sabled\n", npt_enabled ? "en" : "dis");
->  
+Thanks.
