@@ -2,143 +2,143 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A31C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E4CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78AC22076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01C542076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:57:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aaf257HY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rqh/K0Z8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbgHDBvP (ORCPT
+        id S1728019AbgHDB47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 21:51:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53672 "EHLO
+        Mon, 3 Aug 2020 21:56:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726615AbgHDBvP (ORCPT
+        with ESMTP id S1726276AbgHDB46 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 21:51:15 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 233DBC061756
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 18:51:14 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id j186so20254363vsd.10
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 18:51:14 -0700 (PDT)
+        Mon, 3 Aug 2020 21:56:58 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57C71C06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 18:56:58 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id b25so29836362qto.2
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 18:56:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZjddNGXz3YzU7Pvdk0bKn7EGChBBYHNzVV19el9GvN4=;
-        b=aaf257HYCPeWHrjBXePaOYS8VFb1Q/czqyneX50WCTw9iwZoobQcG+o1I1MWB7iKJs
-         smazrjiW0L6F2JZ72ElWTxCb5NTLzF2eL/KqMeWC9AHOwb9tlBgjdHwOTBLnOa+PAG0y
-         GzfieF4oG1m72F66pbXCb9LhKUeoz73OImW5s=
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Ah+PGP8o/FyvN4G1VIxPhld3lHPU5Vf3p/CKy9L7JHU=;
+        b=rqh/K0Z8o4cRv/wOXznVBNzevV2V7Bh/f9d4Lhgj36/+jmZgclumX4v86fggvH70lh
+         MPHYaNd+ARKYE81oPUXg3zpmFjoIGL8esu+97xyTg1VVsBLLS+DYcz4cNM8jbtxM0yMW
+         Uarj6gDquGsCwurCHH4fGkU/vlDrIn0MfdA5bSTvi0yXVAOOOEimkTNJGt5PA8Q2B+c+
+         TdQ50aaVMqc+WUmnoeECBIKuv4kcWFI9iCWIWQEV3C2E4Zo3xyVjd/9XH1WYaipgfwlJ
+         iiDnNZDKY0d6WlSdlXd4maNP6qYcMpcN2dk0QMxBNA11TzC3eso/XHIWtKbTxzMr/n1E
+         X0Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZjddNGXz3YzU7Pvdk0bKn7EGChBBYHNzVV19el9GvN4=;
-        b=JZYuRO/bhn6PUpM66cVLOUiqRQ9jEz5l0gF74P/2MR1hxAa4FABe2HNz7x9c/hbthF
-         Htm1vDs9kLBsmd8UYioj8MOr7LvYzVVPwjqqazCjU3lUrNde5xHYBq8XqZncJiR/BClG
-         Q6KqFTDlAbWmxqM/T50ldHZGNDzbc98QgeXzK5n1dSLnipdoLFF/iqq2ICkv337fDGak
-         tSEWJX/ntIMzQfLRrxGjOfOWqaYNbGO01WjArxdlndxMsnDkxUUVer6tBnKa4XsOVVUM
-         8PBLZPXctLDfO9Z5OMj/EPjfhKThDcZv8EBwheQgMj5jUqnY0PM2P1YacX+74kdIH8P1
-         hCbA==
-X-Gm-Message-State: AOAM530867HEIV6kahHEgf0BU2X+00Nk0bExAkRih0USu6LxbAzmgKxo
-        LjWmTDZzlP/IFBR/hHM25r/l8f7fKzvoOOZJaYbcZw==
-X-Google-Smtp-Source: ABdhPJy1lRFt2xIEK6BlHw92IYkKS9uhFUQMHmq60wCSuWixqVxrgiG9sOnX8EEpNmGgC5HX8UN7Ug7KXZjZv9nKfx8=
-X-Received: by 2002:a67:bb06:: with SMTP id m6mr13785000vsn.54.1596505874070;
- Mon, 03 Aug 2020 18:51:14 -0700 (PDT)
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=Ah+PGP8o/FyvN4G1VIxPhld3lHPU5Vf3p/CKy9L7JHU=;
+        b=oz2M6uYxybzkYEjQ1y1U+8X3KN6iRiJJAl4I7IvsNepIDx+y1t+sWy3+Gm7mwHVhg4
+         +J7HixMIZQxWYhNZx6MPbon9I9muiIDcYAwcK3RaFl92x+BhYqkeeNDPXCfZdLzYcfCI
+         oTDR0d3F5QgrpMLadD0bVKrUwXIYyolVF0+l6W7aHhbA1rzfeKztSzNq/B2DvvqLBRNv
+         zF8A6fuJkzwfwbeAE8jfpyoBTlpPKdyV+DyMn+d0Cub0zoSMKshEtvSNT4hLEXylSicA
+         hKVpnw2JQntMQFj9inbLH4r8V00z1laT71S3mTIbRbROVQFBeSXPeYXbGyTvd0FmWtSh
+         Mw5w==
+X-Gm-Message-State: AOAM5320mnfOZNpfToZgByxS6GRyYeJ05mKPw7jLM4TB4pvzR8kSAWwQ
+        pZQgF6dJgprN3n2CgMtUj7g=
+X-Google-Smtp-Source: ABdhPJwAiwO+ABOtDXxy0Oamvfv2f26RhXUHELDzXlv6x1NDV2Sx0ONVeB+ARJD4O80zsRsmI0IwcQ==
+X-Received: by 2002:ac8:1e0e:: with SMTP id n14mr19245064qtl.109.1596506217315;
+        Mon, 03 Aug 2020 18:56:57 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id y3sm24273096qtj.55.2020.08.03.18.56.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 18:56:56 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 3 Aug 2020 21:56:54 -0400
+To:     Nick Terrell <terrelln@fb.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Terrell <nickrterrell@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, Kernel Team <Kernel-team@fb.com>,
+        Yann Collet <yann.collet.73@gmail.com>,
+        Gao Xiang <gaoxiang25@huawei.com>,
+        Sven Schmidt <4sschmid@informatik.uni-hamburg.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] lz4: Fix kernel decompression speed
+Message-ID: <20200804015654.GA1943218@rani.riverdale.lan>
+References: <20200803194022.2966806-1-nickrterrell@gmail.com>
+ <20200803215747.GA1644409@rani.riverdale.lan>
+ <3961E1BD-8F58-4240-A3B3-B7032A405B42@fb.com>
 MIME-Version: 1.0
-References: <1596445047-2975-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1596445047-2975-2-git-send-email-hsin-hsiung.wang@mediatek.com>
-In-Reply-To: <1596445047-2975-2-git-send-email-hsin-hsiung.wang@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Tue, 4 Aug 2020 09:51:03 +0800
-Message-ID: <CANMq1KCSiRwCvPcbdA-g4Xwm5Jwk7VLDNpsR-_zoxEOv9ZFHWQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] spmi: Add driver shutdown support
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <3961E1BD-8F58-4240-A3B3-B7032A405B42@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 3, 2020 at 4:57 PM Hsin-Hsiung Wang
-<hsin-hsiung.wang@mediatek.com> wrote:
->
-> Add new shutdown() method.  Use it in the standard driver model style.
->
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> ---
->  drivers/spmi/spmi.c  | 12 ++++++++++++
->  drivers/spmi/spmi.c  | 12 ++++++++++++
->  include/linux/spmi.h |  1 +
->  2 files changed, 13 insertions(+)
->
-> diff --git a/drivers/spmi/spmi.c b/drivers/spmi/spmi.c
-> index c16b60f..5fde024 100644
-> --- a/drivers/spmi/spmi.c
-> +++ b/drivers/spmi/spmi.c
-> @@ -357,6 +357,17 @@ static int spmi_drv_remove(struct device *dev)
->         return 0;
->  }
->
-> +static void spmi_drv_shutdown(struct device *dev)
-> +{
-> +       const struct spmi_driver *sdrv = to_spmi_driver(dev->driver);
-> +
-> +       if (!sdrv)
-> +               return;
-> +
-> +
-> +       if (sdrv->shutdown)
-> +               sdrv->shutdown(to_spmi_device(dev));
+On Mon, Aug 03, 2020 at 10:55:01PM +0000, Nick Terrell wrote:
+> 
+> 
+> > On Aug 3, 2020, at 2:57 PM, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> > 
+> > On Mon, Aug 03, 2020 at 12:40:22PM -0700, Nick Terrell wrote:
+> >> From: Nick Terrell <terrelln@fb.com>
+> >> 
+> >> This patch replaces all memcpy() calls with LZ4_memcpy() which calls
+> >> __builtin_memcpy() so the compiler can inline it.
+> >> 
+> >> LZ4 relies heavily on memcpy() with a constant size being inlined. In
+> >> x86 and i386 pre-boot environments memcpy() cannot be inlined because
+> >> memcpy() doesn't get defined as __builtin_memcpy().
+> >> 
+> >> An equivalent patch has been applied upstream so that the next import
+> >> won't lose this change [1].
+> >> 
+> >> I've measured the kernel decompression speed using QEMU before and after
+> >> this patch for the x86_64 and i386 architectures. The speed-up is about
+> >> 10x as shown below.
+> >> 
+> >> Code	Arch	Kernel Size	Time	Speed
+> >> v5.8	x86_64	11504832 B	148 ms	 79 MB/s
+> >> patch	x86_64	11503872 B	 13 ms	885 MB/s
+> >> v5.8	i386	 9621216 B	 91 ms	106 MB/s
+> >> patch	i386	 9620224 B	 10 ms	962 MB/s
+> >> 
+> >> I also measured the time to decompress the initramfs on x86_64, i386,
+> >> and arm. All three show the same decompression speed before and after,
+> >> as expected.
+> >> 
+> >> [1] https://github.com/lz4/lz4/pull/890
+> >> 
+> > 
+> > Hi Nick, would you be able to test the below patch's performance to
+> > verify it gives the same speedup? It removes the #undef in misc.c which
+> > causes the decompressors to not use the builtin version. It should be
+> > equivalent to yours except for applying it to all the decompressors.
+> > 
+> > Thanks.
+> 
+> I will measure it. I would expect it to provide the same speed up. It would be great to fix
+> the problem for x86/i386 in general.
 
-Slight more succinct (assuming sdrv _can_ actually be NULL, I'm not
-sure about that)
+Thanks. I tried using RDTSC to get some timings under QEMU, and I get
+similar speedup as you have for LZ4, and around 15-20% or so for ZSTD
+(on 64-bit) -- I see that ZSTD_copy8 is already using __builtin_memcpy,
+but there must be more that can be optimized? There's a couple 1/2-byte
+sized copies in huf_decompress.c.
 
-if (srdv && sdrv->shutdown)
-
-> +}
-> +}
-> +
->  static int spmi_drv_uevent(struct device *dev, struct kobj_uevent_env *env)
->  {
->         int ret;
-> @@ -373,6 +384,7 @@ static struct bus_type spmi_bus_type = {
-> @@ -373,6 +384,7 @@ static struct bus_type spmi_bus_type = {
->         .match          = spmi_device_match,
->         .probe          = spmi_drv_probe,
->         .remove         = spmi_drv_remove,
-> +       .shutdown       = spmi_drv_shutdown,
->         .uevent         = spmi_drv_uevent,
->  };
->
-> diff --git a/include/linux/spmi.h b/include/linux/spmi.h
-> index 394a3f6..729bcbf 100644
-> --- a/include/linux/spmi.h
-> +++ b/include/linux/spmi.h
-> @@ -138,6 +138,7 @@ struct spmi_driver {
->         struct device_driver driver;
->         int     (*probe)(struct spmi_device *sdev);
->         void    (*remove)(struct spmi_device *sdev);
-> +       void    (*shutdown)(struct spmi_device *sdev);
->  };
->
->  static inline struct spmi_driver *to_spmi_driver(struct device_driver *d)
-> --
-> 2.6.4
+For the rest of the algos there seems to be no difference, likely
+because some casual grepping doesn't show any constant-size copies in
+the other algorithms.
