@@ -2,216 +2,220 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BA4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0023AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 442CC2075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE9BB208A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:51:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596545485;
+	bh=fd/ZT/LKFLc2yiJPmXJ8/NFEKIlg1LH8tpVAV7/Rfkg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RhxSYbKBUTEOuau1r2+sMay8yJxDyJJz8KBxR0cPgQtPUYE8bPyejsMDytJeBZSxO
+	 8I4jvw7UcBpBNN8VCi+OPb1/U0RpIwRYLpsVo4ji7vFiYkcxegmU2Jx2oeGMIEZBc/
+	 cpfuLiZqFLBMZxixA3TZSA6MyY7RHRVLweXS94ug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbgHDMup (ORCPT
+        id S1727977AbgHDMvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 08:50:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58210 "EHLO mx2.suse.de"
+        Tue, 4 Aug 2020 08:51:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725830AbgHDMuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 08:50:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 485F9ACC5;
-        Tue,  4 Aug 2020 12:50:53 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 047361E12CB; Tue,  4 Aug 2020 14:50:36 +0200 (CEST)
-Date:   Tue, 4 Aug 2020 14:50:35 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     =?utf-8?B?5aec6L+O?= <jiangying8582@126.com>
-Cc:     Markus.Elfring@web.de, tytso@mit.edu, adilger.kernel@dilger.ca,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        wanglong19@meituan.com, heguanjun@meituan.com
-Subject: Re: [PATCH v3] ext4: fix direct I/O read error
-Message-ID: <20200804125035.GA21667@quack2.suse.cz>
-References: <1593423930-5576-1-git-send-email-jiangying8582@126.com>
- <13A548B3-C71D-4637-B194-CC405991AFC4@126.com>
+        id S1725932AbgHDMvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 08:51:23 -0400
+Received: from quaco.ghostprotocols.net (unknown [177.158.178.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B44C32075A;
+        Tue,  4 Aug 2020 12:51:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596545482;
+        bh=fd/ZT/LKFLc2yiJPmXJ8/NFEKIlg1LH8tpVAV7/Rfkg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dnb7D66uT0gEMvhQQujHvSZfgLZ7BbJoQ/BcMn5Tor+HpS15jk7Hez+qNhzv1O+LD
+         nrHLO8MU8n8FWBiGZi88XRYkNeF0Kx2OGMxaYuliRo4KEtMEuUDOKaHNwf74y+f/x+
+         LHGdGuXjUaoyy5PH2JUjf7ovilsIA5EaXUU8v8cQ=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id AF62B40C7C; Tue,  4 Aug 2020 09:51:15 -0300 (-03)
+Date:   Tue, 4 Aug 2020 09:51:15 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 01/18] perf ftrace: select function/function_graph
+ tracer automatically
+Message-ID: <20200804125115.GF3440834@kernel.org>
+References: <20200718064826.9865-1-changbin.du@gmail.com>
+ <20200718064826.9865-2-changbin.du@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <13A548B3-C71D-4637-B194-CC405991AFC4@126.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200718064826.9865-2-changbin.du@gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 01-07-20 23:25:26, 姜迎 wrote:
-> Does anyone else have any comments on the PATCH v3？Suggestions are welcome.
+Em Sat, Jul 18, 2020 at 02:48:09PM +0800, Changbin Du escreveu:
+> The '-g/-G' options have already implied function_graph tracer should be
+> used instead of function tracer. So the extra option '--tracer' can be
+> killed.
 > 
-> Thanks！
+> This patch changes the behavior as below:
+>   - By default, function tracer is used.
+>   - If '-g' or '-G' option is on, then function_graph tracer is used.
+>   - The perf configuration item 'ftrace.tracer' is marked as deprecated.
+>   - The option '--tracer' is marked as deprecated.
 
-The patch looks good to me FWIW. But as Jiang properly notes current
-upstream doesn't need this at all so it's only for -stable kernel releases.
-Since there was no report of this problem so far I'm not convinced this is
-serious enough to warrant non-upstream patch in -stable but if this bug
-indeed breaks some application, please add that info to the changelog and
-send the patch to stable@vger.kernel.org for inclusion. In that case also
-feel free to add:
+You should try to be more granular, for instance, I think the decision
+to change the default is questionable, but could be acceptable.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+But why deprecate the perf configuration for the default tracer?
 
-								Honza
+Say people who already use 'perf ftrace ls' go and use with this patch
+and see that it changed the default from the function_graph tracer to
+the function tracer and disagree with you, they want the default to be
+the function graph tracer, know that there is (or there was) a
+ftrace.tracer in ~/.prefconfig, and then try that, only to find out that
+it is not possible, frustrating :-\
+
+So can we please remove this deprecation of ftrace.tracer so that people
+used to how it was can get that behaviour back?
+
+I'll look at the other patches so as to provide comments on all of
+them and to speed things up I may end up removing this deprecation of
+ftrace.tracer and apply the rest, we can always revisit parts that I
+remove.
+
+- Arnaldo
+
+> Here are some examples.
 > 
-> 发自我的iPhone
+> This will start tracing all functions using function tracer:
+>   $ sudo perf ftrace
 > 
-> > 在 2020年6月29日，下午5:45，Jiang Ying <jiangying8582@126.com> 写道：
-> > 
-> > ﻿This patch is used to fix ext4 direct I/O read error when
-> > the read size is not aligned with block size.
-> > 
-> > Then, I will use a test to explain the error.
-> > 
-> > (1) Make a file that is not aligned with block size:
-> >    $dd if=/dev/zero of=./test.jar bs=1000 count=3
-> > 
-> > (2) I wrote a source file named "direct_io_read_file.c" as following:
-> > 
-> >    #include <stdio.h>
-> >    #include <stdlib.h>
-> >    #include <unistd.h>
-> >    #include <sys/file.h>
-> >    #include <sys/types.h>
-> >    #include <sys/stat.h>
-> >    #include <string.h>
-> >    #define BUF_SIZE 1024
-> > 
-> >    int main()
-> >    {
-> >        int fd;
-> >        int ret;
-> > 
-> >        unsigned char *buf;
-> >        ret = posix_memalign((void **)&buf, 512, BUF_SIZE);
-> >        if (ret) {
-> >            perror("posix_memalign failed");
-> >            exit(1);
-> >        }
-> >        fd = open("./test.jar", O_RDONLY | O_DIRECT, 0755);
-> >        if (fd < 0){
-> >            perror("open ./test.jar failed");
-> >            exit(1);
-> >        }
-> > 
-> >        do {
-> >            ret = read(fd, buf, BUF_SIZE);
-> >            printf("ret=%d\n",ret);
-> >            if (ret < 0) {
-> >                perror("write test.jar failed");
-> >            }
-> >        } while (ret > 0);
-> > 
-> >        free(buf);
-> >        close(fd);
-> >    }
-> > 
-> > (3) Compile the source file:
-> >    $gcc direct_io_read_file.c -D_GNU_SOURCE
-> > 
-> > (4) Run the test program:
-> >    $./a.out
-> > 
-> >    The result is as following:
-> >    ret=1024
-> >    ret=1024
-> >    ret=952
-> >    ret=-1
-> >    write test.jar failed: Invalid argument.
-> > 
-> > I have tested this program on XFS filesystem, XFS does not have
-> > this problem, because XFS use iomap_dio_rw() to do direct I/O
-> > read. And the comparing between read offset and file size is done
-> > in iomap_dio_rw(), the code is as following:
-> > 
-> >    if (pos < size) {
-> >        retval = filemap_write_and_wait_range(mapping, pos,
-> >                pos + iov_length(iov, nr_segs) - 1);
-> > 
-> >        if (!retval) {
-> >            retval = mapping->a_ops->direct_IO(READ, iocb,
-> >                        iov, pos, nr_segs);
-> >        }
-> >        ...
-> >    }
-> > 
-> > ...only when "pos < size", direct I/O can be done, or 0 will be return.
-> > 
-> > I have tested the fix patch on Ext4, it is up to the mustard of
-> > EINVAL in man2(read) as following:
-> >    #include <unistd.h>
-> >    ssize_t read(int fd, void *buf, size_t count);
-> > 
-> >    EINVAL
-> >        fd is attached to an object which is unsuitable for reading;
-> >        or the file was opened with the O_DIRECT flag, and either the
-> >        address specified in buf, the value specified in count, or the
-> >        current file offset is not suitably aligned.
-> > 
-> > So I think this patch can be applied to fix ext4 direct I/O error.
-> > 
-> > However Ext4 introduces direct I/O read using iomap infrastructure
-> > on kernel 5.5, the patch is commit <b1b4705d54ab>
-> > ("ext4: introduce direct I/O read using iomap infrastructure"),
-> > then Ext4 will be the same as XFS, they all use iomap_dio_rw() to do direct
-> > I/O read. So this problem does not exist on kernel 5.5 for Ext4.
-> > 
-> > From above description, we can see this problem exists on all the kernel
-> > versions between kernel 3.14 and kernel 5.4. Please apply this patch
-> > on these kernel versions, or please use the method on kernel 5.5 to fix
-> > this problem.
-> > 
-> > Fixes: 9fe55eea7e4b ("Fix race when checking i_size on direct i/o read")
-> > Co-developed-by: Wang Long <wanglong19@meituan.com>
-> > Signed-off-by: Wang Long <wanglong19@meituan.com>
-> > Signed-off-by: Jiang Ying <jiangying8582@126.com>
-> > 
-> > Changes since V2:
-> >    Optimize the description of the commit message and make a variation for
-> >    the patch, e.g. with:
-> > 
-> >        Before:
-> >            loff_t size;
-> >            size = i_size_read(inode);
-> >        After:
-> >            loff_t size = i_size_read(inode);
-> > 
-> > Changes since V1:
-> >    Signed-off use real name and add "Fixes:" flag
-> > 
-> > ---
-> > fs/ext4/inode.c | 5 +++++
-> > 1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> > index 516faa2..a66b0ac 100644
-> > --- a/fs/ext4/inode.c
-> > +++ b/fs/ext4/inode.c
-> > @@ -3821,6 +3821,11 @@ static ssize_t ext4_direct_IO_read(struct kiocb *iocb, struct iov_iter *iter)
-> >    struct inode *inode = mapping->host;
-> >    size_t count = iov_iter_count(iter);
-> >    ssize_t ret;
-> > +    loff_t offset = iocb->ki_pos;
-> > +    loff_t size = i_size_read(inode);
-> > +
-> > +    if (offset >= size)
-> > +        return 0;
-> > 
-> >    /*
-> >     * Shared inode_lock is enough for us - it protects against concurrent
-> > -- 
-> > 1.8.3.1
+> This will trace all functions using function graph tracer:
+>   $ sudo perf ftrace -G '*'
 > 
+> This will trace function vfs_read using function graph tracer:
+>   $ sudo perf ftrace -G vfs_read
+> 
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> 
+> ---
+> v3: remove default '*' for -G/-T.
+> ---
+>  tools/perf/Documentation/perf-config.txt |  5 -----
+>  tools/perf/Documentation/perf-ftrace.txt |  2 +-
+>  tools/perf/builtin-ftrace.c              | 15 ++++++++++-----
+>  3 files changed, 11 insertions(+), 11 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
+> index c7d3df5798e2..a25fee7de3b2 100644
+> --- a/tools/perf/Documentation/perf-config.txt
+> +++ b/tools/perf/Documentation/perf-config.txt
+> @@ -612,11 +612,6 @@ trace.*::
+>  		"libbeauty", the default, to use the same argument beautifiers used in the
+>  		strace-like sys_enter+sys_exit lines.
+>  
+> -ftrace.*::
+> -	ftrace.tracer::
+> -		Can be used to select the default tracer. Possible values are
+> -		'function' and 'function_graph'.
+> -
+>  llvm.*::
+>  	llvm.clang-path::
+>  		Path to clang. If omit, search it from $PATH.
+> diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
+> index b80c84307dc9..952e46669168 100644
+> --- a/tools/perf/Documentation/perf-ftrace.txt
+> +++ b/tools/perf/Documentation/perf-ftrace.txt
+> @@ -24,7 +24,7 @@ OPTIONS
+>  
+>  -t::
+>  --tracer=::
+> -	Tracer to use: function_graph or function.
+> +	Tracer to use: function_graph or function. This option is deprecated.
+>  
+>  -v::
+>  --verbose=::
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index 2bfc1b0db536..5f53da87040d 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+> @@ -27,7 +27,6 @@
+>  #include "util/cap.h"
+>  #include "util/config.h"
+>  
+> -#define DEFAULT_TRACER  "function_graph"
+>  
+>  struct perf_ftrace {
+>  	struct evlist		*evlist;
+> @@ -419,6 +418,7 @@ static int perf_ftrace_config(const char *var, const char *value, void *cb)
+>  	if (strcmp(var, "ftrace.tracer"))
+>  		return -1;
+>  
+> +	pr_warning("Configuration ftrace.tracer is deprecated\n");
+>  	if (!strcmp(value, "function_graph") ||
+>  	    !strcmp(value, "function")) {
+>  		ftrace->tracer = value;
+> @@ -459,7 +459,7 @@ int cmd_ftrace(int argc, const char **argv)
+>  {
+>  	int ret;
+>  	struct perf_ftrace ftrace = {
+> -		.tracer = DEFAULT_TRACER,
+> +		.tracer = "function",
+>  		.target = { .uid = UINT_MAX, },
+>  	};
+>  	const char * const ftrace_usage[] = {
+> @@ -469,7 +469,7 @@ int cmd_ftrace(int argc, const char **argv)
+>  	};
+>  	const struct option ftrace_options[] = {
+>  	OPT_STRING('t', "tracer", &ftrace.tracer, "tracer",
+> -		   "tracer to use: function_graph(default) or function"),
+> +		   "tracer to use: function or function_graph (This option is deprecated)"),
+>  	OPT_STRING('p', "pid", &ftrace.target.pid, "pid",
+>  		   "trace on existing process id"),
+>  	OPT_INCR('v', "verbose", &verbose,
+> @@ -479,11 +479,13 @@ int cmd_ftrace(int argc, const char **argv)
+>  	OPT_STRING('C', "cpu", &ftrace.target.cpu_list, "cpu",
+>  		    "list of cpus to monitor"),
+>  	OPT_CALLBACK('T', "trace-funcs", &ftrace.filters, "func",
+> -		     "trace given functions only", parse_filter_func),
+> +		     "trace given functions using function tracer",
+> +		     parse_filter_func),
+>  	OPT_CALLBACK('N', "notrace-funcs", &ftrace.notrace, "func",
+>  		     "do not trace given functions", parse_filter_func),
+>  	OPT_CALLBACK('G', "graph-funcs", &ftrace.graph_funcs, "func",
+> -		     "Set graph filter on given functions", parse_filter_func),
+> +		     "trace given functions using function_graph tracer",
+> +		     parse_filter_func),
+>  	OPT_CALLBACK('g', "nograph-funcs", &ftrace.nograph_funcs, "func",
+>  		     "Set nograph filter on given functions", parse_filter_func),
+>  	OPT_INTEGER('D', "graph-depth", &ftrace.graph_depth,
+> @@ -505,6 +507,9 @@ int cmd_ftrace(int argc, const char **argv)
+>  	if (!argc && target__none(&ftrace.target))
+>  		ftrace.target.system_wide = true;
+>  
+> +	if (!list_empty(&ftrace.graph_funcs) || !list_empty(&ftrace.nograph_funcs))
+> +		ftrace.tracer = "function_graph";
+> +
+>  	ret = target__validate(&ftrace.target);
+>  	if (ret) {
+>  		char errbuf[512];
+> -- 
+> 2.25.1
+> 
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+
+- Arnaldo
