@@ -2,87 +2,119 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8570DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3752C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7463F20842
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB0BD20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:39:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596573591;
+	bh=fwBmY9dgQYH4vZnWhrqR3ofWDj2807uG5uWKustVE04=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=BpkQmIZb5NDG7pMQrKPVZqDv0zZvEgwSvuNDLEwoze/GS4t/NdJ/ECLNbhWvdufWs
+	 SDN9yWXyuXSU5aQQGBGzGpZ63RUyieXdY3KkkblO850Ovi1Z+PGSNaxYUHbal7gfi8
+	 1WcwiSXJJC/hVnAhPirQwdzJQ6zuJ14lEO1aGx4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgHDUiM (ORCPT
+        id S1727906AbgHDUju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 16:38:12 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:40524
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727035AbgHDUiL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 16:38:11 -0400
-X-IronPort-AV: E=Sophos;i="5.75,435,1589234400"; 
-   d="scan'208";a="355951290"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 22:38:09 +0200
-Date:   Tue, 4 Aug 2020 22:38:08 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Sumera Priyadarsini <sylphrenadin@gmail.com>
-cc:     michal.lkml@markovi.net, Gilles.Muller@lip6.fr,
-        gregkh@linuxfoundation.org, nicolas.palix@imag.fr,
-        linux-kernel@vger.kernel.org, cocci@systeme.lip6.fr
-Subject: Re: [Cocci] [PATCH] scripts: coccicheck: Add chain mode to list of
- modes
-In-Reply-To: <20200804023141.9510-1-sylphrenadin@gmail.com>
-Message-ID: <alpine.DEB.2.22.394.2008042237110.2575@hadrien>
-References: <20200804023141.9510-1-sylphrenadin@gmail.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Tue, 4 Aug 2020 16:39:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35710 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726859AbgHDUjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 16:39:49 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E5C220842;
+        Tue,  4 Aug 2020 20:39:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596573588;
+        bh=fwBmY9dgQYH4vZnWhrqR3ofWDj2807uG5uWKustVE04=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vuQDUdyDj9mot5TWZAsK48WWfz+H4Hm/SYYEA4/+vJLbCkhgOXd38EemwWJ3F3Jyg
+         0/JoTq0Pn1Yr0+DLLtruFovmSbvzl7o8EdTerHIgf2EevMcKp4s9fBNo0JMYf4nxq5
+         5NMbKCQJpk3Yp/tiNehfe2Qqfut0juyswLlfRmqQ=
+Date:   Tue, 4 Aug 2020 13:39:46 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Jiri Pirko <jiri@resnulli.us>
+Cc:     Moshe Shemesh <moshe@mellanox.com>,
+        Jacob Keller <jacob.e.keller@intel.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Subject: Re: [PATCH net-next RFC 01/13] devlink: Add reload level option to
+ devlink reload command
+Message-ID: <20200804133946.7246514e@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200804100418.GA2210@nanopsycho>
+References: <20200728114458.762b5396@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <d6fbfedd-9022-ff67-23ed-418607beecc2@intel.com>
+        <20200728130653.7ce2f013@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <04f00024-758c-bc19-c187-49847c24a5a4@mellanox.com>
+        <20200729140708.5f914c15@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <3352bd96-d10e-6961-079d-5c913a967513@mellanox.com>
+        <20200730161101.48f42c5b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <0f2467fd-ee2e-1a51-f9c1-02f8a579d542@mellanox.com>
+        <20200803141442.GB2290@nanopsycho>
+        <20200803135703.16967635@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <20200804100418.GA2210@nanopsycho>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 4 Aug 2020 12:04:18 +0200 Jiri Pirko wrote:
+> Mon, Aug 03, 2020 at 10:57:03PM CEST, kuba@kernel.org wrote:
+> >I was trying to avoid having to provide a Cartesian product of
+> >operation and system disruption level, if any other action can
+> >be done "live" at some point.
+> >
+> >But no strong feelings about that one.
+> >
+> >Really, as long as there is no driver-specific defaults (or as 
+> >little driver-specific anything as possible) and user actions 
+> >are clearly expressed (fw-reset does not necessarily imply
+> >fw-activation) - the API will be fine IMO.  
+> 
+> Clear actions, that is what I'm fine with.
+> 
+> But not sure how you think we can achieve no driver-specific defaults.
+> We have them already :/ I don't think we can easily remove them and not
+> break user expectations.
+
+AFAIU the per-driver default is needed because we went too low 
+level with what the action constitutes. We need maintain the higher
+level actions.
+
+The user clearly did not care if FW was reset during devlink reload
+before this set, so what has changed? The objective user has is to
+activate their config / FW / move to different net ns. 
+
+Reloading the driver or resetting FW is a low level detail which
+achieves different things for different implementations. So it's 
+not a suitable abstraction -> IOW we need the driver default.
 
 
-On Tue, 4 Aug 2020, Sumera Priyadarsini wrote:
+The work flow for the user is:
 
-> This patch adds chain mode to the list of available modes in coccinelle.
+0. download fw to /lib/firmware
+1. devlink flash $dev $fw
+2. if live activation is enabled
+   yes - devlink reload $dev $live-activate
+   no - report machine has to be drained for reboot
 
-Thanks for the commit.  In the log message, could you change "coccinelle"
-o "coccicheck"?  Actually, the modes are not something that are built into
-Coccinelle.  They are just implemented by the coccicheck script.
+fw-reset can't be $live-activate, because as Jake said fw-reset does
+not activate the new image for Intel. So will we end up per-driver
+defaults in the kernel space, and user space maintaining a mapping from
+a driver to what a "level" of reset implies.
 
-thanks,
-julia
-
-
->
-> Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
-> ---
->  scripts/coccicheck | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/scripts/coccicheck b/scripts/coccicheck
-> index e04d328210ac..6e37cf36caae 100755
-> --- a/scripts/coccicheck
-> +++ b/scripts/coccicheck
-> @@ -99,7 +99,7 @@ fi
->  if [ "$MODE" = "" ] ; then
->      if [ "$ONLINE" = "0" ] ; then
->  	echo 'You have not explicitly specified the mode to use. Using default "report" mode.'
-> -	echo 'Available modes are the following: patch, report, context, org'
-> +	echo 'Available modes are the following: patch, report, context, org, chain'
->  	echo 'You can specify the mode with "make coccicheck MODE=<mode>"'
->  	echo 'Note however that some modes are not implemented by some semantic patches.'
->      fi
-> --
-> 2.17.1
->
-> _______________________________________________
-> Cocci mailing list
-> Cocci@systeme.lip6.fr
-> https://systeme.lip6.fr/mailman/listinfo/cocci
->
+I hope this makes things crystal clear. Please explain what problems
+you're seeing and extensions you're expecting. A list of user scenarios
+you foresee would be v. useful.
