@@ -2,253 +2,253 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CEAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAF0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5B1C20781
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:47:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2AD92076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:51:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pspaZPQ9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dna/yREk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbgHDGrb (ORCPT
+        id S1726166AbgHDGvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 02:47:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42756 "EHLO
+        Tue, 4 Aug 2020 02:51:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbgHDGrb (ORCPT
+        with ESMTP id S1725904AbgHDGvQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 02:47:31 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27CB0C06174A;
-        Mon,  3 Aug 2020 23:47:31 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id k12so12984796otr.1;
-        Mon, 03 Aug 2020 23:47:31 -0700 (PDT)
+        Tue, 4 Aug 2020 02:51:16 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3F59C061756
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 23:51:15 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id a127so51645929ybb.14
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 23:51:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=6z5LRfDTSDcq7ITV5IDPzL7KR6bsFYigJlNx76qYtko=;
-        b=pspaZPQ9zDJE82JpdH9SVx9Cmz+m6OxTuMFwtNzj44dm/k3TmQcdurI3NIzxKtItDV
-         u/W/lQDnwSE1EJ23igPIUPDDACa6FLSEc/reijZUowV/5KcRQFT3azF/ZY88c10LsRHn
-         BBE7ng+oy1LhrRiPAFCF71xvRa6Bq/E/W/Vdp/vmPYmJzo7aYap+9Qbt9btvRRTVXHa+
-         eIb3n/PcPrU1zbCvY952Ti4Yz3TkhvHJpFx87Cgepd4MUsV0+WyyiDhYDRiatLzyTa+0
-         m9cSpvRFJp/NA3A2JCeG7S4SkCLIcbN//nWLJNQCIIne9LTKkKl3C6a4DXc2OzT2XgWT
-         Xe2w==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=FSn0X9txtKoQYA9DDBm/TO9jK+tdQqRTqSZpQdd5Ml4=;
+        b=Dna/yREk3cyTVvUixmOwHNzLzss9Xb/YXSDPPn5wjN8wqh3NdXgot0KLWDrWddXxs3
+         ucb48/3B9Elvdb+3mq128JC7yFVseh+bSxA6hsB+pfjKGIA1bQhFByFEhlDbYX+K1hOy
+         41zRsi4EI/ZxUkpCwkuzX9Eu9S5Wb0wM1ob0G3gx7puHPmSe9OsKYlPnAqJUSIXwTWad
+         qXOkK7TB21RcS/2rVT9+rPqYKTjN/uSW1dq9cBURU8cOZiUc16v8JYlphJfsJIfA0fRG
+         mWeu6QoAZqftH7yAgYU+3LJnGrvn7TtCpfvA2EwPylMpLlPLdJvQ32g9EtL2RiEkC5Ia
+         rkSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=6z5LRfDTSDcq7ITV5IDPzL7KR6bsFYigJlNx76qYtko=;
-        b=K6Z0BZfZLWxjt4eiDAibARs6yFQ169kIlIApW53z5E1ShOjmHWlsE6FO5dLIUKuyQ2
-         P66syUJNnHDCD5KblR4WpqwjXhJkLiytwoEHNeYD9Fz55i5xFoM+fVugRQrYEIrpWyDO
-         fyk1J+M8apW8V/X/DH4HR4bZkONCg4iUUK+UI8d0ey5Q4iFLtQKyuanw7YvyIresbpCp
-         PiO9qu+KT7Nkw2Z1FvspDJyYnXteTt3+coFr6N+QSBTvjLFTgHop8HX6Xbuv+fc2gdEI
-         CbvYzIcj/Ps6WgfvhJyLCRMTITgPwAJX9wXwIE/MozHotphEvUib6B1aq7pkbDR/U6UX
-         Q5tw==
-X-Gm-Message-State: AOAM531P7NWWHDW6qTfuUkFWRacM4QkYwOFToG9ir4oJaxeSe94YdKo9
-        1m9iN7dEqYab+Yz4i8reARdeDY88qyd2oSXiNGXwaLXnlHI=
-X-Google-Smtp-Source: ABdhPJx3DJWysCcYzI/A5/lxKXcY+XiqKANHGcuk/4bZ+AMdMlAyIY2tsEefBwXqLrwFiCt+gVB/wn1z0Vb/d5MmPRs=
-X-Received: by 2002:a9d:5e5:: with SMTP id 92mr17637928otd.9.1596523650478;
- Mon, 03 Aug 2020 23:47:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200730190841.2071656-1-nickrterrell@gmail.com>
-In-Reply-To: <20200730190841.2071656-1-nickrterrell@gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Tue, 4 Aug 2020 08:47:18 +0200
-Message-ID: <CA+icZUU+mREksACdviaaRopg5J850zNXBG2b-XyEZtc9eoL8tQ@mail.gmail.com>
-Subject: Re: [GIT PULL][PATCH v10 0/8] Add support for ZSTD-compressed kernel
- and initramfs
-To:     Nick Terrell <nickrterrell@gmail.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
-        linux-kbuild@vger.kernel.org, x86@kernel.org,
-        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
-        Kees Cook <keescook@chromium.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
-        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>,
-        Norbert Lange <nolange79@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alex Xu <alex_y_xu@yahoo.ca>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Terrell <terrelln@fb.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=FSn0X9txtKoQYA9DDBm/TO9jK+tdQqRTqSZpQdd5Ml4=;
+        b=ljRj1S7gjmDNZgiCtDsyl3/EEo/Vk4grEnJaD8jl4zaeQCI0vgbO1vLwFyR16BC8Rb
+         8+WP5c4HUgV65T8zBSMWRpMcZWrJXCzmKW/OKvJfoShkB//cdiTrWSD31XReHr1pyEB6
+         0YaVHh8Ji/08ycAUWp5LghQQo9uSNDMLjl2SQvkz/oHc3gzX04QZpFVE/3jYW72GbqjF
+         Zw59IZBXfFea2DOlkOgvviCI0kkXBMeC9qDxjv07eqgNwoGZkPuuEvRMs0CAGLbVUi9k
+         RrSFcrxwtr/25PQVL9YESmLUyVmVK6rlfnIS+i0kIPyhvviMSRDbLeF3pNr5ZfcWkAW1
+         HUUg==
+X-Gm-Message-State: AOAM530Wi2tcDPLBjz8lMGmNhfp9vdlFmUE42xTUgwKUOyg48WvlOS7s
+        DQr81Scfi5ZaeIbMDwSGqB8bhaFBL9I=
+X-Google-Smtp-Source: ABdhPJzrUEVRFntZBSMuOP9/fgtY4WEGp8tfgYmreIk29r0/hg+uimY8JwWIDrbX/PLwbOO9M39oZ2xKHbc=
+X-Received: by 2002:a25:45c3:: with SMTP id s186mr33353743yba.251.1596523874872;
+ Mon, 03 Aug 2020 23:51:14 -0700 (PDT)
+Date:   Mon,  3 Aug 2020 23:51:11 -0700
+Message-Id: <20200804065111.3889122-1-badhri@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+Subject: [PATCH v1] tcpm: Honour pSnkStdby requirement during negotiation
+From:   Badhri Jagan Sridharan <badhri@google.com>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        --validate@google.com, Badhri Jagan Sridharan <badhri@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 9:11 PM Nick Terrell <nickrterrell@gmail.com> wrote:
->
-> From: Nick Terrell <terrelln@fb.com>
->
-> Please pull from
->
->   git@github.com:terrelln/linux.git tags/v10-zstd
->
-> to get these changes. Alternatively the patchset is included.
->
-> Hi all,
->
-> This patch set adds support for a ZSTD-compressed kernel, ramdisk, and
-> initramfs in the kernel boot process. ZSTD-compressed ramdisk and initramfs
-> are supported on all architectures. The ZSTD-compressed kernel is only
-> hooked up to x86 in this patch set.
->
-> Zstandard requires slightly more memory during the kernel decompression
-> on x86 (192 KB vs 64 KB), and the memory usage is independent of the
-> window size.
->
-> Zstandard requires memory proprortional to the window size used during
-> compression for decompressing the ramdisk image, since streaming mode is
-> used. Newer versions of zstd (1.3.2+) list the window size of a file
-> with `zstd -lv <file>'. The absolute maximum amount of memory required
-> is just over 8 MB, but it can be controlled at compression time.
->
-> This patch set has been boot tested with buildroot and QEMU based off
-> of linux-5.6-rc6.
->
-> On i386 and x86_64 I have tested the following configurations:
-> * zstd compressed kernel and a separate zstd compressed initramfs
-> * zstd compressed kernel and a built-in zstd compressed initramfs
-> * gzip compressed kernel and a separate gzip compressed initramfs
-> * gzip compressed kernel and a built-in gzip compressed initramfs
->
-> On arm and aarch64 I tested the same configurations, except that the kernel is
-> always gzip compressed.
->
-> Facebook has been using v1 of these patches on x86_64 devices for more than 6
-> months. When we switched from a xz compressed initramfs to a zstd compressed
-> initramfs decompression time shrunk from 12 seconds to 3 seconds. When we
-> switched from a xz compressed kernel to a zstd compressed kernel we saved 2
-> seconds of boot time.
->
-> Facebook has been using v2 of these patches on aarch64 devices for a few weeks.
-> When we switched from an lzma compressed initramfs to a zstd compressed initramfs
-> decompression time shrunk from 27 seconds to 8 seconds.
->
-> The zstd compressed kernel is smaller than the gzip compressed kernel but larger
-> than the xz or lzma compressed kernels, and it decompresses faster than
-> everything except lz4. See the table below for the measurement of an x86_64
-> kernel ordered by compressed size:
->
-> algo    size
-> xz       6,509,792
-> lzma     6,856,576
-> zstd     7,399,157
-> gzip     8,522,527
-> bzip     8,629,603
-> lzo      9,808,035
-> lz4     10,705,570
-> none    32,565,672
->
-> Alex Xu ran benchmarks in https://lkml.org/lkml/2020/7/1/722.
->
-> v1 -> v2:
-> - Rebase
->   - usr/Makefile and init/Kconfig were changed so the patches were updated
-> - No functional changes except to rebase
-> - Split the patches up into smaller chunks
->
-> v2 -> v3:
-> - Add *.zst to the .gitignore in patch 8
-> - Style nits in patch 3
-> - Rename the PREBOOT macro to ZSTD_PREBOOT and XXH_PREBOOT in patches
->   1 through 3
->
-> v3 -> v4:
-> - Increase the ZSTD_IOBUF_SIZE from 4KB to 128KB to improve performance.
->   With this change I switch from malloc() to large_malloc() for the
->   buffers.
-> - Increase the maximum allowed window size from 8 MB to 128 MB, which is
->   the max that zstd in the kernel supports.
->
-> v4 -> v5:
-> - Update commit message for patch 6 in response to comments
-> - Rebase onto next-20200408
->
-> v5 -> v6:
-> - Rebase onto v5.8-rc4
->
-> v6 -> v7:
-> - (1/7) Don't define or use 'ZSTD_PREBOOT' to hide exports
-> - (2/8) Drop 'lib: prepare xxhash for preboot environment'
-> - (2/7) Use '__DISABLE_EXPORTS' in unzstd to hide exports
-> - (3/7) Update zstd compression cmd to follow other compressors
-> - (3/7) Add zstd22 cmd
-> - (6/7) Use zstd -22 --ultra (zstd22) for x86 kernel compression
->
-> v7 -> v8:
-> - (2/7) Don't define '__DISABLE_EXPORTS'
-> - (6/7) Define '__DISABLE_EXPORTS' in misc.c
->
-> v8 -> v9:
-> - Rebase onto v5.8-rc7
-> - (2/7) Fix nits about comment style & typos
-> - (3/7) Fix typo in init/Kconfig description
-> - (6/7) Explain BOOT_HEAP_SIZE increase and define __DISABLE_EXPORTS in
->         Makefile KBUILD_CFLAGS and remove definitions from kaslr.c and misc.c
->
-> v9 -> v10:
-> - (6/8) Fix commit message regarding __DISABLE_EXPORTS
-> - (8/8) Add .zst files to Documentation/dontdiff
->
+From PD Spec:
+The Sink Shall transition to Sink Standby before a positive or
+negative voltage transition of VBUS. During Sink Standby
+the Sink Shall reduce its power draw to pSnkStdby. This allows
+the Source to manage the voltage transition as well as
+supply sufficient operating current to the Sink to maintain PD
+operation during the transition. The Sink Shall
+complete this transition to Sink Standby within tSnkStdby
+after evaluating the Accept Message from the Source. The
+transition when returning to Sink operation from Sink Standby
+Shall be completed within tSnkNewPower. The
+pSnkStdby requirement Shall only apply if the Sink power draw
+is higher than this level.
 
-Now in Linus Git tree.
+The above requirement needs to be met to prevent hard resets
+from port partner.
 
-- Sedat -
+Introducing psnkstdby_after_accept flag to accommodate systems
+where the input current limit loops are not fast enough to meet
+tSnkStby(15 msec).
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c0dfadfed87489fa6126ece161a14c2d15dbdc79
+When not set, port requests PD_P_SNK_STDBY upon entering SNK_DISCOVERY and
+the actual currrent limit after RX of PD_CTRL_PSRDY for PD link,
+SNK_READY for non-pd link.
 
-> Best,
-> Nick Terrell
->
-> Adam Borowski (1):
->   .gitignore: add ZSTD-compressed files
->
-> Nick Terrell (7):
->   lib: prepare zstd for preboot environment
->   lib: add zstd support to decompress
->   init: add support for zstd compressed kernel
->   usr: add support for zstd compressed initramfs
->   x86: bump ZO_z_extra_bytes margin for zstd
->   x86: Add support for ZSTD compressed kernel
->   Documentation: dontdiff: Add zstd compressed files
->
->  .gitignore                        |   1 +
->  Documentation/dontdiff            |   1 +
->  Documentation/x86/boot.rst        |   6 +-
->  Makefile                          |   3 +-
->  arch/x86/Kconfig                  |   1 +
->  arch/x86/boot/compressed/Makefile |   6 +-
->  arch/x86/boot/compressed/kaslr.c  |   7 -
->  arch/x86/boot/compressed/misc.c   |   4 +
->  arch/x86/boot/header.S            |   8 +-
->  arch/x86/include/asm/boot.h       |  11 +-
->  include/linux/decompress/unzstd.h |  11 +
->  init/Kconfig                      |  15 +-
->  lib/Kconfig                       |   4 +
->  lib/Makefile                      |   1 +
->  lib/decompress.c                  |   5 +
->  lib/decompress_unzstd.c           | 345 ++++++++++++++++++++++++++++++
->  lib/zstd/fse_decompress.c         |   9 +-
->  lib/zstd/zstd_internal.h          |  14 +-
->  scripts/Makefile.lib              |  22 ++
->  usr/Kconfig                       |  20 ++
->  usr/Makefile                      |   1 +
->  21 files changed, 469 insertions(+), 26 deletions(-)
->  create mode 100644 include/linux/decompress/unzstd.h
->  create mode 100644 lib/decompress_unzstd.c
->
-> --
-> 2.27.0
->
+When set, port requests CC advertisement based current limit during
+SNK_DISCOVERY, current gets limited to PD_P_SNK_STDBY during
+SNK_TRANSITION_SINK, PD based current limit gets set after RX of
+PD_CTRL_PSRDY. However, in this case it has to be made sure that the
+tSnkStdby (15 msec) is met.
+
+Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
+---
+ drivers/usb/typec/tcpm/tcpm.c | 52 +++++++++++++++++++++++++++--------
+ include/linux/usb/pd.h        |  5 +++-
+ 2 files changed, 44 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
+index 3ef37202ee37..e46da41940b9 100644
+--- a/drivers/usb/typec/tcpm/tcpm.c
++++ b/drivers/usb/typec/tcpm/tcpm.c
+@@ -293,9 +293,12 @@ struct tcpm_port {
+ 	unsigned int operating_snk_mw;
+ 	bool update_sink_caps;
+ 
+-	/* Requested current / voltage */
++	/* Set current / voltage */
+ 	u32 current_limit;
+ 	u32 supply_voltage;
++	/* current / voltage requested to partner */
++	u32 req_current_limit;
++	u32 req_supply_voltage;
+ 
+ 	/* Used to export TA voltage and current */
+ 	struct power_supply *psy;
+@@ -323,13 +326,27 @@ struct tcpm_port {
+ 	struct pd_mode_data mode_data;
+ 	struct typec_altmode *partner_altmode[ALTMODE_DISCOVERY_MAX];
+ 	struct typec_altmode *port_altmode[ALTMODE_DISCOVERY_MAX];
+-
+ 	/* Deadline in jiffies to exit src_try_wait state */
+ 	unsigned long max_wait;
+ 
+ 	/* port belongs to a self powered device */
+ 	bool self_powered;
+ 
++	/*
++	 * Honour psnkstdby after accept is received.
++	 * However, in this case it has to be made sure that the tSnkStdby (15
++	 * msec) is met.
++	 *
++	 * When not set, port requests PD_P_SNK_STDBY_5V upon entering SNK_DISCOVERY and
++	 * the actual currrent limit after RX of PD_CTRL_PSRDY for PD link,
++	 * SNK_READY for non-pd link.
++	 *
++	 * When set, port requests CC advertisement based current limit during
++	 * SNK_DISCOVERY, current gets limited to PD_P_SNK_STDBY_5V during SNK_TRANSITION_SINK,
++	 * PD based current limit gets set after RX of PD_CTRL_PSRDY.
++	 */
++	bool psnkstdby_after_accept;
++
+ #ifdef CONFIG_DEBUG_FS
+ 	struct dentry *dentry;
+ 	struct mutex logbuffer_lock;	/* log buffer access lock */
+@@ -1787,9 +1804,8 @@ static void tcpm_pd_ctrl_request(struct tcpm_port *port,
+ 		switch (port->state) {
+ 		case SNK_TRANSITION_SINK:
+ 			if (port->vbus_present) {
+-				tcpm_set_current_limit(port,
+-						       port->current_limit,
+-						       port->supply_voltage);
++				tcpm_set_current_limit(port, port->req_current_limit,
++						       port->req_supply_voltage);
+ 				port->explicit_contract = true;
+ 				tcpm_set_state(port, SNK_READY, 0);
+ 			} else {
+@@ -1861,8 +1877,8 @@ static void tcpm_pd_ctrl_request(struct tcpm_port *port,
+ 			break;
+ 		case SNK_NEGOTIATE_PPS_CAPABILITIES:
+ 			port->pps_data.active = true;
+-			port->supply_voltage = port->pps_data.out_volt;
+-			port->current_limit = port->pps_data.op_curr;
++			port->req_supply_voltage = port->pps_data.out_volt;
++			port->req_current_limit = port->pps_data.op_curr;
+ 			tcpm_set_state(port, SNK_TRANSITION_SINK, 0);
+ 			break;
+ 		case SOFT_RESET_SEND:
+@@ -2463,8 +2479,8 @@ static int tcpm_pd_build_request(struct tcpm_port *port, u32 *rdo)
+ 			 flags & RDO_CAP_MISMATCH ? " [mismatch]" : "");
+ 	}
+ 
+-	port->current_limit = ma;
+-	port->supply_voltage = mv;
++	port->req_current_limit = ma;
++	port->req_supply_voltage = mv;
+ 
+ 	return 0;
+ }
+@@ -3235,9 +3251,11 @@ static void run_state_machine(struct tcpm_port *port)
+ 		break;
+ 	case SNK_DISCOVERY:
+ 		if (port->vbus_present) {
+-			tcpm_set_current_limit(port,
+-					       tcpm_get_current_limit(port),
+-					       5000);
++			if (port->psnkstdby_after_accept || tcpm_get_current_limit(port) <=
++			    PD_P_SNK_STDBY_5V)
++				tcpm_set_current_limit(port, tcpm_get_current_limit(port), 5000);
++			else
++				tcpm_set_current_limit(port, PD_P_SNK_STDBY_5V, 5000);
+ 			tcpm_set_charge(port, true);
+ 			tcpm_set_state(port, SNK_WAIT_CAPABILITIES, 0);
+ 			break;
+@@ -3318,6 +3336,10 @@ static void run_state_machine(struct tcpm_port *port)
+ 		}
+ 		break;
+ 	case SNK_TRANSITION_SINK:
++		if (port->psnkstdby_after_accept)
++			tcpm_set_current_limit(port, tcpm_get_current_limit(port) >
++					       PD_P_SNK_STDBY_5V ? PD_P_SNK_STDBY_5V :
++					       tcpm_get_current_limit(port), 5000);
+ 	case SNK_TRANSITION_SINK_VBUS:
+ 		tcpm_set_state(port, hard_reset_state(port),
+ 			       PD_T_PS_TRANSITION);
+@@ -3331,6 +3353,10 @@ static void run_state_machine(struct tcpm_port *port)
+ 			port->pwr_opmode = TYPEC_PWR_MODE_PD;
+ 		}
+ 
++		/* Set current limit for NON-PD link when psnkstdby_after_accept is not set*/
++		if (!port->pd_capable && !port->psnkstdby_after_accept)
++			tcpm_set_current_limit(port, tcpm_get_current_limit(port), 5000);
++
+ 		tcpm_swap_complete(port, 0);
+ 		tcpm_typec_connect(port);
+ 		tcpm_check_send_discover(port);
+@@ -4513,6 +4539,8 @@ static int tcpm_fw_get_caps(struct tcpm_port *port,
+ 	port->typec_caps.type = ret;
+ 	port->port_type = port->typec_caps.type;
+ 
++	port->psnkstdby_after_accept = fwnode_property_read_bool(fwnode, "psnkstdby-after-accept");
++
+ 	if (port->port_type == TYPEC_PORT_SNK)
+ 		goto sink;
+ 
+diff --git a/include/linux/usb/pd.h b/include/linux/usb/pd.h
+index b6c233e79bd4..6bd70f77045e 100644
+--- a/include/linux/usb/pd.h
++++ b/include/linux/usb/pd.h
+@@ -483,5 +483,8 @@ static inline unsigned int rdo_max_power(u32 rdo)
+ #define PD_N_CAPS_COUNT		(PD_T_NO_RESPONSE / PD_T_SEND_SOURCE_CAP)
+ #define PD_N_HARD_RESET_COUNT	2
+ 
+-#define PD_T_BIST_CONT_MODE	50 /* 30 - 60 ms */
++#define PD_T_BIST_CONT_MODE	50	/* 30 - 60 ms */
++
++#define PD_P_SNK_STDBY_5V	500	/* 2500 mw - 500mA @ 5V */
++
+ #endif /* __LINUX_USB_PD_H */
+-- 
+2.28.0.163.g6104cc2f0b6-goog
+
