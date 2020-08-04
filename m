@@ -6,196 +6,73 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CE4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7A3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4154D22B40
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABF1622B45
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596527284;
-	bh=pS1WPK1i6yro2DLNjCjUZpZoNv0ByMmOkSSvxn+6F1o=;
+	s=default; t=1596527332;
+	bh=HGontRWxCYghMSz4ZGc0b8/EA8pm9V6ud6CvntyG8ok=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FmKxKdUMwUsPHeO619soivhzw4K/VE7NY3owwXLkfIcjzq/BtsUFQIAuC8x7qpz7j
-	 /U5isKi3tq3Co6vK0EjOQ2iUgeuaszhBtcBzJhiuAUAsBdZPql38Fo2Ct7mtIVfgJV
-	 WzFc8191Z4XSdNfglLmYS6CVOMPOJQpAVrJpXOeE=
+	b=xzDOO/DW0iWiMG987EcgFCEFg3dCePIvh0JeIOKt5sptWa+NMKClBWOV005fFSbKz
+	 K71+0HLLG31UGY8JzIzAi/Td4SLqCQv59tGXx0iGMzRupG/aTRbKTrV+s4g19IyZJh
+	 NetIylgKryioSQggar93pvEza+iWxKklg6g5R4sc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbgHDHsD (ORCPT
+        id S1728500AbgHDHsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 03:48:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54016 "EHLO mail.kernel.org"
+        Tue, 4 Aug 2020 03:48:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726036AbgHDHsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 03:48:02 -0400
+        id S1726722AbgHDHsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 03:48:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FB172086A;
-        Tue,  4 Aug 2020 07:48:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32EAF22B40;
+        Tue,  4 Aug 2020 07:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596527281;
-        bh=pS1WPK1i6yro2DLNjCjUZpZoNv0ByMmOkSSvxn+6F1o=;
+        s=default; t=1596527330;
+        bh=HGontRWxCYghMSz4ZGc0b8/EA8pm9V6ud6CvntyG8ok=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QR3Hg6B44CqSd0jBaGgC7l8EdzRxprSXs/tZkN+GLYXwGA0QXuHoiQay1oVd7+7iT
-         Qgog646pCVwry06e6Eb2tN1DdP9YaEKOTWpKbMGJiWdIrXaTABImI5q4i9tSZK1hUj
-         LGHwlw5aKnCqbsvuj9AeANPuw29rbzUcZwlOm7Rs=
-Date:   Tue, 4 Aug 2020 09:47:41 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dongdong Yang <contribute.kernel@gmail.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>, rjw@rjwysocki.net,
-        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Benjamin Segall <bsegall@google.com>, mgorman@suse.de,
-        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-pm@vger.kernel.org, yangdongdong@xiaomi.com,
-        tanggeliang@xiaomi.com, taojun@xiaomi.com, huangqiwu@xiaomi.com,
-        rocking@linux.alibaba.com, fengwei@xiaomi.com,
-        zhangguoquan@xiaomi.com, gulinghua@xiaomi.com, duhui@xiaomi.com
-Subject: Re: [PATCH v3] Provide USF for the portable equipment.
-Message-ID: <20200804074741.GA1761483@kroah.com>
-References: <cover.1596464894.git.yangdongdong@xiaomi.com>
- <20200804054728.ojudxu5fmd54lar5@vireshk-mac-ubuntu>
- <CADhdXfri8L6763ifBFMtP-cFSOuXO4isXhxZ4qF6M4vE=eeEjA@mail.gmail.com>
+        b=kUvso19X1j14yNWq/8C7RuCKp5AlFUUBda4FIUT6Z6jQ9srcMO1Jr1XJaRlDIQVUj
+         42GDQQJDsZf1ncxUYflFG6ASDfblxRZYpPDvEB7eBKlhW5+lhRiBS9Uyn9djuebo9J
+         IPjB4zFSIgqmJlY4tMu6Gmpxl/SkiqjA90dBs+Lg=
+Date:   Tue, 4 Aug 2020 09:48:31 +0200
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     =?utf-8?B?5ZCz5piK5r6E?= Ricky <ricky_wu@realtek.com>
+Cc:     Chris Clayton <chris2553@googlemail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "philquadra@gmail.com" <philquadra@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: PATCH: rtsx_pci driver - don't disable the rts5229 card reader
+ on Intel NUC boxes
+Message-ID: <20200804074831.GB1761483@kroah.com>
+References: <862172f0-cd23-800c-27b1-27cb49e99099@googlemail.com>
+ <a9a94d7f-4873-7a10-4911-f3c760257c5c@googlemail.com>
+ <5729c72bbc2740d3917619c85e2fde58@realtek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CADhdXfri8L6763ifBFMtP-cFSOuXO4isXhxZ4qF6M4vE=eeEjA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5729c72bbc2740d3917619c85e2fde58@realtek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A: http://en.wikipedia.org/wiki/Top_post
-Q: Were do I find info about this thing called top-posting?
-A: Because it messes up the order in which people normally read text.
-Q: Why is top-posting such a bad thing?
-A: Top-posting.
-Q: What is the most annoying thing in e-mail?
-
-A: No.
-Q: Should I include quotations after my reply?
-
-http://daringfireball.net/2007/07/on_top
-
-On Tue, Aug 04, 2020 at 03:34:25PM +0800, Dongdong Yang wrote:
-> Appreciate Viresh for your help. I thought Peter's NAK was only for the
-> initial version. I am going to upload the verified version 4. Could you
-> please kindly help to further review?
+On Tue, Aug 04, 2020 at 02:44:41AM +0000, 吳昊澄 Ricky wrote:
+> Hi Chris,
 > 
-> 1. Motivation
-> =============
+> rtsx_pci_write_register(pcr, FPDTL, OC_POWER_DOWN, OC_POWER_DOWN);
+> This register operation saved power under 1mA, so if do not care the 1mA power we can have a patch to remove it, make compatible with NUC6
+> We tested others our card reader that remove it, we did not see any side effect 
 > 
-> The power consumption and UI response are more cared for by the portable
-> equipment users.
-
-That's not true, everyone cares about this.
-
-> USF(User Sensitive Feedback factor) auxiliary cpufreq
-> governor
-> is providing more utils adjustment settings to the high level by scenario
-> identification.
-
-Odd line-wrapping :(
-
-And what do you mean by "more utils adjustment settings to the high
-level by scenario identification"?  I can not parse that at all.
-
-> 2. Introduction
-> ===============
+> Hi Greg k-h,
 > 
-> The USF auxiliary scheduling is based on FrameBuffer and schdeutil cpufreq
-> governor to adjust utils by the identificated scenario from User Space.
+> Do you have any comments? 
 
-What is "adjust utils"?
-
-And why is "User Space" in caps?
-
-> It is for portable equipment which "screen off" status stands for no request
-> from the user, however, the kernel is still expected to notify the user for
-> UI in
-> time on modem, network or powerkey events occur. In order to save power, the
-> sysfs inode nonux is provided to set the utils down level on userspace
-> tasks.
-
-Having custom sysfs apis is almost never a good idea.  Do other cpufreq
-governers do this?
-
-> In addition, the portable equipment users usually heavily interact with
-> devices
-> by touch, and other peripherals. On "screen on" status, The boost preemptive
-> counts are marking the load requirement urgent, vice versa. USF provides up
-> and
-> down sysfs inodes to adjust utils according to such feedback factor and the
-> level setting from the user space identified scenario.
-> 
-> adjust_task_pred_set is as the switch to enable or disable the adjustment.
-> If no USF sysfs inodes is set and no screen on or off event be received,
-> adjust_task_pred_demand shall not be executed.
-> 
-> 3. System wide settings
-> =======================
-> 
-> sched_usf_non_ux_r:
->         The ratio of utils is cut down on screen off. The default value is
-> 0,
-
-The line-wrapping makes it almost impossible to read here, can you fix
-that up?
-
->         which no util be adjusted on sugov calculating utils to select
-
-"sugov"?
-
-> cpufreq.
->         Its range is [-100 , 0]. If its value falls into [-50, 0), the half
-> of
->         utils, which calculates cpufreq, shall be  cut down. If its value
-> falls
->         into [-100, -50), only a quarter of utils be left to continue to
->         calculates cpufreq.
->         It is expected to be set [-100, 0) once enter into the identificated
->         scenario, such as listen to music on screen off, and recover to 0 on
->         out of the scenario, such as screen on.
-
-sysfs files are "one value per file", please do not parse such complex
-things in the kernel.
-
-> 
-> sched_usf_up_l0_r:
->         The ratio of utils is boosted up on screen on. The default value is
-> 0,
->         which no util be adjusted on sugov calculates utils to select
-> cpufreq.
->         Its range is [0 , 100]. If its value falls into (0, 50], a quarter
-> of
->         extra utils, which calculates cpufreq, shall be added. If its value
->         falls into (50, 100], the half of extra utils be added to continue
-> to
->         calculates cpufreq.
->         It is expected to be set (0, 100] once enter into the identificated
->         scenario, such as browsing videolet on screen on, and recover to 0
-> on
->         out of the scenario, such as screen off or videolet into background.
-> 
-> sched_usf_down_r:
->         The ratio of utils is cut down on screen on. The default value is 0,
->         which no util be adjusted on sugov calculating utils to select
-> cpufreq.
->         Its range is [-100 , 0]. If its value falls into [-50, 0), the half
-> of
->         utils, which calculates cpufreq, shall be  cut down. If its value
-> falls
->         into [-100, -50), only a quarter of utils be left to continue to
->         calculates cpufreq.
->         It is expected to be set [-100, 0) once enter into the identificated
->         scenario, such as browsing videolet on screen on, and recover to 0
-> on
->         out of the scenario, such as screen off or vidolet into background.
-
-Why can't all of these work automatically?  Why do you need userspace
-interaction here?
-
-thanks,
+comments on what?  I don't know what you are responding to here, sorry.
 
 greg k-h
