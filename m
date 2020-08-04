@@ -2,62 +2,67 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8C5C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5486C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52DBE2067D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:41:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1821208A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:42:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qRIWjL/a"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e/emAKRK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgHDMlf (ORCPT
+        id S1728107AbgHDMmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 08:41:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40712 "EHLO
+        Tue, 4 Aug 2020 08:42:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgHDMle (ORCPT
+        with ESMTP id S1725864AbgHDMlh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 08:41:34 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF881C06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 05:41:34 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id v65so4880244ybv.9
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 05:41:34 -0700 (PDT)
+        Tue, 4 Aug 2020 08:41:37 -0400
+Received: from mail-wr1-x44a.google.com (mail-wr1-x44a.google.com [IPv6:2a00:1450:4864:20::44a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E59FC061756
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 05:41:37 -0700 (PDT)
+Received: by mail-wr1-x44a.google.com with SMTP id w1so10620302wro.4
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 05:41:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=EW4ws3cnCq+yc75UdLo6m+LVSSHzgz4WkI84lcOYn3g=;
-        b=qRIWjL/aEST9Bgmmx1TReXVYXWMihOsuP+mAYj0qjuyBiTphgrU8vG2kDlWWLDxxZc
-         Jg/LIbVqWQjdvN5QE8h4YxR5/B9yyZrsWE8c8qZW41jeLrHYTrlw9Cgi5XREl8IxDRfC
-         co///64tOPGz+FN54l2XLrTcKdQjbLgUiQfL0z3QjR2C4z46DUpqY7w/AgukOpoxYc3p
-         CD9+UVlpekMWPXavUVNf5FWgoZzMzg5BltVr5+w/viNnAaKQBsKSXLhBzBu/rH/ShMam
-         93k5taOEn8vzxT+jZUIfKqfUVPR7WK1vFT7PcRQ0StCmtlNMT8Nh+075v3BYofndZUtW
-         VoeA==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=FcKp4QRyFHBBCVHpXykl5mFo5C8EtuBz90+P1+03xoY=;
+        b=e/emAKRKbJkdBeq2q9WKmzagPJvb8gdtqflMVkfA9U+GObzCW9ZK8iDv+fm06/lNOH
+         ajIRbU5BrRbTrBBREu3uaJou2xzNyaOCp+XZbidInFpetFzQFW1x8pTzoRCyj341z+Lk
+         wq4m5lWgeLtpP7STH34Cb53cG+ae0e77L4MzJmeQ/HMqzyEcxWEcW0LZlOw/BlZk7uoa
+         dO5RcM67ErBDoGmZ9vvLhQ54jnpx36h7CmzrXwZGP0KVeFdh2JE5X6xOlJdqsCGf3JGH
+         qx57794JnfkOQH/j1i6yWfIbZmc2qfK2k0FRmQtkn8Nc1oWCF+4s0O93QqCimgEugC/p
+         C7cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=EW4ws3cnCq+yc75UdLo6m+LVSSHzgz4WkI84lcOYn3g=;
-        b=L3F+jw3AK83WjkOSQXEdRDzLmbNJ3ArcuCRh8t8qt1lGT6h0tNED0nEVV0jrEnNBNX
-         hDAgkkcxyVw5KWRAYvI2wnljtBJJl3nxGCuUaDWBsUFUWBr8OWY0GkmEAG7u+pNJVwbL
-         PbwkIJXuuIsFOVW0Tp+T3SY+7k7aYtUUYW8DWiMCZ4cIXA65Yugllem5a9uhIVoPscxo
-         dROdLso8HxdMl17n+zl1s34uo507tauQem2aYaR2oKgW0mhSI7fLCZkxGCFP49QC1vUT
-         ti+goAoxjCIlmErb/dZhbqRLXA7nPn2/KpS0vZNi1pPEm+DLf84UyXcICyeXDJUBwdEq
-         YjJw==
-X-Gm-Message-State: AOAM531gKWB9pfHuuJjwwuku+uQk7x+azkDrcolB+K92BEowH52VWzDi
-        TF0gfAMhOD3gTnW9xVDkM9BTSEHrlTx/QqSi
-X-Google-Smtp-Source: ABdhPJzh3yXfnlrh952yFi751mKOqrTYGBJNP8FaBO9bCdmzHWrwFtNMq9Jua++VtvKtWW7vV9nXY4rjJmmS8ewv
-X-Received: by 2002:a25:cc07:: with SMTP id l7mr33304214ybf.440.1596544893505;
- Tue, 04 Aug 2020 05:41:33 -0700 (PDT)
-Date:   Tue,  4 Aug 2020 14:41:23 +0200
-Message-Id: <cover.1596544734.git.andreyknvl@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=FcKp4QRyFHBBCVHpXykl5mFo5C8EtuBz90+P1+03xoY=;
+        b=T+E/nviJblbUEV0Prx70Xsgx1ApBJNpPd0uj9w40v1NDUwb5NmaYxHxJ4hjTy7Ld6M
+         kxxSIJekb7wEotJ+fng+ZVtIeKoCVK7Rr/eu/YM5Qa4QdA+X+pFY66T51qTtEHZn0uxH
+         n3PL0GSvSYMdKG3TxnnDp2wVdkpUVC/wy8lVCd1v84yco5hKMfkAJ0JowOiH+hQ6lTj6
+         z+BvpdX3MDs6zcaz5LpoU4JbnZqc98en5dTkufW0RYKjZMh5d1TphNlbeR/k4I0UVdDf
+         OOkz0LtdC6kyTeFLxSUwacYtG2qyjTybbS0FxN5s2MH78Jqvmg1tIDHOTfpN/odRcs1L
+         izdw==
+X-Gm-Message-State: AOAM531AnbhpC7JoP6aDHoFdxQ7GRVvd2JLqFGgM6+Ridp9bPbtnvv/2
+        mCzE4mQDchj1FwzpQ4I8wLfVCKdjcAygg/L6
+X-Google-Smtp-Source: ABdhPJysUQ4oDqsJhy6xq9sHQOykVWtKsRJrE3eJ3umL4PptPqQvdYk0j95C1HF2RsOBJ7cfXSW95HsjwlUjMNSy
+X-Received: by 2002:a1c:b443:: with SMTP id d64mr4329306wmf.68.1596544895842;
+ Tue, 04 Aug 2020 05:41:35 -0700 (PDT)
+Date:   Tue,  4 Aug 2020 14:41:24 +0200
+In-Reply-To: <cover.1596544734.git.andreyknvl@google.com>
+Message-Id: <12d8c678869268dd0884b01271ab592f30792abf.1596544734.git.andreyknvl@google.com>
 Mime-Version: 1.0
+References: <cover.1596544734.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-Subject: [PATCH v2 0/5] kasan: support stack instrumentation for tag-based mode
+Subject: [PATCH v2 1/5] kasan: don't tag stacks allocated with pagealloc
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
@@ -79,32 +84,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This goes on top of Walter's patch titled "kasan: fix KASAN unit tests
-for tag-based KASAN" (already in mm tree).
+This patch prepares Software Tag-Based KASAN for stack tagging support.
 
-Bugzilla link: https://bugzilla.kernel.org/show_bug.cgi?id=203497
+With Tag-Based KASAN when kernel stacks are allocated via pagealloc
+(which happens when CONFIG_VMAP_STACK is not enabled), they get tagged.
+KASAN instrumentation doesn't expect the sp register to be tagged, and
+this leads to false-positive reports.
 
-Thanks to Walter Wu for debugging and testing.
+Fix by resetting the tag of kernel stack pointers after allocation.
 
-Changes v1 -> v2:
-- Add efi patch to undefined reference to `efi_enter_virtual_mode'.
-- Reorder attributes for start_kernel().
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+---
+ kernel/fork.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Andrey Konovalov (5):
-  kasan: don't tag stacks allocated with pagealloc
-  efi: provide empty efi_enter_virtual_mode implementation
-  kasan, arm64: don't instrument functions that enable kasan
-  kasan: allow enabling stack tagging for tag-based mode
-  kasan: adjust kasan_stack_oob for tag-based mode
-
- arch/arm64/kernel/setup.c | 2 +-
- include/linux/efi.h       | 4 ++++
- init/main.c               | 2 +-
- kernel/fork.c             | 3 ++-
- lib/test_kasan.c          | 2 +-
- scripts/Makefile.kasan    | 3 ++-
- 6 files changed, 11 insertions(+), 5 deletions(-)
-
+diff --git a/kernel/fork.c b/kernel/fork.c
+index efc5493203ae..75415f5e647c 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -261,7 +261,7 @@ static unsigned long *alloc_thread_stack_node(struct task_struct *tsk, int node)
+ 					     THREAD_SIZE_ORDER);
+ 
+ 	if (likely(page)) {
+-		tsk->stack = page_address(page);
++		tsk->stack = kasan_reset_tag(page_address(page));
+ 		return tsk->stack;
+ 	}
+ 	return NULL;
+@@ -307,6 +307,7 @@ static unsigned long *alloc_thread_stack_node(struct task_struct *tsk,
+ {
+ 	unsigned long *stack;
+ 	stack = kmem_cache_alloc_node(thread_stack_cache, THREADINFO_GFP, node);
++	stack = kasan_reset_tag(stack);
+ 	tsk->stack = stack;
+ 	return stack;
+ }
 -- 
 2.28.0.163.g6104cc2f0b6-goog
 
