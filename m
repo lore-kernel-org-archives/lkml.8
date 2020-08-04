@@ -2,134 +2,170 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D12C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF66C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 406D322B45
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A19332076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:25:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A+jqMg2H"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+oC1ONX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729881AbgHDHYu (ORCPT
+        id S1729891AbgHDHZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 03:24:50 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:21451 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729859AbgHDHYr (ORCPT
+        Tue, 4 Aug 2020 03:25:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728654AbgHDHZf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 03:24:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596525885;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=x8xawYLO0vUiARW1lmruTP1AmZxbUMKLU8ccSw/5V4w=;
-        b=A+jqMg2HDg00g95sIPYirjQtvQTxsU7KTTxvZ2QctqfZ1l+HsbCJBFj+QJ7T3a42v3qCWH
-        JasZnmSjaYdUnVxbNjObLFqt3fOMDmLlvYYUPRDTfxnPGKI6d4jlLwni9T+8ZoXmXgmWSl
-        GMQqZVEhsGrLEdBuxs1kS1aa5OfcQqY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-458-7o7WNa6WMw6osuJDRunGrg-1; Tue, 04 Aug 2020 03:24:43 -0400
-X-MC-Unique: 7o7WNa6WMw6osuJDRunGrg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7295A100A628;
-        Tue,  4 Aug 2020 07:24:42 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-113-95.ams2.redhat.com [10.36.113.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4C43C5D9F7;
-        Tue,  4 Aug 2020 07:24:37 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Baoquan He <bhe@redhat.com>
-Subject: [PATCH v3 6/6] mm: document semantics of ZONE_MOVABLE
-Date:   Tue,  4 Aug 2020 09:24:08 +0200
-Message-Id: <20200804072408.5481-7-david@redhat.com>
-In-Reply-To: <20200804072408.5481-1-david@redhat.com>
-References: <20200804072408.5481-1-david@redhat.com>
+        Tue, 4 Aug 2020 03:25:35 -0400
+Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40B14C06174A;
+        Tue,  4 Aug 2020 00:25:35 -0700 (PDT)
+Received: by mail-oo1-xc41.google.com with SMTP id z11so1020042oon.5;
+        Tue, 04 Aug 2020 00:25:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=3G6duaqKS+iqVSYEuxdfn+liPqqsSiNQMWQkrp/rtcA=;
+        b=P+oC1ONX4KhsZvaMwr9JFGsSROK1t2WF8nWhL5Hb8WlbFKQcfjnffuj5cHtyDXhTQe
+         RtZ2sbTg4+PrRlYLSiyDjOOOnYVQbPjoeqHiOnUxGAs/YqTy1MkqtHmAeXR537w3YEbf
+         BhQ+AeypP5X7Qz2CxJPJ/VX/W8AYeiTh6dyQTbQRnC6MgKKSPMS1yzts1edOkNPNcsls
+         BAeHs8BqCJsk0tMUbC525jtBsTJNnhrPSEfmKInyz42f2CGeNyYv/LoW9Df+k1R/3HEq
+         PWtqACBeJGC1XbRWBkibV9geaauVi1aWrie/ld1nlJa4l3F3rN+y3HuDVw93r7k6LUTs
+         j72Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=3G6duaqKS+iqVSYEuxdfn+liPqqsSiNQMWQkrp/rtcA=;
+        b=k4ge71sBwNIZk6XAj4E7AGQStzc7S6aPI7xWbc9Td52HnE0t74pRCksaOojj7ZI2wq
+         aqvpyuFXkmvtxiSHjp8vaLCY4FNhbp+7n4JLMiUxCIuv3RB+ea92R0FMMx9y8zRRkPpi
+         TtvM9QAG/7lg7cAhZTyYYZKpVsjHCaljc+E/PhM4Fhil5GWtU1lYcWbofZCoIiBKjlK6
+         eTDBJ8BgUTU2vS89IRbpos5FCtwC8rFR9H2SZ2pQ7vI7kzbDlFcem4csqrF5xuiJlGXR
+         mf9RUKJMB8GzfaqYC1rKGY8xgIweBmqqmA7HytiMRGV3HeBCiGTqWcuBub075UulDnrh
+         rpWg==
+X-Gm-Message-State: AOAM530+U24lF/1Um5XmkLSX9KdOGoqgvx3jfQy45k4sDMRro0Sul0CI
+        fXdZ2cGWp3suGgUWuHkcD6EqSlTgwfpu3iLFOkI=
+X-Google-Smtp-Source: ABdhPJxRuEKIkrFsD8hgOom6KFNXxJ1GrBXHYx0gjfD8gbX84cPUXN3kfUBPjtHwww2sbHWbMVw7OYS2H0mw+tE+r/w=
+X-Received: by 2002:a4a:dfd4:: with SMTP id p20mr7546616ood.86.1596525934626;
+ Tue, 04 Aug 2020 00:25:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20200730190841.2071656-1-nickrterrell@gmail.com>
+ <20200730190841.2071656-5-nickrterrell@gmail.com> <CAMuHMdUo5tfcEUaq4x_b9HJy25HXWmBZ3GPfqJy491zDsct5Rg@mail.gmail.com>
+In-Reply-To: <CAMuHMdUo5tfcEUaq4x_b9HJy25HXWmBZ3GPfqJy491zDsct5Rg@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Tue, 4 Aug 2020 09:25:23 +0200
+Message-ID: <CA+icZUXGbV1x0YJn-0mLA2TtU2jWS6PO3bqdDrqJBMYOMS9Eog@mail.gmail.com>
+Subject: Re: [PATCH v10 4/8] usr: add support for zstd compressed initramfs
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Nick Terrell <nickrterrell@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chris Mason <clm@fb.com>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        Ingo Molnar <mingo@kernel.org>,
+        Patrick Williams <patrick@stwcx.xyz>,
+        Norbert Lange <nolange79@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alex Xu <alex_y_xu@yahoo.ca>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nick Terrell <terrelln@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's document what ZONE_MOVABLE means, how it's used, and which special
-cases we have regarding unmovable pages (memory offlining vs. migration /
-allocations).
+On Tue, Aug 4, 2020 at 8:52 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Nick,
+>
+> On Thu, Jul 30, 2020 at 9:13 PM Nick Terrell <nickrterrell@gmail.com> wrote:
+> > From: Nick Terrell <terrelln@fb.com>
+> >
+> > * Add support for a zstd compressed initramfs.
+> > * Add compression for compressing built-in initramfs with zstd.
+> >
+> > I have tested this patch by boot testing with buildroot and QEMU.
+> > Specifically, I booted the kernel with both a zstd and gzip compressed
+> > initramfs, both built into the kernel and separate. I ensured that the
+> > correct compression algorithm was used. I tested on arm, aarch64, i386,
+> > and x86_64.
+> >
+> > This patch has been tested in production on aarch64 and x86_64 devices.
+> >
+> > Additionally, I have performance measurements from internal use in
+> > production. On an aarch64 device we saw 19 second boot time improvement
+> > from switching from lzma to zstd (27 seconds to 8 seconds). On an x86_64
+> > device we saw a 9 second boot time reduction from switching from xz to
+> > zstd.
+> >
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > Signed-off-by: Nick Terrell <terrelln@fb.com>
+>
+> Thanks for your patch, which is now commit a30d8a39f0571425 ("usr: Add
+> support for zstd compressed initramfs").
+>
+> > --- a/usr/Kconfig
+> > +++ b/usr/Kconfig
+> > @@ -100,6 +100,15 @@ config RD_LZ4
+> >           Support loading of a LZ4 encoded initial ramdisk or cpio buffer
+> >           If unsure, say N.
+> >
+> > +config RD_ZSTD
+> > +       bool "Support initial ramdisk/ramfs compressed using ZSTD"
+> > +       default y
+> > +       depends on BLK_DEV_INITRD
+> > +       select DECOMPRESS_ZSTD
+> > +       help
+> > +         Support loading of a ZSTD encoded initial ramdisk or cpio buffer.
+> > +         If unsure, say N.
+>
+> I'm aware you copied this from the other entries, but IMHO "default y",
+> and "If unsure, say N" are not a good combination.
+>
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Michael S. Tsirkin <mst@redhat.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Cc: Baoquan He <bhe@redhat.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- include/linux/mmzone.h | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+Hi Geert,
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index f6f884970511d..600d449e7d9e9 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -372,6 +372,40 @@ enum zone_type {
- 	 */
- 	ZONE_HIGHMEM,
- #endif
-+	/*
-+	 * ZONE_MOVABLE is similar to ZONE_NORMAL, except that it *primarily*
-+	 * only contains movable pages. Main use cases are to make memory
-+	 * offlining more likely to succeed, and to locally limit unmovable
-+	 * allocations - e.g., to increase the number of THP/huge pages.
-+	 * Notable special cases are:
-+	 *
-+	 * 1. Pinned pages: (Long-term) pinning of movable pages might
-+	 *    essentially turn such pages unmovable. Memory offlining might
-+	 *    retry a long time.
-+	 * 2. memblock allocations: kernelcore/movablecore setups might create
-+	 *    situations where ZONE_MOVABLE contains unmovable allocations
-+	 *    after boot. Memory offlining and allocations fail early.
-+	 * 3. Memory holes: Such pages cannot be allocated. Applies only to
-+	 *    boot memory, not hotplugged memory. Memory offlining and
-+	 *    allocations fail early.
-+	 * 4. PG_hwpoison pages: While poisoned pages can be skipped during
-+	 *    memory offlining, such pages cannot be allocated.
-+	 * 5. Unmovable PG_offline pages: In paravirtualized environments,
-+	 *    hotplugged memory blocks might only partially be managed by the
-+	 *    buddy (e.g., via XEN-balloon, Hyper-V balloon, virtio-mem). The
-+	 *    parts not manged by the buddy are unmovable PG_offline pages. In
-+	 *    some cases (virtio-mem), such pages can be skipped during
-+	 *    memory offlining, however, cannot be moved/allocated. These
-+	 *    techniques might use alloc_contig_range() to hide previously
-+	 *    exposed pages from the buddy again (e.g., to implement some sort
-+	 *    of memory unplug in virtio-mem).
-+	 *
-+	 * In general, no unmovable allocations that degrade memory offlining
-+	 * should end up in ZONE_MOVABLE. Allocators (like alloc_contig_range())
-+	 * have to expect that migrating pages in ZONE_MOVABLE can fail (even
-+	 * if has_unmovable_pages() states that there are no unmovable pages,
-+	 * there can be false negatives).
-+	 */
- 	ZONE_MOVABLE,
- #ifdef CONFIG_ZONE_DEVICE
- 	ZONE_DEVICE,
--- 
-2.26.2
+you are right - for new stuff it should be "default n".
 
+What I am missing - still - is a note - that your user-space should
+have the correct bits to support zstd-initramfs.
+Unsure where to place such an information.
+
+If you send a patch for above feel free to add my:
+
+Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
+
+Thanks.
+
+Regards,
+- Sedat -
+
+[1] https://bugs.debian.org/955469
+
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
