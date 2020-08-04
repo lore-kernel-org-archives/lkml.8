@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAC0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D52C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A185A2076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72D962076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:08:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="liZhsIwJ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uyGtFrlD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729684AbgHDIIr (ORCPT
+        id S1729752AbgHDIIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 04:08:47 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:46048 "EHLO
+        Tue, 4 Aug 2020 04:08:51 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:22741 "EHLO
         mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729605AbgHDIIp (ORCPT
+        by vger.kernel.org with ESMTP id S1726788AbgHDIIu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 04:08:45 -0400
+        Tue, 4 Aug 2020 04:08:50 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596528524; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1596528529; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=wzkE1gcsoctw3hiDqTWdfJ/SEs/ShA6LmWUp5yuAKJA=; b=liZhsIwJOaT4RNwUIGiTG1N7S8HqwIXvJH7mZX5IbP2mK1XjqTaUvBYgRzy9fwogS3mYoNyo
- OitKdcJJP7pPsQekEyZGPTGoSoekn0O0KeTlf6RyASLUuVrqxJ6b7Fcl3tQNWupTcfdcCfHl
- 4EPFTeOppZJoTgrNjdQGrq+eAj0=
+ bh=MFq5q/nvUA4Da5minLQ/5WQKxE6K5fjxfakeD/Ulegg=; b=uyGtFrlDq2q3htu9p2JL2LuC+KAOiSb7iuhHqIqpNXvROb7PVazF8+gQW74kePQjtkIRJZEj
+ WZdOoHzVx/V/DJ2k/1BTXK+E+h8Xfx8DucAv3k5DbGtpK7u90SVqMqDYqspEi/YVWlzZfeH3
+ 8HfkyBiIoCGW0bPuxF3ou+lHwAc=
 X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-west-2.postgun.com with SMTP id
- 5f29178c9fdcd87189b5ad48 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 04 Aug 2020 08:08:44
+ smtp-out-n09.prod.us-west-2.postgun.com with SMTP id
+ 5f29178537790be1d0c5951c (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 04 Aug 2020 08:08:37
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B7536C4344B; Tue,  4 Aug 2020 08:08:43 +0000 (UTC)
+        id 0F943C43395; Tue,  4 Aug 2020 08:08:36 +0000 (UTC)
 Received: from rohkumar-linux.qualcomm.com (unknown [202.46.22.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: rohitkr)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CCCDFC433CB;
-        Tue,  4 Aug 2020 08:08:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CCCDFC433CB
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 86B44C433CB;
+        Tue,  4 Aug 2020 08:08:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 86B44C433CB
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rohitkr@codeaurora.org
 From:   Rohit kumar <rohitkr@codeaurora.org>
@@ -56,9 +56,9 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
         alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Rohit kumar <rohitkr@codeaurora.org>
-Subject: [PATCH v5 07/12] dt-bindings: sound: lpass-cpu: Add sc7180 lpass cpu node
-Date:   Tue,  4 Aug 2020 13:37:28 +0530
-Message-Id: <1596528453-11437-8-git-send-email-rohitkr@codeaurora.org>
+Subject: [PATCH v5 06/12] ASoC: qcom: lpass-cpu: fix concurrency issue
+Date:   Tue,  4 Aug 2020 13:37:27 +0530
+Message-Id: <1596528453-11437-7-git-send-email-rohitkr@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1596528453-11437-1-git-send-email-rohitkr@codeaurora.org>
 References: <1596528453-11437-1-git-send-email-rohitkr@codeaurora.org>
@@ -67,97 +67,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add dt-bindings to support "qcom,lpass-cpu-sc7180" node.
+i2sctl register value is set to 0 during hw_free(). This
+impacts any ongoing concurrent session on the same i2s
+port. As trigger() stop already resets enable bit to 0,
+there is no need of explicit hw_free. Removing it to
+fix the issue.
 
+Fixes: 80beab8e1d86 ("ASoC: qcom: Add LPASS CPU DAI driver")
 Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
+Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- .../devicetree/bindings/sound/qcom,lpass-cpu.txt   | 55 +++++++++++++++++++++-
- 1 file changed, 53 insertions(+), 2 deletions(-)
+ sound/soc/qcom/lpass-cpu.c | 16 ----------------
+ 1 file changed, 16 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
-index 32c2cdb..c07202c 100644
---- a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
-+++ b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.txt
-@@ -4,7 +4,8 @@ This node models the Qualcomm Technologies Low-Power Audio SubSystem (LPASS).
+diff --git a/sound/soc/qcom/lpass-cpu.c b/sound/soc/qcom/lpass-cpu.c
+index 6b86f16..5d84f63 100644
+--- a/sound/soc/qcom/lpass-cpu.c
++++ b/sound/soc/qcom/lpass-cpu.c
+@@ -266,21 +266,6 @@ static int lpass_cpu_daiops_hw_params(struct snd_pcm_substream *substream,
+ 	return 0;
+ }
  
- Required properties:
- 
--- compatible		: "qcom,lpass-cpu" or "qcom,apq8016-lpass-cpu"
-+- compatible		: "qcom,lpass-cpu" or "qcom,apq8016-lpass-cpu" or
-+			  "qcom,sc7180-lpass-cpu"
- - clocks		: Must contain an entry for each entry in clock-names.
- - clock-names		: A list which must include the following entries:
- 				* "ahbix-clk"
-@@ -18,6 +19,13 @@ Required properties:
- 				* "mi2s-bit-clk3"
- 				* "pcnoc-mport-clk"
- 				* "pcnoc-sway-clk"
-+			: required clocks for "qcom,lpass-cpu-sc7180"
-+				* "audio-core"
-+				* "mclk0"
-+				* "mi2s-bit-clk0"
-+				* "mi2s-bit-clk1"
-+				* "pcnoc-sway-clk"
-+				* "pcnoc-mport-clk"
- 
- - interrupts		: Must contain an entry for each entry in
- 			  interrupt-names.
-@@ -53,7 +61,8 @@ Required properties for each DAI (represented by a subnode):
- Note that adding a subnode changes the default to "no lines configured",
- so both playback and capture lines should be configured when a subnode is added.
- 
--Example:
-+Examples:
-+1)
- 
- lpass@28100000 {
- 	compatible = "qcom,lpass-cpu";
-@@ -77,3 +86,45 @@ lpass@28100000 {
- 		qcom,playback-sd-lines = <0 1>;
- 	};
+-static int lpass_cpu_daiops_hw_free(struct snd_pcm_substream *substream,
+-		struct snd_soc_dai *dai)
+-{
+-	struct lpass_data *drvdata = snd_soc_dai_get_drvdata(dai);
+-	int ret;
+-
+-	ret = regmap_write(drvdata->lpaif_map,
+-			   LPAIF_I2SCTL_REG(drvdata->variant, dai->driver->id),
+-			   0);
+-	if (ret)
+-		dev_err(dai->dev, "error writing to i2sctl reg: %d\n", ret);
+-
+-	return ret;
+-}
+-
+ static int lpass_cpu_daiops_prepare(struct snd_pcm_substream *substream,
+ 		struct snd_soc_dai *dai)
+ {
+@@ -350,7 +335,6 @@ const struct snd_soc_dai_ops asoc_qcom_lpass_cpu_dai_ops = {
+ 	.startup	= lpass_cpu_daiops_startup,
+ 	.shutdown	= lpass_cpu_daiops_shutdown,
+ 	.hw_params	= lpass_cpu_daiops_hw_params,
+-	.hw_free	= lpass_cpu_daiops_hw_free,
+ 	.prepare	= lpass_cpu_daiops_prepare,
+ 	.trigger	= lpass_cpu_daiops_trigger,
  };
-+
-+2)
-+
-+#include <dt-bindings/sound/sc7180-lpass.h>
-+
-+lpass_cpu: lpass {
-+	compatible = "qcom,sc7180-lpass-cpu";
-+
-+	reg = <0 0x62F00000 0 0x29000>;
-+
-+	iommus = <&apps_smmu 0x1020 0>;
-+
-+	power-domains = <&lpass_hm LPASS_CORE_HM_GDSCR>;
-+	clocks = <&gcc GCC_LPASS_CFG_NOC_SWAY_CLK>,
-+		<&lpasscorecc LPASS_AUDIO_CORE_CORE_CLK>,
-+		<&lpasscorecc LPASS_AUDIO_CORE_EXT_MCLK0_CLK>,
-+		<&lpasscorecc LPASS_AUDIO_CORE_SYSNOC_MPORT_CORE_CLK>,
-+		<&lpasscorecc LPASS_AUDIO_CORE_LPAIF_PRI_IBIT_CLK>,
-+		<&lpasscorecc LPASS_AUDIO_CORE_LPAIF_SEC_IBIT_CLK>;
-+	clock-names = "pcnoc-sway-clk", "audio-core",
-+			"mclk0", "pcnoc-mport-clk",
-+			"mi2s-bit-clk0", "mi2s-bit-clk1";
-+	interrupts = <0 160 IRQ_TYPE_LEVEL_HIGH>;
-+	interrupt-names = "lpass-irq-lpaif";
-+
-+
-+	#sound-dai-cells = <1>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	mi2s-primary@0 {
-+		reg = <MI2S_PRIMARY>;
-+		qcom,playback-sd-lines = <1>;
-+		qcom,capture-sd-lines = <0>;
-+	};
-+
-+	mi2s-secondary@1 {
-+		reg = <MI2S_SECONDARY>;
-+		qcom,playback-sd-lines = <0>;
-+	};
-+};
 -- 
 Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
 is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
