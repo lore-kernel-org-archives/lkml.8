@@ -2,166 +2,255 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D62C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CF4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC8120738
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3FE720738
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:39:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="kgmfeQ16";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SuTtTF54"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="biXbi42J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730267AbgHDLjM (ORCPT
+        id S1730284AbgHDLjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 07:39:12 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:55241 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730114AbgHDLjL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 07:39:11 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailnew.nyi.internal (Postfix) with ESMTP id DB1925804D6;
-        Tue,  4 Aug 2020 07:39:09 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Tue, 04 Aug 2020 07:39:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
-        GQ35A9QLvt3V3tS5rPqimLchSew/FSuuzCyzXhgfQ1A=; b=kgmfeQ16/whTJorz
-        oDXKB2tNiHs4zASSvo8rupSnw6le9xoRXka0xaj7eV1wl3KlXxBhK9jvlsTpW2I5
-        xsqmOgAxEZ04mc47DOuGlA4WLwH8ReSGT3CX0oWl0cPaE9WRB0c2N5PNFPwImKjp
-        UzO2vax/wxc0UYA6hmwLJxwZrqt5pa4iUidvhF6dqCQK426CwvYxw555f30uYIvR
-        5H59ywR/VBrOYplxFR96RIqaR1p3Kpveny5vknoRtvERGVbcu6gcbZSXfoNGICLf
-        JSUc+2qau2R1fVjOXNFZ5Wse4yAxvWD38Gjvifzg2oiXG9T4x8N2VfojR17r6pCH
-        aNJubw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=GQ35A9QLvt3V3tS5rPqimLchSew/FSuuzCyzXhgfQ
-        1A=; b=SuTtTF54ZVjtLRGZxW/mCEyxi8WJ79N7TT0VougsywuI0KnekAV1lIaze
-        Mx1dJTOV5LinaEM9B5OTBio4cyf+3MoG0+iQnJj+ueVaURezbQgrwYwqk/kjPkNc
-        YqS8C6ENPzYQ3Ym50YC0gOcx/LETOp+69CC//o2YoAMmr/E+f7i4ojaapVtSI6SH
-        Zp93f+pg0914IfG1V/AgFvOs8e+RYREM3C/TI0SzgWmbOTDPR/4l1Z1h+n1qUu22
-        5ui/Ha//jDx8ms2B66MAeki0JL+UEbsOPON1qFpCa8eHEiYGFzONdv+6DCO1m6y7
-        zvN+SH0dYq0xvo4S75gUgveK5q8yg==
-X-ME-Sender: <xms:3EgpX400z3VYmHzvXLn-oWTZ1iL2u1k5Etyw-8b3mvwLK_HyCvjXew>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrjeeigdeggecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
-    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnhepfe
-    efteetvdeguddvveefveeftedtffduudehueeihfeuvefgveehffeludeggfejnecukfhp
-    peduudekrddvtdekrdegjedrudeiudenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
-X-ME-Proxy: <xmx:3EgpXzEqYlIuPLrgIGwJdakWHmizB75srQO8z2eYXH5NDgNKEgOzmA>
-    <xmx:3EgpXw5VQKDqee8BLKXJOzLC_HOH9vQlxbfxh6OuHS9C1VUnONq_OA>
-    <xmx:3EgpXx03mtl9O9w5GDGW8D_W8prLa__CUW0Sw40CfzWxL_07Mloh9Q>
-    <xmx:3UgpX6cESCXEwV8tzUkYv1s_c-6OOit-Sn19G8ePNtnYk8yaV_5zcw>
-Received: from mickey.themaw.net (unknown [118.208.47.161])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 61C5D30600A6;
-        Tue,  4 Aug 2020 07:39:03 -0400 (EDT)
-Message-ID: <43c061d26ddef2aa3ca1ac726da7db9ab461e7be.camel@themaw.net>
-Subject: Re: [PATCH 13/17] watch_queue: Implement mount topology and
- attribute change notifications [ver #5]
-From:   Ian Kent <raven@themaw.net>
-To:     Miklos Szeredi <miklos@szeredi.hu>,
-        David Howells <dhowells@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>, andres@anarazel.de,
-        Jeff Layton <jlayton@redhat.com>, dray@redhat.com,
-        Karel Zak <kzak@redhat.com>, keyrings@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        LSM <linux-security-module@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 04 Aug 2020 19:38:59 +0800
-In-Reply-To: <CAJfpeguvLMCw1H8+DPsfZE_k0sEiRtA17pD9HjnceSsAvqqAZw@mail.gmail.com>
-References: <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk>
-         <158454391302.2863966.1884682840541676280.stgit@warthog.procyon.org.uk>
-         <CAJfpegspWA6oUtdcYvYF=3fij=Bnq03b8VMbU9RNMKc+zzjbag@mail.gmail.com>
-         <1293241.1595501326@warthog.procyon.org.uk>
-         <CAJfpeguvLMCw1H8+DPsfZE_k0sEiRtA17pD9HjnceSsAvqqAZw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 4 Aug 2020 07:39:15 -0400
+Received: from mail-eopbgr80059.outbound.protection.outlook.com ([40.107.8.59]:47640
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730241AbgHDLjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 07:39:13 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M5UPFf1Au72FugdZZkuzq3wVhxhhk4l52Bruq04t+KGn3P6MQTgdFKtzwJwSLNpjt41SmxmsPlSZsOyIBpqdCx/CC6Xhfx2ics5w+9C1NFELy78Vfj6wip9QixN3F6mROiW9BRw1LfPDRzKhSq+rhhtHz8tfPOa4VBUz7vLeovYGg3wiCD3+m9qK+rl3v1M3UPfyOqmjVdOPZ4tMTxa/JuHM7QdxW9oLk04oLEWlYrocynB+uHmbKtzUSqz6oa3jYWehspAQqWBuwf1c0HmSGS9vYtC9mLviMc8owjb8LFvwTHq/Xb7o/YDmTfqgGpp0b8Pn0DRT7Ey5VB5d6y9alg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tU4aP7IIJ5dg2LEf+/SFhGhrMykB+YHcaTBNrM2+t/0=;
+ b=e7RA6jVzd8bHbhzjVRy6IzCHG/PGlzKz8+KU2ImBXJfle2RhyvzUyfl0Xi1SPksc9DKCdHOCcVCBejgKS8FFm3z6DTmumMu/m72Jh4HrxnXi9H8HKWLpx5i/o25wBZmH/7Yu7a1Bc2iJ818pyL8ymOKCGu7BEn+jGVvhKyVz7PvJeEwGDB9TCW+YzdFbk3lQvYgniYERta5Y1tjkZgv6TdhYIZILRtT1PpyvxU76LCd64mTbyA8htiRU8efnPBE5SuYrQImw1zQKpGDoEAY4CrZZAxU9K/VOZOnVHGKgs48Rl/Whc+BnMQ1SqHM67pNCwJZEG/5LRCReq2HEFcnODA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 193.240.239.45) smtp.rcpttodomain=vger.kernel.org
+ smtp.mailfrom=diasemi.com; dmarc=fail (p=none sp=none pct=100) action=none
+ header.from=diasemi.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tU4aP7IIJ5dg2LEf+/SFhGhrMykB+YHcaTBNrM2+t/0=;
+ b=biXbi42J+88/c6MzAk2xL/TDEJkAya2LpIpuslyDIt755Q3vujcYYD8XdA29szgq9Ngl0NYtu5hi0+2nFW8urH44HiwUpL6MHBc+0zEAkzkB4uq53oDW6n20i9FhpAYfT5V766hM9ERabGmGT418y4NL8zRwtxAa/z67gUUou9w=
+Received: from PR3P192CA0054.EURP192.PROD.OUTLOOK.COM (2603:10a6:102:57::29)
+ by VI1PR10MB1744.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:802:34::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.18; Tue, 4 Aug
+ 2020 11:39:08 +0000
+Received: from HE1EUR02FT063.eop-EUR02.prod.protection.outlook.com
+ (2603:10a6:102:57:cafe::c7) by PR3P192CA0054.outlook.office365.com
+ (2603:10a6:102:57::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend
+ Transport; Tue, 4 Aug 2020 11:39:08 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
+ 193.240.239.45) smtp.mailfrom=diasemi.com; vger.kernel.org; dkim=none
+ (message not signed) header.d=none;vger.kernel.org; dmarc=fail action=none
+ header.from=diasemi.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ diasemi.com discourages use of 193.240.239.45 as permitted sender)
+Received: from mailrelay1.diasemi.com (193.240.239.45) by
+ HE1EUR02FT063.mail.protection.outlook.com (10.152.11.211) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.3239.20 via Frontend Transport; Tue, 4 Aug 2020 11:39:07 +0000
+Received: from krsrvapps-03.diasemi.com (10.93.17.2) by
+ NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
+ 14.3.468.0; Tue, 4 Aug 2020 13:39:05 +0200
+Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
+ 4D1D713F673; Tue,  4 Aug 2020 20:39:04 +0900 (KST)
+Message-ID: <b960f68e87dc8892da7eec8bc549652ac3b56c55.1596522828.git.Roy.Im@diasemi.com>
+In-Reply-To: <cover.1596522828.git.Roy.Im@diasemi.com>
+References: <cover.1596522828.git.Roy.Im@diasemi.com>
+From:   Roy Im <roy.im.opensource@diasemi.com>
+Date:   Tue, 4 Aug 2020 15:33:47 +0900
+Subject: [PATCH v19 2/3] dt-bindings: input: Add document bindings for DA7280
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Support Opensource <support.opensource@diasemi.com>,
+        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1d250a32-0589-4d8a-b621-08d8386affac
+X-MS-TrafficTypeDiagnostic: VI1PR10MB1744:
+X-Microsoft-Antispam-PRVS: <VI1PR10MB17448ACAAD585D40FEC2137EA24A0@VI1PR10MB1744.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Z5YsOd/Ypmm7Ggm5B/TMbi82YuEUkbuexoq2HbHTLZfD6nERg+8aL6G3lgISodagPWyxGPneLhCfupD5DG/lHTJ9bII4p+kHERGP5IDvCZRvA2eN+nueWASSsGHmiEXRtE/PjuaWxbM2LUexLDQFY4Kop0EFOGBNKQE6c2FrdPfDrRzNcVYhIDcXMs3vVMK3tj5Xk7FXr9MlpZVWOnRiHNswyeVq4PLUmw8UOd3USa7bSYnUVK+HQxSrC1x2ePQWCfTVH8RBRCV/ybi0gA5A9tOxCaV5WanG2NvKZrIEP7AaQwEswnbTdCLuVowzbi0o/sBljwYt3biMJ69kGa8IdhaP2Z1Sm/Xb8JwSNQ9blCrUMAIf0D8L/t/54YAf4wriYyEfiIGWNXtTYmgKJQHIMuWISOXMIhJgrgdKDMHwI8eu/0K73Bwz4Zws3GV6XZZ8
+X-Forefront-Antispam-Report: CIP:193.240.239.45;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mailrelay1.diasemi.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(46966005)(2616005)(4326008)(6666004)(336012)(36756003)(26005)(33310700002)(2906002)(86362001)(47076004)(83380400001)(5660300002)(8676002)(82310400002)(426003)(54906003)(6266002)(36906005)(70586007)(110136005)(356005)(8936002)(42186006)(81166007)(498600001)(186003)(70206006);DIR:OUT;SFP:1101;
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Aug 2020 11:39:07.7063
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1d250a32-0589-4d8a-b621-08d8386affac
+X-MS-Exchange-CrossTenant-Id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=511e3c0e-ee96-486e-a2ec-e272ffa37b7c;Ip=[193.240.239.45];Helo=[mailrelay1.diasemi.com]
+X-MS-Exchange-CrossTenant-AuthSource: HE1EUR02FT063.eop-EUR02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB1744
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-08-03 at 11:29 +0200, Miklos Szeredi wrote:
-> On Thu, Jul 23, 2020 at 12:48 PM David Howells <dhowells@redhat.com>
-> wrote:
-> 
-> > > >                 __u32   topology_changes;
-> > > >                 __u32   attr_changes;
-> > > >                 __u32   aux_topology_changes;
-> > > 
-> > > Being 32bit this introduces wraparound effects.  Is that really
-> > > worth it?
-> > 
-> > You'd have to make 2 billion changes without whoever's monitoring
-> > getting a
-> > chance to update their counters.  But maybe it's not worth it
-> > putting them
-> > here.  If you'd prefer, I can make the counters all 64-bit and just
-> > retrieve
-> > them with fsinfo().
-> 
-> Yes, I think that would be preferable.
+Add device tree binding information for DA7280 haptic driver.
+Example bindings for DA7280 are added.
 
-I think this is the source of the recommendation for removing the
-change counters from the notification message, correct?
+Reviewed-by: Rob Herring <robh@kernel.org>.
 
-While it looks like I may not need those counters for systemd message
-buffer overflow handling myself I think removing them from the
-notification message isn't a sensible thing to do.
+Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
 
-If you need to detect missing messages, perhaps due to message buffer
-overflow, then you need change counters that are relevant to the
-notification message itself. That's so the next time you get a message
-for that object you can be sure that change counter comparisons you
-you make relate to object notifications you have processed.
+---
+v19: No changes.
+v18: No changes.
+v17: No changes.
+v16: No changes.
+v15: No changes.
+v14: No changes.
+v13: No changes.
+v12: No changes.
+v11: No changes.
+v10: No changes.
+v9: No changes.
+v8: Updated descriptions for new properties.
+v7: No changes.
+v6: No changes.
+v5: Updated descriptions and fixed errors.
+v4: Fixed commit message, properties.
+v3: Fixed subject format.
+v2: No changes
 
-Yes, I know it isn't quite that simple, but tallying up what you have
-processed in the current batch of messages (or in multiple batches of
-messages if more than one read has been possible) to perform the check
-is a user space responsibility. And it simply can't be done if the
-counters consistency is in question which it would be if you need to
-perform another system call to get it.
 
-It's way more useful to have these in the notification than obtainable
-via fsinfo() IMHO.
+ .../devicetree/bindings/input/dlg,da7280.txt       | 109 +++++++++++++++++++++
+ 1 file changed, 109 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
 
-> 
-> > > >         n->watch.info & NOTIFY_MOUNT_IS_RECURSIVE if true
-> > > > indicates that
-> > > >         the notifcation was generated by an event (eg. SETATTR)
-> > > > that was
-> > > >         applied recursively.  The notification is only
-> > > > generated for the
-> > > >         object that initially triggered it.
-> > > 
-> > > Unused in this patchset.  Please don't add things to the API
-> > > which are not
-> > > used.
-> > 
-> > Christian Brauner has patches for mount_setattr() that will need to
-> > use this.
-> 
-> Fine, then that patch can add the flag.
-> 
-> Thanks,
-> Miklos
+diff --git a/Documentation/devicetree/bindings/input/dlg,da7280.txt b/Documentation/devicetree/bindings/input/dlg,da7280.txt
+new file mode 100644
+index 0000000..e6b719d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/dlg,da7280.txt
+@@ -0,0 +1,109 @@
++Dialog Semiconductor DA7280 Haptics bindings
++
++Required properties:
++- compatible: Should be "dlg,da7280".
++- reg: Specifies the I2C slave address.
++
++- interrupt-parent : Specifies the phandle of the interrupt controller to
++  which the IRQs from DA7280 are delivered to.
++
++- dlg,actuator-type: Set Actuator type. it should be one of:
++  "LRA" - Linear Resonance Actuator type.
++  "ERM-bar" - Bar type Eccentric Rotating Mass.
++  "ERM-coin" - Coin type Eccentric Rotating Mass.
++
++- dlg,const-op-mode: Haptic operation mode for FF_CONSTANT.
++  Possible values:
++	1 - Direct register override(DRO) mode triggered by i2c(default),
++	2 - PWM data source mode controlled by PWM duty,
++- dlg,periodic-op-mode: Haptic operation mode for FF_PERIODIC.
++  Possible values:
++	1 - Register triggered waveform memory(RTWM) mode, the pattern
++	    assigned to the PS_SEQ_ID played as much times as PS_SEQ_LOOP,
++	2 - Edge triggered waveform memory(ETWM) mode, external GPI(N)
++	    control are required to enable/disable and it needs to keep
++	    device enabled by sending magnitude (X > 0),
++	    the pattern is assigned to the GPI(N)_SEQUENCE_ID below.
++	The default value is 1 for both of the operation modes.
++	For more details, please see the datasheet.
++
++- dlg,nom-microvolt: Nominal actuator voltage rating.
++  Valid values: 0 - 6000000.
++- dlg,abs-max-microvolt: Absolute actuator maximum voltage rating.
++  Valid values: 0 - 6000000.
++- dlg,imax-microamp: Actuator max current rating.
++  Valid values: 0 - 252000.
++  Default: 130000.
++- dlg,impd-micro-ohms: the impedance of the actuator in micro ohms.
++  Valid values: 0 - 1500000000.
++
++Optional properties:
++- pwms : phandle to the physical PWM(Pulse Width Modulation) device.
++  PWM properties should be named "pwms". And number of cell is different
++  for each pwm device.
++  (See Documentation/devicetree/bindings/pwm/pwm.txt
++   for further information relating to pwm properties)
++
++- dlg,ps-seq-id: the PS_SEQ_ID(pattern ID in waveform memory inside chip)
++  to play back when RTWM-MODE is enabled.
++  Valid range: 0 - 15.
++- dlg,ps-seq-loop: the PS_SEQ_LOOP, Number of times the pre-stored sequence
++  pointed to by PS_SEQ_ID or GPI(N)_SEQUENCE_ID is repeated.
++  Valid range: 0 - 15.
++- dlg,gpiN-seq-id: the GPI(N)_SEQUENCE_ID, pattern to play
++  when gpi0 is triggered, 'N' must be 0 - 2.
++  Valid range: 0 - 15.
++- dlg,gpiN-mode: the pattern mode which can select either
++  "Single-pattern" or "Multi-pattern", 'N' must be 0 - 2.
++- dlg,gpiN-polarity: gpiN polarity which can be chosen among
++  "Rising-edge", "Falling-edge" and "Both-edge",
++  'N' must be 0 - 2
++  Haptic will work by this edge option in case of ETWM mode.
++
++- dlg,resonant-freq-hz: use in case of LRA.
++  the frequency range: 50 - 300.
++  Default: 205.
++
++- dlg,bemf-sens-enable: Enable for internal loop computations.
++- dlg,freq-track-enable: Enable for resonant frequency tracking.
++- dlg,acc-enable: Enable for active acceleration.
++- dlg,rapid-stop-enable: Enable for rapid stop.
++- dlg,amp-pid-enable: Enable for the amplitude PID.
++- dlg,mem-array: Customized waveform memory(patterns) data downloaded to
++  the device during initialization. This is an array of 100 values(u8).
++
++For further information, see device datasheet.
++
++======
++
++Example:
++
++	haptics: da7280-haptics@4a {
++		compatible = "dlg,da7280";
++		reg = <0x4a>;
++		interrupt-parent = <&gpio6>;
++		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
++		dlg,actuator-type = "LRA";
++		dlg,dlg,const-op-mode = <1>;
++		dlg,dlg,periodic-op-mode = <1>;
++		dlg,nom-microvolt = <2000000>;
++		dlg,abs-max-microvolt = <2000000>;
++		dlg,imax-microamp = <170000>;
++		dlg,resonant-freq-hz = <180>;
++		dlg,impd-micro-ohms = <10500000>;
++		dlg,freq-track-enable;
++		dlg,rapid-stop-enable;
++		dlg,mem-array = <
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++		>;
++
++	};
+-- 
+end-of-patch for PATCH v19
 
