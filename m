@@ -2,315 +2,118 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DF1C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E38CAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15F632086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C603F2086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:36:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="i0ag6ziY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OxhKHu6d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgHDMfN (ORCPT
+        id S1727105AbgHDMgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 08:35:13 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:42184 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgHDMfM (ORCPT
+        Tue, 4 Aug 2020 08:36:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39846 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725864AbgHDMgA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 08:35:12 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 074CI0O4019655;
-        Tue, 4 Aug 2020 12:35:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : content-type :
- content-transfer-encoding : mime-version : date : subject : cc : to :
- message-id; s=corp-2020-01-29;
- bh=jfOnjEqOkdNC8tymd3/ppj5lfyzkOoBH/pQeo/+vx7c=;
- b=i0ag6ziYUsmCJH1F2JtuYUNO56VCsnO/U3H2XljeUF0XwEFbw+AwKy0MUEPPA3lvh20/
- D5FJz0fKmE6jERK5Rxm6ynhQz7OS19u2dMnd5mZE9/rZKNSfKRuOmbkVX7GjQpxXKQfj
- SJtb72UI4UfGv4qe9gtOh6bW5zD+86TQv2pHLIAUS3yqaLWTdi17kPzLxiBPCYRTLPjn
- rhq+Ui8sv5sPuLQL+znJk6sOu8LTv69e+vZIyXwQrOUF/tpa9LgUqBJ7dYMP+1g92XCs
- BfafAMCPPIgTNefxo5F5xX0QeJbPQ12mBiZfPMYLxhLoU7FKocHjak8mM1ITtKrJfdK6 FQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 32n11n3xqv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 04 Aug 2020 12:35:08 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 074CHh9P143317;
-        Tue, 4 Aug 2020 12:33:07 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 32njawgdh2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 04 Aug 2020 12:33:07 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 074CX6W0031543;
-        Tue, 4 Aug 2020 12:33:06 GMT
-Received: from [192.168.1.127] (/47.220.71.223)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 04 Aug 2020 05:33:06 -0700
-From:   John Donnelly <john.p.donnelly@oracle.com>
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.5\))
-Date:   Tue, 4 Aug 2020 07:33:05 -0500
-Subject: [(resend) PATCH v3: {linux-4.14.y} ] dm cache: submit writethrough
- writes in parallel to origin and cache
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Mike Snitzer <snitzer@redhat.com>
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
-Message-Id: <8CFF8DA9-C105-461C-8F5A-DA2BF448A135@oracle.com>
-X-Mailer: Apple Mail (2.3445.9.5)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9702 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
- mlxlogscore=974 mlxscore=0 spamscore=0 malwarescore=0 adultscore=0
- suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008040092
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9702 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0 mlxscore=0
- suspectscore=2 mlxlogscore=970 phishscore=0 adultscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008040092
+        Tue, 4 Aug 2020 08:36:00 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9882BC06174A;
+        Tue,  4 Aug 2020 05:35:59 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id c16so21838379ejx.12;
+        Tue, 04 Aug 2020 05:35:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=6RTVhFDX46AnPd26vPe+RB8qNqmkRWknJbiE97l1Y+Y=;
+        b=OxhKHu6db2XpSqxcE6NiFINrJxgBl1DWnXgFtyU+pkKBKOfzyy0+LMbh7NB7HNVfRU
+         lMJGCoDE/FZs+I0WNEJMG5XsdddfDRzcUMWNJu6p52Gu7mJNM+sCuS/VaZb+qIJjMATc
+         R1cfNcJHias4PZkk5yIkei6BALKCW9cfEB9U9E+BymV6YcI4tDWzyhTo0qzWC3ccQQyI
+         sxBWhbkcntUTnU29PDsd1GGfMRoIqRSE0oM2eQqLEsR+ZqV0IScRascUv5BF4oWegVdu
+         lczV+GvaY8Zlsj3LkvcSID3NqGz+TeqAadC7Cnrr+93GAVGDQafxcXR7klC/2PG27GV8
+         oz4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6RTVhFDX46AnPd26vPe+RB8qNqmkRWknJbiE97l1Y+Y=;
+        b=jUekQbGrFT7ZgGFEIE4H3sXm3s5gvvSVsueo1hRElcdR6g+rty4403BS43yKIw6PTR
+         GTqZh8OQ9NDvw52QEpN80U83ZotLPbjAlLrRtVNAWkDtnwgwGLRpLfbIa1Ds9b9kL6vb
+         eJL2Uh9Ns44cQIlzrDkmJ4a4sWtWgByNoq2nLER77VsJDsfk3ahTQp+VKQC64z+he/C2
+         fVILTCHfP1rr+VYIN4Wgt6q9ZM18TH/kN6bZ8p6/ZFc2npgSVavz/gOgnfcKpsPCo6NT
+         /cOTpAmBF1ts5lJf1L+LT3tmeFapPkCzlh0BEZZc9qC8Z7+tg5/bh0e/GI+ecuEW2nyr
+         X4qQ==
+X-Gm-Message-State: AOAM532339lKu8c2ep0RD+nMVOeT6uwF1geMfiFXFDQb03tykpfw+FTS
+        mThQabI2JIA6jW9C8RZpcIx+VZSX
+X-Google-Smtp-Source: ABdhPJz6aFKnteEC4JgAR1C+2YaUjYOnKQtqD4brmBogNEtSQ0mZlS4h+I6t7kqgs/QwPlpjFkXsRQ==
+X-Received: by 2002:a17:906:a209:: with SMTP id r9mr22108168ejy.413.1596544558402;
+        Tue, 04 Aug 2020 05:35:58 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:598:b88a:676c:15b9:533b:62ba:b5b3])
+        by smtp.gmail.com with ESMTPSA id r19sm18514261edi.85.2020.08.04.05.35.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Aug 2020 05:35:57 -0700 (PDT)
+From:   Bean Huo <huobean@gmail.com>
+To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
+        asutoshd@codeaurora.org, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
+        cang@codeaurora.org
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1] scsi: ufs: no need to send one Abort Task TM in case the task in DB was cleared
+Date:   Tue,  4 Aug 2020 14:35:34 +0200
+Message-Id: <20200804123534.29104-1-huobean@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Snitzer <snitzer@redhat.com>
+From: Bean Huo <beanhuo@micron.com>
 
-Discontinue issuing writethrough write IO in series to the origin and
-then cache.
+If the bit corresponds to a task in the Doorbell register has been
+cleared, no need to poll the status of the task on the device side
+and to send an Abort Task TM.
+This patch also deletes dispensable dev_err() in case of the task
+already completed.
 
-Use bio_clone_fast() to create a new origin clone bio that will be
-mapped to the origin device and then bio_chain() it to the bio that gets
-remapped to the cache device.  The origin clone bio does _not_ have a
-copy of the per_bio_data -- as such check_if_tick_bio_needed() will not
-be called.
-
-The cache bio (parent bio) will not complete until the origin bio has
-completed -- this fulfills bio_clone_fast()'s requirements as well as
-the requirement to not complete the original IO until the write IO has
-completed to both the origin and cache device.
-
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-
-(cherry picked from commit 2df3bae9a6543e90042291707b8db0cbfbae9ee9)
-
-Fixes: 4ec34f2196d125ff781170ddc6c3058c08ec5e73 (dm bio record:
-save/restore bi_end_io and bi_integrity )
-
-4ec34f21 introduced a mkfs.ext4 hang on a LVM device that has been
-modified with lvconvert --cachemode=3Dwritethrough.
-
-CC:stable@vger.kernel.org for 4.14.y
-
-Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
-Reviewed-by: Somasundaram Krishnasamy =
-<somasundaram.krishnasamy@oracle.com>
-
-conflicts:
-	drivers/md/dm-cache-target.c. -  Corrected usage of
-	writethrough_mode(&cache->feature) that was caught by
-	compiler, and removed unused static functions : =
-writethrough_endio(),
-	defer_writethrough_bio(), wake_deferred_writethrough_worker()
-	that generated warnings.
+Signed-off-by: Bean Huo <beanhuo@micron.com>
 ---
-drivers/md/dm-cache-target.c | 92 =
-++++++++++++++++++--------------------------
-1 file changed, 37 insertions(+), 55 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/md/dm-cache-target.c b/drivers/md/dm-cache-target.c
-index 69cdb29ef6be..2732d1df05fa 100644
---- a/drivers/md/dm-cache-target.c
-+++ b/drivers/md/dm-cache-target.c
-@@ -450,6 +450,7 @@ struct cache {
-	struct work_struct migration_worker;
-	struct delayed_work waker;
-	struct dm_bio_prison_v2 *prison;
-+	struct bio_set *bs;
-
-	mempool_t *migration_pool;
-
-@@ -537,11 +538,6 @@ static void wake_deferred_bio_worker(struct cache =
-*cache)
-	queue_work(cache->wq, &cache->deferred_bio_worker);
-}
-
--static void wake_deferred_writethrough_worker(struct cache *cache)
--{
--	queue_work(cache->wq, &cache->deferred_writethrough_worker);
--}
--
-static void wake_migration_worker(struct cache *cache)
-{
-	if (passthrough_mode(&cache->features))
-@@ -868,16 +864,23 @@ static void check_if_tick_bio_needed(struct cache =
-*cache, struct bio *bio)
-	spin_unlock_irqrestore(&cache->lock, flags);
-}
-
--static void remap_to_origin_clear_discard(struct cache *cache, struct =
-bio *bio,
--					  dm_oblock_t oblock)
-+static void __remap_to_origin_clear_discard(struct cache *cache, struct =
-bio *bio,
-+					    dm_oblock_t oblock, bool =
-bio_has_pbd)
-{
--	// FIXME: this is called way too much.
--	check_if_tick_bio_needed(cache, bio);
-+	if (bio_has_pbd)
-+		check_if_tick_bio_needed(cache, bio);
-	remap_to_origin(cache, bio);
-	if (bio_data_dir(bio) =3D=3D WRITE)
-		clear_discard(cache, oblock_to_dblock(cache, oblock));
-}
-
-+static void remap_to_origin_clear_discard(struct cache *cache, struct =
-bio *bio,
-+					  dm_oblock_t oblock)
-+{
-+	// FIXME: check_if_tick_bio_needed() is called way too much =
-through this interface
-+	__remap_to_origin_clear_discard(cache, bio, oblock, true);
-+}
-+
-static void remap_to_cache_dirty(struct cache *cache, struct bio *bio,
-				 dm_oblock_t oblock, dm_cblock_t cblock)
-{
-@@ -937,57 +940,26 @@ static void issue_op(struct bio *bio, void =
-*context)
-	accounted_request(cache, bio);
-}
-
--static void defer_writethrough_bio(struct cache *cache, struct bio =
-*bio)
--{
--	unsigned long flags;
--
--	spin_lock_irqsave(&cache->lock, flags);
--	bio_list_add(&cache->deferred_writethrough_bios, bio);
--	spin_unlock_irqrestore(&cache->lock, flags);
--
--	wake_deferred_writethrough_worker(cache);
--}
--
--static void writethrough_endio(struct bio *bio)
--{
--	struct per_bio_data *pb =3D get_per_bio_data(bio, =
-PB_DATA_SIZE_WT);
--
--	dm_unhook_bio(&pb->hook_info, bio);
--
--	if (bio->bi_status) {
--		bio_endio(bio);
--		return;
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 307622284239..581b4ab52bf4 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -6425,19 +6425,16 @@ static int ufshcd_abort(struct scsi_cmnd *cmd)
+ 		return ufshcd_eh_host_reset_handler(cmd);
+ 
+ 	ufshcd_hold(hba, false);
+-	reg = ufshcd_readl(hba, REG_UTP_TRANSFER_REQ_DOOR_BELL);
+ 	/* If command is already aborted/completed, return SUCCESS */
+-	if (!(test_bit(tag, &hba->outstanding_reqs))) {
+-		dev_err(hba->dev,
+-			"%s: cmd at tag %d already completed, outstanding=0x%lx, doorbell=0x%x\n",
+-			__func__, tag, hba->outstanding_reqs, reg);
++	if (!(test_bit(tag, &hba->outstanding_reqs)))
+ 		goto out;
 -	}
--
--	dm_bio_restore(&pb->bio_details, bio);
--	remap_to_cache(pb->cache, bio, pb->cblock);
--
--	/*
--	 * We can't issue this bio directly, since we're in interrupt
--	 * context.  So it gets put on a bio list for processing by the
--	 * worker thread.
--	 */
--	defer_writethrough_bio(pb->cache, bio);
--}
--
-/*
-- * FIXME: send in parallel, huge latency as is.
- * When running in writethrough mode we need to send writes to clean =
-blocks
-- * to both the cache and origin devices.  In future we'd like to clone =
-the
-- * bio and send them in parallel, but for now we're doing them in
-- * series as this is easier.
-+ * to both the cache and origin devices.  Clone the bio and send them =
-in parallel.
- */
--static void remap_to_origin_then_cache(struct cache *cache, struct bio =
-*bio,
--				       dm_oblock_t oblock, dm_cblock_t =
-cblock)
-+static void remap_to_origin_and_cache(struct cache *cache, struct bio =
-*bio,
-+				      dm_oblock_t oblock, dm_cblock_t =
-cblock)
-{
--	struct per_bio_data *pb =3D get_per_bio_data(bio, =
-PB_DATA_SIZE_WT);
-+	struct bio *origin_bio =3D bio_clone_fast(bio, GFP_NOIO, =
-cache->bs);
-+
-+	BUG_ON(!origin_bio);
-
--	pb->cache =3D cache;
--	pb->cblock =3D cblock;
--	dm_hook_bio(&pb->hook_info, bio, writethrough_endio, NULL);
--	dm_bio_record(&pb->bio_details, bio);
-+	bio_chain(origin_bio, bio);
-+	/*
-+	 * Passing false to __remap_to_origin_clear_discard() skips
-+	 * all code that might use per_bio_data (since clone doesn't =
-have it)
-+	 */
-+	__remap_to_origin_clear_discard(cache, origin_bio, oblock, =
-false);
-+	submit_bio(origin_bio);
-
--	remap_to_origin_clear_discard(pb->cache, bio, oblock);
-+	remap_to_cache(cache, bio, cblock);
-}
-
-/*----------------------------------------------------------------
-@@ -1873,7 +1845,7 @@ static int map_bio(struct cache *cache, struct bio =
-*bio, dm_oblock_t block,
-		} else {
-			if (bio_data_dir(bio) =3D=3D WRITE && =
-writethrough_mode(&cache->features) &&
-			    !is_dirty(cache, cblock)) {
--				remap_to_origin_then_cache(cache, bio, =
-block, cblock);
-+				remap_to_origin_and_cache(cache, bio, =
-block, cblock);
-				accounted_begin(cache, bio);
-			} else
-				remap_to_cache_dirty(cache, bio, block, =
-cblock);
-@@ -2132,6 +2104,9 @@ static void destroy(struct cache *cache)
-		kfree(cache->ctr_args[i]);
-	kfree(cache->ctr_args);
-
-+	if (cache->bs)
-+		bioset_free(cache->bs);
-+
-	kfree(cache);
-}
-
-@@ -2589,6 +2564,13 @@ static int cache_create(struct cache_args *ca, =
-struct cache **result)
-	cache->features =3D ca->features;
-	ti->per_io_data_size =3D get_per_bio_data_size(cache);
-
-+	if (writethrough_mode(&cache->features)) {
-+		/* Create bioset for writethrough bios issued to origin =
-*/
-+		cache->bs =3D bioset_create(BIO_POOL_SIZE, 0, 0);
-+		if (!cache->bs)
-+			goto bad;
-+	}
-+
-	cache->callbacks.congested_fn =3D cache_is_congested;
-	dm_table_add_target_callbacks(ti->table, &cache->callbacks);
-
---=20
-1.8.3.1
+ 
++	reg = ufshcd_readl(hba, REG_UTP_TRANSFER_REQ_DOOR_BELL);
+ 	if (!(reg & (1 << tag))) {
+ 		dev_err(hba->dev,
+ 		"%s: cmd was completed, but without a notifying intr, tag = %d",
+ 		__func__, tag);
++		goto out;
+ 	}
+ 
+ 	/* Print Transfer Request of aborted task */
+-- 
+2.17.1
 
