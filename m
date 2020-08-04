@@ -2,154 +2,252 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A50C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A90E4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D76222BED
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D39922BED
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:24:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbgHDMX5 (ORCPT
+        id S1726936AbgHDMYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 08:23:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46628 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726533AbgHDMXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 08:23:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 796B0AD1E;
-        Tue,  4 Aug 2020 12:06:10 +0000 (UTC)
-Subject: Re: [PATCH v3 1/3] mm/gup: restrict CMA region by using allocation
- scope API
-To:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel-team@lge.com, Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-References: <1596180906-8442-1-git-send-email-iamjoonsoo.kim@lge.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <370b1f3c-98ea-421a-d4a2-621bab5a5eec@suse.cz>
-Date:   Tue, 4 Aug 2020 14:05:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 4 Aug 2020 08:24:49 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:53814 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726027AbgHDMYo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 08:24:44 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k2vzl-00AS1k-HE; Tue, 04 Aug 2020 06:24:41 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k2vzk-0006XU-EV; Tue, 04 Aug 2020 06:24:41 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     christian.brauner@ubuntu.com, akpm@linux-foundation.org,
+        viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
+References: <159644958332.604812.13004003379291842292.stgit@localhost.localdomain>
+        <159644977635.604812.1319877322927063560.stgit@localhost.localdomain>
+Date:   Tue, 04 Aug 2020 07:21:26 -0500
+In-Reply-To: <159644977635.604812.1319877322927063560.stgit@localhost.localdomain>
+        (Kirill Tkhai's message of "Mon, 03 Aug 2020 13:16:16 +0300")
+Message-ID: <875z9ysit5.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <1596180906-8442-1-git-send-email-iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-XM-SPF: eid=1k2vzk-0006XU-EV;;;mid=<875z9ysit5.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19R9qaaQxeRvzEEEsWme4GTLCIFWCXZ+jc=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 1/8] ns: Add common refcount into ns_common add use it as counter for net_ns
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 7/31/20 9:35 AM, js1304@gmail.com wrote:
-> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> 
-> We have well defined scope API to exclude CMA region.
-> Use it rather than manipulating gfp_mask manually. With this change,
-> we can now restore __GFP_MOVABLE for gfp_mask like as usual migration
-> target allocation. It would result in that the ZONE_MOVABLE is also
-> searched by page allocator. For hugetlb, gfp_mask is redefined since
-> it has a regular allocation mask filter for migration target.
-> __GPF_NOWARN is added to hugetlb gfp_mask filter since a new user for
-> gfp_mask filter, gup, want to be silent when allocation fails.
-> 
-> Note that this can be considered as a fix for the commit 9a4e9f3b2d73
-> ("mm: update get_user_pages_longterm to migrate pages allocated from
-> CMA region"). However, "Fixes" tag isn't added here since it is just
-> suboptimal but it doesn't cause any problem.
-> 
-> Suggested-by: Michal Hocko <mhocko@suse.com>
-> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Kirill Tkhai <ktkhai@virtuozzo.com> writes:
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> Currently, every type of namespaces has its own counter,
+> which is stored in ns-specific part. Say, @net has
+> struct net::count, @pid has struct pid_namespace::kref, etc.
+>
+> This patchset introduces unified counter for all types
+> of namespaces, and converts net namespace to use it first.
 
+And the other refcounts on struct net?
+
+How do they play into what you are trying to do?
+
+For the lack of an explanation.
+
+Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+
+
+> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
 > ---
->  include/linux/hugetlb.h |  2 ++
->  mm/gup.c                | 17 ++++++++---------
->  2 files changed, 10 insertions(+), 9 deletions(-)
-> 
-> diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-> index 6b9508d..2660b04 100644
-> --- a/include/linux/hugetlb.h
-> +++ b/include/linux/hugetlb.h
-> @@ -708,6 +708,8 @@ static inline gfp_t htlb_modify_alloc_mask(struct hstate *h, gfp_t gfp_mask)
->  	/* Some callers might want to enfoce node */
->  	modified_mask |= (gfp_mask & __GFP_THISNODE);
+>  include/linux/ns_common.h     |    3 +++
+>  include/net/net_namespace.h   |   11 ++++-------
+>  net/core/net-sysfs.c          |    6 +++---
+>  net/core/net_namespace.c      |    6 +++---
+>  net/ipv4/inet_timewait_sock.c |    4 ++--
+>  net/ipv4/tcp_metrics.c        |    2 +-
+>  6 files changed, 16 insertions(+), 16 deletions(-)
+>
+> diff --git a/include/linux/ns_common.h b/include/linux/ns_common.h
+> index 5fbc4000358f..0f1d024bd958 100644
+> --- a/include/linux/ns_common.h
+> +++ b/include/linux/ns_common.h
+> @@ -2,12 +2,15 @@
+>  #ifndef _LINUX_NS_COMMON_H
+>  #define _LINUX_NS_COMMON_H
 >  
-> +	modified_mask |= (gfp_mask & __GFP_NOWARN);
+> +#include <linux/refcount.h>
 > +
->  	return modified_mask;
+>  struct proc_ns_operations;
+>  
+>  struct ns_common {
+>  	atomic_long_t stashed;
+>  	const struct proc_ns_operations *ops;
+>  	unsigned int inum;
+> +	refcount_t count;
+>  };
+>  
+>  #endif
+> diff --git a/include/net/net_namespace.h b/include/net/net_namespace.h
+> index 2ee5901bec7a..cb4b33d7834b 100644
+> --- a/include/net/net_namespace.h
+> +++ b/include/net/net_namespace.h
+> @@ -60,9 +60,6 @@ struct net {
+>  	refcount_t		passive;	/* To decide when the network
+>  						 * namespace should be freed.
+>  						 */
+> -	refcount_t		count;		/* To decided when the network
+> -						 *  namespace should be shut down.
+> -						 */
+>  	spinlock_t		rules_mod_lock;
+>  
+>  	unsigned int		dev_unreg_count;
+> @@ -245,7 +242,7 @@ void __put_net(struct net *net);
+>  
+>  static inline struct net *get_net(struct net *net)
+>  {
+> -	refcount_inc(&net->count);
+> +	refcount_inc(&net->ns.count);
+>  	return net;
 >  }
 >  
-> diff --git a/mm/gup.c b/mm/gup.c
-> index a55f1ec..3990ddc 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -1601,10 +1601,12 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
->  	 * Trying to allocate a page for migration. Ignore allocation
->  	 * failure warnings. We don't force __GFP_THISNODE here because
->  	 * this node here is the node where we have CMA reservation and
-> -	 * in some case these nodes will have really less non movable
-> +	 * in some case these nodes will have really less non CMA
->  	 * allocation memory.
-> +	 *
-> +	 * Note that CMA region is prohibited by allocation scope.
+> @@ -256,14 +253,14 @@ static inline struct net *maybe_get_net(struct net *net)
+>  	 * exists.  If the reference count is zero this
+>  	 * function fails and returns NULL.
 >  	 */
-> -	gfp_t gfp_mask = GFP_USER | __GFP_NOWARN;
-> +	gfp_t gfp_mask = GFP_USER | __GFP_MOVABLE | __GFP_NOWARN;
+> -	if (!refcount_inc_not_zero(&net->count))
+> +	if (!refcount_inc_not_zero(&net->ns.count))
+>  		net = NULL;
+>  	return net;
+>  }
 >  
->  	if (PageHighMem(page))
->  		gfp_mask |= __GFP_HIGHMEM;
-> @@ -1612,6 +1614,8 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
->  #ifdef CONFIG_HUGETLB_PAGE
->  	if (PageHuge(page)) {
->  		struct hstate *h = page_hstate(page);
-> +
-> +		gfp_mask = htlb_modify_alloc_mask(h, gfp_mask);
->  		/*
->  		 * We don't want to dequeue from the pool because pool pages will
->  		 * mostly be from the CMA region.
-> @@ -1626,11 +1630,6 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
->  		 */
->  		gfp_t thp_gfpmask = GFP_TRANSHUGE | __GFP_NOWARN;
+>  static inline void put_net(struct net *net)
+>  {
+> -	if (refcount_dec_and_test(&net->count))
+> +	if (refcount_dec_and_test(&net->ns.count))
+>  		__put_net(net);
+>  }
 >  
-> -		/*
-> -		 * Remove the movable mask so that we don't allocate from
-> -		 * CMA area again.
-> -		 */
-> -		thp_gfpmask &= ~__GFP_MOVABLE;
->  		thp = __alloc_pages_node(nid, thp_gfpmask, HPAGE_PMD_ORDER);
->  		if (!thp)
->  			return NULL;
-> @@ -1773,7 +1772,6 @@ static long __gup_longterm_locked(struct mm_struct *mm,
->  				     vmas_tmp, NULL, gup_flags);
+> @@ -275,7 +272,7 @@ int net_eq(const struct net *net1, const struct net *net2)
 >  
->  	if (gup_flags & FOLL_LONGTERM) {
-> -		memalloc_nocma_restore(flags);
->  		if (rc < 0)
->  			goto out;
+>  static inline int check_net(const struct net *net)
+>  {
+> -	return refcount_read(&net->count) != 0;
+> +	return refcount_read(&net->ns.count) != 0;
+>  }
 >  
-> @@ -1786,9 +1784,10 @@ static long __gup_longterm_locked(struct mm_struct *mm,
+>  void net_drop_ns(void *);
+> diff --git a/net/core/net-sysfs.c b/net/core/net-sysfs.c
+> index 9de33b594ff2..655a88b0071c 100644
+> --- a/net/core/net-sysfs.c
+> +++ b/net/core/net-sysfs.c
+> @@ -1025,7 +1025,7 @@ net_rx_queue_update_kobjects(struct net_device *dev, int old_num, int new_num)
+>  	while (--i >= new_num) {
+>  		struct kobject *kobj = &dev->_rx[i].kobj;
 >  
->  		rc = check_and_migrate_cma_pages(mm, start, rc, pages,
->  						 vmas_tmp, gup_flags);
-> +out:
-> +		memalloc_nocma_restore(flags);
->  	}
+> -		if (!refcount_read(&dev_net(dev)->count))
+> +		if (!refcount_read(&dev_net(dev)->ns.count))
+>  			kobj->uevent_suppress = 1;
+>  		if (dev->sysfs_rx_queue_group)
+>  			sysfs_remove_group(kobj, dev->sysfs_rx_queue_group);
+> @@ -1603,7 +1603,7 @@ netdev_queue_update_kobjects(struct net_device *dev, int old_num, int new_num)
+>  	while (--i >= new_num) {
+>  		struct netdev_queue *queue = dev->_tx + i;
 >  
-> -out:
->  	if (vmas_tmp != vmas)
->  		kfree(vmas_tmp);
->  	return rc;
-> 
-
+> -		if (!refcount_read(&dev_net(dev)->count))
+> +		if (!refcount_read(&dev_net(dev)->ns.count))
+>  			queue->kobj.uevent_suppress = 1;
+>  #ifdef CONFIG_BQL
+>  		sysfs_remove_group(&queue->kobj, &dql_group);
+> @@ -1850,7 +1850,7 @@ void netdev_unregister_kobject(struct net_device *ndev)
+>  {
+>  	struct device *dev = &ndev->dev;
+>  
+> -	if (!refcount_read(&dev_net(ndev)->count))
+> +	if (!refcount_read(&dev_net(ndev)->ns.count))
+>  		dev_set_uevent_suppress(dev, 1);
+>  
+>  	kobject_get(&dev->kobj);
+> diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
+> index dcd61aca343e..5f658cbedd34 100644
+> --- a/net/core/net_namespace.c
+> +++ b/net/core/net_namespace.c
+> @@ -44,7 +44,7 @@ static struct key_tag init_net_key_domain = { .usage = REFCOUNT_INIT(1) };
+>  #endif
+>  
+>  struct net init_net = {
+> -	.count		= REFCOUNT_INIT(1),
+> +	.ns.count	= REFCOUNT_INIT(1),
+>  	.dev_base_head	= LIST_HEAD_INIT(init_net.dev_base_head),
+>  #ifdef CONFIG_KEYS
+>  	.key_domain	= &init_net_key_domain,
+> @@ -248,7 +248,7 @@ int peernet2id_alloc(struct net *net, struct net *peer, gfp_t gfp)
+>  {
+>  	int id;
+>  
+> -	if (refcount_read(&net->count) == 0)
+> +	if (refcount_read(&net->ns.count) == 0)
+>  		return NETNSA_NSID_NOT_ASSIGNED;
+>  
+>  	spin_lock(&net->nsid_lock);
+> @@ -328,7 +328,7 @@ static __net_init int setup_net(struct net *net, struct user_namespace *user_ns)
+>  	int error = 0;
+>  	LIST_HEAD(net_exit_list);
+>  
+> -	refcount_set(&net->count, 1);
+> +	refcount_set(&net->ns.count, 1);
+>  	refcount_set(&net->passive, 1);
+>  	get_random_bytes(&net->hash_mix, sizeof(u32));
+>  	net->dev_base_seq = 1;
+> diff --git a/net/ipv4/inet_timewait_sock.c b/net/ipv4/inet_timewait_sock.c
+> index c411c87ae865..437afe392e66 100644
+> --- a/net/ipv4/inet_timewait_sock.c
+> +++ b/net/ipv4/inet_timewait_sock.c
+> @@ -272,14 +272,14 @@ void inet_twsk_purge(struct inet_hashinfo *hashinfo, int family)
+>  				continue;
+>  			tw = inet_twsk(sk);
+>  			if ((tw->tw_family != family) ||
+> -				refcount_read(&twsk_net(tw)->count))
+> +				refcount_read(&twsk_net(tw)->ns.count))
+>  				continue;
+>  
+>  			if (unlikely(!refcount_inc_not_zero(&tw->tw_refcnt)))
+>  				continue;
+>  
+>  			if (unlikely((tw->tw_family != family) ||
+> -				     refcount_read(&twsk_net(tw)->count))) {
+> +				     refcount_read(&twsk_net(tw)->ns.count))) {
+>  				inet_twsk_put(tw);
+>  				goto restart;
+>  			}
+> diff --git a/net/ipv4/tcp_metrics.c b/net/ipv4/tcp_metrics.c
+> index 279db8822439..39710c417565 100644
+> --- a/net/ipv4/tcp_metrics.c
+> +++ b/net/ipv4/tcp_metrics.c
+> @@ -887,7 +887,7 @@ static void tcp_metrics_flush_all(struct net *net)
+>  		pp = &hb->chain;
+>  		for (tm = deref_locked(*pp); tm; tm = deref_locked(*pp)) {
+>  			match = net ? net_eq(tm_net(tm), net) :
+> -				!refcount_read(&tm_net(tm)->count);
+> +				!refcount_read(&tm_net(tm)->ns.count);
+>  			if (match) {
+>  				*pp = tm->tcpm_next;
+>  				kfree_rcu(tm, rcu_head);
