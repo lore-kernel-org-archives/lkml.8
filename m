@@ -2,190 +2,90 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 130CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B054C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04C9D207FC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87B86206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:37:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="UWxg39Sz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dfIJBc7J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729682AbgHDEdt (ORCPT
+        id S1729718AbgHDEhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 00:33:49 -0400
-Received: from mga06.intel.com ([134.134.136.31]:45833 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726000AbgHDEdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 00:33:49 -0400
-IronPort-SDR: HHbs5ey35h8zau/qgWfGNI9GekD2mcGPYOVl+JNNd7MzC39PezgxURjqAv0BlD2GMcj4vzG2/p
- a9lmfV+9avNQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="213788131"
-X-IronPort-AV: E=Sophos;i="5.75,432,1589266800"; 
-   d="scan'208";a="213788131"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2020 21:33:48 -0700
-IronPort-SDR: zb1MMxTIKP77s7vRzdTUEIE05QpGbu2kmF6SVzI0XPEniaeVlri38foCUD9V5cojzqsZ8BjcHN
- zwkOg2ctkkZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,432,1589266800"; 
-   d="scan'208";a="292415901"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orsmga006.jf.intel.com with ESMTP; 03 Aug 2020 21:33:47 -0700
-Received: from fmsmsx604.amr.corp.intel.com (10.18.126.84) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 3 Aug 2020 21:33:39 -0700
-Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
- fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 3 Aug 2020 21:33:39 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.103)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Mon, 3 Aug 2020 21:33:38 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Scm7KgVoeJpSz2C3oHMR5/mrdYQjZ7Zslzwz6IOifg9xaCsYk3hJmE86Esq+goA/MK70Wqp+8NWSEtbmNYO16x+Mzjsizph1vEJ45slMdMTi+SuiudXY93dcJIYLYCBgitTjhdVKZA5F+5o725t4sSZZ4tcs2aRckF45X+3APasMuv4IX6CNeI7dY77mN4BAwixXvCVDREZ32JRAKtbzGVUjuZpOVzSx6Y5TWu6zpOwkhBsR0aU7YxR+VMhhtSerHM31mus86IGietI5QkCp/+TKm57wubbGa/Eisp334vwKBWTvvUbefC7AL3x0OQRZn/oAs1VpdV0Kl0pnYgRUZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5FS39ASQuzjMIN603E/mdqgPHG8opqi6wVYJEuy1F0g=;
- b=LqD/RdjICBg7z+A2nd/j0fSnPbID2gtkFf4eEYhGwLbBTZpCm6Az6yM2BV6k2XnAAmmnWcMQm6pAniLz6oeLNVY4IiacbDdrAD4oGV8fYgho0Dp+02SFwQueOur5oAy4pwFTub43WsC720Nmr7l6rvd6NgebzbyBQskh1CfrHH4ZSARLuT1kEYeUfBxkbghFM+vWAHrkaMVY9GfwmlHmjZdiTkUIPNtO36IF3ggqGlu9kp+9dsLAghL+BDPjqwOGOSe1Ly8480zdlqIvM3pmvxZestglETa9+RCvpojG3v7HvyVHbrTa9AQSwReQzoVoOd68WwKQlvDjutJwsL7YqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5FS39ASQuzjMIN603E/mdqgPHG8opqi6wVYJEuy1F0g=;
- b=UWxg39SzoiGT7GTdNnniEXKbmqbvwisSEphNuBDE55CxJzu1yzHXWOQXBcDciS+0mZ8aqt0o9fRPB+JJN48iWQioEPPqE0o6xu6UV+UIMOyWIG3UZophH4cox/6hsB3gqQICdfJ/0t5ngxD4y+bwum9hizp93okE5b1mDHY1IrM=
-Received: from DM6PR11MB3642.namprd11.prod.outlook.com (2603:10b6:5:138::26)
- by DM6PR11MB3561.namprd11.prod.outlook.com (2603:10b6:5:136::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Tue, 4 Aug
- 2020 04:33:31 +0000
-Received: from DM6PR11MB3642.namprd11.prod.outlook.com
- ([fe80::f043:4bdc:ef57:1b41]) by DM6PR11MB3642.namprd11.prod.outlook.com
- ([fe80::f043:4bdc:ef57:1b41%5]) with mapi id 15.20.3239.021; Tue, 4 Aug 2020
- 04:33:31 +0000
-From:   "Lu, Brent" <brent.lu@intel.com>
-To:     Takashi Iwai <tiwai@suse.de>
-CC:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        "Guennadi Liakhovetski" <guennadi.liakhovetski@linux.intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "Kuninori Morimoto" <kuninori.morimoto.gx@renesas.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        "Sam McNally" <sammc@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Ranjani Sridharan" <ranjani.sridharan@linux.intel.com>,
-        Daniel Stuart <daniel.stuart14@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Damian van Soelen <dj.vsoelen@gmail.com>,
-        "yuhsuan@google.com" <yuhsuan@google.com>
-Subject: RE: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago
- board
-Thread-Topic: [PATCH v3 2/2] ASoC: Intel: Add period size constraint on strago
- board
-Thread-Index: AQHWZzZzIgMFwAI7HkKT1/DPVspAl6khsDgAgAFDasCAAAm3gIADX8DAgAAlz4CAABcIUIAABbiAgACx9iA=
-Date:   Tue, 4 Aug 2020 04:33:31 +0000
-Message-ID: <DM6PR11MB36423A9D28134811AD5A911F974A0@DM6PR11MB3642.namprd11.prod.outlook.com>
-References: <1596020585-11517-1-git-send-email-brent.lu@intel.com>
-        <1596198365-10105-1-git-send-email-brent.lu@intel.com>
-        <1596198365-10105-3-git-send-email-brent.lu@intel.com>
-        <s5h5za3ajvb.wl-tiwai@suse.de>
-        <DM6PR11MB3642AE90DF98956CCEDE6C2F974F0@DM6PR11MB3642.namprd11.prod.outlook.com>
-        <s5hd04a90o4.wl-tiwai@suse.de>
-        <DM6PR11MB3642B5BC2E1E0708088526D8974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
-        <63bca214-3434-16c6-1b60-adf323aec554@linux.intel.com>
-        <DM6PR11MB3642D9BE1E5DAAB8B78B84B0974D0@DM6PR11MB3642.namprd11.prod.outlook.com>
- <s5hpn873by6.wl-tiwai@suse.de>
-In-Reply-To: <s5hpn873by6.wl-tiwai@suse.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.5.1.3
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: suse.de; dkim=none (message not signed)
- header.d=none;suse.de; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [220.136.119.29]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b18be5fb-4a2d-4dda-db95-08d8382f8acf
-x-ms-traffictypediagnostic: DM6PR11MB3561:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB3561616D50FB5BFAF2304693974A0@DM6PR11MB3561.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 49aylfAjcULRWKqRUFOIlbqyRe2QpAfqPxpjnXVVrTwhR6LSfBqn9bTAQALS9FLpdYCayDryPsQKE0TccRUp7yvwpGYITzZtHL+myNQMPlQN4ruleinX0xeAuPZt266OJrrrjUNY5zMLmtPlXx9vUqmZkwE1pW9XJB+LObr+TBVBUNa4LNp7VUjiCSjPuLrFZ9xdNVx0nWuXx2BVGK0K3wYM92pfevrhoxv2EnlW61CsBTDe+bLfvae+2zNxYTgrbbs9CND4Hbn4LGhZWeOgUn0BrBLCvX2UH4iG8KPE0PUwYYYd1ancObCEwmdCm2OkcAtIjwYWcf8oukPEx/VTzw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3642.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(366004)(396003)(136003)(39860400002)(186003)(26005)(6506007)(52536014)(66476007)(64756008)(66556008)(76116006)(66946007)(71200400001)(66446008)(5660300002)(83380400001)(54906003)(316002)(33656002)(86362001)(4326008)(2906002)(8936002)(55016002)(8676002)(6916009)(9686003)(7696005)(7416002)(478600001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: hNn9BKQ/WRAV6Qofbrc2FkxBYXYW1yoMvPmhoCS0pq8cGRRAoxhxg7cKDqdoHht0h2EszIg923YktrmSnh66S/BXLaKetRAg7b2jU9qkP00C3z8wwj5Pd/QB3/oAkk/X39gOeyaHpwwEFK0UDSQsIW31mGbeHZjvPXVsFNa0j8rnJPCkJoHvkrYmshUdfjj5QMqf6teo8LXJVPoz6oXVW2qk33qt2+/qCLU5GIFGP4RIMab6/nEn0powidHvsQNDfqJNvlkuuuyO8FB4IWPeRF+pF0pJ8w5r9jwSIWaoO038l4WriP4g5kCPvsKCMWFF2VI6l6/QmzOMlXpRnuIvOGK4Lz0ctxmkoR3ykMMHnwfc3QDaHFm//WpwSRPVxD08+9oGT3icEuix8111UPHHRpvvvS64AEM1K1qz1AusbQ2n806W+y6b+cv58K9kPpbCxcPvu2QihxoncOALkmP5I/JCMI6XR6tRclSq5r+2v3DeBrhuEWvdWJfi8fxyxBwMmc9ogxL1mWFGRsQQ03wuqDWDs07BP/SKRSQjtywgeVd34d/Xc4v19P7wOHxbEDqNJMOIRdJspeqLkL5cxicsTHBHUFaH7VlPrDw/g0ad5kt9iRkH3VZnCGvv2HsqmlBT3fqJwIGoIT9lDiZaESRdVA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 4 Aug 2020 00:37:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729149AbgHDEhp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 00:37:45 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CA44C061756
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 21:37:45 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id f5so4144901pgg.10
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 21:37:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zqowAZufb7b0uKdkmkGlWSQC5Gld+DbUt3HuxK1ZIc4=;
+        b=dfIJBc7J6lHjp36VIYX7blXf9z2V2tSLQMdoVnjvBngdeoL6iZ7Jhg+oA5/CheCqbs
+         ZRCMZNeC6Dz1t66JAkwLD/Kzsw5QT72CRiDMITe7+Yx6es41aLi5xcl3IIs4Eu834zPR
+         hL0o+ziAZRDSw9a6yedGgaNrLyAMbPAkFJnqs/R+DQn02JVl2ag0YGEl8KFxw2o0mS45
+         19SeVyhm4H9JrJgBFrJ2zOKfRCdGI4IWNMEtdJjA6zSq60WYQUYIXslJi//TXVlkuB21
+         7M/J4AElDdZx9THIamQhp0jk0rwCLHYgaHFol5zODsPuOK2lF4gVbIDWqZWbBuC08YKC
+         OQUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zqowAZufb7b0uKdkmkGlWSQC5Gld+DbUt3HuxK1ZIc4=;
+        b=CEMz4T2TGzKWx9IIwEqxQFIy/smJ9MbxBRk6W2mowp9V5cg7g7C0LskgyNYJwZ0xPv
+         M8zURCTM1xtJU2uHy3fpnfv+2rfUm36Vmk/Sy+U5eS0zxaCVuRt2AJyt7qoORx6QX9qy
+         88JLRJdrJpjsF5RDJpQNTJZyWXdRwYdbMLLGVX9yJxhiPEfa6x54skBfQVx5js4Dgxxz
+         Kn486Ltv/TtaEBSdgC9AkVmXesaSxD+XliqRehFkaXlipjPOvM1adDBtIAyUGibLtJ2H
+         VsxUT/+5GVxkW9UhPcQCke5DL1Rr4j2/vomNTArd9VuXIHm8dW9AE+h8gF7r4rkkLo/y
+         0LQQ==
+X-Gm-Message-State: AOAM532Veljv86SjNUxf2hgNJWp+fFAdhIQ6csyXQzBQkrxDPX6zarcE
+        AtyhLQMPwFqatUjYZ4vQAnMsSQ==
+X-Google-Smtp-Source: ABdhPJyT1eg8U8v7kNE2LdnRYGrpRoiGECTB6MXZ62JuB7qooc12g5BQxjsZsuVcty2ibapVfbv5MQ==
+X-Received: by 2002:a62:9256:: with SMTP id o83mr17696174pfd.44.1596515864280;
+        Mon, 03 Aug 2020 21:37:44 -0700 (PDT)
+Received: from localhost ([122.162.244.227])
+        by smtp.gmail.com with ESMTPSA id j130sm139319pgc.76.2020.08.03.21.37.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Aug 2020 21:37:43 -0700 (PDT)
+Date:   Tue, 4 Aug 2020 10:07:40 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Xin Hao <xhao@linux.alibaba.com>
+Cc:     rjw@rjwysocki.net, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] cpufreq: CPPC: simply the code access 'highest_perf'
+ value in cppc_perf_caps struct
+Message-ID: <20200804043740.cde3ij2uk4xczemh@vireshk-mac-ubuntu>
+References: <20200701042007.13333-1-xhao@linux.alibaba.com>
+ <8643d122-c069-192e-8f3a-dc18f84eed9a@linux.alibaba.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3642.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b18be5fb-4a2d-4dda-db95-08d8382f8acf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Aug 2020 04:33:31.4652
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YBH4EFAZuP30c2WlNZwnksGOUZw+20rEDvxzQehiE2geQtA3RoMUuVltTWOqWxSosgmFlhCCoGKRpLpIMjA/zw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3561
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8643d122-c069-192e-8f3a-dc18f84eed9a@linux.alibaba.com>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->=20
-> For avoid further misunderstanding: it's fine that CRAS *uses* such a sho=
-rt
-> period.  It's often required for achieving a short latency.
->=20
-> However, the question is whether the driver can set *only* this value for
-> making it working.  IOW, if we don't have this constraint, what actually
-> happens?  If the driver gives the period size alignment, wouldn't CRAS
-> choose 240?
+On 04-08-20, 10:37, Xin Hao wrote:
+> Hi everyone:
+> 
+> I want to know why my patch didn't merge into upstream ?
 
-It won't. Without the constraint it becomes 432. Actually CRAS does not set
-period size specifically so the value depends on the constraint rules.
+I have sent a pull request earlier today to Rafael and this will get
+merged in the next pull request Rafael will send to Linus.
 
-[   52.011146] sound pcmC1D0p: hw_param
-[   52.011152] sound pcmC1D0p:   ACCESS 0x1
-[   52.011155] sound pcmC1D0p:   FORMAT 0x4
-[   52.011158] sound pcmC1D0p:   SUBFORMAT 0x1
-[   52.011161] sound pcmC1D0p:   SAMPLE_BITS [16:16]
-[   52.011164] sound pcmC1D0p:   FRAME_BITS [32:32]
-[   52.011167] sound pcmC1D0p:   CHANNELS [2:2]
-[   52.011170] sound pcmC1D0p:   RATE [48000:48000]
-[   52.011173] sound pcmC1D0p:   PERIOD_TIME [9000:9000]
-[   52.011176] sound pcmC1D0p:   PERIOD_SIZE [432:432]
-[   52.011179] sound pcmC1D0p:   PERIOD_BYTES [1728:1728]
-[   52.011182] sound pcmC1D0p:   PERIODS [474:474]
-[   52.011185] sound pcmC1D0p:   BUFFER_TIME [4266000:4266000]
-[   52.011188] sound pcmC1D0p:   BUFFER_SIZE [204768:204768]
-[   52.011191] sound pcmC1D0p:   BUFFER_BYTES [819072:819072]
-[   52.011194] sound pcmC1D0p:   TICK_TIME [0:0]
-
-Regards,
-Brent
-
->=20
->=20
-> Takashi
-
-
+-- 
+viresh
