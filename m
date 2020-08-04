@@ -2,100 +2,161 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 851DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D868C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A3D52064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57A2E208A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:44:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596559350;
-	bh=d3uaiTv0Ga0UKUyb/DBtTQ3erGKWoEO0Ny8JGoOpI2I=;
+	s=default; t=1596559442;
+	bh=pTyprHUqbLWe2hAnAvazg8DR/XhJsdiBmZaR0P315wk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1zoiHvqPT1jxIhmzlKQOP5h1aApR3ziyOiyEtaEwCpmAeknfj8ax1Y7svkq67NqzD
-	 ArzRRjUAwljSydyRg6SCk17l8E/K5QrigkGLpBcD8sJvdBXhV0XTS609Z0Y1FVyVBB
-	 AEuoU1WbAf9OsnhD7VDWl75dmkukJcSZIbZOROSk=
+	b=NxcvYYLCkqAE132uu/fRn9T4bAJFcL4R43YubApLuZd+EQX+ryeYmMeJWvLtO/qAS
+	 OyE5ormJltx5azyXyC+rMuAPZX1KEXUBdquqwPv2gMiAEBoR3gNqgGzw4k4AhqApws
+	 1aKpsm//VYBgUd1KFvEMSjfCqlvAL9W3Vg+KWRjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729883AbgHDQm3 (ORCPT
+        id S1727059AbgHDQoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 12:42:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42096 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728678AbgHDQm1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 12:42:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42A222064B;
-        Tue,  4 Aug 2020 16:42:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596559346;
-        bh=d3uaiTv0Ga0UKUyb/DBtTQ3erGKWoEO0Ny8JGoOpI2I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HDegcDZ7nagJV+SMTFAJ1bgoiG6iWF2OiUhEiTH6b0vq2i0EZAgTPYy/yESW9liEo
-         7PWsHc9KwOblEb5l0LrWJJiXI7mrhy1vqS6cc5vriB8+Z7c9AoOBhpQZLa7VlbQi7i
-         kdpJzcbn0UioADmv/A+8sMdXMwkwy/YHILLc51g0=
-Date:   Tue, 4 Aug 2020 18:42:46 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Daniel Gutson <daniel@eclypsium.com>
-Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Richard Hughes <hughsient@gmail.com>,
-        Alex Bazhaniuk <alex@eclypsium.com>
-Subject: Re: [PATCH] Platform lockdown information in SYSFS
-Message-ID: <20200804164246.GA502540@kroah.com>
-References: <20200730214136.5534-1-daniel.gutson@eclypsium.com>
- <20200731070053.GC1518178@kroah.com>
- <CAFmMkTGdzjjrvitY8fT+RcXFqHG1JGMB-3w1hi1c8CD0FH34Tw@mail.gmail.com>
- <20200731141503.GA1717752@kroah.com>
- <CAFmMkTG7tkFzwwo_WNe2EFFRVijvGm+NLaeN3qX6CVzTViWBag@mail.gmail.com>
- <20200804064154.GE696690@kroah.com>
- <CAFmMkTE1PHPrZwnH7DKFW145dn01LhydTbL7HPTO+_zKA+P61Q@mail.gmail.com>
- <20200804142250.GA247448@kroah.com>
- <CAFmMkTFEWrMsigabvE2HtmpFXMe0qb8QZJHzMzQ=wZXE1G3fbQ@mail.gmail.com>
+        Tue, 4 Aug 2020 12:44:01 -0400
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:40183 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbgHDQoA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 12:44:00 -0400
+Received: by mail-pj1-f65.google.com with SMTP id d4so2470009pjx.5;
+        Tue, 04 Aug 2020 09:43:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yuWZSG0s7bzdgOA+0VPUa0Lp1EJmf3kTDXCdwURyIzM=;
+        b=lT68BkXSIOmXOr67Tm0FV4KnPqK64pqfPFVCSRp7qO/wC8l3Ug/goXok+7RCCK31MZ
+         l4S1tUzKY5iWdIJuPoY0QLvDt2Qp9Q3Gfv5v3BCZmClFRY07spOABF9KnGe1Oeok5QIj
+         q3/U8uKZ97SsM0o5Nj5vdD5FAbyJVDsYM8+XaVE8mbf5aUhTqgAtMi87TLo3eYKUQnGV
+         zitN57NvtBBflO3wwBX18zFVLJ5wovTDe88zkKt0jGL+Yxg1U+pN/fVpmesxtvP6ENwi
+         u84qOf2IEF8M07Esu4yXERslKGxm69VxEoa3wMF6Y7DceKpFI86nGRcmEvOLVr4FXkWB
+         m1CQ==
+X-Gm-Message-State: AOAM533YEEOsV3egvO3PHpFVg+0e4ZXU5SvmGoZfSJnLUgE2s+b0guxg
+        psNNOFbmjFEbi1jhvrcIgEk=
+X-Google-Smtp-Source: ABdhPJwQAdJMl4TUvT7CbHM8MU9xR/EullcnuFrqc2v93iFTMiBqfiMICZh3PHM4XFs4o0SBNpcVTw==
+X-Received: by 2002:a17:90b:2388:: with SMTP id mr8mr5740417pjb.64.1596559439463;
+        Tue, 04 Aug 2020 09:43:59 -0700 (PDT)
+Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
+        by smtp.gmail.com with ESMTPSA id d14sm15649659pfn.161.2020.08.04.09.43.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Aug 2020 09:43:58 -0700 (PDT)
+Date:   Tue, 4 Aug 2020 09:43:58 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     richard.gong@linux.intel.com
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, trix@redhat.com, dinguyen@kernel.org,
+        Richard Gong <richard.gong@intel.com>
+Subject: Re: [RESEND PATCHv1] fpga: stratix10-soc: make FPGA task
+ un-interruptible
+Message-ID: <20200804164358.GB1499313@epycbox.lan>
+References: <1595607009-2065-1-git-send-email-richard.gong@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFmMkTFEWrMsigabvE2HtmpFXMe0qb8QZJHzMzQ=wZXE1G3fbQ@mail.gmail.com>
+In-Reply-To: <1595607009-2065-1-git-send-email-richard.gong@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 11:37:02AM -0300, Daniel Gutson wrote:
-> static void mypci_remove(struct pci_dev *pdev)
-> {
->         /*
->     I tried enabling and disabling this
->         if (child_device != NULL) {
->                 put_device(child_device);
->                 device_unregister(child_device);
->         }
->         */
+On Fri, Jul 24, 2020 at 11:10:09AM -0500, richard.gong@linux.intel.com wrote:
+> From: Richard Gong <richard.gong@intel.com>
+> 
+> When CTRL+C occurs during the process of FPGA reconfiguration, the FPGA
+> reconfiguration process stops and the user can't perform a new FPGA
+> reconfiguration properly.
+> 
+> Set FPGA task to be not interruptible so that the user can properly
+> perform FPGA reconfiguration after CTRL+C event.
+> 
+> Signed-off-by: Richard Gong <richard.gong@intel.com>
+> Reviewed-by: Tom Rix <trix@redhat.com>
+> ---
+>  drivers/fpga/stratix10-soc.c | 23 +++--------------------
+>  1 file changed, 3 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/fpga/stratix10-soc.c b/drivers/fpga/stratix10-soc.c
+> index 44b7c56..657a70c 100644
+> --- a/drivers/fpga/stratix10-soc.c
+> +++ b/drivers/fpga/stratix10-soc.c
+> @@ -196,17 +196,13 @@ static int s10_ops_write_init(struct fpga_manager *mgr,
+>  	if (ret < 0)
+>  		goto init_done;
+>  
+> -	ret = wait_for_completion_interruptible_timeout(
+> +	ret = wait_for_completion_timeout(
+>  		&priv->status_return_completion, S10_RECONFIG_TIMEOUT);
+>  	if (!ret) {
+>  		dev_err(dev, "timeout waiting for RECONFIG_REQUEST\n");
+>  		ret = -ETIMEDOUT;
+>  		goto init_done;
+>  	}
+> -	if (ret < 0) {
+> -		dev_err(dev, "error (%d) waiting for RECONFIG_REQUEST\n", ret);
+> -		goto init_done;
+> -	}
+>  
+>  	ret = 0;
+>  	if (!test_and_clear_bit(SVC_STATUS_OK, &priv->status)) {
+> @@ -318,7 +314,7 @@ static int s10_ops_write(struct fpga_manager *mgr, const char *buf,
+>  		 */
+>  		wait_status = 1; /* not timed out */
+>  		if (!priv->status)
+> -			wait_status = wait_for_completion_interruptible_timeout(
+> +			wait_status = wait_for_completion_timeout(
+>  				&priv->status_return_completion,
+>  				S10_BUFFER_TIMEOUT);
+>  
+> @@ -340,13 +336,6 @@ static int s10_ops_write(struct fpga_manager *mgr, const char *buf,
+>  			ret = -ETIMEDOUT;
+>  			break;
+>  		}
+> -		if (wait_status < 0) {
+> -			ret = wait_status;
+> -			dev_err(dev,
+> -				"error (%d) waiting for svc layer buffers\n",
+> -				ret);
+> -			break;
+> -		}
+>  	}
+>  
+>  	if (!s10_free_buffers(mgr))
+> @@ -372,7 +361,7 @@ static int s10_ops_write_complete(struct fpga_manager *mgr,
+>  		if (ret < 0)
+>  			break;
+>  
+> -		ret = wait_for_completion_interruptible_timeout(
+> +		ret = wait_for_completion_timeout(
+>  			&priv->status_return_completion, timeout);
+>  		if (!ret) {
+>  			dev_err(dev,
+> @@ -380,12 +369,6 @@ static int s10_ops_write_complete(struct fpga_manager *mgr,
+>  			ret = -ETIMEDOUT;
+>  			break;
+>  		}
+> -		if (ret < 0) {
+> -			dev_err(dev,
+> -				"error (%d) waiting for RECONFIG_COMPLETED\n",
+> -				ret);
+> -			break;
+> -		}
+>  		/* Not error or timeout, so ret is # of jiffies until timeout */
+>  		timeout = ret;
+>  		ret = 0;
+> -- 
+> 2.7.4
+> 
 
-You can just call device_destroy() here, but this should be the same.
+Sorry that one slipped through the cracks, will apply to for-next.
 
-But, if you have it commented out, that's not good, you have to clean
-this up.
-
->         class_remove_file(&my_class, &class_attr_howareyou);
-
-You don't always have to remove files you create, but it doesn't hurt.
-
->         class_unregister(&my_class);
-
-class_destroy()?  But this is the same as well, so all is good.
-
-Try running without the above code commented out.
-
-greg k-h
+Thanks!
