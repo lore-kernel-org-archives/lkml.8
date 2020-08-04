@@ -3,149 +3,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D80C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74242C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7970020842
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AADF21744
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:59:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=eclypsium.com header.i=@eclypsium.com header.b="eK5LMIJb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AIjpsI36"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbgHDT51 (ORCPT
+        id S1726824AbgHDT7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 15:57:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51364 "EHLO
+        Tue, 4 Aug 2020 15:59:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726824AbgHDT5Y (ORCPT
+        with ESMTP id S1726011AbgHDT7r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 15:57:24 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6989C06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 12:57:24 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id l23so39638832qkk.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 12:57:24 -0700 (PDT)
+        Tue, 4 Aug 2020 15:59:47 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C922C06174A;
+        Tue,  4 Aug 2020 12:59:47 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id r4so13246408pls.2;
+        Tue, 04 Aug 2020 12:59:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eclypsium.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rW2BRGX/Sbv+gGj9FdTRztmdZP7QOIjZDIipDKfRWKE=;
-        b=eK5LMIJbJ9NjqaqvVkl+OzCuK4cud6Gd/EYg8VIYsoMyx68onSz/IpWrz0Nw5pEXOP
-         cYKwsQO/BGtvqnJlEkwaA5svMn0FErGbplWqNn4nWci/+YGxmqB4bYlIf+ZGlgfRYj7s
-         ffrJY5I7NrW+L+4SvFbpeRfb+OqKMFOJw9A5n96XTUqA9dlZTM2Kp9HKdLM2sJO0VdhG
-         eILxKvpX3sAKVbj+ufiaprnyfw0xTZ1DyJekpJML4KGnc0mpysYv3wwGfmxseBBSt4VM
-         32XLogPbppKD9QrHkbHSXTUcvz9nKCuhwXiFgwtxFahwiGMCyHZlkJ90GJ6T4A7TpiYw
-         9nGA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=n8qr9Xpstwwca8AXJiSUgtIod/3O027NBlrU0CWCi3I=;
+        b=AIjpsI36psS/bZbywZzRkMmni/1aWo9RsguNrcZix6QjC3ELmBTizcdLnrYman3zS5
+         rjayxz/JRvRyButW7/lH/kyS467vFoi0pfi0AItQ03cn6L7uXFxTXQFLY93Jq6O64w6B
+         dOpE9HQDSF+mnWHGZwDnH0BbfuIHoD1BAGLOjClSQL0JpbXsLzrJJxiF9GfVw7FYI6x2
+         DJykQw0mgk0hUkezmqqhDuqxAF+WO9bSCwlMRXpeF2DgxC00OBk3kC0n/7W5BF1HSzcA
+         Etm7BG8avj4rHA5L12QOV5s3MCmUlUPauKo/PnaaFTr7Qb+SB+XiBnMtO5Ryius7m8Eq
+         qWDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rW2BRGX/Sbv+gGj9FdTRztmdZP7QOIjZDIipDKfRWKE=;
-        b=iE6I/Y4shtqCcM4Rnp7unKt3Gta805lFaBLg+Au6JM+8yTkvO3VznkBESkPLvaOX1j
-         A9vRJW3mF6JwTJkvoaUt5XCzcYI9QNejnRDVfEnRo2ERhvMItE/3MDKFHhlGfYi4nZSK
-         ui9I42tlOnJI2ItS7FbkHeVb1m5AkKbOzCOiJF6pq+ifaJsAVyXxHVTvb6G2euJ8V8w2
-         2n0/2jhl/7Onu/z5I1uwpdNagKIzlRtwYY6SzZsXcJ8a/NarLjUPqozvbyyUs8WVcdoc
-         Sx0Xq/pf99pL6/AOG+c44BqNt/iKtMqBR18MdRSjjB8UUKyEey3btYZNBKjCYncb0ucV
-         z3JA==
-X-Gm-Message-State: AOAM532pkFj2dIuwxJu9lkdMNZXQXUL/+vecHFdIhiZ1/HfPo8S4tMyN
-        fY86rHwwN1sF4audgpONoNvTu4X1Poh54Enhvh/iSw==
-X-Google-Smtp-Source: ABdhPJwfUyTmi7+YxwDcFb9y4O5WFQe1gX8+zuoljzZScW7TDgKuw4P0Shm+c9asxfdUTewciSF0Df1bxydY8BKpBUk=
-X-Received: by 2002:a37:9f0a:: with SMTP id i10mr23651469qke.368.1596571042691;
- Tue, 04 Aug 2020 12:57:22 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=n8qr9Xpstwwca8AXJiSUgtIod/3O027NBlrU0CWCi3I=;
+        b=PtNjQeUZtWbkjI7tjcGNjUohyGUzrGckP/5NRltvujLeWPrq2Fe3f/EsDU7w+zhdaX
+         1GW387i8DoDMy3SWHwjeSXauMzulnyRDroTa7UKpSAw3gxARnKZRJXbwjA2PHJC6+5yD
+         aOXRvaLE1jDJBOMIQJD8F2QowtoG4tEejyTQdjUQzlT7DdXilzCCon6VR0ZXc31CfX3a
+         JlIoH7/l3gT77szvpnZ4jYvEzpiCDMR2vjzPFLBty81+qLFpZoxjkfWJtxVyftYqR+OJ
+         yB2HQNLSTtJpP2g9e4Ot87vqu0Mfw8ajhdA60v2/2ZmK/zorCm7d9hHp5vmD94dVIolt
+         RNlg==
+X-Gm-Message-State: AOAM532RPKir8Q5XnmFVJMNNRu/yahBKFFXE6gN9iVdWiJeSALoBVON+
+        YaQlEYaDcad4CisLr942DwRTmjzkyt0=
+X-Google-Smtp-Source: ABdhPJyFIZzJB6lcTN7Al6/93KEVK9f7bNiV3lcwLil5u3nnX1p7ox6z/hf6Wwyn/I/ykCmFKUIbPg==
+X-Received: by 2002:a17:902:b089:: with SMTP id p9mr20011218plr.52.1596571186607;
+        Tue, 04 Aug 2020 12:59:46 -0700 (PDT)
+Received: from thinkpad (104.36.148.139.aurocloud.com. [104.36.148.139])
+        by smtp.gmail.com with ESMTPSA id v128sm23069064pfc.14.2020.08.04.12.59.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Aug 2020 12:59:46 -0700 (PDT)
+Date:   Tue, 4 Aug 2020 13:00:13 -0700
+From:   Rustam Kovhaev <rkovhaev@gmail.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     dledford@redhat.com, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: use-after-free Read in netdevice_event_work_handler
+Message-ID: <20200804200013.GB263814@thinkpad>
+References: <0000000000005b9fca05aa0af1b9@google.com>
+ <20200731211122.GA1728751@thinkpad>
+ <20200802222226.GO24045@ziepe.ca>
 MIME-Version: 1.0
-References: <20200804135817.5495-1-daniel.gutson@eclypsium.com>
- <CAK8P3a0_fJ0BfD5Qvxdo0s7CbjPWaGA8QTgYhbXR=omafOHH4Q@mail.gmail.com>
- <CAFmMkTHEm8k+5GZkVJbDZMEhMwpsqVKRb-hGskSpBstdLRuFyA@mail.gmail.com> <CAK8P3a27bTYyn3N+tX=i_6f4KrQkOmkUA1zUQfvCW7qw6smSkQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a27bTYyn3N+tX=i_6f4KrQkOmkUA1zUQfvCW7qw6smSkQ@mail.gmail.com>
-From:   Daniel Gutson <daniel@eclypsium.com>
-Date:   Tue, 4 Aug 2020 16:57:11 -0300
-Message-ID: <CAFmMkTF9eVm0tpOKEy2rzdX=Scr3RwqHDFy_i24R3F5ok-4=eA@mail.gmail.com>
-Subject: Re: [PATCH] mtd: spi-nor: intel-spi: Do not try to make the SPI flash
- chip writable
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alex Bazhaniuk <alex@eclypsium.com>,
-        Richard Hughes <hughsient@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200802222226.GO24045@ziepe.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 4:06 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Tue, Aug 4, 2020 at 5:49 PM Daniel Gutson <daniel@eclypsium.com> wrote:
-> > On Tue, Aug 4, 2020 at 12:21 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> >>
-> >> On Tue, Aug 4, 2020 at 3:58 PM Daniel Gutson
-> >> <daniel.gutson@eclypsium.com> wrote:
-> >> >
-> >> > Context, the intel-spi has a module argument that controls
-> >> > whether the driver attempts to turn the SPI flash chip writeable.
-> >> > The default value is FALSE (don't try to make it writeable).
-> >> > However, this flag applies only for a number of devices, coming from the
-> >> > platform driver, whereas the devices detected through the PCI driver
-> >> > (intel-spi-pci) are not subject to this check since the configuration
-> >> > takes place in intel-spi-pci which doesn't have an argument.
-> >>
-> >> This is still factually incorrect, as explained at least three times
-> >> now.
-> >>
-> >> Please either make the same change for both the Bay Trail
-> >> platform driver and the PCI driver, or explain why you want them to
-> >> be different rather than incorrectly claiming that you change them to
-> >> be the same.
-> >
-> >
-> > What about just saying
-> >
-> > "This patch removes the attempt by the intel-spi-pci driver to
-> > make the chip always writable."
->
-> Yes, that is much better, though it still sounds like it would at the
-> moment allow writing to the device from software without also
-> setting the module parameter. I would say something like
->
-> "Disallow overriding the write protection in the PCI driver
-> with a module parameter and instead honor the current
-> state of the write protection as set by the firmware."
+On Sun, Aug 02, 2020 at 07:22:26PM -0300, Jason Gunthorpe wrote:
+> On Fri, Jul 31, 2020 at 02:11:22PM -0700, Rustam Kovhaev wrote:
+> 
+> > IB roce driver receives NETDEV_UNREGISTER event, calls dev_hold() and
+> > schedules work item to execute, and before wq gets a chance to complete
+> > it, we return to ip_tunnel.c:274 and call free_netdev(), and then later
+> > we get UAF when scheduled function references already freed net_device
+> > 
+> > i added verbose logging to ip_tunnel.c to see pcpu_refcnt:
+> > +       pr_info("about to free_netdev(dev) dev->pcpu_refcnt %d", netdev_refcnt_read(dev));
+> > 
+> > and got the following:
+> > [  410.220127][ T2944] ip_tunnel: about to free_netdev(dev) dev->pcpu_refcnt 8
+> 
+> I think there is a missing call to netdev_wait_allrefs() in the
+> rollback_registered_many().
+calling it there leads to rtnl deadlock, i think we should call
+net_set_todo(), so that later when we call rtnl_unlock() it will
+execute netdev_run_todo() and there it will proceed to calling
+netdev_wait_allrefs(), but in ip tunnel i will need get
+free_netdev() to be called after we unlock rtnl mutex
+i'll try to send a new patch for review
 
-But wait, Mika, the author of the file, asked earlier not to remove
-the module parameter of intel-spi,
-and just remove the unconditional attempt to turn the chip writable in
-intle-spi-pci.
-So I'm not touching intel-pci, just removing that code from
-intel-spi-pci without adding
-a new module parameter.
+> The normal success flow has this wait after delivering
+> NETDEV_UNREGISTER, the error unwind for register_netdevice should as
+> well.
+> 
+> If the netdevice can progress to free while a dev_hold is active I
+> think it means dev_hold is functionally useless.
+good point
 
-Are you aligned on this?
-
-
->
-> (note also: imperative form in the patch description rather than
-> "this patch ...").
->
->       Arnd
-
-
-
--- 
-Daniel Gutson
-Argentina Site Director
-Enginieering Director
-Eclypsium
-
-Below The Surface: Get the latest threat research and insights on
-firmware and supply chain threats from the research team at Eclypsium.
-https://eclypsium.com/research/#threatreport
