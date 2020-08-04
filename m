@@ -4,90 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F637C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 00:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A486CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35BEF206DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 00:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACE4B2073E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:00:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbgHDA64 (ORCPT
+        id S1728886AbgHDBAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 20:58:56 -0400
-Received: from smtprelay0007.hostedemail.com ([216.40.44.7]:35118 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726276AbgHDA6z (ORCPT
+        Mon, 3 Aug 2020 21:00:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbgHDBAC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 20:58:55 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 8E29C181D330D;
-        Tue,  4 Aug 2020 00:58:54 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: rat04_10160b926fa2
-X-Filterd-Recvd-Size: 2290
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Tue,  4 Aug 2020 00:58:53 +0000 (UTC)
-Message-ID: <5f7a5ec560775f3c43fdbb6ac93f858d8b5e37f3.camel@perches.com>
-Subject: Re: [PATCH] via-velocity: Add missing KERN_<LEVEL> where needed
-From:   Joe Perches <joe@perches.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     romieu@fr.zoreil.com, kuba@kernel.org, netdev@vger.kernel.org,
+        Mon, 3 Aug 2020 21:00:02 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D35DDC06174A;
+        Mon,  3 Aug 2020 18:00:01 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 91BBD12787B36;
+        Mon,  3 Aug 2020 17:43:14 -0700 (PDT)
+Date:   Mon, 03 Aug 2020 17:59:59 -0700 (PDT)
+Message-Id: <20200803.175959.2039460326230906074.davem@davemloft.net>
+To:     Jisheng.Zhang@synaptics.com
+Cc:     peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, kuba@kernel.org, mcoquelin.stm32@gmail.com,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Date:   Mon, 03 Aug 2020 17:58:52 -0700
-In-Reply-To: <20200803.154248.2020214547846261577.davem@davemloft.net>
-References: <e45d15ad36a0c9a994b5a1136c72518215c99f7a.camel@perches.com>
-         <20200803.154248.2020214547846261577.davem@davemloft.net>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
-MIME-Version: 1.0
+Subject: Re: [PATCH net-next] net: stmmac: fix failed to suspend if phy
+ based WOL is enabled
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200803165647.296e6f21@xhacker.debian>
+References: <20200803165647.296e6f21@xhacker.debian>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 03 Aug 2020 17:43:14 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-08-03 at 15:42 -0700, David Miller wrote:
-> From: Joe Perches <joe@perches.com>
-> Date: Sat, 01 Aug 2020 08:51:03 -0700
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Date: Mon, 3 Aug 2020 16:56:47 +0800
+
+> With the latest net-next tree, if test suspend/resume after enabling
+> WOL, we get error as below:
 > 
-> > Link status is emitted on multiple lines as it does not use
-> > KERN_CONT.
-> > 
-> > Coalesce the multi-part logging into a single line output and
-> > add missing KERN_<LEVEL> to a couple logging calls.
-> > 
-> > This also reduces object size.
-> > 
-> > Signed-off-by: Joe Perches <joe@perches.com>
+> [  487.086365] dpm_run_callback(): mdio_bus_suspend+0x0/0x30 returns -16
+> [  487.086375] PM: Device stmmac-0:00 failed to suspend: error -16
 > 
-> The real problem is the whole VELOCITY_PRT() private debug log
-> control business this driver is doing.
+> -16 means -EBUSY, this is because I didn't enable wakeup of the correct
+> device when implementing phy based WOL feature. To be honest, I caught
+> the issue when implementing phy based WOL and then fix it locally, but
+> forgot to amend the phy based wol patch. Today, I found the issue by
+> testing net-next tree.
 > 
-> It should be using the standard netdev logging level infrastructure.
-> 
-> > +                     VELOCITY_PRT(MSG_LEVEL_INFO, KERN_INFO "set Velocity to forced full mode\n");
-> 
-> You can't tell me that this "KERN_INFO blah blah blah" is really
-> something we should add more of these days, right?
-> 
-> If you're going to improve this driver's logging code please do
-> so by having it use the standard interfaces.
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-The existing code is not great and definitely odd.
-
-This is just a bug fix until such time as it's better.
-
-VELOCITY_PRT is not just used for debugging.
-
-The default is output if MSG_LEVEL_INFO and
-there's a control for further output.
-
-This is just fixing Linus' change for KERN_CONT
-uses on separate lines from awhile ago.
-
-It'd be nice if a via maintainer actually fixed it.
-
-
+Applied.
