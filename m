@@ -2,111 +2,143 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCCCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 558AAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99CAA22B40
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BFA622C9F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:58:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=melexis.com header.i=@melexis.com header.b="gTJwN5BL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729524AbgHDH5S (ORCPT
+        id S1729752AbgHDH6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 03:57:18 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:37286 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727066AbgHDH5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 03:57:18 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D07BCF8FA70C7A9EB81C;
-        Tue,  4 Aug 2020 15:57:15 +0800 (CST)
-Received: from [10.164.122.247] (10.164.122.247) by smtp.huawei.com
- (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 4 Aug 2020
- 15:57:13 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix deadlock between quota writes and
- checkpoint
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <kernel-team@android.com>, Daeho Jeong <daehojeong@google.com>
-References: <20200729070244.584518-1-jaegeuk@kernel.org>
- <670f35e1-872b-6602-320c-dd73bcb62510@huawei.com>
- <20200804035439.GA903802@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <9a35fddd-2b67-c91e-2b1a-c63a285cd4ab@huawei.com>
-Date:   Tue, 4 Aug 2020 15:57:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 4 Aug 2020 03:58:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53642 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728629AbgHDH6P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 03:58:15 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2491DC061756
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 00:58:15 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id z6so41314817iow.6
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 00:58:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=melexis.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kMZf2t9EcjlJ4jvHRNWow+fwJFtPbegbegr9EI3Rn3I=;
+        b=gTJwN5BL9ze+SRbn2vAaVUOswNTugj2bAhZr/Y0GfGZkFZLVvt5l5nRZjN88rsS2Nz
+         05WVcCBG27/xPlsb/hjPo5Iau0aPcwp2sDMNp2E2M8K9L+WHLmY3UchhwKlXf49mHZMO
+         nCIA9IoAk0+dtyF+nAVFVRirPeX8s7dZ2ol5+ojbfn5odwrsgzioTkOszEd+6F747u/t
+         AH8FWX1WzRmhfnXTaKLYoIzNrgLxpeUM0FZiRhB6BTyQL7XqOWfDOUrWyNFTHzRNC4V7
+         b4n1AxP2TBKZmV9re43OZ495tglmvaler52wLc6TNvLhND+x881+JLv6iTGSRFBiCh5V
+         gNxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kMZf2t9EcjlJ4jvHRNWow+fwJFtPbegbegr9EI3Rn3I=;
+        b=THKmUdczbzRslr4AQf/Adg1Yk4vrQCk/KiwFQ9V9RXAZQhx47qvHWjoTw+nTV99ojR
+         3kiBY2CfRSF9gjn5mtOYZ2Vy6+s58CnQoIZFOh3360kyHBRz1h6hYsn0fdxdyK6zoO1f
+         q2DAow/U84Bm5NN2yNdM/GPydCgDWGck/mRr6V09Xwb+YNxwA5EDXiiV6Jpkcxw3EAQe
+         2wkMdx7Ta48O39VOBMS2n/uOMWYS9qrtlO8lKJ3OkhR1MCXHWg3HacfqB+MAjJv5ijJZ
+         uxviwQ+NTNy/qxppK+y7cO+reaPGirapf2Z9AVhwPAgkoffFrOTMd+GnvVZR9c+AlTlk
+         zy1w==
+X-Gm-Message-State: AOAM533W6T0Qqfqpws4Of2H5z7IIjqGUJGasF9eXQMaQjxaYnf4Sbjoq
+        KDSuKDnXoK5l0McaA9rbnGmc57xTxB7MUARR79W93Q==
+X-Google-Smtp-Source: ABdhPJy1L3R+qgiqlRzr8WKIrpgTbp+M9wSv7fjCzoXuZEvcxj/HVoDdZcPtPcQltAlCaNi4V/ltgb7GuNBIk1UBBGM=
+X-Received: by 2002:a6b:ba89:: with SMTP id k131mr3815610iof.133.1596527893889;
+ Tue, 04 Aug 2020 00:58:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200804035439.GA903802@google.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.164.122.247]
-X-CFilter-Loop: Reflected
+References: <20200803151656.332559-1-cmo@melexis.com> <CAHp75VfmSfmezqwwRfHZ797Y9rYDu3hgL5vGvPwbzGjCXsKWcQ@mail.gmail.com>
+In-Reply-To: <CAHp75VfmSfmezqwwRfHZ797Y9rYDu3hgL5vGvPwbzGjCXsKWcQ@mail.gmail.com>
+From:   Crt Mori <cmo@melexis.com>
+Date:   Tue, 4 Aug 2020 09:57:38 +0200
+Message-ID: <CAKv63uuFNOksmDUKEapvX60gg9QE+32Dak_2=M2cYeueFiHjPg@mail.gmail.com>
+Subject: Re: [PATCH] iio:temperature:mlx90632: Reduce number of equal calulcations
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/4 11:54, Jaegeuk Kim wrote:
-> On 08/04, Chao Yu wrote:
->> On 2020/7/29 15:02, Jaegeuk Kim wrote:
->>> f2fs_write_data_pages(quota_mapping)
->>>    __f2fs_write_data_pages             f2fs_write_checkpoint
->>>     * blk_start_plug(&plug);
->>>     * add bio in write_io[DATA]
->>>                                         - block_operations
->>>                                         - skip syncing quota by
->>>                                                   >DEFAULT_RETRY_QUOTA_FLUSH_COUNT
->>>                                         - down_write(&sbi->node_write);
->>
->> f2fs_flush_merged_writes() will be called after block_operations(), why this doesn't
->> help?
-> 
-> Well, I think bio can be added after f2fs_flush_merged_writes() as well.
+Hi Andy,
+Thanks for the comments. This is indeed a cut-out section of what I
+wanted to submit next.
 
-- down_read(node_write)
-- f2fs_do_write_data_page
-  - f2fs_trylock_op
-   - f2fs_outplace_write_data
-      - f2fs_submit_page_write
+On Mon, 3 Aug 2020 at 18:35, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>
+> On Mon, Aug 3, 2020 at 6:17 PM Crt Mori <cmo@melexis.com> wrote:
+> >
+> > TAdut4 was calculated each iteration although it did not change. In light
+> > of near future additions of the Extended range DSP calculations, this
+> > function refactoring will help reduce unrelated changes in that series as
+> > well as reduce the number of new functions needed.
+>
+> Okay!
+>
+> > Also converted shifts in this function of signed integers to divisions as
+> > that is less implementation-defined behavior.
+>
+> This is what I'm wondering about. Why?
+>
+> ...
 
-bio only be added under node_write lock? during f2fs_flush_merged_writes(), node_write
-should have been held by checkpoint() avoiding quota data writeback & bio submission.
+The reason for this is that whenever something is wrong with the
+calculation I am looking into the shifts which are
+implementation-defined and might not keep the signed bit. Division
+however would.
 
-> 
->>
->>>     - f2fs_write_single_data_page
->>>       - f2fs_do_write_data_page
->>>         - f2fs_outplace_write_data
->>>           - do_write_page
->>>              - f2fs_allocate_data_block
->>>               - down_write(node_write)
->>>                                         - f2fs_wait_on_all_pages(F2FS_WB_CP_DATA);
->>>
->>> Signed-off-by: Daeho Jeong <daehojeong@google.com>
->>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
->>> ---
->>>    fs/f2fs/checkpoint.c | 2 ++
->>>    1 file changed, 2 insertions(+)
->>>
->>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
->>> index 8c782d3f324f0..99c8061da55b9 100644
->>> --- a/fs/f2fs/checkpoint.c
->>> +++ b/fs/f2fs/checkpoint.c
->>> @@ -1269,6 +1269,8 @@ void f2fs_wait_on_all_pages(struct f2fs_sb_info *sbi, int type)
->>>    		if (type == F2FS_DIRTY_META)
->>>    			f2fs_sync_meta_pages(sbi, META, LONG_MAX,
->>>    							FS_CP_META_IO);
->>> +		else if (type == F2FS_WB_CP_DATA)
->>> +			f2fs_submit_merged_write(sbi, DATA);
->>>    		io_schedule_timeout(DEFAULT_IO_TIMEOUT);
->>>    	}
->>>    	finish_wait(&sbi->cp_wait, &wait);
->>>
-> .
-> 
+>
+> > -       Ha_customer = ((s64)Ha * 1000000LL) >> 14ULL;
+> > -       Hb_customer = ((s64)Hb * 100) >> 10ULL;
+> > +       Ha_customer = div64_s64((s64)Ha * 1000000LL, 16384);
+> > +       Hb_customer = div64_s64((s64)Hb * 100, 1024);
+>
+> Have you checked the code on 32-bit machines?
+> As far as I can see the div64_*64() do not have power of two divisor
+> optimizations. I bet it will generate a bulk of unneeded code.
+>
+> ...
+>
+> > -       calcedKsTO = ((s64)((s64)Ga * (prev_object_temp - 25 * 1000LL)
+> > -                            * 1000LL)) >> 36LL;
+> > -       calcedKsTA = ((s64)(Fb * (TAdut - 25 * 1000000LL))) >> 36LL;
+> > -       Alpha_corr = div64_s64((((s64)(Fa * 10000000000LL) >> 46LL)
+> > -                               * Ha_customer), 1000LL);
+>
+> > +       calcedKsTO = div64_s64((s64)((s64)Ga * (prev_object_temp - 25 * 1000LL)
+> > +                                    * 1000LL), 68719476736);
+> > +       calcedKsTA = div64_s64((s64)(Fb * (TAdut - 25 * 1000000LL)), 68719476736);
+> > +       Alpha_corr = div64_s64(div64_s64((s64)(Fa * 10000000000LL), 70368744177664)
+> > +                              * Ha_customer, 1000LL);
+>
+> This is less readable and full of magic numbers in comparison to the
+> above (however, also full of magics, but at least gives better hint).
+>
+> ...
+
+These are coefficients so there is not much to unmagic. I can keep the
+shifts, if you think that is more readable or add comments after lines
+with 2^46 or something?
+>
+> > +       TAdut4 = (div64_s64(TAdut, 10000LL) + 27315) *
+> > +               (div64_s64(TAdut, 10000LL) + 27315) *
+> > +               (div64_s64(TAdut, 10000LL)  + 27315) *
+> > +               (div64_s64(TAdut, 10000LL) + 27315);
+>
+> Shouldn't you switch to definitions from units.h? (perhaps as a separate change)
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
