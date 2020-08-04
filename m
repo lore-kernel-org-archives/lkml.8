@@ -2,112 +2,108 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 080CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D01C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE1AD208A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:58:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 843FA208A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596542325;
-	bh=3Ay+2125qwHB+t2rwbFmAyc8NW1poK8+S4xRWxjcoWI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jC68mEXTC1kCw9aua3SV1ME9DLP7TKMAo3e2rmnMcz7LtYd8QDS3ViBeJUF2piw3I
-	 FWBCpSMCDLWabH6oAiVZCiBCe5cxIYXIyx8uuHltW5XHM/1iwx8H22EOskvAaRSzxZ
-	 hdopG4mJ4O1rzC9i1kezJg/t1OMkwa9tlUhx+jXw=
+	s=default; t=1596542334;
+	bh=Ws9mTM9hLH76bfhcMTDlEjXSJGOZ+kmUZwL41/jkJvs=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=iQ9cIzKqzp4cyS1eequl2pp8xmn3NUp2Ihr3Sl7fBDN+ahFIB/VJaFZzMj7ZOurs6
+	 lbVh0lT9UzdYhCamDY0fa/vdH/s+pj2Hd3KMrPUey+ZKYGRKccSV6NL+zLMbWjxcX2
+	 NK13xeVpE3PnOGdLOBBDNi8Y3WZiTRoCgOUdEW3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730446AbgHDL6n (ORCPT
+        id S1730456AbgHDL6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 07:58:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40056 "EHLO mail.kernel.org"
+        Tue, 4 Aug 2020 07:58:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730419AbgHDL6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 07:58:06 -0400
-Received: from pali.im (pali.im [31.31.79.79])
+        id S1730356AbgHDL6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 07:58:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1F0A208C7;
-        Tue,  4 Aug 2020 11:58:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57DD82086A;
+        Tue,  4 Aug 2020 11:58:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596542285;
-        bh=3Ay+2125qwHB+t2rwbFmAyc8NW1poK8+S4xRWxjcoWI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DAs5oblzSzM03UMwQYrcfbdBmRTlj//jGC7lRkNq16pP7z1a3dyIRcCzEWV9kxvZo
-         A+wzrzRGBMJYhYDhGqUFZL+U1pLyNl5J+xDhXn4DIL2daUgJCsrPkpR/ub5X2fJSXw
-         NYJOg8EpRi+gaoGBab8thEFYaLCY5KoQfIqFD1y4=
-Received: by pali.im (Postfix)
-        id 070807FD; Tue,  4 Aug 2020 13:58:04 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Xogium <contact@xogium.me>, marek.behun@nic.cz
-Subject: [PATCH v2 2/5] PCI: aardvark: Check for errors from pci_bridge_emul_init() call
-Date:   Tue,  4 Aug 2020 13:57:44 +0200
-Message-Id: <20200804115747.7078-3-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200804115747.7078-1-pali@kernel.org>
-References: <20200804115747.7078-1-pali@kernel.org>
+        s=default; t=1596542316;
+        bh=Ws9mTM9hLH76bfhcMTDlEjXSJGOZ+kmUZwL41/jkJvs=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=CIaDeLzet63ckJ2uON4/mDPUc7KGHW3WSk0gncq4u7vyzIJFuXgdOPeGJ6yI6QjEG
+         +9aYTIGzE+oZgnnyjaQnfOL0FYDAOkOaoI34zUJ9Q2CnvQhQQKy64F8lXa3jr4c5aQ
+         SM3w3WsDEieWhTkXewHYOTkyYcnMI+uc6FE9s4Ro=
+Date:   Tue, 4 Aug 2020 13:58:17 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        linux-kernel@vger.kernel.org, speakup@linux-speakup.org
+Subject: Re: [PATCH 2/2] speakup: only build serialio when ISA is enabled
+Message-ID: <20200804115817.GC203147@kroah.com>
+References: <20200804111332.dex7jobmabifdzw5@function>
+ <20200804113413.GA181242@kroah.com>
+ <20200804114951.ijs3hnezi4f64nll@function>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200804114951.ijs3hnezi4f64nll@function>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function pci_bridge_emul_init() may fail so correctly check for errors.
+On Tue, Aug 04, 2020 at 01:49:51PM +0200, Samuel Thibault wrote:
+> Greg KH, le mar. 04 ao�t 2020 13:34:13 +0200, a ecrit:
+> > On Tue, Aug 04, 2020 at 01:13:32PM +0200, Samuel Thibault wrote:
+> > > Drivers using serialio are already made available in Kconfig only under
+> > > the ISA condition.
+> > > 
+> > > This solves warnings in inb/outb macros on platform that do not have 
+> > > support for ISA.
+> > > 
+> > > Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
+> > > 
+> > > Index: linux-2.6/drivers/accessibility/speakup/Makefile
+> > > ===================================================================
+> > > --- linux-2.6.orig/drivers/accessibility/speakup/Makefile
+> > > +++ linux-2.6/drivers/accessibility/speakup/Makefile
+> > > @@ -16,6 +16,7 @@ obj-$(CONFIG_SPEAKUP_SYNTH_TXPRT) += spe
+> > >  obj-$(CONFIG_SPEAKUP_SYNTH_DUMMY) += speakup_dummy.o
+> > >  
+> > >  obj-$(CONFIG_SPEAKUP) += speakup.o
+> > > +obj-$(CONFIG_ISA) += serialio.o
+> > >  speakup-y := \
+> > >  	buffers.o \
+> > >  	devsynth.o \
+> > > @@ -25,7 +26,6 @@ speakup-y := \
+> > >  	keyhelp.o \
+> > >  	kobjects.o \
+> > >  	selection.o \
+> > > -	serialio.o \
+> > >  	spk_ttyio.o \
+> > >  	synth.o \
+> > >  	thread.o \
+> > 
+> > Oops, no, I get the following build errors with this patch:
+> > 
+> > ERROR: modpost: "spk_wait_for_xmitr" [drivers/accessibility/speakup/speakup.ko] undefined!
+> 
+> Yes, it depends on the first of the queue.
 
-Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI bridge config space")
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Reviewed-by: Marek Behún <marek.behun@nic.cz>
----
- drivers/pci/controller/pci-aardvark.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+Nope, different errors with both patches applied:
+	ERROR: modpost: "spk_serial_io_ops" [drivers/accessibility/speakup/speakup_keypc.ko] undefined!
+	ERROR: modpost: "spk_stop_serial_interrupt" [drivers/accessibility/speakup/speakup_keypc.ko] undefined!
+	ERROR: modpost: "spk_serial_io_ops" [drivers/accessibility/speakup/speakup_dtlk.ko] undefined!
+	ERROR: modpost: "spk_stop_serial_interrupt" [drivers/accessibility/speakup/speakup_dtlk.ko] undefined!
+	ERROR: modpost: "spk_serial_io_ops" [drivers/accessibility/speakup/speakup_decpc.ko] undefined!
+	ERROR: modpost: "spk_stop_serial_interrupt" [drivers/accessibility/speakup/speakup_decpc.ko] undefined!
+	ERROR: modpost: "spk_serial_io_ops" [drivers/accessibility/speakup/speakup_acntpc.ko] undefined!
+	ERROR: modpost: "spk_stop_serial_interrupt" [drivers/accessibility/speakup/speakup_acntpc.ko] undefined
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 8caa80b19cf8..d5f58684d962 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -608,7 +608,7 @@ static struct pci_bridge_emul_ops advk_pci_bridge_emul_ops = {
-  * Initialize the configuration space of the PCI-to-PCI bridge
-  * associated with the given PCIe interface.
-  */
--static void advk_sw_pci_bridge_init(struct advk_pcie *pcie)
-+static int advk_sw_pci_bridge_init(struct advk_pcie *pcie)
- {
- 	struct pci_bridge_emul *bridge = &pcie->bridge;
- 
-@@ -634,8 +634,7 @@ static void advk_sw_pci_bridge_init(struct advk_pcie *pcie)
- 	bridge->data = pcie;
- 	bridge->ops = &advk_pci_bridge_emul_ops;
- 
--	pci_bridge_emul_init(bridge, 0);
--
-+	return pci_bridge_emul_init(bridge, 0);
- }
- 
- static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
-@@ -1169,7 +1168,11 @@ static int advk_pcie_probe(struct platform_device *pdev)
- 
- 	advk_pcie_setup_hw(pcie);
- 
--	advk_sw_pci_bridge_init(pcie);
-+	ret = advk_sw_pci_bridge_init(pcie);
-+	if (ret) {
-+		dev_err(dev, "Failed to register emulated root PCI bridge\n");
-+		return ret;
-+	}
- 
- 	ret = advk_pcie_init_irq_domain(pcie);
- 	if (ret) {
--- 
-2.20.1
-
+:(
