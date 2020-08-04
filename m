@@ -2,182 +2,219 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 941E8C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C841CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95ADE2076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAE182076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:19:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="lqCl7Qgf";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="KhyDEYwQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lCrMugQU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729218AbgHDBSl (ORCPT
+        id S1728985AbgHDBTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 21:18:41 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:30356 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726276AbgHDBSl (ORCPT
+        Mon, 3 Aug 2020 21:19:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48806 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728840AbgHDBTk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 21:18:41 -0400
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0741GC62022014;
-        Mon, 3 Aug 2020 18:18:22 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=vVPUf2eLCJAhMVvObJsKJbMgRrsYaJpZ6oPfEhClreE=;
- b=lqCl7QgfdiZWo7p9qt2g336Z3tj+osLY8VprK+dX+PrWKeTLAtfQ1q57NKRkSRukiitB
- Mej/6ir7NhORej2I15jjiPcAjoCOaIV6R+F5lTSpYmHrSEzp+/yNPMUqezZBvIonb7Nd
- njnRgB82ScV/trkad7gQCM5pbzQY3JgQvok= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 32nr82fn7q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 03 Aug 2020 18:18:22 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.199) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 3 Aug 2020 18:18:21 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W/aY9WN21zb4Pn9VZscTt2yPscVh2V+f8wgJmXgGxqFK/DPxktoOO1bqnoYmNS7F81Ajd4/7WFf6fO03xhBLcmM5kK7mUcIbckYdcs4ogQNbMVrRDiJ36ieyJ/s6w8OR0pEXi8ADGbwHJGXMnU1VXWAydS7qTuk1SXYFfL/0c0UWlreLjIyUioChONOOsOnamlWpqEIeM96gMhCz2ghRvsntZ/QYIpUK/dyikwIQDB28OOMoaJ9i5Ty3+eviff6JuK8fnx3Bv3xMirzZF3QA4rNWDykM8o211/j1dZOb/tAUItlXEWMevQ5eHMEKVzUqnzo+zvqRTpxBBaP69XKK/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vVPUf2eLCJAhMVvObJsKJbMgRrsYaJpZ6oPfEhClreE=;
- b=eUjfed4hB9ygxoePaT7HbivEC9i4+GNrgM3WlgWhw8YiyZPfPUTIa8oZK3XX4/svoTVfXrTPBsO09PImQTRzlkWIoFSZWJCfmpxoFyRS1ZsP1mD2F7B7+a7ScmLTHnWkW6k5LaUgeUsq6JZacq1L7sfIbIaK9EryXVfmv6FJkB5+I79RzxWlCrlu9fIZpDL0Fg3Des8tUjI04IuLlQ1Mir/gmfgCo9LvgipIraAgVxxDFWh70KFe/voyXxtNaaUKGGvBtDDi9ELTq6czhP2sKG1o1QKB2xlrH8Vro+zAgVhjX/hDY6MMBMEL6BiHpzKNMoqzkNA9GOS/TqCHfQQVxw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vVPUf2eLCJAhMVvObJsKJbMgRrsYaJpZ6oPfEhClreE=;
- b=KhyDEYwQKtsBQCsL9louC1kKabOfCBtCy/mQqdxH4Wepeft+PeLNjCp8b7UQ3B+VYIXjcP2X9RLi6enCyTnplYiSeU0cycoov6/9O1PATbVetCU++FIz26YXkj/EHsctFtns0thNIjhuWVDQwy6fgkXKhv1Dl6eUUoXS4D/qn34=
-Received: from BYAPR15MB2999.namprd15.prod.outlook.com (2603:10b6:a03:fa::12)
- by BYAPR15MB2693.namprd15.prod.outlook.com (2603:10b6:a03:155::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.21; Tue, 4 Aug
- 2020 01:18:07 +0000
-Received: from BYAPR15MB2999.namprd15.prod.outlook.com
- ([fe80::543:b185:ef4a:7e8]) by BYAPR15MB2999.namprd15.prod.outlook.com
- ([fe80::543:b185:ef4a:7e8%5]) with mapi id 15.20.3239.021; Tue, 4 Aug 2020
- 01:18:07 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-CC:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Xu <dlxu@fb.com>
-Subject: Re: [PATCH bpf-next 2/5] libbpf: support BPF_PROG_TYPE_USER programs
-Thread-Topic: [PATCH bpf-next 2/5] libbpf: support BPF_PROG_TYPE_USER programs
-Thread-Index: AQHWZ+C4tQwFkmvi20aNhPcONSrEz6klnl6AgAGMFwA=
-Date:   Tue, 4 Aug 2020 01:18:07 +0000
-Message-ID: <9C1285C1-ECD6-46BD-BA95-3E9E81C00EF0@fb.com>
-References: <20200801084721.1812607-1-songliubraving@fb.com>
- <20200801084721.1812607-3-songliubraving@fb.com>
- <CAEf4BzYp4gO1P+OrY7hGyQjdia3BuSu4DX2_z=UF6RfGNa+gkQ@mail.gmail.com>
-In-Reply-To: <CAEf4BzYp4gO1P+OrY7hGyQjdia3BuSu4DX2_z=UF6RfGNa+gkQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3608.80.23.2.2)
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=fb.com;
-x-originating-ip: [2620:10d:c090:400::5:8f7]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9865b02e-8027-4843-ce25-08d838143e79
-x-ms-traffictypediagnostic: BYAPR15MB2693:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR15MB2693E7F51223C682F2458B4FB34A0@BYAPR15MB2693.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: e/YGbkSe2zc4VVqw0r4jf1pRJ1qBt0Iba80mCQB7+u0MSOAMno7XyzXylPfxf2FR2RYyOdn7W3aZnYlqmrsiBdvfPQhDYlTbOykWXU7mPD173HAs9ZIchmf3aL3pFSDS30GRErk4s1gFoDWi+wH7VwpN5Sj3XFP9wpsJoWMkMOGygKHaifrKe7iFBE+QsheNXeC4MkpY+E0U4Bw5OZcHyWAZqsU9maJCkfOtXqB9TCBZlaW2DQZ4iXXDIhckFnZNHLuYpnbdwZ1QEYxKAnvazFAxSXDnPcR/vROVa6fwmgSgq66uTwQ/0TUckAe/j3+JQEBOiG6OaNfM+PgxhcvHpsjcrXHLogx/Romixomras2TnUgrrI6CD7xOUHUfoIDl
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB2999.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(136003)(366004)(376002)(346002)(39860400002)(4326008)(66556008)(66446008)(186003)(64756008)(66476007)(66946007)(76116006)(6506007)(53546011)(6512007)(83380400001)(8936002)(2616005)(71200400001)(33656002)(316002)(36756003)(8676002)(86362001)(478600001)(2906002)(54906003)(6486002)(6916009)(5660300002)(21314003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: iNhmAAjKeyw4jYIFtDzqKeeiF/dwPxWqlX+awvIB/3LeB0N6tsrjl7ql2Ncqu8nwqHNW8Xde/b8uta/8BsfVmqJMLNbfMM6A9eGjKPPx03MYp2qPNSJ6myfQbGjL7w6/4R/+LaRwYRSOpSXOfRX5hfOE8ux32wL3NKzL9oy+LgL9EvvkZ1lIeGMPXgtIaCS7A9rcprgGWWSLQB814xftkaXqHte4xXzlSv7H4wt1D/N/MKXvcOM9cA7nzjtWP7ioY+pqTX0BF0DbDZAgmwJAoHbW0Y0rmKsAR5Xs3Qjg959Uaa7q4ff+lb3+rUwhcOa2WDsEiTc5i4HZ80BhBpPYuKV1WMDeDtSxEo/l6TFy5lhm6ONDsnedrnUFHHirDQKRqtyfGjlx8vIiIFCsKppnGOYOw7S6IiAOdyQH+wAX5vr7rpWrGZCk1dN6XDm9LEhXnZmDxRzrjihRg07PwCUTZbLnVm5jxTXw++0pUQLQnOzDRNB0ms0nvYUNeRxVYW47X+nrUAAaSU/ylasHyPrfTjRt34DoS68NIMNPmrsoPK1v7zn6g8wzbR2U5Mi69Yg0teYGpujYV68MOGaW4m2ISFYwQOzPmGdTJ375ap4QEj22YMFD1a2YA2IdNYQ5wFzxUefPTti1L6iIVnRJXwSP/Iyxh6xdbVUNKZoYmk9a44A=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <315A3851BDFF80449BCB9484B9D7176D@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 3 Aug 2020 21:19:40 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFDA9C06179E
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 18:19:40 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id p3so21193025pgh.3
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 18:19:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=yLe9ughSSWWsyDhsI7ztPaWolRKsxiUjg5w5lMi5jv0=;
+        b=lCrMugQUVSPuyKgDXCz53qjx8GpRoloxBAlY5KPxbmQ12O72BOerb0UFBL4jyWCZRr
+         YG2/z1jkquu3Dh32tC8iEO4WNJCj7lRufInMQ8f4t5RYS0p/W80vJLslkmt+Zg82l2kU
+         sh5JzBBuyuzHRtnRFi98hxZrc0Vpeyofp94flLPq9R4TczJuwAaUa75N+I2WiyKEADGh
+         J1n2uqRVPrLq0A7jsM/UehNHwvhX/sPpSH4R1dAjlb6f9YC0Pb/sgSa9Vv4cvGAGrWJW
+         LZvSpMWaEtD2YIJWWq/dAVqLCM1hK/KDENo7+dSia+AQHXEomiTC+DTfD9Lzd3Z84DUv
+         ge9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yLe9ughSSWWsyDhsI7ztPaWolRKsxiUjg5w5lMi5jv0=;
+        b=Ap/rJgjwoCLVMCC/tVkR99ofMqGMvyR2A6+m/ZM8SfKWG3+SQzlJTxWtrU2GZpFN9A
+         4fc+6mNV18vxM7j7vG/xmkWW4kwbbnPDi2zloUBa7bL64jq7jlwAg0vBpyEpamcWFWN7
+         LZmADLyKehTaAzWZzNw817CQIiqOslLnSih4JjpEIlDRhl34WlsiCUpOkTt1dwjNyGOX
+         HRQb5qpAzshfMJCNQsGSo6PmAgMTNnScyo8vEo56ldB1J7ZRrqVv6brE+NFUQaSCiYbr
+         odEZi5zuKNADqLsBWIyKNH8ENFdtshh4zxbYL+z3BBAC0WmUU8N4l2Qo+AP/RRdT1kxw
+         WhEg==
+X-Gm-Message-State: AOAM533awO3TXOKhO0Thwf1ADT6H3PVYgqllNnjdjh9me1lPx/J3tIPp
+        V15kks7qHqQ1/0t3ZlSg4l5tmw==
+X-Google-Smtp-Source: ABdhPJw1aC/ZBhM8ma32FF1cdfeNt3UNq3X8Np+PVxOtcg04d9iH5iUgJhrh8gVOdwwfq82yIjRsgw==
+X-Received: by 2002:a63:454d:: with SMTP id u13mr16807380pgk.309.1596503979605;
+        Mon, 03 Aug 2020 18:19:39 -0700 (PDT)
+Received: from google.com ([2620:15c:2ce:0:a6ae:11ff:fe11:4abb])
+        by smtp.gmail.com with ESMTPSA id q82sm7823264pfc.139.2020.08.03.18.19.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 18:19:38 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 18:19:35 -0700
+From:   =?utf-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>
+To:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jian Cai <jiancai@google.com>,
+        Luis Lozano <llozano@google.com>,
+        Manoj Gupta <manojgupta@google.com>, stable@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: Re: [PATCH v5 13/36] vmlinux.lds.h: add PGO and AutoFDO input
+ sections
+Message-ID: <20200804011935.b4asdxdxwvwic7js@google.com>
+References: <20200731230820.1742553-1-keescook@chromium.org>
+ <20200731230820.1742553-14-keescook@chromium.org>
+ <20200801035128.GB2800311@rani.riverdale.lan>
+ <20200803190506.GE1299820@tassilo.jf.intel.com>
+ <20200803201525.GA1351390@rani.riverdale.lan>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB2999.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9865b02e-8027-4843-ce25-08d838143e79
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Aug 2020 01:18:07.0197
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xbvif2SbYOzQCVsPrZxv9bL9T0BWqSNMfKWLYcG2eQ2D2CJocPHaIfB6O8skWMj8JepdFI9ZdExa9CIrVhhytw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2693
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-03_15:2020-08-03,2020-08-03 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
- impostorscore=0 spamscore=0 clxscore=1015 lowpriorityscore=0
- malwarescore=0 suspectscore=0 phishscore=0 priorityscore=1501 bulkscore=0
- mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008040007
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200803201525.GA1351390@rani.riverdale.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-08-03, Arvind Sankar wrote:
+>On Mon, Aug 03, 2020 at 12:05:06PM -0700, Andi Kleen wrote:
+>> > However, the history of their being together comes from
+>> >
+>> >   9bebe9e5b0f3 ("kbuild: Fix .text.unlikely placement")
+>> >
+>> > which seems to indicate there was some problem with having them separated out,
+>> > although I don't quite understand what the issue was from the commit message.
+>>
+>> Separating it out is less efficient. Gives worse packing for the hot part
+>> if they are not aligned to 64byte boundaries, which they are usually not.
+>>
+>> It also improves packing of the cold part, but that probably doesn't matter.
+>>
+>> -Andi
+>
+>Why is that? Both .text and .text.hot have alignment of 2^4 (default
+>function alignment on x86) by default, so it doesn't seem like it should
+>matter for packing density.  Avoiding interspersing cold text among
+>regular/hot text seems like it should be a net win.
+>
+>That old commit doesn't reference efficiency -- it says there was some
+>problem with matching when they were separated out, but there were no
+>wildcard section names back then.
+
+I just want to share some context. GNU ld's internal linker script does
+impose a particular input section order by specifying separate input section descriptions:
+
+   .text           :
+   {
+     *(.text.unlikely .text.*_unlikely .text.unlikely.*)
+     *(.text.exit .text.exit.*)
+     *(.text.startup .text.startup.*)
+     *(.text.hot .text.hot.*)
+     *(SORT(.text.sorted.*))   # binutils 5fa5f8f5fe494ba4fe98c11899a5464cd164ec75, invented for GCC's call graph profiling. LLVM doesn't use it
+     *(.text .stub .text.* .gnu.linkonce.t.*)
+     ...
+
+This order is a bit arbitrary. gold and LLD have -z keep-text-section-prefix. With the option,
+there can be several output sections, with the '.unlikely'/'.exit'/'.startup'/etc suffix.
+This has the advantage that the hot/unlikely/exit/etc attribution of a particular function is more obvious:
+
+   [ 2] .text             PROGBITS        000000000040007c 00007c 000003 00  AX  0   0  4
+   [ 3] .text.startup     PROGBITS        000000000040007f 00007f 000001 00  AX  0   0  1
+   [ 4] .text.exit        PROGBITS        0000000000400080 000080 000002 00  AX  0   0  1
+   [ 5] .text.unlikely    PROGBITS        0000000000400082 000082 000001 00  AX  0   0  1 
+   ...
+
+In our case we only need one output section.......
+
+If we place all text sections in one input section description:
+
+     *(.text.unlikely .text.*_unlikely .text.exit .text.exit.* .text.startup .text.startup.* .text.hot .text.hot.* ... )
+
+In many cases the input sections are laid out in the input order. In LLD there are two ordering cases:
+
+* If clang PGO (-fprofile-use=) is enabled, .llvm.call-graph-profile will be created automatically.
+   LLD can perform reordering **within an input section description**. The ordering is quite complex,
+   you can read https://github.com/llvm/llvm-project/blob/master/lld/ELF/CallGraphSort.cpp#L9 if you are curious:)
+
+   I don't know the performance improvement of this heuristic. (I don't think the original paper
+   cgo2017-hfsort-final1.pdf took ThinLTO into account, so the result might not
+   reflect realistic work loads where both ThinLTO and PGO are used) This, if matters, likely only matters
+   for very large executable, not the case for the kernel.
+* On some RISC architectures (ARM/AArch64/PowerPC),
+   the ordered sections (due to either .llvm.call-graph-profile or
+   --symbol-reordering-file=; the two can't be used together) are placed in a
+   suitable place in the input section description
+   ( http://reviews.llvm.org/D44969 )
 
 
-> On Aug 2, 2020, at 6:40 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> w=
-rote:
->=20
-> On Sat, Aug 1, 2020 at 1:50 AM Song Liu <songliubraving@fb.com> wrote:
->>=20
+In summary, using one (large) input section description may have some
+performance improvement with LLD but I don't think it will be significant.
+There may be some size improvement for ARM/AArch64/PowerPC if someone wants to test.
 
-[...]
-
->=20
->> };
->>=20
->> LIBBPF_API int bpf_prog_test_run_xattr(struct bpf_prog_test_run_attr *te=
-st_attr);
->> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
->> index b9f11f854985b..9ce175a486214 100644
->> --- a/tools/lib/bpf/libbpf.c
->> +++ b/tools/lib/bpf/libbpf.c
->> @@ -6922,6 +6922,7 @@ static const struct bpf_sec_def section_defs[] =3D=
- {
->>        BPF_PROG_SEC("lwt_out",                 BPF_PROG_TYPE_LWT_OUT),
->>        BPF_PROG_SEC("lwt_xmit",                BPF_PROG_TYPE_LWT_XMIT),
->>        BPF_PROG_SEC("lwt_seg6local",           BPF_PROG_TYPE_LWT_SEG6LOC=
-AL),
->> +       BPF_PROG_SEC("user",                    BPF_PROG_TYPE_USER),
->=20
-> let's do "user/" for consistency with most other prog types (and nice
-> separation between prog type and custom user name)
-
-About "user" vs. "user/", I still think "user" is better.=20
-
-Unlike kprobe and tracepoint, user prog doesn't use the part after "/".=20
-This is similar to "perf_event" for BPF_PROG_TYPE_PERF_EVENT, "xdl" for=20
-BPF_PROG_TYPE_XDP, etc. If we specify "user" here, "user/" and "user/xxx"=20
-would also work. However, if we specify "user/" here, programs that used=20
-"user" by accident will fail to load, with a message like:
-
-	libbpf: failed to load program 'user'
-
-which is confusing.=20
-
-Thanks,
-Song
-
-[...]
-
+>commit 9bebe9e5b0f3109a14000df25308c2971f872605
+>Author: Andi Kleen <ak@linux.intel.com>
+>Date:   Sun Jul 19 18:01:19 2015 -0700
+>
+>    kbuild: Fix .text.unlikely placement
+>
+>    When building a kernel with .text.unlikely text the unlikely text for
+>    each translation unit was put next to the main .text code in the
+>    final vmlinux.
+>
+>    The problem is that the linker doesn't allow more specific submatches
+>    of a section name in a different linker script statement after the
+>    main match.
+>
+>    So we need to move them all into one line. With that change
+>    .text.unlikely is at the end of everything again.
+>
+>    I also moved .text.hot into the same statement though, even though
+>    that's not strictly needed.
+>
+>    Signed-off-by: Andi Kleen <ak@linux.intel.com>
+>    Signed-off-by: Michal Marek <mmarek@suse.com>
+>
+>diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+>index 8bd374d3cf21..1781e54ea6d3 100644
+>--- a/include/asm-generic/vmlinux.lds.h
+>+++ b/include/asm-generic/vmlinux.lds.h
+>@@ -412,12 +412,10 @@
+>  * during second ld run in second ld pass when generating System.map */
+> #define TEXT_TEXT							\
+> 		ALIGN_FUNCTION();					\
+>-		*(.text.hot)						\
+>-		*(.text .text.fixup)					\
+>+		*(.text.hot .text .text.fixup .text.unlikely)		\
+> 		*(.ref.text)						\
+> 	MEM_KEEP(init.text)						\
+> 	MEM_KEEP(exit.text)						\
+>-		*(.text.unlikely)
+>
+>
+> /* sched.text is aling to function alignment to secure we have same
