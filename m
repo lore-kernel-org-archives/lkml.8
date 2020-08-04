@@ -2,134 +2,342 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9268DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8C1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B35C2070A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 281B32177B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:05:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="wT3Lb1yB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730182AbgHDKE6 (ORCPT
+        id S1730186AbgHDKFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 06:04:58 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:54201 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728332AbgHDKE5 (ORCPT
+        Tue, 4 Aug 2020 06:05:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729649AbgHDKFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 06:04:57 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0U4jkImR_1596535490;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U4jkImR_1596535490)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 04 Aug 2020 18:04:51 +0800
-Subject: Re: [PATCH v17 21/21] mm/lru: revise the comments of lru_lock
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Rong Chen <rong.a.chen@intel.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Jann Horn <jannh@google.com>
-References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
- <1595681998-19193-22-git-send-email-alex.shi@linux.alibaba.com>
- <CAKgT0UfpHjBTHvtZz7=WMhZZAunVYuNMpuYBQCiorERb5seFUQ@mail.gmail.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <f34e790f-50e6-112c-622f-d7ab804c6d22@linux.alibaba.com>
-Date:   Tue, 4 Aug 2020 18:04:34 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Tue, 4 Aug 2020 06:05:16 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72AC6C061757
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 03:05:15 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id v12so12575058ljc.10
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 03:05:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=9w/UIoNnaZ8iYtq5xCA3U8n+b2iHLpWpJE3T0gsn2Xs=;
+        b=wT3Lb1yB8zokeznVPjG8nrxLWmGhzD0EWw0taPROWRHzQK0tjLxnl6FjbEwA20frra
+         +isY4BojCn0Q08L0F2wrXq1BLxZu+/bLXU4wgHU9I21VRO+VvffObtMXT1hsEKn4IW6N
+         V5jzhMfUo+MY84CqyYriOMDaMuje2YcqjsYz5/YkpCCv82G3S9jZIX5EiMBfdI3wQLHZ
+         hETxf5HTHk+eYvh5WqK+U9PO01oisD/YUUQUQIegKHPgFjsI+4B3Po6OFMk+ipkYU3bj
+         aCnJn43Jx6k32rXMuTKdh9WdTMAin62FS6tdIVZjf2ap4Nnuh2fUK8Jo8SZ+wUfHn0Rw
+         dKsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=9w/UIoNnaZ8iYtq5xCA3U8n+b2iHLpWpJE3T0gsn2Xs=;
+        b=g6Xy9viwmU3gh7cFcDe5Q/CE2oSRBKlqP16LnTo7KVDdtfpfB+jhsAqHPznagiWz8P
+         Du46TxdrwGGcN/IV+8m06XUQE3DOfAl5tRmTNvcYUw30BkP+PIsGtNmHuFKw5oPuP+AT
+         SKJLPGhFigEJHEsyTs0/CJeaHyGgL7ibtLeDZFeEV67GdVGN/+nM/KW5cAv6druMKADm
+         Ql4N/Q7fdy+MJEpNeqHHMS+BcyHwMQsQwpRVTul0CEIkzF3otjycexeoJRV4vlQqQPbh
+         zcbAxkx0vWgQnlDbggOj5itIAWKI6luTpy3KDNhaZOUDRF9Ct7vwG+hoDf/8p3tptdEC
+         nyhg==
+X-Gm-Message-State: AOAM530a6WpjCUMWvk1ZmHaLrhO3ogcrg/pBEwsX7lRKCWfyLHRXISDX
+        WuVQyInw9PpiS8aY7Qqoz7zI3g==
+X-Google-Smtp-Source: ABdhPJwmduTPlvXzSh3Zw3pfiuqMFiczTe11qMw90dIB3jNAXBd1Ljgr7tOrSY0JpnzQ9On03sl1BQ==
+X-Received: by 2002:a2e:b16c:: with SMTP id a12mr9657879ljm.146.1596535511483;
+        Tue, 04 Aug 2020 03:05:11 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id s4sm6080146lfc.56.2020.08.04.03.05.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Aug 2020 03:05:10 -0700 (PDT)
+Date:   Tue, 4 Aug 2020 12:05:10 +0200
+From:   Niklas <niklas.soderlund@ragnatech.se>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [PATCH v2] media: rcar-vin: Add support to select data pins for
+ YCbCr422-8bit input
+Message-ID: <20200804100510.GA2566810@oden.dyn.berto.se>
+References: <1596470573-15065-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200803180618.GA2297236@oden.dyn.berto.se>
+ <CA+V-a8sHOqM2tB-72Z-wVJjvihycCq1zLuk7Py7uKGMxzOJyaA@mail.gmail.com>
+ <20200803192801.GC2297236@oden.dyn.berto.se>
+ <CA+V-a8v0fr9jKMEdOHfDV+DSTqd57NRyQs1phC8nPTcNLR-PfQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0UfpHjBTHvtZz7=WMhZZAunVYuNMpuYBQCiorERb5seFUQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+V-a8v0fr9jKMEdOHfDV+DSTqd57NRyQs1phC8nPTcNLR-PfQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Lad,
 
-
-在 2020/8/4 上午6:37, Alexander Duyck 写道:
->>
->>  shrink_inactive_list() also diverts any unevictable pages that it finds on the
->> -inactive lists to the appropriate zone's unevictable list.
->> +inactive lists to the appropriate node's unevictable list.
->>
->>  shrink_inactive_list() should only see SHM_LOCK'd pages that became SHM_LOCK'd
->>  after shrink_active_list() had moved them to the inactive list, or pages mapped
-> Same here.
-
-lruvec is used per memcg per node actually, and it fallback to node if memcg disabled.
-So the comments are still right.
-
-And most of changes just fix from zone->lru_lock to pgdat->lru_lock change.
+On 2020-08-04 09:04:25 +0100, Lad, Prabhakar wrote:
+> Hi Niklas,
 > 
->> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
->> index 64ede5f150dc..44738cdb5a55 100644
->> --- a/include/linux/mm_types.h
->> +++ b/include/linux/mm_types.h
->> @@ -78,7 +78,7 @@ struct page {
->>                 struct {        /* Page cache and anonymous pages */
->>                         /**
->>                          * @lru: Pageout list, eg. active_list protected by
->> -                        * pgdat->lru_lock.  Sometimes used as a generic list
->> +                        * lruvec->lru_lock.  Sometimes used as a generic list
->>                          * by the page owner.
->>                          */
->>                         struct list_head lru;
->> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
->> index 8af956aa13cf..c92289a4e14d 100644
->> --- a/include/linux/mmzone.h
->> +++ b/include/linux/mmzone.h
->> @@ -115,7 +115,7 @@ static inline bool free_area_empty(struct free_area *area, int migratetype)
->>  struct pglist_data;
->>
->>  /*
->> - * zone->lock and the zone lru_lock are two of the hottest locks in the kernel.
->> + * zone->lock and the lru_lock are two of the hottest locks in the kernel.
->>   * So add a wild amount of padding here to ensure that they fall into separate
->>   * cachelines.  There are very few zone structures in the machine, so space
->>   * consumption is not a concern here.
-> So I don't believe you are using ZONE_PADDING in any way to try and
-> protect the LRU lock currently. At least you aren't using it in the
-> lruvec. As such it might make sense to just drop the reference to the
-> lru_lock here. That reminds me that we still need to review the
-> placement of the lru_lock and determine if there might be a better
-> placement and/or padding that might improve performance when under
-> heavy stress.
+> On Mon, Aug 3, 2020 at 8:28 PM Niklas <niklas.soderlund@ragnatech.se> wrote:
+> >
+> > Hi Lad,
+> >
+> > On 2020-08-03 20:17:54 +0100, Lad, Prabhakar wrote:
+> > > Hi Niklas,
+> > >
+> > > Thank you for the review.
+> > >
+> > > On Mon, Aug 3, 2020 at 7:06 PM Niklas <niklas.soderlund@ragnatech.se> wrote:
+> > > >
+> > > > Hi Lad,
+> > > >
+> > > > Thanks for your work.
+> > > >
+> > > > On 2020-08-03 17:02:53 +0100, Lad Prabhakar wrote:
+> > > > > Select the data pins for YCbCr422-8bit input format depending on
+> > > > > bus_width and data_shift passed as part of DT.
+> > > > >
+> > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > > > > ---
+> > > > > Changes for v2:
+> > > > > * Dropped DT binding documentation patch
+> > > > > * Select the data pins depending on bus-width and data-shift
+> > > >
+> > > > I like this v2 much better then v1, nice work!
+> > > >
+> > > > >
+> > > > > v1 -
+> > > > > https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=323799
+> > > > > ---
+> > > > >  drivers/media/platform/rcar-vin/rcar-core.c | 5 +++++
+> > > > >  drivers/media/platform/rcar-vin/rcar-dma.c  | 7 +++++++
+> > > > >  drivers/media/platform/rcar-vin/rcar-vin.h  | 5 +++++
+> > > > >  3 files changed, 17 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
+> > > > > index 7440c8965d27..55005d86928d 100644
+> > > > > --- a/drivers/media/platform/rcar-vin/rcar-core.c
+> > > > > +++ b/drivers/media/platform/rcar-vin/rcar-core.c
+> > > > > @@ -624,6 +624,11 @@ static int rvin_parallel_parse_v4l2(struct device *dev,
+> > > > >       vin->parallel = rvpe;
+> > > > >       vin->parallel->mbus_type = vep->bus_type;
+> > > > >
+> > > > > +     /* select VInDATA[15:8] pins for YCbCr422-8bit format */
+> > > > > +     if (vep->bus.parallel.bus_width == BUS_WIDTH_8 &&
+> > > > > +         vep->bus.parallel.data_shift == DATA_SHIFT_8)
+> > > > > +             vin->parallel->ycbcr_8b_g = true;
+> > > > > +
+> > > >
+> > > > I would store the bus_width and bus_shift values in the struct
+> > > > rvin_parallel_entity and evaluate them in place rater then create a flag
+> > > > for this specific use-case..
+> > > >
+> > > Ok will do that.
+> > >
+> > > > Also according to the documentation is the check correct? Do we not wish
+> > > > to use the new mode when bus_width == 16 and bus_shift == 8. The check
+> > > > you have here seems to describe a 8 lane bus where 0 lanes are used.
+> > > >
+> > > bus-width is the actual data lines used, so bus_width == 16 and
+> > > bus_shift == 8 would mean use lines 23:8, so just check for bus_width
+> > > == 8 and bus_shift == 8 should be sufficient.
+> >
+> > As you and Geert points out I was wrong, they should indeed both be 8.
+> >
+> > >
+> > > > I think you should also verify that bus_shift is either 0 or 8 as that
+> > > > is all the driver supports.
+> > > >
+> > > Not sure if thats correct.In that case this patch wont make sense, I
+> > > believed we agreed upon we determine the YDS depending on both
+> > > bus-width and bus-shift.
+> >
+> > I'm sorry I think I lost you :-) The driver is not capable of supporting
+> > bus_width = 8 and bus_shift = 2 right? Maybe we are talking about
+> > different things.
+> >
+> > What I tried to say (updated with the knowledge of that bus_width should
+> > indeed be 8 and not 16) was that would it make sens to with bus_width=8
+> > allow for a bus_shift value other then 0 or 8? What for example would
+> > the driver do if the value was 2?
+> >
+> I think this should be possible but I am not sure how this will work.
+> For example on iWave G21D-Q7 platform with 16-bit wired bus say we
+> connect a 8-bit camera as below:
 > 
+> bus-width = 8 and bus-shift = 2
+> VI1_G0_B        -> Not connected
+> VI1_G1_B        -> Not connected
+> VI1_G2_B_16        -> Connected
+> VI1_G3_B        -> Connected
+> VI1_G4_B        -> Connected
+> VI1_G5_B        -> Connected
+> VI1_G6_B        -> Connected
+> VI1_G7_B        -> Connected
+> VI1_DATA7_B/VI1_B7_B_16    -> Connected
+> VI1_DATA6_B/VI1_B6_B_16    -> Connected
+> VI1_DATA5_B/VI1_B5_B_16    -> Not connected
+> VI1_DATA4_B/VI1_B4_B_16    -> Not connected
+> VI1_DATA3_B/VI1_B3_B_16    -> Not connected
+> VI1_DATA2_B/VI1_B2_B_16    -> Not connected
+> VI1_DATA1_B/VI1_B1_B_16    -> Not connected
+> VI1_DATA0_B/VI1_B0_B_16    -> Not connected
 
-Right, is it the following looks better?
+I agree this is how I would imagine bus-width = 8 and bus-shift = 2 to 
+be wired.
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index ccc76590f823..0ed520954843 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -113,8 +113,7 @@ static inline bool free_area_empty(struct free_area *area, int migratetype)
- struct pglist_data;
+> 
+> So in this case for 8-bit YCbCr422 format should YDS be set I am not
+> sure. Or is this not a valid case at all ?
 
- /*
-- * zone->lock and the lru_lock are two of the hottest locks in the kernel.
-- * So add a wild amount of padding here to ensure that they fall into separate
-+ * Add a wild amount of padding here to ensure datas fall into separate
-  * cachelines.  There are very few zone structures in the machine, so space
-  * consumption is not a concern here.
-  */
+That is my question :-)
 
-Thanks!
-Alex
+I can't find anything int the documentation that would allow is to do 
+anything other then bus-width = 8 together with bus-shift = 0 (do not 
+set YDS) or bus-shift = 8 (set YDS). So that is why I suggested you 
+check for this and print a warning if bus-shift is anything else :-)
+
+But if you can figured out how we can do a bus-shift = 2 as in your 
+example then of course the check is wrong. I have not read the docs 
+carefully enough about this to rule it out as impossible.
+
+> 
+> Cheers,
+> Prabhakar
+> 
+> > >
+> > > On iWave G21D-Q7 for VI2 interface VI2_G* pins are connected to SoC
+> > > and for VIN3 interface Vi3_DATA* pins are connected. So in this case
+> > > the capture only works for VIN2 only if YDS bit is set for 8-bit 422,
+> > > and for VIN3 capture only works if YDS is 0
+> > >
+> > > &vin2 {
+> > >     status = "okay";
+> > >     pinctrl-0 = <&vin2_pins>;
+> > >     pinctrl-names = "default";
+> > >
+> > >     port {
+> > >         #address-cells = <1>;
+> > >         #size-cells = <0>;
+> > >
+> > >         vin2ep: endpoint {
+> > >             remote-endpoint = <&ov7725_2>;
+> > >             bus-width = <8>;
+> > >             data-shift = <8>;
+> > >         };
+> > >     };
+> > > };
+> > >
+> > > &vin3 {
+> > >     status = "okay";
+> > >     pinctrl-0 = <&vin3_pins>;
+> > >     pinctrl-names = "default";
+> > >
+> > >     port {
+> > >         #address-cells = <1>;
+> > >         #size-cells = <0>;
+> > >
+> > >         vin3ep: endpoint {
+> > >             remote-endpoint = <&ov7725_3>;
+> > >             bus-width = <8>;
+> > >         };
+> > >     };
+> > > };
+> > >
+> > >
+> > > > >       switch (vin->parallel->mbus_type) {
+> > > > >       case V4L2_MBUS_PARALLEL:
+> > > > >               vin_dbg(vin, "Found PARALLEL media bus\n");
+> > > > > diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media/platform/rcar-vin/rcar-dma.c
+> > > > > index 1a30cd036371..5db483877d65 100644
+> > > > > --- a/drivers/media/platform/rcar-vin/rcar-dma.c
+> > > > > +++ b/drivers/media/platform/rcar-vin/rcar-dma.c
+> > > > > @@ -127,6 +127,8 @@
+> > > > >  #define VNDMR2_FTEV          (1 << 17)
+> > > > >  #define VNDMR2_VLV(n)                ((n & 0xf) << 12)
+> > > > >
+> > > > > +#define VNDMR2_YDS           BIT(22)
+> > > >
+> > > > This should be grouped with the other VNDMR2_* macros and not on its
+> > > > own. Also it should be sorted so it should be inserted between
+> > > > VNDMR2_CES and VNDMR2_FTEV.
+> > > >
+> > > > Also I know BIT() is a nice macro but the rest of the driver uses (1 <<
+> > > > 22), please do the same for this one.
+> > > >
+> > > Sure will take care of it.
+> > >
+> > > > > +
+> > > > >  /* Video n CSI2 Interface Mode Register (Gen3) */
+> > > > >  #define VNCSI_IFMD_DES1              (1 << 26)
+> > > > >  #define VNCSI_IFMD_DES0              (1 << 25)
+> > > > > @@ -698,6 +700,11 @@ static int rvin_setup(struct rvin_dev *vin)
+> > > > >               /* Data Enable Polarity Select */
+> > > > >               if (vin->parallel->mbus_flags & V4L2_MBUS_DATA_ENABLE_LOW)
+> > > > >                       dmr2 |= VNDMR2_CES;
+> > > > > +
+> > > > > +             if (vin->parallel->ycbcr_8b_g && vin->mbus_code == MEDIA_BUS_FMT_UYVY8_2X8)
+> > > > > +                     dmr2 |= VNDMR2_YDS;
+> > > > > +             else
+> > > > > +                     dmr2 &= ~VNDMR2_YDS;
+> > > >
+> > > > dmr2 is already unitized and YDS is cleared, no need to clear it again
+> > > > if you don't wish to set it. Taking this and the comments above into
+> > > > account this would become something like (not tested),
+> > > >
+> > > Agreed.
+> > >
+> > > >     switch (vin->mbus_code) {
+> > > >     case MEDIA_BUS_FMT_UYVY8_2X8:
+> > > >         if (vin->parallel->bus_width == 16 && vin->parallel->bus_shift == 8)
+> > > >             dmr2 |= VNDMR2_YDS;
+> > > >         break;
+> > > >     default:
+> > > >         break;
+> > > >     }
+> > > >
+> > > > >       }
+> > > > >
+> > > > >       /*
+> > > > > diff --git a/drivers/media/platform/rcar-vin/rcar-vin.h b/drivers/media/platform/rcar-vin/rcar-vin.h
+> > > > > index c19d077ce1cb..3126fee9a89b 100644
+> > > > > --- a/drivers/media/platform/rcar-vin/rcar-vin.h
+> > > > > +++ b/drivers/media/platform/rcar-vin/rcar-vin.h
+> > > > > @@ -87,6 +87,9 @@ struct rvin_video_format {
+> > > > >       u8 bpp;
+> > > > >  };
+> > > > >
+> > > > > +#define BUS_WIDTH_8  8
+> > > > > +#define DATA_SHIFT_8 8
+> > > >
+> > > > As pointed out by Geert, not so useful, use 8 in the code :-)
+> > > >
+> > > Agreed will drop it.
+> > >
+> > > Cheers,
+> > > Prabhakar
+> >
+> > --
+> > Regards,
+> > Niklas S�derlund
+
+-- 
+Regards,
+Niklas S�derlund
