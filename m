@@ -2,98 +2,112 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D17C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD4BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF612086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 01:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18EB820792
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:01:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596506481;
+	bh=4XVqqgwktGruGGFjT+GJfaOJ/4GWRFCLq8E7Ac4NJeM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=V/kLTtCkqQarNn/04omhoKBlht3y+MbbU4Bxd3NAwslw2aOh27uRWSn00BHOk6m0q
+	 oWbCik0Y29spLnJD++rbj9pP3vm0pTRMTW3HejRs2IK3hIIwULOTynVLM9hybCrlWk
+	 2R2sTXVwlb1SosQMKq9E8healBaI5KZWCaucqM3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgHDB6A (ORCPT
+        id S1726916AbgHDCBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 21:58:00 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:50100 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725840AbgHDB57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 21:57:59 -0400
-Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 6E24E292DF19CD1F3122;
-        Tue,  4 Aug 2020 09:57:57 +0800 (CST)
-Received: from [10.174.61.242] (10.174.61.242) by
- dggeme758-chm.china.huawei.com (10.3.19.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Tue, 4 Aug 2020 09:57:56 +0800
-Subject: Re: [PATCH net-next v3 1/2] hinic: add generating mailbox random
- index support
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <luoxianjun@huawei.com>,
-        <yin.yinshi@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
-        <chiqijun@huawei.com>
-References: <20200801024935.20819-1-luobin9@huawei.com>
- <20200801024935.20819-2-luobin9@huawei.com>
- <20200803150544.57dbe802@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   "luobin (L)" <luobin9@huawei.com>
-Message-ID: <5f8a2fd5-292b-db53-3cbd-def7c1f22725@huawei.com>
-Date:   Tue, 4 Aug 2020 09:57:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 3 Aug 2020 22:01:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47614 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725840AbgHDCBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 3 Aug 2020 22:01:19 -0400
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A95220792;
+        Tue,  4 Aug 2020 02:01:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596506478;
+        bh=4XVqqgwktGruGGFjT+GJfaOJ/4GWRFCLq8E7Ac4NJeM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=s7Qh5+Lxr+2nDRrGsJ0Yq6A9rR6jlqp0FqJ/GFWzSLjwbl1ob1p2kW+orUqP/UbJk
+         2Xwqjt0wHyyMv/vkMx9rIMQ/78hIlHhANg6hlpQem6KNvWN8cwMjtVLLOyQ382649l
+         PLdpkXwlxAyRZ2msArinhyUhPJ7Yp1hqYpdnLViE=
+Received: by mail-oi1-f180.google.com with SMTP id l84so22494014oig.10;
+        Mon, 03 Aug 2020 19:01:18 -0700 (PDT)
+X-Gm-Message-State: AOAM531pb9nPlaBn2CqhbmbXm3HuRADXrr2QBahyK2NhWG/OFRpoz9dR
+        iP3PkIWsDwdAva9ejGrwUp9ROgEmgzA8vexKFw==
+X-Google-Smtp-Source: ABdhPJybkTGDHYJ7RbW8usE+aYAZuvyH9Qf4GxLxWv9aK7s5b4rphMB8CDwUhA8saSycpJZznnMHvSF2z7+MYaTpAkg=
+X-Received: by 2002:aca:c3d8:: with SMTP id t207mr1037981oif.152.1596506477732;
+ Mon, 03 Aug 2020 19:01:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200803150544.57dbe802@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.61.242]
-X-ClientProxiedBy: dggeme712-chm.china.huawei.com (10.1.199.108) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+References: <20200731164853.3020946-1-campello@chromium.org>
+ <20200731104555.v3.1.I0925046377211b8b6f06764857f03b4ab592bddb@changeid>
+ <20200801160639.1410944e@archlinux> <159648122347.1360974.1094560524092762187@swboyd.mtv.corp.google.com>
+In-Reply-To: <159648122347.1360974.1094560524092762187@swboyd.mtv.corp.google.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 3 Aug 2020 20:01:06 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLs99Q7o32mqZROQSLuaf-_6vVg_wSVbpMr0u3eD9LVEw@mail.gmail.com>
+Message-ID: <CAL_JsqLs99Q7o32mqZROQSLuaf-_6vVg_wSVbpMr0u3eD9LVEw@mail.gmail.com>
+Subject: Re: [PATCH v3 01/15] dt-bindings: iio: Add bindings for sx9310 sensor
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Daniel Campello <campello@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Douglas Anderson <dianders@chromium.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/4 6:05, Jakub Kicinski wrote:
-> On Sat, 1 Aug 2020 10:49:34 +0800 Luo bin wrote:
->> add support to generate mailbox random id of VF to ensure that
->> mailbox messages PF received are from the correct VF.
->>
->> Signed-off-by: Luo bin <luobin9@huawei.com>
->> ---
->> V2~V3 fix review opinions pointed out by Jakub
-> 
-> In the future please specify what was changed, e.g.:
-> 
->  - use get_random_u32()
->  - remove unnecessary parenthesis
-> 
-> etc.
-> 
-Okay, I'll pay attention to that next time.
->> +int hinic_vf_mbox_random_id_init(struct hinic_hwdev *hwdev)
->> +{
->> +	u8 vf_in_pf;
->> +	int err = 0;
->> +
->> +	if (HINIC_IS_VF(hwdev->hwif))
->> +		return 0;
->> +
->> +	for (vf_in_pf = 1; vf_in_pf <= hwdev->nic_cap.max_vf; vf_in_pf++) {
->> +		err = set_vf_mbox_random_id(hwdev, hinic_glb_pf_vf_offset
->> +					    (hwdev->hwif) + vf_in_pf);
-> 
-> I'm sorry but you must put the call to hinic_glb_pf_vf_offset() on a
-> separate line. Perhaps take this call out of the for loop entirely?
-> 
-> The way it's written with the parenthesis on the next line is hard to
-> read.
-Will fix. Thanks. Taking it out of the loop is a better way to avoid a long line length.
-> 
->> +		if (err)
->> +			break;
->> +	}
-> .
-> 
+On Mon, Aug 3, 2020 at 1:00 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Jonathan Cameron (2020-08-01 08:06:39)
+> > On Fri, 31 Jul 2020 10:48:38 -0600
+> > Daniel Campello <campello@chromium.org> wrote:
+> > > diff --git a/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
+> > > new file mode 100644
+> > > index 00000000000000..5739074d3592fe
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
+> > > @@ -0,0 +1,65 @@
+> [...]
+> > > +
+> > > +  "#io-channel-cells":
+> > > +    const: 1
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - "#io-channel-cells"
+> >
+> > Missed this in earlier review (only noticed when I saw whilst santity
+> > checking earlier versions.
+> >
+> > Fairly sure we should only need #io-channel-cells if we have
+> > a consumer of a channel somewhere else in DT.  So it's not
+> > required as far as I can see.
+> >
+>
+> This is mostly a decision for Rob to make, but I would make it required
+> because the device is always an io channel provider. It may be that it
+> isn't providing anything in the DT to something else in the DT but it is
+> providing this information somewhere so always having to spell that out
+> is simple and doesn't hurt.
+
+I agree. If the user is split in a board file or overlay, we don't
+want to have to be adding it to the provider at that time.
+
+Rob
