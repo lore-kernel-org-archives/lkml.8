@@ -2,137 +2,116 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD86DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FD2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B684B2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 692B92086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:09:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k59NGMAr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m760I84z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729460AbgHDQIg (ORCPT
+        id S1729625AbgHDQJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 12:08:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44148 "EHLO
+        Tue, 4 Aug 2020 12:09:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728745AbgHDQGx (ORCPT
+        with ESMTP id S1728766AbgHDQIN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 12:06:53 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35577C06174A;
-        Tue,  4 Aug 2020 09:06:53 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id cs12so1079776qvb.2;
-        Tue, 04 Aug 2020 09:06:53 -0700 (PDT)
+        Tue, 4 Aug 2020 12:08:13 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD1AFC06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 09:08:11 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id x24so6846593otp.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 09:08:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=m06IKFD+Y+zyRLVsGx/ScdWAMYbWtM8lfzX3TLDLqQM=;
-        b=k59NGMArZW/IVO5lr7VYQgHpHOKABoRYVH38jJDnL76HtOxMU2WW97srBYNJZXvEnM
-         CCSnkcKxJTchNS0UFV0HmDnGK0YonaUICzlqNZD4jahfj8pxq2H9dL4YDEO+4SQhEFNe
-         j873vmvHK52C+04qxmB9RF4SkRifztnBM87cifTAPPYhWQ3QZpsKZIKearzQ6cVADQVn
-         36xs8pwoKmlu+9xubKS0claygFJRomudE6cTBrc1gWJJl8aPalo+ofIM0ZEtwBvLEjfv
-         5oYtbZbYpahkW6zv2S7hsB1rHZ/Cvq3VR5bCYi37c5iSprz7jXwa2aTiXclrBFdF/bHO
-         2U3w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yAaXi8I17S+KlrmOJCDBJZ5ckOhfrQktKRXopVrYI4o=;
+        b=m760I84zQhgAxm9R8ycpF+mDr8ftRiC82ZpdvyLKNvLer51RCzj33T7MHICqY5q3QQ
+         t1A+rVWJ8YHzLU2Aa30KESfGOtPJ/q1G3FvpNsOJDtOcIYC0Ol2gqu2Ssj5BKdi+CC9D
+         PPOSmqumzWnycAyqKuqfO8uIYfZdxKLYcSJ9HifuFm+OQ5mqnYm3iAYk+U7cGL6zNxWD
+         vHXZMr/775rjLhg3W6288h25sH4QbWQXCZ9nTBs07Vfi1UzSosvibSDvKd69VK/C9iuq
+         W7zmQfx8EMn608mQcNZvRcK7tyZIvaKrSap4XXWkHbsoY/01yXhM4bT6C8rv77paFtdl
+         vT8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=m06IKFD+Y+zyRLVsGx/ScdWAMYbWtM8lfzX3TLDLqQM=;
-        b=DJvutGGuB26tABMUwFz7jhLLtNx0mPMKfFJwR2O19CChEJvpfB60Vgw70ujsWLROFF
-         hTn7nKCK4YiVBbLeLNx2CnxbcyHzxMpPvXXMpBOZG/mDAClL5XHKzt9pdwoiHe3afjbJ
-         zuYp01+1wmp5bY2bYa+F2h/3+VgonslPk3nPnsp705vZhJv37DlQpMNchXI3DtEIpxS5
-         LaubGF6VV+nTB+N0A784dNtJCOrREKFvTadsrcEMB62pZo4wb587cuRt/D8M92cLMi2+
-         CDJ3LDSpP7LwHTsKw4dS0JNEfYe70zXy1RT0N2ceDURRMy8pXMGnnaWIOfWFbau5K0YG
-         x64A==
-X-Gm-Message-State: AOAM531TZtJ/kn5A4/PoX4zkiMl11MISbK9TEMxckMOKFkeZ9SHuP66m
-        Ng2wpgPD0k/KN0OMUI9MVAk=
-X-Google-Smtp-Source: ABdhPJw2bGYPIUfHRQvq5E7+uSyeqHN5wJTlNWr7pWF5NPqZbUp6h4AcE6QeqyvyFrZTPl2dPt4rGw==
-X-Received: by 2002:a0c:99c8:: with SMTP id y8mr17347027qve.57.1596557212233;
-        Tue, 04 Aug 2020 09:06:52 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id l13sm23581582qth.77.2020.08.04.09.06.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 09:06:51 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 4 Aug 2020 12:06:49 -0400
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jian Cai <jiancai@google.com>,
-        =?utf-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>,
-        Luis Lozano <llozano@google.com>,
-        Manoj Gupta <manojgupta@google.com>, stable@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>, Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Michal Marek <michal.lkml@markovi.net>
-Subject: Re: [PATCH v5 13/36] vmlinux.lds.h: add PGO and AutoFDO input
- sections
-Message-ID: <20200804160649.GA2409491@rani.riverdale.lan>
-References: <20200731230820.1742553-1-keescook@chromium.org>
- <20200731230820.1742553-14-keescook@chromium.org>
- <20200801035128.GB2800311@rani.riverdale.lan>
- <20200803190506.GE1299820@tassilo.jf.intel.com>
- <20200803201525.GA1351390@rani.riverdale.lan>
- <20200804044532.GC1321588@tassilo.jf.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yAaXi8I17S+KlrmOJCDBJZ5ckOhfrQktKRXopVrYI4o=;
+        b=B+sJSnFZK0jTIPWIXgY7XQwTqj7vsL7e92V9o/+XUYyrlvneDAQiMJjXCay2Pm93aN
+         ZaDZOLDSoRVFP5mTJ26QZIHfaw+5kNMZEdfmwlsDqkTYcxnowgGGOxHpIjC5uA31mJCC
+         nALWQD28OmGPqKsK7vY0n3cM15S+hHCvMn9RUA+newsiOSd/lPLXHMdIeNcsmHYxmhb6
+         6XvoZ/qIDp1U/H4FG/omAJJQWbpnMWIZ3fEo165TWRjMqjVpBJLZlGp6yI/qevJRWVcn
+         d1rXe/lKlL8kcoS8FC9QulTD+54iYFehsdPrQnZ0YGjpHWXTWRLo1X2GdGuCXGqKpT2a
+         3IqA==
+X-Gm-Message-State: AOAM532dMVPt/3mIt9suEe9vW1AmhOwQOMvtRDTTHbKuOjrpzP1UAiLS
+        1TUaX4OVyYTyW4LRXEcEiWDT+D9zgBLOcDS+TV8=
+X-Google-Smtp-Source: ABdhPJyjAFIv7tSHXw0z42vyqhWxn3iOfr/4t8y62U6yM2oJfmyvrTWXecnb978dPZeDLagCv1urN10opnTjRN1HiiA=
+X-Received: by 2002:a9d:7490:: with SMTP id t16mr17088165otk.226.1596557290836;
+ Tue, 04 Aug 2020 09:08:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200804044532.GC1321588@tassilo.jf.intel.com>
+References: <20200804145816.GA3823@aditya> <bc993561-e494-d6b5-fc73-eb56cb496d75@infradead.org>
+ <fc7b8ab86d5a07525e546a23b97c1818331526b3.camel@perches.com>
+In-Reply-To: <fc7b8ab86d5a07525e546a23b97c1818331526b3.camel@perches.com>
+From:   Aditya Bansal <adbansal99@gmail.com>
+Date:   Tue, 4 Aug 2020 16:07:59 +0530
+Message-ID: <CAEY4DyhRxwxqk80WWaPARYf7BxmM0T7AuLYhjcboLG+KP_XHMQ@mail.gmail.com>
+Subject: Re: [PATCH] staging: wfx: fixed misspelled word in comment
+To:     Joe Perches <joe@perches.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, gregkh@linuxfoundation.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 09:45:32PM -0700, Andi Kleen wrote:
-> > Why is that? Both .text and .text.hot have alignment of 2^4 (default
-> > function alignment on x86) by default, so it doesn't seem like it should
-> > matter for packing density.  Avoiding interspersing cold text among
-> 
-> You may lose part of a cache line on each unit boundary. Linux has 
-> a lot of units, some of them small. All these bytes add up.
+Should I correct all the instances of the "careful" and submit the
+patch including both "carefull" and "function" word correct? or only
+for the "carefull"? I have already submitted one for the "funcion"
+word.
 
-Separating out .text.unlikely, which isn't aligned, slightly _reduces_
-this loss, but not by much -- just over 1K on a defconfig. More
-importantly, it moves cold code out of line (~320k on a defconfig),
-giving better code density for the hot code.
-
-For .text and .text.hot, you lose the alignment padding on every
-function boundary, not unit boundary, because of the 16-byte alignment.
-Whether .text.hot and .text are arranged by translation unit or not
-makes no difference.
-
-With *(.text.hot) *(.text) you get HHTT, with *(.text.hot .text) you get
-HTHT, but in both cases the individual chunks are already aligned to 16
-bytes. If .text.hot _had_ different alignment requirements to .text, the
-HHTT should actually give better packing in general, I think.
-
-> 
-> It's bad for TLB locality too. Sadly with all the fine grained protection
-> changes the 2MB coverage is eroding anyways, but this makes it even worse.
-> 
-
-Yes, that could be true for .text.hot, depending on whether the hot
-functions are called from all over the kernel (in which case putting
-them together ought to be better) or mostly from regular text within the
-unit in which they appeared (in which case it would be better together
-with that code).
+On Tue, Aug 4, 2020 at 9:13 PM Joe Perches <joe@perches.com> wrote:
+>
+> On Tue, 2020-08-04 at 08:24 -0700, Randy Dunlap wrote:
+> > On 8/4/20 7:58 AM, Aditya Bansal wrote:
+> > > From: Aditya Bansal <adbansal99@gmail.com>
+> > >
+> > > Subject: [PATCH] fixed typo in driver/staging/wfx/hif_tx.c file
+> > >
+> > > Correct the spelling of function
+> > >
+> > > Signed-off-by: Aditya Bansal <adbansal99@gmail.com>
+> > > ---
+> > >
+> > > diff --git a/drivers/staging/wfx/hif_tx.c b/drivers/staging/wfx/hif_tx.c
+> > > index 5110f9b93762..6a485fa5b72b 100644
+> > > --- a/drivers/staging/wfx/hif_tx.c
+> > > +++ b/drivers/staging/wfx/hif_tx.c
+> > > @@ -125,7 +125,7 @@ int wfx_cmd_send(struct wfx_dev *wdev, struct hif_msg *request,
+> > >
+> > >  // This function is special. After HIF_REQ_ID_SHUT_DOWN, chip won't reply to any
+> > >  // request anymore. We need to slightly hack struct wfx_hif_cmd for that job. Be
+> > > -// carefull to only call this funcion during device unregister.
+> > > +// carefull to only call this function during device unregister.
+> >
+> >       careful
+>
+> And if you could do all of them:
+>
+> $ git grep -w -i -n carefull
+> arch/m68k/coldfire/pci.c:34: * We need to be carefull probing on bus 0 (directly connected to host
+> arch/openrisc/kernel/head.S:289: *       a bit more carefull (if we have a PT_SP or current pointer
+> drivers/staging/wfx/debug.c:302:        // Be carefull, write() is waiting for a full message while read()
+> drivers/staging/wfx/hif_tx.c:128:// carefull to only call this funcion during device unregister.
+> fs/ceph/inode.c:1475:           /* parent inode is not locked, be carefull */
+>
+>
+>
