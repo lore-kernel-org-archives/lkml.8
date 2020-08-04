@@ -2,176 +2,226 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB2A8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF9BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B77F421744
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:46:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01CCE21744
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:46:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EutcuYNA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729093AbgHDPqZ (ORCPT
+        id S1729174AbgHDPqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 11:46:25 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:48019 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726398AbgHDPqV (ORCPT
+        Tue, 4 Aug 2020 11:46:47 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:53610 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728295AbgHDPqo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 11:46:21 -0400
-Received: by mail-il1-f200.google.com with SMTP id e12so3951152ile.14
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 08:46:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=6DIGHsfagDAKp/ULUYoRigrhDRxL/hgZYQkhUVMz60M=;
-        b=PYbED1LNLWbE0azldVfZr5xvWckPa+xPxyRmEoGymivQ3cnk90aVf1sBsNjBxQ6UU2
-         6DZ9Cw5ZLXyx2BxThGe0ZcSKVYMCOdixkACcTUfDz3R9HD7FfcqlbXi5NSn+rEDH7ADH
-         rWOeXHX3WzwxTAWRrTPQ285IcNloadQioAJeobNzio3lmZ1KANAXOB5M3DrS3xZrOlMT
-         xqidTnhqAOw4yNk+PNKpGcQlnWMvlDwmw1rBopzgkAPNt0fbxR3JVPX22U0HALl/XZk4
-         HPGhzbMIQu1xt+6dzMldxhFZGj/D/CeQZVvMYjuMdDkt59EEw2mvz4V+9ZydXnB/p53M
-         wnjw==
-X-Gm-Message-State: AOAM532T0g+O2CUn2jzfaBp/ewi+5Y+oH5tUT2kINX/S1PvT/BrRhqKu
-        OgNPP5/TMXlQjq4jBQGCv5Ms27V60gfVu0G55du+Ycs4cX+l
-X-Google-Smtp-Source: ABdhPJwREH5djPThxSKSlsh2hZXG0gUc6T8OaJnHQpaUn8wwW0H6qM9YYvSOZhhGKa36+anYlyxP3/n0XA3MFh4u/NGsX+q9GZiB
+        Tue, 4 Aug 2020 11:46:44 -0400
+Received: from [192.168.254.32] (unknown [47.187.206.220])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 9B23A20B4908;
+        Tue,  4 Aug 2020 08:46:41 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9B23A20B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1596556002;
+        bh=wHC31skMgFt/ebqHymj769kGPOKXA4hyoGb1xMjf0fI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=EutcuYNAeGhOfkiO8T1sIvfJSLcvl24ddG2j+NfgLnwZCraC2VozjLawrJmUJlmea
+         uMTlKW22ne7ngBbcz+KuCNluoJpU8MvjXq4d9Zax32BecuA0bRhi+seD3ikjWvtxPt
+         m71EidTy92505Hg9DsZNgxuxfBJvroeKJTm5VwQk=
+Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>, X86 ML <x86@kernel.org>
+References: <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <CALCETrVy5OMuUx04-wWk9FJbSxkrT2vMfN_kANinudrDwC4Cig@mail.gmail.com>
+ <6540b4b7-3f70-adbf-c922-43886599713a@linux.microsoft.com>
+ <CALCETrWnNR5v3ZCLfBVQGYK8M0jAvQMaAc9uuO05kfZuh-4d6w@mail.gmail.com>
+ <46a1adef-65f0-bd5e-0b17-54856fb7e7ee@linux.microsoft.com>
+ <20200731183146.GD67415@C02TD0UTHF1T.local>
+ <86625441-80f3-2909-2f56-e18e2b60957d@linux.microsoft.com>
+ <20200804135558.GA7440@C02TD0UTHF1T.local>
+From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+Message-ID: <874ec700-405f-bad8-175f-884b4f6f66f2@linux.microsoft.com>
+Date:   Tue, 4 Aug 2020 10:46:40 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:9106:: with SMTP id t6mr5721334ild.105.1596555980358;
- Tue, 04 Aug 2020 08:46:20 -0700 (PDT)
-Date:   Tue, 04 Aug 2020 08:46:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000012cbe905ac0f28c1@google.com>
-Subject: KASAN: use-after-free Read in __sco_sock_close
-From:   syzbot <syzbot+a9b58a6aa2a3e1d37f87@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200804135558.GA7440@C02TD0UTHF1T.local>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hey Mark,
 
-syzbot found the following issue on:
+I am working on putting together an improved definition of trampfd per
+Andy's comment. I will try to address your comments in that improved
+definition. Once I send that out, I will respond to your emails as well.
 
-HEAD commit:    bcf87687 Linux 5.8
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=107dbe0a900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4b489d75d0c8859d
-dashboard link: https://syzkaller.appspot.com/bug?extid=a9b58a6aa2a3e1d37f87
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=145f6342900000
+Thanks.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a9b58a6aa2a3e1d37f87@syzkaller.appspotmail.com
+Madhavan
 
-==================================================================
-BUG: KASAN: use-after-free in debug_spin_lock_before kernel/locking/spinlock_debug.c:83 [inline]
-BUG: KASAN: use-after-free in do_raw_spin_lock+0x5e1/0x800 kernel/locking/spinlock_debug.c:112
-Read of size 4 at addr ffff8880a74d4e8c by task syz-executor.5/18383
+On 8/4/20 8:55 AM, Mark Rutland wrote:
+> On Mon, Aug 03, 2020 at 12:58:04PM -0500, Madhavan T. Venkataraman wrote:
+>> On 7/31/20 1:31 PM, Mark Rutland wrote:
+>>> On Fri, Jul 31, 2020 at 12:13:49PM -0500, Madhavan T. Venkataraman wrote:
+>>>> On 7/30/20 3:54 PM, Andy Lutomirski wrote:
+>>>>> On Thu, Jul 30, 2020 at 7:24 AM Madhavan T. Venkataraman
+>>>>> <madvenka@linux.microsoft.com> wrote:
+>>>>> When the kernel generates the code for a trampoline, it can hard code data values
+>>>> in the generated code itself so it does not need PC-relative data referencing.
+>>>>
+>>>> And, for ISAs that do support the large offset, we do have to implement and
+>>>> maintain the code page stuff for different ISAs for each application and library
+>>>> if we did not use trampfd.
+>>> Trampoline code is architecture specific today, so I don't see that as a
+>>> major issue. Common structural bits can probably be shared even if the
+>>> specifid machine code cannot.
+>> True. But an implementor may prefer a standard mechanism provided by
+>> the kernel so all of his architectures can be supported easily with less
+>> effort.
+>>
+>> If you look at the libffi reference patch I have included, the architecture
+>> specific changes to use trampfd just involve a single C function call to
+>> a common code function.
+> Sure but in addition to that each architecture backend had to define a
+> set of arguments to that. I view the C function is analagous to the
+> "common structural bits".
+>
+> I appreciate that your patch is small today (and architectures seem to
+> largely align on what they need), but I don't think it's necessarily
+> true that things will remain so simple as architecture are extended and
+> their calling conventions evolve, and I also don't think it's clear that
+> this will work for more complex cases elsewhere.
+>
+> [...]
+>
+>>>> With the user level trampoline table approach, the data part of the trampoline table
+>>>> can be hacked by an attacker if an application has a vulnerability. Specifically, the
+>>>> target PC can be altered to some arbitrary location. Trampfd implements an
+>>>> "Allowed PCS" context. In the libffi changes, I have created a read-only array of
+>>>> all ABI handlers used in closures for each architecture. This read-only array
+>>>> can be used to restrict the PC values for libffi trampolines to prevent hacking.
+>>>>
+>>>> To generalize, we can implement security rules/features if the trampoline
+>>>> object is in the kernel.
+>>> I don't follow this argument. If it's possible to statically define that
+>>> in the kernel, it's also possible to do that in userspace without any
+>>> new kernel support.
+>> It is not statically defined in the kernel.
+>>
+>> Let us take the libffi example. In the 64-bit X86 arch code, there are 3
+>> ABI handlers:
+>>
+>>     ffi_closure_unix64_sse
+>>     ffi_closure_unix64
+>>     ffi_closure_win64
+>>
+>> I could create an "Allowed PCs" context like this:
+>>
+>> struct my_allowed_pcs {
+>>     struct trampfd_values    pcs;
+>>     __u64                             pc_values[3];
+>> };
+>>
+>> const struct my_allowed_pcs    my_allowed_pcs = {
+>>     { 3, 0 },
+>>     (uintptr_t) ffi_closure_unix64_sse,
+>>     (uintptr_t) ffi_closure_unix64,
+>>     (uintptr_t) ffi_closure_win64,
+>> };
+>>
+>> I have created a read-only array of allowed ABI handlers that closures use.
+>>
+>> When I set up the context for a closure trampoline, I could do this:
+>>
+>>     pwrite(trampfd, &my_allowed_pcs, sizeof(my_allowed_pcs), TRAMPFD_ALLOWED_PCS_OFFSET);
+>>    
+>> This copies the array into the trampoline object in the kernel.
+>> When the register context is set for the trampoline, the kernel checks
+>> the PC register value against allowed PCs.
+>>
+>> Because my_allowed_pcs is read-only, a hacker cannot modify it. So, the only
+>> permitted target PCs enforced by the kernel are the ABI handlers.
+> Sorry, when I said "statically define" meant when you knew legitimate
+> targets ahead of time when you create the trampoline (i.e. whether you
+> could enumerate those and know they would not change dynamically).
+>
+> My point was that you can achieve the same in userspace if the
+> trampoline and array of legitimate targets are in read-only memory,
+> without having to trap to the kernel.
+>
+> I think the key point here is that an adversary must be prevented from
+> altering a trampoline and any associated metadata, and I think that
+> there are ways of achieving that without having to trap into the kernel,
+> and without the kernel having to be intimately aware of the calling
+> conventions used in userspace.
+>
+> [...]
+>
+>>>> Trampfd is a framework that can be used to implement multiple things. May be,
+>>>> a few of those things can also be implemented in user land itself. But I think having
+>>>> just one mechanism to execute dynamic code objects is preferable to having
+>>>> multiple mechanisms not standardized across all applications.
+>>> In abstract, having a common interface sounds nice, but in practice
+>>> elements of this are always architecture-specific (e.g. interactiosn
+>>> with HW CFI), and that common interface can result in more pain as it
+>>> doesn't fit naturally into the context that ISAs were designed for (e.g. 
+>>> where control-flow instructions are extended with new semantics).
+>> In the case of trampfd, the code generation is indeed architecture
+>> specific. But that is in the kernel. The application is not affected by it.
+> As an ABI detail, applications are *definitely* affected by this, and it
+> is wrong to suggest they are not even if you don't have a specific case
+> in mind today. As this forms a contract between userspace and the kernel
+> it's overly simplistic to say that it's the kernel's problem
+>
+> For example, in the case of BTI on arm64, what should the trampoline
+> set PSTATE.BTYPE to? Different use-cases *will* want different values,
+> and not necessarily the value of PSTATE at the instant the call to the
+> trampoline was made. In the case of libffi specifically using the
+> original value of PSTATE.BTYPE probably is sound, but other code
+> sequences may need to restrict/broaden or entirely change that.
+>
+>> Again, referring to the libffi reference patch, I have defined wrapper
+>> functions for trampfd in common code. The architecture specific code
+>> in libffi only calls the set_context function defined in common code.
+>> Even this is required only because register names are specific to each
+>> architecture and the target PC (to the ABI handler) is specific to
+>> each architecture-ABI combo.
+>>
+>>> It also meass that you can't share the rough approach across OSs which
+>>> do not implement an identical mechanism, so for code abstracting by ISA
+>>> first, then by platform/ABI, there isn't much saving.
+>> Why can you not share the same approach across OSes? In fact,
+>> I have tried to design it so that other OSes can use the same
+>> mechanism.
+> Sure, but where they *don't*, you must fall back to the existing
+> purely-userspace mechanisms, and so a codebase now has the burden of
+> maintaining two distinct mechanisms.
+>
+> Whereas if there's a way of doing this in userspace with (stronger)
+> enforcement of memory permissions the trampoline code can be common for
+> when this is present or absent, which is much easier for a codebase rto
+> maintain, and could make use of weaker existing mechanisms to improve
+> the situation on systems without the new functionality.
+>
+> Thanks,
+> Mark.
 
-CPU: 1 PID: 18383 Comm: syz-executor.5 Not tainted 5.8.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1f0/0x31e lib/dump_stack.c:118
- print_address_description+0x66/0x5a0 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report+0x132/0x1d0 mm/kasan/report.c:530
- debug_spin_lock_before kernel/locking/spinlock_debug.c:83 [inline]
- do_raw_spin_lock+0x5e1/0x800 kernel/locking/spinlock_debug.c:112
- spin_lock include/linux/spinlock.h:353 [inline]
- sco_chan_del net/bluetooth/sco.c:142 [inline]
- __sco_sock_close+0x408/0xed0 net/bluetooth/sco.c:433
- sco_sock_close net/bluetooth/sco.c:447 [inline]
- sco_sock_release+0x63/0x4f0 net/bluetooth/sco.c:1021
- __sock_release net/socket.c:605 [inline]
- sock_close+0xd8/0x260 net/socket.c:1278
- __fput+0x2f0/0x750 fs/file_table.c:281
- task_work_run+0x137/0x1c0 kernel/task_work.c:135
- get_signal+0x15ab/0x1d30 kernel/signal.c:2547
- do_signal+0x33/0x610 arch/x86/kernel/signal.c:810
- exit_to_usermode_loop arch/x86/entry/common.c:235 [inline]
- __prepare_exit_to_usermode+0xd7/0x1e0 arch/x86/entry/common.c:269
- do_syscall_64+0x7f/0xe0 arch/x86/entry/common.c:393
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45cce9
-Code: 2d b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb b5 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ff2665afc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
-RAX: fffffffffffffffc RBX: 0000000000002140 RCX: 000000000045cce9
-RDX: 0000000000000008 RSI: 0000000020000000 RDI: 0000000000000006
-RBP: 000000000078bf40 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000078bf0c
-R13: 00007ffdf046a56f R14: 00007ff2665b09c0 R15: 000000000078bf0c
-
-Allocated by task 18383:
- save_stack mm/kasan/common.c:48 [inline]
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc+0x103/0x140 mm/kasan/common.c:494
- kmem_cache_alloc_trace+0x234/0x300 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- sco_conn_add net/bluetooth/sco.c:112 [inline]
- sco_connect net/bluetooth/sco.c:247 [inline]
- sco_sock_connect+0x3c6/0xaa0 net/bluetooth/sco.c:576
- __sys_connect_file net/socket.c:1854 [inline]
- __sys_connect+0x2da/0x360 net/socket.c:1871
- __do_sys_connect net/socket.c:1882 [inline]
- __se_sys_connect net/socket.c:1879 [inline]
- __x64_sys_connect+0x76/0x80 net/socket.c:1879
- do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 8113:
- save_stack mm/kasan/common.c:48 [inline]
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0x114/0x170 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x10a/0x220 mm/slab.c:3757
- sco_connect_cfm+0x96/0x7e0 net/bluetooth/sco.c:1136
- hci_connect_cfm include/net/bluetooth/hci_core.h:1340 [inline]
- hci_sco_setup+0xf0/0x3e0 net/bluetooth/hci_conn.c:399
- hci_conn_complete_evt net/bluetooth/hci_event.c:2641 [inline]
- hci_event_packet+0x1258e/0x18260 net/bluetooth/hci_event.c:6033
- hci_rx_work+0x236/0x9c0 net/bluetooth/hci_core.c:4705
- process_one_work+0x789/0xfc0 kernel/workqueue.c:2269
- worker_thread+0xaa4/0x1460 kernel/workqueue.c:2415
- kthread+0x37e/0x3a0 drivers/block/aoe/aoecmd.c:1234
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
-The buggy address belongs to the object at ffff8880a74d4e80
- which belongs to the cache kmalloc-96 of size 96
-The buggy address is located 12 bytes inside of
- 96-byte region [ffff8880a74d4e80, ffff8880a74d4ee0)
-The buggy address belongs to the page:
-page:ffffea00029d3500 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea00023cae88 ffffea000288c588 ffff8880aa400540
-raw: 0000000000000000 ffff8880a74d4000 0000000100000020 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8880a74d4d80: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
- ffff8880a74d4e00: 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc
->ffff8880a74d4e80: fb fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
-                      ^
- ffff8880a74d4f00: 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc
- ffff8880a74d4f80: 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
