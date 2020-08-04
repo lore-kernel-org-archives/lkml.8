@@ -2,114 +2,119 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88553C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C6DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70A84207FC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:16:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596561396;
-	bh=KgUSQXHnQmyfVqBx7P8DiLDgLrGMLQ5sEeXPjkKaMgo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=NgsmoPqrJCbZKm8RgycSQv67ZB8Fvm3V0dMYGaZ+l1Zw1VoZHGTz9g/Q82njNPGvr
-	 VFbP32wWQ8nkTUl9rCg8OobRkdo6hiHgPNQHg/FjbAoU3U4vYBmLwscK+Z4M17fKWd
-	 c0CCqlJZ8dDaUlkO6glVoBNqD0wDdZ7x3HmoRnFc=
+	by mail.kernel.org (Postfix) with ESMTP id D2ADB208C7
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:18:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729978AbgHDRQe (ORCPT
+        id S1730018AbgHDRSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 13:16:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33078 "EHLO mail.kernel.org"
+        Tue, 4 Aug 2020 13:18:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59600 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729760AbgHDRQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 13:16:32 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00B8F207FC;
-        Tue,  4 Aug 2020 17:16:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596561392;
-        bh=KgUSQXHnQmyfVqBx7P8DiLDgLrGMLQ5sEeXPjkKaMgo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=po6Awiu2jyPPa8K7P1obOSX43I7xN26lmV3hDkANXkQYWOVML8pKHGk7i8bZvGsXJ
-         C7YOUuBeHSAf5ybIvPArid5p2sVn2opD172H2vkd7LXJ3RBWN+wElJAYGQ02xwutbi
-         T1rDroNvCn5e/s/uutC20fI/FKFmzW8QVPCvkUro=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k30YA-00HReQ-IA; Tue, 04 Aug 2020 18:16:30 +0100
+        id S1729932AbgHDRSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 13:18:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 6B5F6AE3A;
+        Tue,  4 Aug 2020 17:19:06 +0000 (UTC)
+Subject: Re: [PATCH v2 2/2] slab: Add naive detection of double free
+To:     Kees Cook <keescook@chromium.org>, akpm@linux-foundation.org
+Cc:     Roman Gushchin <guro@fb.com>, Christoph Lameter <cl@linux.com>,
+        Alexander Popov <alex.popov@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>, vinmenon@codeaurora.org,
+        Matthew Garrett <mjg59@google.com>,
+        Jann Horn <jannh@google.com>,
+        Vijayanand Jitta <vjitta@codeaurora.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20200625215548.389774-1-keescook@chromium.org>
+ <20200625215548.389774-3-keescook@chromium.org>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <c4424700-3502-90d1-b73a-2d5b6f7256c8@suse.cz>
+Date:   Tue, 4 Aug 2020 19:18:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Tue, 04 Aug 2020 18:16:30 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>
-Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
-        christoffer.dall@arm.com
-Subject: Re: [PATCH  v1 3/3] kernel/configs: don't include PCI_QUIRKS in KVM
- guest configs
-In-Reply-To: <87lfiumnc8.fsf@linaro.org>
-References: <20200804124417.27102-1-alex.bennee@linaro.org>
- <20200804124417.27102-4-alex.bennee@linaro.org>
- <f80cfa932a650d8f7e8fc02a1656b4c2@kernel.org> <87r1smmpw5.fsf@linaro.org>
- <b78f8715bbaec8fc728a85d614b00688@kernel.org> <87lfiumnc8.fsf@linaro.org>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <dd535598ec1886f93f374ed5720b6c74@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: alex.bennee@linaro.org, kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu, christoffer.dall@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+In-Reply-To: <20200625215548.389774-3-keescook@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-04 16:40, Alex Bennée wrote:
-> Marc Zyngier <maz@kernel.org> writes:
+On 6/25/20 11:55 PM, Kees Cook wrote:
+> Similar to commit ce6fa91b9363 ("mm/slub.c: add a naive detection
+> of double free or corruption"), add a very cheap double-free check
+> for SLAB under CONFIG_SLAB_FREELIST_HARDENED. With this added, the
+> "SLAB_FREE_DOUBLE" LKDTM test passes under SLAB:
 > 
->> On 2020-08-04 15:44, Alex Bennée wrote:
->>> Marc Zyngier <maz@kernel.org> writes:
->>> 
->>>> On 2020-08-04 13:44, Alex Bennée wrote:
->>>>> The VIRTIO_PCI support is an idealised PCI bus, we don't need a 
->>>>> bunch
->>>>> of bloat for real world hardware for a VirtIO guest.
->>>> 
->>>> Who says this guest will only have virtio devices?
->>> 
->>> This is true - although what is the point of kvm_guest.config? We
->>> certainly turn on a whole bunch of virt optimised pathways with
->>> PARAVIRT
->>> and HYPERVISOR_GUEST along with the rest of VirtIO.
->> 
->> Most of which actually qualifies as bloat itself as far as KVM/arm64
->> is concerned...
+>   lkdtm: Performing direct entry SLAB_FREE_DOUBLE
+>   lkdtm: Attempting double slab free ...
+>   ------------[ cut here ]------------
+>   WARNING: CPU: 2 PID: 2193 at mm/slab.c:757 ___cache _free+0x325/0x390
 > 
-> So here is the question - does the kernel care about having a blessed
-> config for a minimal viable guest? They are certainly used in the cloud
-> but I understand the kernel is trying to get away from having a zoo of
-> configs. What is the actual point of kvm_guest.config? Just an easy
-> enabling for developers?
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-The cloud vendor I know certainly doesn't provide a "dumbed down"
-kernel configuration. What they run is either a distro kernel
-or something that fits their environment (which does include
-HW PCI devices, and hardly any virtio device).
+No idea how much it helps in practice wrt security, but implementation-wise it
+seems fine, so:
 
-My take is that this kvm-special config isn't that useful in
-the real world, and I don't believe there is such thing as a
-"minimal viable guest" config, certainly not across architectures
-and VMMs. Hopefully it fits someone's development workflow, but
-that's probably it.
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-          M.
--- 
-Jazz is not dead. It just smells funny...
+Maybe you don't want to warn just once, though? We had similar discussion on
+cache_to_obj().
+
+> ---
+>  mm/slab.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/slab.c b/mm/slab.c
+> index ebac5e400ad0..bbff6705ab2b 100644
+> --- a/mm/slab.c
+> +++ b/mm/slab.c
+> @@ -749,6 +749,16 @@ static void drain_alien_cache(struct kmem_cache *cachep,
+>  	}
+>  }
+>  
+> +/* &alien->lock must be held by alien callers. */
+> +static __always_inline void __free_one(struct array_cache *ac, void *objp)
+> +{
+> +	/* Avoid trivial double-free. */
+> +	if (IS_ENABLED(CONFIG_SLAB_FREELIST_HARDENED) &&
+> +	    WARN_ON_ONCE(ac->avail > 0 && ac->entry[ac->avail - 1] == objp))
+> +		return;
+> +	ac->entry[ac->avail++] = objp;
+> +}
+> +
+>  static int __cache_free_alien(struct kmem_cache *cachep, void *objp,
+>  				int node, int page_node)
+>  {
+> @@ -767,7 +777,7 @@ static int __cache_free_alien(struct kmem_cache *cachep, void *objp,
+>  			STATS_INC_ACOVERFLOW(cachep);
+>  			__drain_alien_cache(cachep, ac, page_node, &list);
+>  		}
+> -		ac->entry[ac->avail++] = objp;
+> +		__free_one(ac, objp);
+>  		spin_unlock(&alien->lock);
+>  		slabs_destroy(cachep, &list);
+>  	} else {
+> @@ -3457,7 +3467,7 @@ void ___cache_free(struct kmem_cache *cachep, void *objp,
+>  		}
+>  	}
+>  
+> -	ac->entry[ac->avail++] = objp;
+> +	__free_one(ac, objp);
+>  }
+>  
+>  /**
+> 
+
