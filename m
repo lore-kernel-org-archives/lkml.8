@@ -2,109 +2,129 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D10C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2687C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9EDA2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:37:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="FUh4tqaV";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kQ004FSg"
+	by mail.kernel.org (Postfix) with ESMTP id C8F932086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:39:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729887AbgHDHhe (ORCPT
+        id S1729858AbgHDHjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 03:37:34 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:46039 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729596AbgHDHhd (ORCPT
+        Tue, 4 Aug 2020 03:39:11 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:48628 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbgHDHjK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 03:37:33 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 9BDF85803B6;
-        Tue,  4 Aug 2020 03:37:32 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Tue, 04 Aug 2020 03:37:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm1; bh=F
-        ocaEVAZNOs0ka4mL6/6OKxNWgHGmuyCC7zusvr1Pd4=; b=FUh4tqaVdu4BCwO17
-        1kbbYDF7QOanYfyAl6laql1JXzWhnS8A8QlrfS3CdUZLXUAeLCdEk4JYjW+FzWb+
-        HdQcHUL8nqK7aRVXWV5EQ9n/ihOnQKr7f802t/3KXFYAxLz8FQjw0dp0fyVe1bm3
-        lspxwY32F3W0gN/HAhFWFIDDA1D+7R8XHrbivUiI5ePbcwM+cMyCu9L7RdN8kgG8
-        2Kd5V3iQr8r3fAEuCRL33lulvObydW2aJaiff5GRxrRA8oZHt9qP5anVlWpSohoE
-        f08KhdQNKlETk3Mi6GoaMmNIlCS/gwb7QGcBKUN0hkQyaAa9QTeYT78jIEmI7ac3
-        XSDcg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=FocaEVAZNOs0ka4mL6/6OKxNWgHGmuyCC7zusvr1P
-        d4=; b=kQ004FSg9gs4aPO4D9qVcddcL27QJfEF+krIFkz/PSlsD7jT49WWF1Pyi
-        Oxf/QaiPNBpKAMPAD0JeGktU5a73RdAIQ3v4m99uBTtFFZeweZBOgLcNC2MGjpiH
-        agc6ZH7zh0S7IPnP85LpVaQpoeUSShrY2kewmnTnjjAvaJMvkvhngbv7etR08DiY
-        yCp3HcR8ntRwQS+1nU5fs7y+X/VclWxzE659ys0bHvuJT+e4pqqkaa2BUlzV0D4k
-        woNxnKgfYHoHVJtvfWmSVT/jlWSZJSNBatic/H4z2Yb4DEaZqGyzz8wRKBL3XL4o
-        ezodNClD7d4VjdbSh8LCwXXHVLhqg==
-X-ME-Sender: <xms:OhApX3OQzB_EZn2dDOhkhCf4ipDnmc5RLLf_TeUTJ7aUwH2HUL3wOQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrjeehgdduvdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtugfgjgesthekredttddtjeenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepueehke
-    ehlefffeeiudetfeekjeffvdeuheejjeffheeludfgteekvdelkeduuddvnecukfhppeek
-    fedrkeeirdekledruddtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:OhApXx_v2n9lecvivSPrCjw2ZFh8vZeJ1MlYDBc6ipjjNeMwFsTkfQ>
-    <xmx:OhApX2QCAm1NoA70VI4fVBwUdt4IACAI4IOKTGNaNAQolAxURIguIw>
-    <xmx:OhApX7tIFGk6mj6tbsp5zfY-vuPw54tIcP1DOX5uSsod7y-8ZerjeA>
-    <xmx:PBApXz4OiQiYB_CIyeAVDDntFVYjAO_7_J-59wVmtvT4YY4zi71l7A>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D7EF030600B1;
-        Tue,  4 Aug 2020 03:37:29 -0400 (EDT)
-Date:   Tue, 4 Aug 2020 09:37:11 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Jiri Slaby <jirislaby@kernel.org>
-Cc:     =?utf-8?B?5byg5LqR5rW3?= <zhangyunhai@nsfocus.com>,
-        Solar Designer <solar@openwall.com>, b.zolnierkie@samsung.com,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        Kyungtae Kim <kt0755@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        Anthony Liguori <aliguori@amazon.com>,
-        xiao.zhang@windriver.com,
-        DRI devel <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] vgacon: fix out of bounds write to the scrollback buffer
-Message-ID: <20200804073711.GA1749774@kroah.com>
-References: <659f8dcf-7802-1ca1-1372-eb7fefd4d8f4@kernel.org>
- <dbcf2841-7718-2ba7-11e0-efa4b9de8de1@nsfocus.com>
- <9fb43895-ca91-9b07-ebfd-808cf854ca95@nsfocus.com>
- <9386c640-34dd-0a50-5694-4f87cc600e0f@kernel.org>
+        Tue, 4 Aug 2020 03:39:10 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id E922E1C0BD7; Tue,  4 Aug 2020 09:39:06 +0200 (CEST)
+Date:   Tue, 4 Aug 2020 09:39:06 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Ariel Levkovich <lariel@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 31/56] net/mlx5: Verify Hardware supports requested
+ ptp function on a given pin
+Message-ID: <20200804073906.jo6y4iaa5vqa4ixz@duo.ucw.cz>
+References: <20200803121850.306734207@linuxfoundation.org>
+ <20200803121851.847496622@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="2deo36yqpzzaylvk"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9386c640-34dd-0a50-5694-4f87cc600e0f@kernel.org>
+In-Reply-To: <20200803121851.847496622@linuxfoundation.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 10:08:43AM +0200, Jiri Slaby wrote:
-> Hi,
-> 
-> On 31. 07. 20, 7:22, 张云海 wrote:
-> > Remove whitespace at EOL
-> 
-> I am fine with the patch. However it should be sent properly (inline
-> mail, having a PATCH subject etc. -- see
-> Documentation/process/submitting-patches.rst). git send-email after git
-> format-patch handles most of it.
 
-I'll go fix this all up now "by hand" :(
+--2deo36yqpzzaylvk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi!
+
+> [ Upstream commit 071995c877a8646209d55ff8edddd2b054e7424c ]
+>=20
+> Fix a bug where driver did not verify Hardware pin capabilities for
+> PTP functions.
+>=20
+> Fixes: ee7f12205abc ("net/mlx5e: Implement 1PPS support")
+> Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
+> Reviewed-by: Ariel Levkovich <lariel@mellanox.com>
+> Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+
+> +
+>  static int mlx5_ptp_verify(struct ptp_clock_info *ptp, unsigned int pin,
+>  			   enum ptp_pin_function func, unsigned int chan)
+>  {
+> -	return (func =3D=3D PTP_PF_PHYSYNC) ? -EOPNOTSUPP : 0;
+> +	struct mlx5_clock *clock =3D container_of(ptp, struct mlx5_clock,
+> +						ptp_info);
+> +
+> +	switch (func) {
+> +	case PTP_PF_NONE:
+> +		return 0;
+> +	case PTP_PF_EXTTS:
+> +		return !(clock->pps_info.pin_caps[pin] &
+> +			 MLX5_MTPPS_REG_CAP_PIN_X_MODE_SUPPORT_PPS_IN);
+> +	case PTP_PF_PEROUT:
+> +		return !(clock->pps_info.pin_caps[pin] &
+> +			 MLX5_MTPPS_REG_CAP_PIN_X_MODE_SUPPORT_PPS_OUT);
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	return -EOPNOTSUPP;
+>  }
+
+The last return statement is unreachable code. I'm not sure if it will
+provoke any warnings, but it looks ugly.
+
+Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c b/drivers/=
+net/ethernet/mellanox/mlx5/core/lib/clock.c
+index 2d55b7c22c03..a804f92ccf23 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
+@@ -431,8 +431,6 @@ static int mlx5_ptp_verify(struct ptp_clock_info *ptp, =
+unsigned int pin,
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
+-
+-	return -EOPNOTSUPP;
+ }
+=20
+ static const struct ptp_clock_info mlx5_ptp_clock_info =3D {
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--2deo36yqpzzaylvk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXykQmgAKCRAw5/Bqldv6
+8mBZAJ44rSH77O3rwY3K6531GcdnCUsEeQCgui5/iR1zubZIKtvj8O2IL5zkGEg=
+=nDF/
+-----END PGP SIGNATURE-----
+
+--2deo36yqpzzaylvk--
