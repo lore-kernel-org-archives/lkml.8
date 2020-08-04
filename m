@@ -2,83 +2,95 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA8CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 18:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 469F0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 18:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56EBF21744
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 18:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1920A21744
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 18:42:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596566544;
+	bh=LbRILdb+eW1GiqP4V+7QLShhSAFkXp6GT1VixGSGaAg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mCfbJFvqEqzpGiLrvfIOn9qTZYELDrscg0MLmrLkbUoF5Z48L/GCDEwJ1bBY/Y4BD
+	 3bDxu2ZZI1DfR469djf+wHQnnlAKPjsDn0ak5fQd0DjEvoacxTZnHMsBHQZfRBlVoC
+	 fboo1hh/XJ62JtLg9SqGv3+CYhOuf407UpQ5E0ko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgHDSls (ORCPT
+        id S1728024AbgHDSmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 14:41:48 -0400
-Received: from mga14.intel.com ([192.55.52.115]:6550 "EHLO mga14.intel.com"
+        Tue, 4 Aug 2020 14:42:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726606AbgHDSlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 14:41:47 -0400
-IronPort-SDR: /tAu4mTCxE/zxSxUg73ixnRKXY/ii5wVZV9FQSAIJiclNWhnub3/NX0RO//4JQZs26DmViJw1a
- OWpxf/JE7tMA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="151614819"
-X-IronPort-AV: E=Sophos;i="5.75,434,1589266800"; 
-   d="scan'208";a="151614819"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 11:41:47 -0700
-IronPort-SDR: P+On/KCPJFb54D29X8R4zo1HrfN2yDd2vovuqum2UHaH3TWSdydxYK2ttZHqE8ilDjkYRjI05E
- uGGxcFW5k0fQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,434,1589266800"; 
-   d="scan'208";a="322855740"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.160])
-  by orsmga008.jf.intel.com with ESMTP; 04 Aug 2020 11:41:46 -0700
-Date:   Tue, 4 Aug 2020 11:41:46 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Oliver Upton <oupton@google.com>,
-        Peter Shier <pshier@google.com>
-Subject: Re: [PATCH] KVM: x86: Don't attempt to load PDPTRs when 64-bit mode
- is enabled
-Message-ID: <20200804184146.GA16023@linux.intel.com>
-References: <20200714015732.32426-1-sean.j.christopherson@intel.com>
+        id S1727812AbgHDSmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 14:42:21 -0400
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5052922B42;
+        Tue,  4 Aug 2020 18:42:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596566540;
+        bh=LbRILdb+eW1GiqP4V+7QLShhSAFkXp6GT1VixGSGaAg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jTp1n/ITmWcNERjixocaNVXPVk1sDRErGs0EJIz5wzrz0cWT/IkvYWbTRRxwbVV9f
+         j14ge84hByIKmaOwlHs9M/jqjlgbbQdJew6DEjx1m3+S8rV1w1BPg1RksKptNvYYQr
+         ONQCZ0nocSWdtwPAmYs1LjMleW88ppSxcf+ZSAXQ=
+Received: by mail-lj1-f172.google.com with SMTP id s16so29523158ljc.8;
+        Tue, 04 Aug 2020 11:42:20 -0700 (PDT)
+X-Gm-Message-State: AOAM5330Ql4LUbZObraNjBBX5TVMYom11g40lp5ydd9/cb91Ot/hmIX+
+        jzcnQhJ6AsLkWvpJUaSkF7ezZaIexS3GsjaJJrQ=
+X-Google-Smtp-Source: ABdhPJzO9Px9MUBXcG5PRGc37mJ6xMOVpmtzZs4vWzy/Kjkf2MheLeE3zE110ss0lKMsQFAlrkslHxu2BTd/JCtHwDY=
+X-Received: by 2002:a2e:8816:: with SMTP id x22mr11661719ljh.304.1596566538598;
+ Tue, 04 Aug 2020 11:42:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200714015732.32426-1-sean.j.christopherson@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <1595792274-28580-1-git-send-email-ilial@codeaurora.org>
+ <20200726194528.GC1661457@lunn.ch> <20200727.103233.2024296985848607297.davem@davemloft.net>
+In-Reply-To: <20200727.103233.2024296985848607297.davem@davemloft.net>
+From:   Ilia Lin <ilia.lin@kernel.org>
+Date:   Tue, 4 Aug 2020 21:42:06 +0300
+X-Gmail-Original-Message-ID: <CA+5LGR3SQ=mUvYehkhUk5AMJd4mi7JchdUrO=5zE9wF8xeiYEg@mail.gmail.com>
+Message-ID: <CA+5LGR3SQ=mUvYehkhUk5AMJd4mi7JchdUrO=5zE9wF8xeiYEg@mail.gmail.com>
+Subject: Re: [PATCH] net: dev: Add API to check net_dev readiness
+To:     David Miller <davem@davemloft.net>
+Cc:     andrew@lunn.ch, kuba@kernel.org, jiri@mellanox.com,
+        edumazet@google.com, ap420073@gmail.com, xiyou.wangcong@gmail.com,
+        maximmi@mellanox.com, Ilia Lin <ilia.lin@kernel.org>,
+        netdev@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 13, 2020 at 06:57:32PM -0700, Sean Christopherson wrote:
-> Don't attempt to load PDPTRs if EFER.LME=1, i.e. if 64-bit mode is
-> enabled.  A recent change to reload the PDTPRs when CR0.CD or CR0.NW is
-> toggled botched the EFER.LME handling and sends KVM down the PDTPR path
-> when is_paging() is true, i.e. when the guest toggles CD/NW in 64-bit
-> mode.
-> 
-> Split the CR0 checks for 64-bit vs. 32-bit PAE into separate paths.  The
-> 64-bit path is specifically checking state when paging is toggled on,
-> i.e. CR0.PG transititions from 0->1.  The PDPTR path now needs to run if
-> the new CR0 state has paging enabled, irrespective of whether paging was
-> already enabled.  Trying to shave a few cycles to make the PDPTR path an
-> "else if" case is a mess.
-> 
-> Fixes: d42e3fae6faed ("kvm: x86: Read PDPTEs on CR0.CD and CR0.NW changes")
-> Cc: Jim Mattson <jmattson@google.com>
-> Cc: Oliver Upton <oupton@google.com>
-> Cc: Peter Shier <pshier@google.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
+Hi Andrew and David,
 
-Ping.  This really needs to be in the initial pull for 5.9, as is kvm/queue
-has a 100% fatality rate for me.
+Thank you for your comments!
+
+The client driver is still work in progress, but it can be seen here:
+https://source.codeaurora.org/quic/la/kernel/msm-4.19/tree/drivers/platform/msm/ipa/ipa_api.c#n3842
+
+For HW performance reasons, it has to be in subsys_initcall.
+
+Here is the register_netdev call:
+https://source.codeaurora.org/quic/la/kernel/msm-4.19/tree/drivers/platform/msm/ipa/ipa_v3/rmnet_ipa.c#n2497
+
+And it is going to be in the subsys_initcall as well.
+
+Thanks,
+Ilia
+
+On Mon, Jul 27, 2020 at 8:32 PM David Miller <davem@davemloft.net> wrote:
+>
+> From: Andrew Lunn <andrew@lunn.ch>
+> Date: Sun, 26 Jul 2020 21:45:28 +0200
+>
+> > I also have to wonder why a network device driver is being probed the
+> > subsys_initcall.
+>
+> This makes me wonder how this interface could even be useful.  The
+> only way to fix the problem is to change when the device is probed,
+> which would mean changing which initcall it uses.  So at run time,
+> this information can't do much.
