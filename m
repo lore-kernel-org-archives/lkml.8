@@ -2,81 +2,115 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C8BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D56FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF77622B40
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:18:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BoPTUJWC"
+	by mail.kernel.org (Postfix) with ESMTP id D1BBC208A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:23:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596551005;
+	bh=gCAOTGV+S81wbKkcdN1P5rxcMrLXO+oK03/TIyVDses=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GCoA+17IQfIGcKm8FpSi2i46wDyuvEX2ducUdJxvzR+tBYgadqW76GINsfgWvzr/c
+	 YKpLSMxl4p6RVso/LRIiFg0P6l+xlLDFKX7V7vZ5kSTpe0jLLjagsMb5b77s/eRHeo
+	 3cnZMBpYBJD+l2alp29iwMiD/hbyxY3x8XagTo74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbgHDOSm (ORCPT
+        id S1728668AbgHDOXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:18:42 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48398 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728560AbgHDOSj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:18:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596550718;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Sw61jMeCuZdbDRLwviwnpjt8KTeY+4WKos8mwU2Av5s=;
-        b=BoPTUJWCftZzjUkYW1P/WSw9SgG6Q3YUnNJWUebrNu1bABA8RmJi2AK47/WdbIpbGTX3Ot
-        FA73UOI6CM70Tz77AxIBpRQLd89MpxLOl/U1dAn24FnMZ5E9M70NwMjiX1HotQY0r4xFF9
-        rb+hV7+Q59IcuFNFA3rp2bYipoBvJWc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-294-gCRcc1HPMnaBWNWm9ylx3g-1; Tue, 04 Aug 2020 10:18:35 -0400
-X-MC-Unique: gCRcc1HPMnaBWNWm9ylx3g-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 4 Aug 2020 10:23:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728387AbgHDOXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 10:23:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7E5A719057C9;
-        Tue,  4 Aug 2020 14:18:33 +0000 (UTC)
-Received: from gondolin (ovpn-112-169.ams2.redhat.com [10.36.112.169])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 326667F5CC;
-        Tue,  4 Aug 2020 14:18:29 +0000 (UTC)
-Date:   Tue, 4 Aug 2020 16:18:27 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v2 02/24] virtio_ring: sparse warning fixup
-Message-ID: <20200804161827.5e1851a6.cohuck@redhat.com>
-In-Reply-To: <20200803205814.540410-3-mst@redhat.com>
-References: <20200803205814.540410-1-mst@redhat.com>
-        <20200803205814.540410-3-mst@redhat.com>
-Organization: Red Hat GmbH
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E468208A9;
+        Tue,  4 Aug 2020 14:23:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596550991;
+        bh=gCAOTGV+S81wbKkcdN1P5rxcMrLXO+oK03/TIyVDses=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CnPcdLRmjk0BoEPdgStiHhz3IrtIBwNjq2Pwr+QjQ3YkoGp1MF7W54hvnm03KMQrc
+         60QZhwFmrfQ56agxlyCvDzWqnmmZxYehYxScxkEWWVOa+cHzklHbaM2CpEa7GeyRUo
+         WkBlOG5Rk1nHpVd5vaooFnkOYOdvbYg2FilFG94Y=
+Date:   Tue, 4 Aug 2020 16:22:50 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Daniel Gutson <daniel@eclypsium.com>
+Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Richard Hughes <hughsient@gmail.com>,
+        Alex Bazhaniuk <alex@eclypsium.com>
+Subject: Re: [PATCH] Platform lockdown information in SYSFS
+Message-ID: <20200804142250.GA247448@kroah.com>
+References: <20200730214136.5534-1-daniel.gutson@eclypsium.com>
+ <20200731070053.GC1518178@kroah.com>
+ <CAFmMkTGdzjjrvitY8fT+RcXFqHG1JGMB-3w1hi1c8CD0FH34Tw@mail.gmail.com>
+ <20200731141503.GA1717752@kroah.com>
+ <CAFmMkTG7tkFzwwo_WNe2EFFRVijvGm+NLaeN3qX6CVzTViWBag@mail.gmail.com>
+ <20200804064154.GE696690@kroah.com>
+ <CAFmMkTE1PHPrZwnH7DKFW145dn01LhydTbL7HPTO+_zKA+P61Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFmMkTE1PHPrZwnH7DKFW145dn01LhydTbL7HPTO+_zKA+P61Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 3 Aug 2020 16:58:42 -0400
-"Michael S. Tsirkin" <mst@redhat.com> wrote:
-
-> virtio_store_mb was built with split ring in mind so it accepts
-> __virtio16 arguments. Packed ring uses __le16 values, so sparse
-> complains.  It's just a store with some barriers so let's convert it to
-> a macro, we don't loose too much type safety by doing that.
+On Tue, Aug 04, 2020 at 10:50:13AM -0300, Daniel Gutson wrote:
+> On Tue, Aug 4, 2020 at 3:41 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Mon, Aug 03, 2020 at 07:04:56PM -0300, Daniel Gutson wrote:
+> > > > > > Think of this as an input device.  You don't put the random input
+> > > > > > attributes all in one place, you create a new device that represents the
+> > > > > > input interface and register that.
+> > >
+> > > I'm having trouble with this. What's the dev_t for the child devices?
+> > > I'm doing
+> > >     child_device = device_create(&my_class, &pdev->dev, MKDEV(0, 0),
+> > > NULL, "child");
+> > > pdev is the pci_device (intel-spi-pci)
+> > > dmesg shows
+> > >
+> > >     sysfs: cannot create duplicate filename '/class/my-class'
+> > >     (call trace)
+> > >     kobject_add_internal failed for my-class with -EEXIST, don't try
+> > > to register things with the same name in the same directory.
+> >
+> > Without seeing all of your code, I can't tell you what you are doing
+> > wrong, but the kernel should be giving you a huge hint here...
+> >
+> > Don't create duplicate names in the same subdirectory.
 > 
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->  include/linux/virtio_ring.h | 19 +++++++++----------
->  1 file changed, 9 insertions(+), 10 deletions(-)
+> I'm not doing that. One of my questions is if MKDEV(0, 0) is valid for
+> create_device, which I inferred so from the documentation.
 
-Acked-by: Cornelia Huck <cohuck@redhat.com>
+Yes it is, but that's not the error given to you :)
 
+Many in-kernel users call device_create() with MKDEV(0, 0)
+
+> Here is the listing
+
+<snip>
+
+It's not in any format to read, please never strip leading whitespace,
+it hurts my brain...
+
+thanks,
+
+greg k-h
