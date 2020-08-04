@@ -2,99 +2,77 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED52C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FD1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE4A22B45
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ABC32177B
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:21:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729629AbgHDISH (ORCPT
+        id S1728949AbgHDIVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 04:18:07 -0400
-Received: from mga12.intel.com ([192.55.52.136]:20181 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726793AbgHDISH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 04:18:07 -0400
-IronPort-SDR: PK9eileLvzXHNVXQMTIVmNvyg7mAQ+KduJd+B03hK1GpoyUlIPCc6zXj8hc2gD132cDIhRjgFI
- wZ0aOJdpAs6Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="131840845"
-X-IronPort-AV: E=Sophos;i="5.75,433,1589266800"; 
-   d="scan'208";a="131840845"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 01:18:06 -0700
-IronPort-SDR: lIPKwjOwt6Z/dHXBMxc2tUMS7VrggARADIVhJLj8dxURiyIUymmGIKXCbXECFxFk6hkn6KZVS2
- 6EsbiN6ViElg==
-X-IronPort-AV: E=Sophos;i="5.75,433,1589266800"; 
-   d="scan'208";a="330528978"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 01:18:03 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id F148D20686; Tue,  4 Aug 2020 11:18:01 +0300 (EEST)
-Date:   Tue, 4 Aug 2020 11:18:01 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Jacopo Mondi <jacopo@jmondi.org>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Hugues Fruchet <hugues.fruchet@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] media: i2c: ov5640: Fallback to parallel mode
-Message-ID: <20200804081801.GD13316@paasikivi.fi.intel.com>
-References: <1596465107-14251-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1596465107-14251-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Tue, 4 Aug 2020 04:21:17 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:39790 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726276AbgHDIVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 04:21:17 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CF172A16A63BE924F049;
+        Tue,  4 Aug 2020 16:21:14 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 4 Aug 2020 16:21:03 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH] memory: jz4780-nemc: Fix return value check in jz4780_nemc_probe()
+Date:   Tue, 4 Aug 2020 08:24:03 +0000
+Message-ID: <20200804082403.76297-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1596465107-14251-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+In case of error, the function devm_ioremap() returns NULL pointer not
+ERR_PTR(). The IS_ERR() test in the return value check should be
+replaced with NULL test.
 
-On Mon, Aug 03, 2020 at 03:31:47PM +0100, Lad Prabhakar wrote:
-> Fallback to parallel mode if bus_type doesn't match the supported
-> interfaces by the driver.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  drivers/media/i2c/ov5640.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-> index 08c67250042f..4e88b0540740 100644
-> --- a/drivers/media/i2c/ov5640.c
-> +++ b/drivers/media/i2c/ov5640.c
-> @@ -3074,6 +3074,12 @@ static int ov5640_probe(struct i2c_client *client)
->  		return ret;
->  	}
->  
-> +	/* fallback to parallel mode */
-> +	if (sensor->ep.bus_type != V4L2_MBUS_PARALLEL &&
-> +	    sensor->ep.bus_type != V4L2_MBUS_CSI2_DPHY &&
-> +	    sensor->ep.bus_type != V4L2_MBUS_BT656)
-> +		sensor->ep.bus_type = V4L2_MBUS_PARALLEL;
+Fixes: f046e4a3f0b9 ("memory: jz4780_nemc: Only request IO memory the driver will use")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+---
+ drivers/memory/jz4780-nemc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-You basically need the type from the v4l2_fwnode_endpoint_parse(), and if
-you don't have any of the above bus types, probe should fail. The old
-bindings were documented in a way that either parallel or CSI-2 bus will be
-used, and there were no defaults. So all should be well.
+diff --git a/drivers/memory/jz4780-nemc.c b/drivers/memory/jz4780-nemc.c
+index 3ec5cb0fce1e..608ae925e641 100644
+--- a/drivers/memory/jz4780-nemc.c
++++ b/drivers/memory/jz4780-nemc.c
+@@ -304,9 +304,9 @@ static int jz4780_nemc_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	nemc->base = devm_ioremap(dev, res->start, NEMC_REG_LEN);
+-	if (IS_ERR(nemc->base)) {
++	if (!nemc->base) {
+ 		dev_err(dev, "failed to get I/O memory\n");
+-		return PTR_ERR(nemc->base);
++		return -ENOMEM;
+ 	}
+ 
+ 	writel(0, nemc->base + NEMC_NFCSR);
 
--- 
-Sakari Ailus
+
+
