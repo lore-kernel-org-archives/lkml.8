@@ -2,130 +2,131 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 956ABC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EE7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A2712068F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:29:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="N2Lx7bIp"
+	by mail.kernel.org (Postfix) with ESMTP id 85E38206D4
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:33:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730097AbgHDD3q (ORCPT
+        id S1729642AbgHDDd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 23:29:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40480 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729642AbgHDD3q (ORCPT
+        Mon, 3 Aug 2020 23:33:56 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54942 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728622AbgHDDdz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 23:29:46 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED618C06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 20:29:45 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id y3so35986465wrl.4
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 20:29:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LmKKzdmsH+1VZAyS/bcCQ07sLy0DbSnTthJzq4HEE1c=;
-        b=N2Lx7bIpVS3FuJKK0Z0ef/alEh+npxvLnHgcnIQmEEHSV+bOdivorBtrAUOaIjaQuM
-         /eLnzoiN2RHn5o1vELmITihEHOO1s7vfh3oLze4o01+BvJh61NtK3lY3JGcrm11VHvA3
-         XWw5mSxLNCwU1VcD8M1Bx+/ZrsYDZFBVUeM/1pDg7SJ9T4sWiiy5WrOyAcymIlTB+GHE
-         5mcsx6xQqdsgGXxYVoIHdGjoPjIjjlKHmYw2RNFeIbGMXEncp3CtPnFNqwM4BeujMFkn
-         0BThrq0Ha2ymRqGfYsvbBo8ibUwzjiePhV6KYPqfqV+MXGsBlerMbU2HLYvKZwXW00Au
-         OCbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LmKKzdmsH+1VZAyS/bcCQ07sLy0DbSnTthJzq4HEE1c=;
-        b=tWxqLvp/7UCeAm7DVXd2w/xffhPHICyGQU0Bgwjd+NJywZQge5i3dKsUuXJNlC7FFV
-         lY2CLJnfclPNoIHZNz2piAWJLXMpvdZf8IJ+PryOfc5ui7ZagxQVzpNrzo4+57pAj5Gi
-         Tn8wkWGFpdjaeMxoErKQqJXocihG6SnkoJBHaQ9d4r1tEtCGkZ70mtmqzBgTF/mCFZQY
-         R2/5NMZ9mHK+s7vwOcjSN8Nr5LcW5n2MoOc78fUgX1dw3oAmzTte48oMpyqKKGFcbUzI
-         lu6xa+d5mOdctctkq319Aqg0OtWE3yclPuyF+r0prx3J6ZwNJsGBVSZiFb2iAP1mhLT2
-         /c6A==
-X-Gm-Message-State: AOAM530es/oJSjsnenVQSZufWoMs1X6O3s8+QXWYUyqMBeTY2CEzZW2o
-        kA+ApaMJ3/fTADkImQ+z+P3jlfdAMQLZwxXLz5Hpm3Mi
-X-Google-Smtp-Source: ABdhPJyFa+mc48R5ry3vm9Zy21Kc2uGTPuKBXSUBVyTN7VIdD1/fesiIXrwx4JlGChud9jFDvW10FSsVJaAlhWGNI1s=
-X-Received: by 2002:adf:fb87:: with SMTP id a7mr18913370wrr.390.1596511784511;
- Mon, 03 Aug 2020 20:29:44 -0700 (PDT)
+        Mon, 3 Aug 2020 23:33:55 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0743VRTn040848;
+        Mon, 3 Aug 2020 23:33:33 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32pxv8s7pd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Aug 2020 23:33:33 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0743GRSG017654;
+        Tue, 4 Aug 2020 03:33:30 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma05fra.de.ibm.com with ESMTP id 32n017sqr9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Aug 2020 03:33:30 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0743W1GZ62390658
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 4 Aug 2020 03:32:01 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 194EB11C054;
+        Tue,  4 Aug 2020 03:33:28 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C94A611C052;
+        Tue,  4 Aug 2020 03:33:24 +0000 (GMT)
+Received: from srikart450.in.ibm.com (unknown [9.77.201.172])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  4 Aug 2020 03:33:24 +0000 (GMT)
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Rik van Riel <riel@surriel.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Neuling <mikey@neuling.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
+Subject: [PATCH 1/2] sched/topology: Allow archs to override cpu_smt_mask
+Date:   Tue,  4 Aug 2020 09:03:06 +0530
+Message-Id: <20200804033307.76111-1-srikar@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200804030205.91656-1-greentime.hu@sifive.com>
-In-Reply-To: <20200804030205.91656-1-greentime.hu@sifive.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Tue, 4 Aug 2020 08:59:32 +0530
-Message-ID: <CAAhSdy1QbMjZxxu+wSBYr3+3oaM2Qg=_Uwj8dfQidi=ck6PV_Q@mail.gmail.com>
-Subject: Re: [PATCH] riscv: Add sfence.vma after page table changed
-To:     Greentime Hu <greentime.hu@sifive.com>
-Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>, syven.wang@sifive.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-03_15:2020-08-03,2020-08-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 phishscore=0 suspectscore=0
+ malwarescore=0 clxscore=1011 mlxlogscore=999 bulkscore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008040022
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 8:32 AM Greentime Hu <greentime.hu@sifive.com> wrote:
->
-> This patch addes local_flush_tlb_page(addr) to use sfence.vma after the
+cpu_smt_mask tracks topology_sibling_cpumask. This would be good for
+most architectures. One of the users of cpu_smt_mask(), would be to
+identify idle-cores. On Power9, a pair of cores can be presented by the
+firmware as a big-core for backward compatibility reasons.
 
-s/addes/adds
+In order to maintain userspace backward compatibility with previous
+versions of processor, (since Power8 had SMT8 cores), Power9 onwards there
+is option to the firmware to advertise a pair of SMT4 cores as a fused
+cores (referred to as the big_core mode in the Linux Kernel). On Power9
+this pair shares the L2 cache as well. However, from the scheduler's point
+of view, a core should be determined by SMT4. The load-balancer already
+does this. Hence allow PowerPc architecture to override the default
+cpu_smt_mask() to point to the SMT4 cores in a big_core mode.
 
-> page table changed. That address will be used immediately in
-> memset(nextp, 0, PAGE_SIZE) to cause this issue so we should add the
-> sfence.vma before we use it.
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Michael Neuling <mikey@neuling.org>
+Cc: Gautham R Shenoy <ego@linux.vnet.ibm.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
+Signed-off-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+---
+ include/linux/topology.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Alternate version of this commit description can be:
+diff --git a/include/linux/topology.h b/include/linux/topology.h
+index 608fa4aadf0e..ad03df1cc266 100644
+--- a/include/linux/topology.h
++++ b/include/linux/topology.h
+@@ -198,7 +198,7 @@ static inline int cpu_to_mem(int cpu)
+ #define topology_die_cpumask(cpu)		cpumask_of(cpu)
+ #endif
 
-Invalidate local TLB after both set_pet() and clear_pte() because the
-address can be used immediately after page table change.
+-#ifdef CONFIG_SCHED_SMT
++#if defined(CONFIG_SCHED_SMT) && !defined(cpu_smt_mask)
+ static inline const struct cpumask *cpu_smt_mask(int cpu)
+ {
+ 	return topology_sibling_cpumask(cpu);
+-- 
+2.18.2
 
->
-> Fixes: f2c17aabc917 ("RISC-V: Implement compile-time fixed mappings")
->
-> Reported-by: Syven Wang <syven.wang@sifive.com>
-> Signed-off-by: Syven Wang <syven.wang@sifive.com>
-> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
-> ---
->  arch/riscv/mm/init.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index f4adb3684f3d..29b0f7108054 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -202,12 +202,11 @@ void __set_fixmap(enum fixed_addresses idx, phys_addr_t phys, pgprot_t prot)
->
->         ptep = &fixmap_pte[pte_index(addr)];
->
-> -       if (pgprot_val(prot)) {
-> +       if (pgprot_val(prot))
->                 set_pte(ptep, pfn_pte(phys >> PAGE_SHIFT, prot));
-> -       } else {
-> +       else
->                 pte_clear(&init_mm, addr, ptep);
-> -               local_flush_tlb_page(addr);
-> -       }
-> +       local_flush_tlb_page(addr);
->  }
->
->  static pte_t *__init get_pte_virt(phys_addr_t pa)
-> --
-> 2.28.0
->
-
-Otherwise looks good to me.
-
-Reviewed-by: Anup Patel <anup@brainfault.org>
-
-Regards,
-Anup
