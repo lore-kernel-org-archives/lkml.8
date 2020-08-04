@@ -2,171 +2,94 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9704FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBB2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77B48207FC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9703C207FC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:09:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="zVnmGtaz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SAAlZINX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729961AbgHDRHd (ORCPT
+        id S1729989AbgHDRJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 13:07:33 -0400
-Received: from cmta16.telus.net ([209.171.16.89]:49779 "EHLO cmta16.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729388AbgHDRFr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 13:05:47 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id 30Mhk7TkK5b7l30MjkMSUA; Tue, 04 Aug 2020 11:04:43 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1596560684; bh=JALEurWlvnPlBMa78OmCHzscxaUV9ayGqlorUWPpLOM=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=zVnmGtazlqkbIHxU1KvaCnW3nzLccpDF9ASaAOTmhWU5ao6Yx2cLjD3h/MTBwosWL
-         EcBqJIipYr0b9a9sRgQCDQFyqwv7ToTvf3HYhWClksm/SLRBVtnL4oXYlK699thob4
-         KWS0gQG8QteOJsg+8gYNpRrzJoW5+XTMiNChpuWjQZei1a/zjdv1OlivGu1jH/C7kJ
-         Ju3WPS4a3XsMMAvpcGc84ome4taezNNpaHPZ1BjEXRnRM1U5Yi28Ohiy/7Cx4LLkaP
-         jUV6CRaqb+StqS00Dusz6S3pVDJLr2TbZjJSQ3jxEgFvRrzt8hGG+bVYKwovRrhcxy
-         8HvtPLBF0AfiA==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=YPHhNiOx c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8
- a=Z_ZUgUZAPj2aFtWniJYA:9 a=cGtpBKYyCqBvOoDN:21 a=WcyYtQ8uXPS6tcuo:21
- a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
-Cc:     "'Linux Documentation'" <linux-doc@vger.kernel.org>,
-        "'LKML'" <linux-kernel@vger.kernel.org>,
-        "'Peter Zijlstra'" <peterz@infradead.org>,
-        "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>,
-        "'Giovanni Gherdovich'" <ggherdovich@suse.cz>,
-        "'Francisco Jerez'" <francisco.jerez.plata@intel.com>,
-        "'Viresh Kumar'" <viresh.kumar@linaro.org>,
-        "'Linux PM'" <linux-pm@vger.kernel.org>
-References: <4981405.3kqTVLv5tO@kreacher> <1709487.Bxjb1zNRZM@kreacher> <1633168.eVXp6ieOpF@kreacher>
-In-Reply-To: <1633168.eVXp6ieOpF@kreacher>
-Subject: RE: [PATCH v6] cpufreq: intel_pstate: Implement passive mode with HWP enabled
-Date:   Tue, 4 Aug 2020 10:04:39 -0700
-Message-ID: <000d01d66a81$59326a50$0b973ef0$@net>
+        Tue, 4 Aug 2020 13:09:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729628AbgHDRJb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 13:09:31 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C1D8C06174A;
+        Tue,  4 Aug 2020 10:09:30 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id c16so22883724ejx.12;
+        Tue, 04 Aug 2020 10:09:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TmsN7b1e8rX4AEr8yauDRsn4mhsHXmUyeaZarjIQThg=;
+        b=SAAlZINXTshQ5UICKXaibx5ndHSbTF9K1YpfnT5oRyj4GQRzF93RaHqvDn3XUZb7pf
+         4orEEGGY44v7pppzWPG8L67xQLJslDm7GVCHbWi/kbk20IZtmTJ4dwzB0f9E6DGOzbJM
+         iGfq/DI41YnTvO/UbAviX67Ab1aI8aJE5+XFDuaeLJ5H0Dhlf3qo7FabyNeCDu1GG4sa
+         sxEfO1jD7Fh9r3SQ18M2ZR2jrCCtRA0ZXL00ehn8hWcs/78j07cGXgkj05Pww4p5Z3e3
+         kCvPnezHEdfb51XPzV86QnBmHRli+kuJhb1pO483tUPcv3NTnMa5YULH0DLJ2cbKqcSZ
+         Wl5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TmsN7b1e8rX4AEr8yauDRsn4mhsHXmUyeaZarjIQThg=;
+        b=UpGtXKU9t7OLyHIJdI3z5mvyd0LknImCXVJLu1WLT6r1+M2lA2QGl6n/6hqQ/JRWoc
+         89iS2hBrTi4wU4iv8xFNUFFRezSoZCIxxHQl9ge6law2kPLg9G6XYRYkGya4oa6puv0/
+         74guAqhr5WRTi1m0Iy5PquDpiz16iiDI1D6gFizpYj+kHqMDWNdOFVUGt4HfCEk7a/q8
+         XfSABn8zDHTjFHAJOv3INwfuBrCMLfJ1yspFI1GzCTm8JlPoShXJhXTgnaR9cbEeOXSQ
+         wmQSIQH+HAJtC8TgNROc0bh8YM3ARvb1Rh4f0zkVuE/AuTbRZ1wlF2ZK4UbFc8hhenrc
+         f47Q==
+X-Gm-Message-State: AOAM531aVp4UGmr4DGAW8AyF9wSxBbuM127Cz7Tm4hitlr2YFn2FYgj/
+        vEuTAFy/gaglZwPRx4ugkXeUo4pzJYqpkfCPI/8lHKxRqA==
+X-Google-Smtp-Source: ABdhPJx8Vxg+h2i9MEAYwONcjbEsNnD8gW5IFxNM/SlRiTssVc6oOKBlbPfhsZh6ZmLZt3RqSDqL3qX3aZw58AVcjFM=
+X-Received: by 2002:a17:906:26c7:: with SMTP id u7mr21715410ejc.13.1596560967679;
+ Tue, 04 Aug 2020 10:09:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdZqcXRb5nHqAAAiRZmLFRLLJ0EJBwADBFCQ
-X-CMAE-Envelope: MS4wfBOrrTL5LsPq/idhG+0L5OvyXACBr/DULF4vCaqFGVMhei+w3S6yiPRw3grLdg+/glA+uxKI07NL98+BawXlQOhJgzZcp7fpBZnqXy1sMI39ZGNCWo63
- A2uFt62HCprVZQCBp8YnNS+wFr/4r2J6CqWPVnvxaqcaN560lgwWv1lsWWaIDaNI2rVJXMjeXDPyBI9yVrj/O83kCcnwrX956X7iTSoRcogG3U7PKAmxvKHs
- jMhESBBqhMZZFJzZ63PoLMUZ7vvLVsxaxk1uWwuO0yu8N7UoA+Wtl015NHE6AWBdftg/WWzbD6Or7rdN/lvuH80m5Vyh1Y1an06wtR8bv9xgx+Wb9SP2E6zR
- +n8jMdLbyLSbhYrLBsMSgxN3Ilt7w/IjAn2JPU7Def8Z3AGIa2xRzt1WyiK6UyHwPK8vsE4eYk54XPOUtuHCIQ3h6Q/w1nzjK+eQMfj/WeGlq8ep0Fk=
+References: <CAMciSVWzH3fuo8eStwRUwGJ+VsJjctLucOZo-EVx07ktXzObFA@mail.gmail.com>
+ <83ff62ab-42c8-df6c-32c1-c1df2f8cda7a@roeck-us.net>
+In-Reply-To: <83ff62ab-42c8-df6c-32c1-c1df2f8cda7a@roeck-us.net>
+From:   Naveen Kumar P <naveenkumar.parna@gmail.com>
+Date:   Tue, 4 Aug 2020 22:39:16 +0530
+Message-ID: <CAMciSVVq7LL+c6Va1xqcCfMMMqcM9+3DXsOi+6cyqjPfdLgpGA@mail.gmail.com>
+Subject: Re: iTCO watchdog last reboot reason?
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
-
-I was just writing you about V5 when this V6 came.
-
-On 2020.08.04 08:11 Rafael J. Wysocki wrote:
-...
-> This is on top of the material already in the mainline.
-
-Oh, should have read that part better,
-but did get there in the end.
-...
-> v5 -> v6:
->    * Fix the problem with the EPP setting via sysfs not working with the
->      performance and powersave governors by stopping and restarting the
->      governor around the sysfs-based EPP updates in the passive mode.
->    * Because of that, use the epp_cached field just for avoiding the above
->      if the new EPP value for the given CPU is the same as the old one.
->    * Export cpufreq_start/stop_governor() from the core (for the above).
-
-EPP is still not right.
-I am not messing with it at all, just observing via my msr-decoder.
-
-I booted without any intel_pstate related directives for the
-kernel command line. The below is as expected (performance gov.):
-
-# /home/doug/c/msr-decoder
-How many CPUs?: 6
-8.) 0x198: IA32_PERF_STATUS     : CPU 0-5 :  46 :  46 :  46 :  46 :  46 :  46 :
-B.) 0x770: IA32_PM_ENABLE: 1 : HWP enable
-1.) 0x19C: IA32_THERM_STATUS: 88450000
-2.) 0x1AA: MSR_MISC_PWR_MGMT: 401CC0 EIST enabled Coordination enabled OOB Bit 8 reset OOB Bit 18 reset
-3.) 0x1B1: IA32_PACKAGE_THERM_STATUS: 88430000
-4.) 0x64F: MSR_CORE_PERF_LIMIT_REASONS: 0
-A.) 0x1FC: MSR_POWER_CTL: 3C005D : C1E disable : EEO disable : RHO disable
-5.) 0x771: IA32_HWP_CAPABILITIES (performance): 109252E : high 46 : guaranteed 37 : efficient 9 : lowest 1
-6.) 0x774: IA32_HWP_REQUEST:    CPU 0-5 :
-    raw: 00002E2E : 00002E2E : 00002E2E : 00002E2E : 00002E2E : 00002E2E :
-    min:       46 :       46 :       46 :       46 :       46 :       46 :
-    max:       46 :       46 :       46 :       46 :       46 :       46 :
-    des:        0 :        0 :        0 :        0 :        0 :        0 :
-    epp:        0 :        0 :        0 :        0 :        0 :        0 :
-    act:        0 :        0 :        0 :        0 :        0 :        0 :
-7.) 0x777: IA32_HWP_STATUS: 4 : high 4 : guaranteed 0 : efficient 0 : lowest 0
-
-and then switched to passive mode later. EPP is not as expected. Expect 0
-(performance mode):
-
-# /home/doug/c/msr-decoder
-How many CPUs?: 6
-8.) 0x198: IA32_PERF_STATUS     : CPU 0-5 :  46 :  46 :  46 :  46 :  46 :  46 :
-B.) 0x770: IA32_PM_ENABLE: 1 : HWP enable
-1.) 0x19C: IA32_THERM_STATUS: 88440000
-2.) 0x1AA: MSR_MISC_PWR_MGMT: 401CC0 EIST enabled Coordination enabled OOB Bit 8 reset OOB Bit 18 reset
-3.) 0x1B1: IA32_PACKAGE_THERM_STATUS: 88420000
-4.) 0x64F: MSR_CORE_PERF_LIMIT_REASONS: 0
-A.) 0x1FC: MSR_POWER_CTL: 3C005D : C1E disable : EEO disable : RHO disable
-5.) 0x771: IA32_HWP_CAPABILITIES (performance): 108252E : high 46 : guaranteed 37 : efficient 8 : lowest 1
-6.) 0x774: IA32_HWP_REQUEST:    CPU 0-5 :
-    raw: FF002E2E : FF002E2E : FF002E2E : FF002E2E : FF002E2E : FF002E2E :
-    min:       46 :       46 :       46 :       46 :       46 :       46 :
-    max:       46 :       46 :       46 :       46 :       46 :       46 :
-    des:        0 :        0 :        0 :        0 :        0 :        0 :
-    epp:      255 :      255 :      255 :      255 :      255 :      255 :
-    act:        0 :        0 :        0 :        0 :        0 :        0 :
-7.) 0x777: IA32_HWP_STATUS: 4 : high 4 : guaranteed 0 : efficient 0 : lowest 0
-
-Then switched to ondemand governor, and put 100% load on 2 CPUs.
-EPP is not as expected, which I don't actually know what to expect,
-but assume 128:
-
-# /home/doug/c/msr-decoder
-How many CPUs?: 6
-8.) 0x198: IA32_PERF_STATUS     : CPU 0-5 :  46 :  46 :  46 :  46 :  46 :  46 :
-B.) 0x770: IA32_PM_ENABLE: 1 : HWP enable
-1.) 0x19C: IA32_THERM_STATUS: 883B0000
-2.) 0x1AA: MSR_MISC_PWR_MGMT: 401CC0 EIST enabled Coordination enabled OOB Bit 8 reset OOB Bit 18 reset
-3.) 0x1B1: IA32_PACKAGE_THERM_STATUS: 882B0000
-4.) 0x64F: MSR_CORE_PERF_LIMIT_REASONS: 0
-A.) 0x1FC: MSR_POWER_CTL: 3C005D : C1E disable : EEO disable : RHO disable
-5.) 0x771: IA32_HWP_CAPABILITIES (performance): 10B252E : high 46 : guaranteed 37 : efficient 11 : lowest 1
-6.) 0x774: IA32_HWP_REQUEST:    CPU 0-5 :
-    raw: FF002E09 : FF002E0C : FF002E2E : FF002E08 : FF002E2E : FF002E18 :
-    min:        9 :       12 :       46 :        8 :       46 :       24 :
-    max:       46 :       46 :       46 :       46 :       46 :       46 :
-    des:        0 :        0 :        0 :        0 :        0 :        0 :
-    epp:      255 :      255 :      255 :      255 :      255 :      255 :
-    act:        0 :        0 :        0 :        0 :        0 :        0 :
-7.) 0x777: IA32_HWP_STATUS: 4 : high 4 : guaranteed 0 : efficient 0 : lowest 0
-
-For what it's worth, Kernel:
-
-78b39581ed85 (HEAD -> dtemp) cpufreq: intel_pstate: Implement passive mode with HWP enabled
-c0842fbc1b18 (origin/master, origin/HEAD, master) random32: move the pseudo-random 32-bit definitions to prandom.h
-2baa85d6927d Merge tag 'acpi-5.9-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
-04084978003c Merge tag 'pm-5.9-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
-
-... Doug
-
-
+On Tue, Aug 4, 2020 at 9:45 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On 8/4/20 7:41 AM, Naveen Kumar P wrote:
+> > [ Please keep me in CC as I'm not subscribed to the list]
+> >
+> > Hi everyone,
+> >
+> > I enabled the iTCO watchdog in my Linux system.
+> >
+> > sudo cat /dev/watchdog perfectly reboots my system. But, is there a
+> > way to find out on each boot if the machine was rebooted due to a
+> > watchdog timeout or not?
+> >
+> > Any ideas?
+> >
+>
+> If the hardware supports it, the driver could set the reboot reason
+> in its probe function.
+Thank you Guenter for the quick response. Can you please point me to
+the corresponding patch?
+>
+> Guenter
