@@ -2,113 +2,106 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5F8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 729D3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 724D82067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:20:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="Bs9vew/K"
+	by mail.kernel.org (Postfix) with ESMTP id 623352067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:20:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729841AbgHDLM2 (ORCPT
+        id S1730253AbgHDLUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 07:12:28 -0400
-Received: from mxwww.masterlogin.de ([95.129.51.220]:36040 "EHLO
-        mxwww.masterlogin.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726585AbgHDLF1 (ORCPT
+        Tue, 4 Aug 2020 07:20:20 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:33312 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728079AbgHDLIC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 07:05:27 -0400
-X-Greylist: delayed 348 seconds by postgrey-1.27 at vger.kernel.org; Tue, 04 Aug 2020 07:05:26 EDT
-Received: from mxout1.routing.net (unknown [192.168.10.81])
-        by forward.mxwww.masterlogin.de (Postfix) with ESMTPS id C4614962E5;
-        Tue,  4 Aug 2020 10:59:21 +0000 (UTC)
-Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
-        by mxout1.routing.net (Postfix) with ESMTP id 91FE040313;
-        Tue,  4 Aug 2020 10:59:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-        s=20200217; t=1596538761;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=6sHDa9smyFwbvqKVqeGXROlmDLAtZyXjrCBrDcPCrmE=;
-        b=Bs9vew/KyFn0Up9e3R05pS5gbcH40ClNXZrLRsrMdz1PN7Pf5rMBqBX//UgpRt1qf5wK7S
-        IgX3tDd4f/bPWgknlln5qY7+0MnsvRR171/lCViGz/ORw2f9/iE0OU9yI4CTiohhkC7lbv
-        gRHFhRU0yXeZ4bc2xpL26sfF1Z6C6l8=
-Received: from localhost.localdomain (fttx-pool-217.61.144.119.bambit.de [217.61.144.119])
-        by mxbox3.masterlogin.de (Postfix) with ESMTPSA id BF9AC3606FE;
-        Tue,  4 Aug 2020 10:59:18 +0000 (UTC)
-From:   Frank Wunderlich <linux@fw-web.de>
-To:     linux-mediatek@lists.infradead.org
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/5] make hdmi work on bananapi-r2
-Date:   Tue,  4 Aug 2020 12:58:44 +0200
-Message-Id: <20200804105849.70876-1-linux@fw-web.de>
-X-Mailer: git-send-email 2.25.1
+        Tue, 4 Aug 2020 07:08:02 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 074B3JZc013155;
+        Tue, 4 Aug 2020 07:05:37 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 32n6cjsqj0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Aug 2020 07:05:37 -0400
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 074B5aMu005191
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 4 Aug 2020 07:05:36 -0400
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 4 Aug 2020 07:05:35 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 4 Aug 2020 07:05:34 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 4 Aug 2020 07:05:34 -0400
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 074B5VDs005208;
+        Tue, 4 Aug 2020 07:05:32 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-clk@vger.kernel.org>, <linux-fpga@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <mturquette@baylibre.com>, <sboyd@kernel.org>, <mdf@kernel.org>,
+        "Alexandru Ardelean" <alexandru.ardelean@analog.com>
+Subject: [PATCH 0/6] clk: axi-clk-gen: misc updates to the driver
+Date:   Tue, 4 Aug 2020 14:06:52 +0300
+Message-ID: <20200804110658.40911-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-04_03:2020-08-03,2020-08-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ clxscore=1011 mlxlogscore=773 bulkscore=0 phishscore=0 adultscore=0
+ suspectscore=0 impostorscore=0 lowpriorityscore=0 priorityscore=1501
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008040083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank Wunderlich <frank-w@public-files.de>
+These patches synchronize the driver with the current state in the
+Analog Devices Linux tree:
+  https://github.com/analogdevicesinc/linux/
 
-This Patch-Series adds missing Patches/Bugfixes to get hdmi working
-on BPI-R2
+They have been in the tree for about 2-3, so they did receive some
+testing.
 
-v2->v3:
- - use own mmsys-routing for mt7623 instead of code getting different
-   routing from dts
- - remove ddp routing bls -> dpi from bpir2/rfb dts
- - updated some commit-Messages as suggested by CK Hu
-v1->v2:
- - using get_possible_crtc API instead of hardcoded
- - drop unused dts-nodes
- - refine commit-messages as far as i can :)
-   "config component output by device node port" is needed to fix a WARN_ON()
-   "fix boot up for 720 and 480 but 1080" fixes flickering, 
-     which may cause also some resolutions not working on some TFT (had some problems on my smaller TFT)
+Highlights are:
+* Add support for fractional dividers (Lars-Peter Clausen)
+* Enable support for ZynqMP (UltraScale) (Dragos Bogdan)
+* Support frequency limits for ZynqMP (Mathias Tausen)
+  - And continued by Mircea Caprioru, to read them from the IP cores
 
-Frank Wunderlich (1):
-  drm: mediatek: add ddp routing for mt7623
+Dragos Bogdan (1):
+  clk: axi-clkgen: add support for ZynqMP (UltraScale)
 
-Jitao Shi (1):
-  drm/mediatek: dpi/dsi: change the getting possible_crtc way
+Lars-Peter Clausen (2):
+  clk: axi-clkgen: Add support for fractional dividers
+  clk: axi-clkgen: Set power bits for fractional mode
 
-Ryder Lee (1):
-  arm: dts: mt7623: add display subsystem related device nodes
+Mathias Tausen (1):
+  clk: axi-clkgen: Respect ZYNQMP PFD/VCO frequency limits
 
-Stu Hsieh (1):
-  drm: Add get_possible_crtc API for dpi, dsi
+Mircea Caprioru (2):
+  include: fpga: adi-axi-common.h: add definitions for supported FPGAs
+  clk: axi-clkgen: Add support for FPGA info
 
-chunhui dai (1):
-  drm/mediatek: disable tmds on mt2701
-
- arch/arm/boot/dts/mt7623.dtsi                 | 177 ++++++++++++++++++
- arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  72 +++++++
- arch/arm/boot/dts/mt7623n-rfb-emmc.dts        |  72 +++++++
- drivers/gpu/drm/mediatek/mtk_dpi.c            |   3 +-
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c   |  42 +++++
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h   |   2 +
- drivers/gpu/drm/mediatek/mtk_drm_drv.c        |  25 ++-
- drivers/gpu/drm/mediatek/mtk_dsi.c            |   3 +-
- drivers/gpu/drm/mediatek/mtk_hdmi_phy.c       |   3 +
- drivers/gpu/drm/mediatek/mtk_hdmi_phy.h       |   1 +
- .../gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c    |   1 +
- 11 files changed, 398 insertions(+), 3 deletions(-)
+ drivers/clk/Kconfig                 |   2 +-
+ drivers/clk/clk-axi-clkgen.c        | 253 ++++++++++++++++++++++------
+ include/linux/fpga/adi-axi-common.h |  37 ++++
+ 3 files changed, 236 insertions(+), 56 deletions(-)
 
 -- 
-2.25.1
+2.17.1
 
