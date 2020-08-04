@@ -2,77 +2,117 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7A3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF6EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABF1622B45
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:48:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596527332;
-	bh=HGontRWxCYghMSz4ZGc0b8/EA8pm9V6ud6CvntyG8ok=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xzDOO/DW0iWiMG987EcgFCEFg3dCePIvh0JeIOKt5sptWa+NMKClBWOV005fFSbKz
-	 K71+0HLLG31UGY8JzIzAi/Td4SLqCQv59tGXx0iGMzRupG/aTRbKTrV+s4g19IyZJh
-	 NetIylgKryioSQggar93pvEza+iWxKklg6g5R4sc=
+	by mail.kernel.org (Postfix) with ESMTP id 8621C22B45
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:49:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZiibNN8S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728500AbgHDHsv (ORCPT
+        id S1728718AbgHDHtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 03:48:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54240 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726722AbgHDHsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 03:48:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32EAF22B40;
-        Tue,  4 Aug 2020 07:48:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596527330;
-        bh=HGontRWxCYghMSz4ZGc0b8/EA8pm9V6ud6CvntyG8ok=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kUvso19X1j14yNWq/8C7RuCKp5AlFUUBda4FIUT6Z6jQ9srcMO1Jr1XJaRlDIQVUj
-         42GDQQJDsZf1ncxUYflFG6ASDfblxRZYpPDvEB7eBKlhW5+lhRiBS9Uyn9djuebo9J
-         IPjB4zFSIgqmJlY4tMu6Gmpxl/SkiqjA90dBs+Lg=
-Date:   Tue, 4 Aug 2020 09:48:31 +0200
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     =?utf-8?B?5ZCz5piK5r6E?= Ricky <ricky_wu@realtek.com>
-Cc:     Chris Clayton <chris2553@googlemail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "philquadra@gmail.com" <philquadra@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: PATCH: rtsx_pci driver - don't disable the rts5229 card reader
- on Intel NUC boxes
-Message-ID: <20200804074831.GB1761483@kroah.com>
-References: <862172f0-cd23-800c-27b1-27cb49e99099@googlemail.com>
- <a9a94d7f-4873-7a10-4911-f3c760257c5c@googlemail.com>
- <5729c72bbc2740d3917619c85e2fde58@realtek.com>
+        Tue, 4 Aug 2020 03:49:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbgHDHtY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 03:49:24 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D7C4C06174A;
+        Tue,  4 Aug 2020 00:49:24 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id k13so14573169plk.13;
+        Tue, 04 Aug 2020 00:49:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-transfer-encoding:content-language;
+        bh=4lUb1UDGtIibOehfsGOpj3d1F0eGCARLUemjRhAopo4=;
+        b=ZiibNN8Sjxcp1HIHuEaLVJfUxGcJ7w6XHP+IdD5Zy5ctaJrRP2lsbQGyOybdf6qYcv
+         4wfu/so9vVxhUtrHI24F/dkcYhD0/vD9qtG9yRlxV0JAPgWBJ4IuODgG0a5ZaCxCMXyz
+         vdtU0yI40y3qbB1BheU1pWTOh3TkpDKcub1szRcGoYZUZRR8KiyRY3bHAldHVpR7SIT4
+         PdecyM8LOF0GKlpy6qP3SSj8u3FOCin3I4FT3O+Ec3tEWk+XHGd6dmpIchFsgusnbxjC
+         0hXqaPgHBLWXb7naGKLV5WirN7JdnRAQwLiybUOlm/8uxUwcLl8+btaqt1oLLpx/R2II
+         p2bQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-transfer-encoding:content-language;
+        bh=4lUb1UDGtIibOehfsGOpj3d1F0eGCARLUemjRhAopo4=;
+        b=pcFn8IuuSJdwPhM5175ojzT3sE0TmH3cCqqy/3r+kWyNl4zMc6WJEn/cFGYKpwRUou
+         wj5x8Z+SUWAd9H9mPf17sZlT8aH6gr7nttWZSLYMFUuaLUGGTNbcfPF+eXfk9+IN24e2
+         Oon3fvWtXn+sCvuqAq8YmDWNdT6I7bQmkA3kQKGqo4NLTBJrfa0+TJBoTYJDmPO7/Wg0
+         XzP0fkX4LCD2288dm16cpdigzDbaXiLt0syY8lcXJcfsKK8/rzivBuKv4wjsaIU3BmKz
+         7sAy1C+PNlMkYRp5XCDEl2klGIXcPeI5Jw2L/TDtyQ9MPnYa6GhMgg8KbGq2z4W6iiq7
+         mh0g==
+X-Gm-Message-State: AOAM531oHW84w/wrCVxqLOJfTifMX5uT00UJgiyC8fQJseIPacwg9Ap5
+        MFrxgzLDhvGi9KipWga/PVgByxlx9/Q=
+X-Google-Smtp-Source: ABdhPJxzAJE/ZkD3Su8IXKsD+lGk6tNMUV3r8nMIof4uJv+YxoUbAU8B6Cuv9P0Bj9rdEQe3WGdlUg==
+X-Received: by 2002:a17:902:d303:: with SMTP id b3mr18596539plc.101.1596527364077;
+        Tue, 04 Aug 2020 00:49:24 -0700 (PDT)
+Received: from [127.0.0.1] ([203.205.141.45])
+        by smtp.gmail.com with ESMTPSA id q5sm2746455pfg.89.2020.08.04.00.49.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Aug 2020 00:49:23 -0700 (PDT)
+To:     tytso@mit.edu, adilger.kernel@dilger.ca
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   brookxu <brookxu.cn@gmail.com>
+Subject: [PATCH] ext4: delete invalid ac_b_extent backup inside
+ ext4_mb_use_best_found()
+Message-ID: <ab2231e8-584a-c55b-38b3-5b5f6d02c9b8@gmail.com>
+Date:   Tue, 4 Aug 2020 15:49:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5729c72bbc2740d3917619c85e2fde58@realtek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 02:44:41AM +0000, 吳昊澄 Ricky wrote:
-> Hi Chris,
-> 
-> rtsx_pci_write_register(pcr, FPDTL, OC_POWER_DOWN, OC_POWER_DOWN);
-> This register operation saved power under 1mA, so if do not care the 1mA power we can have a patch to remove it, make compatible with NUC6
-> We tested others our card reader that remove it, we did not see any side effect 
-> 
-> Hi Greg k-h,
-> 
-> Do you have any comments? 
+Delete invalid ac_b_extent backup inside ext4_mb_use_best_found(),
+we have done this operation in ext4_mb_new_group_pa() and
+ext4_mb_new_inode_pa().
 
-comments on what?  I don't know what you are responding to here, sorry.
+Signed-off-by: Chunguang Xu <brookxu@tencent.com>
+---
+ fs/ext4/mballoc.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-greg k-h
+diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+index 9b1c3ad..fb63e9f 100644
+--- a/fs/ext4/mballoc.c
++++ b/fs/ext4/mballoc.c
+@@ -1704,10 +1704,6 @@ static void ext4_mb_use_best_found(struct ext4_allocation_context *ac,
+     ac->ac_b_ex.fe_logical = ac->ac_g_ex.fe_logical;
+     ret = mb_mark_used(e4b, &ac->ac_b_ex);
+ 
+-    /* preallocation can change ac_b_ex, thus we store actually
+-     * allocated blocks for history */
+-    ac->ac_f_ex = ac->ac_b_ex;
+-
+     ac->ac_status = AC_STATUS_FOUND;
+     ac->ac_tail = ret & 0xffff;
+     ac->ac_buddy = ret >> 16;
+@@ -1726,8 +1722,8 @@ static void ext4_mb_use_best_found(struct ext4_allocation_context *ac,
+     /* store last allocated for subsequent stream allocation */
+     if (ac->ac_flags & EXT4_MB_STREAM_ALLOC) {
+         spin_lock(&sbi->s_md_lock);
+-        sbi->s_mb_last_group = ac->ac_f_ex.fe_group;
+-        sbi->s_mb_last_start = ac->ac_f_ex.fe_start;
++        sbi->s_mb_last_group = ac->ac_b_ex.fe_group;
++        sbi->s_mb_last_start = ac->ac_b_ex.fe_start;
+         spin_unlock(&sbi->s_md_lock);
+     }
+     /*
+-- 
+1.8.3.1
+
