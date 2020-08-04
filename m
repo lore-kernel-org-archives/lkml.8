@@ -2,71 +2,139 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A13C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B523C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5BD522CA1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 572612076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:52:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MQKi9p+O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbgHDHty (ORCPT
+        id S1729028AbgHDHwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 03:49:54 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:25031 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725932AbgHDHty (ORCPT
+        Tue, 4 Aug 2020 03:52:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726198AbgHDHwo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 03:49:54 -0400
-X-IronPort-AV: E=Sophos;i="5.75,433,1589234400"; 
-   d="scan'208";a="462364097"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 09:49:52 +0200
-Date:   Tue, 4 Aug 2020 09:49:52 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     Denis Efremov <efremov@linux.com>,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH v3] coccinelle: api: add kvmalloc script
-In-Reply-To: <12b09b8f-7c73-1827-8bf3-63e6041b63fd@web.de>
-Message-ID: <alpine.DEB.2.22.394.2008040949360.2575@hadrien>
-References: <12b09b8f-7c73-1827-8bf3-63e6041b63fd@web.de>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Tue, 4 Aug 2020 03:52:44 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 703CFC06174A;
+        Tue,  4 Aug 2020 00:52:44 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id s15so10112645pgc.8;
+        Tue, 04 Aug 2020 00:52:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zYEc+6a7E/gabrUW1l1oa9EKsDvyQIWgJXIkTHUE6P0=;
+        b=MQKi9p+OTeU7KudYYa62FbuV/BULPjiYgzSkpxX0hFt239tzKILs5CMVfi2I1KxSZL
+         GfihFA6OtXRLxRQZD7oKwMeU6KXG34wfOsADEs28IGhmmbGqiDHJdzpccC0r6xQi6DWC
+         SmnN8OHk6s9e2JP/D9Q+JfazrLLzkvtesb7IIRikhyUkITFY5PbKPCZHHwbs2/apyclg
+         eNcuyJ6WnVTf9qPR9vDJKs7jVfL8wIU6TsQX4MyyqBMwS1E5Vd7SgH1otpekCUFEz6p4
+         PqxhKVpxcN5w3gGBM4dy1lH3mTxVsrUKrh4Mxpvh0oQEovzU9xkWFM83iZS3SVMQhlcV
+         TaQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zYEc+6a7E/gabrUW1l1oa9EKsDvyQIWgJXIkTHUE6P0=;
+        b=RV2YpjJTcdXYMxSzaMI8JT5F/qFPPlniw6iI45fVvroWET+RdYdW2IKh7JGXuydKDJ
+         Pr5/waLxnDOc1trXG/p0HaHv47VKbCcnaf8yy7q3v+KLPG0v23XNKU3tSEoJiH9S/Jda
+         Mq3GTMvOVFvx6l+x0xJX4wLaw8kWgGKOmfnjT4Sgf6Xtt0U7dUTQ5ccxQnrJFMGdPM79
+         b67zl3F141L1Aal0ZcTV0HJslxJbH3U/5vm3az0Uv9MKKeY9PiCQlvMfYaY7zQ55hGnX
+         tmDClgj4WAY3M8gvIrbUkcGC4kLqAuPHh4M4Y9kV3zy3Am2UQFHN3otA3zwUfvwTwudA
+         boKQ==
+X-Gm-Message-State: AOAM531uEGzD4r0+zKH1WjWwgg66N36PjirEV+9AKv0dyWE14AFCBaHg
+        /90w79YkOGi14AuUC2v3/mo=
+X-Google-Smtp-Source: ABdhPJy5sW+NQlKW9dHOgTUY65Od+XjtI8kIDLJBPZM2/PUy6h7MzNiFxtnGDWcOudMFF6TPeijAeA==
+X-Received: by 2002:a63:741b:: with SMTP id p27mr558733pgc.194.1596527563970;
+        Tue, 04 Aug 2020 00:52:43 -0700 (PDT)
+Received: from yangdongdo-OptiPlex-9010.mioffice.cn ([209.9.72.214])
+        by smtp.gmail.com with ESMTPSA id h18sm9462018pfo.21.2020.08.04.00.52.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Aug 2020 00:52:43 -0700 (PDT)
+From:   Dongdong Yang <contribute.kernel@gmail.com>
+To:     gregkh@linuxfoundation.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-pm@vger.kernel.org, yangdongdong@xiaomi.com,
+        yanziily@xiaomi.com, rocking@linux.alibaba.com
+Subject: [PATCH v4] Provide USF for the portable equipment.
+Date:   Tue,  4 Aug 2020 15:50:34 +0800
+Message-Id: <cover.1596526941.git.yangdongdong@xiaomi.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Dongdong Yang <yangdongdong@xiaomi.com>
 
+This patch provides USF(User Sensitive Feedback factor) auxiliary
+cpufreq governor to support high level layer sysfs inodes setting
+for utils adjustment purpose from the identified scenario on portable
+equipment. Because the power consumption and UI response are more cared
+for by portable equipment users. And the "screen off" status stands for
+no request from the user, however, the kernel is still expected to
+notify the user in time on modem, network or powerkey events occur. USF
+provides "sched_usf_non_ux_r" sysfs inode to cut down the utils from
+user space tasks according to high level scenario. In addition, it
+usually hints more cpufreq demand that the preemptive counts of the
+tasks on the cpu burst and over the user expecting completed time such
+as the ratio sysctl_sched_latency to sysctl_sched_min_granularity on
+"screen on" status, which more likely with more UI. The sysfs inodes
+"sched_usf_up_l0_r" and "sched_usf_down_r" have been provided to adjust
+the utils according to high level identified scenario to alloc the
+cpufreq in time.
 
-On Tue, 4 Aug 2020, Markus Elfring wrote:
+Changes in v4
+Based on comments from Greg, Randy and Viresh
+  - Add USF sysfs to ABI
+  - Remove kobj field from usf.
+  - Clean Kconfig left at staging.
 
-> > Changes in v3:
-> > - kvfree rules added
->
-> I find it interesting to you found such an addition needed for this SmPL script.
-> I imagine that it can be helpful to support such a source code search by
-> a separate script for the semantic patch language.
->
-> I am curious if my patch review comments for the second version got also a bit
-> of your software development attention.
->
-> Another implementation detail is relevant for further clarification.
-> The SmPL rules for patch generation differ in search functionality
-> which is provided for other operation modes.
-> Can these deviations influence the confidence level?
+Changes in v3
+Based on comments from Greg, Dietmar, Christoph and Randy
+  - Move usf.c to kernel/sched from staging.
+  - Remove trace_printk and debugfs.
+  - Add document draft.
+  - Update comments.
 
-I see no useful information in this review, nor in the v2 review.
+Changes in v2
+Based on comments from Steven, Greg, Peter and Dan:
+  - Add adjust_task_pred_set switch.
+  - Move adjust_task_pred_demand declaration into sched.h
+  - Update comments.
+  - Clean usf structure.
 
-julia
+Changes in v1
+Initial USF 
+
+Dongdong Yang (1):
+  sched: Provide USF for the portable equipment.
+
+ Documentation/ABI/testing/sysfs-devices-system-cpu |  48 ++++
+ drivers/cpufreq/Kconfig                            |  11 +
+ include/trace/events/sched.h                       |  35 +++
+ kernel/sched/Makefile                              |   1 +
+ kernel/sched/cpufreq_schedutil.c                   |   3 +
+ kernel/sched/sched.h                               |  10 +
+ kernel/sched/usf.c                                 | 294 +++++++++++++++++++++
+ 7 files changed, 402 insertions(+)
+ create mode 100644 kernel/sched/usf.c
+
+-- 
+2.7.4
+
