@@ -2,141 +2,94 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F35CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9794EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B9692086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E4D3208A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:56:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=melexis.com header.i=@melexis.com header.b="pmGgt5uN"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="AEHps8rn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbgHDN4V (ORCPT
+        id S1728701AbgHDN45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 09:56:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52274 "EHLO
+        Tue, 4 Aug 2020 09:56:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728616AbgHDN4S (ORCPT
+        with ESMTP id S1728535AbgHDN4q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 09:56:18 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C58D4C061756
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 06:56:17 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id bo3so19893911ejb.11
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 06:56:17 -0700 (PDT)
+        Tue, 4 Aug 2020 09:56:46 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB0B9C061757
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 06:56:45 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id d6so28676133ejr.5
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 06:56:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=melexis.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WzDswwBfXvOnych9mKo86pvZBTTMjA75hoRZ23jMux8=;
-        b=pmGgt5uNMDYr7vjNTIYqQDZw2nFS3qKA/7RvWdEmlg6MUlWxX/ooGUDm1hoPzxBMul
-         NpjY26NP+K3PAFwDJq8Rz5EtNCLnohoUm0vT3gqcoGUwkcjhephDD6Nk1hzDDrsenADy
-         R61GKcqfYiB2j73tkADN1vWO2kLoN63PzUq7q+t+kJ5NtMDucH9wn0TJZkzftcWY2mDH
-         N1udxl/7iHsNvdmfRzBTZ+DTSRCbw/GCKVPlkjDRH4Laki1LCf6W2CNrLo9UkUC7v9fy
-         72qnF8TXmn6l9zclNVoVmqh5PArB4RevO9Iqc9l6Soszra8nGAyWuEkC1VApdcHkdTI7
-         2CIA==
+        d=szeredi.hu; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Nir289YmvLvB9cYHD+WrMlDkgzY7IXddotY7RZ5kJuw=;
+        b=AEHps8rnJNYWjEsEPmsNrngg9TrZ3KWI5HcB4+HHRs9di0+/ESZLPa6/JKEXxXRDtU
+         j0ZA7GgeP7mT12IX5LxV4n0BWV70/alU7ADPeaFlcj67EWL5F74zxF5tjSOVXXhgCu3N
+         g/f2upIq2fhT1dR8LKBd75so90/Gkfjyd4Eik=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WzDswwBfXvOnych9mKo86pvZBTTMjA75hoRZ23jMux8=;
-        b=QiO1jmLViYKE786gFQudNur5bJuZir4IRQLvzTorU0RKyN/1Cq35DMHWqJFV9EJvIv
-         WGwD9bJBoMjqW/8OWJb/QUPiMbDBmxEY4CxNSGi7ZYuOkqg0TtWvC03mCgH1zGzgq/aP
-         mU55eBxB0HnrUIjwMGcXPGQaL67xwhNTecQXaodkg1LuVLdSEHfqW+p55pODfKxPWY/W
-         +rpKS9n132add67yTEy3Db71/8qbbC2hDiUJURJ/4Z1xdjck/C+E6XOGjPpXZG7vv3nb
-         Wwu7vHczk7sKE7hTuAcsF0OnfuqboYEPgqjFPchCn6PIVaNT6nopu/XnSFhGZFHBx99j
-         PBNg==
-X-Gm-Message-State: AOAM531gm42sohW+wliHsPkMfPA7LYlQLj+YmFLn8dvfsS/D/AyNBzMe
-        wNSaYMnKeV+d8FPF1JNX1AZpLe6sh19EVA==
-X-Google-Smtp-Source: ABdhPJw91afCFXRk5zcL8K32et29oN+/1gU363aw7cgOdED79D7kHcsR2pgFw0GTKeXlVN6Viw6jcw==
-X-Received: by 2002:a17:906:74d0:: with SMTP id z16mr21232387ejl.51.1596549376286;
-        Tue, 04 Aug 2020 06:56:16 -0700 (PDT)
-Received: from localhost.localdomain (ptr-4xajgyum9863qf6si3v.18120a2.ip6.access.telenet.be. [2a02:1810:a421:dd00:2092:7f6b:4676:cab])
-        by smtp.gmail.com with ESMTPSA id r25sm18361473edy.93.2020.08.04.06.56.15
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Nir289YmvLvB9cYHD+WrMlDkgzY7IXddotY7RZ5kJuw=;
+        b=VduLHr+TDECg1xrzPyt+hlZeYkgAncROIgyE83mr6AuJ0U/g6DG4rleMGi4MCTTzXx
+         HNiM43p1klcmeVkCX3fBC4ztiBrKatk/zpx1J/wzDfIZ6xUh4xxHpVm0Ut46H75HeNnr
+         NOeZGu6hMUeqNLDl5vO8WX2CzDxKzZI9MytfqUppJv8ZrcNIerZfO1OpbVniLaaENBQp
+         h7Q16isRtxFR8SSYkf/TsoBBll4OYznq4FNVzzzNm/26YDKZXldQgVZ4l/78PRtoDaCC
+         5/S2Tw+LThcVIZdiXA9DX6GYllOBAFSYGU+GgpqdunneF2NlA+U7QtYN7kxaiiCl+9VS
+         2mLg==
+X-Gm-Message-State: AOAM530c5vQhXkFqKqxUVTxmgRglMYZ3PGrudZlokDJplZlipEN3sYm4
+        diHLlwa+VEPqly8FRuG0exdhRg==
+X-Google-Smtp-Source: ABdhPJyvdxPxUWj7x824NLh/G3TC6fG7Nwu5sJ/FqR59hOHVzeefde3nECyeC40mMapaTamORKbAkg==
+X-Received: by 2002:a17:906:f905:: with SMTP id lc5mr20891718ejb.340.1596549404630;
+        Tue, 04 Aug 2020 06:56:44 -0700 (PDT)
+Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
+        by smtp.gmail.com with ESMTPSA id 4sm18404381ejn.84.2020.08.04.06.56.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 06:56:15 -0700 (PDT)
-From:   Crt Mori <cmo@melexis.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Crt Mori <cmo@melexis.com>
-Subject: [PATCH v2] iio:temperature:mlx90632: Reduce number of equal calculations
-Date:   Tue,  4 Aug 2020 15:55:55 +0200
-Message-Id: <20200804135555.95186-1-cmo@melexis.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 04 Aug 2020 06:56:44 -0700 (PDT)
+Date:   Tue, 4 Aug 2020 15:56:41 +0200
+From:   Miklos Szeredi <miklos@szeredi.hu>
+To:     David Howells <dhowells@redhat.com>
+Cc:     viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
+        raven@themaw.net, mszeredi@redhat.com, christian@brauner.io,
+        jannh@google.com, darrick.wong@oracle.com, kzak@redhat.com,
+        jlayton@redhat.com, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 10/18] fsinfo: Provide notification overrun handling
+ support [ver #21]
+Message-ID: <20200804135641.GE32719@miu.piliscsaba.redhat.com>
+References: <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk>
+ <159646187082.1784947.4293611877413578847.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159646187082.1784947.4293611877413578847.stgit@warthog.procyon.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TAdut4 was calculated each iteration although it did not change. In light
-of near future additions of the Extended range DSP calculations, this
-function refactoring will help reduce unrelated changes in that series as
-well as reduce the number of new functions needed.
+On Mon, Aug 03, 2020 at 02:37:50PM +0100, David Howells wrote:
+> Provide support for the handling of an overrun in a watch queue.  In the
+> event that an overrun occurs, the watcher needs to be able to find out what
+> it was that they missed.  To this end, previous patches added event
+> counters to struct mount.
 
-Signed-off-by: Crt Mori <cmo@melexis.com>
----
- drivers/iio/temperature/mlx90632.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+So this is optimizing the buffer overrun case?
 
-diff --git a/drivers/iio/temperature/mlx90632.c b/drivers/iio/temperature/mlx90632.c
-index 51b812bcff2e..763a148a0095 100644
---- a/drivers/iio/temperature/mlx90632.c
-+++ b/drivers/iio/temperature/mlx90632.c
-@@ -374,11 +374,11 @@ static s32 mlx90632_calc_temp_ambient(s16 ambient_new_raw, s16 ambient_old_raw,
- }
- 
- static s32 mlx90632_calc_temp_object_iteration(s32 prev_object_temp, s64 object,
--					       s64 TAdut, s32 Fa, s32 Fb,
-+					       s64 TAdut, s64 TAdut4, s32 Fa, s32 Fb,
- 					       s32 Ga, s16 Ha, s16 Hb,
- 					       u16 emissivity)
- {
--	s64 calcedKsTO, calcedKsTA, ir_Alpha, TAdut4, Alpha_corr;
-+	s64 calcedKsTO, calcedKsTA, ir_Alpha, Alpha_corr;
- 	s64 Ha_customer, Hb_customer;
- 
- 	Ha_customer = ((s64)Ha * 1000000LL) >> 14ULL;
-@@ -393,10 +393,6 @@ static s32 mlx90632_calc_temp_object_iteration(s32 prev_object_temp, s64 object,
- 	Alpha_corr = emissivity * div64_s64(Alpha_corr, 100000LL);
- 	Alpha_corr = div64_s64(Alpha_corr, 1000LL);
- 	ir_Alpha = div64_s64((s64)object * 10000000LL, Alpha_corr);
--	TAdut4 = (div64_s64(TAdut, 10000LL) + 27315) *
--		(div64_s64(TAdut, 10000LL) + 27315) *
--		(div64_s64(TAdut, 10000LL)  + 27315) *
--		(div64_s64(TAdut, 10000LL) + 27315);
- 
- 	return (int_sqrt64(int_sqrt64(ir_Alpha * 1000000000000LL + TAdut4))
- 		- 27315 - Hb_customer) * 10;
-@@ -406,17 +402,21 @@ static s32 mlx90632_calc_temp_object(s64 object, s64 ambient, s32 Ea, s32 Eb,
- 				     s32 Fa, s32 Fb, s32 Ga, s16 Ha, s16 Hb,
- 				     u16 tmp_emi)
- {
--	s64 kTA, kTA0, TAdut;
-+	s64 kTA, kTA0, TAdut, TAdut4;
- 	s64 temp = 25000;
- 	s8 i;
- 
- 	kTA = (Ea * 1000LL) >> 16LL;
- 	kTA0 = (Eb * 1000LL) >> 8LL;
- 	TAdut = div64_s64(((ambient - kTA0) * 1000000LL), kTA) + 25 * 1000000LL;
-+	TAdut4 = (div64_s64(TAdut, 10000LL) + 27315) *
-+		(div64_s64(TAdut, 10000LL) + 27315) *
-+		(div64_s64(TAdut, 10000LL)  + 27315) *
-+		(div64_s64(TAdut, 10000LL) + 27315);
- 
- 	/* Iterations of calculation as described in datasheet */
- 	for (i = 0; i < 5; ++i) {
--		temp = mlx90632_calc_temp_object_iteration(temp, object, TAdut,
-+		temp = mlx90632_calc_temp_object_iteration(temp, object, TAdut, TAdut4,
- 							   Fa, Fb, Ga, Ha, Hb,
- 							   tmp_emi);
- 	}
--- 
-2.25.1
+Shoun't we just make sure that the likelyhood of overruns is low and if it
+happens, just reinitialize everthing from scratch (shouldn't be *that*
+expensive).
+
+Trying to find out what was missed seems like just adding complexity for no good
+reason.
 
