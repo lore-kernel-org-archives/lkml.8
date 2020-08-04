@@ -2,86 +2,101 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9391BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB42C2076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:10:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WmvoMsei"
+	by mail.kernel.org (Postfix) with ESMTP id 962642076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:11:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596528708;
+	bh=vDIdMthlwvK/lkIZaP62qRcbBqyYKHtAH/TIlf2+Eh4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VZw+ELVIz1sH2b49K/s3g8ackEMDgd/H4gxb19R0nzICULp2LtRpNkDO5jOr6mPfW
+	 /jf5hTarzw3W4uUt/cNk5ZPBwMwLcHCcRYWprI9CM8bigGVDZRrROXT0g0pfjFTCMW
+	 2h0VCGsuk3t0s7JA9/JeuNhe7wCnUpPzyF/8fz3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728064AbgHDIK0 (ORCPT
+        id S1728687AbgHDILr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 04:10:26 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23875 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726036AbgHDIK0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 04:10:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596528624;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VsjEcZFY41HjIzug4Auk9yvODlAjSkAecOahal1f2M0=;
-        b=WmvoMseiajnOm/8Wtjb5WTDg48WOktZEvDtQWuEeCIT1ChWmx+qZj2xF34We18504syd/+
-        PTzyx2bhrSDGsJBNsx7JFMF0iPbE+iq01+ziTXYshVmaRrgwDEL8N6T5cpbALTnUpsf9mG
-        zcusLQrI5tPshYGySAN7aGQdwwSMDJ8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-502-dJ03uWRUM32rQeTI_pE7rw-1; Tue, 04 Aug 2020 04:10:22 -0400
-X-MC-Unique: dJ03uWRUM32rQeTI_pE7rw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 4 Aug 2020 04:11:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36070 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbgHDILq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 04:11:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4C560102C802;
-        Tue,  4 Aug 2020 08:10:21 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 29B5560CC0;
-        Tue,  4 Aug 2020 08:10:20 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200804173456.01c819ea@canb.auug.org.au>
-References: <20200804173456.01c819ea@canb.auug.org.au>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     dhowells@redhat.com,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build warnings after merge of the fsinfo tree
+        by mail.kernel.org (Postfix) with ESMTPSA id B82442076C;
+        Tue,  4 Aug 2020 08:11:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596528706;
+        bh=vDIdMthlwvK/lkIZaP62qRcbBqyYKHtAH/TIlf2+Eh4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QAOqMFQBXE6gbzCuR+sDBsl8IRxsLNFDP6Il/GaPzZT+gvA5oW0wVuRUqzDPvDuQp
+         r8UCTIIT31gsbQEhsvEnC79nrk+7FRDKCi1hajUnkC27OS8olMycbG4OrilGdUOySY
+         +6nCD/Zdd2WXZi+ckAUmdh7dfFuCKqKmk6zoyxbg=
+Date:   Tue, 4 Aug 2020 10:11:26 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "hongxu.zhao" <hongxu.zhao@mediatek.com>
+Cc:     "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        wsd_upstream@mediatek.com, Weiqi Fu <weiqi.fu@mediatek.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Cunliang Du <cunliang.du@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Zhen jiang <zhen.jiang@mediatek.com>
+Subject: Re: [PATCH] staging: Add Mediatek High Frequency Manager Framework
+Message-ID: <20200804081126.GA1765831@kroah.com>
+References: <20200804075339.9820-1-hongxu.zhao@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2010724.1596528619.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Tue, 04 Aug 2020 09:10:19 +0100
-Message-ID: <2010725.1596528619@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200804075339.9820-1-hongxu.zhao@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+On Tue, Aug 04, 2020 at 03:52:49PM +0800, hongxu.zhao wrote:
+> Add a new sensor framework into linux kernel which can support multi client request sensor data.
+> There are the following features:
+>     1.Ringbuffer between manager and client;
+>     2.Kernel space user interface;
+>     3.User space user interface with syscall;
+>     4.Each client hang detect mechanism;
+>     5.Polling timer management in framework no need driver concern;
+>     6.Polling kthread work intergrated into a single kthread
+>       worker to save system resources in framework no need driver concern;
+>     7.Proc file system to show manager device and client details;
+>     8.Compitable with android and widely used in many mediatek platform products;
+> 
+> Change-Id: I6361cdc2d51de50f66eede7df099c4575e7ec473
 
-> After merging the fsinfo tree, today's linux-next build (powerpc
-> allyesconfig) produced these warnings:
-> =
+Did you not run checkpatch.pl on this?  :)
 
-> samples/vfs/test-mntinfo.c: In function 'display_mount':
-> samples/vfs/test-mntinfo.c:146:19: warning: format '%llx' expects argume=
-nt of type 'long long unsigned int', but argument 3 has type '__u64' {aka =
-'long unsigned int'} [-Wformat=3D]
-...
+No need for change-id here.
 
-I've appended a patch for that.
+But, most importantly, why is this in drivers/staging?  What keeps it
+from being in the "real" part of the kernel?  I need a TODO file in the
+directory of the driver listing what remains to be done and who is
+responsible for doing this work and reviewing patches.
 
-David
+Can you resend this with that file added and the Change-id removed?
 
+Also, why not just use the IIO interface, why are you creating
+yet-another api for sensors?  We already have 2, making a third seems
+like something that guarantees this will never be mergable to the
+correct part of the kernel.
+
+And finally, /proc/ is not for devices, that is what sysfs is for,
+please use that.
+
+thanks,
+
+greg k-h
