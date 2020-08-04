@@ -2,166 +2,97 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D99CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CAF2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D6092086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:03:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596549786;
-	bh=E2bgygJ6YnJNErdqArQCjl4L6O71EKfdlktswy0gz1g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=O8sk3QN1oaRZNDYHp+UHHznDFgX6uZZnG7bDbpA86/I7xTz3p2AQ2slmZCA8qIbdL
-	 B50zwkttRRfKDpdU28v9ahfn7CX0cUzFjCxkmnQnrS8BCMyh+A03RmpxJrpWyY59MP
-	 N08ChUjADgPLICDs1Skk1znuHngBFBoS8I4QuE+w=
+	by mail.kernel.org (Postfix) with ESMTP id 0F037208A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:03:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="JO9DJDNS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbgHDOC6 (ORCPT
+        id S1728850AbgHDODG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:02:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54014 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728678AbgHDN76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 09:59:58 -0400
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B99622CBB;
-        Tue,  4 Aug 2020 13:59:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596549597;
-        bh=E2bgygJ6YnJNErdqArQCjl4L6O71EKfdlktswy0gz1g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DGtNVHxpYgha4luyk0w0xpEnrv7R//zKbx8zb1YJHkiTQWFS/crqKiEMSJECcuATj
-         0bcA+q58yE9wjutxDhGv1C7TQROA22h52Ozc7M2Sk4dpyE1LJbAlV1jilbDVs3Fcyv
-         Hliv13uS4aMIbjuG/PGyTQl72N07kvywL/WjjzZ0=
-Received: by mail-oi1-f175.google.com with SMTP id v13so19772468oiv.13;
-        Tue, 04 Aug 2020 06:59:57 -0700 (PDT)
-X-Gm-Message-State: AOAM531bcPok7S4qDZ5dd//tRTci5DGErvzYaum4+5ks/UD8kOv1pwQZ
-        WmkdzOakMQKkLA9uuBw2oiHPhRCf82rBZWJnC6w=
-X-Google-Smtp-Source: ABdhPJy9K28J73rqwaw8sqyHjeTCf6xPw5eIPlfZNIJ6/BHFKRwVxOkMx9Cqd12y0xpIlPkFwjkELicwa2sz+O6lD+w=
-X-Received: by 2002:a05:6808:b37:: with SMTP id t23mr3607031oij.174.1596549596400;
- Tue, 04 Aug 2020 06:59:56 -0700 (PDT)
+        Tue, 4 Aug 2020 10:03:06 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:7851 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728535AbgHDN7k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 09:59:40 -0400
+X-UUID: 53fd66bb83934f9fbd9fba567c87a300-20200804
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=WfJqxF9cONOh9ISapZhRAcSdB5lxjyrlgdtXWgEHlC4=;
+        b=JO9DJDNSHo/RpYPUg+ey0QI29Qtq1SPQBZKxv7DmPKI16nBdBIm9o4U2Jvy6cDFaptCRgrPJGl4K5z5ijGZqASC+krrGZYwswhp11g0kR8wjARGDMEBZfdvFUtiGIGrClSvcpva9H+D2yDortAWxlNBd+zg2a1pqGR+22vOsoAA=;
+X-UUID: 53fd66bb83934f9fbd9fba567c87a300-20200804
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <frankie.chang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 897201809; Tue, 04 Aug 2020 21:59:16 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 4 Aug 2020 21:59:12 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 4 Aug 2020 21:59:13 +0800
+From:   Frankie Chang <Frankie.Chang@mediatek.com>
+To:     Todd Kjos <tkjos@google.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>,
+        =?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
+        Christian Brauner <christian@brauner.io>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Jian-Min Liu <Jian-Min.Liu@mediatek.com>,
+        Frankie Chang <Frankie.Chang@mediatek.com>
+Subject: [PATCH v7] binder: transaction latency tracking for user build
+Date:   Tue, 4 Aug 2020 21:59:09 +0800
+Message-ID: <1596549552-5466-1-git-send-email-Frankie.Chang@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1596509145.5207.21.camel@mtkswgap22>
+References: <1596509145.5207.21.camel@mtkswgap22>
 MIME-Version: 1.0
-References: <20200702101947.682-1-ardb@kernel.org> <20200702101947.682-5-ardb@kernel.org>
- <20200702175022.GA2753@sol.localdomain> <CAMj1kXFen1nickdZab0s8iY7SgauoH56VginEoPdxaAAL2qENw@mail.gmail.com>
- <CAMj1kXG7i1isB9cV57ccaOZhrG3s7x+nKGozzTewuE9uWvX_wg@mail.gmail.com>
- <CAMj1kXGiu5Wr8NAACBUtiJMY8rQAGCTOcQdK1QM6jgH-0Lm=YA@mail.gmail.com> <CAMj1kXHA2R1UDcYROwiLgUQCrOpNWxt-BAP0aBD=3RP4HbcOnA@mail.gmail.com>
-In-Reply-To: <CAMj1kXHA2R1UDcYROwiLgUQCrOpNWxt-BAP0aBD=3RP4HbcOnA@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 4 Aug 2020 15:59:45 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGrm7EFtRxx3nhE-eDhp11cDzkzow7ZcwRiW3wXBgVQyg@mail.gmail.com>
-Message-ID: <CAMj1kXGrm7EFtRxx3nhE-eDhp11cDzkzow7ZcwRiW3wXBgVQyg@mail.gmail.com>
-Subject: Re: [RFC PATCH 4/7] crypto: remove ARC4 support from the skcipher API
-To:     Eric Biggers <ebiggers@kernel.org>,
-        Denis Kenzior <denkenz@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Cc:     linux-wireless@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        "open list:BPF JIT for MIPS (32-BIT AND 64-BIT)" 
-        <netdev@vger.kernel.org>, devel@driverdev.osuosl.org,
-        linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 3E93D052AFF41D3ADDCCD18A75EC749C115769084484D43C1F80304E3455ED712000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 25 Jul 2020 at 10:06, Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Sat, 18 Jul 2020 at 11:18, Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > On Fri, 3 Jul 2020 at 02:04, Ard Biesheuvel <ardb@kernel.org> wrote:
-> > >
-> > > On Thu, 2 Jul 2020 at 20:21, Ard Biesheuvel <ardb@kernel.org> wrote:
-> > > >
-> > > > On Thu, 2 Jul 2020 at 19:50, Eric Biggers <ebiggers@kernel.org> wrote:
-> > > > >
-> > > > > [+linux-wireless, Marcel Holtmann, and Denis Kenzior]
-> > > > >
-> > > > > On Thu, Jul 02, 2020 at 12:19:44PM +0200, Ard Biesheuvel wrote:
-> > > > > > Remove the generic ecb(arc4) skcipher, which is slightly cumbersome from
-> > > > > > a maintenance perspective, since it does not quite behave like other
-> > > > > > skciphers do in terms of key vs IV lifetime. Since we are leaving the
-> > > > > > library interface in place, which is used by the various WEP and TKIP
-> > > > > > implementations we have in the tree, we can safely drop this code now
-> > > > > > it no longer has any users.
-> > > > > >
-> > > > > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > > > >
-> > > > > Last year there was a discussion where it was mentioned that iwd uses
-> > > > > "ecb(arc4)" via AF_ALG.  So can we really remove it yet?
-> > > > > See https://lkml.kernel.org/r/97BB95F6-4A4C-4984-9EAB-6069E19B4A4F@holtmann.org
-> > > > > Note that the code isn't in "iwd" itself but rather in "libell" which iwd
-> > > > > depends on: https://git.kernel.org/pub/scm/libs/ell/ell.git/
-> > > > >
-> > > > > Apparently it also uses md4 and ecb(des) too.
-> > > > >
-> > > >
-> > > > Ah yes, I remember now :-(
-> > > >
-> > > > > Marcel and Denis, what's your deprecation plan for these obsolete and insecure
-> > > > > algorithms?
-> > > > >
-> > > >
-> > > > Given Denis's statement:
-> > > >
-> > > >   It sounds to me like it was broken and should be fixed.  So our vote /
-> > > >   preference is to have ARC4 fixed to follow the proper semantics.  We
-> > > >   can deal with the kernel behavioral change on our end easily enough;
-> > > >   the required workarounds are the worse evil.
-> > > >
-> > > > I would think that an ABI break is not the end of the world for them,
-> > > > and given how trivial it is to implement RC4 in C, the workaround
-> > > > should be to simply implement RC4 in user space, and not even bother
-> > > > trying to use AF_ALG to get at ecb(arc4)
-> > > >
-> > > > (same applies to md4 and ecb(des) btw)
-> > > >
-> > > > There will always be a long tail of use cases, and at some point, we
-> > > > just have to draw the line and remove obsolete and insecure cruft,
-> > > > especially when it impedes progress on other fronts.
-> > > >
-> > >
-> > > I have ported iwd to Nettle's LGPL 2.1 implementation of ARC4, and the
-> > > diffstat is
-> > >
-> > >  src/crypto.c      | 80 ++++++++++++--------
-> > >  src/main.c        |  8 --
-> > >  unit/test-eapol.c |  3 +-
-> > >  3 files changed, 51 insertions(+), 40 deletions(-)
-> > >
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/ardb/iwd.git/log/?h=arc4-cleanup
-> >
-> > Marcel, Denis,
-> >
-> > Do you have any objections to the ecb(arc4) skcipher being dropped
-> > from the kernel, given the fallback i proposed above (which is a much
-> > better way of doing rc4 in user space anyway)?
-> >
-> > For libell, I would suggest dropping rc4 entirely, once iwd stops
-> > relying on it, as using rc4 for tls is obsolete as well.
->
-> Ping?
+DQpGcmFua2llLkNoYW5nICgzKToNCiAgYmluZGVyOiBtb3ZlIHN0cnVjdHMgZnJvbSBjb3JlIGZp
+bGUgdG8gaGVhZGVyIGZpbGUNCiAgYmluZGVyOiBhZGQgdHJhY2UgYXQgZnJlZSB0cmFuc2FjdGlv
+bi4NCiAgYmluZGVyOiBhZGQgdHJhbnNhY3Rpb24gbGF0ZW5jeSB0cmFjZXINCg0KIGRyaXZlcnMv
+YW5kcm9pZC9LY29uZmlnICAgICAgICAgICAgICAgICB8ICAgIDggKw0KIGRyaXZlcnMvYW5kcm9p
+ZC9NYWtlZmlsZSAgICAgICAgICAgICAgICB8ICAgIDEgKw0KIGRyaXZlcnMvYW5kcm9pZC9iaW5k
+ZXIuYyAgICAgICAgICAgICAgICB8ICA0MjUgKystLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LQ0KIGRyaXZlcnMvYW5kcm9pZC9iaW5kZXJfaW50ZXJuYWwuaCAgICAgICB8ICA0MTcgKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrDQogZHJpdmVycy9hbmRyb2lkL2JpbmRlcl9sYXRlbmN5
+X3RyYWNlci5jIHwgIDExMiArKysrKysrKw0KIGRyaXZlcnMvYW5kcm9pZC9iaW5kZXJfdHJhY2Uu
+aCAgICAgICAgICB8ICAgNDkgKysrKw0KIDYgZmlsZXMgY2hhbmdlZCwgNjA3IGluc2VydGlvbnMo
+KyksIDQwNSBkZWxldGlvbnMoLSkgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2FuZHJvaWQv
+YmluZGVyX2xhdGVuY3lfdHJhY2VyLmMNCg0KQ2hhbmdlIGZyb20gdjc6DQogIC0gVXNlIHRoZSBw
+YXNzZWQtaW4gdmFsdWVzIGluc3RlYWQgb2YgYWNjZXNzaW5nIHZpYSB0LT5mcm9tL3RvX3Byb2Mv
+dG9fdGhyZWFkDQogICAgZm9yIHRyYWNlX2JpbmRlcl90eG5fbGF0ZW5jeV9mcmVlLCB3aGVuIHRy
+YWNlX2JpbmRlcl90eG5fbGF0ZW5jeV9mcmVlX2VuYWJsZSgpIHJldHVybiB0cnVlLg0KICAtIG1h
+a2UgYSBoZWxwZXIgZnVuY3Rpb24gdG8gZG8gdGhlIGFib3ZlLg0KDQpDaGFuZ2UgZnJvbSB2NjoN
+CiAgLSBjaGFuZ2UgQ09ORklHX0JJTkRFUl9UUkFOU0FDVElPTl9MQVRFTkNZX1RSQUNLSU5HIHR5
+cGUgZnJvbSBib29sIHRvIHRyaXN0YXRlDQogIC0gYWRkIGNvbW1lbnRzIHRvIEB0aW1lc3RhbXAg
+YW5kIEB0diB1bmRlciBzdHJ1Y3QgYmluZGVyX3RyYW5zYWN0aW9uDQogIC0gbWFrZSBiaW5kZXJf
+dHhuX2xhdGVuY3kgdGhyZXNob2xkIGNvbmZpZ3VyYWJsZQ0KICAtIGVuaGFuY2UgbG9jayBwcm90
+ZWN0aW9uDQoNCkNoYW5nZSBmcm9tIHY1Og0KICAtIGNoYW5nZSBjb25maWcgbmFtZSB0byB0aGUg
+cHJvcGVyIG9uZSwgQ09ORklHX0JJTkRFUl9UUkFOU0FDVElPTl9MQVRFTkNZX1RSQUNLSU5HLg0K
+ICAtIGNoYW5nZSB0cmFjZXBvaW50IG5hbWUgdG8gbW9yZSBkZXNjcmlwdGl2ZSBvbmUsIHRyYWNl
+X2JpbmRlcl90eG5fbGF0ZW5jeV8oYWxsb2N8aW5mb3xmcmVlKQ0KICAtIGVuaGFuY2Ugc29tZSBs
+b2NrIHByb3RlY3Rpb24uDQoNCkNoYW5nZSBmcm9tIHY0Og0KICAtIHNwbGl0IHVwIGludG8gcGF0
+Y2ggc2VyaWVzLg0KDQpDaGFuZ2UgZnJvbSB2MzoNCiAgLSB1c2UgdHJhY2Vwb2ludHMgZm9yIGJp
+bmRlcl91cGRhdGVfaW5mbyBhbmQgcHJpbnRfYmluZGVyX3RyYW5zYWN0aW9uX2V4dCwNCiAgICBp
+bnN0ZWFkIG9mIGN1c3RvbSByZWdpc3RyYXRpb24gZnVuY3Rpb25zLg0KDQpDaGFuZ2UgZnJvbSB2
+MjoNCiAgLSBjcmVhdGUgdHJhbnNhY3Rpb24gbGF0ZW5jeSBtb2R1bGUgdG8gbW9uaXRvciBzbG93
+IHRyYW5zYWN0aW9uLg0KDQpDaGFuZ2UgZnJvbSB2MToNCiAgLSBmaXJzdCBwYXRjaHNldC4NCg==
 
-Denis was kind enough to take the changes to iwd and libell that
-remove all dependencies on the ecb(arc4) skcipher exposed by the
-kernel, so we can at least deprecate it in the short term, and
-hopefully remove it entirely at a later stage.
-
-Perhaps we should introduce a Kconfig symbol that needs to be set to
-enable deprecated algorithms? That way, we can work with the distros
-to phase out the old junk that is piling up, but in a way that doesn't
-break people's systems.
