@@ -2,85 +2,101 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A805FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72ED021744
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:45:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596573947;
-	bh=IsGGbZDqwVSdrx08mN8MiNfmLHPAXTc8CpjLyRYm0PY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ccZqN0hFe8J4ELmURv9ZM3wz8oYHCxX7FZ6vVqXScL+zWhZINoMpbH+Haf5wxu6tk
-	 N1XqA7/E5sL5nao0BidEEonPdTOCneNu9UMZrO8jkV9Fn9z0VdQ6FCjgnarwIc8PUF
-	 pRIXc/35gYZBNwbHB9bTWNIfiYS6c8cyIvd1wm30=
+	by mail.kernel.org (Postfix) with ESMTP id 8939D20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:46:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NFg4cddv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgHDUpq (ORCPT
+        id S1727928AbgHDUqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 16:45:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36342 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726545AbgHDUpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 16:45:45 -0400
-Received: from gmail.com (unknown [104.132.1.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10B7920842;
-        Tue,  4 Aug 2020 20:45:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596573945;
-        bh=IsGGbZDqwVSdrx08mN8MiNfmLHPAXTc8CpjLyRYm0PY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k2RYgdBKRUZvYgyXaVkxI8tIV9M60Ul5vpeFSWkbA6mYNzNXbdFZe+/fRj/AcZNdn
-         Oc+boojGMwh1YfBWUsY2MnjY9quPxdG9/jl7c7lhkNXKUyVtVMayworct1WUEyMmVK
-         vXEszlOdY79qUbEtjI3wfBf7j1/A5vn32NCZKPBY=
-Date:   Tue, 4 Aug 2020 13:45:43 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Lokesh Gidra <lokeshgidra@google.com>
-Cc:     viro@zeniv.linux.org.uk, stephen.smalley.work@gmail.com,
-        casey@schaufler-ca.com, jmorris@namei.org, kaleshsingh@google.com,
-        dancol@dancol.org, surenb@google.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        nnk@google.com, jeffv@google.com, calin@google.com,
-        kernel-team@android.com, yanfei.xu@windriver.com,
-        syzbot+75867c44841cb6373570@syzkaller.appspotmail.com
-Subject: Re: [PATCH] Userfaultfd: Avoid double free of userfault_ctx and
- remove O_CLOEXEC
-Message-ID: <20200804204543.GA1992048@gmail.com>
-References: <20200804203155.2181099-1-lokeshgidra@google.com>
+        Tue, 4 Aug 2020 16:46:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgHDUqN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 16:46:13 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88321C06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 13:46:13 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id m19so3438696ejd.8
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 13:46:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JkYcaggsGpcDWWPmcXd4JLlQeabzirm750hdjJEVhuE=;
+        b=NFg4cddveDkJRaT1O3RuBGLGAnrKH5WS9QKSCol+urjsTiuPILUDsu2qHvIeGvmLZ7
+         AWv+dqZp+ggBIBhCmlj/dhWBVfER342c908cQgR43cNevS278v8mPTqDnS7tFQPPI5ww
+         0GTMHUZTW6oF7Vwz76ilfFm73ybFJNJ6rEwTxyixKG7b6bq1YJt4kSLY9n9xZOkm9GsA
+         Ms3trDIpC1buR1fQsncoCu5fBb+/ZfZTnIFQ2mKOkNppcVA5uH6Iy+VT47X6Eph1VOxy
+         8xECIF/WyUUaRndvro2duUlC7pL0ilZAE0eC7zsuhY2oRYLgdwQDK96xLtZRKCd3F+U+
+         PQuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JkYcaggsGpcDWWPmcXd4JLlQeabzirm750hdjJEVhuE=;
+        b=H633OVK6WmSZ9YRbaYLGO7lyJ9Ox0VpbyMh4dq4i2Z/HxN1kM3MXGOkPrJ+6tbILqT
+         E8c9wPErNuUjfySu8Xqd48+mDmAaf7xXiUzbzfVr5txdyJ74/dYSMQj55G2p2yYXO3EO
+         4TSnHxoyZrwJFlrQaTC6H7bfHNxQwkWIdQdov3q4HlObraJhLZITW61SDdaL063EhmRU
+         MV+wtCohhTwbrRzpljV4pTGf/WVqxTZsN/XB1bdijn5qnLnRlDxeUkGzeZTZAGVV70VH
+         yR/j2Je7KCUKYlzWm2j9KG4pKM7cDKhYyrj8r3laEjCOPsnMGKds+eTDz7a8m4XzEWBR
+         qTiw==
+X-Gm-Message-State: AOAM533t7t7xe0E9/MkSffSFtlO3E06U0OthGJOl7NNEJJrqq1bC5gdU
+        fZgCjQcBMzh2V3bBCRZVm6Y=
+X-Google-Smtp-Source: ABdhPJyJT3XUe9lccfmgoNsSMRHEfwHQ577N9kfOoJ/bFHSN6uqY4hLXGO1yPEfJygTyEl+Xt0QxSQ==
+X-Received: by 2002:a17:906:c08a:: with SMTP id f10mr22883770ejz.181.1596573972287;
+        Tue, 04 Aug 2020 13:46:12 -0700 (PDT)
+Received: from ltop.local ([2a02:a03f:a7fb:e200:d068:a44f:fa3b:62da])
+        by smtp.gmail.com with ESMTPSA id i9sm38188ejb.48.2020.08.04.13.46.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Aug 2020 13:46:11 -0700 (PDT)
+Date:   Tue, 4 Aug 2020 22:46:10 +0200
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Stafford Horne <shorne@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        openrisc@lists.librecores.org
+Subject: Re: [PATCH 2/6] openrisc: uaccess: Fix sparse address space warnings
+Message-ID: <20200804204610.mxzw6ahdnfw6yko2@ltop.local>
+References: <20200804042354.3930694-1-shorne@gmail.com>
+ <20200804042354.3930694-3-shorne@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200804203155.2181099-1-lokeshgidra@google.com>
+In-Reply-To: <20200804042354.3930694-3-shorne@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 01:31:55PM -0700, Lokesh Gidra wrote:
-> when get_unused_fd_flags returns error, ctx will be freed by
-> userfaultfd's release function, which is indirectly called by fput().
-> Also, if anon_inode_getfile_secure() returns an error, then
-> userfaultfd_ctx_put() is called, which calls mmdrop() and frees ctx.
+On Tue, Aug 04, 2020 at 01:23:50PM +0900, Stafford Horne wrote:
+> The OpenRISC user access functions put_user(), get_user() and
+> clear_user() were missing proper sparse annotations.  This generated
+> warnings like the below.
 > 
-> Also, the O_CLOEXEC was inadvertently added to the call to
-> get_unused_fd_flags() [1].
+> This patch adds the annotations to fix the warnings.
 > 
-> Adding Al Viro's suggested-by, based on [2].
+> Example warnings:
 > 
-> [1] https://lore.kernel.org/lkml/1f69c0ab-5791-974f-8bc0-3997ab1d61ea@dancol.org/
-> [2] https://lore.kernel.org/lkml/20200719165746.GJ2786714@ZenIV.linux.org.uk/
+> net/ipv4/ip_sockglue.c:759:29: warning: incorrect type in argument 1 (different address spaces)
+> net/ipv4/ip_sockglue.c:759:29:    expected void const volatile [noderef] __user *
+> net/ipv4/ip_sockglue.c:759:29:    got int const *__gu_addr
+> net/ipv4/ip_sockglue.c:764:29: warning: incorrect type in initializer (different address spaces)
+> net/ipv4/ip_sockglue.c:764:29:    expected unsigned char const *__gu_addr
+> net/ipv4/ip_sockglue.c:764:29:    got unsigned char [noderef] __user *
 > 
-> Fixes: d08ac70b1e0d (Wire UFFD up to SELinux)
-> Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-> Reported-by: syzbot+75867c44841cb6373570@syzkaller.appspotmail.com
-> Signed-off-by: Lokesh Gidra <lokeshgidra@google.com>
+> Signed-off-by: Stafford Horne <shorne@gmail.com>
 
-What branch does this patch apply to?  Neither mainline nor linux-next works.
+Look good to me.
 
-- Eric
+-- Luc
