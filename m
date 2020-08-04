@@ -2,121 +2,139 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B279CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF2152076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DDD62070A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:49:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729980AbgHDIou (ORCPT
+        id S1730010AbgHDItp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 04:44:50 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:52671 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729390AbgHDIot (ORCPT
+        Tue, 4 Aug 2020 04:49:45 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:35136 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726233AbgHDItp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 04:44:49 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-248-G1izeoNFPnOWrVPFbURiZA-1; Tue, 04 Aug 2020 09:44:45 +0100
-X-MC-Unique: G1izeoNFPnOWrVPFbURiZA-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 4 Aug 2020 09:44:42 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 4 Aug 2020 09:44:42 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'James Bottomley' <James.Bottomley@HansenPartnership.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Steven Sistare <steven.sistare@oracle.com>
-CC:     Matthew Wilcox <willy@infradead.org>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "gerg@linux-m68k.org" <gerg@linux-m68k.org>,
-        "ktkhai@virtuozzo.com" <ktkhai@virtuozzo.com>,
-        "christian.brauner@ubuntu.com" <christian.brauner@ubuntu.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "esyr@redhat.com" <esyr@redhat.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
-        "christian@kellner.me" <christian@kellner.me>,
-        "areber@redhat.com" <areber@redhat.com>,
-        "cyphar@cyphar.com" <cyphar@cyphar.com>
-Subject: RE: [RFC PATCH 0/5] madvise MADV_DOEXEC
-Thread-Topic: [RFC PATCH 0/5] madvise MADV_DOEXEC
-Thread-Index: AQHWaay+eK06OQMZZUSyBX/76a/Faaknoqtw
-Date:   Tue, 4 Aug 2020 08:44:42 +0000
-Message-ID: <9371b8272fd84280ae40b409b260bab3@AcuMS.aculab.com>
-References: <1595869887-23307-1-git-send-email-anthony.yznaga@oracle.com>
-         <20200730152250.GG23808@casper.infradead.org>
-         <db3bdbae-eb0f-1ae3-94dd-045e37bc94ba@oracle.com>
-         <20200730171251.GI23808@casper.infradead.org>
-         <63a7404c-e4f6-a82e-257b-217585b0277f@oracle.com>
-         <20200730174956.GK23808@casper.infradead.org>
-         <ab7a25bf-3321-77c8-9bc3-28a223a14032@oracle.com>
-         <87y2n03brx.fsf@x220.int.ebiederm.org>
-         <689d6348-6029-5396-8de7-a26bc3c017e5@oracle.com>
-         <877dufvje9.fsf@x220.int.ebiederm.org>
- <1596469370.29091.13.camel@HansenPartnership.com>
-In-Reply-To: <1596469370.29091.13.camel@HansenPartnership.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 4 Aug 2020 04:49:45 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0U4jVMG6_1596530971;
+Received: from B-J2UMLVDL-1650.local(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0U4jVMG6_1596530971)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 04 Aug 2020 16:49:39 +0800
+Subject: Re: [PATCH v2] virtio_ring: use alloc_pages_node for NUMA-aware
+ allocation
+From:   Shile Zhang <shile.zhang@linux.alibaba.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Jiang Liu <liuj97@gmail.com>, linux-pci@vger.kernel.org,
+        bhelgaas@google.com
+References: <20200721070013.62894-1-shile.zhang@linux.alibaba.com>
+ <20200721041550-mutt-send-email-mst@kernel.org>
+ <d16c8191-3837-8734-8cdf-ae6dd75725f7@linux.alibaba.com>
+ <222b40f1-a36c-0375-e965-cd949e8b9eeb@linux.alibaba.com>
+Message-ID: <d01f138c-9ec7-1740-77f1-6577f7f0b7d4@linux.alibaba.com>
+Date:   Tue, 4 Aug 2020 16:49:31 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+In-Reply-To: <222b40f1-a36c-0375-e965-cd949e8b9eeb@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSmFtZXMgQm90dG9tbGV5DQo+IFNlbnQ6IDAzIEF1Z3VzdCAyMDIwIDE2OjQzDQo+IA0K
-PiBPbiBNb24sIDIwMjAtMDgtMDMgYXQgMTA6MjggLTA1MDAsIEVyaWMgVy4gQmllZGVybWFuIHdy
-b3RlOg0KPiBbLi4uXQ0KPiA+IFdoYXQgaXMgd3Jvbmcgd2l0aCBsaXZlIG1pZ3JhdGlvbiBiZXR3
-ZWVuIG9uZSBxZW11IHByb2Nlc3MgYW5kDQo+ID4gYW5vdGhlciBxZW11IHByb2Nlc3Mgb24gdGhl
-IHNhbWUgbWFjaGluZSBub3Qgd29yayBmb3IgdGhpcyB1c2UgY2FzZT8NCj4gPg0KPiA+IEp1c3Qg
-cmV1c2luZyBsaXZlIG1pZ3JhdGlvbiB3b3VsZCBzZWVtIHRvIGJlIHRoZSBzaW1wbGVzdCBwYXRo
-IG9mDQo+ID4gYWxsLCBhcyB0aGUgY29kZSBpcyBhbHJlYWR5IGltcGxlbWVudGVkLiAgRnVydGhl
-ciBpZiBzb21ldGhpbmcgZ29lcw0KPiA+IHdyb25nIHdpdGggdGhlIGxpdmUgbWlncmF0aW9uIHlv
-dSBjYW4gZmFsbGJhY2sgdG8gdGhlIGV4aXN0aW5nDQo+ID4gcHJvY2Vzcy4gIFdpdGggZXhlYyB0
-aGVyZSBpcyBubyBmYWxsYmFjayBpZiB0aGUgbmV3IHZlcnNpb24gZG9lcyBub3QNCj4gPiBwcm9w
-ZXJseSBzdXBwb3J0IHRoZSBoYW5kb2ZmIHByb3RvY29sIG9mIHRoZSBvbGQgdmVyc2lvbi4NCj4g
-DQo+IEFjdHVhbGx5LCBjb3VsZCBJIGFzayB0aGlzIGFub3RoZXIgd2F5OiB0aGUgb3RoZXIgcGF0
-Y2ggc2V0IHlvdSBzZW50IHRvDQo+IHRoZSBLVk0gbGlzdCB3YXMgdG8gc25hcHNob3QgdGhlIFZN
-IHRvIGEgUEtSQU0gY2Fwc3VsZSBwcmVzZXJ2ZWQgYWNyb3NzDQo+IGtleGVjIHVzaW5nIHplcm8g
-Y29weSBmb3IgZXh0cmVtZWx5IGZhc3Qgc2F2ZS9yZXN0b3JlLiAgVGhlIG9yaWdpbmFsDQo+IGlk
-ZWEgd2FzIHRvIHVzZSB0aGlzIGFzIHBhcnQgb2YgYSBDUklVIGJhc2VkIHNuYXBzaG90LCBrZXhl
-YyB0byBuZXcNCj4gc3lzdGVtLCByZXN0b3JlLiAgSG93ZXZlciwgd2h5IGNhbid0IHlvdSBkbyBh
-IGxvY2FsIHNuYXBzaG90LCByZXN0YXJ0DQo+IHFlbXUsIHJlc3RvcmUgdXNpbmcgdGhlIFBLUkFN
-IGNhcHN1bGUgdG8gYWNoaWV2ZSBleGFjdGx5IHRoZSBzYW1lIGFzDQo+IE1BRFZfRE9FWEVDIGRv
-ZXMgYnV0IHVzaW5nIGEgc3lzdGVtIHRoYXQncyBlYXN5IHRvIHJlYXNvbiBhYm91dD8gIEl0DQo+
-IG1heSBiZSBzbGlnaHRseSBzbG93ZXIsIGJ1dCBJIHRoaW5rIHdlJ3JlIHN0aWxsIHRhbGtpbmcg
-bWlsbGlzZWNvbmRzLg0KDQoNCkkndmUgaGFkIGFub3RoZXIgaWRlYSAodGhhdCBpcyBwcm9iYWJs
-eSBpbXBvc3NpYmxlLi4uKS4NCldoYXQgYWJvdXQgYSAncmV2ZXJzZSBtbWFwJyBvcGVyYXRpb24u
-DQpTb21ldGhpbmcgdGhhdCBjcmVhdGVzIGFuIGZkIHdob3NlIGNvbnRlbnRzIGFyZSBhIGNodW5r
-IG9mIHRoZQ0KcHJvY2Vzc2VzIGFkZHJlc3Mgc3BhY2UuDQoNCglEYXZpZA0KDQotDQpSZWdpc3Rl
-cmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtl
-eW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+Hi Michael & Bjorn,
 
+Sorry for the ping,
+but how about this patch/issue? any comments/suggestions?
+
+Thanks!
+
+On 2020/7/27 21:10, Shile Zhang wrote:
+> 
+> 
+> On 2020/7/21 19:28, Shile Zhang wrote:
+>>
+>>
+>> On 2020/7/21 16:18, Michael S. Tsirkin wrote:
+>>> On Tue, Jul 21, 2020 at 03:00:13PM +0800, Shile Zhang wrote:
+>>>> Use alloc_pages_node() allocate memory for vring queue with proper
+>>>> NUMA affinity.
+>>>>
+>>>> Reported-by: kernel test robot <lkp@intel.com>
+>>>> Suggested-by: Jiang Liu <liuj97@gmail.com>
+>>>> Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+>>>
+>>> Do you observe any performance gains from this patch?
+>>
+>> Thanks for your comments!
+>> Yes, the bandwidth can boost more than doubled (from 30Gbps to 80GBps) 
+>> with this changes in my test env (8 numa nodes), with netperf test.
+>>
+>>>
+>>> I also wonder why isn't the probe code run on the correct numa node?
+>>> That would fix a wide class of issues like this without need to tweak
+>>> drivers.
+>>
+>> Good point, I'll check this, thanks!
+> 
+> Sorry, I have no idea about how the probe code to grab the appropriate 
+> NUMA node.
+> 
+>>
+>>>
+>>> Bjorn, what do you think? Was this considered?
+> 
+> Hi Bjorn, Could you please give any comments about this issue?
+> Thanks!
+> 
+>>>
+>>>> ---
+>>>> Changelog
+>>>> v1 -> v2:
+>>>> - fixed compile warning reported by LKP.
+>>>> ---
+>>>>   drivers/virtio/virtio_ring.c | 10 ++++++----
+>>>>   1 file changed, 6 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/drivers/virtio/virtio_ring.c 
+>>>> b/drivers/virtio/virtio_ring.c
+>>>> index 58b96baa8d48..d38fd6872c8c 100644
+>>>> --- a/drivers/virtio/virtio_ring.c
+>>>> +++ b/drivers/virtio/virtio_ring.c
+>>>> @@ -276,9 +276,11 @@ static void *vring_alloc_queue(struct 
+>>>> virtio_device *vdev, size_t size,
+>>>>           return dma_alloc_coherent(vdev->dev.parent, size,
+>>>>                         dma_handle, flag);
+>>>>       } else {
+>>>> -        void *queue = alloc_pages_exact(PAGE_ALIGN(size), flag);
+>>>> -
+>>>> -        if (queue) {
+>>>> +        void *queue = NULL;
+>>>> +        struct page *page = 
+>>>> alloc_pages_node(dev_to_node(vdev->dev.parent),
+>>>> +                             flag, get_order(size));
+>>>> +        if (page) {
+>>>> +            queue = page_address(page);
+>>>>               phys_addr_t phys_addr = virt_to_phys(queue);
+>>>>               *dma_handle = (dma_addr_t)phys_addr;
+>>>> @@ -308,7 +310,7 @@ static void vring_free_queue(struct 
+>>>> virtio_device *vdev, size_t size,
+>>>>       if (vring_use_dma_api(vdev))
+>>>>           dma_free_coherent(vdev->dev.parent, size, queue, dma_handle);
+>>>>       else
+>>>> -        free_pages_exact(queue, PAGE_ALIGN(size));
+>>>> +        free_pages((unsigned long)queue, get_order(size));
+>>>>   }
+>>>>   /*
+>>>> -- 
+>>>> 2.24.0.rc2
