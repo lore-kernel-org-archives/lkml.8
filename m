@@ -2,176 +2,510 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2381CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2C0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2235920781
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E072E2076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:16:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Zr4ktLrj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kp/clz9J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728985AbgHDGP6 (ORCPT
+        id S1729334AbgHDGQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 02:15:58 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:47993 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727076AbgHDGP6 (ORCPT
+        Tue, 4 Aug 2020 02:16:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38106 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728440AbgHDGQ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 02:15:58 -0400
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200804061555epoutp024c210fdeccb38cc7266a08ce8ff1c300~n-BP2p5Gu1706717067epoutp02O;
-        Tue,  4 Aug 2020 06:15:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200804061555epoutp024c210fdeccb38cc7266a08ce8ff1c300~n-BP2p5Gu1706717067epoutp02O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1596521755;
-        bh=WGzv8NvtDPsUEvGi0v3GFu8hR6WxwFX6S6UJ+258u7E=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=Zr4ktLrjBPQk+pKfB9PS4O/XEwTqcwPiOyOGEjnXpccoLSwvCg2SKn6YI+Zwl5M6q
-         xDLbwyw80HYBmaaZ2IeK4iB4hYTf5jtJd5uSDkTQXP7y9xdE36sbBNgUCqbOfzb3V6
-         y9QiQ39ZHRnZOVYtbaNmR9D8jQHGHXRSqsrP5gXo=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20200804061554epcas5p3f803017cdad58a0ada3d25bbe48905bf~n-BOw_nJK0164801648epcas5p3p;
-        Tue,  4 Aug 2020 06:15:54 +0000 (GMT)
-X-AuditID: b6c32a4b-39fff70000002503-95-5f28fd1aebec
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D6.4C.09475.A1DF82F5; Tue,  4 Aug 2020 15:15:54 +0900 (KST)
-Mime-Version: 1.0
-Subject: RE: [PATCH 1/1] arm64: add support for PAGE_SIZE aligned kernel
- stack
-Reply-To: v.narang@samsung.com
-From:   Vaneet Narang <v.narang@samsung.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-CC:     Maninder Singh <maninder1.s@samsung.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "oleg@redhat.com" <oleg@redhat.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "steve.capper@arm.com" <steve.capper@arm.com>,
-        "vincenzo.frascino@arm.com" <vincenzo.frascino@arm.com>,
-        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
-        "ardb@kernel.org" <ardb@kernel.org>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "kristina.martsenko@arm.com" <kristina.martsenko@arm.com>,
-        "samitolvanen@google.com" <samitolvanen@google.com>,
-        "ebiederm@xmission.com" <ebiederm@xmission.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "gladkov.alexey@gmail.com" <gladkov.alexey@gmail.com>,
-        "daniel.m.jordan@oracle.com" <daniel.m.jordan@oracle.com>,
-        "walken@google.com" <walken@google.com>,
-        "bernd.edlinger@hotmail.de" <bernd.edlinger@hotmail.de>,
-        "laoar.shao@gmail.com" <laoar.shao@gmail.com>,
-        "avagin@gmail.com" <avagin@gmail.com>,
-        "john.johansen@canonical.com" <john.johansen@canonical.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        AMIT SAHRAWAT <a.sahrawat@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <20200803123447.GA89825@C02TD0UTHF1T.local>
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20200804061526epcms5p3ff393f7e51d28ed896105c868bd31e5b@epcms5p3>
-Date:   Tue, 04 Aug 2020 11:45:26 +0530
-X-CMS-MailID: 20200804061526epcms5p3ff393f7e51d28ed896105c868bd31e5b
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUxTVxjGd+69vb10q7mUTo+w6axzKjCEIOOwjGVLnDmTzGCMM9kmrCk3
-        wAaFtDLEZVlRwPEpdpBBgfI1RsVOTIXyUSkFGdSBGkoYW+MEFKdjMCS0IjJkawtx/z3nOb88
-        z3nfHIYUWWhfJlF+nFPIpUkSWkAZr+7e9brvyq7Y4MxGMRo2cei7zAOosllPI7NVhpYccwCt
-        qPv5aGh1mkTnS0cpVDo5RaO5HwoA0jwq46NVYxYf1c4dQqfrm2k0bm4kkNWRTaOh/GQ0PpDD
-        Q433b/GR4e4vPHSl6xqFRjoraXS1OodCDWPDBOqovMZDNksNgVq7swEyfzNBoAbdLA+pZ4wE
-        6nq6RKGn6q9Q1q2wd7ZhvVYP8PITNcAaVSGNK1TDFO7Q/M7HWWY7H9cY0nDdzZ8obGjKpbG1
-        bJnC3VV6Pr78/dd4/p6dwnPmURoXtTQBvGDYEu39keCtOC4p8QtOseftTwUJuQ4LSC0Snbjd
-        aKNUoG9DHvBiILsXltZr+HlAwIhYE4DqcwV0HmAYIesNV9p9XIwPGw3n/7QAlxaxW+DArybg
-        8QOh9b8Hu3Ca9YfzWUddtpjdCQs6HZQrkmTvvABH7PU8T5cQlp25R3m0H2xrbHXneLEIFnSf
-        Jzz+i/C3C7P8dT3XXw08Wgyzb18nPdobTiyZ1vyX4KLzLM9VBtl8ABdaimjPoQTAiuXBtdRw
-        aLqkdTcL2Q+gdtziTqLYHfCx3jWwi9kHNbpMN0+yW2HbbCXpmoxkd8Pmzj0e5GVY+vPFNWQD
-        LFyeItYHa9euawm80dOxFgnhVG65OwayGNp1wLPnLgBv/lFCF4NXNM9WrflfseZZcQ0gm8Bm
-        LlWZHM8pw1JD5Vx6kFKarEyTxwfJUpINwP3J/aPawZ2Jh0G9gGBAL4AMKREL5xd2xoqEcdKM
-        k5wiJVaRlsQpe4EfQ0k2CSWPh2JEbLz0OPc5x6VyivVbgvHyVRHK6Kh/LAGYAK+eO5s2ebAO
-        nMFxq6Wk6fDHF2an+myCmTd64pZOhwfn3Ij0s4SKwzNijFXO8pOnIpqOWYseRlptRw33+xbT
-        L+fq4yNq3pVJn2gPbNtI6w32Nytt1JGA2tda20ZPPEh5jxnwWdw/4izOK1k+UqwfM8qqr2ye
-        EY4lRqRhxfMtAfX7Z4Z6dKKmB+KQWmfZ9KHBBJ0dDOZXaZsDxfuub/37kw9LQmRAFjYU0WVN
-        UDmwObLZufh+uR+RET0pCu2MFyxQ/bquu4WXpp8L93IaoxpE8MdAW4wq96+yjXt1j3akyBPT
-        D08Eb+91XvzyVHXAt6PHPqvatBpYUSehlAnSEH9SoZT+C/G1hfVTBAAA
-X-CMS-RootMailID: 20200802165825epcas5p3a2127be681530fdd785db0f8961eaf96
-References: <20200803123447.GA89825@C02TD0UTHF1T.local>
-        <1596386115-47228-1-git-send-email-maninder1.s@samsung.com>
-        <CGME20200802165825epcas5p3a2127be681530fdd785db0f8961eaf96@epcms5p3>
+        Tue, 4 Aug 2020 02:16:56 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 125A0C061756
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 23:16:56 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id p1so22273089pls.4
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 23:16:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BQxJ0YUEkUrOH8elixr/LeYRVCMI3lZYKouIJxlT1ww=;
+        b=Kp/clz9Ji/MSr0gPKB0VoVp+6il4plIqHCuLIFHeKdv2qd8wl5gAianRAmJ84nm6nw
+         7Bd46F1j1tAwKRUjRIujnPkjMU0iRJNavuQd35YadrDkM4RFTtJLhl2CN/IwjcE01Zql
+         ljjiPKgdIX3OdCaBEnd4lGSvrpthubixglVVzzdFQWmN1BXnm14/Bg/KAo/geLUv0zyu
+         DUOTcsfrWO+kTDsNwOEfPdzftlLdccN3LExA/97bf6+kdgstMeHCQhRfJ8rNGxWi5VCG
+         Qe5uUf1M/SUNI1pMMoiELWJDsss1uurQzknPSNrxGdaGOCz+YjO2Ly+hm/uwIO/4ZelH
+         z+Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=BQxJ0YUEkUrOH8elixr/LeYRVCMI3lZYKouIJxlT1ww=;
+        b=WMfpOnEgA8oH7P3Mqy0ftYnarrBESbvUgVvNd3RISznR1Z8S51xUZuX+vdfYSWO0Ik
+         BagCPxJcBHLYPMgoRMGkfbBEqpb/sU2G97FWMfOLRaMawWT46iL1TK1bHlIhjPrzCd4S
+         V50ciJ6gXa48n3e2xQvWaaLLM5fqRl4HHYXfsaFrYz3niOMIm0ljnfENNuKpRMl8P3hX
+         elo66+QZ5ZFppjs4mWs5CstJFjffo7w1m5kufOaJU027o3/nha3KgZCJ3Eq7u5UAPCq8
+         BDdeB2hrhRPY1UBQjcz9k5wUypMQ1SKLxL2D36e4+otOVIrA/Jd8Zuk6AhS8L6Uu9772
+         HQeg==
+X-Gm-Message-State: AOAM533vQyKPX+9ZAYJ72TVSnDDoLVns0BvWBV83H9ZFSMoDIh31KVzA
+        BfARXYMX3wcKzrByoX2puw11uXkbb4I=
+X-Google-Smtp-Source: ABdhPJw2cGTlB+eY9UVS49MTVDQTBYFtP15HBcGvkz2rjQaTTIt82GhHSGnPo6hVDvyVJJ6qhbGvow==
+X-Received: by 2002:a17:902:7fcb:: with SMTP id t11mr8092847plb.266.1596521815373;
+        Mon, 03 Aug 2020 23:16:55 -0700 (PDT)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id j4sm20537046pgk.4.2020.08.03.23.16.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 23:16:54 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 23:16:52 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Amit Pundir <amit.pundir@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dt <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] arm64: dts: qcom: Add support for Xiaomi Poco F1
+ (Beryllium)
+Message-ID: <20200804061652.GK61202@yoga>
+References: <1596297341-13549-1-git-send-email-amit.pundir@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1596297341-13549-1-git-send-email-amit.pundir@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+On Sat 01 Aug 08:55 PDT 2020, Amit Pundir wrote:
 
->> currently THREAD_SIZE is always in power of 2, which will waste
->> memory in cases there is need to increase of stack size.
->
->If you are seeing issues with the current stack size, can you please
->explain that in more detail? Where are you seeing problems? Which
->configuration options do you have selected?
->
->I'm not keen on making kernel stack sizes configurable as it's not
->currently possible for the person building the kernel to figure out a
->safe size (and if this were possible, it's be better to handle this
->automatically).
->
->If the stack size is too small in some configurations I think we need to
->ensure that it is appropriately sized regardless of whether the person
->building the kernel believes they can identify a reasonable size.
+> Add initial dts support for Xiaomi Poco F1 (Beryllium).
+> 
+> This initial support is based on upstream Dragonboard 845c
+> (sdm845) device. With this dts, Beryllium boots AOSP up to
+> ADB shell over USB-C.
+> 
+> Supported functionality includes UFS, USB-C (peripheral),
+> microSD card and Vol+/Vol-/power keys. Bluetooth should work
+> too but couldn't be verified from adb command line, it is
+> verified when enabled from UI with few WIP display patches.
+> 
+> Just like initial db845c support, initializing the SMMU is
+> clearing the mapping used for the splash screen framebuffer,
+> which causes the device to hang during boot and recovery
+> needs a hard power reset. This can be worked around using:
+> 
+>     fastboot oem select-display-panel none
+> 
+> To switch ON the display back run:
+> 
+>     fastboot oem select-display-panel
+> 
+> But this only works on Beryllium devices running bootloader
+> version BOOT.XF.2.0-00369-SDM845LZB-1 that shipped with
+> Android-9 based release. Newer bootloader version do not
+> support switching OFF the display panel at all. So we need
+> a few additional smmu patches (under review) from here to
+> boot to shell:
+> https://github.com/pundiramit/linux/commits/beryllium-mainline
+> 
+> Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
+> ---
+> v3: Added a reserved-memory region from downstream kernel to fix
+>     a boot regression with recent dma-pool changes in v5.8-rc6.
+> v2: Updated machine compatible string for seemingly inevitable
+>     future quirks.
+> 
+>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>  arch/arm64/boot/dts/qcom/sdm845-beryllium.dts | 331 ++++++++++++++++++++++++++
+>  2 files changed, 332 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/sdm845-beryllium.dts
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 0f2c33d611df..3ef1b48bc0cb 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -21,6 +21,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r1.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-beryllium.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-mtp.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-beryllium.dts b/arch/arm64/boot/dts/qcom/sdm845-beryllium.dts
+> new file mode 100644
+> index 000000000000..af66459712fe
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-beryllium.dts
+> @@ -0,0 +1,331 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+> +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+> +#include "sdm845.dtsi"
+> +#include "pm8998.dtsi"
+> +#include "pmi8998.dtsi"
+> +
+> +/ {
+> +	model = "Xiaomi Technologies Inc. Beryllium";
+> +	compatible = "xiaomi,beryllium", "qcom,sdm845";
+> +
+> +	/* required for bootloader to select correct board */
+> +	qcom,board-id = <69 0>;
+> +	qcom,msm-id = <321 0x20001>;
+> +
+> +	aliases {
+> +		hsuart0 = &uart6;
+> +	};
+> +
+> +	dc12v: dc12v-regulator {
 
-Motivation behind these changes is saving memory on our system. 
-Our system runs around 2500 threads concurrently so saving 4Kb  
-might help us in saving 10MB memory.
+This is a phone, it doesn't have a 12V DC jack. So while I don't know
+the exact power grid for this device, this node shouldn't be here.
 
-To ensure 12KB is sufficient for our system we have used stack tracing and 
-realised maximum stack used is not more than 9KB. 
- /sys/kernel/tracing/stack_max_size
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "DC12V";
+> +		regulator-min-microvolt = <12000000>;
+> +		regulator-max-microvolt = <12000000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	gpio_keys {
 
-Tracing interface defined by kernel to track maximum stack size can be used
-by others to decide appropriate stack size.
+y/_/-/
 
->> Thus adding support for PAGE_SIZE(not power of 2) stacks for arm64.
->> User can decide any value 12KB, 16KB, 20 KB etc. based on value
->> of THREAD_SHIFT. User can set any value which is PAGE_SIZE aligned for
->> PAGE_ALIGNED_STACK_SIZE config.
->> 
->> Value of THREAD_SIZE is defined as 12KB for now, since with irq stacks
->> it is enough and it will save 4KB per thread.
->
->How are you certain of this?
+> +		compatible = "gpio-keys";
+> +		autorepeat;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&vol_up_pin_a>;
+> +
+> +		vol-up {
+> +			label = "Volume Up";
+> +			linux,code = <KEY_VOLUMEUP>;
+> +			gpios = <&pm8998_gpio 6 GPIO_ACTIVE_LOW>;
+> +		};
+> +	};
+> +
+> +	vbat: vbat-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VBAT";
+> +
+> +		vin-supply = <&dc12v>;
+> +		regulator-min-microvolt = <4200000>;
+> +		regulator-max-microvolt = <4200000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	vbat_som: vbat-som-regulator {
 
-Prev ARM64 uses 16KB stack size to store IRQ stack and thread on the same kernel stack.
-Now since these are stored seperately so maximum kernel stack requirement is also reduced. 
-ARM still uses 8KB stack to store both SVC and IRQ mode stack. So ARM64 shouldn't
-have requirement more than double when compared to ARM. 
-So considering these points we realised 12KB stack might be sufficient
-for our system. Analyzing stack using stack tracer confirmed max stack requirement.
+This is specific to db845c, with its power grid split between the main
+board and the SOM. Please omit.
 
-This is still configurable, if some system has higher stack requirement then user can 
-go with 16KB but there should be option to change it.
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VBAT_SOM";
+> +
+> +		vin-supply = <&dc12v>;
+> +		regulator-min-microvolt = <4200000>;
+> +		regulator-max-microvolt = <4200000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	vdc_3v3: vdc-3v3-regulator {
 
- 
+This is probably not on the Poco and it's not referenced, please remove.
+
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VDC_3V3";
+> +		vin-supply = <&dc12v>;
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	vdc_5v: vdc-5v-regulator {
+
+Ditto.
+
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VDC_5V";
+> +
+> +		vin-supply = <&dc12v>;
+> +		regulator-min-microvolt = <500000>;
+> +		regulator-max-microvolt = <500000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	vreg_s4a_1p8: vreg-s4a-1p8 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vreg_s4a_1p8";
+> +
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		regulator-always-on;
+> +	};
+> +};
+> +
+> +&apps_rsc {
+> +	pm8998-rpmh-regulators {
+> +		compatible = "qcom,pm8998-rpmh-regulators";
+> +		qcom,pmic-id = "a";
+> +
+> +		vreg_l1a_0p875: ldo1 {
+> +			regulator-min-microvolt = <880000>;
+> +			regulator-max-microvolt = <880000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l7a_1p8: ldo7 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l12a_1p8: ldo12 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l13a_2p95: ldo13 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <2960000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l17a_1p3: ldo17 {
+> +			regulator-min-microvolt = <1304000>;
+> +			regulator-max-microvolt = <1304000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l20a_2p95: ldo20 {
+> +			regulator-min-microvolt = <2960000>;
+> +			regulator-max-microvolt = <2968000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l21a_2p95: ldo21 {
+> +			regulator-min-microvolt = <2960000>;
+> +			regulator-max-microvolt = <2968000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l24a_3p075: ldo24 {
+> +			regulator-min-microvolt = <3088000>;
+> +			regulator-max-microvolt = <3088000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l25a_3p3: ldo25 {
+> +			regulator-min-microvolt = <3300000>;
+> +			regulator-max-microvolt = <3312000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l26a_1p2: ldo26 {
+> +			regulator-min-microvolt = <1200000>;
+> +			regulator-max-microvolt = <1200000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +	};
+> +};
+> +
+> +&gcc {
+> +	protected-clocks = <GCC_QSPI_CORE_CLK>,
+> +			   <GCC_QSPI_CORE_CLK_SRC>,
+> +			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
+> +};
+> +
+> +/* Reserved memory changes from downstream */
+> +/ {
+> +	reserved-memory {
+> +		removed_region: memory@88f00000 {
+
+Do you know what these 26MB are used for? Do you think it's possible to
+give it a more appropriate label? The size happens to be the same as
+&adsp_mem from sdm845.dtsi, this is probably not a coincidence.
+
+That said, this overlaps at least &rmtfs_mem, &qseecom_mem and
+&camera_mem, so I would expect that you have a few warnings about this
+early in the log? Please shuffle things around to avoid this.
+
+> +			no-map;
+> +			reg = <0 0x88f00000 0 0x1A00000>;
+
+Please lowercase the 'A'
+
 Regards,
-Vaneet Narang
+Bjorn
+
+> +		};
+> +	};
+> +};
+> +
+> +&pm8998_gpio {
+> +	vol_up_pin_a: vol-up-active {
+> +		pins = "gpio6";
+> +		function = "normal";
+> +		input-enable;
+> +		bias-pull-up;
+> +		qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
+> +	};
+> +};
+> +
+> +&pm8998_pon {
+> +	resin {
+> +		compatible = "qcom,pm8941-resin";
+> +		interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
+> +		debounce = <15625>;
+> +		bias-pull-up;
+> +		linux,code = <KEY_VOLUMEDOWN>;
+> +	};
+> +};
+> +
+> +&qupv3_id_0 {
+> +	status = "okay";
+> +};
+> +
+> +&sdhc_2 {
+> +	status = "okay";
+> +
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sdc2_default_state &sdc2_card_det_n>;
+> +
+> +	vmmc-supply = <&vreg_l21a_2p95>;
+> +	vqmmc-supply = <&vreg_l13a_2p95>;
+> +
+> +	bus-width = <4>;
+> +	cd-gpios = <&tlmm 126 GPIO_ACTIVE_HIGH>;
+> +};
+> +
+> +&tlmm {
+> +	gpio-reserved-ranges = <0 4>, <81 4>;
+> +
+> +	sdc2_default_state: sdc2-default {
+> +		clk {
+> +			pins = "sdc2_clk";
+> +			bias-disable;
+> +
+> +			/*
+> +			 * It seems that mmc_test reports errors if drive
+> +			 * strength is not 16 on clk, cmd, and data pins.
+> +			 */
+> +			drive-strength = <16>;
+> +		};
+> +
+> +		cmd {
+> +			pins = "sdc2_cmd";
+> +			bias-pull-up;
+> +			drive-strength = <10>;
+> +		};
+> +
+> +		data {
+> +			pins = "sdc2_data";
+> +			bias-pull-up;
+> +			drive-strength = <10>;
+> +		};
+> +	};
+> +
+> +	sdc2_card_det_n: sd-card-det-n {
+> +		pins = "gpio126";
+> +		function = "gpio";
+> +		bias-pull-up;
+> +	};
+> +};
+> +
+> +&uart6 {
+> +	status = "okay";
+> +
+> +	bluetooth {
+> +		compatible = "qcom,wcn3990-bt";
+> +
+> +		vddio-supply = <&vreg_s4a_1p8>;
+> +		vddxo-supply = <&vreg_l7a_1p8>;
+> +		vddrf-supply = <&vreg_l17a_1p3>;
+> +		vddch0-supply = <&vreg_l25a_3p3>;
+> +		max-speed = <3200000>;
+> +	};
+> +};
+> +
+> +&usb_1 {
+> +	status = "okay";
+> +};
+> +
+> +&usb_1_dwc3 {
+> +	dr_mode = "peripheral";
+> +};
+> +
+> +&usb_1_hsphy {
+> +	status = "okay";
+> +
+> +	vdd-supply = <&vreg_l1a_0p875>;
+> +	vdda-pll-supply = <&vreg_l12a_1p8>;
+> +	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
+> +
+> +	qcom,imp-res-offset-value = <8>;
+> +	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
+> +	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
+> +	qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
+> +};
+> +
+> +&usb_1_qmpphy {
+> +	status = "okay";
+> +
+> +	vdda-phy-supply = <&vreg_l26a_1p2>;
+> +	vdda-pll-supply = <&vreg_l1a_0p875>;
+> +};
+> +
+> +&ufs_mem_hc {
+> +	status = "okay";
+> +
+> +	reset-gpios = <&tlmm 150 GPIO_ACTIVE_LOW>;
+> +
+> +	vcc-supply = <&vreg_l20a_2p95>;
+> +	vcc-max-microamp = <800000>;
+> +};
+> +
+> +&ufs_mem_phy {
+> +	status = "okay";
+> +
+> +	vdda-phy-supply = <&vreg_l1a_0p875>;
+> +	vdda-pll-supply = <&vreg_l26a_1p2>;
+> +};
+> +
+> +/* PINCTRL - additions to nodes defined in sdm845.dtsi */
+> +
+> +&qup_uart6_default {
+> +	pinmux {
+> +		pins = "gpio45", "gpio46", "gpio47", "gpio48";
+> +		function = "qup6";
+> +	};
+> +
+> +	cts {
+> +		pins = "gpio45";
+> +		bias-disable;
+> +	};
+> +
+> +	rts-tx {
+> +		pins = "gpio46", "gpio47";
+> +		drive-strength = <2>;
+> +		bias-disable;
+> +	};
+> +
+> +	rx {
+> +		pins = "gpio48";
+> +		bias-pull-up;
+> +	};
+> +};
+> -- 
+> 2.7.4
+> 
