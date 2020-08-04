@@ -2,120 +2,169 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B0FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B766C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F13DA2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E4882086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:40:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pavvz+Fo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FejR63DY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729907AbgHDHjw (ORCPT
+        id S1729932AbgHDHkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 03:39:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50806 "EHLO
+        Tue, 4 Aug 2020 03:40:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbgHDHjv (ORCPT
+        with ESMTP id S1726808AbgHDHkk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 03:39:51 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0145C06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 00:39:51 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id t6so1539139pjr.0
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 00:39:51 -0700 (PDT)
+        Tue, 4 Aug 2020 03:40:40 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BADDCC06174A;
+        Tue,  4 Aug 2020 00:40:39 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id c15so190180wrs.11;
+        Tue, 04 Aug 2020 00:40:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=bUrPosWpbtUZGITpvnlHaTi7khIGfAqisN4TaUAkCAE=;
-        b=Pavvz+FooPxe5h/5VDGo9c4Zqz16bgtEwD8V/rIC6jRcmkXDzkMZP9aWi2Jn95G93Z
-         5pbFR5GPK5OyIIAy3AhSc23Kixg/Putnz1htPQUk7OmNcBBpaF5y7bPxDpuhtvFnx6mU
-         vftTrbowyZZkyRTg03tMsEiPJgke6IGpEIcrecBx9rhUhrlvnFbgAG88UI7xoG6S7kMN
-         A1AlVHrGIrPF9D83O38YZPJjdBUkX2qRlYQjaSzGHRiFk/JyPT1nKlNaWdD6BY6JXtqm
-         +veqW2flCbTe7MASrs0MuGHk67tV/CJowYkbNdrKJb1l+r3d83uO2kfc2sLl0sdH0LSc
-         c2hw==
+        h=from:to:cc:subject:date:message-id;
+        bh=nNzt5TcbFA3OdRa1OrMmungZKleua2u+KjZa3EIGs5w=;
+        b=FejR63DY+mt6oi68sgJ4ohkXOsHF3VuWI0H9hNo2UhGbRd0ZaLW6gluW3zH+KyFVuv
+         N2Z4Aejyf/ucPLxA/rQrm3i/FSmOkFPS5Nt0oSW7MhEBICtPI3hWpGGh1uHWXUFBDhzR
+         GZf4rtbw7XfGZh6yPwnrpq3AYKntFFBXUzRi7Tz6M6XlqRC22VT0rwj6dqpSr53zpikc
+         dfa+8+ZrblHLUzYN454MVn0qcDoaTXg6ebK3DLP/2D/J4Qdf+ynW4hp6DsS8u0a4Qb0s
+         1U13AkBVwyJxtLF8VbnsI7kVP/D0L21repGv61lyTD37JnB4/LhO8OzfgdxeihNg8i4N
+         BhxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bUrPosWpbtUZGITpvnlHaTi7khIGfAqisN4TaUAkCAE=;
-        b=cE7MWoKVsqG90ATAzB91yDO1qtySDf7Ntqtvv0EJZh1UE5uEZzqSpyxSRPNwqAoIT9
-         A+hRpQqKzdnJtMKAILCbWXpp6x2daPsjF1UuIIabVy2NsKbhtif96ct88OxXYGtaMiOU
-         dMEf0b+zbxDHUO6cimd8UQmR1A5dpjtGU4wpwJNKjReZfedCmActZWX9Plv+Rv5+/kWq
-         cNGWiSs92DuWclO5GsZufh0TMSabG0hVpB2cbuafsXrYTJAQSOwDfD1J4a3qTeGiF73f
-         iDFCDkqv3UJ2gqETNgxhMN26/IJSeObPJfwtshb982rnbN2XvwbBw5QWY7YPe8u2FCeq
-         lT/A==
-X-Gm-Message-State: AOAM5325DXUEjz8FIEZmP1xOpPtyEOGOQyDMEeOTFyZvUbsYrqhz9/jV
-        uEZLy8X/ORsR7Le2FownfUZFU+mrD3gQAoVjwnE=
-X-Google-Smtp-Source: ABdhPJxKhp0KbfInWbfMcpcBEQhF6c+PPuWTjPfHws+fWHsolyRuqos5w/qy91+QMtSQaRgWq1w0LTLFvWsgHpr7Mhc=
-X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr3285472pjp.228.1596526791226;
- Tue, 04 Aug 2020 00:39:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAK8P3a1vFJ+uUGPGifZGhECXvxA=2u745WrGNZb08s1nHkZQ9g@mail.gmail.com>
- <CAK8P3a2B5cxE512R0-ni6BJOnkgR7kGueqd3AU9E2PXh0unsmg@mail.gmail.com>
- <CACPK8Xd++ZQx9hh21dV6qn73aoWvoFsOHq8Pmgbtpi-GD3ShmA@mail.gmail.com> <CAHp75Vc8yXqCsZ79=YWZLJ3ObgA1AYLj0eqqK0e8sXvMWsf+Hg@mail.gmail.com>
-In-Reply-To: <CAHp75Vc8yXqCsZ79=YWZLJ3ObgA1AYLj0eqqK0e8sXvMWsf+Hg@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 4 Aug 2020 10:39:34 +0300
-Message-ID: <CAHp75VcadLh+hM244agKKif_QeSj1osHMzuC8wv9UVFo7diX5w@mail.gmail.com>
-Subject: Re: [GIT PULL 3/5] ARM: SoC changes for v5.9
-To:     Joel Stanley <joel@jms.id.au>
-List-Id: <soc.lore.kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        SoC Team <soc@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=nNzt5TcbFA3OdRa1OrMmungZKleua2u+KjZa3EIGs5w=;
+        b=WaIPUO61DMxDFOixe5AvnFNDIQNO6vi2U3Ucu3DjPDS6pmsHs4RTG8n8efGBn1UVez
+         tYW1OKaUUsIQyXkP7SHhqqQr+sTafL6t9LhlmQoMWvhFsh5PMZkHbo/VPbrqekH7VdNX
+         kjshnoKKi7AGU53Bjpwc08WteKUS5YB7BHvMkya8LQisRgqiId/Nvh1m3Y/LZHbSxavX
+         xLKLIdn57LZXFW7PEgH4ExnCt+3OXd9OPwLhNv5PGwhonq8Wo1oqyb4sBm2kj3XyszP/
+         1KO0nrwXgcHnBIDIHL33lRWd4CVXFXTsFOEVDqiKxW5avMCg7vKdTWAaiOmCm4qIcNVJ
+         T2ZQ==
+X-Gm-Message-State: AOAM530t7CljpbXhbS9QlYgwo2AnhNDRdRRIqDczL3geug19E+kGjj9C
+        g1MlKewnX5HLA/ixPjIpXPP7XtEY/iI=
+X-Google-Smtp-Source: ABdhPJxUdt7GVbNqFGdSxL8QJ40j7jlSGNB7gkOV1Mk2BEoQcpjgYCV7FFu3lPixi7MGbKMY+qA19A==
+X-Received: by 2002:adf:bc07:: with SMTP id s7mr19589488wrg.254.1596526838366;
+        Tue, 04 Aug 2020 00:40:38 -0700 (PDT)
+Received: from ubuntu18_1.cisco.com ([173.38.220.44])
+        by smtp.gmail.com with ESMTPSA id a3sm3406580wme.34.2020.08.04.00.40.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Aug 2020 00:40:37 -0700 (PDT)
+From:   Ahmed Abdelsalam <ahabdels@gmail.com>
+To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andrea.mayer@uniroma2.it
+Cc:     Ahmed Abdelsalam <ahabdels@gmail.com>
+Subject: [PATCH] seg6: using DSCP of inner IPv4 packets
+Date:   Tue,  4 Aug 2020 07:40:30 +0000
+Message-Id: <20200804074030.1147-1-ahabdels@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 10:33 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Tue, Aug 4, 2020 at 10:02 AM Joel Stanley <joel@jms.id.au> wrote:
-> >
-> > On Mon, 3 Aug 2020 at 21:49, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > ARM: SoC changes for v5.9
-> >
-> > > Andy Shevchenko (1):
-> > >       ARM: orion/gpio: Make use of for_each_requested_gpio()
-> >
-> > This change broke the arm build (I noticed it when building multi_v5_de=
-fconfig):
-> >
-> > ../arch/arm/plat-orion/gpio.c:457:2: error: implicit declaration of
-> > function =E2=80=98for_each_requested_gpio=E2=80=99
-> > [-Werror=3Dimplicit-function-declaration]
-> >   457 |  for_each_requested_gpio(chip, i, label) {
-> >       |  ^~~~~~~~~~~~~~~~~~~~~~~
-> >
-> > for_each_requested_gpio isn't in Linus (Torvalds) tree yet. It will be
-> > fixed when he pulls Linus Walleij's GPIO tree which has the commit:
-> >
-> >  b3337eb24831 gpiolib: Introduce for_each_requested_gpio_in_range() mac=
-ro
->
-> Linus W. specifically created an immutable branch [1] for this.
-> And I think I commented somewhere that entire branch should be pulled.
+This patch allows copying the DSCP from inner IPv4 header to the
+outer IPv6 header, when doing SRv6 Encapsulation.
 
-https://www.spinics.net/lists/linux-gpio/msg51186.html
+This allows forwarding packet across the SRv6 fabric based on their
+original traffic class.
 
-Sorry if that message wasn't clear.
+Signed-off-by: Ahmed Abdelsalam <ahabdels@gmail.com>
+---
+ net/ipv6/seg6_iptunnel.c | 36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
-> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.gi=
-t/log/?h=3Dib-for-each-requested
+diff --git a/net/ipv6/seg6_iptunnel.c b/net/ipv6/seg6_iptunnel.c
+index e0e9f48ab14f..12fb32ca64f7 100644
+--- a/net/ipv6/seg6_iptunnel.c
++++ b/net/ipv6/seg6_iptunnel.c
+@@ -87,8 +87,7 @@ static void set_tun_src(struct net *net, struct net_device *dev,
+ }
+ 
+ /* Compute flowlabel for outer IPv6 header */
+-static __be32 seg6_make_flowlabel(struct net *net, struct sk_buff *skb,
+-				  struct ipv6hdr *inner_hdr)
++static __be32 seg6_make_flowlabel(struct net *net, struct sk_buff *skb)
+ {
+ 	int do_flowlabel = net->ipv6.sysctl.seg6_flowlabel;
+ 	__be32 flowlabel = 0;
+@@ -99,7 +98,7 @@ static __be32 seg6_make_flowlabel(struct net *net, struct sk_buff *skb,
+ 		hash = rol32(hash, 16);
+ 		flowlabel = (__force __be32)hash & IPV6_FLOWLABEL_MASK;
+ 	} else if (!do_flowlabel && skb->protocol == htons(ETH_P_IPV6)) {
+-		flowlabel = ip6_flowlabel(inner_hdr);
++		flowlabel = ip6_flowlabel(ipv6_hdr(skb));
+ 	}
+ 	return flowlabel;
+ }
+@@ -109,10 +108,11 @@ int seg6_do_srh_encap(struct sk_buff *skb, struct ipv6_sr_hdr *osrh, int proto)
+ {
+ 	struct dst_entry *dst = skb_dst(skb);
+ 	struct net *net = dev_net(dst->dev);
+-	struct ipv6hdr *hdr, *inner_hdr;
+ 	struct ipv6_sr_hdr *isrh;
+ 	int hdrlen, tot_len, err;
++	struct ipv6hdr *hdr;
+ 	__be32 flowlabel;
++	u8 tos = 0;
+ 
+ 	hdrlen = (osrh->hdrlen + 1) << 3;
+ 	tot_len = hdrlen + sizeof(*hdr);
+@@ -121,31 +121,31 @@ int seg6_do_srh_encap(struct sk_buff *skb, struct ipv6_sr_hdr *osrh, int proto)
+ 	if (unlikely(err))
+ 		return err;
+ 
+-	inner_hdr = ipv6_hdr(skb);
+-	flowlabel = seg6_make_flowlabel(net, skb, inner_hdr);
+-
+-	skb_push(skb, tot_len);
+-	skb_reset_network_header(skb);
+-	skb_mac_header_rebuild(skb);
+-	hdr = ipv6_hdr(skb);
+-
+ 	/* inherit tc, flowlabel and hlim
+ 	 * hlim will be decremented in ip6_forward() afterwards and
+ 	 * decapsulation will overwrite inner hlim with outer hlim
+ 	 */
+ 
++	flowlabel = seg6_make_flowlabel(net, skb);
++
+ 	if (skb->protocol == htons(ETH_P_IPV6)) {
+-		ip6_flow_hdr(hdr, ip6_tclass(ip6_flowinfo(inner_hdr)),
+-			     flowlabel);
+-		hdr->hop_limit = inner_hdr->hop_limit;
++		tos = ip6_tclass(ip6_flowinfo(ipv6_hdr(skb)));
++	} else if (skb->protocol == htons(ETH_P_IP)) {
++		tos = ip_hdr(skb)->tos;
++		memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
+ 	} else {
+-		ip6_flow_hdr(hdr, 0, flowlabel);
+-		hdr->hop_limit = ip6_dst_hoplimit(skb_dst(skb));
+-
+ 		memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
+ 	}
+ 
++	skb_push(skb, tot_len);
++	skb_reset_network_header(skb);
++	skb_mac_header_rebuild(skb);
++	hdr = ipv6_hdr(skb);
++
++	ip6_flow_hdr(hdr, tos, flowlabel);
++
+ 	hdr->nexthdr = NEXTHDR_ROUTING;
++	hdr->hop_limit = ip6_dst_hoplimit(skb_dst(skb));
+ 
+ 	isrh = (void *)hdr + sizeof(*hdr);
+ 	memcpy(isrh, osrh, hdrlen);
+-- 
+2.17.1
 
---=20
-With Best Regards,
-Andy Shevchenko
