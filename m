@@ -2,90 +2,81 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A09C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A3DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46B362073E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D8EA2073E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:54:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codon.org.uk header.i=@codon.org.uk header.b="SI4z6yBB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729817AbgHDFxQ (ORCPT
+        id S1729834AbgHDFyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 01:53:16 -0400
-Received: from a.mx.secunet.com ([62.96.220.36]:46504 "EHLO a.mx.secunet.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726398AbgHDFxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 01:53:15 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by a.mx.secunet.com (Postfix) with ESMTP id 3BF3C20569;
-        Tue,  4 Aug 2020 07:53:13 +0200 (CEST)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id wUQIudoOJEBl; Tue,  4 Aug 2020 07:53:11 +0200 (CEST)
-Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by a.mx.secunet.com (Postfix) with ESMTPS id 655A3201D5;
-        Tue,  4 Aug 2020 07:53:11 +0200 (CEST)
-Received: from mbx-essen-01.secunet.de (10.53.40.197) by
- mail-essen-01.secunet.de (10.53.40.204) with Microsoft SMTP Server (TLS) id
- 14.3.487.0; Tue, 4 Aug 2020 07:53:11 +0200
-Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-01.secunet.de
- (10.53.40.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Tue, 4 Aug 2020
- 07:53:10 +0200
-Received: by gauss2.secunet.de (Postfix, from userid 1000)      id 7E20831803A0;
- Tue,  4 Aug 2020 07:53:10 +0200 (CEST)
-Date:   Tue, 4 Aug 2020 07:53:10 +0200
-From:   Steffen Klassert <steffen.klassert@secunet.com>
-To:     David Miller <davem@davemloft.net>
-CC:     <yuehaibing@huawei.com>, <herbert@gondor.apana.org.au>,
-        <kuznet@ms2.inr.ac.ru>, <yoshfuji@linux-ipv6.org>,
-        <kuba@kernel.org>, <lucien.xin@gmail.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] ip_vti: Fix unused variable warning
-Message-ID: <20200804055310.GK20687@gauss3.secunet.de>
-References: <20200731064952.36900-1-yuehaibing@huawei.com>
- <20200803.151349.926022361234213749.davem@davemloft.net>
+        Tue, 4 Aug 2020 01:54:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726398AbgHDFyA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 01:54:00 -0400
+Received: from cavan.codon.org.uk (cavan.codon.org.uk [IPv6:2a00:1098:0:80:1000:c:0:1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CEE9C06174A;
+        Mon,  3 Aug 2020 22:54:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=codon.org.uk; s=63138784; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=v+OUD80o2Hw94BU/0tGHUr10niN26MvbyLk9nOFbCJ0=; b=SI4z6yBBbsYqYYwn/UOluqwgT
+        7plWwyl/DxJAImKdjicCANk9aWw2PFd0oB5Nb6IR1+ukTGgfgJlP3UkNx6w0hFjRZoPNg8D4SDCvO
+        fkRPHvAC180Bl2XYPAJpR2hw2geL4cPywj8RGQMxKEoPVlZMh1+D1rbj+xAyP2Hyt7mHE=;
+Received: from mjg59 by cavan.codon.org.uk with local (Exim 4.89)
+        (envelope-from <mjg59@cavan.codon.org.uk>)
+        id 1k2ptP-0007uI-7c; Tue, 04 Aug 2020 06:53:43 +0100
+Date:   Tue, 4 Aug 2020 06:53:43 +0100
+From:   Matthew Garrett <mjg59@srcf.ucam.org>
+To:     "Yuan, Perry" <Perry.Yuan@dell.com>
+Cc:     kernel test robot <lkp@intel.com>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "pali@kernel.org" <pali@kernel.org>,
+        "dvhart@infradead.org" <dvhart@infradead.org>,
+        "andy@infradead.org" <andy@infradead.org>,
+        "Limonciello, Mario" <Mario.Limonciello@dell.com>,
+        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86:dell-laptop:Add battery charging thresholds
+ and charging mode switch.
+Message-ID: <20200804055343.mmkypi272sgfx6al@srcf.ucam.org>
+References: <20200729065424.12851-1-Perry_Yuan@Dell.com>
+ <202008011345.5O4q2hta%lkp@intel.com>
+ <SJ0PR19MB45281A4375E622F69642B526844A0@SJ0PR19MB4528.namprd19.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200803.151349.926022361234213749.davem@davemloft.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: cas-essen-01.secunet.de (10.53.40.201) To
- mbx-essen-01.secunet.de (10.53.40.197)
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+In-Reply-To: <SJ0PR19MB45281A4375E622F69642B526844A0@SJ0PR19MB4528.namprd19.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: mjg59@cavan.codon.org.uk
+X-SA-Exim-Scanned: No (on cavan.codon.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 03:13:49PM -0700, David Miller wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> Date: Fri, 31 Jul 2020 14:49:52 +0800
-> 
-> > If CONFIG_INET_XFRM_TUNNEL is set but CONFIG_IPV6 is n,
-> > 
-> > net/ipv4/ip_vti.c:493:27: warning: 'vti_ipip6_handler' defined but not used [-Wunused-variable]
-> > 
-> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> 
-> Steffen, please pick this up if you haven't already.
+On Tue, Aug 04, 2020 at 05:46:30AM +0000, Yuan, Perry wrote:
 
-I still have this one in my queue, it came in after
-I did the the ipsec-next pull request last week.
-Now the 5.8 release was inbetween, so it should go
-to the ipsec tree. I'm waiting until I can backmerge
-the offending patch into the ipsec tree and apply it
-then.
+> It is not patch issue, the kernel config needs to add  "CONFIG_ACPI_BATTERY=y"
 
-Alternatively to speed things up, you can take it
-directly into net-next before you do the pull request
-to Linus. In case you prefer that:
+In that case you probably want to add a dependency to ACPI_BATTERY in 
+the DELL_LAPTOP Kconfig.
 
-Acked-by: Steffen Klassert <steffen.klassert@secunet.com>
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
