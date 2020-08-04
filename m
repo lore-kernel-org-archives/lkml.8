@@ -2,185 +2,171 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1463C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBE1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE9E6207FC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49735207FC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:18:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yeb/dQlV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgHDUNc (ORCPT
+        id S1727053AbgHDUSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 16:13:32 -0400
-Received: from mail.ispras.ru ([83.149.199.84]:51862 "EHLO mail.ispras.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725981AbgHDUNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 16:13:32 -0400
-Received: from localhost.localdomain (unknown [46.188.10.168])
-        by mail.ispras.ru (Postfix) with ESMTPSA id ADE5240A2071;
-        Tue,  4 Aug 2020 20:13:28 +0000 (UTC)
-From:   Alexander Monakov <amonakov@ispras.ru>
-To:     amd-gfx@lists.freedesktop.org
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Monakov <amonakov@ispras.ru>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Subject: [PATCH v2] drm/amd/display: use correct scale for actual_brightness
-Date:   Tue,  4 Aug 2020 23:13:13 +0300
-Message-Id: <20200804201313.6464-1-amonakov@ispras.ru>
-X-Mailer: git-send-email 2.26.2
+        Tue, 4 Aug 2020 16:18:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54682 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbgHDUSb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 16:18:31 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1294C06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 13:18:30 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ha11so2992452pjb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 13:18:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hzRXIsj1+SAs1tNlnSNXJanvh8FrwUG7dToFo76pgso=;
+        b=Yeb/dQlVJPeL8Vx7ag5c0XCGsmI6B14mO/wfB4je5mHzE84Aurte2l0bCK6rN6ftOQ
+         qiWBFA1NwEV85DMi2taxsi8Cf2xBN87c6islpm8jofcLJzirOXvI2tQaJAy8cqUpO/1g
+         Qulj+Oto1t5n+WRVK4IQZIbwf6L1HIEdEsZv6SlQrBJvxGoc0biA8tqDCu43SCCpAlud
+         qsYcX4lJa/218bfLRWcJcBpvRmp2yd0tFlo6LZH4rCQ1cM06SsI5jnnPyirAd8egQ1R+
+         eVAd5M85sPA6sg0qtIuxiZcwx5qeeL9EdvdCbkdoA8bbdA8NbxhKZUPy20BrdS+dSyx9
+         rzVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hzRXIsj1+SAs1tNlnSNXJanvh8FrwUG7dToFo76pgso=;
+        b=F1IgzPQThQmwvgVF/sP4uP1BgJAQ51HJTp12tcWAlBmz499A3JLzezHdL6TcHMdjGl
+         jeSF7eZo+Xal0VFKB4VO1BrJO04TMX3nAEQxn056WWa1tAib12xh9EGqlgveqF7Hp3cX
+         Wlgv5uikqVvJJ7ZHRsmiRkNQj1MZLa2oCD/b9qxg0V2n2tciEDnFNiyGawqwwDIND53P
+         rIEsr0q2EdpHKEOW4Q/E2J0RtY/pGW0YUr6RQEXR6xwulrDDG3TgZBG8J7a6vK3F/Ar2
+         JzGG/fqQLAQRUpwZblEpwkA45U2f7qDrNllRofx1sFvLWQmQLKOZikCjBp6YYN39msUr
+         S8CA==
+X-Gm-Message-State: AOAM530y94PW4St3eJYZyfM9TkZC+7H4NYYkcoBeQvIZ//xJzBP9WCcr
+        P8gOlmrUj2+/0ywfDlVfmPqjVs/uJYYb19X/gMs+AA==
+X-Google-Smtp-Source: ABdhPJxnSyniAwB6YYkeKPYxsQa+/C3NgF4fGYr1Y0yjfcIUeDxlK/6SOOMgIdqAj4vaOhHA3Dvuz8zhsjCp2po3Iwo=
+X-Received: by 2002:a17:902:161:: with SMTP id 88mr21097385plb.325.1596572306459;
+ Tue, 04 Aug 2020 13:18:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200626210917.358969-1-brendanhiggins@google.com>
+ <20200626210917.358969-11-brendanhiggins@google.com> <202006261436.DEF4906A5@keescook>
+In-Reply-To: <202006261436.DEF4906A5@keescook>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 4 Aug 2020 13:18:15 -0700
+Message-ID: <CAFd5g47UYGByhbY+8-EuKDg7HBLGdF9fxsZACXAiTrJZC0kkAw@mail.gmail.com>
+Subject: Re: [PATCH v5 10/12] kunit: Add 'kunit_shutdown' option
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Iurii Zaikin <yzaikin@google.com>,
+        David Gow <davidgow@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>, rppt@linux.ibm.com,
+        Frank Rowand <frowand.list@gmail.com>, catalin.marinas@arm.com,
+        will@kernel.org, Michal Simek <monstr@monstr.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Chris Zankel <chris@zankel.net>, jcmvbkbc@gmail.com,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-arch@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-xtensa@linux-xtensa.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documentation for sysfs backlight level interface requires that
-values in both 'brightness' and 'actual_brightness' files are
-interpreted to be in range from 0 to the value given in the
-'max_brightness' file.
+On Fri, Jun 26, 2020 at 2:40 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Fri, Jun 26, 2020 at 02:09:15PM -0700, Brendan Higgins wrote:
+> > From: David Gow <davidgow@google.com>
+> >
+> > Add a new kernel command-line option, 'kunit_shutdown', which allows the
+> > user to specify that the kernel poweroff, halt, or reboot after
+> > completing all KUnit tests; this is very handy for running KUnit tests
+> > on UML or a VM so that the UML/VM process exits cleanly immediately
+> > after running all tests without needing a special initramfs.
+> >
+> > Signed-off-by: David Gow <davidgow@google.com>
+> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+> > ---
+> >  lib/kunit/executor.c                | 20 ++++++++++++++++++++
+> >  tools/testing/kunit/kunit_kernel.py |  2 +-
+> >  tools/testing/kunit/kunit_parser.py |  2 +-
+> >  3 files changed, 22 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/lib/kunit/executor.c b/lib/kunit/executor.c
+> > index a95742a4ece73..38061d456afb2 100644
+> > --- a/lib/kunit/executor.c
+> > +++ b/lib/kunit/executor.c
+> > @@ -1,5 +1,6 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >
+> > +#include <linux/reboot.h>
+> >  #include <kunit/test.h>
+> >
+> >  /*
+> > @@ -11,6 +12,23 @@ extern struct kunit_suite * const * const __kunit_suites_end[];
+> >
+> >  #if IS_BUILTIN(CONFIG_KUNIT)
+> >
+> > +static char *kunit_shutdown;
+> > +core_param(kunit_shutdown, kunit_shutdown, charp, 0644);
+> > +
+> > +static void kunit_handle_shutdown(void)
+> > +{
+> > +     if (!kunit_shutdown)
+> > +             return;
+> > +
+> > +     if (!strcmp(kunit_shutdown, "poweroff"))
+> > +             kernel_power_off();
+> > +     else if (!strcmp(kunit_shutdown, "halt"))
+> > +             kernel_halt();
+> > +     else if (!strcmp(kunit_shutdown, "reboot"))
+> > +             kernel_restart(NULL);
+> > +
+> > +}
+>
+> If you have patches that do something just before the initrd, and then
+> you add more patches to shut down immediately after an initrd, people
+> may ask you to just use an initrd instead of filling the kernel with
+> these changes...
+>
+> I mean, I get it, but it's not hard to make an initrd that poke a sysctl
+> to start the tests...
+>
+> In fact, you don't even need a initrd to poke sysctls these days.
 
-With amdgpu, max_brightness gives 255, and values written by the user
-into 'brightness' are internally rescaled to a wider range. However,
-reading from 'actual_brightness' gives the raw register value without
-inverse rescaling. This causes issues for various userspace tools such
-as PowerTop and systemd that expect the value to be in the correct
-range.
+True, but it is nice to not have to maintain an initramfs for each
+architecture that you want to test. Still, I see your point. If we can
+find a convenient way to distribute the needed dependencies for
+running KUnit on each non-UML architecture then I think I can abandon
+this change.
 
-Introduce a helper to retrieve internal backlight range. Use it to
-reimplement 'convert_brightness' as 'convert_brightness_from_user' and
-introduce 'convert_brightness_to_user'.
-
-Bug: https://bugzilla.kernel.org/show_bug.cgi?id=203905
-Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1242
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
----
-v2: split convert_brightness to &_from_user and &_to_user (Nicholas)
-
- .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 81 +++++++++----------
- 1 file changed, 40 insertions(+), 41 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 710edc70e37e..b60a763f3f95 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -2881,51 +2881,50 @@ static int set_backlight_via_aux(struct dc_link *link, uint32_t brightness)
- 	return rc ? 0 : 1;
- }
- 
--static u32 convert_brightness(const struct amdgpu_dm_backlight_caps *caps,
--			      const uint32_t user_brightness)
-+static int get_brightness_range(const struct amdgpu_dm_backlight_caps *caps,
-+				unsigned *min, unsigned *max)
- {
--	u32 min, max, conversion_pace;
--	u32 brightness = user_brightness;
--
- 	if (!caps)
--		goto out;
-+		return 0;
- 
--	if (!caps->aux_support) {
--		max = caps->max_input_signal;
--		min = caps->min_input_signal;
--		/*
--		 * The brightness input is in the range 0-255
--		 * It needs to be rescaled to be between the
--		 * requested min and max input signal
--		 * It also needs to be scaled up by 0x101 to
--		 * match the DC interface which has a range of
--		 * 0 to 0xffff
--		 */
--		conversion_pace = 0x101;
--		brightness =
--			user_brightness
--			* conversion_pace
--			* (max - min)
--			/ AMDGPU_MAX_BL_LEVEL
--			+ min * conversion_pace;
-+	if (caps->aux_support) {
-+		// Firmware limits are in nits, DC API wants millinits.
-+		*max = 1000 * caps->aux_max_input_signal;
-+		*min = 1000 * caps->aux_min_input_signal;
- 	} else {
--		/* TODO
--		 * We are doing a linear interpolation here, which is OK but
--		 * does not provide the optimal result. We probably want
--		 * something close to the Perceptual Quantizer (PQ) curve.
--		 */
--		max = caps->aux_max_input_signal;
--		min = caps->aux_min_input_signal;
--
--		brightness = (AMDGPU_MAX_BL_LEVEL - user_brightness) * min
--			       + user_brightness * max;
--		// Multiple the value by 1000 since we use millinits
--		brightness *= 1000;
--		brightness = DIV_ROUND_CLOSEST(brightness, AMDGPU_MAX_BL_LEVEL);
-+		// Firmware limits are 8-bit, PWM control is 16-bit.
-+		*max = 0x101 * caps->max_input_signal;
-+		*min = 0x101 * caps->min_input_signal;
- 	}
-+	return 1;
-+}
- 
--out:
--	return brightness;
-+static u32 convert_brightness_from_user(const struct amdgpu_dm_backlight_caps *caps,
-+					uint32_t brightness)
-+{
-+	unsigned min, max;
-+
-+	if (!get_brightness_range(caps, &min, &max))
-+		return brightness;
-+
-+	// Rescale 0..255 to min..max
-+	return min + DIV_ROUND_CLOSEST((max - min) * brightness,
-+				       AMDGPU_MAX_BL_LEVEL);
-+}
-+
-+static u32 convert_brightness_to_user(const struct amdgpu_dm_backlight_caps *caps,
-+				      uint32_t brightness)
-+{
-+	unsigned min, max;
-+
-+	if (!get_brightness_range(caps, &min, &max))
-+		return brightness;
-+
-+	if (brightness < min)
-+		return 0;
-+	// Rescale min..max to 0..255
-+	return DIV_ROUND_CLOSEST(AMDGPU_MAX_BL_LEVEL * (brightness - min),
-+				 max - min);
- }
- 
- static int amdgpu_dm_backlight_update_status(struct backlight_device *bd)
-@@ -2941,7 +2940,7 @@ static int amdgpu_dm_backlight_update_status(struct backlight_device *bd)
- 
- 	link = (struct dc_link *)dm->backlight_link;
- 
--	brightness = convert_brightness(&caps, bd->props.brightness);
-+	brightness = convert_brightness_from_user(&caps, bd->props.brightness);
- 	// Change brightness based on AUX property
- 	if (caps.aux_support)
- 		return set_backlight_via_aux(link, brightness);
-@@ -2958,7 +2957,7 @@ static int amdgpu_dm_backlight_get_brightness(struct backlight_device *bd)
- 
- 	if (ret == DC_ERROR_UNEXPECTED)
- 		return bd->props.brightness;
--	return ret;
-+	return convert_brightness_to_user(&dm->backlight_caps, ret);
- }
- 
- static const struct backlight_ops amdgpu_dm_backlight_ops = {
-
-base-commit: bcf876870b95592b52519ed4aafcf9d95999bc9c
--- 
-2.26.2
-
+So how about this: I will drop this patch from this patchset and move
+it up to the follow up patchset that adds multiarchitecture support to
+kunit_tool. There we can address the problem of how to best track the
+necessary dependencies including possibly intitramfss.
