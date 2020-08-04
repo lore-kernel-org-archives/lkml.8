@@ -2,131 +2,188 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B06DBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65447C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 984BB207FC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:44:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ldFkcUFp"
+	by mail.kernel.org (Postfix) with ESMTP id 4E09D206D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:45:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728724AbgHDPo5 (ORCPT
+        id S1728909AbgHDPp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 11:44:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbgHDPo4 (ORCPT
+        Tue, 4 Aug 2020 11:45:28 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:55624 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728739AbgHDPpV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 11:44:56 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F273BC06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 08:44:55 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id q13so14287343vsn.9
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 08:44:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=H4JQaTkH18iHZhr5mRcUoCQ7w0Oz4NhHM6QKGzTo1bo=;
-        b=ldFkcUFp7ri+IazwVWH1DnJFGu4x0mPAE5c8LizFVx2rdt1FE7sAuwon3cwzJKF5LL
-         ZNJqk1Re7Ztm4LTRTSxLIblqxv1Tdv3kmXSjg7auDZuvC8yZ0w69Nn/DGRo8tp0Eil14
-         jFciSc7TK05orgQRJRd7XKd6eTpBBIMNXzVXQ2Jed9/2SZYXTu2h73RR/N6qsNl/Pca7
-         9+8tv7nrB+KevcGtu4bJtd0lxUtz9q8jECfBtEGtUXeOl6f4BACUpXlr/k4Faqg/qrCp
-         Hx6izzJsxcomSTRM+gxPrYoa/pz+vZQZOFj3Rncam1GLYEBX+eB0thlPgKUiM/AR0tKS
-         NIzQ==
+        Tue, 4 Aug 2020 11:45:21 -0400
+Received: by mail-io1-f72.google.com with SMTP id k10so29447854ioh.22
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 08:45:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=H4JQaTkH18iHZhr5mRcUoCQ7w0Oz4NhHM6QKGzTo1bo=;
-        b=jIcg+M1O1xOXNPavtUNyhAeV4sqrsJTSTouxu/pf4+1JVMBi9/KjCwKFBRHAL0PMnD
-         52NmJ+PnXZl3Mt1c+/TR6tkuQCJ1TQ9+vgPfUOl5d7tYt91ICsjZhkli1+Ip8jwQS/3P
-         mVghagyNtyztVEaPGYx1L8b80upochSFEOY0A6Im01sjxfEBI+u42RH74isBYHyOgu4S
-         jR2ub917W0N4TEk8OocQ8MO9Ii8kECSSiPTy9nU6u5Th1yaQml9BBMnJbzUTrka+cQQ9
-         8HSwkcebvVxn0OPRFW0c+D4UL5OBHsZilo+rSmS/QdC4q85ZP1w5bFxPUWPdXIgwOhNu
-         913w==
-X-Gm-Message-State: AOAM532Y3poB3eUaWopSRSFmH3EQfkQu9gsOKJLG8ss0TyIraH6vUWqH
-        FCCrmMmjFDac74fZ7i3zU1NxVA==
-X-Google-Smtp-Source: ABdhPJyukknUS02GVsM5w7GzAW9AGOdf699gjZwqpksqLXYiV70ZhFCdPmPPK94v0vzmxZDb4/5nug==
-X-Received: by 2002:a67:ef81:: with SMTP id r1mr8018212vsp.37.1596555894889;
-        Tue, 04 Aug 2020 08:44:54 -0700 (PDT)
-Received: from google.com (182.71.196.35.bc.googleusercontent.com. [35.196.71.182])
-        by smtp.gmail.com with ESMTPSA id b138sm3212924vka.48.2020.08.04.08.44.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 08:44:54 -0700 (PDT)
-Date:   Tue, 4 Aug 2020 15:44:51 +0000
-From:   Kalesh Singh <kaleshsingh@google.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Suren Baghdasaryan <surenb@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-doc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
-        Hridya Valsaraju <hridya@google.com>,
-        Ioannis Ilkos <ilkos@google.com>,
-        John Stultz <john.stultz@linaro.org>,
-        kernel-team <kernel-team@android.com>
-Subject: Re: [PATCH 2/2] dmabuf/tracing: Add dma-buf trace events
-Message-ID: <20200804154451.GA948167@google.com>
-References: <20200803144719.3184138-1-kaleshsingh@google.com>
- <20200803144719.3184138-3-kaleshsingh@google.com>
- <20200803154125.GA23808@casper.infradead.org>
- <CAJuCfpFLikjaoopvt+vGN3W=m9auoK+DLQNgUf-xUbYfC=83Mw@mail.gmail.com>
- <20200803161230.GB23808@casper.infradead.org>
- <CAJuCfpGot1Lr+eS_AU30gqrrjc0aFWikxySe0667_GTJNsGTMw@mail.gmail.com>
- <20200803222831.GI1236603@ZenIV.linux.org.uk>
- <20200804010913.GA2096725@ZenIV.linux.org.uk>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=teHlcAYbi+ok/LTx4VJANdq80jBucOESYR39MhGarW8=;
+        b=SmC/xjX2mbrG6eptr03Xl6mdqNEsmAwUO4UkOWedrHoZSsw7qanCwq6YkJ0JgonOQi
+         oSyTf7QW4gvRmRKvUfSHnJ5Nx7wv+LoMb1ssR8e1+j14bei9ezuKmODgmEPF4DSk/m9X
+         g6J8en36gLNwyjv4ytRpgQuzayq1RlX31eELALx7X0KhgmuGNpCTBb1+bw/NWv/6vVt7
+         41egOdbQA4xvhg5d/tm8iav/poWTpvTcRSNOYRpjpEKqa7doxz0TQsuM2cZtW4A16uQc
+         RqiEc4gwbKFRyKOwBgVi3Fkg/kNjAT+J0UCQWTen0DYgI5n7ZAs12usUB1UKQi4XFz5A
+         OB7w==
+X-Gm-Message-State: AOAM533mcZXoPNshEN9Qm8fvQ0pU7iCqN2bqEMC1e0gvLopIigU/wOvU
+        ofn+s4ekX2T0tZYaT/PVnY4nBwf8Au3yotExfbHhpX+n4ysf
+X-Google-Smtp-Source: ABdhPJzA7NgNLQAjeEjq1AEqh5bI5S7LSZJoBvLtJPvmA0EXPKSKEh5jxuv4jBfYNKZaoAZhgDqz5TmU+M4IzRrWIjmR9mk3Skp0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200804010913.GA2096725@ZenIV.linux.org.uk>
+X-Received: by 2002:a92:9910:: with SMTP id p16mr5384051ili.51.1596555919572;
+ Tue, 04 Aug 2020 08:45:19 -0700 (PDT)
+Date:   Tue, 04 Aug 2020 08:45:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000734f2505ac0f2426@google.com>
+Subject: KASAN: use-after-free Write in hci_conn_del
+From:   syzbot <syzbot+7b1677fecb5976b0a099@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 02:09:13AM +0100, Al Viro wrote:
-> On Mon, Aug 03, 2020 at 11:28:31PM +0100, Al Viro wrote:
-> 
-> > IOW, what the hell is that horror for?  You do realize, for example, that there's
-> > such thing as dup(), right?  And dup2() as well.  And while we are at it, how
-> > do you keep track of removals, considering the fact that you can stick a file
-> > reference into SCM_RIGHTS datagram sent to yourself, close descriptors and an hour
-> > later pick that datagram, suddenly getting descriptor back?
-> > 
-> > Besides, "I have no descriptors left" != "I can't be currently sitting in the middle
-> > of syscall on that sucker"; close() does *NOT* terminate ongoing operations.
-> > 
-> > You are looking at the drastically wrong abstraction level.  Please, describe what
-> > it is that you are trying to achieve.
+Hello,
 
-Hi Al. Thank you for the comments. Ultimately what we need is to identify processes
-that hold a file reference to the dma-buf. Unfortunately we can't use only
-explicit dma_buf_get/dma_buf_put to track them because when an FD is being shared
-between processes the file references are taken implicitly.
+syzbot found the following issue on:
 
-For example, on the sender side:
-   unix_dgram_sendmsg -> send_scm -> __send_scm -> scm_fp_copy -> fget_raw
-and on the receiver side:
-   unix_dgram_recvmsg -> scm_recv -> scm_detach_fds -> __scm_install_fd -> get_file
+HEAD commit:    bcf87687 Linux 5.8
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14184392900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=19b11af1e394136d
+dashboard link: https://syzkaller.appspot.com/bug?extid=7b1677fecb5976b0a099
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15e1ff04900000
 
-I understand now that fd_install is not an appropriate abstraction level to track these.
-Is there a more appropriate alternative where we could use to track these implicit file
-references?
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+7b1677fecb5976b0a099@syzkaller.appspotmail.com
 
-> _IF_ it's "who keeps a particularly long-lived sucker pinned", I would suggest
-> fuser(1) run when you detect that kind of long-lived dmabuf.  With events generated
-> by their constructors and destructors, and detection of longevity done based on
-> that.
-> 
-> But that's only a semi-blind guess at the things you are trying to achieve; please,
-> describe what it really is.
+==================================================================
+BUG: KASAN: use-after-free in hci_conn_del+0x64e/0x6a0 net/bluetooth/hci_conn.c:630
+Write of size 8 at addr ffff888089f54938 by task syz-executor.1/6870
+
+CPU: 0 PID: 6870 Comm: syz-executor.1 Not tainted 5.8.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ hci_conn_del+0x64e/0x6a0 net/bluetooth/hci_conn.c:630
+ hci_conn_hash_flush+0x189/0x220 net/bluetooth/hci_conn.c:1537
+ hci_dev_do_close+0x5c6/0x1080 net/bluetooth/hci_core.c:1761
+ hci_unregister_dev+0x1a3/0xe20 net/bluetooth/hci_core.c:3606
+ vhci_release+0x70/0xe0 drivers/bluetooth/hci_vhci.c:340
+ __fput+0x33c/0x880 fs/file_table.c:281
+ task_work_run+0xdd/0x190 kernel/task_work.c:135
+ exit_task_work include/linux/task_work.h:25 [inline]
+ do_exit+0xb72/0x2a40 kernel/exit.c:805
+ do_group_exit+0x125/0x310 kernel/exit.c:903
+ __do_sys_exit_group kernel/exit.c:914 [inline]
+ __se_sys_exit_group kernel/exit.c:912 [inline]
+ __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:912
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45cce9
+Code: Bad RIP value.
+RSP: 002b:00007ffd598b2c88 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000045cce9
+RDX: 0000000000416741 RSI: 0000000000ca85f0 RDI: 0000000000000043
+RBP: 00000000004c2983 R08: 000000000000000b R09: 0000000000000000
+R10: 0000000002936940 R11: 0000000000000246 R12: 0000000000000008
+R13: 00007ffd598b2dd0 R14: 0000000000136032 R15: 00007ffd598b2de0
+
+Allocated by task 12376:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
+ __do_kmalloc mm/slab.c:3656 [inline]
+ __kmalloc+0x17a/0x340 mm/slab.c:3665
+ kmalloc include/linux/slab.h:560 [inline]
+ tomoyo_realpath_from_path+0xc3/0x620 security/tomoyo/realpath.c:254
+ tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+ tomoyo_check_open_permission+0x272/0x380 security/tomoyo/file.c:771
+ tomoyo_file_open security/tomoyo/tomoyo.c:313 [inline]
+ tomoyo_file_open+0xa3/0xd0 security/tomoyo/tomoyo.c:308
+ security_file_open+0x52/0x3f0 security/security.c:1574
+ do_dentry_open+0x3a0/0x1290 fs/open.c:815
+ do_open fs/namei.c:3243 [inline]
+ path_openat+0x1bb9/0x2750 fs/namei.c:3360
+ do_filp_open+0x17e/0x3c0 fs/namei.c:3387
+ do_sys_openat2+0x16f/0x3b0 fs/open.c:1179
+ do_sys_open fs/open.c:1195 [inline]
+ ksys_open include/linux/syscalls.h:1388 [inline]
+ __do_sys_open fs/open.c:1201 [inline]
+ __se_sys_open fs/open.c:1199 [inline]
+ __x64_sys_open+0x119/0x1c0 fs/open.c:1199
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Freed by task 12376:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x103/0x2c0 mm/slab.c:3757
+ tomoyo_realpath_from_path+0x191/0x620 security/tomoyo/realpath.c:291
+ tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+ tomoyo_check_open_permission+0x272/0x380 security/tomoyo/file.c:771
+ tomoyo_file_open security/tomoyo/tomoyo.c:313 [inline]
+ tomoyo_file_open+0xa3/0xd0 security/tomoyo/tomoyo.c:308
+ security_file_open+0x52/0x3f0 security/security.c:1574
+ do_dentry_open+0x3a0/0x1290 fs/open.c:815
+ do_open fs/namei.c:3243 [inline]
+ path_openat+0x1bb9/0x2750 fs/namei.c:3360
+ do_filp_open+0x17e/0x3c0 fs/namei.c:3387
+ do_sys_openat2+0x16f/0x3b0 fs/open.c:1179
+ do_sys_open fs/open.c:1195 [inline]
+ ksys_open include/linux/syscalls.h:1388 [inline]
+ __do_sys_open fs/open.c:1201 [inline]
+ __se_sys_open fs/open.c:1199 [inline]
+ __x64_sys_open+0x119/0x1c0 fs/open.c:1199
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The buggy address belongs to the object at ffff888089f54000
+ which belongs to the cache kmalloc-4k of size 4096
+The buggy address is located 2360 bytes inside of
+ 4096-byte region [ffff888089f54000, ffff888089f55000)
+The buggy address belongs to the page:
+page:ffffea000227d500 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 head:ffffea000227d500 order:1 compound_mapcount:0
+flags: 0xfffe0000010200(slab|head)
+raw: 00fffe0000010200 ffffea0001e59308 ffffea00028b3908 ffff8880aa002000
+raw: 0000000000000000 ffff888089f54000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888089f54800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888089f54880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff888089f54900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                        ^
+ ffff888089f54980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888089f54a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
