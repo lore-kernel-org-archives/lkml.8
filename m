@@ -2,177 +2,194 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD1AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 460BD2065C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:40:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="CcMOtnK5";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="O5c+3376"
+	by mail.kernel.org (Postfix) with ESMTP id F2B2F2075D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:40:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596552037;
+	bh=nkLqM9VlA8FHpZy8NwqZmUC37JV95B0bjtqMzww6cWs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=E/+3W2tZMITUIU8JvS3Da3NaSPwIaQJJTV5BP07Ghf2+rCqKADu5r81qqNi2cra2H
+	 MYbMjrbrEZDD6nDlskd7JVQ/UfX6BhbwLlbFGImFCMJJ0Y9/D4Z6xgtCCg+zr5z+HE
+	 btUGbjjnOOESKGp+JEYkiaq7g+TWr6GCcfWsLBk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729223AbgHDOkM (ORCPT
+        id S1729237AbgHDOkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:40:12 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:23291 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728157AbgHDOkA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:40:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1596551999; x=1628087999;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=wbf025ctdBheET/PwuKdmRItCq6BInNbJnhEPqQTi1g=;
-  b=CcMOtnK5UENI+qXLI87gCnlX2ZzsPyWPrjWIjSdQCPtz8kqZ/JIzwToV
-   9cSSOl6lHzAwAv77G7Itsaa394kQlIiR3SMDAeKutUtSprp9MtRHLSD5E
-   QgZ8kBZyw8FZhwBwFyp2fm5S4AmTt/eL7XhQ/dPGxtwLlAVhlH31ZM7dG
-   DoY6Egfc6QsUXX4EDIMjaJRF2xwZZGB7VattvwF4hriQBAxTDiHxJK36Z
-   0WOrCsdnPv3FMpqR+JzU1pabLGM+h+Q9ipwrnTG4iCTHw2iBsGw6hzify
-   jKMBnuHN/BdwWrVMj/T7eJXkq9kdLVgO/V8Jz7mfmJ5B8AP+8I85ehRoI
-   A==;
-IronPort-SDR: NNRzA7xpwhK+sSZfroOiSR5AKwcGYTN/55aqyQghOeQZHOIFLGay/KRfOM04nYhcLKaFwmSAFP
- UhAfD2do47NmjrDq+sNbSmfbR8YNzb60Hbq+62xqFp5rL5oyw3wr6j97UwrLyA19kSTU/8BaG7
- OZ8Mk9vH2ei7TOWoWZHTqet1hQNzupzjg6k/BZsLTaHF5j/rjpzG0yg0dAGBPJwvRudzzEdjUN
- d4u0R+DzWVYsMkbbB+RapK7Q3VfREeFmti1Zh5vSzGHPqeKfVpkF7VvlwV63o3VwlP3AtrbAtT
- 6SU=
-X-IronPort-AV: E=Sophos;i="5.75,434,1589212800"; 
-   d="scan'208";a="144114634"
-Received: from mail-bn8nam12lp2170.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.170])
-  by ob1.hgst.iphmx.com with ESMTP; 04 Aug 2020 22:39:58 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZDTbPq75/gbLJKsemQbpsV9PU+/7u82g6ZEBD6SDVVvN5O4mfl0iPje62N7HFjfTXjpzQjRoboGyb+okcVRF/cayJB/goDB5JpyveRaqGAwOM87XNhpd8wW3t17pkMr4h6j7TS77Kaka77cXORuKzostBkpD23+Se8f8jFJse6uSYMQo1ievbIMrBvStfGtZH9wlb5uKcwibUtVdoHPlI40k9MhdYmePCwkaSNMZLzBAbmgs2DMX+u5ORXapuWxLhPPuDSaMf93PZ4U1fn9ZDEVIMcARMLD8imux0bT6VELwu6LwvNpx9tYlLVZKiMHXTXIpaQpmKoyuIaIIRawzJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n8gkZtgQGVsA1iIp87w4FQ5oBwuqqXhY6pyQFOm99MI=;
- b=PoI/VSQCWVKsWyvW80h9EAV7/IoWFUxxvMVkC1ow9cejWUBKEvziTm5fFNMRtpEdHZNFG8g7ITxK4YVY9O0nMxlq+cMhRSeh0w/K9tRqCEVC/z0NiM7+w2MbJSL4DxvTYG7JDHiUpMbCfFy+WwV+hHdrp+saRZzSch9YmTtT1JmZsBCM6kfeFHsIUOYWWYObNmPmB0yUWAz1AyC1AqjR5Uqpo2LKY1wg+wrkJKt7v/fMo/R+ZZqStn9wmIklGpaw4ROHLC1hmOB9aYTwtVRWSNkfUQTDWPNzmXUZBZXuzg2pUzFtVGBcPS8a4O0o5K5b3q10VjIZjGDeaMedCeEKQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n8gkZtgQGVsA1iIp87w4FQ5oBwuqqXhY6pyQFOm99MI=;
- b=O5c+3376cQN8FTb9zMzoZegclppUtGYQqFYDF4DuNotvbZ6dilLV0DA3aVBBvtxsSfJCoUfnf1zeE6h7mnSSTa4TEy+H2BEGbYXFg7AEdUvpMkUwvff0pTrUsJQJzqeREI8MgWyWUXzw6+cNGLIa7lStd3jE+ZSKKDTHopHFSOM=
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- (2603:10b6:803:47::21) by SN6PR04MB4317.namprd04.prod.outlook.com
- (2603:10b6:805:2f::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17; Tue, 4 Aug
- 2020 14:39:57 +0000
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::457e:5fe9:2ae3:e738]) by SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::457e:5fe9:2ae3:e738%7]) with mapi id 15.20.3239.021; Tue, 4 Aug 2020
- 14:39:57 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Coly Li <colyli@suse.de>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
-CC:     "linux-bcache@vger.kernel.org" <linux-bcache@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Hannes Reinecke <hare@suse.com>, Xiao Ni <xni@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Enzo Matsumiya <ematsumiya@suse.com>,
-        Jens Axboe <axboe@kernel.dk>, Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH] block: tolerate 0 byte discard_granularity in
- __blkdev_issue_discard()
-Thread-Topic: [PATCH] block: tolerate 0 byte discard_granularity in
- __blkdev_issue_discard()
-Thread-Index: AQHWamrhOskbhhn9f0O9q4CKi9C/MA==
-Date:   Tue, 4 Aug 2020 14:39:56 +0000
-Message-ID: <SN4PR0401MB35984D6090CE1B7F1FD06CD59B4A0@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <20200804142332.29961-1-colyli@suse.de>
- <SN4PR0401MB3598033FF16A5AE1D375EDD69B4A0@SN4PR0401MB3598.namprd04.prod.outlook.com>
- <b469f0ec-0185-c624-b967-5080d805040c@suse.de>
- <SN4PR0401MB35983A30C6AE9886EF6E91C79B4A0@SN4PR0401MB3598.namprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: suse.de; dkim=none (message not signed)
- header.d=none;suse.de; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [129.253.240.72]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 9febf1dc-02be-4aca-a42f-08d83884422e
-x-ms-traffictypediagnostic: SN6PR04MB4317:
-x-microsoft-antispam-prvs: <SN6PR04MB43177100A2710B02F71741DE9B4A0@SN6PR04MB4317.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0hgLKaoWCWT16nQSoKktfbam6SZaqLZIq2uH2lbhGthH5IwmtF5BKTXU0xxVrL/fuacSdtJgIuIA3pxJXlRQolF4fRVTsL6A3kCypq/WXcUMkrl6pbh8Gn85DPOsxL0m7hDJymGGVnYaeQhgeAEPfO86H8Xot69qb/A2y0ymZtECoEyleKpQ4mNjTouK2E8b1fbsmiPE5b7STgAPHIQWB6+SDVV+lBt734/PknyjslBaWQOOn7OfY46FVGMHJGyITQazjG1XmRQNhupZ/dUyzbu0AlbsCF7hxbeTVDuO2Z9CCHUn09IEfISDa7xsfB4hxW54/8VuvS6Zp9ZUxOLJNw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39850400004)(376002)(366004)(346002)(136003)(316002)(8676002)(71200400001)(4326008)(186003)(8936002)(110136005)(26005)(2906002)(66476007)(66446008)(64756008)(66556008)(5660300002)(54906003)(66946007)(33656002)(91956017)(76116006)(478600001)(9686003)(7696005)(7416002)(53546011)(6506007)(52536014)(55016002)(86362001)(83380400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: r0hIx4idDr6qxRgYgYrn7qp/SAZ+Ehl+7//bysL0dNtDSGGEUa0M/FAjorKT4Rt/pjPiwZ86DanXmPAhoWpqVblJZ4eHvi3sAkU1tuWL18tCJjRxe3GS7CAfiTJ906FTEZ4v0VHXgsDFtFplSU2Tq11VxLJyqXUjUaFB6Ji4zTLZmBS+JvDCWXpp3kR66TkbSOUeLDa/dLnpZmVDxL+c291djGTTsgqhhiXfnXSdKCa7hyRV6o9ij7Z7qokzs5Q9TKUjWFdwPQO7FB+Ap3GUyP88dB+Uxi4R51YRB6K2wiQORvq+PCMRyuqFOykLdoKZnslMeLOkiP0R0JJx8NIsgU40ZCDXuTD2wpEwiIfeB/gTzOYXvCum95u6iMUtuQf+wqe2ZsJI5HXgBNgZl2CMFEF/dnza7wCnR5v8CZdub/2C7n7sSQi5CI/g0q1Hk5+5CH2ijCEYlQhqkZM80dgSZP9F/j7Arla92koH9q8FAiPw/jMPxhnSDZqjUFu/TSL3ZY8dz/DuRT3B3F1nsm9pgKDWWR28i3V3w1Vyohh7N19Ai4ck9B7W2U9aAhmi9FBxbohVuFDAiHK8NM7fqwP3FlbIRou0YZEwcPd2LIoBustiMLlKuRD9MMsu0YABhywYAy3nq2S+DBiBkeF2qxAfjg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 4 Aug 2020 10:40:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36056 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727887AbgHDOke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 10:40:34 -0400
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9EC922C9F
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 14:40:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596552034;
+        bh=nkLqM9VlA8FHpZy8NwqZmUC37JV95B0bjtqMzww6cWs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=IYg4yyMRvQvJjQAtufiU2yKutH8FTciw5RoDowXZwc2OqkcpszzDol4aNF+s77lfn
+         tJ6sDMGs5brTIajOtbnMNwLduAP3oK9i8d/DVqqakhtgB40MQ5XyhBhDDX75KkIOU1
+         toZE6TOSH7kmXeaLcYRsqQoinD6ljDZiU1sP7Hu0=
+Received: by mail-ed1-f41.google.com with SMTP id m20so20573352eds.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 07:40:33 -0700 (PDT)
+X-Gm-Message-State: AOAM531UuqOcrLKswO7DULohSnwYZlgifPjL5ClbbpQXlOaB5+rgQ0JB
+        a1XkaCdIBV7dIfgmYNcFq/GV71fcr0vUCjsI0g==
+X-Google-Smtp-Source: ABdhPJzWsvc2uOluoSCcVdo0tNqnkAV63f2SDu0qjVLgSdaB7LNVXcw1IBpC1jNQcHVAPoQg8i6Oocdo+1cNikzAvHg=
+X-Received: by 2002:a50:d2c7:: with SMTP id q7mr15847530edg.61.1596552032198;
+ Tue, 04 Aug 2020 07:40:32 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9febf1dc-02be-4aca-a42f-08d83884422e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Aug 2020 14:39:56.8987
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LDMw2OUG3dRA3e7UzNzq+SoOeze1lICK9vz2EAub4yFBagesN8yFrnF3TgUKTC3k6UKD20c7U2IAreNqADJFZPRIRpdoiPoR2l4muxifARE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4317
+References: <20200804105849.70876-1-linux@fw-web.de> <20200804105849.70876-4-linux@fw-web.de>
+In-Reply-To: <20200804105849.70876-4-linux@fw-web.de>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Tue, 4 Aug 2020 22:40:20 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_8OqCNuv1Wx+79jO85zo_KJ_v+26=mGiyA+TcaUbDa4yA@mail.gmail.com>
+Message-ID: <CAAOTY_8OqCNuv1Wx+79jO85zo_KJ_v+26=mGiyA+TcaUbDa4yA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/5] drm: Add get_possible_crtc API for dpi, dsi
+To:     Frank Wunderlich <linux@fw-web.de>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        David Airlie <airlied@linux.ie>,
+        Stu Hsieh <stu.hsieh@mediatek.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/08/2020 16:37, Johannes Thumshirn wrote:=0A=
-> On 04/08/2020 16:34, Coly Li wrote:=0A=
->> On 2020/8/4 22:31, Johannes Thumshirn wrote:=0A=
->>> On 04/08/2020 16:23, Coly Li wrote:=0A=
->>>> This is the procedure to reproduce the panic,=0A=
->>>>   # modprobe scsi_debug delay=3D0 dev_size_mb=3D2048 max_queue=3D1=0A=
->>>>   # losetup -f /dev/nvme0n1 --direct-io=3Don=0A=
->>>>   # blkdiscard /dev/loop0 -o 0 -l 0x200=0A=
->>>=0A=
->>> losetup -f /dev/sdX isn't it?=0A=
->>>=0A=
->>=0A=
->> In my case, I use a NVMe SSD as the backing device of the loop device.=
-=0A=
->> Because I don't have a scsi lun.=0A=
->>=0A=
->> And loading scsi_debug module seems necessary, otherwise the discard=0A=
->> process just hang and I cannot see the kernel panic (I don't know why ye=
-t).=0A=
-> =0A=
-> OK, now that's highly interesting. Does it also happen if you back loop w=
-ith=0A=
-> a file? loop_config_discard() has different cases for the different backi=
-ng devices/files. S=0A=
-> =0A=
-=0A=
-Damn I didn't want to hit sent....=0A=
-=0A=
-Does this (untested) change make a difference:=0A=
-=0A=
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c=0A=
-index 475e1a738560..8a07a89d702e 100644=0A=
---- a/drivers/block/loop.c=0A=
-+++ b/drivers/block/loop.c=0A=
-@@ -895,6 +895,9 @@ static void loop_config_discard(struct loop_device *lo)=
-=0A=
-                blk_queue_max_write_zeroes_sectors(q,=0A=
-                        backingq->limits.max_write_zeroes_sectors);=0A=
- =0A=
-+               q->limits.discard_granularity =3D=0A=
-+                       backingq->limits.discard_granularity;=0A=
-+=0A=
-        /*=0A=
-         * We use punch hole to reclaim the free space used by the=0A=
-         * image a.k.a. discard. However we do not support discard if=0A=
-=0A=
+Hi, Frank:
+
+Frank Wunderlich <linux@fw-web.de> =E6=96=BC 2020=E5=B9=B48=E6=9C=884=E6=97=
+=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=887:00=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> From: Stu Hsieh <stu.hsieh@mediatek.com>
+>
+> For current mediatek dsi encoder, its possible crtc is fixed in crtc
+> 0, and mediatek dpi encoder's possible crtc is fixed in crtc 1. In
+> some SoC the possible crtc is not fixed in this case, so search
+> pipeline information to find out the correct possible crtc.
+>
+
+Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+
+> Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 42 +++++++++++++++++++++
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |  2 +
+>  2 files changed, 44 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/dr=
+m/mediatek/mtk_drm_ddp_comp.c
+> index 57c88de9a329..a5f2ff6bea93 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> @@ -13,6 +13,8 @@
+>  #include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/soc/mediatek/mtk-cmdq.h>
+> +#include <drm/drm_print.h>
+> +
+>  #include "mtk_drm_drv.h"
+>  #include "mtk_drm_plane.h"
+>  #include "mtk_drm_ddp_comp.h"
+> @@ -412,6 +414,22 @@ static const struct mtk_ddp_comp_match mtk_ddp_match=
+es[DDP_COMPONENT_ID_MAX] =3D {
+>         [DDP_COMPONENT_WDMA1]   =3D { MTK_DISP_WDMA,      1, NULL },
+>  };
+>
+> +static bool mtk_drm_find_comp_in_ddp(struct mtk_ddp_comp ddp_comp,
+> +                                        const enum mtk_ddp_comp_id *path=
+,
+> +                                        unsigned int path_len)
+> +{
+> +       unsigned int i;
+> +
+> +       if (path =3D=3D NULL)
+> +               return false;
+> +
+> +       for (i =3D 0U; i < path_len; i++)
+> +               if (ddp_comp.id =3D=3D path[i])
+> +                       return true;
+> +
+> +       return false;
+> +}
+> +
+>  int mtk_ddp_comp_get_id(struct device_node *node,
+>                         enum mtk_ddp_comp_type comp_type)
+>  {
+> @@ -427,6 +445,30 @@ int mtk_ddp_comp_get_id(struct device_node *node,
+>         return -EINVAL;
+>  }
+>
+> +unsigned int mtk_drm_find_possible_crtc_by_comp(struct drm_device *drm,
+> +                                               struct mtk_ddp_comp ddp_c=
+omp)
+> +{
+> +       struct mtk_drm_private *private =3D drm->dev_private;
+> +       unsigned int ret;
+> +
+> +       if (mtk_drm_find_comp_in_ddp(ddp_comp, private->data->main_path,
+> +               private->data->main_len) =3D=3D true) {
+> +               ret =3D BIT(0);
+> +       } else if (mtk_drm_find_comp_in_ddp(ddp_comp,
+> +               private->data->ext_path,
+> +               private->data->ext_len) =3D=3D true) {
+> +               ret =3D BIT(1);
+> +       } else if (mtk_drm_find_comp_in_ddp(ddp_comp,
+> +               private->data->third_path,
+> +               private->data->third_len) =3D=3D true) {
+> +               ret =3D BIT(2);
+> +       } else {
+> +               DRM_INFO("Failed to find comp in ddp table\n");
+> +               ret =3D 0;
+> +       }
+> +       return ret;
+> +}
+> +
+>  int mtk_ddp_comp_init(struct device *dev, struct device_node *node,
+>                       struct mtk_ddp_comp *comp, enum mtk_ddp_comp_id com=
+p_id,
+>                       const struct mtk_ddp_comp_funcs *funcs)
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/dr=
+m/mediatek/mtk_drm_ddp_comp.h
+> index debe36395fe7..1d9e00b69462 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> @@ -202,6 +202,8 @@ static inline void mtk_ddp_ctm_set(struct mtk_ddp_com=
+p *comp,
+>
+>  int mtk_ddp_comp_get_id(struct device_node *node,
+>                         enum mtk_ddp_comp_type comp_type);
+> +unsigned int mtk_drm_find_possible_crtc_by_comp(struct drm_device *drm,
+> +                                               struct mtk_ddp_comp ddp_c=
+omp);
+>  int mtk_ddp_comp_init(struct device *dev, struct device_node *comp_node,
+>                       struct mtk_ddp_comp *comp, enum mtk_ddp_comp_id com=
+p_id,
+>                       const struct mtk_ddp_comp_funcs *funcs);
+> --
+> 2.25.1
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
