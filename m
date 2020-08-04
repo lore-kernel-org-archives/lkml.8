@@ -2,175 +2,72 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A71C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B735EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0731D2073E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:35:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yrL1Q/zR"
+	by mail.kernel.org (Postfix) with ESMTP id C3DC1206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:35:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729755AbgHDFfG (ORCPT
+        id S1729781AbgHDFff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 01:35:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59662 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbgHDFfG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 01:35:06 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60DF4C061756
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 22:35:06 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id d188so13513419pfd.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 22:35:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=r4Y9Eca8ia7RNKi2gmFOXnwohdlzWRJ+eWTXbB9dWO8=;
-        b=yrL1Q/zRLwe7IKf6kSP3Sr4pXCxAqbv09twQbWxBsnVyTJbWbGP0GkXqONM2xWof7n
-         q3NWpkQzXpJkUgIj8qBPrq1DhzMg81WfDihBPK4FPpyOx6as5Wv5AEUfwaBF1LHgLsX+
-         rm55fG/reILc0pf8XVKCzkyNWtbvJZxzQIOAl3180wFmCJ43xvBL5minkQx/YkbuqKgM
-         Za5ns9I7sF3hzAGTpx900m3bHGu9qzaiz/YBUWIumFz+CyM09fcrFuCcH/eYSq8KTiQr
-         xKnthpEmgPpJn/zg1ztIPjRK/IegjrBMKYnQK43Em3ob/3y717o+KjEVcHFIYLiQipYC
-         xO9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r4Y9Eca8ia7RNKi2gmFOXnwohdlzWRJ+eWTXbB9dWO8=;
-        b=pO0yJgs6hwx0iQRfXOKJy5pm9Z7OISg31z5GGEA3x8KWIG3ycHgP9t5j7QgTHyknYA
-         O5wDE0oOm+G6UVwTZW7H8MU281d5RJ4MgsJ9UpyvGrrObOBuem5tzBTw3qdZ2A4F5T/n
-         8vAPXn7o3hPl+VElB89YC6n4M8DiJ2HWulF/nyB9lRWdLqsyBJqne2kPbntOJw0F4zOA
-         eJILr8moyjh2xpxjp466Vhngg941u4NJXi+qYeXviASfD7okqvYjM/ZqIOsI0kExHp4Z
-         rQZpn7BPG+vU1rthMUdBb54DEPkGaAOE0bdjaWuMA5SPbJ+C/bBw3dM9r896hQzpkY/o
-         25cA==
-X-Gm-Message-State: AOAM531zcM6Fv1iZSjayxZ98PegI3PBj1oPsmmp+YrGWP0STvCyP65i5
-        2VzEDCeqtqDJY3+Sb2//lr0DvA==
-X-Google-Smtp-Source: ABdhPJyPDTsErNmZ8nQABIsOqnVB+GY6LRnVQEfOJrS3F4f0XChQp7329lc+nTrOuz/sBYFVuAtJnA==
-X-Received: by 2002:a63:7d8:: with SMTP id 207mr18365180pgh.263.1596519305772;
-        Mon, 03 Aug 2020 22:35:05 -0700 (PDT)
-Received: from localhost ([122.162.244.227])
-        by smtp.gmail.com with ESMTPSA id z62sm20915898pfb.47.2020.08.03.22.35.04
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Aug 2020 22:35:04 -0700 (PDT)
-Date:   Tue, 4 Aug 2020 11:05:02 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        cristian.marussi@arm.com, rjw@rjwysocki.net
-Subject: Re: [PATCH 0/4] CPUFreq statistics retrieved by drivers
-Message-ID: <20200804053502.35d3x3vnb3mggtqs@vireshk-mac-ubuntu>
-References: <20200729151208.27737-1-lukasz.luba@arm.com>
- <20200730085333.qubrsv7ufqninihd@vireshk-mac-ubuntu>
- <20200730091014.GA13158@bogus>
- <3b3a56e9-29ec-958f-fb3b-c689a9389d2f@arm.com>
+        Tue, 4 Aug 2020 01:35:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41998 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727035AbgHDFfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 01:35:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 12673ACB5;
+        Tue,  4 Aug 2020 05:35:49 +0000 (UTC)
+Subject: Re: [PATCH v3 10/11] xen/arm: introduce phys/dma translations in
+ xen_dma_sync_for_*
+To:     Stefano Stabellini <sstabellini@kernel.org>,
+        boris.ostrovsky@oracle.com, konrad.wilk@oracle.com
+Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        hch@infradead.org,
+        Stefano Stabellini <stefano.stabellini@xilinx.com>
+References: <alpine.DEB.2.21.2007101521290.4124@sstabellini-ThinkPad-T480s>
+ <20200710223427.6897-10-sstabellini@kernel.org>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <68f244b5-86e7-4c94-7a22-f9ca53311857@suse.com>
+Date:   Tue, 4 Aug 2020 07:35:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3b3a56e9-29ec-958f-fb3b-c689a9389d2f@arm.com>
-User-Agent: NeoMutt/20170609 (1.8.3)
+In-Reply-To: <20200710223427.6897-10-sstabellini@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30-07-20, 10:36, Lukasz Luba wrote:
-> On 7/30/20 10:10 AM, Sudeep Holla wrote:
-> > On Thu, Jul 30, 2020 at 02:23:33PM +0530, Viresh Kumar wrote:
-> > > On 29-07-20, 16:12, Lukasz Luba wrote:
-> > > > The existing CPUFreq framework does not tracks the statistics when the
-> > > > 'fast switch' is used or when firmware changes the frequency independently
-> > > > due to e.g. thermal reasons. However, the firmware might track the frequency
-> > > > changes and expose this to the kernel.
-> > > > 
-> > > > This patch set aims to introduce CPUfreq statistics gathered by firmware
-> > > > and retrieved by CPUFreq driver. It would require a new API functions
-> > > > in the CPUFreq, which allows to poke drivers to get these stats.
-> > > > 
-> > > > The needed CPUFreq infrastructure is in patch 1/4, patch 2/4 extends
-> > > > ARM SCMI protocol layer, patches 3/4, 4/4  modify ARM SCMI CPUFreq driver.
-> > > 
-> > > Are you doing this for the fast switch case or because your platform
-> > > actually runs at frequencies which may be different from what cpufreq
-> > > core has requested ?
-> > > 
-> > 
-> > I think so.
+On 11.07.20 00:34, Stefano Stabellini wrote:
+> From: Stefano Stabellini <stefano.stabellini@xilinx.com>
 > 
-> For both cases, but fast switch is major and present. Thermal is not
-> currently implemented in SCP FW, but might be in future.
-
-Okay, lets simplify things a bit and merge things slowly upstream and merge only
-what is required right now.
-
-IIUC, the only concern right now is to capture stats with fast switch ? Maybe we
-can do something else in that case and brainstorm a bit..
-
-> > > I am also not sure what these tables should represent, what the
-> > > cpufreq core has decided for the CPUs or the frequencies we actually
-> > > run at, as these two can be very different for example if the hardware
-> > > runs at frequencies which don't match exactly to what is there in the
-> > > freq table. I believe these are rather to show what cpufreq and its
-> > > governors are doing with the CPUs.
-> > > 
-> > 
-> > Exactly, I raised similar point in internal discussion and asked Lukasz
-> > to take up the same on the list. I assume it was always what cpufreq
-> > requested rather than what was delivered. So will we break the userspace
-> > ABI if we change that is the main question.
+> xen_dma_sync_for_cpu, xen_dma_sync_for_device, xen_arch_need_swiotlb are
+> getting called passing dma addresses. On some platforms dma addresses
+> could be different from physical addresses. Before doing any operations
+> on these addresses we need to convert them back to physical addresses
+> using dma_to_phys.
 > 
-> Thank you for confirmation. If that is the mechanism for tracking what
-> cpufreq governors are doing with the CPUs, then is clashes with
-> presented data in FW memory, because firmware is the governor.
-
-Why is firmware the governor here ? Aren't you talking about the simple fast
-switch case only ?
-
-Over that, I think this cpufreq stats information isn't parsed by any tool right
-now and tweaking it a bit won't hurt anyone (like if we start capturing things a
-bit differently). So we may not want to worry about breaking userspace ABI here,
-if what we are looking to do is the right thing to do.
-
-> > > Over that I would like the userspace stats to work exactly as the way
-> > > they work right now, i.e. capture all transitions from one freq to
-> > > other, not just time-in-state. Also resetting of the stats from
-> > > userspace for example. All allocation and printing of the data must be
-> > > done from stats core, the only thing which the driver would do at the
-> > > end is updating the stats structure and nothing more. Instead of
-> > > reading all stats from the firmware, it will be much easier if you can
-> > > just get the information from the firmware whenever there is a
-> > > frequency switch and then we can update the stats the way it is done
-> > > right now. And that would be simple.
-> > > 
-> > 
-> > Good point, but notifications may not be lightweight. If that is no good,
-> > alternatively, I suggested to keep these firmware stats in a separate
-> > debugfs. Thoughts ?
+> Move the arch_sync_dma_for_cpu and arch_sync_dma_for_device calls from
+> xen_dma_sync_for_cpu/device to swiotlb-xen.c, and add a call dma_to_phys
+> to do address translations there.
 > 
-> I agree that notifications might not be lightweight.
-
-I am not sure what notifications are we talking about here.
-
-> Furthermore I think
-> this still clashes with the assumption that cpufreq governor decisions
-> are tracked in these statistics, not the firmware decision.
+> dma_cache_maint is fixed by the next patch.
 > 
-> In this case I think we would have to create debugfs.
-> Sudeep do you think these debugfs should be exposed from the protocol
-> layer:
-> drivers/firmware/arm_scmi/perf.c
-> or maybe from the cpufreq scmi driver? I would probably be safer to have
-> it in the cpufreq driver because we have scmi_handle there.
+> Signed-off-by: Stefano Stabellini <stefano.stabellini@xilinx.com>
+> Tested-by: Corey Minyard <cminyard@mvista.com>
+> Tested-by: Roman Shaposhnik <roman@zededa.com>
 
-For the CPUs it would be better if we can keep things in cpufreq only, lets see
-how we go about it.
+Acked-by: Juergen Gross <jgross@suse.com>
 
--- 
-viresh
+
+Juergen
