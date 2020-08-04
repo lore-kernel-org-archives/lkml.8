@@ -2,89 +2,109 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94551C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:25:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9AA8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64A102065C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:25:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C90492065C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:25:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kdP9moyv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbgHDNZh (ORCPT
+        id S1728666AbgHDNZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 09:25:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47230 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728477AbgHDNZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 09:25:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 8EE21B5FB;
-        Tue,  4 Aug 2020 13:25:43 +0000 (UTC)
-Date:   Tue, 4 Aug 2020 15:25:26 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 1/2][next] mm: memcontrol: Use flex_array_size() helper
- in memcpy()
-Message-ID: <20200804132526.GC7306@dhcp22.suse.cz>
-References: <cover.1596214831.git.gustavoars@kernel.org>
- <ddd60dae2d9aea1ccdd2be66634815c93696125e.1596214831.git.gustavoars@kernel.org>
+        Tue, 4 Aug 2020 09:25:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47500 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728419AbgHDNZ1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 09:25:27 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D026C06174A;
+        Tue,  4 Aug 2020 06:25:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ey6gOzQW7qkYrkGPNCRXw13EnycFk1/ExnTO9ySv+ao=; b=kdP9moyvhKotGxsGs3ud6CrK+C
+        F68D1NJpJD69Xd4nD50xvXZSv9JbdEfKoM36v3Yxr8CYIdoliwHD2LUNXC0+Vaj/DoZV+DNp4R7hT
+        pBkJ6IWSHjUERcNNKspiTvwg819ydcytVWnJFstoJ2COGk/hdxxa7/++qWDDvhzVn5goAuB9jaGxz
+        MkZP3ZNmLUv4vgfuIK+q8qGylerjGw8ApEVM7Uc94yrHVH9fRQpa5U3RoVXMlbN//m1m737Y6xJaK
+        6TWeKYTjacuU4uCc6fslXcEMhyauTVUJe+3gIOlPkcKeggVGcLJkoXI9JyF+QZJm1AcA7LHqIZfw0
+        gE9RqyEw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k2wwQ-0006if-TC; Tue, 04 Aug 2020 13:25:19 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4BC18304E03;
+        Tue,  4 Aug 2020 15:25:17 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2DC352B622ED0; Tue,  4 Aug 2020 15:25:17 +0200 (CEST)
+Date:   Tue, 4 Aug 2020 15:25:17 +0200
+From:   peterz@infradead.org
+To:     Vitor Massaru Iha <vitor@massaru.org>
+Cc:     KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org, irogers@google.com,
+        mingo@kernel.org
+Subject: Re: [PATCH] lib: kunit: add test_min_heap test conversion to KUnit
+Message-ID: <20200804132517.GK2657@hirez.programming.kicks-ass.net>
+References: <20200729201146.537433-1-vitor@massaru.org>
+ <20200729203908.GD2655@hirez.programming.kicks-ass.net>
+ <CADQ6JjW-=SNjV-abGpGA9NfHD4yGG_bD5FmvW99W-Vo06twkbw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ddd60dae2d9aea1ccdd2be66634815c93696125e.1596214831.git.gustavoars@kernel.org>
+In-Reply-To: <CADQ6JjW-=SNjV-abGpGA9NfHD4yGG_bD5FmvW99W-Vo06twkbw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 31-07-20 12:12:53, Gustavo A. R. Silva wrote:
-> Make use of the flex_array_size() helper to calculate the size of a
-> flexible array member within an enclosing structure.
-> 
-> This helper offers defense-in-depth against potential integer
-> overflows, while at the same time makes it explicitly clear that
-> we are dealing with a flexible array member.
-> 
-> Also, remove unnecessary braces.
+On Wed, Jul 29, 2020 at 06:57:17PM -0300, Vitor Massaru Iha wrote:
 
-I was not aware of this helper. The code looks slightly better.
- 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-> ---
->  mm/memcontrol.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
+> The results can be seen this way:
 > 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index e84c2b5596f2..bd7f972ceea4 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -4246,10 +4246,9 @@ static int __mem_cgroup_usage_register_event(struct mem_cgroup *memcg,
->  	new->size = size;
->  
->  	/* Copy thresholds (if any) to new array */
-> -	if (thresholds->primary) {
-> -		memcpy(new->entries, thresholds->primary->entries, (size - 1) *
-> -				sizeof(struct mem_cgroup_threshold));
-> -	}
-> +	if (thresholds->primary)
-> +		memcpy(new->entries, thresholds->primary->entries,
-> +		       flex_array_size(new, entries, size - 1));
->  
->  	/* Add new threshold */
->  	new->entries[size - 1].eventfd = eventfd;
-> -- 
-> 2.27.0
+> This is an excerpt from the test.log with the result in TAP format:
+> [snip]
+> ok 5 - example
+>     # Subtest: min-heap
+>     1..6
+>     ok 1 - test_heapify_all_true
+>     ok 2 - test_heapify_all_false
+>     ok 3 - test_heap_push_true
+>     ok 4 - test_heap_push_false
+>     ok 5 - test_heap_pop_push_true
+>     ok 6 - test_heap_pop_push_false
+> [snip]
+> 
+> And this from kunit-tool:
+> [snip]
+> [18:43:32] ============================================================
+> [18:43:32] ======== [PASSED] min-heap ========
+> [18:43:32] [PASSED] test_heapify_all_true
+> [18:43:32] [PASSED] test_heapify_all_false
+> [18:43:32] [PASSED] test_heap_push_true
+> [18:43:32] [PASSED] test_heap_push_false
+> [18:43:32] [PASSED] test_heap_pop_push_true
+> [18:43:32] [PASSED] test_heap_pop_push_false
+> [18:43:32] ============================================================
+> [18:43:32] Testing complete. 20 tests run. 0 failed. 0 crashed.
+> [18:43:32] Elapsed time: 9.758s total, 0.001s configuring, 6.012s
+> building, 0.000s running
+> [snip]
 
--- 
-Michal Hocko
-SUSE Labs
+I don't care or care to use either; what does dmesg do? It used to be
+that just building the self-tests was sufficient and any error would
+show in dmesg when you boot the machine.
+
+But if I now have to use some damn tool, this is a regression.
