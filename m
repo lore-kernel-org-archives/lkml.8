@@ -2,205 +2,99 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44414C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93786C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28F2E22B45
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C45222B42
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596576140;
-	bh=bXcYVMsqD12uE+wXFthj7t7M5Ojuh+fTCQwOUDFBvhc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mBcObmaFxCQkxR6s5Wkr+5+HHolRVzZGrxaJOiIMRXK9cIfMEr1LbUCMgPpbIOpbV
-	 vwMxnXioTAqDM+uSrxpF5lqZUo204T1f24ZFOpqN7SEFKzX5ja/T1Y+th6pQ/aBNZE
-	 zYy39tFy0RIpGd+qXYnT/vyyWbKrR1ds0i+e0n5k=
+	s=default; t=1596576191;
+	bh=FUi79Z6g4j3LKocBOkO8y606YrmtOIbAhq+x5CTTBNo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cMTM+cwQoBXQHuB5sIAAwh5ETgUEk989NeEVLW3OPR+9ePvyIRHbv/Zj1Pu7A21Mo
+	 g/vh9N/tRKQRtvU0oaZ/NmFGs60e7r3z3ZqZ2fPZIIzUzI6h7QnNzhmlR/HAJMcXz0
+	 1jpmnjhOY/oB2gKtJYcWo42QAcNAbEdO5j+bl6v0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgHDVWS (ORCPT
+        id S1727837AbgHDVXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 17:22:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37438 "EHLO mail.kernel.org"
+        Tue, 4 Aug 2020 17:23:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726101AbgHDVWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 17:22:17 -0400
-Received: from gmail.com (unknown [104.132.1.76])
+        id S1727006AbgHDVXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 17:23:09 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B44DA20842;
-        Tue,  4 Aug 2020 21:22:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A099520842;
+        Tue,  4 Aug 2020 21:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596576136;
-        bh=bXcYVMsqD12uE+wXFthj7t7M5Ojuh+fTCQwOUDFBvhc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uPiethCbtW54zrmu3zGud3anlS7devW5CjHR4qSEItdX6X2UJ3ZHPPIOE3b4xH3Rr
-         PUA6OoR6PraR1KgKO8Ampk/wE2u22QefvQwxHKRCIaDXeVIqI65l5e8OuwHaPe+EL1
-         ic2jByeLghPClWbbvvIA1NE33L9i8PvduKTEqDME=
-Date:   Tue, 4 Aug 2020 14:22:14 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     timmurray@google.com, selinux@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, viro@zeniv.linux.org.uk, paul@paul-moore.com,
-        nnk@google.com, sds@tycho.nsa.gov, lokeshgidra@google.com,
-        jmorris@namei.org
-Subject: Re: [PATCH v5 1/3] Add a new LSM-supporting anonymous inode interface
-Message-ID: <20200804212214.GD1992048@gmail.com>
-References: <20200326200634.222009-1-dancol@google.com>
- <20200401213903.182112-1-dancol@google.com>
- <20200401213903.182112-2-dancol@google.com>
+        s=default; t=1596576188;
+        bh=FUi79Z6g4j3LKocBOkO8y606YrmtOIbAhq+x5CTTBNo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nzPunqSGCcvCWrOS3UfFNLt+3r9GiHXOMQtWHfEax2kra8aOA4Uz1DLLHhkhRZqnK
+         LPFNed+wKnuUOmyY2tB2Bi/Jr0htuIvLF5+m6T8pXHsQYJc+1IDtiVp+pVUVHlGEoW
+         0Rmp+whXq5OFgLIh97TNxExjxQWgCPQfhaUDOwpc=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k34Op-00HUEC-2X; Tue, 04 Aug 2020 22:23:07 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200401213903.182112-2-dancol@google.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 04 Aug 2020 22:23:06 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH 5.7 000/121] 5.7.13-rc2 review
+In-Reply-To: <CAHk-=whJ=shbf-guMGZkGvxh9fVmbrvUuiWO48+PDFG7J9A9qw@mail.gmail.com>
+References: <20200804072435.385370289@linuxfoundation.org>
+ <CA+G9fYs35Eiq1QFM0MOj6Y7gC=YKaiknCPgcJpJ5NMW4Y7qnYQ@mail.gmail.com>
+ <20200804082130.GA1768075@kroah.com>
+ <CAHk-=whJ=shbf-guMGZkGvxh9fVmbrvUuiWO48+PDFG7J9A9qw@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <c32ad2216ca3dd83d6d3d740512db9de@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: torvalds@linux-foundation.org, gregkh@linuxfoundation.org, naresh.kamboju@linaro.org, linux-kernel@vger.kernel.org, akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org, stable@vger.kernel.org, arnd@arndb.de, will@kernel.org, catalin.marinas@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 01, 2020 at 02:39:01PM -0700, Daniel Colascione wrote:
-> This change adds two new functions, anon_inode_getfile_secure and
-> anon_inode_getfd_secure, that create anonymous-node files with
-> individual non-S_PRIVATE inodes to which security modules can apply
-> policy. Existing callers continue using the original singleton-inode
-> kind of anonymous-inode file. We can transition anonymous inode users
-> to the new kind of anonymous inode in individual patches for the sake
-> of bisection and review.
+On 2020-08-04 19:33, Linus Torvalds wrote:
+> On Tue, Aug 4, 2020 at 1:21 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+>> 
+>> So Linus's tree is also broken here.
 > 
-> The new functions accept an optional context_inode parameter that
-> callers can use to provide additional contextual information to
-> security modules, e.g., indicating that one anonymous struct file is a
-> logical child of another, allowing a security model to propagate
-> security information from one to the other.
-> 
-> Signed-off-by: Daniel Colascione <dancol@google.com>
-> ---
->  fs/anon_inodes.c            | 191 ++++++++++++++++++++++++++++--------
->  include/linux/anon_inodes.h |  13 +++
->  include/linux/lsm_hooks.h   |  11 +++
->  include/linux/security.h    |   3 +
->  security/security.c         |   9 ++
->  5 files changed, 186 insertions(+), 41 deletions(-)
-> 
-> diff --git a/fs/anon_inodes.c b/fs/anon_inodes.c
-> index 89714308c25b..f87f221167cf 100644
-> --- a/fs/anon_inodes.c
-> +++ b/fs/anon_inodes.c
-> @@ -55,61 +55,108 @@ static struct file_system_type anon_inode_fs_type = {
->  	.kill_sb	= kill_anon_super,
->  };
->  
-> -/**
-> - * anon_inode_getfile - creates a new file instance by hooking it up to an
-> - *                      anonymous inode, and a dentry that describe the "class"
-> - *                      of the file
-> - *
-> - * @name:    [in]    name of the "class" of the new file
-> - * @fops:    [in]    file operations for the new file
-> - * @priv:    [in]    private data for the new file (will be file's private_data)
-> - * @flags:   [in]    flags
-> - *
-> - * Creates a new file by hooking it on a single inode. This is useful for files
-> - * that do not need to have a full-fledged inode in order to operate correctly.
-> - * All the files created with anon_inode_getfile() will share a single inode,
-> - * hence saving memory and avoiding code duplication for the file/inode/dentry
-> - * setup.  Returns the newly created file* or an error pointer.
-> - */
-> -struct file *anon_inode_getfile(const char *name,
-> -				const struct file_operations *fops,
-> -				void *priv, int flags)
-> +static struct inode *anon_inode_make_secure_inode(
-> +	const char *name,
-> +	const struct inode *context_inode)
-> +{
-> +	struct inode *inode;
-> +	const struct qstr qname = QSTR_INIT(name, strlen(name));
-> +	int error;
-> +
-> +	inode = alloc_anon_inode(anon_inode_mnt->mnt_sb);
-> +	if (IS_ERR(inode))
-> +		return inode;
-> +	inode->i_flags &= ~S_PRIVATE;
-> +	error =	security_inode_init_security_anon(
-> +		inode, &qname, context_inode);
-> +	if (error) {
-> +		iput(inode);
-> +		return ERR_PTR(error);
-> +	}
-> +	return inode;
-> +}
-> +
-> +struct file *_anon_inode_getfile(const char *name,
-> +				 const struct file_operations *fops,
-> +				 void *priv, int flags,
-> +				 const struct inode *context_inode,
-> +				 bool secure)
+> No, there's 835d1c3a9879 ("arm64: Drop unnecessary include from
+> asm/smp.h") upstream.
 
-Unnecessarily global function.
+My bet is that Greg ended up with this patch backported to
+5.7, but doesn't have 62a679cb2825 ("arm64: simplify ptrauth
+initialization") as the latter isn't a fix.
 
->  {
-> +	struct inode *inode;
->  	struct file *file;
->  
-> -	if (IS_ERR(anon_inode_inode))
-> -		return ERR_PTR(-ENODEV);
-> +	if (secure) {
-> +		inode =	anon_inode_make_secure_inode(
-> +			name, context_inode);
-> +		if (IS_ERR(inode))
-> +			return ERR_PTR(PTR_ERR(inode));
+I don't think any of these two patches are worth backporting,
+to be honest.
 
-Use ERR_CAST(), not ERR_PTR(PTR_ERR()).
-
->  /**
-> - * anon_inode_getfd - creates a new file instance by hooking it up to an
-> - *                    anonymous inode, and a dentry that describe the "class"
-> - *                    of the file
-> + * anon_inode_getfile_secure - creates a new file instance by hooking
-> + *                             it up to a new anonymous inode and a
-> + *                             dentry that describe the "class" of the
-> + *                             file.  Make it possible to use security
-> + *                             modules to control access to the
-> + *                             new file.
-> + *
-> + * @name:    [in]    name of the "class" of the new file
-> + * @fops:    [in]    file operations for the new file
-> + * @priv:    [in]    private data for the new file (will be file's private_data)
-> + * @flags:   [in]    flags
-> + *
-> + * Creates a new file by hooking it on an unspecified inode. This is
-> + * useful for files that do not need to have a full-fledged filesystem
-> + * to operate correctly.  All the files created with
-> + * anon_inode_getfile_secure() will have distinct inodes, avoiding
-> + * code duplication for the file/inode/dentry setup.  Returns the
-> + * newly created file* or an error pointer.
-> + */
-> +struct file *anon_inode_getfile_secure(const char *name,
-> +				       const struct file_operations *fops,
-> +				       void *priv, int flags,
-> +				       const struct inode *context_inode)
-
-Why copy-and-paste this long comment if it's not even updated to document the
-new argument?
-
-> diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
-> index 20d8cf194fb7..5434c1d285b2 100644
-> --- a/include/linux/lsm_hooks.h
-> +++ b/include/linux/lsm_hooks.h
-> @@ -215,6 +215,13 @@
->   *	Returns 0 if @name and @value have been successfully set,
->   *	-EOPNOTSUPP if no security attribute is needed, or
->   *	-ENOMEM on memory allocation failure.
-> + * @inode_init_security_anon:
-> + *      Set up a secure anonymous inode.
-> + *      @inode contains the inode structure
-> + *      @name name of the anonymous inode class
-> + *      @context_inode optional related inode
-> + *	Returns 0 on success. Returns -EPERM if	the security module denies
-> + *	the creation of this inode.
-
-Shouldn't it be EACCES?
+         M.
+-- 
+Jazz is not dead. It just smells funny...
