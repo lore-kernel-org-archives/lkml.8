@@ -2,128 +2,184 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C99DBC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00590C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFF2022B40
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:21:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596529312;
-	bh=yHshFQTi7X9tbhZouHzBQeXdvJY2DlleNpabUG8FjaI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BRRYyxTk54AFuow5Hothu3qx8fMNaFzoB80mVVgJ2qduwqN/nj2vP5W7XgSFNhGlo
-	 +hWoYEzlFk5mbLJM2/N24tLJxqt/4oGsv5D8hvpTaZpLkMBlaTKIFtKaLOGvRgwmZ6
-	 ufjl0SunzUEFnRFCzpdOw5qbJe1fYpVOb8H9RNBk=
+	by mail.kernel.org (Postfix) with ESMTP id 058EC2070A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:28:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="brrT1/A9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729577AbgHDIVv (ORCPT
+        id S1729436AbgHDI2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 04:21:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbgHDIVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 04:21:51 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A45B2177B;
-        Tue,  4 Aug 2020 08:21:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596529310;
-        bh=yHshFQTi7X9tbhZouHzBQeXdvJY2DlleNpabUG8FjaI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FZ9qmCsVt7qSCuPmQDFZPrKgb4532pL0NxZXI+1/Wbn7Yj7maW4Fcp1/X00FmB+fu
-         cX8aOl+UxTthB3k15IAJUXI/iK6Qg+u/RZDy08V450BadaFCuzWk4q4t6Q1/6+5DME
-         oZu78065UZLeQ+4trscJqr8fn952N8oeZAx62JrE=
-Date:   Tue, 4 Aug 2020 10:21:30 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH 5.7 000/121] 5.7.13-rc2 review
-Message-ID: <20200804082130.GA1768075@kroah.com>
-References: <20200804072435.385370289@linuxfoundation.org>
- <CA+G9fYs35Eiq1QFM0MOj6Y7gC=YKaiknCPgcJpJ5NMW4Y7qnYQ@mail.gmail.com>
+        Tue, 4 Aug 2020 04:28:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58318 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgHDI2i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 04:28:38 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D510C06174A;
+        Tue,  4 Aug 2020 01:28:38 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id s26so19784121pfm.4;
+        Tue, 04 Aug 2020 01:28:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1zLPOfCOr1RAuyDeEqSEeQYdBYJoolPkunVIn7d3sBM=;
+        b=brrT1/A9GytVeAINrXagk80nXdYC0mcoHMB2NWjdpbRcXr+4nqKCy+rwUSSHKqQPQq
+         GrByfJUk8gjZEHzF/mB88wnbel6ldak+YUrWQH4IU8Y87t1nBn0gWmsE1mvMi/y+PcGR
+         Dk19aZadR6A4KQFC3JSeUeKlX0A5EC/ZAV83y0ZYs+JHi/Uaal+VE79MsTrcxneDz3XQ
+         INo8dY71qjmnbENhAbV82LvGG7zIhl9d1nXjMY8vqGr/XaCgMGVOEc+qeUsk4rs69fxA
+         Nf4UG5FpG5ubTuavCKV5OLpDZjxyUwblxhAvExWl56zMsU/gO7diBrNEW2hjeLOJO9gX
+         st5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1zLPOfCOr1RAuyDeEqSEeQYdBYJoolPkunVIn7d3sBM=;
+        b=XNmCqCDHAlEqpqur8vPr2vJmCUpmEcEde6KbkVMvwJmeuEhxkEXmz9aTkVD0a5g55U
+         bbEOCYXuUtsrI+Kg47RFJV1k0kP8sd2ITNMjkQIykMLAoVmGUKV1PRRUoIj/Lz79JvJU
+         42C5SDOBCEYJHReRnsRc0rubO0CDjcmnjihcK99FGh8mbNcbnHkdTyou/Iz4DkIJdu9g
+         ZB2zaOaGqz2UxozsoSx6FhBTpFHMtw2aVzjLpJbpYSkWHgqUTNWIbVm3fvL6B0RAmwjt
+         1m3PnuJxZ3fn1T/6miMoPFABY1rxLkbEB4xThrfc6fJwZbfnZ07a0VxfTQYvtHjomHWc
+         +PAw==
+X-Gm-Message-State: AOAM531SHL4jXEW64Wsr0z2fJSiaFx4iQu/dMgDp+ULpuvWU3iEbDeRt
+        71eK7jtAWGaYaX+l7gFdg38LIYyCLV6Io2TzGwE=
+X-Google-Smtp-Source: ABdhPJzYa0UVDFjJMDx3gG3JiQjPhgly81KTX07Ub4i1Le+i6pmXkt0OdsNywXhG3v8TfGgZF2f4qGMXnnGHxQ1SSig=
+X-Received: by 2002:a62:758f:: with SMTP id q137mr18887403pfc.170.1596529717996;
+ Tue, 04 Aug 2020 01:28:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYs35Eiq1QFM0MOj6Y7gC=YKaiknCPgcJpJ5NMW4Y7qnYQ@mail.gmail.com>
+References: <20200802163735.76617-1-ceggers@arri.de> <20200802163735.76617-3-ceggers@arri.de>
+ <CAHp75Vev64E86OWm+eV=1o4ZDs0Xh_Y1z6V54GmpRwWmjD7=eA@mail.gmail.com> <2356337.HYKpEJ1Wej@n95hx1g2>
+In-Reply-To: <2356337.HYKpEJ1Wej@n95hx1g2>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 4 Aug 2020 11:28:22 +0300
+Message-ID: <CAHp75VdusOQNzrY_Ken0KW06gtRW8fCOOtYXo=9nnFKc6bgWnQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] iio: light: as73211: New driver
+To:     Christian Eggers <ceggers@arri.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 01:46:31PM +0530, Naresh Kamboju wrote:
-> On Tue, 4 Aug 2020 at 13:03, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.7.13 release.
-> > There are 121 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Thu, 06 Aug 2020 07:23:45 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.13-rc2.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> arm64 build broken.
-> 
-> make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=arm64
-> CROSS_COMPILE=aarch64-linux-gnu- HOSTCC=gcc CC="sccache
-> aarch64-linux-gnu-gcc" O=build Image
-> #
-> In file included from ../include/linux/smp.h:67,
->                  from ../include/linux/percpu.h:7,
->                  from ../include/linux/prandom.h:12,
->                  from ../include/linux/random.h:118,
->                  from ../arch/arm64/include/asm/pointer_auth.h:6,
->                  from ../arch/arm64/include/asm/processor.h:39,
->                  from ../include/linux/mutex.h:19,
->                  from ../include/linux/kernfs.h:12,
->                  from ../include/linux/sysfs.h:16,
->                  from ../include/linux/kobject.h:20,
->                  from ../include/linux/of.h:17,
->                  from ../include/linux/irqdomain.h:35,
->                  from ../include/linux/acpi.h:13,
->                  from ../include/acpi/apei.h:9,
->                  from ../include/acpi/ghes.h:5,
->                  from ../include/linux/arm_sdei.h:8,
->                  from ../arch/arm64/kernel/asm-offsets.c:10:
-> ../arch/arm64/include/asm/smp.h:100:29: error: field ‘ptrauth_key’ has
-> incomplete type
->   100 |  struct ptrauth_keys_kernel ptrauth_key;
->       |                             ^~~~~~~~~~~
-> make[2]: *** [../scripts/Makefile.build:100:
-> arch/arm64/kernel/asm-offsets.s] Error 1
+On Tue, Aug 4, 2020 at 10:42 AM Christian Eggers <ceggers@arri.de> wrote:
+> On Sunday, 2 August 2020, 20:02:35 CEST, Andy Shevchenko wrote:
+> > On Sun, Aug 2, 2020 at 7:40 PM Christian Eggers <ceggers@arri.de> wrote:
 
-Wow that was fast :(
+...
 
-So Linus's tree is also broken here.  I think it's time I just removed
-all of these patches from now until we get this all fixed up properly...
+> > > Datasheet:
+> > > https://ams.com/documents/20143/36005/AS73211_DS000556_3-01.pdf/a65474c0-
+> > > b302-c2fd-e30a-c98df87616df
+> > Do we need the UUID after the document file name?
+> I have send AMS an inquiry. Not sure whether I will get an answer. I will wait
+> a few days until sending v6.
 
-thanks,
+I have successfully opened a document w/o additional UUID at the end of URI.
+I think you may drop it.
 
-greg k-h
+...
+
+> > > +#define AS73211_OFFSET_TEMP (-66.9)
+> > > +#define AS73211_SCALE_TEMP  0.05
+> >
+> > In the kernel we don't do float arithmetic. How these are being used?
+> Does this restriction also apply for compile time constants? I am quite
+> sure that all calculations using these defines will be evaluated at compile
+> time. If found a number of other places where probably the same is done:
+>
+> find . -name '*.c' | xargs grep "#define.*[0-9]\.[0-9]" | grep -v '"' | grep -v "\/\*.*[0-9]\.[0-9]"
+
+Side note: `git grep ...` is much faster and better.
+% git grep -n -w '#define[^"/]\+[0-9]\+\.[0-9]\+' -- drivers/ include/
+arch/ | wc -l
+47
+
++ DRM, yes.
+
+In any case...
+
+> > > +               *val2 = (AS73211_OFFSET_TEMP - (int)AS73211_OFFSET_TEMP) *
+> > > 1000000;
+> > >
+> > > +                       *val2 = (AS73211_SCALE_TEMP -
+> > > (int)AS73211_SCALE_TEMP) * 1000000;
+> > Magic 1000000 multiplier.
+> I think that in the context of IIO_VAL_INT_PLUS_MICRO this isn't quite magic. Using
+> 1000000 directly seems quite usual:
+>
+> find drivers/iio/ -type f | xargs grep "val2 = .*1000000"
+
+Hmm... Okay.
+
+> > I think here you got them always 0. And to fix that you need to
+> > redefine (with also units included in the name) above constants like
+> > #define ..._OFFSET_TEMP_mC 66500
+> > ... _SCALE_TEMP_?? 50
+> a scale factor has no unit
+>
+> >
+> > Consider to use definitions from
+> > https://elixir.bootlin.com/linux/latest/source/include/linux/units.h
+> There are only definition for milli celsius. For IIO_VAL_INT_PLUS_MICRO I would
+> require micro celsius.
+>
+> If I have the freedom, I would keep it as it is. Else I would suggest the following:
+> #define AS73211_OFFSET_TEMP_INT (-66)
+> #define AS73211_OFFSET_TEMP_MICRO 900000
+> #define AS73211_SCALE_TEMP_INT 0
+> #define AS73211_SCALE_TEMP_MICRO 50000
+
+...somewhat like above would be better. But your freedom is defined by
+maintainers (not by me), so wait for their comments.
+
+...
+
+> > > +       }}
+> > > +
+> > > +       return -EINVAL;
+> >
+> > Make it default case.
+> changed. Is there any benefit? My IDE's syntax checker now complains
+> "No return, in a function returning non-void". But gcc is happy with this.
+
+Your IDE is buggy :-)
+Yes, there is a benefit of doing this, at some point compiler
+complains about switches that don't cover all cases.
+
+...
+
+> > > +       ret = devm_iio_device_register(dev, indio_dev);
+> > > +       if (ret < 0)
+> > > +               return ret;
+> > > +
+> > > +       return 0;
+> >
+> >   return devm_iio_device_register();
+> changed. I prefer the original pattern as it would produce less changed lines
+> if something needs to inserted later.
+
+But if not, it will be a bulk of several lines of code which is the
+bait for all kinds of janitors and clean up scripts (I saw that IRL,
+so it's not unrealistic). In that case it will be twice the churn.
+
+-- 
+With Best Regards,
+Andy Shevchenko
