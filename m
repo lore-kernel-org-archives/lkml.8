@@ -2,125 +2,129 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95134C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 00:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0301C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 00:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9973F20656
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 00:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCC0720722
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 00:26:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XinFr6mm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VpzeRT+2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728893AbgHDAPX (ORCPT
+        id S1729240AbgHDA0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 20:15:23 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:36653 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728329AbgHDAPW (ORCPT
+        Mon, 3 Aug 2020 20:26:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40610 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729062AbgHDA0P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 20:15:22 -0400
-X-UUID: ef7542779436431f80815dec5f03a96e-20200804
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=3spY01kwf4O6wv7cicumcVELIxjbsq4/eTGUCLDHWqw=;
-        b=XinFr6mmrVN0Q5O7bKYQJPJO8TT9FPpJ0Gy02/VbSxVKidrAchUt5dSoPu1FGIp+L7KEZPSSwFSH8kw4yV1J9XQruu8OSwk+OVKYSbF0Fwd4Bt7TkG8xAsKoOjeQ5B3zDpSbrwTOov3CwZRHM2VCZGaW8pS84ofNl4KUdS2VAEg=;
-X-UUID: ef7542779436431f80815dec5f03a96e-20200804
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <zhiyong.tao@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 50072949; Tue, 04 Aug 2020 08:15:12 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 4 Aug
- 2020 08:15:04 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 4 Aug 2020 08:15:05 +0800
-Message-ID: <1596500071.20778.0.camel@mhfsdcap03>
-Subject: Re: [PATCH v2 2/3] dt-bindings: pinctrl: mt8192: add binding
- document
-From:   zhiyong tao <zhiyong.tao@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     <seiya.wang@mediatek.com>, <linux-arm-kernel@lists.infradead.org>,
-        <jg_poxu@mediatek.com>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <chuanjia.liu@mediatek.com>,
-        <sean.wang@kernel.org>, <srv_heupstream@mediatek.com>,
-        <biao.huang@mediatek.com>, <erin.lo@mediatek.com>,
-        <mark.rutland@arm.com>, <hongzhou.yang@mediatek.com>,
-        <matthias.bgg@gmail.com>, <devicetree@vger.kernel.org>,
-        <robh+dt@kernel.org>, <hui.liu@mediatek.com>,
-        <eddie.huang@mediatek.com>, <sean.wang@mediatek.com>,
-        <linux-gpio@vger.kernel.org>, <sj.huang@mediatek.com>,
-        <linus.walleij@linaro.org>
-Date:   Tue, 4 Aug 2020 08:14:31 +0800
-In-Reply-To: <20200803214054.GA3184946@bogus>
-References: <20200801043303.32149-1-zhiyong.tao@mediatek.com>
-         <20200801043303.32149-3-zhiyong.tao@mediatek.com>
-         <20200803214054.GA3184946@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 3 Aug 2020 20:26:15 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B26EC06174A;
+        Mon,  3 Aug 2020 17:26:15 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id ha11so1050228pjb.1;
+        Mon, 03 Aug 2020 17:26:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5LLqz6v3iunhPCbEM0MOMdCKabmAik+3jIuenBGSPWE=;
+        b=VpzeRT+2u8AD2XRWMIjIK0jinm38SQpoNcJNX2woAhgUuQPGdZRx5WAshGPchBhnp0
+         EcMNklWfTT3tfiibcLbdt7/ltiA7cfk/fQhX9AKaAeCno/PGSQ39YcD+vZDsSwIHy49l
+         PD1a2CGGC37t2UuNgj/3+P3eBviLVMkdeg4bumJOU62REyAxSk+qhmrdBrXXrAztf06m
+         1tMqEU7CRxXr6MPItNN+n5dLScFFZnuS7ccaInmujITkFJau6fhJurfCe0mFX7vTzjZw
+         SMfdeXjN2P0eWdyCHorx2X3RuzvfQfyywcvX1DbNa7tdNq0ZGaszhrrOXUAgxHDaiBm0
+         Z6Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5LLqz6v3iunhPCbEM0MOMdCKabmAik+3jIuenBGSPWE=;
+        b=YxRGG3jD8gDHZm6NJHAQ2wWRbWdOHX96l9Oh2JsnhbS/GFyBi5IHF4HTOC/VWGVs1a
+         +T/WZVl7hMuvwoFe9Bm8N1Dn7q6lLiBhz6mduTf5fMHMeF4iSbJz9xsdCdSu+/wXiMun
+         aZ1Z0tZrMXRxFrqtxYQuhgvEl3Jpzl67cFh1DTPqODRwYLHx6OiwxTn22YXLAVMs2TJB
+         ySdDYh9MtpK4F43p8xvVHuKwRciJxt38Q74XiEngm5OF27qS8540GUiqsyaTraz0jIK4
+         4xMSn5OrbQEEDkDDJwnQAkMJ+LnzG87OAchYHmnGorsuVaFE7/AdZqY3edzH1ZXre12Q
+         x8Fw==
+X-Gm-Message-State: AOAM531qprxQWAEH045Q/cxBQfRfZnwFnYCEkeR/NBJmtenwRQ3Y+92A
+        PEDJuirzhDD2yUHVmiQPK0t8uBmQ
+X-Google-Smtp-Source: ABdhPJwBtIYZha2/No8ds4PEBhV5U3QSpju3WmA5NFb9RTPJbQWfTNcvBDEwhCyXSi0ZEdigTLHDJA==
+X-Received: by 2002:a17:902:6544:: with SMTP id d4mr16951396pln.138.1596500774810;
+        Mon, 03 Aug 2020 17:26:14 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e15sm6686340pgr.39.2020.08.03.17.26.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Aug 2020 17:26:13 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 17:26:12 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.7 000/120] 5.7.13-rc1 review
+Message-ID: <20200804002612.GA28720@roeck-us.net>
+References: <20200803121902.860751811@linuxfoundation.org>
+ <20200803155820.GA160756@roeck-us.net>
+ <20200803173330.GA1186998@kroah.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 7534D64DA8CF1C4E84B2CC352E2ADD1F41974CB8CC880301656CE46078BDEF9C2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200803173330.GA1186998@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA4LTAzIGF0IDE1OjQwIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gU2F0LCAwMSBBdWcgMjAyMCAxMjozMzowMiArMDgwMCwgWmhpeW9uZyBUYW8gd3JvdGU6DQo+
-ID4gVGhlIGNvbW1pdCBhZGRzIG10ODE5MiBjb21wYXRpYmxlIG5vZGUgaW4gYmluZGluZyBkb2N1
-bWVudC4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBaaGl5b25nIFRhbyA8emhpeW9uZy50YW9A
-bWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vYmluZGluZ3MvcGluY3RybC9waW5jdHJs
-LW10ODE5Mi55YW1sICAgICAgfCAxNzUgKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBj
-aGFuZ2VkLCAxNzUgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA3NTUgRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvcGluY3RybC1tdDgxOTIueWFtbA0K
-PiA+IA0KPiANCj4gDQo+IE15IGJvdCBmb3VuZCBlcnJvcnMgcnVubmluZyAnbWFrZSBkdF9iaW5k
-aW5nX2NoZWNrJyBvbiB5b3VyIHBhdGNoOg0KDQo9PT4gRGVhciBSb2IsDQpJIHdpbGwgZml4IGl0
-IGluIHYzLiBUaGFua3MuDQo+IA0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtbXQ4MTky
-LmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzowOiBbMCwg
-MjY4NDU1OTM2LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGlu
-dXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3Bp
-bmN0cmwtbXQ4MTkyLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAw
-OnJlZzoxOiBbMCwgMjk3OTI2NjU2LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3Jv
-YmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9waW5jdHJsL3BpbmN0cmwtbXQ4MTkyLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5j
-dHJsQDEwMDA1MDAwOnJlZzoyOiBbMCwgMjk4OTA5Njk2LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0K
-PiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtbXQ4MTkyLmV4YW1wbGUuZHQueWFtbDogZXhh
-bXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzozOiBbMCwgMjk5MDQwNzY4LCAwLCA0MDk2XSBp
-cyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtbXQ4MTkyLmV4YW1wbGUu
-ZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo0OiBbMCwgMjk5MTA2MzA0
-LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2
-aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtbXQ4
-MTkyLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo1OiBb
-MCwgMzAwMDIzODA4LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcv
-bGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJs
-L3BpbmN0cmwtbXQ4MTkyLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1
-MDAwOnJlZzo2OiBbMCwgMzAwMzUxNDg4LCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRz
-L3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9waW5jdHJsL3BpbmN0cmwtbXQ4MTkyLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBw
-aW5jdHJsQDEwMDA1MDAwOnJlZzo3OiBbMCwgMzAwNTQ4MDk2LCAwLCA0MDk2XSBpcyB0b28gbG9u
-Zw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtbXQ4MTkyLmV4YW1wbGUuZHQueWFtbDog
-ZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo4OiBbMCwgMzAxMDcyMzg0LCAwLCA0MDk2
-XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtbXQ4MTkyLmV4YW1w
-bGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzo5OiBbMCwgMzAxMTM3
-OTIwLCAwLCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQt
-cmV2aWV3L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwt
-bXQ4MTkyLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBwaW5jdHJsQDEwMDA1MDAwOnJlZzox
-MDogWzAsIDI2ODQ4MDUxMiwgMCwgNDA5Nl0gaXMgdG9vIGxvbmcNCj4gDQo+IA0KPiBTZWUgaHR0
-cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC8xMzM5NjYxDQo+IA0KPiBJZiB5b3UgYWxy
-ZWFkeSByYW4gJ21ha2UgZHRfYmluZGluZ19jaGVjaycgYW5kIGRpZG4ndCBzZWUgdGhlIGFib3Zl
-DQo+IGVycm9yKHMpLCB0aGVuIG1ha2Ugc3VyZSBkdC1zY2hlbWEgaXMgdXAgdG8gZGF0ZToNCj4g
-DQo+IHBpcDMgaW5zdGFsbCBnaXQraHR0cHM6Ly9naXRodWIuY29tL2RldmljZXRyZWUtb3JnL2R0
-LXNjaGVtYS5naXRAbWFzdGVyIC0tdXBncmFkZQ0KPiANCj4gUGxlYXNlIGNoZWNrIGFuZCByZS1z
-dWJtaXQuDQo+IA0KDQo=
+On Mon, Aug 03, 2020 at 07:33:30PM +0200, Greg Kroah-Hartman wrote:
+> On Mon, Aug 03, 2020 at 08:58:20AM -0700, Guenter Roeck wrote:
+> > On Mon, Aug 03, 2020 at 02:17:38PM +0200, Greg Kroah-Hartman wrote:
+> > > This is the start of the stable review cycle for the 5.7.13 release.  There
+> > > are 120 patches in this series, all will be posted as a response to this one.
+> > > If anyone has any issues with these being applied, please let me know.
+> > > 
+> > > Responses should be made by Wed, 05 Aug 2020 12:18:33 +0000.  Anything
+> > > received after that time might be too late.
+> > > 
+> > 
+> > Building sparc64:allmodconfig ... failed
+> > --------------
+> > Error log:
+> > <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+> > In file included from arch/sparc/include/asm/percpu_64.h:11,
+> >                  from arch/sparc/include/asm/percpu.h:5,
+> >                  from include/linux/random.h:14,
+> >                  from fs/crypto/policy.c:13:
+> > arch/sparc/include/asm/trap_block.h:54:39: error: 'NR_CPUS' undeclared here (not in a function)
+> >    54 | extern struct trap_per_cpu trap_block[NR_CPUS];
+> > 
+> > Inherited from mainline. Builds are not complete yet;
+> > we may see a few more failures (powerpc:ppc64e_defconfig
+> > fails to build in mainline as well).
+> 
+> If it gets fixed upstream, I'll fix it here :)
+> 
 
+Are you serious ? This problem literally affects all branches, starting
+with v4.4.y. And, yes, the powerpc builds fail as well for all branches.
+Just like mainline. I guess that means it doesn't matter either ?
+
+Building powerpc:ppc64e_defconfig ... failed
+--------------
+Error log:
+In file included from arch/powerpc/include/asm/paca.h:22,
+                 from arch/powerpc/include/asm/percpu.h:13,
+                 from include/linux/random.h:12,
+                 from lib/uuid.c:22:
+arch/powerpc/include/asm/mmu.h:131:22: error: unknown type name 'next_tlbcam_idx'
+
+Congratulations, looks like all stable releases are "bug for bug compatible"
+with mainline.
+
+Does it even make sense to provide full reports for this set of releases ?
+
+Guenter
