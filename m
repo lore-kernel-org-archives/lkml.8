@@ -2,132 +2,105 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 049AAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA14C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2FB2206D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9AC9206D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:33:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PRIjpcg+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YKz23poc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbgHDUcK (ORCPT
+        id S1727796AbgHDUdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 16:32:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726580AbgHDUcI (ORCPT
+        Tue, 4 Aug 2020 16:33:02 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:55655 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726987AbgHDUc7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 16:32:08 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF6CBC061756
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 13:32:07 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id b127so36432190ybh.21
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 13:32:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=TE39gsqa8qAtAr57skK2bIVW3cJaqxb5kdkpRE6BXx4=;
-        b=PRIjpcg+RHpob503zkgZ/kH0zrL/dFq+o15VbDIE+7fG//gkTUyv+BUYuFJGk77mXH
-         J7o0LRArbZY03nboYkobXyq5Mclw1iNcylfxM3oqjztUXa4b16oc9VAe8xlPpDq3VbNL
-         HI7knhb8Bd2R6LXwLc4T7PdFbknrVoH3KQ1n0BjGHFivqbIbJQfRFJ1y0AwH6+9NVr43
-         HUWdRLf+B2SEM4ZF4dJMT3G/MR6QGRE36f/gVO+YIJZKdCGAn9ByjwNRcb+g7GrstnU4
-         +4PcVun0xBJKIGgBUNUyn3FwtjVmpVdQelavHxqvU9qFVlEhe7P2/E9kh/EoaHxvU/jH
-         Rtsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=TE39gsqa8qAtAr57skK2bIVW3cJaqxb5kdkpRE6BXx4=;
-        b=P8gTITJndzLv43xCd/2ExeZyEvV6TAcF+0X1glPKROTeh4QOlhecj9ppicRZXF0CKI
-         QYbiVQWKp7tztonBzbdRwAHiUB+J9DLiusOfK45AYXW2z+WvJP92DmX3Vumh+Amkdxkx
-         CZDJnA3V4icYFRb1krfN5s1aq3fXmCOitMrzHrvuAoAqz8zToFaeDeie9WjP8i8jn+9Y
-         IYAcGNuD7DTddco/v8SR9ytOMnZYkIQYWY9uoaVVuUvmjOAq0LKlaTZpxGaqWO+lW6yR
-         wVVsEmCuL5Sqrnfw61p1kpABHlO9aRNBY8Tg5gKYgKQ0BWWomT1ReFYatES6HekICIqQ
-         pz3g==
-X-Gm-Message-State: AOAM531zTFSpf3IUxLXb8G0Bi7mo9+YxK4cL+vsLPV2pdJYEknCUackj
-        +lpczs51c4q5X5C1bCThA9+2JCcrz6of3Rcbzg==
-X-Google-Smtp-Source: ABdhPJwoK3L7KaN/vfgdTz0aHbC7HLz0oYVW6btJ16u62KFo8LdFftIZhnnFvgmftUX1Ybc35y0qD4s/OLoD5NuXFg==
-X-Received: by 2002:a25:d946:: with SMTP id q67mr33939817ybg.423.1596573126838;
- Tue, 04 Aug 2020 13:32:06 -0700 (PDT)
-Date:   Tue,  4 Aug 2020 13:31:55 -0700
-Message-Id: <20200804203155.2181099-1-lokeshgidra@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-Subject: [PATCH] Userfaultfd: Avoid double free of userfault_ctx and remove O_CLOEXEC
-From:   Lokesh Gidra <lokeshgidra@google.com>
-To:     viro@zeniv.linux.org.uk, stephen.smalley.work@gmail.com,
-        casey@schaufler-ca.com, jmorris@namei.org
-Cc:     kaleshsingh@google.com, dancol@dancol.org, surenb@google.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        nnk@google.com, jeffv@google.com, calin@google.com,
-        kernel-team@android.com, yanfei.xu@windriver.com,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        syzbot+75867c44841cb6373570@syzkaller.appspotmail.com
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 4 Aug 2020 16:32:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596573178;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=X7Z7vDg3Q1pr+nhfflKaYjiVNAZMF87UK16s+2aaWsU=;
+        b=YKz23pocm3ZTRZa4VQldDSuBp3n284TKCi7iDN0+iENpbicqsSyf6xC0qTAAOq1m31vvDo
+        /RwkZyWkZZOGgKihEOkR5Tc+8v/GRivNBjgvGV0u+rks8fA9+6lgTFT842bVJnAjViwGJR
+        uy3cbAtdrvqPM+WDehyyNOac7OWtruk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-416-Yap-K20-OX-axNigE7kk9g-1; Tue, 04 Aug 2020 16:32:54 -0400
+X-MC-Unique: Yap-K20-OX-axNigE7kk9g-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BFE7418C63C0;
+        Tue,  4 Aug 2020 20:32:52 +0000 (UTC)
+Received: from krava (unknown [10.40.192.12])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 56B7C6FEF4;
+        Tue,  4 Aug 2020 20:32:50 +0000 (UTC)
+Date:   Tue, 4 Aug 2020 22:32:49 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Remi Bernon <rbernon@codeweavers.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jacek Caban <jacek@codeweavers.com>
+Subject: Re: [PATCH v2 2/3] perf symbols: Try reading the symbol table with
+ libbfd
+Message-ID: <20200804203249.GJ139381@krava>
+References: <20200804085736.385232-1-rbernon@codeweavers.com>
+ <20200804085736.385232-2-rbernon@codeweavers.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200804085736.385232-2-rbernon@codeweavers.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-when get_unused_fd_flags returns error, ctx will be freed by
-userfaultfd's release function, which is indirectly called by fput().
-Also, if anon_inode_getfile_secure() returns an error, then
-userfaultfd_ctx_put() is called, which calls mmdrop() and frees ctx.
+On Tue, Aug 04, 2020 at 10:57:35AM +0200, Remi Bernon wrote:
 
-Also, the O_CLOEXEC was inadvertently added to the call to
-get_unused_fd_flags() [1].
+SNIP
 
-Adding Al Viro's suggested-by, based on [2].
+> +
+> +int dso__load_bfd_symbols(struct dso *dso, const char *debugfile)
+> +{
+> +	int err = -1;
+> +	long symbols_size, symbols_count;
+> +	asection *section;
+> +	asymbol **symbols, *sym;
+> +	struct symbol *symbol;
+> +	bfd *abfd;
+> +	u_int i;
+> +	u64 start, len;
+> +
+> +	abfd = bfd_openr(dso->long_name, NULL);
+> +	if (!abfd)
+> +		return -1;
+> +
+> +	if (!bfd_check_format(abfd, bfd_object)) {
+> +		pr_debug2("%s: cannot read %s bfd file.\n", __func__,
+> +			  dso->long_name);
+> +		goto out_close;
+> +	}
+> +
+> +	if (bfd_get_flavour(abfd) == bfd_target_elf_flavour)
+> +		goto out_close;
 
-[1] https://lore.kernel.org/lkml/1f69c0ab-5791-974f-8bc0-3997ab1d61ea@dancol.org/
-[2] https://lore.kernel.org/lkml/20200719165746.GJ2786714@ZenIV.linux.org.uk/
+aah, so the code is actualy only for non elf objects,
+somehow I thought it's replacing the symbol load globaly
 
-Fixes: d08ac70b1e0d (Wire UFFD up to SELinux)
-Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-Reported-by: syzbot+75867c44841cb6373570@syzkaller.appspotmail.com
-Signed-off-by: Lokesh Gidra <lokeshgidra@google.com>
----
- fs/userfaultfd.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
-
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index ae859161908f..e15eb8fdc083 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -2042,24 +2042,18 @@ SYSCALL_DEFINE1(userfaultfd, int, flags)
- 		O_RDWR | (flags & UFFD_SHARED_FCNTL_FLAGS),
- 		NULL);
- 	if (IS_ERR(file)) {
--		fd = PTR_ERR(file);
--		goto out;
-+		userfaultfd_ctx_put(ctx);
-+		return PTR_ERR(file);
- 	}
- 
--	fd = get_unused_fd_flags(O_RDONLY | O_CLOEXEC);
-+	fd = get_unused_fd_flags(O_RDONLY);
- 	if (fd < 0) {
- 		fput(file);
--		goto out;
-+		return fd;
- 	}
- 
- 	ctx->owner = file_inode(file);
- 	fd_install(fd, file);
--
--out:
--	if (fd < 0) {
--		mmdrop(ctx->mm);
--		kmem_cache_free(userfaultfd_ctx_cachep, ctx);
--	}
- 	return fd;
- }
- 
--- 
-2.28.0.163.g6104cc2f0b6-goog
+jirka
 
