@@ -2,94 +2,117 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBB2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D7AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9703C207FC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5941C207FC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:12:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SAAlZINX"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SoyMHVPk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729989AbgHDRJj (ORCPT
+        id S1729940AbgHDRMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 13:09:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53810 "EHLO
+        Tue, 4 Aug 2020 13:12:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729628AbgHDRJb (ORCPT
+        with ESMTP id S1729388AbgHDRL6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 13:09:31 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C1D8C06174A;
-        Tue,  4 Aug 2020 10:09:30 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id c16so22883724ejx.12;
-        Tue, 04 Aug 2020 10:09:30 -0700 (PDT)
+        Tue, 4 Aug 2020 13:11:58 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4135C061756
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 10:11:57 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id q68so10057535uaq.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 10:11:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TmsN7b1e8rX4AEr8yauDRsn4mhsHXmUyeaZarjIQThg=;
-        b=SAAlZINXTshQ5UICKXaibx5ndHSbTF9K1YpfnT5oRyj4GQRzF93RaHqvDn3XUZb7pf
-         4orEEGGY44v7pppzWPG8L67xQLJslDm7GVCHbWi/kbk20IZtmTJ4dwzB0f9E6DGOzbJM
-         iGfq/DI41YnTvO/UbAviX67Ab1aI8aJE5+XFDuaeLJ5H0Dhlf3qo7FabyNeCDu1GG4sa
-         sxEfO1jD7Fh9r3SQ18M2ZR2jrCCtRA0ZXL00ehn8hWcs/78j07cGXgkj05Pww4p5Z3e3
-         kCvPnezHEdfb51XPzV86QnBmHRli+kuJhb1pO483tUPcv3NTnMa5YULH0DLJ2cbKqcSZ
-         Wl5Q==
+        bh=NDe2U+JQQtlm6PkmOwl5fjQfHoZ0o3DW3eDHCm6kTvQ=;
+        b=SoyMHVPkgxHGIyVFghEqt+dz76dWygdZK5qv96mgYHIB8BQDfnDSdlwicrCousdePt
+         6kFYSc0n7RSJRhh/WbIBfAW1Mu0Sap9jaMdg6UlhNdK0k672HQpR0CmBGVutHlwlHgV+
+         jMC83l8tqgA+ALlv4CakhMvyvvf1kF8Uhx/7c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TmsN7b1e8rX4AEr8yauDRsn4mhsHXmUyeaZarjIQThg=;
-        b=UpGtXKU9t7OLyHIJdI3z5mvyd0LknImCXVJLu1WLT6r1+M2lA2QGl6n/6hqQ/JRWoc
-         89iS2hBrTi4wU4iv8xFNUFFRezSoZCIxxHQl9ge6law2kPLg9G6XYRYkGya4oa6puv0/
-         74guAqhr5WRTi1m0Iy5PquDpiz16iiDI1D6gFizpYj+kHqMDWNdOFVUGt4HfCEk7a/q8
-         XfSABn8zDHTjFHAJOv3INwfuBrCMLfJ1yspFI1GzCTm8JlPoShXJhXTgnaR9cbEeOXSQ
-         wmQSIQH+HAJtC8TgNROc0bh8YM3ARvb1Rh4f0zkVuE/AuTbRZ1wlF2ZK4UbFc8hhenrc
-         f47Q==
-X-Gm-Message-State: AOAM531aVp4UGmr4DGAW8AyF9wSxBbuM127Cz7Tm4hitlr2YFn2FYgj/
-        vEuTAFy/gaglZwPRx4ugkXeUo4pzJYqpkfCPI/8lHKxRqA==
-X-Google-Smtp-Source: ABdhPJx8Vxg+h2i9MEAYwONcjbEsNnD8gW5IFxNM/SlRiTssVc6oOKBlbPfhsZh6ZmLZt3RqSDqL3qX3aZw58AVcjFM=
-X-Received: by 2002:a17:906:26c7:: with SMTP id u7mr21715410ejc.13.1596560967679;
- Tue, 04 Aug 2020 10:09:27 -0700 (PDT)
+        bh=NDe2U+JQQtlm6PkmOwl5fjQfHoZ0o3DW3eDHCm6kTvQ=;
+        b=qq8mMetVoNQwh5a5QCic3D88EjVk+qrGIbxafeHcxTzXAAY3PS1aanz8Md1RnY8e4e
+         EeN105JAsXzxbP+Fr8r9dn4UZ7bpOUBjgo9XE50SG5RyJgDfoOJUj287u5JwubctIU3Q
+         v78tvL/PyKiA4pIjZkRneF5A/IGHO8nV7/UUNkBibqVfSSu04UAMcZfKmnvKiTjLm0Kd
+         vU6UbHDRva7Cl2z2v+G6NC2B7O3R/jerwwEdRVgFbsKO9jkndqPZVzhafo0u3QASYaCO
+         Cddfq5dRTnSPyo5Rgiqu01n+aqyfUO5ECIN5hnXBLne4Mu623KPVQCaoR1OmeX19k7VB
+         ys4g==
+X-Gm-Message-State: AOAM530MHHJEB8nCftH7tuwc2qVw16hFRWF98CA2Ik9gAq62XAe7Mhfw
+        ZnN+xhm+SYZDPUREOLMZaYT9otxp9KipIb1AcWeYbQ==
+X-Google-Smtp-Source: ABdhPJzdxejwD5qJ3tvpESkSc0h2CyPb4WDolKHYh5SfDmcf4Fg5xK3WK/bLFsJz2MfIniAOjYF53pvHQqw0ach4VHA=
+X-Received: by 2002:a9f:2197:: with SMTP id 23mr15629203uac.60.1596561115676;
+ Tue, 04 Aug 2020 10:11:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAMciSVWzH3fuo8eStwRUwGJ+VsJjctLucOZo-EVx07ktXzObFA@mail.gmail.com>
- <83ff62ab-42c8-df6c-32c1-c1df2f8cda7a@roeck-us.net>
-In-Reply-To: <83ff62ab-42c8-df6c-32c1-c1df2f8cda7a@roeck-us.net>
-From:   Naveen Kumar P <naveenkumar.parna@gmail.com>
-Date:   Tue, 4 Aug 2020 22:39:16 +0530
-Message-ID: <CAMciSVVq7LL+c6Va1xqcCfMMMqcM9+3DXsOi+6cyqjPfdLgpGA@mail.gmail.com>
-Subject: Re: iTCO watchdog last reboot reason?
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200729014225.1842177-1-abhishekpandit@chromium.org>
+In-Reply-To: <20200729014225.1842177-1-abhishekpandit@chromium.org>
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Date:   Tue, 4 Aug 2020 10:11:44 -0700
+Message-ID: <CANFp7mV0TP-WbBWGSpduERaf9-KBXevhG7xKvjkMrqrtWWkZ5w@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Bluetooth: Emit events for suspend/resume
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc:     ChromeOS Bluetooth Upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 9:45 PM Guenter Roeck <linux@roeck-us.net> wrote:
+Hi,
+
+Gentle reminder that this is waiting for feedback. Related userspace
+changes are here to see how we plan on using it:
+https://patchwork.kernel.org/project/bluetooth/list/?series=325777
+
+Thanks
+Abhishek
+
+On Tue, Jul 28, 2020 at 6:42 PM Abhishek Pandit-Subedi
+<abhishekpandit@chromium.org> wrote:
 >
-> On 8/4/20 7:41 AM, Naveen Kumar P wrote:
-> > [ Please keep me in CC as I'm not subscribed to the list]
-> >
-> > Hi everyone,
-> >
-> > I enabled the iTCO watchdog in my Linux system.
-> >
-> > sudo cat /dev/watchdog perfectly reboots my system. But, is there a
-> > way to find out on each boot if the machine was rebooted due to a
-> > watchdog timeout or not?
-> >
-> > Any ideas?
-> >
 >
-> If the hardware supports it, the driver could set the reboot reason
-> in its probe function.
-Thank you Guenter for the quick response. Can you please point me to
-the corresponding patch?
+> Hi Marcel,
 >
-> Guenter
+> This series adds the suspend/resume events suggested in
+> https://patchwork.kernel.org/patch/11663455/.
+>
+> I have tested it with some userspace changes that monitors the
+> controller resumed event to trigger audio device reconnection and
+> verified that the events are correctly emitted.
+>
+> Please take a look.
+> Abhishek
+>
+>
+> Abhishek Pandit-Subedi (3):
+>   Bluetooth: Add mgmt suspend and resume events
+>   Bluetooth: Add suspend reason for device disconnect
+>   Bluetooth: Emit controller suspend and resume events
+>
+>  include/net/bluetooth/hci_core.h |  6 +++
+>  include/net/bluetooth/mgmt.h     | 16 +++++++
+>  net/bluetooth/hci_core.c         | 26 +++++++++++-
+>  net/bluetooth/hci_event.c        | 73 ++++++++++++++++++++++++++++++++
+>  net/bluetooth/mgmt.c             | 28 ++++++++++++
+>  5 files changed, 148 insertions(+), 1 deletion(-)
+>
+> --
+> 2.28.0.rc0.142.g3c755180ce-goog
+>
