@@ -2,112 +2,261 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CBBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B465C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C0F7208A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:24:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596551081;
-	bh=5Z8Kopbxi7aEpHCihK5wFEwoJps5FrOJMRK80kP90m0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sBBhTvdHPXiqkaeegwkKoBSilWwwzOiCQCl39DS5NeWtrBkk03gheRdMbZ61v4oXv
-	 4jPOaMDZHIWUUZp/B2xEr/rvJnYod2ysCY8iLAl1HYBOxQZduisTYGybt5X6oKxDRv
-	 6CiSMOIv405+gQeWIx1/lumXL8wFH8dnNJqvxhsI=
+	by mail.kernel.org (Postfix) with ESMTP id 4CAB821744
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:25:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="cuK0EKgQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbgHDOYi (ORCPT
+        id S1728853AbgHDOZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:24:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728948AbgHDOYM (ORCPT
+        Tue, 4 Aug 2020 10:25:20 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:9912 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728689AbgHDOZS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:24:12 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 324ABC06174A;
-        Tue,  4 Aug 2020 07:24:12 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id q128so6152343qkd.2;
-        Tue, 04 Aug 2020 07:24:12 -0700 (PDT)
+        Tue, 4 Aug 2020 10:25:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dd6Yl/t8idEhFl//6BuOYRHIHDUL8327gbR9zAH7VII=;
-        b=PbNtTay4aqskHx+9NdhxFZehseF/nhdVcF1l3LZK2X9Y8rjBIVIVTDfdX8+RRTLJeA
-         BEn0NuZaG0ByYr4U3wvLnPB7jioK1XTMQ6VXC8FaMiqEl/YUDMz+n+HkmOx+vfb2ERLw
-         Bsxz656teytYovIbCIZhVSQF7E27WRL1BclCtwCXKXV7OUnCwsJgfbtH0opD9dyDoQds
-         vce0WCBMuT6d7fOOWazK3E9sDVc/K0ofrF2lx5G9fO6IrKNQzDrFaybad62VDPcb2zjT
-         RhgOjhM/0TMCDzmyYDzb4id3XkOqE5xdYWcc82BnHGJTZwGPT5MiRm+LLr7Xlvhzjl6W
-         F0wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=dd6Yl/t8idEhFl//6BuOYRHIHDUL8327gbR9zAH7VII=;
-        b=jMbijD4ZNTudqGrRuyjSUvjfBhcocYkX+HG/OPkLDYaPr8HvPlRSXXsZA5GMTx0nX5
-         ph9fIji7S/teC8B4AtgaQsYzPddvVbFFuFqM+s+n5b9QjUQSKTn0SrEBXNMCYOVEE3J2
-         f/iKdYYfcTPEjqvTVSLe0uvjTKe0jHaqRO0p/LRuwNzTwa2CGMHIvuY9WTjGeDlsV2Iv
-         Tj+Rxdjaw+fOhe0OEwUdHHnap38Q7KW9q3kebi4NUJeaojvRpTBmk2kye9lN/3A6HrrR
-         l9CZAxLeAd1bQVqC7XweWCOHgvG7u2kkyTYQSxIgRe9hWSbgBMwnA0FU9x6HFd6bNyIC
-         opHA==
-X-Gm-Message-State: AOAM530k5Btlehzp8TbnWqprwPFrGbgwJPzvu/i3WHXXDUedJ9sSPamv
-        0T9Cts1PhxOATGS3esqomuw=
-X-Google-Smtp-Source: ABdhPJzQmpUK1CGTt/9F7/7OOwbjOHmbsjZjrMdamoMxD7JzhRhkXt/EzrnWxr2DlJs+sh5kwNLiNw==
-X-Received: by 2002:a37:614:: with SMTP id 20mr20958000qkg.456.1596551051224;
-        Tue, 04 Aug 2020 07:24:11 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:d024])
-        by smtp.gmail.com with ESMTPSA id d8sm25642978qtr.12.2020.08.04.07.24.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 07:24:10 -0700 (PDT)
-Date:   Tue, 4 Aug 2020 10:24:09 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Chengming Zhou <zhouchengming@bytedance.com>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iocost: Only inc nr_shortages when have io waited
-Message-ID: <20200804142409.GB4819@mtj.thefacebook.com>
-References: <20200801170021.76756-1-zhouchengming@bytedance.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1596551117; x=1628087117;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=5cr4IHwRik3MQ09WNFwLpau44SBP2YeO5Q/v78uUxqM=;
+  b=cuK0EKgQO3EMISvXb4b2pgETXifZgQOfFaLJio4tYPM5ZhYnPNrapVfG
+   1pkBH6awQ3/+0vs4KDENFjB5SoPVWcIAl2OVMp9hN75109uQtVFc7hqnL
+   2fGUioHQjvK12jK1ElTMsc7gDmc7YYTAFft9BKQyJ0Fjp0ADqPJCpp6IE
+   U=;
+IronPort-SDR: 1ru6FrOUAcyNLS9WpYLJs5rFAA+dkunMa219WW5dD+292Kie1WGsW4G6SR/ZBEsgt0kyBRFmKF
+ wI9svx6PCzdA==
+X-IronPort-AV: E=Sophos;i="5.75,434,1589241600"; 
+   d="scan'208";a="65488960"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 04 Aug 2020 14:25:08 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (Postfix) with ESMTPS id 29365A232D;
+        Tue,  4 Aug 2020 14:25:05 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 4 Aug 2020 14:25:04 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.203) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 4 Aug 2020 14:24:48 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <david@redhat.com>,
+        <dwmw@amazon.com>, <fan.du@intel.com>, <foersleo@amazon.de>,
+        <gthelen@google.com>, <irogers@google.com>, <jolsa@redhat.com>,
+        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
+        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
+        <peterz@infradead.org>, <rdunlap@infradead.org>,
+        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
+        <rppt@kernel.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [RFC v14 0/7] Implement Data Access Monitoring-based Memory Operation Schemes
+Date:   Tue, 4 Aug 2020 16:24:23 +0200
+Message-ID: <20200804142430.15384-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200801170021.76756-1-zhouchengming@bytedance.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.43.161.203]
+X-ClientProxiedBy: EX13D17UWC004.ant.amazon.com (10.43.162.195) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 02, 2020 at 01:00:21AM +0800, Chengming Zhou wrote:
-> The last else branch of current code may have not io waited in iocg,
-> in which case we should not inc nr_shortages, or the device vrate
-> will speed up even this iocg is not shortage of vtime.
-> 
-> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
-> ---
->  block/blk-iocost.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-> index 86ba6fd254e1..ce68b5749364 100644
-> --- a/block/blk-iocost.c
-> +++ b/block/blk-iocost.c
-> @@ -1485,7 +1485,7 @@ static void ioc_timer_fn(struct timer_list *timer)
->  				__propagate_active_weight(iocg, iocg->weight,
->  							  new_inuse);
->  			}
-> -		} else {
-> +		} else if (waitqueue_active(&iocg->waitq)) {
+From: SeongJae Park <sjpark@amazon.de>
 
-This is intentional. Shortage doesn't necessarily mean that there are
-waiters right now. If there are cgroups which don't have enough headroom to
-donate and the device is hitting the latency targets, it makes sense to ramp
-up vrate as those cgroups are likely to get throttled.
+Changes from Previous Version
+=============================
 
-Thanks.
+- Drop loadable module support
+- Use dedicated valid action checker function
+- Rebase on v5.8 plus v19 DAMON
+
+Introduction
+============
+
+DAMON[1] can be used as a primitive for data access awared memory management
+optimizations.  For that, users who want such optimizations should run DAMON,
+read the monitoring results, analyze it, plan a new memory management scheme,
+and apply the new scheme by themselves.  Such efforts will be inevitable for
+some complicated optimizations.
+
+However, in many other cases, the users would simply want the system to apply a
+memory management action to a memory region of a specific size having a
+specific access frequency for a specific time.  For example, "page out a memory
+region larger than 100 MiB keeping only rare accesses more than 2 minutes", or
+"Do not use THP for a memory region larger than 2 MiB rarely accessed for more
+than 1 seconds".
+
+This RFC patchset makes DAMON to handle such data access monitoring-based
+operation schemes.  With this change, users can do the data access aware
+optimizations by simply specifying their schemes to DAMON.
+
+[1] https://lore.kernel.org/linux-mm/20200706115322.29598-1-sjpark@amazon.com/
+
+Evaluations
+===========
+
+We evaluated DAMON's overhead, monitoring quality and usefulness using 25
+realistic workloads on my QEMU/KVM based virtual machine running a kernel that
+v12 of this patchset is applied.
+
+An experimental DAMON-based operation scheme for THP, ‘ethp’, removes 31.29% of
+THP memory overheads while preserving 60.64% of THP speedup. Another
+experimental DAMON-based ‘proactive reclamation’ implementation, ‘prcl’,
+reduces 87.95% of residential sets and 29.52% of system memory footprint while
+incurring only 2.15% runtime overhead in the best case (parsec3/freqmine).
+
+NOTE that the experimentail THP optimization and proactive reclamation are not
+for production, just only for proof of concepts.
+
+Please refer to the official document[1] or "Documentation/admin-guide/mm: Add
+a document for DAMON" patch in the latest DAMON patchset for detailed
+evaluation setup and results.
+
+[1] https://damonitor.github.io/doc/html/latest-damos
+
+More Information
+================
+
+We prepared a showcase web site[1] that you can get more information.  There
+are
+
+- the official documentations[2],
+- the heatmap format dynamic access pattern of various realistic workloads for
+  heap area[3], mmap()-ed area[4], and stack[5] area,
+- the dynamic working set size distribution[6] and chronological working set
+  size changes[7], and
+- the latest performance test results[8].
+
+[1] https://damonitor.github.io/_index
+[2] https://damonitor.github.io/doc/html/latest-damos
+[3] https://damonitor.github.io/test/result/visual/latest/rec.heatmap.0.html
+[4] https://damonitor.github.io/test/result/visual/latest/rec.heatmap.1.html
+[5] https://damonitor.github.io/test/result/visual/latest/rec.heatmap.2.html
+[6] https://damonitor.github.io/test/result/visual/latest/rec.wss_sz.html
+[7] https://damonitor.github.io/test/result/visual/latest/rec.wss_time.html
+[8] https://damonitor.github.io/test/result/perf/latest/html/index.html
+
+Baseline and Complete Git Tree
+==============================
+
+The patches are based on the v5.8 plus v19 DAMON patchset[1] and Minchan's
+``do_madvise()`` patch[2], which retrieved from the -next tree.  You can also
+clone the complete git tree:
+
+    $ git clone git://github.com/sjp38/linux -b damos/rfc/v14
+
+The web is also available:
+https://github.com/sjp38/linux/releases/tag/damos/rfc/v14
+
+There are a couple of trees for entire DAMON patchset series that future
+features are included.  The first one[3] contains the changes for latest
+release, while the other one[4] contains the changes for next release.
+
+[1] https://lore.kernel.org/linux-mm/20200804091416.31039-1-sjpark@amazon.com/
+[2] https://lore.kernel.org/linux-mm/20200302193630.68771-2-minchan@kernel.org/
+[3] https://github.com/sjp38/linux/tree/damon/master
+[4] https://github.com/sjp38/linux/tree/damon/next
+
+Sequence Of Patches
+===================
+
+The 1st patch accounts age of each region.  The 2nd patch implements the
+handling of the schemes in DAMON and exports a kernel space programming
+interface for it.  The 3rd patch implements a debugfs interface for the
+privileged people and user programs.  The 4th patch implements schemes
+statistics feature for easier tuning of the schemes and runtime access pattern
+analysis.  The 5th patche adds selftests for these changes, and the 6th patch
+adds human friendly schemes support to the user space tool for DAMON.  Finally,
+the 7th patch documents this new feature in the document.
+
+Patch History
+=============
+
+Changes from RFC v13
+(https://lore.kernel.org/linux-mm/20200707093805.4775-1-sjpark@amazon.com/)
+- Drop loadable module support
+- Use dedicated valid action checker function
+- Rebase on v5.8 plus v19 DAMON
+
+Changes from RFC v12
+(https://lore.kernel.org/linux-mm/20200616073828.16509-1-sjpark@amazon.com/)
+ - Wordsmith the document, comment, commit messages
+ - Support a scheme of max access count 0
+ - Use 'unsigned long' for (min|max)_sz_region
+
+Changes from RFC v11
+(https://lore.kernel.org/linux-mm/20200609065320.12941-1-sjpark@amazon.com/)
+ - Refine the commit messages (David Hildenbrand)
+ - Clean up debugfs code
+
+Changes from RFC v10
+(https://lore.kernel.org/linux-mm/20200603071138.8152-1-sjpark@amazon.com/)
+ - Fix the wrong error handling for schemes debugfs file
+ - Handle the schemes stats from the user space tool
+ - Remove the schemes implementation plan from the document
+
+Changes from RFC v9
+(https://lore.kernel.org/linux-mm/20200526075702.27339-1-sjpark@amazon.com/)
+ - Rebase on v5.7
+ - Fix wrong comments and documents for schemes apply conditions
+
+Changes from RFC v8
+(https://lore.kernel.org/linux-mm/20200512115343.27699-1-sjpark@amazon.com/)
+ - Rewrite the document (Stefan Nuernberger)
+ - Make 'damon_for_each_*' argument order consistent (Leonard Foerster)
+ - Implement statistics for schemes
+ - Avoid races between debugfs readers and writers
+ - Reset age for only significant access frequency changes
+ - Add kernel-doc comments in damon.h
+
+Please refer to RFC v8 for previous history
+
+SeongJae Park (7):
+  mm/damon: Account age of target regions
+  mm/damon: Implement data access monitoring-based operation schemes
+  mm/damon/schemes: Implement a debugfs interface
+  mm/damon/schemes: Implement statistics feature
+  mm/damon/selftests: Add 'schemes' debugfs tests
+  damon/tools: Support more human friendly 'schemes' control
+  Docs/admin-guide/mm/damon: Document DAMON-based Operation Schemes
+
+ Documentation/admin-guide/mm/damon/guide.rst  |  41 +-
+ Documentation/admin-guide/mm/damon/start.rst  |  11 +
+ Documentation/admin-guide/mm/damon/usage.rst  | 109 +++++-
+ Documentation/vm/damon/index.rst              |   1 -
+ include/linux/damon.h                         |  64 ++++
+ mm/damon.c                                    | 360 +++++++++++++++++-
+ tools/damon/_convert_damos.py                 | 141 +++++++
+ tools/damon/_damon.py                         |  28 +-
+ tools/damon/damo                              |   7 +
+ tools/damon/schemes.py                        | 110 ++++++
+ .../testing/selftests/damon/debugfs_attrs.sh  |  29 ++
+ 11 files changed, 884 insertions(+), 17 deletions(-)
+ create mode 100755 tools/damon/_convert_damos.py
+ create mode 100644 tools/damon/schemes.py
 
 -- 
-tejun
+2.17.1
+
