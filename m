@@ -2,536 +2,199 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99974C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5D7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7946E2177B
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D260722C9F
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:28:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="SyVaUokH"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BftS9Ibr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgHDKZG (ORCPT
+        id S1726844AbgHDK2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 06:25:06 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:39288 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726041AbgHDKZE (ORCPT
+        Tue, 4 Aug 2020 06:28:34 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:27321 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbgHDK2d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 06:25:04 -0400
-Received: from [192.168.0.20] (cpc89244-aztw30-2-0-cust3082.18-1.cable.virginm.net [86.31.172.11])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 99AC827B;
-        Tue,  4 Aug 2020 12:24:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1596536700;
-        bh=oa74E7d1EtUFB5pcg/5rCD1QTlVccfBfqcgfwo2vHD8=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=SyVaUokHbdBlnBwkwWomw2zqYo80ucsrT9ZWQT/o2+PZvfXvGqu7hYyb5r7tZt3mR
-         wOJYmGabMhwoAOU42J4E1C+6men2nXcGz8vUwQHzs7jR1DlA5K5Zb+nmmEpI5krnAl
-         ni3u9vvx+0mxE8rE4bKxr+MGYGRM3UxLVlqRMHeI=
-Reply-To: kieran.bingham@ideasonboard.com
-Subject: Re: [PATCH v2 0/3] media: vimc: Allow multiple capture devices to use
- the same sensor
-To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
-        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Helen Koike <helen.koike@collabora.com>
-Cc:     =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ezequiel Garcia <ezequiel@collabora.com>
-References: <20200724122104.GA18482@kaaira-HP-Pavilion-Notebook>
- <a6f4eabf-6cd5-950b-f2e3-853370c77629@ideasonboard.com>
- <2a6cb067-283d-ca65-2698-1fae66a17d02@collabora.com>
- <20200728113959.GA6350@kaaira-HP-Pavilion-Notebook>
- <3a9ac970-77b8-1bc5-536a-5b4f2bd60745@collabora.com>
- <b5fd3811-2f0e-7563-13fa-bb1e32189814@collabora.com>
- <f2fc6d81-16a6-206b-6bb2-fb99d5a84f65@ideasonboard.com>
- <cd1d18ef-d4ff-8240-e9dd-2d9f9c7c5a45@collabora.com>
- <a2ae2dba-6076-0abc-f620-9047a52b513c@ideasonboard.com>
- <5faeed28-75b2-48d8-4a48-c38418fd89f2@collabora.com>
- <20200731172221.GA28355@kaaira-HP-Pavilion-Notebook>
-From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
-Autocrypt: addr=kieran.bingham@ideasonboard.com; keydata=
- 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
- WZw01QYHU/GUV/zHJSFk
-Organization: Ideas on Board
-Message-ID: <afcdaa96-11b0-bb36-3edb-47505aa28004@ideasonboard.com>
-Date:   Tue, 4 Aug 2020 11:24:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 4 Aug 2020 06:28:33 -0400
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200804102828epoutp012a349c2c8fcd9e78166233663bcbc7d9~oCdwZmZ-y1205712057epoutp01J
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 10:28:28 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200804102828epoutp012a349c2c8fcd9e78166233663bcbc7d9~oCdwZmZ-y1205712057epoutp01J
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1596536908;
+        bh=yEjfWIpgQWCQOveI+hrDVf+t5T+VUeqL6+lnJtCLd9A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BftS9IbrC9KToD8nPKKps2wOmbaaAe0ey2kyedjSMvp7qcfqm+ZtjeugxgpK9hcVt
+         viYsS0X9WZqeknyEGmYxOCldZye9/OduNLQiDt2MDNmo1O+Hrq7ma4rJwJu+g97+LK
+         wd4OLrw2z5HCaY5tfi4HZequE7MQGGbI+eEvsu1Q=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+        20200804102828epcas2p3cebe2fa63a68cffaf3daba0c24bb64b2~oCdwJ1xSO3041530415epcas2p3Q;
+        Tue,  4 Aug 2020 10:28:28 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.40.184]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4BLWDp3tKlzMqYkg; Tue,  4 Aug
+        2020 10:28:26 +0000 (GMT)
+Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
+        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        EA.55.19322.948392F5; Tue,  4 Aug 2020 19:28:25 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200804102824epcas2p41b70fcd3d02d70bc878997c4f6d08ac0~oCdsqcCce2819128191epcas2p4r;
+        Tue,  4 Aug 2020 10:28:24 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200804102824epsmtrp299417e9ccaa05b7215f6d7d78c274069~oCdspwBDb3009130091epsmtrp2R;
+        Tue,  4 Aug 2020 10:28:24 +0000 (GMT)
+X-AuditID: b6c32a45-797ff70000004b7a-31-5f29384993f5
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        62.3B.08382.848392F5; Tue,  4 Aug 2020 19:28:24 +0900 (KST)
+Received: from KEI (unknown [12.36.155.227]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200804102824epsmtip2255bb06f76e70354540375bce8853065~oCdsg63es3065630656epsmtip2N;
+        Tue,  4 Aug 2020 10:28:24 +0000 (GMT)
+Date:   Tue, 4 Aug 2020 19:20:53 +0900
+From:   Cho KyongHo <pullip.cho@samsung.com>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        hyesoo.yu@samsung.com, janghyuck.kim@samsung.com
+Subject: Re: [PATCH] mm: sort freelist by rank number
+Message-ID: <20200804102044.GA4655@KEI>
 MIME-Version: 1.0
-In-Reply-To: <20200731172221.GA28355@kaaira-HP-Pavilion-Notebook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <947a09ba-968b-4c4d-68bb-d13de9c885a1@suse.cz>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHJsWRmVeSWpSXmKPExsWy7bCmqa6nhWa8wauZQhZz1q9hs/i6/hez
+        xd/OC6wWm+cUW1zeNYfN4t6a/6wWsxv7GB3YPTZ9msTucWLGbxaP9/uusnn0bVnF6HFmwRF2
+        j8+b5ALYonJsMlITU1KLFFLzkvNTMvPSbZW8g+Od403NDAx1DS0tzJUU8hJzU22VXHwCdN0y
+        c4BOUVIoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUWpOQUGBoW6BUn5haX5qXrJefnWhka
+        GBiZAlUm5GTM336evWCyfMX7DbcYGxibJLsYOTkkBEwkLjUuZe9i5OIQEtjBKPF29i1mCOcT
+        o8TENQ+hnG+MEtMmtDLDtKzv2QOV2MsoMaO1Bcp5yChx/Mp0RpAqFgEVifWHW5lAbDYBLYnV
+        c4+DxUWA4o82HGUFaWAWWM0o8X3TZbCxwgKmEoc7O1lAbF4BdYlva+8zQtiCEidnPgGLcwpY
+        S3xs6AEaysEhCjTo1cF6kDkSAq0cEtcfvWaBOM9F4uLKi+wQtrDEq+NboGwpic/v9rJBNExn
+        lHg3/xAbRGIzo8S33YIQtrHErGftYIuZBTIkHs85wgiyTEJAWeLILRaIMJ9Ex+G/7BBhXomO
+        NiGIThWJnVOvscCs6tt7A8r2kGh/0g0N4HNMEsenHmCfwCg/C8lrs5Bsg7B1JBbs/sQ2C2gF
+        s4C0xPJ/HBCmpsT6XfoLGFlXMYqlFhTnpqcWGxUYIkf3JkZwQtVy3cE4+e0HvUOMTByMhxgl
+        OJiVRHg/flaPF+JNSaysSi3Kjy8qzUktPsRoCoyoicxSosn5wJSeVxJvaGpkZmZgaWphamZk
+        oSTOm6t4IU5IID2xJDU7NbUgtQimj4mDU6qBKfmtvmbS70/brJO//FhZu7JQL0QsVSZihmri
+        svuLEs+cq2AyXNi4wUqwIqbqVXr2gheZNf3qSenTpjcmLWJIYDcoOyc0z03CQKm/4EyAMZO/
+        7NUf/ySWx4TY/JXIjzDsKe85mrj2R0tC4nn9BYFLr6/fYLY75YDWnv5W46/5kxjST26RWuzr
+        +98hVsyu/Zi/fc2dDmbBGdMTudWF7f9Z/ssJODI5XOtdzvXnjM43DPLnhVjoLHZib3XY5XVj
+        9QKR7T1nk++c1EtWndD9gG2t1nljv8UTo7+alc2/9WxWrbuZUWieY3v0hVWn0/XFFWZ77Zda
+        tbBg3f0ZV2e+l6rxS1ES7Z+4LXO3d93H4holluKMREMt5qLiRADHNwvbMQQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrALMWRmVeSWpSXmKPExsWy7bCSvK6HhWa8wYSTuhZz1q9hs/i6/hez
+        xd/OC6wWm+cUW1zeNYfN4t6a/6wWsxv7GB3YPTZ9msTucWLGbxaP9/uusnn0bVnF6HFmwRF2
+        j8+b5ALYorhsUlJzMstSi/TtErgyDh38xVZwWaZi4q7NrA2Mt8W6GDk5JARMJNb37GHuYuTi
+        EBLYzSgx63gTG0RCSmJe91omCFtY4n7LEVYQW0jgPqPEg2cpIDaLgIrE+sOtYDVsAloSq+ce
+        ZwSxRYDijzYcZQUZyiywmlFi3Y4X7CAJYQFTicOdnSwgNq+AusS3tfcZIYZeYJJ4uqEOIi4o
+        cXLmE7AaZqChN/69BFrAAWRLSyz/xwES5hSwlvjY0AMWFgXa9epg/QRGwVlImmchaZ6F0LyA
+        kXkVo2RqQXFuem6xYYFhXmq5XnFibnFpXrpecn7uJkZwJGhp7mDcvuqD3iFGJg7GQ4wSHMxK
+        IrwfP6vHC/GmJFZWpRblxxeV5qQWH2KU5mBREue9UbgwTkggPbEkNTs1tSC1CCbLxMEp1cA0
+        TZDpnfk27n2/zm8IXSX6+L9dnPqcY3PM7f/ekmDc+Xn63lNt+cZrf1y9sbTzUI+Gw+7qzSu/
+        TDE8XsJgGHjR4tHKdUaXnLcpLQreOf34OZf7/x+zTd+hvz1kTYty4fmXC7VUDuk7P+oPnpE9
+        S+7iGxeRNXfOiVuV9zTp/XimOP/Eoewf99s4XkZHRX9/LcktohFazVX/7sHcnVrxRvkqz27/
+        TxKKc5jA8XW2Z3mR+s/rtaf+5+XF3Zp2ZF3z44dC+ZMrUk7E/WCfdW7KgyXX+7QEJqZu/fvL
+        PZv1j+uf7UVar74apqscO7lr+asHMqwsczdNnfCZVdzY5EWASZN6f+gtq64luXVRSyU/bWG0
+        faTEUpyRaKjFXFScCACLgo4x8wIAAA==
+X-CMS-MailID: 20200804102824epcas2p41b70fcd3d02d70bc878997c4f6d08ac0
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+        boundary="----WPg.tCICMYbzZ7ve.jqv9RPBMPMK9aB2ZS3srN1dKdMJkgZl=_65316_"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200803061805epcas2p20faeeff0b31b23d1bc4464972285b561
+References: <CGME20200803061805epcas2p20faeeff0b31b23d1bc4464972285b561@epcas2p2.samsung.com>
+        <1596435031-41837-1-git-send-email-pullip.cho@samsung.com>
+        <5f41af0f-4593-3441-12f4-5b0f7e6999ac@redhat.com>
+        <ebea485c-7cce-3a4a-2ac4-7a608efe2844@suse.cz> <20200804023548.GA186735@KEI>
+        <947a09ba-968b-4c4d-68bb-d13de9c885a1@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kaaira,
+------WPg.tCICMYbzZ7ve.jqv9RPBMPMK9aB2ZS3srN1dKdMJkgZl=_65316_
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
-On 31/07/2020 18:22, Kaaira Gupta wrote:
-> Hi everyone,
+On Tue, Aug 04, 2020 at 11:12:55AM +0200, Vlastimil Babka wrote:
+> On 8/4/20 4:35 AM, Cho KyongHo wrote:
+> > On Mon, Aug 03, 2020 at 05:45:55PM +0200, Vlastimil Babka wrote:
+> >> On 8/3/20 9:57 AM, David Hildenbrand wrote:
+> >> > On 03.08.20 08:10, pullip.cho@samsung.com wrote:
+> >> >> From: Cho KyongHo <pullip.cho@samsung.com>
+> >> >> 
+> >> >> LPDDR5 introduces rank switch delay. If three successive DRAM accesses
+> >> >> happens and the first and the second ones access one rank and the last
+> >> >> access happens on the other rank, the latency of the last access will
+> >> >> be longer than the second one.
+> >> >> To address this panelty, we can sort the freelist so that a specific
+> >> >> rank is allocated prior to another rank. We expect the page allocator
+> >> >> can allocate the pages from the same rank successively with this
+> >> >> change. It will hopefully improves the proportion of the consecutive
+> >> >> memory accesses to the same rank.
+> >> > 
+> >> > This certainly needs performance numbers to justify ... and I am sorry,
+> >> > "hopefully improves" is not a valid justification :)
+> >> > 
+> >> > I can imagine that this works well initially, when there hasn't been a
+> >> > lot of memory fragmentation going on. But quickly after your system is
+> >> > under stress, I doubt this will be very useful. Proof me wrong. ;)
+> >> 
+> >> Agreed. The implementation of __preferred_rank() seems to be very simple and
+> >> optimistic.
+> > 
+> > DRAM rank is selected by CS bits from DRAM controllers. In the most systems
+> > CS bits are alloated to specific bit fields in BUS address. For example,
+> > If CS bit is allocated to bit[16] in bus (physical) address in two rank
+> > system, all 16KiB with bit[16] = 1 are in the rank 1 and the others are
+> > in the rank 0.
+> > This patch is not beneficial to other system than the mobile devices
+> > with LPDDR5. That is why the default behavior of this patch is noop.
 > 
-> On Wed, Jul 29, 2020 at 05:24:25PM +0200, Dafna Hirschfeld wrote:
->>
->>
->> On 29.07.20 15:27, Kieran Bingham wrote:
->>> Hi Dafna, Kaaira,
->>>
->>> On 29/07/2020 14:16, Dafna Hirschfeld wrote:
->>>>
->>>>
->>>> On 29.07.20 15:05, Kieran Bingham wrote:
->>>>> Hi Dafna,
->>>>>
->>>>> On 28/07/2020 15:00, Dafna Hirschfeld wrote:
->>>>>>
->>>>>>
->>>>>> On 28.07.20 14:07, Dafna Hirschfeld wrote:
->>>>>>> Hi
->>>>>>>
->>>>>>> On 28.07.20 13:39, Kaaira Gupta wrote:
->>>>>>>> On Mon, Jul 27, 2020 at 02:54:30PM -0300, Helen Koike wrote:
->>>>>>>>> Hi,
->>>>>>>>>
->>>>>>>>> On 7/27/20 11:31 AM, Kieran Bingham wrote:
->>>>>>>>>> Hi all,
->>>>>>>>>>
->>>>>>>>>> +Dafna for the thread discussion, as she's missed from the to/cc
->>>>>>>>>> list.
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> On 24/07/2020 13:21, Kaaira Gupta wrote:
->>>>>>>>>>> On Fri, Jul 24, 2020 at 02:15:21PM +0200, Niklas Söderlund wrote:
->>>>>>>>>>> Hi,
->>>>>>>>>>>
->>>>>>>>>>>> Hi Kaaira,
->>>>>>>>>>>>
->>>>>>>>>>>> Thanks for your work.
->>>>>>>>>>>
->>>>>>>>>>> Thanks for yours :D
->>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>> On 2020-07-24 17:32:10 +0530, Kaaira Gupta wrote:
->>>>>>>>>>>>> This is version 2 of the patch series posted by Niklas for
->>>>>>>>>>>>> allowing
->>>>>>>>>>>>> multiple streams in VIMC.
->>>>>>>>>>>>> The original series can be found here:
->>>>>>>>>>>>> https://patchwork.kernel.org/cover/10948831/
->>>>>>>>>>>>>
->>>>>>>>>>>>> This series adds support for two (or more) capture devices to be
->>>>>>>>>>>>> connected to the same sensors and run simultaneously. Each
->>>>>>>>>>>>> capture device
->>>>>>>>>>>>> can be started and stopped independent of each other.
->>>>>>>>>>>>>
->>>>>>>>>>>>> Patch 1/3 and 2/3 deals with solving the issues that arises once
->>>>>>>>>>>>> two
->>>>>>>>>>>>> capture devices can be part of the same pipeline. While 3/3
->>>>>>>>>>>>> allows for
->>>>>>>>>>>>> two capture devices to be part of the same pipeline and thus
->>>>>>>>>>>>> allows for
->>>>>>>>>>>>> simultaneously use.
->>>>>>>
->>>>>>> I wonder if these two patches are enough, since each vimc entity also
->>>>>>> have
->>>>>>> a 'process_frame' callback, but only one allocated frame. That means
->>>>>>> that the 'process_frame' can be called concurrently by two different
->>>>>>> streams
->>>>>>> on the same frame and cause corruption.
->>>>>>>
->>>>>>
->>>>>> I think we should somehow change the vimc-stream.c code so that we have
->>>>>> only
->>>>>> one stream process per pipe. So if one capture is already streaming,
->>>>>> then the new
->>>>>> capture that wants to stream uses the same thread so we don't have two
->>>>>> threads
->>>>>> both calling 'process_frame'.
->>>>>
->>>>>
->>>>> Yes, I think it looks and sounds like there are two threads running when
->>>>> there are two streams.
->>>>>
->>>>> so in effect, although they 'share a pipe', aren't they in effect just
->>>>> sending two separate buffers through their stream-path?
->>>>>
->>>>> If that's the case, then I don't think there's any frame corruption,
->>>>> because they would both have grabbed their own frame separately.
->>>>
->>>> But each entity allocates just one buffer. So the same buffer is used for
->>>> both stream.
->>>
->>> Aha, ok, I hadn't realised there was only a single buffer available in
->>> the pipeline for each entity. Indeed there is a risk of corruption in
->>> that case.
->>>
->>>> What for example can happen is that the debayer of one stream can read the
->>>> sensor's buffer while the sensor itself writes to the buffer for the other
->>>> stream.
->>>
->>>
->>> So, In that case, we have currently got a scenario where each 'stream'
->>> really is operating it's own pipe (even though all components are reused).
->>>
->>> Two questions:
->>>
->>> Is this acceptable, and we should just use a mutex to ensure the buffers
->>> are not corrupted, but essentially each stream is a separate temporal
->>> capture?
->>>
->>>
->>> Or B:
->>>
->>> Should we refactor to make sure that there is a single thread, and the
->>> code which calls process_frame on each entity should become aware of the
->>> potential for multiple paths at the point of the sensor.
->>>
->>>
->>> I suspect option B is really the 'right' path to take, but it is more
->>> complicated of course.
->>
->> I also think option B is preferable.
->>
->> Maybe we can add a bool field 'is_streaming' to struct 'vimc_ent_device'
->> The stream thread can do a BFS scan from the sensor up to the captures
->> and call the 'process_frame' for each entity if 'is_streaming == true'.
->> When a new capture wants to stream it sets 'is_streaming = true'
->> on the entities on his streaming path.
+> Hmm, the patch requires at least pageblock_nr_pages, which is 2MB on x86 (dunno
+> about ARM), so 16KiB would be way too small. What are the actual granularities then?
+
+16KiB is just an example. pageblock_nr_pages is 4Mb on both ARM and
+ARM64. __perferred_rank() works if rank granule >= 4MB.
+
+> >> I think these systems could perhaps better behave as NUMA with (interleaved)
+> >> nodes for each rank, then you immediately have all the mempolicies support etc
+> >> to achieve what you need? Of course there's some cost as well, but not the costs
+> >> of adding hacks to page allocator core?
+> > 
+> > Thank you for the proposal. NUMA will be helpful to allocate pages from
+> > a specific rank programmatically. I should consider NUMA if rank
+> > affinity should be also required.
+> > However, page allocation overhead by this policy (page migration and
+> > reclamation ect.) will give the users worse responsiveness. The intend
+> > of this patch is to reduce rank switch delay optimistically without
+> > hurting page allocation speed.
 > 
-> It is s_stream(enable) that initialises a streaming pipeline, ie the one with
-> those components of the pipeline which are in stream path and then runs a
-> thread which calls process_frame on each and passes the frame to the
-> next entity in streaming pipeline. So currently, one thread is for one
-> "streaming pipeline". So there are two options I can think of if a
-> single thread is required,
+> The problem is, without some control of page migration and reclaim, the simple
+> preference approach will not work after some uptime, as David suggested. It will
+> just mean that the preferred rank will be allocated first, then the
+> non-preferred rank (Linux will fill all unused memory with page cache if
+> possible), then reclaim will free memory from both ranks without any special
+> care, and new allocations will thus come from both ranks.
 > 
-> 1. Not creating a streaming pipeline, rather create a graph(?) which
-> connects both say Raw capture 1 and debayer B to sensor B if two streams
-> are asked for, and only one of them if one stream is asked..that will
-> not be a property of streamer, so I am not sure where it should be kept.
-> Then I could move creating a thread out of s_stream. Creating the thread
-> should wait for entire pipeline to be created, ie s_stream(enable) to
-> must be called by both the captures, and a graph made of all pipeline
-> components before thread initialisation starts. I am not sure how this
-> should be implemented.
+In fact, I did't considered about NUMA in that way. I now need to check
+NUMA if it gives us the same result with this patch.
 
-The graph already exists, and can be walked through the media controller
-right?
+Thank you again for your comments about NUMA :)
+NUMA
+
+------WPg.tCICMYbzZ7ve.jqv9RPBMPMK9aB2ZS3srN1dKdMJkgZl=_65316_
+Content-Type: text/plain; charset="utf-8"
 
 
-> 2. Another option is to check if a stream already exists (by creating it
-> a property of vimc to keep a track of no. of streams maybe?), if it is
-> already present I could take the previous output of sensor (but
-> then it will have to be stored, so i don't think this is a nice idea),
-> and use it further (but thread will be different in this case).
-
-I don't think I understand this one...
-
-
-> What can be a better design for VIMC to have a single thread if two
-> streams are asked (apart/of the options I mentioned)?
-
-How about adding a count in s_stream so that the thread only gets
-started when the use count is > 0, and stopped when the usage < 1.
-
-That handles making sure that only one thread is available.
-
-All calls into s_stream() will need to take a lock/mutex to protect /
-prevent any action from occurring while the thread is performing a
-process of the pipeline.
-
-
-static int vimc_streamer_thread(void *data)
-{
-	struct vimc_stream *stream = data;
-	u8 *frame = NULL;
-	int i;
-
-	set_freezable();
-
-	for (;;) {
-		try_to_freeze();
-		if (kthread_should_stop())
-			break;
-
-+		/* take lock shared with s_stream */
-
-		for (i = stream->pipe_size - 1; i >= 0; i--) {
-			frame = stream->ved_pipeline[i]->process_frame(
-					stream->ved_pipeline[i], frame);
-			if (!frame || IS_ERR(frame))
-				break;
-		}
-
-+		/* Release lock/mutex shared with s_stream
-
-		//wait for 60hz
-		set_current_state(TASK_UNINTERRUPTIBLE);
-		schedule_timeout(HZ / 60);
-	}
-
-	return 0;
-}
-
-
-
-And you'll need to make the code which processes the pipeline aware of
-the fact that there may be two pipelines to fulfil:
-
-Pseudo patch/code:
-
-static int vimc_streamer_thread(void *data)
-{
--	struct vimc_stream *stream = data;
-+	/* Something which knows about the whole device */
-+	struct xxxxx *yyy = data;
-
-+	u8 *raw;
-	u8 *frame = NULL;
-	int i;
-
-	set_freezable();
-
-	for (;;) {
-		try_to_freeze();
-		if (kthread_should_stop())
-			break;
-
-		/* take lock shared with s_stream */
-
-+		/* Process the sensor first */
-+		raw = stream->ved_pipeline[sensor]->process_frame(..);
-+		error check;
-
-+		/* (If connected) Process stream 1 */
-+		if (raw)
-+		frame = stream->ved_pipeline[raw]->process_frame();
-+		error check;
-
-+		/* If connected process the rest of the pipe */
-+		for (i = after sensor; end_entity; i++) {
-			frame = stream->ved_pipeline[i]->process_frame(
-					stream->ved_pipeline[i], frame);
-			if (!frame || IS_ERR(frame))
-				break;
-		}
-
-		/* Release lock/mutex shared with s_stream
-
-		//wait for 60hz
-		set_current_state(TASK_UNINTERRUPTIBLE);
-		schedule_timeout(HZ / 60);
-	}
-
-	return 0;
-}
-
-
-
-I may have missed something as the original loop was decrementing and
-going backwards through the entities in stream->ved_pipeline.
-
-I guess splitting that all out so instead it starts at the sensor, and
-just walks the graph (handling any running/connected fork to two
-entities appropriately) in a neater way would be another option rather
-than hardcoding it, but either way the thread needs to operate at the
-device level rather than the stream level.
-
-
-
-> Thanks
-> Kaaira
-> 
->>
->> Thanks,
->> Dafna
->>
->>
->>>
->>> --
->>> Kieran
->>>
->>>
->>>
->>>
->>>> Thanks,
->>>> Dafna
->>>>
->>>>>
->>>>>
->>>>> I don't think that's a good example of the hardware though, as that
->>>>> doesn't reflect what 'should' happen where the TPG runs once to generate
->>>>> a frame at the sensor, which is then read by both the debayer entity and
->>>>> the RAW capture device when there are two streams...
->>>>>
->>>>>
->>>>> So I suspect trying to move to a single thread is desirable, but that
->>>>> might be a fair bit of work also.
->>>>>
->>>>> -- 
->>>>> Kieran
->>>>>
->>>>>
->>>>>
->>>>>> The second capture that wants to stream should iterate the topology
->>>>>> downwards until
->>>>>> reaching an entity that already belong to the stream path of the other
->>>>>> streaming capture
->>>>>> and tell the streamer it wants to read the frames this entity
->>>>>> produces.
->>>>>>
->>>>>> Thanks,
->>>>>> Dafna
->>>>>>
->>>>>>> Thanks,
->>>>>>> Dafna
->>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>> I'm just curious if you are aware of this series? It would
->>>>>>>>>>>> replace the
->>>>>>>>>>>> need for 1/3 and 2/3 of this series right?
->>>>>>>>>>>
->>>>>>>>>>> v3 of this series replaces the need for 1/3, but not the current
->>>>>>>>>>> version
->>>>>>>>>>> (ie v4). v4 of patch 2/5 removes the stream_counter that is
->>>>>>>>>>> needed to
->>>>>>>>>>> keep count of the calls to s_stream. Hence 1/3 becomes relevant
->>>>>>>>>>> again.
->>>>>>>>>>
->>>>>>>>>> So the question really is, how do we best make use of the two
->>>>>>>>>> current
->>>>>>>>>> series, to achieve our goal of supporting multiple streams.
->>>>>>>>>>
->>>>>>>>>> Having not parsed Dafna's series yet, do we need to combine
->>>>>>>>>> elements of
->>>>>>>>>> both ? Or should we work towards starting with this series and get
->>>>>>>>>> dafna's patches built on top ?
->>>>>>>>>>
->>>>>>>>>> Or should patch 1/3 and 3/3 of this series be on top of Dafna's v4 ?
->>>>>>>>>>
->>>>>>>>>> (It might be noteworthy to say that Kaaira has reported successful
->>>>>>>>>> multiple stream operation from /this/ series and her development
->>>>>>>>>> branch
->>>>>>>>>> on libcamera).
->>>>>>>>>
->>>>>>>>> Dafna's patch seems still under discussion, but I don't want to
->>>>>>>>> block progress in Vimc either.
->>>>>>>>>
->>>>>>>>> So I was wondering if we can move forward with Vimc support for
->>>>>>>>> multistreaming,
->>>>>>>>> without considering Dafna's patchset, and we can do the clean up
->>>>>>>>> later once we solve that.
->>>>>>>>>
->>>>>>>>> What do you think?
->>>>>>>>
->>>>>>>> I agree with supporting multiple streams with VIMC with this patchset,
->>>>>>>> and then we can refactor the counters for s_stream in VIMC later (over
->>>>>>>> this series) if dafna includes them in subsequent version of her
->>>>>>>> patchset.
->>>>>>>>
->>>>>>>
->>>>>>> I also think that adding support in the code will take much longer and
->>>>>>> should not
->>>>>>> stop us from supporting vimc independently.
->>>>>>>
->>>>>>> Thanks,
->>>>>>> Dafna
->>>>>>>
->>>>>>>>>
->>>>>>>>> Regards,
->>>>>>>>> Helen
->>>>>>>>>
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>>>> 1.
->>>>>>>>>>>> https://lore.kernel.org/linux-media/20200522075522.6190-1-dafna.hirschfeld@collabora.com/
->>>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>>>
->>>>>>>>>>>>> Changes since v1:
->>>>>>>>>>>>>       - All three patches rebased on latest media-tree.
->>>>>>>>>>>>>       Patch 3:
->>>>>>>>>>>>>       - Search for an entity with a non-NULL pipe instead of
->>>>>>>>>>>>> searching
->>>>>>>>>>>>>         for sensor. This terminates the search at output itself.
->>>>>>>>>>>>>
->>>>>>>>>>>>> Kaaira Gupta (3):
->>>>>>>>>>>>>      media: vimc: Add usage count to subdevices
->>>>>>>>>>>>>      media: vimc: Serialize vimc_streamer_s_stream()
->>>>>>>>>>>>>      media: vimc: Join pipeline if one already exists
->>>>>>>>>>>>>
->>>>>>>>>>>>>     .../media/test-drivers/vimc/vimc-capture.c    | 35
->>>>>>>>>>>>> ++++++++++++++++++-
->>>>>>>>>>>>>     .../media/test-drivers/vimc/vimc-debayer.c    |  8 +++++
->>>>>>>>>>>>>     drivers/media/test-drivers/vimc/vimc-scaler.c |  8 +++++
->>>>>>>>>>>>>     drivers/media/test-drivers/vimc/vimc-sensor.c |  9 ++++-
->>>>>>>>>>>>>     .../media/test-drivers/vimc/vimc-streamer.c   | 23
->>>>>>>>>>>>> +++++++-----
->>>>>>>>>>>>>     5 files changed, 73 insertions(+), 10 deletions(-)
->>>>>>>>>>>>>
->>>>>>>>>>>>> -- 
->>>>>>>>>>>>> 2.17.1
->>>>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>> -- 
->>>>>>>>>>>> Regards,
->>>>>>>>>>>> Niklas Söderlund
->>>>>>>>>>
->>>>>
->>>
-
--- 
-Regards
---
-Kieran
+------WPg.tCICMYbzZ7ve.jqv9RPBMPMK9aB2ZS3srN1dKdMJkgZl=_65316_--
