@@ -2,93 +2,121 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B327C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 147BAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB8C72070A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:45:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LioAvB/i"
+	by mail.kernel.org (Postfix) with ESMTP id 0A3B0206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:46:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729673AbgHDKpv (ORCPT
+        id S1729801AbgHDKq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 06:45:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51156 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgHDKpo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 06:45:44 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E23FC06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 03:45:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=w5o5IcAoNXwLVf59c401lTKK0QArdzdHQ89b1oA1ILw=; b=LioAvB/iKgUeNOGdS6342XE/WZ
-        nRhe2eYGe9CGIXNs0McyJ7E1ly+G+Vj6Qe81zusLriWie0PCmW8m97VWpfGS/pBrEYsdW7z086s3O
-        gKyBtV30aLLnMB5k7eOLgs0P1O/cqftYA9QcP7nFWF5eFvOpub9Dqh/ykq/tRhUl8o9+v0lq04wwM
-        GVVcVmjdybTNg+ZoqfT+9FjtYyKuAAUdGSi5yCrN2mnMdL0S/U2VC22sbBHiqbYaA2QgIWuidATd2
-        FQThuaXFPax0FXVcGtokbfXJleTGWpc/qyrF5J0YfFRFIGOjHOd68m0a3xDhydCeR10lLQC9/iZS6
-        HCMsY0Aw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k2uRf-00013s-Gz; Tue, 04 Aug 2020 10:45:23 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D8778301A66;
-        Tue,  4 Aug 2020 12:45:20 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9C5AC2B94E749; Tue,  4 Aug 2020 12:45:20 +0200 (CEST)
-Date:   Tue, 4 Aug 2020 12:45:20 +0200
-From:   peterz@infradead.org
-To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Neuling <mikey@neuling.org>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
-Subject: Re: [PATCH 1/2] sched/topology: Allow archs to override cpu_smt_mask
-Message-ID: <20200804104520.GB2657@hirez.programming.kicks-ass.net>
-References: <20200804033307.76111-1-srikar@linux.vnet.ibm.com>
+        Tue, 4 Aug 2020 06:46:28 -0400
+Received: from mga03.intel.com ([134.134.136.65]:56268 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729126AbgHDKpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 06:45:47 -0400
+IronPort-SDR: 0LpYmLK5JTPTFn3wZUkOPdzX33V+C0JuBKqHbR4OswsGJ82HOra6EysTLRqAXR8wm9x5EeIfYY
+ oFLTKhW5Of5g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9702"; a="152253332"
+X-IronPort-AV: E=Sophos;i="5.75,433,1589266800"; 
+   d="scan'208";a="152253332"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 03:45:46 -0700
+IronPort-SDR: Rgl9HHvb284G3NxyLIBGw23xxbjPjyvfAQA228weCp025Qc9lmQuFYdiE2cRckxYSf6sCAJUAv
+ cjD99fux4D/A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,433,1589266800"; 
+   d="scan'208";a="306306680"
+Received: from ipu5-build.bj.intel.com (HELO [10.238.232.196]) ([10.238.232.196])
+  by orsmga002.jf.intel.com with ESMTP; 04 Aug 2020 03:45:45 -0700
+Subject: Re: [PATCH] nvmem: core: add sanity check in nvmem_device_read()
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Bingbu Cao <bingbu.cao@intel.com>
+Cc:     linux-kernel@vger.kernel.org
+References: <1596532436-19073-1-git-send-email-bingbu.cao@intel.com>
+ <20200804095815.GF13316@paasikivi.fi.intel.com>
+ <0e8d60cf-7f8b-c6ab-4184-b869c16b603e@linaro.org>
+From:   Bingbu Cao <bingbu.cao@linux.intel.com>
+Message-ID: <48f2d716-dad9-054d-d049-452fa272d53b@linux.intel.com>
+Date:   Tue, 4 Aug 2020 18:44:27 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200804033307.76111-1-srikar@linux.vnet.ibm.com>
+In-Reply-To: <0e8d60cf-7f8b-c6ab-4184-b869c16b603e@linaro.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 09:03:06AM +0530, Srikar Dronamraju wrote:
-> cpu_smt_mask tracks topology_sibling_cpumask. This would be good for
-> most architectures. One of the users of cpu_smt_mask(), would be to
-> identify idle-cores. On Power9, a pair of cores can be presented by the
-> firmware as a big-core for backward compatibility reasons.
+
+On 8/4/20 6:03 PM, Srinivas Kandagatla wrote:
 > 
-> In order to maintain userspace backward compatibility with previous
-> versions of processor, (since Power8 had SMT8 cores), Power9 onwards there
-> is option to the firmware to advertise a pair of SMT4 cores as a fused
-> cores (referred to as the big_core mode in the Linux Kernel). On Power9
-> this pair shares the L2 cache as well. However, from the scheduler's point
-> of view, a core should be determined by SMT4. The load-balancer already
-> does this. Hence allow PowerPc architecture to override the default
-> cpu_smt_mask() to point to the SMT4 cores in a big_core mode.
+> 
+> On 04/08/2020 10:58, Sakari Ailus wrote:
+>> Hi Bingbu,
+>>
+>> Thank you for the patch.
+>>
+>> On Tue, Aug 04, 2020 at 05:13:56PM +0800, Bingbu Cao wrote:
+>>> nvmem_device_read() could be called directly once nvmem device
+>>> registered, the sanity check should be done before call
+>>> nvmem_reg_read() as cell and sysfs read did now.
+>>>
+>>> Signed-off-by: Bingbu Cao <bingbu.cao@intel.com>
+>>> ---
+>>>   drivers/nvmem/core.c | 7 +++++++
+>>>   1 file changed, 7 insertions(+)
+>>>
+>>> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+>>> index 927eb5f6003f..c9a77993f008 100644
+>>> --- a/drivers/nvmem/core.c
+>>> +++ b/drivers/nvmem/core.c
+>>> @@ -1491,6 +1491,13 @@ int nvmem_device_read(struct nvmem_device *nvmem,
+>>>       if (!nvmem)
+>>>           return -EINVAL;
+>>>   +    if (offset >= nvmem->size || bytes < nvmem->word_size)
+>>> +        return 0;
+>>> +
+>>> +    if (bytes + offset > nvmem->size)
+>>> +        bytes = nvmem->size - offset;
+>>
+>> The check is relevant for nvmem_device_write(), too.
+>>
+>> There are also other ways to access nvmem devices such as nvmem_cell_read
+>> and others alike. Should they be considered as well?
+> 
+> We should probably move these sanity checks to a common place like
+> nvmem_reg_read() and nvmem_reg_write(), so the callers need not duplicate the same!
+> 
+Srini and Sakari, thanks for your review.
 
-I'm utterly confused.
+Is it OK just return INVAL with simple check like below?
 
-Why can't you set your regular siblings mask to the smt4 thing? Who
-cares about the compat stuff, I thought that was an LPAR/AIX thing.
+if (bytes + offset > nvmem->size ||
+    bytes != round_down(bytes, nvmem->word_size))
+        return -EINVAL;
+
+
+> --srini
+> 
+>>
+>>> +
+>>> +    bytes = round_down(bytes, nvmem->word_size);
+>>>       rc = nvmem_reg_read(nvmem, offset, buf, bytes);
+>>>         if (rc)
+>>
+
+-- 
+Best regards,
+Bingbu Cao
