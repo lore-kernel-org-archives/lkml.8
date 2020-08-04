@@ -2,354 +2,341 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C74A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD31C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A35FB207FC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:00:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596553257;
-	bh=UGKz0laAMAeoRRMQ/WBIHLisQCLwq1BVQrmk9x1SlPo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hpNBwnIUiZzpvAa1fDrvGXSRuKcvYFWtn4RnZGOzD8glGWYsgAOgOzn0cJ/mxJuIk
-	 v+xG/V4Rc3AMtt7ysCRrQQB/87JzefVu26SvqcrWhQrdbd+58hiXrWK2izJynCmLaV
-	 WHUGL0qMluOzveWe6RRr4hW4SC/qP3FLETDILqlc=
+	by mail.kernel.org (Postfix) with ESMTP id 7F43D208A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:01:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="BL+ho6hQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729507AbgHDPAy (ORCPT
+        id S1729484AbgHDPAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 11:00:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41230 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729113AbgHDPAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 11:00:19 -0400
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CA9D22CB2
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 15:00:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596553218;
-        bh=UGKz0laAMAeoRRMQ/WBIHLisQCLwq1BVQrmk9x1SlPo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hBmXwqbAD0aEV/RyYT8DMQykRoxAtVj0av0RbXEIsl6QY6lW7RRWsYvqXC4zuixUB
-         X2f1x6fQHOTI40vGFC2qD6o3lMRBfLWEaT3I/gTEJytRbbOlhQr7iIlvO/wCitSdeN
-         bKIYMjAiqMcnBEddhlDUeoUuBM1o+SJ4K1IBHZ04=
-Received: by mail-ed1-f42.google.com with SMTP id a14so13147403edx.7
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 08:00:18 -0700 (PDT)
-X-Gm-Message-State: AOAM532FpzgAcWoFRC0zjqeVATkIzEbAMAitoCRG60FM1An2SxLWIPV1
-        opAZnYfRXvNfCfNiuZy31vyaqRm0+7TRIgjsUw==
-X-Google-Smtp-Source: ABdhPJwunoyDTQhiThZnToQGxQmEkNellltv3DDrPfUVrB3+uPJo4Mn8HeFaGnvA7CheyZl6LWSmvuv4dbDt9K7/sas=
-X-Received: by 2002:aa7:c606:: with SMTP id h6mr8396427edq.288.1596553216689;
- Tue, 04 Aug 2020 08:00:16 -0700 (PDT)
+        Tue, 4 Aug 2020 11:00:52 -0400
+Received: from mx07-00178001.pphosted.com ([185.132.182.106]:28674 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729474AbgHDO7v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 10:59:51 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 074E2eTv012615;
+        Tue, 4 Aug 2020 16:04:32 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=LAG1/atoWlfWmJtGbllySuRLl1a6COVGHRrcpAnsvT4=;
+ b=BL+ho6hQTKnVi4msGN1TyWPhmU0E8Hj9r5AGDUn2IOe5hA503883/UoUUorsbPZ4nhFn
+ ubDAZjO88ZpbAm+LE70U0Tt+cpBZnwN6bPm8l7Ly52qQ+3XhREzZo5ggMa/ON0tG2pJQ
+ whkK+nUSAFJGD1WL0RiZcgOMfP/qEjxiy1hkkAA1GtUE2nOwiqhW2ftBu6y5ORfy+o/R
+ dfLYwysyN/pvERl3HHTlD4v4MjIpvClAl4SWn2m7EDG+Ibd4t+4Ms7bwIe5p6ERQH8dw
+ 5o3BVFyX8GSPwtY/5ONatOo5nMkgEWz2Jq63AqCV9X+tWwQWueKyvmZMJkPb3OgWdnQv vg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 32n6sb3dp9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Aug 2020 16:04:32 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D0C7B10002A;
+        Tue,  4 Aug 2020 16:04:29 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C40952BC7A0;
+        Tue,  4 Aug 2020 16:04:29 +0200 (CEST)
+Received: from lmecxl1060.lme.st.com (10.75.127.45) by SFHDAG5NODE2.st.com
+ (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 4 Aug
+ 2020 16:04:28 +0200
+Subject: Re: [PATCH v3 2/2] i2c: stm32f7: Add SMBus Host-Notify protocol
+ support
+To:     Alain Volmat <alain.volmat@st.com>, <wsa@kernel.org>
+CC:     <alexandre.torgue@st.com>, <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>
+References: <1596431876-24115-1-git-send-email-alain.volmat@st.com>
+ <1596431876-24115-3-git-send-email-alain.volmat@st.com>
+From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Message-ID: <e27abfbc-6cb4-ab00-04ea-4147982c8393@st.com>
+Date:   Tue, 4 Aug 2020 16:04:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200804105849.70876-1-linux@fw-web.de> <20200804105849.70876-6-linux@fw-web.de>
-In-Reply-To: <20200804105849.70876-6-linux@fw-web.de>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Tue, 4 Aug 2020 23:00:05 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9aDqz3muo6ynqX9r0VjW7tD5vvZOiQyR8UZOTUct8oVA@mail.gmail.com>
-Message-ID: <CAAOTY_9aDqz3muo6ynqX9r0VjW7tD5vvZOiQyR8UZOTUct8oVA@mail.gmail.com>
-Subject: Re: [PATCH v3 5/5] arm: dts: mt7623: add display subsystem related
- device nodes
-To:     Frank Wunderlich <linux@fw-web.de>
-Cc:     "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        David Airlie <airlied@linux.ie>,
-        chunhui dai <chunhui.dai@mediatek.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        CK Hu <ck.hu@mediatek.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1596431876-24115-3-git-send-email-alain.volmat@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG5NODE2.st.com
+ (10.75.127.14)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-04_04:2020-08-03,2020-08-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Frank:
+Hi Alain
 
-Frank Wunderlich <linux@fw-web.de> =E6=96=BC 2020=E5=B9=B48=E6=9C=884=E6=97=
-=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=887:00=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> From: Ryder Lee <ryder.lee@mediatek.com>
->
-> Add display subsystem related device nodes for MT7623.
->
-> Cc: CK Hu <ck.hu@mediatek.com>
-> Signed-off-by: chunhui dai <chunhui.dai@mediatek.com>
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> Tested-by: Frank Wunderlich <frank-w@public-files.de>
+Look good for me
+
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+
+Best Regards
+
+On 8/3/20 7:17 AM, Alain Volmat wrote:
+> Rely on the core functions to implement the host-notify
+> protocol via the a I2C slave device.
+> 
+> Signed-off-by: Alain Volmat <alain.volmat@st.com>
 > ---
-> changed v2->v3:
->   drop bls to dpi routing
-> ---
->  arch/arm/boot/dts/mt7623.dtsi                 | 177 ++++++++++++++++++
->  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  72 +++++++
->  arch/arm/boot/dts/mt7623n-rfb-emmc.dts        |  72 +++++++
->  3 files changed, 321 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dts=
-i
-> index a106c0d90a52..d584a3d678ba 100644
-> --- a/arch/arm/boot/dts/mt7623.dtsi
-> +++ b/arch/arm/boot/dts/mt7623.dtsi
-> @@ -24,6 +24,11 @@ / {
->         #address-cells =3D <2>;
->         #size-cells =3D <2>;
->
-> +       aliases {
-> +               rdma0 =3D &rdma0;
-> +               rdma1 =3D &rdma1;
-> +       };
+>  v3: identical to v2
+>  v2: fix slot #0 usage condition within stm32f7_i2c_get_free_slave_id
+> 
+>  drivers/i2c/busses/Kconfig       |   1 +
+>  drivers/i2c/busses/i2c-stm32f7.c | 110 +++++++++++++++++++++++++++++++++------
+>  2 files changed, 96 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+> index 735bf31a3fdf..ae8671727a4c 100644
+> --- a/drivers/i2c/busses/Kconfig
+> +++ b/drivers/i2c/busses/Kconfig
+> @@ -1036,6 +1036,7 @@ config I2C_STM32F7
+>  	tristate "STMicroelectronics STM32F7 I2C support"
+>  	depends on ARCH_STM32 || COMPILE_TEST
+>  	select I2C_SLAVE
+> +	select I2C_SMBUS
+>  	help
+>  	  Enable this option to add support for STM32 I2C controller embedded
+>  	  in STM32F7 SoCs.
+> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+> index bff3479fe122..223c238c3c09 100644
+> --- a/drivers/i2c/busses/i2c-stm32f7.c
+> +++ b/drivers/i2c/busses/i2c-stm32f7.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/err.h>
+>  #include <linux/i2c.h>
+> +#include <linux/i2c-smbus.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/iopoll.h>
+> @@ -50,6 +51,7 @@
+>  
+>  /* STM32F7 I2C control 1 */
+>  #define STM32F7_I2C_CR1_PECEN			BIT(23)
+> +#define STM32F7_I2C_CR1_SMBHEN			BIT(20)
+>  #define STM32F7_I2C_CR1_WUPEN			BIT(18)
+>  #define STM32F7_I2C_CR1_SBC			BIT(16)
+>  #define STM32F7_I2C_CR1_RXDMAEN			BIT(15)
+> @@ -150,7 +152,7 @@
+>  
+>  #define STM32F7_I2C_MAX_LEN			0xff
+>  #define STM32F7_I2C_DMA_LEN_MIN			0x16
+> -#define STM32F7_I2C_MAX_SLAVE			0x2
+> +#define STM32F7_I2C_MAX_SLAVE			0x3
+>  
+>  #define STM32F7_I2C_DNF_DEFAULT			0
+>  #define STM32F7_I2C_DNF_MAX			16
+> @@ -301,6 +303,8 @@ struct stm32f7_i2c_msg {
+>   * @fmp_creg: register address for clearing Fast Mode Plus bits
+>   * @fmp_mask: mask for Fast Mode Plus bits in set register
+>   * @wakeup_src: boolean to know if the device is a wakeup source
+> + * @smbus_mode: states that the controller is configured in SMBus mode
+> + * @host_notify_client: SMBus host-notify client
+>   */
+>  struct stm32f7_i2c_dev {
+>  	struct i2c_adapter adap;
+> @@ -327,6 +331,8 @@ struct stm32f7_i2c_dev {
+>  	u32 fmp_creg;
+>  	u32 fmp_mask;
+>  	bool wakeup_src;
+> +	bool smbus_mode;
+> +	struct i2c_client *host_notify_client;
+>  };
+>  
+>  /*
+> @@ -1321,10 +1327,18 @@ static int stm32f7_i2c_get_free_slave_id(struct stm32f7_i2c_dev *i2c_dev,
+>  	int i;
+>  
+>  	/*
+> -	 * slave[0] supports 7-bit and 10-bit slave address
+> -	 * slave[1] supports 7-bit slave address only
+> +	 * slave[0] support only SMBus Host address (0x8)
+> +	 * slave[1] supports 7-bit and 10-bit slave address
+> +	 * slave[2] supports 7-bit slave address only
+>  	 */
+> -	for (i = STM32F7_I2C_MAX_SLAVE - 1; i >= 0; i--) {
+> +	if (i2c_dev->smbus_mode && (slave->addr == 0x08)) {
+> +		if (i2c_dev->slave[0])
+> +			goto fail;
+> +		*id = 0;
+> +		return 0;
+> +	}
 > +
->         cpu_opp_table: opp-table {
->                 compatible =3D "operating-points-v2";
->                 opp-shared;
-> @@ -321,6 +326,25 @@ pwrap: pwrap@1000d000 {
->                 clock-names =3D "spi", "wrap";
->         };
->
-> +       mipi_tx0: mipi-dphy@10010000 {
-> +               compatible =3D "mediatek,mt7623-mipi-tx",
-
-In mediatek,dsi.txt [1], "mediatek,mt7623-mipi-tx" is undefined.
-
-[1] https://www.kernel.org/doc/Documentation/devicetree/bindings/display/me=
-diatek/mediatek%2Cdsi.txt
-
-> +                            "mediatek,mt2701-mipi-tx";
-> +               reg =3D <0 0x10010000 0 0x90>;
-> +               clocks =3D <&clk26m>;
-> +               clock-output-names =3D "mipi_tx0_pll";
-> +               #clock-cells =3D <0>;
-> +               #phy-cells =3D <0>;
-> +       };
+> +	for (i = STM32F7_I2C_MAX_SLAVE - 1; i > 0; i--) {
+>  		if (i == 1 && (slave->flags & I2C_CLIENT_TEN))
+>  			continue;
+>  		if (!i2c_dev->slave[i]) {
+> @@ -1333,6 +1347,7 @@ static int stm32f7_i2c_get_free_slave_id(struct stm32f7_i2c_dev *i2c_dev,
+>  		}
+>  	}
+>  
+> +fail:
+>  	dev_err(dev, "Slave 0x%x could not be registered\n", slave->addr);
+>  
+>  	return -EINVAL;
+> @@ -1776,7 +1791,13 @@ static int stm32f7_i2c_reg_slave(struct i2c_client *slave)
+>  	if (!stm32f7_i2c_is_slave_registered(i2c_dev))
+>  		stm32f7_i2c_enable_wakeup(i2c_dev, true);
+>  
+> -	if (id == 0) {
+> +	switch (id) {
+> +	case 0:
+> +		/* Slave SMBus Host */
+> +		i2c_dev->slave[id] = slave;
+> +		break;
 > +
-> +       cec: cec@10012000 {
-> +               compatible =3D "mediatek,mt7623-cec",
-
-Please explicitly define "mediatek,mt7623-cec" in mediatek,hdmi.txt [2].
-
-[2] https://www.kernel.org/doc/Documentation/devicetree/bindings/display/me=
-diatek/mediatek%2Chdmi.txt
-
-> +                            "mediatek,mt8173-cec";
-> +               reg =3D <0 0x10012000 0 0xbc>;
-> +               interrupts =3D <GIC_SPI 182 IRQ_TYPE_LEVEL_LOW>;
-> +               clocks =3D <&infracfg CLK_INFRA_CEC>;
-> +               status =3D "disabled";
-> +       };
+> +	case 1:
+>  		/* Configure Own Address 1 */
+>  		oar1 = readl_relaxed(i2c_dev->base + STM32F7_I2C_OAR1);
+>  		oar1 &= ~STM32F7_I2C_OAR1_MASK;
+> @@ -1789,7 +1810,9 @@ static int stm32f7_i2c_reg_slave(struct i2c_client *slave)
+>  		oar1 |= STM32F7_I2C_OAR1_OA1EN;
+>  		i2c_dev->slave[id] = slave;
+>  		writel_relaxed(oar1, i2c_dev->base + STM32F7_I2C_OAR1);
+> -	} else if (id == 1) {
+> +		break;
 > +
->         cir: cir@10013000 {
->                 compatible =3D "mediatek,mt7623-cir";
->                 reg =3D <0 0x10013000 0 0x1000>;
-> @@ -369,6 +393,18 @@ apmixedsys: syscon@10209000 {
->                 #clock-cells =3D <1>;
->         };
->
-> +       hdmi_phy: phy@10209100 {
-> +               compatible =3D "mediatek,mt7623-hdmi-phy",
-
-Ditto.
-
-> +                            "mediatek,mt2701-hdmi-phy";
-> +               reg =3D <0 0x10209100 0 0x24>;
-> +               clocks =3D <&apmixedsys CLK_APMIXED_HDMI_REF>;
-> +               clock-names =3D "pll_ref";
-> +               clock-output-names =3D "hdmitx_dig_cts";
-> +               #clock-cells =3D <0>;
-> +               #phy-cells =3D <0>;
-> +               status =3D "disabled";
-> +       };
+> +	case 2:
+>  		/* Configure Own Address 2 */
+>  		oar2 = readl_relaxed(i2c_dev->base + STM32F7_I2C_OAR2);
+>  		oar2 &= ~STM32F7_I2C_OAR2_MASK;
+> @@ -1802,7 +1825,10 @@ static int stm32f7_i2c_reg_slave(struct i2c_client *slave)
+>  		oar2 |= STM32F7_I2C_OAR2_OA2EN;
+>  		i2c_dev->slave[id] = slave;
+>  		writel_relaxed(oar2, i2c_dev->base + STM32F7_I2C_OAR2);
+> -	} else {
+> +		break;
 > +
->         rng: rng@1020f000 {
->                 compatible =3D "mediatek,mt7623-rng";
->                 reg =3D <0 0x1020f000 0 0x1000>;
-> @@ -568,6 +604,16 @@ bch: ecc@1100e000 {
->                 status =3D "disabled";
->         };
->
-> +       hdmiddc0: i2c@11013000 {
-> +               compatible =3D "mediatek,mt7623-hdmi-ddc",
-
-Ditto.
-
-> +                            "mediatek,mt8173-hdmi-ddc";
-> +               interrupts =3D <GIC_SPI 81 IRQ_TYPE_LEVEL_LOW>;
-> +               reg =3D <0 0x11013000 0 0x1C>;
-> +               clocks =3D <&pericfg CLK_PERI_I2C3>;
-> +               clock-names =3D "ddc-i2c";
-> +               status =3D "disabled";
-> +       };
+> +	default:
+> +		dev_err(dev, "I2C slave id not supported\n");
+>  		ret = -ENODEV;
+>  		goto pm_free;
+>  	}
+> @@ -1843,10 +1869,10 @@ static int stm32f7_i2c_unreg_slave(struct i2c_client *slave)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	if (id == 0) {
+> +	if (id == 1) {
+>  		mask = STM32F7_I2C_OAR1_OA1EN;
+>  		stm32f7_i2c_clr_bits(base + STM32F7_I2C_OAR1, mask);
+> -	} else {
+> +	} else if (id == 2) {
+>  		mask = STM32F7_I2C_OAR2_OA2EN;
+>  		stm32f7_i2c_clr_bits(base + STM32F7_I2C_OAR2, mask);
+>  	}
+> @@ -1911,14 +1937,51 @@ static int stm32f7_i2c_setup_fm_plus_bits(struct platform_device *pdev,
+>  					  &i2c_dev->fmp_mask);
+>  }
+>  
+> +static int stm32f7_i2c_enable_smbus_host(struct stm32f7_i2c_dev *i2c_dev)
+> +{
+> +	struct i2c_adapter *adap = &i2c_dev->adap;
+> +	void __iomem *base = i2c_dev->base;
+> +	struct i2c_client *client;
 > +
->         nor_flash: spi@11014000 {
->                 compatible =3D "mediatek,mt7623-nor",
->                              "mediatek,mt8173-nor";
-> @@ -766,6 +812,84 @@ mmsys: syscon@14000000 {
->                 #clock-cells =3D <1>;
->         };
->
-> +       display_components: dispsys@14000000 {
-> +               compatible =3D "mediatek,mt7623-mmsys",
-> +                            "mediatek,mt2701-mmsys";
-
-In mediatek,mmsys.txt [3], this should be:
-
-mmsys: syscon@14000000 {
-        compatible =3D "mediatek,mt7623-mmsys", "mediatek,mt2701-mmsys", "s=
-yscon"
-
-[3] https://www.kernel.org/doc/Documentation/devicetree/bindings/arm/mediat=
-ek/mediatek%2Cmmsys.txt
-
-> +               reg =3D <0 0x14000000 0 0x1000>;
-> +               power-domains =3D <&scpsys MT2701_POWER_DOMAIN_DISP>;
-> +       };
+> +	client = i2c_new_slave_host_notify_device(adap);
+> +	if (IS_ERR(client))
+> +		return PTR_ERR(client);
 > +
-> +       ovl@14007000 {
-> +               compatible =3D "mediatek,mt7623-disp-ovl",
-
-This is not defined in mediatek,disp.txt [4].
-
-[4] https://www.kernel.org/doc/Documentation/devicetree/bindings/display/me=
-diatek/mediatek%2Cdisp.txt
-
-> +                            "mediatek,mt2701-disp-ovl";
-> +               reg =3D <0 0x14007000 0 0x1000>;
-> +               interrupts =3D <GIC_SPI 153 IRQ_TYPE_LEVEL_LOW>;
-> +               clocks =3D <&mmsys CLK_MM_DISP_OVL>;
-> +               iommus =3D <&iommu MT2701_M4U_PORT_DISP_OVL_0>;
-> +               mediatek,larb =3D <&larb0>;
-> +       };
+> +	i2c_dev->host_notify_client = client;
 > +
-> +       rdma0: rdma@14008000 {
-> +               compatible =3D "mediatek,mt7623-disp-rdma",
-> +                            "mediatek,mt2701-disp-rdma";
-> +               reg =3D <0 0x14008000 0 0x1000>;
-> +               interrupts =3D <GIC_SPI 152 IRQ_TYPE_LEVEL_LOW>;
-> +               clocks =3D <&mmsys CLK_MM_DISP_RDMA>;
-> +               iommus =3D <&iommu MT2701_M4U_PORT_DISP_RDMA>;
-> +               mediatek,larb =3D <&larb0>;
-> +       };
+> +	/* Enable SMBus Host address */
+> +	stm32f7_i2c_set_bits(base + STM32F7_I2C_CR1, STM32F7_I2C_CR1_SMBHEN);
 > +
-> +       wdma@14009000 {
-> +               compatible =3D "mediatek,mt7623-disp-wdma",
-> +                            "mediatek,mt2701-disp-wdma";
-> +               reg =3D <0 0x14009000 0 0x1000>;
-> +               interrupts =3D <GIC_SPI 154 IRQ_TYPE_LEVEL_LOW>;
-> +               clocks =3D <&mmsys CLK_MM_DISP_WDMA>;
-> +               iommus =3D <&iommu MT2701_M4U_PORT_DISP_WDMA>;
-> +               mediatek,larb =3D <&larb0>;
-> +       };
+> +	return 0;
+> +}
 > +
-> +       bls: pwm@1400a000 {
-> +               compatible =3D "mediatek,mt7623-disp-pwm",
-> +                            "mediatek,mt2701-disp-pwm";
-> +               reg =3D <0 0x1400a000 0 0x1000>;
-> +               #pwm-cells =3D <2>;
-> +               clocks =3D <&mmsys CLK_MM_MDP_BLS_26M>,
-> +                        <&mmsys CLK_MM_DISP_BLS>;
-> +               clock-names =3D "main", "mm";
-> +               status =3D "disabled";
-> +       };
+> +static void stm32f7_i2c_disable_smbus_host(struct stm32f7_i2c_dev *i2c_dev)
+> +{
+> +	void __iomem *base = i2c_dev->base;
 > +
-> +       color@1400b000 {
-> +               compatible =3D "mediatek,mt7623-disp-color",
-> +                            "mediatek,mt2701-disp-color";
-> +               reg =3D <0 0x1400b000 0 0x1000>;
-> +               interrupts =3D <GIC_SPI 156 IRQ_TYPE_LEVEL_LOW>;
-> +               clocks =3D <&mmsys CLK_MM_DISP_COLOR>;
-> +       };
+> +	if (i2c_dev->host_notify_client) {
+> +		/* Disable SMBus Host address */
+> +		stm32f7_i2c_clr_bits(base + STM32F7_I2C_CR1,
+> +				     STM32F7_I2C_CR1_SMBHEN);
+> +		i2c_free_slave_host_notify_device(i2c_dev->host_notify_client);
+> +	}
+> +}
 > +
-> +       dsi: dsi@1400c000 {
-> +               compatible =3D "mediatek,mt7623-dsi",
-
-This is not defined in mediatek,dsi.txt [1].
-
-> +                            "mediatek,mt2701-dsi";
-> +               reg =3D <0 0x1400c000 0 0x1000>;
-> +               interrupts =3D <GIC_SPI 157 IRQ_TYPE_LEVEL_LOW>;
-> +               clocks =3D <&mmsys CLK_MM_DSI_ENGINE>,
-> +                        <&mmsys CLK_MM_DSI_DIG>,
-> +                        <&mipi_tx0>;
-> +               clock-names =3D "engine", "digital", "hs";
-> +               phys =3D <&mipi_tx0>;
-> +               phy-names =3D "dphy";
-> +               status =3D "disabled";
-> +       };
+>  static u32 stm32f7_i2c_func(struct i2c_adapter *adap)
+>  {
+> -	return I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR | I2C_FUNC_SLAVE |
+> -		I2C_FUNC_SMBUS_QUICK | I2C_FUNC_SMBUS_BYTE |
+> -		I2C_FUNC_SMBUS_BYTE_DATA | I2C_FUNC_SMBUS_WORD_DATA |
+> -		I2C_FUNC_SMBUS_BLOCK_DATA | I2C_FUNC_SMBUS_BLOCK_PROC_CALL |
+> -		I2C_FUNC_SMBUS_PROC_CALL | I2C_FUNC_SMBUS_PEC |
+> -		I2C_FUNC_SMBUS_I2C_BLOCK;
+> +	struct stm32f7_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
 > +
-> +       mutex: mutex@1400e000 {
-> +               compatible =3D "mediatek,mt7623-disp-mutex",
-> +                            "mediatek,mt2701-disp-mutex";
-> +               reg =3D <0 0x1400e000 0 0x1000>;
-> +               interrupts =3D <GIC_SPI 161 IRQ_TYPE_LEVEL_LOW>;
-> +               clocks =3D <&mmsys CLK_MM_MUTEX_32K>;
-> +       };
+> +	u32 func = I2C_FUNC_I2C | I2C_FUNC_10BIT_ADDR | I2C_FUNC_SLAVE |
+> +		   I2C_FUNC_SMBUS_QUICK | I2C_FUNC_SMBUS_BYTE |
+> +		   I2C_FUNC_SMBUS_BYTE_DATA | I2C_FUNC_SMBUS_WORD_DATA |
+> +		   I2C_FUNC_SMBUS_BLOCK_DATA | I2C_FUNC_SMBUS_BLOCK_PROC_CALL |
+> +		   I2C_FUNC_SMBUS_PROC_CALL | I2C_FUNC_SMBUS_PEC |
+> +		   I2C_FUNC_SMBUS_I2C_BLOCK;
 > +
->         larb0: larb@14010000 {
->                 compatible =3D "mediatek,mt7623-smi-larb",
->                              "mediatek,mt2701-smi-larb";
-> @@ -778,6 +902,44 @@ larb0: larb@14010000 {
->                 power-domains =3D <&scpsys MT2701_POWER_DOMAIN_DISP>;
->         };
->
-> +       rdma1: rdma@14012000 {
-> +               compatible =3D "mediatek,mt7623-disp-rdma",
-> +                            "mediatek,mt2701-disp-rdma";
-> +               reg =3D <0 0x14012000 0 0x1000>;
-> +               interrupts =3D <GIC_SPI 164 IRQ_TYPE_LEVEL_LOW>;
-> +               clocks =3D <&mmsys CLK_MM_DISP_RDMA1>;
-> +               iommus =3D <&iommu MT2701_M4U_PORT_DISP_RDMA1>;
-> +               mediatek,larb =3D <&larb0>;
-> +       };
+> +	if (i2c_dev->smbus_mode)
+> +		func |= I2C_FUNC_SMBUS_HOST_NOTIFY;
 > +
-> +       dpi0: dpi@14014000 {
-> +               compatible =3D "mediatek,mt7623-dpi",
-
-This is not defined in mediatek,dpi.txt [5].
-
-[5] https://www.kernel.org/doc/Documentation/devicetree/bindings/display/me=
-diatek/mediatek%2Cdpi.txt
-
-Regards,
-Chun-Kuang.
-
-> +                            "mediatek,mt2701-dpi";
-> +               reg =3D <0 0x14014000 0 0x1000>;
-> +               interrupts =3D <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
-> +               clocks =3D <&mmsys CLK_MM_DPI1_DIGL>,
-> +                        <&mmsys CLK_MM_DPI1_ENGINE>,
-> +                        <&apmixedsys CLK_APMIXED_TVDPLL>;
-> +               clock-names =3D "pixel", "engine", "pll";
-> +               status =3D "disabled";
-> +       };
+> +	return func;
+>  }
+>  
+>  static const struct i2c_algorithm stm32f7_i2c_algo = {
+> @@ -2084,10 +2147,22 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+>  
+>  	stm32f7_i2c_hw_config(i2c_dev);
+>  
+> +	i2c_dev->smbus_mode = of_property_read_bool(pdev->dev.of_node, "smbus");
 > +
-> +       hdmi0: hdmi@14015000 {
-> +               compatible =3D "mediatek,mt7623-hdmi",
-> +                            "mediatek,mt8173-hdmi";
-> +               reg =3D <0 0x14015000 0 0x400>;
-> +               clocks =3D <&mmsys CLK_MM_HDMI_PIXEL>,
-> +                        <&mmsys CLK_MM_HDMI_PLL>,
-> +                        <&mmsys CLK_MM_HDMI_AUDIO>,
-> +                        <&mmsys CLK_MM_HDMI_SPDIF>;
-> +               clock-names =3D "pixel", "pll", "bclk", "spdif";
-> +               phys =3D <&hdmi_phy>;
-> +               phy-names =3D "hdmi";
-> +               mediatek,syscon-hdmi =3D <&mmsys 0x900>;
-> +               cec =3D <&cec>;
-> +               status =3D "disabled";
-> +       };
+>  	ret = i2c_add_adapter(adap);
+>  	if (ret)
+>  		goto pm_disable;
+>  
+> +	if (i2c_dev->smbus_mode) {
+> +		ret = stm32f7_i2c_enable_smbus_host(i2c_dev);
+> +		if (ret) {
+> +			dev_err(i2c_dev->dev,
+> +				"failed to enable SMBus Host-Notify protocol (%d)\n",
+> +				ret);
+> +			goto i2c_adapter_remove;
+> +		}
+> +	}
 > +
+>  	dev_info(i2c_dev->dev, "STM32F7 I2C-%d bus adapter\n", adap->nr);
+>  
+>  	pm_runtime_mark_last_busy(i2c_dev->dev);
+> @@ -2095,6 +2170,9 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+>  
+>  	return 0;
+>  
+> +i2c_adapter_remove:
+> +	i2c_del_adapter(adap);
+> +
+>  pm_disable:
+>  	pm_runtime_put_noidle(i2c_dev->dev);
+>  	pm_runtime_disable(i2c_dev->dev);
+> @@ -2126,6 +2204,8 @@ static int stm32f7_i2c_remove(struct platform_device *pdev)
+>  {
+>  	struct stm32f7_i2c_dev *i2c_dev = platform_get_drvdata(pdev);
+>  
+> +	stm32f7_i2c_disable_smbus_host(i2c_dev);
+> +
+>  	i2c_del_adapter(&i2c_dev->adap);
+>  	pm_runtime_get_sync(i2c_dev->dev);
+>  
+> 
