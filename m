@@ -2,119 +2,110 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 617EDC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D92C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7458C206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3BC4206F6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 05:43:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rQCZxWU+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729636AbgHDFmm (ORCPT
+        id S1729792AbgHDFnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 01:42:42 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:47602 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728811AbgHDFml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 01:42:41 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BDA862011A2;
-        Tue,  4 Aug 2020 07:42:39 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 70C75201194;
-        Tue,  4 Aug 2020 07:42:34 +0200 (CEST)
-Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A0D70402DE;
-        Tue,  4 Aug 2020 07:42:27 +0200 (CEST)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     hongxing.zhu@nxp.com, l.stach@pengutronix.de,
-        lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] PCI: imx6: Do not output error message when devm_clk_get() failed with -EPROBE_DEFER
-Date:   Tue,  4 Aug 2020 13:38:01 +0800
-Message-Id: <1596519481-28072-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 4 Aug 2020 01:43:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727076AbgHDFnQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 01:43:16 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3B30C06174A;
+        Mon,  3 Aug 2020 22:43:16 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id j21so2760295pgi.9;
+        Mon, 03 Aug 2020 22:43:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=opizXqAmsRO4EtJdKZFFyzh9erOA9+JY3GTU/QHYgDk=;
+        b=rQCZxWU+iptDfciRqydWseMplSG3NKGzlIRXbuPdcwL3sTk+CoRMCB30SEzVae7M60
+         o5lP+0GV025EYyQqWq9iDvnG1cImAVpQK+ElK5t/wx4KsjWklboCHRcI1JEmv6vtIFHA
+         eXTWvJQtP4KZ+Y49S2EPNo8qjLPbFw/T6Z6phv1r/k2DRXY7yuYVb/VTfAKA8SI5igbv
+         I+TbV/e3E5CR7vH7e/qcR9T4L1Qk1NPe/dQzW6i/h5thxTCJbodFDrONRaK11oqvGf3U
+         kGvHtOrHWvBTHciuGBv9gk0p8qGjhuMN531Sp6GCnUvryzqVChL7pHYrS5eDTnfPa8IJ
+         otnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=opizXqAmsRO4EtJdKZFFyzh9erOA9+JY3GTU/QHYgDk=;
+        b=ZuypHvBFOY3s9dnPfLllv+RQ0lMwtduicQoTOTmqth2vtiEbUjkt/rJB2It40HAqAb
+         tVwM84Ec5FTGHAIoFVNAws2d/513d0aMDfR6QXPQDsJgrdUcNVQuZHCIDjxVeGPVBYYi
+         jZQS76oWuOECliTwN/ySRJ4IHnoeCuFfMaF8+/gwUkNmw7Ge98u+I1f3e1vFP29RGFTL
+         Whv2qdeVnTt+Q42wqDS+7B4a3eHpp4we+siPR0/u49+mDDEo9xFupT3yhH14DI5vAtYN
+         BpriINtjJ0iZ9JDmHwINlE0i/z+6lZmbDWqIxzpVozlFFWTkUXmjKeO02ajDcJ2KVOGz
+         rIPA==
+X-Gm-Message-State: AOAM533UYe8zYXLcN06SMCi5rZb4tfsQkYNN4kUqnB6BEFffiih7E7OJ
+        0nPdV4edQCu1dJtDUjTVPqk=
+X-Google-Smtp-Source: ABdhPJznfkOeR7KzT2yv9o6vG39B2pOmluC3VlXdKQF/mn+UWtwESiWkdYyKHYBit8tTPXgXeQTKvw==
+X-Received: by 2002:a63:ec06:: with SMTP id j6mr14109864pgh.328.1596519796146;
+        Mon, 03 Aug 2020 22:43:16 -0700 (PDT)
+Received: from gmail.com ([2601:600:9b7f:872e:a655:30fb:7373:c762])
+        by smtp.gmail.com with ESMTPSA id z2sm7379100pfq.46.2020.08.03.22.43.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2020 22:43:15 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 22:43:13 -0700
+From:   Andrei Vagin <avagin@gmail.com>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        viro@zeniv.linux.org.uk, adobriyan@gmail.com, davem@davemloft.net,
+        akpm@linux-foundation.org, christian.brauner@ubuntu.com,
+        areber@redhat.com, serge@hallyn.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+Subject: Re: [PATCH 00/23] proc: Introduce /proc/namespaces/ directory to
+ expose namespaces lineary
+Message-ID: <20200804054313.GA100819@gmail.com>
+References: <159611007271.535980.15362304262237658692.stgit@localhost.localdomain>
+ <87k0yl5axy.fsf@x220.int.ebiederm.org>
+ <56928404-f194-4194-5f2a-59acb15b1a04@virtuozzo.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=koi8-r
+Content-Disposition: inline
+In-Reply-To: <56928404-f194-4194-5f2a-59acb15b1a04@virtuozzo.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When devm_clk_get() returns -EPROBE_DEFER, i.MX6 PCI driver should
-NOT print error message, just return -EPROBE_DEFER is enough.
+On Thu, Jul 30, 2020 at 06:01:20PM +0300, Kirill Tkhai wrote:
+> On 30.07.2020 17:34, Eric W. Biederman wrote:
+> > Kirill Tkhai <ktkhai@virtuozzo.com> writes:
+> > 
+> >> Currently, there is no a way to list or iterate all or subset of namespaces
+> >> in the system. Some namespaces are exposed in /proc/[pid]/ns/ directories,
+> >> but some also may be as open files, which are not attached to a process.
+> >> When a namespace open fd is sent over unix socket and then closed, it is
+> >> impossible to know whether the namespace exists or not.
+> >>
+> >> Also, even if namespace is exposed as attached to a process or as open file,
+> >> iteration over /proc/*/ns/* or /proc/*/fd/* namespaces is not fast, because
+> >> this multiplies at tasks and fds number.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- drivers/pci/controller/dwc/pci-imx6.c | 30 ++++++++++++++++++++----------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+Could you describe with more details when you need to iterate
+namespaces?
 
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 4e5c379..ee75d35 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -1076,20 +1076,26 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 	/* Fetch clocks */
- 	imx6_pcie->pcie_phy = devm_clk_get(dev, "pcie_phy");
- 	if (IS_ERR(imx6_pcie->pcie_phy)) {
--		dev_err(dev, "pcie_phy clock source missing or invalid\n");
--		return PTR_ERR(imx6_pcie->pcie_phy);
-+		ret = PTR_ERR(imx6_pcie->pcie_phy);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "pcie_phy clock source missing or invalid\n");
-+		return ret;
- 	}
- 
- 	imx6_pcie->pcie_bus = devm_clk_get(dev, "pcie_bus");
- 	if (IS_ERR(imx6_pcie->pcie_bus)) {
--		dev_err(dev, "pcie_bus clock source missing or invalid\n");
--		return PTR_ERR(imx6_pcie->pcie_bus);
-+		ret = PTR_ERR(imx6_pcie->pcie_bus);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "pcie_bus clock source missing or invalid\n");
-+		return ret;
- 	}
- 
- 	imx6_pcie->pcie = devm_clk_get(dev, "pcie");
- 	if (IS_ERR(imx6_pcie->pcie)) {
--		dev_err(dev, "pcie clock source missing or invalid\n");
--		return PTR_ERR(imx6_pcie->pcie);
-+		ret = PTR_ERR(imx6_pcie->pcie);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "pcie clock source missing or invalid\n");
-+		return ret;
- 	}
- 
- 	switch (imx6_pcie->drvdata->variant) {
-@@ -1097,15 +1103,19 @@ static int imx6_pcie_probe(struct platform_device *pdev)
- 		imx6_pcie->pcie_inbound_axi = devm_clk_get(dev,
- 							   "pcie_inbound_axi");
- 		if (IS_ERR(imx6_pcie->pcie_inbound_axi)) {
--			dev_err(dev, "pcie_inbound_axi clock missing or invalid\n");
--			return PTR_ERR(imx6_pcie->pcie_inbound_axi);
-+			ret = PTR_ERR(imx6_pcie->pcie_inbound_axi);
-+			if (ret != -EPROBE_DEFER)
-+				dev_err(dev, "pcie_inbound_axi clock missing or invalid\n");
-+			return ret;
- 		}
- 		break;
- 	case IMX8MQ:
- 		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
- 		if (IS_ERR(imx6_pcie->pcie_aux)) {
--			dev_err(dev, "pcie_aux clock source missing or invalid\n");
--			return PTR_ERR(imx6_pcie->pcie_aux);
-+			ret = PTR_ERR(imx6_pcie->pcie_aux);
-+			if (ret != -EPROBE_DEFER)
-+				dev_err(dev, "pcie_aux clock source missing or invalid\n");
-+			return ret;
- 		}
- 		/* fall through */
- 	case IMX7D:
--- 
-2.7.4
+There are three ways to hold namespaces.
 
+* processes
+* bind-mounts
+* file descriptors
+
+When CRIU dumps a container, it enumirates all processes, collects file
+descriptors and mounts. This means that we will be able to collect all
+namespaces, doesn't it?
