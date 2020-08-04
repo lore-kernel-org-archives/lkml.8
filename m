@@ -2,90 +2,74 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B054C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7698CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87B86206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:37:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dfIJBc7J"
+	by mail.kernel.org (Postfix) with ESMTP id 7EF4622CF6
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:45:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729718AbgHDEhp (ORCPT
+        id S1729663AbgHDEpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 00:37:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50882 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729149AbgHDEhp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 00:37:45 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CA44C061756
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 21:37:45 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id f5so4144901pgg.10
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 21:37:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zqowAZufb7b0uKdkmkGlWSQC5Gld+DbUt3HuxK1ZIc4=;
-        b=dfIJBc7J6lHjp36VIYX7blXf9z2V2tSLQMdoVnjvBngdeoL6iZ7Jhg+oA5/CheCqbs
-         ZRCMZNeC6Dz1t66JAkwLD/Kzsw5QT72CRiDMITe7+Yx6es41aLi5xcl3IIs4Eu834zPR
-         hL0o+ziAZRDSw9a6yedGgaNrLyAMbPAkFJnqs/R+DQn02JVl2ag0YGEl8KFxw2o0mS45
-         19SeVyhm4H9JrJgBFrJ2zOKfRCdGI4IWNMEtdJjA6zSq60WYQUYIXslJi//TXVlkuB21
-         7M/J4AElDdZx9THIamQhp0jk0rwCLHYgaHFol5zODsPuOK2lF4gVbIDWqZWbBuC08YKC
-         OQUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zqowAZufb7b0uKdkmkGlWSQC5Gld+DbUt3HuxK1ZIc4=;
-        b=CEMz4T2TGzKWx9IIwEqxQFIy/smJ9MbxBRk6W2mowp9V5cg7g7C0LskgyNYJwZ0xPv
-         M8zURCTM1xtJU2uHy3fpnfv+2rfUm36Vmk/Sy+U5eS0zxaCVuRt2AJyt7qoORx6QX9qy
-         88JLRJdrJpjsF5RDJpQNTJZyWXdRwYdbMLLGVX9yJxhiPEfa6x54skBfQVx5js4Dgxxz
-         Kn486Ltv/TtaEBSdgC9AkVmXesaSxD+XliqRehFkaXlipjPOvM1adDBtIAyUGibLtJ2H
-         VsxUT/+5GVxkW9UhPcQCke5DL1Rr4j2/vomNTArd9VuXIHm8dW9AE+h8gF7r4rkkLo/y
-         0LQQ==
-X-Gm-Message-State: AOAM532Veljv86SjNUxf2hgNJWp+fFAdhIQ6csyXQzBQkrxDPX6zarcE
-        AtyhLQMPwFqatUjYZ4vQAnMsSQ==
-X-Google-Smtp-Source: ABdhPJyT1eg8U8v7kNE2LdnRYGrpRoiGECTB6MXZ62JuB7qooc12g5BQxjsZsuVcty2ibapVfbv5MQ==
-X-Received: by 2002:a62:9256:: with SMTP id o83mr17696174pfd.44.1596515864280;
-        Mon, 03 Aug 2020 21:37:44 -0700 (PDT)
-Received: from localhost ([122.162.244.227])
-        by smtp.gmail.com with ESMTPSA id j130sm139319pgc.76.2020.08.03.21.37.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Aug 2020 21:37:43 -0700 (PDT)
-Date:   Tue, 4 Aug 2020 10:07:40 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Xin Hao <xhao@linux.alibaba.com>
-Cc:     rjw@rjwysocki.net, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] cpufreq: CPPC: simply the code access 'highest_perf'
- value in cppc_perf_caps struct
-Message-ID: <20200804043740.cde3ij2uk4xczemh@vireshk-mac-ubuntu>
-References: <20200701042007.13333-1-xhao@linux.alibaba.com>
- <8643d122-c069-192e-8f3a-dc18f84eed9a@linux.alibaba.com>
+        Tue, 4 Aug 2020 00:45:30 -0400
+Received: from mail5.windriver.com ([192.103.53.11]:55664 "EHLO mail5.wrs.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726000AbgHDEpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 00:45:30 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 0744hTcB002937
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
+        Mon, 3 Aug 2020 21:43:50 -0700
+Received: from [128.224.162.157] (128.224.162.157) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.50) with Microsoft SMTP Server id 14.3.487.0; Mon, 3 Aug 2020
+ 21:43:24 -0700
+Subject: Re: [PATCH] crypto: ccp - zero the cmd data after use it
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+CC:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Gary Hook <gary.hook@amd.com>, David <davem@davemloft.net>,
+        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200803075858.3561-1-liwei.song@windriver.com>
+ <20200803125242.GA7689@gondor.apana.org.au>
+ <87ae939b-4983-4e96-cc3d-1aa1d1b3d3ae@windriver.com>
+ <20200804040420.GA10850@gondor.apana.org.au>
+ <1b6be879-8449-b519-046f-0312e57aa9a4@windriver.com>
+ <20200804042215.GA10939@gondor.apana.org.au>
+From:   Liwei Song <liwei.song@windriver.com>
+Message-ID: <7f5e38f8-c7a4-65c7-647b-749f66ccc48b@windriver.com>
+Date:   Tue, 4 Aug 2020 12:43:21 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8643d122-c069-192e-8f3a-dc18f84eed9a@linux.alibaba.com>
-User-Agent: NeoMutt/20170609 (1.8.3)
+In-Reply-To: <20200804042215.GA10939@gondor.apana.org.au>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04-08-20, 10:37, Xin Hao wrote:
-> Hi everyone:
+
+
+On 8/4/20 12:22, Herbert Xu wrote:
+> On Tue, Aug 04, 2020 at 12:20:21PM +0800, Liwei Song wrote:
+>>
+>> Yes, the other process should do this zero work, but the case I met is
+>> this address will appear in the slab_alloc_node() as freelist pointer of slub,
+>> and before slub do zero wrok, even kzalloc() doesn't work with this address.
 > 
-> I want to know why my patch didn't merge into upstream ?
+> That would be memory corruption which has nothing to do with your
+> patch.  If it is occurring then you should fix the place that is
+> corrupting the memory and not work around it like this.
 
-I have sent a pull request earlier today to Rafael and this will get
-merged in the next pull request Rafael will send to Linus.
+OK, understand, thanks for your suggestion.
 
--- 
-viresh
+Liwei.
+
+
+> 
+> Cheers,
+> 
