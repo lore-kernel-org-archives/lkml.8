@@ -2,85 +2,134 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A026FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A97C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC1922B45
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:13:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BbsTPuA4"
+	by mail.kernel.org (Postfix) with ESMTP id 9D9EC22B45
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:14:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgHDKNM (ORCPT
+        id S1725996AbgHDKOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 06:13:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725924AbgHDKNL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 06:13:11 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78F6FC06174A;
-        Tue,  4 Aug 2020 03:13:11 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id o5so3847752pgb.2;
-        Tue, 04 Aug 2020 03:13:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VUZ+5uaWO5tygxXuvOm55d3w56P1W5CNtNbPKcozm+o=;
-        b=BbsTPuA4f+c97Mqm4Dhm66f9TB6s3p0y9+fl9la8dSQZ1b2w4EnvmGOkSZBlZVxEQi
-         +mAkU4d3/nigMTMcM7HEC6B7H+1drbyVBb0RJc7P0/JU3g595pcwSRPU7RMk6djLgmZA
-         Tbl1Dvre/iCIBqpldW1K0yGa6l7xkuj3dk/8rQVSOEgOCjCiEwzYUv6gSZQC4P6uwLcL
-         MAq4Fwc9SDNxh0PEm2MTNSNHRODPIBO7AFqc+IkxqPjybdG1dyf5SgMd9VnehbaP8hw/
-         6fhPTL/NW+557guMWBZx68Sjj5L1z4eX5LvEFxXfC2M4t3j/QQl0EdlFy/RAepYcv2r5
-         Edhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VUZ+5uaWO5tygxXuvOm55d3w56P1W5CNtNbPKcozm+o=;
-        b=fUeeWvd2ZRejQZ1sWQrw256P97RzM4EbMsJVtqowW9H2Y3RFKi9vHSKKHb23bDF0uB
-         A9+EBVVHyz5hqsYSufAFR8NyB+EtgFOBPCGbD4e1tnVvm3XHZbGZF10RpgvGkDQsHxOz
-         1Oz3hA0Tzpf4MNq6qOAvVFDuQVLCQ4/z5FigXLEQPGS8ZLDTSPWdhLosVlSa6IqiDSYw
-         Lo/zglcq0yfNyT+MHLUOaR9hUO0Blua4VIQsPZxdU07TPEG0xpJnp8cmRhhPeHxa22Nm
-         K6o3OmXBTLFoUtO4I52kjqwAqF2IXuf26QDefTApr5mo0FLH9VVu224gRdLi8Kq6SIT9
-         jDpw==
-X-Gm-Message-State: AOAM533szIRmvwyPzx+9BmUbxlyq2ejjP9N7w7ZSMJSVfDp7587711Fv
-        glscVrFiURINRX4SHjreuNY0FwFi+9OydCxjTFY=
-X-Google-Smtp-Source: ABdhPJyKMDJtC/pI434FF62GRZ35Xm2o0EpxfqLH2ESt2EmF/5liRp8UjeIexAeqMr2Xm0lz1ysYmDrSXO5yB3E4XyA=
-X-Received: by 2002:a63:5412:: with SMTP id i18mr19181541pgb.63.1596535990834;
- Tue, 04 Aug 2020 03:13:10 -0700 (PDT)
+        Tue, 4 Aug 2020 06:14:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47284 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbgHDKOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 06:14:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 059FEB595;
+        Tue,  4 Aug 2020 10:14:17 +0000 (UTC)
+Date:   Tue, 4 Aug 2020 12:14:00 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marco Elver <elver@google.com>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2][next] printk: ringbuffer: support dataless records
+Message-ID: <20200804101400.GB24529@alley>
+References: <20200721132528.9661-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
-References: <20200730073702.16887-1-xie.he.0141@gmail.com> <CAJht_EO1srhh68DifK61+hpY+zBRU8oOAbJOSpjOqePithc7gw@mail.gmail.com>
- <c88c0acc63cbc64383811193c5e1b184@dev.tdt.de> <CA+FuTSeCFn+t55R8G54bFt4i8zP_gOHT7eZ5TeqNmcX5yL3tGw@mail.gmail.com>
- <CAJht_EOeCpy_SLKk2KXJHBj79VCujUZWiZou_BDfMr+pVWKGPA@mail.gmail.com>
-In-Reply-To: <CAJht_EOeCpy_SLKk2KXJHBj79VCujUZWiZou_BDfMr+pVWKGPA@mail.gmail.com>
-From:   Xie He <xie.he.0141@gmail.com>
-Date:   Tue, 4 Aug 2020 03:13:00 -0700
-Message-ID: <CAJht_EN5fRKMHZRtqOgYKZ4wmOZOQcrGnarEPWUxRD31eaftRA@mail.gmail.com>
-Subject: Re: [PATCH v2] drivers/net/wan/lapbether: Use needed_headroom instead
- of hard_header_len
-To:     Willem de Bruijn <willemb@google.com>
-Cc:     Martin Schiller <ms@dev.tdt.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux X25 <linux-x25@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200721132528.9661-1-john.ogness@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 3:07 AM Xie He <xie.he.0141@gmail.com> wrote:
->
-> Maybe we could contact <majordomo@vger.kernel.org>. It seems to be the
-> manager of VGER mail lists.
+On Tue 2020-07-21 15:31:28, John Ogness wrote:
+> With commit ("printk: use the lockless ringbuffer"), printk()
+> started silently dropping messages without text because such
+> records are not supported by the new printk ringbuffer.
+> 
+> Add support for such records.
+> 
+> Currently dataless records are denoted by INVALID_LPOS in order
+> to recognize failed prb_reserve() calls. Change the ringbuffer
+> to instead use two different identifiers (FAILED_LPOS and
+> NO_LPOS) to distinguish between failed prb_reserve() records and
+> successful dataless records, respectively.
+> 
+> diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
+> index 7355ca99e852..0659b50872b5 100644
+> --- a/kernel/printk/printk_ringbuffer.c
+> +++ b/kernel/printk/printk_ringbuffer.c
+>  static bool data_check_size(struct prb_data_ring *data_ring, unsigned int size)
+>  {
+>  	struct prb_data_block *db = NULL;
+>  
+> -	/*
+> -	 * Writers are not allowed to write data-less records. Such records
+> -	 * are used only internally by the ringbuffer to denote records where
+> -	 * their data failed to allocate or have been lost.
+> -	 */
+>  	if (size == 0)
+> -		return false;
+> +		return true;
 
-Oh. No. Majordomo seems to be a robot.
+Nit: This might deserve a comment why size == 0 is handled
+     a special way.specially. I think about something like:
+
+	/*
+	 * Empty data blocks are handled by special lpos values in
+	 * the record descriptor. No space is needed in the data ring.
+	 */
+
+or simply
+
+	/* Data-less records take no space in the data ring. */
+
+>  	/*
+>  	 * Ensure the alignment padded size could possibly fit in the data
+
+> @@ -1025,6 +1020,10 @@ static char *data_alloc(struct printk_ringbuffer *rb,
+>  static unsigned int space_used(struct prb_data_ring *data_ring,
+>  			       struct prb_data_blk_lpos *blk_lpos)
+>  {
+> +	/* Data-less blocks take no space. */
+> +	if (LPOS_DATALESS(blk_lpos->begin))
+> +		return 0;
+
+Nit: It seems that all the other locations check also blk_lpos->next,
+     for example, get_data() does:
+
+	if (LPOS_DATALESS(blk_lpos->begin) && LPOS_DATALESS(blk_lpos->next)) {
+
+
+     Both approaches are error prone. I would either simplify the
+     other locations and check only lpos->begin. But better might
+     be to be on the safe side do a paranoid check, like:
+
+bool is_dataless(struct prb_data_blk_lpos *blk_lpos)
+{
+	if (LPOS_DATALESS(blk_lpos->begin) || LPOS_DATALESS(blk_lpos->next)) {
+		WARN_ON_ONCE(blk_lpos->begin != blk_lpos->next);
+		return true;
+	}
+
+	return false;
+}
+
+> +
+>  	if (DATA_WRAPS(data_ring, blk_lpos->begin) == DATA_WRAPS(data_ring, blk_lpos->next)) {
+>  		/* Data block does not wrap. */
+>  		return (DATA_INDEX(data_ring, blk_lpos->next) -
+
+Anyway, the patch looks fine. It is already pushed in
+printk/linux.git. So, if you agree with my nits, we should
+solve them with separate patches on top of the existing ones.
+
+Best Regards,
+Petr
