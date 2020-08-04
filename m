@@ -4,124 +4,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 166F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B50C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 271652075D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45A7E2075D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:36:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729941AbgHDIfr (ORCPT
+        id S1729954AbgHDIgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 04:35:47 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2601 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728163AbgHDIfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 04:35:47 -0400
-Received: from dggeme758-chm.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 97260A2700479B0058EC;
-        Tue,  4 Aug 2020 16:35:44 +0800 (CST)
-Received: from [10.40.49.11] (10.40.49.11) by dggeme758-chm.china.huawei.com
- (10.3.19.104) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1913.5; Tue, 4 Aug
- 2020 16:35:44 +0800
-Subject: Re: [RFC PATCH 8/9] PCI/PME: Add RCEC PME handling
-To:     Sean V Kelley <sean.v.kelley@intel.com>, <bhelgaas@google.com>,
-        <Jonathan.Cameron@huawei.com>, <rjw@rjwysocki.net>,
-        <ashok.raj@kernel.org>, <tony.luck@intel.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-References: <20200724172223.145608-1-sean.v.kelley@intel.com>
- <20200724172223.145608-9-sean.v.kelley@intel.com>
-From:   Jay Fang <f.fangjian@huawei.com>
-Message-ID: <edbcf3da-a1d5-e1b6-6a1a-a286429fc4e3@huawei.com>
-Date:   Tue, 4 Aug 2020 16:35:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.0.1
+        Tue, 4 Aug 2020 04:36:53 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:42492 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726058AbgHDIgw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 04:36:52 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0U4jpNEg_1596530205;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U4jpNEg_1596530205)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 04 Aug 2020 16:36:46 +0800
+Subject: Re: [PATCH v17 00/21] per memcg lru lock
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
+        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
+        kirill@shutemov.name, alexander.duyck@gmail.com,
+        rong.a.chen@intel.com, Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
+Message-ID: <f875a544-124c-c001-3447-4dcedce269c1@linux.alibaba.com>
+Date:   Tue, 4 Aug 2020 16:36:29 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200724172223.145608-9-sean.v.kelley@intel.com>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.40.49.11]
-X-ClientProxiedBy: dggeme718-chm.china.huawei.com (10.1.199.114) To
- dggeme758-chm.china.huawei.com (10.3.19.104)
-X-CFilter-Loop: Reflected
+In-Reply-To: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From 6f3ac2a72448291a88f50df836d829a23e7df736 Mon Sep 17 00:00:00 2001
+From: Alex Shi <alex.shi@linux.alibaba.com>
+Date: Sat, 25 Jul 2020 22:52:11 +0800
+Subject: [PATCH 2/3] mm/mlock: remove __munlock_isolate_lru_page
+
+The func only has one caller, remove it to clean up code and simplify
+code.
+
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+---
+ mm/mlock.c | 22 ++++------------------
+ 1 file changed, 4 insertions(+), 18 deletions(-)
+
+diff --git a/mm/mlock.c b/mm/mlock.c
+index 46a05e6ec5ba..40a8bb79c65e 100644
+--- a/mm/mlock.c
++++ b/mm/mlock.c
+@@ -102,23 +102,6 @@ void mlock_vma_page(struct page *page)
+ }
+ 
+ /*
+- * Isolate a page from LRU with optional get_page() pin.
+- * Assumes lru_lock already held and page already pinned.
+- */
+-static bool __munlock_isolate_lru_page(struct page *page,
+-				struct lruvec *lruvec, bool getpage)
+-{
+-	if (TestClearPageLRU(page)) {
+-		if (getpage)
+-			get_page(page);
+-		del_page_from_lru_list(page, lruvec, page_lru(page));
+-		return true;
+-	}
+-
+-	return false;
+-}
+-
+-/*
+  * Finish munlock after successful page isolation
+  *
+  * Page must be locked. This is a wrapper for try_to_munlock()
+@@ -300,7 +283,10 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
+ 			 * We already have pin from follow_page_mask()
+ 			 * so we can spare the get_page() here.
+ 			 */
+-			if (__munlock_isolate_lru_page(page, lruvec, false)) {
++			if (TestClearPageLRU(page)) {
++				enum lru_list lru = page_lru(page);
++
++				del_page_from_lru_list(page, lruvec, lru);
+ 				unlock_page_memcg(page);
+ 				continue;
+ 			} else
+-- 
+1.8.3.1
 
 
-ÔÚ 2020/7/25 1:22, Sean V Kelley Ð´µÀ:
-> The Root Complex Event Collectors(RCEC) appear as peers of Root Ports
-> and also have the PME capability. So add RCEC support to the current PME
-> service driver and attach the PME service driver to the RCEC device.
-> 
-> Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> ---
->  drivers/pci/pcie/pme.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
-> index 6a32970bb731..87799166c96a 100644
-> --- a/drivers/pci/pcie/pme.c
-> +++ b/drivers/pci/pcie/pme.c
-> @@ -310,7 +310,10 @@ static int pcie_pme_can_wakeup(struct pci_dev *dev, void *ign)
->  static void pcie_pme_mark_devices(struct pci_dev *port)
->  {
->  	pcie_pme_can_wakeup(port, NULL);
-> -	if (port->subordinate)
-> +
-> +	if (pci_pcie_type(port) == PCI_EXP_TYPE_RC_EC)
-> +		pcie_walk_rcec(port, pcie_pme_can_wakeup, NULL);
-> +	else if (port->subordinate)
->  		pci_walk_bus(port->subordinate, pcie_pme_can_wakeup, NULL);
->  }
->  
-> @@ -320,10 +323,15 @@ static void pcie_pme_mark_devices(struct pci_dev *port)
->   */
->  static int pcie_pme_probe(struct pcie_device *srv)
->  {
-> -	struct pci_dev *port;
-> +	struct pci_dev *port = srv->port;
->  	struct pcie_pme_service_data *data;
->  	int ret;
->  
-> +	/* Limit to Root Ports or Root Complex Event Collectors */
-> +	if ((pci_pcie_type(port) != PCI_EXP_TYPE_RC_EC) &&
-> +	    (pci_pcie_type(port) != PCI_EXP_TYPE_ROOT_PORT))
-> +		return -ENODEV;
-> +
->  	data = kzalloc(sizeof(*data), GFP_KERNEL);
->  	if (!data)
->  		return -ENOMEM;
-> @@ -333,7 +341,6 @@ static int pcie_pme_probe(struct pcie_device *srv)
->  	data->srv = srv;
->  	set_service_data(srv, data);
->  
-> -	port = srv->port;
->  	pcie_pme_interrupt_enable(port, false);
->  	pcie_clear_root_pme_status(port);
->  
-> @@ -445,7 +452,7 @@ static void pcie_pme_remove(struct pcie_device *srv)
->  
->  static struct pcie_port_service_driver pcie_pme_driver = {
->  	.name		= "pcie_pme",
-> -	.port_type	= PCI_EXP_TYPE_ROOT_PORT,
-> +	.port_type	= PCIE_ANY_PORT,
-Maybe we can use port_type for driver matching. There is no need
-to check the type of port in pcie_pme_probe function.
-
-
-Jay
-
->  	.service	= PCIE_PORT_SERVICE_PME,
->  
->  	.probe		= pcie_pme_probe,
-> 
