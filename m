@@ -2,307 +2,159 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF07C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F6BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB9A21744
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9146C20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:43:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="STcx0Q2I";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ilplFyix"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EOi3TYyc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbgHDUlG (ORCPT
+        id S1727942AbgHDUnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 16:41:06 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47510 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726807AbgHDUlF (ORCPT
+        Tue, 4 Aug 2020 16:43:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58458 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726545AbgHDUnD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 16:41:05 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596573661;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mNmAmiejVUb8O5lX/7R9+mNhNa6UJvKW+fNNp/5TLU0=;
-        b=STcx0Q2ITipPM64lbMXi7mbEh/ZoIpJkxz8Xu9DTEJDZNVbLFq4wJw7SzF7UGEYVqgInQL
-        Q8ocTuKzaD7vmP1vTMrNw8JBh3GQsyL1TAN2lne92M+OBD0MOW7riib6e73ayrdwWw/WQY
-        MVd7UaEsMYY8nToF230DrZyM83VQYCZJcDuVIER4Kk3jRKbw7EyGYnTiwDZNmPEJbqaq+C
-        +y689J27EQYIeLmm8NA335XJrm9O39k4nS7UJ8EUv86tFGl2uIq6MiuV/4GP2wPaymhOG1
-        bbpMQ5i22dM4BAjEPNeZoQgLh81GAIOopgBJFtOIY/THDlBl8Frjrsg4rAj8Fw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596573661;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mNmAmiejVUb8O5lX/7R9+mNhNa6UJvKW+fNNp/5TLU0=;
-        b=ilplFyix5nrOQRPF/39WvM+rUGh9hnSdn4zrhM0uFw0A6RpHz059tiftYeebuQT61ZsCGg
-        lYs3dkc/5pDCWfDA==
-To:     Sven Schnelle <svens@linux.ibm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        hca@linux.ibm.com, Sven Schnelle <svens@linux.ibm.com>
-Subject: Re: [PATCH v3 3/3] s390: convert to GENERIC_VDSO
-In-Reply-To: <20200804150124.41692-4-svens@linux.ibm.com>
-References: <20200804150124.41692-1-svens@linux.ibm.com> <20200804150124.41692-4-svens@linux.ibm.com>
-Date:   Tue, 04 Aug 2020 22:41:00 +0200
-Message-ID: <87tuxikuub.fsf@nanos.tec.linutronix.de>
+        Tue, 4 Aug 2020 16:43:03 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22E45C06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 13:43:03 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id m12so1137419vko.5
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 13:43:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TlCjdbRMbP/wUOWxhVpHiQRbe/DkH4AfQXHxlQhoVjA=;
+        b=EOi3TYycOATstmP6d5D/4kHK77cpmm07nIj5AHuvfKmnLxKlJXrFY2QFvli6qNNCKA
+         wqQ6Gx1OjpknqNrHPOsQ6i5pA4Nsl/0P+o8YnHG9NApjT17RZYWFm2ppHG2Oa91sfuxA
+         V7/UnvO5E3bSeNaQiSfAOAo3JPrbiEZyVWI1xZBomo1Dr5q+3bfJwXgF9dxiWHQGZQ2B
+         pLhcuu+09iTwu7nNQoaBdcI38gAj4GsGHfeAu8E+COwEkQ7qG41AYUnujdSx6sdIvWGB
+         LIzkgD64Cktj4Lrk9qYaJk7E7mh6dWZ2/a0BboxrjqurpZNuVBcAGleuhJxvMUPytp7k
+         494Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TlCjdbRMbP/wUOWxhVpHiQRbe/DkH4AfQXHxlQhoVjA=;
+        b=WPVRUYLkDt6330hfUXaSn1RsBCK6wR7ktPVjQnnm6747ykU3j0bis5s1L4JFGPTDbX
+         pqkCfAndE9MmUGfKW341FLdMo5DoDFOpxgnyHoGT7zrWEGXwU4aCl5lIoWsCpW9JZabc
+         cpKYtBCXkRSHlpli3h0FyxQfbwusXgcrFxU8AMlXcyw1LEl0BMWwlRmMFyHWjXnOR+S2
+         0awKuYItV8dJjmc5quYBFrH3g1iZwC+hss9UR+J5Oj9F0okrTtQkE+ptbU/RplzKXJVC
+         Qd1cG9FkVmOsFgZFVKKAv1R53kEvsRGVgKYIsRjSBnESUaB5pQCLFbEjo/ubz+/t90Uf
+         Cb2Q==
+X-Gm-Message-State: AOAM531THUPpO5Q+Te7QYCMV2pAyuN4P3EOF9gnfXtiUgUjg6X1D2LEI
+        caOdVRyJiEdTkzptg1X31GiYTw==
+X-Google-Smtp-Source: ABdhPJw4pSB0K0iA7nRulTXnJfiqTxaQf1+i2vnos6vZbo7/HN0GM59TI/tMLvET0NGIlCFNwPQn1A==
+X-Received: by 2002:a1f:eac1:: with SMTP id i184mr80498vkh.66.1596573782070;
+        Tue, 04 Aug 2020 13:43:02 -0700 (PDT)
+Received: from google.com (182.71.196.35.bc.googleusercontent.com. [35.196.71.182])
+        by smtp.gmail.com with ESMTPSA id a3sm2560129vsh.31.2020.08.04.13.43.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Aug 2020 13:43:01 -0700 (PDT)
+Date:   Tue, 4 Aug 2020 20:42:58 +0000
+From:   Kalesh Singh <kaleshsingh@google.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Suren Baghdasaryan <surenb@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-doc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
+        Hridya Valsaraju <hridya@google.com>,
+        Ioannis Ilkos <ilkos@google.com>,
+        John Stultz <john.stultz@linaro.org>,
+        kernel-team <kernel-team@android.com>
+Subject: Re: [PATCH 2/2] dmabuf/tracing: Add dma-buf trace events
+Message-ID: <20200804204258.GA1002979@google.com>
+References: <20200803144719.3184138-1-kaleshsingh@google.com>
+ <20200803144719.3184138-3-kaleshsingh@google.com>
+ <20200803154125.GA23808@casper.infradead.org>
+ <CAJuCfpFLikjaoopvt+vGN3W=m9auoK+DLQNgUf-xUbYfC=83Mw@mail.gmail.com>
+ <20200803161230.GB23808@casper.infradead.org>
+ <CAJuCfpGot1Lr+eS_AU30gqrrjc0aFWikxySe0667_GTJNsGTMw@mail.gmail.com>
+ <20200803222831.GI1236603@ZenIV.linux.org.uk>
+ <20200804010913.GA2096725@ZenIV.linux.org.uk>
+ <20200804154451.GA948167@google.com>
+ <20200804182724.GK1236603@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200804182724.GK1236603@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sven,
+On Tue, Aug 04, 2020 at 07:27:24PM +0100, Al Viro wrote:
+> On Tue, Aug 04, 2020 at 03:44:51PM +0000, Kalesh Singh wrote:
+> 
+> > Hi Al. Thank you for the comments. Ultimately what we need is to identify processes
+> > that hold a file reference to the dma-buf. Unfortunately we can't use only
+> > explicit dma_buf_get/dma_buf_put to track them because when an FD is being shared
+> > between processes the file references are taken implicitly.
+> > 
+> > For example, on the sender side:
+> >    unix_dgram_sendmsg -> send_scm -> __send_scm -> scm_fp_copy -> fget_raw
+> > and on the receiver side:
+> >    unix_dgram_recvmsg -> scm_recv -> scm_detach_fds -> __scm_install_fd -> get_file
+> > 
+> > I understand now that fd_install is not an appropriate abstraction level to track these.
+> > Is there a more appropriate alternative where we could use to track these implicit file
+> > references?
+> 
+> There is no single lock that would stabilize the descriptor tables of all
+> processes.  And there's not going to be one, ever - it would be a contention
+> point from hell, since that would've been a system-wide lock that would have
+> to be taken by *ALL* syscalls modifying any descriptor table.  Not going to
+> happen, for obvious reasons.  Moreover, you would have to have fork(2) take
+> the same lock, since it does copy descriptor table.  And clone(2) either does
+> the same, or has the child share the descriptor table of parent.
+> 
+> What's more, a reference to struct file can bloody well survive without
+> a single descriptor refering to that file.  In the example you've mentioned
+> above, sender has ever right to close all descriptors it has sent.   Files
+> will stay opened as long as the references are held in the datagram; when
+> that datagram is received, the references will be inserted into recepient's
+> descriptor table.  At that point you again have descriptors refering to
+> that file, can do any IO on it, etc.
+> 
+> So "the set of processes that hold a file reference to the dma-buf" is
+> 	* inherently unstable, unless you are willing to freeze every
+> process in the system except for the one trying to find that set.
+> 	* can remain empty for any amount of time (hours, weeks, whatever),
+> only to get non-empty later, with syscalls affecting the object in question
+> done afterwards.
+> 
+> So... what were you going to do with that set if you could calculate it?
+> If it's really "how do we debug a leak?", it's one thing; in that case
+> I would suggest keeping track of creation/destruction of objects (not
+> gaining/dropping references - actual constructors and destructors) to
+> see what gets stuck around for too long and use fuser(1) to try and locate
+> the culprits if you see that something *was* living for too long.  "Try"
+> since the only reference might indeed have been stashed into an SCM_RIGHTS
+> datagram sitting in a queue of some AF_UNIX socket.  Note that "fuser
+> needs elevated priveleges" is not a strong argument - the ability to
+> do that sort of tracking does imply elevated priveleges anyway, and
+> having a root process taking requests along the lines of "gimme the
+> list of PIDs that have such-and-such dma_buf in their descriptor table"
+> is not much of an attack surface.
+> 
+> If you want to use it for something else, you'll need to describe that
+> intended use; there might be sane ways to do that, but it's hard to
+> come up with one without knowing what's being attempted...
 
-Sven Schnelle <svens@linux.ibm.com> writes:
-> --- /dev/null
-> +++ b/arch/s390/include/asm/vdso/data.h
-> @@ -0,0 +1,13 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __S390_ASM_VDSO_DATA_H
-> +#define __S390_ASM_VDSO_DATA_H
-> +
-> +#include <linux/types.h>
-> +#include <vdso/datapage.h>
+Hi Al. Thanks for the guidance and detailed explanation. It appears what we
+were trying to accomplish here is not feasible.
 
-I don't think this header needs vdso/datapage.h
-
-> +struct arch_vdso_data {
-> +	__u64 tod_steering_delta;
-> +	__u64 tod_steering_end;
-> +};
-> +
-> +#endif /* __S390_ASM_VDSO_DATA_H */
-
-> --- /dev/null
-> +++ b/arch/s390/include/asm/vdso/gettimeofday.h
-
-> +static inline u64 __arch_get_hw_counter(s32 clock_mode)
-> +{
-> +	const struct vdso_data *vdso = __arch_get_vdso_data();
-
-If you go and implement time namespace support for VDSO then this
-becomes a problem. See do_hres_timens().
-
-As we did not expect that this function needs vdso_data we should just
-add a vdso_data pointer argument to __arch_get_hw_counter(). And while
-looking at it you're not the first one. MIPS already uses it and because
-it does not support time namespaces so far nobody noticed yet.
-
-That's fine for all others because the compiler will optimize it
-out when it's unused. If the compiler fails to do so, then this is the
-least of our worries :)
-
-As there is no new VDSO conversion pending in next, I can just queue
-that (see below) along with #1 and #2 of this series and send it to
-Linus by end of the week.
-
-> +	u64 adj, now;
-> +
-> +	now = get_tod_clock();
-> +	adj = vdso->arch.tod_steering_end - now;
-> +	if (unlikely((s64) adj > 0))
-> +		now += (vdso->arch.tod_steering_delta < 0) ? (adj >> 15) : -(adj >> 15);
-> +	return now;
-> +}
-
-
-> --- /dev/null
-> +++ b/arch/s390/include/asm/vdso/processor.h
-> @@ -0,0 +1,5 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +#ifndef __ASM_VDSO_PROCESSOR_H
-> +#define __ASM_VDSO_PROCESSOR_H
-> +
-> +#endif /* __ASM_VDSO_PROCESSOR_H */
-
-The idea of this file was to provide cpu_relax() self contained without
-pulling in tons of other things from asm/processor.h.
-
-> diff --git a/arch/s390/include/asm/vdso/vdso.h b/arch/s390/include/asm/vdso/vdso.h
-> new file mode 100644
-> index 000000000000..e69de29bb2d1
-> diff --git a/arch/s390/include/asm/vdso/vsyscall.h b/arch/s390/include/asm/vdso/vsyscall.h
-> new file mode 100644
-> index 000000000000..6c67c08cefdd
-> --- /dev/null
-> +++ b/arch/s390/include/asm/vdso/vsyscall.h
-> @@ -0,0 +1,26 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __ASM_VDSO_VSYSCALL_H
-> +#define __ASM_VDSO_VSYSCALL_H
-> +
-> +#ifndef __ASSEMBLY__
-> +
-> +#include <linux/hrtimer.h>
-> +#include <linux/timekeeper_internal.h>
-
-I know you copied that from x86 or some other architecture, but thinking
-about the above these two includes are not required for building VDSO
-itself. Only the kernel update side needs them and they are included
-already there. I'm going to remove them from x86 as well.
-
-> @@ -443,9 +396,8 @@ static void clock_sync_global(unsigned long long delta)
->  		panic("TOD clock sync offset %lli is too large to drift\n",
->  		      tod_steering_delta);
->  	tod_steering_end = now + (abs(tod_steering_delta) << 15);
-> -	vdso_data->ts_dir = (tod_steering_delta < 0) ? 0 : 1;
-> -	vdso_data->ts_end = tod_steering_end;
-> -	vdso_data->tb_update_count++;
-> +	vdso_data->arch.tod_steering_end = tod_steering_end;
-
-Leftover from the previous version. Should be arch_data.tod....
-
-Heiko, do you consider this 5.9 material or am I right to assume that
-this targets 5.10?
-
-Thanks,
-
-        tglx
------
-Subject: vdso/treewide: Add vdso_data pointer argument to __arch_get_hw_counter()
-From: Thomas Gleixner <tglx@linutronix.de>
-Date: Tue, 04 Aug 2020 22:17:44 +0200
-
-MIPS already uses and S390 will need the vdso data pointer in
-__arch_get_hw_counter().
-
-This works nicely as long as the architecture does not support time
-namespaces in the VDSO. With time namespaces enabled the regular
-accessor to the vdso data pointer __arch_get_vdso_data() will return the
-namespace specific VDSO data page for tasks which are part of a
-non-root time namespace. This would cause the architectures which need
-the vdso data pointer in __arch_get_hw_counter() to access the wrong
-vdso data page.
-
-Add a vdso_data pointer argument to __arch_get_hw_counter() and hand it
-in from the call sites in the core code. For architectures which do not
-need the data pointer in their counter accessor inline function the
-compiler will just optimize it out.
-
-Fix up all existing architecture implementations and make MIPS utilize the
-pointer instead of invoking the accessor function.
-
-No functional change and no change in the resulting object code (except
-MIPS).
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/arm/include/asm/vdso/gettimeofday.h          |    3 ++-
- arch/arm64/include/asm/vdso/compat_gettimeofday.h |    3 ++-
- arch/arm64/include/asm/vdso/gettimeofday.h        |    3 ++-
- arch/mips/include/asm/vdso/gettimeofday.h         |    5 +++--
- arch/riscv/include/asm/vdso/gettimeofday.h        |    3 ++-
- arch/x86/include/asm/vdso/gettimeofday.h          |    3 ++-
- lib/vdso/gettimeofday.c                           |    4 ++--
- 7 files changed, 15 insertions(+), 9 deletions(-)
-
---- a/arch/arm/include/asm/vdso/gettimeofday.h
-+++ b/arch/arm/include/asm/vdso/gettimeofday.h
-@@ -112,7 +112,8 @@ static inline bool arm_vdso_hres_capable
- }
- #define __arch_vdso_hres_capable arm_vdso_hres_capable
- 
--static __always_inline u64 __arch_get_hw_counter(int clock_mode)
-+static __always_inline u64 __arch_get_hw_counter(int clock_mode,
-+						 const struct vdso_data *vd)
- {
- #ifdef CONFIG_ARM_ARCH_TIMER
- 	u64 cycle_now;
---- a/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-+++ b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-@@ -102,7 +102,8 @@ int clock_getres32_fallback(clockid_t _c
- 	return ret;
- }
- 
--static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
-+static __always_inline u64 __arch_get_hw_counter(s32 clock_mode,
-+						 const struct vdso_data *vd)
- {
- 	u64 res;
- 
---- a/arch/arm64/include/asm/vdso/gettimeofday.h
-+++ b/arch/arm64/include/asm/vdso/gettimeofday.h
-@@ -63,7 +63,8 @@ int clock_getres_fallback(clockid_t _clk
- 	return ret;
- }
- 
--static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
-+static __always_inline u64 __arch_get_hw_counter(s32 clock_mode,
-+						 const struct vdso_data *vd)
- {
- 	u64 res;
- 
---- a/arch/mips/include/asm/vdso/gettimeofday.h
-+++ b/arch/mips/include/asm/vdso/gettimeofday.h
-@@ -167,7 +167,8 @@ static __always_inline u64 read_gic_coun
- 
- #endif
- 
--static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
-+static __always_inline u64 __arch_get_hw_counter(s32 clock_mode,
-+						 const struct vdso_data *vd)
- {
- #ifdef CONFIG_CSRC_R4K
- 	if (clock_mode == VDSO_CLOCKMODE_R4K)
-@@ -175,7 +176,7 @@ static __always_inline u64 __arch_get_hw
- #endif
- #ifdef CONFIG_CLKSRC_MIPS_GIC
- 	if (clock_mode == VDSO_CLOCKMODE_GIC)
--		return read_gic_count(get_vdso_data());
-+		return read_gic_count(vd);
- #endif
- 	/*
- 	 * Core checks mode already. So this raced against a concurrent
---- a/arch/riscv/include/asm/vdso/gettimeofday.h
-+++ b/arch/riscv/include/asm/vdso/gettimeofday.h
-@@ -59,7 +59,8 @@ int clock_getres_fallback(clockid_t _clk
- 	return ret;
- }
- 
--static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
-+static __always_inline u64 __arch_get_hw_counter(s32 clock_mode,
-+						 const struct vdso_data *vd)
- {
- 	/*
- 	 * The purpose of csr_read(CSR_TIME) is to trap the system into
---- a/arch/x86/include/asm/vdso/gettimeofday.h
-+++ b/arch/x86/include/asm/vdso/gettimeofday.h
-@@ -241,7 +241,8 @@ static u64 vread_hvclock(void)
- }
- #endif
- 
--static inline u64 __arch_get_hw_counter(s32 clock_mode)
-+static inline u64 __arch_get_hw_counter(s32 clock_mode,
-+					const struct vdso_data *vd)
- {
- 	if (likely(clock_mode == VDSO_CLOCKMODE_TSC))
- 		return (u64)rdtsc_ordered();
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -68,7 +68,7 @@ static int do_hres_timens(const struct v
- 		if (unlikely(!vdso_clocksource_ok(vd)))
- 			return -1;
- 
--		cycles = __arch_get_hw_counter(vd->clock_mode);
-+		cycles = __arch_get_hw_counter(vd->clock_mode, vd);
- 		if (unlikely(!vdso_cycles_ok(cycles)))
- 			return -1;
- 		ns = vdso_ts->nsec;
-@@ -138,7 +138,7 @@ static __always_inline int do_hres(const
- 		if (unlikely(!vdso_clocksource_ok(vd)))
- 			return -1;
- 
--		cycles = __arch_get_hw_counter(vd->clock_mode);
-+		cycles = __arch_get_hw_counter(vd->clock_mode, vd);
- 		if (unlikely(!vdso_cycles_ok(cycles)))
- 			return -1;
- 		ns = vdso_ts->nsec;
+Thanks, Kalesh
