@@ -6,49 +6,50 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65447C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F9C7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E09D206D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EFE2206D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:45:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbgHDPp2 (ORCPT
+        id S1728081AbgHDPpe convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 11:45:28 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:55624 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728739AbgHDPpV (ORCPT
+        Tue, 4 Aug 2020 11:45:34 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:47367 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728256AbgHDPpU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 11:45:21 -0400
-Received: by mail-io1-f72.google.com with SMTP id k10so29447854ioh.22
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 08:45:20 -0700 (PDT)
+        Tue, 4 Aug 2020 11:45:20 -0400
+Received: by mail-io1-f69.google.com with SMTP id 18so6617590ioo.14
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 08:45:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=teHlcAYbi+ok/LTx4VJANdq80jBucOESYR39MhGarW8=;
-        b=SmC/xjX2mbrG6eptr03Xl6mdqNEsmAwUO4UkOWedrHoZSsw7qanCwq6YkJ0JgonOQi
-         oSyTf7QW4gvRmRKvUfSHnJ5Nx7wv+LoMb1ssR8e1+j14bei9ezuKmODgmEPF4DSk/m9X
-         g6J8en36gLNwyjv4ytRpgQuzayq1RlX31eELALx7X0KhgmuGNpCTBb1+bw/NWv/6vVt7
-         41egOdbQA4xvhg5d/tm8iav/poWTpvTcRSNOYRpjpEKqa7doxz0TQsuM2cZtW4A16uQc
-         RqiEc4gwbKFRyKOwBgVi3Fkg/kNjAT+J0UCQWTen0DYgI5n7ZAs12usUB1UKQi4XFz5A
-         OB7w==
-X-Gm-Message-State: AOAM533mcZXoPNshEN9Qm8fvQ0pU7iCqN2bqEMC1e0gvLopIigU/wOvU
-        ofn+s4ekX2T0tZYaT/PVnY4nBwf8Au3yotExfbHhpX+n4ysf
-X-Google-Smtp-Source: ABdhPJzA7NgNLQAjeEjq1AEqh5bI5S7LSZJoBvLtJPvmA0EXPKSKEh5jxuv4jBfYNKZaoAZhgDqz5TmU+M4IzRrWIjmR9mk3Skp0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
+         :content-transfer-encoding;
+        bh=n5bm4gcX2kNCxzaBvmn7KzMz6UUigjSuxKBSRxaemkE=;
+        b=Q+6xYNAZ1EpqwVarV/4FJLgbB9XY0cD++Qk861PW7mweSC5OTmlKU3z01r02gQg5Z1
+         aPOLgKi0T99rAChSUA+DdS1R82T/eMLdxCMqcm/dkeynEsfQANSRra0IETwZMmBL3zWA
+         tKL1QKC7YhE+onfvYu5WifJ+XgJ1iK6hPoS+qJ6QG4kJYpbMdnKD+HcIMr8BS3TuINvy
+         4jDdOKjyPtlRokIbNkBpUKRmphLKGsGTO0nNN00hbq5cD0fHv4VD8yvYgah51p1hms8+
+         X8gql7vuiPIkylAphRHScLvGrH1qgr8UywTxfm0eKUnvHZBfIWG/gQsb6b66rwxPPymY
+         5xPQ==
+X-Gm-Message-State: AOAM531XCNkc1DRivVnmB6kevBGmhhWbaOSP57Zvj5c15b7MBMj8Ah/y
+        qdN955+L8W3uaW+yuZN136j50eINo9DsWZxO3NABjzyrDJ6S
+X-Google-Smtp-Source: ABdhPJy1cdxDpzvGfhVRtIMEDpdmgz7EcWhpOxoFCyylPH/oZnvCcOULqX7nonn4KKETfmaZXzi8gArn4/Ej0i6QWjQCG8UqLsb6
 MIME-Version: 1.0
-X-Received: by 2002:a92:9910:: with SMTP id p16mr5384051ili.51.1596555919572;
+X-Received: by 2002:a02:3e11:: with SMTP id s17mr6398336jas.67.1596555919196;
  Tue, 04 Aug 2020 08:45:19 -0700 (PDT)
 Date:   Tue, 04 Aug 2020 08:45:19 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000734f2505ac0f2426@google.com>
-Subject: KASAN: use-after-free Write in hci_conn_del
-From:   syzbot <syzbot+7b1677fecb5976b0a099@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <0000000000006d871805ac0f2416@google.com>
+Subject: WARNING: suspicious RCU usage in ovs_flow_tbl_masks_cache_size
+From:   syzbot <syzbot+f612c02823acb02ff9bc@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dev@openvswitch.org, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        pshelar@ovn.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,124 +59,65 @@ Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    bcf87687 Linux 5.8
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14184392900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=19b11af1e394136d
-dashboard link: https://syzkaller.appspot.com/bug?extid=7b1677fecb5976b0a099
+HEAD commit:    2f631133 net: Pass NULL to skb_network_protocol() when we ..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=12c1f770900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=91a13b78c7dc258d
+dashboard link: https://syzkaller.appspot.com/bug?extid=f612c02823acb02ff9bc
 compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15e1ff04900000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e8430a900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=123549fc900000
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+7b1677fecb5976b0a099@syzkaller.appspotmail.com
+Reported-by: syzbot+f612c02823acb02ff9bc@syzkaller.appspotmail.com
 
-==================================================================
-BUG: KASAN: use-after-free in hci_conn_del+0x64e/0x6a0 net/bluetooth/hci_conn.c:630
-Write of size 8 at addr ffff888089f54938 by task syz-executor.1/6870
+netlink: 'syz-executor210': attribute type 2 has an invalid length.
+device  entered promiscuous mode
+=============================
+WARNING: suspicious RCU usage
+5.8.0-rc7-syzkaller #0 Not tainted
+-----------------------------
+net/openvswitch/flow_table.c:940 suspicious rcu_dereference_check() usage!
 
-CPU: 0 PID: 6870 Comm: syz-executor.1 Not tainted 5.8.0-syzkaller #0
+other info that might help us debug this:
+
+
+rcu_scheduler_active = 2, debug_locks = 1
+2 locks held by syz-executor210/6812:
+ #0: ffffffff8a8319b0 (cb_lock){++++}-{3:3}, at: genl_rcv+0x15/0x40 net/netlink/genetlink.c:741
+ #1: ffffffff8aa786a8 (ovs_mutex){+.+.}-{3:3}, at: ovs_lock net/openvswitch/datapath.c:105 [inline]
+ #1: ffffffff8aa786a8 (ovs_mutex){+.+.}-{3:3}, at: ovs_dp_cmd_new+0x4db/0xea0 net/openvswitch/datapath.c:1707
+
+stack backtrace:
+CPU: 0 PID: 6812 Comm: syz-executor210 Not tainted 5.8.0-rc7-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
  dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- hci_conn_del+0x64e/0x6a0 net/bluetooth/hci_conn.c:630
- hci_conn_hash_flush+0x189/0x220 net/bluetooth/hci_conn.c:1537
- hci_dev_do_close+0x5c6/0x1080 net/bluetooth/hci_core.c:1761
- hci_unregister_dev+0x1a3/0xe20 net/bluetooth/hci_core.c:3606
- vhci_release+0x70/0xe0 drivers/bluetooth/hci_vhci.c:340
- __fput+0x33c/0x880 fs/file_table.c:281
- task_work_run+0xdd/0x190 kernel/task_work.c:135
- exit_task_work include/linux/task_work.h:25 [inline]
- do_exit+0xb72/0x2a40 kernel/exit.c:805
- do_group_exit+0x125/0x310 kernel/exit.c:903
- __do_sys_exit_group kernel/exit.c:914 [inline]
- __se_sys_exit_group kernel/exit.c:912 [inline]
- __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:912
+ ovs_flow_tbl_masks_cache_size+0xc3/0xe0 net/openvswitch/flow_table.c:940
+ ovs_dp_cmd_fill_info+0x4e4/0x880 net/openvswitch/datapath.c:1539
+ ovs_dp_cmd_new+0x584/0xea0 net/openvswitch/datapath.c:1728
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:669 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:714 [inline]
+ genl_rcv_msg+0x61d/0x980 net/netlink/genetlink.c:731
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2470
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:742
+ netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1330
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1919
+ sock_sendmsg_nosec net/socket.c:651 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:671
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2359
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2413
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2446
  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45cce9
-Code: Bad RIP value.
-RSP: 002b:00007ffd598b2c88 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000045cce9
-RDX: 0000000000416741 RSI: 0000000000ca85f0 RDI: 0000000000000043
-RBP: 00000000004c2983 R08: 000000000000000b R09: 0000000000000000
-R10: 0000000002936940 R11: 0000000000000246 R12: 0000000000000008
-R13: 00007ffd598b2dd0 R14: 0000000000136032 R15: 00007ffd598b2de0
-
-Allocated by task 12376:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
- __do_kmalloc mm/slab.c:3656 [inline]
- __kmalloc+0x17a/0x340 mm/slab.c:3665
- kmalloc include/linux/slab.h:560 [inline]
- tomoyo_realpath_from_path+0xc3/0x620 security/tomoyo/realpath.c:254
- tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
- tomoyo_check_open_permission+0x272/0x380 security/tomoyo/file.c:771
- tomoyo_file_open security/tomoyo/tomoyo.c:313 [inline]
- tomoyo_file_open+0xa3/0xd0 security/tomoyo/tomoyo.c:308
- security_file_open+0x52/0x3f0 security/security.c:1574
- do_dentry_open+0x3a0/0x1290 fs/open.c:815
- do_open fs/namei.c:3243 [inline]
- path_openat+0x1bb9/0x2750 fs/namei.c:3360
- do_filp_open+0x17e/0x3c0 fs/namei.c:3387
- do_sys_openat2+0x16f/0x3b0 fs/open.c:1179
- do_sys_open fs/open.c:1195 [inline]
- ksys_open include/linux/syscalls.h:1388 [inline]
- __do_sys_open fs/open.c:1201 [inline]
- __se_sys_open fs/open.c:1199 [inline]
- __x64_sys_open+0x119/0x1c0 fs/open.c:1199
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 12376:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x103/0x2c0 mm/slab.c:3757
- tomoyo_realpath_from_path+0x191/0x620 security/tomoyo/realpath.c:291
- tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
- tomoyo_check_open_permission+0x272/0x380 security/tomoyo/file.c:771
- tomoyo_file_open security/tomoyo/tomoyo.c:313 [inline]
- tomoyo_file_open+0xa3/0xd0 security/tomoyo/tomoyo.c:308
- security_file_open+0x52/0x3f0 security/security.c:1574
- do_dentry_open+0x3a0/0x1290 fs/open.c:815
- do_open fs/namei.c:3243 [inline]
- path_openat+0x1bb9/0x2750 fs/namei.c:3360
- do_filp_open+0x17e/0x3c0 fs/namei.c:3387
- do_sys_openat2+0x16f/0x3b0 fs/open.c:1179
- do_sys_open fs/open.c:1195 [inline]
- ksys_open include/linux/syscalls.h:1388 [inline]
- __do_sys_open fs/open.c:1201 [inline]
- __se_sys_open fs/open.c:1199 [inline]
- __x64_sys_open+0x119/0x1c0 fs/open.c:1199
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:384
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The buggy address belongs to the object at ffff888089f54000
- which belongs to the cache kmalloc-4k of size 4096
-The buggy address is located 2360 bytes inside of
- 4096-byte region [ffff888089f54000, ffff888089f55000)
-The buggy address belongs to the page:
-page:ffffea000227d500 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 head:ffffea000227d500 order:1 compound_mapcount:0
-flags: 0xfffe0000010200(slab|head)
-raw: 00fffe0000010200 ffffea0001e59308 ffffea00028b3908 ffff8880aa002000
-raw: 0000000000000000 ffff888089f54000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff888089f54800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888089f54880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff888089f54900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                        ^
- ffff888089f54980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888089f54a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+RIP: 0033:0x4402d9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffd71bb22a8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004402d9
+RDX: 0000000000000000 RSI: 00000000200000c0 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 0000000000
 
 
 ---
