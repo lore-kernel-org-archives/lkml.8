@@ -2,170 +2,138 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 249F7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83565C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 019D521744
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:53:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EED621744
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:54:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="YHtqOTyI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Bgca/p+A";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="qKOsLRZ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729239AbgHDOxu (ORCPT
+        id S1729257AbgHDOy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:53:50 -0400
-Received: from mail-eopbgr1400118.outbound.protection.outlook.com ([40.107.140.118]:19704
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726580AbgHDOxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:53:49 -0400
+        Tue, 4 Aug 2020 10:54:29 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:37233 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726556AbgHDOy2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 10:54:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1596552868; x=1628088868;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=oBmB+KbnN9te0+ZhbNiFw4mufdWr9aEZt25QI9icg30=;
+  b=Bgca/p+AGgQCYZTL2B53FSq29ijRNqSil0WHj4EgpYwZ5KPfrmm4PbNJ
+   0tJbp96UxtwORyB28d17zzMMtQUFH31/4XLG7J/wEI8wN9mxLs02tLKf6
+   lSm8rzVsuRtHGnsH/HAtDBuf/VJ5vkrajAl9edRxVoOBij+UO0cd8Gw/k
+   BWzxyLMl/pxGDGhyKbtdgF2lPMX7Lg5+uJTe2PMn1f6/NOveReh5pIM/k
+   ZPjDJqT9MOGUJLU2Tx94YWbR8VxcOHAT6RnLQIrLWMzIiNws7v2Ebz0aP
+   ZSNBNeT3ZVh25q/O8dmUyKyjAnp4lhM9PqQgoMyFQ4vV9q0Af886wzHSc
+   A==;
+IronPort-SDR: kSzQegDvEUyvOSuzDXO0VwTHbNuJ7at1CtkUxz12GVToFWPbmKjXOkAGCxh9JifytoUtJaRRRA
+ hCPVra3+dZqUiiQsV5tHRMLBZEY8qOuH+QHCZpx+zFCz55js7ir12c0UIZ7RXwzymduspKVS5d
+ tg+O4MSgpQOp/JqGgt3sA14PvkSs2iPXjvf7PMo1eN/2R0OLnjwyprovd6axoA7qnqc9Qii53Q
+ Hfy8eUt0NBk2MRw1qGiVdEpYyQ2o30zJuE2Rvx3kE9HJsvlvByJrokbnZhGy6McI5OpEmrdRr5
+ sLE=
+X-IronPort-AV: E=Sophos;i="5.75,434,1589212800"; 
+   d="scan'208";a="144186195"
+Received: from mail-sn1nam04lp2058.outbound.protection.outlook.com (HELO NAM04-SN1-obe.outbound.protection.outlook.com) ([104.47.44.58])
+  by ob1.hgst.iphmx.com with ESMTP; 04 Aug 2020 22:54:27 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q6t0/NMeBJIoM9LhB1NI9BbJJbAtvy5Xw/9F2x/PVuFVYfjBHpt1mvICPeLsY5sxxwS8q/rYuO82qZ9+pO2W7tmDqvABuoy3Mql29knNQtyOdEvQESq7qCYqn9r1f0eF8Do+2rPKHKTGDQeB85vbZmnonoErb/qbvL5okNLadmAsYuBqyrXQE6eFFw5q8rgRy2FYthMAAl+fEhqiZc03PPH9D3/CMT0gasI9vmP+VBV9rEllM9O1bsaC+JDKPXa86dyUBYpG5N7qH5ucis6ctu+43viqTywM5ytDWoLtk1smKQWETO0sWPwLzdp8lvqd9F4Hq/RM6mCOK+jfb3ENXg==
+ b=cLPvcfyTKqdQtSXMXV3iU9sC3bLQD/bIVbS1985XLZ/wwaZ4YRalpOTexfHaV+Owlc/RjgQrBv2CNtsEDa/VTQuxrqaWq1GfadF2YxzEzM+Lvha+THTs4shYDw19x4dm5a03qM4anY72LwOvZtloY4nTBezYIYNrVir09Q1uqZZgLuBwTEi3NM8ED8ypCTkVf5bs0JGJLsYmKqKZrJrP9vmzju/P6/ZURCV6Q+wJZSjzOvTrposW8r65wQHVdTRELe97KFBSGD4w0kkfkLYnIzs/b6PR4KpSJgf/Bf7PBPzymNYKUr4lf5CLARlXBN3RcFu9OeWK+SooVbbdmYcngA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wHJ927n5/Tlkyc4Dn1XWas71JGvz2RR1BVqjdcB+b7I=;
- b=aJh4RrxUZ7zXEgFtpfbL6NHbh1NpqV44Hc8RzgignoOehGUXEG5gNosbwzqrabmZAaNasFLRuSxVOx9h5qnmCnsdWOVkwg16kGbDeJ5YHtwntOYqwir1CJ2q8I00EzITM6oDZKOC3aLzb13RjbkGzZvmD9mTQra6qK2yM/xMjLNwStOj5Jxu5tNQubpqLsbkfqxo3bqH7fQQzXwSe/3yIvLrepAX7xKEeM7up/1VU/+2mo4z3svBpUEuS4u3fG2vvXbgSPVKoZJvfiQ8QSjGZmVPXItfB6kE8guuzjY7huBZcu+p2ceyt/C5ioOZPGwwUAKc+XM2pLrmVPDBix5TQQ==
+ bh=oBmB+KbnN9te0+ZhbNiFw4mufdWr9aEZt25QI9icg30=;
+ b=SFHrEads4x248tEuzncIJPCBdiXywCiU3G9bBxQMogyeLbyZLxibghV3aNvHY2WH28Jy0b1Qu4D1aOHTsbvbo9xYmZaYwGiHxF/lBLorcjL46lMivajuuLAVYo5QL13TYgOm20n5a3phfQNs6aWmvfMVqcXZ5zwoP/qfLX774lkDauA7OzzDPh2TRHmbmCQ1/zwaHxkRtS+8p38r6XY/DRsb02y8L7i+TwAYbu6DlOEk5lWp3ECNv3xPL8JuH7Ut4gsQeazntjOGgBNl/bmmnkyPvIj/Fi2HDu/t1frokNPYpuYL+gilOklBFgBAXWQSX8zffA8mMxJSzxuFd9UClQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wHJ927n5/Tlkyc4Dn1XWas71JGvz2RR1BVqjdcB+b7I=;
- b=YHtqOTyIVifYZJHfllxuQ7p26gABnH45X90TsGioZjDqIIXVw2HgJE5a3Eh4UOnOz07S4iQvvucBALAH72MWB92Um9zvQH6UGFf19DoqgpV56YhFsh1gx1T27CBet+mQ+Jg0wyJItt5WOszYLYlTaEQ/MfMMkgc7KbwFAtvJ9Vs=
-Received: from OSAPR01MB2385.jpnprd01.prod.outlook.com (2603:1096:603:37::20)
- by OSAPR01MB5106.jpnprd01.prod.outlook.com (2603:1096:604:6d::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.18; Tue, 4 Aug
- 2020 14:53:46 +0000
-Received: from OSAPR01MB2385.jpnprd01.prod.outlook.com
- ([fe80::9dba:6049:dd66:3c70]) by OSAPR01MB2385.jpnprd01.prod.outlook.com
- ([fe80::9dba:6049:dd66:3c70%7]) with mapi id 15.20.3239.022; Tue, 4 Aug 2020
- 14:53:46 +0000
-From:   Chris Paterson <Chris.Paterson2@renesas.com>
-To:     Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "patches@kernelci.org" <patches@kernelci.org>,
-        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH 4.19 00/56] 4.19.137-rc1 review
-Thread-Topic: [PATCH 4.19 00/56] 4.19.137-rc1 review
-Thread-Index: AQHWaZIw72+QhKs9zkSO6gQcXgjYTaknk46AgABzYWA=
-Date:   Tue, 4 Aug 2020 14:53:45 +0000
-Message-ID: <OSAPR01MB23857AEF0D818484DF9BAEF3B74A0@OSAPR01MB2385.jpnprd01.prod.outlook.com>
-References: <20200803121850.306734207@linuxfoundation.org>
- <20200804074623.6nhrryvq46zi7qkv@duo.ucw.cz>
-In-Reply-To: <20200804074623.6nhrryvq46zi7qkv@duo.ucw.cz>
-Accept-Language: en-GB, en-US
+ bh=oBmB+KbnN9te0+ZhbNiFw4mufdWr9aEZt25QI9icg30=;
+ b=qKOsLRZ2QdBcvsKIK9mqb7M6wwWvF7KK8RcU8BN8KrY4NoXdHtMlSAppBJMXJ+fEd+sYtFUaOohh/Q1HrF2zy09BZH06xsocRbQUGu2VQNTir56Zs64WMqnTA55RdSJcq2gyzzsOMEB9bl7SZjqQSWqkAYVmWPD9NlybeJNn7sU=
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ (2603:10b6:803:47::21) by SN6PR04MB4861.namprd04.prod.outlook.com
+ (2603:10b6:805:94::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Tue, 4 Aug
+ 2020 14:54:25 +0000
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::457e:5fe9:2ae3:e738]) by SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::457e:5fe9:2ae3:e738%7]) with mapi id 15.20.3239.021; Tue, 4 Aug 2020
+ 14:54:25 +0000
+From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+To:     Coly Li <colyli@suse.de>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+CC:     "linux-bcache@vger.kernel.org" <linux-bcache@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Hannes Reinecke <hare@suse.com>, Xiao Ni <xni@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Enzo Matsumiya <ematsumiya@suse.com>,
+        Jens Axboe <axboe@kernel.dk>, Evan Green <evgreen@chromium.org>
+Subject: Re: [PATCH] block: tolerate 0 byte discard_granularity in
+ __blkdev_issue_discard()
+Thread-Topic: [PATCH] block: tolerate 0 byte discard_granularity in
+ __blkdev_issue_discard()
+Thread-Index: AQHWamrhOskbhhn9f0O9q4CKi9C/MA==
+Date:   Tue, 4 Aug 2020 14:54:25 +0000
+Message-ID: <SN4PR0401MB35987148438CF84C015CCC479B4A0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+References: <20200804142332.29961-1-colyli@suse.de>
+ <SN4PR0401MB3598033FF16A5AE1D375EDD69B4A0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+ <b469f0ec-0185-c624-b967-5080d805040c@suse.de>
+ <SN4PR0401MB35983A30C6AE9886EF6E91C79B4A0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+ <SN4PR0401MB35984D6090CE1B7F1FD06CD59B4A0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+ <06f2bb53-8917-82d6-3e0c-76270cd80e06@suse.de>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: denx.de; dkim=none (message not signed)
- header.d=none;denx.de; dmarc=none action=none header.from=renesas.com;
-x-originating-ip: [193.141.220.21]
+authentication-results: suse.de; dkim=none (message not signed)
+ header.d=none;suse.de; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [129.253.240.72]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7a8f193e-04e5-4eae-1bda-08d838863054
-x-ms-traffictypediagnostic: OSAPR01MB5106:
-x-microsoft-antispam-prvs: <OSAPR01MB510631482CE14266F1636283B74A0@OSAPR01MB5106.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-office365-filtering-correlation-id: 9b0fcee3-99bf-47ec-82b1-08d8388647d3
+x-ms-traffictypediagnostic: SN6PR04MB4861:
+x-microsoft-antispam-prvs: <SN6PR04MB486176D44BD2321680C2A04C9B4A0@SN6PR04MB4861.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:2582;
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rKhuXft0vG65T66NmXunhMJFnZJCIAYRfjSuTRA4TI/0uRNOEnxKJhABpW1uf7rqaEF51PDlbrXUVbCrMP/mWYiLvqnNp4dWPQQldzib2KZR0KvswM8/+1SY6Uba31ivkEaY/9O1X8wNO8KThKqOKE91ksMlh9i+PCzAvXLGtp3p3ZJr9SWe/q6wRWykDYSBSBlFGM0FXAzOMuyfcwHVnLaBpORN4ZZHEUMPKWY1WWFsVEMdQ6KVmvFwmQ9vdMYIxYO5DiJ+s64ZMqjesSHZuEuf+4Yayl5DVGgbrPruAttDUlotlVoQiA0npB1FvmW4jnltS+eebdyX9i0PZGM55j2Ccx91gOzx8kEcQq1rFDGAr191a0bf7mq51OV58lF46SVSo0G35IM+IBw2UVcvOQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSAPR01MB2385.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39850400004)(136003)(346002)(396003)(376002)(366004)(2906002)(186003)(6506007)(55016002)(83380400001)(71200400001)(26005)(9686003)(7696005)(33656002)(66446008)(86362001)(110136005)(54906003)(316002)(52536014)(7416002)(966005)(8676002)(64756008)(8936002)(76116006)(66556008)(5660300002)(66476007)(66946007)(478600001)(4326008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: ISVU1KI1nP0wx7nsJhHxRlDGRdwaj2IEC//dCVF6JYlaO06P/TifMYsWy4ytvQfZ9NaINHk55UFflLss0dSiASn/PFiZFlMfYoUEM0DqaRDRhjoiw6GJeubzQF4TbC6V/ilun7LB6V3MYge4tLjC4N8OA+Z2FENh5s9CPCFTXoxif9i0fGVaItmlncodoYLSNneWFJZ8wtzFIQIx5uWVYdc0y8OTETmsEGLEgdTzn6uVOKec7DVzBY9WJT6pnou5by+cTiL+rCAhQybONgGXxAGrCiZU1zdRpLvB/Zrb+x/4o9lAMhuLK8D7ow6scZwxSBFsiMyQfexh/NdvQ+lM6ro6lPNes+zt04DGPBA+UOErC7aE0zAycbgeKNrM1bL2Epk91+NLtMW3/BgpSPsRKoCgcJZBakYDxFEtuNxUceM1M0sOdOcrBpogBe1B+NfZKt2eupylzB77cpP9yQUFlFewHTaw/pYwHwFO7tSiOwIZ46VhM1q/a92lk/LEViPkkOseX5w9NmDd7ThrADlDrgWvsA3LXClzjO6pa59TWnFkf4a/J3XA/8D3kTxfOqOVHgOJp52Zj6XL+4on2C6h0mOQWs4D60bzw4wFFCc8Gq4CbMrCjeis5DOIuA1irROzmyz4fDNCChpbRXgWi9SMgg==
+x-microsoft-antispam-message-info: f7MT0K1fApDFW2Zuhgcbe7ByA0WDzx6EcBURM2rSXx2fQ/APu16zUbu91JvfsrzumWVqP3APZDo6k1EIImyy7LUN3nlemtFFdLfC/5IydXeT0AX3BuNmMieShmQ+NaH//+DLn1fRS9B3j5Bp6eq3j8ZDR2K5WMQzzo9M8vM6MDAXiUkrRNxFqGSbunCV5xLYuBu+nZY+VmIu4VIAGb30SQFCifTeCVGr1XRjLdWYKimmQB7w4Yi7zelc71h3XcGWnahH4QUfPRzY8c1EwHK+feBj7P5AsWeqlVcHqXAXRh0Ctxl+IZw4lCftRmM4w5nveZouoaK649fIAGDUZ/aRhw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(39850400004)(366004)(376002)(346002)(558084003)(91956017)(76116006)(5660300002)(52536014)(4326008)(54906003)(316002)(66476007)(66556008)(110136005)(66446008)(64756008)(66946007)(8936002)(55016002)(53546011)(2906002)(26005)(186003)(8676002)(6506007)(86362001)(71200400001)(33656002)(7696005)(7416002)(9686003)(478600001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 1VGo4yvvi4FHBihiyWLLedFkqk+zDtp7a46b4FDfnw3+ukk6ojQn1xuzj0TpRQDmUOdtiF5dKH2g2oZceHudLwrbRPutqpz1ac5/UrzQTKZAM22v+h2ip3lsSO9WEiwXlN/mOEWy5/coGMMAede60jSA9g2uswKZFKQg3Uige5XJJRxIhoffXX0NgUke/QU6lC+SyLkEpQsmU+SAF2OFvqofYzAfY/lOvASI/gxzJsbnMb2xxqFpusxykB/JHmxm32LqnLs2gF/KRVc7Ep808AFN0d5viAC95h+vhds289bjYdy/jZSYHkMjq/3iGWFnusEEEXq8Dum6+RcvKTdmdOsU26OYWvvmNvCl4LQsc0e3cMjn/ZqDeZcGnsKitOx9+8twcI4DXkFZ3vwi4X691noGZilzRxL2tuSOxCrHwQpSO3GbfaihQTSP/LuLo0sv2r07LXOLtzPGnLjU8ew3QizZxbJgr12P5jV57hTRMAVpm+zP5CjmfzF66vxzKP+y2BoY9GNbuGcld7fzPoKbNGYY74Q/Etxe2t9e2VxSD+UOIsQDXLP2j9TrjxR+AvrqSQsTACj50/Pmzc/Etc3uKE1F4W5NUsW7gJocc97GeGVZLxKtM/x1o1HGONByUnPgxwv9mLZsQknF0yDxV/HfKA==
 x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
+X-OriginatorOrg: wdc.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OSAPR01MB2385.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a8f193e-04e5-4eae-1bda-08d838863054
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Aug 2020 14:53:45.7848
+X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b0fcee3-99bf-47ec-82b1-08d8388647d3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Aug 2020 14:54:25.3672
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WpEFWx5KgMou0/GraGgfJ/Q9nHWSimlkBsJxPOeuSmS90Y+GUYs3e+4eMhNE46nLsxDEl6XtTj51aohZAk4ND2Lr4sirU5bt1YMIa6gwVN4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB5106
+X-MS-Exchange-CrossTenant-userprincipalname: sLwgJVdEvzvaZuEomntmvCF6VLn10YIeE13KO79IaefADWTs1YtGQxsZUp+0nLyzD3HNh3dFZiVUJA/06osl14wP1EwCCiqjbXRn6elmel0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4861
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
-
-> From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
-> Behalf Of Pavel Machek
-> Sent: 04 August 2020 08:46
->
-> *** gpg4o | The signature of this email could not be verified because the
-> following public key is missing. Click here to search and import the key
-> 30E7F06A95DBFAF2 ***
->
-> Hi!
->
-> > This is the start of the stable review cycle for the 4.19.137 release.
-> > There are 56 patches in this series, all will be posted as a response
-> > to this one.=A0 If anyone has any issues with these being applied, plea=
-se
-> > let me know.
-> >
-> > Responses should be made by Wed, 05 Aug 2020 12:18:33 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> > =A0=A0=A0 https://www.kernel.org/pub/linux/kernel/v4.x/stable-
-> review/patch-4.19.137-rc1.gz
-> > or in the git tree and branch at:
-> > =A0=A0=A0 git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-st=
-able-
-> rc.git linux-4.19.y
-> > and the diffstat can be found below.
->
-> CIP test farm does not see any problems...
->
-> https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-
-> /pipelines/173700523
->
-> ...except that one of the targets is unavailable.
-
-This is up again now so I've rescheduled the tests.
-
->
-> Chris, could we get distinction between "we ran a test and it failed"
-> and "we could not run a test because mice ate the cables"?
-
-You can see that the board is offline in the GitLab CI log, but that's not =
-ideal.
-I can change it so the job passes with a nice big green tick, but this may =
-lead people to think that the tests had actually been run.
-Maybe we need a yellow icon in the GitLab GUI for this circumstance. Looks =
-like we aren't the first with this request:
-https://gitlab.com/gitlab-org/gitlab/-/issues/16733
-
-Kind regards, Chris=20
-
->
-> Best regards,
-> =A0=A0=A0=A0=A0 =A0=A0=A0=A0=A0=A0=A0 =A0=A0=A0=A0=A0=A0=A0 =A0=A0=A0=A0=
-=A0=A0=A0 =A0=A0=A0=A0=A0=A0=A0 =A0=A0=A0=A0=A0=A0=A0 =A0=A0=A0=A0=A0=A0=A0=
- =A0=A0=A0=A0=A0=A0=A0 =A0=A0=A0=A0=A0=A0=A0 Pavel
->
->
-> --
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures)
-> http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+On 04/08/2020 16:45, Coly Li wrote:=0A=
+> Yes, Ming just posts a patch with a very similar change to loop device=0A=
+> driver.=0A=
+=0A=
+Ah ok. I'll go and have a look at Ming's patch then.=0A=
