@@ -2,151 +2,202 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7717FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFA9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5665E2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:29:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZ2Jas15"
+	by mail.kernel.org (Postfix) with ESMTP id 4096D2086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:32:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729697AbgHDP3q (ORCPT
+        id S1729652AbgHDPcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 11:29:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729526AbgHDP3l (ORCPT
+        Tue, 4 Aug 2020 11:32:54 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34941 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728467AbgHDPcv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 11:29:41 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A383C06174A;
-        Tue,  4 Aug 2020 08:29:41 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id b25so31200713qto.2;
-        Tue, 04 Aug 2020 08:29:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=A3dFPndoyZvaWEl6YVaSywxK6lVziWTAEQzlumQD6Fs=;
-        b=jZ2Jas15OLgmyhb72/ztVsVnNfEV5LeMoUoRQzqhZg2uMUEZuzDlWCZvZ9o/Z6c4Ga
-         ZN08Z/F0NNr6/0b35XQHiji2W1nAdzt/d9R44eIknuUgLEyE6hIxSWYAPPLUe0lywx66
-         nDp06wt43XmZ/CFOGnj4mDCHMvl9l8xo4y7rUQzWXKeZi+B9hBpxv5my4khl24R+Rk2j
-         4ZlBvJc+igtHi8Pj8upBiENNO5Ev3loMwmgo8OsneFP0Vgp1m1zOSnLQoN3Gd4JyN6Kq
-         jEje80e5k8uSgMvEPl4hpjbMlMIWhSufxgqKBThDb7xRsqZh3Ze+jgParxQqDB/Eu7Ok
-         GoQQ==
+        Tue, 4 Aug 2020 11:32:51 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 93so20717527otx.2;
+        Tue, 04 Aug 2020 08:32:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=A3dFPndoyZvaWEl6YVaSywxK6lVziWTAEQzlumQD6Fs=;
-        b=Y/uosQC0XCIujQeVG8WXu3eajODjiL7IqbmGgYzkM8eMxGii4bbLe4W24wjYoQek6g
-         8tcsgxSE3/zmNtlJxxKH8ygd4ZSBU1LJiq6I5d/nZopiCKwwvD9qSVhzQ3R5n+QJqOcL
-         FB8EqRm6Ydojau3d+yuH9HwvpuE2BtV9qdC+WdrZ7kKVhN0kJkxi7Ms+90o8FWNqEIOl
-         LtLcGZLtk+Ph9Q+JOd9kSgcaMzIxx2HTCzESnHevuvQJ1R59bVUDavBqnqpdvyJqd0Ov
-         6ZueRJv1eLO2WKUiGe8gobIuFOC918npztge/5Bs0jIUbz+aojsVKAyNn/bARRkbs9wk
-         P+zg==
-X-Gm-Message-State: AOAM532E54lByEQifpSOsd7ZX7MtKsO9MIQT0zfVv+pPz2ZgRHJbH1Ax
-        IEvfjYaznFT42854DU6tyX0GeI0bHjc=
-X-Google-Smtp-Source: ABdhPJwQAAeoyAn31/xwdwHap5tFvMTs6BZKat8bFoDFP6/onB9Itr1XbdKiZVYUWS9WJMpJ5W8E6g==
-X-Received: by 2002:ac8:4b4d:: with SMTP id e13mr21821962qts.256.1596554980407;
-        Tue, 04 Aug 2020 08:29:40 -0700 (PDT)
-Received: from [192.168.1.190] (pool-96-244-118-111.bltmmd.fios.verizon.net. [96.244.118.111])
-        by smtp.gmail.com with ESMTPSA id d26sm17370443qtc.51.2020.08.04.08.29.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Aug 2020 08:29:39 -0700 (PDT)
-Subject: Re: [PATCH v5 3/4] LSM: Define SELinux function to measure state and
- policy
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Tyler Hicks <tyhicks@linux.microsoft.com>, sashal@kernel.org,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200730034724.3298-1-nramas@linux.microsoft.com>
- <20200730034724.3298-4-nramas@linux.microsoft.com>
- <dfd6f9c8-d62a-d278-9b0e-6b1f5ad03d3e@gmail.com>
- <6371efa9-5ae6-05ac-c357-3fbe1a5a93d5@linux.microsoft.com>
- <CAEjxPJ789kmdDwy-6RaL7HuMFxKpQ9Hwxj9J-_-f62XDCNJUiA@mail.gmail.com>
- <f992901f-6dca-7d31-3426-5a74d36c2c8c@gmail.com>
- <d988a6d0-04e0-62f0-2705-4352b268ca55@linux.microsoft.com>
- <5c843a3d-713c-e71f-8d4f-c6e5f51422f1@gmail.com>
- <3e766eed-7a0b-afca-6139-ac43dea053d7@linux.microsoft.com>
- <0fa0b1f3-6226-c307-0f11-8b3a881a070e@gmail.com>
-Message-ID: <32da0a4a-252a-67d8-5dc8-173959f6ddb4@gmail.com>
-Date:   Tue, 4 Aug 2020 11:29:38 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qatmt//JPwi1mbsIxWPddiiFHQBPfl2gDmEQQ2hQzbk=;
+        b=YA1Qznd5+F1T39Y2zv1RpHi9h5odWgMhBgFCc9PDI2ibE53PnqOH0HoYEjC+f3bfqE
+         OGyANJaBGsv88DkEhWmBIm1OEMXh+gjgd7sov5Yp871RQQzvGgFQh8HO/VOMvBTjhTv5
+         CBFevSd2FxSN5BWy8ishbpRk7nrIpigbGNp0FvDHsWk4hv/hbUZW6d420Z5UkRsP2zMP
+         KzUCW6Cqt9JXs4HpNTvqpRBDO+GlvLidBsyOko7oGcERirhZVlEZQ0QPVBbYS1v2m9GX
+         vriqRJdm90bZ9pHq5kXwHHwQSn85ZpqkVo8mZe7WA5P48P5qKXHIwPa58Ea73pMjecMI
+         T1PA==
+X-Gm-Message-State: AOAM531rgO/5P6oLmo20pr0xI+v4H7qI3hxzHuWlvr+iTzmzkK6121Lv
+        MgATkAjqowaPFF9T1uSYzO3+9vb89S0xk1ERXHusPMd8
+X-Google-Smtp-Source: ABdhPJzG7qI4RyhxG3B6hNJToEp2pigrJTkEwQ9m+um6GnPexUVKm9D/BBSXTUG5n4P1l2cmstIa98lE/PWPwbb3fg8=
+X-Received: by 2002:a9d:1b0d:: with SMTP id l13mr17641241otl.145.1596555170237;
+ Tue, 04 Aug 2020 08:32:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <0fa0b1f3-6226-c307-0f11-8b3a881a070e@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <1596470573-15065-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200803180618.GA2297236@oden.dyn.berto.se> <CA+V-a8sHOqM2tB-72Z-wVJjvihycCq1zLuk7Py7uKGMxzOJyaA@mail.gmail.com>
+ <20200803192801.GC2297236@oden.dyn.berto.se> <CA+V-a8v0fr9jKMEdOHfDV+DSTqd57NRyQs1phC8nPTcNLR-PfQ@mail.gmail.com>
+ <20200804100510.GA2566810@oden.dyn.berto.se> <CAMuHMdW6DtbBUdEPi1DiCUv1n6dxCjvD3b1vVY7tnJq-R+vyiw@mail.gmail.com>
+ <CA+V-a8tEdrap_kaDk+K+KuA8_WWndwn4KbqD5i9n0YPVnbJ5Tg@mail.gmail.com>
+In-Reply-To: <CA+V-a8tEdrap_kaDk+K+KuA8_WWndwn4KbqD5i9n0YPVnbJ5Tg@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 4 Aug 2020 17:32:38 +0200
+Message-ID: <CAMuHMdU2N30vn-SO-AAEf34uW81pqEjfBiCN6pBLZChNucd34g@mail.gmail.com>
+Subject: Re: [PATCH v2] media: rcar-vin: Add support to select data pins for
+ YCbCr422-8bit input
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Niklas <niklas.soderlund@ragnatech.se>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Chris Paterson <Chris.Paterson2@renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/4/20 11:20 AM, Stephen Smalley wrote:
+Hi Prabhakar,
 
-> On 8/3/20 6:08 PM, Lakshmi Ramasubramanian wrote:
+On Tue, Aug 4, 2020 at 5:12 PM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+> On Tue, Aug 4, 2020 at 11:17 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Tue, Aug 4, 2020 at 12:05 PM Niklas <niklas.soderlund@ragnatech.se> wrote:
+> > > On 2020-08-04 09:04:25 +0100, Lad, Prabhakar wrote:
+> > > > On Mon, Aug 3, 2020 at 8:28 PM Niklas <niklas.soderlund@ragnatech.se> wrote:
+> > > > > On 2020-08-03 20:17:54 +0100, Lad, Prabhakar wrote:
+> > > > > > On Mon, Aug 3, 2020 at 7:06 PM Niklas <niklas.soderlund@ragnatech.se> wrote:
+> > > > > > > On 2020-08-03 17:02:53 +0100, Lad Prabhakar wrote:
+> > > > > > > > Select the data pins for YCbCr422-8bit input format depending on
+> > > > > > > > bus_width and data_shift passed as part of DT.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > > > > > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> >
+> > > > > > > > --- a/drivers/media/platform/rcar-vin/rcar-core.c
+> > > > > > > > +++ b/drivers/media/platform/rcar-vin/rcar-core.c
+> > > > > > > > @@ -624,6 +624,11 @@ static int rvin_parallel_parse_v4l2(struct device *dev,
+> > > > > > > >       vin->parallel = rvpe;
+> > > > > > > >       vin->parallel->mbus_type = vep->bus_type;
+> > > > > > > >
+> > > > > > > > +     /* select VInDATA[15:8] pins for YCbCr422-8bit format */
+> > > > > > > > +     if (vep->bus.parallel.bus_width == BUS_WIDTH_8 &&
+> > > > > > > > +         vep->bus.parallel.data_shift == DATA_SHIFT_8)
+> > > > > > > > +             vin->parallel->ycbcr_8b_g = true;
+> > > > > > > > +
+> > > > > > >
+> > > > > > > I would store the bus_width and bus_shift values in the struct
+> > > > > > > rvin_parallel_entity and evaluate them in place rater then create a flag
+> > > > > > > for this specific use-case..
+> > > > > > >
+> > > > > > Ok will do that.
+> > > > > >
+> > > > > > > Also according to the documentation is the check correct? Do we not wish
+> > > > > > > to use the new mode when bus_width == 16 and bus_shift == 8. The check
+> > > > > > > you have here seems to describe a 8 lane bus where 0 lanes are used.
+> > > > > > >
+> > > > > > bus-width is the actual data lines used, so bus_width == 16 and
+> > > > > > bus_shift == 8 would mean use lines 23:8, so just check for bus_width
+> > > > > > == 8 and bus_shift == 8 should be sufficient.
+> > > > >
+> > > > > As you and Geert points out I was wrong, they should indeed both be 8.
+> > > > >
+> > > > > >
+> > > > > > > I think you should also verify that bus_shift is either 0 or 8 as that
+> > > > > > > is all the driver supports.
+> > > > > > >
+> > > > > > Not sure if thats correct.In that case this patch wont make sense, I
+> > > > > > believed we agreed upon we determine the YDS depending on both
+> > > > > > bus-width and bus-shift.
+> > > > >
+> > > > > I'm sorry I think I lost you :-) The driver is not capable of supporting
+> > > > > bus_width = 8 and bus_shift = 2 right? Maybe we are talking about
+> > > > > different things.
+> > > > >
+> > > > > What I tried to say (updated with the knowledge of that bus_width should
+> > > > > indeed be 8 and not 16) was that would it make sens to with bus_width=8
+> > > > > allow for a bus_shift value other then 0 or 8? What for example would
+> > > > > the driver do if the value was 2?
+> > > > >
+> > > > I think this should be possible but I am not sure how this will work.
+> > > > For example on iWave G21D-Q7 platform with 16-bit wired bus say we
+> > > > connect a 8-bit camera as below:
+> > > >
+> > > > bus-width = 8 and bus-shift = 2
+> > > > VI1_G0_B        -> Not connected
+> > > > VI1_G1_B        -> Not connected
+> > > > VI1_G2_B_16        -> Connected
+> > > > VI1_G3_B        -> Connected
+> > > > VI1_G4_B        -> Connected
+> > > > VI1_G5_B        -> Connected
+> > > > VI1_G6_B        -> Connected
+> > > > VI1_G7_B        -> Connected
+> > > > VI1_DATA7_B/VI1_B7_B_16    -> Connected
+> > > > VI1_DATA6_B/VI1_B6_B_16    -> Connected
+> > > > VI1_DATA5_B/VI1_B5_B_16    -> Not connected
+> > > > VI1_DATA4_B/VI1_B4_B_16    -> Not connected
+> > > > VI1_DATA3_B/VI1_B3_B_16    -> Not connected
+> > > > VI1_DATA2_B/VI1_B2_B_16    -> Not connected
+> > > > VI1_DATA1_B/VI1_B1_B_16    -> Not connected
+> > > > VI1_DATA0_B/VI1_B0_B_16    -> Not connected
+> > >
+> > > I agree this is how I would imagine bus-width = 8 and bus-shift = 2 to
+> > > be wired.
+> > >
+> > > > So in this case for 8-bit YCbCr422 format should YDS be set I am not
+> > > > sure. Or is this not a valid case at all ?
+> > >
+> > > That is my question :-)
+> > >
+> > > I can't find anything int the documentation that would allow is to do
+> > > anything other then bus-width = 8 together with bus-shift = 0 (do not
+> > > set YDS) or bus-shift = 8 (set YDS). So that is why I suggested you
+> > > check for this and print a warning if bus-shift is anything else :-)
+> > >
+> > > But if you can figured out how we can do a bus-shift = 2 as in your
+> > > example then of course the check is wrong. I have not read the docs
+> > > carefully enough about this to rule it out as impossible.
+> >
+> > IIUIC, this is a completely different scenario than "low" or "high" wiring
+> > of 8-bit YCbCr-422, hence YDS does not apply?
+> >
+> I tend to agree. We only enable YDS if bus-width = 8 and bus-shift=8
+> as done by this patch. (Although there isn't enough documentation to
+> prove it)
 >
->> On 8/3/20 2:07 PM, Stephen Smalley wrote:
->>
->>>>>> [   68.870715] irq event stamp: 23486085
->>>>>> [   68.870715] hardirqs last  enabled at (23486085):
->>>>>> [<ffffffffaa419406>] _raw_spin_unlock_irqrestore+0x46/0x60
->>>>>> [   68.870715] hardirqs last disabled at (23486084):
->>>>>> [<ffffffffaa419443>] _raw_spin_lock_irqsave+0x23/0x90
->>>>>> [   68.870715] softirqs last  enabled at (23486074):
->>>>>> [<ffffffffaa8004f3>] __do_softirq+0x4f3/0x662
->>>>>> [   68.870715] softirqs last disabled at (23486067):
->>>>>> [<ffffffffaa601072>] asm_call_on_stack+0x12/0x20
->>>>>> [   68.870715] ---[ end trace fb02740ff6f4d0cd ]---
->>>>>
->>>>> I think one issue here is that systemd loads SELinux policy first, 
->>>>> then IMA policy, so it doesn't know whether it needs to measure 
->>>>> SELinux policy on first policy load, and another issue is that the 
->>>>> policy is too large to just queue the policy data itself this way 
->>>>> (or you need to use an allocator that can handle larger sizes).
->>>>>
->>>>
->>>> The problem seems to be that a lock is held when the IMA hook to 
->>>> measure the LSM state is called. So memory allocation is not 
->>>> allowed, but the hook is doing an allocation. I'll address this - 
->>>> thanks for catching it.
->>>>
->>>> I have the following CONFIGs enabled, but I still don't see the 
->>>> above issue on my machine.
->>>>
->>> The warning has to do with the memory allocation order being above 
->>> the max order supported for kmalloc.  I think the problem is that 
->>> ima_alloc_data_entry() is using kmemdup() to duplicate a payload of 
->>> arbitrary size.  Policies on e.g. Fedora can be quite large, so you 
->>> can't assume they can be allocated with kmalloc and friends.
->>>
->>
->> Thanks for clarifying. Yes ima_alloc_entry() does use kmemdup to save 
->> the given buffer (to be measured) until IMA loads custom policy.
->>
->> On my machine the SELinux policy size is about 2MB.
->>
->> Perhaps vmalloc would be better than using kmalloc? If there are 
->> better options for such large buffer allocation, please let me know.
+> > The iWave G21D-Q7 wiring seems to be 10-bit YCbCr-422 with the 2 LSB
+> > bits unconnected?
+> >
+> B-8bit/ BG-16 bit for VI0 and  B-8bit/ BG-16 bit for VI0
 >
-> kvmalloc() can be used to select whichever one is most appropriate.
+> > Interestingly, that mode is supported on all RZ/G1 SoCs, on most R-Car
+> > Gen3 SoCs, but only on a single R-Car Gen2 SoC (V2H).
+> >
+> YDS mode ?
 
-Other option would be for ima to compute and save the hash(es) of the 
-payload and not the payload itself for later use.  I guess you won't 
-know at that point which hash algorithm is desired?
+No, 10-bit YCbCr-422. But please forget my comment, I was looking at
+the wrong table.
 
+VI1_G[7:2] plus VI1_DATA[7:6] is not even a contiguous subset (I had
+misread the used subset to be G[1:0] and B[7:2]), so it cannot be represented
+using just bus-width and bus-shift properties?
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
