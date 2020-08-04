@@ -2,117 +2,229 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B26C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E6DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB9C2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:35:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="l7fIXiLE"
+	by mail.kernel.org (Postfix) with ESMTP id 3F838206D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:35:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729912AbgHDHfA (ORCPT
+        id S1729918AbgHDHfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 03:35:00 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33857 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729566AbgHDHfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 03:35:00 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BLRNf0vCXz9sSt;
-        Tue,  4 Aug 2020 17:34:57 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596526498;
-        bh=eye2JhZwravnhFeIr7WolCHUFPGiA0p5ArKH3CJordY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=l7fIXiLEaZcCAFlcGIAtqfB9b5c8gy3cQWNVp2QPZUOUs5RUZrqUvX+qp4sXSHqTZ
-         VaZ+t48TjXm/CmmvKWn/cfwFtI4sApuzaSAbVMDefUD64C1ikwXQg+ndK8fKq8Qc8z
-         sMthhnv73p8tmJcIME/8SIFJhJNOizyx0/T3wQCiaEACzb3pYWvT80xi7Wc5J5CkK8
-         LG9H24FNyLJsoj81JfbABf1BcuVKSq2dY3ASqF031YwNJwUSv54bP0VTCdqMK2iPyR
-         zwDDfXS3alkTdUVpopf3MI6IHRiuzuLBcErtkUJ/85ZbyH2E3lABRPspHw5wl0VPer
-         lIinFNvWMfAcA==
-Date:   Tue, 4 Aug 2020 17:34:56 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build warnings after merge of the fsinfo tree
-Message-ID: <20200804173456.01c819ea@canb.auug.org.au>
+        Tue, 4 Aug 2020 03:35:31 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:32878 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729610AbgHDHfb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 03:35:31 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U4isePz_1596526524;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U4isePz_1596526524)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 04 Aug 2020 15:35:25 +0800
+Subject: Re: [PATCH] mm/memcg: remove useless check on page->mem_cgroup
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1596166480-22814-1-git-send-email-alex.shi@linux.alibaba.com>
+ <20200731151655.GB491801@cmpxchg.org>
+ <9338716f-ca0e-057f-8d94-03e2b3f70281@linux.alibaba.com>
+ <20200803081815.GD5174@dhcp22.suse.cz>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <bd61e672-b997-c4cd-2047-fca9dc11cc4c@linux.alibaba.com>
+Date:   Tue, 4 Aug 2020 15:35:08 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/7uupr6YPSo=a8lzNq8=sPPI";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200803081815.GD5174@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/7uupr6YPSo=a8lzNq8=sPPI
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-After merging the fsinfo tree, today's linux-next build (powerpc
-allyesconfig) produced these warnings:
+在 2020/8/3 下午4:18, Michal Hocko 写道:
+> On Sat 01-08-20 11:58:41, Alex Shi wrote:
+>>
+>>
+>> 在 2020/7/31 下午11:16, Johannes Weiner 写道:
+>>>>  	if (!entry.val) {
+>>>>  		memcg_memory_event(memcg, MEMCG_SWAP_FAIL);
+>>> Uncharged readahead pages are gone, but I'm not 100% sure uncharged
+>>> pages in general are gone. ISTR that the !page->mem_cgroup check in
+>>> mem_cgroup_uncharge() prevented a crash - although that is of course a
+>>> much broader interface, whereas the ones you change should only apply
+>>> to LRU pages (which are hopefully all charged).
+>>>
+>>> Nevertheless, to avoid unnecessary crashes if we discover that we've
+>>> been wrong, how about leaving the branches for now, but adding a (new)
+>>> VM_WARN_ON_ONCE_PAGE() to them?
+> 
+> Agreed!
+> 
+>> Right, let's see if other unexcepted things happens, and then do actions.
+>> So it's the patch:
+>>
+>> >From 28893cf8e55b98665cce58c0ba6d54aeafb63a62 Mon Sep 17 00:00:00 2001
+>> From: Alex Shi <alex.shi@linux.alibaba.com>
+>> Date: Sat, 1 Aug 2020 10:43:55 +0800
+>> Subject: [PATCH] mm/memcg: warning on !memcg after readahead page charged
+>>
+>> Since readahead page is charged on memcg too, in theory we don't have to
+>> check this exception now. Before safely remove them all, add a warning
+>> for the unexpected !memcg.
+> 
+> I would find it useful to mention since when this assumption holds.> 
+>> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+>> Cc: Johannes Weiner <hannes@cmpxchg.org>
+>> Cc: Michal Hocko <mhocko@kernel.org>
+>> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: cgroups@vger.kernel.org
+>> Cc: linux-mm@kvack.org
+>> Cc: linux-kernel@vger.kernel.org
+>> ---
+>>  include/linux/mmdebug.h |  8 ++++++++
+>>  mm/memcontrol.c         | 15 ++++++++-------
+>>  2 files changed, 16 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/include/linux/mmdebug.h b/include/linux/mmdebug.h
+>> index 2ad72d2c8cc5..639e98a3384e 100644
+>> --- a/include/linux/mmdebug.h
+>> +++ b/include/linux/mmdebug.h
+>> @@ -37,6 +37,13 @@
+>>  			BUG();						\
+>>  		}							\
+>>  	} while (0)
+>> +#define VM_WARN_ON_ONCE_PAGE(cond, page)				\
+>> +	do {								\
+>> +		if (unlikely(cond)) {					\
+>> +			dump_page(page, "VM_WARN_ON_ONCE_PAGE(" __stringify(cond)")");\
+>> +			WARN_ON_ONCE(cond);				\
+>> +		}							\
+> 
+> This is a bit strange behavior. You dump page for each occasion but warn
+> only once. I would expect either "once" semantic for any output or just
+> dump on each occasion because if the whole point is to reduce to amount
+> of output then the above doesn't serve the purpose.
+> 
 
-samples/vfs/test-mntinfo.c: In function 'display_mount':
-samples/vfs/test-mntinfo.c:146:19: warning: format '%llx' expects argument =
-of type 'long long unsigned int', but argument 3 has type '__u64' {aka 'lon=
-g unsigned int'} [-Wformat=3D]
-  146 |  printf("%10u %8llx %2x %x %5s %s",
-      |               ~~~~^
-      |                   |
-      |                   long long unsigned int
-      |               %8lx
-  147 |         info.mnt_id,
-  148 |         (info.mnt_attr_changes +
-      |         ~~~~~~~~~~~~~~~~~~~~~~~~
-  149 |   info.mnt_topology_changes +
-      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      |                             |
-      |                             __u64 {aka long unsigned int}
-  150 |   info.mnt_subtree_notifications),
-      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-samples/vfs/test-fsinfo.c: In function 'dump_fsinfo_generic_mount_all':
-samples/vfs/test-fsinfo.c:384:30: warning: format '%llu' expects argument o=
-f type 'long long unsigned int', but argument 5 has type '__u64' {aka 'long=
- unsigned int'} [-Wformat=3D]
-  384 |  printf("%5x %5x %12llx %10llu %s\n",
-      |                         ~~~~~^
-      |                              |
-      |                              long long unsigned int
-      |                         %10lu
-  385 |         r->mnt_id, r->parent_id, (unsigned long long)r->mnt_unique_=
-id,
-  386 |         r->mnt_notify_sum, mp);
-      |         ~~~~~~~~~~~~~~~~~    =20
-      |          |
-      |          __u64 {aka long unsigned int}
+Yes, left more dump_page may ommited by users. for reduce dmesg purpose, warn once
+is better.
 
---=20
-Cheers,
-Stephen Rothwell
+Thanks for comment!
+Alex 
+--
+From 3cee031d50625733a64b58240d0e6f8151e5299c Mon Sep 17 00:00:00 2001
+From: Alex Shi <alex.shi@linux.alibaba.com>
+Date: Sat, 1 Aug 2020 10:43:55 +0800
+Subject: [PATCH v2] mm/memcg: warning on !memcg after readahead page charged
 
---Sig_/7uupr6YPSo=a8lzNq8=sPPI
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Since readahead page is charged on memcg too, in theory we don't have to
+check this exception now. Before safely remove them all, add a warning
+for the unexpected !memcg.
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: cgroups@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+---
+ include/linux/mmdebug.h | 13 +++++++++++++
+ mm/memcontrol.c         | 15 ++++++++-------
+ 2 files changed, 21 insertions(+), 7 deletions(-)
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8pD6AACgkQAVBC80lX
-0Gwa8wf8DgnGrB0x4wEbuaaT8lvLn/sSXiV5PPBP093nODUVeGpA8d5A9XhSqgVF
-Xzk5qjqdFcfCM+MlZCYxpoKlfWU2JgBz2NddOGzG3UY9Z3e2r7uJYvF2+FKduuLi
-CW3P/pvu1TFYuZfQ/4hGgIHanMxAn/2EK+2qcD1+gMkah+I/M/LC6fWM2ayD4Iwz
-KnqAtw5dHbiPelDlgd0H5qYKgTUA/gJMl63aOFFnEmAXIjQ2r/d7lzzhfi8t+Rkl
-xAMI9T9iAVn4qUU4zOJ8N9iQHVlDwhpxEfK6GsIZh57sWGzmJuoOspDuoSODdNpA
-H6lW3I3v6fOLlXaVNO6KW4kF66Tg6Q==
-=JZqY
------END PGP SIGNATURE-----
+diff --git a/include/linux/mmdebug.h b/include/linux/mmdebug.h
+index 2ad72d2c8cc5..698eaf56f89f 100644
+--- a/include/linux/mmdebug.h
++++ b/include/linux/mmdebug.h
+@@ -37,6 +37,18 @@
+ 			BUG();						\
+ 		}							\
+ 	} while (0)
++#define VM_WARN_ON_ONCE_PAGE(condition, page)	({			\
++	static bool __section(.data.once) __warned;			\
++	int __ret_warn_once = !!(condition);				\
++									\
++	if (unlikely(__ret_warn_once && !__warned)) {			\
++		dump_page(page, "VM_WARN_ON_ONCE_PAGE(" __stringify(cond)")");\
++		__warned = true;					\
++		WARN_ON(1);						\
++	}								\
++	unlikely(__ret_warn_once);					\
++})
++
+ #define VM_WARN_ON(cond) (void)WARN_ON(cond)
+ #define VM_WARN_ON_ONCE(cond) (void)WARN_ON_ONCE(cond)
+ #define VM_WARN_ONCE(cond, format...) (void)WARN_ONCE(cond, format)
+@@ -48,6 +60,7 @@
+ #define VM_BUG_ON_MM(cond, mm) VM_BUG_ON(cond)
+ #define VM_WARN_ON(cond) BUILD_BUG_ON_INVALID(cond)
+ #define VM_WARN_ON_ONCE(cond) BUILD_BUG_ON_INVALID(cond)
++#define VM_WARN_ON_ONCE_PAGE(cond, page)  BUILD_BUG_ON_INVALID(cond)
+ #define VM_WARN_ONCE(cond, format...) BUILD_BUG_ON_INVALID(cond)
+ #define VM_WARN(cond, format...) BUILD_BUG_ON_INVALID(cond)
+ #endif
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 130093bdf74b..299382fc55a9 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1322,10 +1322,8 @@ struct lruvec *mem_cgroup_page_lruvec(struct page *page, struct pglist_data *pgd
+ 	}
+ 
+ 	memcg = page->mem_cgroup;
+-	/*
+-	 * Swapcache readahead pages are added to the LRU - and
+-	 * possibly migrated - before they are charged.
+-	 */
++	/* Readahead page is charged too, to see if other page uncharged */
++	VM_WARN_ON_ONCE_PAGE(!memcg, page);
+ 	if (!memcg)
+ 		memcg = root_mem_cgroup;
+ 
+@@ -6906,8 +6904,9 @@ void mem_cgroup_migrate(struct page *oldpage, struct page *newpage)
+ 	if (newpage->mem_cgroup)
+ 		return;
+ 
+-	/* Swapcache readahead pages can get replaced before being charged */
+ 	memcg = oldpage->mem_cgroup;
++	/* Readahead page is charged too, to see if other page uncharged */
++	VM_WARN_ON_ONCE_PAGE(!memcg, oldpage);
+ 	if (!memcg)
+ 		return;
+ 
+@@ -7104,7 +7103,8 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
+ 
+ 	memcg = page->mem_cgroup;
+ 
+-	/* Readahead page, never charged */
++	/* Readahead page is charged too, to see if other page uncharged */
++	VM_WARN_ON_ONCE_PAGE(!memcg, page);
+ 	if (!memcg)
+ 		return;
+ 
+@@ -7168,7 +7168,8 @@ int mem_cgroup_try_charge_swap(struct page *page, swp_entry_t entry)
+ 
+ 	memcg = page->mem_cgroup;
+ 
+-	/* Readahead page, never charged */
++	/* Readahead page is charged too, to see if other page uncharged */
++	VM_WARN_ON_ONCE_PAGE(!memcg, page);
+ 	if (!memcg)
+ 		return 0;
+ 
+-- 
+1.8.3.1
 
---Sig_/7uupr6YPSo=a8lzNq8=sPPI--
