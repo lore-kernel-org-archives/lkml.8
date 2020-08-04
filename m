@@ -2,153 +2,150 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E816C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC151C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A57420738
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC40820738
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 03:01:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E6lz/F0l"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gaxwoqhx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbgHDDAT (ORCPT
+        id S1728016AbgHDDBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 23:00:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36010 "EHLO
+        Mon, 3 Aug 2020 23:01:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbgHDDAT (ORCPT
+        with ESMTP id S1725840AbgHDDBJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 23:00:19 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15FF2C06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 20:00:19 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id r4so11442468pls.2
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 20:00:19 -0700 (PDT)
+        Mon, 3 Aug 2020 23:01:09 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0154C06174A;
+        Mon,  3 Aug 2020 20:01:09 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id g19so9503608plq.0;
+        Mon, 03 Aug 2020 20:01:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=I/S5vrlNulwp45H+XxtQvmflrkKxTEGHdqIBJtU71UM=;
-        b=E6lz/F0loOMWpzwzL9EL5uI8uRE19tRQP8x66a03pEQA0uuyi7toqSi6AoaweZG9K5
-         kdGBp5YQODii2KyuK6QSITM5ArS23MuRPv9wtCeM+iFwogJdPooAtuBAD3kl7rBkul3Z
-         R574Ut7X2gu4Fp4ggfuY4Tp19hbBgM/cyON+33LrsuHrhR+DMqGp+4VaFCINEnqz63ZH
-         SU+QivAajBxArpmeh+oDTzNtjVD6xiliQbWJhcg1lb1tGoBPXM4m1lMUKH4lk3a7Um20
-         bqFef/sVT2SphtvqJRmrZQ/S1K9XhN5acH4havK7QeGCXf7JFUlZS1upKs7BOrgz7HLI
-         yqYA==
+        bh=t7bwQ7uszFAoujrRz6CfHxaIJ5PCL1LbSKdLTSTnrIw=;
+        b=gaxwoqhxXzq5sdzxrMO8ULxCa2KiPx1YgUoYsK2lXwp3FewnyOJxBnlqZaLvpSWYRR
+         okPkoL4YtRjdezmdAFm1/+SZK9Gg/0eixFVXHWAzKchJ3O0iuGho0Rt/DjoWj9lbLL9r
+         cD9mmKcfZjbtBMfVGYgmsv/SNz8zfjGkbJeOs7aN3+epY7fjaF1p+ILZ/cEUSo/ClHLU
+         /smDmj9z3dhWVOem6Z0HPAt/jDfA/+YsEy4U7sRtR7CK1UgDCybC5hw22Weddr5BR5c8
+         PY8uzMI2eYn6XnNUZ5PXyZDU9IEsqwByTrjSLvJzKWbEWqRmdwXjcRLnIABIqCXng3L9
+         W/mQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=I/S5vrlNulwp45H+XxtQvmflrkKxTEGHdqIBJtU71UM=;
-        b=sog5IPcjR3w6sL0ApbpgGz3NEOxae/FgmjhRex7AzRW2WFKGe30OR/r4OzmEgqnEuK
-         c6ww3X7kL1KYCV7XixQg9P2gIbIq+qcO/yYqDeM/92aHjBlj61ygwpbvTBf6m+q4cSr6
-         0W6dA872qWvBEprhvegVKYvR5lq9PBplVf2/TDaRIQV8Zj394KoXe+S5cgexemIwJ9/U
-         w1k6Ew3oHq7pDMUJYg6godSCRI3EaIunnh+1l+/9IoeQ6y15RIKJt1+/lqqpB/UY43xz
-         qvBM0p157Y0qKPN+ZNBwqgDHRqKDtEalomPwKGX0xQH4gKbjPI3FP5hY/LD5Udoa44EN
-         BAAQ==
-X-Gm-Message-State: AOAM5320bCIcSHC7xOVkqPhbNyj1botXXQDJuAg5ji/IkA1JiI8ayTYC
-        02p9rn3mCcHxdv8YD/WMxgg=
-X-Google-Smtp-Source: ABdhPJx1+9OQ1P10b47ZvUn/LDad5t2VFaOqWhE2dXRFv7b+mWMz8VgTzGFprojAaDIAxuyGHT5M3Q==
-X-Received: by 2002:a17:90b:3652:: with SMTP id nh18mr2298790pjb.30.1596510017980;
-        Mon, 03 Aug 2020 20:00:17 -0700 (PDT)
-Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id j142sm21055148pfd.100.2020.08.03.20.00.17
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=t7bwQ7uszFAoujrRz6CfHxaIJ5PCL1LbSKdLTSTnrIw=;
+        b=Hzo2cN3KOyOhx7nRWGM4ZGA50UgGJ8uXACFs77lCg9UH4yCVnAFZkGHrcn7mqm075y
+         YHDCkadlcJ4zyft9fyFm3bgjI3XzedqqfMSaILlxUsNrAWuauveneCNIkl57S2aBk9ZC
+         VxbBaSracXJoBHjxOFNQYtvIQQZ24JVWP46xBoXxXBkFYuoSoBUw3q1q82eIaLeaPFiE
+         nhfsuE/HlZqHuu6Sm6duwesBn9/OiYgs5hdn1Mz8rvChV8NkA2od9pKL/vYtECSCDNGB
+         9/Q7SAH+I3OS2uiG9VraJ7ipxG3sEOiAs4DMhO3Anpx2UbuzcbbuOm71LtHJmIksDNjE
+         oHDA==
+X-Gm-Message-State: AOAM532Ep2WqI0jNEkQ8yi+6pVPfKS8U0C/3QqZ1C26JF+AAiV17ZhBZ
+        T0h0KHgJmQSXnpc4lmxd5tE=
+X-Google-Smtp-Source: ABdhPJzr1g+60gUIfi4iCvfQCTqYTrx7MMJPxlHxsCf1eNUSi9O/jLpDK6ahpOQsHsPrVbMZbltVkA==
+X-Received: by 2002:a17:902:bd01:: with SMTP id p1mr13255411pls.25.1596510069334;
+        Mon, 03 Aug 2020 20:01:09 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d81sm7352521pfd.174.2020.08.03.20.01.07
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Aug 2020 20:00:17 -0700 (PDT)
-Date:   Mon, 3 Aug 2020 20:00:05 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ASoC: fsl_sai: Clean code for synchronize mode
-Message-ID: <20200804030004.GA27028@Asurada-Nvidia>
-References: <1596424674-32127-1-git-send-email-shengjiu.wang@nxp.com>
- <20200803054037.GA1056@Asurada-Nvidia>
- <CAA+D8AOGF44UUq=P1S-M5TUwDUaOnqVmHJKPDBM9DAzt1nVzmQ@mail.gmail.com>
- <20200803215735.GA5461@Asurada-Nvidia>
- <CAA+D8ANQxnvR2bOyHVRs5h2NJhMeVh4gjLPknaz7aQ86MtL0sQ@mail.gmail.com>
- <20200804021114.GA15390@Asurada-Nvidia>
- <CAA+D8ANagfMXPAkK4-vBDY9rZMukVUXs8FfBCHS0avXt57pekA@mail.gmail.com>
+        Mon, 03 Aug 2020 20:01:08 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 20:01:07 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org, stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 5.7 000/120] 5.7.13-rc1 review
+Message-ID: <20200804030107.GA220454@roeck-us.net>
+References: <20200803121902.860751811@linuxfoundation.org>
+ <20200803155820.GA160756@roeck-us.net>
+ <20200803173330.GA1186998@kroah.com>
+ <CAMuHMdW1Cz_JJsTmssVz_0wjX_1_EEXGOvGjygPxTkcMsbR6Lw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAA+D8ANagfMXPAkK4-vBDY9rZMukVUXs8FfBCHS0avXt57pekA@mail.gmail.com>
+In-Reply-To: <CAMuHMdW1Cz_JJsTmssVz_0wjX_1_EEXGOvGjygPxTkcMsbR6Lw@mail.gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 10:35:12AM +0800, Shengjiu Wang wrote:
-> On Tue, Aug 4, 2020 at 10:11 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
-> >
-> > On Tue, Aug 04, 2020 at 09:39:44AM +0800, Shengjiu Wang wrote:
-> > > On Tue, Aug 4, 2020 at 5:57 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
-> > > >
-> > > > On Mon, Aug 03, 2020 at 04:04:23PM +0800, Shengjiu Wang wrote:
-> > > >
-> > > > > > > clock generation. The TCSR.TE is no need to enabled when only RX
-> > > > > > > is enabled.
-> > > > > >
-> > > > > > You are correct if there's only RX running without TX joining.
-> > > > > > However, that's something we can't guarantee. Then we'd enable
-> > > > > > TE after RE is enabled, which is against what RM recommends:
-> > > > > >
-> > > > > > # From 54.3.3.1 Synchronous mode in IMX6SXRM
-> > > > > > # If the receiver bit clock and frame sync are to be used by
-> > > > > > # both the transmitter and receiver, it is recommended that
-> > > > > > # the receiver is the last enabled and the first disabled.
-> > > > > >
-> > > > > > I remember I did this "ugly" design by strictly following what
-> > > > > > RM says. If hardware team has updated the RM or removed this
-> > > > > > limitation, please quote in the commit logs.
-> > > > >
-> > > > > There is no change in RM and same recommandation.
-> > > > >
-> > > > > My change does not violate the RM. The direction which generates
-> > > > > the clock is still last enabled.
-> > > >
-> > > > Using Tx syncing with Rx clock for example,
-> > > > T1: arecord (non-stop) => set RE
-> > > > T2: aplay => set TE then RE (but RE is already set at T1)
-> > > >
-> > > > Anything that I am missing?
-> > >
-> > > This is a good example.
-> > > We have used this change locally for a long time, so I think it is
-> > > safe to do this change, a little different with the recommandation.
-> >
-> > Any reason for we have to go against the recommendation?
+On Mon, Aug 03, 2020 at 10:33:59PM +0200, Geert Uytterhoeven wrote:
+> Hi Greg,
 > 
-> Previous code will enable TE and RE  together even for asynchronous
-> mode.
-> And for recommendation, previous code just consider the RX sync with
-> TX, but still violates the recommendation for TX sync with RX case.
-> So at least this new change is some kind of improvement.
+> On Mon, Aug 3, 2020 at 7:35 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> > On Mon, Aug 03, 2020 at 08:58:20AM -0700, Guenter Roeck wrote:
+> > > On Mon, Aug 03, 2020 at 02:17:38PM +0200, Greg Kroah-Hartman wrote:
+> > > > This is the start of the stable review cycle for the 5.7.13 release.  There
+> > > > are 120 patches in this series, all will be posted as a response to this one.
+> > > > If anyone has any issues with these being applied, please let me know.
+> > > >
+> > > > Responses should be made by Wed, 05 Aug 2020 12:18:33 +0000.  Anything
+> > > > received after that time might be too late.
+> > > >
+> > >
+> > > Building sparc64:allmodconfig ... failed
+> > > --------------
+> > > Error log:
+> > > <stdin>:1511:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+> > > In file included from arch/sparc/include/asm/percpu_64.h:11,
+> > >                  from arch/sparc/include/asm/percpu.h:5,
+> > >                  from include/linux/random.h:14,
+> > >                  from fs/crypto/policy.c:13:
+> > > arch/sparc/include/asm/trap_block.h:54:39: error: 'NR_CPUS' undeclared here (not in a function)
+> > >    54 | extern struct trap_per_cpu trap_block[NR_CPUS];
+> > >
+> > > Inherited from mainline. Builds are not complete yet;
+> > > we may see a few more failures (powerpc:ppc64e_defconfig
+> > > fails to build in mainline as well).
+> >
+> > If it gets fixed upstream, I'll fix it here :)
+> 
+> And else you'll release a known-broken v5.7.13?
+> 
+> Perhaps backporting should be a bit less aggressive?
+> This breakage was introduced in between v5.8-rc7 and v5.8, and backported
+> before people had the time to properly look into the v5.8 build bot logs.
+> 
 
-Okay. Let's change it then. Please make sure to update/remove
-those old comments in the trigger(). And it's probably better
-to mention that what we do now is a bit different from RM:
-	/*
-	 * Enable the opposite direction for synchronous mode
-	 * 1. Tx sync with Rx: only set RE for Rx; set TE & RE for Tx
-	 * 2. Rx sync with Tx: only set TE for Tx; set RE & TE for Rx
-	 *
-	 * RM recommends to enable RE after TE for case 1 and to enable
-	 * TE after RE for case 2, but we here may not always guarantee
-	 * that happens: "arecord 1.wav; aplay 2.wav" in case 1 enables
-	 * TE after RE, which is against what RM recommends but should
-	 * be safe to do, judging by years of testing results.
-	 */
+The bisect log below applies to both the sparc and the powerpc build
+failures.
 
-Btw, do we need similar change for TRIGGER_STOP?
+I should have guessed. Bisect points to the random changes. Those are
+really causing an endless amount of trouble. I hope the problem they
+are solving is worth all that trouble.
+
+Guenter
+
+---
+# bad: [333e573a423b816b8b28000d6106fa52bd98e198] Linux 4.14.192-rc1
+# good: [7f2c5eb458b8855655a19c44cd0043f7f83c595f] Linux 4.14.191
+git bisect start 'HEAD' 'v4.14.191'
+# bad: [88918f1a1f18dad31154103fa5218e714f10679e] net/x25: Fix x25_neigh refcnt leak when x25 disconnect
+git bisect bad 88918f1a1f18dad31154103fa5218e714f10679e
+# good: [1f9d268fd05887ecb6225a9452309efc3535492d] ARM: percpu.h: fix build error
+git bisect good 1f9d268fd05887ecb6225a9452309efc3535492d
+# bad: [f496bedf603212e6dbef88425680f8e137a51e27] random32: remove net_rand_state from the latent entropy gcc plugin
+git bisect bad f496bedf603212e6dbef88425680f8e137a51e27
+# good: [1e69d85c7e40051b57414953410bcee858285081] f2fs: check memory boundary by insane namelen
+git bisect good 1e69d85c7e40051b57414953410bcee858285081
+# bad: [0ea865dc4e3d93320e7103958ff041f5d7032ed5] random: fix circular include dependency on arm64 after addition of percpu.h
+git bisect bad 0ea865dc4e3d93320e7103958ff041f5d7032ed5
+# good: [e2bd43f819d770de686a904b7139bf444e96543c] f2fs: check if file namelen exceeds max value
+git bisect good e2bd43f819d770de686a904b7139bf444e96543c
+# first bad commit: [0ea865dc4e3d93320e7103958ff041f5d7032ed5] random: fix circular include dependency on arm64 after addition of percpu.h
