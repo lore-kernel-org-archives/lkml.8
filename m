@@ -2,116 +2,87 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C9AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8570DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C03820842
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:37:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596573446;
-	bh=TB1O33CuTCa9/BD5BOlCNs2uuFxJ04kfDES+UGro+50=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=UvgPEzz0lFWt0zuzZBxqWH0ssHzE3p2hqPg531q+GGDnNQJKAYLGq98BMTy90iSCH
-	 8GSHuGolu2Jat1kyUNGq/llI77X85PvCJQWq7tmUocaWhk1UslR+Jd+tr0s2WzcP9G
-	 CSlVLVxbXabA5DCDIZA8KSU+R3MmuQdbQRN2WOGc=
+	by mail.kernel.org (Postfix) with ESMTP id 7463F20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:38:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgHDUhZ (ORCPT
+        id S1727887AbgHDUiM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 16:37:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57598 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727092AbgHDUhZ (ORCPT
+        Tue, 4 Aug 2020 16:38:12 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:40524
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727035AbgHDUiL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 16:37:25 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20328C061756
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 13:37:25 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id z10so5424376ooi.10
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 13:37:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pFDh7nGN736WMoIOc8zyOhHg72v4zuXANR8Au8EWk5k=;
-        b=e0+NO2RTD/3gnAomEZmJ+y6dRWbz+AvOQcXjJF79gUFk5jIRu8RqHsGEvkO2ptyc6e
-         ruPdNPVhHavJ9RN9SeA8S54JIvuTFf/JvvFGFTzzp6JvJceTXyFaJhYz4mRaqRafLzxk
-         dgOce6drY5Ip62u9u8WY8r3GVjLldW/QZc6Uo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pFDh7nGN736WMoIOc8zyOhHg72v4zuXANR8Au8EWk5k=;
-        b=rIdG33bHEds1EWJYf4WooDnLWpBGgprtw+w33EcwPRwJlt88UU9r+vxeaul3B9uVo8
-         t+mx2or1CX6cBk1ZjZXbhn02bFqjg5kQlungf9p7uQIn7+0zLTJBPAFXyPB2ihWjxjcT
-         Jt5HbQspRn8TC2PI2ZZy24H1i04dB6Tv/NwRHD99NBhhFk+9dhpMsTYHCYikEF9yJpPT
-         xJZn9p1/GA6TYnNyY/xdNOkokC3U10dat3T44GCo7fyIV5MdcMa5aGCRc33hACXb5SC2
-         rGscFYX2eCvjmYr2kGom3nizLwRqyB3M28l7idd2offdfa1urYteqh+98eZatFPrTYMh
-         29rA==
-X-Gm-Message-State: AOAM532ccehHrJK6UpWUEMJz6Gh03FsRiEwbqzrVqOO03phTRiSbbepM
-        A905oHvfentfoQtxsz9GvaQBPg==
-X-Google-Smtp-Source: ABdhPJylcFBlLBp1D9EE6Jj+XuaHU5c42yOmKFtHkBsTeawlpg5iTCKqYkNF6p/zAVw7pdugSew8QA==
-X-Received: by 2002:a4a:c299:: with SMTP id b25mr20392446ooq.35.1596573444141;
-        Tue, 04 Aug 2020 13:37:24 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id 90sm3840981oty.9.2020.08.04.13.37.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Aug 2020 13:37:23 -0700 (PDT)
-Subject: Re: [PATCH 4.19 00/52] 4.19.137-rc3 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, skhan@linuxfoundation.org
-References: <20200804085216.109206737@linuxfoundation.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <395f3142-efdf-d16e-5bee-19f02646212e@linuxfoundation.org>
-Date:   Tue, 4 Aug 2020 14:37:22 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 4 Aug 2020 16:38:11 -0400
+X-IronPort-AV: E=Sophos;i="5.75,435,1589234400"; 
+   d="scan'208";a="355951290"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 22:38:09 +0200
+Date:   Tue, 4 Aug 2020 22:38:08 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Sumera Priyadarsini <sylphrenadin@gmail.com>
+cc:     michal.lkml@markovi.net, Gilles.Muller@lip6.fr,
+        gregkh@linuxfoundation.org, nicolas.palix@imag.fr,
+        linux-kernel@vger.kernel.org, cocci@systeme.lip6.fr
+Subject: Re: [Cocci] [PATCH] scripts: coccicheck: Add chain mode to list of
+ modes
+In-Reply-To: <20200804023141.9510-1-sylphrenadin@gmail.com>
+Message-ID: <alpine.DEB.2.22.394.2008042237110.2575@hadrien>
+References: <20200804023141.9510-1-sylphrenadin@gmail.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-In-Reply-To: <20200804085216.109206737@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/4/20 2:53 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.137 release.
-> There are 52 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 06 Aug 2020 08:51:59 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.137-rc3.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
 
-Compiled and booted on my test system. No dmesg regressions.
 
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+On Tue, 4 Aug 2020, Sumera Priyadarsini wrote:
+
+> This patch adds chain mode to the list of available modes in coccinelle.
+
+Thanks for the commit.  In the log message, could you change "coccinelle"
+o "coccicheck"?  Actually, the modes are not something that are built into
+Coccinelle.  They are just implemented by the coccicheck script.
 
 thanks,
--- Shuah
+julia
 
 
-
+>
+> Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
+> ---
+>  scripts/coccicheck | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/scripts/coccicheck b/scripts/coccicheck
+> index e04d328210ac..6e37cf36caae 100755
+> --- a/scripts/coccicheck
+> +++ b/scripts/coccicheck
+> @@ -99,7 +99,7 @@ fi
+>  if [ "$MODE" = "" ] ; then
+>      if [ "$ONLINE" = "0" ] ; then
+>  	echo 'You have not explicitly specified the mode to use. Using default "report" mode.'
+> -	echo 'Available modes are the following: patch, report, context, org'
+> +	echo 'Available modes are the following: patch, report, context, org, chain'
+>  	echo 'You can specify the mode with "make coccicheck MODE=<mode>"'
+>  	echo 'Note however that some modes are not implemented by some semantic patches.'
+>      fi
+> --
+> 2.17.1
+>
+> _______________________________________________
+> Cocci mailing list
+> Cocci@systeme.lip6.fr
+> https://systeme.lip6.fr/mailman/listinfo/cocci
+>
