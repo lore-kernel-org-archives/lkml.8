@@ -2,125 +2,125 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5252CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D15CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5735E2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD54120792
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 02:11:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QADiLWYD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nsaApM3N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgHDCLM (ORCPT
+        id S1728016AbgHDCL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 3 Aug 2020 22:11:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56750 "EHLO
+        Mon, 3 Aug 2020 22:11:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbgHDCLL (ORCPT
+        with ESMTP id S1726948AbgHDCL2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 3 Aug 2020 22:11:11 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AFB3C06179E
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 19:11:11 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id u15so1773939uau.10
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 19:11:11 -0700 (PDT)
+        Mon, 3 Aug 2020 22:11:28 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A46EEC06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 19:11:28 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id d4so1159162pjx.5
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 19:11:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k9EPoA/TZ6oFdobQPbI92mloUpSocVCmYhmgQ9XTICk=;
-        b=QADiLWYDVY5sDxEYuLEuvcCNAPfU3goGeGw7YEgVuEfcRmX+WQZUvyrbIKtcB7k7iQ
-         YxtIg+05jbwODdVdONyVxvmTrVZkmGIM0V8YH0Opo5g6s04ssZ+E7raI4lMc6wipoLsR
-         mtgY7uBETHz6kZN968nSb549MAS66ZiRjzYJIBh4V2KqbBYjvi0sk8NkJGObyROZ26Rz
-         wr0T342klm0lF2dZp+0E7GYYrZV1oLV7ImOHoLhAfA2b6vuOhpxgD4QGTMNTY6xao7VS
-         tnWQeeqa1y9yCWAdCkdmUq6sTQ5PXziy0Z7S8lVg41R2Av1E7muXD5VKHWwh+4EHg+RB
-         Rqbg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lbNLUcgcp61dwL2pAmmG5QRL/i/NBysb7/NHuyoqPLA=;
+        b=nsaApM3NTHR6R2T7nNwk1CPtmRQNw6viH5XfJjq+O/bdtm2Q65KlN7iX7rf0eDE2qg
+         5OLREwXWLFEHVv+VPMreRV8/KN++G49x7xksnDd35LSOkcVgys8ZxB77H0fAJj/3vZ/V
+         yIiGurTTSdPHHAeQKYX4VU0LXG0Uka8AQiqD4fW5iPAxg06Oh8EH1XBGIPIhjZtHXcmb
+         xdH6v3suapQPOEpFVl1imcrWg4X0iyxtm3wU9LHtRDST7W6+uMcVWuCBJbivdT34z0kd
+         OAMK6zph824b2NMgpfzKgT1pRY/9HfGNHMgt4WrjYrfbsLt8Adr7dHzIcmOypE8599y+
+         WfXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k9EPoA/TZ6oFdobQPbI92mloUpSocVCmYhmgQ9XTICk=;
-        b=S6RCuonpjSnp3yVwOXdpRqErPCW4SiJyQgjOkYDkgA5Za6Pq8M4Ztkg5hFn4VjWI5u
-         U7SA+8tUV/5ZYQtc2OZxQrzPJX13tuVU1NjgY+u9D52gFMHTzucGwcJGFzMZfewh+qPf
-         ckYpb4u9tlnigZzXh7Me1yGzv8XfurqbG7LuCwYk9YqZV8jP2UsSiegmbNO0ceNcA7kj
-         3QSLAPDIbwjhcj4glts4BigNcmAHvDRwWAGvmEOFmplX5Mqk8jZ6Lx5QpBDldZ1QXi/T
-         d8RqJckXZ0QHh3k3OJH9NmHOuKVVnJRmuhMAGI0ZYlDT+qg05KXGdBF9rZQ2wTEhNPyr
-         CM5Q==
-X-Gm-Message-State: AOAM532jmemxCXmcDLqVAyoxdIBhZQSqc+V+QSPf48DUR6aZz6lnnF/y
-        OlOiCS8GgJ5OB1nGidqjfITktgGJ2sT/iCxvHCDHnw==
-X-Google-Smtp-Source: ABdhPJxsSSJwioh1fipswY2Sg0TuZ8kexPdrIAJWw0UnM4xG9WSpH2NU05FlGdWBuHZgMZ+Mu0VvpeSV2QDEBT1mDD8=
-X-Received: by 2002:ab0:5eaa:: with SMTP id y42mr13300969uag.118.1596507070267;
- Mon, 03 Aug 2020 19:11:10 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lbNLUcgcp61dwL2pAmmG5QRL/i/NBysb7/NHuyoqPLA=;
+        b=GdeYrplabhig3Q3jhvyNLjJ3P1MEufTGqflaHGsQd+UlaUGXYSwyjOcwJ9WTfjurd2
+         iqg2XYhgW4fRFRHs5S3xukmB1MVkrKHKAlzdKOs2U7CsAXtFcYuEwwYVic/IproOcRXV
+         oTyOp+yKQfQr5plyylBMaK/6JSC4IcVgKIJA6ayP7XrI0eP0o8ZpuGrxx9kffGi9M1CA
+         mXaLL5j7x1HaVs6aq7cmjKOxjYwbkxAqWPdrTxFIkkIepYl79Fv4SM16kYssKjk/K/1g
+         Ta7yxTH8+eHR0nMEdKW2a2PhBDkAKx274Em1yV46tYSIuWlb2Z2NSHbPVF1j0SAY4Dfg
+         caQg==
+X-Gm-Message-State: AOAM531adDL71VHkppUGn28qBfaPPipytFvcCRa3aDuRH6QvRyTFL9t6
+        9miUW174jWJbTIfLHM7T21OPXZ/0AVg=
+X-Google-Smtp-Source: ABdhPJxXJgybVnO38/6iDmh+Vn8Q3oldCX79b37Cqy+zqFF47vMHsrWFuGMjDfgGwC4Ihu/GP11gEQ==
+X-Received: by 2002:a17:90a:bc41:: with SMTP id t1mr2042798pjv.181.1596507088135;
+        Mon, 03 Aug 2020 19:11:28 -0700 (PDT)
+Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id j142sm20970462pfd.100.2020.08.03.19.11.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Aug 2020 19:11:27 -0700 (PDT)
+Date:   Mon, 3 Aug 2020 19:11:15 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@gmail.com>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: fsl_sai: Clean code for synchronize mode
+Message-ID: <20200804021114.GA15390@Asurada-Nvidia>
+References: <1596424674-32127-1-git-send-email-shengjiu.wang@nxp.com>
+ <20200803054037.GA1056@Asurada-Nvidia>
+ <CAA+D8AOGF44UUq=P1S-M5TUwDUaOnqVmHJKPDBM9DAzt1nVzmQ@mail.gmail.com>
+ <20200803215735.GA5461@Asurada-Nvidia>
+ <CAA+D8ANQxnvR2bOyHVRs5h2NJhMeVh4gjLPknaz7aQ86MtL0sQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200803144719.3184138-1-kaleshsingh@google.com>
- <20200803144719.3184138-3-kaleshsingh@google.com> <20200803154125.GA23808@casper.infradead.org>
- <CAJuCfpFLikjaoopvt+vGN3W=m9auoK+DLQNgUf-xUbYfC=83Mw@mail.gmail.com>
- <20200803161230.GB23808@casper.infradead.org> <CAJuCfpGot1Lr+eS_AU30gqrrjc0aFWikxySe0667_GTJNsGTMw@mail.gmail.com>
- <20200803222831.GI1236603@ZenIV.linux.org.uk> <20200804010913.GA2096725@ZenIV.linux.org.uk>
-In-Reply-To: <20200804010913.GA2096725@ZenIV.linux.org.uk>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Mon, 3 Aug 2020 19:10:59 -0700
-Message-ID: <CAJuCfpE3fqCDfNmKphg6ZkHVb-B07_jvhquVgwgPHPi1CTupmw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dmabuf/tracing: Add dma-buf trace events
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-doc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        linaro-mm-sig@lists.linaro.org, linux-fsdevel@vger.kernel.org,
-        Hridya Valsaraju <hridya@google.com>,
-        Ioannis Ilkos <ilkos@google.com>,
-        John Stultz <john.stultz@linaro.org>,
-        kernel-team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA+D8ANQxnvR2bOyHVRs5h2NJhMeVh4gjLPknaz7aQ86MtL0sQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 3, 2020 at 6:09 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> On Mon, Aug 03, 2020 at 11:28:31PM +0100, Al Viro wrote:
->
-> > IOW, what the hell is that horror for?  You do realize, for example, that there's
-> > such thing as dup(), right?  And dup2() as well.  And while we are at it, how
-> > do you keep track of removals, considering the fact that you can stick a file
-> > reference into SCM_RIGHTS datagram sent to yourself, close descriptors and an hour
-> > later pick that datagram, suddenly getting descriptor back?
+On Tue, Aug 04, 2020 at 09:39:44AM +0800, Shengjiu Wang wrote:
+> On Tue, Aug 4, 2020 at 5:57 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
 > >
-> > Besides, "I have no descriptors left" != "I can't be currently sitting in the middle
-> > of syscall on that sucker"; close() does *NOT* terminate ongoing operations.
-
-Thanks for your feedback, Al. I see your points and sorry for not
-realizing these shortcomings.
-
+> > On Mon, Aug 03, 2020 at 04:04:23PM +0800, Shengjiu Wang wrote:
 > >
-> > You are looking at the drastically wrong abstraction level.  Please, describe what
-> > it is that you are trying to achieve.
->
-> _IF_ it's "who keeps a particularly long-lived sucker pinned", I would suggest
-> fuser(1) run when you detect that kind of long-lived dmabuf.  With events generated
-> by their constructors and destructors, and detection of longevity done based on
-> that.
+> > > > > clock generation. The TCSR.TE is no need to enabled when only RX
+> > > > > is enabled.
+> > > >
+> > > > You are correct if there's only RX running without TX joining.
+> > > > However, that's something we can't guarantee. Then we'd enable
+> > > > TE after RE is enabled, which is against what RM recommends:
+> > > >
+> > > > # From 54.3.3.1 Synchronous mode in IMX6SXRM
+> > > > # If the receiver bit clock and frame sync are to be used by
+> > > > # both the transmitter and receiver, it is recommended that
+> > > > # the receiver is the last enabled and the first disabled.
+> > > >
+> > > > I remember I did this "ugly" design by strictly following what
+> > > > RM says. If hardware team has updated the RM or removed this
+> > > > limitation, please quote in the commit logs.
+> > >
+> > > There is no change in RM and same recommandation.
+> > >
+> > > My change does not violate the RM. The direction which generates
+> > > the clock is still last enabled.
+> >
+> > Using Tx syncing with Rx clock for example,
+> > T1: arecord (non-stop) => set RE
+> > T2: aplay => set TE then RE (but RE is already set at T1)
+> >
+> > Anything that I am missing?
+> 
+> This is a good example.
+> We have used this change locally for a long time, so I think it is
+> safe to do this change, a little different with the recommandation.
 
-That is the intention here. IIUC fuser(1) would require root access to
-collect this information from a process other than the caller. Ideally
-what we would like to have is a non-root process with specific
-capabilities (in our case a process that can access BPF maps) to be
-able to obtain the information on dma-buf users.
-However, it might make more sense to track dma-buf usage from
-dma_buf_getfile, dma_buf_get and dma_buf_put since these calls are the
-ones that affect file refcount. Will dig some more into this.
-Thanks for your time and sorry for not thinking it through beforehand.
-
->
-> But that's only a semi-blind guess at the things you are trying to achieve; please,
-> describe what it really is.
+Any reason for we have to go against the recommendation?
