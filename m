@@ -2,140 +2,149 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBE8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D01C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92D8922D08
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:58:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596574731;
-	bh=dtol9Ums/BnhF/0mrqyXgMMO0Dg0T0IcgMhAWs7Cpc4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wMmd+L/YudixD1QdgtBgKyqcs1bDm25AoXj38DfD2B6clQ61ct5ptQ8W+kATpxX24
-	 zEr4sniXKZ3iCmVDEseILu8gtPK9H2gePTpK+mmK55/cMQNXWMiHgR4YD4JdnX2AW6
-	 I1IwtNW5BcVtZ/mbSeno4/YVsfksqgKiga6n/C2o=
+	by mail.kernel.org (Postfix) with ESMTP id DEC5122BED
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:58:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbgHDU6u (ORCPT
+        id S1728484AbgHDU6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 16:58:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42850 "EHLO mail.kernel.org"
+        Tue, 4 Aug 2020 16:58:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728394AbgHDU6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 16:58:48 -0400
-Received: from gmail.com (unknown [104.132.1.76])
+        id S1728156AbgHDU6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 16:58:17 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCEFF2086A;
-        Tue,  4 Aug 2020 20:58:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596574728;
-        bh=dtol9Ums/BnhF/0mrqyXgMMO0Dg0T0IcgMhAWs7Cpc4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HOjBDJkp94PpyHMCmrl7tSHNej/Cr+XBZUXcsfPLqD5Ny/cMs7p+4+dsx4mOwaX4x
-         oMnMOtKJ/OExtbF+iF2OTWDctUS5Izc4qRGgB1tG/ZvARbF45Ed8eQwLNT1jwzmXR5
-         6CLfVzF54c5nIqm3rrD/iqnAkV0Dlu6vQHahVM4U=
-Date:   Tue, 4 Aug 2020 13:58:46 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Lokesh Gidra <lokeshgidra@google.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        casey@schaufler-ca.com, James Morris <jmorris@namei.org>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Daniel Colascione <dancol@dancol.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Nick Kralevich <nnk@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        Calin Juravle <calin@google.com>, kernel-team@android.com,
-        yanfei.xu@windriver.com,
-        syzbot+75867c44841cb6373570@syzkaller.appspotmail.com
-Subject: Re: [PATCH] Userfaultfd: Avoid double free of userfault_ctx and
- remove O_CLOEXEC
-Message-ID: <20200804205846.GB1992048@gmail.com>
-References: <20200804203155.2181099-1-lokeshgidra@google.com>
- <20200804204543.GA1992048@gmail.com>
- <CA+EESO6XGpiTLnxPraZqBigY7mh6G2jkHa2PKXaHXpzdrZd4wA@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 3897322CF7;
+        Tue,  4 Aug 2020 20:58:15 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.93)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1k340k-006HGY-7R; Tue, 04 Aug 2020 16:58:14 -0400
+Message-ID: <20200804205814.061094876@goodmis.org>
+User-Agent: quilt/0.66
+Date:   Tue, 04 Aug 2020 16:57:58 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [for-linus][PATCH 15/17] lib/bootconfig: Add override operator support
+References: <20200804205743.419135730@goodmis.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+EESO6XGpiTLnxPraZqBigY7mh6G2jkHa2PKXaHXpzdrZd4wA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 01:49:30PM -0700, Lokesh Gidra wrote:
-> On Tue, Aug 4, 2020 at 1:45 PM Eric Biggers <ebiggers@kernel.org> wrote:
-> >
-> > On Tue, Aug 04, 2020 at 01:31:55PM -0700, Lokesh Gidra wrote:
-> > > when get_unused_fd_flags returns error, ctx will be freed by
-> > > userfaultfd's release function, which is indirectly called by fput().
-> > > Also, if anon_inode_getfile_secure() returns an error, then
-> > > userfaultfd_ctx_put() is called, which calls mmdrop() and frees ctx.
-> > >
-> > > Also, the O_CLOEXEC was inadvertently added to the call to
-> > > get_unused_fd_flags() [1].
-> > >
-> > > Adding Al Viro's suggested-by, based on [2].
-> > >
-> > > [1] https://lore.kernel.org/lkml/1f69c0ab-5791-974f-8bc0-3997ab1d61ea@dancol.org/
-> > > [2] https://lore.kernel.org/lkml/20200719165746.GJ2786714@ZenIV.linux.org.uk/
-> > >
-> > > Fixes: d08ac70b1e0d (Wire UFFD up to SELinux)
-> > > Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-> > > Reported-by: syzbot+75867c44841cb6373570@syzkaller.appspotmail.com
-> > > Signed-off-by: Lokesh Gidra <lokeshgidra@google.com>
-> >
-> > What branch does this patch apply to?  Neither mainline nor linux-next works.
-> >
-> On James Morris' tree (secure_uffd_v5.9 branch).
-> 
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-For those of us not "in the know", that apparently means branch secure_uffd_v5.9
-of https://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git
+Add the value override operator (":=") support to the bootconfig.
 
-Perhaps it would make more sense to resend your original patch series with this
-fix folded in?
+This value override operator will be useful for the bootloaders
+which will only update the existing bootconfig according to the
+bootloader boot options.
 
-> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-> index ae859161908f..e15eb8fdc083 100644
-> --- a/fs/userfaultfd.c
-> +++ b/fs/userfaultfd.c
-> @@ -2042,24 +2042,18 @@ SYSCALL_DEFINE1(userfaultfd, int, flags)
->  		O_RDWR | (flags & UFFD_SHARED_FCNTL_FLAGS),
->  		NULL);
->  	if (IS_ERR(file)) {
-> -		fd = PTR_ERR(file);
-> -		goto out;
-> +		userfaultfd_ctx_put(ctx);
-> +		return PTR_ERR(file);
->  	}
->  
-> -	fd = get_unused_fd_flags(O_RDONLY | O_CLOEXEC);
-> +	fd = get_unused_fd_flags(O_RDONLY);
->  	if (fd < 0) {
->  		fput(file);
-> -		goto out;
-> +		return fd;
->  	}
->  
->  	ctx->owner = file_inode(file);
->  	fd_install(fd, file);
-> -
-> -out:
-> -	if (fd < 0) {
-> -		mmdrop(ctx->mm);
-> -		kmem_cache_free(userfaultfd_ctx_cachep, ctx);
-> -	}
->  	return fd;
+Without this override operator, the bootloader needs to parse
+the existing bootconfig and update it. However, with this
+assignment, it can just append the updated (partial) bootconfig
+text at the tail of existing one without parsing it.
+(Of course, it must update the size, checksum and magic,
+ but that will be done easily)
 
-This introduces the opposite bug: now it's hardcoded to *not* use O_CLOEXEC,
-instead of using the flag the user passed in the flags argument to the syscall.
+Link: https://lkml.kernel.org/r/159482882954.126704.16209517125614438640.stgit@devnote2
 
-- Eric
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ lib/bootconfig.c | 33 +++++++++++++++++++++++----------
+ 1 file changed, 23 insertions(+), 10 deletions(-)
+
+diff --git a/lib/bootconfig.c b/lib/bootconfig.c
+index 912ef4921398..a5f701161f6b 100644
+--- a/lib/bootconfig.c
++++ b/lib/bootconfig.c
+@@ -329,22 +329,30 @@ const char * __init xbc_node_find_next_key_value(struct xbc_node *root,
+ 
+ /* XBC parse and tree build */
+ 
++static int __init xbc_init_node(struct xbc_node *node, char *data, u32 flag)
++{
++	unsigned long offset = data - xbc_data;
++
++	if (WARN_ON(offset >= XBC_DATA_MAX))
++		return -EINVAL;
++
++	node->data = (u16)offset | flag;
++	node->child = 0;
++	node->next = 0;
++
++	return 0;
++}
++
+ static struct xbc_node * __init xbc_add_node(char *data, u32 flag)
+ {
+ 	struct xbc_node *node;
+-	unsigned long offset;
+ 
+ 	if (xbc_node_num == XBC_NODE_MAX)
+ 		return NULL;
+ 
+ 	node = &xbc_nodes[xbc_node_num++];
+-	offset = data - xbc_data;
+-	node->data = (u16)offset;
+-	if (WARN_ON(offset >= XBC_DATA_MAX))
++	if (xbc_init_node(node, data, flag) < 0)
+ 		return NULL;
+-	node->data |= flag;
+-	node->child = 0;
+-	node->next = 0;
+ 
+ 	return node;
+ }
+@@ -603,7 +611,9 @@ static int __init xbc_parse_kv(char **k, char *v, int op)
+ 	if (c < 0)
+ 		return c;
+ 
+-	if (!xbc_add_sibling(v, XBC_VALUE))
++	if (op == ':' && child) {
++		xbc_init_node(child, v, XBC_VALUE);
++	} else if (!xbc_add_sibling(v, XBC_VALUE))
+ 		return -ENOMEM;
+ 
+ 	if (c == ',') {	/* Array */
+@@ -787,7 +797,7 @@ int __init xbc_init(char *buf, const char **emsg, int *epos)
+ 
+ 	p = buf;
+ 	do {
+-		q = strpbrk(p, "{}=+;\n#");
++		q = strpbrk(p, "{}=+;:\n#");
+ 		if (!q) {
+ 			p = skip_spaces(p);
+ 			if (*p != '\0')
+@@ -798,9 +808,12 @@ int __init xbc_init(char *buf, const char **emsg, int *epos)
+ 		c = *q;
+ 		*q++ = '\0';
+ 		switch (c) {
++		case ':':
+ 		case '+':
+ 			if (*q++ != '=') {
+-				ret = xbc_parse_error("Wrong '+' operator",
++				ret = xbc_parse_error(c == '+' ?
++						"Wrong '+' operator" :
++						"Wrong ':' operator",
+ 							q - 2);
+ 				break;
+ 			}
+-- 
+2.26.2
+
+
