@@ -2,114 +2,168 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 187FDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1B4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 22:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0941207FC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 21:58:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dPl8A8UN"
+	by mail.kernel.org (Postfix) with ESMTP id 5DF7922B42
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 22:02:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbgHDV6r (ORCPT
+        id S1728407AbgHDWCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 17:58:47 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31945 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728052AbgHDV6p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 17:58:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596578324;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kBOKJp8w9KZXZuz53OUDNEXh+d4eCdFrJ20ncB3veo8=;
-        b=dPl8A8UNaI7L9Prg2GoJRKqjd6oArOQSlDFlYnDaueto1VzWlu7usI/sPMe7RgTCL1uD37
-        NCgjEtORJxK65rZcoRa7Y/tER57tyLyGYVboiYbyA+NASBwSv2mWbgRhiZ0SNDIR+YgmP6
-        WxlKeXf7Z3e3qAN1kJriNOJnNv+xEG0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-375-5AV7SC3ANV6U9ZNH25nRiA-1; Tue, 04 Aug 2020 17:58:39 -0400
-X-MC-Unique: 5AV7SC3ANV6U9ZNH25nRiA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 4 Aug 2020 18:02:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728305AbgHDWB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 18:01:59 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7483E1DE1;
-        Tue,  4 Aug 2020 21:58:36 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-113-133.rdu2.redhat.com [10.10.113.133])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9845272E48;
-        Tue,  4 Aug 2020 21:58:34 +0000 (UTC)
-Date:   Tue, 4 Aug 2020 17:58:32 -0400
-From:   Neil Horman <nhorman@redhat.com>
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-Cc:     izabela.bakollari@gmail.com, Neil Horman <nhorman@tuxdriver.com>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        David Miller <davem@davemloft.net>
-Subject: Re: [Linux-kernel-mentees] [PATCHv2 net-next] dropwatch: Support
- monitoring of dropped frames
-Message-ID: <20200804215832.GB72184@localhost.localdomain>
-References: <20200707171515.110818-1-izabela.bakollari@gmail.com>
- <20200804160908.46193-1-izabela.bakollari@gmail.com>
- <CAM_iQpV-AfX_=o0=ZhU2QzV_pmyWs8RKV0yyMuxFgwFAPwpnXw@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id A7F67207FC;
+        Tue,  4 Aug 2020 22:01:50 +0000 (UTC)
+Date:   Tue, 4 Aug 2020 18:01:47 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.de>,
+        <Jonathan.Cameron@Huawei.com>, <aarcange@redhat.com>,
+        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
+        <amit@kernel.org>, <benh@kernel.crashing.org>,
+        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
+        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
+        <david@redhat.com>, <dwmw@amazon.com>, <fan.du@intel.com>,
+        <foersleo@amazon.de>, <gthelen@google.com>, <irogers@google.com>,
+        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
+        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
+        <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rppt@kernel.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v19 08/15] mm/damon: Add a tracepoint
+Message-ID: <20200804180147.16d34809@oasis.local.home>
+In-Reply-To: <20200804091416.31039-9-sjpark@amazon.com>
+References: <20200804091416.31039-1-sjpark@amazon.com>
+        <20200804091416.31039-9-sjpark@amazon.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM_iQpV-AfX_=o0=ZhU2QzV_pmyWs8RKV0yyMuxFgwFAPwpnXw@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 02:28:28PM -0700, Cong Wang wrote:
-> On Tue, Aug 4, 2020 at 9:14 AM <izabela.bakollari@gmail.com> wrote:
-> >
-> > From: Izabela Bakollari <izabela.bakollari@gmail.com>
-> >
-> > Dropwatch is a utility that monitors dropped frames by having userspace
-> > record them over the dropwatch protocol over a file. This augument
-> > allows live monitoring of dropped frames using tools like tcpdump.
-> >
-> > With this feature, dropwatch allows two additional commands (start and
-> > stop interface) which allows the assignment of a net_device to the
-> > dropwatch protocol. When assinged, dropwatch will clone dropped frames,
-> > and receive them on the assigned interface, allowing tools like tcpdump
-> > to monitor for them.
-> >
-> > With this feature, create a dummy ethernet interface (ip link add dev
-> > dummy0 type dummy), assign it to the dropwatch kernel subsystem, by using
-> > these new commands, and then monitor dropped frames in real time by
-> > running tcpdump -i dummy0.
-> 
-> drop monitor is already able to send dropped packets to user-space,
-> and wireshark already catches up with this feature:
-> 
-> https://code.wireshark.org/review/gitweb?p=wireshark.git;a=commitdiff;h=a94a860c0644ec3b8a129fd243674a2e376ce1c8
-> 
-> So what you propose here seems pretty much a duplicate?
-> 
-I had asked Izabela to implement this feature as an alternative approach to
-doing live capture of dropped packets, as part of the Linux foundation
-mentorship program.  I'm supportive of this additional feature as the added code
-is fairly minimal, and allows for the use of other user space packet monitoring
-tools without additional code changes (i.e. tcpdump/snort/etc can now monitor
-dropped packets without the need to augment those tools with netlink capture
-code.
+On Tue, 4 Aug 2020 11:14:09 +0200
+SeongJae Park <sjpark@amazon.com> wrote:
 
-Best
-Neil 
-> Thanks.
-> _______________________________________________
-> Linux-kernel-mentees mailing list
-> Linux-kernel-mentees@lists.linuxfoundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/linux-kernel-mentees
+> From: SeongJae Park <sjpark@amazon.de>
 > 
+> This commit adds a tracepoint for DAMON.  It traces the monitoring
+> results of each region for each aggregation interval.  Using this, DAMON
+> can easily integrated with tracepoints supporting tools such as perf.
+> 
+> Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> Reviewed-by: Leonard Foerster <foersleo@amazon.de>
+> ---
+>  include/trace/events/damon.h | 43 ++++++++++++++++++++++++++++++++++++
+>  mm/damon.c                   |  4 ++++
+>  2 files changed, 47 insertions(+)
+>  create mode 100644 include/trace/events/damon.h
+> 
+> diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
+> new file mode 100644
+> index 000000000000..2f422f4f1fb9
+> --- /dev/null
+> +++ b/include/trace/events/damon.h
+> @@ -0,0 +1,43 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM damon
+> +
+> +#if !defined(_TRACE_DAMON_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_DAMON_H
+> +
+> +#include <linux/damon.h>
+> +#include <linux/types.h>
+> +#include <linux/tracepoint.h>
+> +
+> +TRACE_EVENT(damon_aggregated,
+> +
+> +	TP_PROTO(struct damon_target *t, struct damon_region *r,
+> +		unsigned int nr_regions),
+> +
+> +	TP_ARGS(t, r, nr_regions),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(unsigned long, target_id)
+> +		__field(unsigned int, nr_regions)
+> +		__field(unsigned long, start)
+> +		__field(unsigned long, end)
+> +		__field(unsigned int, nr_accesses)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->target_id = t->id;
+> +		__entry->nr_regions = nr_regions;
+> +		__entry->start = r->ar.start;
+> +		__entry->end = r->ar.end;
+> +		__entry->nr_accesses = r->nr_accesses;
+> +	),
+> +
+> +	TP_printk("target_id=%lu nr_regions=%u %lu-%lu: %u",
+> +			__entry->target_id, __entry->nr_regions,
+> +			__entry->start, __entry->end, __entry->nr_accesses)
+> +);
+> +
+> +#endif /* _TRACE_DAMON_H */
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
+> diff --git a/mm/damon.c b/mm/damon.c
+> index b3420ba97fd2..65e65e779313 100644
+> --- a/mm/damon.c
+> +++ b/mm/damon.c
+> @@ -20,6 +20,8 @@
+>  
+>  #define pr_fmt(fmt) "damon: " fmt
+>  
+> +#define CREATE_TRACE_POINTS
+> +
+>  #include <linux/damon.h>
+>  #include <linux/delay.h>
+>  #include <linux/kthread.h>
+> @@ -31,6 +33,7 @@
+>  #include <linux/sched/mm.h>
+>  #include <linux/sched/task.h>
+>  #include <linux/slab.h>
+
+It's best to place the #define CREATE_TRACE_POINTS here, so that it
+doesn't cause any side effects when including the other headers.
+
+Other than that:
+
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+-- Steve
+
+
+> +#include <trace/events/damon.h>
+>  
+>  /* Minimal region size.  Every damon_region is aligned by this. */
+>  #define MIN_REGION PAGE_SIZE
+> @@ -856,6 +859,7 @@ static void kdamond_reset_aggregated(struct damon_ctx *c)
+>  			damon_write_rbuf(c, &r->ar.end, sizeof(r->ar.end));
+>  			damon_write_rbuf(c, &r->nr_accesses,
+>  					sizeof(r->nr_accesses));
+> +			trace_damon_aggregated(t, r, nr);
+>  			r->nr_accesses = 0;
+>  		}
+>  	}
 
