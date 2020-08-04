@@ -2,145 +2,86 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:43:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 021C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5C3F207FC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:43:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e+67uSIM"
+	by mail.kernel.org (Postfix) with ESMTP id DBF95207FC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:43:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbgHDPnP (ORCPT
+        id S1728200AbgHDPnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 11:43:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40510 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgHDPnL (ORCPT
+        Tue, 4 Aug 2020 11:43:53 -0400
+Received: from smtprelay0153.hostedemail.com ([216.40.44.153]:32952 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725932AbgHDPnw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 11:43:11 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BEA5C06174A;
-        Tue,  4 Aug 2020 08:43:11 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id qc22so28160948ejb.4;
-        Tue, 04 Aug 2020 08:43:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XvDU7ICblMvlU4iZYYabhFUIQmUPVsxNxDRb1FZXmmQ=;
-        b=e+67uSIMTJb41hxcWS6ZQmz0qzGJN+L+0LjLuEvxDP1SR0HK+KVh6uL3ACN479ohD3
-         DLaWjsW/mWVnl/3x1ojrBejYHb+DM/wjSxscTaohaLbeuJCKGccPBqiFa8g732pJRXUP
-         2KVSV9Z++b3X5HJPoDh6XVcCdEJjVDTWwCrdgDICS8KWTRU7O9tNn+K8roCzsUPmarEI
-         oVFQSHvmt4HjwSni/SMqATRSdKoCyXEEu02bXcTrRo5SuSdGil4TT4HjFFoCewftRUi4
-         8KUaA8nTjECb2DfjErOR1OjXDtcFEdROjk2TbRGxLEPAR3yWHAvbDbQDlz1dbR2WFUw1
-         sEVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XvDU7ICblMvlU4iZYYabhFUIQmUPVsxNxDRb1FZXmmQ=;
-        b=uk2Ah0uK0DvqfqmDE8/IQb9Lk0xp3te32F6v1/t5EM6GKNBT5EpMDCHr++3WEPo6w+
-         5DnZy4ENWGLt+TTAky8L3Xg2oXJAjzSFgdhaDTq61XixtDN3QPSo44hcxKQtG8z7sHwJ
-         s0WGufGEa8D9/9aOprId/X8qF2R63IKaNXQTvoQL+DFRTUhHXY4r4CcOhyvY1zQmBVE4
-         Thf8kKPXbpoZGlWQ03knr2ZggkuGvov+UjdMw16s684Vwv7NmaQy77PggFBz26+TX89F
-         LPJiwys7sQQ6ZM4RNauxBREiZcyITq0aKsReKqUZVAF1FYda/JA/5fyh1pyfM/UaSPN8
-         h3tw==
-X-Gm-Message-State: AOAM533rhV4nQs/wCpSPqmauW+oWfXuJooPAgOlh7KrrjVJcNoy3bzVn
-        Zqwma4rIZa6eVGm9mo8C6ldj6EyvEG/WDWp9358=
-X-Google-Smtp-Source: ABdhPJyG/9OaPWsq91DUuGc0ZHEkp1Igwsy4OYzy799p9zWx9XbX3KeVYuueq33MKr+f5VDzCNWkOoFl7hDa0Dk2xRI=
-X-Received: by 2002:a17:906:f14f:: with SMTP id gw15mr21260603ejb.245.1596555789850;
- Tue, 04 Aug 2020 08:43:09 -0700 (PDT)
+        Tue, 4 Aug 2020 11:43:52 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 012C018224939;
+        Tue,  4 Aug 2020 15:43:50 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: side53_330bb9026fa7
+X-Filterd-Recvd-Size: 2413
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf15.hostedemail.com (Postfix) with ESMTPA;
+        Tue,  4 Aug 2020 15:43:49 +0000 (UTC)
+Message-ID: <fc7b8ab86d5a07525e546a23b97c1818331526b3.camel@perches.com>
+Subject: Re: [PATCH] staging: wfx: fixed misspelled word in comment
+From:   Joe Perches <joe@perches.com>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Aditya Bansal <adbansal99@gmail.com>,
+        gregkh@linuxfoundation.org
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Date:   Tue, 04 Aug 2020 08:43:47 -0700
+In-Reply-To: <bc993561-e494-d6b5-fc73-eb56cb496d75@infradead.org>
+References: <20200804145816.GA3823@aditya>
+         <bc993561-e494-d6b5-fc73-eb56cb496d75@infradead.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-References: <1594899334-19772-1-git-send-email-kalyan_t@codeaurora.org> <1594899334-19772-2-git-send-email-kalyan_t@codeaurora.org>
-In-Reply-To: <1594899334-19772-2-git-send-email-kalyan_t@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 4 Aug 2020 08:43:54 -0700
-Message-ID: <CAF6AEGu8GG4i1inhjQ11PDeUxEq=4E2ggVm6cL=AfNHbvNuh6w@mail.gmail.com>
-Subject: Re: [PATCH 2/3] arm64: dts: sc7180: add bus clock to mdp node for
- sc7180 target
-To:     Kalyan Thota <kalyan_t@codeaurora.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Krishna Manikandan <mkrishn@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Raviteja Tamatam <travitej@codeaurora.org>,
-        nganji@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 4:36 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
->
-> From: Krishna Manikandan <mkrishn@codeaurora.org>
->
-> Move the bus clock to mdp device node,in order
-> to facilitate bus band width scaling on sc7180
-> target.
->
-> The parent device MDSS will not vote for bus bw,
-> instead the vote will be triggered by mdp device
-> node. Since a minimum vote is required to turn
-> on bus clock, move the clock node to mdp device
-> from where the votes are requested.
->
-> This patch has dependency on the below series
-> https://patchwork.kernel.org/patch/11468783/
->
-> Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
+On Tue, 2020-08-04 at 08:24 -0700, Randy Dunlap wrote:
+> On 8/4/20 7:58 AM, Aditya Bansal wrote:
+> > From: Aditya Bansal <adbansal99@gmail.com>
+> > 
+> > Subject: [PATCH] fixed typo in driver/staging/wfx/hif_tx.c file
+> > 
+> > Correct the spelling of function
+> > 
+> > Signed-off-by: Aditya Bansal <adbansal99@gmail.com>
+> > ---
+> > 
+> > diff --git a/drivers/staging/wfx/hif_tx.c b/drivers/staging/wfx/hif_tx.c
+> > index 5110f9b93762..6a485fa5b72b 100644
+> > --- a/drivers/staging/wfx/hif_tx.c
+> > +++ b/drivers/staging/wfx/hif_tx.c
+> > @@ -125,7 +125,7 @@ int wfx_cmd_send(struct wfx_dev *wdev, struct hif_msg *request,
+> >  
+> >  // This function is special. After HIF_REQ_ID_SHUT_DOWN, chip won't reply to any
+> >  // request anymore. We need to slightly hack struct wfx_hif_cmd for that job. Be
+> > -// carefull to only call this funcion during device unregister.
+> > +// carefull to only call this function during device unregister.
+> 
+>       careful
 
-Reviewed-by: Rob Clark <robdclark@chromium.org>
+And if you could do all of them:
 
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 4f2c0d1..31fed6d 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -1510,10 +1510,9 @@
->                         power-domains = <&dispcc MDSS_GDSC>;
->
->                         clocks = <&gcc GCC_DISP_AHB_CLK>,
-> -                                <&gcc GCC_DISP_HF_AXI_CLK>,
->                                  <&dispcc DISP_CC_MDSS_AHB_CLK>,
->                                  <&dispcc DISP_CC_MDSS_MDP_CLK>;
-> -                       clock-names = "iface", "bus", "ahb", "core";
-> +                       clock-names = "iface", "ahb", "core";
->
->                         assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>;
->                         assigned-clock-rates = <300000000>;
-> @@ -1539,12 +1538,13 @@
->                                       <0 0x0aeb0000 0 0x2008>;
->                                 reg-names = "mdp", "vbif";
->
-> -                               clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
-> +                               clocks = <&gcc GCC_DISP_HF_AXI_CLK>,
-> +                                        <&dispcc DISP_CC_MDSS_AHB_CLK>,
->                                          <&dispcc DISP_CC_MDSS_ROT_CLK>,
->                                          <&dispcc DISP_CC_MDSS_MDP_LUT_CLK>,
->                                          <&dispcc DISP_CC_MDSS_MDP_CLK>,
->                                          <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-> -                               clock-names = "iface", "rot", "lut", "core",
-> +                               clock-names = "bus", "iface", "rot", "lut", "core",
->                                               "vsync";
->                                 assigned-clocks = <&dispcc DISP_CC_MDSS_MDP_CLK>,
->                                                   <&dispcc DISP_CC_MDSS_VSYNC_CLK>;
-> --
-> 1.9.1
->
+$ git grep -w -i -n carefull
+arch/m68k/coldfire/pci.c:34: * We need to be carefull probing on bus 0 (directly connected to host
+arch/openrisc/kernel/head.S:289: *       a bit more carefull (if we have a PT_SP or current pointer
+drivers/staging/wfx/debug.c:302:	// Be carefull, write() is waiting for a full message while read()
+drivers/staging/wfx/hif_tx.c:128:// carefull to only call this funcion during device unregister.
+fs/ceph/inode.c:1475:		/* parent inode is not locked, be carefull */
+
+
+
