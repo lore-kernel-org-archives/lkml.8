@@ -2,197 +2,1081 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EC6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9071C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F5CB207FC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:03:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ekgvuixi";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="mmuOEyYL"
+	by mail.kernel.org (Postfix) with ESMTP id 96661207FC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:03:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729530AbgHDPBu (ORCPT
+        id S1729394AbgHDPDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 11:01:50 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:37096 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728965AbgHDPAr (ORCPT
+        Tue, 4 Aug 2020 11:03:48 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14208 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729508AbgHDPBr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 11:00:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1596553246; x=1628089246;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=1jUrswAmdMCrJneZGpJuWy1gnXXYApWRabwwQ1K8BqY=;
-  b=ekgvuixiYz4hZFG6iCZyjeoym6mRT6ipOfJz+mw3Y6z6fAecmDJGqe2o
-   1mN9kSQam7aHH/mxo5zK8GcSt1vPvOvtToGEdgZBcLNGtQNwB3mBGDT3D
-   6Bu6OKsvrCZpe21TUsRS1epdNpj9VjDI10UG0ooLWy7yaPo1EGKOmPYvH
-   LVERRAscmTUtExIzZvZB0YEEZ3rljc7dkqpZJZMH2F9dqzg1Z8VFpRnmO
-   HogscJQwPnxGjKxrCs6GztNWUlaAjErzXjI4rqXNLrfZRdxeNNVX6sakE
-   lsB9igvCsG/CbM/YRlZOZACLVN0ZFh1rCHgB9k2fhvBpbZCnKDac0rBBL
-   Q==;
-IronPort-SDR: l9dS15Jf08vWJ8+SNPzumfypfMTf9k1aqUFUYtKANkn3cE38k84rFYcI3VCNGetpeJ50dgx335
- jnvDGvHKvRS8bVhnt9MrUlZzzANZXKrQu8Y0EfJYrt9C10ojSoZ58lrXw1nuEelvBc5qWxHaxP
- YMdFENVm3ftfznU9b5DRaCuZJ1ZcI6UCtkz1q2UrLG/jPSGKcsnnE8alLOKr631EYroGBjzYk4
- h6zqF5I0LQEsdi8AlEW7R1MmBus9/B9qbQYFPlBXr/iaIfKnv1yEVy6dWv4uLepKn+KKA59tAa
- vz4=
-X-IronPort-AV: E=Sophos;i="5.75,434,1589266800"; 
-   d="scan'208";a="84380120"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Aug 2020 08:00:41 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 4 Aug 2020 08:00:36 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Tue, 4 Aug 2020 08:00:36 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oCOVr8lsClzpGYR9ikWX/QJR2F//GqIIrupVcx4g+/5kj9P4PQx2J96XSoYShGS4TaZWWHWakyNZqFxCgbjwixPL3a/ABuME7aVEtlO+rgBZ/jiKLFpnnSEEz4IeJT9Kzh4JPhIRn/UCwW2EKS/8F775tRRXErlC+qkAD312ic7qM+kcMIHMLt2YInxYieToNeZzIxmRQnUSd9MrcJ4fIZ8M15dBIiCpRRq5KYoG+GoXekCqxhVfFSh0Jhiqtv0/cfUZaoT7vvYVDGijkpsS8GJSnB1gFNe+Z3k2740emUJmCWMAq6sANgCknNaQEUb57xQXiJ1d0/8BPXlTsfEskA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1jUrswAmdMCrJneZGpJuWy1gnXXYApWRabwwQ1K8BqY=;
- b=IyJqluSYOe3uDZl6EJLFiP05ZmeV1fR8bfgf2zImEOn/91Hy9lLFszfzIENf092anE1qx3/nYA8aTLOTyPoVIfAkoF9LJLWymYylykojaTzuCHXsoUl/miA0zIkCOqBGhOVU7f7NSLJtt3wAOkmjyUfmj2PuySA+Q5SCglgEQRs5YxlcWEwhYtn3gLQnbvWdsfJGes637dthsv8xX2RvHscteM+idsW38bnXLa6yVKmxpHK8Qc2bUgIoxom2oTGixXslgFIJboym7N5NN3/DdUuPd2F0ZBb6J9DF4xKagA7WsRovVPjY7LbqdLJotX/Ix8+4TP3jvu6ZLyTaCDlkgA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1jUrswAmdMCrJneZGpJuWy1gnXXYApWRabwwQ1K8BqY=;
- b=mmuOEyYLk0E3HJV+TmPEleQ+Lb3p1vfzFa76T0PXMmcq6L0vSPyEAWX8ioN48f5JpdwoNT/G0qJwXbJ9wl+ln5w8j8HY/TDmy9ln4884qNX+w0L9Zb3xeazb3zrDmwHzNK9OOY8EhwhwLfptnMoHlTvZjqm+qHjGUQ0+2KF6BzQ=
-Received: from DM6PR11MB3420.namprd11.prod.outlook.com (2603:10b6:5:69::31) by
- DM6PR11MB4297.namprd11.prod.outlook.com (2603:10b6:5:14e::29) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3239.21; Tue, 4 Aug 2020 15:00:38 +0000
-Received: from DM6PR11MB3420.namprd11.prod.outlook.com
- ([fe80::e8b2:1d82:49d9:f4b]) by DM6PR11MB3420.namprd11.prod.outlook.com
- ([fe80::e8b2:1d82:49d9:f4b%6]) with mapi id 15.20.3239.021; Tue, 4 Aug 2020
- 15:00:38 +0000
-From:   <Claudiu.Beznea@microchip.com>
-To:     <alexandre.belloni@bootlin.com>
-CC:     <Nicolas.Ferre@microchip.com>, <Ludovic.Desroches@microchip.com>,
-        <wenyou.yang@atmel.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] ARM: at91: pm: add per soc validation of pm modes
-Thread-Topic: [PATCH v2 2/3] ARM: at91: pm: add per soc validation of pm modes
-Thread-Index: AQHWanACN1d1n4sWwEaqiqSQihqxnQ==
-Date:   Tue, 4 Aug 2020 15:00:38 +0000
-Message-ID: <f9e1d923-225e-7a18-ed48-c8c7e7d4d8cf@microchip.com>
-References: <1596539258-20719-1-git-send-email-claudiu.beznea@microchip.com>
- <1596539258-20719-3-git-send-email-claudiu.beznea@microchip.com>
- <20200804114223.GC7836@piout.net>
-In-Reply-To: <20200804114223.GC7836@piout.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-authentication-results: bootlin.com; dkim=none (message not signed)
- header.d=none;bootlin.com; dmarc=none action=none header.from=microchip.com;
-x-originating-ip: [86.124.22.126]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1994078a-642b-4068-5ecc-08d838872661
-x-ms-traffictypediagnostic: DM6PR11MB4297:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB4297D4F6F03413E1C9669D0E874A0@DM6PR11MB4297.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +XxNhKG9z60Yritm7pOg6DtZbE50J+VuFgZpQNypfBaQLIkZWHR+cTkHfc1nTco18OYqSIkl2op6GZYTxbveWPllNx5iYEi3AB9bPmBGPtvKNgIgdmgqNc+5oZFzN+y2s+kV3tptXI3Tlz17npcfEot7x5MPFnhgugzjUdNspvQcNUnoR8MohGR5z2esmX0+dDUtu4d4zYxiUh9nAERMhr1kiXzh9wok7Ptnzr4eXB3DY8deagJ8YaS7aWc1bzh/9FuCsi0xhy+fVBZHxS3RsaQdO+MwWKPmoqAwQhmozVbVuQjJ2RMC1riDPbhUbGVf/LelkZwrQDiCXtAKziyqDiyRzEufVEOPjLQWSl3Nv/Bjbjgf+DpQsDWhmuRKJbZ7TtDSMY3JHLJjACQJaK/4qeFm8DPB6hCGWEiDectDPyJSXwpQWyrrrNkzIPuwf6PtgnZdr1WyH7aSr1/3R5Kf2w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3420.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(186003)(5660300002)(31686004)(2616005)(6512007)(71200400001)(4326008)(31696002)(498600001)(6486002)(83380400001)(966005)(86362001)(66946007)(91956017)(2906002)(54906003)(8936002)(53546011)(6506007)(66446008)(66556008)(64756008)(66476007)(6916009)(36756003)(26005)(8676002)(76116006)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: lnRsvvoBlKd9eWofF3X0LtwOtF2bp+WurWqW9wEVkHKxg4Euo4pjFkuMdpBRRWqOhMCJ834UNsABfBWefOywHIxnoS3CcrDnMWXpn35yzOw2zbxgc8tzYwXnKvPfCFdV3ySw9JdVTJZxU96coDK7tlfj3Sq+qX3leo4MEomXOlwZN8Qywc2yGmOQ/AjuxDWsLkxTSRnpTjcMyS+X/Xf8EmklatVwPJHt7zg+vls/hweOMdQvOaTpMJOiD9XZ888JqSg6OaJ0N/eDIefv5hnLLXcAfYeAaK2g/UugJXq7Vt5iZ2re981nNw5xyt0e1NUgSUowLH6yKoPOPfF3jRo6fb6+R91X881FTVAL+Ecqum4dpE27zBk7KE2ufHi4Mmv6rSuHZqtuwoTdw6FtAnijPLQB6fzqNP28x4+gTuIypDUtbNICRkcwh97mMM89wV80/6q1v8fV34T65YCZwQGYUL5Twfl3FnVbwa1gpZaiXABBjcV+Xw5+hi6y03SVqJskBt/VW16yP0QpJJRpZ/f9NPnGNJ7Z2nvmKlW99jjo+TJAvWCC6pZKg2+v7rnRJkxE4/tx0HA7M91MACqwjjmX/NLyl/PZRkCOeZTPRv/kzMlrZLX/JQvK1/O/onZq3ZQdXOre2H+Qu5ygoZsuanw6Ng==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1AF9F7DB3997434CA756AC5D107F8726@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3420.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1994078a-642b-4068-5ecc-08d838872661
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Aug 2020 15:00:38.7431
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: iSMs1nnvpycoHe6OiZFDCO+aro13VILFcZG4VWN9sme+oLullu5IWS96xhqhU9Yah9wyxJh2pnU1mBxw+Gx8P5Y6YWmyGm6ZcOz5ZQS6dbw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4297
+        Tue, 4 Aug 2020 11:01:47 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 074F0tiX139881;
+        Tue, 4 Aug 2020 11:01:36 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32q8kxk77s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Aug 2020 11:01:35 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 074F1YaO031679;
+        Tue, 4 Aug 2020 15:01:34 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma03fra.de.ibm.com with ESMTP id 32nyyd1a35-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Aug 2020 15:01:33 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 074F1UTZ58786112
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 4 Aug 2020 15:01:30 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 478CCA4065;
+        Tue,  4 Aug 2020 15:01:30 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 20E61A4066;
+        Tue,  4 Aug 2020 15:01:30 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  4 Aug 2020 15:01:30 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55390)
+        id CE871E1BB4; Tue,  4 Aug 2020 17:01:29 +0200 (CEST)
+From:   Sven Schnelle <svens@linux.ibm.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        hca@linux.ibm.com, Sven Schnelle <svens@linux.ibm.com>
+Subject: [PATCH v3 3/3] s390: convert to GENERIC_VDSO
+Date:   Tue,  4 Aug 2020 17:01:24 +0200
+Message-Id: <20200804150124.41692-4-svens@linux.ibm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200804150124.41692-1-svens@linux.ibm.com>
+References: <20200804150124.41692-1-svens@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-04_04:2020-08-03,2020-08-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
+ priorityscore=1501 phishscore=0 malwarescore=0 lowpriorityscore=0
+ impostorscore=0 spamscore=0 adultscore=0 suspectscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008040110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDA0LjA4LjIwMjAgMTQ6NDIsIEFsZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KPiBFWFRF
-Uk5BTCBFTUFJTDogRG8gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5sZXNz
-IHlvdSBrbm93IHRoZSBjb250ZW50IGlzIHNhZmUNCj4gDQo+IEhlbGxvLA0KPiANCj4gT24gMDQv
-MDgvMjAyMCAxNDowNzozNyswMzAwLCBDbGF1ZGl1IEJlem5lYSB3cm90ZToNCj4+ICB2b2lkIF9f
-aW5pdCBhdDkxcm05MjAwX3BtX2luaXQodm9pZCkNCj4+ICB7DQo+PiArICAgICBzdGF0aWMgY29u
-c3QgaW50IG1vZGVzW10gX19pbml0Y29uc3QgPSB7DQo+IA0KPiBZb3UgZG9uJ3QgbmVlZCB0aGF0
-IHRvIGJlIHN0YXRpYyBhcyBpdCBpcyBub3cgbG9jYWwgdG8gdGhlIGZ1bmN0aW9uLg0KPiANCj4+
-ICsgICAgICAgICAgICAgQVQ5MV9QTV9TVEFOREJZLCBBVDkxX1BNX1VMUDANCj4+ICsgICAgIH07
-DQo+PiArDQo+PiAgICAgICBpZiAoIUlTX0VOQUJMRUQoQ09ORklHX1NPQ19BVDkxUk05MjAwKSkN
-Cj4+ICAgICAgICAgICAgICAgcmV0dXJuOw0KPj4NCj4+ICsgICAgIGF0OTFfcG1fbW9kZXNfdmFs
-aWRhdGUobW9kZXMsIEFSUkFZX1NJWkUobW9kZXMpKTsNCj4gDQo+IEZvciBybTkyMDAgYW5kIGF0
-OTFzYW05LCBJIHdvdWxkIG5vdCBhbGxvdyBjaGFuZ2luZyB0aGUgcG1fbW9kZXMgYW5kDQo+IHNp
-bXBseSBlbmZvcmNlIHN0YW5kYnlfbW9kZSA9IEFUOTFfUE1fU1RBTkRCWSBhbmQgc3VzcGVuZF9t
-b2RlID0NCj4gQVQ5MV9QTV9VTFAwLkkgZG9uJ3QgdGhpbmsgeW91IGhhdmUgYW55IHVzZXIgdGhh
-dCBldmVyIGNoYW5nZWQgdGhhdA0KPiBiZWhhdmlvdXIgYWxzbyB0aGF0IGF2b2lkcyBpbmNyZWFz
-aW5nIHRoZSBib290IHRpbWUgZm9yIHRob3NlIHNsb3cgU29Dcy4NCg0KT0ssIGJ1dCBib290YXJn
-cyBpcyBwYXJzZWQgYXQgYSBtb21lbnQgd2hlbiB0aGVyZSBpcyBubyBpbmZvcm1hdGlvbiBhYm91
-dA0KdGhlIG1hY2hpbmUgdGhhdCBpcyBydW5uaW5nIHRoZSBjb2RlLiBBbmQgZW5mb3JjaW5nIHRo
-aXMgaW4gKl9wbV9pbml0KCkNCmZ1bmN0aW9ucyBmb3Igcm05MjAwIGFuZCBhdDkxc2FtOSBtYXkg
-Y2hhbmdlIHN1c3BlbmQgYW5kIHN0YW5kYnkgbW9kZSB0aGF0DQp1c2VyIHNlbGVjdGVkLiBJZiB0
-aGVyZSBpcyBubyB1c2VyIHVwIHRvIHRoaXMgbW9tZW50IHRoZXJlIGlzIHN0aWxsIHRoZQ0KcG9z
-c2liaWxpdHkgb2YgYmVpbmcgb25lIGluIHRoZSBmdXR1cmUuDQoNCj4gDQo+PiAgICAgICBhdDkx
-X2R0X3JhbWMoKTsNCj4+DQo+PiAgICAgICAvKg0KPj4gQEAgLTgzOCw5ICs4ODgsMTQgQEAgdm9p
-ZCBfX2luaXQgYXQ5MXJtOTIwMF9wbV9pbml0KHZvaWQpDQo+Pg0KPj4gIHZvaWQgX19pbml0IHNh
-bTl4NjBfcG1faW5pdCh2b2lkKQ0KPj4gIHsNCj4+ICsgICAgIHN0YXRpYyBjb25zdCBpbnQgbW9k
-ZXNbXSBfX2luaXRjb25zdCA9IHsNCj4+ICsgICAgICAgICAgICAgQVQ5MV9QTV9TVEFOREJZLCBB
-VDkxX1BNX1VMUDAsIEFUOTFfUE1fVUxQMF9GQVNULCBBVDkxX1BNX1VMUDEsDQo+PiArICAgICB9
-Ow0KPj4gKw0KPj4gICAgICAgaWYgKCFJU19FTkFCTEVEKENPTkZJR19TT0NfU0FNOVg2MCkpDQo+
-PiAgICAgICAgICAgICAgIHJldHVybjsNCj4+DQo+PiArICAgICBhdDkxX3BtX21vZGVzX3ZhbGlk
-YXRlKG1vZGVzLCBBUlJBWV9TSVpFKG1vZGVzKSk7DQo+PiAgICAgICBhdDkxX3BtX21vZGVzX2lu
-aXQoKTsNCj4+ICAgICAgIGF0OTFfZHRfcmFtYygpOw0KPj4gICAgICAgYXQ5MV9wbV9pbml0KGF0
-OTFzYW05eDYwX2lkbGUpOw0KPj4gQEAgLTg1MSwxNCArOTA2LDE5IEBAIHZvaWQgX19pbml0IHNh
-bTl4NjBfcG1faW5pdCh2b2lkKQ0KPj4NCj4+ICB2b2lkIF9faW5pdCBhdDkxc2FtOV9wbV9pbml0
-KHZvaWQpDQo+PiAgew0KPj4gKyAgICAgc3RhdGljIGNvbnN0IGludCBtb2Rlc1tdIF9faW5pdGNv
-bnN0ID0gew0KPj4gKyAgICAgICAgICAgICBBVDkxX1BNX1NUQU5EQlksIEFUOTFfUE1fVUxQMCwN
-Cj4+ICsgICAgIH07DQo+PiArDQo+PiAgICAgICBpZiAoIUlTX0VOQUJMRUQoQ09ORklHX1NPQ19B
-VDkxU0FNOSkpDQo+PiAgICAgICAgICAgICAgIHJldHVybjsNCj4+DQo+PiArICAgICBhdDkxX3Bt
-X21vZGVzX3ZhbGlkYXRlKG1vZGVzLCBBUlJBWV9TSVpFKG1vZGVzKSk7DQo+PiAgICAgICBhdDkx
-X2R0X3JhbWMoKTsNCj4+ICAgICAgIGF0OTFfcG1faW5pdChhdDkxc2FtOV9pZGxlKTsNCj4+ICB9
-DQo+Pg0KPj4gLXZvaWQgX19pbml0IHNhbWE1X3BtX2luaXQodm9pZCkNCj4+ICtzdGF0aWMgdm9p
-ZCBfX2luaXQgc2FtYTVfcG0odm9pZCkNCj4+ICB7DQo+PiAgICAgICBpZiAoIUlTX0VOQUJMRUQo
-Q09ORklHX1NPQ19TQU1BNSkpDQo+PiAgICAgICAgICAgICAgIHJldHVybjsNCj4+IEBAIC04Njcs
-MTMgKzkyNywzMiBAQCB2b2lkIF9faW5pdCBzYW1hNV9wbV9pbml0KHZvaWQpDQo+PiAgICAgICBh
-dDkxX3BtX2luaXQoTlVMTCk7DQo+PiAgfQ0KPj4NCj4+ICt2b2lkIF9faW5pdCBzYW1hNV9wbV9p
-bml0KHZvaWQpDQo+PiArew0KPj4gKyAgICAgc3RhdGljIGNvbnN0IGludCBtb2Rlc1tdIF9faW5p
-dGNvbnN0ID0gew0KPj4gKyAgICAgICAgICAgICBBVDkxX1BNX1NUQU5EQlksIEFUOTFfUE1fVUxQ
-MCwgQVQ5MV9QTV9VTFAwX0ZBU1QsDQo+PiArICAgICB9Ow0KPj4gKw0KPj4gKyAgICAgaWYgKCFJ
-U19FTkFCTEVEKENPTkZJR19TT0NfU0FNQTUpKQ0KPj4gKyAgICAgICAgICAgICByZXR1cm47DQo+
-PiArDQo+PiArICAgICBhdDkxX3BtX21vZGVzX3ZhbGlkYXRlKG1vZGVzLCBBUlJBWV9TSVpFKG1v
-ZGVzKSk7DQo+PiArICAgICBzYW1hNV9wbSgpOw0KPj4gK30NCj4+ICsNCj4+ICB2b2lkIF9faW5p
-dCBzYW1hNWQyX3BtX2luaXQodm9pZCkNCj4+ICB7DQo+PiArICAgICBzdGF0aWMgY29uc3QgaW50
-IG1vZGVzW10gX19pbml0Y29uc3QgPSB7DQo+PiArICAgICAgICAgICAgIEFUOTFfUE1fU1RBTkRC
-WSwgQVQ5MV9QTV9VTFAwLCBBVDkxX1BNX1VMUDBfRkFTVCwgQVQ5MV9QTV9VTFAxLA0KPj4gKyAg
-ICAgICAgICAgICBBVDkxX1BNX0JBQ0tVUCwNCj4+ICsgICAgIH07DQo+PiArDQo+PiAgICAgICBp
-ZiAoIUlTX0VOQUJMRUQoQ09ORklHX1NPQ19TQU1BNUQyKSkNCj4+ICAgICAgICAgICAgICAgcmV0
-dXJuOw0KPj4NCj4+ICsgICAgIGF0OTFfcG1fbW9kZXNfdmFsaWRhdGUobW9kZXMsIEFSUkFZX1NJ
-WkUobW9kZXMpKTsNCj4+ICAgICAgIGF0OTFfcG1fbW9kZXNfaW5pdCgpOw0KPj4gLSAgICAgc2Ft
-YTVfcG1faW5pdCgpOw0KPj4gKyAgICAgc2FtYTVfcG0oKTsNCj4gDQo+IEkgd291bGQgY2FsbCB0
-aG9zZSB0d28gZGlyZWN0bHk6DQo+ICAgICAgICAgYXQ5MV9kdF9yYW1jKCk7DQo+ICAgICAgICAg
-YXQ5MV9wbV9pbml0KE5VTEwpOw0KPiANCj4gaW5zdGVhZCBvZiBoYXZpbmcgYSBmdW5jdGlvbiB0
-aGF0IGRvZXNuJ3QgZG8gbXVjaC4NCj4gDQo+IC0tDQo+IEFsZXhhbmRyZSBCZWxsb25pLCBCb290
-bGluDQo+IEVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcNCj4gaHR0cHM6Ly9i
-b290bGluLmNvbQ0KPiA=
+This patch converts s390 to the generic vDSO. There are a few special
+things on s390:
+
+- vDSO can be called without a stack frame - glibc did this in the past.
+  So we need to allocate a stackframe on our own.
+
+- The former assembly code used stcke to get the TOD clock and applied
+  time steering to it. We need to do the same in the new code. This is done
+  in the architecture specific __arch_get_hw_counter function. The steering
+  information is stored in an architecure specific area in the vDSO data.
+
+- CPUCLOCK_VIRT is now handled with a syscall fallback, which might
+  be slower/less accurate than the old implementation.
+
+The getcpu() function stays as an assembly function because there is no
+generic implementation and the code is just a few lines.
+
+Performance number from my system do 100 mio gettimeofday() calls:
+
+Plain syscall: 8.6s
+Generic VDSO:  1.3s
+old ASM VDSO:  1s
+
+So it's a bit slower but still much faster than syscalls.
+
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+---
+ arch/s390/Kconfig                           |   3 +
+ arch/s390/include/asm/clocksource.h         |   7 +
+ arch/s390/include/asm/vdso.h                |  25 +--
+ arch/s390/include/asm/vdso/clocksource.h    |   8 +
+ arch/s390/include/asm/vdso/data.h           |  13 ++
+ arch/s390/include/asm/vdso/gettimeofday.h   |  71 +++++++++
+ arch/s390/include/asm/vdso/processor.h      |   5 +
+ arch/s390/include/asm/vdso/vdso.h           |   0
+ arch/s390/include/asm/vdso/vsyscall.h       |  26 ++++
+ arch/s390/kernel/asm-offsets.c              |  20 ---
+ arch/s390/kernel/entry.S                    |   6 -
+ arch/s390/kernel/setup.c                    |   1 -
+ arch/s390/kernel/time.c                     |  66 ++------
+ arch/s390/kernel/vdso.c                     |  29 +---
+ arch/s390/kernel/vdso64/Makefile            |  19 ++-
+ arch/s390/kernel/vdso64/clock_getres.S      |  50 ------
+ arch/s390/kernel/vdso64/clock_gettime.S     | 163 --------------------
+ arch/s390/kernel/vdso64/gettimeofday.S      |  71 ---------
+ arch/s390/kernel/vdso64/vdso64_generic.c    |  18 +++
+ arch/s390/kernel/vdso64/vdso_user_wrapper.S |  38 +++++
+ 20 files changed, 219 insertions(+), 420 deletions(-)
+ create mode 100644 arch/s390/include/asm/clocksource.h
+ create mode 100644 arch/s390/include/asm/vdso/clocksource.h
+ create mode 100644 arch/s390/include/asm/vdso/data.h
+ create mode 100644 arch/s390/include/asm/vdso/gettimeofday.h
+ create mode 100644 arch/s390/include/asm/vdso/processor.h
+ create mode 100644 arch/s390/include/asm/vdso/vdso.h
+ create mode 100644 arch/s390/include/asm/vdso/vsyscall.h
+ delete mode 100644 arch/s390/kernel/vdso64/clock_getres.S
+ delete mode 100644 arch/s390/kernel/vdso64/clock_gettime.S
+ delete mode 100644 arch/s390/kernel/vdso64/gettimeofday.S
+ create mode 100644 arch/s390/kernel/vdso64/vdso64_generic.c
+ create mode 100644 arch/s390/kernel/vdso64/vdso_user_wrapper.S
+
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index c7d7ede6300c..eb50f748e151 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -73,6 +73,7 @@ config S390
+ 	select ARCH_HAS_STRICT_MODULE_RWX
+ 	select ARCH_HAS_SYSCALL_WRAPPER
+ 	select ARCH_HAS_UBSAN_SANITIZE_ALL
++	select ARCH_HAS_VDSO_DATA
+ 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
+ 	select ARCH_INLINE_READ_LOCK
+ 	select ARCH_INLINE_READ_LOCK_BH
+@@ -118,6 +119,7 @@ config S390
+ 	select GENERIC_CPU_AUTOPROBE
+ 	select GENERIC_CPU_VULNERABILITIES
+ 	select GENERIC_FIND_FIRST_BIT
++	select GENERIC_GETTIMEOFDAY
+ 	select GENERIC_SMP_IDLE_THREAD
+ 	select GENERIC_TIME_VSYSCALL
+ 	select HAVE_ALIGNED_STRUCT_PAGE if SLUB
+@@ -149,6 +151,7 @@ config S390
+ 	select HAVE_FUNCTION_TRACER
+ 	select HAVE_FUTEX_CMPXCHG if FUTEX
+ 	select HAVE_GCC_PLUGINS
++	select HAVE_GENERIC_VDSO
+ 	select HAVE_KERNEL_BZIP2
+ 	select HAVE_KERNEL_GZIP
+ 	select HAVE_KERNEL_LZ4
+diff --git a/arch/s390/include/asm/clocksource.h b/arch/s390/include/asm/clocksource.h
+new file mode 100644
+index 000000000000..03434369fce4
+--- /dev/null
++++ b/arch/s390/include/asm/clocksource.h
+@@ -0,0 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* s390-specific clocksource additions */
++
++#ifndef _ASM_S390_CLOCKSOURCE_H
++#define _ASM_S390_CLOCKSOURCE_H
++
++#endif /* _ASM_S390_CLOCKSOURCE_H */
+diff --git a/arch/s390/include/asm/vdso.h b/arch/s390/include/asm/vdso.h
+index 0cd085cdeb4f..82f86b3c394b 100644
+--- a/arch/s390/include/asm/vdso.h
++++ b/arch/s390/include/asm/vdso.h
+@@ -2,6 +2,8 @@
+ #ifndef __S390_VDSO_H__
+ #define __S390_VDSO_H__
+ 
++#include <vdso/datapage.h>
++
+ /* Default link addresses for the vDSOs */
+ #define VDSO32_LBASE	0
+ #define VDSO64_LBASE	0
+@@ -18,30 +20,7 @@
+  * itself and may change without notice.
+  */
+ 
+-struct vdso_data {
+-	__u64 tb_update_count;		/* Timebase atomicity ctr	0x00 */
+-	__u64 xtime_tod_stamp;		/* TOD clock for xtime		0x08 */
+-	__u64 xtime_clock_sec;		/* Kernel time			0x10 */
+-	__u64 xtime_clock_nsec;		/*				0x18 */
+-	__u64 xtime_coarse_sec;		/* Coarse kernel time		0x20 */
+-	__u64 xtime_coarse_nsec;	/*				0x28 */
+-	__u64 wtom_clock_sec;		/* Wall to monotonic clock	0x30 */
+-	__u64 wtom_clock_nsec;		/*				0x38 */
+-	__u64 wtom_coarse_sec;		/* Coarse wall to monotonic	0x40 */
+-	__u64 wtom_coarse_nsec;		/*				0x48 */
+-	__u32 tz_minuteswest;		/* Minutes west of Greenwich	0x50 */
+-	__u32 tz_dsttime;		/* Type of dst correction	0x54 */
+-	__u32 ectg_available;		/* ECTG instruction present	0x58 */
+-	__u32 tk_mult;			/* Mult. used for xtime_nsec	0x5c */
+-	__u32 tk_shift;			/* Shift used for xtime_nsec	0x60 */
+-	__u32 ts_dir;			/* TOD steering direction	0x64 */
+-	__u64 ts_end;			/* TOD steering end		0x68 */
+-	__u32 hrtimer_res;		/* hrtimer resolution		0x70 */
+-};
+-
+ struct vdso_per_cpu_data {
+-	__u64 ectg_timer_base;
+-	__u64 ectg_user_time;
+ 	/*
+ 	 * Note: node_id and cpu_nr must be at adjacent memory locations.
+ 	 * VDSO userspace must read both values with a single instruction.
+diff --git a/arch/s390/include/asm/vdso/clocksource.h b/arch/s390/include/asm/vdso/clocksource.h
+new file mode 100644
+index 000000000000..a93eda0ce7bb
+--- /dev/null
++++ b/arch/s390/include/asm/vdso/clocksource.h
+@@ -0,0 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __ASM_VDSO_CLOCKSOURCE_H
++#define __ASM_VDSO_CLOCKSOURCE_H
++
++#define VDSO_ARCH_CLOCKMODES	\
++	VDSO_CLOCKMODE_TOD
++
++#endif /* __ASM_VDSO_CLOCKSOURCE_H */
+diff --git a/arch/s390/include/asm/vdso/data.h b/arch/s390/include/asm/vdso/data.h
+new file mode 100644
+index 000000000000..7b3cdb4a5f48
+--- /dev/null
++++ b/arch/s390/include/asm/vdso/data.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __S390_ASM_VDSO_DATA_H
++#define __S390_ASM_VDSO_DATA_H
++
++#include <linux/types.h>
++#include <vdso/datapage.h>
++
++struct arch_vdso_data {
++	__u64 tod_steering_delta;
++	__u64 tod_steering_end;
++};
++
++#endif /* __S390_ASM_VDSO_DATA_H */
+diff --git a/arch/s390/include/asm/vdso/gettimeofday.h b/arch/s390/include/asm/vdso/gettimeofday.h
+new file mode 100644
+index 000000000000..4a74aabb54df
+--- /dev/null
++++ b/arch/s390/include/asm/vdso/gettimeofday.h
+@@ -0,0 +1,71 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef ASM_VDSO_GETTIMEOFDAY_H
++#define ASM_VDSO_GETTIMEOFDAY_H
++
++#define VDSO_HAS_TIME 1
++
++#define VDSO_HAS_CLOCK_GETRES 1
++
++#include <asm/timex.h>
++#include <asm/unistd.h>
++#include <asm/vdso.h>
++#include <linux/compiler.h>
++
++#define vdso_calc_delta __arch_vdso_calc_delta
++static __always_inline u64 __arch_vdso_calc_delta(u64 cycles, u64 last, u64 mask, u32 mult)
++{
++	return (cycles - last) * mult;
++}
++
++static __always_inline const struct vdso_data *__arch_get_vdso_data(void)
++{
++	return _vdso_data;
++}
++
++static inline u64 __arch_get_hw_counter(s32 clock_mode)
++{
++	const struct vdso_data *vdso = __arch_get_vdso_data();
++	u64 adj, now;
++
++	now = get_tod_clock();
++	adj = vdso->arch.tod_steering_end - now;
++	if (unlikely((s64) adj > 0))
++		now += (vdso->arch.tod_steering_delta < 0) ? (adj >> 15) : -(adj >> 15);
++	return now;
++}
++
++static __always_inline
++long clock_gettime_fallback(clockid_t clkid, struct __kernel_timespec *ts)
++{
++	register unsigned long r1 __asm__("r1") = __NR_clock_gettime;
++	register unsigned long r2 __asm__("r2") = (unsigned long)clkid;
++	register void *r3 __asm__("r3") = ts;
++
++	asm ("svc 0\n" : "+d" (r2) : "d" (r1), "d" (r3) : "cc", "memory");
++	return r2;
++}
++
++static __always_inline
++long gettimeofday_fallback(register struct __kernel_old_timeval *tv,
++			   register struct timezone *tz)
++{
++	register unsigned long r1 __asm__("r1") = __NR_gettimeofday;
++	register unsigned long r2 __asm__("r2") = (unsigned long)tv;
++	register void *r3 __asm__("r3") = tz;
++
++	asm ("svc 0\n" : "+d" (r2) : "d" (r1), "d" (r3) : "cc", "memory");
++	return r2;
++}
++
++static __always_inline
++long clock_getres_fallback(clockid_t clkid, struct __kernel_timespec *ts)
++{
++	register unsigned long r1 __asm__("r1") = __NR_clock_getres;
++	register unsigned long r2 __asm__("r2") = (unsigned long)clkid;
++	register void *r3 __asm__("r3") = ts;
++
++	asm ("svc 0\n" : "+d" (r2) : "d" (r1), "d" (r3) : "cc", "memory");
++	return r2;
++}
++
++#endif
+diff --git a/arch/s390/include/asm/vdso/processor.h b/arch/s390/include/asm/vdso/processor.h
+new file mode 100644
+index 000000000000..c47deb472e2a
+--- /dev/null
++++ b/arch/s390/include/asm/vdso/processor.h
+@@ -0,0 +1,5 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef __ASM_VDSO_PROCESSOR_H
++#define __ASM_VDSO_PROCESSOR_H
++
++#endif /* __ASM_VDSO_PROCESSOR_H */
+diff --git a/arch/s390/include/asm/vdso/vdso.h b/arch/s390/include/asm/vdso/vdso.h
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/arch/s390/include/asm/vdso/vsyscall.h b/arch/s390/include/asm/vdso/vsyscall.h
+new file mode 100644
+index 000000000000..6c67c08cefdd
+--- /dev/null
++++ b/arch/s390/include/asm/vdso/vsyscall.h
+@@ -0,0 +1,26 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __ASM_VDSO_VSYSCALL_H
++#define __ASM_VDSO_VSYSCALL_H
++
++#ifndef __ASSEMBLY__
++
++#include <linux/hrtimer.h>
++#include <linux/timekeeper_internal.h>
++#include <vdso/datapage.h>
++#include <asm/vdso.h>
++/*
++ * Update the vDSO data page to keep in sync with kernel timekeeping.
++ */
++
++static __always_inline struct vdso_data *__s390_get_k_vdso_data(void)
++{
++	return vdso_data;
++}
++#define __arch_get_k_vdso_data __s390_get_k_vdso_data
++
++/* The asm-generic header needs to be included after the definitions above */
++#include <asm-generic/vdso/vsyscall.h>
++
++#endif /* !__ASSEMBLY__ */
++
++#endif /* __ASM_VDSO_VSYSCALL_H */
+diff --git a/arch/s390/kernel/asm-offsets.c b/arch/s390/kernel/asm-offsets.c
+index 5d8cc1864566..ece58f2217cb 100644
+--- a/arch/s390/kernel/asm-offsets.c
++++ b/arch/s390/kernel/asm-offsets.c
+@@ -59,26 +59,6 @@ int main(void)
+ 	OFFSET(__SF_SIE_REASON, stack_frame, empty1[2]);
+ 	OFFSET(__SF_SIE_FLAGS, stack_frame, empty1[3]);
+ 	BLANK();
+-	/* timeval/timezone offsets for use by vdso */
+-	OFFSET(__VDSO_UPD_COUNT, vdso_data, tb_update_count);
+-	OFFSET(__VDSO_XTIME_STAMP, vdso_data, xtime_tod_stamp);
+-	OFFSET(__VDSO_XTIME_SEC, vdso_data, xtime_clock_sec);
+-	OFFSET(__VDSO_XTIME_NSEC, vdso_data, xtime_clock_nsec);
+-	OFFSET(__VDSO_XTIME_CRS_SEC, vdso_data, xtime_coarse_sec);
+-	OFFSET(__VDSO_XTIME_CRS_NSEC, vdso_data, xtime_coarse_nsec);
+-	OFFSET(__VDSO_WTOM_SEC, vdso_data, wtom_clock_sec);
+-	OFFSET(__VDSO_WTOM_NSEC, vdso_data, wtom_clock_nsec);
+-	OFFSET(__VDSO_WTOM_CRS_SEC, vdso_data, wtom_coarse_sec);
+-	OFFSET(__VDSO_WTOM_CRS_NSEC, vdso_data, wtom_coarse_nsec);
+-	OFFSET(__VDSO_TIMEZONE, vdso_data, tz_minuteswest);
+-	OFFSET(__VDSO_ECTG_OK, vdso_data, ectg_available);
+-	OFFSET(__VDSO_TK_MULT, vdso_data, tk_mult);
+-	OFFSET(__VDSO_TK_SHIFT, vdso_data, tk_shift);
+-	OFFSET(__VDSO_TS_DIR, vdso_data, ts_dir);
+-	OFFSET(__VDSO_TS_END, vdso_data, ts_end);
+-	OFFSET(__VDSO_CLOCK_REALTIME_RES, vdso_data, hrtimer_res);
+-	OFFSET(__VDSO_ECTG_BASE, vdso_per_cpu_data, ectg_timer_base);
+-	OFFSET(__VDSO_ECTG_USER, vdso_per_cpu_data, ectg_user_time);
+ 	OFFSET(__VDSO_GETCPU_VAL, vdso_per_cpu_data, getcpu_val);
+ 	BLANK();
+ 	/* constants used by the vdso */
+diff --git a/arch/s390/kernel/entry.S b/arch/s390/kernel/entry.S
+index 969b35b177dd..5de00e1f8830 100644
+--- a/arch/s390/kernel/entry.S
++++ b/arch/s390/kernel/entry.S
+@@ -435,10 +435,8 @@ ENTRY(system_call)
+ 	jz	.Lsysc_skip_fpu
+ 	brasl	%r14,load_fpu_regs
+ .Lsysc_skip_fpu:
+-	lg	%r14,__LC_VDSO_PER_CPU
+ 	mvc	__LC_RETURN_PSW(16),__PT_PSW(%r11)
+ 	stpt	__LC_EXIT_TIMER
+-	mvc	__VDSO_ECTG_BASE(16,%r14),__LC_EXIT_TIMER
+ 	lmg	%r0,%r15,__PT_R0(%r11)
+ 	b	__LC_RETURN_LPSWE
+ 
+@@ -797,13 +795,11 @@ ENTRY(io_int_handler)
+ 	TRACE_IRQS_ON
+ 0:
+ #endif
+-	lg	%r14,__LC_VDSO_PER_CPU
+ 	mvc	__LC_RETURN_PSW(16),__PT_PSW(%r11)
+ 	tm	__PT_PSW+1(%r11),0x01	# returning to user ?
+ 	jno	.Lio_exit_kernel
+ 	BPEXIT	__TI_flags(%r12),_TIF_ISOLATE_BP
+ 	stpt	__LC_EXIT_TIMER
+-	mvc	__VDSO_ECTG_BASE(16,%r14),__LC_EXIT_TIMER
+ .Lio_exit_kernel:
+ 	lmg	%r0,%r15,__PT_R0(%r11)
+ 	b	__LC_RETURN_LPSWE
+@@ -1213,14 +1209,12 @@ ENTRY(mcck_int_handler)
+ 	brasl	%r14,s390_handle_mcck
+ 	TRACE_IRQS_ON
+ .Lmcck_return:
+-	lg	%r14,__LC_VDSO_PER_CPU
+ 	lmg	%r0,%r10,__PT_R0(%r11)
+ 	mvc	__LC_RETURN_MCCK_PSW(16),__PT_PSW(%r11) # move return PSW
+ 	tm	__LC_RETURN_MCCK_PSW+1,0x01 # returning to user ?
+ 	jno	0f
+ 	BPEXIT	__TI_flags(%r12),_TIF_ISOLATE_BP
+ 	stpt	__LC_EXIT_TIMER
+-	mvc	__VDSO_ECTG_BASE(16,%r14),__LC_EXIT_TIMER
+ 0:	lmg	%r11,%r15,__PT_R11(%r11)
+ 	b	__LC_RETURN_MCCK_LPSWE
+ 
+diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
+index 07aa15ba43b3..0a5cb423aae2 100644
+--- a/arch/s390/kernel/setup.c
++++ b/arch/s390/kernel/setup.c
+@@ -402,7 +402,6 @@ static void __init setup_lowcore_dat_off(void)
+ 	memcpy(lc->alt_stfle_fac_list, S390_lowcore.alt_stfle_fac_list,
+ 	       sizeof(lc->alt_stfle_fac_list));
+ 	nmi_alloc_boot_cpu(lc);
+-	vdso_alloc_boot_cpu(lc);
+ 	lc->sync_enter_timer = S390_lowcore.sync_enter_timer;
+ 	lc->async_enter_timer = S390_lowcore.async_enter_timer;
+ 	lc->exit_timer = S390_lowcore.exit_timer;
+diff --git a/arch/s390/kernel/time.c b/arch/s390/kernel/time.c
+index b1113b519432..b7608278f6cd 100644
+--- a/arch/s390/kernel/time.c
++++ b/arch/s390/kernel/time.c
+@@ -41,6 +41,9 @@
+ #include <linux/gfp.h>
+ #include <linux/kprobes.h>
+ #include <linux/uaccess.h>
++#include <vdso/vsyscall.h>
++#include <vdso/clocksource.h>
++#include <vdso/helpers.h>
+ #include <asm/facility.h>
+ #include <asm/delay.h>
+ #include <asm/div64.h>
+@@ -84,7 +87,7 @@ void __init time_early_init(void)
+ 
+ 	/* Initialize TOD steering parameters */
+ 	tod_steering_end = *(unsigned long long *) &tod_clock_base[1];
+-	vdso_data->ts_end = tod_steering_end;
++	vdso_data->arch.tod_steering_end = tod_steering_end;
+ 
+ 	if (!test_facility(28))
+ 		return;
+@@ -257,6 +260,7 @@ static struct clocksource clocksource_tod = {
+ 	.mult		= 1000,
+ 	.shift		= 12,
+ 	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
++	.vdso_clock_mode = VDSO_CLOCKMODE_TOD,
+ };
+ 
+ struct clocksource * __init clocksource_default_clock(void)
+@@ -264,56 +268,6 @@ struct clocksource * __init clocksource_default_clock(void)
+ 	return &clocksource_tod;
+ }
+ 
+-void update_vsyscall(struct timekeeper *tk)
+-{
+-	u64 nsecps;
+-
+-	if (tk->tkr_mono.clock != &clocksource_tod)
+-		return;
+-
+-	/* Make userspace gettimeofday spin until we're done. */
+-	++vdso_data->tb_update_count;
+-	smp_wmb();
+-	vdso_data->xtime_tod_stamp = tk->tkr_mono.cycle_last;
+-	vdso_data->xtime_clock_sec = tk->xtime_sec;
+-	vdso_data->xtime_clock_nsec = tk->tkr_mono.xtime_nsec;
+-	vdso_data->wtom_clock_sec =
+-		tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
+-	vdso_data->wtom_clock_nsec = tk->tkr_mono.xtime_nsec +
+-		+ ((u64) tk->wall_to_monotonic.tv_nsec << tk->tkr_mono.shift);
+-	nsecps = (u64) NSEC_PER_SEC << tk->tkr_mono.shift;
+-	while (vdso_data->wtom_clock_nsec >= nsecps) {
+-		vdso_data->wtom_clock_nsec -= nsecps;
+-		vdso_data->wtom_clock_sec++;
+-	}
+-
+-	vdso_data->xtime_coarse_sec = tk->xtime_sec;
+-	vdso_data->xtime_coarse_nsec =
+-		(long)(tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift);
+-	vdso_data->wtom_coarse_sec =
+-		vdso_data->xtime_coarse_sec + tk->wall_to_monotonic.tv_sec;
+-	vdso_data->wtom_coarse_nsec =
+-		vdso_data->xtime_coarse_nsec + tk->wall_to_monotonic.tv_nsec;
+-	while (vdso_data->wtom_coarse_nsec >= NSEC_PER_SEC) {
+-		vdso_data->wtom_coarse_nsec -= NSEC_PER_SEC;
+-		vdso_data->wtom_coarse_sec++;
+-	}
+-
+-	vdso_data->tk_mult = tk->tkr_mono.mult;
+-	vdso_data->tk_shift = tk->tkr_mono.shift;
+-	vdso_data->hrtimer_res = hrtimer_resolution;
+-	smp_wmb();
+-	++vdso_data->tb_update_count;
+-}
+-
+-extern struct timezone sys_tz;
+-
+-void update_vsyscall_tz(void)
+-{
+-	vdso_data->tz_minuteswest = sys_tz.tz_minuteswest;
+-	vdso_data->tz_dsttime = sys_tz.tz_dsttime;
+-}
+-
+ /*
+  * Initialize the TOD clock and the CPU timer of
+  * the boot cpu.
+@@ -431,7 +385,6 @@ static void clock_sync_global(unsigned long long delta)
+ 		/* Epoch overflow */
+ 		tod_clock_base[0]++;
+ 	/* Adjust TOD steering parameters. */
+-	vdso_data->tb_update_count++;
+ 	now = get_tod_clock();
+ 	adj = tod_steering_end - now;
+ 	if (unlikely((s64) adj >= 0))
+@@ -443,9 +396,8 @@ static void clock_sync_global(unsigned long long delta)
+ 		panic("TOD clock sync offset %lli is too large to drift\n",
+ 		      tod_steering_delta);
+ 	tod_steering_end = now + (abs(tod_steering_delta) << 15);
+-	vdso_data->ts_dir = (tod_steering_delta < 0) ? 0 : 1;
+-	vdso_data->ts_end = tod_steering_end;
+-	vdso_data->tb_update_count++;
++	vdso_data->arch.tod_steering_end = tod_steering_end;
++
+ 	/* Update LPAR offset. */
+ 	if (ptff_query(PTFF_QTO) && ptff(&qto, sizeof(qto), PTFF_QTO) == 0)
+ 		lpar_offset = qto.tod_epoch_difference;
+@@ -586,7 +538,7 @@ void stp_queue_work(void)
+ static int stp_sync_clock(void *data)
+ {
+ 	struct clock_sync_data *sync = data;
+-	unsigned long long clock_delta;
++	unsigned long long clock_delta, flags;
+ 	static int first;
+ 	int rc;
+ 
+@@ -599,6 +551,7 @@ static int stp_sync_clock(void *data)
+ 		if (stp_info.todoff[0] || stp_info.todoff[1] ||
+ 		    stp_info.todoff[2] || stp_info.todoff[3] ||
+ 		    stp_info.tmd != 2) {
++			flags = vdso_update_begin();
+ 			rc = chsc_sstpc(stp_page, STP_OP_SYNC, 0,
+ 					&clock_delta);
+ 			if (rc == 0) {
+@@ -609,6 +562,7 @@ static int stp_sync_clock(void *data)
+ 				if (rc == 0 && stp_info.tmd != 2)
+ 					rc = -EAGAIN;
+ 			}
++			vdso_update_end(flags);
+ 		}
+ 		sync->in_sync = rc ? -EAGAIN : 1;
+ 		xchg(&first, 0);
+diff --git a/arch/s390/kernel/vdso.c b/arch/s390/kernel/vdso.c
+index c4baefaa6e34..f9da5b149141 100644
+--- a/arch/s390/kernel/vdso.c
++++ b/arch/s390/kernel/vdso.c
+@@ -20,6 +20,8 @@
+ #include <linux/security.h>
+ #include <linux/memblock.h>
+ #include <linux/compat.h>
++#include <linux/binfmts.h>
++#include <vdso/datapage.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/processor.h>
+ #include <asm/mmu.h>
+@@ -96,35 +98,12 @@ static union {
+ 	struct vdso_data	data;
+ 	u8			page[PAGE_SIZE];
+ } vdso_data_store __page_aligned_data;
+-struct vdso_data *vdso_data = &vdso_data_store.data;
+-
+-/*
+- * Setup vdso data page.
+- */
+-static void __init vdso_init_data(struct vdso_data *vd)
+-{
+-	vd->ectg_available = test_facility(31);
+-}
+-
++struct vdso_data *vdso_data = (struct vdso_data *)&vdso_data_store.data;
+ /*
+  * Allocate/free per cpu vdso data.
+  */
+ #define SEGMENT_ORDER	2
+ 
+-/*
+- * The initial vdso_data structure for the boot CPU. Eventually
+- * it is replaced with a properly allocated structure in vdso_init.
+- * This is necessary because a valid S390_lowcore.vdso_per_cpu_data
+- * pointer is required to be able to return from an interrupt or
+- * program check. See the exit paths in entry.S.
+- */
+-struct vdso_data boot_vdso_data __initdata;
+-
+-void __init vdso_alloc_boot_cpu(struct lowcore *lowcore)
+-{
+-	lowcore->vdso_per_cpu_data = (unsigned long) &boot_vdso_data;
+-}
+-
+ int vdso_alloc_per_cpu(struct lowcore *lowcore)
+ {
+ 	unsigned long segment_table, page_table, page_frame;
+@@ -246,8 +225,6 @@ static int __init vdso_init(void)
+ {
+ 	int i;
+ 
+-	vdso_init_data(vdso_data);
+-
+ 	/* Calculate the size of the 64 bit vDSO */
+ 	vdso64_pages = ((&vdso64_end - &vdso64_start
+ 			 + PAGE_SIZE - 1) >> PAGE_SHIFT) + 1;
+diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
+index 4a66a1cb919b..f1c0570780d1 100644
+--- a/arch/s390/kernel/vdso64/Makefile
++++ b/arch/s390/kernel/vdso64/Makefile
+@@ -1,14 +1,20 @@
+ # SPDX-License-Identifier: GPL-2.0
+-# List of files in the vdso, has to be asm only for now
++# List of files in the vdso
+ 
+ KCOV_INSTRUMENT := n
++ARCH_REL_TYPE_ABS := R_390_COPY|R_390_GLOB_DAT|R_390_JMP_SLOT|R_390_RELATIVE
++ARCH_REL_TYPE_ABS += R_390_GOT|R_390_PLT
+ 
+-obj-vdso64 = gettimeofday.o clock_getres.o clock_gettime.o note.o getcpu.o
++include $(srctree)/lib/vdso/Makefile
++obj-vdso64 = vdso_user_wrapper.o note.o getcpu.o
++obj-cvdso64 = vdso64_generic.o
++CFLAGS_REMOVE_vdso64_generic.o = -pg $(CC_FLAGS_FTRACE) $(CC_FLAGS_EXPOLINE)
+ 
+ # Build rules
+ 
+-targets := $(obj-vdso64) vdso64.so vdso64.so.dbg
++targets := $(obj-vdso64) $(obj-cvdso64) vdso64.so vdso64.so.dbg
+ obj-vdso64 := $(addprefix $(obj)/, $(obj-vdso64))
++obj-cvdso64 := $(addprefix $(obj)/, $(obj-cvdso64))
+ 
+ KBUILD_AFLAGS += -DBUILD_VDSO
+ KBUILD_CFLAGS += -DBUILD_VDSO
+@@ -37,7 +43,7 @@ KASAN_SANITIZE := n
+ $(obj)/vdso64_wrapper.o : $(obj)/vdso64.so
+ 
+ # link rule for the .so file, .lds has to be first
+-$(obj)/vdso64.so.dbg: $(obj)/vdso64.lds $(obj-vdso64) FORCE
++$(obj)/vdso64.so.dbg: $(src)/vdso64.lds $(obj-vdso64) $(obj-cvdso64) FORCE
+ 	$(call if_changed,ld)
+ 
+ # strip rule for the .so file
+@@ -49,9 +55,14 @@ $(obj)/%.so: $(obj)/%.so.dbg FORCE
+ $(obj-vdso64): %.o: %.S FORCE
+ 	$(call if_changed_dep,vdso64as)
+ 
++$(obj-cvdso64): %.o: %.c FORCE
++	$(call if_changed_dep,vdso64cc)
++
+ # actual build commands
+ quiet_cmd_vdso64as = VDSO64A $@
+       cmd_vdso64as = $(CC) $(a_flags) -c -o $@ $<
++quiet_cmd_vdso64cc = VDSO64C $@
++      cmd_vdso64cc = $(CC) $(c_flags) -c -o $@ $<
+ 
+ # install commands for the unstripped file
+ quiet_cmd_vdso_install = INSTALL $@
+diff --git a/arch/s390/kernel/vdso64/clock_getres.S b/arch/s390/kernel/vdso64/clock_getres.S
+deleted file mode 100644
+index 0c79caa32b59..000000000000
+--- a/arch/s390/kernel/vdso64/clock_getres.S
++++ /dev/null
+@@ -1,50 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * Userland implementation of clock_getres() for 64 bits processes in a
+- * s390 kernel for use in the vDSO
+- *
+- *  Copyright IBM Corp. 2008
+- *  Author(s): Martin Schwidefsky (schwidefsky@de.ibm.com)
+- */
+-#include <asm/vdso.h>
+-#include <asm/asm-offsets.h>
+-#include <asm/unistd.h>
+-#include <asm/dwarf.h>
+-
+-	.text
+-	.align 4
+-	.globl __kernel_clock_getres
+-	.type  __kernel_clock_getres,@function
+-__kernel_clock_getres:
+-	CFI_STARTPROC
+-	larl	%r1,3f
+-	lg	%r0,0(%r1)
+-	cghi	%r2,__CLOCK_REALTIME_COARSE
+-	je	0f
+-	cghi	%r2,__CLOCK_MONOTONIC_COARSE
+-	je	0f
+-	larl	%r1,_vdso_data
+-	llgf	%r0,__VDSO_CLOCK_REALTIME_RES(%r1)
+-	cghi	%r2,__CLOCK_REALTIME
+-	je	0f
+-	cghi	%r2,__CLOCK_MONOTONIC
+-	je	0f
+-	cghi	%r2,__CLOCK_THREAD_CPUTIME_ID
+-	je	0f
+-	cghi	%r2,-2		/* Per-thread CPUCLOCK with PID=0, VIRT=1 */
+-	jne	2f
+-	larl	%r5,_vdso_data
+-	icm	%r0,15,__LC_ECTG_OK(%r5)
+-	jz	2f
+-0:	ltgr	%r3,%r3
+-	jz	1f				/* res == NULL */
+-	xc	0(8,%r3),0(%r3)			/* set tp->tv_sec to zero */
+-	stg	%r0,8(%r3)			/* store tp->tv_usec */
+-1:	lghi	%r2,0
+-	br	%r14
+-2:	lghi	%r1,__NR_clock_getres		/* fallback to svc */
+-	svc	0
+-	br	%r14
+-	CFI_ENDPROC
+-3:	.quad	__CLOCK_COARSE_RES
+-	.size	__kernel_clock_getres,.-__kernel_clock_getres
+diff --git a/arch/s390/kernel/vdso64/clock_gettime.S b/arch/s390/kernel/vdso64/clock_gettime.S
+deleted file mode 100644
+index 9d2ee79b90f2..000000000000
+--- a/arch/s390/kernel/vdso64/clock_gettime.S
++++ /dev/null
+@@ -1,163 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * Userland implementation of clock_gettime() for 64 bits processes in a
+- * s390 kernel for use in the vDSO
+- *
+- *  Copyright IBM Corp. 2008
+- *  Author(s): Martin Schwidefsky (schwidefsky@de.ibm.com)
+- */
+-#include <asm/vdso.h>
+-#include <asm/asm-offsets.h>
+-#include <asm/unistd.h>
+-#include <asm/dwarf.h>
+-#include <asm/ptrace.h>
+-
+-	.text
+-	.align 4
+-	.globl __kernel_clock_gettime
+-	.type  __kernel_clock_gettime,@function
+-__kernel_clock_gettime:
+-	CFI_STARTPROC
+-	aghi	%r15,-16
+-	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
+-	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+-	larl	%r5,_vdso_data
+-	cghi	%r2,__CLOCK_REALTIME_COARSE
+-	je	4f
+-	cghi	%r2,__CLOCK_REALTIME
+-	je	5f
+-	cghi	%r2,-3		/* Per-thread CPUCLOCK with PID=0, VIRT=1 */
+-	je	9f
+-	cghi	%r2,__CLOCK_MONOTONIC_COARSE
+-	je	3f
+-	cghi	%r2,__CLOCK_MONOTONIC
+-	jne	12f
+-
+-	/* CLOCK_MONOTONIC */
+-0:	lg	%r4,__VDSO_UPD_COUNT(%r5)	/* load update counter */
+-	tmll	%r4,0x0001			/* pending update ? loop */
+-	jnz	0b
+-	stcke	0(%r15)				/* Store TOD clock */
+-	lgf	%r2,__VDSO_TK_SHIFT(%r5)	/* Timekeeper shift */
+-	lg	%r0,__VDSO_WTOM_SEC(%r5)
+-	lg	%r1,1(%r15)
+-	sg	%r1,__VDSO_XTIME_STAMP(%r5)	/* TOD - cycle_last */
+-	msgf	%r1,__VDSO_TK_MULT(%r5)		/*  * tk->mult */
+-	alg	%r1,__VDSO_WTOM_NSEC(%r5)
+-	srlg	%r1,%r1,0(%r2)			/*  >> tk->shift */
+-	clg	%r4,__VDSO_UPD_COUNT(%r5)	/* check update counter */
+-	jne	0b
+-	larl	%r5,13f
+-1:	clg	%r1,0(%r5)
+-	jl	2f
+-	slg	%r1,0(%r5)
+-	aghi	%r0,1
+-	j	1b
+-2:	stg	%r0,0(%r3)			/* store tp->tv_sec */
+-	stg	%r1,8(%r3)			/* store tp->tv_nsec */
+-	lghi	%r2,0
+-	aghi	%r15,16
+-	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
+-	CFI_RESTORE 15
+-	br	%r14
+-
+-	/* CLOCK_MONOTONIC_COARSE */
+-	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
+-	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+-3:	lg	%r4,__VDSO_UPD_COUNT(%r5)	/* load update counter */
+-	tmll	%r4,0x0001			/* pending update ? loop */
+-	jnz	3b
+-	lg	%r0,__VDSO_WTOM_CRS_SEC(%r5)
+-	lg	%r1,__VDSO_WTOM_CRS_NSEC(%r5)
+-	clg	%r4,__VDSO_UPD_COUNT(%r5)	/* check update counter */
+-	jne	3b
+-	j	2b
+-
+-	/* CLOCK_REALTIME_COARSE */
+-4:	lg	%r4,__VDSO_UPD_COUNT(%r5)	/* load update counter */
+-	tmll	%r4,0x0001			/* pending update ? loop */
+-	jnz	4b
+-	lg	%r0,__VDSO_XTIME_CRS_SEC(%r5)
+-	lg	%r1,__VDSO_XTIME_CRS_NSEC(%r5)
+-	clg	%r4,__VDSO_UPD_COUNT(%r5)	/* check update counter */
+-	jne	4b
+-	j	7f
+-
+-	/* CLOCK_REALTIME */
+-5:	lg	%r4,__VDSO_UPD_COUNT(%r5)	/* load update counter */
+-	tmll	%r4,0x0001			/* pending update ? loop */
+-	jnz	5b
+-	stcke	0(%r15)				/* Store TOD clock */
+-	lg	%r1,1(%r15)
+-	lg	%r0,__VDSO_TS_END(%r5)		/* TOD steering end time */
+-	slgr	%r0,%r1				/* now - ts_steering_end */
+-	ltgr	%r0,%r0				/* past end of steering ? */
+-	jm	17f
+-	srlg	%r0,%r0,15			/* 1 per 2^16 */
+-	tm	__VDSO_TS_DIR+3(%r5),0x01	/* steering direction? */
+-	jz	18f
+-	lcgr	%r0,%r0				/* negative TOD offset */
+-18:	algr	%r1,%r0				/* add steering offset */
+-17:	lgf	%r2,__VDSO_TK_SHIFT(%r5)	/* Timekeeper shift */
+-	sg	%r1,__VDSO_XTIME_STAMP(%r5)	/* TOD - cycle_last */
+-	msgf	%r1,__VDSO_TK_MULT(%r5)		/*  * tk->mult */
+-	alg	%r1,__VDSO_XTIME_NSEC(%r5)	/*  + tk->xtime_nsec */
+-	srlg	%r1,%r1,0(%r2)			/*  >> tk->shift */
+-	lg	%r0,__VDSO_XTIME_SEC(%r5)	/* tk->xtime_sec */
+-	clg	%r4,__VDSO_UPD_COUNT(%r5)	/* check update counter */
+-	jne	5b
+-	larl	%r5,13f
+-6:	clg	%r1,0(%r5)
+-	jl	7f
+-	slg	%r1,0(%r5)
+-	aghi	%r0,1
+-	j	6b
+-7:	stg	%r0,0(%r3)			/* store tp->tv_sec */
+-	stg	%r1,8(%r3)			/* store tp->tv_nsec */
+-	lghi	%r2,0
+-	aghi	%r15,16
+-	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
+-	CFI_RESTORE 15
+-	br	%r14
+-
+-	/* CPUCLOCK_VIRT for this thread */
+-	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
+-	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+-9:	lghi	%r4,0
+-	icm	%r0,15,__VDSO_ECTG_OK(%r5)
+-	jz	12f
+-	sacf	256				/* Magic ectg instruction */
+-	.insn	ssf,0xc80100000000,__VDSO_ECTG_BASE(4),__VDSO_ECTG_USER(4),4
+-	sacf	0
+-	algr	%r1,%r0				/* r1 = cputime as TOD value */
+-	mghi	%r1,1000			/* convert to nanoseconds */
+-	srlg	%r1,%r1,12			/* r1 = cputime in nanosec */
+-	lgr	%r4,%r1
+-	larl	%r5,13f
+-	srlg	%r1,%r1,9			/* divide by 1000000000 */
+-	mlg	%r0,8(%r5)
+-	srlg	%r0,%r0,11			/* r0 = tv_sec */
+-	stg	%r0,0(%r3)
+-	msg	%r0,0(%r5)			/* calculate tv_nsec */
+-	slgr	%r4,%r0				/* r4 = tv_nsec */
+-	stg	%r4,8(%r3)
+-	lghi	%r2,0
+-	aghi	%r15,16
+-	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
+-	CFI_RESTORE 15
+-	br	%r14
+-
+-	/* Fallback to system call */
+-	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
+-	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+-12:	lghi	%r1,__NR_clock_gettime
+-	svc	0
+-	aghi	%r15,16
+-	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
+-	CFI_RESTORE 15
+-	br	%r14
+-	CFI_ENDPROC
+-
+-13:	.quad	1000000000
+-14:	.quad	19342813113834067
+-	.size	__kernel_clock_gettime,.-__kernel_clock_gettime
+diff --git a/arch/s390/kernel/vdso64/gettimeofday.S b/arch/s390/kernel/vdso64/gettimeofday.S
+deleted file mode 100644
+index aebe10dc7c99..000000000000
+--- a/arch/s390/kernel/vdso64/gettimeofday.S
++++ /dev/null
+@@ -1,71 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-/*
+- * Userland implementation of gettimeofday() for 64 bits processes in a
+- * s390 kernel for use in the vDSO
+- *
+- *  Copyright IBM Corp. 2008
+- *  Author(s): Martin Schwidefsky (schwidefsky@de.ibm.com)
+- */
+-#include <asm/vdso.h>
+-#include <asm/asm-offsets.h>
+-#include <asm/unistd.h>
+-#include <asm/dwarf.h>
+-#include <asm/ptrace.h>
+-
+-	.text
+-	.align 4
+-	.globl __kernel_gettimeofday
+-	.type  __kernel_gettimeofday,@function
+-__kernel_gettimeofday:
+-	CFI_STARTPROC
+-	aghi	%r15,-16
+-	CFI_ADJUST_CFA_OFFSET 16
+-	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+-	larl	%r5,_vdso_data
+-0:	ltgr	%r3,%r3				/* check if tz is NULL */
+-	je	1f
+-	mvc	0(8,%r3),__VDSO_TIMEZONE(%r5)
+-1:	ltgr	%r2,%r2				/* check if tv is NULL */
+-	je	4f
+-	lg	%r4,__VDSO_UPD_COUNT(%r5)	/* load update counter */
+-	tmll	%r4,0x0001			/* pending update ? loop */
+-	jnz	0b
+-	stcke	0(%r15)				/* Store TOD clock */
+-	lg	%r1,1(%r15)
+-	lg	%r0,__VDSO_TS_END(%r5)		/* TOD steering end time */
+-	slgr	%r0,%r1				/* now - ts_steering_end */
+-	ltgr	%r0,%r0				/* past end of steering ? */
+-	jm	6f
+-	srlg	%r0,%r0,15			/* 1 per 2^16 */
+-	tm	__VDSO_TS_DIR+3(%r5),0x01	/* steering direction? */
+-	jz	7f
+-	lcgr	%r0,%r0				/* negative TOD offset */
+-7:	algr	%r1,%r0				/* add steering offset */
+-6:	sg	%r1,__VDSO_XTIME_STAMP(%r5)	/* TOD - cycle_last */
+-	msgf	%r1,__VDSO_TK_MULT(%r5)		/*  * tk->mult */
+-	alg	%r1,__VDSO_XTIME_NSEC(%r5)	/*  + tk->xtime_nsec */
+-	lg	%r0,__VDSO_XTIME_SEC(%r5)	/* tk->xtime_sec */
+-	clg	%r4,__VDSO_UPD_COUNT(%r5)	/* check update counter */
+-	jne	0b
+-	lgf	%r5,__VDSO_TK_SHIFT(%r5)	/* Timekeeper shift */
+-	srlg	%r1,%r1,0(%r5)			/*  >> tk->shift */
+-	larl	%r5,5f
+-2:	clg	%r1,0(%r5)
+-	jl	3f
+-	slg	%r1,0(%r5)
+-	aghi	%r0,1
+-	j	2b
+-3:	stg	%r0,0(%r2)			/* store tv->tv_sec */
+-	slgr	%r0,%r0				/* tv_nsec -> tv_usec */
+-	ml	%r0,8(%r5)
+-	srlg	%r0,%r0,6
+-	stg	%r0,8(%r2)			/* store tv->tv_usec */
+-4:	lghi	%r2,0
+-	aghi	%r15,16
+-	CFI_ADJUST_CFA_OFFSET -16
+-	CFI_RESTORE 15
+-	br	%r14
+-	CFI_ENDPROC
+-5:	.quad	1000000000
+-	.long	274877907
+-	.size	__kernel_gettimeofday,.-__kernel_gettimeofday
+diff --git a/arch/s390/kernel/vdso64/vdso64_generic.c b/arch/s390/kernel/vdso64/vdso64_generic.c
+new file mode 100644
+index 000000000000..a8cef7e4d137
+--- /dev/null
++++ b/arch/s390/kernel/vdso64/vdso64_generic.c
+@@ -0,0 +1,18 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "../../../../lib/vdso/gettimeofday.c"
++
++int __s390_vdso_gettimeofday(struct __kernel_old_timeval *tv,
++			     struct timezone *tz)
++{
++	return __cvdso_gettimeofday(tv, tz);
++}
++
++int __s390_vdso_clock_gettime(clockid_t clock, struct __kernel_timespec *ts)
++{
++	return __cvdso_clock_gettime(clock, ts);
++}
++
++int __s390_vdso_clock_getres(clockid_t clock, struct __kernel_timespec *ts)
++{
++	return __cvdso_clock_getres(clock, ts);
++}
+diff --git a/arch/s390/kernel/vdso64/vdso_user_wrapper.S b/arch/s390/kernel/vdso64/vdso_user_wrapper.S
+new file mode 100644
+index 000000000000..a775d7e52872
+--- /dev/null
++++ b/arch/s390/kernel/vdso64/vdso_user_wrapper.S
+@@ -0,0 +1,38 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#include <asm/vdso.h>
++#include <asm/unistd.h>
++#include <asm/asm-offsets.h>
++#include <asm/dwarf.h>
++#include <asm/ptrace.h>
++
++#define WRAPPER_FRAME_SIZE (STACK_FRAME_OVERHEAD+8)
++
++/*
++ * Older glibc version called vdso without allocating a stackframe. This wrapper
++ * is just used to allocate a stackframe. See
++ * https://sourceware.org/git/?p=glibc.git;a=commit;h=478593e6374f3818da39332260dc453cb19cfa1e
++ * for details.
++ */
++.macro vdso_func func
++	.globl __kernel_\func
++	.type  __kernel_\func,@function
++	.align 8
++__kernel_\func:
++	CFI_STARTPROC
++	aghi	%r15,-WRAPPER_FRAME_SIZE
++	CFI_DEF_CFA_OFFSET (STACK_FRAME_OVERHEAD + WRAPPER_FRAME_SIZE)
++	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
++	stg	%r14,STACK_FRAME_OVERHEAD(%r15)
++	brasl	%r14,__s390_vdso_\func
++	lg	%r14,STACK_FRAME_OVERHEAD(%r15)
++	aghi	%r15,WRAPPER_FRAME_SIZE
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
++	CFI_RESTORE 15
++	br	%r14
++	CFI_ENDPROC
++	.size	__kernel_\func,.-__kernel_\func
++.endm
++
++vdso_func gettimeofday
++vdso_func clock_getres
++vdso_func clock_gettime
+-- 
+2.17.1
+
