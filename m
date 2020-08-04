@@ -2,137 +2,189 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 999DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83E642076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 355D52076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:43:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hwAmUhDP"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="CwKotEeF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728891AbgHDTmX (ORCPT
+        id S1728257AbgHDTng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 15:42:23 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:47341 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728462AbgHDTmT (ORCPT
+        Tue, 4 Aug 2020 15:43:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726824AbgHDTnf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 15:42:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596570138;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=I1cdcrpSaUyPT7UgxPkoUt6fR2Ifv+AIMispg+nEOrI=;
-        b=hwAmUhDPNViYX2KfaTfAqLpKLLdlJb2vAeL8Gc5L6LfI9+FO1KSl4Oxb08PZkITaly8ZSj
-        NmGXppfbk41AB5GMVDTVayN448uN4+tHWcx0l8tlCYlBg0+FJeyJrQYGu1iparzjWB08KJ
-        7/3V/TZ15K2RErE8q9EKNF0mYDCiDo0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-390-a5iX9AmiPN6YMOCLCbM3nw-1; Tue, 04 Aug 2020 15:42:16 -0400
-X-MC-Unique: a5iX9AmiPN6YMOCLCbM3nw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C4AED1800D42;
-        Tue,  4 Aug 2020 19:42:14 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-113-95.ams2.redhat.com [10.36.113.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6A51A72E4F;
-        Tue,  4 Aug 2020 19:42:12 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
-        David Hildenbrand <david@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Baoquan He <bhe@redhat.com>
-Subject: [PATCH v4 6/6] mm: document semantics of ZONE_MOVABLE
-Date:   Tue,  4 Aug 2020 21:41:42 +0200
-Message-Id: <20200804194142.28279-7-david@redhat.com>
-In-Reply-To: <20200804194142.28279-1-david@redhat.com>
-References: <20200804194142.28279-1-david@redhat.com>
+        Tue, 4 Aug 2020 15:43:35 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C023C061756
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 12:43:35 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id k18so31876423qtm.10
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 12:43:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dSlSO2Zd9jkm/qIiBUSX2pIA2UBSkdUFM49R5g/2fa4=;
+        b=CwKotEeFTnw1upnSHoKsi58txKyhF+rlF0h+eBu8/NituD1yNVhftmi4SR920UYDbC
+         KJAgfxS5HRaUsfa1d34Ako9v8rtlOtEJl6Uv0x3ad83vS9v7+zwKXit+3jTL7J4duQ2G
+         xjJBKjC3ygeHZ2ice7rStZ93Og4+zZ0aZ5y5pozO6ElaO9FcV2OH+4geH1Y1IuUj3hNi
+         nJY/nSk7PtZQ4Aky5znOBvUpnnIKuGjpV/hI5oYRfuza+Ij1fx9ZVz4V0MtSIj6K4sEK
+         d38vT+shF+dwY0CSpULHY0lSvbbH/PPrwVDUsaOOrtr8luAYLCQKqhQyFEKVW1phBiBP
+         TprQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dSlSO2Zd9jkm/qIiBUSX2pIA2UBSkdUFM49R5g/2fa4=;
+        b=IN+m6yV7VayHYtZGKn+broVKFrur3+fuxkoeJHyM4z4sART3KfCJk1fCU6jG9Su5t6
+         +nyCS/V87nBN96xFPVQh24vatkUSxCz0HKbLZv1/nLaD3Q6b0F/Q7H5Xi+wazRlxEEoK
+         l9b3skSxm7q0k1d0tbRB2WC4NspmRXQv6vte+E6wFKwjGU1bE100Ty1sJEc9Bu/v0GaT
+         8S/tmJcuSuHPVRuZVR0X6mLzvGfOCg0vPjXsvAh44RodgPlK2TGhWcavFBvF1MvxmE0P
+         W1eTBdzz21vmf+m5A6esTxos0Nw1w5N9acNuhmCaXExqzaajZigphO0/FkUl9pzUaFft
+         CYFQ==
+X-Gm-Message-State: AOAM532F4S3MrmsmjIicCJ1Vbj5/+XGpdcDCIyRVycThMq8d+OgZV3r+
+        VV9XPAK1uNht4mvXdPAAbx6Noo6TP3tcAYKThmP3ug==
+X-Google-Smtp-Source: ABdhPJxVqXW3ZVO66KO5J3TnDbxKqwRHMNOEAEk7QFIVPH7VkPHUXzlIy2UvpTCm5rAnxEp/mDaP80nAnL+h67NDFrs=
+X-Received: by 2002:ac8:4e39:: with SMTP id d25mr9122163qtw.208.1596570214100;
+ Tue, 04 Aug 2020 12:43:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+References: <20200725041955.9985-1-warthog618@gmail.com> <20200725041955.9985-12-warthog618@gmail.com>
+In-Reply-To: <20200725041955.9985-12-warthog618@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 4 Aug 2020 21:43:23 +0200
+Message-ID: <CAMpxmJX1z2=E4zao_pRR_Qkp8LFLixTk5V1uHH4q3=EA6rChug@mail.gmail.com>
+Subject: Re: [PATCH v2 11/18] gpio: uapi: document uAPI v1 as deprecated
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's document what ZONE_MOVABLE means, how it's used, and which special
-cases we have regarding unmovable pages (memory offlining vs. migration /
-allocations).
+On Sat, Jul 25, 2020 at 6:22 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> Update uAPI documentation to deprecate v1 structs and ioctls.
+>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> ---
+>  include/uapi/linux/gpio.h | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>
+> diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
+> index 3f6db33014f0..92a74c245534 100644
+> --- a/include/uapi/linux/gpio.h
+> +++ b/include/uapi/linux/gpio.h
+> @@ -278,6 +278,9 @@ struct gpioline_event {
+>
+>  /*
+>   *  ABI v1
+> + *
+> + * This version of the ABI is deprecated and will be removed in the future.
+> + * Use the latest version if the ABI, defined above, instead.
 
-Acked-by: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Michael S. Tsirkin <mst@redhat.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Cc: Baoquan He <bhe@redhat.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- include/linux/mmzone.h | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+typo: of the ABI
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index f6f884970511d..3c22aca6cc4f1 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -372,6 +372,41 @@ enum zone_type {
- 	 */
- 	ZONE_HIGHMEM,
- #endif
-+	/*
-+	 * ZONE_MOVABLE is similar to ZONE_NORMAL, except that it contains
-+	 * movable pages with few exceptional cases described below. Main use
-+	 * cases for ZONE_MOVABLE are to make memory offlining/unplug more
-+	 * likely to succeed, and to locally limit unmovable allocations - e.g.,
-+	 * to increase the number of THP/huge pages. Notable special cases are:
-+	 *
-+	 * 1. Pinned pages: (long-term) pinning of movable pages might
-+	 *    essentially turn such pages unmovable. Memory offlining might
-+	 *    retry a long time.
-+	 * 2. memblock allocations: kernelcore/movablecore setups might create
-+	 *    situations where ZONE_MOVABLE contains unmovable allocations
-+	 *    after boot. Memory offlining and allocations fail early.
-+	 * 3. Memory holes: we might have a memmap for memory holes, for
-+	 *    example, if we have sections that are only partially populated.
-+	 *    Such pages cannot be allocated. Applies only to boot memory, not
-+	 *    hotplugged memory. Memory offlining and allocations fail early.
-+	 * 4. PG_hwpoison pages: while poisoned pages can be skipped during
-+	 *    memory offlining, such pages cannot be allocated.
-+	 * 5. Unmovable PG_offline pages: in paravirtualized environments,
-+	 *    hotplugged memory blocks might only partially be managed by the
-+	 *    buddy (e.g., via XEN-balloon, Hyper-V balloon, virtio-mem). The
-+	 *    parts not manged by the buddy are unmovable PG_offline pages. In
-+	 *    some cases (virtio-mem), such pages can be skipped during
-+	 *    memory offlining, however, cannot be moved/allocated. These
-+	 *    techniques might use alloc_contig_range() to hide previously
-+	 *    exposed pages from the buddy again (e.g., to implement some sort
-+	 *    of memory unplug in virtio-mem).
-+	 *
-+	 * In general, no unmovable allocations that degrade memory offlining
-+	 * should end up in ZONE_MOVABLE. Allocators (like alloc_contig_range())
-+	 * have to expect that migrating pages in ZONE_MOVABLE can fail (even
-+	 * if has_unmovable_pages() states that there are no unmovable pages,
-+	 * there can be false negatives).
-+	 */
- 	ZONE_MOVABLE,
- #ifdef CONFIG_ZONE_DEVICE
- 	ZONE_DEVICE,
--- 
-2.26.2
+>   */
+>
+>  /* Informational flags */
+> @@ -301,6 +304,9 @@ struct gpioline_event {
+>   * @consumer: a functional name for the consumer of this GPIO line as set by
+>   * whatever is using it, will be empty if there is no current user but may
+>   * also be empty if the consumer doesn't set this up
+> + *
+> + * This struct part of ABI v1 and is deprecated.
 
+"This struct is part of ABI (...)"
+
+> + * Use struct gpioline_info_v2 instead.
+>   */
+>  struct gpioline_info {
+>         __u32 line_offset;
+> @@ -325,6 +331,9 @@ struct gpioline_info {
+>   * guarantee there are no implicit holes between it and subsequent members.
+>   * The 20-byte padding at the end makes sure we don't add any implicit padding
+>   * at the end of the structure on 64-bit architectures.
+> + *
+> + * This struct part of ABI v1 and is deprecated.
+
+Same as above and same below.
+
+Bart
+
+> + * Use struct gpioline_info_changed_v2 instead.
+>   */
+>  struct gpioline_info_changed {
+>         struct gpioline_info info;
+> @@ -364,6 +373,9 @@ struct gpioline_info_changed {
+>   * @fd: if successful this field will contain a valid anonymous file handle
+>   * after a GPIO_GET_LINEHANDLE_IOCTL operation, zero or negative value
+>   * means error
+> + *
+> + * This struct part of ABI v1 and is deprecated.
+> + * Use struct gpioline_request instead.
+>   */
+>  struct gpiohandle_request {
+>         __u32 lineoffsets[GPIOHANDLES_MAX];
+> @@ -383,6 +395,9 @@ struct gpiohandle_request {
+>   * this specifies the default output value, should be 0 (low) or
+>   * 1 (high), anything else than 0 or 1 will be interpreted as 1 (high)
+>   * @padding: reserved for future use and should be zero filled
+> + *
+> + * This struct part of ABI v1 and is deprecated.
+> + * Use struct gpioline_config instead.
+>   */
+>  struct gpiohandle_config {
+>         __u32 flags;
+> @@ -395,6 +410,9 @@ struct gpiohandle_config {
+>   * @values: when getting the state of lines this contains the current
+>   * state of a line, when setting the state of lines these should contain
+>   * the desired target state
+> + *
+> + * This struct part of ABI v1 and is deprecated.
+> + * Use struct gpioline_values instead.
+>   */
+>  struct gpiohandle_data {
+>         __u8 values[GPIOHANDLES_MAX];
+> @@ -418,6 +436,9 @@ struct gpiohandle_data {
+>   * @fd: if successful this field will contain a valid anonymous file handle
+>   * after a GPIO_GET_LINEEVENT_IOCTL operation, zero or negative value
+>   * means error
+> + *
+> + * This struct part of ABI v1 and is deprecated.
+> + * Use struct gpioline_request instead.
+>   */
+>  struct gpioevent_request {
+>         __u32 lineoffset;
+> @@ -437,6 +458,9 @@ struct gpioevent_request {
+>   * struct gpioevent_data - The actual event being pushed to userspace
+>   * @timestamp: best estimate of time of event occurrence, in nanoseconds
+>   * @id: event identifier
+> + *
+> + * This struct part of ABI v1 and is deprecated.
+> + * Use struct gpioline_event instead.
+>   */
+>  struct gpioevent_data {
+>         __u64 timestamp;
+> @@ -461,6 +485,8 @@ struct gpioevent_data {
+>
+>  /*
+>   * v1 ioctl()s
+> + *
+> + * These ioctl()s are deprecated.  Use the v2 equivalent instead.
+>   */
+>  #define GPIO_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x02, struct gpioline_info)
+>  #define GPIO_GET_LINEHANDLE_IOCTL _IOWR(0xB4, 0x03, struct gpiohandle_request)
+> --
+> 2.27.0
+>
