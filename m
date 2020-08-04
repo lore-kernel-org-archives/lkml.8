@@ -5,70 +5,72 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27100C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDFBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D3492070A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:24:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 259682070A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 04:24:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K+z3LaGk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uBZEqpyk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729673AbgHDEYQ (ORCPT
+        id S1729692AbgHDEYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 00:24:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48818 "EHLO
+        Tue, 4 Aug 2020 00:24:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgHDEYQ (ORCPT
+        with ESMTP id S1725999AbgHDEYU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 00:24:16 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E9FBC06174A
-        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 21:24:16 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id c10so975520pjn.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 21:24:16 -0700 (PDT)
+        Tue, 4 Aug 2020 00:24:20 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4022AC06174A
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 21:24:20 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id t10so16823449plz.10
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 21:24:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=JngFG1EkTLo4BpqZhiJxszD1gfeCHHSLXHsexflvscw=;
-        b=K+z3LaGknG3+dskAQIYMfnPKZZK9plCBb+szon+FT/j+2OfxNClUn1QhGrHJ5Y9/mP
-         MTv0g3GD6cpoOaHa2uT6sx9vNEqrNbrpVbjR2I4/6Vm/K04cvprsA8wQDKhcmmIkuWvg
-         wCxeQXSiWWFwz8jn5WI6+1sqASV2cs+MiO40IB5OOlV61y324Sq6VfZs/ca1Ow/tS+vG
-         Hwn2cd1G7ea5W3GkQyif4XReLegm74iGrxoCxVIarH8ASnQgoY5hbPijDuvKv+712y/p
-         UMkgde2b0G56XmiZUYIXsvA9wGnG2h5go9RxdWAuu01FYYkWLOOCCROHAdplkQyuBGy+
-         vlkg==
+        bh=6FQQh9grVE9WmqeYXdehIdQwW9U/dAMb893sRAt75ZM=;
+        b=uBZEqpykqt1c/NtoFtFkiYRPjXq/DjkOC0dqEIKQYgA2z0nQlsMOqtZvNnnfjhBavS
+         yxgafmW7t7eLvEI95aD4U3Q++5esqlDcoAha32yxun7dmQcnCodO7Q26e6yB+zvXjHBR
+         Ptg2VdD7gcpq05vmN5IaF6kFxdeSiV2kgF40qS2kmBwEBqyL6K9GGSl+TqoKva7HX8YS
+         EhM27dQ1eauN2I4rZh7uozUGDyngS1OqWLpLzpTqNugz+hLtY//Oz3TST/Zh+K/fnNwx
+         WVygcl1Sxfi7L++kT6MTKKOgHiHPQ2YIxyNddZR+FC+URSgoATOvCJiiQ+bNWWdcYyjA
+         dpjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=JngFG1EkTLo4BpqZhiJxszD1gfeCHHSLXHsexflvscw=;
-        b=Lml//gXi+7pfdc5SVZRj6GsIWl2DBooFGnnpwvyQzpLPNGGh2gaZn0HlWz2JyU0pgz
-         p9m6kIZ2MIxmM4J5v+JAVOBA8fUFO3gS+4qzG3jK3IGdwAH/x2o5mDjWyzt8+rsp2I6N
-         TB6GgHVvebPSeS2vYkP6Wafor2sp3Q3FxWpmhFDn2kA0aYM1LeRDzC1WXTwtvzydYUMq
-         9E1mAq9KdCkZKL6icu3VeULXC/KbUI2dSRDQIyFCWgqfy7W25qp/sLstvfAPHNq1sQaC
-         +tbZyVoTgKqrpOxvmgSojyZOKamAnifXzkm5GsFpR96euI+AWZzDF646qMzLp4iegBjg
-         kVtQ==
-X-Gm-Message-State: AOAM5303ye8uDL52FbPRaMVqS0g0V49DTpJDQg6VlZMhXDKIKel0ekwb
-        RKRK/ZIchrefZFZmrkBdcc7CDgOL
-X-Google-Smtp-Source: ABdhPJzfpgnCKblnJGY/7G3hc88dXBossscj+e/PDs0c+uhVJluJnQ3C3XjLnEzx8zqlP4avaEL5mg==
-X-Received: by 2002:a17:902:7246:: with SMTP id c6mr17804962pll.17.1596515055411;
-        Mon, 03 Aug 2020 21:24:15 -0700 (PDT)
+        bh=6FQQh9grVE9WmqeYXdehIdQwW9U/dAMb893sRAt75ZM=;
+        b=awWettHnOfAVp3JjmYq94VGN02BXxezcAT+WcjBc0MgmtHFTS5eUJIbUCuz/e4z+i2
+         Z6XaPz8Pie9lPdALxsPxd8GzhCEHiBq4zG5FioUmir9seMsscvDGz71xiKQcUBKdNJhA
+         daNHFHAZQYyciYG+f/1uG+qhFh2mJlDZBkhPFVkkTEsWEzE57sbdZPjXFxLmuXgbnSfd
+         WhoBUDhyygXiFFcDrU64X3ZEANg+xhPfxwj2wFe2CWhhrSYaDTYKz8TbqvotMsAIbWe1
+         250vdlGf8KiZaRazHl8VctJSq3LrbzkxV4Ap/IIHIo9Q7+BNoBdGxff76tyc6aHgfK0s
+         IIYw==
+X-Gm-Message-State: AOAM531rSFbVSd8hJtbHv5CJKzhOjPhbDr2TxNtueGKt7ZVnEAgsW1r/
+        r0u6KMFpKjrVX4BQofa4q5I6d66x
+X-Google-Smtp-Source: ABdhPJw6I1I1rhc5642O2n0pcD89AvC3Qz39sDbhZYqzI6laUlHGgX4EZG7iZEJLlzdMM+3COArm+g==
+X-Received: by 2002:a17:902:9349:: with SMTP id g9mr17504812plp.313.1596515059299;
+        Mon, 03 Aug 2020 21:24:19 -0700 (PDT)
 Received: from localhost (g223.115-65-55.ppp.wakwak.ne.jp. [115.65.55.223])
-        by smtp.gmail.com with ESMTPSA id j130sm107809pgc.76.2020.08.03.21.24.14
+        by smtp.gmail.com with ESMTPSA id r15sm12279933pfq.189.2020.08.03.21.24.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2020 21:24:14 -0700 (PDT)
+        Mon, 03 Aug 2020 21:24:18 -0700 (PDT)
 From:   Stafford Horne <shorne@gmail.com>
 To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Stafford Horne <shorne@gmail.com>, Jonas Bonn <jonas@southpole.se>,
+Cc:     Stafford Horne <shorne@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jonas Bonn <jonas@southpole.se>,
         Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
         Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
         openrisc@lists.librecores.org
-Subject: [PATCH 2/6] openrisc: uaccess: Fix sparse address space warnings
-Date:   Tue,  4 Aug 2020 13:23:50 +0900
-Message-Id: <20200804042354.3930694-3-shorne@gmail.com>
+Subject: [PATCH 3/6] openrisc: uaccess: Use static inline function in access_ok
+Date:   Tue,  4 Aug 2020 13:23:51 +0900
+Message-Id: <20200804042354.3930694-4-shorne@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200804042354.3930694-1-shorne@gmail.com>
 References: <20200804042354.3930694-1-shorne@gmail.com>
@@ -79,61 +81,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The OpenRISC user access functions put_user(), get_user() and
-clear_user() were missing proper sparse annotations.  This generated
-warnings like the below.
+As suggested by Linus when reviewing commit 9cb2feb4d21d
+("arch/openrisc: Fix issues with access_ok()") last year; making
+__range_ok an inline function also fixes the used twice issue that the
+commit was fixing.  I agree it's a good cleanup.  This patch addresses
+that as I am currently working on the access_ok macro to fixup sparse
+annotations in OpenRISC.
 
-This patch adds the annotations to fix the warnings.
-
-Example warnings:
-
-net/ipv4/ip_sockglue.c:759:29: warning: incorrect type in argument 1 (different address spaces)
-net/ipv4/ip_sockglue.c:759:29:    expected void const volatile [noderef] __user *
-net/ipv4/ip_sockglue.c:759:29:    got int const *__gu_addr
-net/ipv4/ip_sockglue.c:764:29: warning: incorrect type in initializer (different address spaces)
-net/ipv4/ip_sockglue.c:764:29:    expected unsigned char const *__gu_addr
-net/ipv4/ip_sockglue.c:764:29:    got unsigned char [noderef] __user *
-
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Stafford Horne <shorne@gmail.com>
 ---
- arch/openrisc/include/asm/uaccess.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/openrisc/include/asm/uaccess.h | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/arch/openrisc/include/asm/uaccess.h b/arch/openrisc/include/asm/uaccess.h
-index 46e31bb4a9ad..f2fc5c4b88c3 100644
+index f2fc5c4b88c3..4b59dc9ad300 100644
 --- a/arch/openrisc/include/asm/uaccess.h
 +++ b/arch/openrisc/include/asm/uaccess.h
-@@ -100,7 +100,7 @@ extern long __put_user_bad(void);
- #define __put_user_check(x, ptr, size)					\
- ({									\
- 	long __pu_err = -EFAULT;					\
--	__typeof__(*(ptr)) *__pu_addr = (ptr);				\
-+	__typeof__(*(ptr)) __user *__pu_addr = (ptr);			\
- 	if (access_ok(__pu_addr, size))			\
- 		__put_user_size((x), __pu_addr, (size), __pu_err);	\
- 	__pu_err;							\
-@@ -173,7 +173,7 @@ struct __large_struct {
- #define __get_user_check(x, ptr, size)					\
- ({									\
- 	long __gu_err = -EFAULT, __gu_val = 0;				\
--	const __typeof__(*(ptr)) * __gu_addr = (ptr);			\
-+	const __typeof__(*(ptr)) __user *__gu_addr = (ptr);		\
- 	if (access_ok(__gu_addr, size))			\
- 		__get_user_size(__gu_val, __gu_addr, (size), __gu_err);	\
- 	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
-@@ -248,10 +248,10 @@ raw_copy_to_user(void __user *to, const void *from, unsigned long size)
- #define INLINE_COPY_FROM_USER
- #define INLINE_COPY_TO_USER
+@@ -48,16 +48,19 @@
+ /* Ensure that the range from addr to addr+size is all within the process'
+  * address space
+  */
+-#define __range_ok(addr, size) (size <= get_fs() && addr <= (get_fs()-size))
++static inline int __range_ok(unsigned long addr, unsigned long size)
++{
++	const mm_segment_t fs = get_fs();
++
++	return size <= fs && addr <= (fs - size);
++}
  
--extern unsigned long __clear_user(void *addr, unsigned long size);
-+extern unsigned long __clear_user(void __user *addr, unsigned long size);
+ /* Ensure that addr is below task's addr_limit */
+ #define __addr_ok(addr) ((unsigned long) addr < get_fs())
  
- static inline __must_check unsigned long
--clear_user(void *addr, unsigned long size)
-+clear_user(void __user *addr, unsigned long size)
- {
- 	if (likely(access_ok(addr, size)))
- 		size = __clear_user(addr, size);
+ #define access_ok(addr, size)						\
+ ({ 									\
+-	unsigned long __ao_addr = (unsigned long)(addr);		\
+-	unsigned long __ao_size = (unsigned long)(size);		\
+-	__range_ok(__ao_addr, __ao_size);				\
++	__range_ok((unsigned long)(addr), (size));			\
+ })
+ 
+ /*
 -- 
 2.26.2
 
