@@ -2,120 +2,134 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD52C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E535AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 404BE207FC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0908207FC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:40:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="ashTFwDO"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="mCiJhDrQ";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="bmKnsvG0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbgHDPjx (ORCPT
+        id S1728533AbgHDPkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 11:39:53 -0400
-Received: from mout.gmx.net ([212.227.17.21]:39193 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726916AbgHDPjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 11:40:01 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:51856 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727038AbgHDPjt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 4 Aug 2020 11:39:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1596555523;
-        bh=KVIdFu4snYkr3f0Fmfu+cjnV5+Wi4qwOh8QwNS/ed8c=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=ashTFwDO+vcqxgOr36RVtsWHsXJJF443+1fukpwEObzeCAweNjSbUAzI41i+gk0qb
-         Xzdu7DO1ExiCSJXwRHxM3Kk/IZ72sWE/dOXmfr4/5hAy150oJUrNAsU+2qHFqey/Wa
-         fA3yDurcLYLtr1c1Eds8OOuFVgv+I1hRnyDo4rWs=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [217.61.144.119] ([217.61.144.119]) by web-mail.gmx.net
- (3c-app-gmx-bap28.server.lan [172.19.172.98]) (via HTTP); Tue, 4 Aug 2020
- 17:38:43 +0200
-MIME-Version: 1.0
-Message-ID: <trinity-387bb173-6a50-4227-bf3c-90401dbf77ad-1596555523067@3c-app-gmx-bap28>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc:     Frank Wunderlich <linux@fw-web.de>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        chunhui dai <chunhui.dai@mediatek.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        CK Hu <ck.hu@mediatek.com>, Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Aw: Re: [PATCH v3 5/5] arm: dts: mt7623: add display subsystem
- related device nodes
-Content-Type: text/plain; charset=UTF-8
-Date:   Tue, 4 Aug 2020 17:38:43 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <CAAOTY_9aDqz3muo6ynqX9r0VjW7tD5vvZOiQyR8UZOTUct8oVA@mail.gmail.com>
-References: <20200804105849.70876-1-linux@fw-web.de>
- <20200804105849.70876-6-linux@fw-web.de>
- <CAAOTY_9aDqz3muo6ynqX9r0VjW7tD5vvZOiQyR8UZOTUct8oVA@mail.gmail.com>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:AvRFvL6vHuGUQ5uZliiJaNJd4wt1NtazV/Qat3cVkfRNTmtJqvMDQKW9h9oDuBiDwO8Mn
- oi3RObTfOlRtNEXAyVHW2NweYjhXsSP30UIi6LJCUn5BjQhsIpG3/cN1ZFAPV/FIubTZT6SplmHU
- s5QEmlh5MhkmKG49LRBwwoJgH12ukqlazYcHIs1zvj13WAoYvMCm/GSEsMWaZMCh94kxHAz2BVP8
- /h4qsIzRszFNz6hkqNQqwICaX/HiDvg+sv31O06HNk842CYF8Gi5tNkKzwy+IUPgZWohVHLA/fS+
- z4=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yNX/tQxieYA=:BIuFsOgMQlg98Dfeok5Br6
- osXUJXBjbntsuBNNb3ofJFWKIfT1DbO93O1YCbpAemnlcFLL4EWjOEc6XY3uxMjNnKdBLg+Ai
- 5+XRHi2BH1EsXm9bJdhzBbJaI/2uOKXeLBMnINw4SgEl3GYxYwIklN0zeOd9bI7s/DCboO/oy
- dptBuU7tmXyAas4ItU+c4e0ZHwDw3hlJCnXDPmkNhDG1Mi5v5JGA8eGDeNHMGQ6e+f6zCc0V1
- 9jVk1G4brldrTsPn0uqoZIUkOwYG6YTYhA2xuw0ISWq42I0Hf5ugmGfiAiclVsVzsyYYl5tK/
- coGstICAYKRtHKmm/0fGNfbAedvsRNGsunnwb7+pboVtRNKpTgpBNXXbmtcxiZsAGzyLxM3pn
- DuupVksCKzDEOonkh3JZF03WMEmO/NQoxNcR4FLM/cNW/BXMVQxJ57opmoy8DCU7rnqSNhfJO
- DcjRjfJs88rSjnXgdR7yLtKIyFImhD/Qq8Vc3Mibb9APwkGRc0E6O4GPDxSQfJBTtX1S6+jxn
- TJHXE4LqumuSQxRY6lu+wJE7Lpbq5zyUFwQBd85bpJIBLUlSsjd1pO9xhN0svmJTeHvUzp292
- tWA5/bYlK/3KMd+72fwdDRJT7krem+2YP6l4mm1pU+3NYjsRO2n+vH9b/PHLRDLCC+smVLUTM
- Z2qoZ/TB457pRswiA7ISCPGYB02/HNbPgtP9fEM+OlYzqcnxcmyDPS6ZNSt3bSzdkGBY=
-Content-Transfer-Encoding: quoted-printable
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 9ACC18EE19F;
+        Tue,  4 Aug 2020 08:39:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1596555587;
+        bh=ubA7UgAjztHk4GVyHjlFRj5OwpgCUgVMlAu9TLOG2Po=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=mCiJhDrQYtjSKfKCoc+zcXJw20GOjtM2YdZhPriO5Hpid2hhKtxkt8+OGJwn2AR3k
+         /FzvI51x/wnSixkOpn44wsemSD62wUTee772UZzM6yfGamb8lw4JDlhYCqImJp8k0g
+         hmxDKw2bpbC2GIaRZMiNMW3KnidEG+hyy2eB6oS4=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Bg9YfVLl3_vu; Tue,  4 Aug 2020 08:39:47 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 939768EE0E4;
+        Tue,  4 Aug 2020 08:39:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1596555586;
+        bh=ubA7UgAjztHk4GVyHjlFRj5OwpgCUgVMlAu9TLOG2Po=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=bmKnsvG0vWB3ZUCvyzNR7rWc4eZ9+ZsNbdyYPV9VoolPcD7XlGUzdRm1c07fHjqT1
+         qmu1PsFAW7gpFD+aA+3WSAkibprMkfYJ8qYBN+PYTXiY0qbHHzX8qwXsshnmHzmyD6
+         Q9O+aU2LAAvWaja75qo/xTXfUs/5DETrYxxrcOpI=
+Message-ID: <1596555579.10158.23.camel@HansenPartnership.com>
+Subject: Re: [PATCH 00/18] VFS: Filesystem information [ver #21]
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk
+Cc:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Jeff Layton <jlayton@kernel.org>, linux-ext4@vger.kernel.org,
+        Carlos Maiolino <cmaiolino@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-api@vger.kernel.org, torvalds@linux-foundation.org,
+        raven@themaw.net, mszeredi@redhat.com, christian@brauner.io,
+        jannh@google.com, kzak@redhat.com, jlayton@redhat.com,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 04 Aug 2020 08:39:39 -0700
+In-Reply-To: <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk>
+References: <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Gesendet: Dienstag, 04. August 2020 um 17:00 Uhr
-> Von: "Chun-Kuang Hu" <chunkuang.hu@kernel.org>
+On Mon, 2020-08-03 at 14:36 +0100, David Howells wrote:
+> Here's a set of patches that adds a system call, fsinfo(), that
+> allows information about the VFS, mount topology, superblock and
+> files to be retrieved.
+> 
+> The patchset is based on top of the notifications patchset and allows
+> event counters implemented in the latter to be retrieved to allow
+> overruns to be efficiently managed.
 
-> > +       display_components: dispsys@14000000 {
-> > +               compatible =3D "mediatek,mt7623-mmsys",
-> > +                            "mediatek,mt2701-mmsys";
->
-> In mediatek,mmsys.txt [3], this should be:
->
-> mmsys: syscon@14000000 {
->         compatible =3D "mediatek,mt7623-mmsys", "mediatek,mt2701-mmsys",=
- "syscon"
->
-> [3] https://www.kernel.org/doc/Documentation/devicetree/bindings/arm/med=
-iatek/mediatek%2Cmmsys.txt
+Could I repeat the question I asked about six months back that never
+got answered:
 
-oh i see i can drop this because there is already a mmsys-node with the co=
-mpatibles from documentation.
-only powerdomain is missing, but this seems not be needed (hdmi works with=
-out this "display_components" node)...
+https://lore.kernel.org/linux-api/1582316494.3376.45.camel@HansenPartnership.com/
 
-    mmsys: syscon@14000000 {
-        compatible =3D "mediatek,mt7623-mmsys",
-                 "mediatek,mt2701-mmsys",
-                 "syscon";
-        reg =3D <0 0x14000000 0 0x1000>;
-        #clock-cells =3D <1>;
-    };
+It sort of petered out into a long winding thread about why not use
+sysfs instead, which really doesn't look like a good idea to me.
 
-    display_components: dispsys@14000000 {
-        compatible =3D "mediatek,mt7623-mmsys",
-                 "mediatek,mt2701-mmsys";
-        reg =3D <0 0x14000000 0 0x1000>;
-        power-domains =3D <&scpsys MT2701_POWER_DOMAIN_DISP>;
-    };
+I'll repeat the information for those who want to quote it easily on
+reply without having to use a web interface:
+
+---
+Could I make a suggestion about how this should be done in a way that
+doesn't actually require the fsinfo syscall at all: it could just be
+done with fsconfig.  The idea is based on something I've wanted to do
+for configfd but couldn't because otherwise it wouldn't substitute for
+fsconfig, but Christian made me think it was actually essential to the
+ability of the seccomp and other verifier tools in the critique of
+configfd and I belive the same critique applies here.
+
+Instead of making fsconfig functionally configure ... as in you pass
+the attribute name, type and parameters down into the fs specific
+handler and the handler does a string match and then verifies the
+parameters and then acts on them, make it table configured, so what
+each fstype does is register a table of attributes which can be got and
+optionally set (with each attribute having a get and optional set
+function).  We'd have multiple tables per fstype, so the generic VFS
+can register a table of attributes it understands for every fstype
+(things like name, uuid and the like) and then each fs type would
+register a table of fs specific attributes following the same pattern. 
+The system would examine the fs specific table before the generic one,
+allowing overrides.  fsconfig would have the ability to both get and
+set attributes, permitting retrieval as well as setting (which is how I
+get rid of the fsinfo syscall), we'd have a global parameter, which
+would retrieve the entire table by name and type so the whole thing is
+introspectable because the upper layer knows a-priori all the
+attributes which can be set for a given fs type and what type they are
+(so we can make more of the parsing generic).  Any attribute which
+doesn't have a set routine would be read only and all attributes would
+have to have a get routine meaning everything is queryable.
+
+I think I know how to code this up in a way that would be fully
+transparent to the existing syscalls.
+---
+
+James
+
+
+
