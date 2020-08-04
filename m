@@ -2,168 +2,172 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E635C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D59C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 214272086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E877208A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:54:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="jumdjySC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MqpYAiWi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbgHDNxf (ORCPT
+        id S1728516AbgHDNyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 09:53:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51796 "EHLO
+        Tue, 4 Aug 2020 09:54:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728200AbgHDNxY (ORCPT
+        with ESMTP id S1728408AbgHDNyR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 09:53:24 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E7E8C06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 06:53:20 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 189so4617095pfd.9
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 06:53:20 -0700 (PDT)
+        Tue, 4 Aug 2020 09:54:17 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AABB6C061756
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 06:54:17 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id o2so1275076vkn.9
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 06:54:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=nig2/fJdYyt3b0Q5A/SU+0msFseeyybXCaAI4dDRdTg=;
-        b=jumdjySCSXZVJzizm9OUzoU9OXCS+Cfq57D4M9+nOmcjFx/ImlUYxx8bn1JnW+143W
-         B6tMiLN9WKIVbxAyKxyw81HdIULr1/GZN+VKaYR0TvHVg/4jcAFDj42GWXCA2Swm1Yfw
-         5v27iYJTlRgBYWmLp+/HqtnWpSjejedeiZ1fo=
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Gjh1CQhNcX/dKpwghpqe5PsnWMgHIT7SFzJs24h1UQM=;
+        b=MqpYAiWijmvg7loVHczpUKtn2+LJz7S2aV+N438n2Y65/hPVYPyLQR3Af4s3W2Ukz5
+         gLYAov6l7shRm+JJpOMpNLndV0/ZN4ObOy7kmt1MItL+zU2Z+xVsuMjvEyJd2qOdyWo0
+         FylGqdCVn+1NMjtq4E5q0zRZFh8pRB+uxba1HCcuNm9M02q8JFldhPwgCaiZOYCWBq17
+         hVfSRFG/p6V6p2i8FPTcnBgv1pNvvWSi1HNczyO13FgS09NjRa2VVtLpmtPOcrBkTVBA
+         UyvW53IFCMp5nvhUMLZR17cge+of0Ri0a1fQv4QKYnq9ADROB24CM2+wvliFp9MVw8OR
+         sPIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=nig2/fJdYyt3b0Q5A/SU+0msFseeyybXCaAI4dDRdTg=;
-        b=COWqMG8lPW1BYc1lY4tGCiJXx5/buZF2QFqdzSAaRaIHza6cPOEk3EJu4+KlXwG7aQ
-         Z53Qqz/CCL+2K8U8+zYtRvSjpztevPmOtitsXQe4j5azmZazEsT9bQ+YutV+ZiMIDbiB
-         ipLLNHZZQxYdlc+RdmGDVsJLJSM7dpgtZjFhgr41WaY9FmW4DZUR4DZ/+IQzot+UpGhc
-         rTYYi8/x0r+VobtH6l1pzsuYJZXPoUvaw7ShUCQbG94bDgai0lH2F2CYr9+imBdp+aek
-         O63lzQ1z2ReeeY7PmFYsZM1XIKIr2vRmU5HpyAoexmekQZn8Vt+xxCeuzwJtYV83Ie7I
-         vX5w==
-X-Gm-Message-State: AOAM533AtJeBDD0uNE+7rHX9BHL0H0nyBvvtHyUAX8+GcTlzz9nlmU32
-        IwuwdrU/Ftw+nX/BJ1n6AQ2L0g==
-X-Google-Smtp-Source: ABdhPJzULAmNSkaX32weXl1O34te5NSuX9EJVhPlxbPjsXptEZqiJedi5i9MSO/avpj2cLsHaUiFtw==
-X-Received: by 2002:a63:3587:: with SMTP id c129mr20025647pga.322.1596549199803;
-        Tue, 04 Aug 2020 06:53:19 -0700 (PDT)
-Received: from localhost (2001-44b8-1113-6700-0414-2e33-60ed-75ec.static.ipv6.internode.on.net. [2001:44b8:1113:6700:414:2e33:60ed:75ec])
-        by smtp.gmail.com with ESMTPSA id g8sm9981404pfo.132.2020.08.04.06.53.18
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Gjh1CQhNcX/dKpwghpqe5PsnWMgHIT7SFzJs24h1UQM=;
+        b=pPvj9KBUgG0buFW/cgCF5iRKh+/VVBlIA0ObwWkIQ0rUOR1HDlLftLjm1fbQo8wnrF
+         qApw1/IuSOj7tH33aQnU+UE8uxVWADoeKIdqIBgPxdWkvvUzVgEa1xJYeTn7RkSnDckd
+         gr4QZIgubVZ1zzPH+apaNxFT339exYug5dmGHWDiUeIRlNjCmPHp7tg+ztiywZvHTEtZ
+         vHUsY3sqPmOM/wA+WKwzs0opeW3auzhGMA4Agc3Re8OBSqcEipE+txV6Ntrbwak1wmZU
+         X6YH71X/WHVtSRu7BH34yln4tP/HbqAtjgLffBmBCqfhPk/fcKkL/uSKkdXJt0fhRzG4
+         zrcQ==
+X-Gm-Message-State: AOAM532Rvzv7PLrGJ12JhVTYtVBb5+0DSVF2L8xTwkaSJff84Vd3fbzc
+        ziGeW1QU6R9XdYBuXoXy4nrO5A==
+X-Google-Smtp-Source: ABdhPJywEqRIB+C/laAdsWyb753dUVCT2rmRqL5RBMcCSf76aIKKVtfXUnjQ/uxnkDArh3Jzj6HeBQ==
+X-Received: by 2002:a1f:bd02:: with SMTP id n2mr14859615vkf.1.1596549256680;
+        Tue, 04 Aug 2020 06:54:16 -0700 (PDT)
+Received: from google.com (182.71.196.35.bc.googleusercontent.com. [35.196.71.182])
+        by smtp.gmail.com with ESMTPSA id n62sm3130893vke.12.2020.08.04.06.54.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 06:53:19 -0700 (PDT)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Mike Rapoport <rppt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
+        Tue, 04 Aug 2020 06:54:15 -0700 (PDT)
+Date:   Tue, 4 Aug 2020 13:54:12 +0000
+From:   Kalesh Singh <kaleshsingh@google.com>
+To:     Joel Fernandes <joelaf@google.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Simek <monstr@monstr.eu>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        clang-built-linux@googlegroups.com,
-        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
-        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
-        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
-Subject: Re: [PATCH v2 01/17] KVM: PPC: Book3S HV: simplify kvm_cma_reserve()
-In-Reply-To: <20200802163601.8189-2-rppt@kernel.org>
-References: <20200802163601.8189-1-rppt@kernel.org> <20200802163601.8189-2-rppt@kernel.org>
-Date:   Tue, 04 Aug 2020 23:53:15 +1000
-Message-ID: <87tuxio6us.fsf@dja-thinkpad.axtens.net>
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-fsdevel@vger.kernel.org,
+        Suren Baghdasaryan <surenb@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Ioannis Ilkos <ilkos@google.com>,
+        John Stultz <john.stultz@linaro.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>
+Subject: Re: [PATCH 1/2] fs: Add fd_install file operation
+Message-ID: <20200804135412.GA934259@google.com>
+References: <20200803144719.3184138-1-kaleshsingh@google.com>
+ <20200803144719.3184138-2-kaleshsingh@google.com>
+ <CAJWu+orzhpO5hPfUWd0EJp-ViWMifeQ_Ng+R4fHf7xabL+Bggw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJWu+orzhpO5hPfUWd0EJp-ViWMifeQ_Ng+R4fHf7xabL+Bggw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
+On Mon, Aug 03, 2020 at 08:30:59PM -0400, Joel Fernandes wrote:
+> On Mon, Aug 3, 2020 at 10:47 AM 'Kalesh Singh' via kernel-team
+> <kernel-team@android.com> wrote:
+> >
+> > Provides a per process hook for the acquisition of file descriptors,
+> > despite the method used to obtain the descriptor.
+> >
+> 
+> Hi,
+> So apart from all of the comments received, I think it is hard to
+> understand what the problem is, what the front-end looks like etc.
+> Your commit message is 1 line only.
+> 
+> I do remember some of the challenges discussed before, but it would
+> describe the problem in the commit message in detail and then discuss
+> why this solution is fit.  Please read submitting-patches.rst
+> especially "2) Describe your changes".
+> 
+> thanks,
+> 
+>  - Joel
 
->
-> The memory size calculation in kvm_cma_reserve() traverses memblock.memory
-> rather than simply call memblock_phys_mem_size(). The comment in that
-> function suggests that at some point there should have been call to
-> memblock_analyze() before memblock_phys_mem_size() could be used.
-> As of now, there is no memblock_analyze() at all and
-> memblock_phys_mem_size() can be used as soon as cold-plug memory is
-> registerd with memblock.
->
-> Replace loop over memblock.memory with a call to memblock_phys_mem_size().
->
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->  arch/powerpc/kvm/book3s_hv_builtin.c | 11 ++---------
->  1 file changed, 2 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/powerpc/kvm/book3s_hv_builtin.c b/arch/powerpc/kvm/book3s_hv_builtin.c
-> index 7cd3cf3d366b..56ab0d28de2a 100644
-> --- a/arch/powerpc/kvm/book3s_hv_builtin.c
-> +++ b/arch/powerpc/kvm/book3s_hv_builtin.c
-> @@ -95,22 +95,15 @@ EXPORT_SYMBOL_GPL(kvm_free_hpt_cma);
->  void __init kvm_cma_reserve(void)
->  {
->  	unsigned long align_size;
-> -	struct memblock_region *reg;
-> -	phys_addr_t selected_size = 0;
-> +	phys_addr_t selected_size;
->  
->  	/*
->  	 * We need CMA reservation only when we are in HV mode
->  	 */
->  	if (!cpu_has_feature(CPU_FTR_HVMODE))
->  		return;
-> -	/*
-> -	 * We cannot use memblock_phys_mem_size() here, because
-> -	 * memblock_analyze() has not been called yet.
-> -	 */
-> -	for_each_memblock(memory, reg)
-> -		selected_size += memblock_region_memory_end_pfn(reg) -
-> -				 memblock_region_memory_base_pfn(reg);
->  
-> +	selected_size = PHYS_PFN(memblock_phys_mem_size());
->  	selected_size = (selected_size * kvm_cma_resv_ratio / 100) << PAGE_SHIFT;
-
-I think this is correct, but PHYS_PFN does x >> PAGE_SHIFT and then the
-next line does x << PAGE_SHIFT, so I think we could combine those two
-lines as:
-
-selected_size = PAGE_ALIGN(memblock_phys_mem_size() * kvm_cma_resv_ratio / 100);
-
-(I think that might technically change it from aligning down to aligning
-up but I don't think 1 page matters here.)
-
-Kind regards,
-Daniel
-
-
->  	if (selected_size) {
->  		pr_debug("%s: reserving %ld MiB for global area\n", __func__,
-> -- 
-> 2.26.2
+Thanks for the advice Joel :)
+> 
+> 
+> > Signed-off-by: Kalesh Singh <kaleshsingh@google.com>
+> > ---
+> >  Documentation/filesystems/vfs.rst | 5 +++++
+> >  fs/file.c                         | 3 +++
+> >  include/linux/fs.h                | 1 +
+> >  3 files changed, 9 insertions(+)
+> >
+> > diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
+> > index ed17771c212b..95b30142c8d9 100644
+> > --- a/Documentation/filesystems/vfs.rst
+> > +++ b/Documentation/filesystems/vfs.rst
+> > @@ -1123,6 +1123,11 @@ otherwise noted.
+> >  ``fadvise``
+> >         possibly called by the fadvise64() system call.
+> >
+> > +``fd_install``
+> > +       called by the VFS when a file descriptor is installed in the
+> > +       process's file descriptor table, regardless how the file descriptor
+> > +       was acquired -- be it via the open syscall, received over IPC, etc.
+> > +
+> >  Note that the file operations are implemented by the specific
+> >  filesystem in which the inode resides.  When opening a device node
+> >  (character or block special) most filesystems will call special
+> > diff --git a/fs/file.c b/fs/file.c
+> > index abb8b7081d7a..f5db8622b851 100644
+> > --- a/fs/file.c
+> > +++ b/fs/file.c
+> > @@ -616,6 +616,9 @@ void __fd_install(struct files_struct *files, unsigned int fd,
+> >  void fd_install(unsigned int fd, struct file *file)
+> >  {
+> >         __fd_install(current->files, fd, file);
+> > +
+> > +       if (file->f_op->fd_install)
+> > +               file->f_op->fd_install(fd, file);
+> >  }
+> >
+> >  EXPORT_SYMBOL(fd_install);
+> > diff --git a/include/linux/fs.h b/include/linux/fs.h
+> > index f5abba86107d..b976fbe8c902 100644
+> > --- a/include/linux/fs.h
+> > +++ b/include/linux/fs.h
+> > @@ -1864,6 +1864,7 @@ struct file_operations {
+> >                                    struct file *file_out, loff_t pos_out,
+> >                                    loff_t len, unsigned int remap_flags);
+> >         int (*fadvise)(struct file *, loff_t, loff_t, int);
+> > +       void (*fd_install)(int, struct file *);
+> >  } __randomize_layout;
+> >
+> >  struct inode_operations {
+> > --
+> > 2.28.0.163.g6104cc2f0b6-goog
+> >
+> > --
+> > To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+> >
