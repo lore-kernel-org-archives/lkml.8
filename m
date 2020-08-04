@@ -2,98 +2,135 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C58C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 18:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF03C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 18:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5195D20792
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 18:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43A362086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 18:20:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+/m0VdD"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K8i9KulQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgHDSRz (ORCPT
+        id S1726393AbgHDSUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 14:17:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbgHDSRy (ORCPT
+        Tue, 4 Aug 2020 14:20:45 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28303 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725826AbgHDSUn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 14:17:54 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D92DC06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 11:17:54 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id w17so23609925ply.11
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 11:17:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=a4tfCnzr4+3Vx6rPZIuq6XqGtDYKgl1/4YSkrP73Ea4=;
-        b=Z+/m0VdDjhfO3sTKjHjfXRkxKWgUFS7YMUFyEubDOG82kpiOKCuzMqtEadaKhvrr4f
-         EuC3pjHVo6WqhHwjS0Ijcwk5s+SQfUN75TB5n45iMclgUHoZ11rmuaPn5wwYjlHvUGcX
-         lM73YXE+VN4fdT0MbELvujQBHlgiIostnMSRgS9Nh437nTC59TJ6JqhQIGXa00qS6t5r
-         Np+G+Wf7G95S055gNuoZjOAl6kqEZOZa1KPNYzBpde7DZrFBx0RD4GhZc6FisVRa9Xum
-         3VCvCa0DclVbD/2CEGfkMQc7gg1z+oO7S1KI8JaxhezsErWYn8nJOe3NmFasCd2YrV+j
-         5DuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=a4tfCnzr4+3Vx6rPZIuq6XqGtDYKgl1/4YSkrP73Ea4=;
-        b=U8KpgA8uGRcuBOG6Iw6UKth95wxzsw/obZOdTGcDDLVYIfzuoYd4QwgQyV1J5sE2gr
-         YTN8C88eM5E6E2c58wT2tL652Yvh3C8gXgwS0C3kBmQb8j/lCieFoFEaieVKWg4gJ9mW
-         nYkK4X/0FMAoSeALo2eX96Fl2s1ml0+Jdnky4K2+7Gsq+TbghhucKhtFp4mVgxh5PiVV
-         kSQD5XKfhtB0+SBG7GdPGmb4FXfxWqWuk25jUzXsXnzNq5Z3shKK7D8I2ToYtFcFykrF
-         AUGifJ2uuKxECeAgtwhFgFJmN3otTjD1QuBmsm004xdBArlmAuZxrcy5HxTFRrixqeZ0
-         WYFw==
-X-Gm-Message-State: AOAM530sdCOrzLZpPyRyNTvX5RyMg4gIcJ9lWguDEThejQYFoRfWaPWw
-        sJKV0cBQ9guoX0Ntgc5w8jc=
-X-Google-Smtp-Source: ABdhPJyFGGZ0oNMt7juL0+U0n+sUKltwVR33pI2Fkp6Gv/xOdoV0hiVje9tkeWtWo6h0FS2alHZWZQ==
-X-Received: by 2002:a17:902:ee02:: with SMTP id z2mr20278515plb.291.1596565073765;
-        Tue, 04 Aug 2020 11:17:53 -0700 (PDT)
-Received: from aditya ([139.167.61.143])
-        by smtp.gmail.com with ESMTPSA id o2sm23729722pfh.160.2020.08.04.11.17.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 11:17:53 -0700 (PDT)
-Date:   Tue, 4 Aug 2020 18:17:47 +0530
-From:   Aditya Bansal <adbansal99@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: wfx: fixed misspelled word in comment
-Message-ID: <20200804124627.GA3348@aditya>
-References: <20200804145816.GA3823@aditya>
+        Tue, 4 Aug 2020 14:20:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596565242;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=PzrZsRQ4J1oSBPN640V0xgV/2mOlKDiGJWkKLAGuzzE=;
+        b=K8i9KulQkBMR13BUMmXQfyz16z/a9/WSFkgFJAa3mRHkElsKWnhGSc4twSv4izxCEEmy7x
+        WfL5lrty33Ispx3Fw7xxAC5abPoDvRJ6xTMXqYh0PhtHgUhvK8Hzvcr9/4NnD9Q60KvHlN
+        xJ2aRQutc6syXJ0l0ymR8u7xB2esRak=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-7-0rbPJK2zN_CQYw_9AQMoNA-1; Tue, 04 Aug 2020 14:20:40 -0400
+X-MC-Unique: 0rbPJK2zN_CQYw_9AQMoNA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 30903100AA21;
+        Tue,  4 Aug 2020 18:20:39 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DE2A01001B2B;
+        Tue,  4 Aug 2020 18:20:38 +0000 (UTC)
+Date:   Tue, 4 Aug 2020 14:20:38 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     John Donnelly <john.p.donnelly@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Re: [(resend) PATCH v3: {linux-4.14.y} ] dm cache: submit
+ writethrough writes in parallel to origin and cache
+Message-ID: <20200804182037.GA15453@redhat.com>
+References: <8CFF8DA9-C105-461C-8F5A-DA2BF448A135@oracle.com>
+ <20200804124735.GA219143@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200804145816.GA3823@aditya>
+In-Reply-To: <20200804124735.GA219143@kroah.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Bansal <adbansal99@gmail.com>
+On Tue, Aug 04 2020 at  8:47am -0400,
+Greg KH <gregkh@linuxfoundation.org> wrote:
 
-Subject: [PATCH v2] fixed typo in driver/staging/wfx/hif_tx.c file
+> On Tue, Aug 04, 2020 at 07:33:05AM -0500, John Donnelly wrote:
+> > From: Mike Snitzer <snitzer@redhat.com>
+> > 
+> > Discontinue issuing writethrough write IO in series to the origin and
+> > then cache.
+> > 
+> > Use bio_clone_fast() to create a new origin clone bio that will be
+> > mapped to the origin device and then bio_chain() it to the bio that gets
+> > remapped to the cache device.  The origin clone bio does _not_ have a
+> > copy of the per_bio_data -- as such check_if_tick_bio_needed() will not
+> > be called.
+> > 
+> > The cache bio (parent bio) will not complete until the origin bio has
+> > completed -- this fulfills bio_clone_fast()'s requirements as well as
+> > the requirement to not complete the original IO until the write IO has
+> > completed to both the origin and cache device.
+> > 
+> > Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+> > 
+> > (cherry picked from commit 2df3bae9a6543e90042291707b8db0cbfbae9ee9)
+> > 
+> > Fixes: 4ec34f2196d125ff781170ddc6c3058c08ec5e73 (dm bio record:
+> > save/restore bi_end_io and bi_integrity )
+> > 
+> > 4ec34f21 introduced a mkfs.ext4 hang on a LVM device that has been
+> > modified with lvconvert --cachemode=writethrough.
+> > 
+> > CC:stable@vger.kernel.org for 4.14.y
+> > 
+> > Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
+> > Reviewed-by: Somasundaram Krishnasamy <somasundaram.krishnasamy@oracle.com>
+> > 
+> > conflicts:
+> > 	drivers/md/dm-cache-target.c. -  Corrected usage of
+> > 	writethrough_mode(&cache->feature) that was caught by
+> > 	compiler, and removed unused static functions : writethrough_endio(),
+> > 	defer_writethrough_bio(), wake_deferred_writethrough_worker()
+> > 	that generated warnings.
+> 
+> What is this "conflicts nonsense"?  You don't see that in any other
+> kernel patch changelog, do you?
+> 
+> > ---
+> > drivers/md/dm-cache-target.c | 92 ++++++++++++++++++--------------------------
+> > 1 file changed, 37 insertions(+), 55 deletions(-)
+> 
+> Please fix your email client up, it's totally broken and this does not
+> work at all and is getting frustrating from my side here.
+> 
+> Try sending emails to yourself and see if you can apply the patches, as
+> the one you sent here does not work, again:
 
-Correct the spelling of word function and careful
+John's inability to submit a patch that can apply aside: I do not like
+how this patch header is constructed (yet attributed "From" me).  It is
+devoid of detail as it relates to stable@.
 
-Signed-off-by: Aditya Bansal <adbansal99@gmail.com>
----
+Greg, please don't apply the v4 of this patch either.  I'll craft a
+proper stable@ patch that explains the reason for change and why we're
+left having to resolve conflicts in stable@.
 
-diff --git a/drivers/staging/wfx/hif_tx.c b/drivers/staging/wfx/hif_tx.c
-index 5110f9b93762..fc12f9dcefce 100644
---- a/drivers/staging/wfx/hif_tx.c
-+++ b/drivers/staging/wfx/hif_tx.c
-@@ -125,7 +125,7 @@ int wfx_cmd_send(struct wfx_dev *wdev, struct hif_msg *request,
- 
- // This function is special. After HIF_REQ_ID_SHUT_DOWN, chip won't reply to any
- // request anymore. We need to slightly hack struct wfx_hif_cmd for that job. Be
--// carefull to only call this funcion during device unregister.
-+// careful to only call this function during device unregister.
- int hif_shutdown(struct wfx_dev *wdev)
- {
-        int ret;
+But first I need to focus on sending DM changes to Linus for v5.9 merge.
+
+Thanks,
+Mike
+
