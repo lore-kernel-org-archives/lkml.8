@@ -2,548 +2,173 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 934E6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB68C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 663512076E
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07E752076E
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 19:31:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b22tYC6z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgHDTbk (ORCPT
+        id S1728004AbgHDTbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 15:31:40 -0400
-Received: from pbmsgap02.intersil.com ([192.157.179.202]:42844 "EHLO
-        pbmsgap02.intersil.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbgHDTbj (ORCPT
+        Tue, 4 Aug 2020 15:31:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47442 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726027AbgHDTbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 15:31:39 -0400
-X-Greylist: delayed 1140 seconds by postgrey-1.27 at vger.kernel.org; Tue, 04 Aug 2020 15:31:38 EDT
-Received: from pps.filterd (pbmsgap02.intersil.com [127.0.0.1])
-        by pbmsgap02.intersil.com (8.16.0.27/8.16.0.27) with SMTP id 074JCRaZ005063;
-        Tue, 4 Aug 2020 15:12:36 -0400
-Received: from pbmxdp01.intersil.corp (pbmxdp01.pb.intersil.com [132.158.200.222])
-        by pbmsgap02.intersil.com with ESMTP id 32n2jcsbjc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 04 Aug 2020 15:12:36 -0400
-Received: from pbmxdp03.intersil.corp (132.158.200.224) by
- pbmxdp01.intersil.corp (132.158.200.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.1979.3; Tue, 4 Aug 2020 15:12:34 -0400
-Received: from localhost (132.158.202.109) by pbmxdp03.intersil.corp
- (132.158.200.224) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Tue, 4 Aug 2020 15:12:34 -0400
-From:   <min.li.xe@renesas.com>
-To:     <richardcochran@gmail.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Min Li <min.li.xe@renesas.com>
-Subject: [PATCH net] ptp: ptp_idt82p33: update to support adjphase
-Date:   Tue, 4 Aug 2020 15:12:14 -0400
-Message-ID: <1596568334-17070-1-git-send-email-min.li.xe@renesas.com>
-X-Mailer: git-send-email 2.7.4
-X-TM-AS-MML: disable
+        Tue, 4 Aug 2020 15:31:47 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B68B7C06174A;
+        Tue,  4 Aug 2020 12:31:46 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id q4so27510778edv.13;
+        Tue, 04 Aug 2020 12:31:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lPQhi2EGIWphqgXXS6/LgcuZPutzCILAsqJJu6qo/8w=;
+        b=b22tYC6z9W/pbIRO7pJWfs9ARLlciURv3Ksmck7YruC7f5u3NH1DKq5lVFgz/t3qqV
+         W/JlYe5Bl2+t9oCR8Sm1qfSKQzMujgg9Wg2C7ZkGJaLqh6A5jLqskKrWqViCYnmNo2L+
+         nv8/HgDn0+cqpExXpEniNbSJ6qBDHGZm0HQQZQT3fdWO9PhLxX8N/ASz+EutLp3lgAfl
+         ZaJExNIczPugzHIw3Mr9HKcuQzQduUi6thP4zEXv05vIbEYRCHykgfBC2e9kebRjQJfh
+         UtetO4nSPpY1RhZbbDpNiLPTTrmkAqr6t4wGjJV1NHzPoWjmNP1koKNIZD7ta2+c2X/X
+         ssQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lPQhi2EGIWphqgXXS6/LgcuZPutzCILAsqJJu6qo/8w=;
+        b=G6wZe8UNHVApQ5lwizhuL/8Bws9Zniz3zUiprdS8fNhJha/PE0+Eh+vIl6WqaklvAt
+         P8Ec6t9/Z18SCRsfDNmqgvK+ErwT9NV9JYGMBNkEsuVJ2TueAF5Jd4fcGpzJGDvSBz1U
+         7YY3ahax4t/Nfz6d95nrr7ak1YF1v+8mUZW2kmC8yQ2iS/eMRhkBJj3efJr36tktIIA+
+         NC/fFzfmtNdgkWIMxH9OcYQ/1cOzCnpv3A6colUH7aWlAdTdplYkWPkR+4KJf4YB5G/+
+         j6y0E6hBrgvAbOJaVI2gYrEq8CINFm2BYR9jGc3SCfBlyBJNXMwyx+eAYU8T4XzzELEc
+         WoNA==
+X-Gm-Message-State: AOAM533c/IBhMYXapF6XCJdcCXQvGKxKUpv45up+V4UkMC3v8h11vuZR
+        H1K0zo0Go5849YML+AKE6cz1cT1zSEVsCuY6Cyc=
+X-Google-Smtp-Source: ABdhPJyWzQIa1aqdPHfKxqQQpi7/uDtf+blsHcQxkD1HTdQTfhXqWmSKU5IaGYgFNsjgBZf8SpKdcLXhi7nHsJkqAV4=
+X-Received: by 2002:a50:fd16:: with SMTP id i22mr21981071eds.281.1596569505319;
+ Tue, 04 Aug 2020 12:31:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-04_04:2020-08-03,2020-08-04 signatures=0
-X-Proofpoint-Spam-Details: rule=junk_notspam policy=junk score=0 suspectscore=4 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-2006250000 definitions=main-2008040136
-X-Proofpoint-Spam-Reason: mlx
+References: <1596540744-6902-1-git-send-email-kalyan_t@codeaurora.org>
+In-Reply-To: <1596540744-6902-1-git-send-email-kalyan_t@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 4 Aug 2020 12:32:29 -0700
+Message-ID: <CAF6AEGtpPU+ALcpQMuy-MpLF_ZwjD+k=aN7gkoBFjJPq1++9qQ@mail.gmail.com>
+Subject: Re: [v1] drm/msm/dpu: update reservations in commit path
+To:     Kalyan Thota <kalyan_t@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Krishna Manikandan <mkrishn@codeaurora.org>,
+        Raviteja Tamatam <travitej@codeaurora.org>,
+        nganji@codeaurora.org, Stephen Boyd <swboyd@chromium.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Drew Davenport <ddavenport@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Min Li <min.li.xe@renesas.com>
+On Tue, Aug 4, 2020 at 4:32 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
+>
+> DPU resources reserved in the atomic_check path gets unwinded
+> during modeset operation before commit happens in a non seamless
+> transition.
+>
+> Update the reservations in the commit path to avoid resource
+> failures. Secondly have dummy reservations in atomic_check path
+> so that we can gracefully fail the composition if resources are
+> not available.
+>
+> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+> ---
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 15 +++++++++++----
+>  1 file changed, 11 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> index 63976dc..c6b8254 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+> @@ -565,7 +565,7 @@ static int dpu_encoder_virt_atomic_check(
+>         const struct drm_display_mode *mode;
+>         struct drm_display_mode *adj_mode;
+>         struct msm_display_topology topology;
+> -       struct dpu_global_state *global_state;
+> +       struct dpu_global_state tmp_resv_state;
+>         int i = 0;
+>         int ret = 0;
+>
+> @@ -582,7 +582,7 @@ static int dpu_encoder_virt_atomic_check(
+>         dpu_kms = to_dpu_kms(priv->kms);
+>         mode = &crtc_state->mode;
+>         adj_mode = &crtc_state->adjusted_mode;
+> -       global_state = dpu_kms_get_existing_global_state(dpu_kms);
+> +       memset(&tmp_resv_state, 0, sizeof(tmp_resv_state));
 
-This update includes adjphase support, more debug logs, firmware name
-parameter, correct PTP_CLK_REQ_PEROUT support and use do_aux_work to
-do delay work.
+I think what you want to do is dpu_kms_get_global_state().. that will
+clone/duplicate the existing global state (or return the already
+duplicated global state if it is called multiple times).
 
-Signed-off-by: Min Li <min.li.xe@renesas.com>
----
- drivers/ptp/ptp_idt82p33.c | 233 +++++++++++++++++++++++++++++++++++++--------
- drivers/ptp/ptp_idt82p33.h |   4 +-
- 2 files changed, 193 insertions(+), 44 deletions(-)
+It is safe to modify this global state in the atomic_check() path.. in
+fact that is the intention.  For a TEST_ONLY atomic commit, or if any
+of the atomic_check()'s fail, this new duplicated global state is
+discarded.  If all the checks succeed and the atomic update is
+committed to hw, this new global state replaces the existing global
+state.
 
-diff --git a/drivers/ptp/ptp_idt82p33.c b/drivers/ptp/ptp_idt82p33.c
-index 179f6c4..b5bf2f0 100644
---- a/drivers/ptp/ptp_idt82p33.c
-+++ b/drivers/ptp/ptp_idt82p33.c
-@@ -33,6 +33,9 @@ module_param(phase_snap_threshold, uint, 0);
- MODULE_PARM_DESC(phase_snap_threshold,
- "threshold (150000ns by default) below which adjtime would ignore");
- 
-+static char *firmware;
-+module_param(firmware, charp, 0);
-+
- static void idt82p33_byte_array_to_timespec(struct timespec64 *ts,
- 					    u8 buf[TOD_BYTE_COUNT])
- {
-@@ -86,6 +89,7 @@ static int idt82p33_xfer(struct idt82p33 *idt82p33,
- 	struct i2c_client *client = idt82p33->client;
- 	struct i2c_msg msg[2];
- 	int cnt;
-+	char *fmt = "i2c_transfer failed at %d in %s for %s, at addr: %04X!\n";
- 
- 	msg[0].addr = client->addr;
- 	msg[0].flags = 0;
-@@ -99,7 +103,12 @@ static int idt82p33_xfer(struct idt82p33 *idt82p33,
- 
- 	cnt = i2c_transfer(client->adapter, msg, 2);
- 	if (cnt < 0) {
--		dev_err(&client->dev, "i2c_transfer returned %d\n", cnt);
-+		dev_err(&client->dev,
-+			fmt,
-+			__LINE__,
-+			__func__,
-+			write ? "write" : "read",
-+			(u8) regaddr);
- 		return cnt;
- 	} else if (cnt != 2) {
- 		dev_err(&client->dev,
-@@ -448,8 +457,13 @@ static int idt82p33_measure_tod_write_overhead(struct idt82p33_channel *channel)
- 
- 	err = idt82p33_measure_settime_gettime_gap_overhead(channel, &gap_ns);
- 
--	if (err)
-+	if (err) {
-+		dev_err(&idt82p33->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
- 		return err;
-+	}
- 
- 	err = idt82p33_measure_one_byte_write_overhead(channel,
- 						       &one_byte_write_ns);
-@@ -520,8 +534,8 @@ static int idt82p33_sync_tod(struct idt82p33_channel *channel, bool enable)
- 
- 	if (enable == channel->sync_tod_on) {
- 		if (enable && sync_tod_timeout) {
--			mod_delayed_work(system_wq, &channel->sync_tod_work,
--					 sync_tod_timeout * HZ);
-+			ptp_schedule_worker(channel->ptp_clock,
-+					    sync_tod_timeout * HZ);
- 		}
- 		return 0;
- 	}
-@@ -544,53 +558,69 @@ static int idt82p33_sync_tod(struct idt82p33_channel *channel, bool enable)
- 	channel->sync_tod_on = enable;
- 
- 	if (enable && sync_tod_timeout) {
--		mod_delayed_work(system_wq, &channel->sync_tod_work,
--				 sync_tod_timeout * HZ);
-+		ptp_schedule_worker(channel->ptp_clock,
-+				    sync_tod_timeout * HZ);
- 	}
- 
- 	return 0;
- }
- 
--static void idt82p33_sync_tod_work_handler(struct work_struct *work)
-+static long idt82p33_sync_tod_work_handler(struct ptp_clock_info *ptp)
- {
- 	struct idt82p33_channel *channel =
--		container_of(work, struct idt82p33_channel, sync_tod_work.work);
-+			container_of(ptp, struct idt82p33_channel, caps);
- 	struct idt82p33 *idt82p33 = channel->idt82p33;
-+	int ret;
- 
- 	mutex_lock(&idt82p33->reg_lock);
- 
--	(void)idt82p33_sync_tod(channel, false);
-+	ret = idt82p33_sync_tod(channel, false);
- 
- 	mutex_unlock(&idt82p33->reg_lock);
-+
-+	return ret;
- }
- 
--static int idt82p33_pps_enable(struct idt82p33_channel *channel, bool enable)
-+static int idt82p33_output_enable(struct idt82p33_channel *channel,
-+				  bool enable, unsigned int outn)
- {
- 	struct idt82p33 *idt82p33 = channel->idt82p33;
--	u8 mask, outn, val;
- 	int err;
-+	u8 val;
-+
-+	err = idt82p33_read(idt82p33, OUT_MUX_CNFG(outn), &val, sizeof(val));
-+
-+	if (err)
-+		return err;
-+
-+	if (enable)
-+		val &= ~SQUELCH_ENABLE;
-+	else
-+		val |= SQUELCH_ENABLE;
-+
-+	return idt82p33_write(idt82p33, OUT_MUX_CNFG(outn), &val, sizeof(val));
-+}
-+
-+static int idt82p33_output_mask_enable(struct idt82p33_channel *channel,
-+				       bool enable)
-+{
-+	u16 mask;
-+	int err;
-+	u8 outn;
- 
- 	mask = channel->output_mask;
- 	outn = 0;
- 
- 	while (mask) {
--		if (mask & 0x1) {
--			err = idt82p33_read(idt82p33, OUT_MUX_CNFG(outn),
--					    &val, sizeof(val));
--			if (err)
--				return err;
- 
--			if (enable)
--				val &= ~SQUELCH_ENABLE;
--			else
--				val |= SQUELCH_ENABLE;
-+		if (mask & 0x1) {
- 
--			err = idt82p33_write(idt82p33, OUT_MUX_CNFG(outn),
--					     &val, sizeof(val));
-+			err = idt82p33_output_enable(channel, enable, outn);
- 
- 			if (err)
- 				return err;
- 		}
-+
- 		mask >>= 0x1;
- 		outn++;
- 	}
-@@ -598,6 +628,20 @@ static int idt82p33_pps_enable(struct idt82p33_channel *channel, bool enable)
- 	return 0;
- }
- 
-+static int idt82p33_perout_enable(struct idt82p33_channel *channel,
-+				  bool enable,
-+				  struct ptp_perout_request *perout)
-+{
-+	unsigned int flags = perout->flags;
-+
-+	/* Enable/disable output based on output_mask */
-+	if (flags == PEROUT_ENABLE_OUTPUT_MASK)
-+		return idt82p33_output_mask_enable(channel, enable);
-+
-+	/* Enable/disable individual output instead */
-+	return idt82p33_output_enable(channel, enable, perout->index);
-+}
-+
- static int idt82p33_enable_tod(struct idt82p33_channel *channel)
- {
- 	struct idt82p33 *idt82p33 = channel->idt82p33;
-@@ -611,15 +655,23 @@ static int idt82p33_enable_tod(struct idt82p33_channel *channel)
- 	if (err)
- 		return err;
- 
--	err = idt82p33_pps_enable(channel, false);
--
--	if (err)
-+	if (err) {
-+		dev_err(&idt82p33->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
- 		return err;
-+	}
- 
- 	err = idt82p33_measure_tod_write_overhead(channel);
- 
--	if (err)
-+	if (err) {
-+		dev_err(&idt82p33->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
- 		return err;
-+	}
- 
- 	err = _idt82p33_settime(channel, &ts);
- 
-@@ -638,10 +690,8 @@ static void idt82p33_ptp_clock_unregister_all(struct idt82p33 *idt82p33)
- 
- 		channel = &idt82p33->channel[i];
- 
--		if (channel->ptp_clock) {
-+		if (channel->ptp_clock)
- 			ptp_clock_unregister(channel->ptp_clock);
--			cancel_delayed_work_sync(&channel->sync_tod_work);
--		}
- 	}
- }
- 
-@@ -659,14 +709,16 @@ static int idt82p33_enable(struct ptp_clock_info *ptp,
- 
- 	if (rq->type == PTP_CLK_REQ_PEROUT) {
- 		if (!on)
--			err = idt82p33_pps_enable(channel, false);
-+			err = idt82p33_perout_enable(channel, false,
-+						     &rq->perout);
- 
- 		/* Only accept a 1-PPS aligned to the second. */
- 		else if (rq->perout.start.nsec || rq->perout.period.sec != 1 ||
- 		    rq->perout.period.nsec) {
- 			err = -ERANGE;
- 		} else
--			err = idt82p33_pps_enable(channel, true);
-+			err = idt82p33_perout_enable(channel, true,
-+						     &rq->perout);
- 	}
- 
- 	mutex_unlock(&idt82p33->reg_lock);
-@@ -674,6 +726,51 @@ static int idt82p33_enable(struct ptp_clock_info *ptp,
- 	return err;
- }
- 
-+static int idt82p33_adjwritephase(struct ptp_clock_info *ptp, s32 offsetNs)
-+{
-+	struct idt82p33_channel *channel =
-+		container_of(ptp, struct idt82p33_channel, caps);
-+	struct idt82p33 *idt82p33 = channel->idt82p33;
-+	s64 offsetInFs;
-+	s64 offsetRegVal;
-+	u8 val[4] = {0};
-+	int err;
-+
-+	offsetInFs = (s64)(-offsetNs) * 1000000;
-+
-+	if (offsetInFs > WRITE_PHASE_OFFSET_LIMIT)
-+		offsetInFs = WRITE_PHASE_OFFSET_LIMIT;
-+	else if (offsetInFs < -WRITE_PHASE_OFFSET_LIMIT)
-+		offsetInFs = -WRITE_PHASE_OFFSET_LIMIT;
-+
-+	/* Convert from phaseOffsetInFs to register value */
-+	offsetRegVal = ((offsetInFs * 1000) / IDT_T0DPLL_PHASE_RESOL);
-+
-+	val[0] = offsetRegVal & 0xFF;
-+	val[1] = (offsetRegVal >> 8) & 0xFF;
-+	val[2] = (offsetRegVal >> 16) & 0xFF;
-+	val[3] = (offsetRegVal >> 24) & 0x1F;
-+	val[3] |= PH_OFFSET_EN;
-+
-+	mutex_lock(&idt82p33->reg_lock);
-+
-+	err = idt82p33_dpll_set_mode(channel, PLL_MODE_WPH);
-+	if (err) {
-+		dev_err(&idt82p33->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
-+		goto out;
-+	}
-+
-+	err = idt82p33_write(idt82p33, channel->dpll_phase_cnfg, val,
-+			     sizeof(val));
-+
-+out:
-+	mutex_unlock(&idt82p33->reg_lock);
-+	return err;
-+}
-+
- static int idt82p33_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
- {
- 	struct idt82p33_channel *channel =
-@@ -683,6 +780,11 @@ static int idt82p33_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
- 
- 	mutex_lock(&idt82p33->reg_lock);
- 	err = _idt82p33_adjfine(channel, scaled_ppm);
-+	if (err)
-+		dev_err(&idt82p33->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
- 	mutex_unlock(&idt82p33->reg_lock);
- 
- 	return err;
-@@ -706,10 +808,19 @@ static int idt82p33_adjtime(struct ptp_clock_info *ptp, s64 delta_ns)
- 
- 	if (err) {
- 		mutex_unlock(&idt82p33->reg_lock);
-+		dev_err(&idt82p33->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
- 		return err;
- 	}
- 
- 	err = idt82p33_sync_tod(channel, true);
-+	if (err)
-+		dev_err(&idt82p33->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
- 
- 	mutex_unlock(&idt82p33->reg_lock);
- 
-@@ -725,6 +836,11 @@ static int idt82p33_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts)
- 
- 	mutex_lock(&idt82p33->reg_lock);
- 	err = _idt82p33_gettime(channel, ts);
-+	if (err)
-+		dev_err(&idt82p33->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
- 	mutex_unlock(&idt82p33->reg_lock);
- 
- 	return err;
-@@ -740,6 +856,11 @@ static int idt82p33_settime(struct ptp_clock_info *ptp,
- 
- 	mutex_lock(&idt82p33->reg_lock);
- 	err = _idt82p33_settime(channel, ts);
-+	if (err)
-+		dev_err(&idt82p33->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
- 	mutex_unlock(&idt82p33->reg_lock);
- 
- 	return err;
-@@ -772,8 +893,6 @@ static int idt82p33_channel_init(struct idt82p33_channel *channel, int index)
- 		return -EINVAL;
- 	}
- 
--	INIT_DELAYED_WORK(&channel->sync_tod_work,
--			  idt82p33_sync_tod_work_handler);
- 	channel->sync_tod_on = false;
- 	channel->current_freq_ppb = 0;
- 
-@@ -784,11 +903,14 @@ static void idt82p33_caps_init(struct ptp_clock_info *caps)
- {
- 	caps->owner = THIS_MODULE;
- 	caps->max_adj = 92000;
-+	caps->n_per_out = 11;
-+	caps->adjphase = idt82p33_adjwritephase;
- 	caps->adjfine = idt82p33_adjfine;
- 	caps->adjtime = idt82p33_adjtime;
- 	caps->gettime64 = idt82p33_gettime;
- 	caps->settime64 = idt82p33_settime;
- 	caps->enable = idt82p33_enable;
-+	caps->do_aux_work = idt82p33_sync_tod_work_handler;
- }
- 
- static int idt82p33_enable_channel(struct idt82p33 *idt82p33, u32 index)
-@@ -802,23 +924,37 @@ static int idt82p33_enable_channel(struct idt82p33 *idt82p33, u32 index)
- 	channel = &idt82p33->channel[index];
- 
- 	err = idt82p33_channel_init(channel, index);
--	if (err)
-+	if (err) {
-+		dev_err(&idt82p33->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
- 		return err;
-+	}
- 
- 	channel->idt82p33 = idt82p33;
- 
- 	idt82p33_caps_init(&channel->caps);
- 	snprintf(channel->caps.name, sizeof(channel->caps.name),
- 		 "IDT 82P33 PLL%u", index);
--	channel->caps.n_per_out = hweight8(channel->output_mask);
- 
- 	err = idt82p33_dpll_set_mode(channel, PLL_MODE_DCO);
--	if (err)
-+	if (err) {
-+		dev_err(&idt82p33->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
- 		return err;
-+	}
- 
- 	err = idt82p33_enable_tod(channel);
--	if (err)
-+	if (err) {
-+		dev_err(&idt82p33->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
- 		return err;
-+	}
- 
- 	channel->ptp_clock = ptp_clock_register(&channel->caps, NULL);
- 
-@@ -839,19 +975,27 @@ static int idt82p33_enable_channel(struct idt82p33 *idt82p33, u32 index)
- 
- static int idt82p33_load_firmware(struct idt82p33 *idt82p33)
- {
-+	char fname[128] = FW_FILENAME;
- 	const struct firmware *fw;
- 	struct idt82p33_fwrc *rec;
- 	u8 loaddr, page, val;
- 	int err;
- 	s32 len;
- 
--	dev_dbg(&idt82p33->client->dev,
--		"requesting firmware '%s'\n", FW_FILENAME);
-+	if (firmware) /* module parameter */
-+		snprintf(fname, sizeof(fname), "%s", firmware);
- 
--	err = request_firmware(&fw, FW_FILENAME, &idt82p33->client->dev);
-+	dev_dbg(&idt82p33->client->dev, "requesting firmware '%s'\n", fname);
- 
--	if (err)
-+	err = request_firmware(&fw, fname, &idt82p33->client->dev);
-+
-+	if (err) {
-+		dev_err(&idt82p33->client->dev,
-+			"Failed at line %d in func %s!\n",
-+			__LINE__,
-+			__func__);
- 		return err;
-+	}
- 
- 	dev_dbg(&idt82p33->client->dev, "firmware size %zu bytes\n", fw->size);
- 
-@@ -935,8 +1079,13 @@ static int idt82p33_probe(struct i2c_client *client,
- 		for (i = 0; i < MAX_PHC_PLL; i++) {
- 			if (idt82p33->pll_mask & (1 << i)) {
- 				err = idt82p33_enable_channel(idt82p33, i);
--				if (err)
-+				if (err) {
-+					dev_err(&idt82p33->client->dev,
-+						"Failed at %d in func %s!\n",
-+						__LINE__,
-+						__func__);
- 					break;
-+				}
- 			}
- 		}
- 	} else {
-diff --git a/drivers/ptp/ptp_idt82p33.h b/drivers/ptp/ptp_idt82p33.h
-index 9d46966..5008998 100644
---- a/drivers/ptp/ptp_idt82p33.h
-+++ b/drivers/ptp/ptp_idt82p33.h
-@@ -56,6 +56,8 @@
- #define PLL_MODE_SHIFT                    (0)
- #define PLL_MODE_MASK                     (0x1F)
- 
-+#define PEROUT_ENABLE_OUTPUT_MASK         (0xdeadbeef)
-+
- enum pll_mode {
- 	PLL_MODE_MIN = 0,
- 	PLL_MODE_AUTOMATIC = PLL_MODE_MIN,
-@@ -119,8 +121,6 @@ struct idt82p33_channel {
- 	struct ptp_clock	*ptp_clock;
- 	struct idt82p33	*idt82p33;
- 	enum pll_mode	pll_mode;
--	/* task to turn off SYNC_TOD bit after pps sync */
--	struct delayed_work	sync_tod_work;
- 	bool			sync_tod_on;
- 	s32			current_freq_ppb;
- 	u8			output_mask;
--- 
-2.7.4
+BR,
+-R
 
+>         trace_dpu_enc_atomic_check(DRMID(drm_enc));
+>
+>         /*
+> @@ -621,7 +621,7 @@ static int dpu_encoder_virt_atomic_check(
+>                  * info may not be available to complete reservation.
+>                  */
+>                 if (drm_atomic_crtc_needs_modeset(crtc_state)) {
+> -                       ret = dpu_rm_reserve(&dpu_kms->rm, global_state,
+> +                       ret = dpu_rm_reserve(&dpu_kms->rm, &tmp_resv_state,
+>                                         drm_enc, crtc_state, topology);
+>                 }
+>         }
+> @@ -966,7 +966,7 @@ static void dpu_encoder_virt_mode_set(struct drm_encoder *drm_enc,
+>         struct dpu_hw_blk *hw_lm[MAX_CHANNELS_PER_ENC];
+>         struct dpu_hw_blk *hw_dspp[MAX_CHANNELS_PER_ENC] = { NULL };
+>         int num_lm, num_ctl, num_pp, num_dspp;
+> -       int i, j;
+> +       int i, j, rc;
+>
+>         if (!drm_enc) {
+>                 DPU_ERROR("invalid encoder\n");
+> @@ -1006,6 +1006,13 @@ static void dpu_encoder_virt_mode_set(struct drm_encoder *drm_enc,
+>
+>         topology = dpu_encoder_get_topology(dpu_enc, dpu_kms, adj_mode);
+>
+> +       rc = dpu_rm_reserve(&dpu_kms->rm, global_state, drm_enc,
+> +               drm_crtc->state, topology);
+> +       if (rc) {
+> +               DPU_ERROR_ENC(dpu_enc, "Failed to reserve resources\n");
+> +               return;
+> +       }
+> +
+>         /* Query resource that have been reserved in atomic check step. */
+>         num_pp = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
+>                 drm_enc->base.id, DPU_HW_BLK_PINGPONG, hw_pp,
+> --
+> 1.9.1
+>
