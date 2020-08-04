@@ -2,465 +2,104 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13331C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 692A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECD56208A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F3D0208A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:23:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="SXN/9Lte"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729825AbgHDQX0 (ORCPT
+        id S1729836AbgHDQXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 12:23:26 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:43929 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729677AbgHDQVX (ORCPT
+        Tue, 4 Aug 2020 12:23:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46414 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729745AbgHDQVc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 12:21:23 -0400
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from eli@mellanox.com)
-        with SMTP; 4 Aug 2020 19:20:54 +0300
-Received: from nps-server-21.mtl.labs.mlnx (nps-server-21.mtl.labs.mlnx [10.237.240.120])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 074GKsm8024060;
-        Tue, 4 Aug 2020 19:20:54 +0300
-Received: from nps-server-21.mtl.labs.mlnx (localhost [127.0.0.1])
-        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 074GKsA9022653;
-        Tue, 4 Aug 2020 19:20:54 +0300
-Received: (from eli@localhost)
-        by nps-server-21.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 074GKsnH022652;
-        Tue, 4 Aug 2020 19:20:54 +0300
-From:   Eli Cohen <eli@mellanox.com>
-To:     mst@redhat.com, jasowang@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     shahafs@mellanox.com, saeedm@mellanox.com, parav@mellanox.com,
-        Eli Cohen <eli@mellanox.com>
-Subject: [PATCH V4 linux-next 10/12] vdpa/mlx5: Add support library for mlx5 VDPA implementation
-Date:   Tue,  4 Aug 2020 19:20:46 +0300
-Message-Id: <20200804162048.22587-11-eli@mellanox.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200804162048.22587-1-eli@mellanox.com>
-References: <20200804162048.22587-1-eli@mellanox.com>
+        Tue, 4 Aug 2020 12:21:32 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A14A8C061756
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 09:21:31 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id q76so3501887wme.4
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 09:21:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=ST9UBbZKghuCFpLuvhcBi8OC0S5lAPRob4gGRkqUBQI=;
+        b=SXN/9LteKBtddUwm0e5UMFZX3bzVy6GxJDciQvp2jhpu55QK068xpA0TfA0ee205Gq
+         DgEXzVRWBbixlxxR6B5P0TtoYIbj4NJ9A9ZNkb7quhHTJZkqIkp0P909n8sCBYYLkAV2
+         8AVP2oyeTNXt8vnnqVD/PXQoMn9T+CH8sjMFE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=ST9UBbZKghuCFpLuvhcBi8OC0S5lAPRob4gGRkqUBQI=;
+        b=BhmWABWBPwtu3fewKGXbVPhDyJMA/m5uncB/WH128phOt4CnmGWSrV35aXYYO8kJo5
+         sqbHnahLtdzIOT3mPHbKw+vz/7nnBpEVPzBuam8ZXCGa/YRXy6I3d3ug6utVLLP6dPwN
+         z0Ysd4iKDdUwafqTOUUbx+AVZkFSNCnykHFLgaS30Ra6V1OhxPaQxrhOZKK2vKFLEbip
+         A1mokFkqCdD7I9lxGBCCxml76VNM2qCsFAJ0K3wyYKxvTvYvPAOtwK5pSvNbJbIaequL
+         uvOPEs0tK0kqghJ3U19VdHufqnKChULUn1PxYT8zLU61rIvoO737Gc6OGzViIBtAqrTE
+         9rdg==
+X-Gm-Message-State: AOAM531FqZzpuJV9UKdp9oWHaet9yT7d9CZoTpJrYiTkkV1voXn0ZMbM
+        VpNpv8cpCFrqIPvNwomJq5OWjca+X+3IMUhb9EBrQaogBhDDrRer5lAMPnMjnCj7c4q0ll8dPyb
+        OWEpsmKlhdNEHP/9OU6lKuk19U33qU+o1lK9QiDJAF71eF3Oo8Ac6KG801E8RXiuF29P0EFv/Jj
+        MiBghkpw==
+X-Google-Smtp-Source: ABdhPJyzl7yOei+IZoGA9xJVGGHeQUKJPzBjfKEeN12WVpymiUK9Opk6H6+2KeAThLEQGdLe2xVkHA==
+X-Received: by 2002:a1c:6a03:: with SMTP id f3mr3422486wmc.181.1596558089133;
+        Tue, 04 Aug 2020 09:21:29 -0700 (PDT)
+Received: from [10.230.185.151] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id z12sm29956754wrp.20.2020.08.04.09.21.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Aug 2020 09:21:28 -0700 (PDT)
+Subject: Re: [PATCH] scsi: lpfc: Add the missed misc_deregister() for
+ lpfc_init()
+To:     Jing Xiangfeng <jingxiangfeng@huawei.com>,
+        dick.kennedy@broadcom.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200731065639.190646-1-jingxiangfeng@huawei.com>
+From:   James Smart <james.smart@broadcom.com>
+Message-ID: <ace2c669-5fc6-e6c5-9d39-382ba02b1adf@broadcom.com>
+Date:   Tue, 4 Aug 2020 09:21:23 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200731065639.190646-1-jingxiangfeng@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Following patches introduce VDPA network driver for Mellanox Connectx6
-devices. This patch provides functionality that will be used by those
-patches.
 
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Signed-off-by: Eli Cohen <eli@mellanox.com>
----
- drivers/vdpa/Kconfig               |   9 +
- drivers/vdpa/Makefile              |   1 +
- drivers/vdpa/mlx5/Makefile         |   1 +
- drivers/vdpa/mlx5/core/Makefile    |   1 +
- drivers/vdpa/mlx5/core/mlx5_vdpa.h |  57 ++++++
- drivers/vdpa/mlx5/core/resources.c | 281 +++++++++++++++++++++++++++++
- 6 files changed, 350 insertions(+)
- create mode 100644 drivers/vdpa/mlx5/Makefile
- create mode 100644 drivers/vdpa/mlx5/core/Makefile
- create mode 100644 drivers/vdpa/mlx5/core/mlx5_vdpa.h
- create mode 100644 drivers/vdpa/mlx5/core/resources.c
 
-diff --git a/drivers/vdpa/Kconfig b/drivers/vdpa/Kconfig
-index 3e1ceb8e9f2b..7cb84f82feba 100644
---- a/drivers/vdpa/Kconfig
-+++ b/drivers/vdpa/Kconfig
-@@ -28,4 +28,13 @@ config IFCVF
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called ifcvf.
- 
-+config MLX5_VDPA
-+	bool "MLX5 VDPA support library for ConnectX devices"
-+	depends on MLX5_CORE
-+	default n
-+	help
-+	  Support library for Mellanox VDPA drivers. Provides code that is
-+	  common for all types of VDPA drivers. The following drivers are planned:
-+	  net, block.
-+
- endif # VDPA
-diff --git a/drivers/vdpa/Makefile b/drivers/vdpa/Makefile
-index 8bbb686ca7a2..d160e9b63a66 100644
---- a/drivers/vdpa/Makefile
-+++ b/drivers/vdpa/Makefile
-@@ -2,3 +2,4 @@
- obj-$(CONFIG_VDPA) += vdpa.o
- obj-$(CONFIG_VDPA_SIM) += vdpa_sim/
- obj-$(CONFIG_IFCVF)    += ifcvf/
-+obj-$(CONFIG_MLX5_VDPA) += mlx5/
-diff --git a/drivers/vdpa/mlx5/Makefile b/drivers/vdpa/mlx5/Makefile
-new file mode 100644
-index 000000000000..d552abb1d126
---- /dev/null
-+++ b/drivers/vdpa/mlx5/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_MLX5_VDPA) += core/resources.o
-diff --git a/drivers/vdpa/mlx5/core/Makefile b/drivers/vdpa/mlx5/core/Makefile
-new file mode 100644
-index 000000000000..7070f8c8680d
---- /dev/null
-+++ b/drivers/vdpa/mlx5/core/Makefile
-@@ -0,0 +1 @@
-+obj-y += resources.o
-diff --git a/drivers/vdpa/mlx5/core/mlx5_vdpa.h b/drivers/vdpa/mlx5/core/mlx5_vdpa.h
-new file mode 100644
-index 000000000000..f3571c8b257e
---- /dev/null
-+++ b/drivers/vdpa/mlx5/core/mlx5_vdpa.h
-@@ -0,0 +1,57 @@
-+/* SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB */
-+/* Copyright (c) 2020 Mellanox Technologies Ltd. */
-+
-+#ifndef __MLX5_VDPA_H__
-+#define __MLX5_VDPA_H__
-+
-+#include <linux/vdpa.h>
-+#include <linux/mlx5/driver.h>
-+
-+struct mlx5_vdpa_resources {
-+	u32 pdn;
-+	struct mlx5_uars_page *uar;
-+	void __iomem *kick_addr;
-+	u16 uid;
-+	u32 null_mkey;
-+	bool valid;
-+};
-+
-+struct mlx5_vdpa_dev {
-+	struct vdpa_device vdev;
-+	struct mlx5_core_dev *mdev;
-+	struct mlx5_vdpa_resources res;
-+
-+	u64 mlx_features;
-+	u64 actual_features;
-+	u8 status;
-+	u32 max_vqs;
-+	u32 generation;
-+};
-+
-+int mlx5_vdpa_alloc_pd(struct mlx5_vdpa_dev *dev, u32 *pdn, u16 uid);
-+int mlx5_vdpa_dealloc_pd(struct mlx5_vdpa_dev *dev, u32 pdn, u16 uid);
-+int mlx5_vdpa_get_null_mkey(struct mlx5_vdpa_dev *dev, u32 *null_mkey);
-+int mlx5_vdpa_create_tis(struct mlx5_vdpa_dev *mvdev, void *in, u32 *tisn);
-+void mlx5_vdpa_destroy_tis(struct mlx5_vdpa_dev *mvdev, u32 tisn);
-+int mlx5_vdpa_create_rqt(struct mlx5_vdpa_dev *mvdev, void *in, int inlen, u32 *rqtn);
-+void mlx5_vdpa_destroy_rqt(struct mlx5_vdpa_dev *mvdev, u32 rqtn);
-+int mlx5_vdpa_create_tir(struct mlx5_vdpa_dev *mvdev, void *in, u32 *tirn);
-+void mlx5_vdpa_destroy_tir(struct mlx5_vdpa_dev *mvdev, u32 tirn);
-+int mlx5_vdpa_alloc_transport_domain(struct mlx5_vdpa_dev *mvdev, u32 *tdn);
-+void mlx5_vdpa_dealloc_transport_domain(struct mlx5_vdpa_dev *mvdev, u32 tdn);
-+int mlx5_vdpa_alloc_resources(struct mlx5_vdpa_dev *mvdev);
-+void mlx5_vdpa_free_resources(struct mlx5_vdpa_dev *mvdev);
-+
-+#define mlx5_vdpa_warn(__dev, format, ...)                                                         \
-+	dev_warn((__dev)->mdev->device, "%s:%d:(pid %d) warning: " format, __func__, __LINE__,     \
-+		 current->pid, ##__VA_ARGS__)
-+
-+#define mlx5_vdpa_info(__dev, format, ...)                                                         \
-+	dev_info((__dev)->mdev->device, "%s:%d:(pid %d): " format, __func__, __LINE__,             \
-+		 current->pid, ##__VA_ARGS__)
-+
-+#define mlx5_vdpa_dbg(__dev, format, ...)                                                          \
-+	dev_debug((__dev)->mdev->device, "%s:%d:(pid %d): " format, __func__, __LINE__,            \
-+		  current->pid, ##__VA_ARGS__)
-+
-+#endif /* __MLX5_VDPA_H__ */
-diff --git a/drivers/vdpa/mlx5/core/resources.c b/drivers/vdpa/mlx5/core/resources.c
-new file mode 100644
-index 000000000000..6c6552b7e9b5
---- /dev/null
-+++ b/drivers/vdpa/mlx5/core/resources.c
-@@ -0,0 +1,281 @@
-+// SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB
-+/* Copyright (c) 2020 Mellanox Technologies Ltd. */
-+
-+#include <linux/mlx5/driver.h>
-+#include "mlx5_vdpa.h"
-+
-+static int alloc_pd(struct mlx5_vdpa_dev *dev, u32 *pdn, u16 uid)
-+{
-+	struct mlx5_core_dev *mdev = dev->mdev;
-+
-+	u32 out[MLX5_ST_SZ_DW(alloc_pd_out)] = {};
-+	u32 in[MLX5_ST_SZ_DW(alloc_pd_in)] = {};
-+	int err;
-+
-+	MLX5_SET(alloc_pd_in, in, opcode, MLX5_CMD_OP_ALLOC_PD);
-+	MLX5_SET(alloc_pd_in, in, uid, uid);
-+
-+	err = mlx5_cmd_exec_inout(mdev, alloc_pd, in, out);
-+	if (!err)
-+		*pdn = MLX5_GET(alloc_pd_out, out, pd);
-+
-+	return err;
-+}
-+
-+static int dealloc_pd(struct mlx5_vdpa_dev *dev, u32 pdn, u16 uid)
-+{
-+	u32 in[MLX5_ST_SZ_DW(dealloc_pd_in)] = {};
-+	struct mlx5_core_dev *mdev = dev->mdev;
-+
-+	MLX5_SET(dealloc_pd_in, in, opcode, MLX5_CMD_OP_DEALLOC_PD);
-+	MLX5_SET(dealloc_pd_in, in, pd, pdn);
-+	MLX5_SET(dealloc_pd_in, in, uid, uid);
-+	return mlx5_cmd_exec_in(mdev, dealloc_pd, in);
-+}
-+
-+static int get_null_mkey(struct mlx5_vdpa_dev *dev, u32 *null_mkey)
-+{
-+	u32 out[MLX5_ST_SZ_DW(query_special_contexts_out)] = {};
-+	u32 in[MLX5_ST_SZ_DW(query_special_contexts_in)] = {};
-+	struct mlx5_core_dev *mdev = dev->mdev;
-+	int err;
-+
-+	MLX5_SET(query_special_contexts_in, in, opcode, MLX5_CMD_OP_QUERY_SPECIAL_CONTEXTS);
-+	err = mlx5_cmd_exec_inout(mdev, query_special_contexts, in, out);
-+	if (!err)
-+		*null_mkey = MLX5_GET(query_special_contexts_out, out, null_mkey);
-+	return err;
-+}
-+
-+static int create_uctx(struct mlx5_vdpa_dev *mvdev, u16 *uid)
-+{
-+	u32 out[MLX5_ST_SZ_DW(create_uctx_out)] = {};
-+	int inlen;
-+	void *in;
-+	int err;
-+
-+	/* 0 means not supported */
-+	if (!MLX5_CAP_GEN(mvdev->mdev, log_max_uctx))
-+		return -EOPNOTSUPP;
-+
-+	inlen = MLX5_ST_SZ_BYTES(create_uctx_in);
-+	in = kzalloc(inlen, GFP_KERNEL);
-+	if (!in)
-+		return -ENOMEM;
-+
-+	MLX5_SET(create_uctx_in, in, opcode, MLX5_CMD_OP_CREATE_UCTX);
-+	MLX5_SET(create_uctx_in, in, uctx.cap, MLX5_UCTX_CAP_RAW_TX);
-+
-+	err = mlx5_cmd_exec(mvdev->mdev, in, inlen, out, sizeof(out));
-+	kfree(in);
-+	if (!err)
-+		*uid = MLX5_GET(create_uctx_out, out, uid);
-+
-+	return err;
-+}
-+
-+static void destroy_uctx(struct mlx5_vdpa_dev *mvdev, u32 uid)
-+{
-+	u32 out[MLX5_ST_SZ_DW(destroy_uctx_out)] = {};
-+	u32 in[MLX5_ST_SZ_DW(destroy_uctx_in)] = {};
-+
-+	MLX5_SET(destroy_uctx_in, in, opcode, MLX5_CMD_OP_DESTROY_UCTX);
-+	MLX5_SET(destroy_uctx_in, in, uid, uid);
-+
-+	mlx5_cmd_exec(mvdev->mdev, in, sizeof(in), out, sizeof(out));
-+}
-+
-+int mlx5_vdpa_create_tis(struct mlx5_vdpa_dev *mvdev, void *in, u32 *tisn)
-+{
-+	u32 out[MLX5_ST_SZ_DW(create_tis_out)] = {};
-+	int err;
-+
-+	MLX5_SET(create_tis_in, in, opcode, MLX5_CMD_OP_CREATE_TIS);
-+	MLX5_SET(create_tis_in, in, uid, mvdev->res.uid);
-+	err = mlx5_cmd_exec_inout(mvdev->mdev, create_tis, in, out);
-+	if (!err)
-+		*tisn = MLX5_GET(create_tis_out, out, tisn);
-+
-+	return err;
-+}
-+
-+void mlx5_vdpa_destroy_tis(struct mlx5_vdpa_dev *mvdev, u32 tisn)
-+{
-+	u32 in[MLX5_ST_SZ_DW(destroy_tis_in)] = {};
-+
-+	MLX5_SET(destroy_tis_in, in, opcode, MLX5_CMD_OP_DESTROY_TIS);
-+	MLX5_SET(destroy_tis_in, in, uid, mvdev->res.uid);
-+	MLX5_SET(destroy_tis_in, in, tisn, tisn);
-+	mlx5_cmd_exec_in(mvdev->mdev, destroy_tis, in);
-+}
-+
-+int mlx5_vdpa_create_rqt(struct mlx5_vdpa_dev *mvdev, void *in, int inlen, u32 *rqtn)
-+{
-+	u32 out[MLX5_ST_SZ_DW(create_rqt_out)] = {};
-+	int err;
-+
-+	MLX5_SET(create_rqt_in, in, opcode, MLX5_CMD_OP_CREATE_RQT);
-+	err = mlx5_cmd_exec(mvdev->mdev, in, inlen, out, sizeof(out));
-+	if (!err)
-+		*rqtn = MLX5_GET(create_rqt_out, out, rqtn);
-+
-+	return err;
-+}
-+
-+void mlx5_vdpa_destroy_rqt(struct mlx5_vdpa_dev *mvdev, u32 rqtn)
-+{
-+	u32 in[MLX5_ST_SZ_DW(destroy_rqt_in)] = {};
-+
-+	MLX5_SET(destroy_rqt_in, in, opcode, MLX5_CMD_OP_DESTROY_RQT);
-+	MLX5_SET(destroy_rqt_in, in, uid, mvdev->res.uid);
-+	MLX5_SET(destroy_rqt_in, in, rqtn, rqtn);
-+	mlx5_cmd_exec_in(mvdev->mdev, destroy_rqt, in);
-+}
-+
-+int mlx5_vdpa_create_tir(struct mlx5_vdpa_dev *mvdev, void *in, u32 *tirn)
-+{
-+	u32 out[MLX5_ST_SZ_DW(create_tir_out)] = {};
-+	int err;
-+
-+	MLX5_SET(create_tir_in, in, opcode, MLX5_CMD_OP_CREATE_TIR);
-+	err = mlx5_cmd_exec_inout(mvdev->mdev, create_tir, in, out);
-+	if (!err)
-+		*tirn = MLX5_GET(create_tir_out, out, tirn);
-+
-+	return err;
-+}
-+
-+void mlx5_vdpa_destroy_tir(struct mlx5_vdpa_dev *mvdev, u32 tirn)
-+{
-+	u32 in[MLX5_ST_SZ_DW(destroy_tir_in)] = {};
-+
-+	MLX5_SET(destroy_tir_in, in, opcode, MLX5_CMD_OP_DESTROY_TIR);
-+	MLX5_SET(destroy_tir_in, in, uid, mvdev->res.uid);
-+	MLX5_SET(destroy_tir_in, in, tirn, tirn);
-+	mlx5_cmd_exec_in(mvdev->mdev, destroy_tir, in);
-+}
-+
-+int mlx5_vdpa_alloc_transport_domain(struct mlx5_vdpa_dev *mvdev, u32 *tdn)
-+{
-+	u32 out[MLX5_ST_SZ_DW(alloc_transport_domain_out)] = {};
-+	u32 in[MLX5_ST_SZ_DW(alloc_transport_domain_in)] = {};
-+	int err;
-+
-+	MLX5_SET(alloc_transport_domain_in, in, opcode, MLX5_CMD_OP_ALLOC_TRANSPORT_DOMAIN);
-+	MLX5_SET(alloc_transport_domain_in, in, uid, mvdev->res.uid);
-+
-+	err = mlx5_cmd_exec_inout(mvdev->mdev, alloc_transport_domain, in, out);
-+	if (!err)
-+		*tdn = MLX5_GET(alloc_transport_domain_out, out, transport_domain);
-+
-+	return err;
-+}
-+
-+void mlx5_vdpa_dealloc_transport_domain(struct mlx5_vdpa_dev *mvdev, u32 tdn)
-+{
-+	u32 in[MLX5_ST_SZ_DW(dealloc_transport_domain_in)] = {};
-+
-+	MLX5_SET(dealloc_transport_domain_in, in, opcode, MLX5_CMD_OP_DEALLOC_TRANSPORT_DOMAIN);
-+	MLX5_SET(dealloc_transport_domain_in, in, uid, mvdev->res.uid);
-+	MLX5_SET(dealloc_transport_domain_in, in, transport_domain, tdn);
-+	mlx5_cmd_exec_in(mvdev->mdev, dealloc_transport_domain, in);
-+}
-+
-+int mlx5_vdpa_create_mkey(struct mlx5_vdpa_dev *mvdev, struct mlx5_core_mkey *mkey, u32 *in,
-+			  int inlen)
-+{
-+	u32 lout[MLX5_ST_SZ_DW(create_mkey_out)] = {};
-+	u32 mkey_index;
-+	void *mkc;
-+	int err;
-+
-+	MLX5_SET(create_mkey_in, in, opcode, MLX5_CMD_OP_CREATE_MKEY);
-+	MLX5_SET(create_mkey_in, in, uid, mvdev->res.uid);
-+
-+	err = mlx5_cmd_exec(mvdev->mdev, in, inlen, lout, sizeof(lout));
-+	if (err)
-+		return err;
-+
-+	mkc = MLX5_ADDR_OF(create_mkey_in, in, memory_key_mkey_entry);
-+	mkey_index = MLX5_GET(create_mkey_out, lout, mkey_index);
-+	mkey->iova = MLX5_GET64(mkc, mkc, start_addr);
-+	mkey->size = MLX5_GET64(mkc, mkc, len);
-+	mkey->key |= mlx5_idx_to_mkey(mkey_index);
-+	mkey->pd = MLX5_GET(mkc, mkc, pd);
-+	return 0;
-+}
-+
-+int mlx5_vdpa_destroy_mkey(struct mlx5_vdpa_dev *mvdev, struct mlx5_core_mkey *mkey)
-+{
-+	u32 in[MLX5_ST_SZ_DW(destroy_mkey_in)] = {};
-+
-+	MLX5_SET(destroy_mkey_in, in, uid, mvdev->res.uid);
-+	MLX5_SET(destroy_mkey_in, in, opcode, MLX5_CMD_OP_DESTROY_MKEY);
-+	MLX5_SET(destroy_mkey_in, in, mkey_index, mlx5_mkey_to_idx(mkey->key));
-+	return mlx5_cmd_exec_in(mvdev->mdev, destroy_mkey, in);
-+}
-+
-+int mlx5_vdpa_alloc_resources(struct mlx5_vdpa_dev *mvdev)
-+{
-+	u64 offset = MLX5_CAP64_DEV_VDPA_EMULATION(mvdev->mdev, doorbell_bar_offset);
-+	struct mlx5_vdpa_resources *res = &mvdev->res;
-+	struct mlx5_core_dev *mdev = mvdev->mdev;
-+	u64 kick_addr;
-+	int err;
-+
-+	if (res->valid) {
-+		mlx5_vdpa_warn(mvdev, "resources already allocated\n");
-+		return -EINVAL;
-+	}
-+	res->uar = mlx5_get_uars_page(mdev);
-+	if (IS_ERR(res->uar)) {
-+		err = PTR_ERR(res->uar);
-+		goto err_uars;
-+	}
-+
-+	err = create_uctx(mvdev, &res->uid);
-+	if (err)
-+		goto err_uctx;
-+
-+	err = alloc_pd(mvdev, &res->pdn, res->uid);
-+	if (err)
-+		goto err_pd;
-+
-+	err = get_null_mkey(mvdev, &res->null_mkey);
-+	if (err)
-+		goto err_key;
-+
-+	kick_addr = pci_resource_start(mdev->pdev, 0) + offset;
-+	res->kick_addr = ioremap(kick_addr, PAGE_SIZE);
-+	if (!res->kick_addr) {
-+		err = -ENOMEM;
-+		goto err_key;
-+	}
-+	res->valid = true;
-+
-+	return 0;
-+
-+err_key:
-+	dealloc_pd(mvdev, res->pdn, res->uid);
-+err_pd:
-+	destroy_uctx(mvdev, res->uid);
-+err_uctx:
-+	mlx5_put_uars_page(mdev, res->uar);
-+err_uars:
-+	return err;
-+}
-+
-+void mlx5_vdpa_free_resources(struct mlx5_vdpa_dev *mvdev)
-+{
-+	struct mlx5_vdpa_resources *res = &mvdev->res;
-+
-+	if (!res->valid)
-+		return;
-+
-+	iounmap(res->kick_addr);
-+	res->kick_addr = NULL;
-+	dealloc_pd(mvdev, res->pdn, res->uid);
-+	destroy_uctx(mvdev, res->uid);
-+	mlx5_put_uars_page(mvdev->mdev, res->uar);
-+	res->valid = false;
-+}
--- 
-2.26.0
+On 7/30/2020 11:56 PM, Jing Xiangfeng wrote:
+> lpfc_init() misses to call misc_deregister() in an error path. Add a
+> label 'unregister' to fix it.
+>
+> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+> ---
+>   drivers/scsi/lpfc/lpfc_init.c | 7 +++++--
+>   1 file changed, 5 insertions(+), 2 deletions(-)
+>
+>
+Looks fine.
+
+Reviewed-by: James Smart <james.smart@broadcom.com>
+
+
+Thanks
+
+-- james
 
