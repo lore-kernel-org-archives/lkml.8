@@ -2,82 +2,98 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B1DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB82CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8F02075D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2993D207FC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 13:11:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=doubly.so header.i=@doubly.so header.b="KNzE2sql"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbgHDNCL (ORCPT
+        id S1728382AbgHDNLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 09:02:11 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:39753 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728247AbgHDNBI (ORCPT
+        Tue, 4 Aug 2020 09:11:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45316 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727987AbgHDNLO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 09:01:08 -0400
-Received: by mail-il1-f198.google.com with SMTP id i66so21889673ile.6
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 06:01:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=06+82rKMp3PGXLDD6Ap7gC365MaLMsLGY5Rl6STa3zE=;
-        b=Lm6UxQ0XX4cHLa+QNUb2KSXVGfGayeFSUHP9JDdLfxygMTxXaM0ojrzFNA4020296M
-         cecbfBHrTpM3nktHk3AzyTGXHBtLt6f68BFSPhLsATCb1ZcgBP7pEIScNP3xUVN+jk6T
-         /KJA9v+eZPBAKGDgilhzTOrQDhEtkhSZDHIFhwkTP2ZUUwCCgf5gGuywiFs4nk2oGHv/
-         VwT3pz8RZKIj+VwSDM2uYe7F4czrfL51af19b2egFSrDcOEpuN85pf7xmMR2wh7UfiPy
-         UkDmKqWf5JbVE0yD0wA/bBTPQLRUhUkOtswfHRffKWK6/BulOeOY7EpEx83oWoIf9YTP
-         o7ng==
-X-Gm-Message-State: AOAM531vExzKv7qb4tOdA8Kf0IyIgWuzTGSJNJNjaCmlbojKhEHl0ktl
-        QbpMQQBBgRxiKwRujPJN8ycShJCcc5BIhW3wPblFR5sDPBGA
-X-Google-Smtp-Source: ABdhPJysIn/3rq8mJzFBZcPdgkiq5Vci73yhB6VXvAfDq6syCOUZWs4ErkDjGmgAWbCV304S/arGJe8W97c4vCtTU2PHRCJr/z6K
+        Tue, 4 Aug 2020 09:11:14 -0400
+X-Greylist: delayed 337 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 04 Aug 2020 06:11:13 PDT
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [IPv6:2001:67c:2050::465:102])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B487DC06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 06:11:13 -0700 (PDT)
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4BLZk31hH5zKm6T
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 15:05:31 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=doubly.so; s=MBO0001;
+        t=1596546330;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=URVnzukKS+P2nWYrtw5dp7rwGBO9XtEHJXqL8SP6zO8=;
+        b=KNzE2sqlvnuz77ErAj4S35CFSwz7UN2ImtNaX49D3Ulj04l+OasRm8fTE4QEeqK/HUlnlv
+        QpvMgiBcqSrpdjBRqXse2GglEYkCb7NgtB1EApxmzAO8r3xCwMdOJ+POhUcfDsIxUL4vH6
+        lt4IgS2bcqKzFcNnPYvpaN8BFPTtPOv390TgMFgsDED3vSJMMCMfmd0e39dNo1gBqNVvup
+        HB2GFunwsdnaT+2ottltmcI1TRUyaS2/kztsj5tIsqY8Ou6h/SOx9cFRfWmVjb3V7L1j9Q
+        hY9jfrRW7pAML952j+nGhZ9rhlBN7/scU686UApMKJcWbmLhJxFgz0eajxc37Q==
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
+        with ESMTP id d2tN0njdRyVX for <linux-kernel@vger.kernel.org>;
+        Tue,  4 Aug 2020 15:05:28 +0200 (CEST)
+From:   Devin Bayer <dev@doubly.so>
+Subject: setsid2(sid) proposal - assign current process to existing session
+To:     linux-kernel@vger.kernel.org
+Message-ID: <dd606c6b-eb2e-3069-59d1-4db5b2dc7d69@doubly.so>
+Date:   Tue, 4 Aug 2020 15:05:27 +0200
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:d51:: with SMTP id h17mr4320234ilj.155.1596546066783;
- Tue, 04 Aug 2020 06:01:06 -0700 (PDT)
-Date:   Tue, 04 Aug 2020 06:01:06 -0700
-In-Reply-To: <000000000000a7eb5e05abeb197d@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002da68705ac0cd9ab@google.com>
-Subject: Re: general protection fault in hci_event_packet
-From:   syzbot <syzbot+0bef568258653cff272f@syzkaller.appspotmail.com>
-To:     a@unstable.cc, b.a.t.m.a.n@lists.open-mesh.org,
-        davem@davemloft.net, geert@linux-m68k.org, javier@osg.samsung.com,
-        johan.hedberg@gmail.com, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@armlinux.org.uk, marcel@holtmann.org,
-        mareklindner@neomailbox.ch, netdev@vger.kernel.org,
-        sw@simonwunderlich.de, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-MBO-SPAM-Probability: 0
+X-Rspamd-Score: -2.55 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 41E5D17BA
+X-Rspamd-UID: dce495
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this issue to:
+Hello,
 
-commit 941992d2944789641470626e9336d663236b1d28
-Author: Javier Martinez Canillas <javier@osg.samsung.com>
-Date:   Mon Sep 12 14:03:34 2016 +0000
+I'm wondering about the possibility of introducing a new system call for 
+moving a process to an existing session. If `sid` is an existing session 
+with the same owner as the current process, one could call:
 
-    ethernet: amd: use IS_ENABLED() instead of checking for built-in or module
+	setsid2(sid)
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=155180c2900000
-start commit:   bcf87687 Linux 5.8
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=175180c2900000
-console output: https://syzkaller.appspot.com/x/log.txt?x=135180c2900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4b489d75d0c8859d
-dashboard link: https://syzkaller.appspot.com/bug?extid=0bef568258653cff272f
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1043af04900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12ca1dea900000
+This would have similar behavior to setpgid(), and would probably 
+effectively call setpgid() internally too.
 
-Reported-by: syzbot+0bef568258653cff272f@syzkaller.appspotmail.com
-Fixes: 941992d29447 ("ethernet: amd: use IS_ENABLED() instead of checking for built-in or module")
+The use case is for something like `flatpak-spawn --host`, which allows 
+you to launch a program in an outer namespace from an inner namespace. 
+It behaves as a child of the caller but is actually a child of an 
+external daemon.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+It works by connecting stdin/out/err to those of the caller, for example 
+a PTY for xterm running in the inner namespace. This works fine for 
+non-interactive programs, but it's impossible for the spawned task to 
+share the controlling TTY with the shell running in xterm.
+
+I can't see where the problems are, though I'm surprised such 
+functionally doesn't yet exist. Because it deals with such basic 
+concepts, I'm wondering if such a change will even be considered.
+
+There is a workaround; one can create a new PTY on the host and copy the 
+I/O streams manually. Not ideal, but okay.
+
+Any comments welcome.
+
+Cheers
+~ dev
