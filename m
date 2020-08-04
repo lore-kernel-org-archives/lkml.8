@@ -5,109 +5,108 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CF4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54589C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3FE720738
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:39:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3670020738
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 11:39:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="biXbi42J"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="WCEDRTmx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730284AbgHDLjP (ORCPT
+        id S1730293AbgHDLjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 07:39:15 -0400
-Received: from mail-eopbgr80059.outbound.protection.outlook.com ([40.107.8.59]:47640
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        Tue, 4 Aug 2020 07:39:19 -0400
+Received: from mail-eopbgr130070.outbound.protection.outlook.com ([40.107.13.70]:26599
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730241AbgHDLjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 07:39:13 -0400
+        id S1729799AbgHDLjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 07:39:11 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M5UPFf1Au72FugdZZkuzq3wVhxhhk4l52Bruq04t+KGn3P6MQTgdFKtzwJwSLNpjt41SmxmsPlSZsOyIBpqdCx/CC6Xhfx2ics5w+9C1NFELy78Vfj6wip9QixN3F6mROiW9BRw1LfPDRzKhSq+rhhtHz8tfPOa4VBUz7vLeovYGg3wiCD3+m9qK+rl3v1M3UPfyOqmjVdOPZ4tMTxa/JuHM7QdxW9oLk04oLEWlYrocynB+uHmbKtzUSqz6oa3jYWehspAQqWBuwf1c0HmSGS9vYtC9mLviMc8owjb8LFvwTHq/Xb7o/YDmTfqgGpp0b8Pn0DRT7Ey5VB5d6y9alg==
+ b=Frl4cMOkRJA20qthKGmSPt6n6LoT83Ole6nIuoGDNcgAkIZmreTKx7+4f0ymF69++K6jxhbI9p/Zw/r9yJtzFu6nV5llWiCGVUuZlnlv3kp+hxjMg438UsSb9fcJsFLO+ufTwJ/NTfZqsYy4VEwZq8rdKTgRooehaen8qM7wcN/LJ0D1PL9yxKLgud59zEz7tIQONY9Q8WVKrcohjqFB18gOLk4NanvYTR05jN47Zb4r+YRt1WO0cMLjEEmqXTm9WepsijrLp2KgITArNwH1qyxbbF7k3XNZ7knLqGePgcwh8oVYwzAlCh240nAOzhpSNbFRwqhn6XhpEWmXx5zSWw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tU4aP7IIJ5dg2LEf+/SFhGhrMykB+YHcaTBNrM2+t/0=;
- b=e7RA6jVzd8bHbhzjVRy6IzCHG/PGlzKz8+KU2ImBXJfle2RhyvzUyfl0Xi1SPksc9DKCdHOCcVCBejgKS8FFm3z6DTmumMu/m72Jh4HrxnXi9H8HKWLpx5i/o25wBZmH/7Yu7a1Bc2iJ818pyL8ymOKCGu7BEn+jGVvhKyVz7PvJeEwGDB9TCW+YzdFbk3lQvYgniYERta5Y1tjkZgv6TdhYIZILRtT1PpyvxU76LCd64mTbyA8htiRU8efnPBE5SuYrQImw1zQKpGDoEAY4CrZZAxU9K/VOZOnVHGKgs48Rl/Whc+BnMQ1SqHM67pNCwJZEG/5LRCReq2HEFcnODA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 193.240.239.45) smtp.rcpttodomain=vger.kernel.org
- smtp.mailfrom=diasemi.com; dmarc=fail (p=none sp=none pct=100) action=none
- header.from=diasemi.com; dkim=none (message not signed); arc=none
+ bh=Ad8OQyX4I1YH5lU+pKpT+Pj7NTw6P/pEJp75goOmSGU=;
+ b=UVJn2vtgZhvy63gZ8/xF1uRPwcl2+Tru6f/uozv0L56z5n8jJvulAxPmhI2ENgGRl48RLnZlOKSWzrqun8PjCiD4p/9ewAqJ+dSPVfoTb/1Xw/9arOzC0pvMUwe0/ZGCZYxt4iFHtipjUccSdrHx+KNfA0n1RVMGgoRerZNVDB/fJWyAfoF9UGLCvLCd/bJrrk8+UvUeWI7WifgpF/STjQF37G5xo9zOw220iEchBwB4GiNPqAeahv66ItbS1TIHKxWdanIKtxkvpN8mILYpjsriRjpzhHF5xw8CAtMmlRrcoH0NUkFU+8ms44ShpDLPWjt6at+IxdlMaE51gQ6/+g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=neutral (sender ip is
+ 193.240.239.45) smtp.rcpttodomain=kernel.org smtp.mailfrom=diasemi.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=diasemi.com;
+ dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=dialogsemiconductor.onmicrosoft.com;
  s=selector1-dialogsemiconductor-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tU4aP7IIJ5dg2LEf+/SFhGhrMykB+YHcaTBNrM2+t/0=;
- b=biXbi42J+88/c6MzAk2xL/TDEJkAya2LpIpuslyDIt755Q3vujcYYD8XdA29szgq9Ngl0NYtu5hi0+2nFW8urH44HiwUpL6MHBc+0zEAkzkB4uq53oDW6n20i9FhpAYfT5V766hM9ERabGmGT418y4NL8zRwtxAa/z67gUUou9w=
+ bh=Ad8OQyX4I1YH5lU+pKpT+Pj7NTw6P/pEJp75goOmSGU=;
+ b=WCEDRTmxHWzrEC9O/T+N/+WFaFv0BfRyJG5Sy/N5l+iyINtCaPyshgzHMxTuwUn8PaljcnX+VcCX7WWeCn0D0lQUocNyYuPq/p8dabQi5T16nCl7eKpudZ5j0DR4n8TPPBuJKypW0e+Ibk9uNW1yn4qTlhQMMjdeo4T7NAeRVdc=
 Received: from PR3P192CA0054.EURP192.PROD.OUTLOOK.COM (2603:10a6:102:57::29)
- by VI1PR10MB1744.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:802:34::19) with
+ by AM0PR10MB3044.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:158::29) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.18; Tue, 4 Aug
- 2020 11:39:08 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Tue, 4 Aug
+ 2020 11:39:07 +0000
 Received: from HE1EUR02FT063.eop-EUR02.prod.protection.outlook.com
  (2603:10a6:102:57:cafe::c7) by PR3P192CA0054.outlook.office365.com
  (2603:10a6:102:57::29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend
- Transport; Tue, 4 Aug 2020 11:39:08 +0000
-X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
- 193.240.239.45) smtp.mailfrom=diasemi.com; vger.kernel.org; dkim=none
- (message not signed) header.d=none;vger.kernel.org; dmarc=fail action=none
+ Transport; Tue, 4 Aug 2020 11:39:07 +0000
+X-MS-Exchange-Authentication-Results: spf=neutral (sender IP is
+ 193.240.239.45) smtp.mailfrom=diasemi.com; kernel.org; dkim=none (message not
+ signed) header.d=none;kernel.org; dmarc=fail action=none
  header.from=diasemi.com;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- diasemi.com discourages use of 193.240.239.45 as permitted sender)
+Received-SPF: Neutral (protection.outlook.com: 193.240.239.45 is neither
+ permitted nor denied by domain of diasemi.com)
 Received: from mailrelay1.diasemi.com (193.240.239.45) by
  HE1EUR02FT063.mail.protection.outlook.com (10.152.11.211) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.3239.20 via Frontend Transport; Tue, 4 Aug 2020 11:39:07 +0000
+ 15.20.3239.20 via Frontend Transport; Tue, 4 Aug 2020 11:39:06 +0000
 Received: from krsrvapps-03.diasemi.com (10.93.17.2) by
  NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
  14.3.468.0; Tue, 4 Aug 2020 13:39:05 +0200
 Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
- 4D1D713F673; Tue,  4 Aug 2020 20:39:04 +0900 (KST)
-Message-ID: <b960f68e87dc8892da7eec8bc549652ac3b56c55.1596522828.git.Roy.Im@diasemi.com>
+ 4BB2213F670; Tue,  4 Aug 2020 20:39:04 +0900 (KST)
+Message-ID: <4c3579cc6623f50d53e3cacca29a5cd1954c2063.1596522828.git.Roy.Im@diasemi.com>
 In-Reply-To: <cover.1596522828.git.Roy.Im@diasemi.com>
 References: <cover.1596522828.git.Roy.Im@diasemi.com>
 From:   Roy Im <roy.im.opensource@diasemi.com>
 Date:   Tue, 4 Aug 2020 15:33:47 +0900
-Subject: [PATCH v19 2/3] dt-bindings: input: Add document bindings for DA7280
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Support Opensource <support.opensource@diasemi.com>,
-        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v19 1/3] MAINTAINERS: da7280 updates to the Dialog
+ Semiconductor search terms
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Greg KH <gregkh@linuxfoundation.org>,
+        Support Opensource <support.opensource@diasemi.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1d250a32-0589-4d8a-b621-08d8386affac
-X-MS-TrafficTypeDiagnostic: VI1PR10MB1744:
-X-Microsoft-Antispam-PRVS: <VI1PR10MB17448ACAAD585D40FEC2137EA24A0@VI1PR10MB1744.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Office365-Filtering-Correlation-Id: 501c25ed-c284-4a9e-7b76-08d8386aff22
+X-MS-TrafficTypeDiagnostic: AM0PR10MB3044:
+X-Microsoft-Antispam-PRVS: <AM0PR10MB3044FA5DDADF7802F5187F50A24A0@AM0PR10MB3044.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Z5YsOd/Ypmm7Ggm5B/TMbi82YuEUkbuexoq2HbHTLZfD6nERg+8aL6G3lgISodagPWyxGPneLhCfupD5DG/lHTJ9bII4p+kHERGP5IDvCZRvA2eN+nueWASSsGHmiEXRtE/PjuaWxbM2LUexLDQFY4Kop0EFOGBNKQE6c2FrdPfDrRzNcVYhIDcXMs3vVMK3tj5Xk7FXr9MlpZVWOnRiHNswyeVq4PLUmw8UOd3USa7bSYnUVK+HQxSrC1x2ePQWCfTVH8RBRCV/ybi0gA5A9tOxCaV5WanG2NvKZrIEP7AaQwEswnbTdCLuVowzbi0o/sBljwYt3biMJ69kGa8IdhaP2Z1Sm/Xb8JwSNQ9blCrUMAIf0D8L/t/54YAf4wriYyEfiIGWNXtTYmgKJQHIMuWISOXMIhJgrgdKDMHwI8eu/0K73Bwz4Zws3GV6XZZ8
-X-Forefront-Antispam-Report: CIP:193.240.239.45;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mailrelay1.diasemi.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(46966005)(2616005)(4326008)(6666004)(336012)(36756003)(26005)(33310700002)(2906002)(86362001)(47076004)(83380400001)(5660300002)(8676002)(82310400002)(426003)(54906003)(6266002)(36906005)(70586007)(110136005)(356005)(8936002)(42186006)(81166007)(498600001)(186003)(70206006);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: /jK3b9eqaeS+D16gnIBsxGyh6mytttk/SN8ZJHVzKYliuM/q8DcXei9WHR9zA4lPIs5hJyvmVLt9E0L+rH1RqCC5TUJBJGqU8zdo6uhJCPU7YOb2NjXHCOx/7wRR0oKg9Syca7lJ8U0lW0ZCk6s6DBeNr+nXpRzatfthsdgWHuK2Q/xGS6n2Zk6mY4LFsIJocjvL/TTCydPH75+4JyqJ//gf0RX43xvTCH/d5JSqUVYa3jTFC/DGm+46LBXZcJpaJ4BEUydsiSoqimN1SCvtm6izykOg7O7dcDpGlqYsXQ5ZaSd+nqsErVXYXpvKd0iIP5Q+X8ucMr69vJoBOJqS++6j+zYKX7aFCgYZQOokHTZNsd/EuBtWwX9/3zuYIeKEVQ31IhRydXU8vaopLsy0AXAjyT1+dLuRuvcTCgO4JtT/KpWVSAw12va5b6SDXaQDBTVykxL6jMHdsy5rwkT78YjQizcY9FqLXrwYlp6AP12ymrdu6B+twZizrM00LkQD
+X-Forefront-Antispam-Report: CIP:193.240.239.45;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mailrelay1.diasemi.com;PTR:InfoDomainNonexistent;CAT:NONE;SFTY:;SFS:(4636009)(46966005)(426003)(8676002)(966005)(83380400001)(5660300002)(336012)(356005)(2616005)(6266002)(498600001)(107886003)(2906002)(33310700002)(4326008)(82310400002)(36906005)(81166007)(42186006)(47076004)(86362001)(54906003)(110136005)(6666004)(8936002)(70206006)(186003)(36756003)(70586007)(26005);DIR:OUT;SFP:1101;
 X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Aug 2020 11:39:07.7063
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Aug 2020 11:39:06.8079
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1d250a32-0589-4d8a-b621-08d8386affac
+X-MS-Exchange-CrossTenant-Network-Message-Id: 501c25ed-c284-4a9e-7b76-08d8386aff22
 X-MS-Exchange-CrossTenant-Id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=511e3c0e-ee96-486e-a2ec-e272ffa37b7c;Ip=[193.240.239.45];Helo=[mailrelay1.diasemi.com]
 X-MS-Exchange-CrossTenant-AuthSource: HE1EUR02FT063.eop-EUR02.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB1744
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB3044
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device tree binding information for DA7280 haptic driver.
-Example bindings for DA7280 are added.
-
-Reviewed-by: Rob Herring <robh@kernel.org>.
+This patch adds the da7280 bindings doc and driver to the Dialog
+Semiconductor support list.
 
 Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
 
@@ -119,138 +118,42 @@ v16: No changes.
 v15: No changes.
 v14: No changes.
 v13: No changes.
-v12: No changes.
+v12: Corrected file list order.
 v11: No changes.
 v10: No changes.
 v9: No changes.
-v8: Updated descriptions for new properties.
+v8: No changes.
 v7: No changes.
 v6: No changes.
-v5: Updated descriptions and fixed errors.
-v4: Fixed commit message, properties.
-v3: Fixed subject format.
-v2: No changes
+v5: No changes.
+v4: No changes.
+v3: No changes.
+v2: No changes.
 
 
- .../devicetree/bindings/input/dlg,da7280.txt       | 109 +++++++++++++++++++++
- 1 file changed, 109 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/input/dlg,da7280.txt b/Documentation/devicetree/bindings/input/dlg,da7280.txt
-new file mode 100644
-index 0000000..e6b719d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/dlg,da7280.txt
-@@ -0,0 +1,109 @@
-+Dialog Semiconductor DA7280 Haptics bindings
-+
-+Required properties:
-+- compatible: Should be "dlg,da7280".
-+- reg: Specifies the I2C slave address.
-+
-+- interrupt-parent : Specifies the phandle of the interrupt controller to
-+  which the IRQs from DA7280 are delivered to.
-+
-+- dlg,actuator-type: Set Actuator type. it should be one of:
-+  "LRA" - Linear Resonance Actuator type.
-+  "ERM-bar" - Bar type Eccentric Rotating Mass.
-+  "ERM-coin" - Coin type Eccentric Rotating Mass.
-+
-+- dlg,const-op-mode: Haptic operation mode for FF_CONSTANT.
-+  Possible values:
-+	1 - Direct register override(DRO) mode triggered by i2c(default),
-+	2 - PWM data source mode controlled by PWM duty,
-+- dlg,periodic-op-mode: Haptic operation mode for FF_PERIODIC.
-+  Possible values:
-+	1 - Register triggered waveform memory(RTWM) mode, the pattern
-+	    assigned to the PS_SEQ_ID played as much times as PS_SEQ_LOOP,
-+	2 - Edge triggered waveform memory(ETWM) mode, external GPI(N)
-+	    control are required to enable/disable and it needs to keep
-+	    device enabled by sending magnitude (X > 0),
-+	    the pattern is assigned to the GPI(N)_SEQUENCE_ID below.
-+	The default value is 1 for both of the operation modes.
-+	For more details, please see the datasheet.
-+
-+- dlg,nom-microvolt: Nominal actuator voltage rating.
-+  Valid values: 0 - 6000000.
-+- dlg,abs-max-microvolt: Absolute actuator maximum voltage rating.
-+  Valid values: 0 - 6000000.
-+- dlg,imax-microamp: Actuator max current rating.
-+  Valid values: 0 - 252000.
-+  Default: 130000.
-+- dlg,impd-micro-ohms: the impedance of the actuator in micro ohms.
-+  Valid values: 0 - 1500000000.
-+
-+Optional properties:
-+- pwms : phandle to the physical PWM(Pulse Width Modulation) device.
-+  PWM properties should be named "pwms". And number of cell is different
-+  for each pwm device.
-+  (See Documentation/devicetree/bindings/pwm/pwm.txt
-+   for further information relating to pwm properties)
-+
-+- dlg,ps-seq-id: the PS_SEQ_ID(pattern ID in waveform memory inside chip)
-+  to play back when RTWM-MODE is enabled.
-+  Valid range: 0 - 15.
-+- dlg,ps-seq-loop: the PS_SEQ_LOOP, Number of times the pre-stored sequence
-+  pointed to by PS_SEQ_ID or GPI(N)_SEQUENCE_ID is repeated.
-+  Valid range: 0 - 15.
-+- dlg,gpiN-seq-id: the GPI(N)_SEQUENCE_ID, pattern to play
-+  when gpi0 is triggered, 'N' must be 0 - 2.
-+  Valid range: 0 - 15.
-+- dlg,gpiN-mode: the pattern mode which can select either
-+  "Single-pattern" or "Multi-pattern", 'N' must be 0 - 2.
-+- dlg,gpiN-polarity: gpiN polarity which can be chosen among
-+  "Rising-edge", "Falling-edge" and "Both-edge",
-+  'N' must be 0 - 2
-+  Haptic will work by this edge option in case of ETWM mode.
-+
-+- dlg,resonant-freq-hz: use in case of LRA.
-+  the frequency range: 50 - 300.
-+  Default: 205.
-+
-+- dlg,bemf-sens-enable: Enable for internal loop computations.
-+- dlg,freq-track-enable: Enable for resonant frequency tracking.
-+- dlg,acc-enable: Enable for active acceleration.
-+- dlg,rapid-stop-enable: Enable for rapid stop.
-+- dlg,amp-pid-enable: Enable for the amplitude PID.
-+- dlg,mem-array: Customized waveform memory(patterns) data downloaded to
-+  the device during initialization. This is an array of 100 values(u8).
-+
-+For further information, see device datasheet.
-+
-+======
-+
-+Example:
-+
-+	haptics: da7280-haptics@4a {
-+		compatible = "dlg,da7280";
-+		reg = <0x4a>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
-+		dlg,actuator-type = "LRA";
-+		dlg,dlg,const-op-mode = <1>;
-+		dlg,dlg,periodic-op-mode = <1>;
-+		dlg,nom-microvolt = <2000000>;
-+		dlg,abs-max-microvolt = <2000000>;
-+		dlg,imax-microamp = <170000>;
-+		dlg,resonant-freq-hz = <180>;
-+		dlg,impd-micro-ohms = <10500000>;
-+		dlg,freq-track-enable;
-+		dlg,rapid-stop-enable;
-+		dlg,mem-array = <
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
-+		>;
-+
-+	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4e2698c..81a9416 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5003,6 +5003,7 @@ M:	Support Opensource <support.opensource@diasemi.com>
+ S:	Supported
+ W:	http://www.dialog-semiconductor.com/products
+ F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
++F:	Documentation/devicetree/bindings/input/dlg,da72??.txt
+ F:	Documentation/devicetree/bindings/mfd/da90*.txt
+ F:	Documentation/devicetree/bindings/regulator/da92*.txt
+ F:	Documentation/devicetree/bindings/regulator/slg51000.txt
+@@ -5013,6 +5014,7 @@ F:	Documentation/hwmon/da90??.rst
+ F:	drivers/gpio/gpio-da90??.c
+ F:	drivers/hwmon/da90??-hwmon.c
+ F:	drivers/iio/adc/da91??-*.c
++F:	drivers/input/misc/da72??.[ch]
+ F:	drivers/input/misc/da90??_onkey.c
+ F:	drivers/input/touchscreen/da9052_tsi.c
+ F:	drivers/leds/leds-da90??.c
 -- 
 end-of-patch for PATCH v19
 
