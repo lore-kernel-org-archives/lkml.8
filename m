@@ -2,184 +2,254 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2667C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFC1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD12D2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:26:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pv2RJRtd"
+	by mail.kernel.org (Postfix) with ESMTP id 4D6BA2086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:28:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596554904;
+	bh=GrEWQJQGOl4cRu/UhU8uTIUnxBntWt33e91g5LKhI0I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dxzIKnTLXpDX3QiYrA5aRV/fK9MtuQ2azKXeRXq4kUYrjWBTl26RZXMGFunPZPYvn
+	 lsrqpBhb2fnadkye+U0jj+Coz8NGjGcVd5kvYunMo69kYYL1DGaNLX3dfgfN883E1y
+	 3IXC+/x7AuXjwnDsFluzQmejhxxlJrhc+C06GIUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729655AbgHDP0u (ORCPT
+        id S1729675AbgHDP2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 11:26:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37982 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729417AbgHDP0t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 11:26:49 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9832C06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 08:26:48 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id l4so42825587ejd.13
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 08:26:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X3o6MDqUXmxvVSlcdLb2IgJysM+Vk/j+xrJF23Zh02s=;
-        b=Pv2RJRtdXsa5JPcelCLgxa/MabWdHgHvtHX75GYe7Y7xpruRC9hh7PLtf/ZOrHAiw8
-         VP5SVZy9b8umW6eW4ARyy48QMQ04NXamcrYz/GNkRfZMJGsXWPv/4vzFwLb3jFRpYEil
-         pH6XwupwhFlGXDIdQ31xqorNxSrOTLPt93pOsFh4wouUfVLrvSyQy3o1r6I+AsoT/Vz0
-         RSdzPrqKE53H3zFd38glLLTTI8nU73sl1fjcJGsbwGX5h7qUZ0KqWC8tWUOmv7csf1uL
-         QT7YGckMXfwEbCMNjfsr1ATWDXeF16wNxdgOU8FRKqoElZ1lvj4d+mZyRV4KwZRBLvS2
-         6wcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X3o6MDqUXmxvVSlcdLb2IgJysM+Vk/j+xrJF23Zh02s=;
-        b=jq8ZIbXadMcYO2N+Q+J3renDtU5T1LrTKleUpfXKx1zmpA83Qoqh5wFEw1PdMx3Nc7
-         KZ82nSpOvIe+3V7FWJVRayi5+hp/3NL3qpzq/kbGAiWkTeZ/sVNd7JCLumqKqZbEUc5b
-         ZP+6JwhVtVXHH3THz5WgT4nVW5YkQ+V2JiKNCIGdawI2lid/TfogSr+aB1f60OcORlsr
-         K2d12i2b750Va8YxrSL+GKc3/eCOJsnDWVowC6ZA6Nn4/PIwlai2lSy72ly01MazbMvu
-         KNzZnf/RdkCnanOkhTcXx5vtkgeLaYPKavPZf4Lta7NNgPtvh5TTQ1fJrRUc0luamn3H
-         glUw==
-X-Gm-Message-State: AOAM530easuE8kg7Dse6uLCV1Jgu7hZdhMCiHLzTOPsO+0YWd0syb0GO
-        THi8kikUrK2S6yorFLev3D2SRijmIIaC1hFxqHQ/7A==
-X-Google-Smtp-Source: ABdhPJzaWinHalOkG+8o4dRZjbIYHrsFx1Egu0ptiIqT6GQ27fDqCFx7Adt4ulh0/BdlBtahwcDejEV1GBPU83hOoBw=
-X-Received: by 2002:a17:906:c406:: with SMTP id u6mr23070434ejz.47.1596554807097;
- Tue, 04 Aug 2020 08:26:47 -0700 (PDT)
+        Tue, 4 Aug 2020 11:28:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50372 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729417AbgHDP2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 11:28:14 -0400
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13A092086A;
+        Tue,  4 Aug 2020 15:28:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596554889;
+        bh=GrEWQJQGOl4cRu/UhU8uTIUnxBntWt33e91g5LKhI0I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nPRx8iVY++kqpG4JDyL1ugJ8/dPRM/1CePHwuMe6djgeGx/H47CQvGe8BxoDCcvTB
+         +xnKxXz0q/mQsWogVoyUU8Nh1lisdIbXVuFzZvsCKxPeZ9zgnQAokq3MDRCJvXynF8
+         EV4KlR/0/hX43DjjgGRnOv62JW6Wup4tHovWHpek=
+Received: by mail-ed1-f53.google.com with SMTP id df16so13844972edb.9;
+        Tue, 04 Aug 2020 08:28:08 -0700 (PDT)
+X-Gm-Message-State: AOAM530t0JtibuhZ1WbZ2YAlFvrIgzL8o6yFwNcT6cyhQWD2SxGep5Eg
+        Y3kGj5PpNHk75KSePsS+5VE/21DRzdFvCn1JsQ==
+X-Google-Smtp-Source: ABdhPJz4owQRFlNIZk3qrbGz+1xbIMmNTB4wOXaF6pJDPcefYmGuIWtd4ZfGJJqDp76Dh2VsG/aOI8Et1XcOKW06Fao=
+X-Received: by 2002:a50:e109:: with SMTP id h9mr7679015edl.47.1596554887579;
+ Tue, 04 Aug 2020 08:28:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <1596509145.5207.21.camel@mtkswgap22> <1596549552-5466-1-git-send-email-Frankie.Chang@mediatek.com>
- <1596549552-5466-3-git-send-email-Frankie.Chang@mediatek.com>
-In-Reply-To: <1596549552-5466-3-git-send-email-Frankie.Chang@mediatek.com>
-From:   Todd Kjos <tkjos@google.com>
-Date:   Tue, 4 Aug 2020 08:26:34 -0700
-Message-ID: <CAHRSSExeOn_MO3F3aFc=N0KXBmP0TsWz3RQ8Z-0G2QwK_3y=sw@mail.gmail.com>
-Subject: Re: [PATCH v7 2/3] binder: add trace at free transaction.
-To:     Frankie Chang <Frankie.Chang@mediatek.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Martijn Coenen <maco@android.com>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Christian Brauner <christian@brauner.io>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mediatek@lists.infradead.org,
+References: <1596010690-13178-1-git-send-email-neal.liu@mediatek.com>
+ <1596010690-13178-3-git-send-email-neal.liu@mediatek.com> <CAAOTY_8bE8Qo5-0MA9J1gcEbN4DP=Wf2O6vOUVos=VkoODeayA@mail.gmail.com>
+ <1596163478.3932.17.camel@mtkswgap22> <CAAOTY_9kS+jrCOpZtOs+L8gBzvkewi+cSN7XWGNxuiMQocedFA@mail.gmail.com>
+ <1596425521.22971.13.camel@mtkswgap22> <CAAOTY_9UcnSDTaVPDPyPLsWEYcrcq5MY=z520MWtFdeLw_FqGQ@mail.gmail.com>
+ <1596507531.17917.10.camel@mtkswgap22>
+In-Reply-To: <1596507531.17917.10.camel@mtkswgap22>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Tue, 4 Aug 2020 23:27:56 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_-fsAXAO0rVMBdL+MLpFUx6w8EUCNoZG=qNvG+UuEDkGA@mail.gmail.com>
+Message-ID: <CAAOTY_-fsAXAO0rVMBdL+MLpFUx6w8EUCNoZG=qNvG+UuEDkGA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] soc: mediatek: add mtk-devapc driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org,
         wsd_upstream <wsd_upstream@mediatek.com>,
-        Jian-Min Liu <Jian-Min.Liu@mediatek.com>
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 7:09 AM Frankie Chang <Frankie.Chang@mediatek.com> wrote:
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=884=E6=97=
+=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=8810:19=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> From: "Frankie.Chang" <Frankie.Chang@mediatek.com>
 >
-> Since the original trace_binder_transaction_received cannot
-> precisely present the real finished time of transaction, adding a
-> trace_binder_txn_latency_free at the point of free transaction
-> may be more close to it.
+> On Tue, 2020-08-04 at 00:13 +0800, Chun-Kuang Hu wrote:
+> > Hi, Neal:
+> >
+> > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=883=E6=
+=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8A=E5=8D=8811:32=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> > >
+> > > Hi Chun-Kuang,
+> > >
+> > > On Fri, 2020-07-31 at 23:03 +0800, Chun-Kuang Hu wrote:
+> > > > Hi, Neal:
+> > > >
+> > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=883=
+1=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=8810:44=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+> > > > >
+> > > > > Hi Chun-Kuang,
+> > > > >
+> > > > >
+> > > > > On Thu, 2020-07-30 at 00:38 +0800, Chun-Kuang Hu wrote:
+> > > > > > Hi, Neal:
+> > > > > >
+> > > > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B47=E6=9C=
+=8829=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=884:29=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+> > > > > > >
+> > > > > > > MediaTek bus fabric provides TrustZone security support and d=
+ata
+> > > > > > > protection to prevent slaves from being accessed by unexpecte=
+d
+> > > > > > > masters.
+> > > > > > > The security violation is logged and sent to the processor fo=
+r
+> > > > > > > further analysis or countermeasures.
+> > > > > > >
+> > > > > > > Any occurrence of security violation would raise an interrupt=
+, and
+> > > > > > > it will be handled by mtk-devapc driver. The violation
+> > > > > > > information is printed in order to find the murderer.
+> > > > > > >
+> > > > > > > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> > > > > > > ---
+> > > > > >
+> > > > > > [snip]
+> > > > > >
+> > > > > > > +
+> > > > > > > +/*
+> > > > > > > + * devapc_extract_vio_dbg - extract full violation informati=
+on after doing
+> > > > > > > + *                          shift mechanism.
+> > > > > > > + */
+> > > > > > > +static void devapc_extract_vio_dbg(struct mtk_devapc_context=
+ *ctx)
+> > > > > > > +{
+> > > > > > > +       const struct mtk_devapc_vio_dbgs *vio_dbgs;
+> > > > > > > +       struct mtk_devapc_vio_info *vio_info;
+> > > > > > > +       void __iomem *vio_dbg0_reg;
+> > > > > > > +       void __iomem *vio_dbg1_reg;
+> > > > > > > +       u32 dbg0;
+> > > > > > > +
+> > > > > > > +       vio_dbg0_reg =3D ctx->devapc_pd_base + ctx->offset->v=
+io_dbg0;
+> > > > > > > +       vio_dbg1_reg =3D ctx->devapc_pd_base + ctx->offset->v=
+io_dbg1;
+> > > > > > > +
+> > > > > > > +       vio_dbgs =3D ctx->vio_dbgs;
+> > > > > > > +       vio_info =3D ctx->vio_info;
+> > > > > > > +
+> > > > > > > +       /* Starts to extract violation information */
+> > > > > > > +       dbg0 =3D readl(vio_dbg0_reg);
+> > > > > > > +       vio_info->vio_addr =3D readl(vio_dbg1_reg);
+> > > > > > > +
+> > > > > > > +       vio_info->master_id =3D (dbg0 & vio_dbgs->mstid.mask)=
+ >>
+> > > > > > > +                             vio_dbgs->mstid.start;
+> > > > > >
+> > > > > > What is master_id? How could we use it to debug? For example, i=
+f we
+> > > > > > get a master_id =3D 1, what should we do for this?
+> > > > > >
+> > > > > > > +       vio_info->domain_id =3D (dbg0 & vio_dbgs->dmnid.mask)=
+ >>
+> > > > > > > +                             vio_dbgs->dmnid.start;
+> > > > > >
+> > > > > > What is domain_id? How could we use it to debug? For example, i=
+f we
+> > > > > > get a domain_id =3D 2, what should we do for this?
+> > > > > >
+> > > > >
+> > > > > master_id and domain_id belongs our bus side-band signal info. It=
+ can
+> > > > > help us to find the violation master.
+> > > >
+> > > > Does 'violation master' means the hardware could access the protect=
+ed
+> > > > register? (ex. CPU, GCE, ...) If so, I think it's better to add
+> > > > comment to explain how to map (master_id, domain_id) to a hardware
+> > > > (maybe the device in device tree) because every body does not know
+> > > > what the number means. Don't try to translate the number to a strin=
+g
+> > > > because this would cost much time to do this. Just print a number a=
+nd
+> > > > we could find out the master by the comment.
+> > >
+> > > 'violation master' means the master which violates the permission
+> > > control. For example, if we set permission 'Secure R/W only' as CPU t=
+o
+> > > spi register. When violation is triggered, it means CPU access spi
+> > > register through normal world instead of secure world, which is not
+> > > allowed.
+> > >
+> > > 'master_id' cannot use the simple comments to describe which master i=
+t
+> > > is. It depends on violation slaves. For example, if there are two
+> > > violations:
+> > > 1. CPU access spi reg
+> > > 2. CPU access timer reg
+> > > It might be different 'master_id' for CPU on these two cases.
+> > > I would prefer to remain the id number if translate to a string is a =
+bad
+> > > idea.
+> > > Thanks !
+> >
+> > It seams that master_id and domain_id does not help for debug. When we
+> > get master_id =3D 1 and domain_id =3D 2, we don't know what it mean. I
+> > think we just need violation address because we could find the driver
+> > that write this address and the bug would be inside this driver. So
+> > need not to process master_id and domain_id.
+> >
 >
-> Signed-off-by: Frankie.Chang <Frankie.Chang@mediatek.com>
+> Actually, it does help us for debug. violation master is not CPU only.
+> It might be any other master in our SoC. So the bug might not be inside
+> the kernel driver.
+> I'll prefer to remain this information.
+> Thanks !
 
-Acked-by: Todd Kjos <tkjos@google.com>
+Let maintainer to make decision. Maybe he like to print magic number
+and wait for someone to hack it.
 
-> ---
->  drivers/android/binder.c       |   18 ++++++++++++++++++
->  drivers/android/binder_trace.h |   29 +++++++++++++++++++++++++++++
->  2 files changed, 47 insertions(+)
 >
-> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-> index 2df146f..1bfadc2 100644
-> --- a/drivers/android/binder.c
-> +++ b/drivers/android/binder.c
-> @@ -1508,6 +1508,20 @@ static void binder_free_txn_fixups(struct binder_transaction *t)
->         }
->  }
+> > Regards,
+> > Chun-Kuang.
+> >
+> > >
+> > > >
+> > > > >
+> > > > > > > +       vio_info->write =3D ((dbg0 & vio_dbgs->vio_w.mask) >>
+> > > > > > > +                           vio_dbgs->vio_w.start) =3D=3D 1;
+> > > > > > > +       vio_info->read =3D ((dbg0 & vio_dbgs->vio_r.mask) >>
+> > > > > > > +                         vio_dbgs->vio_r.start) =3D=3D 1;
+> > > > > > > +       vio_info->vio_addr_high =3D (dbg0 & vio_dbgs->addr_h.=
+mask) >>
+> > > > > > > +                                 vio_dbgs->addr_h.start;
+> > > > > >
+> > > > > > What is vio_addr_high? As I know all register address are 32 bi=
+ts, is
+> > > > > > vio_addr_high the address above 32 bits?
+> > > > >
+> > > > > Yes, you are right. In MT6779, all register base are 32 bits. We =
+can
+> > > > > ignore this info for current driver. I'll update on next patch.
+> > > > > Thanks !
+> > > >
+> > > > Such a strange hardware, all register is 32 bits but it has a
+> > > > vio_addr_high in its register. OK, just drop this.
+> > > >
+> > > > >
+> > > > > >
+> > > > > > > +
+> > > > > > > +       devapc_vio_info_print(ctx);
+> > > > > > > +}
+> > > > > > > +
+> > > > > >
 >
-> +static void binder_txn_latency_free(struct binder_transaction *t)
-> +{
-> +       int from_proc, from_thread, to_proc, to_thread;
-> +
-> +       spin_lock(&t->lock);
-> +       from_proc = t->from ? t->from->proc->pid : 0;
-> +       from_thread = t->from ? t->from->pid : 0;
-> +       to_proc = t->to_proc ? t->to_proc->pid : 0;
-> +       to_thread = t->to_thread ? t->to_thread->pid : 0;
-> +       spin_unlock(&t->lock);
-> +
-> +       trace_binder_txn_latency_free(t, from_proc, from_thread, to_proc, to_thread);
-> +}
-> +
->  static void binder_free_transaction(struct binder_transaction *t)
->  {
->         struct binder_proc *target_proc = t->to_proc;
-> @@ -1518,6 +1532,8 @@ static void binder_free_transaction(struct binder_transaction *t)
->                         t->buffer->transaction = NULL;
->                 binder_inner_proc_unlock(target_proc);
->         }
-> +       if (trace_binder_txn_latency_free_enabled())
-> +               binder_txn_latency_free(t);
->         /*
->          * If the transaction has no target_proc, then
->          * t->buffer->transaction has already been cleared.
-> @@ -3093,6 +3109,8 @@ static void binder_transaction(struct binder_proc *proc,
->         kfree(tcomplete);
->         binder_stats_deleted(BINDER_STAT_TRANSACTION_COMPLETE);
->  err_alloc_tcomplete_failed:
-> +       if (trace_binder_txn_latency_free_enabled())
-> +               binder_txn_latency_free(t);
->         kfree(t);
->         binder_stats_deleted(BINDER_STAT_TRANSACTION);
->  err_alloc_t_failed:
-> diff --git a/drivers/android/binder_trace.h b/drivers/android/binder_trace.h
-> index 6731c3c..eb2c53c 100644
-> --- a/drivers/android/binder_trace.h
-> +++ b/drivers/android/binder_trace.h
-> @@ -95,6 +95,35 @@
->                   __entry->thread_todo)
->  );
->
-> +TRACE_EVENT(binder_txn_latency_free,
-> +       TP_PROTO(struct binder_transaction *t
-> +                int from_proc, int from_thread
-> +                int to_proc, int to_thread),
-> +       TP_ARGS(t, from_proc, from_thread, to_proc, to_thread),
-> +       TP_STRUCT__entry(
-> +               __field(int, debug_id)
-> +               __field(int, from_proc)
-> +               __field(int, from_thread)
-> +               __field(int, to_proc)
-> +               __field(int, to_thread)
-> +               __field(unsigned int, code)
-> +               __field(unsigned int, flags)
-> +       ),
-> +       TP_fast_assign(
-> +               __entry->debug_id = t->debug_id;
-> +               __entry->from_proc = from_proc;
-> +               __entry->from_thread = from_thread;
-> +               __entry->to_proc = to_proc;
-> +               __entry->to_thread = to_thread;
-> +               __entry->code = t->code;
-> +               __entry->flags = t->flags;
-> +       ),
-> +       TP_printk("transaction=%d from %d:%d to %d:%d flags=0x%x code=0x%x",
-> +                 __entry->debug_id, __entry->from_proc, __entry->from_thread,
-> +                 __entry->to_proc, __entry->to_thread, __entry->code,
-> +                 __entry->flags)
-> +);
-> +
->  TRACE_EVENT(binder_transaction,
->         TP_PROTO(bool reply, struct binder_transaction *t,
->                  struct binder_node *target_node),
-> --
-> 1.7.9.5
