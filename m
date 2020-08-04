@@ -2,129 +2,120 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2687C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B0FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8F932086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:39:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F13DA2086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:39:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pavvz+Fo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729858AbgHDHjL (ORCPT
+        id S1729907AbgHDHjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 03:39:11 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:48628 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbgHDHjK (ORCPT
+        Tue, 4 Aug 2020 03:39:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50806 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbgHDHjv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 03:39:10 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id E922E1C0BD7; Tue,  4 Aug 2020 09:39:06 +0200 (CEST)
-Date:   Tue, 4 Aug 2020 09:39:06 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        Ariel Levkovich <lariel@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 31/56] net/mlx5: Verify Hardware supports requested
- ptp function on a given pin
-Message-ID: <20200804073906.jo6y4iaa5vqa4ixz@duo.ucw.cz>
-References: <20200803121850.306734207@linuxfoundation.org>
- <20200803121851.847496622@linuxfoundation.org>
+        Tue, 4 Aug 2020 03:39:51 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0145C06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 00:39:51 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id t6so1539139pjr.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 00:39:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=bUrPosWpbtUZGITpvnlHaTi7khIGfAqisN4TaUAkCAE=;
+        b=Pavvz+FooPxe5h/5VDGo9c4Zqz16bgtEwD8V/rIC6jRcmkXDzkMZP9aWi2Jn95G93Z
+         5pbFR5GPK5OyIIAy3AhSc23Kixg/Putnz1htPQUk7OmNcBBpaF5y7bPxDpuhtvFnx6mU
+         vftTrbowyZZkyRTg03tMsEiPJgke6IGpEIcrecBx9rhUhrlvnFbgAG88UI7xoG6S7kMN
+         A1AlVHrGIrPF9D83O38YZPJjdBUkX2qRlYQjaSzGHRiFk/JyPT1nKlNaWdD6BY6JXtqm
+         +veqW2flCbTe7MASrs0MuGHk67tV/CJowYkbNdrKJb1l+r3d83uO2kfc2sLl0sdH0LSc
+         c2hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=bUrPosWpbtUZGITpvnlHaTi7khIGfAqisN4TaUAkCAE=;
+        b=cE7MWoKVsqG90ATAzB91yDO1qtySDf7Ntqtvv0EJZh1UE5uEZzqSpyxSRPNwqAoIT9
+         A+hRpQqKzdnJtMKAILCbWXpp6x2daPsjF1UuIIabVy2NsKbhtif96ct88OxXYGtaMiOU
+         dMEf0b+zbxDHUO6cimd8UQmR1A5dpjtGU4wpwJNKjReZfedCmActZWX9Plv+Rv5+/kWq
+         cNGWiSs92DuWclO5GsZufh0TMSabG0hVpB2cbuafsXrYTJAQSOwDfD1J4a3qTeGiF73f
+         iDFCDkqv3UJ2gqETNgxhMN26/IJSeObPJfwtshb982rnbN2XvwbBw5QWY7YPe8u2FCeq
+         lT/A==
+X-Gm-Message-State: AOAM5325DXUEjz8FIEZmP1xOpPtyEOGOQyDMEeOTFyZvUbsYrqhz9/jV
+        uEZLy8X/ORsR7Le2FownfUZFU+mrD3gQAoVjwnE=
+X-Google-Smtp-Source: ABdhPJxKhp0KbfInWbfMcpcBEQhF6c+PPuWTjPfHws+fWHsolyRuqos5w/qy91+QMtSQaRgWq1w0LTLFvWsgHpr7Mhc=
+X-Received: by 2002:a17:90a:a393:: with SMTP id x19mr3285472pjp.228.1596526791226;
+ Tue, 04 Aug 2020 00:39:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="2deo36yqpzzaylvk"
-Content-Disposition: inline
-In-Reply-To: <20200803121851.847496622@linuxfoundation.org>
-User-Agent: NeoMutt/20180716
+References: <CAK8P3a1vFJ+uUGPGifZGhECXvxA=2u745WrGNZb08s1nHkZQ9g@mail.gmail.com>
+ <CAK8P3a2B5cxE512R0-ni6BJOnkgR7kGueqd3AU9E2PXh0unsmg@mail.gmail.com>
+ <CACPK8Xd++ZQx9hh21dV6qn73aoWvoFsOHq8Pmgbtpi-GD3ShmA@mail.gmail.com> <CAHp75Vc8yXqCsZ79=YWZLJ3ObgA1AYLj0eqqK0e8sXvMWsf+Hg@mail.gmail.com>
+In-Reply-To: <CAHp75Vc8yXqCsZ79=YWZLJ3ObgA1AYLj0eqqK0e8sXvMWsf+Hg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 4 Aug 2020 10:39:34 +0300
+Message-ID: <CAHp75VcadLh+hM244agKKif_QeSj1osHMzuC8wv9UVFo7diX5w@mail.gmail.com>
+Subject: Re: [GIT PULL 3/5] ARM: SoC changes for v5.9
+To:     Joel Stanley <joel@jms.id.au>
+List-Id: <soc.lore.kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        SoC Team <soc@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 4, 2020 at 10:33 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Tue, Aug 4, 2020 at 10:02 AM Joel Stanley <joel@jms.id.au> wrote:
+> >
+> > On Mon, 3 Aug 2020 at 21:49, Arnd Bergmann <arnd@arndb.de> wrote:
+> > > ARM: SoC changes for v5.9
+> >
+> > > Andy Shevchenko (1):
+> > >       ARM: orion/gpio: Make use of for_each_requested_gpio()
+> >
+> > This change broke the arm build (I noticed it when building multi_v5_de=
+fconfig):
+> >
+> > ../arch/arm/plat-orion/gpio.c:457:2: error: implicit declaration of
+> > function =E2=80=98for_each_requested_gpio=E2=80=99
+> > [-Werror=3Dimplicit-function-declaration]
+> >   457 |  for_each_requested_gpio(chip, i, label) {
+> >       |  ^~~~~~~~~~~~~~~~~~~~~~~
+> >
+> > for_each_requested_gpio isn't in Linus (Torvalds) tree yet. It will be
+> > fixed when he pulls Linus Walleij's GPIO tree which has the commit:
+> >
+> >  b3337eb24831 gpiolib: Introduce for_each_requested_gpio_in_range() mac=
+ro
+>
+> Linus W. specifically created an immutable branch [1] for this.
+> And I think I commented somewhere that entire branch should be pulled.
 
---2deo36yqpzzaylvk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+https://www.spinics.net/lists/linux-gpio/msg51186.html
 
-Hi!
+Sorry if that message wasn't clear.
 
-> [ Upstream commit 071995c877a8646209d55ff8edddd2b054e7424c ]
->=20
-> Fix a bug where driver did not verify Hardware pin capabilities for
-> PTP functions.
->=20
-> Fixes: ee7f12205abc ("net/mlx5e: Implement 1PPS support")
-> Signed-off-by: Eran Ben Elisha <eranbe@mellanox.com>
-> Reviewed-by: Ariel Levkovich <lariel@mellanox.com>
-> Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-
-> +
->  static int mlx5_ptp_verify(struct ptp_clock_info *ptp, unsigned int pin,
->  			   enum ptp_pin_function func, unsigned int chan)
->  {
-> -	return (func =3D=3D PTP_PF_PHYSYNC) ? -EOPNOTSUPP : 0;
-> +	struct mlx5_clock *clock =3D container_of(ptp, struct mlx5_clock,
-> +						ptp_info);
-> +
-> +	switch (func) {
-> +	case PTP_PF_NONE:
-> +		return 0;
-> +	case PTP_PF_EXTTS:
-> +		return !(clock->pps_info.pin_caps[pin] &
-> +			 MLX5_MTPPS_REG_CAP_PIN_X_MODE_SUPPORT_PPS_IN);
-> +	case PTP_PF_PEROUT:
-> +		return !(clock->pps_info.pin_caps[pin] &
-> +			 MLX5_MTPPS_REG_CAP_PIN_X_MODE_SUPPORT_PPS_OUT);
-> +	default:
-> +		return -EOPNOTSUPP;
-> +	}
-> +
-> +	return -EOPNOTSUPP;
->  }
-
-The last return statement is unreachable code. I'm not sure if it will
-provoke any warnings, but it looks ugly.
-
-Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c b/drivers/=
-net/ethernet/mellanox/mlx5/core/lib/clock.c
-index 2d55b7c22c03..a804f92ccf23 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c
-@@ -431,8 +431,6 @@ static int mlx5_ptp_verify(struct ptp_clock_info *ptp, =
-unsigned int pin,
- 	default:
- 		return -EOPNOTSUPP;
- 	}
--
--	return -EOPNOTSUPP;
- }
-=20
- static const struct ptp_clock_info mlx5_ptp_clock_info =3D {
-
+> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.gi=
+t/log/?h=3Dib-for-each-requested
 
 --=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---2deo36yqpzzaylvk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXykQmgAKCRAw5/Bqldv6
-8mBZAJ44rSH77O3rwY3K6531GcdnCUsEeQCgui5/iR1zubZIKtvj8O2IL5zkGEg=
-=nDF/
------END PGP SIGNATURE-----
-
---2deo36yqpzzaylvk--
+With Best Regards,
+Andy Shevchenko
