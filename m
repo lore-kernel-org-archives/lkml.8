@@ -2,115 +2,101 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADA2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C766DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93C2222B45
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:15:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596536129;
-	bh=uhNrf4tk+/t79WxEC5WxEldBfKQ9SFtFAckU2O+biDQ=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=jCT1CEgTKWZVdIrvpPnFnopHNoQITI9s2EN6RAS3BcBSWK6Ep4x27Zg3GNGdfZXL8
-	 pKuJsNtbtxx9j6r7+Qt059hq+TP/U3lCb/RnPqA2+rRDhUQ+n5r1MIfSWuxaoWcc6D
-	 cJilpI1nPaJCXoNRkGA1klKy98DEFE23w88hwPTc=
+	by mail.kernel.org (Postfix) with ESMTP id C2D7C22B45
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:15:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BS+33gy1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbgHDKP2 (ORCPT
+        id S1728311AbgHDKPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 06:15:28 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37455 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbgHDKPU (ORCPT
+        Tue, 4 Aug 2020 06:15:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbgHDKPi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 06:15:20 -0400
-Received: by mail-wm1-f65.google.com with SMTP id k8so2345084wma.2;
-        Tue, 04 Aug 2020 03:15:19 -0700 (PDT)
+        Tue, 4 Aug 2020 06:15:38 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D9A6C06174A;
+        Tue,  4 Aug 2020 03:15:37 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a14so36873385wra.5;
+        Tue, 04 Aug 2020 03:15:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=H5j9+8nmnJdMppGosOvhVeg5yrEmi0eTTjC4+FGQAik=;
+        b=BS+33gy1+UWjVpsrRC0ldxaeHxg/C4gBtng4EeueLwXw0sy2QDce6cJpcgyoxY/vkp
+         a9ZTANWhYBqIHwlfjTZ4lF/R/2O2HpoD6kbltM7DaXlig3417ljr7sp4CIh63ayDLZoD
+         txUvmJ3I298UXaWq1VDrpIviq6O/D3fVSSSyEZIPXG1ZdppUtAVSkvgsnvSWhs3Slz2U
+         5f/51V5eq4JUauN/FVlsaLjHM7xF0rSlEy8BzOGnZ3sZfvHBXJbv8+2w3x33bQZVuD0N
+         RdV6HC720pOV2wUyCxGhR2W6iXJYkABHqXXhhC1O/MG9HsYqTliaRqz3MceI1bTmcJ08
+         OYiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=vsGbhhKgXTUUJkFhYjSRWE+DKY65nuYoudNERqqQhRU=;
-        b=ZHGZWmri2HbiNqTykox0dNEQWDXZoB1H5fgHfuXPmKsHUpMcm/V2WQYgbTSEfhhTMt
-         wEUQrwTjXm9WKgASIB4ZHnBQH3pmPq9+nT+rKC2aZVMMOT5vXto6iRL/SWS3S0ej6c21
-         mRofqCxm1txYDwCA6sM35ilPCUlAexCmle3C6Q6LG7An30j5taAHpyFeWZZ9N+rz7RnW
-         oq+ozHc/LtBvmoi7A+Q53xBLptD5diSGxbMs3dJLK1QoTY3s3cU+kO1V2hoHaJij6MkX
-         ovFvCZBxkSJPq+FUOoN6hV9V2N5TIRxZ4+b8VtW9YVxSf8odFcKgUFrKpAAxV7ZQ6Yrs
-         YifA==
-X-Gm-Message-State: AOAM531XEvzENAfPf82c/CdEku11Nu8xfy5gnWAKfenvIdnMlVfZwbk9
-        zP6vgEQlLLpBvKODSYb5akg=
-X-Google-Smtp-Source: ABdhPJz9qmKOJQGeUFkACEeNFGz4MhV5U0n6Kn83N+9jCZYDEQroNOOHrHmY6g8uFBCrpN023CzreQ==
-X-Received: by 2002:a1c:5581:: with SMTP id j123mr3286704wmb.75.1596536118534;
-        Tue, 04 Aug 2020 03:15:18 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id d14sm29519453wre.44.2020.08.04.03.15.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 03:15:18 -0700 (PDT)
-Date:   Tue, 4 Aug 2020 10:15:16 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
-        sthemmin@microsoft.com, haiyangz@microsoft.com,
-        Michael Kelley <mikelley@microsoft.com>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        Linux Kernel List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Hyper-V commits for 5.9
-Message-ID: <20200804101516.xtytsljxre3wheae@liuwe-devbox-debian-v2>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=H5j9+8nmnJdMppGosOvhVeg5yrEmi0eTTjC4+FGQAik=;
+        b=VYMZsf8ej5QrZ/wEfG6+8Oef4m8SUAO3438T1oqOenWw/XTQwEyeaVrZupozvdZ0SF
+         7XlHltmUrR2embDS1AyTHNW9TcSwCCjZQdFkhUh/RbU1NLLNZgYNwA4wY1mJdWquP0LW
+         si9whf0n8U6PVYM4yPH7HsfqARhw7gORYDOZXDMDg5AGwUcWgoFuaLh5x9n3xq0IgVQ6
+         2yJ+N4b46K8rE/y+ZeNnqIeiFpLn99RHZOl5Bd4mQH1epXiGYfC0ynVh+8//SYqkywTw
+         J0xVO2eyRtBiZ0eeGBNGoF0BmvtUKeNn4n0yIG+mFFgy5S/hlb+WR3U6lVhCYwCJ06om
+         ic7g==
+X-Gm-Message-State: AOAM533llEPpS/P+dcie2JXzVfXmedPXx9V7mxZBXnfzknA/iOJGx/Ko
+        MOj3j1nSKzHnm+i/i0iJoGEibN/5
+X-Google-Smtp-Source: ABdhPJyLndcJDNVINUqMwrCG8DEJ+692FT0GVMQnAm9+wiAJLeWnjQL2AtfSV0+Ychlnc9EXD5J+Kg==
+X-Received: by 2002:adf:e68f:: with SMTP id r15mr18465693wrm.196.1596536135580;
+        Tue, 04 Aug 2020 03:15:35 -0700 (PDT)
+Received: from myhost.home ([2a01:110f:b59:fd00:14b7:411e:74a4:708d])
+        by smtp.gmail.com with ESMTPSA id 111sm30428728wrc.53.2020.08.04.03.15.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Aug 2020 03:15:35 -0700 (PDT)
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+To:     linux-leds@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, pavel@ucw.cz,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: [PATCH] MAINTAINERS: Remove myself as LED subsystem maintainer
+Date:   Tue,  4 Aug 2020 12:15:25 +0200
+Message-Id: <20200804101525.7235-1-jacek.anaszewski@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus
+It don't have enough time for reviewing patches and thus don't
+want to be listed as regular LED maintainer. Nonetheless I may still
+give a review from time to time.
 
-Please pull the following changes since commit b3a9e3b9622ae10064826dccb4f7a52bd88c7407:
+Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+---
+ MAINTAINERS | 2 --
+ 1 file changed, 2 deletions(-)
 
-  Linux 5.8-rc1 (2020-06-14 12:45:04 -0700)
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4e2698cc7e23..71e16ba36048 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9681,12 +9681,10 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tobin/leaks.git
+ F:	scripts/leaking_addresses.pl
+ 
+ LED SUBSYSTEM
+-M:	Jacek Anaszewski <jacek.anaszewski@gmail.com>
+ M:	Pavel Machek <pavel@ucw.cz>
+ R:	Dan Murphy <dmurphy@ti.com>
+ L:	linux-leds@vger.kernel.org
+ S:	Maintained
+-T:	git git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds.git
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git
+ F:	Documentation/devicetree/bindings/leds/
+ F:	drivers/leds/
+-- 
+2.11.0
 
-are available in the Git repository at:
-
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-next-signed
-
-for you to fetch changes up to 7deff7b5b4395784b194bae3631b8333d3423938:
-
-  hyperv: hyperv.h: drop a duplicated word (2020-07-23 17:55:20 +0000)
-
-----------------------------------------------------------------
-hyperv-next for 5.9
-  - A patch series from Andrea to improve vmbus code.
-  - Two clean-up patches from Alexander and Randy.
-
-----------------------------------------------------------------
-Alexander A. Klimov (1):
-      tools: hv: change http to https in hv_kvp_daemon.c
-
-Andrea Parri (Microsoft) (8):
-      Drivers: hv: vmbus: Remove the target_vp field from the vmbus_channel struct
-      Drivers: hv: vmbus: Remove the numa_node field from the vmbus_channel struct
-      Drivers: hv: vmbus: Replace cpumask_test_cpu(, cpu_online_mask) with cpu_online()
-      Drivers: hv: vmbus: Remove unnecessary channel->lock critical sections (sc_list readers)
-      Drivers: hv: vmbus: Use channel_mutex in channel_vp_mapping_show()
-      Drivers: hv: vmbus: Remove unnecessary channel->lock critical sections (sc_list updaters)
-      scsi: storvsc: Introduce the per-storvsc_device spinlock
-      Drivers: hv: vmbus: Remove the lock field from the vmbus_channel struct
-
-Randy Dunlap (1):
-      hyperv: hyperv.h: drop a duplicated word
-
- drivers/hv/channel.c        |  9 +++------
- drivers/hv/channel_mgmt.c   | 31 ++++++-------------------------
- drivers/hv/hv.c             |  3 ---
- drivers/hv/vmbus_drv.c      | 17 +++++------------
- drivers/scsi/storvsc_drv.c  | 16 +++++++++++-----
- include/linux/hyperv.h      | 22 +++++++---------------
- include/uapi/linux/hyperv.h |  2 +-
- tools/hv/hv_kvp_daemon.c    |  2 +-
- 8 files changed, 34 insertions(+), 68 deletions(-)
