@@ -2,121 +2,93 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA8AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B327C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16EFD2070A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB8C72070A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 10:45:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LioAvB/i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729896AbgHDKoP (ORCPT
+        id S1729673AbgHDKpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 06:44:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:42436 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726947AbgHDKoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 06:44:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BE5F31B;
-        Tue,  4 Aug 2020 03:44:13 -0700 (PDT)
-Received: from [10.37.12.45] (unknown [10.37.12.45])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF34E3F718;
-        Tue,  4 Aug 2020 03:44:11 -0700 (PDT)
-Subject: Re: [PATCH 0/4] CPUFreq statistics retrieved by drivers
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        cristian.marussi@arm.com, rjw@rjwysocki.net
-References: <20200729151208.27737-1-lukasz.luba@arm.com>
- <20200730085333.qubrsv7ufqninihd@vireshk-mac-ubuntu>
- <20200730091014.GA13158@bogus> <3b3a56e9-29ec-958f-fb3b-c689a9389d2f@arm.com>
- <20200804053502.35d3x3vnb3mggtqs@vireshk-mac-ubuntu>
- <f784bf30-83a6-55ff-8fa6-f7bd2d4399b9@arm.com>
- <20200804103857.mxgkmt6qmmzejuzb@vireshk-mac-ubuntu>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <1f978078-b2df-a2e5-6af8-e73f65044ba7@arm.com>
-Date:   Tue, 4 Aug 2020 11:44:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 4 Aug 2020 06:45:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbgHDKpo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 06:45:44 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E23FC06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 03:45:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=w5o5IcAoNXwLVf59c401lTKK0QArdzdHQ89b1oA1ILw=; b=LioAvB/iKgUeNOGdS6342XE/WZ
+        nRhe2eYGe9CGIXNs0McyJ7E1ly+G+Vj6Qe81zusLriWie0PCmW8m97VWpfGS/pBrEYsdW7z086s3O
+        gKyBtV30aLLnMB5k7eOLgs0P1O/cqftYA9QcP7nFWF5eFvOpub9Dqh/ykq/tRhUl8o9+v0lq04wwM
+        GVVcVmjdybTNg+ZoqfT+9FjtYyKuAAUdGSi5yCrN2mnMdL0S/U2VC22sbBHiqbYaA2QgIWuidATd2
+        FQThuaXFPax0FXVcGtokbfXJleTGWpc/qyrF5J0YfFRFIGOjHOd68m0a3xDhydCeR10lLQC9/iZS6
+        HCMsY0Aw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k2uRf-00013s-Gz; Tue, 04 Aug 2020 10:45:23 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D8778301A66;
+        Tue,  4 Aug 2020 12:45:20 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9C5AC2B94E749; Tue,  4 Aug 2020 12:45:20 +0200 (CEST)
+Date:   Tue, 4 Aug 2020 12:45:20 +0200
+From:   peterz@infradead.org
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Neuling <mikey@neuling.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
+Subject: Re: [PATCH 1/2] sched/topology: Allow archs to override cpu_smt_mask
+Message-ID: <20200804104520.GB2657@hirez.programming.kicks-ass.net>
+References: <20200804033307.76111-1-srikar@linux.vnet.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200804103857.mxgkmt6qmmzejuzb@vireshk-mac-ubuntu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200804033307.76111-1-srikar@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 04, 2020 at 09:03:06AM +0530, Srikar Dronamraju wrote:
+> cpu_smt_mask tracks topology_sibling_cpumask. This would be good for
+> most architectures. One of the users of cpu_smt_mask(), would be to
+> identify idle-cores. On Power9, a pair of cores can be presented by the
+> firmware as a big-core for backward compatibility reasons.
+> 
+> In order to maintain userspace backward compatibility with previous
+> versions of processor, (since Power8 had SMT8 cores), Power9 onwards there
+> is option to the firmware to advertise a pair of SMT4 cores as a fused
+> cores (referred to as the big_core mode in the Linux Kernel). On Power9
+> this pair shares the L2 cache as well. However, from the scheduler's point
+> of view, a core should be determined by SMT4. The load-balancer already
+> does this. Hence allow PowerPc architecture to override the default
+> cpu_smt_mask() to point to the SMT4 cores in a big_core mode.
 
+I'm utterly confused.
 
-On 8/4/20 11:38 AM, Viresh Kumar wrote:
-> On 04-08-20, 11:29, Lukasz Luba wrote:
->> On 8/4/20 6:35 AM, Viresh Kumar wrote:
->>> IIUC, the only concern right now is to capture stats with fast switch ? Maybe we
->>> can do something else in that case and brainstorm a bit..
->>
->> Correct, the fast switch is the only concern right now and not tracked. We
->> could fill in that information with statistics data from firmware
->> with a cpufreq driver help.
->>
->> I could make the if from patch 1/4 covering narrowed case, when
->> fast switch is present, check for drivers stats.
->> Something like:
->> -----------8<------------------------------------------------------------
->> if (policy->fast_switch_enabled)
->> 	if (policy->has_driver_stats)
->> 		return cpufreq_stats_present_driver_data(policy, buf);
->> 	else
->> 		return 0;
->> -------------->8----------------------------------------------------------
-> 
-> I don't think doing it with help of firmware is the right thing to do
-> here then. For another platform we may not have a firmware which can
-> help us, we need something in the opp core itself for that. Lemme see
-> if I can do something about it.
-
-OK, great, I will wait then with this patch series v2 which would change
-into debugfs scmi only. Could you please add me on CC, I am very
-interested in.
-
-> 
->>> Why is firmware the governor here ? Aren't you talking about the simple fast
->>> switch case only ?
->>
->> I used a term 'governor' for the firmware because it makes the final
->> set for the frequency. It (FW) should respect the frequency value
->> set using the fast switch. I don't know how other firmware (e.g. Intel)
->> treats this fast switch value or if they even expose FW stats, though.
-> 
-> For Intel I think, Linux is one of the entities that vote for deciding
-> the frequency of the CPUs and the firmware (after taking all such
-> factors into account) chooses a frequency by its own, which must be >=
-> the frequency requested by Linux.
-> 
->> You can read about this statistics region in [1] at:
->> 4.5.5 Performance domain statistics shared memory region
->>
->>>
->>> Over that, I think this cpufreq stats information isn't parsed by any tool right
->>> now and tweaking it a bit won't hurt anyone (like if we start capturing things a
->>> bit differently). So we may not want to worry about breaking userspace ABI here,
->>> if what we are looking to do is the right thing to do.
->>
->> So, there is some hope... IMHO it would be better to have this cpufreq
->> stats in normal location, rather then in scmi debugfs.
-> 
-> I agree.
-> 
->>> I am not sure what notifications are we talking about here.
->>
->> There is a notification mechanism described in the SCMI spec [1] at
->> 4.5.4 Notifications.
->> We were referring to that mechanism.
-> 
-> Ahh, I see. All I was thinking was about the cpufreq specific
-> notifiers :)
-> 
+Why can't you set your regular siblings mask to the smt4 thing? Who
+cares about the compat stuff, I thought that was an LPAR/AIX thing.
