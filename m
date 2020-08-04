@@ -4,38 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C116C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13465C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0197622CA0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A2822CA0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:59:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728393AbgHDU6p (ORCPT
+        id S1728594AbgHDU7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 16:58:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42168 "EHLO mail.kernel.org"
+        Tue, 4 Aug 2020 16:59:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728064AbgHDU6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 16:58:17 -0400
+        id S1728103AbgHDU6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 16:58:16 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A92522D01;
-        Tue,  4 Aug 2020 20:58:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B87AB22CAE;
+        Tue,  4 Aug 2020 20:58:14 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1k340k-006HH4-CY; Tue, 04 Aug 2020 16:58:14 -0400
-Message-ID: <20200804205814.263230363@goodmis.org>
+        id 1k340j-006HF0-Nx; Tue, 04 Aug 2020 16:58:13 -0400
+Message-ID: <20200804205813.625104551@goodmis.org>
 User-Agent: quilt/0.66
-Date:   Tue, 04 Aug 2020 16:57:59 -0400
+Date:   Tue, 04 Aug 2020 16:57:55 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [for-linus][PATCH 16/17] tools/bootconfig: Add testcases for value override operator
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Chengming Zhou <zhouchengming@bytedance.com>
+Subject: [for-linus][PATCH 12/17] kprobes: Fix NULL pointer dereference at kprobe_ftrace_handler
 References: <20200804205743.419135730@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -44,78 +47,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Muchun Song <songmuchun@bytedance.com>
 
-Add some testcases and examples for value override operator.
+We found a case of kernel panic on our server. The stack trace is as
+follows(omit some irrelevant information):
 
-Link: https://lkml.kernel.org/r/159482883824.126704.2166030493721357163.stgit@devnote2
+  BUG: kernel NULL pointer dereference, address: 0000000000000080
+  RIP: 0010:kprobe_ftrace_handler+0x5e/0xe0
+  RSP: 0018:ffffb512c6550998 EFLAGS: 00010282
+  RAX: 0000000000000000 RBX: ffff8e9d16eea018 RCX: 0000000000000000
+  RDX: ffffffffbe1179c0 RSI: ffffffffc0535564 RDI: ffffffffc0534ec0
+  RBP: ffffffffc0534ec1 R08: ffff8e9d1bbb0f00 R09: 0000000000000004
+  R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+  R13: ffff8e9d1f797060 R14: 000000000000bacc R15: ffff8e9ce13eca00
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000080 CR3: 00000008453d0005 CR4: 00000000003606e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+   <IRQ>
+   ftrace_ops_assist_func+0x56/0xe0
+   ftrace_call+0x5/0x34
+   tcpa_statistic_send+0x5/0x130 [ttcp_engine]
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+The tcpa_statistic_send is the function being kprobed. After analysis,
+the root cause is that the fourth parameter regs of kprobe_ftrace_handler
+is NULL. Why regs is NULL? We use the crash tool to analyze the kdump.
+
+  crash> dis tcpa_statistic_send -r
+         <tcpa_statistic_send>: callq 0xffffffffbd8018c0 <ftrace_caller>
+
+The tcpa_statistic_send calls ftrace_caller instead of ftrace_regs_caller.
+So it is reasonable that the fourth parameter regs of kprobe_ftrace_handler
+is NULL. In theory, we should call the ftrace_regs_caller instead of the
+ftrace_caller. After in-depth analysis, we found a reproducible path.
+
+  Writing a simple kernel module which starts a periodic timer. The
+  timer's handler is named 'kprobe_test_timer_handler'. The module
+  name is kprobe_test.ko.
+
+  1) insmod kprobe_test.ko
+  2) bpftrace -e 'kretprobe:kprobe_test_timer_handler {}'
+  3) echo 0 > /proc/sys/kernel/ftrace_enabled
+  4) rmmod kprobe_test
+  5) stop step 2) kprobe
+  6) insmod kprobe_test.ko
+  7) bpftrace -e 'kretprobe:kprobe_test_timer_handler {}'
+
+We mark the kprobe as GONE but not disarm the kprobe in the step 4).
+The step 5) also do not disarm the kprobe when unregister kprobe. So
+we do not remove the ip from the filter. In this case, when the module
+loads again in the step 6), we will replace the code to ftrace_caller
+via the ftrace_module_enable(). When we register kprobe again, we will
+not replace ftrace_caller to ftrace_regs_caller because the ftrace is
+disabled in the step 3). So the step 7) will trigger kernel panic. Fix
+this problem by disarming the kprobe when the module is going away.
+
+Link: https://lkml.kernel.org/r/20200728064536.24405-1-songmuchun@bytedance.com
+
+Cc: stable@vger.kernel.org
+Fixes: ae6aa16fdc16 ("kprobes: introduce ftrace based optimization")
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Co-developed-by: Chengming Zhou <zhouchengming@bytedance.com>
+Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- tools/bootconfig/samples/bad-override.bconf  |  3 +++
- tools/bootconfig/samples/bad-override2.bconf |  3 +++
- tools/bootconfig/samples/good-override.bconf |  6 ++++++
- tools/bootconfig/test-bootconfig.sh          | 13 +++++++++++++
- 4 files changed, 25 insertions(+)
- create mode 100644 tools/bootconfig/samples/bad-override.bconf
- create mode 100644 tools/bootconfig/samples/bad-override2.bconf
- create mode 100644 tools/bootconfig/samples/good-override.bconf
+ kernel/kprobes.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/tools/bootconfig/samples/bad-override.bconf b/tools/bootconfig/samples/bad-override.bconf
-new file mode 100644
-index 000000000000..fde6c561512e
---- /dev/null
-+++ b/tools/bootconfig/samples/bad-override.bconf
-@@ -0,0 +1,3 @@
-+key.subkey = value
-+# We can not override pre-defined subkeys with value
-+key := value
-diff --git a/tools/bootconfig/samples/bad-override2.bconf b/tools/bootconfig/samples/bad-override2.bconf
-new file mode 100644
-index 000000000000..688587cb023c
---- /dev/null
-+++ b/tools/bootconfig/samples/bad-override2.bconf
-@@ -0,0 +1,3 @@
-+key = value
-+# We can not override pre-defined value with subkey
-+key.subkey := value
-diff --git a/tools/bootconfig/samples/good-override.bconf b/tools/bootconfig/samples/good-override.bconf
-new file mode 100644
-index 000000000000..7d31d5f8fbd8
---- /dev/null
-+++ b/tools/bootconfig/samples/good-override.bconf
-@@ -0,0 +1,6 @@
-+# Override the value
-+key.word = 1,2,4
-+key.word := 2,3
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 4a904cc56d68..07bf03fcf574 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -2113,6 +2113,13 @@ static void kill_kprobe(struct kprobe *p)
+ 	 * the original probed function (which will be freed soon) any more.
+ 	 */
+ 	arch_remove_kprobe(p);
 +
-+# No pre-defined key
-+key.new.word := "new"
-diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
-index 3c2ab9e75730..56284b98d8f0 100755
---- a/tools/bootconfig/test-bootconfig.sh
-+++ b/tools/bootconfig/test-bootconfig.sh
-@@ -117,6 +117,19 @@ xpass grep -q "bar" $OUTFILE
- xpass grep -q "baz" $OUTFILE
- xpass grep -q "qux" $OUTFILE
++	/*
++	 * The module is going away. We should disarm the kprobe which
++	 * is using ftrace.
++	 */
++	if (kprobe_ftrace(p))
++		disarm_kprobe_ftrace(p);
+ }
  
-+echo "Override same-key values"
-+cat > $TEMPCONF << EOF
-+key = bar, baz
-+key := qux
-+EOF
-+echo > $INITRD
-+
-+xpass $BOOTCONF -a $TEMPCONF $INITRD
-+$BOOTCONF $INITRD > $OUTFILE
-+xfail grep -q "bar" $OUTFILE
-+xfail grep -q "baz" $OUTFILE
-+xpass grep -q "qux" $OUTFILE
-+
- echo "Double/single quotes test"
- echo "key = '\"string\"';" > $TEMPCONF
- $BOOTCONF -a $TEMPCONF $INITRD
+ /* Disable one kprobe */
 -- 
 2.26.2
 
