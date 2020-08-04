@@ -4,3239 +4,1246 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AC0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91734C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 441E12070A
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DA4820738
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:30:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d/87tzvQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ReQoGn9u"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jGFGyC7k";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="i3vMtzND"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729789AbgHDIaL (ORCPT
+        id S1729912AbgHDIaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 04:30:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729622AbgHDIaJ (ORCPT
+        Tue, 4 Aug 2020 04:30:16 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42618 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728163AbgHDIaO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 04:30:09 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86B92C06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 01:30:08 -0700 (PDT)
-Date:   Tue, 04 Aug 2020 08:21:57 -0000
+        Tue, 4 Aug 2020 04:30:14 -0400
+Date:   Tue, 04 Aug 2020 08:21:55 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1596529804;
+        s=2020; t=1596529802;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=LVBkT30IeCMKRUK7hDMBOOElR+y7Bf9utueqht7o/RM=;
-        b=d/87tzvQVpeXvAtnE0J7NF32Mync0qPIFZ/U5PF8v6HKsAQ7tae6CYy0GZc23eFtzwApYP
-        UKYKWO6JyVz88To4GhntfC0GxfnTRW+jwJZTEoYGjKgBD7Rmr1PkImfkoAIEcSbguMI6mN
-        3R3+T4a6c4rNJkAh4/vIjRsSqkV9DEJz79QwQqLElM719f9GdQ/rvlF3w7FBgkp+sf0iGk
-        VtM9G7emyFs3v+xKiNRsff09TT8UBdAN2mlSV7eXtxm43jpX8nE8Nwak658xc+y8hZA2Ke
-        USWkA787tT7DFUV9KOpu1gSznbdnMBr4G+BkHdFoRyehog4aY3yYgC5ZqcOQ6Q==
+        bh=xC1Z4mnbvwYE44ney7GUY8zEZlhritF2ps0XYlLNdh4=;
+        b=jGFGyC7kmO/zBDKzPMOn/edbzdpVOh7406j595ILzmH1OGPRGFewbxU/jjLgB9UqzI0C+k
+        IDx6Gx4MUdAXI7HQe8UWkkCQdduemhEdc9TtrXN7FCRcDgJimpb1wZm2PUFBmfLKRsaUlF
+        PlFEQ9E5huj83JE1Qnay2wydMN+Phs2oKlaD2H0MZjHUJo51QNxcWSlBfvXZH9ALkk88dd
+        DJQ/Us7tyylTQD4oUgpHyGVmnt08E5PTKqNeenJj/Je4CnyaLgOTbwmuiXrXzaaA0IAi/m
+        wj7wlx6YslNHDsQvA4dkSyQN+EN+sbK2QRAVeopDIdotWsq3JA70O6kEecfIVQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1596529804;
+        s=2020e; t=1596529802;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=LVBkT30IeCMKRUK7hDMBOOElR+y7Bf9utueqht7o/RM=;
-        b=ReQoGn9uBmWf2bxIDFKF/Z34jNy6wA+8UY1dsNz71Hk+nCceVDQThMpklsZC0GzhtbxKqc
-        n2YyJhLAYA9T4pDQ==
+        bh=xC1Z4mnbvwYE44ney7GUY8zEZlhritF2ps0XYlLNdh4=;
+        b=i3vMtzND1oTzSf9R4CIdFD0JJr3htWsCQ4N8qmNEHAzvoDqofhDaDUyXRCb7/U1nSRDZCY
+        8bwJ/TZHoVZWTPCA==
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: [GIT pull] x86/entry for v5.9
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [GIT pull] timers/core for v5.9
 References: <159652931338.11821.6870342948950391828.tglx@nanos.tec.linutronix.de>
-Message-ID: <159652931703.11821.10293235307345307460.tglx@nanos.tec.linutronix.de>
+Message-ID: <159652931581.11821.16979537775204894252.tglx@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: base64
 Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
-
-please pull the latest x86/entry branch from:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-entry-2020-08-04
-
-up to:  adb334d17858: Merge branch 'WIP.x86/entry' into x86/entry, to merge the latest generic code and resolve conflicts
-
-The conversion of X86 syscall, interrupt and exception entry/exit handling
-to the generic code. Pretty much a straight forward 1:1 conversion plus the
-consolidation of the KVM handling of pending work before entering guest
-mode.
-
-Contains the core/entry branch (previous pull request) and has the already
-merged locking/core changes which caused conflicts integrated.
-
-Thanks,
-
-	tglx
-
------------------->
-Andy Lutomirski (1):
-      x86/entry: Rename idtentry_enter/exit_cond_rcu() to idtentry_enter/exit()
-
-Herbert Xu (1):
-      lockdep: Split header file into lockdep and lockdep_types
-
-Ingo Molnar (1):
-      entry: Correct 'noinstr' attributes
-
-Ira Weiny (1):
-      x86: Correct noinstr qualifiers
-
-Marco Elver (1):
-      kcsan: Make KCSAN compatible with new IRQ state tracking
-
-Peter Zijlstra (2):
-      lockdep: Prepare for NMI IRQ state tracking
-      x86/entry: Fix NMI vs IRQ state tracking
-
-Thomas Gleixner (18):
-      x86/idtentry: Remove stale comment
-      seccomp: Provide stub for __secure_computing()
-      entry: Provide generic syscall entry functionality
-      entry: Provide generic syscall exit function
-      entry: Provide generic interrupt entry/exit code
-      entry: Provide infrastructure for work before transitioning to guest mode
-      x86/entry: Consolidate check_user_regs()
-      x86/entry: Consolidate 32/64 bit syscall entry
-      x86/entry: Move user return notifier out of loop
-      x86/ptrace: Provide pt_regs helper for entry/exit
-      x86/entry: Use generic syscall entry function
-      x86/entry: Use generic syscall exit functionality
-      x86/entry: Cleanup idtentry_entry/exit_user
-      x86/entry: Use generic interrupt entry/exit code
-      x86/entry: Cleanup idtentry_enter/exit
-      x86/kvm: Use generic xfer to guest work function
-      entry: Correct __secure_computing() stub
-      x86/kvm: Use __xfer_to_guest_mode_work_pending() in kvm_run_vcpu()
-
-
- arch/Kconfig                        |   3 +
- arch/x86/Kconfig                    |   1 +
- arch/x86/entry/common.c             | 638 ++++--------------------------------
- arch/x86/entry/entry_32.S           |   2 +-
- arch/x86/entry/entry_64.S           |   2 +-
- arch/x86/include/asm/entry-common.h |  76 +++++
- arch/x86/include/asm/idtentry.h     |  42 ++-
- arch/x86/include/asm/ptrace.h       |   5 +
- arch/x86/include/asm/signal.h       |   1 -
- arch/x86/include/asm/thread_info.h  |   5 -
- arch/x86/kernel/alternative.c       |   2 +-
- arch/x86/kernel/cpu/mce/core.c      |   6 +-
- arch/x86/kernel/kvm.c               |   6 +-
- arch/x86/kernel/nmi.c               |   9 +-
- arch/x86/kernel/signal.c            |   3 +-
- arch/x86/kernel/traps.c             |  41 +--
- arch/x86/kvm/Kconfig                |   1 +
- arch/x86/kvm/vmx/vmx.c              |  11 +-
- arch/x86/kvm/x86.c                  |  15 +-
- arch/x86/mm/fault.c                 |   6 +-
- include/linux/entry-common.h        | 372 +++++++++++++++++++++
- include/linux/entry-kvm.h           |  80 +++++
- include/linux/hardirq.h             |  28 +-
- include/linux/kvm_host.h            |   8 +
- include/linux/lockdep.h             | 178 +---------
- include/linux/lockdep_types.h       | 196 +++++++++++
- include/linux/seccomp.h             |   2 +
- include/linux/spinlock.h            |   1 +
- include/linux/spinlock_types.h      |   2 +-
- kernel/Makefile                     |   1 +
- kernel/entry/Makefile               |  13 +
- kernel/entry/common.c               | 374 +++++++++++++++++++++
- kernel/entry/kvm.c                  |  51 +++
- kernel/kcsan/core.c                 |   5 +-
- kernel/kcsan/report.c               |   9 +-
- kernel/locking/lockdep.c            |  46 ++-
- virt/kvm/Kconfig                    |   3 +
- 37 files changed, 1384 insertions(+), 860 deletions(-)
- create mode 100644 arch/x86/include/asm/entry-common.h
- create mode 100644 include/linux/entry-common.h
- create mode 100644 include/linux/entry-kvm.h
- create mode 100644 include/linux/lockdep_types.h
- create mode 100644 kernel/entry/Makefile
- create mode 100644 kernel/entry/common.c
- create mode 100644 kernel/entry/kvm.c
-
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 8cc35dc556c7..852a527f418f 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -27,6 +27,9 @@ config HAVE_IMA_KEXEC
- config HOTPLUG_SMT
- 	bool
- 
-+config GENERIC_ENTRY
-+       bool
-+
- config OPROFILE
- 	tristate "OProfile system profiling"
- 	depends on PROFILING
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 883da0abf779..ccf02e6c144c 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -115,6 +115,7 @@ config X86
- 	select GENERIC_CPU_AUTOPROBE
- 	select GENERIC_CPU_VULNERABILITIES
- 	select GENERIC_EARLY_IOREMAP
-+	select GENERIC_ENTRY
- 	select GENERIC_FIND_FIRST_BIT
- 	select GENERIC_IOMAP
- 	select GENERIC_IRQ_EFFECTIVE_AFF_MASK	if SMP
-diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-index f09288431f28..48512c7944e7 100644
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -10,20 +10,13 @@
- #include <linux/kernel.h>
- #include <linux/sched.h>
- #include <linux/sched/task_stack.h>
-+#include <linux/entry-common.h>
- #include <linux/mm.h>
- #include <linux/smp.h>
- #include <linux/errno.h>
- #include <linux/ptrace.h>
--#include <linux/tracehook.h>
--#include <linux/audit.h>
--#include <linux/seccomp.h>
--#include <linux/signal.h>
- #include <linux/export.h>
--#include <linux/context_tracking.h>
--#include <linux/user-return-notifier.h>
- #include <linux/nospec.h>
--#include <linux/uprobes.h>
--#include <linux/livepatch.h>
- #include <linux/syscalls.h>
- #include <linux/uaccess.h>
- 
-@@ -42,343 +35,12 @@
- #include <asm/syscall.h>
- #include <asm/irq_stack.h>
- 
--#define CREATE_TRACE_POINTS
--#include <trace/events/syscalls.h>
--
--/* Check that the stack and regs on entry from user mode are sane. */
--static noinstr void check_user_regs(struct pt_regs *regs)
--{
--	if (IS_ENABLED(CONFIG_DEBUG_ENTRY)) {
--		/*
--		 * Make sure that the entry code gave us a sensible EFLAGS
--		 * register.  Native because we want to check the actual CPU
--		 * state, not the interrupt state as imagined by Xen.
--		 */
--		unsigned long flags = native_save_fl();
--		WARN_ON_ONCE(flags & (X86_EFLAGS_AC | X86_EFLAGS_DF |
--				      X86_EFLAGS_NT));
--
--		/* We think we came from user mode. Make sure pt_regs agrees. */
--		WARN_ON_ONCE(!user_mode(regs));
--
--		/*
--		 * All entries from user mode (except #DF) should be on the
--		 * normal thread stack and should have user pt_regs in the
--		 * correct location.
--		 */
--		WARN_ON_ONCE(!on_thread_stack());
--		WARN_ON_ONCE(regs != task_pt_regs(current));
--	}
--}
--
--#ifdef CONFIG_CONTEXT_TRACKING
--/**
-- * enter_from_user_mode - Establish state when coming from user mode
-- *
-- * Syscall entry disables interrupts, but user mode is traced as interrupts
-- * enabled. Also with NO_HZ_FULL RCU might be idle.
-- *
-- * 1) Tell lockdep that interrupts are disabled
-- * 2) Invoke context tracking if enabled to reactivate RCU
-- * 3) Trace interrupts off state
-- */
--static noinstr void enter_from_user_mode(void)
--{
--	enum ctx_state state = ct_state();
--
--	lockdep_hardirqs_off(CALLER_ADDR0);
--	user_exit_irqoff();
--
--	instrumentation_begin();
--	CT_WARN_ON(state != CONTEXT_USER);
--	trace_hardirqs_off_finish();
--	instrumentation_end();
--}
--#else
--static __always_inline void enter_from_user_mode(void)
--{
--	lockdep_hardirqs_off(CALLER_ADDR0);
--	instrumentation_begin();
--	trace_hardirqs_off_finish();
--	instrumentation_end();
--}
--#endif
--
--/**
-- * exit_to_user_mode - Fixup state when exiting to user mode
-- *
-- * Syscall exit enables interrupts, but the kernel state is interrupts
-- * disabled when this is invoked. Also tell RCU about it.
-- *
-- * 1) Trace interrupts on state
-- * 2) Invoke context tracking if enabled to adjust RCU state
-- * 3) Clear CPU buffers if CPU is affected by MDS and the migitation is on.
-- * 4) Tell lockdep that interrupts are enabled
-- */
--static __always_inline void exit_to_user_mode(void)
--{
--	instrumentation_begin();
--	trace_hardirqs_on_prepare();
--	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
--	instrumentation_end();
--
--	user_enter_irqoff();
--	mds_user_clear_cpu_buffers();
--	lockdep_hardirqs_on(CALLER_ADDR0);
--}
--
--static void do_audit_syscall_entry(struct pt_regs *regs, u32 arch)
--{
--#ifdef CONFIG_X86_64
--	if (arch == AUDIT_ARCH_X86_64) {
--		audit_syscall_entry(regs->orig_ax, regs->di,
--				    regs->si, regs->dx, regs->r10);
--	} else
--#endif
--	{
--		audit_syscall_entry(regs->orig_ax, regs->bx,
--				    regs->cx, regs->dx, regs->si);
--	}
--}
--
--/*
-- * Returns the syscall nr to run (which should match regs->orig_ax) or -1
-- * to skip the syscall.
-- */
--static long syscall_trace_enter(struct pt_regs *regs)
--{
--	u32 arch = in_ia32_syscall() ? AUDIT_ARCH_I386 : AUDIT_ARCH_X86_64;
--
--	struct thread_info *ti = current_thread_info();
--	unsigned long ret = 0;
--	u32 work;
--
--	work = READ_ONCE(ti->flags);
--
--	if (work & (_TIF_SYSCALL_TRACE | _TIF_SYSCALL_EMU)) {
--		ret = tracehook_report_syscall_entry(regs);
--		if (ret || (work & _TIF_SYSCALL_EMU))
--			return -1L;
--	}
--
--#ifdef CONFIG_SECCOMP
--	/*
--	 * Do seccomp after ptrace, to catch any tracer changes.
--	 */
--	if (work & _TIF_SECCOMP) {
--		struct seccomp_data sd;
--
--		sd.arch = arch;
--		sd.nr = regs->orig_ax;
--		sd.instruction_pointer = regs->ip;
--#ifdef CONFIG_X86_64
--		if (arch == AUDIT_ARCH_X86_64) {
--			sd.args[0] = regs->di;
--			sd.args[1] = regs->si;
--			sd.args[2] = regs->dx;
--			sd.args[3] = regs->r10;
--			sd.args[4] = regs->r8;
--			sd.args[5] = regs->r9;
--		} else
--#endif
--		{
--			sd.args[0] = regs->bx;
--			sd.args[1] = regs->cx;
--			sd.args[2] = regs->dx;
--			sd.args[3] = regs->si;
--			sd.args[4] = regs->di;
--			sd.args[5] = regs->bp;
--		}
--
--		ret = __secure_computing(&sd);
--		if (ret == -1)
--			return ret;
--	}
--#endif
--
--	if (unlikely(test_thread_flag(TIF_SYSCALL_TRACEPOINT)))
--		trace_sys_enter(regs, regs->orig_ax);
--
--	do_audit_syscall_entry(regs, arch);
--
--	return ret ?: regs->orig_ax;
--}
--
--#define EXIT_TO_USERMODE_LOOP_FLAGS				\
--	(_TIF_SIGPENDING | _TIF_NOTIFY_RESUME | _TIF_UPROBE |	\
--	 _TIF_NEED_RESCHED | _TIF_USER_RETURN_NOTIFY | _TIF_PATCH_PENDING)
--
--static void exit_to_usermode_loop(struct pt_regs *regs, u32 cached_flags)
--{
--	/*
--	 * In order to return to user mode, we need to have IRQs off with
--	 * none of EXIT_TO_USERMODE_LOOP_FLAGS set.  Several of these flags
--	 * can be set at any time on preemptible kernels if we have IRQs on,
--	 * so we need to loop.  Disabling preemption wouldn't help: doing the
--	 * work to clear some of the flags can sleep.
--	 */
--	while (true) {
--		/* We have work to do. */
--		local_irq_enable();
--
--		if (cached_flags & _TIF_NEED_RESCHED)
--			schedule();
--
--		if (cached_flags & _TIF_UPROBE)
--			uprobe_notify_resume(regs);
--
--		if (cached_flags & _TIF_PATCH_PENDING)
--			klp_update_patch_state(current);
--
--		/* deal with pending signal delivery */
--		if (cached_flags & _TIF_SIGPENDING)
--			do_signal(regs);
--
--		if (cached_flags & _TIF_NOTIFY_RESUME) {
--			clear_thread_flag(TIF_NOTIFY_RESUME);
--			tracehook_notify_resume(regs);
--			rseq_handle_notify_resume(NULL, regs);
--		}
--
--		if (cached_flags & _TIF_USER_RETURN_NOTIFY)
--			fire_user_return_notifiers();
--
--		/* Disable IRQs and retry */
--		local_irq_disable();
--
--		cached_flags = READ_ONCE(current_thread_info()->flags);
--
--		if (!(cached_flags & EXIT_TO_USERMODE_LOOP_FLAGS))
--			break;
--	}
--}
--
--static void __prepare_exit_to_usermode(struct pt_regs *regs)
--{
--	struct thread_info *ti = current_thread_info();
--	u32 cached_flags;
--
--	addr_limit_user_check();
--
--	lockdep_assert_irqs_disabled();
--	lockdep_sys_exit();
--
--	cached_flags = READ_ONCE(ti->flags);
--
--	if (unlikely(cached_flags & EXIT_TO_USERMODE_LOOP_FLAGS))
--		exit_to_usermode_loop(regs, cached_flags);
--
--	/* Reload ti->flags; we may have rescheduled above. */
--	cached_flags = READ_ONCE(ti->flags);
--
--	if (unlikely(cached_flags & _TIF_IO_BITMAP))
--		tss_update_io_bitmap();
--
--	fpregs_assert_state_consistent();
--	if (unlikely(cached_flags & _TIF_NEED_FPU_LOAD))
--		switch_fpu_return();
--
--#ifdef CONFIG_COMPAT
--	/*
--	 * Compat syscalls set TS_COMPAT.  Make sure we clear it before
--	 * returning to user mode.  We need to clear it *after* signal
--	 * handling, because syscall restart has a fixup for compat
--	 * syscalls.  The fixup is exercised by the ptrace_syscall_32
--	 * selftest.
--	 *
--	 * We also need to clear TS_REGS_POKED_I386: the 32-bit tracer
--	 * special case only applies after poking regs and before the
--	 * very next return to user mode.
--	 */
--	ti->status &= ~(TS_COMPAT|TS_I386_REGS_POKED);
--#endif
--}
--
--static noinstr void prepare_exit_to_usermode(struct pt_regs *regs)
--{
--	instrumentation_begin();
--	__prepare_exit_to_usermode(regs);
--	instrumentation_end();
--	exit_to_user_mode();
--}
--
--#define SYSCALL_EXIT_WORK_FLAGS				\
--	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT |	\
--	 _TIF_SINGLESTEP | _TIF_SYSCALL_TRACEPOINT)
--
--static void syscall_slow_exit_work(struct pt_regs *regs, u32 cached_flags)
--{
--	bool step;
--
--	audit_syscall_exit(regs);
--
--	if (cached_flags & _TIF_SYSCALL_TRACEPOINT)
--		trace_sys_exit(regs, regs->ax);
--
--	/*
--	 * If TIF_SYSCALL_EMU is set, we only get here because of
--	 * TIF_SINGLESTEP (i.e. this is PTRACE_SYSEMU_SINGLESTEP).
--	 * We already reported this syscall instruction in
--	 * syscall_trace_enter().
--	 */
--	step = unlikely(
--		(cached_flags & (_TIF_SINGLESTEP | _TIF_SYSCALL_EMU))
--		== _TIF_SINGLESTEP);
--	if (step || cached_flags & _TIF_SYSCALL_TRACE)
--		tracehook_report_syscall_exit(regs, step);
--}
--
--static void __syscall_return_slowpath(struct pt_regs *regs)
--{
--	struct thread_info *ti = current_thread_info();
--	u32 cached_flags = READ_ONCE(ti->flags);
--
--	CT_WARN_ON(ct_state() != CONTEXT_KERNEL);
--
--	if (IS_ENABLED(CONFIG_PROVE_LOCKING) &&
--	    WARN(irqs_disabled(), "syscall %ld left IRQs disabled", regs->orig_ax))
--		local_irq_enable();
--
--	rseq_syscall(regs);
--
--	/*
--	 * First do one-time work.  If these work items are enabled, we
--	 * want to run them exactly once per syscall exit with IRQs on.
--	 */
--	if (unlikely(cached_flags & SYSCALL_EXIT_WORK_FLAGS))
--		syscall_slow_exit_work(regs, cached_flags);
--
--	local_irq_disable();
--	__prepare_exit_to_usermode(regs);
--}
--
--/*
-- * Called with IRQs on and fully valid regs.  Returns with IRQs off in a
-- * state such that we can immediately switch to user mode.
-- */
--__visible noinstr void syscall_return_slowpath(struct pt_regs *regs)
--{
--	instrumentation_begin();
--	__syscall_return_slowpath(regs);
--	instrumentation_end();
--	exit_to_user_mode();
--}
--
- #ifdef CONFIG_X86_64
- __visible noinstr void do_syscall_64(unsigned long nr, struct pt_regs *regs)
- {
--	struct thread_info *ti;
-+	nr = syscall_enter_from_user_mode(regs, nr);
- 
--	check_user_regs(regs);
--
--	enter_from_user_mode();
- 	instrumentation_begin();
--
--	local_irq_enable();
--	ti = current_thread_info();
--	if (READ_ONCE(ti->flags) & _TIF_WORK_SYSCALL_ENTRY)
--		nr = syscall_trace_enter(regs);
--
- 	if (likely(nr < NR_syscalls)) {
- 		nr = array_index_nospec(nr, NR_syscalls);
- 		regs->ax = sys_call_table[nr](regs);
-@@ -390,66 +52,55 @@ __visible noinstr void do_syscall_64(unsigned long nr, struct pt_regs *regs)
- 		regs->ax = x32_sys_call_table[nr](regs);
- #endif
- 	}
--	__syscall_return_slowpath(regs);
--
- 	instrumentation_end();
--	exit_to_user_mode();
-+	syscall_exit_to_user_mode(regs);
- }
- #endif
- 
- #if defined(CONFIG_X86_32) || defined(CONFIG_IA32_EMULATION)
--/*
-- * Does a 32-bit syscall.  Called with IRQs on in CONTEXT_KERNEL.  Does
-- * all entry and exit work and returns with IRQs off.  This function is
-- * extremely hot in workloads that use it, and it's usually called from
-- * do_fast_syscall_32, so forcibly inline it to improve performance.
-- */
--static void do_syscall_32_irqs_on(struct pt_regs *regs)
-+static __always_inline unsigned int syscall_32_enter(struct pt_regs *regs)
- {
--	struct thread_info *ti = current_thread_info();
- 	unsigned int nr = (unsigned int)regs->orig_ax;
- 
--#ifdef CONFIG_IA32_EMULATION
--	ti->status |= TS_COMPAT;
--#endif
--
--	if (READ_ONCE(ti->flags) & _TIF_WORK_SYSCALL_ENTRY) {
--		/*
--		 * Subtlety here: if ptrace pokes something larger than
--		 * 2^32-1 into orig_ax, this truncates it.  This may or
--		 * may not be necessary, but it matches the old asm
--		 * behavior.
--		 */
--		nr = syscall_trace_enter(regs);
--	}
-+	if (IS_ENABLED(CONFIG_IA32_EMULATION))
-+		current_thread_info()->status |= TS_COMPAT;
-+	/*
-+	 * Subtlety here: if ptrace pokes something larger than 2^32-1 into
-+	 * orig_ax, the unsigned int return value truncates it.  This may
-+	 * or may not be necessary, but it matches the old asm behavior.
-+	 */
-+	return (unsigned int)syscall_enter_from_user_mode(regs, nr);
-+}
- 
-+/*
-+ * Invoke a 32-bit syscall.  Called with IRQs on in CONTEXT_KERNEL.
-+ */
-+static __always_inline void do_syscall_32_irqs_on(struct pt_regs *regs,
-+						  unsigned int nr)
-+{
- 	if (likely(nr < IA32_NR_syscalls)) {
-+		instrumentation_begin();
- 		nr = array_index_nospec(nr, IA32_NR_syscalls);
- 		regs->ax = ia32_sys_call_table[nr](regs);
-+		instrumentation_end();
- 	}
--
--	__syscall_return_slowpath(regs);
- }
- 
- /* Handles int $0x80 */
- __visible noinstr void do_int80_syscall_32(struct pt_regs *regs)
- {
--	check_user_regs(regs);
-+	unsigned int nr = syscall_32_enter(regs);
- 
--	enter_from_user_mode();
--	instrumentation_begin();
--
--	local_irq_enable();
--	do_syscall_32_irqs_on(regs);
--
--	instrumentation_end();
--	exit_to_user_mode();
-+	do_syscall_32_irqs_on(regs, nr);
-+	syscall_exit_to_user_mode(regs);
- }
- 
--static bool __do_fast_syscall_32(struct pt_regs *regs)
-+static noinstr bool __do_fast_syscall_32(struct pt_regs *regs)
- {
-+	unsigned int nr	= syscall_32_enter(regs);
- 	int res;
- 
-+	instrumentation_begin();
- 	/* Fetch EBP from where the vDSO stashed it. */
- 	if (IS_ENABLED(CONFIG_X86_64)) {
- 		/*
-@@ -462,17 +113,18 @@ static bool __do_fast_syscall_32(struct pt_regs *regs)
- 		res = get_user(*(u32 *)&regs->bp,
- 		       (u32 __user __force *)(unsigned long)(u32)regs->sp);
- 	}
-+	instrumentation_end();
- 
- 	if (res) {
- 		/* User code screwed up. */
- 		regs->ax = -EFAULT;
--		local_irq_disable();
--		__prepare_exit_to_usermode(regs);
-+		syscall_exit_to_user_mode(regs);
- 		return false;
- 	}
- 
- 	/* Now this is just like a normal syscall. */
--	do_syscall_32_irqs_on(regs);
-+	do_syscall_32_irqs_on(regs, nr);
-+	syscall_exit_to_user_mode(regs);
- 	return true;
- }
- 
-@@ -485,9 +137,6 @@ __visible noinstr long do_fast_syscall_32(struct pt_regs *regs)
- 	 */
- 	unsigned long landing_pad = (unsigned long)current->mm->context.vdso +
- 					vdso_image_32.sym_int80_landing_pad;
--	bool success;
--
--	check_user_regs(regs);
- 
- 	/*
- 	 * SYSENTER loses EIP, and even SYSCALL32 needs us to skip forward
-@@ -496,17 +145,8 @@ __visible noinstr long do_fast_syscall_32(struct pt_regs *regs)
- 	 */
- 	regs->ip = landing_pad;
- 
--	enter_from_user_mode();
--	instrumentation_begin();
--
--	local_irq_enable();
--	success = __do_fast_syscall_32(regs);
--
--	instrumentation_end();
--	exit_to_user_mode();
--
--	/* If it failed, keep it simple: use IRET. */
--	if (!success)
-+	/* Invoke the syscall. If it failed, keep it simple: use IRET. */
-+	if (!__do_fast_syscall_32(regs))
- 		return 0;
- 
- #ifdef CONFIG_X86_64
-@@ -558,197 +198,38 @@ SYSCALL_DEFINE0(ni_syscall)
- 	return -ENOSYS;
- }
- 
--/**
-- * idtentry_enter_cond_rcu - Handle state tracking on idtentry with conditional
-- *			     RCU handling
-- * @regs:	Pointer to pt_regs of interrupted context
-- *
-- * Invokes:
-- *  - lockdep irqflag state tracking as low level ASM entry disabled
-- *    interrupts.
-- *
-- *  - Context tracking if the exception hit user mode.
-- *
-- *  - The hardirq tracer to keep the state consistent as low level ASM
-- *    entry disabled interrupts.
-- *
-- * For kernel mode entries RCU handling is done conditional. If RCU is
-- * watching then the only RCU requirement is to check whether the tick has
-- * to be restarted. If RCU is not watching then rcu_irq_enter() has to be
-- * invoked on entry and rcu_irq_exit() on exit.
-- *
-- * Avoiding the rcu_irq_enter/exit() calls is an optimization but also
-- * solves the problem of kernel mode pagefaults which can schedule, which
-- * is not possible after invoking rcu_irq_enter() without undoing it.
-- *
-- * For user mode entries enter_from_user_mode() must be invoked to
-- * establish the proper context for NOHZ_FULL. Otherwise scheduling on exit
-- * would not be possible.
-- *
-- * Returns: True if RCU has been adjusted on a kernel entry
-- *	    False otherwise
-- *
-- * The return value must be fed into the rcu_exit argument of
-- * idtentry_exit_cond_rcu().
-- */
--bool noinstr idtentry_enter_cond_rcu(struct pt_regs *regs)
-+noinstr bool idtentry_enter_nmi(struct pt_regs *regs)
- {
--	if (user_mode(regs)) {
--		check_user_regs(regs);
--		enter_from_user_mode();
--		return false;
--	}
-+	bool irq_state = lockdep_hardirqs_enabled();
- 
--	/*
--	 * If this entry hit the idle task invoke rcu_irq_enter() whether
--	 * RCU is watching or not.
--	 *
--	 * Interupts can nest when the first interrupt invokes softirq
--	 * processing on return which enables interrupts.
--	 *
--	 * Scheduler ticks in the idle task can mark quiescent state and
--	 * terminate a grace period, if and only if the timer interrupt is
--	 * not nested into another interrupt.
--	 *
--	 * Checking for __rcu_is_watching() here would prevent the nesting
--	 * interrupt to invoke rcu_irq_enter(). If that nested interrupt is
--	 * the tick then rcu_flavor_sched_clock_irq() would wrongfully
--	 * assume that it is the first interupt and eventually claim
--	 * quiescient state and end grace periods prematurely.
--	 *
--	 * Unconditionally invoke rcu_irq_enter() so RCU state stays
--	 * consistent.
--	 *
--	 * TINY_RCU does not support EQS, so let the compiler eliminate
--	 * this part when enabled.
--	 */
--	if (!IS_ENABLED(CONFIG_TINY_RCU) && is_idle_task(current)) {
--		/*
--		 * If RCU is not watching then the same careful
--		 * sequence vs. lockdep and tracing is required
--		 * as in enter_from_user_mode().
--		 */
--		lockdep_hardirqs_off(CALLER_ADDR0);
--		rcu_irq_enter();
--		instrumentation_begin();
--		trace_hardirqs_off_finish();
--		instrumentation_end();
--
--		return true;
--	}
-+	__nmi_enter();
-+	lockdep_hardirqs_off(CALLER_ADDR0);
-+	lockdep_hardirq_enter();
-+	rcu_nmi_enter();
- 
--	/*
--	 * If RCU is watching then RCU only wants to check whether it needs
--	 * to restart the tick in NOHZ mode. rcu_irq_enter_check_tick()
--	 * already contains a warning when RCU is not watching, so no point
--	 * in having another one here.
--	 */
- 	instrumentation_begin();
--	rcu_irq_enter_check_tick();
--	/* Use the combo lockdep/tracing function */
--	trace_hardirqs_off();
-+	trace_hardirqs_off_finish();
-+	ftrace_nmi_enter();
- 	instrumentation_end();
- 
--	return false;
--}
--
--static void idtentry_exit_cond_resched(struct pt_regs *regs, bool may_sched)
--{
--	if (may_sched && !preempt_count()) {
--		/* Sanity check RCU and thread stack */
--		rcu_irq_exit_check_preempt();
--		if (IS_ENABLED(CONFIG_DEBUG_ENTRY))
--			WARN_ON_ONCE(!on_thread_stack());
--		if (need_resched())
--			preempt_schedule_irq();
--	}
--	/* Covers both tracing and lockdep */
--	trace_hardirqs_on();
-+	return irq_state;
- }
- 
--/**
-- * idtentry_exit_cond_rcu - Handle return from exception with conditional RCU
-- *			    handling
-- * @regs:	Pointer to pt_regs (exception entry regs)
-- * @rcu_exit:	Invoke rcu_irq_exit() if true
-- *
-- * Depending on the return target (kernel/user) this runs the necessary
-- * preemption and work checks if possible and reguired and returns to
-- * the caller with interrupts disabled and no further work pending.
-- *
-- * This is the last action before returning to the low level ASM code which
-- * just needs to return to the appropriate context.
-- *
-- * Counterpart to idtentry_enter_cond_rcu(). The return value of the entry
-- * function must be fed into the @rcu_exit argument.
-- */
--void noinstr idtentry_exit_cond_rcu(struct pt_regs *regs, bool rcu_exit)
-+noinstr void idtentry_exit_nmi(struct pt_regs *regs, bool restore)
- {
--	lockdep_assert_irqs_disabled();
--
--	/* Check whether this returns to user mode */
--	if (user_mode(regs)) {
--		prepare_exit_to_usermode(regs);
--	} else if (regs->flags & X86_EFLAGS_IF) {
--		/*
--		 * If RCU was not watching on entry this needs to be done
--		 * carefully and needs the same ordering of lockdep/tracing
--		 * and RCU as the return to user mode path.
--		 */
--		if (rcu_exit) {
--			instrumentation_begin();
--			/* Tell the tracer that IRET will enable interrupts */
--			trace_hardirqs_on_prepare();
--			lockdep_hardirqs_on_prepare(CALLER_ADDR0);
--			instrumentation_end();
--			rcu_irq_exit();
--			lockdep_hardirqs_on(CALLER_ADDR0);
--			return;
--		}
--
--		instrumentation_begin();
--		idtentry_exit_cond_resched(regs, IS_ENABLED(CONFIG_PREEMPTION));
--		instrumentation_end();
--	} else {
--		/*
--		 * IRQ flags state is correct already. Just tell RCU if it
--		 * was not watching on entry.
--		 */
--		if (rcu_exit)
--			rcu_irq_exit();
-+	instrumentation_begin();
-+	ftrace_nmi_exit();
-+	if (restore) {
-+		trace_hardirqs_on_prepare();
-+		lockdep_hardirqs_on_prepare(CALLER_ADDR0);
- 	}
--}
--
--/**
-- * idtentry_enter_user - Handle state tracking on idtentry from user mode
-- * @regs:	Pointer to pt_regs of interrupted context
-- *
-- * Invokes enter_from_user_mode() to establish the proper context for
-- * NOHZ_FULL. Otherwise scheduling on exit would not be possible.
-- */
--void noinstr idtentry_enter_user(struct pt_regs *regs)
--{
--	check_user_regs(regs);
--	enter_from_user_mode();
--}
--
--/**
-- * idtentry_exit_user - Handle return from exception to user mode
-- * @regs:	Pointer to pt_regs (exception entry regs)
-- *
-- * Runs the necessary preemption and work checks and returns to the caller
-- * with interrupts disabled and no further work pending.
-- *
-- * This is the last action before returning to the low level ASM code which
-- * just needs to return to the appropriate context.
-- *
-- * Counterpart to idtentry_enter_user().
-- */
--void noinstr idtentry_exit_user(struct pt_regs *regs)
--{
--	lockdep_assert_irqs_disabled();
-+	instrumentation_end();
- 
--	prepare_exit_to_usermode(regs);
-+	rcu_nmi_exit();
-+	lockdep_hardirq_exit();
-+	if (restore)
-+		lockdep_hardirqs_on(CALLER_ADDR0);
-+	__nmi_exit();
- }
- 
- #ifdef CONFIG_XEN_PV
-@@ -800,9 +281,10 @@ static void __xen_pv_evtchn_do_upcall(void)
- __visible noinstr void xen_pv_evtchn_do_upcall(struct pt_regs *regs)
- {
- 	struct pt_regs *old_regs;
--	bool inhcall, rcu_exit;
-+	bool inhcall;
-+	irqentry_state_t state;
- 
--	rcu_exit = idtentry_enter_cond_rcu(regs);
-+	state = irqentry_enter(regs);
- 	old_regs = set_irq_regs(regs);
- 
- 	instrumentation_begin();
-@@ -812,13 +294,13 @@ __visible noinstr void xen_pv_evtchn_do_upcall(struct pt_regs *regs)
- 	set_irq_regs(old_regs);
- 
- 	inhcall = get_and_clear_inhcall();
--	if (inhcall && !WARN_ON_ONCE(rcu_exit)) {
-+	if (inhcall && !WARN_ON_ONCE(state.exit_rcu)) {
- 		instrumentation_begin();
--		idtentry_exit_cond_resched(regs, true);
-+		irqentry_exit_cond_resched();
- 		instrumentation_end();
- 		restore_inhcall(inhcall);
- 	} else {
--		idtentry_exit_cond_rcu(regs, rcu_exit);
-+		irqentry_exit(regs, state);
- 	}
- }
- #endif /* CONFIG_XEN_PV */
-diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
-index 2d0bd5d5f032..6addbd1d0775 100644
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -846,7 +846,7 @@ SYM_CODE_START(ret_from_fork)
- 2:
- 	/* When we fork, we trace the syscall return in the child, too. */
- 	movl    %esp, %eax
--	call    syscall_return_slowpath
-+	call    syscall_exit_to_user_mode
- 	jmp     .Lsyscall_32_done
- 
- 	/* kernel thread */
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index d2a00c97e53f..f423ca9e8a51 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -283,7 +283,7 @@ SYM_CODE_START(ret_from_fork)
- 2:
- 	UNWIND_HINT_REGS
- 	movq	%rsp, %rdi
--	call	syscall_return_slowpath	/* returns with IRQs disabled */
-+	call	syscall_exit_to_user_mode	/* returns with IRQs disabled */
- 	jmp	swapgs_restore_regs_and_return_to_usermode
- 
- 1:
-diff --git a/arch/x86/include/asm/entry-common.h b/arch/x86/include/asm/entry-common.h
-new file mode 100644
-index 000000000000..a8f9315b9eae
---- /dev/null
-+++ b/arch/x86/include/asm/entry-common.h
-@@ -0,0 +1,76 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef _ASM_X86_ENTRY_COMMON_H
-+#define _ASM_X86_ENTRY_COMMON_H
-+
-+#include <linux/user-return-notifier.h>
-+
-+#include <asm/nospec-branch.h>
-+#include <asm/io_bitmap.h>
-+#include <asm/fpu/api.h>
-+
-+/* Check that the stack and regs on entry from user mode are sane. */
-+static __always_inline void arch_check_user_regs(struct pt_regs *regs)
-+{
-+	if (IS_ENABLED(CONFIG_DEBUG_ENTRY)) {
-+		/*
-+		 * Make sure that the entry code gave us a sensible EFLAGS
-+		 * register.  Native because we want to check the actual CPU
-+		 * state, not the interrupt state as imagined by Xen.
-+		 */
-+		unsigned long flags = native_save_fl();
-+		WARN_ON_ONCE(flags & (X86_EFLAGS_AC | X86_EFLAGS_DF |
-+				      X86_EFLAGS_NT));
-+
-+		/* We think we came from user mode. Make sure pt_regs agrees. */
-+		WARN_ON_ONCE(!user_mode(regs));
-+
-+		/*
-+		 * All entries from user mode (except #DF) should be on the
-+		 * normal thread stack and should have user pt_regs in the
-+		 * correct location.
-+		 */
-+		WARN_ON_ONCE(!on_thread_stack());
-+		WARN_ON_ONCE(regs != task_pt_regs(current));
-+	}
-+}
-+#define arch_check_user_regs arch_check_user_regs
-+
-+#define ARCH_SYSCALL_EXIT_WORK		(_TIF_SINGLESTEP)
-+
-+static inline void arch_exit_to_user_mode_prepare(struct pt_regs *regs,
-+						  unsigned long ti_work)
-+{
-+	if (ti_work & _TIF_USER_RETURN_NOTIFY)
-+		fire_user_return_notifiers();
-+
-+	if (unlikely(ti_work & _TIF_IO_BITMAP))
-+		tss_update_io_bitmap();
-+
-+	fpregs_assert_state_consistent();
-+	if (unlikely(ti_work & _TIF_NEED_FPU_LOAD))
-+		switch_fpu_return();
-+
-+#ifdef CONFIG_COMPAT
-+	/*
-+	 * Compat syscalls set TS_COMPAT.  Make sure we clear it before
-+	 * returning to user mode.  We need to clear it *after* signal
-+	 * handling, because syscall restart has a fixup for compat
-+	 * syscalls.  The fixup is exercised by the ptrace_syscall_32
-+	 * selftest.
-+	 *
-+	 * We also need to clear TS_REGS_POKED_I386: the 32-bit tracer
-+	 * special case only applies after poking regs and before the
-+	 * very next return to user mode.
-+	 */
-+	current_thread_info()->status &= ~(TS_COMPAT | TS_I386_REGS_POKED);
-+#endif
-+}
-+#define arch_exit_to_user_mode_prepare arch_exit_to_user_mode_prepare
-+
-+static __always_inline void arch_exit_to_user_mode(void)
-+{
-+	mds_user_clear_cpu_buffers();
-+}
-+#define arch_exit_to_user_mode arch_exit_to_user_mode
-+
-+#endif
-diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
-index 80d3b30d3ee3..ff198fc2495e 100644
---- a/arch/x86/include/asm/idtentry.h
-+++ b/arch/x86/include/asm/idtentry.h
-@@ -6,15 +6,13 @@
- #include <asm/trapnr.h>
- 
- #ifndef __ASSEMBLY__
-+#include <linux/entry-common.h>
- #include <linux/hardirq.h>
- 
- #include <asm/irq_stack.h>
- 
--void idtentry_enter_user(struct pt_regs *regs);
--void idtentry_exit_user(struct pt_regs *regs);
--
--bool idtentry_enter_cond_rcu(struct pt_regs *regs);
--void idtentry_exit_cond_rcu(struct pt_regs *regs, bool rcu_exit);
-+bool idtentry_enter_nmi(struct pt_regs *regs);
-+void idtentry_exit_nmi(struct pt_regs *regs, bool irq_state);
- 
- /**
-  * DECLARE_IDTENTRY - Declare functions for simple IDT entry points
-@@ -45,8 +43,8 @@ void idtentry_exit_cond_rcu(struct pt_regs *regs, bool rcu_exit);
-  * The macro is written so it acts as function definition. Append the
-  * body with a pair of curly brackets.
-  *
-- * idtentry_enter() contains common code which has to be invoked before
-- * arbitrary code in the body. idtentry_exit() contains common code
-+ * irqentry_enter() contains common code which has to be invoked before
-+ * arbitrary code in the body. irqentry_exit() contains common code
-  * which has to run before returning to the low level assembly code.
-  */
- #define DEFINE_IDTENTRY(func)						\
-@@ -54,12 +52,12 @@ static __always_inline void __##func(struct pt_regs *regs);		\
- 									\
- __visible noinstr void func(struct pt_regs *regs)			\
- {									\
--	bool rcu_exit = idtentry_enter_cond_rcu(regs);			\
-+	irqentry_state_t state = irqentry_enter(regs);			\
- 									\
- 	instrumentation_begin();					\
- 	__##func (regs);						\
- 	instrumentation_end();						\
--	idtentry_exit_cond_rcu(regs, rcu_exit);				\
-+	irqentry_exit(regs, state);					\
- }									\
- 									\
- static __always_inline void __##func(struct pt_regs *regs)
-@@ -101,12 +99,12 @@ static __always_inline void __##func(struct pt_regs *regs,		\
- __visible noinstr void func(struct pt_regs *regs,			\
- 			    unsigned long error_code)			\
- {									\
--	bool rcu_exit = idtentry_enter_cond_rcu(regs);			\
-+	irqentry_state_t state = irqentry_enter(regs);			\
- 									\
- 	instrumentation_begin();					\
- 	__##func (regs, error_code);					\
- 	instrumentation_end();						\
--	idtentry_exit_cond_rcu(regs, rcu_exit);				\
-+	irqentry_exit(regs, state);					\
- }									\
- 									\
- static __always_inline void __##func(struct pt_regs *regs,		\
-@@ -161,7 +159,7 @@ __visible noinstr void func(struct pt_regs *regs)
-  * body with a pair of curly brackets.
-  *
-  * Contrary to DEFINE_IDTENTRY_ERRORCODE() this does not invoke the
-- * idtentry_enter/exit() helpers before and after the body invocation. This
-+ * irqentry_enter/exit() helpers before and after the body invocation. This
-  * needs to be done in the body itself if applicable. Use if extra work
-  * is required before the enter/exit() helpers are invoked.
-  */
-@@ -187,11 +185,9 @@ __visible noinstr void func(struct pt_regs *regs, unsigned long error_code)
-  * to the function as error_code argument which needs to be truncated
-  * to an u8 because the push is sign extending.
-  *
-- * On 64-bit idtentry_enter/exit() are invoked in the ASM entry code before
-- * and after switching to the interrupt stack. On 32-bit this happens in C.
-- *
-  * irq_enter/exit_rcu() are invoked before the function body and the
-- * KVM L1D flush request is set.
-+ * KVM L1D flush request is set. Stack switching to the interrupt stack
-+ * has to be done in the function body if necessary.
-  */
- #define DEFINE_IDTENTRY_IRQ(func)					\
- static __always_inline void __##func(struct pt_regs *regs, u8 vector);	\
-@@ -199,7 +195,7 @@ static __always_inline void __##func(struct pt_regs *regs, u8 vector);	\
- __visible noinstr void func(struct pt_regs *regs,			\
- 			    unsigned long error_code)			\
- {									\
--	bool rcu_exit = idtentry_enter_cond_rcu(regs);			\
-+	irqentry_state_t state = irqentry_enter(regs);			\
- 									\
- 	instrumentation_begin();					\
- 	irq_enter_rcu();						\
-@@ -207,7 +203,7 @@ __visible noinstr void func(struct pt_regs *regs,			\
- 	__##func (regs, (u8)error_code);				\
- 	irq_exit_rcu();							\
- 	instrumentation_end();						\
--	idtentry_exit_cond_rcu(regs, rcu_exit);				\
-+	irqentry_exit(regs, state);					\
- }									\
- 									\
- static __always_inline void __##func(struct pt_regs *regs, u8 vector)
-@@ -231,7 +227,7 @@ static __always_inline void __##func(struct pt_regs *regs, u8 vector)
-  * DEFINE_IDTENTRY_SYSVEC - Emit code for system vector IDT entry points
-  * @func:	Function name of the entry point
-  *
-- * idtentry_enter/exit() and irq_enter/exit_rcu() are invoked before the
-+ * irqentry_enter/exit() and irq_enter/exit_rcu() are invoked before the
-  * function body. KVM L1D flush request is set.
-  *
-  * Runs the function on the interrupt stack if the entry hit kernel mode
-@@ -241,7 +237,7 @@ static void __##func(struct pt_regs *regs);				\
- 									\
- __visible noinstr void func(struct pt_regs *regs)			\
- {									\
--	bool rcu_exit = idtentry_enter_cond_rcu(regs);			\
-+	irqentry_state_t state = irqentry_enter(regs);			\
- 									\
- 	instrumentation_begin();					\
- 	irq_enter_rcu();						\
-@@ -249,7 +245,7 @@ __visible noinstr void func(struct pt_regs *regs)			\
- 	run_on_irqstack_cond(__##func, regs, regs);			\
- 	irq_exit_rcu();							\
- 	instrumentation_end();						\
--	idtentry_exit_cond_rcu(regs, rcu_exit);				\
-+	irqentry_exit(regs, state);					\
- }									\
- 									\
- static noinline void __##func(struct pt_regs *regs)
-@@ -270,7 +266,7 @@ static __always_inline void __##func(struct pt_regs *regs);		\
- 									\
- __visible noinstr void func(struct pt_regs *regs)			\
- {									\
--	bool rcu_exit = idtentry_enter_cond_rcu(regs);			\
-+	irqentry_state_t state = irqentry_enter(regs);			\
- 									\
- 	instrumentation_begin();					\
- 	__irq_enter_raw();						\
-@@ -278,7 +274,7 @@ __visible noinstr void func(struct pt_regs *regs)			\
- 	__##func (regs);						\
- 	__irq_exit_raw();						\
- 	instrumentation_end();						\
--	idtentry_exit_cond_rcu(regs, rcu_exit);				\
-+	irqentry_exit(regs, state);					\
- }									\
- 									\
- static __always_inline void __##func(struct pt_regs *regs)
-diff --git a/arch/x86/include/asm/ptrace.h b/arch/x86/include/asm/ptrace.h
-index 255b2dde2c1b..40aa69d04862 100644
---- a/arch/x86/include/asm/ptrace.h
-+++ b/arch/x86/include/asm/ptrace.h
-@@ -209,6 +209,11 @@ static inline void user_stack_pointer_set(struct pt_regs *regs,
- 	regs->sp = val;
- }
- 
-+static __always_inline bool regs_irqs_disabled(struct pt_regs *regs)
-+{
-+	return !(regs->flags & X86_EFLAGS_IF);
-+}
-+
- /* Query offset/name of register from its name/offset */
- extern int regs_query_register_offset(const char *name);
- extern const char *regs_query_register_name(unsigned int offset);
-diff --git a/arch/x86/include/asm/signal.h b/arch/x86/include/asm/signal.h
-index 33d3c88a7225..6fd8410a3910 100644
---- a/arch/x86/include/asm/signal.h
-+++ b/arch/x86/include/asm/signal.h
-@@ -35,7 +35,6 @@ typedef sigset_t compat_sigset_t;
- #endif /* __ASSEMBLY__ */
- #include <uapi/asm/signal.h>
- #ifndef __ASSEMBLY__
--extern void do_signal(struct pt_regs *regs);
- 
- #define __ARCH_HAS_SA_RESTORER
- 
-diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/thread_info.h
-index 8de8ceccb8bc..267701ae3d86 100644
---- a/arch/x86/include/asm/thread_info.h
-+++ b/arch/x86/include/asm/thread_info.h
-@@ -133,11 +133,6 @@ struct thread_info {
- #define _TIF_X32		(1 << TIF_X32)
- #define _TIF_FSCHECK		(1 << TIF_FSCHECK)
- 
--/* Work to do before invoking the actual syscall. */
--#define _TIF_WORK_SYSCALL_ENTRY	\
--	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_EMU | _TIF_SYSCALL_AUDIT |	\
--	 _TIF_SECCOMP | _TIF_SYSCALL_TRACEPOINT)
--
- /* flags to check in __switch_to() */
- #define _TIF_WORK_CTXSW_BASE					\
- 	(_TIF_NOCPUID | _TIF_NOTSC | _TIF_BLOCKSTEP |		\
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 8fd39ff74a49..069e77c0a360 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -1044,7 +1044,7 @@ static __always_inline int patch_cmp(const void *key, const void *elt)
- 	return 0;
- }
- 
--int noinstr poke_int3_handler(struct pt_regs *regs)
-+noinstr int poke_int3_handler(struct pt_regs *regs)
- {
- 	struct bp_patching_desc *desc;
- 	struct text_poke_loc *tp;
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index 14e4b4d17ee5..97ff8313544f 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -1212,7 +1212,7 @@ static void kill_me_maybe(struct callback_head *cb)
-  * backing the user stack, tracing that reads the user stack will cause
-  * potentially infinite recursion.
-  */
--void noinstr do_machine_check(struct pt_regs *regs)
-+noinstr void do_machine_check(struct pt_regs *regs)
- {
- 	DECLARE_BITMAP(valid_banks, MAX_NR_BANKS);
- 	DECLARE_BITMAP(toclear, MAX_NR_BANKS);
-@@ -1927,11 +1927,11 @@ static __always_inline void exc_machine_check_kernel(struct pt_regs *regs)
- 
- static __always_inline void exc_machine_check_user(struct pt_regs *regs)
- {
--	idtentry_enter_user(regs);
-+	irqentry_enter_from_user_mode(regs);
- 	instrumentation_begin();
- 	machine_check_vector(regs);
- 	instrumentation_end();
--	idtentry_exit_user(regs);
-+	irqentry_exit_to_user_mode(regs);
- }
- 
- #ifdef CONFIG_X86_64
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index df63786e7bfa..233c77d056c9 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -233,7 +233,7 @@ EXPORT_SYMBOL_GPL(kvm_read_and_reset_apf_flags);
- noinstr bool __kvm_handle_async_pf(struct pt_regs *regs, u32 token)
- {
- 	u32 reason = kvm_read_and_reset_apf_flags();
--	bool rcu_exit;
-+	irqentry_state_t state;
- 
- 	switch (reason) {
- 	case KVM_PV_REASON_PAGE_NOT_PRESENT:
-@@ -243,7 +243,7 @@ noinstr bool __kvm_handle_async_pf(struct pt_regs *regs, u32 token)
- 		return false;
- 	}
- 
--	rcu_exit = idtentry_enter_cond_rcu(regs);
-+	state = irqentry_enter(regs);
- 	instrumentation_begin();
- 
- 	/*
-@@ -264,7 +264,7 @@ noinstr bool __kvm_handle_async_pf(struct pt_regs *regs, u32 token)
- 	}
- 
- 	instrumentation_end();
--	idtentry_exit_cond_rcu(regs, rcu_exit);
-+	irqentry_exit(regs, state);
- 	return true;
- }
- 
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index d7c5e44b26f7..4fc9954a9560 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -330,7 +330,6 @@ static noinstr void default_do_nmi(struct pt_regs *regs)
- 	__this_cpu_write(last_nmi_rip, regs->ip);
- 
- 	instrumentation_begin();
--	trace_hardirqs_off_finish();
- 
- 	handled = nmi_handle(NMI_LOCAL, regs);
- 	__this_cpu_add(nmi_stats.normal, handled);
-@@ -417,8 +416,6 @@ static noinstr void default_do_nmi(struct pt_regs *regs)
- 		unknown_nmi_error(reason, regs);
- 
- out:
--	if (regs->flags & X86_EFLAGS_IF)
--		trace_hardirqs_on_prepare();
- 	instrumentation_end();
- }
- 
-@@ -478,6 +475,8 @@ static DEFINE_PER_CPU(unsigned long, nmi_dr7);
- 
- DEFINE_IDTENTRY_RAW(exc_nmi)
- {
-+	bool irq_state;
-+
- 	if (IS_ENABLED(CONFIG_SMP) && arch_cpu_is_offline(smp_processor_id()))
- 		return;
- 
-@@ -491,14 +490,14 @@ DEFINE_IDTENTRY_RAW(exc_nmi)
- 
- 	this_cpu_write(nmi_dr7, local_db_save());
- 
--	nmi_enter();
-+	irq_state = idtentry_enter_nmi(regs);
- 
- 	inc_irq_stat(__nmi_count);
- 
- 	if (!ignore_nmis)
- 		default_do_nmi(regs);
- 
--	nmi_exit();
-+	idtentry_exit_nmi(regs, irq_state);
- 
- 	local_db_restore(this_cpu_read(nmi_dr7));
- 
-diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
-index 399f97abee02..d5fa494c2304 100644
---- a/arch/x86/kernel/signal.c
-+++ b/arch/x86/kernel/signal.c
-@@ -25,6 +25,7 @@
- #include <linux/user-return-notifier.h>
- #include <linux/uprobes.h>
- #include <linux/context_tracking.h>
-+#include <linux/entry-common.h>
- #include <linux/syscalls.h>
- 
- #include <asm/processor.h>
-@@ -803,7 +804,7 @@ static inline unsigned long get_nr_restart_syscall(const struct pt_regs *regs)
-  * want to handle. Thus you cannot kill init even with a SIGKILL even by
-  * mistake.
-  */
--void do_signal(struct pt_regs *regs)
-+void arch_do_signal(struct pt_regs *regs)
- {
- 	struct ksignal ksig;
- 
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index b7cb3e0716f7..438fc554d48d 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -245,7 +245,7 @@ static noinstr bool handle_bug(struct pt_regs *regs)
- 
- DEFINE_IDTENTRY_RAW(exc_invalid_op)
- {
--	bool rcu_exit;
-+	irqentry_state_t state;
- 
- 	/*
- 	 * We use UD2 as a short encoding for 'CALL __WARN', as such
-@@ -255,11 +255,11 @@ DEFINE_IDTENTRY_RAW(exc_invalid_op)
- 	if (!user_mode(regs) && handle_bug(regs))
- 		return;
- 
--	rcu_exit = idtentry_enter_cond_rcu(regs);
-+	state = irqentry_enter(regs);
- 	instrumentation_begin();
- 	handle_invalid_op(regs);
- 	instrumentation_end();
--	idtentry_exit_cond_rcu(regs, rcu_exit);
-+	irqentry_exit(regs, state);
- }
- 
- DEFINE_IDTENTRY(exc_coproc_segment_overrun)
-@@ -405,7 +405,7 @@ DEFINE_IDTENTRY_DF(exc_double_fault)
- 	}
- #endif
- 
--	nmi_enter();
-+	idtentry_enter_nmi(regs);
- 	instrumentation_begin();
- 	notify_die(DIE_TRAP, str, regs, error_code, X86_TRAP_DF, SIGSEGV);
- 
-@@ -638,28 +638,25 @@ DEFINE_IDTENTRY_RAW(exc_int3)
- 		return;
- 
- 	/*
--	 * idtentry_enter_user() uses static_branch_{,un}likely() and therefore
--	 * can trigger INT3, hence poke_int3_handler() must be done
--	 * before. If the entry came from kernel mode, then use nmi_enter()
--	 * because the INT3 could have been hit in any context including
--	 * NMI.
-+	 * irqentry_enter_from_user_mode() uses static_branch_{,un}likely()
-+	 * and therefore can trigger INT3, hence poke_int3_handler() must
-+	 * be done before. If the entry came from kernel mode, then use
-+	 * nmi_enter() because the INT3 could have been hit in any context
-+	 * including NMI.
- 	 */
- 	if (user_mode(regs)) {
--		idtentry_enter_user(regs);
-+		irqentry_enter_from_user_mode(regs);
- 		instrumentation_begin();
- 		do_int3_user(regs);
- 		instrumentation_end();
--		idtentry_exit_user(regs);
-+		irqentry_exit_to_user_mode(regs);
- 	} else {
--		nmi_enter();
-+		bool irq_state = idtentry_enter_nmi(regs);
- 		instrumentation_begin();
--		trace_hardirqs_off_finish();
- 		if (!do_int3(regs))
- 			die("int3", regs, 0);
--		if (regs->flags & X86_EFLAGS_IF)
--			trace_hardirqs_on_prepare();
- 		instrumentation_end();
--		nmi_exit();
-+		idtentry_exit_nmi(regs, irq_state);
- 	}
- }
- 
-@@ -867,9 +864,8 @@ static void handle_debug(struct pt_regs *regs, unsigned long dr6, bool user)
- static __always_inline void exc_debug_kernel(struct pt_regs *regs,
- 					     unsigned long dr6)
- {
--	nmi_enter();
-+	bool irq_state = idtentry_enter_nmi(regs);
- 	instrumentation_begin();
--	trace_hardirqs_off_finish();
- 
- 	/*
- 	 * If something gets miswired and we end up here for a user mode
-@@ -886,10 +882,8 @@ static __always_inline void exc_debug_kernel(struct pt_regs *regs,
- 
- 	handle_debug(regs, dr6, false);
- 
--	if (regs->flags & X86_EFLAGS_IF)
--		trace_hardirqs_on_prepare();
- 	instrumentation_end();
--	nmi_exit();
-+	idtentry_exit_nmi(regs, irq_state);
- }
- 
- static __always_inline void exc_debug_user(struct pt_regs *regs,
-@@ -901,12 +895,13 @@ static __always_inline void exc_debug_user(struct pt_regs *regs,
- 	 */
- 	WARN_ON_ONCE(!user_mode(regs));
- 
--	idtentry_enter_user(regs);
-+	irqentry_enter_from_user_mode(regs);
- 	instrumentation_begin();
- 
- 	handle_debug(regs, dr6, true);
-+
- 	instrumentation_end();
--	idtentry_exit_user(regs);
-+	irqentry_exit_to_user_mode(regs);
- }
- 
- #ifdef CONFIG_X86_64
-diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-index b277a2db6267..fbd5bd7a945a 100644
---- a/arch/x86/kvm/Kconfig
-+++ b/arch/x86/kvm/Kconfig
-@@ -42,6 +42,7 @@ config KVM
- 	select HAVE_KVM_MSI
- 	select HAVE_KVM_CPU_RELAX_INTERCEPT
- 	select HAVE_KVM_NO_POLL
-+	select KVM_XFER_TO_GUEST_WORK
- 	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
- 	select KVM_VFIO
- 	select SRCU
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 13745f2a5ecd..9909375ee1fd 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -27,6 +27,7 @@
- #include <linux/slab.h>
- #include <linux/tboot.h>
- #include <linux/trace_events.h>
-+#include <linux/entry-kvm.h>
- 
- #include <asm/apic.h>
- #include <asm/asm.h>
-@@ -5373,14 +5374,12 @@ static int handle_invalid_guest_state(struct kvm_vcpu *vcpu)
- 		}
- 
- 		/*
--		 * Note, return 1 and not 0, vcpu_run() is responsible for
--		 * morphing the pending signal into the proper return code.
-+		 * Note, return 1 and not 0, vcpu_run() will invoke
-+		 * xfer_to_guest_mode() which will create a proper return
-+		 * code.
- 		 */
--		if (signal_pending(current))
-+		if (__xfer_to_guest_mode_work_pending())
- 			return 1;
--
--		if (need_resched())
--			schedule();
- 	}
- 
- 	return 1;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 88c593f83b28..532597265c50 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -56,6 +56,7 @@
- #include <linux/sched/stat.h>
- #include <linux/sched/isolation.h>
- #include <linux/mem_encrypt.h>
-+#include <linux/entry-kvm.h>
- 
- #include <trace/events/kvm.h>
- 
-@@ -1587,7 +1588,7 @@ EXPORT_SYMBOL_GPL(kvm_emulate_wrmsr);
- bool kvm_vcpu_exit_request(struct kvm_vcpu *vcpu)
- {
- 	return vcpu->mode == EXITING_GUEST_MODE || kvm_request_pending(vcpu) ||
--		need_resched() || signal_pending(current);
-+		xfer_to_guest_mode_work_pending();
- }
- EXPORT_SYMBOL_GPL(kvm_vcpu_exit_request);
- 
-@@ -8681,15 +8682,11 @@ static int vcpu_run(struct kvm_vcpu *vcpu)
- 			break;
- 		}
- 
--		if (signal_pending(current)) {
--			r = -EINTR;
--			vcpu->run->exit_reason = KVM_EXIT_INTR;
--			++vcpu->stat.signal_exits;
--			break;
--		}
--		if (need_resched()) {
-+		if (__xfer_to_guest_mode_work_pending()) {
- 			srcu_read_unlock(&kvm->srcu, vcpu->srcu_idx);
--			cond_resched();
-+			r = xfer_to_guest_mode_handle_work(vcpu);
-+			if (r)
-+				return r;
- 			vcpu->srcu_idx = srcu_read_lock(&kvm->srcu);
- 		}
- 	}
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 1ead568c0101..5e5edd2ec893 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -1377,7 +1377,7 @@ handle_page_fault(struct pt_regs *regs, unsigned long error_code,
- DEFINE_IDTENTRY_RAW_ERRORCODE(exc_page_fault)
- {
- 	unsigned long address = read_cr2();
--	bool rcu_exit;
-+	irqentry_state_t state;
- 
- 	prefetchw(&current->mm->mmap_lock);
- 
-@@ -1412,11 +1412,11 @@ DEFINE_IDTENTRY_RAW_ERRORCODE(exc_page_fault)
- 	 * code reenabled RCU to avoid subsequent wreckage which helps
- 	 * debugability.
- 	 */
--	rcu_exit = idtentry_enter_cond_rcu(regs);
-+	state = irqentry_enter(regs);
- 
- 	instrumentation_begin();
- 	handle_page_fault(regs, error_code, address);
- 	instrumentation_end();
- 
--	idtentry_exit_cond_rcu(regs, rcu_exit);
-+	irqentry_exit(regs, state);
- }
-diff --git a/include/linux/entry-common.h b/include/linux/entry-common.h
-new file mode 100644
-index 000000000000..efebbffcd5cc
---- /dev/null
-+++ b/include/linux/entry-common.h
-@@ -0,0 +1,372 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LINUX_ENTRYCOMMON_H
-+#define __LINUX_ENTRYCOMMON_H
-+
-+#include <linux/tracehook.h>
-+#include <linux/syscalls.h>
-+#include <linux/seccomp.h>
-+#include <linux/sched.h>
-+
-+#include <asm/entry-common.h>
-+
-+/*
-+ * Define dummy _TIF work flags if not defined by the architecture or for
-+ * disabled functionality.
-+ */
-+#ifndef _TIF_SYSCALL_EMU
-+# define _TIF_SYSCALL_EMU		(0)
-+#endif
-+
-+#ifndef _TIF_SYSCALL_TRACEPOINT
-+# define _TIF_SYSCALL_TRACEPOINT	(0)
-+#endif
-+
-+#ifndef _TIF_SECCOMP
-+# define _TIF_SECCOMP			(0)
-+#endif
-+
-+#ifndef _TIF_SYSCALL_AUDIT
-+# define _TIF_SYSCALL_AUDIT		(0)
-+#endif
-+
-+#ifndef _TIF_PATCH_PENDING
-+# define _TIF_PATCH_PENDING		(0)
-+#endif
-+
-+#ifndef _TIF_UPROBE
-+# define _TIF_UPROBE			(0)
-+#endif
-+
-+/*
-+ * TIF flags handled in syscall_enter_from_usermode()
-+ */
-+#ifndef ARCH_SYSCALL_ENTER_WORK
-+# define ARCH_SYSCALL_ENTER_WORK	(0)
-+#endif
-+
-+#define SYSCALL_ENTER_WORK						\
-+	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT | _TIF_SECCOMP |	\
-+	 _TIF_SYSCALL_TRACEPOINT | _TIF_SYSCALL_EMU |			\
-+	 ARCH_SYSCALL_ENTER_WORK)
-+
-+/*
-+ * TIF flags handled in syscall_exit_to_user_mode()
-+ */
-+#ifndef ARCH_SYSCALL_EXIT_WORK
-+# define ARCH_SYSCALL_EXIT_WORK		(0)
-+#endif
-+
-+#define SYSCALL_EXIT_WORK						\
-+	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT |			\
-+	 _TIF_SYSCALL_TRACEPOINT | ARCH_SYSCALL_EXIT_WORK)
-+
-+/*
-+ * TIF flags handled in exit_to_user_mode_loop()
-+ */
-+#ifndef ARCH_EXIT_TO_USER_MODE_WORK
-+# define ARCH_EXIT_TO_USER_MODE_WORK		(0)
-+#endif
-+
-+#define EXIT_TO_USER_MODE_WORK						\
-+	(_TIF_SIGPENDING | _TIF_NOTIFY_RESUME | _TIF_UPROBE |		\
-+	 _TIF_NEED_RESCHED | _TIF_PATCH_PENDING |			\
-+	 ARCH_EXIT_TO_USER_MODE_WORK)
-+
-+/**
-+ * arch_check_user_regs - Architecture specific sanity check for user mode regs
-+ * @regs:	Pointer to currents pt_regs
-+ *
-+ * Defaults to an empty implementation. Can be replaced by architecture
-+ * specific code.
-+ *
-+ * Invoked from syscall_enter_from_user_mode() in the non-instrumentable
-+ * section. Use __always_inline so the compiler cannot push it out of line
-+ * and make it instrumentable.
-+ */
-+static __always_inline void arch_check_user_regs(struct pt_regs *regs);
-+
-+#ifndef arch_check_user_regs
-+static __always_inline void arch_check_user_regs(struct pt_regs *regs) {}
-+#endif
-+
-+/**
-+ * arch_syscall_enter_tracehook - Wrapper around tracehook_report_syscall_entry()
-+ * @regs:	Pointer to currents pt_regs
-+ *
-+ * Returns: 0 on success or an error code to skip the syscall.
-+ *
-+ * Defaults to tracehook_report_syscall_entry(). Can be replaced by
-+ * architecture specific code.
-+ *
-+ * Invoked from syscall_enter_from_user_mode()
-+ */
-+static inline __must_check int arch_syscall_enter_tracehook(struct pt_regs *regs);
-+
-+#ifndef arch_syscall_enter_tracehook
-+static inline __must_check int arch_syscall_enter_tracehook(struct pt_regs *regs)
-+{
-+	return tracehook_report_syscall_entry(regs);
-+}
-+#endif
-+
-+/**
-+ * syscall_enter_from_user_mode - Check and handle work before invoking
-+ *				 a syscall
-+ * @regs:	Pointer to currents pt_regs
-+ * @syscall:	The syscall number
-+ *
-+ * Invoked from architecture specific syscall entry code with interrupts
-+ * disabled. The calling code has to be non-instrumentable. When the
-+ * function returns all state is correct and the subsequent functions can be
-+ * instrumented.
-+ *
-+ * Returns: The original or a modified syscall number
-+ *
-+ * If the returned syscall number is -1 then the syscall should be
-+ * skipped. In this case the caller may invoke syscall_set_error() or
-+ * syscall_set_return_value() first.  If neither of those are called and -1
-+ * is returned, then the syscall will fail with ENOSYS.
-+ *
-+ * The following functionality is handled here:
-+ *
-+ *  1) Establish state (lockdep, RCU (context tracking), tracing)
-+ *  2) TIF flag dependent invocations of arch_syscall_enter_tracehook(),
-+ *     __secure_computing(), trace_sys_enter()
-+ *  3) Invocation of audit_syscall_entry()
-+ */
-+long syscall_enter_from_user_mode(struct pt_regs *regs, long syscall);
-+
-+/**
-+ * local_irq_enable_exit_to_user - Exit to user variant of local_irq_enable()
-+ * @ti_work:	Cached TIF flags gathered with interrupts disabled
-+ *
-+ * Defaults to local_irq_enable(). Can be supplied by architecture specific
-+ * code.
-+ */
-+static inline void local_irq_enable_exit_to_user(unsigned long ti_work);
-+
-+#ifndef local_irq_enable_exit_to_user
-+static inline void local_irq_enable_exit_to_user(unsigned long ti_work)
-+{
-+	local_irq_enable();
-+}
-+#endif
-+
-+/**
-+ * local_irq_disable_exit_to_user - Exit to user variant of local_irq_disable()
-+ *
-+ * Defaults to local_irq_disable(). Can be supplied by architecture specific
-+ * code.
-+ */
-+static inline void local_irq_disable_exit_to_user(void);
-+
-+#ifndef local_irq_disable_exit_to_user
-+static inline void local_irq_disable_exit_to_user(void)
-+{
-+	local_irq_disable();
-+}
-+#endif
-+
-+/**
-+ * arch_exit_to_user_mode_work - Architecture specific TIF work for exit
-+ *				 to user mode.
-+ * @regs:	Pointer to currents pt_regs
-+ * @ti_work:	Cached TIF flags gathered with interrupts disabled
-+ *
-+ * Invoked from exit_to_user_mode_loop() with interrupt enabled
-+ *
-+ * Defaults to NOOP. Can be supplied by architecture specific code.
-+ */
-+static inline void arch_exit_to_user_mode_work(struct pt_regs *regs,
-+					       unsigned long ti_work);
-+
-+#ifndef arch_exit_to_user_mode_work
-+static inline void arch_exit_to_user_mode_work(struct pt_regs *regs,
-+					       unsigned long ti_work)
-+{
-+}
-+#endif
-+
-+/**
-+ * arch_exit_to_user_mode_prepare - Architecture specific preparation for
-+ *				    exit to user mode.
-+ * @regs:	Pointer to currents pt_regs
-+ * @ti_work:	Cached TIF flags gathered with interrupts disabled
-+ *
-+ * Invoked from exit_to_user_mode_prepare() with interrupt disabled as the last
-+ * function before return. Defaults to NOOP.
-+ */
-+static inline void arch_exit_to_user_mode_prepare(struct pt_regs *regs,
-+						  unsigned long ti_work);
-+
-+#ifndef arch_exit_to_user_mode_prepare
-+static inline void arch_exit_to_user_mode_prepare(struct pt_regs *regs,
-+						  unsigned long ti_work)
-+{
-+}
-+#endif
-+
-+/**
-+ * arch_exit_to_user_mode - Architecture specific final work before
-+ *			    exit to user mode.
-+ *
-+ * Invoked from exit_to_user_mode() with interrupt disabled as the last
-+ * function before return. Defaults to NOOP.
-+ *
-+ * This needs to be __always_inline because it is non-instrumentable code
-+ * invoked after context tracking switched to user mode.
-+ *
-+ * An architecture implementation must not do anything complex, no locking
-+ * etc. The main purpose is for speculation mitigations.
-+ */
-+static __always_inline void arch_exit_to_user_mode(void);
-+
-+#ifndef arch_exit_to_user_mode
-+static __always_inline void arch_exit_to_user_mode(void) { }
-+#endif
-+
-+/**
-+ * arch_do_signal -  Architecture specific signal delivery function
-+ * @regs:	Pointer to currents pt_regs
-+ *
-+ * Invoked from exit_to_user_mode_loop().
-+ */
-+void arch_do_signal(struct pt_regs *regs);
-+
-+/**
-+ * arch_syscall_exit_tracehook - Wrapper around tracehook_report_syscall_exit()
-+ * @regs:	Pointer to currents pt_regs
-+ * @step:	Indicator for single step
-+ *
-+ * Defaults to tracehook_report_syscall_exit(). Can be replaced by
-+ * architecture specific code.
-+ *
-+ * Invoked from syscall_exit_to_user_mode()
-+ */
-+static inline void arch_syscall_exit_tracehook(struct pt_regs *regs, bool step);
-+
-+#ifndef arch_syscall_exit_tracehook
-+static inline void arch_syscall_exit_tracehook(struct pt_regs *regs, bool step)
-+{
-+	tracehook_report_syscall_exit(regs, step);
-+}
-+#endif
-+
-+/**
-+ * syscall_exit_to_user_mode - Handle work before returning to user mode
-+ * @regs:	Pointer to currents pt_regs
-+ *
-+ * Invoked with interrupts enabled and fully valid regs. Returns with all
-+ * work handled, interrupts disabled such that the caller can immediately
-+ * switch to user mode. Called from architecture specific syscall and ret
-+ * from fork code.
-+ *
-+ * The call order is:
-+ *  1) One-time syscall exit work:
-+ *	- rseq syscall exit
-+ *      - audit
-+ *	- syscall tracing
-+ *	- tracehook (single stepping)
-+ *
-+ *  2) Preparatory work
-+ *	- Exit to user mode loop (common TIF handling). Invokes
-+ *	  arch_exit_to_user_mode_work() for architecture specific TIF work
-+ *	- Architecture specific one time work arch_exit_to_user_mode_prepare()
-+ *	- Address limit and lockdep checks
-+ *
-+ *  3) Final transition (lockdep, tracing, context tracking, RCU). Invokes
-+ *     arch_exit_to_user_mode() to handle e.g. speculation mitigations
-+ */
-+void syscall_exit_to_user_mode(struct pt_regs *regs);
-+
-+/**
-+ * irqentry_enter_from_user_mode - Establish state before invoking the irq handler
-+ * @regs:	Pointer to currents pt_regs
-+ *
-+ * Invoked from architecture specific entry code with interrupts disabled.
-+ * Can only be called when the interrupt entry came from user mode. The
-+ * calling code must be non-instrumentable.  When the function returns all
-+ * state is correct and the subsequent functions can be instrumented.
-+ *
-+ * The function establishes state (lockdep, RCU (context tracking), tracing)
-+ */
-+void irqentry_enter_from_user_mode(struct pt_regs *regs);
-+
-+/**
-+ * irqentry_exit_to_user_mode - Interrupt exit work
-+ * @regs:	Pointer to current's pt_regs
-+ *
-+ * Invoked with interrupts disbled and fully valid regs. Returns with all
-+ * work handled, interrupts disabled such that the caller can immediately
-+ * switch to user mode. Called from architecture specific interrupt
-+ * handling code.
-+ *
-+ * The call order is #2 and #3 as described in syscall_exit_to_user_mode().
-+ * Interrupt exit is not invoking #1 which is the syscall specific one time
-+ * work.
-+ */
-+void irqentry_exit_to_user_mode(struct pt_regs *regs);
-+
-+#ifndef irqentry_state
-+typedef struct irqentry_state {
-+	bool	exit_rcu;
-+} irqentry_state_t;
-+#endif
-+
-+/**
-+ * irqentry_enter - Handle state tracking on ordinary interrupt entries
-+ * @regs:	Pointer to pt_regs of interrupted context
-+ *
-+ * Invokes:
-+ *  - lockdep irqflag state tracking as low level ASM entry disabled
-+ *    interrupts.
-+ *
-+ *  - Context tracking if the exception hit user mode.
-+ *
-+ *  - The hardirq tracer to keep the state consistent as low level ASM
-+ *    entry disabled interrupts.
-+ *
-+ * As a precondition, this requires that the entry came from user mode,
-+ * idle, or a kernel context in which RCU is watching.
-+ *
-+ * For kernel mode entries RCU handling is done conditional. If RCU is
-+ * watching then the only RCU requirement is to check whether the tick has
-+ * to be restarted. If RCU is not watching then rcu_irq_enter() has to be
-+ * invoked on entry and rcu_irq_exit() on exit.
-+ *
-+ * Avoiding the rcu_irq_enter/exit() calls is an optimization but also
-+ * solves the problem of kernel mode pagefaults which can schedule, which
-+ * is not possible after invoking rcu_irq_enter() without undoing it.
-+ *
-+ * For user mode entries irqentry_enter_from_user_mode() is invoked to
-+ * establish the proper context for NOHZ_FULL. Otherwise scheduling on exit
-+ * would not be possible.
-+ *
-+ * Returns: An opaque object that must be passed to idtentry_exit()
-+ */
-+irqentry_state_t noinstr irqentry_enter(struct pt_regs *regs);
-+
-+/**
-+ * irqentry_exit_cond_resched - Conditionally reschedule on return from interrupt
-+ *
-+ * Conditional reschedule with additional sanity checks.
-+ */
-+void irqentry_exit_cond_resched(void);
-+
-+/**
-+ * irqentry_exit - Handle return from exception that used irqentry_enter()
-+ * @regs:	Pointer to pt_regs (exception entry regs)
-+ * @state:	Return value from matching call to irqentry_enter()
-+ *
-+ * Depending on the return target (kernel/user) this runs the necessary
-+ * preemption and work checks if possible and reguired and returns to
-+ * the caller with interrupts disabled and no further work pending.
-+ *
-+ * This is the last action before returning to the low level ASM code which
-+ * just needs to return to the appropriate context.
-+ *
-+ * Counterpart to irqentry_enter().
-+ */
-+void noinstr irqentry_exit(struct pt_regs *regs, irqentry_state_t state);
-+
-+#endif
-diff --git a/include/linux/entry-kvm.h b/include/linux/entry-kvm.h
-new file mode 100644
-index 000000000000..0cef17afb41a
---- /dev/null
-+++ b/include/linux/entry-kvm.h
-@@ -0,0 +1,80 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LINUX_ENTRYKVM_H
-+#define __LINUX_ENTRYKVM_H
-+
-+#include <linux/entry-common.h>
-+
-+/* Transfer to guest mode work */
-+#ifdef CONFIG_KVM_XFER_TO_GUEST_WORK
-+
-+#ifndef ARCH_XFER_TO_GUEST_MODE_WORK
-+# define ARCH_XFER_TO_GUEST_MODE_WORK	(0)
-+#endif
-+
-+#define XFER_TO_GUEST_MODE_WORK					\
-+	(_TIF_NEED_RESCHED | _TIF_SIGPENDING |			\
-+	 _TIF_NOTIFY_RESUME | ARCH_XFER_TO_GUEST_MODE_WORK)
-+
-+struct kvm_vcpu;
-+
-+/**
-+ * arch_xfer_to_guest_mode_handle_work - Architecture specific xfer to guest
-+ *					 mode work handling function.
-+ * @vcpu:	Pointer to current's VCPU data
-+ * @ti_work:	Cached TIF flags gathered in xfer_to_guest_mode_handle_work()
-+ *
-+ * Invoked from xfer_to_guest_mode_handle_work(). Defaults to NOOP. Can be
-+ * replaced by architecture specific code.
-+ */
-+static inline int arch_xfer_to_guest_mode_handle_work(struct kvm_vcpu *vcpu,
-+						      unsigned long ti_work);
-+
-+#ifndef arch_xfer_to_guest_mode_work
-+static inline int arch_xfer_to_guest_mode_handle_work(struct kvm_vcpu *vcpu,
-+						      unsigned long ti_work)
-+{
-+	return 0;
-+}
-+#endif
-+
-+/**
-+ * xfer_to_guest_mode_handle_work - Check and handle pending work which needs
-+ *				    to be handled before going to guest mode
-+ * @vcpu:	Pointer to current's VCPU data
-+ *
-+ * Returns: 0 or an error code
-+ */
-+int xfer_to_guest_mode_handle_work(struct kvm_vcpu *vcpu);
-+
-+/**
-+ * __xfer_to_guest_mode_work_pending - Check if work is pending
-+ *
-+ * Returns: True if work pending, False otherwise.
-+ *
-+ * Bare variant of xfer_to_guest_mode_work_pending(). Can be called from
-+ * interrupt enabled code for racy quick checks with care.
-+ */
-+static inline bool __xfer_to_guest_mode_work_pending(void)
-+{
-+	unsigned long ti_work = READ_ONCE(current_thread_info()->flags);
-+
-+	return !!(ti_work & XFER_TO_GUEST_MODE_WORK);
-+}
-+
-+/**
-+ * xfer_to_guest_mode_work_pending - Check if work is pending which needs to be
-+ *				     handled before returning to guest mode
-+ *
-+ * Returns: True if work pending, False otherwise.
-+ *
-+ * Has to be invoked with interrupts disabled before the transition to
-+ * guest mode.
-+ */
-+static inline bool xfer_to_guest_mode_work_pending(void)
-+{
-+	lockdep_assert_irqs_disabled();
-+	return __xfer_to_guest_mode_work_pending();
-+}
-+#endif /* CONFIG_KVM_XFER_TO_GUEST_WORK */
-+
-+#endif
-diff --git a/include/linux/hardirq.h b/include/linux/hardirq.h
-index 03c9fece7d43..754f67ac4326 100644
---- a/include/linux/hardirq.h
-+++ b/include/linux/hardirq.h
-@@ -111,32 +111,42 @@ extern void rcu_nmi_exit(void);
- /*
-  * nmi_enter() can nest up to 15 times; see NMI_BITS.
-  */
--#define nmi_enter()						\
-+#define __nmi_enter()						\
- 	do {							\
-+		lockdep_off();					\
- 		arch_nmi_enter();				\
- 		printk_nmi_enter();				\
--		lockdep_off();					\
- 		BUG_ON(in_nmi() == NMI_MASK);			\
- 		__preempt_count_add(NMI_OFFSET + HARDIRQ_OFFSET);	\
--		rcu_nmi_enter();				\
-+	} while (0)
-+
-+#define nmi_enter()						\
-+	do {							\
-+		__nmi_enter();					\
- 		lockdep_hardirq_enter();			\
-+		rcu_nmi_enter();				\
- 		instrumentation_begin();			\
- 		ftrace_nmi_enter();				\
- 		instrumentation_end();				\
- 	} while (0)
- 
-+#define __nmi_exit()						\
-+	do {							\
-+		BUG_ON(!in_nmi());				\
-+		__preempt_count_sub(NMI_OFFSET + HARDIRQ_OFFSET);	\
-+		printk_nmi_exit();				\
-+		arch_nmi_exit();				\
-+		lockdep_on();					\
-+	} while (0)
-+
- #define nmi_exit()						\
- 	do {							\
- 		instrumentation_begin();			\
- 		ftrace_nmi_exit();				\
- 		instrumentation_end();				\
--		lockdep_hardirq_exit();				\
- 		rcu_nmi_exit();					\
--		BUG_ON(!in_nmi());				\
--		__preempt_count_sub(NMI_OFFSET + HARDIRQ_OFFSET);	\
--		lockdep_on();					\
--		printk_nmi_exit();				\
--		arch_nmi_exit();				\
-+		lockdep_hardirq_exit();				\
-+		__nmi_exit();					\
- 	} while (0)
- 
- #endif /* LINUX_HARDIRQ_H */
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index d564855243d8..ac83e9c1d82c 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -1439,4 +1439,12 @@ int kvm_vm_create_worker_thread(struct kvm *kvm, kvm_vm_thread_fn_t thread_fn,
- 				uintptr_t data, const char *name,
- 				struct task_struct **thread_ptr);
- 
-+#ifdef CONFIG_KVM_XFER_TO_GUEST_WORK
-+static inline void kvm_handle_signal_exit(struct kvm_vcpu *vcpu)
-+{
-+	vcpu->run->exit_reason = KVM_EXIT_INTR;
-+	vcpu->stat.signal_exits++;
-+}
-+#endif /* CONFIG_KVM_XFER_TO_GUEST_WORK */
-+
- #endif
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 8fce5c98a4b0..3b73cf84f77d 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -10,181 +10,20 @@
- #ifndef __LINUX_LOCKDEP_H
- #define __LINUX_LOCKDEP_H
- 
-+#include <linux/lockdep_types.h>
-+
- struct task_struct;
--struct lockdep_map;
- 
- /* for sysctl */
- extern int prove_locking;
- extern int lock_stat;
- 
--#define MAX_LOCKDEP_SUBCLASSES		8UL
--
--#include <linux/types.h>
--
--enum lockdep_wait_type {
--	LD_WAIT_INV = 0,	/* not checked, catch all */
--
--	LD_WAIT_FREE,		/* wait free, rcu etc.. */
--	LD_WAIT_SPIN,		/* spin loops, raw_spinlock_t etc.. */
--
--#ifdef CONFIG_PROVE_RAW_LOCK_NESTING
--	LD_WAIT_CONFIG,		/* CONFIG_PREEMPT_LOCK, spinlock_t etc.. */
--#else
--	LD_WAIT_CONFIG = LD_WAIT_SPIN,
--#endif
--	LD_WAIT_SLEEP,		/* sleeping locks, mutex_t etc.. */
--
--	LD_WAIT_MAX,		/* must be last */
--};
--
- #ifdef CONFIG_LOCKDEP
- 
- #include <linux/linkage.h>
--#include <linux/list.h>
- #include <linux/debug_locks.h>
- #include <linux/stacktrace.h>
- 
--/*
-- * We'd rather not expose kernel/lockdep_states.h this wide, but we do need
-- * the total number of states... :-(
-- */
--#define XXX_LOCK_USAGE_STATES		(1+2*4)
--
--/*
-- * NR_LOCKDEP_CACHING_CLASSES ... Number of classes
-- * cached in the instance of lockdep_map
-- *
-- * Currently main class (subclass == 0) and signle depth subclass
-- * are cached in lockdep_map. This optimization is mainly targeting
-- * on rq->lock. double_rq_lock() acquires this highly competitive with
-- * single depth.
-- */
--#define NR_LOCKDEP_CACHING_CLASSES	2
--
--/*
-- * A lockdep key is associated with each lock object. For static locks we use
-- * the lock address itself as the key. Dynamically allocated lock objects can
-- * have a statically or dynamically allocated key. Dynamically allocated lock
-- * keys must be registered before being used and must be unregistered before
-- * the key memory is freed.
-- */
--struct lockdep_subclass_key {
--	char __one_byte;
--} __attribute__ ((__packed__));
--
--/* hash_entry is used to keep track of dynamically allocated keys. */
--struct lock_class_key {
--	union {
--		struct hlist_node		hash_entry;
--		struct lockdep_subclass_key	subkeys[MAX_LOCKDEP_SUBCLASSES];
--	};
--};
--
--extern struct lock_class_key __lockdep_no_validate__;
--
--struct lock_trace;
--
--#define LOCKSTAT_POINTS		4
--
--/*
-- * The lock-class itself. The order of the structure members matters.
-- * reinit_class() zeroes the key member and all subsequent members.
-- */
--struct lock_class {
--	/*
--	 * class-hash:
--	 */
--	struct hlist_node		hash_entry;
--
--	/*
--	 * Entry in all_lock_classes when in use. Entry in free_lock_classes
--	 * when not in use. Instances that are being freed are on one of the
--	 * zapped_classes lists.
--	 */
--	struct list_head		lock_entry;
--
--	/*
--	 * These fields represent a directed graph of lock dependencies,
--	 * to every node we attach a list of "forward" and a list of
--	 * "backward" graph nodes.
--	 */
--	struct list_head		locks_after, locks_before;
--
--	const struct lockdep_subclass_key *key;
--	unsigned int			subclass;
--	unsigned int			dep_gen_id;
--
--	/*
--	 * IRQ/softirq usage tracking bits:
--	 */
--	unsigned long			usage_mask;
--	const struct lock_trace		*usage_traces[XXX_LOCK_USAGE_STATES];
--
--	/*
--	 * Generation counter, when doing certain classes of graph walking,
--	 * to ensure that we check one node only once:
--	 */
--	int				name_version;
--	const char			*name;
--
--	short				wait_type_inner;
--	short				wait_type_outer;
--
--#ifdef CONFIG_LOCK_STAT
--	unsigned long			contention_point[LOCKSTAT_POINTS];
--	unsigned long			contending_point[LOCKSTAT_POINTS];
--#endif
--} __no_randomize_layout;
--
--#ifdef CONFIG_LOCK_STAT
--struct lock_time {
--	s64				min;
--	s64				max;
--	s64				total;
--	unsigned long			nr;
--};
--
--enum bounce_type {
--	bounce_acquired_write,
--	bounce_acquired_read,
--	bounce_contended_write,
--	bounce_contended_read,
--	nr_bounce_types,
--
--	bounce_acquired = bounce_acquired_write,
--	bounce_contended = bounce_contended_write,
--};
--
--struct lock_class_stats {
--	unsigned long			contention_point[LOCKSTAT_POINTS];
--	unsigned long			contending_point[LOCKSTAT_POINTS];
--	struct lock_time		read_waittime;
--	struct lock_time		write_waittime;
--	struct lock_time		read_holdtime;
--	struct lock_time		write_holdtime;
--	unsigned long			bounces[nr_bounce_types];
--};
--
--struct lock_class_stats lock_stats(struct lock_class *class);
--void clear_lock_stats(struct lock_class *class);
--#endif
--
--/*
-- * Map the lock object (the lock instance) to the lock-class object.
-- * This is embedded into specific lock instances:
-- */
--struct lockdep_map {
--	struct lock_class_key		*key;
--	struct lock_class		*class_cache[NR_LOCKDEP_CACHING_CLASSES];
--	const char			*name;
--	short				wait_type_outer; /* can be taken in this context */
--	short				wait_type_inner; /* presents this context */
--#ifdef CONFIG_LOCK_STAT
--	int				cpu;
--	unsigned long			ip;
--#endif
--};
--
- static inline void lockdep_copy_map(struct lockdep_map *to,
- 				    struct lockdep_map *from)
- {
-@@ -440,8 +279,6 @@ static inline void lock_set_subclass(struct lockdep_map *lock,
- 
- extern void lock_downgrade(struct lockdep_map *lock, unsigned long ip);
- 
--struct pin_cookie { unsigned int val; };
--
- #define NIL_COOKIE (struct pin_cookie){ .val = 0U, }
- 
- extern struct pin_cookie lock_pin_lock(struct lockdep_map *lock);
-@@ -520,10 +357,6 @@ static inline void lockdep_set_selftest_task(struct task_struct *task)
- # define lockdep_reset()		do { debug_locks = 1; } while (0)
- # define lockdep_free_key_range(start, size)	do { } while (0)
- # define lockdep_sys_exit() 			do { } while (0)
--/*
-- * The class key takes no space if lockdep is disabled:
-- */
--struct lock_class_key { };
- 
- static inline void lockdep_register_key(struct lock_class_key *key)
- {
-@@ -533,11 +366,6 @@ static inline void lockdep_unregister_key(struct lock_class_key *key)
- {
- }
- 
--/*
-- * The lockdep_map takes no space if lockdep is disabled:
-- */
--struct lockdep_map { };
--
- #define lockdep_depth(tsk)	(0)
- 
- #define lockdep_is_held_type(l, r)		(1)
-@@ -549,8 +377,6 @@ struct lockdep_map { };
- 
- #define lockdep_recursing(tsk)			(0)
- 
--struct pin_cookie { };
--
- #define NIL_COOKIE (struct pin_cookie){ }
- 
- #define lockdep_pin_lock(l)			({ struct pin_cookie cookie = { }; cookie; })
-diff --git a/include/linux/lockdep_types.h b/include/linux/lockdep_types.h
-new file mode 100644
-index 000000000000..7b9350624577
---- /dev/null
-+++ b/include/linux/lockdep_types.h
-@@ -0,0 +1,196 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Runtime locking correctness validator
-+ *
-+ *  Copyright (C) 2006,2007 Red Hat, Inc., Ingo Molnar <mingo@redhat.com>
-+ *  Copyright (C) 2007 Red Hat, Inc., Peter Zijlstra
-+ *
-+ * see Documentation/locking/lockdep-design.rst for more details.
-+ */
-+#ifndef __LINUX_LOCKDEP_TYPES_H
-+#define __LINUX_LOCKDEP_TYPES_H
-+
-+#include <linux/types.h>
-+
-+#define MAX_LOCKDEP_SUBCLASSES		8UL
-+
-+enum lockdep_wait_type {
-+	LD_WAIT_INV = 0,	/* not checked, catch all */
-+
-+	LD_WAIT_FREE,		/* wait free, rcu etc.. */
-+	LD_WAIT_SPIN,		/* spin loops, raw_spinlock_t etc.. */
-+
-+#ifdef CONFIG_PROVE_RAW_LOCK_NESTING
-+	LD_WAIT_CONFIG,		/* CONFIG_PREEMPT_LOCK, spinlock_t etc.. */
-+#else
-+	LD_WAIT_CONFIG = LD_WAIT_SPIN,
-+#endif
-+	LD_WAIT_SLEEP,		/* sleeping locks, mutex_t etc.. */
-+
-+	LD_WAIT_MAX,		/* must be last */
-+};
-+
-+#ifdef CONFIG_LOCKDEP
-+
-+#include <linux/list.h>
-+
-+/*
-+ * We'd rather not expose kernel/lockdep_states.h this wide, but we do need
-+ * the total number of states... :-(
-+ */
-+#define XXX_LOCK_USAGE_STATES		(1+2*4)
-+
-+/*
-+ * NR_LOCKDEP_CACHING_CLASSES ... Number of classes
-+ * cached in the instance of lockdep_map
-+ *
-+ * Currently main class (subclass == 0) and signle depth subclass
-+ * are cached in lockdep_map. This optimization is mainly targeting
-+ * on rq->lock. double_rq_lock() acquires this highly competitive with
-+ * single depth.
-+ */
-+#define NR_LOCKDEP_CACHING_CLASSES	2
-+
-+/*
-+ * A lockdep key is associated with each lock object. For static locks we use
-+ * the lock address itself as the key. Dynamically allocated lock objects can
-+ * have a statically or dynamically allocated key. Dynamically allocated lock
-+ * keys must be registered before being used and must be unregistered before
-+ * the key memory is freed.
-+ */
-+struct lockdep_subclass_key {
-+	char __one_byte;
-+} __attribute__ ((__packed__));
-+
-+/* hash_entry is used to keep track of dynamically allocated keys. */
-+struct lock_class_key {
-+	union {
-+		struct hlist_node		hash_entry;
-+		struct lockdep_subclass_key	subkeys[MAX_LOCKDEP_SUBCLASSES];
-+	};
-+};
-+
-+extern struct lock_class_key __lockdep_no_validate__;
-+
-+struct lock_trace;
-+
-+#define LOCKSTAT_POINTS		4
-+
-+/*
-+ * The lock-class itself. The order of the structure members matters.
-+ * reinit_class() zeroes the key member and all subsequent members.
-+ */
-+struct lock_class {
-+	/*
-+	 * class-hash:
-+	 */
-+	struct hlist_node		hash_entry;
-+
-+	/*
-+	 * Entry in all_lock_classes when in use. Entry in free_lock_classes
-+	 * when not in use. Instances that are being freed are on one of the
-+	 * zapped_classes lists.
-+	 */
-+	struct list_head		lock_entry;
-+
-+	/*
-+	 * These fields represent a directed graph of lock dependencies,
-+	 * to every node we attach a list of "forward" and a list of
-+	 * "backward" graph nodes.
-+	 */
-+	struct list_head		locks_after, locks_before;
-+
-+	const struct lockdep_subclass_key *key;
-+	unsigned int			subclass;
-+	unsigned int			dep_gen_id;
-+
-+	/*
-+	 * IRQ/softirq usage tracking bits:
-+	 */
-+	unsigned long			usage_mask;
-+	const struct lock_trace		*usage_traces[XXX_LOCK_USAGE_STATES];
-+
-+	/*
-+	 * Generation counter, when doing certain classes of graph walking,
-+	 * to ensure that we check one node only once:
-+	 */
-+	int				name_version;
-+	const char			*name;
-+
-+	short				wait_type_inner;
-+	short				wait_type_outer;
-+
-+#ifdef CONFIG_LOCK_STAT
-+	unsigned long			contention_point[LOCKSTAT_POINTS];
-+	unsigned long			contending_point[LOCKSTAT_POINTS];
-+#endif
-+} __no_randomize_layout;
-+
-+#ifdef CONFIG_LOCK_STAT
-+struct lock_time {
-+	s64				min;
-+	s64				max;
-+	s64				total;
-+	unsigned long			nr;
-+};
-+
-+enum bounce_type {
-+	bounce_acquired_write,
-+	bounce_acquired_read,
-+	bounce_contended_write,
-+	bounce_contended_read,
-+	nr_bounce_types,
-+
-+	bounce_acquired = bounce_acquired_write,
-+	bounce_contended = bounce_contended_write,
-+};
-+
-+struct lock_class_stats {
-+	unsigned long			contention_point[LOCKSTAT_POINTS];
-+	unsigned long			contending_point[LOCKSTAT_POINTS];
-+	struct lock_time		read_waittime;
-+	struct lock_time		write_waittime;
-+	struct lock_time		read_holdtime;
-+	struct lock_time		write_holdtime;
-+	unsigned long			bounces[nr_bounce_types];
-+};
-+
-+struct lock_class_stats lock_stats(struct lock_class *class);
-+void clear_lock_stats(struct lock_class *class);
-+#endif
-+
-+/*
-+ * Map the lock object (the lock instance) to the lock-class object.
-+ * This is embedded into specific lock instances:
-+ */
-+struct lockdep_map {
-+	struct lock_class_key		*key;
-+	struct lock_class		*class_cache[NR_LOCKDEP_CACHING_CLASSES];
-+	const char			*name;
-+	short				wait_type_outer; /* can be taken in this context */
-+	short				wait_type_inner; /* presents this context */
-+#ifdef CONFIG_LOCK_STAT
-+	int				cpu;
-+	unsigned long			ip;
-+#endif
-+};
-+
-+struct pin_cookie { unsigned int val; };
-+
-+#else /* !CONFIG_LOCKDEP */
-+
-+/*
-+ * The class key takes no space if lockdep is disabled:
-+ */
-+struct lock_class_key { };
-+
-+/*
-+ * The lockdep_map takes no space if lockdep is disabled:
-+ */
-+struct lockdep_map { };
-+
-+struct pin_cookie { };
-+
-+#endif /* !LOCKDEP */
-+
-+#endif /* __LINUX_LOCKDEP_TYPES_H */
-diff --git a/include/linux/seccomp.h b/include/linux/seccomp.h
-index 4192369b8418..51f234b6d28f 100644
---- a/include/linux/seccomp.h
-+++ b/include/linux/seccomp.h
-@@ -58,9 +58,11 @@ static inline int seccomp_mode(struct seccomp *s)
- 
- struct seccomp { };
- struct seccomp_filter { };
-+struct seccomp_data;
- 
- #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
- static inline int secure_computing(void) { return 0; }
-+static inline int __secure_computing(const struct seccomp_data *sd) { return 0; }
- #else
- static inline void secure_computing_strict(int this_syscall) { return; }
- #endif
-diff --git a/include/linux/spinlock.h b/include/linux/spinlock.h
-index d3770b3f9d9a..f2f12d746dbd 100644
---- a/include/linux/spinlock.h
-+++ b/include/linux/spinlock.h
-@@ -56,6 +56,7 @@
- #include <linux/kernel.h>
- #include <linux/stringify.h>
- #include <linux/bottom_half.h>
-+#include <linux/lockdep.h>
- #include <asm/barrier.h>
- #include <asm/mmiowb.h>
- 
-diff --git a/include/linux/spinlock_types.h b/include/linux/spinlock_types.h
-index 6102e6bff3ae..b981caafe8bf 100644
---- a/include/linux/spinlock_types.h
-+++ b/include/linux/spinlock_types.h
-@@ -15,7 +15,7 @@
- # include <linux/spinlock_types_up.h>
- #endif
- 
--#include <linux/lockdep.h>
-+#include <linux/lockdep_types.h>
- 
- typedef struct raw_spinlock {
- 	arch_spinlock_t raw_lock;
-diff --git a/kernel/Makefile b/kernel/Makefile
-index f3218bc5ec69..fde2000d0d0d 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -48,6 +48,7 @@ obj-y += irq/
- obj-y += rcu/
- obj-y += livepatch/
- obj-y += dma/
-+obj-y += entry/
- 
- obj-$(CONFIG_CHECKPOINT_RESTORE) += kcmp.o
- obj-$(CONFIG_FREEZER) += freezer.o
-diff --git a/kernel/entry/Makefile b/kernel/entry/Makefile
-new file mode 100644
-index 000000000000..34c8a3f1c735
---- /dev/null
-+++ b/kernel/entry/Makefile
-@@ -0,0 +1,13 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+# Prevent the noinstr section from being pestered by sanitizer and other goodies
-+# as long as these things cannot be disabled per function.
-+KASAN_SANITIZE := n
-+UBSAN_SANITIZE := n
-+KCOV_INSTRUMENT := n
-+
-+CFLAGS_REMOVE_common.o	 = -fstack-protector -fstack-protector-strong
-+CFLAGS_common.o		+= -fno-stack-protector
-+
-+obj-$(CONFIG_GENERIC_ENTRY) 		+= common.o
-+obj-$(CONFIG_KVM_XFER_TO_GUEST_WORK)	+= kvm.o
-diff --git a/kernel/entry/common.c b/kernel/entry/common.c
-new file mode 100644
-index 000000000000..9852e0d62d95
---- /dev/null
-+++ b/kernel/entry/common.c
-@@ -0,0 +1,374 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/context_tracking.h>
-+#include <linux/entry-common.h>
-+#include <linux/livepatch.h>
-+#include <linux/audit.h>
-+
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/syscalls.h>
-+
-+/**
-+ * enter_from_user_mode - Establish state when coming from user mode
-+ *
-+ * Syscall/interrupt entry disables interrupts, but user mode is traced as
-+ * interrupts enabled. Also with NO_HZ_FULL RCU might be idle.
-+ *
-+ * 1) Tell lockdep that interrupts are disabled
-+ * 2) Invoke context tracking if enabled to reactivate RCU
-+ * 3) Trace interrupts off state
-+ */
-+static __always_inline void enter_from_user_mode(struct pt_regs *regs)
-+{
-+	arch_check_user_regs(regs);
-+	lockdep_hardirqs_off(CALLER_ADDR0);
-+
-+	CT_WARN_ON(ct_state() != CONTEXT_USER);
-+	user_exit_irqoff();
-+
-+	instrumentation_begin();
-+	trace_hardirqs_off_finish();
-+	instrumentation_end();
-+}
-+
-+static inline void syscall_enter_audit(struct pt_regs *regs, long syscall)
-+{
-+	if (unlikely(audit_context())) {
-+		unsigned long args[6];
-+
-+		syscall_get_arguments(current, regs, args);
-+		audit_syscall_entry(syscall, args[0], args[1], args[2], args[3]);
-+	}
-+}
-+
-+static long syscall_trace_enter(struct pt_regs *regs, long syscall,
-+				unsigned long ti_work)
-+{
-+	long ret = 0;
-+
-+	/* Handle ptrace */
-+	if (ti_work & (_TIF_SYSCALL_TRACE | _TIF_SYSCALL_EMU)) {
-+		ret = arch_syscall_enter_tracehook(regs);
-+		if (ret || (ti_work & _TIF_SYSCALL_EMU))
-+			return -1L;
-+	}
-+
-+	/* Do seccomp after ptrace, to catch any tracer changes. */
-+	if (ti_work & _TIF_SECCOMP) {
-+		ret = __secure_computing(NULL);
-+		if (ret == -1L)
-+			return ret;
-+	}
-+
-+	if (unlikely(ti_work & _TIF_SYSCALL_TRACEPOINT))
-+		trace_sys_enter(regs, syscall);
-+
-+	syscall_enter_audit(regs, syscall);
-+
-+	return ret ? : syscall;
-+}
-+
-+noinstr long syscall_enter_from_user_mode(struct pt_regs *regs, long syscall)
-+{
-+	unsigned long ti_work;
-+
-+	enter_from_user_mode(regs);
-+	instrumentation_begin();
-+
-+	local_irq_enable();
-+	ti_work = READ_ONCE(current_thread_info()->flags);
-+	if (ti_work & SYSCALL_ENTER_WORK)
-+		syscall = syscall_trace_enter(regs, syscall, ti_work);
-+	instrumentation_end();
-+
-+	return syscall;
-+}
-+
-+/**
-+ * exit_to_user_mode - Fixup state when exiting to user mode
-+ *
-+ * Syscall/interupt exit enables interrupts, but the kernel state is
-+ * interrupts disabled when this is invoked. Also tell RCU about it.
-+ *
-+ * 1) Trace interrupts on state
-+ * 2) Invoke context tracking if enabled to adjust RCU state
-+ * 3) Invoke architecture specific last minute exit code, e.g. speculation
-+ *    mitigations, etc.
-+ * 4) Tell lockdep that interrupts are enabled
-+ */
-+static __always_inline void exit_to_user_mode(void)
-+{
-+	instrumentation_begin();
-+	trace_hardirqs_on_prepare();
-+	lockdep_hardirqs_on_prepare(CALLER_ADDR0);
-+	instrumentation_end();
-+
-+	user_enter_irqoff();
-+	arch_exit_to_user_mode();
-+	lockdep_hardirqs_on(CALLER_ADDR0);
-+}
-+
-+/* Workaround to allow gradual conversion of architecture code */
-+void __weak arch_do_signal(struct pt_regs *regs) { }
-+
-+static unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
-+					    unsigned long ti_work)
-+{
-+	/*
-+	 * Before returning to user space ensure that all pending work
-+	 * items have been completed.
-+	 */
-+	while (ti_work & EXIT_TO_USER_MODE_WORK) {
-+
-+		local_irq_enable_exit_to_user(ti_work);
-+
-+		if (ti_work & _TIF_NEED_RESCHED)
-+			schedule();
-+
-+		if (ti_work & _TIF_UPROBE)
-+			uprobe_notify_resume(regs);
-+
-+		if (ti_work & _TIF_PATCH_PENDING)
-+			klp_update_patch_state(current);
-+
-+		if (ti_work & _TIF_SIGPENDING)
-+			arch_do_signal(regs);
-+
-+		if (ti_work & _TIF_NOTIFY_RESUME) {
-+			clear_thread_flag(TIF_NOTIFY_RESUME);
-+			tracehook_notify_resume(regs);
-+			rseq_handle_notify_resume(NULL, regs);
-+		}
-+
-+		/* Architecture specific TIF work */
-+		arch_exit_to_user_mode_work(regs, ti_work);
-+
-+		/*
-+		 * Disable interrupts and reevaluate the work flags as they
-+		 * might have changed while interrupts and preemption was
-+		 * enabled above.
-+		 */
-+		local_irq_disable_exit_to_user();
-+		ti_work = READ_ONCE(current_thread_info()->flags);
-+	}
-+
-+	/* Return the latest work state for arch_exit_to_user_mode() */
-+	return ti_work;
-+}
-+
-+static void exit_to_user_mode_prepare(struct pt_regs *regs)
-+{
-+	unsigned long ti_work = READ_ONCE(current_thread_info()->flags);
-+
-+	lockdep_assert_irqs_disabled();
-+
-+	if (unlikely(ti_work & EXIT_TO_USER_MODE_WORK))
-+		ti_work = exit_to_user_mode_loop(regs, ti_work);
-+
-+	arch_exit_to_user_mode_prepare(regs, ti_work);
-+
-+	/* Ensure that the address limit is intact and no locks are held */
-+	addr_limit_user_check();
-+	lockdep_assert_irqs_disabled();
-+	lockdep_sys_exit();
-+}
-+
-+#ifndef _TIF_SINGLESTEP
-+static inline bool report_single_step(unsigned long ti_work)
-+{
-+	return false;
-+}
-+#else
-+/*
-+ * If TIF_SYSCALL_EMU is set, then the only reason to report is when
-+ * TIF_SINGLESTEP is set (i.e. PTRACE_SYSEMU_SINGLESTEP).  This syscall
-+ * instruction has been already reported in syscall_enter_from_usermode().
-+ */
-+#define SYSEMU_STEP	(_TIF_SINGLESTEP | _TIF_SYSCALL_EMU)
-+
-+static inline bool report_single_step(unsigned long ti_work)
-+{
-+	return (ti_work & SYSEMU_STEP) == _TIF_SINGLESTEP;
-+}
-+#endif
-+
-+static void syscall_exit_work(struct pt_regs *regs, unsigned long ti_work)
-+{
-+	bool step;
-+
-+	audit_syscall_exit(regs);
-+
-+	if (ti_work & _TIF_SYSCALL_TRACEPOINT)
-+		trace_sys_exit(regs, syscall_get_return_value(current, regs));
-+
-+	step = report_single_step(ti_work);
-+	if (step || ti_work & _TIF_SYSCALL_TRACE)
-+		arch_syscall_exit_tracehook(regs, step);
-+}
-+
-+/*
-+ * Syscall specific exit to user mode preparation. Runs with interrupts
-+ * enabled.
-+ */
-+static void syscall_exit_to_user_mode_prepare(struct pt_regs *regs)
-+{
-+	u32 cached_flags = READ_ONCE(current_thread_info()->flags);
-+	unsigned long nr = syscall_get_nr(current, regs);
-+
-+	CT_WARN_ON(ct_state() != CONTEXT_KERNEL);
-+
-+	if (IS_ENABLED(CONFIG_PROVE_LOCKING)) {
-+		if (WARN(irqs_disabled(), "syscall %lu left IRQs disabled", nr))
-+			local_irq_enable();
-+	}
-+
-+	rseq_syscall(regs);
-+
-+	/*
-+	 * Do one-time syscall specific work. If these work items are
-+	 * enabled, we want to run them exactly once per syscall exit with
-+	 * interrupts enabled.
-+	 */
-+	if (unlikely(cached_flags & SYSCALL_EXIT_WORK))
-+		syscall_exit_work(regs, cached_flags);
-+}
-+
-+__visible noinstr void syscall_exit_to_user_mode(struct pt_regs *regs)
-+{
-+	instrumentation_begin();
-+	syscall_exit_to_user_mode_prepare(regs);
-+	local_irq_disable_exit_to_user();
-+	exit_to_user_mode_prepare(regs);
-+	instrumentation_end();
-+	exit_to_user_mode();
-+}
-+
-+noinstr void irqentry_enter_from_user_mode(struct pt_regs *regs)
-+{
-+	enter_from_user_mode(regs);
-+}
-+
-+noinstr void irqentry_exit_to_user_mode(struct pt_regs *regs)
-+{
-+	instrumentation_begin();
-+	exit_to_user_mode_prepare(regs);
-+	instrumentation_end();
-+	exit_to_user_mode();
-+}
-+
-+noinstr irqentry_state_t irqentry_enter(struct pt_regs *regs)
-+{
-+	irqentry_state_t ret = {
-+		.exit_rcu = false,
-+	};
-+
-+	if (user_mode(regs)) {
-+		irqentry_enter_from_user_mode(regs);
-+		return ret;
-+	}
-+
-+	/*
-+	 * If this entry hit the idle task invoke rcu_irq_enter() whether
-+	 * RCU is watching or not.
-+	 *
-+	 * Interupts can nest when the first interrupt invokes softirq
-+	 * processing on return which enables interrupts.
-+	 *
-+	 * Scheduler ticks in the idle task can mark quiescent state and
-+	 * terminate a grace period, if and only if the timer interrupt is
-+	 * not nested into another interrupt.
-+	 *
-+	 * Checking for __rcu_is_watching() here would prevent the nesting
-+	 * interrupt to invoke rcu_irq_enter(). If that nested interrupt is
-+	 * the tick then rcu_flavor_sched_clock_irq() would wrongfully
-+	 * assume that it is the first interupt and eventually claim
-+	 * quiescient state and end grace periods prematurely.
-+	 *
-+	 * Unconditionally invoke rcu_irq_enter() so RCU state stays
-+	 * consistent.
-+	 *
-+	 * TINY_RCU does not support EQS, so let the compiler eliminate
-+	 * this part when enabled.
-+	 */
-+	if (!IS_ENABLED(CONFIG_TINY_RCU) && is_idle_task(current)) {
-+		/*
-+		 * If RCU is not watching then the same careful
-+		 * sequence vs. lockdep and tracing is required
-+		 * as in irq_enter_from_user_mode().
-+		 */
-+		lockdep_hardirqs_off(CALLER_ADDR0);
-+		rcu_irq_enter();
-+		instrumentation_begin();
-+		trace_hardirqs_off_finish();
-+		instrumentation_end();
-+
-+		ret.exit_rcu = true;
-+		return ret;
-+	}
-+
-+	/*
-+	 * If RCU is watching then RCU only wants to check whether it needs
-+	 * to restart the tick in NOHZ mode. rcu_irq_enter_check_tick()
-+	 * already contains a warning when RCU is not watching, so no point
-+	 * in having another one here.
-+	 */
-+	instrumentation_begin();
-+	rcu_irq_enter_check_tick();
-+	/* Use the combo lockdep/tracing function */
-+	trace_hardirqs_off();
-+	instrumentation_end();
-+
-+	return ret;
-+}
-+
-+void irqentry_exit_cond_resched(void)
-+{
-+	if (!preempt_count()) {
-+		/* Sanity check RCU and thread stack */
-+		rcu_irq_exit_check_preempt();
-+		if (IS_ENABLED(CONFIG_DEBUG_ENTRY))
-+			WARN_ON_ONCE(!on_thread_stack());
-+		if (need_resched())
-+			preempt_schedule_irq();
-+	}
-+}
-+
-+noinstr void irqentry_exit(struct pt_regs *regs, irqentry_state_t state)
-+{
-+	lockdep_assert_irqs_disabled();
-+
-+	/* Check whether this returns to user mode */
-+	if (user_mode(regs)) {
-+		irqentry_exit_to_user_mode(regs);
-+	} else if (!regs_irqs_disabled(regs)) {
-+		/*
-+		 * If RCU was not watching on entry this needs to be done
-+		 * carefully and needs the same ordering of lockdep/tracing
-+		 * and RCU as the return to user mode path.
-+		 */
-+		if (state.exit_rcu) {
-+			instrumentation_begin();
-+			/* Tell the tracer that IRET will enable interrupts */
-+			trace_hardirqs_on_prepare();
-+			lockdep_hardirqs_on_prepare(CALLER_ADDR0);
-+			instrumentation_end();
-+			rcu_irq_exit();
-+			lockdep_hardirqs_on(CALLER_ADDR0);
-+			return;
-+		}
-+
-+		instrumentation_begin();
-+		if (IS_ENABLED(CONFIG_PREEMPTION))
-+			irqentry_exit_cond_resched();
-+		/* Covers both tracing and lockdep */
-+		trace_hardirqs_on();
-+		instrumentation_end();
-+	} else {
-+		/*
-+		 * IRQ flags state is correct already. Just tell RCU if it
-+		 * was not watching on entry.
-+		 */
-+		if (state.exit_rcu)
-+			rcu_irq_exit();
-+	}
-+}
-diff --git a/kernel/entry/kvm.c b/kernel/entry/kvm.c
-new file mode 100644
-index 000000000000..eb1a8a4c867c
---- /dev/null
-+++ b/kernel/entry/kvm.c
-@@ -0,0 +1,51 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/entry-kvm.h>
-+#include <linux/kvm_host.h>
-+
-+static int xfer_to_guest_mode_work(struct kvm_vcpu *vcpu, unsigned long ti_work)
-+{
-+	do {
-+		int ret;
-+
-+		if (ti_work & _TIF_SIGPENDING) {
-+			kvm_handle_signal_exit(vcpu);
-+			return -EINTR;
-+		}
-+
-+		if (ti_work & _TIF_NEED_RESCHED)
-+			schedule();
-+
-+		if (ti_work & _TIF_NOTIFY_RESUME) {
-+			clear_thread_flag(TIF_NOTIFY_RESUME);
-+			tracehook_notify_resume(NULL);
-+		}
-+
-+		ret = arch_xfer_to_guest_mode_handle_work(vcpu, ti_work);
-+		if (ret)
-+			return ret;
-+
-+		ti_work = READ_ONCE(current_thread_info()->flags);
-+	} while (ti_work & XFER_TO_GUEST_MODE_WORK || need_resched());
-+	return 0;
-+}
-+
-+int xfer_to_guest_mode_handle_work(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long ti_work;
-+
-+	/*
-+	 * This is invoked from the outer guest loop with interrupts and
-+	 * preemption enabled.
-+	 *
-+	 * KVM invokes xfer_to_guest_mode_work_pending() with interrupts
-+	 * disabled in the inner loop before going into guest mode. No need
-+	 * to disable interrupts here.
-+	 */
-+	ti_work = READ_ONCE(current_thread_info()->flags);
-+	if (!(ti_work & XFER_TO_GUEST_MODE_WORK))
-+		return 0;
-+
-+	return xfer_to_guest_mode_work(vcpu, ti_work);
-+}
-+EXPORT_SYMBOL_GPL(xfer_to_guest_mode_handle_work);
-diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index 15f67949d11e..732623c30359 100644
---- a/kernel/kcsan/core.c
-+++ b/kernel/kcsan/core.c
-@@ -397,8 +397,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 	}
- 
- 	if (!kcsan_interrupt_watcher)
--		/* Use raw to avoid lockdep recursion via IRQ flags tracing. */
--		raw_local_irq_save(irq_flags);
-+		local_irq_save(irq_flags);
- 
- 	watchpoint = insert_watchpoint((unsigned long)ptr, size, is_write);
- 	if (watchpoint == NULL) {
-@@ -539,7 +538,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 	kcsan_counter_dec(KCSAN_COUNTER_USED_WATCHPOINTS);
- out_unlock:
- 	if (!kcsan_interrupt_watcher)
--		raw_local_irq_restore(irq_flags);
-+		local_irq_restore(irq_flags);
- out:
- 	user_access_restore(ua_flags);
- }
-diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-index ac5f8345bae9..6b2fb1a6d8cd 100644
---- a/kernel/kcsan/report.c
-+++ b/kernel/kcsan/report.c
-@@ -606,10 +606,11 @@ void kcsan_report(const volatile void *ptr, size_t size, int access_type,
- 		goto out;
- 
- 	/*
--	 * With TRACE_IRQFLAGS, lockdep's IRQ trace state becomes corrupted if
--	 * we do not turn off lockdep here; this could happen due to recursion
--	 * into lockdep via KCSAN if we detect a race in utilities used by
--	 * lockdep.
-+	 * Because we may generate reports when we're in scheduler code, the use
-+	 * of printk() could deadlock. Until such time that all printing code
-+	 * called in print_report() is scheduler-safe, accept the risk, and just
-+	 * get our message out. As such, also disable lockdep to hide the
-+	 * warning, and avoid disabling lockdep for the rest of the kernel.
- 	 */
- 	lockdep_off();
- 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 29a8de4c50b9..d595623c4b34 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -395,7 +395,7 @@ void lockdep_init_task(struct task_struct *task)
- 
- static __always_inline void lockdep_recursion_finish(void)
- {
--	if (WARN_ON_ONCE(--current->lockdep_recursion))
-+	if (WARN_ON_ONCE((--current->lockdep_recursion) & LOCKDEP_RECURSION_MASK))
- 		current->lockdep_recursion = 0;
- }
- 
-@@ -3646,7 +3646,16 @@ static void __trace_hardirqs_on_caller(void)
-  */
- void lockdep_hardirqs_on_prepare(unsigned long ip)
- {
--	if (unlikely(!debug_locks || current->lockdep_recursion))
-+	if (unlikely(!debug_locks))
-+		return;
-+
-+	/*
-+	 * NMIs do not (and cannot) track lock dependencies, nothing to do.
-+	 */
-+	if (unlikely(in_nmi()))
-+		return;
-+
-+	if (unlikely(current->lockdep_recursion & LOCKDEP_RECURSION_MASK))
- 		return;
- 
- 	if (unlikely(current->hardirqs_enabled)) {
-@@ -3692,7 +3701,27 @@ void noinstr lockdep_hardirqs_on(unsigned long ip)
- {
- 	struct task_struct *curr = current;
- 
--	if (unlikely(!debug_locks || curr->lockdep_recursion))
-+	if (unlikely(!debug_locks))
-+		return;
-+
-+	/*
-+	 * NMIs can happen in the middle of local_irq_{en,dis}able() where the
-+	 * tracking state and hardware state are out of sync.
-+	 *
-+	 * NMIs must save lockdep_hardirqs_enabled() to restore IRQ state from,
-+	 * and not rely on hardware state like normal interrupts.
-+	 */
-+	if (unlikely(in_nmi())) {
-+		/*
-+		 * Skip:
-+		 *  - recursion check, because NMI can hit lockdep;
-+		 *  - hardware state check, because above;
-+		 *  - chain_key check, see lockdep_hardirqs_on_prepare().
-+		 */
-+		goto skip_checks;
-+	}
-+
-+	if (unlikely(current->lockdep_recursion & LOCKDEP_RECURSION_MASK))
- 		return;
- 
- 	if (curr->hardirqs_enabled) {
-@@ -3720,6 +3749,7 @@ void noinstr lockdep_hardirqs_on(unsigned long ip)
- 	DEBUG_LOCKS_WARN_ON(current->hardirq_chain_key !=
- 			    current->curr_chain_key);
- 
-+skip_checks:
- 	/* we'll do an OFF -> ON transition: */
- 	curr->hardirqs_enabled = 1;
- 	curr->hardirq_enable_ip = ip;
-@@ -3735,7 +3765,15 @@ void noinstr lockdep_hardirqs_off(unsigned long ip)
- {
- 	struct task_struct *curr = current;
- 
--	if (unlikely(!debug_locks || curr->lockdep_recursion))
-+	if (unlikely(!debug_locks))
-+		return;
-+
-+	/*
-+	 * Matching lockdep_hardirqs_on(), allow NMIs in the middle of lockdep;
-+	 * they will restore the software state. This ensures the software
-+	 * state is consistent inside NMIs as well.
-+	 */
-+	if (unlikely(!in_nmi() && (current->lockdep_recursion & LOCKDEP_RECURSION_MASK)))
- 		return;
- 
- 	/*
-diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
-index aad9284c043a..1c37ccd5d402 100644
---- a/virt/kvm/Kconfig
-+++ b/virt/kvm/Kconfig
-@@ -60,3 +60,6 @@ config HAVE_KVM_VCPU_RUN_PID_CHANGE
- 
- config HAVE_KVM_NO_POLL
-        bool
-+
-+config KVM_XFER_TO_GUEST_WORK
-+       bool
-
+TGludXMsCgpwbGVhc2UgcHVsbCB0aGUgbGF0ZXN0IHRpbWVycy9jb3JlIGJyYW5jaCBmcm9tOgoK
+ICAgZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3RpcC90aXAu
+Z2l0IHRpbWVycy1jb3JlLTIwMjAtMDgtMDQKCnVwIHRvOiAgMzFjZDBlMTE5ZDUwOiB0aW1lcnM6
+IFJlY2FsY3VsYXRlIG5leHQgdGltZXIgaW50ZXJydXB0IG9ubHkgd2hlbiBuZWNlc3NhcnkKClRp
+bWUsIHRpbWVycyBhbmQgcmVsYXRlZCBkcml2ZXIgdXBkYXRlczoKCiAtIFByZXZlbnQgdW5uZWNl
+c3NhcnkgdGltZXIgc29mdGlycSBpbnZvY2F0aW9ucyBieSBleHRlbmRpbmcgdGhlIHRyYWNraW5n
+CiAgIG9mIHRoZSBuZXh0IGV4cGlyaW5nIHRpbWVyIGluIHRoZSB0aW1lciB3aGVlbCBiZXlvbmQg
+dGhlIGV4aXN0aW5nIE5PSFoKICAgZnVuY3Rpb25hbGl0eS4gVGhlIHRyYWNraW5nIG92ZXJoZWFk
+IGF0IGVucXVldWUgdGltZSBpcyB3aXRoaW4gdGhlCiAgIG5vaXNlLCBidXQgb24gc2Vuc2l0aXZl
+IHdvcmtsb2FkcyB0aGUgYXZvaWRhbmNlIG9mIHRoZSBzb2Z0IGludGVycnVwdAogICBpbnZvY2F0
+aW9uIGlzIGEgbWVhc3VyYWJsZSBpbXByb3ZlbWVudC4KCiAtIFRoZSBvYmxpZ2F0b3J5IG5ldyBj
+bG9ja3NvdXJjZSBkcml2ZXIgZm9yIEluZ2VuaWMgWDEwMCBPU1QKCiAtIFRoZSB1c3VhbCBmaXhl
+cywgaW1wcm92ZW1lbnRzLCBjbGVhbnVwcyBhbmQgZXh0ZW5zaW9ucyBmb3IgbmV3ZXIgY2hpcAog
+ICB2YXJpYW50cyBhbGwgb3ZlciB0aGUgZHJpdmVyIHNwYWNlLgoKVGhhbmtzLAoKCXRnbHgKCi0t
+LS0tLS0tLS0tLS0tLS0tLT4KQWxleGFuZGVyIEEuIEtsaW1vdiAoMSk6CiAgICAgIGNsb2Nrc291
+cmNlL2RyaXZlcnM6IFJlcGxhY2UgSFRUUCBsaW5rcyB3aXRoIEhUVFBTIG9uZXMKCkFsZXhhbmRy
+ZSBCZWxsb25pICg4KToKICAgICAgZHQtYmluZGluZ3M6IGF0bWVsLXRjYjogY29udmVydCBiaW5k
+aW5ncyB0byBqc29uLXNjaGVtYQogICAgICBkdC1iaW5kaW5nczogbWljcm9jaGlwOiBhdG1lbCxh
+dDkxcm05MjAwLXRjYjogYWRkIHNhbWE1ZDIgY29tcGF0aWJsZQogICAgICBBUk06IGR0czogYXQ5
+MTogc2FtYTVkMjogYWRkIFRDQiBHQ0xLCiAgICAgIGNsb2Nrc291cmNlL2RyaXZlcnMvdGltZXIt
+YXRtZWwtdGNiOiBSZXdvcmsgMzJraHogY2xvY2sgc2VsZWN0aW9uCiAgICAgIGNsb2Nrc291cmNl
+L2RyaXZlcnMvdGltZXItYXRtZWwtdGNiOiBGaWxsIHRjYl9jb25maWcKICAgICAgY2xvY2tzb3Vy
+Y2UvZHJpdmVycy90aW1lci1hdG1lbC10Y2I6IFN0b3AgdXNpbmcgdGhlIDMya0h6IGZvciBjbG9j
+a2V2ZW50cwogICAgICBjbG9ja3NvdXJjZS9kcml2ZXJzL3RpbWVyLWF0bWVsLXRjYjogQWxsb3cg
+c2VsZWN0aW5nIGZpcnN0IGRpdmlkZXIKICAgICAgY2xvY2tzb3VyY2UvZHJpdmVycy90aW1lci1h
+dG1lbC10Y2I6IEFkZCBzYW1hNWQyIHN1cHBvcnQKCkFubmEtTWFyaWEgQmVobnNlbiAoMSk6CiAg
+ICAgIHRpbWVyczogVXNlIG9ubHkgYnVja2V0IGV4cGlyeSBmb3IgYmFzZS0+bmV4dF9leHBpcnkg
+dmFsdWUKCkFuc29uIEh1YW5nICgxKToKICAgICAgY2xvY2tzb3VyY2UvZHJpdmVycy9pbXg6IEFk
+ZCBzdXBwb3J0IGZvciBpLk1YIFRQTSBkcml2ZXIgd2l0aCBBUk02NAoKRnJlZGVyaWMgV2Vpc2Jl
+Y2tlciAoMTEpOgogICAgICB0aW1lcnM6IFByZXNlcnZlIGhpZ2hlciBiaXRzIG9mIGV4cGlyYXRp
+b24gb24gaW5kZXggY2FsY3VsYXRpb24KICAgICAgdGltZXJzOiBNb3ZlIHRyaWdnZXJfZHludGlj
+a19jcHUoKSB0byBlbnF1ZXVlX3RpbWVyKCkKICAgICAgdGltZXJzOiBBZGQgY29tbWVudHMgYWJv
+dXQgY2FsY19pbmRleCgpIGNlaWxpbmcgd29yawogICAgICB0aW1lcnM6IE9wdGltaXplIF9uZXh0
+X3RpbWVyX2ludGVycnVwdCgpIGxldmVsIGl0ZXJhdGlvbgogICAgICB0aW1lcnM6IEFsd2F5cyBr
+ZWVwIHRyYWNrIG9mIG5leHQgZXhwaXJ5CiAgICAgIHRpbWVyczogUmV1c2UgbmV4dCBleHBpcnkg
+Y2FjaGUgYWZ0ZXIgbm9oeiBleGl0CiAgICAgIHRpbWVyczogRXhwYW5kIGNsayBmb3J3YXJkIGxv
+Z2ljIGJleW9uZCBub2h6CiAgICAgIHRpbWVyczogU3BhcmUgdGltZXIgc29mdGlycSB1bnRpbCBu
+ZXh0IGV4cGlyeQogICAgICB0aW1lcnM6IFJlbW92ZSBtdXN0X2ZvcndhcmRfY2xrCiAgICAgIHRp
+bWVyczogTG93ZXIgYmFzZSBjbG9jayBmb3J3YXJkaW5nIHRocmVzaG9sZAogICAgICB0aW1lcnM6
+IFJlY2FsY3VsYXRlIG5leHQgdGltZXIgaW50ZXJydXB0IG9ubHkgd2hlbiBuZWNlc3NhcnkKCkdl
+ZXJ0IFV5dHRlcmhvZXZlbiAoMSk6CiAgICAgIGNsb2Nrc291cmNlL2RyaXZlcnMvc2hfY210OiBV
+c2UgImtIeiIgZm9yIGtpbG9oZXJ0egoKS2FtZWwgQm91aGFyYSAoMSk6CiAgICAgIEFSTTogYXQ5
+MTogYWRkIGF0bWVsIHRjYiBjYXBhYmlsaXRpZXMKCkxpbnVzIFdhbGxlaWogKDEpOgogICAgICBj
+bG9ja3NvdXJjZS9kcml2ZXJzL25vbWFkaWstbXR1OiBIYW5kbGUgMzJrSHogY2xvY2sKCuWRqOeQ
+sOadsCAoWmhvdSBZYW5qaWUpICgzKToKICAgICAgY2xvY2tzb3VyY2UvZHJpdmVycy9pbmdlbmlj
+OiBBZGQgaGlnaCByZXNvbHV0aW9uIHRpbWVyIHN1cHBvcnQgZm9yIFNNUC9TTVQuCiAgICAgIGR0
+LWJpbmRpbmdzOiB0aW1lcjogQWRkIEluZ2VuaWMgWDEwMDAgT1NUIGJpbmRpbmdzLgogICAgICBj
+bG9ja3NvdXJjZS9kcml2ZXJzL2luZ2VuaWM6IEFkZCBzdXBwb3J0IGZvciB0aGUgSW5nZW5pYyBY
+MTAwMCBPU1QuCgoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9hdG1lbC10Y2IudHh0ICAg
+ICAgICAgIHwgIDU2IC0tLQogLi4uL3NvYy9taWNyb2NoaXAvYXRtZWwsYXQ5MXJtOTIwMC10Y2Iu
+eWFtbCAgICAgICAgfCAxNTUgKysrKysrCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9p
+bmdlbmljLHN5c29zdC55YW1sICB8ICA2MyArKysKIC4uLi9iaW5kaW5ncy90aW1lci90aSxrZXlz
+dG9uZS10aW1lci50eHQgICAgICAgICAgIHwgICAyICstCiBhcmNoL2FybS9ib290L2R0cy9zYW1h
+NWQyLmR0c2kgICAgICAgICAgICAgICAgICAgICB8ICAxMiArLQogZHJpdmVycy9jbG9ja3NvdXJj
+ZS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgfCAgMTUgKy0KIGRyaXZlcnMvY2xvY2tz
+b3VyY2UvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvY2xv
+Y2tzb3VyY2UvaW5nZW5pYy1zeXNvc3QuYyAgICAgICAgICAgICAgIHwgNTM5ICsrKysrKysrKysr
+KysrKysrKysrKwogZHJpdmVycy9jbG9ja3NvdXJjZS9pbmdlbmljLXRpbWVyLmMgICAgICAgICAg
+ICAgICAgfCAxODIgKysrKy0tLQogZHJpdmVycy9jbG9ja3NvdXJjZS9ub21hZGlrLW10dS5jICAg
+ICAgICAgICAgICAgICAgfCAgMTEgKy0KIGRyaXZlcnMvY2xvY2tzb3VyY2Uvc2hfY210LmMgICAg
+ICAgICAgICAgICAgICAgICAgIHwgICAyICstCiBkcml2ZXJzL2Nsb2Nrc291cmNlL3RpbWVyLWF0
+bWVsLXRjYi5jICAgICAgICAgICAgICB8IDEwMyArKy0tCiBkcml2ZXJzL2Nsb2Nrc291cmNlL3Rp
+bWVyLXRpLTMyay5jICAgICAgICAgICAgICAgICB8ICAgMiArLQogZHJpdmVycy9jbG9ja3NvdXJj
+ZS90aW1lci10aS1kbS5jICAgICAgICAgICAgICAgICAgfCAgIDIgKy0KIGluY2x1ZGUvZHQtYmlu
+ZGluZ3MvY2xvY2svaW5nZW5pYyxzeXNvc3QuaCAgICAgICAgIHwgIDEyICsKIGluY2x1ZGUvc29j
+L2F0OTEvYXRtZWxfdGNiLmggICAgICAgICAgICAgICAgICAgICAgIHwgICA1ICsKIGtlcm5lbC90
+aW1lL3RpbWVyLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMjUzICsrKysrLS0t
+LS0KIDE3IGZpbGVzIGNoYW5nZWQsIDEwOTggaW5zZXJ0aW9ucygrKSwgMzE3IGRlbGV0aW9ucygt
+KQogZGVsZXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
+ZmQvYXRtZWwtdGNiLnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9zb2MvbWljcm9jaGlwL2F0bWVsLGF0OTFybTkyMDAtdGNiLnlhbWwKIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIv
+aW5nZW5pYyxzeXNvc3QueWFtbAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvY2xvY2tzb3Vy
+Y2UvaW5nZW5pYy1zeXNvc3QuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGlu
+Z3MvY2xvY2svaW5nZW5pYyxzeXNvc3QuaAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9tZmQvYXRtZWwtdGNiLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9tZmQvYXRtZWwtdGNiLnR4dApkZWxldGVkIGZpbGUgbW9kZSAxMDA2NDQK
+aW5kZXggYzRhODNlMzY0Y2I2Li4wMDAwMDAwMDAwMDAKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL21mZC9hdG1lbC10Y2IudHh0CisrKyAvZGV2L251bGwKQEAgLTEsNTYg
+KzAsMCBAQAotKiBEZXZpY2UgdHJlZSBiaW5kaW5ncyBmb3IgQXRtZWwgVGltZXIgQ291bnRlciBC
+bG9ja3MKLS0gY29tcGF0aWJsZTogU2hvdWxkIGJlICJhdG1lbCw8Y2hpcD4tdGNiIiwgInNpbXBs
+ZS1tZmQiLCAic3lzY29uIi4KLSAgPGNoaXA+IGNhbiBiZSAiYXQ5MXJtOTIwMCIgb3IgImF0OTFz
+YW05eDUiCi0tIHJlZzogU2hvdWxkIGNvbnRhaW4gcmVnaXN0ZXJzIGxvY2F0aW9uIGFuZCBsZW5n
+dGgKLS0gI2FkZHJlc3MtY2VsbHM6IGhhcyB0byBiZSAxCi0tICNzaXplLWNlbGxzOiBoYXMgdG8g
+YmUgMAotLSBpbnRlcnJ1cHRzOiBTaG91bGQgY29udGFpbiBhbGwgaW50ZXJydXB0cyBmb3IgdGhl
+IFRDIGJsb2NrCi0gIE5vdGUgdGhhdCB5b3UgY2FuIHNwZWNpZnkgc2V2ZXJhbCBpbnRlcnJ1cHQg
+Y2VsbHMgaWYgdGhlIFRDCi0gIGJsb2NrIGhhcyBvbmUgaW50ZXJydXB0IHBlciBjaGFubmVsLgot
+LSBjbG9jay1uYW1lczogdHVwbGUgbGlzdGluZyBpbnB1dCBjbG9jayBuYW1lcy4KLQlSZXF1aXJl
+ZCBlbGVtZW50czogInQwX2NsayIsICJzbG93X2NsayIKLQlPcHRpb25hbCBlbGVtZW50czogInQx
+X2NsayIsICJ0Ml9jbGsiCi0tIGNsb2NrczogcGhhbmRsZXMgdG8gaW5wdXQgY2xvY2tzLgotCi1U
+aGUgVENCIGNhbiBleHBvc2UgbXVsdGlwbGUgc3ViZGV2aWNlczoKLSAqIGEgdGltZXIKLSAgIC0g
+Y29tcGF0aWJsZTogU2hvdWxkIGJlICJhdG1lbCx0Y2ItdGltZXIiCi0gICAtIHJlZzogU2hvdWxk
+IGNvbnRhaW4gdGhlIFRDQiBjaGFubmVscyB0byBiZSB1c2VkLiBJZiB0aGUKLSAgICAgY291bnRl
+ciB3aWR0aCBpcyAxNiBiaXRzIChhdDkxcm05MjAwLXRjYiksIHR3byBjb25zZWN1dGl2ZQotICAg
+ICBjaGFubmVscyBhcmUgbmVlZGVkLiBFbHNlLCBvbmx5IG9uZSBjaGFubmVsIHdpbGwgYmUgdXNl
+ZC4KLQotRXhhbXBsZXM6Ci0KLU9uZSBpbnRlcnJ1cHQgcGVyIFRDIGJsb2NrOgotCXRjYjA6IHRp
+bWVyQGZmZjdjMDAwIHsKLQkJY29tcGF0aWJsZSA9ICJhdG1lbCxhdDkxcm05MjAwLXRjYiIsICJz
+aW1wbGUtbWZkIiwgInN5c2NvbiI7Ci0JCSNhZGRyZXNzLWNlbGxzID0gPDE+OwotCQkjc2l6ZS1j
+ZWxscyA9IDwwPjsKLQkJcmVnID0gPDB4ZmZmN2MwMDAgMHgxMDA+OwotCQlpbnRlcnJ1cHRzID0g
+PDE4IDQ+OwotCQljbG9ja3MgPSA8JnRjYjBfY2xrPiwgPCZjbGszMms+OwotCQljbG9jay1uYW1l
+cyA9ICJ0MF9jbGsiLCAic2xvd19jbGsiOwotCi0JCXRpbWVyQDAgewotCQkJY29tcGF0aWJsZSA9
+ICJhdG1lbCx0Y2ItdGltZXIiOwotCQkJcmVnID0gPDA+LCA8MT47Ci0JCX07Ci0KLQkJdGltZXJA
+MiB7Ci0JCQljb21wYXRpYmxlID0gImF0bWVsLHRjYi10aW1lciI7Ci0JCQlyZWcgPSA8Mj47Ci0J
+CX07Ci0JfTsKLQotT25lIGludGVycnVwdCBwZXIgVEMgY2hhbm5lbCBpbiBhIFRDIGJsb2NrOgot
+CXRjYjE6IHRpbWVyQGZmZmRjMDAwIHsKLQkJY29tcGF0aWJsZSA9ICJhdG1lbCxhdDkxcm05MjAw
+LXRjYiIsICJzaW1wbGUtbWZkIiwgInN5c2NvbiI7Ci0JCSNhZGRyZXNzLWNlbGxzID0gPDE+Owot
+CQkjc2l6ZS1jZWxscyA9IDwwPjsKLQkJcmVnID0gPDB4ZmZmZGMwMDAgMHgxMDA+OwotCQlpbnRl
+cnJ1cHRzID0gPDI2IDQ+LCA8MjcgND4sIDwyOCA0PjsKLQkJY2xvY2tzID0gPCZ0Y2IxX2Nsaz4s
+IDwmY2xrMzJrPjsKLQkJY2xvY2stbmFtZXMgPSAidDBfY2xrIiwgInNsb3dfY2xrIjsKLQl9Owot
+Ci0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvbWlj
+cm9jaGlwL2F0bWVsLGF0OTFybTkyMDAtdGNiLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3Mvc29jL21pY3JvY2hpcC9hdG1lbCxhdDkxcm05MjAwLXRjYi55YW1sCm5ldyBm
+aWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uZDIyNmZkN2Q1MjU4Ci0tLSAvZGV2
+L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9taWNyb2No
+aXAvYXRtZWwsYXQ5MXJtOTIwMC10Y2IueWFtbApAQCAtMCwwICsxLDE1NSBAQAorIyBTUERYLUxp
+Y2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjAgT1IgQlNELTItQ2xhdXNlKQorJVlBTUwgMS4yCist
+LS0KKyRpZDogImh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL3NvYy9taWNyb2NoaXAvYXRt
+ZWwsYXQ5MXJtOTIwMC10Y2IueWFtbCMiCiskc2NoZW1hOiAiaHR0cDovL2RldmljZXRyZWUub3Jn
+L21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjIgorCit0aXRsZTogQXRtZWwgVGltZXIgQ291bnRlciBC
+bG9jaworCittYWludGFpbmVyczoKKyAgLSBBbGV4YW5kcmUgQmVsbG9uaSA8YWxleGFuZHJlLmJl
+bGxvbmlAYm9vdGxpbi5jb20+CisKK2Rlc2NyaXB0aW9uOiB8CisgIFRoZSBBdG1lbCAobm93IE1p
+Y3JvY2hpcCkgU29DcyBoYXZlIHRpbWVycyBuYW1lZCBUaW1lciBDb3VudGVyIEJsb2NrLiBFYWNo
+CisgIHRpbWVyIGhhcyB0aHJlZSBjaGFubmVscyB3aXRoIHR3byBjb3VudGVycyBlYWNoLgorCitw
+cm9wZXJ0aWVzOgorICBjb21wYXRpYmxlOgorICAgIGl0ZW1zOgorICAgICAgLSBlbnVtOgorICAg
+ICAgICAgIC0gYXRtZWwsYXQ5MXJtOTIwMC10Y2IKKyAgICAgICAgICAtIGF0bWVsLGF0OTFzYW05
+eDUtdGNiCisgICAgICAgICAgLSBhdG1lbCxzYW1hNWQyLXRjYgorICAgICAgLSBjb25zdDogc2lt
+cGxlLW1mZAorICAgICAgLSBjb25zdDogc3lzY29uCisKKyAgcmVnOgorICAgIG1heEl0ZW1zOiAx
+CisKKyAgaW50ZXJydXB0czoKKyAgICBkZXNjcmlwdGlvbjoKKyAgICAgIExpc3Qgb2YgaW50ZXJy
+dXB0cy4gT25lIGludGVycnVwdCBwZXIgVENCIGNoYW5uZWwgaWYgYXZhaWxhYmxlIG9yIG9uZQor
+ICAgICAgaW50ZXJydXB0IGZvciB0aGUgVEMgYmxvY2sKKyAgICBtaW5JdGVtczogMQorICAgIG1h
+eEl0ZW1zOiAzCisKKyAgY2xvY2stbmFtZXM6CisgICAgZGVzY3JpcHRpb246CisgICAgICBMaXN0
+IG9mIGNsb2NrIG5hbWVzLiBBbHdheXMgaW5jbHVkZXMgdDBfY2xrIGFuZCBzbG93IGNsay4gQWxz
+byBpbmNsdWRlcworICAgICAgdDFfY2xrIGFuZCB0Ml9jbGsgaWYgYSBjbG9jayBwZXIgY2hhbm5l
+bCBpcyBhdmFpbGFibGUuCisgICAgbWluSXRlbXM6IDIKKyAgICBtYXhJdGVtczogNAorCisgIGNs
+b2NrczoKKyAgICBtaW5JdGVtczogMgorICAgIG1heEl0ZW1zOiA0CisKKyAgJyNhZGRyZXNzLWNl
+bGxzJzoKKyAgICBjb25zdDogMQorCisgICcjc2l6ZS1jZWxscyc6CisgICAgY29uc3Q6IDAKKwor
+cGF0dGVyblByb3BlcnRpZXM6CisgICJedGltZXJAWzAtMl0kIjoKKyAgICBkZXNjcmlwdGlvbjog
+VGhlIHRpbWVyIGJsb2NrIGNoYW5uZWxzIHRoYXQgYXJlIHVzZWQgYXMgdGltZXJzLgorICAgIHR5
+cGU6IG9iamVjdAorICAgIHByb3BlcnRpZXM6CisgICAgICBjb21wYXRpYmxlOgorICAgICAgICBj
+b25zdDogYXRtZWwsdGNiLXRpbWVyCisgICAgICByZWc6CisgICAgICAgIGRlc2NyaXB0aW9uOgor
+ICAgICAgICAgIExpc3Qgb2YgY2hhbm5lbHMgdG8gdXNlIGZvciB0aGlzIHBhcnRpY3VsYXIgdGlt
+ZXIuCisgICAgICAgIG1pbkl0ZW1zOiAxCisgICAgICAgIG1heEl0ZW1zOiAzCisKKyAgICByZXF1
+aXJlZDoKKyAgICAgIC0gY29tcGF0aWJsZQorICAgICAgLSByZWcKKworYWxsT2Y6CisgIC0gaWY6
+CisgICAgICBwcm9wZXJ0aWVzOgorICAgICAgICBjb21wYXRpYmxlOgorICAgICAgICAgIGNvbnRh
+aW5zOgorICAgICAgICAgICAgY29uc3Q6IGF0bWVsLHNhbWE1ZDItdGNiCisgICAgdGhlbjoKKyAg
+ICAgIHByb3BlcnRpZXM6CisgICAgICAgIGNsb2NrczoKKyAgICAgICAgICBtaW5JdGVtczogMwor
+ICAgICAgICAgIG1heEl0ZW1zOiAzCisgICAgICAgIGNsb2NrLW5hbWVzOgorICAgICAgICAgIGl0
+ZW1zOgorICAgICAgICAgICAgLSBjb25zdDogdDBfY2xrCisgICAgICAgICAgICAtIGNvbnN0OiBn
+Y2xrCisgICAgICAgICAgICAtIGNvbnN0OiBzbG93X2NsaworICAgIGVsc2U6CisgICAgICBwcm9w
+ZXJ0aWVzOgorICAgICAgICBjbG9ja3M6CisgICAgICAgICAgbWluSXRlbXM6IDIKKyAgICAgICAg
+ICBtYXhJdGVtczogNAorICAgICAgICBjbG9jay1uYW1lczoKKyAgICAgICAgICBvbmVPZjoKKyAg
+ICAgICAgICAgIC0gaXRlbXM6CisgICAgICAgICAgICAgIC0gY29uc3Q6IHQwX2NsaworICAgICAg
+ICAgICAgICAtIGNvbnN0OiBzbG93X2NsaworICAgICAgICAgICAgLSBpdGVtczoKKyAgICAgICAg
+ICAgICAgLSBjb25zdDogdDBfY2xrCisgICAgICAgICAgICAgIC0gY29uc3Q6IHQxX2NsaworICAg
+ICAgICAgICAgICAtIGNvbnN0OiB0Ml9jbGsKKyAgICAgICAgICAgICAgLSBjb25zdDogc2xvd19j
+bGsKKworcmVxdWlyZWQ6CisgIC0gY29tcGF0aWJsZQorICAtIHJlZworICAtIGludGVycnVwdHMK
+KyAgLSBjbG9ja3MKKyAgLSBjbG9jay1uYW1lcworICAtICcjYWRkcmVzcy1jZWxscycKKyAgLSAn
+I3NpemUtY2VsbHMnCisKK2FkZGl0aW9uYWxQcm9wZXJ0aWVzOiBmYWxzZQorCitleGFtcGxlczoK
+KyAgLSB8CisgICAgLyogT25lIGludGVycnVwdCBwZXIgVEMgYmxvY2s6ICovCisgICAgICAgIHRj
+YjA6IHRpbWVyQGZmZjdjMDAwIHsKKyAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImF0bWVs
+LGF0OTFybTkyMDAtdGNiIiwgInNpbXBsZS1tZmQiLCAic3lzY29uIjsKKyAgICAgICAgICAgICAg
+ICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKKyAgICAgICAgICAgICAgICAjc2l6ZS1jZWxscyA9IDww
+PjsKKyAgICAgICAgICAgICAgICByZWcgPSA8MHhmZmY3YzAwMCAweDEwMD47CisgICAgICAgICAg
+ICAgICAgaW50ZXJydXB0cyA9IDwxOCA0PjsKKyAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JnRj
+YjBfY2xrPiwgPCZjbGszMms+OworICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gInQwX2Ns
+ayIsICJzbG93X2NsayI7CisKKyAgICAgICAgICAgICAgICB0aW1lckAwIHsKKyAgICAgICAgICAg
+ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYXRtZWwsdGNiLXRpbWVyIjsKKyAgICAgICAgICAg
+ICAgICAgICAgICAgIHJlZyA9IDwwPiwgPDE+OworICAgICAgICAgICAgICAgIH07CisKKyAgICAg
+ICAgICAgICAgICB0aW1lckAyIHsKKyAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUg
+PSAiYXRtZWwsdGNiLXRpbWVyIjsKKyAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwyPjsK
+KyAgICAgICAgICAgICAgICB9OworICAgICAgICB9OworCisgICAgLyogT25lIGludGVycnVwdCBw
+ZXIgVEMgY2hhbm5lbCBpbiBhIFRDIGJsb2NrOiAqLworICAgICAgICB0Y2IxOiB0aW1lckBmZmZk
+YzAwMCB7CisgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhdG1lbCxhdDkxcm05MjAwLXRj
+YiIsICJzaW1wbGUtbWZkIiwgInN5c2NvbiI7CisgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2Vs
+bHMgPSA8MT47CisgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47CisgICAgICAgICAg
+ICAgICAgcmVnID0gPDB4ZmZmZGMwMDAgMHgxMDA+OworICAgICAgICAgICAgICAgIGludGVycnVw
+dHMgPSA8MjYgND4sIDwyNyA0PiwgPDI4IDQ+OworICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwm
+dGNiMV9jbGs+LCA8JmNsazMyaz47CisgICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAidDBf
+Y2xrIiwgInNsb3dfY2xrIjsKKworICAgICAgICAgICAgICAgIHRpbWVyQDAgeworICAgICAgICAg
+ICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhdG1lbCx0Y2ItdGltZXIiOworICAgICAgICAg
+ICAgICAgICAgICAgICAgcmVnID0gPDA+OworICAgICAgICAgICAgICAgIH07CisKKyAgICAgICAg
+ICAgICAgICB0aW1lckAxIHsKKyAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAi
+YXRtZWwsdGNiLXRpbWVyIjsKKyAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwxPjsKKyAg
+ICAgICAgICAgICAgICB9OworICAgICAgICB9OwpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL2luZ2VuaWMsc3lzb3N0LnlhbWwgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvaW5nZW5pYyxzeXNvc3QueWFtbApuZXcgZmls
+ZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAuLmRmM2ViNzYwNDVlMAotLS0gL2Rldi9u
+dWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9pbmdlbmlj
+LHN5c29zdC55YW1sCkBAIC0wLDAgKzEsNjMgQEAKKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6
+IChHUEwtMi4wLW9ubHkgT1IgQlNELTItQ2xhdXNlKQorJVlBTUwgMS4yCistLS0KKyRpZDogaHR0
+cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvdGltZXIvaW5nZW5pYyxzeXNvc3QueWFtbCMKKyRz
+Y2hlbWE6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sIworCit0
+aXRsZTogQmluZGluZ3MgZm9yIFNZU09TVCBpbiBJbmdlbmljIFhCdXJzdCBmYW1pbHkgU29Dcwor
+CittYWludGFpbmVyczoKKyAgLSDlkajnkLDmnbAgKFpob3UgWWFuamllKSA8emhvdXlhbmppZUB3
+YW55ZWV0ZWNoLmNvbT4KKworZGVzY3JpcHRpb246CisgIFRoZSBTWVNPU1QgaW4gYW4gSW5nZW5p
+YyBTb0MgcHJvdmlkZXMgb25lIDY0Yml0IHRpbWVyIGZvciBjbG9ja3NvdXJjZQorICBhbmQgb25l
+IG9yIG1vcmUgMzJiaXQgdGltZXJzIGZvciBjbG9ja2V2ZW50LgorCitwcm9wZXJ0aWVzOgorICAi
+I2Nsb2NrLWNlbGxzIjoKKyAgICBjb25zdDogMQorCisgIGNvbXBhdGlibGU6CisgICAgZW51bToK
+KyAgICAgIC0gaW5nZW5pYyx4MTAwMC1vc3QKKyAgICAgIC0gaW5nZW5pYyx4MjAwMC1vc3QKKwor
+ICByZWc6CisgICAgbWF4SXRlbXM6IDEKKworICBjbG9ja3M6CisgICAgbWF4SXRlbXM6IDEKKwor
+ICBjbG9jay1uYW1lczoKKyAgICBjb25zdDogb3N0CisKKyAgaW50ZXJydXB0czoKKyAgICBtYXhJ
+dGVtczogMQorCityZXF1aXJlZDoKKyAgLSAiI2Nsb2NrLWNlbGxzIgorICAtIGNvbXBhdGlibGUK
+KyAgLSByZWcKKyAgLSBjbG9ja3MKKyAgLSBjbG9jay1uYW1lcworICAtIGludGVycnVwdHMKKwor
+YWRkaXRpb25hbFByb3BlcnRpZXM6IGZhbHNlCisKK2V4YW1wbGVzOgorICAtIHwKKyAgICAjaW5j
+bHVkZSA8ZHQtYmluZGluZ3MvY2xvY2sveDEwMDAtY2d1Lmg+CisKKyAgICBvc3Q6IHRpbWVyQDEy
+MDAwMDAwIHsKKyAgICAgICAgY29tcGF0aWJsZSA9ICJpbmdlbmljLHgxMDAwLW9zdCI7CisgICAg
+ICAgIHJlZyA9IDwweDEyMDAwMDAwIDB4M2M+OworCisgICAgICAgICNjbG9jay1jZWxscyA9IDwx
+PjsKKworICAgICAgICBjbG9ja3MgPSA8JmNndSBYMTAwMF9DTEtfT1NUPjsKKyAgICAgICAgY2xv
+Y2stbmFtZXMgPSAib3N0IjsKKworICAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZjcHVpbnRj
+PjsKKyAgICAgICAgaW50ZXJydXB0cyA9IDwzPjsKKyAgICB9OworLi4uCmRpZmYgLS1naXQgYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvdGksa2V5c3RvbmUtdGltZXIu
+dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL3RpLGtleXN0b25l
+LXRpbWVyLnR4dAppbmRleCA1ZmJlMzYxMjUyYjQuLmQzOTA1YTU0MTJiOCAxMDA2NDQKLS0tIGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL3RpLGtleXN0b25lLXRpbWVy
+LnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvdGksa2V5
+c3RvbmUtdGltZXIudHh0CkBAIC0xMCw3ICsxMCw3IEBAIEl0IGlzIGdsb2JhbCB0aW1lciBpcyBh
+IGZyZWUgcnVubmluZyB1cC1jb3VudGVyIGFuZCBjYW4gZ2VuZXJhdGUgaW50ZXJydXB0CiB3aGVu
+IHRoZSBjb3VudGVyIHJlYWNoZXMgcHJlc2V0IGNvdW50ZXIgdmFsdWVzLgogCiBEb2N1bWVudGF0
+aW9uOgotaHR0cDovL3d3dy50aS5jb20vbGl0L3VnL3NwcnVndjVhL3NwcnVndjVhLnBkZgoraHR0
+cHM6Ly93d3cudGkuY29tL2xpdC91Zy9zcHJ1Z3Y1YS9zcHJ1Z3Y1YS5wZGYKIAogUmVxdWlyZWQg
+cHJvcGVydGllczoKIApkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvc2FtYTVkMi5kdHNp
+IGIvYXJjaC9hcm0vYm9vdC9kdHMvc2FtYTVkMi5kdHNpCmluZGV4IDMxZDg3NjZlYzdlZi4uZDdm
+MjU3MDY4OTJkIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9zYW1hNWQyLmR0c2kKKysr
+IGIvYXJjaC9hcm0vYm9vdC9kdHMvc2FtYTVkMi5kdHNpCkBAIC0zNzUsMjMgKzM3NSwyMyBAQAog
+CQkJfTsKIAogCQkJdGNiMDogdGltZXJAZjgwMGMwMDAgewotCQkJCWNvbXBhdGlibGUgPSAiYXRt
+ZWwsYXQ5MXNhbTl4NS10Y2IiLCAic2ltcGxlLW1mZCIsICJzeXNjb24iOworCQkJCWNvbXBhdGli
+bGUgPSAiYXRtZWwsc2FtYTVkMi10Y2IiLCAic2ltcGxlLW1mZCIsICJzeXNjb24iOwogCQkJCSNh
+ZGRyZXNzLWNlbGxzID0gPDE+OwogCQkJCSNzaXplLWNlbGxzID0gPDA+OwogCQkJCXJlZyA9IDww
+eGY4MDBjMDAwIDB4MTAwPjsKIAkJCQlpbnRlcnJ1cHRzID0gPDM1IElSUV9UWVBFX0xFVkVMX0hJ
+R0ggMD47Ci0JCQkJY2xvY2tzID0gPCZwbWMgUE1DX1RZUEVfUEVSSVBIRVJBTCAzNT4sIDwmY2xr
+MzJrPjsKLQkJCQljbG9jay1uYW1lcyA9ICJ0MF9jbGsiLCAic2xvd19jbGsiOworCQkJCWNsb2Nr
+cyA9IDwmcG1jIFBNQ19UWVBFX1BFUklQSEVSQUwgMzU+LCA8JnBtYyBQTUNfVFlQRV9HQ0sgMzU+
+LCA8JmNsazMyaz47CisJCQkJY2xvY2stbmFtZXMgPSAidDBfY2xrIiwgImdjbGsiLCAic2xvd19j
+bGsiOwogCQkJfTsKIAogCQkJdGNiMTogdGltZXJAZjgwMTAwMDAgewotCQkJCWNvbXBhdGlibGUg
+PSAiYXRtZWwsYXQ5MXNhbTl4NS10Y2IiLCAic2ltcGxlLW1mZCIsICJzeXNjb24iOworCQkJCWNv
+bXBhdGlibGUgPSAiYXRtZWwsc2FtYTVkMi10Y2IiLCAic2ltcGxlLW1mZCIsICJzeXNjb24iOwog
+CQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OwogCQkJCSNzaXplLWNlbGxzID0gPDA+OwogCQkJCXJl
+ZyA9IDwweGY4MDEwMDAwIDB4MTAwPjsKIAkJCQlpbnRlcnJ1cHRzID0gPDM2IElSUV9UWVBFX0xF
+VkVMX0hJR0ggMD47Ci0JCQkJY2xvY2tzID0gPCZwbWMgUE1DX1RZUEVfUEVSSVBIRVJBTCAzNj4s
+IDwmY2xrMzJrPjsKLQkJCQljbG9jay1uYW1lcyA9ICJ0MF9jbGsiLCAic2xvd19jbGsiOworCQkJ
+CWNsb2NrcyA9IDwmcG1jIFBNQ19UWVBFX1BFUklQSEVSQUwgMzY+LCA8JnBtYyBQTUNfVFlQRV9H
+Q0sgMzY+LCA8JmNsazMyaz47CisJCQkJY2xvY2stbmFtZXMgPSAidDBfY2xrIiwgImdjbGsiLCAi
+c2xvd19jbGsiOwogCQkJfTsKIAogCQkJaHNtYzogaHNtY0BmODAxNDAwMCB7CmRpZmYgLS1naXQg
+YS9kcml2ZXJzL2Nsb2Nrc291cmNlL0tjb25maWcgYi9kcml2ZXJzL2Nsb2Nrc291cmNlL0tjb25m
+aWcKaW5kZXggOTE0MTgzODFmY2Q0Li4yZWQ4YjQzNjFkOTUgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
+Y2xvY2tzb3VyY2UvS2NvbmZpZworKysgYi9kcml2ZXJzL2Nsb2Nrc291cmNlL0tjb25maWcKQEAg
+LTYxNiw4ICs2MTYsOSBAQCBjb25maWcgQ0xLU1JDX0lNWF9HUFQKIAogY29uZmlnIENMS1NSQ19J
+TVhfVFBNCiAJYm9vbCAiQ2xvY2tzb3VyY2UgdXNpbmcgaS5NWCBUUE0iIGlmIENPTVBJTEVfVEVT
+VAotCWRlcGVuZHMgb24gQVJNICYmIENMS0RFVl9MT09LVVAKKwlkZXBlbmRzIG9uIChBUk0gfHwg
+QVJNNjQpICYmIENMS0RFVl9MT09LVVAKIAlzZWxlY3QgQ0xLU1JDX01NSU8KKwlzZWxlY3QgVElN
+RVJfT0YKIAloZWxwCiAJICBFbmFibGUgdGhpcyBvcHRpb24gdG8gdXNlIElNWCBUaW1lci9QV00g
+TW9kdWxlIChUUE0pIHRpbWVyIGFzCiAJICBjbG9ja3NvdXJjZS4KQEAgLTY5Niw4ICs2OTcsMTgg
+QEAgY29uZmlnIElOR0VOSUNfVElNRVIKIAloZWxwCiAJICBTdXBwb3J0IGZvciB0aGUgdGltZXIv
+Y291bnRlciB1bml0IG9mIHRoZSBJbmdlbmljIEpaIFNvQ3MuCiAKK2NvbmZpZyBJTkdFTklDX1NZ
+U09TVAorCWJvb2wgIkNsb2Nrc291cmNlL3RpbWVyIHVzaW5nIHRoZSBTWVNPU1QgaW4gSW5nZW5p
+YyBYIFNvQ3MiCisJZGVwZW5kcyBvbiBNSVBTIHx8IENPTVBJTEVfVEVTVAorCWRlcGVuZHMgb24g
+Q09NTU9OX0NMSworCXNlbGVjdCBNRkRfU1lTQ09OCisJc2VsZWN0IFRJTUVSX09GCisJc2VsZWN0
+IElSUV9ET01BSU4KKwloZWxwCisJICBTdXBwb3J0IGZvciB0aGUgU1lTT1NUIG9mIHRoZSBJbmdl
+bmljIFggU2VyaWVzIFNvQ3MuCisKIGNvbmZpZyBJTkdFTklDX09TVAotCWJvb2wgIkNsb2Nrc291
+cmNlIGZvciBJbmdlbmljIE9TIFRpbWVyIgorCWJvb2wgIkNsb2Nrc291cmNlIHVzaW5nIHRoZSBP
+U1QgaW4gSW5nZW5pYyBKWiBTb0NzIgogCWRlcGVuZHMgb24gTUlQUyB8fCBDT01QSUxFX1RFU1QK
+IAlkZXBlbmRzIG9uIENPTU1PTl9DTEsKIAlzZWxlY3QgTUZEX1NZU0NPTgpkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9jbG9ja3NvdXJjZS9NYWtlZmlsZSBiL2RyaXZlcnMvY2xvY2tzb3VyY2UvTWFrZWZp
+bGUKaW5kZXggYmRkYTFhMmU0MDk3Li4zOTk0ZTIyMWUyNjIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
+Y2xvY2tzb3VyY2UvTWFrZWZpbGUKKysrIGIvZHJpdmVycy9jbG9ja3NvdXJjZS9NYWtlZmlsZQpA
+QCAtODIsNiArODIsNyBAQCBvYmotJChDT05GSUdfSDgzMDBfVE1SOCkJCSs9IGg4MzAwX3RpbWVy
+OC5vCiBvYmotJChDT05GSUdfSDgzMDBfVE1SMTYpCQkrPSBoODMwMF90aW1lcjE2Lm8KIG9iai0k
+KENPTkZJR19IODMwMF9UUFUpCQkJKz0gaDgzMDBfdHB1Lm8KIG9iai0kKENPTkZJR19JTkdFTklD
+X09TVCkJCSs9IGluZ2VuaWMtb3N0Lm8KK29iai0kKENPTkZJR19JTkdFTklDX1NZU09TVCkJKz0g
+aW5nZW5pYy1zeXNvc3Qubwogb2JqLSQoQ09ORklHX0lOR0VOSUNfVElNRVIpCQkrPSBpbmdlbmlj
+LXRpbWVyLm8KIG9iai0kKENPTkZJR19DTEtTUkNfU1RfTFBDKQkJKz0gY2xrc3JjX3N0X2xwYy5v
+CiBvYmotJChDT05GSUdfWDg2X05VTUFDSElQKQkJKz0gbnVtYWNoaXAubwpkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9jbG9ja3NvdXJjZS9pbmdlbmljLXN5c29zdC5jIGIvZHJpdmVycy9jbG9ja3NvdXJj
+ZS9pbmdlbmljLXN5c29zdC5jCm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAw
+MC4uZTc3ZDU4NDQ5MDA1Ci0tLSAvZGV2L251bGwKKysrIGIvZHJpdmVycy9jbG9ja3NvdXJjZS9p
+bmdlbmljLXN5c29zdC5jCkBAIC0wLDAgKzEsNTM5IEBACisvLyBTUERYLUxpY2Vuc2UtSWRlbnRp
+ZmllcjogR1BMLTIuMAorLyoKKyAqIEluZ2VuaWMgWEJ1cnN0IFNvQ3MgU1lTT1NUIGNsb2NrcyBk
+cml2ZXIKKyAqIENvcHlyaWdodCAoYykgMjAyMCDlkajnkLDmnbAgKFpob3UgWWFuamllKSA8emhv
+dXlhbmppZUB3YW55ZWV0ZWNoLmNvbT4KKyAqLworCisjaW5jbHVkZSA8bGludXgvYml0b3BzLmg+
+CisjaW5jbHVkZSA8bGludXgvY2xrLmg+CisjaW5jbHVkZSA8bGludXgvY2xrLXByb3ZpZGVyLmg+
+CisjaW5jbHVkZSA8bGludXgvY2xvY2tjaGlwcy5oPgorI2luY2x1ZGUgPGxpbnV4L2Nsb2Nrc291
+cmNlLmg+CisjaW5jbHVkZSA8bGludXgvaW50ZXJydXB0Lmg+CisjaW5jbHVkZSA8bGludXgvbWZk
+L3N5c2Nvbi5oPgorI2luY2x1ZGUgPGxpbnV4L29mX2FkZHJlc3MuaD4KKyNpbmNsdWRlIDxsaW51
+eC9vZl9pcnEuaD4KKyNpbmNsdWRlIDxsaW51eC9zY2hlZF9jbG9jay5oPgorI2luY2x1ZGUgPGxp
+bnV4L3NsYWIuaD4KKyNpbmNsdWRlIDxsaW51eC9zeXNjb3JlX29wcy5oPgorCisjaW5jbHVkZSA8
+ZHQtYmluZGluZ3MvY2xvY2svaW5nZW5pYyxzeXNvc3QuaD4KKworLyogT1NUIHJlZ2lzdGVyIG9m
+ZnNldHMgKi8KKyNkZWZpbmUgT1NUX1JFR19PU1RDQ1IJCQkweDAwCisjZGVmaW5lIE9TVF9SRUdf
+T1NUQ1IJCQkweDA4CisjZGVmaW5lIE9TVF9SRUdfT1NURlIJCQkweDBjCisjZGVmaW5lIE9TVF9S
+RUdfT1NUTVIJCQkweDEwCisjZGVmaW5lIE9TVF9SRUdfT1NUMURGUgkJCTB4MTQKKyNkZWZpbmUg
+T1NUX1JFR19PU1QxQ05UCQkJMHgxOAorI2RlZmluZSBPU1RfUkVHX09TVDJDTlRMCQkweDIwCisj
+ZGVmaW5lIE9TVF9SRUdfT1NUQ05UMkhCVUYJCTB4MjQKKyNkZWZpbmUgT1NUX1JFR19PU1RFU1IJ
+CQkweDM0CisjZGVmaW5lIE9TVF9SRUdfT1NURUNSCQkJMHgzOAorCisvKiBiaXRzIHdpdGhpbiB0
+aGUgT1NUQ0NSIHJlZ2lzdGVyICovCisjZGVmaW5lIE9TVENDUl9QUkVTQ0FMRTFfTUFTSwkweDMK
+KyNkZWZpbmUgT1NUQ0NSX1BSRVNDQUxFMl9NQVNLCTB4YworI2RlZmluZSBPU1RDQ1JfUFJFU0NB
+TEUxX0xTQgkwCisjZGVmaW5lIE9TVENDUl9QUkVTQ0FMRTJfTFNCCTIKKworLyogYml0cyB3aXRo
+aW4gdGhlIE9TVENSIHJlZ2lzdGVyICovCisjZGVmaW5lIE9TVENSX09TVDFDTFIJCQlCSVQoMCkK
+KyNkZWZpbmUgT1NUQ1JfT1NUMkNMUgkJCUJJVCgxKQorCisvKiBiaXRzIHdpdGhpbiB0aGUgT1NU
+RlIgcmVnaXN0ZXIgKi8KKyNkZWZpbmUgT1NURlJfRkZMQUcJCQkJQklUKDApCisKKy8qIGJpdHMg
+d2l0aGluIHRoZSBPU1RNUiByZWdpc3RlciAqLworI2RlZmluZSBPU1RNUl9GTUFTSwkJCQlCSVQo
+MCkKKworLyogYml0cyB3aXRoaW4gdGhlIE9TVEVTUiByZWdpc3RlciAqLworI2RlZmluZSBPU1RF
+U1JfT1NUMUVOUwkJCUJJVCgwKQorI2RlZmluZSBPU1RFU1JfT1NUMkVOUwkJCUJJVCgxKQorCisv
+KiBiaXRzIHdpdGhpbiB0aGUgT1NURUNSIHJlZ2lzdGVyICovCisjZGVmaW5lIE9TVEVDUl9PU1Qx
+RU5DCQkJQklUKDApCisjZGVmaW5lIE9TVEVDUl9PU1QyRU5DCQkJQklUKDEpCisKK3N0cnVjdCBp
+bmdlbmljX3NvY19pbmZvIHsKKwl1bnNpZ25lZCBpbnQgbnVtX2NoYW5uZWxzOworfTsKKworc3Ry
+dWN0IGluZ2VuaWNfb3N0X2Nsa19pbmZvIHsKKwlzdHJ1Y3QgY2xrX2luaXRfZGF0YSBpbml0X2Rh
+dGE7CisJdTggb3N0Y2NyX3JlZzsKK307CisKK3N0cnVjdCBpbmdlbmljX29zdF9jbGsgeworCXN0
+cnVjdCBjbGtfaHcgaHc7CisJdW5zaWduZWQgaW50IGlkeDsKKwlzdHJ1Y3QgaW5nZW5pY19vc3Qg
+Km9zdDsKKwljb25zdCBzdHJ1Y3QgaW5nZW5pY19vc3RfY2xrX2luZm8gKmluZm87Cit9OworCitz
+dHJ1Y3QgaW5nZW5pY19vc3QgeworCXZvaWQgX19pb21lbSAqYmFzZTsKKwljb25zdCBzdHJ1Y3Qg
+aW5nZW5pY19zb2NfaW5mbyAqc29jX2luZm87CisJc3RydWN0IGNsayAqY2xrLCAqcGVyY3B1X3Rp
+bWVyX2NsaywgKmdsb2JhbF90aW1lcl9jbGs7CisJc3RydWN0IGNsb2NrX2V2ZW50X2RldmljZSBj
+ZXZ0OworCXN0cnVjdCBjbG9ja3NvdXJjZSBjczsKKwljaGFyIG5hbWVbMjBdOworCisJc3RydWN0
+IGNsa19od19vbmVjZWxsX2RhdGEgKmNsb2NrczsKK307CisKK3N0YXRpYyBzdHJ1Y3QgaW5nZW5p
+Y19vc3QgKmluZ2VuaWNfb3N0OworCitzdGF0aWMgaW5saW5lIHN0cnVjdCBpbmdlbmljX29zdF9j
+bGsgKnRvX29zdF9jbGsoc3RydWN0IGNsa19odyAqaHcpCit7CisJcmV0dXJuIGNvbnRhaW5lcl9v
+Zihodywgc3RydWN0IGluZ2VuaWNfb3N0X2NsaywgaHcpOworfQorCitzdGF0aWMgdW5zaWduZWQg
+bG9uZyBpbmdlbmljX29zdF9wZXJjcHVfdGltZXJfcmVjYWxjX3JhdGUoc3RydWN0IGNsa19odyAq
+aHcsCisJCXVuc2lnbmVkIGxvbmcgcGFyZW50X3JhdGUpCit7CisJc3RydWN0IGluZ2VuaWNfb3N0
+X2NsayAqb3N0X2NsayA9IHRvX29zdF9jbGsoaHcpOworCWNvbnN0IHN0cnVjdCBpbmdlbmljX29z
+dF9jbGtfaW5mbyAqaW5mbyA9IG9zdF9jbGstPmluZm87CisJdW5zaWduZWQgaW50IHByZXNjYWxl
+OworCisJcHJlc2NhbGUgPSByZWFkbChvc3RfY2xrLT5vc3QtPmJhc2UgKyBpbmZvLT5vc3RjY3Jf
+cmVnKTsKKworCXByZXNjYWxlID0gKHByZXNjYWxlICYgT1NUQ0NSX1BSRVNDQUxFMV9NQVNLKSA+
+PiBPU1RDQ1JfUFJFU0NBTEUxX0xTQjsKKworCXJldHVybiBwYXJlbnRfcmF0ZSA+PiAocHJlc2Nh
+bGUgKiAyKTsKK30KKworc3RhdGljIHVuc2lnbmVkIGxvbmcgaW5nZW5pY19vc3RfZ2xvYmFsX3Rp
+bWVyX3JlY2FsY19yYXRlKHN0cnVjdCBjbGtfaHcgKmh3LAorCQl1bnNpZ25lZCBsb25nIHBhcmVu
+dF9yYXRlKQoreworCXN0cnVjdCBpbmdlbmljX29zdF9jbGsgKm9zdF9jbGsgPSB0b19vc3RfY2xr
+KGh3KTsKKwljb25zdCBzdHJ1Y3QgaW5nZW5pY19vc3RfY2xrX2luZm8gKmluZm8gPSBvc3RfY2xr
+LT5pbmZvOworCXVuc2lnbmVkIGludCBwcmVzY2FsZTsKKworCXByZXNjYWxlID0gcmVhZGwob3N0
+X2Nsay0+b3N0LT5iYXNlICsgaW5mby0+b3N0Y2NyX3JlZyk7CisKKwlwcmVzY2FsZSA9IChwcmVz
+Y2FsZSAmIE9TVENDUl9QUkVTQ0FMRTJfTUFTSykgPj4gT1NUQ0NSX1BSRVNDQUxFMl9MU0I7CisK
+KwlyZXR1cm4gcGFyZW50X3JhdGUgPj4gKHByZXNjYWxlICogMik7Cit9CisKK3N0YXRpYyB1OCBp
+bmdlbmljX29zdF9nZXRfcHJlc2NhbGUodW5zaWduZWQgbG9uZyByYXRlLCB1bnNpZ25lZCBsb25n
+IHJlcV9yYXRlKQoreworCXU4IHByZXNjYWxlOworCisJZm9yIChwcmVzY2FsZSA9IDA7IHByZXNj
+YWxlIDwgMjsgcHJlc2NhbGUrKykKKwkJaWYgKChyYXRlID4+IChwcmVzY2FsZSAqIDIpKSA8PSBy
+ZXFfcmF0ZSkKKwkJCXJldHVybiBwcmVzY2FsZTsKKworCXJldHVybiAyOyAvKiAvMTYgZGl2aWRl
+ciAqLworfQorCitzdGF0aWMgbG9uZyBpbmdlbmljX29zdF9yb3VuZF9yYXRlKHN0cnVjdCBjbGtf
+aHcgKmh3LCB1bnNpZ25lZCBsb25nIHJlcV9yYXRlLAorCQl1bnNpZ25lZCBsb25nICpwYXJlbnRf
+cmF0ZSkKK3sKKwl1bnNpZ25lZCBsb25nIHJhdGUgPSAqcGFyZW50X3JhdGU7CisJdTggcHJlc2Nh
+bGU7CisKKwlpZiAocmVxX3JhdGUgPiByYXRlKQorCQlyZXR1cm4gcmF0ZTsKKworCXByZXNjYWxl
+ID0gaW5nZW5pY19vc3RfZ2V0X3ByZXNjYWxlKHJhdGUsIHJlcV9yYXRlKTsKKworCXJldHVybiBy
+YXRlID4+IChwcmVzY2FsZSAqIDIpOworfQorCitzdGF0aWMgaW50IGluZ2VuaWNfb3N0X3BlcmNw
+dV90aW1lcl9zZXRfcmF0ZShzdHJ1Y3QgY2xrX2h3ICpodywgdW5zaWduZWQgbG9uZyByZXFfcmF0
+ZSwKKwkJdW5zaWduZWQgbG9uZyBwYXJlbnRfcmF0ZSkKK3sKKwlzdHJ1Y3QgaW5nZW5pY19vc3Rf
+Y2xrICpvc3RfY2xrID0gdG9fb3N0X2Nsayhodyk7CisJY29uc3Qgc3RydWN0IGluZ2VuaWNfb3N0
+X2Nsa19pbmZvICppbmZvID0gb3N0X2Nsay0+aW5mbzsKKwl1OCBwcmVzY2FsZSA9IGluZ2VuaWNf
+b3N0X2dldF9wcmVzY2FsZShwYXJlbnRfcmF0ZSwgcmVxX3JhdGUpOworCWludCB2YWw7CisKKwl2
+YWwgPSByZWFkbChvc3RfY2xrLT5vc3QtPmJhc2UgKyBpbmZvLT5vc3RjY3JfcmVnKTsKKwl2YWwg
+PSAodmFsICYgfk9TVENDUl9QUkVTQ0FMRTFfTUFTSykgfCAocHJlc2NhbGUgPDwgT1NUQ0NSX1BS
+RVNDQUxFMV9MU0IpOworCXdyaXRlbCh2YWwsIG9zdF9jbGstPm9zdC0+YmFzZSArIGluZm8tPm9z
+dGNjcl9yZWcpOworCisJcmV0dXJuIDA7Cit9CisKK3N0YXRpYyBpbnQgaW5nZW5pY19vc3RfZ2xv
+YmFsX3RpbWVyX3NldF9yYXRlKHN0cnVjdCBjbGtfaHcgKmh3LCB1bnNpZ25lZCBsb25nIHJlcV9y
+YXRlLAorCQl1bnNpZ25lZCBsb25nIHBhcmVudF9yYXRlKQoreworCXN0cnVjdCBpbmdlbmljX29z
+dF9jbGsgKm9zdF9jbGsgPSB0b19vc3RfY2xrKGh3KTsKKwljb25zdCBzdHJ1Y3QgaW5nZW5pY19v
+c3RfY2xrX2luZm8gKmluZm8gPSBvc3RfY2xrLT5pbmZvOworCXU4IHByZXNjYWxlID0gaW5nZW5p
+Y19vc3RfZ2V0X3ByZXNjYWxlKHBhcmVudF9yYXRlLCByZXFfcmF0ZSk7CisJaW50IHZhbDsKKwor
+CXZhbCA9IHJlYWRsKG9zdF9jbGstPm9zdC0+YmFzZSArIGluZm8tPm9zdGNjcl9yZWcpOworCXZh
+bCA9ICh2YWwgJiB+T1NUQ0NSX1BSRVNDQUxFMl9NQVNLKSB8IChwcmVzY2FsZSA8PCBPU1RDQ1Jf
+UFJFU0NBTEUyX0xTQik7CisJd3JpdGVsKHZhbCwgb3N0X2Nsay0+b3N0LT5iYXNlICsgaW5mby0+
+b3N0Y2NyX3JlZyk7CisKKwlyZXR1cm4gMDsKK30KKworc3RhdGljIGNvbnN0IHN0cnVjdCBjbGtf
+b3BzIGluZ2VuaWNfb3N0X3BlcmNwdV90aW1lcl9vcHMgPSB7CisJLnJlY2FsY19yYXRlCT0gaW5n
+ZW5pY19vc3RfcGVyY3B1X3RpbWVyX3JlY2FsY19yYXRlLAorCS5yb3VuZF9yYXRlCQk9IGluZ2Vu
+aWNfb3N0X3JvdW5kX3JhdGUsCisJLnNldF9yYXRlCQk9IGluZ2VuaWNfb3N0X3BlcmNwdV90aW1l
+cl9zZXRfcmF0ZSwKK307CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgY2xrX29wcyBpbmdlbmljX29z
+dF9nbG9iYWxfdGltZXJfb3BzID0geworCS5yZWNhbGNfcmF0ZQk9IGluZ2VuaWNfb3N0X2dsb2Jh
+bF90aW1lcl9yZWNhbGNfcmF0ZSwKKwkucm91bmRfcmF0ZQkJPSBpbmdlbmljX29zdF9yb3VuZF9y
+YXRlLAorCS5zZXRfcmF0ZQkJPSBpbmdlbmljX29zdF9nbG9iYWxfdGltZXJfc2V0X3JhdGUsCit9
+OworCitzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IGluZ2VuaWNfb3N0X2Nsa19wYXJlbnRzW10g
+PSB7ICJleHQiIH07CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgaW5nZW5pY19vc3RfY2xrX2luZm8g
+aW5nZW5pY19vc3RfY2xrX2luZm9bXSA9IHsKKwlbT1NUX0NMS19QRVJDUFVfVElNRVJdID0gewor
+CQkuaW5pdF9kYXRhID0geworCQkJLm5hbWUgPSAicGVyY3B1IHRpbWVyIiwKKwkJCS5wYXJlbnRf
+bmFtZXMgPSBpbmdlbmljX29zdF9jbGtfcGFyZW50cywKKwkJCS5udW1fcGFyZW50cyA9IEFSUkFZ
+X1NJWkUoaW5nZW5pY19vc3RfY2xrX3BhcmVudHMpLAorCQkJLm9wcyA9ICZpbmdlbmljX29zdF9w
+ZXJjcHVfdGltZXJfb3BzLAorCQkJLmZsYWdzID0gQ0xLX1NFVF9SQVRFX1VOR0FURSwKKwkJfSwK
+KwkJLm9zdGNjcl9yZWcgPSBPU1RfUkVHX09TVENDUiwKKwl9LAorCisJW09TVF9DTEtfR0xPQkFM
+X1RJTUVSXSA9IHsKKwkJLmluaXRfZGF0YSA9IHsKKwkJCS5uYW1lID0gImdsb2JhbCB0aW1lciIs
+CisJCQkucGFyZW50X25hbWVzID0gaW5nZW5pY19vc3RfY2xrX3BhcmVudHMsCisJCQkubnVtX3Bh
+cmVudHMgPSBBUlJBWV9TSVpFKGluZ2VuaWNfb3N0X2Nsa19wYXJlbnRzKSwKKwkJCS5vcHMgPSAm
+aW5nZW5pY19vc3RfZ2xvYmFsX3RpbWVyX29wcywKKwkJCS5mbGFncyA9IENMS19TRVRfUkFURV9V
+TkdBVEUsCisJCX0sCisJCS5vc3RjY3JfcmVnID0gT1NUX1JFR19PU1RDQ1IsCisJfSwKK307CisK
+K3N0YXRpYyB1NjQgbm90cmFjZSBpbmdlbmljX29zdF9nbG9iYWxfdGltZXJfcmVhZF9jbnRsKHZv
+aWQpCit7CisJc3RydWN0IGluZ2VuaWNfb3N0ICpvc3QgPSBpbmdlbmljX29zdDsKKwl1bnNpZ25l
+ZCBpbnQgY291bnQ7CisKKwljb3VudCA9IHJlYWRsKG9zdC0+YmFzZSArIE9TVF9SRUdfT1NUMkNO
+VEwpOworCisJcmV0dXJuIGNvdW50OworfQorCitzdGF0aWMgdTY0IG5vdHJhY2UgaW5nZW5pY19v
+c3RfY2xvY2tzb3VyY2VfcmVhZChzdHJ1Y3QgY2xvY2tzb3VyY2UgKmNzKQoreworCXJldHVybiBp
+bmdlbmljX29zdF9nbG9iYWxfdGltZXJfcmVhZF9jbnRsKCk7Cit9CisKK3N0YXRpYyBpbmxpbmUg
+c3RydWN0IGluZ2VuaWNfb3N0ICp0b19pbmdlbmljX29zdChzdHJ1Y3QgY2xvY2tfZXZlbnRfZGV2
+aWNlICpldnQpCit7CisJcmV0dXJuIGNvbnRhaW5lcl9vZihldnQsIHN0cnVjdCBpbmdlbmljX29z
+dCwgY2V2dCk7Cit9CisKK3N0YXRpYyBpbnQgaW5nZW5pY19vc3RfY2V2dF9zZXRfc3RhdGVfc2h1
+dGRvd24oc3RydWN0IGNsb2NrX2V2ZW50X2RldmljZSAqZXZ0KQoreworCXN0cnVjdCBpbmdlbmlj
+X29zdCAqb3N0ID0gdG9faW5nZW5pY19vc3QoZXZ0KTsKKworCXdyaXRlbChPU1RFQ1JfT1NUMUVO
+Qywgb3N0LT5iYXNlICsgT1NUX1JFR19PU1RFQ1IpOworCisJcmV0dXJuIDA7Cit9CisKK3N0YXRp
+YyBpbnQgaW5nZW5pY19vc3RfY2V2dF9zZXRfbmV4dCh1bnNpZ25lZCBsb25nIG5leHQsCisJCQkJ
+ICAgICBzdHJ1Y3QgY2xvY2tfZXZlbnRfZGV2aWNlICpldnQpCit7CisJc3RydWN0IGluZ2VuaWNf
+b3N0ICpvc3QgPSB0b19pbmdlbmljX29zdChldnQpOworCisJd3JpdGVsKCh1MzIpfk9TVEZSX0ZG
+TEFHLCBvc3QtPmJhc2UgKyBPU1RfUkVHX09TVEZSKTsKKwl3cml0ZWwobmV4dCwgb3N0LT5iYXNl
+ICsgT1NUX1JFR19PU1QxREZSKTsKKwl3cml0ZWwoT1NUQ1JfT1NUMUNMUiwgb3N0LT5iYXNlICsg
+T1NUX1JFR19PU1RDUik7CisJd3JpdGVsKE9TVEVTUl9PU1QxRU5TLCBvc3QtPmJhc2UgKyBPU1Rf
+UkVHX09TVEVTUik7CisJd3JpdGVsKCh1MzIpfk9TVE1SX0ZNQVNLLCBvc3QtPmJhc2UgKyBPU1Rf
+UkVHX09TVE1SKTsKKworCXJldHVybiAwOworfQorCitzdGF0aWMgaXJxcmV0dXJuX3QgaW5nZW5p
+Y19vc3RfY2V2dF9jYihpbnQgaXJxLCB2b2lkICpkZXZfaWQpCit7CisJc3RydWN0IGNsb2NrX2V2
+ZW50X2RldmljZSAqZXZ0ID0gZGV2X2lkOworCXN0cnVjdCBpbmdlbmljX29zdCAqb3N0ID0gdG9f
+aW5nZW5pY19vc3QoZXZ0KTsKKworCXdyaXRlbChPU1RFQ1JfT1NUMUVOQywgb3N0LT5iYXNlICsg
+T1NUX1JFR19PU1RFQ1IpOworCisJaWYgKGV2dC0+ZXZlbnRfaGFuZGxlcikKKwkJZXZ0LT5ldmVu
+dF9oYW5kbGVyKGV2dCk7CisKKwlyZXR1cm4gSVJRX0hBTkRMRUQ7Cit9CisKK3N0YXRpYyBpbnQg
+X19pbml0IGluZ2VuaWNfb3N0X3JlZ2lzdGVyX2Nsb2NrKHN0cnVjdCBpbmdlbmljX29zdCAqb3N0
+LAorCQkJdW5zaWduZWQgaW50IGlkeCwgY29uc3Qgc3RydWN0IGluZ2VuaWNfb3N0X2Nsa19pbmZv
+ICppbmZvLAorCQkJc3RydWN0IGNsa19od19vbmVjZWxsX2RhdGEgKmNsb2NrcykKK3sKKwlzdHJ1
+Y3QgaW5nZW5pY19vc3RfY2xrICpvc3RfY2xrOworCWludCB2YWwsIGVycjsKKworCW9zdF9jbGsg
+PSBremFsbG9jKHNpemVvZigqb3N0X2NsayksIEdGUF9LRVJORUwpOworCWlmICghb3N0X2NsaykK
+KwkJcmV0dXJuIC1FTk9NRU07CisKKwlvc3RfY2xrLT5ody5pbml0ID0gJmluZm8tPmluaXRfZGF0
+YTsKKwlvc3RfY2xrLT5pZHggPSBpZHg7CisJb3N0X2Nsay0+aW5mbyA9IGluZm87CisJb3N0X2Ns
+ay0+b3N0ID0gb3N0OworCisJLyogUmVzZXQgY2xvY2sgZGl2aWRlciAqLworCXZhbCA9IHJlYWRs
+KG9zdC0+YmFzZSArIGluZm8tPm9zdGNjcl9yZWcpOworCXZhbCAmPSB+KE9TVENDUl9QUkVTQ0FM
+RTFfTUFTSyB8IE9TVENDUl9QUkVTQ0FMRTJfTUFTSyk7CisJd3JpdGVsKHZhbCwgb3N0LT5iYXNl
+ICsgaW5mby0+b3N0Y2NyX3JlZyk7CisKKwllcnIgPSBjbGtfaHdfcmVnaXN0ZXIoTlVMTCwgJm9z
+dF9jbGstPmh3KTsKKwlpZiAoZXJyKSB7CisJCWtmcmVlKG9zdF9jbGspOworCQlyZXR1cm4gZXJy
+OworCX0KKworCWNsb2Nrcy0+aHdzW2lkeF0gPSAmb3N0X2Nsay0+aHc7CisKKwlyZXR1cm4gMDsK
+K30KKworc3RhdGljIHN0cnVjdCBjbGsgKiBfX2luaXQgaW5nZW5pY19vc3RfZ2V0X2Nsb2NrKHN0
+cnVjdCBkZXZpY2Vfbm9kZSAqbnAsIGludCBpZCkKK3sKKwlzdHJ1Y3Qgb2ZfcGhhbmRsZV9hcmdz
+IGFyZ3M7CisKKwlhcmdzLm5wID0gbnA7CisJYXJncy5hcmdzX2NvdW50ID0gMTsKKwlhcmdzLmFy
+Z3NbMF0gPSBpZDsKKworCXJldHVybiBvZl9jbGtfZ2V0X2Zyb21fcHJvdmlkZXIoJmFyZ3MpOwor
+fQorCitzdGF0aWMgaW50IF9faW5pdCBpbmdlbmljX29zdF9wZXJjcHVfdGltZXJfaW5pdChzdHJ1
+Y3QgZGV2aWNlX25vZGUgKm5wLAorCQkJCQkgc3RydWN0IGluZ2VuaWNfb3N0ICpvc3QpCit7CisJ
+dW5zaWduZWQgaW50IHRpbWVyX3ZpcnEsIGNoYW5uZWwgPSBPU1RfQ0xLX1BFUkNQVV9USU1FUjsK
+Kwl1bnNpZ25lZCBsb25nIHJhdGU7CisJaW50IGVycjsKKworCW9zdC0+cGVyY3B1X3RpbWVyX2Ns
+ayA9IGluZ2VuaWNfb3N0X2dldF9jbG9jayhucCwgY2hhbm5lbCk7CisJaWYgKElTX0VSUihvc3Qt
+PnBlcmNwdV90aW1lcl9jbGspKQorCQlyZXR1cm4gUFRSX0VSUihvc3QtPnBlcmNwdV90aW1lcl9j
+bGspOworCisJZXJyID0gY2xrX3ByZXBhcmVfZW5hYmxlKG9zdC0+cGVyY3B1X3RpbWVyX2Nsayk7
+CisJaWYgKGVycikKKwkJZ290byBlcnJfY2xrX3B1dDsKKworCXJhdGUgPSBjbGtfZ2V0X3JhdGUo
+b3N0LT5wZXJjcHVfdGltZXJfY2xrKTsKKwlpZiAoIXJhdGUpIHsKKwkJZXJyID0gLUVJTlZBTDsK
+KwkJZ290byBlcnJfY2xrX2Rpc2FibGU7CisJfQorCisJdGltZXJfdmlycSA9IG9mX2lycV9nZXQo
+bnAsIDApOworCWlmICghdGltZXJfdmlycSkgeworCQllcnIgPSAtRUlOVkFMOworCQlnb3RvIGVy
+cl9jbGtfZGlzYWJsZTsKKwl9CisKKwlzbnByaW50Zihvc3QtPm5hbWUsIHNpemVvZihvc3QtPm5h
+bWUpLCAiT1NUIHBlcmNwdSB0aW1lciIpOworCisJZXJyID0gcmVxdWVzdF9pcnEodGltZXJfdmly
+cSwgaW5nZW5pY19vc3RfY2V2dF9jYiwgSVJRRl9USU1FUiwKKwkJCSAgb3N0LT5uYW1lLCAmb3N0
+LT5jZXZ0KTsKKwlpZiAoZXJyKQorCQlnb3RvIGVycl9pcnFfZGlzcG9zZV9tYXBwaW5nOworCisJ
+b3N0LT5jZXZ0LmNwdW1hc2sgPSBjcHVtYXNrX29mKHNtcF9wcm9jZXNzb3JfaWQoKSk7CisJb3N0
+LT5jZXZ0LmZlYXR1cmVzID0gQ0xPQ0tfRVZUX0ZFQVRfT05FU0hPVDsKKwlvc3QtPmNldnQubmFt
+ZSA9IG9zdC0+bmFtZTsKKwlvc3QtPmNldnQucmF0aW5nID0gNDAwOworCW9zdC0+Y2V2dC5zZXRf
+c3RhdGVfc2h1dGRvd24gPSBpbmdlbmljX29zdF9jZXZ0X3NldF9zdGF0ZV9zaHV0ZG93bjsKKwlv
+c3QtPmNldnQuc2V0X25leHRfZXZlbnQgPSBpbmdlbmljX29zdF9jZXZ0X3NldF9uZXh0OworCisJ
+Y2xvY2tldmVudHNfY29uZmlnX2FuZF9yZWdpc3Rlcigmb3N0LT5jZXZ0LCByYXRlLCA0LCAweGZm
+ZmZmZmZmKTsKKworCXJldHVybiAwOworCitlcnJfaXJxX2Rpc3Bvc2VfbWFwcGluZzoKKwlpcnFf
+ZGlzcG9zZV9tYXBwaW5nKHRpbWVyX3ZpcnEpOworZXJyX2Nsa19kaXNhYmxlOgorCWNsa19kaXNh
+YmxlX3VucHJlcGFyZShvc3QtPnBlcmNwdV90aW1lcl9jbGspOworZXJyX2Nsa19wdXQ6CisJY2xr
+X3B1dChvc3QtPnBlcmNwdV90aW1lcl9jbGspOworCXJldHVybiBlcnI7Cit9CisKK3N0YXRpYyBp
+bnQgX19pbml0IGluZ2VuaWNfb3N0X2dsb2JhbF90aW1lcl9pbml0KHN0cnVjdCBkZXZpY2Vfbm9k
+ZSAqbnAsCisJCQkJCSAgICAgICBzdHJ1Y3QgaW5nZW5pY19vc3QgKm9zdCkKK3sKKwl1bnNpZ25l
+ZCBpbnQgY2hhbm5lbCA9IE9TVF9DTEtfR0xPQkFMX1RJTUVSOworCXN0cnVjdCBjbG9ja3NvdXJj
+ZSAqY3MgPSAmb3N0LT5jczsKKwl1bnNpZ25lZCBsb25nIHJhdGU7CisJaW50IGVycjsKKworCW9z
+dC0+Z2xvYmFsX3RpbWVyX2NsayA9IGluZ2VuaWNfb3N0X2dldF9jbG9jayhucCwgY2hhbm5lbCk7
+CisJaWYgKElTX0VSUihvc3QtPmdsb2JhbF90aW1lcl9jbGspKQorCQlyZXR1cm4gUFRSX0VSUihv
+c3QtPmdsb2JhbF90aW1lcl9jbGspOworCisJZXJyID0gY2xrX3ByZXBhcmVfZW5hYmxlKG9zdC0+
+Z2xvYmFsX3RpbWVyX2Nsayk7CisJaWYgKGVycikKKwkJZ290byBlcnJfY2xrX3B1dDsKKworCXJh
+dGUgPSBjbGtfZ2V0X3JhdGUob3N0LT5nbG9iYWxfdGltZXJfY2xrKTsKKwlpZiAoIXJhdGUpIHsK
+KwkJZXJyID0gLUVJTlZBTDsKKwkJZ290byBlcnJfY2xrX2Rpc2FibGU7CisJfQorCisJLyogQ2xl
+YXIgY291bnRlciBDTlQgcmVnaXN0ZXJzICovCisJd3JpdGVsKE9TVENSX09TVDJDTFIsIG9zdC0+
+YmFzZSArIE9TVF9SRUdfT1NUQ1IpOworCisJLyogRW5hYmxlIE9TVCBjaGFubmVsICovCisJd3Jp
+dGVsKE9TVEVTUl9PU1QyRU5TLCBvc3QtPmJhc2UgKyBPU1RfUkVHX09TVEVTUik7CisKKwljcy0+
+bmFtZSA9ICJpbmdlbmljLW9zdCI7CisJY3MtPnJhdGluZyA9IDQwMDsKKwljcy0+ZmxhZ3MgPSBD
+TE9DS19TT1VSQ0VfSVNfQ09OVElOVU9VUzsKKwljcy0+bWFzayA9IENMT0NLU09VUkNFX01BU0so
+MzIpOworCWNzLT5yZWFkID0gaW5nZW5pY19vc3RfY2xvY2tzb3VyY2VfcmVhZDsKKworCWVyciA9
+IGNsb2Nrc291cmNlX3JlZ2lzdGVyX2h6KGNzLCByYXRlKTsKKwlpZiAoZXJyKQorCQlnb3RvIGVy
+cl9jbGtfZGlzYWJsZTsKKworCXJldHVybiAwOworCitlcnJfY2xrX2Rpc2FibGU6CisJY2xrX2Rp
+c2FibGVfdW5wcmVwYXJlKG9zdC0+Z2xvYmFsX3RpbWVyX2Nsayk7CitlcnJfY2xrX3B1dDoKKwlj
+bGtfcHV0KG9zdC0+Z2xvYmFsX3RpbWVyX2Nsayk7CisJcmV0dXJuIGVycjsKK30KKworc3RhdGlj
+IGNvbnN0IHN0cnVjdCBpbmdlbmljX3NvY19pbmZvIHgxMDAwX3NvY19pbmZvID0geworCS5udW1f
+Y2hhbm5lbHMgPSAyLAorfTsKKworc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgX19t
+YXliZV91bnVzZWQgaW5nZW5pY19vc3Rfb2ZfbWF0Y2hbXSBfX2luaXRjb25zdCA9IHsKKwl7IC5j
+b21wYXRpYmxlID0gImluZ2VuaWMseDEwMDAtb3N0IiwgLmRhdGEgPSAmeDEwMDBfc29jX2luZm8s
+IH0sCisJeyAvKiBzZW50aW5lbCAqLyB9Cit9OworCitzdGF0aWMgaW50IF9faW5pdCBpbmdlbmlj
+X29zdF9wcm9iZShzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wKQoreworCWNvbnN0IHN0cnVjdCBvZl9k
+ZXZpY2VfaWQgKmlkID0gb2ZfbWF0Y2hfbm9kZShpbmdlbmljX29zdF9vZl9tYXRjaCwgbnApOwor
+CXN0cnVjdCBpbmdlbmljX29zdCAqb3N0OworCXVuc2lnbmVkIGludCBpOworCWludCByZXQ7CisK
+Kwlvc3QgPSBremFsbG9jKHNpemVvZigqb3N0KSwgR0ZQX0tFUk5FTCk7CisJaWYgKCFvc3QpCisJ
+CXJldHVybiAtRU5PTUVNOworCisJb3N0LT5iYXNlID0gb2ZfaW9fcmVxdWVzdF9hbmRfbWFwKG5w
+LCAwLCBvZl9ub2RlX2Z1bGxfbmFtZShucCkpOworCWlmIChJU19FUlIob3N0LT5iYXNlKSkgewor
+CQlwcl9lcnIoIiVzOiBGYWlsZWQgdG8gbWFwIE9TVCByZWdpc3RlcnNcbiIsIF9fZnVuY19fKTsK
+KwkJcmV0ID0gUFRSX0VSUihvc3QtPmJhc2UpOworCQlnb3RvIGVycl9mcmVlX29zdDsKKwl9CisK
+Kwlvc3QtPmNsayA9IG9mX2Nsa19nZXRfYnlfbmFtZShucCwgIm9zdCIpOworCWlmIChJU19FUlIo
+b3N0LT5jbGspKSB7CisJCXJldCA9IFBUUl9FUlIob3N0LT5jbGspOworCQlwcl9jcml0KCIlczog
+Q2Fubm90IGdldCBPU1QgY2xvY2tcbiIsIF9fZnVuY19fKTsKKwkJZ290byBlcnJfZnJlZV9vc3Q7
+CisJfQorCisJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKG9zdC0+Y2xrKTsKKwlpZiAocmV0KSB7
+CisJCXByX2NyaXQoIiVzOiBVbmFibGUgdG8gZW5hYmxlIE9TVCBjbG9ja1xuIiwgX19mdW5jX18p
+OworCQlnb3RvIGVycl9wdXRfY2xrOworCX0KKworCW9zdC0+c29jX2luZm8gPSBpZC0+ZGF0YTsK
+KworCW9zdC0+Y2xvY2tzID0ga3phbGxvYyhzdHJ1Y3Rfc2l6ZShvc3QtPmNsb2NrcywgaHdzLCBv
+c3QtPnNvY19pbmZvLT5udW1fY2hhbm5lbHMpLAorCQkJICAgICAgR0ZQX0tFUk5FTCk7CisJaWYg
+KCFvc3QtPmNsb2NrcykgeworCQlyZXQgPSAtRU5PTUVNOworCQlnb3RvIGVycl9jbGtfZGlzYWJs
+ZTsKKwl9CisKKwlvc3QtPmNsb2Nrcy0+bnVtID0gb3N0LT5zb2NfaW5mby0+bnVtX2NoYW5uZWxz
+OworCisJZm9yIChpID0gMDsgaSA8IG9zdC0+Y2xvY2tzLT5udW07IGkrKykgeworCQlyZXQgPSBp
+bmdlbmljX29zdF9yZWdpc3Rlcl9jbG9jayhvc3QsIGksICZpbmdlbmljX29zdF9jbGtfaW5mb1tp
+XSwgb3N0LT5jbG9ja3MpOworCQlpZiAocmV0KSB7CisJCQlwcl9jcml0KCIlczogQ2Fubm90IHJl
+Z2lzdGVyIGNsb2NrICVkXG4iLCBfX2Z1bmNfXywgaSk7CisJCQlnb3RvIGVycl91bnJlZ2lzdGVy
+X29zdF9jbG9ja3M7CisJCX0KKwl9CisKKwlyZXQgPSBvZl9jbGtfYWRkX2h3X3Byb3ZpZGVyKG5w
+LCBvZl9jbGtfaHdfb25lY2VsbF9nZXQsIG9zdC0+Y2xvY2tzKTsKKwlpZiAocmV0KSB7CisJCXBy
+X2NyaXQoIiVzOiBDYW5ub3QgYWRkIE9GIGNsb2NrIHByb3ZpZGVyXG4iLCBfX2Z1bmNfXyk7CisJ
+CWdvdG8gZXJyX3VucmVnaXN0ZXJfb3N0X2Nsb2NrczsKKwl9CisKKwlpbmdlbmljX29zdCA9IG9z
+dDsKKworCXJldHVybiAwOworCitlcnJfdW5yZWdpc3Rlcl9vc3RfY2xvY2tzOgorCWZvciAoaSA9
+IDA7IGkgPCBvc3QtPmNsb2Nrcy0+bnVtOyBpKyspCisJCWlmIChvc3QtPmNsb2Nrcy0+aHdzW2ld
+KQorCQkJY2xrX2h3X3VucmVnaXN0ZXIob3N0LT5jbG9ja3MtPmh3c1tpXSk7CisJa2ZyZWUob3N0
+LT5jbG9ja3MpOworZXJyX2Nsa19kaXNhYmxlOgorCWNsa19kaXNhYmxlX3VucHJlcGFyZShvc3Qt
+PmNsayk7CitlcnJfcHV0X2NsazoKKwljbGtfcHV0KG9zdC0+Y2xrKTsKK2Vycl9mcmVlX29zdDoK
+KwlrZnJlZShvc3QpOworCXJldHVybiByZXQ7Cit9CisKK3N0YXRpYyBpbnQgX19pbml0IGluZ2Vu
+aWNfb3N0X2luaXQoc3RydWN0IGRldmljZV9ub2RlICpucCkKK3sKKwlzdHJ1Y3QgaW5nZW5pY19v
+c3QgKm9zdDsKKwl1bnNpZ25lZCBsb25nIHJhdGU7CisJaW50IHJldDsKKworCXJldCA9IGluZ2Vu
+aWNfb3N0X3Byb2JlKG5wKTsKKwlpZiAocmV0KSB7CisJCXByX2NyaXQoIiVzOiBGYWlsZWQgdG8g
+aW5pdGlhbGl6ZSBPU1QgY2xvY2tzOiAlZFxuIiwgX19mdW5jX18sIHJldCk7CisJCXJldHVybiBy
+ZXQ7CisJfQorCisJb2Zfbm9kZV9jbGVhcl9mbGFnKG5wLCBPRl9QT1BVTEFURUQpOworCisJb3N0
+ID0gaW5nZW5pY19vc3Q7CisJaWYgKElTX0VSUihvc3QpKQorCQlyZXR1cm4gUFRSX0VSUihvc3Qp
+OworCisJcmV0ID0gaW5nZW5pY19vc3RfZ2xvYmFsX3RpbWVyX2luaXQobnAsIG9zdCk7CisJaWYg
+KHJldCkgeworCQlwcl9jcml0KCIlczogVW5hYmxlIHRvIGluaXQgZ2xvYmFsIHRpbWVyOiAleFxu
+IiwgX19mdW5jX18sIHJldCk7CisJCWdvdG8gZXJyX2ZyZWVfaW5nZW5pY19vc3Q7CisJfQorCisJ
+cmV0ID0gaW5nZW5pY19vc3RfcGVyY3B1X3RpbWVyX2luaXQobnAsIG9zdCk7CisJaWYgKHJldCkK
+KwkJZ290byBlcnJfb3N0X2dsb2JhbF90aW1lcl9jbGVhbnVwOworCisJLyogUmVnaXN0ZXIgdGhl
+IHNjaGVkX2Nsb2NrIGF0IHRoZSBlbmQgYXMgdGhlcmUncyBubyB3YXkgdG8gdW5kbyBpdCAqLwor
+CXJhdGUgPSBjbGtfZ2V0X3JhdGUob3N0LT5nbG9iYWxfdGltZXJfY2xrKTsKKwlzY2hlZF9jbG9j
+a19yZWdpc3RlcihpbmdlbmljX29zdF9nbG9iYWxfdGltZXJfcmVhZF9jbnRsLCAzMiwgcmF0ZSk7
+CisKKwlyZXR1cm4gMDsKKworZXJyX29zdF9nbG9iYWxfdGltZXJfY2xlYW51cDoKKwljbG9ja3Nv
+dXJjZV91bnJlZ2lzdGVyKCZvc3QtPmNzKTsKKwljbGtfZGlzYWJsZV91bnByZXBhcmUob3N0LT5n
+bG9iYWxfdGltZXJfY2xrKTsKKwljbGtfcHV0KG9zdC0+Z2xvYmFsX3RpbWVyX2Nsayk7CitlcnJf
+ZnJlZV9pbmdlbmljX29zdDoKKwlrZnJlZShvc3QpOworCXJldHVybiByZXQ7Cit9CisKK1RJTUVS
+X09GX0RFQ0xBUkUoeDEwMDBfb3N0LCAgImluZ2VuaWMseDEwMDAtb3N0IiwgIGluZ2VuaWNfb3N0
+X2luaXQpOwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbG9ja3NvdXJjZS9pbmdlbmljLXRpbWVyLmMg
+Yi9kcml2ZXJzL2Nsb2Nrc291cmNlL2luZ2VuaWMtdGltZXIuYwppbmRleCA0OTYzMzM2NTBkZTIu
+LjU4ZmQ5MTg5ZmFiNyAxMDA2NDQKLS0tIGEvZHJpdmVycy9jbG9ja3NvdXJjZS9pbmdlbmljLXRp
+bWVyLmMKKysrIGIvZHJpdmVycy9jbG9ja3NvdXJjZS9pbmdlbmljLXRpbWVyLmMKQEAgLTEsNyAr
+MSw4IEBACiAvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMAogLyoKLSAqIEpaNDd4
+eCBTb0NzIFRDVSBJUlEgZHJpdmVyCisgKiBJbmdlbmljIFNvQ3MgVENVIElSUSBkcml2ZXIKICAq
+IENvcHlyaWdodCAoQykgMjAxOSBQYXVsIENlcmN1ZWlsIDxwYXVsQGNyYXBvdWlsbG91Lm5ldD4K
+KyAqIENvcHlyaWdodCAoQykgMjAyMCDlkajnkLDmnbAgKFpob3UgWWFuamllKSA8emhvdXlhbmpp
+ZUB3YW55ZWV0ZWNoLmNvbT4KICAqLwogCiAjaW5jbHVkZSA8bGludXgvYml0b3BzLmg+CkBAIC0x
+NSwyNCArMTYsMzUgQEAKICNpbmNsdWRlIDxsaW51eC9vZl9hZGRyZXNzLmg+CiAjaW5jbHVkZSA8
+bGludXgvb2ZfaXJxLmg+CiAjaW5jbHVkZSA8bGludXgvb2ZfcGxhdGZvcm0uaD4KKyNpbmNsdWRl
+IDxsaW51eC9vdmVyZmxvdy5oPgogI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPgog
+I2luY2x1ZGUgPGxpbnV4L3JlZ21hcC5oPgogI2luY2x1ZGUgPGxpbnV4L3NjaGVkX2Nsb2NrLmg+
+CiAKICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9jbG9jay9pbmdlbmljLHRjdS5oPgogCitzdGF0aWMg
+REVGSU5FX1BFUl9DUFUoY2FsbF9zaW5nbGVfZGF0YV90LCBpbmdlbmljX2NldnRfY3NkKTsKKwog
+c3RydWN0IGluZ2VuaWNfc29jX2luZm8gewogCXVuc2lnbmVkIGludCBudW1fY2hhbm5lbHM7CiB9
+OwogCitzdHJ1Y3QgaW5nZW5pY190Y3VfdGltZXIgeworCXVuc2lnbmVkIGludCBjcHU7CisJdW5z
+aWduZWQgaW50IGNoYW5uZWw7CisJc3RydWN0IGNsb2NrX2V2ZW50X2RldmljZSBjZXZ0OworCXN0
+cnVjdCBjbGsgKmNsazsKKwljaGFyIG5hbWVbOF07Cit9OworCiBzdHJ1Y3QgaW5nZW5pY190Y3Ug
+ewogCXN0cnVjdCByZWdtYXAgKm1hcDsKLQlzdHJ1Y3QgY2xrICp0aW1lcl9jbGssICpjc19jbGs7
+Ci0JdW5zaWduZWQgaW50IHRpbWVyX2NoYW5uZWwsIGNzX2NoYW5uZWw7Ci0Jc3RydWN0IGNsb2Nr
+X2V2ZW50X2RldmljZSBjZXZ0OworCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnA7CisJc3RydWN0IGNs
+ayAqY3NfY2xrOworCXVuc2lnbmVkIGludCBjc19jaGFubmVsOwogCXN0cnVjdCBjbG9ja3NvdXJj
+ZSBjczsKLQljaGFyIG5hbWVbNF07CiAJdW5zaWduZWQgbG9uZyBwd21fY2hhbm5lbHNfbWFzazsK
+KwlzdHJ1Y3QgaW5nZW5pY190Y3VfdGltZXIgdGltZXJzW107CiB9OwogCiBzdGF0aWMgc3RydWN0
+IGluZ2VuaWNfdGN1ICppbmdlbmljX3RjdTsKQEAgLTUyLDE2ICs2NCwyNCBAQCBzdGF0aWMgdTY0
+IG5vdHJhY2UgaW5nZW5pY190Y3VfdGltZXJfY3NfcmVhZChzdHJ1Y3QgY2xvY2tzb3VyY2UgKmNz
+KQogCXJldHVybiBpbmdlbmljX3RjdV90aW1lcl9yZWFkKCk7CiB9CiAKLXN0YXRpYyBpbmxpbmUg
+c3RydWN0IGluZ2VuaWNfdGN1ICp0b19pbmdlbmljX3RjdShzdHJ1Y3QgY2xvY2tfZXZlbnRfZGV2
+aWNlICpldnQpCitzdGF0aWMgaW5saW5lIHN0cnVjdCBpbmdlbmljX3RjdSAqCit0b19pbmdlbmlj
+X3RjdShzdHJ1Y3QgaW5nZW5pY190Y3VfdGltZXIgKnRpbWVyKQoreworCXJldHVybiBjb250YWlu
+ZXJfb2YodGltZXIsIHN0cnVjdCBpbmdlbmljX3RjdSwgdGltZXJzW3RpbWVyLT5jcHVdKTsKK30K
+Kworc3RhdGljIGlubGluZSBzdHJ1Y3QgaW5nZW5pY190Y3VfdGltZXIgKgordG9faW5nZW5pY190
+Y3VfdGltZXIoc3RydWN0IGNsb2NrX2V2ZW50X2RldmljZSAqZXZ0KQogewotCXJldHVybiBjb250
+YWluZXJfb2YoZXZ0LCBzdHJ1Y3QgaW5nZW5pY190Y3UsIGNldnQpOworCXJldHVybiBjb250YWlu
+ZXJfb2YoZXZ0LCBzdHJ1Y3QgaW5nZW5pY190Y3VfdGltZXIsIGNldnQpOwogfQogCiBzdGF0aWMg
+aW50IGluZ2VuaWNfdGN1X2NldnRfc2V0X3N0YXRlX3NodXRkb3duKHN0cnVjdCBjbG9ja19ldmVu
+dF9kZXZpY2UgKmV2dCkKIHsKLQlzdHJ1Y3QgaW5nZW5pY190Y3UgKnRjdSA9IHRvX2luZ2VuaWNf
+dGN1KGV2dCk7CisJc3RydWN0IGluZ2VuaWNfdGN1X3RpbWVyICp0aW1lciA9IHRvX2luZ2VuaWNf
+dGN1X3RpbWVyKGV2dCk7CisJc3RydWN0IGluZ2VuaWNfdGN1ICp0Y3UgPSB0b19pbmdlbmljX3Rj
+dSh0aW1lcik7CiAKLQlyZWdtYXBfd3JpdGUodGN1LT5tYXAsIFRDVV9SRUdfVEVDUiwgQklUKHRj
+dS0+dGltZXJfY2hhbm5lbCkpOworCXJlZ21hcF93cml0ZSh0Y3UtPm1hcCwgVENVX1JFR19URUNS
+LCBCSVQodGltZXItPmNoYW5uZWwpKTsKIAogCXJldHVybiAwOwogfQpAQCAtNjksMjcgKzg5LDQw
+IEBAIHN0YXRpYyBpbnQgaW5nZW5pY190Y3VfY2V2dF9zZXRfc3RhdGVfc2h1dGRvd24oc3RydWN0
+IGNsb2NrX2V2ZW50X2RldmljZSAqZXZ0KQogc3RhdGljIGludCBpbmdlbmljX3RjdV9jZXZ0X3Nl
+dF9uZXh0KHVuc2lnbmVkIGxvbmcgbmV4dCwKIAkJCQkgICAgIHN0cnVjdCBjbG9ja19ldmVudF9k
+ZXZpY2UgKmV2dCkKIHsKLQlzdHJ1Y3QgaW5nZW5pY190Y3UgKnRjdSA9IHRvX2luZ2VuaWNfdGN1
+KGV2dCk7CisJc3RydWN0IGluZ2VuaWNfdGN1X3RpbWVyICp0aW1lciA9IHRvX2luZ2VuaWNfdGN1
+X3RpbWVyKGV2dCk7CisJc3RydWN0IGluZ2VuaWNfdGN1ICp0Y3UgPSB0b19pbmdlbmljX3RjdSh0
+aW1lcik7CiAKIAlpZiAobmV4dCA+IDB4ZmZmZikKIAkJcmV0dXJuIC1FSU5WQUw7CiAKLQlyZWdt
+YXBfd3JpdGUodGN1LT5tYXAsIFRDVV9SRUdfVERGUmModGN1LT50aW1lcl9jaGFubmVsKSwgbmV4
+dCk7Ci0JcmVnbWFwX3dyaXRlKHRjdS0+bWFwLCBUQ1VfUkVHX1RDTlRjKHRjdS0+dGltZXJfY2hh
+bm5lbCksIDApOwotCXJlZ21hcF93cml0ZSh0Y3UtPm1hcCwgVENVX1JFR19URVNSLCBCSVQodGN1
+LT50aW1lcl9jaGFubmVsKSk7CisJcmVnbWFwX3dyaXRlKHRjdS0+bWFwLCBUQ1VfUkVHX1RERlJj
+KHRpbWVyLT5jaGFubmVsKSwgbmV4dCk7CisJcmVnbWFwX3dyaXRlKHRjdS0+bWFwLCBUQ1VfUkVH
+X1RDTlRjKHRpbWVyLT5jaGFubmVsKSwgMCk7CisJcmVnbWFwX3dyaXRlKHRjdS0+bWFwLCBUQ1Vf
+UkVHX1RFU1IsIEJJVCh0aW1lci0+Y2hhbm5lbCkpOwogCiAJcmV0dXJuIDA7CiB9CiAKK3N0YXRp
+YyB2b2lkIGluZ2VuaWNfcGVyX2NwdV9ldmVudF9oYW5kbGVyKHZvaWQgKmluZm8pCit7CisJc3Ry
+dWN0IGNsb2NrX2V2ZW50X2RldmljZSAqY2V2dCA9IChzdHJ1Y3QgY2xvY2tfZXZlbnRfZGV2aWNl
+ICopIGluZm87CisKKwljZXZ0LT5ldmVudF9oYW5kbGVyKGNldnQpOworfQorCiBzdGF0aWMgaXJx
+cmV0dXJuX3QgaW5nZW5pY190Y3VfY2V2dF9jYihpbnQgaXJxLCB2b2lkICpkZXZfaWQpCiB7Ci0J
+c3RydWN0IGNsb2NrX2V2ZW50X2RldmljZSAqZXZ0ID0gZGV2X2lkOwotCXN0cnVjdCBpbmdlbmlj
+X3RjdSAqdGN1ID0gdG9faW5nZW5pY190Y3UoZXZ0KTsKKwlzdHJ1Y3QgaW5nZW5pY190Y3VfdGlt
+ZXIgKnRpbWVyID0gZGV2X2lkOworCXN0cnVjdCBpbmdlbmljX3RjdSAqdGN1ID0gdG9faW5nZW5p
+Y190Y3UodGltZXIpOworCWNhbGxfc2luZ2xlX2RhdGFfdCAqY3NkOwogCi0JcmVnbWFwX3dyaXRl
+KHRjdS0+bWFwLCBUQ1VfUkVHX1RFQ1IsIEJJVCh0Y3UtPnRpbWVyX2NoYW5uZWwpKTsKKwlyZWdt
+YXBfd3JpdGUodGN1LT5tYXAsIFRDVV9SRUdfVEVDUiwgQklUKHRpbWVyLT5jaGFubmVsKSk7CiAK
+LQlpZiAoZXZ0LT5ldmVudF9oYW5kbGVyKQotCQlldnQtPmV2ZW50X2hhbmRsZXIoZXZ0KTsKKwlp
+ZiAodGltZXItPmNldnQuZXZlbnRfaGFuZGxlcikgeworCQljc2QgPSAmcGVyX2NwdShpbmdlbmlj
+X2NldnRfY3NkLCB0aW1lci0+Y3B1KTsKKwkJY3NkLT5pbmZvID0gKHZvaWQgKikgJnRpbWVyLT5j
+ZXZ0OworCQljc2QtPmZ1bmMgPSBpbmdlbmljX3Blcl9jcHVfZXZlbnRfaGFuZGxlcjsKKwkJc21w
+X2NhbGxfZnVuY3Rpb25fc2luZ2xlX2FzeW5jKHRpbWVyLT5jcHUsIGNzZCk7CisJfQogCiAJcmV0
+dXJuIElSUV9IQU5ETEVEOwogfQpAQCAtMTA1LDY0ICsxMzgsNjYgQEAgc3RhdGljIHN0cnVjdCBj
+bGsgKiBfX2luaXQgaW5nZW5pY190Y3VfZ2V0X2Nsb2NrKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAs
+IGludCBpZCkKIAlyZXR1cm4gb2ZfY2xrX2dldF9mcm9tX3Byb3ZpZGVyKCZhcmdzKTsKIH0KIAot
+c3RhdGljIGludCBfX2luaXQgaW5nZW5pY190Y3VfdGltZXJfaW5pdChzdHJ1Y3QgZGV2aWNlX25v
+ZGUgKm5wLAotCQkJCQkgc3RydWN0IGluZ2VuaWNfdGN1ICp0Y3UpCitzdGF0aWMgaW50IGluZ2Vu
+aWNfdGN1X3NldHVwX2NldnQodW5zaWduZWQgaW50IGNwdSkKIHsKLQl1bnNpZ25lZCBpbnQgdGlt
+ZXJfdmlycSwgY2hhbm5lbCA9IHRjdS0+dGltZXJfY2hhbm5lbDsKKwlzdHJ1Y3QgaW5nZW5pY190
+Y3UgKnRjdSA9IGluZ2VuaWNfdGN1OworCXN0cnVjdCBpbmdlbmljX3RjdV90aW1lciAqdGltZXIg
+PSAmdGN1LT50aW1lcnNbY3B1XTsKKwl1bnNpZ25lZCBpbnQgdGltZXJfdmlycTsKIAlzdHJ1Y3Qg
+aXJxX2RvbWFpbiAqZG9tYWluOwogCXVuc2lnbmVkIGxvbmcgcmF0ZTsKIAlpbnQgZXJyOwogCi0J
+dGN1LT50aW1lcl9jbGsgPSBpbmdlbmljX3RjdV9nZXRfY2xvY2sobnAsIGNoYW5uZWwpOwotCWlm
+IChJU19FUlIodGN1LT50aW1lcl9jbGspKQotCQlyZXR1cm4gUFRSX0VSUih0Y3UtPnRpbWVyX2Ns
+ayk7CisJdGltZXItPmNsayA9IGluZ2VuaWNfdGN1X2dldF9jbG9jayh0Y3UtPm5wLCB0aW1lci0+
+Y2hhbm5lbCk7CisJaWYgKElTX0VSUih0aW1lci0+Y2xrKSkKKwkJcmV0dXJuIFBUUl9FUlIodGlt
+ZXItPmNsayk7CiAKLQllcnIgPSBjbGtfcHJlcGFyZV9lbmFibGUodGN1LT50aW1lcl9jbGspOwor
+CWVyciA9IGNsa19wcmVwYXJlX2VuYWJsZSh0aW1lci0+Y2xrKTsKIAlpZiAoZXJyKQogCQlnb3Rv
+IGVycl9jbGtfcHV0OwogCi0JcmF0ZSA9IGNsa19nZXRfcmF0ZSh0Y3UtPnRpbWVyX2Nsayk7CisJ
+cmF0ZSA9IGNsa19nZXRfcmF0ZSh0aW1lci0+Y2xrKTsKIAlpZiAoIXJhdGUpIHsKIAkJZXJyID0g
+LUVJTlZBTDsKIAkJZ290byBlcnJfY2xrX2Rpc2FibGU7CiAJfQogCi0JZG9tYWluID0gaXJxX2Zp
+bmRfaG9zdChucCk7CisJZG9tYWluID0gaXJxX2ZpbmRfaG9zdCh0Y3UtPm5wKTsKIAlpZiAoIWRv
+bWFpbikgewogCQllcnIgPSAtRU5PREVWOwogCQlnb3RvIGVycl9jbGtfZGlzYWJsZTsKIAl9CiAK
+LQl0aW1lcl92aXJxID0gaXJxX2NyZWF0ZV9tYXBwaW5nKGRvbWFpbiwgY2hhbm5lbCk7CisJdGlt
+ZXJfdmlycSA9IGlycV9jcmVhdGVfbWFwcGluZyhkb21haW4sIHRpbWVyLT5jaGFubmVsKTsKIAlp
+ZiAoIXRpbWVyX3ZpcnEpIHsKIAkJZXJyID0gLUVJTlZBTDsKIAkJZ290byBlcnJfY2xrX2Rpc2Fi
+bGU7CiAJfQogCi0Jc25wcmludGYodGN1LT5uYW1lLCBzaXplb2YodGN1LT5uYW1lKSwgIlRDVSIp
+OworCXNucHJpbnRmKHRpbWVyLT5uYW1lLCBzaXplb2YodGltZXItPm5hbWUpLCAiVENVJXUiLCB0
+aW1lci0+Y2hhbm5lbCk7CiAKIAllcnIgPSByZXF1ZXN0X2lycSh0aW1lcl92aXJxLCBpbmdlbmlj
+X3RjdV9jZXZ0X2NiLCBJUlFGX1RJTUVSLAotCQkJICB0Y3UtPm5hbWUsICZ0Y3UtPmNldnQpOwor
+CQkJICB0aW1lci0+bmFtZSwgdGltZXIpOwogCWlmIChlcnIpCiAJCWdvdG8gZXJyX2lycV9kaXNw
+b3NlX21hcHBpbmc7CiAKLQl0Y3UtPmNldnQuY3B1bWFzayA9IGNwdW1hc2tfb2Yoc21wX3Byb2Nl
+c3Nvcl9pZCgpKTsKLQl0Y3UtPmNldnQuZmVhdHVyZXMgPSBDTE9DS19FVlRfRkVBVF9PTkVTSE9U
+OwotCXRjdS0+Y2V2dC5uYW1lID0gdGN1LT5uYW1lOwotCXRjdS0+Y2V2dC5yYXRpbmcgPSAyMDA7
+Ci0JdGN1LT5jZXZ0LnNldF9zdGF0ZV9zaHV0ZG93biA9IGluZ2VuaWNfdGN1X2NldnRfc2V0X3N0
+YXRlX3NodXRkb3duOwotCXRjdS0+Y2V2dC5zZXRfbmV4dF9ldmVudCA9IGluZ2VuaWNfdGN1X2Nl
+dnRfc2V0X25leHQ7CisJdGltZXItPmNwdSA9IHNtcF9wcm9jZXNzb3JfaWQoKTsKKwl0aW1lci0+
+Y2V2dC5jcHVtYXNrID0gY3B1bWFza19vZihzbXBfcHJvY2Vzc29yX2lkKCkpOworCXRpbWVyLT5j
+ZXZ0LmZlYXR1cmVzID0gQ0xPQ0tfRVZUX0ZFQVRfT05FU0hPVDsKKwl0aW1lci0+Y2V2dC5uYW1l
+ID0gdGltZXItPm5hbWU7CisJdGltZXItPmNldnQucmF0aW5nID0gMjAwOworCXRpbWVyLT5jZXZ0
+LnNldF9zdGF0ZV9zaHV0ZG93biA9IGluZ2VuaWNfdGN1X2NldnRfc2V0X3N0YXRlX3NodXRkb3du
+OworCXRpbWVyLT5jZXZ0LnNldF9uZXh0X2V2ZW50ID0gaW5nZW5pY190Y3VfY2V2dF9zZXRfbmV4
+dDsKIAotCWNsb2NrZXZlbnRzX2NvbmZpZ19hbmRfcmVnaXN0ZXIoJnRjdS0+Y2V2dCwgcmF0ZSwg
+MTAsIDB4ZmZmZik7CisJY2xvY2tldmVudHNfY29uZmlnX2FuZF9yZWdpc3RlcigmdGltZXItPmNl
+dnQsIHJhdGUsIDEwLCAweGZmZmYpOwogCiAJcmV0dXJuIDA7CiAKIGVycl9pcnFfZGlzcG9zZV9t
+YXBwaW5nOgogCWlycV9kaXNwb3NlX21hcHBpbmcodGltZXJfdmlycSk7CiBlcnJfY2xrX2Rpc2Fi
+bGU6Ci0JY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHRjdS0+dGltZXJfY2xrKTsKKwljbGtfZGlzYWJs
+ZV91bnByZXBhcmUodGltZXItPmNsayk7CiBlcnJfY2xrX3B1dDoKLQljbGtfcHV0KHRjdS0+dGlt
+ZXJfY2xrKTsKKwljbGtfcHV0KHRpbWVyLT5jbGspOwogCXJldHVybiBlcnI7CiB9CiAKQEAgLTIz
+OCwxMCArMjczLDEyIEBAIHN0YXRpYyBpbnQgX19pbml0IGluZ2VuaWNfdGN1X2luaXQoc3RydWN0
+IGRldmljZV9ub2RlICpucCkKIHsKIAljb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkICppZCA9IG9m
+X21hdGNoX25vZGUoaW5nZW5pY190Y3Vfb2ZfbWF0Y2gsIG5wKTsKIAljb25zdCBzdHJ1Y3QgaW5n
+ZW5pY19zb2NfaW5mbyAqc29jX2luZm8gPSBpZC0+ZGF0YTsKKwlzdHJ1Y3QgaW5nZW5pY190Y3Vf
+dGltZXIgKnRpbWVyOwogCXN0cnVjdCBpbmdlbmljX3RjdSAqdGN1OwogCXN0cnVjdCByZWdtYXAg
+Km1hcDsKKwl1bnNpZ25lZCBpbnQgY3B1OworCWludCByZXQsIGxhc3RfYml0ID0gLTE7CiAJbG9u
+ZyByYXRlOwotCWludCByZXQ7CiAKIAlvZl9ub2RlX2NsZWFyX2ZsYWcobnAsIE9GX1BPUFVMQVRF
+RCk7CiAKQEAgLTI0OSwxNyArMjg2LDIzIEBAIHN0YXRpYyBpbnQgX19pbml0IGluZ2VuaWNfdGN1
+X2luaXQoc3RydWN0IGRldmljZV9ub2RlICpucCkKIAlpZiAoSVNfRVJSKG1hcCkpCiAJCXJldHVy
+biBQVFJfRVJSKG1hcCk7CiAKLQl0Y3UgPSBremFsbG9jKHNpemVvZigqdGN1KSwgR0ZQX0tFUk5F
+TCk7CisJdGN1ID0ga3phbGxvYyhzdHJ1Y3Rfc2l6ZSh0Y3UsIHRpbWVycywgbnVtX3Bvc3NpYmxl
+X2NwdXMoKSksCisJCSAgICAgIEdGUF9LRVJORUwpOwogCWlmICghdGN1KQogCQlyZXR1cm4gLUVO
+T01FTTsKIAotCS8qIEVuYWJsZSBhbGwgVENVIGNoYW5uZWxzIGZvciBQV00gdXNlIGJ5IGRlZmF1
+bHQgZXhjZXB0IGNoYW5uZWxzIDAvMSAqLwotCXRjdS0+cHdtX2NoYW5uZWxzX21hc2sgPSBHRU5N
+QVNLKHNvY19pbmZvLT5udW1fY2hhbm5lbHMgLSAxLCAyKTsKKwkvKgorCSAqIEVuYWJsZSBhbGwg
+VENVIGNoYW5uZWxzIGZvciBQV00gdXNlIGJ5IGRlZmF1bHQgZXhjZXB0IGNoYW5uZWxzIDAvMSwK
+KwkgKiBhbmQgY2hhbm5lbCAyIGlmIHRhcmdldCBDUFUgaXMgSlo0NzgwL1gyMDAwIGFuZCBTTVAg
+aXMgc2VsZWN0ZWQuCisJICovCisJdGN1LT5wd21fY2hhbm5lbHNfbWFzayA9IEdFTk1BU0soc29j
+X2luZm8tPm51bV9jaGFubmVscyAtIDEsCisJCQkJCSBudW1fcG9zc2libGVfY3B1cygpICsgMSk7
+CiAJb2ZfcHJvcGVydHlfcmVhZF91MzIobnAsICJpbmdlbmljLHB3bS1jaGFubmVscy1tYXNrIiwK
+IAkJCSAgICAgKHUzMiAqKSZ0Y3UtPnB3bV9jaGFubmVsc19tYXNrKTsKIAotCS8qIFZlcmlmeSB0
+aGF0IHdlIGhhdmUgYXQgbGVhc3QgdHdvIGZyZWUgY2hhbm5lbHMgKi8KLQlpZiAoaHdlaWdodDgo
+dGN1LT5wd21fY2hhbm5lbHNfbWFzaykgPiBzb2NfaW5mby0+bnVtX2NoYW5uZWxzIC0gMikgewor
+CS8qIFZlcmlmeSB0aGF0IHdlIGhhdmUgYXQgbGVhc3QgbnVtX3Bvc3NpYmxlX2NwdXMoKSArIDEg
+ZnJlZSBjaGFubmVscyAqLworCWlmIChod2VpZ2h0OCh0Y3UtPnB3bV9jaGFubmVsc19tYXNrKSA+
+CisJCQlzb2NfaW5mby0+bnVtX2NoYW5uZWxzIC0gbnVtX3Bvc3NpYmxlX2NwdXMoKSArIDEpIHsK
+IAkJcHJfY3JpdCgiJXM6IEludmFsaWQgUFdNIGNoYW5uZWwgbWFzazogMHglMDJseFxuIiwgX19m
+dW5jX18sCiAJCQl0Y3UtPnB3bV9jaGFubmVsc19tYXNrKTsKIAkJcmV0ID0gLUVJTlZBTDsKQEAg
+LTI2NywxMyArMzEwLDIyIEBAIHN0YXRpYyBpbnQgX19pbml0IGluZ2VuaWNfdGN1X2luaXQoc3Ry
+dWN0IGRldmljZV9ub2RlICpucCkKIAl9CiAKIAl0Y3UtPm1hcCA9IG1hcDsKKwl0Y3UtPm5wID0g
+bnA7CiAJaW5nZW5pY190Y3UgPSB0Y3U7CiAKLQl0Y3UtPnRpbWVyX2NoYW5uZWwgPSBmaW5kX2Zp
+cnN0X3plcm9fYml0KCZ0Y3UtPnB3bV9jaGFubmVsc19tYXNrLAotCQkJCQkJIHNvY19pbmZvLT5u
+dW1fY2hhbm5lbHMpOworCWZvciAoY3B1ID0gMDsgY3B1IDwgbnVtX3Bvc3NpYmxlX2NwdXMoKTsg
+Y3B1KyspIHsKKwkJdGltZXIgPSAmdGN1LT50aW1lcnNbY3B1XTsKKworCQl0aW1lci0+Y3B1ID0g
+Y3B1OworCQl0aW1lci0+Y2hhbm5lbCA9IGZpbmRfbmV4dF96ZXJvX2JpdCgmdGN1LT5wd21fY2hh
+bm5lbHNfbWFzaywKKwkJCQkJCSAgc29jX2luZm8tPm51bV9jaGFubmVscywKKwkJCQkJCSAgbGFz
+dF9iaXQgKyAxKTsKKwkJbGFzdF9iaXQgPSB0aW1lci0+Y2hhbm5lbDsKKwl9CisKIAl0Y3UtPmNz
+X2NoYW5uZWwgPSBmaW5kX25leHRfemVyb19iaXQoJnRjdS0+cHdtX2NoYW5uZWxzX21hc2ssCiAJ
+CQkJCSAgICAgc29jX2luZm8tPm51bV9jaGFubmVscywKLQkJCQkJICAgICB0Y3UtPnRpbWVyX2No
+YW5uZWwgKyAxKTsKKwkJCQkJICAgICBsYXN0X2JpdCArIDEpOwogCiAJcmV0ID0gaW5nZW5pY190
+Y3VfY2xvY2tzb3VyY2VfaW5pdChucCwgdGN1KTsKIAlpZiAocmV0KSB7CkBAIC0yODEsOSArMzMz
+LDEzIEBAIHN0YXRpYyBpbnQgX19pbml0IGluZ2VuaWNfdGN1X2luaXQoc3RydWN0IGRldmljZV9u
+b2RlICpucCkKIAkJZ290byBlcnJfZnJlZV9pbmdlbmljX3RjdTsKIAl9CiAKLQlyZXQgPSBpbmdl
+bmljX3RjdV90aW1lcl9pbml0KG5wLCB0Y3UpOwotCWlmIChyZXQpCisJLyogU2V0dXAgY2xvY2sg
+ZXZlbnRzIG9uIGVhY2ggQ1BVIGNvcmUgKi8KKwlyZXQgPSBjcHVocF9zZXR1cF9zdGF0ZShDUFVI
+UF9BUF9PTkxJTkVfRFlOLCAiSW5nZW5pYyBYQnVyc3Q6IG9ubGluZSIsCisJCQkJaW5nZW5pY190
+Y3Vfc2V0dXBfY2V2dCwgTlVMTCk7CisJaWYgKHJldCA8IDApIHsKKwkJcHJfY3JpdCgiJXM6IFVu
+YWJsZSB0byBzdGFydCBDUFUgdGltZXJzOiAlZFxuIiwgX19mdW5jX18sIHJldCk7CiAJCWdvdG8g
+ZXJyX3RjdV9jbG9ja3NvdXJjZV9jbGVhbnVwOworCX0KIAogCS8qIFJlZ2lzdGVyIHRoZSBzY2hl
+ZF9jbG9jayBhdCB0aGUgZW5kIGFzIHRoZXJlJ3Mgbm8gd2F5IHRvIHVuZG8gaXQgKi8KIAlyYXRl
+ID0gY2xrX2dldF9yYXRlKHRjdS0+Y3NfY2xrKTsKQEAgLTMxNSwyOCArMzcxLDM4IEBAIHN0YXRp
+YyBpbnQgX19pbml0IGluZ2VuaWNfdGN1X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBk
+ZXYpCiBzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGluZ2VuaWNfdGN1X3N1c3BlbmQoc3RydWN0
+IGRldmljZSAqZGV2KQogewogCXN0cnVjdCBpbmdlbmljX3RjdSAqdGN1ID0gZGV2X2dldF9kcnZk
+YXRhKGRldik7CisJdW5zaWduZWQgaW50IGNwdTsKIAogCWNsa19kaXNhYmxlKHRjdS0+Y3NfY2xr
+KTsKLQljbGtfZGlzYWJsZSh0Y3UtPnRpbWVyX2Nsayk7CisKKwlmb3IgKGNwdSA9IDA7IGNwdSA8
+IG51bV9vbmxpbmVfY3B1cygpOyBjcHUrKykKKwkJY2xrX2Rpc2FibGUodGN1LT50aW1lcnNbY3B1
+XS5jbGspOworCiAJcmV0dXJuIDA7CiB9CiAKIHN0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgaW5n
+ZW5pY190Y3VfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikKIHsKIAlzdHJ1Y3QgaW5nZW5pY190
+Y3UgKnRjdSA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOworCXVuc2lnbmVkIGludCBjcHU7CiAJaW50
+IHJldDsKIAotCXJldCA9IGNsa19lbmFibGUodGN1LT50aW1lcl9jbGspOwotCWlmIChyZXQpCi0J
+CXJldHVybiByZXQ7CisJZm9yIChjcHUgPSAwOyBjcHUgPCBudW1fb25saW5lX2NwdXMoKTsgY3B1
+KyspIHsKKwkJcmV0ID0gY2xrX2VuYWJsZSh0Y3UtPnRpbWVyc1tjcHVdLmNsayk7CisJCWlmIChy
+ZXQpCisJCQlnb3RvIGVycl90aW1lcl9jbGtfZGlzYWJsZTsKKwl9CiAKIAlyZXQgPSBjbGtfZW5h
+YmxlKHRjdS0+Y3NfY2xrKTsKLQlpZiAocmV0KSB7Ci0JCWNsa19kaXNhYmxlKHRjdS0+dGltZXJf
+Y2xrKTsKLQkJcmV0dXJuIHJldDsKLQl9CisJaWYgKHJldCkKKwkJZ290byBlcnJfdGltZXJfY2xr
+X2Rpc2FibGU7CiAKIAlyZXR1cm4gMDsKKworZXJyX3RpbWVyX2Nsa19kaXNhYmxlOgorCWZvciAo
+OyBjcHUgPiAwOyBjcHUtLSkKKwkJY2xrX2Rpc2FibGUodGN1LT50aW1lcnNbY3B1IC0gMV0uY2xr
+KTsKKwlyZXR1cm4gcmV0OwogfQogCiBzdGF0aWMgY29uc3Qgc3RydWN0IGRldl9wbV9vcHMgX19t
+YXliZV91bnVzZWQgaW5nZW5pY190Y3VfcG1fb3BzID0gewpkaWZmIC0tZ2l0IGEvZHJpdmVycy9j
+bG9ja3NvdXJjZS9ub21hZGlrLW10dS5jIGIvZHJpdmVycy9jbG9ja3NvdXJjZS9ub21hZGlrLW10
+dS5jCmluZGV4IGY0OWE2MzFkOGY1OC4uMWNmMzMwNDY1MmQ2IDEwMDY0NAotLS0gYS9kcml2ZXJz
+L2Nsb2Nrc291cmNlL25vbWFkaWstbXR1LmMKKysrIGIvZHJpdmVycy9jbG9ja3NvdXJjZS9ub21h
+ZGlrLW10dS5jCkBAIC0xODYsNiArMTg2LDcgQEAgc3RhdGljIGludCBfX2luaXQgbm1ka190aW1l
+cl9pbml0KHZvaWQgX19pb21lbSAqYmFzZSwgaW50IGlycSwKIHsKIAl1bnNpZ25lZCBsb25nIHJh
+dGU7CiAJaW50IHJldDsKKwlpbnQgbWluX3RpY2tzOwogCiAJbXR1X2Jhc2UgPSBiYXNlOwogCkBA
+IC0xOTQsNyArMTk1LDggQEAgc3RhdGljIGludCBfX2luaXQgbm1ka190aW1lcl9pbml0KHZvaWQg
+X19pb21lbSAqYmFzZSwgaW50IGlycSwKIAogCS8qCiAJICogVGljayByYXRlIGlzIDIuNE1IeiBm
+b3IgTm9tYWRpayBhbmQgMi40TWh6LCAxMDBNSHogb3IgMTMzIE1IegotCSAqIGZvciB1eDUwMC4K
+KwkgKiBmb3IgdXg1MDAsIGFuZCBpbiBvbmUgc3BlY2lmaWMgVXg1MDAgY2FzZSAzMjc2OCBIei4K
+KwkgKgogCSAqIFVzZSBhIGRpdmlkZS1ieS0xNiBjb3VudGVyIGlmIHRoZSB0aWNrIHJhdGUgaXMg
+bW9yZSB0aGFuIDMyTUh6LgogCSAqIEF0IDMyIE1IeiwgdGhlIHRpbWVyICh3aXRoIDMyIGJpdCBj
+b3VudGVyKSBjYW4gYmUgcHJvZ3JhbW1lZAogCSAqIHRvIHdha2UtdXAgYXQgYSBtYXggMTI3cyBh
+IGhlYWQgaW4gdGltZS4gRGl2aWRpbmcgYSAyLjQgTUh6IHRpbWVyCkBAIC0yMzAsNyArMjMyLDEy
+IEBAIHN0YXRpYyBpbnQgX19pbml0IG5tZGtfdGltZXJfaW5pdCh2b2lkIF9faW9tZW0gKmJhc2Us
+IGludCBpcnEsCiAJCXByX2VycigiJXM6IHJlcXVlc3RfaXJxKCkgZmFpbGVkXG4iLCAiTm9tYWRp
+ayBUaW1lciBUaWNrIik7CiAJbm1ka19jbGtldnQuY3B1bWFzayA9IGNwdW1hc2tfb2YoMCk7CiAJ
+bm1ka19jbGtldnQuaXJxID0gaXJxOwotCWNsb2NrZXZlbnRzX2NvbmZpZ19hbmRfcmVnaXN0ZXIo
+Jm5tZGtfY2xrZXZ0LCByYXRlLCAyLCAweGZmZmZmZmZmVSk7CisJaWYgKHJhdGUgPCAxMDAwMDAp
+CisJCW1pbl90aWNrcyA9IDU7CisJZWxzZQorCQltaW5fdGlja3MgPSAyOworCWNsb2NrZXZlbnRz
+X2NvbmZpZ19hbmRfcmVnaXN0ZXIoJm5tZGtfY2xrZXZ0LCByYXRlLCBtaW5fdGlja3MsCisJCQkJ
+CTB4ZmZmZmZmZmZVKTsKIAogCW10dV9kZWxheV90aW1lci5yZWFkX2N1cnJlbnRfdGltZXIgPSAm
+bm1ka190aW1lcl9yZWFkX2N1cnJlbnRfdGltZXI7CiAJbXR1X2RlbGF5X3RpbWVyLmZyZXEgPSBy
+YXRlOwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbG9ja3NvdXJjZS9zaF9jbXQuYyBiL2RyaXZlcnMv
+Y2xvY2tzb3VyY2Uvc2hfY210LmMKaW5kZXggMTJhYzc1Zjc1NzFmLi43NjA3Nzc0NThhOTAgMTAw
+NjQ0Ci0tLSBhL2RyaXZlcnMvY2xvY2tzb3VyY2Uvc2hfY210LmMKKysrIGIvZHJpdmVycy9jbG9j
+a3NvdXJjZS9zaF9jbXQuYwpAQCAtMzQ5LDcgKzM0OSw3IEBAIHN0YXRpYyBpbnQgc2hfY210X2Vu
+YWJsZShzdHJ1Y3Qgc2hfY210X2NoYW5uZWwgKmNoKQogCiAJLyoKIAkgKiBBY2NvcmRpbmcgdG8g
+dGhlIHNoNzNhMCB1c2VyJ3MgbWFudWFsLCBhcyBDTUNOVCBjYW4gYmUgb3BlcmF0ZWQKLQkgKiBv
+bmx5IGJ5IHRoZSBSQ0xLIChQc2V1ZG8gMzIgS0h6KSwgdGhlcmUncyBvbmUgcmVzdHJpY3Rpb24g
+b24KKwkgKiBvbmx5IGJ5IHRoZSBSQ0xLIChQc2V1ZG8gMzIga0h6KSwgdGhlcmUncyBvbmUgcmVz
+dHJpY3Rpb24gb24KIAkgKiBtb2RpZnlpbmcgQ01DTlQgcmVnaXN0ZXI7IHR3byBSQ0xLIGN5Y2xl
+cyBhcmUgbmVjZXNzYXJ5IGJlZm9yZQogCSAqIHRoaXMgcmVnaXN0ZXIgaXMgZWl0aGVyIHJlYWQg
+b3IgYW55IG1vZGlmaWNhdGlvbiBvZiB0aGUgdmFsdWUKIAkgKiBpdCBob2xkcyBpcyByZWZsZWN0
+ZWQgaW4gdGhlIExTSSdzIGFjdHVhbCBvcGVyYXRpb24uCmRpZmYgLS1naXQgYS9kcml2ZXJzL2Ns
+b2Nrc291cmNlL3RpbWVyLWF0bWVsLXRjYi5jIGIvZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci1h
+dG1lbC10Y2IuYwppbmRleCA3NDI3YjA3NDk1YTguLjc4N2RiZWJiYjQzMiAxMDA2NDQKLS0tIGEv
+ZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci1hdG1lbC10Y2IuYworKysgYi9kcml2ZXJzL2Nsb2Nr
+c291cmNlL3RpbWVyLWF0bWVsLXRjYi5jCkBAIC0yNyw5ICsyNywxMCBAQAogICogICAtIFNvbWUg
+Y2hpcHMgc3VwcG9ydCAzMiBiaXQgY291bnRlci4gQSBzaW5nbGUgY2hhbm5lbCBpcyB1c2VkIGZv
+cgogICogICAgIHRoaXMgMzIgYml0IGZyZWUtcnVubmluZyBjb3VudGVyLiB0aGUgc2Vjb25kIGNo
+YW5uZWwgaXMgbm90IHVzZWQuCiAgKgotICogICAtIFRoZSB0aGlyZCBjaGFubmVsIG1heSBiZSB1
+c2VkIHRvIHByb3ZpZGUgYSAxNi1iaXQgY2xvY2tldmVudAotICogICAgIHNvdXJjZSwgdXNlZCBp
+biBlaXRoZXIgcGVyaW9kaWMgb3Igb25lc2hvdCBtb2RlLiAgVGhpcyBydW5zCi0gKiAgICAgYXQg
+MzIgS2lIWiwgYW5kIGNhbiBoYW5kbGUgZGVsYXlzIG9mIHVwIHRvIHR3byBzZWNvbmRzLgorICog
+ICAtIFRoZSB0aGlyZCBjaGFubmVsIG1heSBiZSB1c2VkIHRvIHByb3ZpZGUgYSBjbG9ja2V2ZW50
+IHNvdXJjZSwgdXNlZCBpbgorICogICBlaXRoZXIgcGVyaW9kaWMgb3Igb25lc2hvdCBtb2RlLiBG
+b3IgMTYtYml0IGNvdW50ZXIgaXRzIHJ1bnMgYXQgMzIgS2lIWiwKKyAqICAgYW5kIGNhbiBoYW5k
+bGUgZGVsYXlzIG9mIHVwIHRvIHR3byBzZWNvbmRzLiBGb3IgMzItYml0IGNvdW50ZXJzLCBpdCBy
+dW5zIGF0CisgKiAgIHRoZSBzYW1lIHJhdGUgYXMgdGhlIGNsb2Nrc291cmNlCiAgKgogICogUkVW
+SVNJVCBiZWhhdmlvciBkdXJpbmcgc3lzdGVtIHN1c3BlbmQgc3RhdGVzLi4uIHdlIHNob3VsZCBk
+aXNhYmxlCiAgKiBhbGwgY2xvY2tzIGFuZCBzYXZlIHRoZSBwb3dlci4gIEVhc2lseSBkb25lIGZv
+ciBjbG9ja2V2ZW50IGRldmljZXMsCkBAIC00Nyw2ICs0OCw4IEBAIHN0YXRpYyBzdHJ1Y3QKIH0g
+dGNiX2NhY2hlWzNdOwogc3RhdGljIHUzMiBibXJfY2FjaGU7CiAKK3N0YXRpYyBjb25zdCB1OCBh
+dG1lbF90Y2JfZGl2aXNvcnNbXSA9IHsgMiwgOCwgMzIsIDEyOCB9OworCiBzdGF0aWMgdTY0IHRj
+X2dldF9jeWNsZXMoc3RydWN0IGNsb2Nrc291cmNlICpjcykKIHsKIAl1bnNpZ25lZCBsb25nCWZs
+YWdzOwpAQCAtMTQzLDYgKzE0Niw3IEBAIHN0YXRpYyB1bnNpZ25lZCBsb25nIG5vdHJhY2UgdGNf
+ZGVsYXlfdGltZXJfcmVhZDMyKHZvaWQpCiBzdHJ1Y3QgdGNfY2xrZXZ0X2RldmljZSB7CiAJc3Ry
+dWN0IGNsb2NrX2V2ZW50X2RldmljZQljbGtldnQ7CiAJc3RydWN0IGNsawkJCSpjbGs7CisJdTMy
+CQkJCXJhdGU7CiAJdm9pZCBfX2lvbWVtCQkJKnJlZ3M7CiB9OwogCkBAIC0xNTEsMTMgKzE1NSw2
+IEBAIHN0YXRpYyBzdHJ1Y3QgdGNfY2xrZXZ0X2RldmljZSAqdG9fdGNfY2xrZXZ0KHN0cnVjdCBj
+bG9ja19ldmVudF9kZXZpY2UgKmNsa2V2dCkKIAlyZXR1cm4gY29udGFpbmVyX29mKGNsa2V2dCwg
+c3RydWN0IHRjX2Nsa2V2dF9kZXZpY2UsIGNsa2V2dCk7CiB9CiAKLS8qIEZvciBub3csIHdlIGFs
+d2F5cyB1c2UgdGhlIDMySyBjbG9jayAuLi4gdGhpcyBvcHRpbWl6ZXMgZm9yIE5PX0haLAotICog
+YmVjYXVzZSB1c2luZyBvbmUgb2YgdGhlIGRpdmlkZWQgY2xvY2tzIHdvdWxkIHVzdWFsbHkgbWVh
+biB0aGUKLSAqIHRpY2sgcmF0ZSBjYW4gbmV2ZXIgYmUgbGVzcyB0aGFuIHNldmVyYWwgZG96ZW4g
+SHogKHZzIDAuNSBIeikuCi0gKgotICogQSBkaXZpZGVkIGNsb2NrIGNvdWxkIGJlIGdvb2QgZm9y
+IGhpZ2ggcmVzb2x1dGlvbiB0aW1lcnMsIHNpbmNlCi0gKiAzMC41IHVzZWMgcmVzb2x1dGlvbiBj
+YW4gc2VlbSAibG93Ii4KLSAqLwogc3RhdGljIHUzMiB0aW1lcl9jbG9jazsKIAogc3RhdGljIGlu
+dCB0Y19zaHV0ZG93bihzdHJ1Y3QgY2xvY2tfZXZlbnRfZGV2aWNlICpkKQpAQCAtMTgzLDcgKzE4
+MCw3IEBAIHN0YXRpYyBpbnQgdGNfc2V0X29uZXNob3Qoc3RydWN0IGNsb2NrX2V2ZW50X2Rldmlj
+ZSAqZCkKIAogCWNsa19lbmFibGUodGNkLT5jbGspOwogCi0JLyogc2xvdyBjbG9jaywgY291bnQg
+dXAgdG8gUkMsIHRoZW4gaXJxIGFuZCBzdG9wICovCisJLyogY291bnQgdXAgdG8gUkMsIHRoZW4g
+aXJxIGFuZCBzdG9wICovCiAJd3JpdGVsKHRpbWVyX2Nsb2NrIHwgQVRNRUxfVENfQ1BDU1RPUCB8
+IEFUTUVMX1RDX1dBVkUgfAogCQkgICAgIEFUTUVMX1RDX1dBVkVTRUxfVVBfQVVUTywgcmVncyAr
+IEFUTUVMX1RDX1JFRygyLCBDTVIpKTsKIAl3cml0ZWwoQVRNRUxfVENfQ1BDUywgcmVncyArIEFU
+TUVMX1RDX1JFRygyLCBJRVIpKTsKQEAgLTIwNSwxMCArMjAyLDEwIEBAIHN0YXRpYyBpbnQgdGNf
+c2V0X3BlcmlvZGljKHN0cnVjdCBjbG9ja19ldmVudF9kZXZpY2UgKmQpCiAJICovCiAJY2xrX2Vu
+YWJsZSh0Y2QtPmNsayk7CiAKLQkvKiBzbG93IGNsb2NrLCBjb3VudCB1cCB0byBSQywgdGhlbiBp
+cnEgYW5kIHJlc3RhcnQgKi8KKwkvKiBjb3VudCB1cCB0byBSQywgdGhlbiBpcnEgYW5kIHJlc3Rh
+cnQgKi8KIAl3cml0ZWwodGltZXJfY2xvY2sgfCBBVE1FTF9UQ19XQVZFIHwgQVRNRUxfVENfV0FW
+RVNFTF9VUF9BVVRPLAogCQkgICAgIHJlZ3MgKyBBVE1FTF9UQ19SRUcoMiwgQ01SKSk7Ci0Jd3Jp
+dGVsKCgzMjc2OCArIEhaIC8gMikgLyBIWiwgdGNhZGRyICsgQVRNRUxfVENfUkVHKDIsIFJDKSk7
+CisJd3JpdGVsKCh0Y2QtPnJhdGUgKyBIWiAvIDIpIC8gSFosIHRjYWRkciArIEFUTUVMX1RDX1JF
+RygyLCBSQykpOwogCiAJLyogRW5hYmxlIGNsb2NrIGFuZCBpbnRlcnJ1cHRzIG9uIFJDIGNvbXBh
+cmUgKi8KIAl3cml0ZWwoQVRNRUxfVENfQ1BDUywgcmVncyArIEFUTUVMX1RDX1JFRygyLCBJRVIp
+KTsKQEAgLTI1Niw0NyArMjUzLDU1IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBjaDJfaXJxKGludCBp
+cnEsIHZvaWQgKmhhbmRsZSkKIAlyZXR1cm4gSVJRX05PTkU7CiB9CiAKLXN0YXRpYyBpbnQgX19p
+bml0IHNldHVwX2Nsa2V2ZW50cyhzdHJ1Y3QgYXRtZWxfdGMgKnRjLCBpbnQgY2xrMzJrX2Rpdmlz
+b3JfaWR4KQorc3RhdGljIGludCBfX2luaXQgc2V0dXBfY2xrZXZlbnRzKHN0cnVjdCBhdG1lbF90
+YyAqdGMsIGludCBkaXZpc29yX2lkeCkKIHsKIAlpbnQgcmV0OwogCXN0cnVjdCBjbGsgKnQyX2Ns
+ayA9IHRjLT5jbGtbMl07CiAJaW50IGlycSA9IHRjLT5pcnFbMl07Ci0KLQlyZXQgPSBjbGtfcHJl
+cGFyZV9lbmFibGUodGMtPnNsb3dfY2xrKTsKLQlpZiAocmV0KQotCQlyZXR1cm4gcmV0OworCWlu
+dCBiaXRzID0gdGMtPnRjYl9jb25maWctPmNvdW50ZXJfd2lkdGg7CiAKIAkvKiB0cnkgdG8gZW5h
+YmxlIHQyIGNsayB0byBhdm9pZCBmdXR1cmUgZXJyb3JzIGluIG1vZGUgY2hhbmdlICovCiAJcmV0
+ID0gY2xrX3ByZXBhcmVfZW5hYmxlKHQyX2Nsayk7Ci0JaWYgKHJldCkgewotCQljbGtfZGlzYWJs
+ZV91bnByZXBhcmUodGMtPnNsb3dfY2xrKTsKKwlpZiAocmV0KQogCQlyZXR1cm4gcmV0OwotCX0K
+LQotCWNsa19kaXNhYmxlKHQyX2Nsayk7CiAKIAljbGtldnQucmVncyA9IHRjLT5yZWdzOwogCWNs
+a2V2dC5jbGsgPSB0Ml9jbGs7CiAKLQl0aW1lcl9jbG9jayA9IGNsazMya19kaXZpc29yX2lkeDsK
+KwlpZiAoYml0cyA9PSAzMikgeworCQl0aW1lcl9jbG9jayA9IGRpdmlzb3JfaWR4OworCQljbGtl
+dnQucmF0ZSA9IGNsa19nZXRfcmF0ZSh0Ml9jbGspIC8gYXRtZWxfdGNiX2Rpdmlzb3JzW2Rpdmlz
+b3JfaWR4XTsKKwl9IGVsc2UgeworCQlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUodGMtPnNsb3df
+Y2xrKTsKKwkJaWYgKHJldCkgeworCQkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHQyX2Nsayk7CisJ
+CQlyZXR1cm4gcmV0OworCQl9CisKKwkJY2xrZXZ0LnJhdGUgPSBjbGtfZ2V0X3JhdGUodGMtPnNs
+b3dfY2xrKTsKKwkJdGltZXJfY2xvY2sgPSBBVE1FTF9UQ19USU1FUl9DTE9DSzU7CisJfQorCisJ
+Y2xrX2Rpc2FibGUodDJfY2xrKTsKIAogCWNsa2V2dC5jbGtldnQuY3B1bWFzayA9IGNwdW1hc2tf
+b2YoMCk7CiAKIAlyZXQgPSByZXF1ZXN0X2lycShpcnEsIGNoMl9pcnEsIElSUUZfVElNRVIsICJ0
+Y19jbGtldnQiLCAmY2xrZXZ0KTsKIAlpZiAocmV0KSB7CiAJCWNsa191bnByZXBhcmUodDJfY2xr
+KTsKLQkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHRjLT5zbG93X2Nsayk7CisJCWlmIChiaXRzICE9
+IDMyKQorCQkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHRjLT5zbG93X2Nsayk7CiAJCXJldHVybiBy
+ZXQ7CiAJfQogCi0JY2xvY2tldmVudHNfY29uZmlnX2FuZF9yZWdpc3RlcigmY2xrZXZ0LmNsa2V2
+dCwgMzI3NjgsIDEsIDB4ZmZmZik7CisJY2xvY2tldmVudHNfY29uZmlnX2FuZF9yZWdpc3Rlcigm
+Y2xrZXZ0LmNsa2V2dCwgY2xrZXZ0LnJhdGUsIDEsIEJJVChiaXRzKSAtIDEpOwogCiAJcmV0dXJu
+IHJldDsKIH0KIAogI2Vsc2UgLyogIUNPTkZJR19HRU5FUklDX0NMT0NLRVZFTlRTICovCiAKLXN0
+YXRpYyBpbnQgX19pbml0IHNldHVwX2Nsa2V2ZW50cyhzdHJ1Y3QgYXRtZWxfdGMgKnRjLCBpbnQg
+Y2xrMzJrX2Rpdmlzb3JfaWR4KQorc3RhdGljIGludCBfX2luaXQgc2V0dXBfY2xrZXZlbnRzKHN0
+cnVjdCBhdG1lbF90YyAqdGMsIGludCBkaXZpc29yX2lkeCkKIHsKIAkvKiBOT1RISU5HICovCiAJ
+cmV0dXJuIDA7CkBAIC0zNDYsMTEgKzM1MSwyMyBAQCBzdGF0aWMgdm9pZCBfX2luaXQgdGNiX3Nl
+dHVwX3NpbmdsZV9jaGFuKHN0cnVjdCBhdG1lbF90YyAqdGMsIGludCBtY2tfZGl2aXNvcl9pZAog
+CXdyaXRlbChBVE1FTF9UQ19TWU5DLCB0Y2FkZHIgKyBBVE1FTF9UQ19CQ1IpOwogfQogCi1zdGF0
+aWMgY29uc3QgdTggYXRtZWxfdGNiX2Rpdmlzb3JzWzVdID0geyAyLCA4LCAzMiwgMTI4LCAwLCB9
+Oworc3RhdGljIHN0cnVjdCBhdG1lbF90Y2JfY29uZmlnIHRjYl9ybTkyMDBfY29uZmlnID0gewor
+CS5jb3VudGVyX3dpZHRoID0gMTYsCit9OworCitzdGF0aWMgc3RydWN0IGF0bWVsX3RjYl9jb25m
+aWcgdGNiX3NhbTl4NV9jb25maWcgPSB7CisJLmNvdW50ZXJfd2lkdGggPSAzMiwKK307CisKK3N0
+YXRpYyBzdHJ1Y3QgYXRtZWxfdGNiX2NvbmZpZyB0Y2Jfc2FtYTVkMl9jb25maWcgPSB7CisJLmNv
+dW50ZXJfd2lkdGggPSAzMiwKKwkuaGFzX2djbGsgPSAxLAorfTsKIAogc3RhdGljIGNvbnN0IHN0
+cnVjdCBvZl9kZXZpY2VfaWQgYXRtZWxfdGNiX29mX21hdGNoW10gPSB7Ci0JeyAuY29tcGF0aWJs
+ZSA9ICJhdG1lbCxhdDkxcm05MjAwLXRjYiIsIC5kYXRhID0gKHZvaWQgKikxNiwgfSwKLQl7IC5j
+b21wYXRpYmxlID0gImF0bWVsLGF0OTFzYW05eDUtdGNiIiwgLmRhdGEgPSAodm9pZCAqKTMyLCB9
+LAorCXsgLmNvbXBhdGlibGUgPSAiYXRtZWwsYXQ5MXJtOTIwMC10Y2IiLCAuZGF0YSA9ICZ0Y2Jf
+cm05MjAwX2NvbmZpZywgfSwKKwl7IC5jb21wYXRpYmxlID0gImF0bWVsLGF0OTFzYW05eDUtdGNi
+IiwgLmRhdGEgPSAmdGNiX3NhbTl4NV9jb25maWcsIH0sCisJeyAuY29tcGF0aWJsZSA9ICJhdG1l
+bCxzYW1hNWQyLXRjYiIsIC5kYXRhID0gJnRjYl9zYW1hNWQyX2NvbmZpZywgfSwKIAl7IC8qIHNl
+bnRpbmVsICovIH0KIH07CiAKQEAgLTM2Miw3ICszNzksNiBAQCBzdGF0aWMgaW50IF9faW5pdCB0
+Y2JfY2xrc3JjX2luaXQoc3RydWN0IGRldmljZV9ub2RlICpub2RlKQogCXU2NCAoKnRjX3NjaGVk
+X2Nsb2NrKSh2b2lkKTsKIAl1MzIgcmF0ZSwgZGl2aWRlZF9yYXRlID0gMDsKIAlpbnQgYmVzdF9k
+aXZpc29yX2lkeCA9IC0xOwotCWludCBjbGszMmtfZGl2aXNvcl9pZHggPSAtMTsKIAlpbnQgYml0
+czsKIAlpbnQgaTsKIAlpbnQgcmV0OwpAQCAtMzk5LDcgKzQxNSwxMSBAQCBzdGF0aWMgaW50IF9f
+aW5pdCB0Y2JfY2xrc3JjX2luaXQoc3RydWN0IGRldmljZV9ub2RlICpub2RlKQogCX0KIAogCW1h
+dGNoID0gb2ZfbWF0Y2hfbm9kZShhdG1lbF90Y2Jfb2ZfbWF0Y2gsIG5vZGUtPnBhcmVudCk7Ci0J
+Yml0cyA9ICh1aW50cHRyX3QpbWF0Y2gtPmRhdGE7CisJaWYgKCFtYXRjaCkKKwkJcmV0dXJuIC1F
+Tk9ERVY7CisKKwl0Yy50Y2JfY29uZmlnID0gbWF0Y2gtPmRhdGE7CisJYml0cyA9IHRjLnRjYl9j
+b25maWctPmNvdW50ZXJfd2lkdGg7CiAKIAlmb3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRSh0Yy5p
+cnEpOyBpKyspCiAJCXdyaXRlbChBVE1FTF9UQ19BTExfSVJRLCB0Yy5yZWdzICsgQVRNRUxfVENf
+UkVHKGksIElEUikpOwpAQCAtNDEyLDIyICs0MzIsMTcgQEAgc3RhdGljIGludCBfX2luaXQgdGNi
+X2Nsa3NyY19pbml0KHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSkKIAogCS8qIEhvdyBmYXN0IHdp
+bGwgd2UgYmUgY291bnRpbmc/ICBQaWNrIHNvbWV0aGluZyBvdmVyIDUgTUh6LiAgKi8KIAlyYXRl
+ID0gKHUzMikgY2xrX2dldF9yYXRlKHQwX2Nsayk7Ci0JZm9yIChpID0gMDsgaSA8IEFSUkFZX1NJ
+WkUoYXRtZWxfdGNiX2Rpdmlzb3JzKTsgaSsrKSB7CisJaSA9IDA7CisJaWYgKHRjLnRjYl9jb25m
+aWctPmhhc19nY2xrKQorCQlpID0gMTsKKwlmb3IgKDsgaSA8IEFSUkFZX1NJWkUoYXRtZWxfdGNi
+X2Rpdmlzb3JzKTsgaSsrKSB7CiAJCXVuc2lnbmVkIGRpdmlzb3IgPSBhdG1lbF90Y2JfZGl2aXNv
+cnNbaV07CiAJCXVuc2lnbmVkIHRtcDsKIAotCQkvKiByZW1lbWJlciAzMiBLaUh6IGNsb2NrIGZv
+ciBsYXRlciAqLwotCQlpZiAoIWRpdmlzb3IpIHsKLQkJCWNsazMya19kaXZpc29yX2lkeCA9IGk7
+Ci0JCQljb250aW51ZTsKLQkJfQotCiAJCXRtcCA9IHJhdGUgLyBkaXZpc29yOwogCQlwcl9kZWJ1
+ZygiVEM6ICV1IC8gJS0zdSBbJWRdIC0tPiAldVxuIiwgcmF0ZSwgZGl2aXNvciwgaSwgdG1wKTsK
+LQkJaWYgKGJlc3RfZGl2aXNvcl9pZHggPiAwKSB7Ci0JCQlpZiAodG1wIDwgNSAqIDEwMDAgKiAx
+MDAwKQotCQkJCWNvbnRpbnVlOwotCQl9CisJCWlmICgoYmVzdF9kaXZpc29yX2lkeCA+PSAwKSAm
+JiAodG1wIDwgNSAqIDEwMDAgKiAxMDAwKSkKKwkJCWJyZWFrOwogCQlkaXZpZGVkX3JhdGUgPSB0
+bXA7CiAJCWJlc3RfZGl2aXNvcl9pZHggPSBpOwogCX0KQEAgLTQ2Nyw3ICs0ODIsNyBAQCBzdGF0
+aWMgaW50IF9faW5pdCB0Y2JfY2xrc3JjX2luaXQoc3RydWN0IGRldmljZV9ub2RlICpub2RlKQog
+CQlnb3RvIGVycl9kaXNhYmxlX3QxOwogCiAJLyogY2hhbm5lbCAyOiAgcGVyaW9kaWMgYW5kIG9u
+ZXNob3QgdGltZXIgc3VwcG9ydCAqLwotCXJldCA9IHNldHVwX2Nsa2V2ZW50cygmdGMsIGNsazMy
+a19kaXZpc29yX2lkeCk7CisJcmV0ID0gc2V0dXBfY2xrZXZlbnRzKCZ0YywgYmVzdF9kaXZpc29y
+X2lkeCk7CiAJaWYgKHJldCkKIAkJZ290byBlcnJfdW5yZWdpc3Rlcl9jbGtzcmM7CiAKZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvY2xvY2tzb3VyY2UvdGltZXItdGktMzJrLmMgYi9kcml2ZXJzL2Nsb2Nr
+c291cmNlL3RpbWVyLXRpLTMyay5jCmluZGV4IGFlMTJiYmYzZDY4Yy4uNTliMGJlNDgyZjMyIDEw
+MDY0NAotLS0gYS9kcml2ZXJzL2Nsb2Nrc291cmNlL3RpbWVyLXRpLTMyay5jCisrKyBiL2RyaXZl
+cnMvY2xvY2tzb3VyY2UvdGltZXItdGktMzJrLmMKQEAgLTIxLDcgKzIxLDcgQEAKICAqIFJvdWdo
+bHkgbW9kZWxsZWQgYWZ0ZXIgdGhlIE9NQVAxIE1QVSB0aW1lciBjb2RlLgogICogQWRkZWQgT01B
+UDQgc3VwcG9ydCAtIFNhbnRvc2ggU2hpbGlta2FyIDxzYW50b3NoLnNoaWxpbWthckB0aS5jb20+
+CiAgKgotICogQ29weXJpZ2h0IChDKSAyMDE1IFRleGFzIEluc3RydW1lbnRzIEluY29ycG9yYXRl
+ZCAtIGh0dHA6Ly93d3cudGkuY29tCisgKiBDb3B5cmlnaHQgKEMpIDIwMTUgVGV4YXMgSW5zdHJ1
+bWVudHMgSW5jb3Jwb3JhdGVkIC0gaHR0cHM6Ly93d3cudGkuY29tCiAgKi8KIAogI2luY2x1ZGUg
+PGxpbnV4L2Nsay5oPgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci10aS1k
+bS5jIGIvZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci10aS1kbS5jCmluZGV4IDYwYWZmMDg3OTQ3
+YS4uMzNlZWFiZjljM2QxIDEwMDY0NAotLS0gYS9kcml2ZXJzL2Nsb2Nrc291cmNlL3RpbWVyLXRp
+LWRtLmMKKysrIGIvZHJpdmVycy9jbG9ja3NvdXJjZS90aW1lci10aS1kbS5jCkBAIC00LDcgKzQs
+NyBAQAogICoKICAqIE9NQVAgRHVhbC1Nb2RlIFRpbWVycwogICoKLSAqIENvcHlyaWdodCAoQykg
+MjAxMCBUZXhhcyBJbnN0cnVtZW50cyBJbmNvcnBvcmF0ZWQgLSBodHRwOi8vd3d3LnRpLmNvbS8K
+KyAqIENvcHlyaWdodCAoQykgMjAxMCBUZXhhcyBJbnN0cnVtZW50cyBJbmNvcnBvcmF0ZWQgLSBo
+dHRwczovL3d3dy50aS5jb20vCiAgKiBUYXJ1biBLYW50aSBEZWJCYXJtYSA8dGFydW4ua2FudGlA
+dGkuY29tPgogICogVGhhcmEgR29waW5hdGggPHRoYXJhQHRpLmNvbT4KICAqCmRpZmYgLS1naXQg
+YS9pbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL2luZ2VuaWMsc3lzb3N0LmggYi9pbmNsdWRlL2R0
+LWJpbmRpbmdzL2Nsb2NrL2luZ2VuaWMsc3lzb3N0LmgKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5k
+ZXggMDAwMDAwMDAwMDAwLi45YWM4OGU5MGJhYmYKLS0tIC9kZXYvbnVsbAorKysgYi9pbmNsdWRl
+L2R0LWJpbmRpbmdzL2Nsb2NrL2luZ2VuaWMsc3lzb3N0LmgKQEAgLTAsMCArMSwxMiBAQAorLyog
+U1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAgKi8KKy8qCisgKiBUaGlzIGhlYWRlciBw
+cm92aWRlcyBjbG9jayBudW1iZXJzIGZvciB0aGUgaW5nZW5pYyx0Y3UgRFQgYmluZGluZy4KKyAq
+LworCisjaWZuZGVmIF9fRFRfQklORElOR1NfQ0xPQ0tfSU5HRU5JQ19PU1RfSF9fCisjZGVmaW5l
+IF9fRFRfQklORElOR1NfQ0xPQ0tfSU5HRU5JQ19PU1RfSF9fCisKKyNkZWZpbmUgT1NUX0NMS19Q
+RVJDUFVfVElNRVIJMAorI2RlZmluZSBPU1RfQ0xLX0dMT0JBTF9USU1FUgkxCisKKyNlbmRpZiAv
+KiBfX0RUX0JJTkRJTkdTX0NMT0NLX0lOR0VOSUNfT1NUX0hfXyAqLwpkaWZmIC0tZ2l0IGEvaW5j
+bHVkZS9zb2MvYXQ5MS9hdG1lbF90Y2IuaCBiL2luY2x1ZGUvc29jL2F0OTEvYXRtZWxfdGNiLmgK
+aW5kZXggYzNjNzIwMGNlMTUxLi4xZDcwNzFkYzBiY2EgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvc29j
+L2F0OTEvYXRtZWxfdGNiLmgKKysrIGIvaW5jbHVkZS9zb2MvYXQ5MS9hdG1lbF90Y2IuaApAQCAt
+MzYsOSArMzYsMTQgQEAgc3RydWN0IGNsazsKIC8qKgogICogc3RydWN0IGF0bWVsX3RjYl9jb25m
+aWcgLSBTb0MgZGF0YSBmb3IgYSBUaW1lci9Db3VudGVyIEJsb2NrCiAgKiBAY291bnRlcl93aWR0
+aDogc2l6ZSBpbiBiaXRzIG9mIGEgdGltZXIgY291bnRlciByZWdpc3RlcgorICogQGhhc19nY2xr
+OiBib29sZWFuIGluZGljYXRpbmcgaWYgYSB0aW1lciBjb3VudGVyIGhhcyBhIGdlbmVyaWMgY2xv
+Y2sKKyAqIEBoYXNfcWRlYzogYm9vbGVhbiBpbmRpY2F0aW5nIGlmIGEgdGltZXIgY291bnRlciBo
+YXMgYSBxdWFkcmF0dXJlCisgKiBkZWNvZGVyLgogICovCiBzdHJ1Y3QgYXRtZWxfdGNiX2NvbmZp
+ZyB7CiAJc2l6ZV90CWNvdW50ZXJfd2lkdGg7CisJYm9vbCAgICBoYXNfZ2NsazsKKwlib29sICAg
+IGhhc19xZGVjOwogfTsKIAogLyoqCmRpZmYgLS1naXQgYS9rZXJuZWwvdGltZS90aW1lci5jIGIv
+a2VybmVsL3RpbWUvdGltZXIuYwppbmRleCBkZjFmZjgwM2FjYzQuLjk2ZDgwMmU5NzY5ZSAxMDA2
+NDQKLS0tIGEva2VybmVsL3RpbWUvdGltZXIuYworKysgYi9rZXJuZWwvdGltZS90aW1lci5jCkBA
+IC0xNTYsNyArMTU2LDggQEAgRVhQT1JUX1NZTUJPTChqaWZmaWVzXzY0KTsKIAogLyoKICAqIFRo
+ZSB0aW1lIHN0YXJ0IHZhbHVlIGZvciBlYWNoIGxldmVsIHRvIHNlbGVjdCB0aGUgYnVja2V0IGF0
+IGVucXVldWUKLSAqIHRpbWUuCisgKiB0aW1lLiBXZSBzdGFydCBmcm9tIHRoZSBsYXN0IHBvc3Np
+YmxlIGRlbHRhIG9mIHRoZSBwcmV2aW91cyBsZXZlbAorICogc28gdGhhdCB3ZSBjYW4gbGF0ZXIg
+YWRkIGFuIGV4dHJhIExWTF9HUkFOKG4pIHRvIG4gKHNlZSBjYWxjX2luZGV4KCkpLgogICovCiAj
+ZGVmaW5lIExWTF9TVEFSVChuKQkoKExWTF9TSVpFIC0gMSkgPDwgKCgobikgLSAxKSAqIExWTF9D
+TEtfU0hJRlQpKQogCkBAIC0yMDMsOCArMjA0LDggQEAgc3RydWN0IHRpbWVyX2Jhc2UgewogCXVu
+c2lnbmVkIGxvbmcJCWNsazsKIAl1bnNpZ25lZCBsb25nCQluZXh0X2V4cGlyeTsKIAl1bnNpZ25l
+ZCBpbnQJCWNwdTsKKwlib29sCQkJbmV4dF9leHBpcnlfcmVjYWxjOwogCWJvb2wJCQlpc19pZGxl
+OwotCWJvb2wJCQltdXN0X2ZvcndhcmRfY2xrOwogCURFQ0xBUkVfQklUTUFQKHBlbmRpbmdfbWFw
+LCBXSEVFTF9TSVpFKTsKIAlzdHJ1Y3QgaGxpc3RfaGVhZAl2ZWN0b3JzW1dIRUVMX1NJWkVdOwog
+fSBfX19fY2FjaGVsaW5lX2FsaWduZWQ7CkBAIC00ODcsMzUgKzQ4OCw0OCBAQCBzdGF0aWMgaW5s
+aW5lIHZvaWQgdGltZXJfc2V0X2lkeChzdHJ1Y3QgdGltZXJfbGlzdCAqdGltZXIsIHVuc2lnbmVk
+IGludCBpZHgpCiAgKiBIZWxwZXIgZnVuY3Rpb24gdG8gY2FsY3VsYXRlIHRoZSBhcnJheSBpbmRl
+eCBmb3IgYSBnaXZlbiBleHBpcnkKICAqIHRpbWUuCiAgKi8KLXN0YXRpYyBpbmxpbmUgdW5zaWdu
+ZWQgY2FsY19pbmRleCh1bnNpZ25lZCBleHBpcmVzLCB1bnNpZ25lZCBsdmwpCitzdGF0aWMgaW5s
+aW5lIHVuc2lnbmVkIGNhbGNfaW5kZXgodW5zaWduZWQgbG9uZyBleHBpcmVzLCB1bnNpZ25lZCBs
+dmwsCisJCQkJICB1bnNpZ25lZCBsb25nICpidWNrZXRfZXhwaXJ5KQogeworCisJLyoKKwkgKiBU
+aGUgdGltZXIgd2hlZWwgaGFzIHRvIGd1YXJhbnRlZSB0aGF0IGEgdGltZXIgZG9lcyBub3QgZmly
+ZQorCSAqIGVhcmx5LiBFYXJseSBleHBpcnkgY2FuIGhhcHBlbiBkdWUgdG86CisJICogLSBUaW1l
+ciBpcyBhcm1lZCBhdCB0aGUgZWRnZSBvZiBhIHRpY2sKKwkgKiAtIFRydW5jYXRpb24gb2YgdGhl
+IGV4cGlyeSB0aW1lIGluIHRoZSBvdXRlciB3aGVlbCBsZXZlbHMKKwkgKgorCSAqIFJvdW5kIHVw
+IHdpdGggbGV2ZWwgZ3JhbnVsYXJpdHkgdG8gcHJldmVudCB0aGlzLgorCSAqLwogCWV4cGlyZXMg
+PSAoZXhwaXJlcyArIExWTF9HUkFOKGx2bCkpID4+IExWTF9TSElGVChsdmwpOworCSpidWNrZXRf
+ZXhwaXJ5ID0gZXhwaXJlcyA8PCBMVkxfU0hJRlQobHZsKTsKIAlyZXR1cm4gTFZMX09GRlMobHZs
+KSArIChleHBpcmVzICYgTFZMX01BU0spOwogfQogCi1zdGF0aWMgaW50IGNhbGNfd2hlZWxfaW5k
+ZXgodW5zaWduZWQgbG9uZyBleHBpcmVzLCB1bnNpZ25lZCBsb25nIGNsaykKK3N0YXRpYyBpbnQg
+Y2FsY193aGVlbF9pbmRleCh1bnNpZ25lZCBsb25nIGV4cGlyZXMsIHVuc2lnbmVkIGxvbmcgY2xr
+LAorCQkJICAgIHVuc2lnbmVkIGxvbmcgKmJ1Y2tldF9leHBpcnkpCiB7CiAJdW5zaWduZWQgbG9u
+ZyBkZWx0YSA9IGV4cGlyZXMgLSBjbGs7CiAJdW5zaWduZWQgaW50IGlkeDsKIAogCWlmIChkZWx0
+YSA8IExWTF9TVEFSVCgxKSkgewotCQlpZHggPSBjYWxjX2luZGV4KGV4cGlyZXMsIDApOworCQlp
+ZHggPSBjYWxjX2luZGV4KGV4cGlyZXMsIDAsIGJ1Y2tldF9leHBpcnkpOwogCX0gZWxzZSBpZiAo
+ZGVsdGEgPCBMVkxfU1RBUlQoMikpIHsKLQkJaWR4ID0gY2FsY19pbmRleChleHBpcmVzLCAxKTsK
+KwkJaWR4ID0gY2FsY19pbmRleChleHBpcmVzLCAxLCBidWNrZXRfZXhwaXJ5KTsKIAl9IGVsc2Ug
+aWYgKGRlbHRhIDwgTFZMX1NUQVJUKDMpKSB7Ci0JCWlkeCA9IGNhbGNfaW5kZXgoZXhwaXJlcywg
+Mik7CisJCWlkeCA9IGNhbGNfaW5kZXgoZXhwaXJlcywgMiwgYnVja2V0X2V4cGlyeSk7CiAJfSBl
+bHNlIGlmIChkZWx0YSA8IExWTF9TVEFSVCg0KSkgewotCQlpZHggPSBjYWxjX2luZGV4KGV4cGly
+ZXMsIDMpOworCQlpZHggPSBjYWxjX2luZGV4KGV4cGlyZXMsIDMsIGJ1Y2tldF9leHBpcnkpOwog
+CX0gZWxzZSBpZiAoZGVsdGEgPCBMVkxfU1RBUlQoNSkpIHsKLQkJaWR4ID0gY2FsY19pbmRleChl
+eHBpcmVzLCA0KTsKKwkJaWR4ID0gY2FsY19pbmRleChleHBpcmVzLCA0LCBidWNrZXRfZXhwaXJ5
+KTsKIAl9IGVsc2UgaWYgKGRlbHRhIDwgTFZMX1NUQVJUKDYpKSB7Ci0JCWlkeCA9IGNhbGNfaW5k
+ZXgoZXhwaXJlcywgNSk7CisJCWlkeCA9IGNhbGNfaW5kZXgoZXhwaXJlcywgNSwgYnVja2V0X2V4
+cGlyeSk7CiAJfSBlbHNlIGlmIChkZWx0YSA8IExWTF9TVEFSVCg3KSkgewotCQlpZHggPSBjYWxj
+X2luZGV4KGV4cGlyZXMsIDYpOworCQlpZHggPSBjYWxjX2luZGV4KGV4cGlyZXMsIDYsIGJ1Y2tl
+dF9leHBpcnkpOwogCX0gZWxzZSBpZiAoTFZMX0RFUFRIID4gOCAmJiBkZWx0YSA8IExWTF9TVEFS
+VCg4KSkgewotCQlpZHggPSBjYWxjX2luZGV4KGV4cGlyZXMsIDcpOworCQlpZHggPSBjYWxjX2lu
+ZGV4KGV4cGlyZXMsIDcsIGJ1Y2tldF9leHBpcnkpOwogCX0gZWxzZSBpZiAoKGxvbmcpIGRlbHRh
+IDwgMCkgewogCQlpZHggPSBjbGsgJiBMVkxfTUFTSzsKKwkJKmJ1Y2tldF9leHBpcnkgPSBjbGs7
+CiAJfSBlbHNlIHsKIAkJLyoKIAkJICogRm9yY2UgZXhwaXJlIG9ic2NlbmUgbGFyZ2UgdGltZW91
+dHMgdG8gZXhwaXJlIGF0IHRoZQpAQCAtNTI0LDM0ICs1MzgsMTEgQEAgc3RhdGljIGludCBjYWxj
+X3doZWVsX2luZGV4KHVuc2lnbmVkIGxvbmcgZXhwaXJlcywgdW5zaWduZWQgbG9uZyBjbGspCiAJ
+CWlmIChkZWx0YSA+PSBXSEVFTF9USU1FT1VUX0NVVE9GRikKIAkJCWV4cGlyZXMgPSBjbGsgKyBX
+SEVFTF9USU1FT1VUX01BWDsKIAotCQlpZHggPSBjYWxjX2luZGV4KGV4cGlyZXMsIExWTF9ERVBU
+SCAtIDEpOworCQlpZHggPSBjYWxjX2luZGV4KGV4cGlyZXMsIExWTF9ERVBUSCAtIDEsIGJ1Y2tl
+dF9leHBpcnkpOwogCX0KIAlyZXR1cm4gaWR4OwogfQogCi0vKgotICogRW5xdWV1ZSB0aGUgdGlt
+ZXIgaW50byB0aGUgaGFzaCBidWNrZXQsIG1hcmsgaXQgcGVuZGluZyBpbgotICogdGhlIGJpdG1h
+cCBhbmQgc3RvcmUgdGhlIGluZGV4IGluIHRoZSB0aW1lciBmbGFncy4KLSAqLwotc3RhdGljIHZv
+aWQgZW5xdWV1ZV90aW1lcihzdHJ1Y3QgdGltZXJfYmFzZSAqYmFzZSwgc3RydWN0IHRpbWVyX2xp
+c3QgKnRpbWVyLAotCQkJICB1bnNpZ25lZCBpbnQgaWR4KQotewotCWhsaXN0X2FkZF9oZWFkKCZ0
+aW1lci0+ZW50cnksIGJhc2UtPnZlY3RvcnMgKyBpZHgpOwotCV9fc2V0X2JpdChpZHgsIGJhc2Ut
+PnBlbmRpbmdfbWFwKTsKLQl0aW1lcl9zZXRfaWR4KHRpbWVyLCBpZHgpOwotCi0JdHJhY2VfdGlt
+ZXJfc3RhcnQodGltZXIsIHRpbWVyLT5leHBpcmVzLCB0aW1lci0+ZmxhZ3MpOwotfQotCi1zdGF0
+aWMgdm9pZAotX19pbnRlcm5hbF9hZGRfdGltZXIoc3RydWN0IHRpbWVyX2Jhc2UgKmJhc2UsIHN0
+cnVjdCB0aW1lcl9saXN0ICp0aW1lcikKLXsKLQl1bnNpZ25lZCBpbnQgaWR4OwotCi0JaWR4ID0g
+Y2FsY193aGVlbF9pbmRleCh0aW1lci0+ZXhwaXJlcywgYmFzZS0+Y2xrKTsKLQllbnF1ZXVlX3Rp
+bWVyKGJhc2UsIHRpbWVyLCBpZHgpOwotfQotCiBzdGF0aWMgdm9pZAogdHJpZ2dlcl9keW50aWNr
+X2NwdShzdHJ1Y3QgdGltZXJfYmFzZSAqYmFzZSwgc3RydWN0IHRpbWVyX2xpc3QgKnRpbWVyKQog
+ewpAQCAtNTczLDM0ICs1NjQsNDggQEAgdHJpZ2dlcl9keW50aWNrX2NwdShzdHJ1Y3QgdGltZXJf
+YmFzZSAqYmFzZSwgc3RydWN0IHRpbWVyX2xpc3QgKnRpbWVyKQogCSAqIHRpbWVyIGlzIG5vdCBk
+ZWZlcnJhYmxlLiBJZiB0aGUgb3RoZXIgQ1BVIGlzIG9uIHRoZSB3YXkgdG8gaWRsZQogCSAqIHRo
+ZW4gaXQgY2FuJ3Qgc2V0IGJhc2UtPmlzX2lkbGUgYXMgd2UgaG9sZCB0aGUgYmFzZSBsb2NrOgog
+CSAqLwotCWlmICghYmFzZS0+aXNfaWRsZSkKLQkJcmV0dXJuOworCWlmIChiYXNlLT5pc19pZGxl
+KQorCQl3YWtlX3VwX25vaHpfY3B1KGJhc2UtPmNwdSk7Cit9CiAKLQkvKiBDaGVjayB3aGV0aGVy
+IHRoaXMgaXMgdGhlIG5ldyBmaXJzdCBleHBpcmluZyB0aW1lcjogKi8KLQlpZiAodGltZV9hZnRl
+cl9lcSh0aW1lci0+ZXhwaXJlcywgYmFzZS0+bmV4dF9leHBpcnkpKQotCQlyZXR1cm47CisvKgor
+ICogRW5xdWV1ZSB0aGUgdGltZXIgaW50byB0aGUgaGFzaCBidWNrZXQsIG1hcmsgaXQgcGVuZGlu
+ZyBpbgorICogdGhlIGJpdG1hcCwgc3RvcmUgdGhlIGluZGV4IGluIHRoZSB0aW1lciBmbGFncyB0
+aGVuIHdha2UgdXAKKyAqIHRoZSB0YXJnZXQgQ1BVIGlmIG5lZWRlZC4KKyAqLworc3RhdGljIHZv
+aWQgZW5xdWV1ZV90aW1lcihzdHJ1Y3QgdGltZXJfYmFzZSAqYmFzZSwgc3RydWN0IHRpbWVyX2xp
+c3QgKnRpbWVyLAorCQkJICB1bnNpZ25lZCBpbnQgaWR4LCB1bnNpZ25lZCBsb25nIGJ1Y2tldF9l
+eHBpcnkpCit7CisKKwlobGlzdF9hZGRfaGVhZCgmdGltZXItPmVudHJ5LCBiYXNlLT52ZWN0b3Jz
+ICsgaWR4KTsKKwlfX3NldF9iaXQoaWR4LCBiYXNlLT5wZW5kaW5nX21hcCk7CisJdGltZXJfc2V0
+X2lkeCh0aW1lciwgaWR4KTsKKworCXRyYWNlX3RpbWVyX3N0YXJ0KHRpbWVyLCB0aW1lci0+ZXhw
+aXJlcywgdGltZXItPmZsYWdzKTsKIAogCS8qCi0JICogU2V0IHRoZSBuZXh0IGV4cGlyeSB0aW1l
+IGFuZCBraWNrIHRoZSBDUFUgc28gaXQgY2FuIHJlZXZhbHVhdGUgdGhlCi0JICogd2hlZWw6CisJ
+ICogQ2hlY2sgd2hldGhlciB0aGlzIGlzIHRoZSBuZXcgZmlyc3QgZXhwaXJpbmcgdGltZXIuIFRo
+ZQorCSAqIGVmZmVjdGl2ZSBleHBpcnkgdGltZSBvZiB0aGUgdGltZXIgaXMgcmVxdWlyZWQgaGVy
+ZQorCSAqIChidWNrZXRfZXhwaXJ5KSBpbnN0ZWFkIG9mIHRpbWVyLT5leHBpcmVzLgogCSAqLwot
+CWlmICh0aW1lX2JlZm9yZSh0aW1lci0+ZXhwaXJlcywgYmFzZS0+Y2xrKSkgeworCWlmICh0aW1l
+X2JlZm9yZShidWNrZXRfZXhwaXJ5LCBiYXNlLT5uZXh0X2V4cGlyeSkpIHsKIAkJLyoKLQkJICog
+UHJldmVudCBmcm9tIGZvcndhcmRfdGltZXJfYmFzZSgpIG1vdmluZyB0aGUgYmFzZS0+Y2xrCi0J
+CSAqIGJhY2t3YXJkCisJCSAqIFNldCB0aGUgbmV4dCBleHBpcnkgdGltZSBhbmQga2ljayB0aGUg
+Q1BVIHNvIGl0CisJCSAqIGNhbiByZWV2YWx1YXRlIHRoZSB3aGVlbDoKIAkJICovCi0JCWJhc2Ut
+Pm5leHRfZXhwaXJ5ID0gYmFzZS0+Y2xrOwotCX0gZWxzZSB7Ci0JCWJhc2UtPm5leHRfZXhwaXJ5
+ID0gdGltZXItPmV4cGlyZXM7CisJCWJhc2UtPm5leHRfZXhwaXJ5ID0gYnVja2V0X2V4cGlyeTsK
+KwkJYmFzZS0+bmV4dF9leHBpcnlfcmVjYWxjID0gZmFsc2U7CisJCXRyaWdnZXJfZHludGlja19j
+cHUoYmFzZSwgdGltZXIpOwogCX0KLQl3YWtlX3VwX25vaHpfY3B1KGJhc2UtPmNwdSk7CiB9CiAK
+LXN0YXRpYyB2b2lkCi1pbnRlcm5hbF9hZGRfdGltZXIoc3RydWN0IHRpbWVyX2Jhc2UgKmJhc2Us
+IHN0cnVjdCB0aW1lcl9saXN0ICp0aW1lcikKK3N0YXRpYyB2b2lkIGludGVybmFsX2FkZF90aW1l
+cihzdHJ1Y3QgdGltZXJfYmFzZSAqYmFzZSwgc3RydWN0IHRpbWVyX2xpc3QgKnRpbWVyKQogewot
+CV9faW50ZXJuYWxfYWRkX3RpbWVyKGJhc2UsIHRpbWVyKTsKLQl0cmlnZ2VyX2R5bnRpY2tfY3B1
+KGJhc2UsIHRpbWVyKTsKKwl1bnNpZ25lZCBsb25nIGJ1Y2tldF9leHBpcnk7CisJdW5zaWduZWQg
+aW50IGlkeDsKKworCWlkeCA9IGNhbGNfd2hlZWxfaW5kZXgodGltZXItPmV4cGlyZXMsIGJhc2Ut
+PmNsaywgJmJ1Y2tldF9leHBpcnkpOworCWVucXVldWVfdGltZXIoYmFzZSwgdGltZXIsIGlkeCwg
+YnVja2V0X2V4cGlyeSk7CiB9CiAKICNpZmRlZiBDT05GSUdfREVCVUdfT0JKRUNUU19USU1FUlMK
+QEAgLTgzMyw4ICs4MzgsMTAgQEAgc3RhdGljIGludCBkZXRhY2hfaWZfcGVuZGluZyhzdHJ1Y3Qg
+dGltZXJfbGlzdCAqdGltZXIsIHN0cnVjdCB0aW1lcl9iYXNlICpiYXNlLAogCWlmICghdGltZXJf
+cGVuZGluZyh0aW1lcikpCiAJCXJldHVybiAwOwogCi0JaWYgKGhsaXN0X2lzX3Npbmd1bGFyX25v
+ZGUoJnRpbWVyLT5lbnRyeSwgYmFzZS0+dmVjdG9ycyArIGlkeCkpCisJaWYgKGhsaXN0X2lzX3Np
+bmd1bGFyX25vZGUoJnRpbWVyLT5lbnRyeSwgYmFzZS0+dmVjdG9ycyArIGlkeCkpIHsKIAkJX19j
+bGVhcl9iaXQoaWR4LCBiYXNlLT5wZW5kaW5nX21hcCk7CisJCWJhc2UtPm5leHRfZXhwaXJ5X3Jl
+Y2FsYyA9IHRydWU7CisJfQogCiAJZGV0YWNoX3RpbWVyKHRpbWVyLCBjbGVhcl9wZW5kaW5nKTsK
+IAlyZXR1cm4gMTsKQEAgLTg4NCwyMCArODkxLDE0IEBAIGdldF90YXJnZXRfYmFzZShzdHJ1Y3Qg
+dGltZXJfYmFzZSAqYmFzZSwgdW5zaWduZWQgdGZsYWdzKQogCiBzdGF0aWMgaW5saW5lIHZvaWQg
+Zm9yd2FyZF90aW1lcl9iYXNlKHN0cnVjdCB0aW1lcl9iYXNlICpiYXNlKQogewotI2lmZGVmIENP
+TkZJR19OT19IWl9DT01NT04KLQl1bnNpZ25lZCBsb25nIGpub3c7CisJdW5zaWduZWQgbG9uZyBq
+bm93ID0gUkVBRF9PTkNFKGppZmZpZXMpOwogCiAJLyoKLQkgKiBXZSBvbmx5IGZvcndhcmQgdGhl
+IGJhc2Ugd2hlbiB3ZSBhcmUgaWRsZSBvciBoYXZlIGp1c3QgY29tZSBvdXQgb2YKLQkgKiBpZGxl
+IChtdXN0X2ZvcndhcmRfY2xrIGxvZ2ljKSwgYW5kIGhhdmUgYSBkZWx0YSBiZXR3ZWVuIGJhc2Ug
+Y2xvY2sKLQkgKiBhbmQgamlmZmllcy4gSW4gdGhlIGNvbW1vbiBjYXNlLCBydW5fdGltZXJzIHdp
+bGwgdGFrZSBjYXJlIG9mIGl0LgorCSAqIE5vIG5lZWQgdG8gZm9yd2FyZCBpZiB3ZSBhcmUgY2xv
+c2UgZW5vdWdoIGJlbG93IGppZmZpZXMuCisJICogQWxzbyB3aGlsZSBleGVjdXRpbmcgdGltZXJz
+LCBiYXNlLT5jbGsgaXMgMSBvZmZzZXQgYWhlYWQKKwkgKiBvZiBqaWZmaWVzIHRvIGF2b2lkIGVu
+ZGxlc3MgcmVxdWV1aW5nIHRvIGN1cnJlbnQgamZmaWVzLgogCSAqLwotCWlmIChsaWtlbHkoIWJh
+c2UtPm11c3RfZm9yd2FyZF9jbGspKQotCQlyZXR1cm47Ci0KLQlqbm93ID0gUkVBRF9PTkNFKGpp
+ZmZpZXMpOwotCWJhc2UtPm11c3RfZm9yd2FyZF9jbGsgPSBiYXNlLT5pc19pZGxlOwotCWlmICgo
+bG9uZykoam5vdyAtIGJhc2UtPmNsaykgPCAyKQorCWlmICgobG9uZykoam5vdyAtIGJhc2UtPmNs
+aykgPCAxKQogCQlyZXR1cm47CiAKIAkvKgpAQCAtOTExLDcgKzkxMiw2IEBAIHN0YXRpYyBpbmxp
+bmUgdm9pZCBmb3J3YXJkX3RpbWVyX2Jhc2Uoc3RydWN0IHRpbWVyX2Jhc2UgKmJhc2UpCiAJCQly
+ZXR1cm47CiAJCWJhc2UtPmNsayA9IGJhc2UtPm5leHRfZXhwaXJ5OwogCX0KLSNlbmRpZgogfQog
+CiAKQEAgLTk1OSw5ICs5NTksOSBAQCBzdGF0aWMgc3RydWN0IHRpbWVyX2Jhc2UgKmxvY2tfdGlt
+ZXJfYmFzZShzdHJ1Y3QgdGltZXJfbGlzdCAqdGltZXIsCiBzdGF0aWMgaW5saW5lIGludAogX19t
+b2RfdGltZXIoc3RydWN0IHRpbWVyX2xpc3QgKnRpbWVyLCB1bnNpZ25lZCBsb25nIGV4cGlyZXMs
+IHVuc2lnbmVkIGludCBvcHRpb25zKQogeworCXVuc2lnbmVkIGxvbmcgY2xrID0gMCwgZmxhZ3Ms
+IGJ1Y2tldF9leHBpcnk7CiAJc3RydWN0IHRpbWVyX2Jhc2UgKmJhc2UsICpuZXdfYmFzZTsKIAl1
+bnNpZ25lZCBpbnQgaWR4ID0gVUlOVF9NQVg7Ci0JdW5zaWduZWQgbG9uZyBjbGsgPSAwLCBmbGFn
+czsKIAlpbnQgcmV0ID0gMDsKIAogCUJVR19PTighdGltZXItPmZ1bmN0aW9uKTsKQEAgLTEwMDAs
+NyArMTAwMCw3IEBAIF9fbW9kX3RpbWVyKHN0cnVjdCB0aW1lcl9saXN0ICp0aW1lciwgdW5zaWdu
+ZWQgbG9uZyBleHBpcmVzLCB1bnNpZ25lZCBpbnQgb3B0aW9uCiAJCX0KIAogCQljbGsgPSBiYXNl
+LT5jbGs7Ci0JCWlkeCA9IGNhbGNfd2hlZWxfaW5kZXgoZXhwaXJlcywgY2xrKTsKKwkJaWR4ID0g
+Y2FsY193aGVlbF9pbmRleChleHBpcmVzLCBjbGssICZidWNrZXRfZXhwaXJ5KTsKIAogCQkvKgog
+CQkgKiBSZXRyaWV2ZSBhbmQgY29tcGFyZSB0aGUgYXJyYXkgaW5kZXggb2YgdGhlIHBlbmRpbmcK
+QEAgLTEwNTMsMTYgKzEwNTMsMTMgQEAgX19tb2RfdGltZXIoc3RydWN0IHRpbWVyX2xpc3QgKnRp
+bWVyLCB1bnNpZ25lZCBsb25nIGV4cGlyZXMsIHVuc2lnbmVkIGludCBvcHRpb24KIAkvKgogCSAq
+IElmICdpZHgnIHdhcyBjYWxjdWxhdGVkIGFib3ZlIGFuZCB0aGUgYmFzZSB0aW1lIGRpZCBub3Qg
+YWR2YW5jZQogCSAqIGJldHdlZW4gY2FsY3VsYXRpbmcgJ2lkeCcgYW5kIHBvc3NpYmx5IHN3aXRj
+aGluZyB0aGUgYmFzZSwgb25seQotCSAqIGVucXVldWVfdGltZXIoKSBhbmQgdHJpZ2dlcl9keW50
+aWNrX2NwdSgpIGlzIHJlcXVpcmVkLiBPdGhlcndpc2UKLQkgKiB3ZSBuZWVkIHRvIChyZSljYWxj
+dWxhdGUgdGhlIHdoZWVsIGluZGV4IHZpYQotCSAqIGludGVybmFsX2FkZF90aW1lcigpLgorCSAq
+IGVucXVldWVfdGltZXIoKSBpcyByZXF1aXJlZC4gT3RoZXJ3aXNlIHdlIG5lZWQgdG8gKHJlKWNh
+bGN1bGF0ZQorCSAqIHRoZSB3aGVlbCBpbmRleCB2aWEgaW50ZXJuYWxfYWRkX3RpbWVyKCkuCiAJ
+ICovCi0JaWYgKGlkeCAhPSBVSU5UX01BWCAmJiBjbGsgPT0gYmFzZS0+Y2xrKSB7Ci0JCWVucXVl
+dWVfdGltZXIoYmFzZSwgdGltZXIsIGlkeCk7Ci0JCXRyaWdnZXJfZHludGlja19jcHUoYmFzZSwg
+dGltZXIpOwotCX0gZWxzZSB7CisJaWYgKGlkeCAhPSBVSU5UX01BWCAmJiBjbGsgPT0gYmFzZS0+
+Y2xrKQorCQllbnF1ZXVlX3RpbWVyKGJhc2UsIHRpbWVyLCBpZHgsIGJ1Y2tldF9leHBpcnkpOwor
+CWVsc2UKIAkJaW50ZXJuYWxfYWRkX3RpbWVyKGJhc2UsIHRpbWVyKTsKLQl9CiAKIG91dF91bmxv
+Y2s6CiAJcmF3X3NwaW5fdW5sb2NrX2lycXJlc3RvcmUoJmJhc2UtPmxvY2ssIGZsYWdzKTsKQEAg
+LTE0NjUsMTAgKzE0NjIsMTAgQEAgc3RhdGljIHZvaWQgZXhwaXJlX3RpbWVycyhzdHJ1Y3QgdGlt
+ZXJfYmFzZSAqYmFzZSwgc3RydWN0IGhsaXN0X2hlYWQgKmhlYWQpCiAJfQogfQogCi1zdGF0aWMg
+aW50IF9fY29sbGVjdF9leHBpcmVkX3RpbWVycyhzdHJ1Y3QgdGltZXJfYmFzZSAqYmFzZSwKLQkJ
+CQkgICAgc3RydWN0IGhsaXN0X2hlYWQgKmhlYWRzKQorc3RhdGljIGludCBjb2xsZWN0X2V4cGly
+ZWRfdGltZXJzKHN0cnVjdCB0aW1lcl9iYXNlICpiYXNlLAorCQkJCSAgc3RydWN0IGhsaXN0X2hl
+YWQgKmhlYWRzKQogewotCXVuc2lnbmVkIGxvbmcgY2xrID0gYmFzZS0+Y2xrOworCXVuc2lnbmVk
+IGxvbmcgY2xrID0gYmFzZS0+Y2xrID0gYmFzZS0+bmV4dF9leHBpcnk7CiAJc3RydWN0IGhsaXN0
+X2hlYWQgKnZlYzsKIAlpbnQgaSwgbGV2ZWxzID0gMDsKIAl1bnNpZ25lZCBpbnQgaWR4OwpAQCAt
+MTQ5MCw3ICsxNDg3LDYgQEAgc3RhdGljIGludCBfX2NvbGxlY3RfZXhwaXJlZF90aW1lcnMoc3Ry
+dWN0IHRpbWVyX2Jhc2UgKmJhc2UsCiAJcmV0dXJuIGxldmVsczsKIH0KIAotI2lmZGVmIENPTkZJ
+R19OT19IWl9DT01NT04KIC8qCiAgKiBGaW5kIHRoZSBuZXh0IHBlbmRpbmcgYnVja2V0IG9mIGEg
+bGV2ZWwuIFNlYXJjaCBmcm9tIGxldmVsIHN0YXJ0IChAb2Zmc2V0KQogICogKyBAY2xrIHVwd2Fy
+ZHMgYW5kIGlmIG5vdGhpbmcgdGhlcmUsIHNlYXJjaCBmcm9tIHN0YXJ0IG9mIHRoZSBsZXZlbApA
+QCAtMTUyMyw2ICsxNTE5LDcgQEAgc3RhdGljIHVuc2lnbmVkIGxvbmcgX19uZXh0X3RpbWVyX2lu
+dGVycnVwdChzdHJ1Y3QgdGltZXJfYmFzZSAqYmFzZSkKIAljbGsgPSBiYXNlLT5jbGs7CiAJZm9y
+IChsdmwgPSAwOyBsdmwgPCBMVkxfREVQVEg7IGx2bCsrLCBvZmZzZXQgKz0gTFZMX1NJWkUpIHsK
+IAkJaW50IHBvcyA9IG5leHRfcGVuZGluZ19idWNrZXQoYmFzZSwgb2Zmc2V0LCBjbGsgJiBMVkxf
+TUFTSyk7CisJCXVuc2lnbmVkIGxvbmcgbHZsX2NsayA9IGNsayAmIExWTF9DTEtfTUFTSzsKIAog
+CQlpZiAocG9zID49IDApIHsKIAkJCXVuc2lnbmVkIGxvbmcgdG1wID0gY2xrICsgKHVuc2lnbmVk
+IGxvbmcpIHBvczsKQEAgLTE1MzAsNiArMTUyNywxMyBAQCBzdGF0aWMgdW5zaWduZWQgbG9uZyBf
+X25leHRfdGltZXJfaW50ZXJydXB0KHN0cnVjdCB0aW1lcl9iYXNlICpiYXNlKQogCQkJdG1wIDw8
+PSBMVkxfU0hJRlQobHZsKTsKIAkJCWlmICh0aW1lX2JlZm9yZSh0bXAsIG5leHQpKQogCQkJCW5l
+eHQgPSB0bXA7CisKKwkJCS8qCisJCQkgKiBJZiB0aGUgbmV4dCBleHBpcmF0aW9uIGhhcHBlbnMg
+YmVmb3JlIHdlIHJlYWNoCisJCQkgKiB0aGUgbmV4dCBsZXZlbCwgbm8gbmVlZCB0byBjaGVjayBm
+dXJ0aGVyLgorCQkJICovCisJCQlpZiAocG9zIDw9ICgoTFZMX0NMS19ESVYgLSBsdmxfY2xrKSAm
+IExWTF9DTEtfTUFTSykpCisJCQkJYnJlYWs7CiAJCX0KIAkJLyoKIAkJICogQ2xvY2sgZm9yIHRo
+ZSBuZXh0IGxldmVsLiBJZiB0aGUgY3VycmVudCBsZXZlbCBjbG9jayBsb3dlcgpAQCAtMTU2Nywx
+MyArMTU3MSwxNyBAQCBzdGF0aWMgdW5zaWduZWQgbG9uZyBfX25leHRfdGltZXJfaW50ZXJydXB0
+KHN0cnVjdCB0aW1lcl9iYXNlICpiYXNlKQogCQkgKiBTbyB0aGUgc2ltcGxlIGNoZWNrIHdoZXRo
+ZXIgdGhlIGxvd2VyIGJpdHMgb2YgdGhlIGN1cnJlbnQKIAkJICogbGV2ZWwgYXJlIDAgb3Igbm90
+IGlzIHN1ZmZpY2llbnQgZm9yIGFsbCBjYXNlcy4KIAkJICovCi0JCWFkaiA9IGNsayAmIExWTF9D
+TEtfTUFTSyA/IDEgOiAwOworCQlhZGogPSBsdmxfY2xrID8gMSA6IDA7CiAJCWNsayA+Pj0gTFZM
+X0NMS19TSElGVDsKIAkJY2xrICs9IGFkajsKIAl9CisKKwliYXNlLT5uZXh0X2V4cGlyeV9yZWNh
+bGMgPSBmYWxzZTsKKwogCXJldHVybiBuZXh0OwogfQogCisjaWZkZWYgQ09ORklHX05PX0haX0NP
+TU1PTgogLyoKICAqIENoZWNrLCBpZiB0aGUgbmV4dCBocnRpbWVyIGV2ZW50IGlzIGJlZm9yZSB0
+aGUgbmV4dCB0aW1lciB3aGVlbAogICogZXZlbnQ6CkBAIC0xNjMwLDkgKzE2MzgsMTEgQEAgdTY0
+IGdldF9uZXh0X3RpbWVyX2ludGVycnVwdCh1bnNpZ25lZCBsb25nIGJhc2VqLCB1NjQgYmFzZW0p
+CiAJCXJldHVybiBleHBpcmVzOwogCiAJcmF3X3NwaW5fbG9jaygmYmFzZS0+bG9jayk7Ci0JbmV4
+dGV2dCA9IF9fbmV4dF90aW1lcl9pbnRlcnJ1cHQoYmFzZSk7CisJaWYgKGJhc2UtPm5leHRfZXhw
+aXJ5X3JlY2FsYykKKwkJYmFzZS0+bmV4dF9leHBpcnkgPSBfX25leHRfdGltZXJfaW50ZXJydXB0
+KGJhc2UpOworCW5leHRldnQgPSBiYXNlLT5uZXh0X2V4cGlyeTsKIAlpc19tYXhfZGVsdGEgPSAo
+bmV4dGV2dCA9PSBiYXNlLT5jbGsgKyBORVhUX1RJTUVSX01BWF9ERUxUQSk7Ci0JYmFzZS0+bmV4
+dF9leHBpcnkgPSBuZXh0ZXZ0OworCiAJLyoKIAkgKiBXZSBoYXZlIGEgZnJlc2ggbmV4dCBldmVu
+dC4gQ2hlY2sgd2hldGhlciB3ZSBjYW4gZm9yd2FyZCB0aGUKIAkgKiBiYXNlLiBXZSBjYW4gb25s
+eSBkbyB0aGF0IHdoZW4gQGJhc2VqIGlzIHBhc3QgYmFzZS0+Y2xrCkBAIC0xNjU4LDEwICsxNjY4
+LDggQEAgdTY0IGdldF9uZXh0X3RpbWVyX2ludGVycnVwdCh1bnNpZ25lZCBsb25nIGJhc2VqLCB1
+NjQgYmFzZW0pCiAJCSAqIGxvZ2ljIGlzIG9ubHkgbWFpbnRhaW5lZCBmb3IgdGhlIEJBU0VfU1RE
+IGJhc2UsIGRlZmVycmFibGUKIAkJICogdGltZXJzIG1heSBzdGlsbCBzZWUgbGFyZ2UgZ3JhbnVs
+YXJpdHkgc2tldyAoYnkgZGVzaWduKS4KIAkJICovCi0JCWlmICgoZXhwaXJlcyAtIGJhc2VtKSA+
+IFRJQ0tfTlNFQykgewotCQkJYmFzZS0+bXVzdF9mb3J3YXJkX2NsayA9IHRydWU7CisJCWlmICgo
+ZXhwaXJlcyAtIGJhc2VtKSA+IFRJQ0tfTlNFQykKIAkJCWJhc2UtPmlzX2lkbGUgPSB0cnVlOwot
+CQl9CiAJfQogCXJhd19zcGluX3VubG9jaygmYmFzZS0+bG9jayk7CiAKQEAgLTE2ODUsNDIgKzE2
+OTMsNiBAQCB2b2lkIHRpbWVyX2NsZWFyX2lkbGUodm9pZCkKIAkgKi8KIAliYXNlLT5pc19pZGxl
+ID0gZmFsc2U7CiB9Ci0KLXN0YXRpYyBpbnQgY29sbGVjdF9leHBpcmVkX3RpbWVycyhzdHJ1Y3Qg
+dGltZXJfYmFzZSAqYmFzZSwKLQkJCQkgIHN0cnVjdCBobGlzdF9oZWFkICpoZWFkcykKLXsKLQl1
+bnNpZ25lZCBsb25nIG5vdyA9IFJFQURfT05DRShqaWZmaWVzKTsKLQotCS8qCi0JICogTk9IWiBv
+cHRpbWl6YXRpb24uIEFmdGVyIGEgbG9uZyBpZGxlIHNsZWVwIHdlIG5lZWQgdG8gZm9yd2FyZCB0
+aGUKLQkgKiBiYXNlIHRvIGN1cnJlbnQgamlmZmllcy4gQXZvaWQgYSBsb29wIGJ5IHNlYXJjaGlu
+ZyB0aGUgYml0ZmllbGQgZm9yCi0JICogdGhlIG5leHQgZXhwaXJpbmcgdGltZXIuCi0JICovCi0J
+aWYgKChsb25nKShub3cgLSBiYXNlLT5jbGspID4gMikgewotCQl1bnNpZ25lZCBsb25nIG5leHQg
+PSBfX25leHRfdGltZXJfaW50ZXJydXB0KGJhc2UpOwotCi0JCS8qCi0JCSAqIElmIHRoZSBuZXh0
+IHRpbWVyIGlzIGFoZWFkIG9mIHRpbWUgZm9yd2FyZCB0byBjdXJyZW50Ci0JCSAqIGppZmZpZXMs
+IG90aGVyd2lzZSBmb3J3YXJkIHRvIHRoZSBuZXh0IGV4cGlyeSB0aW1lOgotCQkgKi8KLQkJaWYg
+KHRpbWVfYWZ0ZXIobmV4dCwgbm93KSkgewotCQkJLyoKLQkJCSAqIFRoZSBjYWxsIHNpdGUgd2ls
+bCBpbmNyZW1lbnQgYmFzZS0+Y2xrIGFuZCB0aGVuCi0JCQkgKiB0ZXJtaW5hdGUgdGhlIGV4cGly
+eSBsb29wIGltbWVkaWF0ZWx5LgotCQkJICovCi0JCQliYXNlLT5jbGsgPSBub3c7Ci0JCQlyZXR1
+cm4gMDsKLQkJfQotCQliYXNlLT5jbGsgPSBuZXh0OwotCX0KLQlyZXR1cm4gX19jb2xsZWN0X2V4
+cGlyZWRfdGltZXJzKGJhc2UsIGhlYWRzKTsKLX0KLSNlbHNlCi1zdGF0aWMgaW5saW5lIGludCBj
+b2xsZWN0X2V4cGlyZWRfdGltZXJzKHN0cnVjdCB0aW1lcl9iYXNlICpiYXNlLAotCQkJCQkgc3Ry
+dWN0IGhsaXN0X2hlYWQgKmhlYWRzKQotewotCXJldHVybiBfX2NvbGxlY3RfZXhwaXJlZF90aW1l
+cnMoYmFzZSwgaGVhZHMpOwotfQogI2VuZGlmCiAKIC8qCkBAIC0xNzUzLDMyICsxNzI1LDIzIEBA
+IHN0YXRpYyBpbmxpbmUgdm9pZCBfX3J1bl90aW1lcnMoc3RydWN0IHRpbWVyX2Jhc2UgKmJhc2Up
+CiAJc3RydWN0IGhsaXN0X2hlYWQgaGVhZHNbTFZMX0RFUFRIXTsKIAlpbnQgbGV2ZWxzOwogCi0J
+aWYgKCF0aW1lX2FmdGVyX2VxKGppZmZpZXMsIGJhc2UtPmNsaykpCisJaWYgKHRpbWVfYmVmb3Jl
+KGppZmZpZXMsIGJhc2UtPm5leHRfZXhwaXJ5KSkKIAkJcmV0dXJuOwogCiAJdGltZXJfYmFzZV9s
+b2NrX2V4cGlyeShiYXNlKTsKIAlyYXdfc3Bpbl9sb2NrX2lycSgmYmFzZS0+bG9jayk7CiAKLQkv
+KgotCSAqIHRpbWVyX2Jhc2U6Om11c3RfZm9yd2FyZF9jbGsgbXVzdCBiZSBjbGVhcmVkIGJlZm9y
+ZSBydW5uaW5nCi0JICogdGltZXJzIHNvIHRoYXQgYW55IHRpbWVyIGZ1bmN0aW9ucyB0aGF0IGNh
+bGwgbW9kX3RpbWVyKCkgd2lsbAotCSAqIG5vdCB0cnkgdG8gZm9yd2FyZCB0aGUgYmFzZS4gSWRs
+ZSB0cmFja2luZyAvIGNsb2NrIGZvcndhcmRpbmcKLQkgKiBsb2dpYyBpcyBvbmx5IHVzZWQgd2l0
+aCBCQVNFX1NURCB0aW1lcnMuCi0JICoKLQkgKiBUaGUgbXVzdF9mb3J3YXJkX2NsayBmbGFnIGlz
+IGNsZWFyZWQgdW5jb25kaXRpb25hbGx5IGFsc28gZm9yCi0JICogdGhlIGRlZmVycmFibGUgYmFz
+ZS4gVGhlIGRlZmVycmFibGUgYmFzZSBpcyBub3QgYWZmZWN0ZWQgYnkgaWRsZQotCSAqIHRyYWNr
+aW5nIGFuZCBuZXZlciBmb3J3YXJkZWQsIHNvIGNsZWFyaW5nIHRoZSBmbGFnIGlzIGEgTk9PUC4K
+LQkgKgotCSAqIFRoZSBmYWN0IHRoYXQgdGhlIGRlZmVycmFibGUgYmFzZSBpcyBuZXZlciBmb3J3
+YXJkZWQgY2FuIGNhdXNlCi0JICogbGFyZ2UgdmFyaWF0aW9ucyBpbiBncmFudWxhcml0eSBmb3Ig
+ZGVmZXJyYWJsZSB0aW1lcnMsIGJ1dCB0aGV5Ci0JICogY2FuIGJlIGRlZmVycmVkIGZvciBsb25n
+IHBlcmlvZHMgZHVlIHRvIGlkbGUgYW55d2F5LgotCSAqLwotCWJhc2UtPm11c3RfZm9yd2FyZF9j
+bGsgPSBmYWxzZTsKLQotCXdoaWxlICh0aW1lX2FmdGVyX2VxKGppZmZpZXMsIGJhc2UtPmNsaykp
+IHsKLQorCXdoaWxlICh0aW1lX2FmdGVyX2VxKGppZmZpZXMsIGJhc2UtPmNsaykgJiYKKwkgICAg
+ICAgdGltZV9hZnRlcl9lcShqaWZmaWVzLCBiYXNlLT5uZXh0X2V4cGlyeSkpIHsKIAkJbGV2ZWxz
+ID0gY29sbGVjdF9leHBpcmVkX3RpbWVycyhiYXNlLCBoZWFkcyk7CisJCS8qCisJCSAqIFRoZSBv
+bmx5IHBvc3NpYmxlIHJlYXNvbiBmb3Igbm90IGZpbmRpbmcgYW55IGV4cGlyZWQKKwkJICogdGlt
+ZXIgYXQgdGhpcyBjbGsgaXMgdGhhdCBhbGwgbWF0Y2hpbmcgdGltZXJzIGhhdmUgYmVlbgorCQkg
+KiBkZXF1ZXVlZC4KKwkJICovCisJCVdBUk5fT05fT05DRSghbGV2ZWxzICYmICFiYXNlLT5uZXh0
+X2V4cGlyeV9yZWNhbGMpOwogCQliYXNlLT5jbGsrKzsKKwkJYmFzZS0+bmV4dF9leHBpcnkgPSBf
+X25leHRfdGltZXJfaW50ZXJydXB0KGJhc2UpOwogCiAJCXdoaWxlIChsZXZlbHMtLSkKIAkJCWV4
+cGlyZV90aW1lcnMoYmFzZSwgaGVhZHMgKyBsZXZlbHMpOwpAQCAtMTgwOCwxMiArMTc3MSwxMiBA
+QCB2b2lkIHJ1bl9sb2NhbF90aW1lcnModm9pZCkKIAogCWhydGltZXJfcnVuX3F1ZXVlcygpOwog
+CS8qIFJhaXNlIHRoZSBzb2Z0aXJxIG9ubHkgaWYgcmVxdWlyZWQuICovCi0JaWYgKHRpbWVfYmVm
+b3JlKGppZmZpZXMsIGJhc2UtPmNsaykpIHsKKwlpZiAodGltZV9iZWZvcmUoamlmZmllcywgYmFz
+ZS0+bmV4dF9leHBpcnkpKSB7CiAJCWlmICghSVNfRU5BQkxFRChDT05GSUdfTk9fSFpfQ09NTU9O
+KSkKIAkJCXJldHVybjsKIAkJLyogQ1BVIGlzIGF3YWtlLCBzbyBjaGVjayB0aGUgZGVmZXJyYWJs
+ZSBiYXNlLiAqLwogCQliYXNlKys7Ci0JCWlmICh0aW1lX2JlZm9yZShqaWZmaWVzLCBiYXNlLT5j
+bGspKQorCQlpZiAodGltZV9iZWZvcmUoamlmZmllcywgYmFzZS0+bmV4dF9leHBpcnkpKQogCQkJ
+cmV0dXJuOwogCX0KIAlyYWlzZV9zb2Z0aXJxKFRJTUVSX1NPRlRJUlEpOwpAQCAtMTk3OCw3ICsx
+OTQxLDYgQEAgaW50IHRpbWVyc19wcmVwYXJlX2NwdSh1bnNpZ25lZCBpbnQgY3B1KQogCQliYXNl
+LT5jbGsgPSBqaWZmaWVzOwogCQliYXNlLT5uZXh0X2V4cGlyeSA9IGJhc2UtPmNsayArIE5FWFRf
+VElNRVJfTUFYX0RFTFRBOwogCQliYXNlLT5pc19pZGxlID0gZmFsc2U7Ci0JCWJhc2UtPm11c3Rf
+Zm9yd2FyZF9jbGsgPSB0cnVlOwogCX0KIAlyZXR1cm4gMDsKIH0KQEAgLTIwMzEsNiArMTk5Myw3
+IEBAIHN0YXRpYyB2b2lkIF9faW5pdCBpbml0X3RpbWVyX2NwdShpbnQgY3B1KQogCQliYXNlLT5j
+cHUgPSBjcHU7CiAJCXJhd19zcGluX2xvY2tfaW5pdCgmYmFzZS0+bG9jayk7CiAJCWJhc2UtPmNs
+ayA9IGppZmZpZXM7CisJCWJhc2UtPm5leHRfZXhwaXJ5ID0gYmFzZS0+Y2xrICsgTkVYVF9USU1F
+Ul9NQVhfREVMVEE7CiAJCXRpbWVyX2Jhc2VfaW5pdF9leHBpcnlfbG9jayhiYXNlKTsKIAl9CiB9
+Cgo=
