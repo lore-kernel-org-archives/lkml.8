@@ -2,198 +2,137 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5257C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70622C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4732207FC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D1F208A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:33:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="clTQFpIM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CdBBGHL9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QOOZIhaq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgHDMdE (ORCPT
+        id S1727951AbgHDMdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 08:33:04 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:36261 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727779AbgHDMcQ (ORCPT
+        Tue, 4 Aug 2020 08:33:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39236 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgHDMcP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 08:32:16 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailnew.nyi.internal (Postfix) with ESMTP id C94F6580552;
-        Tue,  4 Aug 2020 08:32:13 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Tue, 04 Aug 2020 08:32:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
-        GQrvTmzmmFYdgKDOjC8EuXBs0YT7HCIH7S0aDNWKxu4=; b=clTQFpIMSolCW6jY
-        xc99NEC4kl0YqyNOsm6qSVHOkZFRyhaNemvV42oGz7IHHSv3+EpRvRgaPZX4cMIy
-        uG0kY97csqAYzzeIO62vthsBgZrguMDBKu/4hEXIjO4S9A+KjMpZagxQ5rSB+eIx
-        O5n0AO9Qqsy1lDc9obh3cjdW33gc9VxRh7KFRLYeHawdsj7/3L8vr7yb2w8VxEy4
-        6F9I8qHqZYZzJPQ2+9u5WHdCut/HdViUN3H6TEGza9MYaxUCBpBxQSfW58VjyVwo
-        /k3Ao5jizSrnCh6TCBW6h/8qVBg4fpTax4o6yrywHYuGXFDhRak1DbcxlLj+7Lht
-        VWfBLA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=GQrvTmzmmFYdgKDOjC8EuXBs0YT7HCIH7S0aDNWKx
-        u4=; b=CdBBGHL97gKyORvrfh7sIlaBs00XY1tMVHmMDPzGTQSg4+bSBCCqF0hFt
-        IEOc0mHjwjmFv+oIHhMtp9t73oOn8Cksi2OJH0E+hhO5fxCI2oRe2y2ODq1db5vE
-        GjMdoyORzN3OkoEAWJJkbhe/oM+BTvd34+WwFilOZM1ls0pcUHGNrzmgJupL0lwh
-        ZmXqcQagnbWVfqbkqhUP6hOgg1Y6/bJVv9Xw4qEUzBuicH9wojYTrZau8RYBRimo
-        kL6iylsRcEy5jdV1F/iCrShzmtZ0eV4NnoWaj6K31/l79V0bN9nFYTr5bevOyUts
-        izE9B7fraIwpvRSS6TWlVZ+ve9TtQ==
-X-ME-Sender: <xms:TFUpX4-ox1o4MRnKnWdE272jhCVKtxE-9wztQZddi5qFKWRXZKovwQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrjeeigdehgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
-    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnhepfe
-    efteetvdeguddvveefveeftedtffduudehueeihfeuvefgveehffeludeggfejnecukfhp
-    peduudekrddvtdekrdegjedrudeiudenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
-X-ME-Proxy: <xmx:TFUpXwtbPbbZc6pREsPaXvlLpznOoU3pBIZOBhXXNNcVQ2h0mLttnw>
-    <xmx:TFUpX-D9bye0WAANnM0viVcGOmAzEJX1_LFFaakEqE-0b_L9nXh0Yg>
-    <xmx:TFUpX4fEKfhE8UMAm7Q4DP_ltPtsf8PFO0R1s9TQiYNAy1w7fbTTDQ>
-    <xmx:TVUpXwoVZSDciaCCPlUM353wOLXDPtV5BJH8lEGIxW6IJfby6hy0zw>
-Received: from mickey.themaw.net (unknown [118.208.47.161])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 078F830600A6;
-        Tue,  4 Aug 2020 08:32:07 -0400 (EDT)
-Message-ID: <3341383b655b39697b4dcdb9f64c5f3bc46a6ac4.camel@themaw.net>
-Subject: Re: [PATCH 06/18] fsinfo: Add a uniquifier ID to struct mount [ver
- #21]
-From:   Ian Kent <raven@themaw.net>
-To:     Miklos Szeredi <miklos@szeredi.hu>,
-        David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
-        mszeredi@redhat.com, christian@brauner.io, jannh@google.com,
-        darrick.wong@oracle.com, kzak@redhat.com, jlayton@redhat.com,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 04 Aug 2020 20:32:04 +0800
-In-Reply-To: <20200804104108.GC32719@miu.piliscsaba.redhat.com>
-References: <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk>
-         <159646183662.1784947.5709738540440380373.stgit@warthog.procyon.org.uk>
-         <20200804104108.GC32719@miu.piliscsaba.redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 4 Aug 2020 08:32:15 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAA2DC061756
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 05:32:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=RANkuMGH5Shk9k5d9SY1igHjSQobHcAmQUt/sHBCrIY=; b=QOOZIhaq3WBJjDTaWqMnTDOBgz
+        rIBxVhGND/pICG5HS6Hefy3MoPz+ZmNJK04JQPWiil+/xAwFMe2XMYmUD2SRVHhJc3tyi1K3XFwoJ
+        h2kHqkS9zkIXy/2XbkWmACWcATH1Rtyq5794ScWPktI6IA4Jel9Q3jl+OJWeGxgZJ4YdE73Pf/mh/
+        xP0yE/mOqs0llKZiJOMo9qr+Y87ISpeXaib0rVaTBaz/boxfdOzb8tFM7bEaM3wT9Jrkqu6JXLzHk
+        hmc0/Ed3ZfB6cGU0vSjs48CNtGS6YNZ77YZytqYG4T/lgVdO6nSTrTAZBP89/pczCuz+op3qa0QAa
+        Ewz0y+Jw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k2w6h-00087p-Pa; Tue, 04 Aug 2020 12:31:52 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 650EB301631;
+        Tue,  4 Aug 2020 14:31:47 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4D11E2BDB8C9F; Tue,  4 Aug 2020 14:31:47 +0200 (CEST)
+Date:   Tue, 4 Aug 2020 14:31:47 +0200
+From:   peterz@infradead.org
+To:     Peter Oskolkov <posk@posk.io>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Peter Oskolkov <posk@google.com>,
+        Andrei Vagin <avagin@google.com>, Paul Turner <pjt@google.com>,
+        Ben Segall <bsegall@google.com>, Aaron Lu <aaron.lwe@gmail.com>
+Subject: Re: [PATCH for 5.9 v2 1/4] futex: introduce FUTEX_SWAP operation
+Message-ID: <20200804123147.GI2674@hirez.programming.kicks-ass.net>
+References: <20200803221510.170674-1-posk@posk.io>
+ <20200803221510.170674-2-posk@posk.io>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200803221510.170674-2-posk@posk.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-08-04 at 12:41 +0200, Miklos Szeredi wrote:
-> On Mon, Aug 03, 2020 at 02:37:16PM +0100, David Howells wrote:
-> > Add a uniquifier ID to struct mount that is effectively unique over
-> > the
-> > kernel lifetime to deal around mnt_id values being reused.  This
-> > can then
-> > be exported through fsinfo() to allow detection of replacement
-> > mounts that
-> > happen to end up with the same mount ID.
-> > 
-> > The normal mount handle is still used for referring to a particular
-> > mount.
-> > 
-> > The mount notification is then changed to convey these unique mount
-> > IDs
-> > rather than the mount handle.
-> > 
-> > Signed-off-by: David Howells <dhowells@redhat.com>
-> > ---
-> > 
-> >  fs/mount.h        |    3 +++
-> >  fs/mount_notify.c |    4 ++--
-> >  fs/namespace.c    |    3 +++
-> >  3 files changed, 8 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/fs/mount.h b/fs/mount.h
-> > index 85456a5f5a3a..1037781be055 100644
-> > --- a/fs/mount.h
-> > +++ b/fs/mount.h
-> > @@ -79,6 +79,9 @@ struct mount {
-> >  	int mnt_expiry_mark;		/* true if marked for
-> > expiry */
-> >  	struct hlist_head mnt_pins;
-> >  	struct hlist_head mnt_stuck_children;
-> > +#ifdef CONFIG_FSINFO
-> > +	u64	mnt_unique_id;		/* ID unique over lifetime of
-> > kernel */
-> > +#endif
-> 
-> Not sure if it's worth making conditional.
-> 
-> >  #ifdef CONFIG_MOUNT_NOTIFICATIONS
-> >  	struct watch_list *mnt_watchers; /* Watches on dentries within
-> > this mount */
-> >  #endif
-> > diff --git a/fs/mount_notify.c b/fs/mount_notify.c
-> > index 44f570e4cebe..d8ba66ed5f77 100644
-> > --- a/fs/mount_notify.c
-> > +++ b/fs/mount_notify.c
-> > @@ -90,7 +90,7 @@ void notify_mount(struct mount *trigger,
-> >  	n.watch.type	= WATCH_TYPE_MOUNT_NOTIFY;
-> >  	n.watch.subtype	= subtype;
-> >  	n.watch.info	= info_flags | watch_sizeof(n);
-> > -	n.triggered_on	= trigger->mnt_id;
-> > +	n.triggered_on	= trigger->mnt_unique_id;
-> >  
-> >  	switch (subtype) {
-> >  	case NOTIFY_MOUNT_EXPIRY:
-> > @@ -102,7 +102,7 @@ void notify_mount(struct mount *trigger,
-> >  	case NOTIFY_MOUNT_UNMOUNT:
-> >  	case NOTIFY_MOUNT_MOVE_FROM:
-> >  	case NOTIFY_MOUNT_MOVE_TO:
-> > -		n.auxiliary_mount	= aux->mnt_id;
-> > +		n.auxiliary_mount = aux->mnt_unique_id;
-> 
-> Hmm, so we now have two ID's:
-> 
->  - one can be used to look up the mount
->  - one is guaranteed to be unique
-> 
-> With this change the mount cannot be looked up with
-> FSINFO_FLAGS_QUERY_MOUNT,
-> right?
-> 
-> Should we be merging the two ID's into a single one which has both
-> properties?
+On Mon, Aug 03, 2020 at 03:15:07PM -0700, Peter Oskolkov wrote:
+> A simplified/idealized use case: imagine a multi-user service application
+> (e.g. a DBMS) that has to implement the following user CPU quota
+> policy:
 
-I'd been thinking we would probably need to change to 64 bit ids
-for a while now and I thought that was what was going to happen.
+So the last posting made hackernews; and there a bunch expressed far
+more interest in coroutines, which, if I'm not mistaken, can also be
+implemented using all this.
 
-We'll need to change libmount and current code but better early
-on than later.
+Would that not make for a far simpler and more convincing use-case?
 
-Ian
-
+> - block detection: when a task blocks in the kernel (on a network
+>   read, for example), the userspace scheduler is notified and
+>   schedules (resumes or swaps into) a pending task in the newly available
+>   CPU slot;
+> - wake detection: when a task wakes from a previously blocking kernel
+>   operation (e.g. can now process some data on a network socket), the
+>   userspace scheduler is notified and can now schedule the task to
+>   run on a CPU when a CPU is available and the task can use it according
+>   to its scheduling policy.
 > 
-> >  		break;
-> >  
-> >  	default:
-> > diff --git a/fs/namespace.c b/fs/namespace.c
-> > index b2b9920ffd3c..1db8a64cd76f 100644
-> > --- a/fs/namespace.c
-> > +++ b/fs/namespace.c
-> > @@ -115,6 +115,9 @@ static int mnt_alloc_id(struct mount *mnt)
-> >  	if (res < 0)
-> >  		return res;
-> >  	mnt->mnt_id = res;
-> > +#ifdef CONFIG_FSINFO
-> > +	mnt->mnt_unique_id = atomic64_inc_return(&vfs_unique_counter);
-> > +#endif
-> >  	return 0;
-> >  }
-> >  
-> > 
-> > 
+> (Technically, block/wake detection is still experimental and not
+> used widely: as we control the userspace, we can actually determine
+> blocking/waking syscalls without kernel support).
+> 
+> Internally we currently use kernel patches that are too "intrusive" to be
+> included in a general-purpose Linux kernel, so we are exploring ways to
+> upstream this functionality.
+> 
+> The easiest/least intrusive approach that we have come up with is this:
+> 
+> - block/resume map perfectly to futex wait/wake;
+> - switch_to thus maps to FUTEX_SWAP;
+> - block and wake detection can be done either through tracing
+>   or by introducing new BPF attach points (when a task blocks or wakes,
+>   a BPF program is triggered that then communicates with the userspace);
+> - the BPF attach points are per task, and the task needs to "opt in"
+>   (i.e. all other tasks suffer just an additional pointer comparison
+>   on block/wake);
+> - the BPF programs triggered on block/wake should be able to perform
+>   futex ops (e.g. wake a designated userspace scheduling task) - this
+>   probably indicates that tracing is not enough, and a new BPF prog type
+>   is needed.
 
+I really think we want to have block/resume detection sorted before this
+goes anywhere, I also strongly feel BPF should not be used for
+functional interfaces like that.
+
+That is, I want to see a complete interface before I want to commit to
+an ABI that we're stuck with.
+
+I also want to see userspace that goes along with it; like with
+sys_membarrier() / liburcu and sys_rseq() / librseq (which seems to be
+heading for glibc).
+
+Also, and this seems to be the crux of the whole endeavour, you want to
+allow your 'fibers' to block. Which is what makes
+{make,swap,get,set}context() unsuited for your needs and gives rise to
+the whole block/resume issue above.
+
+Also, I want words on the interaction between resume notification and
+wake-up preemption. That is, how do you envision managing the
+interaction between the two schedulers.
+
+
+All in all, I don't think you're even close to having something
+mergable.
