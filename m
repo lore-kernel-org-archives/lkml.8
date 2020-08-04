@@ -2,260 +2,96 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 838D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8DAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60B4921744
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:48:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 131EA21744
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:48:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IcRDT7zz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vSmsvJyS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbgHDUsV (ORCPT
+        id S1728278AbgHDUs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 16:48:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59228 "EHLO
+        Tue, 4 Aug 2020 16:48:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728100AbgHDUr5 (ORCPT
+        with ESMTP id S1727057AbgHDUs2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 16:47:57 -0400
-Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2A33C06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 13:47:56 -0700 (PDT)
-Received: by mail-pf1-x44a.google.com with SMTP id z16so28856817pfq.7
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 13:47:56 -0700 (PDT)
+        Tue, 4 Aug 2020 16:48:28 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89DE3C06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 13:48:28 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id m22so860578eje.10
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 13:48:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=dHVZunjWNtgqB5lbkdr6zaqYDYt1QTvDnOtIriqcITc=;
-        b=IcRDT7zzzIHBSrHusZVDx7CrCW5d0Ool2TKTnReHwbPogBD3MyOwpMJUhQBh9rm4zE
-         KggyFNCzEGg2EyqxPhl0Rdj+ei5lJGHuVpFnioCjk0lu4FpHBbMIY0hXTCZlDVx8xS2y
-         gg2qiILJeCoW2bakXI0ASKjycbngl/i4xgrrPbI7oJnX2At0ZzSzs8tYbm88nKMgIzFi
-         QUtVYKZT1PtEZEHWRMRFXfvSMnVMxyhWSvc6SDjylqTY1wys+dgWsWjNvIHevMzZwhmc
-         uim5XW7PuDO/fsgl2lCcZB3qPkgUvwi3oQbdYITvhmMQcAOXH+DsMb2PhkXbqFpYzbPW
-         9n+Q==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=NqpbOQVzDCzUgU0urNu9EPIE4Ge9MLfqzEnXxyaLaK0=;
+        b=vSmsvJySEicOLbSHzIA6J7MgSzVb0wwZnrCz69Ozrzro7d3Ac1yqFZH0FAfB73KIwY
+         8JYwmoBy0NZVisqeb84sLLG/CkCrIjrwrM1XE4HolDbRdylLOvRrwDKWgx8qGEzEJCX7
+         zppNPDwiytYQmvHetDGpoJBMfqCPpoxdG9YtpEesl8rGln7bjGSWl9OOJnxr81w5/GNj
+         QTUhiusCCh6y1z8gksTYZi5Vl2onOiiaMGavWoSA8LmVVgXrkBQKiHHEZQ2sujUoGs0w
+         /4Ix6WtmX4toYoHqZFEFmBgBYybhz8y/7cQqkah6j200r92kY8kaRy5dlF0SEBcW42Rf
+         TI4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=dHVZunjWNtgqB5lbkdr6zaqYDYt1QTvDnOtIriqcITc=;
-        b=e3/AH5Hm+v2BxCTxn2FECKf7a4hIB70saEieUjk73qD79iNdn1uw6O+PQEcqqMcLHC
-         WNZOxS+QMhqezu5GrPVD6W5HMp5tPM022QqtoibTr11P7TQeodtwnL2hsKR74eFkWlIA
-         QBa3OeDyjqKqTSf6gDba6XDMPp43rlwcmKlfLl0fJ50JySh/4kXPrV+2iGgqKVn1zO1z
-         8IytGB8cjKX/DQmk5vI4/fY2zRA2+JH1nyRec3ZQr135wK0hcjf7ad6GTP4EeQsEj/ck
-         y1hmw0vn282B6IJaaVSyjAbWoZD2PFO23++LbCIbEJte8xw1OyZpmKf5BQSXYv4CpzsQ
-         jEqQ==
-X-Gm-Message-State: AOAM532EpYfVHSeMEAk5dXFezUF09xauaXVmj3tdXbbDnbDqCPQQJzm9
-        LMFyrvPYFq+jLWmaCJWDcfOVVLsK/oByIN7RRk4x2A==
-X-Google-Smtp-Source: ABdhPJwENoSqQnBcQZjPTU6dBdfdbIcq1VZAvgrhVUVDWy8+rfh9R+G9wMEf2JrqW2BY3Wie2Ihd+14wTeL8KeHdO147bQ==
-X-Received: by 2002:a63:7f5a:: with SMTP id p26mr207397pgn.117.1596574076050;
- Tue, 04 Aug 2020 13:47:56 -0700 (PDT)
-Date:   Tue,  4 Aug 2020 13:47:42 -0700
-In-Reply-To: <20200804204745.987648-1-brendanhiggins@google.com>
-Message-Id: <20200804204745.987648-3-brendanhiggins@google.com>
-Mime-Version: 1.0
-References: <20200804204745.987648-1-brendanhiggins@google.com>
-X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-Subject: [PATCH v6 2/5] kunit: test: create a single centralized executor for
- all tests
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
-        arnd@arndb.de, keescook@chromium.org, skhan@linuxfoundation.org,
-        alan.maguire@oracle.com, yzaikin@google.com, davidgow@google.com,
-        akpm@linux-foundation.org, rppt@linux.ibm.com,
-        frowand.list@gmail.com
-Cc:     gregkh@linuxfoundation.org, sboyd@kernel.org, logang@deltatee.com,
-        mcgrof@kernel.org, linux-arch@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        Brendan Higgins <brendanhiggins@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NqpbOQVzDCzUgU0urNu9EPIE4Ge9MLfqzEnXxyaLaK0=;
+        b=Omm9CaNnnr5gDOjQSqFSCsDiPYHtAm+NqNvXgDcCDYPC0ZYX1JcOeWtEmiksEZAXNH
+         166+OFaTMuv+A8dlEYVO8YL+jN4lhEfzLeMlYGATb8XJpQpPkgd2cpfkUO/rkidcgHv/
+         J2YUATgy3c8KZDTckbgF0CE7j24KlKSHfkHMAwWvAT8CRSMtJuiA3btjVsftAfyX1YIM
+         jS856csdH8OiP4c9S0aEThGGaoRaZ8P4SVxF/yLoBhDksYi66QPkzhEX6sVGXjtLiJxN
+         Dbw2peUEO19FhDEv1GhwUVMdoVp76P7Gbfi0LMlPis5FGJ2nZYOwZMIboRragqCWL7zs
+         uZeQ==
+X-Gm-Message-State: AOAM533yMlIiKY1KubvhxtxvD36SHyrt9LL9kYoguslq3o4OD4PYE7ff
+        O3AKQ08IjbshpXfkT0kUOWw=
+X-Google-Smtp-Source: ABdhPJwu9MuLWp3ZrRR44iWqE5kIVxrgTONB0odsS9YEKhesx9g3xCecLA/JtmUU+mCFSReF2GgKxA==
+X-Received: by 2002:a17:906:1392:: with SMTP id f18mr22686757ejc.521.1596574107347;
+        Tue, 04 Aug 2020 13:48:27 -0700 (PDT)
+Received: from ltop.local ([2a02:a03f:a7fb:e200:d068:a44f:fa3b:62da])
+        by smtp.gmail.com with ESMTPSA id di5sm78772edb.16.2020.08.04.13.48.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Aug 2020 13:48:24 -0700 (PDT)
+Date:   Tue, 4 Aug 2020 22:48:08 +0200
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Stafford Horne <shorne@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        openrisc@lists.librecores.org
+Subject: Re: [PATCH 3/6] openrisc: uaccess: Use static inline function in
+ access_ok
+Message-ID: <20200804204808.ttgkwrievzn5aoqd@ltop.local>
+References: <20200804042354.3930694-1-shorne@gmail.com>
+ <20200804042354.3930694-4-shorne@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200804042354.3930694-4-shorne@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Maguire <alan.maguire@oracle.com>
+On Tue, Aug 04, 2020 at 01:23:51PM +0900, Stafford Horne wrote:
+> As suggested by Linus when reviewing commit 9cb2feb4d21d
+> ("arch/openrisc: Fix issues with access_ok()") last year; making
+> __range_ok an inline function also fixes the used twice issue that the
+> commit was fixing.  I agree it's a good cleanup.  This patch addresses
+> that as I am currently working on the access_ok macro to fixup sparse
+> annotations in OpenRISC.
+> 
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Stafford Horne <shorne@gmail.com>
 
-Add a centralized executor to dispatch tests rather than relying on
-late_initcall to schedule each test suite separately. Centralized
-execution is for built-in tests only; modules will execute tests when
-loaded.
+Look good to me.
 
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-Co-developed-by: Iurii Zaikin <yzaikin@google.com>
-Signed-off-by: Iurii Zaikin <yzaikin@google.com>
-Co-developed-by: Brendan Higgins <brendanhiggins@google.com>
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
- include/kunit/test.h | 67 +++++++++++++++++++++++++++++---------------
- lib/kunit/Makefile   |  3 +-
- lib/kunit/executor.c | 28 ++++++++++++++++++
- lib/kunit/test.c     |  2 +-
- 4 files changed, 76 insertions(+), 24 deletions(-)
- create mode 100644 lib/kunit/executor.c
-
-diff --git a/include/kunit/test.h b/include/kunit/test.h
-index 47e61e1d53370..f3e86c3953a2b 100644
---- a/include/kunit/test.h
-+++ b/include/kunit/test.h
-@@ -224,7 +224,7 @@ size_t kunit_suite_num_test_cases(struct kunit_suite *suite);
- unsigned int kunit_test_case_num(struct kunit_suite *suite,
- 				 struct kunit_case *test_case);
- 
--int __kunit_test_suites_init(struct kunit_suite **suites);
-+int __kunit_test_suites_init(struct kunit_suite * const * const suites);
- 
- void __kunit_test_suites_exit(struct kunit_suite **suites);
- 
-@@ -237,34 +237,57 @@ void __kunit_test_suites_exit(struct kunit_suite **suites);
-  * Registers @suites_list with the test framework. See &struct kunit_suite for
-  * more information.
-  *
-- * When builtin, KUnit tests are all run as late_initcalls; this means
-- * that they cannot test anything where tests must run at a different init
-- * phase. One significant restriction resulting from this is that KUnit
-- * cannot reliably test anything that is initialize in the late_init phase;
-- * another is that KUnit is useless to test things that need to be run in
-- * an earlier init phase.
-- *
-- * An alternative is to build the tests as a module.  Because modules
-- * do not support multiple late_initcall()s, we need to initialize an
-- * array of suites for a module.
-- *
-- * TODO(brendanhiggins@google.com): Don't run all KUnit tests as
-- * late_initcalls.  I have some future work planned to dispatch all KUnit
-- * tests from the same place, and at the very least to do so after
-- * everything else is definitely initialized.
-+ * If a test suite is built-in, module_init() gets translated into
-+ * an initcall which we don't want as the idea is that for builtins
-+ * the executor will manage execution.  So ensure we do not define
-+ * module_{init|exit} functions for the builtin case when registering
-+ * suites via kunit_test_suites() below.
-  */
--#define kunit_test_suites(suites_list...)				\
--	static struct kunit_suite *suites[] = {suites_list, NULL};	\
--	static int kunit_test_suites_init(void)				\
-+#ifdef MODULE
-+#define kunit_test_suites_for_module(__suites)				\
-+	static int __init kunit_test_suites_init(void)			\
- 	{								\
--		return __kunit_test_suites_init(suites);		\
-+		return __kunit_test_suites_init(__suites);		\
- 	}								\
--	late_initcall(kunit_test_suites_init);				\
-+	module_init(kunit_test_suites_init);				\
-+									\
- 	static void __exit kunit_test_suites_exit(void)			\
- 	{								\
--		return __kunit_test_suites_exit(suites);		\
-+		return __kunit_test_suites_exit(__suites);		\
- 	}								\
- 	module_exit(kunit_test_suites_exit)
-+#else
-+#define kunit_test_suites_for_module(__suites)
-+#endif /* MODULE */
-+
-+#define __kunit_test_suites(unique_array, unique_suites, ...)		       \
-+	static struct kunit_suite *unique_array[] = { __VA_ARGS__, NULL };     \
-+	kunit_test_suites_for_module(unique_array);			       \
-+	static struct kunit_suite **unique_suites			       \
-+	__used __section(.kunit_test_suites) = unique_array
-+
-+/**
-+ * kunit_test_suites() - used to register one or more &struct kunit_suite
-+ *			 with KUnit.
-+ *
-+ * @suites: a statically allocated list of &struct kunit_suite.
-+ *
-+ * Registers @suites with the test framework. See &struct kunit_suite for
-+ * more information.
-+ *
-+ * When builtin,  KUnit tests are all run via executor; this is done
-+ * by placing the array of struct kunit_suite * in the .kunit_test_suites
-+ * ELF section.
-+ *
-+ * An alternative is to build the tests as a module.  Because modules do not
-+ * support multiple initcall()s, we need to initialize an array of suites for a
-+ * module.
-+ *
-+ */
-+#define kunit_test_suites(...)						\
-+	__kunit_test_suites(__UNIQUE_ID(array),				\
-+			    __UNIQUE_ID(suites),			\
-+			    __VA_ARGS__)
- 
- #define kunit_test_suite(suite)	kunit_test_suites(&suite)
- 
-diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
-index 724b94311ca36..c49f4ffb6273a 100644
---- a/lib/kunit/Makefile
-+++ b/lib/kunit/Makefile
-@@ -3,7 +3,8 @@ obj-$(CONFIG_KUNIT) +=			kunit.o
- kunit-objs +=				test.o \
- 					string-stream.o \
- 					assert.o \
--					try-catch.o
-+					try-catch.o \
-+					executor.o
- 
- ifeq ($(CONFIG_KUNIT_DEBUGFS),y)
- kunit-objs +=				debugfs.o
-diff --git a/lib/kunit/executor.c b/lib/kunit/executor.c
-new file mode 100644
-index 0000000000000..7015e7328dce7
---- /dev/null
-+++ b/lib/kunit/executor.c
-@@ -0,0 +1,28 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <kunit/test.h>
-+
-+/*
-+ * These symbols point to the .kunit_test_suites section and are defined in
-+ * include/asm-generic/vmlinux.lds.h, and consequently must be extern.
-+ */
-+extern struct kunit_suite * const * const __kunit_suites_start[];
-+extern struct kunit_suite * const * const __kunit_suites_end[];
-+
-+#if IS_BUILTIN(CONFIG_KUNIT)
-+
-+static int kunit_run_all_tests(void)
-+{
-+	struct kunit_suite * const * const *suites;
-+
-+	for (suites = __kunit_suites_start;
-+	     suites < __kunit_suites_end;
-+	     suites++)
-+			__kunit_test_suites_init(*suites);
-+
-+	return 0;
-+}
-+
-+late_initcall(kunit_run_all_tests);
-+
-+#endif /* IS_BUILTIN(CONFIG_KUNIT) */
-diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-index ccb2ffad8dcfa..918dff400a9d7 100644
---- a/lib/kunit/test.c
-+++ b/lib/kunit/test.c
-@@ -380,7 +380,7 @@ static void kunit_init_suite(struct kunit_suite *suite)
- 	kunit_debugfs_create_suite(suite);
- }
- 
--int __kunit_test_suites_init(struct kunit_suite **suites)
-+int __kunit_test_suites_init(struct kunit_suite * const * const suites)
- {
- 	unsigned int i;
- 
--- 
-2.28.0.163.g6104cc2f0b6-goog
-
+-- Luc
