@@ -2,132 +2,137 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A35C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 439F4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A30F220842
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EF0A207FC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:03:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="CiW6z32Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729577AbgHDRDj (ORCPT
+        id S1729844AbgHDRDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 13:03:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51346 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728880AbgHDRCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 13:02:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 22F21B588;
-        Tue,  4 Aug 2020 17:02:30 +0000 (UTC)
-Subject: Re: [RFC-PROTOTYPE 1/1] mm: Add __GFP_FAST_TRY flag
-To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, RCU <rcu@vger.kernel.org>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-References: <20200803163029.1997-1-urezki@gmail.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <1d50a46a-b97f-96b2-8a5c-21075f022f01@suse.cz>
-Date:   Tue, 4 Aug 2020 19:02:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 4 Aug 2020 13:03:46 -0400
+Received: from mail-eopbgr70074.outbound.protection.outlook.com ([40.107.7.74]:17300
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729131AbgHDRDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 13:03:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FbmOvc1yqLDC0CEmZ+SJ0+bxokjsuPSWaksneOHlX9MvfZ+tHQT//RfE7VkTTsudo5Xo3if9RD8JO6/xbVt3PcOYROkL+iBvuuCyd3bOzfOh2wqEbHyK90TJukvdfhHDGGOFVO/w8NmdmyCeA45/8MbeXiZ2G/DZtmN5cHK5/r1lbFJaWY7BKkraCak2ughQiIQ9q+bwlOPgHp+h8bTNlixNtQsSly2lOiMHARvyu6iSJQ8GfC9tPGth6INQ56/JG0x0kUk7rVSrbwaxKBJRn1S3s+wTvjo5y1LXuRUDAmkQvQqbrTZdboJPq/XmJyrqOhFSmLu2p8TE0vBS6TcTgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7wLHGsl2C6BI5j1457dAed07dHoa/4CliwDGpeWowms=;
+ b=EihtR8bw1bvL1BFx20M+abDXu/yIggTyWRTokAumOcge+DMlMN/VbDQEcL5dJSlBtGVzXE63eqcFWVSAlqGHFdam5D0LIeULt3TRCxCs3AcSHtaHDqxWZ/VPbiIJUW3pOWnYpaV7fBVGHoR3wL6dyOjDLXzZn0HGR8MtMZx7pmvQx4AP7Zjcw22UGkHya9fBX2S5krHuixegVoHXvkHz3eAenTcjpFl3+dUKHF7r5Hr1ge2xucRZCCtaBjm/j4YBBBXjOvwkkyqgCX2YkKv9GkBADqtCsrE7rvDbiulzQqtwuXPyQVxSbHkFZmaaLSy2fG5gF4q0XgpzEOKOcXgX8Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7wLHGsl2C6BI5j1457dAed07dHoa/4CliwDGpeWowms=;
+ b=CiW6z32ZyxRj7D3q9bT8Iuoev15rOBsjdgw96aRA7g53EYm03m8CrI31YTQCdPWQMtCMJXpoq4VI5R1O3/dnKbDAsA27t1cJwbMwMLcTaOKIZZUBihtMqJWH9mfl9eNAzGE9M7eS/H9xIkKpBbte+cIHGKZjoPHXrAxFVKwWkJ4=
+Authentication-Results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=mellanox.com;
+Received: from DB7PR05MB4138.eurprd05.prod.outlook.com (2603:10a6:5:23::16) by
+ DB8PR05MB6698.eurprd05.prod.outlook.com (2603:10a6:10:132::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3239.16; Tue, 4 Aug 2020 17:03:02 +0000
+Received: from DB7PR05MB4138.eurprd05.prod.outlook.com
+ ([fe80::4025:1579:1d10:fd4d]) by DB7PR05MB4138.eurprd05.prod.outlook.com
+ ([fe80::4025:1579:1d10:fd4d%7]) with mapi id 15.20.3239.021; Tue, 4 Aug 2020
+ 17:03:02 +0000
+Date:   Tue, 4 Aug 2020 14:02:58 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     akpm@linux-foundation.org, David Hildenbrand <david@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        David Airlie <airlied@linux.ie>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Wei Yang <richardw.yang@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Jia He <justin.he@arm.com>, Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Brice Goglin <Brice.Goglin@inria.fr>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-mm@kvack.org,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v3 00/23] device-dax: Support sub-dividing soft-reserved
+ ranges
+Message-ID: <20200804170258.GV19097@mellanox.com>
+References: <159625229779.3040297.11363509688097221416.stgit@dwillia2-desk3.amr.corp.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159625229779.3040297.11363509688097221416.stgit@dwillia2-desk3.amr.corp.intel.com>
+X-ClientProxiedBy: BL0PR0102CA0061.prod.exchangelabs.com
+ (2603:10b6:208:25::38) To DB7PR05MB4138.eurprd05.prod.outlook.com
+ (2603:10a6:5:23::16)
 MIME-Version: 1.0
-In-Reply-To: <20200803163029.1997-1-urezki@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by BL0PR0102CA0061.prod.exchangelabs.com (2603:10b6:208:25::38) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17 via Frontend Transport; Tue, 4 Aug 2020 17:03:02 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@mellanox.com>)      id 1k30L5-003QOA-0S; Tue, 04 Aug 2020 14:02:59 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: c561fd81-bafb-45b2-6a16-08d838983f6d
+X-MS-TrafficTypeDiagnostic: DB8PR05MB6698:
+X-Microsoft-Antispam-PRVS: <DB8PR05MB6698AF9564BCD10DFACEFDA7CF4A0@DB8PR05MB6698.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2803;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: H3oLK4DQy34IthsePWj+m2eUxKMWw32fALHR08cTHhfC1YCjn6Sbke6O516IPeZqLXEyscPRgrEen+KMQcwOw4Y5xgJKYfWIZDyV+YAlYCMfYxwtgq5x6Ykx9AN7xSn8fT+iyV/GLKCK7BvizYrwIP/dmFazcxTkjjrOeuIKT5YHGhOEbaV0gVzEXegvxcH1GX3OyCBHZCEJCJBps+DPwUGVTNzB9DlcLt1GjRHqsMF8aPEdtm395gy5DGNQBIbMtVkPkqqKIa8A5KNVdYyvrLbCr8PujbWJfrdbH3E71DYtsloEUahjdAnJK5hrOovT
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR05MB4138.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(136003)(396003)(39860400002)(366004)(2616005)(4326008)(9746002)(9786002)(558084003)(5660300002)(36756003)(7406005)(7416002)(426003)(26005)(186003)(66556008)(66946007)(66476007)(316002)(54906003)(1076003)(2906002)(478600001)(33656002)(8676002)(8936002)(86362001)(6916009);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: ooX1gXy+Unzj5ZgWTuhCl4+QjUgNuUDYr9BP99YBYYIwDbW0L34SzMiYI6uEiXDQilu2h4J5VoM3a6Y0TlcU5sJ8jbajC8YH/uyPiabwBEfCcx2Wya1ZBZA1YacFGJ9fx6NXtWNaPJYzj5uWKuk5uOd2zMaN/1M11nUFFOZ7l0YqL68evnuiixtmiUqb9Z8kkBW7zFeB/3XmlDMlcDN3nsSYlCzwbwfKZONOVw6HcX5qRWZ1aq4440wXsnP7utp6cv4kgrtioNapuEyvYk0NSnqd50UMDZaYre9ulBqUJVF+wnpIdUyIz/dakZ03r8EDtQWwRtC8dnWWdYAJqCM63W1jleZab2sauVr0t6kA4xeIbUCn6H4ePLQlbA9Ba8ztvlgm4EZD4gfe2+tpuT/oGvsKcIl+Kz/5FdxF/1Cr2hX6nw2C4I55PeId69/PU6lwXihyorHTG1YhlckZMrkKZUJn586A9uVutI8WCSVL11h/yh3XJaFLpXDLc73b67ilGGCEZrdkatkv6lNHjwn1o6ew6kAz9JRQsemGeI9GEmn6keBEXQx5c8d0f1GJNvbREqWLFasT12ssbx8sM5hc11xS5UVkl/BWCDePa4c5TPVQW4DHdEFI7X+1pWStkOMX+fd+Bt3cfD8ohqDJzkun5g==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c561fd81-bafb-45b2-6a16-08d838983f6d
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR05MB4138.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Aug 2020 17:03:02.7362
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VzQLuCw32OZmSzSwbCewJA0UXR68m5N9rn3ogeA9QLUAW5V9CZrohYyFDBqtZ6XcFe+t/qXXq1QexO7CjF4HdQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR05MB6698
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/3/20 6:30 PM, Uladzislau Rezki (Sony) wrote:
-> Some background and kfree_rcu()
-> ===============================
-> The pointers to be freed are stored in the per-cpu array to improve
-> performance, to enable an easier-to-use API, to accommodate vmalloc
-> memmory and to support a single argument of the kfree_rcu() when only
-> a pointer is passed. More details are below.
-> 
-> In order to maintain such per-CPU arrays there is a need in dynamic
-> allocation when a current array is fully populated and a new block is
-> required. See below the example:
-> 
->  0 1 2 3      0 1 2 3
-> |p|p|p|p| -> |p|p|p|p| -> NULL
-> 
-> there are two pointer-blocks, each one can store 4 addresses
-> which will be freed after a grace period is passed. In reality
-> we store PAGE_SIZE / sizeof(void *).
+On Fri, Jul 31, 2020 at 08:24:58PM -0700, Dan Williams wrote:
 
-So what do you actually have without the dynamic allocation, 8 addresses or
-PAGE_SIZE / sizeof(void *) addresses? And how many dynamically allocated pages
-did you observe you might need in practice? Can it be somehow quantified the
-benefit that you are able to allocate up to X pages dynamically from the
-pcplists, vs a fixed number of pages held just for that purpose + fallback?
+> - Fix test_hmm and other compilation fixups (Ralph)
 
-...
+The hmm parts look OK
 
-> A number of pre-fetched elements seems does not depend on amount of the
-> physical memory in a system. In my case it is 63 pages. This step is not
+Acked-by: Jason Gunthorpe <jgg@nvidia.com>
 
-It may depend, if you tune vm.percpu_pagelist_fraction sysctl. But I wouldn't
-know the exact formulas immediately. See pageset_set_high_and_batch(). In any
-case for your purpose the 'high' value (in e.g. /proc/zoneinfo) is more relevant
-(it means the maximum pages you might find cached) for you than the 'batch' (how
-much is cached in one refill).
-
-> lock-less. It uses spinlock_t for accessing to the body's zone. This
-> step is fully covered in the rmqueue_bulk() function.
-> 
-> Summarizing. The __GFP_FAST_TRY covers only [1] and can not do step [2],
-> due to the fact that [2] acquires spinlock_t. It implies that it is super
-> fast, but a higher rate of fails is also expected.
-> 
-> Usage: __get_free_page(__GFP_FAST_TRY);
-> 
-> 2) There was a proposal from Matthew Wilcox: https://lkml.org/lkml/2020/7/31/1015
-> 
-> <snip>
-> On non-RT, we could make that lock a raw spinlock.  On RT, we could
-> decline to take the lock.  We'd need to abstract the spin_lock() away
-> behind zone_lock(zone), but that should be OK.
-> <snip>
-> 
-> It would be great to use any existing flag, say GFP_NOWAIT. Suppose we
-> decline to take the lock across the page allocator for RT. But there is
-> at least one path that does it outside of the page allocator. GFP_NOWAIT
-> can wakeup the kswapd, whereas a "wake-up path" uses sleepable lock:
-> 
-> wakeup_kswapd() -> wake_up_interruptible(&pgdat->kswapd_wait).
-> 
-> Probably it can be fixed by the excluding of waking of the kswapd process
-> defining something like below:
-
-Is something missing here?
-
-> what is equal to zero and i am not sure if __get_free_page(0) handles
-> all that correctly, though it allocates and seems working on my test
-> machine! Please note it is related to "if we can reuse existing flags".
-> 
-> In the meantime, please see below for a patch that adds a __GFP_FAST_TRY,
-> which can at least serve as a baseline against which other proposals can
-> be compared. The patch is based on the 5.8.0-rc3.
-> 
-> Please RFC.
-
-At first glance __GFP_FAST_TRY (more descriptive name? __GFP_NO_LOCKS?) seems
-better than doing weird things with GFP_NOWAIT, but depends on the real benefits
-(hence my first questions).
-
-Thanks,
-Vlastimil
+Jason
