@@ -2,133 +2,197 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 304A2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F1AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1318922C9F
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:48:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="uYmTC1kZ"
+	by mail.kernel.org (Postfix) with ESMTP id A5701206DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:49:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729365AbgHDOsx (ORCPT
+        id S1729373AbgHDOs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:48:53 -0400
-Received: from mail.efficios.com ([167.114.26.124]:47576 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbgHDOsn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:48:43 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 322B92D7B46;
-        Tue,  4 Aug 2020 10:48:42 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id ZEZP2hoar3Hm; Tue,  4 Aug 2020 10:48:42 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id E1FD22D7B43;
-        Tue,  4 Aug 2020 10:48:41 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com E1FD22D7B43
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1596552521;
-        bh=DcQU8cz0KN0eXUyY05/A6WfPdiNsESHnmyMO1LCZ4uM=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=uYmTC1kZZsQtypzvkqDNCRzveU5otX6OKgQccRZSDowJGm5tLIvSvmsbXdn/nUzzv
-         Ebr5rHzYdxEqw44eWIZW0ODpWcMR3/L22gWeQd/HpQlgrkTKXIXOwoTirx3AIlUIo3
-         bJLC1Rwl3RVoTScPjx0AFy+wm4X229MPtlbhBWa/EoJ1cU7jwE9gd/9CUpZx7oNAUQ
-         mm9j1a2P4RrvZV4+Hz+sJ2zjgdblqkVdXZIKdvKzPrkmkcWx2q0zmJwWwJYhDhGgw7
-         iUgjKF4kMxu0zYXM+Tza0LYTCp3TC94TFxS08IXIw/0/TLivvI1+9LmTtB/VzHkTUY
-         2XbkGUOQ8/arQ==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id cdPm4lxPdYGP; Tue,  4 Aug 2020 10:48:41 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id D2D9A2D7A50;
-        Tue,  4 Aug 2020 10:48:41 -0400 (EDT)
-Date:   Tue, 4 Aug 2020 10:48:41 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>, paulmck <paulmck@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        linux-mm <linux-mm@kvack.org>
-Message-ID: <709073430.39864.1596552521779.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200804143419.GL2657@hirez.programming.kicks-ass.net>
-References: <20200728160010.3314-1-mathieu.desnoyers@efficios.com> <20200804143419.GL2657@hirez.programming.kicks-ass.net>
-Subject: Re: [RFC PATCH 1/2] sched: Fix exit_mm vs membarrier
+        Tue, 4 Aug 2020 10:48:58 -0400
+Received: from mga04.intel.com ([192.55.52.120]:46371 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729289AbgHDOs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 10:48:56 -0400
+IronPort-SDR: tsVZ/tjcKwsoxZgJuff7q/SM3d6XUIw56F2RHxSPBILGzF7fpsz5a3ChOCp6W7ckrGtvOZ5ZSH
+ WwTV+vZiaJIg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="149767250"
+X-IronPort-AV: E=Sophos;i="5.75,434,1589266800"; 
+   d="scan'208";a="149767250"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 07:48:55 -0700
+IronPort-SDR: 6DZxYlE1bs/rSa4hs8oiEQ56aoyt3MJIAYK6vqhTugUjtPXoKO++yNMEsfd226X65H46AnaOv9
+ uDeI3Z2sIcPA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,434,1589266800"; 
+   d="scan'208";a="492923456"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
+  by fmsmga005.fm.intel.com with ESMTP; 04 Aug 2020 07:48:50 -0700
+Subject: Re: [PATCH v2 4/5] perf record: Don't clear event's period if set by
+ a term
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+References: <20200728085734.609930-1-irogers@google.com>
+ <20200728085734.609930-5-irogers@google.com>
+ <969ef797-59ea-69d0-24b9-33bcdff106a1@intel.com>
+ <CAP-5=fUCnBGX0L0Tt3_gmVnt+hvaouJMx6XFErFKk72+xuw9fw@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <86324041-aafb-f556-eda7-6250ba678f24@intel.com>
+Date:   Tue, 4 Aug 2020 17:48:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <CAP-5=fUCnBGX0L0Tt3_gmVnt+hvaouJMx6XFErFKk72+xuw9fw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3955 (ZimbraWebClient - FF79 (Linux)/8.8.15_GA_3953)
-Thread-Topic: sched: Fix exit_mm vs membarrier
-Thread-Index: 4wlPtxcjq37vbD29WsZHDlFzoriwyA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
------ On Aug 4, 2020, at 10:34 AM, Peter Zijlstra peterz@infradead.org wrote:
-
-> On Tue, Jul 28, 2020 at 12:00:09PM -0400, Mathieu Desnoyers wrote:
->> exit_mm should issue memory barriers after user-space memory accesses,
->> before clearing current->mm, to order user-space memory accesses
->> performed prior to exit_mm before clearing tsk->mm, which has the
->> effect of skipping the membarrier private expedited IPIs.
->> 
->> The membarrier system call can be issued concurrently with do_exit
->> if we have thread groups created with CLONE_VM but not CLONE_THREAD.
+On 4/08/20 4:33 pm, Ian Rogers wrote:
+> On Tue, Aug 4, 2020 at 3:08 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>
+>> On 28/07/20 11:57 am, Ian Rogers wrote:
+>>> If events in a group explicitly set a frequency or period with leader
+>>> sampling, don't disable the samples on those events.
+>>>
+>>> Prior to 5.8:
+>>> perf record -e '{cycles/period=12345000/,instructions/period=6789000/}:S'
+>>
+>> Might be worth explaining this use-case some more.
+>> Perhaps add it to the leader sampling documentation for perf-list.
+>>
+>>> would clear the attributes then apply the config terms. In commit
+>>> 5f34278867b7 leader sampling configuration was moved to after applying the
+>>> config terms, in the example, making the instructions' event have its period
+>>> cleared.
+>>> This change makes it so that sampling is only disabled if configuration
+>>> terms aren't present.
+>>>
+>>> Fixes: 5f34278867b7 ("perf evlist: Move leader-sampling configuration")
+>>> Signed-off-by: Ian Rogers <irogers@google.com>
+>>> ---
+>>>  tools/perf/util/record.c | 28 ++++++++++++++++++++--------
+>>>  1 file changed, 20 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
+>>> index a4cc11592f6b..01d1c6c613f7 100644
+>>> --- a/tools/perf/util/record.c
+>>> +++ b/tools/perf/util/record.c
+>>> @@ -2,6 +2,7 @@
+>>>  #include "debug.h"
+>>>  #include "evlist.h"
+>>>  #include "evsel.h"
+>>> +#include "evsel_config.h"
+>>>  #include "parse-events.h"
+>>>  #include <errno.h>
+>>>  #include <limits.h>
+>>> @@ -38,6 +39,9 @@ static void evsel__config_leader_sampling(struct evsel *evsel, struct evlist *ev
+>>>       struct perf_event_attr *attr = &evsel->core.attr;
+>>>       struct evsel *leader = evsel->leader;
+>>>       struct evsel *read_sampler;
+>>> +     struct evsel_config_term *term;
+>>> +     struct list_head *config_terms = &evsel->config_terms;
+>>> +     int term_types, freq_mask;
+>>>
+>>>       if (!leader->sample_read)
+>>>               return;
+>>> @@ -47,16 +51,24 @@ static void evsel__config_leader_sampling(struct evsel *evsel, struct evlist *ev
+>>>       if (evsel == read_sampler)
+>>>               return;
+>>>
+>>> +     /* Determine the evsel's config term types. */
+>>> +     term_types = 0;
+>>> +     list_for_each_entry(term, config_terms, list) {
+>>> +             term_types |= 1 << term->type;
+>>> +     }
+>>>       /*
+>>> -      * Disable sampling for all group members other than the leader in
+>>> -      * case the leader 'leads' the sampling, except when the leader is an
+>>> -      * AUX area event, in which case the 2nd event in the group is the one
+>>> -      * that 'leads' the sampling.
+>>> +      * Disable sampling for all group members except those with explicit
+>>> +      * config terms or the leader. In the case of an AUX area event, the 2nd
+>>> +      * event in the group is the one that 'leads' the sampling.
+>>>        */
+>>> -     attr->freq           = 0;
+>>> -     attr->sample_freq    = 0;
+>>> -     attr->sample_period  = 0;
+>>> -     attr->write_backward = 0;
+>>> +     freq_mask = (1 << EVSEL__CONFIG_TERM_FREQ) | (1 << EVSEL__CONFIG_TERM_PERIOD);
+>>> +     if ((term_types & freq_mask) == 0) {
+>>
+>> It would be nicer to have a helper e.g.
+>>
+>>         if (!evsel__have_config_term(evsel, FREQ) &&
+>>             !evsel__have_config_term(evsel, PERIOD)) {
 > 
-> I'm still wonder what the exact failure case is though; exit_mm() is on
-> the exit path (as the name very much implies) and the thread is about to
-> die. The context switch that follows guarantees a full barrier before we
-> run anything else again.
+> Sure. The point of doing it this way was to avoid repeatedly iterating
+> over the config term list.
 
-Here is the scenario I have in mind:
+But perhaps it is premature optimization
 
-Two thread groups are created, A and B. Thread group B is created by
-issuing clone from group A with flag CLONE_VM set, but not CLONE_THREAD.
-Let's assume we have a single thread within each thread group (Thread A
-and Thread B).
+> 
+>>> +             attr->freq           = 0;
+>>> +             attr->sample_freq    = 0;
+>>> +             attr->sample_period  = 0;
+>>
+>> If we are not sampling, then maybe we should also put here:
+>>
+>>                 attr->write_backward = 0;
+>>
+>>> +     }
+>>
+>> Then, if we are sampling this evsel shouldn't the backward setting
+>> match the leader? e.g.
+>>
+>>         if (attr->sample_freq)
+>>                 attr->write_backward = leader->core.attr.write_backward;
+> 
+> Perhaps that should be a follow up change? This change is trying to
+> make the behavior match the previous behavior.
 
-The AFAIU we can have:
+Sure
 
-Userspace variables:
+> 
+> Thanks,
+> Ian
+> 
+>>> +     if ((term_types & (1 << EVSEL__CONFIG_TERM_OVERWRITE)) == 0)
+>>> +             attr->write_backward = 0;
+>>>
+>>>       /*
+>>>        * We don't get a sample for slave events, we make them when delivering
+>>>
+>>
 
-int x = 0, y = 0;
-
-CPU 0                   CPU 1
-Thread A                Thread B
-(in thread group A)     (in thread group B)
-
-x = 1
-barrier()
-y = 1
-exit()
-exit_mm()
-current->mm = NULL;
-                        r1 = load y
-                        membarrier()
-                          skips CPU 0 (no IPI) because its current mm is NULL
-                        r2 = load x
-                        BUG_ON(r1 == 1 && r2 == 0)
-
-Thanks,
-
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
