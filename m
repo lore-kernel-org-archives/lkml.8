@@ -2,78 +2,155 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B52F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9836BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4FA8206F6
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BE3C20722
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 06:26:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zxYJy5St"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729390AbgHDGXl (ORCPT
+        id S1729028AbgHDG0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 02:23:41 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:40956 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727076AbgHDGXl (ORCPT
+        Tue, 4 Aug 2020 02:26:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728466AbgHDG0R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 02:23:41 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07484;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0U4isUyX_1596522215;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U4isUyX_1596522215)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 04 Aug 2020 14:23:36 +0800
-Subject: Re: [PATCH v17 19/21] mm/vmscan: use relock for move_pages_to_lru
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Rong Chen <rong.a.chen@intel.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Jann Horn <jannh@google.com>
-References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
- <1595681998-19193-20-git-send-email-alex.shi@linux.alibaba.com>
- <CAKgT0UebLfdju0Ny9ad5bigzAazqpzfwk2_JNQQ9yEHYyVm5-Q@mail.gmail.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <e6b142b6-8349-443d-5442-80d25d79eb57@linux.alibaba.com>
-Date:   Tue, 4 Aug 2020 14:23:19 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Tue, 4 Aug 2020 02:26:17 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA6DDC061756
+        for <linux-kernel@vger.kernel.org>; Mon,  3 Aug 2020 23:26:16 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t10so16949541plz.10
+        for <linux-kernel@vger.kernel.org>; Mon, 03 Aug 2020 23:26:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=A9XNvvJrivb8JTq4QeaRMps6wdVFfMtg1N723IohrT8=;
+        b=zxYJy5Stx156yltLhRTP9GhksOd2MBnMjQpwNHIWQHQ+Bp0htv+64wpe8tUrSf0uZs
+         hVkgWk9tJ4efrQQwpZQYthBB3iRztK6b2ZapTTKQO4YHrYqaEeyEKFB5uy06yJtm+8+o
+         fqvcdq+db54bYb0vstHJl+Sc//Nqkzq6bskXZ1FO8n70gd3tlL/HzOh2fOFycF4zjNEN
+         e1EgUUW9riQTWujTLwvwcmPSzDqntaiYxvyDIpaB0Z2tm789PN2WgcLE1j1ussb/jF1T
+         Ck0QfuEI3IVeM9jBBUAD3THtIPMYfKdzdHjs1MSuZxzPQ4Dj0T7+SgJVNOy3UYtYY5En
+         uw/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=A9XNvvJrivb8JTq4QeaRMps6wdVFfMtg1N723IohrT8=;
+        b=tPE3mV1PQhhx7btih6L4arQJoK+z/ZqhyXTvVQrn9q7REA0vFcX8Be/R42IaUiQ/Dw
+         wnZ6u+RHNJzrX+m0xa1tuFqCGLbW9UXyOOOVOGU2HtYc1UvibUoWDeyITLOXt96X26t4
+         LieWQluzZLEtyorycSy5X/EikrgT0tB4P1dqW8gQaUwgaRWOHIhwBmaxt6bdk663p6FQ
+         KYT3tfIR3ikGiVEsIxYJoli22akwra41Yt75bMMBYdkQFxEtARnrgnywstcA0lffvN56
+         eFiN3n8a+MlPcY0z9hGK4D2uj5/uvVL3Za+iTsfY9k45ND3UDItqaqQC0GBwG7/HO+1K
+         KSDw==
+X-Gm-Message-State: AOAM532W2db7y5hN69MCd40UAXwN94GCaxxa1crp+oAzRWbHIL/eZYuU
+        wPKSTbRn+6sXpSDfiLeGSa2fEefFyyE=
+X-Google-Smtp-Source: ABdhPJwuBFWBOL0wZlYQZdtR9A7iPgxvlw2yl0HtQ9dIfmTb4jJy6WHJGuE2cnhX9J0PSHYJUr+dPw==
+X-Received: by 2002:a17:90a:bc04:: with SMTP id w4mr2645937pjr.99.1596522376172;
+        Mon, 03 Aug 2020 23:26:16 -0700 (PDT)
+Received: from localhost ([122.162.244.227])
+        by smtp.gmail.com with ESMTPSA id z29sm6992161pfj.182.2020.08.03.23.26.14
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 03 Aug 2020 23:26:15 -0700 (PDT)
+Date:   Tue, 4 Aug 2020 11:56:11 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     rjw@rjwysocki.net, dietmar.eggemann@arm.com,
+        catalin.marinas@arm.com, sudeep.holla@arm.com, will@kernel.org,
+        linux@armlinux.org.uk, mingo@redhat.com, peterz@infradead.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/7] cpufreq: set invariance scale factor on
+ transition end
+Message-ID: <20200804062611.6jpra73hmhybdw3i@vireshk-mac-ubuntu>
+References: <20200722093732.14297-1-ionela.voinescu@arm.com>
+ <20200722093732.14297-3-ionela.voinescu@arm.com>
+ <20200730041334.cjg5mc5xpopd2lst@vireshk-mac-ubuntu>
+ <20200803135838.GB9512@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0UebLfdju0Ny9ad5bigzAazqpzfwk2_JNQQ9yEHYyVm5-Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200803135838.GB9512@arm.com>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-在 2020/8/4 上午6:49, Alexander Duyck 写道:
->> Cc: linux-mm@kvack.org
-> I am assuming this is only separate from patch 18 because of the fact
-> that it is from Hugh and not yourself. Otherwise I would recommend
-> folding this into patch 18.
-
-Yes, that's resaon for this patch keeps.
-
+On 03-08-20, 14:58, Ionela Voinescu wrote:
+> Hi Viresh,
 > 
-> Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> On Thursday 30 Jul 2020 at 09:43:34 (+0530), Viresh Kumar wrote:
+> > On 22-07-20, 10:37, Ionela Voinescu wrote:
+> > > While the move of the invariance setter calls (arch_set_freq_scale())
+> > > from cpufreq drivers to cpufreq core maintained the previous
+> > > functionality for existing drivers that use target_index() and
+> > > fast_switch() for frequency switching, it also gives the possibility
+> > > of adding support for users of the target() callback, which is exploited
+> > > here.
+> > > 
+> > > To be noted that the target() callback has been flagged as deprecated
+> > > since:
+> > > 
+> > > commit 9c0ebcf78fde ("cpufreq: Implement light weight ->target_index() routine")
+> > > 
+> > > It also doesn't have that many users:
+> > > 
+> > >   cpufreq-nforce2.c:371:2:      .target = nforce2_target,
+> > >   cppc_cpufreq.c:416:2:         .target = cppc_cpufreq_set_target,
+> > >   gx-suspmod.c:439:2:           .target = cpufreq_gx_target,
+> > >   pcc-cpufreq.c:573:2:          .target = pcc_cpufreq_target,
+> > > 
+> > > Similarly to the path taken for target_index() calls in the cpufreq core
+> > > during a frequency change, all of the drivers above will mark the end of a
+> > > frequency change by a call to cpufreq_freq_transition_end().
+> > > 
+> > > Therefore, cpufreq_freq_transition_end() can be used as the location for
+> > > the arch_set_freq_scale() call to potentially inform the scheduler of the
+> > > frequency change.
+> > > 
+> > > This change maintains the previous functionality for the drivers that
+> > > implement the target_index() callback, while also adding support for the
+> > > few drivers that implement the deprecated target() callback.
+> > > 
+> > > Two notes are worthwhile here:
+> > >  - In __target_index(), cpufreq_freq_transition_end() is called only for
+> > >    drivers that have synchronous notifications enabled. There is only one
+> > >    driver that disables them,
+> > > 
+> > >    drivers/cpufreq/powernow-k8.c:1142: .flags = CPUFREQ_ASYNC_NOTIFICATION,
+> > > 
+> > >    which is deprecated.
+> > 
+> > I don't think this is deprecated.
 
-Thanks a lot!
-Alex
+Heh, maybe I misunderstood. I thought you are talking about the flag,
+while you were talking about the driver.
+
+> Sorry, possibly 'deprecated' is a strong word.
+> 
+> As far as I knew acpi_cpufreq was recommended more recently for K8/K10
+> CPUs so that's why I decided not to create a special case for it, also
+> considering that it was not supporting cpufreq-based frequency
+> invariance to begin with.
+> 
+> We could support this as well by having a call to arch_set_freq_scale()
+> on the else path in __target_index(). But given that there was only this
+> one user of CPUFREQ_ASYNC_NOTIFICATION, I thought I'd propose this simpler
+> version first.
+> 
+> Let me know if my reasoning is wrong.
+
+Nevertheless, I don't think you need to mention this detail in
+changelog for powernow-k8 as cpufreq_freq_transition_end() does get
+called for it as well, by the driver instead of the core.
+
+-- 
+viresh
