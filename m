@@ -2,209 +2,158 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2F7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 09:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94697C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 09:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFA7522B40
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 09:31:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="hSRc18DI"
+	by mail.kernel.org (Postfix) with ESMTP id A380F2086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 09:32:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbgHDJbn (ORCPT
+        id S1726386AbgHDJcJ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 05:31:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbgHDJbm (ORCPT
+        Tue, 4 Aug 2020 05:32:09 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43231 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbgHDJcI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 05:31:42 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB8B6C06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 02:31:41 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id o21so15050944oie.12
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 02:31:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Bx8QnSbD21aKEv4HPh/WQgnpCovb+oX4WSI/yUidvUA=;
-        b=hSRc18DI12vibI2y/PhLUpEH+n2WEK43Hx+65fY+/xoVAy8Nk+iOU1wBQlXk53IF+q
-         am4mS9n9SJASS+m1vHXi9FxNsGa2Z/5oejaQoiErvncEZ9HLXEK9RJfWfdRctFk5aNT8
-         eXpK2q6Ga41ilbw3cwzfxFdgg0/zYkp4LetcA=
+        Tue, 4 Aug 2020 05:32:08 -0400
+Received: from mail-pj1-f72.google.com ([209.85.216.72])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1k2tIj-0003hr-La
+        for linux-kernel@vger.kernel.org; Tue, 04 Aug 2020 09:32:05 +0000
+Received: by mail-pj1-f72.google.com with SMTP id s4so1790075pjq.8
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 02:32:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Bx8QnSbD21aKEv4HPh/WQgnpCovb+oX4WSI/yUidvUA=;
-        b=tUSeNgaHfkbBLHK3/FFA0mk4frBWE1SdKv/mRck5P0H3pk9LaEUH+wsCAJuXW6ioW1
-         8dbU54x6yiPO2ywrKigswIlj595mXXkjKIXl9CygKeP+XClIU7EbkC3JhG7atCTwWS28
-         itZqofTWfZauonGtvcspKjvmCvIFa9hJmeTKbkeI7ZalxuJlzftMIAM26eTLkmKFZoSU
-         SDav9/gFskZE8iBOTZ2JnwkhIQh9dFjvFxgSxkJ6IvcSWI7nd5TY7ODHuAenT8BwG8PQ
-         4YQCtNif9H3EF/RZ2C31bw+lho1rgG7AeFrUgs1U8HIFnkAwW0UgNEdaupj2k84MgTov
-         nisw==
-X-Gm-Message-State: AOAM531r4esnnCAjO8ZLEFXNjeZB5mVAHrMZL3dUObZs3nO2VpuBTfxS
-        lB5SRUN9cj9phd3CH1JXvBb/ptCB4/w+N32goXO/35/Q
-X-Google-Smtp-Source: ABdhPJwdpUdLPhrTPAaU7NeuwyRn6hE1IzDc4jwEglS1bZDZpyn1A79/YYbgME6XqG72lThDZ7VnwRdmnDyTYRZ8hEI=
-X-Received: by 2002:aca:ab87:: with SMTP id u129mr2628735oie.128.1596533501194;
- Tue, 04 Aug 2020 02:31:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200730144830.10479-1-paul@crapouillou.net> <20200730144830.10479-4-paul@crapouillou.net>
- <20200730152958.GB1474381@ravnborg.org> <6RIAEQ.2KRLCE1YRKKB1@crapouillou.net>
-In-Reply-To: <6RIAEQ.2KRLCE1YRKKB1@crapouillou.net>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Tue, 4 Aug 2020 11:31:29 +0200
-Message-ID: <CAKMK7uFfS0XuGAeT0t_UF7f0gALUK-BHFVsk4w_u9BjoeFtNYQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] drm/ingenic: ipu: Only enable clock when needed
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, od@zcrc.me,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=m7D3E+oljZppcXRqnOA0d+1JsK0dAh8esFkhEip7S3c=;
+        b=TibPmGq4DXIbPzcE6QRFz6RU1vvxvbRd87hvSxthYyHBLZurYDKsq6KkWftZwTnI+s
+         MHL8pPq/SdArVFlZsqFrJZXmpKW40g2xKXMh7ri3clED/DBk3p0Q+bwpBjK26WPELJlI
+         OHr1UGgRDm+ElerOAKNsbdM4g6Iyl5g23DCT9TbmvJjYPxVhUBqDIpUoNEPMiMaIoSCM
+         eN+NWA4x254acNbZ4+nUhrPTT/lbHya45dt/dImcQPCJzFw1SoeuL2INj7tkCDqZnJVO
+         y/mpXB+EzlJ9ju8jS5nZ1Niv3EFG4cU1GgOIjoKaMM89gASNKhMhTf5nAK2lfj9Rm1Ll
+         gK9A==
+X-Gm-Message-State: AOAM531+hZMRpJdwxROWgKMKMcW6xTadokHGy8YOs3QNdso8vSCY2lle
+        tSNSdLHaDi3rGfDoLG0rHlkp3/kLG27XrJvwSa6EqHBCRpFWq4RlkMJT8qm6BdESMA7kIJrIaOx
+        3hd5ftmzS+pbeipoICXiaLQZqcWvKKsHlccrpfGDqsQ==
+X-Received: by 2002:a62:6491:: with SMTP id y139mr19387363pfb.102.1596533524284;
+        Tue, 04 Aug 2020 02:32:04 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyChQbl3Sq1PVoc/sQokj4EO+tLCMI48/uyJjuiqnk70WW4RrmMYu1sGVfmrT+s694MpWx8dA==
+X-Received: by 2002:a62:6491:: with SMTP id y139mr19387332pfb.102.1596533523824;
+        Tue, 04 Aug 2020 02:32:03 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id 22sm21501192pfh.157.2020.08.04.02.32.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Aug 2020 02:32:03 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
+Subject: Re: [PATCH] ALSA: hda/hdmi: Add pins with jack detection support
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <s5hv9hy235r.wl-tiwai@suse.de>
+Date:   Tue, 4 Aug 2020 17:31:59 +0800
+Cc:     tiwai@suse.com, Jaroslav Kysela <perex@perex.cz>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Nikhil Mahale <nmahale@nvidia.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Aaron Plattner <aplattner@nvidia.com>,
+        "moderated list:SOUND" <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <41E2234E-451C-4C14-833A-E24C650EDEE1@canonical.com>
+References: <20200804072926.16897-1-kai.heng.feng@canonical.com>
+ <s5hv9hy235r.wl-tiwai@suse.de>
+To:     Takashi Iwai <tiwai@suse.de>
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 06:21:05PM +0200, Paul Cercueil wrote:
->
->
-> Le jeu. 30 juil. 2020 =C3=A0 17:29, Sam Ravnborg <sam@ravnborg.org> a =C3=
-=A9crit :
-> > On Thu, Jul 30, 2020 at 04:48:30PM +0200, Paul Cercueil wrote:
-> > >  Instead of keeping the IPU clock enabled constantly, enable and
-> > > disable
-> > >  it on demand, when the IPU plane is used. That way, we won't use any
-> > >  extra power when the IPU is not used.
-> > >
-> > >  v2: Explain the reason of this patch
-> > >
-> > >  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> >
-> > And thanks for the quick update!
->
-> Pushed to drm-misc-next. Thanks!
-
-Hi Paul,
-
-Maybe I'm mixing up people, but iirc you're the one very much interested
-in running fbdev userspace. Did you think about building up a set of
-regression tests in igt (which we could eventually even run on something
-like vkms for hw-free regression testing) so that we make sure fbdev keeps
-wroking?
-
-Defacto drm_fb_helper.c has become the fbdev reference implementation
-already anyway (e.g. with stuff like stanardizing vblank waiting
-behaviour), so this would only be the next logical step.
-
-Also adding Bart.
-
-Cheers, Daniel
 
 
->
-> Cheers,
-> -Paul
->
-> >
-> >     Sam
-> >
-> > >  ---
-> > >   drivers/gpu/drm/ingenic/ingenic-ipu.c | 23 ++++++++++++++++++++---
-> > >   1 file changed, 20 insertions(+), 3 deletions(-)
-> > >
-> > >  diff --git a/drivers/gpu/drm/ingenic/ingenic-ipu.c
-> > > b/drivers/gpu/drm/ingenic/ingenic-ipu.c
-> > >  index 7dd2a6ae4994..fc8c6e970ee3 100644
-> > >  --- a/drivers/gpu/drm/ingenic/ingenic-ipu.c
-> > >  +++ b/drivers/gpu/drm/ingenic/ingenic-ipu.c
-> > >  @@ -49,6 +49,7 @@ struct ingenic_ipu {
-> > >           struct regmap *map;
-> > >           struct clk *clk;
-> > >           const struct soc_info *soc_info;
-> > >  +        bool clk_enabled;
-> > >
-> > >           unsigned int num_w, num_h, denom_w, denom_h;
-> > >
-> > >  @@ -288,12 +289,23 @@ static void
-> > > ingenic_ipu_plane_atomic_update(struct drm_plane *plane,
-> > >           const struct drm_format_info *finfo;
-> > >           u32 ctrl, stride =3D 0, coef_index =3D 0, format =3D 0;
-> > >           bool needs_modeset, upscaling_w, upscaling_h;
-> > >  +        int err;
-> > >
-> > >           if (!state || !state->fb)
-> > >                   return;
-> > >
-> > >           finfo =3D drm_format_info(state->fb->format->format);
-> > >
-> > >  +        if (!ipu->clk_enabled) {
-> > >  +                err =3D clk_enable(ipu->clk);
-> > >  +                if (err) {
-> > >  +                        dev_err(ipu->dev, "Unable to enable clock: =
-%d\n", err);
-> > >  +                        return;
-> > >  +                }
-> > >  +
-> > >  +                ipu->clk_enabled =3D true;
-> > >  +        }
-> > >  +
-> > >           /* Reset all the registers if needed */
-> > >           needs_modeset =3D drm_atomic_crtc_needs_modeset(state->crtc=
-->state);
-> > >           if (needs_modeset) {
-> > >  @@ -578,6 +590,11 @@ static void
-> > > ingenic_ipu_plane_atomic_disable(struct drm_plane *plane,
-> > >           regmap_clear_bits(ipu->map, JZ_REG_IPU_CTRL, JZ_IPU_CTRL_CH=
-IP_EN);
-> > >
-> > >           ingenic_drm_plane_disable(ipu->master, plane);
-> > >  +
-> > >  +        if (ipu->clk_enabled) {
-> > >  +                clk_disable(ipu->clk);
-> > >  +                ipu->clk_enabled =3D false;
-> > >  +        }
-> > >   }
-> > >
-> > >   static const struct drm_plane_helper_funcs
-> > > ingenic_ipu_plane_helper_funcs =3D {
-> > >  @@ -761,9 +778,9 @@ static int ingenic_ipu_bind(struct device *dev,
-> > > struct device *master, void *d)
-> > >           drm_object_attach_property(&plane->base, ipu->sharpness_pro=
-p,
-> > >                                      ipu->sharpness);
-> > >
-> > >  -        err =3D clk_prepare_enable(ipu->clk);
-> > >  +        err =3D clk_prepare(ipu->clk);
-> > >           if (err) {
-> > >  -                dev_err(dev, "Unable to enable clock\n");
-> > >  +                dev_err(dev, "Unable to prepare clock\n");
-> > >                   return err;
-> > >           }
-> > >
-> > >  @@ -775,7 +792,7 @@ static void ingenic_ipu_unbind(struct device
-> > > *dev,
-> > >   {
-> > >           struct ingenic_ipu *ipu =3D dev_get_drvdata(dev);
-> > >
-> > >  -        clk_disable_unprepare(ipu->clk);
-> > >  +        clk_unprepare(ipu->clk);
-> > >   }
-> > >
-> > >   static const struct component_ops ingenic_ipu_ops =3D {
-> > >  --
-> > >  2.27.0
->
->
+> On Aug 4, 2020, at 17:04, Takashi Iwai <tiwai@suse.de> wrote:
+> 
+> On Tue, 04 Aug 2020 09:29:25 +0200,
+> Kai-Heng Feng wrote:
+>> 
+>> HDMI on some platforms doesn't enable audio support because its Port
+>> Connectivity [31:30] is set to AC_JACK_PORT_NONE:
+>> Node 0x05 [Pin Complex] wcaps 0x40778d: 8-Channels Digital Amp-Out CP
+>>  Amp-Out caps: ofs=0x00, nsteps=0x00, stepsize=0x00, mute=1
+>>  Amp-Out vals:  [0x00 0x00]
+>>  Pincap 0x0b000094: OUT Detect HBR HDMI DP
+>>  Pin Default 0x58560010: [N/A] Digital Out at Int HDMI
+>>    Conn = Digital, Color = Unknown
+>>    DefAssociation = 0x1, Sequence = 0x0
+>>  Pin-ctls: 0x40: OUT
+>>  Unsolicited: tag=00, enabled=0
+>>  Power states:  D0 D3 EPSS
+>>  Power: setting=D0, actual=D0
+>>  Devices: 0
+>>  Connection: 3
+>>     0x02 0x03* 0x04
+>> 
+>> Those pins were filtered out by commit 116dcde63806 ("ALSA: HDA: Remove
+>> unconnected PCM devices for Intel HDMI"). However, jacks that support
+>> detection won't have the issues the commit addresses.
+>> 
+>> So still add the pin if it supports jack detection.
+>> 
+>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> 
+> Which platform did show the problem?
 
---
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+An HP desktop.
+
+> 
+> I'm reluctant to apply this change as it would potentially break the
+> existing system.  If we must to apply, maybe it's safer to apply it
+> conditionally to the limited devices.
+
+Hmm, I find it's a bit hard to match a specific device, because the ID seems to be rather generic:
+Codec: Intel Kabylake HDMI
+Address: 2                      
+AFG Function Id: 0x1 (unsol 0)
+Vendor Id: 0x8086280b         
+Subsystem Id: 0x80860101
+Revision Id: 0x100000
+
+Should we use DMI string instead?
+
+Kai-Heng
+
+> 
+> 
+> thanks,
+> 
+> Takashi
+> 
+>> ---
+>> sound/pci/hda/patch_hdmi.c | 3 ++-
+>> 1 file changed, 2 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+>> index cd46247988e4..db3a5148bd40 100644
+>> --- a/sound/pci/hda/patch_hdmi.c
+>> +++ b/sound/pci/hda/patch_hdmi.c
+>> @@ -1701,7 +1701,8 @@ static int hdmi_add_pin(struct hda_codec *codec, hda_nid_t pin_nid)
+>> 	 * all device entries on the same pin
+>> 	 */
+>> 	config = snd_hda_codec_get_pincfg(codec, pin_nid);
+>> -	if (get_defcfg_connect(config) == AC_JACK_PORT_NONE)
+>> +	if ((get_defcfg_connect(config) == AC_JACK_PORT_NONE) &&
+>> +	    !(caps & AC_PINCAP_PRES_DETECT))
+>> 		return 0;
+>> 
+>> 	/*
+>> -- 
+>> 2.17.1
+
