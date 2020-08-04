@@ -2,67 +2,68 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-25.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A66C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838D7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E4B022CE3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60B4921744
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 20:48:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f4bULRvk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IcRDT7zz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgHDUsO (ORCPT
+        id S1728270AbgHDUsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 16:48:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59256 "EHLO
+        Tue, 4 Aug 2020 16:48:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgHDUsA (ORCPT
+        with ESMTP id S1728100AbgHDUr5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 16:48:00 -0400
-Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E507C0617A0
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 13:48:00 -0700 (PDT)
-Received: by mail-qv1-xf4a.google.com with SMTP id q12so22023602qvm.19
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 13:48:00 -0700 (PDT)
+        Tue, 4 Aug 2020 16:47:57 -0400
+Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2A33C06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 13:47:56 -0700 (PDT)
+Received: by mail-pf1-x44a.google.com with SMTP id z16so28856817pfq.7
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 13:47:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=TSwdGn1VKn8ivAXqNKcO8YJkHuAqWhNdtyX0HW0tM1E=;
-        b=f4bULRvkDbvnd6Ei9dAuD6H/KeBIAT16u+EuJz/lQIHMqBTJP52blzXFEt85X3d8Bx
-         ufb/TDumefQU3ou9cQD7b+l2PNxTw+zYztGlpL2rwBv+1sCq3PdTZ/+ljdVvvlrxehyM
-         jQ7Wocw95n0io8TndCJ1fdihwI9/N5Jbscfe2QZVgq4FKUMuMcQRUlGmxMoeG/tJ0Ne6
-         twahCOmC0Oq58WWYAqKueqae/GPte+HbLOMw8krXgnx91Z8plNawn8GovB5binH+kfsD
-         k3xYhJfbD5RgHQrX+KMthTsHkAstB3SG1lnh6SvUYhCoSNJf0amv7vnwk6EhfALA9hcU
-         ieCg==
+        bh=dHVZunjWNtgqB5lbkdr6zaqYDYt1QTvDnOtIriqcITc=;
+        b=IcRDT7zzzIHBSrHusZVDx7CrCW5d0Ool2TKTnReHwbPogBD3MyOwpMJUhQBh9rm4zE
+         KggyFNCzEGg2EyqxPhl0Rdj+ei5lJGHuVpFnioCjk0lu4FpHBbMIY0hXTCZlDVx8xS2y
+         gg2qiILJeCoW2bakXI0ASKjycbngl/i4xgrrPbI7oJnX2At0ZzSzs8tYbm88nKMgIzFi
+         QUtVYKZT1PtEZEHWRMRFXfvSMnVMxyhWSvc6SDjylqTY1wys+dgWsWjNvIHevMzZwhmc
+         uim5XW7PuDO/fsgl2lCcZB3qPkgUvwi3oQbdYITvhmMQcAOXH+DsMb2PhkXbqFpYzbPW
+         9n+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=TSwdGn1VKn8ivAXqNKcO8YJkHuAqWhNdtyX0HW0tM1E=;
-        b=A/5iY09+jJFw+3HBcmrVPE97jRNMd07MLMEHeOatF5RYxQ9tw8dhMXiE+1bv1XoDQK
-         fQY+SCjnWRzmrkAKqYnCAqSS8+25P0RoPJy+kGUD/AbZK7LjmsZEm/7lnnUhvx+KRIvL
-         gjRUhWDK6Ei/jQBunZeorXrNuob04IGUFnFdjpfMKhJLuNF+RChC0kWs04ja3DMeZTVK
-         1/ICqaGeBwj+L8NG9ZMqVQEp5KOzDODzQAZnSTgLVWT6Eure8IPqAaco8lAyJa+4RAR/
-         OJYJK4rv4Hz4xlB2Yt9cbF55jYKwHMrikAGKaYSiFmsnBYp4JvzkoDU0qP6ZxaTfl4+6
-         RdvQ==
-X-Gm-Message-State: AOAM530AeguMIonUQ2tdRwhQtCLAXNUAdn8+70QBb3okb95uB7SWmogG
-        pgiPhFxu+J1vKhLBlLP93PpxfY3h1UpR/N154AVt/A==
-X-Google-Smtp-Source: ABdhPJyWhtKuyczUr41ZwldEmpD0xM1z4I8hCwUZqA5AKQQJ9p5Vq5OnbOb4AyG0lJZO+lHUS8w+XdRmf7Cjpa97xTRlEQ==
-X-Received: by 2002:a0c:fdeb:: with SMTP id m11mr198474qvu.103.1596574079596;
- Tue, 04 Aug 2020 13:47:59 -0700 (PDT)
-Date:   Tue,  4 Aug 2020 13:47:44 -0700
+        bh=dHVZunjWNtgqB5lbkdr6zaqYDYt1QTvDnOtIriqcITc=;
+        b=e3/AH5Hm+v2BxCTxn2FECKf7a4hIB70saEieUjk73qD79iNdn1uw6O+PQEcqqMcLHC
+         WNZOxS+QMhqezu5GrPVD6W5HMp5tPM022QqtoibTr11P7TQeodtwnL2hsKR74eFkWlIA
+         QBa3OeDyjqKqTSf6gDba6XDMPp43rlwcmKlfLl0fJ50JySh/4kXPrV+2iGgqKVn1zO1z
+         8IytGB8cjKX/DQmk5vI4/fY2zRA2+JH1nyRec3ZQr135wK0hcjf7ad6GTP4EeQsEj/ck
+         y1hmw0vn282B6IJaaVSyjAbWoZD2PFO23++LbCIbEJte8xw1OyZpmKf5BQSXYv4CpzsQ
+         jEqQ==
+X-Gm-Message-State: AOAM532EpYfVHSeMEAk5dXFezUF09xauaXVmj3tdXbbDnbDqCPQQJzm9
+        LMFyrvPYFq+jLWmaCJWDcfOVVLsK/oByIN7RRk4x2A==
+X-Google-Smtp-Source: ABdhPJwENoSqQnBcQZjPTU6dBdfdbIcq1VZAvgrhVUVDWy8+rfh9R+G9wMEf2JrqW2BY3Wie2Ihd+14wTeL8KeHdO147bQ==
+X-Received: by 2002:a63:7f5a:: with SMTP id p26mr207397pgn.117.1596574076050;
+ Tue, 04 Aug 2020 13:47:56 -0700 (PDT)
+Date:   Tue,  4 Aug 2020 13:47:42 -0700
 In-Reply-To: <20200804204745.987648-1-brendanhiggins@google.com>
-Message-Id: <20200804204745.987648-5-brendanhiggins@google.com>
+Message-Id: <20200804204745.987648-3-brendanhiggins@google.com>
 Mime-Version: 1.0
 References: <20200804204745.987648-1-brendanhiggins@google.com>
 X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-Subject: [PATCH v6 4/5] kunit: test: add test plan to KUnit TAP format
+Subject: [PATCH v6 2/5] kunit: test: create a single centralized executor for
+ all tests
 From:   Brendan Higgins <brendanhiggins@google.com>
 To:     jdike@addtoit.com, richard@nod.at, anton.ivanov@cambridgegreys.com,
         arnd@arndb.de, keescook@chromium.org, skhan@linuxfoundation.org,
@@ -80,263 +81,181 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TAP 14 allows an optional test plan to be emitted before the start of
-the start of testing[1]; this is valuable because it makes it possible
-for a test harness to detect whether the number of tests run matches the
-number of tests expected to be run, ensuring that no tests silently
-failed.
+From: Alan Maguire <alan.maguire@oracle.com>
 
-Link[1]: https://github.com/isaacs/testanything.github.io/blob/tap14/tap-version-14-specification.md#the-plan
+Add a centralized executor to dispatch tests rather than relying on
+late_initcall to schedule each test suite separately. Centralized
+execution is for built-in tests only; modules will execute tests when
+loaded.
+
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+Co-developed-by: Iurii Zaikin <yzaikin@google.com>
+Signed-off-by: Iurii Zaikin <yzaikin@google.com>
+Co-developed-by: Brendan Higgins <brendanhiggins@google.com>
 Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
 Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- lib/kunit/executor.c                          |  17 ++++
- lib/kunit/test.c                              |  11 ---
- tools/testing/kunit/kunit_parser.py           |  76 ++++++++++++++----
- .../test_is_test_passed-all_passed.log        | Bin 1562 -> 1567 bytes
- .../test_data/test_is_test_passed-crash.log   | Bin 3016 -> 3021 bytes
- .../test_data/test_is_test_passed-failure.log | Bin 1700 -> 1705 bytes
- 6 files changed, 79 insertions(+), 25 deletions(-)
+ include/kunit/test.h | 67 +++++++++++++++++++++++++++++---------------
+ lib/kunit/Makefile   |  3 +-
+ lib/kunit/executor.c | 28 ++++++++++++++++++
+ lib/kunit/test.c     |  2 +-
+ 4 files changed, 76 insertions(+), 24 deletions(-)
+ create mode 100644 lib/kunit/executor.c
 
+diff --git a/include/kunit/test.h b/include/kunit/test.h
+index 47e61e1d53370..f3e86c3953a2b 100644
+--- a/include/kunit/test.h
++++ b/include/kunit/test.h
+@@ -224,7 +224,7 @@ size_t kunit_suite_num_test_cases(struct kunit_suite *suite);
+ unsigned int kunit_test_case_num(struct kunit_suite *suite,
+ 				 struct kunit_case *test_case);
+ 
+-int __kunit_test_suites_init(struct kunit_suite **suites);
++int __kunit_test_suites_init(struct kunit_suite * const * const suites);
+ 
+ void __kunit_test_suites_exit(struct kunit_suite **suites);
+ 
+@@ -237,34 +237,57 @@ void __kunit_test_suites_exit(struct kunit_suite **suites);
+  * Registers @suites_list with the test framework. See &struct kunit_suite for
+  * more information.
+  *
+- * When builtin, KUnit tests are all run as late_initcalls; this means
+- * that they cannot test anything where tests must run at a different init
+- * phase. One significant restriction resulting from this is that KUnit
+- * cannot reliably test anything that is initialize in the late_init phase;
+- * another is that KUnit is useless to test things that need to be run in
+- * an earlier init phase.
+- *
+- * An alternative is to build the tests as a module.  Because modules
+- * do not support multiple late_initcall()s, we need to initialize an
+- * array of suites for a module.
+- *
+- * TODO(brendanhiggins@google.com): Don't run all KUnit tests as
+- * late_initcalls.  I have some future work planned to dispatch all KUnit
+- * tests from the same place, and at the very least to do so after
+- * everything else is definitely initialized.
++ * If a test suite is built-in, module_init() gets translated into
++ * an initcall which we don't want as the idea is that for builtins
++ * the executor will manage execution.  So ensure we do not define
++ * module_{init|exit} functions for the builtin case when registering
++ * suites via kunit_test_suites() below.
+  */
+-#define kunit_test_suites(suites_list...)				\
+-	static struct kunit_suite *suites[] = {suites_list, NULL};	\
+-	static int kunit_test_suites_init(void)				\
++#ifdef MODULE
++#define kunit_test_suites_for_module(__suites)				\
++	static int __init kunit_test_suites_init(void)			\
+ 	{								\
+-		return __kunit_test_suites_init(suites);		\
++		return __kunit_test_suites_init(__suites);		\
+ 	}								\
+-	late_initcall(kunit_test_suites_init);				\
++	module_init(kunit_test_suites_init);				\
++									\
+ 	static void __exit kunit_test_suites_exit(void)			\
+ 	{								\
+-		return __kunit_test_suites_exit(suites);		\
++		return __kunit_test_suites_exit(__suites);		\
+ 	}								\
+ 	module_exit(kunit_test_suites_exit)
++#else
++#define kunit_test_suites_for_module(__suites)
++#endif /* MODULE */
++
++#define __kunit_test_suites(unique_array, unique_suites, ...)		       \
++	static struct kunit_suite *unique_array[] = { __VA_ARGS__, NULL };     \
++	kunit_test_suites_for_module(unique_array);			       \
++	static struct kunit_suite **unique_suites			       \
++	__used __section(.kunit_test_suites) = unique_array
++
++/**
++ * kunit_test_suites() - used to register one or more &struct kunit_suite
++ *			 with KUnit.
++ *
++ * @suites: a statically allocated list of &struct kunit_suite.
++ *
++ * Registers @suites with the test framework. See &struct kunit_suite for
++ * more information.
++ *
++ * When builtin,  KUnit tests are all run via executor; this is done
++ * by placing the array of struct kunit_suite * in the .kunit_test_suites
++ * ELF section.
++ *
++ * An alternative is to build the tests as a module.  Because modules do not
++ * support multiple initcall()s, we need to initialize an array of suites for a
++ * module.
++ *
++ */
++#define kunit_test_suites(...)						\
++	__kunit_test_suites(__UNIQUE_ID(array),				\
++			    __UNIQUE_ID(suites),			\
++			    __VA_ARGS__)
+ 
+ #define kunit_test_suite(suite)	kunit_test_suites(&suite)
+ 
+diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
+index 724b94311ca36..c49f4ffb6273a 100644
+--- a/lib/kunit/Makefile
++++ b/lib/kunit/Makefile
+@@ -3,7 +3,8 @@ obj-$(CONFIG_KUNIT) +=			kunit.o
+ kunit-objs +=				test.o \
+ 					string-stream.o \
+ 					assert.o \
+-					try-catch.o
++					try-catch.o \
++					executor.o
+ 
+ ifeq ($(CONFIG_KUNIT_DEBUGFS),y)
+ kunit-objs +=				debugfs.o
 diff --git a/lib/kunit/executor.c b/lib/kunit/executor.c
-index 4aab7f70a88c3..a95742a4ece73 100644
---- a/lib/kunit/executor.c
+new file mode 100644
+index 0000000000000..7015e7328dce7
+--- /dev/null
 +++ b/lib/kunit/executor.c
-@@ -11,10 +11,27 @@ extern struct kunit_suite * const * const __kunit_suites_end[];
- 
- #if IS_BUILTIN(CONFIG_KUNIT)
- 
-+static void kunit_print_tap_header(void)
+@@ -0,0 +1,28 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <kunit/test.h>
++
++/*
++ * These symbols point to the .kunit_test_suites section and are defined in
++ * include/asm-generic/vmlinux.lds.h, and consequently must be extern.
++ */
++extern struct kunit_suite * const * const __kunit_suites_start[];
++extern struct kunit_suite * const * const __kunit_suites_end[];
++
++#if IS_BUILTIN(CONFIG_KUNIT)
++
++static int kunit_run_all_tests(void)
 +{
-+	struct kunit_suite * const * const *suites, * const *subsuite;
-+	int num_of_suites = 0;
++	struct kunit_suite * const * const *suites;
 +
 +	for (suites = __kunit_suites_start;
 +	     suites < __kunit_suites_end;
 +	     suites++)
-+		for (subsuite = *suites; *subsuite != NULL; subsuite++)
-+			num_of_suites++;
++			__kunit_test_suites_init(*suites);
 +
-+	pr_info("TAP version 14\n");
-+	pr_info("1..%d\n", num_of_suites);
++	return 0;
 +}
 +
- int kunit_run_all_tests(void)
- {
- 	struct kunit_suite * const * const *suites;
- 
-+	kunit_print_tap_header();
++late_initcall(kunit_run_all_tests);
 +
- 	for (suites = __kunit_suites_start;
- 	     suites < __kunit_suites_end;
- 	     suites++)
++#endif /* IS_BUILTIN(CONFIG_KUNIT) */
 diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-index 918dff400a9d7..b1835ccb3fce2 100644
+index ccb2ffad8dcfa..918dff400a9d7 100644
 --- a/lib/kunit/test.c
 +++ b/lib/kunit/test.c
-@@ -19,16 +19,6 @@ static void kunit_set_failure(struct kunit *test)
- 	WRITE_ONCE(test->success, false);
+@@ -380,7 +380,7 @@ static void kunit_init_suite(struct kunit_suite *suite)
+ 	kunit_debugfs_create_suite(suite);
  }
  
--static void kunit_print_tap_version(void)
--{
--	static bool kunit_has_printed_tap_version;
--
--	if (!kunit_has_printed_tap_version) {
--		pr_info("TAP version 14\n");
--		kunit_has_printed_tap_version = true;
--	}
--}
--
- /*
-  * Append formatted message to log, size of which is limited to
-  * KUNIT_LOG_SIZE bytes (including null terminating byte).
-@@ -68,7 +58,6 @@ EXPORT_SYMBOL_GPL(kunit_suite_num_test_cases);
- 
- static void kunit_print_subtest_start(struct kunit_suite *suite)
+-int __kunit_test_suites_init(struct kunit_suite **suites)
++int __kunit_test_suites_init(struct kunit_suite * const * const suites)
  {
--	kunit_print_tap_version();
- 	kunit_log(KERN_INFO, suite, KUNIT_SUBTEST_INDENT "# Subtest: %s",
- 		  suite->name);
- 	kunit_log(KERN_INFO, suite, KUNIT_SUBTEST_INDENT "1..%zd",
-diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/kunit_parser.py
-index f13e0c0d66639..8019e3dd4c32f 100644
---- a/tools/testing/kunit/kunit_parser.py
-+++ b/tools/testing/kunit/kunit_parser.py
-@@ -45,10 +45,11 @@ class TestStatus(Enum):
- 	FAILURE = auto()
- 	TEST_CRASHED = auto()
- 	NO_TESTS = auto()
-+	FAILURE_TO_PARSE_TESTS = auto()
+ 	unsigned int i;
  
- kunit_start_re = re.compile(r'TAP version [0-9]+$')
- kunit_end_re = re.compile('(List of all partitions:|'
--			  'Kernel panic - not syncing: VFS:|reboot: System halted)')
-+			  'Kernel panic - not syncing: VFS:)')
- 
- def isolate_kunit_output(kernel_output):
- 	started = False
-@@ -109,7 +110,7 @@ OkNotOkResult = namedtuple('OkNotOkResult', ['is_ok','description', 'text'])
- 
- OK_NOT_OK_SUBTEST = re.compile(r'^[\s]+(ok|not ok) [0-9]+ - (.*)$')
- 
--OK_NOT_OK_MODULE = re.compile(r'^(ok|not ok) [0-9]+ - (.*)$')
-+OK_NOT_OK_MODULE = re.compile(r'^(ok|not ok) ([0-9]+) - (.*)$')
- 
- def parse_ok_not_ok_test_case(lines: List[str], test_case: TestCase) -> bool:
- 	save_non_diagnositic(lines, test_case)
-@@ -197,7 +198,9 @@ def max_status(left: TestStatus, right: TestStatus) -> TestStatus:
- 	else:
- 		return TestStatus.SUCCESS
- 
--def parse_ok_not_ok_test_suite(lines: List[str], test_suite: TestSuite) -> bool:
-+def parse_ok_not_ok_test_suite(lines: List[str],
-+			       test_suite: TestSuite,
-+			       expected_suite_index: int) -> bool:
- 	consume_non_diagnositic(lines)
- 	if not lines:
- 		test_suite.status = TestStatus.TEST_CRASHED
-@@ -210,6 +213,12 @@ def parse_ok_not_ok_test_suite(lines: List[str], test_suite: TestSuite) -> bool:
- 			test_suite.status = TestStatus.SUCCESS
- 		else:
- 			test_suite.status = TestStatus.FAILURE
-+		suite_index = int(match.group(2))
-+		if suite_index != expected_suite_index:
-+			print_with_timestamp(
-+				red('[ERROR] ') + 'expected_suite_index ' +
-+				str(expected_suite_index) + ', but got ' +
-+				str(suite_index))
- 		return True
- 	else:
- 		return False
-@@ -222,7 +231,7 @@ def bubble_up_test_case_errors(test_suite: TestSuite) -> TestStatus:
- 	max_test_case_status = bubble_up_errors(lambda x: x.status, test_suite.cases)
- 	return max_status(max_test_case_status, test_suite.status)
- 
--def parse_test_suite(lines: List[str]) -> TestSuite:
-+def parse_test_suite(lines: List[str], expected_suite_index: int) -> TestSuite:
- 	if not lines:
- 		return None
- 	consume_non_diagnositic(lines)
-@@ -241,7 +250,7 @@ def parse_test_suite(lines: List[str]) -> TestSuite:
- 			break
- 		test_suite.cases.append(test_case)
- 		expected_test_case_num -= 1
--	if parse_ok_not_ok_test_suite(lines, test_suite):
-+	if parse_ok_not_ok_test_suite(lines, test_suite, expected_suite_index):
- 		test_suite.status = bubble_up_test_case_errors(test_suite)
- 		return test_suite
- 	elif not lines:
-@@ -261,6 +270,17 @@ def parse_tap_header(lines: List[str]) -> bool:
- 	else:
- 		return False
- 
-+TEST_PLAN = re.compile(r'[0-9]+\.\.([0-9]+)')
-+
-+def parse_test_plan(lines: List[str]) -> int:
-+	consume_non_diagnositic(lines)
-+	match = TEST_PLAN.match(lines[0])
-+	if match:
-+		lines.pop(0)
-+		return int(match.group(1))
-+	else:
-+		return None
-+
- def bubble_up_suite_errors(test_suite_list: List[TestSuite]) -> TestStatus:
- 	return bubble_up_errors(lambda x: x.status, test_suite_list)
- 
-@@ -268,20 +288,33 @@ def parse_test_result(lines: List[str]) -> TestResult:
- 	consume_non_diagnositic(lines)
- 	if not lines or not parse_tap_header(lines):
- 		return TestResult(TestStatus.NO_TESTS, [], lines)
-+	expected_test_suite_num = parse_test_plan(lines)
-+	if not expected_test_suite_num:
-+		return TestResult(TestStatus.FAILURE_TO_PARSE_TESTS, [], lines)
- 	test_suites = []
--	test_suite = parse_test_suite(lines)
--	while test_suite:
--		test_suites.append(test_suite)
--		test_suite = parse_test_suite(lines)
--	return TestResult(bubble_up_suite_errors(test_suites), test_suites, lines)
-+	for i in range(1, expected_test_suite_num + 1):
-+		test_suite = parse_test_suite(lines, i)
-+		if test_suite:
-+			test_suites.append(test_suite)
-+		else:
-+			print_with_timestamp(
-+				red('[ERROR] ') + ' expected ' +
-+				str(expected_test_suite_num) +
-+				' test suites, but got ' + str(i - 2))
-+			break
-+	test_suite = parse_test_suite(lines, -1)
-+	if test_suite:
-+		print_with_timestamp(red('[ERROR] ') +
-+			'got unexpected test suite: ' + test_suite.name)
-+	if test_suites:
-+		return TestResult(bubble_up_suite_errors(test_suites), test_suites, lines)
-+	else:
-+		return TestResult(TestStatus.NO_TESTS, [], lines)
- 
--def parse_run_tests(kernel_output) -> TestResult:
-+def print_and_count_results(test_result: TestResult) -> None:
- 	total_tests = 0
- 	failed_tests = 0
- 	crashed_tests = 0
--	test_result = parse_test_result(list(isolate_kunit_output(kernel_output)))
--	if test_result.status == TestStatus.NO_TESTS:
--		print_with_timestamp(red('[ERROR] ') + 'no kunit output detected')
- 	for test_suite in test_result.suites:
- 		if test_suite.status == TestStatus.SUCCESS:
- 			print_suite_divider(green('[PASSED] ') + test_suite.name)
-@@ -303,6 +336,21 @@ def parse_run_tests(kernel_output) -> TestResult:
- 				print_with_timestamp(red('[FAILED] ') + test_case.name)
- 				print_log(map(yellow, test_case.log))
- 				print_with_timestamp('')
-+	return total_tests, failed_tests, crashed_tests
-+
-+def parse_run_tests(kernel_output) -> TestResult:
-+	total_tests = 0
-+	failed_tests = 0
-+	crashed_tests = 0
-+	test_result = parse_test_result(list(isolate_kunit_output(kernel_output)))
-+	if test_result.status == TestStatus.NO_TESTS:
-+		print(red('[ERROR] ') + yellow('no tests run!'))
-+	elif test_result.status == TestStatus.FAILURE_TO_PARSE_TESTS:
-+		print(red('[ERROR] ') + yellow('could not parse test results!'))
-+	else:
-+		(total_tests,
-+		 failed_tests,
-+		 crashed_tests) = print_and_count_results(test_result)
- 	print_with_timestamp(DIVIDER)
- 	fmt = green if test_result.status == TestStatus.SUCCESS else red
- 	print_with_timestamp(
-diff --git a/tools/testing/kunit/test_data/test_is_test_passed-all_passed.log b/tools/testing/kunit/test_data/test_is_test_passed-all_passed.log
-index 62ebc0288355c4b122ccc18ae2505f971efa57bc..bc0dc8fe35b760b1feb74ec419818dbfae1adb5c 100644
-GIT binary patch
-delta 28
-jcmbQmGoME|#4$jjEVZaOGe1wk(1goSPtRy09}gP<dC~`u
-
-delta 23
-ecmbQwGmD2W#4$jjEVZaOGe1wk&}5@94;uhhkp{*9
-
-diff --git a/tools/testing/kunit/test_data/test_is_test_passed-crash.log b/tools/testing/kunit/test_data/test_is_test_passed-crash.log
-index 0b249870c8be417a5865bd40a24c8597bb7f5ab1..4d97f6708c4a5ad5bb2ac879e12afca6e816d83d 100644
-GIT binary patch
-delta 15
-WcmX>hepY;fFN>j`p3z318g2k9Uj*m?
-
-delta 10
-RcmX>renNbL@5Z2NZU7lr1S$Xk
-
-diff --git a/tools/testing/kunit/test_data/test_is_test_passed-failure.log b/tools/testing/kunit/test_data/test_is_test_passed-failure.log
-index 9e89d32d5667a59d137f8adacf3a88fdb7f88baf..7a416497e3bec044eefc1535f7d84ee85703ba97 100644
-GIT binary patch
-delta 28
-jcmZ3&yOLKp#4$jjEVZaOGe1wk(1goSPtRy0-!wJ=eKrU$
-
-delta 23
-ecmZ3<yM&i7#4$jjEVZaOGe1wk&}5_VG&TTPhX-Z=
-
 -- 
 2.28.0.163.g6104cc2f0b6-goog
 
