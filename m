@@ -2,170 +2,155 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF66C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70F6C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A19332076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A984D2076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 07:27:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+oC1ONX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JL08f7Ni"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729891AbgHDHZg (ORCPT
+        id S1729619AbgHDH1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 03:25:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48602 "EHLO
+        Tue, 4 Aug 2020 03:27:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728654AbgHDHZf (ORCPT
+        with ESMTP id S1726808AbgHDH1M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 03:25:35 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40B14C06174A;
-        Tue,  4 Aug 2020 00:25:35 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id z11so1020042oon.5;
-        Tue, 04 Aug 2020 00:25:35 -0700 (PDT)
+        Tue, 4 Aug 2020 03:27:12 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDF9DC06174A;
+        Tue,  4 Aug 2020 00:27:11 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id r11so11799876pfl.11;
+        Tue, 04 Aug 2020 00:27:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=3G6duaqKS+iqVSYEuxdfn+liPqqsSiNQMWQkrp/rtcA=;
-        b=P+oC1ONX4KhsZvaMwr9JFGsSROK1t2WF8nWhL5Hb8WlbFKQcfjnffuj5cHtyDXhTQe
-         RtZ2sbTg4+PrRlYLSiyDjOOOnYVQbPjoeqHiOnUxGAs/YqTy1MkqtHmAeXR537w3YEbf
-         BhQ+AeypP5X7Qz2CxJPJ/VX/W8AYeiTh6dyQTbQRnC6MgKKSPMS1yzts1edOkNPNcsls
-         BAeHs8BqCJsk0tMUbC525jtBsTJNnhrPSEfmKInyz42f2CGeNyYv/LoW9Df+k1R/3HEq
-         PWtqACBeJGC1XbRWBkibV9geaauVi1aWrie/ld1nlJa4l3F3rN+y3HuDVw93r7k6LUTs
-         j72Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S+LWBeYipq+ceid3K3seSlGlVrJ1K4pI/42TN0sWehM=;
+        b=JL08f7NiIwAPdUelKgqXR0B33MheFeRJI2WxYAJofyVdCfC/wW2Z8UWmk43icFOjrN
+         f1xFqzNHo1ZDlqreI/BGgSBpy2TuAFquBxDw5Vb1Zx9uCl9U/K1a8ZFJvXhIPR+5TYzJ
+         wNbmd/VlchFsykZFKf1XFM84zth0vkwPx5TMJiWiFWzYKUT5XAgS5jpgXIjGQ9vgRsfp
+         A5xpP58DMDAH02oVsbH1ObeYJKF+iY0KDopRgizKqhdSTXZ/bGqDwmt+ralJgh7gIICt
+         6y9URjcvaK+YyRsUxiT14u4DvM0WsmtkeWPomewNv4AmHk4gEXWy04dxanF4Hh7cdQ0j
+         peHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=3G6duaqKS+iqVSYEuxdfn+liPqqsSiNQMWQkrp/rtcA=;
-        b=k4ge71sBwNIZk6XAj4E7AGQStzc7S6aPI7xWbc9Td52HnE0t74pRCksaOojj7ZI2wq
-         aqvpyuFXkmvtxiSHjp8vaLCY4FNhbp+7n4JLMiUxCIuv3RB+ea92R0FMMx9y8zRRkPpi
-         TtvM9QAG/7lg7cAhZTyYYZKpVsjHCaljc+E/PhM4Fhil5GWtU1lYcWbofZCoIiBKjlK6
-         eTDBJ8BgUTU2vS89IRbpos5FCtwC8rFR9H2SZ2pQ7vI7kzbDlFcem4csqrF5xuiJlGXR
-         mf9RUKJMB8GzfaqYC1rKGY8xgIweBmqqmA7HytiMRGV3HeBCiGTqWcuBub075UulDnrh
-         rpWg==
-X-Gm-Message-State: AOAM530+U24lF/1Um5XmkLSX9KdOGoqgvx3jfQy45k4sDMRro0Sul0CI
-        fXdZ2cGWp3suGgUWuHkcD6EqSlTgwfpu3iLFOkI=
-X-Google-Smtp-Source: ABdhPJxRuEKIkrFsD8hgOom6KFNXxJ1GrBXHYx0gjfD8gbX84cPUXN3kfUBPjtHwww2sbHWbMVw7OYS2H0mw+tE+r/w=
-X-Received: by 2002:a4a:dfd4:: with SMTP id p20mr7546616ood.86.1596525934626;
- Tue, 04 Aug 2020 00:25:34 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S+LWBeYipq+ceid3K3seSlGlVrJ1K4pI/42TN0sWehM=;
+        b=XxG4dDRgaaCf2xUXc5Y/5Rl+kLD8bfN989aL9uJmGxVrgx4+2G4EwOqcro0LnXyKCW
+         pVRZNwhGOEvTSF0944t8z5TBSH2sl+Tw899rbAlya2hUxUhelSrMDSHiQjaURxq0d0la
+         Nxs5duMbpH5CHxAKK/dEvItNOlHM8aKS7qmfvxTWPfzOADgY2E+cyx6mtxjQHkAUeH2B
+         gy3DZ23pQ5hw6WXNFCqAq55SkarHBqeDHoj0T59HDDn7ypPbGijhiFgpysJIreiPvfzP
+         SeO/fEM/GaTOmW/3yg9MA7QBsRX7yPq94BPy8nWl86+mEspwfmI0MWgcZDgrMCTsgCxt
+         jxyA==
+X-Gm-Message-State: AOAM532ZJMC6HIWYr8ceASht80tdK4bPgMBJ5VdfLaJRQarLFcabpDqe
+        KCqmY+V1/mu7Jhu2Qk5b0anEf5uUsPmgc2P0X3w=
+X-Google-Smtp-Source: ABdhPJwzkKwmjuOmrKa2yDmLHcCsZM911YiteZxUD/AfoRcnOeuCKtwXibuHF4fQqWoUrs+KckSZ815VcF7ExP+mVPE=
+X-Received: by 2002:a63:924b:: with SMTP id s11mr17633349pgn.74.1596526031371;
+ Tue, 04 Aug 2020 00:27:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200730190841.2071656-1-nickrterrell@gmail.com>
- <20200730190841.2071656-5-nickrterrell@gmail.com> <CAMuHMdUo5tfcEUaq4x_b9HJy25HXWmBZ3GPfqJy491zDsct5Rg@mail.gmail.com>
-In-Reply-To: <CAMuHMdUo5tfcEUaq4x_b9HJy25HXWmBZ3GPfqJy491zDsct5Rg@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Tue, 4 Aug 2020 09:25:23 +0200
-Message-ID: <CA+icZUXGbV1x0YJn-0mLA2TtU2jWS6PO3bqdDrqJBMYOMS9Eog@mail.gmail.com>
-Subject: Re: [PATCH v10 4/8] usr: add support for zstd compressed initramfs
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Nick Terrell <nickrterrell@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chris Mason <clm@fb.com>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Petr Malat <oss@malat.biz>, Kees Cook <keescook@chromium.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
-        Ingo Molnar <mingo@kernel.org>,
-        Patrick Williams <patrick@stwcx.xyz>,
-        Norbert Lange <nolange79@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alex Xu <alex_y_xu@yahoo.ca>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Terrell <terrelln@fb.com>
+References: <20200803235815.778997-1-campello@chromium.org> <20200803175559.v5.3.Idbfcd2e92d2fd89b6ed2e83211bd3e6c06852c33@changeid>
+In-Reply-To: <20200803175559.v5.3.Idbfcd2e92d2fd89b6ed2e83211bd3e6c06852c33@changeid>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 4 Aug 2020 10:26:55 +0300
+Message-ID: <CAHp75VcftUCi-4w=NWXUb=zPYL9zz6BEHw6y1wUKPD8vXcX9zA@mail.gmail.com>
+Subject: Re: [PATCH v5 03/15] iio: sx9310: Fix irq handling
+To:     Daniel Campello <campello@chromium.org>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 8:52 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Tue, Aug 4, 2020 at 2:58 AM Daniel Campello <campello@chromium.org> wrote:
 >
-> Hi Nick,
+> Fixes enable/disable irq handling at various points. The driver needs to
+> only enable/disable irqs if there is an actual irq handler installed.
+
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> ---
 >
-> On Thu, Jul 30, 2020 at 9:13 PM Nick Terrell <nickrterrell@gmail.com> wrote:
-> > From: Nick Terrell <terrelln@fb.com>
-> >
-> > * Add support for a zstd compressed initramfs.
-> > * Add compression for compressing built-in initramfs with zstd.
-> >
-> > I have tested this patch by boot testing with buildroot and QEMU.
-> > Specifically, I booted the kernel with both a zstd and gzip compressed
-> > initramfs, both built into the kernel and separate. I ensured that the
-> > correct compression algorithm was used. I tested on arm, aarch64, i386,
-> > and x86_64.
-> >
-> > This patch has been tested in production on aarch64 and x86_64 devices.
-> >
-> > Additionally, I have performance measurements from internal use in
-> > production. On an aarch64 device we saw 19 second boot time improvement
-> > from switching from lzma to zstd (27 seconds to 8 seconds). On an x86_64
-> > device we saw a 9 second boot time reduction from switching from xz to
-> > zstd.
-> >
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-> > Signed-off-by: Nick Terrell <terrelln@fb.com>
+> Changes in v5: None
+> Changes in v4:
+>  - Reverted condition check logic on enable/disable_irq methods.
 >
-> Thanks for your patch, which is now commit a30d8a39f0571425 ("usr: Add
-> support for zstd compressed initramfs").
+> Changes in v3:
+>  - Moved irq presence check down to lower methods
 >
-> > --- a/usr/Kconfig
-> > +++ b/usr/Kconfig
-> > @@ -100,6 +100,15 @@ config RD_LZ4
-> >           Support loading of a LZ4 encoded initial ramdisk or cpio buffer
-> >           If unsure, say N.
-> >
-> > +config RD_ZSTD
-> > +       bool "Support initial ramdisk/ramfs compressed using ZSTD"
-> > +       default y
-> > +       depends on BLK_DEV_INITRD
-> > +       select DECOMPRESS_ZSTD
-> > +       help
-> > +         Support loading of a ZSTD encoded initial ramdisk or cpio buffer.
-> > +         If unsure, say N.
+> Changes in v2:
+>  - Reordered error handling on sx9310_resume()
 >
-> I'm aware you copied this from the other entries, but IMHO "default y",
-> and "If unsure, say N" are not a good combination.
+>  drivers/iio/proximity/sx9310.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
 >
-
-Hi Geert,
-
-you are right - for new stuff it should be "default n".
-
-What I am missing - still - is a note - that your user-space should
-have the correct bits to support zstd-initramfs.
-Unsure where to place such an information.
-
-If you send a patch for above feel free to add my:
-
-Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
-
-Thanks.
-
-Regards,
-- Sedat -
-
-[1] https://bugs.debian.org/955469
-
-> Gr{oetje,eeting}s,
+> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+> index d7c77fc661ba86..dafee85018aa6d 100644
+> --- a/drivers/iio/proximity/sx9310.c
+> +++ b/drivers/iio/proximity/sx9310.c
+> @@ -323,11 +323,15 @@ static int sx9310_put_event_channel(struct sx9310_data *data, int channel)
 >
->                         Geert
+>  static int sx9310_enable_irq(struct sx9310_data *data, unsigned int irq)
+>  {
+> +       if (!data->client->irq)
+> +               return 0;
+>         return regmap_update_bits(data->regmap, SX9310_REG_IRQ_MSK, irq, irq);
+>  }
 >
+>  static int sx9310_disable_irq(struct sx9310_data *data, unsigned int irq)
+>  {
+> +       if (!data->client->irq)
+> +               return 0;
+>         return regmap_update_bits(data->regmap, SX9310_REG_IRQ_MSK, irq, 0);
+>  }
+>
+> @@ -381,7 +385,7 @@ static int sx9310_read_proximity(struct sx9310_data *data,
+>
+>         mutex_unlock(&data->mutex);
+>
+> -       if (data->client->irq > 0) {
+> +       if (data->client->irq) {
+>                 ret = wait_for_completion_interruptible(&data->completion);
+>                 reinit_completion(&data->completion);
+>         } else {
+> @@ -1010,10 +1014,11 @@ static int __maybe_unused sx9310_resume(struct device *dev)
+>
+>  out:
+>         mutex_unlock(&data->mutex);
+> +       if (ret)
+> +               return ret;
+>
+>         enable_irq(data->client->irq);
+> -
+> -       return ret;
+> +       return 0;
+>  }
+>
+>  static const struct dev_pm_ops sx9310_pm_ops = {
 > --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 2.28.0.163.g6104cc2f0b6-goog
 >
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
