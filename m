@@ -2,87 +2,128 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D563C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE319C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:32:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E6F2206DA
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:31:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596529918;
-	bh=Mti/7aZFLcM2eMh2GD15qvO2ln1JYo2FO4GQKxBYbTU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ke7OM50HfAXjNtbW/wGAaTk1mm/JTKS7aG91R+Af7VjCnoHpsww/+aVjKpqjJOyD2
-	 BgW0zmCRpBWbazU9/CwrSTB7rQTCWv5d/8I6PrYV9oQuYCFygmKXjd5TXvIdKPBfVY
-	 vWSnZvbq4q0wsWV4fUquiPkfqAtE2DTI0anwepIg=
+	by mail.kernel.org (Postfix) with ESMTP id D2A0B206DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 08:32:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729947AbgHDIb5 (ORCPT
+        id S1729728AbgHDIc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 04:31:57 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44776 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726058AbgHDIb4 (ORCPT
+        Tue, 4 Aug 2020 04:32:57 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:52832 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726058AbgHDIc5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 04:31:56 -0400
-Received: by mail-ed1-f66.google.com with SMTP id l23so15501824edv.11;
-        Tue, 04 Aug 2020 01:31:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=E8OBarjLqjjgivNZT3rXljirLxP8pq8m7D6nGSrYCpM=;
-        b=kdYZyLc9XQ/bPeEsWZl6RbKgriJ37M3ZiJU2no25o9mou5Pngm+ktDxj3jMORRaTLT
-         t1zJOG/p+bN+qHWIo6vabN7hK5YOqZ+nPGY28M74DeDIZlpbJmGSqBQ8R4gJaFKyAD8A
-         Mc7Bt3oYCYEu+QhWzGemkt3qcJsjJf3/6VE+8g+3VebrhNMLTY9aJXc8hIKMFqSdPO5M
-         j5cu/ETsmulwg4jmgQwXgNR/IKHaGI41P+IQ3GS87urbtt90+OadAQWM/acVhp3PcS0M
-         AI6Wsn+WDFgPIo9PLbXyjYVreE97APvUKTpjKRNrSHJB+V2pksjelGklm58lAKS5q+9f
-         sRPA==
-X-Gm-Message-State: AOAM5311TNFsBdKcY6UiVf0Y/5TaElbT+C0Q3Lc043nFmyNVNOd7o/8f
-        lKv/HqgIYYOj9DVVjPq3Rbo=
-X-Google-Smtp-Source: ABdhPJyKKgMB8aC8EF/PoUwW/9sPZSH5aZsosMxkY+PRMbWqoxonOx4ezAlmSY2+BFODp+VODFUFyg==
-X-Received: by 2002:a50:da04:: with SMTP id z4mr18999648edj.375.1596529915221;
-        Tue, 04 Aug 2020 01:31:55 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.117])
-        by smtp.googlemail.com with ESMTPSA id by3sm18075154ejb.9.2020.08.04.01.31.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Aug 2020 01:31:54 -0700 (PDT)
-Date:   Tue, 4 Aug 2020 10:31:52 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Wei Yongjun <weiyongjun1@huawei.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
-Subject: Re: [PATCH] memory: jz4780-nemc: Fix return value check in
- jz4780_nemc_probe()
-Message-ID: <20200804083152.GA26771@kozik-lap>
-References: <20200804082403.76297-1-weiyongjun1@huawei.com>
+        Tue, 4 Aug 2020 04:32:57 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 82EB01C0BDD; Tue,  4 Aug 2020 10:32:51 +0200 (CEST)
+Date:   Tue, 4 Aug 2020 10:32:36 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Nick Terrell <terrelln@fb.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Terrell <nickrterrell@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, Kernel Team <Kernel-team@fb.com>,
+        Yann Collet <yann.collet.73@gmail.com>,
+        Gao Xiang <gaoxiang25@huawei.com>,
+        Sven Schmidt <4sschmid@informatik.uni-hamburg.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] lz4: Fix kernel decompression speed
+Message-ID: <20200804083236.zjkmfer37z5rn3r4@duo.ucw.cz>
+References: <20200803194022.2966806-1-nickrterrell@gmail.com>
+ <20200803215747.GA1644409@rani.riverdale.lan>
+ <3961E1BD-8F58-4240-A3B3-B7032A405B42@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="unkgxepgdpqe5p3t"
 Content-Disposition: inline
-In-Reply-To: <20200804082403.76297-1-weiyongjun1@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <3961E1BD-8F58-4240-A3B3-B7032A405B42@fb.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 08:24:03AM +0000, Wei Yongjun wrote:
-> In case of error, the function devm_ioremap() returns NULL pointer not
-> ERR_PTR(). The IS_ERR() test in the return value check should be
-> replaced with NULL test.
-> 
-> Fixes: f046e4a3f0b9 ("memory: jz4780_nemc: Only request IO memory the driver will use")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-> ---
->  drivers/memory/jz4780-nemc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks for the patch. The fix was already posted by Dan:
-https://lore.kernel.org/lkml/20200803143607.GC346925@mwanda/
+--unkgxepgdpqe5p3t
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> >> I've measured the kernel decompression speed using QEMU before and aft=
+er
+> >> this patch for the x86_64 and i386 architectures. The speed-up is about
+> >> 10x as shown below.
+> >>=20
+> >> Code	Arch	Kernel Size	Time	Speed
+> >> v5.8	x86_64	11504832 B	148 ms	 79 MB/s
+> >> patch	x86_64	11503872 B	 13 ms	885 MB/s
+> >> v5.8	i386	 9621216 B	 91 ms	106 MB/s
+> >> patch	i386	 9620224 B	 10 ms	962 MB/s
+> >>=20
+> >> I also measured the time to decompress the initramfs on x86_64, i386,
+> >> and arm. All three show the same decompression speed before and after,
+> >> as expected.
+> >>=20
+> >> [1] https://github.com/lz4/lz4/pull/890
+> >>=20
+> >=20
+> > Hi Nick, would you be able to test the below patch's performance to
+> > verify it gives the same speedup? It removes the #undef in misc.c which
+> > causes the decompressors to not use the builtin version. It should be
+> > equivalent to yours except for applying it to all the decompressors.
+> >=20
+> > Thanks.
+>=20
+> I will measure it. I would expect it to provide the same speed up. It wou=
+ld be great to fix
+> the problem for x86/i386 in general.
+>=20
+> But, I believe that this is also a problem for ARM, though I have a hard =
+time measuring
+> because I can=E2=80=99t get pre-boot print statements in QEMU. I will att=
+empt to take a look at the
+> assembly, because I=E2=80=99m fairly certain that memcpy() isn=E2=80=99t =
+inlined in master.
+>=20
+> Even if we fix all the architectures, I would still like to merge the LZ4=
+ patch. It seems like it
+> is pretty easy to merge a patch that is a boot speed regression, because =
+people aren=E2=80=99t
+> actively measuring it. So I prefer a layered defense.
+
+
+Layered defense against performance-only problem, happening on
+emulation-only?
+
+IMO that's a bit of overkill.
 
 Best regards,
-Krzysztof
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--unkgxepgdpqe5p3t
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXykdJAAKCRAw5/Bqldv6
+8h/YAJ9snZA+NN1irCzUGWNHAFTqDZBRWwCfTSqvSSxHl3MvQJU0X6gUeYYRRQ8=
+=6uB0
+-----END PGP SIGNATURE-----
+
+--unkgxepgdpqe5p3t--
