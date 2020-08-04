@@ -2,804 +2,314 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DF3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAC5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E5B7208A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:28:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="v8NxrvYW"
+	by mail.kernel.org (Postfix) with ESMTP id D6164208A9
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 14:29:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbgHDO2i (ORCPT
+        id S1728996AbgHDO25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 10:28:38 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:38426 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729225AbgHDO10 (ORCPT
+        Tue, 4 Aug 2020 10:28:57 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17702 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729028AbgHDO2g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 10:27:26 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596551242; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=AEdtcZ7JJs4el2PjouMu7oeLzSzwOFJrlOEIb8CrJvI=; b=v8NxrvYWL5UW/mSTMSfSm3qBdc0BPLQ/a2dE0x+UsOkbLJH/ApzWqXjx/Eajofc/rZV9Wqks
- fEzSodFYZirmhUTaUzA24UjTg3Cdv2M89usLtIL85EhDRu1+DMHiSpY/1ZMlqAr90sQebqYp
- 1TUDxZ8xMsrOa4LCTsxuZB4lYaI=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5f297039798b1029685e13f7 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 04 Aug 2020 14:27:05
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 786C2C43395; Tue,  4 Aug 2020 14:27:04 +0000 (UTC)
-Received: from [192.168.1.4] (unknown [223.230.47.40])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: gkohli)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B1AEEC433CB;
-        Tue,  4 Aug 2020 14:26:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B1AEEC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=gkohli@codeaurora.org
-Subject: Re: [PATCH] nvmem: core: add NVMEM_SYSFS Kconfig
-To:     will@kernel.org, linux-arm-kernel@lists.infradead.org,
-        maz@kernel.org, gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        neeraju@codeaurora.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        maxime.ripard@bootlin.com
-References: <1596550484-11029-1-git-send-email-gkohli@codeaurora.org>
- <20190415164011.2638-1-srinivas.kandagatla@linaro.org>
-From:   Gaurav Kohli <gkohli@codeaurora.org>
-Message-ID: <cec2c865-7b46-42ce-d904-f63b597d4f28@codeaurora.org>
-Date:   Tue, 4 Aug 2020 19:56:46 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 4 Aug 2020 10:28:36 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 074E350S120103;
+        Tue, 4 Aug 2020 10:28:31 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32q86qtv4x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Aug 2020 10:28:31 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 074E3Q18122520;
+        Tue, 4 Aug 2020 10:28:30 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32q86qtv44-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Aug 2020 10:28:30 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 074EK2Pu002201;
+        Tue, 4 Aug 2020 14:28:29 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma04wdc.us.ibm.com with ESMTP id 32n0190t0a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Aug 2020 14:28:29 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 074ESRUk41156890
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 4 Aug 2020 14:28:27 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D82C512405A;
+        Tue,  4 Aug 2020 14:28:27 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6531C124055;
+        Tue,  4 Aug 2020 14:28:27 +0000 (GMT)
+Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.175.63])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  4 Aug 2020 14:28:27 +0000 (GMT)
+Subject: Re: [PATCH v9 00/15] s390/vfio-ap: dynamic configuration support
+To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com
+References: <20200720150344.24488-1-akrowiak@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <21bf3576-cb40-d02b-2245-e140a6edd15e@linux.ibm.com>
+Date:   Tue, 4 Aug 2020 10:28:27 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20190415164011.2638-1-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20200720150344.24488-1-akrowiak@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-04_04:2020-08-03,2020-08-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ malwarescore=0 mlxlogscore=999 phishscore=0 clxscore=1015
+ lowpriorityscore=0 bulkscore=0 priorityscore=1501 suspectscore=3
+ mlxscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008040105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please ignore this patch also, sent due to git send mistake.
-Apologies for the spam.
+PING!
 
+On 7/20/20 11:03 AM, Tony Krowiak wrote:
+> The current design for AP pass-through does not support making dynamic
+> changes to the AP matrix of a running guest resulting in a few
+> deficiencies this patch series is intended to mitigate:
+>
+> 1. Adapters, domains and control domains can not be added to or removed
+>     from a running guest. In order to modify a guest's AP configuration,
+>     the guest must be terminated; only then can AP resources be assigned
+>     to or unassigned from the guest's matrix mdev. The new AP
+>     configuration becomes available to the guest when it is subsequently
+>     restarted.
+>
+> 2. The AP bus's /sys/bus/ap/apmask and /sys/bus/ap/aqmask interfaces can
+>     be modified by a root user without any restrictions. A change to
+>     either mask can result in AP queue devices being unbound from the
+>     vfio_ap device driver and bound to a zcrypt device driver even if a
+>     guest is using the queues, thus giving the host access to the guest's
+>     private crypto data and vice versa.
+>
+> 3. The APQNs derived from the Cartesian product of the APIDs of the
+>     adapters and APQIs of the domains assigned to a matrix mdev must
+>     reference an AP queue device bound to the vfio_ap device driver. The
+>     AP architecture allows assignment of AP resources that are not
+>     available to the system, so this artificial restriction is not
+>     compliant with the architecture.
+>
+> 4. The AP configuration profile can be dynamically changed for the linux
+>     host after a KVM guest is started. For example, a new domain can be
+>     dynamically added to the configuration profile via the SE or an HMC
+>     connected to a DPM enabled lpar. Likewise, AP adapters can be
+>     dynamically configured (online state) and deconfigured (standby state)
+>     using the SE, an SCLP command or an HMC connected to a DPM enabled
+>     lpar. This can result in inadvertent sharing of AP queues between the
+>     guest and host.
+>
+> 5. A root user can manually unbind an AP queue device representing a
+>     queue in use by a KVM guest via the vfio_ap device driver's sysfs
+>     unbind attribute. In this case, the guest will be using a queue that
+>     is not bound to the driver which violates the device model.
+>
+> This patch series introduces the following changes to the current design
+> to alleviate the shortcomings described above as well as to implement
+> more of the AP architecture:
+>
+> 1. A root user will be prevented from making changes to the AP bus's
+>     /sys/bus/ap/apmask or /sys/bus/ap/aqmask if the ownership of an APQN
+>     changes from the vfio_ap device driver to a zcrypt driver when the
+>     APQN is assigned to a matrix mdev.
+>
+> 2. Allow a root user to hot plug/unplug AP adapters, domains and control
+>     domains using the matrix mdev's assign/unassign attributes.
+>
+> 4. Allow assignment of an AP adapter or domain to a matrix mdev even if
+>     it results in assignment of an APQN that does not reference an AP
+>     queue device bound to the vfio_ap device driver, as long as the APQN
+>     is not reserved for use by the default zcrypt drivers (also known as
+>     over-provisioning of AP resources). Allowing over-provisioning of AP
+>     resources better models the architecture which does not preclude
+>     assigning AP resources that are not yet available in the system. Such
+>     APQNs, however, will not be assigned to the guest using the matrix
+>     mdev; only APQNs referencing AP queue devices bound to the vfio_ap
+>     device driver will actually get assigned to the guest.
+>
+> 5. Handle dynamic changes to the AP device model.
+>
+> 1. Rationale for changes to AP bus's apmask/aqmask interfaces:
+> ----------------------------------------------------------
+> Due to the extremely sensitive nature of cryptographic data, it is
+> imperative that great care be taken to ensure that such data is secured.
+> Allowing a root user, either inadvertently or maliciously, to configure
+> these masks such that a queue is shared between the host and a guest is
+> not only avoidable, it is advisable. It was suggested that this scenario
+> is better handled in user space with management software, but that does
+> not preclude a malicious administrator from using the sysfs interfaces
+> to gain access to a guest's crypto data. It was also suggested that this
+> scenario could be avoided by taking access to the adapter away from the
+> guest and zeroing out the queues prior to the vfio_ap driver releasing the
+> device; however, stealing an adapter in use from a guest as a by-product
+> of an operation is bad and will likely cause problems for the guest
+> unnecessarily. It was decided that the most effective solution with the
+> least number of negative side effects is to prevent the situation at the
+> source.
+>
+> 2. Rationale for hot plug/unplug using matrix mdev sysfs interfaces:
+> ----------------------------------------------------------------
+> Allowing a user to hot plug/unplug AP resources using the matrix mdev
+> sysfs interfaces circumvents the need to terminate the guest in order to
+> modify its AP configuration. Allowing dynamic configuration makes
+> reconfiguring a guest's AP matrix much less disruptive.
+>
+> 3. Rationale for allowing over-provisioning of AP resources:
+> -----------------------------------------------------------
+> Allowing assignment of AP resources to a matrix mdev and ultimately to a
+> guest better models the AP architecture. The architecture does not
+> preclude assignment of unavailable AP resources. If a queue subsequently
+> becomes available while a guest using the matrix mdev to which its APQN
+> is assigned, the guest will be given access to it. If an APQN
+> is dynamically unassigned from the underlying host system, it will
+> automatically become unavailable to the guest.
+>
+> Change log v8-v9:
+> ----------------
+> * Fixed errors flagged by the kernel test robot
+>
+> * Fixed issue with guest losing queues when a new queue is probed due to
+>    manual bind operation.
+>
+> Change log v7-v8:
+> ----------------
+> * Now logging a message when an attempt to reserve APQNs for the zcrypt
+>    drivers will result in taking a queue away from a KVM guest to provide
+>    the sysadmin a way to ascertain why the sysfs operation failed.
+>
+> * Created locked and unlocked versions of the ap_parse_mask_str() function.
+>
+> * Now using new interface provided by an AP bus patch -
+>    s390/ap: introduce new ap function ap_get_qdev() - to retrieve
+>    struct ap_queue representing an AP queue device. This patch is not a
+>    part of this series but is a prerequisite for this series.
+>
+> Change log v6-v7:
+> ----------------
+> * Added callbacks to AP bus:
+>    - on_config_changed: Notifies implementing drivers that
+>      the AP configuration has changed since last AP device scan.
+>    - on_scan_complete: Notifies implementing drivers that the device scan
+>      has completed.
+>    - implemented on_config_changed and on_scan_complete callbacks for
+>      vfio_ap device driver.
+>    - updated vfio_ap device driver's probe and remove callbacks to handle
+>      dynamic changes to the AP device model.
+> * Added code to filter APQNs when assigning AP resources to a KVM guest's
+>    CRYCB
+>
+> Change log v5-v6:
+> ----------------
+> * Fixed a bug in ap_bus.c introduced with patch 2/7 of the v5
+>    series. Harald Freudenberer pointed out that the mutex lock
+>    for ap_perms_mutex in the apmask_store and aqmask_store functions
+>    was not being freed.
+>
+> * Removed patch 6/7 which added logging to the vfio_ap driver
+>    to expedite acceptance of this series. The logging will be introduced
+>    with a separate patch series to allow more time to explore options
+>    such as DBF logging vs. tracepoints.
+>
+> * Added 3 patches related to ensuring that APQNs that do not reference
+>    AP queue devices bound to the vfio_ap device driver are not assigned
+>    to the guest CRYCB:
+>
+>    Patch 4: Filter CRYCB bits for unavailable queue devices
+>    Patch 5: sysfs attribute to display the guest CRYCB
+>    Patch 6: update guest CRYCB in vfio_ap probe and remove callbacks
+>
+> * Added a patch (Patch 9) to version the vfio_ap module.
+>
+> * Reshuffled patches to allow the in_use callback implementation to
+>    invoke the vfio_ap_mdev_verify_no_sharing() function introduced in
+>    patch 2.
+>
+> Change log v4-v5:
+> ----------------
+> * Added a patch to provide kernel s390dbf debug logs for VFIO AP
+>
+> Change log v3->v4:
+> -----------------
+> * Restored patches preventing root user from changing ownership of
+>    APQNs from zcrypt drivers to the vfio_ap driver if the APQN is
+>    assigned to an mdev.
+>
+> * No longer enforcing requirement restricting guest access to
+>    queues represented by a queue device bound to the vfio_ap
+>    device driver.
+>
+> * Removed shadow CRYCB and now directly updating the guest CRYCB
+>    from the matrix mdev's matrix.
+>
+> * Rebased the patch series on top of 'vfio: ap: AP Queue Interrupt
+>    Control' patches.
+>
+> * Disabled bind/unbind sysfs interfaces for vfio_ap driver
+>
+> Change log v2->v3:
+> -----------------
+> * Allow guest access to an AP queue only if the queue is bound to
+>    the vfio_ap device driver.
+>
+> * Removed the patch to test CRYCB masks before taking the vCPUs
+>    out of SIE. Now checking the shadow CRYCB in the vfio_ap driver.
+>
+> Change log v1->v2:
+> -----------------
+> * Removed patches preventing root user from unbinding AP queues from
+>    the vfio_ap device driver
+> * Introduced a shadow CRYCB in the vfio_ap driver to manage dynamic
+>    changes to the AP guest configuration due to root user interventions
+>    or hardware anomalies.
+>
+> Harald Freudenberger (1):
+>    s390/zcrypt: Notify driver on config changed and scan complete
+>      callbacks
+>
+> Tony Krowiak (14):
+>    s390/vfio-ap: add version vfio_ap module
+>    s390/vfio-ap: use new AP bus interface to search for queue devices
+>    s390/vfio-ap: manage link between queue struct and matrix mdev
+>    s390/zcrypt: driver callback to indicate resource in use
+>    s390/vfio-ap: implement in-use callback for vfio_ap driver
+>    s390/vfio-ap: introduce shadow APCB
+>    s390/vfio-ap: sysfs attribute to display the guest's matrix
+>    s390/vfio-ap: filter matrix for unavailable queue devices
+>    s390/vfio-ap: allow assignment of unavailable AP queues to mdev device
+>    s390/vfio-ap: allow configuration of matrix mdev in use by a KVM guest
+>    s390/vfio-ap: allow hot plug/unplug of AP resources using mdev device
+>    s390/vfio-ap: handle host AP config change notification
+>    s390/vfio-ap: handle AP bus scan completed notification
+>    s390/vfio-ap: handle probe/remove not due to host AP config changes
+>
+>   drivers/s390/crypto/ap_bus.c          |  323 +++++--
+>   drivers/s390/crypto/ap_bus.h          |   16 +
+>   drivers/s390/crypto/vfio_ap_drv.c     |   36 +-
+>   drivers/s390/crypto/vfio_ap_ops.c     | 1216 ++++++++++++++++++++-----
+>   drivers/s390/crypto/vfio_ap_private.h |   23 +-
+>   5 files changed, 1294 insertions(+), 320 deletions(-)
+>
 
-On 8/4/2020 7:44 PM, Gaurav Kohli wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> 
-> Many nvmem providers are not very keen on having default sysfs
-> nvmem entry, as most of the usecases for them are inside kernel
-> itself. And in some cases read/writes to some areas in nvmem are
-> restricted and trapped at secure monitor level, so accessing them
-> from userspace would result in board reboots.
-> 
-> This patch adds new NVMEM_SYSFS Kconfig to make binary sysfs entry
-> an optional one. This provision will give more flexibility to users.
-> This patch also moves existing sysfs code to a new file so that its
-> not compiled in when its not really required.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->   Documentation/ABI/stable/sysfs-bus-nvmem |   2 +
->   drivers/nvmem/Kconfig                    |   9 +
->   drivers/nvmem/Makefile                   |   3 +
->   drivers/nvmem/core.c                     | 264 +----------------------
->   drivers/nvmem/nvmem-sysfs.c              | 256 ++++++++++++++++++++++
->   drivers/nvmem/nvmem.h                    |  62 ++++++
->   6 files changed, 336 insertions(+), 260 deletions(-)
->   create mode 100644 drivers/nvmem/nvmem-sysfs.c
->   create mode 100644 drivers/nvmem/nvmem.h
-> 
-> diff --git a/Documentation/ABI/stable/sysfs-bus-nvmem b/Documentation/ABI/stable/sysfs-bus-nvmem
-> index 5923ab4620c5..9ffba8576f7b 100644
-> --- a/Documentation/ABI/stable/sysfs-bus-nvmem
-> +++ b/Documentation/ABI/stable/sysfs-bus-nvmem
-> @@ -6,6 +6,8 @@ Description:
->   		This file allows user to read/write the raw NVMEM contents.
->   		Permissions for write to this file depends on the nvmem
->   		provider configuration.
-> +		Note: This file is only present if CONFIG_NVMEM_SYSFS
-> +		is enabled
->   
->   		ex:
->   		hexdump /sys/bus/nvmem/devices/qfprom0/nvmem
-> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-> index a90e9a1ebe55..e316811e9c04 100644
-> --- a/drivers/nvmem/Kconfig
-> +++ b/drivers/nvmem/Kconfig
-> @@ -13,6 +13,15 @@ menuconfig NVMEM
->   
->   if NVMEM
->   
-> +config NVMEM_SYSFS
-> +	bool "/sys/bus/nvmem/devices/*/nvmem (sysfs interface)"
-> +	depends on SYSFS
-> +	help
-> +	 Say Y here to add a sysfs interface for NVMEM.
-> +
-> +	 This interface is mostly used by userspace applications to
-> +	 read/write directly into nvmem.
-> +
->   config NVMEM_IMX_IIM
->   	tristate "i.MX IC Identification Module support"
->   	depends on ARCH_MXC || COMPILE_TEST
-> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-> index 4c7ba12a7005..c1fe4768dfef 100644
-> --- a/drivers/nvmem/Makefile
-> +++ b/drivers/nvmem/Makefile
-> @@ -6,6 +6,9 @@
->   obj-$(CONFIG_NVMEM)		+= nvmem_core.o
->   nvmem_core-y			:= core.o
->   
-> +obj-$(CONFIG_NVMEM_SYSFS)	+= nvmem_sysfs.o
-> +nvmem_sysfs-y			:= nvmem-sysfs.o
-> +
->   # Devices
->   obj-$(CONFIG_NVMEM_BCM_OCOTP)	+= nvmem-bcm-ocotp.o
->   nvmem-bcm-ocotp-y		:= bcm-ocotp.o
-> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> index 5abebf2128b8..c7892c3da91f 100644
-> --- a/drivers/nvmem/core.c
-> +++ b/drivers/nvmem/core.c
-> @@ -17,27 +17,7 @@
->   #include <linux/nvmem-provider.h>
->   #include <linux/of.h>
->   #include <linux/slab.h>
-> -
-> -struct nvmem_device {
-> -	struct module		*owner;
-> -	struct device		dev;
-> -	int			stride;
-> -	int			word_size;
-> -	int			id;
-> -	struct kref		refcnt;
-> -	size_t			size;
-> -	bool			read_only;
-> -	int			flags;
-> -	enum nvmem_type		type;
-> -	struct bin_attribute	eeprom;
-> -	struct device		*base_dev;
-> -	struct list_head	cells;
-> -	nvmem_reg_read_t	reg_read;
-> -	nvmem_reg_write_t	reg_write;
-> -	void *priv;
-> -};
-> -
-> -#define FLAG_COMPAT		BIT(0)
-> +#include "nvmem.h"
->   
->   struct nvmem_cell {
->   	const char		*name;
-> @@ -61,18 +41,7 @@ static LIST_HEAD(nvmem_lookup_list);
->   
->   static BLOCKING_NOTIFIER_HEAD(nvmem_notifier);
->   
-> -static const char * const nvmem_type_str[] = {
-> -	[NVMEM_TYPE_UNKNOWN] = "Unknown",
-> -	[NVMEM_TYPE_EEPROM] = "EEPROM",
-> -	[NVMEM_TYPE_OTP] = "OTP",
-> -	[NVMEM_TYPE_BATTERY_BACKED] = "Battery backed",
-> -};
-> -
-> -#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> -static struct lock_class_key eeprom_lock_key;
-> -#endif
->   
-> -#define to_nvmem_device(d) container_of(d, struct nvmem_device, dev)
->   static int nvmem_reg_read(struct nvmem_device *nvmem, unsigned int offset,
->   			  void *val, size_t bytes)
->   {
-> @@ -91,187 +60,6 @@ static int nvmem_reg_write(struct nvmem_device *nvmem, unsigned int offset,
->   	return -EINVAL;
->   }
->   
-> -static ssize_t type_show(struct device *dev,
-> -			 struct device_attribute *attr, char *buf)
-> -{
-> -	struct nvmem_device *nvmem = to_nvmem_device(dev);
-> -
-> -	return sprintf(buf, "%s\n", nvmem_type_str[nvmem->type]);
-> -}
-> -
-> -static DEVICE_ATTR_RO(type);
-> -
-> -static struct attribute *nvmem_attrs[] = {
-> -	&dev_attr_type.attr,
-> -	NULL,
-> -};
-> -
-> -static ssize_t bin_attr_nvmem_read(struct file *filp, struct kobject *kobj,
-> -				    struct bin_attribute *attr,
-> -				    char *buf, loff_t pos, size_t count)
-> -{
-> -	struct device *dev;
-> -	struct nvmem_device *nvmem;
-> -	int rc;
-> -
-> -	if (attr->private)
-> -		dev = attr->private;
-> -	else
-> -		dev = container_of(kobj, struct device, kobj);
-> -	nvmem = to_nvmem_device(dev);
-> -
-> -	/* Stop the user from reading */
-> -	if (pos >= nvmem->size)
-> -		return 0;
-> -
-> -	if (count < nvmem->word_size)
-> -		return -EINVAL;
-> -
-> -	if (pos + count > nvmem->size)
-> -		count = nvmem->size - pos;
-> -
-> -	count = round_down(count, nvmem->word_size);
-> -
-> -	rc = nvmem_reg_read(nvmem, pos, buf, count);
-> -
-> -	if (rc)
-> -		return rc;
-> -
-> -	return count;
-> -}
-> -
-> -static ssize_t bin_attr_nvmem_write(struct file *filp, struct kobject *kobj,
-> -				     struct bin_attribute *attr,
-> -				     char *buf, loff_t pos, size_t count)
-> -{
-> -	struct device *dev;
-> -	struct nvmem_device *nvmem;
-> -	int rc;
-> -
-> -	if (attr->private)
-> -		dev = attr->private;
-> -	else
-> -		dev = container_of(kobj, struct device, kobj);
-> -	nvmem = to_nvmem_device(dev);
-> -
-> -	/* Stop the user from writing */
-> -	if (pos >= nvmem->size)
-> -		return -EFBIG;
-> -
-> -	if (count < nvmem->word_size)
-> -		return -EINVAL;
-> -
-> -	if (pos + count > nvmem->size)
-> -		count = nvmem->size - pos;
-> -
-> -	count = round_down(count, nvmem->word_size);
-> -
-> -	rc = nvmem_reg_write(nvmem, pos, buf, count);
-> -
-> -	if (rc)
-> -		return rc;
-> -
-> -	return count;
-> -}
-> -
-> -/* default read/write permissions */
-> -static struct bin_attribute bin_attr_rw_nvmem = {
-> -	.attr	= {
-> -		.name	= "nvmem",
-> -		.mode	= 0644,
-> -	},
-> -	.read	= bin_attr_nvmem_read,
-> -	.write	= bin_attr_nvmem_write,
-> -};
-> -
-> -static struct bin_attribute *nvmem_bin_rw_attributes[] = {
-> -	&bin_attr_rw_nvmem,
-> -	NULL,
-> -};
-> -
-> -static const struct attribute_group nvmem_bin_rw_group = {
-> -	.bin_attrs	= nvmem_bin_rw_attributes,
-> -	.attrs		= nvmem_attrs,
-> -};
-> -
-> -static const struct attribute_group *nvmem_rw_dev_groups[] = {
-> -	&nvmem_bin_rw_group,
-> -	NULL,
-> -};
-> -
-> -/* read only permission */
-> -static struct bin_attribute bin_attr_ro_nvmem = {
-> -	.attr	= {
-> -		.name	= "nvmem",
-> -		.mode	= 0444,
-> -	},
-> -	.read	= bin_attr_nvmem_read,
-> -};
-> -
-> -static struct bin_attribute *nvmem_bin_ro_attributes[] = {
-> -	&bin_attr_ro_nvmem,
-> -	NULL,
-> -};
-> -
-> -static const struct attribute_group nvmem_bin_ro_group = {
-> -	.bin_attrs	= nvmem_bin_ro_attributes,
-> -	.attrs		= nvmem_attrs,
-> -};
-> -
-> -static const struct attribute_group *nvmem_ro_dev_groups[] = {
-> -	&nvmem_bin_ro_group,
-> -	NULL,
-> -};
-> -
-> -/* default read/write permissions, root only */
-> -static struct bin_attribute bin_attr_rw_root_nvmem = {
-> -	.attr	= {
-> -		.name	= "nvmem",
-> -		.mode	= 0600,
-> -	},
-> -	.read	= bin_attr_nvmem_read,
-> -	.write	= bin_attr_nvmem_write,
-> -};
-> -
-> -static struct bin_attribute *nvmem_bin_rw_root_attributes[] = {
-> -	&bin_attr_rw_root_nvmem,
-> -	NULL,
-> -};
-> -
-> -static const struct attribute_group nvmem_bin_rw_root_group = {
-> -	.bin_attrs	= nvmem_bin_rw_root_attributes,
-> -	.attrs		= nvmem_attrs,
-> -};
-> -
-> -static const struct attribute_group *nvmem_rw_root_dev_groups[] = {
-> -	&nvmem_bin_rw_root_group,
-> -	NULL,
-> -};
-> -
-> -/* read only permission, root only */
-> -static struct bin_attribute bin_attr_ro_root_nvmem = {
-> -	.attr	= {
-> -		.name	= "nvmem",
-> -		.mode	= 0400,
-> -	},
-> -	.read	= bin_attr_nvmem_read,
-> -};
-> -
-> -static struct bin_attribute *nvmem_bin_ro_root_attributes[] = {
-> -	&bin_attr_ro_root_nvmem,
-> -	NULL,
-> -};
-> -
-> -static const struct attribute_group nvmem_bin_ro_root_group = {
-> -	.bin_attrs	= nvmem_bin_ro_root_attributes,
-> -	.attrs		= nvmem_attrs,
-> -};
-> -
-> -static const struct attribute_group *nvmem_ro_root_dev_groups[] = {
-> -	&nvmem_bin_ro_root_group,
-> -	NULL,
-> -};
-> -
->   static void nvmem_release(struct device *dev)
->   {
->   	struct nvmem_device *nvmem = to_nvmem_device(dev);
-> @@ -422,43 +210,6 @@ static int nvmem_add_cells(struct nvmem_device *nvmem,
->   	return rval;
->   }
->   
-> -/*
-> - * nvmem_setup_compat() - Create an additional binary entry in
-> - * drivers sys directory, to be backwards compatible with the older
-> - * drivers/misc/eeprom drivers.
-> - */
-> -static int nvmem_setup_compat(struct nvmem_device *nvmem,
-> -			      const struct nvmem_config *config)
-> -{
-> -	int rval;
-> -
-> -	if (!config->base_dev)
-> -		return -EINVAL;
-> -
-> -	if (nvmem->read_only)
-> -		nvmem->eeprom = bin_attr_ro_root_nvmem;
-> -	else
-> -		nvmem->eeprom = bin_attr_rw_root_nvmem;
-> -	nvmem->eeprom.attr.name = "eeprom";
-> -	nvmem->eeprom.size = nvmem->size;
-> -#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> -	nvmem->eeprom.attr.key = &eeprom_lock_key;
-> -#endif
-> -	nvmem->eeprom.private = &nvmem->dev;
-> -	nvmem->base_dev = config->base_dev;
-> -
-> -	rval = device_create_bin_file(nvmem->base_dev, &nvmem->eeprom);
-> -	if (rval) {
-> -		dev_err(&nvmem->dev,
-> -			"Failed to create eeprom binary file %d\n", rval);
-> -		return rval;
-> -	}
-> -
-> -	nvmem->flags |= FLAG_COMPAT;
-> -
-> -	return 0;
-> -}
-> -
->   /**
->    * nvmem_register_notifier() - Register a notifier block for nvmem events.
->    *
-> @@ -651,14 +402,7 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
->   	nvmem->read_only = device_property_present(config->dev, "read-only") ||
->   			   config->read_only || !nvmem->reg_write;
->   
-> -	if (config->root_only)
-> -		nvmem->dev.groups = nvmem->read_only ?
-> -			nvmem_ro_root_dev_groups :
-> -			nvmem_rw_root_dev_groups;
-> -	else
-> -		nvmem->dev.groups = nvmem->read_only ?
-> -			nvmem_ro_dev_groups :
-> -			nvmem_rw_dev_groups;
-> +	nvmem->dev.groups = nvmem_sysfs_get_groups(nvmem, config);
->   
->   	device_initialize(&nvmem->dev);
->   
-> @@ -669,7 +413,7 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
->   		goto err_put_device;
->   
->   	if (config->compat) {
-> -		rval = nvmem_setup_compat(nvmem, config);
-> +		rval = nvmem_sysfs_setup_compat(nvmem, config);
->   		if (rval)
->   			goto err_device_del;
->   	}
-> @@ -696,7 +440,7 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
->   	nvmem_device_remove_all_cells(nvmem);
->   err_teardown_compat:
->   	if (config->compat)
-> -		device_remove_bin_file(nvmem->base_dev, &nvmem->eeprom);
-> +		nvmem_sysfs_remove_compat(nvmem, config);
->   err_device_del:
->   	device_del(&nvmem->dev);
->   err_put_device:
-> diff --git a/drivers/nvmem/nvmem-sysfs.c b/drivers/nvmem/nvmem-sysfs.c
-> new file mode 100644
-> index 000000000000..6f303b91f6e7
-> --- /dev/null
-> +++ b/drivers/nvmem/nvmem-sysfs.c
-> @@ -0,0 +1,256 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019, Linaro Limited
-> + */
-> +#include "nvmem.h"
-> +
-> +static const char * const nvmem_type_str[] = {
-> +	[NVMEM_TYPE_UNKNOWN] = "Unknown",
-> +	[NVMEM_TYPE_EEPROM] = "EEPROM",
-> +	[NVMEM_TYPE_OTP] = "OTP",
-> +	[NVMEM_TYPE_BATTERY_BACKED] = "Battery backed",
-> +};
-> +
-> +#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> +static struct lock_class_key eeprom_lock_key;
-> +#endif
-> +
-> +static ssize_t type_show(struct device *dev,
-> +			 struct device_attribute *attr, char *buf)
-> +{
-> +	struct nvmem_device *nvmem = to_nvmem_device(dev);
-> +
-> +	return sprintf(buf, "%s\n", nvmem_type_str[nvmem->type]);
-> +}
-> +
-> +static DEVICE_ATTR_RO(type);
-> +
-> +static struct attribute *nvmem_attrs[] = {
-> +	&dev_attr_type.attr,
-> +	NULL,
-> +};
-> +
-> +static ssize_t bin_attr_nvmem_read(struct file *filp, struct kobject *kobj,
-> +				    struct bin_attribute *attr,
-> +				    char *buf, loff_t pos, size_t count)
-> +{
-> +	struct device *dev;
-> +	struct nvmem_device *nvmem;
-> +	int rc;
-> +
-> +	if (attr->private)
-> +		dev = attr->private;
-> +	else
-> +		dev = container_of(kobj, struct device, kobj);
-> +	nvmem = to_nvmem_device(dev);
-> +
-> +	/* Stop the user from reading */
-> +	if (pos >= nvmem->size)
-> +		return 0;
-> +
-> +	if (count < nvmem->word_size)
-> +		return -EINVAL;
-> +
-> +	if (pos + count > nvmem->size)
-> +		count = nvmem->size - pos;
-> +
-> +	count = round_down(count, nvmem->word_size);
-> +
-> +	rc = nvmem->reg_read(nvmem->priv, pos, buf, count);
-> +
-> +	if (rc)
-> +		return rc;
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t bin_attr_nvmem_write(struct file *filp, struct kobject *kobj,
-> +				     struct bin_attribute *attr,
-> +				     char *buf, loff_t pos, size_t count)
-> +{
-> +	struct device *dev;
-> +	struct nvmem_device *nvmem;
-> +	int rc;
-> +
-> +	if (attr->private)
-> +		dev = attr->private;
-> +	else
-> +		dev = container_of(kobj, struct device, kobj);
-> +	nvmem = to_nvmem_device(dev);
-> +
-> +	/* Stop the user from writing */
-> +	if (pos >= nvmem->size)
-> +		return -EFBIG;
-> +
-> +	if (count < nvmem->word_size)
-> +		return -EINVAL;
-> +
-> +	if (pos + count > nvmem->size)
-> +		count = nvmem->size - pos;
-> +
-> +	count = round_down(count, nvmem->word_size);
-> +
-> +	rc = nvmem->reg_write(nvmem->priv, pos, buf, count);
-> +
-> +	if (rc)
-> +		return rc;
-> +
-> +	return count;
-> +}
-> +
-> +/* default read/write permissions */
-> +static struct bin_attribute bin_attr_rw_nvmem = {
-> +	.attr	= {
-> +		.name	= "nvmem",
-> +		.mode	= 0644,
-> +	},
-> +	.read	= bin_attr_nvmem_read,
-> +	.write	= bin_attr_nvmem_write,
-> +};
-> +
-> +static struct bin_attribute *nvmem_bin_rw_attributes[] = {
-> +	&bin_attr_rw_nvmem,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group nvmem_bin_rw_group = {
-> +	.bin_attrs	= nvmem_bin_rw_attributes,
-> +	.attrs		= nvmem_attrs,
-> +};
-> +
-> +static const struct attribute_group *nvmem_rw_dev_groups[] = {
-> +	&nvmem_bin_rw_group,
-> +	NULL,
-> +};
-> +
-> +/* read only permission */
-> +static struct bin_attribute bin_attr_ro_nvmem = {
-> +	.attr	= {
-> +		.name	= "nvmem",
-> +		.mode	= 0444,
-> +	},
-> +	.read	= bin_attr_nvmem_read,
-> +};
-> +
-> +static struct bin_attribute *nvmem_bin_ro_attributes[] = {
-> +	&bin_attr_ro_nvmem,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group nvmem_bin_ro_group = {
-> +	.bin_attrs	= nvmem_bin_ro_attributes,
-> +	.attrs		= nvmem_attrs,
-> +};
-> +
-> +static const struct attribute_group *nvmem_ro_dev_groups[] = {
-> +	&nvmem_bin_ro_group,
-> +	NULL,
-> +};
-> +
-> +/* default read/write permissions, root only */
-> +static struct bin_attribute bin_attr_rw_root_nvmem = {
-> +	.attr	= {
-> +		.name	= "nvmem",
-> +		.mode	= 0600,
-> +	},
-> +	.read	= bin_attr_nvmem_read,
-> +	.write	= bin_attr_nvmem_write,
-> +};
-> +
-> +static struct bin_attribute *nvmem_bin_rw_root_attributes[] = {
-> +	&bin_attr_rw_root_nvmem,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group nvmem_bin_rw_root_group = {
-> +	.bin_attrs	= nvmem_bin_rw_root_attributes,
-> +	.attrs		= nvmem_attrs,
-> +};
-> +
-> +static const struct attribute_group *nvmem_rw_root_dev_groups[] = {
-> +	&nvmem_bin_rw_root_group,
-> +	NULL,
-> +};
-> +
-> +/* read only permission, root only */
-> +static struct bin_attribute bin_attr_ro_root_nvmem = {
-> +	.attr	= {
-> +		.name	= "nvmem",
-> +		.mode	= 0400,
-> +	},
-> +	.read	= bin_attr_nvmem_read,
-> +};
-> +
-> +static struct bin_attribute *nvmem_bin_ro_root_attributes[] = {
-> +	&bin_attr_ro_root_nvmem,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group nvmem_bin_ro_root_group = {
-> +	.bin_attrs	= nvmem_bin_ro_root_attributes,
-> +	.attrs		= nvmem_attrs,
-> +};
-> +
-> +static const struct attribute_group *nvmem_ro_root_dev_groups[] = {
-> +	&nvmem_bin_ro_root_group,
-> +	NULL,
-> +};
-> +
-> +const struct attribute_group **nvmem_sysfs_get_groups(
-> +					struct nvmem_device *nvmem,
-> +					const struct nvmem_config *config)
-> +{
-> +	if (config->root_only)
-> +		return nvmem->read_only ?
-> +			nvmem_ro_root_dev_groups :
-> +			nvmem_rw_root_dev_groups;
-> +
-> +	return nvmem->read_only ? nvmem_ro_dev_groups : nvmem_rw_dev_groups;
-> +}
-> +
-> +/*
-> + * nvmem_setup_compat() - Create an additional binary entry in
-> + * drivers sys directory, to be backwards compatible with the older
-> + * drivers/misc/eeprom drivers.
-> + */
-> +int nvmem_sysfs_setup_compat(struct nvmem_device *nvmem,
-> +			      const struct nvmem_config *config)
-> +{
-> +	int rval;
-> +
-> +	if (!config->compat)
-> +		return 0;
-> +
-> +	if (!config->base_dev)
-> +		return -EINVAL;
-> +
-> +	if (nvmem->read_only)
-> +		nvmem->eeprom = bin_attr_ro_root_nvmem;
-> +	else
-> +		nvmem->eeprom = bin_attr_rw_root_nvmem;
-> +	nvmem->eeprom.attr.name = "eeprom";
-> +	nvmem->eeprom.size = nvmem->size;
-> +#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> +	nvmem->eeprom.attr.key = &eeprom_lock_key;
-> +#endif
-> +	nvmem->eeprom.private = &nvmem->dev;
-> +	nvmem->base_dev = config->base_dev;
-> +
-> +	rval = device_create_bin_file(nvmem->base_dev, &nvmem->eeprom);
-> +	if (rval) {
-> +		dev_err(&nvmem->dev,
-> +			"Failed to create eeprom binary file %d\n", rval);
-> +		return rval;
-> +	}
-> +
-> +	nvmem->flags |= FLAG_COMPAT;
-> +
-> +	return 0;
-> +}
-> +
-> +void nvmem_sysfs_remove_compat(struct nvmem_device *nvmem,
-> +			      const struct nvmem_config *config)
-> +{
-> +	if (config->compat)
-> +		device_remove_bin_file(nvmem->base_dev, &nvmem->eeprom);
-> +}
-> diff --git a/drivers/nvmem/nvmem.h b/drivers/nvmem/nvmem.h
-> new file mode 100644
-> index 000000000000..eb8ed7121fa3
-> --- /dev/null
-> +++ b/drivers/nvmem/nvmem.h
-> @@ -0,0 +1,62 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +#ifndef _DRIVERS_NVMEM_H
-> +#define _DRIVERS_NVMEM_H
-> +
-> +#include <linux/device.h>
-> +#include <linux/fs.h>
-> +#include <linux/kref.h>
-> +#include <linux/list.h>
-> +#include <linux/nvmem-consumer.h>
-> +#include <linux/nvmem-provider.h>
-> +
-> +struct nvmem_device {
-> +	struct module		*owner;
-> +	struct device		dev;
-> +	int			stride;
-> +	int			word_size;
-> +	int			id;
-> +	struct kref		refcnt;
-> +	size_t			size;
-> +	bool			read_only;
-> +	int			flags;
-> +	enum nvmem_type		type;
-> +	struct bin_attribute	eeprom;
-> +	struct device		*base_dev;
-> +	struct list_head	cells;
-> +	nvmem_reg_read_t	reg_read;
-> +	nvmem_reg_write_t	reg_write;
-> +	void *priv;
-> +};
-> +
-> +#define to_nvmem_device(d) container_of(d, struct nvmem_device, dev)
-> +#define FLAG_COMPAT		BIT(0)
-> +
-> +#ifdef CONFIG_NVMEM_SYSFS
-> +const struct attribute_group **nvmem_sysfs_get_groups(
-> +					struct nvmem_device *nvmem,
-> +					const struct nvmem_config *config);
-> +int nvmem_sysfs_setup_compat(struct nvmem_device *nvmem,
-> +			      const struct nvmem_config *config);
-> +void nvmem_sysfs_remove_compat(struct nvmem_device *nvmem,
-> +			      const struct nvmem_config *config);
-> +#else
-> +static inline const struct attribute_group **nvmem_sysfs_get_groups(
-> +					struct nvmem_device *nvmem,
-> +					const struct nvmem_config *config)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline int nvmem_sysfs_setup_compat(struct nvmem_device *nvmem,
-> +				      const struct nvmem_config *config)
-> +{
-> +	return -ENOSYS;
-> +}
-> +static inline void nvmem_sysfs_remove_compat(struct nvmem_device *nvmem,
-> +			      const struct nvmem_config *config)
-> +{
-> +}
-> +#endif /* CONFIG_NVMEM_SYSFS */
-> +
-> +#endif /* _DRIVERS_NVMEM_H */
-> 
-
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
-Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project.
