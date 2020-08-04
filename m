@@ -2,134 +2,156 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A25C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A1FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C780A2067D
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:42:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="epaWaJlt"
+	by mail.kernel.org (Postfix) with ESMTP id 5258B2067D
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 12:43:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbgHDMmj (ORCPT
+        id S1728282AbgHDMnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 08:42:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40756 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbgHDMlp (ORCPT
+        Tue, 4 Aug 2020 08:43:51 -0400
+Received: from host-88-217-225-28.customer.m-online.net ([88.217.225.28]:56536
+        "EHLO mail.dev.tdt.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726210AbgHDMnu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 08:41:45 -0400
-Received: from mail-wr1-x449.google.com (mail-wr1-x449.google.com [IPv6:2a00:1450:4864:20::449])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63253C06179F
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 05:41:42 -0700 (PDT)
-Received: by mail-wr1-x449.google.com with SMTP id k11so12080248wrv.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 05:41:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=KTaExCeIbMBtrg6f3KaFtKJ9kXln1IxZOo4x1K8ywoo=;
-        b=epaWaJlt64ntx42FNABLMyLva14SlmdYcoGzzYGyrXWUnAJnxMu5GEZgilr7YOjQyg
-         rwN+m322Ym4K72DntPYQLTQpUlUsvtp9hOED35dktAjWzCeoMAdqgWFu+8q67qvVGdd0
-         ASSvypkGepo2fVM74GawP/zGW8ARgykh7GWGHusAgWS8l/UBxb0pdkO0TYQ7EmgRfqVS
-         +AhohRsPKYfLCyuszVYf5jaiW3P7HKDO0xMW0AxuHSElSjjWJ6UveE2t2MgCnIL+ItDv
-         /1ed6bLGDRty9mFhZhCq6dEUtquKavGW9+Vz9/sId52Rf88V2RXw/k9gqiVHbxbaBWtN
-         +9hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=KTaExCeIbMBtrg6f3KaFtKJ9kXln1IxZOo4x1K8ywoo=;
-        b=Et0MFlCrNyqVfqSAqsKDl3D5xY5dCjpw7s7dySK6JgByaNIo2j0xY9FhrokZC3MYtY
-         8n6UnHsADO/TPCBeUpUSzPnvFW9p9FrWDgDukHBSLQLKIXjzJMtVXcxWHLDGjdONWt7Z
-         Yck6tW+bYq89trFYOG5phGU0IdPuPilYOCTbD3yCWQNgkUzYPL69eJgOsTXB1psJ1u12
-         dYcJ+UxdGHz9B8vTJqpdZvRRFk8Gu4uRDCL2Cw1QCoH896mcrF89ZFs8Qtz+52Mf+qxr
-         Q/8jH6cHglVC6dZYRbREh4ujco/OHhht+Uq/2ck/TITGo0TAqk23V9GbjqE+TnY9HTMw
-         Pmwg==
-X-Gm-Message-State: AOAM533lIoGglukMFmx9KeaJMN7OuFEv7iTzYU45chfHWf1TieelmpSm
-        yGuQKfiojRlIOFfs3ZSk6nW4U32vXSr4uXZs
-X-Google-Smtp-Source: ABdhPJwWjosW9Y2ZD4qtR2i07CuuW2KOWsc+Y1P+/2KrTNBkB6pCcdGVRsu0tHMa3wVdBR/M1mpyQCpyke7nl0k9
-X-Received: by 2002:a7b:cd93:: with SMTP id y19mr492659wmj.0.1596544900281;
- Tue, 04 Aug 2020 05:41:40 -0700 (PDT)
-Date:   Tue,  4 Aug 2020 14:41:26 +0200
-In-Reply-To: <cover.1596544734.git.andreyknvl@google.com>
-Message-Id: <26fb6165a17abcf61222eda5184c030fb6b133d1.1596544734.git.andreyknvl@google.com>
-Mime-Version: 1.0
-References: <cover.1596544734.git.andreyknvl@google.com>
-X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-Subject: [PATCH v2 3/5] kasan, arm64: don't instrument functions that enable kasan
-From:   Andrey Konovalov <andreyknvl@google.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Marco Elver <elver@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org,
-        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Walter Wu <walter-zh.wu@mediatek.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 4 Aug 2020 08:43:50 -0400
+Received: from mail.dev.tdt.de (localhost [IPv6:::1])
+        by mail.dev.tdt.de (Postfix) with ESMTP id 94668200F9;
+        Tue,  4 Aug 2020 12:43:46 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 04 Aug 2020 14:43:46 +0200
+From:   Martin Schiller <ms@dev.tdt.de>
+To:     Xie He <xie.he.0141@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Brian Norris <briannorris@chromium.org>,
+        netdev-owner@vger.kernel.org
+Subject: Re: [net v3] drivers/net/wan/lapbether: Use needed_headroom instead
+ of hard_header_len
+Organization: TDT AG
+In-Reply-To: <20200802195046.402539-1-xie.he.0141@gmail.com>
+References: <20200802195046.402539-1-xie.he.0141@gmail.com>
+Message-ID: <d02996f90f64d55d5c5e349560bfde46@dev.tdt.de>
+X-Sender: ms@dev.tdt.de
+User-Agent: Roundcube Webmail/1.1.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch prepares Software Tag-Based KASAN for stack tagging support.
+On 2020-08-02 21:50, Xie He wrote:
+> In net/packet/af_packet.c, the function packet_snd first reserves a
+> headroom of length (dev->hard_header_len + dev->needed_headroom).
+> Then if the socket is a SOCK_DGRAM socket, it calls dev_hard_header,
+> which calls dev->header_ops->create, to create the link layer header.
+> If the socket is a SOCK_RAW socket, it "un-reserves" a headroom of
+> length (dev->hard_header_len), and assumes the user to provide the
+> appropriate link layer header.
+> 
+> So according to the logic of af_packet.c, dev->hard_header_len should
+> be the length of the header that would be created by
+> dev->header_ops->create.
+> 
+> However, this driver doesn't provide dev->header_ops, so logically
+> dev->hard_header_len should be 0.
+> 
+> So we should use dev->needed_headroom instead of dev->hard_header_len
+> to request necessary headroom to be allocated.
 
-With stack tagging enabled, KASAN tags stack variable in each function
-in its prologue. In start_kernel() stack variables get tagged before KASAN
-is enabled via setup_arch()->kasan_init(). As the result the tags for
-start_kernel()'s stack variables end up in the temporary shadow memory.
-Later when KASAN gets enabled, switched to normal shadow, and starts
-checking tags, this leads to false-positive reports, as proper tags are
-missing in normal shadow.
+I'm not an expert in the field, but after reading the commit message and
+the previous comments, I'd say that makes sense.
 
-Disable KASAN instrumentation for start_kernel(). Also disable it for
-arm64's setup_arch() as a precaution (it doesn't have any stack variables
-right now).
+> 
+> This change fixes kernel panic when this driver is used with AF_PACKET
+> SOCK_RAW sockets. Call stack when panic:
+> 
+> [  168.399197] skbuff: skb_under_panic: text:ffffffff819d95fb len:20
+> put:14 head:ffff8882704c0a00 data:ffff8882704c09fd tail:0x11 end:0xc0
+> dev:veth0
+> ...
+> [  168.399255] Call Trace:
+> [  168.399259]  skb_push.cold+0x14/0x24
+> [  168.399262]  eth_header+0x2b/0xc0
+> [  168.399267]  lapbeth_data_transmit+0x9a/0xb0 [lapbether]
+> [  168.399275]  lapb_data_transmit+0x22/0x2c [lapb]
+> [  168.399277]  lapb_transmit_buffer+0x71/0xb0 [lapb]
+> [  168.399279]  lapb_kick+0xe3/0x1c0 [lapb]
+> [  168.399281]  lapb_data_request+0x76/0xc0 [lapb]
+> [  168.399283]  lapbeth_xmit+0x56/0x90 [lapbether]
+> [  168.399286]  dev_hard_start_xmit+0x91/0x1f0
+> [  168.399289]  ? irq_init_percpu_irqstack+0xc0/0x100
+> [  168.399291]  __dev_queue_xmit+0x721/0x8e0
+> [  168.399295]  ? packet_parse_headers.isra.0+0xd2/0x110
+> [  168.399297]  dev_queue_xmit+0x10/0x20
+> [  168.399298]  packet_sendmsg+0xbf0/0x19b0
+> ......
 
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
----
- arch/arm64/kernel/setup.c | 2 +-
- init/main.c               | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Shouldn't this kernel panic be intercepted by a skb_cow() before the
+skb_push() in lapbeth_data_transmit()?
 
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 93b3844cf442..575da075a2b9 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -276,7 +276,7 @@ arch_initcall(reserve_memblock_reserved_regions);
- 
- u64 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = INVALID_HWID };
- 
--void __init setup_arch(char **cmdline_p)
-+void __init __no_sanitize_address setup_arch(char **cmdline_p)
- {
- 	init_mm.start_code = (unsigned long) _text;
- 	init_mm.end_code   = (unsigned long) _etext;
-diff --git a/init/main.c b/init/main.c
-index 0ead83e86b5a..7e5e25d9fe42 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -827,7 +827,7 @@ void __init __weak arch_call_rest_init(void)
- 	rest_init();
- }
- 
--asmlinkage __visible void __init start_kernel(void)
-+asmlinkage __visible void __init __no_sanitize_address start_kernel(void)
- {
- 	char *command_line;
- 	char *after_dashes;
--- 
-2.28.0.163.g6104cc2f0b6-goog
+> 
+> Additional change:
+> When sending, check skb->len to ensure the 1-byte pseudo header is
+> present before reading it.
+> 
+> Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+> Cc: Brian Norris <briannorris@chromium.org>
+> Signed-off-by: Xie He <xie.he.0141@gmail.com>
+> ---
+> 
+> Change from v2:
+> Added skb->len check when sending.
+> 
+> Change from v1:
+> None
+> 
+> ---
+>  drivers/net/wan/lapbether.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
+> index b2868433718f..8a3f7ba36f7e 100644
+> --- a/drivers/net/wan/lapbether.c
+> +++ b/drivers/net/wan/lapbether.c
+> @@ -157,6 +157,9 @@ static netdev_tx_t lapbeth_xmit(struct sk_buff 
+> *skb,
+>  	if (!netif_running(dev))
+>  		goto drop;
+> 
+> +	if (skb->len < 1)
+> +		goto drop;
+> +
+>  	switch (skb->data[0]) {
+>  	case X25_IFACE_DATA:
+>  		break;
+> @@ -305,6 +308,7 @@ static void lapbeth_setup(struct net_device *dev)
+>  	dev->netdev_ops	     = &lapbeth_netdev_ops;
+>  	dev->needs_free_netdev = true;
+>  	dev->type            = ARPHRD_X25;
+> +	dev->hard_header_len = 0;
+>  	dev->mtu             = 1000;
+>  	dev->addr_len        = 0;
+>  }
+> @@ -331,7 +335,8 @@ static int lapbeth_new_device(struct net_device 
+> *dev)
+>  	 * then this driver prepends a length field of 2 bytes,
+>  	 * then the underlying Ethernet device prepends its own header.
+>  	 */
+> -	ndev->hard_header_len = -1 + 3 + 2 + dev->hard_header_len;
+> +	ndev->needed_headroom = -1 + 3 + 2 + dev->hard_header_len
+> +					   + dev->needed_headroom;
+> 
+>  	lapbeth = netdev_priv(ndev);
+>  	lapbeth->axdev = ndev;
 
