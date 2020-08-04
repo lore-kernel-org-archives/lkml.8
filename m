@@ -2,117 +2,149 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AB9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0527C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA3D207FC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFA5522B40
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 15:42:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UhxrF8BW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AjZY9OLE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbgHDPkw (ORCPT
+        id S1728587AbgHDPlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 11:40:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40042 "EHLO
+        Tue, 4 Aug 2020 11:41:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727038AbgHDPkM (ORCPT
+        with ESMTP id S1725950AbgHDPlq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 11:40:12 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BADAEC061756
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 08:40:11 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id r4so34871235wrx.9
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 08:40:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=+xqFoCQQoa6eAiMo50Uy9HC91LgUQEIMjIx3DBlCRwg=;
-        b=UhxrF8BWf2l+4DIHmMKF00sQXo8svgIiLw4wfiT0UFAkEZGCKIqFtslV1c2kRtGlqQ
-         nObO2HKC3Mj6IC+86y8xR8g+5888z59r/fHaEqxFhzK+3oWbidT5LallCb9JyDmgB9zS
-         +ngxNEdKVlV3KMiZJ4ZMqrD8ew6SRgICco4g0fPoAYtGL4FxOZYROuRumhj1W7GqZckv
-         7dmBPTMLO1R8Ei/Z8q55dDEP6OJc+R52TXXYErh7advHtW34287efJjtaZlKyTvm4TOY
-         h5GmRLoCvngNzxR/BHnJxFbtL/yhw/IwGqibGjaIMr6h9rPOZTGy75dl3HwKRPYr2ijR
-         eUoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version:content-transfer-encoding;
-        bh=+xqFoCQQoa6eAiMo50Uy9HC91LgUQEIMjIx3DBlCRwg=;
-        b=eE5teEFVd+66jobJ4doVyzq5PpXWHHIaJEP9ckzXnFKYQKDqeFIHTD2VspqzSubd9W
-         mz0Q6+Y8Iyqb1lIHVT1OJxBRP39v5JqeBTTzp/VaP/BYVREMRfpbR31P8i2mpA3KLMep
-         7idF71W3KxfQ+KY2uOHhr/QOXMX8V9z6mFU+98xqsoVDyG6Dmr+bz1GoLGRUG/aNWduA
-         f46gBYPFqsHC73i3feW8L9vBdPFyNOSbsyQwQ8YrrjPtGi66akgeYLaqfd713NAXNajC
-         dhx6l2pkE5X4bbNYgZXEpB0G2Li9SaLhPu97gR+HYIp1wUUUrGA5BOdLyQR8UP+vpCA3
-         5F1Q==
-X-Gm-Message-State: AOAM532CUZc9j2DU4oN7U/5hDYtxLIUZtIFN9ORzhX5rnZWNHryp41oG
-        8tiapvADnbhTpscKOqvoYRsmIdXaxzQ=
-X-Google-Smtp-Source: ABdhPJzJKsRHYbdxphNd2Y+U/MaVHkKnNns4heTa05XV+GsGcSREvqMNGKYzebFV5HdOfY82dOrLMA==
-X-Received: by 2002:a5d:51c3:: with SMTP id n3mr20350026wrv.104.1596555610319;
-        Tue, 04 Aug 2020 08:40:10 -0700 (PDT)
-Received: from zen.linaroharston ([51.148.130.216])
-        by smtp.gmail.com with ESMTPSA id a10sm30539397wrx.15.2020.08.04.08.40.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 08:40:08 -0700 (PDT)
-Received: from zen (localhost [127.0.0.1])
-        by zen.linaroharston (Postfix) with ESMTP id A1FA31FF7E;
-        Tue,  4 Aug 2020 16:40:07 +0100 (BST)
-References: <20200804124417.27102-1-alex.bennee@linaro.org>
- <20200804124417.27102-4-alex.bennee@linaro.org>
- <f80cfa932a650d8f7e8fc02a1656b4c2@kernel.org> <87r1smmpw5.fsf@linaro.org>
- <b78f8715bbaec8fc728a85d614b00688@kernel.org>
-User-agent: mu4e 1.5.5; emacs 28.0.50
-From:   Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
-        christoffer.dall@arm.com
-Subject: Re: [PATCH  v1 3/3] kernel/configs: don't include PCI_QUIRKS in KVM
- guest configs
-In-reply-to: <b78f8715bbaec8fc728a85d614b00688@kernel.org>
-Date:   Tue, 04 Aug 2020 16:40:07 +0100
-Message-ID: <87lfiumnc8.fsf@linaro.org>
+        Tue, 4 Aug 2020 11:41:46 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9BF8C06174A;
+        Tue,  4 Aug 2020 08:41:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=4HYOsiWuipXA9W4Av6msL0bg5EM4ZU//zWeqQbSSb4Y=; b=AjZY9OLE4ER6XFJ2LVIu7XnO8R
+        x/MYxLmAhfurUe1u0rvS4b04CnTUXL/Bo8iCnghvFmgeg1saQ3q1aOKmqfzE3/qgJnVV3Y5avqAod
+        lCNKowcjrhCg//YQvJxo/84zGJdiuF6goSnR2lqUDLlgi4unVpeeHwE8bwvZLTdHzYTHVIRradfmz
+        WVr7MZ+gpANvhDltZd8un/D1I0DeqhsXNaUk6mG0xRFjx4LEuVp3rzSzvkBVidFuxxbwlZ8uftgG8
+        r1CaBHAgqUttriiMtjiV2LomrsJ3kV8NtaJJwV1S8TLpAtlo6HcAA7/LWp8df3gTMVMWRkSE1kPOS
+        1W2jPmGw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k2z4H-0000fW-5v; Tue, 04 Aug 2020 15:41:34 +0000
+Subject: Re: [PATCH v4] sched: Provide USF for the portable equipment.
+To:     Dongdong Yang <contribute.kernel@gmail.com>,
+        gregkh@linuxfoundation.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-pm@vger.kernel.org, yangdongdong@xiaomi.com,
+        yanziily@xiaomi.com, rocking@linux.alibaba.com
+References: <cover.1596526941.git.yangdongdong@xiaomi.com>
+ <820a185b6765d6246ac34f612faedeb35189487c.1596526941.git.yangdongdong@xiaomi.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <2a35c303-6c28-cc16-3f12-3d7b25ff4dfc@infradead.org>
+Date:   Tue, 4 Aug 2020 08:41:27 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <820a185b6765d6246ac34f612faedeb35189487c.1596526941.git.yangdongdong@xiaomi.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 8/4/20 12:50 AM, Dongdong Yang wrote:
+> From: Dongdong Yang <yangdongdong@xiaomi.com>
+> 
+> ---
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
+> index b555df8..e299418 100644
+> --- a/Documentation/ABI/testing/sysfs-devices-system-cpu
+> +++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
+> @@ -614,3 +614,51 @@ Description:	SPURR ticks for cpuX when it was idle.
+>  
+>  		This sysfs interface exposes the number of SPURR ticks
+>  		for cpuX when it was idle.
+> +
+> +What:		/sys/devices/system/cpu/sched_usf
+> +		/sys/devices/system/cpu/sched_usf/sched_usf_non_ux_r
+> +		/sys/devices/system/cpu/sched_usf/sched_usf_up_l0_r
+> +		/sys/devices/system/cpu/sched_usf/sched_usf_down_r
+> +Date:		Aug 2020
+> +Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
+> +Description:	User Sensitive Feedback factor auxiliary scheduling which
+> +		is providing more utils adjustment settings to the high level
+> +		by scenario identification.
 
-Marc Zyngier <maz@kernel.org> writes:
+what is "utils"?
 
-> On 2020-08-04 15:44, Alex Benn=C3=A9e wrote:
->> Marc Zyngier <maz@kernel.org> writes:
->>=20
->>> On 2020-08-04 13:44, Alex Benn=C3=A9e wrote:
->>>> The VIRTIO_PCI support is an idealised PCI bus, we don't need a bunch
->>>> of bloat for real world hardware for a VirtIO guest.
->>>=20
->>> Who says this guest will only have virtio devices?
->>=20
->> This is true - although what is the point of kvm_guest.config? We
->> certainly turn on a whole bunch of virt optimised pathways with=20
->> PARAVIRT
->> and HYPERVISOR_GUEST along with the rest of VirtIO.
->
-> Most of which actually qualifies as bloat itself as far as KVM/arm64
-> is concerned...
+> +		sched_usf_non_ux_r:
+> +			The ratio of utils is cut down on screen off. The
 
-So here is the question - does the kernel care about having a blessed
-config for a minimal viable guest? They are certainly used in the cloud
-but I understand the kernel is trying to get away from having a zoo of
-configs. What is the actual point of kvm_guest.config? Just an easy
-enabling for developers?
+same question.
 
->
->           M.
+> +			default value is 0, which no util is adjusted on sugov
+
+what is "sugov"?
+
+> +			calculating utils to select cpufreq. Its range is
+> +			[-100 , 0]. If its value falls into [-50, 0), the half
+> +			of utils, which	calculates cpufreq, shall be  cut down.
+> +			If its value falls into [-100, -50), only a quarter of
+> +			utils are left to continue to calculate cpufreq.
+> +			It is expected to be set [-100, 0) once enter into the
+> +			identificated scenario, such as listen to music on
+
+			^^^^^^^^^^^^^ not a word.
 
 
---=20
-Alex Benn=C3=A9e
+> +			screen off, and recover to 0 on out of the scenario,
+> +			such as	screen on.
+> +
+> +		sched_usf_up_l0_r:
+> +			The ratio of utils is boost up on screen on. The
+> +			default value is 0, which no util is adjusted on sugov
+> +			calculates utils to select cpufreq. Its range is [0 , 100].
+> +			If its value falls into (0, 50], a quarter of extra utils,
+> +			which calculate cpufreq, shall be added. If its value
+> +			falls into (50, 100], the half of extra utils are added
+> +			to continue to	calculate cpufreq.
+> +			It is expected to be set (0, 100] once enter into the
+> +			identificated scenario, such as browsing videolet on
+
+what is "videolet"?
+
+> +			screen on, and recover to 0 on out of the scenario,
+> +			such as screen off or videolet into background.
+> +
+> +		sched_usf_down_r:
+> +			The ratio of utils is cut down on screen on. The
+> +			default	value is 0, which no util is adjusted on sugov
+> +			calculating utils to select cpufreq. Its range is
+> +			[-100 , 0]. If its value falls into [-50, 0), the half
+> +			of utils, which	calculate cpufreq, shall be  cut down.
+> +			If its value falls into [-100, -50), only a quarter of
+> +			utils are left to continue to calculate cpufreq.
+> +			It is expected to be set [-100, 0) once enter into the
+> +			identificated scenario, such as browsing videolet on
+> +			screen on, and recover to 0 on	out of the scenario,
+> +			such as screen off or vidolet into background.
+
+
+-- 
+~Randy
+
