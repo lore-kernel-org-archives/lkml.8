@@ -2,162 +2,75 @@ Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C89C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3417FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EB8120842
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D1E2206DA
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 17:54:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgHDRtj (ORCPT
+        id S1726058AbgHDRyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 13:49:39 -0400
-Received: from mga02.intel.com ([134.134.136.20]:48308 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727902AbgHDRth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 13:49:37 -0400
-IronPort-SDR: WEy+on+2bKgfNfaH46b/qEiN7ohlDnYZ639yl2SCULyOMsaEXm3PvRIW9es8eE9s1U4gnzrZXz
- BOX2mwmbNsBg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="140285010"
-X-IronPort-AV: E=Sophos;i="5.75,434,1589266800"; 
-   d="scan'208";a="140285010"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 10:49:35 -0700
-IronPort-SDR: vs6Dh4VZN5MzxpDli0i/f/kKxKwJorfoxBkdAAWGySOJ2LF6UCtnZMYCY4AIXXfQ9cLhhiuuMK
- zP3QzAo142sQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,434,1589266800"; 
-   d="scan'208";a="288650237"
-Received: from marshy.an.intel.com (HELO [10.122.105.159]) ([10.122.105.159])
-  by orsmga003.jf.intel.com with ESMTP; 04 Aug 2020 10:49:35 -0700
-Subject: Re: [RESEND PATCHv1] fpga: stratix10-soc: make FPGA task
- un-interruptible
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-        trix@redhat.com, dinguyen@kernel.org,
-        Richard Gong <richard.gong@intel.com>
-References: <1595607009-2065-1-git-send-email-richard.gong@linux.intel.com>
- <20200804164358.GB1499313@epycbox.lan>
-From:   Richard Gong <richard.gong@linux.intel.com>
-Message-ID: <91182a46-edcd-f4f2-3316-696a5147f5e4@linux.intel.com>
-Date:   Tue, 4 Aug 2020 13:04:13 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 4 Aug 2020 13:54:05 -0400
+Received: from smtprelay0192.hostedemail.com ([216.40.44.192]:49980 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725826AbgHDRyD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 13:54:03 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id A98CE181D303C;
+        Tue,  4 Aug 2020 17:54:02 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: army50_54005e126fa8
+X-Filterd-Recvd-Size: 1724
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf19.hostedemail.com (Postfix) with ESMTPA;
+        Tue,  4 Aug 2020 17:54:01 +0000 (UTC)
+Message-ID: <ce2ec5ce170b17a902074d111b28f8e924553a87.camel@perches.com>
+Subject: Re: False positive in checkpatch.pl
+From:   Joe Perches <joe@perches.com>
+To:     "Kumar K, Anil" <anil.kumar.k@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Date:   Tue, 04 Aug 2020 10:54:00 -0700
+In-Reply-To: <MWHPR11MB1712232275EA75228B5069FECE4A0@MWHPR11MB1712.namprd11.prod.outlook.com>
+References: <MWHPR11MB1712232275EA75228B5069FECE4A0@MWHPR11MB1712.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.3-0ubuntu1 
 MIME-Version: 1.0
-In-Reply-To: <20200804164358.GB1499313@epycbox.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Moritz,
+On Tue, 2020-08-04 at 17:44 +0000, Kumar K, Anil wrote:
+> Hi Joe,
 
-No problem.
+Hello.
 
-Thanks you very much for applying patch to the next!
+Please always cc linux-kernel@vger.kernel.org
 
-Regards,
-Richard
-
-On 8/4/20 11:43 AM, Moritz Fischer wrote:
-> On Fri, Jul 24, 2020 at 11:10:09AM -0500, richard.gong@linux.intel.com wrote:
->> From: Richard Gong <richard.gong@intel.com>
->>
->> When CTRL+C occurs during the process of FPGA reconfiguration, the FPGA
->> reconfiguration process stops and the user can't perform a new FPGA
->> reconfiguration properly.
->>
->> Set FPGA task to be not interruptible so that the user can properly
->> perform FPGA reconfiguration after CTRL+C event.
->>
->> Signed-off-by: Richard Gong <richard.gong@intel.com>
->> Reviewed-by: Tom Rix <trix@redhat.com>
->> ---
->>   drivers/fpga/stratix10-soc.c | 23 +++--------------------
->>   1 file changed, 3 insertions(+), 20 deletions(-)
->>
->> diff --git a/drivers/fpga/stratix10-soc.c b/drivers/fpga/stratix10-soc.c
->> index 44b7c56..657a70c 100644
->> --- a/drivers/fpga/stratix10-soc.c
->> +++ b/drivers/fpga/stratix10-soc.c
->> @@ -196,17 +196,13 @@ static int s10_ops_write_init(struct fpga_manager *mgr,
->>   	if (ret < 0)
->>   		goto init_done;
->>   
->> -	ret = wait_for_completion_interruptible_timeout(
->> +	ret = wait_for_completion_timeout(
->>   		&priv->status_return_completion, S10_RECONFIG_TIMEOUT);
->>   	if (!ret) {
->>   		dev_err(dev, "timeout waiting for RECONFIG_REQUEST\n");
->>   		ret = -ETIMEDOUT;
->>   		goto init_done;
->>   	}
->> -	if (ret < 0) {
->> -		dev_err(dev, "error (%d) waiting for RECONFIG_REQUEST\n", ret);
->> -		goto init_done;
->> -	}
->>   
->>   	ret = 0;
->>   	if (!test_and_clear_bit(SVC_STATUS_OK, &priv->status)) {
->> @@ -318,7 +314,7 @@ static int s10_ops_write(struct fpga_manager *mgr, const char *buf,
->>   		 */
->>   		wait_status = 1; /* not timed out */
->>   		if (!priv->status)
->> -			wait_status = wait_for_completion_interruptible_timeout(
->> +			wait_status = wait_for_completion_timeout(
->>   				&priv->status_return_completion,
->>   				S10_BUFFER_TIMEOUT);
->>   
->> @@ -340,13 +336,6 @@ static int s10_ops_write(struct fpga_manager *mgr, const char *buf,
->>   			ret = -ETIMEDOUT;
->>   			break;
->>   		}
->> -		if (wait_status < 0) {
->> -			ret = wait_status;
->> -			dev_err(dev,
->> -				"error (%d) waiting for svc layer buffers\n",
->> -				ret);
->> -			break;
->> -		}
->>   	}
->>   
->>   	if (!s10_free_buffers(mgr))
->> @@ -372,7 +361,7 @@ static int s10_ops_write_complete(struct fpga_manager *mgr,
->>   		if (ret < 0)
->>   			break;
->>   
->> -		ret = wait_for_completion_interruptible_timeout(
->> +		ret = wait_for_completion_timeout(
->>   			&priv->status_return_completion, timeout);
->>   		if (!ret) {
->>   			dev_err(dev,
->> @@ -380,12 +369,6 @@ static int s10_ops_write_complete(struct fpga_manager *mgr,
->>   			ret = -ETIMEDOUT;
->>   			break;
->>   		}
->> -		if (ret < 0) {
->> -			dev_err(dev,
->> -				"error (%d) waiting for RECONFIG_COMPLETED\n",
->> -				ret);
->> -			break;
->> -		}
->>   		/* Not error or timeout, so ret is # of jiffies until timeout */
->>   		timeout = ret;
->>   		ret = 0;
->> -- 
->> 2.7.4
->>
+> I noticed a false positive while executing checkpatch.pl. Checkpatch
+> identifies the * as multiplication I guess. I saw there was some
+> discussion about this before. Was there a workaround/fix for this ?
+> Can u please share if so. Thanks for your time
 > 
-> Sorry that one slipped through the cracks, will apply to for-next.
-> 
-> Thanks!
-> 
+> ERROR: need consistent spacing around '*' (ctx:WxV)
+> #8195: FILE: src/soc/intel/abc/include/soc/romstage.h:21:
+> +void mainboard_memory_init_params(FSPM_UPD *mupd);
+
+Basically, avoid typedefs.
+
+Either have the typedef available for checkpatch in the same
+file or don't use typedefs at all.
+
+If your project has multiple typedefs and these messages
+annoy you, you could add --typedefsfile=<filepath> to the
+checkpatch command line where <filepath> contains a
+one entry per line list of the typedefs used.
+
+
