@@ -5,46 +5,46 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3ACCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA05C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBE99207FC
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CACB1207FC
+	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 16:57:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="Gq6MX+KB"
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="lZemiGum"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729870AbgHDQ4y (ORCPT
+        id S1729549AbgHDQ5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 12:56:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51776 "EHLO
+        Tue, 4 Aug 2020 12:57:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728295AbgHDQ4X (ORCPT
+        with ESMTP id S1728244AbgHDQ4S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 12:56:23 -0400
+        Tue, 4 Aug 2020 12:56:18 -0400
 Received: from mxwww.masterlogin.de (mxwww.masterlogin.de [IPv6:2a03:2900:1:1::b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFA06C06179E
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 09:56:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF923C06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 09:56:16 -0700 (PDT)
 Received: from mxout1.routing.net (unknown [192.168.10.81])
-        by forward.mxwww.masterlogin.de (Postfix) with ESMTPS id 371FC96151;
-        Tue,  4 Aug 2020 16:56:14 +0000 (UTC)
+        by forward.mxwww.masterlogin.de (Postfix) with ESMTPS id 871D59614E;
+        Tue,  4 Aug 2020 16:56:09 +0000 (UTC)
 Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
-        by mxout1.routing.net (Postfix) with ESMTP id F387C402F8;
-        Tue,  4 Aug 2020 16:56:13 +0000 (UTC)
+        by mxout1.routing.net (Postfix) with ESMTP id 5922040295;
+        Tue,  4 Aug 2020 16:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-        s=20200217; t=1596560174;
+        s=20200217; t=1596560169;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=AzBGcZ+vbk/R/lBHASsN4TX5ORmNe1ddeJtTwA/FqeQ=;
-        b=Gq6MX+KBgiiOpWed/9+P5b9/A42SGpHYsGVvQsoGrwaPFtLH5bnRUhhLLQP+WHiCCM41bD
-        XgLiJCcPFzYhRW1WCQrnBZiDDkDl1uE6a6LK12YaF2Nwtw+UVtOU4KN5/hluX4jcLU+0Td
-        glhUUMByuOrh70iLyah+2oMLObkswGY=
+        bh=4ewXB5FpohxgJpmkvbol3KpCl1csVHrG3vmcWsHV3gc=;
+        b=lZemiGumuSpSI/q66uA5a9WrKtHLa4xuMZDfSUWRRizIvx+mbfG/VPtSmqYLA39Hq5et5F
+        h65yZq4KGy3G6aV3NZvSEyUXMF5LL7fwTbzNGFn9dcv/CEFMlrz9IPGQCKJWZh2uYrT6Lo
+        C0vGG9ubDs0zG+JWUhE5JtyWPK2ah70=
 Received: from localhost.localdomain (fttx-pool-217.61.144.119.bambit.de [217.61.144.119])
-        by mxbox3.masterlogin.de (Postfix) with ESMTPSA id 2DEFF3603C2;
-        Tue,  4 Aug 2020 16:56:13 +0000 (UTC)
+        by mxbox3.masterlogin.de (Postfix) with ESMTPSA id A3D223605F9;
+        Tue,  4 Aug 2020 16:56:08 +0000 (UTC)
 From:   Frank Wunderlich <linux@fw-web.de>
 To:     linux-mediatek@lists.infradead.org
 Cc:     Frank Wunderlich <frank-w@public-files.de>,
@@ -54,13 +54,10 @@ Cc:     Frank Wunderlich <frank-w@public-files.de>,
         Daniel Vetter <daniel@ffwll.ch>,
         Matthias Brugger <matthias.bgg@gmail.com>,
         dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Ryder Lee <ryder.lee@mediatek.com>, CK Hu <ck.hu@mediatek.com>,
-        chunhui dai <chunhui.dai@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v4 6/6] arm: dts: mt7623: add display subsystem related device nodes
-Date:   Tue,  4 Aug 2020 18:55:55 +0200
-Message-Id: <20200804165555.75159-8-linux@fw-web.de>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 1/6] dt-bindings: mediatek: add mt7623 display-nodes
+Date:   Tue,  4 Aug 2020 18:55:49 +0200
+Message-Id: <20200804165555.75159-2-linux@fw-web.de>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200804165555.75159-1-linux@fw-web.de>
 References: <20200804165555.75159-1-linux@fw-web.de>
@@ -71,467 +68,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ryder Lee <ryder.lee@mediatek.com>
+From: Frank Wunderlich <frank-w@public-files.de>
 
-Add display subsystem related device nodes for MT7623.
+mt7623 uses mt2701/mt8173 for drm, but have own compatibles
 
-Cc: CK Hu <ck.hu@mediatek.com>
-Signed-off-by: chunhui dai <chunhui.dai@mediatek.com>
-Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-Tested-by: Frank Wunderlich <frank-w@public-files.de>
 ---
-changed
-v3->v4:
-  drop display_components which is duplicate of existing mmsys
-v2->v3:
-  drop bls to dpi routing
----
- arch/arm/boot/dts/mt7623.dtsi                 | 170 ++++++++++++++++++
- arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  72 ++++++++
- arch/arm/boot/dts/mt7623n-rfb-emmc.dts        |  72 ++++++++
- 3 files changed, 314 insertions(+)
+ .../devicetree/bindings/display/mediatek/mediatek,disp.txt    | 2 +-
+ .../devicetree/bindings/display/mediatek/mediatek,dpi.txt     | 2 +-
+ .../devicetree/bindings/display/mediatek/mediatek,dsi.txt     | 4 ++--
+ .../devicetree/bindings/display/mediatek/mediatek,hdmi.txt    | 4 ++++
+ 4 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-index a106c0d90a52..f2cb44a69454 100644
---- a/arch/arm/boot/dts/mt7623.dtsi
-+++ b/arch/arm/boot/dts/mt7623.dtsi
-@@ -24,6 +24,11 @@ / {
- 	#address-cells = <2>;
- 	#size-cells = <2>;
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+index b91e709db7a4..121220745d46 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+@@ -43,7 +43,7 @@ Required properties (all function blocks):
+ 	"mediatek,<chip>-dpi"        		- DPI controller, see mediatek,dpi.txt
+ 	"mediatek,<chip>-disp-mutex" 		- display mutex
+ 	"mediatek,<chip>-disp-od"    		- overdrive
+-  the supported chips are mt2701, mt2712 and mt8173.
++  the supported chips are mt2701, mt7623, mt2712 and mt8173.
+ - reg: Physical base address and length of the function block register space
+ - interrupts: The interrupt signal from the function block (required, except for
+   merge and split function blocks).
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+index 77def4456706..dc1ebd13cc88 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+@@ -7,7 +7,7 @@ output bus.
  
-+	aliases {
-+		rdma0 = &rdma0;
-+		rdma1 = &rdma1;
-+	};
-+
- 	cpu_opp_table: opp-table {
- 		compatible = "operating-points-v2";
- 		opp-shared;
-@@ -321,6 +326,25 @@ pwrap: pwrap@1000d000 {
- 		clock-names = "spi", "wrap";
- 	};
+ Required properties:
+ - compatible: "mediatek,<chip>-dpi"
+-  the supported chips are mt2701 , mt8173 and mt8183.
++  the supported chips are mt2701, mt7623, mt8173 and mt8183.
+ - reg: Physical base address and length of the controller's registers
+ - interrupts: The interrupt signal from the function block.
+ - clocks: device clocks
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
+index 8e4729de8c85..f06f24d405a5 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt
+@@ -7,7 +7,7 @@ channel output.
  
-+	mipi_tx0: mipi-dphy@10010000 {
-+		compatible = "mediatek,mt7623-mipi-tx",
-+			     "mediatek,mt2701-mipi-tx";
-+		reg = <0 0x10010000 0 0x90>;
-+		clocks = <&clk26m>;
-+		clock-output-names = "mipi_tx0_pll";
-+		#clock-cells = <0>;
-+		#phy-cells = <0>;
-+	};
-+
-+	cec: cec@10012000 {
-+		compatible = "mediatek,mt7623-cec",
-+			     "mediatek,mt8173-cec";
-+		reg = <0 0x10012000 0 0xbc>;
-+		interrupts = <GIC_SPI 182 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&infracfg CLK_INFRA_CEC>;
-+		status = "disabled";
-+	};
-+
- 	cir: cir@10013000 {
- 		compatible = "mediatek,mt7623-cir";
- 		reg = <0 0x10013000 0 0x1000>;
-@@ -369,6 +393,18 @@ apmixedsys: syscon@10209000 {
- 		#clock-cells = <1>;
- 	};
+ Required properties:
+ - compatible: "mediatek,<chip>-dsi"
+-  the supported chips are mt2701, mt8173 and mt8183.
++- the supported chips are mt2701, mt7623, mt8173 and mt8183.
+ - reg: Physical base address and length of the controller's registers
+ - interrupts: The interrupt signal from the function block.
+ - clocks: device clocks
+@@ -26,7 +26,7 @@ The MIPI TX configuration module controls the MIPI D-PHY.
  
-+	hdmi_phy: phy@10209100 {
-+		compatible = "mediatek,mt7623-hdmi-phy",
-+			     "mediatek,mt2701-hdmi-phy";
-+		reg = <0 0x10209100 0 0x24>;
-+		clocks = <&apmixedsys CLK_APMIXED_HDMI_REF>;
-+		clock-names = "pll_ref";
-+		clock-output-names = "hdmitx_dig_cts";
-+		#clock-cells = <0>;
-+		#phy-cells = <0>;
-+		status = "disabled";
-+	};
-+
- 	rng: rng@1020f000 {
- 		compatible = "mediatek,mt7623-rng";
- 		reg = <0 0x1020f000 0 0x1000>;
-@@ -568,6 +604,16 @@ bch: ecc@1100e000 {
- 		status = "disabled";
- 	};
+ Required properties:
+ - compatible: "mediatek,<chip>-mipi-tx"
+-  the supported chips are mt2701, mt8173 and mt8183.
++- the supported chips are mt2701, 7623, mt8173 and mt8183.
+ - reg: Physical base address and length of the controller's registers
+ - clocks: PLL reference clock
+ - clock-output-names: name of the output clock line to the DSI encoder
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.txt
+index 7b124242b0c5..6b1c586403e4 100644
+--- a/Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.txt
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,hdmi.txt
+@@ -6,6 +6,7 @@ its parallel input.
  
-+	hdmiddc0: i2c@11013000 {
-+		compatible = "mediatek,mt7623-hdmi-ddc",
-+			     "mediatek,mt8173-hdmi-ddc";
-+		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_LOW>;
-+		reg = <0 0x11013000 0 0x1C>;
-+		clocks = <&pericfg CLK_PERI_I2C3>;
-+		clock-names = "ddc-i2c";
-+		status = "disabled";
-+	};
-+
- 	nor_flash: spi@11014000 {
- 		compatible = "mediatek,mt7623-nor",
- 			     "mediatek,mt8173-nor";
-@@ -766,6 +812,77 @@ mmsys: syscon@14000000 {
- 		#clock-cells = <1>;
- 	};
+ Required properties:
+ - compatible: Should be "mediatek,<chip>-hdmi".
++- the supported chips are mt2701, mt7623 and mt8173
+ - reg: Physical base address and length of the controller's registers
+ - interrupts: The interrupt signal from the function block.
+ - clocks: device clocks
+@@ -32,6 +33,7 @@ The HDMI CEC controller handles hotplug detection and CEC communication.
  
-+	ovl@14007000 {
-+		compatible = "mediatek,mt7623-disp-ovl",
-+			     "mediatek,mt2701-disp-ovl";
-+		reg = <0 0x14007000 0 0x1000>;
-+		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_DISP_OVL>;
-+		iommus = <&iommu MT2701_M4U_PORT_DISP_OVL_0>;
-+		mediatek,larb = <&larb0>;
-+	};
-+
-+	rdma0: rdma@14008000 {
-+		compatible = "mediatek,mt7623-disp-rdma",
-+			     "mediatek,mt2701-disp-rdma";
-+		reg = <0 0x14008000 0 0x1000>;
-+		interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_DISP_RDMA>;
-+		iommus = <&iommu MT2701_M4U_PORT_DISP_RDMA>;
-+		mediatek,larb = <&larb0>;
-+	};
-+
-+	wdma@14009000 {
-+		compatible = "mediatek,mt7623-disp-wdma",
-+			     "mediatek,mt2701-disp-wdma";
-+		reg = <0 0x14009000 0 0x1000>;
-+		interrupts = <GIC_SPI 154 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_DISP_WDMA>;
-+		iommus = <&iommu MT2701_M4U_PORT_DISP_WDMA>;
-+		mediatek,larb = <&larb0>;
-+	};
-+
-+	bls: pwm@1400a000 {
-+		compatible = "mediatek,mt7623-disp-pwm",
-+			     "mediatek,mt2701-disp-pwm";
-+		reg = <0 0x1400a000 0 0x1000>;
-+		#pwm-cells = <2>;
-+		clocks = <&mmsys CLK_MM_MDP_BLS_26M>,
-+			 <&mmsys CLK_MM_DISP_BLS>;
-+		clock-names = "main", "mm";
-+		status = "disabled";
-+	};
-+
-+	color@1400b000 {
-+		compatible = "mediatek,mt7623-disp-color",
-+			     "mediatek,mt2701-disp-color";
-+		reg = <0 0x1400b000 0 0x1000>;
-+		interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_DISP_COLOR>;
-+	};
-+
-+	dsi: dsi@1400c000 {
-+		compatible = "mediatek,mt7623-dsi",
-+			     "mediatek,mt2701-dsi";
-+		reg = <0 0x1400c000 0 0x1000>;
-+		interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_DSI_ENGINE>,
-+			 <&mmsys CLK_MM_DSI_DIG>,
-+			 <&mipi_tx0>;
-+		clock-names = "engine", "digital", "hs";
-+		phys = <&mipi_tx0>;
-+		phy-names = "dphy";
-+		status = "disabled";
-+	};
-+
-+	mutex: mutex@1400e000 {
-+		compatible = "mediatek,mt7623-disp-mutex",
-+			     "mediatek,mt2701-disp-mutex";
-+		reg = <0 0x1400e000 0 0x1000>;
-+		interrupts = <GIC_SPI 161 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_MUTEX_32K>;
-+	};
-+
- 	larb0: larb@14010000 {
- 		compatible = "mediatek,mt7623-smi-larb",
- 			     "mediatek,mt2701-smi-larb";
-@@ -778,6 +895,44 @@ larb0: larb@14010000 {
- 		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
- 	};
+ Required properties:
+ - compatible: Should be "mediatek,<chip>-cec"
++- the supported chips are mt7623 and mt8173
+ - reg: Physical base address and length of the controller's registers
+ - interrupts: The interrupt signal from the function block.
+ - clocks: device clock
+@@ -44,6 +46,7 @@ The Mediatek's I2C controller is used to interface with I2C devices.
  
-+	rdma1: rdma@14012000 {
-+		compatible = "mediatek,mt7623-disp-rdma",
-+			     "mediatek,mt2701-disp-rdma";
-+		reg = <0 0x14012000 0 0x1000>;
-+		interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_DISP_RDMA1>;
-+		iommus = <&iommu MT2701_M4U_PORT_DISP_RDMA1>;
-+		mediatek,larb = <&larb0>;
-+	};
-+
-+	dpi0: dpi@14014000 {
-+		compatible = "mediatek,mt7623-dpi",
-+			     "mediatek,mt2701-dpi";
-+		reg = <0 0x14014000 0 0x1000>;
-+		interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&mmsys CLK_MM_DPI1_DIGL>,
-+			 <&mmsys CLK_MM_DPI1_ENGINE>,
-+			 <&apmixedsys CLK_APMIXED_TVDPLL>;
-+		clock-names = "pixel", "engine", "pll";
-+		status = "disabled";
-+	};
-+
-+	hdmi0: hdmi@14015000 {
-+		compatible = "mediatek,mt7623-hdmi",
-+			     "mediatek,mt8173-hdmi";
-+		reg = <0 0x14015000 0 0x400>;
-+		clocks = <&mmsys CLK_MM_HDMI_PIXEL>,
-+			 <&mmsys CLK_MM_HDMI_PLL>,
-+			 <&mmsys CLK_MM_HDMI_AUDIO>,
-+			 <&mmsys CLK_MM_HDMI_SPDIF>;
-+		clock-names = "pixel", "pll", "bclk", "spdif";
-+		phys = <&hdmi_phy>;
-+		phy-names = "hdmi";
-+		mediatek,syscon-hdmi = <&mmsys 0x900>;
-+		cec = <&cec>;
-+		status = "disabled";
-+	};
-+
- 	imgsys: syscon@15000000 {
- 		compatible = "mediatek,mt7623-imgsys",
- 			     "mediatek,mt2701-imgsys",
-@@ -1102,6 +1257,21 @@ pins-cir {
- 		};
- 	};
+ Required properties:
+ - compatible: Should be "mediatek,<chip>-hdmi-ddc"
++- the supported chips are mt7623 and mt8173
+ - reg: Physical base address and length of the controller's registers
+ - clocks: device clock
+ - clock-names: Should be "ddc-i2c".
+@@ -56,6 +59,7 @@ output and drives the HDMI pads.
  
-+	hdmi_pins_a: hdmi-default {
-+		pins-hdmi {
-+			pinmux = <MT7623_PIN_123_HTPLG_FUNC_HTPLG>;
-+			input-enable;
-+			bias-pull-down;
-+		};
-+	};
-+
-+	hdmi_ddc_pins_a: hdmi_ddc-default {
-+		pins-hdmi-ddc {
-+			pinmux = <MT7623_PIN_124_GPIO124_FUNC_HDMISCK>,
-+				 <MT7623_PIN_125_GPIO125_FUNC_HDMISD>;
-+		};
-+	};
-+
- 	i2c0_pins_a: i2c0-default {
- 		pins-i2c0 {
- 			pinmux = <MT7623_PIN_75_SDA0_FUNC_SDA0>,
-diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-index 2b760f90f38c..b1c83e919015 100644
---- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-+++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-@@ -21,6 +21,19 @@ chosen {
- 		stdout-path = "serial2:115200n8";
- 	};
- 
-+	connector {
-+		compatible = "hdmi-connector";
-+		label = "hdmi";
-+		type = "d";
-+		ddc-i2c-bus = <&hdmiddc0>;
-+
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi0_out>;
-+			};
-+		};
-+	};
-+
- 	cpus {
- 		cpu@0 {
- 			proc-supply = <&mt6323_vproc_reg>;
-@@ -114,10 +127,18 @@ memory@80000000 {
- 	};
- };
- 
-+&bls {
-+	status = "okay";
-+};
-+
- &btif {
- 	status = "okay";
- };
- 
-+&cec {
-+	status = "okay";
-+};
-+
- &cir {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&cir_pins_a>;
-@@ -128,6 +149,21 @@ &crypto {
- 	status = "okay";
- };
- 
-+&dpi0 {
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		port@0 {
-+			reg = <0>;
-+			dpi0_out: endpoint {
-+				remote-endpoint = <&hdmi0_in>;
-+			};
-+		};
-+	};
-+};
-+
- &eth {
- 	status = "okay";
- 
-@@ -199,6 +235,42 @@ fixed-link {
- 	};
- };
- 
-+&hdmi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&hdmi_pins_a>;
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		port@0 {
-+			reg = <0>;
-+			hdmi0_in: endpoint {
-+				remote-endpoint = <&dpi0_out>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+			hdmi0_out: endpoint {
-+				remote-endpoint = <&hdmi_connector_in>;
-+			};
-+		};
-+	};
-+};
-+
-+&hdmiddc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&hdmi_ddc_pins_a>;
-+	status = "okay";
-+};
-+
-+&hdmi_phy {
-+	mediatek,ibias = <0xa>;
-+	mediatek,ibias_up = <0x1c>;
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c0_pins_a>;
-diff --git a/arch/arm/boot/dts/mt7623n-rfb-emmc.dts b/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-index 0447748f9fa0..7e3ded7d9e7d 100644
---- a/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-+++ b/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-@@ -24,6 +24,19 @@ chosen {
- 		stdout-path = "serial2:115200n8";
- 	};
- 
-+	connector {
-+		compatible = "hdmi-connector";
-+		label = "hdmi";
-+		type = "d";
-+		ddc-i2c-bus = <&hdmiddc0>;
-+
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi0_out>;
-+			};
-+		};
-+	};
-+
- 	cpus {
- 		cpu@0 {
- 			proc-supply = <&mt6323_vproc_reg>;
-@@ -106,10 +119,18 @@ sound {
- 	};
- };
- 
-+&bls {
-+	status = "okay";
-+};
-+
- &btif {
- 	status = "okay";
- };
- 
-+&cec {
-+	status = "okay";
-+};
-+
- &cir {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&cir_pins_a>;
-@@ -120,6 +141,21 @@ &crypto {
- 	status = "okay";
- };
- 
-+&dpi0 {
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		port@0 {
-+			reg = <0>;
-+			dpi0_out: endpoint {
-+				remote-endpoint = <&hdmi0_in>;
-+			};
-+		};
-+	};
-+};
-+
- &eth {
- 	status = "okay";
- 
-@@ -203,6 +239,42 @@ fixed-link {
- 	};
- };
- 
-+&hdmi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&hdmi_pins_a>;
-+	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		port@0 {
-+			reg = <0>;
-+			hdmi0_in: endpoint {
-+				remote-endpoint = <&dpi0_out>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+			hdmi0_out: endpoint {
-+				remote-endpoint = <&hdmi_connector_in>;
-+			};
-+		};
-+	};
-+};
-+
-+&hdmiddc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&hdmi_ddc_pins_a>;
-+	status = "okay";
-+};
-+
-+&hdmi_phy {
-+	mediatek,ibias = <0xa>;
-+	mediatek,ibias_up = <0x1c>;
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c0_pins_a>;
+ Required properties:
+ - compatible: "mediatek,<chip>-hdmi-phy"
++- the supported chips are mt2701, mt7623 and mt8173
+ - reg: Physical base address and length of the module's registers
+ - clocks: PLL reference clock
+ - clock-names: must contain "pll_ref"
 -- 
 2.25.1
 
