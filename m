@@ -2,125 +2,85 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4DCC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF0FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A70C22CAE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2FFF22CAE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:48:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgHECsS (ORCPT
+        id S1727108AbgHECsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 22:48:18 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:39602 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727109AbgHECsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 22:48:16 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6B1C920139E;
-        Wed,  5 Aug 2020 04:48:14 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BEE05201398;
-        Wed,  5 Aug 2020 04:48:08 +0200 (CEST)
-Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E3A2740302;
-        Wed,  5 Aug 2020 04:48:01 +0200 (CEST)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     herbert@gondor.apana.org.au, davem@davemloft.net,
-        robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, marex@denx.de,
-        s.trumtrar@pengutronix.de, linux-crypto@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 3/3] dt-bindings: crypto: Convert i.MX sahara to json-schema
-Date:   Wed,  5 Aug 2020 10:43:30 +0800
-Message-Id: <1596595410-26921-3-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596595410-26921-1-git-send-email-Anson.Huang@nxp.com>
-References: <1596595410-26921-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 4 Aug 2020 22:48:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57884 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgHECsO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 22:48:14 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2986C06174A;
+        Tue,  4 Aug 2020 19:48:13 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k39TL-009Y7j-1q; Wed, 05 Aug 2020 02:48:07 +0000
+Date:   Wed, 5 Aug 2020 03:48:07 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     macro@wdc.com, linux-riscv@lists.infradead.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 1/2] riscv: ptrace: Use the correct API for `fcsr' access
+Message-ID: <20200805024807.GM1236603@ZenIV.linux.org.uk>
+References: <20200805020745.GL1236603@ZenIV.linux.org.uk>
+ <mhng-cd1ff2e9-7d34-4d56-8d79-b2d02a239290@palmerdabbelt-glaptop1>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <mhng-cd1ff2e9-7d34-4d56-8d79-b2d02a239290@palmerdabbelt-glaptop1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the i.MX sahara binding to DT schema format using json-schema.
+On Tue, Aug 04, 2020 at 07:20:05PM -0700, Palmer Dabbelt wrote:
+> On Tue, 04 Aug 2020 19:07:45 PDT (-0700), viro@zeniv.linux.org.uk wrote:
+> > On Tue, Aug 04, 2020 at 07:01:01PM -0700, Palmer Dabbelt wrote:
+> > 
+> > > > We currently have @start_pos fixed at 0 across all calls, which works as
+> > > > a result of the implementation, in particular because we have no padding
+> > > > between the FP general registers and the FP control and status register,
+> > > > but appears not to have been the intent of the API and is not what other
+> > > > ports do, requiring one to study the copy handlers to understand what is
+> > > > going on here.
+> > 
+> > start_pos *is* fixed at 0 and it's going to go away, along with the
+> > sodding user_regset_copyout() very shortly.  ->get() is simply a bad API.
+> > See vfs.git#work.regset for replacement.  And ->put() is also going to be
+> > taken out and shot (next cycle, most likely).
+> 
+> I'm not sure I understand what you're saying, but given that branch replaces
+> all of this I guess it's best to just do nothing on our end here?
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- .../devicetree/bindings/crypto/fsl-imx-sahara.txt  | 15 ----------
- .../devicetree/bindings/crypto/fsl-imx-sahara.yaml | 35 ++++++++++++++++++++++
- 2 files changed, 35 insertions(+), 15 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/crypto/fsl-imx-sahara.txt
- create mode 100644 Documentation/devicetree/bindings/crypto/fsl-imx-sahara.yaml
+It doesn't replace ->put() (for now); it _does_ replace ->get() and AFAICS the
+replacement is much saner:
 
-diff --git a/Documentation/devicetree/bindings/crypto/fsl-imx-sahara.txt b/Documentation/devicetree/bindings/crypto/fsl-imx-sahara.txt
-deleted file mode 100644
-index db690b1..0000000
---- a/Documentation/devicetree/bindings/crypto/fsl-imx-sahara.txt
-+++ /dev/null
-@@ -1,15 +0,0 @@
--Freescale SAHARA Cryptographic Accelerator included in some i.MX chips.
--Currently only i.MX27 and i.MX53 are supported.
--
--Required properties:
--- compatible : Should be "fsl,<soc>-sahara"
--- reg : Should contain SAHARA registers location and length
--- interrupts : Should contain SAHARA interrupt number
--
--Example:
--
--sah: crypto@10025000 {
--	compatible = "fsl,imx27-sahara";
--	reg = <	0x10025000 0x800>;
--	interrupts = <75>;
--};
-diff --git a/Documentation/devicetree/bindings/crypto/fsl-imx-sahara.yaml b/Documentation/devicetree/bindings/crypto/fsl-imx-sahara.yaml
-new file mode 100644
-index 0000000..3cabc6b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/fsl-imx-sahara.yaml
-@@ -0,0 +1,35 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/crypto/fsl-imx-sahara.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale SAHARA Cryptographic Accelerator included in some i.MX chips
-+
-+maintainers:
-+  - Steffen Trumtrar <s.trumtrar@pengutronix.de>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,imx27-sahara
-+      - fsl,imx53-sahara
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+examples:
-+  - |
-+    crypto@10025000 {
-+        compatible = "fsl,imx27-sahara";
-+        reg = < 0x10025000 0x800>;
-+        interrupts = <75>;
-+    };
--- 
-2.7.4
+static int riscv_fpr_get(struct task_struct *target,
+                         const struct user_regset *regset,
+                         struct membuf to)
+{
+	struct __riscv_d_ext_state *fstate = &target->thread.fstate;
 
+	membuf_write(&to, fstate, offsetof(struct __riscv_d_ext_state, fcsr));
+	membuf_store(&to, fstate->fcsr);
+	return membuf_zero(&to, 4);     // explicitly pad
+}
+
+user_regset_copyout() calling conventions are atrocious and so are those of
+regset ->get().  The best thing to do with both is to take them out of their
+misery and be done with that.  Do you see any problems with riscv gdbserver
+on current linux-next?  If not, I'd rather see that "API" simply go away...
+If there are problems, I would very much prefer fixes on top of what's done
+in that branch.
