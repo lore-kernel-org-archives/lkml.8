@@ -3,173 +3,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0A5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC524C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 595842076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89AD322B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596657923;
-	bh=fshGYLcQsSw3oRUdVr523hsrXJ+lrjE7n7VUtXtO3IQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l6PzGUtgUbPCpHcezXk81RFB8n+CT7Ez78iGRC5V1NlluZ55tBm/ABtgT17fUeiab
-	 m5+ovEiEwO5WxnQnZK9JUWiyndcfab6ZosIyBXaITItlohF5gStGEfniyFm4pA0Npy
-	 gij/tQ1mAaMw9Yq6zxRNZR6O5djX+vP0JwS7sfeo=
+	s=default; t=1596657928;
+	bh=SmzHEjXJKI0Ah3FCpKvLcMIvLkMQABYGGHX0eTpxkp0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vF3WUEKAKnLG+Iq9RAiXisOUXOKb7eKuswYbr3eSZyPmtK36zoDinPXF4ps55tyL4
+	 ZoZlpM+x4QESMx26QLY7+vPsxz57sQvu72gxsO2Zt+kosht+eQmqEHoVErN4cIWxFh
+	 U4moAuizSMtUZX5PkvSv8oAOURwa8w1WCBzjmQl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgHEUFS (ORCPT
+        id S1727961AbgHEUF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:05:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50662 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 16:05:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726402AbgHEQgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:36:35 -0400
+        id S1727808AbgHEQgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 12:36:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF2662339E;
-        Wed,  5 Aug 2020 15:53:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6E9121744;
+        Wed,  5 Aug 2020 12:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596642789;
-        bh=fshGYLcQsSw3oRUdVr523hsrXJ+lrjE7n7VUtXtO3IQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FA+cFCpJByyCLrQaA+xjz7yCg5InSp2Py9rUpYcTsCrRLCFPVpyk09wg1gZqlv0j8
-         braYbQuZUqv0MQmtrxEkHIlsPgmV9i2psI96wuJPI8XSik46ve4qcVpoX+EUBBg8Ig
-         v/YYLAiaR9ClL29w6gbr5Imu4MbmX2uum33l2hOI=
+        s=default; t=1596632170;
+        bh=SmzHEjXJKI0Ah3FCpKvLcMIvLkMQABYGGHX0eTpxkp0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bCxIQJw4GOQ+h1x3tpCiOUo/92RnUW5K44Ue5g2BDrgjVKDIeXDdMTLRnPjibu+3M
+         Lc+TzYJggQfzEAXArbpTLmfrvfB/Y9EwDdCS/TJ+h1PFBtf+fU8o3bsVmUfKp1RiqO
+         ox5N7Y2xXe+uqcPy6x6U6/8b6T9WvZmByeDlqzew=
+Date:   Wed, 5 Aug 2020 14:56:27 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amit Klein <aksecurity@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>, Willy Tarreau <w@1wt.eu>
-Subject: [PATCH 4.19 1/6] random32: update the net random state on interrupt and activity
-Date:   Wed,  5 Aug 2020 17:53:00 +0200
-Message-Id: <20200805153505.558718245@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200805153505.472594546@linuxfoundation.org>
-References: <20200805153505.472594546@linuxfoundation.org>
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
+To:     "Vabhav Sharma (OSS)" <vabhav.sharma@oss.nxp.com>
+Cc:     B K Karthik <bkkarthik@pesu.pes.edu>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhuvanchandra.dv@toradex.com" <bhuvanchandra.dv@toradex.com>
+Subject: Re: [PATCH v2] tty: serial: fsl_lpuart.c: prevent a bad shift
+ operation
+Message-ID: <20200805125627.GA1822283@kroah.com>
+References: <20200721174228.misj2mgqzcfz2lsj@pesu.pes.edu>
+ <20200729160333.GA3652767@kroah.com>
+ <VI1PR04MB480018F32A080BC5CC76E3C7F34B0@VI1PR04MB4800.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VI1PR04MB480018F32A080BC5CC76E3C7F34B0@VI1PR04MB4800.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willy Tarreau <w@1wt.eu>
+On Wed, Aug 05, 2020 at 12:09:34PM +0000, Vabhav Sharma (OSS) wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Sent: Wednesday, July 29, 2020 9:34 PM
+> > To: B K Karthik <bkkarthik@pesu.pes.edu>
+> > Cc: Jiri Slaby <jirislaby@kernel.org>; linux-serial@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; Vabhav Sharma (OSS)
+> > <vabhav.sharma@oss.nxp.com>; bhuvanchandra.dv@toradex.com
+> > Subject: Re: [PATCH v2] tty: serial: fsl_lpuart.c: prevent a bad shift operation
+> > 
+> > On Tue, Jul 21, 2020 at 11:12:29PM +0530, B K Karthik wrote:
+> > > prevent a bad shift operation by verifying that the argument to fls is
+> > > non zero.
+> > >
+> > > Reported-by: "Vabhav Sharma (OSS)" <vabhav.sharma@oss.nxp.com>
+> > > Signed-off-by: B K Karthik <bkkarthik@pesu.pes.edu>
+> > > ---
+> > > v1 -> v2:
+> > > 	added Reported-by tag
+> > >
+> > >  drivers/tty/serial/fsl_lpuart.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/tty/serial/fsl_lpuart.c
+> > > b/drivers/tty/serial/fsl_lpuart.c index 7ca642249224..0cc64279cd2d
+> > > 100644
+> > > --- a/drivers/tty/serial/fsl_lpuart.c
+> > > +++ b/drivers/tty/serial/fsl_lpuart.c
+> > > @@ -1168,7 +1168,8 @@ static inline int lpuart_start_rx_dma(struct
+> > lpuart_port *sport)
+> > >  	 * 10ms at any baud rate.
+> > >  	 */
+> > >  	sport->rx_dma_rng_buf_len = (DMA_RX_TIMEOUT * baud /  bits /
+> > 1000) * 2;
+> > > -	sport->rx_dma_rng_buf_len = (1 << (fls(sport->rx_dma_rng_buf_len)
+> > - 1));
+> > > +	if (sport->rx_dma_rng_buf_len != 0)
+> > 
+> > How can this variable become 0?
+> Condition x, taking false branch
+> Explicitly returning zero 
+> 
+> static __always_inline int fls(unsigned int x)
+> {
+> 	return x ? sizeof(x) * 8 - __builtin_clz(x) : 0;
+> }
 
-commit f227e3ec3b5cad859ad15666874405e8c1bbc1d4 upstream.
+What false branch?
 
-This modifies the first 32 bits out of the 128 bits of a random CPU's
-net_rand_state on interrupt or CPU activity to complicate remote
-observations that could lead to guessing the network RNG's internal
-state.
+I don't see how this can ever be an issue in "the real world", can you
+explain how it could ever be a problem?
 
-Note that depending on some network devices' interrupt rate moderation
-or binding, this re-seeding might happen on every packet or even almost
-never.
+thanks,
 
-In addition, with NOHZ some CPUs might not even get timer interrupts,
-leaving their local state rarely updated, while they are running
-networked processes making use of the random state.  For this reason, we
-also perform this update in update_process_times() in order to at least
-update the state when there is user or system activity, since it's the
-only case we care about.
-
-Reported-by: Amit Klein <aksecurity@gmail.com>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Willy Tarreau <w@1wt.eu>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/char/random.c  |    1 +
- include/linux/random.h |    3 +++
- kernel/time/timer.c    |    8 ++++++++
- lib/random32.c         |    2 +-
- 4 files changed, 13 insertions(+), 1 deletion(-)
-
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -1257,6 +1257,7 @@ void add_interrupt_randomness(int irq, i
- 
- 	fast_mix(fast_pool);
- 	add_interrupt_bench(cycles);
-+	this_cpu_add(net_rand_state.s1, fast_pool->pool[cycles & 3]);
- 
- 	if (unlikely(crng_init == 0)) {
- 		if ((fast_pool->count >= 64) &&
---- a/include/linux/random.h
-+++ b/include/linux/random.h
-@@ -9,6 +9,7 @@
- 
- #include <linux/list.h>
- #include <linux/once.h>
-+#include <linux/percpu.h>
- 
- #include <uapi/linux/random.h>
- 
-@@ -115,6 +116,8 @@ struct rnd_state {
- 	__u32 s1, s2, s3, s4;
- };
- 
-+DECLARE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
-+
- u32 prandom_u32_state(struct rnd_state *state);
- void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
- void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -44,6 +44,7 @@
- #include <linux/sched/debug.h>
- #include <linux/slab.h>
- #include <linux/compat.h>
-+#include <linux/random.h>
- 
- #include <linux/uaccess.h>
- #include <asm/unistd.h>
-@@ -1654,6 +1655,13 @@ void update_process_times(int user_tick)
- 	scheduler_tick();
- 	if (IS_ENABLED(CONFIG_POSIX_TIMERS))
- 		run_posix_cpu_timers(p);
-+
-+	/* The current CPU might make use of net randoms without receiving IRQs
-+	 * to renew them often enough. Let's update the net_rand_state from a
-+	 * non-constant value that's not affine to the number of calls to make
-+	 * sure it's updated when there's some activity (we don't care in idle).
-+	 */
-+	this_cpu_add(net_rand_state.s1, rol32(jiffies, 24) + user_tick);
- }
- 
- /**
---- a/lib/random32.c
-+++ b/lib/random32.c
-@@ -48,7 +48,7 @@ static inline void prandom_state_selftes
- }
- #endif
- 
--static DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
-+DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
- 
- /**
-  *	prandom_u32_state - seeded pseudo-random number generator.
-
-
+greg k-h
