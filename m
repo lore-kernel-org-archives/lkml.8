@@ -2,101 +2,99 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADA2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50089C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AAA62245C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:46:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Feg85hqy"
+	by mail.kernel.org (Postfix) with ESMTP id 381672245C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:49:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbgHEHqH (ORCPT
+        id S1726640AbgHEHtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 03:46:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47368 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbgHEHqF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 03:46:05 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6EB2C061756
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 00:46:04 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id c16so24944553ejx.12
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 00:46:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JcRNpeqICVUMdW+eQV6cNmoTKrDCq48jfX1KaVHDvwQ=;
-        b=Feg85hqy7+vcolCIrLFilOaGgrOtXj8thXykBp3Bp0XpYsuPfElOh4nm8I3SnyS62b
-         64JD9H/zVxxGypHdTvYO2f1EJ0uPlTosWe53MpIC26xzA7XHbleGbFMLSSofhpx5X7gL
-         6fThps3gz64rNFTjpg3m0BIu77PqTCGcRQciM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JcRNpeqICVUMdW+eQV6cNmoTKrDCq48jfX1KaVHDvwQ=;
-        b=IwdvWrD/h7UnKXBCliOJ8/bdV1m/8iKGvkhlll16gdKhm9iOKjSE2ygwAAD40xVOCD
-         rsFUPkQfcGkTZe+FV79y1BjMUe+NsNZbi4cy3QC8WCY6DYRbjZPqkjnPFJ2H88eJmM8J
-         VtM6UXRgXry5Dh9NCIGmkvZV/2BjSRmwdgItrVPAu6k00b1zIPnmTtLRwhqqPZgjrN/n
-         woxs5hBSUlGgFj+QtPCQ6EK0hQB8HjR4+6ipIvLczKQbjPnaTFy7Mi32K2Zbp5rsW7An
-         +BkeszBtK7X4JgZ+cKkJ/tPMxAcDB1w73z8nNlSAGQsHLP3nuH2LjAk7yYew0/w0tizU
-         61Fg==
-X-Gm-Message-State: AOAM5318u0gULML/sCdKRbmPR+DqB6TBKdOE7MIyRWeZ7vMDo3RXXmUY
-        IMeyCZ53m0fIVuSs7WTj/v+qDziiXDqSXAYpdw43vg==
-X-Google-Smtp-Source: ABdhPJwSzf7ZyfM06Ap8zJ46vCH2qMZs0q/mJf/FF/mKV8B2cn3vTn5+kSxcusIr/7oVCz9jGqzaVrb7ONfCeuEjpiI=
-X-Received: by 2002:a17:907:405f:: with SMTP id ns23mr1832194ejb.511.1596613563524;
- Wed, 05 Aug 2020 00:46:03 -0700 (PDT)
+        Wed, 5 Aug 2020 03:49:16 -0400
+Received: from mga12.intel.com ([192.55.52.136]:40323 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725920AbgHEHtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 03:49:15 -0400
+IronPort-SDR: 0K+5ET+WOd1uiXNm+axO7fwQmCnYAh79VB6IjJP5r+/xiBYeOcZkj/Fu1ylcl/7pbgGkk1yVXU
+ G0pC5LpZD1JA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="132046072"
+X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
+   d="scan'208";a="132046072"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 00:49:14 -0700
+IronPort-SDR: ik29/gHE1/qYrJ+mcPEOXOZQNZ8fPyZ5ZR8n8Bv0oNadrviTy1trgUVGCn/mFR4z1yzOWL51UI
+ vIb0dr6lIdLQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
+   d="scan'208";a="493191854"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
+  by fmsmga005.fm.intel.com with ESMTP; 05 Aug 2020 00:49:12 -0700
+Subject: Re: [PATCH v2 1/6] sdhci: tegra: Remove
+ SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra210
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        ulf.hansson@linaro.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+References: <1596515363-27235-1-git-send-email-skomatineni@nvidia.com>
+ <1596515363-27235-2-git-send-email-skomatineni@nvidia.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <63829275-2572-929b-c26c-79823f1e0ba5@intel.com>
+Date:   Wed, 5 Aug 2020 10:48:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk>
- <159646187082.1784947.4293611877413578847.stgit@warthog.procyon.org.uk>
- <20200804135641.GE32719@miu.piliscsaba.redhat.com> <94bba6f200bb2bbf83f4945faa2ccb83fd947540.camel@themaw.net>
- <5078554c6028e29c91d815c63e2af1ffac2ecbbb.camel@themaw.net>
-In-Reply-To: <5078554c6028e29c91d815c63e2af1ffac2ecbbb.camel@themaw.net>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 5 Aug 2020 09:45:52 +0200
-Message-ID: <CAJfpegs1NLaamFA12f=EJRN4B3_iC+Uzi2NQKTV-fBSypcufLQ@mail.gmail.com>
-Subject: Re: [PATCH 10/18] fsinfo: Provide notification overrun handling
- support [ver #21]
-To:     Ian Kent <raven@themaw.net>
-Cc:     David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        LSM <linux-security-module@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1596515363-27235-2-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 4:46 AM Ian Kent <raven@themaw.net> wrote:
->
+On 4/08/20 7:29 am, Sowjanya Komatineni wrote:
+> commit b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
 
-> Coming back to an actual use case.
->
-> What I said above is one aspect but, since I'm looking at this right
-> now with systemd, and I do have the legacy code to fall back to, the
-> "just reset everything" suggestion does make sense.
->
-> But I'm struggling to see how I can identify notification buffer
-> overrun in libmount, and overrun is just one possibility for lost
-> notifications, so I like the idea that, as a library user, I can
-> work out that I need to take action based on what I have in the
-> notifications themselves.
+So that could be a Fixes tag?
 
-Hmm, what's the other possibility for lost notifications?
+> 
+> SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK is set for Tegra210 from the
+> beginning of Tegra210 support in the driver.
+> 
+> Tegra210 SDMMC hardware by default uses timeout clock (TMCLK)
+> instead of SDCLK and this quirk should not be set.
+> 
+> So, this patch remove this quirk for Tegra210.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-Thanks,
-Miklos
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
+> ---
+>  drivers/mmc/host/sdhci-tegra.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+> index 0a3f9d0..2be3511 100644
+> --- a/drivers/mmc/host/sdhci-tegra.c
+> +++ b/drivers/mmc/host/sdhci-tegra.c
+> @@ -1418,7 +1418,6 @@ static const struct sdhci_ops tegra210_sdhci_ops = {
+>  
+>  static const struct sdhci_pltfm_data sdhci_tegra210_pdata = {
+>  	.quirks = SDHCI_QUIRK_BROKEN_TIMEOUT_VAL |
+> -		  SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
+>  		  SDHCI_QUIRK_SINGLE_POWER_WRITE |
+>  		  SDHCI_QUIRK_NO_HISPD_BIT |
+>  		  SDHCI_QUIRK_BROKEN_ADMA_ZEROLEN_DESC |
+> 
+
