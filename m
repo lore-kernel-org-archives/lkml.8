@@ -2,185 +2,152 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4DDC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE40C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90D85206D4
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39EAA2075A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:40:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=foundries-io.20150623.gappssmtp.com header.i=@foundries-io.20150623.gappssmtp.com header.b="2S6WDkUD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A/y/YbQt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgHEUiV (ORCPT
+        id S1726721AbgHEUkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:38:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54720 "EHLO
+        Wed, 5 Aug 2020 16:40:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbgHEUiU (ORCPT
+        with ESMTP id S1725996AbgHEUkS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 16:38:20 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6598FC06174A
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 13:38:20 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id k8so7632477wma.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 13:38:20 -0700 (PDT)
+        Wed, 5 Aug 2020 16:40:18 -0400
+Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7CB6C06174A
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 13:40:18 -0700 (PDT)
+Received: by mail-pf1-x449.google.com with SMTP id t11so20756549pfq.21
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 13:40:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=foundries-io.20150623.gappssmtp.com; s=20150623;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7ai80oEXD5TUH4kL0wAhAhV8D1VZPYzvujrrgszirKg=;
-        b=2S6WDkUDn9DLBsJscSu+iStNGO1FDRZewnWBSEYEyycowl4T6AZu/b4HrktcsQc4Cd
-         sn/6QMScX1TGSFndtQNWYeMvzqryfNfKBGMEEkKmkXJJaR3ARZRg3JahLPCjADVjsfmq
-         6cqiobIlzy088aA9lwBm/HfEwl7xTdZm/m69/KI2QF6a8yu5f31hFKiBHbEYQEO/PS58
-         0Q1U0njODqZjp7XFPMeu/O5h7yqU+2bfAlrmD01POhRxT4XdejI9Li2t4Bci86rEWSwT
-         a1jz5c8ud4wU8rgiVWxU+wvFDOpDF68UrOTbRxuFKKyHQSIP/pLj4jgqbNcH9Ip7Fw5q
-         GMAQ==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc:content-transfer-encoding;
+        bh=g0zLcPjjUpPWGBIkwFBQkzsGpvqT4KeB0aZcM7LEpSk=;
+        b=A/y/YbQtCUUfPAMdDBbhqzHyx0/ZLv+jQwbLPf8SVVXgyLVRWdtvLir18Hnyz3Sg2Y
+         t0f889clZXXBlnJXIs4Y2anSeE+7LuP98YTSlknvOBVxcgxONPaYlsYij5Or6YHFzWqa
+         hpZFkyIiWGexCfLT2Zw0m2VzA1sr/GWCoW82Kz8gQIToT35tTH9Mm/gbDFvI7ZhPHOj0
+         t1YK7El3dSHUOyR51mYogogwAxdf2YMPr0dhUUGT6qmTToUIfWD/CzwTATXjlK7Iu99g
+         6tulkjdyKLIqvdU/ExgYOc4bYHR5QmuMYORH3fXnJQbf1OTAreDfSM6XutvmeI+ghPoc
+         tl3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7ai80oEXD5TUH4kL0wAhAhV8D1VZPYzvujrrgszirKg=;
-        b=R+aR2ZBv6O7liRSZMcozWldUo7bNknCI/83qAsfoIQHzGDcaFMNKHfUtG69dNasA1q
-         dc5QlLXpKm3ZCbkBd9j1QimMn+krUZs/OZO2dMpmjthMQV24/UZnoAfkP+NsRsb2Tyc9
-         vPacEEmgL3UaPwJQQ42eHoSKOJBQaAvQXF8Okz+7A6f88tOXT+odiCj3r+M59J7ENXmV
-         mt85s9yngDH3+FpgX1ijx/pL/Mb/J57qJGXehO1ZteWYz8F7yKxKkbCsygIOKuI4jepP
-         u7vaDA28V4MXI44QYhOymNsIhTF1VJksm0vcX3ngVRd4rl1e9mTRhHBypSMLjBeaLjvZ
-         vUaA==
-X-Gm-Message-State: AOAM531QInf6MwKuG/7rSRaJPIPZ7fiE/jGZaQQzmi136bxbACutN1xh
-        2mTPcHd3WaRVfsT2WyoWFQmUIQ==
-X-Google-Smtp-Source: ABdhPJw5dIrRnu6tWJo2YEBOEoRkU62p1ln//AAHICc8qihQrMWHzV9WM/WGq2WUU5Jrct39nNNFxw==
-X-Received: by 2002:a1c:a942:: with SMTP id s63mr4602660wme.19.1596659898978;
-        Wed, 05 Aug 2020 13:38:18 -0700 (PDT)
-Received: from trex (239.red-83-34-184.dynamicip.rima-tde.net. [83.34.184.239])
-        by smtp.gmail.com with ESMTPSA id 126sm4119322wme.42.2020.08.05.13.38.17
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 05 Aug 2020 13:38:18 -0700 (PDT)
-From:   "Jorge Ramirez-Ortiz, Foundries" <jorge@foundries.io>
-X-Google-Original-From: "Jorge Ramirez-Ortiz, Foundries" <JorgeRamirez-Ortiz>
-Date:   Wed, 5 Aug 2020 22:38:17 +0200
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     "Jorge Ramirez-Ortiz, Foundries" <jorge@foundries.io>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, ricardo@foundries.io,
-        Michael Scott <mike@foundries.io>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        op-tee@lists.trustedfirmware.org,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv2 2/2] hwrng: optee: fix wait use case
-Message-ID: <20200805203817.GA12229@trex>
-References: <20200723084622.31134-1-jorge@foundries.io>
- <20200723084622.31134-2-jorge@foundries.io>
- <CAFA6WYPQ3GGYostoHU=6qg4c_LqoqOZVbZ8gbQbGkNfyGydQjQ@mail.gmail.com>
- <20200724142305.GA24164@trex>
- <CAFA6WYOGu4DPzd93h-yFLJvLmRH=ZroN70+ZNY6xCOOM+TJOSA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFA6WYOGu4DPzd93h-yFLJvLmRH=ZroN70+ZNY6xCOOM+TJOSA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc:content-transfer-encoding;
+        bh=g0zLcPjjUpPWGBIkwFBQkzsGpvqT4KeB0aZcM7LEpSk=;
+        b=ewJmU5qY1xcC+DLLbK7hm+/Zbx1Hk0Jtvv5nSdTaTT6CzcdM/Mz0f8Hmi3U0v8aMOY
+         +kNEPcmZE3oRmbkfjI1W5SNfUSHaERlL5I/Ld82XqsZRjmN4SAsuwW5adyWwmncl1LAO
+         uSmW4jtLz4hXRionaLzMLYtLfsa4um3pAhPKFs+0z6Ja/d4MLUexSzF9RJovhjy8aIEO
+         uKn4nBNqvrjcLB8IMsfX8yP2zQgu/xo4N1qCCcnqWqFwUtPqSM8UYeywk6vkCjgHbheo
+         VMSvku6thfT9P6IcOS5XZhQ7Tb/rzUD5D00hCPWuyxTAQDecYDPXiBjHfb6TXsh8R+k8
+         Xm6Q==
+X-Gm-Message-State: AOAM531Zqf1JyyRX7zw5V0rskmJgRyXyxg2FfBpGDC0HdfKHM62LHhee
+        VuD0uO4G55v//VbHDpxH6yo3SxpuaGel
+X-Google-Smtp-Source: ABdhPJzCEKGmfgHogxsqzR1mNow9fh0Atsi/jvOkuMPdYytaTgY2ZO9ZFy32GZqCo0Ycn97x2OZnH+iDHMMF
+X-Received: by 2002:a17:902:b787:: with SMTP id e7mr4651752pls.227.1596660017673;
+ Wed, 05 Aug 2020 13:40:17 -0700 (PDT)
+Date:   Wed, 05 Aug 2020 13:40:15 -0700
+In-Reply-To: <3d949545-a7f2-4057-1204-600eabfd8f28@linuxfoundation.org>
+Message-Id: <xr93zh78bzdc.fsf@gthelen.svl.corp.google.com>
+Mime-Version: 1.0
+References: <20200728073241.3625015-1-gthelen@google.com> <CAHH2K0bU7w_rbKN_f0Fe_ZdGLtgBz_GVKS3eottTtm8P7QGoJA@mail.gmail.com>
+ <3d949545-a7f2-4057-1204-600eabfd8f28@linuxfoundation.org>
+Subject: Re: [PATCH] selftests: more general make nesting support
+From:   Greg Thelen <gthelen@google.com>
+To:     Shuah Khan <skhan@linuxfoundation.org>,
+        Shuah Khan <shuah@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/08/20, Sumit Garg wrote:
-> Apologies for my delayed response as I was busy with some other tasks
-> along with holidays.
+Shuah Khan <skhan@linuxfoundation.org> wrote:
 
-no pb! was just making sure this wasnt falling through some cracks.
+> On 8/5/20 1:36 PM, Greg Thelen wrote:
+>> On Tue, Jul 28, 2020 at 12:32 AM Greg Thelen <gthelen@google.com> wrote:
+>>>
+>>> selftests can be built from the toplevel kernel makefile (e.g. make
+>>> kselftest-all) or directly (make -C tools/testing/selftests all).
+>>>
+>>> The toplevel kernel makefile explicitly disables implicit rules with
+>>> "MAKEFLAGS +=3D -rR", which is passed to tools/testing/selftests.  Some
+>>> selftest makefiles require implicit make rules, which is why
+>>> commit 67d8712dcc70 ("selftests: Fix build failures when invoked from
+>>> kselftest target") reenables implicit rules by clearing MAKEFLAGS if
+>>> MAKELEVEL=3D1.
+>>>
+>>> So far so good.  However, if the toplevel makefile is called from an
+>>> outer makefile then MAKELEVEL will be elevated, which breaks the
+>>> MAKELEVEL equality test.
+>>> Example wrapped makefile error:
+>>>    $ cat ~/Makefile
+>>>    all:
+>>>          $(MAKE) defconfig
+>>>          $(MAKE) kselftest-all
+>>>    $ make -sf ~/Makefile
+>>>      futex_wait_timeout.c /src/tools/testing/selftests/kselftest_harnes=
+s.h   /src/tools/testing/selftests/kselftest.h ../include/futextest.h ../in=
+clude/atomic.h ../include/logging.h -lpthread -lrt -o /src/tools/testing/se=
+lftests/futex/functional/futex_wait_timeout
+>>>    make[4]: futex_wait_timeout.c: Command not found
+>>>
+>>> Rather than checking $(MAKELEVEL), check for $(LINK.c), which is a more
+>>> direct side effect of "make -R".  This enables arbitrary makefile
+>>> nesting.
+>>>
+>>> Signed-off-by: Greg Thelen <gthelen@google.com>
+>>> ---
+>>>   tools/testing/selftests/Makefile | 8 ++++----
+>>>   1 file changed, 4 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests=
+/Makefile
+>>> index 1195bd85af38..289a2e4b3f6f 100644
+>>> --- a/tools/testing/selftests/Makefile
+>>> +++ b/tools/testing/selftests/Makefile
+>>> @@ -84,10 +84,10 @@ endif
+>>>   # of the targets gets built.
+>>>   FORCE_TARGETS ?=3D
+>>>
+>>> -# Clear LDFLAGS and MAKEFLAGS if called from main
+>>> -# Makefile to avoid test build failures when test
+>>> -# Makefile doesn't have explicit build rules.
+>>> -ifeq (1,$(MAKELEVEL))
+>>> +# Clear LDFLAGS and MAKEFLAGS when implicit rules are missing.  This p=
+rovides
+>>> +# implicit rules to sub-test Makefiles which avoids build failures in =
+test
+>>> +# Makefile that don't have explicit build rules.
+>>> +ifeq (,$(LINK.c))
+>>>   override LDFLAGS =3D
+>>>   override MAKEFLAGS =3D
+>>>   endif
+>>> --
+>>> 2.28.0.rc0.142.g3c755180ce-goog
+>>=20
+>> Is there any feedback on this patch?  It's not high priority but somethi=
+ng that
+>> will help me make more use of selftests.
+>>=20
+>
+> No issues with the patch. I will apply it once the merge window ends.
+>
+> thanks,
+> -- Shuah
 
-> 
-> On Fri, 24 Jul 2020 at 19:53, Jorge Ramirez-Ortiz, Foundries
-> <jorge@foundries.io> wrote:
-> >
-> > On 24/07/20, Sumit Garg wrote:
-> > > On Thu, 23 Jul 2020 at 14:16, Jorge Ramirez-Ortiz <jorge@foundries.io> wrote:
-> > > >
-> > > > The current code waits for data to be available before attempting a
-> > > > second read. However the second read would not be executed as the
-> > > > while loop exits.
-> > > >
-> > > > This fix does not wait if all data has been read and reads a second
-> > > > time if only partial data was retrieved on the first read.
-> > > >
-> > > > This fix also does not attempt to read if not data is requested.
-> > >
-> > > I am not sure how this is possible, can you elaborate?
-> >
-> > currently, if the user sets max 0, get_optee_rng_data will regardless
-> > issuese a call to the secure world requesting 0 bytes from the RNG
-> >
-> 
-> This case is already handled by core API: rng_dev_read().
-
-ah ok good point, you are right
-but yeah, there is no consequence to the actual patch.
-
-> 
-> > with this patch, this request is avoided.
-> >
-> > >
-> > > >
-> > > > Signed-off-by: Jorge Ramirez-Ortiz <jorge@foundries.io>
-> > > > ---
-> > > >  v2: tidy up the while loop to avoid reading when no data is requested
-> > > >
-> > > >  drivers/char/hw_random/optee-rng.c | 4 ++--
-> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/drivers/char/hw_random/optee-rng.c b/drivers/char/hw_random/optee-rng.c
-> > > > index 5bc4700c4dae..a99d82949981 100644
-> > > > --- a/drivers/char/hw_random/optee-rng.c
-> > > > +++ b/drivers/char/hw_random/optee-rng.c
-> > > > @@ -122,14 +122,14 @@ static int optee_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
-> > > >         if (max > MAX_ENTROPY_REQ_SZ)
-> > > >                 max = MAX_ENTROPY_REQ_SZ;
-> > > >
-> > > > -       while (read == 0) {
-> > > > +       while (read < max) {
-> > > >                 rng_size = get_optee_rng_data(pvt_data, data, (max - read));
-> > > >
-> > > >                 data += rng_size;
-> > > >                 read += rng_size;
-> > > >
-> > > >                 if (wait && pvt_data->data_rate) {
-> > > > -                       if (timeout-- == 0)
-> > > > +                       if ((timeout-- == 0) || (read == max))
-> > >
-> > > If read == max, would there be any sleep?
-> >
-> > no but I see no reason why there should be a wait since we already have
-> > all the data that we need; the msleep is only required when we need to
-> > wait for the RNG to generate entropy for the number of bytes we are
-> > requesting. if we are requesting 0 bytes, the entropy is already
-> > available. at leat this is what makes sense to me.
-> >
-> 
-> Wouldn't it lead to a call as msleep(0); that means no wait as well?
-
-I dont understand: there is no reason to wait if read == max and this
-patch will not wait: if read == max it calls 'return read'
-
-am I misunderstanding your point?
-
-> 
-> -Sumit
-> 
-> >
-> > >
-> > > -Sumit
-> > >
-> > > >                                 return read;
-> > > >                         msleep((1000 * (max - read)) / pvt_data->data_rate);
-> > > >                 } else {
-> > > > --
-> > > > 2.17.1
-> > > >
+Great.  Thank you.
