@@ -2,76 +2,94 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E78C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FF7C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B9CC22CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:14:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fb84QEiz"
+	by mail.kernel.org (Postfix) with ESMTP id AC50D22B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:14:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729618AbgHEUOP (ORCPT
+        id S1729720AbgHEUON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:14:15 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44102 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726748AbgHEQX0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 16:14:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:33034 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726622AbgHEQX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:23:26 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 075DHV9M072287;
-        Wed, 5 Aug 2020 08:17:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596633451;
-        bh=57yF68qyZ0azOmyzTIEwYs+6yRB7tuKz3qfi5lQTL2Y=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=fb84QEizh1xqIZv4YwwWKBoNcIaWNZdLEhdp8PKXmcuSz5LdjdZudXZ+ZMNZfMHp+
-         I3YuZE1CRruSM+2Cd9D/meA6KiIyju3KG+y7B2dEGuxf4+6NuubBU86ah5a8RLBs36
-         MaqnS51DCQ7/TOyrO0POqJY3nYVUcAdxjSdLfkaA=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 075DHVG9004195
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 5 Aug 2020 08:17:31 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 5 Aug
- 2020 08:17:30 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 5 Aug 2020 08:17:30 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 075DHSMg035743;
-        Wed, 5 Aug 2020 08:17:28 -0500
-Subject: Re: [PATCH] dmaengine: ti: k3-udma-glue: Fix parameters for rx ring
- pair request
-To:     Vinod Koul <vkoul@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-CC:     <ssantosh@kernel.org>, <santosh.shilimkar@oracle.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>
-References: <20200805112746.15475-1-peter.ujfalusi@ti.com>
- <20200805113237.GX12965@vkoul-mobl>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <3eea63fe-88f5-d6b6-433a-bb15495a839d@ti.com>
-Date:   Wed, 5 Aug 2020 16:17:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 264F913D5;
+        Wed,  5 Aug 2020 06:56:56 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B9B13F7BB;
+        Wed,  5 Aug 2020 06:56:54 -0700 (PDT)
+References: <877dumbtoi.fsf@kurt> <20200729094943.lsmhsqlnl7rlnl6f@skbuf> <87mu3ho48v.fsf@kurt> <20200730082228.r24zgdeiofvwxijm@skbuf> <873654m9zi.fsf@kurt> <87lfiwm2bj.fsf@nanos.tec.linutronix.de> <20200803114112.mrcuupz4ir5uqlp6@skbuf> <87d047n4oh.fsf@nanos.tec.linutronix.de> <jhjh7tjivew.mognet@arm.com> <875z9zmt4i.fsf@nanos.tec.linutronix.de> <20200805134002.GQ2674@hirez.programming.kicks-ass.net>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     peterz@infradead.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>,
+        Alison Wang <alison.wang@nxp.com>, catalin.marinas@arm.com,
+        will@kernel.org, paulmck@kernel.org, mw@semihalf.com,
+        leoyang.li@nxp.com, vladimir.oltean@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>
+Subject: Re: [RFC PATCH] arm64: defconfig: Disable fine-grained task level IRQ time accounting
+In-reply-to: <20200805134002.GQ2674@hirez.programming.kicks-ass.net>
+Date:   Wed, 05 Aug 2020 14:56:49 +0100
+Message-ID: <jhja6z9i4bi.mognet@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200805113237.GX12965@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200805131724.haZUkLUZxQHdJFGbO7gL3I5cix0Clvc4dpfXN6KBnTg@z>
 
 
+On 05/08/20 14:40, peterz@infradead.org wrote:
+> On Mon, Aug 03, 2020 at 09:22:53PM +0200, Thomas Gleixner wrote:
+>
+>>    totaltime = irqtime + tasktime
+>>
+>> Ignoring irqtime and pretending that totaltime is what the scheduler
+>> can control and deal with is naive at best.
+>
+> Well no, that's what we call system overhead and is assumed to be
+> included in the 'error margin'.
+>
+> The way things are set up is that we say that, by default, RT tasks can
+> consume 95% of cputime and the remaining 5% is sufficient to keep the
+> system alive.
+>
+> Those 5% include all system overhead, IRQs, RCU, !RT workqueues etc..
+>
+> Obviously IRQ_TIME accounting changes the balance a bit, but that's what
+> it is. We can't really do anything better.
+>
+
+I'm starting to think that as well. I tried some fugly hack of injecting
+avg_irq into sched_rt_runtime_exceeded() with something along the lines of:
+
+  irq_time = (rq->avg_irq.util_avg * sched_rt_period(rt_rq)) >> SCHED_CAPACITY_SHIFT;
+
+It's pretty bad for a few reasons; one is that avg_irq already has its own
+period (PELT-based). Another is that it is, as Dietmar pointed out, CPU and
+freq invariant, so falls over on big.LITTLE.
+
+Making update_curr_rt() use rq_clock() rather than rq_clock_task() makes it
+"work" but goes against all the good reasons there were to introduce
+rq_clock_task() in the first place.
+
+> Apparently this SoC has significant IRQ time for some reason. Also,
+> relying on RT throttling for 'correct' behaviour is also wrong. What
+> needs to be done is find who is using all this RT time and why, that
+> isn't right.
+
+I've been tempted to say the test case is a bit bogus, but am not familiar
+enough with the RT throttling details to stand that ground. That said, from
+both looking at the execution and the stress-ng source code, it seems to
+unconditionally spawn 32 FIFO-50 tasks (there's even an option to make
+these FIFO-99!!!), which is quite a crowd on monoCPU systems.
