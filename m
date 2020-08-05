@@ -2,217 +2,166 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB1EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E958C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 04:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F3D922B40
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0471C22B40
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 04:03:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="b2SyfvtX";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="cd4jdlyO"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TZ6inYmW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgHED7o (ORCPT
+        id S1725947AbgHEEDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 23:59:44 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:4418 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725904AbgHED7m (ORCPT
+        Wed, 5 Aug 2020 00:03:05 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:18346 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbgHEEDF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 23:59:42 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 0753xPkp012006;
-        Tue, 4 Aug 2020 20:59:26 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=p/Duiods2BS/Vc6ISTdJQimTmp2nKYEznLIsIHGXDGs=;
- b=b2SyfvtX4W3k0uQGGLQBYa+OObTFoV2rIKxEi4FUHseHRvtPuifZmIsn8TU6Sq9gIaf3
- n5VQG9S2dK37D35hIk7R53GiNwyQDMx4crd9XzqX9KtBM/7xjn4Fd71LBvFr/d6JtR7i
- +3Hc9OYsw8qaQ76syULsTSAdpQDA6wPoyfY= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by m0089730.ppops.net with ESMTP id 32n81yg6xk-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 04 Aug 2020 20:59:26 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 4 Aug 2020 20:59:17 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Varg3wynbhuqe9jVe5Q24jNv2X86hPD19GQmCko06HFKFANP1Cft5JjQqAg3JiVExRcR+ijPEHnYaQCE+LZFLMek/uchLWjT3f0/ynBbDCrSIfBYl2qYenCg/eGI5vYoM83ri0g+6qp8j0zwbO96wjgiWPKFFwf9Kr3uyTZVyqO2IpSxK4k1Rskyb6erIKVKqn1nIAzF23UIuA66dBHZERvGY8XPF/szyNfQMV0sPyRVTvpkeJHDXU92cWZUXHZ4SE5JWgXmeZPfk8Q0CuaRHTHNDJ5oNmQzX3g8+ks9bVI6OBzfj2/QT/EVg4mb1JHdYGihDV8gwascLln/+ZvzgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p/Duiods2BS/Vc6ISTdJQimTmp2nKYEznLIsIHGXDGs=;
- b=QHrj3ZVu1ado4hhrULR0M6Z7hhxDU+7Impm/K7BEMZ18JGywWsvTzMQggD3QCyBt+aO0wWRzeyZkVrwDk+2TVd9ZGWmfzMHEPxNt5n0+GeYg3Yj7Ep8PwkpnOZH1ywD/vmc3+BMbxn4xUFPlbX4lTdqw0cgQzyD+5sLFYzVG9dblDQYoZFg55y4886ofRVrXjmMOk0ogEIPdGcJcCQGe4rdUiFuMtIqYwxY+Xah/BdgIg2eDk3trnLqiPKBDDh1e6AM7YIH6ImcxvKwfepDjGeJSFZgkd5jV3h8gGR/egf/gO22XNVh6fjuugffk7K0Py6d07YkEMYzUIMziw8UfSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p/Duiods2BS/Vc6ISTdJQimTmp2nKYEznLIsIHGXDGs=;
- b=cd4jdlyOMpV3nLr/RVsK4mv3PkDWzoX+sNyWI5Ydcl9A7JpzHYyuN8a0zUZUDYTF5CXVqnMVeRjkLytQ/P0z6kUZ9E333GLwRUbr6ddaZeDcXob8YBizIeE8nFWZaJfK24LqUjHBzRvUXwtso3juVx9aVcpJoQwLl87W9gCvnNg=
-Received: from BYAPR15MB2999.namprd15.prod.outlook.com (2603:10b6:a03:fa::12)
- by BYAPR15MB3304.namprd15.prod.outlook.com (2603:10b6:a03:10a::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Wed, 5 Aug
- 2020 03:59:13 +0000
-Received: from BYAPR15MB2999.namprd15.prod.outlook.com
- ([fe80::543:b185:ef4a:7e8]) by BYAPR15MB2999.namprd15.prod.outlook.com
- ([fe80::543:b185:ef4a:7e8%5]) with mapi id 15.20.3239.022; Wed, 5 Aug 2020
- 03:59:13 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-CC:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Xu <dlxu@fb.com>
-Subject: Re: [PATCH bpf-next 2/5] libbpf: support BPF_PROG_TYPE_USER programs
-Thread-Topic: [PATCH bpf-next 2/5] libbpf: support BPF_PROG_TYPE_USER programs
-Thread-Index: AQHWZ+C4tQwFkmvi20aNhPcONSrEz6klnl6AgAGMFwCAAZgFAIAAJ1IA
-Date:   Wed, 5 Aug 2020 03:59:13 +0000
-Message-ID: <5BC1D7AD-32C1-4CDC-BA99-F4DABE61EEA3@fb.com>
-References: <20200801084721.1812607-1-songliubraving@fb.com>
- <20200801084721.1812607-3-songliubraving@fb.com>
- <CAEf4BzYp4gO1P+OrY7hGyQjdia3BuSu4DX2_z=UF6RfGNa+gkQ@mail.gmail.com>
- <9C1285C1-ECD6-46BD-BA95-3E9E81C00EF0@fb.com>
- <CAEf4BzYojfFiMn6VeUkxUsdSTdFK0A4MzKQxhCCp_OowkseznQ@mail.gmail.com>
-In-Reply-To: <CAEf4BzYojfFiMn6VeUkxUsdSTdFK0A4MzKQxhCCp_OowkseznQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3608.80.23.2.2)
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=fb.com;
-x-originating-ip: [2620:10d:c090:400::5:8f7]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 364af8d9-ee68-4070-9d2e-08d838f3ea71
-x-ms-traffictypediagnostic: BYAPR15MB3304:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR15MB3304882C9EC34BE545E765E1B34B0@BYAPR15MB3304.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WhMNdsMz7xpz+LH6/lmG79zTy4uW2Oixbef/C0ppWCBVroNCLFyLFDwONaJbnE0dbeLclXuNHodt56qHsg2tszGW/4m44uYF4MNeIBP0Fk7JC/ZcMeLtGun8KwFPCWZ98/mWlwTZREpkqEARb9iyC0o17MQtGodqVhAZOV9w4TNqI4dkCUCyi8tPYzWncL/C4kyMz2YZcT4hMZl5M/KV5I2ppTKbJjNvKLRlqEaOdGwffwx+4p75HcqScvjPDKroZLBakMcRQLCKShnAIlAtTI2GQvxldb9ezstQAyh+5Q4M0ukpYn2Kr8/lhjrtk92n+nVJMzZhEI5i3MS+zd5VotjUuJbZXiVvD0oR/pDblYonMfieCvVnTB0oDIg+oZSO
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB2999.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(346002)(376002)(366004)(396003)(136003)(39860400002)(316002)(4326008)(186003)(2616005)(54906003)(8676002)(36756003)(86362001)(8936002)(6486002)(83380400001)(6512007)(478600001)(71200400001)(66556008)(33656002)(6916009)(64756008)(2906002)(66476007)(66446008)(76116006)(5660300002)(53546011)(6506007)(66946007)(21314003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 32kRozHzKHvYaltuBJoS7O4TbL6InB3Maz8QHzLx1IyYs4mKxuGu6py0mW5dRtj2jUMZCmuhb4xLtnlTnPg6BWkmYgI6hyNppvbuuvvyWbZS8kNaTJIaKuSthRDb81sKH5iPN+p1WkfdHVKcIzU8cC0FZBo31cZPSlShs4HhCtESIbhLrvTCwIAvLY9fAZXUjiVnv8dUndsUiohDyT6ojU1dRDolJoEkmcsbAEcWjG6rYkGgutElMj8eGk6SrN2HYNDBTHQfG1dZ/NTczA7lTbiUbml5M5Bf8MxY9NHMBA6anLoFQhN5y+pr9fijc0zDekRZDHJSoZatApLg/Svrq2+duKwP427Q2C9WEHjyum0IkxGAHKBjLZEu8zAZ5Bdx4Zt5dv4Q8GRr4pvQjfQPZmEr+aGg+oUMW4lwIH4TPM0w5L3wRTvoxOTjyo4EY+Faf7mFXGYk5pxe9OaYTYCBXzAlP/lAd9V6yEMYX+qjEk8BG004Bun3RFvzRzfgtt6UCrLYEEbHp0IKcKwDPxOfRjwZFH9nMykSLR2oaMwoJev/PrYCPOki0yO1GdFXYnrS3aJqBiEoJUgVYGvID0oLhqMNULtnoXgPVGyvSm3zIrC4XNK3fflWgVXL5lIDG54PXcjJ9BeSMeYAF+TXcwaCd9DVrpo6K6Jgj1j120owYOM=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <807257139EBEDF4199E1EB2BD2128796@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB2999.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 364af8d9-ee68-4070-9d2e-08d838f3ea71
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2020 03:59:13.4108
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: iSUCFO2Mwd1tGr30BctY4CGlhacpNIu8izloVbatHErLI71NcivvSkOmDYs00R/V2uHGWMthUpl1lhLedf+S8A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3304
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-05_03:2020-08-03,2020-08-05 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
- phishscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0 suspectscore=0
- impostorscore=0 adultscore=0 clxscore=1015 mlxscore=0 spamscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008050035
-X-FB-Internal: deliver
+        Wed, 5 Aug 2020 00:03:05 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200805040302epoutp012e8905ffc921303488bf2214af100159~oQ2gWg2O82792227922epoutp016
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 04:03:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200805040302epoutp012e8905ffc921303488bf2214af100159~oQ2gWg2O82792227922epoutp016
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1596600182;
+        bh=2lWhxzwGGTTGMdNZBQVYEmhIYU2GD+fuPMlM4zehPBA=;
+        h=Subject:Reply-To:From:To:CC:Date:References:From;
+        b=TZ6inYmWmz6axF230BTqReBu5p099UBMNvj6sabppNOaQr3eFgIPYQTwp4Dmq7c3+
+         2VPoyt8jPucfB1I9CWpm5mZzNZSKr7f1TFdAwvOnRh00uoLcAbnK2NTi211nuGEad7
+         flycDVKYs8FEIS/O3W37XRsVvPN3YZIWZA+vvT3o=
+Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p3.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200805040301epcas1p309eacba65cd2b1d96caeaa7e773259f2~oQ2gEAsXm2044420444epcas1p3Q;
+        Wed,  5 Aug 2020 04:03:01 +0000 (GMT)
+Mime-Version: 1.0
+Subject: [PATCH v7 0/4] scsi: ufs: Add Host Performance Booster Support
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>,
+        Daejun Park <daejun7.park@samsung.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <231786897.01596600181895.JavaMail.epsvc@epcpadp2>
+Date:   Wed, 05 Aug 2020 12:37:50 +0900
+X-CMS-MailID: 20200805033750epcms2p3fd74b94500593df38d50e1bf426c2347
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200805033750epcms2p3fd74b94500593df38d50e1bf426c2347
+References: <CGME20200805033750epcms2p3fd74b94500593df38d50e1bf426c2347@epcms2p3>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Changelog:
 
+v6 -> v7
+1. Remove UFS feature layer.
+2. Cleanup for sparse error.
 
-> On Aug 4, 2020, at 6:38 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> w=
-rote:
->=20
-> On Mon, Aug 3, 2020 at 6:18 PM Song Liu <songliubraving@fb.com> wrote:
->>=20
->>=20
->>=20
->>> On Aug 2, 2020, at 6:40 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com>=
- wrote:
->>>=20
->>> On Sat, Aug 1, 2020 at 1:50 AM Song Liu <songliubraving@fb.com> wrote:
->>>>=20
->>=20
->> [...]
->>=20
->>>=20
->>>> };
->>>>=20
->>>> LIBBPF_API int bpf_prog_test_run_xattr(struct bpf_prog_test_run_attr *=
-test_attr);
->>>> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
->>>> index b9f11f854985b..9ce175a486214 100644
->>>> --- a/tools/lib/bpf/libbpf.c
->>>> +++ b/tools/lib/bpf/libbpf.c
->>>> @@ -6922,6 +6922,7 @@ static const struct bpf_sec_def section_defs[] =
-=3D {
->>>>       BPF_PROG_SEC("lwt_out",                 BPF_PROG_TYPE_LWT_OUT),
->>>>       BPF_PROG_SEC("lwt_xmit",                BPF_PROG_TYPE_LWT_XMIT),
->>>>       BPF_PROG_SEC("lwt_seg6local",           BPF_PROG_TYPE_LWT_SEG6LO=
-CAL),
->>>> +       BPF_PROG_SEC("user",                    BPF_PROG_TYPE_USER),
->>>=20
->>> let's do "user/" for consistency with most other prog types (and nice
->>> separation between prog type and custom user name)
->>=20
->> About "user" vs. "user/", I still think "user" is better.
->>=20
->> Unlike kprobe and tracepoint, user prog doesn't use the part after "/".
->> This is similar to "perf_event" for BPF_PROG_TYPE_PERF_EVENT, "xdl" for
->> BPF_PROG_TYPE_XDP, etc. If we specify "user" here, "user/" and "user/xxx=
-"
->> would also work. However, if we specify "user/" here, programs that used
->> "user" by accident will fail to load, with a message like:
->>=20
->>        libbpf: failed to load program 'user'
->>=20
->> which is confusing.
->=20
-> xdp, perf_event and a bunch of others don't enforce it, that's true,
-> they are a bit of a legacy,
+v5 -> v6
+Change base commit to b53293fa662e28ae0cdd40828dc641c09f133405
 
-I don't see w/o "/" is a legacy thing. BPF_PROG_TYPE_STRUCT_OPS just uses
-"struct_ops".=20
+v4 -> v5
+Delete unused macro define.
 
-> unfortunately. But all the recent ones do,
-> and we explicitly did that for xdp_dev/xdp_cpu, for instance.
-> Specifying just "user" in the spec would allow something nonsensical
-> like "userargh", for instance, due to this being treated as a prefix.
-> There is no harm to require users to do "user/my_prog", though.
+v3 -> v4
+1. Cleanup.
 
-I don't see why allowing "userargh" is a problem. Failing "user" is=20
-more confusing. We can probably improve that by a hint like:
+v2 -> v3
+1. Add checking input module parameter value.
+2. Change base commit from 5.8/scsi-queue to 5.9/scsi-queue.
+3. Cleanup for unused variables and label.
 
-    libbpf: failed to load program 'user', do you mean "user/"?
+v1 -> v2
+1. Change the full boilerplate text to SPDX style.
+2. Adopt dynamic allocation for sub-region data structure.
+3. Cleanup.
 
-But it is pretty silly. "user/something_never_used" also looks weird.
+NAND flash memory-based storage devices use Flash Translation Layer (FTL)
+to translate logical addresses of I/O requests to corresponding flash
+memory addresses. Mobile storage devices typically have RAM with
+constrained size, thus lack in memory to keep the whole mapping table.
+Therefore, mapping tables are partially retrieved from NAND flash on
+demand, causing random-read performance degradation.
 
-> Alternatively, we could introduce a new convention in the spec,
-> something like "user?", which would accept either "user" or
-> "user/something", but not "user/" nor "userblah". We can try that as
-> well.
+To improve random read performance, JESD220-3 (HPB v1.0) proposes HPB
+(Host Performance Booster) which uses host system memory as a cache for the
+FTL mapping table. By using HPB, FTL data can be read from host memory
+faster than from NAND flash memory. 
 
-Again, I don't really understand why allowing "userblah" is a problem.=20
-We already have "xdp", "xdp_devmap/", and "xdp_cpumap/", they all work=20
-fine so far.=20
+The current version only supports the DCM (device control mode).
+This patch consists of 3 parts to support HPB feature.
 
-Thanks,
-Song=
+1) HPB probe and initialization process
+2) READ -> HPB READ using cached map information
+3) L2P (logical to physical) map management
+
+In the HPB probe and init process, the device information of the UFS is
+queried. After checking supported features, the data structure for the HPB
+is initialized according to the device information.
+
+A read I/O in the active sub-region where the map is cached is changed to
+HPB READ by the HPB.
+
+The HPB manages the L2P map using information received from the
+device. For active sub-region, the HPB caches through ufshpb_map
+request. For the in-active region, the HPB discards the L2P map.
+When a write I/O occurs in an active sub-region area, associated dirty
+bitmap checked as dirty for preventing stale read.
+
+HPB is shown to have a performance improvement of 58 - 67% for random read
+workload. [1]
+
+This series patches are based on the 5.9/scsi-queue branch.
+
+[1]:
+https://www.usenix.org/conference/hotstorage17/program/presentation/jeong
+
+Daejun park (4):
+ scsi: ufs: Add UFS feature related parameter
+ scsi: ufs: Introduce HPB feature
+ scsi: ufs: L2P map management for HPB read
+ scsi: ufs: Prepare HPB read for cached sub-region
+ 
+ drivers/scsi/ufs/Kconfig  |   18 +
+ drivers/scsi/ufs/Makefile |    1 +
+ drivers/scsi/ufs/ufs.h    |   12 +
+ drivers/scsi/ufs/ufshcd.c |   42 +
+ drivers/scsi/ufs/ufshcd.h |    9 +
+ drivers/scsi/ufs/ufshpb.c | 1926 ++++++++++++++++++++++++++++++++++++++++
+ drivers/scsi/ufs/ufshpb.h |  241 +++++
+ 7 files changed, 2249 insertions(+)
+ created mode 100644 drivers/scsi/ufs/ufshpb.c
+ created mode 100644 drivers/scsi/ufs/ufshpb.h
