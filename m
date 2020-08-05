@@ -2,71 +2,105 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0063C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95969C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90FB921D95
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6399421D95
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:47:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S7o67WxF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbgHETbD (ORCPT
+        id S1729321AbgHETr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:31:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728295AbgHERIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:08:17 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 5 Aug 2020 15:47:26 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53656 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728443AbgHERDW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:03:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596646996;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aqjcjFj0cLfrtaKdyRnzSHGUtnIcD/6QjX80vbdnnDs=;
+        b=S7o67WxFGJ7ObtRSLMZZ9347jTi9CXhSUT40ueFMXuZvV3gvb3UiIKtfG4e0Z5167D8y09
+        2JRaVIqtXAR/CKPHo4Xz5dDUe8mDYMWSxJ4bMuO2Vn+IRdPGLsv6QPZ+oXPG9pPW8VqTKb
+        UYvBV32kyhDMPPhti8tZoZ2CkaCq+hU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-48-v1Ut0-vMMlKQmdlxYzNI4g-1; Wed, 05 Aug 2020 13:03:04 -0400
+X-MC-Unique: v1Ut0-vMMlKQmdlxYzNI4g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AA6A22D00;
-        Wed,  5 Aug 2020 17:08:09 +0000 (UTC)
-Date:   Wed, 5 Aug 2020 13:08:07 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Muchun Song <songmuchun@bytedance.com>
-Cc:     naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
-        davem@davemloft.net, mhiramat@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
-        yhs@fb.com, andriin@fb.com, john.fastabend@gmail.com,
-        kpsingh@chromium.org, sfr@canb.auug.org.au, mingo@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Chengming Zhou <zhouchengming@bytedance.com>
-Subject: Re: [External] Re: [PATCH v2] kprobes: fix NULL pointer dereference
- at kprobe_ftrace_handler
-Message-ID: <20200805130807.268cc1a8@oasis.local.home>
-In-Reply-To: <CAMZfGtW2LJTUB6OaixF-V0tVPXt5kEzVvUvOSbO551r0vvZGbg@mail.gmail.com>
-References: <20200805162713.16386-1-songmuchun@bytedance.com>
-        <20200805125056.1dfe74b5@oasis.local.home>
-        <CAMZfGtW2LJTUB6OaixF-V0tVPXt5kEzVvUvOSbO551r0vvZGbg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5AA368F53CF;
+        Wed,  5 Aug 2020 17:02:48 +0000 (UTC)
+Received: from elisabeth (unknown [10.36.110.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 488217B910;
+        Wed,  5 Aug 2020 17:02:41 +0000 (UTC)
+Date:   Wed, 5 Aug 2020 19:02:34 +0200
+From:   Stefano Brivio <sbrivio@redhat.com>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     linux-riscv@lists.infradead.org,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Westphal <fw@strlen.de>,
+        David Ahern <dsahern@gmail.com>,
+        Aaron Conole <aconole@redhat.com>,
+        Numan Siddique <nusiddiq@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Pravin B Shelar <pshelar@ovn.org>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Lourdes Pedrajas <lu@pplo.net>,
+        Netdev <netdev@vger.kernel.org>, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu,
+        lkft-triage@lists.linaro.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH net-next v2 2/6] tunnels: PMTU discovery support for
+ directly bridged IP packets
+Message-ID: <20200805190234.1d95dccd@elisabeth>
+In-Reply-To: <CA+G9fYsJdoQieVr6=e09nYAvpAjnay5XSmJ3WkZHgMdzJRUYEw@mail.gmail.com>
+References: <cover.1596520062.git.sbrivio@redhat.com>
+        <83e5876f589b0071638630dd93fbe0fa6b1b257c.1596520062.git.sbrivio@redhat.com>
+        <CA+G9fYsJdoQieVr6=e09nYAvpAjnay5XSmJ3WkZHgMdzJRUYEw@mail.gmail.com>
+Organization: Red Hat
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Aug 2020 00:59:41 +0800
-Muchun Song <songmuchun@bytedance.com> wrote:
+Hi Naresh,
 
-> > The original patch has already been pulled into the queue and tested.
-> > Please make a new patch that adds this update, as if your original
-> > patch has already been accepted.  
+On Wed, 5 Aug 2020 22:24:03 +0530
+Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+
+> On Tue, 4 Aug 2020 at 11:24, Stefano Brivio <sbrivio@redhat.com> wrote:
+> >
+> > +       icmp6h->icmp6_cksum = csum_ipv6_magic(&nip6h->saddr, &nip6h->daddr, len,
+> > +                                             IPPROTO_ICMPV6, csum);
 > 
-> Will do, thanks!
+> Linux next build breaks for riscv architecture defconfig build.
 
-Also, if you can, add the following:
+Yes, sorry for that. Stephen Rothwell already reported this for s390
+defconfig and I sent a patch some hours ago:
 
-Link: https://lore.kernel.org/r/20200805142136.0331f7ea@canb.auug.org.au
+	https://patchwork.ozlabs.org/project/netdev/patch/a85e9878716c2904488d56335320b7131613e94c.1596633316.git.sbrivio@redhat.com/
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Fixes: 0cb2f1372baa ("kprobes: Fix NULL pointer dereference at kprobe_ftrace_handler")
+Thanks for reporting this though!
 
-It's no big deal if you don't, because I will ;-)
+-- 
+Stefano
 
--- Steve
