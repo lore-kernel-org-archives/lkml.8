@@ -6,125 +6,102 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA72C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A576C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39F7E2076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10EC820842
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:53:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729104AbgHETxK (ORCPT
+        id S1729081AbgHETxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:53:10 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22806 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727792AbgHEQuV (ORCPT
+        Wed, 5 Aug 2020 15:53:23 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37637 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728166AbgHEQuV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:50:21 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 075D3f36027833;
-        Wed, 5 Aug 2020 09:21:50 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32qsqa6ygq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Aug 2020 09:21:50 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 075D3unD029305;
-        Wed, 5 Aug 2020 09:21:50 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32qsqa6yfu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Aug 2020 09:21:50 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 075DJiPI011757;
-        Wed, 5 Aug 2020 13:21:48 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 32n0184dhj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Aug 2020 13:21:48 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 075DLkTU25297218
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 5 Aug 2020 13:21:46 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0AEE7A4054;
-        Wed,  5 Aug 2020 13:21:46 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AA130A405C;
-        Wed,  5 Aug 2020 13:21:45 +0000 (GMT)
-Received: from osiris (unknown [9.171.16.161])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed,  5 Aug 2020 13:21:45 +0000 (GMT)
-Date:   Wed, 5 Aug 2020 15:21:44 +0200
-From:   Heiko Carstens <hca@linux.ibm.com>
-To:     Stefano Brivio <sbrivio@redhat.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>
-Subject: Re: linux-next: build failure after merge of the net-next tree
-Message-ID: <20200805132144.GA12227@osiris>
-References: <20200805223121.7dec86de@canb.auug.org.au>
- <20200805150627.3351fe24@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200805150627.3351fe24@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-05_09:2020-08-03,2020-08-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- lowpriorityscore=0 malwarescore=0 suspectscore=1 impostorscore=0
- priorityscore=1501 phishscore=0 spamscore=0 bulkscore=0 mlxlogscore=999
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008050104
+Received: from mail-pg1-f199.google.com ([209.85.215.199])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1k3HXC-00086D-8E
+        for linux-kernel@vger.kernel.org; Wed, 05 Aug 2020 11:24:38 +0000
+Received: by mail-pg1-f199.google.com with SMTP id j37so7398428pgi.16
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 04:24:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=lF9ALM9gRuD9sB/pHsvqa0BtUHkbcECALGd1yP2+BEE=;
+        b=IJEMwoI6SX/1go6TKmtcvxt4uNuRFgQs9m+CiC1XT2AoudohhVseJRgurJUMZ4P8Ji
+         yxGmPkiDYDNzMWK1MN/WBNQrlWb5H7Jy9PJxFSyHrj9wCxAwPUzWXuTwhtNeO3OTNG7p
+         2H9bxSXIlHHL/FLKAoHTyo8pbTObM7BBMR8BR2DPQTnz/7QKOGEwtXrvlfakUOk3Q8NB
+         /QMp8D7vzJWJlTAMH+uKmV2jzU4TcSGACLB+AJyUt6LAjwe+/Ps9GiBmCs8KpFTAfrXh
+         kQtduPHQM3+EJlmMg1dBdfORatzsa91026cx8vmomBtT02PRtDNo8qpg+iEXXY6c8ca+
+         xYAQ==
+X-Gm-Message-State: AOAM531CjqtjqgpgLyJJyRJk07OMiZY0bBqheCdEOLtkHND5FnuZqoVN
+        tQODxChLcTpmxIEpk8t44GP82UkV0u654F7JVU67AajjJRgOGCIKewS0lokf2N9pNSt41tYrsr4
+        Wn3o41c71qBcUcIBzCDZZwHCIUUJOJA/fajppGpEAbg==
+X-Received: by 2002:aa7:9a4c:: with SMTP id x12mr2894370pfj.307.1596626676926;
+        Wed, 05 Aug 2020 04:24:36 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzJvZXSuRgwTlY5y0En/vjiU7lqcs7sM2JL0qxNrQv5cxET1ZLz6FnSZD2pMhacVp3VGxyXoA==
+X-Received: by 2002:aa7:9a4c:: with SMTP id x12mr2894345pfj.307.1596626676533;
+        Wed, 05 Aug 2020 04:24:36 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id i11sm2613913pjv.30.2020.08.05.04.24.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Aug 2020 04:24:35 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
+Subject: Re: [PATCH] rtw88: 8821c: Add RFE 2 support
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <c0c336d806584361992d4b52665fbb82@realtek.com>
+Date:   Wed, 5 Aug 2020 19:24:32 +0800
+Cc:     "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "open list:REALTEK WIRELESS DRIVER (rtw88)" 
+        <linux-wireless@vger.kernel.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Andy Huang <tehuang@realtek.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <9330BBA5-158B-49F1-8B7C-C2733F358AC1@canonical.com>
+References: <20200805084559.30092-1-kai.heng.feng@canonical.com>
+ <c0c336d806584361992d4b52665fbb82@realtek.com>
+To:     Tony Chuang <yhchuang@realtek.com>
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 03:06:27PM +0200, Stefano Brivio wrote:
-> On Wed, 5 Aug 2020 22:31:21 +1000
-> Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> 
-> > Hi all,
-> > 
-> > After merging the net-next tree, today's linux-next build (s390 defconfig)
-> > failed like this:
-> > 
-> > net/ipv4/ip_tunnel_core.c:335:2: error: implicit declaration of function 'csum_ipv6_magic' [-Werror=implicit-function-declaration]
-> > 
-> > Caused by commit
-> > 
-> >   4cb47a8644cc ("tunnels: PMTU discovery support for directly bridged IP packets")
-> 
-> Ouch, sorry for that.
-> 
-> I'm getting a few of them by the way:
-> 
-> ---
-> net/core/skbuff.o: In function `skb_checksum_setup_ipv6':
-> /home/sbrivio/net-next/net/core/skbuff.c:4980: undefined reference to `csum_ipv6_magic'
-> net/core/netpoll.o: In function `netpoll_send_udp':
-> /home/sbrivio/net-next/net/core/netpoll.c:419: undefined reference to `csum_ipv6_magic'
-> net/netfilter/utils.o: In function `nf_ip6_checksum':
-> /home/sbrivio/net-next/net/netfilter/utils.c:74: undefined reference to `csum_ipv6_magic'
-> /home/sbrivio/net-next/net/netfilter/utils.c:84: undefined reference to `csum_ipv6_magic'
-> net/netfilter/utils.o: In function `nf_ip6_checksum_partial':
-> /home/sbrivio/net-next/net/netfilter/utils.c:112: undefined reference to `csum_ipv6_magic'
-> net/ipv4/ip_tunnel_core.o:/home/sbrivio/net-next/net/ipv4/ip_tunnel_core.c:335: more undefined references to `csum_ipv6_magic' follow
-> ---
-> 
-> ...checking how it should be fixed now.
-> 
-> Heiko, by the way, do we want to provide a s390 version similar to the
-> existing csum_partial() implementation in
-> arch/s390/include/asm/checksum.h right away? Otherwise, I'll just take
-> care of the ifdeffery.
+Hi Tony,
 
-You probably only need to include include/net/ip6_checksum.h which
-contains the default implementation.
+> On Aug 5, 2020, at 19:18, Tony Chuang <yhchuang@realtek.com> wrote:
+> 
+>> 8821CE with RFE 2 isn't supported:
+>> [   12.404834] rtw_8821ce 0000:02:00.0: rfe 2 isn't supported
+>> [   12.404937] rtw_8821ce 0000:02:00.0: failed to setup chip efuse info
+>> [   12.404939] rtw_8821ce 0000:02:00.0: failed to setup chip information
+>> 
+> 
+> NACK
+> 
+> The RFE type 2 should be working with some additional fixes.
+> Did you tested connecting to AP with BT paired?
 
-And yes, I put it on my todo list that we need to provide an s390
-variant as well.
+No, I only tested WiFi.
+
+> The antenna configuration is different with RFE type 0.
+> I will ask someone else to fix them.
+> Then the RFE type 2 modules can be supported.
+
+Good to know that, I'll be patient and wait for a real fix.
+
+Kai-Heng
+
+> 
+> Yen-Hsuan
+
