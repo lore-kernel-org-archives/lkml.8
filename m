@@ -2,141 +2,154 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E822C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D609C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 742EC22B42
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 708BB22B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:13:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="AwFBpkUn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lGi918tC"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="mLoon+iK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729679AbgHEUNx (ORCPT
+        id S1729648AbgHEUNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:13:53 -0400
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:37003 "EHLO
-        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726629AbgHEQX0 (ORCPT
+        Wed, 5 Aug 2020 16:13:47 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:7990 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726776AbgHEQX1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:23:26 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailnew.west.internal (Postfix) with ESMTP id 37C75970;
-        Wed,  5 Aug 2020 07:36:16 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Wed, 05 Aug 2020 07:36:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
-        TV/ywlemDl0JIUauxpySAysG0pozcgKEtLbmEq/dGCI=; b=AwFBpkUnA5Q3eZVP
-        GUBhoB/ilhwXI9VqrBWf6R5OCpprqNbp8Idwbc0ORpfdwf9XRzKHxTAwASOBHloP
-        C8kELv06f6HkCdmM7o/reWrBy3ZFHjtS93RPzrtwzpS9px9u0fikYwf5UfAk8BZ5
-        RcJHbvLqHaFZmmEjgxmdm0rRJiF6rzz0BWYeVdJTPAjS1R2mxJunWX3eTVWhiAW/
-        6Ap9JaHp1kY6tvHneM1y6nxLkgmPIl/GLPbviB/kmezKdXUMUKBQ6umnfBH0G58f
-        uP7AT57ilb7hRJHyP0HqrNRGP3Aw+xdw/wbrLXYX5oE44K2eyZIzhipL3rbEpcmc
-        S1RKug==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=TV/ywlemDl0JIUauxpySAysG0pozcgKEtLbmEq/dG
-        CI=; b=lGi918tCPuQclchc60ZkZQcFuFeLnuEaz5oFvKYw47Yf6N9duODX99vQ0
-        v2wjcf/SgbslZcfvhprEmRgqBL19HB/1eb/JYzoYuP5jz2HFYgT/ak9IDUfwnhAJ
-        YkJIqH/75jxgyxwt67ZoBjpJqUEoP+E/n89yydB8voI+I/O7zCc7QhLrKKOuLxd8
-        vDlll4NR2YcE16zazVrfdI/a8y3gt5FGnB5CxQbKvQx0Q1/68uU+NYGdXE8gcVBZ
-        bHzmSNEbRP2lrp6vbGU5+8EiHmA2mQO1uyjzA/m5uW9PHXNgxKUgFedSPlxBTu5F
-        R1D43CcSiAfHDm04i23VAV+1VwUBw==
-X-ME-Sender: <xms:rpkqXxIM464vxKzxo1Ps1E1MNcoGOyyXu-byRxZmcehu1oS4oiPbAg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrjeekgdeggecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
-    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnhepfe
-    efteetvdeguddvveefveeftedtffduudehueeihfeuvefgveehffeludeggfejnecukfhp
-    peehkedrjedrvdehhedrvddvtdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
-X-ME-Proxy: <xmx:rpkqX9JrEnjQ0a_60B4dCHApSvALGVOSkJ8Sxj0D243ONHuAEjv0JQ>
-    <xmx:rpkqX5vsriW3o_YwMp5QeyhNrGEqZvM_FMb5gGXkEH6Kldth5k2SAw>
-    <xmx:rpkqXyZs1QHUmAvW5-dnVwWP92AJYBeyrGhvLg8ZW4Z58zFbXsHgqw>
-    <xmx:r5kqX0T5XKAiop0pugkIzJKNdw90x3nEoU89eXDiXzbLMU5kcLe6uaYBMNU>
-Received: from mickey.themaw.net (58-7-255-220.dyn.iinet.net.au [58.7.255.220])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1578A30600B1;
-        Wed,  5 Aug 2020 07:36:08 -0400 (EDT)
-Message-ID: <013e9bb3cb1536c73a5b58c5ff000b3b00629561.camel@themaw.net>
-Subject: Re: [PATCH 13/17] watch_queue: Implement mount topology and
- attribute change notifications [ver #5]
-From:   Ian Kent <raven@themaw.net>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Christian Brauner <christian@brauner.io>, andres@anarazel.de,
-        Jeff Layton <jlayton@redhat.com>, dray@redhat.com,
-        Karel Zak <kzak@redhat.com>, keyrings@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        LSM <linux-security-module@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 05 Aug 2020 19:36:05 +0800
-In-Reply-To: <CAJfpegvxKTy+4Zk6banvxQ83PeFV7Xnt2Qv=kkOg57rxFKqVEg@mail.gmail.com>
-References: <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk>
-         <158454391302.2863966.1884682840541676280.stgit@warthog.procyon.org.uk>
-         <CAJfpegspWA6oUtdcYvYF=3fij=Bnq03b8VMbU9RNMKc+zzjbag@mail.gmail.com>
-         <1293241.1595501326@warthog.procyon.org.uk>
-         <CAJfpeguvLMCw1H8+DPsfZE_k0sEiRtA17pD9HjnceSsAvqqAZw@mail.gmail.com>
-         <43c061d26ddef2aa3ca1ac726da7db9ab461e7be.camel@themaw.net>
-         <CAJfpeguFkDDhz7+70pSUv_j=xY5L08ESpaE+jER9vE5p+ZmfFw@mail.gmail.com>
-         <c558fc4af785f62a2751be3b297d1ccbbfcfa969.camel@themaw.net>
-         <CAJfpegvxKTy+4Zk6banvxQ83PeFV7Xnt2Qv=kkOg57rxFKqVEg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Wed, 5 Aug 2020 12:23:27 -0400
+X-UUID: 6e8e03a222d84d94b4a41ae4b8735427-20200805
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=tWETgV80oKa12y7OJg8hJVWC3udr9qgCf1OmDSZNG+A=;
+        b=mLoon+iKJYOusow8i9mVk1uE6o8v6dFKOMBJGQjvP+D4Uw6UwG0pY0nKHax0pOdRdRoR0u0qPjYzxYrOq8b9WWaOUlyPQsdEs+a34g1GIXvvepB6/kvhAiCUTW6X9jEPeqnZmWlwjfTu0ho7uAJGfspt1jtu4xFunyvikQaPmL8=;
+X-UUID: 6e8e03a222d84d94b4a41ae4b8735427-20200805
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <qii.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1964303194; Wed, 05 Aug 2020 18:53:21 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 5 Aug 2020 18:53:17 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 5 Aug 2020 18:53:18 +0800
+From:   Qii Wang <qii.wang@mediatek.com>
+To:     <wsa@the-dreams.de>
+CC:     <robh+dt@kernel.org>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <qii.wang@mediatek.com>
+Subject: [PATCH v3 2/4] i2c: mediatek: Add access to more than 8GB dram in i2c driver
+Date:   Wed, 5 Aug 2020 18:52:20 +0800
+Message-ID: <1596624742-14727-3-git-send-email-qii.wang@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1596624742-14727-1-git-send-email-qii.wang@mediatek.com>
+References: <1596624742-14727-1-git-send-email-qii.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-08-05 at 09:43 +0200, Miklos Szeredi wrote:
-> On Wed, Aug 5, 2020 at 3:54 AM Ian Kent <raven@themaw.net> wrote:
-> > > > It's way more useful to have these in the notification than
-> > > > obtainable
-> > > > via fsinfo() IMHO.
-> > > 
-> > > What is it useful for?
-> > 
-> > Only to verify that you have seen all the notifications.
-> > 
-> > If you have to grab that info with a separate call then the count
-> > isn't necessarily consistent because other notifications can occur
-> > while you grab it.
-> 
-> No, no no.   The watch queue will signal an overflow, without any
-> additional overhead for the normal case.  If you think of this as a
-> protocol stack, then the overflow detection happens on the transport
-> layer, instead of the application layer.  The application layer is
-> responsible for restoring state in case of a transport layer error,
-> but detection of that error is not the responsibility of the
-> application layer.
-
-I can see in the kernel code that an error is returned if the message
-buffer is full when trying to add a message, I just can't see where
-to get it in the libmount code.
-
-That's not really a communication protocol problem.
-
-Still I need to work out how to detect it, maybe it is seen by
-the code in libmount already and I simply can't see what I need
-to do to recognise it ...
-
-So I'm stuck wanting to verify I have got everything that was
-sent and am having trouble moving on from that.
-
-Ian
+TmV3ZXIgTVRLIGNoaXAgc3VwcG9ydCBtb3JlIHRoYW4gOEdCIG9mIGRyYW0uIFJlcGxhY2Ugc3Vw
+cG9ydF8zM2JpdHMNCndpdGggbW9yZSBnZW5lcmFsIGRtYV9tYXhfc3VwcG9ydCBhbmQgcmVtb3Zl
+IG10a19pMmNfc2V0XzRnX21vZGUuDQoNClJldmlld2VkLWJ5OiBZaW5nam9lIENoZW4gPHlpbmdq
+b2UuY2hlbkBtZWRpYXRlay5jb20+DQpTaWduZWQtb2ZmLWJ5OiBRaWkgV2FuZyA8cWlpLndhbmdA
+bWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1tdDY1eHguYyB8IDM5
+ICsrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KIDEgZmlsZSBjaGFuZ2Vk
+LCAxNyBpbnNlcnRpb25zKCspLCAyMiBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4
+eC5jDQppbmRleCBlNmI5ODRhLi40NjM4NjBlIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9pMmMvYnVz
+c2VzL2kyYy1tdDY1eHguYw0KKysrIGIvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1tdDY1eHguYw0K
+QEAgLTU1LDcgKzU1LDYgQEANCiAjZGVmaW5lIEkyQ19ETUFfSU5UX0ZMQUdfTk9ORQkJMHgwMDAw
+DQogI2RlZmluZSBJMkNfRE1BX0NMUl9GTEFHCQkweDAwMDANCiAjZGVmaW5lIEkyQ19ETUFfSEFS
+RF9SU1QJCTB4MDAwMg0KLSNkZWZpbmUgSTJDX0RNQV80R19NT0RFCQkJMHgwMDAxDQogDQogI2Rl
+ZmluZSBNQVhfU0FNUExFX0NOVF9ESVYJCTgNCiAjZGVmaW5lIE1BWF9TVEVQX0NOVF9ESVYJCTY0
+DQpAQCAtMjA0LDExICsyMDMsMTEgQEAgc3RydWN0IG10a19pMmNfY29tcGF0aWJsZSB7DQogCXVu
+c2lnbmVkIGNoYXIgZGNtOiAxOw0KIAl1bnNpZ25lZCBjaGFyIGF1dG9fcmVzdGFydDogMTsNCiAJ
+dW5zaWduZWQgY2hhciBhdXhfbGVuX3JlZzogMTsNCi0JdW5zaWduZWQgY2hhciBzdXBwb3J0XzMz
+Yml0czogMTsNCiAJdW5zaWduZWQgY2hhciB0aW1pbmdfYWRqdXN0OiAxOw0KIAl1bnNpZ25lZCBj
+aGFyIGRtYV9zeW5jOiAxOw0KIAl1bnNpZ25lZCBjaGFyIGx0aW1pbmdfYWRqdXN0OiAxOw0KIAl1
+bnNpZ25lZCBjaGFyIGFwZG1hX3N5bmM6IDE7DQorCXVuc2lnbmVkIGNoYXIgbWF4X2RtYV9zdXBw
+b3J0Ow0KIH07DQogDQogc3RydWN0IG10a19pMmNfYWNfdGltaW5nIHsNCkBAIC0zMTEsMTEgKzMx
+MCwxMSBAQCBzdHJ1Y3QgaTJjX3NwZWNfdmFsdWVzIHsNCiAJLmRjbSA9IDEsDQogCS5hdXRvX3Jl
+c3RhcnQgPSAxLA0KIAkuYXV4X2xlbl9yZWcgPSAxLA0KLQkuc3VwcG9ydF8zM2JpdHMgPSAxLA0K
+IAkudGltaW5nX2FkanVzdCA9IDEsDQogCS5kbWFfc3luYyA9IDAsDQogCS5sdGltaW5nX2FkanVz
+dCA9IDAsDQogCS5hcGRtYV9zeW5jID0gMCwNCisJLm1heF9kbWFfc3VwcG9ydCA9IDMzLA0KIH07
+DQogDQogc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfaTJjX2NvbXBhdGlibGUgbXQ2NTc3X2NvbXBh
+dCA9IHsNCkBAIC0zMjUsMTEgKzMyNCwxMSBAQCBzdHJ1Y3QgaTJjX3NwZWNfdmFsdWVzIHsNCiAJ
+LmRjbSA9IDEsDQogCS5hdXRvX3Jlc3RhcnQgPSAwLA0KIAkuYXV4X2xlbl9yZWcgPSAwLA0KLQku
+c3VwcG9ydF8zM2JpdHMgPSAwLA0KIAkudGltaW5nX2FkanVzdCA9IDAsDQogCS5kbWFfc3luYyA9
+IDAsDQogCS5sdGltaW5nX2FkanVzdCA9IDAsDQogCS5hcGRtYV9zeW5jID0gMCwNCisJLm1heF9k
+bWFfc3VwcG9ydCA9IDMyLA0KIH07DQogDQogc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfaTJjX2Nv
+bXBhdGlibGUgbXQ2NTg5X2NvbXBhdCA9IHsNCkBAIC0zMzksMTEgKzMzOCwxMSBAQCBzdHJ1Y3Qg
+aTJjX3NwZWNfdmFsdWVzIHsNCiAJLmRjbSA9IDAsDQogCS5hdXRvX3Jlc3RhcnQgPSAwLA0KIAku
+YXV4X2xlbl9yZWcgPSAwLA0KLQkuc3VwcG9ydF8zM2JpdHMgPSAwLA0KIAkudGltaW5nX2FkanVz
+dCA9IDAsDQogCS5kbWFfc3luYyA9IDAsDQogCS5sdGltaW5nX2FkanVzdCA9IDAsDQogCS5hcGRt
+YV9zeW5jID0gMCwNCisJLm1heF9kbWFfc3VwcG9ydCA9IDMyLA0KIH07DQogDQogc3RhdGljIGNv
+bnN0IHN0cnVjdCBtdGtfaTJjX2NvbXBhdGlibGUgbXQ3NjIyX2NvbXBhdCA9IHsNCkBAIC0zNTMs
+MTEgKzM1MiwxMSBAQCBzdHJ1Y3QgaTJjX3NwZWNfdmFsdWVzIHsNCiAJLmRjbSA9IDEsDQogCS5h
+dXRvX3Jlc3RhcnQgPSAxLA0KIAkuYXV4X2xlbl9yZWcgPSAxLA0KLQkuc3VwcG9ydF8zM2JpdHMg
+PSAwLA0KIAkudGltaW5nX2FkanVzdCA9IDAsDQogCS5kbWFfc3luYyA9IDAsDQogCS5sdGltaW5n
+X2FkanVzdCA9IDAsDQogCS5hcGRtYV9zeW5jID0gMCwNCisJLm1heF9kbWFfc3VwcG9ydCA9IDMy
+LA0KIH07DQogDQogc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfaTJjX2NvbXBhdGlibGUgbXQ4MTcz
+X2NvbXBhdCA9IHsNCkBAIC0zNjYsMTEgKzM2NSwxMSBAQCBzdHJ1Y3QgaTJjX3NwZWNfdmFsdWVz
+IHsNCiAJLmRjbSA9IDEsDQogCS5hdXRvX3Jlc3RhcnQgPSAxLA0KIAkuYXV4X2xlbl9yZWcgPSAx
+LA0KLQkuc3VwcG9ydF8zM2JpdHMgPSAxLA0KIAkudGltaW5nX2FkanVzdCA9IDAsDQogCS5kbWFf
+c3luYyA9IDAsDQogCS5sdGltaW5nX2FkanVzdCA9IDAsDQogCS5hcGRtYV9zeW5jID0gMCwNCisJ
+Lm1heF9kbWFfc3VwcG9ydCA9IDMzLA0KIH07DQogDQogc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtf
+aTJjX2NvbXBhdGlibGUgbXQ4MTgzX2NvbXBhdCA9IHsNCkBAIC0zODAsMTEgKzM3OSwxMSBAQCBz
+dHJ1Y3QgaTJjX3NwZWNfdmFsdWVzIHsNCiAJLmRjbSA9IDAsDQogCS5hdXRvX3Jlc3RhcnQgPSAx
+LA0KIAkuYXV4X2xlbl9yZWcgPSAxLA0KLQkuc3VwcG9ydF8zM2JpdHMgPSAxLA0KIAkudGltaW5n
+X2FkanVzdCA9IDEsDQogCS5kbWFfc3luYyA9IDEsDQogCS5sdGltaW5nX2FkanVzdCA9IDEsDQog
+CS5hcGRtYV9zeW5jID0gMCwNCisJLm1heF9kbWFfc3VwcG9ydCA9IDMzLA0KIH07DQogDQogc3Rh
+dGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgbXRrX2kyY19vZl9tYXRjaFtdID0gew0KQEAg
+LTc5NiwxMSArNzk1LDYgQEAgc3RhdGljIGludCBtdGtfaTJjX3NldF9zcGVlZChzdHJ1Y3QgbXRr
+X2kyYyAqaTJjLCB1bnNpZ25lZCBpbnQgcGFyZW50X2NsaykNCiAJcmV0dXJuIDA7DQogfQ0KIA0K
+LXN0YXRpYyBpbmxpbmUgdTMyIG10a19pMmNfc2V0XzRnX21vZGUoZG1hX2FkZHJfdCBhZGRyKQ0K
+LXsNCi0JcmV0dXJuIChhZGRyICYgQklUX1VMTCgzMikpID8gSTJDX0RNQV80R19NT0RFIDogSTJD
+X0RNQV9DTFJfRkxBRzsNCi19DQotDQogc3RhdGljIGludCBtdGtfaTJjX2RvX3RyYW5zZmVyKHN0
+cnVjdCBtdGtfaTJjICppMmMsIHN0cnVjdCBpMmNfbXNnICptc2dzLA0KIAkJCSAgICAgICBpbnQg
+bnVtLCBpbnQgbGVmdF9udW0pDQogew0KQEAgLTg4NSw4ICs4NzksOCBAQCBzdGF0aWMgaW50IG10
+a19pMmNfZG9fdHJhbnNmZXIoc3RydWN0IG10a19pMmMgKmkyYywgc3RydWN0IGkyY19tc2cgKm1z
+Z3MsDQogCQkJcmV0dXJuIC1FTk9NRU07DQogCQl9DQogDQotCQlpZiAoaTJjLT5kZXZfY29tcC0+
+c3VwcG9ydF8zM2JpdHMpIHsNCi0JCQlyZWdfNGdfbW9kZSA9IG10a19pMmNfc2V0XzRnX21vZGUo
+cnBhZGRyKTsNCisJCWlmIChpMmMtPmRldl9jb21wLT5tYXhfZG1hX3N1cHBvcnQgPiAzMikgew0K
+KwkJCXJlZ180Z19tb2RlID0gdXBwZXJfMzJfYml0cyhycGFkZHIpOw0KIAkJCXdyaXRlbChyZWdf
+NGdfbW9kZSwgaTJjLT5wZG1hYmFzZSArIE9GRlNFVF9SWF80R19NT0RFKTsNCiAJCX0NCiANCkBA
+IC05MDgsOCArOTAyLDggQEAgc3RhdGljIGludCBtdGtfaTJjX2RvX3RyYW5zZmVyKHN0cnVjdCBt
+dGtfaTJjICppMmMsIHN0cnVjdCBpMmNfbXNnICptc2dzLA0KIAkJCXJldHVybiAtRU5PTUVNOw0K
+IAkJfQ0KIA0KLQkJaWYgKGkyYy0+ZGV2X2NvbXAtPnN1cHBvcnRfMzNiaXRzKSB7DQotCQkJcmVn
+XzRnX21vZGUgPSBtdGtfaTJjX3NldF80Z19tb2RlKHdwYWRkcik7DQorCQlpZiAoaTJjLT5kZXZf
+Y29tcC0+bWF4X2RtYV9zdXBwb3J0ID4gMzIpIHsNCisJCQlyZWdfNGdfbW9kZSA9IHVwcGVyXzMy
+X2JpdHMod3BhZGRyKTsNCiAJCQl3cml0ZWwocmVnXzRnX21vZGUsIGkyYy0+cGRtYWJhc2UgKyBP
+RkZTRVRfVFhfNEdfTU9ERSk7DQogCQl9DQogDQpAQCAtOTU0LDExICs5NDgsMTEgQEAgc3RhdGlj
+IGludCBtdGtfaTJjX2RvX3RyYW5zZmVyKHN0cnVjdCBtdGtfaTJjICppMmMsIHN0cnVjdCBpMmNf
+bXNnICptc2dzLA0KIAkJCXJldHVybiAtRU5PTUVNOw0KIAkJfQ0KIA0KLQkJaWYgKGkyYy0+ZGV2
+X2NvbXAtPnN1cHBvcnRfMzNiaXRzKSB7DQotCQkJcmVnXzRnX21vZGUgPSBtdGtfaTJjX3NldF80
+Z19tb2RlKHdwYWRkcik7DQorCQlpZiAoaTJjLT5kZXZfY29tcC0+bWF4X2RtYV9zdXBwb3J0ID4g
+MzIpIHsNCisJCQlyZWdfNGdfbW9kZSA9IHVwcGVyXzMyX2JpdHMod3BhZGRyKTsNCiAJCQl3cml0
+ZWwocmVnXzRnX21vZGUsIGkyYy0+cGRtYWJhc2UgKyBPRkZTRVRfVFhfNEdfTU9ERSk7DQogDQot
+CQkJcmVnXzRnX21vZGUgPSBtdGtfaTJjX3NldF80Z19tb2RlKHJwYWRkcik7DQorCQkJcmVnXzRn
+X21vZGUgPSB1cHBlcl8zMl9iaXRzKHJwYWRkcik7DQogCQkJd3JpdGVsKHJlZ180Z19tb2RlLCBp
+MmMtPnBkbWFiYXNlICsgT0ZGU0VUX1JYXzRHX01PREUpOw0KIAkJfQ0KIA0KQEAgLTEyMzIsOCAr
+MTIyNiw5IEBAIHN0YXRpYyBpbnQgbXRrX2kyY19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
+ICpwZGV2KQ0KIAkJcmV0dXJuIC1FSU5WQUw7DQogCX0NCiANCi0JaWYgKGkyYy0+ZGV2X2NvbXAt
+PnN1cHBvcnRfMzNiaXRzKSB7DQotCQlyZXQgPSBkbWFfc2V0X21hc2soJnBkZXYtPmRldiwgRE1B
+X0JJVF9NQVNLKDMzKSk7DQorCWlmIChpMmMtPmRldl9jb21wLT5tYXhfZG1hX3N1cHBvcnQgPiAz
+Mikgew0KKwkJcmV0ID0gZG1hX3NldF9tYXNrKCZwZGV2LT5kZXYsDQorCQkJCURNQV9CSVRfTUFT
+SyhpMmMtPmRldl9jb21wLT5tYXhfZG1hX3N1cHBvcnQpKTsNCiAJCWlmIChyZXQpIHsNCiAJCQlk
+ZXZfZXJyKCZwZGV2LT5kZXYsICJkbWFfc2V0X21hc2sgcmV0dXJuIGVycm9yLlxuIik7DQogCQkJ
+cmV0dXJuIHJldDsNCi0tIA0KMS45LjENCg==
 
