@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8956BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC1BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5E6207FC
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:16:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AB87207FC
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:17:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="mzV+7XEN"
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="scffj9e8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgHEDQv (ORCPT
+        id S1727845AbgHEDRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 23:16:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34046 "EHLO
+        Tue, 4 Aug 2020 23:17:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgHEDQv (ORCPT
+        with ESMTP id S1725950AbgHEDRD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 23:16:51 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC0C9C06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 20:16:50 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id t6so23635365pgq.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 20:16:50 -0700 (PDT)
+        Tue, 4 Aug 2020 23:17:03 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46290C06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 20:17:03 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id i92so2482921pje.0
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 20:17:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Z2B0RmAB4ikc/fEMgmPCTBuqG3VCsesR19swZhGr12s=;
-        b=mzV+7XENhGV3RDNd+3/YtuVeJgGsZwTDMz5ITjJYRIixwwkM5nHl41KlWqNAaCHVLr
-         NQdOUmTBr5pRVXOCF6WUveXIiW69y41xCZM9vBRSBo8ZKuvg/86XUG3U6RlN2iLQLTjo
-         lhS7jc4mq7VW/Tz0IA367v3kKOy2GVBXXGUvCV9T+u7Slhy5Z5DKK2V5Y/ITgvYOI+xQ
-         e0hp9QmJE698waeExf4ukAvSXycqflodSd7oDuvJwGNT2lJQp5EnDkru5Zg8lUSXBUZe
-         sFCbyJeNnVbMM4MsV9b0RGekpY33L5333J22MOCimfNHaiI5XDF/Rw3CAWtWL6WNLEtc
-         sznQ==
+        bh=t5NxKE93++XwVZfl6V5TzJqOUFQQ+59AlnnlORRw42g=;
+        b=scffj9e86Q90xGOJLiPAMjnaJRVQsGoX0cNTgWyqMiSensGoxCbBjQIEys44DUDPHS
+         H1gblW+NJKutBmOzbfyQeUNXHycNOz1SorKYLzkAdhYGWUmLjpjNFUcONLMA8QrDQhRj
+         K2crUFZzMCJgomhVMobBl0ObLSZF7bUdK+VUMkyDPyHiwVNSoyXiqKCY/T/uVT2/31tT
+         s8RDKMe/8q8eBdq7K+2H2230ZcJV06mrr2hG657I0dJxPWIfzWHW6vDwhb0i2XgdhGPo
+         pYkFVmokR34w1O0u0+dcC3CM6QSQX5jnySJ+uHzsnMIRUPNinZewIH/4Sv2uAkK6gKfK
+         g33g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=Z2B0RmAB4ikc/fEMgmPCTBuqG3VCsesR19swZhGr12s=;
-        b=qMJddfht+TQP+uI1jJaxDbWXt2VUES8XbR9vcMqTBzklqrcIa4vAxzk5CR0s+bHcLe
-         Y8R1NZf36ahmmEbDrRlNmR7bcksCujqL5+8AuHttbKCbGTXW/8ySmIKMPRybe9fWZfnk
-         oYxCy6enelJQw5Fz1zT9mHwBBbgbVIGA+ibLCTC/qcFIuZxAgekQ1JTGLS8z56Mp/WYh
-         y4d5lyxVI8e+THLGTxmMsWymj6Qbb5PZat+RFBrCj5NXFHDLSA0oc2UTwe4C7g6ntdLz
-         SrPdkufSLN97e5upGdeNQfejKwyP3PMYVbatk6KN42FUHfJZALNOSU0QHd3RYIyoQAqM
-         bq/A==
-X-Gm-Message-State: AOAM530pyjSA2YG2JmUhbAfE4Ect8AL2Ju6RaAmk5QblCfUAzSX7S3qm
-        WpfMofo0PPoa4NZ+1ctaN717MZdiEuXgkg==
-X-Google-Smtp-Source: ABdhPJwK8RLvQaxRUsa+qfF1Br+vOHOQ14vIi7MBMEyvJoUSMTzoNyBHd7Tg58pGKzqET0CAMfgaOQ==
-X-Received: by 2002:aa7:9d04:: with SMTP id k4mr1354807pfp.256.1596597409860;
-        Tue, 04 Aug 2020 20:16:49 -0700 (PDT)
+        bh=t5NxKE93++XwVZfl6V5TzJqOUFQQ+59AlnnlORRw42g=;
+        b=lkrgScx1O66T50uU/j+CLpBHI6f/qOwH3pyIMgL9aM/9AF2M8HPVwyiOemCNUnXtlH
+         BdS5JNICJM3Lphl17mjfbhS28tJXsvAMakviYxD336ftWg8Ggd02eQtfIPySFjVsTVd4
+         1u9b25GgevgTwTtVQC6t9vmwDS3wFiDEhl0eyTqeO3YPwtVB9kz8q6GGM7kszFsuJYEn
+         NTQVgjAaBv1YIRxcL3IwKhuxkt2tM8jFkggRBXr91PRM8bRpJzjlJKn1Ivvy6OVYzpUv
+         B1ZvSdWmaQaPZ6NKnY9sCBRcKI5c9waM6smO448w3t+WZiuYiq9JaIMF/Vi4zBI6qe07
+         vGSQ==
+X-Gm-Message-State: AOAM532mC1CxfsJKStGRhaIXP2hlmfRrWQPN7MlodeTnidqKIwQyVzNU
+        wQwlk6kY9AHCJVRmCt4aCUZf12zAsXGp7A==
+X-Google-Smtp-Source: ABdhPJzy0z4X7LOO/D0WfkmVQ2tb2xOQP9GCLfrLNMzJTYpJQJfS0yKu1YK00+AX60eTuiu9POVVNg==
+X-Received: by 2002:a17:90b:1a8d:: with SMTP id ng13mr1132975pjb.24.1596597420125;
+        Tue, 04 Aug 2020 20:17:00 -0700 (PDT)
 Received: from [192.168.10.94] (124-171-83-152.dyn.iinet.net.au. [124.171.83.152])
-        by smtp.gmail.com with ESMTPSA id v77sm866846pfc.137.2020.08.04.20.16.45
+        by smtp.gmail.com with ESMTPSA id t19sm853664pfq.179.2020.08.04.20.16.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Aug 2020 20:16:48 -0700 (PDT)
-Subject: Re: [PATCH v5 1/4] powerpc/pseries/iommu: Create defines for
- operations in ibm,ddw-applicable
+        Tue, 04 Aug 2020 20:16:59 -0700 (PDT)
+Subject: Re: [PATCH v5 2/4] powerpc/pseries/iommu: Update call to
+ ibm,query-pe-dma-windows
 To:     Leonardo Bras <leobras.c@gmail.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -73,7 +73,7 @@ To:     Leonardo Bras <leobras.c@gmail.com>,
         David Dai <zdai@linux.vnet.ibm.com>
 Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
 References: <20200805030455.123024-1-leobras.c@gmail.com>
- <20200805030455.123024-2-leobras.c@gmail.com>
+ <20200805030455.123024-3-leobras.c@gmail.com>
 From:   Alexey Kardashevskiy <aik@ozlabs.ru>
 Autocrypt: addr=aik@ozlabs.ru; keydata=
  mQINBE+rT0sBEADFEI2UtPRsLLvnRf+tI9nA8T91+jDK3NLkqV+2DKHkTGPP5qzDZpRSH6mD
@@ -148,12 +148,12 @@ Autocrypt: addr=aik@ozlabs.ru; keydata=
  c7E5M+/NpslPCmYnDjs5qg0/3ihh6XuOGggZQOqrYPC3PnsNs3NxirwOkVPQgO6mXxpuifvJ
  DG9EMkK8IBXnLulqVk54kf7fE0jT/d8RTtJIA92GzsgdK2rpT1MBKKVffjRFGwN7nQVOzi4T
  XrB5p+6ML7Bd84xOEGsj/vdaXmz1esuH7BOZAGEZfLRCHJ0GVCSssg==
-Message-ID: <62a5bd43-6c81-0c79-806c-e9001ae010f6@ozlabs.ru>
-Date:   Wed, 5 Aug 2020 13:16:41 +1000
+Message-ID: <4767d7e9-1f08-eb64-46a8-f4fc612fe752@ozlabs.ru>
+Date:   Wed, 5 Aug 2020 13:16:53 +1000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200805030455.123024-2-leobras.c@gmail.com>
+In-Reply-To: <20200805030455.123024-3-leobras.c@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -165,130 +165,177 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 05/08/2020 13:04, Leonardo Bras wrote:
-> Create defines to help handling ibm,ddw-applicable values, avoiding
-> confusion about the index of given operations.
+> From LoPAR level 2.8, "ibm,ddw-extensions" index 3 can make the number of
+> outputs from "ibm,query-pe-dma-windows" go from 5 to 6.
+> 
+> This change of output size is meant to expand the address size of
+> largest_available_block PE TCE from 32-bit to 64-bit, which ends up
+> shifting page_size and migration_capable.
+> 
+> This ends up requiring the update of
+> ddw_query_response->largest_available_block from u32 to u64, and manually
+> assigning the values from the buffer into this struct, according to
+> output size.
+> 
+> Also, a routine was created for helping reading the ddw extensions as
+> suggested by LoPAR: First reading the size of the extension array from
+> index 0, checking if the property exists, and then returning it's value.
 > 
 > Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
 > Tested-by: David Dai <zdai@linux.vnet.ibm.com>
+
 
 Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
 
 
 
 > ---
->  arch/powerpc/platforms/pseries/iommu.c | 43 ++++++++++++++++----------
->  1 file changed, 26 insertions(+), 17 deletions(-)
+>  arch/powerpc/platforms/pseries/iommu.c | 91 +++++++++++++++++++++++---
+>  1 file changed, 81 insertions(+), 10 deletions(-)
 > 
 > diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-> index 6d47b4a3ce39..ac0d6376bdad 100644
+> index ac0d6376bdad..1a933c4e8bba 100644
 > --- a/arch/powerpc/platforms/pseries/iommu.c
 > +++ b/arch/powerpc/platforms/pseries/iommu.c
-> @@ -39,6 +39,14 @@
->  
->  #include "pseries.h"
+> @@ -47,6 +47,12 @@ enum {
+>  	DDW_APPLICABLE_SIZE
+>  };
 >  
 > +enum {
-> +	DDW_QUERY_PE_DMA_WIN  = 0,
-> +	DDW_CREATE_PE_DMA_WIN = 1,
-> +	DDW_REMOVE_PE_DMA_WIN = 2,
-> +
-> +	DDW_APPLICABLE_SIZE
+> +	DDW_EXT_SIZE = 0,
+> +	DDW_EXT_RESET_DMA_WIN = 1,
+> +	DDW_EXT_QUERY_OUT_SIZE = 2
 > +};
 > +
 >  static struct iommu_table_group *iommu_pseries_alloc_group(int node)
 >  {
 >  	struct iommu_table_group *table_group;
-> @@ -771,12 +779,12 @@ static void remove_ddw(struct device_node *np, bool remove_prop)
+> @@ -342,7 +348,7 @@ struct direct_window {
+>  /* Dynamic DMA Window support */
+>  struct ddw_query_response {
+>  	u32 windows_available;
+> -	u32 largest_available_block;
+> +	u64 largest_available_block;
+>  	u32 page_size;
+>  	u32 migration_capable;
+>  };
+> @@ -877,14 +883,62 @@ static int find_existing_ddw_windows(void)
+>  }
+>  machine_arch_initcall(pseries, find_existing_ddw_windows);
+>  
+> +/**
+> + * ddw_read_ext - Get the value of an DDW extension
+> + * @np:		device node from which the extension value is to be read.
+> + * @extnum:	index number of the extension.
+> + * @value:	pointer to return value, modified when extension is available.
+> + *
+> + * Checks if "ibm,ddw-extensions" exists for this node, and get the value
+> + * on index 'extnum'.
+> + * It can be used only to check if a property exists, passing value == NULL.
+> + *
+> + * Returns:
+> + *	0 if extension successfully read
+> + *	-EINVAL if the "ibm,ddw-extensions" does not exist,
+> + *	-ENODATA if "ibm,ddw-extensions" does not have a value, and
+> + *	-EOVERFLOW if "ibm,ddw-extensions" does not contain this extension.
+> + */
+> +static inline int ddw_read_ext(const struct device_node *np, int extnum,
+> +			       u32 *value)
+> +{
+> +	static const char propname[] = "ibm,ddw-extensions";
+> +	u32 count;
+> +	int ret;
+> +
+> +	ret = of_property_read_u32_index(np, propname, DDW_EXT_SIZE, &count);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (count < extnum)
+> +		return -EOVERFLOW;
+> +
+> +	if (!value)
+> +		value = &count;
+> +
+> +	return of_property_read_u32_index(np, propname, extnum, value);
+> +}
+> +
+>  static int query_ddw(struct pci_dev *dev, const u32 *ddw_avail,
+> -			struct ddw_query_response *query)
+> +		     struct ddw_query_response *query,
+> +		     struct device_node *parent)
 >  {
->  	struct dynamic_dma_window_prop *dwp;
->  	struct property *win64;
-> -	u32 ddw_avail[3];
-> +	u32 ddw_avail[DDW_APPLICABLE_SIZE];
->  	u64 liobn;
->  	int ret = 0;
+>  	struct device_node *dn;
+>  	struct pci_dn *pdn;
+> -	u32 cfg_addr;
+> +	u32 cfg_addr, ext_query, query_out[5];
+>  	u64 buid;
+> -	int ret;
+> +	int ret, out_sz;
+> +
+> +	/*
+> +	 * From LoPAR level 2.8, "ibm,ddw-extensions" index 3 can rule how many
+> +	 * output parameters ibm,query-pe-dma-windows will have, ranging from
+> +	 * 5 to 6.
+> +	 */
+> +	ret = ddw_read_ext(parent, DDW_EXT_QUERY_OUT_SIZE, &ext_query);
+> +	if (!ret && ext_query == 1)
+> +		out_sz = 6;
+> +	else
+> +		out_sz = 5;
 >  
->  	ret = of_property_read_u32_array(np, "ibm,ddw-applicable",
-> -					 &ddw_avail[0], 3);
-> +					 &ddw_avail[0], DDW_APPLICABLE_SIZE);
->  
->  	win64 = of_find_property(np, DIRECT64_PROPNAME, NULL);
->  	if (!win64)
-> @@ -798,15 +806,15 @@ static void remove_ddw(struct device_node *np, bool remove_prop)
->  		pr_debug("%pOF successfully cleared tces in window.\n",
->  			 np);
->  
-> -	ret = rtas_call(ddw_avail[2], 1, 1, NULL, liobn);
-> +	ret = rtas_call(ddw_avail[DDW_REMOVE_PE_DMA_WIN], 1, 1, NULL, liobn);
->  	if (ret)
->  		pr_warn("%pOF: failed to remove direct window: rtas returned "
->  			"%d to ibm,remove-pe-dma-window(%x) %llx\n",
-> -			np, ret, ddw_avail[2], liobn);
-> +			np, ret, ddw_avail[DDW_REMOVE_PE_DMA_WIN], liobn);
->  	else
->  		pr_debug("%pOF: successfully removed direct window: rtas returned "
->  			"%d to ibm,remove-pe-dma-window(%x) %llx\n",
-> -			np, ret, ddw_avail[2], liobn);
-> +			np, ret, ddw_avail[DDW_REMOVE_PE_DMA_WIN], liobn);
->  
->  delprop:
->  	if (remove_prop)
-> @@ -889,11 +897,11 @@ static int query_ddw(struct pci_dev *dev, const u32 *ddw_avail,
+>  	/*
+>  	 * Get the config address and phb buid of the PE window.
+> @@ -897,11 +951,28 @@ static int query_ddw(struct pci_dev *dev, const u32 *ddw_avail,
 >  	buid = pdn->phb->buid;
 >  	cfg_addr = ((pdn->busno << 16) | (pdn->devfn << 8));
 >  
-> -	ret = rtas_call(ddw_avail[0], 3, 5, (u32 *)query,
-> -		  cfg_addr, BUID_HI(buid), BUID_LO(buid));
-> +	ret = rtas_call(ddw_avail[DDW_QUERY_PE_DMA_WIN], 3, 5, (u32 *)query,
-> +			cfg_addr, BUID_HI(buid), BUID_LO(buid));
->  	dev_info(&dev->dev, "ibm,query-pe-dma-windows(%x) %x %x %x"
-> -		" returned %d\n", ddw_avail[0], cfg_addr, BUID_HI(buid),
-> -		BUID_LO(buid), ret);
-> +		" returned %d\n", ddw_avail[DDW_QUERY_PE_DMA_WIN], cfg_addr,
-> +		 BUID_HI(buid), BUID_LO(buid), ret);
+> -	ret = rtas_call(ddw_avail[DDW_QUERY_PE_DMA_WIN], 3, 5, (u32 *)query,
+> +	ret = rtas_call(ddw_avail[DDW_QUERY_PE_DMA_WIN], 3, out_sz, query_out,
+>  			cfg_addr, BUID_HI(buid), BUID_LO(buid));
+> -	dev_info(&dev->dev, "ibm,query-pe-dma-windows(%x) %x %x %x"
+> -		" returned %d\n", ddw_avail[DDW_QUERY_PE_DMA_WIN], cfg_addr,
+> -		 BUID_HI(buid), BUID_LO(buid), ret);
+> +	dev_info(&dev->dev, "ibm,query-pe-dma-windows(%x) %x %x %x returned %d\n",
+> +		 ddw_avail[DDW_QUERY_PE_DMA_WIN], cfg_addr, BUID_HI(buid),
+> +		 BUID_LO(buid), ret);
+> +
+> +	switch (out_sz) {
+> +	case 5:
+> +		query->windows_available = query_out[0];
+> +		query->largest_available_block = query_out[1];
+> +		query->page_size = query_out[2];
+> +		query->migration_capable = query_out[3];
+> +		break;
+> +	case 6:
+> +		query->windows_available = query_out[0];
+> +		query->largest_available_block = ((u64)query_out[1] << 32) |
+> +						 query_out[2];
+> +		query->page_size = query_out[3];
+> +		query->migration_capable = query_out[4];
+> +		break;
+> +	}
+> +
 >  	return ret;
 >  }
 >  
-> @@ -920,15 +928,16 @@ static int create_ddw(struct pci_dev *dev, const u32 *ddw_avail,
->  
->  	do {
->  		/* extra outputs are LIOBN and dma-addr (hi, lo) */
-> -		ret = rtas_call(ddw_avail[1], 5, 4, (u32 *)create,
-> -				cfg_addr, BUID_HI(buid), BUID_LO(buid),
-> -				page_shift, window_shift);
-> +		ret = rtas_call(ddw_avail[DDW_CREATE_PE_DMA_WIN], 5, 4,
-> +				(u32 *)create, cfg_addr, BUID_HI(buid),
-> +				BUID_LO(buid), page_shift, window_shift);
->  	} while (rtas_busy_delay(ret));
->  	dev_info(&dev->dev,
->  		"ibm,create-pe-dma-window(%x) %x %x %x %x %x returned %d "
-> -		"(liobn = 0x%x starting addr = %x %x)\n", ddw_avail[1],
-> -		 cfg_addr, BUID_HI(buid), BUID_LO(buid), page_shift,
-> -		 window_shift, ret, create->liobn, create->addr_hi, create->addr_lo);
-> +		"(liobn = 0x%x starting addr = %x %x)\n",
-> +		 ddw_avail[DDW_CREATE_PE_DMA_WIN], cfg_addr, BUID_HI(buid),
-> +		 BUID_LO(buid), page_shift, window_shift, ret, create->liobn,
-> +		 create->addr_hi, create->addr_lo);
->  
->  	return ret;
->  }
-> @@ -996,7 +1005,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
->  	int page_shift;
->  	u64 dma_addr, max_addr;
->  	struct device_node *dn;
-> -	u32 ddw_avail[3];
-> +	u32 ddw_avail[DDW_APPLICABLE_SIZE];
->  	struct direct_window *window;
->  	struct property *win64;
->  	struct dynamic_dma_window_prop *ddwprop;
-> @@ -1029,7 +1038,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
->  	 * the property is actually in the parent, not the PE
+> @@ -1049,7 +1120,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+>  	 * of page sizes: supported and supported for migrate-dma.
 >  	 */
->  	ret = of_property_read_u32_array(pdn, "ibm,ddw-applicable",
-> -					 &ddw_avail[0], 3);
-> +					 &ddw_avail[0], DDW_APPLICABLE_SIZE);
->  	if (ret)
+>  	dn = pci_device_to_OF_node(dev);
+> -	ret = query_ddw(dev, ddw_avail, &query);
+> +	ret = query_ddw(dev, ddw_avail, &query, pdn);
+>  	if (ret != 0)
 >  		goto out_failed;
 >  
+> @@ -1077,7 +1148,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+>  	/* check largest block * page size > max memory hotplug addr */
+>  	max_addr = ddw_memory_hotplug_max();
+>  	if (query.largest_available_block < (max_addr >> page_shift)) {
+> -		dev_dbg(&dev->dev, "can't map partition max 0x%llx with %u "
+> +		dev_dbg(&dev->dev, "can't map partition max 0x%llx with %llu "
+>  			  "%llu-sized pages\n", max_addr,  query.largest_available_block,
+>  			  1ULL << page_shift);
+>  		goto out_failed;
 > 
 
 -- 
