@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B66EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A586CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07FCA2076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80ECE2076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:03:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596657793;
-	bh=xUsj0SvQPFOPJt9RmavoyhnEOWip1p8YnmuqOsaFhaA=;
+	s=default; t=1596657804;
+	bh=WyKSjpajL0Wrn6EPgmwu9jvodbEDJzLgR334xRdaG9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lvrluY/4uT11skedlKaWIFSOBvogvMQjmKjL6U47yjacBqN0iRybwDROuh3eWUXX0
-	 QEXNGwXWVLiQOc8OWNE6oj1E0f6mWwuDZMWG9Mw7oy0QlmGC4OHuebcy3yA3wUGGpX
-	 TmdTxP56TUp9WZ+ySt7AiQ6wyhFwbOx3UJdvbyu0=
+	b=jXHNG70Z1GVqQNAnp/XPf9/ATQF3TaHwUQjJ8igbaumvZONhkP0KlpSduiD/4eOzR
+	 fUq6tzIknBXS4MXCgQKf2goU19dynpOyJHKYyjC3WGpelb9mdiFrSF29WRqAfZ+Cdp
+	 UwVYes0lpG4YHaGBQmlOOWD6hIi/TFnwyIRumjjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbgHEUDL (ORCPT
+        id S1728296AbgHEUDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:03:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50646 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 16:03:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727878AbgHEQii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727874AbgHEQii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:38:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBF8A233EE;
-        Wed,  5 Aug 2020 15:53:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9CC723356;
+        Wed,  5 Aug 2020 15:52:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596642811;
-        bh=xUsj0SvQPFOPJt9RmavoyhnEOWip1p8YnmuqOsaFhaA=;
+        s=default; t=1596642737;
+        bh=WyKSjpajL0Wrn6EPgmwu9jvodbEDJzLgR334xRdaG9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oqcmQ4SJLwLfQD5eYqdfUVcZQb+LEhREO03dcF8KZPSd9lcIzYZx2B+GrdE375MIm
-         7whrA2UKaQpADL4UZEK77TrKHTsybKJznuzHUNkKO+TipxOKSCQKpF0zbyty9ESv/k
-         qJ2aPsXRdSnj1E3SYlmpy27BNvwFd7Tc2t8ZyP3I=
+        b=TlTvasGOKp1Z29JDvwn0dMD6eqxuewOd8ic9GN3jloqI+bJDsTt6MpK8wfvKkbTHe
+         gxxWyZ86yC9Pn0IrItm+yYB1QNsJl6Bn6r8fXCD7emmsm9gN35CR/GUkxbhI3uPfFN
+         JsekOBkZXp7MlSdS54aZFUgZsWoxY2hgQXoF1kpA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -50,13 +50,15 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Kees Cook <keescook@chromium.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Peter Zijlstra <peterz@infradead.org>, Willy Tarreau <w@1wt.eu>
-Subject: [PATCH 4.14 2/8] random32: update the net random state on interrupt and activity
-Date:   Wed,  5 Aug 2020 17:53:28 +0200
-Message-Id: <20200805153507.114544813@linuxfoundation.org>
+Subject: [PATCH 5.7 1/6] random32: update the net random state on interrupt and activity
+Date:   Wed,  5 Aug 2020 17:52:28 +0200
+Message-Id: <20200805153507.042931685@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200805153507.005753845@linuxfoundation.org>
-References: <20200805153507.005753845@linuxfoundation.org>
+In-Reply-To: <20200805153506.978105994@linuxfoundation.org>
+References: <20200805153506.978105994@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -107,7 +109,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/drivers/char/random.c
 +++ b/drivers/char/random.c
-@@ -1246,6 +1246,7 @@ void add_interrupt_randomness(int irq, i
+@@ -1277,6 +1277,7 @@ void add_interrupt_randomness(int irq, i
  
  	fast_mix(fast_pool);
  	add_interrupt_bench(cycles);
@@ -117,15 +119,15 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  		if ((fast_pool->count >= 64) &&
 --- a/include/linux/random.h
 +++ b/include/linux/random.h
-@@ -9,6 +9,7 @@
- 
+@@ -11,6 +11,7 @@
+ #include <linux/kernel.h>
  #include <linux/list.h>
  #include <linux/once.h>
 +#include <linux/percpu.h>
  
  #include <uapi/linux/random.h>
  
-@@ -116,6 +117,8 @@ struct rnd_state {
+@@ -119,6 +120,8 @@ struct rnd_state {
  	__u32 s1, s2, s3, s4;
  };
  
@@ -136,7 +138,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
 --- a/kernel/time/timer.c
 +++ b/kernel/time/timer.c
-@@ -44,6 +44,7 @@
+@@ -43,6 +43,7 @@
  #include <linux/sched/debug.h>
  #include <linux/slab.h>
  #include <linux/compat.h>
@@ -144,10 +146,10 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  
  #include <linux/uaccess.h>
  #include <asm/unistd.h>
-@@ -1595,6 +1596,13 @@ void update_process_times(int user_tick)
+@@ -1743,6 +1744,13 @@ void update_process_times(int user_tick)
  	scheduler_tick();
  	if (IS_ENABLED(CONFIG_POSIX_TIMERS))
- 		run_posix_cpu_timers(p);
+ 		run_posix_cpu_timers();
 +
 +	/* The current CPU might make use of net randoms without receiving IRQs
 +	 * to renew them often enough. Let's update the net_rand_state from a
