@@ -2,180 +2,137 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F70C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E5C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A1FD2177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57DE22177B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:45:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BikImbzK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I9BUjuhD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729680AbgHETpk (ORCPT
+        id S1729654AbgHETpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:45:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46426 "EHLO
+        Wed, 5 Aug 2020 15:45:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729045AbgHETpG (ORCPT
+        with ESMTP id S1726066AbgHETpH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 15:45:06 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7DFBC0617A0;
-        Wed,  5 Aug 2020 12:38:58 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id d188so17362619pfd.2;
-        Wed, 05 Aug 2020 12:38:58 -0700 (PDT)
+        Wed, 5 Aug 2020 15:45:07 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7824CC061575
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 12:36:26 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id r7so7302510vsq.5
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 12:36:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=dBMgOJj+hD0qde6PizICeeruU0EhS183W5s3SUBAwf4=;
-        b=BikImbzKWtXH4hWkL6UbutgkjuCU5o+a4HGlxXS/Eln4FqKtJYUgtDLL6YIHyGSCP8
-         CBxLixsGpoTPYMz8Cf0XrtLRu6+Rti11TQrJqZgpiaDsCXwpj9MbpPYhYVAgiB8/QkVf
-         DgP19nZF+fOvIDznv++8Xl99J8bYUKHo7N3maZr2NZCnhAlYkpBEiIHaVBCaTr/ZGEQa
-         /PRc6prnGBWZ5Z9yJ2ZWDsbUTzud+kzUWqtFPXn5UCcE9iIKmaAOZDPlsP9hiT0UlwWO
-         yue8KChKcJa0oHV2iHf01F95VU1hdKwjiPl+mM19h4Pfh/IsJRjEbP4Rcq5XJjIgQYBl
-         La/w==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=gpE3pI+c54t6EfFzgTsovD6WfPTVv6WNXfktad4/3wk=;
+        b=I9BUjuhDQNAzE2pI2FinWz92sPpvEO6KTOIMHLGhafXwBpVELW0tLwqop3XTJkKDYv
+         Tn1lvCb8qvdfBNG4BYLjw1LmKzvk5SZl5ML5eAUt4ZFYRE/j54+em3p/Pwdy/llYmUy6
+         C+XG80hvDcS8pYjgtCdT2NI3YW+0Vi5kgUBosIwWGHyLk5v1Ev+ON2OuJKhI6Ga7oVEQ
+         G/+VfS44pXs3d0JSTeUrzBmKYY3Gl5ujrY5kESY7zaOXONdG5iXBTS14WoKIQuP4zfyi
+         MvPRxN70UsrWlwA9kM0RVKWCmESDygXDMV66Y4Y2kVo8eA735xbCkreQyLhGckDqMvu7
+         OKqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dBMgOJj+hD0qde6PizICeeruU0EhS183W5s3SUBAwf4=;
-        b=AjS7uiD+yX2s/voksWSj+K2iIvDQJlC+iszbqRAMYVx1DBhbMMSOkfiysylXVEfJf8
-         vhK/dxVRJbmOTMGkLkchx48xgHYu66yoE19ggZiBcQ7T3EWhJeJISazdVeh/AQtvt+si
-         yoeOZl5jonBRvZYdxzScvl+c7OL/6ZK5iI4FTzmGT/IAg/1h7F+aDwztEBn2vcBJOwQ6
-         V1NjykpPgR/cqcgrvQbPugVTKi6AbMG7hHJp6WHu65Cks4fWD1R5/+obxyP30LOr7dfN
-         TAPTmnnKLjX1bhZUhAnfGzUiyxbx0gaKCkIAd7yvPNGuU04Fwhi4x7Pi61FFbmgJH1en
-         ntGQ==
-X-Gm-Message-State: AOAM530u1eRCBHttRk6+aIaNCQPYJn6mJrbT6a9e3TYMdhiCd680ufoo
-        asHYA/COmikj+DlmMZZaYmE=
-X-Google-Smtp-Source: ABdhPJwFtNAeKIW4wjHsuCKjx78tIa6bbsqpyKdJl7Wd91LaOdgUTgAq66b+bFaz44muXZNU/9fsXg==
-X-Received: by 2002:a63:5b55:: with SMTP id l21mr4506542pgm.348.1596656338172;
-        Wed, 05 Aug 2020 12:38:58 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id f20sm4901764pfk.36.2020.08.05.12.38.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 12:38:57 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>,
-        Tomoya MORINAGA <tomoya.rohm@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v2 2/2] i2c: eg20t: use generic power management
-Date:   Thu,  6 Aug 2020 01:06:16 +0530
-Message-Id: <20200805193616.384313-3-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200805193616.384313-1-vaibhavgupta40@gmail.com>
-References: <20200805165611.GA516242@bjorn-Precision-5520>
- <20200805193616.384313-1-vaibhavgupta40@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gpE3pI+c54t6EfFzgTsovD6WfPTVv6WNXfktad4/3wk=;
+        b=NMctQ5POVNt8cGitw9ezhirn2HRBXo02ZPjUFFJYKrLRJ/2mFbxZKCelBbPQqbFtgs
+         sPd0zOw0W59TGaIWR3/zqXy5bg4APBAmrwLt63PYshOeVWdoAljVj1QjlgkiHY4rgBnX
+         v3c9zXkJr4VueOqBLxxhweG9HmpmnAFw/P275+SJpULAeXrfoiL20I7edufFvx22vCBy
+         KsxCyHxlGyuK1FLHd6lu2ov/EAaLtuzpHkKaBbIhn98IszknhlHAvdpiQ6XS20R+p9Oh
+         Dyp+zFUrMi+H1/Nuq3MdIVLxIFG69oEUl9frFKL0RAyUIz3juUX+QCAEzdk2H+7BF+4P
+         b3Uw==
+X-Gm-Message-State: AOAM533kAUVWAQcF6WCGug+4A78t3qDWHsI4teWBQgIFTh/yPyyVXqaz
+        feClqMCs8xAP4+BtWJkvSTj8LSLkqu2LNpk8xvCxP4QEuNxLcw==
+X-Google-Smtp-Source: ABdhPJzpsjel2TEzh8Y0IarhecVHni+meEcN9TX2IdZJ6p3P1z0TtPWp+z2oihdnSQuga7vI+QQFtmR+MG6HJjL1U+I=
+X-Received: by 2002:a67:f2ce:: with SMTP id a14mr3323321vsn.49.1596656184959;
+ Wed, 05 Aug 2020 12:36:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200728073241.3625015-1-gthelen@google.com>
+In-Reply-To: <20200728073241.3625015-1-gthelen@google.com>
+From:   Greg Thelen <gthelen@google.com>
+Date:   Wed, 5 Aug 2020 12:36:13 -0700
+Message-ID: <CAHH2K0bU7w_rbKN_f0Fe_ZdGLtgBz_GVKS3eottTtm8P7QGoJA@mail.gmail.com>
+Subject: Re: [PATCH] selftests: more general make nesting support
+To:     Shuah Khan <shuah@kernel.org>, skhan@linuxfoundation.org
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drivers using legacy power management .suspen()/.resume() callbacks
-have to manage PCI states and device's PM states themselves. They also
-need to take care of standard configuration registers.
+On Tue, Jul 28, 2020 at 12:32 AM Greg Thelen <gthelen@google.com> wrote:
+>
+> selftests can be built from the toplevel kernel makefile (e.g. make
+> kselftest-all) or directly (make -C tools/testing/selftests all).
+>
+> The toplevel kernel makefile explicitly disables implicit rules with
+> "MAKEFLAGS +=3D -rR", which is passed to tools/testing/selftests.  Some
+> selftest makefiles require implicit make rules, which is why
+> commit 67d8712dcc70 ("selftests: Fix build failures when invoked from
+> kselftest target") reenables implicit rules by clearing MAKEFLAGS if
+> MAKELEVEL=3D1.
+>
+> So far so good.  However, if the toplevel makefile is called from an
+> outer makefile then MAKELEVEL will be elevated, which breaks the
+> MAKELEVEL equality test.
+> Example wrapped makefile error:
+>   $ cat ~/Makefile
+>   all:
+>         $(MAKE) defconfig
+>         $(MAKE) kselftest-all
+>   $ make -sf ~/Makefile
+>     futex_wait_timeout.c /src/tools/testing/selftests/kselftest_harness.h=
+   /src/tools/testing/selftests/kselftest.h ../include/futextest.h ../inclu=
+de/atomic.h ../include/logging.h -lpthread -lrt -o /src/tools/testing/selft=
+ests/futex/functional/futex_wait_timeout
+>   make[4]: futex_wait_timeout.c: Command not found
+>
+> Rather than checking $(MAKELEVEL), check for $(LINK.c), which is a more
+> direct side effect of "make -R".  This enables arbitrary makefile
+> nesting.
+>
+> Signed-off-by: Greg Thelen <gthelen@google.com>
+> ---
+>  tools/testing/selftests/Makefile | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/M=
+akefile
+> index 1195bd85af38..289a2e4b3f6f 100644
+> --- a/tools/testing/selftests/Makefile
+> +++ b/tools/testing/selftests/Makefile
+> @@ -84,10 +84,10 @@ endif
+>  # of the targets gets built.
+>  FORCE_TARGETS ?=3D
+>
+> -# Clear LDFLAGS and MAKEFLAGS if called from main
+> -# Makefile to avoid test build failures when test
+> -# Makefile doesn't have explicit build rules.
+> -ifeq (1,$(MAKELEVEL))
+> +# Clear LDFLAGS and MAKEFLAGS when implicit rules are missing.  This pro=
+vides
+> +# implicit rules to sub-test Makefiles which avoids build failures in te=
+st
+> +# Makefile that don't have explicit build rules.
+> +ifeq (,$(LINK.c))
+>  override LDFLAGS =3D
+>  override MAKEFLAGS =3D
+>  endif
+> --
+> 2.28.0.rc0.142.g3c755180ce-goog
 
-Switch to generic power management framework using a single
-"struct dev_pm_ops" variable to take the unnecessary load from the driver.
-This also avoids the need for the driver to directly call most of the PCI
-helper functions and device power state control functions, as through
-the generic framework PCI Core takes care of the necessary operations,
-and drivers are required to do only device-specific jobs.
-
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- drivers/i2c/busses/i2c-eg20t.c | 36 +++++++---------------------------
- 1 file changed, 7 insertions(+), 29 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-eg20t.c b/drivers/i2c/busses/i2c-eg20t.c
-index eb41de22d461..843b31a0f752 100644
---- a/drivers/i2c/busses/i2c-eg20t.c
-+++ b/drivers/i2c/busses/i2c-eg20t.c
-@@ -846,11 +846,10 @@ static void pch_i2c_remove(struct pci_dev *pdev)
- 	kfree(adap_info);
- }
- 
--#ifdef CONFIG_PM
--static int pch_i2c_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused pch_i2c_suspend(struct device *dev)
- {
--	int ret;
- 	int i;
-+	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct adapter_info *adap_info = pci_get_drvdata(pdev);
- 	void __iomem *p = adap_info->pch_data[0].pch_base_address;
- 
-@@ -872,31 +871,13 @@ static int pch_i2c_suspend(struct pci_dev *pdev, pm_message_t state)
- 		ioread32(p + PCH_I2CSR), ioread32(p + PCH_I2CBUFSTA),
- 		ioread32(p + PCH_I2CESRSTA));
- 
--	ret = pci_save_state(pdev);
--
--	if (ret) {
--		pch_pci_err(pdev, "pci_save_state\n");
--		return ret;
--	}
--
--	pci_disable_device(pdev);
--	pci_set_power_state(pdev, pci_choose_state(pdev, state));
--
- 	return 0;
- }
- 
--static int pch_i2c_resume(struct pci_dev *pdev)
-+static int __maybe_unused pch_i2c_resume(struct device *dev)
- {
- 	int i;
--	struct adapter_info *adap_info = pci_get_drvdata(pdev);
--
--	pci_set_power_state(pdev, PCI_D0);
--	pci_restore_state(pdev);
--
--	if (pci_enable_device(pdev) < 0) {
--		pch_pci_err(pdev, "pch_i2c_resume:pci_enable_device FAILED\n");
--		return -EIO;
--	}
-+	struct adapter_info *adap_info = dev_get_drvdata(dev);
- 
- 	for (i = 0; i < adap_info->ch_num; i++)
- 		pch_i2c_init(&adap_info->pch_data[i]);
-@@ -905,18 +886,15 @@ static int pch_i2c_resume(struct pci_dev *pdev)
- 
- 	return 0;
- }
--#else
--#define pch_i2c_suspend NULL
--#define pch_i2c_resume NULL
--#endif
-+
-+static SIMPLE_DEV_PM_OPS(pch_i2c_pm_ops, pch_i2c_suspend, pch_i2c_resume);
- 
- static struct pci_driver pch_pcidriver = {
- 	.name = KBUILD_MODNAME,
- 	.id_table = pch_pcidev_id,
- 	.probe = pch_i2c_probe,
- 	.remove = pch_i2c_remove,
--	.suspend = pch_i2c_suspend,
--	.resume = pch_i2c_resume
-+	.driver.pm = &pch_i2c_pm_ops,
- };
- 
- module_pci_driver(pch_pcidriver);
--- 
-2.27.0
-
+Is there any feedback on this patch?  It's not high priority but something =
+that
+will help me make more use of selftests.
