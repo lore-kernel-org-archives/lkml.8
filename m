@@ -2,110 +2,154 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-22.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5151CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E388C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EAA92075A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:18:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596655099;
-	bh=Wdf0Tn/N4MqyPZ0mHpM9d4Q/BFvmnsDNb0MHROp1xAc=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=eGrEWb4P7jdgcg88M3gYN6TEdZTqqFHFHsYiyg0myhUGYunIzfwP86rMGe2tTLHMw
-	 aqP9TlPvl2K9F0VHnWqy3okb+X6lq3z1qe3QyOsLIkJNDtFqNqfI14M135vXmJuwsi
-	 dkez7IZ2Ob0JsICKNAfdLYFmimIjOFSIwhqMjVis=
+	by mail.kernel.org (Postfix) with ESMTP id 61447206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:18:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k7zDMfTF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbgHETSO (ORCPT
+        id S1728268AbgHETSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:18:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41398 "EHLO
+        Wed, 5 Aug 2020 15:18:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728332AbgHETQY (ORCPT
+        with ESMTP id S1728776AbgHETQ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 15:16:24 -0400
-Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E221AC06174A
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 12:15:47 -0700 (PDT)
-Received: by mail-oi1-x236.google.com with SMTP id o21so19875281oie.12
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 12:15:47 -0700 (PDT)
+        Wed, 5 Aug 2020 15:16:29 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39238C061756
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 12:16:06 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ep8so4947646pjb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 12:16:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jYEN2cvet5zB5B5eyNC+shZAVcvkiH+f+FbncW7ectU=;
-        b=Ena+3Y8jxN4bGxdwm2AgkNEPvhg6MLLZCSTy7U08iocYStSazDPf+mGA4GOi9UBExJ
-         yyTAwbejrI9oilVci6jN+uTDCXPdwtYjC29V613/TBch+v6qBURzpNLeeokDLwtyHbJg
-         bUATeRa0Te0lbhpCWgdx5vOURqCdNxw8cjPj0=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fkmFyG52wjJPsFo+KzVqJsJKl7IJxS/xx3YOl+eRHzM=;
+        b=k7zDMfTFxk8JnB8TgeYLfypFbQ2++Busy0lqmkagGYMVzK9j/01eZytdPYe6nZunW3
+         /PudDDvJsjceVLXm89FLA9DKT6Yfz9OVU6pGkEmYcUFARSUiPR0z1CtKTuF2NV3cVsVi
+         eZK/o4FjojYVX8LpYyDMoUPaam7ytKFie+CaNpaSg0hoJ3WH7ogQKPx2YnJaooYnytMU
+         Takd+XWse1MQkhYWNnAR4FMyhmf0/LYEj9nqVfEKk/mimbuXIDOyNPsT0re8wzoNKvA1
+         xb6mARrtUBzLAe4Ye6zcO2RlVTrecnOTJGZ+DhZiwmfR7OQ43wopmfzw/Zd5Rx9xwBGN
+         7snQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jYEN2cvet5zB5B5eyNC+shZAVcvkiH+f+FbncW7ectU=;
-        b=dqEzeNNSFUJbNt6QpF7fpwd3EuwOuN4oK83h/VGu8NpIrkrYIkxx7MIvr9RhP4hUf3
-         2rDyuh9J/fKrA4oVW/DQBP1Ztbhe5fJCTnVwX/NUzj5Pt1u2JDI33aZvQLpY+j6tqh6u
-         h8qYcezBPCmZ736k/qi+jm+t9PKmEAslr1R7KYP1Uwoew/GmFfazRgmJv5m2HFOdz4ml
-         W22e0zQROlbqVuxmM+fH0tIygOtGCg33t6wwuZ8zNWOvsp/yahUm66X5TJd5JGfnbJon
-         f47LYgFFM3L2frKEm0MfUBV50v37MEJW5azHB29FEFfPHXaTy/9dy3k1e+HNIAfauccy
-         ++ug==
-X-Gm-Message-State: AOAM533/4oKVwrd43HGZALIb8gZAXzMja4wUv+9BEvua/XTPT3VFKEj5
-        E2xYg1/kP4KexxeiP6Iq1FtyDg==
-X-Google-Smtp-Source: ABdhPJw4kgHT2DVcqZYav5EpT9M+m+g1ZhwCut2UPLjmjltFinAwFibAgUqzfTyBmsEbXr2RgRzHYg==
-X-Received: by 2002:aca:b30b:: with SMTP id c11mr2101630oif.48.1596654945457;
-        Wed, 05 Aug 2020 12:15:45 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id o22sm539984ota.49.2020.08.05.12.15.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2020 12:15:44 -0700 (PDT)
-Subject: Re: [GIT PULL] Kselftest update for Linux 5.9-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <0e3a9c1f-7ac6-33e2-ed11-5a56659fc5f7@linuxfoundation.org>
- <CAHk-=wi4iDwuazgXQ-1yvM_JMTBepi9rc-zfSMeyjfDgSS2fgA@mail.gmail.com>
- <8d894cb3-83ac-66bc-48ec-dc273d1afcbe@linuxfoundation.org>
- <CAHk-=wiKe_rBFthfttj1fM3cwqaArSUN0Dz1KhARdMNo1a2F=A@mail.gmail.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <3c439640-111e-7399-5839-a5cba4a98a54@linuxfoundation.org>
-Date:   Wed, 5 Aug 2020 13:15:43 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fkmFyG52wjJPsFo+KzVqJsJKl7IJxS/xx3YOl+eRHzM=;
+        b=Fv5/BJMQROZrlu1x4Zidt4MVrMxEw1Q2C+mZvZcgLyNtD3FxMC2ni6EB4tRocAn87t
+         AQAKr3/ec6bH+7Dw1GWF1D+3ZAmtx8mt0iWmKu15eeR01fli8zoyElI9ugVm0PeAJBOM
+         FLzrrHqp4ii4OkdPPCOCy4gZllttPGqShxdblGeJexRtd/50XGYKwMGfCnivMKxXMAVn
+         H65U9AF7rgAinljyRGeqbVIMKZ8JiyLlSyjb3D7KyCQKouGKFZC4UeaiQrCpB1AyrIlM
+         7/l5tqEKZA8Ll9wruS22YDwnBll+H9JCaRLwadc0FDCRbClmNAHdHJ3fMwqJNIG3U4ZY
+         P6Gg==
+X-Gm-Message-State: AOAM532MhKsa/fB7xAyt9lC6BFVagtkaIFDWKW9FJL5iirYS6s4HQ+1X
+        RujQrR9yZiBm/al+Maq9tFX5KxeF71XjEqpziQrVIA==
+X-Google-Smtp-Source: ABdhPJyCA9qw2gaHKPatgawhFP9M09a/tCzHU/LtleaJuYAh5YXNaloSDteGKH1rjGVtpXRVQjLAAnQ9pI05jjtDYI4=
+X-Received: by 2002:a17:90a:fc98:: with SMTP id ci24mr4860374pjb.101.1596654965300;
+ Wed, 05 Aug 2020 12:16:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wiKe_rBFthfttj1fM3cwqaArSUN0Dz1KhARdMNo1a2F=A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200805181920.4013059-1-samitolvanen@google.com>
+In-Reply-To: <20200805181920.4013059-1-samitolvanen@google.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 5 Aug 2020 12:15:54 -0700
+Message-ID: <CAKwvOdncvJbxphoDFdWTeiMnuu4pDie9xCxA-dC=__CK9p1KBw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: tlb: fix ARM64_TLB_RANGE with LLVM's integrated assembler
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Zhenyu Ye <yezhenyu2@huawei.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/5/20 11:32 AM, Linus Torvalds wrote:
-> On Wed, Aug 5, 2020 at 7:13 AM Shuah Khan <skhan@linuxfoundation.org> wrote:
->>
->> Please pull the following Kselftest update for Linux 5.9-rc1.
-> 
-> Ok, it worked fine this time, although now you lost the note about the
-> conflict ;)
-> 
+On Wed, Aug 5, 2020 at 11:19 AM Sami Tolvanen <samitolvanen@google.com> wrote:
+>
+> Commit 7c78f67e9bd9 ("arm64: enable tlbi range instructions") breaks
+> LLVM's integrated assembler, because -Wa,-march is only passed to
+> external assemblers and therefore, the new instructions are not enabled
+> when IAS is used.
+>
+> As binutils doesn't support .arch_extension tlb-rmi, this change adds
+> .arch armv8.4-a to __TLBI_0 and __TLBI_1 to fix the issue with both LLVM
+> IAS and binutils.
+>
+> Fixes: 7c78f67e9bd9 ("arm64: enable tlbi range instructions")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1106
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 
-Sorry about that. I should have included that as well.
+I've filed https://sourceware.org/bugzilla/show_bug.cgi?id=26339 to
+discuss more with ARM binutils devs about some of the compat issues
+around these assembler directives.
 
-> I took the version from the seccomp tree that seemed to be the
-> slightly cleaned-up one.
-> 
+> ---
+>  arch/arm64/include/asm/tlbflush.h | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+> index d493174415db..66c2aab5e9cb 100644
+> --- a/arch/arm64/include/asm/tlbflush.h
+> +++ b/arch/arm64/include/asm/tlbflush.h
+> @@ -16,6 +16,16 @@
+>  #include <asm/cputype.h>
+>  #include <asm/mmu.h>
+>
+> +/*
+> + * Enable ARMv8.4-TLBI instructions with ARM64_TLB_RANGE. Note that binutils
+> + * doesn't support .arch_extension tlb-rmi, so use .arch armv8.4-a instead.
+> + */
+> +#ifdef CONFIG_ARM64_TLB_RANGE
+> +#define __TLBI_PREAMBLE        ".arch armv8.4-a\n"
+> +#else
+> +#define __TLBI_PREAMBLE
+> +#endif
+> +
+>  /*
+>   * Raw TLBI operations.
+>   *
+> @@ -28,14 +38,16 @@
+>   * not. The macros handles invoking the asm with or without the
+>   * register argument as appropriate.
+>   */
+> -#define __TLBI_0(op, arg) asm ("tlbi " #op "\n"                                       \
+> +#define __TLBI_0(op, arg) asm (__TLBI_PREAMBLE                                \
+> +                              "tlbi " #op "\n"                                \
+>                    ALTERNATIVE("nop\n                   nop",                  \
+>                                "dsb ish\n               tlbi " #op,            \
+>                                ARM64_WORKAROUND_REPEAT_TLBI,                   \
+>                                CONFIG_ARM64_WORKAROUND_REPEAT_TLBI)            \
+>                             : : )
+>
+> -#define __TLBI_1(op, arg) asm ("tlbi " #op ", %0\n"                           \
+> +#define __TLBI_1(op, arg) asm (__TLBI_PREAMBLE                                \
+> +                              "tlbi " #op ", %0\n"                            \
+>                    ALTERNATIVE("nop\n                   nop",                  \
+>                                "dsb ish\n               tlbi " #op ", %0",     \
+>                                ARM64_WORKAROUND_REPEAT_TLBI,                   \
+>
+> base-commit: 4834ce9d8e074bb7ae197632e0708219b9f389b5
+> --
+> 2.28.0.163.g6104cc2f0b6-goog
+>
 
-Yes. The version from seccomp tree is the one to pick up. Thanks
-for working through this.
 
-thanks,
--- Shuah
+-- 
+Thanks,
+~Nick Desaulniers
