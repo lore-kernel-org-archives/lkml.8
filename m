@@ -2,115 +2,171 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D50EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC41C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B061A2076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B50B2076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:02:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="clorqv+G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vAw9kGgb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgHEUBy (ORCPT
+        id S1728229AbgHEUCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:01:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49048 "EHLO
+        Wed, 5 Aug 2020 16:02:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727817AbgHEUBe (ORCPT
+        with ESMTP id S1727116AbgHEQkG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 16:01:34 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5924EC061575;
-        Wed,  5 Aug 2020 13:01:34 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id y3so41841721wrl.4;
-        Wed, 05 Aug 2020 13:01:34 -0700 (PDT)
+        Wed, 5 Aug 2020 12:40:06 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B87C0086CF;
+        Wed,  5 Aug 2020 07:15:10 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id y206so12491410pfb.10;
+        Wed, 05 Aug 2020 07:15:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sFMazUp0MhwJbVuexgj1bxt76f5CLnr6BJ4vAddg9SU=;
-        b=clorqv+GMwdktNqZ6yyQxXrKzFF6/uB+b5UtHOzV5SpjRSNFQ89UimVPAVq4+9+NSo
-         OHRqMlxYcEasQ3TVdW5ps6BHjWd7Y0TElNh/rAhBHZJ9VXFG8ud6KZAiF1Ik40MEn3ux
-         JSH7uR2kmM+6HCKQgIn6onU0fuQqfGIHGZrKkx5raOUaLR3nJCgCUm9y4bsf45vpFb7R
-         GAb5WCzsUSZJ3JhpIul+FGKcCtEklbMpGNS7tuionEjy3dJ/JTOmY2ZUws3eyk7qoPBo
-         UZv5Xc+GIR7hK6+W5zAO0YoeyZJX+f00gcwsw5G1mNngdt/2pMvtz+osrtNJ0cK/KS7a
-         r9Lw==
+        h=from:to:cc:subject:date:message-id;
+        bh=+xqqce3bt1Dd6YXyCPFzN+2GzEUcHoRk0/h1IH691fM=;
+        b=vAw9kGgbL9KkM2+HjZkFVCiAEauRuoyizHa2DE6NIt/H/ukbr4biFl6FGaPLzqYR1m
+         Y8feBgiVM4qSu50iFsGj6seA3Q+j9oLVsC7ZTIW301zQZQePILt51nINe00B/lm8asGU
+         PKFIcoHfyTy1Yx46R8iwO4Rxoy5FpkzLWDtvWhOqdK9bSIiQs6/5DuDW7e0ipqsIoY0A
+         08il6ksimfsPfvDVAGglj0SYwjOIfKLZxarQPN2FahhOz43Is6/czXHIMgMCOgMr4y04
+         vhwJqQOnsRjbTh6jrbJbOGh7SYE4nuYoF8PVX7nrKYDnKxHNrLHLJczLHyu9B/gQ/KA7
+         GRjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sFMazUp0MhwJbVuexgj1bxt76f5CLnr6BJ4vAddg9SU=;
-        b=Gxj7OhdhflMYfslkwFpW1OdxXNA5W+7ue8LRItzDr+2ePLcOzMSLAFyLAK0URjaSY1
-         mpcw8BZR0jugra0aByU7JmG75MQkHXAx6sepQdaI0aPkakQL8sn0LtYjKZFzlYxILYO8
-         B+azBSvL0Y3Wd+mz8tMoCBlXa2LsLuHCe25DIuqHGm3ocpuhUMzP0meaYroFwCUJwv9P
-         LnFUzGAQcLbtQQHAMSCEMuJFTJPpK9h90hEWyuPxF0AZTGIm3o1m8KzO89fks4m1KPju
-         HIP0QvqhW3YTN1AdNHc277Auv2GlDGL3XFpYQryYb6X9AaCX0BsFkDMVWcf9Ih+w8Fgc
-         ZrlQ==
-X-Gm-Message-State: AOAM532tc7PusHfT/s/HJB24fmSShfS3xSaHNq5A5nEecSo31lY69w9D
-        ZCNOotoCDS4ieh+vlQZLGx1XHe8s6wLmxhvrGkA=
-X-Google-Smtp-Source: ABdhPJzcEbloQmJvxKNefm95pR63lEvoWfrv/5u8FdjvGjUP4tRNqqhD2adAS9zjFX5NZBZdKixnLqEcd/X7qdyfync=
-X-Received: by 2002:a5d:494b:: with SMTP id r11mr4356598wrs.419.1596657693122;
- Wed, 05 Aug 2020 13:01:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200805113510.18277-1-colin.king@canonical.com>
-In-Reply-To: <20200805113510.18277-1-colin.king@canonical.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 5 Aug 2020 16:01:22 -0400
-Message-ID: <CADnq5_NA9f2N3xkH4WAdDEP+0-5W0LkmTRy3yXqFdnWQmfsVmQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/amdgpu: fix spelling mistake "Falied" -> "Failed"
-To:     Colin King <colin.king@canonical.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+xqqce3bt1Dd6YXyCPFzN+2GzEUcHoRk0/h1IH691fM=;
+        b=bRSBgwUsoZJA+v2asKhhrB0Q6JOGDp+Ykwbvb5CrNSQaZhPP675pt3f6D8R4fqdKp+
+         LAaeJPAlRVFqvwa0ysLPtO7c66We2P366giN0AR81qYVVzguwoaoZyXOvu7cHVUhlfQ9
+         nUTanDYeXJb4ETE3aWDfUpZBOfdZYl5D8Tb4w0Ut5WomoXYzXqExMs2xjepXvUgi8UrV
+         5gN+vh0eshD5/ehUs/kwbLjCJkFIQXVMS2yWY9R24gOg4/kYIVP6q2ZdPR1sNYU5Fyii
+         jX/I9t4sQyqMRYgVNRJunhmvNkWfvMdfcxWjHudZRKYBClqFS9haijnnpWPD2tWczB6u
+         /08Q==
+X-Gm-Message-State: AOAM533zPAOCh9O5T70rmqZA9opE0BjCDZxblhpRgnOlqeFXeUCh1KBa
+        ZYVQLt9r+8SmxpYqxPgbnmY=
+X-Google-Smtp-Source: ABdhPJwbuUbGXm01c54qPcEJaJWwHBAtthhYKl/qC5Dq5fmWMZtf+rrnJZ29JSqA4wwniCL3ChsA7g==
+X-Received: by 2002:a62:6842:: with SMTP id d63mr3551252pfc.82.1596636907357;
+        Wed, 05 Aug 2020 07:15:07 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.62])
+        by smtp.gmail.com with ESMTPSA id g12sm3197172pjd.6.2020.08.05.07.15.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 07:15:06 -0700 (PDT)
+From:   Yulei Zhang <yulei.kernel@gmail.com>
+To:     pbonzini@redhat.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sean.j.christopherson@intel.com, jmattson@google.com,
+        vkuznets@redhat.com, xiaoguangrong.eric@gmail.com,
+        kernellwp@gmail.com, lihaiwei.kernel@gmail.com,
+        Yulei Zhang <yuleixzhang@tencent.com>
+Subject: [RFC 8/9] Introduce kvm module parameter global_tdp to turn on the direct build EPT mode
+Date:   Wed,  5 Aug 2020 22:15:56 +0800
+Message-Id: <20200805141556.9430-1-yulei.kernel@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 7:35 AM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> There is a spelling mistake in a DRM_ERROR message. Fix it.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+From: Yulei Zhang <yuleixzhang@tencent.com>
 
-This is already fixed.
+Currently global_tdp is only supported on intel X86 system with ept
+supported, and it will turn off the smm mode when enable global_tdp.
 
-Alex
+Signed-off-by: Yulei Zhang <yuleixzhang@tencent.com>
+---
+ arch/x86/include/asm/kvm_host.h |  4 ++++
+ arch/x86/kvm/mmu/mmu.c          |  5 ++++-
+ arch/x86/kvm/x86.c              | 11 ++++++++++-
+ 3 files changed, 18 insertions(+), 2 deletions(-)
 
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
-> index 49d4514aa6ed..c68369731b20 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
-> @@ -2010,7 +2010,7 @@ static int psp_suspend(void *handle)
->
->         ret = psp_tmr_terminate(psp);
->         if (ret) {
-> -               DRM_ERROR("Falied to terminate tmr\n");
-> +               DRM_ERROR("Failed to terminate tmr\n");
->                 return ret;
->         }
->
-> --
-> 2.27.0
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 7063b9d2cac0..a8c219fb33f5 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1368,6 +1368,8 @@ extern u64  kvm_default_tsc_scaling_ratio;
+ 
+ extern u64 kvm_mce_cap_supported;
+ 
++extern bool global_tdp;
++
+ /*
+  * EMULTYPE_NO_DECODE - Set when re-emulating an instruction (after completing
+  *			userspace I/O) to indicate that the emulation context
+@@ -1698,6 +1700,8 @@ static inline int kvm_cpu_get_apicid(int mps_cpu)
+ #endif
+ }
+ 
++inline bool boot_cpu_is_amd(void);
++
+ #define put_smstate(type, buf, offset, val)                      \
+ 	*(type *)((buf) + (offset) - 0x7e00) = val
+ 
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 485f7287aad2..f963a3b0500f 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4630,7 +4630,7 @@ reset_shadow_zero_bits_mask(struct kvm_vcpu *vcpu, struct kvm_mmu *context)
+ }
+ EXPORT_SYMBOL_GPL(reset_shadow_zero_bits_mask);
+ 
+-static inline bool boot_cpu_is_amd(void)
++inline bool boot_cpu_is_amd(void)
+ {
+ 	WARN_ON_ONCE(!tdp_enabled);
+ 	return shadow_x_mask == 0;
+@@ -6471,6 +6471,9 @@ int kvm_direct_tdp_populate_page_table(struct kvm *kvm, struct kvm_memory_slot *
+ 	kvm_pfn_t pfn;
+ 	int host_level;
+ 
++	if (!global_tdp)
++		return 0;
++
+ 	if (!kvm->arch.global_root_hpa) {
+ 		struct page *page;
+ 		WARN_ON(!tdp_enabled);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 37e11b3588b5..abe838240084 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -162,6 +162,9 @@ module_param(force_emulation_prefix, bool, S_IRUGO);
+ int __read_mostly pi_inject_timer = -1;
+ module_param(pi_inject_timer, bint, S_IRUGO | S_IWUSR);
+ 
++bool __read_mostly global_tdp;
++module_param_named(global_tdp, global_tdp, bool, S_IRUGO);
++
+ #define KVM_NR_SHARED_MSRS 16
+ 
+ struct kvm_shared_msrs_global {
+@@ -3403,7 +3406,10 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 		 * fringe case that is not enabled except via specific settings
+ 		 * of the module parameters.
+ 		 */
+-		r = kvm_x86_ops.has_emulated_msr(MSR_IA32_SMBASE);
++		if (global_tdp)
++			r = 0;
++		else
++			r = kvm_x86_ops.has_emulated_msr(MSR_IA32_SMBASE);
+ 		break;
+ 	case KVM_CAP_VAPIC:
+ 		r = !kvm_x86_ops.cpu_has_accelerated_tpr();
+@@ -9675,6 +9681,9 @@ int kvm_arch_hardware_setup(void *opaque)
+ 	if (r != 0)
+ 		return r;
+ 
++	if ((tdp_enabled == false) || boot_cpu_is_amd())
++		global_tdp = 0;
++
+ 	memcpy(&kvm_x86_ops, ops->runtime_ops, sizeof(kvm_x86_ops));
+ 
+ 	if (!kvm_cpu_cap_has(X86_FEATURE_XSAVES))
+-- 
+2.17.1
+
