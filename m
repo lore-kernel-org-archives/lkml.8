@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA48C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAD2C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F150220792
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5F4620792
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:48:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="HzK+ca6H"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="Ih6JwGiv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726398AbgHEBry (ORCPT
+        id S1726710AbgHEBr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 21:47:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48622 "EHLO
+        Tue, 4 Aug 2020 21:47:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgHEBrx (ORCPT
+        with ESMTP id S1726514AbgHEBrz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 21:47:53 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11885C061756
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 18:47:52 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id g33so6108323pgb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 18:47:52 -0700 (PDT)
+        Tue, 4 Aug 2020 21:47:55 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F718C061756
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 18:47:54 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id a79so6008482pfa.8
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 18:47:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
         h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
          :content-transfer-encoding;
-        bh=hbhDd5h5jVe1Ri0zJKjTyJWIMM8zkGidIN7/ag+bjpw=;
-        b=HzK+ca6Ha/0cNCnlTwobFMy1ZkHvaDLOgSrzqNXZNqx9T5ust2PaIE1g2MGS6XIqm9
-         YCSKh/pqKUD+hWosSgQ6hf4WTnu+h8/ogN2xTkNxfU91WXFWRisqCec7XKOJIwLm59T7
-         3Nen6gAEd/aPvCk07o0qPHWLLgryuXVN7zxWKbNmvjZ1dZxL8E56Ffh7FSJnZsxxrb6c
-         lELId0btI8O4ANWXcrngyev23Bu04Topj6XUAnVkUfeSiVPh+5TWuc5Rv3WIAsHAT+ca
-         LyUeWhCnACIX4U4mJUXEMXXkDMe4kFgLvKeGsZ0Vhozved7o3CIitzOI2SFaFP5peach
-         hkGw==
+        bh=ZcqOoE0k//T6iKJl8Iy6MdqrkbGXLPe7ERkD/eHi0yU=;
+        b=Ih6JwGivgC5jtdLTYu1d8Jxo+0sWPc0KHpD37HDIcVut821WvOsNwaovapFCvLsVo3
+         wM1TRR/h6/WQQSGiKodIZvTIFmnTiYPl8UPsi+BoP7hI577zNX3NTeiKXo4SwwTGKo4x
+         zo9UNt6KCZ7mFjzeVDUwzLJJTbLwplZUEgMHgEWlbtSQg4CseLiBRBLAnDyWCrJ9WaaU
+         H8hqqmn/w3hbp1LhBN78NEOHYOYixowoJhuQAZ8e8ZYmOE5MqkFkDW9QrzrKhoJtaYVL
+         /5gnMAbS/swGJVnVLb1m/DO55HGG3LFcz1U0lDgZuX3RX+BX2Izqinsm8FHLFAok110n
+         +6YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
          :mime-version:content-transfer-encoding;
-        bh=hbhDd5h5jVe1Ri0zJKjTyJWIMM8zkGidIN7/ag+bjpw=;
-        b=kyJ359ehAexBGC+Mwz9dpEtiXxSQ8n9xIAuni0Vs6NVzxK6OavvCEDoaOW7izLR62c
-         wI87U3t/9jvBUsYvXPnvqHKRqSLDUj6IwDM3cxl8gORogd8fcfdl+ZUSYzYyqHDjnQBr
-         zRCuMeAOOkXF8IN9V5rfGxOwmCWLrknHAG6AaQGPopiHFbqREkefdRsMLzyz1f8HhEvV
-         euOONrYzfT5oTisgnCwaJTiwbs6TqCCeP+NGYcqgovnS0p6/38je7dunA9whQ0F0VhBc
-         rPCMmRa5QBdVjbtIDUmlz69y6TcYEcHw21IH/QdiC6ZzGmNHXNj0tZaKh5EFxmLhODLA
-         ivpA==
-X-Gm-Message-State: AOAM530Ma+7zro6oYpGhi3hUDKaDpBVN6dCyF5cTKCX8shtjj+g4huBK
-        z/Jqmqw9sU53DWvFduHngvdm7Q==
-X-Google-Smtp-Source: ABdhPJxrebvWAbvTnoleLLDXQbpIBRACyC1mC8A95kpxL4dJrKqB9vIsBXj8mvSwvWOnhek1x9mJYg==
-X-Received: by 2002:a62:144b:: with SMTP id 72mr1106302pfu.111.1596592072080;
-        Tue, 04 Aug 2020 18:47:52 -0700 (PDT)
+        bh=ZcqOoE0k//T6iKJl8Iy6MdqrkbGXLPe7ERkD/eHi0yU=;
+        b=jTYx51ExL3dzFo/+oQz+vxTrXpVph5ThMKVuzzSZaKkaMg+h3zcT6Ddo6i3nDKJn81
+         mqyI0n9Nm4E+X/in6MHKbB8ngduD4u1ywGWnm96PASNeW4mDRV7mDswEWRmj3sVlWayK
+         DjZ6ci0AC0mK4IfOG6AgC8kP5XT4m9mDv1DihBUWNCV7M0TL9t1Gj8Z9gCkp9prTwZtR
+         WGBorLHxBR+ZVw5bwUWSI/WtsI+O7gCT5J3qhruG9wwnxmsbTbe6IZdrg4ZtIz0SiwTf
+         GyHzuroXRt1zujrhrPOHmoSYMNJ15zBCnPFehjL8UQJER2iWpfV8qz8w7nsRcfmIQjAd
+         wWUQ==
+X-Gm-Message-State: AOAM533tngkBf2Wj3AVWLE98QCUaTLtLnr9SkXv4xJW5L8w6nH1Xa5qY
+        X+bfORt/NPk19RUohFqRMc7PDA==
+X-Google-Smtp-Source: ABdhPJwxr9dxLTvZLURrhuFcbav23he9QZxX4AZNz75TVaqQtZh4vsr7wtYYE2GZR53mjqJEudmGqw==
+X-Received: by 2002:a63:4423:: with SMTP id r35mr988884pga.122.1596592073410;
+        Tue, 04 Aug 2020 18:47:53 -0700 (PDT)
 Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id l8sm502367pjb.14.2020.08.04.18.47.50
+        by smtp.gmail.com with ESMTPSA id w7sm542367pfi.164.2020.08.04.18.47.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 18:47:51 -0700 (PDT)
-Date:   Tue, 04 Aug 2020 18:47:51 -0700 (PDT)
-X-Google-Original-Date: Tue, 04 Aug 2020 18:30:52 PDT (-0700)
-Subject:     Re: [PATCH v6 1/4] RISC-V: Add mechanism to provide custom IPI operations
-In-Reply-To: <20200724071822.126758-2-anup.patel@wdc.com>
+        Tue, 04 Aug 2020 18:47:52 -0700 (PDT)
+Date:   Tue, 04 Aug 2020 18:47:52 -0700 (PDT)
+X-Google-Original-Date: Tue, 04 Aug 2020 18:33:45 PDT (-0700)
+Subject:     Re: [PATCH v6 2/4] clocksource/drivers: Add CLINT timer driver
+In-Reply-To: <20200724071822.126758-3-anup.patel@wdc.com>
 CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
         robh+dt@kernel.org, daniel.lezcano@linaro.org, tglx@linutronix.de,
         Damien Le Moal <Damien.LeMoal@wdc.com>,
@@ -73,7 +73,7 @@ CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
         Anup Patel <Anup.Patel@wdc.com>, kernel@esmil.dk
 From:   Palmer Dabbelt <palmer@dabbelt.com>
 To:     Anup Patel <Anup.Patel@wdc.com>
-Message-ID: <mhng-b663cb30-a0de-4594-a5e1-394c3f29a049@palmerdabbelt-glaptop1>
+Message-ID: <mhng-264e345d-64c2-4765-906b-34a4d292fe58@palmerdabbelt-glaptop1>
 Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
@@ -82,140 +82,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 Jul 2020 00:18:19 PDT (-0700), Anup Patel wrote:
-> We add mechanism to set custom IPI operations so that CLINT driver
-> from drivers directory can provide custom IPI operations.
+On Fri, 24 Jul 2020 00:18:20 PDT (-0700), Anup Patel wrote:
+> We add a separate CLINT timer driver for Linux RISC-V M-mode (i.e.
+> RISC-V NoMMU kernel).
+>
+> The CLINT MMIO device provides three things:
+> 1. 64bit free running counter register
+> 2. 64bit per-CPU time compare registers
+> 3. 32bit per-CPU inter-processor interrupt registers
+>
+> Unlike other timer devices, CLINT provides IPI registers along with
+> timer registers. To use CLINT IPI registers, the CLINT timer driver
+> provides IPI related callbacks to arch/riscv.
 >
 > Signed-off-by: Anup Patel <anup.patel@wdc.com>
 > Tested-by: Emil Renner Berhing <kernel@esmil.dk>
-> Reviewed-by: Atish Patra <atish.patra@wdc.com>
+> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 > ---
->  arch/riscv/include/asm/clint.h | 25 --------------------
->  arch/riscv/include/asm/smp.h   | 19 +++++++++++++++
->  arch/riscv/kernel/clint.c      | 23 ++++++++++++++++--
->  arch/riscv/kernel/sbi.c        | 14 +++++++++++
->  arch/riscv/kernel/smp.c        | 43 +++++++++++++++++++---------------
->  arch/riscv/kernel/smpboot.c    |  3 +--
->  6 files changed, 79 insertions(+), 48 deletions(-)
+>  drivers/clocksource/Kconfig       |   9 ++
+>  drivers/clocksource/Makefile      |   1 +
+>  drivers/clocksource/timer-clint.c | 226 ++++++++++++++++++++++++++++++
+>  include/linux/cpuhotplug.h        |   1 +
+>  4 files changed, 237 insertions(+)
+>  create mode 100644 drivers/clocksource/timer-clint.c
 >
-> diff --git a/arch/riscv/include/asm/clint.h b/arch/riscv/include/asm/clint.h
-> index a279b17a6aad..adaba98a7d6c 100644
-> --- a/arch/riscv/include/asm/clint.h
-> +++ b/arch/riscv/include/asm/clint.h
-> @@ -6,34 +6,9 @@
->  #include <linux/smp.h>
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index 91418381fcd4..41f1c147c178 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -658,6 +658,15 @@ config RISCV_TIMER
+>  	  is accessed via both the SBI and the rdcycle instruction.  This is
+>  	  required for all RISC-V systems.
 >
->  #ifdef CONFIG_RISCV_M_MODE
-> -extern u32 __iomem *clint_ipi_base;
-> -
->  void clint_init_boot_cpu(void);
-> -
-> -static inline void clint_send_ipi_single(unsigned long hartid)
-> -{
-> -	writel(1, clint_ipi_base + hartid);
-> -}
-> -
-> -static inline void clint_send_ipi_mask(const struct cpumask *mask)
-> -{
-> -	int cpu;
-> -
-> -	for_each_cpu(cpu, mask)
-> -		clint_send_ipi_single(cpuid_to_hartid_map(cpu));
-> -}
-> -
-> -static inline void clint_clear_ipi(unsigned long hartid)
-> -{
-> -	writel(0, clint_ipi_base + hartid);
-> -}
->  #else /* CONFIG_RISCV_M_MODE */
->  #define clint_init_boot_cpu()	do { } while (0)
-> -
-> -/* stubs to for code is only reachable under IS_ENABLED(CONFIG_RISCV_M_MODE): */
-> -void clint_send_ipi_single(unsigned long hartid);
-> -void clint_send_ipi_mask(const struct cpumask *hartid_mask);
-> -void clint_clear_ipi(unsigned long hartid);
->  #endif /* CONFIG_RISCV_M_MODE */
->
->  #endif /* _ASM_RISCV_CLINT_H */
-
-So this is entirely unrelated to the actual contents of this patch, I'd just
-forgotten about it before: the scheme used by clint_init_boot_cpu() only works
-once per system reset (and as far as I can tell, that code only works for
-two-CPU systems).  Not really an issue with this patch set, but we should
-probably put a sanity check in the code -- the two-CPU thing should be easy,
-but the "only use the CLINT init trick once" thing need some sort of platform
-interface.
-
-> diff --git a/arch/riscv/include/asm/smp.h b/arch/riscv/include/asm/smp.h
-> index 40bb1c15a731..68de78a8eba6 100644
-> --- a/arch/riscv/include/asm/smp.h
-> +++ b/arch/riscv/include/asm/smp.h
-> @@ -15,6 +15,11 @@
->  struct seq_file;
->  extern unsigned long boot_cpu_hartid;
->
-> +struct riscv_ipi_ops {
-> +	void (*ipi_inject)(const struct cpumask *target);
-> +	void (*ipi_clear)(void);
-> +};
+> +config CLINT_TIMER
+> +	bool "CLINT Timer for the RISC-V platform" if COMPILE_TEST
+> +	depends on GENERIC_SCHED_CLOCK && RISCV
+> +	select TIMER_PROBE
+> +	select TIMER_OF
+> +	help
+> +	  This option enables the CLINT timer for RISC-V systems.  The CLINT
+> +	  driver is usually used for NoMMU RISC-V systems.
 > +
->  #ifdef CONFIG_SMP
->  /*
->   * Mapping between linux logical cpu index and hartid.
-> @@ -40,6 +45,12 @@ void arch_send_call_function_single_ipi(int cpu);
->  int riscv_hartid_to_cpuid(int hartid);
->  void riscv_cpuid_to_hartid_mask(const struct cpumask *in, struct cpumask *out);
->
-> +/* Set custom IPI operations */
-> +void riscv_set_ipi_ops(struct riscv_ipi_ops *ops);
+>  config CSKY_MP_TIMER
+>  	bool "SMP Timer for the C-SKY platform" if COMPILE_TEST
+>  	depends on CSKY
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+> index bdda1a2e4097..18e700e703a0 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -87,6 +87,7 @@ obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
+>  obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
+>  obj-$(CONFIG_ATCPIT100_TIMER)		+= timer-atcpit100.o
+>  obj-$(CONFIG_RISCV_TIMER)		+= timer-riscv.o
+> +obj-$(CONFIG_CLINT_TIMER)		+= timer-clint.o
+>  obj-$(CONFIG_CSKY_MP_TIMER)		+= timer-mp-csky.o
+>  obj-$(CONFIG_GX6605S_TIMER)		+= timer-gx6605s.o
+>  obj-$(CONFIG_HYPERV_TIMER)		+= hyperv_timer.o
+> diff --git a/drivers/clocksource/timer-clint.c b/drivers/clocksource/timer-clint.c
+> new file mode 100644
+> index 000000000000..8eeafa82c03d
+> --- /dev/null
+> +++ b/drivers/clocksource/timer-clint.c
+> @@ -0,0 +1,226 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
+> + *
+> + * Most of the M-mode (i.e. NoMMU) RISC-V systems usually have a
+> + * CLINT MMIO timer device.
+> + */
 > +
-> +/* Clear IPI for current CPU */
-> +void riscv_clear_ipi(void);
-> +
->  /*
->   * Obtains the hart ID of the currently executing task.  This relies on
->   * THREAD_INFO_IN_TASK, but we define that unconditionally.
-> @@ -78,6 +89,14 @@ static inline void riscv_cpuid_to_hartid_mask(const struct cpumask *in,
->  	cpumask_set_cpu(boot_cpu_hartid, out);
->  }
->
-> +static inline void riscv_set_ipi_ops(struct riscv_ipi_ops *ops)
-> +{
-> +}
-
-It's a bit pedantic, but it seems like this should do something as of this
-patch -- even though there's only a single driver, it's odd to have this both
-exist and do nothing.
-
-> +
-> +static inline void riscv_clear_ipi(void)
-> +{
-> +}
-> +
->  #endif /* CONFIG_SMP */
->
->  #if defined(CONFIG_HOTPLUG_CPU) && (CONFIG_SMP)
-> diff --git a/arch/riscv/kernel/clint.c b/arch/riscv/kernel/clint.c
-> index 3647980d14c3..a9845ee023e2 100644
-> --- a/arch/riscv/kernel/clint.c
-> +++ b/arch/riscv/kernel/clint.c
-> @@ -5,11 +5,11 @@
->
->  #include <linux/io.h>
->  #include <linux/of_address.h>
+> +#define pr_fmt(fmt) "clint: " fmt
+> +#include <linux/bitops.h>
+> +#include <linux/clocksource.h>
+> +#include <linux/clockchips.h>
+> +#include <linux/cpu.h>
+> +#include <linux/delay.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/sched_clock.h>
+> +#include <linux/io-64-nonatomic-lo-hi.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/of_irq.h>
 > +#include <linux/smp.h>
->  #include <linux/types.h>
->  #include <asm/clint.h>
->  #include <asm/csr.h>
->  #include <asm/timex.h>
-> -#include <asm/smp.h>
->
->  /*
->   * This is the layout used by the SiFive clint, which is also shared by the qemu
-> @@ -21,6 +21,24 @@
->
->  u32 __iomem *clint_ipi_base;
->
+> +
+> +#define CLINT_IPI_OFF		0
+> +#define CLINT_TIMER_CMP_OFF	0x4000
+> +#define CLINT_TIMER_VAL_OFF	0xbff8
+> +
+> +/* CLINT manages IPI and Timer for RISC-V M-mode  */
+> +static u32 __iomem *clint_ipi_base;
+> +static u64 __iomem *clint_timer_cmp;
+> +static u64 __iomem *clint_timer_val;
+> +static unsigned long clint_timer_freq;
+> +static unsigned int clint_timer_irq;
+> +
 > +static void clint_send_ipi(const struct cpumask *target)
 > +{
 > +	unsigned int cpu;
@@ -234,143 +195,192 @@ exist and do nothing.
 > +	.ipi_clear = clint_clear_ipi,
 > +};
 > +
->  void clint_init_boot_cpu(void)
->  {
->  	struct device_node *np;
-> @@ -40,5 +58,6 @@ void clint_init_boot_cpu(void)
->  	riscv_time_cmp = base + CLINT_TIME_CMP_OFF;
->  	riscv_time_val = base + CLINT_TIME_VAL_OFF;
->
-> -	clint_clear_ipi(boot_cpu_hartid);
-> +	clint_clear_ipi();
-> +	riscv_set_ipi_ops(&clint_ipi_ops);
->  }
-> diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
-> index f383ef5672b2..226ccce0f9e0 100644
-> --- a/arch/riscv/kernel/sbi.c
-> +++ b/arch/riscv/kernel/sbi.c
-> @@ -547,6 +547,18 @@ static inline long sbi_get_firmware_version(void)
->  	return __sbi_base_ecall(SBI_EXT_BASE_GET_IMP_VERSION);
->  }
->
-> +static void sbi_send_cpumask_ipi(const struct cpumask *target)
+> +#ifdef CONFIG_64BIT
+> +#define clint_get_cycles()	readq_relaxed(clint_timer_val)
+> +#else
+> +#define clint_get_cycles()	readl_relaxed(clint_timer_val)
+> +#define clint_get_cycles_hi()	readl_relaxed(((u32 *)clint_timer_val) + 1)
+> +#endif
+> +
+> +#ifdef CONFIG_64BIT
+> +static u64 notrace clint_get_cycles64(void)
 > +{
-> +	struct cpumask hartid_mask;
+> +	return clint_get_cycles();
+> +}
+> +#else /* CONFIG_64BIT */
+> +static u64 notrace clint_get_cycles64(void)
+> +{
+> +	u32 hi, lo;
 > +
-> +	riscv_cpuid_to_hartid_mask(target, &hartid_mask);
+> +	do {
+> +		hi = clint_get_cycles_hi();
+> +		lo = clint_get_cycles();
+> +	} while (hi != clint_get_cycles_hi());
 > +
-> +	sbi_send_ipi(cpumask_bits(&hartid_mask));
+> +	return ((u64)hi << 32) | lo;
+> +}
+> +#endif /* CONFIG_64BIT */
+> +
+> +static u64 clint_rdtime(struct clocksource *cs)
+> +{
+> +	return clint_get_cycles64();
 > +}
 > +
-> +static struct riscv_ipi_ops sbi_ipi_ops = {
-> +	.ipi_inject = sbi_send_cpumask_ipi
+> +static struct clocksource clint_clocksource = {
+> +	.name		= "clint_clocksource",
+> +	.rating		= 300,
+> +	.mask		= CLOCKSOURCE_MASK(64),
+> +	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
+> +	.read		= clint_rdtime,
 > +};
->
->  int __init sbi_init(void)
->  {
-> @@ -587,5 +599,7 @@ int __init sbi_init(void)
->  		__sbi_rfence	= __sbi_rfence_v01;
->  	}
->
-> +	riscv_set_ipi_ops(&sbi_ipi_ops);
 > +
->  	return 0;
->  }
-> diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
-> index b1d4f452f843..8b85683ce203 100644
-> --- a/arch/riscv/kernel/smp.c
-> +++ b/arch/riscv/kernel/smp.c
-> @@ -84,9 +84,25 @@ static void ipi_stop(void)
->  		wait_for_interrupt();
->  }
->
-> +static struct riscv_ipi_ops *ipi_ops;
-> +
-> +void riscv_set_ipi_ops(struct riscv_ipi_ops *ops)
+> +static int clint_clock_next_event(unsigned long delta,
+> +				   struct clock_event_device *ce)
 > +{
-> +	ipi_ops = ops;
-> +}
-> +EXPORT_SYMBOL_GPL(riscv_set_ipi_ops);
+> +	void __iomem *r = clint_timer_cmp +
+> +			  cpuid_to_hartid_map(smp_processor_id());
 > +
-> +void riscv_clear_ipi(void)
+> +	csr_set(CSR_IE, IE_TIE);
+> +	writeq_relaxed(clint_get_cycles64() + delta, r);
+> +	return 0;
+> +}
+> +
+> +static DEFINE_PER_CPU(struct clock_event_device, clint_clock_event) = {
+> +	.name		= "clint_clockevent",
+> +	.features	= CLOCK_EVT_FEAT_ONESHOT,
+> +	.rating		= 100,
+> +	.set_next_event	= clint_clock_next_event,
+> +};
+> +
+> +static int clint_timer_starting_cpu(unsigned int cpu)
 > +{
-> +	if (ipi_ops && ipi_ops->ipi_clear)
-> +		ipi_ops->ipi_clear();
+> +	struct clock_event_device *ce = per_cpu_ptr(&clint_clock_event, cpu);
 > +
-> +	csr_clear(CSR_IP, IE_SIE);
+> +	ce->cpumask = cpumask_of(cpu);
+> +	clockevents_config_and_register(ce, clint_timer_freq, 100, 0x7fffffff);
+> +
+> +	enable_percpu_irq(clint_timer_irq,
+> +			  irq_get_trigger_type(clint_timer_irq));
+> +	return 0;
 > +}
-> +EXPORT_SYMBOL_GPL(riscv_clear_ipi);
 > +
->  static void send_ipi_mask(const struct cpumask *mask, enum ipi_message_type op)
->  {
-> -	struct cpumask hartid_mask;
->  	int cpu;
->
->  	smp_mb__before_atomic();
-> @@ -94,33 +110,22 @@ static void send_ipi_mask(const struct cpumask *mask, enum ipi_message_type op)
->  		set_bit(op, &ipi_data[cpu].bits);
->  	smp_mb__after_atomic();
->
-> -	riscv_cpuid_to_hartid_mask(mask, &hartid_mask);
-> -	if (IS_ENABLED(CONFIG_RISCV_SBI))
-> -		sbi_send_ipi(cpumask_bits(&hartid_mask));
-> +	if (ipi_ops && ipi_ops->ipi_inject)
-> +		ipi_ops->ipi_inject(mask);
->  	else
-> -		clint_send_ipi_mask(mask);
-> +		pr_warn("SMP: IPI inject method not available\n");
->  }
->
->  static void send_ipi_single(int cpu, enum ipi_message_type op)
->  {
-> -	int hartid = cpuid_to_hartid_map(cpu);
-> -
->  	smp_mb__before_atomic();
->  	set_bit(op, &ipi_data[cpu].bits);
->  	smp_mb__after_atomic();
->
-> -	if (IS_ENABLED(CONFIG_RISCV_SBI))
-> -		sbi_send_ipi(cpumask_bits(cpumask_of(hartid)));
-> -	else
-> -		clint_send_ipi_single(hartid);
-> -}
-> -
-> -static inline void clear_ipi(void)
-> -{
-> -	if (IS_ENABLED(CONFIG_RISCV_SBI))
-> -		csr_clear(CSR_IP, IE_SIE);
-> +	if (ipi_ops && ipi_ops->ipi_inject)
-> +		ipi_ops->ipi_inject(cpumask_of(cpu));
->  	else
-> -		clint_clear_ipi(cpuid_to_hartid_map(smp_processor_id()));
-> +		pr_warn("SMP: IPI inject method not available\n");
->  }
->
->  void handle_IPI(struct pt_regs *regs)
-> @@ -131,7 +136,7 @@ void handle_IPI(struct pt_regs *regs)
->
->  	irq_enter();
->
-> -	clear_ipi();
-> +	riscv_clear_ipi();
->
->  	while (true) {
->  		unsigned long ops;
-> diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
-> index 4e9922790f6e..5fe849791bf0 100644
-> --- a/arch/riscv/kernel/smpboot.c
-> +++ b/arch/riscv/kernel/smpboot.c
-> @@ -147,8 +147,7 @@ asmlinkage __visible void smp_callin(void)
->  {
->  	struct mm_struct *mm = &init_mm;
->
-> -	if (!IS_ENABLED(CONFIG_RISCV_SBI))
-> -		clint_clear_ipi(cpuid_to_hartid_map(smp_processor_id()));
-> +	riscv_clear_ipi();
->
->  	/* All kernel threads share the same mm context.  */
->  	mmgrab(mm);
-
-I don't really care that much, though, so:
+> +static int clint_timer_dying_cpu(unsigned int cpu)
+> +{
+> +	disable_percpu_irq(clint_timer_irq);
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t clint_timer_interrupt(int irq, void *dev_id)
+> +{
+> +	struct clock_event_device *evdev = this_cpu_ptr(&clint_clock_event);
+> +
+> +	csr_clear(CSR_IE, IE_TIE);
+> +	evdev->event_handler(evdev);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int __init clint_timer_init_dt(struct device_node *np)
+> +{
+> +	int rc;
+> +	u32 i, nr_irqs;
+> +	void __iomem *base;
+> +	struct of_phandle_args oirq;
+> +
+> +	/*
+> +	 * Ensure that CLINT device interrupts are either RV_IRQ_TIMER or
+> +	 * RV_IRQ_SOFT. If it's anything else then we ignore the device.
+> +	 */
+> +	nr_irqs = of_irq_count(np);
+> +	for (i = 0; i < nr_irqs; i++) {
+> +		if (of_irq_parse_one(np, i, &oirq)) {
+> +			pr_err("%pOFP: failed to parse irq %d.\n", np, i);
+> +			continue;
+> +		}
+> +
+> +		if ((oirq.args_count != 1) ||
+> +		    (oirq.args[0] != RV_IRQ_TIMER &&
+> +		     oirq.args[0] != RV_IRQ_SOFT)) {
+> +			pr_err("%pOFP: invalid irq %d (hwirq %d)\n",
+> +			       np, i, oirq.args[0]);
+> +			return -ENODEV;
+> +		}
+> +
+> +		/* Find parent irq domain and map timer irq */
+> +		if (!clint_timer_irq &&
+> +		    oirq.args[0] == RV_IRQ_TIMER &&
+> +		    irq_find_host(oirq.np))
+> +			clint_timer_irq = irq_of_parse_and_map(np, i);
+> +	}
+> +
+> +	/* If CLINT timer irq not found then fail */
+> +	if (!clint_timer_irq) {
+> +		pr_err("%pOFP: timer irq not found\n", np);
+> +		return -ENODEV;
+> +	}
+> +
+> +	base = of_iomap(np, 0);
+> +	if (!base) {
+> +		pr_err("%pOFP: could not map registers\n", np);
+> +		return -ENODEV;
+> +	}
+> +
+> +	clint_ipi_base = base + CLINT_IPI_OFF;
+> +	clint_timer_cmp = base + CLINT_TIMER_CMP_OFF;
+> +	clint_timer_val = base + CLINT_TIMER_VAL_OFF;
+> +	clint_timer_freq = riscv_timebase;
+> +
+> +	pr_info("%pOFP: timer running at %ld Hz\n", np, clint_timer_freq);
+> +
+> +	rc = clocksource_register_hz(&clint_clocksource, clint_timer_freq);
+> +	if (rc) {
+> +		pr_err("%pOFP: clocksource register failed [%d]\n", np, rc);
+> +		goto fail_iounmap;
+> +	}
+> +
+> +	sched_clock_register(clint_get_cycles64, 64, clint_timer_freq);
+> +
+> +	rc = request_percpu_irq(clint_timer_irq, clint_timer_interrupt,
+> +				 "clint-timer", &clint_clock_event);
+> +	if (rc) {
+> +		pr_err("registering percpu irq failed [%d]\n", rc);
+> +		goto fail_iounmap;
+> +	}
+> +
+> +	rc = cpuhp_setup_state(CPUHP_AP_CLINT_TIMER_STARTING,
+> +				"clockevents/clint/timer:starting",
+> +				clint_timer_starting_cpu,
+> +				clint_timer_dying_cpu);
+> +	if (rc) {
+> +		pr_err("%pOFP: cpuhp setup state failed [%d]\n", np, rc);
+> +		goto fail_free_irq;
+> +	}
+> +
+> +	riscv_set_ipi_ops(&clint_ipi_ops);
+> +	clint_clear_ipi();
+> +
+> +	return 0;
+> +
+> +fail_free_irq:
+> +	free_irq(clint_timer_irq, &clint_clock_event);
+> +fail_iounmap:
+> +	iounmap(base);
+> +	return rc;
+> +}
+> +
+> +TIMER_OF_DECLARE(clint_timer, "riscv,clint0", clint_timer_init_dt);
+> +TIMER_OF_DECLARE(clint_timer1, "sifive,clint0", clint_timer_init_dt);
+> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+> index 191772d4a4d7..1451f4625833 100644
+> --- a/include/linux/cpuhotplug.h
+> +++ b/include/linux/cpuhotplug.h
+> @@ -132,6 +132,7 @@ enum cpuhp_state {
+>  	CPUHP_AP_MIPS_GIC_TIMER_STARTING,
+>  	CPUHP_AP_ARC_TIMER_STARTING,
+>  	CPUHP_AP_RISCV_TIMER_STARTING,
+> +	CPUHP_AP_CLINT_TIMER_STARTING,
+>  	CPUHP_AP_CSKY_TIMER_STARTING,
+>  	CPUHP_AP_HYPERV_TIMER_STARTING,
+>  	CPUHP_AP_KVM_STARTING,
 
 Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
