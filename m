@@ -2,152 +2,135 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78996C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CF1421744
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F6F82177B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:50:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbgHEItf (ORCPT
+        id S1727946AbgHEIue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 04:49:35 -0400
-Received: from mga04.intel.com ([192.55.52.120]:30474 "EHLO mga04.intel.com"
+        Wed, 5 Aug 2020 04:50:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:56100 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725868AbgHEItc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 04:49:32 -0400
-IronPort-SDR: smC7siSlzqjFwgT/kPdk/a2Nx9+zxswaruDhYa80aan5QxqJQxc7mQFZk5TYbTmxFFRuK02Brc
- DROgBOkqFIow==
-X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="149930438"
-X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
-   d="scan'208";a="149930438"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 01:49:32 -0700
-IronPort-SDR: inDHEm7R7TbnfSeKEiELpSAlk4ItHNo7Wy9lelKgCwAQOdXVgxRrepaigoTrpsXk4kKj18gSwz
- AXzTNxOuhQZA==
-X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
-   d="scan'208";a="330870223"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 01:49:30 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 82C1220859; Wed,  5 Aug 2020 11:49:28 +0300 (EEST)
-Date:   Wed, 5 Aug 2020 11:49:28 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Wolfram Sang <wsa@kernel.org>
-Subject: Re: [PATCH] PM: runtime: Add kerneldoc comments to multiple helpers
-Message-ID: <20200805084928.GK13316@paasikivi.fi.intel.com>
-References: <2672940.cHDmkauF2A@kreacher>
- <20200803085347.GV13316@paasikivi.fi.intel.com>
- <CAJZ5v0hRi3DZ69b1b=xes4qz2keq_aGDzX5kKQsR_rkwuFgk0w@mail.gmail.com>
- <20200803230536.GB13316@paasikivi.fi.intel.com>
- <CAJZ5v0jDpuKYJED90CveWgfYcoA60X5qYY6U6CJmEFd7KDiY-A@mail.gmail.com>
+        id S1725868AbgHEIud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 04:50:33 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14D5CD6E;
+        Wed,  5 Aug 2020 01:50:33 -0700 (PDT)
+Received: from [192.168.178.2] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DDF223F6CF;
+        Wed,  5 Aug 2020 01:50:30 -0700 (PDT)
+Subject: Re: [RFC PATCH] arm64: defconfig: Disable fine-grained task level IRQ
+ time accounting
+To:     Valentin Schneider <valentin.schneider@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Vladimir Oltean <olteanv@gmail.com>,
+        Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>,
+        Alison Wang <alison.wang@nxp.com>, catalin.marinas@arm.com,
+        will@kernel.org, paulmck@kernel.org, mw@semihalf.com,
+        leoyang.li@nxp.com, vladimir.oltean@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <20200729033934.22349-1-alison.wang@nxp.com> <877dumbtoi.fsf@kurt>
+ <20200729094943.lsmhsqlnl7rlnl6f@skbuf> <87mu3ho48v.fsf@kurt>
+ <20200730082228.r24zgdeiofvwxijm@skbuf> <873654m9zi.fsf@kurt>
+ <87lfiwm2bj.fsf@nanos.tec.linutronix.de>
+ <20200803114112.mrcuupz4ir5uqlp6@skbuf>
+ <87d047n4oh.fsf@nanos.tec.linutronix.de> <jhjh7tjivew.mognet@arm.com>
+ <875z9zmt4i.fsf@nanos.tec.linutronix.de> <jhjft93i8mg.mognet@arm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <02195130-3d9a-a206-d931-fab7dc606061@arm.com>
+Date:   Wed, 5 Aug 2020 10:50:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0jDpuKYJED90CveWgfYcoA60X5qYY6U6CJmEFd7KDiY-A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <jhjft93i8mg.mognet@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
+On 04/08/2020 01:59, Valentin Schneider wrote:
+> 
+> On 03/08/20 20:22, Thomas Gleixner wrote:
+>> Valentin,
+>>
+>> Valentin Schneider <valentin.schneider@arm.com> writes:
+>>> On 03/08/20 16:13, Thomas Gleixner wrote:
+>>>> Vladimir Oltean <olteanv@gmail.com> writes:
+>>>>>>  1) When irq accounting is disabled, RT throttling kicks in as
+>>>>>>     expected.
+>>>>>>
+>>>>>>  2) With irq accounting the RT throttler does not kick in and the RCU
+>>>>>>     stall/lockups happen.
+>>>>> What is this telling us?
+>>>>
+>>>> It seems that the fine grained irq time accounting affects the runtime
+>>>> accounting in some way which I haven't figured out yet.
+>>>>
+>>>
+>>> With IRQ_TIME_ACCOUNTING, rq_clock_task() will always be incremented by a
+>>> lesser-or-equal value than when not having the option; you start with the
+>>> same delta_exec but slice some for the IRQ accounting, and leave the rest
+>>> for the rq_clock_task() (+paravirt).
+>>>
+>>> IIUC this means that if you spend e.g. 10% of the time in IRQ and 90% of
+>>> the time running the stress-ng RT tasks, despite having RT tasks hogging
+>>> the entirety of the "available time" it is still only 90% runtime, which is
+>>> below the 95% default and the throttling doesn't happen.
+>>
+>>    totaltime = irqtime + tasktime
+>>
+>> Ignoring irqtime and pretending that totaltime is what the scheduler
+>> can control and deal with is naive at best.
+>>
+> 
+> Agreed, however AFAICT rt_time is only incremented by rq_clock_task()
+> deltas, which don't include IRQ time with IRQ_TIME_ACCOUNTING=y. That would
+> then be directly compared to the sysctl runtime.
+> 
+> Adding some prints in sched_rt_runtime_exceeded() and running this test
+> case on my Juno, I get:
+>   # IRQ_TIME_ACCOUNTING=y
+>   cpu=2 rt_time=713455220 runtime=950000000 rq->avg_irq.util_avg=265
+>   (rt_time oscillates between [70.1e7, 75.1e7]; avg_irq between [220, 270])
+> 
+>   # IRQ_TIME_ACCOUNTING=n
+>   cpu=2 rt_time=963035300 runtime=949951811
+>   (rt_time oscillates between [94.1e7, 96.1e7];
+> 
+> Throttling happens for IRQ_TIME_ACCOUNTING=n and doesn't for
+> IRQ_TIME_ACCOUNTING=y - clearly the accounted rt_time isn't high enough for
+> that to happen, and it does look like what is missing in rt_time (or what
+> should be subtracted from the available runtime) is there in the avg_irq.
 
-On Tue, Aug 04, 2020 at 12:15:03PM +0200, Rafael J. Wysocki wrote:
-> Hi Sakari,
-> 
-> On Tue, Aug 4, 2020 at 1:05 AM Sakari Ailus
-> <sakari.ailus@linux.intel.com> wrote:
-> >
-> > Hi Rafael,
-> >
-> > On Mon, Aug 03, 2020 at 01:36:52PM +0200, Rafael J. Wysocki wrote:
-> > > Hi Sakari,
-> > >
-> > > On Mon, Aug 3, 2020 at 10:53 AM Sakari Ailus
-> > > <sakari.ailus@linux.intel.com> wrote:
-> > > >
-> > > > Hi Rafael,
-> > > >
-> > > > Thanks for the patch.
-> > > >
-> > > > On Fri, Jul 31, 2020 at 07:03:26PM +0200, Rafael J. Wysocki wrote:
-> > > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > >
-> > > > > Add kerneldoc comments to multiple PM-runtime helper functions
-> > > > > defined as static inline wrappers around lower-level routines to
-> > > > > provide quick reference decumentation of their behavior.
-> > > >
-> > > > > Some of them are similar to each other with subtle differences only
-> > > > > and the behavior of some of them may appear as counter-intuitive, so
-> > > > > clarify all that to avoid confusion.
-> > > > >
-> > > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > > ---
-> > > > >  include/linux/pm_runtime.h |  246 +++++++++++++++++++++++++++++++++++++++++++++
-> > > > >  1 file changed, 246 insertions(+)
-> > > > >
-> > > > > Index: linux-pm/include/linux/pm_runtime.h
-> > > > > ===================================================================
-> > > > > --- linux-pm.orig/include/linux/pm_runtime.h
-> > > > > +++ linux-pm/include/linux/pm_runtime.h
-> > > > > @@ -60,58 +60,151 @@ extern void pm_runtime_put_suppliers(str
-> > > > >  extern void pm_runtime_new_link(struct device *dev);
-> > > > >  extern void pm_runtime_drop_link(struct device *dev);
-> > > > >
-> > > > > +/**
-> > > > > + * pm_runtime_get_if_in_use - Conditionally bump up runtime PM usage counter.
-> > > > > + * @dev: Target device.
-> > > > > + *
-> > > > > + * Increment the runtime PM usage counter of @dev if its runtime PM status is
-> > > > > + * %RPM_ACTIVE and its runtime PM usage counter is greater than 0.
-> > > >
-> > > > The implementation of the non-runtime PM variants (used when CONFIG_PM is
-> > > > disabled) isn't here but I think it'd be nice if their behaviour was also
-> > > > documented here. pm_runtime_get_if_in_use() returns -EINVAL if CONFIG_PM is
-> > > > disabled, for instance.
-> > >
-> > > These kerneldoc comments cover the CONFIG_PM case only.  The behavior
-> > > for !CONFIG_PM needs to be figured out from the code, if it matters.
-> > >
-> > > I'm not sure why it would matter for pm_runtime_get_if_in_use(), in particular?
-> >
-> > Just as an example. It depends on the use case, but there have been bugs
-> > related to these (e.g. commit 4d471563d87b2b83e73b8abffb9273950e6d2e36),
-> > likely at least partly because it's extra manual work to figure out what a
-> > given API function could return when it's not documented.
-> 
-> If it is a static inline wrapper around another exported function,
-> whoever uses it should look at the documentation of the function being
-> wrapped anyway, so IMO it is sufficient to document the return values
-> in there and also (as stated in another message) this avoids the need
-> to manually synchronize the kerneldoc comments every time a new return
-> value is added or removed.
-> 
-> In the particular case above it might be useful to change
-> pm_runtime_get_if_active() to return bool, make it return "false" if
-> PM-runtime is disabled for the device and update the callers
-> accordingly (some of them still appear to be doing the wrong thing).
-> 
-> IOW, it would return "true" only if the usage counter has been
-> incremented and so it needs to be decremented.
+I agree that w/ IRQ_TIME_ACCOUNTING=y rt_rq->rt_time isn't high enough
+in this testcase.
 
-In the case of above commit, the driver is interested in knowing whether
-the device is powered on, and so accessible. That's the case if PM is
-disabled, so it should return true. Then we do lose the information whether
-the counter was touched. I guess we should keep it as-is.
+stress-ng-hrtim-1655 [001] 462.897733: bprint: update_curr_rt:
+rt_rq->rt_time=416716900 rt_rq->rt_runtime=950000000
+rt_b->rt_runtime=950000000
 
--- 
-Sakari Ailus
+The 5% reservation (1 - sched_rt_runtime_us/sched_rt_period_us) for CFS
+is massively eclipsed by irqtime.
+
+It's true that avg_irq tracks 'irq_delta + steal' time but it is meant
+to potentially reduce cpu capacity. It's also cpu and frequency
+invariant (your CPU2 is a big CPU so no issue here).
+
+Could a rq_clock(rq) derived rt_rq signal been used to compare against
+rt_runtime?
+
+BTW, DL already influences rt_rq->rt_time.
+
+[...]
