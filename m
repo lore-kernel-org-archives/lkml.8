@@ -2,142 +2,120 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C36C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CBDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE0812075A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:31:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aUOxTUPp"
+	by mail.kernel.org (Postfix) with ESMTP id D76312075A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:34:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596620045;
+	bh=+PVMkHow/1cTDpTZAm0fNUZhkXhy8Y97366o6wkD/AE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=h/J7MJbrcz1rddrW0CutogOV+YpKLlbrG8n/Dgk0axT2bbx3IK1uMIzyV2GDoZBi9
+	 8WFkthnWLxIvohGK9MGS5Z3MndNhQ7hgmaC8ige6miFtgy8sSOD4JcbcLc0ihGMlSA
+	 pk1/tRtghHASeC1vRrQi1VFM4lSqTGB+kvcObSwc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbgHEJbK (ORCPT
+        id S1728235AbgHEJeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 05:31:10 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48813 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728324AbgHEJaE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 05:30:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596619802;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=KGrNYVry5FOInRW/Xy0yFMiPNeyHmg20qhVD8oGfJJ4=;
-        b=aUOxTUPpBPd48TQUNVSosUBrx0RpYWwrCSGKn8GWTGhB28sC3H1gVhK3g5jDWcq7hb1KLW
-        HZC/Y/5rDZbbpdfxZ99aYgN5c7MepdlUlLdBcuzSbWncjo6uHbrkf+n4c9F1jMaqB2oSnv
-        k3iBr7h6S4pqZcnEQhPLETOc35VuQnc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-470-ZnwKN9E9NxSzYumJ2rNNrw-1; Wed, 05 Aug 2020 05:29:58 -0400
-X-MC-Unique: ZnwKN9E9NxSzYumJ2rNNrw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 5 Aug 2020 05:34:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725868AbgHEJdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 05:33:50 -0400
+Received: from localhost (router.4pisysteme.de [80.79.225.122])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 24BE680183C;
-        Wed,  5 Aug 2020 09:29:53 +0000 (UTC)
-Received: from localhost (ovpn-12-71.pek2.redhat.com [10.72.12.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 068AF726A5;
-        Wed,  5 Aug 2020 09:29:51 +0000 (UTC)
-Date:   Wed, 5 Aug 2020 17:29:48 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Ingo Molnar <mingo@redhat.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Simek <monstr@monstr.eu>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        clang-built-linux@googlegroups.com,
-        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
-        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
-        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
-Subject: Re: [PATCH v2 17/17] memblock: use separate iterators for memory and
- reserved regions
-Message-ID: <20200805092948.GX10792@MiWiFi-R3L-srv>
-References: <20200802163601.8189-1-rppt@kernel.org>
- <20200802163601.8189-18-rppt@kernel.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DE4D2075A;
+        Wed,  5 Aug 2020 09:33:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596620029;
+        bh=+PVMkHow/1cTDpTZAm0fNUZhkXhy8Y97366o6wkD/AE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uld5+n9kR22gnZeVca/pluvROt16z6AmOtya7TVb6MjC7DU5KxrpqMT5M1WEYnFsq
+         ERVt39kL2w74Cdn32KGV8TUM57jhsOk3IHnmM0RoSWp0WfXUIS66PpmdYFQKf1YV4g
+         HQHBSj12KVFETrEIr67Rsha8OcMn0h5yb365wLbg=
+Date:   Wed, 5 Aug 2020 11:33:47 +0200
+From:   wsa@kernel.org
+To:     Jeffrey Lin <jeffrey@icurse.nl>
+Cc:     jdelvare@suse.com, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: i801: Register lis3lv02d I2C device on Dell
+ Latitude 5480
+Message-ID: <20200805093347.GM1229@kunai>
+Mail-Followup-To: wsa@kernel.org, Jeffrey Lin <jeffrey@icurse.nl>,
+        jdelvare@suse.com, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200616234130.814499-1-jeffrey@icurse.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="37nyS7qXrnu4wN2o"
 Content-Disposition: inline
-In-Reply-To: <20200802163601.8189-18-rppt@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20200616234130.814499-1-jeffrey@icurse.nl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/02/20 at 07:36pm, Mike Rapoport wrote:
-> From: Mike Rapoport <rppt@linux.ibm.com>
-> 
-> for_each_memblock() is used to iterate over memblock.memory in
-> a few places that use data from memblock_region rather than the memory
-> ranges.
-> 
-> Introduce separate for_each_mem_region() and for_each_reserved_mem_region()
-> to improve encapsulation of memblock internals from its users.
-> 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+
+--37nyS7qXrnu4wN2o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jun 16, 2020 at 07:41:30PM -0400, Jeffrey Lin wrote:
+> Value of /sys/devices/platform/lis3lv02d/position when
+>     Horizontal:     (36,-108,-1152)
+>     Left elevated:  (-432,-126,-1062)
+>     Front elevated: (36,594,-936)
+>     Upside down:    (-126,-252,1098)
+>=20
+> Signed-off-by: Jeffrey Lin <jeffrey@icurse.nl>
+
+Jean?
+
 > ---
->  .clang-format                  |  3 ++-
->  arch/arm64/kernel/setup.c      |  2 +-
->  arch/arm64/mm/numa.c           |  2 +-
->  arch/mips/netlogic/xlp/setup.c |  2 +-
->  arch/x86/mm/numa.c             |  2 +-
->  include/linux/memblock.h       | 19 ++++++++++++++++---
->  mm/memblock.c                  |  4 ++--
->  mm/page_alloc.c                |  8 ++++----
->  8 files changed, 28 insertions(+), 14 deletions(-)
-> 
-...
+>  drivers/i2c/busses/i2c-i801.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
+> index fea644921a76..d7c802e20ae6 100644
+> --- a/drivers/i2c/busses/i2c-i801.c
+> +++ b/drivers/i2c/busses/i2c-i801.c
+> @@ -1268,6 +1268,7 @@ static const struct {
+>  	/*
+>  	 * Additional individual entries were added after verification.
+>  	 */
+> +	{ "Latitude 5480",      0x29 },
+>  	{ "Vostro V131",        0x1d },
+>  };
+> =20
+> --=20
+> 2.27.0
+>=20
 
-> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> index 9e51b3fd4134..a6970e058bd7 100644
-> --- a/include/linux/memblock.h
-> +++ b/include/linux/memblock.h
-> @@ -522,9 +522,22 @@ static inline unsigned long memblock_region_reserved_end_pfn(const struct memblo
->  	return PFN_UP(reg->base + reg->size);
->  }
->  
-> -#define for_each_memblock(memblock_type, region)					\
-> -	for (region = memblock.memblock_type.regions;					\
-> -	     region < (memblock.memblock_type.regions + memblock.memblock_type.cnt);	\
-> +/**
-> + * for_each_mem_region - itereate over registered memory regions
-                                          ~~~~~~~~~~~~~~~~~
+--37nyS7qXrnu4wN2o
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Wonder why emphasize 'registered' memory.
+-----BEGIN PGP SIGNATURE-----
 
-Other than this confusion to me, this patch looks good.
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8qfPsACgkQFA3kzBSg
+KbYSkw//eQnM9kVffTP2sjG4jmvlxf+5TFmy//rhpCAaIOa/hBbOh2WmAsQvkcYq
+fvIDnl+RnCVuydZX1IKfIZWGaALJ2s/jNsXv8GwQMzsrEjD2HC9I2vN/ivn3le8K
+IpAcJUHylKUNV+1XeQZi+VtXUVkfGqLC88YV5Vz+Z9+peDvVFT9Vi8anDGOsnKUK
+gwvXAQndn0RHTyF6WdzZKIc4RhPX61EKZep66xScB1FXrxLgEchwkwStg9ZG5+Te
+80WmFMaEKzTPEaNiEWYsaIxHvEbF4Nkw8xHEu7I/nhP7+pzGHjAcBTlEOh4piowB
+e5xZZBVD8XpIMc3WJ5eoCNIxQSzDryQg4araqH/iWktW1lSJF2FnzHNTNDPTKjrs
+uCATpzPjDU9qODctW5EBCopH0aM00YWZGQOoWAT+SsvuRTcNNls3DkO5vNXe1okN
+s59hrS/atRFc1FVOs7ySPWAA1Kr8FApRcApE/Sjq6odkll5N9skVnNf7LOHbs907
+0hpr/4L6AQkF55oKRX/e5hJ7mIcsVbbKHRGO+1r1+KUW9UYxWI++dEfHsjbTz34w
+Rle+tp+Hw6T0S2zLuvhKYfAr+ypGb2NEwDNMnrgn0kIzRWGULQT5vhmMNvZUI8LF
+hYG0qCTuTCrewcIRAcq/FoYOUq9ybvPaIWIYAQSU9L0d6cA9yMQ=
+=ckP+
+-----END PGP SIGNATURE-----
 
-Reviewed-by: Baoquan He <bhe@redhat.com>
-
+--37nyS7qXrnu4wN2o--
