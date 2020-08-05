@@ -2,166 +2,104 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9299C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D4B023434
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:03:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="oHQbav2m"
+	by mail.kernel.org (Postfix) with ESMTP id 815E52312C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:06:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgHEQCv (ORCPT
+        id S1726339AbgHEQEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 12:02:51 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:38886 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726150AbgHEPuo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 11:50:44 -0400
-Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 3D52C20B490D;
-        Wed,  5 Aug 2020 08:45:06 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3D52C20B490D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1596642306;
-        bh=XOrG6kgI4euvjYkxWTvPnOcX/802rLfjdEoLoqEaKrg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oHQbav2mXkHTi6Ep67ltjE6btg+CTQlS1zjS3DUZbnSrPz+em8I0Mfh9p6+RwNJwR
-         WE1dCukSVCXnqg6s+eV8D5j2m6FOYPaENcU6t6/gOGuetA28ji5Y578Uft1PaGmKYR
-         +TgyWknC9kSWCh8/Y9LX9WDLDrw6vHMyEMmyuQUU=
-Date:   Wed, 5 Aug 2020 10:45:04 -0500
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        zohar@linux.ibm.com, stephen.smalley.work@gmail.com,
-        sashal@kernel.org, jmorris@namei.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/4] LSM: Measure security module data
-Message-ID: <20200805154504.GB4365@sequoia>
-References: <20200805004331.20652-1-nramas@linux.microsoft.com>
- <f3971f35-309d-c3e5-9126-69add7ad4c11@schaufler-ca.com>
- <50587a3e-bcb5-c68e-c16c-41baf68b4d4a@linux.microsoft.com>
- <c7c168f2-e30b-d2c5-abcb-1b6919197474@schaufler-ca.com>
+        Wed, 5 Aug 2020 12:04:45 -0400
+Received: from elvis.franken.de ([193.175.24.41]:35580 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726027AbgHEPti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 11:49:38 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1k3HAl-0001HW-01; Wed, 05 Aug 2020 13:01:27 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 899DDC0C25; Wed,  5 Aug 2020 13:00:35 +0200 (CEST)
+Date:   Wed, 5 Aug 2020 13:00:35 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Simek <monstr@monstr.eu>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Stafford Horne <shorne@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        clang-built-linux@googlegroups.com,
+        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
+        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
+        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
+Subject: Re: [PATCH v2 12/17] arch, drivers: replace for_each_membock() with
+ for_each_mem_range()
+Message-ID: <20200805110035.GB11658@alpha.franken.de>
+References: <20200802163601.8189-1-rppt@kernel.org>
+ <20200802163601.8189-13-rppt@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c7c168f2-e30b-d2c5-abcb-1b6919197474@schaufler-ca.com>
+In-Reply-To: <20200802163601.8189-13-rppt@kernel.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-05 08:36:40, Casey Schaufler wrote:
-> On 8/4/2020 6:14 PM, Lakshmi Ramasubramanian wrote:
-> > On 8/4/20 6:04 PM, Casey Schaufler wrote:
-> >> On 8/4/2020 5:43 PM, Lakshmi Ramasubramanian wrote:
-> >>> Critical data structures of security modules are currently not measured.
-> >>> Therefore an attestation service, for instance, would not be able to
-> >>> attest whether the security modules are always operating with the policies
-> >>> and configuration that the system administrator had setup. The policies
-> >>> and configuration for the security modules could be tampered with by
-> >>> malware by exploiting kernel vulnerabilities or modified through some
-> >>> inadvertent actions on the system. Measuring such critical data would
-> >>> enable an attestation service to better assess the state of the system.
-> >>
-> >> I still wonder why you're calling this an LSM change/feature when
-> >> all the change is in IMA and SELinux. You're not putting anything
-> >> into the LSM infrastructure, not are you using the LSM infrastructure
-> >> to achieve your ends. Sure, you *could* support other security modules
-> >> using this scheme, but you have a configuration dependency on
-> >> SELinux, so that's at best going to be messy. If you want this to
-> >> be an LSM "feature" you need to use the LSM hooking mechanism.
-> >
-> >>
-> >> I'm not objecting to the feature. It adds value. But as you've
-> >> implemented it it is either an IMA extension to SELinux, or an
-> >> SELiux extension to IMA. Could AppArmor add hooks for this without
-> >> changing the IMA code? It doesn't look like it to me.
-> >
-> > The check in IMA to allow the new IMA hook func LSM_STATE and LSM_POLICY when SELinux is enabled is just because SELinux is the only security module using these hooks now.
-> >
-> > To enable AppArmor, for instance, to use the new IMA hooks to measure state and policy would just require adding the check for CONFIG_SECURITY_APPARMOR. Other than that, there are no IMA changes needed to support AppArmor or other such security modules.
+On Sun, Aug 02, 2020 at 07:35:56PM +0300, Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
 > 
-> This is exactly what I'm objecting to. What if a system has both SELinux
-> and AppArmor compiled in? What if it has both enabled?
-
-The SELinux state and policy would be measured but the AppArmor
-state/policy would be silently ignored. This isn't ideal as the IMA
-policy author would need to read the kernel code to figure out which
-LSMs are going to be measured.
-
+> There are several occurrences of the following pattern:
 > 
-> >
-> > Please see Patch 1/4
-> >
-> > +            else if (IS_ENABLED(CONFIG_SECURITY_SELINUX) &&
-> > +                 strcmp(args[0].from, "LSM_STATE") == 0)
-> > +                entry->func = LSM_STATE;
-> > +            else if (IS_ENABLED(CONFIG_SECURITY_SELINUX) &&
-> > +                 strcmp(args[0].from, "LSM_POLICY") == 0)
-> > +                entry->func = LSM_POLICY;
-> >
-> > And, if early boot measurement is needed for AppArmor the following change in IMA's Kconfig
-> >
-> > Patch 4/4
-> >
-> > +config IMA_QUEUE_EARLY_BOOT_DATA
-> >      bool
-> > +    depends on SECURITY_SELINUX || (IMA_MEASURE_ASYMMETRIC_KEYS && SYSTEM_TRUSTED_KEYRING)
-> >      default y
-> >
-> > If you think calling this an "LSM feature" is not appropriate, please suggest a better phrase.
+> 	for_each_memblock(memory, reg) {
+> 		start = __pfn_to_phys(memblock_region_memory_base_pfn(reg);
+> 		end = __pfn_to_phys(memblock_region_memory_end_pfn(reg));
 > 
-> In the code above you are under CONFIG_SECURITY_SELINUX.
-> I would suggest that it's an SELinux feature, so you should
-> be using SELINUX_STATE and SELINUX_POLICY, as I suggested
-> before. Just because SELinux has state and policy to measure
-> doesn't mean that a different module might not have other data,
-> such as history, that should be covered as well.
-
-In addition to SELINUX_STATE and SELINUX_POLICY, we should also consider
-the proposed LSM_STATE and LSM_POLICY func values but require an "lsm"
-rule conditional.
-
-So the current proposed rules:
-
- measure func=LSM_STATE
- measure func=LSM_POLICY
-
-Would become:
-
- measure func=LSM_STATE lsm=selinux
- measure func=LSM_POLICY lsm=selinux
-
-The following rules would be rejected:
-
- measure func=LSM_STATE
- measure func=LSM_POLICY
- measure func=LSM_STATE lsm=apparmor
- measure func=LSM_POLICY lsm=smack
-
-Of course, the apparmor and smack rules could/would be allowed when
-proper support is in place.
-
-Tyler
-
+> 		/* do something with start and end */
+> 	}
 > 
-> I realize that IMA already has compile time dependencies to
-> determine which xattrs to measure. There's no reason that
-> the xattr list couldn't be determined at boot time, with
-> each security module providing the XATTR_NAME values it
-> uses.
+> Using for_each_mem_range() iterator is more appropriate in such cases and
+> allows simpler and cleaner code.
 > 
-> >
-> > But like I said above, with minimal change in IMA other security modules can be supported to measure STATE and POLICY data.
-> >
-> >  -lakshmi
-> >
-> >
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
+>  arch/mips/cavium-octeon/dma-octeon.c     | 12 +++---
+>  arch/mips/kernel/setup.c                 | 31 +++++++--------
+
+Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
