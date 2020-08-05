@@ -2,271 +2,184 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D343EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E249FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A456C22CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:14:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="j7afnAq0"
+	by mail.kernel.org (Postfix) with ESMTP id C743122CAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:14:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728395AbgHEJOP (ORCPT
+        id S1728618AbgHEJO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 05:14:15 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:58952 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728534AbgHEJMm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 05:12:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1596618762; x=1628154762;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=/Ae5VW+70xpnD8hTAzV/FHF1PuU2sVr8vHuAhjOfPOM=;
-  b=j7afnAq0tSyADFK7+pr1B/1m1e69LK5Kx/o7a2DpJRECjFtmd3WjaL53
-   47IF7xRVH0RsKHxvmdoPCLFycICJH2V+MmGiyPnIkEZhXzv9DjYqPqPSf
-   7zfVTOciYTdKfhcEVf11UHzXdbL2khVkX62AVxd5oHMGk8s8OiiDYCwKV
-   U=;
-IronPort-SDR: zPRus7cThy/J2lwAC75fBmtGVh5y6c8AjKvTOfmo1wa7rDpmAEqzatl69WftNAA9oV6ru/mQlA
- dpjtjCNHzmhA==
-X-IronPort-AV: E=Sophos;i="5.75,436,1589241600"; 
-   d="scan'208";a="46143680"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 05 Aug 2020 09:12:40 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com (Postfix) with ESMTPS id 7FD91A189F;
-        Wed,  5 Aug 2020 09:12:38 +0000 (UTC)
-Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 5 Aug 2020 09:12:37 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.248) by
- EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 5 Aug 2020 09:12:28 +0000
-From:   Andra Paraschiv <andraprs@amazon.com>
-To:     linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        "David Duncan" <davdunc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        "David Woodhouse" <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "Karen Noel" <knoel@redhat.com>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Stefan Hajnoczi" <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        "Uwe Dannowski" <uwed@amazon.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm <kvm@vger.kernel.org>,
-        ne-devel-upstream <ne-devel-upstream@amazon.com>,
-        Andra Paraschiv <andraprs@amazon.com>
-Subject: [PATCH v6 12/18] nitro_enclaves: Add logic for starting an enclave
-Date:   Wed, 5 Aug 2020 12:10:11 +0300
-Message-ID: <20200805091017.86203-13-andraprs@amazon.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-In-Reply-To: <20200805091017.86203-1-andraprs@amazon.com>
-References: <20200805091017.86203-1-andraprs@amazon.com>
+        Wed, 5 Aug 2020 05:14:29 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:45882 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728602AbgHEJNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 05:13:21 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5AFBFC84C92F2D78BBAF;
+        Wed,  5 Aug 2020 17:13:14 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.24) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 5 Aug 2020 17:13:07 +0800
+From:   Xiaofei Tan <tanxiaofei@huawei.com>
+To:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <rjw@rjwysocki.net>, <lenb@kernel.org>, <james.morse@arm.com>,
+        <tony.luck@intel.com>, <bp@alien8.de>
+CC:     <linuxarm@huawei.com>, <shiju.jose@huawei.com>,
+        <jonathan.cameron@huawei.com>, Xiaofei Tan <tanxiaofei@huawei.com>
+Subject: [PATCH v2] ACPI / APEI: do memory failure on the physical address reported by ARM processor error section
+Date:   Wed, 5 Aug 2020 17:12:11 +0800
+Message-ID: <1596618731-37623-1-git-send-email-tanxiaofei@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-X-Originating-IP: [10.43.162.248]
-X-ClientProxiedBy: EX13D37UWA003.ant.amazon.com (10.43.160.25) To
- EX13D16EUB003.ant.amazon.com (10.43.166.99)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.165.24]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After all the enclave resources are set, the enclave is ready for
-beginning to run.
+After the commit 8fcc4ae6faf8 ("arm64: acpi: Make apei_claim_sea()
+synchronise with APEI's irq work") applied, user-mode SEA is
+preferentially processed by APEI. Do memory failure to recover.
 
-Add ioctl command logic for starting an enclave after all its resources,
-memory regions and CPUs, have been set.
+But there are some problems:
+1) The function apei_claim_sea() has processed an CPER, does not
+mean that memory failure handling has done. Because the firmware-first
+RAS error is reported by both producer and consumer. Mostly SEA uses
+ARM processor error section to report as a consumer. (The producer could
+be DDRC and cache, and use memory error section and other error section
+to report). But memory failure handling for ARM processor error section
+has not been supported. This patch will add it.
 
-The enclave start information includes the local channel addressing -
-vsock CID - and the flags associated with the enclave.
+2) Some hardware platforms can't record physical address each time. But
+they could always have reported a firmware-first RAS error using ARM
+processor error section. Such platform should update firmware. Don't
+report the RAS error in SEA processing flow when physical address is
+not recorded.
 
-Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
-Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
 ---
-Changelog
+ drivers/acpi/apei/ghes.c | 70 ++++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 53 insertions(+), 17 deletions(-)
 
-v5 -> v6
-
-* Check for invalid enclave start flags.
-* Update documentation to kernel-doc format.
-
-v4 -> v5
-
-* Add early exit on enclave start ioctl function call error.
-* Move sanity checks in the enclave start ioctl function, outside of the
-  switch-case block.
-* Remove log on copy_from_user() / copy_to_user() failure.
-
-v3 -> v4
-
-* Use dev_err instead of custom NE log pattern.
-* Update the naming for the ioctl command from metadata to info.
-* Check for minimum enclave memory size.
-
-v2 -> v3
-
-* Remove the WARN_ON calls.
-* Update static calls sanity checks.
-
-v1 -> v2
-
-* Add log pattern for NE.
-* Check if enclave state is init when starting an enclave.
-* Remove the BUG_ON calls.
----
- drivers/virt/nitro_enclaves/ne_misc_dev.c | 109 ++++++++++++++++++++++
- 1 file changed, 109 insertions(+)
-
-diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.c b/drivers/virt/nitro_enclaves/ne_misc_dev.c
-index 88536a415246..c7eb1146a6c0 100644
---- a/drivers/virt/nitro_enclaves/ne_misc_dev.c
-+++ b/drivers/virt/nitro_enclaves/ne_misc_dev.c
-@@ -820,6 +820,77 @@ static int ne_set_user_memory_region_ioctl(struct ne_enclave *ne_enclave,
- 	return rc;
+diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+index 81bf71b..aee7787 100644
+--- a/drivers/acpi/apei/ghes.c
++++ b/drivers/acpi/apei/ghes.c
+@@ -429,28 +429,35 @@ static void ghes_kick_task_work(struct callback_head *head)
+ 	gen_pool_free(ghes_estatus_pool, (unsigned long)estatus_node, node_len);
  }
  
-+/**
-+ * ne_start_enclave_ioctl() - Trigger enclave start after the enclave resources,
-+ *			      such as memory and CPU, have been set.
-+ * @ne_enclave :		Private data associated with the current enclave.
-+ * @enclave_start_info :	Enclave info that includes enclave cid and flags.
-+ *
-+ * Context: Process context. This function is called with the ne_enclave mutex held.
-+ * Return:
-+ * * 0 on success.
-+ * * Negative return value on failure.
-+ */
-+static int ne_start_enclave_ioctl(struct ne_enclave *ne_enclave,
-+	struct ne_enclave_start_info *enclave_start_info)
-+{
-+	struct ne_pci_dev_cmd_reply cmd_reply = {};
-+	unsigned int cpu = 0;
-+	struct enclave_start_req enclave_start_req = {};
-+	unsigned int i = 0;
-+	int rc = -EINVAL;
-+
-+	if (!ne_enclave->nr_mem_regions) {
-+		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "Enclave has no mem regions\n");
-+
-+		return -NE_ERR_NO_MEM_REGIONS_ADDED;
-+	}
-+
-+	if (ne_enclave->mem_size < NE_MIN_ENCLAVE_MEM_SIZE) {
-+		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "Enclave memory is less than %ld\n",
-+				    NE_MIN_ENCLAVE_MEM_SIZE);
-+
-+		return -NE_ERR_ENCLAVE_MEM_MIN_SIZE;
-+	}
-+
-+	if (!ne_enclave->nr_vcpus) {
-+		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "Enclave has no vCPUs\n");
-+
-+		return -NE_ERR_NO_VCPUS_ADDED;
-+	}
-+
-+	for (i = 0; i < ne_enclave->avail_cpu_cores_size; i++)
-+		for_each_cpu(cpu, ne_enclave->avail_cpu_cores[i])
-+			if (!cpumask_test_cpu(cpu, ne_enclave->vcpu_ids)) {
-+				dev_err_ratelimited(ne_misc_dev.this_device,
-+						    "Full CPU cores not used\n");
-+
-+				return -NE_ERR_FULL_CORES_NOT_USED;
-+			}
-+
-+	enclave_start_req.enclave_cid = enclave_start_info->enclave_cid;
-+	enclave_start_req.flags = enclave_start_info->flags;
-+	enclave_start_req.slot_uid = ne_enclave->slot_uid;
-+
-+	rc = ne_do_request(ne_enclave->pdev, ENCLAVE_START, &enclave_start_req,
-+			   sizeof(enclave_start_req), &cmd_reply, sizeof(cmd_reply));
-+	if (rc < 0) {
-+		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "Error in enclave start [rc=%d]\n", rc);
-+
-+		return rc;
-+	}
-+
-+	ne_enclave->state = NE_STATE_RUNNING;
-+
-+	enclave_start_info->enclave_cid = cmd_reply.enclave_cid;
-+
-+	return 0;
-+}
-+
- /**
-  * ne_enclave_ioctl() - Ioctl function provided by the enclave file.
-  * @file:	File associated with this ioctl function.
-@@ -967,6 +1038,44 @@ static long ne_enclave_ioctl(struct file *file, unsigned int cmd, unsigned long
- 		return 0;
+-static bool ghes_handle_memory_failure(struct acpi_hest_generic_data *gdata,
+-				       int sev)
++static bool ghes_do_memory_failure(u64 physical_addr, int flags)
+ {
+ 	unsigned long pfn;
+-	int flags = -1;
+-	int sec_sev = ghes_severity(gdata->error_severity);
+-	struct cper_sec_mem_err *mem_err = acpi_hest_get_payload(gdata);
+ 
+ 	if (!IS_ENABLED(CONFIG_ACPI_APEI_MEMORY_FAILURE))
+ 		return false;
+ 
+-	if (!(mem_err->validation_bits & CPER_MEM_VALID_PA))
+-		return false;
+-
+-	pfn = mem_err->physical_addr >> PAGE_SHIFT;
++	pfn = PHYS_PFN(physical_addr);
+ 	if (!pfn_valid(pfn)) {
+ 		pr_warn_ratelimited(FW_WARN GHES_PFX
+ 		"Invalid address in generic error data: %#llx\n",
+-		mem_err->physical_addr);
++		physical_addr);
+ 		return false;
  	}
  
-+	case NE_START_ENCLAVE: {
-+		struct ne_enclave_start_info enclave_start_info = {};
-+		int rc = -EINVAL;
++	memory_failure_queue(pfn, flags);
++	return true;
++}
 +
-+		if (copy_from_user(&enclave_start_info, (void __user *)arg,
-+				   sizeof(enclave_start_info)))
-+			return -EFAULT;
++static bool ghes_handle_memory_failure(struct acpi_hest_generic_data *gdata,
++				       int sev)
++{
++	int flags = -1;
++	int sec_sev = ghes_severity(gdata->error_severity);
++	struct cper_sec_mem_err *mem_err = acpi_hest_get_payload(gdata);
 +
-+		if (enclave_start_info.flags >= NE_ENCLAVE_START_MAX_FLAG_VAL)
-+			return -EINVAL;
++	if (!(mem_err->validation_bits & CPER_MEM_VALID_PA))
++		return false;
 +
-+		mutex_lock(&ne_enclave->enclave_info_mutex);
+ 	/* iff following two events can be handled properly by now */
+ 	if (sec_sev == GHES_SEV_CORRECTED &&
+ 	    (gdata->flags & CPER_SEC_ERROR_THRESHOLD_EXCEEDED))
+@@ -458,14 +465,45 @@ static bool ghes_handle_memory_failure(struct acpi_hest_generic_data *gdata,
+ 	if (sev == GHES_SEV_RECOVERABLE && sec_sev == GHES_SEV_RECOVERABLE)
+ 		flags = 0;
+ 
+-	if (flags != -1) {
+-		memory_failure_queue(pfn, flags);
+-		return true;
+-	}
++	if (flags != -1)
++		return ghes_do_memory_failure(mem_err->physical_addr, flags);
+ 
+ 	return false;
+ }
+ 
++static bool ghes_handle_arm_hw_error(struct acpi_hest_generic_data *gdata, int sev)
++{
++	struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
++	struct cper_arm_err_info *err_info;
++	bool queued = false;
++	int sec_sev, i;
 +
-+		if (ne_enclave->state != NE_STATE_INIT) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "Enclave is not in init state\n");
++	log_arm_hw_error(err);
 +
-+			mutex_unlock(&ne_enclave->enclave_info_mutex);
++	sec_sev = ghes_severity(gdata->error_severity);
++	if (sev != GHES_SEV_RECOVERABLE || sec_sev != GHES_SEV_RECOVERABLE)
++		return false;
 +
-+			return -NE_ERR_NOT_IN_INIT_STATE;
++	err_info = (struct cper_arm_err_info *) (err + 1);
++	for (i = 0; i < err->err_info_num; i++, err_info++) {
++		if (!(err_info->validation_bits & CPER_ARM_INFO_VALID_PHYSICAL_ADDR))
++			continue;
++
++		if (err_info->type != CPER_ARM_CACHE_ERROR) {
++			pr_warn_ratelimited(FW_WARN GHES_PFX
++			"Physical address should be invalid for %s\n",
++			err_info->type < ARRAY_SIZE(cper_proc_error_type_strs) ?
++			cper_proc_error_type_strs[err_info->type] : "unknown error type");
++			continue;
 +		}
 +
-+		rc = ne_start_enclave_ioctl(ne_enclave, &enclave_start_info);
-+		if (rc < 0) {
-+			mutex_unlock(&ne_enclave->enclave_info_mutex);
-+
-+			return rc;
-+		}
-+
-+		mutex_unlock(&ne_enclave->enclave_info_mutex);
-+
-+		if (copy_to_user((void __user *)arg, &enclave_start_info,
-+				 sizeof(enclave_start_info)))
-+			return -EFAULT;
-+
-+		return 0;
++		if (ghes_do_memory_failure(err_info->physical_fault_addr, 0))
++			queued = true;
 +	}
 +
- 	default:
- 		return -ENOTTY;
- 	}
++	return queued;
++}
++
+ /*
+  * PCIe AER errors need to be sent to the AER driver for reporting and
+  * recovery. The GHES severities map to the following AER severities and
+@@ -543,9 +581,7 @@ static bool ghes_do_proc(struct ghes *ghes,
+ 			ghes_handle_aer(gdata);
+ 		}
+ 		else if (guid_equal(sec_type, &CPER_SEC_PROC_ARM)) {
+-			struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
+-
+-			log_arm_hw_error(err);
++			queued = ghes_handle_arm_hw_error(gdata, sev);
+ 		} else {
+ 			void *err = acpi_hest_get_payload(gdata);
+ 
 -- 
-2.20.1 (Apple Git-117)
-
-
-
-
-Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in Romania. Registration number J22/2621/2005.
+2.8.1
 
