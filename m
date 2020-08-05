@@ -2,127 +2,109 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8269FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 133EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C64321744
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE30121744
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:40:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596616835;
+	bh=1I8PoQzOBFsAKCKx7INAo0QiWfPvyGc/mgQySNIEmgE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=R5XyMfBp6+tEg5U/dIu+q/qLN2pDMioclbiDpqG+C8gfW+NAyi4RuJxwbZtF+CYPa
+	 VV5wU4QbN4j3LNcs4hQc244agdA2qmnsNMF3f08QTjLJqYdG7LcqVJy08IR1ckPNGI
+	 r/W/gLRB7hfklLVqEYV22YVuDRCzKRKZfNGDz57I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgHEIjg (ORCPT
+        id S1727986AbgHEIke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 04:39:36 -0400
-Received: from mga12.intel.com ([192.55.52.136]:46257 "EHLO mga12.intel.com"
+        Wed, 5 Aug 2020 04:40:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725963AbgHEIjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 04:39:35 -0400
-IronPort-SDR: PlVoAU24o2O+fqv2sX6CsxzlkFAx0E9IawDJLi+xqMyBJf5Y/TwrcR+Q5XQ9AmST6ztAY9zOWK
- Q5efib9/ZZLg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="132053318"
-X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
-   d="scan'208";a="132053318"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 01:39:34 -0700
-IronPort-SDR: guzNlBMCBPFNVze+bJ3F+LvIMVtWCcor+lqNMrTXYz2j/SaFBkfDzuOlQZsPTvdakmfzW48qfb
- D+VxQmMPYeKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
-   d="scan'208";a="315673885"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by fmsmga004.fm.intel.com with ESMTP; 05 Aug 2020 01:39:33 -0700
-Date:   Wed, 5 Aug 2020 16:36:05 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     Tom Rix <trix@redhat.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, lgoncalv@redhat.com,
-        Wu Hao <hao.wu@intel.com>,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        Russ Weight <russell.h.weight@intel.com>
-Subject: Re: [PATCH v3 4/4] fpga: dfl: add support for N3000 nios private
-  feature
-Message-ID: <20200805083605.GB20262@yilunxu-OptiPlex-7050>
-References: <1596524715-18038-1-git-send-email-yilun.xu@intel.com>
- <1596524715-18038-5-git-send-email-yilun.xu@intel.com>
- <b5d4157b-1bdf-445c-58a7-abd2f485a5ff@redhat.com>
+        id S1725809AbgHEIkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 04:40:33 -0400
+Received: from localhost (router.4pisysteme.de [80.79.225.122])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 558FA21744;
+        Wed,  5 Aug 2020 08:40:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596616832;
+        bh=1I8PoQzOBFsAKCKx7INAo0QiWfPvyGc/mgQySNIEmgE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mHYzd6XSFOg6CcROMgT6Taq9U6v+sgJoBI+jd3kfkB4vMn2GMbb+jbf6ZWe+oY1/G
+         8VCIxk+1A2N/MuVUk5Pb1uKm9EXyRpz3GPEbyBC8tquasHyC/+bM+TVbFMLhNWGB7x
+         qIAe2E4CPqnRttwexbvAjKSGvxP4Kaz0gbdzryZs=
+Date:   Wed, 5 Aug 2020 10:40:30 +0200
+From:   <wsa@kernel.org>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <robh+dt@kernel.org>,
+        <ludovic.desroches@microchip.com>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
+        <kamel.bouhara@bootlin.com>
+Subject: Re: [PATCH 3/4] i2c: core: treat EPROBE_DEFER when acquiring SCL/SDA
+ GPIOs
+Message-ID: <20200805084030.GC1229@kunai>
+Mail-Followup-To: <wsa@kernel.org>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <robh+dt@kernel.org>,
+        <ludovic.desroches@microchip.com>, <nicolas.ferre@microchip.com>,
+        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
+        <kamel.bouhara@bootlin.com>
+References: <20200804095926.205643-1-codrin.ciubotariu@microchip.com>
+ <20200804095926.205643-4-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="TYecfFk8j8mZq+dy"
 Content-Disposition: inline
-In-Reply-To: <b5d4157b-1bdf-445c-58a7-abd2f485a5ff@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200804095926.205643-4-codrin.ciubotariu@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the word smith. I'll add these changes.
 
-Thanks,
-Yilun
+--TYecfFk8j8mZq+dy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 04, 2020 at 11:45:33AM -0700, Tom Rix wrote:
-> Some minor edits.
-> 
-> I have added definitions for fec, kr, and rs.
-> 
-> Reviewed-by: Tom Rix <trix@redhat.com>
-> 
-> Tom
-> 
-> > --- /dev/null
-> > +++ b/Documentation/fpga/dfl-n3000-nios.rst
-> > @@ -0,0 +1,39 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +=====================================
-> > +DFL N3000 Nios Private Feature Driver
-> > +=====================================
-> > +
-> > +The dfl n3000 nios driver supports for the nios handshake private feature on
-> > +Intel N3000 FPGA Card.
-> > +
-> > +This private feature provides a handshake interface to FPGA NIOS firmware,
-> > +which receives the ethernet retimer configuration command from host and
-> > +do the configuration via an internal SPI master. When nios finished the
-> 
-> does the configuration..
-> 
-> When nios finishes the ..
-> 
-> > +configuration, host takes over the ownership of the SPI master to control an
-> > +Intel MAX10 BMC Chip on the SPI bus.
-> > +
-> > +So the driver does 2 major tasks on probe, requires NIOS firmware to configure
-> , uses the NIOS firmware to configure the ethernet retimer, and then ..
-> > +the ethernet retimer by operating the handshake interfaces, and then creates a
-> > +spi master platform device with the MAX10 device info in spi_board_info.
-> > +
-> > +Module Parameters
-> > +=================
-> > +
-> > +The dfl n3000 nios driver supports the following module parameters:
-> > +
-> > +* fec_mode: string
-> > +  Require the NIOS firmware to set the FEC mode of the ethernet retimer on
-> the FEC (Forward Error Correction) mode
-> > +  the PAC N3000 FPGA card. The possible values could be:
-> > +
-> > +  - "rs": RS FEC mode (default)
-> - "rs" : Reed Solomon FEC (default)
-> > +  - "kr": KR FEC mode
-> - "kr": Fire Code FEC
-> > +  - "no": NO FEC mode
-> > +
-> > +  The configuration could only be set once after the board powers up, the
-> The configuration can only be ..
-> > +  firmware will not accept a second configuration afterward. So the fec mode
-> second configuration.
-> > +  will not be changed if the module is reloaded with a different param value.
-> > +
-> > +  The configured value of the fec mode could be queried from sysfs node:
-> > +
-> > +  /sys/bus/dfl/devices/dfl-fme.X.X/fec_mode
+On Tue, Aug 04, 2020 at 12:59:25PM +0300, Codrin Ciubotariu wrote:
+> Even if I2C bus GPIO recovery is optional, devm_gpiod_get() can return
+> -EPROBE_DEFER, so we should at least treat that. This ends up with
+> i2c_register_adapter() to be able to return -EPROBE_DEFER.
+>=20
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+
+Applied to for-next, thanks!
+
+
+--TYecfFk8j8mZq+dy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8qcH4ACgkQFA3kzBSg
+KbZU5g//UDBqMpzb9kiNknhGEQk4H9HZ8SGNMcSwcBydPHu0bC2RrVvcCU0ptkRM
+Puzhx6CBQmEaZybmM1NCuNLJ6gUoCkYnjYKv7d0T+kxmPjPe5zcHFblTr8ZYt/xf
+qEUrKotUTSyivKaEURBOVzKAKHAH4xZ6r4tTXQByLvsnT6TiNDchoA23DH+itk79
+afZRWpnWRooEAKYtV3jCW6z4YzXuLGQQnkYBfZTITW9lTlXkLEXXgKj9i9FUrpug
+YsfKvVMsHa49b1mc87sb0GPKaFfLzd1Fdqq70YeOQcdTySsmdvaxoJUhioMZMBue
+3a4eg6B1pKQUmZOxbv6Jbk4LmF+n1t0K5pR+j7k1F47P+6XyMzFN6DE+Wf2uUqDf
+hpveby+d2KtxhstPWFVqXJ2ufUV61+Puj3AF16E5T5txx1tnTjFXjNBa146EZNWX
+JIKfovIqWfEZrIxiPkbzvdCToFw6BwAIbRJ2N6MnlhJ/gKET36lwva1jPy6Mc5X0
+rqJjPWCTnoJTasiSUEKhMVAP32efOsGbjMbnlSSHJ7JCEOxY8ix+Y9DnuQHom8eO
+Yvm6n7HlYIxVwLHLMLGNpTPakade65dXs/fjYkDQXIx8YFDQnNzDzo97cHcT24Dz
+CrceL+pP8OIau1IcSr+iBqgOTye/3FKd3UjbHVOb/gcRfVFvxrU=
+=yo/Y
+-----END PGP SIGNATURE-----
+
+--TYecfFk8j8mZq+dy--
