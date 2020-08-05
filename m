@@ -2,98 +2,143 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E50C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 15:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED79C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 15:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7AEC2312B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 15:48:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XbLe8kAn"
+	by mail.kernel.org (Postfix) with ESMTP id 3BB922311F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 15:55:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgHEPsd (ORCPT
+        id S1726226AbgHEPyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 11:48:33 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20002 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726645AbgHEPku (ORCPT
+        Wed, 5 Aug 2020 11:54:55 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58924 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725830AbgHEPsi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 11:40:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596641785;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tg1NaN73CW0LtnEK10fe+dApSmqLG8nxdGa4rhiVRvI=;
-        b=XbLe8kAnlsqrG4q/HLi1Fl1jCaiDEIimVOGc1ZWyJy3mS9uYkSgxvQcqjPJJnd84JNTw8l
-        esHz0LElwzZE8ZIHOErYnLFwHPr0oEVQzfUUstMiGFxU3pVnGKhaoG4njdgICi1JRohU/9
-        fL+D1h35nPaYO+lCegxBLdvD7cYZ4GM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-321-K9dMuQccOZWetAzznd3kwg-1; Wed, 05 Aug 2020 11:30:16 -0400
-X-MC-Unique: K9dMuQccOZWetAzznd3kwg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BCFCE107B83C;
-        Wed,  5 Aug 2020 15:30:14 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 710C660BF3;
-        Wed,  5 Aug 2020 15:30:11 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAJfpegtOguKOGWxv-sA_C9eSWG_3Srnj_k=oW-wSHNprCipFVg@mail.gmail.com>
-References: <CAJfpegtOguKOGWxv-sA_C9eSWG_3Srnj_k=oW-wSHNprCipFVg@mail.gmail.com> <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk> <159646183662.1784947.5709738540440380373.stgit@warthog.procyon.org.uk> <20200804104108.GC32719@miu.piliscsaba.redhat.com> <2306029.1596636828@warthog.procyon.org.uk>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ian Kent <raven@themaw.net>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        LSM <linux-security-module@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/18] fsinfo: Add a uniquifier ID to struct mount [ver #21]
+        Wed, 5 Aug 2020 11:48:38 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 075DMYiJ001183;
+        Wed, 5 Aug 2020 09:35:09 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32qwkcrar0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Aug 2020 09:35:09 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 075DZ7d8014782;
+        Wed, 5 Aug 2020 13:35:07 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma02fra.de.ibm.com with ESMTP id 32n018aq0r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Aug 2020 13:35:06 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 075DZ4aO26280306
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 5 Aug 2020 13:35:04 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EA59C11C058;
+        Wed,  5 Aug 2020 13:35:03 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 992E911C064;
+        Wed,  5 Aug 2020 13:35:03 +0000 (GMT)
+Received: from pomme.tlslab.ibm.com (unknown [9.145.52.198])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  5 Aug 2020 13:35:03 +0000 (GMT)
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     mpe@ellerman.id.au, nathanl@linux.ibm.com, cheloha@linux.ibm.com,
+        benh@kernel.crashing.org
+Subject: [PATCH v2] powerpc/drmem: Don't compute the NUMA node for each LMB
+Date:   Wed,  5 Aug 2020 15:35:02 +0200
+Message-Id: <20200805133502.33723-1-ldufour@linux.ibm.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <202008051807.Vi8NDJtX%lkp@intel.com>
+References: <202008051807.Vi8NDJtX%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2315924.1596641410.1@warthog.procyon.org.uk>
-Date:   Wed, 05 Aug 2020 16:30:10 +0100
-Message-ID: <2315925.1596641410@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-05_09:2020-08-03,2020-08-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 adultscore=0 mlxscore=0 clxscore=1015 bulkscore=0
+ priorityscore=1501 phishscore=0 spamscore=0 mlxlogscore=999
+ lowpriorityscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008050108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Miklos Szeredi <miklos@szeredi.hu> wrote:
+All the LMB from the same set of ibm,dynamic-memory-v2 property are
+sharing the same NUMA node. Don't compute that node for each one.
 
-> idr_alloc_cyclic() seems to be a good template for doing the lower
-> 32bit allocation, and we can add code to increment the high 32bit on
-> wraparound.
-> 
-> Lots of code uses idr_alloc_cyclic() so I guess it shouldn't be too
-> bad in terms of memory use or performance.
+Tested on a system with 1022 LMBs spread on 4 NUMA nodes, only 4 calls to
+lmb_set_nid() have been made instead of 1022.
 
-It's optimised for shortness of path and trades memory for performance.  It's
-currently implemented using an xarray, so memory usage is dependent on the
-sparseness of the tree.  Each node in the tree is 576 bytes and in the worst
-case, each one node will contain one mount - and then you have to backfill the
-ancestry, though for lower memory costs.
+This should prevent some soft lockups when starting large guests
 
-Systemd makes life more interesting since it sets up a whole load of
-propagations.  Each mount you make may cause several others to be created, but
-that would likely make the tree more efficient.
+Code has meaning only if CONFIG_MEMORY_HOTPLUG is set, otherwise the nid
+field is not present in the drmem_lmb structure.
 
-David
+Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+---
+ arch/powerpc/mm/drmem.c | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
+
+diff --git a/arch/powerpc/mm/drmem.c b/arch/powerpc/mm/drmem.c
+index b2eeea39684c..c11b6ec99ea3 100644
+--- a/arch/powerpc/mm/drmem.c
++++ b/arch/powerpc/mm/drmem.c
+@@ -402,6 +402,9 @@ static void __init init_drmem_v2_lmbs(const __be32 *prop)
+ 	const __be32 *p;
+ 	u32 i, j, lmb_sets;
+ 	int lmb_index;
++#ifdef CONFIG_MEMORY_HOTPLUG
++	struct drmem_lmb *first = NULL;
++#endif
+ 
+ 	lmb_sets = of_read_number(prop++, 1);
+ 	if (lmb_sets == 0)
+@@ -426,6 +429,15 @@ static void __init init_drmem_v2_lmbs(const __be32 *prop)
+ 	for (i = 0; i < lmb_sets; i++) {
+ 		read_drconf_v2_cell(&dr_cell, &p);
+ 
++#ifdef CONFIG_MEMORY_HOTPLUG
++		/*
++		 * Fetch the NUMA node id for the fist set or if the
++		 * associativity index is different from the previous set.
++		 */
++		if (first && dr_cell.aa_index != first->aa_index)
++			first = NULL;
++#endif
++
+ 		for (j = 0; j < dr_cell.seq_lmbs; j++) {
+ 			lmb = &drmem_info->lmbs[lmb_index++];
+ 
+@@ -438,7 +450,18 @@ static void __init init_drmem_v2_lmbs(const __be32 *prop)
+ 			lmb->aa_index = dr_cell.aa_index;
+ 			lmb->flags = dr_cell.flags;
+ 
+-			lmb_set_nid(lmb);
++#ifdef CONFIG_MEMORY_HOTPLUG
++			/*
++			 * All the LMB in the set share the same NUMA
++			 * associativity property. So read that node only once.
++			 */
++			if (!first) {
++				lmb_set_nid(lmb);
++				first = lmb;
++			} else {
++				lmb->nid = first->nid;
++			}
++#endif
+ 		}
+ 	}
+ }
+-- 
+2.28.0
 
