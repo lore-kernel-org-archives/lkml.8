@@ -2,106 +2,79 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A09F7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 00:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F714C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 00:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49E2620792
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 00:23:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="E6oxyEIm"
+	by mail.kernel.org (Postfix) with ESMTP id 6B82822CB2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 00:24:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgHEAXF (ORCPT
+        id S1725921AbgHEAYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 20:23:05 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:50030 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725863AbgHEAXE (ORCPT
+        Tue, 4 Aug 2020 20:24:07 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:45669 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbgHEAYG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 20:23:04 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200805002301epoutp03d2f7acfb5dbff1fd3cb7e8d6ffb48415~oN2aqWhSw1578215782epoutp03H
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 00:23:01 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200805002301epoutp03d2f7acfb5dbff1fd3cb7e8d6ffb48415~oN2aqWhSw1578215782epoutp03H
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1596586982;
-        bh=qlNdJKxS6vjRNEiMmu428ar6fswYmiSCm+c/7glGFUc=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=E6oxyEImGOCEmwvFkNP+WDq6o4Wg2m9tfMl8jKsUYo8Ce2RfhFM9Yr/5Q740qa+yT
-         PX+Pq7ANbScCy3ERYJ//Z/ffnc7pXst307ZILFouAt1P67vOeoGh9PbeHq7SjXNcVy
-         AnHtjk+MhNZRsdJ2nfZOm4VbQJ9J8HcTZ8Mh3PAI=
-Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p4.samsung.com
-        (KnoxPortal) with ESMTP id
-        20200805002301epcas1p4bd83ad50725ee1ba24824c5ff429a42c~oN2aOGZ3c1926719267epcas1p4a;
-        Wed,  5 Aug 2020 00:23:01 +0000 (GMT)
-Mime-Version: 1.0
-Subject: RE: Re: [PATCH v6 2/5] scsi: ufs: Add UFS-feature layer
-Reply-To: daejun7.park@samsung.com
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     Bart Van Assche <bvanassche@acm.org>,
-        Daejun Park <daejun7.park@samsung.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>
-CC:     "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <8d0fe031-e941-1b4e-7596-301ebd36f06d@acm.org>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <231786897.01596586981491.JavaMail.epsvc@epcpadp2>
-Date:   Wed, 05 Aug 2020 08:33:04 +0900
-X-CMS-MailID: 20200804233304epcms2p1a36cc6f2726b091573bb592e261a7961
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8
-References: <8d0fe031-e941-1b4e-7596-301ebd36f06d@acm.org>
-        <7bcf45da-233b-0c38-b93a-99d205603e63@acm.org>
-        <231786897.01594636801601.JavaMail.epsvc@epcpadp1>
-        <963815509.21594636682161.JavaMail.epsvc@epcpadp2>
-        <231786897.01594637401708.JavaMail.epsvc@epcpadp1>
-        <20200722064112.GB21117@infradead.org>
-        <yq1h7tzg1lb.fsf@ca-mkp.ca.oracle.com>
-        <963815509.21595830981720.JavaMail.epsvc@epcpadp2>
-        <CGME20200713103423epcms2p8442ee7cc22395e4a4cedf224f95c45e8@epcms2p1>
+        Tue, 4 Aug 2020 20:24:06 -0400
+Received: by mail-io1-f71.google.com with SMTP id p17so27231519iod.12
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 17:24:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=YcEYobWe0gtmbwSjs0eeDwSC4BGhccPAeLKXxasmpXw=;
+        b=RFR81iCoG3SvWBFcNlbZAX0Eu6Eik6nSOuKRqMaCwNcwz8dtxWHK9UndjVpZi4304w
+         QdXfmFlZupP6PnPmj/owDOMPItpCDwUsUKs7bi5fu4gShHkaw71genheKJdCxLHXt55q
+         1YMmUPI4jw3nDfespliE3ArjbTTHpjbjFUFr0ot5CA4noRD+mqDMK4+eFr2j9kLA0PRd
+         7RIm8wDN0ZZSoZFa0TZFqZ8PIrV+v+d4TnBkq/uZeCl2rc8LC2jO0qmd1YHAijMlcS4p
+         XN82UdxB2hgyPtJFQ26jU40VoFyilJQ5SMlmAOtcXGkBHFjeQWVmsQRYZOMWqRljaew+
+         4ZEg==
+X-Gm-Message-State: AOAM532ejaz5VaAhxyS1LCXf+pKsf2+l7vn4fZL2S1e6PhISzeUn8qit
+        gNzbSJA4ZBw1XfZVABLu4o00dl2d0hw4U1TwwAIKn0BNBoeW
+X-Google-Smtp-Source: ABdhPJwuZalmKeWO+pHiPWSqqtn5gfgs4D6jBqCQuwsKDkM2LSlSrPL+ZsNuPLhlwiwWkpFQK5ByESHxEN/Ub93XP1IFRfUCg0KC
+MIME-Version: 1.0
+X-Received: by 2002:a05:6638:1649:: with SMTP id a9mr979747jat.115.1596587045563;
+ Tue, 04 Aug 2020 17:24:05 -0700 (PDT)
+Date:   Tue, 04 Aug 2020 17:24:05 -0700
+In-Reply-To: <0000000000006d871805ac0f2416@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b4484105ac16639c@google.com>
+Subject: Re: WARNING: suspicious RCU usage in ovs_flow_tbl_masks_cache_size
+From:   syzbot <syzbot+f612c02823acb02ff9bc@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, dev@openvswitch.org, echaudro@redhat.com,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, pabeni@redhat.com, pshelar@ovn.org,
+        syzkaller-bugs@googlegroups.com, xiangxia.m.yue@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bart,
+syzbot has bisected this issue to:
 
-> Any idea how much time this work will take and when a new version will be
-> posted?
+commit 9bf24f594c6acf676fb8c229f152c21bfb915ddb
+Author: Eelco Chaudron <echaudro@redhat.com>
+Date:   Fri Jul 31 12:21:34 2020 +0000
 
-I have plan to patch new version in this week.
+    net: openvswitch: make masks cache size configurable
 
-Thanks,
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=110e06dc900000
+start commit:   2f631133 net: Pass NULL to skb_network_protocol() when we ..
+git tree:       net-next
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=130e06dc900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=150e06dc900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=91a13b78c7dc258d
+dashboard link: https://syzkaller.appspot.com/bug?extid=f612c02823acb02ff9bc
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10e8430a900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=123549fc900000
 
-Daejun
+Reported-by: syzbot+f612c02823acb02ff9bc@syzkaller.appspotmail.com
+Fixes: 9bf24f594c6a ("net: openvswitch: make masks cache size configurable")
 
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
