@@ -2,156 +2,125 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB0AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD1FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C626206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F34C206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:10:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728545AbgHERJf (ORCPT
+        id S1728387AbgHERKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:09:35 -0400
-Received: from mail-pl1-f200.google.com ([209.85.214.200]:33982 "EHLO
-        mail-pl1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728495AbgHERHK (ORCPT
+        Wed, 5 Aug 2020 13:10:43 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2866 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728453AbgHEREv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:07:10 -0400
-Received: by mail-pl1-f200.google.com with SMTP id 65so32928794plf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 10:07:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=A1AQFUtZc3oUBC+ELHd0XSkjPz6GoWRGj0v6BMelR/0=;
-        b=XcDyIO5O8JreBZId5ejSbrbD8ffOt8z2ZeSooiv0S5iIPXDc7fBbBbZEgoGGTam3K3
-         YdIZUPtxIirj0m1BujDBfy3iP9uPUIJMOYesVFp/TVsBFjajc+uDqqZFD3CX5IJnPYbV
-         7EQHfGEuI3r5m8GREJO5phT9bCT83YetKH2UlFoJaUrWLT+dXsRQzJstCnGdBjx5FP+T
-         nIfqgnm7teRlkdhrURQqVBv3M0lsBtD0afk7+xbR5dK3VxBlsm49EBNgf7jQVwTSaWxt
-         XaGQVHnPdnH2SRaV+33r26fIKVMFHbPFAWfE/0XThfXncshfxBVySLhupYTiEvzDC/bv
-         mthw==
-X-Gm-Message-State: AOAM530x3uIjtQLWmS2YTc04tCjWOQMMgq/VF8LCpF47O3CN0VpPfrF+
-        KFBChs5+QYg20rzb6CcYwyArflRN4zqW+s3RmwvOyp9qtDj/
-X-Google-Smtp-Source: ABdhPJykkigbEi+M0gISZNJMdIPXT3ju2NiFa2v2XCWKQqEk8ic4jWaTpxRf/FDS3gSAkV6njowu7TVDsJBm9V9nFFyGPEY0qALC
-MIME-Version: 1.0
-X-Received: by 2002:a6b:b4d1:: with SMTP id d200mr3127653iof.70.1596629836200;
- Wed, 05 Aug 2020 05:17:16 -0700 (PDT)
-Date:   Wed, 05 Aug 2020 05:17:16 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000039829c05ac205a4c@google.com>
-Subject: KMSAN: uninit-value in do_xdp_generic
-From:   syzbot <syzbot+007ef8d907f2fb6e17ca@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, glider@google.com,
-        hawk@kernel.org, john.fastabend@gmail.com, kafai@fb.com,
-        kpsingh@chromium.org, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 5 Aug 2020 13:04:51 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 075H3NZ0092705;
+        Wed, 5 Aug 2020 13:03:41 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32qtnvccjv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Aug 2020 13:03:41 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 075H3dbq094591;
+        Wed, 5 Aug 2020 13:03:40 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32qtnvccf8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Aug 2020 13:03:40 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 075GsubG030897;
+        Wed, 5 Aug 2020 17:03:35 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma02fra.de.ibm.com with ESMTP id 32n018atg4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Aug 2020 17:03:34 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 075H3W4a22872388
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 5 Aug 2020 17:03:32 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 965AB42045;
+        Wed,  5 Aug 2020 17:03:32 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A174242042;
+        Wed,  5 Aug 2020 17:03:29 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.95.205])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  5 Aug 2020 17:03:29 +0000 (GMT)
+Message-ID: <69810007161e689ac817099fb1c6df21962963e4.camel@linux.ibm.com>
+Subject: Re: [PATCH v6 0/4] LSM: Measure security module data
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        stephen.smalley.work@gmail.com, sashal@kernel.org,
+        jmorris@namei.org, linux-integrity@vger.kernel.org,
+        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 05 Aug 2020 13:03:28 -0400
+In-Reply-To: <20200805154504.GB4365@sequoia>
+References: <20200805004331.20652-1-nramas@linux.microsoft.com>
+         <f3971f35-309d-c3e5-9126-69add7ad4c11@schaufler-ca.com>
+         <50587a3e-bcb5-c68e-c16c-41baf68b4d4a@linux.microsoft.com>
+         <c7c168f2-e30b-d2c5-abcb-1b6919197474@schaufler-ca.com>
+         <20200805154504.GB4365@sequoia>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-05_13:2020-08-03,2020-08-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=905
+ malwarescore=0 suspectscore=0 spamscore=0 mlxscore=0 bulkscore=0
+ phishscore=0 clxscore=1015 priorityscore=1501 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008050136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, 2020-08-05 at 10:45 -0500, Tyler Hicks wrote:
 
-syzbot found the following issue on:
+> In addition to SELINUX_STATE and SELINUX_POLICY, we should also consider
+> the proposed LSM_STATE and LSM_POLICY func values but require an "lsm"
+> rule conditional.
+> 
+> So the current proposed rules:
+> 
+>  measure func=LSM_STATE
+>  measure func=LSM_POLICY
+> 
+> Would become:
+> 
+>  measure func=LSM_STATE lsm=selinux
+>  measure func=LSM_POLICY lsm=selinux
+> 
+> The following rules would be rejected:
+> 
+>  measure func=LSM_STATE
+>  measure func=LSM_POLICY
+>  measure func=LSM_STATE lsm=apparmor
+>  measure func=LSM_POLICY lsm=smack
 
-HEAD commit:    93f54a72 instrumented.h: fix KMSAN support
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=16fa5198900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fa4f3b91169c2501
-dashboard link: https://syzkaller.appspot.com/bug?extid=007ef8d907f2fb6e17ca
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-userspace arch: i386
+Kees is cleaning up the firmware code which differentiated between how
+firmware was loaded.   There will be a single firmware enumeration.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Similarly, the new IMA hook to measure critical state may be placed in
+multiple places.  Is there really a need from a policy perspective for
+differentiating the source of the critical state being measurind?   The
+data being measured should include some identifying information.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+007ef8d907f2fb6e17ca@syzkaller.appspotmail.com
+I think moving away from the idea that measuring "critical" data should
+be limited to LSMs, will clarify this.
 
-=====================================================
-BUG: KMSAN: uninit-value in netif_receive_generic_xdp net/core/dev.c:4670 [inline]
-BUG: KMSAN: uninit-value in do_xdp_generic+0x1312/0x24f0 net/core/dev.c:4735
-CPU: 1 PID: 11582 Comm: syz-executor.1 Not tainted 5.8.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1df/0x240 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- netif_receive_generic_xdp net/core/dev.c:4670 [inline]
- do_xdp_generic+0x1312/0x24f0 net/core/dev.c:4735
- __netif_receive_skb_core+0x9a0/0x5890 net/core/dev.c:5107
- __netif_receive_skb_one_core net/core/dev.c:5279 [inline]
- __netif_receive_skb net/core/dev.c:5395 [inline]
- netif_receive_skb_internal net/core/dev.c:5497 [inline]
- netif_receive_skb+0x56c/0xff0 net/core/dev.c:5556
- tun_rx_batched include/linux/skbuff.h:4327 [inline]
- tun_get_user+0x6df8/0x72f0 drivers/net/tun.c:1972
- tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2001
- call_write_iter include/linux/fs.h:1908 [inline]
- new_sync_write fs/read_write.c:503 [inline]
- vfs_write+0xd98/0x1480 fs/read_write.c:578
- ksys_write+0x267/0x450 fs/read_write.c:631
- __do_sys_write fs/read_write.c:643 [inline]
- __se_sys_write+0x92/0xb0 fs/read_write.c:640
- __ia32_sys_write+0x4a/0x70 fs/read_write.c:640
- do_syscall_32_irqs_on arch/x86/entry/common.c:430 [inline]
- __do_fast_syscall_32+0x2aa/0x400 arch/x86/entry/common.c:477
- do_fast_syscall_32+0x6b/0xd0 arch/x86/entry/common.c:505
- do_SYSENTER_32+0x73/0x90 arch/x86/entry/common.c:554
- entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
-RIP: 0023:0xf7f1b549
-Code: Bad RIP value.
-RSP: 002b:00000000f54910cc EFLAGS: 00000296 ORIG_RAX: 0000000000000004
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000020000240
-RDX: 000000000000000c RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+Mimi
 
-Uninit was created at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
- kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:80
- slab_alloc_node mm/slub.c:2839 [inline]
- __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4478
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- pskb_expand_head+0x20b/0x1b00 net/core/skbuff.c:1627
- netif_receive_generic_xdp net/core/dev.c:4616 [inline]
- do_xdp_generic+0x58c/0x24f0 net/core/dev.c:4735
- __netif_receive_skb_core+0x9a0/0x5890 net/core/dev.c:5107
- __netif_receive_skb_one_core net/core/dev.c:5279 [inline]
- __netif_receive_skb net/core/dev.c:5395 [inline]
- netif_receive_skb_internal net/core/dev.c:5497 [inline]
- netif_receive_skb+0x56c/0xff0 net/core/dev.c:5556
- tun_rx_batched include/linux/skbuff.h:4327 [inline]
- tun_get_user+0x6df8/0x72f0 drivers/net/tun.c:1972
- tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2001
- call_write_iter include/linux/fs.h:1908 [inline]
- new_sync_write fs/read_write.c:503 [inline]
- vfs_write+0xd98/0x1480 fs/read_write.c:578
- ksys_write+0x267/0x450 fs/read_write.c:631
- __do_sys_write fs/read_write.c:643 [inline]
- __se_sys_write+0x92/0xb0 fs/read_write.c:640
- __ia32_sys_write+0x4a/0x70 fs/read_write.c:640
- do_syscall_32_irqs_on arch/x86/entry/common.c:430 [inline]
- __do_fast_syscall_32+0x2aa/0x400 arch/x86/entry/common.c:477
- do_fast_syscall_32+0x6b/0xd0 arch/x86/entry/common.c:505
- do_SYSENTER_32+0x73/0x90 arch/x86/entry/common.c:554
- entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
-=====================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
