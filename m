@@ -2,112 +2,103 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32524C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A756C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E508322B40
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:28:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596616125;
-	bh=ujBWMZVAJmdqs5ewPgjkGJqFBmb33QfCj/WK2zJWHkU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QmKJLUnWYh8ob16JBlYIvARbaRWhdXDVbWjUKNtAEjsTi8TzVM8Bt+1xbGOv3rKhL
-	 gJAxaMn5Iqr0wuRj+CesfZLT+pLPhkAes7djx2jdO37jht8JKCXlmC80q5xvGCaFjx
-	 wK08oW/BBXkRcCaz8yVSPwFz3Vdn4zoqIHT0HMeA=
+	by mail.kernel.org (Postfix) with ESMTP id DE0EE20792
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:29:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ekT26djR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgHEI2n (ORCPT
+        id S1727910AbgHEI3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 04:28:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726563AbgHEI2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 04:28:41 -0400
-Received: from localhost (router.4pisysteme.de [80.79.225.122])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC32722B40;
-        Wed,  5 Aug 2020 08:28:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596616120;
-        bh=ujBWMZVAJmdqs5ewPgjkGJqFBmb33QfCj/WK2zJWHkU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EUCOQmnqJcxoIgcz0/Roq6uWxx4u4h+gCFsDCPWUHgqZL92X/FOHNL2cm03u8Nx73
-         V4vJrC+7EGnFLG4mDMgH5/ed+yiwWqO0S74qr0fmHFWji8ksx9IeqVH9B2P0mmx2Km
-         eYuTLwBLlblloe9arSD6+LO5rqsrQYlXinl14nIA=
-Date:   Wed, 5 Aug 2020 10:28:34 +0200
-From:   <wsa@kernel.org>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <robh+dt@kernel.org>,
-        <ludovic.desroches@microchip.com>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
-        <kamel.bouhara@bootlin.com>
-Subject: Re: [PATCH 1/4] dt-binding: i2c: add generic properties for GPIO bus
- recovery
-Message-ID: <20200805082834.GA1229@kunai>
-Mail-Followup-To: <wsa@kernel.org>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <robh+dt@kernel.org>,
-        <ludovic.desroches@microchip.com>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
-        <kamel.bouhara@bootlin.com>
-References: <20200804095926.205643-1-codrin.ciubotariu@microchip.com>
- <20200804095926.205643-2-codrin.ciubotariu@microchip.com>
+        Wed, 5 Aug 2020 04:29:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726563AbgHEI26 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 04:28:58 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3615FC06174A
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 01:28:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=PYbyv2RjlX8KRzFyJl9c8iwgN8lvWXE2KszivzJegs8=; b=ekT26djRUIRIyMZkc4GR3Y6kTC
+        qNmzrpPBeWQ+a2ceBo4s0wBLm4hhAX2ghofBlvjJ/1Uzd4W5PGLz1QqsahEumJT82N0tjytu3cf8Z
+        Bf+emSr+h9rlZpxNViTZCRK77EoxxiYrzaUz749Sh5rK5p/nVyhSh8eOdKhr6XNnNapbm9mVdlaml
+        HYcvSDecgsI03H6vpR1NvbsxFuc5RyDDyWgu0qpO5SP1u7R5rWNQViNzJWxminbK2PdxDTQK7awKF
+        rPWM9sKv6qRdridB54smwu6D0W9CKEyNjpwodFMRT32mI4YSjUCo0/cSVVtqgz1rZN+yXlLNf/JgB
+        g5UfDxJQ==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k3Emz-00073L-ST; Wed, 05 Aug 2020 08:28:46 +0000
+Date:   Wed, 5 Aug 2020 09:28:45 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Kai M??kisara <Kai.Makisara@kolumbus.fi>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lenny Szubowicz <lszubowi@redhat.com>
+Subject: Re: [GIT PULL] configfs updates for 5.9
+Message-ID: <20200805082845.GA25876@infradead.org>
+References: <20200803140726.GA752014@infradead.org>
+ <CAHk-=wg1h_XfPbXvisfAUsXU-WiOeCJDUibhxZGu=x9w-VKB0A@mail.gmail.com>
+ <CAHk-=wg9dzJOkvysjgdHv5eFJU76EFAwCxNenRxTtq6VWof98Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200804095926.205643-2-codrin.ciubotariu@microchip.com>
+In-Reply-To: <CAHk-=wg9dzJOkvysjgdHv5eFJU76EFAwCxNenRxTtq6VWof98Q@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 04, 2020 at 05:59:19PM -0700, Linus Torvalds wrote:
+> So again, doing that
+> 
+>         if (file_count(file) > 1)
+> 
+> kind of check is very very wrong even outside of the fundamental race
+> with two close() calls at the same time.
+> 
+> It is a very dangerous pattern, because it likely works in practice
+> during testing, and looks like it might work.
+> 
+> But it is completely and unfixably wrong.
+> 
+> Again, the only reliable way to do that "last close" is "->release()",
+> but you will never get errors from that, since (for all the same
+> reasons) it might not even be done by a close. The last releaser of a
+> file descriptor might be that mmap/io_uring/proc case now releasing
+> the no longer used file, possibly long after the last "close()" call
+> has happened.
+> 
+> One acceptable half-way measure *may* be
+> 
+>  - do the flush with the above bogus test at ->flush() time, knowing
+> it might never trigger at all
+> 
+>  - do the flush *again* at ->release() time, in case it didn't trigger
+> 
+>  - add a big comment to the flush-time case to show you understand the
+> issue, and understand
+> 
+> but I'd discourage it because of how unreliable it is.
 
---G4iJoqBmSsgzjUCe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, but this is a fundamental problem with the commit on close
+model that the configfs binary attributes implement, and we have to
+work around that somehow.  The current behavior is to entirely ignore
+errors, which of course has major issues.  I guess the alternative might
+be to just commit on every ->flush as the use case (and yes I know
+people could abuse it) for the configfs files is a set of simple
+write syscalls.  Then again the above might be better than that.
 
-On Tue, Aug 04, 2020 at 12:59:23PM +0300, Codrin Ciubotariu wrote:
-> The I2C GPIO bus recovery properties consist of two GPIOS and one extra
-> pinctrl state ("gpio" or "recovery"). "recovery" pinctrl state is
-> considered deprecated and "gpio" should be used instead.
-> Not all are mandatory for recovery.
->=20
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-
-Kept the alphabetical sorting, added a space before '(', took the
-liberty to add Rob's review from last version (no significant change
-IMO) and applied to for-next, thanks!
-
-
---G4iJoqBmSsgzjUCe
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8qba0ACgkQFA3kzBSg
-KbYFzRAAoERSE5FsXZu9pjxLQo28Wa1tiIn+ioFpBYLXTdY+7JOuBa4aIYeUCPZk
-mDCip6vA8xSoS4Gg1agLmKnZ5JxqsJNjEhLFpkq5ATFq9i0i3G2MX/uQAa/miYkf
-vamRcT539NoT3eq/4w8lUgdVhpDf1epcABWAHYONFfAFp9RAZhDIuosp09teSS62
-xlagvz/F0DrMrEAfqSRSyMbo7kmLZoGG6vR5Z3lssL5ZkoD53wi35XsAmmlnHFUz
-BtngTo3aswx5sBdAtz5X/4nUSOHvmcbI1W36XNYOSnQsICcepaRoiqF3HW/iAASR
-1y3+sMBqHqhh7IcZCG/XGnXCMQMNW1/yStB9D16rW6w/0HtE18I/RhERMY/C2m4X
-DuMnOO0bzBky5y8YAUXwCsHu+dTUSkNAJHtAVXgKLueKZqt1kL5FOHiRre5CVbPn
-sF/1LiVqFpsYLjeL814xChwsG4vNWgK/2LgPo+Wvb8q2yAEvZwvf43UlXkQqeqFf
-8EmaQaODv0C0/yJJnsXuZbKskSNADY9PNuF3jjOtNbxw+61a4p69z3atCGgm4WPE
-i3kM9/kqmtQIHCftWaOvBUtxgXugEyjFeBNaClueE8uBaV7Luqw9fuER731CqOyT
-bjBUw/YIVIBBHjBJixh+o9vkY9KHMVRCABxVSpdSNSUxoQYHhl0=
-=SBdL
------END PGP SIGNATURE-----
-
---G4iJoqBmSsgzjUCe--
+Lenny, can you look ingo that?
