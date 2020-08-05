@@ -2,116 +2,85 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9428AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A57CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 692A920842
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3421622B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:52:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="EkQQ89yO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EaHVI8Yp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgHETwH (ORCPT
+        id S1728393AbgHETwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:52:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47316 "EHLO
+        Wed, 5 Aug 2020 15:52:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728067AbgHEQvq (ORCPT
+        with ESMTP id S1728188AbgHEQvk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:51:46 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57BE3C0617AA
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 04:01:23 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id m8so15638642pfh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 04:01:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IXl0op0XvQYTvwb5bcKNryRkXDVpBLnZpOMVzhjZNkQ=;
-        b=EkQQ89yOe1EY9nCbVWZoj+93xO0UKBjV3pPJai1tGnUiFF0YVCdf8dXYFZQB9ONXtR
-         ep47VBzoQ6jmxkdmei8O1tV8rewHUskV5pgNaUV3mfnLbFe/qmGR8zOxPkqx/ZrF0iIS
-         LOlEzVbCSII1vSt3mVT+9npv7i8tO6fEvWnA0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IXl0op0XvQYTvwb5bcKNryRkXDVpBLnZpOMVzhjZNkQ=;
-        b=pZy2eMLWJ4LaBUd0/TSo2ngwYE4CtqeBoD6jSELz1yA8jU3FSHLdKqdcRM6VguXI+R
-         Iza1Ab5u3zWr66cjeo6vibvoLwxuHrVy+P6JhZ7VSieH/BrnJnaPMTzZQTtKsFhTPyzp
-         uC6jYBq0t6EVQBvxGN5WHF0mLPLvZ9rXcrWhx5TXpdk1agi0VMga87wvsRVdpxRFyvgD
-         tqGr4S3106iyv5Ry1bc/0wSj1TA0M+A/IoZVuevZV4WcQVvk9vcKhN4A/ay1JpZHnysP
-         eZGoC8O7gSJfmkX46oPgu61zFWUQCb5dcsaYKmsmpCSURWgR9A3b+PS2QCEiohUMAZ2N
-         12Fw==
-X-Gm-Message-State: AOAM533wFlSpQ0U6bvG2dzJJMK7RmNEHkUFdZ6Z5qVqoq+I7D4q7cKGJ
-        TV2rXNfKfP4BC2aotWkDlm3SMg==
-X-Google-Smtp-Source: ABdhPJzHQO7oRI8Z0FA40Z+RnWxDwemAbCPf5cqMPN8QdngN6CsqzLsAddBnozTIqq8fndWf2sqZew==
-X-Received: by 2002:a63:b74f:: with SMTP id w15mr2581625pgt.314.1596625281526;
-        Wed, 05 Aug 2020 04:01:21 -0700 (PDT)
-Received: from shiro.work (p532183-ipngn200506sizuokaden.shizuoka.ocn.ne.jp. [153.199.2.183])
-        by smtp.googlemail.com with ESMTPSA id fv21sm2583142pjb.16.2020.08.05.04.01.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 04:01:20 -0700 (PDT)
-From:   Daniel Palmer <daniel@0x0f.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        robh+dt@kernel.org, arnd@arndb.de, Daniel Palmer <daniel@0x0f.com>
-Subject: [PATCH 0/3] irqchip: mstar: msc313 intc driver
-Date:   Wed,  5 Aug 2020 20:00:49 +0900
-Message-Id: <20200805110052.2655487-1-daniel@0x0f.com>
-X-Mailer: git-send-email 2.27.0
+        Wed, 5 Aug 2020 12:51:40 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5642AC0617A1;
+        Wed,  5 Aug 2020 03:42:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=T7Zf13XTlUQSe/dbrPakLq04rPma9WfTqW7+qPuHC/8=; b=EaHVI8YpmOMLdyJSiFa8b1rMZa
+        0pJMt8imbpuIDWtkEyuefvwlxGb3nV5J+pz5zWStG5j+fmTmLkA9tqg7L3p1a6WcpMKdFhV4a0DaD
+        VyPLI7JjRDuAmMRSIWaEywhQdx9uRyCg0JYiAyPE0+sP7iSJ8zVa0RAAz36CQx1kqy9rUEy0DjUEM
+        8SQ9nLZcb4IBuuGFOT5BwydR56trYSzQfkcWmmL5o5sY4LvAU9hqp4ye9W5vJrnYFflNd+9tQS/yL
+        VIzjvHwaapa6qqUpbyx+xFkwsRpbKkKHZd4+3aVr/hc5UNNtsJDfW0W/niTsXW6+ZOGBtGxeX2EU0
+        OQ+M/oAw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k3Grl-0005Zg-JH; Wed, 05 Aug 2020 10:41:51 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DEF00301A66;
+        Wed,  5 Aug 2020 12:41:46 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8CC03235CDBB2; Wed,  5 Aug 2020 12:41:46 +0200 (CEST)
+Date:   Wed, 5 Aug 2020 12:41:46 +0200
+From:   peterz@infradead.org
+To:     ren_guo@c-sky.com
+Cc:     linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
+        mathieu.desnoyers@efficios.com, Will Deacon <will@kernel.org>
+Subject: csky: smp_mb__after_spinlock
+Message-ID: <20200805104146.GP2674@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver adds support for the interrupt controllers
-present between the various IP blocks and the ARM GIC
-in MStar/SigmaStar Armv7 SoCs.
+Hi,
 
-All of the chips so far have two instances of this
-controller.
+While doing an audit of smp_mb__after_spinlock, I found that csky
+defines it, why?
 
-One instance controls what are called "IRQ" interrupts
-by the vendor code I have seen.
+CSKY only has smp_mb(), it doesn't override __atomic_acquire_fence or
+otherwise special cases it's atomic*_acquire() primitives. It has an
+explicit smp_mb() in its arch_spin_lock().
 
-The other instance controls what are called "FIQ" interrupts
-by the vendor code. Presumably because they can be FIQ
-interrupts. Right now the FIQ bypass is disabled in the
-GIC so they operate just the same as the IRQ interrupts.
-
-The register layouts are the same for both. The FIQ one
-needs to have the status bit cleared on EOI so that difference
-is handled by a compatible string difference.
-
-I initially made this an RFC because this is my first
-interrupt controller driver and I expect to have made a
-bunch of mistakes. I've cleaned this up a bit since then
-but I still expect it's not 100% correct. Especially
-the offset to map the INTC interrupt to the GIC interrupt.
-
-Daniel Palmer (3):
-  dt: bindings: interrupt-controller: Add binding description for
-    msc313-intc
-  irqchip: mstar: msc313-intc interrupt controller driver
-  ARM: mstar: Add interrupt controller to base dtsi
-
- .../mstar,msc313-intc.yaml                    |  79 +++++++
- MAINTAINERS                                   |   2 +
- arch/arm/boot/dts/mstar-v7.dtsi               |  20 ++
- drivers/irqchip/Makefile                      |   1 +
- drivers/irqchip/irq-msc313-intc.c             | 210 ++++++++++++++++++
- 5 files changed, 312 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mstar,msc313-intc.yaml
- create mode 100644 drivers/irqchip/irq-msc313-intc.c
-
--- 
-2.27.0
-
+---
+diff --git a/arch/csky/include/asm/spinlock.h b/arch/csky/include/asm/spinlock.h
+index 7cf3f2b34cea..22a05caf2d18 100644
+--- a/arch/csky/include/asm/spinlock.h
++++ b/arch/csky/include/asm/spinlock.h
+@@ -88,9 +88,6 @@ static inline int arch_spin_is_contended(arch_spinlock_t *lock)
+ 
+ #include <asm/qrwlock.h>
+ 
+-/* See include/linux/spinlock.h */
+-#define smp_mb__after_spinlock()	smp_mb()
+-
+ #else /* CONFIG_QUEUED_RWLOCKS */
+ 
+ /*
