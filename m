@@ -2,92 +2,100 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9440C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC57C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82B3C22B42
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:08:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596658110;
-	bh=EiATByOyKVVEDEiKPvEDXfJXjBlvSpmgzgFeI6rtaeE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t+wB8hwpLxnx+JvHLL6EldI4HtvW03Iz5xeb76p+eJPMongja+CLXApn3Vp0kn4sW
-	 TN+CNgXe66Yo0sLldzYOwj9V51JR/Oq0OYwc5AqosusIFRAiOzNwBnWSjvcwZMhNQ/
-	 6o+d79dg7P544j5piH+MzlBXy5O/SVfLAO2Riik8=
+	by mail.kernel.org (Postfix) with ESMTP id DA69322CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:08:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbgHEUI3 (ORCPT
+        id S1729164AbgHEUIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:08:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726872AbgHEQce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 16:08:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43802 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbgHEQce (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:32:34 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAA1622CF7;
-        Wed,  5 Aug 2020 11:03:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596625426;
-        bh=EiATByOyKVVEDEiKPvEDXfJXjBlvSpmgzgFeI6rtaeE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1U99Db/ClRkQ6KDU37nlwCde0OcY8IsBhaUDb/7P4LktqYY+Z0aXwlIHJjaLLEg0i
-         HP6UmQ81xNImqJlw9hvBneS5eOrYgM8OpOB2BwT4o1Bk6ZArKj0cqnNrzzsAZPZsn9
-         CMXDKJsrOkcPyiFsNo1isIOAWdLVMRyDgwbTlfLg=
-Date:   Wed, 5 Aug 2020 12:03:23 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Alain Volmat <alain.volmat@st.com>
-Cc:     amelie.delaunay@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-Subject: Re: [PATCH 16/18] spi: stm32: always perform registers configuration
- prior to transfer
-Message-ID: <20200805110323.GJ5556@sirena.org.uk>
-References: <1596610933-32599-1-git-send-email-alain.volmat@st.com>
- <1596610933-32599-17-git-send-email-alain.volmat@st.com>
+Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EC18C008691;
+        Wed,  5 Aug 2020 07:33:09 -0700 (PDT)
+Received: by mail-oo1-xc42.google.com with SMTP id x1so6635989oox.6;
+        Wed, 05 Aug 2020 07:33:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tpO2xc5Co4QKfwe/fUkQqUFFAe1WeeGtz1oyCqUMySo=;
+        b=LhYz9i6I5AM4ZFtxHd+I9u1ASrO4rAxTxI/t4siugm6WhxTGylbyg693lSH2SkAJZg
+         IIGDv8cuq2Atkg6a/memP/3ZxkHNwXGhTlhzGgql3a+l8cb4BSqpY41/FoS2Dey738US
+         HNY7oS82tp4qxK0zU5KSG+5wR25XkLh17nddtBS+6isamMTdOSpgHAG7z+Dv3ZLvYKSj
+         WGny2c2fiRFPZvJ/1bYdsySXuQgp4q5b00waN4/XfIO6UGXfbhT3GB3aIdI6DdpTqwQf
+         PttRBBuebLldZ7pofLVcvbU+u/4I905HPTm1+H9J+KjyGphDBVlO8Qd1DI2oAJ/StVAp
+         dTsA==
+X-Gm-Message-State: AOAM533LjPC09EQ93J7+rqUEO7o2QGimyEUznlys74pspdXXuJB5yAAR
+        UXzpdrWWpUaJ+hWv1tXbOuarwbxyZUyw1hXSS06MMhU6
+X-Google-Smtp-Source: ABdhPJxign8Uk2fIcUs7RpIodong0uS1bWU72pwITdrYewzbK7L9StNz09TcvScLc02ZC/yaUnpVr8Fq/+75ppivh0g=
+X-Received: by 2002:a4a:9d19:: with SMTP id w25mr2320144ooj.11.1596626166283;
+ Wed, 05 Aug 2020 04:16:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="x+WOirvrtTKur1pg"
-Content-Disposition: inline
-In-Reply-To: <1596610933-32599-17-git-send-email-alain.volmat@st.com>
-X-Cookie: Fast, cheap, good: pick two.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-16-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594919915-5225-16-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 5 Aug 2020 13:15:54 +0200
+Message-ID: <CAMuHMdWzwQpjhOeVDkj1b1L7mJuxnLpVMO-3WMMLF3oJMzgAmg@mail.gmail.com>
+Subject: Re: [PATCH 15/20] arm64: dts: renesas: r8a774e1: Add audio support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 16, 2020 at 7:20 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add sound support for the RZ/G2H SoC (a.k.a. R8A774E1).
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
---x+WOirvrtTKur1pg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.10.
 
-On Wed, Aug 05, 2020 at 09:02:11AM +0200, Alain Volmat wrote:
-> SPI registers content may have been lost upon suspend/resume sequence.
-> So, always compute and apply the necessary configuration in
-> stm32_spi_transfer_one_setup routine.
+Gr{oetje,eeting}s,
 
-This also.
+                        Geert
 
---x+WOirvrtTKur1pg
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8qkfoACgkQJNaLcl1U
-h9BirAf9F8v+4ZpcM5/rsegzbIEMnqmQNj2m1sFs+bLGVfyscsekXzaSTqzqJkC7
-nev7KJtz7moksvzFim3TlHdPOTGmX9YOGii/DSqoYftYYbqHLfZhYkEXE5xZQfkm
-NymiZpnrHMSWOUaV8EGcpL2971rJHz+7LoOwwiJAPLofZu6fJLHXDw7ZMCZ27RIk
-6GKEVtsn+Vhh0oh5RzSVeKwmEBtaj0Qng8SA0xRC2+1dGhmPFYAbznHVWrFyJYs1
-WtIKtCh/v8wZ732BrS4qiyd/l5UdyesjRBugNMwx7ZNlqLwYHiFQhh8VxX1ot+hI
-72nCUjTwhxvzVa40nFYNpPYf/9ZbAw==
-=1GlO
------END PGP SIGNATURE-----
-
---x+WOirvrtTKur1pg--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
