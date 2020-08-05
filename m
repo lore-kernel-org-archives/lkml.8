@@ -2,171 +2,199 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC41C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD82C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B50B2076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:02:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vAw9kGgb"
+	by mail.kernel.org (Postfix) with ESMTP id 509B62076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:02:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596657737;
+	bh=FMBxdA5JmzzOJjTyt2cWeFUljW7MBpHfnQXnyELzolg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=w7I7yYV1sRkSqsBuTzt9wB4GkCW5SZFrexFxsJbtqls7uIlGJdmQnszdShedSNobp
+	 MasGSHJC/MltSXOpSIcAftkAMIYTaIBBOW6ZOV209kkyyLZTuB1iHY7c9q37luDL0H
+	 fsownGhWVFIL0D08v77eyp5wPZpZZ1MENGjXrYRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728229AbgHEUCA (ORCPT
+        id S1728583AbgHEUCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:02:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45422 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727116AbgHEQkG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:40:06 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B87C0086CF;
-        Wed,  5 Aug 2020 07:15:10 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id y206so12491410pfb.10;
-        Wed, 05 Aug 2020 07:15:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=+xqqce3bt1Dd6YXyCPFzN+2GzEUcHoRk0/h1IH691fM=;
-        b=vAw9kGgbL9KkM2+HjZkFVCiAEauRuoyizHa2DE6NIt/H/ukbr4biFl6FGaPLzqYR1m
-         Y8feBgiVM4qSu50iFsGj6seA3Q+j9oLVsC7ZTIW301zQZQePILt51nINe00B/lm8asGU
-         PKFIcoHfyTy1Yx46R8iwO4Rxoy5FpkzLWDtvWhOqdK9bSIiQs6/5DuDW7e0ipqsIoY0A
-         08il6ksimfsPfvDVAGglj0SYwjOIfKLZxarQPN2FahhOz43Is6/czXHIMgMCOgMr4y04
-         vhwJqQOnsRjbTh6jrbJbOGh7SYE4nuYoF8PVX7nrKYDnKxHNrLHLJczLHyu9B/gQ/KA7
-         GRjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=+xqqce3bt1Dd6YXyCPFzN+2GzEUcHoRk0/h1IH691fM=;
-        b=bRSBgwUsoZJA+v2asKhhrB0Q6JOGDp+Ykwbvb5CrNSQaZhPP675pt3f6D8R4fqdKp+
-         LAaeJPAlRVFqvwa0ysLPtO7c66We2P366giN0AR81qYVVzguwoaoZyXOvu7cHVUhlfQ9
-         nUTanDYeXJb4ETE3aWDfUpZBOfdZYl5D8Tb4w0Ut5WomoXYzXqExMs2xjepXvUgi8UrV
-         5gN+vh0eshD5/ehUs/kwbLjCJkFIQXVMS2yWY9R24gOg4/kYIVP6q2ZdPR1sNYU5Fyii
-         jX/I9t4sQyqMRYgVNRJunhmvNkWfvMdfcxWjHudZRKYBClqFS9haijnnpWPD2tWczB6u
-         /08Q==
-X-Gm-Message-State: AOAM533zPAOCh9O5T70rmqZA9opE0BjCDZxblhpRgnOlqeFXeUCh1KBa
-        ZYVQLt9r+8SmxpYqxPgbnmY=
-X-Google-Smtp-Source: ABdhPJwbuUbGXm01c54qPcEJaJWwHBAtthhYKl/qC5Dq5fmWMZtf+rrnJZ29JSqA4wwniCL3ChsA7g==
-X-Received: by 2002:a62:6842:: with SMTP id d63mr3551252pfc.82.1596636907357;
-        Wed, 05 Aug 2020 07:15:07 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.62])
-        by smtp.gmail.com with ESMTPSA id g12sm3197172pjd.6.2020.08.05.07.15.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 07:15:06 -0700 (PDT)
-From:   Yulei Zhang <yulei.kernel@gmail.com>
-To:     pbonzini@redhat.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sean.j.christopherson@intel.com, jmattson@google.com,
-        vkuznets@redhat.com, xiaoguangrong.eric@gmail.com,
-        kernellwp@gmail.com, lihaiwei.kernel@gmail.com,
-        Yulei Zhang <yuleixzhang@tencent.com>
-Subject: [RFC 8/9] Introduce kvm module parameter global_tdp to turn on the direct build EPT mode
-Date:   Wed,  5 Aug 2020 22:15:56 +0800
-Message-Id: <20200805141556.9430-1-yulei.kernel@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 5 Aug 2020 16:02:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50648 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727873AbgHEQii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 12:38:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F78C233F9;
+        Wed,  5 Aug 2020 15:53:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596642824;
+        bh=FMBxdA5JmzzOJjTyt2cWeFUljW7MBpHfnQXnyELzolg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aCgJRO7NJc7Uvg3BKfXuE4hctyC+fofZuMGGYnqTC4X6kCmZ65PxBgDn9UAJyFTem
+         7vvlEpeTMyAIrPPSk5IyY0wDPB2oB7MwrB/1NxX3d4AiI974Z5WMrLRPuw+LS+daOK
+         MdbUTdueeO76F2QCa+vpFRb67e6aZC0of/sPEK2o=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Wang Long <wanglong19@meituan.com>,
+        Jiang Ying <jiangying8582@126.com>
+Subject: [PATCH 4.14 7/8] ext4: fix direct I/O read error
+Date:   Wed,  5 Aug 2020 17:53:33 +0200
+Message-Id: <20200805153507.344548361@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200805153507.005753845@linuxfoundation.org>
+References: <20200805153507.005753845@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yulei Zhang <yuleixzhang@tencent.com>
+From: Jiang Ying <jiangying8582@126.com>
 
-Currently global_tdp is only supported on intel X86 system with ept
-supported, and it will turn off the smm mode when enable global_tdp.
+This patch is used to fix ext4 direct I/O read error when
+the read size is not aligned with block size.
 
-Signed-off-by: Yulei Zhang <yuleixzhang@tencent.com>
+Then, I will use a test to explain the error.
+
+(1) Make a file that is not aligned with block size:
+	$dd if=/dev/zero of=./test.jar bs=1000 count=3
+
+(2) I wrote a source file named "direct_io_read_file.c" as following:
+
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <unistd.h>
+	#include <sys/file.h>
+	#include <sys/types.h>
+	#include <sys/stat.h>
+	#include <string.h>
+	#define BUF_SIZE 1024
+
+	int main()
+	{
+		int fd;
+		int ret;
+
+		unsigned char *buf;
+		ret = posix_memalign((void **)&buf, 512, BUF_SIZE);
+		if (ret) {
+			perror("posix_memalign failed");
+			exit(1);
+		}
+		fd = open("./test.jar", O_RDONLY | O_DIRECT, 0755);
+		if (fd < 0){
+			perror("open ./test.jar failed");
+			exit(1);
+		}
+
+		do {
+			ret = read(fd, buf, BUF_SIZE);
+			printf("ret=%d\n",ret);
+			if (ret < 0) {
+				perror("write test.jar failed");
+			}
+		} while (ret > 0);
+
+		free(buf);
+		close(fd);
+	}
+
+(3) Compile the source file:
+	$gcc direct_io_read_file.c -D_GNU_SOURCE
+
+(4) Run the test program:
+	$./a.out
+
+	The result is as following:
+	ret=1024
+	ret=1024
+	ret=952
+	ret=-1
+	write test.jar failed: Invalid argument.
+
+I have tested this program on XFS filesystem, XFS does not have
+this problem, because XFS use iomap_dio_rw() to do direct I/O
+read. And the comparing between read offset and file size is done
+in iomap_dio_rw(), the code is as following:
+
+	if (pos < size) {
+		retval = filemap_write_and_wait_range(mapping, pos,
+				pos + iov_length(iov, nr_segs) - 1);
+
+		if (!retval) {
+			retval = mapping->a_ops->direct_IO(READ, iocb,
+						iov, pos, nr_segs);
+		}
+		...
+	}
+
+...only when "pos < size", direct I/O can be done, or 0 will be return.
+
+I have tested the fix patch on Ext4, it is up to the mustard of
+EINVAL in man2(read) as following:
+	#include <unistd.h>
+	ssize_t read(int fd, void *buf, size_t count);
+
+	EINVAL
+		fd is attached to an object which is unsuitable for reading;
+		or the file was opened with the O_DIRECT flag, and either the
+		address specified in buf, the value specified in count, or the
+		current file offset is not suitably aligned.
+
+So I think this patch can be applied to fix ext4 direct I/O error.
+
+However Ext4 introduces direct I/O read using iomap infrastructure
+on kernel 5.5, the patch is commit <b1b4705d54ab>
+("ext4: introduce direct I/O read using iomap infrastructure"),
+then Ext4 will be the same as XFS, they all use iomap_dio_rw() to do direct
+I/O read. So this problem does not exist on kernel 5.5 for Ext4.
+
+>From above description, we can see this problem exists on all the kernel
+versions between kernel 3.14 and kernel 5.4. It will cause the Applications
+to fail to read. For example, when the search service downloads a new full
+index file, the search engine is loading the previous index file and is
+processing the search request, it can not use buffer io that may squeeze
+the previous index file in use from pagecache, so the serch service must
+use direct I/O read.
+
+Please apply this patch on these kernel versions, or please use the method
+on kernel 5.5 to fix this problem.
+
+Fixes: 9fe55eea7e4b ("Fix race when checking i_size on direct i/o read")
+Reviewed-by: Jan Kara <jack@suse.cz>
+Co-developed-by: Wang Long <wanglong19@meituan.com>
+Signed-off-by: Wang Long <wanglong19@meituan.com>
+Signed-off-by: Jiang Ying <jiangying8582@126.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/include/asm/kvm_host.h |  4 ++++
- arch/x86/kvm/mmu/mmu.c          |  5 ++++-
- arch/x86/kvm/x86.c              | 11 ++++++++++-
- 3 files changed, 18 insertions(+), 2 deletions(-)
+ fs/ext4/inode.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 7063b9d2cac0..a8c219fb33f5 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1368,6 +1368,8 @@ extern u64  kvm_default_tsc_scaling_ratio;
- 
- extern u64 kvm_mce_cap_supported;
- 
-+extern bool global_tdp;
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -3794,6 +3794,11 @@ static ssize_t ext4_direct_IO_read(struc
+ 	struct inode *inode = mapping->host;
+ 	size_t count = iov_iter_count(iter);
+ 	ssize_t ret;
++	loff_t offset = iocb->ki_pos;
++	loff_t size = i_size_read(inode);
 +
- /*
-  * EMULTYPE_NO_DECODE - Set when re-emulating an instruction (after completing
-  *			userspace I/O) to indicate that the emulation context
-@@ -1698,6 +1700,8 @@ static inline int kvm_cpu_get_apicid(int mps_cpu)
- #endif
- }
- 
-+inline bool boot_cpu_is_amd(void);
-+
- #define put_smstate(type, buf, offset, val)                      \
- 	*(type *)((buf) + (offset) - 0x7e00) = val
- 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 485f7287aad2..f963a3b0500f 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4630,7 +4630,7 @@ reset_shadow_zero_bits_mask(struct kvm_vcpu *vcpu, struct kvm_mmu *context)
- }
- EXPORT_SYMBOL_GPL(reset_shadow_zero_bits_mask);
- 
--static inline bool boot_cpu_is_amd(void)
-+inline bool boot_cpu_is_amd(void)
- {
- 	WARN_ON_ONCE(!tdp_enabled);
- 	return shadow_x_mask == 0;
-@@ -6471,6 +6471,9 @@ int kvm_direct_tdp_populate_page_table(struct kvm *kvm, struct kvm_memory_slot *
- 	kvm_pfn_t pfn;
- 	int host_level;
- 
-+	if (!global_tdp)
++	if (offset >= size)
 +		return 0;
-+
- 	if (!kvm->arch.global_root_hpa) {
- 		struct page *page;
- 		WARN_ON(!tdp_enabled);
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 37e11b3588b5..abe838240084 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -162,6 +162,9 @@ module_param(force_emulation_prefix, bool, S_IRUGO);
- int __read_mostly pi_inject_timer = -1;
- module_param(pi_inject_timer, bint, S_IRUGO | S_IWUSR);
  
-+bool __read_mostly global_tdp;
-+module_param_named(global_tdp, global_tdp, bool, S_IRUGO);
-+
- #define KVM_NR_SHARED_MSRS 16
- 
- struct kvm_shared_msrs_global {
-@@ -3403,7 +3406,10 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 		 * fringe case that is not enabled except via specific settings
- 		 * of the module parameters.
- 		 */
--		r = kvm_x86_ops.has_emulated_msr(MSR_IA32_SMBASE);
-+		if (global_tdp)
-+			r = 0;
-+		else
-+			r = kvm_x86_ops.has_emulated_msr(MSR_IA32_SMBASE);
- 		break;
- 	case KVM_CAP_VAPIC:
- 		r = !kvm_x86_ops.cpu_has_accelerated_tpr();
-@@ -9675,6 +9681,9 @@ int kvm_arch_hardware_setup(void *opaque)
- 	if (r != 0)
- 		return r;
- 
-+	if ((tdp_enabled == false) || boot_cpu_is_amd())
-+		global_tdp = 0;
-+
- 	memcpy(&kvm_x86_ops, ops->runtime_ops, sizeof(kvm_x86_ops));
- 
- 	if (!kvm_cpu_cap_has(X86_FEATURE_XSAVES))
--- 
-2.17.1
+ 	/*
+ 	 * Shared inode_lock is enough for us - it protects against concurrent
+
 
