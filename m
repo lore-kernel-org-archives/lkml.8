@@ -2,253 +2,274 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D331C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC9F2076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:50:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 374F520842
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:50:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tlMr0ee5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WAmuiavo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbgHETuW (ORCPT
+        id S1728268AbgHETu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:50:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47334 "EHLO
+        Wed, 5 Aug 2020 15:50:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbgHEQxw (ORCPT
-        <rfc822;Linux-kernel@vger.kernel.org>);
+        with ESMTP id S1728100AbgHEQxw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:53:52 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF741C034611
-        for <Linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 05:45:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=unp2ULRv3n88LTY/GZXfJgG6CYh6rsWdx2r0Nn+lYa4=; b=tlMr0ee5tqEHn8jmPLIhwMd3R4
-        xHTX+0F6Xm0542kkqE05tQMKd8tUr3AmyWi/BoiRJ9hWbnzctbx2gROvD45wboJGPP6Nc4xz+rKMn
-        6O1h0X+hb6hw7qL9CsRplNZwx+ozmZFh4c+67CZZSyRL71NM9wuMRbMw9OWnnpArjcR8EtJ0wipRZ
-        NjhLoY4BxwBqBww+csnY9YUWwwwdble4rvygMYwTh8s3UgluucVW+cJhmW5S4pPzGL2G0qCUCnOI5
-        fV470+cIrIItw06PjGGTSC2oVxFLelj0iHWRzXWigoIOq9x9k+h2YT7ACf6Qdprs2egJDNhRKDvOl
-        SHB+dleQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k3Imv-0000GA-Lo; Wed, 05 Aug 2020 12:44:58 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BC085301E02;
-        Wed,  5 Aug 2020 14:44:54 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AE16223E7A6AB; Wed,  5 Aug 2020 14:44:54 +0200 (CEST)
-Date:   Wed, 5 Aug 2020 14:44:54 +0200
-From:   peterz@infradead.org
-To:     "Jin, Yao" <yao.jin@linux.intel.com>
-Cc:     mingo@redhat.com, oleg@redhat.com, acme@kernel.org,
-        jolsa@kernel.org, Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        alexander.shishkin@linux.intel.com, mark.rutland@arm.com
-Subject: Re: [PATCH v1 2/2] perf/core: Fake regs for leaked kernel samples
-Message-ID: <20200805124454.GP2657@hirez.programming.kicks-ass.net>
-References: <20200731025617.16243-1-yao.jin@linux.intel.com>
- <20200731025617.16243-2-yao.jin@linux.intel.com>
- <20200804114900.GI2657@hirez.programming.kicks-ass.net>
- <4c958d61-11a7-9f3e-9e7d-d733270144a1@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4c958d61-11a7-9f3e-9e7d-d733270144a1@linux.intel.com>
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B759CC034617
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 05:49:48 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id d190so5697530wmd.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 05:49:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=aeL1/kmzV5klgxwNmoqHqRskkWEVKnTd0w9wdAMhO/E=;
+        b=WAmuiavoNO5SrR9ev60NCdMPW1s7JSDTVl3tsS2T9FBY1b18G+eebdQyaaJeIT0Ghi
+         Pex8XIIGsYw4qPwkMZTz6zmTuHVi4T+PLDokYUjqNdPV+MDNMJnppTHQe/mBZjjluqic
+         0FI/5htQhx5Pw+hs3C4xYFIoxIz5BFheWT/idUSj56K+Q/G61X+zyb5UzjGSLFizZbzY
+         SSY0dTnkJ5vAidyXonsHmnucPLm4yoMlv7yv6D86gaMHZhMxXrDkIIgGSgCQ4k/ESe5U
+         FvQ4esh+ykvDYYrX1QT+5qyF8ckUY3SSTNU/BvL4ViaI2XKWEcks/ECt8bzz5spVnmdk
+         W5+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=aeL1/kmzV5klgxwNmoqHqRskkWEVKnTd0w9wdAMhO/E=;
+        b=LuvOgNG3krafyC9QFZAWOpDqpXz051hBJWKMYaIwPQEFnnOUwz8gQDTcUGAimp8njI
+         tjMqzawccrYli7o1vw4TK10oDKD2pJf+l4lFrylG+IaiRStBHdvy+Lz/PUPuu7kcXpsb
+         1MmWygSybC22NTUGI0BCaVnlZntGTf2uPilawub5y3U/rKXhfI0+hv7JIshTx0kizt3I
+         UBTMrhd+YLkNvcfQyC1wqJ2GxoPlGJBd+r8NFDVJ6+vt4VOsq2gZyMm5ejjO3S2DHC1W
+         qniAOnCNSRK0lDmCKp8uhLtHw7MXV91T4FZkiQsc6dm289f4/ys1+hXtezcYaXfSTaxR
+         9yyQ==
+X-Gm-Message-State: AOAM53168VKYN2GpRvrkGUDdzuH6ZfDRk2im0KGbylVryH7jwm7+EkGp
+        9VfgGV1dMGvxPuZN4Dv7lWnXnERP
+X-Google-Smtp-Source: ABdhPJylKwIbndyLGfYQ0B7bmzNn5iv4k0xutgN9bL9Dv48Z0AtPAYsK0ZAePNYdSmBptYcPdUaX/g==
+X-Received: by 2002:a1c:7d12:: with SMTP id y18mr3035240wmc.115.1596631786445;
+        Wed, 05 Aug 2020 05:49:46 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
+        by smtp.gmail.com with ESMTPSA id 33sm2713525wri.16.2020.08.05.05.49.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 05:49:44 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
+Cc:     farah kassabri <fkassabri@habana.ai>
+Subject: [PATCH 2/2] habanalabs: remove security from ARB_MST_QUIET register
+Date:   Wed,  5 Aug 2020 15:49:39 +0300
+Message-Id: <20200805124939.13935-2-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200805124939.13935-1-oded.gabbay@gmail.com>
+References: <20200805124939.13935-1-oded.gabbay@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 10:15:26AM +0800, Jin, Yao wrote:
-> Hi Peter,
-> 
-> On 8/4/2020 7:49 PM, peterz@infradead.org wrote:
-> > On Fri, Jul 31, 2020 at 10:56:17AM +0800, Jin Yao wrote:
-> > > @@ -6973,7 +6973,8 @@ static struct perf_callchain_entry __empty_callchain = { .nr = 0, };
-> > >   struct perf_callchain_entry *
-> > >   perf_callchain(struct perf_event *event, struct pt_regs *regs)
-> > >   {
-> > > -	bool kernel = !event->attr.exclude_callchain_kernel;
-> > > +	bool kernel = !event->attr.exclude_callchain_kernel &&
-> > > +		      !event->attr.exclude_kernel;
-> > 
-> > This seems weird; how can we get there. Also it seems to me that if you
-> > have !exclude_callchain_kernel you already have permission for kernel
-> > bits, so who cares.
-> > 
-> 
-> In perf tool, exclude_callchain_kernel is set to 1 when perf-record only
-> collects the user callchains and exclude_kernel is set to 1 when events are
-> configured to run in user space.
-> 
-> So if an event is configured to run in user space, that should make sense we
-> don't need it's kernel callchains.
-> 
-> But it seems to me there is no code logic in perf tool which can make sure
-> !exclude_callchain_kernel -> !exclude_kernel.
-> 
-> Jiri, Arnaldo, is my understanding correct?
+From: farah kassabri <fkassabri@habana.ai>
 
-What the perf tool does or does not do is irrelevant. It is a valid,
-(albeit slightly silly) configuration to have:
+Allow user application to write to this register in order
+to be able to configure the quiet period of the QMAN between grants.
 
-	exclude_kernel && !exclude_callchain_kernel
-
-You're now saying that when you configure things like this you're not
-allowed kernel IPs, that's wrong I think.
-
-Also, !exclude_callchain_kernel should require privilidge, whcih needs
-fixing, see below.
-
-> So the new code looks like:
-> 
-> if (event->attr.exclude_kernel && !user_mode(regs)) {
-> 	if (!(current->flags & PF_KTHREAD)) {
-> 		regs_fake = task_pt_regs(current);
-> 		if (!regs_fake)
-> 			instruction_pointer_set(regs, -1L);
-> 	} else {
-> 		instruction_pointer_set(regs, -1L);
-> 	}
-
-Again:
-
-	if (!(current->flags & PF_KTHREAD))
-		regs_fake = task_pt_regs(current);
-
-	if (!regs_fake)
-		instruction_pointer_set(regs, -1L);
-
-Is much simpler and more readable.
-
-> > > +		if ((header->misc & PERF_RECORD_MISC_CPUMODE_MASK) ==
-> > > +		     PERF_RECORD_MISC_KERNEL) {
-> > > +			header->misc &= ~PERF_RECORD_MISC_CPUMODE_MASK;
-> > > +			header->misc |= PERF_RECORD_MISC_USER;
-> > > +		}
-> > 
-> > Why the conditional? At this point it had better be unconditionally
-> > user, no?
-> > 
-> > 		headers->misc &= ~PERF_RECORD_MISC_CPUMODE_MASK;
-> > 		headers->misc |= PERF_RECORD_MISC_USER;
-> > 
-> 
-> #define PERF_RECORD_MISC_CPUMODE_MASK		(7 << 0)
-> #define PERF_RECORD_MISC_CPUMODE_UNKNOWN	(0 << 0)
-> #define PERF_RECORD_MISC_KERNEL			(1 << 0)
-> #define PERF_RECORD_MISC_USER			(2 << 0)
-> #define PERF_RECORD_MISC_HYPERVISOR		(3 << 0)
-> #define PERF_RECORD_MISC_GUEST_KERNEL		(4 << 0)
-> #define PERF_RECORD_MISC_GUEST_USER		(5 << 0)
-> 
-> If we unconditionally set user, it will reset for hypervisor, guest
-> kernel and guest_user.
-
-At the same time :u had better not get any of those either. Which seems
-to suggest we're going about this wrong.
-
-Also, if we call this before perf_misc_flags() we don't need to fix it
-up.
-
-How's this?
-
+Signed-off-by: farah kassabri <fkassabri@habana.ai>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- kernel/events/core.c | 38 +++++++++++++++++++++++++++++++++-----
- 1 file changed, 33 insertions(+), 5 deletions(-)
+ .../misc/habanalabs/gaudi/gaudi_security.c    | 55 +++++++------------
+ 1 file changed, 19 insertions(+), 36 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 7c436d705fbd..3e4e328b521a 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -6988,23 +6988,49 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
- 	return callchain ?: &__empty_callchain;
- }
- 
-+/*
-+ * Due to interrupt latency (skid), we may enter the kernel before taking the
-+ * PMI, even if the PMU is configured to only count user events. To avoid
-+ * leaking kernel addresses, use task_pt_regs(), when available.
-+ */
-+static struct pt_regs *sanitize_sample_regs(struct perf_event *event, struct pt_regs *regs)
-+{
-+	struct pt_regs *sample_regs = regs;
+diff --git a/drivers/misc/habanalabs/gaudi/gaudi_security.c b/drivers/misc/habanalabs/gaudi/gaudi_security.c
+index 8d5d6ddee6ed..615b547ad2b7 100644
+--- a/drivers/misc/habanalabs/gaudi/gaudi_security.c
++++ b/drivers/misc/habanalabs/gaudi/gaudi_security.c
+@@ -831,8 +831,7 @@ static void gaudi_init_mme_protection_bits(struct hl_device *hdev)
+ 			PROT_BITS_OFFS;
+ 	word_offset = ((mmMME0_QM_ARB_MST_CHOISE_PUSH_OFST_23 &
+ 			PROT_BITS_OFFS) >> 7) << 2;
+-	mask = 1 << ((mmMME0_QM_ARB_MST_QUIET_PER & 0x7F) >> 2);
+-	mask |= 1 << ((mmMME0_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
++	mask = 1 << ((mmMME0_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmMME0_QM_ARB_MSG_MAX_INFLIGHT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmMME0_QM_ARB_MSG_AWUSER_31_11 & 0x7F) >> 2);
+ 	mask |= 1 << ((mmMME0_QM_ARB_MSG_AWUSER_SEC_PROP & 0x7F) >> 2);
+@@ -1311,8 +1310,7 @@ static void gaudi_init_mme_protection_bits(struct hl_device *hdev)
+ 			PROT_BITS_OFFS;
+ 	word_offset = ((mmMME2_QM_ARB_MST_CHOISE_PUSH_OFST_23 &
+ 			PROT_BITS_OFFS) >> 7) << 2;
+-	mask = 1 << ((mmMME2_QM_ARB_MST_QUIET_PER & 0x7F) >> 2);
+-	mask |= 1 << ((mmMME2_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
++	mask = 1 << ((mmMME2_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmMME2_QM_ARB_MSG_MAX_INFLIGHT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmMME2_QM_ARB_MSG_AWUSER_31_11 & 0x7F) >> 2);
+ 	mask |= 1 << ((mmMME2_QM_ARB_MSG_AWUSER_SEC_PROP & 0x7F) >> 2);
+@@ -1790,8 +1788,7 @@ static void gaudi_init_dma_protection_bits(struct hl_device *hdev)
+ 	word_offset =
+ 		((mmDMA0_QM_ARB_MST_CHOISE_PUSH_OFST_23 & PROT_BITS_OFFS) >> 7)
+ 		<< 2;
+-	mask = 1 << ((mmDMA0_QM_ARB_MST_QUIET_PER & 0x7F) >> 2);
+-	mask |= 1 << ((mmDMA0_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
++	mask = 1 << ((mmDMA0_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA0_QM_ARB_MSG_MAX_INFLIGHT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA0_QM_ARB_MSG_AWUSER_31_11 & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA0_QM_ARB_MSG_AWUSER_SEC_PROP & 0x7F) >> 2);
+@@ -2186,8 +2183,7 @@ static void gaudi_init_dma_protection_bits(struct hl_device *hdev)
+ 	word_offset =
+ 		((mmDMA1_QM_ARB_MST_CHOISE_PUSH_OFST_23 & PROT_BITS_OFFS) >> 7)
+ 		<< 2;
+-	mask = 1 << ((mmDMA1_QM_ARB_MST_QUIET_PER & 0x7F) >> 2);
+-	mask |= 1 << ((mmDMA1_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
++	mask = 1 << ((mmDMA1_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA1_QM_ARB_MSG_MAX_INFLIGHT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA1_QM_ARB_MSG_AWUSER_31_11 & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA1_QM_ARB_MSG_AWUSER_SEC_PROP & 0x7F) >> 2);
+@@ -2582,8 +2578,7 @@ static void gaudi_init_dma_protection_bits(struct hl_device *hdev)
+ 	word_offset =
+ 		((mmDMA2_QM_ARB_MST_CHOISE_PUSH_OFST_23 & PROT_BITS_OFFS) >> 7)
+ 		<< 2;
+-	mask = 1 << ((mmDMA2_QM_ARB_MST_QUIET_PER & 0x7F) >> 2);
+-	mask |= 1 << ((mmDMA2_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
++	mask = 1 << ((mmDMA2_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA2_QM_ARB_MSG_MAX_INFLIGHT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA2_QM_ARB_MSG_AWUSER_31_11 & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA2_QM_ARB_MSG_AWUSER_SEC_PROP & 0x7F) >> 2);
+@@ -2978,8 +2973,7 @@ static void gaudi_init_dma_protection_bits(struct hl_device *hdev)
+ 	word_offset =
+ 		((mmDMA3_QM_ARB_MST_CHOISE_PUSH_OFST_23 & PROT_BITS_OFFS) >> 7)
+ 		<< 2;
+-	mask = 1 << ((mmDMA3_QM_ARB_MST_QUIET_PER & 0x7F) >> 2);
+-	mask |= 1 << ((mmDMA3_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
++	mask = 1 << ((mmDMA3_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA3_QM_ARB_MSG_MAX_INFLIGHT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA3_QM_ARB_MSG_AWUSER_31_11 & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA3_QM_ARB_MSG_AWUSER_SEC_PROP & 0x7F) >> 2);
+@@ -3374,8 +3368,7 @@ static void gaudi_init_dma_protection_bits(struct hl_device *hdev)
+ 	word_offset =
+ 		((mmDMA4_QM_ARB_MST_CHOISE_PUSH_OFST_23 & PROT_BITS_OFFS) >> 7)
+ 		<< 2;
+-	mask = 1 << ((mmDMA4_QM_ARB_MST_QUIET_PER & 0x7F) >> 2);
+-	mask |= 1 << ((mmDMA4_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
++	mask = 1 << ((mmDMA4_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA4_QM_ARB_MSG_MAX_INFLIGHT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA4_QM_ARB_MSG_AWUSER_31_11 & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA4_QM_ARB_MSG_AWUSER_SEC_PROP & 0x7F) >> 2);
+@@ -3770,8 +3763,7 @@ static void gaudi_init_dma_protection_bits(struct hl_device *hdev)
+ 	word_offset =
+ 		((mmDMA5_QM_ARB_MST_CHOISE_PUSH_OFST_23 & PROT_BITS_OFFS) >> 7)
+ 		<< 2;
+-	mask = 1 << ((mmDMA5_QM_ARB_MST_QUIET_PER & 0x7F) >> 2);
+-	mask |= 1 << ((mmDMA5_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
++	mask = 1 << ((mmDMA5_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA5_QM_ARB_MSG_MAX_INFLIGHT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA5_QM_ARB_MSG_AWUSER_31_11 & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA5_QM_ARB_MSG_AWUSER_SEC_PROP & 0x7F) >> 2);
+@@ -4166,8 +4158,8 @@ static void gaudi_init_dma_protection_bits(struct hl_device *hdev)
+ 	word_offset =
+ 		((mmDMA6_QM_ARB_MST_CHOISE_PUSH_OFST_23 & PROT_BITS_OFFS) >> 7)
+ 		<< 2;
+-	mask = 1 << ((mmDMA6_QM_ARB_MST_QUIET_PER & 0x7F) >> 2);
+-	mask |= 1 << ((mmDMA6_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
 +
-+	/* user only */
-+	if (!event->attr.exclude_kernel || !event->attr.exclude_hv ||
-+	    !event->attr.exclude_host   || !event->attr.exclude_guest)
-+		return sample_regs;
-+
-+	if (sample_regs(regs))
-+		return sample_regs;
-+
-+	if (!(current->flags & PF_KTHREAD)) {
-+		sample_regs = task_pt_regs(current);
-+	else
-+		instruction_pointer_set(regs, -1L);
-+
-+	return sample_regs;
-+}
-+
- void perf_prepare_sample(struct perf_event_header *header,
- 			 struct perf_sample_data *data,
- 			 struct perf_event *event,
- 			 struct pt_regs *regs)
- {
-+	struct pt_regs *sample_regs = sanitize_sample_regs(event, regs);
- 	u64 sample_type = event->attr.sample_type;
++	mask = 1 << ((mmDMA6_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA6_QM_ARB_MSG_MAX_INFLIGHT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA6_QM_ARB_MSG_AWUSER_31_11 & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA6_QM_ARB_MSG_AWUSER_SEC_PROP & 0x7F) >> 2);
+@@ -4562,8 +4554,7 @@ static void gaudi_init_dma_protection_bits(struct hl_device *hdev)
+ 	word_offset =
+ 		((mmDMA7_QM_ARB_MST_CHOISE_PUSH_OFST_23 & PROT_BITS_OFFS) >> 7)
+ 		<< 2;
+-	mask = 1 << ((mmDMA7_QM_ARB_MST_QUIET_PER & 0x7F) >> 2);
+-	mask |= 1 << ((mmDMA7_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
++	mask = 1 << ((mmDMA7_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA7_QM_ARB_MSG_MAX_INFLIGHT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA7_QM_ARB_MSG_AWUSER_31_11 & 0x7F) >> 2);
+ 	mask |= 1 << ((mmDMA7_QM_ARB_MSG_AWUSER_SEC_PROP & 0x7F) >> 2);
+@@ -5491,8 +5482,7 @@ static void gaudi_init_tpc_protection_bits(struct hl_device *hdev)
  
- 	header->type = PERF_RECORD_SAMPLE;
- 	header->size = sizeof(*header) + event->header_size;
+ 	word_offset = ((mmTPC0_QM_ARB_MST_CHOISE_PUSH_OFST_23 & PROT_BITS_OFFS)
+ 								>> 7) << 2;
+-	mask = 1 << ((mmTPC0_QM_ARB_MST_QUIET_PER & 0x7F) >> 2);
+-	mask |= 1 << ((mmTPC0_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
++	mask = 1 << ((mmTPC0_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC0_QM_ARB_MSG_MAX_INFLIGHT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC0_QM_ARB_MSG_AWUSER_31_11 & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC0_QM_ARB_MSG_AWUSER_SEC_PROP & 0x7F) >> 2);
+@@ -5947,8 +5937,7 @@ static void gaudi_init_tpc_protection_bits(struct hl_device *hdev)
  
- 	header->misc = 0;
--	header->misc |= perf_misc_flags(regs);
-+	header->misc |= perf_misc_flags(sample_regs);
+ 	word_offset = ((mmTPC1_QM_ARB_MST_CHOISE_PUSH_OFST_23 & PROT_BITS_OFFS)
+ 								>> 7) << 2;
+-	mask = 1 << ((mmTPC1_QM_ARB_MST_QUIET_PER & 0x7F) >> 2);
+-	mask |= 1 << ((mmTPC1_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
++	mask = 1 << ((mmTPC1_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC1_QM_ARB_MSG_MAX_INFLIGHT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC1_QM_ARB_MSG_AWUSER_31_11 & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC1_QM_ARB_MSG_AWUSER_SEC_PROP & 0x7F) >> 2);
+@@ -6402,8 +6391,7 @@ static void gaudi_init_tpc_protection_bits(struct hl_device *hdev)
+ 								PROT_BITS_OFFS;
+ 	word_offset = ((mmTPC2_QM_ARB_MST_CHOISE_PUSH_OFST_23 & PROT_BITS_OFFS)
+ 								>> 7) << 2;
+-	mask = 1 << ((mmTPC2_QM_ARB_MST_QUIET_PER & 0x7F) >> 2);
+-	mask |= 1 << ((mmTPC2_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
++	mask = 1 << ((mmTPC2_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC2_QM_ARB_MSG_MAX_INFLIGHT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC2_QM_ARB_MSG_AWUSER_31_11 & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC2_QM_ARB_MSG_AWUSER_SEC_PROP & 0x7F) >> 2);
+@@ -6857,8 +6845,7 @@ static void gaudi_init_tpc_protection_bits(struct hl_device *hdev)
+ 								PROT_BITS_OFFS;
+ 	word_offset = ((mmTPC3_QM_ARB_MST_CHOISE_PUSH_OFST_23 & PROT_BITS_OFFS)
+ 								>> 7) << 2;
+-	mask = 1 << ((mmTPC3_QM_ARB_MST_QUIET_PER & 0x7F) >> 2);
+-	mask |= 1 << ((mmTPC3_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
++	mask = 1 << ((mmTPC3_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC3_QM_ARB_MSG_MAX_INFLIGHT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC3_QM_ARB_MSG_AWUSER_31_11 & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC3_QM_ARB_MSG_AWUSER_SEC_PROP & 0x7F) >> 2);
+@@ -7312,8 +7299,7 @@ static void gaudi_init_tpc_protection_bits(struct hl_device *hdev)
+ 								PROT_BITS_OFFS;
+ 	word_offset = ((mmTPC4_QM_ARB_MST_CHOISE_PUSH_OFST_23 & PROT_BITS_OFFS)
+ 								>> 7) << 2;
+-	mask = 1 << ((mmTPC4_QM_ARB_MST_QUIET_PER & 0x7F) >> 2);
+-	mask |= 1 << ((mmTPC4_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
++	mask = 1 << ((mmTPC4_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC4_QM_ARB_MSG_MAX_INFLIGHT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC4_QM_ARB_MSG_AWUSER_31_11 & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC4_QM_ARB_MSG_AWUSER_SEC_PROP & 0x7F) >> 2);
+@@ -7767,8 +7753,7 @@ static void gaudi_init_tpc_protection_bits(struct hl_device *hdev)
+ 								PROT_BITS_OFFS;
+ 	word_offset = ((mmTPC5_QM_ARB_MST_CHOISE_PUSH_OFST_23 & PROT_BITS_OFFS)
+ 								>> 7) << 2;
+-	mask = 1 << ((mmTPC5_QM_ARB_MST_QUIET_PER & 0x7F) >> 2);
+-	mask |= 1 << ((mmTPC5_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
++	mask = 1 << ((mmTPC5_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC5_QM_ARB_MSG_MAX_INFLIGHT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC5_QM_ARB_MSG_AWUSER_31_11 & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC5_QM_ARB_MSG_AWUSER_SEC_PROP & 0x7F) >> 2);
+@@ -8223,8 +8208,7 @@ static void gaudi_init_tpc_protection_bits(struct hl_device *hdev)
  
- 	__perf_event_header__init_id(header, data, event);
- 
- 	if (sample_type & PERF_SAMPLE_IP)
--		data->ip = perf_instruction_pointer(regs);
-+		data->ip = perf_instruction_pointer(sample_regs);
- 
- 	if (sample_type & PERF_SAMPLE_CALLCHAIN) {
- 		int size = 1;
-@@ -7054,9 +7080,10 @@ void perf_prepare_sample(struct perf_event_header *header,
- 		header->size += size;
- 	}
- 
--	if (sample_type & (PERF_SAMPLE_REGS_USER | PERF_SAMPLE_STACK_USER))
-+	if (sample_type & (PERF_SAMPLE_REGS_USER | PERF_SAMPLE_STACK_USER)) {
- 		perf_sample_regs_user(&data->regs_user, regs,
- 				      &data->regs_user_copy);
-+	}
- 
- 	if (sample_type & PERF_SAMPLE_REGS_USER) {
- 		/* regs dump ABI info */
-@@ -7099,7 +7126,7 @@ void perf_prepare_sample(struct perf_event_header *header,
- 		/* regs dump ABI info */
- 		int size = sizeof(u64);
- 
--		perf_sample_regs_intr(&data->regs_intr, regs);
-+		perf_sample_regs_intr(&data->regs_intr, sample_regs);
- 
- 		if (data->regs_intr.regs) {
- 			u64 mask = event->attr.sample_regs_intr;
-@@ -11609,7 +11636,8 @@ SYSCALL_DEFINE5(perf_event_open,
- 	if (err)
- 		return err;
- 
--	if (!attr.exclude_kernel) {
-+	if (!attr.exclude_kernel || !attr.exclude_callchain_kernel ||
-+	    !attr.exclude_hv || !attr.exclude_host || !attr.exclude_guest) {
- 		err = perf_allow_kernel(&attr);
- 		if (err)
- 			return err;
+ 	word_offset = ((mmTPC6_QM_ARB_MST_CHOISE_PUSH_OFST_23 & PROT_BITS_OFFS)
+ 								>> 7) << 2;
+-	mask = 1 << ((mmTPC6_QM_ARB_MST_QUIET_PER & 0x7F) >> 2);
+-	mask |= 1 << ((mmTPC6_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
++	mask = 1 << ((mmTPC6_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC6_QM_ARB_MSG_MAX_INFLIGHT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC6_QM_ARB_MSG_AWUSER_31_11 & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC6_QM_ARB_MSG_AWUSER_SEC_PROP & 0x7F) >> 2);
+@@ -8681,8 +8665,7 @@ static void gaudi_init_tpc_protection_bits(struct hl_device *hdev)
+ 			PROT_BITS_OFFS;
+ 	word_offset = ((mmTPC7_QM_ARB_MST_CHOISE_PUSH_OFST_23 & PROT_BITS_OFFS)
+ 								>> 7) << 2;
+-	mask = 1 << ((mmTPC7_QM_ARB_MST_QUIET_PER & 0x7F) >> 2);
+-	mask |= 1 << ((mmTPC7_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
++	mask = 1 << ((mmTPC7_QM_ARB_SLV_CHOISE_WDT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC7_QM_ARB_MSG_MAX_INFLIGHT & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC7_QM_ARB_MSG_AWUSER_31_11 & 0x7F) >> 2);
+ 	mask |= 1 << ((mmTPC7_QM_ARB_MSG_AWUSER_SEC_PROP & 0x7F) >> 2);
+-- 
+2.17.1
+
