@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A68B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EADC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE3122CA0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58F8822CA0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:23:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gub5BhXg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BrpYJEVk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbgHESWb (ORCPT
+        id S1728937AbgHESW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 14:22:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59864 "EHLO
+        Wed, 5 Aug 2020 14:22:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728712AbgHESLW (ORCPT
+        with ESMTP id S1729079AbgHESLQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 14:11:22 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E97BCC0617B1;
-        Wed,  5 Aug 2020 11:10:28 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 74so14935607pfx.13;
-        Wed, 05 Aug 2020 11:10:28 -0700 (PDT)
+        Wed, 5 Aug 2020 14:11:16 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC79FC0617AB;
+        Wed,  5 Aug 2020 11:10:22 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id z5so24937925pgb.6;
+        Wed, 05 Aug 2020 11:10:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lTR8Lgo0lTVr30kAgGXldRLjSzJrurZ+/TCCEqZVqLQ=;
-        b=gub5BhXgKIwql1fVHMrX+4usvSKCyg4lEY8j+g0tftBKI6jTK++/xJ98ikhyonQevY
-         DcLYyqAawxEpy1H9uh0ctJVCOSy6DVB6UbVaYPu9jY0G0ktlVkw+X21iaOWak94jrsje
-         YpxQ1fTAdY0T9Q0qSVuWXq6A+0isRy8zZ0NbEA/o/9TfA02w/0zGNY4LVR5gUeAxm3lO
-         8US9cWJrqi3g6NL79G5wBUNN423vu40M3SuAnMfxpaGrVwO3QHs/RrIFY2aILq3cLCZJ
-         2nkBJ7O1LJb9mDA+yk7c7Acv7rxDBePnN5iZBw9YWWV39K2npVI8Oyx0SV3i3w2TrFXu
-         Ejdw==
+        bh=oVv4Wzhn3JTwGtZviwAnr4HC2ws5LBgl7lYKjJuNKZY=;
+        b=BrpYJEVk8N/XVlt4jsasznf003BTu7lhnJ1yz6JbHpFcdbh0Jgwy5vrSZZzMMpXNuG
+         rOCr8SOkoAUK5ZMGdgz4COUznIrU9pfS1GFtceCstYb8ZmuWiqwS9T01VCXsRcny3SD0
+         8SK+j9Lv9xT4IBuOUEiGFY9p2ilme1znS6pOMaj//glr5nnDJI8CJUmOFiFQD0f7NoRF
+         5Q7c1ON8o7dzq+Dq8i6ssclH+jsM/2vInABBoozfXimoPjvFEv1eGrBXTITf3ANqucbK
+         e8MtS3enVGZa5I4TOXD50C2ibKk8cBoPjYGBQLEZSATPyhJDUErPbVmNDHEqOEa4M05x
+         WhgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lTR8Lgo0lTVr30kAgGXldRLjSzJrurZ+/TCCEqZVqLQ=;
-        b=KXeq+kRb9UeTW13/nwi6eKi/rTaimi58N/PhyG4uPGzBMe9j0qY5LAyvicmbVgc0ps
-         2pGl7NUsNv0i4oSn1IXaUuS1csFJcmROsyX664dfeqIZkiZc2meTmGlWsOUAyi9ThgQv
-         Kmv+ZlIfmBclvfj03J+4fzNeXaYSFeFv1BmREcSRy/QBBZM71ipr6V8e//cgrw4DmjjQ
-         /rQ7Y1XmYNudHFbJ10hSiYLsIQmbwKFdQqxZoESBMnDjo9y8sWlze1qCpUD3pp+4PJZA
-         rCyNQWbTnTKqS4EwUS5ed1U0rnllBEoxlskPCBgzRmGDq4dNtftgG4o2jtEdvPVODe65
-         W4pQ==
-X-Gm-Message-State: AOAM5329q37U+tZrJgNEDdSX0YRmjoBRE3+oI18SvWjUgH+Zu3R2Rp93
-        qcTtPoM/oOZ6YF07fadaEv8=
-X-Google-Smtp-Source: ABdhPJyAAqO7Rx5av7I1iXkiEYPek0iKwQgNUn4/m4VcSnNpdaU7uE7GLjNluwPRQgTfUc24ejyZ3w==
-X-Received: by 2002:a63:330c:: with SMTP id z12mr4150629pgz.46.1596651028426;
-        Wed, 05 Aug 2020 11:10:28 -0700 (PDT)
+        bh=oVv4Wzhn3JTwGtZviwAnr4HC2ws5LBgl7lYKjJuNKZY=;
+        b=WDKjX9J8hXytZZqjWaaYy9pvHueZmjCdY3+fA0hWVTr2OFAYnM8jDdIae5aOFj/M0Y
+         POer1aqWnDtkrD2CSfS6df1LD37sT04INsRta0RqIVvN6cMKKlbQ+9m6rmYGjL75TpEB
+         RCQMEFe76SBcyF9EYtRv0UVGZA9Zq3EixGik8HKz04WXVbab0xHdCkaTyYaLIErVeAyB
+         5zBC+0p+PFQrGv58O/UuIUIdHctG2+EdaRbpBhuR8JlTapE5Phi0UauPF5haTWzjAkBN
+         okJDDyM2afgbL4CEzUhHOeJumOszIw6wW1gHLCdUE/bUjDRmZmGs5MF9cDjHqX7+BWqJ
+         N2lA==
+X-Gm-Message-State: AOAM533DC2vPlFc/Dso1Py68HDwke9NwsmhqVrp+3COOauZce07Od1Rq
+        s1ZHH2Teoo8FuWcEPzcRS1w=
+X-Google-Smtp-Source: ABdhPJwDZAcI2ajtEzbJOnXXP2LJhU/UuVb3xTgiB80quyQR0y4N5pspuNUgpRuAZpoI77zZkWfobg==
+X-Received: by 2002:a65:524b:: with SMTP id q11mr4075709pgp.372.1596651022278;
+        Wed, 05 Aug 2020 11:10:22 -0700 (PDT)
 Received: from varodek.iballbatonwifi.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id t63sm4977510pfb.210.2020.08.05.11.10.23
+        by smtp.gmail.com with ESMTPSA id t63sm4977510pfb.210.2020.08.05.11.10.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 11:10:27 -0700 (PDT)
+        Wed, 05 Aug 2020 11:10:21 -0700 (PDT)
 From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -77,9 +77,9 @@ Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
         linux-geode@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v1 11/12] fbdev: s3fb: use generic power management
-Date:   Wed,  5 Aug 2020 23:37:21 +0530
-Message-Id: <20200805180722.244008-12-vaibhavgupta40@gmail.com>
+Subject: [PATCH v1 10/12] fbdev: vt8623fb: use generic power management
+Date:   Wed,  5 Aug 2020 23:37:20 +0530
+Message-Id: <20200805180722.244008-11-vaibhavgupta40@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200805180722.244008-1-vaibhavgupta40@gmail.com>
 References: <20200805180722.244008-1-vaibhavgupta40@gmail.com>
@@ -103,26 +103,29 @@ and drivers are required to do only device-specific jobs.
 
 Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 ---
- drivers/video/fbdev/s3fb.c | 39 ++++++++++++++++----------------------
- 1 file changed, 16 insertions(+), 23 deletions(-)
+ drivers/video/fbdev/vt8623fb.c | 41 ++++++++++++++--------------------
+ 1 file changed, 17 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/video/fbdev/s3fb.c b/drivers/video/fbdev/s3fb.c
-index 60c424fae988..5c74253e7b2c 100644
---- a/drivers/video/fbdev/s3fb.c
-+++ b/drivers/video/fbdev/s3fb.c
-@@ -1410,9 +1410,9 @@ static void s3_pci_remove(struct pci_dev *dev)
+diff --git a/drivers/video/fbdev/vt8623fb.c b/drivers/video/fbdev/vt8623fb.c
+index 7b3eef1b893f..c488e0117758 100644
+--- a/drivers/video/fbdev/vt8623fb.c
++++ b/drivers/video/fbdev/vt8623fb.c
+@@ -815,12 +815,11 @@ static void vt8623_pci_remove(struct pci_dev *dev)
+ }
  
+ 
+-#ifdef CONFIG_PM
  /* PCI suspend */
  
--static int s3_pci_suspend(struct pci_dev* dev, pm_message_t state)
-+static int __maybe_unused s3_pci_suspend(struct device *dev)
+-static int vt8623_pci_suspend(struct pci_dev* dev, pm_message_t state)
++static int __maybe_unused vt8623_pci_suspend(struct device *dev)
  {
 -	struct fb_info *info = pci_get_drvdata(dev);
 +	struct fb_info *info = dev_get_drvdata(dev);
- 	struct s3fb_info *par = info->par;
+ 	struct vt8623fb_info *par = info->par;
  
  	dev_info(info->device, "suspend\n");
-@@ -1420,7 +1420,7 @@ static int s3_pci_suspend(struct pci_dev* dev, pm_message_t state)
+@@ -828,7 +827,7 @@ static int vt8623_pci_suspend(struct pci_dev* dev, pm_message_t state)
  	console_lock();
  	mutex_lock(&(par->open_lock));
  
@@ -131,7 +134,7 @@ index 60c424fae988..5c74253e7b2c 100644
  		mutex_unlock(&(par->open_lock));
  		console_unlock();
  		return 0;
-@@ -1428,10 +1428,6 @@ static int s3_pci_suspend(struct pci_dev* dev, pm_message_t state)
+@@ -836,10 +835,6 @@ static int vt8623_pci_suspend(struct pci_dev* dev, pm_message_t state)
  
  	fb_set_suspend(info, 1);
  
@@ -142,65 +145,65 @@ index 60c424fae988..5c74253e7b2c 100644
  	mutex_unlock(&(par->open_lock));
  	console_unlock();
  
-@@ -1441,11 +1437,10 @@ static int s3_pci_suspend(struct pci_dev* dev, pm_message_t state)
+@@ -849,9 +844,9 @@ static int vt8623_pci_suspend(struct pci_dev* dev, pm_message_t state)
  
  /* PCI resume */
  
--static int s3_pci_resume(struct pci_dev* dev)
-+static int __maybe_unused s3_pci_resume(struct device *dev)
+-static int vt8623_pci_resume(struct pci_dev* dev)
++static int __maybe_unused vt8623_pci_resume(struct device *dev)
  {
 -	struct fb_info *info = pci_get_drvdata(dev);
 +	struct fb_info *info = dev_get_drvdata(dev);
- 	struct s3fb_info *par = info->par;
--	int err;
+ 	struct vt8623fb_info *par = info->par;
  
  	dev_info(info->device, "resume\n");
- 
-@@ -1458,17 +1453,6 @@ static int s3_pci_resume(struct pci_dev* dev)
- 		return 0;
- 	}
+@@ -862,14 +857,6 @@ static int vt8623_pci_resume(struct pci_dev* dev)
+ 	if (par->ref_count == 0)
+ 		goto fail;
  
 -	pci_set_power_state(dev, PCI_D0);
 -	pci_restore_state(dev);
--	err = pci_enable_device(dev);
--	if (err) {
--		mutex_unlock(&(par->open_lock));
--		console_unlock();
--		dev_err(info->device, "error %d enabling device for resume\n", err);
--		return err;
--	}
+-
+-	if (pci_enable_device(dev))
+-		goto fail;
+-
 -	pci_set_master(dev);
 -
- 	s3fb_set_par(info);
+ 	vt8623fb_set_par(info);
  	fb_set_suspend(info, 0);
  
-@@ -1478,6 +1462,16 @@ static int s3_pci_resume(struct pci_dev* dev)
+@@ -879,10 +866,17 @@ static int vt8623_pci_resume(struct pci_dev* dev)
+ 
  	return 0;
  }
- 
-+static const struct dev_pm_ops s3_pci_pm_ops = {
+-#else
+-#define vt8623_pci_suspend NULL
+-#define vt8623_pci_resume NULL
+-#endif /* CONFIG_PM */
++
++static const struct dev_pm_ops vt8623_pci_pm_ops = {
 +#ifdef CONFIG_PM_SLEEP
-+	.suspend	= s3_pci_suspend,
-+	.resume		= s3_pci_resume,
++	.suspend	= vt8623_pci_suspend,
++	.resume		= vt8623_pci_resume,
 +	.freeze		= NULL,
-+	.thaw		= s3_pci_resume,
-+	.poweroff	= s3_pci_suspend,
-+	.restore	= s3_pci_resume,
-+#endif
++	.thaw		= vt8623_pci_resume,
++	.poweroff	= vt8623_pci_suspend,
++	.restore	= vt8623_pci_resume,
++#endif /* CONFIG_PM_SLEEP */
 +};
  
  /* List of boards that we are trying to support */
  
-@@ -1510,8 +1504,7 @@ static struct pci_driver s3fb_pci_driver = {
- 	.id_table	= s3_devices,
- 	.probe		= s3_pci_probe,
- 	.remove		= s3_pci_remove,
--	.suspend	= s3_pci_suspend,
--	.resume		= s3_pci_resume,
-+	.driver.pm	= &s3_pci_pm_ops,
+@@ -898,8 +892,7 @@ static struct pci_driver vt8623fb_pci_driver = {
+ 	.id_table	= vt8623_devices,
+ 	.probe		= vt8623_pci_probe,
+ 	.remove		= vt8623_pci_remove,
+-	.suspend	= vt8623_pci_suspend,
+-	.resume		= vt8623_pci_resume,
++	.driver.pm	= &vt8623_pci_pm_ops,
  };
  
- /* Parse user specified options */
+ /* Cleanup */
 -- 
 2.27.0
 
