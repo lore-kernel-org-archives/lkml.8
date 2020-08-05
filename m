@@ -2,113 +2,178 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED3DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 04:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CB0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 04:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44C01208C7
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 04:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B013A22CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 04:20:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbgGmYgF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RhB7tJrW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726179AbgHEELY (ORCPT
+        id S1725791AbgHEEUk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 00:11:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42366 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbgHEELY (ORCPT
+        Wed, 5 Aug 2020 00:20:40 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52653 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbgHEEUj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 00:11:24 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4065CC06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 21:11:24 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id w17so24518655ply.11
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 21:11:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hxlzhilvpbhmfegLmBqfpD7CzDK63zsBFUHMpLeOrf8=;
-        b=gbgGmYgF0YdpUhrBT8h1liSj6kuTwlC09ocfWaO9eU591HVmlnn6hPetkmf8DTum1C
-         C846wjQ71ar6b4ov/10B1KDvxHju+an47hQbzDQUasqRTkIZZCGe0LixtP1tlZ2Z3hHn
-         AQznHxv1cBeKx0Urr4pBV6hGdRKoF6luQGbvpgrkaR4s67QjIW9QcDZ75tJ4RaFZWfNM
-         D/nME9nSSyN3Hm79JBIdOZT/dgrKl/Z7u/BgmLir2lxu+p40to+W0krkBfzmUkt/D1A3
-         OO/X4H8EXfiPS4XFlwKi0TS5vJ+dtgfdSeyAfIMR+w1b9+/YoYD04ANWhfZ3RYyNIx+n
-         PBsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hxlzhilvpbhmfegLmBqfpD7CzDK63zsBFUHMpLeOrf8=;
-        b=A/PraC7SAokqaYdKRbv9docyq+fZrYfo0FJQBRahp4wDG/dnIrExJ/irXNDtJXg5dZ
-         x6gALQY66fpToxGagpktejG3fWycF7B99P7geAEC5C0ORpumNGZ3U1AoWIyYSZOgLlpY
-         qx4Cb+qBcMtiHGIMq2q840P6BCROEztyEHnLfC0pT7PtDbQmdxyKrMjtyzKmsxZwZVWH
-         ZzYppPbaTkHcoApOEI9HVJZKz5wRqRh0lumHZLaEX/pXZINbAs75dW1V9z7wYM0WiyP0
-         hPa+dYGqwqT2v0Nf/d/erm2mqPdbQ13fsCwz9t0+DAMv3K5rpdweR4+YB04zb0CF59AY
-         c28g==
-X-Gm-Message-State: AOAM531arEcHXcl0Lj1sVykn72ym2H9WRgKUfo2p7KDx31ugrMRyYdC4
-        6dPU2uWqPeRd+lMciKvscrXwSRCzNaw=
-X-Google-Smtp-Source: ABdhPJzpXE7rX9+PiFNYZWRcw3RheNt5DShOYBGze0ylmEzhCuKl6oc5Z0S0RvMEH6h/H7A7bvvoOA==
-X-Received: by 2002:a17:902:9001:: with SMTP id a1mr1377741plp.124.1596600683704;
-        Tue, 04 Aug 2020 21:11:23 -0700 (PDT)
-Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id x127sm1108891pfd.86.2020.08.04.21.11.23
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 04 Aug 2020 21:11:23 -0700 (PDT)
-Date:   Tue, 4 Aug 2020 21:11:11 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] ASoC: fsl_sai: Refine enable and disable sequence
- for synchronous mode
-Message-ID: <20200805041111.GB10174@Asurada-Nvidia>
-References: <1596594233-13489-1-git-send-email-shengjiu.wang@nxp.com>
- <1596594233-13489-3-git-send-email-shengjiu.wang@nxp.com>
+        Wed, 5 Aug 2020 00:20:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596601237;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=twertatwzUrM7ldiTnLyq8dIY3NouOKQbE23vgZibYc=;
+        b=RhB7tJrWsV46yFoehAYmxLRKZCWlHdsxIYJKxQV1BjXImPnPGbcPU6V368xtzPpT8l+y2N
+        KOIzb3ETxq+JUYWFHDfnWn7ZFyX7kyfYNAjP/tGJCSGm5VxuDZQnRtGjoaDq+EoKLy2dTo
+        aEXBlqjVykf8BUIRQmUAnBKVDoaGdv8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-14-pdUQtGUaN4iDPq52ne80Vw-1; Wed, 05 Aug 2020 00:20:34 -0400
+X-MC-Unique: pdUQtGUaN4iDPq52ne80Vw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B26651009600;
+        Wed,  5 Aug 2020 04:20:29 +0000 (UTC)
+Received: from localhost (ovpn-12-71.pek2.redhat.com [10.72.12.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2C71071765;
+        Wed,  5 Aug 2020 04:20:27 +0000 (UTC)
+Date:   Wed, 5 Aug 2020 12:20:24 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Simek <monstr@monstr.eu>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Stafford Horne <shorne@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        clang-built-linux@googlegroups.com,
+        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
+        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
+        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
+Subject: Re: [PATCH v2 13/17] x86/setup: simplify initrd relocation and
+ reservation
+Message-ID: <20200805042024.GT10792@MiWiFi-R3L-srv>
+References: <20200802163601.8189-1-rppt@kernel.org>
+ <20200802163601.8189-14-rppt@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1596594233-13489-3-git-send-email-shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200802163601.8189-14-rppt@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 10:23:53AM +0800, Shengjiu Wang wrote:
-> Tx synchronous with Rx:
-> The TCSR.TE is no need to enabled when only Rx is going to be enabled.
-> Check if need to disable RSCR.RE before disabling TCSR.TE.
+On 08/02/20 at 07:35pm, Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
 > 
-> Rx synchronous with Tx:
-> The RCSR.RE is no need to enabled when only Tx is going to be enabled.
-> Check if need to disable TSCR.RE before disabling RCSR.TE.
+> Currently, initrd image is reserved very early during setup and then it
+> might be relocated and re-reserved after the initial physical memory
+> mapping is created. The "late" reservation of memblock verifies that mapped
+> memory size exceeds the size of initrd, the checks whether the relocation
+                                          ~ then?
+> required and, if yes, relocates inirtd to a new memory allocated from
+> memblock and frees the old location.
+> 
+> The check for memory size is excessive as memblock allocation will anyway
+> fail if there is not enough memory. Besides, there is no point to allocate
+> memory from memblock using memblock_find_in_range() + memblock_reserve()
+> when there exists memblock_phys_alloc_range() with required functionality.
+> 
+> Remove the redundant check and simplify memblock allocation.
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
+>  arch/x86/kernel/setup.c | 16 +++-------------
+>  1 file changed, 3 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index a3767e74c758..d8de4053c5e8 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -262,16 +262,12 @@ static void __init relocate_initrd(void)
+>  	u64 area_size     = PAGE_ALIGN(ramdisk_size);
+>  
+>  	/* We need to move the initrd down into directly mapped mem */
+> -	relocated_ramdisk = memblock_find_in_range(0, PFN_PHYS(max_pfn_mapped),
+> -						   area_size, PAGE_SIZE);
+> -
+> +	relocated_ramdisk = memblock_phys_alloc_range(area_size, PAGE_SIZE, 0,
+> +						      PFN_PHYS(max_pfn_mapped));
+>  	if (!relocated_ramdisk)
+>  		panic("Cannot find place for new RAMDISK of size %lld\n",
+>  		      ramdisk_size);
+>  
+> -	/* Note: this includes all the mem currently occupied by
+> -	   the initrd, we rely on that fact to keep the data intact. */
+> -	memblock_reserve(relocated_ramdisk, area_size);
+>  	initrd_start = relocated_ramdisk + PAGE_OFFSET;
+>  	initrd_end   = initrd_start + ramdisk_size;
+>  	printk(KERN_INFO "Allocated new RAMDISK: [mem %#010llx-%#010llx]\n",
+> @@ -298,13 +294,13 @@ static void __init early_reserve_initrd(void)
+>  
+>  	memblock_reserve(ramdisk_image, ramdisk_end - ramdisk_image);
+>  }
+> +
+>  static void __init reserve_initrd(void)
+>  {
+>  	/* Assume only end is not page aligned */
+>  	u64 ramdisk_image = get_ramdisk_image();
+>  	u64 ramdisk_size  = get_ramdisk_size();
+>  	u64 ramdisk_end   = PAGE_ALIGN(ramdisk_image + ramdisk_size);
+> -	u64 mapped_size;
+>  
+>  	if (!boot_params.hdr.type_of_loader ||
+>  	    !ramdisk_image || !ramdisk_size)
+> @@ -312,12 +308,6 @@ static void __init reserve_initrd(void)
+>  
+>  	initrd_start = 0;
+>  
+> -	mapped_size = memblock_mem_size(max_pfn_mapped);
+> -	if (ramdisk_size >= (mapped_size>>1))
+> -		panic("initrd too large to handle, "
+> -		       "disabling initrd (%lld needed, %lld available)\n",
+> -		       ramdisk_size, mapped_size>>1);
 
-Please add to the commit log more context such as what we have
-discussed: what's the problem of the current driver, and why we
-_have_to_ apply this change though it's sightly against what RM
-recommends.
+Reviewed-by: Baoquan He <bhe@redhat.com>
 
-(If thing is straightforward, it's okay to make the text short.
- Yet I believe that this change deserves more than these lines.)
+> -
+>  	printk(KERN_INFO "RAMDISK: [mem %#010llx-%#010llx]\n", ramdisk_image,
+>  			ramdisk_end - 1);
+>  
+> -- 
+> 2.26.2
+> 
 
-One info that you should mention -- also the main reason why I'm
-convinced to add this change: trigger() is still in the shape of
-the early version where we only supported one operation mode --
-Tx synchronous with Rx. So we need an update for other modes.
-
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-
-The git-diff part looks good, please add this in next ver.:
-
-Reviewed-by: Nicolin Chen <nicoleotsuka@gmail.com>
-
-Btw, the new fsl_sai_dir_is_synced() can be probably applied to
-other places with a followup patch.
