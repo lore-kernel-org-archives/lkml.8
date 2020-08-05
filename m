@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D9DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3FDC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5ECC2076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 953382076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596657883;
-	bh=szKyfdCf1Jf/SkG9ybiPLg0SInDIfcKuTeM+JmnJMz0=;
+	s=default; t=1596657886;
+	bh=h3F50YRu/vJdUAaf8yXaUUqx+mIxdpj9HxIcTXfF7B0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gazCCtiv17nUueo12RJ4c3BdmY2ct4ENwX7eujUcjl+aWHYmlY7rp+pdbMTEO4zXo
-	 aarmyofjk8lQQkFoPS9vRsYhzIH9DWSY3GPZNmk9+DnBCMkfFJwSF+0TTEBsaI76iO
-	 h/8v8zn7nn7F9UI33K5Z+U6+AGNlxKGaM0vSl0dc=
+	b=zgke/EKY9jof93kdrmHsGy8OHLPeNHDV8KOzoNEXhk14rLPjMh3zVxZPf4Ck0jYBY
+	 CDRB4m3AfGoWiZj2HR3mMNO8Lwd4p4cNFAJQsxbqwshemXuN0mrj/CrXhgvwvrRaVc
+	 0MKCvzsu+63I1uLUq2I7eEY+UPxvS21swFEly78c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728168AbgHEUEk (ORCPT
+        id S1727968AbgHEUEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:04:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50660 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 16:04:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727807AbgHEQgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727804AbgHEQgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:36:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9663F233F8;
-        Wed,  5 Aug 2020 15:53:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBB22233A2;
+        Wed,  5 Aug 2020 15:53:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596642819;
-        bh=szKyfdCf1Jf/SkG9ybiPLg0SInDIfcKuTeM+JmnJMz0=;
+        s=default; t=1596642797;
+        bh=h3F50YRu/vJdUAaf8yXaUUqx+mIxdpj9HxIcTXfF7B0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KdltBeSS97D5QFBcrBS7GNA9LF+6Ql3eyMCNWFFBgvh8W46mXMEinNNrePvsdjVr0
-         Ilc29OfbuD4pbsH6b73FmUpEB3pVdXf4KYSKDSyb66ZakmrmU5ZGHUCUUMSJ8Q+0BV
-         JGyswoe7E9fc/JzMdWtyV1Jzr9iOl+XdWuAdAjaI=
+        b=tEXEy2EwPqjRoexBABNw6w2M8YvntZejUJDXFT196htHUB2EIthsjSeViq3KH0flr
+         9z2QnW3b7GKefoLyCpY4pVTEG+V0JwuqgNndU7OqgLEkrx8r8pwR2FcFR3ZtlqLe76
+         sboVOYP5PQGjulFLHNqQg5M1MnxiXJkcFTnRsd6Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,12 +46,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Emese Revfy <re.emese@gmail.com>,
         Kees Cook <keescook@chromium.org>, Willy Tarreau <w@1wt.eu>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 5/8] random32: remove net_rand_state from the latent entropy gcc plugin
-Date:   Wed,  5 Aug 2020 17:53:31 +0200
-Message-Id: <20200805153507.254999876@linuxfoundation.org>
+Subject: [PATCH 4.19 4/6] random32: remove net_rand_state from the latent entropy gcc plugin
+Date:   Wed,  5 Aug 2020 17:53:03 +0200
+Message-Id: <20200805153505.696556762@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200805153507.005753845@linuxfoundation.org>
-References: <20200805153507.005753845@linuxfoundation.org>
+In-Reply-To: <20200805153505.472594546@linuxfoundation.org>
+References: <20200805153505.472594546@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -88,7 +88,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/include/linux/random.h
 +++ b/include/linux/random.h
-@@ -117,7 +117,7 @@ struct rnd_state {
+@@ -116,7 +116,7 @@ struct rnd_state {
  	__u32 s1, s2, s3, s4;
  };
  
