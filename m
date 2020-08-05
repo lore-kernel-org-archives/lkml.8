@@ -2,109 +2,129 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B4BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A958C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A999206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:27:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D55EE206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:27:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EMnIT0OP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sV/MLpud"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgHET1g (ORCPT
+        id S1728475AbgHET1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:27:36 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:36008 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728648AbgHERNE (ORCPT
+        Wed, 5 Aug 2020 15:27:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50498 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728500AbgHERMf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:13:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596647582;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Cgzc7fKo8GoNarTDetAApPhaV9xAvssaIfGNymLUTzM=;
-        b=EMnIT0OPC4DkFuKA/ZyWIOSSBnYVr+oRZo4QuerpLTqd4W8/j0TZj/nlyIf/lCmfGYvYE2
-        LRuon5P33QP33Jn7MiZbr80KwUcNwvJEZblfnAISCZsX3/ZR+JeVYSGNhqW8LrwHhms71D
-        CN+w00Rs74fiLtpI6sedwq/2r6Zc4Sk=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-200-bT8RRy36OLSBF3bxAViCxg-1; Wed, 05 Aug 2020 09:44:00 -0400
-X-MC-Unique: bT8RRy36OLSBF3bxAViCxg-1
-Received: by mail-wm1-f70.google.com with SMTP id v8so2471856wma.6
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:44:00 -0700 (PDT)
+        Wed, 5 Aug 2020 13:12:35 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FE69C0617A2
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 10:12:20 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id k23so46628723iom.10
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 10:12:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=KkfsA9tbt51JhKe8sFTLvMpREroWrtYLfSyGKrepgnc=;
+        b=sV/MLpudecnRU4GQxONhClJttWv3PUwHU66kJKLWiHum4YhBiyGbSz5MhfOBgXKOrr
+         MKWe2ljEQ952stDe2dXiAh2gsZbWP9Z/HXkK2PxOkyxkjpUXWT6VYx0bhDB6qKEvtgAo
+         0+8VpahpNTwnAPH32jAbzyTPZe00UK+uDCwUv51GlJVhvbo8Zy9YpIrVKbiPtA4iVEXe
+         +O7bnZ7s/S+pDsjGSV9MVUNIi9PE1F0kTWRdUSroboeB0xUzpHzmdYlthsVDyMwIu8FR
+         VzFuVtzTc3Jt62SIS85GIC7n8Iks7jgVMsvpNqFG4dlxCxIlwObJfeuAbSYL+Um7ewcM
+         nY/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Cgzc7fKo8GoNarTDetAApPhaV9xAvssaIfGNymLUTzM=;
-        b=ZWxMp5k0fK8rFzhqrdIVE9Vr2zR+4l/D8AhU7BRa37S7PXJs3qC8K9ldEASRy3i2GJ
-         ezWKDPT2uQ7QaO7SqL6W1S5+4cil73/zEUExNDYTFmjieJq0T6fl3ffHrGu/rR6MAfMy
-         wDeDllMZvL7VJmlMJ5Kf3xGitV/5B3nYZCx8El041WgAHubiLGc7twaTiXuNKH/M+jub
-         +nAYZjBOzUEQjXYfdGaLVJZ5HPthxX3Q34i/6goFeUlWs62NBK2l10r2ez5V7J7ZcxeG
-         cKJ6FZ3+f5qcIkeEA5HASg1XHdX54xB9KftYOkRU6oXyZw3Erb7LgRKYuospwd7zIi2w
-         wzIw==
-X-Gm-Message-State: AOAM5307y60Z1tgYFnaZjE5AB2mUAjT5fPIzc5Ayu0K3GZ+Y5TFBTFha
-        IgWAzxwiRouKuGx8Hr2oJD8iCpsfC6mKXXx6up1BUNpdtI7Mw/5eTzwS8vXekUh8f+dL4N91lf9
-        7EP2W5tcfDXDTJv/20Gx2UlfA
-X-Received: by 2002:adf:f847:: with SMTP id d7mr2742207wrq.328.1596635039290;
-        Wed, 05 Aug 2020 06:43:59 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxRqO12QcUwDk9o3YsfPdSGZy8iXhCreHkQXWrlBGFyjkXszT12U4qC7xxUD0DhWva5Aj2v4Q==
-X-Received: by 2002:adf:f847:: with SMTP id d7mr2742192wrq.328.1596635039093;
-        Wed, 05 Aug 2020 06:43:59 -0700 (PDT)
-Received: from redhat.com ([192.117.173.58])
-        by smtp.gmail.com with ESMTPSA id p8sm3005021wrq.9.2020.08.05.06.43.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 06:43:58 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 09:43:56 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 15/38] virtio_pmem: correct tags for config space fields
-Message-ID: <20200805134226.1106164-16-mst@redhat.com>
-References: <20200805134226.1106164-1-mst@redhat.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=KkfsA9tbt51JhKe8sFTLvMpREroWrtYLfSyGKrepgnc=;
+        b=fafwCy6/DkJA0BAqyzvJskDC6vXWOQTA6HQI5pBdpFqne8InNdAk2k0XXztvp0AkpS
+         jFjQw72itpqtU3akD6joq7kMVzQthyp0UofES92eO1S1GWwYbU/fsaaq8SKP4+K+AOxA
+         VirhcghQ2Q0QgbEtsKgFcdSihJU5/JGPMydZBCwpDFT843aXfBisVB5hYC8eu8g7X/7F
+         4aTPfvEdHOsq+AfCNHAK8Uiez0kIim2pOxWc5u89O+9boB/Cj9qb5UhVZMgl43l+bzdp
+         5xTsh5Ep8nTJWEyRoGEyjMz59IC9e1GTS0LWpgEbL/qEn/sq0lCzB04v4Vo7wQO20YdL
+         63Sw==
+X-Gm-Message-State: AOAM530WYTGdks6JsQudX5gEcCu6tJnpTvBrtnoZrTP/fPLdiTkB2ZR0
+        87bUu0qeqj7EmWPFjaCcT7pS86hNV9yNjpC5IOKsuw==
+X-Google-Smtp-Source: ABdhPJydvkbI8JuH0DRGc8fl99fy8gEfBBiNspPdGBUDSlzEmjUkpG8MId4QwMHSc07sfLFkkrPwZ1DMKb81MUx1Ntg=
+X-Received: by 2002:a05:6638:1614:: with SMTP id x20mr5286536jas.92.1596647539517;
+ Wed, 05 Aug 2020 10:12:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200805134226.1106164-1-mst@redhat.com>
-X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
-X-Mutt-Fcc: =sent
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 5 Aug 2020 22:42:08 +0530
+Message-ID: <CA+G9fYtpsT23+xXkOfhBt3RP6MeHKjQCrmgF921mDdwQ+wZu2g@mail.gmail.com>
+Subject: stable rc 4.4 - v4.4.232-33-g0b3898baf614 - build breaks on arm64,
+ arm, x86_64 and i386.
+To:     linux- stable <stable@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Jiang Ying <jiangying8582@126.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, wanglong19@meituan.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since this is a modern-only device,
-tag config space fields as having little endian-ness.
+stable rc 4.4 build breaks on arm64, arm, x86_64 and i386.
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
----
- include/uapi/linux/virtio_pmem.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Here are the build log failures on arm64.
+   git_repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-s=
+table-rc.git
+    target_arch: arm64
+    toolchain: gcc-9
+    git_short_log: 0b3898baf614 (\Linux 4.4.233-rc1\)
+    git_sha: 0b3898baf61459e1f963dcf893b4683174668975
+    git_describe: v4.4.232-33-g0b3898baf614
+    kernel_version: 4.4.233-rc1
 
-diff --git a/include/uapi/linux/virtio_pmem.h b/include/uapi/linux/virtio_pmem.h
-index b022787ffb94..d676b3620383 100644
---- a/include/uapi/linux/virtio_pmem.h
-+++ b/include/uapi/linux/virtio_pmem.h
-@@ -15,8 +15,8 @@
- #include <linux/virtio_config.h>
- 
- struct virtio_pmem_config {
--	__u64 start;
--	__u64 size;
-+	__le64 start;
-+	__le64 size;
- };
- 
- #define VIRTIO_PMEM_REQ_TYPE_FLUSH      0
--- 
-MST
+make -sk KBUILD_BUILD_USER=3DTuxBuild -C/linux -j16 ARCH=3Darm64
+CROSS_COMPILE=3Daarch64-linux-gnu- HOSTCC=3Dgcc CC=3D"sccache
+aarch64-linux-gnu-gcc" O=3Dbuild Image
+#
+../arch/arm64/kernel/hw_breakpoint.c: In function =E2=80=98arch_bp_generic_=
+fields=E2=80=99:
+../arch/arm64/kernel/hw_breakpoint.c:348:5: note: parameter passing
+for argument of type =E2=80=98struct arch_hw_breakpoint_ctrl=E2=80=99 chang=
+ed in GCC
+9.1
+  348 | int arch_bp_generic_fields(struct arch_hw_breakpoint_ctrl ctrl,
+      |     ^~~~~~~~~~~~~~~~~~~~~~
+../fs/ext4/inode.c: In function =E2=80=98ext4_direct_IO=E2=80=99:
+../fs/ext4/inode.c:3355:9: error: =E2=80=98offset=E2=80=99 redeclared as di=
+fferent
+kind of symbol
+ 3355 |  loff_t offset =3D iocb->ki_pos;
+      |         ^~~~~~
+../fs/ext4/inode.c:3349:17: note: previous definition of =E2=80=98offset=E2=
+=80=99 was here
+ 3349 |          loff_t offset)
+      |          ~~~~~~~^~~~~~
+make[3]: *** [../scripts/Makefile.build:277: fs/ext4/inode.o] Error 1
+make[3]: Target '__build' not remade because of errors.
+make[2]: *** [../scripts/Makefile.build:484: fs/ext4] Error 2
+../drivers/net/ethernet/apm/xgene/xgene_enet_main.c:32:36: warning:
+array =E2=80=98xgene_enet_acpi_match=E2=80=99 assumed to have one element
+   32 | static const struct acpi_device_id xgene_enet_acpi_match[];
+      |                                    ^~~~~~~~~~~~~~~~~~~~~
+make[2]: Target '__build' not remade because of errors.
+make[1]: *** [/linux/Makefile:1006: fs] Error 2
+make[1]: Target 'Image' not remade because of errors.
+make: *** [Makefile:152: sub-make] Error 2
+make: Target 'Image' not remade because of errors.
 
+--=20
+Linaro LKFT
+https://lkft.linaro.org
