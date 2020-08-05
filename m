@@ -2,122 +2,180 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1024DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F70C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB9B92173E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A1FD2177B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:45:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YvH/uR8J"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BikImbzK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbgHETpi (ORCPT
+        id S1729680AbgHETpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:45:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46428 "EHLO
+        Wed, 5 Aug 2020 15:45:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729075AbgHETpG (ORCPT
+        with ESMTP id S1729045AbgHETpG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 15:45:06 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48146C061756
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 12:37:27 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id k18so34565825qtm.10
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 12:37:27 -0700 (PDT)
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7DFBC0617A0;
+        Wed,  5 Aug 2020 12:38:58 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id d188so17362619pfd.2;
+        Wed, 05 Aug 2020 12:38:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JXg1rw7TER/dCS/fPia5Ipaa/xp5S6D1puoEf6L0It8=;
-        b=YvH/uR8JUCjfa4yM05TlsoHznQuDvY432VhGlVI/pHdGA1BNxkCdTFQLKNPQk7DB9o
-         W4exEUyJxqcw7cA1t+hPZwLSyc3Za2zW1De+bmu7LZaqLd+wZaAHQ/k3x94ZJc74RpV4
-         mjaAWtz6Mv47ROUZZfcRldBd6j8emltAm+zoE=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=dBMgOJj+hD0qde6PizICeeruU0EhS183W5s3SUBAwf4=;
+        b=BikImbzKWtXH4hWkL6UbutgkjuCU5o+a4HGlxXS/Eln4FqKtJYUgtDLL6YIHyGSCP8
+         CBxLixsGpoTPYMz8Cf0XrtLRu6+Rti11TQrJqZgpiaDsCXwpj9MbpPYhYVAgiB8/QkVf
+         DgP19nZF+fOvIDznv++8Xl99J8bYUKHo7N3maZr2NZCnhAlYkpBEiIHaVBCaTr/ZGEQa
+         /PRc6prnGBWZ5Z9yJ2ZWDsbUTzud+kzUWqtFPXn5UCcE9iIKmaAOZDPlsP9hiT0UlwWO
+         yue8KChKcJa0oHV2iHf01F95VU1hdKwjiPl+mM19h4Pfh/IsJRjEbP4Rcq5XJjIgQYBl
+         La/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JXg1rw7TER/dCS/fPia5Ipaa/xp5S6D1puoEf6L0It8=;
-        b=CQJb+Wz4Jg+iCr9N8k3Lijs2lq8ij5G9NAIbDvOAmRBsX6/IB1PzToFvMKzrHmWjnC
-         dKP51Yb7DmSLVyxxA0Z2+x1TmlmwchlVe1U3uPJ2vcc9zNGJRWW1T9AuHIk4XEjloatc
-         nNtL0X7jGToBkOIkId//i6wa5k5QVJ1aZzX7+pYunp4H0aXfzx0LStYssS3zb+8+bzcW
-         5rz6lbo9srLKt/La4alU3VXxnNiRpK/tgEF6LgUmUtHzCZutSr1/9BvARDJiUU/9pweo
-         xnT/9wC6cy6EKdCkdnBVXHnINDF2n8uCKSXAJ5CjEBw1A8usJAbhXjPS84KP/065sK98
-         iZIA==
-X-Gm-Message-State: AOAM532cI99jZUFPEmgn4vnFcTJltYXp3tz9gUWiD4uv4dSuKRw6S6zW
-        hoJF+eiaWpVwEto0X/EMOulTp7HDB2hGGXgHcLSOmw==
-X-Google-Smtp-Source: ABdhPJyxeAblojwA1B4vmv63kp9dzBHhpG6HUxAusjiQvQWtvPGblPWZubEL4RHuGFZ+ts1mbQra85M7Anit8/9MEMQ=
-X-Received: by 2002:ac8:777a:: with SMTP id h26mr4947670qtu.141.1596656246037;
- Wed, 05 Aug 2020 12:37:26 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=dBMgOJj+hD0qde6PizICeeruU0EhS183W5s3SUBAwf4=;
+        b=AjS7uiD+yX2s/voksWSj+K2iIvDQJlC+iszbqRAMYVx1DBhbMMSOkfiysylXVEfJf8
+         vhK/dxVRJbmOTMGkLkchx48xgHYu66yoE19ggZiBcQ7T3EWhJeJISazdVeh/AQtvt+si
+         yoeOZl5jonBRvZYdxzScvl+c7OL/6ZK5iI4FTzmGT/IAg/1h7F+aDwztEBn2vcBJOwQ6
+         V1NjykpPgR/cqcgrvQbPugVTKi6AbMG7hHJp6WHu65Cks4fWD1R5/+obxyP30LOr7dfN
+         TAPTmnnKLjX1bhZUhAnfGzUiyxbx0gaKCkIAd7yvPNGuU04Fwhi4x7Pi61FFbmgJH1en
+         ntGQ==
+X-Gm-Message-State: AOAM530u1eRCBHttRk6+aIaNCQPYJn6mJrbT6a9e3TYMdhiCd680ufoo
+        asHYA/COmikj+DlmMZZaYmE=
+X-Google-Smtp-Source: ABdhPJwFtNAeKIW4wjHsuCKjx78tIa6bbsqpyKdJl7Wd91LaOdgUTgAq66b+bFaz44muXZNU/9fsXg==
+X-Received: by 2002:a63:5b55:: with SMTP id l21mr4506542pgm.348.1596656338172;
+        Wed, 05 Aug 2020 12:38:58 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.152.86])
+        by smtp.gmail.com with ESMTPSA id f20sm4901764pfk.36.2020.08.05.12.38.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 12:38:57 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>,
+        Tomoya MORINAGA <tomoya.rohm@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v2 2/2] i2c: eg20t: use generic power management
+Date:   Thu,  6 Aug 2020 01:06:16 +0530
+Message-Id: <20200805193616.384313-3-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200805193616.384313-1-vaibhavgupta40@gmail.com>
+References: <20200805165611.GA516242@bjorn-Precision-5520>
+ <20200805193616.384313-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-References: <20200730225609.7395-1-azhar.shaikh@intel.com> <20200730225609.7395-3-azhar.shaikh@intel.com>
- <20200730230238.GD3145664@google.com> <MWHPR11MB1518178C5B2335FC02CD36AE91710@MWHPR11MB1518.namprd11.prod.outlook.com>
- <20200730232504.GG3145664@google.com> <MWHPR11MB151867DF25664C80E99A326D914B0@MWHPR11MB1518.namprd11.prod.outlook.com>
-In-Reply-To: <MWHPR11MB151867DF25664C80E99A326D914B0@MWHPR11MB1518.namprd11.prod.outlook.com>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Wed, 5 Aug 2020 12:37:14 -0700
-Message-ID: <CACeCKaf6WuW6XbFBQoVEW55w=OHfaVmmDn1xepiYYeRyMzZFrA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] platform/chrome: cros_ec_typec: Avoid setting usb
- role during disconnect
-To:     "Shaikh, Azhar" <azhar.shaikh@intel.com>
-Cc:     "bleung@chromium.org" <bleung@chromium.org>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "groeck@chromium.org" <groeck@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>,
-        "Patel, Utkarsh H" <utkarsh.h.patel@intel.com>,
-        "Bowman, Casey G" <casey.g.bowman@intel.com>,
-        "Mani, Rajmohan" <rajmohan.mani@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Azhar,
+Drivers using legacy power management .suspen()/.resume() callbacks
+have to manage PCI states and device's PM states themselves. They also
+need to take care of standard configuration registers.
 
+Switch to generic power management framework using a single
+"struct dev_pm_ops" variable to take the unnecessary load from the driver.
+This also avoids the need for the driver to directly call most of the PCI
+helper functions and device power state control functions, as through
+the generic framework PCI Core takes care of the necessary operations,
+and drivers are required to do only device-specific jobs.
 
-On Wed, Aug 5, 2020 at 12:22 PM Shaikh, Azhar <azhar.shaikh@intel.com> wrote:
->
-> Hi Prashant,
->
-> > Is this documented anywhere? Kindly provide the links to that if so. I wasn't
-> > aware of any ordering requirements (but I may be missing something).
->
-> The configuration of the connector should always happen in the order defined in the
-> USB Type-C specification. Check ch. 2.3 (USB Type-C Spec R2.0). So that will basically give you:
->
-> 1. orientation
-> 2. role(s)
-> 3. the rest.
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ drivers/i2c/busses/i2c-eg20t.c | 36 +++++++---------------------------
+ 1 file changed, 7 insertions(+), 29 deletions(-)
 
-Thanks for the link. Are you referring to Section 2.3 (Configuration
-Process) ? I couldn't find anything there which
-implied any required ordering (I'm reading Release 2.0, Aug 2019, so I
-don't know if something has been added since).
-Could you kindly point me to the appropriate subsection?
+diff --git a/drivers/i2c/busses/i2c-eg20t.c b/drivers/i2c/busses/i2c-eg20t.c
+index eb41de22d461..843b31a0f752 100644
+--- a/drivers/i2c/busses/i2c-eg20t.c
++++ b/drivers/i2c/busses/i2c-eg20t.c
+@@ -846,11 +846,10 @@ static void pch_i2c_remove(struct pci_dev *pdev)
+ 	kfree(adap_info);
+ }
+ 
+-#ifdef CONFIG_PM
+-static int pch_i2c_suspend(struct pci_dev *pdev, pm_message_t state)
++static int __maybe_unused pch_i2c_suspend(struct device *dev)
+ {
+-	int ret;
+ 	int i;
++	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct adapter_info *adap_info = pci_get_drvdata(pdev);
+ 	void __iomem *p = adap_info->pch_data[0].pch_base_address;
+ 
+@@ -872,31 +871,13 @@ static int pch_i2c_suspend(struct pci_dev *pdev, pm_message_t state)
+ 		ioread32(p + PCH_I2CSR), ioread32(p + PCH_I2CBUFSTA),
+ 		ioread32(p + PCH_I2CESRSTA));
+ 
+-	ret = pci_save_state(pdev);
+-
+-	if (ret) {
+-		pch_pci_err(pdev, "pci_save_state\n");
+-		return ret;
+-	}
+-
+-	pci_disable_device(pdev);
+-	pci_set_power_state(pdev, pci_choose_state(pdev, state));
+-
+ 	return 0;
+ }
+ 
+-static int pch_i2c_resume(struct pci_dev *pdev)
++static int __maybe_unused pch_i2c_resume(struct device *dev)
+ {
+ 	int i;
+-	struct adapter_info *adap_info = pci_get_drvdata(pdev);
+-
+-	pci_set_power_state(pdev, PCI_D0);
+-	pci_restore_state(pdev);
+-
+-	if (pci_enable_device(pdev) < 0) {
+-		pch_pci_err(pdev, "pch_i2c_resume:pci_enable_device FAILED\n");
+-		return -EIO;
+-	}
++	struct adapter_info *adap_info = dev_get_drvdata(dev);
+ 
+ 	for (i = 0; i < adap_info->ch_num; i++)
+ 		pch_i2c_init(&adap_info->pch_data[i]);
+@@ -905,18 +886,15 @@ static int pch_i2c_resume(struct pci_dev *pdev)
+ 
+ 	return 0;
+ }
+-#else
+-#define pch_i2c_suspend NULL
+-#define pch_i2c_resume NULL
+-#endif
++
++static SIMPLE_DEV_PM_OPS(pch_i2c_pm_ops, pch_i2c_suspend, pch_i2c_resume);
+ 
+ static struct pci_driver pch_pcidriver = {
+ 	.name = KBUILD_MODNAME,
+ 	.id_table = pch_pcidev_id,
+ 	.probe = pch_i2c_probe,
+ 	.remove = pch_i2c_remove,
+-	.suspend = pch_i2c_suspend,
+-	.resume = pch_i2c_resume
++	.driver.pm = &pch_i2c_pm_ops,
+ };
+ 
+ module_pci_driver(pch_pcidriver);
+-- 
+2.27.0
 
-Additionally, I think any ordering requirements there are already
-handled by the TCPM in the Chrome OS EC.
-
->
-> Also I see in USB Type-C Port Manager driver the above mentioned sequence being followed
-> https://elixir.bootlin.com/linux/latest/source/drivers/usb/typec/tcpm/tcpm.c#L664
-
-In addition to the above, note that this is a TCPM implementation (on
-Chrome OS the TCPM implementation is in the EC), so what is
-done there doesn't necessarily apply to cros-ec-typec.
-
-Best regards,
-
--Prashant
-
->
->
-> > > > -Prashant
->
-> Regards,
-> Azhar
