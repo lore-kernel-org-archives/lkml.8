@@ -2,198 +2,157 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 283E9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72780C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B71F204EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4832F204EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbgHEGdl (ORCPT
+        id S1728166AbgHEGdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 02:33:41 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60984 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725904AbgHEGdl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 02:33:41 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0756UsTo155366;
-        Wed, 5 Aug 2020 02:33:36 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32qkgjna1m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Aug 2020 02:33:35 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0756U9kZ030194;
-        Wed, 5 Aug 2020 06:33:34 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04ams.nl.ibm.com with ESMTP id 32n0184309-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Aug 2020 06:33:34 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0756XVgc20316616
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 5 Aug 2020 06:33:32 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BF1BF4204B;
-        Wed,  5 Aug 2020 06:33:31 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8583B42047;
-        Wed,  5 Aug 2020 06:33:31 +0000 (GMT)
-Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed,  5 Aug 2020 06:33:31 +0000 (GMT)
-From:   Sven Schnelle <svens@linux.ibm.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        hca@linux.ibm.com
-Subject: Re: [PATCH v3 3/3] s390: convert to GENERIC_VDSO
-References: <20200804150124.41692-1-svens@linux.ibm.com>
-        <20200804150124.41692-4-svens@linux.ibm.com>
-        <87tuxikuub.fsf@nanos.tec.linutronix.de>
-Date:   Wed, 05 Aug 2020 08:33:31 +0200
-In-Reply-To: <87tuxikuub.fsf@nanos.tec.linutronix.de> (Thomas Gleixner's
-        message of "Tue, 04 Aug 2020 22:41:00 +0200")
-Message-ID: <yt9d8setsitg.fsf@linux.ibm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+        Wed, 5 Aug 2020 02:33:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39806 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725904AbgHEGdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 02:33:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id A6FA0AC79;
+        Wed,  5 Aug 2020 06:34:06 +0000 (UTC)
+Subject: Re: [PATCH v3] block: check queue's limits.discard_granularity in
+ __blkdev_issue_discard()
+To:     Coly Li <colyli@suse.de>, linux-block@vger.kernel.org
+Cc:     linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ming Lei <ming.lei@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Enzo Matsumiya <ematsumiya@suse.com>,
+        Evan Green <evgreen@chromium.org>,
+        Hannes Reinecke <hare@suse.com>, Jens Axboe <axboe@kernel.dk>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Xiao Ni <xni@redhat.com>
+References: <20200805063150.41037-1-colyli@suse.de>
+From:   Hannes Reinecke <hare@suse.de>
+Message-ID: <7be61799-674c-2700-c7d0-a8b2fbe2ae34@suse.de>
+Date:   Wed, 5 Aug 2020 08:33:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-05_04:2020-08-03,2020-08-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 malwarescore=0 mlxscore=0 phishscore=0 suspectscore=0
- mlxlogscore=999 adultscore=0 spamscore=0 priorityscore=1501 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008050054
+In-Reply-To: <20200805063150.41037-1-colyli@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+On 8/5/20 8:31 AM, Coly Li wrote:
+> If create a loop device with a backing NVMe SSD, current loop device
+> driver doesn't correctly set its  queue's limits.discard_granularity and
+> leaves it as 0. If a discard request at LBA 0 on this loop device, in
+> __blkdev_issue_discard() the calculated req_sects will be 0, and a zero
+> length discard request will trigger a BUG() panic in generic block layer
+> code at block/blk-mq.c:563.
+> 
+> [  955.565006][   C39] ------------[ cut here ]------------
+> [  955.559660][   C39] invalid opcode: 0000 [#1] SMP NOPTI
+> [  955.622171][   C39] CPU: 39 PID: 248 Comm: ksoftirqd/39 Tainted: G            E     5.8.0-default+ #40
+> [  955.622171][   C39] Hardware name: Lenovo ThinkSystem SR650 -[7X05CTO1WW]-/-[7X05CTO1WW]-, BIOS -[IVE160M-2.70]- 07/17/2020
+> [  955.622175][   C39] RIP: 0010:blk_mq_end_request+0x107/0x110
+> [  955.622177][   C39] Code: 48 8b 03 e9 59 ff ff ff 48 89 df 5b 5d 41 5c e9 9f ed ff ff 48 8b 35 98 3c f4 00 48 83 c7 10 48 83 c6 19 e8 cb 56 c9 ff eb cb <0f> 0b 0f 1f 80 00 00 00 00 0f 1f 44 00 00 55 48 89 e5 41 56 41 54
+> [  955.622179][   C39] RSP: 0018:ffffb1288701fe28 EFLAGS: 00010202
+> [  955.749277][   C39] RAX: 0000000000000001 RBX: ffff956fffba5080 RCX: 0000000000004003
+> [  955.749278][   C39] RDX: 0000000000000003 RSI: 0000000000000000 RDI: 0000000000000000
+> [  955.749279][   C39] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+> [  955.749279][   C39] R10: ffffb1288701fd28 R11: 0000000000000001 R12: ffffffffa8e05160
+> [  955.749280][   C39] R13: 0000000000000004 R14: 0000000000000004 R15: ffffffffa7ad3a1e
+> [  955.749281][   C39] FS:  0000000000000000(0000) GS:ffff95bfbda00000(0000) knlGS:0000000000000000
+> [  955.749282][   C39] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  955.749282][   C39] CR2: 00007f6f0ef766a8 CR3: 0000005a37012002 CR4: 00000000007606e0
+> [  955.749283][   C39] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [  955.749284][   C39] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [  955.749284][   C39] PKRU: 55555554
+> [  955.749285][   C39] Call Trace:
+> [  955.749290][   C39]  blk_done_softirq+0x99/0xc0
+> [  957.550669][   C39]  __do_softirq+0xd3/0x45f
+> [  957.550677][   C39]  ? smpboot_thread_fn+0x2f/0x1e0
+> [  957.550679][   C39]  ? smpboot_thread_fn+0x74/0x1e0
+> [  957.550680][   C39]  ? smpboot_thread_fn+0x14e/0x1e0
+> [  957.550684][   C39]  run_ksoftirqd+0x30/0x60
+> [  957.550687][   C39]  smpboot_thread_fn+0x149/0x1e0
+> [  957.886225][   C39]  ? sort_range+0x20/0x20
+> [  957.886226][   C39]  kthread+0x137/0x160
+> [  957.886228][   C39]  ? kthread_park+0x90/0x90
+> [  957.886231][   C39]  ret_from_fork+0x22/0x30
+> [  959.117120][   C39] ---[ end trace 3dacdac97e2ed164 ]---
+> 
+> This is the procedure to reproduce the panic,
+>    # modprobe scsi_debug delay=0 dev_size_mb=2048 max_queue=1
+>    # losetup -f /dev/nvme0n1 --direct-io=on
+>    # blkdiscard /dev/loop0 -o 0 -l 0x200
+> 
+> This patch fixes the issue by checking q->limits.discard_granularity in
+> __blkdev_issue_discard() before composing the discard bio. If the value
+> is 0, then prints a warning oops information and returns -EOPNOTSUPP to
+> the caller to indicate that this buggy device driver doesn't support
+> discard request.
+> 
+> Fixes: 9b15d109a6b2 ("block: improve discard bio alignment in __blkdev_issue_discard()")
+> Fixes: c52abf563049 ("loop: Better discard support for block devices")
+> Reported-and-suggested-by: Ming Lei <ming.lei@redhat.com>
+> Signed-off-by: Coly Li <colyli@suse.de>
+> Reviewed-by: Ming Lei <ming.lei@redhat.com>
+> Cc: Bart Van Assche <bvanassche@acm.org>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Enzo Matsumiya <ematsumiya@suse.com>
+> Cc: Evan Green <evgreen@chromium.org>
+> Cc: Hannes Reinecke <hare@suse.com>
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Cc: Martin K. Petersen <martin.petersen@oracle.com>
+> Cc: Xiao Ni <xni@redhat.com>
+> ---
+> Changelog:
+> v3: print device name assocated with the buggy driver.
+> v2: fix typo of the wrong return error code.
+> v1: first version.
+> 
+>   block/blk-lib.c | 9 +++++++++
+>   1 file changed, 9 insertions(+)
+> 
+> diff --git a/block/blk-lib.c b/block/blk-lib.c
+> index 019e09bb9c0e..d3bbb3d9fac3 100644
+> --- a/block/blk-lib.c
+> +++ b/block/blk-lib.c
+> @@ -47,6 +47,15 @@ int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
+>   		op = REQ_OP_DISCARD;
+>   	}
+>   
+> +	/* In case the discard granularity isn't set by buggy device driver */
+> +	if (WARN_ON_ONCE(!q->limits.discard_granularity)) {
+> +		char dev_name[BDEVNAME_SIZE];
+> +
+> +		bdevname(bdev, dev_name);
+> +		pr_err("%s: Error: discard_granularity is 0.\n", dev_name);
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+>   	bs_mask = (bdev_logical_block_size(bdev) >> 9) - 1;
+>   	if ((sector | nr_sects) & bs_mask)
+>   		return -EINVAL;
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Thomas Gleixner <tglx@linutronix.de> writes:
+Cheers,
 
-> Sven Schnelle <svens@linux.ibm.com> writes:
->> --- /dev/null
->> +++ b/arch/s390/include/asm/vdso/data.h
->> @@ -0,0 +1,13 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +#ifndef __S390_ASM_VDSO_DATA_H
->> +#define __S390_ASM_VDSO_DATA_H
->> +
->> +#include <linux/types.h>
->> +#include <vdso/datapage.h>
->
-> I don't think this header needs vdso/datapage.h
-
-Agreed.
-
->> +struct arch_vdso_data {
->> +	__u64 tod_steering_delta;
->> +	__u64 tod_steering_end;
->> +};
->> +
->> +#endif /* __S390_ASM_VDSO_DATA_H */
->
->> --- /dev/null
->> +++ b/arch/s390/include/asm/vdso/gettimeofday.h
->
->> +static inline u64 __arch_get_hw_counter(s32 clock_mode)
->> +{
->> +	const struct vdso_data *vdso = __arch_get_vdso_data();
->
-> If you go and implement time namespace support for VDSO then this
-> becomes a problem. See do_hres_timens().
->
-> As we did not expect that this function needs vdso_data we should just
-> add a vdso_data pointer argument to __arch_get_hw_counter(). And while
-> looking at it you're not the first one. MIPS already uses it and because
-> it does not support time namespaces so far nobody noticed yet.
->
-> That's fine for all others because the compiler will optimize it
-> out when it's unused. If the compiler fails to do so, then this is the
-> least of our worries :)
->
-> As there is no new VDSO conversion pending in next, I can just queue
-> that (see below) along with #1 and #2 of this series and send it to
-> Linus by end of the week.
-
-Fine with me.
-
->> +	u64 adj, now;
->> +
->> +	now = get_tod_clock();
->> +	adj = vdso->arch.tod_steering_end - now;
->> +	if (unlikely((s64) adj > 0))
->> +		now += (vdso->arch.tod_steering_delta < 0) ? (adj >> 15) : -(adj >> 15);
->> +	return now;
->> +}
->
->
->> --- /dev/null
->> +++ b/arch/s390/include/asm/vdso/processor.h
->> @@ -0,0 +1,5 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +#ifndef __ASM_VDSO_PROCESSOR_H
->> +#define __ASM_VDSO_PROCESSOR_H
->> +
->> +#endif /* __ASM_VDSO_PROCESSOR_H */
->
-> The idea of this file was to provide cpu_relax() self contained without
-> pulling in tons of other things from asm/processor.h.
-
-Thanks, i'll add that.
-
->> diff --git a/arch/s390/include/asm/vdso/vdso.h b/arch/s390/include/asm/vdso/vdso.h
->> new file mode 100644
->> index 000000000000..e69de29bb2d1
->> diff --git a/arch/s390/include/asm/vdso/vsyscall.h b/arch/s390/include/asm/vdso/vsyscall.h
->> new file mode 100644
->> index 000000000000..6c67c08cefdd
->> --- /dev/null
->> +++ b/arch/s390/include/asm/vdso/vsyscall.h
->> @@ -0,0 +1,26 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +#ifndef __ASM_VDSO_VSYSCALL_H
->> +#define __ASM_VDSO_VSYSCALL_H
->> +
->> +#ifndef __ASSEMBLY__
->> +
->> +#include <linux/hrtimer.h>
->> +#include <linux/timekeeper_internal.h>
->
-> I know you copied that from x86 or some other architecture, but thinking
-> about the above these two includes are not required for building VDSO
-> itself. Only the kernel update side needs them and they are included
-> already there. I'm going to remove them from x86 as well.
-
-Thanks, i removed them from my patch.
-
->> @@ -443,9 +396,8 @@ static void clock_sync_global(unsigned long long delta)
->>  		panic("TOD clock sync offset %lli is too large to drift\n",
->>  		      tod_steering_delta);
->>  	tod_steering_end = now + (abs(tod_steering_delta) << 15);
->> -	vdso_data->ts_dir = (tod_steering_delta < 0) ? 0 : 1;
->> -	vdso_data->ts_end = tod_steering_end;
->> -	vdso_data->tb_update_count++;
->> +	vdso_data->arch.tod_steering_end = tod_steering_end;
->
-> Leftover from the previous version. Should be arch_data.tod....
-
-Oops, indeed.
-
-> Heiko, do you consider this 5.9 material or am I right to assume that
-> this targets 5.10?
-
-I talked to Heiko yesterday and we agreed that it's to late for 5.9, so
-we target 5.10.
-
-Thanks,
-Sven
+Hannes
+-- 
+Dr. Hannes Reinecke            Teamlead Storage & Networking
+hare@suse.de                               +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
