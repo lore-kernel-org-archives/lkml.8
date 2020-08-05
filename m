@@ -2,104 +2,141 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B18C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6670C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2857322CF8
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:59:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596607167;
-	bh=98OyFugr4kZ7qKas+6tJmd32bt21nxcRSc+5tICHYwk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BY6bPNRmca+3GnJ6+MOiCbx7QXpx3vlBEuEq6uBLUJgPCgcSwFWJYFxhxD+NteHdO
-	 r++9S4iCSkbiyP5/J75afZpBsGwpRC4dwfqnZdBTWE0AlOY9R5TBmRZk6WwQ1gOONY
-	 wywUXkxQnF5vTI4j7/qqjW36mR/JiL6sfR6YNOLE=
+	by mail.kernel.org (Postfix) with ESMTP id A264F20842
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:59:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbgHEF70 (ORCPT
+        id S1727098AbgHEF7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 01:59:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52876 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 01:59:37 -0400
+Received: from mailout11.rmx.de ([94.199.88.76]:47235 "EHLO mailout11.rmx.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725372AbgHEF7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 01:59:24 -0400
-Received: from kernel.org (unknown [87.70.91.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725372AbgHEF7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 01:59:37 -0400
+Received: from kdin01.retarus.com (kdin01.dmz1.retloc [172.19.17.48])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F6D52245C;
-        Wed,  5 Aug 2020 05:59:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596607163;
-        bh=98OyFugr4kZ7qKas+6tJmd32bt21nxcRSc+5tICHYwk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bFmzYj+zADb5AKblo2g0DgWjvGdXklBuYzqYEb/bV7Yw5rUPqvopeaYYFO/WWTsRW
-         gO4LMsnKLyGKpLkE+r1ZBLYgrpUqrQj3zGD/ZjUFqQD9wkQbnCH0InqIJvH59bfj/G
-         n4Fa0+GKXLSBH7lRyh5REisKXEzk8RqmUTgZIFYg=
-Date:   Wed, 5 Aug 2020 08:59:09 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Ingo Molnar <mingo@redhat.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Simek <monstr@monstr.eu>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        clang-built-linux@googlegroups.com,
-        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
-        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
-        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
-Subject: Re: [PATCH v2 13/17] x86/setup: simplify initrd relocation and
- reservation
-Message-ID: <20200805055909.GD8243@kernel.org>
-References: <20200802163601.8189-1-rppt@kernel.org>
- <20200802163601.8189-14-rppt@kernel.org>
- <20200805042024.GT10792@MiWiFi-R3L-srv>
+        by mailout11.rmx.de (Postfix) with ESMTPS id 4BM1D523Xyz41d9;
+        Wed,  5 Aug 2020 07:59:33 +0200 (CEST)
+Received: from mta.arri.de (unknown [217.111.95.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by kdin01.retarus.com (Postfix) with ESMTPS id 4BM1C83QGHz2xFZ;
+        Wed,  5 Aug 2020 07:58:44 +0200 (CEST)
+Received: from N95HX1G2.wgnetz.xx (192.168.54.60) by mta.arri.de
+ (192.168.100.104) with Microsoft SMTP Server (TLS) id 14.3.408.0; Wed, 5 Aug
+ 2020 07:58:32 +0200
+From:   Christian Eggers <ceggers@arri.de>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Cameron <jic23@kernel.org>
+CC:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Christian Eggers" <ceggers@arri.de>, Rob Herring <robh@kernel.org>
+Subject: [PATCH v6 1/2] dt-bindings: iio: light: add AMS AS73211 support
+Date:   Wed, 5 Aug 2020 07:57:43 +0200
+Message-ID: <20200805055744.31909-2-ceggers@arri.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200805055744.31909-1-ceggers@arri.de>
+References: <20200805055744.31909-1-ceggers@arri.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200805042024.GT10792@MiWiFi-R3L-srv>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [192.168.54.60]
+X-RMX-ID: 20200805-075852-4BM1C83QGHz2xFZ-0@kdin01
+X-RMX-SOURCE: 217.111.95.66
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 12:20:24PM +0800, Baoquan He wrote:
-> On 08/02/20 at 07:35pm, Mike Rapoport wrote:
-> > From: Mike Rapoport <rppt@linux.ibm.com>
-> > 
-> > Currently, initrd image is reserved very early during setup and then it
-> > might be relocated and re-reserved after the initial physical memory
-> > mapping is created. The "late" reservation of memblock verifies that mapped
-> > memory size exceeds the size of initrd, the checks whether the relocation
->                                           ~ then?
+Add DT bindings for AMS AS73211 XYZ True Color Sensor.
 
-Right, thanks!
+Signed-off-by: Christian Eggers <ceggers@arri.de>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/iio/light/ams,as73211.yaml       | 54 +++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/light/ams,as73211.yaml
 
-> > required and, if yes, relocates inirtd to a new memory allocated from
-> > memblock and frees the old location.
+diff --git a/Documentation/devicetree/bindings/iio/light/ams,as73211.yaml b/Documentation/devicetree/bindings/iio/light/ams,as73211.yaml
+new file mode 100644
+index 000000000000..0e8cd02759b3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/light/ams,as73211.yaml
+@@ -0,0 +1,54 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/light/ams,as73211.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: AMS AS73211 JENCOLOR(R) Digital XYZ Sensor
++
++maintainers:
++  - Christian Eggers <ceggers@arri.de>
++
++description: |
++  XYZ True Color Sensor with I2C Interface
++  https://ams.com/documents/20143/36005/AS73211_DS000556_3-01.pdf/a65474c0-b302-c2fd-e30a-c98df87616df
++
++properties:
++  compatible:
++    enum:
++      - ams,as73211
++
++  reg:
++    description:
++      I2C address of the device (0x74...0x77).
++    maxItems: 1
++
++  interrupts:
++    description:
++      Interrupt specifier for the READY interrupt generated by the device.
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        as73211@74 {
++            compatible = "ams,as73211";
++            reg = <0x74>;
++            pinctrl-names = "default";
++            pinctrl-0 = <&pinctrl_color_sensor>;
++            interrupt-parent = <&gpio2>;
++            interrupts = <19 IRQ_TYPE_EDGE_RISING>; /* READY */
++        };
++    };
++...
+-- 
+Christian Eggers
+Embedded software developer
+
+Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
+Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
+Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
+Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
+
