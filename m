@@ -2,203 +2,161 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD02AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C34C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A58E822CA0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FD1322BF3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:04:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Z3lRBcUS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NEE4+B+u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbgHEHEt (ORCPT
+        id S1728476AbgHEHEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 03:04:49 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:54442 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728333AbgHEHEh (ORCPT
+        Wed, 5 Aug 2020 03:04:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42670 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728392AbgHEHEp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 03:04:37 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07573OoP002361;
-        Wed, 5 Aug 2020 09:04:16 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=RffTtPmKCv/Aa2h8bw9Avd3hjS+jAC1L4CxYDKOc4jw=;
- b=Z3lRBcUSGbru34zjrzwCPy6d5YlIhLUhDUDxUKiKZ9BZuy2OxFebVV1k9G4fqn+E7Zjk
- NVosWxv3t2aN39PHyIQLk4bu0jYqh0sxh/wcdJDG4NtTVuwDlAmsXAB+q4m+zFqgJ3YB
- qzhm45Bogxeoyuw3KvFJpOOEKBEnIO+Fp2TbScXSoOclwrBwYfkwFIfRLAE48iAIrckw
- SzjMV1ysL80RB2mZYzkmAD2Wxcx01d3TkcuwROaspJXQajcj5shYJP2MMenyPx8WkJax
- Ys4MD8e8Ff2sDAfPc8fmRllFJJ0v8YAkDOC05tBiYxxYODf1z8XDyvBWvTGzZGVY3LqB pw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32n6knf7du-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Aug 2020 09:04:16 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2BC9D100038;
-        Wed,  5 Aug 2020 09:04:16 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1CEC82A4D8E;
-        Wed,  5 Aug 2020 09:04:16 +0200 (CEST)
-Received: from localhost (10.75.127.48) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Aug 2020 09:04:15
- +0200
-From:   Alain Volmat <alain.volmat@st.com>
-To:     <broonie@kernel.org>, <amelie.delaunay@st.com>
-CC:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <linux-spi@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
-        <alain.volmat@st.com>
-Subject: [PATCH 06/18] spi: stm32h7: fix irq handler
-Date:   Wed, 5 Aug 2020 09:02:01 +0200
-Message-ID: <1596610933-32599-7-git-send-email-alain.volmat@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596610933-32599-1-git-send-email-alain.volmat@st.com>
-References: <1596610933-32599-1-git-send-email-alain.volmat@st.com>
+        Wed, 5 Aug 2020 03:04:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596611081;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OllU2AtLxALI933xrusVDqtVc7Jp0X73cxjCgcSpPPs=;
+        b=NEE4+B+uEWOzaqcFoJYtM9Vmuw0U/3GzD5CuREmUEtqYWDK6ANNvAxbSxWiE9hkk9w+2J3
+        TsSd01HEalKVQxDiqhFTgLEP+S4SXnO4mdsdeZXTVPssNrw89I+KMORiS5VgX41PFXPy/q
+        LU++aMz5IVjWVzNV5asC29QGM59KnDQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-239-zYa7F1cJNfOsJ3ezn09pKw-1; Wed, 05 Aug 2020 03:04:33 -0400
+X-MC-Unique: zYa7F1cJNfOsJ3ezn09pKw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DD99D101C8A9;
+        Wed,  5 Aug 2020 07:04:30 +0000 (UTC)
+Received: from starship (unknown [10.35.206.144])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6E26571D35;
+        Wed,  5 Aug 2020 07:04:27 +0000 (UTC)
+Message-ID: <084a332afc149c0c647e86f71fea49bb0665a843.camel@redhat.com>
+Subject: Re: [PATCH] KVM: x86: Don't attempt to load PDPTRs when 64-bit mode
+ is enabled
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Oliver Upton <oupton@google.com>,
+        Peter Shier <pshier@google.com>
+Date:   Wed, 05 Aug 2020 10:04:26 +0300
+In-Reply-To: <20200714015732.32426-1-sean.j.christopherson@intel.com>
+References: <20200714015732.32426-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-05_04:2020-08-03,2020-08-05 signatures=0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amelie Delaunay <amelie.delaunay@st.com>
+On Mon, 2020-07-13 at 18:57 -0700, Sean Christopherson wrote:
+> Don't attempt to load PDPTRs if EFER.LME=1, i.e. if 64-bit mode is
+> enabled.  A recent change to reload the PDTPRs when CR0.CD or CR0.NW is
+> toggled botched the EFER.LME handling and sends KVM down the PDTPR path
+> when is_paging() is true, i.e. when the guest toggles CD/NW in 64-bit
+> mode.
+> 
+> Split the CR0 checks for 64-bit vs. 32-bit PAE into separate paths.  The
+> 64-bit path is specifically checking state when paging is toggled on,
+> i.e. CR0.PG transititions from 0->1.  The PDPTR path now needs to run if
+> the new CR0 state has paging enabled, irrespective of whether paging was
+> already enabled.  Trying to shave a few cycles to make the PDPTR path an
+> "else if" case is a mess.
+> 
+> Fixes: d42e3fae6faed ("kvm: x86: Read PDPTEs on CR0.CD and CR0.NW changes")
+> Cc: Jim Mattson <jmattson@google.com>
+> Cc: Oliver Upton <oupton@google.com>
+> Cc: Peter Shier <pshier@google.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+> 
+> The other way to fix this, with a much smaller diff stat, is to simply
+> move the !is_page(vcpu) check inside (vcpu->arch.efer & EFER_LME).  But
+> that results in a ridiculous amount of nested conditionals for what is a
+> very straightforward check e.g.
+> 
+> 	if (cr0 & X86_CR0_PG) {
+> 		if (vcpu->arch.efer & EFER_LME) }
+> 			if (!is_paging(vcpu)) {
+> 				...
+> 			}
+> 		}
+> 	}
+> 
+> Since this doesn't need to be backported anywhere, I didn't see any value
+> in having an intermediate step.
+> 
+>  arch/x86/kvm/x86.c | 24 ++++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 95ef629228691..5f526d94c33f3 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -819,22 +819,22 @@ int kvm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
+>  	if ((cr0 & X86_CR0_PG) && !(cr0 & X86_CR0_PE))
+>  		return 1;
+>  
+> -	if (cr0 & X86_CR0_PG) {
+>  #ifdef CONFIG_X86_64
+> -		if (!is_paging(vcpu) && (vcpu->arch.efer & EFER_LME)) {
+> -			int cs_db, cs_l;
+> +	if ((vcpu->arch.efer & EFER_LME) && !is_paging(vcpu) &&
+> +	    (cr0 & X86_CR0_PG)) {
+> +		int cs_db, cs_l;
+>  
+> -			if (!is_pae(vcpu))
+> -				return 1;
+> -			kvm_x86_ops.get_cs_db_l_bits(vcpu, &cs_db, &cs_l);
+> -			if (cs_l)
+> -				return 1;
+> -		} else
+> -#endif
+> -		if (is_pae(vcpu) && ((cr0 ^ old_cr0) & pdptr_bits) &&
+> -		    !load_pdptrs(vcpu, vcpu->arch.walk_mmu, kvm_read_cr3(vcpu)))
+> +		if (!is_pae(vcpu))
+> +			return 1;
+> +		kvm_x86_ops.get_cs_db_l_bits(vcpu, &cs_db, &cs_l);
+> +		if (cs_l)
+>  			return 1;
+>  	}
+> +#endif
+> +	if (!(vcpu->arch.efer & EFER_LME) && (cr0 & X86_CR0_PG) &&
+> +	    is_pae(vcpu) && ((cr0 ^ old_cr0) & pdptr_bits) &&
+> +	    !load_pdptrs(vcpu, vcpu->arch.walk_mmu, kvm_read_cr3(vcpu)))
+> +		return 1;
+>  
+>  	if (!(cr0 & X86_CR0_PG) && kvm_read_cr4_bits(vcpu, X86_CR4_PCIDE))
+>  		return 1;
 
-Check the expected flags in irq handler instead of all flags set in
-status register and clear only flags that are not automatically cleared
-by hardware.
-In case of Full-Duplex mode, DXP flag is set when RXP and TXP flags are
-set. But to avoid 2 different handlings, just add TXP and RXP flag in
-the mask instead of DXP, and then keep the initial handling of TXP and
-RXP events.
-Also rephrase comment about EOTIE which is one of the interrupt enable
-bits. It is not triggered by any event.
+I also investigated this issue (also same thing, OVMF doesn't boot),
+and after looking at the intel and amd's PRM, this looks like correct solution.
+I also tested this and it works.
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
----
- drivers/spi/spi-stm32.c | 40 ++++++++++++++++++++++++++--------------
- 1 file changed, 26 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index b90367d522f2..bbda73937668 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -131,6 +131,7 @@
- #define STM32H7_SPI_SR_RXP		BIT(0)
- #define STM32H7_SPI_SR_TXP		BIT(1)
- #define STM32H7_SPI_SR_EOT		BIT(3)
-+#define STM32H7_SPI_SR_TXTF		BIT(4)
- #define STM32H7_SPI_SR_OVR		BIT(6)
- #define STM32H7_SPI_SR_SUSP		BIT(11)
- #define STM32H7_SPI_SR_RXPLVL		GENMASK(14, 13)
-@@ -881,7 +882,7 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
- {
- 	struct spi_master *master = dev_id;
- 	struct stm32_spi *spi = spi_master_get_devdata(master);
--	u32 sr, ier, mask;
-+	u32 sr, ier, mask, ifcr;
- 	unsigned long flags;
- 	bool end = false;
- 
-@@ -889,26 +890,31 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
- 
- 	sr = readl_relaxed(spi->base + STM32H7_SPI_SR);
- 	ier = readl_relaxed(spi->base + STM32H7_SPI_IER);
-+	ifcr = 0;
- 
- 	mask = ier;
--	/* EOTIE is triggered on EOT, SUSP and TXC events. */
-+	/*
-+	 * EOTIE enables irq from EOT, SUSP and TXC events. We need to set
-+	 * SUSP to acknowledge it later. TXC is automatically cleared
-+	 */
- 	mask |= STM32H7_SPI_SR_SUSP;
- 	/*
--	 * When TXTF is set, DXPIE and TXPIE are cleared. So in case of
--	 * Full-Duplex, need to poll RXP event to know if there are remaining
--	 * data, before disabling SPI.
-+	 * DXPIE is set in Full-Duplex, one IT will be raised if TXP and RXP
-+	 * are set. So in case of Full-Duplex, need to poll TXP and RXP event.
- 	 */
--	if (spi->rx_buf && !spi->cur_usedma)
--		mask |= STM32H7_SPI_SR_RXP;
-+	if ((spi->cur_comm == SPI_FULL_DUPLEX) && (!spi->cur_usedma))
-+		mask |= STM32H7_SPI_SR_TXP | STM32H7_SPI_SR_RXP;
- 
--	if (!(sr & mask)) {
-+	mask &= sr;
-+
-+	if (!mask) {
- 		dev_dbg(spi->dev, "spurious IT (sr=0x%08x, ier=0x%08x)\n",
- 			sr, ier);
- 		spin_unlock_irqrestore(&spi->lock, flags);
- 		return IRQ_NONE;
- 	}
- 
--	if (sr & STM32H7_SPI_SR_SUSP) {
-+	if (mask & STM32H7_SPI_SR_SUSP) {
- 		dev_warn(spi->dev, "Communication suspended\n");
- 		if (!spi->cur_usedma && (spi->rx_buf && (spi->rx_len > 0)))
- 			stm32h7_spi_read_rxfifo(spi, false);
-@@ -918,9 +924,10 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
- 		 */
- 		if (spi->cur_usedma)
- 			end = true;
-+		ifcr |= STM32H7_SPI_SR_SUSP;
- 	}
- 
--	if (sr & STM32H7_SPI_SR_OVR) {
-+	if (mask & STM32H7_SPI_SR_OVR) {
- 		dev_warn(spi->dev, "Overrun: received value discarded\n");
- 		if (!spi->cur_usedma && (spi->rx_buf && (spi->rx_len > 0)))
- 			stm32h7_spi_read_rxfifo(spi, false);
-@@ -930,23 +937,28 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
- 		 */
- 		if (spi->cur_usedma)
- 			end = true;
-+		ifcr |= STM32H7_SPI_SR_OVR;
- 	}
- 
--	if (sr & STM32H7_SPI_SR_EOT) {
-+	if (mask & STM32H7_SPI_SR_TXTF)
-+		ifcr |= STM32H7_SPI_SR_TXTF;
-+
-+	if (mask & STM32H7_SPI_SR_EOT) {
- 		if (!spi->cur_usedma && (spi->rx_buf && (spi->rx_len > 0)))
- 			stm32h7_spi_read_rxfifo(spi, true);
- 		end = true;
-+		ifcr |= STM32H7_SPI_SR_EOT;
- 	}
- 
--	if (sr & STM32H7_SPI_SR_TXP)
-+	if (mask & STM32H7_SPI_SR_TXP)
- 		if (!spi->cur_usedma && (spi->tx_buf && (spi->tx_len > 0)))
- 			stm32h7_spi_write_txfifo(spi);
- 
--	if (sr & STM32H7_SPI_SR_RXP)
-+	if (mask & STM32H7_SPI_SR_RXP)
- 		if (!spi->cur_usedma && (spi->rx_buf && (spi->rx_len > 0)))
- 			stm32h7_spi_read_rxfifo(spi, false);
- 
--	writel_relaxed(mask, spi->base + STM32H7_SPI_IFCR);
-+	writel_relaxed(ifcr, spi->base + STM32H7_SPI_IFCR);
- 
- 	spin_unlock_irqrestore(&spi->lock, flags);
- 
--- 
-2.7.4
+Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
+
+Best regards,
+	Maxim Levitsky
 
