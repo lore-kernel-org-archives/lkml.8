@@ -2,292 +2,293 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA86C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C95A8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FFE822B45
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85E3C22B45
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:01:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="lnjfCi8/"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="gIfnD9D0";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="LMe+cImb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgHEHB1 (ORCPT
+        id S1728178AbgHEHBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 03:01:27 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:33582 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgHEHBZ (ORCPT
+        Wed, 5 Aug 2020 03:01:34 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:28794 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725904AbgHEHBc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 03:01:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1596610884; x=1628146884;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=eFQ5FjEXjCcRqP315OtcZTEl8DRR0ETd5Jfrqerv8aI=;
-  b=lnjfCi8/L3nsWQ+DfIKJXUuz1YqtwHJs5lj4+t62fPvLWPWosWpWumAk
-   uvl7uPmUlx4MBABEuU+31+YGNQhniGoFVmc4zjh7iob7IrMuutaeh7JQ0
-   iyWYyHjY0//9KMJw2VMLmBl0oKSlZdobSsd39rii1E/+NKVIGpj3oDzmV
-   k=;
-IronPort-SDR: Afg6lbE2BYbwPO4BRioGpMX1wTH8vqXv3yqSKFBuI7SVW5wC3KRsSHMmZjzRUCl0ZhdZ54IgGF
- ZOAXa7W9ALWg==
-X-IronPort-AV: E=Sophos;i="5.75,436,1589241600"; 
-   d="scan'208";a="57505648"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-17c49630.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 05 Aug 2020 07:01:21 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-17c49630.us-east-1.amazon.com (Postfix) with ESMTPS id 83C25A238A;
-        Wed,  5 Aug 2020 07:01:09 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 5 Aug 2020 07:01:08 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.26) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 5 Aug 2020 07:00:51 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <david@redhat.com>,
-        <dwmw@amazon.com>, <fan.du@intel.com>, <foersleo@amazon.de>,
-        <gthelen@google.com>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <rppt@kernel.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
-        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC v6 02/10] tools/damon: Support init target regions specification
-Date:   Wed, 5 Aug 2020 08:59:43 +0200
-Message-ID: <20200805065951.18221-3-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200805065951.18221-1-sjpark@amazon.com>
-References: <20200805065951.18221-1-sjpark@amazon.com>
+        Wed, 5 Aug 2020 03:01:32 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0756xOps022463;
+        Wed, 5 Aug 2020 00:01:16 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=PXpzQOg3+0z5l1+dcGpT0rYHreCWRIJ4sTnnfgcvgNI=;
+ b=gIfnD9D0ztbLb0TIGB85GkuD9LKznM7ZYdFhhjINVufKEStwzKOvaKX+0Wy09HNI45Fo
+ czgunOyTJu/H2aie+qSwwk9NQB6TS/1J3iuyxAYD0EhAKjnMFqnHqI8QlLOpps7K9isf
+ /DEFwFHTmvAezSAppMxoAKrxb3hVNZDQrRk= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 32n81jrnru-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 05 Aug 2020 00:01:16 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 5 Aug 2020 00:01:15 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lAgk0iPygd7eALccmQ2nsvH9rOz7xpcmPQ/aPazK4krYplwuCOIa8AA0Rz0NC41+dEBMwPg81NvATdK3tcGm3q0ONawP7lqyy3vHvPv40qiumov0Gn9d6xRo8uagivwJkdSfh8Y47GnYnP5ElusDGTWXtOSagKnjYZZDkpVmBJC3JCodLcTp7VhW08uu6F0ZdIqSD54y+b6t/L/ApY9N4TkcDkHDeZj0wKXklcU9XWnFtiF1XmXR8T3Obr/1aysg9ThFPbaHrS6JLjykgXsS4LZIyldS6QtaARS4g7MtoEeoRX4DTtKdxbth2gjFXLxx41r/rp1xaDiKbpRcsD46uw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PXpzQOg3+0z5l1+dcGpT0rYHreCWRIJ4sTnnfgcvgNI=;
+ b=df2zkBBovuecD32asV/nNoevbU5HcBDodRqXZruWMjq9HR+rvpIu/RGbARfFehIM3UGvN+ksVg3lgClcjRKTPamIKKhaikKdRtUbLlddYkTuHIhPZNcanfbQh0gPGoutHSlCqW55A5KbIhhbg6jAWdPWwzFLJjXYq+jBfTxVLYXQK3CgJjg4CODNk0gMjPAhWZUv5JRRlFZriOZh3wHlJ88HjzIwPHfMfzYMLs+lPdgB3FeT+7dVln6r6KOg20wZG6t3jX65xA68AD0fVIDn73dbpBZ++5Xe8Up/lsy/8yAdgs+2qMzxMg6D1vgC7lL6Cxs5zFvpAfbHSptLDZLItg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PXpzQOg3+0z5l1+dcGpT0rYHreCWRIJ4sTnnfgcvgNI=;
+ b=LMe+cImbSeC8n2P7nc/sSzhfIfCCKte6cVOxiZGTrhuwkLgolJCf8+D5C14tcFAy6SVvgxibO7aKhM4STdq6BO9kL+Ny4jnxSOExz1QXcB0XdCgm59ksSVfz8oZtMuWQZRxiECqQlAPKOiS7ZqJ/Mv/wzWbMse12vQ9JUU9C/zM=
+Received: from BYAPR15MB2999.namprd15.prod.outlook.com (2603:10b6:a03:fa::12)
+ by BYAPR15MB2565.namprd15.prod.outlook.com (2603:10b6:a03:14f::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.21; Wed, 5 Aug
+ 2020 07:01:00 +0000
+Received: from BYAPR15MB2999.namprd15.prod.outlook.com
+ ([fe80::543:b185:ef4a:7e8]) by BYAPR15MB2999.namprd15.prod.outlook.com
+ ([fe80::543:b185:ef4a:7e8%5]) with mapi id 15.20.3239.022; Wed, 5 Aug 2020
+ 07:01:00 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+CC:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <Kernel-team@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Xu <dlxu@fb.com>
+Subject: Re: [PATCH bpf-next 5/5] selftests/bpf: add benchmark for uprobe vs.
+ user_prog
+Thread-Topic: [PATCH bpf-next 5/5] selftests/bpf: add benchmark for uprobe vs.
+ user_prog
+Thread-Index: AQHWZ+C4z/mDZUCS20yCUvtKcPb5ZakloXcAgAAxPICAAAZdgIACmfGAgABTZwCAADDfgIAAEL+AgAAUkIA=
+Date:   Wed, 5 Aug 2020 07:01:00 +0000
+Message-ID: <BA750BC0-0A3B-488B-806C-90C1B6CDF586@fb.com>
+References: <20200801084721.1812607-1-songliubraving@fb.com>
+ <20200801084721.1812607-6-songliubraving@fb.com>
+ <CAEf4BzaP4TGF7kcmZRAKsy=oWPpFA6sUGFkctpGz-fPp+YuSOQ@mail.gmail.com>
+ <DDCD362E-21D3-46BF-90A6-8F3221CBB54E@fb.com>
+ <CAEf4BzY5RYMM6w8wn3qEB3AsuKWv-TMaD5NVFj=YqbCW4DLjqA@mail.gmail.com>
+ <7384B583-EE19-4045-AC72-B6FE87C187DD@fb.com>
+ <CAEf4BzaiJnCu14AWougmxH80msGdOp4S8ZNmAiexMmtwUM_2Xg@mail.gmail.com>
+ <AF9D0E8C-0AA5-4BE4-90F4-946FABAB63FD@fb.com>
+ <CAEf4BzZ29G2KexhKY=CffOPK_DiqAXxRHWuVRREHv0dnXgobRQ@mail.gmail.com>
+In-Reply-To: <CAEf4BzZ29G2KexhKY=CffOPK_DiqAXxRHWuVRREHv0dnXgobRQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3608.80.23.2.2)
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=fb.com;
+x-originating-ip: [2620:10d:c090:400::5:8f7]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6516eea3-bd85-44ff-9103-08d8390d4fb9
+x-ms-traffictypediagnostic: BYAPR15MB2565:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR15MB2565CEB4EE1E92CF776BF166B34B0@BYAPR15MB2565.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-oob-tlc-oobclassifiers: OLM:3826;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +xiM+tmHV5XyvW15G/2juyA4j/HFf5d39t4e0MGv8Un41mH+wHK7/9g02fj9SQv9qqqBG6ziE5ikyIHsnuVlwNpGE/aQX8BLuQem72VzVaGEUsN9IaLIwl2s3VEJKFq6pejROyxYLsIROxbgeiTfRa8wcWDAc7mIbjz75rkt2o5p7fxoJTa4EbtvROj6WPoZHkzacoh/JwsHnupbZHAJK3xEgnFTNoq+bGEjjP1vkFVGvAzD0G5KUcVemDFQliWR5s5JeIB6AHCLAA3zfo4+4H6s3rXSD5wr0TuxyuU2YH0fJoqlHehLwU9bRqeQNpDSw6N7MfpPnCoFTpQLE/rG+A==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB2999.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(396003)(346002)(39860400002)(136003)(366004)(376002)(66446008)(64756008)(66476007)(66556008)(66946007)(76116006)(2616005)(8676002)(6486002)(71200400001)(478600001)(4326008)(8936002)(6512007)(54906003)(6916009)(186003)(53546011)(6506007)(86362001)(36756003)(5660300002)(83380400001)(33656002)(316002)(2906002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: GkyXbmnpW4uFuPfRp8CTlloSEBm+bHYaVFH6I9cNFRZIQ+g3dQXRDpj+jijiEEIjGWao0q0dCeSUzMZMqTEYOY6HJHZD8ZYtt9WSMR99lE8mVKy7/uFcfv3JPaeY+yITLQjhZWOBeg0WGVTWQdJvtosC0IaUDEuW/LiK6b8ujDUKogB9e6ISb9JO+GyUgR6kjvhNdPIsri4Ohond+bhyGK/pZkEdr7Mrg/EJu8x1ve26/VenyibwiSrh/ZVjwNwrtLgXXwkMJf9xsPxSt4iKl6SPMKdWk+saFnlrwVA9BtF9pSB9R9EcZ4g8YQDXF8qPX/BtNZRvubfNioTh18HeJsuanCYU/ZcwwwlTKj8WACmz/XuvW3XrEKLKfCJ1auei1PNCzL3b0FKHWHPjGN3OVdBDO9BCzVYJ6OQBX3/96ycVPkj3OLUsTJVt7aR/K9u9OqmMXBE78BGik0BdF0bLsGNvEjQEVV99lu4FB35tEIkNyiZ4btxwY20/vz0cvst1KcqA4dEljrulUUk0N2sptMEVMr7lbr3/jSXkiRR56i3N1wYzyPeAEyO0RVn6GzjntwlHXtuVw15qxubeZwbSmAyWAgp8dZANB0DYnNqHy9k9/vSbkwhyhgQYMkAE21dHvWb7wz9h+MzIOrfmqmrM1BZ1UinjIU5rN5pQLl8SA+0=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9C4D0A46F11C014AA4C96CE3879F77BC@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.26]
-X-ClientProxiedBy: EX13D24UWB002.ant.amazon.com (10.43.161.159) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB2999.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6516eea3-bd85-44ff-9103-08d8390d4fb9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2020 07:01:00.6435
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uPZGOohdVbImtNNv1b+DjklO2Gjd8y8ixwscjO70gNCCl9HODC6JoaMTAj1YLhqmiN/xjUxM4CKlRdAulntcow==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2565
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-05_04:2020-08-03,2020-08-05 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
+ impostorscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0 phishscore=0
+ bulkscore=0 malwarescore=0 mlxscore=0 priorityscore=1501 mlxlogscore=999
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008050059
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
-
-This commit updates the damon user space tool to support the initial
-monitoring target regions specification.
-
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- tools/damon/_damon.py  | 39 +++++++++++++++++++++++++++++++++++++++
- tools/damon/record.py  | 12 +++++++-----
- tools/damon/schemes.py | 12 +++++++-----
- 3 files changed, 53 insertions(+), 10 deletions(-)
-
-diff --git a/tools/damon/_damon.py b/tools/damon/_damon.py
-index a4f6c03c23e4..a22ec3777c16 100644
---- a/tools/damon/_damon.py
-+++ b/tools/damon/_damon.py
-@@ -12,12 +12,25 @@ debugfs_attrs = None
- debugfs_record = None
- debugfs_schemes = None
- debugfs_target_ids = None
-+debugfs_init_regions = None
- debugfs_monitor_on = None
- 
- def set_target_id(tid):
-     with open(debugfs_target_ids, 'w') as f:
-         f.write('%s\n' % tid)
- 
-+def set_target(tid, init_regions=[]):
-+    rc = set_target_id(tid)
-+    if rc:
-+        return rc
-+
-+    if not os.path.exists(debugfs_init_regions):
-+        return 0
-+
-+    string = ' '.join(['%s %d %d' % (tid, r[0], r[1]) for r in init_regions])
-+    return subprocess.call('echo "%s" > %s' % (string, debugfs_init_regions),
-+            shell=True, executable='/bin/bash')
-+
- def turn_damon(on_off):
-     return subprocess.call("echo %s > %s" % (on_off, debugfs_monitor_on),
-             shell=True, executable="/bin/bash")
-@@ -97,6 +110,7 @@ def chk_update_debugfs(debugfs):
-     global debugfs_record
-     global debugfs_schemes
-     global debugfs_target_ids
-+    global debugfs_init_regions
-     global debugfs_monitor_on
- 
-     debugfs_damon = os.path.join(debugfs, 'damon')
-@@ -104,6 +118,7 @@ def chk_update_debugfs(debugfs):
-     debugfs_record = os.path.join(debugfs_damon, 'record')
-     debugfs_schemes = os.path.join(debugfs_damon, 'schemes')
-     debugfs_target_ids = os.path.join(debugfs_damon, 'target_ids')
-+    debugfs_init_regions = os.path.join(debugfs_damon, 'init_regions')
-     debugfs_monitor_on = os.path.join(debugfs_damon, 'monitor_on')
- 
-     if not os.path.isdir(debugfs_damon):
-@@ -131,6 +146,26 @@ def cmd_args_to_attrs(args):
-     return Attrs(sample_interval, aggr_interval, regions_update_interval,
-             min_nr_regions, max_nr_regions, rbuf_len, rfile_path, schemes)
- 
-+def cmd_args_to_init_regions(args):
-+    regions = []
-+    for arg in args.regions.split():
-+        addrs = arg.split('-')
-+        try:
-+            if len(addrs) != 2:
-+                raise Exception('two addresses not given')
-+            start = int(addrs[0])
-+            end = int(addrs[1])
-+            if start >= end:
-+                raise Exception('start >= end')
-+            if regions and regions[-1][1] > start:
-+                raise Exception('regions overlap')
-+        except Exception as e:
-+            print('Wrong \'--regions\' argument (%s)' % e)
-+            exit(1)
-+
-+        regions.append([start, end])
-+    return regions
-+
- def set_attrs_argparser(parser):
-     parser.add_argument('-d', '--debugfs', metavar='<debugfs>', type=str,
-             default='/sys/kernel/debug', help='debugfs mounted path')
-@@ -144,3 +179,7 @@ def set_attrs_argparser(parser):
-             default=10, help='minimal number of regions')
-     parser.add_argument('-m', '--maxr', metavar='<# regions>', type=int,
-             default=1000, help='maximum number of regions')
-+
-+def set_init_regions_argparser(parser):
-+    parser.add_argument('-r', '--regions', metavar='"<start>-<end> ..."',
-+            type=str, default='', help='monitoring target address regions')
-diff --git a/tools/damon/record.py b/tools/damon/record.py
-index 6d1cbe593b94..11fd54001472 100644
---- a/tools/damon/record.py
-+++ b/tools/damon/record.py
-@@ -24,7 +24,7 @@ def pidfd_open(pid):
- 
-     return syscall(NR_pidfd_open, pid, 0)
- 
--def do_record(target, is_target_cmd, attrs, old_attrs, pidfd):
-+def do_record(target, is_target_cmd, init_regions, attrs, old_attrs, pidfd):
-     if os.path.isfile(attrs.rfile_path):
-         os.rename(attrs.rfile_path, attrs.rfile_path + '.old')
- 
-@@ -48,8 +48,8 @@ def do_record(target, is_target_cmd, attrs, old_attrs, pidfd):
-         # only for reference of the pidfd usage.
-         target = 'pidfd %s' % fd
- 
--    if _damon.set_target_id(target):
--        print('target id setting (%s) failed' % target)
-+    if _damon.set_target(target, init_regions):
-+        print('target setting (%s, %s) failed' % (target, init_regions))
-         cleanup_exit(old_attrs, -2)
-     if _damon.turn_damon('on'):
-         print('could not turn on damon' % target)
-@@ -91,6 +91,7 @@ def chk_permission():
- 
- def set_argparser(parser):
-     _damon.set_attrs_argparser(parser)
-+    _damon.set_init_regions_argparser(parser)
-     parser.add_argument('target', type=str, metavar='<target>',
-             help='the target command or the pid to record')
-     parser.add_argument('--pidfd', action='store_true',
-@@ -117,19 +118,20 @@ def main(args=None):
-     args.schemes = ''
-     pidfd = args.pidfd
-     new_attrs = _damon.cmd_args_to_attrs(args)
-+    init_regions = _damon.cmd_args_to_init_regions(args)
-     target = args.target
- 
-     target_fields = target.split()
-     if not subprocess.call('which %s &> /dev/null' % target_fields[0],
-             shell=True, executable='/bin/bash'):
--        do_record(target, True, new_attrs, orig_attrs, pidfd)
-+        do_record(target, True, init_regions, new_attrs, orig_attrs, pidfd)
-     else:
-         try:
-             pid = int(target)
-         except:
-             print('target \'%s\' is neither a command, nor a pid' % target)
-             exit(1)
--        do_record(target, False, new_attrs, orig_attrs, pidfd)
-+        do_record(target, False, init_regions, new_attrs, orig_attrs, pidfd)
- 
- if __name__ == '__main__':
-     main()
-diff --git a/tools/damon/schemes.py b/tools/damon/schemes.py
-index 9095835f6133..cfec89854a08 100644
---- a/tools/damon/schemes.py
-+++ b/tools/damon/schemes.py
-@@ -14,7 +14,7 @@ import time
- import _convert_damos
- import _damon
- 
--def run_damon(target, is_target_cmd, attrs, old_attrs):
-+def run_damon(target, is_target_cmd, init_regions, attrs, old_attrs):
-     if os.path.isfile(attrs.rfile_path):
-         os.rename(attrs.rfile_path, attrs.rfile_path + '.old')
- 
-@@ -27,8 +27,8 @@ def run_damon(target, is_target_cmd, attrs, old_attrs):
-     if is_target_cmd:
-         p = subprocess.Popen(target, shell=True, executable='/bin/bash')
-         target = p.pid
--    if _damon.set_target_pid(target):
--        print('pid setting (%s) failed' % target)
-+    if _damon.set_target(target, init_regions):
-+        print('target setting (%s, %s) failed' % (target, init_regions))
-         cleanup_exit(old_attrs, -2)
-     if _damon.turn_damon('on'):
-         print('could not turn on damon' % target)
-@@ -68,6 +68,7 @@ def chk_permission():
- 
- def set_argparser(parser):
-     _damon.set_attrs_argparser(parser)
-+    _damon.set_init_regions_argparser(parser)
-     parser.add_argument('target', type=str, metavar='<target>',
-             help='the target command or the pid to record')
-     parser.add_argument('-c', '--schemes', metavar='<file>', type=str,
-@@ -92,19 +93,20 @@ def main(args=None):
-     args.out = 'null'
-     args.schemes = _convert_damos.convert(args.schemes, args.sample, args.aggr)
-     new_attrs = _damon.cmd_args_to_attrs(args)
-+    init_regions = _damon.cmd_args_to_init_regions(args)
-     target = args.target
- 
-     target_fields = target.split()
-     if not subprocess.call('which %s &> /dev/null' % target_fields[0],
-             shell=True, executable='/bin/bash'):
--        run_damon(target, True, new_attrs, orig_attrs)
-+        run_damon(target, True, init_regions, new_attrs, orig_attrs)
-     else:
-         try:
-             pid = int(target)
-         except:
-             print('target \'%s\' is neither a command, nor a pid' % target)
-             exit(1)
--        run_damon(target, False, new_attrs, orig_attrs)
-+        run_damon(target, False, init_regions, new_attrs, orig_attrs)
- 
- if __name__ == '__main__':
-     main()
--- 
-2.17.1
-
+DQoNCj4gT24gQXVnIDQsIDIwMjAsIGF0IDEwOjQ3IFBNLCBBbmRyaWkgTmFrcnlpa28gPGFuZHJp
+aS5uYWtyeWlrb0BnbWFpbC5jb20+IHdyb3RlOg0KPiANCj4gT24gVHVlLCBBdWcgNCwgMjAyMCBh
+dCA5OjQ3IFBNIFNvbmcgTGl1IDxzb25nbGl1YnJhdmluZ0BmYi5jb20+IHdyb3RlOg0KPj4gDQo+
+PiANCj4+IA0KPj4+IE9uIEF1ZyA0LCAyMDIwLCBhdCA2OjUyIFBNLCBBbmRyaWkgTmFrcnlpa28g
+PGFuZHJpaS5uYWtyeWlrb0BnbWFpbC5jb20+IHdyb3RlOg0KPj4+IA0KPj4+IE9uIFR1ZSwgQXVn
+IDQsIDIwMjAgYXQgMjowMSBQTSBTb25nIExpdSA8c29uZ2xpdWJyYXZpbmdAZmIuY29tPiB3cm90
+ZToNCj4+Pj4gDQo+Pj4+IA0KPj4+PiANCj4+Pj4+IE9uIEF1ZyAyLCAyMDIwLCBhdCAxMDoxMCBQ
+TSwgQW5kcmlpIE5ha3J5aWtvIDxhbmRyaWkubmFrcnlpa29AZ21haWwuY29tPiB3cm90ZToNCj4+
+Pj4+IA0KPj4+Pj4gT24gU3VuLCBBdWcgMiwgMjAyMCBhdCA5OjQ3IFBNIFNvbmcgTGl1IDxzb25n
+bGl1YnJhdmluZ0BmYi5jb20+IHdyb3RlOg0KPj4+Pj4+IA0KPj4+Pj4+IA0KPj4+Pj4+PiBPbiBB
+dWcgMiwgMjAyMCwgYXQgNjo1MSBQTSwgQW5kcmlpIE5ha3J5aWtvIDxhbmRyaWkubmFrcnlpa29A
+Z21haWwuY29tPiB3cm90ZToNCj4+Pj4+Pj4gDQo+Pj4+Pj4+IE9uIFNhdCwgQXVnIDEsIDIwMjAg
+YXQgMTo1MCBBTSBTb25nIExpdSA8c29uZ2xpdWJyYXZpbmdAZmIuY29tPiB3cm90ZToNCj4+Pj4+
+Pj4+IA0KPj4+Pj4+Pj4gQWRkIGEgYmVuY2htYXJrIHRvIGNvbXBhcmUgcGVyZm9ybWFuY2Ugb2YN
+Cj4+Pj4+Pj4+IDEpIHVwcm9iZTsNCj4+Pj4+Pj4+IDIpIHVzZXIgcHJvZ3JhbSB3L28gYXJnczsN
+Cj4+Pj4+Pj4+IDMpIHVzZXIgcHJvZ3JhbSB3LyBhcmdzOw0KPj4+Pj4+Pj4gNCkgdXNlciBwcm9n
+cmFtIHcvIGFyZ3Mgb24gcmFuZG9tIGNwdS4NCj4+Pj4+Pj4+IA0KPj4+Pj4+PiANCj4+Pj4+Pj4g
+Q2FuIHlvdSBwbGVhc2UgYWRkIGl0IHRvIHRoZSBleGlzdGluZyBiZW5jaG1hcmsgcnVubmVyIGlu
+c3RlYWQsIGUuZy4sDQo+Pj4+Pj4+IGFsb25nIHRoZSBvdGhlciBiZW5jaF90cmlnZ2VyIGJlbmNo
+bWFya3M/IE5vIG5lZWQgdG8gcmUtaW1wbGVtZW50DQo+Pj4+Pj4+IGJlbmNobWFyayBzZXR1cC4g
+QW5kIGFsc28gdGhhdCB3b3VsZCBhbHNvIGFsbG93IHRvIGNvbXBhcmUgZXhpc3RpbmcNCj4+Pj4+
+Pj4gd2F5cyBvZiBjaGVhcGx5IHRyaWdnZXJpbmcgYSBwcm9ncmFtIHZzIHRoaXMgbmV3IF9VU0VS
+IHByb2dyYW0/DQo+Pj4+Pj4gDQo+Pj4+Pj4gV2lsbCB0cnkuDQo+Pj4+Pj4gDQo+Pj4+Pj4+IA0K
+Pj4+Pj4+PiBJZiB0aGUgcGVyZm9ybWFuY2UgaXMgbm90IHNpZ25pZmljYW50bHkgYmV0dGVyIHRo
+YW4gb3RoZXIgd2F5cywgZG8geW91DQo+Pj4+Pj4+IHRoaW5rIGl0IHN0aWxsIG1ha2VzIHNlbnNl
+IHRvIGFkZCBhIG5ldyBCUEYgcHJvZ3JhbSB0eXBlPyBJIHRoaW5rDQo+Pj4+Pj4+IHRyaWdnZXJp
+bmcgS1BST0JFL1RSQUNFUE9JTlQgZnJvbSBicGZfcHJvZ190ZXN0X3J1bigpIHdvdWxkIGJlIHZl
+cnkNCj4+Pj4+Pj4gbmljZSwgbWF5YmUgaXQncyBwb3NzaWJsZSB0byBhZGQgdGhhdCBpbnN0ZWFk
+IG9mIGEgbmV3IHByb2dyYW0gdHlwZT8NCj4+Pj4+Pj4gRWl0aGVyIHdheSwgbGV0J3Mgc2VlIGNv
+bXBhcmlzb24gd2l0aCBvdGhlciBwcm9ncmFtIHRyaWdnZXJpbmcNCj4+Pj4+Pj4gbWVjaGFuaXNt
+cyBmaXJzdC4NCj4+Pj4+PiANCj4+Pj4+PiBUcmlnZ2VyaW5nIEtQUk9CRSBhbmQgVFJBQ0VQT0lO
+VCBmcm9tIGJwZl9wcm9nX3Rlc3RfcnVuKCkgd2lsbCBiZSB1c2VmdWwuDQo+Pj4+Pj4gQnV0IEkg
+ZG9uJ3QgdGhpbmsgdGhleSBjYW4gYmUgdXNlZCBpbnN0ZWFkIG9mIHVzZXIgcHJvZ3JhbSwgZm9y
+IGEgY291cGxlDQo+Pj4+Pj4gcmVhc29ucy4gRmlyc3QsIEtQUk9CRS9UUkFDRVBPSU5UIG1heSBi
+ZSB0cmlnZ2VyZWQgYnkgb3RoZXIgcHJvZ3JhbXMNCj4+Pj4+PiBydW5uaW5nIGluIHRoZSBzeXN0
+ZW0sIHNvIHVzZXIgd2lsbCBoYXZlIHRvIGZpbHRlciB0aG9zZSBub2lzZSBvdXQgaW4NCj4+Pj4+
+PiBlYWNoIHByb2dyYW0uIFNlY29uZCwgaXQgaXMgbm90IGVhc3kgdG8gc3BlY2lmeSBDUFUgZm9y
+IEtQUk9CRS9UUkFDRVBPSU5ULA0KPj4+Pj4+IHdoaWxlIHRoaXMgZmVhdHVyZSBjb3VsZCBiZSB1
+c2VmdWwgaW4gbWFueSBjYXNlcywgZS5nLiBnZXQgc3RhY2sgdHJhY2UNCj4+Pj4+PiBvbiBhIGdp
+dmVuIENQVS4NCj4+Pj4+PiANCj4+Pj4+IA0KPj4+Pj4gUmlnaHQsIGl0J3Mgbm90IGFzIGNvbnZl
+bmllbnQgd2l0aCBLUFJPQkUvVFJBQ0VQT0lOVCBhcyB3aXRoIHRoZSBVU0VSDQo+Pj4+PiBwcm9n
+cmFtIHlvdSd2ZSBhZGRlZCBzcGVjaWZpY2FsbHkgd2l0aCB0aGF0IGZlYXR1cmUgaW4gbWluZC4g
+QnV0IGlmDQo+Pj4+PiB5b3UgcGluIHVzZXItc3BhY2UgdGhyZWFkIG9uIHRoZSBuZWVkZWQgQ1BV
+IGFuZCB0cmlnZ2VyIGtwcm9iZS90cCwNCj4+Pj4+IHRoZW4geW91J2xsIGdldCB3aGF0IHlvdSB3
+YW50LiBBcyBmb3IgdGhlICJub2lzZSIsIHNlZSBob3cNCj4+Pj4+IGJlbmNoX3RyaWdnZXIoKSBk
+ZWFscyB3aXRoIHRoYXQ6IGl0IHJlY29yZHMgdGhyZWFkIElEIGFuZCBmaWx0ZXJzDQo+Pj4+PiBl
+dmVyeXRoaW5nIG5vdCBtYXRjaGluZy4gWW91IGNhbiBkbyB0aGUgc2FtZSB3aXRoIENQVSBJRC4g
+SXQncyBub3QgYXMNCj4+Pj4+IGF1dG9tYXRpYyBhcyB3aXRoIGEgc3BlY2lhbCBCUEYgcHJvZ3Jh
+bSB0eXBlLCBidXQgc3RpbGwgcHJldHR5IHNpbXBsZSwNCj4+Pj4+IHdoaWNoIGlzIHdoeSBJJ20g
+c3RpbGwgZGVjaWRpbmcgKGZvciBteXNlbGYpIHdoZXRoZXIgVVNFUiBwcm9ncmFtIHR5cGUNCj4+
+Pj4+IGlzIG5lY2Vzc2FyeSA6KQ0KPj4+PiANCj4+Pj4gSGVyZSBhcmUgc29tZSBiZW5jaF90cmln
+Z2VyIG51bWJlcnM6DQo+Pj4+IA0KPj4+PiBiYXNlICAgICAgOiAgICAxLjY5OCDCsSAwLjAwMU0v
+cw0KPj4+PiB0cCAgICAgICAgOiAgICAxLjQ3NyDCsSAwLjAwMU0vcw0KPj4+PiByYXd0cCAgICAg
+OiAgICAxLjU2NyDCsSAwLjAwMU0vcw0KPj4+PiBrcHJvYmUgICAgOiAgICAxLjQzMSDCsSAwLjAw
+ME0vcw0KPj4+PiBmZW50cnkgICAgOiAgICAxLjY5MSDCsSAwLjAwME0vcw0KPj4+PiBmbW9kcmV0
+ICAgOiAgICAxLjY1NCDCsSAwLjAwME0vcw0KPj4+PiB1c2VyICAgICAgOiAgICAxLjI1MyDCsSAw
+LjAwME0vcw0KPj4+PiBmZW50cnktb24tY3B1OiAgICAwLjAyMiDCsSAwLjAxMU0vcw0KPj4+PiB1
+c2VyLW9uLWNwdTogICAgMC4zMTUgwrEgMC4wMDFNL3MNCj4+Pj4gDQo+Pj4gDQo+Pj4gT2ssIHNv
+IGJhc2ljYWxseSBhbGwgb2YgcmF3X3RwLHRwLGtwcm9iZSxmZW50cnkvZmV4aXQgYXJlDQo+Pj4g
+c2lnbmlmaWNhbnRseSBmYXN0ZXIgdGhhbiBVU0VSIHByb2dyYW1zLiBTdXJlLCB3aGVuIGNvbXBh
+cmVkIHRvDQo+Pj4gdXByb2JlLCB0aGV5IGFyZSBmYXN0ZXIsIGJ1dCBub3Qgd2hlbiBkb2luZyBv
+bi1zcGVjaWZpYy1DUFUgcnVuLCBpdA0KPj4+IHNlZW1zIChqdWRnaW5nIGZyb20gdGhpcyBwYXRj
+aCdzIGRlc2NyaXB0aW9uLCBpZiBJJ20gcmVhZGluZyBpdA0KPj4+IHJpZ2h0KS4gQW55d2F5cywg
+c3BlZWQgYXJndW1lbnQgc2hvdWxkbid0IGJlIGEgcmVhc29uIGZvciBkb2luZyB0aGlzLA0KPj4+
+IElNTy4NCj4+PiANCj4+Pj4gVGhlIHR3byAib24tY3B1IiB0ZXN0cyBydW4gdGhlIHByb2dyYW0g
+b24gYSBkaWZmZXJlbnQgQ1BVIChzZWUgdGhlIHBhdGNoDQo+Pj4+IGF0IHRoZSBlbmQpLg0KPj4+
+PiANCj4+Pj4gInVzZXIiIGlzIGFib3V0IDI1JSBzbG93ZXIgdGhhbiAiZmVudHJ5Ii4gSSB0aGlu
+ayB0aGlzIGlzIG1vc3RseSBiZWNhdXNlDQo+Pj4+IGdldHBnaWQoKSBpcyBhIGZhc3RlciBzeXNj
+YWxsIHRoYW4gYnBmKEJQRl9URVNUX1JVTikuDQo+Pj4gDQo+Pj4gWWVzLCBwcm9iYWJseS4NCj4+
+PiANCj4+Pj4gDQo+Pj4+ICJ1c2VyLW9uLWNwdSIgaXMgbW9yZSB0aGFuIDEweCBmYXN0ZXIgdGhh
+biAiZmVudHJ5LW9uLWNwdSIsIGJlY2F1c2UgSVBJDQo+Pj4+IGlzIHdheSBmYXN0ZXIgdGhhbiBt
+b3ZpbmcgdGhlIHByb2Nlc3MgKHZpYSBzY2hlZF9zZXRhZmZpbml0eSkuDQo+Pj4gDQo+Pj4gSSBk
+b24ndCB0aGluayB0aGF0J3MgYSBnb29kIGNvbXBhcmlzb24sIGJlY2F1c2UgeW91IGFyZSBhY3R1
+YWxseQ0KPj4+IHRlc3Rpbmcgc2NoZWRfc2V0YWZmaW5pdHkgcGVyZm9ybWFuY2Ugb24gZWFjaCBp
+dGVyYXRpb24gdnMgSVBJIGluIHRoZQ0KPj4+IGtlcm5lbCwgbm90IGEgQlBGIG92ZXJoZWFkLg0K
+Pj4+IA0KPj4+IEkgdGhpbmsgdGhlIGZhaXIgY29tcGFyaXNvbiBmb3IgdGhpcyB3b3VsZCBiZSB0
+byBjcmVhdGUgYSB0aHJlYWQgYW5kDQo+Pj4gcGluIGl0IG9uIG5lY2Vzc2FyeSBDUFUsIGFuZCBv
+bmx5IHRoZW4gQlBGIHByb2dyYW0gY2FsbHMgaW4gYSBsb29wLg0KPj4+IEJ1dCBJIGJldCBhbnkg
+b2YgZXhpc3RpbmcgcHJvZ3JhbSB0eXBlcyB3b3VsZCBiZWF0IFVTRVIgcHJvZ3JhbS4NCj4+PiAN
+Cj4+Pj4gDQo+Pj4+IEZvciB1c2UgY2FzZXMgdGhhdCB3ZSB3b3VsZCBsaWtlIHRvIGNhbGwgQlBG
+IHByb2dyYW0gb24gc3BlY2lmaWMgQ1BVLA0KPj4+PiB0cmlnZ2VyaW5nIGl0IHZpYSBJUEkgaXMg
+YSBsb3QgZmFzdGVyLg0KPj4+IA0KPj4+IFNvIHRoZXNlIHVzZSBjYXNlcyB3b3VsZCBiZSBuaWNl
+IHRvIGV4cGFuZCBvbiBpbiB0aGUgbW90aXZhdGlvbmFsIHBhcnQNCj4+PiBvZiB0aGUgcGF0Y2gg
+c2V0LiBJdCdzIG5vdCByZWFsbHkgZW1waGFzaXplZCBhbmQgaXQncyBub3QgYXQgYWxsIGNsZWFy
+DQo+Pj4gd2hhdCB5b3UgYXJlIHRyeWluZyB0byBhY2hpZXZlLiBJdCBhbHNvIHNlZW1zLCBkZXBl
+bmRpbmcgb24gbGF0ZW5jeQ0KPj4+IHJlcXVpcmVtZW50cywgaXQncyB0b3RhbGx5IHBvc3NpYmxl
+IHRvIGFjaGlldmUgY29tcGFyYWJsZSByZXN1bHRzIGJ5DQo+Pj4gcHJlLWNyZWF0aW5nIGEgdGhy
+ZWFkIGZvciBlYWNoIENQVSwgcGlubmluZyBlYWNoIG9uZSB0byBpdHMgZGVzaWduYXRlZA0KPj4+
+IENQVSBhbmQgdGhlbiB1c2luZyBhbnkgc3VpdGFibGUgdXNlci1zcGFjZSBzaWduYWxpbmcgbWVj
+aGFuaXNtIChhDQo+Pj4gcXVldWUsIGNvbmR2YXIsIGV0YykgdG8gYXNrIGEgdGhyZWFkIHRvIHRy
+aWdnZXIgQlBGIHByb2dyYW0gKGZlbnRyeSBvbg0KPj4+IGdldHBnaWQoKSwgZm9yIGluc3RhbmNl
+KS4NCj4+IA0KPj4gSSBkb24ndCBzZWUgd2h5IHVzZXIgc3BhY2Ugc2lnbmFsIHBsdXMgZmVudHJ5
+IHdvdWxkIGJlIGZhc3RlciB0aGFuIElQSS4NCj4+IElmIHRoZSB0YXJnZXQgY3B1IGlzIHJ1bm5p
+bmcgc29tZXRoaW5nLCB0aGlzIGdvbm5hIGFkZCB0d28gY29udGV4dA0KPj4gc3dpdGNoZXMuDQo+
+PiANCj4gDQo+IEkgZGlkbid0IHNheSBmYXN0ZXIsIGRpZCBJPyBJIHNhaWQgaXQgd291bGQgYmUg
+Y29tcGFyYWJsZSBhbmQgd291bGRuJ3QNCj4gcmVxdWlyZSBhIG5ldyBwcm9ncmFtIHR5cGUuDQoN
+CldlbGwsIEkgZG9uJ3QgdGhpbmsgYWRkaW5nIHByb2dyYW0gdHlwZSBpcyB0aGF0IGJpZyBhIGRl
+YWwuIElmIHRoYXQgaXMNCnJlYWxseSBhIHByb2JsZW0sIHdlIGNhbiB1c2UgYSBuZXcgYXR0YWNo
+IHR5cGUgaW5zdGVhZC4gVGhlIGdvYWwgaXMgdG8gDQp0cmlnZ2VyIGl0IHdpdGggc3lzX2JwZigp
+IG9uIGEgZGlmZmVyZW50IGNwdS4gU28gd2UgY2FuIGNhbGwgaXQga3Byb2JlDQphdHRhY2ggdG8g
+bm90aGluZyBhbmQgaGFjayB0aGF0IHdheS4gSSBhZGQgdGhlIG5ldyB0eXBlIGJlY2F1c2UgaXQg
+bWFrZXMNCnNlbnNlLiBUaGUgdXNlciBqdXN0IHdhbnQgdG8gdHJpZ2dlciBhIEJQRiBwcm9ncmFt
+IGZyb20gdXNlciBzcGFjZS4gDQoNCj4gQnV0IHRoZW4gYWdhaW4sIHdpdGhvdXQga25vd2luZyBh
+bGwgdGhlDQo+IGRldGFpbHMsIGl0J3MgYSBiaXQgaGFyZCB0byBkaXNjdXNzIHRoaXMuIEUuZy4s
+IGlmIHlvdSBuZWVkIHRvIHRyaWdnZXINCj4gdGhhdCBCUEYgcHJvZ3JhbSBwZXJpb2RpY2FsbHks
+IHlvdSBjYW4gc2xlZXAgaW4gdGhvc2UgcGVyLUNQVSB0aHJlYWRzLA0KPiBvciBlcG9sbCwgb3Ig
+d2hhdGV2ZXIuIE9yIG1heWJlIHlvdSBjYW4gc2V0IHVwIGEgcGVyLUNQVSBwZXJmIGV2ZW50DQo+
+IHRoYXQgd291bGQgdHJpZ2dlciB5b3VyIHByb2dyYW0gb24gdGhlIGRlc2lyZWQgQ1BVLCBldGMu
+TXkgcG9pbnQgaXMNCj4gdGhhdCBJIGFuZCBvdGhlcnMgc2hvdWxkbid0IGJlIGd1ZXNzaW5nIHRo
+aXMsIEknZCBleHBlY3Qgc29tZW9uZSB3aG8ncw0KPiBwcm9wb3NpbmcgYW4gZW50aXJlIG5ldyBC
+UEYgcHJvZ3JhbSB0eXBlIHRvIG1vdGl2YXRlIHdoeSB0aGlzIG5ldw0KPiBwcm9ncmFtIHR5cGUg
+aXMgbmVjZXNzYXJ5IGFuZCB3aGF0IHByb2JsZW0gaXQncyBzb2x2aW5nIHRoYXQgY2FuJ3QgYmUN
+Cj4gc29sdmVkIHdpdGggZXhpc3RpbmcgbWVhbnMuDQoNClllcywgdGhlcmUgYXJlIG90aGVyIG9w
+dGlvbnMuIEJ1dCB0aGV5IGFsbCBjb21lIHdpdGggbm9uLXRyaXZpYWwgY29zdC4gDQpQZXItQ1BV
+LXBlci1wcm9jZXNzIHRocmVhZHMgYW5kL29yIHBlci1DUFUgcGVyZiBldmVudCBhcmUgY29zdCB3
+ZSBoYXZlIA0KdG8gcGF5IGluIHByb2R1Y3Rpb24uIElNTywgdGhlc2UgY29zdCBhcmUgbXVjaCBo
+aWdoZXIgdGhhbiBhIG5ldyBwcm9ncmFtDQp0eXBlIChvciBhdHRhY2ggdHlwZSkuIA0KDQo+IA0K
+PiBCVFcsIGhvdyBmcmVxdWVudGx5IGRvIHlvdSBuZWVkIHRvIHRyaWdnZXIgdGhlIEJQRiBwcm9n
+cmFtPyBTZWVtcyB2ZXJ5DQo+IGZyZXF1ZW50bHksIGlmIDIgdnMgMSBjb250ZXh0IHN3aXRjaGVz
+IG1pZ2h0IGJlIGEgcHJvYmxlbT8NCg0KVGhlIHdob2xlIHNvbHV0aW9uIHJlcXVpcmVzIHR3byBC
+UEYgcHJvZ3JhbXMuIE9uZSBvbiBlYWNoIGNvbnRleHQgc3dpdGNoLCANCnRoZSBvdGhlciBpcyB0
+aGUgdXNlciBwcm9ncmFtLiBUaGUgdXNlciBwcm9ncmFtIHdpbGwgbm90IHRyaWdnZXIgdmVyeQ0K
+b2Z0ZW4uIA0KDQo+IA0KPj4+IEkgYmV0IGluIHRoaXMgY2FzZSB0aGUgIHBlcmZvcm1hbmNlIHdv
+dWxkIGJlDQo+Pj4gcmVhbGx5IG5pY2UgZm9yIGEgbG90IG9mIHByYWN0aWNhbCB1c2UgY2FzZXMu
+IEJ1dCB0aGVuIGFnYWluLCBJIGRvbid0DQo+Pj4ga25vdyBkZXRhaWxzIG9mIHRoZSBpbnRlbmRl
+ZCB1c2UgY2FzZSwgc28gcGxlYXNlIHByb3ZpZGUgc29tZSBtb3JlDQo+Pj4gZGV0YWlscy4NCj4+
+IA0KPj4gQmVpbmcgYWJsZSB0byB0cmlnZ2VyIEJQRiBwcm9ncmFtIG9uIGEgZGlmZmVyZW50IENQ
+VSBjb3VsZCBlbmFibGUgbWFueQ0KPj4gdXNlIGNhc2VzIGFuZCBvcHRpbWl6YXRpb25zLiBUaGUg
+dXNlIGNhc2UgSSBhbSBsb29raW5nIGF0IGlzIHRvIGFjY2Vzcw0KPj4gcGVyZl9ldmVudCBhbmQg
+cGVyY3B1IG1hcHMgb24gdGhlIHRhcmdldCBDUFUuIEZvciBleGFtcGxlOg0KPj4gICAgICAgIDAu
+IHRyaWdnZXIgdGhlIHByb2dyYW0NCj4+ICAgICAgICAxLiByZWFkIHBlcmZfZXZlbnQgb24gY3B1
+IHg7DQo+PiAgICAgICAgMi4gKG9wdGlvbmFsKSBjaGVjayB3aGljaCBwcm9jZXNzIGlzIHJ1bm5p
+bmcgb24gY3B1IHg7DQo+PiAgICAgICAgMy4gYWRkIHBlcmZfZXZlbnQgdmFsdWUgdG8gcGVyY3B1
+IG1hcChzKSBvbiBjcHUgeC4NCj4+IA0KPj4gSWYgd2UgZG8gdGhlc2Ugc3RlcHMgaW4gYSBCUEYg
+cHJvZ3JhbSBvbiBjcHUgeCwgdGhlIGNvc3QgaXM6DQo+PiAgICAgICAgQS4wKSB0cmlnZ2VyIEJQ
+RiB2aWEgSVBJOw0KPj4gICAgICAgIEEuMSkgcmVhZCBwZXJmX2V2ZW50IGxvY2FsbHk7DQo+PiAg
+ICAgICAgQS4yKSBsb2NhbCBhY2Nlc3MgY3VycmVudDsNCj4+ICAgICAgICBBLjMpIGxvY2FsIGFj
+Y2VzcyBvZiBwZXJjcHUgbWFwKHMpLg0KPj4gDQo+PiBJZiB3ZSBjYW4gb25seSBkbyB0aGVzZSBv
+biBhIGRpZmZlcmVudCBDUFUsIHRoZSBjb3N0IHdpbGwgYmU6DQo+PiAgICAgICAgQi4wKSB0cmln
+Z2VyIEJQRiBsb2NhbGx5Ow0KPj4gICAgICAgIEIuMSkgcmVhZCBwZXJmX2V2ZW50IHZpYSBJUEk7
+DQo+PiAgICAgICAgQi4yKSByZW1vdGUgYWNjZXNzIGN1cnJlbnQgb24gY3B1IHg7DQo+PiAgICAg
+ICAgQi4zKSByZW1vdGUgYWNjZXNzIHBlcmNwdSBtYXAocyksIG9yIHVzZSBub24tcGVyY3B1IG1h
+cCgyKS4NCj4+IA0KPj4gQ29zdCBvZiAoQS4wICsgQS4xKSBpcyBhYm91dCBzYW1lIGFzIChCLjAg
+KyBCLjEpLCBtYXliZSBhIGxpdHRsZSBoaWdoZXINCj4+IChzeXNfYnBmKCksIHZzLiBzeXNfZ2V0
+cGdpZCgpKS4gQnV0IEEuMiBhbmQgQS4zIHdpbGwgYmUgc2lnbmlmaWNhbnRseQ0KPj4gY2hlYXBl
+ciB0aGFuIEIuMiBhbmQgQi4zLg0KPj4gDQo+PiBEb2VzIHRoaXMgbWFrZSBzZW5zZT8NCj4gDQo+
+IEl0IGRvZXMsIHRoYW5rcy4gQnV0IHdoYXQgSSB3YXMgZGVzY3JpYmluZyBpcyBzdGlsbCBBLCBu
+bz8gQlBGIHByb2dyYW0NCj4gd2lsbCBiZSB0cmlnZ2VyZWQgb24geW91ciBkZXNpcmVkIGNwdSBY
+LCB3b3VsZG4ndCBpdD8NCg0KV2VsbCwgdGhhdCB3b3VsZCBiZSBvcHRpb24gQywgYnV0IEMgY291
+bGQgbm90IGRvIHN0ZXAgMiwgYmVjYXVzZSB3ZSBjb250ZXh0IA0Kc3dpdGNoIHRvIHRoZSBkZWRp
+Y2F0ZWQgdGhyZWFkLiANCg0K
