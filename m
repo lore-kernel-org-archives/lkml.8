@@ -2,278 +2,216 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE76C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDACC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22668206B6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ED3920842
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:51:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fz8E6U86"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="RKIzBL+g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgHEFrg (ORCPT
+        id S1726817AbgHEFvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 01:47:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57190 "EHLO
+        Wed, 5 Aug 2020 01:51:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgHEFrf (ORCPT
+        with ESMTP id S1725904AbgHEFvo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 01:47:35 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82ACAC06174A;
-        Tue,  4 Aug 2020 22:47:35 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id e187so10863082ybc.5;
-        Tue, 04 Aug 2020 22:47:35 -0700 (PDT)
+        Wed, 5 Aug 2020 01:51:44 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A883C06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 22:51:44 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id a14so39462044wra.5
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 22:51:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=N9PlJ3Rl6xanzUO3i8UD8cYfGevp2bF1yYiHqvkpnwo=;
-        b=fz8E6U86ooXrxj2Ei7lJcJ5Tc9fG44PdK1gCsCSSs9fYrU3DYyLVNfAJzQHlDVH4DC
-         2/QeePq0OcK8qBZLW1f3iKHZv3L85WfddK0oR9/JDhWeTuFSSXbapcFJDe3tOBuohEx0
-         OB74LPC/wgewf5sgkrQlKf/Sq1zg18AhTHEsrD4KnoHo6BPbrjfgsn+IsDh4W866s6w6
-         /N0Ir6GKxT59uFGBbFD3qt6OyAEwEtij1AWt8UqwITAxC2fpRX6X1xrNgZppS3pR3NIC
-         0oOn6vUcvbNSesgeGfyTdEkYjPthQJ7fTsoPG7DqXB4hBV789zhNh7GTLkrqtCwd9SRH
-         n+uQ==
+        d=googlemail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Nh6RpHvoBY8ofwqqO/cHqcsqgVpuTrAuC8FfP1MFzgE=;
+        b=RKIzBL+gqWhvN/gyd6TbeeRbqWFqDggHeRUAXYx3w8DL0qGytknrgACIDrxLfe/53b
+         ESwpiKrFqh4gWRGa6CNB20e/sdr0H7P5/Z+2s8uTDJwYcslkESN8q5QhlmaZvmZm8rA1
+         tXDQXJVQR4NnAA757OXPDTlEKOYtfo3Ol8r+plN13wSSdm/FSjW8oZWiEBYL87bpQLSR
+         sv6Sd2Q7/FH0sybSpk2MaZR1GBy5PGhi2THikdRRc+Tc3PtKd6Q13ocpdH5oRbqCnYMO
+         aGu4+uUdZeg36FWbcW7/4bI6ZeniEIc/V+t6hIJfudZkl5FpBmOnpmoxnLGhQfzfaqJ2
+         iZ3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=N9PlJ3Rl6xanzUO3i8UD8cYfGevp2bF1yYiHqvkpnwo=;
-        b=oOm79UeVzOTsFh77ab7dkOkBo1dNpoSjqtpPOiwx/d97HxuFeNVB6KfPhC0BSR3xfH
-         UY961k3cO57ms/DfSfKFX7aRTh34YikmDQ5gulFAmdeclUoCW/t7tndGEkoYDV30DAAY
-         omKCP2sfILR66NBY87KAMYBD2maD7jthJlalHqCGWh5zVwgrrrNa5Qwn6m3WGfJFUzPW
-         RmN6NxYq3XyQ9R07GLb+zZiOOhmbBNnbVGIayhX2ypSw4R6ho6MGs/OIXZeMMa3vdiEk
-         uOLrRMJjJsKEHuxDd6wqS5w2M0Ksxh4wg/2gwsSqzE6e/U6VrEOioUUIottHY8l/RPzu
-         rrhA==
-X-Gm-Message-State: AOAM530gpPBCJq0XdqEMi7rP7PCVM0WgPdfpxOsLipaYwZif5QGz9AYW
-        V4U+c6i69YCWqqv7g0fpg36RNcDJUhXsq+eJ4sXh2g==
-X-Google-Smtp-Source: ABdhPJzflcU6Nnw4Y4XcLzADkuammhaX8z0ZLxZzWyciHQRgJrZxebgcXc/M4LAG0o5jDjxM7uvRbw6KesBMm5B2p20=
-X-Received: by 2002:a25:84cd:: with SMTP id x13mr2330998ybm.425.1596606454446;
- Tue, 04 Aug 2020 22:47:34 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Nh6RpHvoBY8ofwqqO/cHqcsqgVpuTrAuC8FfP1MFzgE=;
+        b=c06WgSZiB1GbhdvGhKv6bXuS0uLVaCp56YYFxXcjyFdmkENzqJx0En5u71gE4Xp6D/
+         k8kzV88T6e0+xn47HtH1vl/8sHtifPZ1z5f7doCMBupi+RsNa7ZwQBiigwIoM4k4gYnz
+         WuN0lmYP5PCYXKVp/ZWdxU2LXPT8OH5h2AFpDQRv7Uf/AVSLU/xV1MLvzdJQbCFE5ZTS
+         7SxQGesAIz6ONfoB0QQ2lIHGBUYdnGU0wkxPT/09M5TgFnuTt095qAuMIavzehEsgjVt
+         jqA8L9QcCF1xKTP88485e+klrld9ARwgnUY2J5l8ry21u54f/n2K5V4L+LhBnll5McvR
+         yWwg==
+X-Gm-Message-State: AOAM531DJv7Q3UAEwXkgbhyWEqKrYaGVtOU5WKCXH2bxUpjteY7kuN3j
+        +xtaUbBNc3MJBEU5wpLhkjw=
+X-Google-Smtp-Source: ABdhPJwPGiRW4zC+XLGAEfZED+c80ltvfZI18KAgFrfM6iIm1ShX3m7rzIMkeev5Gc1uCX+c+ZJxhw==
+X-Received: by 2002:a5d:4241:: with SMTP id s1mr1164054wrr.411.1596606701466;
+        Tue, 04 Aug 2020 22:51:41 -0700 (PDT)
+Received: from [192.168.1.20] ([213.122.218.185])
+        by smtp.googlemail.com with ESMTPSA id i82sm1285154wmi.10.2020.08.04.22.51.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Aug 2020 22:51:41 -0700 (PDT)
+Subject: Re: PATCH: rtsx_pci driver - don't disable the rts5229 card reader on
+ Intel NUC boxes
+To:     =?UTF-8?B?5ZCz5piK5r6EIFJpY2t5?= <ricky_wu@realtek.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "philquadra@gmail.com" <philquadra@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+References: <862172f0-cd23-800c-27b1-27cb49e99099@googlemail.com>
+ <a9a94d7f-4873-7a10-4911-f3c760257c5c@googlemail.com>
+ <5729c72bbc2740d3917619c85e2fde58@realtek.com>
+ <20200804074831.GB1761483@kroah.com>
+ <11e224ca299b48f1bea07082f2ff7c00@realtek.com>
+ <0afbd711-0bda-d9a3-138d-5c713b4e2ed9@googlemail.com>
+ <19de15c2f07d447dace6bea483d38159@realtek.com>
+ <152ef6c0-f3c0-bb67-4175-adced3c720cd@googlemail.com>
+ <e1c295f28e3d4bdd8c78dfd3a5ed398c@realtek.com>
+From:   Chris Clayton <chris2553@googlemail.com>
+Message-ID: <68b9bdd2-a05e-7fb0-ec9a-70b03e0c5289@googlemail.com>
+Date:   Wed, 5 Aug 2020 06:51:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200801084721.1812607-1-songliubraving@fb.com>
- <20200801084721.1812607-6-songliubraving@fb.com> <CAEf4BzaP4TGF7kcmZRAKsy=oWPpFA6sUGFkctpGz-fPp+YuSOQ@mail.gmail.com>
- <DDCD362E-21D3-46BF-90A6-8F3221CBB54E@fb.com> <CAEf4BzY5RYMM6w8wn3qEB3AsuKWv-TMaD5NVFj=YqbCW4DLjqA@mail.gmail.com>
- <7384B583-EE19-4045-AC72-B6FE87C187DD@fb.com> <CAEf4BzaiJnCu14AWougmxH80msGdOp4S8ZNmAiexMmtwUM_2Xg@mail.gmail.com>
- <AF9D0E8C-0AA5-4BE4-90F4-946FABAB63FD@fb.com>
-In-Reply-To: <AF9D0E8C-0AA5-4BE4-90F4-946FABAB63FD@fb.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 4 Aug 2020 22:47:23 -0700
-Message-ID: <CAEf4BzZ29G2KexhKY=CffOPK_DiqAXxRHWuVRREHv0dnXgobRQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 5/5] selftests/bpf: add benchmark for uprobe vs. user_prog
-To:     Song Liu <songliubraving@fb.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Xu <dlxu@fb.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <e1c295f28e3d4bdd8c78dfd3a5ed398c@realtek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 9:47 PM Song Liu <songliubraving@fb.com> wrote:
->
->
->
-> > On Aug 4, 2020, at 6:52 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com>=
- wrote:
-> >
-> > On Tue, Aug 4, 2020 at 2:01 PM Song Liu <songliubraving@fb.com> wrote:
-> >>
-> >>
-> >>
-> >>> On Aug 2, 2020, at 10:10 PM, Andrii Nakryiko <andrii.nakryiko@gmail.c=
-om> wrote:
-> >>>
-> >>> On Sun, Aug 2, 2020 at 9:47 PM Song Liu <songliubraving@fb.com> wrote=
-:
-> >>>>
-> >>>>
-> >>>>> On Aug 2, 2020, at 6:51 PM, Andrii Nakryiko <andrii.nakryiko@gmail.=
-com> wrote:
-> >>>>>
-> >>>>> On Sat, Aug 1, 2020 at 1:50 AM Song Liu <songliubraving@fb.com> wro=
-te:
-> >>>>>>
-> >>>>>> Add a benchmark to compare performance of
-> >>>>>> 1) uprobe;
-> >>>>>> 2) user program w/o args;
-> >>>>>> 3) user program w/ args;
-> >>>>>> 4) user program w/ args on random cpu.
-> >>>>>>
-> >>>>>
-> >>>>> Can you please add it to the existing benchmark runner instead, e.g=
-.,
-> >>>>> along the other bench_trigger benchmarks? No need to re-implement
-> >>>>> benchmark setup. And also that would also allow to compare existing
-> >>>>> ways of cheaply triggering a program vs this new _USER program?
-> >>>>
-> >>>> Will try.
-> >>>>
-> >>>>>
-> >>>>> If the performance is not significantly better than other ways, do =
-you
-> >>>>> think it still makes sense to add a new BPF program type? I think
-> >>>>> triggering KPROBE/TRACEPOINT from bpf_prog_test_run() would be very
-> >>>>> nice, maybe it's possible to add that instead of a new program type=
-?
-> >>>>> Either way, let's see comparison with other program triggering
-> >>>>> mechanisms first.
-> >>>>
-> >>>> Triggering KPROBE and TRACEPOINT from bpf_prog_test_run() will be us=
-eful.
-> >>>> But I don't think they can be used instead of user program, for a co=
-uple
-> >>>> reasons. First, KPROBE/TRACEPOINT may be triggered by other programs
-> >>>> running in the system, so user will have to filter those noise out i=
-n
-> >>>> each program. Second, it is not easy to specify CPU for KPROBE/TRACE=
-POINT,
-> >>>> while this feature could be useful in many cases, e.g. get stack tra=
-ce
-> >>>> on a given CPU.
-> >>>>
-> >>>
-> >>> Right, it's not as convenient with KPROBE/TRACEPOINT as with the USER
-> >>> program you've added specifically with that feature in mind. But if
-> >>> you pin user-space thread on the needed CPU and trigger kprobe/tp,
-> >>> then you'll get what you want. As for the "noise", see how
-> >>> bench_trigger() deals with that: it records thread ID and filters
-> >>> everything not matching. You can do the same with CPU ID. It's not as
-> >>> automatic as with a special BPF program type, but still pretty simple=
-,
-> >>> which is why I'm still deciding (for myself) whether USER program typ=
-e
-> >>> is necessary :)
-> >>
-> >> Here are some bench_trigger numbers:
-> >>
-> >> base      :    1.698 =C2=B1 0.001M/s
-> >> tp        :    1.477 =C2=B1 0.001M/s
-> >> rawtp     :    1.567 =C2=B1 0.001M/s
-> >> kprobe    :    1.431 =C2=B1 0.000M/s
-> >> fentry    :    1.691 =C2=B1 0.000M/s
-> >> fmodret   :    1.654 =C2=B1 0.000M/s
-> >> user      :    1.253 =C2=B1 0.000M/s
-> >> fentry-on-cpu:    0.022 =C2=B1 0.011M/s
-> >> user-on-cpu:    0.315 =C2=B1 0.001M/s
-> >>
-> >
-> > Ok, so basically all of raw_tp,tp,kprobe,fentry/fexit are
-> > significantly faster than USER programs. Sure, when compared to
-> > uprobe, they are faster, but not when doing on-specific-CPU run, it
-> > seems (judging from this patch's description, if I'm reading it
-> > right). Anyways, speed argument shouldn't be a reason for doing this,
-> > IMO.
-> >
-> >> The two "on-cpu" tests run the program on a different CPU (see the pat=
-ch
-> >> at the end).
-> >>
-> >> "user" is about 25% slower than "fentry". I think this is mostly becau=
-se
-> >> getpgid() is a faster syscall than bpf(BPF_TEST_RUN).
-> >
-> > Yes, probably.
-> >
-> >>
-> >> "user-on-cpu" is more than 10x faster than "fentry-on-cpu", because IP=
-I
-> >> is way faster than moving the process (via sched_setaffinity).
-> >
-> > I don't think that's a good comparison, because you are actually
-> > testing sched_setaffinity performance on each iteration vs IPI in the
-> > kernel, not a BPF overhead.
-> >
-> > I think the fair comparison for this would be to create a thread and
-> > pin it on necessary CPU, and only then BPF program calls in a loop.
-> > But I bet any of existing program types would beat USER program.
-> >
-> >>
-> >> For use cases that we would like to call BPF program on specific CPU,
-> >> triggering it via IPI is a lot faster.
-> >
-> > So these use cases would be nice to expand on in the motivational part
-> > of the patch set. It's not really emphasized and it's not at all clear
-> > what you are trying to achieve. It also seems, depending on latency
-> > requirements, it's totally possible to achieve comparable results by
-> > pre-creating a thread for each CPU, pinning each one to its designated
-> > CPU and then using any suitable user-space signaling mechanism (a
-> > queue, condvar, etc) to ask a thread to trigger BPF program (fentry on
-> > getpgid(), for instance).
->
-> I don't see why user space signal plus fentry would be faster than IPI.
-> If the target cpu is running something, this gonna add two context
-> switches.
->
+Thanks, Ricky.
 
-I didn't say faster, did I? I said it would be comparable and wouldn't
-require a new program type. But then again, without knowing all the
-details, it's a bit hard to discuss this. E.g., if you need to trigger
-that BPF program periodically, you can sleep in those per-CPU threads,
-or epoll, or whatever. Or maybe you can set up a per-CPU perf event
-that would trigger your program on the desired CPU, etc. My point is
-that I and others shouldn't be guessing this, I'd expect someone who's
-proposing an entire new BPF program type to motivate why this new
-program type is necessary and what problem it's solving that can't be
-solved with existing means.
+On 05/08/2020 03:35, 吳昊澄 Ricky wrote:
+> 
+> 
+>> -----Original Message-----
+>> From: Chris Clayton [mailto:chris2553@googlemail.com]
+>> Sent: Tuesday, August 04, 2020 7:52 PM
+>> To: 吳昊澄 Ricky; gregkh@linuxfoundation.org
+>> Cc: LKML; rdunlap@infradead.org; philquadra@gmail.com; Arnd Bergmann
+>> Subject: Re: PATCH: rtsx_pci driver - don't disable the rts5229 card reader on
+>> Intel NUC boxes
+>>
+>>
+>>
+>> On 04/08/2020 11:46, 吳昊澄 Ricky wrote:
+>>>> -----Original Message-----
+>>>> From: Chris Clayton [mailto:chris2553@googlemail.com]
+>>>> Sent: Tuesday, August 04, 2020 4:51 PM
+>>>> To: 吳昊澄 Ricky; gregkh@linuxfoundation.org
+>>>> Cc: LKML; rdunlap@infradead.org; philquadra@gmail.com; Arnd Bergmann
+>>>> Subject: Re: PATCH: rtsx_pci driver - don't disable the rts5229 card reader on
+>>>> Intel NUC boxes
+>>>>
+>>>>
+>>>>
+>>>> On 04/08/2020 09:08, 吳昊澄 Ricky wrote:
+>>>>>> -----Original Message-----
+>>>>>> From: gregkh@linuxfoundation.org [mailto:gregkh@linuxfoundation.org]
+>>>>>> Sent: Tuesday, August 04, 2020 3:49 PM
+>>>>>> To: 吳昊澄 Ricky
+>>>>>> Cc: Chris Clayton; LKML; rdunlap@infradead.org; philquadra@gmail.com;
+>>>> Arnd
+>>>>>> Bergmann
+>>>>>> Subject: Re: PATCH: rtsx_pci driver - don't disable the rts5229 card reader
+>> on
+>>>>>> Intel NUC boxes
+>>>>>>
+>>>>>> On Tue, Aug 04, 2020 at 02:44:41AM +0000, 吳昊澄 Ricky wrote:
+>>>>>>> Hi Chris,
+>>>>>>>
+>>>>>>> rtsx_pci_write_register(pcr, FPDTL, OC_POWER_DOWN,
+>>>> OC_POWER_DOWN);
+>>>>>>> This register operation saved power under 1mA, so if do not care the 1mA
+>>>>>> power we can have a patch to remove it, make compatible with NUC6
+>>>>>>> We tested others our card reader that remove it, we did not see any side
+>>>> effect
+>>>>>>>
+>>>>>>> Hi Greg k-h,
+>>>>>>>
+>>>>>>> Do you have any comments?
+>>>>>>
+>>>>>> comments on what?  I don't know what you are responding to here, sorry.
+>>>>>>
+>>>>> Can we have a patch to kernel for NUC6? It may cause more power(1mA) but
+>> it
+>>>> will have more compatibility
+>>>>>
+>>>>
+>>>> Ricky,
+>>>>
+>>>> I don't understand why you want to completely remove the code that sets up
+>> the
+>>>> 1mA power saving. That code was there
+>>>> even before your patch (bede03a579b3b4a036003c4862cc1baa4ddc351f), so I
+>>>> assume it benefits some of the Realtek card
+>>>> readers. Before your patch however, rtsx_pci_init_ocp() was not called for the
+>>>> rts5229 reader, but the patch introduced
+>>>> an unconditional call to that function into rtsx_pci_init_hw(), which is run for
+>> the
+>>>> rts5229. That is what now disables
+>>>> the card reader.
+>>>>
+>>>> Now, I don't know whether other cards are affected, although I don't recall
+>>>> seeing any reported as I searched the kernel
+>>>> and ubuntu bugzillas for any analysis of the problem. I know this is not what
+>> the
+>>>> patch I sent does, but having thought
+>>>> about it more, seems to me that the simplest fix is to skip the new call to
+>>>> rtsx_pci_init_ocp() if the reader is an rts5229.
+>>>>
+>>>
+>>> Because we are thinking about if others our card reader that not belong A
+>> series(my ocp patch coverage) also on NUC6 platform maybe have the same
+>> problem...
+>>>
+>>
+>> OK. What if we do make the new call but only for the card readers that are in the
+>> A series? Are they the ones that have
+>> PID_5nnn defines in include/linux/rtsx_pci.h? Or is there another simple way of
+>> identifying that a reader is a member of
+>> the A series?
+>>
+>> I'm thinking of something like:
+>> static bool rtsx_pci_is_series_A(pcr)
+>> {
+>> 	unsigned short device = pcr->pci->device;
+>>
+>> 	return device == PID524A || device == PID_5249 || device == PID_5250 ||
+>> device == PID_525A
+>> 			|| device == PID_525A || device == PID_5260 || device ==
+>> PID_5261;
+>> }
+>>
+>> then in rtsx_pci_init_hw() change the unconditional call to:
+>>
+>> 	if rtsx_pci_is_series_A(pcr)
+>> 		rtsx_pci_init_ocp();
+>>
+>> Does that seem OK?
+>>
+> Previously, I want to remove
+> else {
+> 		/* OC power down */
+> 		rtsx_pci_write_register(pcr, FPDCTL, OC_POWER_DOWN,
+> 			OC_POWER_DOWN);
+> }
+> Because in our A-series card Reader we already assigned option->ocp_en to 1 in self init_params() , this is an easy way to fix this problem
+> 
 
-BTW, how frequently do you need to trigger the BPF program? Seems very
-frequently, if 2 vs 1 context switches might be a problem?
+Ah, OK. I'll prepare the patch and send it to you once I've tested it.
 
-> > I bet in this case the  performance would be
-> > really nice for a lot of practical use cases. But then again, I don't
-> > know details of the intended use case, so please provide some more
-> > details.
->
-> Being able to trigger BPF program on a different CPU could enable many
-> use cases and optimizations. The use case I am looking at is to access
-> perf_event and percpu maps on the target CPU. For example:
->         0. trigger the program
->         1. read perf_event on cpu x;
->         2. (optional) check which process is running on cpu x;
->         3. add perf_event value to percpu map(s) on cpu x.
->
-> If we do these steps in a BPF program on cpu x, the cost is:
->         A.0) trigger BPF via IPI;
->         A.1) read perf_event locally;
->         A.2) local access current;
->         A.3) local access of percpu map(s).
->
-> If we can only do these on a different CPU, the cost will be:
->         B.0) trigger BPF locally;
->         B.1) read perf_event via IPI;
->         B.2) remote access current on cpu x;
->         B.3) remote access percpu map(s), or use non-percpu map(2).
->
-> Cost of (A.0 + A.1) is about same as (B.0 + B.1), maybe a little higher
-> (sys_bpf(), vs. sys_getpgid()). But A.2 and A.3 will be significantly
-> cheaper than B.2 and B.3.
->
-> Does this make sense?
-
-It does, thanks. But what I was describing is still A, no? BPF program
-will be triggered on your desired cpu X, wouldn't it?
-
->
->
-> OTOH, I do agree we can trigger bpftrace BEGIN/END with sys_getpgid()
-> or something similar.
-
-Right.
-
->
-> Thanks,
-> Song
+Chris
