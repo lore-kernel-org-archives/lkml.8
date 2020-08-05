@@ -2,148 +2,62 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53884C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0F0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 371AD22D06
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8808922D06
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:30:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728591AbgHER1n (ORCPT
+        id S1728843AbgHER31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:27:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51202 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728418AbgHERZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:25:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id CE2E8B028;
-        Wed,  5 Aug 2020 17:26:01 +0000 (UTC)
-From:   Coly Li <colyli@suse.de>
-To:     linux-block@vger.kernel.org
-Cc:     linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Coly Li <colyli@suse.de>, Ming Lei <ming.lei@redhat.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@lst.de>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Enzo Matsumiya <ematsumiya@suse.com>,
-        Evan Green <evgreen@chromium.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Xiao Ni <xni@redhat.com>
-Subject: [PATCH v4] block: check queue's limits.discard_granularity in __blkdev_issue_discard()
-Date:   Thu,  6 Aug 2020 01:25:03 +0800
-Message-Id: <20200805172503.45121-1-colyli@suse.de>
-X-Mailer: git-send-email 2.26.2
+        Wed, 5 Aug 2020 13:29:27 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:36570 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728371AbgHER0j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:26:39 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 4A4291C0BD2; Wed,  5 Aug 2020 19:26:31 +0200 (CEST)
+Date:   Wed, 5 Aug 2020 19:26:30 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [TECH TOPIC] Planning code obsolescence
+Message-ID: <20200805172629.GA1040@bug>
+References: <CAK8P3a2PK_bC5=3wcWm43=y5xk-Dq5-fGPExJMnOrNfGfB1m1A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2PK_bC5=3wcWm43=y5xk-Dq5-fGPExJMnOrNfGfB1m1A@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If create a loop device with a backing NVMe SSD, current loop device
-driver doesn't correctly set its  queue's limits.discard_granularity and
-leaves it as 0. If a discard request at LBA 0 on this loop device, in
-__blkdev_issue_discard() the calculated req_sects will be 0, and a zero
-length discard request will trigger a BUG() panic in generic block layer
-code at block/blk-mq.c:563.
+Hi!
 
-[  955.565006][   C39] ------------[ cut here ]------------
-[  955.559660][   C39] invalid opcode: 0000 [#1] SMP NOPTI
-[  955.622171][   C39] CPU: 39 PID: 248 Comm: ksoftirqd/39 Tainted: G            E     5.8.0-default+ #40
-[  955.622171][   C39] Hardware name: Lenovo ThinkSystem SR650 -[7X05CTO1WW]-/-[7X05CTO1WW]-, BIOS -[IVE160M-2.70]- 07/17/2020
-[  955.622175][   C39] RIP: 0010:blk_mq_end_request+0x107/0x110
-[  955.622177][   C39] Code: 48 8b 03 e9 59 ff ff ff 48 89 df 5b 5d 41 5c e9 9f ed ff ff 48 8b 35 98 3c f4 00 48 83 c7 10 48 83 c6 19 e8 cb 56 c9 ff eb cb <0f> 0b 0f 1f 80 00 00 00 00 0f 1f 44 00 00 55 48 89 e5 41 56 41 54
-[  955.622179][   C39] RSP: 0018:ffffb1288701fe28 EFLAGS: 00010202
-[  955.749277][   C39] RAX: 0000000000000001 RBX: ffff956fffba5080 RCX: 0000000000004003
-[  955.749278][   C39] RDX: 0000000000000003 RSI: 0000000000000000 RDI: 0000000000000000
-[  955.749279][   C39] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-[  955.749279][   C39] R10: ffffb1288701fd28 R11: 0000000000000001 R12: ffffffffa8e05160
-[  955.749280][   C39] R13: 0000000000000004 R14: 0000000000000004 R15: ffffffffa7ad3a1e
-[  955.749281][   C39] FS:  0000000000000000(0000) GS:ffff95bfbda00000(0000) knlGS:0000000000000000
-[  955.749282][   C39] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  955.749282][   C39] CR2: 00007f6f0ef766a8 CR3: 0000005a37012002 CR4: 00000000007606e0
-[  955.749283][   C39] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  955.749284][   C39] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  955.749284][   C39] PKRU: 55555554
-[  955.749285][   C39] Call Trace:
-[  955.749290][   C39]  blk_done_softirq+0x99/0xc0
-[  957.550669][   C39]  __do_softirq+0xd3/0x45f
-[  957.550677][   C39]  ? smpboot_thread_fn+0x2f/0x1e0
-[  957.550679][   C39]  ? smpboot_thread_fn+0x74/0x1e0
-[  957.550680][   C39]  ? smpboot_thread_fn+0x14e/0x1e0
-[  957.550684][   C39]  run_ksoftirqd+0x30/0x60
-[  957.550687][   C39]  smpboot_thread_fn+0x149/0x1e0
-[  957.886225][   C39]  ? sort_range+0x20/0x20
-[  957.886226][   C39]  kthread+0x137/0x160
-[  957.886228][   C39]  ? kthread_park+0x90/0x90
-[  957.886231][   C39]  ret_from_fork+0x22/0x30
-[  959.117120][   C39] ---[ end trace 3dacdac97e2ed164 ]---
+> I have submitted the below as a topic for the linux/arch/* MC that Mike
+> and I run, but I suppose it also makes sense to discuss it on the
+> ksummit-discuss mailing list (cross-posted to linux-arch and lkml) as well
+> even if we don't discuss it at the main ksummit track.
 
-This is the procedure to reproduce the panic,
-  # modprobe scsi_debug delay=0 dev_size_mb=2048 max_queue=1
-  # losetup -f /dev/nvme0n1 --direct-io=on
-  # blkdiscard /dev/loop0 -o 0 -l 0x200
+> * Latest kernel in which it was known to have worked
 
-This patch fixes the issue by checking q->limits.discard_granularity in
-__blkdev_issue_discard() before composing the discard bio. If the value
-is 0, then prints a warning oops information and returns -EOPNOTSUPP to
-the caller to indicate that this buggy device driver doesn't support
-discard request.
+For some old hardware, I started collecting kernel version, .config and dmesg from
+successful boots. github.com/pavelmachek, click on "missy".
 
-Fixes: 9b15d109a6b2 ("block: improve discard bio alignment in __blkdev_issue_discard()")
-Fixes: c52abf563049 ("loop: Better discard support for block devices")
-Reported-and-suggested-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Jack Wang <jinpu.wang@cloud.ionos.com>
-Cc: Bart Van Assche <bvanassche@acm.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Darrick J. Wong <darrick.wong@oracle.com>
-Cc: Enzo Matsumiya <ematsumiya@suse.com>
-Cc: Evan Green <evgreen@chromium.org>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Martin K. Petersen <martin.petersen@oracle.com>
-Cc: Xiao Ni <xni@redhat.com>
----
-Changelog:
-v4: use pr_err_ratelimited(), and add more reviewed-by tags.
-v3: print device name assocated with the buggy driver.
-v2: fix typo of the wrong return error code.
-v1: first version.
+Best regards,
+									Pavel
 
- block/blk-lib.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
 
-diff --git a/block/blk-lib.c b/block/blk-lib.c
-index 019e09bb9c0e..d3bbb3d9fac3 100644
---- a/block/blk-lib.c
-+++ b/block/blk-lib.c
-@@ -47,6 +47,15 @@ int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
- 		op = REQ_OP_DISCARD;
- 	}
- 
-+	/* In case the discard granularity isn't set by buggy device driver */
-+	if (WARN_ON_ONCE(!q->limits.discard_granularity)) {
-+		char dev_name[BDEVNAME_SIZE];
-+
-+		bdevname(bdev, dev_name);
-+		pr_err_ratelimited("%s: Error: discard_granularity is 0.\n", dev_name);
-+		return -EOPNOTSUPP;
-+	}
-+
- 	bs_mask = (bdev_logical_block_size(bdev) >> 9) - 1;
- 	if ((sector | nr_sects) & bs_mask)
- 		return -EINVAL;
--- 
-2.26.2
-
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
