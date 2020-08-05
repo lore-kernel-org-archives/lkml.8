@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4066FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70174C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1502E22D00
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4132C22D2C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:13:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IPtCCwa6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C8sCBIB8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728163AbgHERNH (ORCPT
+        id S1727066AbgHERNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:13:07 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:32213 "EHLO
+        Wed, 5 Aug 2020 13:13:19 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43099 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728565AbgHERKO (ORCPT
+        by vger.kernel.org with ESMTP id S1728559AbgHERKM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:10:14 -0400
+        Wed, 5 Aug 2020 13:10:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596647413;
+        s=mimecast20190719; t=1596647410;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=kSRe7wmYN+c40TNuZd0aK8LNMOsV+g9hMYDNFujk/tc=;
-        b=IPtCCwa6LmFTew0cHgVuDnGZh+pjcuxTDimYCLo1WgZwiMHYzCqCajXh1izsbyS6E3vndP
-        D8aF5NA6TfDyEHXN2yyxULA3yaxUoRYTS7g9fqiUdz+PC1/i+0R4Bfoh9CYp5bENuCTXDN
-        6i8PR71f52VhYTeXn5ZamBRMzYbuPNw=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-288-UnXyzEaAM5OJi1x8uyekmA-1; Wed, 05 Aug 2020 09:44:22 -0400
-X-MC-Unique: UnXyzEaAM5OJi1x8uyekmA-1
-Received: by mail-wr1-f69.google.com with SMTP id 89so13594838wrr.15
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:44:22 -0700 (PDT)
+        bh=zXTzwQncFETdoKYzPm5tvIQfmxAfJtNu07ODUBYdb0E=;
+        b=C8sCBIB8koQQBJs69vWnY1GFSHtyqjROcUyFz6G49daEogKZ0xbfoMUklv+yUpG8pMyLUx
+        DjixIMJ9q0hPUEnuoQwbc/VNDftWCInFX9iuOXeaQ5S65neE3GMJWc9c/kdY6oCj6qgy8+
+        AwoidGTmEhpR7c1CVJx/e9NnTA39e9s=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-244-A56U8EkVM2mbqxCLBLABVQ-1; Wed, 05 Aug 2020 09:44:12 -0400
+X-MC-Unique: A56U8EkVM2mbqxCLBLABVQ-1
+Received: by mail-wm1-f71.google.com with SMTP id c124so2474737wme.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:44:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=kSRe7wmYN+c40TNuZd0aK8LNMOsV+g9hMYDNFujk/tc=;
-        b=GNEOzxpCIZdbqLRNUZF/t+3fWTTD01SCav/UyrJ00vi3LRtxOrLAduPRNzDiJt2GRT
-         vjnOu6zoitVL+LJI8+gmGMrgJtlzZPtDulKBBxP2T2SB+mmXtAuclB8rTWPuCJEfeinA
-         X+T4S201cxUGxpTPsm/qL+8/DBYpFyb8Ks7TRhKJSUeBmEbXxRxk89PqIqb2uTnCTSm2
-         mjOaxZCYq9eIx1Rx8Rj3NH9KJDeyxSLX6NAQm1Nj2JVX9n7OBvlwOCtgr/3RJUN7dX2F
-         AAUlSpq60HcDrdJ0oZYmq/ThgsMSAPU1hAZSuHNYr8Vq8mKAdIMqJVfpmRlQdivKBNWY
-         /VUQ==
-X-Gm-Message-State: AOAM530HD3VEKoejkw+z8ICNb5cK8hj6jRdVjtbxFhdnTp9qncAlhhr+
-        qdIxEngt9VLhaoc82++wrTCFMurStYFswK8XHAinD5OLJm1srRgrmtWQk7DQnQUHHzpTYFtEWlh
-        AQT4fsxXIJFHVEBTEjK+R9xad
-X-Received: by 2002:a1c:38c5:: with SMTP id f188mr3184181wma.7.1596635060870;
-        Wed, 05 Aug 2020 06:44:20 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwtu4fGrz2OcjqJ60Gx1dujnfxQ+ydCwiHL+CZ6x4QY+RWP5ctttNcCg2cu41yMIpSX3GIA4Q==
-X-Received: by 2002:a1c:38c5:: with SMTP id f188mr3184169wma.7.1596635060701;
-        Wed, 05 Aug 2020 06:44:20 -0700 (PDT)
-Received: from redhat.com ([192.117.173.58])
-        by smtp.gmail.com with ESMTPSA id f131sm2902892wme.40.2020.08.05.06.44.19
+        bh=zXTzwQncFETdoKYzPm5tvIQfmxAfJtNu07ODUBYdb0E=;
+        b=Ll8RueJlQQMN8XtN+f/i7TNg4SOeBRv2Ans2GLaeaNtd/+xKy1zanI11hCINsEljfL
+         iRmzI8IM9d0iKZ/UTwRDjHmNxVINbllRzPeyT3ywjRwmarV2bqPxv8osVFSHvIvTdPeq
+         +FM997J72+dE2pNurXvuVPglp7kuh2YzyNEoJKwXj3zhNUG3ajLmmnyO5F6s3jkTKkup
+         E614pkZ3gAt6W7nuj2v7Cre/X1Xq0BlE2DBld/17IVmkRKyEKTcW151gZcnsDSr8ClrK
+         9xGY6U0JdeLjT79OS1/PSPENDRv0y71C4uBybAchaA5SIeZrPj5MDEPnRXwotAIcvt/L
+         wu3Q==
+X-Gm-Message-State: AOAM533FdeK13Pyu1qanIreqNSzl601VpS0yG2d6WiVcx6l2zgirNmMR
+        SZNQXg+KeVB8YvvpjEhgxfm+x9BDLnwixYL/2pRaLEmrsw+fQpyYGiRnPXR0khRGcWk5hgUWLHb
+        O45pF4O2zxQ+LckENqhg5/6Jv
+X-Received: by 2002:adf:ebc5:: with SMTP id v5mr2874752wrn.100.1596635050288;
+        Wed, 05 Aug 2020 06:44:10 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzN15n3nk3moRyvVlKfo0eUXQqSTsa3wGWLzNDiCq5dlFLmjNv9TM2NLycLh5wHgFYsktf9nw==
+X-Received: by 2002:adf:ebc5:: with SMTP id v5mr2874729wrn.100.1596635049955;
+        Wed, 05 Aug 2020 06:44:09 -0700 (PDT)
+Received: from redhat.com (bzq-79-180-0-181.red.bezeqint.net. [79.180.0.181])
+        by smtp.gmail.com with ESMTPSA id l11sm2746431wme.11.2020.08.05.06.44.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 06:44:20 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 09:44:18 -0400
+        Wed, 05 Aug 2020 06:44:09 -0700 (PDT)
+Date:   Wed, 5 Aug 2020 09:44:07 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Jason Wang <jasowang@redhat.com>,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 23/38] virtio_config: cread/write cleanup
-Message-ID: <20200805134226.1106164-24-mst@redhat.com>
+Subject: [PATCH v3 19/38] vdpa: make sure set_features is invoked for legacy
+Message-ID: <20200805134226.1106164-20-mst@redhat.com>
 References: <20200805134226.1106164-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -80,90 +80,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use vars of the correct type instead of casting.
+Some legacy guests just assume features are 0 after reset.
+We detect that config space is accessed before features are
+set and set features to 0 automatically.
+Note: some legacy guests might not even access config space, if this is
+reported in the field we might need to catch a kick to handle these.
 
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- include/linux/virtio_config.h | 31 +++++++++++++++++++------------
- 1 file changed, 19 insertions(+), 12 deletions(-)
+ drivers/vdpa/vdpa.c  |  1 +
+ include/linux/vdpa.h | 34 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 35 insertions(+)
 
-diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
-index c68f58f3bf34..5c3b02245ecd 100644
---- a/include/linux/virtio_config.h
-+++ b/include/linux/virtio_config.h
-@@ -444,53 +444,60 @@ static inline void virtio_cwrite8(struct virtio_device *vdev,
- static inline u16 virtio_cread16(struct virtio_device *vdev,
- 				 unsigned int offset)
- {
--	u16 ret;
-+	__virtio16 ret;
+diff --git a/drivers/vdpa/vdpa.c b/drivers/vdpa/vdpa.c
+index de211ef3738c..7105265e4793 100644
+--- a/drivers/vdpa/vdpa.c
++++ b/drivers/vdpa/vdpa.c
+@@ -96,6 +96,7 @@ struct vdpa_device *__vdpa_alloc_device(struct device *parent,
+ 	vdev->dev.release = vdpa_release_dev;
+ 	vdev->index = err;
+ 	vdev->config = config;
++	vdev->features_valid = false;
  
- 	might_sleep();
- 	vdev->config->get(vdev, offset, &ret, sizeof(ret));
--	return virtio16_to_cpu(vdev, (__force __virtio16)ret);
-+	return virtio16_to_cpu(vdev, ret);
+ 	err = dev_set_name(&vdev->dev, "vdpa%u", vdev->index);
+ 	if (err)
+diff --git a/include/linux/vdpa.h b/include/linux/vdpa.h
+index 239db794357c..29b8296f1414 100644
+--- a/include/linux/vdpa.h
++++ b/include/linux/vdpa.h
+@@ -33,12 +33,14 @@ struct vdpa_notification_area {
+  * @dma_dev: the actual device that is performing DMA
+  * @config: the configuration ops for this device.
+  * @index: device index
++ * @features_valid: were features initialized? for legacy guests
+  */
+ struct vdpa_device {
+ 	struct device dev;
+ 	struct device *dma_dev;
+ 	const struct vdpa_config_ops *config;
+ 	unsigned int index;
++	bool features_valid;
+ };
+ 
+ /**
+@@ -266,4 +268,36 @@ static inline struct device *vdpa_get_dma_dev(struct vdpa_device *vdev)
+ {
+ 	return vdev->dma_dev;
  }
- 
- static inline void virtio_cwrite16(struct virtio_device *vdev,
- 				   unsigned int offset, u16 val)
- {
-+	__virtio16 v;
 +
- 	might_sleep();
--	val = (__force u16)cpu_to_virtio16(vdev, val);
--	vdev->config->set(vdev, offset, &val, sizeof(val));
-+	v = cpu_to_virtio16(vdev, val);
-+	vdev->config->set(vdev, offset, &v, sizeof(v));
- }
- 
- static inline u32 virtio_cread32(struct virtio_device *vdev,
- 				 unsigned int offset)
- {
--	u32 ret;
-+	__virtio32 ret;
- 
- 	might_sleep();
- 	vdev->config->get(vdev, offset, &ret, sizeof(ret));
--	return virtio32_to_cpu(vdev, (__force __virtio32)ret);
-+	return virtio32_to_cpu(vdev, ret);
- }
- 
- static inline void virtio_cwrite32(struct virtio_device *vdev,
- 				   unsigned int offset, u32 val)
- {
-+	__virtio32 v;
++static inline void vdpa_reset(struct vdpa_device *vdev)
++{
++        const struct vdpa_config_ops *ops = vdev->config;
 +
- 	might_sleep();
--	val = (__force u32)cpu_to_virtio32(vdev, val);
--	vdev->config->set(vdev, offset, &val, sizeof(val));
-+	v = cpu_to_virtio32(vdev, val);
-+	vdev->config->set(vdev, offset, &v, sizeof(v));
- }
- 
- static inline u64 virtio_cread64(struct virtio_device *vdev,
- 				 unsigned int offset)
- {
--	u64 ret;
-+	__virtio64 ret;
++	vdev->features_valid = false;
++        ops->set_status(vdev, 0);
++}
 +
- 	__virtio_cread_many(vdev, offset, &ret, 1, sizeof(ret));
--	return virtio64_to_cpu(vdev, (__force __virtio64)ret);
-+	return virtio64_to_cpu(vdev, ret);
- }
- 
- static inline void virtio_cwrite64(struct virtio_device *vdev,
- 				   unsigned int offset, u64 val)
- {
-+	__virtio64 v;
++static inline int vdpa_set_features(struct vdpa_device *vdev, u64 features)
++{
++        const struct vdpa_config_ops *ops = vdev->config;
 +
- 	might_sleep();
--	val = (__force u64)cpu_to_virtio64(vdev, val);
--	vdev->config->set(vdev, offset, &val, sizeof(val));
-+	v = cpu_to_virtio64(vdev, val);
-+	vdev->config->set(vdev, offset, &v, sizeof(v));
- }
- 
- /* Conditional config space accessors. */
++	vdev->features_valid = true;
++        return ops->set_features(vdev, features);
++}
++
++
++static inline void vdpa_get_config(struct vdpa_device *vdev, unsigned offset,
++				   void *buf, unsigned int len)
++{
++        const struct vdpa_config_ops *ops = vdev->config;
++
++	/*
++	 * Config accesses aren't supposed to trigger before features are set.
++	 * If it does happen we assume a legacy guest.
++	 */
++	if (!vdev->features_valid)
++		vdpa_set_features(vdev, 0);
++	ops->get_config(vdev, offset, buf, len);
++}
++
+ #endif /* _LINUX_VDPA_H */
 -- 
 MST
 
