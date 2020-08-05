@@ -2,173 +2,114 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B45C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 10:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96472C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 10:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 584D320792
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 10:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E2A8207FC
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 10:07:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jqaR06xc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgHEKDv (ORCPT
+        id S1727057AbgHEKHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 06:03:51 -0400
-Received: from regular1.263xmail.com ([211.150.70.202]:58882 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgHEKDa (ORCPT
+        Wed, 5 Aug 2020 06:07:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40776 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbgHEKGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 06:03:30 -0400
-Received: from localhost (unknown [192.168.167.209])
-        by regular1.263xmail.com (Postfix) with ESMTP id 46CF7485;
-        Wed,  5 Aug 2020 18:03:17 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [172.16.12.76] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P12032T139957011113728S1596621795960706_;
-        Wed, 05 Aug 2020 18:03:17 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <58f15e56412951c2acfe8d69cef47c2a>
-X-RL-SENDER: hjc@rock-chips.com
-X-SENDER: hjc@rock-chips.com
-X-LOGIN-NAME: hjc@rock-chips.com
-X-FST-TO: hjc@rock-chips.com
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-Subject: Re: [PATCH] drm: sysfs: Add to get current mode
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Tao Huang <huangtao@rock-chips.com>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200805083646.4123-1-hjc@rock-chips.com>
- <CAKMK7uGmKJqZJ0ONQjjquZn6mksKbkScmcUSEA43eg1jFskmTg@mail.gmail.com>
-From:   Huang Jiachai <hjc@rock-chips.com>
-Message-ID: <693f6555-d9d2-f255-1198-e3798c8f4fe8@rock-chips.com>
-Date:   Wed, 5 Aug 2020 18:03:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 5 Aug 2020 06:06:48 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37326C06174A;
+        Wed,  5 Aug 2020 03:06:21 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id a14so15105371edx.7;
+        Wed, 05 Aug 2020 03:06:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=o31JkXgtZ4KmGQwREdAQtnazhwrTeZbjodMq4WKIsR8=;
+        b=jqaR06xc5HtUs7MVw/5Go/HLs96oAV0bc+H9PNL0c4dqzWihlBfFj2W0bBeN4pyIXg
+         smJeD9YmR9+XlUd8J/Ei0PdM3Ze4oSzB7TokvOG9Tr3rKMQgurDOVBM+nULiBDNoYh1b
+         YMnM5huvG3CTVU502QwXy5/tjiRaXd9o0lm2tohK/oTvWzfJnSWQcIA61P5mg2ZxLkls
+         jooEmRS9H8oD+rAMH+C6x22hMIjQqciHjoxhFiDlfUhtkl9StEtwPxy2xmj1IeQILcFz
+         JOqTFlHe/Rh3kvmPTwXbN8iLy6kB7r80CSXYYS9Y8SHgndKnBHkXqPRmkFjQ4gg+zaYe
+         QbtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=o31JkXgtZ4KmGQwREdAQtnazhwrTeZbjodMq4WKIsR8=;
+        b=TCtbq0hrYjY8WBPa/k+6+K6sMT6NzAGNy81pOHd/3Hj6p35+7LYnNn123YOqi1rL/y
+         fX0gbXug0U2lh0u9MEdQX8xy1/zkqT4OENO6D6Tw+Uqp2exyk2vrRJ8hWR9kqk8CVKpQ
+         dUWQQN2sp2S4GO06SUBv8fP3J52IhPreXa4V7y6SX2xZOQiUpQ+Vq5naPgAHg3PS60J+
+         qtm2Lde3ks3sBk5gU0/Jq6kpQ1qUxtyea2T1ppG97ObtCkcL/19EDpAEU2ai2ZVHpfPb
+         9n5YMKqTNpmg35C779PIcvSyLZJH7nhkOjipJzb+KV/YF7/HkEmdN09wP1J4MOMYeEWP
+         wN3w==
+X-Gm-Message-State: AOAM533TS60ZUUaRDxmqhh+vpZz21upe/0xUQ7zh1wqBUSNFvpT3fG3C
+        Fvm+ZXRBxQnoP/mdPUBwzng7eXD3mczJUaOW
+X-Google-Smtp-Source: ABdhPJwnKcUuCTNXc5gdVniToDxdlNfB7kNhTTGfx/JjK3WYYdgxPAcKRikC/CVdFUlzK7zOtFz24w==
+X-Received: by 2002:a05:6402:1758:: with SMTP id v24mr2110733edx.274.1596621979408;
+        Wed, 05 Aug 2020 03:06:19 -0700 (PDT)
+Received: from ci00583-linux.xsens-tech.local (2001-1c06-0702-ba00-8940-6ad0-42ef-6a6f.cable.dynamic.v6.ziggo.nl. [2001:1c06:702:ba00:8940:6ad0:42ef:6a6f])
+        by smtp.googlemail.com with ESMTPSA id f20sm1194723ejq.60.2020.08.05.03.06.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 03:06:18 -0700 (PDT)
+From:   Patrick Riphagen <ppriphagen@gmail.com>
+X-Google-Original-From: Patrick Riphagen <patrick.riphagen@xsens.com>
+To:     stable@vger.kernel.org
+Cc:     patrick.riphagen@xsens.com, Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] USB: serial: ftdi_sio: add IDs for Xsens Mti USB converter
+Date:   Wed,  5 Aug 2020 12:05:57 +0200
+Message-Id: <20200805100558.18593-1-patrick.riphagen@xsens.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <CAKMK7uGmKJqZJ0ONQjjquZn6mksKbkScmcUSEA43eg1jFskmTg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel
+The device added has an FTDI chip inside.
+The device is used to connect Xsens USB Motion Trackers.
 
-在 2020/8/5 17:36, Daniel Vetter 写道:
-> On Wed, Aug 5, 2020 at 10:37 AM Sandy Huang <hjc@rock-chips.com> wrote:
->> add this node to get the current true mode.
->>
->> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
-> Uh what's this for? Since it's sysfs, I guess there's something
-> parsing this, which means we'd kinda need to have that piece too.
->
-> If it's just for debugging purposes, then we already have this
-> information in debugfs, together with everything else that's in the
-> atomic modeset state.
-> -Daniel
+Signed-off-by: Patrick Riphagen <patrick.riphagen@xsens.com>
+---
+ drivers/usb/serial/ftdi_sio.c     | 1 +
+ drivers/usb/serial/ftdi_sio_ids.h | 1 +
+ 2 files changed, 2 insertions(+)
 
-yes, this is just for debug;
-
-and i get the information what i need from cat 
-/sys/kernel/debug/dri/0/state, thanks.
-
->> ---
->>   drivers/gpu/drm/drm_sysfs.c | 30 ++++++++++++++++++++++++++++++
->>   1 file changed, 30 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/drm_sysfs.c b/drivers/gpu/drm/drm_sysfs.c
->> index 939f0032aab1..f39bcd34853b 100644
->> --- a/drivers/gpu/drm/drm_sysfs.c
->> +++ b/drivers/gpu/drm/drm_sysfs.c
->> @@ -19,6 +19,7 @@
->>   #include <linux/slab.h>
->>
->>   #include <drm/drm_connector.h>
->> +#include <drm/drm_crtc.h>
->>   #include <drm/drm_device.h>
->>   #include <drm/drm_file.h>
->>   #include <drm/drm_modes.h>
->> @@ -236,16 +237,45 @@ static ssize_t modes_show(struct device *device,
->>          return written;
->>   }
->>
->> +static ssize_t current_mode_show(struct device *device,
->> +                     struct device_attribute *attr,
->> +                     char *buf)
->> +{
->> +       struct drm_connector *connector = to_drm_connector(device);
->> +       struct drm_display_mode *mode;
->> +       struct drm_crtc_state *crtc_state;
->> +       bool interlaced;
->> +       int written = 0;
->> +
->> +       if (!connector->state || !connector->state->crtc)
->> +               return written;
->> +
->> +       crtc_state = connector->state->crtc->state;
->> +       if (!crtc_state)
->> +               return written;
->> +
->> +       mode = &crtc_state->mode;
->> +
->> +       interlaced = !!(mode->flags & DRM_MODE_FLAG_INTERLACE);
->> +       written += snprintf(buf + written, PAGE_SIZE - written, "%dx%d%s%d\n",
->> +                           mode->hdisplay, mode->vdisplay,
->> +                           interlaced ? "i" : "p", drm_mode_vrefresh(mode));
->> +
->> +       return written;
->> +}
->> +
->>   static DEVICE_ATTR_RW(status);
->>   static DEVICE_ATTR_RO(enabled);
->>   static DEVICE_ATTR_RO(dpms);
->>   static DEVICE_ATTR_RO(modes);
->> +static DEVICE_ATTR_RO(current_mode);
->>
->>   static struct attribute *connector_dev_attrs[] = {
->>          &dev_attr_status.attr,
->>          &dev_attr_enabled.attr,
->>          &dev_attr_dpms.attr,
->>          &dev_attr_modes.attr,
->> +       &dev_attr_current_mode.attr,
->>          NULL
->>   };
->>
->> --
->> 2.17.1
->>
->>
->>
->
+diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
+index 9ad44a96dfe3..2c08cad32f1d 100644
+--- a/drivers/usb/serial/ftdi_sio.c
++++ b/drivers/usb/serial/ftdi_sio.c
+@@ -713,6 +713,7 @@ static const struct usb_device_id id_table_combined[] = {
+ 	{ USB_DEVICE(XSENS_VID, XSENS_AWINDA_STATION_PID) },
+ 	{ USB_DEVICE(XSENS_VID, XSENS_CONVERTER_PID) },
+ 	{ USB_DEVICE(XSENS_VID, XSENS_MTDEVBOARD_PID) },
++	{ USB_DEVICE(XSENS_VID, XSENS_MTIUSBCONVERTER_PID) },
+ 	{ USB_DEVICE(XSENS_VID, XSENS_MTW_PID) },
+ 	{ USB_DEVICE(FTDI_VID, FTDI_OMNI1509) },
+ 	{ USB_DEVICE(MOBILITY_VID, MOBILITY_USB_SERIAL_PID) },
+diff --git a/drivers/usb/serial/ftdi_sio_ids.h b/drivers/usb/serial/ftdi_sio_ids.h
+index e8373528264c..b5ca17a5967a 100644
+--- a/drivers/usb/serial/ftdi_sio_ids.h
++++ b/drivers/usb/serial/ftdi_sio_ids.h
+@@ -160,6 +160,7 @@
+ #define XSENS_AWINDA_DONGLE_PID 0x0102
+ #define XSENS_MTW_PID		0x0200	/* Xsens MTw */
+ #define XSENS_MTDEVBOARD_PID	0x0300	/* Motion Tracker Development Board */
++#define XSENS_MTIUSBCONVERTER_PID	0x0301	/* MTi USB converter */
+ #define XSENS_CONVERTER_PID	0xD00D	/* Xsens USB-serial converter */
+ 
+ /* Xsens devices using FTDI VID */
 -- 
-Best Regard
-
-黄家钗
-Sandy Huang
-Addr: 福州市鼓楼区铜盘路软件大道89号福州软件园A区21号楼(350003)
-       No. 21 Building, A District, No.89,software Boulevard Fuzhou,Fujian,PRC
-Tel：+86 0591-87884919  8690
-E-mail：hjc@rock-chips.com
-
-
+2.25.1
 
