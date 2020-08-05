@@ -2,151 +2,115 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86892C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 326F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61A5F22D2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 042A822D00
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:00:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="XkWRNKzo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbgHERAZ (ORCPT
+        id S1728363AbgHERAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:00:25 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:44772 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728360AbgHEQ5o (ORCPT
+        Wed, 5 Aug 2020 13:00:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728255AbgHERAH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:57:44 -0400
-Received: by mail-il1-f198.google.com with SMTP id y82so26271918ilk.11
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 09:57:43 -0700 (PDT)
+        Wed, 5 Aug 2020 13:00:07 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97DECC0F26C3
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 08:20:23 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id l23so42037543qkk.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 08:20:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/tKLJQerXAd3IgNPAHruQgQjEuVQ8X51x0/Hm0qS14o=;
+        b=XkWRNKzos6RgtLNAoLG8ZqpBImUQJtQbl5iOZX6FYYABNq8W8UxSmfV5pZBOl6M8ha
+         23CqhkftlOKAS2CUfwjzJD1w9gJN9S0x1Lg3ZQA5zwHPnOh9hSin+Xe6OikM5uskHI2w
+         fvihzKHQKYICjQTiNNy4ccVCVMyjzEJU/w0R1gMGJOGhDGqo7CbsUqaT6qNVfAK8BeD4
+         Aa9NW9VcCU72QTj6uTYFa9uXcJ5wgnByQxbu9N4V8g2e5Kmr6YZmYoGPVy+y8RIik3i9
+         qy/4SlwwMX2Tt3Y+VuNhfF4eGCxhG5q4NcdQf9ZzkPhJ4hngmyu4VLfwpalUNMuSOjCJ
+         DRKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=vD/veeEc05bcXlG0e+JSfe9O59TwwwUvH3Hr6H/SIyA=;
-        b=DT4ShEHPi6FH6QoYLd3QL9v5ycy4OPhG8zz34atxEDEb98d8T0mS5Q1SDdtQ23O1DX
-         jM3R7SJ9PTZPwXe27H+cbdMgDAI+bt4n2eU74g5vIlb4f0mJu+N02Og3kLlDpw/ArJaR
-         JJuCQpk0lYgHzMYu7M/BjrEzQGQIYudZLL78O1+6LOi6hxaX2KkRaGgmiAdNY/Y5OZc5
-         GbHHhXOqUmdln5OkaGJQ7Fw+L/yLWS+2pAhmkPqh5or9uOZFjKRC7mZVqQl4DYQiwqcW
-         YqOaRUXHHZ1hrIsnx6O1gDFkoQTDPDKvUts4dulzYsKfp8wyesntu+V/5EwP4zKqDcts
-         WlvQ==
-X-Gm-Message-State: AOAM531FE9Yz5A8blOLvGLKmVD1+Mkyc4CEdAZ9VMs9n64DTAMFB1Nj3
-        XwRwtlHxR2GiBQWY87FPQtowl9MjMkxuL7KPxafZksfhiGxQ
-X-Google-Smtp-Source: ABdhPJyCIyEAmTjH3mqmhkj1F6rTlvWQHvwfZk6hoXyQVk34+x2BOvU/JDLR5tpGpsL3ZeWGnfdbt0fxmuRIfqVtucp3aBL6viaF
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/tKLJQerXAd3IgNPAHruQgQjEuVQ8X51x0/Hm0qS14o=;
+        b=kuO+RtR1dxN0xEEABQ/szBZe5yXJUeN33S6tYNPi7vTXE+pOlTTfD8okSdTAWm0SLm
+         Vnf7vZDgRzpzDtrkToSxrNVGB+H289u0BZOvdnHcrUjC9xu55NAfmLlAIflXGJj0TX8e
+         MgRQlMg170Jba95l02FjUJL1W2J8x33BZQwjWPGEYkSf5k55OfNKd9pmFuM3Fsiq9yJ6
+         OuMA5p/0rp2Vc0HCmQiqmb2bEa+4ScNsBZpvwTlLLEWUmL1EU4pKZyVVbr84l6zkliJk
+         ZXbt6dEuG/px7W39tO+48dgd1Qag7icwqomsR3PFRodZirk753baA4ZW/nhrAKnCL2Oj
+         2mng==
+X-Gm-Message-State: AOAM530slssu2uet9/CiYkZnSQOszN042X4m3WqH0hpNcZ/AvBHQnkDV
+        qqa58/zDhJYU3NJ4NVr6nyJJPg==
+X-Google-Smtp-Source: ABdhPJwTuHqoGr+EOp/oEpmcu+tl2UY7H6KOYj4gWuTioPF0y42q1PQVq60jEk9mh3DtDWUVKuUzdQ==
+X-Received: by 2002:a37:6741:: with SMTP id b62mr3781846qkc.217.1596640812168;
+        Wed, 05 Aug 2020 08:20:12 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id x24sm2502113qtj.8.2020.08.05.08.20.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 08:20:10 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1k3LD7-003qYn-U3; Wed, 05 Aug 2020 12:20:09 -0300
+Date:   Wed, 5 Aug 2020 12:20:09 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Rustam Kovhaev <rkovhaev@gmail.com>
+Cc:     dledford@redhat.com, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: KASAN: use-after-free Read in netdevice_event_work_handler
+Message-ID: <20200805152009.GR24045@ziepe.ca>
+References: <0000000000005b9fca05aa0af1b9@google.com>
+ <20200731211122.GA1728751@thinkpad>
+ <20200802222226.GO24045@ziepe.ca>
+ <20200804200013.GB263814@thinkpad>
 MIME-Version: 1.0
-X-Received: by 2002:a92:dcc6:: with SMTP id b6mr4591063ilr.147.1596642980561;
- Wed, 05 Aug 2020 08:56:20 -0700 (PDT)
-Date:   Wed, 05 Aug 2020 08:56:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b087a705ac2369dd@google.com>
-Subject: INFO: trying to register non-static key in l2cap_chan_del
-From:   syzbot <syzbot+abfc0f5e668d4099af73@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200804200013.GB263814@thinkpad>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Aug 04, 2020 at 01:00:13PM -0700, Rustam Kovhaev wrote:
+> On Sun, Aug 02, 2020 at 07:22:26PM -0300, Jason Gunthorpe wrote:
+> > On Fri, Jul 31, 2020 at 02:11:22PM -0700, Rustam Kovhaev wrote:
+> > 
+> > > IB roce driver receives NETDEV_UNREGISTER event, calls dev_hold() and
+> > > schedules work item to execute, and before wq gets a chance to complete
+> > > it, we return to ip_tunnel.c:274 and call free_netdev(), and then later
+> > > we get UAF when scheduled function references already freed net_device
+> > > 
+> > > i added verbose logging to ip_tunnel.c to see pcpu_refcnt:
+> > > +       pr_info("about to free_netdev(dev) dev->pcpu_refcnt %d", netdev_refcnt_read(dev));
+> > > 
+> > > and got the following:
+> > > [  410.220127][ T2944] ip_tunnel: about to free_netdev(dev) dev->pcpu_refcnt 8
+> > 
+> > I think there is a missing call to netdev_wait_allrefs() in the
+> > rollback_registered_many().
+> calling it there leads to rtnl deadlock, i think we should call
+> net_set_todo(), so that later when we call rtnl_unlock() it will
+> execute netdev_run_todo() and there it will proceed to calling
+> netdev_wait_allrefs(), but in ip tunnel i will need get
+> free_netdev() to be called after we unlock rtnl mutex
+> i'll try to send a new patch for review
 
-syzbot found the following issue on:
+Oh the whole register is called under rtnl? Yikes..
 
-HEAD commit:    442489c2 Merge tag 'timers-core-2020-08-04' of git://git.k..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15aa9494900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=669b4bedb6478222
-dashboard link: https://syzkaller.appspot.com/bug?extid=abfc0f5e668d4099af73
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+This is probably a systemic problem with register_netdevice error
+unwind, not just ip tunnel
 
-Unfortunately, I don't have any reproducer for this issue yet.
+The other way to handle it would be to organize things so that
+register cannot fail once it starts calling notifiers?
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+abfc0f5e668d4099af73@syzkaller.appspotmail.com
-
-INFO: trying to register non-static key.
-the code is fine but needs lockdep annotation.
-turning off the locking correctness validator.
-CPU: 1 PID: 27 Comm: kworker/1:1 Not tainted 5.8.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events l2cap_chan_timeout
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- assign_lock_key kernel/locking/lockdep.c:894 [inline]
- register_lock_class+0x157d/0x1630 kernel/locking/lockdep.c:1206
- __lock_acquire+0xf9/0x5640 kernel/locking/lockdep.c:4305
- lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:5005
- __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
- _raw_spin_lock_bh+0x2f/0x40 kernel/locking/spinlock.c:175
- spin_lock_bh include/linux/spinlock.h:359 [inline]
- lock_sock_nested+0x3b/0x110 net/core/sock.c:3070
- l2cap_sock_teardown_cb+0x88/0x400 net/bluetooth/l2cap_sock.c:1520
- l2cap_chan_del+0xad/0x1300 net/bluetooth/l2cap_core.c:618
- l2cap_chan_close+0x118/0xb10 net/bluetooth/l2cap_core.c:824
- l2cap_chan_timeout+0x173/0x450 net/bluetooth/l2cap_core.c:436
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-BUG: kernel NULL pointer dereference, address: 0000000000000000
-#PF: supervisor instruction fetch in kernel mode
-#PF: error_code(0x0010) - not-present page
-PGD 32376067 P4D 32376067 PUD 9356f067 PMD 0 
-Oops: 0010 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 27 Comm: kworker/1:1 Not tainted 5.8.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events l2cap_chan_timeout
-RIP: 0010:0x0
-Code: Bad RIP value.
-RSP: 0018:ffffc90000e17b60 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: ffff88808d94c000 RCX: ffffffff8723aa4f
-RDX: 1ffff11005e48c8c RSI: ffffffff8723ac9c RDI: ffff88802f246000
-RBP: 0000000000000005 R08: 0000000000000001 R09: ffff88802f246067
-R10: 0000000000000009 R11: 0000000000000001 R12: 000000000000006f
-R13: ffff88802f246000 R14: 0000000000000000 R15: 0000000000000005
-FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffffffffd6 CR3: 0000000094fa9000 CR4: 00000000001426e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- l2cap_sock_teardown_cb+0x374/0x400 net/bluetooth/l2cap_sock.c:1547
- l2cap_chan_del+0xad/0x1300 net/bluetooth/l2cap_core.c:618
- l2cap_chan_close+0x118/0xb10 net/bluetooth/l2cap_core.c:824
- l2cap_chan_timeout+0x173/0x450 net/bluetooth/l2cap_core.c:436
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-Modules linked in:
-CR2: 0000000000000000
----[ end trace 661471e896caece1 ]---
-RIP: 0010:0x0
-Code: Bad RIP value.
-RSP: 0018:ffffc90000e17b60 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: ffff88808d94c000 RCX: ffffffff8723aa4f
-RDX: 1ffff11005e48c8c RSI: ffffffff8723ac9c RDI: ffff88802f246000
-RBP: 0000000000000005 R08: 0000000000000001 R09: ffff88802f246067
-R10: 0000000000000009 R11: 0000000000000001 R12: 000000000000006f
-R13: ffff88802f246000 R14: 0000000000000000 R15: 0000000000000005
-FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffffffffd6 CR3: 0000000094fa9000 CR4: 00000000001426e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Jason
