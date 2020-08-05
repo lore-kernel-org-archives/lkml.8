@@ -2,154 +2,135 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D609C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D307FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 708BB22B42
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD15922B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:14:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="mLoon+iK"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="k+tuYhnI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UlVjy0fz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729648AbgHEUNr (ORCPT
+        id S1729115AbgHEUOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:13:47 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:7990 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726776AbgHEQX1 (ORCPT
+        Wed, 5 Aug 2020 16:14:09 -0400
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:36325 "EHLO
+        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726627AbgHEQX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:23:27 -0400
-X-UUID: 6e8e03a222d84d94b4a41ae4b8735427-20200805
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=tWETgV80oKa12y7OJg8hJVWC3udr9qgCf1OmDSZNG+A=;
-        b=mLoon+iKJYOusow8i9mVk1uE6o8v6dFKOMBJGQjvP+D4Uw6UwG0pY0nKHax0pOdRdRoR0u0qPjYzxYrOq8b9WWaOUlyPQsdEs+a34g1GIXvvepB6/kvhAiCUTW6X9jEPeqnZmWlwjfTu0ho7uAJGfspt1jtu4xFunyvikQaPmL8=;
-X-UUID: 6e8e03a222d84d94b4a41ae4b8735427-20200805
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <qii.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1964303194; Wed, 05 Aug 2020 18:53:21 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 5 Aug 2020 18:53:17 +0800
-Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 5 Aug 2020 18:53:18 +0800
-From:   Qii Wang <qii.wang@mediatek.com>
-To:     <wsa@the-dreams.de>
-CC:     <robh+dt@kernel.org>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <qii.wang@mediatek.com>
-Subject: [PATCH v3 2/4] i2c: mediatek: Add access to more than 8GB dram in i2c driver
-Date:   Wed, 5 Aug 2020 18:52:20 +0800
-Message-ID: <1596624742-14727-3-git-send-email-qii.wang@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1596624742-14727-1-git-send-email-qii.wang@mediatek.com>
-References: <1596624742-14727-1-git-send-email-qii.wang@mediatek.com>
+        Wed, 5 Aug 2020 12:23:26 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.west.internal (Postfix) with ESMTP id E931D95C;
+        Wed,  5 Aug 2020 07:23:18 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Wed, 05 Aug 2020 07:23:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        26J/RpIA9Dzs/j/8HMkMSuIzptW47JbejMg/q+iS3MA=; b=k+tuYhnIwwJqPC4a
+        ARmLeCMtIylGfe41ZB2xKZDmYvrKjpecqduRXwP+9BBuVWQgIaFmKGJTo3YJYXAx
+        Ypn3UJy81+Nvgtt39qeUW24jGFuqamg9GKZuaAL46pkTIrKEv0spYSGUItue51qM
+        BMEYBbtZSz2Afm8rvLkRPQLA3UQu5OFEeZcXaBtC28KAaWyED2HYsD1gD22fjByH
+        XaKZUEkNIEy+8yie9mVabtLESGXmRThqMwg8kT3n8Zks1mkufq0xGuTjVWrBZKJy
+        t+U0BtxJPwxVTRyKfTgopI4oCy+E+f9Q/YEOlFvgNxyDd/r3mZ38tXZoMCCaxSe8
+        BzA7cQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=26J/RpIA9Dzs/j/8HMkMSuIzptW47JbejMg/q+iS3
+        MA=; b=UlVjy0fzxkWVFYnPUQXHQ3/SyandLHZI25k0hCWN2r2/1tUCxtdEGSYjm
+        GXKGrXAJ+D4IS9BdU05Xkvg4CRigWZWia+z/Rs8q9s8R/stmJ+fTTsh3K5yKFOem
+        sQyOz2u1x9OepQCiE0ydYQhN55yHJPMCnEtdrWPUXDOEOUk4FPLvn0WPOC9D0Sxy
+        93Xdzz7yWniafh0KlABxeImu8+TU6nNiOg1rz2EELtjJ21wVjypuFoLPPVVFFNQz
+        hTD2PklgWGLzAxRJZAnJYy8D5VV2qhj/k7v9pPO6mIPWTh7vUkxwxSWcVeSGgrKc
+        UmXy8Xn804pK0z1jYUQdrELOQxWwg==
+X-ME-Sender: <xms:pZYqXyxcpqQd8fkTI6CfOrrv8tj2qzF8np8tJRa1_efpe0JMgQiGkw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrjeekgdegudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnhepfe
+    efteetvdeguddvveefveeftedtffduudehueeihfeuvefgveehffeludeggfejnecukfhp
+    peehkedrjedrvdehhedrvddvtdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:pZYqX-TiKvrEJ-MB-FbK2Btrf7kE1Tw3EkDuTNy2v6yvzsOy2SlEgw>
+    <xmx:pZYqX0XLq-Ut0c4cHHkycDFeDRjTfcKY2AARmx6vEU009KfSrHB6bQ>
+    <xmx:pZYqX4j2RKFEQXdNPE9IPUWmO_fQ8BMKzSb1-ncgv31k1b-0y7ht3A>
+    <xmx:ppYqX0vJJE9yQ9CN4XXM-SnCkV-X0bG9y8hV4wWuiBbvkYky1I3se41MUu4>
+Received: from mickey.themaw.net (58-7-255-220.dyn.iinet.net.au [58.7.255.220])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 40FB530600B4;
+        Wed,  5 Aug 2020 07:23:12 -0400 (EDT)
+Message-ID: <e1caad2bff5faf9b24b59fe4ee51df255412cc56.camel@themaw.net>
+Subject: Re: [PATCH 10/18] fsinfo: Provide notification overrun handling
+ support [ver #21]
+From:   Ian Kent <raven@themaw.net>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 05 Aug 2020 19:23:07 +0800
+In-Reply-To: <CAJfpegs1NLaamFA12f=EJRN4B3_iC+Uzi2NQKTV-fBSypcufLQ@mail.gmail.com>
+References: <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk>
+         <159646187082.1784947.4293611877413578847.stgit@warthog.procyon.org.uk>
+         <20200804135641.GE32719@miu.piliscsaba.redhat.com>
+         <94bba6f200bb2bbf83f4945faa2ccb83fd947540.camel@themaw.net>
+         <5078554c6028e29c91d815c63e2af1ffac2ecbbb.camel@themaw.net>
+         <CAJfpegs1NLaamFA12f=EJRN4B3_iC+Uzi2NQKTV-fBSypcufLQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TmV3ZXIgTVRLIGNoaXAgc3VwcG9ydCBtb3JlIHRoYW4gOEdCIG9mIGRyYW0uIFJlcGxhY2Ugc3Vw
-cG9ydF8zM2JpdHMNCndpdGggbW9yZSBnZW5lcmFsIGRtYV9tYXhfc3VwcG9ydCBhbmQgcmVtb3Zl
-IG10a19pMmNfc2V0XzRnX21vZGUuDQoNClJldmlld2VkLWJ5OiBZaW5nam9lIENoZW4gPHlpbmdq
-b2UuY2hlbkBtZWRpYXRlay5jb20+DQpTaWduZWQtb2ZmLWJ5OiBRaWkgV2FuZyA8cWlpLndhbmdA
-bWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1tdDY1eHguYyB8IDM5
-ICsrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KIDEgZmlsZSBjaGFuZ2Vk
-LCAxNyBpbnNlcnRpb25zKCspLCAyMiBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4
-eC5jDQppbmRleCBlNmI5ODRhLi40NjM4NjBlIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9pMmMvYnVz
-c2VzL2kyYy1tdDY1eHguYw0KKysrIGIvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1tdDY1eHguYw0K
-QEAgLTU1LDcgKzU1LDYgQEANCiAjZGVmaW5lIEkyQ19ETUFfSU5UX0ZMQUdfTk9ORQkJMHgwMDAw
-DQogI2RlZmluZSBJMkNfRE1BX0NMUl9GTEFHCQkweDAwMDANCiAjZGVmaW5lIEkyQ19ETUFfSEFS
-RF9SU1QJCTB4MDAwMg0KLSNkZWZpbmUgSTJDX0RNQV80R19NT0RFCQkJMHgwMDAxDQogDQogI2Rl
-ZmluZSBNQVhfU0FNUExFX0NOVF9ESVYJCTgNCiAjZGVmaW5lIE1BWF9TVEVQX0NOVF9ESVYJCTY0
-DQpAQCAtMjA0LDExICsyMDMsMTEgQEAgc3RydWN0IG10a19pMmNfY29tcGF0aWJsZSB7DQogCXVu
-c2lnbmVkIGNoYXIgZGNtOiAxOw0KIAl1bnNpZ25lZCBjaGFyIGF1dG9fcmVzdGFydDogMTsNCiAJ
-dW5zaWduZWQgY2hhciBhdXhfbGVuX3JlZzogMTsNCi0JdW5zaWduZWQgY2hhciBzdXBwb3J0XzMz
-Yml0czogMTsNCiAJdW5zaWduZWQgY2hhciB0aW1pbmdfYWRqdXN0OiAxOw0KIAl1bnNpZ25lZCBj
-aGFyIGRtYV9zeW5jOiAxOw0KIAl1bnNpZ25lZCBjaGFyIGx0aW1pbmdfYWRqdXN0OiAxOw0KIAl1
-bnNpZ25lZCBjaGFyIGFwZG1hX3N5bmM6IDE7DQorCXVuc2lnbmVkIGNoYXIgbWF4X2RtYV9zdXBw
-b3J0Ow0KIH07DQogDQogc3RydWN0IG10a19pMmNfYWNfdGltaW5nIHsNCkBAIC0zMTEsMTEgKzMx
-MCwxMSBAQCBzdHJ1Y3QgaTJjX3NwZWNfdmFsdWVzIHsNCiAJLmRjbSA9IDEsDQogCS5hdXRvX3Jl
-c3RhcnQgPSAxLA0KIAkuYXV4X2xlbl9yZWcgPSAxLA0KLQkuc3VwcG9ydF8zM2JpdHMgPSAxLA0K
-IAkudGltaW5nX2FkanVzdCA9IDEsDQogCS5kbWFfc3luYyA9IDAsDQogCS5sdGltaW5nX2FkanVz
-dCA9IDAsDQogCS5hcGRtYV9zeW5jID0gMCwNCisJLm1heF9kbWFfc3VwcG9ydCA9IDMzLA0KIH07
-DQogDQogc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfaTJjX2NvbXBhdGlibGUgbXQ2NTc3X2NvbXBh
-dCA9IHsNCkBAIC0zMjUsMTEgKzMyNCwxMSBAQCBzdHJ1Y3QgaTJjX3NwZWNfdmFsdWVzIHsNCiAJ
-LmRjbSA9IDEsDQogCS5hdXRvX3Jlc3RhcnQgPSAwLA0KIAkuYXV4X2xlbl9yZWcgPSAwLA0KLQku
-c3VwcG9ydF8zM2JpdHMgPSAwLA0KIAkudGltaW5nX2FkanVzdCA9IDAsDQogCS5kbWFfc3luYyA9
-IDAsDQogCS5sdGltaW5nX2FkanVzdCA9IDAsDQogCS5hcGRtYV9zeW5jID0gMCwNCisJLm1heF9k
-bWFfc3VwcG9ydCA9IDMyLA0KIH07DQogDQogc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfaTJjX2Nv
-bXBhdGlibGUgbXQ2NTg5X2NvbXBhdCA9IHsNCkBAIC0zMzksMTEgKzMzOCwxMSBAQCBzdHJ1Y3Qg
-aTJjX3NwZWNfdmFsdWVzIHsNCiAJLmRjbSA9IDAsDQogCS5hdXRvX3Jlc3RhcnQgPSAwLA0KIAku
-YXV4X2xlbl9yZWcgPSAwLA0KLQkuc3VwcG9ydF8zM2JpdHMgPSAwLA0KIAkudGltaW5nX2FkanVz
-dCA9IDAsDQogCS5kbWFfc3luYyA9IDAsDQogCS5sdGltaW5nX2FkanVzdCA9IDAsDQogCS5hcGRt
-YV9zeW5jID0gMCwNCisJLm1heF9kbWFfc3VwcG9ydCA9IDMyLA0KIH07DQogDQogc3RhdGljIGNv
-bnN0IHN0cnVjdCBtdGtfaTJjX2NvbXBhdGlibGUgbXQ3NjIyX2NvbXBhdCA9IHsNCkBAIC0zNTMs
-MTEgKzM1MiwxMSBAQCBzdHJ1Y3QgaTJjX3NwZWNfdmFsdWVzIHsNCiAJLmRjbSA9IDEsDQogCS5h
-dXRvX3Jlc3RhcnQgPSAxLA0KIAkuYXV4X2xlbl9yZWcgPSAxLA0KLQkuc3VwcG9ydF8zM2JpdHMg
-PSAwLA0KIAkudGltaW5nX2FkanVzdCA9IDAsDQogCS5kbWFfc3luYyA9IDAsDQogCS5sdGltaW5n
-X2FkanVzdCA9IDAsDQogCS5hcGRtYV9zeW5jID0gMCwNCisJLm1heF9kbWFfc3VwcG9ydCA9IDMy
-LA0KIH07DQogDQogc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfaTJjX2NvbXBhdGlibGUgbXQ4MTcz
-X2NvbXBhdCA9IHsNCkBAIC0zNjYsMTEgKzM2NSwxMSBAQCBzdHJ1Y3QgaTJjX3NwZWNfdmFsdWVz
-IHsNCiAJLmRjbSA9IDEsDQogCS5hdXRvX3Jlc3RhcnQgPSAxLA0KIAkuYXV4X2xlbl9yZWcgPSAx
-LA0KLQkuc3VwcG9ydF8zM2JpdHMgPSAxLA0KIAkudGltaW5nX2FkanVzdCA9IDAsDQogCS5kbWFf
-c3luYyA9IDAsDQogCS5sdGltaW5nX2FkanVzdCA9IDAsDQogCS5hcGRtYV9zeW5jID0gMCwNCisJ
-Lm1heF9kbWFfc3VwcG9ydCA9IDMzLA0KIH07DQogDQogc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtf
-aTJjX2NvbXBhdGlibGUgbXQ4MTgzX2NvbXBhdCA9IHsNCkBAIC0zODAsMTEgKzM3OSwxMSBAQCBz
-dHJ1Y3QgaTJjX3NwZWNfdmFsdWVzIHsNCiAJLmRjbSA9IDAsDQogCS5hdXRvX3Jlc3RhcnQgPSAx
-LA0KIAkuYXV4X2xlbl9yZWcgPSAxLA0KLQkuc3VwcG9ydF8zM2JpdHMgPSAxLA0KIAkudGltaW5n
-X2FkanVzdCA9IDEsDQogCS5kbWFfc3luYyA9IDEsDQogCS5sdGltaW5nX2FkanVzdCA9IDEsDQog
-CS5hcGRtYV9zeW5jID0gMCwNCisJLm1heF9kbWFfc3VwcG9ydCA9IDMzLA0KIH07DQogDQogc3Rh
-dGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgbXRrX2kyY19vZl9tYXRjaFtdID0gew0KQEAg
-LTc5NiwxMSArNzk1LDYgQEAgc3RhdGljIGludCBtdGtfaTJjX3NldF9zcGVlZChzdHJ1Y3QgbXRr
-X2kyYyAqaTJjLCB1bnNpZ25lZCBpbnQgcGFyZW50X2NsaykNCiAJcmV0dXJuIDA7DQogfQ0KIA0K
-LXN0YXRpYyBpbmxpbmUgdTMyIG10a19pMmNfc2V0XzRnX21vZGUoZG1hX2FkZHJfdCBhZGRyKQ0K
-LXsNCi0JcmV0dXJuIChhZGRyICYgQklUX1VMTCgzMikpID8gSTJDX0RNQV80R19NT0RFIDogSTJD
-X0RNQV9DTFJfRkxBRzsNCi19DQotDQogc3RhdGljIGludCBtdGtfaTJjX2RvX3RyYW5zZmVyKHN0
-cnVjdCBtdGtfaTJjICppMmMsIHN0cnVjdCBpMmNfbXNnICptc2dzLA0KIAkJCSAgICAgICBpbnQg
-bnVtLCBpbnQgbGVmdF9udW0pDQogew0KQEAgLTg4NSw4ICs4NzksOCBAQCBzdGF0aWMgaW50IG10
-a19pMmNfZG9fdHJhbnNmZXIoc3RydWN0IG10a19pMmMgKmkyYywgc3RydWN0IGkyY19tc2cgKm1z
-Z3MsDQogCQkJcmV0dXJuIC1FTk9NRU07DQogCQl9DQogDQotCQlpZiAoaTJjLT5kZXZfY29tcC0+
-c3VwcG9ydF8zM2JpdHMpIHsNCi0JCQlyZWdfNGdfbW9kZSA9IG10a19pMmNfc2V0XzRnX21vZGUo
-cnBhZGRyKTsNCisJCWlmIChpMmMtPmRldl9jb21wLT5tYXhfZG1hX3N1cHBvcnQgPiAzMikgew0K
-KwkJCXJlZ180Z19tb2RlID0gdXBwZXJfMzJfYml0cyhycGFkZHIpOw0KIAkJCXdyaXRlbChyZWdf
-NGdfbW9kZSwgaTJjLT5wZG1hYmFzZSArIE9GRlNFVF9SWF80R19NT0RFKTsNCiAJCX0NCiANCkBA
-IC05MDgsOCArOTAyLDggQEAgc3RhdGljIGludCBtdGtfaTJjX2RvX3RyYW5zZmVyKHN0cnVjdCBt
-dGtfaTJjICppMmMsIHN0cnVjdCBpMmNfbXNnICptc2dzLA0KIAkJCXJldHVybiAtRU5PTUVNOw0K
-IAkJfQ0KIA0KLQkJaWYgKGkyYy0+ZGV2X2NvbXAtPnN1cHBvcnRfMzNiaXRzKSB7DQotCQkJcmVn
-XzRnX21vZGUgPSBtdGtfaTJjX3NldF80Z19tb2RlKHdwYWRkcik7DQorCQlpZiAoaTJjLT5kZXZf
-Y29tcC0+bWF4X2RtYV9zdXBwb3J0ID4gMzIpIHsNCisJCQlyZWdfNGdfbW9kZSA9IHVwcGVyXzMy
-X2JpdHMod3BhZGRyKTsNCiAJCQl3cml0ZWwocmVnXzRnX21vZGUsIGkyYy0+cGRtYWJhc2UgKyBP
-RkZTRVRfVFhfNEdfTU9ERSk7DQogCQl9DQogDQpAQCAtOTU0LDExICs5NDgsMTEgQEAgc3RhdGlj
-IGludCBtdGtfaTJjX2RvX3RyYW5zZmVyKHN0cnVjdCBtdGtfaTJjICppMmMsIHN0cnVjdCBpMmNf
-bXNnICptc2dzLA0KIAkJCXJldHVybiAtRU5PTUVNOw0KIAkJfQ0KIA0KLQkJaWYgKGkyYy0+ZGV2
-X2NvbXAtPnN1cHBvcnRfMzNiaXRzKSB7DQotCQkJcmVnXzRnX21vZGUgPSBtdGtfaTJjX3NldF80
-Z19tb2RlKHdwYWRkcik7DQorCQlpZiAoaTJjLT5kZXZfY29tcC0+bWF4X2RtYV9zdXBwb3J0ID4g
-MzIpIHsNCisJCQlyZWdfNGdfbW9kZSA9IHVwcGVyXzMyX2JpdHMod3BhZGRyKTsNCiAJCQl3cml0
-ZWwocmVnXzRnX21vZGUsIGkyYy0+cGRtYWJhc2UgKyBPRkZTRVRfVFhfNEdfTU9ERSk7DQogDQot
-CQkJcmVnXzRnX21vZGUgPSBtdGtfaTJjX3NldF80Z19tb2RlKHJwYWRkcik7DQorCQkJcmVnXzRn
-X21vZGUgPSB1cHBlcl8zMl9iaXRzKHJwYWRkcik7DQogCQkJd3JpdGVsKHJlZ180Z19tb2RlLCBp
-MmMtPnBkbWFiYXNlICsgT0ZGU0VUX1JYXzRHX01PREUpOw0KIAkJfQ0KIA0KQEAgLTEyMzIsOCAr
-MTIyNiw5IEBAIHN0YXRpYyBpbnQgbXRrX2kyY19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
-ICpwZGV2KQ0KIAkJcmV0dXJuIC1FSU5WQUw7DQogCX0NCiANCi0JaWYgKGkyYy0+ZGV2X2NvbXAt
-PnN1cHBvcnRfMzNiaXRzKSB7DQotCQlyZXQgPSBkbWFfc2V0X21hc2soJnBkZXYtPmRldiwgRE1B
-X0JJVF9NQVNLKDMzKSk7DQorCWlmIChpMmMtPmRldl9jb21wLT5tYXhfZG1hX3N1cHBvcnQgPiAz
-Mikgew0KKwkJcmV0ID0gZG1hX3NldF9tYXNrKCZwZGV2LT5kZXYsDQorCQkJCURNQV9CSVRfTUFT
-SyhpMmMtPmRldl9jb21wLT5tYXhfZG1hX3N1cHBvcnQpKTsNCiAJCWlmIChyZXQpIHsNCiAJCQlk
-ZXZfZXJyKCZwZGV2LT5kZXYsICJkbWFfc2V0X21hc2sgcmV0dXJuIGVycm9yLlxuIik7DQogCQkJ
-cmV0dXJuIHJldDsNCi0tIA0KMS45LjENCg==
+On Wed, 2020-08-05 at 09:45 +0200, Miklos Szeredi wrote:
+> On Wed, Aug 5, 2020 at 4:46 AM Ian Kent <raven@themaw.net> wrote:
+> > Coming back to an actual use case.
+> > 
+> > What I said above is one aspect but, since I'm looking at this
+> > right
+> > now with systemd, and I do have the legacy code to fall back to,
+> > the
+> > "just reset everything" suggestion does make sense.
+> > 
+> > But I'm struggling to see how I can identify notification buffer
+> > overrun in libmount, and overrun is just one possibility for lost
+> > notifications, so I like the idea that, as a library user, I can
+> > work out that I need to take action based on what I have in the
+> > notifications themselves.
+> 
+> Hmm, what's the other possibility for lost notifications?
+
+In user space that is:
+
+Multi-threaded application races, single threaded applications and
+signal processing races, other bugs ...
+
+For example systemd has it's own event handling sub-system and handles
+half a dozen or so event types of which the mount changes are one. It's
+fairly complex so I find myself wondering if I can trust it and
+wondering if there are undiscovered bugs in it. The answer to the
+former is probably yes but the answer to the later is also probably
+yes.
+
+Maybe I just paranoid!
+Ian
+
 
