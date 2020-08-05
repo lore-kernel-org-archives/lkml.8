@@ -2,119 +2,87 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 202C0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B55C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 004BA22B40
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA5822B40
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:15:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jFS7DMDh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbgHEIPB (ORCPT
+        id S1728074AbgHEIPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 04:15:01 -0400
-Received: from mga07.intel.com ([134.134.136.100]:22115 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728118AbgHEIO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 04:14:59 -0400
-IronPort-SDR: wvgw0Q8gQ+1RDGiKDEem0YI1cC5kaCY4hKl0U8EJcXJPKPHYIMSdHm7tUj8c0dkzQ6VpCVe0uB
- 8C0JFfIuWQcg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="216858170"
-X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
-   d="scan'208";a="216858170"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 01:14:58 -0700
-IronPort-SDR: FKAEfpxQvRpAwcmWHM4G3+ACM4fCV8GZe1qflhqIUAodCGG1rOJAXWIHTBCMwE7GEg59IlQONp
- i7OyQUfH8AoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
-   d="scan'208";a="493197775"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
-  by fmsmga005.fm.intel.com with ESMTP; 05 Aug 2020 01:14:56 -0700
-Subject: Re: [PATCH] mmc: sdhci_am654: Add workaround for card detect debounce
- timer
-To:     Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org
-Cc:     ulf.hansson@linaro.org
-References: <20200729234130.25056-1-faiz_abbas@ti.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <2d692a90-0e58-ae69-9b5b-c9eb3ffe21ec@intel.com>
-Date:   Wed, 5 Aug 2020 11:14:32 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 5 Aug 2020 04:15:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51974 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbgHEIPw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 04:15:52 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED478C06174A;
+        Wed,  5 Aug 2020 01:15:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=O9maNZgxo9jG14qKmejuN27LhV8t5XITkhKE0XSd29E=; b=jFS7DMDh25OL9yC/twevC8JZBM
+        ceBuRQ2PJnyXbv98USNDdcIfSF91o2AdMye0v3SbkljZF1DbjEXBSrV+hOqKiP0ddDHiNynFY0cHw
+        viv7hgykkDIA1XEFjmaFABC+Yk+zQ0Wdx65zLDIaCiU2wG6pthEqj+NytzrffvrnceAs9R94xv8EM
+        HPqT6PrZ/OHdUNFvVH2GD2dMTuIANBTevZQhGIQ4uV8Sl8qzpbo7IbFchKrmglloSXsW8WDM71Npy
+        N8FP3PkXwr1/Jl8Ig1Uc6jhJ/PnCcJFnt8+8XCAKLp9AlPTsLp8+3o8otfz+Nkob62iTQn7PsOSY6
+        LNilp1Wg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k3Ea9-00061h-Ha; Wed, 05 Aug 2020 08:15:29 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3B958301EE3;
+        Wed,  5 Aug 2020 10:15:23 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1F7A42C3020ED; Wed,  5 Aug 2020 10:15:23 +0200 (CEST)
+Date:   Wed, 5 Aug 2020 10:15:23 +0200
+From:   peterz@infradead.org
+To:     Dongdong Yang <contribute.kernel@gmail.com>
+Cc:     gregkh@linuxfoundation.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, mingo@redhat.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-pm@vger.kernel.org, yangdongdong@xiaomi.com,
+        yanziily@xiaomi.com, rocking@linux.alibaba.com
+Subject: Re: [PATCH v5] sched: Provide USF for the portable equipment.
+Message-ID: <20200805081523.GN2674@hirez.programming.kicks-ass.net>
+References: <cover.1596612536.git.yangdongdong@xiaomi.com>
+ <3bbd9a487176a05588e33ff660d4e58efa1fdb10.1596612536.git.yangdongdong@xiaomi.com>
 MIME-Version: 1.0
-In-Reply-To: <20200729234130.25056-1-faiz_abbas@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3bbd9a487176a05588e33ff660d4e58efa1fdb10.1596612536.git.yangdongdong@xiaomi.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30/07/20 2:41 am, Faiz Abbas wrote:
-> There is a one time delay because of a card detect debounce timer in the
-> controller IP. This timer runs as soon as power is applied to the module
-> regardless of whether a card is present or not and any writes to
-> SDHCI_POWER_ON will return 0 before it expires. This timeout has been
-> measured to be about 1 second in am654x and j721e.
-> 
-> Write-and-read-back in a loop on SDHCI_POWER_ON for a maximum of
-> 1.5 seconds to make sure that the controller actually powers on.
-> 
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> ---
->  drivers/mmc/host/sdhci_am654.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-> index 1718b9e8af63..55cff9de2f3e 100644
-> --- a/drivers/mmc/host/sdhci_am654.c
-> +++ b/drivers/mmc/host/sdhci_am654.c
-> @@ -272,6 +272,7 @@ static void sdhci_j721e_4bit_set_clock(struct sdhci_host *host,
->  	sdhci_set_clock(host, clock);
->  }
->  
-> +#define MAX_POWER_ON_TIMEOUT	1500 /* ms */
->  static void sdhci_am654_write_b(struct sdhci_host *host, u8 val, int reg)
->  {
->  	unsigned char timing = host->mmc->ios.timing;
-> @@ -291,6 +292,26 @@ static void sdhci_am654_write_b(struct sdhci_host *host, u8 val, int reg)
->  	}
->  
->  	writeb(val, host->ioaddr + reg);
-> +	if (reg == SDHCI_POWER_CONTROL && (val & SDHCI_POWER_ON)) {
-> +		/*
-> +		 * Power on will not happen until the card detect debounce
-> +		 * timer expires. Wait at least 1.5 seconds for the power on
-> +		 * bit to be set
-> +		 */
-
-Can you use readb_poll_timeout() here?
-
-> +		ktime_t timeout = ktime_add_ms(ktime_get(),
-> +					       MAX_POWER_ON_TIMEOUT);
-> +		do {
-> +			if (ktime_compare(ktime_get(), timeout) > 0) {
-> +				dev_warn(mmc_dev(host->mmc),
-> +					 "Power on failed\n");
+On Wed, Aug 05, 2020 at 03:36:21PM +0800, Dongdong Yang wrote:
+> +config SCHED_USF
+> +	bool "User Sensitive Factors for Scheduler"
+> +	depends on CPU_FREQ_GOV_SCHEDUTIL && FB
+> +	help
+> +	  Select this option to enable the adjustment on the cpufreq with
+> +	  the user sensitive factors on schedule. It is special for mobile
+> +	  devices which more power care and quick response requirement on
+> +	  screen on.
 > +
-> +				return;
-> +			}
-> +
-> +			writeb(val, host->ioaddr + reg);
-> +			usleep_range(1000, 10000);
-> +		} while (!(readb(host->ioaddr + reg) & SDHCI_POWER_ON));
-> +	}
->  }
->  
->  static int sdhci_am654_execute_tuning(struct mmc_host *mmc, u32 opcode)
-> 
+> +	  If unsure, say N.
 
+You're still suffering all the same problems, still NAK.
+
+Read carefully: "we do *NOT* do special case hacks"
+
+If you keep sending the same stuff over and over, you'll be elegible for
+an entry in my mailfilter.
