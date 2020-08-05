@@ -2,203 +2,107 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F090AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CB7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D450F2245C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D303207FC
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:28:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgHEG1F (ORCPT
+        id S1727945AbgHEG23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 02:27:05 -0400
-Received: from atl4mhfb04.myregisteredsite.com ([209.17.115.120]:50078 "EHLO
-        atl4mhfb04.myregisteredsite.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725904AbgHEG1E (ORCPT
+        Wed, 5 Aug 2020 02:28:29 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34946 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727114AbgHEG22 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 02:27:04 -0400
-X-Greylist: delayed 548 seconds by postgrey-1.27 at vger.kernel.org; Wed, 05 Aug 2020 02:27:02 EDT
-Received: from jax4mhob08.myregisteredsite.com (jax4mhob08.myregisteredsite.com [64.69.218.88])
-        by atl4mhfb04.myregisteredsite.com (8.14.4/8.14.4) with ESMTP id 0756Hp2J012836
-        for <linux-kernel@vger.kernel.org>; Wed, 5 Aug 2020 02:17:51 -0400
-Received: from mailpod.hostingplatform.com (atl4qobmail04pod0.registeredsite.com [10.30.71.206])
-        by jax4mhob08.myregisteredsite.com (8.14.4/8.14.4) with ESMTP id 0756HnkU032363
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-kernel@vger.kernel.org>; Wed, 5 Aug 2020 02:17:49 -0400
-Received: (qmail 3705 invoked by uid 0); 5 Aug 2020 06:17:49 -0000
-X-TCPREMOTEIP: 83.128.90.119
-X-Authenticated-UID: mike@milosoftware.com
-Received: from unknown (HELO phenom.domain?not?set.invalid) (mike@milosoftware.com@83.128.90.119)
-  by 0 with ESMTPA; 5 Aug 2020 06:17:48 -0000
-From:   Mike Looijmans <mike.looijmans@topic.nl>
-To:     linux-usb@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, vincent.whitchurch@axis.com,
-        balbi@kernel.org, gregkh@linuxfoundation.org, lgirdwood@gmail.com,
-        Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH v4] usb: dwc3: Add support for VBUS power control
-Date:   Wed,  5 Aug 2020 08:17:44 +0200
-Message-Id: <20200805061744.20404-1-mike.looijmans@topic.nl>
-X-Mailer: git-send-email 2.17.1
+        Wed, 5 Aug 2020 02:28:28 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0755YS8C064823;
+        Wed, 5 Aug 2020 02:28:04 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32qcfd7afb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Aug 2020 02:28:04 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0755Ypv0065823;
+        Wed, 5 Aug 2020 02:28:03 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32qcfd7aej-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Aug 2020 02:28:03 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0756GWqQ031034;
+        Wed, 5 Aug 2020 06:28:01 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma05fra.de.ibm.com with ESMTP id 32n017tfsa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Aug 2020 06:28:01 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0756RvcR26673580
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 5 Aug 2020 06:27:57 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BDF7F4C04E;
+        Wed,  5 Aug 2020 06:27:57 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DD9A54C044;
+        Wed,  5 Aug 2020 06:27:54 +0000 (GMT)
+Received: from bangoria.ibmuc.com (unknown [9.199.33.73])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  5 Aug 2020 06:27:54 +0000 (GMT)
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     ravi.bangoria@linux.ibm.com, mikey@neuling.org, paulus@samba.org,
+        christophe.leroy@c-s.fr, naveen.n.rao@linux.vnet.ibm.com,
+        pedromfc@br.ibm.com, rogealve@br.ibm.com, jniethe5@gmail.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] powerpc/watchpoint/ptrace: Buf fix plus new feature flag
+Date:   Wed,  5 Aug 2020 11:57:48 +0530
+Message-Id: <20200805062750.290289-1-ravi.bangoria@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-05_04:2020-08-03,2020-08-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 priorityscore=1501 mlxscore=0 mlxlogscore=596
+ impostorscore=0 adultscore=0 malwarescore=0 phishscore=0 spamscore=0
+ bulkscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008050049
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support VBUS power control using regulator framework. Enables the regulator
-while the port is in host mode.
+Patch #1 fixes a bug when watchpoint is created with ptrace
+PPC_PTRACE_SETHWDEBUG and CONFIG_HAVE_HW_BREAKPOINT=N.
+patch #2 introduce new feature bit
+PPC_DEBUG_FEATURE_DATA_BP_ARCH_31 which will be set when
+running on ISA 3.1 compliant machine.
 
-The "vbus-supply" property can be provided using a usb-connector child node
-and standard devicetree bindings.
+v2: https://lore.kernel.org/r/20200723093330.306341-1-ravi.bangoria@linux.ibm.com
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
----
-v2: Add missing devm_regulator_get call which got lost during rebase
-v3: Remove devicetree binding, use standard usb-connector
-    Fix probe fail when vbus-supply is not present
-v4: Use devm_regulator_get (without "optional")
+v2->v3:
+ - #1: is new
+ - #2: Set PPC_DEBUG_FEATURE_DATA_BP_ARCH_31 unconditionally
+   while running on p10.
+ - Rebased to powerpc/next (cf1ae052e073)
 
- drivers/usb/dwc3/core.c | 34 ++++++++++++++++++++++++++--------
- drivers/usb/dwc3/core.h |  4 ++++
- drivers/usb/dwc3/drd.c  |  6 ++----
- 3 files changed, 32 insertions(+), 12 deletions(-)
+Ravi Bangoria (2):
+  powerpc/watchpoint/ptrace: Fix SETHWDEBUG when
+    CONFIG_HAVE_HW_BREAKPOINT=N
+  powerpc/watchpoint/ptrace: Introduce PPC_DEBUG_FEATURE_DATA_BP_ARCH_31
 
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index edc17155cb2b..abfd043bae21 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -25,6 +25,7 @@
- #include <linux/of.h>
- #include <linux/acpi.h>
- #include <linux/pinctrl/consumer.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/reset.h>
- 
- #include <linux/usb/ch9.h>
-@@ -112,6 +113,23 @@ void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode)
- 	dwc->current_dr_role = mode;
- }
- 
-+void dwc3_set_vbus(struct dwc3 *dwc, bool enable)
-+{
-+	int ret;
-+
-+	if (enable != dwc->vbus_reg_enabled) {
-+		if (enable)
-+			ret = regulator_enable(dwc->vbus_reg);
-+		else
-+			ret = regulator_disable(dwc->vbus_reg);
-+		if (!ret)
-+			dwc->vbus_reg_enabled = enable;
-+	}
-+
-+	if (dwc->usb2_phy)
-+		otg_set_vbus(dwc->usb2_phy->otg, enable);
-+}
-+
- static void __dwc3_set_mode(struct work_struct *work)
- {
- 	struct dwc3 *dwc = work_to_dwc(work);
-@@ -164,8 +182,7 @@ static void __dwc3_set_mode(struct work_struct *work)
- 		if (ret) {
- 			dev_err(dwc->dev, "failed to initialize host\n");
- 		} else {
--			if (dwc->usb2_phy)
--				otg_set_vbus(dwc->usb2_phy->otg, true);
-+			dwc3_set_vbus(dwc, true);
- 			phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_HOST);
- 			phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_HOST);
- 		}
-@@ -173,8 +190,7 @@ static void __dwc3_set_mode(struct work_struct *work)
- 	case DWC3_GCTL_PRTCAP_DEVICE:
- 		dwc3_event_buffers_setup(dwc);
- 
--		if (dwc->usb2_phy)
--			otg_set_vbus(dwc->usb2_phy->otg, false);
-+		dwc3_set_vbus(dwc, false);
- 		phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_DEVICE);
- 		phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_DEVICE);
- 
-@@ -1183,8 +1199,7 @@ static int dwc3_core_init_mode(struct dwc3 *dwc)
- 	case USB_DR_MODE_PERIPHERAL:
- 		dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_DEVICE);
- 
--		if (dwc->usb2_phy)
--			otg_set_vbus(dwc->usb2_phy->otg, false);
-+		dwc3_set_vbus(dwc, false);
- 		phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_DEVICE);
- 		phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_DEVICE);
- 
-@@ -1198,8 +1213,7 @@ static int dwc3_core_init_mode(struct dwc3 *dwc)
- 	case USB_DR_MODE_HOST:
- 		dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_HOST);
- 
--		if (dwc->usb2_phy)
--			otg_set_vbus(dwc->usb2_phy->otg, true);
-+		dwc3_set_vbus(dwc, true);
- 		phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_HOST);
- 		phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_HOST);
- 
-@@ -1470,6 +1484,10 @@ static int dwc3_probe(struct platform_device *pdev)
- 
- 	dwc3_get_properties(dwc);
- 
-+	dwc->vbus_reg = devm_regulator_get(dev, "vbus");
-+	if (IS_ERR(dwc->vbus_reg))
-+		return PTR_ERR(dwc->vbus_reg);
-+
- 	dwc->reset = devm_reset_control_array_get(dev, true, true);
- 	if (IS_ERR(dwc->reset))
- 		return PTR_ERR(dwc->reset);
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index 4c171a8e215f..cee2574d7bf4 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -1085,6 +1085,9 @@ struct dwc3 {
- 
- 	bool			phys_ready;
- 
-+	struct regulator	*vbus_reg;
-+	bool			vbus_reg_enabled;
-+
- 	struct ulpi		*ulpi;
- 	bool			ulpi_ready;
- 
-@@ -1397,6 +1400,7 @@ struct dwc3_gadget_ep_cmd_params {
- 
- /* prototypes */
- void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode);
-+void dwc3_set_vbus(struct dwc3 *dwc, bool enable);
- void dwc3_set_mode(struct dwc3 *dwc, u32 mode);
- u32 dwc3_core_fifo_space(struct dwc3_ep *dep, u8 type);
- 
-diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
-index 7db1ffc92bbd..45fdec2d128d 100644
---- a/drivers/usb/dwc3/drd.c
-+++ b/drivers/usb/dwc3/drd.c
-@@ -384,8 +384,7 @@ void dwc3_otg_update(struct dwc3 *dwc, bool ignore_idstatus)
- 		if (ret) {
- 			dev_err(dwc->dev, "failed to initialize host\n");
- 		} else {
--			if (dwc->usb2_phy)
--				otg_set_vbus(dwc->usb2_phy->otg, true);
-+			dwc3_set_vbus(dwc, true);
- 			if (dwc->usb2_generic_phy)
- 				phy_set_mode(dwc->usb2_generic_phy,
- 					     PHY_MODE_USB_HOST);
-@@ -398,8 +397,7 @@ void dwc3_otg_update(struct dwc3 *dwc, bool ignore_idstatus)
- 		dwc3_event_buffers_setup(dwc);
- 		spin_unlock_irqrestore(&dwc->lock, flags);
- 
--		if (dwc->usb2_phy)
--			otg_set_vbus(dwc->usb2_phy->otg, false);
-+		dwc3_set_vbus(dwc, false);
- 		if (dwc->usb2_generic_phy)
- 			phy_set_mode(dwc->usb2_generic_phy,
- 				     PHY_MODE_USB_DEVICE);
+ Documentation/powerpc/ptrace.rst          | 1 +
+ arch/powerpc/include/uapi/asm/ptrace.h    | 1 +
+ arch/powerpc/kernel/ptrace/ptrace-noadv.c | 4 +++-
+ 3 files changed, 5 insertions(+), 1 deletion(-)
+
 -- 
-2.17.1
+2.26.2
 
