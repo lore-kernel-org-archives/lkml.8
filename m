@@ -3,399 +3,229 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD70C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30FE3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B394D2070A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 121862070A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:54:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n3dyElIx"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="YE+d82rI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jgUjtgUf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgHEBwq (ORCPT
+        id S1726634AbgHEByA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 21:52:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49394 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgHEBwp (ORCPT
+        Tue, 4 Aug 2020 21:54:00 -0400
+Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:48731 "EHLO
+        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725904AbgHEBx7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 21:52:45 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6616FC06174A;
-        Tue,  4 Aug 2020 18:52:45 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id 2so22955570ybr.13;
-        Tue, 04 Aug 2020 18:52:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=f5vWovwwL6FVRfpowsNb43860ihjb6YS2LAtVZgCvT8=;
-        b=n3dyElIxcSrBm7/2UaBZBRAMktVFD7ZjGdTKk8r8b4jx6UIZCDZfNDX+9Sr5kyp93H
-         ADb+qKMJkRwrWPFTqx+6iKg4HR/AxmWgWiLY1+ryKLNSDHiXBigsCwMED/X+KbDWbpS8
-         4l95ZaTkxuA1cy3cF4L7DbbX/1k8p2OUtZJYtCcLdl8mJMfPLyV1sVOuSFCZ9a+Dfy+T
-         6riLnu3W0Ou+pCAIDXJkXjBNb9V9eqA94lGGeyMXFftxnvq10HA38EPk3kTgMOumEyel
-         FiQrb8RR9aRM+jP92uIJvye4aDvJbCmLaT+IglMzXjYV1Bs7scgv7qZcHfq9iSXcLOLm
-         xiog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=f5vWovwwL6FVRfpowsNb43860ihjb6YS2LAtVZgCvT8=;
-        b=INiaf+Xi3Vh8BEpqm22XrsXUeuTRNfe8IPOTxvyv6FyoX57ZMPWvQbyCxqb9+7zSnd
-         jPaJhaLvHxix3P4oqnNOP3svoLIF+siKBYGX5pYHvuxNrwnm4PAjpN7XMfq6b6zckz59
-         nTrPPft/HOy09pG7C9TFevJZ2kyMDJwaa4N+a2QjFHmt38H4TMtgCcvmKURQxE2or2/t
-         wt+9ixxL4F/507yJe0C1Z41IT/3kg0WX41Jn2ydsMCjXG3acUMn32FLyiul3+1qcib0t
-         6nSTRZozIEqO+PLFuxdK/7QtxkYEHF5IfZM+9VBLjdHM0fhxeifU1CED9KFDUHDr9aZ3
-         cbSw==
-X-Gm-Message-State: AOAM531ODvQH2q/uTiwNSeQVjDjw1ccPMLwTmGxK3rbPJB8h7XQskvVj
-        T/r19I+EeDQs/p1rDgnCU+C4sazSWFdfO4Fc75o=
-X-Google-Smtp-Source: ABdhPJxKVJJYL0V0ORifsBd/k8iQrFdHSIT/Fp3Dn1ywH2UIvtoqoSECcmEo4+HRovneUPeo0y9mtVcN41LH91lLQ2A=
-X-Received: by 2002:a25:ba0f:: with SMTP id t15mr1363384ybg.459.1596592364540;
- Tue, 04 Aug 2020 18:52:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200801084721.1812607-1-songliubraving@fb.com>
- <20200801084721.1812607-6-songliubraving@fb.com> <CAEf4BzaP4TGF7kcmZRAKsy=oWPpFA6sUGFkctpGz-fPp+YuSOQ@mail.gmail.com>
- <DDCD362E-21D3-46BF-90A6-8F3221CBB54E@fb.com> <CAEf4BzY5RYMM6w8wn3qEB3AsuKWv-TMaD5NVFj=YqbCW4DLjqA@mail.gmail.com>
- <7384B583-EE19-4045-AC72-B6FE87C187DD@fb.com>
-In-Reply-To: <7384B583-EE19-4045-AC72-B6FE87C187DD@fb.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 4 Aug 2020 18:52:32 -0700
-Message-ID: <CAEf4BzaiJnCu14AWougmxH80msGdOp4S8ZNmAiexMmtwUM_2Xg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 5/5] selftests/bpf: add benchmark for uprobe vs. user_prog
-To:     Song Liu <songliubraving@fb.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Xu <dlxu@fb.com>
+        Tue, 4 Aug 2020 21:53:59 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.west.internal (Postfix) with ESMTP id CB856601;
+        Tue,  4 Aug 2020 21:53:57 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Tue, 04 Aug 2020 21:53:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        rPYF5yA8hLNR4c7pU4Df6+cNnwOEB80CCSVmFwv4puA=; b=YE+d82rIPbXuqxKn
+        CXWvxCQaWgzhv0XBh1YVuS/u8Fz0WWKMS//bQaBDHULPvdD5yvCyzb+jBcSJ3Mdh
+        1mUsM4K1IdFBQfkLZ0yAYYF+34SvOvlgsIs94InE758/8SOWYBZfj36o9d0cB545
+        nUafKcJcssT+8CBoAFNAlVaWgAC4X7wHow2XrOFUfdVWrtSlfz7MyL4uHBh6AI2G
+        ycpE8qcsRdXa90ejYNkcz5NKCUQZYBBGovcRLN+zL0L6eB7Cs7/xlZ/npofRWONZ
+        1oUZqJt3HQ8033SHLXsx1sqCfRXt64zZ+zNeX6Iq2cD4lBee121EAawySjv89w5c
+        nTw2fA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=rPYF5yA8hLNR4c7pU4Df6+cNnwOEB80CCSVmFwv4p
+        uA=; b=jgUjtgUfMjrVXlKCmnCFFqJRatOzXD+NEJFZq47Rzhx6N0/vyRokeyTfD
+        mTjr2N5w0ddJEQ1yGJWC/6+6DI9G9M218fx1WUJhn2aAzI9cAC0dFyW7vbCBWL9/
+        OluyU20xC54EE0Cj0pbj49mXIG1fDRenSPdSJluKS2nQdDvCIUS7mjxxBIUH5oTh
+        wJh2M5bhy4GNcwK/2qMZdvpM1V6K7A+HzDrsLSp/FtebaGTkmigfFVjKV8nVr92N
+        m4LMH8JGBwkpUm+LOkmox3+ZliFks7+8Sdh8P9bUCyvbUQLP/4Dwrys5FRAf4X6m
+        4wwPNlTdaggnYdC2c/HTHizozvNAg==
+X-ME-Sender: <xms:NBEqXymkRrlVO5xktKBzf0ANqsZ26TDxhaukMJRmDd1jnt-UyUNGPQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrjeejgdehfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnhepfe
+    efteetvdeguddvveefveeftedtffduudehueeihfeuvefgveehffeludeggfejnecukfhp
+    peehkedrjedrvdehhedrvddvtdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:NBEqX53XUobCLoxk8ViEmFPfFVxhV4n8SkdnTKtrD2roLlpm_3zv0Q>
+    <xmx:NBEqXwo0GYEBS0IXO-_Zm0V5YRX6VOjmYI6gjRgvIoEiku8QKQ7K6g>
+    <xmx:NBEqX2mQl4ZOb1JottGZERsKA41UNsdkW4kNX_47B1jazMOc-geySQ>
+    <xmx:NREqX2N-KA3YGhusO26WSXjOI-4EW_NPYYrRQwx1c6rLZ1aEeZrtip8tmpM>
+Received: from mickey.themaw.net (58-7-255-220.dyn.iinet.net.au [58.7.255.220])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 94858328005D;
+        Tue,  4 Aug 2020 21:53:50 -0400 (EDT)
+Message-ID: <c558fc4af785f62a2751be3b297d1ccbbfcfa969.camel@themaw.net>
+Subject: Re: [PATCH 13/17] watch_queue: Implement mount topology and
+ attribute change notifications [ver #5]
+From:   Ian Kent <raven@themaw.net>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>, andres@anarazel.de,
+        Jeff Layton <jlayton@redhat.com>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>, keyrings@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 05 Aug 2020 09:53:46 +0800
+In-Reply-To: <CAJfpeguFkDDhz7+70pSUv_j=xY5L08ESpaE+jER9vE5p+ZmfFw@mail.gmail.com>
+References: <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk>
+         <158454391302.2863966.1884682840541676280.stgit@warthog.procyon.org.uk>
+         <CAJfpegspWA6oUtdcYvYF=3fij=Bnq03b8VMbU9RNMKc+zzjbag@mail.gmail.com>
+         <1293241.1595501326@warthog.procyon.org.uk>
+         <CAJfpeguvLMCw1H8+DPsfZE_k0sEiRtA17pD9HjnceSsAvqqAZw@mail.gmail.com>
+         <43c061d26ddef2aa3ca1ac726da7db9ab461e7be.camel@themaw.net>
+         <CAJfpeguFkDDhz7+70pSUv_j=xY5L08ESpaE+jER9vE5p+ZmfFw@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 2:01 PM Song Liu <songliubraving@fb.com> wrote:
->
->
->
-> > On Aug 2, 2020, at 10:10 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com=
-> wrote:
-> >
-> > On Sun, Aug 2, 2020 at 9:47 PM Song Liu <songliubraving@fb.com> wrote:
-> >>
-> >>
-> >>> On Aug 2, 2020, at 6:51 PM, Andrii Nakryiko <andrii.nakryiko@gmail.co=
-m> wrote:
-> >>>
-> >>> On Sat, Aug 1, 2020 at 1:50 AM Song Liu <songliubraving@fb.com> wrote=
-:
-> >>>>
-> >>>> Add a benchmark to compare performance of
-> >>>> 1) uprobe;
-> >>>> 2) user program w/o args;
-> >>>> 3) user program w/ args;
-> >>>> 4) user program w/ args on random cpu.
-> >>>>
-> >>>
-> >>> Can you please add it to the existing benchmark runner instead, e.g.,
-> >>> along the other bench_trigger benchmarks? No need to re-implement
-> >>> benchmark setup. And also that would also allow to compare existing
-> >>> ways of cheaply triggering a program vs this new _USER program?
-> >>
-> >> Will try.
-> >>
-> >>>
-> >>> If the performance is not significantly better than other ways, do yo=
-u
-> >>> think it still makes sense to add a new BPF program type? I think
-> >>> triggering KPROBE/TRACEPOINT from bpf_prog_test_run() would be very
-> >>> nice, maybe it's possible to add that instead of a new program type?
-> >>> Either way, let's see comparison with other program triggering
-> >>> mechanisms first.
-> >>
-> >> Triggering KPROBE and TRACEPOINT from bpf_prog_test_run() will be usef=
-ul.
-> >> But I don't think they can be used instead of user program, for a coup=
-le
-> >> reasons. First, KPROBE/TRACEPOINT may be triggered by other programs
-> >> running in the system, so user will have to filter those noise out in
-> >> each program. Second, it is not easy to specify CPU for KPROBE/TRACEPO=
-INT,
-> >> while this feature could be useful in many cases, e.g. get stack trace
-> >> on a given CPU.
-> >>
-> >
-> > Right, it's not as convenient with KPROBE/TRACEPOINT as with the USER
-> > program you've added specifically with that feature in mind. But if
-> > you pin user-space thread on the needed CPU and trigger kprobe/tp,
-> > then you'll get what you want. As for the "noise", see how
-> > bench_trigger() deals with that: it records thread ID and filters
-> > everything not matching. You can do the same with CPU ID. It's not as
-> > automatic as with a special BPF program type, but still pretty simple,
-> > which is why I'm still deciding (for myself) whether USER program type
-> > is necessary :)
->
-> Here are some bench_trigger numbers:
->
-> base      :    1.698 =C2=B1 0.001M/s
-> tp        :    1.477 =C2=B1 0.001M/s
-> rawtp     :    1.567 =C2=B1 0.001M/s
-> kprobe    :    1.431 =C2=B1 0.000M/s
-> fentry    :    1.691 =C2=B1 0.000M/s
-> fmodret   :    1.654 =C2=B1 0.000M/s
-> user      :    1.253 =C2=B1 0.000M/s
-> fentry-on-cpu:    0.022 =C2=B1 0.011M/s
-> user-on-cpu:    0.315 =C2=B1 0.001M/s
->
+On Tue, 2020-08-04 at 15:19 +0200, Miklos Szeredi wrote:
+> On Tue, Aug 4, 2020 at 1:39 PM Ian Kent <raven@themaw.net> wrote:
+> > On Mon, 2020-08-03 at 11:29 +0200, Miklos Szeredi wrote:
+> > > On Thu, Jul 23, 2020 at 12:48 PM David Howells <
+> > > dhowells@redhat.com>
+> > > wrote:
+> > > 
+> > > > > >                 __u32   topology_changes;
+> > > > > >                 __u32   attr_changes;
+> > > > > >                 __u32   aux_topology_changes;
+> > > > > 
+> > > > > Being 32bit this introduces wraparound effects.  Is that
+> > > > > really
+> > > > > worth it?
+> > > > 
+> > > > You'd have to make 2 billion changes without whoever's
+> > > > monitoring
+> > > > getting a
+> > > > chance to update their counters.  But maybe it's not worth it
+> > > > putting them
+> > > > here.  If you'd prefer, I can make the counters all 64-bit and
+> > > > just
+> > > > retrieve
+> > > > them with fsinfo().
+> > > 
+> > > Yes, I think that would be preferable.
+> > 
+> > I think this is the source of the recommendation for removing the
+> > change counters from the notification message, correct?
+> > 
+> > While it looks like I may not need those counters for systemd
+> > message
+> > buffer overflow handling myself I think removing them from the
+> > notification message isn't a sensible thing to do.
+> > 
+> > If you need to detect missing messages, perhaps due to message
+> > buffer
+> > overflow, then you need change counters that are relevant to the
+> > notification message itself. That's so the next time you get a
+> > message
+> > for that object you can be sure that change counter comparisons you
+> > you make relate to object notifications you have processed.
+> 
+> I don't quite get it.  Change notification is just that: a
+> notification.   You need to know what object that notification
+> relates
+> to, to be able to retrieve the up to date attributes of said object.
+> 
+> What happens if you get a change counter N in the notification
+> message, then get a change counter N + 1 in the attribute retrieval?
+> You know that another change happened, and you haven't yet processed
+> the notification yet.  So when the notification with N + 1 comes in,
+> you can optimize away the attribute retrieve.
+> 
+> Nice optimization, but it's optimizing a race condition, and I don't
+> think that's warranted.  I don't see any other use for the change
+> counter in the notification message.
+> 
+> 
+> > Yes, I know it isn't quite that simple, but tallying up what you
+> > have
+> > processed in the current batch of messages (or in multiple batches
+> > of
+> > messages if more than one read has been possible) to perform the
+> > check
+> > is a user space responsibility. And it simply can't be done if the
+> > counters consistency is in question which it would be if you need
+> > to
+> > perform another system call to get it.
+> > 
+> > It's way more useful to have these in the notification than
+> > obtainable
+> > via fsinfo() IMHO.
+> 
+> What is it useful for?
 
-Ok, so basically all of raw_tp,tp,kprobe,fentry/fexit are
-significantly faster than USER programs. Sure, when compared to
-uprobe, they are faster, but not when doing on-specific-CPU run, it
-seems (judging from this patch's description, if I'm reading it
-right). Anyways, speed argument shouldn't be a reason for doing this,
-IMO.
+Only to verify that you have seen all the notifications.
 
-> The two "on-cpu" tests run the program on a different CPU (see the patch
-> at the end).
->
-> "user" is about 25% slower than "fentry". I think this is mostly because
-> getpgid() is a faster syscall than bpf(BPF_TEST_RUN).
+If you have to grab that info with a separate call then the count
+isn't necessarily consistent because other notifications can occur
+while you grab it.
 
-Yes, probably.
+My per-object rant isn't quite right, what's needed is a consistent
+way to verify you have seen everything you were supposed to.
 
->
-> "user-on-cpu" is more than 10x faster than "fentry-on-cpu", because IPI
-> is way faster than moving the process (via sched_setaffinity).
+I think your point is that if you grab the info in another call and
+it doesn't match you need to refresh and that's fine but I think it's
+better to be able to verify you have got everything that was sent as
+you go and avoid the need for the refresh more often.
 
-I don't think that's a good comparison, because you are actually
-testing sched_setaffinity performance on each iteration vs IPI in the
-kernel, not a BPF overhead.
-
-I think the fair comparison for this would be to create a thread and
-pin it on necessary CPU, and only then BPF program calls in a loop.
-But I bet any of existing program types would beat USER program.
-
->
-> For use cases that we would like to call BPF program on specific CPU,
-> triggering it via IPI is a lot faster.
-
-So these use cases would be nice to expand on in the motivational part
-of the patch set. It's not really emphasized and it's not at all clear
-what you are trying to achieve. It also seems, depending on latency
-requirements, it's totally possible to achieve comparable results by
-pre-creating a thread for each CPU, pinning each one to its designated
-CPU and then using any suitable user-space signaling mechanism (a
-queue, condvar, etc) to ask a thread to trigger BPF program (fentry on
-getpgid(), for instance). I bet in this case the  performance would be
-really nice for a lot of practical use cases. But then again, I don't
-know details of the intended use case, so please provide some more
-details.
-
->
+> 
+> If the notification itself would contain the list of updated
+> attributes and their new values, then yes, this would make sense.  If
+> the notification just tells us that the object was modified, but not
+> the modifications themselves, then I don't see how the change counter
+> in itself could add any information (other than optimizing the race
+> condition above).
+> 
 > Thanks,
-> Song
->
->
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D 8< =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
->
-> diff --git c/tools/testing/selftests/bpf/bench.c w/tools/testing/selftest=
-s/bpf/bench.c
-> index 944ad4721c83c..5394a1d2dfd21 100644
-> --- c/tools/testing/selftests/bpf/bench.c
-> +++ w/tools/testing/selftests/bpf/bench.c
-> @@ -317,7 +317,10 @@ extern const struct bench bench_trig_tp;
->  extern const struct bench bench_trig_rawtp;
->  extern const struct bench bench_trig_kprobe;
->  extern const struct bench bench_trig_fentry;
-> +extern const struct bench bench_trig_fentry_on_cpu;
->  extern const struct bench bench_trig_fmodret;
-> +extern const struct bench bench_trig_user;
-> +extern const struct bench bench_trig_user_on_cpu;
->  extern const struct bench bench_rb_libbpf;
->  extern const struct bench bench_rb_custom;
->  extern const struct bench bench_pb_libbpf;
-> @@ -338,7 +341,10 @@ static const struct bench *benchs[] =3D {
->         &bench_trig_rawtp,
->         &bench_trig_kprobe,
->         &bench_trig_fentry,
-> +       &bench_trig_fentry_on_cpu,
->         &bench_trig_fmodret,
-> +       &bench_trig_user,
-> +       &bench_trig_user_on_cpu,
->         &bench_rb_libbpf,
->         &bench_rb_custom,
->         &bench_pb_libbpf,
-> @@ -462,4 +468,3 @@ int main(int argc, char **argv)
->
->         return 0;
->  }
-> -
-> diff --git c/tools/testing/selftests/bpf/benchs/bench_trigger.c w/tools/t=
-esting/selftests/bpf/benchs/bench_trigger.c
-> index 49c22832f2169..a1ebaebf6070c 100644
-> --- c/tools/testing/selftests/bpf/benchs/bench_trigger.c
-> +++ w/tools/testing/selftests/bpf/benchs/bench_trigger.c
-> @@ -1,5 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /* Copyright (c) 2020 Facebook */
-> +#define _GNU_SOURCE
-> +#include <sched.h>
->  #include "bench.h"
->  #include "trigger_bench.skel.h"
->
-> @@ -39,6 +41,22 @@ static void *trigger_producer(void *input)
->         return NULL;
->  }
->
-> +static void *trigger_on_cpu_producer(void *input)
-> +{
-> +       cpu_set_t set;
-> +       int i =3D 0, nr_cpu;
-> +
-> +       nr_cpu =3D libbpf_num_possible_cpus();
-> +       while (true) {
-> +               CPU_ZERO(&set);
-> +               CPU_SET(i, &set);
-> +               sched_setaffinity(0, sizeof(set), &set);
-> +               (void)syscall(__NR_getpgid);
-> +               i =3D (i + 1) % nr_cpu;
-> +       }
-> +       return NULL;
-> +}
-> +
->  static void trigger_measure(struct bench_res *res)
->  {
->         res->hits =3D atomic_swap(&ctx.skel->bss->hits, 0);
-> @@ -96,6 +114,39 @@ static void trigger_fmodret_setup()
->         attach_bpf(ctx.skel->progs.bench_trigger_fmodret);
->  }
->
-> +static void trigger_user_setup()
-> +{
-> +       setup_ctx();
-> +}
-> +
-> +static void *trigger_producer_user(void *input)
-> +{
-> +       struct bpf_prog_test_run_attr attr =3D {};
-> +
-> +       attr.prog_fd =3D bpf_program__fd(ctx.skel->progs.bench_trigger_us=
-er);
-> +
-> +       while (true)
-> +               (void)bpf_prog_test_run_xattr(&attr);
-> +       return NULL;
-> +}
-> +
-> +static void *trigger_producer_user_on_cpu(void *input)
-> +{
-> +       struct bpf_prog_test_run_attr attr =3D {};
-> +       int i =3D 0, nr_cpu;
-> +
-> +       nr_cpu =3D libbpf_num_possible_cpus();
-> +
-> +       attr.prog_fd =3D bpf_program__fd(ctx.skel->progs.bench_trigger_us=
-er);
-> +
-> +       while (true) {
-> +               attr.cpu_plus =3D i + 1;
-> +               (void)bpf_prog_test_run_xattr(&attr);
-> +               i =3D (i + 1) % nr_cpu;
-> +       }
-> +       return NULL;
-> +}
-> +
->  static void *trigger_consumer(void *input)
->  {
->         return NULL;
-> @@ -155,6 +206,17 @@ const struct bench bench_trig_fentry =3D {
->         .report_final =3D hits_drops_report_final,
->  };
->
-> +const struct bench bench_trig_fentry_on_cpu =3D {
-> +       .name =3D "trig-fentry-on-cpu",
-> +       .validate =3D trigger_validate,
-> +       .setup =3D trigger_fentry_setup,
-> +       .producer_thread =3D trigger_on_cpu_producer,
-> +       .consumer_thread =3D trigger_consumer,
-> +       .measure =3D trigger_measure,
-> +       .report_progress =3D hits_drops_report_progress,
-> +       .report_final =3D hits_drops_report_final,
-> +};
-> +
->  const struct bench bench_trig_fmodret =3D {
->         .name =3D "trig-fmodret",
->         .validate =3D trigger_validate,
-> @@ -165,3 +227,25 @@ const struct bench bench_trig_fmodret =3D {
->         .report_progress =3D hits_drops_report_progress,
->         .report_final =3D hits_drops_report_final,
->  };
-> +
-> +const struct bench bench_trig_user =3D {
-> +       .name =3D "trig-user",
-> +       .validate =3D trigger_validate,
-> +       .setup =3D trigger_user_setup,
-> +       .producer_thread =3D trigger_producer_user,
-> +       .consumer_thread =3D trigger_consumer,
-> +       .measure =3D trigger_measure,
-> +       .report_progress =3D hits_drops_report_progress,
-> +       .report_final =3D hits_drops_report_final,
-> +};
-> +
-> +const struct bench bench_trig_user_on_cpu =3D {
-> +       .name =3D "trig-user-on-cpu",
-> +       .validate =3D trigger_validate,
-> +       .setup =3D trigger_user_setup,
-> +       .producer_thread =3D trigger_producer_user_on_cpu,
-> +       .consumer_thread =3D trigger_consumer,
-> +       .measure =3D trigger_measure,
-> +       .report_progress =3D hits_drops_report_progress,
-> +       .report_final =3D hits_drops_report_final,
-> +};
-> diff --git c/tools/testing/selftests/bpf/benchs/run_bench_trigger.sh w/to=
-ols/testing/selftests/bpf/benchs/run_bench_trigger.sh
-> index 78e83f2432946..f10b7aea76aa3 100755
-> --- c/tools/testing/selftests/bpf/benchs/run_bench_trigger.sh
-> +++ w/tools/testing/selftests/bpf/benchs/run_bench_trigger.sh
-> @@ -2,7 +2,7 @@
->
->  set -eufo pipefail
->
-> -for i in base tp rawtp kprobe fentry fmodret
-> +for i in base tp rawtp kprobe fentry fmodret user fentry-on-cpu user-on-=
-cpu
->  do
->         summary=3D$(sudo ./bench -w2 -d5 -a trig-$i | tail -n1 | cut -d'(=
-' -f1 | cut -d' ' -f3-)
->         printf "%-10s: %s\n" $i "$summary"
-> diff --git c/tools/testing/selftests/bpf/progs/trigger_bench.c w/tools/te=
-sting/selftests/bpf/progs/trigger_bench.c
-> index 8b36b6640e7e9..a6ac11e68d287 100644
-> --- c/tools/testing/selftests/bpf/progs/trigger_bench.c
-> +++ w/tools/testing/selftests/bpf/progs/trigger_bench.c
-> @@ -45,3 +45,10 @@ int bench_trigger_fmodret(void *ctx)
->         __sync_add_and_fetch(&hits, 1);
->         return -22;
->  }
-> +
-> +SEC("user")
-> +int BPF_PROG(bench_trigger_user)
-> +{
-> +       __sync_add_and_fetch(&hits, 1);
-> +       return 0;
-> +}
-> ~
->
->
->
->
+> Miklos
+> 
+> Thanks,
+> 
+> 
+> 
+> > > > > >         n->watch.info & NOTIFY_MOUNT_IS_RECURSIVE if true
+> > > > > > indicates that
+> > > > > >         the notifcation was generated by an event (eg.
+> > > > > > SETATTR)
+> > > > > > that was
+> > > > > >         applied recursively.  The notification is only
+> > > > > > generated for the
+> > > > > >         object that initially triggered it.
+> > > > > 
+> > > > > Unused in this patchset.  Please don't add things to the API
+> > > > > which are not
+> > > > > used.
+> > > > 
+> > > > Christian Brauner has patches for mount_setattr() that will
+> > > > need to
+> > > > use this.
+> > > 
+> > > Fine, then that patch can add the flag.
+> > > 
+> > > Thanks,
+> > > Miklos
+
