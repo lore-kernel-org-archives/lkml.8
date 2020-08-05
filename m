@@ -2,135 +2,76 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D307FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:14:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E78C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD15922B42
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:14:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B9CC22CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:14:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="k+tuYhnI";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UlVjy0fz"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fb84QEiz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729115AbgHEUOJ (ORCPT
+        id S1729618AbgHEUOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:14:09 -0400
-Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:36325 "EHLO
-        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726627AbgHEQX0 (ORCPT
+        Wed, 5 Aug 2020 16:14:15 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44102 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726748AbgHEQX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:23:26 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailnew.west.internal (Postfix) with ESMTP id E931D95C;
-        Wed,  5 Aug 2020 07:23:18 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Wed, 05 Aug 2020 07:23:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
-        26J/RpIA9Dzs/j/8HMkMSuIzptW47JbejMg/q+iS3MA=; b=k+tuYhnIwwJqPC4a
-        ARmLeCMtIylGfe41ZB2xKZDmYvrKjpecqduRXwP+9BBuVWQgIaFmKGJTo3YJYXAx
-        Ypn3UJy81+Nvgtt39qeUW24jGFuqamg9GKZuaAL46pkTIrKEv0spYSGUItue51qM
-        BMEYBbtZSz2Afm8rvLkRPQLA3UQu5OFEeZcXaBtC28KAaWyED2HYsD1gD22fjByH
-        XaKZUEkNIEy+8yie9mVabtLESGXmRThqMwg8kT3n8Zks1mkufq0xGuTjVWrBZKJy
-        t+U0BtxJPwxVTRyKfTgopI4oCy+E+f9Q/YEOlFvgNxyDd/r3mZ38tXZoMCCaxSe8
-        BzA7cQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=26J/RpIA9Dzs/j/8HMkMSuIzptW47JbejMg/q+iS3
-        MA=; b=UlVjy0fzxkWVFYnPUQXHQ3/SyandLHZI25k0hCWN2r2/1tUCxtdEGSYjm
-        GXKGrXAJ+D4IS9BdU05Xkvg4CRigWZWia+z/Rs8q9s8R/stmJ+fTTsh3K5yKFOem
-        sQyOz2u1x9OepQCiE0ydYQhN55yHJPMCnEtdrWPUXDOEOUk4FPLvn0WPOC9D0Sxy
-        93Xdzz7yWniafh0KlABxeImu8+TU6nNiOg1rz2EELtjJ21wVjypuFoLPPVVFFNQz
-        hTD2PklgWGLzAxRJZAnJYy8D5VV2qhj/k7v9pPO6mIPWTh7vUkxwxSWcVeSGgrKc
-        UmXy8Xn804pK0z1jYUQdrELOQxWwg==
-X-ME-Sender: <xms:pZYqXyxcpqQd8fkTI6CfOrrv8tj2qzF8np8tJRa1_efpe0JMgQiGkw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrjeekgdegudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
-    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnhepfe
-    efteetvdeguddvveefveeftedtffduudehueeihfeuvefgveehffeludeggfejnecukfhp
-    peehkedrjedrvdehhedrvddvtdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
-X-ME-Proxy: <xmx:pZYqX-TiKvrEJ-MB-FbK2Btrf7kE1Tw3EkDuTNy2v6yvzsOy2SlEgw>
-    <xmx:pZYqX0XLq-Ut0c4cHHkycDFeDRjTfcKY2AARmx6vEU009KfSrHB6bQ>
-    <xmx:pZYqX4j2RKFEQXdNPE9IPUWmO_fQ8BMKzSb1-ncgv31k1b-0y7ht3A>
-    <xmx:ppYqX0vJJE9yQ9CN4XXM-SnCkV-X0bG9y8hV4wWuiBbvkYky1I3se41MUu4>
-Received: from mickey.themaw.net (58-7-255-220.dyn.iinet.net.au [58.7.255.220])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 40FB530600B4;
-        Wed,  5 Aug 2020 07:23:12 -0400 (EDT)
-Message-ID: <e1caad2bff5faf9b24b59fe4ee51df255412cc56.camel@themaw.net>
-Subject: Re: [PATCH 10/18] fsinfo: Provide notification overrun handling
- support [ver #21]
-From:   Ian Kent <raven@themaw.net>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        LSM <linux-security-module@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 05 Aug 2020 19:23:07 +0800
-In-Reply-To: <CAJfpegs1NLaamFA12f=EJRN4B3_iC+Uzi2NQKTV-fBSypcufLQ@mail.gmail.com>
-References: <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk>
-         <159646187082.1784947.4293611877413578847.stgit@warthog.procyon.org.uk>
-         <20200804135641.GE32719@miu.piliscsaba.redhat.com>
-         <94bba6f200bb2bbf83f4945faa2ccb83fd947540.camel@themaw.net>
-         <5078554c6028e29c91d815c63e2af1ffac2ecbbb.camel@themaw.net>
-         <CAJfpegs1NLaamFA12f=EJRN4B3_iC+Uzi2NQKTV-fBSypcufLQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 075DHV9M072287;
+        Wed, 5 Aug 2020 08:17:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1596633451;
+        bh=57yF68qyZ0azOmyzTIEwYs+6yRB7tuKz3qfi5lQTL2Y=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=fb84QEizh1xqIZv4YwwWKBoNcIaWNZdLEhdp8PKXmcuSz5LdjdZudXZ+ZMNZfMHp+
+         I3YuZE1CRruSM+2Cd9D/meA6KiIyju3KG+y7B2dEGuxf4+6NuubBU86ah5a8RLBs36
+         MaqnS51DCQ7/TOyrO0POqJY3nYVUcAdxjSdLfkaA=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 075DHVG9004195
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 5 Aug 2020 08:17:31 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 5 Aug
+ 2020 08:17:30 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 5 Aug 2020 08:17:30 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 075DHSMg035743;
+        Wed, 5 Aug 2020 08:17:28 -0500
+Subject: Re: [PATCH] dmaengine: ti: k3-udma-glue: Fix parameters for rx ring
+ pair request
+To:     Vinod Koul <vkoul@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>
+CC:     <ssantosh@kernel.org>, <santosh.shilimkar@oracle.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>
+References: <20200805112746.15475-1-peter.ujfalusi@ti.com>
+ <20200805113237.GX12965@vkoul-mobl>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <3eea63fe-88f5-d6b6-433a-bb15495a839d@ti.com>
+Date:   Wed, 5 Aug 2020 16:17:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200805113237.GX12965@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-
-On Wed, 2020-08-05 at 09:45 +0200, Miklos Szeredi wrote:
-> On Wed, Aug 5, 2020 at 4:46 AM Ian Kent <raven@themaw.net> wrote:
-> > Coming back to an actual use case.
-> > 
-> > What I said above is one aspect but, since I'm looking at this
-> > right
-> > now with systemd, and I do have the legacy code to fall back to,
-> > the
-> > "just reset everything" suggestion does make sense.
-> > 
-> > But I'm struggling to see how I can identify notification buffer
-> > overrun in libmount, and overrun is just one possibility for lost
-> > notifications, so I like the idea that, as a library user, I can
-> > work out that I need to take action based on what I have in the
-> > notifications themselves.
-> 
-> Hmm, what's the other possibility for lost notifications?
-
-In user space that is:
-
-Multi-threaded application races, single threaded applications and
-signal processing races, other bugs ...
-
-For example systemd has it's own event handling sub-system and handles
-half a dozen or so event types of which the mount changes are one. It's
-fairly complex so I find myself wondering if I can trust it and
-wondering if there are undiscovered bugs in it. The answer to the
-former is probably yes but the answer to the later is also probably
-yes.
-
-Maybe I just paranoid!
-Ian
+Message-ID: <20200805131724.haZUkLUZxQHdJFGbO7gL3I5cix0Clvc4dpfXN6KBnTg@z>
 
 
