@@ -2,133 +2,356 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AE0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F85C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14C3C20792
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:31:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BFZyF6cd"
+	by mail.kernel.org (Postfix) with ESMTP id 06AB52086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:31:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgHEWbO (ORCPT
+        id S1726630AbgHEWb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 18:31:14 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33029 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726005AbgHEWbK (ORCPT
+        Wed, 5 Aug 2020 18:31:56 -0400
+Received: from 2.mo173.mail-out.ovh.net ([178.33.251.49]:59274 "EHLO
+        2.mo173.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725771AbgHEWbz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 18:31:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596666668;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ta8W4lWYHuibGb7VenSY+ZFBUsjZkLeP1z3XiFNvHH0=;
-        b=BFZyF6cdedbYLC/e8ATDFwN4J3w1yOnHGyjWgTyy4MAfS1pYDRb0BrvLbhgUHna7hSdXMk
-        mGKDiL5Y88njsZuOmTkO8o9LEbvPJ1+jULrKEVlrL4n24lZ/Fx/8CewHeNNKsyh4I8M/kk
-        kVdNZ7keawujCxyQOo4K2OXIZujgxtA=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-296-pkwOLtYMPPmhFg_uehD0fQ-1; Wed, 05 Aug 2020 18:31:06 -0400
-X-MC-Unique: pkwOLtYMPPmhFg_uehD0fQ-1
-Received: by mail-wm1-f69.google.com with SMTP id h6so2942858wml.8
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 15:31:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ta8W4lWYHuibGb7VenSY+ZFBUsjZkLeP1z3XiFNvHH0=;
-        b=Kd0S+3cSUm8lwRqvhjI3N57BQylQbk1WWTA24qppsAFiKk2oqlN1XKmDlMQn4RHIDK
-         EpDgONXml9V/g2dAfZwFp5I7xymjFDQkog3gguM+qU56gQMm0MLShhK004txUE+QenkB
-         04cBFbj8UMduq9Nf/PFZwc88wmWBtvKtaGIY7veA8K9Mi+N87NIUn+kiGooaYLmV+vfH
-         O7Zo4C/90a1elhEkIhHOPXB98UbTll+gGPv2Xeiyb/LUevEqN6C4JiVDUGLulTCKPLwQ
-         27+sx9KNk1ARDxcDKpROvpzpLJ8hZT1PZr/3tQUAN9hB7RlpSqVihYr/AvqV4+abJXcI
-         Dgjg==
-X-Gm-Message-State: AOAM532OBRqRCARto/sJ9cpKoF8S4utA1NYhoZvqsz+ZumCCCzgyaVjt
-        AZV37wt5o46phkkCV4wlPmfwfRtQdFtCELwIJeOcbf7kDKQ8zPgpI1Uy5SvtFVu7K49J+A65rlM
-        ypOaG6h8liqCyEtHVxJmhsPBT
-X-Received: by 2002:a5d:4ad1:: with SMTP id y17mr4895345wrs.132.1596666665632;
-        Wed, 05 Aug 2020 15:31:05 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJweYLLE6b8uo1XP/9+STMEkV5LbdOvdlrtunNKnBmO4rNYW4xagyblCQIRFcf+KM51Wo/Qexw==
-X-Received: by 2002:a5d:4ad1:: with SMTP id y17mr4895324wrs.132.1596666665385;
-        Wed, 05 Aug 2020 15:31:05 -0700 (PDT)
-Received: from redhat.com (bzq-79-177-102-128.red.bezeqint.net. [79.177.102.128])
-        by smtp.gmail.com with ESMTPSA id 62sm4379354wrq.31.2020.08.05.15.31.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 15:31:04 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 18:31:01 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Saeed Mahameed <saeedm@mellanox.com>, Eli Cohen <eli@mellanox.com>,
-        Shahaf Shuler <shahafs@mellanox.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Parav Pandit <parav@mellanox.com>
-Subject: Re: [PATCH V4 linux-next 00/12] VDPA support for Mellanox ConnectX
- devices
-Message-ID: <20200805183017-mutt-send-email-mst@kernel.org>
-References: <20200804162048.22587-1-eli@mellanox.com>
- <20200805075856-mutt-send-email-mst@kernel.org>
- <20200805124054.GA125576@mtl-vdi-166.wap.labs.mlnx>
- <20200805084604-mutt-send-email-mst@kernel.org>
- <20200805130158.GA126406@mtl-vdi-166.wap.labs.mlnx>
- <20200805090304-mutt-send-email-mst@kernel.org>
- <063f66418da235ee459b367c5049948ee6db59ce.camel@mellanox.com>
- <20200805194646.GJ19097@mellanox.com>
+        Wed, 5 Aug 2020 18:31:55 -0400
+X-Greylist: delayed 12935 seconds by postgrey-1.27 at vger.kernel.org; Wed, 05 Aug 2020 18:31:53 EDT
+Received: from player731.ha.ovh.net (unknown [10.108.54.203])
+        by mo173.mail-out.ovh.net (Postfix) with ESMTP id 4C75414582E
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 20:31:58 +0200 (CEST)
+Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
+        (Authenticated sender: steve@sk2.org)
+        by player731.ha.ovh.net (Postfix) with ESMTPSA id 9951514D3469E;
+        Wed,  5 Aug 2020 18:31:54 +0000 (UTC)
+Authentication-Results: garm.ovh; auth=pass (GARM-104R005aa1e33ce-4bf9-4223-8d07-e3f378d047ee,
+                    61EB5F03F455356FFDEC3EC2AC7AFDA20CE2F8AD) smtp.auth=steve@sk2.org
+From:   Stephen Kitt <steve@sk2.org>
+To:     Wolfram Sang <wsa@kernel.org>, linux-i2c@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
+Subject: [PATCH] docs: remove the 2.6 "Upgrading I2C Drivers" guide
+Date:   Wed,  5 Aug 2020 20:31:49 +0200
+Message-Id: <20200805183149.21647-1-steve@sk2.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200805194646.GJ19097@mellanox.com>
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 18094618878727245250
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduiedrjeekgdduvdelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucggtffrrghtthgvrhhnpeetgedugfelkeeikeetgeegteevfeeufeetuefgudeiiedthfehtdeffeekvdeffeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeefuddrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 04:46:46PM -0300, Jason Gunthorpe wrote:
-> On Wed, Aug 05, 2020 at 07:01:52PM +0000, Saeed Mahameed wrote:
-> > On Wed, 2020-08-05 at 09:12 -0400, Michael S. Tsirkin wrote:
-> > > On Wed, Aug 05, 2020 at 04:01:58PM +0300, Eli Cohen wrote:
-> > > > On Wed, Aug 05, 2020 at 08:48:52AM -0400, Michael S. Tsirkin wrote:
-> > > > > > Did you merge this?:
-> > > > > > git pull
-> > > > > > git://git.kernel.org/pub/scm/linux/kernel/git/mellanox/linux.gi
-> > > > > > t mlx5-next
-> > > > > 
-> > > > > I can only merge this tree if no one else will. Linus does not
-> > > > > like getting same patches through two trees.
-> 
-> This is not quite the case
-> 
-> Linus does not like multiple *copies* of the same patches. The same
-> actual git commits can be OK.
-> 
-> Linus also does not like unnecessarily cross linking trees, mlx5-next
-> is designed to be small enough and approved enough that it is not
-> controversial.
-> 
-> Linus really doesn't like it when people jams stuff together in rc7 or
-> the weeks of the merge window. He wants to see stuff be in linux-next
-> for at least a bit. So it may be too late regardless.
+All the drivers have long since been upgraded, and all the important
+information here is also included in the "Implementing I2C device
+drivers" guide.
 
-I'll try, let's see what happens.
+Signed-off-by: Stephen Kitt <steve@sk2.org>
+---
+ Documentation/i2c/upgrading-clients.rst | 285 ------------------------
+ 1 file changed, 285 deletions(-)
+ delete mode 100644 Documentation/i2c/upgrading-clients.rst
 
-> > We do this all the time with net-next and rdma,
-> > mlx5-next is a very small branch based on a very early rc that includes
-> > mlx5 shared stuff between rdma and net-next, and now virtio as well.
-> 
-> Yes, going on two years now? Been working well
-> 
-> Jason
+diff --git a/Documentation/i2c/upgrading-clients.rst b/Documentation/i2c/upgrading-clients.rst
+deleted file mode 100644
+index 1708090d7b8f..000000000000
+--- a/Documentation/i2c/upgrading-clients.rst
++++ /dev/null
+@@ -1,285 +0,0 @@
+-=================================================
+-Upgrading I2C Drivers to the new 2.6 Driver Model
+-=================================================
+-
+-Ben Dooks <ben-linux@fluff.org>
+-
+-Introduction
+-------------
+-
+-This guide outlines how to alter existing Linux 2.6 client drivers from
+-the old to the new binding methods.
+-
+-
+-Example old-style driver
+-------------------------
+-
+-::
+-
+-  struct example_state {
+-	struct i2c_client	client;
+-	....
+-  };
+-
+-  static struct i2c_driver example_driver;
+-
+-  static unsigned short ignore[] = { I2C_CLIENT_END };
+-  static unsigned short normal_addr[] = { OUR_ADDR, I2C_CLIENT_END };
+-
+-  I2C_CLIENT_INSMOD;
+-
+-  static int example_attach(struct i2c_adapter *adap, int addr, int kind)
+-  {
+-	struct example_state *state;
+-	struct device *dev = &adap->dev;  /* to use for dev_ reports */
+-	int ret;
+-
+-	state = kzalloc(sizeof(struct example_state), GFP_KERNEL);
+-	if (state == NULL) {
+-		dev_err(dev, "failed to create our state\n");
+-		return -ENOMEM;
+-	}
+-
+-	example->client.addr    = addr;
+-	example->client.flags   = 0;
+-	example->client.adapter = adap;
+-
+-	i2c_set_clientdata(&state->i2c_client, state);
+-	strscpy(client->i2c_client.name, "example", sizeof(client->i2c_client.name));
+-
+-	ret = i2c_attach_client(&state->i2c_client);
+-	if (ret < 0) {
+-		dev_err(dev, "failed to attach client\n");
+-		kfree(state);
+-		return ret;
+-	}
+-
+-	dev = &state->i2c_client.dev;
+-
+-	/* rest of the initialisation goes here. */
+-
+-	dev_info(dev, "example client created\n");
+-
+-	return 0;
+-  }
+-
+-  static int example_detach(struct i2c_client *client)
+-  {
+-	struct example_state *state = i2c_get_clientdata(client);
+-
+-	i2c_detach_client(client);
+-	kfree(state);
+-	return 0;
+-  }
+-
+-  static int example_attach_adapter(struct i2c_adapter *adap)
+-  {
+-	return i2c_probe(adap, &addr_data, example_attach);
+-  }
+-
+-  static struct i2c_driver example_driver = {
+-	.driver		= {
+-		.owner		= THIS_MODULE,
+-		.name		= "example",
+-		.pm		= &example_pm_ops,
+-	},
+-	.attach_adapter = example_attach_adapter,
+-	.detach_client	= example_detach,
+-  };
+-
+-
+-Updating the client
+--------------------
+-
+-The new style binding model will check against a list of supported
+-devices and their associated address supplied by the code registering
+-the busses. This means that the driver .attach_adapter and
+-.detach_client methods can be removed, along with the addr_data,
+-as follows::
+-
+-  - static struct i2c_driver example_driver;
+-
+-  - static unsigned short ignore[] = { I2C_CLIENT_END };
+-  - static unsigned short normal_addr[] = { OUR_ADDR, I2C_CLIENT_END };
+-
+-  - I2C_CLIENT_INSMOD;
+-
+-  - static int example_attach_adapter(struct i2c_adapter *adap)
+-  - {
+-  - 	return i2c_probe(adap, &addr_data, example_attach);
+-  - }
+-
+-    static struct i2c_driver example_driver = {
+-  -	.attach_adapter = example_attach_adapter,
+-  -	.detach_client	= example_detach,
+-    }
+-
+-Add the probe and remove methods to the i2c_driver, as so::
+-
+-   static struct i2c_driver example_driver = {
+-  +	.probe		= example_probe,
+-  +	.remove		= example_remove,
+-   }
+-
+-Change the example_attach method to accept the new parameters
+-which include the i2c_client that it will be working with::
+-
+-  - static int example_attach(struct i2c_adapter *adap, int addr, int kind)
+-  + static int example_probe(struct i2c_client *client,
+-  +			   const struct i2c_device_id *id)
+-
+-Change the name of example_attach to example_probe to align it with the
+-i2c_driver entry names. The rest of the probe routine will now need to be
+-changed as the i2c_client has already been setup for use.
+-
+-The necessary client fields have already been setup before
+-the probe function is called, so the following client setup
+-can be removed::
+-
+-  -	example->client.addr    = addr;
+-  -	example->client.flags   = 0;
+-  -	example->client.adapter = adap;
+-  -
+-  -	strscpy(client->i2c_client.name, "example", sizeof(client->i2c_client.name));
+-
+-The i2c_set_clientdata is now::
+-
+-  -	i2c_set_clientdata(&state->client, state);
+-  +	i2c_set_clientdata(client, state);
+-
+-The call to i2c_attach_client is no longer needed, if the probe
+-routine exits successfully, then the driver will be automatically
+-attached by the core. Change the probe routine as so::
+-
+-  -	ret = i2c_attach_client(&state->i2c_client);
+-  -	if (ret < 0) {
+-  -		dev_err(dev, "failed to attach client\n");
+-  -		kfree(state);
+-  -		return ret;
+-  -	}
+-
+-
+-Remove the storage of 'struct i2c_client' from the 'struct example_state'
+-as we are provided with the i2c_client in our example_probe. Instead we
+-store a pointer to it for when it is needed.
+-
+-::
+-
+-  struct example_state {
+-  -	struct i2c_client	client;
+-  +	struct i2c_client	*client;
+-
+-the new i2c client as so::
+-
+-  -	struct device *dev = &adap->dev;  /* to use for dev_ reports */
+-  + 	struct device *dev = &i2c_client->dev;  /* to use for dev_ reports */
+-
+-And remove the change after our client is attached, as the driver no
+-longer needs to register a new client structure with the core::
+-
+-  -	dev = &state->i2c_client.dev;
+-
+-In the probe routine, ensure that the new state has the client stored
+-in it::
+-
+-  static int example_probe(struct i2c_client *i2c_client,
+-			 const struct i2c_device_id *id)
+-  {
+-	struct example_state *state;
+-	struct device *dev = &i2c_client->dev;
+-	int ret;
+-
+-	state = kzalloc(sizeof(struct example_state), GFP_KERNEL);
+-	if (state == NULL) {
+-		dev_err(dev, "failed to create our state\n");
+-		return -ENOMEM;
+-	}
+-
+-  +	state->client = i2c_client;
+-
+-Update the detach method, by changing the name to _remove and
+-to delete the i2c_detach_client call. It is possible that you
+-can also remove the ret variable as it is not needed for any
+-of the core functions.
+-
+-::
+-
+-  - static int example_detach(struct i2c_client *client)
+-  + static int example_remove(struct i2c_client *client)
+-  {
+-	struct example_state *state = i2c_get_clientdata(client);
+-
+-  -	i2c_detach_client(client);
+-
+-And finally ensure that we have the correct ID table for the i2c-core
+-and other utilities::
+-
+-  + struct i2c_device_id example_idtable[] = {
+-  +       { "example", 0 },
+-  +       { }
+-  +};
+-  +
+-  +MODULE_DEVICE_TABLE(i2c, example_idtable);
+-
+-  static struct i2c_driver example_driver = {
+-	.driver		= {
+-		.owner		= THIS_MODULE,
+-		.name		= "example",
+-	},
+-  +	.id_table	= example_ids,
+-
+-
+-Our driver should now look like this::
+-
+-  struct example_state {
+-	struct i2c_client	*client;
+-	....
+-  };
+-
+-  static int example_probe(struct i2c_client *client,
+-			 const struct i2c_device_id *id)
+-  {
+-	struct example_state *state;
+-	struct device *dev = &client->dev;
+-
+-	state = kzalloc(sizeof(struct example_state), GFP_KERNEL);
+-	if (state == NULL) {
+-		dev_err(dev, "failed to create our state\n");
+-		return -ENOMEM;
+-	}
+-
+-	state->client = client;
+-	i2c_set_clientdata(client, state);
+-
+-	/* rest of the initialisation goes here. */
+-
+-	dev_info(dev, "example client created\n");
+-
+-	return 0;
+-  }
+-
+-  static int example_remove(struct i2c_client *client)
+-  {
+-	struct example_state *state = i2c_get_clientdata(client);
+-
+-	kfree(state);
+-	return 0;
+-  }
+-
+-  static struct i2c_device_id example_idtable[] = {
+-	{ "example", 0 },
+-	{ }
+-  };
+-
+-  MODULE_DEVICE_TABLE(i2c, example_idtable);
+-
+-  static struct i2c_driver example_driver = {
+-	.driver		= {
+-		.owner		= THIS_MODULE,
+-		.name		= "example",
+-		.pm		= &example_pm_ops,
+-	},
+-	.id_table	= example_idtable,
+-	.probe		= example_probe,
+-	.remove		= example_remove,
+-  };
 
-OK, I'll merge it then. Thanks!
-
+base-commit: 2324d50d051ec0f14a548e78554fb02513d6dcef
 -- 
-MST
+2.20.1
 
