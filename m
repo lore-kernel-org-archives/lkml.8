@@ -2,248 +2,251 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96165C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4074AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60B242067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B38D2067D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:49:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E9b9xRUZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DVJOqyZE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbgHEQso (ORCPT
+        id S1728119AbgHEQtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 12:48:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46370 "EHLO
+        Wed, 5 Aug 2020 12:49:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728037AbgHEQqQ (ORCPT
+        with ESMTP id S1728034AbgHEQqQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:46:16 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D62E5C0086D6
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 07:24:09 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id v9so13425676ljk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 07:24:09 -0700 (PDT)
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7F29C034624
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 06:05:14 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id z3so27036845ilh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:05:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4sZV1/gQN/258iL0rr5Xs5RZ6T6r7SkqFDya4T9+hhQ=;
-        b=E9b9xRUZtCoNc7BmcnjKZKhPMW4C6kTS55eaU+9K6uRzDuW4TNj3CRV97WvzO/of2Y
-         zwdRFO6qTxVL/8AJOZFe2VwM18ZDpa2zt7HE8TMzl/K9XNvba6QLBigNU4LDkz9fEp8h
-         TozZAI8dmNwaLYwAj+rpf5m+fZxw1RFzua2mawTi4OcXBq0HskcqEmw7dfMK3gjhlI1f
-         6+d48Ygix+b6dZvLFiZNPH1GLGnwyTP2eBGGnUlCxJzjYvmkqZ5LhvG60bflC5NfrouR
-         qteTlbkjDme/q3Om8n6GR6GNVSRNYYXYVd93qBD8bFFI+1Ok7+GkCFm4Mbwy/lZUE3se
-         BxTQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wzax1JoI9zRG5UqAp2s+JfDhNvSfuH/tKXpfiaAlnEc=;
+        b=DVJOqyZE9aXM1N+pfiDtYjX3fYyUcoPNlyB0YkcYDwJBmZgzFrdfWonlYEyaOL5giJ
+         ZePKRZCkC3SW9XJENgZgB1Y41LR1KE70JQUb/cvOtsw6VrjMWoNzBdw/3edomY9xa1SS
+         Z0kPKqHhEpuK16s23XYP5fHbjF9BeVjUSoF4KNfkRXtSreZ3XE4Raq64oMlE+VncQxkG
+         rijeaFFwnTaK+xqK+/kPzOjzvDkohlendgCOh0CBg4Vk8vC/YdqgngVQq6jgrY6vleE4
+         5X+BOeFY+9hoqCuQnxphvVelaCyYLthSwTXf2nI0omcaVq1TvpBBKqvr7L/wTK7f72YB
+         LX1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4sZV1/gQN/258iL0rr5Xs5RZ6T6r7SkqFDya4T9+hhQ=;
-        b=BagE2tJGSGl1v1FIKI3lsO5tFWuaajOWfP6T7ecXxthnEf6rSmDeNly6ZPbc1x2Tgo
-         Uq8NoEkSulX5mokfH2KPxGrlSOQRAHYCEm4/qC6Wb4soiAsuVRIYhwK2Kod7HJ26nXhh
-         nwII8xgXjnf3DySfLn1OcASD5mQBkVJZbGMb2IUNRv8PAfGM3Ps8sJ31g2BbmlJ7fDCu
-         J4GZ24weZRemVCsMPpIh+LcC4s7LRqVriCIIKVA5ce9EOKKMqgEtHEctz0oamSbSfWmW
-         JxfUDCi5XJs7aPsXlJY0kCUCEyQMyD8VdnpzM3U5yURrHvfrNJJwiXut7oXMGbAD2wyL
-         Sd6w==
-X-Gm-Message-State: AOAM533bEFgE+r0vQ12opG4O+h8ZjlXo9d554FLkX8/y226ZVkpcqzub
-        oekwywQlRq1uAn8q6GoRQ2SzYw==
-X-Google-Smtp-Source: ABdhPJx5GVKqBcJfUrSinpyw/JPyAmFuCbg4ibeeyeBsa4MFulh9QF9PIbff8txGT7dzYpPegeBNSw==
-X-Received: by 2002:a05:651c:3c5:: with SMTP id f5mr1467608ljp.209.1596637447389;
-        Wed, 05 Aug 2020 07:24:07 -0700 (PDT)
-Received: from jade (h-249-223.A175.priv.bahnhof.se. [98.128.249.223])
-        by smtp.gmail.com with ESMTPSA id e69sm1172866lfd.21.2020.08.05.07.24.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 07:24:06 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 16:24:04 +0200
-From:   Jens Wiklander <jens.wiklander@linaro.org>
-To:     "Jorge Ramirez-Ortiz, Foundries" <jorge@foundries.io>
-Cc:     sumit.garg@linaro.org, ricardo@foundries.io, mike@foundries.io,
-        tee-dev@lists.linaro.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv6] drivers: optee: allow op-tee to access devices on the
- i2c bus
-Message-ID: <20200805142404.GA550721@jade>
-References: <20200722212105.1798-1-jorge@foundries.io>
- <20200805133501.GA8360@trex>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wzax1JoI9zRG5UqAp2s+JfDhNvSfuH/tKXpfiaAlnEc=;
+        b=GBmU5Dfq67MLj9lD5B9rmRqNNVyvD4y5wSvpljnnwf3F1hU+VE4EcJmeRAV2lUYd6P
+         7Cr8yxe3sBcwJGWkcSk1cncl9tQX0MMnAN6fvnFfojDZusI2gbUHa7Emz6jNEzt+wmUH
+         J2fSUfUkiajIsHIjP7X9KNgETkp17LgmvbjiBKvq/LyAJ/jAk8rNfJM3KMbYTzLS+qBC
+         ozeAvjwm38cAOayxoBHrGG8hpkFPEGPvjjqLWhiYdXDrstybD9csNJXabCZQbAtydpcw
+         3XF0KQjBgcohI6Vpm4rdrY1Zcrzzco2exbnEAQIsxAQCynlrwB5I88+fZm8+fstkao2C
+         sfLw==
+X-Gm-Message-State: AOAM532hlDOdIFjwB7Pk3UtG49b3avTk3DJ+iZBaOo0Xevpc9VTOwrcn
+        yp41ymLjI/di4iaYvcdLqT4eGg==
+X-Google-Smtp-Source: ABdhPJxp6OK2QdRf+UwsBi/lMaDPcEVuBouzFlXVW62OTS1hOEXu47t2qPN6mIV2jZjdLcSglOlSeA==
+X-Received: by 2002:a92:660e:: with SMTP id a14mr3990516ilc.262.1596632713672;
+        Wed, 05 Aug 2020 06:05:13 -0700 (PDT)
+Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id k18sm1003543ioh.50.2020.08.05.06.05.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Aug 2020 06:05:12 -0700 (PDT)
+Subject: Re: [greybus-dev] [PATCH v4 1/7] staging: greybus: audio: Update
+ snd_jack FW usage as per new APIs
+To:     Vaibhav Agarwal <vaibhav.sr@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alex Elder <elder@kernel.org>, Johan Hovold <johan@kernel.org>,
+        Mark Greer <mgreer@animalcreek.com>
+Cc:     devel@driverdev.osuosl.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-kernel@vger.kernel.org, greybus-dev@lists.linaro.org,
+        Dan Carpenter <dan.carpenter@oracle.com>
+References: <cover.1594290158.git.vaibhav.sr@gmail.com>
+ <896b8e24d990f2bca5aafaebd26e37095042951e.1594290158.git.vaibhav.sr@gmail.com>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <7cbc0daa-993f-ffc9-78f4-b1e62fd54304@linaro.org>
+Date:   Wed, 5 Aug 2020 08:05:11 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <896b8e24d990f2bca5aafaebd26e37095042951e.1594290158.git.vaibhav.sr@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200805133501.GA8360@trex>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 03:35:01PM +0200, Jorge Ramirez-Ortiz, Foundries wrote:
-> On 22/07/20, Jorge Ramirez-Ortiz wrote:
-> > Some secure elements like NXP's SE050 sit on I2C buses. For OP-TEE to
-> > control this type of cryptographic devices it needs coordinated access
-> > to the bus, so collisions and RUNTIME_PM dont get in the way.
-> > 
-> > This trampoline driver allow OP-TEE to access them.
-> > Tested on imx8mm LPDDR4
-> > 
-> > Signed-off-by: Jorge Ramirez-Ortiz <jorge@foundries.io>
-> > ---
-> >  v6: compile out if CONFIG_I2C not enabled
-> >  v5: alphabetic order of includes
-> >  v4: remove unnecessary extra line in optee_msg.h
-> >  v3: use from/to msg param to support all types of memory
-> >      modify OPTEE_MSG_RPC_CMD_I2C_TRANSFER message id
-> >      
-> >  drivers/tee/optee/optee_msg.h | 16 +++++++
-> >  drivers/tee/optee/rpc.c       | 88 +++++++++++++++++++++++++++++++++++
-> >  2 files changed, 104 insertions(+)
-> > 
-> > diff --git a/drivers/tee/optee/optee_msg.h b/drivers/tee/optee/optee_msg.h
-> > index 795bc19ae17a..14b580f55356 100644
-> > --- a/drivers/tee/optee/optee_msg.h
-> > +++ b/drivers/tee/optee/optee_msg.h
-> > @@ -419,4 +419,20 @@ struct optee_msg_arg {
-> >   */
-> >  #define OPTEE_MSG_RPC_CMD_SHM_FREE	7
-> >  
-> > +/*
-> > + * Access a device on an i2c bus
-> > + *
-> > + * [in]  param[0].u.value.a		mode: RD(0), WR(1)
-> > + * [in]  param[0].u.value.b		i2c adapter
-> > + * [in]  param[0].u.value.c		i2c chip
-> > + *
-> > + * [in/out] memref[1]			buffer to exchange the transfer data
-> > + *					with the secure world
-> > + *
-> > + * [out]  param[0].u.value.a		bytes transferred by the driver
-> > + */
-> > +#define OPTEE_MSG_RPC_CMD_I2C_TRANSFER 21
-> > +#define OPTEE_MSG_RPC_CMD_I2C_TRANSFER_RD 0
-> > +#define OPTEE_MSG_RPC_CMD_I2C_TRANSFER_WR 1
-> > +
-> >  #endif /* _OPTEE_MSG_H */
-> > diff --git a/drivers/tee/optee/rpc.c b/drivers/tee/optee/rpc.c
-> > index b4ade54d1f28..5fd5c6c93896 100644
-> > --- a/drivers/tee/optee/rpc.c
-> > +++ b/drivers/tee/optee/rpc.c
-> > @@ -7,6 +7,7 @@
-> >  
-> >  #include <linux/delay.h>
-> >  #include <linux/device.h>
-> > +#include <linux/i2c.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/tee_drv.h>
-> >  #include "optee_private.h"
-> > @@ -49,6 +50,90 @@ static void handle_rpc_func_cmd_get_time(struct optee_msg_arg *arg)
-> >  	arg->ret = TEEC_ERROR_BAD_PARAMETERS;
-> >  }
-> >  
-> > +#if IS_ENABLED(CONFIG_I2C)
-> > +static void handle_rpc_func_cmd_i2c_transfer(struct tee_context *ctx,
-> > +					     struct optee_msg_arg *arg)
-> > +{
-> > +	struct i2c_client client;
-> > +	struct tee_param *params;
-> > +	uint32_t type;
-> > +	int i, ret;
-> > +	size_t len;
-> > +	char *buf;
-> > +	uint32_t attr[] = {
-> > +		TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT,
-> > +		TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT,
-> > +		TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_OUTPUT,
-> > +	};
-> > +
-> > +	if (arg->num_params != ARRAY_SIZE(attr)) {
-> > +		arg->ret = TEEC_ERROR_BAD_PARAMETERS;
-> > +		return;
-> > +	}
-> > +
-> > +	params = kmalloc_array(arg->num_params, sizeof(struct tee_param),
-> > +			       GFP_KERNEL);
-> > +	if (!params) {
-> > +		arg->ret = TEEC_ERROR_OUT_OF_MEMORY;
-> > +		return;
-> > +	}
-> > +
-> > +	if (optee_from_msg_param(params, arg->num_params, arg->params))
-> > +		goto bad;
-> > +
-> > +	for (i = 0; i < arg->num_params; i++) {
-> > +		type = params[i].attr & TEE_IOCTL_PARAM_ATTR_TYPE_MASK;
-> > +		if (type != attr[i])
-> > +			goto bad;
-> > +	}
-> > +
-> > +	client.addr = params[0].u.value.c;
-> > +	client.adapter = i2c_get_adapter(params[0].u.value.b);
-> > +	if (!client.adapter)
-> > +		goto bad;
-> > +
-> > +	snprintf(client.name, I2C_NAME_SIZE, "i2c%d", client.adapter->nr);
-> > +
-> > +	buf = params[1].u.memref.shm->kaddr;
-> > +	len = params[1].u.memref.size;
-> > +
-> > +	switch (params[0].u.value.a) {
-> > +	case OPTEE_MSG_RPC_CMD_I2C_TRANSFER_RD:
-> > +		ret = i2c_master_recv(&client, buf, len);
-> > +		break;
-> > +	case OPTEE_MSG_RPC_CMD_I2C_TRANSFER_WR:
-> > +		ret = i2c_master_send(&client, buf, len);
-> > +		break;
-> > +	default:
-> > +		i2c_put_adapter(client.adapter);
-> > +		goto bad;
-> > +	}
-> > +
-> > +	if (ret >= 0) {
-> > +		params[2].u.value.a = ret;
-> > +		arg->ret = TEEC_SUCCESS;
-> > +	} else {
-> > +		arg->ret = TEEC_ERROR_COMMUNICATION;
-> > +	}
-> > +
-> > +	if (optee_to_msg_param(arg->params, arg->num_params, params))
-> > +		arg->ret = TEEC_ERROR_BAD_PARAMETERS;
-> > +
-> > +	i2c_put_adapter(client.adapter);
-> > +	kfree(params);
-> > +	return;
-> > +bad:
-> > +	kfree(params);
-> > +	arg->ret = TEEC_ERROR_BAD_PARAMETERS;
-> > +}
-> > +#else
-> > +static void handle_rpc_func_cmd_i2c_transfer(struct tee_context *ctx,
-> > +					     struct optee_msg_arg *arg)
-> > +{
-> > +	arg->ret = TEEC_ERROR_COMMUNICATION;
-> > +}
-> > +#endif
-> > +
-> >  static struct wq_entry *wq_entry_get(struct optee_wait_queue *wq, u32 key)
-> >  {
-> >  	struct wq_entry *w;
-> > @@ -382,6 +467,9 @@ static void handle_rpc_func_cmd(struct tee_context *ctx, struct optee *optee,
-> >  	case OPTEE_MSG_RPC_CMD_SHM_FREE:
-> >  		handle_rpc_func_cmd_shm_free(ctx, arg);
-> >  		break;
-> > +	case OPTEE_MSG_RPC_CMD_I2C_TRANSFER:
-> > +		handle_rpc_func_cmd_i2c_transfer(ctx, arg);
-> > +		break;
-> >  	default:
-> >  		handle_rpc_supp_cmd(ctx, arg);
-> >  	}
-> 
-> 
-> any comments please?
+On 7/9/20 5:27 AM, Vaibhav Agarwal wrote:
+> snd_soc_jack APIs are modified in recent kernel versions. This patch
+> updates the codec driver to resolve the compilation errors related to
+> jack framework.
 
-As you know we're still reviewing the secure world counterpart at
-https://github.com/OP-TEE/optee_os/pull/3905
-Where we're sorting out the ABI. Thanks for your patience.
+Greg has already accepted this series so I won't review this now.  But
+I still wanted to provide this comment.
 
-Cheers,
-Jens
+It would be helpful in the future to provide a little more information
+about the nature of the changes to these APIs.  As a reviewer I had to
+go track them down to get a little more context about what you are doing
+here.  So you could say something like:
+
+  Audio jacks are now registered at the card level rather than being
+  associated with a CODEC.  The new card-based API allows a jack's pins
+  to be supplied when the jack is first registered.  See: 970939964c26
+  ("ASoC: Allow to register jacks at the card level")
+
+In other words, don't just say "the APIs changed," say "here is how
+the APIs have changed."  This kind of introduction can be very helpful
+and time saving for your reviewers.
+
+					-Alex
+
+> Signed-off-by: Vaibhav Agarwal <vaibhav.sr@gmail.com>
+> Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+>  drivers/staging/greybus/audio_codec.c | 54 +++++++++++++++++++++------
+>  1 file changed, 42 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/staging/greybus/audio_codec.c b/drivers/staging/greybus/audio_codec.c
+> index 08746c85dea6..5d3a5e6a8fe6 100644
+> --- a/drivers/staging/greybus/audio_codec.c
+> +++ b/drivers/staging/greybus/audio_codec.c
+> @@ -709,17 +709,26 @@ static struct snd_soc_dai_driver gbaudio_dai[] = {
+>  };
+>  
+>  static int gbaudio_init_jack(struct gbaudio_module_info *module,
+> -			     struct snd_soc_codec *codec)
+> +			     struct snd_soc_card *card)
+>  {
+>  	int ret;
+> +	struct snd_soc_jack_pin *headset, *button;
+>  
+>  	if (!module->jack_mask)
+>  		return 0;
+>  
+>  	snprintf(module->jack_name, NAME_SIZE, "GB %d Headset Jack",
+>  		 module->dev_id);
+> -	ret = snd_soc_jack_new(codec, module->jack_name, module->jack_mask,
+> -			       &module->headset_jack);
+> +
+> +	headset = devm_kzalloc(module->dev, sizeof(*headset), GFP_KERNEL);
+> +	if (!headset)
+> +		return -ENOMEM;
+> +
+> +	headset->pin = module->jack_name;
+> +	headset->mask = module->jack_mask;
+> +
+> +	ret = snd_soc_card_jack_new(card, module->jack_name, module->jack_mask,
+> +				    &module->headset_jack, headset, 1);
+>  	if (ret) {
+>  		dev_err(module->dev, "Failed to create new jack\n");
+>  		return ret;
+> @@ -730,11 +739,21 @@ static int gbaudio_init_jack(struct gbaudio_module_info *module,
+>  
+>  	snprintf(module->button_name, NAME_SIZE, "GB %d Button Jack",
+>  		 module->dev_id);
+> -	ret = snd_soc_jack_new(codec, module->button_name, module->button_mask,
+> -			       &module->button_jack);
+> +	button = devm_kzalloc(module->dev, sizeof(*button), GFP_KERNEL);
+> +	if (!button) {
+> +		ret = -ENOMEM;
+> +		goto free_headset;
+> +	}
+> +
+> +	button->pin = module->button_name;
+> +	button->mask = module->button_mask;
+> +
+> +	ret = snd_soc_card_jack_new(card, module->button_name,
+> +				    module->button_mask, &module->button_jack,
+> +				    button, 1);
+>  	if (ret) {
+>  		dev_err(module->dev, "Failed to create button jack\n");
+> -		return ret;
+> +		goto free_headset;
+>  	}
+>  
+>  	/*
+> @@ -750,7 +769,7 @@ static int gbaudio_init_jack(struct gbaudio_module_info *module,
+>  				       KEY_MEDIA);
+>  		if (ret) {
+>  			dev_err(module->dev, "Failed to set BTN_0\n");
+> -			return ret;
+> +			goto free_button;
+>  		}
+>  	}
+>  
+> @@ -759,7 +778,7 @@ static int gbaudio_init_jack(struct gbaudio_module_info *module,
+>  				       KEY_VOICECOMMAND);
+>  		if (ret) {
+>  			dev_err(module->dev, "Failed to set BTN_1\n");
+> -			return ret;
+> +			goto free_button;
+>  		}
+>  	}
+>  
+> @@ -768,7 +787,7 @@ static int gbaudio_init_jack(struct gbaudio_module_info *module,
+>  				       KEY_VOLUMEUP);
+>  		if (ret) {
+>  			dev_err(module->dev, "Failed to set BTN_2\n");
+> -			return ret;
+> +			goto free_button;
+>  		}
+>  	}
+>  
+> @@ -777,7 +796,7 @@ static int gbaudio_init_jack(struct gbaudio_module_info *module,
+>  				       KEY_VOLUMEDOWN);
+>  		if (ret) {
+>  			dev_err(module->dev, "Failed to set BTN_0\n");
+> -			return ret;
+> +			goto free_button;
+>  		}
+>  	}
+>  
+> @@ -788,6 +807,16 @@ static int gbaudio_init_jack(struct gbaudio_module_info *module,
+>  	*/
+>  
+>  	return 0;
+> +
+> +free_button:
+> +	snd_device_free(card->snd_card, module->button_jack.jack);
+> +	list_del(&module->button_jack.list);
+> +
+> +free_headset:
+> +	snd_device_free(card->snd_card, module->headset_jack.jack);
+> +	list_del(&module->headset_jack.list);
+> +
+> +	return ret;
+>  }
+>  
+>  int gbaudio_register_module(struct gbaudio_module_info *module)
+> @@ -815,7 +844,7 @@ int gbaudio_register_module(struct gbaudio_module_info *module)
+>  		return -EINVAL;
+>  	}
+>  
+> -	ret = gbaudio_init_jack(module, codec);
+> +	ret = gbaudio_init_jack(module, component->card);
+>  	if (ret) {
+>  		up_write(&card->controls_rwsem);
+>  		return ret;
+> @@ -942,7 +971,8 @@ void gbaudio_unregister_module(struct gbaudio_module_info *module)
+>  
+>  #ifdef CONFIG_SND_JACK
+>  	/* free jack devices for this module from codec->jack_list */
+> -	list_for_each_entry_safe(jack, next_j, &codec->jack_list, list) {
+> +	list_for_each_entry_safe(jack, next_j, &component->card->jack_list,
+> +				 list) {
+>  		if (jack == &module->headset_jack)
+>  			mask = GBCODEC_JACK_MASK;
+>  		else if (jack == &module->button_jack)
+> 
+
