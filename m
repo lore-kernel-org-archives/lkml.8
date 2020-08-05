@@ -2,139 +2,184 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 205F2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EE8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0617420792
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C3C42086A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:44:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u1HcNS5D"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MAKSAnD0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbgHEBim (ORCPT
+        id S1726542AbgHEBos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 21:38:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47220 "EHLO
+        Tue, 4 Aug 2020 21:44:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725863AbgHEBik (ORCPT
+        with ESMTP id S1725950AbgHEBom (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 21:38:40 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49C08C06174A;
-        Tue,  4 Aug 2020 18:38:40 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id a34so17928178ybj.9;
-        Tue, 04 Aug 2020 18:38:40 -0700 (PDT)
+        Tue, 4 Aug 2020 21:44:42 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AFDAC06174A;
+        Tue,  4 Aug 2020 18:44:42 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 17so1407181pfw.9;
+        Tue, 04 Aug 2020 18:44:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6+uZyxND/e705z2BJrrSR+eq5E0rutVK6A3yMf2U9bQ=;
-        b=u1HcNS5DtJRxqEPRRW0jRw44uthXArp0ZH7gKgekC/Kst/wtNFlT9qRGNLQ50DiI+k
-         FSTvNBckWjeeIECB8B4PP2zPTZykyWeaBGWg+EXrzOF1gHRHb+TZEfJIiyHQskDWN2q2
-         317QV2IVr++h0HqJLhyavIxc6UGRZnyOvo7Qm1DpsP6OTFTkqi/nRwOad5740h9t0Kgp
-         ZPAguu8EkoVN6OBpjan02cmajgk4HZSqIyq6VYZrQ4qgglELW3XS6lGHHraR9bfJuYlH
-         i6Pz1+SJjaU7OfkzpOb+rqq95F5WmMHMojDuUTDgkB+n+PNm43IYJz4fXEtU8lxNDLSV
-         NhbQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=H7BJuPQcZ5V/7UBDAvP8UACTKplyPBFmmLy/DLb8wI8=;
+        b=MAKSAnD05LKUMQ8kuUvEdsOfKICcqnCV29ChGGtTJNnr4IpU5YOKzBryRhhhg54ib7
+         kdZeZT+5+GjlzQM6LCeSo2zj5q1kj8XS90fPAjb2tNOTt9g9C+a6VE2J98pi/bAa4xwg
+         eXwQIfGW+fr671TiIH8FcS0JKWhu2jtTpS9bBtQG6O5pPyE1jJnhvYqd+/5koSqr5iIN
+         SsO7yy6IiPv+7cEk10gBZ8m0keJpkcNGLMTqt5W+cBiY0cLfQXGrn3LK5pBzUqwyMAJa
+         6m9banQHsTzcoaKEHMvPVyhyT06LQDul29CTt2CqsXOx3PuDAqT/JLOSRDzEGi1vfbqv
+         lvdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6+uZyxND/e705z2BJrrSR+eq5E0rutVK6A3yMf2U9bQ=;
-        b=CoFSe9i0Shnq3B3tJ+ghajqFx4zcjEXPY0msAy/5QlMP08yoKnQ9Hg7IDQMAWeu4t4
-         c8SEKneh3yDFGOqT7ji3eLPjgyZzFVynqBqtXRD7qDViTV/qSR3QoYVFG+iTe4UCdBSi
-         tJCkflqzgTnkcXLxpwnl4kLoy/7prZX2Fy/Xk1lYksEWxtTJpPgNWFslzpMuyhtBal9z
-         V+EafOzePptcn32RujcG6yZ7tXUA2+aRYclT+UhP+6CK0xyFfVHAvhAHyKOkVbWjZnw3
-         ALxeUG7doFA2WrWzqW6bHnK0zbMEFR55FjHXUgxnjI6VPO3uXRjYn9Tn8uqYAJZQMNxw
-         6/dw==
-X-Gm-Message-State: AOAM533LlK4d9dOmgdPy/l7wTGmPkNjtkf/XUvPt8W+pj5l1IVlKa/XO
-        o8G9Puhi3w69KPWuu6Q28AfJQPMvw56UcscNhuAeKw==
-X-Google-Smtp-Source: ABdhPJwPnvZup7P66a4UCySDlemSAW34C0XGHkBrWfaPqHOMtZNY81rM0rCzEqQ9UKWllMyXDlFjrSFMVPC4izRscsM=
-X-Received: by 2002:a25:824a:: with SMTP id d10mr1370701ybn.260.1596591519526;
- Tue, 04 Aug 2020 18:38:39 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=H7BJuPQcZ5V/7UBDAvP8UACTKplyPBFmmLy/DLb8wI8=;
+        b=gMVaLEeIsh8YSktcihiKkENv3giubhrWzuqObK16XYCUIysZ9S1lDhvGidMJVXbR6q
+         PSfNSOPtGIwYR//XOgsfJ5BINibWq2zGplJ/Y4gqG+Ihmq/9Qyuld5vkkMECFYddOelM
+         X+XmW6O33Kk0RadtgJEmYzvcCT08B1RXKbJWiWl8We/OOf2J9VhGexY+XmRQk7fnkYPA
+         HiPWghvobSko1aUGq3PCUbAYmtRHqNTKYgfa+Z7wnigXb08k2JNdgHXadawOTudO4VGv
+         rgf2R0zMuZHfxvUiiQHu2oLdK62U0nKnCdBL8uEP3OIu1w5V6MfNMH8NyAHWSKxegAt/
+         ASxA==
+X-Gm-Message-State: AOAM533zSYRhSQtIoXe2cUCt6+zY02TpTSotW+7x3l2dnjQvhY8RTdcy
+        PH9rLSpISpmTyoWdqygCJ1CSo2MO
+X-Google-Smtp-Source: ABdhPJwIk329Jse0FHZbrQnU0oOrRPnSdv1tfi6sxSo70DizzLpuKPvIUSHCr/ieY3v0WidLQkb7Kg==
+X-Received: by 2002:aa7:9e5d:: with SMTP id z29mr1127451pfq.122.1596591881763;
+        Tue, 04 Aug 2020 18:44:41 -0700 (PDT)
+Received: from ?IPv6:2404:7a87:83e0:f800:d05c:a260:d7a2:2303? ([2404:7a87:83e0:f800:d05c:a260:d7a2:2303])
+        by smtp.gmail.com with ESMTPSA id c9sm510042pjr.35.2020.08.04.18.44.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Aug 2020 18:44:41 -0700 (PDT)
+Subject: Re: [PATCH v2] exfat: integrates dir-entry getting and validation
+To:     Namjae Jeon <namjae.jeon@samsung.com>,
+        Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp
+Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
+        Motai.Hirotaka@aj.MitsubishiElectric.co.jp,
+        'Sungjong Seo' <sj1557.seo@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CGME20200715012304epcas1p23e9f45415afc551beea122e4e1bdb933@epcas1p2.samsung.com>
+ <20200715012249.16378-1-kohada.t2@gmail.com>
+ <015d01d6663e$1eb8c780$5c2a5680$@samsung.com>
+ <TY2PR01MB287579A95A7994DE2B34E425904D0@TY2PR01MB2875.jpnprd01.prod.outlook.com>
+ <001c01d669fe$8ab7cf80$a0276e80$@samsung.com>
+From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
+Message-ID: <05c5c1e9-2ccf-203d-5e8c-1c951004a7f9@gmail.com>
+Date:   Wed, 5 Aug 2020 10:44:36 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200801084721.1812607-1-songliubraving@fb.com>
- <20200801084721.1812607-3-songliubraving@fb.com> <CAEf4BzYp4gO1P+OrY7hGyQjdia3BuSu4DX2_z=UF6RfGNa+gkQ@mail.gmail.com>
- <9C1285C1-ECD6-46BD-BA95-3E9E81C00EF0@fb.com>
-In-Reply-To: <9C1285C1-ECD6-46BD-BA95-3E9E81C00EF0@fb.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 4 Aug 2020 18:38:28 -0700
-Message-ID: <CAEf4BzYojfFiMn6VeUkxUsdSTdFK0A4MzKQxhCCp_OowkseznQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 2/5] libbpf: support BPF_PROG_TYPE_USER programs
-To:     Song Liu <songliubraving@fb.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Xu <dlxu@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <001c01d669fe$8ab7cf80$a0276e80$@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 3, 2020 at 6:18 PM Song Liu <songliubraving@fb.com> wrote:
->
->
->
-> > On Aug 2, 2020, at 6:40 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Sat, Aug 1, 2020 at 1:50 AM Song Liu <songliubraving@fb.com> wrote:
-> >>
->
-> [...]
->
-> >
-> >> };
-> >>
-> >> LIBBPF_API int bpf_prog_test_run_xattr(struct bpf_prog_test_run_attr *test_attr);
-> >> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> >> index b9f11f854985b..9ce175a486214 100644
-> >> --- a/tools/lib/bpf/libbpf.c
-> >> +++ b/tools/lib/bpf/libbpf.c
-> >> @@ -6922,6 +6922,7 @@ static const struct bpf_sec_def section_defs[] = {
-> >>        BPF_PROG_SEC("lwt_out",                 BPF_PROG_TYPE_LWT_OUT),
-> >>        BPF_PROG_SEC("lwt_xmit",                BPF_PROG_TYPE_LWT_XMIT),
-> >>        BPF_PROG_SEC("lwt_seg6local",           BPF_PROG_TYPE_LWT_SEG6LOCAL),
-> >> +       BPF_PROG_SEC("user",                    BPF_PROG_TYPE_USER),
-> >
-> > let's do "user/" for consistency with most other prog types (and nice
-> > separation between prog type and custom user name)
->
-> About "user" vs. "user/", I still think "user" is better.
->
-> Unlike kprobe and tracepoint, user prog doesn't use the part after "/".
-> This is similar to "perf_event" for BPF_PROG_TYPE_PERF_EVENT, "xdl" for
-> BPF_PROG_TYPE_XDP, etc. If we specify "user" here, "user/" and "user/xxx"
-> would also work. However, if we specify "user/" here, programs that used
-> "user" by accident will fail to load, with a message like:
->
->         libbpf: failed to load program 'user'
->
-> which is confusing.
 
-xdp, perf_event and a bunch of others don't enforce it, that's true,
-they are a bit of a legacy, unfortunately. But all the recent ones do,
-and we explicitly did that for xdp_dev/xdp_cpu, for instance.
-Specifying just "user" in the spec would allow something nonsensical
-like "userargh", for instance, due to this being treated as a prefix.
-There is no harm to require users to do "user/my_prog", though.
+>>>> +	i = 2;
+>>>> +	while ((ep = exfat_get_validated_dentry(es, i++, TYPE_NAME))) {
+>>> As Sungjong said, I think that TYPE_NAME seems right to be validated in exfat_get_dentry_set().
+>>
+>> First, it is possible to correctly determine that "Immediately follow the Stream Extension directory
+>> entry as a consecutive series"
+>> whether the TYPE_NAME check is implemented here or exfat_get_dentry_set().
+>> It's functionally same, so it is also right to validate in either.
+>>
+>> Second, the current implementation does not care for NameLength field, as I replied to Sungjong.
+>> If name is not terminated with zero, the name will be incorrect.(With or without my patch) I think
+>> TYPE_NAME and NameLength validation should not be separated from the name extraction.
+>> If validate TYPE_NAME in exfat_get_dentry_set(), NameLength validation and name extraction should also
+>> be implemented there.
+>> (Otherwise, a duplication check with exfat_get_dentry_set() and here.) I will add NameLength
+>> validation here.
+> Okay.
 
-Alternatively, we could introduce a new convention in the spec,
-something like "user?", which would accept either "user" or
-"user/something", but not "user/" nor "userblah". We can try that as
-well.
+Thank you for your understanding.
 
->
-> Thanks,
-> Song
->
-> [...]
->
+>> Therefore, TYPE_NAME validation here should not be omitted.
+>>
+>> Third, getting dentry and entry-type validation should be integrated.
+>> These no longer have to be primitive.
+>> The integration simplifies caller error checking.
+
+
+
+>>>> diff --git a/fs/exfat/file.c b/fs/exfat/file.c index
+>>>> 6707f3eb09b5..b6b458e6f5e3 100644
+>>>> --- a/fs/exfat/file.c
+>>>> +++ b/fs/exfat/file.c
+>>>> @@ -160,8 +160,8 @@ int __exfat_truncate(struct inode *inode, loff_t new_size)
+>>>>   				ES_ALL_ENTRIES);
+>>>>   		if (!es)
+>>>>   			return -EIO;
+>>>> -		ep = exfat_get_dentry_cached(es, 0);
+>>>> -		ep2 = exfat_get_dentry_cached(es, 1);
+>>>> +		ep = exfat_get_validated_dentry(es, 0, TYPE_FILE);
+>>>> +		ep2 = exfat_get_validated_dentry(es, 1, TYPE_STREAM);
+>>> TYPE_FILE and TYPE_STREAM was already validated in exfat_get_dentry_set().
+>>> Isn't it unnecessary duplication check ?
+>>
+>> No, as you say.
+>> Although TYPE is specified, it is not good not to check the null of ep/ep2.
+>> However, with TYPE_ALL, it becomes difficult to understand what purpose ep/ep2 is used for.
+>> Therefore, I proposed adding ep_file/ep_stream to es, and here
+>> 	ep = es->ep_file;
+>> 	ep2 = es->ep_stream;
+>>
+>> How about this?
+> You can factor out exfat_get_dentry_cached() from exfat_get_validated_dentry() and use it here.
+
+I actually implemented and use it, but I feel it is not so good.
+- Since there are two functions to get from es, so it's a bit confusing which one is better for use.
+- There was the same anxiety as using exfat_get_validated_dentry() in that there is no NULL check of
+   ep got with exfat_get_dentry_cached().
+
+Whichever function I use, there are places where I check the return value and where I don't.
+This will cause  missing entry-type validation or missing return value check,in the future.
+I think it's easier to use by including it as a validated object in the member of exfat_entry_set_cache.
+
+> And then, You can rename ep and ep2 to ep_file and ep_stream.
+
+I propose a slightly different approach than last.
+Add members to exfat_entry_set_cache as below.
+     struct exfat_de_file *de_file;
+     struct exfat_de_stream *de_stream;
+And, use these as below.
+     es->de_file->attr = cpu_to_le16(exfat_make_attr(inode));
+     es->de_stream->valid_size = cpu_to_le64(on_disk_size);
+
+exfat_de_file/exfat_de_stream corresponds to the file dir-entry/stream dir-enty structure in the exfat_dentry union.
+We can use the validated valid values ​​directly.
+Furthermore, these are strongly typed.
+
+
+>> Or is it better to specify TYPE_ALL?
+>>
+>>
+>> BTW
+>> It's been about a month since I posted this patch.
+>> In the meantime, I created a NameLength check and a checksum validation based on this patch.
+>> Can you review those as well?
+> Let me see the patches.
+
+Thanks a lot.
+For now, I will create and post a V3 patch with this proposal.
+After that, I will recreate the NameLength check and a checksum validation patches based on the V3 patch and post them.
+(Should I post these as an RFC?)
+
+BR
+---
+Kohada Tetsuhiro <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
