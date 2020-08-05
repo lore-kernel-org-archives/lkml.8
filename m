@@ -2,138 +2,192 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B46C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B089C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF8F722CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:06:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FTFMp8Dn"
+	by mail.kernel.org (Postfix) with ESMTP id 35A4122CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:06:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596657988;
+	bh=A3fBP2F0oTnzghrQINF7bdDyAwWTRiVsMOyIPbS9fnI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=hZo+ulaPDx4/4Q2DoOKgx7V7dNbBtwWMIZVMBgCpvdVLzTdHo+Qn8qZbfRoEv4Sna
+	 IbQ54imdjTFm2cqJlmmtqOpOTzwJispQ/97Eq39HRJ5S8jNVP9mfqyYm7WwgVvLDnU
+	 S0Ho0OoDoZTJZmLL/MjdonJ7I46+nxlkr/Micr7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729447AbgHEUGU (ORCPT
+        id S1729735AbgHEUG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:06:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44596 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726186AbgHEQfG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:35:06 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21128C008686;
-        Wed,  5 Aug 2020 07:25:09 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id p8so8421945pgn.13;
-        Wed, 05 Aug 2020 07:25:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AC9ky2C3Ij8fAbqbNhEO64rPYUTHmvfPvc5f+fIvzK8=;
-        b=FTFMp8DnK1Q4yCvVpBK237B45BNVaxqLnYbQeyXwNQKF3T0ZVU+frSVo2esy4lqhLh
-         UePeEM1VFfFpKnHfqUwbxpdTEgtDQShJwz55PkiFECm7qsuRTvY6kYyy9S47l4ATuIST
-         dua2Rmvkia9HCFr72HBFOWjaa0TWmFVmzg7hq2BZynnJVB8GEhIzk7/gG4Vhy4/L0i8L
-         2azsYhrCvRtU5v6COB/6TuounJ6wQoB0k2vQbZr2TB2bwcPsfsOLTOVXglXguUvlCY2W
-         d5r80JAsoCHdPTRcH3pi7HNGXontHgVz8GQsJGEZFOk6QpEXe/9i9TR89eHn4CQABQJE
-         QRAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AC9ky2C3Ij8fAbqbNhEO64rPYUTHmvfPvc5f+fIvzK8=;
-        b=suwqqfbNEyFVR0HtOzzQ/5qz8hGlUjd3YjO/AbcpdghzZzhxqIjNv+Hdew114er+vc
-         1mkgw7zvGwoxkFUibxFn0LPEZVZRVf0CeeNh64LOzfPiF0HsahAl46yA8YeDppSCaobG
-         td6vXsedUN1p6D7YIi9LFEo7PFBbf5Kyqr7X+FFvHlDEIyG2cNmy9MZbIMwYuiU7hwTH
-         HStBSVkx2U4/aHkyo/zAN6CqOIf3LEuNmhGEyqX02gYFk/bCPsRQV5ZpfGqQ6GoI+qyc
-         54NP3XBAEWkyF5q/vjj0hUKNsie14iNW8ky7BoiD+EHYqFd+tgNR4HCL98WwIAyB0ulE
-         qdqA==
-X-Gm-Message-State: AOAM5329X9MnIcmmnGW1Dbut81pLxMfDSh1sqnzwWSlRZX535ka9RJ5X
-        1bcliss3NdIV/iygIn8dqRgE0/wGGDKRzKLM61ELMzK9o9c=
-X-Google-Smtp-Source: ABdhPJy3Zwn4T8BNUfOUv+eXKmotLpzwuZ7FaC/MF6rO2BR8iLdAlMXguhBtGU6wXRb1rk93OIPQquvJFGErG8XjcBo=
-X-Received: by 2002:a62:7b4e:: with SMTP id w75mr3503195pfc.130.1596637508595;
- Wed, 05 Aug 2020 07:25:08 -0700 (PDT)
+        Wed, 5 Aug 2020 16:06:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50734 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726351AbgHEQev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 12:34:51 -0400
+Received: from localhost (mobile-166-175-186-42.mycingular.net [166.175.186.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B83BD2333D;
+        Wed,  5 Aug 2020 15:28:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596641314;
+        bh=A3fBP2F0oTnzghrQINF7bdDyAwWTRiVsMOyIPbS9fnI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Jn3hU4c1pYpI0XdlIq4C3LPHy/seX54M6XHzJdjok72coYQfH0cempWUpzwY/1x1C
+         GLBitKtQx8rX4Rx4W6NC8Kwwta3z9ctGwV8hdZcT6s9FyVsoV9nSlSpNZ0ehRSakFN
+         vFlc8OEtJI2NPZAE1hqWB2ILz853HevbhrOXacCY=
+Date:   Wed, 5 Aug 2020 10:28:32 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>,
+        Tomoya MORINAGA <tomoya.rohm@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: [PATCH v1] i2c: eg20t: use generic power management
+Message-ID: <20200805152832.GA511823@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <20200805134226.1106164-1-mst@redhat.com> <20200805134226.1106164-19-mst@redhat.com>
-In-Reply-To: <20200805134226.1106164-19-mst@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 5 Aug 2020 17:24:53 +0300
-Message-ID: <CAHp75Vfyjxegi8EtNqVZLVUDzR_0WOJQVmJFoJi4DFxDgNRG-g@mail.gmail.com>
-Subject: Re: [PATCH v3 18/38] mlxbf-tmfifo: sparse tags for config access
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200805152331.GA510793@bjorn-Precision-5520>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 4:44 PM Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> mlxbf-tmfifo accesses config space using native types -
-> which works for it since the legacy virtio native types.
->
-> This will break if it ever needs to support modern virtio,
-> so with new tags previously introduced for virtio net config,
-> sparse now warns for this in drivers.
->
-> Since this is a legacy only device, fix it up using
-> virtio_legacy_is_little_endian for now.
->
-> No functional changes.
->
+[update Linus's address, drop Qi's (bounced)]
 
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> Acked-by: Cornelia Huck <cohuck@redhat.com>
-> ---
->  drivers/platform/mellanox/mlxbf-tmfifo.c | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/platform/mellanox/mlxbf-tmfifo.c b/drivers/platform/mellanox/mlxbf-tmfifo.c
-> index 5739a9669b29..bbc4e71a16ff 100644
-> --- a/drivers/platform/mellanox/mlxbf-tmfifo.c
-> +++ b/drivers/platform/mellanox/mlxbf-tmfifo.c
-> @@ -625,7 +625,10 @@ static void mlxbf_tmfifo_rxtx_header(struct mlxbf_tmfifo_vring *vring,
->                         vdev_id = VIRTIO_ID_NET;
->                         hdr_len = sizeof(struct virtio_net_hdr);
->                         config = &fifo->vdev[vdev_id]->config.net;
-> -                       if (ntohs(hdr.len) > config->mtu +
-> +                       /* A legacy-only interface for now. */
-> +                       if (ntohs(hdr.len) >
-> +                           __virtio16_to_cpu(virtio_legacy_is_little_endian(),
-> +                                             config->mtu) +
->                             MLXBF_TMFIFO_NET_L2_OVERHEAD)
->                                 return;
->                 } else {
-> @@ -1231,8 +1234,12 @@ static int mlxbf_tmfifo_probe(struct platform_device *pdev)
->
->         /* Create the network vdev. */
->         memset(&net_config, 0, sizeof(net_config));
-> -       net_config.mtu = ETH_DATA_LEN;
-> -       net_config.status = VIRTIO_NET_S_LINK_UP;
-> +
-> +       /* A legacy-only interface for now. */
-> +       net_config.mtu = __cpu_to_virtio16(virtio_legacy_is_little_endian(),
-> +                                          ETH_DATA_LEN);
-> +       net_config.status = __cpu_to_virtio16(virtio_legacy_is_little_endian(),
-> +                                             VIRTIO_NET_S_LINK_UP);
->         mlxbf_tmfifo_get_cfg_mac(net_config.mac);
->         rc = mlxbf_tmfifo_create_vdev(dev, fifo, VIRTIO_ID_NET,
->                                       MLXBF_TMFIFO_NET_FEATURES, &net_config,
-> --
-> MST
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+On Wed, Aug 05, 2020 at 10:23:31AM -0500, Bjorn Helgaas wrote:
+> [+cc Tomoya, Linus, Qi, Ben from e9bc8fa5df1c]
+> 
+> On Mon, Jul 20, 2020 at 07:30:32PM +0530, Vaibhav Gupta wrote:
+> > Drivers using legacy PM have to manage PCI states and device's PM states
+> > themselves. They also need to take care of configuration registers.
+> > 
+> > With improved and powerful support of generic PM, PCI Core takes care of
+> > above mentioned, device-independent, jobs.
+> > 
+> > This driver makes use of PCI helper functions like
+> > pci_save/restore_state(), pci_enable/disable_device(),
+> > pci_enable_wake() and pci_set_power_state() to do required operations. In
+> > generic mode, they are no longer needed.
+> > 
+> > Change function parameter in both .suspend() and .resume() to
+> > "struct device*" type. Use to_pci_dev() and dev_get_drvdata() to get
+> > "struct pci_dev*" variable and drv data.
+> > 
+> > Compile-tested only.
+> > 
+> > Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+> > ---
+> >  drivers/i2c/busses/i2c-eg20t.c | 39 ++++++++--------------------------
+> >  1 file changed, 9 insertions(+), 30 deletions(-)
+> > 
+> > diff --git a/drivers/i2c/busses/i2c-eg20t.c b/drivers/i2c/busses/i2c-eg20t.c
+> > index 73f139690e4e..c0ddc4cc2ce7 100644
+> > --- a/drivers/i2c/busses/i2c-eg20t.c
+> > +++ b/drivers/i2c/busses/i2c-eg20t.c
+> > @@ -846,11 +846,10 @@ static void pch_i2c_remove(struct pci_dev *pdev)
+> >  	kfree(adap_info);
+> >  }
+> >  
+> > -#ifdef CONFIG_PM
+> > -static int pch_i2c_suspend(struct pci_dev *pdev, pm_message_t state)
+> > +static int __maybe_unused pch_i2c_suspend(struct device *dev)
+> >  {
+> > -	int ret;
+> >  	int i;
+> > +	struct pci_dev *pdev = to_pci_dev(dev);
+> >  	struct adapter_info *adap_info = pci_get_drvdata(pdev);
+> 
+> Why don't you use "adap_info = dev_get_drvdata(dev)" as you did below,
+> so you don't need to_pci_dev()?
+> 
+> >  	void __iomem *p = adap_info->pch_data[0].pch_base_address;
+> >  
+> > @@ -872,34 +871,17 @@ static int pch_i2c_suspend(struct pci_dev *pdev, pm_message_t state)
+> >  		ioread32(p + PCH_I2CSR), ioread32(p + PCH_I2CBUFSTA),
+> >  		ioread32(p + PCH_I2CESRSTA));
+> >  
+> > -	ret = pci_save_state(pdev);
+> > -
+> > -	if (ret) {
+> > -		pch_pci_err(pdev, "pci_save_state\n");
+> > -		return ret;
+> > -	}
+> > -
+> > -	pci_enable_wake(pdev, PCI_D3hot, 0);
+> > -	pci_disable_device(pdev);
+> > -	pci_set_power_state(pdev, pci_choose_state(pdev, state));
+> > +	device_wakeup_disable(dev);
+> >  
+> >  	return 0;
+> >  }
+> >  
+> > -static int pch_i2c_resume(struct pci_dev *pdev)
+> > +static int __maybe_unused pch_i2c_resume(struct device *dev)
+> >  {
+> >  	int i;
+> > -	struct adapter_info *adap_info = pci_get_drvdata(pdev);
+> > -
+> > -	pci_set_power_state(pdev, PCI_D0);
+> > -	pci_restore_state(pdev);
+> > +	struct adapter_info *adap_info = dev_get_drvdata(dev);
+> >  
+> > -	if (pci_enable_device(pdev) < 0) {
+> > -		pch_pci_err(pdev, "pch_i2c_resume:pci_enable_device FAILED\n");
+> > -		return -EIO;
+> > -	}
+> > -
+> > -	pci_enable_wake(pdev, PCI_D3hot, 0);
+> > +	device_wakeup_disable(dev);
+> 
+> It *looks* wrong to disable wakeup in both suspend and resume.  I
+> think the usual pattern is to enable wakeup in suspend and disable it
+> in resume.
+> 
+> But it looks like it's been that way since the driver was added by
+> e9bc8fa5df1c ("i2c-eg20t: add driver for Intel EG20T").
+> 
+> If the device doesn't support wakeup, I would not expect the driver to
+> mention wakeup at all.
+> 
+> In any case, I think it's the right thing for *this* patch to preserve
+> the previous wakeup behavior.  Maybe we want a follow-up patch to just
+> remove both device_wakeup_disable() calls?
+> 
+> >  	for (i = 0; i < adap_info->ch_num; i++)
+> >  		pch_i2c_init(&adap_info->pch_data[i]);
+> > @@ -908,18 +890,15 @@ static int pch_i2c_resume(struct pci_dev *pdev)
+> >  
+> >  	return 0;
+> >  }
+> > -#else
+> > -#define pch_i2c_suspend NULL
+> > -#define pch_i2c_resume NULL
+> > -#endif
+> > +
+> > +static SIMPLE_DEV_PM_OPS(pch_i2c_pm_ops, pch_i2c_suspend, pch_i2c_resume);
+> >  
+> >  static struct pci_driver pch_pcidriver = {
+> >  	.name = KBUILD_MODNAME,
+> >  	.id_table = pch_pcidev_id,
+> >  	.probe = pch_i2c_probe,
+> >  	.remove = pch_i2c_remove,
+> > -	.suspend = pch_i2c_suspend,
+> > -	.resume = pch_i2c_resume
+> > +	.driver.pm = &pch_i2c_pm_ops,
+> >  };
+> >  
+> >  module_pci_driver(pch_pcidriver);
+> > -- 
+> > 2.27.0
+> > 
