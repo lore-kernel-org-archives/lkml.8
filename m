@@ -2,101 +2,74 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF19BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5530EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B43FC206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:25:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596655554;
-	bh=47QAnSMoOVMr8QHQNgdXK4N904/7dAfTkxp4OLgXePU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VPe+/RAo8z4bihLbgiO+Dwk0A86SirslZ77Shklp3JJpOk1aZjqMskbzyJB/EtDOh
-	 o1m27xvnlxC1VnAhk1agO2tItmrwSz3CkTN7xG0Cy0exH9C3v+7DL7Wz7/gCkzoP8X
-	 ITFxA6G495NX0opHSJLvtjhPWodKBCAIJdTJJEOM=
+	by mail.kernel.org (Postfix) with ESMTP id 23EB02075D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:26:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729104AbgHETZt (ORCPT
+        id S1728829AbgHET0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:25:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35572 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 15:26:00 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:43894 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728751AbgHERPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:15:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58E9423371;
-        Wed,  5 Aug 2020 15:52:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596642763;
-        bh=47QAnSMoOVMr8QHQNgdXK4N904/7dAfTkxp4OLgXePU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t9Ylgpvi0YEcEmP+ExJf6FzmK0zYUsWdnnijU1WxDn/qBN7+I0V0uDNvN/s3dDEyR
-         m4voc3+kBHhPqCjCD58CaFVWWeVlOsrpOUGgHH1yIM2jFx0uGpPqdpV040UPJbYaLd
-         i/7UTZxWg8Y0MmNm71zSMxMwaL+3IO7sgv960rlo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 2/9] ARM: percpu.h: fix build error
-Date:   Wed,  5 Aug 2020 17:52:39 +0200
-Message-Id: <20200805153507.166338238@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200805153507.053638231@linuxfoundation.org>
-References: <20200805153507.053638231@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1728624AbgHERO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:14:57 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1k3JFE-008NAi-1O; Wed, 05 Aug 2020 15:14:12 +0200
+Date:   Wed, 5 Aug 2020 15:14:12 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Ilia Lin <ilia.lin@kernel.org>
+Cc:     David Miller <davem@davemloft.net>, ilial@codeaurora.org,
+        kuba@kernel.org, jiri@mellanox.com, edumazet@google.com,
+        ap420073@gmail.com, xiyou.wangcong@gmail.com, maximmi@mellanox.com,
+        netdev@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: dev: Add API to check net_dev readiness
+Message-ID: <20200805131412.GA1960434@lunn.ch>
+References: <1595792274-28580-1-git-send-email-ilial@codeaurora.org>
+ <20200726194528.GC1661457@lunn.ch>
+ <20200727.103233.2024296985848607297.davem@davemloft.net>
+ <CA+5LGR1KwePssqhCkZ6qT_W87fO2o1XPze53mJwjkTWtphiWrA@mail.gmail.com>
+ <20200804192435.GG1919070@lunn.ch>
+ <CA+5LGR32kKvaeDnb4qpGS_f=t-U4dDCYpnVy7R9zgAQCJW6jtA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+5LGR32kKvaeDnb4qpGS_f=t-U4dDCYpnVy7R9zgAQCJW6jtA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+> > Well, until the user of this new API is ready, we will not accept the
+> > patch.
+> OK, but once we submit the change in the driver, is it good to go?
 
-commit aa54ea903abb02303bf55855fb51e3fcee135d70 upstream.
+No. You really do need to explain why it is needed, and why it is
+safe.
 
-Fix build error for the case:
-  defined(CONFIG_SMP) && !defined(CONFIG_CPU_V6)
+> > You also need to explain "For HW performance reasons". Why is this
+> > driver special that it can do things which no over driver does?
+> There are very strict KPI requirements. E.g. automotive rear mirror
+> must be online 3 sec since boot.
 
-config: keystone_defconfig
+Which does not explain why this driver is special. What you really
+should be thinking about is having the required drivers for this use
+case built in, and the rest as modules. Get your time critical parts
+running, and then load the rest of the driver moduless and kick off
+additional user space in a second phase.
 
-  CC      arch/arm/kernel/signal.o
-  In file included from ../include/linux/random.h:14,
-                    from ../arch/arm/kernel/signal.c:8:
-  ../arch/arm/include/asm/percpu.h: In function ‘__my_cpu_offset’:
-  ../arch/arm/include/asm/percpu.h:29:34: error: ‘current_stack_pointer’ undeclared (first use in this function); did you mean ‘user_stack_pointer’?
-      : "Q" (*(const unsigned long *)current_stack_pointer));
-                                     ^~~~~~~~~~~~~~~~~~~~~
-                                     user_stack_pointer
+You are breaking all sorts of assumptions by loading network drivers
+before the stack is ready. You need to expect all sorts of nasty bugs.
+If this was just in your vendor kernel, we would not care too much, it
+is your problem to solve. But by doing this in mainline, you are
+setting a precedent for others to do it as well. And then we really do
+need to care about the broken assumptions. I doubt we are ready to
+allow this.
 
-Fixes: f227e3ec3b5c ("random32: update the net random state on interrupt and activity")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/arm/include/asm/percpu.h |    2 ++
- 1 file changed, 2 insertions(+)
-
---- a/arch/arm/include/asm/percpu.h
-+++ b/arch/arm/include/asm/percpu.h
-@@ -5,6 +5,8 @@
- #ifndef _ASM_ARM_PERCPU_H_
- #define _ASM_ARM_PERCPU_H_
- 
-+#include <asm/thread_info.h>
-+
- /*
-  * Same as asm-generic/percpu.h, except that we store the per cpu offset
-  * in the TPIDRPRW. TPIDRPRW only exists on V6K and V7
-
-
+      Andrew
