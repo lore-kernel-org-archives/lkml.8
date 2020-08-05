@@ -2,106 +2,76 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A576C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A70C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10EC820842
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CC5C2076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:53:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbgHETxX (ORCPT
+        id S1729200AbgHETx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:53:23 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37637 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728166AbgHEQuV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:50:21 -0400
-Received: from mail-pg1-f199.google.com ([209.85.215.199])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1k3HXC-00086D-8E
-        for linux-kernel@vger.kernel.org; Wed, 05 Aug 2020 11:24:38 +0000
-Received: by mail-pg1-f199.google.com with SMTP id j37so7398428pgi.16
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 04:24:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=lF9ALM9gRuD9sB/pHsvqa0BtUHkbcECALGd1yP2+BEE=;
-        b=IJEMwoI6SX/1go6TKmtcvxt4uNuRFgQs9m+CiC1XT2AoudohhVseJRgurJUMZ4P8Ji
-         yxGmPkiDYDNzMWK1MN/WBNQrlWb5H7Jy9PJxFSyHrj9wCxAwPUzWXuTwhtNeO3OTNG7p
-         2H9bxSXIlHHL/FLKAoHTyo8pbTObM7BBMR8BR2DPQTnz/7QKOGEwtXrvlfakUOk3Q8NB
-         /QMp8D7vzJWJlTAMH+uKmV2jzU4TcSGACLB+AJyUt6LAjwe+/Ps9GiBmCs8KpFTAfrXh
-         kQtduPHQM3+EJlmMg1dBdfORatzsa91026cx8vmomBtT02PRtDNo8qpg+iEXXY6c8ca+
-         xYAQ==
-X-Gm-Message-State: AOAM531CjqtjqgpgLyJJyRJk07OMiZY0bBqheCdEOLtkHND5FnuZqoVN
-        tQODxChLcTpmxIEpk8t44GP82UkV0u654F7JVU67AajjJRgOGCIKewS0lokf2N9pNSt41tYrsr4
-        Wn3o41c71qBcUcIBzCDZZwHCIUUJOJA/fajppGpEAbg==
-X-Received: by 2002:aa7:9a4c:: with SMTP id x12mr2894370pfj.307.1596626676926;
-        Wed, 05 Aug 2020 04:24:36 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzJvZXSuRgwTlY5y0En/vjiU7lqcs7sM2JL0qxNrQv5cxET1ZLz6FnSZD2pMhacVp3VGxyXoA==
-X-Received: by 2002:aa7:9a4c:: with SMTP id x12mr2894345pfj.307.1596626676533;
-        Wed, 05 Aug 2020 04:24:36 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id i11sm2613913pjv.30.2020.08.05.04.24.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Aug 2020 04:24:35 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
-Subject: Re: [PATCH] rtw88: 8821c: Add RFE 2 support
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <c0c336d806584361992d4b52665fbb82@realtek.com>
-Date:   Wed, 5 Aug 2020 19:24:32 +0800
-Cc:     "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "open list:REALTEK WIRELESS DRIVER (rtw88)" 
-        <linux-wireless@vger.kernel.org>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Andy Huang <tehuang@realtek.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <9330BBA5-158B-49F1-8B7C-C2733F358AC1@canonical.com>
-References: <20200805084559.30092-1-kai.heng.feng@canonical.com>
- <c0c336d806584361992d4b52665fbb82@realtek.com>
-To:     Tony Chuang <yhchuang@realtek.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.1)
+        Wed, 5 Aug 2020 15:53:27 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:45384 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728158AbgHEQuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 12:50:20 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 434B1201463;
+        Wed,  5 Aug 2020 12:43:57 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 680AF200431;
+        Wed,  5 Aug 2020 12:43:53 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5282A402D0;
+        Wed,  5 Aug 2020 12:43:35 +0200 (CEST)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] ARM: dts: imx6qdl-sabresd: Support headphone and microphone detection
+Date:   Wed,  5 Aug 2020 18:39:04 +0800
+Message-Id: <1596623944-3104-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony,
+Add "DMIC" rounting, headphone and microphone detect gpio for sound
+card, then output sound can switch between headphone and speaker.
+input sound can switch between DMIC and AMIC.
 
-> On Aug 5, 2020, at 19:18, Tony Chuang <yhchuang@realtek.com> wrote:
-> 
->> 8821CE with RFE 2 isn't supported:
->> [   12.404834] rtw_8821ce 0000:02:00.0: rfe 2 isn't supported
->> [   12.404937] rtw_8821ce 0000:02:00.0: failed to setup chip efuse info
->> [   12.404939] rtw_8821ce 0000:02:00.0: failed to setup chip information
->> 
-> 
-> NACK
-> 
-> The RFE type 2 should be working with some additional fixes.
-> Did you tested connecting to AP with BT paired?
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-No, I only tested WiFi.
-
-> The antenna configuration is different with RFE type 0.
-> I will ask someone else to fix them.
-> Then the RFE type 2 modules can be supported.
-
-Good to know that, I'll be patient and wait for a real fix.
-
-Kai-Heng
-
-> 
-> Yen-Hsuan
+diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+index 28b35ccb3757..d933b5384a96 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
+@@ -105,9 +105,13 @@ sound {
+ 			"Ext Spk", "SPKOUTL",
+ 			"Ext Spk", "SPKOUTR",
+ 			"AMIC", "MICBIAS",
+-			"IN3R", "AMIC";
++			"IN3R", "AMIC",
++			"DMIC", "MICBIAS",
++			"DMICDAT", "DMIC";
+ 		mux-int-port = <2>;
+ 		mux-ext-port = <3>;
++		hp-det-gpio = <&gpio7 8 GPIO_ACTIVE_LOW>;
++		mic-det-gpio = <&gpio1 9 GPIO_ACTIVE_LOW>;
+ 	};
+ 
+ 	backlight_lvds: backlight-lvds {
+-- 
+2.27.0
 
