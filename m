@@ -2,137 +2,284 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-25.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F6EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDABC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84D9C22CA0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:20:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16A7D22CA0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:21:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b7usL0VO"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="fphzMPhy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbgHESUR (ORCPT
+        id S1728794AbgHESVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 14:20:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33086 "EHLO
+        Wed, 5 Aug 2020 14:21:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729213AbgHESTb (ORCPT
+        with ESMTP id S1728797AbgHESOo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 14:19:31 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3763C061575
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 11:19:25 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id c4so9506383qvq.15
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 11:19:25 -0700 (PDT)
+        Wed, 5 Aug 2020 14:14:44 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E583C061575
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 11:14:42 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id a5so31638131ioa.13
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 11:14:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=uiS4vK1ED9a+VphuuXYAfxefFTXitmOIurQShIFya8E=;
-        b=b7usL0VOL7PPQfXINDo8SSR5TInSgE9RLT/VD3I8RopG0mUBvlQtznYdBEPztuPJ9U
-         3keS4RjqtSWdqfSbLa4Y7pTcdCA9i9nOJce9Pw45+koPewzc9wEF5vEg5Lz3PCdpsAnl
-         Q+ICX0WmjChTnMC3e3Pajz5ertwDBxhYdq7nEWOKN+rKuQIux6gg9yP6FcSF4EWLjufW
-         mwe5GRvQI8xDDRGsF+1rzmIm/wizRihcSJ+Zb2fzs0wljgsgmaBfu+2tuauQE5+bTLOP
-         88GoLKesxhmArXOPcwI5XqE1Q0EpSpJnT3WoAHX5/Ll5KOKYAXAuXjjePQ0wDKvb8Cea
-         ommw==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=w0IXhDxPaIDABQjAbzl0aq6xX3B2TWL/BGPjCg5EAQI=;
+        b=fphzMPhyQ2D5ZWF4hklrmLqzUVH0KuSf6rTNU4w0xTT+WGpGiiCSXwekBkCLogcKoJ
+         1MdMjK8G45vo789K9a/KzsfCaCQ+xGG6uv0KNBbJZMCgH1K6wHP8pVaXGBeZ0VagkluH
+         RbWAeXBeF7eMJh5x7C07X8xm9by4NPtJWvSFd+eskC6GBtAQL1dp10+FvKAjQqZr/wR4
+         2nkhFrEQANtG7ifM8jANYvpwik7Af7PhdnHsupLErVI3jiH1XtXZQFhi711JxAZ8CLwB
+         tyiAhS/4E+HUeSbagvR3Hbm+RGbA0Q7Qly7om2rt7Yi/Bv+/bhGiCMcwSZtuF4zbBgzJ
+         K2FQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=uiS4vK1ED9a+VphuuXYAfxefFTXitmOIurQShIFya8E=;
-        b=pUKET2oi+pvJAMQH8Kc7XtDRJwB4XyOgBughnwG/ZarvF4ljZiiFkltgX2x0vJvypG
-         jabPXiGJ6ohuFR0PjZ3+qTI5MyCgFDRNdRRzI9LmMUpQ45XYKqdxnC+CxzGcbCGkA4Qh
-         L823rJicJo8sUECRhdvFjOtfL9hclY/hSW92t4mkqMdpv9mySAJUIFvAZufdOW7+P55j
-         mqR68/EBSEt/eQFoHeSkTYtvp4Wicq6xIQf9nsvpxxS+Imtoy/XwFZp4J8xhFQD8MVqF
-         A11+Z/4W4PoO2QcxtL1xzsfXMWEGrFrcD83wF95v8IkiLmX1OHD+mn2oixjsqIk15Eq8
-         QUCg==
-X-Gm-Message-State: AOAM532DxUvgb8UJsB9xQH4LkQDtK9yg1WjHyT1xTZxMgdeuetC3Fqua
-        3qTPpQzioyyRzP6rbqDuJWfYqLsAinBlMRHn7H4=
-X-Google-Smtp-Source: ABdhPJyQlgl//n+4oh/u/DXcrOj6zGvBkKmeLit3yZipK/1vtNk4x1r35x11Qpx6dqyegtQzgfRH5nJ0UHRADBro3FQ=
-X-Received: by 2002:a05:6214:8a:: with SMTP id n10mr5030949qvr.13.1596651564177;
- Wed, 05 Aug 2020 11:19:24 -0700 (PDT)
-Date:   Wed,  5 Aug 2020 11:19:20 -0700
-Message-Id: <20200805181920.4013059-1-samitolvanen@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-Subject: [PATCH] arm64: tlb: fix ARM64_TLB_RANGE with LLVM's integrated assembler
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Zhenyu Ye <yezhenyu2@huawei.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Sami Tolvanen <samitolvanen@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=w0IXhDxPaIDABQjAbzl0aq6xX3B2TWL/BGPjCg5EAQI=;
+        b=OHEUZ+ujwZMp27koiyYKpE77R5J1T4kKvQyy4AA9BLLZ81N3aERCKC1JOv9su98P95
+         qk6vnD5zRPqaO1qxIu/QBOGvwGGEBF1oZbX06aZmvx1rrukdh7bTse5Ax4Sja9XIi0ZW
+         HAQuYOqvXPG6QEbFPBjntw95VhrIWupM0uiDL3f52FiehzPUxXBZF+Zl78LeWanGryaD
+         CoIgzyGtMX0J79qjxopftHK+px0634caPSejcbxS1GpKWUkllLkJiZpL8Jk5BG6Bz3C1
+         ff+dvGzbxGPIImDH6Xudz8DQD9ANBkBqW1KH+C+1zR8BgAsdmhQW7xr1uxlHhFJ9WZRm
+         T6Vg==
+X-Gm-Message-State: AOAM530l8S52Ad0VcG1IGr7+EZQYlU04Z9CgcvZEWVr92uL18j4eGK6j
+        i0m9s/taEXQNgD9c14vUYplrv6gSh99Tk6WcW4NZwA==
+X-Google-Smtp-Source: ABdhPJx8vxQx+KF1GJByxSwbEm54QG5LwXEMj2NqJ+mpyyvwG22P3C6OumkFi3/l+mm9o1160Toz7uT1OuxDLF3iybc=
+X-Received: by 2002:a5d:9586:: with SMTP id a6mr4575399ioo.131.1596651279679;
+ Wed, 05 Aug 2020 11:14:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200317151409.7940926c@endymion> <CAMRc=Mdoh5Sk3iS_CO4+++SG2jJOy1qrG4q2zOzbeYYMdJR0VA@mail.gmail.com>
+ <20200805163655.6cfa6e17@endymion>
+In-Reply-To: <20200805163655.6cfa6e17@endymion>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 5 Aug 2020 20:14:28 +0200
+Message-ID: <CAMRc=MeoWUaL_qvwL6bkpaVUvxh4x3ZN6V4UNQr+bjnLo3NubQ@mail.gmail.com>
+Subject: Re: VAIO EEPROM support in at24
+To:     Jean Delvare <jdelvare@suse.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 7c78f67e9bd9 ("arm64: enable tlbi range instructions") breaks
-LLVM's integrated assembler, because -Wa,-march is only passed to
-external assemblers and therefore, the new instructions are not enabled
-when IAS is used.
+On Wed, Aug 5, 2020 at 4:36 PM Jean Delvare <jdelvare@suse.de> wrote:
+>
+> Hi Bartosz,
+>
+> On Tue, 17 Mar 2020 15:32:56 +0100, Bartosz Golaszewski wrote:
+> > wt., 17 mar 2020 o 15:14 Jean Delvare <jdelvare@suse.de> napisa=C5=82(a=
+):
+> > > Before I start implementing the idea above, I would like to know if
+> > > anyone objects to it, or has a better idea?
+> >
+> > Sounds good to me in general but isn't it something we could
+> > generalize a bit more?
+> >
+> > For instance we could make at24_chip_data struct look something like th=
+is:
+> >
+> > struct at24_chip_data {
+> >     u32 byte_len;
+> >     u8 flags;
+> >     struct resource masked;
+> > };
+> >
+> > And we could introduce a new macro called AT24_CHIP_DATA_MASKED that
+> > would automacially set the AT24_FLAG_MASKED_RANGE flag and take
+> > another argument that would contain the address and size of the masked
+> > register range (we'd put it into the "masked" resource)?
+> >
+> > Other ideas are welcome too. I just think that making it
+> > SONY_VAIO-specific may be a bit limiting in the future.
+>
+> I finally found the time to give it a try. Here's what my (tested)
+> prototype looks like:
+>
 
-As binutils doesn't support .arch_extension tlb-rmi, this change adds
-.arch armv8.4-a to __TLBI_0 and __TLBI_1 to fix the issue with both LLVM
-IAS and binutils.
+Hi Jean,
 
-Fixes: 7c78f67e9bd9 ("arm64: enable tlbi range instructions")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1106
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
----
- arch/arm64/include/asm/tlbflush.h | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+this looks good at first glance.
 
-diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-index d493174415db..66c2aab5e9cb 100644
---- a/arch/arm64/include/asm/tlbflush.h
-+++ b/arch/arm64/include/asm/tlbflush.h
-@@ -16,6 +16,16 @@
- #include <asm/cputype.h>
- #include <asm/mmu.h>
- 
-+/*
-+ * Enable ARMv8.4-TLBI instructions with ARM64_TLB_RANGE. Note that binutils
-+ * doesn't support .arch_extension tlb-rmi, so use .arch armv8.4-a instead.
-+ */
-+#ifdef CONFIG_ARM64_TLB_RANGE
-+#define __TLBI_PREAMBLE	".arch armv8.4-a\n"
-+#else
-+#define __TLBI_PREAMBLE
-+#endif
-+
- /*
-  * Raw TLBI operations.
-  *
-@@ -28,14 +38,16 @@
-  * not. The macros handles invoking the asm with or without the
-  * register argument as appropriate.
-  */
--#define __TLBI_0(op, arg) asm ("tlbi " #op "\n"				       \
-+#define __TLBI_0(op, arg) asm (__TLBI_PREAMBLE				       \
-+			       "tlbi " #op "\n"				       \
- 		   ALTERNATIVE("nop\n			nop",		       \
- 			       "dsb ish\n		tlbi " #op,	       \
- 			       ARM64_WORKAROUND_REPEAT_TLBI,		       \
- 			       CONFIG_ARM64_WORKAROUND_REPEAT_TLBI)	       \
- 			    : : )
- 
--#define __TLBI_1(op, arg) asm ("tlbi " #op ", %0\n"			       \
-+#define __TLBI_1(op, arg) asm (__TLBI_PREAMBLE				       \
-+			       "tlbi " #op ", %0\n"			       \
- 		   ALTERNATIVE("nop\n			nop",		       \
- 			       "dsb ish\n		tlbi " #op ", %0",     \
- 			       ARM64_WORKAROUND_REPEAT_TLBI,		       \
+> --- a/drivers/misc/eeprom/at24.c
+> +++ b/drivers/misc/eeprom/at24.c
+> @@ -8,9 +8,11 @@
+>
+>  #include <linux/acpi.h>
+>  #include <linux/bitops.h>
+> +#include <linux/capability.h>
+>  #include <linux/delay.h>
+>  #include <linux/i2c.h>
+>  #include <linux/init.h>
+> +#include <linux/ioport.h>
+>  #include <linux/jiffies.h>
+>  #include <linux/kernel.h>
+>  #include <linux/mod_devicetable.h>
+> @@ -38,6 +40,8 @@
+>  #define AT24_FLAG_MAC          BIT(2)
+>  /* Does not auto-rollover reads to the next slave address. */
+>  #define AT24_FLAG_NO_RDROL     BIT(1)
+> +/* Contains an area that should not be exposed to non-root users */
+> +#define AT24_FLAG_MASKED_RANGE BIT(0)
+>
+>  /*
+>   * I2C EEPROMs from most vendors are inexpensive and mostly interchangea=
+ble.
+> @@ -87,6 +91,7 @@ struct at24_data {
+>         u16 page_size;
+>         u8 flags;
+>
+> +       struct resource masked;
+>         struct nvmem_device *nvmem;
+>         struct regulator *vcc_reg;
+>
+> @@ -121,6 +126,7 @@ MODULE_PARM_DESC(at24_write_timeout, "Ti
+>  struct at24_chip_data {
+>         u32 byte_len;
+>         u8 flags;
+> +       struct resource masked;
+>  };
+>
+>  #define AT24_CHIP_DATA(_name, _len, _flags)                            \
+> @@ -128,6 +134,16 @@ struct at24_chip_data {
+>                 .byte_len =3D _len, .flags =3D _flags,                   =
+   \
+>         }
+>
+> +#define AT24_CHIP_DATA_MASKED(_name, _len, _flags, _mstart, _mlen)     \
+> +       static const struct at24_chip_data _name =3D {                   =
+ \
+> +               .byte_len =3D _len,                                      =
+ \
+> +               .flags =3D _flags | AT24_FLAG_MASKED_RANGE,              =
+ \
+> +               .masked =3D {                                            =
+ \
+> +                       .start =3D _mstart,                              =
+ \
+> +                       .end =3D _mstart + _mlen - 1,                    =
+ \
+> +               },                                                      \
+> +       }
+> +
+>  /* needs 8 addresses as A0-A2 are ignored */
+>  AT24_CHIP_DATA(at24_data_24c00, 128 / 8, AT24_FLAG_TAKE8ADDR);
+>  /* old variants can't be handled with this generic entry! */
+> @@ -144,6 +160,9 @@ AT24_CHIP_DATA(at24_data_24mac602, 64 /
+>  /* spd is a 24c02 in memory DIMMs */
+>  AT24_CHIP_DATA(at24_data_spd, 2048 / 8,
+>         AT24_FLAG_READONLY | AT24_FLAG_IRUGO);
+> +/* vaio is a 24c02 on some Sony laptops */
+> +AT24_CHIP_DATA_MASKED(at24_data_vaio, 2048 / 8,
+> +       AT24_FLAG_READONLY | AT24_FLAG_IRUGO, 0x00, 14);
+>  AT24_CHIP_DATA(at24_data_24c04, 4096 / 8, 0);
+>  AT24_CHIP_DATA(at24_data_24cs04, 16,
+>         AT24_FLAG_SERIAL | AT24_FLAG_READONLY);
+> @@ -177,6 +196,7 @@ static const struct i2c_device_id at24_i
+>         { "24mac402",   (kernel_ulong_t)&at24_data_24mac402 },
+>         { "24mac602",   (kernel_ulong_t)&at24_data_24mac602 },
+>         { "spd",        (kernel_ulong_t)&at24_data_spd },
+> +       { "eeprom-vaio",(kernel_ulong_t)&at24_data_vaio },
+>         { "24c04",      (kernel_ulong_t)&at24_data_24c04 },
+>         { "24cs04",     (kernel_ulong_t)&at24_data_24cs04 },
+>         { "24c08",      (kernel_ulong_t)&at24_data_24c08 },
+> @@ -389,6 +409,9 @@ static int at24_read(void *priv, unsigne
+>         struct device *dev;
+>         char *buf =3D val;
+>         int ret;
+> +       unsigned int orig_off =3D off;
+> +       char *orig_buf =3D buf;
+> +       size_t orig_count =3D count;
+>
+>         at24 =3D priv;
+>         dev =3D at24_base_client_dev(at24);
+> @@ -427,6 +450,15 @@ static int at24_read(void *priv, unsigne
+>
+>         pm_runtime_put(dev);
+>
+> +       if ((at24->flags & AT24_FLAG_MASKED_RANGE) && !capable(CAP_SYS_AD=
+MIN)) {
 
-base-commit: 4834ce9d8e074bb7ae197632e0708219b9f389b5
--- 
-2.28.0.163.g6104cc2f0b6-goog
+Maybe use unlikely() here? It's not necessarily a hotpath but at least
+it would be obvious it's a corner case.
 
+> +               int i;
+> +
+> +               for (i =3D orig_off; i < orig_off + orig_count; i++) {
+> +                       if (i >=3D at24->masked.start && i <=3D at24->mas=
+ked.end)
+> +                               orig_buf[i] =3D 0x00;
+> +               }
+> +       }
+> +
+>         return 0;
+>  }
+>
+> @@ -654,6 +686,7 @@ static int at24_probe(struct i2c_client
+>         at24->byte_len =3D byte_len;
+>         at24->page_size =3D page_size;
+>         at24->flags =3D flags;
+> +       at24->masked =3D cdata->masked;
+>         at24->num_addresses =3D num_addresses;
+>         at24->offset_adj =3D at24_get_offset_adj(flags, byte_len);
+>         at24->client[0].client =3D client;
+>
+> Comments welcome. I already have my own comments/questions:
+>
+> 1* Do we actually need to use a struct resource? With the current
+>    requirements, that looks overkill to me. We really only need the
+>    start and end offsets of the masked area (or start and length). Or
+>    do you plan to ever support multiple masked ranges, and
+>    resource.child would be used to daisy-chain these ranges? Personally
+>    I would wait until the need exists.
+>
+
+Yes, since this change doesn't seem to commit to any stable ABI, I'd
+say we can drop the reference to struct resource and possibly add it
+in the future. This just was the first thing that came to mind when I
+suggested it.
+
+>    Note that if we would just store mstart and mlen in struct
+>    at24_chip_data then we could even get rid of AT24_FLAG_MASKED_RANGE,
+>    as mlen > 0 would imply a masked range.
+>
+
+Makes sense.
+
+> 2* I chose the name "eeprom-vaio" because "vaio" would be too generic.
+>    I'm open to suggestions if you don't like that name.
+>
+
+Are you sure there won't be any different models of vaio eeproms? How
+about '24c02-vaio' or 'eeprom-vaio-24c02'?
+
+> 3* at24_read() was pretty elegant before my changes, but with the need
+>    to remember the original value of many parameters, it no longer is.
+>    I'm considering rewriting it in a way that does not modify the
+>    parameters needed to process the masked range, either as part of
+>    this patch or as a subsequent clean-up patch. That would hopefully
+>    make the code elegant again.
+>
+
+All clean-ups are welcome.
+
+> 4* I made the masking active only for non-root users as this is what
+>    the legacy eeprom driver was doing. I hope that's OK with you.
+>
+
+Yes, it's fine with me. If more fine-grained control is needed we can
+probably extend it.
+
+Bartosz
