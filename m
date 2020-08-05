@@ -2,153 +2,119 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2D7C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA29C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E6D822CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 803AD22CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:50:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MnrfV5sD"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CWCdHI/c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbgHEWuU (ORCPT
+        id S1726722AbgHEWuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 18:50:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46818 "EHLO
+        Wed, 5 Aug 2020 18:50:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgHEWuT (ORCPT
+        with ESMTP id S1726130AbgHEWu0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 18:50:19 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0304C061574;
-        Wed,  5 Aug 2020 15:50:19 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id x6so10420718pgx.12;
-        Wed, 05 Aug 2020 15:50:19 -0700 (PDT)
+        Wed, 5 Aug 2020 18:50:26 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1449C061574
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 15:50:25 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id k35so27787700qtk.9
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 15:50:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vj9AUo1zpNQ5RuH9pFdCoBk8bA+DrgMBZZmQXR9xOD8=;
-        b=MnrfV5sDmox75nbL/EDwsBfnjbjk4wXfaW38MnNMWcBe/rvK0oLdauM3j4zaPvRezZ
-         V2z86kueOxOfTJh5eQIZ/xtfs4AidyIAwpzIJv5DxVn9IZMMnNeRZa6PucxRepTLw5XG
-         fRz0eaYQ60VEfilOViLIaNcKlxkqwrWsaoL2Fpii1kIB9ltrVGagU51uh386AQu0nHOL
-         1bwo1DZc2Dhch3cVLdEmdXSjJ2a5YhnR4Ch6JAgtWwmboNqv8HGxlKwAgu2lCoStwCnD
-         b8P0gb7mgVkVNdEzhbR1MMTwdGJYjLIFWaWmSWS15K3m1+WaTnIX2kFJBHgrefcH8BU/
-         I82Q==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=7O3UtfnS/mNLmFOS+lsZ1i4Dn60nUb+QzLe2DjT4KBg=;
+        b=CWCdHI/c+etNs1XZU07tYKaYttKUL9hZyLnr7FbZTjWadegAJfcNrihtWA8srTg1+i
+         pGgUriwEDnS4Ktwn8UYKQdg9shWVj7ZZvzeGiwX0O0QYZCIvZ9FbCVZxqH7YEpZURUYN
+         mM974U/73V/vydWMZKEfvFWxKNgm1JnQLh/gCfequG4hp6DDUo776BxS0uvI1RNY7CiG
+         g0xzPs7/LtQOJFeb2WyJHjRzCj6hHWSxU4dFnkP4KAEnnpVOHYMh5C+fc0+q72qfGhz7
+         J3R1v9I+Q7tYxgnrRzaVPzTZwBa4YLfXyh03iO9VpE6hNHQ8mG+GwCt0M+j8wwN+5+QP
+         WtkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vj9AUo1zpNQ5RuH9pFdCoBk8bA+DrgMBZZmQXR9xOD8=;
-        b=jfGEkPKNy3IAeMYAx320QmgHq4Y0FI1015lW9Jt60LenwAozt96zHSKsSqpsbCcBll
-         VWqBWArqDXH750qhER/D7PFSxN3Wk+XNdITQ37feE+S7szpnfTeA8VaSLhE7zjTAKfJa
-         AoOFkMmKJE29aNaSJCHRn6bx6ANHZHfAH6pbcgVjGwkD641FP83uhxwTPyxJBJWLKy6U
-         Nt3KrL/KuS4NCGI3aoQ0uGgGyX+04MQWXY1TCEp2fS2QlpjTr5Y6UgVae6MfxDlr5tZy
-         7mEcE/U3XsjZm4z5cEkiuk103eTk1C7zz6d1h7yvLJm8C3hYaKGasrQzH02QVpndSM3p
-         H3gg==
-X-Gm-Message-State: AOAM533a4LZf/bvLDm/doLkLUGK/n80n6VPUqSPzVJa7EAnRLM6Drfev
-        4REyepdFA6RxpIe2/uxng88=
-X-Google-Smtp-Source: ABdhPJxBt3cAwNTqbiQptRNm2RKUT8txQ2j3cJfjVsGIP+XbaA3iJlUnkY1SCFLE8odILc2Q4V82Zw==
-X-Received: by 2002:a63:ec06:: with SMTP id j6mr4752828pgh.328.1596667818628;
-        Wed, 05 Aug 2020 15:50:18 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:634])
-        by smtp.gmail.com with ESMTPSA id a17sm4489949pgi.26.2020.08.05.15.50.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 15:50:17 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 15:50:15 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Xu <dlxu@fb.com>
-Subject: Re: [PATCH bpf-next 5/5] selftests/bpf: add benchmark for uprobe vs.
- user_prog
-Message-ID: <20200805225015.kd4tx6w3wh67oara@ast-mbp.dhcp.thefacebook.com>
-References: <20200801084721.1812607-1-songliubraving@fb.com>
- <20200801084721.1812607-6-songliubraving@fb.com>
- <CAEf4BzaP4TGF7kcmZRAKsy=oWPpFA6sUGFkctpGz-fPp+YuSOQ@mail.gmail.com>
- <DDCD362E-21D3-46BF-90A6-8F3221CBB54E@fb.com>
- <CAEf4BzY5RYMM6w8wn3qEB3AsuKWv-TMaD5NVFj=YqbCW4DLjqA@mail.gmail.com>
- <7384B583-EE19-4045-AC72-B6FE87C187DD@fb.com>
- <CAEf4BzaiJnCu14AWougmxH80msGdOp4S8ZNmAiexMmtwUM_2Xg@mail.gmail.com>
- <AF9D0E8C-0AA5-4BE4-90F4-946FABAB63FD@fb.com>
- <20200805171639.tsqjmifd7eb3htou@ast-mbp.dhcp.thefacebook.com>
- <31754A5F-AD12-44D2-B80A-36638684C2CE@fb.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <31754A5F-AD12-44D2-B80A-36638684C2CE@fb.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=7O3UtfnS/mNLmFOS+lsZ1i4Dn60nUb+QzLe2DjT4KBg=;
+        b=mvGAjkEL3DOS1mJKibUvLdZm79rU5j8seo0hvodmJ50DFvlhUmbdq9P2wOglMdPJUP
+         jAMB9av9AMgEKDg290DSzxCoR87xI5YYubjJHlPVf7lxB3cAmjNgpv9KSqYeFyAdKFlE
+         jkWwBz/Nwcz/xTOcVhIpA6188CVT0qI4lOqA7T1Ljb1kOXUhnU6J8GzTTvLlG06Lvwwc
+         QjpORiJYmg/yEXu42ZCfJdnzJI7QqwqNQLU1nPMQxpGNL5FQHEO8dA6aqUEb7OgwtLGZ
+         eEUo5dLg6xNut1cXyk9lr2wSnktaHPPUWnKyrpLj2vO6HHdvv/2VAiGZ76Tf0+eKcYkc
+         0rjw==
+X-Gm-Message-State: AOAM532ApN8JD29qCnwiHsrcwZU61beFtLUVeZ1vBx0lQvCqjmjMlQmo
+        eSJjE++oYF0ilXpRRIs3umwXX4HMJDbH4a+wq0U=
+X-Google-Smtp-Source: ABdhPJyQXLTYjM6TqUweQc16QWwQBIceCnx9d8Jac3bT5VxdhwSINOugDy09sztt4I38wu3ql5UTAzb1NPhR4Hx2N5c=
+X-Received: by 2002:ad4:564d:: with SMTP id bl13mr5864367qvb.60.1596667824695;
+ Wed, 05 Aug 2020 15:50:24 -0700 (PDT)
+Date:   Wed,  5 Aug 2020 15:50:14 -0700
+Message-Id: <20200805225015.2847624-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+Subject: [PATCH] scripts/gdb: fix python 3.8 SyntaxWarning
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Kieran Bingham <kbingham@kernel.org>
+Cc:     Aymeric Agon-Rambosson <aymeric.agon@yandex.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 06:56:26PM +0000, Song Liu wrote:
-> 
-> 
-> > On Aug 5, 2020, at 10:16 AM, Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-> > 
-> > On Wed, Aug 05, 2020 at 04:47:30AM +0000, Song Liu wrote:
-> >> 
-> >> Being able to trigger BPF program on a different CPU could enable many
-> >> use cases and optimizations. The use case I am looking at is to access
-> >> perf_event and percpu maps on the target CPU. For example:
-> >> 	0. trigger the program
-> >> 	1. read perf_event on cpu x;
-> >> 	2. (optional) check which process is running on cpu x;
-> >> 	3. add perf_event value to percpu map(s) on cpu x. 
-> > 
-> > If the whole thing is about doing the above then I don't understand why new
-> > prog type is needed.
-> 
-> I was under the (probably wrong) impression that adding prog type is not
-> that big a deal. 
+Fixes the observed warnings:
+scripts/gdb/linux/rbtree.py:20: SyntaxWarning: "is" with a literal. Did
+you mean "=="?
+  if node is 0:
+scripts/gdb/linux/rbtree.py:36: SyntaxWarning: "is" with a literal. Did
+you mean "=="?
+  if node is 0:
 
-Not a big deal when it's necessary.
+It looks like this is a new warning added in Python 3.8. I've only seen
+this once after adding the add-auto-load-safe-path rule to my ~/.gdbinit
+for a new tree.
 
-> > Can prog_test_run support existing BPF_PROG_TYPE_KPROBE?
-> 
-> I haven't looked into all the details, but I bet this is possible.
-> 
-> > "enable many use cases" sounds vague. I don't think folks reading
-> > the patches can guess those "use cases".
-> > "Testing existing kprobe bpf progs" would sound more convincing to me.
-> > If the test_run framework can be extended to trigger kprobe with correct pt_regs.
-> > As part of it test_run would trigger on a given cpu with $ip pointing
-> > to some test fuction in test_run.c. For local test_run the stack trace
-> > would include bpf syscall chain. For IPI the stack trace would include
-> > the corresponding kernel pieces where top is our special test function.
-> > Sort of like pseudo kprobe where there is no actual kprobe logic,
-> > since kprobe prog doesn't care about mechanism. It needs correct
-> > pt_regs only as input context.
-> > The kprobe prog output (return value) has special meaning though,
-> > so may be kprobe prog type is not a good fit.
-> > Something like fentry/fexit may be better, since verifier check_return_code()
-> > enforces 'return 0'. So their return value is effectively "void".
-> > Then prog_test_run would need to gain an ability to trigger
-> > fentry/fexit prog on a given cpu.
-> 
-> Maybe we add a new attach type for BPF_PROG_TYPE_TRACING, which is in 
-> parallel with BPF_TRACE_FENTRY and BPF_TRACE_EXIT? Say BPF_TRACE_USER? 
-> (Just realized I like this name :-D, it matches USDT...). Then we can 
-> enable test_run for most (if not all) tracing programs, including
-> fentry/fexit. 
+Cc: Stephen Boyd <swboyd@chromium.org>
+Fixes: commit 449ca0c95ea2 ("scripts/gdb: add rb tree iterating utilities")
+Link: https://adamj.eu/tech/2020/01/21/why-does-python-3-8-syntaxwarning-for-is-literal/
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+ scripts/gdb/linux/rbtree.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Why new hook? Why prog_test_run cmd cannot be made to work
-BPF_PROG_TYPE_TRACING when it's loaded as BPF_TRACE_FENTRY and attach_btf_id
-points to special test function?
-The test_run cmd will trigger execution of that special function.
-Devil is in details of course. How attach, trampoline, etc going to work
-that all needs to be figured out. Parallel test_run cmd ideally shouldn't
-affect each other, etc.
+diff --git a/scripts/gdb/linux/rbtree.py b/scripts/gdb/linux/rbtree.py
+index c4b991607917..fe462855eefd 100644
+--- a/scripts/gdb/linux/rbtree.py
++++ b/scripts/gdb/linux/rbtree.py
+@@ -17,7 +17,7 @@ def rb_first(root):
+         raise gdb.GdbError("Must be struct rb_root not {}".format(root.type))
+ 
+     node = root['rb_node']
+-    if node is 0:
++    if node == 0:
+         return None
+ 
+     while node['rb_left']:
+@@ -33,7 +33,7 @@ def rb_last(root):
+         raise gdb.GdbError("Must be struct rb_root not {}".format(root.type))
+ 
+     node = root['rb_node']
+-    if node is 0:
++    if node == 0:
+         return None
+ 
+     while node['rb_right']:
+-- 
+2.28.0.163.g6104cc2f0b6-goog
+
