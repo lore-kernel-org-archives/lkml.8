@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E88C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DEFC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F298B22B45
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AE7D22B45
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:09:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728299AbgHEHJf (ORCPT
+        id S1728146AbgHEHJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 03:09:35 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:24596 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725983AbgHEHJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 03:09:30 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:62881 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726209AbgHEHJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 03:09:26 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BM2mk02YLz9vD3p;
-        Wed,  5 Aug 2020 09:09:26 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 4BM2md58K4z9vD3l;
+        Wed,  5 Aug 2020 09:09:21 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id kXUHZnOa37pX; Wed,  5 Aug 2020 09:09:25 +0200 (CEST)
+        with ESMTP id YgJISQcGYLOW; Wed,  5 Aug 2020 09:09:21 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BM2mj5Zxmz9vD3j;
-        Wed,  5 Aug 2020 09:09:25 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BM2md3ZMfz9vD3j;
+        Wed,  5 Aug 2020 09:09:21 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id CA1538B7E1;
-        Wed,  5 Aug 2020 09:09:26 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C89348B7DF;
+        Wed,  5 Aug 2020 09:09:22 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id xQhmU62iHP7V; Wed,  5 Aug 2020 09:09:26 +0200 (CEST)
+        with ESMTP id km2dBg7iPglw; Wed,  5 Aug 2020 09:09:22 +0200 (CEST)
 Received: from po16052vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8D7088B75F;
-        Wed,  5 Aug 2020 09:09:26 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 720658B75F;
+        Wed,  5 Aug 2020 09:09:22 +0200 (CEST)
 Received: by po16052vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 676E865BBD; Wed,  5 Aug 2020 07:09:26 +0000 (UTC)
-Message-Id: <32049545671e558b6ef822e0f501a2038c121bf1.1596611196.git.christophe.leroy@csgroup.eu>
+        id 4B3B165BBD; Wed,  5 Aug 2020 07:09:22 +0000 (UTC)
+Message-Id: <288845ddd80bb0ae636bb013d4b0fa803fad1056.1596611196.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <cover.1596611196.git.christophe.leroy@csgroup.eu>
 References: <cover.1596611196.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v10 5/5] powerpc/vdso: Provide __kernel_clock_gettime64() on
- vdso32
+Subject: [PATCH v10 1/5] powerpc/processor: Move cpu_relax() into
+ asm/vdso/processor.h
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
@@ -55,72 +55,100 @@ To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         arnd@arndb.de, tglx@linutronix.de, vincenzo.frascino@arm.com,
         luto@kernel.org, linux-arch@vger.kernel.org
-Date:   Wed,  5 Aug 2020 07:09:26 +0000 (UTC)
+Date:   Wed,  5 Aug 2020 07:09:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provides __kernel_clock_gettime64() on vdso32. This is the
-64 bits version of __kernel_clock_gettime() which is
-y2038 compliant.
+cpu_relax() need to be in asm/vdso/processor.h to be used by
+the C VDSO generic library.
+
+Move it there.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/kernel/vdso32/gettimeofday.S  | 9 +++++++++
- arch/powerpc/kernel/vdso32/vdso32.lds.S    | 1 +
- arch/powerpc/kernel/vdso32/vgettimeofday.c | 6 ++++++
- 3 files changed, 16 insertions(+)
+v9: Forgot to remove cpu_relax() from processor.h in v8
+---
+ arch/powerpc/include/asm/processor.h      | 13 ++-----------
+ arch/powerpc/include/asm/vdso/processor.h | 23 +++++++++++++++++++++++
+ 2 files changed, 25 insertions(+), 11 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/vdso/processor.h
 
-diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
-index fd7b01c51281..a6e29f880e0e 100644
---- a/arch/powerpc/kernel/vdso32/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
-@@ -35,6 +35,15 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
- 	cvdso_call __c_kernel_clock_gettime
- V_FUNCTION_END(__kernel_clock_gettime)
+diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
+index ed0d633ab5aa..c1ba9c8d9b90 100644
+--- a/arch/powerpc/include/asm/processor.h
++++ b/arch/powerpc/include/asm/processor.h
+@@ -6,6 +6,8 @@
+  * Copyright (C) 2001 PPC 64 Team, IBM Corp
+  */
  
-+/*
-+ * Exact prototype of clock_gettime64()
-+ *
-+ * int __kernel_clock_gettime64(clockid_t clock_id, struct __timespec64 *ts);
-+ *
-+ */
-+V_FUNCTION_BEGIN(__kernel_clock_gettime64)
-+	cvdso_call __c_kernel_clock_gettime64
-+V_FUNCTION_END(__kernel_clock_gettime64)
++#include <vdso/processor.h>
++
+ #include <asm/reg.h>
  
- /*
-  * Exact prototype of clock_getres()
-diff --git a/arch/powerpc/kernel/vdso32/vdso32.lds.S b/arch/powerpc/kernel/vdso32/vdso32.lds.S
-index 4c985467a668..582c5b046cc9 100644
---- a/arch/powerpc/kernel/vdso32/vdso32.lds.S
-+++ b/arch/powerpc/kernel/vdso32/vdso32.lds.S
-@@ -148,6 +148,7 @@ VERSION
- #ifndef CONFIG_PPC_BOOK3S_601
- 		__kernel_gettimeofday;
- 		__kernel_clock_gettime;
-+		__kernel_clock_gettime64;
- 		__kernel_clock_getres;
- 		__kernel_time;
- 		__kernel_get_tbfreq;
-diff --git a/arch/powerpc/kernel/vdso32/vgettimeofday.c b/arch/powerpc/kernel/vdso32/vgettimeofday.c
-index 0b9ab4c22ef2..f7f71fecf4ed 100644
---- a/arch/powerpc/kernel/vdso32/vgettimeofday.c
-+++ b/arch/powerpc/kernel/vdso32/vgettimeofday.c
-@@ -11,6 +11,12 @@ int __c_kernel_clock_gettime(clockid_t clock, struct old_timespec32 *ts,
- 	return __cvdso_clock_gettime32_data(vd, clock, ts);
+ #ifdef CONFIG_VSX
+@@ -63,14 +65,6 @@ extern int _chrp_type;
+ 
+ #endif /* defined(__KERNEL__) && defined(CONFIG_PPC32) */
+ 
+-/* Macros for adjusting thread priority (hardware multi-threading) */
+-#define HMT_very_low()   asm volatile("or 31,31,31   # very low priority")
+-#define HMT_low()	 asm volatile("or 1,1,1	     # low priority")
+-#define HMT_medium_low() asm volatile("or 6,6,6      # medium low priority")
+-#define HMT_medium()	 asm volatile("or 2,2,2	     # medium priority")
+-#define HMT_medium_high() asm volatile("or 5,5,5      # medium high priority")
+-#define HMT_high()	 asm volatile("or 3,3,3	     # high priority")
+-
+ #ifdef __KERNEL__
+ 
+ #ifdef CONFIG_PPC64
+@@ -350,7 +344,6 @@ static inline unsigned long __pack_fe01(unsigned int fpmode)
  }
  
-+int __c_kernel_clock_gettime64(clockid_t clock, struct __kernel_timespec *ts,
-+			       const struct vdso_data *vd)
-+{
-+	return __cvdso_clock_gettime_data(vd, clock, ts);
-+}
+ #ifdef CONFIG_PPC64
+-#define cpu_relax()	do { HMT_low(); HMT_medium(); barrier(); } while (0)
+ 
+ #define spin_begin()	HMT_low()
+ 
+@@ -369,8 +362,6 @@ do {								\
+ 	}							\
+ } while (0)
+ 
+-#else
+-#define cpu_relax()	barrier()
+ #endif
+ 
+ /* Check that a certain kernel stack pointer is valid in task_struct p */
+diff --git a/arch/powerpc/include/asm/vdso/processor.h b/arch/powerpc/include/asm/vdso/processor.h
+new file mode 100644
+index 000000000000..39b9beace9ca
+--- /dev/null
++++ b/arch/powerpc/include/asm/vdso/processor.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef __ASM_VDSO_PROCESSOR_H
++#define __ASM_VDSO_PROCESSOR_H
 +
- int __c_kernel_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz,
- 			    const struct vdso_data *vd)
- {
++#ifndef __ASSEMBLY__
++
++/* Macros for adjusting thread priority (hardware multi-threading) */
++#define HMT_very_low()		asm volatile("or 31, 31, 31	# very low priority")
++#define HMT_low()		asm volatile("or 1, 1, 1	# low priority")
++#define HMT_medium_low()	asm volatile("or 6, 6, 6	# medium low priority")
++#define HMT_medium()		asm volatile("or 2, 2, 2	# medium priority")
++#define HMT_medium_high()	asm volatile("or 5, 5, 5	# medium high priority")
++#define HMT_high()		asm volatile("or 3, 3, 3	# high priority")
++
++#ifdef CONFIG_PPC64
++#define cpu_relax()	do { HMT_low(); HMT_medium(); barrier(); } while (0)
++#else
++#define cpu_relax()	barrier()
++#endif
++
++#endif /* __ASSEMBLY__ */
++
++#endif /* __ASM_VDSO_PROCESSOR_H */
 -- 
 2.25.0
 
