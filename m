@@ -2,101 +2,322 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF11AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D548C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C561622D73
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A962250E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:01:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NeztqPI2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbgHER54 (ORCPT
+        id S1728935AbgHER7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:57:56 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2583 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729067AbgHER52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:57:28 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 8BF9FA9C28E1B99876D7;
-        Wed,  5 Aug 2020 18:56:16 +0100 (IST)
-Received: from localhost (10.52.120.30) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 5 Aug 2020
- 18:56:15 +0100
-Date:   Wed, 5 Aug 2020 18:54:50 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Sean V Kelley <sean.v.kelley@intel.com>
-CC:     <bhelgaas@google.com>, <rjw@rjwysocki.net>, <ashok.raj@intel.com>,
-        <tony.luck@intel.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [PATCH V2 9/9] PCI/AER: Add RCEC AER error injection support
-Message-ID: <20200805185450.0000512d@Huawei.com>
-In-Reply-To: <20200804194052.193272-10-sean.v.kelley@intel.com>
-References: <20200804194052.193272-1-sean.v.kelley@intel.com>
-        <20200804194052.193272-10-sean.v.kelley@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Wed, 5 Aug 2020 13:59:51 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:38660 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728704AbgHER6X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:58:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596650298;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=2x3mgNdTSCpVK/PvsDtS076Na69D7EpUGAvTaGV+Rek=;
+        b=NeztqPI2uItGb/UxDEd+G6pKaCRCvntgYgwWHswtfJyH8R9Yw6RHDt4zBWh3iLGD2Lo3ZV
+        4+GxcgXISsi0AKhaqv2GaJsjvpjNsMZQ4dwno2rwQ/eMwitQVSFI4pO8BJQQSksYZSHi6z
+        eb0j0JydXf3Jqy+wa/QvULg3jLDrpfU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-478-EZlvipCxNui6X3CIYHErHA-1; Wed, 05 Aug 2020 13:58:16 -0400
+X-MC-Unique: EZlvipCxNui6X3CIYHErHA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2A74F81EDB7;
+        Wed,  5 Aug 2020 17:58:06 +0000 (UTC)
+Received: from gimli.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CC8441755E;
+        Wed,  5 Aug 2020 17:58:05 +0000 (UTC)
+Subject: [PATCH] vfio-pci: Avoid recursive read-lock usage
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     alex.williamson@redhat.com
+Cc:     cohuck@redhat.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 05 Aug 2020 11:58:05 -0600
+Message-ID: <159665024415.30380.4401928486051321567.stgit@gimli.home>
+User-Agent: StGit/0.19-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.120.30]
-X-ClientProxiedBy: lhreml744-chm.china.huawei.com (10.201.108.194) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Aug 2020 12:40:52 -0700
-Sean V Kelley <sean.v.kelley@intel.com> wrote:
+A down_read on memory_lock is held when performing read/write accesses
+to MMIO BAR space, including across the copy_to/from_user() callouts
+which may fault.  If the user buffer for these copies resides in an
+mmap of device MMIO space, the mmap fault handler will acquire a
+recursive read-lock on memory_lock.  Avoid this by reducing the lock
+granularity.  Sequential accesses requiring multiple ioread/iowrite
+cycles are expected to be rare, therefore typical accesses should not
+see additional overhead.
 
-> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> 
-> The Root Complex Event Collectors(RCEC) appear as peers to Root Ports
-> and also have the AER capability. So add RCEC support to the current AER
-> error injection driver.
-> 
-> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
-> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+VGA MMIO accesses are expected to be non-fatal regardless of the PCI
+memory enable bit to allow legacy probing, this behavior remains with
+a comment added.  ioeventfds are now included in memory access testing,
+with writes dropped while memory space is disabled.
 
-Silly English subtlety inline.
+Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+---
+ drivers/vfio/pci/vfio_pci_private.h |    2 +
+ drivers/vfio/pci/vfio_pci_rdwr.c    |  120 ++++++++++++++++++++++++++++-------
+ 2 files changed, 98 insertions(+), 24 deletions(-)
 
-> ---
->  drivers/pci/pcie/aer_inject.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pcie/aer_inject.c b/drivers/pci/pcie/aer_inject.c
-> index c2cbf425afc5..2077dc826fdf 100644
-> --- a/drivers/pci/pcie/aer_inject.c
-> +++ b/drivers/pci/pcie/aer_inject.c
-> @@ -333,8 +333,11 @@ static int aer_inject(struct aer_error_inj *einj)
->  	if (!dev)
->  		return -ENODEV;
->  	rpdev = pcie_find_root_port(dev);
-> +	/* If Root port not found, try to find an RCEC */
-> +	if (!rpdev)
-> +		rpdev = dev->rcec;
->  	if (!rpdev) {
-> -		pci_err(dev, "Root port not found\n");
-> +		pci_err(dev, "Root port or RCEC not found\n");
-
-That is a bit confusing, could be
-
-RP | !RCEC
-
-"Neither root port nor RCEC found\n" perhaps?
-
-
->  		ret = -ENODEV;
->  		goto out_put;
->  	}
-
+diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
+index 86a02aff8735..61ca8ab165dc 100644
+--- a/drivers/vfio/pci/vfio_pci_private.h
++++ b/drivers/vfio/pci/vfio_pci_private.h
+@@ -33,12 +33,14 @@
+ 
+ struct vfio_pci_ioeventfd {
+ 	struct list_head	next;
++	struct vfio_pci_device	*vdev;
+ 	struct virqfd		*virqfd;
+ 	void __iomem		*addr;
+ 	uint64_t		data;
+ 	loff_t			pos;
+ 	int			bar;
+ 	int			count;
++	bool			test_mem;
+ };
+ 
+ struct vfio_pci_irq_ctx {
+diff --git a/drivers/vfio/pci/vfio_pci_rdwr.c b/drivers/vfio/pci/vfio_pci_rdwr.c
+index 916b184df3a5..9e353c484ace 100644
+--- a/drivers/vfio/pci/vfio_pci_rdwr.c
++++ b/drivers/vfio/pci/vfio_pci_rdwr.c
+@@ -37,17 +37,70 @@
+ #define vfio_ioread8	ioread8
+ #define vfio_iowrite8	iowrite8
+ 
++#define VFIO_IOWRITE(size) \
++static int vfio_pci_iowrite##size(struct vfio_pci_device *vdev,		\
++			bool test_mem, u##size val, void __iomem *io)	\
++{									\
++	if (test_mem) {							\
++		down_read(&vdev->memory_lock);				\
++		if (!__vfio_pci_memory_enabled(vdev)) {			\
++			up_read(&vdev->memory_lock);			\
++			return -EIO;					\
++		}							\
++	}								\
++									\
++	vfio_iowrite##size(val, io);					\
++									\
++	if (test_mem)							\
++		up_read(&vdev->memory_lock);				\
++									\
++	return 0;							\
++}
++
++VFIO_IOWRITE(8)
++VFIO_IOWRITE(16)
++VFIO_IOWRITE(32)
++#ifdef iowrite64
++VFIO_IOWRITE(64)
++#endif
++
++#define VFIO_IOREAD(size) \
++static int vfio_pci_ioread##size(struct vfio_pci_device *vdev,		\
++			bool test_mem, u##size *val, void __iomem *io)	\
++{									\
++	if (test_mem) {							\
++		down_read(&vdev->memory_lock);				\
++		if (!__vfio_pci_memory_enabled(vdev)) {			\
++			up_read(&vdev->memory_lock);			\
++			return -EIO;					\
++		}							\
++	}								\
++									\
++	*val = vfio_ioread##size(io);					\
++									\
++	if (test_mem)							\
++		up_read(&vdev->memory_lock);				\
++									\
++	return 0;							\
++}
++
++VFIO_IOREAD(8)
++VFIO_IOREAD(16)
++VFIO_IOREAD(32)
++
+ /*
+  * Read or write from an __iomem region (MMIO or I/O port) with an excluded
+  * range which is inaccessible.  The excluded range drops writes and fills
+  * reads with -1.  This is intended for handling MSI-X vector tables and
+  * leftover space for ROM BARs.
+  */
+-static ssize_t do_io_rw(void __iomem *io, char __user *buf,
++static ssize_t do_io_rw(struct vfio_pci_device *vdev, bool test_mem,
++			void __iomem *io, char __user *buf,
+ 			loff_t off, size_t count, size_t x_start,
+ 			size_t x_end, bool iswrite)
+ {
+ 	ssize_t done = 0;
++	int ret;
+ 
+ 	while (count) {
+ 		size_t fillable, filled;
+@@ -66,9 +119,15 @@ static ssize_t do_io_rw(void __iomem *io, char __user *buf,
+ 				if (copy_from_user(&val, buf, 4))
+ 					return -EFAULT;
+ 
+-				vfio_iowrite32(val, io + off);
++				ret = vfio_pci_iowrite32(vdev, test_mem,
++							 val, io + off);
++				if (ret)
++					return ret;
+ 			} else {
+-				val = vfio_ioread32(io + off);
++				ret = vfio_pci_ioread32(vdev, test_mem,
++							&val, io + off);
++				if (ret)
++					return ret;
+ 
+ 				if (copy_to_user(buf, &val, 4))
+ 					return -EFAULT;
+@@ -82,9 +141,15 @@ static ssize_t do_io_rw(void __iomem *io, char __user *buf,
+ 				if (copy_from_user(&val, buf, 2))
+ 					return -EFAULT;
+ 
+-				vfio_iowrite16(val, io + off);
++				ret = vfio_pci_iowrite16(vdev, test_mem,
++							 val, io + off);
++				if (ret)
++					return ret;
+ 			} else {
+-				val = vfio_ioread16(io + off);
++				ret = vfio_pci_ioread16(vdev, test_mem,
++							&val, io + off);
++				if (ret)
++					return ret;
+ 
+ 				if (copy_to_user(buf, &val, 2))
+ 					return -EFAULT;
+@@ -98,9 +163,15 @@ static ssize_t do_io_rw(void __iomem *io, char __user *buf,
+ 				if (copy_from_user(&val, buf, 1))
+ 					return -EFAULT;
+ 
+-				vfio_iowrite8(val, io + off);
++				ret = vfio_pci_iowrite8(vdev, test_mem,
++							val, io + off);
++				if (ret)
++					return ret;
+ 			} else {
+-				val = vfio_ioread8(io + off);
++				ret = vfio_pci_ioread8(vdev, test_mem,
++						       &val, io + off);
++				if (ret)
++					return ret;
+ 
+ 				if (copy_to_user(buf, &val, 1))
+ 					return -EFAULT;
+@@ -178,14 +249,6 @@ ssize_t vfio_pci_bar_rw(struct vfio_pci_device *vdev, char __user *buf,
+ 
+ 	count = min(count, (size_t)(end - pos));
+ 
+-	if (res->flags & IORESOURCE_MEM) {
+-		down_read(&vdev->memory_lock);
+-		if (!__vfio_pci_memory_enabled(vdev)) {
+-			up_read(&vdev->memory_lock);
+-			return -EIO;
+-		}
+-	}
+-
+ 	if (bar == PCI_ROM_RESOURCE) {
+ 		/*
+ 		 * The ROM can fill less space than the BAR, so we start the
+@@ -213,7 +276,8 @@ ssize_t vfio_pci_bar_rw(struct vfio_pci_device *vdev, char __user *buf,
+ 		x_end = vdev->msix_offset + vdev->msix_size;
+ 	}
+ 
+-	done = do_io_rw(io, buf, pos, count, x_start, x_end, iswrite);
++	done = do_io_rw(vdev, res->flags & IORESOURCE_MEM, io, buf, pos,
++			count, x_start, x_end, iswrite);
+ 
+ 	if (done >= 0)
+ 		*ppos += done;
+@@ -221,9 +285,6 @@ ssize_t vfio_pci_bar_rw(struct vfio_pci_device *vdev, char __user *buf,
+ 	if (bar == PCI_ROM_RESOURCE)
+ 		pci_unmap_rom(pdev, io);
+ out:
+-	if (res->flags & IORESOURCE_MEM)
+-		up_read(&vdev->memory_lock);
+-
+ 	return done;
+ }
+ 
+@@ -278,7 +339,12 @@ ssize_t vfio_pci_vga_rw(struct vfio_pci_device *vdev, char __user *buf,
+ 		return ret;
+ 	}
+ 
+-	done = do_io_rw(iomem, buf, off, count, 0, 0, iswrite);
++	/*
++	 * VGA MMIO is a legacy, non-BAR resource that hopefully allows
++	 * probing, so we don't currently worry about access in relation
++	 * to the memory enable bit in the command register.
++	 */
++	done = do_io_rw(vdev, false, iomem, buf, off, count, 0, 0, iswrite);
+ 
+ 	vga_put(vdev->pdev, rsrc);
+ 
+@@ -296,17 +362,21 @@ static int vfio_pci_ioeventfd_handler(void *opaque, void *unused)
+ 
+ 	switch (ioeventfd->count) {
+ 	case 1:
+-		vfio_iowrite8(ioeventfd->data, ioeventfd->addr);
++		vfio_pci_iowrite8(ioeventfd->vdev, ioeventfd->test_mem,
++				  ioeventfd->data, ioeventfd->addr);
+ 		break;
+ 	case 2:
+-		vfio_iowrite16(ioeventfd->data, ioeventfd->addr);
++		vfio_pci_iowrite16(ioeventfd->vdev, ioeventfd->test_mem,
++				   ioeventfd->data, ioeventfd->addr);
+ 		break;
+ 	case 4:
+-		vfio_iowrite32(ioeventfd->data, ioeventfd->addr);
++		vfio_pci_iowrite32(ioeventfd->vdev, ioeventfd->test_mem,
++				   ioeventfd->data, ioeventfd->addr);
+ 		break;
+ #ifdef iowrite64
+ 	case 8:
+-		vfio_iowrite64(ioeventfd->data, ioeventfd->addr);
++		vfio_pci_iowrite64(ioeventfd->vdev, ioeventfd->test_mem,
++				   ioeventfd->data, ioeventfd->addr);
+ 		break;
+ #endif
+ 	}
+@@ -378,11 +448,13 @@ long vfio_pci_ioeventfd(struct vfio_pci_device *vdev, loff_t offset,
+ 		goto out_unlock;
+ 	}
+ 
++	ioeventfd->vdev = vdev;
+ 	ioeventfd->addr = vdev->barmap[bar] + pos;
+ 	ioeventfd->data = data;
+ 	ioeventfd->pos = pos;
+ 	ioeventfd->bar = bar;
+ 	ioeventfd->count = count;
++	ioeventfd->test_mem = vdev->pdev->resource[bar].flags & IORESOURCE_MEM;
+ 
+ 	ret = vfio_virqfd_enable(ioeventfd, vfio_pci_ioeventfd_handler,
+ 				 NULL, NULL, &ioeventfd->virqfd, fd);
 
