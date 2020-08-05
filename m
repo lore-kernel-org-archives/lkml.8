@@ -2,125 +2,130 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CD0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA901C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F9132173E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:45:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BBOMnrtN"
+	by mail.kernel.org (Postfix) with ESMTP id B69DF2173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:45:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbgHETpQ (ORCPT
+        id S1728712AbgHETp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:45:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46422 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728982AbgHETpG (ORCPT
+        Wed, 5 Aug 2020 15:45:26 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:45454 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729186AbgHETpP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 15:45:06 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C651CC06179F;
-        Wed,  5 Aug 2020 12:38:50 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id f9so4995530pju.4;
-        Wed, 05 Aug 2020 12:38:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=q8aaXnFcZ4AT3389+t0qxS8pbT28OEw3qAsjmqDR3UE=;
-        b=BBOMnrtNFHReBjXDeCiLjMl9olE1dPUW9Qju+IcKdTK3+9GmtDNFNKlHOTHl1uT1iX
-         12vARS7LIHCPWquRGW42vrmScp10LsjoaOh9dHQ0Pkwx6nGWmfupqAO5cqk3TQjtZmCA
-         3oS96NPE7nvwK/tdJK7yxY+05tEuNJleTWQCgSqMAwuIj5P/Qk9yOFwq3zOF5SwGGSLs
-         O0lGc7m4Bo+I0Tr3PxKczoeIxuQx9Hh+UnUpM11dJDvm2RCMSS/ybQ/vscp7poo+tUki
-         0tZuc7tMl6Dyxb7+Vld7soicjuNyNE4iZb5B4jKe5m+yXmNDZGm6KyeWicaoco0Y7lYQ
-         splQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=q8aaXnFcZ4AT3389+t0qxS8pbT28OEw3qAsjmqDR3UE=;
-        b=PY0dVr8T9InAQJqs9He8WY+Cq7lm8vNrRxFFEWQzB4fEMZGqw8ZxmmiM7iFC0tXa/2
-         9MmKU9jyCvsUYVu8Dk1beGo2C4fs++Cn8fVvdSwqDiLShE0MB3x50DPMUWtyqGYN20gD
-         yCAoiAIOM5WwBBrLbm1kj7/SFVjTKGdE66LpNV4hQHA6ZeVx+kZXLTf2tmsQNl5A34x4
-         j0Bc06pSX/0Q9QzNRq3gD7Pz+FhcmP+kWJxeZGpqlHxqg+ahvKjYevV4f88Zbm/rlXjq
-         nPNZ36/C0C1fcK1co2BmpL6q3hStuVSq7fAKrrv0hK1lmC8eJnb0ZRrYCCx2OJ7eAIkv
-         H3dA==
-X-Gm-Message-State: AOAM530/VixFErxqBzIJZaCqznO72jJrzUGOZuAKTaS8oqnybZzxxpBz
-        aIcvb1ZIUJ+DKzy6zlcXbgI=
-X-Google-Smtp-Source: ABdhPJzn7Bj7lt8lc5KhEfI4kSkNrIrHdD2blN71urAzi5cr8ZEUcmTH30mCT37gF5bvmXT1w9iMYA==
-X-Received: by 2002:a17:902:6bca:: with SMTP id m10mr4508470plt.210.1596656330165;
-        Wed, 05 Aug 2020 12:38:50 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id f20sm4901764pfk.36.2020.08.05.12.38.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 12:38:49 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>,
-        Tomoya MORINAGA <tomoya.rohm@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v2 1/2] i2c: eg20t: Drop PCI wakeup calls from .suspend/.resume
-Date:   Thu,  6 Aug 2020 01:06:15 +0530
-Message-Id: <20200805193616.384313-2-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200805193616.384313-1-vaibhavgupta40@gmail.com>
-References: <20200805165611.GA516242@bjorn-Precision-5520>
- <20200805193616.384313-1-vaibhavgupta40@gmail.com>
+        Wed, 5 Aug 2020 15:45:15 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 29CB91C0BD2; Wed,  5 Aug 2020 21:45:13 +0200 (CEST)
+Date:   Wed, 5 Aug 2020 21:45:12 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        SoC Team <soc@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [GIT PULL 0/5] ARM: SoC: changes for v5.9
+Message-ID: <20200805194512.bh5hds2l46opcole@duo.ucw.cz>
+References: <CAK8P3a1vFJ+uUGPGifZGhECXvxA=2u745WrGNZb08s1nHkZQ9g@mail.gmail.com>
+ <20200805172746.GC1118@bug>
+ <CAK8P3a2KnmDXYCyst15=kZWneDTMFAbz47F_TYnY_26+W4PM6A@mail.gmail.com>
+ <CAMS8qEVzCtxrH-K4U4_TeHi3RXDQ7UeGo+sVnB-HPS0Y+mju-w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="v2jz4bfp3v7pyu7z"
+Content-Disposition: inline
+In-Reply-To: <CAMS8qEVzCtxrH-K4U4_TeHi3RXDQ7UeGo+sVnB-HPS0Y+mju-w@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver calls pci_enable_wake(...., false) in pch_i2c_suspend() as well
-as pch_i2c_resume(). Either it should enable-wake the device in .suspend()
-or should not invoke pci_enable_wake() at all.
 
-Concluding that this driver doesn't support enable-wake and PCI core calls
-pci_enable_wake(pci_dev, PCI_D0, false) during resume, drop it from
-.suspend() and .resume().
+--v2jz4bfp3v7pyu7z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reported-by: Bjorn Helgaas <helgaas@kernel.org>
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- drivers/i2c/busses/i2c-eg20t.c | 3 ---
- 1 file changed, 3 deletions(-)
+Hi!
 
-diff --git a/drivers/i2c/busses/i2c-eg20t.c b/drivers/i2c/busses/i2c-eg20t.c
-index 73f139690e4e..eb41de22d461 100644
---- a/drivers/i2c/busses/i2c-eg20t.c
-+++ b/drivers/i2c/busses/i2c-eg20t.c
-@@ -879,7 +879,6 @@ static int pch_i2c_suspend(struct pci_dev *pdev, pm_message_t state)
- 		return ret;
- 	}
- 
--	pci_enable_wake(pdev, PCI_D3hot, 0);
- 	pci_disable_device(pdev);
- 	pci_set_power_state(pdev, pci_choose_state(pdev, state));
- 
-@@ -899,8 +898,6 @@ static int pch_i2c_resume(struct pci_dev *pdev)
- 		return -EIO;
- 	}
- 
--	pci_enable_wake(pdev, PCI_D3hot, 0);
--
- 	for (i = 0; i < adap_info->ch_num; i++)
- 		pch_i2c_init(&adap_info->pch_data[i]);
- 
--- 
-2.27.0
+> Thanks for all the kind words, I really appreciate it.
 
+Thanks for good work :-).
+
+> >My impression is that the newly added phones are still fairly rudimentar=
+y,
+> >but some others that were added in the past releases have gotten
+> >further. I don't know any details, but I've added Konrad to Cc, he can
+> >comment on his work.
+>=20
+> Thanks for adding me. The Sony sdm630/6 phones are shaping up really
+> well, but most of the work is not upstreamed yet mainly due to SMMU
+> maintainers not liking Qualcomm code and looking for cleaner
+> solutions. As time progresses, more things will see the light of the
+> upstream. The current-ish progress can be seen on my github [1]. And
+> much more is yet to come.
+>=20
+> Regarding msm8992/4, there is a need for the 20nm DSI PHY driver. It
+> exists for every other gen of qcom SoCs since 2013, but due to low
+> interest in these platforms, this specific one never got there. I
+> tried emailing the person who wrote most of the present ones, but
+> gmail told me the mail didn't exist :shrug:.
+
+I won't pretend to understand all this. Do you normally have modems
+working?
+
+> >> Should we have some kind of linux-phones mailing list? There is quite =
+a lot of
+> >> stuff common in phones.
+>=20
+> >PostmarketOS is probably the right place to look for this.
+>=20
+> First of all: postmarketOS, not PostmarketOS :P
+>=20
+> I would actually say that's incorrect. With the release of the
+> PinePhone and the Librem 5, the Linux mobile community has entered its
+> heyday and plenty mobile-oriented distributions have arisen (for
+> example Mobian, Manjaro ARM, Pure OS-ARM etc.) and some have gotten
+> more attention than before (think Ubuntu Touch, Maemo Leste). pmOS is
+> only one of many.
+>=20
+> The current thing to do is every distro maintains their own kernel (or
+> over 100 like in pmOS, which is terrible for the poor CI :/) and only
+> a small percentage of patches end up being upstreamed for various
+> reasons (clean-ness of the code, will of the maintainers, time
+> constraints..). As time goes, we're gonna see more stuff being
+> added.
+
+I did not know how popular PinePhone is. Does it currently have useful
+battery life?
+
+Would something like phone@vger.kernel.org be useful for low-level
+stuff?
+
+Best regards,
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--v2jz4bfp3v7pyu7z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXysMSAAKCRAw5/Bqldv6
+8phFAJ4z18tm5ObumuMFHNk30LayrjBw8gCfZ7oRyGDbXIqWqqdKsst3BA+ROQ4=
+=OxLd
+-----END PGP SIGNATURE-----
+
+--v2jz4bfp3v7pyu7z--
