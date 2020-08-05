@@ -2,244 +2,131 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CC4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 326B2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 563A32177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D74322DA9
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:23:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="psVRPR/s"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="1p9kECCs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbgHERW6 (ORCPT
+        id S1728815AbgHERXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:22:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52246 "EHLO
+        Wed, 5 Aug 2020 13:23:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728114AbgHERVa (ORCPT
+        with ESMTP id S1728770AbgHERVU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:21:30 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C497FC06179E;
-        Wed,  5 Aug 2020 10:21:21 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id 2so4877693pjx.5;
-        Wed, 05 Aug 2020 10:21:21 -0700 (PDT)
+        Wed, 5 Aug 2020 13:21:20 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23CCBC061575
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 10:21:12 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id f193so12687236pfa.12
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 10:21:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ClBxmhMDW8/EvqLNuXj7OToao++oyiDhHUE3TT7mBds=;
-        b=psVRPR/sQ1D/EHzTjCqfMm49Kjs6jS5auCQQBuWbaa1ukcEDyAan+MKT7yZoc3sepE
-         EoqGblTTU4cr4TCQeCPp/im62vToSQLewk0u5eMCamxeSnJNHMpiCoReUYZSxzRPngu1
-         1PUQ+MMFRGpA4CUuOiUzBNwZaxXTTuUauYeD2V3wKoQZwQ7bwQ8+2biTqpaPDNAgq8Rz
-         5+au1GfTD1+3fTUoK7IALQA/eUtFt+9W3E4iMiikKnnsD0Xhfw9N22U86G3kYHDISlAt
-         o20tsTlfuuPQMKS2NMPO7rIyuXCOUHGemsNKMwJoCsjOrAoekgzG9GyjBezv50GGVbjT
-         sX7w==
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FbzyMEQueQDY3YDpmwzlLQ7A2LdIlI00oS2N1BmMemo=;
+        b=1p9kECCs2Xu30P/0sAU+cJKXlwibxSqcehh6AyJa4aBU4moLlvMpXPt/tyOryRrF2q
+         33XZM2JlPVoeldKBki9UbuapxrXDnWnTYJWGdd51STCGwlS3vT7D13q4mQdwVyiIE8pP
+         K5/wGPaF37h2DxnFPLpVXsP0q6X7wdW1HsFrJaX+k1AocBq7BF1R4zQyHMxPH+I+2Xeh
+         VnxtaGlErCNqRJkqMJik4ILc/Xw1ksRRpn5m8COXa9VN3Uqbcyckyfw1VxHq5rPnAKca
+         05sUegVB6m5V6ARTNN9vuWcCC2gTsYDe4SisszMj13Evi+Su4zGJTgbttY/H9t92qyfu
+         XfDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ClBxmhMDW8/EvqLNuXj7OToao++oyiDhHUE3TT7mBds=;
-        b=eBSff30Fgum2ByIJIpAIwRA1yDLjWVFuwpIm309ALtnqwi9p6p0zLngy9SuGAitH3z
-         PFxH4/IqjO+/v2QjDJRnwev68H0M045uG73NVAVgGNuDbP9JIlo3n2pM8goKbQX4ejjE
-         1+P2uMMLYAklYg+keU96X/k2UFIWTF4fFxqiFmmDDLq0Y/GY5kgreRk32XY36bAvTUVn
-         XrVdjgzW1WWu6qZ+QfQ8dYnZ0p9AYdqZfST11cLbA+PU7bPsnhlA4xC4asPreWr0yBym
-         py2oGSrQUKx5z6qjqQIdrCg015kSXKTg4mW5Bd0LNKXFCXMkQEP77A2fbRKhPxkPkFWl
-         FMxA==
-X-Gm-Message-State: AOAM533Iaqj1Ri62BfxZqEE73xoz+Tz2bDPszB9sUFZMvAAuuvNrIyjs
-        qPyF7Fg3Kgfk9hqkI6mApec=
-X-Google-Smtp-Source: ABdhPJxzb/HUa4PssPf3WyZJk2/9fO9KwC5LbUHExxDSZz5HT6M3KGkwkKCGNwW8SVIKjQvLhzHLAw==
-X-Received: by 2002:a17:902:8495:: with SMTP id c21mr4240892plo.82.1596648081145;
-        Wed, 05 Aug 2020 10:21:21 -0700 (PDT)
-Received: from gmail.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id d24sm4850758pfq.72.2020.08.05.10.21.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 10:21:20 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 22:49:37 +0530
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>,
-        Tomoya MORINAGA <tomoya.rohm@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: Re: [PATCH v1] i2c: eg20t: use generic power management
-Message-ID: <20200805171937.GA85392@gmail.com>
-References: <20200805162154.GA3179@gmail.com>
- <20200805165611.GA516242@bjorn-Precision-5520>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FbzyMEQueQDY3YDpmwzlLQ7A2LdIlI00oS2N1BmMemo=;
+        b=m/P7U0uewztA9FUU5YEPuylK8sFpwokQ3lJtULXFIAgDzWlVBLTUKXbcjaR34vj4Lo
+         DizrGxlLEQx8zGe8Z1DxHV6D41+vbjX8vq/TCoYK5G6DvX7HtOUXxvpq7dTBnvadszVH
+         bDCp7dJNrIAptFCd6iF9jrQRvbLui9Y7UYZB+9iUaKzrlXDFIODeyn8VB+jokFrUZFKZ
+         9J3GA7ojcmTGqnyKmxCX8i0kAbvan18VKQMJAS5UC78kJAqQ0qgSKwlQw1NCC8mefSa0
+         erB1eAjiA0XlStRF+tQHf8nrbhCUAVvIHOXZwIP/rs1syv0oPt1PVlUIFSDQuZGVe/PL
+         RIBw==
+X-Gm-Message-State: AOAM530dJaMD9e8N8tNlJwabRYJrTnfn7UCgkivngkKuYIJyp+BKvsHd
+        wIs09unobbqoO06MO2qJp25MshQnBSsWC7wy
+X-Google-Smtp-Source: ABdhPJzIkVaHvoR9tH5K50gUhGmPh+91WufLNUGc3rhmCrQDI0HIHRst5vySfI+LEfznVwHsaMaGmg==
+X-Received: by 2002:aa7:92cb:: with SMTP id k11mr4287827pfa.233.1596648071561;
+        Wed, 05 Aug 2020 10:21:11 -0700 (PDT)
+Received: from localhost.localdomain ([103.136.220.73])
+        by smtp.gmail.com with ESMTPSA id z1sm3709583pjn.34.2020.08.05.10.21.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Aug 2020 10:21:10 -0700 (PDT)
+From:   Muchun Song <songmuchun@bytedance.com>
+To:     rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
+        anil.s.keshavamurthy@intel.com, davem@davemloft.net,
+        mhiramat@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org,
+        sfr@canb.auug.org.au, mingo@kernel.org, akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Muchun Song <songmuchun@bytedance.com>
+Subject: [PATCH] kprobes: fix compiler warning for !CONFIG_KPROBES_ON_FTRACE
+Date:   Thu,  6 Aug 2020 01:20:46 +0800
+Message-Id: <20200805172046.19066-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200805165611.GA516242@bjorn-Precision-5520>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 11:56:11AM -0500, Bjorn Helgaas wrote:
-> On Wed, Aug 05, 2020 at 09:51:54PM +0530, Vaibhav Gupta wrote:
-> > On Wed, Aug 05, 2020 at 10:28:32AM -0500, Bjorn Helgaas wrote:
-> > > On Wed, Aug 05, 2020 at 10:23:31AM -0500, Bjorn Helgaas wrote:
-> > > > On Mon, Jul 20, 2020 at 07:30:32PM +0530, Vaibhav Gupta wrote:
-> > > > > Drivers using legacy PM have to manage PCI states and device's PM states
-> > > > > themselves. They also need to take care of configuration registers.
-> > > > > 
-> > > > > With improved and powerful support of generic PM, PCI Core takes care of
-> > > > > above mentioned, device-independent, jobs.
-> > > > > 
-> > > > > This driver makes use of PCI helper functions like
-> > > > > pci_save/restore_state(), pci_enable/disable_device(),
-> > > > > pci_enable_wake() and pci_set_power_state() to do required operations. In
-> > > > > generic mode, they are no longer needed.
-> > > > > 
-> > > > > Change function parameter in both .suspend() and .resume() to
-> > > > > "struct device*" type. Use to_pci_dev() and dev_get_drvdata() to get
-> > > > > "struct pci_dev*" variable and drv data.
-> > > > > 
-> > > > > Compile-tested only.
-> > > > > 
-> > > > > Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
-> > > > > ---
-> > > > >  drivers/i2c/busses/i2c-eg20t.c | 39 ++++++++--------------------------
-> > > > >  1 file changed, 9 insertions(+), 30 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/i2c/busses/i2c-eg20t.c b/drivers/i2c/busses/i2c-eg20t.c
-> > > > > index 73f139690e4e..c0ddc4cc2ce7 100644
-> > > > > --- a/drivers/i2c/busses/i2c-eg20t.c
-> > > > > +++ b/drivers/i2c/busses/i2c-eg20t.c
-> > > > > @@ -846,11 +846,10 @@ static void pch_i2c_remove(struct pci_dev *pdev)
-> > > > >  	kfree(adap_info);
-> > > > >  }
-> > > > >  
-> > > > > -#ifdef CONFIG_PM
-> > > > > -static int pch_i2c_suspend(struct pci_dev *pdev, pm_message_t state)
-> > > > > +static int __maybe_unused pch_i2c_suspend(struct device *dev)
-> > > > >  {
-> > > > > -	int ret;
-> > > > >  	int i;
-> > > > > +	struct pci_dev *pdev = to_pci_dev(dev);
-> > > > >  	struct adapter_info *adap_info = pci_get_drvdata(pdev);
-> > > > 
-> > > > Why don't you use "adap_info = dev_get_drvdata(dev)" as you did below,
-> > > > so you don't need to_pci_dev()?
-> > > >
-> > Actually, line 870, pch_pci_dbg() again needs "struct pci_dev*" type
-> > pointer.  Either way I had to use to_pci_dev(), so defined "pdev"
-> > which made less number of required changes in the code.
-> 
-> OK.  pch_pci_dbg() only needs the pdev in order to *get* the struct
-> device *, so it's all sort of in circles.  But it's fine to do as you
-> did here.
-> 
-> > > > >  	void __iomem *p = adap_info->pch_data[0].pch_base_address;
-> > > > >  
-> > > > > @@ -872,34 +871,17 @@ static int pch_i2c_suspend(struct pci_dev *pdev, pm_message_t state)
-> > > > >  		ioread32(p + PCH_I2CSR), ioread32(p + PCH_I2CBUFSTA),
-> > > > >  		ioread32(p + PCH_I2CESRSTA));
-> > > > >  
-> > > > > -	ret = pci_save_state(pdev);
-> > > > > -
-> > > > > -	if (ret) {
-> > > > > -		pch_pci_err(pdev, "pci_save_state\n");
-> > > > > -		return ret;
-> > > > > -	}
-> > > > > -
-> > > > > -	pci_enable_wake(pdev, PCI_D3hot, 0);
-> > > > > -	pci_disable_device(pdev);
-> > > > > -	pci_set_power_state(pdev, pci_choose_state(pdev, state));
-> > > > > +	device_wakeup_disable(dev);
-> > > > >  
-> > > > >  	return 0;
-> > > > >  }
-> > > > >  
-> > > > > -static int pch_i2c_resume(struct pci_dev *pdev)
-> > > > > +static int __maybe_unused pch_i2c_resume(struct device *dev)
-> > > > >  {
-> > > > >  	int i;
-> > > > > -	struct adapter_info *adap_info = pci_get_drvdata(pdev);
-> > > > > -
-> > > > > -	pci_set_power_state(pdev, PCI_D0);
-> > > > > -	pci_restore_state(pdev);
-> > > > > +	struct adapter_info *adap_info = dev_get_drvdata(dev);
-> > > > >  
-> > > > > -	if (pci_enable_device(pdev) < 0) {
-> > > > > -		pch_pci_err(pdev, "pch_i2c_resume:pci_enable_device FAILED\n");
-> > > > > -		return -EIO;
-> > > > > -	}
-> > > > > -
-> > > > > -	pci_enable_wake(pdev, PCI_D3hot, 0);
-> > > > > +	device_wakeup_disable(dev);
-> > > > 
-> > > > It *looks* wrong to disable wakeup in both suspend and resume.  I
-> > > > think the usual pattern is to enable wakeup in suspend and disable it
-> > > > in resume.
-> > > > 
-> > > > But it looks like it's been that way since the driver was added by
-> > > > e9bc8fa5df1c ("i2c-eg20t: add driver for Intel EG20T").
-> > > > 
-> > > > If the device doesn't support wakeup, I would not expect the driver to
-> > > > mention wakeup at all.
-> > > > 
-> > > > In any case, I think it's the right thing for *this* patch to preserve
-> > > > the previous wakeup behavior.  Maybe we want a follow-up patch to just
-> > > > remove both device_wakeup_disable() calls?
-> > > > 
-> > We have seen this issue earlier in other drivers too. I remember you even
-> > identified and listed them.
-> > The PCI core calls, pci_enable_wake(pci_dev, PCI_D0, false). And if the driver
-> > does not want to enable-wake on suspend, we discussed and concluded that the
-> > calls should be dropped.
-> > I am sending v2, to include dropping wakeup call.
-> 
-> Personally, I think I would do this in two patches, and in the reverse
-> order than what I first suggested:
-> 
->   1) Drop pci_enable_wake() calls
->   2) Convert to generic PM
-> 
-> Doing them in that order means patch 2 will be slightly simpler, and
-> if there's any issue with removing the wakeup stuff, we can debug it
-> in the context of the original PCI PM code we've been using for years
-> without muddying the water with the additional generic PM changes.
-> 
-Yeah, this seems more reasonable.
+Fix compiler warning(as show below) for !CONFIG_KPROBES_ON_FTRACE.
 
-Thanks
-Vaibhav Gupta
-> > > > >  	for (i = 0; i < adap_info->ch_num; i++)
-> > > > >  		pch_i2c_init(&adap_info->pch_data[i]);
-> > > > > @@ -908,18 +890,15 @@ static int pch_i2c_resume(struct pci_dev *pdev)
-> > > > >  
-> > > > >  	return 0;
-> > > > >  }
-> > > > > -#else
-> > > > > -#define pch_i2c_suspend NULL
-> > > > > -#define pch_i2c_resume NULL
-> > > > > -#endif
-> > > > > +
-> > > > > +static SIMPLE_DEV_PM_OPS(pch_i2c_pm_ops, pch_i2c_suspend, pch_i2c_resume);
-> > > > >  
-> > > > >  static struct pci_driver pch_pcidriver = {
-> > > > >  	.name = KBUILD_MODNAME,
-> > > > >  	.id_table = pch_pcidev_id,
-> > > > >  	.probe = pch_i2c_probe,
-> > > > >  	.remove = pch_i2c_remove,
-> > > > > -	.suspend = pch_i2c_suspend,
-> > > > > -	.resume = pch_i2c_resume
-> > > > > +	.driver.pm = &pch_i2c_pm_ops,
-> > > > >  };
-> > > > >  
-> > > > >  module_pci_driver(pch_pcidriver);
-> > > > > -- 
-> > > > > 2.27.0
-> > > > > 
+kernel/kprobes.c: In function 'kill_kprobe':
+kernel/kprobes.c:1116:33: warning: statement with no effect
+[-Wunused-value]
+ 1116 | #define disarm_kprobe_ftrace(p) (-ENODEV)
+      |                                 ^
+kernel/kprobes.c:2154:3: note: in expansion of macro
+'disarm_kprobe_ftrace'
+ 2154 |   disarm_kprobe_ftrace(p);
+
+Link: https://lore.kernel.org/r/20200805142136.0331f7ea@canb.auug.org.au
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Fixes: 0cb2f1372baa ("kprobes: Fix NULL pointer dereference at kprobe_ftrace_handler")
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+---
+ kernel/kprobes.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 503add629599..d36e2b017588 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1114,9 +1114,20 @@ static int disarm_kprobe_ftrace(struct kprobe *p)
+ 		ipmodify ? &kprobe_ipmodify_enabled : &kprobe_ftrace_enabled);
+ }
+ #else	/* !CONFIG_KPROBES_ON_FTRACE */
+-#define prepare_kprobe(p)	arch_prepare_kprobe(p)
+-#define arm_kprobe_ftrace(p)	(-ENODEV)
+-#define disarm_kprobe_ftrace(p)	(-ENODEV)
++static inline int prepare_kprobe(struct kprobe *p)
++{
++	return arch_prepare_kprobe(p);
++}
++
++static inline int arm_kprobe_ftrace(struct kprobe *p)
++{
++	return -ENODEV;
++}
++
++static inline int disarm_kprobe_ftrace(struct kprobe *p)
++{
++	return -ENODEV;
++}
+ #endif
+ 
+ /* Arm a kprobe with text_mutex */
+-- 
+2.11.0
+
