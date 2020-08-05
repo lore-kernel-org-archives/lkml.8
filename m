@@ -2,171 +2,278 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2051C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE76C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B56220678
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22668206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:47:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="i+XqBB42"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fz8E6U86"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgHEFpR (ORCPT
+        id S1726962AbgHEFrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 01:45:17 -0400
-Received: from mail-eopbgr60049.outbound.protection.outlook.com ([40.107.6.49]:35908
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725887AbgHEFpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 01:45:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I8xxedFSa3aopBkr9q4s/qOFfKe2oJX54zMWXhV+ForA26yEpI/vKQaI1pPf76ymZR0UUwBbjVB7sKr42Dlba2W2sGO466RNfPZpIftTyDGuz4+78IPUCuD0wncUtSmqaYYIh+PDzUz/OnfknIs4kxt+6IiaixhfdSlEITNwFkmLsEp9ZBLBGxZiZi9WTEcfWnRgBhrkpcR2T7GiOZYopk/EIZKRSeE0R5Wr4FdPmyXqWUc0iUhcNCGxO53eUnDhh5cgHePFqk2kuveWZoSQravQp+qaQk7rNRIApWbuHn2Cpu8OMoD/Eqw6+2ZXxvDrFVqUtJqQ/lYXMKk9XGiVzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SQLsie+wNKuPQaZsHUX9TJg5vNRvDb5OimhlNmgvTQM=;
- b=efeGVI2msVaUbontRNcPuiZYGc/RN1MNpHbzs3a5vkyg22n2S2801Rf2fZ9KLH2Xr4DJ/dgaPEtTIljZhSuCfAf7qoOZ7k4sQqH6+016RtF/tB1imF+BNTP6Zz2SKzXQslbS3dHpiF0lHlV+wVBDreOMd1/8UCOsE4BFCf4Axw+btbZIsVpayle4KwT1zJ/y7yuPplGfNxgEhTG/vFqxE/wy1GAzfKWTuJ9rpMa631FOudikI7C2tYWNRlUfhtNJRRNJYLf9UQUM0CsOrxcUrGG4D3cy6D/mufAZBGpEn/3rqOveamzW3/5+RJ1q+qyXVB1hTkT1+0wf8XYgDECczg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SQLsie+wNKuPQaZsHUX9TJg5vNRvDb5OimhlNmgvTQM=;
- b=i+XqBB42tpbXcyQpUqGilEmDYKUJE3nkYepUabIMUu2UOGZbtMrRXW5m5clGw2bfwcZXUjqqwV8pNcaKVEht7NR9WN+rofHXoEe7z24I1/k5/A0UW1NGDfK54EIpgZECHnKfyiWgWcg9t6BVLyaVYqJWgGP+xT06jUCvInE++N0=
-Received: from VI1PR04MB5853.eurprd04.prod.outlook.com (2603:10a6:803:e3::25)
- by VI1PR0402MB3838.eurprd04.prod.outlook.com (2603:10a6:803:20::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Wed, 5 Aug
- 2020 05:45:11 +0000
-Received: from VI1PR04MB5853.eurprd04.prod.outlook.com
- ([fe80::1de7:774:144c:e60f]) by VI1PR04MB5853.eurprd04.prod.outlook.com
- ([fe80::1de7:774:144c:e60f%6]) with mapi id 15.20.3261.016; Wed, 5 Aug 2020
- 05:45:11 +0000
-From:   Richard Zhu <hongxing.zhu@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] PCI: imx6: Do not output error message when
- devm_clk_get() failed with -EPROBE_DEFER
-Thread-Topic: [PATCH] PCI: imx6: Do not output error message when
- devm_clk_get() failed with -EPROBE_DEFER
-Thread-Index: AQHWaiIRYG5KaLfjNUWjAQst5+ssEako+/2g
-Date:   Wed, 5 Aug 2020 05:45:10 +0000
-Message-ID: <VI1PR04MB58535C5DF3141EA35674A7CF8C4B0@VI1PR04MB5853.eurprd04.prod.outlook.com>
-References: <1596519481-28072-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1596519481-28072-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8224913b-62e3-4352-f52f-08d83902b7f2
-x-ms-traffictypediagnostic: VI1PR0402MB3838:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB38385C0FA5BB1B6E9C676C5E8C4B0@VI1PR0402MB3838.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:239;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XEiHcnNYmC87tofy2+biz8Z27OgOAGNq6/RqjcVBNVVAMBFu0DJSv8rE8ysjkwVxkplBaPJP9j7fqMGrxDk5dRVWzOyEfMJRLclugNGjBDzqgIpOcESmsrzkbCr081rlBLmH+wBCHXk0j7ipBWuLY6kdE456nAom6csrxhr+GE1+e6UuIRzsfnPShVjM5Q0WNKpMZmdAbt5IV/0JVitYwgl3rM7UVUkL8sU75ZtxBxbLSq01cHkbUn0H5TsOBvaDknuJ8Y79KRCUkGZn7kLhIFvuVrE5oA6bHLtYHW50J70OTEOnsXV0wt83yhhpetnFgBBgxwHehvkZ1t+i1Xd8Guj8s3KbsjcLLPmB7RJ7UsFTs5yjVSBuzzgIcldgxu9V
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5853.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(136003)(396003)(366004)(376002)(110136005)(86362001)(52536014)(64756008)(8936002)(76116006)(8676002)(5660300002)(316002)(66476007)(66556008)(66446008)(33656002)(66946007)(7416002)(9686003)(478600001)(2906002)(4326008)(186003)(71200400001)(83380400001)(53546011)(7696005)(26005)(6506007)(55016002)(15650500001)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: rfDKTI6j/uBFXzalmOBDotj86QSTOJFiLhB8JKZj1GURmF7VhWK9TVqglBMitB5X8Ezk6U32fkMqFPD0NbX2VNWcRCwkNdqTmhD8rejVNxiJFxdkjXEnSS3zJR4rY0kRt8zLAVBBetPKW21qol4DP5GfiGXBT0cpRGqWWxWE/+rMnrbtdFuvtO6obqENZjMxYOuKgE7vNut0YGquVDPJQF95qo1hGM7UE3ICdEOJvMkffgFoRH9e2bGXWC5TNFoafd9bZp11SddQvWAGeUeRVYhlYi1UwYxbdThp/ToR0d0F1pzR2hCyeLML1dfk6QuDtedOvU6awABhLWlRW64KpqP9MWIyqserpPEawKxV4YJdjn6uim+ti1jOR7G+4KbXjGgP9ObbmY2nXK279T1XyfcPhgaIzwNc66kD0ttwP1MmbG9JcERYgUchmJQjKX+L+Dc5pEDENHPe3H+xQIsm6ZTXkHU/gKRQXjNnE/p9syh7d/Blswks/Malgaxb6GbxqBrXboHfSDoxZkk8imCXbM2eBgffPgkVX6PHQhop1SvFbEA9e4I2737O5ws30tSTsVBgt6HNfr+IpJEm+1RGCF2DROrK+kKuGJltL9qBilrEmOq+E0aPXqYZooxU9Wg2CUN1rnj7EJ250/A1Y3FQqw==
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Wed, 5 Aug 2020 01:47:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57190 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbgHEFrf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 01:47:35 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82ACAC06174A;
+        Tue,  4 Aug 2020 22:47:35 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id e187so10863082ybc.5;
+        Tue, 04 Aug 2020 22:47:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=N9PlJ3Rl6xanzUO3i8UD8cYfGevp2bF1yYiHqvkpnwo=;
+        b=fz8E6U86ooXrxj2Ei7lJcJ5Tc9fG44PdK1gCsCSSs9fYrU3DYyLVNfAJzQHlDVH4DC
+         2/QeePq0OcK8qBZLW1f3iKHZv3L85WfddK0oR9/JDhWeTuFSSXbapcFJDe3tOBuohEx0
+         OB74LPC/wgewf5sgkrQlKf/Sq1zg18AhTHEsrD4KnoHo6BPbrjfgsn+IsDh4W866s6w6
+         /N0Ir6GKxT59uFGBbFD3qt6OyAEwEtij1AWt8UqwITAxC2fpRX6X1xrNgZppS3pR3NIC
+         0oOn6vUcvbNSesgeGfyTdEkYjPthQJ7fTsoPG7DqXB4hBV789zhNh7GTLkrqtCwd9SRH
+         n+uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=N9PlJ3Rl6xanzUO3i8UD8cYfGevp2bF1yYiHqvkpnwo=;
+        b=oOm79UeVzOTsFh77ab7dkOkBo1dNpoSjqtpPOiwx/d97HxuFeNVB6KfPhC0BSR3xfH
+         UY961k3cO57ms/DfSfKFX7aRTh34YikmDQ5gulFAmdeclUoCW/t7tndGEkoYDV30DAAY
+         omKCP2sfILR66NBY87KAMYBD2maD7jthJlalHqCGWh5zVwgrrrNa5Qwn6m3WGfJFUzPW
+         RmN6NxYq3XyQ9R07GLb+zZiOOhmbBNnbVGIayhX2ypSw4R6ho6MGs/OIXZeMMa3vdiEk
+         uOLrRMJjJsKEHuxDd6wqS5w2M0Ksxh4wg/2gwsSqzE6e/U6VrEOioUUIottHY8l/RPzu
+         rrhA==
+X-Gm-Message-State: AOAM530gpPBCJq0XdqEMi7rP7PCVM0WgPdfpxOsLipaYwZif5QGz9AYW
+        V4U+c6i69YCWqqv7g0fpg36RNcDJUhXsq+eJ4sXh2g==
+X-Google-Smtp-Source: ABdhPJzflcU6Nnw4Y4XcLzADkuammhaX8z0ZLxZzWyciHQRgJrZxebgcXc/M4LAG0o5jDjxM7uvRbw6KesBMm5B2p20=
+X-Received: by 2002:a25:84cd:: with SMTP id x13mr2330998ybm.425.1596606454446;
+ Tue, 04 Aug 2020 22:47:34 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5853.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8224913b-62e3-4352-f52f-08d83902b7f2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2020 05:45:10.9927
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uorXSibLLeYAUYKYFkYEu45jPqvYjSjqGlJf/fBSnng1ajfEYjSzSLBPaXp6x1oVP8dqhKes6eE5VWglHpuFfQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3838
+References: <20200801084721.1812607-1-songliubraving@fb.com>
+ <20200801084721.1812607-6-songliubraving@fb.com> <CAEf4BzaP4TGF7kcmZRAKsy=oWPpFA6sUGFkctpGz-fPp+YuSOQ@mail.gmail.com>
+ <DDCD362E-21D3-46BF-90A6-8F3221CBB54E@fb.com> <CAEf4BzY5RYMM6w8wn3qEB3AsuKWv-TMaD5NVFj=YqbCW4DLjqA@mail.gmail.com>
+ <7384B583-EE19-4045-AC72-B6FE87C187DD@fb.com> <CAEf4BzaiJnCu14AWougmxH80msGdOp4S8ZNmAiexMmtwUM_2Xg@mail.gmail.com>
+ <AF9D0E8C-0AA5-4BE4-90F4-946FABAB63FD@fb.com>
+In-Reply-To: <AF9D0E8C-0AA5-4BE4-90F4-946FABAB63FD@fb.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 4 Aug 2020 22:47:23 -0700
+Message-ID: <CAEf4BzZ29G2KexhKY=CffOPK_DiqAXxRHWuVRREHv0dnXgobRQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 5/5] selftests/bpf: add benchmark for uprobe vs. user_prog
+To:     Song Liu <songliubraving@fb.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <Kernel-team@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Xu <dlxu@fb.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24u
-SHVhbmdAbnhwLmNvbT4NCj4gU2VudDogMjAyMMTqONTCNMjVIDEzOjM4DQo+IFRvOiBSaWNoYXJk
-IFpodSA8aG9uZ3hpbmcuemh1QG54cC5jb20+OyBsLnN0YWNoQHBlbmd1dHJvbml4LmRlOw0KPiBs
-b3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tOyByb2JoQGtlcm5lbC5vcmc7IGJoZWxnYWFzQGdvb2ds
-ZS5jb207DQo+IHNoYXduZ3VvQGtlcm5lbC5vcmc7IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7IGtl
-cm5lbEBwZW5ndXRyb25peC5kZTsNCj4gZmVzdGV2YW1AZ21haWwuY29tOyBsaW51eC1wY2lAdmdl
-ci5rZXJuZWwub3JnOw0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxp
-bnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IGRsLWxpbnV4LWlteCA8bGludXgtaW14
-QG54cC5jb20+DQo+IFN1YmplY3Q6IFtQQVRDSF0gUENJOiBpbXg2OiBEbyBub3Qgb3V0cHV0IGVy
-cm9yIG1lc3NhZ2Ugd2hlbiBkZXZtX2Nsa19nZXQoKQ0KPiBmYWlsZWQgd2l0aCAtRVBST0JFX0RF
-RkVSDQo+IA0KPiBXaGVuIGRldm1fY2xrX2dldCgpIHJldHVybnMgLUVQUk9CRV9ERUZFUiwgaS5N
-WDYgUENJIGRyaXZlciBzaG91bGQgTk9UIHByaW50DQo+IGVycm9yIG1lc3NhZ2UsIGp1c3QgcmV0
-dXJuIC1FUFJPQkVfREVGRVIgaXMgZW5vdWdoLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQW5zb24g
-SHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQoNCkknbSBmaW5lIHdpdGggdGhlc2UgY2hhbmdl
-cy4gVGhhbmtzLg0KUmV2aWV3ZWQtYnk6IFJpY2hhcmQgWmh1IDxob25neGluZy56aHVAbnhwLmNv
-bT4NCg0KQmVzdCBSZWdhcmRzDQpSaWNoYXJkIFpodQ0KDQo+IC0tLQ0KPiAgZHJpdmVycy9wY2kv
-Y29udHJvbGxlci9kd2MvcGNpLWlteDYuYyB8IDMwICsrKysrKysrKysrKysrKysrKysrLS0tLS0t
-LS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKyksIDEwIGRlbGV0aW9ucygt
-KQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1pbXg2
-LmMNCj4gYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktaW14Ni5jDQo+IGluZGV4IDRl
-NWMzNzkuLmVlNzVkMzUgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdj
-L3BjaS1pbXg2LmMNCj4gKysrIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWlteDYu
-Yw0KPiBAQCAtMTA3NiwyMCArMTA3NiwyNiBAQCBzdGF0aWMgaW50IGlteDZfcGNpZV9wcm9iZShz
-dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlDQo+ICpwZGV2KQ0KPiAgCS8qIEZldGNoIGNsb2NrcyAqLw0K
-PiAgCWlteDZfcGNpZS0+cGNpZV9waHkgPSBkZXZtX2Nsa19nZXQoZGV2LCAicGNpZV9waHkiKTsN
-Cj4gIAlpZiAoSVNfRVJSKGlteDZfcGNpZS0+cGNpZV9waHkpKSB7DQo+IC0JCWRldl9lcnIoZGV2
-LCAicGNpZV9waHkgY2xvY2sgc291cmNlIG1pc3Npbmcgb3IgaW52YWxpZFxuIik7DQo+IC0JCXJl
-dHVybiBQVFJfRVJSKGlteDZfcGNpZS0+cGNpZV9waHkpOw0KPiArCQlyZXQgPSBQVFJfRVJSKGlt
-eDZfcGNpZS0+cGNpZV9waHkpOw0KPiArCQlpZiAocmV0ICE9IC1FUFJPQkVfREVGRVIpDQo+ICsJ
-CQlkZXZfZXJyKGRldiwgInBjaWVfcGh5IGNsb2NrIHNvdXJjZSBtaXNzaW5nIG9yIGludmFsaWRc
-biIpOw0KPiArCQlyZXR1cm4gcmV0Ow0KPiAgCX0NCj4gDQo+ICAJaW14Nl9wY2llLT5wY2llX2J1
-cyA9IGRldm1fY2xrX2dldChkZXYsICJwY2llX2J1cyIpOw0KPiAgCWlmIChJU19FUlIoaW14Nl9w
-Y2llLT5wY2llX2J1cykpIHsNCj4gLQkJZGV2X2VycihkZXYsICJwY2llX2J1cyBjbG9jayBzb3Vy
-Y2UgbWlzc2luZyBvciBpbnZhbGlkXG4iKTsNCj4gLQkJcmV0dXJuIFBUUl9FUlIoaW14Nl9wY2ll
-LT5wY2llX2J1cyk7DQo+ICsJCXJldCA9IFBUUl9FUlIoaW14Nl9wY2llLT5wY2llX2J1cyk7DQo+
-ICsJCWlmIChyZXQgIT0gLUVQUk9CRV9ERUZFUikNCj4gKwkJCWRldl9lcnIoZGV2LCAicGNpZV9i
-dXMgY2xvY2sgc291cmNlIG1pc3Npbmcgb3IgaW52YWxpZFxuIik7DQo+ICsJCXJldHVybiByZXQ7
-DQo+ICAJfQ0KPiANCj4gIAlpbXg2X3BjaWUtPnBjaWUgPSBkZXZtX2Nsa19nZXQoZGV2LCAicGNp
-ZSIpOw0KPiAgCWlmIChJU19FUlIoaW14Nl9wY2llLT5wY2llKSkgew0KPiAtCQlkZXZfZXJyKGRl
-diwgInBjaWUgY2xvY2sgc291cmNlIG1pc3Npbmcgb3IgaW52YWxpZFxuIik7DQo+IC0JCXJldHVy
-biBQVFJfRVJSKGlteDZfcGNpZS0+cGNpZSk7DQo+ICsJCXJldCA9IFBUUl9FUlIoaW14Nl9wY2ll
-LT5wY2llKTsNCj4gKwkJaWYgKHJldCAhPSAtRVBST0JFX0RFRkVSKQ0KPiArCQkJZGV2X2Vycihk
-ZXYsICJwY2llIGNsb2NrIHNvdXJjZSBtaXNzaW5nIG9yIGludmFsaWRcbiIpOw0KPiArCQlyZXR1
-cm4gcmV0Ow0KPiAgCX0NCj4gDQo+ICAJc3dpdGNoIChpbXg2X3BjaWUtPmRydmRhdGEtPnZhcmlh
-bnQpIHsgQEAgLTEwOTcsMTUgKzExMDMsMTkgQEAgc3RhdGljDQo+IGludCBpbXg2X3BjaWVfcHJv
-YmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gIAkJaW14Nl9wY2llLT5wY2llX2lu
-Ym91bmRfYXhpID0gZGV2bV9jbGtfZ2V0KGRldiwNCj4gIAkJCQkJCQkgICAicGNpZV9pbmJvdW5k
-X2F4aSIpOw0KPiAgCQlpZiAoSVNfRVJSKGlteDZfcGNpZS0+cGNpZV9pbmJvdW5kX2F4aSkpIHsN
-Cj4gLQkJCWRldl9lcnIoZGV2LCAicGNpZV9pbmJvdW5kX2F4aSBjbG9jayBtaXNzaW5nIG9yIGlu
-dmFsaWRcbiIpOw0KPiAtCQkJcmV0dXJuIFBUUl9FUlIoaW14Nl9wY2llLT5wY2llX2luYm91bmRf
-YXhpKTsNCj4gKwkJCXJldCA9IFBUUl9FUlIoaW14Nl9wY2llLT5wY2llX2luYm91bmRfYXhpKTsN
-Cj4gKwkJCWlmIChyZXQgIT0gLUVQUk9CRV9ERUZFUikNCj4gKwkJCQlkZXZfZXJyKGRldiwgInBj
-aWVfaW5ib3VuZF9heGkgY2xvY2sgbWlzc2luZyBvciBpbnZhbGlkXG4iKTsNCj4gKwkJCXJldHVy
-biByZXQ7DQo+ICAJCX0NCj4gIAkJYnJlYWs7DQo+ICAJY2FzZSBJTVg4TVE6DQo+ICAJCWlteDZf
-cGNpZS0+cGNpZV9hdXggPSBkZXZtX2Nsa19nZXQoZGV2LCAicGNpZV9hdXgiKTsNCj4gIAkJaWYg
-KElTX0VSUihpbXg2X3BjaWUtPnBjaWVfYXV4KSkgew0KPiAtCQkJZGV2X2VycihkZXYsICJwY2ll
-X2F1eCBjbG9jayBzb3VyY2UgbWlzc2luZyBvciBpbnZhbGlkXG4iKTsNCj4gLQkJCXJldHVybiBQ
-VFJfRVJSKGlteDZfcGNpZS0+cGNpZV9hdXgpOw0KPiArCQkJcmV0ID0gUFRSX0VSUihpbXg2X3Bj
-aWUtPnBjaWVfYXV4KTsNCj4gKwkJCWlmIChyZXQgIT0gLUVQUk9CRV9ERUZFUikNCj4gKwkJCQlk
-ZXZfZXJyKGRldiwgInBjaWVfYXV4IGNsb2NrIHNvdXJjZSBtaXNzaW5nIG9yIGludmFsaWRcbiIp
-Ow0KPiArCQkJcmV0dXJuIHJldDsNCj4gIAkJfQ0KPiAgCQkvKiBmYWxsIHRocm91Z2ggKi8NCj4g
-IAljYXNlIElNWDdEOg0KPiAtLQ0KPiAyLjcuNA0KDQo=
+On Tue, Aug 4, 2020 at 9:47 PM Song Liu <songliubraving@fb.com> wrote:
+>
+>
+>
+> > On Aug 4, 2020, at 6:52 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com>=
+ wrote:
+> >
+> > On Tue, Aug 4, 2020 at 2:01 PM Song Liu <songliubraving@fb.com> wrote:
+> >>
+> >>
+> >>
+> >>> On Aug 2, 2020, at 10:10 PM, Andrii Nakryiko <andrii.nakryiko@gmail.c=
+om> wrote:
+> >>>
+> >>> On Sun, Aug 2, 2020 at 9:47 PM Song Liu <songliubraving@fb.com> wrote=
+:
+> >>>>
+> >>>>
+> >>>>> On Aug 2, 2020, at 6:51 PM, Andrii Nakryiko <andrii.nakryiko@gmail.=
+com> wrote:
+> >>>>>
+> >>>>> On Sat, Aug 1, 2020 at 1:50 AM Song Liu <songliubraving@fb.com> wro=
+te:
+> >>>>>>
+> >>>>>> Add a benchmark to compare performance of
+> >>>>>> 1) uprobe;
+> >>>>>> 2) user program w/o args;
+> >>>>>> 3) user program w/ args;
+> >>>>>> 4) user program w/ args on random cpu.
+> >>>>>>
+> >>>>>
+> >>>>> Can you please add it to the existing benchmark runner instead, e.g=
+.,
+> >>>>> along the other bench_trigger benchmarks? No need to re-implement
+> >>>>> benchmark setup. And also that would also allow to compare existing
+> >>>>> ways of cheaply triggering a program vs this new _USER program?
+> >>>>
+> >>>> Will try.
+> >>>>
+> >>>>>
+> >>>>> If the performance is not significantly better than other ways, do =
+you
+> >>>>> think it still makes sense to add a new BPF program type? I think
+> >>>>> triggering KPROBE/TRACEPOINT from bpf_prog_test_run() would be very
+> >>>>> nice, maybe it's possible to add that instead of a new program type=
+?
+> >>>>> Either way, let's see comparison with other program triggering
+> >>>>> mechanisms first.
+> >>>>
+> >>>> Triggering KPROBE and TRACEPOINT from bpf_prog_test_run() will be us=
+eful.
+> >>>> But I don't think they can be used instead of user program, for a co=
+uple
+> >>>> reasons. First, KPROBE/TRACEPOINT may be triggered by other programs
+> >>>> running in the system, so user will have to filter those noise out i=
+n
+> >>>> each program. Second, it is not easy to specify CPU for KPROBE/TRACE=
+POINT,
+> >>>> while this feature could be useful in many cases, e.g. get stack tra=
+ce
+> >>>> on a given CPU.
+> >>>>
+> >>>
+> >>> Right, it's not as convenient with KPROBE/TRACEPOINT as with the USER
+> >>> program you've added specifically with that feature in mind. But if
+> >>> you pin user-space thread on the needed CPU and trigger kprobe/tp,
+> >>> then you'll get what you want. As for the "noise", see how
+> >>> bench_trigger() deals with that: it records thread ID and filters
+> >>> everything not matching. You can do the same with CPU ID. It's not as
+> >>> automatic as with a special BPF program type, but still pretty simple=
+,
+> >>> which is why I'm still deciding (for myself) whether USER program typ=
+e
+> >>> is necessary :)
+> >>
+> >> Here are some bench_trigger numbers:
+> >>
+> >> base      :    1.698 =C2=B1 0.001M/s
+> >> tp        :    1.477 =C2=B1 0.001M/s
+> >> rawtp     :    1.567 =C2=B1 0.001M/s
+> >> kprobe    :    1.431 =C2=B1 0.000M/s
+> >> fentry    :    1.691 =C2=B1 0.000M/s
+> >> fmodret   :    1.654 =C2=B1 0.000M/s
+> >> user      :    1.253 =C2=B1 0.000M/s
+> >> fentry-on-cpu:    0.022 =C2=B1 0.011M/s
+> >> user-on-cpu:    0.315 =C2=B1 0.001M/s
+> >>
+> >
+> > Ok, so basically all of raw_tp,tp,kprobe,fentry/fexit are
+> > significantly faster than USER programs. Sure, when compared to
+> > uprobe, they are faster, but not when doing on-specific-CPU run, it
+> > seems (judging from this patch's description, if I'm reading it
+> > right). Anyways, speed argument shouldn't be a reason for doing this,
+> > IMO.
+> >
+> >> The two "on-cpu" tests run the program on a different CPU (see the pat=
+ch
+> >> at the end).
+> >>
+> >> "user" is about 25% slower than "fentry". I think this is mostly becau=
+se
+> >> getpgid() is a faster syscall than bpf(BPF_TEST_RUN).
+> >
+> > Yes, probably.
+> >
+> >>
+> >> "user-on-cpu" is more than 10x faster than "fentry-on-cpu", because IP=
+I
+> >> is way faster than moving the process (via sched_setaffinity).
+> >
+> > I don't think that's a good comparison, because you are actually
+> > testing sched_setaffinity performance on each iteration vs IPI in the
+> > kernel, not a BPF overhead.
+> >
+> > I think the fair comparison for this would be to create a thread and
+> > pin it on necessary CPU, and only then BPF program calls in a loop.
+> > But I bet any of existing program types would beat USER program.
+> >
+> >>
+> >> For use cases that we would like to call BPF program on specific CPU,
+> >> triggering it via IPI is a lot faster.
+> >
+> > So these use cases would be nice to expand on in the motivational part
+> > of the patch set. It's not really emphasized and it's not at all clear
+> > what you are trying to achieve. It also seems, depending on latency
+> > requirements, it's totally possible to achieve comparable results by
+> > pre-creating a thread for each CPU, pinning each one to its designated
+> > CPU and then using any suitable user-space signaling mechanism (a
+> > queue, condvar, etc) to ask a thread to trigger BPF program (fentry on
+> > getpgid(), for instance).
+>
+> I don't see why user space signal plus fentry would be faster than IPI.
+> If the target cpu is running something, this gonna add two context
+> switches.
+>
+
+I didn't say faster, did I? I said it would be comparable and wouldn't
+require a new program type. But then again, without knowing all the
+details, it's a bit hard to discuss this. E.g., if you need to trigger
+that BPF program periodically, you can sleep in those per-CPU threads,
+or epoll, or whatever. Or maybe you can set up a per-CPU perf event
+that would trigger your program on the desired CPU, etc. My point is
+that I and others shouldn't be guessing this, I'd expect someone who's
+proposing an entire new BPF program type to motivate why this new
+program type is necessary and what problem it's solving that can't be
+solved with existing means.
+
+BTW, how frequently do you need to trigger the BPF program? Seems very
+frequently, if 2 vs 1 context switches might be a problem?
+
+> > I bet in this case the  performance would be
+> > really nice for a lot of practical use cases. But then again, I don't
+> > know details of the intended use case, so please provide some more
+> > details.
+>
+> Being able to trigger BPF program on a different CPU could enable many
+> use cases and optimizations. The use case I am looking at is to access
+> perf_event and percpu maps on the target CPU. For example:
+>         0. trigger the program
+>         1. read perf_event on cpu x;
+>         2. (optional) check which process is running on cpu x;
+>         3. add perf_event value to percpu map(s) on cpu x.
+>
+> If we do these steps in a BPF program on cpu x, the cost is:
+>         A.0) trigger BPF via IPI;
+>         A.1) read perf_event locally;
+>         A.2) local access current;
+>         A.3) local access of percpu map(s).
+>
+> If we can only do these on a different CPU, the cost will be:
+>         B.0) trigger BPF locally;
+>         B.1) read perf_event via IPI;
+>         B.2) remote access current on cpu x;
+>         B.3) remote access percpu map(s), or use non-percpu map(2).
+>
+> Cost of (A.0 + A.1) is about same as (B.0 + B.1), maybe a little higher
+> (sys_bpf(), vs. sys_getpgid()). But A.2 and A.3 will be significantly
+> cheaper than B.2 and B.3.
+>
+> Does this make sense?
+
+It does, thanks. But what I was describing is still A, no? BPF program
+will be triggered on your desired cpu X, wouldn't it?
+
+>
+>
+> OTOH, I do agree we can trigger bpftrace BEGIN/END with sys_getpgid()
+> or something similar.
+
+Right.
+
+>
+> Thanks,
+> Song
