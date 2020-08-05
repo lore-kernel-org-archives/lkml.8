@@ -2,156 +2,146 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA8BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3079C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CE732177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A357322B40
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:50:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EYZdOlpq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbgHEDsW (ORCPT
+        id S1726631AbgHEDuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 23:48:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgHEDsV (ORCPT
+        Tue, 4 Aug 2020 23:50:44 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31905 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726150AbgHEDum (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 23:48:21 -0400
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [IPv6:2001:67c:2050::465:103])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C058C06174A;
-        Tue,  4 Aug 2020 20:48:21 -0700 (PDT)
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        Tue, 4 Aug 2020 23:50:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596599440;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=PBRFUAvhtw5NCrkPVOAd8K2sp2Oav4oQ9F6n5x6FCHA=;
+        b=EYZdOlpqgLfXYcJ95lIiIG9jD3a1oW8PCH1InpolAq3M4UnJOLrALEXAaQQyx/TPShB2DO
+        yfU9TV7/Rg/inqOSJdhhNpc8yXkx+aTt7p0X9cv6/FTadZ+KoS/PAb2VWWKAOx36FAhPGh
+        ia9fLyZzx3ekCylRUwL23E4gDcuFrRo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-185-xI0_yRdGMPGizyxDuo-nyA-1; Tue, 04 Aug 2020 23:50:36 -0400
+X-MC-Unique: xI0_yRdGMPGizyxDuo-nyA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4BLyJb1zSNzKmR9;
-        Wed,  5 Aug 2020 05:48:15 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
-        with ESMTP id E-94TVlXGldS; Wed,  5 Aug 2020 05:48:10 +0200 (CEST)
-Date:   Wed, 5 Aug 2020 13:47:58 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Lokesh Gidra <lokeshgidra@google.com>
-Cc:     viro@zeniv.linux.org.uk, stephen.smalley.work@gmail.com,
-        casey@schaufler-ca.com, jmorris@namei.org, kaleshsingh@google.com,
-        dancol@dancol.org, surenb@google.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        nnk@google.com, jeffv@google.com, calin@google.com,
-        kernel-team@android.com, yanfei.xu@windriver.com,
-        syzbot+75867c44841cb6373570@syzkaller.appspotmail.com
-Subject: Re: [PATCH] Userfaultfd: Avoid double free of userfault_ctx and
- remove O_CLOEXEC
-Message-ID: <20200805034758.lrobunwdcqtknsvz@yavin.dot.cyphar.com>
-References: <20200804203155.2181099-1-lokeshgidra@google.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8CFAE102C7EC;
+        Wed,  5 Aug 2020 03:50:30 +0000 (UTC)
+Received: from localhost (ovpn-12-71.pek2.redhat.com [10.72.12.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 17E4F8AC06;
+        Wed,  5 Aug 2020 03:50:27 +0000 (UTC)
+Date:   Wed, 5 Aug 2020 11:50:24 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Simek <monstr@monstr.eu>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Stafford Horne <shorne@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        clang-built-linux@googlegroups.com,
+        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
+        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
+        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
+Subject: Re: [PATCH v2 02/17] dma-contiguous: simplify
+ cma_early_percent_memory()
+Message-ID: <20200805035024.GR10792@MiWiFi-R3L-srv>
+References: <20200802163601.8189-1-rppt@kernel.org>
+ <20200802163601.8189-3-rppt@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jx4te5hbjl6sds64"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200804203155.2181099-1-lokeshgidra@google.com>
-X-MBO-SPAM-Probability: 0
-X-Rspamd-Score: -7.10 / 15.00 / 15.00
-X-Rspamd-Queue-Id: F24341768
-X-Rspamd-UID: 5729ac
+In-Reply-To: <20200802163601.8189-3-rppt@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---jx4te5hbjl6sds64
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 2020-08-04, Lokesh Gidra <lokeshgidra@google.com> wrote:
-> when get_unused_fd_flags returns error, ctx will be freed by
-> userfaultfd's release function, which is indirectly called by fput().
-> Also, if anon_inode_getfile_secure() returns an error, then
-> userfaultfd_ctx_put() is called, which calls mmdrop() and frees ctx.
->=20
-> Also, the O_CLOEXEC was inadvertently added to the call to
-> get_unused_fd_flags() [1].
-
-I disagree that it is "wrong" to do O_CLOEXEC-by-default (after all,
-it's trivial to disable O_CLOEXEC, but it's non-trivial to enable it on
-an existing file descriptor because it's possible for another thread to
-exec() before you set the flag). Several new syscalls and fd-returning
-facilities are O_CLOEXEC-by-default now (the most obvious being pidfds
-and seccomp notifier fds).
-
-At the very least there should be a new flag added that sets O_CLOEXEC.
-
-> Adding Al Viro's suggested-by, based on [2].
->=20
-> [1] https://lore.kernel.org/lkml/1f69c0ab-5791-974f-8bc0-3997ab1d61ea@dan=
-col.org/
-> [2] https://lore.kernel.org/lkml/20200719165746.GJ2786714@ZenIV.linux.org=
-=2Euk/
->=20
-> Fixes: d08ac70b1e0d (Wire UFFD up to SELinux)
-> Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-> Reported-by: syzbot+75867c44841cb6373570@syzkaller.appspotmail.com
-> Signed-off-by: Lokesh Gidra <lokeshgidra@google.com>
+On 08/02/20 at 07:35pm, Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
+> 
+> The memory size calculation in cma_early_percent_memory() traverses
+> memblock.memory rather than simply call memblock_phys_mem_size(). The
+> comment in that function suggests that at some point there should have been
+> call to memblock_analyze() before memblock_phys_mem_size() could be used.
+> As of now, there is no memblock_analyze() at all and
+> memblock_phys_mem_size() can be used as soon as cold-plug memory is
+> registerd with memblock.
+> 
+> Replace loop over memblock.memory with a call to memblock_phys_mem_size().
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 > ---
->  fs/userfaultfd.c | 14 ++++----------
->  1 file changed, 4 insertions(+), 10 deletions(-)
->=20
-> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-> index ae859161908f..e15eb8fdc083 100644
-> --- a/fs/userfaultfd.c
-> +++ b/fs/userfaultfd.c
-> @@ -2042,24 +2042,18 @@ SYSCALL_DEFINE1(userfaultfd, int, flags)
->  		O_RDWR | (flags & UFFD_SHARED_FCNTL_FLAGS),
->  		NULL);
->  	if (IS_ERR(file)) {
-> -		fd =3D PTR_ERR(file);
-> -		goto out;
-> +		userfaultfd_ctx_put(ctx);
-> +		return PTR_ERR(file);
->  	}
-> =20
-> -	fd =3D get_unused_fd_flags(O_RDONLY | O_CLOEXEC);
-> +	fd =3D get_unused_fd_flags(O_RDONLY);
->  	if (fd < 0) {
->  		fput(file);
-> -		goto out;
-> +		return fd;
->  	}
-> =20
->  	ctx->owner =3D file_inode(file);
->  	fd_install(fd, file);
+>  kernel/dma/contiguous.c | 11 +----------
+>  1 file changed, 1 insertion(+), 10 deletions(-)
+> 
+> diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
+> index 15bc5026c485..1992afd8ca7b 100644
+> --- a/kernel/dma/contiguous.c
+> +++ b/kernel/dma/contiguous.c
+> @@ -73,16 +73,7 @@ early_param("cma", early_cma);
+>  
+>  static phys_addr_t __init __maybe_unused cma_early_percent_memory(void)
+>  {
+> -	struct memblock_region *reg;
+> -	unsigned long total_pages = 0;
 > -
-> -out:
-> -	if (fd < 0) {
-> -		mmdrop(ctx->mm);
-> -		kmem_cache_free(userfaultfd_ctx_cachep, ctx);
-> -	}
->  	return fd;
+> -	/*
+> -	 * We cannot use memblock_phys_mem_size() here, because
+> -	 * memblock_analyze() has not been called yet.
+> -	 */
+> -	for_each_memblock(memory, reg)
+> -		total_pages += memblock_region_memory_end_pfn(reg) -
+> -			       memblock_region_memory_base_pfn(reg);
+> +	unsigned long total_pages = PHYS_PFN(memblock_phys_mem_size());
+
+Reviewed-by: Baoquan He <bhe@redhat.com>
+
+>  
+>  	return (total_pages * CONFIG_CMA_SIZE_PERCENTAGE / 100) << PAGE_SHIFT;
 >  }
-> =20
-> --=20
-> 2.28.0.163.g6104cc2f0b6-goog
->=20
+> -- 
+> 2.26.2
+> 
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---jx4te5hbjl6sds64
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXyor6wAKCRCdlLljIbnQ
-EvlBAP9yT6247DlCIs/Tflt7TprvwpvnjAbnWJ/71XH7JGf3EgEA0OLS0YoSm9zV
-dHgGAW0D6J8tKTslxFA785dqofjTKQ4=
-=l25V
------END PGP SIGNATURE-----
-
---jx4te5hbjl6sds64--
