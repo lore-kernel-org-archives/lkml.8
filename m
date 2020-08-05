@@ -2,119 +2,189 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BF7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE97C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 845D021744
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:19:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ilW8vnnJ"
+	by mail.kernel.org (Postfix) with ESMTP id ECAF6206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:20:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbgHEHTw (ORCPT
+        id S1728137AbgHEHU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 03:19:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43358 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgHEHTt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 03:19:49 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3287DC06174A;
-        Wed,  5 Aug 2020 00:19:49 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id p25so332206qkp.2;
-        Wed, 05 Aug 2020 00:19:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=FaEGzOgyBR8AMrEH/saCACEjpxQkzKeYijkuZ/V+U+o=;
-        b=ilW8vnnJJfaLmaAF552XrtvQJaLxZzmJQYy9RZXrp9+zWxJSn7ZBqnocioKgTZD7di
-         M+gu5qpz8NGmWu8e5WFOIHch8DUejIzqTm4RA9XDm7qvF3qd0onAuG1HvZBA81ykTbe8
-         ALSOyP42Da9aX1NBhuS99F4K8XEkal3QwiTCBi+OO2ud8gAvin9ReEiDk82Qw8/5+23h
-         wi3ydf7gcOvfCey581GZTctje7xG35/DzCuxRGmvSmtSn2w02SGHDAtvtkMGjwq5lYI1
-         OT0qk1uFZY66uxVv9UUw47h2Yd7BWoAXTsMJCg1/gS+Dzhu5FEimycK/4tNaOU7UR9Sn
-         Qulw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=FaEGzOgyBR8AMrEH/saCACEjpxQkzKeYijkuZ/V+U+o=;
-        b=n8h5oCPrw2lWN63UXVsdn28ANbQ6UMhJZfepC97oCvVJQZTh5X/7xO8V6QD+XOeSBJ
-         j9sOgxiAkhVaKBA5N/C+xA19jaOJKJ3pztmucp0y8TV1UaSs4JnJr/OoSti+tpR9A+7l
-         qmicFC3E/CrYsZG3wiDNCs/2zoA33D0k22igu7V43enTllfazC6c6YYK9ipe0TlikniM
-         91gokPJ1QgLwyEbWvdA35X1z+yjwwK95nU317IdLwDPK6ceJsXT4ZXB7mOudjKMAczJ4
-         HCK2gHK1a+W/0dojAWNk3hfVVlp5g7pSBWbMvW7Rka3Jk5POz5Ri8t6zAbW1hKwZmQc1
-         9jeg==
-X-Gm-Message-State: AOAM533la/Stk8MxOAhalJS1xH7VOZnvXodWJt9EIZp9JNchLqi9Suc6
-        Xj/v6Bv/2Bq+4xQLOziOkuA=
-X-Google-Smtp-Source: ABdhPJxTwbNbMDnDvBuxSOb/SHAzcUaYN56CL+kG8AQqLnCQWcOsXUp0JwT+Hecp1bNzf8wZlGuGcw==
-X-Received: by 2002:a05:620a:490:: with SMTP id 16mr1848131qkr.89.1596611988431;
-        Wed, 05 Aug 2020 00:19:48 -0700 (PDT)
-Received: from localhost.localdomain ([111.205.198.3])
-        by smtp.gmail.com with ESMTPSA id y14sm1389009qtc.84.2020.08.05.00.19.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Aug 2020 00:19:47 -0700 (PDT)
-From:   xiangxia.m.yue@gmail.com
-To:     davem@davemloft.net, echaudro@redhat.com, kuba@kernel.org,
-        pabeni@redhat.com, pshelar@ovn.org, syzkaller-bugs@googlegroups.com
-Cc:     dev@openvswitch.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, Tonghao Zhang <xiangxia.m.yue@gmail.com>
-Subject: [PATCH] net: openvswitch: silence suspicious RCU usage warning
-Date:   Wed,  5 Aug 2020 15:19:11 +0800
-Message-Id: <20200805071911.64101-1-xiangxia.m.yue@gmail.com>
-X-Mailer: git-send-email 2.15.0
+        Wed, 5 Aug 2020 03:20:28 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:59538 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725904AbgHEHU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 03:20:27 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 57F512003A1;
+        Wed,  5 Aug 2020 09:20:25 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8A6A1201418;
+        Wed,  5 Aug 2020 09:20:20 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 03B5F40309;
+        Wed,  5 Aug 2020 09:20:14 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     axboe@kernel.dk, robh+dt@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] dt-bindings: ata: Convert i.MX sata to json-schema
+Date:   Wed,  5 Aug 2020 15:15:46 +0800
+Message-Id: <1596611746-29155-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tonghao Zhang <xiangxia.m.yue@gmail.com>
+Convert the i.MX sata binding to DT schema format using json-schema.
 
-ovs_flow_tbl_destroy always is called from RCU callback
-or error path. It is no need to check if rcu_read_lock
-or lockdep_ovsl_is_held was held.
-
-ovs_dp_cmd_fill_info always is called with ovs_mutex,
-So use the rcu_dereference_ovsl instead of rcu_dereference
-in ovs_flow_tbl_masks_cache_size.
-
-Fixes: 9bf24f594c6a ("net: openvswitch: make masks cache size configurable")
-Cc: Eelco Chaudron <echaudro@redhat.com>
-Reported-by: syzbot+c0eb9e7cdde04e4eb4be@syzkaller.appspotmail.com
-Reported-by: syzbot+f612c02823acb02ff9bc@syzkaller.appspotmail.com
-Signed-off-by: Tonghao Zhang <xiangxia.m.yue@gmail.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- net/openvswitch/flow_table.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/ata/imx-sata.txt | 37 ----------
+ .../devicetree/bindings/ata/imx-sata.yaml          | 81 ++++++++++++++++++++++
+ 2 files changed, 81 insertions(+), 37 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/ata/imx-sata.txt
+ create mode 100644 Documentation/devicetree/bindings/ata/imx-sata.yaml
 
-diff --git a/net/openvswitch/flow_table.c b/net/openvswitch/flow_table.c
-index 6527d84c3ea6..8c12675cbb67 100644
---- a/net/openvswitch/flow_table.c
-+++ b/net/openvswitch/flow_table.c
-@@ -518,8 +518,8 @@ void ovs_flow_tbl_destroy(struct flow_table *table)
- {
- 	struct table_instance *ti = rcu_dereference_raw(table->ti);
- 	struct table_instance *ufid_ti = rcu_dereference_raw(table->ufid_ti);
--	struct mask_cache *mc = rcu_dereference(table->mask_cache);
--	struct mask_array *ma = rcu_dereference_ovsl(table->mask_array);
-+	struct mask_cache *mc = rcu_dereference_raw(table->mask_cache);
-+	struct mask_array *ma = rcu_dereference_raw(table->mask_array);
- 
- 	call_rcu(&mc->rcu, mask_cache_rcu_cb);
- 	call_rcu(&ma->rcu, mask_array_rcu_cb);
-@@ -937,7 +937,7 @@ int ovs_flow_tbl_num_masks(const struct flow_table *table)
- 
- u32 ovs_flow_tbl_masks_cache_size(const struct flow_table *table)
- {
--	struct mask_cache *mc = rcu_dereference(table->mask_cache);
-+	struct mask_cache *mc = rcu_dereference_ovsl(table->mask_cache);
- 
- 	return READ_ONCE(mc->cache_size);
- }
+diff --git a/Documentation/devicetree/bindings/ata/imx-sata.txt b/Documentation/devicetree/bindings/ata/imx-sata.txt
+deleted file mode 100644
+index 781f887..0000000
+--- a/Documentation/devicetree/bindings/ata/imx-sata.txt
++++ /dev/null
+@@ -1,37 +0,0 @@
+-* Freescale i.MX AHCI SATA Controller
+-
+-The Freescale i.MX SATA controller mostly conforms to the AHCI interface
+-with some special extensions at integration level.
+-
+-Required properties:
+-- compatible : should be one of the following:
+-   - "fsl,imx53-ahci" for i.MX53 SATA controller
+-   - "fsl,imx6q-ahci" for i.MX6Q SATA controller
+-   - "fsl,imx6qp-ahci" for i.MX6QP SATA controller
+-- interrupts : interrupt mapping for SATA IRQ
+-- reg : registers mapping
+-- clocks : list of clock specifiers, must contain an entry for each
+-  required entry in clock-names
+-- clock-names : should include "sata", "sata_ref" and "ahb" entries
+-
+-Optional properties:
+-- fsl,transmit-level-mV : transmit voltage level, in millivolts.
+-- fsl,transmit-boost-mdB : transmit boost level, in milli-decibels
+-- fsl,transmit-atten-16ths : transmit attenuation, in 16ths
+-- fsl,receive-eq-mdB : receive equalisation, in milli-decibels
+-  Please refer to the technical documentation or the driver source code
+-  for the list of legal values for these options.
+-- fsl,no-spread-spectrum : disable spread-spectrum clocking on the SATA
+-  link.
+-
+-Examples:
+-
+-sata@2200000 {
+-	compatible = "fsl,imx6q-ahci";
+-	reg = <0x02200000 0x4000>;
+-	interrupts = <0 39 IRQ_TYPE_LEVEL_HIGH>;
+-	clocks = <&clks IMX6QDL_CLK_SATA>,
+-		 <&clks IMX6QDL_CLK_SATA_REF_100M>,
+-		 <&clks IMX6QDL_CLK_AHB>;
+-	clock-names = "sata", "sata_ref", "ahb";
+-};
+diff --git a/Documentation/devicetree/bindings/ata/imx-sata.yaml b/Documentation/devicetree/bindings/ata/imx-sata.yaml
+new file mode 100644
+index 0000000..cd94937
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ata/imx-sata.yaml
+@@ -0,0 +1,81 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/ata/imx-sata.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale i.MX AHCI SATA Controller
++
++maintainers:
++  - Shawn Guo <shawn.guo@linaro.org>
++
++description: |
++  The Freescale i.MX SATA controller mostly conforms to the AHCI interface
++  with some special extensions at integration level.
++
++properties:
++  compatible:
++    enum:
++      - fsl,imx53-ahci
++      - fsl,imx6q-ahci
++      - fsl,imx6qp-ahci
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: sata clock
++      - description: sata reference clock
++      - description: ahb clock
++
++  clock-names:
++    items:
++      - const: sata
++      - const: sata_ref
++      - const: ahb
++
++  fsl,transmit-level-mV:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: transmit voltage level, in millivolts.
++
++  fsl,transmit-boost-mdB:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: transmit boost level, in milli-decibels.
++
++  fsl,transmit-atten-16ths:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: transmit attenuation, in 16ths.
++
++  fsl,receive-eq-mdB:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: receive equalisation, in milli-decibels.
++
++  fsl,no-spread-spectrum:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: if present, disable spread-spectrum clocking on the SATA link.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    #include <dt-bindings/clock/imx6qdl-clock.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    sata@2200000 {
++        compatible = "fsl,imx6q-ahci";
++        reg = <0x02200000 0x4000>;
++        interrupts = <0 39 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clks IMX6QDL_CLK_SATA>,
++                 <&clks IMX6QDL_CLK_SATA_REF_100M>,
++                 <&clks IMX6QDL_CLK_AHB>;
++        clock-names = "sata", "sata_ref", "ahb";
++    };
 -- 
-2.26.1
+2.7.4
 
