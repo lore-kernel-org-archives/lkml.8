@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92913C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C07C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 678D620792
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A294820792
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:11:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="SBqrSXZK"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="kiDRXWV6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbgHEJLV (ORCPT
+        id S1728409AbgHEJLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 05:11:21 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:16612 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728259AbgHEJK5 (ORCPT
+        Wed, 5 Aug 2020 05:11:44 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:58694 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728378AbgHEJLR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 05:10:57 -0400
+        Wed, 5 Aug 2020 05:11:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1596618654; x=1628154654;
+  t=1596618676; x=1628154676;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=SAuiY7ArfZ5rB2a/4H1KX257jcHs5n1Bjf6WT5FEq+0=;
-  b=SBqrSXZKeS/A7Fv3GJZrPYwx1pWnRtQkECTc9Bc92NdfQmcdaqp+fKVX
-   lx20WcW8Wa4t/5OxesrSBH1ijbcYGr9V7jA5xs2O6PZEc+68mxKPp4A+w
-   y+aEBF3wMvD55jWn6Kz6Ix6LeDVUk1qBr9ul2zT0B4GY7b3W+9QRNBRzc
-   c=;
-IronPort-SDR: uFqcB5M/RWoZavd7c3DgeTzUcxxRpdrGRAgqJ2b9Y1yJEAvfb4n91uUcWKIRvbM/g19b6jKc44
- +izcENWgwsGA==
+  bh=6Kz528tZ5q9MoNlUsKXKUoIbfZRj/LU6wWVqoabo8NA=;
+  b=kiDRXWV6mxFQlM343MpJGGFZYyWc7xoUb4eHL76QqHlCsriCAe3JcqMA
+   93gHH/vz75QP7nITUrauyJPCvXpBaTMsZNzvHQMPb1G4cs9sGyvLY4Chv
+   EQygCRgy0IPI0fPObyDhldb1GnxeFjHi4PZkXzoSXOQNuF3ix2Awz5uML
+   s=;
+IronPort-SDR: LSAtT/WRqo/sFllk1A2KksjkaqBsjqLibYUeV7hzSD7TXZal6LHjXiUU4OauUxJ7lmhDdttIOO
+ fBtz6jwwChMw==
 X-IronPort-AV: E=Sophos;i="5.75,436,1589241600"; 
-   d="scan'208";a="57530580"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-81e76b79.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 05 Aug 2020 09:10:54 +0000
+   d="scan'208";a="46143481"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 05 Aug 2020 09:11:13 +0000
 Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2b-81e76b79.us-west-2.amazon.com (Postfix) with ESMTPS id 6E196A07A7;
-        Wed,  5 Aug 2020 09:10:53 +0000 (UTC)
+        by email-inbound-relay-2b-8cc5d68b.us-west-2.amazon.com (Postfix) with ESMTPS id E392EA1CAE;
+        Wed,  5 Aug 2020 09:11:11 +0000 (UTC)
 Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
  EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 5 Aug 2020 09:10:52 +0000
+ id 15.0.1497.2; Wed, 5 Aug 2020 09:11:11 +0000
 Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.26) by
  EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 5 Aug 2020 09:10:43 +0000
+ id 15.0.1497.2; Wed, 5 Aug 2020 09:11:01 +0000
 From:   Andra Paraschiv <andraprs@amazon.com>
 To:     linux-kernel <linux-kernel@vger.kernel.org>
 CC:     Anthony Liguori <aliguori@amazon.com>,
@@ -72,9 +72,9 @@ CC:     Anthony Liguori <aliguori@amazon.com>,
         kvm <kvm@vger.kernel.org>,
         ne-devel-upstream <ne-devel-upstream@amazon.com>,
         Andra Paraschiv <andraprs@amazon.com>
-Subject: [PATCH v6 02/18] nitro_enclaves: Define the PCI device interface
-Date:   Wed, 5 Aug 2020 12:10:01 +0300
-Message-ID: <20200805091017.86203-3-andraprs@amazon.com>
+Subject: [PATCH v6 04/18] nitro_enclaves: Init PCI device driver
+Date:   Wed, 5 Aug 2020 12:10:03 +0300
+Message-ID: <20200805091017.86203-5-andraprs@amazon.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20200805091017.86203-1-andraprs@amazon.com>
 References: <20200805091017.86203-1-andraprs@amazon.com>
@@ -89,20 +89,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Nitro Enclaves (NE) driver communicates with a new PCI device, that
-is exposed to a virtual machine (VM) and handles commands meant for
-handling enclaves lifetime e.g. creation, termination, setting memory
-regions. The communication with the PCI device is handled using a MMIO
-space and MSI-X interrupts.
+The Nitro Enclaves PCI device is used by the kernel driver as a means of
+communication with the hypervisor on the host where the primary VM and
+the enclaves run. It handles requests with regard to enclave lifetime.
 
-This device communicates with the hypervisor on the host, where the VM
-that spawned the enclave itself runs, e.g. to launch a VM that is used
-for the enclave.
-
-Define the MMIO space of the NE PCI device, the commands that are
-provided by this device. Add an internal data structure used as private
-data for the PCI device driver and the function for the PCI device
-command requests handling.
+Setup the PCI device driver and add support for MSI-X interrupts.
 
 Signed-off-by: Alexandru-Catalin Vasile <lexnv@amazon.com>
 Signed-off-by: Alexandru Ciobotaru <alcioa@amazon.com>
@@ -117,355 +108,315 @@ v5 -> v6
 
 v4 -> v5
 
-* Add a TODO for including flags in the request to the NE PCI device to
-  set a memory region for an enclave. It is not used for now.
+* Remove sanity checks for situations that shouldn't happen, only if
+  buggy system or broken logic at all.
 
 v3 -> v4
 
-* Remove the "packed" attribute and include padding in the NE data
-  structures.
+* Use dev_err instead of custom NE log pattern.
+* Update NE PCI driver name to "nitro_enclaves".
 
 v2 -> v3
 
 * Remove the GPL additional wording as SPDX-License-Identifier is
   already in place.
+* Remove the WARN_ON calls.
+* Remove linux/bug include that is not needed.
+* Update static calls sanity checks.
+* Remove "ratelimited" from the logs that are not in the ioctl call
+  paths.
+* Update kzfree() calls to kfree().
 
 v1 -> v2
 
-* Update path naming to drivers/virt/nitro_enclaves.
-* Update NE_ENABLE_OFF / NE_ENABLE_ON defines.
+* Add log pattern for NE.
+* Update PCI device setup functions to receive PCI device data structure and
+  then get private data from it inside the functions logic.
+* Remove the BUG_ON calls.
+* Add teardown function for MSI-X setup.
+* Update goto labels to match their purpose.
+* Implement TODO for NE PCI device disable state check.
+* Update function name for NE PCI device probe / remove.
 ---
- drivers/virt/nitro_enclaves/ne_pci_dev.h | 321 +++++++++++++++++++++++
- 1 file changed, 321 insertions(+)
- create mode 100644 drivers/virt/nitro_enclaves/ne_pci_dev.h
+ drivers/virt/nitro_enclaves/ne_pci_dev.c | 269 +++++++++++++++++++++++
+ 1 file changed, 269 insertions(+)
+ create mode 100644 drivers/virt/nitro_enclaves/ne_pci_dev.c
 
-diff --git a/drivers/virt/nitro_enclaves/ne_pci_dev.h b/drivers/virt/nitro_enclaves/ne_pci_dev.h
+diff --git a/drivers/virt/nitro_enclaves/ne_pci_dev.c b/drivers/virt/nitro_enclaves/ne_pci_dev.c
 new file mode 100644
-index 000000000000..bfae8af4bf06
+index 000000000000..31650dcd592e
 --- /dev/null
-+++ b/drivers/virt/nitro_enclaves/ne_pci_dev.h
-@@ -0,0 +1,321 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
++++ b/drivers/virt/nitro_enclaves/ne_pci_dev.c
+@@ -0,0 +1,269 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 + */
 +
-+#ifndef _NE_PCI_DEV_H_
-+#define _NE_PCI_DEV_H_
++/**
++ * DOC: Nitro Enclaves (NE) PCI device driver.
++ */
 +
-+#include <linux/atomic.h>
++#include <linux/delay.h>
++#include <linux/device.h>
 +#include <linux/list.h>
++#include <linux/module.h>
 +#include <linux/mutex.h>
++#include <linux/nitro_enclaves.h>
 +#include <linux/pci.h>
-+#include <linux/pci_ids.h>
++#include <linux/types.h>
 +#include <linux/wait.h>
 +
-+/**
-+ * DOC: Nitro Enclaves (NE) PCI device
-+ */
-+
-+#define PCI_DEVICE_ID_NE	(0xe4c1)
-+#define PCI_BAR_NE		(0x03)
++#include "ne_misc_dev.h"
++#include "ne_pci_dev.h"
 +
 +/**
-+ * DOC: Device registers
++ * NE_DEFAULT_TIMEOUT_MSECS - Default timeout to wait for a reply from
++ *			      the NE PCI device.
 + */
++#define NE_DEFAULT_TIMEOUT_MSECS	(120000) /* 120 sec */
 +
-+/**
-+ * NE_ENABLE - (1 byte) Register to notify the device that the driver is using
-+ *	       it (Read/Write).
-+ */
-+#define NE_ENABLE		(0x0000)
-+#define NE_ENABLE_OFF		(0x00)
-+#define NE_ENABLE_ON		(0x01)
-+
-+/**
-+ * NE_VERSION - (2 bytes) Register to select the device run-time version
-+ *		(Read/Write).
-+ */
-+#define NE_VERSION		(0x0002)
-+#define NE_VERSION_MAX		(0x0001)
-+
-+/**
-+ * NE_COMMAND - (4 bytes) Register to notify the device what command was
-+ *		requested (Write-Only).
-+ */
-+#define NE_COMMAND		(0x0004)
-+
-+/**
-+ * NE_EVTCNT - (4 bytes) Register to notify the driver that a reply or a device
-+ *	       event is available (Read-Only):
-+ *	       - Lower half  - command reply counter
-+ *	       - Higher half - out-of-band device event counter
-+ */
-+#define NE_EVTCNT		(0x000c)
-+#define NE_EVTCNT_REPLY_SHIFT	(0)
-+#define NE_EVTCNT_REPLY_MASK	(0x0000ffff)
-+#define NE_EVTCNT_REPLY(cnt)	(((cnt) & NE_EVTCNT_REPLY_MASK) >> \
-+				NE_EVTCNT_REPLY_SHIFT)
-+#define NE_EVTCNT_EVENT_SHIFT	(16)
-+#define NE_EVTCNT_EVENT_MASK	(0xffff0000)
-+#define NE_EVTCNT_EVENT(cnt)	(((cnt) & NE_EVTCNT_EVENT_MASK) >> \
-+				NE_EVTCNT_EVENT_SHIFT)
-+
-+/**
-+ * NE_SEND_DATA - (240 bytes) Buffer for sending the command request payload
-+ *		  (Read/Write).
-+ */
-+#define NE_SEND_DATA		(0x0010)
-+
-+/**
-+ * NE_RECV_DATA - (240 bytes) Buffer for receiving the command reply payload
-+ *		  (Read-Only).
-+ */
-+#define NE_RECV_DATA		(0x0100)
-+
-+/**
-+ * DOC: Device MMIO buffer sizes
-+ */
-+
-+/**
-+ * NE_SEND_DATA_SIZE / NE_RECV_DATA_SIZE - 240 bytes for send / recv buffer.
-+ */
-+#define NE_SEND_DATA_SIZE	(240)
-+#define NE_RECV_DATA_SIZE	(240)
-+
-+/**
-+ * DOC: MSI-X interrupt vectors
-+ */
-+
-+/**
-+ * NE_VEC_REPLY - MSI-X vector used for command reply notification.
-+ */
-+#define NE_VEC_REPLY		(0)
-+
-+/**
-+ * NE_VEC_EVENT - MSI-X vector used for out-of-band events e.g. enclave crash.
-+ */
-+#define NE_VEC_EVENT		(1)
-+
-+/**
-+ * enum ne_pci_dev_cmd_type - Device command types.
-+ * @INVALID_CMD:		Invalid command.
-+ * @ENCLAVE_START:		Start an enclave, after setting its resources.
-+ * @ENCLAVE_GET_SLOT:		Get the slot uid of an enclave.
-+ * @ENCLAVE_STOP:		Terminate an enclave.
-+ * @SLOT_ALLOC :		Allocate a slot for an enclave.
-+ * @SLOT_FREE:			Free the slot allocated for an enclave
-+ * @SLOT_ADD_MEM:		Add a memory region to an enclave slot.
-+ * @SLOT_ADD_VCPU:		Add a vCPU to an enclave slot.
-+ * @SLOT_COUNT :		Get the number of allocated slots.
-+ * @NEXT_SLOT:			Get the next slot in the list of allocated slots.
-+ * @SLOT_INFO:			Get the info for a slot e.g. slot uid, vCPUs count.
-+ * @SLOT_ADD_BULK_VCPUS:	Add a number of vCPUs, not providing CPU ids.
-+ * @MAX_CMD:			A gatekeeper for max possible command type.
-+ */
-+enum ne_pci_dev_cmd_type {
-+	INVALID_CMD = 0,
-+	ENCLAVE_START = 1,
-+	ENCLAVE_GET_SLOT = 2,
-+	ENCLAVE_STOP = 3,
-+	SLOT_ALLOC = 4,
-+	SLOT_FREE = 5,
-+	SLOT_ADD_MEM = 6,
-+	SLOT_ADD_VCPU = 7,
-+	SLOT_COUNT = 8,
-+	NEXT_SLOT = 9,
-+	SLOT_INFO = 10,
-+	SLOT_ADD_BULK_VCPUS = 11,
-+	MAX_CMD,
++static const struct pci_device_id ne_pci_ids[] = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_AMAZON, PCI_DEVICE_ID_NE) },
++	{ 0, }
 +};
 +
-+/**
-+ * DOC: Device commands - payload structure for requests and replies.
-+ */
++MODULE_DEVICE_TABLE(pci, ne_pci_ids);
 +
 +/**
-+ * struct enclave_start_req - ENCLAVE_START request.
-+ * @slot_uid:		Slot unique id mapped to the enclave to start.
-+ * @enclave_cid:	Context ID (CID) for the enclave vsock device.
-+ *			If 0, CID is autogenerated.
-+ * @flags:		Flags for the enclave to start with (e.g. debug mode).
-+ */
-+struct enclave_start_req {
-+	u64	slot_uid;
-+	u64	enclave_cid;
-+	u64	flags;
-+};
-+
-+/**
-+ * struct enclave_get_slot_req - ENCLAVE_GET_SLOT request.
-+ * @enclave_cid:	Context ID (CID) for the enclave vsock device.
-+ */
-+struct enclave_get_slot_req {
-+	u64	enclave_cid;
-+};
-+
-+/**
-+ * struct enclave_stop_req - ENCLAVE_STOP request.
-+ * @slot_uid:	Slot unique id mapped to the enclave to stop.
-+ */
-+struct enclave_stop_req {
-+	u64	slot_uid;
-+};
-+
-+/**
-+ * struct slot_alloc_req - SLOT_ALLOC request.
-+ * @unused:	In order to avoid weird sizeof edge cases.
-+ */
-+struct slot_alloc_req {
-+	u8	unused;
-+};
-+
-+/**
-+ * struct slot_free_req - SLOT_FREE request.
-+ * @slot_uid:	Slot unique id mapped to the slot to free.
-+ */
-+struct slot_free_req {
-+	u64	slot_uid;
-+};
-+
-+/* TODO: Add flags field to the request to add memory region. */
-+/**
-+ * struct slot_add_mem_req - SLOT_ADD_MEM request.
-+ * @slot_uid:	Slot unique id mapped to the slot to add the memory region to.
-+ * @paddr:	Physical address of the memory region to add to the slot.
-+ * @size:	Memory size, in bytes, of the memory region to add to the slot.
-+ */
-+struct slot_add_mem_req {
-+	u64	slot_uid;
-+	u64	paddr;
-+	u64	size;
-+};
-+
-+/**
-+ * struct slot_add_vcpu_req - SLOT_ADD_VCPU request.
-+ * @slot_uid:	Slot unique id mapped to the slot to add the vCPU to.
-+ * @vcpu_id:	vCPU ID of the CPU to add to the enclave.
-+ * @padding:	Padding for the overall data structure.
-+ */
-+struct slot_add_vcpu_req {
-+	u64	slot_uid;
-+	u32	vcpu_id;
-+	u8	padding[4];
-+};
-+
-+/**
-+ * struct slot_count_req - SLOT_COUNT request.
-+ * @unused:	In order to avoid weird sizeof edge cases.
-+ */
-+struct slot_count_req {
-+	u8	unused;
-+};
-+
-+/**
-+ * struct next_slot_req - NEXT_SLOT request.
-+ * @slot_uid:	Slot unique id of the next slot in the iteration.
-+ */
-+struct next_slot_req {
-+	u64	slot_uid;
-+};
-+
-+/**
-+ * struct slot_info_req - SLOT_INFO request.
-+ * @slot_uid:	Slot unique id mapped to the slot to get information about.
-+ */
-+struct slot_info_req {
-+	u64	slot_uid;
-+};
-+
-+/**
-+ * struct slot_add_bulk_vcpus_req - SLOT_ADD_BULK_VCPUS request.
-+ * @slot_uid:	Slot unique id mapped to the slot to add vCPUs to.
-+ * @nr_vcpus:	Number of vCPUs to add to the slot.
-+ */
-+struct slot_add_bulk_vcpus_req {
-+	u64	slot_uid;
-+	u64	nr_vcpus;
-+};
-+
-+/**
-+ * struct ne_pci_dev_cmd_reply - NE PCI device command reply.
-+ * @rc :		Return code of the logic that processed the request.
-+ * @padding0:		Padding for the overall data structure.
-+ * @slot_uid:		Valid for all commands except SLOT_COUNT.
-+ * @enclave_cid:	Valid for ENCLAVE_START command.
-+ * @slot_count :	Valid for SLOT_COUNT command.
-+ * @mem_regions:	Valid for SLOT_ALLOC and SLOT_INFO commands.
-+ * @mem_size:		Valid for SLOT_INFO command.
-+ * @nr_vcpus:		Valid for SLOT_INFO command.
-+ * @flags:		Valid for SLOT_INFO command.
-+ * @state:		Valid for SLOT_INFO command.
-+ * @padding1:		Padding for the overall data structure.
-+ */
-+struct ne_pci_dev_cmd_reply {
-+	s32	rc;
-+	u8	padding0[4];
-+	u64	slot_uid;
-+	u64	enclave_cid;
-+	u64	slot_count;
-+	u64	mem_regions;
-+	u64	mem_size;
-+	u64	nr_vcpus;
-+	u64	flags;
-+	u16	state;
-+	u8	padding1[6];
-+};
-+
-+/**
-+ * struct ne_pci_dev - Nitro Enclaves (NE) PCI device.
-+ * @cmd_reply_avail:		Variable set if a reply has been sent by the
-+ *				PCI device.
-+ * @cmd_reply_wait_q:		Wait queue for handling command reply from the
-+ *				PCI device.
-+ * @enclaves_list:		List of the enclaves managed by the PCI device.
-+ * @enclaves_list_mutex:	Mutex for accessing the list of enclaves.
-+ * @event_wq:			Work queue for handling out-of-band events
-+ *				triggered by the Nitro Hypervisor which require
-+ *				enclave state scanning and propagation to the
-+ *				enclave process.
-+ * @iomem_base :		MMIO region of the PCI device.
-+ * @notify_work:		Work item for every received out-of-band event.
-+ * @pci_dev_mutex:		Mutex for accessing the PCI device MMIO space.
-+ * @pdev:			PCI device data structure.
-+ */
-+struct ne_pci_dev {
-+	atomic_t		cmd_reply_avail;
-+	wait_queue_head_t	cmd_reply_wait_q;
-+	struct list_head	enclaves_list;
-+	struct mutex		enclaves_list_mutex;
-+	struct workqueue_struct	*event_wq;
-+	void __iomem		*iomem_base;
-+	struct work_struct	notify_work;
-+	struct mutex		pci_dev_mutex;
-+	struct pci_dev		*pdev;
-+};
-+
-+/**
-+ * ne_do_request() - Submit command request to the PCI device based on the command
-+ *		     type and retrieve the associated reply.
-+ * @pdev:		PCI device to send the command to and receive the reply from.
-+ * @cmd_type:		Command type of the request sent to the PCI device.
-+ * @cmd_request:	Command request payload.
-+ * @cmd_request_size:	Size of the command request payload.
-+ * @cmd_reply:		Command reply payload.
-+ * @cmd_reply_size:	Size of the command reply payload.
++ * ne_setup_msix() - Setup MSI-X vectors for the PCI device.
++ * @pdev:	PCI device to setup the MSI-X for.
 + *
-+ * Context: Process context. This function uses the ne_pci_dev mutex to handle
-+ *	    one command at a time.
++ * Context: Process context.
 + * Return:
 + * * 0 on success.
 + * * Negative return value on failure.
 + */
-+int ne_do_request(struct pci_dev *pdev, enum ne_pci_dev_cmd_type cmd_type,
-+		  void *cmd_request, size_t cmd_request_size,
-+		  struct ne_pci_dev_cmd_reply *cmd_reply,
-+		  size_t cmd_reply_size);
++static int ne_setup_msix(struct pci_dev *pdev)
++{
++	int nr_vecs = 0;
++	int rc = -EINVAL;
 +
-+/* Nitro Enclaves (NE) PCI device driver */
-+extern struct pci_driver ne_pci_driver;
++	nr_vecs = pci_msix_vec_count(pdev);
++	if (nr_vecs < 0) {
++		rc = nr_vecs;
 +
-+#endif /* _NE_PCI_DEV_H_ */
++		dev_err(&pdev->dev, "Error in getting vec count [rc=%d]\n", rc);
++
++		return rc;
++	}
++
++	rc = pci_alloc_irq_vectors(pdev, nr_vecs, nr_vecs, PCI_IRQ_MSIX);
++	if (rc < 0) {
++		dev_err(&pdev->dev, "Error in alloc MSI-X vecs [rc=%d]\n", rc);
++
++		return rc;
++	}
++
++	return 0;
++}
++
++/**
++ * ne_teardown_msix() - Teardown MSI-X vectors for the PCI device.
++ * @pdev:	PCI device to teardown the MSI-X for.
++ *
++ * Context: Process context.
++ */
++static void ne_teardown_msix(struct pci_dev *pdev)
++{
++	pci_free_irq_vectors(pdev);
++}
++
++/**
++ * ne_pci_dev_enable() - Select the PCI device version and enable it.
++ * @pdev:	PCI device to select version for and then enable.
++ *
++ * Context: Process context.
++ * Return:
++ * * 0 on success.
++ * * Negative return value on failure.
++ */
++static int ne_pci_dev_enable(struct pci_dev *pdev)
++{
++	u8 dev_enable_reply = 0;
++	u16 dev_version_reply = 0;
++	struct ne_pci_dev *ne_pci_dev = pci_get_drvdata(pdev);
++
++	iowrite16(NE_VERSION_MAX, ne_pci_dev->iomem_base + NE_VERSION);
++
++	dev_version_reply = ioread16(ne_pci_dev->iomem_base + NE_VERSION);
++	if (dev_version_reply != NE_VERSION_MAX) {
++		dev_err(&pdev->dev, "Error in pci dev version cmd\n");
++
++		return -EIO;
++	}
++
++	iowrite8(NE_ENABLE_ON, ne_pci_dev->iomem_base + NE_ENABLE);
++
++	dev_enable_reply = ioread8(ne_pci_dev->iomem_base + NE_ENABLE);
++	if (dev_enable_reply != NE_ENABLE_ON) {
++		dev_err(&pdev->dev, "Error in pci dev enable cmd\n");
++
++		return -EIO;
++	}
++
++	return 0;
++}
++
++/**
++ * ne_pci_dev_disable() - Disable the PCI device.
++ * @pdev:	PCI device to disable.
++ *
++ * Context: Process context.
++ */
++static void ne_pci_dev_disable(struct pci_dev *pdev)
++{
++	u8 dev_disable_reply = 0;
++	struct ne_pci_dev *ne_pci_dev = pci_get_drvdata(pdev);
++	const unsigned int sleep_time = 10; /* 10 ms */
++	unsigned int sleep_time_count = 0;
++
++	iowrite8(NE_ENABLE_OFF, ne_pci_dev->iomem_base + NE_ENABLE);
++
++	/*
++	 * Check for NE_ENABLE_OFF in a loop, to handle cases when the device
++	 * state is not immediately set to disabled and going through a
++	 * transitory state of disabling.
++	 */
++	while (sleep_time_count < NE_DEFAULT_TIMEOUT_MSECS) {
++		dev_disable_reply = ioread8(ne_pci_dev->iomem_base + NE_ENABLE);
++		if (dev_disable_reply == NE_ENABLE_OFF)
++			return;
++
++		msleep_interruptible(sleep_time);
++		sleep_time_count += sleep_time;
++	}
++
++	dev_disable_reply = ioread8(ne_pci_dev->iomem_base + NE_ENABLE);
++	if (dev_disable_reply != NE_ENABLE_OFF)
++		dev_err(&pdev->dev, "Error in pci dev disable cmd\n");
++}
++
++/**
++ * ne_pci_probe() - Probe function for the NE PCI device.
++ * @pdev:	PCI device to match with the NE PCI driver.
++ * @id :	PCI device id table associated with the NE PCI driver.
++ *
++ * Context: Process context.
++ * Return:
++ * * 0 on success.
++ * * Negative return value on failure.
++ */
++static int ne_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
++{
++	struct ne_pci_dev *ne_pci_dev = NULL;
++	int rc = -EINVAL;
++
++	ne_pci_dev = kzalloc(sizeof(*ne_pci_dev), GFP_KERNEL);
++	if (!ne_pci_dev)
++		return -ENOMEM;
++
++	rc = pci_enable_device(pdev);
++	if (rc < 0) {
++		dev_err(&pdev->dev, "Error in pci dev enable [rc=%d]\n", rc);
++
++		goto free_ne_pci_dev;
++	}
++
++	rc = pci_request_regions_exclusive(pdev, "nitro_enclaves");
++	if (rc < 0) {
++		dev_err(&pdev->dev, "Error in pci request regions [rc=%d]\n", rc);
++
++		goto disable_pci_dev;
++	}
++
++	ne_pci_dev->iomem_base = pci_iomap(pdev, PCI_BAR_NE, 0);
++	if (!ne_pci_dev->iomem_base) {
++		rc = -ENOMEM;
++
++		dev_err(&pdev->dev, "Error in pci iomap [rc=%d]\n", rc);
++
++		goto release_pci_regions;
++	}
++
++	pci_set_drvdata(pdev, ne_pci_dev);
++
++	rc = ne_setup_msix(pdev);
++	if (rc < 0) {
++		dev_err(&pdev->dev, "Error in pci dev msix setup [rc=%d]\n", rc);
++
++		goto iounmap_pci_bar;
++	}
++
++	ne_pci_dev_disable(pdev);
++
++	rc = ne_pci_dev_enable(pdev);
++	if (rc < 0) {
++		dev_err(&pdev->dev, "Error in ne_pci_dev enable [rc=%d]\n", rc);
++
++		goto teardown_msix;
++	}
++
++	atomic_set(&ne_pci_dev->cmd_reply_avail, 0);
++	init_waitqueue_head(&ne_pci_dev->cmd_reply_wait_q);
++	INIT_LIST_HEAD(&ne_pci_dev->enclaves_list);
++	mutex_init(&ne_pci_dev->enclaves_list_mutex);
++	mutex_init(&ne_pci_dev->pci_dev_mutex);
++	ne_pci_dev->pdev = pdev;
++
++	return 0;
++
++teardown_msix:
++	ne_teardown_msix(pdev);
++iounmap_pci_bar:
++	pci_set_drvdata(pdev, NULL);
++	pci_iounmap(pdev, ne_pci_dev->iomem_base);
++release_pci_regions:
++	pci_release_regions(pdev);
++disable_pci_dev:
++	pci_disable_device(pdev);
++free_ne_pci_dev:
++	kfree(ne_pci_dev);
++
++	return rc;
++}
++
++/**
++ * ne_pci_remove() - Remove function for the NE PCI device.
++ * @pdev:	PCI device associated with the NE PCI driver.
++ *
++ * Context: Process context.
++ */
++static void ne_pci_remove(struct pci_dev *pdev)
++{
++	struct ne_pci_dev *ne_pci_dev = pci_get_drvdata(pdev);
++
++	ne_pci_dev_disable(pdev);
++
++	ne_teardown_msix(pdev);
++
++	pci_set_drvdata(pdev, NULL);
++
++	pci_iounmap(pdev, ne_pci_dev->iomem_base);
++
++	pci_release_regions(pdev);
++
++	pci_disable_device(pdev);
++
++	kfree(ne_pci_dev);
++}
++
++/*
++ * TODO: Add suspend / resume functions for power management w/ CONFIG_PM, if
++ * needed.
++ */
++/* NE PCI device driver. */
++struct pci_driver ne_pci_driver = {
++	.name		= "nitro_enclaves",
++	.id_table	= ne_pci_ids,
++	.probe		= ne_pci_probe,
++	.remove		= ne_pci_remove,
++};
 -- 
 2.20.1 (Apple Git-117)
 
