@@ -1,226 +1,264 @@
-Return-Path: <SRS0=pusq=BO=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DD1C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 23:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE62CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 00:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08DF4206B7
-	for <linux-kernel@archiver.kernel.org>; Tue,  4 Aug 2020 23:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4E68208C7
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 00:09:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZlRCfmvm"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="z9LkveQW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgHDX6f (ORCPT
+        id S1727857AbgHEAJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 19:58:35 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:30676 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726918AbgHDX6f (ORCPT
+        Tue, 4 Aug 2020 20:09:49 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:41196 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726011AbgHEAJs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 19:58:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596585512;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tcoi88UjUtHreHVq4CWtml0D+Jcg5BLQSGs0QdX2kdU=;
-        b=ZlRCfmvmq0uGThxM/1FmPw0pdl5xIl7t8TkJSaWEYHk/ODjTxnOSUlAauBd+a/PvTIgYR+
-        qVf/L0b3SGaa6gVtaylZlc+BcBY8PQSGmbSQwDisx5AOmgKrZH3wUPgT+hYYEeslQ50YDK
-        +WCvZiaSOcXI/ilb8usO5dlOfsUnNgc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-353-0jFEHyO6NxC9T2eu0pP14A-1; Tue, 04 Aug 2020 19:58:28 -0400
-X-MC-Unique: 0jFEHyO6NxC9T2eu0pP14A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4F026106B242;
-        Tue,  4 Aug 2020 23:58:26 +0000 (UTC)
-Received: from T590 (ovpn-13-169.pek2.redhat.com [10.72.13.169])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0C7EB5C1BD;
-        Tue,  4 Aug 2020 23:58:15 +0000 (UTC)
-Date:   Wed, 5 Aug 2020 07:58:11 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Coly Li <colyli@suse.de>
-Cc:     linux-block@vger.kernel.org, linux-bcache@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
-        Xiao Ni <xni@redhat.com>, Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Enzo Matsumiya <ematsumiya@suse.com>,
-        Jens Axboe <axboe@kernel.dk>, Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH] block: tolerate 0 byte discard_granularity in
- __blkdev_issue_discard()
-Message-ID: <20200804235811.GA1981569@T590>
-References: <20200804142332.29961-1-colyli@suse.de>
+        Tue, 4 Aug 2020 20:09:48 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 075023on039636
+        for <linux-kernel@vger.kernel.org>; Wed, 5 Aug 2020 00:09:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=cmUh+HFEch2Q0bmJXzqRX2Xx7MA6Tv/sL3+zVK34Q9w=;
+ b=z9LkveQWElntD9+ueJWkRVjdNEQNvpHFePurm6u6rstogKsg5F44S+KTyjByMkrD+50T
+ jsQlkjyRId7JkLKSTZMPmDNNx2PVHkctrdH/f+PLwJxRkv//QkPWY9WcCdlEnBkO1B5H
+ LyyYw3aE3ZI3ejnEn4TE2EoajIvjQrVpb6nauZHAg+ioxQLTRba6GhGTsZaDKBEeJ1t3
+ p7t7cUhj0q5rC+g+dgO6cUS1OROE7EixKrCDfoharcObFtAh+zKUejnqv4ifNOVBHl7E
+ VPe8Us8QdbB/HLBFZl0ns+xEiueXEt2GUidKCjhpT/q3B+bt+v5Zlyqs4DLxtJkpKlMg mQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 32n11n760j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 00:09:47 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07502wMh137646
+        for <linux-kernel@vger.kernel.org>; Wed, 5 Aug 2020 00:07:46 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.147.25.63])
+        by userp3020.oracle.com with ESMTP id 32pdhd3knf-1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 00:07:46 +0000
+From:   john.p.donnelly@oracle.com
+To:     linux-kernel@vger.kernel.org
+Subject: [PATCH v4: {linux-4.14.y} ] dm cache: submit writethrough writes in parallel to origin and cache
+Date:   Tue,  4 Aug 2020 17:07:46 -0700
+Message-Id: <20200805000746.53112-1-john.p.donnelly@oracle.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200804142332.29961-1-colyli@suse.de>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9703 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
+ bulkscore=0 malwarescore=0 mlxscore=0 mlxlogscore=712 suspectscore=3
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008040167
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9703 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
+ impostorscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0 mlxscore=0
+ suspectscore=3 mlxlogscore=786 phishscore=0 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008040167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 10:23:32PM +0800, Coly Li wrote:
-> When some buggy driver doesn't set its queue->limits.discard_granularity
-> (e.g. current loop device driver), discard at LBA 0 on such device will
-> trigger a kernel BUG() panic from block/blk-mq.c:563.
-> 
-> [  955.565006][   C39] ------------[ cut here ]------------
-> [  955.559660][   C39] invalid opcode: 0000 [#1] SMP NOPTI
-> [  955.622171][   C39] CPU: 39 PID: 248 Comm: ksoftirqd/39 Tainted: G            E     5.8.0-default+ #40
-> [  955.622171][   C39] Hardware name: Lenovo ThinkSystem SR650 -[7X05CTO1WW]-/-[7X05CTO1WW]-, BIOS -[IVE160M-2.70]- 07/17/2020
-> [  955.622175][   C39] RIP: 0010:blk_mq_end_request+0x107/0x110
-> [  955.622177][   C39] Code: 48 8b 03 e9 59 ff ff ff 48 89 df 5b 5d 41 5c e9 9f ed ff ff 48 8b 35 98 3c f4 00 48 83 c7 10 48 83 c6 19 e8 cb 56 c9 ff eb cb <0f> 0b 0f 1f 80 00 00 00 00 0f 1f 44 00 00 55 48 89 e5 41 56 41 54
-> [  955.622179][   C39] RSP: 0018:ffffb1288701fe28 EFLAGS: 00010202
-> [  955.749277][   C39] RAX: 0000000000000001 RBX: ffff956fffba5080 RCX: 0000000000004003
-> [  955.749278][   C39] RDX: 0000000000000003 RSI: 0000000000000000 RDI: 0000000000000000
-> [  955.749279][   C39] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-> [  955.749279][   C39] R10: ffffb1288701fd28 R11: 0000000000000001 R12: ffffffffa8e05160
-> [  955.749280][   C39] R13: 0000000000000004 R14: 0000000000000004 R15: ffffffffa7ad3a1e
-> [  955.749281][   C39] FS:  0000000000000000(0000) GS:ffff95bfbda00000(0000) knlGS:0000000000000000
-> [  955.749282][   C39] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  955.749282][   C39] CR2: 00007f6f0ef766a8 CR3: 0000005a37012002 CR4: 00000000007606e0
-> [  955.749283][   C39] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [  955.749284][   C39] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [  955.749284][   C39] PKRU: 55555554
-> [  955.749285][   C39] Call Trace:
-> [  955.749290][   C39]  blk_done_softirq+0x99/0xc0
-> [  957.550669][   C39]  __do_softirq+0xd3/0x45f
-> [  957.550677][   C39]  ? smpboot_thread_fn+0x2f/0x1e0
-> [  957.550679][   C39]  ? smpboot_thread_fn+0x74/0x1e0
-> [  957.550680][   C39]  ? smpboot_thread_fn+0x14e/0x1e0
-> [  957.550684][   C39]  run_ksoftirqd+0x30/0x60
-> [  957.550687][   C39]  smpboot_thread_fn+0x149/0x1e0
-> [  957.886225][   C39]  ? sort_range+0x20/0x20
-> [  957.886226][   C39]  kthread+0x137/0x160
-> [  957.886228][   C39]  ? kthread_park+0x90/0x90
-> [  957.886231][   C39]  ret_from_fork+0x22/0x30
-> [  959.117120][   C39] ---[ end trace 3dacdac97e2ed164 ]---
-> 
-> This is the procedure to reproduce the panic,
->   # modprobe scsi_debug delay=0 dev_size_mb=2048 max_queue=1
->   # losetup -f /dev/nvme0n1 --direct-io=on
->   # blkdiscard /dev/loop0 -o 0 -l 0x200
-> 
-> This is how the BUG() panic triggered by __blkdev_issue_discard(),
-> - For a NVMe SSD backing loop device, the driver does not initialize
->   its queue->limits.discard_granularity and leaves it to 0.
-> - When discard on LBA 0 of the loop device, __blkdev_issue_discard()
->   is called before loop device driver code.
-> - Inside __blkdev_issue_discard(), when calculating value of
->   granularity_aligned_lba by
-> 	granularity_aligned_lba = round_up(sector_mapped,
-> 			q->limits.discard_granularity >> SECTOR_SHIFT);
->   because sector_mapped is 0 (at LBA 0 and no partition offset), and
->   q->limits.discard_granularity is 0 (by the buggy loop driver), the
->   calculated granularity_aligned_lba is 0.
-> - The inline function bio_aligned_discard_max_sectors() is defined as
-> 	return round_down(UINT_MAX, q->limits.discard_granularity) >>
-> 			SECTOR_SHIFT;
->    when q->limits.discard_granularity is 0 from loop device driver, the
->    above calculation returns value 0.
-> - Now granularity_aligned_lba and sctor_mapped are 0, req_sectors is
->   calculated by the following lines in __blkdev_issue_discard(),
-> 	if (granularity_aligned_lba == sector_mapped)
-> 		req_sects = min_t(sector_t, nr_sects,
-> 				  bio_aligned_discard_max_sectors(q));
->   because bio_aligned_discard_max_sectors(q) returns 0, req_sects is
->   calculated as 0.
-> - Now a discard bio is mistakenly initialized as a 0 byte bio by,
-> 	bio->bi_iter.bi_size = req_sects << 9;
->   and sent to loop device driver.
-> - This discard request is handled by loop device driver by following
->   code path,
->     loop_handle_cmd => do_req_filebacked => lo_fallocate =>
->     file->f_op->fallocate => blkdev_fallocate => blkdev_issue_zeroout =>
->     __blkdev_issue_write_zeroes
-> - Inside __blkdev_issue_write_zeroes(), a 0 byte length discard bio is
->   composed and sent to the backing device of the loop device.
-> - In the I/O completion code path, in my case it is,
->     blk_done_softirq => nrq->q->mq_ops->complete => nvme_pci_complete_rq
->     => nvme_complete_rq => blk_mq_end_request
->   inside blk_mq_end_request(), blk_update_request() is called and due to
->   req->bio is NULL in previous step, blk_update_request() returns false
->   then the BUG() panic in blk_mq_end_request() is triggered.
-> 
-> Although the above panic can be fixed in loop device driver, the generic
-> __blkdev_issue_discard() should also be fixed to tolerate the incorrect
-> 0 value from queue->limits.discard_granularity, in case some other buggy
-> driver makes such mistake again.
-> 
-> This patch checks whether q->limits.discard_granularity is 0 in
-> __blkdev_issue_discard() and bio_aligned_discard_max_sectors(). If it is
-> 0 from some buggy driver queue, prints a warning oops information and
-> set queue_logical_block_size(q) to a local variable discard_granularity.
-> This local variable is used in round_up() and round_down() calculation,
-> now req_sects won't be 0  and no empty discard request is generated.
-> 
-> Fixes: 9b15d109a6b2 ("block: improve discard bio alignment in __blkdev_issue_discard()")
-> Fixes: c52abf563049 ("loop: Better discard support for block devices")
-> Reported-by: Ming Lei <ming.lei@redhat.com>
-> Signed-off-by: Coly Li <colyli@suse.de>
-> Cc: Hannes Reinecke <hare@suse.com>
-> Cc: Ming Lei <ming.lei@redhat.com>
-> Cc: Xiao Ni <xni@redhat.com>
-> Cc: Bart Van Assche <bvanassche@acm.org>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Enzo Matsumiya <ematsumiya@suse.com>
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: Evan Green <evgreen@chromium.org>
-> ---
->  block/blk-lib.c | 8 +++++++-
->  block/blk.h     | 9 +++++++--
->  2 files changed, 14 insertions(+), 3 deletions(-)
-> 
-> diff --git a/block/blk-lib.c b/block/blk-lib.c
-> index 019e09bb9c0e..3017e4cba923 100644
-> --- a/block/blk-lib.c
-> +++ b/block/blk-lib.c
-> @@ -30,6 +30,7 @@ int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
->  	struct bio *bio = *biop;
->  	unsigned int op;
->  	sector_t bs_mask, part_offset = 0;
-> +	sector_t discard_granularity;
->  
->  	if (!q)
->  		return -ENXIO;
-> @@ -54,6 +55,11 @@ int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
->  	if (!nr_sects)
->  		return -EINVAL;
->  
-> +	discard_granularity = q->limits.discard_granularity;
-> +	/* In case some buggy driver does not set limits.discard_granularity */
-> +	if (WARN_ON_ONCE(discard_granularity == 0))
-> +		discard_granularity = queue_logical_block_size(q);
+From: Mike Snitzer <snitzer@redhat.com>
 
-This code path is supposed to not run in case of zero q->limits.discard_granularity,
-and looks it is fine to just warn and return -EINVAL in this case,
-see Documentation/ABI/testing/sysfs-block:
+Discontinue issuing writethrough write IO in series to the origin and
+then cache.
 
-	What:       /sys/block/<disk>/queue/discard_granularity
-	Date:       May 2011
-	Contact:    Martin K. Petersen <martin.petersen@oracle.com>
-	Description:
-	        Devices that support discard functionality may
-	        internally allocate space using units that are bigger
-	        than the logical block size. The discard_granularity
-	        parameter indicates the size of the internal allocation
-	        unit in bytes if reported by the device. Otherwise the
-	        discard_granularity will be set to match the device's
-	        physical block size. A discard_granularity of 0 means
-	        that the device does not support discard functionality.
+Use bio_clone_fast() to create a new origin clone bio that will be
+mapped to the origin device and then bio_chain() it to the bio that gets
+remapped to the cache device.  The origin clone bio does _not_ have a
+copy of the per_bio_data -- as such check_if_tick_bio_needed() will not
+be called.
 
-What we need to fix is loop driver, if it claims to support discard,
-q->limits.discard_granularity has to be one valid value.
+The cache bio (parent bio) will not complete until the origin bio has
+completed -- this fulfills bio_clone_fast()'s requirements as well as
+the requirement to not complete the original IO until the write IO has
+completed to both the origin and cache device.
 
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 
-Thanks,
-Ming
+(cherry picked from commit 2df3bae9a6543e90042291707b8db0cbfbae9ee9)
+
+Fixes: 4ec34f2196d125ff781170ddc6c3058c08ec5e73 (dm bio record:
+save/restore bi_end_io and bi_integrity )
+
+4ec34f21 introduced a mkfs.ext4 hang on a LVM device that has been
+modified with lvconvert --cachemode=writethrough.
+
+CC:stable@vger.kernel.org for 4.14.y
+
+Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
+Reviewed-by: Somasundaram Krishnasamy <somasundaram.krishnasamy@oracle.com>
+---
+ drivers/md/dm-cache-target.c | 92 ++++++++++++++++++--------------------------
+ 1 file changed, 37 insertions(+), 55 deletions(-)
+
+diff --git a/drivers/md/dm-cache-target.c b/drivers/md/dm-cache-target.c
+index 69cdb29ef6be..2732d1df05fa 100644
+--- a/drivers/md/dm-cache-target.c
++++ b/drivers/md/dm-cache-target.c
+@@ -450,6 +450,7 @@ struct cache {
+ 	struct work_struct migration_worker;
+ 	struct delayed_work waker;
+ 	struct dm_bio_prison_v2 *prison;
++	struct bio_set *bs;
+ 
+ 	mempool_t *migration_pool;
+ 
+@@ -537,11 +538,6 @@ static void wake_deferred_bio_worker(struct cache *cache)
+ 	queue_work(cache->wq, &cache->deferred_bio_worker);
+ }
+ 
+-static void wake_deferred_writethrough_worker(struct cache *cache)
+-{
+-	queue_work(cache->wq, &cache->deferred_writethrough_worker);
+-}
+-
+ static void wake_migration_worker(struct cache *cache)
+ {
+ 	if (passthrough_mode(&cache->features))
+@@ -868,16 +864,23 @@ static void check_if_tick_bio_needed(struct cache *cache, struct bio *bio)
+ 	spin_unlock_irqrestore(&cache->lock, flags);
+ }
+ 
+-static void remap_to_origin_clear_discard(struct cache *cache, struct bio *bio,
+-					  dm_oblock_t oblock)
++static void __remap_to_origin_clear_discard(struct cache *cache, struct bio *bio,
++					    dm_oblock_t oblock, bool bio_has_pbd)
+ {
+-	// FIXME: this is called way too much.
+-	check_if_tick_bio_needed(cache, bio);
++	if (bio_has_pbd)
++		check_if_tick_bio_needed(cache, bio);
+ 	remap_to_origin(cache, bio);
+ 	if (bio_data_dir(bio) == WRITE)
+ 		clear_discard(cache, oblock_to_dblock(cache, oblock));
+ }
+ 
++static void remap_to_origin_clear_discard(struct cache *cache, struct bio *bio,
++					  dm_oblock_t oblock)
++{
++	// FIXME: check_if_tick_bio_needed() is called way too much through this interface
++	__remap_to_origin_clear_discard(cache, bio, oblock, true);
++}
++
+ static void remap_to_cache_dirty(struct cache *cache, struct bio *bio,
+ 				 dm_oblock_t oblock, dm_cblock_t cblock)
+ {
+@@ -937,57 +940,26 @@ static void issue_op(struct bio *bio, void *context)
+ 	accounted_request(cache, bio);
+ }
+ 
+-static void defer_writethrough_bio(struct cache *cache, struct bio *bio)
+-{
+-	unsigned long flags;
+-
+-	spin_lock_irqsave(&cache->lock, flags);
+-	bio_list_add(&cache->deferred_writethrough_bios, bio);
+-	spin_unlock_irqrestore(&cache->lock, flags);
+-
+-	wake_deferred_writethrough_worker(cache);
+-}
+-
+-static void writethrough_endio(struct bio *bio)
+-{
+-	struct per_bio_data *pb = get_per_bio_data(bio, PB_DATA_SIZE_WT);
+-
+-	dm_unhook_bio(&pb->hook_info, bio);
+-
+-	if (bio->bi_status) {
+-		bio_endio(bio);
+-		return;
+-	}
+-
+-	dm_bio_restore(&pb->bio_details, bio);
+-	remap_to_cache(pb->cache, bio, pb->cblock);
+-
+-	/*
+-	 * We can't issue this bio directly, since we're in interrupt
+-	 * context.  So it gets put on a bio list for processing by the
+-	 * worker thread.
+-	 */
+-	defer_writethrough_bio(pb->cache, bio);
+-}
+-
+ /*
+- * FIXME: send in parallel, huge latency as is.
+  * When running in writethrough mode we need to send writes to clean blocks
+- * to both the cache and origin devices.  In future we'd like to clone the
+- * bio and send them in parallel, but for now we're doing them in
+- * series as this is easier.
++ * to both the cache and origin devices.  Clone the bio and send them in parallel.
+  */
+-static void remap_to_origin_then_cache(struct cache *cache, struct bio *bio,
+-				       dm_oblock_t oblock, dm_cblock_t cblock)
++static void remap_to_origin_and_cache(struct cache *cache, struct bio *bio,
++				      dm_oblock_t oblock, dm_cblock_t cblock)
+ {
+-	struct per_bio_data *pb = get_per_bio_data(bio, PB_DATA_SIZE_WT);
++	struct bio *origin_bio = bio_clone_fast(bio, GFP_NOIO, cache->bs);
++
++	BUG_ON(!origin_bio);
+ 
+-	pb->cache = cache;
+-	pb->cblock = cblock;
+-	dm_hook_bio(&pb->hook_info, bio, writethrough_endio, NULL);
+-	dm_bio_record(&pb->bio_details, bio);
++	bio_chain(origin_bio, bio);
++	/*
++	 * Passing false to __remap_to_origin_clear_discard() skips
++	 * all code that might use per_bio_data (since clone doesn't have it)
++	 */
++	__remap_to_origin_clear_discard(cache, origin_bio, oblock, false);
++	submit_bio(origin_bio);
+ 
+-	remap_to_origin_clear_discard(pb->cache, bio, oblock);
++	remap_to_cache(cache, bio, cblock);
+ }
+ 
+ /*----------------------------------------------------------------
+@@ -1873,7 +1845,7 @@ static int map_bio(struct cache *cache, struct bio *bio, dm_oblock_t block,
+ 		} else {
+ 			if (bio_data_dir(bio) == WRITE && writethrough_mode(&cache->features) &&
+ 			    !is_dirty(cache, cblock)) {
+-				remap_to_origin_then_cache(cache, bio, block, cblock);
++				remap_to_origin_and_cache(cache, bio, block, cblock);
+ 				accounted_begin(cache, bio);
+ 			} else
+ 				remap_to_cache_dirty(cache, bio, block, cblock);
+@@ -2132,6 +2104,9 @@ static void destroy(struct cache *cache)
+ 		kfree(cache->ctr_args[i]);
+ 	kfree(cache->ctr_args);
+ 
++	if (cache->bs)
++		bioset_free(cache->bs);
++
+ 	kfree(cache);
+ }
+ 
+@@ -2589,6 +2564,13 @@ static int cache_create(struct cache_args *ca, struct cache **result)
+ 	cache->features = ca->features;
+ 	ti->per_io_data_size = get_per_bio_data_size(cache);
+ 
++	if (writethrough_mode(&cache->features)) {
++		/* Create bioset for writethrough bios issued to origin */
++		cache->bs = bioset_create(BIO_POOL_SIZE, 0, 0);
++		if (!cache->bs)
++			goto bad;
++	}
++
+ 	cache->callbacks.congested_fn = cache_is_congested;
+ 	dm_table_add_target_callbacks(ti->table, &cache->callbacks);
+ 
+-- 
+1.8.3.1
 
