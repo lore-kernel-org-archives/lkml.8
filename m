@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C77C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76413C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAEF622D08
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51DB92245C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:05:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="x0mfk/fN"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="pxs8v3QZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728565AbgHEHFo (ORCPT
+        id S1728593AbgHEHFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 03:05:44 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:6266 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728137AbgHEHEb (ORCPT
+        Wed, 5 Aug 2020 03:05:50 -0400
+Received: from mx07-00178001.pphosted.com ([185.132.182.106]:27810 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728037AbgHEHE3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 03:04:31 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07572Sl6030166;
-        Wed, 5 Aug 2020 09:04:18 +0200
+        Wed, 5 Aug 2020 03:04:29 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07572gFl017714;
+        Wed, 5 Aug 2020 09:04:17 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=Z+Hwk1wFql5BmY3WxoJe/xt45cRduaVoj1mAtgDiK3s=;
- b=x0mfk/fNNqS4WH3ze9ZdPiUGiOs2S0YSHxcklsUNk0FBTNAcQwtN2oi0lZlJNA+H35mR
- Vb27Xdg0jWV/wflfpQl6/5MTyFgwC0hr2nK2sz0nq9blp+Wc+vElFXc35Vkx1L0OCngj
- NIVcUtRbEmwJ6ZpiueWXrKNeH+n7fBnonWRYaWL9DcBgxUbeCInMPdWOw600+jRN93GE
- knIY7rqQ04ztuHPfwhoqYgoqjnqr098nCcc26U/C7TIxyJH+4TVujvhkSKg0eyqRY79e
- FmxImipedc9T5Ayrd9Jw9FrvvMns51Am8WIYlZqaxMWYI9U/KmXNH5v05sjGloiwALi4 Zg== 
+ bh=MR0NzTVq272GJr+h7by9Bf1/nQnQ6WI6tLKx+kOBiq8=;
+ b=pxs8v3QZByuCYgeM91J0267Ab1GT2GSrjSTFK+e82tgGue/Z8wfkmjK7vVod+41T/gts
+ LugbCKvh297n209P/BxBHUwiV5HKYuR77dqHdYv9jFKFzh8WKuvoC48eTkjZSF4LB9D5
+ epKNtqfcpeB3pLsMmhpNwmEqf5CjKFJ20MekA5t5YuHXvzaz8TKtXryXgIVYbiKBTw9o
+ aXolgbVaZ12vSC7L8y0lH2V045LFpO/6FA5kApWAAhEIh5GqiaAxz9aCn8hWfrA2o6vH
+ L/bVlmwYZfMb8OwWTVd5YNQSSgvNhNqplHYl4wAg9PapqsBgvLaQvo6Q2ZJ981JoM/o1 JA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32n6hyq7tm-1
+        by mx07-00178001.pphosted.com with ESMTP id 32n6sb6qx2-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Wed, 05 Aug 2020 09:04:17 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5CC9110002A;
-        Wed,  5 Aug 2020 09:04:17 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EA14210003A;
+        Wed,  5 Aug 2020 09:04:16 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5134F2A4D8E;
-        Wed,  5 Aug 2020 09:04:17 +0200 (CEST)
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DCAEA2A4D8E;
+        Wed,  5 Aug 2020 09:04:16 +0200 (CEST)
 Received: from localhost (10.75.127.49) by SFHDAG3NODE2.st.com (10.75.127.8)
  with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Aug 2020 09:04:16
  +0200
@@ -56,16 +56,16 @@ CC:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
         <alain.volmat@st.com>
-Subject: [PATCH 09/18] spi: stm32h7: fix race condition at end of transfer
-Date:   Wed, 5 Aug 2020 09:02:04 +0200
-Message-ID: <1596610933-32599-10-git-send-email-alain.volmat@st.com>
+Subject: [PATCH 08/18] spi: stm32h7: fix dbg/warn/err conditions in irq handler
+Date:   Wed, 5 Aug 2020 09:02:03 +0200
+Message-ID: <1596610933-32599-9-git-send-email-alain.volmat@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1596610933-32599-1-git-send-email-alain.volmat@st.com>
 References: <1596610933-32599-1-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG6NODE3.st.com (10.75.127.18) To SFHDAG3NODE2.st.com
+X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE2.st.com
  (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-08-05_04:2020-08-03,2020-08-05 signatures=0
@@ -74,37 +74,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antonio Borneo <antonio.borneo@st.com>
+From: Amelie Delaunay <amelie.delaunay@st.com>
 
-The caller of stm32_spi_transfer_one(), spi_transfer_one_message(),
-is waiting for us to call spi_finalize_current_transfer() and will
-eventually schedule a new transfer, if available.
-We should guarantee that the spi controller is really available
-before calling spi_finalize_current_transfer().
+Make spurious interrupts visible. We do not expect to receive
+them, so rise at least a warning if it happens.
 
-Move the call to spi_finalize_current_transfer() _after_ the call
-to stm32_spi_disable().
+Don't bother repeating the suspended RX messages; to avoid RX
+overrun we have set SPI_CR1_MASRX that enables the automatic
+suspended RX so, mainly in irq mode, it's normal that we will
+receive SUSP interrupts every time the CPU is too much loaded
+or the spi speed too high and we fail to remove on-time the
+data from the RX queue. Moreover, when the CPU is overloaded
+there is a delay while serving the interrupt. This forces
+inactivity on the SPI bus between bytes. So the warning message
+"System too slow, spi speed not guaranteed" is inaccurate; the
+term "spi speed" is currently used in kernel for the toggling
+frequency of the spi CLK pin, which is driven by HW and is not
+impacted by CPU overload. The correct term should be
+"data throughput".
 
+RX overrun is an error condition that signals a corrupted RX
+stream both in dma and in irq modes. Report the error and
+abort the transfer in either cases.
+
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
 Signed-off-by: Alain Volmat <alain.volmat@st.com>
 ---
- drivers/spi/spi-stm32.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/spi-stm32.c | 19 +++++++------------
+ 1 file changed, 7 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index 6731e3ff0e50..a931c821c280 100644
+index 06478643855a..6731e3ff0e50 100644
 --- a/drivers/spi/spi-stm32.c
 +++ b/drivers/spi/spi-stm32.c
-@@ -954,8 +954,8 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
- 	spin_unlock_irqrestore(&spi->lock, flags);
+@@ -904,14 +904,16 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
+ 	mask &= sr;
  
- 	if (end) {
--		spi_finalize_current_transfer(master);
- 		stm32h7_spi_disable(spi);
-+		spi_finalize_current_transfer(master);
+ 	if (!mask) {
+-		dev_dbg(spi->dev, "spurious IT (sr=0x%08x, ier=0x%08x)\n",
+-			sr, ier);
++		dev_warn(spi->dev, "spurious IT (sr=0x%08x, ier=0x%08x)\n",
++			 sr, ier);
+ 		spin_unlock_irqrestore(&spi->lock, flags);
+ 		return IRQ_NONE;
  	}
  
- 	return IRQ_HANDLED;
+ 	if (mask & STM32H7_SPI_SR_SUSP) {
+-		dev_warn(spi->dev, "Communication suspended\n");
++		dev_warn_once(spi->dev,
++			      "System too slow is limiting data throughput\n");
++
+ 		if (!spi->cur_usedma && (spi->rx_buf && (spi->rx_len > 0)))
+ 			stm32h7_spi_read_rxfifo(spi);
+ 		/*
+@@ -924,15 +926,8 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
+ 	}
+ 
+ 	if (mask & STM32H7_SPI_SR_OVR) {
+-		dev_warn(spi->dev, "Overrun: received value discarded\n");
+-		if (!spi->cur_usedma && (spi->rx_buf && (spi->rx_len > 0)))
+-			stm32h7_spi_read_rxfifo(spi);
+-		/*
+-		 * If overrun is detected while using DMA, it means that
+-		 * something went wrong, so stop the current transfer
+-		 */
+-		if (spi->cur_usedma)
+-			end = true;
++		dev_err(spi->dev, "Overrun: RX data lost\n");
++		end = true;
+ 		ifcr |= STM32H7_SPI_SR_OVR;
+ 	}
+ 
 -- 
 2.7.4
 
