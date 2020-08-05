@@ -2,92 +2,104 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A73C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5AAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6275C22D00
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 450FF22D2C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:08:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DDlDKTDb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L31YrSDz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbgHERHS (ORCPT
+        id S1728478AbgHERIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:07:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49824 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728489AbgHERF6 (ORCPT
+        Wed, 5 Aug 2020 13:08:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25725 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728329AbgHERGO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:05:58 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97400C06179E
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 10:05:54 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id v6so31401987iow.11
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 10:05:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fBJV0XruchpYgDI1qMU6kXVYMvuaojqcy/VM/BfhHS4=;
-        b=DDlDKTDb/0WHPHlQszr8T/dicZ3JvB4fFR88fjW3PYNXn4Bd1sOBHkO14IfBQN8Kzh
-         wW8hvZGObDj1LUEztpmRYNVUjkSGbX9qyi02lldsKk72wxUXVKWu5CWFbhAWtfQn4TMN
-         63WibHCjsj6FWC078lkCBf7/E3a8z4dWQFw1y8Cugeyb89wnvH4FYd4FiEQDGXaUQZ5R
-         hAx8fkejSXcWdQJTeHgHVzIFmTdNLFra23jvNnZDA8dVXvtPgm0wPyE8T5NteTKpHUnp
-         7Vh0NuAPJbKmXEVGBtIJWc/WQ0DOUBfE5Wi4IsL0+v86q4+xHk7bbof7HBChNKrE0TEi
-         BUvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fBJV0XruchpYgDI1qMU6kXVYMvuaojqcy/VM/BfhHS4=;
-        b=oXraB0UsLiiyFeSzSXYOBKl6gW3rmZygI0zfQ9jXBM3K5cx34CXRey/OMA6yquvVlw
-         3kZxHXI4zwSCmx9KaMwdFxoykSJSCYrdnpFYkBfF0G6pNR5N+Y0TF4qqalfhXhLy7W8G
-         qncFhmBH3WogFlerNeNsS1zIm0QMz/ekA7Cfh9k1pieGe7TXrLsJqHiWg92HuU/eX6UN
-         AGGP0ybGD6PtOU0OB8fX9lphR1ybJTo9U3qdKewXJi/Q5uQ7O8pz3cm8WpFVDQAZMQ4t
-         JaaiE9+AV6+FfCdfPYbHHZ+aktmdJAue+bwY9lSETvLb2ZVcOY6UHsUEskDg1u10D5IL
-         uMyw==
-X-Gm-Message-State: AOAM532he2150l40S7BCfvoVk8qdNwgczdNfRGh7KmxpXbgZRdrhRtLX
-        DIDfenXiH7uVlzYqLxub2uwFDJdslB23pj5W+F4LTQ==
-X-Google-Smtp-Source: ABdhPJytYzCJbS45tauBAiUZxFGUgBBjr+Uns//aaQKG0bhrMyRYe2msAgYn/W/ZmBM7UHzdKHfygm67zRHOOqVWsNE=
-X-Received: by 2002:a6b:c3cf:: with SMTP id t198mr4294638iof.164.1596647152347;
- Wed, 05 Aug 2020 10:05:52 -0700 (PDT)
+        Wed, 5 Aug 2020 13:06:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596647173;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=BJTmQpoAkIpbguLFUsJigmbm7ftZPVlO31weMkCEohw=;
+        b=L31YrSDzCl2zHFd1sJ6XsRWKZ+ibBGhncJHNbiYAMQSta4Kg5E3jSa454+/KFjRHgly5P4
+        tDuKmKUYrtIRRVLtNLn3CHHZnOzm2fC3SfZckIecSl2SmbqEfs8yX3I5cYX2wR1vIBMf1y
+        P7/bL5v3QdEeHK8SNERpiJLazce3fts=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-138-FgJlMIBBOEqWZYWlkZ1Vjw-1; Wed, 05 Aug 2020 09:39:35 -0400
+X-MC-Unique: FgJlMIBBOEqWZYWlkZ1Vjw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 390D5100A8DF;
+        Wed,  5 Aug 2020 13:39:34 +0000 (UTC)
+Received: from maya.cloud.tilaa.com (unknown [10.36.110.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EDB792DE95;
+        Wed,  5 Aug 2020 13:39:33 +0000 (UTC)
+Received: from localhost (055-041-157-037.ip-addr.inexio.net [37.157.41.55])
+        by maya.cloud.tilaa.com (Postfix) with ESMTPSA id D853F40093;
+        Wed,  5 Aug 2020 15:39:32 +0200 (CEST)
+Date:   Wed, 5 Aug 2020 15:39:31 +0200
+From:   Stefano Brivio <sbrivio@redhat.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-next@vger.kernel.org, heiko.carstens@de.ibm.com,
+        Cong Wang <xiyou.wangcong@gmail.com>
+Subject: [PATCH RESEND net-next] ip_tunnel_core: Fix build for archs without
+ _HAVE_ARCH_IPV6_CSUM
+Message-ID: <20200805153931.50a3d518@redhat.com>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <20200728143741.2718593-1-vkuznets@redhat.com> <20200728143741.2718593-3-vkuznets@redhat.com>
-In-Reply-To: <20200728143741.2718593-3-vkuznets@redhat.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Wed, 5 Aug 2020 10:05:40 -0700
-Message-ID: <CALMp9eSWsvufDXMuTUR3Fmh91O7tHUaqpDbAoavSMc=prpcDzg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] KVM: x86: introduce KVM_MEM_PCI_HOLE memory
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Peter Xu <peterx@redhat.com>, Michael Tsirkin <mst@redhat.com>,
-        Julia Suvorova <jsuvorov@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 7:38 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->
-> PCIe config space can (depending on the configuration) be quite big but
-> usually is sparsely populated. Guest may scan it by accessing individual
-> device's page which, when device is missing, is supposed to have 'pci
-> hole' semantics: reads return '0xff' and writes get discarded. Compared
-> to the already existing KVM_MEM_READONLY, VMM doesn't need to allocate
-> real memory and stuff it with '0xff'.
+On architectures defining _HAVE_ARCH_IPV6_CSUM, we get
+csum_ipv6_magic() defined by means of arch checksum.h headers. On
+other architectures, we actually need to include net/ip6_checksum.h
+to be able to use it.
 
-Note that the bus error semantics described should apply to *any*
-unbacked guest physical addresses, not just addresses in the PCI hole.
-(Typically, this also applies to the standard local APIC page
-(0xfee00xxx) when the local APIC is either disabled or in x2APIC mode,
-which is an area that kvm has had trouble with in the past.)
+Without this include, building with defconfig breaks at least for
+s390.
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Fixes: 4cb47a8644cc ("tunnels: PMTU discovery support for directly bridged IP packets")
+Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+---
+I'm submitting this for net-next despite the fact it's closed, as
+the offending code isn't merged to net.git yet. Should I rather
+submit this to... linux-next?
+
+Re-sending as original copy seems to be stuck in some SMTP queue.
+
+ net/ipv4/ip_tunnel_core.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/net/ipv4/ip_tunnel_core.c b/net/ipv4/ip_tunnel_core.c
+index 9ddee2a0c66d..75c6013ff9a4 100644
+--- a/net/ipv4/ip_tunnel_core.c
++++ b/net/ipv4/ip_tunnel_core.c
+@@ -25,6 +25,7 @@
+ #include <net/protocol.h>
+ #include <net/ip_tunnels.h>
+ #include <net/ip6_tunnel.h>
++#include <net/ip6_checksum.h>
+ #include <net/arp.h>
+ #include <net/checksum.h>
+ #include <net/dsfield.h>
+-- 
+2.27.0
+
