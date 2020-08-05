@@ -2,310 +2,153 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E58C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CBBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5F0522D03
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F4BF22B45
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:04:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="GPdcbAZG"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="yeR2cygT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgHEHEX (ORCPT
+        id S1728311AbgHEHEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 03:04:23 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:2577 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbgHEHEV (ORCPT
+        Wed, 5 Aug 2020 03:04:31 -0400
+Received: from mx07-00178001.pphosted.com ([185.132.182.106]:27832 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728034AbgHEHE3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 03:04:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1596611061; x=1628147061;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=VIt0QPHvmvqG4Kch/PM9e/Zwtiyux2gOnoeb9rYl0nc=;
-  b=GPdcbAZGHGu4b++JO9L0EYWIB2/F5N2ecg4JXQ07W6bSjkqVFLFbUWeE
-   ZcJjabShjwiKgN4xd9dlPzSOuW6bm+pqsjEP8gNaNknqV33x0RXI/EO2X
-   W2d/D89ioMGkJZiw5PHhpgBfSfhaUvjr0PjgVgk1G2Y9XLdMzvB/2N4xA
-   I=;
-IronPort-SDR: IMs5RNHvt7l/Hi6VrOTnuBSid7dno/JsfipzFL9qFFGB7VVXGk73vua7VJZTtySs/qwKBYWhUC
- EmLm/YSu6kMA==
-X-IronPort-AV: E=Sophos;i="5.75,436,1589241600"; 
-   d="scan'208";a="65698539"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 05 Aug 2020 07:04:17 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com (Postfix) with ESMTPS id C8B87A278C;
-        Wed,  5 Aug 2020 07:04:05 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 5 Aug 2020 07:04:04 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.26) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 5 Aug 2020 07:03:48 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <david@redhat.com>,
-        <dwmw@amazon.com>, <fan.du@intel.com>, <foersleo@amazon.de>,
-        <gthelen@google.com>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <rppt@kernel.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
-        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [RFC v6 09/10] tools/damon/record: Support NUMA specific recording
-Date:   Wed, 5 Aug 2020 08:59:50 +0200
-Message-ID: <20200805065951.18221-10-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200805065951.18221-1-sjpark@amazon.com>
-References: <20200805065951.18221-1-sjpark@amazon.com>
+        Wed, 5 Aug 2020 03:04:29 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07572hrU017746;
+        Wed, 5 Aug 2020 09:04:15 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=IxKma3ZgGYqE2Up2PZlJEGac0OiQcXRirgMn7PShygY=;
+ b=yeR2cygT/3Tzibk508I/VxZYclbiwW2+lwpvEHSagf/2j+XtNSBgl2QDP2WoIoV3WOpJ
+ mtR+vb1xprRhx5ajdReoUVoOf52auphCrGE4vLD53bNsE6FAtycN+6pd8q3Gdh8NxtCN
+ XGGzAqxVUaGpjt3dTidt0SX2UYuTVbcf0GPIsiVERf3TC87+hhxvoFYx3ckm65gqZt/f
+ 6bEx2GWZrFx9ynNLvFZrfUh1raT5mMKlio5QtjumgGhCjBsPft7+W2ECOtzNy7uJrqwA
+ Oir0RjKEy2iJaL5Hp+kJgQzd8WvMmXjsAG6k/4FirwDcEbNe1i4GuUL52ZkkXRFzvvmN rA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 32n6sb6qwu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Aug 2020 09:04:15 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DD5F910002A;
+        Wed,  5 Aug 2020 09:04:14 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D0FB12A4D8E;
+        Wed,  5 Aug 2020 09:04:14 +0200 (CEST)
+Received: from localhost (10.75.127.48) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Aug 2020 09:04:14
+ +0200
+From:   Alain Volmat <alain.volmat@st.com>
+To:     <broonie@kernel.org>, <amelie.delaunay@st.com>
+CC:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <linux-spi@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
+        <alain.volmat@st.com>
+Subject: [PATCH 03/18] spi: stm32h7: remove unused mode fault MODF event handling
+Date:   Wed, 5 Aug 2020 09:01:58 +0200
+Message-ID: <1596610933-32599-4-git-send-email-alain.volmat@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596610933-32599-1-git-send-email-alain.volmat@st.com>
+References: <1596610933-32599-1-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.43.160.26]
-X-ClientProxiedBy: EX13D24UWB002.ant.amazon.com (10.43.161.159) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-05_04:2020-08-03,2020-08-05 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+From: Antonio Borneo <antonio.borneo@st.com>
 
-This commit updates the DAMON user space tool (damo-record) for NUMA
-specific physical memory monitoring.  With this change, users can
-monitor accesses to physical memory of specific NUMA node.
+Accordingly to STM32H7 document RM0433, "mode fault" MODF is
+a special mode to handle a spi bus with multiple masters, in
+which each master has to "detect" if another master enables
+its CS to take control of the bus. Once this is detected,
+all other masters has to temporarily switch to "slave" mode.
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
+Such multi-master mode is not supported in Linux and this
+driver properly disables the mode by setting the bits
+SPI_CR1_SSI and SPI_CFG2_SSM, thus forcing a master only
+operating mode.
+
+In this condition, we will never receive an interrupt due to
+MODF event and we do not need to handle it.
+
+Remove all the unused code around handling MODF events.
+
+Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
 ---
- tools/damon/_paddr_layout.py | 147 +++++++++++++++++++++++++++++++++++
- tools/damon/record.py        |  18 ++++-
- 2 files changed, 164 insertions(+), 1 deletion(-)
- create mode 100644 tools/damon/_paddr_layout.py
+ drivers/spi/spi-stm32.c | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
 
-diff --git a/tools/damon/_paddr_layout.py b/tools/damon/_paddr_layout.py
-new file mode 100644
-index 000000000000..561c2b6729f6
---- /dev/null
-+++ b/tools/damon/_paddr_layout.py
-@@ -0,0 +1,147 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: GPL-2.0
-+
-+import os
-+
-+class PaddrRange:
-+    start = None
-+    end = None
-+    nid = None
-+    state = None
-+    name = None
-+
-+    def __init__(self, start, end, nid, state, name):
-+        self.start = start
-+        self.end = end
-+        self.nid = nid
-+        self.state = state
-+        self.name = name
-+
-+    def interleaved(self, prange):
-+        if self.end <= prange.start:
-+            return None
-+        if prange.end <= self.start:
-+            return None
-+        return [max(self.start, prange.start), min(self.end, prange.end)]
-+
-+    def __str__(self):
-+        return '%x-%x, nid %s, state %s, name %s' % (self.start, self.end,
-+                self.nid, self.state, self.name)
-+
-+class MemBlock:
-+    nid = None
-+    index = None
-+    state = None
-+
-+    def __init__(self, nid, index, state):
-+        self.nid = nid
-+        self.index = index
-+        self.state = state
-+
-+    def __str__(self):
-+        return '%d (%s)' % (self.index, self.state)
-+
-+    def __repr__(self):
-+        return self.__str__()
-+
-+def readfile(file_path):
-+    with open(file_path, 'r') as f:
-+        return f.read()
-+
-+def collapse_ranges(ranges):
-+    ranges = sorted(ranges, key=lambda x: x.start)
-+    merged = []
-+    for r in ranges:
-+        if not merged:
-+            merged.append(r)
-+            continue
-+        last = merged[-1]
-+        if last.end != r.start or last.nid != r.nid or last.state != r.state:
-+            merged.append(r)
-+        else:
-+            last.end = r.end
-+    return merged
-+
-+def memblocks_to_ranges(blocks, block_size):
-+    ranges = []
-+    for b in blocks:
-+        ranges.append(PaddrRange(b.index * block_size,
-+            (b.index + 1) * block_size, b.nid, b.state, None))
-+
-+    return collapse_ranges(ranges)
-+
-+def memblock_ranges():
-+    SYSFS='/sys/devices/system/node'
-+    sz_block = int(readfile('/sys/devices/system/memory/block_size_bytes'), 16)
-+    sys_nodes = [x for x in os.listdir(SYSFS) if x.startswith('node')]
-+
-+    blocks = []
-+    for sys_node in sys_nodes:
-+        nid = int(sys_node[4:])
-+
-+        sys_node_files = os.listdir(os.path.join(SYSFS, sys_node))
-+        for f in sys_node_files:
-+            if not f.startswith('memory'):
-+                continue
-+            index = int(f[6:])
-+            sys_state = os.path.join(SYSFS, sys_node, f, 'state')
-+            state = readfile(sys_state).strip()
-+
-+            blocks.append(MemBlock(nid, index, state))
-+
-+    return memblocks_to_ranges(blocks, sz_block)
-+
-+def iomem_ranges():
-+    ranges = []
-+
-+    with open('/proc/iomem', 'r') as f:
-+        # example of the line: '100000000-42b201fff : System RAM'
-+        for line in f:
-+            fields = line.split(':')
-+            if len(fields) < 2:
-+                continue
-+            name = ':'.join(fields[1:]).strip()
-+            addrs = fields[0].split('-')
-+            if len(addrs) != 2:
-+                continue
-+            start = int(addrs[0], 16)
-+            end = int(addrs[1], 16) + 1
-+            ranges.append(PaddrRange(start, end, None, None, name))
-+
-+    return ranges
-+
-+def integrate(memblock_parsed, iomem_parsed):
-+    merged = []
-+
-+    for r in iomem_parsed:
-+        for r2 in memblock_parsed:
-+            if r2.start <= r.start and r.end <= r2.end:
-+                r.nid = r2.nid
-+                r.state = r2.state
-+                merged.append(r)
-+            elif r2.start <= r.start and r.start < r2.end and r2.end < r.end:
-+                sub = PaddrRange(r2.end, r.end, None, None, r.name)
-+                iomem_parsed.append(sub)
-+                r.end = r2.end
-+                r.nid = r2.nid
-+                r.state = r2.state
-+                merged.append(r)
-+    merged = sorted(merged, key=lambda x: x.start)
-+    return merged
-+
-+def paddr_ranges():
-+    return integrate(memblock_ranges(), iomem_ranges())
-+
-+def pr_ranges(ranges):
-+    print('#%12s %13s\tnode\tstate\tresource\tsize' % ('start', 'end'))
-+    for r in ranges:
-+        print('%13d %13d\t%s\t%s\t%s\t%d' % (r.start, r.end, r.nid,
-+            r.state, r.name, r.end - r.start))
-+
-+def main():
-+    ranges = paddr_ranges()
-+
-+    pr_ranges(ranges)
-+
-+if __name__ == '__main__':
-+    main()
-diff --git a/tools/damon/record.py b/tools/damon/record.py
-index 6fd0b59c73e0..e9d6bfc70ead 100644
---- a/tools/damon/record.py
-+++ b/tools/damon/record.py
-@@ -12,6 +12,7 @@ import subprocess
- import time
+diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+index eaa416c551c9..df22dea784d9 100644
+--- a/drivers/spi/spi-stm32.c
++++ b/drivers/spi/spi-stm32.c
+@@ -129,7 +129,6 @@
+ #define STM32H7_SPI_IER_EOTIE		BIT(3)
+ #define STM32H7_SPI_IER_TXTFIE		BIT(4)
+ #define STM32H7_SPI_IER_OVRIE		BIT(6)
+-#define STM32H7_SPI_IER_MODFIE		BIT(9)
+ #define STM32H7_SPI_IER_ALL		GENMASK(10, 0)
  
- import _damon
-+import _paddr_layout
+ /* STM32H7_SPI_SR bit fields */
+@@ -137,7 +136,6 @@
+ #define STM32H7_SPI_SR_TXP		BIT(1)
+ #define STM32H7_SPI_SR_EOT		BIT(3)
+ #define STM32H7_SPI_SR_OVR		BIT(6)
+-#define STM32H7_SPI_SR_MODF		BIT(9)
+ #define STM32H7_SPI_SR_SUSP		BIT(11)
+ #define STM32H7_SPI_SR_RXPLVL_SHIFT	13
+ #define STM32H7_SPI_SR_RXPLVL		GENMASK(14, 13)
+@@ -933,11 +931,6 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
+ 			end = true;
+ 	}
  
- def pidfd_open(pid):
-     import ctypes
-@@ -98,6 +99,8 @@ def set_argparser(parser):
-             help='use pidfd type target id')
-     parser.add_argument('-l', '--rbuf', metavar='<len>', type=int,
-             default=1024*1024, help='length of record result buffer')
-+    parser.add_argument('--numa_node', metavar='<node id>', type=int,
-+            help='if target is \'paddr\', limit it to the numa node')
-     parser.add_argument('-o', '--out', metavar='<file path>', type=str,
-             default='damon.data', help='output file path')
+-	if (sr & STM32H7_SPI_SR_MODF) {
+-		dev_warn(spi->dev, "Mode fault: transfer aborted\n");
+-		end = true;
+-	}
+-
+ 	if (sr & STM32H7_SPI_SR_OVR) {
+ 		dev_warn(spi->dev, "Overrun: received value discarded\n");
+ 		if (!spi->cur_usedma && (spi->rx_buf && (spi->rx_len > 0)))
+@@ -1201,7 +1194,7 @@ static int stm32h7_spi_transfer_one_irq(struct stm32_spi *spi)
  
-@@ -124,6 +127,15 @@ def default_paddr_region():
-                 ret = [start, end]
-     return ret
+ 	/* Enable the interrupts relative to the end of transfer */
+ 	ier |= STM32H7_SPI_IER_EOTIE | STM32H7_SPI_IER_TXTFIE |
+-	       STM32H7_SPI_IER_OVRIE | STM32H7_SPI_IER_MODFIE;
++	       STM32H7_SPI_IER_OVRIE;
  
-+def paddr_region_of(numa_node):
-+    regions = []
-+    paddr_ranges = _paddr_layout.paddr_ranges()
-+    for r in paddr_ranges:
-+        if r.nid == numa_node and r.name == 'System RAM':
-+            regions.append([r.start, r.end])
-+
-+    return regions
-+
- def main(args=None):
-     global orig_attrs
-     if not args:
-@@ -142,12 +154,16 @@ def main(args=None):
-     pidfd = args.pidfd
-     new_attrs = _damon.cmd_args_to_attrs(args)
-     init_regions = _damon.cmd_args_to_init_regions(args)
-+    numa_node = args.numa_node
-     target = args.target
+ 	spin_lock_irqsave(&spi->lock, flags);
  
-     target_fields = target.split()
-     if target == 'paddr':   # physical memory address space
-         if not init_regions:
--            init_regions = [default_paddr_region()]
-+            if numa_node:
-+                init_regions = paddr_region_of(numa_node)
-+            else:
-+                init_regions = [default_paddr_region()]
-         do_record(target, False, init_regions, new_attrs, orig_attrs, pidfd)
-     elif not subprocess.call('which %s &> /dev/null' % target_fields[0],
-             shell=True, executable='/bin/bash'):
+@@ -1251,8 +1244,7 @@ static void stm32h7_spi_transfer_one_dma_start(struct stm32_spi *spi)
+ 	/* Enable the interrupts relative to the end of transfer */
+ 	stm32_spi_set_bits(spi, STM32H7_SPI_IER, STM32H7_SPI_IER_EOTIE |
+ 						 STM32H7_SPI_IER_TXTFIE |
+-						 STM32H7_SPI_IER_OVRIE |
+-						 STM32H7_SPI_IER_MODFIE);
++						 STM32H7_SPI_IER_OVRIE);
+ 
+ 	stm32_spi_enable(spi);
+ 
 -- 
-2.17.1
+2.7.4
 
