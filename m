@@ -2,174 +2,180 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EA4C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 04:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C19C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 04:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15AAE22CA0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 04:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D8620842
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 04:43:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TBGXVFSW"
+	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="p5+bjfFz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgHEEaL (ORCPT
+        id S1725998AbgHEEne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 00:30:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45202 "EHLO
+        Wed, 5 Aug 2020 00:43:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbgHEE37 (ORCPT
+        with ESMTP id S1725887AbgHEEna (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 00:29:59 -0400
-Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF278C061756
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 21:29:57 -0700 (PDT)
-Received: by mail-qv1-xf4a.google.com with SMTP id v5so25044339qvr.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 21:29:57 -0700 (PDT)
+        Wed, 5 Aug 2020 00:43:30 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E755C06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 21:43:30 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id t6so23729091pgq.1
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 21:43:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=nr8mXyqoppq75z/FRAmv2PARhpMnaUiNjcYddLk+74Y=;
-        b=TBGXVFSWKjIeEBqhvRaejVcq72l1gKFOpsaGCkZOAQJpdKTwqMp/DQXge1vJKAeR5/
-         ThVPPm/zNb2xLLpfeYEeQKNcqG1kCFRXvJwJiHpulAaJiB4j61TxQCMJFcOkOXgOLQ/Z
-         a2+HD8lIq0X8NR4IZH3ThaMkZ5BmfQlKqHdr8xVOPWzrMhVpfzKN2qoCftelTjCce5AI
-         cymRYGgP42zU7ZsJC3GMRNkOPIaQt/cJM7bc1TnycBnTatTc0ilWK9Nq2QCTMj/6Bb4/
-         FtEHlXvb7Mgo1q8joQCtFHwsHZ1OiGoQ78JdVDGjNgdnJ6t86ULnbwBakvPUfdTbNOMZ
-         Ibtg==
+        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=BtldnxnFGrnTj00hwH1RPWgV5daAD5Id66YyAskc8sc=;
+        b=p5+bjfFzJA6jvz4xnlTy2n2YOoAvWDhX62Q7nXKj3JpIwTPRQ1biKW37VEKtaWkndg
+         plNncOj6TuVYPmygNUkujOAgrQDwa/ghd5kN9Mz1l/X3r7VWGIZ4IFlauewEurlltSNq
+         Qvw2rWqxamweae3XtTBk0tQ4LHoO4nx+LyFMjVWemcsEaKMeTmZqB5B/MS9ypAtHXqFq
+         V22fYfmHX8+kEbiD9ZEfp/1dpzIAZKJZ0k2kCEXOvHBM3QgorSvlVGgLD46pJbHQ1Vzo
+         ajzm6tA/TdyegZfYApp4HtzFiLuS1qwxgQbXq0CETCk2glzZkbfseT9OWdqcqAs1Cuwd
+         c4sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=nr8mXyqoppq75z/FRAmv2PARhpMnaUiNjcYddLk+74Y=;
-        b=rtIx4RjVlYTrWfFIomTPNAAp9ccb4/I9+UO1bAvWbtH3YqXAN37ZKcs8L82RjMpthm
-         Uizd7eXK8QkpPUoM5/PRrY7xoAaFa36mapwEl61T1m74Vb4uBb2mX4GyDIgIsuLUd3Vh
-         QfsvINVpxTWnZPHu7D7JfQxDVjlpV7UIUoNjhKGylD3XUgltaiRs+Agu1xxMWEmXy2pl
-         8pnEdsLgepPCcuQ92nef7fU2GV49Sv4tJDsGCdip7RJqeU669NAkPXYPiB7+rrIAlyM0
-         Yp230mo5Iw58yAnFr20CCIoTWqG34XGhyYs6PvxkayP56nCcNnHvzHYpfJBL2sGiJvaL
-         OaPQ==
-X-Gm-Message-State: AOAM5321P/FIyFImKIsHsgQB/eR3apj8NuHaeKutvef17wTwygI1fnW+
-        6ONvHH6ULQ38in3vV8ukcUQjtO0/wF/AEQ==
-X-Google-Smtp-Source: ABdhPJyOD1VNp72JmjPWa6NqIFzpjMKCPktNfzHcJvlTS4cUwujsKARM51+jzJ3ICEGDcQvZK6HI7D4IA5H6KQ==
-X-Received: by 2002:ad4:4152:: with SMTP id z18mr1839378qvp.42.1596601796941;
- Tue, 04 Aug 2020 21:29:56 -0700 (PDT)
-Date:   Tue,  4 Aug 2020 21:29:37 -0700
-In-Reply-To: <20200805042938.2961494-1-davidgow@google.com>
-Message-Id: <20200805042938.2961494-6-davidgow@google.com>
-Mime-Version: 1.0
-References: <20200805042938.2961494-1-davidgow@google.com>
-X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-Subject: [PATCH v11 5/6] KASAN: Testing Documentation
-From:   David Gow <davidgow@google.com>
-To:     trishalfonso@google.com, brendanhiggins@google.com,
-        aryabinin@virtuozzo.com, dvyukov@google.com, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, andreyknvl@google.com,
-        shuah@kernel.org, akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, David Gow <davidgow@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=BtldnxnFGrnTj00hwH1RPWgV5daAD5Id66YyAskc8sc=;
+        b=muf73iXIShHo4PYzTPnBnyLtofqX6stAEhmZokJtoiudi+cFV+TU/nbPrXVg5c2fbn
+         xysE353QjHW4but2LLOqPwLOlrMGtJLrTWauM86XUy0K9/yarkNTPG2lJ6BabH4dQYuZ
+         CjdFGvfuzCSiGEIjlanD7atBBdFChD1/cZ81XKPfjZgv4VLlVRNU5h/LNVYmXjtLL5gM
+         8U15OlwbVwzl/mo2xbZwSIKmvqMFS727ofxpWKGxr7Jvu2qxFLIB+3GZYRJXsV9meTS0
+         AhTZ6bjgwekSscJRYaCiNPzhG+ZiDBQSFmdFfdHk5QHCBClymVMP/75UaQzfApMrAy3f
+         EBsA==
+X-Gm-Message-State: AOAM530qTNd6Smg2aZNrKKT8Ko1ZiPXB+WCUlxUzq0qdrwmlwuwZc8Oz
+        UbvGDan0mNT2N1RPwHyp9ynTcz9SSNw=
+X-Google-Smtp-Source: ABdhPJwA32XcoJrn5trX4X7yJ+b+uKPc02HlJT5FBW7PP4dtcHntkoBIID4Z2swVxsbUpU9rImFdmg==
+X-Received: by 2002:a62:2ad6:: with SMTP id q205mr1588016pfq.316.1596602609659;
+        Tue, 04 Aug 2020 21:43:29 -0700 (PDT)
+Received: from [192.168.10.160] (S01061cabc081bf83.cg.shawcable.net. [70.77.221.9])
+        by smtp.gmail.com with ESMTPSA id g14sm1012054pgi.46.2020.08.04.21.43.27
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 04 Aug 2020 21:43:28 -0700 (PDT)
+From:   Andreas Dilger <adilger@dilger.ca>
+Message-Id: <7FA38CCB-BDB3-4D35-AA73-C7604B0BCC87@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_269E6BAA-58C5-4E7B-81BA-23B491D68C63";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [PATCH v2 1/3] ext4: reorganize if statement of
+ ext4_mb_release_context()
+Date:   Tue, 4 Aug 2020 22:43:24 -0600
+In-Reply-To: <ad1ac152-6d52-13cd-5786-7c888bf9370d@gmail.com>
+Cc:     Theodore Ts'o <tytso@mit.edu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>
+To:     brookxu <brookxu.cn@gmail.com>
+References: <ad1ac152-6d52-13cd-5786-7c888bf9370d@gmail.com>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patricia Alfonso <trishalfonso@google.com>
 
-Include documentation on how to test KASAN using CONFIG_TEST_KASAN_KUNIT
-and CONFIG_TEST_KASAN_MODULE.
+--Apple-Mail=_269E6BAA-58C5-4E7B-81BA-23B491D68C63
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
-Signed-off-by: David Gow <davidgow@google.com>
-Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-Acked-by: Brendan Higgins <brendanhiggins@google.com>
----
- Documentation/dev-tools/kasan.rst | 70 +++++++++++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
+On Aug 4, 2020, at 7:01 PM, brookxu <brookxu.cn@gmail.com> wrote:
+>=20
+> Reorganize the if statement of ext4_mb_release_context(), make it
+> easier to read.
+>=20
+> Signed-off-by: Chunguang Xu <brookxu@tencent.com>
 
-diff --git a/Documentation/dev-tools/kasan.rst b/Documentation/dev-tools/kasan.rst
-index 38fd5681fade..42991e40cbe1 100644
---- a/Documentation/dev-tools/kasan.rst
-+++ b/Documentation/dev-tools/kasan.rst
-@@ -281,3 +281,73 @@ unmapped. This will require changes in arch-specific code.
- 
- This allows ``VMAP_STACK`` support on x86, and can simplify support of
- architectures that do not have a fixed module region.
-+
-+CONFIG_KASAN_KUNIT_TEST & CONFIG_TEST_KASAN_MODULE
-+--------------------------------------------------
-+
-+``CONFIG_KASAN_KUNIT_TEST`` utilizes the KUnit Test Framework for testing.
-+This means each test focuses on a small unit of functionality and
-+there are a few ways these tests can be run.
-+
-+Each test will print the KASAN report if an error is detected and then
-+print the number of the test and the status of the test:
-+
-+pass::
-+
-+        ok 28 - kmalloc_double_kzfree
-+or, if kmalloc failed::
-+
-+        # kmalloc_large_oob_right: ASSERTION FAILED at lib/test_kasan.c:163
-+        Expected ptr is not null, but is
-+        not ok 4 - kmalloc_large_oob_right
-+or, if a KASAN report was expected, but not found::
-+
-+        # kmalloc_double_kzfree: EXPECTATION FAILED at lib/test_kasan.c:629
-+        Expected kasan_data->report_expected == kasan_data->report_found, but
-+        kasan_data->report_expected == 1
-+        kasan_data->report_found == 0
-+        not ok 28 - kmalloc_double_kzfree
-+
-+All test statuses are tracked as they run and an overall status will
-+be printed at the end::
-+
-+        ok 1 - kasan_kunit_test
-+
-+or::
-+
-+        not ok 1 - kasan_kunit_test
-+
-+(1) Loadable Module
-+~~~~~~~~~~~~~~~~~~~~
-+
-+With ``CONFIG_KUNIT`` enabled, ``CONFIG_KASAN_KUNIT_TEST`` can be built as
-+a loadable module and run on any architecture that supports KASAN
-+using something like insmod or modprobe.
-+
-+(2) Built-In
-+~~~~~~~~~~~~~
-+
-+With ``CONFIG_KUNIT`` built-in, ``CONFIG_KASAN_KUNIT_TEST`` can be built-in
-+on any architecure that supports KASAN. These and any other KUnit
-+tests enabled will run and print the results at boot as a late-init
-+call.
-+
-+(3) Using kunit_tool
-+~~~~~~~~~~~~~~~~~~~~~
-+
-+With ``CONFIG_KUNIT`` and ``CONFIG_KASAN_KUNIT_TEST`` built-in, we can also
-+use kunit_tool to see the results of these along with other KUnit
-+tests in a more readable way. This will not print the KASAN reports
-+of tests that passed. Use `KUnit documentation <https://www.kernel.org/doc/html/latest/dev-tools/kunit/index.html>`_ for more up-to-date
-+information on kunit_tool.
-+
-+.. _KUnit: https://www.kernel.org/doc/html/latest/dev-tools/kunit/index.html
-+
-+``CONFIG_TEST_KASAN_MODULE`` is a set of KASAN tests that could not be
-+converted to KUnit. These tests can be run only as a module with
-+``CONFIG_TEST_KASAN_MODULE`` built as a loadable module and
-+``CONFIG_KASAN`` built-in. The type of error expected and the
-+function being run is printed before the expression expected to give
-+an error. Then the error is printed, if found, and that test
-+should be interpretted to pass only if the error was the one expected
-+by the test.
--- 
-2.28.0.163.g6104cc2f0b6-goog
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
 
+> ---
+>  fs/ext4/mballoc.c | 27 +++++++++++++--------------
+>  1 file changed, 13 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+> index c0a331e..4f21f34 100644
+> --- a/fs/ext4/mballoc.c
+> +++ b/fs/ext4/mballoc.c
+> @@ -4564,20 +4564,19 @@ static int ext4_mb_release_context(struct =
+ext4_allocation_context *ac)
+>              pa->pa_free -=3D ac->ac_b_ex.fe_len;
+>              pa->pa_len -=3D ac->ac_b_ex.fe_len;
+>              spin_unlock(&pa->pa_lock);
+> -        }
+> -    }
+> -    if (pa) {
+> -        /*
+> -         * We want to add the pa to the right bucket.
+> -         * Remove it from the list and while adding
+> -         * make sure the list to which we are adding
+> -         * doesn't grow big.
+> -         */
+> -        if ((pa->pa_type =3D=3D MB_GROUP_PA) && likely(pa->pa_free)) =
+{
+> -            spin_lock(pa->pa_obj_lock);
+> -            list_del_rcu(&pa->pa_inode_list);
+> -            spin_unlock(pa->pa_obj_lock);
+> -            ext4_mb_add_n_trim(ac);
+> +
+> +            /*
+> +             * We want to add the pa to the right bucket.
+> +             * Remove it from the list and while adding
+> +             * make sure the list to which we are adding
+> +             * doesn't grow big.
+> +             */
+> +            if (likely(pa->pa_free)) {
+> +                spin_lock(pa->pa_obj_lock);
+> +                list_del_rcu(&pa->pa_inode_list);
+> +                spin_unlock(pa->pa_obj_lock);
+> +                ext4_mb_add_n_trim(ac);
+> +            }
+>          }
+>          ext4_mb_put_pa(ac, ac->ac_sb, pa);
+>      }
+>=20
+> --
+> 1.8.3.1
+>=20
+
+
+Cheers, Andreas
+
+
+
+
+
+
+--Apple-Mail=_269E6BAA-58C5-4E7B-81BA-23B491D68C63
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl8qOOwACgkQcqXauRfM
+H+CgTxAAv9r9vdGfmUbKAhpr1+mI3LshZikFcWLsWfuvsELuHPPL8a4CqETR5cHN
+waHDmp2pnvRMhBuVrsXJoLUcqT1FdxAp0TVe+h3lbQuGfM+uOtgP2fcKIz4tyyV+
+4o4JSTEPn71qAsMhNK2PWod4O0rDMQbTb7bL0fl4BcMJMpXGuAdz8MbdFHlZph8I
+oRgqEg3spuYSMDGzRP7K601e3yqUkvAF+POADReWtYletpTUrpphXxTFxX7+yN6F
+Ad/39sEnMBtgbFKuv1C018rVszLZPMYKcZXqxC7EILqwIfSpXU3iTjvBY+a3tmhu
+pWDtufpKL0/p1FR+d+Z0zELHA3YOOr883ruLasXchx9u7N2BJMZ98qKoOVnQlRo5
+ozR2PNEEGdmzsKz3x0BMyX1MNNA1BFaS9S35kn6ny1beH0eitPyGV1vALg8PaUT7
+IbJlWQrikT5o74aFUwaWTGDBmYpOLQcAwYIjaZWmYBcywRKRq5Bqyo+/iLva80J9
+mwSZ3ynww4cEmFp51EcK/j0BsPwVmOX1kFNpP2Awre2skgjZ4hule45u0yXmLM8R
+bRL/4dB6Ps+ettYaR1x7/ljXyQQyECifiD8RCvZ8+0/h8DUeeUE85lsnKs0GW66i
+NI8hQgcZnLSsVgfTJE1Upt4kdJwvCOiFVvQ1urRRYcp/nc9L0as=
+=/uyT
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_269E6BAA-58C5-4E7B-81BA-23B491D68C63--
