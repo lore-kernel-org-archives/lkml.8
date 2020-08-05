@@ -2,121 +2,144 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C05C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798AAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C239D2076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 481AC2076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:57:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wWnLh0O7"
+	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="DAhkOvAY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729203AbgHET5c (ORCPT
+        id S1728345AbgHET5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:57:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45420 "EHLO
+        Wed, 5 Aug 2020 15:57:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727911AbgHEQoB (ORCPT
+        with ESMTP id S1727976AbgHEQnt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:44:01 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00821C0086D1
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 07:17:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=0+DiSUHCj5Hv8PjpoaXrRSduwxZW9oCImFLTKQ6/8Jw=; b=wWnLh0O7rFXKxWGqPJd5SoHYuD
-        2vMXg3u9S5hoo3qfSQrgXEZvq1mGtp1Nen6Y8RHkIJvQRWGtgnV+hT7YVirF4gy6SDhQrXThQRGQn
-        HbGmvddK515aoc2nF5VIzL4fX+d9OS6+mbHwbQOnp74Uwa8U2HmGkspr6ZwmmLR3Ao0lJaDfdLbds
-        ACFvkkz/L4y72ld6OpBNV4MAez/SKW8TzSgm9B6tQ2p6M+IHFy8/tymqy3+z8W/OrYU72F9k9RIXA
-        +R1/cXA/1UdqHfIu1Ve9f6ArFsrtq3CjAyie7E84H44Yng6OtkE3ejISNitOdjY3FQ1wraPd66up6
-        BbYJtHNg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k3KEB-0006vw-3r; Wed, 05 Aug 2020 14:17:11 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2FE9D301A66;
-        Wed,  5 Aug 2020 16:17:10 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0A7E022B957D0; Wed,  5 Aug 2020 16:17:10 +0200 (CEST)
-Date:   Wed, 5 Aug 2020 16:17:09 +0200
-From:   peterz@infradead.org
-To:     Marco Elver <elver@google.com>
-Cc:     bp@alien8.de, dave.hansen@linux.intel.com, fenghua.yu@intel.com,
-        hpa@zytor.com, linux-kernel@vger.kernel.org, mingo@redhat.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        tony.luck@intel.com, x86@kernel.org, yu-cheng.yu@intel.com,
-        jgross@suse.com, sdeep@vmware.com,
-        virtualization@lists.linux-foundation.org,
-        kasan-dev@googlegroups.com,
-        syzbot <syzbot+8db9e1ecde74e590a657@syzkaller.appspotmail.com>
-Subject: Re: [PATCH] x86/paravirt: Add missing noinstr to arch_local*()
- helpers
-Message-ID: <20200805141709.GD35926@hirez.programming.kicks-ass.net>
-References: <0000000000007d3b2d05ac1c303e@google.com>
- <20200805132629.GA87338@elver.google.com>
- <20200805134232.GR2674@hirez.programming.kicks-ass.net>
- <20200805135940.GA156343@elver.google.com>
- <20200805141237.GS2674@hirez.programming.kicks-ass.net>
+        Wed, 5 Aug 2020 12:43:49 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 057D8C0A8894
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 06:55:33 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id p16so26623106ile.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:55:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ieee.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=T0iHC5DzypW6poy3NDVtNkEOvm1za2UqY6n/ov5xw0A=;
+        b=DAhkOvAYaZ9UtoECfWC2gAqYzdQdZu4/OTZhHotTaCMraihBeTETAb2o+tdVB+R9c/
+         fgruEjKoM8VG+YdsLo4GUZF8VaCggzTi5h3uToTV2f2Sv1hwOpZ5HvtTKuXa2Y1A6q3O
+         zX5fNDo98uB0Sok2zX9/YQGJMJ6y+B1u0vCnk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=T0iHC5DzypW6poy3NDVtNkEOvm1za2UqY6n/ov5xw0A=;
+        b=Za+jP8TRd/y0YjnZe3RtdSUzgdbs16df2TFiS5X8njCCuxXR/VcLGsigxfqXCHYqCg
+         LxMpQDhPzEd81nj+e7JkTkWwEwclPVOzVhnanT6fcF27/HbebcmAEHWhssVszHxRHpTo
+         CAciMwgcQXCBLI1+Qtk7Gys+drDDkz0Q7ysTvqSWB7bjY18Ttz8Ge8Hh6cKtqr4ipo7V
+         4CCvqIwzQlSgfFFAwUzNTJFcvag1e9nkmSmlfk1i72O691ebfpG97BDKVEEN/updhlDm
+         SxnjoSDFqfUbwydUWMNfLpkFx9IdVV8Fb/HTe96jY2AlUOzzVOfVGiJmdXlYM0IP1nrB
+         gRUA==
+X-Gm-Message-State: AOAM533L/S4dvQ7qh+X0k/Omf9nLBSP34labvHyVaH2X1YG2KTjFkOMd
+        5mGdBSV62XpkRRWrMOv7SaQmXQ==
+X-Google-Smtp-Source: ABdhPJygRlU9l3OctXlmAVj+p1MKYQ+VT9ZvU9QPRbxWDqUzC6q+bEae4dy82QDhDGDE28iGtnJLqA==
+X-Received: by 2002:a92:c14d:: with SMTP id b13mr3548606ilh.269.1596635733090;
+        Wed, 05 Aug 2020 06:55:33 -0700 (PDT)
+Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id c2sm1073796iow.6.2020.08.05.06.55.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Aug 2020 06:55:32 -0700 (PDT)
+Subject: Re: [PATCH] soc: qmi: allow user to set handle wq to hiprio
+To:     =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     elder@kernel.org, davem@davemloft.net, kuba@kernel.org,
+        kvalo@codeaurora.org, agross@kernel.org, ohad@wizery.com,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, alsa-devel@alsa-project.org,
+        ath11k@lists.infradead.org, netdev@vger.kernel.org,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        srinivas.kandagatla@linaro.org, sibis@codeaurora.org
+References: <ADUAnwD8DVByMMSsrG-r3Kri.3.1596374087585.Hmail.wenhu.wang@vivo.com>
+From:   Alex Elder <elder@ieee.org>
+Message-ID: <5c6123f2-1a65-8615-9d5d-3bb1d25818b2@ieee.org>
+Date:   Wed, 5 Aug 2020 08:55:30 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200805141237.GS2674@hirez.programming.kicks-ass.net>
+In-Reply-To: <ADUAnwD8DVByMMSsrG-r3Kri.3.1596374087585.Hmail.wenhu.wang@vivo.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 04:12:37PM +0200, peterz@infradead.org wrote:
-> On Wed, Aug 05, 2020 at 03:59:40PM +0200, Marco Elver wrote:
-> > On Wed, Aug 05, 2020 at 03:42PM +0200, peterz@infradead.org wrote:
+On 8/2/20 8:14 AM, 王文虎 wrote:
 > 
-> > > Shouldn't we __always_inline those? They're going to be really small.
-> > 
-> > I can send a v2, and you can choose. For reference, though:
-> > 
-> > 	ffffffff86271ee0 <arch_local_save_flags>:
-> > 	ffffffff86271ee0:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
-> > 	ffffffff86271ee5:       48 83 3d 43 87 e4 01    cmpq   $0x0,0x1e48743(%rip)        # ffffffff880ba630 <pv_ops+0x120>
-> > 	ffffffff86271eec:       00
-> > 	ffffffff86271eed:       74 0d                   je     ffffffff86271efc <arch_local_save_flags+0x1c>
-> > 	ffffffff86271eef:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
-> > 	ffffffff86271ef4:       ff 14 25 30 a6 0b 88    callq  *0xffffffff880ba630
-> > 	ffffffff86271efb:       c3                      retq
-> > 	ffffffff86271efc:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
-> > 	ffffffff86271f01:       0f 0b                   ud2
+>>> Currently the qmi_handle is initialized single threaded and strictly
+>>> ordered with the active set to 1. This is pretty simple and safe but
+>>> sometimes ineffency. So it is better to allow user to decide whether
+>>> a high priority workqueue should be used.
+>>
+>> Can you please describe a scenario where this is needed/desired and
+>> perhaps also comment on why this is not always desired?
+>>
 > 
-> > 	ffffffff86271a90 <arch_local_irq_restore>:
-> > 	ffffffff86271a90:       53                      push   %rbx
-> > 	ffffffff86271a91:       48 89 fb                mov    %rdi,%rbx
-> > 	ffffffff86271a94:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
-> > 	ffffffff86271a99:       48 83 3d 97 8b e4 01    cmpq   $0x0,0x1e48b97(%rip)        # ffffffff880ba638 <pv_ops+0x128>
-> > 	ffffffff86271aa0:       00
-> > 	ffffffff86271aa1:       74 11                   je     ffffffff86271ab4 <arch_local_irq_restore+0x24>
-> > 	ffffffff86271aa3:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
-> > 	ffffffff86271aa8:       48 89 df                mov    %rbx,%rdi
-> > 	ffffffff86271aab:       ff 14 25 38 a6 0b 88    callq  *0xffffffff880ba638
-> > 	ffffffff86271ab2:       5b                      pop    %rbx
-> > 	ffffffff86271ab3:       c3                      retq
-> > 	ffffffff86271ab4:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
-> > 	ffffffff86271ab9:       0f 0b                   ud2
+> Well, one scenario is that when the AP wants to check the status of the
+> subsystems and the whole QMI data path. It first sends out an indication
+> which asks the subsystems to report their status. After the subsystems send
+> responses to the AP, the responses then are queued on the workqueue of
+> the QMI handler. Actually the AP is configured to do the check in a specific
+> interval regularly. And it check the report counts within a specific delay after
+> it sends out the related indication. When the AP has been under a heavy
+> load for long, the reports are queue their without CPU resource to update
+> the report counts within the specific delay. As a result, the thread that checks
+> the report counts takes it misleadingly that the QMI data path or the subsystems
+> are crashed.
 > 
+> The patch can really resolve the problem mentioned abolve.
+
+Is it your intention to submit code that actually does what you describe
+above?  If so, then (as David said) you should propose this change at
+the time it will be needed--which is at the time you send that new
+code out for review.
+
+Even in that case, I don't believe using a high priority workqueue
+would guarantee the improved behavior you think this would provide.
+
+In case it wasn't clear already, this change won't be accepted
+at this time (despite your explanation above).
+
+						-Alex
+
 > 
-> Blergh, that's abysmall. In part I suspect because you have
-> CONFIG_PARAVIRT_DEBUG, let me try and untangle that PV macro maze.
+> For narmal situations, it is enough to just use normal priority QMI workqueue.
+> 
+>> Regards,
+>> Bjorn
+>>
+>>>
+>>> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
+>>> ---
+>>>  drivers/net/ipa/ipa_qmi.c             | 4 ++--
+>>>  drivers/net/wireless/ath/ath10k/qmi.c | 2 +-
+>>>  drivers/net/wireless/ath/ath11k/qmi.c | 2 +-
+>>>  drivers/remoteproc/qcom_sysmon.c      | 2 +-
+>>>  drivers/slimbus/qcom-ngd-ctrl.c       | 4 ++--
+>>>  drivers/soc/qcom/pdr_interface.c      | 4 ++--
+>>>  drivers/soc/qcom/qmi_interface.c      | 9 +++++++--
+>>>  include/linux/soc/qcom/qmi.h          | 3 ++-
+>>>  samples/qmi/qmi_sample_client.c       | 4 ++--
+>>>  9 files changed, 20 insertions(+), 14 deletions(-)
+> 
 
-Yeah, look here:
-
-0000 0000000000462149 <arch_local_save_flags>:
-0000   462149:  ff 14 25 00 00 00 00    callq  *0x0
-0003                    46214c: R_X86_64_32S    pv_ops+0x120
-0007   462150:  c3                      retq
-
-
-That's exactly what I was expecting.
