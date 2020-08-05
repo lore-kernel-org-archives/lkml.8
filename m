@@ -2,100 +2,144 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02073C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3306C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4FBB2084D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:14:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596654847;
-	bh=GS+/d4Ux7f5KySR64sVX9NErnoZYC3TJhkfC+uca/OI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oJ8blGdyb5yKhOx0lVVRfwPWdeEaDIIISpB/QVkOGaSLXUwQ904mA7882sLiDU0VH
-	 yFWKPP6N5X620Esvn1WSldjxoeFaZegRkpFw0RQhDPJuecAsIurTNznSP7eOGFa09N
-	 s08YIibFgsdACqWtx4ej6pzzkZk589+BlO4lE5mM=
+	by mail.kernel.org (Postfix) with ESMTP id CE16A20842
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:14:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZfjAliDR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728710AbgHESIy (ORCPT
+        id S1728694AbgHETOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 14:08:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59148 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729070AbgHESFl (ORCPT
+        Wed, 5 Aug 2020 15:14:14 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:57818 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729127AbgHESIN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 14:05:41 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A086FC061756
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 11:05:27 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id v9so14261348ljk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 11:05:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SJLLgIEjQbsi/SjTfRAATLA+9JTrjXUP0jdNW6WmMgI=;
-        b=eaY7NtzotzWV/MnsZjfDao9T2g2eCy+3wm499kvwu1wBI+Vd7me0Jx1vxfPwpDDz2e
-         +1s5SmJEh1SEzTbjd/vRaoC7ncNiNL4Lkyg2YumYQ4UA7w+AEcfjLokkCNp9gUuGZSuL
-         cWA3tsPtGDQzsow/KN0TSz2gkofo5VDhkb9Kk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SJLLgIEjQbsi/SjTfRAATLA+9JTrjXUP0jdNW6WmMgI=;
-        b=l36RRZ0Tr7noRgEjxe7zP3GJilceKenoNL9FFecDqV27oYrAkXryk7Bhp9zFGSrbrF
-         mR56NdULvcqdvj4pkVcYPSnCv3dBvYErfpJjGuQeG2ovPVXsB0Lrbkg+ozF/sjIGZZR+
-         f8tOFsbfbZXU+eky9iItPNHi7rsv+L7tLi0XWE4jxtIqBBInFXjcBnPn7Xu1k989ighU
-         TlGWsf3aIZyhf7/YlvTopKER3admGbeHIKZO/AJpdapnnAS2bWphXd6CjdeuPNlzgco5
-         ulGEhh4cT+5OEtaAs85RXrMZbOWhgO+FRbDDTdZQEN0eL24ovYYAKcRZgnnIoSkWsmiw
-         SZbg==
-X-Gm-Message-State: AOAM5334DzwbpWEEuk0QMuFbluUIA5nJyjQwV9IwWsH8GrH4xr49OOKp
-        L7cA9zzv9u0U8mr2phMTVW8+CoZj8dE=
-X-Google-Smtp-Source: ABdhPJxDv2YJIThf/IFG7b54Dzk+Px82xuzn+nZs25PjChZwmR4ijviRC86YGzQEVVZb7lcJXn3X3g==
-X-Received: by 2002:a2e:96d9:: with SMTP id d25mr2162879ljj.408.1596650725832;
-        Wed, 05 Aug 2020 11:05:25 -0700 (PDT)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id t10sm1189266ljg.60.2020.08.05.11.05.24
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2020 11:05:24 -0700 (PDT)
-Received: by mail-lj1-f173.google.com with SMTP id v9so14261243ljk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 11:05:24 -0700 (PDT)
-X-Received: by 2002:a2e:9252:: with SMTP id v18mr1872739ljg.70.1596650724308;
- Wed, 05 Aug 2020 11:05:24 -0700 (PDT)
+        Wed, 5 Aug 2020 14:08:13 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 3F24120B4908;
+        Wed,  5 Aug 2020 11:08:12 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3F24120B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1596650892;
+        bh=nmsxVvy9uSl1xEN+jjXmNcxFl8xyf7PQlgsr4N4w3tY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ZfjAliDROLZOk0o0RA2eB/39qWP4JJcgS24/LRkShVDpP5hiCcHhbZYGr2WdptVHW
+         sUMFKc/XA5VQE8yTMpCuBMtovTVgF8rjaK72HzsCGnWOyUOIM9pVlXWfIWPPwXUzMX
+         SfNkxA/7bH/HwehmjdTi6UPbBGN/EM1LGhBgvrao=
+Subject: Re: [PATCH v6 0/4] LSM: Measure security module data
+To:     Casey Schaufler <casey@schaufler-ca.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Tyler Hicks <tyhicks@linux.microsoft.com>
+Cc:     stephen.smalley.work@gmail.com, sashal@kernel.org,
+        jmorris@namei.org, linux-integrity@vger.kernel.org,
+        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200805004331.20652-1-nramas@linux.microsoft.com>
+ <f3971f35-309d-c3e5-9126-69add7ad4c11@schaufler-ca.com>
+ <50587a3e-bcb5-c68e-c16c-41baf68b4d4a@linux.microsoft.com>
+ <c7c168f2-e30b-d2c5-abcb-1b6919197474@schaufler-ca.com>
+ <20200805154504.GB4365@sequoia>
+ <69810007161e689ac817099fb1c6df21962963e4.camel@linux.ibm.com>
+ <9ad079ff-1bd4-1302-e6fb-25a7396ef12f@linux.microsoft.com>
+ <ecc97f59-c2cc-0b23-6199-925ba0d6358b@schaufler-ca.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <50f00ace-8d46-01c2-bf0f-d5484aafd95c@linux.microsoft.com>
+Date:   Wed, 5 Aug 2020 11:08:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200805090653.GI23458@shao2-debian>
-In-Reply-To: <20200805090653.GI23458@shao2-debian>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 5 Aug 2020 11:05:08 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiuF-0JSmiDe-A--+Z4UbEWQxQ40ftm88aKwSi0FLvM+g@mail.gmail.com>
-Message-ID: <CAHk-=wiuF-0JSmiDe-A--+Z4UbEWQxQ40ftm88aKwSi0FLvM+g@mail.gmail.com>
-Subject: Re: [mm] 2a9127fcf2: vm-scalability.throughput 130.0% improvement
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>, Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ecc97f59-c2cc-0b23-6199-925ba0d6358b@schaufler-ca.com>
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-W00t!
+On 8/5/20 10:57 AM, Casey Schaufler wrote:
+> On 8/5/2020 10:25 AM, Lakshmi Ramasubramanian wrote:
+>> On 8/5/20 10:03 AM, Mimi Zohar wrote:
+>>> On Wed, 2020-08-05 at 10:45 -0500, Tyler Hicks wrote:
+>>>
+>>>> In addition to SELINUX_STATE and SELINUX_POLICY, we should also consider
+>>>> the proposed LSM_STATE and LSM_POLICY func values but require an "lsm"
+>>>> rule conditional.
+>>>>
+>>>> So the current proposed rules:
+>>>>
+>>>> ? measure func=LSM_STATE
+>>>> ? measure func=LSM_POLICY
+>>>>
+>>>> Would become:
+>>>>
+>>>> ? measure func=LSM_STATE lsm=selinux
+>>>> ? measure func=LSM_POLICY lsm=selinux
+>>>>
+>>>> The following rules would be rejected:
+>>>>
+>>>> ? measure func=LSM_STATE
+>>>> ? measure func=LSM_POLICY
+>>>> ? measure func=LSM_STATE lsm=apparmor
+>>>> ? measure func=LSM_POLICY lsm=smack
+>>>
+>>> Kees is cleaning up the firmware code which differentiated between how
+>>> firmware was loaded.?? There will be a single firmware enumeration.
+>>>
+>>> Similarly, the new IMA hook to measure critical state may be placed in
+>>> multiple places.? Is there really a need from a policy perspective for
+>>> differentiating the source of the critical state being measurind??? The
+>>> data being measured should include some identifying information.
+>>
+>> Yes Mimi - SELinux is including the identifying information in the "event name" field. Please see a sample measurement of STATE and POLICY for SELinux below:
+>>
+>> 10 e32e...5ac3 ima-buf sha256:86e8...4594 selinux-state-1595389364:287899386 696e697469616c697a65643d313b656e61626c65643d313b656e666f7263696e673d303b636865636b72657170726f743d313b6e6574776f726b5f706565725f636f6e74726f6c733d313b6f70656e5f7065726d733d313b657874656e6465645f736f636b65745f636c6173733d313b616c776179735f636865636b5f6e6574776f726b3d303b6367726f75705f7365636c6162656c3d313b6e6e705f6e6f737569645f7472616e736974696f6e3d313b67656e66735f7365636c6162656c5f73796d6c696e6b733d303
+>>
+>> 10 f4a7...9408 ima-ng sha256:8d1d...1834 selinux-policy-hash-1595389353:863934271
+>>
+>>>
+>>> I think moving away from the idea that measuring "critical" data should
+>>> be limited to LSMs, will clarify this.
+>>>
+>>
+>> Are you suggesting that instead of calling the hooks LSM_STATE and LSM_POLICY, we should keep it more generic so that it can be utilized by any subsystem to measure their "critical data"?
+> 
+> Policy, state, history or whim, it should be up to the security module
+> to determine what data it cares about, and how it should be measured.
+> Smack does not keep its policy in a single blob of data, it uses lists
+> which can be modified at will. Your definition of the behavior for
+> LSM_POLICY wouldn't work for Smack. That doesn't mean that there isn't
+> a viable way to measure the Smack policy, it just means that IMA isn't
+> the place for it. If SELinux wants its data measured, SELinux should be
+> providing the mechanism to do it.
+> 
+> I guess that I'm agreeing with you in part. If you want a generic measurement
+> of "critical data", you don't need to assign a type to it, you have the
+> caller (a security module, a device driver or whatever) identify itself and
+> how it is going to deal with the data. That's very different from what you've
+> done to date.
 
-Usually I think these kinds of big changes are likely outright bugs,
-but this time I'll take it, because that improvement was the point and
-aim of the change even if I didn't have numbers to back up my BS.
+Agree.
 
-              Linus
+Like Stephen had stated earlier, the reason we kept separate hooks 
+(STATE and POLICY) is because the data for state is usually small and 
+therefore we measure the entire data. Whereas, policy data is usually 
+quite large (a few MB) and hence we measure a hash of the policy.
 
-On Wed, Aug 5, 2020 at 2:07 AM kernel test robot <rong.a.chen@intel.com> wrote:
->
-> Greeting,
->
-> FYI, we noticed a 130.0% improvement of vm-scalability.throughput due to commit:
->
-> commit: 2a9127fcf2296674d58024f83981f40b128fffea ("mm: rewrite wait_on_page_bit_common() logic")
+If change to a generic measurement of "critical data", at the least IMA 
+should provide a way to measure "data" and "hash(data)".
+
+And, with the caller providing the identifying information, there would 
+be no need to call it "LSM_STATE" or "SELINUX_STATE" or such.
+
+  -lakshmi
+
+
