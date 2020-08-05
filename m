@@ -2,177 +2,93 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 526CBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 105F02177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09BC422CA0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:55:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="MxfExJLb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eB7I0ztJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbgHEGzU (ORCPT
+        id S1728184AbgHEGz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 02:55:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39632 "EHLO
+        Wed, 5 Aug 2020 02:55:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727019AbgHEGzR (ORCPT
+        with ESMTP id S1725920AbgHEGz1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 02:55:17 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC907C061756
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 23:55:15 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id v12so16096462ljc.10
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 23:55:15 -0700 (PDT)
+        Wed, 5 Aug 2020 02:55:27 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DF01C06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 23:55:27 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id l60so3960589pjb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 23:55:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JzOtpPJGzpk27qLUM9ywxcX4QZa0HVAQQ/bWzHU7nKE=;
-        b=MxfExJLbBqi8zM89C2o7I6zk5aDRHW8HQoOMKQfJ5QxzzMpYOLu5dKMtpLpcYgBwx2
-         GgbFpMOP/udHpuKFTPxNVEbxrRizO5xo/xPzd93DWy5oJ4UpJplUDTIs/d5wjgJdnxz2
-         DrL8BNs8MUBCQr7RhOx20UqGMf1W1UuC6zxT0=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SGZKUpYTKCkpMjR2/gp6H6g/7u9i9ZZGE+6qybYiQ1Y=;
+        b=eB7I0ztJTU4WSthYXqaqoUu5nSugYMxc2h5yrlbERDylgNa5sZlC76hDkZJW/uGdnY
+         ryKSBxW9gyHVLeTlXc6NsDiakiPlYlrOyMvJ/xlp1jS23dc0hXzSpa4Cl8FGA2UIilYA
+         xGMU+MW5UDmVHJoqO/4M1gy3YcmzlczR8Qs7pwBwCQYHulXFSBfKNUF6DAjG7tHwurKS
+         7hWQMmdU4QDHD8vWyntNOXjcA3mFqaj6QqyYjBEkYf1TZi4lLIy+F25pU0WA1Rj6B2y7
+         ueSqb9UzN5PuY4e2y/IURP+J0HzudC0TfY1mYMtZYIEsE+gjxsAiOLOeySmE5XCqXHBz
+         MfGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JzOtpPJGzpk27qLUM9ywxcX4QZa0HVAQQ/bWzHU7nKE=;
-        b=UKrSlVkJTfPpJ/ZhFI3lkkQITzkpDS7GNJGbg56FC7P/c7W1kRIBmExWv1HMYr22Gp
-         /+xM68Jno5henl1BiT7SRvXhr8UwtZiN7BsmLye+cP1jUTtxk+I+ti+/1w43+IXqChX2
-         HMBXjkV4pU94LalFVsr1ddNAqLkVpANpC5mVh8LYp48JWu3BlKox3t7mcX23rLhDXTN2
-         3xM8HJC08bVU9+RMif/KFO0D6XKQjueDv9IiUK56A1JIoUy88CrhSgc5JJV9rWrIk7v7
-         /W/MqKJBPZuningIglpxz9vk+6+eR3V+WEzRdGKAc6QxUI2YNcE4nWV3uILXzlc4mY5N
-         dUew==
-X-Gm-Message-State: AOAM533kCLPcEIal7AUy6sjlQKmJIKeEQRc+eYinU3yfTbfmblghBCiZ
-        3ng6QBQv6I7kacYm3qNP53OWgg5tyR2Aos3epqPUCQ==
-X-Google-Smtp-Source: ABdhPJyP3hxVOtUiojqCuVUAe79LusZ/8z9+u42jOdj1jGaS6vCskKQ2Rd/Yv0RqPuFHfQCDy3QFjLq7RULdaXOHslQ=
-X-Received: by 2002:a2e:2f02:: with SMTP id v2mr759796ljv.391.1596610513852;
- Tue, 04 Aug 2020 23:55:13 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SGZKUpYTKCkpMjR2/gp6H6g/7u9i9ZZGE+6qybYiQ1Y=;
+        b=QSFMR4+nG4LtW0F8NDTMFeQTqauvu74OhoJsyzF9RdWuDU9wyRqZQmjsQFhdfhY/36
+         y4z6tYMqG2M+eRkCSZlxzMVsv4cQ17RBE1NneE/TzY/d5C4m84naxVxFZ0FtR+PRw7Iz
+         oD6tBG5LOo0Rk0UQN7ij+h+pZYVu0eAzeO3JGrNyoRedqvNpiqDqDSvH6zGCMvRusmdn
+         X7Ary1Cb9HapJCpr9U6BRKIFWU1deCl6ZVUBm+Hh3PgzFmBshQnE3NEzkFLpwnxDVRLE
+         s46HX3cb5ar/vhx1cN1qn+zNBj/RC5c4W1/b7nqnrlBWIEeuMj7GKOE8ABdFUHM1nozO
+         b9jg==
+X-Gm-Message-State: AOAM533dCsR9tKKLW0xGlRa4AZNkNGl961Nq8+/LlA26cWKy3Fu+UNoi
+        HgBb/K7eVPp59s3ltfaGKEA=
+X-Google-Smtp-Source: ABdhPJx4V/D/s9pzIYwlx+8snhleVdhwnfP6tP4uC6/N2c5q73hqwxsDv7A3bUhT6kOfk3YclbwQTg==
+X-Received: by 2002:a17:90a:c58b:: with SMTP id l11mr1847841pjt.195.1596610526653;
+        Tue, 04 Aug 2020 23:55:26 -0700 (PDT)
+Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
+        by smtp.gmail.com with ESMTPSA id h5sm1835143pfq.146.2020.08.04.23.55.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 04 Aug 2020 23:55:26 -0700 (PDT)
+Date:   Tue, 4 Aug 2020 23:55:12 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] ASoC: fsl_sai: Replace synchronous check with
+ fsl_sai_dir_is_synced
+Message-ID: <20200805065511.GA1131@Asurada-Nvidia>
+References: <20200805063413.4610-1-shengjiu.wang@nxp.com>
+ <20200805063413.4610-4-shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-References: <1595847753-2234-1-git-send-email-moshe@mellanox.com>
- <CAACQVJqNXh0B=oe5W7psiMGc6LzNPujNe2sypWi_SvH5sY=F3Q@mail.gmail.com>
- <a3e20b44-9399-93c1-210f-e3c1172bf60d@intel.com> <CAACQVJo+bAr_k=LjgdTKbOxFEkpbYAsaWbkSDjUepgO7_XQfNA@mail.gmail.com>
- <7a9c315f-fa29-7bd5-31be-3748b8841b29@mellanox.com> <CAACQVJpZZPfiWszZ36E0Awuo2Ad1w5=4C1rgG=d4qPiWVP609Q@mail.gmail.com>
- <7fd63d16-f9fa-9d55-0b30-fe190d0fb1cb@mellanox.com> <CAACQVJqXa-8v4TU+M1DWA2Tfv3ayrAobiH9Fajd=5MCgsfAA6A@mail.gmail.com>
- <da0e4997-73d7-9f3c-d877-f2d3bcc718b9@mellanox.com>
-In-Reply-To: <da0e4997-73d7-9f3c-d877-f2d3bcc718b9@mellanox.com>
-From:   Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Date:   Wed, 5 Aug 2020 12:25:02 +0530
-Message-ID: <CAACQVJofS2B3y40H=QxBzNaccsa+gNnSqfmoATyML_S686ykfw@mail.gmail.com>
-Subject: Re: [PATCH net-next RFC 00/13] Add devlink reload level option
-To:     Moshe Shemesh <moshe@mellanox.com>
-Cc:     Jacob Keller <jacob.e.keller@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Netdev <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200805063413.4610-4-shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 12:02 PM Moshe Shemesh <moshe@mellanox.com> wrote:
->
->
-> On 8/4/2020 1:13 PM, Vasundhara Volam wrote:
-> > On Mon, Aug 3, 2020 at 7:23 PM Moshe Shemesh <moshe@mellanox.com> wrote:
-> >>
-> >> On 8/3/2020 3:47 PM, Vasundhara Volam wrote:
-> >>> On Mon, Aug 3, 2020 at 5:47 PM Moshe Shemesh <moshe@mellanox.com> wrote:
-> >>>> On 8/3/2020 1:24 PM, Vasundhara Volam wrote:
-> >>>>> On Tue, Jul 28, 2020 at 10:13 PM Jacob Keller <jacob.e.keller@intel.com> wrote:
-> >>>>>> On 7/27/2020 10:25 PM, Vasundhara Volam wrote:
-> >>>>>>> On Mon, Jul 27, 2020 at 4:36 PM Moshe Shemesh <moshe@mellanox.com> wrote:
-> >>>>>>>> Introduce new option on devlink reload API to enable the user to select the
-> >>>>>>>> reload level required. Complete support for all levels in mlx5.
-> >>>>>>>> The following reload levels are supported:
-> >>>>>>>>      driver: Driver entities re-instantiation only.
-> >>>>>>>>      fw_reset: Firmware reset and driver entities re-instantiation.
-> >>>>>>> The Name is a little confusing. I think it should be renamed to
-> >>>>>>> fw_live_reset (in which both firmware and driver entities are
-> >>>>>>> re-instantiated).  For only fw_reset, the driver should not undergo
-> >>>>>>> reset (it requires a driver reload for firmware to undergo reset).
-> >>>>>>>
-> >>>>>> So, I think the differentiation here is that "live_patch" doesn't reset
-> >>>>>> anything.
-> >>>>> This seems similar to flashing the firmware and does not reset anything.
-> >>>> The live patch is activating fw change without reset.
-> >>>>
-> >>>> It is not suitable for any fw change but fw gaps which don't require reset.
-> >>>>
-> >>>> I can query the fw to check if the pending image change is suitable or
-> >>>> require fw reset.
-> >>> Okay.
-> >>>>>>>>      fw_live_patch: Firmware live patching only.
-> >>>>>>> This level is not clear. Is this similar to flashing??
-> >>>>>>>
-> >>>>>>> Also I have a basic query. The reload command is split into
-> >>>>>>> reload_up/reload_down handlers (Please correct me if this behaviour is
-> >>>>>>> changed with this patchset). What if the vendor specific driver does
-> >>>>>>> not support up/down and needs only a single handler to fire a firmware
-> >>>>>>> reset or firmware live reset command?
-> >>>>>> In the "reload_down" handler, they would trigger the appropriate reset,
-> >>>>>> and quiesce anything that needs to be done. Then on reload up, it would
-> >>>>>> restore and bring up anything quiesced in the first stage.
-> >>>>> Yes, I got the "reload_down" and "reload_up". Similar to the device
-> >>>>> "remove" and "re-probe" respectively.
-> >>>>>
-> >>>>> But our requirement is a similar "ethtool reset" command, where
-> >>>>> ethtool calls a single callback in driver and driver just sends a
-> >>>>> firmware command for doing the reset. Once firmware receives the
-> >>>>> command, it will initiate the reset of driver and firmware entities
-> >>>>> asynchronously.
-> >>>> It is similar to mlx5 case here for fw_reset. The driver triggers the fw
-> >>>> command to reset and all PFs drivers gets events to handle and do
-> >>>> re-initialization.  To fit it to the devlink reload_down and reload_up,
-> >>>> I wait for the event handler to complete and it stops at driver unload
-> >>>> to have the driver up by devlink reload_up. See patch 8 in this patchset.
-> >>>>
-> >>> Yes, I see reload_down is triggering the reset. In our driver, after
-> >>> triggering the reset through a firmware command, reset is done in
-> >>> another context as the driver initiates the reset only after receiving
-> >>> an ASYNC event from the firmware.
-> >>
-> >> Same here.
-> >>
-> >>> Probably, we have to use reload_down() to send firmware command to
-> >>> trigger reset and do nothing in reload_up.
-> >> I had that in previous version, but its wrong to use devlink reload this
-> >> way, so I added wait with timeout for the event handling to complete
-> >> before unload_down function ends. See mlx5_fw_wait_fw_reset_done(). Also
-> >> the event handler stops before load back to have that done by devlink
-> >> reload_up.
-> > But "devlink dev reload" will be invoked by the user only on a single
-> > dev handler and all function drivers will be re-instantiated upon the
-> > ASYNC event. reload_down and reload_up are invoked only the function
-> > which the user invoked.
-> >
-> > Take an example of a 2-port (PF0 and PF1) adapter on a single host and
-> > with some VFs loaded on the device. User invokes "devlink dev reload"
-> > on PF0, ASYNC event is received on 2 PFs and VFs for reset. All the
-> > function drivers will be re-instantiated including PF0.
-> >
-> > If we wait for some time in reload_down() of PF0 and then call load in
-> > reload_up(), this code will be different from other function drivers.
->
->
-> I see your point here, but the user run devlink reload command on one
-> PF, in this case of fw-reset it will influence other PFs, but that's a
-> result of the fw-reset, the user if asked for params change or namespace
-> change that was for this PF.
-Right, if any driver is implementing only fw-reset have to leave
-reload_up as an empty function.
+On Wed, Aug 05, 2020 at 02:34:13PM +0800, Shengjiu Wang wrote:
+> As new function fsl_sai_dir_is_synced is included for checking if
+> stream is synced by the opposite stream, then replace the existing
+> synchronous checking with this new function.
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
->
-> >>>    And returning from reload
-> >>> does not mean that reset is complete as it is done in another context
-> >>> and the driver notifies the health reporter once the reset is
-> >>> complete. devlink framework may have to allow drivers to implement
-> >>> reload_down only to look more clean or call reload_up only if the
-> >>> driver notifies the devlink once reset is completed from another
-> >>> context. Please suggest.
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+
+Nice, thanks!
