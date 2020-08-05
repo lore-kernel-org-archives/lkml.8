@@ -2,343 +2,150 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 096A2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F43C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC80A22CA0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E0422CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:22:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="0NwH30I9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkEWqptL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbgHESVf (ORCPT
+        id S1729060AbgHESVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 14:21:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60240 "EHLO
+        Wed, 5 Aug 2020 14:21:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729185AbgHESMX (ORCPT
+        with ESMTP id S1729181AbgHESLW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 14:12:23 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C50C5C06179E
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 11:12:23 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id mw10so1064399pjb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 11:12:23 -0700 (PDT)
+        Wed, 5 Aug 2020 14:11:22 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A2CCC06138D;
+        Wed,  5 Aug 2020 11:10:32 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id s15so16744045qvv.7;
+        Wed, 05 Aug 2020 11:10:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+EY8xwLOvb0xunAeWMqIoWbMSULdQM37RXMtNt8qOxE=;
-        b=0NwH30I9cl4VJw9EDJmTKsrdcHgnhJMN6qld7YpaoUUkUdhto8jugxb/Jp0HikxVQN
-         ScAWsis+EMmaeYMoXc24ZCoZ28hwVpYebbtNOFLc3kWezqfpEWPHw0vMM97ukYZh/uIr
-         6J9UGhVT1Kx8XaawdD7/HRy6xxxts/XGqZuCV9yJGMXD+HSmibJTPg0xNvuhn1lWx6e7
-         5HLEoLih+dKl+vSulfB6u1zc9R7ohATeDCqOez2+ZGT5QOwwkBSdoAbHUdTZX0Wfxscf
-         I7vtB9bwi8WioqLnpYFpht+g4O3koHcBtn9yz9zEhzknqUIjfRZqQ04tQ1hWMjYaNBqC
-         4zxg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CSOoq3zhF6z2fZ+X97MfanJIRrTuyK8BNIkdVGDMQEQ=;
+        b=WkEWqptLDy3R6ioOulhs9LCTz33DYC1YwZpUJavPXOLVGV2Oh1GCAetOfpDiAicnfC
+         bnnTTBfinXKPD8zwEhxTo3jAr1u6b1KivySeOrU9BiBn/I6UQAqhjBJCNsMKvG0hkImf
+         ALAyJ0TBul74xRJlxBK0ORqfKLnd46HXDgh18AjaR8DPqu0fHH8ldssbfQi1trX6tRB7
+         5UW7Vc1V2K2qydneRegNu1wCNbnVqa8s8SaDMEMPNS65YHhlNkvARMGJz77FYBEcMec3
+         v1SU3F9ISIdfIyZiYpIFsVgMAzZcO+5s6AMfJZRSIANi/QySkiAvuVZebvBhIVj14HNN
+         KJ6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+EY8xwLOvb0xunAeWMqIoWbMSULdQM37RXMtNt8qOxE=;
-        b=JYgzW4Vgq8G/Q9vE+0rjDbg6LhM86WN360oGe7IKiVzHgknRVGSh31MEq5kaCWRFd8
-         xLipiNjRqB7yqePSbI9sxNmr6yPlHWlZXkTN3ljA99NSyuQHozR960naL64NBM9LFBRg
-         ijbT/u2hBApX7erpX0FFDNcHwxSacfwv/UoxCYjcgeCBMXcldWxm/L4I8oVDV9ZMxDqJ
-         RPsI+CTFOkbtBgM4N4Zi6vTr5zgfmWHRMd0GQexVyYt/fTENi8Z1eKxRDFmKbDDPrOhr
-         zEWfH239prz2G0NqWoUIhqKkYHOXbm6OHC1mXSkvz6O1NwMAo04u4Haz7uDnWrayhfEE
-         eqjA==
-X-Gm-Message-State: AOAM533WWVxN379EELmxWMbwNdU5VKlyOOC92j9+dLYkjzMkcu4L6Mer
-        iGcfRn0CRuymBXyDMfKMuLUNNw==
-X-Google-Smtp-Source: ABdhPJxkNOvGmkIDfr9XZqptadC55bRUxwV6Wa++YQxDU6o7yKVdmjivZ+C0xuir3elNc0D7XBVQ4g==
-X-Received: by 2002:a17:90b:4b89:: with SMTP id lr9mr4738141pjb.190.1596651143167;
-        Wed, 05 Aug 2020 11:12:23 -0700 (PDT)
-Received: from [10.213.170.159] (fmdmzpr04-ext.fm.intel.com. [192.55.55.39])
-        by smtp.gmail.com with ESMTPSA id r6sm3672432pjd.1.2020.08.05.11.12.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Aug 2020 11:12:22 -0700 (PDT)
-From:   "Sean V Kelley" <sean.v.kelley@intel.com>
-To:     "Bjorn Helgaas" <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
-        rjw@rjwysocki.net, ashok.raj@intel.com, tony.luck@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 0/9] Add RCEC handling to PCI/AER
-Date:   Wed, 05 Aug 2020 11:12:20 -0700
-X-Mailer: MailMate (1.13.1r5671)
-Message-ID: <3C6A30BC-5826-4BD8-BF93-BE964FECAA4A@intel.com>
-In-Reply-To: <20200805180035.GA522190@bjorn-Precision-5520>
-References: <20200805180035.GA522190@bjorn-Precision-5520>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CSOoq3zhF6z2fZ+X97MfanJIRrTuyK8BNIkdVGDMQEQ=;
+        b=a4Plm0h/9rXTD4DSDFG67hE/2D5IY1EAldWANby4cPctLkiqPo4Ped9khm/Z1iUGuX
+         soLEHmcfXVsL2O3zVZSsvIzjZGDrzdeJfP7kAo5cjj1UTD3u+GxwICQgQW5Ffvisjqc1
+         WMc/mS1lTjSmN7w3GcdzWX2R/14/TPkHIsuSZMj3OeCew7e96gBJCVGz9diRbEBL+I9r
+         seAheRMgxGkRCxnFvXscmqKwnljpGc83bQSouqJdjkMq/xtk7nG4wPlKZ5Vx1jYpjR/y
+         UCl/re5o8+CpdaWuAoWv4Bvs5oYxW053tWhI3oNqceyFn1dYBfAwKBLXoiaOPPnym312
+         OT4w==
+X-Gm-Message-State: AOAM530BDCfwX1T4ctGYQKfWyNjVotXgZnz12wqWqp4YweWjpH8dQfH6
+        ibluYCAoc+ODEW6S1UTe+Q==
+X-Google-Smtp-Source: ABdhPJybD0CTplQH9PaqhvAh94r4pvrJHLy/2Cb1rWWuo+HcvlxTLUJMXYleqq82a0Jy8907RV108g==
+X-Received: by 2002:ad4:438f:: with SMTP id s15mr5142142qvr.164.1596651031728;
+        Wed, 05 Aug 2020 11:10:31 -0700 (PDT)
+Received: from localhost.localdomain (146-115-88-66.s3894.c3-0.sbo-ubr1.sbo.ma.cable.rcncustomer.com. [146.115.88.66])
+        by smtp.gmail.com with ESMTPSA id i7sm2571560qtb.27.2020.08.05.11.10.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 11:10:31 -0700 (PDT)
+From:   Peilin Ye <yepeilin.cs@gmail.com>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: [Linux-kernel-mentees] [PATCH net] Bluetooth: Fix slab-out-of-bounds read in hci_le_direct_adv_report_evt()
+Date:   Wed,  5 Aug 2020 14:09:02 -0400
+Message-Id: <20200805180902.684024-1-yepeilin.cs@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5 Aug 2020, at 11:00, Bjorn Helgaas wrote:
+`num_reports` is not being properly checked. A malformed event packet with
+a large `num_reports` number makes hci_le_direct_adv_report_evt() read out
+of bounds. Fix it.
 
-> On Tue, Aug 04, 2020 at 12:40:43PM -0700, Sean V Kelley wrote:
->> From: Sean V Kelley <sean.v.kelley@linux.intel.com>
->>
->> On the use of FLR on RCiEPs for the fatal case, still interested in =
+Reported-and-tested-by: syzbot+24ebd650e20bd263ca01@syzkaller.appspotmail.com
+Fixes: 2f010b55884e ("Bluetooth: Add support for handling LE Direct Advertising Report events")
+Link: https://syzkaller.appspot.com/bug?extid=24ebd650e20bd263ca01
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+---
+I moved the initialization of `ev` out of the loop and restructured the
+function a bit, since otherwise the check would look like:
 
->> more
->> feedback from the earlier discussion here [1]:
->>
->> [1] =
+	if (!num_reports || skb->len < num_reports * sizeof(struct hci_ev_le_direct_adv_info) + 1)
+		return;
 
->> https://lore.kernel.org/linux-pci/C21C050B-48B1-4429-B019-C81F3AB8E843=
-@intel.com/
->>
->> There is also the question of the absence of an FLR for non-fatal =
+Therefore I used the similar structure with hci_inquiry_result_evt() etc.
 
->> error.
->> If the device driver tells us that it needs =
+hci_le_adv_report_evt() and hci_le_ext_adv_report_evt() also have the
+same issue with `num_reports`, but I'm not sure how to perform the check
+for them, since they use variable-length reports. Should we do something
+like this? (take hci_le_adv_report_evt() as example:)
 
->> "PCI_ERS_RESULT_NEED_RESET" by
->> the callback report_normal_detected() then we should try FLR on the =
+	if (!num_reports ||
+	    skb->len < num_reports * (sizeof(*ev) + HCI_MAX_AD_LENGTH + 1) + 1)
+		return;
 
->> device
->> as well.
->>
->> On the use of variables with RP centric names such as the attributes
->> dev_attr_aer_rootport_total_err_..., one concern is the ripple effect =
+Then how about hci_le_ext_adv_report_evt()? There is no such
+`HCI_MAX_AD_LENGTH` restrictions on `ev->length` for it, I assume?
 
->> on code
->> churn due to renaming. Open to suggestions, but trying to co-habitate =
+Would like to hear your opinion. Thank you!
 
->> so to
->> speak RCECs with RPs in the same drivers has trade-offs.
->>
->> Changes since v1 [2]:
->>
->> - Make PME capability of RCEC discoverable in =
+ net/bluetooth/hci_event.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
->> get_port_device_capability().
->> - Replace the check on bnr with <=3D lastbusn in pcie_walk_rcec().
->> - Fix comment header for pcie_walk_rcec().
->> - Fix comment header for pci_walk_dev_affected().
->> - Fix spurious newline.
->> - Add sanity checks on dev->rcec.
->> - Use pci_dbg() in place of pci_info() for discovered RCiEPs.
->> - Remove AER RCEC AP FOUND message (accidently left in previously).
->> - Remove the check for RC_END from set_device_error_reporting() since
->> only Ports and RCECs are being passed.
->> (Jonathan Cameron)
->> - Fix the return type for flr_on_rciep().
->> (reported by lkp on DEC Alpha arch.)
->>
->> [1] =
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 4b7fc430793c..aec43ae488d1 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -5863,21 +5863,19 @@ static void hci_le_direct_adv_report_evt(struct hci_dev *hdev,
+ 					 struct sk_buff *skb)
+ {
+ 	u8 num_reports = skb->data[0];
+-	void *ptr = &skb->data[1];
++	struct hci_ev_le_direct_adv_info *ev = (void *)&skb->data[1];
+ 
+-	hci_dev_lock(hdev);
++	if (!num_reports || skb->len < num_reports * sizeof(*ev) + 1)
++		return;
+ 
+-	while (num_reports--) {
+-		struct hci_ev_le_direct_adv_info *ev = ptr;
++	hci_dev_lock(hdev);
+ 
++	for (; num_reports; num_reports--, ev++)
+ 		process_adv_report(hdev, ev->evt_type, &ev->bdaddr,
+ 				   ev->bdaddr_type, &ev->direct_addr,
+ 				   ev->direct_addr_type, ev->rssi, NULL, 0,
+ 				   false);
+ 
+-		ptr += sizeof(*ev);
+-	}
+-
+ 	hci_dev_unlock(hdev);
+ }
+ 
+-- 
+2.25.1
 
->> https://lore.kernel.org/linux-pci/20200724172223.145608-1-sean.v.kelle=
-y@intel.com/
->>
->> Root Complex Event Collectors (RCEC) provide support for terminating =
-
->> error
->> and PME messages from Root Complex Integrated Endpoints (RCiEPs).  An =
-
->> RCEC
->> resides on a Bus in the Root Complex. Multiple RCECs can in fact =
-
->> reside on
->> a single bus. An RCEC will explicitly declare supported RCiEPs =
-
->> through the
->> Root Complex Endpoint Association Extended Capability.
->>
->> (See PCIe 5.0-1, sections 1.3.2.3 (RCiEP), and 7.9.10 (RCEC Ext. =
-
->> Cap.))
->>
->> The kernel lacks handling for these RCECs and the error messages =
-
->> received
->> from their respective associated RCiEPs. More recently, a new CPU
->> interconnect, Compute eXpress Link (CXL) depends on RCEC capabilities =
-
->> for
->> purposes of error messaging from CXL 1.1 supported RCiEP devices.
->>
->> DocLink: https://www.computeexpresslink.org/
->>
->> This use case is not limited to CXL. Existing hardware today includes
->> support for RCECs, such as the Denverton microserver product
->> family. Future hardware will be forthcoming.
->>
->> (See Intel Document, Order number: 33061-003US)
->>
->> So services such as AER or PME could be associated with an RCEC =
-
->> driver.
->> In the case of CXL, if an RCiEP (i.e., CXL 1.1 device) is associated =
-
->> with a
->> platform's RCEC it shall signal PME and AER error conditions through =
-
->> that
->> RCEC.
->>
->> Towards the above use cases, add the missing RCEC class and extend =
-
->> the
->> PCIe Root Port and service drivers to allow association of RCiEPs to =
-
->> their
->> respective parent RCEC and facilitate handling of terminating error =
-
->> and PME
->> messages.
->>
->>
->> AER Test Results:
->> 1) Inject a correctable error to the RCiEP 0000:e9:00.0
->>     Run ./aer_inject <a parameter file as below>:
->>     AER
->>     PCI_ID 0000:e9:00.0
->>     COR_STATUS BAD_TLP
->>     HEADER_LOG 0 1 2 3
->>
->>     Log:
->> [   76.155963] pcieport 0000:e8:00.4: aer_inject: Injecting errors =
-
->> 00000040/00000000 into device 0000:e9:00.0
->> [   76.166966] pcieport 0000:e8:00.4: AER: Corrected error received: =
-
->> 0000:e9:00.0
->> [   76.175253] pci 0000:e9:00.0: PCIe Bus Error: severity=3DCorrected,=
- =
-
->> type=3DData Link Layer, (Receiver ID)
->> [   76.185633] pci 0000:e9:00.0:   device [8086:4940] error =
-
->> status/mask=3D00000040/00002000
->> [   76.194604] pci 0000:e9:00.0:    [ 6] BadTLP
->
-> If you remove the timestamps, there will be less distraction here.  As
-> I'm sure you know, the 0/n cover letter text doesn't really go
-> anywhere except the email archives.  If this is potentially useful in
-> the future, it should be in the actual patch commit logs.
-
-Right, the intent is to show how it was tested.  Understood.
-
->
->> 2) Inject a non-fatal error to the RCiEP 0000:e8:01.0
->>     Run ./aer_inject <a parameter file as below>:
->>     AER
->>     PCI_ID 0000:e8:01.0
->>     UNCOR_STATUS COMP_ABORT
->>     HEADER_LOG 0 1 2 3
->
-> I think maybe this could be written in a way that could be cut and
-> pasted?
-
-Good point.  Will do.
-
->
->>     Log:
->> [  117.791854] pcieport 0000:e8:00.4: aer_inject: Injecting errors =
-
->> 00000000/00008000 into device 0000:e8:01.0
->> [  117.804244] pcieport 0000:e8:00.4: AER: Uncorrected (Non-Fatal) =
-
->> error received: 0000:e8:01.0
->> [  117.814652] igen6_edac 0000:e8:01.0: PCIe Bus Error: =
-
->> severity=3DUncorrected (Non-Fatal), type=3DTransaction Layer, (Complet=
-er =
-
->> ID)
->> [  117.828511] igen6_edac 0000:e8:01.0:   device [8086:0b25] error =
-
->> status/mask=3D00008000/00100000
->> [  117.839189] igen6_edac 0000:e8:01.0:    [15] CmpltAbrt
->> [  117.847365] igen6_edac 0000:e8:01.0: AER:   TLP Header: 00000000 =
-
->> 00000001 00000002 00000003
->> [  117.857775] igen6_edac 0000:e8:01.0: AER: device recovery =
-
->> successful
->>
->> 3) Inject a fatal error to the RCiEP 0000:ed:01.0
->>     Run ./aer_inject <a parameter file as below>:
->>     AER
->>     PCI_ID 0000:ed:01.0
->>     UNCOR_STATUS MALF_TLP
->>     HEADER_LOG 0 1 2 3
->>
->>     Log:
->> [  131.511623] pcieport 0000:ed:00.4: aer_inject: Injecting errors =
-
->> 00000000/00040000 into device 0000:ed:01.0
->> [  131.523259] pcieport 0000:ed:00.4: AER: Uncorrected (Fatal) error =
-
->> received: 0000:ed:01.0
->> [  131.533842] igen6_edac 0000:ed:01.0: AER: PCIe Bus Error: =
-
->> severity=3DUncorrected (Fatal), type=3DInaccessible, (Unregistered Age=
-nt =
-
->> ID)
->> [  131.655618] igen6_edac 0000:ed:01.0: AER: device recovery =
-
->> successful
->>
->> Jonathan Cameron (1):
->>   PCI/AER: Extend AER error handling to RCECs
->>
->> Qiuxu Zhuo (6):
->>   pci_ids: Add class code and extended capability for RCEC
->>   PCI: Extend Root Port Driver to support RCEC
->>   PCI/portdrv: Add pcie_walk_rcec() to walk RCiEPs associated with =
-
->> RCEC
->>   PCI/AER: Apply function level reset to RCiEP on fatal error
->>   PCI: Add 'rcec' field to pci_dev for associated RCiEPs
->>   PCI/AER: Add RCEC AER error injection support
->>
->> Sean V Kelley (2):
->>   PCI/AER: Add RCEC AER handling
->>   PCI/PME: Add RCEC PME handling
->>
->
->>  drivers/pci/pcie/aer.c          | 36 +++++++++----
->>  drivers/pci/pcie/aer_inject.c   |  5 +-
->>  drivers/pci/pcie/err.c          | 90 =
-
->> +++++++++++++++++++++++++++------
->>  drivers/pci/pcie/pme.c          | 15 ++++--
->>  drivers/pci/pcie/portdrv.h      |  2 +
->>  drivers/pci/pcie/portdrv_core.c | 90 =
-
->> +++++++++++++++++++++++++++++++--
->>  drivers/pci/pcie/portdrv_pci.c  | 20 +++++++-
->>  include/linux/pci.h             |  3 ++
->>  include/linux/pci_ids.h         |  1 +
->>  include/uapi/linux/pci_regs.h   |  7 +++
->>  10 files changed, 233 insertions(+), 36 deletions(-)
->
-> I always apply patches to topic branches based at my "master" branch
-> (typically -rc1, so currently v5.8-rc1, but will soon be v5.9-rc1).
->
-> If your series doesn't apply there (as this one doesn't), it saves me
-> time if you tell me where it does apply.  I figured out that this
-> applies cleanly on top of my pci/error branch, which does make sense.
->
-> I'd actually *rather* have patches based on "master", even if I have
-> to resolve conflicts, because that gives me the flexibility to squash
-> in fixes and re-merge the topic branches.
-
-Okay. Good to know as this time it was put on your pci branch. Will =
-
-switch back to master.
-
-Thanks,
-
-Sean
-
->
-> Bjorn
