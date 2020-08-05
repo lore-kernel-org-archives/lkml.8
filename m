@@ -2,150 +2,111 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D913AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BBEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3A0C22B40
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:41:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596613282;
-	bh=drKtsLeF1osFV69PUj0aSkz5xDDMxcTAlYiBxYPMkUw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KhvuM0GonhFYwMTTZFlb1GBoBBy9vlhNm9x157roCjrET24DZoM1EsPttUMQsthCx
-	 zHo6T3EducSo/iAp0tHj6BiPxCNatxIeF+e5WXg9W6JBiYSG2QZqjjj8eRAaPN9J12
-	 QgEJiI/mMwPAqFeHp+WvykTxsCLMcPj9k7ljYBow=
+	by mail.kernel.org (Postfix) with ESMTP id 894E62245C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:43:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="G2U85/Sh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgHEHlV (ORCPT
+        id S1726775AbgHEHnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 03:41:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53860 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725963AbgHEHlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 03:41:21 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36C842245C;
-        Wed,  5 Aug 2020 07:41:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596613280;
-        bh=drKtsLeF1osFV69PUj0aSkz5xDDMxcTAlYiBxYPMkUw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WPiDQ0ZD0IJnAC2KKPplaIlPsepL6Z4njQjaQbnQNCD08fm+5tUnyfXvvXfCO3Cdq
-         6xXXhL4LMEIWMMRHJ7mqxRIUwSd4mnxM7NkABFj0lWKtfv0zZJMgzvdkkZboWKydlL
-         qHIPx3NKMCA4CzOsgcg+IoPaCWzjG+/Ixv6/HUGk=
-Date:   Wed, 5 Aug 2020 16:41:16 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] bootconfig: Fix to find the initargs correctly
-Message-Id: <20200805164116.2e396561081e61ef75c1ca51@kernel.org>
-In-Reply-To: <20200804165929.3bfeb318@oasis.local.home>
-References: <159650953285.270383.14822353843556363851.stgit@devnote2>
-        <20200804165929.3bfeb318@oasis.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 5 Aug 2020 03:43:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbgHEHnv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 03:43:51 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF85AC061757
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 00:43:50 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id c10so2072878edk.6
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 00:43:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c7MS/sDmqsu2UeEHE/y1WIBOLGRyoL/hTSKDaerW230=;
+        b=G2U85/Sh33+IcIW0dxhFoe+oW0YUFI67TOMZGh5yXHDRtVNTTIES6+/5ghbYizPlrA
+         NxqWRNYE+WiZQ5x/6V5NBGxTNuIsiyaYdE1+DK4um+EutgPdxUhLgshYgl+AqycDH9vs
+         4dvJRUCTUHLDjtWW+GCIgH/TbkBbaYm/yDD6c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c7MS/sDmqsu2UeEHE/y1WIBOLGRyoL/hTSKDaerW230=;
+        b=K0yR0n3BQc5xawG5vrTg2Rhg+dbHdz38tFIGvybR7HOy77FbA9TP/EqNbBGcoh1qJU
+         tfpjsAVCWHvulxJrHlvflskf3IvDwNZFixq19KiKz8U6GxB/Sx017ObPBb8V0F50gL+0
+         TJEd0poJNXBvEDv/YH2/WKbKZlVxdkSIA8qNcamDDiFny0NYYT1no63gcLXF08DUqxYx
+         hMDNg5aGY/j9ceG0RWzT8/FzDMnop3WkSyaBsb1ozvA0BPzYg49w12s8sNPi9HSUWAHu
+         Y1l4qpRW8PIFWgzVBxE6rrE1ogM7XSf1N+odUjmq83BSqpekCTIn+u1/cenIO6v8hKy3
+         4/NQ==
+X-Gm-Message-State: AOAM532ewPsPhe8W+pvybIONP1KixlkQphDf1vhniFPEB4gsHYdkl4jK
+        8l7bFBtf5IifNgHkQbINb9n3rU0xqWi2VhiaHR7RBA==
+X-Google-Smtp-Source: ABdhPJxB/evMZ5+0ZnmBx4YzSXoXDzPSNs9Cjc++wXkfuUDJKvalsR0eiNz5UMmlIUDOEP5Cy96B5iGq/jW2A8IePJ4=
+X-Received: by 2002:a50:fb10:: with SMTP id d16mr1638111edq.134.1596613429317;
+ Wed, 05 Aug 2020 00:43:49 -0700 (PDT)
+MIME-Version: 1.0
+References: <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk>
+ <158454391302.2863966.1884682840541676280.stgit@warthog.procyon.org.uk>
+ <CAJfpegspWA6oUtdcYvYF=3fij=Bnq03b8VMbU9RNMKc+zzjbag@mail.gmail.com>
+ <1293241.1595501326@warthog.procyon.org.uk> <CAJfpeguvLMCw1H8+DPsfZE_k0sEiRtA17pD9HjnceSsAvqqAZw@mail.gmail.com>
+ <43c061d26ddef2aa3ca1ac726da7db9ab461e7be.camel@themaw.net>
+ <CAJfpeguFkDDhz7+70pSUv_j=xY5L08ESpaE+jER9vE5p+ZmfFw@mail.gmail.com> <c558fc4af785f62a2751be3b297d1ccbbfcfa969.camel@themaw.net>
+In-Reply-To: <c558fc4af785f62a2751be3b297d1ccbbfcfa969.camel@themaw.net>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Wed, 5 Aug 2020 09:43:38 +0200
+Message-ID: <CAJfpegvxKTy+4Zk6banvxQ83PeFV7Xnt2Qv=kkOg57rxFKqVEg@mail.gmail.com>
+Subject: Re: [PATCH 13/17] watch_queue: Implement mount topology and attribute
+ change notifications [ver #5]
+To:     Ian Kent <raven@themaw.net>
+Cc:     David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>, andres@anarazel.de,
+        Jeff Layton <jlayton@redhat.com>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>, keyrings@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+On Wed, Aug 5, 2020 at 3:54 AM Ian Kent <raven@themaw.net> wrote:
+>
 
-On Tue, 4 Aug 2020 16:59:29 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+> > > It's way more useful to have these in the notification than
+> > > obtainable
+> > > via fsinfo() IMHO.
+> >
+> > What is it useful for?
+>
+> Only to verify that you have seen all the notifications.
+>
+> If you have to grab that info with a separate call then the count
+> isn't necessarily consistent because other notifications can occur
+> while you grab it.
 
-> On Tue,  4 Aug 2020 11:52:13 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> 
-> > Since the parse_args() stops parsing at '--', bootconfig_params()
-> > will never get the '--' as param and initargs_found never be true.
-> > In the result, if we pass some init arguments via the bootconfig,
-> > those are always appended to the kernel command line with '--'
-> > even if the kernel command line already has '--'.
-> > 
-> > To fix this correctly, check the return value of parse_args()
-> > and set initargs_found true if the return value is not an error
-> > but a valid address.
-> 
-> Thanks Masami,
-> 
-> I'll start testing this now. I just finished testing everything else I
-> had in my queue and pushed it to my for-next branch. Can you check to
-> see if I missed anything there?
-
-Yeah, it seems all acked patches are picked up.
-I'll move onto the next series.
-
-Thank you!
-
-> 
-> -- Steve
-> 
-> 
-> > 
-> > Fixes: f61872bb58a1 ("bootconfig: Use parse_args() to find bootconfig and '--'")
-> > Cc: stable@vger.kernel.org
-> > Reported-by: Arvind Sankar <nivedita@alum.mit.edu>
-> > Suggested-by: Arvind Sankar <nivedita@alum.mit.edu>
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > ---
-> >  Changes in v2:
-> >   - Remvoe unneede !IS_ERR().
-> > ---
-> >  init/main.c |   14 ++++++++------
-> >  1 file changed, 8 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/init/main.c b/init/main.c
-> > index 0ead83e86b5a..883ded3638e5 100644
-> > --- a/init/main.c
-> > +++ b/init/main.c
-> > @@ -387,8 +387,6 @@ static int __init bootconfig_params(char *param, char *val,
-> >  {
-> >  	if (strcmp(param, "bootconfig") == 0) {
-> >  		bootconfig_found = true;
-> > -	} else if (strcmp(param, "--") == 0) {
-> > -		initargs_found = true;
-> >  	}
-> >  	return 0;
-> >  }
-> > @@ -399,19 +397,23 @@ static void __init setup_boot_config(const char *cmdline)
-> >  	const char *msg;
-> >  	int pos;
-> >  	u32 size, csum;
-> > -	char *data, *copy;
-> > +	char *data, *copy, *err;
-> >  	int ret;
-> >  
-> >  	/* Cut out the bootconfig data even if we have no bootconfig option */
-> >  	data = get_boot_config_from_initrd(&size, &csum);
-> >  
-> >  	strlcpy(tmp_cmdline, boot_command_line, COMMAND_LINE_SIZE);
-> > -	parse_args("bootconfig", tmp_cmdline, NULL, 0, 0, 0, NULL,
-> > -		   bootconfig_params);
-> > +	err = parse_args("bootconfig", tmp_cmdline, NULL, 0, 0, 0, NULL,
-> > +			 bootconfig_params);
-> >  
-> > -	if (!bootconfig_found)
-> > +	if (IS_ERR(err) || !bootconfig_found)
-> >  		return;
-> >  
-> > +	/* parse_args() stops at '--' and returns an address */
-> > +	if (err)
-> > +		initargs_found = true;
-> > +
-> >  	if (!data) {
-> >  		pr_err("'bootconfig' found on command line, but no bootconfig found\n");
-> >  		return;
-> 
+No, no no.   The watch queue will signal an overflow, without any
+additional overhead for the normal case.  If you think of this as a
+protocol stack, then the overflow detection happens on the transport
+layer, instead of the application layer.  The application layer is
+responsible for restoring state in case of a transport layer error,
+but detection of that error is not the responsibility of the
+application layer.
 
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Thanks,
+Miklos
