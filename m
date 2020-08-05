@@ -2,148 +2,167 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4E8C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 21:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D95C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 21:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 753A62076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 21:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D4C12076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 21:18:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kali.org header.i=@kali.org header.b="hDRflfqS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hOGXqAlm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbgHEVQm (ORCPT
+        id S1726197AbgHEVSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 17:16:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60710 "EHLO
+        Wed, 5 Aug 2020 17:18:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726629AbgHEVQk (ORCPT
+        with ESMTP id S1725139AbgHEVSk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 17:16:40 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF127C061575
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 14:16:40 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id u24so31038178oiv.7
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 14:16:40 -0700 (PDT)
+        Wed, 5 Aug 2020 17:18:40 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA130C061575;
+        Wed,  5 Aug 2020 14:18:40 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id y18so30216182ilp.10;
+        Wed, 05 Aug 2020 14:18:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kali.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Grm1cy93TykL2UQMLvitYfHftzNHr5WnvDxuij6JO+U=;
-        b=hDRflfqSy7WcRWVgHidQaxalAI6pcrvC53q01AJTbJpMbWw0sNYAQ9P8vdMHgeRPzt
-         pUMxybYMki+htTItPgxlEP+8j/xk9QLY3EMGVh9z6ID72rcfx2NsTFKdbZkn34p/DPpP
-         sATeXwBCbvxxrxPCwOuI8ihYtOlfZ7xmHXT9/x8dv+2qc4DekekRa9QXqMEbg4nPpLoe
-         mCp17blYYj28WG6NcfnvFnXtPSr1c/W8XUYmWMHx9vukbEXs2AwcAcUDWTuD7C8CDMIG
-         55CsIkGcXeDMzVmXgFMgfXN+LBKjaHa4o7RvWYyAjaNKs5sVrbjm4uCVACRUrrNdkB6H
-         aYeA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=47Asclv1FK7U2jk7VK/Qqzc/1uZms3QEdnET+4/Hxhw=;
+        b=hOGXqAlmNmwjcpWgNq+i7sz0gXOY45BTpoSEyZ7rQgxc8KoTFIq72+Sp3FqRmWUGch
+         BzMjQw9EsuXc1EkXuw4M/HNTKNKhWg44QfrlbEhDfVbFKVwxiTH5fO+RBDpeSKYxhAOr
+         97nXaQN3SqulrQyeviEqOelMhLmtmdfPAGHC0nT6CaFiG+qOGEZpu2Ks27v8ughOlpC1
+         us7d21TosVqDjmVTvwK4B6ovXoFxFbmAQXDdijY/4Ha+hwaSLqvZ1ShYcNjiOS3ASxsx
+         nfMOwaEzMpqofoyw6UO9W6ksT52pUAYn7Fq1VrJHLjX1Fae7VbB0QTJ/W1+55pFwDJNQ
+         CPqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Grm1cy93TykL2UQMLvitYfHftzNHr5WnvDxuij6JO+U=;
-        b=Nwwy81ua8czQ002t8kIdlOht0WLXIkEDJLfvAdqZZpp5DMYQmKJWoaEb3e6eDfQk7m
-         hKZ+Shu+bT69WpcmAeZXFmDHf3nKk22lgWZHCqZVg+6ejH2om5+Ll4fST7cdFbZZFyYz
-         AoL21EL1ZzFyooC3bnAoiM4AyXr4T0n5T52d1VLjyRqex+hVhAKjhJn+MLBF4ywBOifU
-         0dtkKkJTkRXVkaTsvWfHvlojBpbDjnu+TZjGgeNq2Elreecj87Sd2lsyXkO6u0qqJ5Ga
-         02rx/MSMAhycnHuWRKQTCr7TTn146E/F+waglEt8oCwWaHEtwwrQOEsm8sTale8oGtp1
-         2YrQ==
-X-Gm-Message-State: AOAM532Zx9zlYUBb7iToTpo4xokt40W5C/Ca/26umFhNgPrEPDxKmodM
-        979gkaOY0TFVnnxhFILawAzQSw==
-X-Google-Smtp-Source: ABdhPJyq3up6BgBEF4JBbpDeMKpsNeJVYqW/Eie4xYc5kopvUzCGvKOxeLD5qDnmN0Ym3dFzcn5GIA==
-X-Received: by 2002:aca:c5d6:: with SMTP id v205mr4539034oif.143.1596662200100;
-        Wed, 05 Aug 2020 14:16:40 -0700 (PDT)
-Received: from Steevs-MBP.hackershack.net (cpe-173-175-113-3.satx.res.rr.com. [173.175.113.3])
-        by smtp.gmail.com with ESMTPSA id 33sm609369ots.12.2020.08.05.14.16.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2020 14:16:39 -0700 (PDT)
-Subject: Re: [PATCH v3 2/4] irqchip/qcom-pdc: Switch to using
- IRQCHIP_PLATFORM_DRIVER helper macros
-To:     Saravana Kannan <saravanak@google.com>,
-        John Stultz <john.stultz@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Hanks Chen <hanks.chen@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-References: <20200718000637.3632841-1-saravanak@google.com>
- <20200718000637.3632841-3-saravanak@google.com>
- <CALAqxLVZ+rFE+hM9OtQ46NqpTHeLu6oKLNWKstLv1U5zbwyq7g@mail.gmail.com>
- <CAGETcx_rkK3-bKhDP_N4n_WyXLXFPoaUV9rbY_Y+H1Joj=dCyw@mail.gmail.com>
-From:   Steev Klimaszewski <steev@kali.org>
-Message-ID: <f314b687-11a9-5a5e-e79e-c46dd2f16c6f@kali.org>
-Date:   Wed, 5 Aug 2020 16:16:37 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=47Asclv1FK7U2jk7VK/Qqzc/1uZms3QEdnET+4/Hxhw=;
+        b=hefQ2q6qD6cboAb4CQjry3Jv0Cq3jjY/HZiqof3KHLz5NvlxNJw+ZWPoIm+GL+1iR/
+         mZxosLlM77ZOWc+N8iJn81EQClQ5qKwZPrDfV6YqHn7mP6o7jEFbiv0Ft57/MqUJYrbE
+         oN6Jkuoq1PnHRXsLs8wqGB6ody02RvlWOogwP6r2pBatFIYZeEiA9H9w8SQWR7PgGcOi
+         vbfGD0lMmcR5IHNZ0avxRUgQCBp7YQp0TlfXQ3M68Wn9pBu2Gl5Xk4EZrBWumtCJsmOx
+         6SOqF3HEMZv0ucSprOPu+vce2WlzNH/viSFYFO5vc2z6RxW1eYCmdnbEFiPpu0YzrxBm
+         Mv/A==
+X-Gm-Message-State: AOAM5309HF4k1q5TQn15WajYHkQZYb0Su/B9qpdWshiISI19SFMhdq98
+        rCIAtrh4kQCrn6aqUgdNzbMNPVWb2swvAT0ixNU=
+X-Google-Smtp-Source: ABdhPJz5HQXy+KXF8yn3h980J3l9bX6POO/8Sp49m+jlrztwg9zijubXJFLCSGZH4IRvp2PhB9SCfieVsb8nS8m+WR0=
+X-Received: by 2002:a92:bb92:: with SMTP id x18mr5788263ilk.64.1596662319442;
+ Wed, 05 Aug 2020 14:18:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAGETcx_rkK3-bKhDP_N4n_WyXLXFPoaUV9rbY_Y+H1Joj=dCyw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com> <1595681998-19193-12-git-send-email-alex.shi@linux.alibaba.com>
+In-Reply-To: <1595681998-19193-12-git-send-email-alex.shi@linux.alibaba.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Wed, 5 Aug 2020 14:18:28 -0700
+Message-ID: <CAKgT0Udo=DSH76YF9L_qmWFNSCJW22UQaL57jHWnKstdB2wngg@mail.gmail.com>
+Subject: Re: [PATCH v17 11/21] mm/lru: move lru_lock holding in func lru_note_cost_page
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Rong Chen <rong.a.chen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 8/5/20 3:19 PM, Saravana Kannan wrote:
-> On Wed, Aug 5, 2020 at 12:44 AM John Stultz <john.stultz@linaro.org> wrote:
->> <sigh>
->> So this is where I bashfully admit I didn't get a chance to try this
->> patch series out, as I had success with a much older version of
->> Saravana's macro magic.
->>
->> But unfortunately, now that this has landed in mainline, I'm seeing
->> boot regressions on db845c. :( This is in the non-modular case,
->> building the driver in.
-> Does that mean the modular version is working? Or you haven't tried
-> that yet? I'll wait for your reply before I try to fix it. I don't
-> have the hardware, but it should be easy to guess this issue looking
-> at the code delta.
-
-For what it's worth, I saw this too on the Lenovo C630 (started on -next
-around 20200727, but I didn't track it down as, well, there's less way
-to get debug output on the C630.
-
-In my testing, module or built-in doesn't matter, but reverting does
-allow me to boot again.
-
-> The only significant change from what your probe function is doing is
-> this snippet. But it'd be surprising if this only affects the builtin
-> case.
+On Sat, Jul 25, 2020 at 6:00 AM Alex Shi <alex.shi@linux.alibaba.com> wrote:
 >
-> + if (par_np == np)
-> +         par_np = NULL;
-> +
-> + /*
-> + * If there's a parent interrupt controller and  none of the parent irq
-> + * domains have been registered, that means the parent interrupt
-> + * controller has not been initialized yet.  it's not time for this
-> + * interrupt controller to initialize. So, defer probe of this
-> + * interrupt controller. The actual initialization callback of this
-> + * interrupt controller can check for specific domains as necessary.
-> + */
-> + if (par_np && !irq_find_matching_host(np, DOMAIN_BUS_ANY))
-> +         return -EPROBE_DEFER;
+> It's a clean up patch w/o function changes.
 >
->> I managed to bisect it down to this patch, and reverting it avoids the
->> issue. I don't see what is wrong right off, but I really need to get
->> to bed, so I'll dig further tomorrow.
->>
->> Saravana: Apologies for not getting around to testing this beforehand!
-> No worries. Apologies for breaking it accidentally.
+> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+
+Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+
+> ---
+>  mm/memory.c     | 3 ---
+>  mm/swap.c       | 2 ++
+>  mm/swap_state.c | 2 --
+>  mm/workingset.c | 2 --
+>  4 files changed, 2 insertions(+), 7 deletions(-)
 >
-> -Saravana
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 87ec87cdc1ff..dafc5585517e 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -3150,10 +3150,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+>                                  * XXX: Move to lru_cache_add() when it
+>                                  * supports new vs putback
+>                                  */
+> -                               spin_lock_irq(&page_pgdat(page)->lru_lock);
+>                                 lru_note_cost_page(page);
+> -                               spin_unlock_irq(&page_pgdat(page)->lru_lock);
+> -
+>                                 lru_cache_add(page);
+>                                 swap_readpage(page, true);
+>                         }
+> diff --git a/mm/swap.c b/mm/swap.c
+> index dc8b02cdddcb..b88ca630db70 100644
+> --- a/mm/swap.c
+> +++ b/mm/swap.c
+> @@ -298,8 +298,10 @@ void lru_note_cost(struct lruvec *lruvec, bool file, unsigned int nr_pages)
+>
+>  void lru_note_cost_page(struct page *page)
+>  {
+> +       spin_lock_irq(&page_pgdat(page)->lru_lock);
+>         lru_note_cost(mem_cgroup_page_lruvec(page, page_pgdat(page)),
+>                       page_is_file_lru(page), hpage_nr_pages(page));
+> +       spin_unlock_irq(&page_pgdat(page)->lru_lock);
+>  }
+>
+>  static void __activate_page(struct page *page, struct lruvec *lruvec)
+> diff --git a/mm/swap_state.c b/mm/swap_state.c
+> index 05889e8e3c97..080be52db6a8 100644
+> --- a/mm/swap_state.c
+> +++ b/mm/swap_state.c
+> @@ -440,9 +440,7 @@ struct page *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
+>         }
+>
+>         /* XXX: Move to lru_cache_add() when it supports new vs putback */
+> -       spin_lock_irq(&page_pgdat(page)->lru_lock);
+>         lru_note_cost_page(page);
+> -       spin_unlock_irq(&page_pgdat(page)->lru_lock);
+>
+>         /* Caller will initiate read into locked page */
+>         SetPageWorkingset(page);
+> diff --git a/mm/workingset.c b/mm/workingset.c
+> index 50b7937bab32..337d5b9ad132 100644
+> --- a/mm/workingset.c
+> +++ b/mm/workingset.c
+> @@ -372,9 +372,7 @@ void workingset_refault(struct page *page, void *shadow)
+>         if (workingset) {
+>                 SetPageWorkingset(page);
+>                 /* XXX: Move to lru_cache_add() when it supports new vs putback */
+> -               spin_lock_irq(&page_pgdat(page)->lru_lock);
+>                 lru_note_cost_page(page);
+> -               spin_unlock_irq(&page_pgdat(page)->lru_lock);
+>                 inc_lruvec_state(lruvec, WORKINGSET_RESTORE);
+>         }
+>  out:
+> --
+> 1.8.3.1
+>
