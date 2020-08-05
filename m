@@ -2,224 +2,150 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F09C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B84E0C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5F1E22D2C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:09:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kleVXsE4"
+	by mail.kernel.org (Postfix) with ESMTP id 9E83322D2C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:09:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728522AbgHERJB (ORCPT
+        id S1728530AbgHERJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:09:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49668 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728466AbgHERE5 (ORCPT
+        Wed, 5 Aug 2020 13:09:09 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36010 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728451AbgHEREw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:04:57 -0400
-Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A06A7C061575
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 10:04:57 -0700 (PDT)
-Received: by mail-io1-xd30.google.com with SMTP id z6so46710549iow.6
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 10:04:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=+tKIJ4WfKtgkgJ70TYuXATNUVm3LhJghXiOd28Dg4S4=;
-        b=kleVXsE46UakXw54HJz9RI31Pm/wR5ygNm2B19l8S5/st12R9Faem7GqanY5xMSa24
-         2EPhX8Xe48UrUk/IPL5fvB+4mgiJHSdVlh/07MkzfqwEXrpz18yzuMI0ns71XkeN07x9
-         a6hymI5IWaCBTbwQrVRYUFzdmK8W+oISvCJf0MJ9AoYWPH0Lp5x+aprfy/D/uX8St6z/
-         1pnb5sW3dj5t6+W6f4Fg2yTzrAhsijWFulDLBysOY0KBM4IBXnIDpoSbAwyBna1TIIxh
-         dyv2ZQuSdjnL+cfyQbqAlCMFR8khuqvVZIxsKeGippegBPYCC6rq2LBJNH0KHJGBJZZp
-         oZEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=+tKIJ4WfKtgkgJ70TYuXATNUVm3LhJghXiOd28Dg4S4=;
-        b=Fg6EUJkVL2E3krzboGLXXk1MQUmEd/epQVrTtwGDF3gY/OYXDtCii8YZncy1jE0BfU
-         XCH+aEQTbTN0UxexoCktD75DH8PVpLUq5W8qoN5B+isxcEJzpHpS8ZArY1tiqV5lNZLc
-         kmBxk5U/Vh2RR4Q5rxUz3Fu/YRSwDZAVR4V4iubZcin/U0/OoKUmIBGVZqdA0gbZwYSW
-         wl7xv7y8a81v93bu6mGjM8lWdzB6cQ9IALhvOHuF5oTOXWNVo4hevEnWMO0ubJXST7g/
-         fMt2mVO60SyZun01XGLnYt9ISWL8J1ZQO1NNsSD0TeFTpnz8sakVTns6dWm9IM0tJaCZ
-         ICxA==
-X-Gm-Message-State: AOAM531C2JSLTe/T7F2xZE2qpHAxC5NGcdlB429gXhikDp4pE+AI1E+h
-        qJWg4NPP/yymnZsAL0PfE2mnYSCH4S3j3QOnwihMB53ZEzc1Pw==
-X-Google-Smtp-Source: ABdhPJx2ihURBb9WXEgJWBbJrLCpXYtPqeV+qPX2VxxwISq3rP1Z5pMvy/je2X/nqaRG0OTnUp7Lolp9VsEDp+rb/NY=
-X-Received: by 2002:a05:6638:1129:: with SMTP id f9mr3627080jar.35.1596647096002;
- Wed, 05 Aug 2020 10:04:56 -0700 (PDT)
-MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 5 Aug 2020 22:34:44 +0530
-Message-ID: <CA+G9fYu4tshr3YUqqU-y8vXtoMVt5BgHtmFXqMUa_457_-8D-A@mail.gmail.com>
-Subject: stable rc 4.9- v4.9.232-51-g1f47445197d2 - build breaks on arm64,
- arm, x86_64 and i386.
-To:     linux- stable <stable@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 5 Aug 2020 13:04:52 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 075FDwkb127568;
+        Wed, 5 Aug 2020 11:32:29 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32qu0v8ymy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Aug 2020 11:32:28 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 075FGMQE029092;
+        Wed, 5 Aug 2020 15:32:26 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma06fra.de.ibm.com with ESMTP id 32mynhas6q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Aug 2020 15:32:26 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 075FUvYT60555774
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 5 Aug 2020 15:30:57 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1DF38AE045;
+        Wed,  5 Aug 2020 15:32:24 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 49002AE051;
+        Wed,  5 Aug 2020 15:32:23 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.95.205])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  5 Aug 2020 15:32:23 +0000 (GMT)
+Message-ID: <4400d951e18528297e3e63524ff0ff63d48efda1.camel@linux.ibm.com>
+Subject: [GIT PULL] integrity subsystem updates for v5.9
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Wed, 05 Aug 2020 11:32:19 -0400
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-05_10:2020-08-03,2020-08-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ clxscore=1015 impostorscore=0 lowpriorityscore=0 suspectscore=2
+ phishscore=0 mlxscore=0 bulkscore=0 priorityscore=1501 spamscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008050124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable rc 4.9 build breaks on arm64, arm, x86_64 and i386.
+Hi Linus,
 
-Here are the build log failures on arm64.
+The nicest change is the IMA policy rule checking.  The other changes
+include allowing the kexec boot cmdline line measure policy rules to be
+defined in terms of the inode associated with the kexec kernel image,
+making the IMA_APPRAISE_BOOTPARAM, which governs the IMA appraise mode
+(log, fix, enforce), a runtime decision based on the secure boot mode
+of the system, and including errno in the audit log.
 
-    git_repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-=
-stable-rc.git
-    target_arch: arm64
-    toolchain: gcc-9
-    git_short_log: 1f47445197d2 (\Linux 4.9.233-rc1\)
-    git_sha: 1f47445197d2c8eecafa2b996f635aa89851c123
-    git_describe: v4.9.232-51-g1f47445197d2
-    kernel_version: 4.9.233-rc1
+thanks,
 
-make -sk KBUILD_BUILD_USER=3DTuxBuild -C/linux -j16 ARCH=3Darm64
-CROSS_COMPILE=3Daarch64-linux-gnu- HOSTCC=3Dgcc CC=3D"sccache
-aarch64-linux-gnu-gcc" O=3Dbuild Image
-#
-../arch/arm64/kernel/hw_breakpoint.c: In function =E2=80=98arch_bp_generic_=
-fields=E2=80=99:
-../arch/arm64/kernel/hw_breakpoint.c:352:5: note: parameter passing
-for argument of type =E2=80=98struct arch_hw_breakpoint_ctrl=E2=80=99 chang=
-ed in GCC
-9.1
-  352 | int arch_bp_generic_fields(struct arch_hw_breakpoint_ctrl ctrl,
-      |     ^~~~~~~~~~~~~~~~~~~~~~
-../fs/ext4/inode.c: In function =E2=80=98ext4_direct_IO=E2=80=99:
-../fs/ext4/inode.c:3610:9: error: redefinition of =E2=80=98offset=E2=80=99
- 3610 |  loff_t offset =3D iocb->ki_pos;
-      |         ^~~~~~
-../fs/ext4/inode.c:3608:9: note: previous definition of =E2=80=98offset=E2=
-=80=99 was here
- 3608 |  loff_t offset =3D iocb->ki_pos;
-      |         ^~~~~~
-make[3]: *** [../scripts/Makefile.build:304: fs/ext4/inode.o] Error 1
-make[3]: Target '__build' not remade because of errors.
-make[2]: *** [../scripts/Makefile.build:555: fs/ext4] Error 2
-../lib/vsprintf.c: In function =E2=80=98number=E2=80=99:
-../lib/vsprintf.c:399:7: note: parameter passing for argument of type
-=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
-  399 | char *number(char *buf, char *end, unsigned long long num,
-      |       ^~~~~~
-../lib/vsprintf.c: In function =E2=80=98widen_string=E2=80=99:
-../lib/vsprintf.c:562:7: note: parameter passing for argument of type
-=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
-  562 | char *widen_string(char *buf, int n, char *end, struct printf_spec =
-spec)
-      |       ^~~~~~~~~~~~
-../lib/vsprintf.c: In function =E2=80=98string=E2=80=99:
-../lib/vsprintf.c:583:7: note: parameter passing for argument of type
-=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
-  583 | char *string(char *buf, char *end, const char *s, struct
-printf_spec spec)
-      |       ^~~~~~
-../lib/vsprintf.c: In function =E2=80=98hex_string=E2=80=99:
-../lib/vsprintf.c:803:7: note: parameter passing for argument of type
-=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
-  803 | char *hex_string(char *buf, char *end, u8 *addr, struct
-printf_spec spec,
-      |       ^~~~~~~~~~
-../lib/vsprintf.c: In function =E2=80=98mac_address_string=E2=80=99:
-../lib/vsprintf.c:936:7: note: parameter passing for argument of type
-=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
-  936 | char *mac_address_string(char *buf, char *end, u8 *addr,
-      |       ^~~~~~~~~~~~~~~~~~
-../lib/vsprintf.c: In function =E2=80=98ip4_addr_string=E2=80=99:
-../lib/vsprintf.c:1137:7: note: parameter passing for argument of type
-=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
- 1137 | char *ip4_addr_string(char *buf, char *end, const u8 *addr,
-      |       ^~~~~~~~~~~~~~~
-../lib/vsprintf.c: In function =E2=80=98uuid_string=E2=80=99:
-../lib/vsprintf.c:1305:7: note: parameter passing for argument of type
-=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
- 1305 | char *uuid_string(char *buf, char *end, const u8 *addr,
-      |       ^~~~~~~~~~~
-../lib/vsprintf.c: In function =E2=80=98symbol_string=E2=80=99:
-../lib/vsprintf.c:668:7: note: parameter passing for argument of type
-=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
-  668 | char *symbol_string(char *buf, char *end, void *ptr,
-      |       ^~~~~~~~~~~~~
-../lib/vsprintf.c: In function =E2=80=98resource_string=E2=80=99:
-../lib/vsprintf.c:695:7: note: parameter passing for argument of type
-=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
-  695 | char *resource_string(char *buf, char *end, struct resource *res,
-      |       ^~~~~~~~~~~~~~~
-../lib/vsprintf.c: In function =E2=80=98ip6_addr_string=E2=80=99:
-../lib/vsprintf.c:1123:7: note: parameter passing for argument of type
-=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
- 1123 | char *ip6_addr_string(char *buf, char *end, const u8 *addr,
-      |       ^~~~~~~~~~~~~~~
-../lib/vsprintf.c: In function =E2=80=98ip4_addr_string_sa=E2=80=99:
-../lib/vsprintf.c:1210:7: note: parameter passing for argument of type
-=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
- 1210 | char *ip4_addr_string_sa(char *buf, char *end, const struct
-sockaddr_in *sa,
-      |       ^~~~~~~~~~~~~~~~~~
-../lib/vsprintf.c: In function =E2=80=98ip6_addr_string_sa=E2=80=99:
-../lib/vsprintf.c:1148:7: note: parameter passing for argument of type
-=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
- 1148 | char *ip6_addr_string_sa(char *buf, char *end, const struct
-sockaddr_in6 *sa,
-      |       ^~~~~~~~~~~~~~~~~~
-../lib/vsprintf.c: In function =E2=80=98escaped_string=E2=80=99:
-../lib/vsprintf.c:1245:7: note: parameter passing for argument of type
-=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
- 1245 | char *escaped_string(char *buf, char *end, u8 *addr, struct
-printf_spec spec,
-      |       ^~~~~~~~~~~~~~
-../lib/vsprintf.c: In function =E2=80=98dentry_name=E2=80=99:
-../lib/vsprintf.c:604:7: note: parameter passing for argument of type
-=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
-  604 | char *dentry_name(char *buf, char *end, const struct dentry
-*d, struct printf_spec spec,
-      |       ^~~~~~~~~~~
-../lib/vsprintf.c: In function =E2=80=98clock.isra.0=E2=80=99:
-../lib/vsprintf.c:1387:7: note: parameter passing for argument of type
-=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
- 1387 | char *clock(char *buf, char *end, struct clk *clk, struct
-printf_spec spec,
-      |       ^~~~~
-../lib/vsprintf.c: In function =E2=80=98bitmap_list_string.isra.0=E2=80=99:
-../lib/vsprintf.c:896:7: note: parameter passing for argument of type
-=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
-  896 | char *bitmap_list_string(char *buf, char *end, unsigned long *bitma=
-p,
-      |       ^~~~~~~~~~~~~~~~~~
-../lib/vsprintf.c: In function =E2=80=98bitmap_string.isra.0=E2=80=99:
-../lib/vsprintf.c:855:7: note: parameter passing for argument of type
-=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
-  855 | char *bitmap_string(char *buf, char *end, unsigned long *bitmap,
-      |       ^~~~~~~~~~~~~
-../lib/vsprintf.c: In function =E2=80=98bdev_name.isra.0=E2=80=99:
-../lib/vsprintf.c:649:7: note: parameter passing for argument of type
-=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
-  649 | char *bdev_name(char *buf, char *end, struct block_device *bdev,
-      |       ^~~~~~~~~
-../lib/vsprintf.c: In function =E2=80=98pointer=E2=80=99:
-../lib/vsprintf.c:1571:7: note: parameter passing for argument of type
-=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
- 1571 | char *pointer(const char *fmt, char *buf, char *end, void *ptr,
-      |       ^~~~~~~
-make[2]: Target '__build' not remade because of errors.
-make[1]: *** [/linux/Makefile:1036: fs] Error 2
-make[1]: Target 'Image' not remade because of errors.
-make: *** [Makefile:152: sub-make] Error 2
-make: Target 'Image' not remade because of errors.
+Mimi
 
+The following changes since commit 48778464bb7d346b47157d21ffde2af6b2d39110:
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
+  Linux 5.8-rc2 (2020-06-21 15:45:29 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git tags/integrity-v5.9
+
+for you to fetch changes up to 3db0d0c276a752af39beb5ca7424cb659aa005bb:
+
+  integrity: remove redundant initialization of variable ret (2020-07-27 16:52:09 -0400)
+
+----------------------------------------------------------------
+integrity-v5.9
+
+----------------------------------------------------------------
+Bruno Meneguele (1):
+      ima: move APPRAISE_BOOTPARAM dependency on ARCH_POLICY to runtime
+
+Colin Ian King (1):
+      integrity: remove redundant initialization of variable ret
+
+Lakshmi Ramasubramanian (2):
+      integrity: Add errno field in audit message
+      IMA: Add audit log for failure conditions
+
+Maurizio Drocco (1):
+      ima: extend boot_aggregate with kernel measurements
+
+Mimi Zohar (1):
+      Merge branch 'validate-policy-rules' into next-integrity
+
+Tyler Hicks (14):
+      ima: Have the LSM free its audit rule
+      ima: Free the entire rule when deleting a list of rules
+      ima: Free the entire rule if it fails to parse
+      ima: Fail rule parsing when buffer hook functions have an invalid action
+      ima: Fail rule parsing when the KEXEC_CMDLINE hook is combined with an invalid cond
+      ima: Fail rule parsing when the KEY_CHECK hook is combined with an invalid cond
+      ima: Fail rule parsing when appraise_flag=blacklist is unsupportable
+      ima: Shallow copy the args_p member of ima_rule_entry.lsm elements
+      ima: Use correct type for the args_p member of ima_rule_entry.lsm elements
+      ima: Move comprehensive rule validation checks out of the token parser
+      ima: Use the common function to detect LSM conditionals in a rule
+      ima: Support additional conditionals in the KEXEC_CMDLINE hook function
+      ima: Rename internal filter rule functions
+      ima: AppArmor satisfies the audit rule requirements
+
+ include/linux/ima.h                          |   4 +-
+ kernel/kexec_file.c                          |   2 +-
+ security/integrity/digsig_asymmetric.c       |   2 +-
+ security/integrity/ima/Kconfig               |   4 +-
+ security/integrity/ima/ima.h                 |  75 +++++----
+ security/integrity/ima/ima_api.c             |   2 +-
+ security/integrity/ima/ima_appraise.c        |   8 +-
+ security/integrity/ima/ima_asymmetric_keys.c |   2 +-
+ security/integrity/ima/ima_crypto.c          |  15 +-
+ security/integrity/ima/ima_main.c            |  41 +++--
+ security/integrity/ima/ima_modsig.c          |  20 ---
+ security/integrity/ima/ima_policy.c          | 240 +++++++++++++++++++--------
+ security/integrity/ima/ima_queue_keys.c      |   7 +-
+ security/integrity/integrity.h               |  13 ++
+ security/integrity/integrity_audit.c         |  11 +-
+ 15 files changed, 301 insertions(+), 145 deletions(-)
+
