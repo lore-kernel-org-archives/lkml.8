@@ -2,173 +2,180 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AE8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B23C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AC7322CAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E328E22CAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:19:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lBeyGQOG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbgHEUTj convert rfc822-to-8bit (ORCPT
+        id S1726764AbgHEUT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:19:39 -0400
-Received: from mga12.intel.com ([192.55.52.136]:63556 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbgHEUTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 16:19:38 -0400
-IronPort-SDR: jRg6g+aihljhKVo7IYgeHbtq/vxkD9PLlw7GqoDD5LgS2Pxs/4edTf5QWjmOs6aOllXRuZDjeL
- k0x+5YqCH5Cw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="132211385"
-X-IronPort-AV: E=Sophos;i="5.75,438,1589266800"; 
-   d="scan'208";a="132211385"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 13:19:38 -0700
-IronPort-SDR: w9VSCNrISXm96GGjOlNyk4yJ4AZEqjxtdap/DxRUPdcHd6GR7/SdzO2DGKE9Nih3CrBJdlNu3m
- RCa+339YsD3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,438,1589266800"; 
-   d="scan'208";a="467585502"
-Received: from orsmsx604.amr.corp.intel.com ([10.22.229.17])
-  by orsmga005.jf.intel.com with ESMTP; 05 Aug 2020 13:19:37 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 5 Aug 2020 13:19:37 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 5 Aug 2020 13:19:36 -0700
-Received: from orsmsx612.amr.corp.intel.com ([10.22.229.25]) by
- ORSMSX612.amr.corp.intel.com ([10.22.229.25]) with mapi id 15.01.1713.004;
- Wed, 5 Aug 2020 13:19:36 -0700
-From:   "Dey, Megha" <megha.dey@intel.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-CC:     "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: RE: [PATCH RFC v2 04/18] irq/dev-msi: Introduce APIs to allocate/free
- dev-msi interrupts
-Thread-Topic: [PATCH RFC v2 04/18] irq/dev-msi: Introduce APIs to
- allocate/free dev-msi interrupts
-Thread-Index: AQHWX3heqXf8B+7kfUafGS9cbpYfH6kSrV6AgAExB0iAFi3TEA==
-Date:   Wed, 5 Aug 2020 20:19:36 +0000
-Message-ID: <8cdfef10438047f5ae7fc81770d32351@intel.com>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <159534736176.28840.5547007059232964457.stgit@djiang5-desk3.ch.intel.com>
- <20200721162501.GC2021248@mellanox.com>
- <b3bc68b3-937e-4b64-e1c7-84942d7ba60c@intel.com>
- <20200722173515.GL2021248@mellanox.com>
-In-Reply-To: <20200722173515.GL2021248@mellanox.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.5.1.3
-x-originating-ip: [10.22.254.132]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 5 Aug 2020 16:19:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726718AbgHEUTq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 16:19:46 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C270DC061757
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 13:19:46 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id t6so5114216pjr.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 13:19:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qVjtbYhstiKuNQL6JeVbBPs4G1xXwyHdcoC1ZxR9HUQ=;
+        b=lBeyGQOGbakQKscP5qJp87U0BD2iPT7BShFj1oh45m4vW3V+uOyjQZjzqLblxE+DoG
+         ub+MTpdonw61jGuhYukxNyO/HMUXjsmaRDFu5GslTldXpvTE1UfUzpXvKOGxj4GBOLFJ
+         o1jzDk6g7iUKQwYW/KEivXAieYBSN294EgsiL2TdFPLYA4zX/pRBxN4U3YNsKkDsBxqR
+         aW+1CWTbx8Oktp2rcBVnX7xXXbWHanLCj0j5d3/0RGRRX8bdH+kVmgZKOjHTKoPbwrjy
+         kD9dI/VFWynhcgO7mpFsAc5PiwBbeklTcxzilRT/p1dFwFyC+yDqdJhCmaEC7t6r8Ihd
+         ix+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qVjtbYhstiKuNQL6JeVbBPs4G1xXwyHdcoC1ZxR9HUQ=;
+        b=mmhomsUWzkLd6sJ+GF1/LKe/Gl0tCEdpX+81dRfyMRM+JK3sV32QV6kEdRIv5/TX+p
+         WpSdbTe7KbpcOLkP80ncqA/4JDqt1te8mEOyMclb1xTioRWPrx4/LgZiiaAAhgYtxEub
+         BRc/vSQsWumt2aFwJXVmq/7jUWMXtUyaS1cTVUNx9dsuwekuIUNBuVzQkIyvY/cDs6Wl
+         AlpoEFj7uOIEig8W2/jSUNMpbt3IIcY59sp4TnxPJkGgpc1onHb7cnq7+ImBY6EZCxZe
+         MgNdjOn2zj05kHvA6qv6vTLctTdYrf17liK3PbZHPfeCF0OiFBcONeKLUhPC0ps5Sl/y
+         EDgQ==
+X-Gm-Message-State: AOAM533ptNCnCtOyy4WA718O3o6HvvZ+SFFrfPkSLlm31XLAMWfZty8c
+        KVUeozUjx/5hqtZaij09yk6HKBu+r3ziwvwZdKXLjA==
+X-Google-Smtp-Source: ABdhPJyzC3W0lW0kRAsgMCPz7TzprnpMpUFYzlQwQ8cedIEf9CqmMuoAlFAGdxAKZ6AyjNgpHiemuwv1bJvRpW+qLtA=
+X-Received: by 2002:a17:90a:17e9:: with SMTP id q96mr4963217pja.91.1596658785977;
+ Wed, 05 Aug 2020 13:19:45 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200718000637.3632841-1-saravanak@google.com>
+ <20200718000637.3632841-3-saravanak@google.com> <CALAqxLVZ+rFE+hM9OtQ46NqpTHeLu6oKLNWKstLv1U5zbwyq7g@mail.gmail.com>
+In-Reply-To: <CALAqxLVZ+rFE+hM9OtQ46NqpTHeLu6oKLNWKstLv1U5zbwyq7g@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 5 Aug 2020 13:19:10 -0700
+Message-ID: <CAGETcx_rkK3-bKhDP_N4n_WyXLXFPoaUV9rbY_Y+H1Joj=dCyw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] irqchip/qcom-pdc: Switch to using
+ IRQCHIP_PLATFORM_DRIVER helper macros
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Hanks Chen <hanks.chen@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason,
+On Wed, Aug 5, 2020 at 12:44 AM John Stultz <john.stultz@linaro.org> wrote:
+>
+> On Fri, Jul 17, 2020 at 5:06 PM Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > Switch the driver to use the helper macros. In addition to reducing the
+> > number of lines, this also adds module unload protection (if the driver
+> > is compiled as a module) by switching from module_platform_driver to
+> > builtin_platform_driver.
+> >
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> >  drivers/irqchip/qcom-pdc.c | 26 +++-----------------------
+> >  1 file changed, 3 insertions(+), 23 deletions(-)
+> >
+> > diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+> > index 5b624e3295e4..c1c5dfad57cc 100644
+> > --- a/drivers/irqchip/qcom-pdc.c
+> > +++ b/drivers/irqchip/qcom-pdc.c
+> > @@ -432,28 +432,8 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
+> >         return ret;
+> >  }
+> >
+> > -static int qcom_pdc_probe(struct platform_device *pdev)
+> > -{
+> > -       struct device_node *np = pdev->dev.of_node;
+> > -       struct device_node *parent = of_irq_find_parent(np);
+> > -
+> > -       return qcom_pdc_init(np, parent);
+> > -}
+> > -
+> > -static const struct of_device_id qcom_pdc_match_table[] = {
+> > -       { .compatible = "qcom,pdc" },
+> > -       {}
+> > -};
+> > -MODULE_DEVICE_TABLE(of, qcom_pdc_match_table);
+> > -
+> > -static struct platform_driver qcom_pdc_driver = {
+> > -       .probe = qcom_pdc_probe,
+> > -       .driver = {
+> > -               .name = "qcom-pdc",
+> > -               .of_match_table = qcom_pdc_match_table,
+> > -               .suppress_bind_attrs = true,
+> > -       },
+> > -};
+> > -module_platform_driver(qcom_pdc_driver);
+> > +IRQCHIP_PLATFORM_DRIVER_BEGIN(qcom_pdc)
+> > +IRQCHIP_MATCH("qcom,pdc", qcom_pdc_init)
+> > +IRQCHIP_PLATFORM_DRIVER_END(qcom_pdc)
+> >  MODULE_DESCRIPTION("Qualcomm Technologies, Inc. Power Domain Controller");
+> >  MODULE_LICENSE("GPL v2");
+>
+> <sigh>
+> So this is where I bashfully admit I didn't get a chance to try this
+> patch series out, as I had success with a much older version of
+> Saravana's macro magic.
+>
+> But unfortunately, now that this has landed in mainline, I'm seeing
+> boot regressions on db845c. :( This is in the non-modular case,
+> building the driver in.
 
-> -----Original Message-----
-> From: Jason Gunthorpe <jgg@mellanox.com>
-> Sent: Wednesday, July 22, 2020 10:35 AM
-> To: Dey, Megha <megha.dey@intel.com>
-> Cc: Jiang, Dave <dave.jiang@intel.com>; vkoul@kernel.org; maz@kernel.org;
-> bhelgaas@google.com; rafael@kernel.org; gregkh@linuxfoundation.org;
-> tglx@linutronix.de; hpa@zytor.com; alex.williamson@redhat.com; Pan, Jacob
-> jun <jacob.jun.pan@intel.com>; Raj, Ashok <ashok.raj@intel.com>; Liu, Yi L
-> <yi.l.liu@intel.com>; Lu, Baolu <baolu.lu@intel.com>; Tian, Kevin
-> <kevin.tian@intel.com>; Kumar, Sanjay K <sanjay.k.kumar@intel.com>; Luck,
-> Tony <tony.luck@intel.com>; Lin, Jing <jing.lin@intel.com>; Williams, Dan J
-> <dan.j.williams@intel.com>; kwankhede@nvidia.com; eric.auger@redhat.com;
-> parav@mellanox.com; Hansen, Dave <dave.hansen@intel.com>;
-> netanelg@mellanox.com; shahafs@mellanox.com; yan.y.zhao@linux.intel.com;
-> pbonzini@redhat.com; Ortiz, Samuel <samuel.ortiz@intel.com>; Hossain, Mona
-> <mona.hossain@intel.com>; dmaengine@vger.kernel.org; linux-
-> kernel@vger.kernel.org; x86@kernel.org; linux-pci@vger.kernel.org;
-> kvm@vger.kernel.org
-> Subject: Re: [PATCH RFC v2 04/18] irq/dev-msi: Introduce APIs to allocate/free
-> dev-msi interrupts
-> 
-> On Wed, Jul 22, 2020 at 10:05:52AM -0700, Dey, Megha wrote:
-> >
-> >
-> > On 7/21/2020 9:25 AM, Jason Gunthorpe wrote:
-> > > On Tue, Jul 21, 2020 at 09:02:41AM -0700, Dave Jiang wrote:
-> > > > From: Megha Dey <megha.dey@intel.com>
-> > > >
-> > > > The dev-msi interrupts are to be allocated/freed only for custom
-> > > > devices, not standard PCI-MSIX devices.
-> > > >
-> > > > These interrupts are device-defined and they are distinct from the
-> > > > already existing msi interrupts:
-> > > > pci-msi: Standard PCI MSI/MSI-X setup format
-> > > > platform-msi: Platform custom, but device-driver opaque MSI
-> > > > setup/control
-> > > > arch-msi: fallback for devices not assigned to the generic PCI
-> > > > domain
-> > > > dev-msi: device defined IRQ domain for ancillary devices. For e.g.
-> > > > DSA portal devices use device specific IMS(Interrupt message store)
-> interrupts.
-> > > >
-> > > > dev-msi interrupts are represented by their own device-type. That
-> > > > means
-> > > > dev->msi_list is never contended for different interrupt types. It
-> > > > will either be all PCI-MSI or all device-defined.
-> > >
-> > > Not sure I follow this, where is the enforcement that only dev-msi
-> > > or normal MSI is being used at one time on a single struct device?
-> > >
-> >
-> > So, in the dev_msi_alloc_irqs, I first check if the dev_is_pci..
-> > If it is a pci device, it is forbidden to use dev-msi and must use the
-> > pci subsystem calls. dev-msi is to be used for all other custom
-> > devices, mdev or otherwise.
-> 
-> What prevents creating a dev-msi directly on the struct pci_device ?
+Does that mean the modular version is working? Or you haven't tried
+that yet? I'll wait for your reply before I try to fix it. I don't
+have the hardware, but it should be easy to guess this issue looking
+at the code delta.
 
-In the next patchset, I have explicitly added code which denies PCI devices from using the dev_msi alloc/free APIS
-> 
-> Jason
+The only significant change from what your probe function is doing is
+this snippet. But it'd be surprising if this only affects the builtin
+case.
+
++ if (par_np == np)
++         par_np = NULL;
++
++ /*
++ * If there's a parent interrupt controller and  none of the parent irq
++ * domains have been registered, that means the parent interrupt
++ * controller has not been initialized yet.  it's not time for this
++ * interrupt controller to initialize. So, defer probe of this
++ * interrupt controller. The actual initialization callback of this
++ * interrupt controller can check for specific domains as necessary.
++ */
++ if (par_np && !irq_find_matching_host(np, DOMAIN_BUS_ANY))
++         return -EPROBE_DEFER;
+
+> I managed to bisect it down to this patch, and reverting it avoids the
+> issue. I don't see what is wrong right off, but I really need to get
+> to bed, so I'll dig further tomorrow.
+>
+> Saravana: Apologies for not getting around to testing this beforehand!
+
+No worries. Apologies for breaking it accidentally.
+
+-Saravana
