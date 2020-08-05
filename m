@@ -5,22 +5,22 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11872C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0049AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C42F9206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B548E206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:27:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BiZf+SQP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dR3nXJcO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbgHET1R (ORCPT
+        id S1726695AbgHET1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:27:17 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28579 "EHLO
+        Wed, 5 Aug 2020 15:27:15 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53682 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728641AbgHERNE (ORCPT
+        with ESMTP id S1728645AbgHERNE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 13:13:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
@@ -28,48 +28,46 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=QZtQO+RPpH+qMcVX7UHHBecNGQz0/LWgC7hfTGQuckU=;
-        b=BiZf+SQPkhv15UyvVHjdinZ8N64kunXFOU480/nrQ+Q6i2WtsSuhBm1xF0pKbHTSEHp4Gq
-        6VWu/B67wiEHqI9Y/k8pl+mm+Ij6oj5aNKw1sTZ16P/8yOu3J0jqIVx/SLakOd/KVRcE9H
-        CbXypTR4lZ4wOsDMEH87QCkj4r0UT28=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-455-iAbHYY24O7u1B-70GkGgqw-1; Wed, 05 Aug 2020 09:43:21 -0400
-X-MC-Unique: iAbHYY24O7u1B-70GkGgqw-1
-Received: by mail-wr1-f71.google.com with SMTP id f14so13524862wrm.22
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:43:20 -0700 (PDT)
+        bh=f1A99Kan+ToYvUmOMuODkd0BFkRSjBNq3WkT2nA5570=;
+        b=dR3nXJcOxXQhXr4gn6VmnbjOJP1FxOpoj2yjDm2sGOB2XQpNQ99v7U/3kvvgfu2ewkayRf
+        Mn68IMjrF78i0E6dWUf6UonGQbjnuSf6zeMNP4h7bmrKiCr5kRQkOMBWv3GbNGUE/rYh6a
+        XuR6rfx7M4qLvf6K9kuF8xUCy8KVRQA=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-226-YGQs7NjpOLOPTbjI2RF8dw-1; Wed, 05 Aug 2020 09:44:15 -0400
+X-MC-Unique: YGQs7NjpOLOPTbjI2RF8dw-1
+Received: by mail-wm1-f70.google.com with SMTP id v8so2472111wma.6
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:44:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=QZtQO+RPpH+qMcVX7UHHBecNGQz0/LWgC7hfTGQuckU=;
-        b=ajFoYkR3jy1reHEfBLayaRLG8ts6mf3u6xCtN14VRrZGzkdjdOpcH8fTDAbgvVHdkV
-         n6fg/8y0L0i181KyLsZ+FqwDtk3OSJXcfGAOGZSCAwyTP6qAbvIBAAZEtLG/7vbFlucb
-         lhhwkMfWnq0sLb2viYxKTs5c0dBeg1UVY+iYeI7EFBZkC/gvLdsj21Loqr5UbnjLL4iq
-         7AeUV+MUe9Ygl/qgkf1y8NK4VkL4d0V8E5shYbfjh0h5RTCwFhJCrCMYnFkniA1tQ2Ea
-         2Y+8k7jofGZCD3bkHMiABiL56O7fnKRQw4xlLvmWnztrpbui6AaZIAOUbdA4dC/89SpZ
-         yxDg==
-X-Gm-Message-State: AOAM531ybiMO90teg4EBXxyaxksCFtWBa0RJq9yQzTrjiuN7N6FWbzfp
-        imjmJS5XGXmXFnzF7rtF/bNqJmBjQsj0D6Pu97zdJrO9AJzHeCZj29b/MPkn0nRoochS6DMw/Zz
-        u1SRqPG2wRjnEgs4SP2SknIpl
-X-Received: by 2002:a05:600c:2189:: with SMTP id e9mr3594946wme.171.1596634999574;
-        Wed, 05 Aug 2020 06:43:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzaUQx57cc7JttIMX2xKEoawmsqxvIFhQa983nt+oNgyKZc7lcEC6u20fEKG5dxWjJXOX9tYA==
-X-Received: by 2002:a05:600c:2189:: with SMTP id e9mr3594934wme.171.1596634999421;
-        Wed, 05 Aug 2020 06:43:19 -0700 (PDT)
+        bh=f1A99Kan+ToYvUmOMuODkd0BFkRSjBNq3WkT2nA5570=;
+        b=RmQjnOjh0hU13RKHQJropXLjhmfjSglH0WbBkyo/rEZJJ/yPBRrGOX+eU5vCwIa6sA
+         A9hRyDt+i9QdMUtRKgkqpzXDQARRHA5KDE0FeuEHtrB3nsi5c2CLle5z4x93UnG2JTZ5
+         pcSZZp3WGNCergW0SiXllQqIBLFHFaiLsvWeN6Z/vKSp7djIxlMZ/jwhVQPFVHuABpmI
+         vyo4kBJrvVKzPQ4/5fRt5YCy9zGVytWEAkbYSB6xWs/HogFgXYi1JSpvYbEz6/GQXKgR
+         0w82e+SI+hOSS0dZc+Bc/Gok3NVA74eOP0shV8U/3pj46pJNgEKFQyyCMD8eu/u+Ns/T
+         k4oA==
+X-Gm-Message-State: AOAM530nS37PNfNZ19yGdeOv/sU8/dWSA84L4ob5nNxjHloIUebpKMGP
+        pQnWD9dO872K1A1O5MHafan3CAjixkHkLBySWPYg3USeIDlaP9hknCaojq/7IxS+jXVsXIvn0I1
+        6u6hWOFdjrG29Yo4QzF8QTAW7
+X-Received: by 2002:a5d:56c9:: with SMTP id m9mr2815443wrw.311.1596635052938;
+        Wed, 05 Aug 2020 06:44:12 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz1s5cwBUNfyg52XUg786M5asAtfYsirHkxCrJWthFsY+eLaHorMKAhGdLmAYB5+K4MVfGhow==
+X-Received: by 2002:a5d:56c9:: with SMTP id m9mr2815427wrw.311.1596635052770;
+        Wed, 05 Aug 2020 06:44:12 -0700 (PDT)
 Received: from redhat.com (bzq-79-180-0-181.red.bezeqint.net. [79.180.0.181])
-        by smtp.gmail.com with ESMTPSA id x6sm594339wmx.28.2020.08.05.06.43.17
+        by smtp.gmail.com with ESMTPSA id o30sm2873971wra.67.2020.08.05.06.44.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 06:43:18 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 09:43:16 -0400
+        Wed, 05 Aug 2020 06:44:12 -0700 (PDT)
+Date:   Wed, 5 Aug 2020 09:44:10 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 01/38] virtio_balloon: fix sparse warning
-Message-ID: <20200805134226.1106164-2-mst@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: [PATCH v3 20/38] vhost/vdpa: switch to new helpers
+Message-ID: <20200805134226.1106164-21-mst@redhat.com>
 References: <20200805134226.1106164-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -82,32 +80,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-balloon uses virtio32_to_cpu instead of cpu_to_virtio32
-to convert a native endian number to virtio.
-No practical difference but makes sparse warn.
-Fix it up.
+For new helpers handling legacy features to be effective,
+vhost needs to invoke them. Tie them in.
 
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Acked-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 ---
- drivers/virtio/virtio_balloon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/vhost/vdpa.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-index 54fd989f9353..8bc1704ffdf3 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -600,7 +600,7 @@ static int send_cmd_id_start(struct virtio_balloon *vb)
- 	while (virtqueue_get_buf(vq, &unused))
- 		;
+diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
+index 18869a35d408..3674404688f5 100644
+--- a/drivers/vhost/vdpa.c
++++ b/drivers/vhost/vdpa.c
+@@ -118,9 +118,8 @@ static irqreturn_t vhost_vdpa_config_cb(void *private)
+ static void vhost_vdpa_reset(struct vhost_vdpa *v)
+ {
+ 	struct vdpa_device *vdpa = v->vdpa;
+-	const struct vdpa_config_ops *ops = vdpa->config;
  
--	vb->cmd_id_active = virtio32_to_cpu(vb->vdev,
-+	vb->cmd_id_active = cpu_to_virtio32(vb->vdev,
- 					virtio_balloon_cmd_id_received(vb));
- 	sg_init_one(&sg, &vb->cmd_id_active, sizeof(vb->cmd_id_active));
- 	err = virtqueue_add_outbuf(vq, &sg, 1, &vb->cmd_id_active, GFP_KERNEL);
+-	ops->set_status(vdpa, 0);
++	vdpa_reset(vdpa);
+ }
+ 
+ static long vhost_vdpa_get_device_id(struct vhost_vdpa *v, u8 __user *argp)
+@@ -196,7 +195,6 @@ static long vhost_vdpa_get_config(struct vhost_vdpa *v,
+ 				  struct vhost_vdpa_config __user *c)
+ {
+ 	struct vdpa_device *vdpa = v->vdpa;
+-	const struct vdpa_config_ops *ops = vdpa->config;
+ 	struct vhost_vdpa_config config;
+ 	unsigned long size = offsetof(struct vhost_vdpa_config, buf);
+ 	u8 *buf;
+@@ -209,7 +207,7 @@ static long vhost_vdpa_get_config(struct vhost_vdpa *v,
+ 	if (!buf)
+ 		return -ENOMEM;
+ 
+-	ops->get_config(vdpa, config.off, buf, config.len);
++	vdpa_get_config(vdpa, config.off, buf, config.len);
+ 
+ 	if (copy_to_user(c->buf, buf, config.len)) {
+ 		kvfree(buf);
+@@ -282,7 +280,7 @@ static long vhost_vdpa_set_features(struct vhost_vdpa *v, u64 __user *featurep)
+ 	if (features & ~vhost_vdpa_features[v->virtio_id])
+ 		return -EINVAL;
+ 
+-	if (ops->set_features(vdpa, features))
++	if (vdpa_set_features(vdpa, features))
+ 		return -EINVAL;
+ 
+ 	return 0;
 -- 
 MST
 
