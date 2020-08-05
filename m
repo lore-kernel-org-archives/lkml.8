@@ -4,59 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24090C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57456C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0127A22CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37EF822CAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596658533;
-	bh=x3ZHXxquKDbAiA2NrYdhb8ekIS3wwnWPgFDvfXsCgjQ=;
+	s=default; t=1596658536;
+	bh=WhoFOPfHGPgdx+utmWK9QI3Z+xfTMsThhvg3J1Yw9nw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Bb+iOYLuNqzED5vFZkhUIJTw2Qub7ZAuKn5D1PKbchnjMqciOfaT/ySRzCygF2uV3
-	 InnRsTLq2Vn6qBhlroa0q7r3hr5ADKR07QlR4SSRp7gUj5Rpcjxl853qM9nkGX+NJj
-	 F3+w/luUU1hBb/N94G8GjfhuWrCS3zQTveIOl7GA=
+	b=jNNFlZC/zog+CEX9ijsmctOFCF6bSvY84JDDJ0MNKSa78mHAJ1K1Za5guau5dg30t
+	 pTgk/wNK3KfnGAGRlfL8zKhYDj4CK7DJT3vBt6r5ESl127jTEb7rrk4VKrawWodZa0
+	 L8KFzHtUBBFfqADmBPJHogCtDoaj3dn3mJ4xDPe4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbgHEUPa (ORCPT
+        id S1728748AbgHEUPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:15:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48136 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 16:15:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726489AbgHEQUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726481AbgHEQUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:20:17 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 616D7207FC;
-        Wed,  5 Aug 2020 10:51:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C74F023406;
+        Wed,  5 Aug 2020 16:10:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596624686;
-        bh=x3ZHXxquKDbAiA2NrYdhb8ekIS3wwnWPgFDvfXsCgjQ=;
+        s=default; t=1596643844;
+        bh=WhoFOPfHGPgdx+utmWK9QI3Z+xfTMsThhvg3J1Yw9nw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Tz9/O3MwNWVUjnDemRDBvIBHLVnCwzcZU9KwGVAfLwJL9klqT5BXqz1Xdd8jPqNwM
-         JihxqNRzl/tuH3X1xIDDy5h7jYfjdribFzyTkod95UguTpz2DDZsDpOs0iFqDPn3aZ
-         SwLoSRPWz174jubsykqQiQ8naeWwRJ0IJ1ilLquY=
-Date:   Wed, 5 Aug 2020 11:51:04 +0100
+        b=wdwG1V09WOdsUE6fUOwmBTm3Ztbthxnyna80LJ2nU8oSYmnnsN9HK53ujcyTUdZIP
+         UpHFogpal+vQnnVRVSjD0cAGqjZwUEIdvKqS1sYm5+Ccp/rbrrnVYjXW9Bt/hyvZID
+         DI11Jnc5yLbZxUHesh6tfBZiYksW3oeg8WSocMyI=
+Date:   Wed, 5 Aug 2020 17:10:21 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Alain Volmat <alain.volmat@st.com>
-Cc:     amelie.delaunay@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-Subject: Re: [PATCH 03/18] spi: stm32h7: remove unused mode fault MODF event
- handling
-Message-ID: <20200805105104.GC5556@sirena.org.uk>
-References: <1596610933-32599-1-git-send-email-alain.volmat@st.com>
- <1596610933-32599-4-git-send-email-alain.volmat@st.com>
+To:     Gene Chen <gene.chen.richtek@gmail.com>
+Cc:     lee.jones@linaro.org, matthias.bgg@gmail.com, rafael@kernel.org,
+        gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gene_chen@richtek.com, benjamin.chao@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com
+Subject: Re: [PATCH 9/9] mfd: mt6360: Merge different sub-devices I2C
+ read/write
+Message-ID: <20200805161021.GK5556@sirena.org.uk>
+References: <1596558782-3415-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1596558782-3415-11-git-send-email-gene.chen.richtek@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4jXrM3lyYWu4nBt5"
+        protocol="application/pgp-signature"; boundary="AYsPlKobQGgtCvjI"
 Content-Disposition: inline
-In-Reply-To: <1596610933-32599-4-git-send-email-alain.volmat@st.com>
+In-Reply-To: <1596558782-3415-11-git-send-email-gene.chen.richtek@gmail.com>
 X-Cookie: Fast, cheap, good: pick two.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,47 +64,34 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---4jXrM3lyYWu4nBt5
+--AYsPlKobQGgtCvjI
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 05, 2020 at 09:01:58AM +0200, Alain Volmat wrote:
-> From: Antonio Borneo <antonio.borneo@st.com>
+On Wed, Aug 05, 2020 at 12:33:02AM +0800, Gene Chen wrote:
+> From: Gene Chen <gene_chen@richtek.com>
+>=20
+> Remove unuse register definition.
+> Merge different sub-devices I2C read/write functions into one Regmap,
+> because PMIC and LDO part need CRC bits for access protection.
 
-> Accordingly to STM32H7 document RM0433, "mode fault" MODF is
-> a special mode to handle a spi bus with multiple masters, in
-> which each master has to "detect" if another master enables
-> its CS to take control of the bus. Once this is detected,
-> all other masters has to temporarily switch to "slave" mode.
+It's not clear why this isn't just done in the device regmap, there's
+exactly one user?
 
-> Such multi-master mode is not supported in Linux and this
-> driver properly disables the mode by setting the bits
-> SPI_CR1_SSI and SPI_CFG2_SSM, thus forcing a master only
-> operating mode.
-
-> In this condition, we will never receive an interrupt due to
-> MODF event and we do not need to handle it.
-
-> Remove all the unused code around handling MODF events.
-
-What does having this cost us?  Hopefully it's not doing much but if
-something goes wrong with the hardware and this does get flagged up for
-some reason it'd be good to know about it.  It doesn't seem to be having
-a big impact on the code or anything.
-
---4jXrM3lyYWu4nBt5
+--AYsPlKobQGgtCvjI
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8qjxcACgkQJNaLcl1U
-h9C+kAf8CK9hJ/6Jc4BQ05hn0nAaypIJAYNq1bv8lExUjoH1m3AeiTfTBbh8Aq25
-W/1u3hhb83akhry/0vcVC2vSF5UGKInNhyeb6FRRoqUaiBD2krRo55ZDgmYeD7Ta
-F34U8K3C4QbYMpQeKO5ceuZZOadkfjxKrgX4h+ZkFwGXaUn8tIGN9MDZLKyQ85md
-ecRl77X3Wt9kX9OxEml6f5UFJvbaVA//arSxikBmyBnFDAe4udEu9PVXHtdJ1pNy
-jvw6E20aw6tBoteFTfL1iv36f8kImbVrjGWJjgHEUu2ujyEgQgJfg9xrU3wWIykr
-OlTao50KMlI4sHvYI2leN01XzXGJdA==
-=gL3F
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8q2ewACgkQJNaLcl1U
+h9BJaQf/e0Lbk/kx2bARen+5ThM7i3n9dmDuHvJ9CvSxiUMx6Hru/VTrxy326CeC
+1z7UW97+Jia1/NXuz8Er/QmM2b7d9Fj02CYyVnlD0tbGBmrACsvfDzQaZ0hVVgff
+pAn0CcJkqK5W264AMpUYoVcJ6Og8TeUxYSQb+xRCzFDdddddQBwn2w9Y8/bO/onm
+MC4uxD/rt46rStAwYxri7jd0YInN328wK0MrE7okiQuWXDtybDf4ud2Xdoi/BJ6w
+FqmJaKZBSn4MMg6Ese7xewyegU0WcntH9qg08weIh8REtS/Uad0eOfyNnTk1n+Ah
+99pBqYSA/cmvSTGHS48yUtSODT34Qg==
+=MD5u
 -----END PGP SIGNATURE-----
 
---4jXrM3lyYWu4nBt5--
+--AYsPlKobQGgtCvjI--
