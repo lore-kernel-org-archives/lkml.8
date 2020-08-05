@@ -2,180 +2,231 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC7CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E030C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 532632177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41A192177B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:24:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="geGxxXXI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d+vuuiZG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbgHERYB (ORCPT
+        id S1728824AbgHERYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:24:01 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34098 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728485AbgHERQF (ORCPT
+        Wed, 5 Aug 2020 13:24:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52632 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728776AbgHERXy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:16:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596647763;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lad+l1QsVGACWdbh/Js4EqT43VIKUvJSAKVohar8Uec=;
-        b=geGxxXXI5N6UvtmH5+Th8NT6nsUOKyjiAAzwNPda72ts1kdnSMpY4OAaceZXsPaJWsot+k
-        UdyiofWAjjmk/Rb96oQL0gcmiM4NPQwdhNw2nOqvd+U5i7YHKrPEcYvulCnnt/G9XaFx9W
-        u81nnO08lRFDRAiSyUU4BI2Efh1N2a0=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-291-WY5JIb6JMEOlT1wXyPPUUA-1; Wed, 05 Aug 2020 07:40:20 -0400
-X-MC-Unique: WY5JIb6JMEOlT1wXyPPUUA-1
-Received: by mail-wr1-f72.google.com with SMTP id e12so13538114wra.13
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 04:40:20 -0700 (PDT)
+        Wed, 5 Aug 2020 13:23:54 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86000C06174A;
+        Wed,  5 Aug 2020 10:23:54 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id v15so20146934lfg.6;
+        Wed, 05 Aug 2020 10:23:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RTUzsrfaQoHKZVy9cmLeHwNyr/nr7Ihju/lId3cbKHg=;
+        b=d+vuuiZGBac23smNQ/5Nf9Dtkcm0tB0T2ace/UJGn7IdY34laxqz0QKuy6qVcYXxTX
+         +8g+LxrozCHuwfFazJh+d4Gvx834EMtyZ02EnbqXmyZeYfbo2+glRHaEsq3vewzceL7d
+         D4Da75X3ZOYT6Og0MHRZ4/ylzjZ69jXb5Zchd7WdC9qyGi9hlFdQHA0Ix0X1mBw/Cr33
+         UWgjurxDi3NxRBYA9finrD5CMQcLN96aphBlSEOEkpQYo6NpLfFNmBl0rZP+na9DMuel
+         cUPpqtz90/ge5DVXsbx8uRqOX9U5GSJtDe4HchlLMPjAhkGrAN81LQQt4i2S1uiClG6X
+         nucQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=lad+l1QsVGACWdbh/Js4EqT43VIKUvJSAKVohar8Uec=;
-        b=s3YAd+wlXGjLRp1AwSxn5Q7Sy/sbmPNBuC6TO5J06m8b6UcCt1bCH7d+OiRY9z1hyf
-         tUzXcqfKqm5Qx/9kTzSg0RrJkCE/Hiv46/EllQg6Qzb+e9Ubh+nMM5XeWfNPTgWW74E4
-         0mUbT6PccIs21ExPqJvr8+Tvjw2vgy5QRoFO5VVUPqGKX9YndGY0F07C+OlxqMdqULXj
-         7CCOae02VD5iE1/Z4a/uRAbTU/LU6KObuzeR3FzVqXjeUPjHjto7RhMndHIWHtxKYb8J
-         XE/pw6BytMBf+ZaBTMqO2VOwDeefafVqUGetNorawbNmeqHao+Tef/luoXogQ3Bd8MaB
-         O74g==
-X-Gm-Message-State: AOAM531cNFS1Ig7IjcznhuuGmm8KLYl8q5YvzoaAzK8OBcFVQwbOe1J7
-        Yg7/IgSDlMXSh2kCzMNdLlu//9VsOi5Bgv1xm1+SAak25Ycq7fZe5oPlCpy440dB6OHqa3QmP6V
-        6c8zASI89Q00wSeolcsMlVRTM
-X-Received: by 2002:a05:600c:2154:: with SMTP id v20mr2905540wml.186.1596627619070;
-        Wed, 05 Aug 2020 04:40:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxzLUhNKsFdDJV97Qke7oWTu+zTzIxWpF7w4wMB3AJ3toR2KxppLas4gqRP9GzEle7rmm20eQ==
-X-Received: by 2002:a05:600c:2154:: with SMTP id v20mr2905517wml.186.1596627618867;
-        Wed, 05 Aug 2020 04:40:18 -0700 (PDT)
-Received: from redhat.com (bzq-79-180-0-181.red.bezeqint.net. [79.180.0.181])
-        by smtp.gmail.com with ESMTPSA id d14sm2409261wre.44.2020.08.05.04.40.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 04:40:17 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 07:40:15 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v2 19/24] vdpa: make sure set_features in invoked for
- legacy
-Message-ID: <20200805073929-mutt-send-email-mst@kernel.org>
-References: <20200803205814.540410-1-mst@redhat.com>
- <20200803205814.540410-20-mst@redhat.com>
- <9e47d227-f220-4651-dcb9-7a11f059a715@redhat.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RTUzsrfaQoHKZVy9cmLeHwNyr/nr7Ihju/lId3cbKHg=;
+        b=TRvl2Aa7cYOUcLxij2bDi5QlPupJNJNH3ox0he3pQsE4lIpF9oD3HjqbkoDE6s/+A4
+         nYhwijzW7lfa7ySQbeKQZgNMwAHlJlhcgRuWEqEftUHBpLyZP0U3Qs3O0B8ankFVpWIj
+         PlI/ocP0crr4IX01PdZrM+hNk/cMTAr5jFWwptZEi9U5L0c7dkpfKKdeoC5Xi1qTEcS1
+         0xRGAb5VuIci3ZxxCSnkFqmkJ6b9DfkivVc66P1hjUwgbA9c6AH2qxE/dfTq3IEh/rhX
+         sMLxtEZQto7VU5uXcBDidWWR/peMB8PYf6FbZIArrPaVckSED7sILVaewluIQuRT5f4s
+         hpOw==
+X-Gm-Message-State: AOAM532DdbCK7AomIncYtRdn44lTLeSn2oL41ubFVKOoAoUO+nxXQ2hk
+        D5TEEfAEocVAT50zlCNbOqKyYHE0
+X-Google-Smtp-Source: ABdhPJx974DTKzMbJvfgKqrnBwD14STcF/ve8Md3Id04y1YrjXJl8wCgVmYa/KTjw2EDqxWlfwYpAA==
+X-Received: by 2002:a19:d14:: with SMTP id 20mr2030698lfn.27.1596648232750;
+        Wed, 05 Aug 2020 10:23:52 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
+        by smtp.googlemail.com with ESMTPSA id a19sm1398454lff.25.2020.08.05.10.23.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Aug 2020 10:23:52 -0700 (PDT)
+Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
+ calibration is done
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     jonathanh@nvidia.com, frankc@nvidia.com, hverkuil@xs4all.nl,
+        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com,
+        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
+ <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
+ <20200805134600.GA3351349@ulmo>
+ <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
+ <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
+ <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
+ <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
+ <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
+ <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
+ <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <57b48a06-325c-86ba-db24-011de7ab51a3@gmail.com>
+Date:   Wed, 5 Aug 2020 20:23:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9e47d227-f220-4651-dcb9-7a11f059a715@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 02:14:07PM +0800, Jason Wang wrote:
+05.08.2020 20:04, Sowjanya Komatineni пишет:
 > 
-> On 2020/8/4 上午5:00, Michael S. Tsirkin wrote:
-> > Some legacy guests just assume features are 0 after reset.
-> > We detect that config space is accessed before features are
-> > set and set features to 0 automatically.
-> > Note: some legacy guests might not even access config space, if this is
-> > reported in the field we might need to catch a kick to handle these.
+> On 8/5/20 9:57 AM, Dmitry Osipenko wrote:
+>> 05.08.2020 19:50, Sowjanya Komatineni пишет:
+>>> On 8/5/20 9:47 AM, Dmitry Osipenko wrote:
+>>>> 05.08.2020 19:33, Sowjanya Komatineni пишет:
+>>>>> On 8/5/20 7:19 AM, Dmitry Osipenko wrote:
+>>>>>> 05.08.2020 17:05, Dmitry Osipenko пишет:
+>>>>>>> 05.08.2020 16:46, Thierry Reding пишет:
+>>>>>>>> On Mon, Aug 03, 2020 at 08:42:24AM -0700, Sowjanya Komatineni
+>>>>>>>> wrote:
+>>>>>>>>> With the split of MIPI calibration into tegra_mipi_calibrate() and
+>>>>>>>>> tegra_mipi_wait(), MIPI clock is not kept enabled till the
+>>>>>>>>> calibration
+>>>>>>>>> is done.
+>>>>>>>>>
+>>>>>>>>> So, this patch skips disabling MIPI clock after triggering
+>>>>>>>>> start of
+>>>>>>>>> calibration and disables it only after waiting for done status
+>>>>>>>>> from
+>>>>>>>>> the calibration logic.
+>>>>>>>>>
+>>>>>>>>> This patch renames tegra_mipi_calibrate() as
+>>>>>>>>> tegra_mipi_start_calibration()
+>>>>>>>>> and tegra_mipi_wait() as tegra_mipi_finish_calibration() to be
+>>>>>>>>> inline
+>>>>>>>>> with their usage.
+>>>>>>>>>
+>>>>>>>>> As MIPI clock is left enabled and in case of any failures with CSI
+>>>>>>>>> input
+>>>>>>>>> streaming tegra_mipi_finish_calibration() will not get invoked.
+>>>>>>>>> So added new API tegra_mipi_cancel_calibration() which disables
+>>>>>>>>> MIPI clock
+>>>>>>>>> and consumer drivers can call this in such cases.
+>>>>>>>>>
+>>>>>>>>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>>>>> ---
+>>>>>>>>>     drivers/gpu/drm/tegra/dsi.c |  4 ++--
+>>>>>>>>>     drivers/gpu/host1x/mipi.c   | 19 ++++++++++---------
+>>>>>>>>>     include/linux/host1x.h      |  5 +++--
+>>>>>>>>>     3 files changed, 15 insertions(+), 13 deletions(-)
+>>>>>>>>>
+>>>>>>>>> diff --git a/drivers/gpu/drm/tegra/dsi.c
+>>>>>>>>> b/drivers/gpu/drm/tegra/dsi.c
+>>>>>>>>> index 3820e8d..a7864e9 100644
+>>>>>>>>> --- a/drivers/gpu/drm/tegra/dsi.c
+>>>>>>>>> +++ b/drivers/gpu/drm/tegra/dsi.c
+>>>>>>>>> @@ -694,11 +694,11 @@ static int tegra_dsi_pad_calibrate(struct
+>>>>>>>>> tegra_dsi *dsi)
+>>>>>>>>>             DSI_PAD_PREEMP_PD(0x03) | DSI_PAD_PREEMP_PU(0x3);
+>>>>>>>>>         tegra_dsi_writel(dsi, value, DSI_PAD_CONTROL_3);
+>>>>>>>>>     -    err = tegra_mipi_calibrate(dsi->mipi);
+>>>>>>>>> +    err = tegra_mipi_start_calibration(dsi->mipi);
+>>>>>>>>>         if (err < 0)
+>>>>>>>>>             return err;
+>>>>>>>>>     -    return tegra_mipi_wait(dsi->mipi);
+>>>>>>>>> +    return tegra_mipi_finish_calibration(dsi->mipi);
+>>>>>>>>>     }
+>>>>>>>>>       static void tegra_dsi_set_timeout(struct tegra_dsi *dsi,
+>>>>>>>>> unsigned long bclk,
+>>>>>>>>> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
+>>>>>>>>> index e606464..b15ab6e 100644
+>>>>>>>>> --- a/drivers/gpu/host1x/mipi.c
+>>>>>>>>> +++ b/drivers/gpu/host1x/mipi.c
+>>>>>>>>> @@ -293,17 +293,19 @@ int tegra_mipi_disable(struct
+>>>>>>>>> tegra_mipi_device *dev)
+>>>>>>>>>     }
+>>>>>>>>>     EXPORT_SYMBOL(tegra_mipi_disable);
+>>>>>>>>>     -int tegra_mipi_wait(struct tegra_mipi_device *device)
+>>>>>>>>> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device
+>>>>>>>>> *device)
+>>>>>>>>> +{
+>>>>>>>>> +    clk_disable(device->mipi->clk);
+>>>>>>>> Do we need to do anything with the MIPI_CAL_CTRL and
+>>>>>>>> MIPI_CAL_STATUS
+>>>>>>>> registers here? We don't clear the START bit in the former when the
+>>>>>>>> calibration has successfully finished, but I suspect that's because
+>>>>>>>> the bit is self-clearing. But I wonder if we still need to clear it
+>>>>>>>> upon cancellation to make sure the calibration does indeed stop.
+>>>>>>> Apparently there is no way to explicitly stop calibration other
+>>>>>>> than to
+>>>>>>> reset MIPI calibration block, but Sowjanya says this is unnecessary.
+>>>>>>>
+>>>>>>> Perhaps having a fixed delay before disabling clock could be
+>>>>>>> enough to
+>>>>>>> ensure that calibration is stopped before the clock is disabled?
+>>>>>>>
+>>>>>> Actually, there is a MIPI_CAL_ACTIVE bit in the status register.
+>>>>>> Maybe
+>>>>>> it needs to be polled until it's unset?
+>>>>> Confirmed with HW design team during this patch update.
+>>>>>
+>>>>> SW does not need to clear START bit and only write 1 takes effect to
+>>>>> that bit.
+>>>>>
+>>>>> Also, no need to have delay or do any other register settings
+>>>>> unclear as
+>>>>> its FSM and there's nothing to get stuck.
+>>>>>
+>>>>> Also it goes thru small finite set of codes and by the time sensor
+>>>>> programming happens for enabling streaming FSM will finish its
+>>>>> calibration sequence much early and it will only wait for pads LP-11.
+>>>>>
+>>>>> So, during cancel we only need disable MIPI clock.
+>>>>>
+>>>> But there is no guarantee that cancel_calibration() couldn't be invoked
+>>>> in the middle of the calibration process, hence FSM could freeze in an
+>>>> intermediate state if it's running on the disabled MIPI clock, this
+>>>> doesn't sound good.
+>>> Actual calibration logic uses UART_FST_CAL clock which is always enabled
+>> What enables the UART_FST_CAL clock? I don't see this clock used
+>> anywhere.
 > 
+> UART_FST_MIPI_CAL is shared with uart and is always enabled all the time.
 > 
-> I wonder whether it's easier to just support modern device?
-> 
-> Thanks
+> I don't see mipi driver handling this and I think that's because this
+> clock is enabled all the time as its used for UART as well. Probably
+> thierry can comment on this clock.
 
+It's not only the MIPI driver, the clock isn't defined at all neither in
+the clk driver, nor in clk DT bindings.
 
-Well hardware vendors are I think interested in supporting legacy
-guests. Limiting vdpa to modern only would make it uncompetitive.
+It could be fragile to assume that it's always enabled.
 
+> Also regarding cancel calibration, as FSM goes thru only finite sequence
+> codes by the time csi stream and sensor stream happens which is where we
+> check for calibration to complete for sure calibration will be finished
+> and calibration logic will only wait for pads to be in LP-11 to apply
+> results. So nothing special needed during cancel except to turn clock
+> off to balance its usage count.
 
-
-> 
-> > 
-> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > ---
-> >   drivers/vdpa/vdpa.c  |  1 +
-> >   include/linux/vdpa.h | 34 ++++++++++++++++++++++++++++++++++
-> >   2 files changed, 35 insertions(+)
-> > 
-> > diff --git a/drivers/vdpa/vdpa.c b/drivers/vdpa/vdpa.c
-> > index de211ef3738c..7105265e4793 100644
-> > --- a/drivers/vdpa/vdpa.c
-> > +++ b/drivers/vdpa/vdpa.c
-> > @@ -96,6 +96,7 @@ struct vdpa_device *__vdpa_alloc_device(struct device *parent,
-> >   	vdev->dev.release = vdpa_release_dev;
-> >   	vdev->index = err;
-> >   	vdev->config = config;
-> > +	vdev->features_valid = false;
-> >   	err = dev_set_name(&vdev->dev, "vdpa%u", vdev->index);
-> >   	if (err)
-> > diff --git a/include/linux/vdpa.h b/include/linux/vdpa.h
-> > index 239db794357c..29b8296f1414 100644
-> > --- a/include/linux/vdpa.h
-> > +++ b/include/linux/vdpa.h
-> > @@ -33,12 +33,14 @@ struct vdpa_notification_area {
-> >    * @dma_dev: the actual device that is performing DMA
-> >    * @config: the configuration ops for this device.
-> >    * @index: device index
-> > + * @features_valid: were features initialized? for legacy guests
-> >    */
-> >   struct vdpa_device {
-> >   	struct device dev;
-> >   	struct device *dma_dev;
-> >   	const struct vdpa_config_ops *config;
-> >   	unsigned int index;
-> > +	bool features_valid;
-> >   };
-> >   /**
-> > @@ -266,4 +268,36 @@ static inline struct device *vdpa_get_dma_dev(struct vdpa_device *vdev)
-> >   {
-> >   	return vdev->dma_dev;
-> >   }
-> > +
-> > +static inline void vdpa_reset(struct vdpa_device *vdev)
-> > +{
-> > +        const struct vdpa_config_ops *ops = vdev->config;
-> > +
-> > +	vdev->features_valid = false;
-> > +        ops->set_status(vdev, 0);
-> > +}
-> > +
-> > +static inline int vdpa_set_features(struct vdpa_device *vdev, u64 features)
-> > +{
-> > +        const struct vdpa_config_ops *ops = vdev->config;
-> > +
-> > +	vdev->features_valid = true;
-> > +        return ops->set_features(vdev, features);
-> > +}
-> > +
-> > +
-> > +static inline void vdpa_get_config(struct vdpa_device *vdev, unsigned offset,
-> > +				   void *buf, unsigned int len)
-> > +{
-> > +        const struct vdpa_config_ops *ops = vdev->config;
-> > +
-> > +	/*
-> > +	 * Config accesses aren't supposed to trigger before features are set.
-> > +	 * If it does happen we assume a legacy guest.
-> > +	 */
-> > +	if (!vdev->features_valid)
-> > +		vdpa_set_features(vdev, 0);
-> > +	ops->get_config(vdev, offset, buf, len);
-> > +}
-> > +
-> >   #endif /* _LINUX_VDPA_H */
-
+I guess it should be okay for the case of the VI driver, but
+in general please don't assume that code can't change in the future. The
+common API always should be made reliable for all possible situations.
