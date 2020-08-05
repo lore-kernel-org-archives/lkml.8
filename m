@@ -2,132 +2,185 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CB3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24467C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9293921D95
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDA442250E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:48:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h6wGUUGc"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="B1prvCHa";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="B1prvCHa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgHETsN (ORCPT
+        id S1728233AbgHETsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:48:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48726 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728299AbgHEQ7K (ORCPT
+        Wed, 5 Aug 2020 15:48:20 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:39006 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728145AbgHEQ6y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:59:10 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8623EC061756
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 09:59:10 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id z3so27760446ilh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 09:59:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/iY/ubMmbOSOA8vM2Ed9hyP7ugEKG4FguBxj1BcTv4M=;
-        b=h6wGUUGcP75XA3LUEzYumdnVapc3qvV4UdgfvimPqvzccdQVOToiVkOD2SCzhcXKmf
-         yIWsGk3a2DnN301kQaz84du1eqLCiPxGyvYag41d8ICac7CBAdh2ZcoD/yN5rC7UydHy
-         FFJoHcL3brk1PRJFxENYKmQqn0sNE4IsuCrr52Ys5/muTA2A5LZ3RMupCxdVmPooRVcS
-         6mwUxSwk8VGQYVixrXLkMpVkbG13MPKnEwXTh2MNL8AMRF+bDhzoziRusSmmw4UtcYeZ
-         cBDxgzWt8M39rLO2Fgb0v4Sxw4hh+j5xBfBqnk4SiqRrobA4tvtSp2OesiWDYYiIszb3
-         u6sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/iY/ubMmbOSOA8vM2Ed9hyP7ugEKG4FguBxj1BcTv4M=;
-        b=o6AOTp5TBNdLY5qziOPYYs7y6AOnk4OZAn1uusHndTMom8DwMl9Egl2/ZhSk9mlq9e
-         20QRxZAQWvAn3OoMakkj3r5HNpWY4uhQPQTm4khs5TrabEqusw/ltasb1i5B+Pyf5fea
-         ulRmVnLrRyb19pnSVlk9f7RT6Udrhs9FrP7OFeDi7vwEz0cQIsymVol6iVeuTGFTi4pe
-         h3bc/JrvwqwUkUTPB9H4T54v0LBsWPXQk3ouCWUS7K/87AfuMsIZ/wc4UZERgB9o4Qbw
-         sUyb7rRy8d0GeBS2zVR6OvtZVuNAwbnLrZhzDIeGU6hCeR+P7JBPL2gwetbQLhhC6vi3
-         icDw==
-X-Gm-Message-State: AOAM532RiLKBJ9BKFB8yNv7Nma7R5ws/Md7F0QhWw6D+AwfeZX7SO4wj
-        e21AcDHfBvYBe/ep7FN+DhW1+ZVVXFnDJQRYZLl91Q==
-X-Google-Smtp-Source: ABdhPJypYAKgX0g9f2ZUaKnwT2czaqscnJNCCLD3hST31y/Ci03lV+urmS6O+HiFATowBbfuaEHvgtP8cK1MMqA4igQ=
-X-Received: by 2002:a92:da0a:: with SMTP id z10mr2863722ilm.275.1596646748668;
- Wed, 05 Aug 2020 09:59:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <202008051540.zMO6UY7G%lkp@intel.com>
-In-Reply-To: <202008051540.zMO6UY7G%lkp@intel.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Wed, 5 Aug 2020 19:58:57 +0300
-Message-ID: <CAOQ4uxh9s8ukzyUvADZzF-kyTGXgZxdei9LyfzEDHJ_h+wKRFg@mail.gmail.com>
-Subject: Re: fs/notify/fanotify/fanotify_user.c:370:3: warning: Assignment of
- function parameter has no effect outside the function. Did you forget dereferencing
-To:     kernel test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jan Kara <jack@suse.cz>
+        Wed, 5 Aug 2020 12:58:54 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id D79E28EE1DD;
+        Wed,  5 Aug 2020 08:01:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1596639691;
+        bh=5KjscTjJ2rT9ybNg+PHjihmjqEcOr8OKbSKYiE1mN1I=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=B1prvCHaxEOP6CSKSR0sHnRVt+H7uKCtNBlJKR80V92AyV4g/UjhOaObGhccE1cxU
+         h67RP5SGz6mKGuFNlGpONxtoRbl7VGSuPWAch2yCZ1IyNcoEJYsxbLlHDD3W5DNw4C
+         EiJrjXIJ5VmBGYjtG0XlF6FaVWV2wOa28tr7BgzY=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id FBfBPUShTYhM; Wed,  5 Aug 2020 08:01:31 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 3D9978EE0F8;
+        Wed,  5 Aug 2020 08:01:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1596639691;
+        bh=5KjscTjJ2rT9ybNg+PHjihmjqEcOr8OKbSKYiE1mN1I=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=B1prvCHaxEOP6CSKSR0sHnRVt+H7uKCtNBlJKR80V92AyV4g/UjhOaObGhccE1cxU
+         h67RP5SGz6mKGuFNlGpONxtoRbl7VGSuPWAch2yCZ1IyNcoEJYsxbLlHDD3W5DNw4C
+         EiJrjXIJ5VmBGYjtG0XlF6FaVWV2wOa28tr7BgzY=
+Message-ID: <1596639689.3457.17.camel@HansenPartnership.com>
+Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement
+ LSM (IPE)
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Deven Bowers <deven.desai@linux.microsoft.com>,
+        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
+Cc:     snitzer@redhat.com, zohar@linux.ibm.com, dm-devel@redhat.com,
+        tyhicks@linux.microsoft.com, agk@redhat.com, paul@paul-moore.com,
+        corbet@lwn.net, jmorris@namei.org, nramas@linux.microsoft.com,
+        serge@hallyn.com, pasha.tatashin@soleen.com, jannh@google.com,
+        linux-block@vger.kernel.org, viro@zeniv.linux.org.uk,
+        axboe@kernel.dk, mdsakib@microsoft.com,
+        linux-kernel@vger.kernel.org, eparis@redhat.com,
+        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        jaskarankhurana@linux.microsoft.com
+Date:   Wed, 05 Aug 2020 08:01:29 -0700
+In-Reply-To: <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
+References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
+         <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
+         <20200802143143.GB20261@amd>
+         <1596386606.4087.20.camel@HansenPartnership.com>
+         <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 10:40 AM kernel test robot <lkp@intel.com> wrote:
->
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   4da9f3302615f4191814f826054846bf843e24fa
-> commit: 44d705b0370b1d581f46ff23e5d33e8b5ff8ec58 fanotify: report name info for FAN_DIR_MODIFY event
-> date:   4 months ago
+On Tue, 2020-08-04 at 09:07 -0700, Deven Bowers wrote:
+> On 8/2/2020 9:43 AM, James Bottomley wrote:
+> > On Sun, 2020-08-02 at 16:31 +0200, Pavel Machek wrote:
+> > > On Sun 2020-08-02 10:03:00, Sasha Levin wrote:
+> > > > On Sun, Aug 02, 2020 at 01:55:45PM +0200, Pavel Machek wrote:
+> > > > > Hi!
+> > > > > 
+> > > > > > IPE is a Linux Security Module which allows for a
+> > > > > > configurable policy to enforce integrity requirements on
+> > > > > > the whole system. It attempts to solve the issue of Code
+> > > > > > Integrity: that any code being executed (or files being
+> > > > > > read), are identical to the version that was built by a
+> > > > > > trusted source.
+> > > > > 
+> > > > > How is that different from security/integrity/ima?
+> > > > 
+> > > > Maybe if you would have read the cover letter all the way down
+> > > > to the 5th paragraph which explains how IPE is different from
+> > > > IMA we could avoided this mail exchange...
+> > > 
+> > > "
+> > > IPE differs from other LSMs which provide integrity checking (for
+> > > instance, IMA), as it has no dependency on the filesystem
+> > > metadata itself.
+> > > The attributes that IPE checks are deterministic properties that
+> > > exist solely in the kernel. Additionally, IPE provides no
+> > > additional mechanisms of verifying these files (e.g. IMA
+> > > Signatures) - all of the attributes of verifying files are
+> > > existing features within the kernel, such as dm-verity
+> > > or fsverity.
+> > > "
+> > > 
+> > > That is not really helpful.
+> 
+> Perhaps I can explain (and re-word this paragraph) a bit better.
+> 
+> As James indicates, IPE does try to close the gap of the IMA
+> limitation with xattr. I honestly wasn’t familiar with the appended
+> signatures, which seems fine.
+> 
+> Regardless, this isn’t the larger benefit that IPE provides. The
+> larger benefit of this is how IPE separates _mechanisms_ (properties)
+> to enforce integrity requirements, from _policy_. The LSM provides
+> policy, while things like dm-verity provide mechanism.
 
-Gee that's an old patch...
+Colour me confused here, but I thought that's exactly what IMA does. 
+The mechanism is the gates and the policy is simply a list of rules
+which are applied when a gate is triggered.  The policy necessarily has
+to be tailored to the information available at the gate (so the bprm
+exec gate knows filesystem things like the inode for instance) but the
+whole thing looks very extensible.
 
-> compiler: nds32le-linux-gcc (GCC) 9.3.0
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
->
->
-> cppcheck warnings: (new ones prefixed by >>)
->
-> >> fs/notify/fanotify/fanotify_user.c:370:3: warning: Assignment of function parameter has no effect outside the function. Did you forget dereferencing it? [uselessAssignmentPtrArg]
->      buf += ret;
->      ^
-> >> fs/notify/fanotify/fanotify_user.c:371:3: warning: Assignment of function parameter has no effect outside the function. [uselessAssignmentArg]
->      count -= ret;
->      ^
-...
+> So to speak, IPE acts as the glue for other mechanisms to leverage a
+> customizable, system-wide policy to enforce. While this initial
+> patchset only onboards dm-verity, there’s also potential for MAC
+> labels, fs-verity, authenticated BTRFS, dm-integrity, etc. IPE
+> leverages existing systems in the kernel, while IMA uses its own.
 
->    348          /* Event info records order is: dir fid + name, child fid */
->    349          if (fanotify_event_name_len(event)) {
->    350                  struct fanotify_name_event *fne = FANOTIFY_NE(event);
->    351
->    352                  ret = copy_info_to_user(fanotify_event_fsid(event),
->    353                                          fanotify_event_dir_fh(event),
->    354                                          fne->name, fne->name_len,
->    355                                          buf, count);
->    356                  if (ret < 0)
->    357                          return ret;
->    358
->    359                  buf += ret;
->    360                  count -= ret;
->    361          }
->    362
->    363          if (fanotify_event_object_fh_len(event)) {
->    364                  ret = copy_info_to_user(fanotify_event_fsid(event),
->    365                                          fanotify_event_object_fh(event),
->    366                                          NULL, 0, buf, count);
->    367                  if (ret < 0)
->    368                          return ret;
->    369
->  > 370                  buf += ret;
->  > 371                  count -= ret;
->    372          }
+Is this about who does the measurement?  I think there's no reason at
+all why IMA can't leverage existing measurements, it's just nothing to
+leverage existed when it was created.
 
-This is intentional.
-The code is more readable and robust this way even though these
-assignments have no effect in current code.
+> Another difference is the general coverage. IMA has some difficulties
+> in covering mprotect[1], IPE doesn’t (the MAP_ANONYMOUS indicated by
+> Jann in that thread would be denied as the file struct would be null,
+> with IPE’s current set of supported mechanisms. mprotect would
+> continue to function as expected if you change to PROT_EXEC).
 
-Thanks,
-Amir.
+I don't really think a debate over who does what and why is productive
+at this stage.  I just note that IMA policy could be updated to deny
+MAP_ANONYMOUS, but no-one's asked for that (probably because of the
+huge application breakage that would ensue).  The policy is a product
+of the use case and the current use case for IMA is working with
+existing filesystem semantics.
+
+> > Perhaps the big question is: If we used the existing IMA appended
+> > signature for detached signatures (effectively becoming the
+> > "properties" referred to in the cover letter) and hooked IMA into
+> > device mapper using additional policy terms, would that satisfy all
+> > the requirements this new LSM has?
+> 
+> Well, Mimi, what do you think? Should we integrate all the features
+> of IPE into IMA, or do you think they are sufficiently different in
+> architecture that it would be worth it to keep the code base in
+> separate LSMs?
+
+I'll leave Mimi to answer, but really this is exactly the question that
+should have been asked before writing IPE.  However, since we have the
+cart before the horse, let me break the above down into two specific
+questions.
+
+   1. Could we implement IPE in IMA (as in would extensions to IMA cover
+      everything).  I think the answers above indicate this is a "yes".
+   2. Should we extend IMA to implement it?  This is really whether from a
+      usability standpoint two seperate LSMs would make sense to cover the
+      different use cases.  I've got to say the least attractive thing
+      about separation is the fact that you now both have a policy parser.
+       You've tried to differentiate yours by making it more Kconfig
+      based, but policy has a way of becoming user space supplied because
+      the distros hate config options, so I think you're going to end up
+      with a policy parser very like IMAs.
+
+James
+
