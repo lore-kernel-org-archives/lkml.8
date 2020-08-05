@@ -2,88 +2,80 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E395C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5AD6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15D6D2177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CD692177B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:20:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I6zDlSJ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728234AbgHERT5 (ORCPT
+        id S1728335AbgHERUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:19:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:33668 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728653AbgHERSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:18:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F37F230E;
-        Wed,  5 Aug 2020 05:36:48 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E18173FA1C;
-        Wed,  5 Aug 2020 05:36:46 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 13:36:43 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Lukasz Luba <lukasz.luba@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org, cristian.marussi@arm.com,
-        Sudeep Holla <sudeep.holla@arm.com>, rjw@rjwysocki.net
-Subject: Re: [PATCH 0/4] CPUFreq statistics retrieved by drivers
-Message-ID: <20200805123643.GB4818@bogus>
-References: <20200729151208.27737-1-lukasz.luba@arm.com>
- <20200730085333.qubrsv7ufqninihd@vireshk-mac-ubuntu>
- <20200730091014.GA13158@bogus>
- <3b3a56e9-29ec-958f-fb3b-c689a9389d2f@arm.com>
- <20200731155650.GC14529@bogus>
- <ae352c39-f7c4-c69e-0113-7c810c130ee0@gmail.com>
+        Wed, 5 Aug 2020 13:20:31 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52455 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728772AbgHERTC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:19:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596647941;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kZTBrunrXrFalb8MiTTYY4li8BGfP27s1yfj7FYVgAs=;
+        b=I6zDlSJ5d7gRMIfEL0QprBsn3nu8f6L8PYwyu0mMSgMgmlZo8OfKI7II2eQ0R+eJ2axENV
+        ZXxCyYnWYDOk8OciW0aXwKAGkct/a8OZmIenfspVaixzEMXCd0pH+Mp5SRvhA/dXuBrDN+
+        gM2z52CNIoZq8CxwgGC5BWpc+dSdN2o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-449-Y4-7UuimPtOA66nnqm_UqQ-1; Wed, 05 Aug 2020 13:18:56 -0400
+X-MC-Unique: Y4-7UuimPtOA66nnqm_UqQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A38031B18BCD;
+        Wed,  5 Aug 2020 17:18:46 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7DBA95D9DC;
+        Wed,  5 Aug 2020 17:18:45 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAKgNAkgYZ4HrFpOW_n8BshbR8d=03wetmxX2zNv7hX4ZmeQPmg@mail.gmail.com>
+References: <CAKgNAkgYZ4HrFpOW_n8BshbR8d=03wetmxX2zNv7hX4ZmeQPmg@mail.gmail.com> <CAKgNAkjyXcXZkEczRz2yvJRFBy2zAwTaNfyiSmskAFWN_3uY1g@mail.gmail.com> <2007335.1595587534@warthog.procyon.org.uk>
+To:     mtk.manpages@gmail.com
+Cc:     dhowells@redhat.com, Petr Vorel <pvorel@suse.cz>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Mount API manual pages
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ae352c39-f7c4-c69e-0113-7c810c130ee0@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2329755.1596647924.1@warthog.procyon.org.uk>
+Date:   Wed, 05 Aug 2020 18:18:44 +0100
+Message-ID: <2329756.1596647924@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 10:19:23AM -0700, Florian Fainelli wrote:
->
->
-> On 7/31/2020 8:56 AM, Sudeep Holla wrote:
-> > On Thu, Jul 30, 2020 at 10:36:51AM +0100, Lukasz Luba wrote:
-> >>
-> >> In this case I think we would have to create debugfs.
-> >> Sudeep do you think these debugfs should be exposed from the protocol
-> >> layer:
-> >> drivers/firmware/arm_scmi/perf.c
-> >
-> > I prefer above over cpufreq as we can support for all the devices not
-> > just cpus which avoids adding similar support elsewhere(mostly devfreq)
-> >
-> >> or maybe from the cpufreq scmi driver? I would probably be safer to have
-> >> it in the cpufreq driver because we have scmi_handle there.
-> >>
-> >
-> > Cristian was thinking if we can consolidate all such debugfs under one
-> > device may be and that should eliminate your handle restriction. I would
-> > like to see how that works out in implementation but I don't have any
-> > better suggestion ATM.
->
-> debugfs is not enabled in production kernels, and especially not with
-> Android kernels, so sticking those in sysfs like the existing cpufreq
-> subsystem statistics may be a better choice.
+Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
 
-Fair enough. I was suggesting that only if we can't push this into existing
-sysfs support. If we can, then we need not worry about it. If not, I don't
-want a user ABI just for SCMI for this firmware stats, I would rather keep
-it in debugfs for debug purposes. This will be useless once we start seeing
-AMU in the hardware and hence I was pushing for debugfs.
+> This is just a reminder mail :-).
 
---
-Regards,
-Sudeep
+Yep - I haven't forgotten.  Spent a chunk of time arguing with reinventors and
+arguing with a failing dishwasher.  I have some other manpages that I'm
+sprucing up too for the notifications stuff.
+
+David
+
