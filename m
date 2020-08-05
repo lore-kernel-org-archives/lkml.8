@@ -2,186 +2,179 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDCAC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84C7A22B40
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926912076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:39:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="IFdVIsfL"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aGvivbAb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgHEGiM (ORCPT
+        id S1728145AbgHEGjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 02:38:12 -0400
-Received: from mail-eopbgr70055.outbound.protection.outlook.com ([40.107.7.55]:29152
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728036AbgHEGiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 02:38:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EeUESxhZI0/cO7GsftvR612/kF8ofX3OJKSOpJprmb5GWd5IWJmFQZYZQxhOS5df2AN9oojTVXiIruPXXOaoP5o2QnY3ki280wfwenPp4QO/YGaHdCY/va4R+87t17a5pgHucc25sE/cx3xdYNtyhj+GElZ9HBg0gcGXWZo5fgIog0X3XoALHG5hfV6nUy1sx9hkfedOS4S+Ov47aUEkHp3g7YC7BJ/6wYCTyDR+z6sCCjckKFfXMeLaXBlhC7w5w6d6wnWDX8tHmp4NjzFilZbtnEMY74w7wdhPrTldv02m36kz3L5PLKsbEthjlg0Phh95S3MN92KqAR36/Ouc9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n0zMM0JhlzaXBePhSH+s1xb8PjeOUHkljWYyPZBV9FY=;
- b=HIpyKzgEpd0wDkW4nu+4cAsrUhWRe4lplowb5S/xm/pCeor1UYE8b1TC//F7idP6cMj3KwxV3E96rYsaWzsZ94gp1WwS4JJ3l8hjgC31BoVLFUcCFwyjAyvz5yKwiPt/yvlA10tDO3K79offz1e3Z0SyzpoUEJkV4ITpnGjxRKH/YO6Z3aySWdhKWToMH7W5K6ZIl/inMc72xGKXxu+lSkXoaQm2ktmJ9J9qioKVMEiZJ4nDRZyC50pHsC5ILoSoGpKtpZ3khbSQ041hbFFSrgfluxN6GnhiLoLz+j4xen8QZGiOqpsAVT4R8c6F8k5W6CJtCGBqPyyuK8EifR5jlg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=n0zMM0JhlzaXBePhSH+s1xb8PjeOUHkljWYyPZBV9FY=;
- b=IFdVIsfLWNbSHKhU1/pqr7qxzfduiIf0njI/cxvMC5E/1cRN+eZJLWTWgrcd4w+y5DXalngNAMiJeCExRy3bBXPj7EMiEqgyUJpH1wTCufUP3WIq6rxrTmMWxpfw0RU/+RMGptpVl3o2jgvwP5oBJz1bFzkph23edw8GGyt4L+8=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from VI1PR0402MB3342.eurprd04.prod.outlook.com
- (2603:10a6:803:11::14) by VI1PR04MB3055.eurprd04.prod.outlook.com
- (2603:10a6:802:9::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.16; Wed, 5 Aug
- 2020 06:38:03 +0000
-Received: from VI1PR0402MB3342.eurprd04.prod.outlook.com
- ([fe80::c1a:39dd:a2d5:3d2f]) by VI1PR0402MB3342.eurprd04.prod.outlook.com
- ([fe80::c1a:39dd:a2d5:3d2f%7]) with mapi id 15.20.3261.016; Wed, 5 Aug 2020
- 06:38:03 +0000
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
-        perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] ASoC: fsl_sai: Replace synchronous check with fsl_sai_dir_is_synced
-Date:   Wed,  5 Aug 2020 14:34:13 +0800
-Message-Id: <20200805063413.4610-4-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200805063413.4610-1-shengjiu.wang@nxp.com>
-References: <20200805063413.4610-1-shengjiu.wang@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR03CA0109.apcprd03.prod.outlook.com
- (2603:1096:4:91::13) To VI1PR0402MB3342.eurprd04.prod.outlook.com
- (2603:10a6:803:11::14)
+        Wed, 5 Aug 2020 02:39:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37134 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728014AbgHEGjF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 02:39:05 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52D3DC061757
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 23:39:05 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id bh1so11599102plb.12
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 23:39:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=bmuyaLQZBi2uEmha54ZgdgKhFHmlcWLfKJualcCqXYk=;
+        b=aGvivbAbfB865LKL11Qmg8wlGFIIGu/j6BKLv4iR0FZn+SBKIT3qSlTrgTNjccD0PK
+         vP1JboQG4hXEjb0D8FIkbCQOnULHp9AIrDmYSlXRVI18ueUFEgeEjAUAr99oMSIMP3qj
+         Un97pDZl1B4/Hcm2AAlaRVDQbovd+j+rkQFXU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=bmuyaLQZBi2uEmha54ZgdgKhFHmlcWLfKJualcCqXYk=;
+        b=GRAe2AZa+uCwZWaD+yeDVAG2aTn221DASNV6RG690nAYaH9rrvbK56P5+9Rbw3Nvab
+         m186kjb1BjCG9ZBmTkBVPbH1NxaMCv7Nev/nG9d78+LwQ25Koj3/gS95dcLwPFG9SBxz
+         4ns+peGylrnAFhSDswyLWMC+JlTviNTXaF3OV2Z+8GibaKkIKiCpDkDw/MQvZI+MpMsW
+         Z1zNj/atIqWD5lb9kWFNlGw4V2RIb1KwqaqsF5v4E/m+Lj08PxWEbsLPdcDXiPdtXuUd
+         RNBcNlJSP7TKv/H1gMZ2ECiAmnKj/ZrLWdmojQRppBciI7/G2VAQmsFEtUyJP9Ut3Sd8
+         /Dgg==
+X-Gm-Message-State: AOAM531K6fy3PxPVEsz/9fHIE8Rh5pjxu82lMZ3y43zWfj4A2X48jvN8
+        eG0O9p11gfCTt8rIeqfUZRitOw==
+X-Google-Smtp-Source: ABdhPJwkVI9PXqaFBGmNw3AgAnGz0s6XO9J95Zk48HYQBJe4hs2a1T5PzPV6AC+KhZL1Bp8VZ8vLaQ==
+X-Received: by 2002:a17:90b:208:: with SMTP id fy8mr1705011pjb.131.1596609544417;
+        Tue, 04 Aug 2020 23:39:04 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id gi22sm1478909pjb.41.2020.08.04.23.39.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Aug 2020 23:39:03 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from audiosh1.ap.freescale.net (119.31.174.67) by SG2PR03CA0109.apcprd03.prod.outlook.com (2603:1096:4:91::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3261.12 via Frontend Transport; Wed, 5 Aug 2020 06:37:59 +0000
-X-Mailer: git-send-email 2.27.0
-X-Originating-IP: [119.31.174.67]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: e81d0715-3079-4b82-d699-08d8390a1a76
-X-MS-TrafficTypeDiagnostic: VI1PR04MB3055:
-X-Microsoft-Antispam-PRVS: <VI1PR04MB3055351D95B05C7A6789BF62E34B0@VI1PR04MB3055.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9/hWTrDqxUBo6+pCDII9E5M1mpVafJORP4Ka0aCU44nHZGw9SsbQrY++hNjgMoafxa/6BXNQlvDQEtjnfA+mqaZMppYDYrlQBthdZ9Y9MYR4Ep2+NYJpbaPAA5Iyz0Hh1jbfwqjD/+RLnxG+dMhGtDY/GXAF8OKzY+r3a+IYhajXglx7W3lr21DCpYEk+TLSPVcRn+e1LLtxNroW1740F36Zakgxvbt8k5gEaHGbU6HXnI34P3B/9/N2kOymzT97X8FHBcQ/uxt7cj3rq4xYl1y8JWKBBwdPW3OJwDV/ld3C7kd8CE449B4BqeunGVl6fKv3XkINvBqjyDw+AEWOYxCV/1gR46UhpWxD1E6VdkVmnkuM5fUlj9h1vNu6e8Rx
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3342.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(39860400002)(346002)(376002)(136003)(36756003)(2906002)(44832011)(26005)(86362001)(6506007)(16526019)(186003)(956004)(2616005)(1076003)(5660300002)(6666004)(7416002)(6486002)(6512007)(316002)(8936002)(8676002)(52116002)(478600001)(66946007)(83380400001)(66556008)(66476007)(921003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 7nDoisJfWUDRAgJWXkTnmJrFfXd1rZVNRDEfO+Slf736iQN9WwaS35nJBYq0hmslMmYsN6zKLxWEQwr/OSHC8ZWY9LG0x0q4pL/bsOWEMXiqAYaCI7UxTeLN4WqjD1II4VEAfvGX/xoc6Ifn1m3urQ5BGEho5XnxohQO96F7Or09xNBFtnpoUFGhnH2InCXvT3vR7cKJZ17uqrE0HdsgmnOZI4Y7WdKdqcsVPwtxY110tkiJW1Y4M5qd0WnfTy58CARVSlS3EUhVszNdXLUrRgdknssKwGnM+4j+7hGWbko0yPpxIz1NchCnXxrk2KmxJbsLsixtw7u6y+3WgnCx2MkKTSyqKdwkFZqQnQ7tyUn75utiKzL6P7DQb0twvb4fhOvz7ph3ZyFHqMVihbZJNh4HhyXLU8tEr8gwj4qZdNb7F9DLxPA6sgbfOLVKv9fL/2CHqg3AxFEj0TLQ8jMHQxsFnDF5XYCkdkmX3pzIjG6St/WsLY36CVGKcXFoCu1xykOc8Mn3GYH6dIawlqdFfgHOseIKgwJNUo8YzqV/kIBmaQo/BFU4MLkg3IL9fMnbg5lFELbUPeK1BhblYES3cA5IQNRwRlBTiHke2xKkYMI1itz+0YHmA7FrimX0sgJxnw3PKP70BEzJ3Ah7CnyQNg==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e81d0715-3079-4b82-d699-08d8390a1a76
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3342.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Aug 2020 06:38:03.1725
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: y9a+lMgDUdkUEC8RRBUQCB8BDZZtsPZnKui9OCI0vz+nO15EExXV33hPvpjaIhqjsUyGXgNiDz5MppOYiJ4xnw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3055
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1596541616-27688-2-git-send-email-rnayak@codeaurora.org>
+References: <1596541616-27688-1-git-send-email-rnayak@codeaurora.org> <1596541616-27688-2-git-send-email-rnayak@codeaurora.org>
+Subject: Re: [PATCH 1/3] dt-bindings: power: Introduce 'assigned-performance-states' property
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org, ulf.hansson@linaro.org
+Date:   Tue, 04 Aug 2020 23:39:02 -0700
+Message-ID: <159660954201.1360974.5176671532597020049@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As new function fsl_sai_dir_is_synced is included for checking if
-stream is synced by the opposite stream, then replace the existing
-synchronous checking with this new function.
+Quoting Rajendra Nayak (2020-08-04 04:46:54)
+> While most devices within power-domains which support performance states,
+> scale the performance state dynamically, some devices might want to
+> set a static/default performance state while the device is active.
+> These devices typically would also run of a fixed clock and not support
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- sound/soc/fsl/fsl_sai.c | 40 ++++++++++++++++------------------------
- 1 file changed, 16 insertions(+), 24 deletions(-)
+s/of/off/
 
-diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
-index 334090d581ae..f6969a5d49e3 100644
---- a/sound/soc/fsl/fsl_sai.c
-+++ b/sound/soc/fsl/fsl_sai.c
-@@ -350,6 +350,8 @@ static int fsl_sai_set_bclk(struct snd_soc_dai *dai, bool tx, u32 freq)
- 	unsigned int ofs = sai->soc_data->reg_offset;
- 	unsigned long clk_rate;
- 	u32 savediv = 0, ratio, savesub = freq;
-+	int adir = tx ? RX : TX;
-+	int dir = tx ? TX : RX;
- 	u32 id;
- 	int ret = 0;
- 
-@@ -408,19 +410,17 @@ static int fsl_sai_set_bclk(struct snd_soc_dai *dai, bool tx, u32 freq)
- 	 * 4) For Tx and Rx are both Synchronous with another SAI, we just
- 	 *    ignore it.
- 	 */
--	if ((sai->synchronous[TX] && !sai->synchronous[RX]) ||
--	    (!tx && !sai->synchronous[RX])) {
--		regmap_update_bits(sai->regmap, FSL_SAI_RCR2(ofs),
-+	if (fsl_sai_dir_is_synced(sai, adir)) {
-+		regmap_update_bits(sai->regmap, FSL_SAI_xCR2(!tx, ofs),
- 				   FSL_SAI_CR2_MSEL_MASK,
- 				   FSL_SAI_CR2_MSEL(sai->mclk_id[tx]));
--		regmap_update_bits(sai->regmap, FSL_SAI_RCR2(ofs),
-+		regmap_update_bits(sai->regmap, FSL_SAI_xCR2(!tx, ofs),
- 				   FSL_SAI_CR2_DIV_MASK, savediv - 1);
--	} else if ((sai->synchronous[RX] && !sai->synchronous[TX]) ||
--		   (tx && !sai->synchronous[TX])) {
--		regmap_update_bits(sai->regmap, FSL_SAI_TCR2(ofs),
-+	} else if (!sai->synchronous[dir]) {
-+		regmap_update_bits(sai->regmap, FSL_SAI_xCR2(tx, ofs),
- 				   FSL_SAI_CR2_MSEL_MASK,
- 				   FSL_SAI_CR2_MSEL(sai->mclk_id[tx]));
--		regmap_update_bits(sai->regmap, FSL_SAI_TCR2(ofs),
-+		regmap_update_bits(sai->regmap, FSL_SAI_xCR2(tx, ofs),
- 				   FSL_SAI_CR2_DIV_MASK, savediv - 1);
- 	}
- 
-@@ -442,6 +442,7 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
- 	u32 val_cr4 = 0, val_cr5 = 0;
- 	u32 slots = (channels == 1) ? 2 : channels;
- 	u32 slot_width = word_width;
-+	int adir = tx ? RX : TX;
- 	int ret;
- 
- 	if (sai->slots)
-@@ -491,22 +492,13 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
- 	 * RCR5(TCR5) for playback(capture), or there will be sync error.
- 	 */
- 
--	if (!sai->is_slave_mode) {
--		if (!sai->synchronous[TX] && sai->synchronous[RX] && !tx) {
--			regmap_update_bits(sai->regmap, FSL_SAI_TCR4(ofs),
--				FSL_SAI_CR4_SYWD_MASK | FSL_SAI_CR4_FRSZ_MASK,
--				val_cr4);
--			regmap_update_bits(sai->regmap, FSL_SAI_TCR5(ofs),
--				FSL_SAI_CR5_WNW_MASK | FSL_SAI_CR5_W0W_MASK |
--				FSL_SAI_CR5_FBT_MASK, val_cr5);
--		} else if (!sai->synchronous[RX] && sai->synchronous[TX] && tx) {
--			regmap_update_bits(sai->regmap, FSL_SAI_RCR4(ofs),
--				FSL_SAI_CR4_SYWD_MASK | FSL_SAI_CR4_FRSZ_MASK,
--				val_cr4);
--			regmap_update_bits(sai->regmap, FSL_SAI_RCR5(ofs),
--				FSL_SAI_CR5_WNW_MASK | FSL_SAI_CR5_W0W_MASK |
--				FSL_SAI_CR5_FBT_MASK, val_cr5);
--		}
-+	if (!sai->is_slave_mode && fsl_sai_dir_is_synced(sai, adir)) {
-+		regmap_update_bits(sai->regmap, FSL_SAI_xCR4(!tx, ofs),
-+				   FSL_SAI_CR4_SYWD_MASK | FSL_SAI_CR4_FRSZ_MASK,
-+				   val_cr4);
-+		regmap_update_bits(sai->regmap, FSL_SAI_xCR5(!tx, ofs),
-+				   FSL_SAI_CR5_WNW_MASK | FSL_SAI_CR5_W0W_MASK |
-+				   FSL_SAI_CR5_FBT_MASK, val_cr5);
- 	}
- 
- 	regmap_update_bits(sai->regmap, FSL_SAI_xCR4(tx, ofs),
--- 
-2.27.0
+> dyamically scaling the device's performance, also known as DVFS technique=
+s.
 
+s/dyamically/dynamically/
+
+> Add a property 'assigned-performance-states' which client devices can
+> use to set this default performance state on their power-domains.
+>=20
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> ---
+>  .../devicetree/bindings/power/power-domain.yaml    | 47 ++++++++++++++++=
+++++++
+>  1 file changed, 47 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/power-domain.yaml b/=
+Documentation/devicetree/bindings/power/power-domain.yaml
+> index ff5936e..48e9319 100644
+> --- a/Documentation/devicetree/bindings/power/power-domain.yaml
+> +++ b/Documentation/devicetree/bindings/power/power-domain.yaml
+> @@ -66,6 +66,16 @@ properties:
+>         by the given provider should be subdomains of the domain specified
+>         by this binding.
+> =20
+> +  assigned-performance-states:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    description:
+> +       Some devices might need to configure their power domains in a def=
+ault
+> +       performance state while the device is active. These devices typci=
+ally
+> +       would also run of a fixed clock and not support dyamically scalin=
+g the
+
+Same of and dynamically comment.
+
+> +       device's performance, also known as DVFS techniques. The list of =
+performance
+> +       state values should correspond to the list of power domains speci=
+fied as part
+> +       of the power-domains property.
+
+This is different than assigned-clock-rates. I guess that's OK because
+we don't need to assign parents with more specifiers. Maybe it should be
+worded more strongly to clearly state that each cell corresponds to one
+power domain? And that it should match the opp-level inside any OPP
+table for the power domain?
+
+> +
+>  required:
+>    - "#power-domain-cells"
+> =20
+> @@ -129,3 +139,40 @@ examples:
+>              min-residency-us =3D <7000>;
+>          };
+>      };
+> +
+> +  - |
+> +    parent4: power-controller@12340000 {
+> +        compatible =3D "foo,power-controller";
+> +        reg =3D <0x12340000 0x1000>;
+> +        #power-domain-cells =3D <0>;
+> +    };
+> +
+> +    parent5: power-controller@43210000 {
+> +        compatible =3D "foo,power-controller";
+> +        reg =3D <0x43210000 0x1000>;
+> +        #power-domain-cells =3D <0>;
+> +        operating-points-v2 =3D <&power_opp_table>;
+> +
+> +        power_opp_table: opp-table {
+> +            compatible =3D "operating-points-v2";
+> +
+> +            power_opp_low: opp1 {
+> +                opp-level =3D <16>;
+> +            };
+> +
+> +            rpmpd_opp_ret: opp2 {
+> +                opp-level =3D <64>;
+> +            };
+> +
+> +            rpmpd_opp_svs: opp3 {
+> +                opp-level =3D <256>;
+> +            };
+> +        };
+> +    };
+> +
+> +    child4: consumer@12341000 {
+> +        compatible =3D "foo,consumer";
+> +        reg =3D <0x12341000 0x1000>;
+> +        power-domains =3D <&parent4>, <&parent5>;
+> +        assigned-performance-states =3D <0>, <256>;
+
+I guess <0> means don't set anything?
