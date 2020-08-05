@@ -2,88 +2,149 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B66C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5546EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 088EF2177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 253282177B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:12:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rn7sVf3B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W2FufXtz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgHEIMK (ORCPT
+        id S1728188AbgHEIMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 04:12:10 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29578 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725868AbgHEILw (ORCPT
+        Wed, 5 Aug 2020 04:12:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50392 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728160AbgHEIFn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 04:11:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596615110;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Kq2PiHN4d43s5PFrLhzWB+jalzzIkTTsT/m6YIrJ9Kc=;
-        b=Rn7sVf3BQRLolkNVFaTEExhjSx1Gwhim34hCSOSInLJ3s1d9nkgxyNgPfKTP2ep+BuJADn
-        RNOtQKdofdeJQiPLoDPvShUFP3P/kEXEFUdIQfsQ1KM2UoF9h9L/1XFOIQw19AOVU9kPlA
-        N8i2DifVIK4//KFBrlIxLnbiBsayYuo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-365-FJgq2jiCN1WMVDk0YMDCCw-1; Wed, 05 Aug 2020 04:11:47 -0400
-X-MC-Unique: FJgq2jiCN1WMVDk0YMDCCw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 23C138064AB;
-        Wed,  5 Aug 2020 08:11:46 +0000 (UTC)
-Received: from [10.72.12.225] (ovpn-12-225.pek2.redhat.com [10.72.12.225])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C2B2460BF3;
-        Wed,  5 Aug 2020 08:11:40 +0000 (UTC)
-Subject: Re: [PATCH V4 linux-next 00/12] VDPA support for Mellanox ConnectX
- devices
-To:     Eli Cohen <eli@mellanox.com>, mst@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     shahafs@mellanox.com, saeedm@mellanox.com, parav@mellanox.com
-References: <20200804162048.22587-1-eli@mellanox.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <8cac76d4-680e-979b-6dea-64087acf9c5d@redhat.com>
-Date:   Wed, 5 Aug 2020 16:11:39 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 5 Aug 2020 04:05:43 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAA56C06174A;
+        Wed,  5 Aug 2020 01:05:42 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id a34so18332386ybj.9;
+        Wed, 05 Aug 2020 01:05:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ohHs0aTHt4EN2lAERZatHD3N+Zhcsjq6lSkSQ86OZ7c=;
+        b=W2FufXtzNO1DxkIBUAjkRISlynEEA8Flpx9efpdgqFVRD50Fo+SU9567tGy/1b8ofy
+         EfDOHsbeLJb3QyN9+REBojrOasH0ogd+U2Ioq6cQYFv7A1kyYIf4CV2aR4FXa4CEzXW6
+         ybbk8t/iEG6tIlvmzCxwKkPAUw2cb1eDvg6YdB/GDuRjBzKvfPgM3N2rK2uD7t2daMHh
+         FsLvIxuUbJVtCD2m7DY0P2BLTdc2LwCXS8TGzcPxSR678DTw2rg3E6hDZpgOVfhTUmBG
+         SE8DsoYHiuebMBRJYTTSD1L9mhKdq+hQS2AwPe8mN006Ow6TnwJ2EfIKdAZmcF4JcHaH
+         8fsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ohHs0aTHt4EN2lAERZatHD3N+Zhcsjq6lSkSQ86OZ7c=;
+        b=fOTHv9qyPzdDY3npc+KsW1cNN9lQfpFYjcacxHdQcjjFo/Q7VmkHgE8u/dVCxD1Xiu
+         xHV7sJag61LWERBLyNvE9XPdebxLJy5P1YlmOk9hkJbPX38R2PyYCyXoAN/cDCKkFVSN
+         e9uP1WXVec5Zc0v/nrSHlJ32OBwMqxpvLOKKciFqdtXvlYZ+bA5uz6Uytpr7ltHbrZKA
+         0mVXct69UwDIylXlJ9E6/qCK6H/tFVJ+ATiFcwQ2m0EiKA+u5APoTq+rNSIBMm86+2vW
+         RP5s1qeT0yutDalEM3k3r89KHd6X/ICvSNWsCaI5ClDCJi8+pJcOQWsaA9fyDSXYC7lw
+         QERA==
+X-Gm-Message-State: AOAM532BPeCQIvjfxwp1/qMpXb8TUd78lWyW6QYbINJc5t2AmwxAqp+H
+        T/KCUUDM8oQiAADSXM98r3bU5U+Jgoq8zO+NFK4=
+X-Google-Smtp-Source: ABdhPJwaAiO/Es1VEZFBFhn7DvIyi6gk4N3vmj9czx2+RjxA1iF/Hx+bGVEFMkR82jjSBe1kh1+JIaQ+Ibc4oxITckY=
+X-Received: by 2002:a25:9186:: with SMTP id w6mr2676030ybl.401.1596614742159;
+ Wed, 05 Aug 2020 01:05:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200804162048.22587-1-eli@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <1596465107-14251-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1596465107-14251-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200804081458.GC13316@paasikivi.fi.intel.com>
+In-Reply-To: <20200804081458.GC13316@paasikivi.fi.intel.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Wed, 5 Aug 2020 09:05:15 +0100
+Message-ID: <CA+V-a8sP443vzj5niegZx=UMKKM1ZEy==6PfxYLYxuZAOqwUkw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: media: i2c: ov5640: Document bus-type property
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Steve Longerbeam <slongerbeam@gmail.com>,
+        Hugues Fruchet <hugues.fruchet@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sakari,
 
-On 2020/8/5 上午12:20, Eli Cohen wrote:
-> Hi Michael,
-> please note that this series depends on mlx5 core device driver patches
-> in mlx5-next branch in
-> git://git.kernel.org/pub/scm/linux/kernel/git/mellanox/linux.git.
+Thank you for the review.
+
+On Tue, Aug 4, 2020 at 9:15 AM Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
 >
-> git pull git://git.kernel.org/pub/scm/linux/kernel/git/mellanox/linux.git mlx5-next
+> Hi Prabhakar,
 >
-> They also depend Jason Wang's patches:https://lkml.org/lkml/2020/7/1/301
+> Thanks for the update.
 >
-> Jason, I had to resolve some conflicts so I would appreciate of you can verify
-> that it is ok.
+> On Mon, Aug 03, 2020 at 03:31:44PM +0100, Lad Prabhakar wrote:
+> > Document the possible bus-type's supported by the OV5640 sensor driver.
+> >
+> > Also add the bus-type in example node.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  Documentation/devicetree/bindings/media/i2c/ov5640.txt | 9 ++++++++-
+> >  1 file changed, 8 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.txt b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+> > index c97c2f2da12d..00131dbb147e 100644
+> > --- a/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+> > +++ b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+> > @@ -36,9 +36,15 @@ Endpoint node required properties for parallel connection are:
+> >  - data-shift: shall be set to <2> for 8 bits parallel bus
+> >             (lines 9:2 are used) or <0> for 10 bits parallel bus
+> >  - hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
+> > +             (Required for bus-type 5)
+> >  - vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
+> > +             (Required for bus-type 5)
+> >  - pclk-sample: sample data on rising (1) or falling (0) edge of the pixel clock
+> > -            signal.
+> > +            signal. (Required for bus-type 5)
+> > +- bus-type: data bus type. Possible values are:
+> > +         4 - MIPI CSI-2 D-PHY
+> > +         5 - Parallel
+> > +         6 - Bt.656
+>
+> This is under required parallel properties. You could document value 4
+> under CSI-2 related properties.
+>
+Agreed will do that.
 
+Cheers,
+Prabhakar
 
-Looks good to me.
-
-Thanks
-
+> >
+> >  Examples:
+> >
+> > @@ -86,6 +92,7 @@ Examples:
+> >                               hsync-active = <0>;
+> >                               vsync-active = <0>;
+> >                               pclk-sample = <1>;
+> > +                             bus-type = <5>;
+> >                       };
+> >               };
+> >       };
+>
+> --
+> Regards,
+>
+> Sakari Ailus
