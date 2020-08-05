@@ -2,252 +2,300 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7014DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E79DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DB4A2084D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29B37206D4
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:20:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="i1T15cW+"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="zpVZXiTW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgHETUQ (ORCPT
+        id S1728836AbgHETUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:20:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56582 "EHLO
+        Wed, 5 Aug 2020 15:20:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728950AbgHERsv (ORCPT
+        with ESMTP id S1729010AbgHERsO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:48:51 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FF3C061756
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 10:48:50 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id t10so20359723plz.10
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 10:48:50 -0700 (PDT)
+        Wed, 5 Aug 2020 13:48:14 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B210C06174A
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 10:48:10 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id l64so35664511qkb.8
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 10:48:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version;
-        bh=AN9lXxTtUIqeSqnhtWqPoGBSysu+7woyVZhyjrKsSws=;
-        b=i1T15cW+HRL+p852S2fTs1hjBZSveLXDnk5dyOQ1naPnB8IlqcrYRJ2raHvn8KKQ+t
-         3AmssaQxfBZL5DwXppRiWMwzjlEg6F4gsvrulkvmWdqO+0ADxQklRCHhse2fTsYd13f8
-         m37Lo9uNFOYZaW/n+uWZF/gd+ECIMVc3JcrUQrz6A7JMbq45dfwz++RDsO3y76yf1zA8
-         NPqfUuiUOMXUoVm2W9Q78t7IG2kI5pldoyxzGCuiwPvQpTlLuIh9Z5Zk3ZY1DHx1mE4Y
-         Dv2T356bWIPPw9Dee7exTc3Ld0vX45KMgINZVyyuKCy/77jqGYOwpSadK5zIltWDT4G/
-         AyPw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g8SDbLijbQZbWGypmj2TRMxsFz9ReijxHmpVUeM/fIc=;
+        b=zpVZXiTWfoCgikALeecwe2WeBbjwJYJ1YBxnpb330Cep2am51yyu1rn8Jfs+OHNBA8
+         jnOluEFZr5d36i646rcPYpZvMJoX+aOX7y+88qovUDAteNekmYzX+4VdxK+dpYRBNrs3
+         pSte05YDaOeoy4L5DOt7kYoBIzKh+ED2VT8ytRmJw/B/Fvu8YjPbeYDHP2sqFIe9JVkV
+         Do6yqWx/R/1EKC2ACz1UyhpsRdjR1bof2wmPA+OSiP3OAM4VW39IW7x8gNXSxSajcrN2
+         v1jyJ/ZqjmM8t4EiAjdpUQPetivujOEKO3yBW6RuHF1NwGKT/Uh6C6RWjR205gxohh5/
+         lCzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version;
-        bh=AN9lXxTtUIqeSqnhtWqPoGBSysu+7woyVZhyjrKsSws=;
-        b=WB+u/ZdrX1vZ24n+wEHGaSu4PeP0eOrjf4+h8FH97tSGby4r04PO+Q8qcNeD1Jn0wX
-         8RY+yL6Dw58+DdkKOZ2U6MHwJah0ir23dDF8K6FC2uffABYRUP8YgFyKi9acbSHDydYv
-         ISntzCcv8o6qAVPslCec93ZNpdJvDvmTTBv/bnv4UXQgAsEZPEwcSbtDomKeQyzKg4tv
-         AaaqgIuKnu/B8qOt/WNMoLEYycvcmL3xBR45b8CwpzFAm+WY790tHu9SqBmDRJ0EBt+n
-         lTf4V1NsBJ06LNSRMdP6xgopR1XW5zM8dhjuAfOsdZgItNAIFIn78XRZMG3x+niG9sw/
-         Y4TA==
-X-Gm-Message-State: AOAM5302JAE3oFceMopfakBL++7jLa7O7A0D2hvkg7HPG5J/itfOOPN/
-        2ZRQvYpTiMYLdfosKQvbzwdpWQ==
-X-Google-Smtp-Source: ABdhPJyj978+UEa8ClNSaHWi3r3lQbgAj9hS3PWUrlDsGOSW08sBlMCtMtXlqGVUaieKyXqEzt3+wg==
-X-Received: by 2002:a17:90b:1106:: with SMTP id gi6mr4643433pjb.2.1596649730064;
-        Wed, 05 Aug 2020 10:48:50 -0700 (PDT)
-Received: from [10.213.170.159] (fmdmzpr04-ext.fm.intel.com. [192.55.55.39])
-        by smtp.gmail.com with ESMTPSA id z25sm4219247pfn.159.2020.08.05.10.48.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Aug 2020 10:48:49 -0700 (PDT)
-From:   "Sean V Kelley" <sean.v.kelley@intel.com>
-To:     "Jonathan Cameron" <Jonathan.Cameron@Huawei.com>
-Cc:     bhelgaas@google.com, rjw@rjwysocki.net, ashok.raj@intel.com,
-        tony.luck@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Qiuxu Zhuo" <qiuxu.zhuo@intel.com>
-Subject: Re: [PATCH V2 6/9] PCI: Add 'rcec' field to pci_dev for associated
- RCiEPs
-Date:   Wed, 05 Aug 2020 10:48:46 -0700
-X-Mailer: MailMate (1.13.1r5671)
-Message-ID: <BE94DF65-ED67-4113-A932-58BFE86B1152@intel.com>
-In-Reply-To: <20200805184020.00000cf3@Huawei.com>
-References: <20200804194052.193272-1-sean.v.kelley@intel.com>
- <20200804194052.193272-7-sean.v.kelley@intel.com>
- <20200805184020.00000cf3@Huawei.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g8SDbLijbQZbWGypmj2TRMxsFz9ReijxHmpVUeM/fIc=;
+        b=jn2pOGxjvbY8CGcshIldhrsxWxBylBAPAkRyF/7/n94q+IdFNelOpLSpYO0RltE7Rq
+         +IBdP24jy4bfrMNe/jTNvMQwXKi+8SAuLqudJwnmXePJ2At+zUDf/wQN9ibeNi9XUi7/
+         y8hg75CMrVSlk7ILfTgcatqpm4mBd4X5WZ/y78QLCrb1UXr6udyzU/T0FVqGhjyjfePt
+         LIMKajRucOvoGL+5LA245ucSBcFrAbBzaGVrb174AlMWv1Y2eDwsJsl1JGelHrGoupUJ
+         5AmqQaPAJFS7m1Gm9YZtkMPHodlwEp0mng2gXJvt+8IDowoUUoH7MG5mtxXZaO6KyCSd
+         1ROw==
+X-Gm-Message-State: AOAM530kihPzsGlj8Zz06VFiiU2PivjxdQim4aUlvp2IDAVMJAcTOIse
+        1SG9NyjxhcXs62jIZbz7/lQkaInjdVWa0AxrvSJqrg==
+X-Google-Smtp-Source: ABdhPJxIv17WhN4iwentpctBBr2GjiUzc/lct6DN+CTnKQkJtXypfEZqdXr6fyMdqfypTUtLg8+W4rWERToBOrIgGaY=
+X-Received: by 2002:a05:620a:12ef:: with SMTP id f15mr4696171qkl.120.1596649688730;
+ Wed, 05 Aug 2020 10:48:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+References: <20200725041955.9985-1-warthog618@gmail.com> <20200725041955.9985-3-warthog618@gmail.com>
+ <CAMpxmJXocdDTvC7_76UwZ9FONn86p0MjZtorRKTR5bxN7PJy6g@mail.gmail.com> <20200805051853.GA122005@sol>
+In-Reply-To: <20200805051853.GA122005@sol>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 5 Aug 2020 19:47:57 +0200
+Message-ID: <CAMpxmJWWmBULX+RdqN3nyXFO4M9sbu2Q6i11UJMiKxomVDr47g@mail.gmail.com>
+Subject: Re: [PATCH v2 02/18] gpio: uapi: define uAPI v2
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5 Aug 2020, at 10:40, Jonathan Cameron wrote:
+On Wed, Aug 5, 2020 at 7:19 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
 
-> On Tue, 4 Aug 2020 12:40:49 -0700
-> Sean V Kelley <sean.v.kelley@intel.com> wrote:
->
->> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
->>
->> When attempting error recovery for an RCiEP associated with an RCEC 
->> device,
->> there needs to be a way to update the Root Error Status, the 
->> Uncorrectable
->> Error Status and the Uncorrectable Error Severity of the parent RCEC.
->> So add the 'rcec' field to the pci_dev structure and provide a hook 
->> for the
->> Root Port Driver to associate RCiEPs with their respective parent 
->> RCEC.
->>
->> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
->> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
->> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-> Hi,
->
-> One question in line.
->
->> ---
->>  drivers/pci/pcie/aer.c         |  9 +++++----
->>  drivers/pci/pcie/err.c         | 12 ++++++++++++
->>  drivers/pci/pcie/portdrv_pci.c | 15 +++++++++++++++
->>  include/linux/pci.h            |  3 +++
->>  4 files changed, 35 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->> index 87283cda3990..f658607e8e00 100644
->> --- a/drivers/pci/pcie/aer.c
->> +++ b/drivers/pci/pcie/aer.c
->> @@ -1358,17 +1358,18 @@ static int aer_probe(struct pcie_device *dev)
->>  static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
->>  {
->>  	int aer = dev->aer_cap;
->> +	int rc = 0;
->>  	u32 reg32;
->> -	int rc;
->> -
->>
->>  	/* Disable Root's interrupt in response to error messages */
->>  	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
->>  	reg32 &= ~ROOT_PORT_INTR_ON_MESG_MASK;
->>  	pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
->>
->> -	rc = pci_bus_error_reset(dev);
->> -	pci_info(dev, "Root Port link has been reset\n");
->> +	if (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC) {
->> +		rc = pci_bus_error_reset(dev);
->> +		pci_info(dev, "Root Port link has been reset\n");
->> +	}
->>
->>  	/* Clear Root Error Status */
->>  	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &reg32);
->> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->> index 4812aa678eff..43f1c55c76db 100644
->> --- a/drivers/pci/pcie/err.c
->> +++ b/drivers/pci/pcie/err.c
->> @@ -203,6 +203,12 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev 
->> *dev,
->>  		pci_walk_dev_affected(dev, report_frozen_detected, &status);
->>  		if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
->>  			status = flr_on_rciep(dev);
->> +			/*
->> +			 * The callback only clears the Root Error Status
->> +			 * of the RCEC (see aer.c).
->> +			 */
->> +			if (pcie_aer_is_native(dev) && dev->rcec)
->> +				reset_link(dev->rcec);
->
-> I'm not sure about this pcie_aer_is_native check.
-> We don't check in the normal EP path.  Perhaps we should be checking 
-> there
-> as well?
+[snip]
 
-Looks like we should.  Will make adjustments and test.
-
+> > >
+> > > +/*
+> > > + * Maximum number of requested lines.
+> > > + *
+> > > + * Must be a multiple of 8 to ensure 32/64-bit alignment of structs.
+> > > + */
+> > > +#define GPIOLINES_MAX 64
+> > > +
+> > > +/* The number of __u64 required for a bitmap for GPIOLINES_MAX lines */
+> > > +#define GPIOLINES_BITMAP_SIZE  __KERNEL_DIV_ROUND_UP(GPIOLINES_MAX, 64)
+> > > +
+> >
+> > In what circumstances can this be different than 1? It's worth
+> > documenting here I suppose.
+> >
 >
-> I can contrive a CPER record that hits the reset_link for the normal 
-> EP on my qemu
-> test setup.  Just for fun it causes a synchronous external abort that 
-> I need
-> to track down but not related this patch or indeed reset_link and may 
-> just reflect
-> an impossible to hit path in the e1000e driver.
+> In terms of the API definition, GPIOLINES_MAX can be anything you want
+> and the definitions are still valid.  In practice in the mainline kernel
+> it would always be 1 for ABI compatibility.
 >
-> It needs a very contrived combination of blocks that say the error is 
-> fatal
-> and others that say it isn't so I'm not that worried about that.
-
-Okay, will also test on my end.
-
-Thanks,
-
-Sean
-
+> Chiselling GPIOLINES_MAX <= 64 into stone could simplify things a bit,
+> as all the bitmaps reduce to a single __u64.  Would you prefer that?
 >
+
+I'm not sure I follow. We need to chisel some max value in stone. Up
+to that point it's been 64. We can make it more and the bitmap API
+would handle it alright but if we don't, then this
+__KERNEL_DIV_ROUND_UP() is unnecessary. Limiting it to 64 makes things
+very simple thanks to fitting into a __u64 though. I've personally
+never needed to request even half that so I guess this value's fine?
+
+> > > +/*
+> > > + * The maximum number of configuration attributes associated with a line
+> > > + * request.
+> > > + */
+> > > +#define GPIOLINE_NUM_ATTRS_MAX 10
+> > > +
+> >
+> > How did you choose this number? I mean: it's reasonable - just asking
+> > for clarification.
+> >
 >
->>  			if (status != PCI_ERS_RESULT_RECOVERED) {
->>  				pci_warn(dev, "function level reset failed\n");
->>  				goto failed;
->> @@ -247,7 +253,13 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev 
->> *dev,
->>  		if (pcie_aer_is_native(dev))
->>  			pcie_clear_device_status(dev);
->>  		pci_aer_clear_nonfatal_status(dev);
->> +	} else if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
->> +		if (pcie_aer_is_native(dev) && dev->rcec)
->> +			pcie_clear_device_status(dev->rcec);
->> +		if (dev->rcec)
->> +			pci_aer_clear_nonfatal_status(dev->rcec);
->>  	}
->> +
->>  	pci_info(dev, "device recovery successful\n");
->>  	return status;
->>
->> diff --git a/drivers/pci/pcie/portdrv_pci.c 
->> b/drivers/pci/pcie/portdrv_pci.c
->> index 4d880679b9b1..dff5c9e13412 100644
->> --- a/drivers/pci/pcie/portdrv_pci.c
->> +++ b/drivers/pci/pcie/portdrv_pci.c
->> @@ -90,6 +90,18 @@ static const struct dev_pm_ops pcie_portdrv_pm_ops 
->> = {
->>  #define PCIE_PORTDRV_PM_OPS	NULL
->>  #endif /* !PM */
->>
->> +static int pcie_hook_rcec(struct pci_dev *pdev, void *data)
->> +{
->> +	struct pci_dev *rcec = (struct pci_dev *)data;
->> +
->> +	pdev->rcec = rcec;
->> +	pci_dbg(rcec, "RCiEP(under an RCEC) %04x:%02x:%02x.%d\n",
->> +		pci_domain_nr(pdev->bus), pdev->bus->number,
->> +		PCI_SLOT(pdev->devfn), PCI_FUNC(pdev->devfn));
->> +
->> +	return 0;
->> +}
->> +
->>  /*
->>   * pcie_portdrv_probe - Probe PCI-Express port devices
->>   * @dev: PCI-Express port device being probed
->> @@ -110,6 +122,9 @@ static int pcie_portdrv_probe(struct pci_dev 
->> *dev,
->>  	     (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)))
->>  		return -ENODEV;
->>
->> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
->> +		pcie_walk_rcec(dev, pcie_hook_rcec, dev);
->> +
->>  	status = pcie_port_device_register(dev);
->>  	if (status)
->>  		return status;
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index ee49469bd2b5..d5f7dbbf5e2f 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -326,6 +326,9 @@ struct pci_dev {
->>  #ifdef CONFIG_PCIEAER
->>  	u16		aer_cap;	/* AER capability offset */
->>  	struct aer_stats *aer_stats;	/* AER stats for this device */
->> +#endif
->> +#ifdef CONFIG_PCIEPORTBUS
->> +	struct pci_dev	*rcec;		/* Associated RCEC device */
->>  #endif
->>  	u8		pcie_cap;	/* PCIe capability offset */
->>  	u8		msi_cap;	/* MSI capability offset */
+> I didn't want to constrain the possible configurations by making it too
+> small, particularly allowing for future attributes, but wanted to keep the
+> request size down so it can still comfortably fit on the stack.
+> The gpioline_request stands at 592 bytes, which is already substantially
+> larger than the 364 bytes of the v1 request, and each additional config
+> attribute slot adds another 24 bytes.
+>
+> So 10 seemed like a happy medium.
+>
+
+Makes sense.
+
+> > > +/**
+> > > + * enum gpioline_flag_v2 - &struct gpioline_attribute.flags values
+> > > + */
+> > > +enum gpioline_flag_v2 {
+> > > +       GPIOLINE_FLAG_V2_USED                   = 1UL << 0, /* line is not available for request */
+> > > +       GPIOLINE_FLAG_V2_ACTIVE_LOW             = 1UL << 1,
+> > > +       GPIOLINE_FLAG_V2_INPUT                  = 1UL << 2,
+> > > +       GPIOLINE_FLAG_V2_OUTPUT                 = 1UL << 3,
+> > > +       GPIOLINE_FLAG_V2_EDGE_RISING            = 1UL << 4,
+> > > +       GPIOLINE_FLAG_V2_EDGE_FALLING           = 1UL << 5,
+> > > +       GPIOLINE_FLAG_V2_OPEN_DRAIN             = 1UL << 6,
+> > > +       GPIOLINE_FLAG_V2_OPEN_SOURCE            = 1UL << 7,
+> > > +       GPIOLINE_FLAG_V2_BIAS_PULL_UP           = 1UL << 8,
+> > > +       GPIOLINE_FLAG_V2_BIAS_PULL_DOWN         = 1UL << 9,
+> > > +       GPIOLINE_FLAG_V2_BIAS_DISABLED          = 1UL << 10,
+> > > +};
+> > > +
+> > > +/**
+> > > + * struct gpioline_values - Values of GPIO lines
+> > > + * @bits: a bitmap containing the value of the lines, set to 1 for active
+> > > + * and 0 for inactive.  Note that this is the logical value, which will be
+> > > + * the opposite of the physical value if the line is configured as active
+> > > + * low.
+> > > + */
+> > > +struct gpioline_values {
+> > > +       __u64 bits[GPIOLINES_BITMAP_SIZE];
+> > > +};
+> > > +
+> >
+> > We can set values only for a subset of requested lines but AFAICT we
+> > can't read values of only a subset of lines. Would it be difficult to
+> > remove this limitation? While reading values always succeeds - even if
+> > the line is in input mode and has edge detected - I think that someone
+> > may want to request the max number of lines without reading all their
+> > values each time. Maybe consider merging this with struct
+> > gpioline_set_values?
+> >
+>
+> That is correct.
+>
+> I considered that corner case to be unlikely, as a major point of
+> requesting lines together is to be able to perform collective operations
+> on them as atomically as possible.  If you only want subsets then
+> request them as separate subsets.
+>
+
+And yet this version implements heterogeneous config and setting edge
+detection and values of subsets of requested lines. :)
+
+> Do you have a case in mind where you would have overlapping subsets?
+>
+
+No, not really but then I also don't have a use-case for setting only
+a certain subset of lines.
+
+> Not difficult to remove the limitation - I just didn't see sufficient
+> benefit.
+>
+
+Using the same structure for setting and getting values is a benefit
+IMO. If it's not a difficult task, then I think it's worth adding it.
+
+> > > +/**
+> > > + * struct gpioline_set_values - Values to set a group of GPIO lines
+> > > + * @mask: a bitmap identifying the lines to set.
+> > > + * @bits: a bitmap containing the value of the lines, set to 1 for active
+> > > + * and 0 for inactive.  Note that this is the logical value, which will be
+> > > + * the opposite of the physical value if the line is configured as active
+> > > + * low.
+> > > + */
+> > > +struct gpioline_set_values {
+> > > +       __u64 mask[GPIOLINES_BITMAP_SIZE];
+> > > +       __u64 bits[GPIOLINES_BITMAP_SIZE];
+> > > +};
+> > > +
+> > > +/**
+> > > + * enum gpioline_attr_id - &struct gpioline_attribute.id values
+> > > + */
+> > > +enum gpioline_attr_id {
+> > > +       GPIOLINE_ATTR_ID_FLAGS                  = 1,
+> > > +       GPIOLINE_ATTR_ID_OUTPUT_VALUES          = 2,
+> > > +       GPIOLINE_ATTR_ID_DEBOUNCE               = 3,
+> > > +};
+> > > +
+> > > +/**
+> > > + * struct gpioline_attribute - a configurable attribute of a line
+> > > + * @id: attribute identifier with value from &enum gpioline_attr_id
+> > > + * @padding: reserved for future use and must be zero filled
+> > > + * @flags: if id is GPIOLINE_ATTR_ID_FLAGS, the flags for the GPIO line,
+> > > + * with values from enum gpioline_flag_v2, such as
+> > > + * GPIOLINE_FLAG_V2_ACTIVE_LOW, GPIOLINE_FLAG_V2_OUTPUT etc, OR:ed
+> > > + * together.  This overrides the default flags contained in the &struct
+> > > + * gpioline_config for the associated line.
+> > > + * @values: if id is GPIOLINE_ATTR_ID_OUTPUT_VALUES, the values to which
+> > > + * the lines will be set
+> > > + * @debounce_period: if id is GPIOLINE_ATTR_ID_DEBOUNCE, the desired
+> > > + * debounce period, in microseconds
+> > > + */
+> > > +struct gpioline_attribute {
+> > > +       __u32 id;
+> > > +       __u32 padding;
+> > > +       union {
+> > > +               __u64 flags;
+> > > +               struct gpioline_values values;
+> > > +               __u32 debounce_period;
+> > > +       };
+> > > +};
+> >
+> > I'm afraid that if we don't have enough padding here (at the end),
+> > we'll end up wanting to add a new attribute at some point whose
+> > argument won't fit. Maybe have a specific field in the union that's
+> > even larger than __u64?
+> >
+>
+> I'm satisfied with the 64-bit value restriction.
+>
+> I don't want to go adding another 8 bytes of pad per attribute on the
+> off chance that we ever find such an attribute, and that we couldn't
+> find some other solution like using the __u32 padding, or user the
+> gpioline_config padding, or split it over two attributes....
+>
+
+Fair enough.
+
+> > > +
+> > > +/**
+> > > + * struct gpioline_config_attribute - a configuration attribute associated
+> > > + * with one or more of the requested lines.
+> > > + * @mask: a bitmap identifying the lines to which the attribute applies
+> > > + * @attr: the configurable attribute
+> > > + */
+> > > +struct gpioline_config_attribute {
+> > > +       __u64 mask[GPIOLINES_BITMAP_SIZE];
+> > > +       struct gpioline_attribute attr;
+> > > +};
+> > > +
+> > > +/**
+> > > + * struct gpioline_config - Configuration for GPIO lines
+> > > + * @flags: flags for the GPIO lines, with values from enum
+> > > + * gpioline_flag_v2, such as GPIOLINE_FLAG_V2_ACTIVE_LOW,
+> > > + * GPIOLINE_FLAG_V2_OUTPUT etc, OR:ed together.  This is the default for
+> > > + * all requested lines but may be overridden for particular lines using
+> > > + * attrs.
+> >
+> > So I'm having a hard time with this. I understand that the thinking
+> > behind it was: use the flags field to set all lines to INPUT by
+> > default and only set certain lines to OUTPUT with attrs. This would
+> > make life easier for user-space but it complicates the kernel code and
+> > I also believe that any such simplification should be handled by
+> > user-space libraries, not be exposed by kernel uAPI. My personal
+> > preference would be to drop the flags field and only handle attributes
+> > (maybe even define a special macro to set all bits in mask -
+> > GPIOLINE_CONFIG_ALL_LINES or something) on a first-in-wins basis. I'm
+> > open to other suggestions though.
+> >
+>
+> I think I've addressed this elsewhere, and still think it is worthwhile
+> and very low cost.  I thought it was an easy win when I added it, and
+> still do.
+>
+> Happy to change the attrs to first-in-wins though - the validation of
+> the attrs is still my biggest bugbear with this version.
+
+Yes, I read your other reply. Ok, makes sense to have default flags
+with an attribute for overrides. This just needs very explicit
+documentation.
+
+Bartosz
