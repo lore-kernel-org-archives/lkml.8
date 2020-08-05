@@ -2,173 +2,177 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A31EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C83EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EFA520678
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B31C220658
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:15:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbgHECL2 (ORCPT
+        id S1726585AbgHECPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 22:11:28 -0400
-Received: from mga17.intel.com ([192.55.52.151]:55732 "EHLO mga17.intel.com"
+        Tue, 4 Aug 2020 22:15:30 -0400
+Received: from mga17.intel.com ([192.55.52.151]:56132 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725864AbgHECL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 22:11:27 -0400
-IronPort-SDR: 3CoqdszJAmEkmZm16I/Z4L0T/QtF9f57ymX4mbDM2DyIfHaeFSp+U+1JTA1ScaBsLrj9BYID69
- i/kqkY2wELxQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="132527039"
+        id S1725904AbgHECPa (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 22:15:30 -0400
+IronPort-SDR: TF1F0PLo+IIk0p6cDlQwCa6zz5WpXCepPGd9JAy//fLrGbQCdTDhQQl0qo/jHyeH9VKum7BSW0
+ BORgOdiGzZHA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="132527403"
 X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
-   d="scan'208";a="132527039"
+   d="scan'208";a="132527403"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 19:11:26 -0700
-IronPort-SDR: 7YZv9kSyXHYI1/6wKsTsJNloUdG9Cga/wALKClNATycnIJE6k2WjwseoQyZ1ZcyItT6NMQwClN
- hE46hxDjbpYg==
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 19:15:29 -0700
+IronPort-SDR: ODAW8pQ7TE7CjEqwtVO8h+h5eloajf2QBZqXOd8uMvVvzxbvY6KaP8GpA4syL25WMWdY3Sq1Ue
+ eZZ0bsHft1fg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
-   d="scan'208";a="322962027"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orsmga008.jf.intel.com with ESMTP; 04 Aug 2020 19:11:26 -0700
-From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Cathy Zhang <cathy.zhang@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Kyung Min Park <kyung.min.park@intel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        linux-kernel@vger.kernel.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-edac@vger.kernel.org
-Subject: [PATCH v2] x86/cpu: Use SERIALIZE in sync_core() when available
-Date:   Tue,  4 Aug 2020 19:10:59 -0700
-Message-Id: <20200805021059.1331-1-ricardo.neri-calderon@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+   d="scan'208";a="330790837"
+Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.5.239]) ([10.238.5.239])
+  by FMSMGA003.fm.intel.com with ESMTP; 04 Aug 2020 19:15:27 -0700
+Subject: Re: [PATCH v1 2/2] perf/core: Fake regs for leaked kernel samples
+To:     peterz@infradead.org
+Cc:     mingo@redhat.com, oleg@redhat.com, acme@kernel.org,
+        jolsa@kernel.org, Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        alexander.shishkin@linux.intel.com, mark.rutland@arm.com
+References: <20200731025617.16243-1-yao.jin@linux.intel.com>
+ <20200731025617.16243-2-yao.jin@linux.intel.com>
+ <20200804114900.GI2657@hirez.programming.kicks-ass.net>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <4c958d61-11a7-9f3e-9e7d-d733270144a1@linux.intel.com>
+Date:   Wed, 5 Aug 2020 10:15:26 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <20200804114900.GI2657@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SERIALIZE instruction gives software a way to force the processor to
-complete all modifications to flags, registers and memory from previous
-instructions and drain all buffered writes to memory before the next
-instruction is fetched and executed. Thus, it serves the purpose of
-sync_core(). Use it when available.
+Hi Peter,
 
-Commit 7117f16bf460 ("objtool: Fix ORC vs alternatives") enforced stack
-invariance in alternatives. The iret-to-self does not comply with such
-invariance. Thus, it cannot be used inside alternative code. Instead, use
-an alternative that jumps to SERIALIZE when available.
+On 8/4/2020 7:49 PM, peterz@infradead.org wrote:
+> On Fri, Jul 31, 2020 at 10:56:17AM +0800, Jin Yao wrote:
+>> @@ -6973,7 +6973,8 @@ static struct perf_callchain_entry __empty_callchain = { .nr = 0, };
+>>   struct perf_callchain_entry *
+>>   perf_callchain(struct perf_event *event, struct pt_regs *regs)
+>>   {
+>> -	bool kernel = !event->attr.exclude_callchain_kernel;
+>> +	bool kernel = !event->attr.exclude_callchain_kernel &&
+>> +		      !event->attr.exclude_kernel;
+> 
+> This seems weird; how can we get there. Also it seems to me that if you
+> have !exclude_callchain_kernel you already have permission for kernel
+> bits, so who cares.
+> 
 
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Cathy Zhang <cathy.zhang@intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Kyung Min Park <kyung.min.park@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: linux-edac@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Suggested-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
----
-This is a v2 from my initial submission [1]. The first three patches of
-the series have been merged in Linus' tree. Hence, I am submitting only
-this patch for review.
+In perf tool, exclude_callchain_kernel is set to 1 when perf-record only collects the user 
+callchains and exclude_kernel is set to 1 when events are configured to run in user space.
 
-[1]. https://lkml.org/lkml/2020/7/27/8
+So if an event is configured to run in user space, that should make sense we don't need it's kernel 
+callchains.
 
-Changes since v1:
- * Support SERIALIZE using alternative runtime patching.
-   (Peter Zijlstra, H. Peter Anvin)
- * Added a note to specify which version of binutils supports SERIALIZE.
-   (Peter Zijlstra)
- * Verified that (::: "memory") is used. (H. Peter Anvin)
----
- arch/x86/include/asm/special_insns.h |  2 ++
- arch/x86/include/asm/sync_core.h     | 10 +++++++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+But it seems to me there is no code logic in perf tool which can make sure !exclude_callchain_kernel 
+-> !exclude_kernel.
 
-diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
-index 59a3e13204c3..25cd67801dda 100644
---- a/arch/x86/include/asm/special_insns.h
-+++ b/arch/x86/include/asm/special_insns.h
-@@ -10,6 +10,8 @@
- #include <linux/irqflags.h>
- #include <linux/jump_label.h>
- 
-+/* Instruction opcode for SERIALIZE; supported in binutils >= 2.35. */
-+#define __ASM_SERIALIZE ".byte 0xf, 0x1, 0xe8"
- /*
-  * Volatile isn't enough to prevent the compiler from reordering the
-  * read/write functions for the control registers and messing everything up.
-diff --git a/arch/x86/include/asm/sync_core.h b/arch/x86/include/asm/sync_core.h
-index fdb5b356e59b..201ea3d9a6bd 100644
---- a/arch/x86/include/asm/sync_core.h
-+++ b/arch/x86/include/asm/sync_core.h
-@@ -5,15 +5,19 @@
- #include <linux/preempt.h>
- #include <asm/processor.h>
- #include <asm/cpufeature.h>
-+#include <asm/special_insns.h>
- 
- #ifdef CONFIG_X86_32
- static inline void iret_to_self(void)
- {
- 	asm volatile (
-+		ALTERNATIVE("", "jmp 2f", X86_FEATURE_SERIALIZE)
- 		"pushfl\n\t"
- 		"pushl %%cs\n\t"
- 		"pushl $1f\n\t"
- 		"iret\n\t"
-+		"2:\n\t"
-+		__ASM_SERIALIZE "\n"
- 		"1:"
- 		: ASM_CALL_CONSTRAINT : : "memory");
- }
-@@ -23,6 +27,7 @@ static inline void iret_to_self(void)
- 	unsigned int tmp;
- 
- 	asm volatile (
-+		ALTERNATIVE("", "jmp 2f", X86_FEATURE_SERIALIZE)
- 		"mov %%ss, %0\n\t"
- 		"pushq %q0\n\t"
- 		"pushq %%rsp\n\t"
-@@ -32,6 +37,8 @@ static inline void iret_to_self(void)
- 		"pushq %q0\n\t"
- 		"pushq $1f\n\t"
- 		"iretq\n\t"
-+		"2:\n\t"
-+		__ASM_SERIALIZE "\n"
- 		"1:"
- 		: "=&r" (tmp), ASM_CALL_CONSTRAINT : : "cc", "memory");
- }
-@@ -54,7 +61,8 @@ static inline void iret_to_self(void)
- static inline void sync_core(void)
- {
- 	/*
--	 * There are quite a few ways to do this.  IRET-to-self is nice
-+	 * Hardware can do this for us if SERIALIZE is available. Otherwise,
-+	 * there are quite a few ways to do this.  IRET-to-self is nice
- 	 * because it works on every CPU, at any CPL (so it's compatible
- 	 * with paravirtualization), and it never exits to a hypervisor.
- 	 * The only down sides are that it's a bit slow (it seems to be
--- 
-2.17.1
+Jiri, Arnaldo, is my understanding correct?
 
+>>   	bool user   = !event->attr.exclude_callchain_user;
+>>   	/* Disallow cross-task user callchains. */
+>>   	bool crosstask = event->ctx->task && event->ctx->task != current;
+>> @@ -6988,12 +6989,39 @@ perf_callchain(struct perf_event *event, struct pt_regs *regs)
+>>   	return callchain ?: &__empty_callchain;
+>>   }
+>>   
+>> +static struct pt_regs *leak_check(struct perf_event_header *header,
+>> +				  struct perf_event *event,
+>> +				  struct pt_regs *regs)
+>> +{
+>> +	struct pt_regs *regs_fake = NULL;
+>> +
+>> +	if (event->attr.exclude_kernel && !user_mode(regs)) {
+>> +		if (!(current->flags & PF_KTHREAD)) {
+>> +			regs_fake = task_pt_regs(current);
+>> +			if (!user_mode(regs_fake)) {
+>> +				regs_fake = NULL;
+>> +				instruction_pointer_set(regs, -1L);
+>> +			}
+>> +		} else
+>> +			instruction_pointer_set(regs, -1L);
+> 
+> That violates coding style, also:
+> 
+
+Thanks, I should use:
+
+} else {
+	instruction_pointer_set(regs, -1L);
+}
+
+> 		if (!(current->flags & PF_KTHREAD)) {
+> 			regs_fake = task_pt_regs(current);
+> 			if (!user_mode(regs_fake)) /* is this not a BUG?  */
+
+We don't need !user_mode(regs_fake) check here, it's unnecessary check.
+
+> 				regs_fake = NULL;
+> 		}
+> 
+> 		if (!regs_fake)
+> 			instruction_pointer_set(regs, -1L);
+> 
+> Seems simpler to me.
+> 
+
+So the new code looks like:
+
+if (event->attr.exclude_kernel && !user_mode(regs)) {
+	if (!(current->flags & PF_KTHREAD)) {
+		regs_fake = task_pt_regs(current);
+		if (!regs_fake)
+			instruction_pointer_set(regs, -1L);
+	} else {
+		instruction_pointer_set(regs, -1L);
+	}
+
+>> +		if ((header->misc & PERF_RECORD_MISC_CPUMODE_MASK) ==
+>> +		     PERF_RECORD_MISC_KERNEL) {
+>> +			header->misc &= ~PERF_RECORD_MISC_CPUMODE_MASK;
+>> +			header->misc |= PERF_RECORD_MISC_USER;
+>> +		}
+> 
+> Why the conditional? At this point it had better be unconditionally
+> user, no?
+> 
+> 		headers->misc &= ~PERF_RECORD_MISC_CPUMODE_MASK;
+> 		headers->misc |= PERF_RECORD_MISC_USER;
+> 
+
+#define PERF_RECORD_MISC_CPUMODE_MASK		(7 << 0)
+#define PERF_RECORD_MISC_CPUMODE_UNKNOWN	(0 << 0)
+#define PERF_RECORD_MISC_KERNEL			(1 << 0)
+#define PERF_RECORD_MISC_USER			(2 << 0)
+#define PERF_RECORD_MISC_HYPERVISOR		(3 << 0)
+#define PERF_RECORD_MISC_GUEST_KERNEL		(4 << 0)
+#define PERF_RECORD_MISC_GUEST_USER		(5 << 0)
+
+If we unconditionally set user, it will reset for hypervisor, guest kernel and guest_user.
+
+Thanks
+Jin Yao
+
+>> +	}
+>> +
+>> +	return regs_fake;
+>> +}
