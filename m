@@ -2,126 +2,109 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 503C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD15C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 265A322D2C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:58:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596646722;
-	bh=s4M9z0PpUaC78g2FBmcWjmoek0lH37PmXjd+aXtbWdU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qamyQzfhjI3K8/R+p9ks1jmUHuBWUHsBLxhDyaplH58yq8CGOaX/GleI5l+p2MUW3
-	 JNWnNh+LAidmSglpxvVNoSTUYsBX+ODBDR5O5+gbfcdlREhpKD0kDw4kcWdPYmCYVX
-	 HxJNAm2MjgPzkJTAqStUplWVo36Qhqqq47q4HQsM=
+	by mail.kernel.org (Postfix) with ESMTP id B85F522D00
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:59:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LbdFwCww"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgHEQ6k (ORCPT
+        id S1728124AbgHEQ6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 12:58:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47492 "EHLO
+        Wed, 5 Aug 2020 12:58:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728349AbgHEQ4s (ORCPT
+        with ESMTP id S1728352AbgHEQ44 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:56:48 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87B0CC061757
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 09:51:32 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id t23so24970448ljc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 09:51:32 -0700 (PDT)
+        Wed, 5 Aug 2020 12:56:56 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB546C061756
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 09:52:46 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id w17so25558138ply.11
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 09:52:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=yKgJ87tlQurrZfrQYEXodAO8OzBfJ9TRYjwrwCi61/U=;
-        b=Olb3V+ArUyt0OGqFt/v2uUo/5e1lC5R9fiJfpnbkZ/1hkrUJuQ9U+awiv/FWz0zxRU
-         QLt5Xjiyk5jNC0IE5H2855C1ZLlcXbu4to/gW3c03vbsYmHn9d8pcxIdlUAc4Km2VHWa
-         fGVwwxbiecbT2soul1jwPZgwNIkYwmYIK46Mo=
+        bh=zXZGtsOURmZyHZLbU5fvxhNJ7/uuuH+Jf1Odf6vVQ/Y=;
+        b=LbdFwCwwQ9+ZYyYA91SbJw79q5NmfsQ584hs+WRyh/6ENT1awKjxbLxxdjwZpDO0gW
+         Tr8xIPC0qYpNF56Q/Vts64nXhmUpDrmJLjoqxk/snzwrty3UkfAgqdzR5hinsLeFi6zI
+         R0hscqToNuNUSjBqXpBmkZOBp4sTvJCK+24di3gbiG9OWnxJYYP1bNtXGr9Q30ftrg8q
+         vPn815m/91evw5LuxWkVMSPSZo6J39FiRaqdzSkpKUsghh81J8x/r1EPU6Nb+/hb8iwv
+         nY6iURyZ+psWPW05NKmkzHzYlTDuN6KZ6xlntRf6Sn4Wii2ZfodpTQ2Z15XVy28LdWcO
+         rpow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yKgJ87tlQurrZfrQYEXodAO8OzBfJ9TRYjwrwCi61/U=;
-        b=Hm0gqXCwU7Bm/5bf9oRypEIyHv4zFQZ7q9a0+N6+yO5ObYCo8ul5p+ckFP+Zun5sDP
-         EWouBmPA26RqTf/mbh2Z9yhwd5fNyv74UlmGKqJS9e81Pg02vjVr5TZ54BHUMIRs68RP
-         xnhRSJqTK0cSrjjgAlSXa+RDLaczvuiY4GiNSN4GsiCozvR7N5HVCmnPFoOdht86A/jC
-         G/avxPxsYzDDGYymcPmEHmi8hqsGfRdpqCXj2+HgR7zqWo6JmHOOYmAkaATA7PuGa9mD
-         dvZs39i2BwYDnKNlO1To5vcano85/VJNpsTGZrLi5R8JK47w/j8x1orsdTZEfkyCfYAe
-         3Kpg==
-X-Gm-Message-State: AOAM533f7Ert+JWUIRw7nhm9KsPclpCjpoBYUaGfe3bKbQJbH6OVkpFH
-        d0ibO/XrWfhdfBKJ87Cd7APPivdx+Zg=
-X-Google-Smtp-Source: ABdhPJwsOrtBMuyTe74k32fC2wedbdBmYhztLBWFnc62gWVz3eFBjqZdNQ9ShugJI042w70RcqIdog==
-X-Received: by 2002:a2e:b175:: with SMTP id a21mr1806724ljm.423.1596646289189;
-        Wed, 05 Aug 2020 09:51:29 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id m20sm1426285lfb.72.2020.08.05.09.51.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2020 09:51:27 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id h19so48487952ljg.13
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 09:51:27 -0700 (PDT)
-X-Received: by 2002:a2e:9a11:: with SMTP id o17mr1821083lji.314.1596646286874;
- Wed, 05 Aug 2020 09:51:26 -0700 (PDT)
+        bh=zXZGtsOURmZyHZLbU5fvxhNJ7/uuuH+Jf1Odf6vVQ/Y=;
+        b=kGnl9/jCsbFAhpZuSSQWnJMY0Jvr8pgV4L0rjQNOUHZUgoV1rF85SNztAusp/1cOli
+         Co/0XEy0NHqFZNgIwojNxXzd3sE0Bx4OBsJE3gxhZwZMoyW8K3chWP265A6yEpml8Vwf
+         ZWRdMOfor+s1ywmyh8lFwdKE3G6RL1dSZwWdeWPpGojHLJQsjRPm7a/02uppqKyupt2X
+         3NbttArBe3E2Fwiy+XZ8TiNqCL5d5lbTupar/fi+b7SXxM8ApgonVtmFX9L/kQGcmF+6
+         vNxlXA0NamUfROrI+/b7FOAWoMYwWXM7lRGuFEY0Nc4qx1/y+R4CS9rR31PgZlptv+WN
+         4xsQ==
+X-Gm-Message-State: AOAM533z2BGAb9JPRBR9Gv9QUPNjfyMD3ateUzMkj2zZ+67/2wXt3bmD
+        c/vgPwnKYsu+AuyzB8We8PgfjJ01aPG8V7X00sQ=
+X-Google-Smtp-Source: ABdhPJzq2IoaaG/XACuojhMxN71N1xV8rgh0jzB4NCZ3up/DasYj5P+gibCzFgPgwUVAYsmZlRJnUeV8JfW04Jc8fHk=
+X-Received: by 2002:a17:90a:148:: with SMTP id z8mr4414464pje.197.1596646366165;
+ Wed, 05 Aug 2020 09:52:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200804072435.385370289@linuxfoundation.org> <CA+G9fYs35Eiq1QFM0MOj6Y7gC=YKaiknCPgcJpJ5NMW4Y7qnYQ@mail.gmail.com>
- <20200804082130.GA1768075@kroah.com> <CAHk-=whJ=shbf-guMGZkGvxh9fVmbrvUuiWO48+PDFG7J9A9qw@mail.gmail.com>
- <c32ad2216ca3dd83d6d3d740512db9de@kernel.org> <20200805095439.GB1634853@kroah.com>
- <813c64c8dbe037b9d84763f56c4dbb7d@kernel.org>
-In-Reply-To: <813c64c8dbe037b9d84763f56c4dbb7d@kernel.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 5 Aug 2020 09:51:10 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiUEonP7tyAfYv=dja4i3b1oBtHL=KY=j8x55x3AFoZZw@mail.gmail.com>
-Message-ID: <CAHk-=wiUEonP7tyAfYv=dja4i3b1oBtHL=KY=j8x55x3AFoZZw@mail.gmail.com>
-Subject: Re: [PATCH 5.7 000/121] 5.7.13-rc2 review
-To:     Marc Zyngier <maz@kernel.org>
+References: <cover.1594290158.git.vaibhav.sr@gmail.com> <896b8e24d990f2bca5aafaebd26e37095042951e.1594290158.git.vaibhav.sr@gmail.com>
+ <7cbc0daa-993f-ffc9-78f4-b1e62fd54304@linaro.org>
+In-Reply-To: <7cbc0daa-993f-ffc9-78f4-b1e62fd54304@linaro.org>
+From:   Vaibhav Agarwal <vaibhav.sr@gmail.com>
+Date:   Wed, 5 Aug 2020 22:22:09 +0530
+Message-ID: <CAAs364-PFw2OGGhwBH8RB7jBPD4Xre4puu9G-7P+z6Ur_Ni-yA@mail.gmail.com>
+Subject: Re: [greybus-dev] [PATCH v4 1/7] staging: greybus: audio: Update
+ snd_jack FW usage as per new APIs
+To:     Alex Elder <elder@linaro.org>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
+        Alex Elder <elder@kernel.org>, Johan Hovold <johan@kernel.org>,
+        Mark Greer <mgreer@animalcreek.com>,
+        devel@driverdev.osuosl.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-kernel@vger.kernel.org, greybus-dev@lists.linaro.org,
+        Dan Carpenter <dan.carpenter@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 4:20 AM Marc Zyngier <maz@kernel.org> wrote:
+On Wed, Aug 5, 2020 at 6:35 PM Alex Elder <elder@linaro.org> wrote:
 >
-> I came up with yet another "quality" hack, which gets the job done,
-> see below. It is obviously much simpler, but also terribly ugly.
+> On 7/9/20 5:27 AM, Vaibhav Agarwal wrote:
+> > snd_soc_jack APIs are modified in recent kernel versions. This patch
+> > updates the codec driver to resolve the compilation errors related to
+> > jack framework.
+>
+> Greg has already accepted this series so I won't review this now.  But
+> I still wanted to provide this comment.
+>
+> It would be helpful in the future to provide a little more information
+> about the nature of the changes to these APIs.  As a reviewer I had to
+> go track them down to get a little more context about what you are doing
+> here.  So you could say something like:
+>
+>   Audio jacks are now registered at the card level rather than being
+>   associated with a CODEC.  The new card-based API allows a jack's pins
+>   to be supplied when the jack is first registered.  See: 970939964c26
+>   ("ASoC: Allow to register jacks at the card level")
+>
+> In other words, don't just say "the APIs changed," say "here is how
+> the APIs have changed."  This kind of introduction can be very helpful
+> and time saving for your reviewers.
+>
 
-This is effectively what the approach of commit c0842fbc1b18
-("random32: move the pseudo-random 32-bit definitions to prandom.h")
-was too. It has the prandom include in the middle of random.h - which
-makes sense in the context of that patch (because it's where all the
-prandom stuff used to live there), but the real secret is that as it
-does that, it basically moves the percpu.h include down there too.
+Thanks for the feedback Alex. I'll take care of the commit message while
+sharing similar patches.
 
-This mess has caused me to seriously look at making sparse generate a
-"defined here, used here" list, and do a topo-sort on it all, and warn
-about unused includes but also about stupidities like this.
-
-But I won't have time to do that until after the merge window, and it
-may turn out nastier than expected. But I did add all the include
-chaining information to the sparse position logic recently in a fairly
-easy to digest form, so my gut feel is that something that doesn't try
-to actually optimize or solve the problem - just point out the obvious
-errors - might be more reasonably doable than doing something that is
-theoretically the RightThing(tm) to do.
-
-IOW, a tool only to help find and figure these things out, rather than
-a tool to do all the minimization for you automatically.
-
-We'll see. No promises. And if somebody else beats me to it, I won't complain.
-
-            Linus
+--
+vaibhav
