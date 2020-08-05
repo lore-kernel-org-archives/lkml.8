@@ -2,393 +2,158 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CB8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35CE6C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37E2C206B6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:49:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596620995;
-	bh=Rt7eYIa5nqA060iw0KPsbwAS08mkHFpq96WWubi30Og=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=z6yttLfDLUwJIRQ/JuhPT3mguI5Ak95j2SdOo66Lxf8e2ZdTB7zKangk0EW1ae8VD
-	 3jHECJuTn+iOk6gIOWearNkYQ3L3h1wdfAb6wwYpTickgKcyt4kZ9xuYAOSre8lvBn
-	 bc9GMq63cJyfXc9GZ6xQbaX9cYagIkxP9VE6MHj4=
+	by mail.kernel.org (Postfix) with ESMTP id 19B12206B6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:50:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgHEJti (ORCPT
+        id S1728473AbgHEJt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 05:49:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37706 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 05:49:57 -0400
+Received: from mga14.intel.com ([192.55.52.115]:36869 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727921AbgHEJqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 05:46:54 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6EBE22CA0;
-        Wed,  5 Aug 2020 09:46:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596620767;
-        bh=Rt7eYIa5nqA060iw0KPsbwAS08mkHFpq96WWubi30Og=;
-        h=From:To:Cc:Subject:Date:From;
-        b=R8tK82CJUB7yGIS9jVAUO9eDNKOiAo2q3w8xMvY4hYdIawe+F0Jlmrpz6RBMZjDZe
-         tRyhN/L3Th1o+etKjqBb6u7lUKfdIEoTbqdeiwjHoX5riiSXBMfO+XdJ5E7EbYCTrD
-         Ua09WmoFYGK1q4loYcU+/S2bZ+zkpuoXOJDEaObc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, jslaby@suse.cz,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Linux 5.4.56
-Date:   Wed,  5 Aug 2020 11:46:15 +0200
-Message-Id: <1596620775133125@kroah.com>
-X-Mailer: git-send-email 2.28.0
+        id S1725946AbgHEJrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 05:47:21 -0400
+IronPort-SDR: tQV1dEeKKGd7aZzxmJg+nlDvhl+W6IAbdKyYIchxrZtaqFOWtO8nARSxcM2/BQmg4hHs/yLnGt
+ 4zqeaNAJlESQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="151724075"
+X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
+   d="scan'208";a="151724075"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 02:47:19 -0700
+IronPort-SDR: mgkR+4TR9AuXaEUmyoWXi85tF139cYRXvEZHA/bwpLHVTm93M+Df5h+btdjwm+yhbwA/CfA2Tu
+ EjIVB/n/7/4g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
+   d="scan'208";a="493219085"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
+  by fmsmga005.fm.intel.com with ESMTP; 05 Aug 2020 02:47:17 -0700
+Subject: Re: [PATCH] mmc: sdhci_am654: Add workaround for card detect debounce
+ timer
+To:     Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+Cc:     ulf.hansson@linaro.org
+References: <20200729234130.25056-1-faiz_abbas@ti.com>
+ <2d692a90-0e58-ae69-9b5b-c9eb3ffe21ec@intel.com>
+ <75b188ef-2755-b833-4756-79f0f171f8bd@ti.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <c5b166c9-f9ba-e01e-b759-57ac93d99832@intel.com>
+Date:   Wed, 5 Aug 2020 12:46:53 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <75b188ef-2755-b833-4756-79f0f171f8bd@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm announcing the release of the 5.4.56 kernel.
-
-All users of the 5.4 kernel series must upgrade.
-
-The updated 5.4.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.4.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
-
-thanks,
-
-greg k-h
-
-------------
-
- Makefile                                                      |    2 
- arch/arm/boot/dts/armada-38x.dtsi                             |    3 
- arch/arm/boot/dts/imx6qdl-icore.dtsi                          |    3 
- arch/arm/boot/dts/imx6sx-sabreauto.dts                        |    2 
- arch/arm/boot/dts/imx6sx-sdb.dtsi                             |    2 
- arch/arm/boot/dts/sun4i-a10.dtsi                              |    2 
- arch/arm/boot/dts/sun5i.dtsi                                  |    2 
- arch/arm/boot/dts/sun7i-a20.dtsi                              |    2 
- arch/arm/kernel/hw_breakpoint.c                               |   27 +++-
- arch/arm64/include/asm/alternative.h                          |    4 
- arch/arm64/include/asm/checksum.h                             |    5 
- arch/parisc/include/asm/cmpxchg.h                             |    2 
- arch/parisc/lib/bitops.c                                      |   12 +
- arch/riscv/mm/init.c                                          |    2 
- arch/sh/include/asm/pgalloc.h                                 |   10 -
- arch/sh/kernel/entry-common.S                                 |    6 
- arch/x86/kernel/i8259.c                                       |    2 
- arch/x86/kernel/stacktrace.c                                  |    5 
- arch/x86/kernel/unwind_orc.c                                  |    8 -
- arch/x86/kvm/lapic.c                                          |    2 
- drivers/crypto/ccp/ccp-ops.c                                  |    3 
- drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c                       |    3 
- drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c                        |    9 -
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c             |   36 ++++-
- drivers/gpu/drm/drm_gem.c                                     |   10 -
- drivers/gpu/drm/drm_mipi_dbi.c                                |    2 
- drivers/i2c/busses/i2c-cadence.c                              |    9 -
- drivers/infiniband/sw/rdmavt/qp.c                             |   33 -----
- drivers/infiniband/sw/rdmavt/rc.c                             |    4 
- drivers/media/pci/cx23885/cx23888-ir.c                        |    5 
- drivers/net/ethernet/chelsio/cxgb4/sge.c                      |    1 
- drivers/net/ethernet/cortina/gemini.c                         |    5 
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c               |    2 
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c       |   28 ++--
- drivers/net/ethernet/ibm/ibmvnic.c                            |    2 
- drivers/net/ethernet/mellanox/mlx4/main.c                     |    2 
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c             |   31 ++++
- drivers/net/ethernet/mellanox/mlx5/core/en_rep.c              |    2 
- drivers/net/ethernet/mellanox/mlx5/core/eswitch.c             |   23 ++-
- drivers/net/ethernet/mellanox/mlx5/core/eswitch.h             |    2 
- drivers/net/ethernet/mellanox/mlx5/core/lib/clock.c           |   23 +++
- drivers/net/ethernet/mellanox/mlxsw/core.c                    |    8 -
- drivers/net/ethernet/ni/nixge.c                               |    8 -
- drivers/net/ethernet/qlogic/qed/qed_int.c                     |    3 
- drivers/net/ethernet/renesas/ravb_main.c                      |   26 +++-
- drivers/net/usb/hso.c                                         |    5 
- drivers/net/usb/lan78xx.c                                     |    6 
- drivers/net/vxlan.c                                           |    6 
- drivers/net/wan/hdlc_x25.c                                    |    4 
- drivers/net/wan/lapbether.c                                   |    8 -
- drivers/net/wireless/ath/ath10k/hw.c                          |    1 
- drivers/net/xen-netfront.c                                    |   64 ++++++----
- drivers/nfc/s3fwrn5/core.c                                    |    1 
- drivers/nvme/host/tcp.c                                       |    3 
- drivers/pci/quirks.c                                          |   13 ++
- drivers/scsi/scsi_lib.c                                       |   16 +-
- drivers/vhost/scsi.c                                          |    2 
- drivers/virtio/virtio_balloon.c                               |    6 
- include/linux/mlx5/mlx5_ifc.h                                 |    1 
- include/linux/rhashtable.h                                    |   25 ++-
- include/net/xfrm.h                                            |   15 +-
- include/rdma/rdmavt_qp.h                                      |   19 ++
- include/uapi/linux/wireless.h                                 |    5 
- kernel/bpf/hashtab.c                                          |   12 +
- mm/filemap.c                                                  |    2 
- net/9p/trans_fd.c                                             |   15 ++
- net/bluetooth/hci_event.c                                     |   26 ++--
- net/key/af_key.c                                              |    4 
- net/mac80211/cfg.c                                            |    1 
- net/mac80211/mesh_pathtbl.c                                   |    1 
- net/rds/recv.c                                                |    3 
- net/sunrpc/sunrpc.h                                           |    1 
- net/sunrpc/sunrpc_syms.c                                      |    2 
- net/sunrpc/svcauth.c                                          |   27 ++++
- net/x25/x25_subr.c                                            |    6 
- net/xfrm/xfrm_policy.c                                        |   39 ++----
- net/xfrm/xfrm_user.c                                          |   18 +-
- sound/pci/hda/patch_hdmi.c                                    |    2 
- sound/pci/hda/patch_realtek.c                                 |   36 ++++-
- sound/usb/pcm.c                                               |    1 
- tools/lib/traceevent/plugins/Makefile                         |    2 
- tools/perf/arch/arm/util/auxtrace.c                           |    8 -
- tools/perf/bench/bench.h                                      |    4 
- tools/perf/bench/epoll-ctl.c                                  |    7 -
- tools/perf/bench/epoll-wait.c                                 |   11 -
- tools/perf/bench/futex-hash.c                                 |   12 -
- tools/perf/bench/futex-lock-pi.c                              |   11 -
- tools/perf/tests/bp_account.c                                 |    2 
- tools/perf/util/env.c                                         |    4 
- tools/testing/selftests/net/fib_nexthop_multiprefix.sh        |    2 
- tools/testing/selftests/net/ip_defrag.sh                      |    2 
- tools/testing/selftests/net/psock_fanout.c                    |    3 
- tools/testing/selftests/net/so_txtime.c                       |    2 
- tools/testing/selftests/networking/timestamping/rxtimestamp.c |    3 
- virt/kvm/arm/mmu.c                                            |   11 -
- 95 files changed, 575 insertions(+), 288 deletions(-)
-
-Abhishek Ambure (1):
-      ath10k: enable transmit data ack RSSI for QCA9884
-
-Alaa Hleihel (1):
-      net/mlx5e: Fix kernel crash when setting vf VLANID on a VF dev
-
-Alain Michaud (1):
-      Bluetooth: fix kernel oops in store_pending_adv_report
-
-Alex Deucher (1):
-      Revert "drm/amdgpu: Fix NULL dereference in dpm sysfs handlers"
-
-Andrea Righi (1):
-      xen-netfront: fix potential deadlock in xennet_remove()
-
-Andrii Nakryiko (1):
-      bpf: Fix map leak in HASH_OF_MAPS map
-
-Armas Spann (2):
-      ALSA: hda/realtek: enable headset mic of ASUS ROG Zephyrus G15(GA502) series with ALC289
-      ALSA: hda/realtek: typo_fix: enable headset mic of ASUS ROG Zephyrus G14(GA401) series with ALC289
-
-Arnaldo Carvalho de Melo (3):
-      perf tests bp_account: Make global variable static
-      perf env: Do not return pointers to local variables
-      perf bench: Share some global variables to fix build with gcc 10
-
-Atish Patra (1):
-      RISC-V: Set maximum number of mapped pages correctly
-
-Aya Levin (1):
-      net/mlx5e: Fix error path of device attach
-
-Ben Hutchings (1):
-      libtraceevent: Fix build with binutils 2.35
-
-Eran Ben Elisha (1):
-      net/mlx5: Verify Hardware supports requested ptp function on a given pin
-
-Fabio Estevam (2):
-      ARM: dts: imx6sx-sabreauto: Fix the phy-mode on fec2
-      ARM: dts: imx6sx-sdb: Fix the phy-mode on fec2
-
-Geert Uytterhoeven (1):
-      usb: hso: Fix debug compile warning on sparc32
-
-Greg Kroah-Hartman (1):
-      Linux 5.4.56
-
-Guojia Liao (1):
-      net: hns3: fix aRFS FD rules leftover after add a user FD rule
-
-Herbert Xu (1):
-      rhashtable: Fix unprotected RCU dereference in __rht_ptr
-
-Ido Schimmel (2):
-      mlxsw: core: Increase scope of RCU read-side critical section
-      mlxsw: core: Free EMAD transactions using kfree_rcu()
-
-Jakub Kicinski (1):
-      mlx4: disable device on shutdown
-
-Jan Kara (1):
-      mm/filemap.c: don't bother dropping mmap_sem for zero size readahead
-
-Johan Hovold (2):
-      net: lan78xx: add missing endpoint sanity check
-      net: lan78xx: fix transfer-buffer memory leak
-
-Josh Poimboeuf (2):
-      x86/unwind/orc: Fix ORC for newly forked tasks
-      x86/stacktrace: Fix reliable check for empty user task stacks
-
-Kailang Yang (1):
-      ALSA: hda/realtek - Fixed HP right speaker no sound
-
-Laurence Oberman (1):
-      qed: Disable "MFW indication via attention" SPAM every 5 minutes
-
-Laurence Tratt (1):
-      ALSA: usb-audio: Add implicit feedback quirk for SSL2
-
-Liam Beguin (1):
-      parisc: add support for cmpxchg on u8 pointers
-
-Lu Wei (1):
-      net: nixge: fix potential memory leak in nixge_probe()
-
-Maxime Ripard (1):
-      ARM: dts sunxi: Relax a bit the CMA pool allocation range
-
-Mazin Rezk (1):
-      drm/amd/display: Clear dm_state for fast updates
-
-Michael Karcher (1):
-      sh: Fix validation of system call number
-
-Michael S. Tsirkin (2):
-      vhost/scsi: fix up req type endian-ness
-      virtio_balloon: fix up endian-ness for free cmd id
-
-Michael Trimarchi (1):
-      ARM: dts: imx6qdl-icore: Fix OTG_ID pin and sdcard detect
-
-Mike Marciniszyn (1):
-      IB/rdmavt: Fix RQ counting issues causing use of an invalid RWQE
-
-Ming Lei (1):
-      scsi: core: Run queue in case of I/O resource contention failure
-
-Navid Emamdoost (4):
-      crypto: ccp - Release all allocated memory if sha type is invalid
-      media: rc: prevent memory leak in cx23888_ir_probe
-      nfc: s3fwrn5: add missing release on skb in s3fwrn5_recv_frame
-      cxgb4: add missing release on skb in uld_send()
-
-Paolo Pisati (2):
-      selftests: fib_nexthop_multiprefix: fix cleanup() netns deletion
-      selftests: net: ip_defrag: modprobe missing nf_defrag_ipv6 support
-
-Parav Pandit (1):
-      net/mlx5: E-switch, Destroy TSAR when fail to enable the mode
-
-Paul Cercueil (1):
-      drm/dbi: Fix SPI Type 1 (9-bit) transfer
-
-PeiSen Hou (1):
-      ALSA: hda/realtek: Fix add a "ultra_low_power" function for intel reference board (alc256)
-
-Peilin Ye (2):
-      drm/amdgpu: Prevent kernel-infoleak in amdgpu_info_ioctl()
-      rds: Prevent kernel-infoleak in rds_notify_queue_get()
-
-Peter Zijlstra (1):
-      sh/tlb: Fix PGTABLE_LEVELS > 2
-
-Pi-Hsun Shih (1):
-      wireless: Use offsetof instead of custom macro.
-
-Raviteja Narayanam (1):
-      Revert "i2c: cadence: Fix the hold bit setting"
-
-Remi Pommarel (2):
-      mac80211: mesh: Free ie data when leaving mesh
-      mac80211: mesh: Free pending skb when destroying a mpath
-
-Robert Hancock (1):
-      PCI/ASPM: Disable ASPM on ASMedia ASM1083/1085 PCIe-to-PCI bridge
-
-Robin Murphy (1):
-      arm64: csum: Fix handling of bad packets
-
-Ron Diskin (1):
-      net/mlx5e: Modify uplink state on interface up/down
-
-Russell King (1):
-      ARM: dts: armada-38x: fix NETA lockup when repeatedly switching speeds
-
-Sagi Grimberg (1):
-      nvme-tcp: fix possible hang waiting for icresp response
-
-Sami Tolvanen (1):
-      arm64/alternatives: move length validation inside the subsection
-
-Sasha Levin (1):
-      sunrpc: check that domain table is empty at module unload.
-
-Steffen Klassert (1):
-      xfrm: Fix crash when the hold queue is used.
-
-Steve Cohen (1):
-      drm: hold gem reference until object is no longer accessed
-
-Taehee Yoo (1):
-      vxlan: fix memleak of fdb
-
-Takashi Iwai (1):
-      ALSA: hda/hdmi: Fix keep_power assignment for non-component devices
-
-Tanner Love (3):
-      selftests/net: rxtimestamp: fix clang issues for target arch PowerPC
-      selftests/net: psock_fanout: fix clang issues for target arch PowerPC
-      selftests/net: so_txtime: fix clang issues for target arch PowerPC
-
-Thomas Falcon (1):
-      ibmvnic: Fix IRQ mapping disposal in error path
-
-Thomas Gleixner (1):
-      x86/i8259: Use printk_deferred() to prevent deadlock
-
-Wang Hai (2):
-      9p/trans_fd: Fix concurrency del of req_list in p9_fd_cancelled/p9_read_work
-      net: gemini: Fix missing clk_disable_unprepare() in error path of gemini_ethernet_port_probe()
-
-Wanpeng Li (1):
-      KVM: LAPIC: Prevent setting the tscdeadline timer if the lapic is hw disabled
-
-Wei Li (1):
-      perf tools: Fix record failure when mixed with ARM SPE event
-
-Will Deacon (2):
-      ARM: 8986/1: hw_breakpoint: Don't invoke overflow handler on uaccess watchpoints
-      KVM: arm64: Don't inherit exec permission across page-table levels
-
-Xie He (1):
-      drivers/net/wan: lapb: Corrected the usage of skb_cow
-
-Xin Long (1):
-      xfrm: policy: match with both mark and mask on user interfaces
-
-Xin Xiong (1):
-      net/mlx5e: fix bpf_prog reference count leaks in mlx5e_alloc_rq
-
-Xiyu Yang (1):
-      net/x25: Fix x25_neigh refcnt leak when x25 disconnect
-
-Yonglong Liu (1):
-      net: hns3: fix a TX timeout issue
-
-Yoshihiro Shimoda (1):
-      net: ethernet: ravb: exit if re-initialization fails in tx timeout
-
-YueHaibing (1):
-      net/x25: Fix null-ptr-deref in x25_disconnect
+On 5/08/20 11:22 am, Faiz Abbas wrote:
+> Hi Adrian,
+> 
+> On 05/08/20 1:44 pm, Adrian Hunter wrote:
+>> On 30/07/20 2:41 am, Faiz Abbas wrote:
+>>> There is a one time delay because of a card detect debounce timer in the
+>>> controller IP. This timer runs as soon as power is applied to the module
+>>> regardless of whether a card is present or not and any writes to
+>>> SDHCI_POWER_ON will return 0 before it expires. This timeout has been
+>>> measured to be about 1 second in am654x and j721e.
+>>>
+>>> Write-and-read-back in a loop on SDHCI_POWER_ON for a maximum of
+>>> 1.5 seconds to make sure that the controller actually powers on.
+>>>
+>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+>>> ---
+>>>  drivers/mmc/host/sdhci_am654.c | 21 +++++++++++++++++++++
+>>>  1 file changed, 21 insertions(+)
+>>>
+>>> diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
+>>> index 1718b9e8af63..55cff9de2f3e 100644
+>>> --- a/drivers/mmc/host/sdhci_am654.c
+>>> +++ b/drivers/mmc/host/sdhci_am654.c
+>>> @@ -272,6 +272,7 @@ static void sdhci_j721e_4bit_set_clock(struct sdhci_host *host,
+>>>  	sdhci_set_clock(host, clock);
+>>>  }
+>>>  
+>>> +#define MAX_POWER_ON_TIMEOUT	1500 /* ms */
+>>>  static void sdhci_am654_write_b(struct sdhci_host *host, u8 val, int reg)
+>>>  {
+>>>  	unsigned char timing = host->mmc->ios.timing;
+>>> @@ -291,6 +292,26 @@ static void sdhci_am654_write_b(struct sdhci_host *host, u8 val, int reg)
+>>>  	}
+>>>  
+>>>  	writeb(val, host->ioaddr + reg);
+>>> +	if (reg == SDHCI_POWER_CONTROL && (val & SDHCI_POWER_ON)) {
+>>> +		/*
+>>> +		 * Power on will not happen until the card detect debounce
+>>> +		 * timer expires. Wait at least 1.5 seconds for the power on
+>>> +		 * bit to be set
+>>> +		 */
+>>
+>> Can you use readb_poll_timeout() here?
+>>
+> 
+> The loop is write -> readback -> check for set bit -> write again and so on until timeout
+> so poll_timeout() calls will not work.
+
+I mentioned it because pedantically you need to check the condition
+again after a timeout.  Alternatively, the read_poll_timeout macro
+can be used with a function, something like below (not even compile
+tested!)
+
+static u8 write_power_on(struct sdhci_host *host, u8 val, int reg)
+{
+	writeb(val, host->ioaddr + reg);
+	usleep_range(1000, 10000);
+	return readb(host->ioaddr + reg);
+}
+
+#define MAX_POWER_ON_TIMEOUT	1500000 /* us */
+static void sdhci_am654_write_b(struct sdhci_host *host, u8 val, int reg)
+{
+	unsigned char timing = host->mmc->ios.timing;
+	u8 pwr;
+
+	if (reg == SDHCI_HOST_CONTROL) {
+		switch (timing) {
+		/*
+		 * According to the data manual, HISPD bit
+		 * should not be set in these speed modes.
+		 */
+		case MMC_TIMING_SD_HS:
+		case MMC_TIMING_MMC_HS:
+		case MMC_TIMING_UHS_SDR12:
+		case MMC_TIMING_UHS_SDR25:
+			val &= ~SDHCI_CTRL_HISPD;
+		}
+	}
+
+	writeb(val, host->ioaddr + reg);
+
+	/*
+	 * Power on will not happen until the card detect debounce
+	 * timer expires. Wait at least 1.5 seconds for the power on
+	 * bit to be set
+	 */
+	if (reg == SDHCI_POWER_CONTROL && (val & SDHCI_POWER_ON) &&
+	    read_poll_timeout(write_power_on, pwr, (pwr & SDHCI_POWER_ON), 0,
+			      MAX_POWER_ON_TIMEOUT, false, host, val, reg))
+			dev_warn(mmc_dev(host->mmc), "Power on failed\n");
+			return;
+		}
+	}
+}
 
