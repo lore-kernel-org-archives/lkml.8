@@ -2,164 +2,97 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F3DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 384B422CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1841D2076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:47:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gwlV0g6j"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DC8aYJFt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgHEQpv (ORCPT
+        id S1727981AbgHEQq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 12:45:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45436 "EHLO
+        Wed, 5 Aug 2020 12:46:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727928AbgHEQmM (ORCPT
+        with ESMTP id S1727915AbgHEQmM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:42:12 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 237C9C0086D2;
-        Wed,  5 Aug 2020 07:19:56 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id h19so47888800ljg.13;
-        Wed, 05 Aug 2020 07:19:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Qm6Ej0exkuDwKqXg5SiXppSqBSR/B5iSnMsDgHpre7I=;
-        b=gwlV0g6jtWbcz3d4+dfyYotSLCuWXlwfq5pi61UDD/9b97I+lD8aaLS+mZb52iNqIe
-         IS6aCP90M8Va2j9rHpQr/J2yKrX8DJYesdYthy28qYmvwgaP1eLNkABPQgu1PxN5KaYA
-         jNI9o3XnFGb+RX1AQaLbu072D16Wx5oXtsHISbtvOiYFa8hqYxnNt3cBVNw4gImM1AyG
-         0YCTkAiOMV76R7adrn1xyldkdCAfT34MhLg/oGUw+7HG9sUxJHcUUEwbW8X03H/Rs/ka
-         KUTUUJasa2YqvCfN7ltLjnKV+nDdJlpMR+TUaAr0NhLPBtCtpw66i6spOVroxsWeb7+j
-         +ujQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Qm6Ej0exkuDwKqXg5SiXppSqBSR/B5iSnMsDgHpre7I=;
-        b=bXaBAVIP8mGjAvjdhzqjUlnoQVV0JFJ4RoQ9nIn3ffAq9DPuNj6EIo8aA33PBDAT+j
-         mRx6DIcGVhdo7i8/yEVP7+wJ6Q/00TsQKGQAd0k2wOE1ntm1jrgY3EzdKzxJNSfOyFfH
-         VdmRLE127qMVkdq1WlDdZrF10B7aFvH3lc3/XAqOFyW0dcSBFEMjcUS9Oz0t8gRgteNJ
-         NQPL+EeQpmzodI3+wDnvT/5cIrYzkX7AGCk24kT3xKZm7++fRHwAGuZ4bNDYCEEYA4wT
-         ZD+62oAHJkNiw8izYjGLzFeFYJjYtuIvlkYPzwSeuYW/JJ1n+uNTCQCV3bGzBLgHlnEX
-         fHnw==
-X-Gm-Message-State: AOAM530goFGc9eoPb0Opk5XgX0kRkkK/fqq9eK5EEQq6jouedmezCx3T
-        8S67q0hZypCbLIjYDPbgbLHlMT7i
-X-Google-Smtp-Source: ABdhPJyX/nk4BnxYLi+IZ2EQX/2K3hvXCNEtxm0Q1OtvaDN4g1VTEtKtaj5iBJmRqEIBT+Wsd7t/Nw==
-X-Received: by 2002:a2e:9449:: with SMTP id o9mr1667761ljh.403.1596637194081;
-        Wed, 05 Aug 2020 07:19:54 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
-        by smtp.googlemail.com with ESMTPSA id c4sm1263842lfs.27.2020.08.05.07.19.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2020 07:19:53 -0700 (PDT)
-Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
- calibration is done
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, frankc@nvidia.com, hverkuil@xs4all.nl,
-        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com,
-        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
- <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
- <20200805134600.GA3351349@ulmo>
- <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
-Message-ID: <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
-Date:   Wed, 5 Aug 2020 17:19:52 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EADFC061A31;
+        Wed,  5 Aug 2020 04:30:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=J08654X7H3kbc58/m2gL+bfcL2jyb0HzXVeKBQozN18=; b=DC8aYJFt9cO5OYGZXYZ4pk5oxV
+        +8JcsbVbK3VPyo8Rqa1zrayMTV25RJIgCiEFVYdntVbNcbl/W/L8yxfEDBIZxqO7ExarM07ZZLIXF
+        /DfydtCqSvavDLR0MTVFO/RKveDDydmsL67zqd02pXJf1i6lK0XPCNARjPP5QG1lVKPo/nOZgIiXH
+        kKto+7OnkDAbfE6fGtfntJiJslatSVyIfBpqIqW0R6ofjAhlbBppIAqr/Xu5JC9b/3WP3jyY21ACY
+        DFd0XOgngt31L6mWcqKubsxBwHcyGopOuxQzNlWx02B8ygbE/ejNAP/7nr3ygleS1IJbek2tw+PiA
+        OYbmVQSg==;
+Received: from i7.infradead.org ([2001:8b0:10b:1:21e:67ff:fecb:7a92])
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k3Hcc-0007nH-4c; Wed, 05 Aug 2020 11:30:14 +0000
+Received: from dwoodhou by i7.infradead.org with local (Exim 4.93 #3 (Red Hat Linux))
+        id 1k3Hcb-00BavU-NB; Wed, 05 Aug 2020 12:30:13 +0100
+From:   David Woodhouse <dwmw2@infradead.org>
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        chunhui dai <chunhui.dai@mediatek.com>,
+        David Airlie <airlied@linux.ie>,
+        Sean Wang <sean.wang@mediatek.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        CK Hu <ck.hu@mediatek.com>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Frank Wunderlich <linux@fw-web.de>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 1/3] arm: dts: remove stray /dts-v1/ from mt7623a.dtsi
+Date:   Wed,  5 Aug 2020 12:30:11 +0100
+Message-Id: <20200805113013.2763510-1-dwmw2@infradead.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <8ef96e4d02ef82e171409945ee6cc0348c4fe594.camel@infradead.org>
+References: <8ef96e4d02ef82e171409945ee6cc0348c4fe594.camel@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-05.08.2020 17:05, Dmitry Osipenko пишет:
-> 05.08.2020 16:46, Thierry Reding пишет:
->> On Mon, Aug 03, 2020 at 08:42:24AM -0700, Sowjanya Komatineni wrote:
->>> With the split of MIPI calibration into tegra_mipi_calibrate() and
->>> tegra_mipi_wait(), MIPI clock is not kept enabled till the calibration
->>> is done.
->>>
->>> So, this patch skips disabling MIPI clock after triggering start of
->>> calibration and disables it only after waiting for done status from
->>> the calibration logic.
->>>
->>> This patch renames tegra_mipi_calibrate() as tegra_mipi_start_calibration()
->>> and tegra_mipi_wait() as tegra_mipi_finish_calibration() to be inline
->>> with their usage.
->>>
->>> As MIPI clock is left enabled and in case of any failures with CSI input
->>> streaming tegra_mipi_finish_calibration() will not get invoked.
->>> So added new API tegra_mipi_cancel_calibration() which disables MIPI clock
->>> and consumer drivers can call this in such cases.
->>>
->>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>>  drivers/gpu/drm/tegra/dsi.c |  4 ++--
->>>  drivers/gpu/host1x/mipi.c   | 19 ++++++++++---------
->>>  include/linux/host1x.h      |  5 +++--
->>>  3 files changed, 15 insertions(+), 13 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
->>> index 3820e8d..a7864e9 100644
->>> --- a/drivers/gpu/drm/tegra/dsi.c
->>> +++ b/drivers/gpu/drm/tegra/dsi.c
->>> @@ -694,11 +694,11 @@ static int tegra_dsi_pad_calibrate(struct tegra_dsi *dsi)
->>>  		DSI_PAD_PREEMP_PD(0x03) | DSI_PAD_PREEMP_PU(0x3);
->>>  	tegra_dsi_writel(dsi, value, DSI_PAD_CONTROL_3);
->>>  
->>> -	err = tegra_mipi_calibrate(dsi->mipi);
->>> +	err = tegra_mipi_start_calibration(dsi->mipi);
->>>  	if (err < 0)
->>>  		return err;
->>>  
->>> -	return tegra_mipi_wait(dsi->mipi);
->>> +	return tegra_mipi_finish_calibration(dsi->mipi);
->>>  }
->>>  
->>>  static void tegra_dsi_set_timeout(struct tegra_dsi *dsi, unsigned long bclk,
->>> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
->>> index e606464..b15ab6e 100644
->>> --- a/drivers/gpu/host1x/mipi.c
->>> +++ b/drivers/gpu/host1x/mipi.c
->>> @@ -293,17 +293,19 @@ int tegra_mipi_disable(struct tegra_mipi_device *dev)
->>>  }
->>>  EXPORT_SYMBOL(tegra_mipi_disable);
->>>  
->>> -int tegra_mipi_wait(struct tegra_mipi_device *device)
->>> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device)
->>> +{
->>> +	clk_disable(device->mipi->clk);
->>
->> Do we need to do anything with the MIPI_CAL_CTRL and MIPI_CAL_STATUS
->> registers here? We don't clear the START bit in the former when the
->> calibration has successfully finished, but I suspect that's because
->> the bit is self-clearing. But I wonder if we still need to clear it
->> upon cancellation to make sure the calibration does indeed stop.
-> 
-> Apparently there is no way to explicitly stop calibration other than to
-> reset MIPI calibration block, but Sowjanya says this is unnecessary.
-> 
-> Perhaps having a fixed delay before disabling clock could be enough to
-> ensure that calibration is stopped before the clock is disabled?
-> 
+From: David Woodhouse <dwmw@amazon.co.uk>
 
-Actually, there is a MIPI_CAL_ACTIVE bit in the status register. Maybe
-it needs to be polled until it's unset?
+This isn't needed in dtsi files.
+
+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+---
+ arch/arm/boot/dts/mt7623a.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/mt7623a.dtsi b/arch/arm/boot/dts/mt7623a.dtsi
+index 0735a1fb8ad9..a96075206cce 100644
+--- a/arch/arm/boot/dts/mt7623a.dtsi
++++ b/arch/arm/boot/dts/mt7623a.dtsi
+@@ -5,7 +5,6 @@
+  *
+  */
+ 
+-/dts-v1/;
+ #include <dt-bindings/power/mt7623a-power.h>
+ #include "mt7623.dtsi"
+ 
+-- 
+2.26.2
+
