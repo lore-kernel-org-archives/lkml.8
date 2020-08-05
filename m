@@ -2,185 +2,84 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C72CCC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E24C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 840A422CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5857222B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:09:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XYyYL82K"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="Xln+P+yx";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="jZLFbTc4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgHEUJo (ORCPT
+        id S1728381AbgHEUJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:09:44 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34550 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726851AbgHEQ31 (ORCPT
+        Wed, 5 Aug 2020 16:09:54 -0400
+Received: from pb-smtp2.pobox.com ([64.147.108.71]:56962 "EHLO
+        pb-smtp2.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725996AbgHEQ3N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:29:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596644965;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8ULrzApT10RVIpakDAc4yxKBeNUnNTeZD7ehmAQ8Tms=;
-        b=XYyYL82KozWTlZEnoE9hOkSv4h3gvP+3o59kDPpoly70br8ohs3XhJba1B8Ym4Q/p/LeQF
-        pZJmSzhoo2/7eoi+CNDlwNIX2+E7RGLxwfOb4RlJRDQhUD2x7guwiO6JscV4YPeBBI0N7C
-        rDdG9ZIb8gZfrkO97UioElzEMnkBBxA=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-385-MD482BvWNSGIVOfLKES59g-1; Wed, 05 Aug 2020 08:58:08 -0400
-X-MC-Unique: MD482BvWNSGIVOfLKES59g-1
-Received: by mail-wr1-f72.google.com with SMTP id z1so13537647wrn.18
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 05:58:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8ULrzApT10RVIpakDAc4yxKBeNUnNTeZD7ehmAQ8Tms=;
-        b=gXLL4HjKnSfOop8outjvqjE1HViPmYOCX1yZz4sCKaukOPhDmQRfa8nrZ+I3FV+Np4
-         C6e1eiL/oBCUIiypWL6AW+AFqXKSkCPLlkSKOxVaz1x+7MKjzmx/WN88RBC6xnP3951v
-         xmuUsfpxUlRCOWf6grSEulGXASlW/bpU/uD2LWmIPPWifiqgkGd2aw68aYWYhSl2BRhF
-         wI3Hp41CGdfaLvNoDfJ844TOFch96RnI9VG97Sjd2lzf5qutifAGAkJoFr5qP00y3EOM
-         BD6KZoxzMOxUSub9W35bSRn0lwFiZPlKomCZkAijY2HrrySUfCcjlad/ixs5k/DnrOhO
-         3gew==
-X-Gm-Message-State: AOAM5309x3Kt3GHVGmSvab8Em2lg3lx3PMDnG/lFDCgcx2t5TK8ycUSv
-        8NFuJ6REsi+GuI65uSJk6PQiqXBpQmAyFlqh1VY8Hw71DVKZqq84+fM6cShf8zOzuRjGTPmDhWH
-        vZlG0pkCjlcQSOUpO9GaYUrZu
-X-Received: by 2002:adf:a106:: with SMTP id o6mr2692913wro.1.1596632287579;
-        Wed, 05 Aug 2020 05:58:07 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJymsZfge35MX/5Sup1G9j697447cGxNEw/hBVXxdZ/SC5LeZkULFXxLuRBqbaI8jyXaxQHhUw==
-X-Received: by 2002:adf:a106:: with SMTP id o6mr2692833wro.1.1596632286353;
-        Wed, 05 Aug 2020 05:58:06 -0700 (PDT)
-Received: from redhat.com (bzq-79-178-123-8.red.bezeqint.net. [79.178.123.8])
-        by smtp.gmail.com with ESMTPSA id p8sm2842373wrq.9.2020.08.05.05.58.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 05:58:05 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 08:58:02 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, rob.miller@broadcom.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com,
-        gdawar@xilinx.com, saugatm@xilinx.com, vmireyno@marvell.com,
-        zhangweining@ruijie.com.cn, eli@mellanox.com
-Subject: Re: [PATCH 4/4] vhost: vdpa: report iova range
-Message-ID: <20200805085635-mutt-send-email-mst@kernel.org>
-References: <20200617032947.6371-1-jasowang@redhat.com>
- <20200617032947.6371-5-jasowang@redhat.com>
+        Wed, 5 Aug 2020 12:29:13 -0400
+Received: from pb-smtp2.pobox.com (unknown [127.0.0.1])
+        by pb-smtp2.pobox.com (Postfix) with ESMTP id 3153987992;
+        Wed,  5 Aug 2020 11:13:43 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=t4fVhjQVDWtzEETmfxy67PMJ+aE=; b=Xln+P+
+        yxlSY/84uqmszJffyoR/qH2KB/720zEYc/zh05B9w6FYOZo4SNr9h8RIRD9YGwUd
+        11XTHGNxdeatYBx7fwQRKn1KMzxfvb1+tEQj7ZOISPLsts5x+dWLdNJC25uO6khI
+        B+/WIr6D7qtNubL+35i4I2hjOMe31sYeorLtc=
+Received: from pb-smtp2.nyi.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp2.pobox.com (Postfix) with ESMTP id 28FEC87991;
+        Wed,  5 Aug 2020 11:13:43 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=Cvq6oQrzezpY4LxASPSDQy3sp0oeiiOQ+kGdMlRFHB4=; b=jZLFbTc4/NjzG+eJj6EfBs0AT33scg8HOgZvS0M5ev35O9kw6hCDbVnZHJr7GRhvS4AXf1ayxSbZqCUXBnU8mD4YbXbkqVt9Qtt48z1QSieFOrL5wCXG2xJOz2hMROcuo+zeGXbk7SKI2a7+E5OMeNcaERHPAyyuHU/tojg6Kvw=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp2.pobox.com (Postfix) with ESMTPSA id 700B987990;
+        Wed,  5 Aug 2020 11:13:42 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id 380822DA0AA7;
+        Wed,  5 Aug 2020 11:13:41 -0400 (EDT)
+Date:   Wed, 5 Aug 2020 11:13:41 -0400 (EDT)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Conor Culhane <conor.culhane@silvaco.com>
+cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rajeev Huralikoppi <rajeev.huralikoppi@silvaco.com>
+Subject: Re: [PATCH 3/4] i3c: master: svc: Add Silvaco I3C master driver
+In-Reply-To: <BN6PR16MB1762D6CE430AB08B7A2BE5FCF14A0@BN6PR16MB1762.namprd16.prod.outlook.com>
+Message-ID: <nycvar.YSQ.7.77.849.2008051105550.1112668@knanqh.ubzr>
+References: <20200709080159.2178-1-miquel.raynal@bootlin.com> <20200709080159.2178-3-miquel.raynal@bootlin.com>,<nycvar.YSQ.7.77.849.2008031546570.1112668@knanqh.ubzr> <BN6PR16MB1762D6CE430AB08B7A2BE5FCF14A0@BN6PR16MB1762.namprd16.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617032947.6371-5-jasowang@redhat.com>
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: 3FA9ABCE-D72E-11EA-93F8-2F5D23BA3BAF-78420484!pb-smtp2.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 17, 2020 at 11:29:47AM +0800, Jason Wang wrote:
-> This patch introduces a new ioctl for vhost-vdpa device that can
-> report the iova range by the device. For device that depends on
-> platform IOMMU, we fetch the iova range via DOMAIN_ATTR_GEOMETRY. For
-> devices that has its own DMA translation unit, we fetch it directly
-> from vDPA bus operation.
-> 
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  drivers/vhost/vdpa.c             | 27 +++++++++++++++++++++++++++
->  include/uapi/linux/vhost.h       |  4 ++++
->  include/uapi/linux/vhost_types.h |  5 +++++
->  3 files changed, 36 insertions(+)
-> 
-> diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
-> index 77a0c9fb6cc3..ad23e66cbf57 100644
-> --- a/drivers/vhost/vdpa.c
-> +++ b/drivers/vhost/vdpa.c
-> @@ -332,6 +332,30 @@ static long vhost_vdpa_set_config_call(struct vhost_vdpa *v, u32 __user *argp)
->  
->  	return 0;
->  }
-> +
-> +static long vhost_vdpa_get_iova_range(struct vhost_vdpa *v, u32 __user *argp)
-> +{
-> +	struct iommu_domain_geometry geo;
-> +	struct vdpa_device *vdpa = v->vdpa;
-> +	const struct vdpa_config_ops *ops = vdpa->config;
-> +	struct vhost_vdpa_iova_range range;
-> +	struct vdpa_iova_range vdpa_range;
-> +
-> +	if (!ops->set_map && !ops->dma_map) {
+On Tue, 4 Aug 2020, Conor Culhane wrote:
 
-Why not just check if (ops->get_iova_range) directly?
+> Miquel is passing 0 as the delay_us argument.
+
+Good point.
+
+> Is this still a concern?
+
+Not in that case.
 
 
-
-
-> +		iommu_domain_get_attr(v->domain,
-> +				      DOMAIN_ATTR_GEOMETRY, &geo);
-> +		range.start = geo.aperture_start;
-> +		range.end = geo.aperture_end;
-> +	} else {
-> +		vdpa_range = ops->get_iova_range(vdpa);
-> +		range.start = vdpa_range.start;
-> +		range.end = vdpa_range.end;
-> +	}
-> +
-> +	return copy_to_user(argp, &range, sizeof(range));
-> +
-> +}
-> +
->  static long vhost_vdpa_vring_ioctl(struct vhost_vdpa *v, unsigned int cmd,
->  				   void __user *argp)
->  {
-> @@ -442,6 +466,9 @@ static long vhost_vdpa_unlocked_ioctl(struct file *filep,
->  	case VHOST_VDPA_SET_CONFIG_CALL:
->  		r = vhost_vdpa_set_config_call(v, argp);
->  		break;
-> +	case VHOST_VDPA_GET_IOVA_RANGE:
-> +		r = vhost_vdpa_get_iova_range(v, argp);
-> +		break;
->  	default:
->  		r = vhost_dev_ioctl(&v->vdev, cmd, argp);
->  		if (r == -ENOIOCTLCMD)
-> diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
-> index 0c2349612e77..850956980e27 100644
-> --- a/include/uapi/linux/vhost.h
-> +++ b/include/uapi/linux/vhost.h
-> @@ -144,4 +144,8 @@
->  
->  /* Set event fd for config interrupt*/
->  #define VHOST_VDPA_SET_CONFIG_CALL	_IOW(VHOST_VIRTIO, 0x77, int)
-> +
-> +/* Get the valid iova range */
-> +#define VHOST_VDPA_GET_IOVA_RANGE	_IOW(VHOST_VIRTIO, 0x78, \
-> +					     struct vhost_vdpa_iova_range)
->  #endif
-> diff --git a/include/uapi/linux/vhost_types.h b/include/uapi/linux/vhost_types.h
-> index 669457ce5c48..4025b5a36177 100644
-> --- a/include/uapi/linux/vhost_types.h
-> +++ b/include/uapi/linux/vhost_types.h
-> @@ -127,6 +127,11 @@ struct vhost_vdpa_config {
->  	__u8 buf[0];
->  };
->  
-> +struct vhost_vdpa_iova_range {
-> +	__u64 start;
-> +	__u64 end;
-> +};
-> +
-
-
-Pls document fields. And I think first/last is a better API ...
-
->  /* Feature bits */
->  /* Log all write descriptors. Can be changed while device is active. */
->  #define VHOST_F_LOG_ALL 26
-> -- 
-> 2.20.1
-
+Nicolas
