@@ -2,239 +2,142 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CED2C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55307C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A69D22CBB
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:13:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NVGNkW+Z"
+	by mail.kernel.org (Postfix) with ESMTP id 348812084D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:13:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbgHESNn (ORCPT
+        id S1729195AbgHESNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 14:13:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59864 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729166AbgHESKG (ORCPT
+        Wed, 5 Aug 2020 14:13:50 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:44718 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729162AbgHESJX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 14:10:06 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9C83C0617A0;
-        Wed,  5 Aug 2020 11:09:22 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id o13so24946219pgf.0;
-        Wed, 05 Aug 2020 11:09:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=goKFB3UsILeJxx7SbinyIOCk3WJ4RQXLgNSmHzEzFg0=;
-        b=NVGNkW+ZXLtdHwLu46TZ/riLS/HvA74czJyfph8hFG9UnSG/U/gPT5WUjbdzrGJhjH
-         280VZ6JK0j9dVEg6sHoi9vExunqfho41gWUFf/rNaCKzy5io8cEUg07QUkmeJPZ6yGNh
-         nsJqM2SMAYmy8P1PI5BaRxwt9Wyrxk3Mj+v/mTQ45S/DkRqRz5UTWkc04tr4YdTOxCvZ
-         zsPm5rB4PiU78uV8iZF5asrfAEIOwj9kFrbgkeZc/woz8R3bCy9c+lmgCFq5xGgL50GI
-         eOiFYEM9fOJEcOwM5tjQj7DQSibKgPFfxAIIuQvlte1W6PYGjzSxUrmSMhwovZgGgKMZ
-         9I+Q==
+        Wed, 5 Aug 2020 14:09:23 -0400
+Received: by mail-il1-f198.google.com with SMTP id y82so26450277ilk.11
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 11:09:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=goKFB3UsILeJxx7SbinyIOCk3WJ4RQXLgNSmHzEzFg0=;
-        b=aJhDNIfVvDx/0PTpngBLAccuq/Ug/3MVon8gDnww34asU1OY0Jkd024KZEwaZoerjY
-         4tTdw5bL7apttO1Hn3nFI4Lwc5czwNi0ClgKDxdqNKRDuh+U1S96j41wtGSAvuMDzUkZ
-         RbqKBSn7xL4yXhMGWRzenqYrDttYSw8MEloVbMOaLnhKMwbPBnIzL3VW6+W+oJKkAb+I
-         dAY3zl99NCNVdxDH8JCuILrt+I5vqsnivuJioc0ThtzQLLTzOuLnHjFKBzn4iR5nwm7X
-         pDeQicSYETA0e/nEz9PeK5vvxmzWGrBYkHR/PVJxDJ/afzJuTDeJ2hIQnBRXaNxrjvxh
-         H8Ug==
-X-Gm-Message-State: AOAM530m2sd6NjN/fmCI9M6M9oP0lmaDdGvxa/8bWHlDfmu3V+QyWPPe
-        +S5gZhyHwtF7cB+6vJkNgG8=
-X-Google-Smtp-Source: ABdhPJx3hE5uVNv4BONTmX+VDrTp/RXEW0dAcBn31h92ynjHWVIactZM+viyyXxL90OZNJ+NijpCKQ==
-X-Received: by 2002:aa7:9341:: with SMTP id 1mr4609542pfn.40.1596650962166;
-        Wed, 05 Aug 2020 11:09:22 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id t63sm4977510pfb.210.2020.08.05.11.09.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 11:09:21 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Andres Salomon <dilinger@queued.net>,
-        Antonino Daplas <adaplas@gmail.com>,
-        Florian Tobias Schandinat <FlorianSchandinat@gmx.de>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-geode@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v1 01/12] fbdev: gxfb: use generic power management
-Date:   Wed,  5 Aug 2020 23:37:11 +0530
-Message-Id: <20200805180722.244008-2-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200805180722.244008-1-vaibhavgupta40@gmail.com>
-References: <20200805180722.244008-1-vaibhavgupta40@gmail.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=YloGL6E01nHExHJj20pzTeVaG7arypuWNvc/TTQM6GU=;
+        b=m4v0HvcvxZyyRqXzpC5ZajM9cbr4OVej7m0RjCcnoWlyOp7ODReW/1kCbpOORUD7Qx
+         a2JVuGtMmdZ6ZKhjJ6CFH5k5Ef4poNu7KeP95yVbdaR8qFIkkuMUmNZGcLXxZQGIJVMJ
+         InovqNEoV+EDUgaOr6SzEPtxXJJvLzEoa73lkNGJHYGCTgONZ+ey4Z+YJ/sUmL9PTKxQ
+         n3XdjIbHF4Lw/A+UeiwDt3T1vZYwWsJ0+HyrAs3twuVYb3k5Evf3v1Uce3xj3dIJ0/Tm
+         X2LG2txnwXqmxOApQH+Fy9Sbm3xuIu8BSgjLZNakzui4Rch+2ffkOYTg+QclsTgZl3pq
+         b+nQ==
+X-Gm-Message-State: AOAM530MNV+hz2vHre66XfO+TZFufJJEVBVAjFvwyHKOjHnoiB9xOWyw
+        /Q0A5ziyBKFAW79hICiZWwb7XXTzimYnqdCDDEkG0/6eQMI/
+X-Google-Smtp-Source: ABdhPJxKKv7Wr77Bbzsv5urdfzRqc3Ro2et+RbGkg6ws9iwd9GeFuikYIHMlqbLtnzqWa1N3LL1eyj/v5jRCbV2oUEfjHNWPBA2z
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:2493:: with SMTP id x19mr5753725jat.53.1596650962939;
+ Wed, 05 Aug 2020 11:09:22 -0700 (PDT)
+Date:   Wed, 05 Aug 2020 11:09:22 -0700
+In-Reply-To: <000000000000b087a705ac2369dd@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000079f28205ac254528@google.com>
+Subject: Re: INFO: trying to register non-static key in l2cap_chan_del
+From:   syzbot <syzbot+abfc0f5e668d4099af73@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drivers using legacy power management .suspen()/.resume() callbacks
-have to manage PCI states and device's PM states themselves. They also
-need to take care of standard configuration registers.
+syzbot has found a reproducer for the following issue on:
 
-Switch to generic power management framework using a single
-"struct dev_pm_ops" variable to take the unnecessary load from the driver.
-This also avoids the need for the driver to directly call most of the PCI
-helper functions and device power state control functions, as through
-the generic framework PCI Core takes care of the necessary operations,
-and drivers are required to do only device-specific jobs.
+HEAD commit:    4c900a6b farsync: switch from 'pci_' to 'dma_' API
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1561801a900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=91a13b78c7dc258d
+dashboard link: https://syzkaller.appspot.com/bug?extid=abfc0f5e668d4099af73
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15bdcc3a900000
 
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- drivers/video/fbdev/geode/gxfb.h       |  5 ----
- drivers/video/fbdev/geode/gxfb_core.c  | 36 ++++++++++++++------------
- drivers/video/fbdev/geode/suspend_gx.c |  4 ---
- 3 files changed, 20 insertions(+), 25 deletions(-)
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+abfc0f5e668d4099af73@syzkaller.appspotmail.com
 
-diff --git a/drivers/video/fbdev/geode/gxfb.h b/drivers/video/fbdev/geode/gxfb.h
-index d2e9c5c8e294..792c111c21e4 100644
---- a/drivers/video/fbdev/geode/gxfb.h
-+++ b/drivers/video/fbdev/geode/gxfb.h
-@@ -21,7 +21,6 @@ struct gxfb_par {
- 	void __iomem *dc_regs;
- 	void __iomem *vid_regs;
- 	void __iomem *gp_regs;
--#ifdef CONFIG_PM
- 	int powered_down;
- 
- 	/* register state, for power management functionality */
-@@ -36,7 +35,6 @@ struct gxfb_par {
- 	uint64_t fp[FP_REG_COUNT];
- 
- 	uint32_t pal[DC_PAL_COUNT];
--#endif
- };
- 
- unsigned int gx_frame_buffer_size(void);
-@@ -49,11 +47,8 @@ void gx_set_dclk_frequency(struct fb_info *info);
- void gx_configure_display(struct fb_info *info);
- int gx_blank_display(struct fb_info *info, int blank_mode);
- 
--#ifdef CONFIG_PM
- int gx_powerdown(struct fb_info *info);
- int gx_powerup(struct fb_info *info);
--#endif
--
- 
- /* Graphics Processor registers (table 6-23 from the data book) */
- enum gp_registers {
-diff --git a/drivers/video/fbdev/geode/gxfb_core.c b/drivers/video/fbdev/geode/gxfb_core.c
-index d38a148d4746..44089b331f91 100644
---- a/drivers/video/fbdev/geode/gxfb_core.c
-+++ b/drivers/video/fbdev/geode/gxfb_core.c
-@@ -322,17 +322,14 @@ static struct fb_info *gxfb_init_fbinfo(struct device *dev)
- 	return info;
- }
- 
--#ifdef CONFIG_PM
--static int gxfb_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused gxfb_suspend(struct device *dev)
- {
--	struct fb_info *info = pci_get_drvdata(pdev);
-+	struct fb_info *info = dev_get_drvdata(dev);
- 
--	if (state.event == PM_EVENT_SUSPEND) {
--		console_lock();
--		gx_powerdown(info);
--		fb_set_suspend(info, 1);
--		console_unlock();
--	}
-+	console_lock();
-+	gx_powerdown(info);
-+	fb_set_suspend(info, 1);
-+	console_unlock();
- 
- 	/* there's no point in setting PCI states; we emulate PCI, so
- 	 * we don't end up getting power savings anyways */
-@@ -340,9 +337,9 @@ static int gxfb_suspend(struct pci_dev *pdev, pm_message_t state)
- 	return 0;
- }
- 
--static int gxfb_resume(struct pci_dev *pdev)
-+static int __maybe_unused gxfb_resume(struct device *dev)
- {
--	struct fb_info *info = pci_get_drvdata(pdev);
-+	struct fb_info *info = dev_get_drvdata(dev);
- 	int ret;
- 
- 	console_lock();
-@@ -356,7 +353,6 @@ static int gxfb_resume(struct pci_dev *pdev)
- 	console_unlock();
- 	return 0;
- }
--#endif
- 
- static int gxfb_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
-@@ -467,15 +463,23 @@ static const struct pci_device_id gxfb_id_table[] = {
- 
- MODULE_DEVICE_TABLE(pci, gxfb_id_table);
- 
-+static const struct dev_pm_ops gxfb_pm_ops = {
-+#ifdef CONFIG_PM_SLEEP
-+	.suspend	= gxfb_suspend,
-+	.resume		= gxfb_resume,
-+	.freeze		= NULL,
-+	.thaw		= gxfb_resume,
-+	.poweroff	= NULL,
-+	.restore	= gxfb_resume,
-+#endif
-+};
-+
- static struct pci_driver gxfb_driver = {
- 	.name		= "gxfb",
- 	.id_table	= gxfb_id_table,
- 	.probe		= gxfb_probe,
- 	.remove		= gxfb_remove,
--#ifdef CONFIG_PM
--	.suspend	= gxfb_suspend,
--	.resume		= gxfb_resume,
--#endif
-+	.driver.pm	= &gxfb_pm_ops,
- };
- 
- #ifndef MODULE
-diff --git a/drivers/video/fbdev/geode/suspend_gx.c b/drivers/video/fbdev/geode/suspend_gx.c
-index 1110a527c35c..8c49d4e98772 100644
---- a/drivers/video/fbdev/geode/suspend_gx.c
-+++ b/drivers/video/fbdev/geode/suspend_gx.c
-@@ -11,8 +11,6 @@
- 
- #include "gxfb.h"
- 
--#ifdef CONFIG_PM
--
- static void gx_save_regs(struct gxfb_par *par)
- {
- 	int i;
-@@ -259,5 +257,3 @@ int gx_powerup(struct fb_info *info)
- 	par->powered_down  = 0;
- 	return 0;
- }
--
--#endif
--- 
-2.27.0
+INFO: trying to register non-static key.
+the code is fine but needs lockdep annotation.
+turning off the locking correctness validator.
+CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.8.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events l2cap_chan_timeout
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ assign_lock_key kernel/locking/lockdep.c:894 [inline]
+ register_lock_class+0x157d/0x1630 kernel/locking/lockdep.c:1206
+ __lock_acquire+0xfa/0x56e0 kernel/locking/lockdep.c:4259
+ lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:4959
+ __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
+ _raw_spin_lock_bh+0x2f/0x40 kernel/locking/spinlock.c:175
+ spin_lock_bh include/linux/spinlock.h:358 [inline]
+ lock_sock_nested+0x3b/0x110 net/core/sock.c:3019
+ l2cap_sock_teardown_cb+0x88/0x400 net/bluetooth/l2cap_sock.c:1520
+ l2cap_chan_del+0xad/0x1300 net/bluetooth/l2cap_core.c:618
+ l2cap_chan_close+0x118/0xb10 net/bluetooth/l2cap_core.c:823
+ l2cap_chan_timeout+0x173/0x450 net/bluetooth/l2cap_core.c:436
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+#PF: supervisor instruction fetch in kernel mode
+#PF: error_code(0x0010) - not-present page
+PGD 0 P4D 0 
+Oops: 0010 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.8.0-rc7-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events l2cap_chan_timeout
+RIP: 0010:0x0
+Code: Bad RIP value.
+RSP: 0018:ffffc90000cbfb60 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: ffff8880931bd000 RCX: ffffffff8728bc2f
+RDX: 1ffff11014549a8c RSI: ffffffff8728be7c RDI: ffff8880a2a4d000
+RBP: 0000000000000005 R08: 0000000000000001 R09: ffff8880a2a4d067
+R10: 0000000000000009 R11: 0000000000000001 R12: 000000000000006f
+R13: ffff8880a2a4d000 R14: 0000000000000000 R15: 0000000000000005
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffd6 CR3: 00000000929e6000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ l2cap_sock_teardown_cb+0x374/0x400 net/bluetooth/l2cap_sock.c:1547
+ l2cap_chan_del+0xad/0x1300 net/bluetooth/l2cap_core.c:618
+ l2cap_chan_close+0x118/0xb10 net/bluetooth/l2cap_core.c:823
+ l2cap_chan_timeout+0x173/0x450 net/bluetooth/l2cap_core.c:436
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:291
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+Modules linked in:
+CR2: 0000000000000000
+---[ end trace ecb0577583d92fc1 ]---
+RIP: 0010:0x0
+Code: Bad RIP value.
+RSP: 0018:ffffc90000cbfb60 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: ffff8880931bd000 RCX: ffffffff8728bc2f
+RDX: 1ffff11014549a8c RSI: ffffffff8728be7c RDI: ffff8880a2a4d000
+RBP: 0000000000000005 R08: 0000000000000001 R09: ffff8880a2a4d067
+R10: 0000000000000009 R11: 0000000000000001 R12: 000000000000006f
+R13: ffff8880a2a4d000 R14: 0000000000000000 R15: 0000000000000005
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffffffffd6 CR3: 00000000929e6000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
