@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32816C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EEBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C12622CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B4E22CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:13:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="HLyjHkqH"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="jj1fqKir"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbgHEJNi (ORCPT
+        id S1728667AbgHEJNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 05:13:38 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:17102 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728532AbgHEJMd (ORCPT
+        Wed, 5 Aug 2020 05:13:43 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:58766 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728462AbgHEJMk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 05:12:33 -0400
+        Wed, 5 Aug 2020 05:12:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1596618750; x=1628154750;
+  t=1596618758; x=1628154758;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=NUSLJ/LscJTjt7Uvmx0YHo3mWKI+9w+utRXYOcw7kdU=;
-  b=HLyjHkqHjmjkE+m5rluHkZvooxcNC6fE1vQyRLZeD0bi+S5Ut3Pkh+Tt
-   Co+rH7RzJeBI9OaiT3+9DuogzLzjKvYHJPlzeJn2z1r1H4nCQSo5socsO
-   bst7iXjoPLA+3t1Ir6N0J2aHkgpav39jXKFsV5TQ4tsjDqP8HZR/cEoxi
-   A=;
-IronPort-SDR: aKMdfv/dZVZXMKPkkL6teu30Dve91A3Kl5Lj6F+G4Q+uIloCNugg7yOFQ7b4yyE+R/i4TbW0Dx
- t2xxKPthFa0w==
+  bh=ERLX5ZNwbYxR2PurfdnQYY2uOEAclEHLZKUIYKkOkc0=;
+  b=jj1fqKirSr+9W6Ubx+sepmeF5uWhp/v6VP+OoqShWoJf53S2MVc/UQJt
+   dwPc1SwzCerBtcG1/5ggGwZrCblMa8UfW2ob1ISknl/8RQUirKQFsPXmB
+   /KoZrtgjhWCCpaqjIPoxwAao6T/rEd0D5mNIOuJgyIDCYnPdWchPq+43i
+   U=;
+IronPort-SDR: Ow6oXeCjLy2NllvwDyArRbM/jybvGSjgRx8l+N9cd/ijlf9r71enulJ3CexY8EREdWGEQkJnBP
+ ClsA8k8GkILg==
 X-IronPort-AV: E=Sophos;i="5.75,436,1589241600"; 
-   d="scan'208";a="57530936"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-859fe132.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 05 Aug 2020 09:12:30 +0000
+   d="scan'208";a="64480789"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 05 Aug 2020 09:11:57 +0000
 Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-859fe132.us-west-2.amazon.com (Postfix) with ESMTPS id 663AD2217B3;
-        Wed,  5 Aug 2020 09:12:29 +0000 (UTC)
+        by email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com (Postfix) with ESMTPS id C02A2A1FDF;
+        Wed,  5 Aug 2020 09:11:55 +0000 (UTC)
 Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
  EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 5 Aug 2020 09:12:28 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.248) by
+ id 15.0.1497.2; Wed, 5 Aug 2020 09:11:55 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.100) by
  EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 5 Aug 2020 09:12:18 +0000
+ id 15.0.1497.2; Wed, 5 Aug 2020 09:11:45 +0000
 From:   Andra Paraschiv <andraprs@amazon.com>
 To:     linux-kernel <linux-kernel@vger.kernel.org>
 CC:     Anthony Liguori <aliguori@amazon.com>,
@@ -72,15 +72,15 @@ CC:     Anthony Liguori <aliguori@amazon.com>,
         kvm <kvm@vger.kernel.org>,
         ne-devel-upstream <ne-devel-upstream@amazon.com>,
         Andra Paraschiv <andraprs@amazon.com>
-Subject: [PATCH v6 11/18] nitro_enclaves: Add logic for setting an enclave memory region
-Date:   Wed, 5 Aug 2020 12:10:10 +0300
-Message-ID: <20200805091017.86203-12-andraprs@amazon.com>
+Subject: [PATCH v6 08/18] nitro_enclaves: Add logic for creating an enclave VM
+Date:   Wed, 5 Aug 2020 12:10:07 +0300
+Message-ID: <20200805091017.86203-9-andraprs@amazon.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20200805091017.86203-1-andraprs@amazon.com>
 References: <20200805091017.86203-1-andraprs@amazon.com>
 MIME-Version: 1.0
-X-Originating-IP: [10.43.162.248]
-X-ClientProxiedBy: EX13D37UWA003.ant.amazon.com (10.43.160.25) To
+X-Originating-IP: [10.43.160.100]
+X-ClientProxiedBy: EX13D18UWC001.ant.amazon.com (10.43.162.105) To
  EX13D16EUB003.ant.amazon.com (10.43.166.99)
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -89,374 +89,303 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Another resource that is being set for an enclave is memory. User space
-memory regions, that need to be backed by contiguous memory regions,
-are associated with the enclave.
+Add ioctl command logic for enclave VM creation. It triggers a slot
+allocation. The enclave resources will be associated with this slot and
+it will be used as an identifier for triggering enclave run.
 
-One solution for allocating / reserving contiguous memory regions, that
-is used for integration, is hugetlbfs. The user space process that is
-associated with the enclave passes to the driver these memory regions.
+Return a file descriptor, namely enclave fd. This is further used by the
+associated user space enclave process to set enclave resources and
+trigger enclave termination.
 
-The enclave memory regions need to be from the same NUMA node as the
-enclave CPUs.
-
-Add ioctl command logic for setting user space memory region for an
-enclave.
+The poll function is implemented in order to notify the enclave process
+when an enclave exits without a specific enclave termination command
+trigger e.g. when an enclave crashes.
 
 Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
 Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+Reviewed-by: Alexander Graf <graf@amazon.com>
 ---
 Changelog
 
 v5 -> v6
 
-* Check for max number of pages allocated for the internal data
-  structure for pages.
-* Check for invalid memory region flags.
-* Check for aligned physical memory regions.
+* Update the code base to init the ioctl function in this patch.
 * Update documentation to kernel-doc format.
-* Check for duplicate user space memory regions.
-* Use directly put_page() instead of unpin_user_pages(), to match the
-  get_user_pages() calls.
 
 v4 -> v5
 
-* Add early exit on set memory region ioctl function call error.
-* Remove log on copy_from_user() failure.
-* Exit without unpinning the pages on NE PCI dev request failure as
-  memory regions from the user space range may have already been added.
-* Add check for the memory region user space address to be 2 MiB
-  aligned.
-* Update logic to not have a hardcoded check for 2 MiB memory regions.
+* Release the reference to the NE PCI device on create VM error.
+* Close enclave fd on copy_to_user() failure; rename fd to enclave fd
+  while at it.
+* Remove sanity checks for situations that shouldn't happen, only if
+  buggy system or broken logic at all.
+* Remove log on copy_to_user() failure.
 
 v3 -> v4
 
-* Check enclave memory regions are from the same NUMA node as the
-  enclave CPUs.
 * Use dev_err instead of custom NE log pattern.
 * Update the NE ioctl call to match the decoupling from the KVM API.
+* Add metadata for the NUMA node for the enclave memory and CPUs.
 
 v2 -> v3
 
 * Remove the WARN_ON calls.
 * Update static calls sanity checks.
 * Update kzfree() calls to kfree().
+* Remove file ops that do nothing for now - open.
 
 v1 -> v2
 
 * Add log pattern for NE.
 * Update goto labels to match their purpose.
 * Remove the BUG_ON calls.
-* Check if enclave max memory regions is reached when setting an enclave
-  memory region.
-* Check if enclave state is init when setting an enclave memory region.
 ---
- drivers/virt/nitro_enclaves/ne_misc_dev.c | 285 ++++++++++++++++++++++
- 1 file changed, 285 insertions(+)
+ drivers/virt/nitro_enclaves/ne_misc_dev.c | 229 ++++++++++++++++++++++
+ 1 file changed, 229 insertions(+)
 
 diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.c b/drivers/virt/nitro_enclaves/ne_misc_dev.c
-index 850e5e0ce0e9..88536a415246 100644
+index 472850250220..6c8c12f65666 100644
 --- a/drivers/virt/nitro_enclaves/ne_misc_dev.c
 +++ b/drivers/virt/nitro_enclaves/ne_misc_dev.c
-@@ -568,6 +568,258 @@ static int ne_add_vcpu_ioctl(struct ne_enclave *ne_enclave, u32 vcpu_id)
- 	return 0;
- }
+@@ -87,9 +87,238 @@ struct ne_cpu_pool {
+ 
+ static struct ne_cpu_pool ne_cpu_pool;
  
 +/**
-+ * ne_sanity_check_user_mem_region() - Sanity check the user space memory
-+ *				       region received during the set user
-+ *				       memory region ioctl call.
-+ * @ne_enclave :	Private data associated with the current enclave.
-+ * @mem_region :	User space memory region to be sanity checked.
++ * ne_enclave_poll() - Poll functionality used for enclave out-of-band events.
++ * @file:	File associated with this poll function.
++ * @wait:	Poll table data structure.
 + *
-+ * Context: Process context. This function is called with the ne_enclave mutex held.
++ * Context: Process context.
 + * Return:
-+ * * 0 on success.
-+ * * Negative return value on failure.
++ * * Poll mask.
 + */
-+static int ne_sanity_check_user_mem_region(struct ne_enclave *ne_enclave,
-+	struct ne_user_memory_region mem_region)
++static __poll_t ne_enclave_poll(struct file *file, poll_table *wait)
 +{
-+	struct ne_mem_region *ne_mem_region = NULL;
++	__poll_t mask = 0;
++	struct ne_enclave *ne_enclave = file->private_data;
 +
-+	if (ne_enclave->mm != current->mm)
-+		return -EIO;
++	poll_wait(file, &ne_enclave->eventq, wait);
 +
-+	if (mem_region.memory_size & (NE_MIN_MEM_REGION_SIZE - 1)) {
-+		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "User space memory size is not multiple of 2 MiB\n");
++	if (!ne_enclave->has_event)
++		return mask;
 +
-+		return -NE_ERR_INVALID_MEM_REGION_SIZE;
-+	}
++	mask = POLLHUP;
 +
-+	if (!IS_ALIGNED(mem_region.userspace_addr, NE_MIN_MEM_REGION_SIZE)) {
-+		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "User space address is not 2 MiB aligned\n");
-+
-+		return -NE_ERR_UNALIGNED_MEM_REGION_ADDR;
-+	}
-+
-+	if ((mem_region.userspace_addr & (NE_MIN_MEM_REGION_SIZE - 1)) ||
-+	    !access_ok((void __user *)(unsigned long)mem_region.userspace_addr,
-+		       mem_region.memory_size)) {
-+		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "Invalid user space address range\n");
-+
-+		return -NE_ERR_INVALID_MEM_REGION_ADDR;
-+	}
-+
-+	list_for_each_entry(ne_mem_region, &ne_enclave->mem_regions_list,
-+			    mem_region_list_entry) {
-+		u64 memory_size = ne_mem_region->memory_size;
-+		u64 userspace_addr = ne_mem_region->userspace_addr;
-+
-+		if (userspace_addr <= mem_region.userspace_addr &&
-+		    mem_region.userspace_addr < (userspace_addr + memory_size)) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "User space memory region already used\n");
-+
-+			return -NE_ERR_MEM_REGION_ALREADY_USED;
-+		}
-+	}
-+
-+	return 0;
++	return mask;
 +}
 +
++static const struct file_operations ne_enclave_fops = {
++	.owner		= THIS_MODULE,
++	.llseek		= noop_llseek,
++	.poll		= ne_enclave_poll,
++};
++
 +/**
-+ * ne_set_user_memory_region_ioctl() - Add user space memory region to the slot
-+ *				       associated with the current enclave.
-+ * @ne_enclave :	Private data associated with the current enclave.
-+ * @mem_region :	User space memory region to be associated with the given slot.
++ * ne_create_vm_ioctl() - Alloc slot to be associated with an enclave. Create
++ *			  enclave file descriptor to be further used for enclave
++ *			  resources handling e.g. memory regions and CPUs.
++ * @pdev:		PCI device used for enclave lifetime management.
++ * @ne_pci_dev :	Private data associated with the PCI device.
++ * @slot_uid:		Generated unique slot id associated with an enclave.
 + *
-+ * Context: Process context. This function is called with the ne_enclave mutex held.
++ * Context: Process context. This function is called with the ne_pci_dev enclave
++ *	    mutex held.
 + * Return:
-+ * * 0 on success.
++ * * Enclave fd on success.
 + * * Negative return value on failure.
 + */
-+static int ne_set_user_memory_region_ioctl(struct ne_enclave *ne_enclave,
-+	struct ne_user_memory_region mem_region)
++static int ne_create_vm_ioctl(struct pci_dev *pdev, struct ne_pci_dev *ne_pci_dev,
++			      u64 *slot_uid)
 +{
-+	long gup_rc = 0;
-+	unsigned long i = 0;
-+	unsigned long max_nr_pages = 0;
-+	unsigned long memory_size = 0;
-+	struct ne_mem_region *ne_mem_region = NULL;
-+	unsigned long nr_phys_contig_mem_regions = 0;
-+	struct page **phys_contig_mem_regions = NULL;
++	struct ne_pci_dev_cmd_reply cmd_reply = {};
++	int enclave_fd = -1;
++	struct file *enclave_file = NULL;
++	unsigned int i = 0;
++	struct ne_enclave *ne_enclave = NULL;
 +	int rc = -EINVAL;
++	struct slot_alloc_req slot_alloc_req = {};
 +
-+	rc = ne_sanity_check_user_mem_region(ne_enclave, mem_region);
-+	if (rc < 0)
-+		return rc;
++	mutex_lock(&ne_cpu_pool.mutex);
 +
-+	ne_mem_region = kzalloc(sizeof(*ne_mem_region), GFP_KERNEL);
-+	if (!ne_mem_region)
++	for (i = 0; i < ne_cpu_pool.avail_cores_size; i++)
++		if (!cpumask_empty(ne_cpu_pool.avail_cores[i]))
++			break;
++
++	if (i == ne_cpu_pool.avail_cores_size) {
++		dev_err_ratelimited(ne_misc_dev.this_device,
++				    "No CPUs available in CPU pool\n");
++
++		mutex_unlock(&ne_cpu_pool.mutex);
++
++		return -NE_ERR_NO_CPUS_AVAIL_IN_POOL;
++	}
++
++	mutex_unlock(&ne_cpu_pool.mutex);
++
++	ne_enclave = kzalloc(sizeof(*ne_enclave), GFP_KERNEL);
++	if (!ne_enclave)
 +		return -ENOMEM;
 +
-+	max_nr_pages = mem_region.memory_size / NE_MIN_MEM_REGION_SIZE;
++	mutex_lock(&ne_cpu_pool.mutex);
 +
-+	ne_mem_region->pages = kcalloc(max_nr_pages, sizeof(*ne_mem_region->pages),
-+				       GFP_KERNEL);
-+	if (!ne_mem_region->pages) {
++	ne_enclave->avail_cpu_cores_size = ne_cpu_pool.avail_cores_size;
++	ne_enclave->numa_node = ne_cpu_pool.numa_node;
++
++	mutex_unlock(&ne_cpu_pool.mutex);
++
++	ne_enclave->avail_cpu_cores = kcalloc(ne_enclave->avail_cpu_cores_size,
++		sizeof(*ne_enclave->avail_cpu_cores), GFP_KERNEL);
++	if (!ne_enclave->avail_cpu_cores) {
 +		rc = -ENOMEM;
 +
-+		goto free_mem_region;
++		goto free_ne_enclave;
 +	}
 +
-+	phys_contig_mem_regions = kcalloc(max_nr_pages, sizeof(*phys_contig_mem_regions),
-+					  GFP_KERNEL);
-+	if (!phys_contig_mem_regions) {
-+		rc = -ENOMEM;
-+
-+		goto free_mem_region;
-+	}
-+
-+	do {
-+		i = ne_mem_region->nr_pages;
-+
-+		if (i == max_nr_pages) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "Reached max nr of pages in the pages data struct\n");
-+
++	for (i = 0; i < ne_enclave->avail_cpu_cores_size; i++)
++		if (!zalloc_cpumask_var(&ne_enclave->avail_cpu_cores[i], GFP_KERNEL)) {
 +			rc = -ENOMEM;
 +
-+			goto put_pages;
++			goto free_cpumask;
 +		}
 +
-+		gup_rc = get_user_pages(mem_region.userspace_addr + memory_size, 1, FOLL_GET,
-+					ne_mem_region->pages + i, NULL);
-+		if (gup_rc < 0) {
-+			rc = gup_rc;
++	if (!zalloc_cpumask_var(&ne_enclave->vcpu_ids, GFP_KERNEL)) {
++		rc = -ENOMEM;
 +
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "Error in get user pages [rc=%d]\n", rc);
++		goto free_cpumask;
++	}
 +
-+			goto put_pages;
-+		}
++	ne_enclave->pdev = pdev;
 +
-+		if (!PageHuge(ne_mem_region->pages[i])) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "Not a hugetlbfs page\n");
++	enclave_fd = get_unused_fd_flags(O_CLOEXEC);
++	if (enclave_fd < 0) {
++		rc = enclave_fd;
 +
-+			rc = -NE_ERR_MEM_NOT_HUGE_PAGE;
-+
-+			goto put_pages;
-+		}
-+
-+		if (ne_enclave->numa_node != page_to_nid(ne_mem_region->pages[i])) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "Page is not from NUMA node %d\n",
-+					    ne_enclave->numa_node);
-+
-+			rc = -NE_ERR_MEM_DIFFERENT_NUMA_NODE;
-+
-+			goto put_pages;
-+		}
-+
-+		/*
-+		 * TODO: Update once handled non-contiguous memory regions
-+		 * received from user space or contiguous physical memory regions
-+		 * larger than 2 MiB e.g. 8 MiB.
-+		 */
-+		phys_contig_mem_regions[i] = ne_mem_region->pages[i];
-+
-+		memory_size += page_size(ne_mem_region->pages[i]);
-+
-+		ne_mem_region->nr_pages++;
-+	} while (memory_size < mem_region.memory_size);
-+
-+	/*
-+	 * TODO: Update once handled non-contiguous memory regions received
-+	 * from user space or contiguous physical memory regions larger than
-+	 * 2 MiB e.g. 8 MiB.
-+	 */
-+	nr_phys_contig_mem_regions = ne_mem_region->nr_pages;
-+
-+	if ((ne_enclave->nr_mem_regions + nr_phys_contig_mem_regions) >
-+	    ne_enclave->max_mem_regions) {
 +		dev_err_ratelimited(ne_misc_dev.this_device,
-+				    "Reached max memory regions %lld\n",
-+				    ne_enclave->max_mem_regions);
++				    "Error in getting unused fd [rc=%d]\n", rc);
 +
-+		rc = -NE_ERR_MEM_MAX_REGIONS;
-+
-+		goto put_pages;
++		goto free_cpumask;
 +	}
 +
-+	for (i = 0; i < nr_phys_contig_mem_regions; i++) {
-+		u64 phys_region_addr = page_to_phys(phys_contig_mem_regions[i]);
-+		u64 phys_region_size = page_size(phys_contig_mem_regions[i]);
++	enclave_file = anon_inode_getfile("ne-vm", &ne_enclave_fops, ne_enclave, O_RDWR);
++	if (IS_ERR(enclave_file)) {
++		rc = PTR_ERR(enclave_file);
 +
-+		if (phys_region_size & (NE_MIN_MEM_REGION_SIZE - 1)) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "Physical mem region size is not multiple of 2 MiB\n");
++		dev_err_ratelimited(ne_misc_dev.this_device,
++				    "Error in anon inode get file [rc=%d]\n", rc);
 +
-+			rc = -EINVAL;
-+
-+			goto put_pages;
-+		}
-+
-+		if (!IS_ALIGNED(phys_region_addr, NE_MIN_MEM_REGION_SIZE)) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "Physical mem region address is not 2 MiB aligned\n");
-+
-+			rc = -EINVAL;
-+
-+			goto put_pages;
-+		}
++		goto put_fd;
 +	}
 +
-+	ne_mem_region->memory_size = mem_region.memory_size;
-+	ne_mem_region->userspace_addr = mem_region.userspace_addr;
++	rc = ne_do_request(ne_enclave->pdev, SLOT_ALLOC, &slot_alloc_req, sizeof(slot_alloc_req),
++			   &cmd_reply, sizeof(cmd_reply));
++	if (rc < 0) {
++		dev_err_ratelimited(ne_misc_dev.this_device,
++				    "Error in slot alloc [rc=%d]\n", rc);
 +
-+	list_add(&ne_mem_region->mem_region_list_entry, &ne_enclave->mem_regions_list);
-+
-+	for (i = 0; i < nr_phys_contig_mem_regions; i++) {
-+		struct ne_pci_dev_cmd_reply cmd_reply = {};
-+		struct slot_add_mem_req slot_add_mem_req = {};
-+
-+		slot_add_mem_req.slot_uid = ne_enclave->slot_uid;
-+		slot_add_mem_req.paddr = page_to_phys(phys_contig_mem_regions[i]);
-+		slot_add_mem_req.size = page_size(phys_contig_mem_regions[i]);
-+
-+		rc = ne_do_request(ne_enclave->pdev, SLOT_ADD_MEM,
-+				   &slot_add_mem_req, sizeof(slot_add_mem_req),
-+				   &cmd_reply, sizeof(cmd_reply));
-+		if (rc < 0) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "Error in slot add mem [rc=%d]\n", rc);
-+
-+			kfree(phys_contig_mem_regions);
-+
-+			/*
-+			 * Exit here without put pages as memory regions may
-+			 * already been added.
-+			 */
-+			return rc;
-+		}
-+
-+		ne_enclave->mem_size += slot_add_mem_req.size;
-+		ne_enclave->nr_mem_regions++;
++		goto put_file;
 +	}
 +
-+	kfree(phys_contig_mem_regions);
++	init_waitqueue_head(&ne_enclave->eventq);
++	ne_enclave->has_event = false;
++	mutex_init(&ne_enclave->enclave_info_mutex);
++	ne_enclave->max_mem_regions = cmd_reply.mem_regions;
++	INIT_LIST_HEAD(&ne_enclave->mem_regions_list);
++	ne_enclave->mm = current->mm;
++	ne_enclave->slot_uid = cmd_reply.slot_uid;
++	ne_enclave->state = NE_STATE_INIT;
 +
-+	return 0;
++	list_add(&ne_enclave->enclave_list_entry, &ne_pci_dev->enclaves_list);
 +
-+put_pages:
-+	for (i = 0; i < ne_mem_region->nr_pages; i++)
-+		put_page(ne_mem_region->pages[i]);
-+free_mem_region:
-+	kfree(phys_contig_mem_regions);
-+	kfree(ne_mem_region->pages);
-+	kfree(ne_mem_region);
++	*slot_uid = ne_enclave->slot_uid;
++
++	fd_install(enclave_fd, enclave_file);
++
++	return enclave_fd;
++
++put_file:
++	fput(enclave_file);
++put_fd:
++	put_unused_fd(enclave_fd);
++free_cpumask:
++	free_cpumask_var(ne_enclave->vcpu_ids);
++	for (i = 0; i < ne_enclave->avail_cpu_cores_size; i++)
++		free_cpumask_var(ne_enclave->avail_cpu_cores[i]);
++	kfree(ne_enclave->avail_cpu_cores);
++free_ne_enclave:
++	kfree(ne_enclave);
 +
 +	return rc;
 +}
 +
- /**
-  * ne_enclave_ioctl() - Ioctl function provided by the enclave file.
-  * @file:	File associated with this ioctl function.
-@@ -682,6 +934,39 @@ static long ne_enclave_ioctl(struct file *file, unsigned int cmd, unsigned long
- 		return 0;
- 	}
- 
-+	case NE_SET_USER_MEMORY_REGION: {
-+		struct ne_user_memory_region mem_region = {};
++/**
++ * ne_ioctl() - Ioctl function provided by the NE misc device.
++ * @file:	File associated with this ioctl function.
++ * @cmd:	The command that is set for the ioctl call.
++ * @arg:	The argument that is provided for the ioctl call.
++ *
++ * Context: Process context.
++ * Return:
++ * * Ioctl result (e.g. enclave file descriptor) on success.
++ * * Negative return value on failure.
++ */
++static long ne_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
++{
++	switch (cmd) {
++	case NE_CREATE_VM: {
++		int enclave_fd = -1;
++		struct file *enclave_file = NULL;
++		struct ne_pci_dev *ne_pci_dev = NULL;
++		/* TODO: Find another way to get the NE PCI device reference. */
++		struct pci_dev *pdev = pci_get_device(PCI_VENDOR_ID_AMAZON,
++						      PCI_DEVICE_ID_NE, NULL);
 +		int rc = -EINVAL;
++		u64 slot_uid = 0;
 +
-+		if (copy_from_user(&mem_region, (void __user *)arg, sizeof(mem_region)))
-+			return -EFAULT;
++		ne_pci_dev = pci_get_drvdata(pdev);
 +
-+		if (mem_region.flags >= NE_MEMORY_REGION_MAX_FLAG_VAL)
-+			return -EINVAL;
++		mutex_lock(&ne_pci_dev->enclaves_list_mutex);
 +
-+		mutex_lock(&ne_enclave->enclave_info_mutex);
++		enclave_fd = ne_create_vm_ioctl(pdev, ne_pci_dev, &slot_uid);
++		if (enclave_fd < 0) {
++			rc = enclave_fd;
 +
-+		if (ne_enclave->state != NE_STATE_INIT) {
-+			dev_err_ratelimited(ne_misc_dev.this_device,
-+					    "Enclave is not in init state\n");
++			mutex_unlock(&ne_pci_dev->enclaves_list_mutex);
 +
-+			mutex_unlock(&ne_enclave->enclave_info_mutex);
-+
-+			return -NE_ERR_NOT_IN_INIT_STATE;
-+		}
-+
-+		rc = ne_set_user_memory_region_ioctl(ne_enclave, mem_region);
-+		if (rc < 0) {
-+			mutex_unlock(&ne_enclave->enclave_info_mutex);
++			pci_dev_put(pdev);
 +
 +			return rc;
 +		}
 +
-+		mutex_unlock(&ne_enclave->enclave_info_mutex);
++		mutex_unlock(&ne_pci_dev->enclaves_list_mutex);
 +
-+		return 0;
++		if (copy_to_user((void __user *)arg, &slot_uid, sizeof(slot_uid))) {
++			enclave_file = fget(enclave_fd);
++			/* Decrement file refs to have release() called. */
++			fput(enclave_file);
++			fput(enclave_file);
++			put_unused_fd(enclave_fd);
++
++			return -EFAULT;
++		}
++
++		return enclave_fd;
 +	}
 +
- 	default:
- 		return -ENOTTY;
- 	}
++	default:
++		return -ENOTTY;
++	}
++
++	return 0;
++}
++
+ static const struct file_operations ne_fops = {
+ 	.owner		= THIS_MODULE,
+ 	.llseek		= noop_llseek,
++	.unlocked_ioctl	= ne_ioctl,
+ };
+ 
+ struct miscdevice ne_misc_dev = {
 -- 
 2.20.1 (Apple Git-117)
 
