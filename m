@@ -2,192 +2,136 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE90C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D93C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B559F207FC
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF8C12245C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:23:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="vV7opS8n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbgHEGXV (ORCPT
+        id S1727878AbgHEGXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 02:23:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:54350 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbgHEGXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 02:23:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F0A6D6E;
-        Tue,  4 Aug 2020 23:23:20 -0700 (PDT)
-Received: from e110176-lin.kfn.arm.com (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A5D03F718;
-        Tue,  4 Aug 2020 23:23:18 -0700 (PDT)
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Ofir Drang <ofir.drang@arm.com>, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] crypto: ccree: remove bitlocker cipher
-Date:   Wed,  5 Aug 2020 09:23:01 +0300
-Message-Id: <20200805062302.16569-3-gilad@benyossef.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200805062302.16569-1-gilad@benyossef.com>
-References: <20200805062302.16569-1-gilad@benyossef.com>
+        Wed, 5 Aug 2020 02:23:51 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:35456 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbgHEGXu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 02:23:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1596608631; x=1628144631;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=5lSVeMwhnW0MdPI/AZAXkR/tN0Rb+ZbTOxeir3z6Hzs=;
+  b=vV7opS8nueCEYhqJ8HmQx1r9PMyGTqeVJAwX1JCNEw/KFt//WwMThp/F
+   z7UOKxWYwe57VnDmUU0dmiXtqU+7WlFZrJXQgxVT5iIExkmOGNk1TBNJe
+   EA7z8RAYGf/ZXtzr99v62WbM5Pp3gI356A3r01r44MW0C0SjFo/MPmdB3
+   Q=;
+IronPort-SDR: gcki4P2QkTT/fe4dxt/fYdBVnGC+8nZEmn8DHVMRm0+Vsl59PM3wewzuZd3fmCir5LjVkZJi06
+ ONABzTirvvEQ==
+X-IronPort-AV: E=Sophos;i="5.75,436,1589241600"; 
+   d="scan'208";a="47554303"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 05 Aug 2020 06:23:50 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com (Postfix) with ESMTPS id E5E2CA26F6;
+        Wed,  5 Aug 2020 06:23:38 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 5 Aug 2020 06:23:38 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.140) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 5 Aug 2020 06:23:21 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+CC:     SeongJae Park <sjpark@amazon.com>,
+        SeongJae Park <sjpark@amazon.de>,
+        <Jonathan.Cameron@Huawei.com>, <aarcange@redhat.com>,
+        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
+        <amit@kernel.org>, <benh@kernel.crashing.org>,
+        <brendan.d.gregg@gmail.com>, <brendanhiggins@google.com>,
+        <cai@lca.pw>, <colin.king@canonical.com>, <corbet@lwn.net>,
+        <david@redhat.com>, <dwmw@amazon.com>, <fan.du@intel.com>,
+        <foersleo@amazon.de>, <gthelen@google.com>, <irogers@google.com>,
+        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
+        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
+        <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <riel@surriel.com>, <rientjes@google.com>,
+        <rppt@kernel.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <linux-damon@amazon.com>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v19 08/15] mm/damon: Add a tracepoint
+Date:   Wed, 5 Aug 2020 08:23:05 +0200
+Message-ID: <20200805062305.9417-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200804180147.16d34809@oasis.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.140]
+X-ClientProxiedBy: EX13D21UWB004.ant.amazon.com (10.43.161.221) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the bitlocker cipher which is not supported by
-the kernel.
+On Tue, 4 Aug 2020 18:01:47 -0400 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
----
- drivers/crypto/ccree/cc_cipher.c     | 49 ++--------------------------
- drivers/crypto/ccree/cc_crypto_ctx.h |  1 -
- 2 files changed, 3 insertions(+), 47 deletions(-)
+> On Tue, 4 Aug 2020 11:14:09 +0200
+> SeongJae Park <sjpark@amazon.com> wrote:
+> 
+> > From: SeongJae Park <sjpark@amazon.de>
+> > 
+> > This commit adds a tracepoint for DAMON.  It traces the monitoring
+> > results of each region for each aggregation interval.  Using this, DAMON
+> > can easily integrated with tracepoints supporting tools such as perf.
+> > 
+> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> > Reviewed-by: Leonard Foerster <foersleo@amazon.de>
+> > ---
+> >  include/trace/events/damon.h | 43 ++++++++++++++++++++++++++++++++++++
+> >  mm/damon.c                   |  4 ++++
+> >  2 files changed, 47 insertions(+)
+> >  create mode 100644 include/trace/events/damon.h
+> > 
+[...]
+> > --- a/mm/damon.c
+> > +++ b/mm/damon.c
+> > @@ -20,6 +20,8 @@
+> >  
+> >  #define pr_fmt(fmt) "damon: " fmt
+> >  
+> > +#define CREATE_TRACE_POINTS
+> > +
+> >  #include <linux/damon.h>
+> >  #include <linux/delay.h>
+> >  #include <linux/kthread.h>
+> > @@ -31,6 +33,7 @@
+> >  #include <linux/sched/mm.h>
+> >  #include <linux/sched/task.h>
+> >  #include <linux/slab.h>
+> 
+> It's best to place the #define CREATE_TRACE_POINTS here, so that it
+> doesn't cause any side effects when including the other headers.
 
-diff --git a/drivers/crypto/ccree/cc_cipher.c b/drivers/crypto/ccree/cc_cipher.c
-index 0a74f3808510..50a0cd9abd49 100644
---- a/drivers/crypto/ccree/cc_cipher.c
-+++ b/drivers/crypto/ccree/cc_cipher.c
-@@ -96,8 +96,7 @@ static int validate_keys_sizes(struct cc_cipher_ctx *ctx_p, u32 size)
- 		switch (size) {
- 		case CC_AES_128_BIT_KEY_SIZE:
- 		case CC_AES_192_BIT_KEY_SIZE:
--			if (ctx_p->cipher_mode != DRV_CIPHER_XTS &&
--			    ctx_p->cipher_mode != DRV_CIPHER_BITLOCKER)
-+			if (ctx_p->cipher_mode != DRV_CIPHER_XTS)
- 				return 0;
- 			break;
- 		case CC_AES_256_BIT_KEY_SIZE:
-@@ -105,8 +104,7 @@ static int validate_keys_sizes(struct cc_cipher_ctx *ctx_p, u32 size)
- 		case (CC_AES_192_BIT_KEY_SIZE * 2):
- 		case (CC_AES_256_BIT_KEY_SIZE * 2):
- 			if (ctx_p->cipher_mode == DRV_CIPHER_XTS ||
--			    ctx_p->cipher_mode == DRV_CIPHER_ESSIV ||
--			    ctx_p->cipher_mode == DRV_CIPHER_BITLOCKER)
-+			    ctx_p->cipher_mode == DRV_CIPHER_ESSIV)
- 				return 0;
- 			break;
- 		default:
-@@ -143,7 +141,6 @@ static int validate_data_size(struct cc_cipher_ctx *ctx_p,
- 		case DRV_CIPHER_ECB:
- 		case DRV_CIPHER_CBC:
- 		case DRV_CIPHER_ESSIV:
--		case DRV_CIPHER_BITLOCKER:
- 			if (IS_ALIGNED(size, AES_BLOCK_SIZE))
- 				return 0;
- 			break;
-@@ -369,8 +366,7 @@ static int cc_cipher_sethkey(struct crypto_skcipher *sktfm, const u8 *key,
- 		}
- 
- 		if (ctx_p->cipher_mode == DRV_CIPHER_XTS ||
--		    ctx_p->cipher_mode == DRV_CIPHER_ESSIV ||
--		    ctx_p->cipher_mode == DRV_CIPHER_BITLOCKER) {
-+		    ctx_p->cipher_mode == DRV_CIPHER_ESSIV) {
- 			if (hki.hw_key1 == hki.hw_key2) {
- 				dev_err(dev, "Illegal hw key numbers (%d,%d)\n",
- 					hki.hw_key1, hki.hw_key2);
-@@ -568,7 +564,6 @@ static void cc_setup_readiv_desc(struct crypto_tfm *tfm,
- 		break;
- 	case DRV_CIPHER_XTS:
- 	case DRV_CIPHER_ESSIV:
--	case DRV_CIPHER_BITLOCKER:
- 		/*  IV */
- 		hw_desc_init(&desc[*seq_size]);
- 		set_setup_mode(&desc[*seq_size], SETUP_WRITE_STATE1);
-@@ -623,7 +618,6 @@ static void cc_setup_state_desc(struct crypto_tfm *tfm,
- 		break;
- 	case DRV_CIPHER_XTS:
- 	case DRV_CIPHER_ESSIV:
--	case DRV_CIPHER_BITLOCKER:
- 		break;
- 	default:
- 		dev_err(dev, "Unsupported cipher mode (%d)\n", cipher_mode);
-@@ -657,7 +651,6 @@ static void cc_setup_xex_state_desc(struct crypto_tfm *tfm,
- 		break;
- 	case DRV_CIPHER_XTS:
- 	case DRV_CIPHER_ESSIV:
--	case DRV_CIPHER_BITLOCKER:
- 
- 		if (cipher_mode == DRV_CIPHER_ESSIV)
- 			key_len = SHA256_DIGEST_SIZE;
-@@ -771,7 +764,6 @@ static void cc_setup_key_desc(struct crypto_tfm *tfm,
- 		break;
- 	case DRV_CIPHER_XTS:
- 	case DRV_CIPHER_ESSIV:
--	case DRV_CIPHER_BITLOCKER:
- 		/* Load AES key */
- 		hw_desc_init(&desc[*seq_size]);
- 		set_cipher_mode(&desc[*seq_size], cipher_mode);
-@@ -1069,24 +1061,6 @@ static const struct cc_alg_template skcipher_algs[] = {
- 		.std_body = CC_STD_NIST,
- 		.sec_func = true,
- 	},
--	{
--		.name = "bitlocker(paes)",
--		.driver_name = "bitlocker-paes-ccree",
--		.blocksize = AES_BLOCK_SIZE,
--		.template_skcipher = {
--			.setkey = cc_cipher_sethkey,
--			.encrypt = cc_cipher_encrypt,
--			.decrypt = cc_cipher_decrypt,
--			.min_keysize = CC_HW_KEY_SIZE,
--			.max_keysize = CC_HW_KEY_SIZE,
--			.ivsize = AES_BLOCK_SIZE,
--			},
--		.cipher_mode = DRV_CIPHER_BITLOCKER,
--		.flow_mode = S_DIN_to_AES,
--		.min_hw_rev = CC_HW_REV_712,
--		.std_body = CC_STD_NIST,
--		.sec_func = true,
--	},
- 	{
- 		.name = "ecb(paes)",
- 		.driver_name = "ecb-paes-ccree",
-@@ -1215,23 +1189,6 @@ static const struct cc_alg_template skcipher_algs[] = {
- 		.min_hw_rev = CC_HW_REV_712,
- 		.std_body = CC_STD_NIST,
- 	},
--	{
--		.name = "bitlocker(aes)",
--		.driver_name = "bitlocker-aes-ccree",
--		.blocksize = AES_BLOCK_SIZE,
--		.template_skcipher = {
--			.setkey = cc_cipher_setkey,
--			.encrypt = cc_cipher_encrypt,
--			.decrypt = cc_cipher_decrypt,
--			.min_keysize = AES_MIN_KEY_SIZE * 2,
--			.max_keysize = AES_MAX_KEY_SIZE * 2,
--			.ivsize = AES_BLOCK_SIZE,
--			},
--		.cipher_mode = DRV_CIPHER_BITLOCKER,
--		.flow_mode = S_DIN_to_AES,
--		.min_hw_rev = CC_HW_REV_712,
--		.std_body = CC_STD_NIST,
--	},
- 	{
- 		.name = "ecb(aes)",
- 		.driver_name = "ecb-aes-ccree",
-diff --git a/drivers/crypto/ccree/cc_crypto_ctx.h b/drivers/crypto/ccree/cc_crypto_ctx.h
-index ccf960a0d989..bd9a1c0896b3 100644
---- a/drivers/crypto/ccree/cc_crypto_ctx.h
-+++ b/drivers/crypto/ccree/cc_crypto_ctx.h
-@@ -108,7 +108,6 @@ enum drv_cipher_mode {
- 	DRV_CIPHER_CBC_CTS = 11,
- 	DRV_CIPHER_GCTR = 12,
- 	DRV_CIPHER_ESSIV = 13,
--	DRV_CIPHER_BITLOCKER = 14,
- 	DRV_CIPHER_RESERVE32B = S32_MAX
- };
- 
--- 
-2.27.0
+Agreed, I will do so in the next spin!
 
+> 
+> Other than that:
+> 
+> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> 
+> -- Steve
+
+
+Thanks,
+SeongJae Park
