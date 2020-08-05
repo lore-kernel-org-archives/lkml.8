@@ -2,174 +2,190 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A586CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D4BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80ECE2076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E2842076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:04:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596657804;
-	bh=WyKSjpajL0Wrn6EPgmwu9jvodbEDJzLgR334xRdaG9Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jXHNG70Z1GVqQNAnp/XPf9/ATQF3TaHwUQjJ8igbaumvZONhkP0KlpSduiD/4eOzR
-	 fUq6tzIknBXS4MXCgQKf2goU19dynpOyJHKYyjC3WGpelb9mdiFrSF29WRqAfZ+Cdp
-	 UwVYes0lpG4YHaGBQmlOOWD6hIi/TFnwyIRumjjA=
+	s=default; t=1596657871;
+	bh=BFqcBYITNyNBWLkZLsFiZsM+0wk0yyEyUZo4cqZHcQU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=ItbOJz2Ms0ZeBH6ceVstDFRyvRdf6d9nr7x+ILsoi3JmRqniAtl/yQ2zG8gbLVtu1
+	 tIeUJrEq/lb4ajMj81QJ8ZDgFUKmZTv/y4w+9kQjR39Z3dmgq918z3tCmrZIg4w2rc
+	 4un0BVrB88kogAp4c2GVGY/3wu+fAX69c1+/gGp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbgHEUDV (ORCPT
+        id S1727797AbgHEUEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:03:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51016 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 16:04:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727874AbgHEQii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:38:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726569AbgHEQgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 12:36:38 -0400
+Received: from localhost (mobile-166-175-186-42.mycingular.net [166.175.186.42])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9CC723356;
-        Wed,  5 Aug 2020 15:52:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 300DD22BED;
+        Wed,  5 Aug 2020 15:23:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596642737;
-        bh=WyKSjpajL0Wrn6EPgmwu9jvodbEDJzLgR334xRdaG9Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TlTvasGOKp1Z29JDvwn0dMD6eqxuewOd8ic9GN3jloqI+bJDsTt6MpK8wfvKkbTHe
-         gxxWyZ86yC9Pn0IrItm+yYB1QNsJl6Bn6r8fXCD7emmsm9gN35CR/GUkxbhI3uPfFN
-         JsekOBkZXp7MlSdS54aZFUgZsWoxY2hgQXoF1kpA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amit Klein <aksecurity@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>, Willy Tarreau <w@1wt.eu>
-Subject: [PATCH 5.7 1/6] random32: update the net random state on interrupt and activity
-Date:   Wed,  5 Aug 2020 17:52:28 +0200
-Message-Id: <20200805153507.042931685@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200805153506.978105994@linuxfoundation.org>
-References: <20200805153506.978105994@linuxfoundation.org>
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
+        s=default; t=1596641013;
+        bh=BFqcBYITNyNBWLkZLsFiZsM+0wk0yyEyUZo4cqZHcQU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=T2+XSPehLm5jhlp/tZVgLUhQiXe5DyTRMLTdi0yOnOPWOeqAdcFxXxr4tcWPM+y80
+         Cdh4VpRxiqbcyPgLAHJBx9RbeYvUy4PN6Y/AveKgLEbMnjoTIrVDvk9tRf27bcGITh
+         ZkJOy9kXskrEFns8q09CV73+xDOXcG2bHwi/3Drg=
+Date:   Wed, 5 Aug 2020 10:23:31 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>,
+        Tomoya MORINAGA <tomoya.rohm@gmail.com>,
+        Linus Walleij <linus.walleij@stericsson.com>,
+        Qi Wang <qi.wang@intel.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: [PATCH v1] i2c: eg20t: use generic power management
+Message-ID: <20200805152331.GA510793@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200720140031.511830-1-vaibhavgupta40@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willy Tarreau <w@1wt.eu>
+[+cc Tomoya, Linus, Qi, Ben from e9bc8fa5df1c]
 
-commit f227e3ec3b5cad859ad15666874405e8c1bbc1d4 upstream.
+On Mon, Jul 20, 2020 at 07:30:32PM +0530, Vaibhav Gupta wrote:
+> Drivers using legacy PM have to manage PCI states and device's PM states
+> themselves. They also need to take care of configuration registers.
+> 
+> With improved and powerful support of generic PM, PCI Core takes care of
+> above mentioned, device-independent, jobs.
+> 
+> This driver makes use of PCI helper functions like
+> pci_save/restore_state(), pci_enable/disable_device(),
+> pci_enable_wake() and pci_set_power_state() to do required operations. In
+> generic mode, they are no longer needed.
+> 
+> Change function parameter in both .suspend() and .resume() to
+> "struct device*" type. Use to_pci_dev() and dev_get_drvdata() to get
+> "struct pci_dev*" variable and drv data.
+> 
+> Compile-tested only.
+> 
+> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+> ---
+>  drivers/i2c/busses/i2c-eg20t.c | 39 ++++++++--------------------------
+>  1 file changed, 9 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-eg20t.c b/drivers/i2c/busses/i2c-eg20t.c
+> index 73f139690e4e..c0ddc4cc2ce7 100644
+> --- a/drivers/i2c/busses/i2c-eg20t.c
+> +++ b/drivers/i2c/busses/i2c-eg20t.c
+> @@ -846,11 +846,10 @@ static void pch_i2c_remove(struct pci_dev *pdev)
+>  	kfree(adap_info);
+>  }
+>  
+> -#ifdef CONFIG_PM
+> -static int pch_i2c_suspend(struct pci_dev *pdev, pm_message_t state)
+> +static int __maybe_unused pch_i2c_suspend(struct device *dev)
+>  {
+> -	int ret;
+>  	int i;
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+>  	struct adapter_info *adap_info = pci_get_drvdata(pdev);
 
-This modifies the first 32 bits out of the 128 bits of a random CPU's
-net_rand_state on interrupt or CPU activity to complicate remote
-observations that could lead to guessing the network RNG's internal
-state.
+Why don't you use "adap_info = dev_get_drvdata(dev)" as you did below,
+so you don't need to_pci_dev()?
 
-Note that depending on some network devices' interrupt rate moderation
-or binding, this re-seeding might happen on every packet or even almost
-never.
+>  	void __iomem *p = adap_info->pch_data[0].pch_base_address;
+>  
+> @@ -872,34 +871,17 @@ static int pch_i2c_suspend(struct pci_dev *pdev, pm_message_t state)
+>  		ioread32(p + PCH_I2CSR), ioread32(p + PCH_I2CBUFSTA),
+>  		ioread32(p + PCH_I2CESRSTA));
+>  
+> -	ret = pci_save_state(pdev);
+> -
+> -	if (ret) {
+> -		pch_pci_err(pdev, "pci_save_state\n");
+> -		return ret;
+> -	}
+> -
+> -	pci_enable_wake(pdev, PCI_D3hot, 0);
+> -	pci_disable_device(pdev);
+> -	pci_set_power_state(pdev, pci_choose_state(pdev, state));
+> +	device_wakeup_disable(dev);
+>  
+>  	return 0;
+>  }
+>  
+> -static int pch_i2c_resume(struct pci_dev *pdev)
+> +static int __maybe_unused pch_i2c_resume(struct device *dev)
+>  {
+>  	int i;
+> -	struct adapter_info *adap_info = pci_get_drvdata(pdev);
+> -
+> -	pci_set_power_state(pdev, PCI_D0);
+> -	pci_restore_state(pdev);
+> +	struct adapter_info *adap_info = dev_get_drvdata(dev);
+>  
+> -	if (pci_enable_device(pdev) < 0) {
+> -		pch_pci_err(pdev, "pch_i2c_resume:pci_enable_device FAILED\n");
+> -		return -EIO;
+> -	}
+> -
+> -	pci_enable_wake(pdev, PCI_D3hot, 0);
+> +	device_wakeup_disable(dev);
 
-In addition, with NOHZ some CPUs might not even get timer interrupts,
-leaving their local state rarely updated, while they are running
-networked processes making use of the random state.  For this reason, we
-also perform this update in update_process_times() in order to at least
-update the state when there is user or system activity, since it's the
-only case we care about.
+It *looks* wrong to disable wakeup in both suspend and resume.  I
+think the usual pattern is to enable wakeup in suspend and disable it
+in resume.
 
-Reported-by: Amit Klein <aksecurity@gmail.com>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Willy Tarreau <w@1wt.eu>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+But it looks like it's been that way since the driver was added by
+e9bc8fa5df1c ("i2c-eg20t: add driver for Intel EG20T").
 
----
- drivers/char/random.c  |    1 +
- include/linux/random.h |    3 +++
- kernel/time/timer.c    |    8 ++++++++
- lib/random32.c         |    2 +-
- 4 files changed, 13 insertions(+), 1 deletion(-)
+If the device doesn't support wakeup, I would not expect the driver to
+mention wakeup at all.
 
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -1277,6 +1277,7 @@ void add_interrupt_randomness(int irq, i
- 
- 	fast_mix(fast_pool);
- 	add_interrupt_bench(cycles);
-+	this_cpu_add(net_rand_state.s1, fast_pool->pool[cycles & 3]);
- 
- 	if (unlikely(crng_init == 0)) {
- 		if ((fast_pool->count >= 64) &&
---- a/include/linux/random.h
-+++ b/include/linux/random.h
-@@ -11,6 +11,7 @@
- #include <linux/kernel.h>
- #include <linux/list.h>
- #include <linux/once.h>
-+#include <linux/percpu.h>
- 
- #include <uapi/linux/random.h>
- 
-@@ -119,6 +120,8 @@ struct rnd_state {
- 	__u32 s1, s2, s3, s4;
- };
- 
-+DECLARE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
-+
- u32 prandom_u32_state(struct rnd_state *state);
- void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
- void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -43,6 +43,7 @@
- #include <linux/sched/debug.h>
- #include <linux/slab.h>
- #include <linux/compat.h>
-+#include <linux/random.h>
- 
- #include <linux/uaccess.h>
- #include <asm/unistd.h>
-@@ -1743,6 +1744,13 @@ void update_process_times(int user_tick)
- 	scheduler_tick();
- 	if (IS_ENABLED(CONFIG_POSIX_TIMERS))
- 		run_posix_cpu_timers();
-+
-+	/* The current CPU might make use of net randoms without receiving IRQs
-+	 * to renew them often enough. Let's update the net_rand_state from a
-+	 * non-constant value that's not affine to the number of calls to make
-+	 * sure it's updated when there's some activity (we don't care in idle).
-+	 */
-+	this_cpu_add(net_rand_state.s1, rol32(jiffies, 24) + user_tick);
- }
- 
- /**
---- a/lib/random32.c
-+++ b/lib/random32.c
-@@ -48,7 +48,7 @@ static inline void prandom_state_selftes
- }
- #endif
- 
--static DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
-+DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
- 
- /**
-  *	prandom_u32_state - seeded pseudo-random number generator.
+In any case, I think it's the right thing for *this* patch to preserve
+the previous wakeup behavior.  Maybe we want a follow-up patch to just
+remove both device_wakeup_disable() calls?
 
-
+>  	for (i = 0; i < adap_info->ch_num; i++)
+>  		pch_i2c_init(&adap_info->pch_data[i]);
+> @@ -908,18 +890,15 @@ static int pch_i2c_resume(struct pci_dev *pdev)
+>  
+>  	return 0;
+>  }
+> -#else
+> -#define pch_i2c_suspend NULL
+> -#define pch_i2c_resume NULL
+> -#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(pch_i2c_pm_ops, pch_i2c_suspend, pch_i2c_resume);
+>  
+>  static struct pci_driver pch_pcidriver = {
+>  	.name = KBUILD_MODNAME,
+>  	.id_table = pch_pcidev_id,
+>  	.probe = pch_i2c_probe,
+>  	.remove = pch_i2c_remove,
+> -	.suspend = pch_i2c_suspend,
+> -	.resume = pch_i2c_resume
+> +	.driver.pm = &pch_i2c_pm_ops,
+>  };
+>  
+>  module_pci_driver(pch_pcidriver);
+> -- 
+> 2.27.0
+> 
