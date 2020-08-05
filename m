@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2579C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF90C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEC4C22CA0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C427322CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:24:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GooaC+Z/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PSluF0Ft"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729209AbgHESXm (ORCPT
+        id S1728628AbgHESXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 14:23:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60020 "EHLO
+        Wed, 5 Aug 2020 14:23:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729176AbgHESLJ (ORCPT
+        with ESMTP id S1729174AbgHESLJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 14:11:09 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 595ACC0617A9;
-        Wed,  5 Aug 2020 11:09:58 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id mw10so1056509pjb.2;
-        Wed, 05 Aug 2020 11:09:58 -0700 (PDT)
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62924C0617A3;
+        Wed,  5 Aug 2020 11:09:45 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id w19so12758612plq.3;
+        Wed, 05 Aug 2020 11:09:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MGnCAdiaQS4lKXaU6CPlGVdYZqlXYf98yajQSydVzaY=;
-        b=GooaC+Z/Sw51BwDbPFpNpXwlbG4AQ62EbZ7018uruKRN36yZ1iJ9IqmTmqMyx8zFh/
-         YcgBT15dzPrtu7YWMy5QWQ3oLjABat8Ucgx9C8kx0LbrXNOKcGhMwdXg7HZbwYcWd9gm
-         xb1aR+4ZZgdoIIJi9kSrnyn9/fSjkhLMeGDYWI9WKxqRzu4k2irQjc7WGQs/BZS+4agO
-         cZ8ZSKy+GYM7fDIbbLfOhzFAe0ZtyacKCAmtX1uS/tH3rBLWu2nQfdJHqAcF6TjmiYVB
-         qjUp1CtaErGkloLDzp3iDZ8azOKp2Xs5CrOrxIpirbNA3U/Wo+gPtrg4Ph/hfFrbH6d5
-         3YqA==
+        bh=B1dL9NIqPaG8kTtxrKrQZP2Mw3nbKryvhXJJhuiXF3I=;
+        b=PSluF0FtdT+Om/bzBDquw3qF0LxOPjniWWeaGZe5f1u4fXAfbfPfTPE4tOA8oGXjKe
+         SdK6vVKOsHOnS9c6GjmBKj+3NBigffqUQkvku2E5VbJAywb3NnTWnqL1Przbl35TLUYD
+         r87i6InR6SIWjuZu7j38/XHbZfteiddwuiV6ydKo1Gxv/lcqkvvF7mcxyvcD4+BwijLq
+         vvK/cwIzopjXNwodmnjjr85ID7eGGpsmi9UHh0vDsvbrxlxtgybYgsbEJxKoYKzyrwAU
+         p3nxyFiekf1jXA36LKz03k+0VOMURFdkOAW4hqQTHcCDUUlnGh0ehmDo+M5HuSc+Dk7O
+         cdzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MGnCAdiaQS4lKXaU6CPlGVdYZqlXYf98yajQSydVzaY=;
-        b=C6MAXtebZ4v8cdBLVwsFHOV+slK98z4tr3f97t2tNDYi+JmrX7yaRBxGPvCVvYNCKd
-         42qFd0/6cRoVVScGNbqfGl0wqTdRnpIlC4qffCkQjagrdR1hCbqNvHWziT54gPaJK8pO
-         EUpYxCia5O57eOKbgM1HJobeWwgaCjGo13/Zl7nNLRdU5oMxXdli5O63nPxbRdP6FRIc
-         suUFJYo0jmUhovq7uu9EzeTDDL6omQwNLfPLG8lM4LAm1WMu+1pD6/9iIdSxSU1AWd55
-         IhYhXuZPaT+FTgN9YmSGf+vXktai7Ac8W1JxZVXk6N2LmXbi4WxWgz+Pi4j81DdWIZLF
-         ExQQ==
-X-Gm-Message-State: AOAM533pCJd9vPnF45Rzl4zuBa5nQc5knFUzR4irP16LvWhAHrR/wrh+
-        VsVQiCwzN9Op8UBW4POta8c=
-X-Google-Smtp-Source: ABdhPJwTLOvvBskyaMc51FE1majJByR7jO3rKr1iHORHuNjdrINFR+leYDEVFq8PYruaW+zKhoeO0A==
-X-Received: by 2002:a17:90a:e986:: with SMTP id v6mr4767972pjy.88.1596650997864;
-        Wed, 05 Aug 2020 11:09:57 -0700 (PDT)
+        bh=B1dL9NIqPaG8kTtxrKrQZP2Mw3nbKryvhXJJhuiXF3I=;
+        b=RKa0ffHQy3khi1cHM89sV72liBhElOLqsdafTn+lfdB+h2bLrmBxX2KfOYgVcIyXud
+         c0TX49IW0c4dFSfLq8Pw1MnNrJ3riXntjKNhnHAevCCeOwxGhmNdfaJ25zpCbpd3XDwd
+         lLKjCEjCFRpfq5a5PzB0nHHyN9Tl+fORlYBiZdGZuWpmA6sjSHnisjDYedRcvZLf28gc
+         yLsJ6TZ8yu8orHhLCKlyue3sWYZWxNde+BF43IPUx0Z/nWXGhs/UMsxLX9GwP/VGL4zy
+         P8wtRdWs7r2EAKckrLQLB3jidst3jNTY8d/DufqHrmqHf+MF0bU4hJ/G1BpBoq5EqE5v
+         76uA==
+X-Gm-Message-State: AOAM530nF2AJPC4Y9/oQCoVkvQRO88+f3m6Atv0pkgPjnxGQNdDnPOif
+        kapnjUJLpqVj/6kQkf8zDIM=
+X-Google-Smtp-Source: ABdhPJwPs+1RKcGAtXdbkaMuXzE72m2vxBZT/zcxGLG4rjME36hPn5Q3MfrQIKsdMVnlVU+1WOyZJg==
+X-Received: by 2002:a17:90a:f290:: with SMTP id fs16mr4432461pjb.35.1596650984881;
+        Wed, 05 Aug 2020 11:09:44 -0700 (PDT)
 Received: from varodek.iballbatonwifi.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id t63sm4977510pfb.210.2020.08.05.11.09.52
+        by smtp.gmail.com with ESMTPSA id t63sm4977510pfb.210.2020.08.05.11.09.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 11:09:57 -0700 (PDT)
+        Wed, 05 Aug 2020 11:09:44 -0700 (PDT)
 From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -77,9 +77,9 @@ Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
         linux-geode@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v1 06/12] fbdev: nvidia: use generic power management
-Date:   Wed,  5 Aug 2020 23:37:16 +0530
-Message-Id: <20200805180722.244008-7-vaibhavgupta40@gmail.com>
+Subject: [PATCH v1 04/12] fbdev: aty: use generic power management
+Date:   Wed,  5 Aug 2020 23:37:14 +0530
+Message-Id: <20200805180722.244008-5-vaibhavgupta40@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200805180722.244008-1-vaibhavgupta40@gmail.com>
 References: <20200805180722.244008-1-vaibhavgupta40@gmail.com>
@@ -103,119 +103,135 @@ and drivers are required to do only device-specific jobs.
 
 Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 ---
- drivers/video/fbdev/nvidia/nvidia.c | 64 ++++++++++++++++-------------
- 1 file changed, 35 insertions(+), 29 deletions(-)
+ drivers/video/fbdev/aty/atyfb_base.c | 50 ++++++++++++++++++++--------
+ 1 file changed, 36 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/video/fbdev/nvidia/nvidia.c b/drivers/video/fbdev/nvidia/nvidia.c
-index c24de9107958..3a1a4330e0d3 100644
---- a/drivers/video/fbdev/nvidia/nvidia.c
-+++ b/drivers/video/fbdev/nvidia/nvidia.c
-@@ -1041,10 +1041,9 @@ static struct fb_ops nvidia_fb_ops = {
- 	.fb_sync        = nvidiafb_sync,
- };
+diff --git a/drivers/video/fbdev/aty/atyfb_base.c b/drivers/video/fbdev/aty/atyfb_base.c
+index b0ac895e5ac9..a24d5bf6ade1 100644
+--- a/drivers/video/fbdev/aty/atyfb_base.c
++++ b/drivers/video/fbdev/aty/atyfb_base.c
+@@ -132,8 +132,8 @@
+ #define PRINTKI(fmt, args...)	printk(KERN_INFO "atyfb: " fmt, ## args)
+ #define PRINTKE(fmt, args...)	printk(KERN_ERR "atyfb: " fmt, ## args)
  
--#ifdef CONFIG_PM
--static int nvidiafb_suspend(struct pci_dev *dev, pm_message_t mesg)
-+static int nvidiafb_suspend_late(struct device *dev, pm_message_t mesg)
- {
--	struct fb_info *info = pci_get_drvdata(dev);
-+	struct fb_info *info = dev_get_drvdata(dev);
- 	struct nvidia_par *par = info->par;
- 
- 	if (mesg.event == PM_EVENT_PRETHAW)
-@@ -1056,46 +1055,54 @@ static int nvidiafb_suspend(struct pci_dev *dev, pm_message_t mesg)
- 		fb_set_suspend(info, 1);
- 		nvidiafb_blank(FB_BLANK_POWERDOWN, info);
- 		nvidia_write_regs(par, &par->SavedReg);
--		pci_save_state(dev);
--		pci_disable_device(dev);
--		pci_set_power_state(dev, pci_choose_state(dev, mesg));
+-#if defined(CONFIG_PM) || defined(CONFIG_PMAC_BACKLIGHT) || \
+-defined (CONFIG_FB_ATY_GENERIC_LCD) || defined(CONFIG_FB_ATY_BACKLIGHT)
++#if defined(CONFIG_PMAC_BACKLIGHT) || defined(CONFIG_FB_ATY_GENERIC_LCD) || \
++defined(CONFIG_FB_ATY_BACKLIGHT)
+ static const u32 lt_lcd_regs[] = {
+ 	CNFG_PANEL_LG,
+ 	LCD_GEN_CNTL_LG,
+@@ -175,7 +175,7 @@ u32 aty_ld_lcd(int index, const struct atyfb_par *par)
+ 		return aty_ld_le32(LCD_DATA, par);
  	}
--	dev->dev.power.power_state = mesg;
-+	dev->power.power_state = mesg;
- 
- 	console_unlock();
- 	return 0;
  }
+-#endif /* defined(CONFIG_PM) || defined(CONFIG_PMAC_BACKLIGHT) || defined (CONFIG_FB_ATY_GENERIC_LCD) */
++#endif /* defined(CONFIG_PMAC_BACKLIGHT) || defined (CONFIG_FB_ATY_GENERIC_LCD) */
  
--static int nvidiafb_resume(struct pci_dev *dev)
-+static int __maybe_unused nvidiafb_suspend(struct device *dev)
+ #ifdef CONFIG_FB_ATY_GENERIC_LCD
+ /*
+@@ -1994,7 +1994,7 @@ static int atyfb_mmap(struct fb_info *info, struct vm_area_struct *vma)
+ 
+ 
+ 
+-#if defined(CONFIG_PM) && defined(CONFIG_PCI)
++#if defined(CONFIG_PCI)
+ 
+ #ifdef CONFIG_PPC_PMAC
+ /* Power management routines. Those are used for PowerBook sleep.
+@@ -2055,8 +2055,9 @@ static int aty_power_mgmt(int sleep, struct atyfb_par *par)
+ }
+ #endif /* CONFIG_PPC_PMAC */
+ 
+-static int atyfb_pci_suspend(struct pci_dev *pdev, pm_message_t state)
++static int atyfb_pci_suspend_late(struct device *dev, pm_message_t state)
  {
--	struct fb_info *info = pci_get_drvdata(dev);
--	struct nvidia_par *par = info->par;
-+	return nvidiafb_suspend_late(dev, PMSG_SUSPEND);
-+}
++	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct fb_info *info = pci_get_drvdata(pdev);
+ 	struct atyfb_par *par = (struct atyfb_par *) info->par;
  
--	console_lock();
--	pci_set_power_state(dev, PCI_D0);
-+static int __maybe_unused nvidiafb_hibernate(struct device *dev)
-+{
-+	return nvidiafb_suspend_late(dev, PMSG_HIBERNATE);
-+}
+@@ -2082,7 +2083,6 @@ static int atyfb_pci_suspend(struct pci_dev *pdev, pm_message_t state)
+ 	 * first save the config space content so the core can
+ 	 * restore it properly on resume.
+ 	 */
+-	pci_save_state(pdev);
  
--	if (par->pm_state != PM_EVENT_FREEZE) {
--		pci_restore_state(dev);
-+static int __maybe_unused nvidiafb_freeze(struct device *dev)
-+{
-+	return nvidiafb_suspend_late(dev, PMSG_FREEZE);
-+}
+ #ifdef CONFIG_PPC_PMAC
+ 	/* Set chip to "suspend" mode */
+@@ -2094,8 +2094,6 @@ static int atyfb_pci_suspend(struct pci_dev *pdev, pm_message_t state)
+ 		console_unlock();
+ 		return -EIO;
+ 	}
+-#else
+-	pci_set_power_state(pdev, pci_choose_state(pdev, state));
+ #endif
  
--		if (pci_enable_device(dev))
--			goto fail;
-+static int __maybe_unused nvidiafb_resume(struct device *dev)
-+{
-+	struct fb_info *info = dev_get_drvdata(dev);
-+	struct nvidia_par *par = info->par;
- 
--		pci_set_master(dev);
--	}
-+	console_lock();
- 
- 	par->pm_state = PM_EVENT_ON;
- 	nvidiafb_set_par(info);
- 	fb_set_suspend (info, 0);
- 	nvidiafb_blank(FB_BLANK_UNBLANK, info);
- 
--fail:
  	console_unlock();
+@@ -2105,6 +2103,21 @@ static int atyfb_pci_suspend(struct pci_dev *pdev, pm_message_t state)
  	return 0;
  }
--#else
--#define nvidiafb_suspend NULL
--#define nvidiafb_resume NULL
--#endif
+ 
++static int __maybe_unused atyfb_pci_suspend(struct device *dev)
++{
++	return atyfb_pci_suspend_late(dev, PMSG_SUSPEND);
++}
 +
-+static const struct dev_pm_ops nvidiafb_pm_ops = {
++static int __maybe_unused atyfb_pci_hibernate(struct device *dev)
++{
++	return atyfb_pci_suspend_late(dev, PMSG_HIBERNATE);
++}
++
++static int __maybe_unused atyfb_pci_freeze(struct device *dev)
++{
++	return atyfb_pci_suspend_late(dev, PMSG_FREEZE);
++}
++
+ static void aty_resume_chip(struct fb_info *info)
+ {
+ 	struct atyfb_par *par = info->par;
+@@ -2119,8 +2132,9 @@ static void aty_resume_chip(struct fb_info *info)
+ 			aty_ld_le32(BUS_CNTL, par) | BUS_APER_REG_DIS, par);
+ }
+ 
+-static int atyfb_pci_resume(struct pci_dev *pdev)
++static int __maybe_unused atyfb_pci_resume(struct device *dev)
+ {
++	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct fb_info *info = pci_get_drvdata(pdev);
+ 	struct atyfb_par *par = (struct atyfb_par *) info->par;
+ 
+@@ -2162,7 +2176,18 @@ static int atyfb_pci_resume(struct pci_dev *pdev)
+ 	return 0;
+ }
+ 
+-#endif /*  defined(CONFIG_PM) && defined(CONFIG_PCI) */
++static const struct dev_pm_ops atyfb_pci_pm_ops = {
 +#ifdef CONFIG_PM_SLEEP
-+	.suspend	= nvidiafb_suspend,
-+	.resume		= nvidiafb_resume,
-+	.freeze		= nvidiafb_freeze,
-+	.thaw		= nvidiafb_resume,
-+	.poweroff	= nvidiafb_hibernate,
-+	.restore	= nvidiafb_resume,
++	.suspend	= atyfb_pci_suspend,
++	.resume		= atyfb_pci_resume,
++	.freeze		= atyfb_pci_freeze,
++	.thaw		= atyfb_pci_resume,
++	.poweroff	= atyfb_pci_hibernate,
++	.restore	= atyfb_pci_resume,
 +#endif /* CONFIG_PM_SLEEP */
 +};
++
++#endif /*  defined(CONFIG_PCI) */
  
- static int nvidia_set_fbinfo(struct fb_info *info)
- {
-@@ -1496,12 +1503,11 @@ static int nvidiafb_setup(char *options)
- #endif				/* !MODULE */
- 
- static struct pci_driver nvidiafb_driver = {
--	.name = "nvidiafb",
--	.id_table = nvidiafb_pci_tbl,
--	.probe    = nvidiafb_probe,
--	.suspend  = nvidiafb_suspend,
--	.resume   = nvidiafb_resume,
--	.remove   = nvidiafb_remove,
-+	.name      = "nvidiafb",
-+	.id_table  = nvidiafb_pci_tbl,
-+	.probe     = nvidiafb_probe,
-+	.driver.pm = &nvidiafb_pm_ops,
-+	.remove    = nvidiafb_remove,
+ /* Backlight */
+ #ifdef CONFIG_FB_ATY_BACKLIGHT
+@@ -3801,10 +3826,7 @@ static struct pci_driver atyfb_driver = {
+ 	.id_table	= atyfb_pci_tbl,
+ 	.probe		= atyfb_pci_probe,
+ 	.remove		= atyfb_pci_remove,
+-#ifdef CONFIG_PM
+-	.suspend	= atyfb_pci_suspend,
+-	.resume		= atyfb_pci_resume,
+-#endif /* CONFIG_PM */
++	.driver.pm	= &atyfb_pci_pm_ops,
  };
  
- /* ------------------------------------------------------------------------- *
+ #endif /* CONFIG_PCI */
 -- 
 2.27.0
 
