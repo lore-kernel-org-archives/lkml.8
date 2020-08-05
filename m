@@ -3,100 +3,130 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52DDE206D4
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:21:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596655289;
-	bh=itzMvNq8nfgP8VKXOJXPOoZfq8+Pd5YP4oo6JUWZy/Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OY66tv2GPw87uQk2RW8ZHjOKqx+RwLEFNFNNLwzsYKAuCvHk7ODMFVQqSnKfUMb3q
-	 5NIhBjHJaH91aZCIOx3Nby+9h+9hYn11sDlLncZhHTl08t0Hyugs0WnWzuB8eOMYnN
-	 DHdd/rtpCZmULVu9Z7mYfhDRkDstWdZoaNBYIcCE=
+	by mail.kernel.org (Postfix) with ESMTP id A470D206D4
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:21:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="QLWP0f4m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728995AbgHETV1 (ORCPT
+        id S1726643AbgHETVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:21:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728977AbgHERl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:41:59 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E99452173E;
-        Wed,  5 Aug 2020 10:54:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596624860;
-        bh=itzMvNq8nfgP8VKXOJXPOoZfq8+Pd5YP4oo6JUWZy/Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=daILxyCwv0M7mQeyhNXxvi03DAUtga5jJtqn9dQXwRgrXBcNva8DPZDusD/aFamB8
-         Au9mHe9ABAS9MqqceMBsO7YPBu1LumIOWL9uh+TWE/OO/RKyxryVA4IqaKwGaUH9uK
-         2Cbco3etFIjw9O/v4cujAsyuMP3cTEND8YVamfgM=
-Date:   Wed, 5 Aug 2020 11:53:57 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Alain Volmat <alain.volmat@st.com>
-Cc:     amelie.delaunay@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-Subject: Re: [PATCH 09/18] spi: stm32h7: fix race condition at end of transfer
-Message-ID: <20200805105357.GD5556@sirena.org.uk>
-References: <1596610933-32599-1-git-send-email-alain.volmat@st.com>
- <1596610933-32599-10-git-send-email-alain.volmat@st.com>
+        Wed, 5 Aug 2020 15:21:31 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:61112 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728929AbgHERmr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:42:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1596649366; x=1628185366;
+  h=date:from:to:cc:message-id:references:mime-version:
+   in-reply-to:subject;
+  bh=lNEkMbYi0vdrAauS7Kx1F2bZJKjVMy/W93IpO/fQsUY=;
+  b=QLWP0f4m1iXMxE7WwpXelDNbJnoNpF+g0+s6zbmV6NzsvnU9VULdxkeI
+   gY9/qb9cgZPYou8CeQkx/eJVolTOG/oZ7NyXiJT+rDnyjMXLfW03bDpfT
+   KqB676qf2oJz5gqmTw4a4slQHYINimnhvUdLlAyixXdcL2ljd5cHg23Bh
+   E=;
+IronPort-SDR: 9ySw8fWle7MttK7suY4BIhxnPpUpw/OAAJafe5LAcUtSaR7nXlHuY3JimXe5qJR44ypaJ2YRoP
+ 96gheUehfPyA==
+X-IronPort-AV: E=Sophos;i="5.75,438,1589241600"; 
+   d="scan'208";a="57653120"
+Subject: Re: [PATCH v2 01/11] xen/manage: keep track of the on-going suspend mode
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-579b7f5b.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 05 Aug 2020 17:42:44 +0000
+Received: from EX13MTAUEB002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-579b7f5b.us-west-2.amazon.com (Postfix) with ESMTPS id C5250A2967;
+        Wed,  5 Aug 2020 17:42:42 +0000 (UTC)
+Received: from EX13D08UEB001.ant.amazon.com (10.43.60.245) by
+ EX13MTAUEB002.ant.amazon.com (10.43.60.12) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 5 Aug 2020 17:42:20 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (10.43.61.77) by
+ EX13D08UEB001.ant.amazon.com (10.43.60.245) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 5 Aug 2020 17:42:20 +0000
+Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
+ (172.22.96.68) by mail-relay.amazon.com (10.43.61.169) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Wed, 5 Aug 2020 17:42:19 +0000
+Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
+        id D027740865; Wed,  5 Aug 2020 17:42:19 +0000 (UTC)
+Date:   Wed, 5 Aug 2020 17:42:19 +0000
+From:   Anchal Agarwal <anchalag@amazon.com>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
+CC:     Stefano Stabellini <sstabellini@kernel.org>, <tglx@linutronix.de>,
+        <mingo@redhat.com>, <bp@alien8.de>, <hpa@zytor.com>,
+        <x86@kernel.org>, <jgross@suse.com>, <linux-pm@vger.kernel.org>,
+        <linux-mm@kvack.org>, <kamatam@amazon.com>,
+        <konrad.wilk@oracle.com>, <roger.pau@citrix.com>,
+        <axboe@kernel.dk>, <davem@davemloft.net>, <rjw@rjwysocki.net>,
+        <len.brown@intel.com>, <pavel@ucw.cz>, <peterz@infradead.org>,
+        <eduval@amazon.com>, <sblbir@amazon.com>,
+        <xen-devel@lists.xenproject.org>, <vkuznets@redhat.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>
+Message-ID: <20200805174219.GA16105@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+References: <alpine.DEB.2.21.2007211640500.17562@sstabellini-ThinkPad-T480s>
+ <20200722180229.GA32316@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <alpine.DEB.2.21.2007221645430.17562@sstabellini-ThinkPad-T480s>
+ <20200723225745.GB32316@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <alpine.DEB.2.21.2007241431280.17562@sstabellini-ThinkPad-T480s>
+ <66a9b838-70ed-0807-9260-f2c31343a081@oracle.com>
+ <20200730230634.GA17221@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <53b577a3-6af9-5587-7e47-485be38b3653@oracle.com>
+ <20200804234201.GA23820@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <50d0dbe1-533e-792a-6916-8c72d623064a@oracle.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3Gf/FFewwPeBMqCJ"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <1596610933-32599-10-git-send-email-alain.volmat@st.com>
-X-Cookie: Fast, cheap, good: pick two.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <50d0dbe1-533e-792a-6916-8c72d623064a@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---3Gf/FFewwPeBMqCJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Aug 05, 2020 at 09:02:04AM +0200, Alain Volmat wrote:
-> From: Antonio Borneo <antonio.borneo@st.com>
->=20
-> The caller of stm32_spi_transfer_one(), spi_transfer_one_message(),
-> is waiting for us to call spi_finalize_current_transfer() and will
-> eventually schedule a new transfer, if available.
-> We should guarantee that the spi controller is really available
-> before calling spi_finalize_current_transfer().
->=20
-> Move the call to spi_finalize_current_transfer() _after_ the call
-> to stm32_spi_disable().
-
-This seems like a bug fix and should therefore be at the start of the
-series so it can be sent to mainline without the new development work.
-
---3Gf/FFewwPeBMqCJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8qj8UACgkQJNaLcl1U
-h9BPMwf/SVAa/tykTrFSDmtKpWBCSoTEQyhwBfjKuq+rQf3+01Akz63PIPooThf4
-4hcsMCzyVNfFiNhOCvCyeK5ccZ3iJ6ZX+CBzIp82qadb35VN1MNxMVwHPy2kshTW
-8S+oKpDXRIFEiuKmDTBW22swtHCy8m01Ng4gQXvQPBhdjIpff4sl/kAMBxPRUFBS
-TjkRi39WPFNwmRWRBrAxa99mmyOt0+83zOs0jjLRRJADsfoIaDdkISbFGJ517Wh1
-10XUqNK0kNJC8hqj6rK7jgkgQeMW3vAQaimhlJzFbnjVOgtiW74zF03RPmxM1w6V
-R+0IRfA+AzMkXP1gTek7e+vjuBraaQ==
-=4szv
------END PGP SIGNATURE-----
-
---3Gf/FFewwPeBMqCJ--
+On Wed, Aug 05, 2020 at 09:31:13AM -0400, Boris Ostrovsky wrote:
+> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> 
+> 
+> 
+> On 8/4/20 7:42 PM, Anchal Agarwal wrote:
+> >
+> > I think this could be done. PM_HIBERNATION_PREPARE could return -ENOTSUPP
+> > for arm and pvh dom0 when the notifier call chain is invoked for this case
+> > in hibernate(). This will then be an empty notifier just for checking two
+> > usecases.
+> > Also, for pvh dom0, the earlier code didn't register any notifier,
+> > with this approach you are suggesting setup the notifier for hvm/pvh dom0 and
+> > arm but fail during notifier call chain during PM_HIBERNATION_PREPARE ?
+> 
+> 
+> Right.
+> 
+> 
+> (Although the earlier code did register the notifier:
+> xen_setup_pm_notifier() would return an error for !xen_hvm_domain() and
+> PVH *is* an HVM domain, so registration would actually happen)
+>
+Yes you are right. My bad, what I meant with "earlier code" was whatever we
+discussed w.r.t to removing the notifier all together, it won't be registered for
+pvh dom0.
+Anyways got the point :)
+> 
+> >
+> > I think still getting rid of suspend mode that was earlier a part of this
+> > notifier is a good idea as it seems redundant as you pointed out earlier.
+> 
+> 
+> Yes.
+> 
+> 
+> -boris
+Thanks,
+Anchal
+> 
+> 
