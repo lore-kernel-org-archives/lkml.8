@@ -2,174 +2,133 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F09B8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8499FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C05AA22B42
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 511CD22B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596658278;
-	bh=RMz6cKYNxMZuugoaSHv0PdWbqR1GvdDtewVaDPXuXkU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zaUeF5TXm8I0QeXMdT+YLlTBWaffBAb3Q5S2aI+1js5aPoG9JlTJ9kYHWqRw/I35P
-	 TZG9cE+yH1cDOZ9W11lDYh1UvFj2iwvg5gM+dZ4ngTMC6HUmMIxtvxu2tGJn5MDuWD
-	 JXhdc0hOKc+NzfeVOMoOfn+MGpGT3uAobm4uzf2Y=
+	s=default; t=1596658290;
+	bh=VH9ZXPRys3w5CJ+DJFHkL4Z9y1wA1TDZNwVzjEJQMoY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NuKTNYBL5Q0eNI/l7P7neWGZBghTZWmnkC4noIX2erpgKh4r9KGcbJJUOgupE/ch5
+	 /ePvKs5o4Qz8vQeQwZ1TOHzIyV0zOiqUqM+gK4wMi5ZLW08y1FxDx3D2CZq83/CH8w
+	 nhGwhgQrZiN6oB4Q3s8uNiHDoWEPIhhEoZGZdyq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbgHEULJ (ORCPT
+        id S1729624AbgHEUL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:11:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49478 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 16:11:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727016AbgHEQ1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727017AbgHEQ1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:27:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86AC823370;
-        Wed,  5 Aug 2020 15:52:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C8732313B;
+        Wed,  5 Aug 2020 14:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596642761;
-        bh=RMz6cKYNxMZuugoaSHv0PdWbqR1GvdDtewVaDPXuXkU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jJ9UF6lvlqTy8SvdrAqPq82i53ZuTWhVsh7OOpBkK8jFuNZ4VwA/mGqfx3lq74pS5
-         EuJ3NAEO3LFRCMkdEanNv42eG1SYxwffYN2yNM5cz+MDbDeRIq4UbVzzGiVPOI0Pl8
-         TjduDT/IKx4NS2A8cQm/QQWumEp5cdHZJ3LiUL1o=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amit Klein <aksecurity@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>, Willy Tarreau <w@1wt.eu>
-Subject: [PATCH 5.4 1/9] random32: update the net random state on interrupt and activity
-Date:   Wed,  5 Aug 2020 17:52:38 +0200
-Message-Id: <20200805153507.123440513@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200805153507.053638231@linuxfoundation.org>
-References: <20200805153507.053638231@linuxfoundation.org>
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
+        s=default; t=1596637945;
+        bh=VH9ZXPRys3w5CJ+DJFHkL4Z9y1wA1TDZNwVzjEJQMoY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mXDTUV14QDTkt/yjDUfiRuddYcnnNkrpHoQJN0sdCRrSbC6kvZNObNiIrf7fgPEYJ
+         AKNuvxZZTkswKUcrd3u+YaLwgMm+maQ/RVsB/uzRcUMEZwwF3E+1s//nylQur456h1
+         JHkXhjqzCYS12U7tyxbtETyk/kuHKqQA/92F52ms=
+Date:   Wed, 5 Aug 2020 16:32:42 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     John Donnelly <john.p.donnelly@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Re: [(resend) PATCH v3: {linux-4.14.y} ] dm cache: submit
+ writethrough writes in parallel to origin and cache
+Message-ID: <20200805143242.GC2154236@kroah.com>
+References: <8CFF8DA9-C105-461C-8F5A-DA2BF448A135@oracle.com>
+ <20200804124735.GA219143@kroah.com>
+ <20200804182037.GA15453@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200804182037.GA15453@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willy Tarreau <w@1wt.eu>
+On Tue, Aug 04, 2020 at 02:20:38PM -0400, Mike Snitzer wrote:
+> On Tue, Aug 04 2020 at  8:47am -0400,
+> Greg KH <gregkh@linuxfoundation.org> wrote:
+> 
+> > On Tue, Aug 04, 2020 at 07:33:05AM -0500, John Donnelly wrote:
+> > > From: Mike Snitzer <snitzer@redhat.com>
+> > > 
+> > > Discontinue issuing writethrough write IO in series to the origin and
+> > > then cache.
+> > > 
+> > > Use bio_clone_fast() to create a new origin clone bio that will be
+> > > mapped to the origin device and then bio_chain() it to the bio that gets
+> > > remapped to the cache device.  The origin clone bio does _not_ have a
+> > > copy of the per_bio_data -- as such check_if_tick_bio_needed() will not
+> > > be called.
+> > > 
+> > > The cache bio (parent bio) will not complete until the origin bio has
+> > > completed -- this fulfills bio_clone_fast()'s requirements as well as
+> > > the requirement to not complete the original IO until the write IO has
+> > > completed to both the origin and cache device.
+> > > 
+> > > Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+> > > 
+> > > (cherry picked from commit 2df3bae9a6543e90042291707b8db0cbfbae9ee9)
+> > > 
+> > > Fixes: 4ec34f2196d125ff781170ddc6c3058c08ec5e73 (dm bio record:
+> > > save/restore bi_end_io and bi_integrity )
+> > > 
+> > > 4ec34f21 introduced a mkfs.ext4 hang on a LVM device that has been
+> > > modified with lvconvert --cachemode=writethrough.
+> > > 
+> > > CC:stable@vger.kernel.org for 4.14.y
+> > > 
+> > > Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
+> > > Reviewed-by: Somasundaram Krishnasamy <somasundaram.krishnasamy@oracle.com>
+> > > 
+> > > conflicts:
+> > > 	drivers/md/dm-cache-target.c. -  Corrected usage of
+> > > 	writethrough_mode(&cache->feature) that was caught by
+> > > 	compiler, and removed unused static functions : writethrough_endio(),
+> > > 	defer_writethrough_bio(), wake_deferred_writethrough_worker()
+> > > 	that generated warnings.
+> > 
+> > What is this "conflicts nonsense"?  You don't see that in any other
+> > kernel patch changelog, do you?
+> > 
+> > > ---
+> > > drivers/md/dm-cache-target.c | 92 ++++++++++++++++++--------------------------
+> > > 1 file changed, 37 insertions(+), 55 deletions(-)
+> > 
+> > Please fix your email client up, it's totally broken and this does not
+> > work at all and is getting frustrating from my side here.
+> > 
+> > Try sending emails to yourself and see if you can apply the patches, as
+> > the one you sent here does not work, again:
+> 
+> John's inability to submit a patch that can apply aside: I do not like
+> how this patch header is constructed (yet attributed "From" me).  It is
+> devoid of detail as it relates to stable@.
+> 
+> Greg, please don't apply the v4 of this patch either.  I'll craft a
+> proper stable@ patch that explains the reason for change and why we're
+> left having to resolve conflicts in stable@.
+> 
+> But first I need to focus on sending DM changes to Linus for v5.9 merge.
 
-commit f227e3ec3b5cad859ad15666874405e8c1bbc1d4 upstream.
+Ok, no worries, I'll drop all of these from my review queue and wait for
+something from you sometime in the future.
 
-This modifies the first 32 bits out of the 128 bits of a random CPU's
-net_rand_state on interrupt or CPU activity to complicate remote
-observations that could lead to guessing the network RNG's internal
-state.
+thanks,
 
-Note that depending on some network devices' interrupt rate moderation
-or binding, this re-seeding might happen on every packet or even almost
-never.
-
-In addition, with NOHZ some CPUs might not even get timer interrupts,
-leaving their local state rarely updated, while they are running
-networked processes making use of the random state.  For this reason, we
-also perform this update in update_process_times() in order to at least
-update the state when there is user or system activity, since it's the
-only case we care about.
-
-Reported-by: Amit Klein <aksecurity@gmail.com>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Willy Tarreau <w@1wt.eu>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/char/random.c  |    1 +
- include/linux/random.h |    3 +++
- kernel/time/timer.c    |    8 ++++++++
- lib/random32.c         |    2 +-
- 4 files changed, 13 insertions(+), 1 deletion(-)
-
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -1330,6 +1330,7 @@ void add_interrupt_randomness(int irq, i
- 
- 	fast_mix(fast_pool);
- 	add_interrupt_bench(cycles);
-+	this_cpu_add(net_rand_state.s1, fast_pool->pool[cycles & 3]);
- 
- 	if (unlikely(crng_init == 0)) {
- 		if ((fast_pool->count >= 64) &&
---- a/include/linux/random.h
-+++ b/include/linux/random.h
-@@ -9,6 +9,7 @@
- 
- #include <linux/list.h>
- #include <linux/once.h>
-+#include <linux/percpu.h>
- 
- #include <uapi/linux/random.h>
- 
-@@ -117,6 +118,8 @@ struct rnd_state {
- 	__u32 s1, s2, s3, s4;
- };
- 
-+DECLARE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
-+
- u32 prandom_u32_state(struct rnd_state *state);
- void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
- void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -43,6 +43,7 @@
- #include <linux/sched/debug.h>
- #include <linux/slab.h>
- #include <linux/compat.h>
-+#include <linux/random.h>
- 
- #include <linux/uaccess.h>
- #include <asm/unistd.h>
-@@ -1742,6 +1743,13 @@ void update_process_times(int user_tick)
- 	scheduler_tick();
- 	if (IS_ENABLED(CONFIG_POSIX_TIMERS))
- 		run_posix_cpu_timers();
-+
-+	/* The current CPU might make use of net randoms without receiving IRQs
-+	 * to renew them often enough. Let's update the net_rand_state from a
-+	 * non-constant value that's not affine to the number of calls to make
-+	 * sure it's updated when there's some activity (we don't care in idle).
-+	 */
-+	this_cpu_add(net_rand_state.s1, rol32(jiffies, 24) + user_tick);
- }
- 
- /**
---- a/lib/random32.c
-+++ b/lib/random32.c
-@@ -48,7 +48,7 @@ static inline void prandom_state_selftes
- }
- #endif
- 
--static DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
-+DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
- 
- /**
-  *	prandom_u32_state - seeded pseudo-random number generator.
-
-
+greg k-h
