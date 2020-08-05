@@ -2,155 +2,118 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB95C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F73C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D45822B40
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BA5121744
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:46:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kf0kPEaV"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="NwhhO7yJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgHEIpM (ORCPT
+        id S1728064AbgHEIqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 04:45:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56492 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbgHEIpH (ORCPT
+        Wed, 5 Aug 2020 04:46:00 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:59511 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725963AbgHEIp6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 04:45:07 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCE6FC061756
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 01:45:06 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id o25so13626494uar.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 01:45:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=o5bGfUkI0TnoG29U72+wYqyFdj5RODR1Ju6c+jix9G0=;
-        b=kf0kPEaVVqjO+tibXO/BrYddVQyTvWLUZ/24XavuNmMYdFT6EOU3UN6FYcxjZH3qwW
-         1NbL1hXeQvxv2HC+PZC40EULkvoRbTkdfu79/p4gZo3AqKSYl/VdcCXLKnTF0O8CDUik
-         M8vI9JmDpxfYcDW8JwkO/EsjsgLg1exmXaBS4VAWQdLepewlrOqU0uqSvBzuO4oav4ZR
-         /KZl/mgrSgkP1i0KZ8pZieCtdscu2Mbt/6Olxe8dZTpGEJmQiS5iiTUKlUXMwpH0BkQj
-         0KouMItchhDfWeLk4CZlydh7yomaBu6t4nqtICtNGC+uhuVoorrA29jAEIlONK9OAL2T
-         fIvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o5bGfUkI0TnoG29U72+wYqyFdj5RODR1Ju6c+jix9G0=;
-        b=s4T4B6kaaxor2yhrNKo3TkXaJX2UjXk7JcZCcYVlxBbutHTcAoLW6y2jRlk7OMEvpV
-         KJ7GeVXwxT/VNJaQtkANuE0wyNhhp1CDVjeJiJEUGA/b9o8J+YTHIJIfa8r+JzNYbAL1
-         tgFHJLU+t0ANed3k6Eta3Vp8fwFjiufyAKXTziI4fiKQ79yosInXuIV8pSwViLi/bonb
-         BkEPDIhVobra9AtnccRl97TTZT3xieHWl7ojllIXyUFvvAzBdCvTtYcX1O5VxDB1yFPu
-         X6MH2xKlnivDwYxqOXd08v0hlpddJsiVxEkhhHCODWaIz+C7twO5wHHGH9Y47azUOck6
-         UR2A==
-X-Gm-Message-State: AOAM530NDVYGMaXhZH8Ulz+erZ0cd0wSXRLC7/W64xd6NZ0WaVQr0gqp
-        83coT3eL3u7BpIfNDETbbYMDynZXvK4=
-X-Google-Smtp-Source: ABdhPJzLbAPQH5Q/dm4z3Je4Y9rkae8eqQq2/znXOYTIR+qx8uEePU5uvbzVrJDViqCC2mEx5Cu08w==
-X-Received: by 2002:ab0:312:: with SMTP id 18mr1273876uat.12.1596617105558;
-        Wed, 05 Aug 2020 01:45:05 -0700 (PDT)
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
-        by smtp.gmail.com with ESMTPSA id r35sm215288uad.9.2020.08.05.01.45.04
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2020 01:45:04 -0700 (PDT)
-Received: by mail-ua1-f41.google.com with SMTP id 4so8928722uav.8
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 01:45:04 -0700 (PDT)
-X-Received: by 2002:ab0:242:: with SMTP id 60mr1283334uas.37.1596617104040;
- Wed, 05 Aug 2020 01:45:04 -0700 (PDT)
+        Wed, 5 Aug 2020 04:45:58 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 3F3Wk0EzyuuXO3F3XkjXt6; Wed, 05 Aug 2020 10:45:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1596617155; bh=E3G95BLyAUJmVusMMfwPa0XjRXL7LH/JhsGHryHhhqk=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=NwhhO7yJ2w0SLPOlQCTV8HVXR3hQzzG8bBAd/ba0hx4r1MDZxJvLxJrSRfpFbHfJ7
+         pC6dvxXxPov+DBJUfiIWNvAsqzYcIJ+FbJCflEwJs+iuaTr48ZIZh/H3/cyA3bkypF
+         q0oOWJ7auAVO8hiOIxJtoC0ZH8EVug30KAGweyu3TZQaTC1wwdcY4UvY431Gr31zsD
+         y0mqAYuy0z3F4nWoSzVEr5DerN5Fb9m0ziv2r85J4ziv9NWwg03YPS88/Ii5HsmG/z
+         GCmVJGtat7FD67uivHpRlsQcjz3HXZwQyqvm1WdMea/12If0i3Xj4ftCviGB68E/7Q
+         0kXxxSW9KgoQQ==
+Subject: Re: [PATCH v11 00/28] Add support for mt2701 JPEG ENC support
+To:     Xia Jiang <xia.jiang@mediatek.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>, srv_heupstream@mediatek.com,
+        senozhatsky@chromium.org, mojahsu@chromium.org,
+        drinkcat@chromium.org, maoguang.meng@mediatek.com
+References: <20200804034102.22983-1-xia.jiang@mediatek.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <dc3d16ad-fd05-5bab-8a16-dc5ba0ef671c@xs4all.nl>
+Date:   Wed, 5 Aug 2020 10:45:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200804123012.378750-1-colin.king@canonical.com>
- <b99004ea-cd9d-bec3-5f9f-82dcb00a6284@gmail.com> <CA+FuTSd9K+s1rXUFpb_RWEC-uAgwU1Vz44zaUPaZK0cfsX4kwA@mail.gmail.com>
- <fc66cf3c-b4be-f098-3a2b-aef36b90835d@canonical.com>
-In-Reply-To: <fc66cf3c-b4be-f098-3a2b-aef36b90835d@canonical.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Wed, 5 Aug 2020 10:44:27 +0200
-X-Gmail-Original-Message-ID: <CA+FuTSfVOPiiBi2AcyiyNHoOpbKg4dPWCNvjg=-UuP+GA2c5FA@mail.gmail.com>
-Message-ID: <CA+FuTSfVOPiiBi2AcyiyNHoOpbKg4dPWCNvjg=-UuP+GA2c5FA@mail.gmail.com>
-Subject: Re: [PATCH] selftests/net: skip msg_zerocopy test if we have less
- than 4 CPUs
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Shuah Khan <shuah@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kernel-janitors@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200804034102.22983-1-xia.jiang@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfM7apDStT39H88fUqokBMwpoJPCF/emODIBQNG2aBDzuduKXhUGZyGxV4hNcIqRe1VY8xCHijxo80J9WV3GPg3QX8WtWlOWmC9OxmHAa8gSMTRS6zvb7
+ ozMn/nkVzm9eerHLW7F1evmUUnKxklzfb9jl06WuE5hFwg2X/aduIzDWnmnbkKIKCingeCHlQwMlNxCKP9ingl+Ho1ccKha9X76Dm27fef7U4vUPB3uPFRD3
+ SDFouRLttkjtidgZnIg7+2h0Qt5ka4rIOR3HqqIR29WRXwUw8RLN1e3tkPXiSUeuzMv3XPe6fzKB3xHKtkRu2duDB+P5G6dNv9oSC/QKiVZP8yzgEul/YhVX
+ BvBbD9au2S0ZEYAGwzBYPRqiDQzAy9l7PrUpmjXurd0Q8LQ5fpJoq7fSzegrIFAC2gw6EX6WqNF6PmJoP68nAPdOxxGudJ91X3LwXklUpt0q9q20LMPB+0WK
+ 0SY5EZREdv4xlEgOJg0MDJqp7UlUXsgYxldnQPQA92VNv9xnov6b/0HRUr4qdPSMFY8weKuspmmoT4Dg4AGosynjxE+rR9213yllcnkbGwMoQbjnMNc8eCNX
+ WOoVtGx2x10wTbPLrDekAhr2vEobzycrLDNtHMxrPFq270LiQuPfwsNAoViPVOwTylkn0UrSzhBM4+WQguWxwdaNxP+Hg6tNdYVuEMWh3i48n/K8CUckts1a
+ fOS/KoewWfa9D9N3Kh3xpLse7sadizs2u6VyNkoE3Bsb/WOivHbe7HA48IRSGg2VhFiuk3cK8zVtr53QTiBQRLygiLGf3PdhNRvC4APxE7dsDjo8Wn2j2W4E
+ SZvx5FEVMse3C1lVoDHYpiqWdypcxUl0nlvgxwFBTzMjTfYoE3rmE28QI++1Fg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 10:22 AM Colin Ian King <colin.king@canonical.com> wrote:
->
-> On 05/08/2020 09:06, Willem de Bruijn wrote:
-> > On Wed, Aug 5, 2020 at 2:54 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
-> >>
-> >>
-> >>
-> >> On 8/4/20 5:30 AM, Colin King wrote:
-> >>> From: Colin Ian King <colin.king@canonical.com>
-> >>>
-> >>> The current test will exit with a failure if it cannot set affinity on
-> >>> specific CPUs which is problematic when running this on single CPU
-> >>> systems. Add a check for the number of CPUs and skip the test if
-> >>> the CPU requirement is not met.
-> >>>
-> >>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> >>> ---
-> >>>  tools/testing/selftests/net/msg_zerocopy.sh | 5 +++++
-> >>>  1 file changed, 5 insertions(+)
-> >>>
-> >>> diff --git a/tools/testing/selftests/net/msg_zerocopy.sh b/tools/testing/selftests/net/msg_zerocopy.sh
-> >>> index 825ffec85cea..97bc527e1297 100755
-> >>> --- a/tools/testing/selftests/net/msg_zerocopy.sh
-> >>> +++ b/tools/testing/selftests/net/msg_zerocopy.sh
-> >>> @@ -21,6 +21,11 @@ readonly DADDR6='fd::2'
-> >>>
-> >>>  readonly path_sysctl_mem="net.core.optmem_max"
-> >>>
-> >>> +if [[ $(nproc) -lt 4 ]]; then
-> >>> +     echo "SKIP: test requires at least 4 CPUs"
-> >>> +     exit 4
-> >>> +fi
-> >>> +
-> >>>  # No arguments: automated test
-> >>>  if [[ "$#" -eq "0" ]]; then
-> >>>       $0 4 tcp -t 1
-> >>>
-> >>
-> >> Test explicitly uses CPU 2 and 3, right ?
-> >>
-> >> nproc could be 500, yet cpu 2 or 3 could be offline
-> >>
-> >> # cat /sys/devices/system/cpu/cpu3/online
-> >> 0
-> >> # echo $(nproc)
-> >> 71
-> >
-> > The cpu affinity is only set to bring some stability across runs.
-> >
-> > The test does not actually verify that a run with zerocopy is some
-> > factor faster than without, as that factor is hard to choose across
-> > all platforms. As a result the automated run mainly gives code coverage.
-> >
-> > It's preferable to always run. And on sched_setaffinity failure log a
-> > message about possible jitter and continue. I can send that patch, if
-> > the approach sounds good.
-> >
-> That's sounds preferable to my bad fix for sure :-)
+On 04/08/2020 05:40, Xia Jiang wrote:
+> This patchset add support for mt2701 JPEG ENC support.      
 
-Certainly not a bad fix! Thanks for addressing the issue. Alternative
-approach at
+I'm getting these compile warnings/errors:
 
-http://patchwork.ozlabs.org/project/netdev/patch/20200805084045.1549492-1-willemdebruijn.kernel@gmail.com/
+drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c: In function ‘mtk_jpeg_enc_device_run’:
+drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c:917:27: warning: variable ‘jpeg_src_buf’ set but not used [-Wunused-but-set-variable]
+
+  917 |  struct mtk_jpeg_src_buf *jpeg_src_buf;
+      |                           ^~~~~~~~~~~~
+
+It's indeed not used.
+
+drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c: In function ‘mtk_jpeg_suspend’:
+drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c:1482:2: error: implicit declaration of function ‘v4l2_m2m_suspend’; did you mean ‘v4l2_m2m_mmap’? [-Werror=implicit-function-declaration]
+
+ 1482 |  v4l2_m2m_suspend(jpeg->m2m_dev);
+      |  ^~~~~~~~~~~~~~~~
+      |  v4l2_m2m_mmap
+drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c: In function ‘mtk_jpeg_resume’:
+drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c:1495:2: error: implicit declaration of function ‘v4l2_m2m_resume’; did you mean ‘v4l2_m2m_release’? [-Werror=implicit-function-declaration]
+
+ 1495 |  v4l2_m2m_resume(jpeg->m2m_dev);
+      |  ^~~~~~~~~~~~~~~
+      |  v4l2_m2m_release
+
+This apparently relies on https://lore.kernel.org/linux-arm-kernel/20191204124732.10932-2-Jerry-Ch.chen@mediatek.com/
+
+Please add this patch to this series. Don't forget to add Tomasz' 'Reviewed-by' line.
+
+drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c: In function ‘mtk_jpeg_enc_g_selection’:
+drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c:525:8: warning: this statement may fall through [-Wimplicit-fallthrough=]
+
+  525 |   s->r = ctx->out_q.enc_crop_rect;
+      |   ~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c:526:2: note: here
+  526 |  case V4L2_SEL_TGT_CROP_BOUNDS:
+      |  ^~~~
+
+This is definitely wrong. A break is missing here.
+
+Regards,
+
+	Hans
