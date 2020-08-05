@@ -2,120 +2,120 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D780AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 512E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A844206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:29:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596655784;
-	bh=+gY4oOBJ8mrW6kXgW8BhqBGT43wWoNSlmR+GcLP1H94=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=iUwkg3meVGplb+b3MNRDzkoR1R0ytijtCGG737mlfkVBiFOPJEy4MH/j9E1Z7hOfu
-	 XjlJ8LX1ECGEnyvL9srGslgyog55sEITjQQx9RAxzwfoprMQhaE8xVG1SzGH0sEzc5
-	 WW92Bc1b5B487xHiNEXIzT162Pw6jJTtXxMHHK+U=
+	by mail.kernel.org (Postfix) with ESMTP id 10E272173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:29:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bw9i6jQe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbgHET3n (ORCPT
+        id S1728095AbgHET3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:29:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44024 "EHLO
+        Wed, 5 Aug 2020 15:29:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728587AbgHET3Z (ORCPT
+        with ESMTP id S1728698AbgHET31 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 15:29:25 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C9CDC061575
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 12:29:25 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id z14so11423990ljm.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 12:29:25 -0700 (PDT)
+        Wed, 5 Aug 2020 15:29:27 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3540FC06174A
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 12:29:27 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id qc22so32849667ejb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 12:29:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=oyP1mU6+ebwH2z4wx3gLMWWnEis6gU/VrLrd1AZyGlg=;
-        b=fhlYmL/3y0kHtYeNI3bs4iExuMdI3NUu+EGIEiYSvoTfiDoHjdisaOOXhNzoT6ZyHG
-         OOtMakr4cVU5Hpag9vrMwmhHolDGMxnAycaLSeCVrr7FdySR03Cx1kvgw+iXe19F2rNI
-         jxRORS0aBWPqFjspy7Ks+36oCD6BpLOSCabEU=
+        bh=C8b7ZxzAJUuZyOmA9rjQfMMfXWA2lApFCOKA99bteGU=;
+        b=Bw9i6jQewHTzmB9Yq437oKHeGjjYk3eso3TEcDin+YMuMrEwUmE4qW+bAiecA8zUNM
+         ymvphP49ZJbxIIi24GX7C7ww33liFUcm7Eotku3gMkceswdWwiQBt2ilH9uvE5Fm9eTz
+         eP6vQ1paIgiNfwyUvh9QqViYzHIn416iQShdYnf2UgiQfEvT4VtYrbGA649VuLIs8846
+         3VPjY6xeGv5YZIsi4uOWFCSkb18bMKfxNxBn32YSuE/+QvEnL6P7hi3Pve6SAw8TFF+B
+         w6zzsQlfC3fZn/XLgtWcMl3bG8QRc3hlZ28V2fmb3T8A4IFEHEehjjbCk92xHzzxk8FM
+         W2aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oyP1mU6+ebwH2z4wx3gLMWWnEis6gU/VrLrd1AZyGlg=;
-        b=AZzwZWiEKso2iv532QK7VeQqDKo//Tdf/llMf9NIye+mog0zw/fWE0zSBX/jhgDxVK
-         Ou1IKBqFqBejUxEmdX7lgYN9C9AZgXdz3bew08qwX2wu7aiymSABdG0OC8ucOG7c6kFg
-         N5t9CZrbTa/8iidvCN1RmfeYy1qoQKnVXX8xVuIm8+vuUJC3uQSJi1HfBJEV96LW2Vgk
-         t8mz4UwS1Nig3nRye2C5n6aKLtAzp9BGs1m+Q6ztFD+tUqnDJsXHyZCSIn6IMeROBCDy
-         /22GJZGdSLRLZ59sRMr5/eZKNOiMHv1DjsfDhx8oA1ZcvwPRT6pOx8vHU1lQOOV4HKkv
-         cSCQ==
-X-Gm-Message-State: AOAM533UWZ7UoayyqE2tKhk/Lf+49/Yx3nP8hFoZp7YC+5K5WfpsQHpc
-        3E824X5Oy6hxei6Au8oxvUdU5WIY3f0=
-X-Google-Smtp-Source: ABdhPJziMrIhvehoqJBjpubbj75FFYhoFbsWoryDNSKvQar+Cf3sphVMJRhuzt4A1+JYMO44MFJUZQ==
-X-Received: by 2002:a2e:8904:: with SMTP id d4mr2024937lji.400.1596655761953;
-        Wed, 05 Aug 2020 12:29:21 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id m12sm1261519ljh.127.2020.08.05.12.29.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2020 12:29:20 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id z14so11423866ljm.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 12:29:20 -0700 (PDT)
-X-Received: by 2002:a2e:7615:: with SMTP id r21mr2026657ljc.371.1596655760225;
- Wed, 05 Aug 2020 12:29:20 -0700 (PDT)
+        bh=C8b7ZxzAJUuZyOmA9rjQfMMfXWA2lApFCOKA99bteGU=;
+        b=HuEgQudBt0WplkH4ug5xIT2guS8XQj1TILpXlOZLZQpsZFvdvw+A8pezFTn5DlqS/s
+         0ycly8KEWfAt6dSJ+1Bjd0BIViWqiVZShXnGKSEOLE01eqdkmq/Zuz9tcQszfTxet+GP
+         +v1d+lRVsTcErZSpbCBYJOccIMR2N7OA9sf+uJAhp+PaSVtX/kYS7G+cTFrblen905Qg
+         yXb9NcGKkk49IgvgAZwYq44+9cPc+qjKSycZ9GyKyIys7cAqXLvJOKpV2FiS9+YTHjFB
+         bQjMNXQ4+gnmIEMJftoQ4RAE9DE4lj1xZ+/UifgeBULyo6ojMK1frAXa1D+d1x4xsU2V
+         9umg==
+X-Gm-Message-State: AOAM533eTPrvW3B5wKg50x1iOaq1TjwCO/Tc2aOIQVNoGt359hPJ9lJg
+        J5Bq4h+UPew6IXRHozX19RkJOGMDFwO0qNOjCOI=
+X-Google-Smtp-Source: ABdhPJz60WbPGbMHfR3RQgL76FbUYqmp10TXL0TN8L7qY7H7tnq96j0rDwz0F6U5yshkUojybqfHN7TqxU0c5GeRifk=
+X-Received: by 2002:a17:906:2ed1:: with SMTP id s17mr873983eji.52.1596655765954;
+ Wed, 05 Aug 2020 12:29:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200803140726.GA752014@infradead.org> <CAHk-=wg1h_XfPbXvisfAUsXU-WiOeCJDUibhxZGu=x9w-VKB0A@mail.gmail.com>
- <CAHk-=wg9dzJOkvysjgdHv5eFJU76EFAwCxNenRxTtq6VWof98Q@mail.gmail.com> <20200805082845.GA25876@infradead.org>
-In-Reply-To: <20200805082845.GA25876@infradead.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 5 Aug 2020 12:29:04 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgPwB3uWy9FVzD6yhVnDzY9fHth0WaQ0vqmRThhoU6Wrg@mail.gmail.com>
-Message-ID: <CAHk-=wgPwB3uWy9FVzD6yhVnDzY9fHth0WaQ0vqmRThhoU6Wrg@mail.gmail.com>
-Subject: Re: [GIT PULL] configfs updates for 5.9
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "Kai M??kisara" <Kai.Makisara@kolumbus.fi>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Joel Becker <jlbec@evilplan.org>,
+References: <CAK8P3a1vFJ+uUGPGifZGhECXvxA=2u745WrGNZb08s1nHkZQ9g@mail.gmail.com>
+ <20200805172746.GC1118@bug> <CAK8P3a2KnmDXYCyst15=kZWneDTMFAbz47F_TYnY_26+W4PM6A@mail.gmail.com>
+In-Reply-To: <CAK8P3a2KnmDXYCyst15=kZWneDTMFAbz47F_TYnY_26+W4PM6A@mail.gmail.com>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Wed, 5 Aug 2020 21:28:50 +0200
+Message-ID: <CAMS8qEVzCtxrH-K4U4_TeHi3RXDQ7UeGo+sVnB-HPS0Y+mju-w@mail.gmail.com>
+Subject: Re: [GIT PULL 0/5] ARM: SoC: changes for v5.9
+To:     Arnd Bergmann <arnd@arndb.de>
+List-Id: <soc.lore.kernel.org>
+Cc:     Pavel Machek <pavel@ucw.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Lenny Szubowicz <lszubowi@redhat.com>
+        SoC Team <soc@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 1:28 AM Christoph Hellwig <hch@infradead.org> wrote:
->
-> Yes, but this is a fundamental problem with the commit on close
-> model that the configfs binary attributes implement, and we have to
-> work around that somehow.  The current behavior is to entirely ignore
-> errors, which of course has major issues.
+Thanks for all the kind words, I really appreciate it.
 
-Ignoring errors is better than randomly not doing the commit at all,
-which is what that patch does.
+>My impression is that the newly added phones are still fairly rudimentary,
+>but some others that were added in the past releases have gotten
+>further. I don't know any details, but I've added Konrad to Cc, he can
+>comment on his work.
 
-> I guess the alternative might be to just commit on every ->flush
+Thanks for adding me. The Sony sdm630/6 phones are shaping up really
+well, but most of the work is not upstreamed yet mainly due to SMMU
+maintainers not liking Qualcomm code and looking for cleaner
+solutions. As time progresses, more things will see the light of the
+upstream. The current-ish progress can be seen on my github [1]. And
+much more is yet to come.
 
-That's how ->flush() is designed to be used, yes. It's also why it's
-named that way.
+Regarding msm8992/4, there is a need for the 20nm DSI PHY driver. It
+exists for every other gen of qcom SoCs since 2013, but due to low
+interest in these platforms, this specific one never got there. I
+tried emailing the person who wrote most of the present ones, but
+gmail told me the mail didn't exist :shrug:.
 
-It can obviously cause problems too, if you have multiple opens (ie
-dup/fork) and one file descriptor is closed while another is in the
-middle of a series of writes
+>> Should we have some kind of linux-phones mailing list? There is quite a lot of
+>> stuff common in phones.
 
-But honestly, if you do binary writes to sysfs, you should do them as
-one single write, and the flush function should take that mutex and
-then skip the flush if write_in_progress is true.
+>PostmarketOS is probably the right place to look for this.
 
-Because in *that* case, it has serialized with other writers and we
-know that those other writers will flush when closing, and there's no
-race.
+First of all: postmarketOS, not PostmarketOS :P
 
-You can still screw up by doing multiple independent writes and do s
-close() in between the writes, but at some point it becomes a "yeah,
-that's broken and nobody actually does that" issue.
+I would actually say that's incorrect. With the release of the
+PinePhone and the Librem 5, the Linux mobile community has entered its
+heyday and plenty mobile-oriented distributions have arisen (for
+example Mobian, Manjaro ARM, Pure OS-ARM etc.) and some have gotten
+more attention than before (think Ubuntu Touch, Maemo Leste). pmOS is
+only one of many.
 
-                Linus
+The current thing to do is every distro maintains their own kernel (or
+over 100 like in pmOS, which is terrible for the poor CI :/) and only
+a small percentage of patches end up being upstreamed for various
+reasons (clean-ness of the code, will of the maintainers, time
+constraints..). As time goes, we're gonna see more stuff being added.
+
+[1] https://github.com/konradybcio/linux/commits/58ninges_labs
+
+Konrad
