@@ -2,126 +2,164 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F44C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 00:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA262C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 00:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDB5E20738
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 00:54:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AowsasC1"
+	by mail.kernel.org (Postfix) with ESMTP id 9B15020738
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 00:59:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596589184;
+	bh=UkmSP1/gzVDZLMhX1opuIDre7K9FcheyRSPjB3OONZc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0mMOmhCmE24RhMZLal2y3IV9vvr2f3ArZidnZ7dMn8M5ImY/BtDwSm+pZmZuSKh8s
+	 7U5mgLo6DR05ETNqd//4KkzRVlifwuIg1NuAoITDE+hyTWvPe12+lqUT1/Xas427VT
+	 ACctzrb8f8nMspYs/UjbF6uEnLP29nHB7nkdAyFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgHEAyX (ORCPT
+        id S1726789AbgHEA7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 20:54:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40450 "EHLO
+        Tue, 4 Aug 2020 20:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgHEAyW (ORCPT
+        with ESMTP id S1726584AbgHEA7m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 20:54:22 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06F23C06174A;
-        Tue,  4 Aug 2020 17:54:21 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id l60so3565533pjb.3;
-        Tue, 04 Aug 2020 17:54:21 -0700 (PDT)
+        Tue, 4 Aug 2020 20:59:42 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D122BC06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 17:59:40 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id v12so15383144ljc.10
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 17:59:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BxG05DrFE72MOSGeh/nY3ptdaEd7/gUavlyqDnB6i8I=;
-        b=AowsasC1tnaoLsPE+JXPouJvv4SWJ8rby3ouB/3Lk3rA6Ad+K4X8QYIoew3qNP/CSH
-         c01KUTKd9ezV2iy1zV1NvrhEdyPZekjBx8GYYtTfk+302Q6BSur1QzeIu/6s/vzuUj2w
-         GyLbD/ZMYB+4YUy8w1l7ntsOL4B1s1am4vLLrJ3qBO/KKYS6e7GBJ1cGksgRp3ngMGiW
-         TP6XDk5wcK8Gu7WAaagVhn0mihANBOdE9ay1OWO+dS8k0RkSeBaYRBLug1+b0USPh2XN
-         WZaxI5XzWcODT3Sp8zBhnuigBT94g4om8oaax00jUWa/bFmW6y6GuOuKHl4q5iLOWD+E
-         wHGw==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3YYfu/xgqz693Pt83ni1NU1MOzFWnsY8KnwOFU/Zl6A=;
+        b=f1LzaY3GjRLDZfh/pp3L7AVVdORSAFkxKPjEHMAjL80Ldta1l+NmN2t1CgEtrONHX/
+         5EmF1CDUDw2K4dMeNGZqiu9wEFUjDbI7wGBuGYsY+EMRcOgeIQR2ShAbUxp6mfENVgKT
+         LWHdMODRUg+SWk/4f7SrbDA2DNN5fymN/yt+Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BxG05DrFE72MOSGeh/nY3ptdaEd7/gUavlyqDnB6i8I=;
-        b=gOJtqrarJaJrvwkhPtIA+F0dmy1OFPs++jAkz38DlX2biULwRm4uc1i3yK4dy+qdT/
-         kd2SJ6jxwqSBFCOnPpnzGhhMvXkfn9bPjIBWpokVT98GcIp5/YrMFGkrkaiJ+5rruxdm
-         D7JrUqLo9UIBhan2ncdrPniXRzQOBOl31FPD3Z7IW9ar1bzOk3twMRWFtiKYWNnI4xLg
-         k4LqrZxuxq0uPgfHkvb69oHUej6c/eKBCm0Qx3q6HOwkIT1uwEd/PzJ4u1apPL7L1jHZ
-         77oqrWrY+B301WlbWzHq7z8jG4h/bzAxhBiVlbUvxJfAy8+DVOJcQvXcbcDkzmo5XfeI
-         5HRA==
-X-Gm-Message-State: AOAM530XqK8tUmG4e6CbWr1qMnyqtdFD82Md//NCbjAgrAMlZ80hDekX
-        1n9FJehjVvRebislRSM6KgujBWgi
-X-Google-Smtp-Source: ABdhPJxr0UjlZMG0OjFUlayZYLfycyN2ymZAc4EBOQ7kJ4SMuC8oXoDn0GJiozFWRN8ChOO0WI3cDg==
-X-Received: by 2002:a17:902:bd01:: with SMTP id p1mr843670pls.25.1596588861126;
-        Tue, 04 Aug 2020 17:54:21 -0700 (PDT)
-Received: from [10.1.10.11] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id s61sm397343pjb.57.2020.08.04.17.54.19
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3YYfu/xgqz693Pt83ni1NU1MOzFWnsY8KnwOFU/Zl6A=;
+        b=SlpeRHDyy+y4PZDZ1xZ3jS5DKeiZl+zAoFngx64EulQpR2TmCeBfzQn6Qg7BYpCCkb
+         58SdEvP/KYmSylnYEYFxlgTGixXvPtlnzVob9oOqxZZ9RxJQkDR+4p+3c+s+Ex8Vzo0o
+         sv/M7It+4XSUGetDFpektOzL4QOFti09ugOpThqP3NU/RYtKewrY3PrWRxWmQYZG6CPV
+         AiMXzewAnqhA1gLYRnHSSJM3+D7zlEuYIAR84RmFkF1if/5+qk8JZaVpsOfJnQLGjXIm
+         Y2+trZSqoLJhG7hkpMBtJu7JCn1upm8V6inqi6TrYea7x2tsjYndfIcRyn628vNHw3eR
+         MGRQ==
+X-Gm-Message-State: AOAM533t+5vha2hRr6qyHY2CZrtZS+R/7xjXU2oKIP6odO4QkMGTn5Og
+        VfHpYH4a5ZmjPCknQgFZOkJjXdYtz3U=
+X-Google-Smtp-Source: ABdhPJytSBE+2ViJcRICcnyMb7Z6rHFN2nTiM0WMD3WFqRdt5ejRaHYcKllN6GKut6gwoDDXykSVgA==
+X-Received: by 2002:a05:651c:1b4:: with SMTP id c20mr195016ljn.432.1596589177048;
+        Tue, 04 Aug 2020 17:59:37 -0700 (PDT)
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
+        by smtp.gmail.com with ESMTPSA id 72sm303135lfh.97.2020.08.04.17.59.35
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Aug 2020 17:54:20 -0700 (PDT)
-Subject: Re: [PATCH] selftests/net: skip msg_zerocopy test if we have less
- than 4 CPUs
-To:     Colin King <colin.king@canonical.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200804123012.378750-1-colin.king@canonical.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <b99004ea-cd9d-bec3-5f9f-82dcb00a6284@gmail.com>
-Date:   Tue, 4 Aug 2020 17:54:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 04 Aug 2020 17:59:36 -0700 (PDT)
+Received: by mail-lj1-f173.google.com with SMTP id t23so22198820ljc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 17:59:35 -0700 (PDT)
+X-Received: by 2002:a2e:b008:: with SMTP id y8mr168790ljk.421.1596589175449;
+ Tue, 04 Aug 2020 17:59:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200804123012.378750-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200803140726.GA752014@infradead.org> <CAHk-=wg1h_XfPbXvisfAUsXU-WiOeCJDUibhxZGu=x9w-VKB0A@mail.gmail.com>
+In-Reply-To: <CAHk-=wg1h_XfPbXvisfAUsXU-WiOeCJDUibhxZGu=x9w-VKB0A@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 4 Aug 2020 17:59:19 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg9dzJOkvysjgdHv5eFJU76EFAwCxNenRxTtq6VWof98Q@mail.gmail.com>
+Message-ID: <CAHk-=wg9dzJOkvysjgdHv5eFJU76EFAwCxNenRxTtq6VWof98Q@mail.gmail.com>
+Subject: Re: [GIT PULL] configfs updates for 5.9
+To:     Christoph Hellwig <hch@infradead.org>,
+        =?UTF-8?Q?Kai_M=C3=A4kisara?= <Kai.Makisara@kolumbus.fi>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc:     Joel Becker <jlbec@evilplan.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 4, 2020 at 5:27 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> The commit is completely confused and wrong.
+>
+> In particular, this part:
+>
+> +       /* Only commit the data if no more shared refs to file */
+> +       if (file_count(file) > 1)
+> +               return 0;
+>
+> is bogus and prone to races, meaning that if there are multiple
+> openers, *none* of them flush.
 
+Side note: this made me worry that this is some kind of pattern, so I
+started grepping.
 
-On 8/4/20 5:30 AM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The current test will exit with a failure if it cannot set affinity on
-> specific CPUs which is problematic when running this on single CPU
-> systems. Add a check for the number of CPUs and skip the test if
-> the CPU requirement is not met.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  tools/testing/selftests/net/msg_zerocopy.sh | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/net/msg_zerocopy.sh b/tools/testing/selftests/net/msg_zerocopy.sh
-> index 825ffec85cea..97bc527e1297 100755
-> --- a/tools/testing/selftests/net/msg_zerocopy.sh
-> +++ b/tools/testing/selftests/net/msg_zerocopy.sh
-> @@ -21,6 +21,11 @@ readonly DADDR6='fd::2'
->  
->  readonly path_sysctl_mem="net.core.optmem_max"
->  
-> +if [[ $(nproc) -lt 4 ]]; then
-> +	echo "SKIP: test requires at least 4 CPUs"
-> +	exit 4
-> +fi
-> +
->  # No arguments: automated test
->  if [[ "$#" -eq "0" ]]; then
->  	$0 4 tcp -t 1
-> 
+It isn't, thankfully. But I do notice that st_flush() has the same
+bug, probably going back to forever.
 
-Test explicitly uses CPU 2 and 3, right ?
+In fact, that bogus use may be going back so far in time that it might
+even have been almost ok. Back when we had the big kernel lock, the
+fundamental race wasn't so fundamental, although it is still true that
+it could possibly have been mixed up by other non-file references (ie
+code sequences doing get_file() on it without ever doing a real
+open/close).
 
-nproc could be 500, yet cpu 2 or 3 could be offline
+I have to say, I cannot find it in myself to care about SCSI tapes and
+possible races with multiple concurrent openers or whatever.
 
-# cat /sys/devices/system/cpu/cpu3/online
-0
-# echo $(nproc)
-71
+So I'm cc'ing the appropriate authorities, but I don't really expect
+the bogus code in st.c to go away.
+
+It _is_ very wrong, though, and I very much don't want to have new
+cases of that wrongness.
+
+For another example of where "file_count()" isn't reliable or useful
+at close() time, you can have any of mmap/io_uring/proc and probably a
+number of other cases do get_file/put_file to get a refcount on the
+file that can remain active even after the last user has actually
+closed it.
+
+And yeah, maybe mmap() doesn't end up being relevant for these file
+descriptors, but things like /proc/*/fdinfo/* are possible for all
+files, and do that refcount increase exactly to avoid races.
+
+So again, doing that
+
+        if (file_count(file) > 1)
+
+kind of check is very very wrong even outside of the fundamental race
+with two close() calls at the same time.
+
+It is a very dangerous pattern, because it likely works in practice
+during testing, and looks like it might work.
+
+But it is completely and unfixably wrong.
+
+Again, the only reliable way to do that "last close" is "->release()",
+but you will never get errors from that, since (for all the same
+reasons) it might not even be done by a close. The last releaser of a
+file descriptor might be that mmap/io_uring/proc case now releasing
+the no longer used file, possibly long after the last "close()" call
+has happened.
+
+One acceptable half-way measure *may* be
+
+ - do the flush with the above bogus test at ->flush() time, knowing
+it might never trigger at all
+
+ - do the flush *again* at ->release() time, in case it didn't trigger
+
+ - add a big comment to the flush-time case to show you understand the
+issue, and understand
+
+but I'd discourage it because of how unreliable it is.
+
+              Linus
