@@ -2,202 +2,90 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7787BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C744C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 537FF20842
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ED862076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:56:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJ7L5pli"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cZHcYmzE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728038AbgHET4P (ORCPT
+        id S1729151AbgHET41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:56:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46314 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727104AbgHEQqQ (ORCPT
+        Wed, 5 Aug 2020 15:56:27 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33042 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727978AbgHEQoW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:46:16 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D984AC034614
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 05:49:45 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a14so40608189wra.5
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 05:49:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=NGh3qV9bnhStjMJvm5/xoTqyt0oZ80U2JyhykslboTM=;
-        b=dJ7L5plirWRryjsL0w+sJdTROVivbDeTQAkwANWl4dPDxYJDMr8xmxqugElTamdk/C
-         DIp8qiSY4E3w3uk6Q/hZNyz+5z9YF/9oVzR8hMoB1YUX9JtDvk01+bBwbLwzmYgya+sT
-         fpt4pVhtNx8pzHiLR8591sACDg7U9ccxPEVTi57bFi/0vd3iT7S7IG1UjjrB9nLrPCrQ
-         0ql8jUDRfEP/FWyrgGB/Tktb9p+8Z9BQHnVBvjgwN8vjgDkpIQjJPRYsV+5DFAuo7JjC
-         vLBE2Yf/p3sAo9P8t+kXMtFUq8lpczXR0FoAZkb2nyAI5aVwXJNebMCqJVNu1k7AW45B
-         g7bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=NGh3qV9bnhStjMJvm5/xoTqyt0oZ80U2JyhykslboTM=;
-        b=q/WzpOi6rL9qynj6MBmjLhHipe37PQq5s0Ow2bsZH+Rfr8fZXdg/RoSHuOj2yAKuNC
-         Ob7DiktZqo9ElFtCT+GYZGQqyDI8S1vfcLMkY7QDX5a0l2+bLf/LNm38ErnUI5tGfcOT
-         +7cyLzLPZFav1ZI9Ylrrm1s3PztqZyT1EgtD28+ULbYlmLHiLHwbWjBa0Q6DCJd+pkRZ
-         l7IlBx/vddrTOQM/BPgDXuxh1sDQ9RIfIIUPIR9xabhYUFNVdB6HoebX25gD3xgFiHTH
-         zPUep3Nv+331A+Eu8Yq8GRpT2AUmBcfnyEzrqNWhg9tBQXTgovIexK+OvWS5iI9VkvOl
-         FH9w==
-X-Gm-Message-State: AOAM53183zjHOrDAEVb+jKgQXuMdfy8fX365Tr8V70xYP5UgSjR3zmBA
-        f2O7vTcoFfgIC4cY+7gckyDZ5vMJ
-X-Google-Smtp-Source: ABdhPJy7mglUaNyadtCneLJtoiOr+c9efaQCWD3ufWo36Iu3UnV+qw5Tzxf4W4mHSIiRQbZqzRKXKA==
-X-Received: by 2002:a5d:494b:: with SMTP id r11mr2813496wrs.419.1596631783888;
-        Wed, 05 Aug 2020 05:49:43 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
-        by smtp.gmail.com with ESMTPSA id 33sm2713525wri.16.2020.08.05.05.49.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 05:49:42 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
-Cc:     Ofir Bitton <obitton@habana.ai>
-Subject: [PATCH 1/2] habanalabs: PCIe Advanced Error Reporting support
-Date:   Wed,  5 Aug 2020 15:49:38 +0300
-Message-Id: <20200805124939.13935-1-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 5 Aug 2020 12:44:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596645859;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ymSp4PIW1iklpKRZ7s5LPng5aoYV9shgptoEdnu23SM=;
+        b=cZHcYmzE9r/tv3b5wNvyxrcDtlq/aaTlJVxzu1IOxFW+CWRiWP3lAopcjTEGuEPhkCUQLW
+        LQsgFnpqaOdu+AsTu1x+NSNfFbM5+XTmb5ovbZJr2efWifiYnl+6ev1S8ei01jLcQJsGSA
+        dlOjULjDpMp2wwb8Bh4H4BWtdphvFzs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-471-4W7hKjd4NCeORz2QHj-HnQ-1; Wed, 05 Aug 2020 12:44:17 -0400
+X-MC-Unique: 4W7hKjd4NCeORz2QHj-HnQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4333957;
+        Wed,  5 Aug 2020 16:44:15 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CDCF65F202;
+        Wed,  5 Aug 2020 16:44:12 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200804140558.GF32719@miu.piliscsaba.redhat.com>
+References: <20200804140558.GF32719@miu.piliscsaba.redhat.com> <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk> <159646191446.1784947.11228235431863356055.stgit@warthog.procyon.org.uk>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
+        torvalds@linux-foundation.org, raven@themaw.net,
+        mszeredi@redhat.com, christian@brauner.io, jannh@google.com,
+        darrick.wong@oracle.com, kzak@redhat.com, jlayton@redhat.com,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 15/18] fsinfo: Add an attribute that lists all the visible mounts in a namespace [ver #21]
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2325154.1596645852.1@warthog.procyon.org.uk>
+Date:   Wed, 05 Aug 2020 17:44:12 +0100
+Message-ID: <2325155.1596645852@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ofir Bitton <obitton@habana.ai>
+Miklos Szeredi <miklos@szeredi.hu> wrote:
 
-driver will now get notified upon any PCI error occurred and
-will respond according to the severity of the error.
+> > where each element contains a once-in-a-system-lifetime unique ID, the
+> > mount ID (which may get reused), the parent mount ID and sums of the
+> > notification/change counters for the mount and its superblock.
+> 
+> The change counters are currently conditional on CONFIG_MOUNT_NOTIFICATIONS.
+> Is this is intentional?
 
-Signed-off-by: Ofir Bitton <obitton@habana.ai>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
----
- .../misc/habanalabs/common/habanalabs_drv.c   | 76 ++++++++++++++++++-
- 1 file changed, 75 insertions(+), 1 deletion(-)
+Yeah - the counters aren't driven unless CONFIG_MOUNT_NOTIFICATIONS=y.
 
-diff --git a/drivers/misc/habanalabs/common/habanalabs_drv.c b/drivers/misc/habanalabs/common/habanalabs_drv.c
-index c6b31e93fb5e..a36e33c58d37 100644
---- a/drivers/misc/habanalabs/common/habanalabs_drv.c
-+++ b/drivers/misc/habanalabs/common/habanalabs_drv.c
-@@ -11,6 +11,7 @@
- #include "habanalabs.h"
- 
- #include <linux/pci.h>
-+#include <linux/aer.h>
- #include <linux/module.h>
- 
- #define HL_DRIVER_AUTHOR	"HabanaLabs Kernel Driver Team"
-@@ -408,6 +409,8 @@ static int hl_pci_probe(struct pci_dev *pdev,
- 
- 	pci_set_drvdata(pdev, hdev);
- 
-+	pci_enable_pcie_error_reporting(pdev);
-+
- 	rc = hl_device_init(hdev, hl_class);
- 	if (rc) {
- 		dev_err(&pdev->dev, "Fatal error during habanalabs device init\n");
-@@ -440,22 +443,93 @@ static void hl_pci_remove(struct pci_dev *pdev)
- 		return;
- 
- 	hl_device_fini(hdev);
-+	pci_disable_pcie_error_reporting(pdev);
- 	pci_set_drvdata(pdev, NULL);
--
- 	destroy_hdev(hdev);
- }
- 
-+/**
-+ * hl_pci_err_detected - a PCI bus error detected on this device
-+ *
-+ * @pdev: pointer to pci device
-+ * @err: PCI error type
-+ *
-+ * Called by the PCI subsystem whenever a non-correctable
-+ * PCI bus error is detected
-+ */
-+static pci_ers_result_t
-+hl_pci_err_detected(struct pci_dev *pdev, enum pci_channel_state state)
-+{
-+	struct hl_device *hdev = pci_get_drvdata(pdev);
-+	enum pci_ers_result result;
-+
-+	switch (state) {
-+	case pci_channel_io_normal:
-+		return PCI_ERS_RESULT_CAN_RECOVER;
-+
-+	case pci_channel_io_frozen:
-+		dev_warn(hdev->dev, "frozen state error detected\n");
-+		result = PCI_ERS_RESULT_NEED_RESET;
-+		break;
-+
-+	case pci_channel_io_perm_failure:
-+		dev_warn(hdev->dev, "failure state error detected\n");
-+		result = PCI_ERS_RESULT_DISCONNECT;
-+		break;
-+
-+	default:
-+		result = PCI_ERS_RESULT_NONE;
-+	}
-+
-+	hdev->asic_funcs->halt_engines(hdev, true);
-+
-+	return result;
-+}
-+
-+/**
-+ * hl_pci_err_resume - resume after a PCI slot reset
-+ *
-+ * @pdev: pointer to pci device
-+ *
-+ */
-+static void hl_pci_err_resume(struct pci_dev *pdev)
-+{
-+	struct hl_device *hdev = pci_get_drvdata(pdev);
-+
-+	dev_warn(hdev->dev, "Resuming device after PCI slot reset\n");
-+	hl_device_resume(hdev);
-+}
-+
-+/**
-+ * hl_pci_err_slot_reset - a PCI slot reset has just happened
-+ *
-+ * @pdev: pointer to pci device
-+ *
-+ * Determine if the driver can recover from the PCI slot reset
-+ */
-+static pci_ers_result_t hl_pci_err_slot_reset(struct pci_dev *pdev)
-+{
-+	return PCI_ERS_RESULT_RECOVERED;
-+}
-+
- static const struct dev_pm_ops hl_pm_ops = {
- 	.suspend = hl_pmops_suspend,
- 	.resume = hl_pmops_resume,
- };
- 
-+static const struct pci_error_handlers hl_pci_err_handler = {
-+	.error_detected = hl_pci_err_detected,
-+	.slot_reset = hl_pci_err_slot_reset,
-+	.resume = hl_pci_err_resume,
-+};
-+
- static struct pci_driver hl_pci_driver = {
- 	.name = HL_NAME,
- 	.id_table = ids,
- 	.probe = hl_pci_probe,
- 	.remove = hl_pci_remove,
- 	.driver.pm = &hl_pm_ops,
-+	.err_handler = &hl_pci_err_handler,
- };
- 
- /*
--- 
-2.17.1
+I could perhaps make it so they're driven in both cases, but driving the
+in-subtree counter is somewhat tied up in the notification posting.
+
+This is something that can be fixed after this patchset is taken - if it is
+taken since that doesn't change the UAPI.
+
+David
 
