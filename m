@@ -5,22 +5,22 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA39C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5060FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6194C2075D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12110206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:28:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L00RFt4h"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H3HlkJLA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728919AbgHET2s (ORCPT
+        id S1728935AbgHET2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:28:48 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54994 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728599AbgHERL0 (ORCPT
+        Wed, 5 Aug 2020 15:28:52 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22595 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728401AbgHERL0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 13:11:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
@@ -28,49 +28,47 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=nsePUp5bwDzPkeGMt9DhuoyzhxlPvsYKTxQ+QKtzY8M=;
-        b=L00RFt4hyZphKEkzOLKgLtwumDIYN0ka0yiSzXi3Lxkxo0DUCDZZ6eKg3TGRf6zfhXvtWR
-        7gKepz9QStTnZtbGqHcA+9dtlFWmw3DOgS1X9FDgfroL9Vz2G3Aanpvhw7LL70/NH0wb8d
-        n/mECgc9MFl+7dZNNT+mCUELluNK8hg=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-167-qXjyYV8GOJ63X808JCdliQ-1; Wed, 05 Aug 2020 09:45:04 -0400
-X-MC-Unique: qXjyYV8GOJ63X808JCdliQ-1
-Received: by mail-wr1-f72.google.com with SMTP id b13so10876161wrq.19
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:45:04 -0700 (PDT)
+        bh=7dHJWpRpe+SGCeKRCL7RrX1ymnMkDIH+g5Ri3pUQbvw=;
+        b=H3HlkJLAUu8Lj6wSmGqSXHK1Z16X0UOdIw6G5//tPXHPiA/SYC2lPKex5611TUcNN8i41J
+        Gq/SmKgA3bw4tjcV4VLfffguIrGEL6c6HidkyuhRyIcHOBjoB6jcrLJJKK9oboLJdi3rH7
+        tAIs8JNJSIgsS/M2cv0TuMf2qu0dX70=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-492-RB_ERJMfOrmN89RTL3nP2g-1; Wed, 05 Aug 2020 09:44:38 -0400
+X-MC-Unique: RB_ERJMfOrmN89RTL3nP2g-1
+Received: by mail-wm1-f71.google.com with SMTP id c184so1973887wme.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:44:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=nsePUp5bwDzPkeGMt9DhuoyzhxlPvsYKTxQ+QKtzY8M=;
-        b=dJLeetCIT4mmlidH0LsgEQG4gbOUXaLw0e/e/vr9EwxkWUGAXEGkCVCYq8wrS9Ow4j
-         KzTd7T9FayoZB7Db+LO3XtozH+mgpTamIjaeDW/USAvBtckaQvK4B7ZTwUC7YglrqIKx
-         hMVdsQ4cVvmLQap+JeDQN7c6KQHWOUvULsdUoIKhTsPElikuv49GfU5IWYfgIzOdAPnI
-         wTO78MZjFnmLUNd6nSlJ2sqLL02+9VATxEzDQi8bvSx8ioHlILzHeewx0WiWdXDWgqlE
-         pC1tNUOsFgcEqstXHcKjiL8p3vC4Xr0cYbZBcC9NFEwwxN+6U1i+26myo5YEejQhwCTI
-         TjMw==
-X-Gm-Message-State: AOAM533ziHBw5S1Ct5sKP+IEhx1WA2kq/i9ERs1thcxgM3DAqKSpDq9T
-        LvhmQz9j/6VxBiwdRA9nhkR1dCmS1grCt3dNiWVeaQoqDBW5EuNt0+UmmfPaV/jfCCJgU12e+2y
-        jZ2xI0/dAzGM1+Iyr+tHWpxxy
-X-Received: by 2002:a1c:96c5:: with SMTP id y188mr3540959wmd.72.1596635102978;
-        Wed, 05 Aug 2020 06:45:02 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyhLoRx7IzuivQlViG9F0fDgIgMdjMVV9PC0dBe4LfMZpIiYNNk/XwHbeS7FyfdebXIBXrqkg==
-X-Received: by 2002:a1c:96c5:: with SMTP id y188mr3540940wmd.72.1596635102770;
-        Wed, 05 Aug 2020 06:45:02 -0700 (PDT)
-Received: from redhat.com (bzq-79-178-123-8.red.bezeqint.net. [79.178.123.8])
-        by smtp.gmail.com with ESMTPSA id e16sm2907812wrx.30.2020.08.05.06.45.01
+        bh=7dHJWpRpe+SGCeKRCL7RrX1ymnMkDIH+g5Ri3pUQbvw=;
+        b=UwneuivqsJqQCNTRKIdODC/cBCSA3Y9zcJS35mowRVCuzdjlkYV3hvydqF1Gulh1I/
+         sPLnL+SRrxL7/jBzIwjRC+YTRlAzV+rtzOFQ8xJPvhG62ID3eRrqU9bYBm/OmYY8ZBcT
+         MIXnt2h+Nm0mXM+aWWsp1NBC3TakWc4Boy/1Z2NVt1lzPPVBwOhlFpxFofLe1Z1Bb4ag
+         WhgnVvBWpEdk6ig18fyQr6G3ovite1VH0oCnEIT2Kfly7Getr0Ey0b5cir1a1sol29qh
+         mlxPRzVyDaErwKdwXEU9xkcfsdVI3jG9jnqF4QOJ4p2IvoppOieMB7htukS3mD/qKnfz
+         zxlw==
+X-Gm-Message-State: AOAM530d++m+h80cWq7FR1PWe/nOg2hOEaI3GO33VaCXQF1wiCkgme1i
+        xEev9xjOxL9InPies5Fif1XUhibRjCe8zmyhySQT37YYHqi2EyB0MjGUtsc7ZoMBbelV8qFojWH
+        CHbg5aSPRsZfRwnHKVtOgMhTr
+X-Received: by 2002:adf:b441:: with SMTP id v1mr2885514wrd.61.1596635076657;
+        Wed, 05 Aug 2020 06:44:36 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwQGdbl54JNx1KvL4TiD4XZk3a0G829i0AZqCQq/0GXJ2UmmPCnIhNjqrC/ljNwKlqjr429kg==
+X-Received: by 2002:adf:b441:: with SMTP id v1mr2885496wrd.61.1596635076408;
+        Wed, 05 Aug 2020 06:44:36 -0700 (PDT)
+Received: from redhat.com ([192.117.173.58])
+        by smtp.gmail.com with ESMTPSA id o2sm3136755wrh.70.2020.08.05.06.44.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 06:45:02 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 09:45:00 -0400
+        Wed, 05 Aug 2020 06:44:35 -0700 (PDT)
+Date:   Wed, 5 Aug 2020 09:44:33 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Cornelia Huck <cohuck@redhat.com>,
+Cc:     David Hildenbrand <david@redhat.com>,
         Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: [PATCH v3 38/38] virtio_net: use LE accessors for speed/duplex
-Message-ID: <20200805134226.1106164-39-mst@redhat.com>
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v3 29/38] virtio_balloon: use LE config space accesses
+Message-ID: <20200805134226.1106164-30-mst@redhat.com>
 References: <20200805134226.1106164-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -83,53 +81,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Speed and duplex config fields depend on VIRTIO_NET_F_SPEED_DUPLEX
-which being 63>31 depends on VIRTIO_F_VERSION_1.
+Balloon is LE, it's cleaner to access it as such directly.
 
-Accordingly, use LE accessors for these fields.
-
-Reported-by: Cornelia Huck <cohuck@redhat.com>
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- drivers/net/virtio_net.c        | 9 +++++----
- include/uapi/linux/virtio_net.h | 2 +-
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ drivers/virtio/virtio_balloon.c | 26 +++++++++-----------------
+ 1 file changed, 9 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-index ba38765dc490..0934b1ec5320 100644
---- a/drivers/net/virtio_net.c
-+++ b/drivers/net/virtio_net.c
-@@ -2264,12 +2264,13 @@ static void virtnet_update_settings(struct virtnet_info *vi)
- 	if (!virtio_has_feature(vi->vdev, VIRTIO_NET_F_SPEED_DUPLEX))
- 		return;
+diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+index 8bc1704ffdf3..31cc97f2f515 100644
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -398,12 +398,9 @@ static inline s64 towards_target(struct virtio_balloon *vb)
+ 	s64 target;
+ 	u32 num_pages;
  
--	speed = virtio_cread32(vi->vdev, offsetof(struct virtio_net_config,
--						  speed));
-+	virtio_cread_le(vi->vdev, struct virtio_net_config, speed, &speed);
-+
- 	if (ethtool_validate_speed(speed))
- 		vi->speed = speed;
--	duplex = virtio_cread8(vi->vdev, offsetof(struct virtio_net_config,
--						  duplex));
-+
-+	virtio_cread_le(vi->vdev, struct virtio_net_config, duplex, &duplex);
-+
- 	if (ethtool_validate_duplex(duplex))
- 		vi->duplex = duplex;
+-	virtio_cread(vb->vdev, struct virtio_balloon_config, num_pages,
+-		     &num_pages);
+-
+ 	/* Legacy balloon config space is LE, unlike all other devices. */
+-	if (!virtio_has_feature(vb->vdev, VIRTIO_F_VERSION_1))
+-		num_pages = le32_to_cpu((__force __le32)num_pages);
++	virtio_cread_le(vb->vdev, struct virtio_balloon_config, num_pages,
++			&num_pages);
+ 
+ 	target = num_pages;
+ 	return target - vb->num_pages;
+@@ -462,11 +459,8 @@ static void update_balloon_size(struct virtio_balloon *vb)
+ 	u32 actual = vb->num_pages;
+ 
+ 	/* Legacy balloon config space is LE, unlike all other devices. */
+-	if (!virtio_has_feature(vb->vdev, VIRTIO_F_VERSION_1))
+-		actual = (__force u32)cpu_to_le32(actual);
+-
+-	virtio_cwrite(vb->vdev, struct virtio_balloon_config, actual,
+-		      &actual);
++	virtio_cwrite_le(vb->vdev, struct virtio_balloon_config, actual,
++			 &actual);
  }
-diff --git a/include/uapi/linux/virtio_net.h b/include/uapi/linux/virtio_net.h
-index 27d996f29dd1..3f55a4215f11 100644
---- a/include/uapi/linux/virtio_net.h
-+++ b/include/uapi/linux/virtio_net.h
-@@ -99,7 +99,7 @@ struct virtio_net_config {
- 	 * speed, in units of 1Mb. All values 0 to INT_MAX are legal.
- 	 * Any other value stands for unknown.
- 	 */
--	__virtio32 speed;
-+	__le32 speed;
- 	/*
- 	 * 0x00 - half duplex
- 	 * 0x01 - full duplex
+ 
+ static void update_balloon_stats_func(struct work_struct *work)
+@@ -579,12 +573,10 @@ static u32 virtio_balloon_cmd_id_received(struct virtio_balloon *vb)
+ {
+ 	if (test_and_clear_bit(VIRTIO_BALLOON_CONFIG_READ_CMD_ID,
+ 			       &vb->config_read_bitmap)) {
+-		virtio_cread(vb->vdev, struct virtio_balloon_config,
+-			     free_page_hint_cmd_id,
+-			     &vb->cmd_id_received_cache);
+ 		/* Legacy balloon config space is LE, unlike all other devices. */
+-		if (!virtio_has_feature(vb->vdev, VIRTIO_F_VERSION_1))
+-			vb->cmd_id_received_cache = le32_to_cpu((__force __le32)vb->cmd_id_received_cache);
++		virtio_cread_le(vb->vdev, struct virtio_balloon_config,
++				free_page_hint_cmd_id,
++				&vb->cmd_id_received_cache);
+ 	}
+ 
+ 	return vb->cmd_id_received_cache;
+@@ -987,8 +979,8 @@ static int virtballoon_probe(struct virtio_device *vdev)
+ 		if (!want_init_on_free())
+ 			memset(&poison_val, PAGE_POISON, sizeof(poison_val));
+ 
+-		virtio_cwrite(vb->vdev, struct virtio_balloon_config,
+-			      poison_val, &poison_val);
++		virtio_cwrite_le(vb->vdev, struct virtio_balloon_config,
++				 poison_val, &poison_val);
+ 	}
+ 
+ 	vb->pr_dev_info.report = virtballoon_free_page_report;
 -- 
 MST
 
