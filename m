@@ -2,126 +2,145 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE2CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E59DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57B5B22B45
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:32:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="V022I0oi"
+	by mail.kernel.org (Postfix) with ESMTP id 4B207204EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:32:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgHEGcu (ORCPT
+        id S1728113AbgHEGcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 02:32:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726377AbgHEGct (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 02:32:49 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CA5CC06174A;
-        Tue,  4 Aug 2020 23:32:49 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BM1yR38vWz9sRK;
-        Wed,  5 Aug 2020 16:32:47 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596609167;
-        bh=pPI7gCgrBz7AyUXYoBTt1dPlJ+UPryDQtNyUOo0kzBE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=V022I0oiNIdRxouV0DOkDZmA6kqsm6k9i41tuhjoYGvVnWDaYUfLxWWWbKGqqasZ8
-         SpByg9VwBUTZ1xY0DZ905EleDGw4dleOqiYsT17S9Vg8pR0FREXG4QG68TFPZkCebI
-         8bCN0I+U1K34gzJDYfcJXGQkXOMGefDkxViWBJ3gK9aUdV7xrxmvnq/oZtSuD/lFre
-         nsbMnOk+X4qTWs19b45Z7I9KyGwx01GikcCtpHWaGEj5KnHQzbCsinpRwLCyeDMzGh
-         wQPBN3OEENDAbHSseM5qt1ngG1fbaEVWI77avDRteAOTb6xfiG/NgUVP2iQkUSl4v4
-         LfTbnBa0xaT6g==
-Date:   Wed, 5 Aug 2020 16:32:46 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the fsinfo tree with the kbuid tree
-Message-ID: <20200805163246.4df09c31@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/AkSKNCgqLbvRaMW+eA8Jnfd";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Wed, 5 Aug 2020 02:32:53 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:35786 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726232AbgHEGcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 02:32:51 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C42C62010A4;
+        Wed,  5 Aug 2020 08:32:48 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 17F872001B6;
+        Wed,  5 Aug 2020 08:32:43 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D45E54024E;
+        Wed,  5 Aug 2020 08:32:35 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     mpm@selenic.com, herbert@gondor.apana.org.au, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, horia.geanta@nxp.com, vz@mleia.com,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] dt-bindings: rng: Convert i.MX to json-schema
+Date:   Wed,  5 Aug 2020 14:28:04 +0800
+Message-Id: <1596608884-13205-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/AkSKNCgqLbvRaMW+eA8Jnfd
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Convert the i.MX rng binding to DT schema format using json-schema.
 
-Hi all,
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ Documentation/devicetree/bindings/rng/imx-rng.txt  | 23 ----------
+ Documentation/devicetree/bindings/rng/imx-rng.yaml | 50 ++++++++++++++++++++++
+ 2 files changed, 50 insertions(+), 23 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/rng/imx-rng.txt
+ create mode 100644 Documentation/devicetree/bindings/rng/imx-rng.yaml
 
-Today's linux-next merge of the fsinfo tree got a conflict in:
+diff --git a/Documentation/devicetree/bindings/rng/imx-rng.txt b/Documentation/devicetree/bindings/rng/imx-rng.txt
+deleted file mode 100644
+index 659d4ef..0000000
+--- a/Documentation/devicetree/bindings/rng/imx-rng.txt
++++ /dev/null
+@@ -1,23 +0,0 @@
+-Freescale RNGA/RNGB/RNGC (Random Number Generator Versions A, B and C)
+-
+-Required properties:
+-- compatible : should be one of
+-               "fsl,imx21-rnga"
+-               "fsl,imx31-rnga" (backward compatible with "fsl,imx21-rnga")
+-               "fsl,imx25-rngb"
+-               "fsl,imx6sl-rngb" (backward compatible with "fsl,imx25-rngb")
+-               "fsl,imx6sll-rngb" (backward compatible with "fsl,imx25-rngb")
+-               "fsl,imx6ull-rngb" (backward compatible with "fsl,imx25-rngb")
+-               "fsl,imx35-rngc"
+-- reg : offset and length of the register set of this block
+-- interrupts : the interrupt number for the RNG block
+-- clocks : the RNG clk source
+-
+-Example:
+-
+-rng@53fb0000 {
+-	compatible = "fsl,imx25-rngb";
+-	reg = <0x53fb0000 0x4000>;
+-	interrupts = <22>;
+-	clocks = <&trng_clk>;
+-};
+diff --git a/Documentation/devicetree/bindings/rng/imx-rng.yaml b/Documentation/devicetree/bindings/rng/imx-rng.yaml
+new file mode 100644
+index 0000000..cf5b8ed
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rng/imx-rng.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/rng/imx-rng.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale RNGA/RNGB/RNGC (Random Number Generator Versions A, B and C)
++
++maintainers:
++  - Vladimir Zapolskiy <vz@mleia.com>
++
++properties:
++  compatible:
++    oneOf:
++      - const: fsl,imx21-rnga
++      - const: fsl,imx25-rngb
++      - items:
++          - const: fsl,imx31-rnga
++          - const: fsl,imx21-rnga
++      - items:
++          - enum:
++            - fsl,imx6sl-rngb
++            - fsl,imx6sll-rngb
++            - fsl,imx6ull-rngb
++          - const: fsl,imx25-rngb
++      - const: fsl,imx35-rngc
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++examples:
++  - |
++    rngb@53fb0000 {
++        compatible = "fsl,imx25-rngb";
++        reg = <0x53fb0000 0x4000>;
++        clocks = <&clks 109>;
++        interrupts = <22>;
++    };
+-- 
+2.7.4
 
-  samples/vfs/Makefile
-
-between commit:
-
-  2f95ada7fe22 ("kbuild: introduce hostprogs-always-y and userprogs-always-=
-y")
-
-from the kbuid tree and commits:
-
-  7e786dee0b78 ("fsinfo: Add fsinfo() syscall to query filesystem informati=
-on")
-  96f310048fba ("fsinfo: sample: Mount listing program")
-
-from the fsinfo tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc samples/vfs/Makefile
-index 6377a678134a,7bcdd7a2829e..000000000000
---- a/samples/vfs/Makefile
-+++ b/samples/vfs/Makefile
-@@@ -1,4 -1,9 +1,4 @@@
-  # SPDX-License-Identifier: GPL-2.0-only
-- userprogs-always-y +=3D test-fsmount test-statx
- -userprogs :=3D \
- -	test-fsinfo \
- -	test-fsmount \
- -	test-mntinfo \
- -	test-statx
- -always-y :=3D $(userprogs)
-++userprogs-always-y +=3D test-fsinfo test-fsmount test-mntinfo test-statx
- =20
-  userccflags +=3D -I usr/include
-
---Sig_/AkSKNCgqLbvRaMW+eA8Jnfd
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8qUo4ACgkQAVBC80lX
-0Gwh1gf/XqiMggfMTJGmd3Qv/6RD36/5Bo/q2gzNsAWK5DTkvAj5bDIbh9SRxRa1
-lAUaJ2f3knhAFeb60ocqVDjcgNMc7A/lJXl2RBl0WGfnf+ZWm1hlcZr0JG/A8Byj
-JY5oNtGx0lcXL7farCYje7o05r16GDm/HO3JdncBkfrDwcOgMhRnO0gKFlQAP1ik
-aSJMcQLrfd3Ri6DjTUnMYMSF6UlAlc+4ZR0W8lWiM+eF8/N+lvj9Hm6FkWIEBmuB
-gs+aknwnvWrBBAMKHMFZcDgXXNVEbHbmwXo2nV+0kCrmj2mQICWS9MVG1rVdIHtw
-s0613fru+DmECtRHvp/xAlBPfNwfaw==
-=O7Ml
------END PGP SIGNATURE-----
-
---Sig_/AkSKNCgqLbvRaMW+eA8Jnfd--
