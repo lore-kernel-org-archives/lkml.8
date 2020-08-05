@@ -2,101 +2,117 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95082C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B20C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AC2E21744
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7587221744
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:39:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596645583;
+	bh=gXEwiYtWJrb+EFFUrwnNNz7Jzhi9gU+IQFe3eDUXoAg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=N6t7FSzcIYBmwsicb8CrGoSDhx9+gG07oPXkceHdAr+Q9Vl9rM7/nSDnY7GuK4Gky
+	 OP0CbevLGi8OCTrz3VqaIiHHwvZ/jNFtI21PHCi27kEvRu6A8tsv6anF503OU31F3z
+	 4bX3I1LW7ZAa5aMeOs8UbJfNqPEtA2svj6gfvHlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726078AbgHEQil (ORCPT
+        id S1727887AbgHEQji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 12:38:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58318 "EHLO mx2.suse.de"
+        Wed, 5 Aug 2020 12:39:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727114AbgHEQfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:35:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id A4C6FB619;
-        Wed,  5 Aug 2020 14:17:24 +0000 (UTC)
-Subject: Re: [PATCH] x86/paravirt: Add missing noinstr to arch_local*()
- helpers
-To:     peterz@infradead.org, Marco Elver <elver@google.com>
-Cc:     bp@alien8.de, dave.hansen@linux.intel.com, fenghua.yu@intel.com,
-        hpa@zytor.com, linux-kernel@vger.kernel.org, mingo@redhat.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        tony.luck@intel.com, x86@kernel.org, yu-cheng.yu@intel.com,
-        sdeep@vmware.com, virtualization@lists.linux-foundation.org,
-        kasan-dev@googlegroups.com,
-        syzbot <syzbot+8db9e1ecde74e590a657@syzkaller.appspotmail.com>
-References: <0000000000007d3b2d05ac1c303e@google.com>
- <20200805132629.GA87338@elver.google.com>
- <20200805134232.GR2674@hirez.programming.kicks-ass.net>
- <20200805135940.GA156343@elver.google.com>
- <20200805141237.GS2674@hirez.programming.kicks-ass.net>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <b4d46726-d343-f347-c044-06c6e815076a@suse.com>
-Date:   Wed, 5 Aug 2020 16:17:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1727823AbgHEQgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 12:36:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E76B7233F6;
+        Wed,  5 Aug 2020 15:53:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596642816;
+        bh=gXEwiYtWJrb+EFFUrwnNNz7Jzhi9gU+IQFe3eDUXoAg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZPkgQtuofnj6+ejtHRgUm/Puh426mtVgv16RnHXv/j1+yTPGz0gClrtUgfFuJ+Dlp
+         9No5+7j68M/5as5dUChHTiZio5/jM21/sC3/oXJtarPYC9Jf/DXjQtccSZQEaFPtYd
+         n3RQCJKdOH+Ber/3z6Emxz1b/VIb8/PMnhlOm+LU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Willy Tarreau <w@1wt.eu>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 4/8] random: fix circular include dependency on arm64 after addition of percpu.h
+Date:   Wed,  5 Aug 2020 17:53:30 +0200
+Message-Id: <20200805153507.213380115@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200805153507.005753845@linuxfoundation.org>
+References: <20200805153507.005753845@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200805141237.GS2674@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05.08.20 16:12, peterz@infradead.org wrote:
-> On Wed, Aug 05, 2020 at 03:59:40PM +0200, Marco Elver wrote:
->> On Wed, Aug 05, 2020 at 03:42PM +0200, peterz@infradead.org wrote:
-> 
->>> Shouldn't we __always_inline those? They're going to be really small.
->>
->> I can send a v2, and you can choose. For reference, though:
->>
->> 	ffffffff86271ee0 <arch_local_save_flags>:
->> 	ffffffff86271ee0:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
->> 	ffffffff86271ee5:       48 83 3d 43 87 e4 01    cmpq   $0x0,0x1e48743(%rip)        # ffffffff880ba630 <pv_ops+0x120>
->> 	ffffffff86271eec:       00
->> 	ffffffff86271eed:       74 0d                   je     ffffffff86271efc <arch_local_save_flags+0x1c>
->> 	ffffffff86271eef:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
->> 	ffffffff86271ef4:       ff 14 25 30 a6 0b 88    callq  *0xffffffff880ba630
->> 	ffffffff86271efb:       c3                      retq
->> 	ffffffff86271efc:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
->> 	ffffffff86271f01:       0f 0b                   ud2
-> 
->> 	ffffffff86271a90 <arch_local_irq_restore>:
->> 	ffffffff86271a90:       53                      push   %rbx
->> 	ffffffff86271a91:       48 89 fb                mov    %rdi,%rbx
->> 	ffffffff86271a94:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
->> 	ffffffff86271a99:       48 83 3d 97 8b e4 01    cmpq   $0x0,0x1e48b97(%rip)        # ffffffff880ba638 <pv_ops+0x128>
->> 	ffffffff86271aa0:       00
->> 	ffffffff86271aa1:       74 11                   je     ffffffff86271ab4 <arch_local_irq_restore+0x24>
->> 	ffffffff86271aa3:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
->> 	ffffffff86271aa8:       48 89 df                mov    %rbx,%rdi
->> 	ffffffff86271aab:       ff 14 25 38 a6 0b 88    callq  *0xffffffff880ba638
->> 	ffffffff86271ab2:       5b                      pop    %rbx
->> 	ffffffff86271ab3:       c3                      retq
->> 	ffffffff86271ab4:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
->> 	ffffffff86271ab9:       0f 0b                   ud2
-> 
-> 
-> Blergh, that's abysmall. In part I suspect because you have
-> CONFIG_PARAVIRT_DEBUG, let me try and untangle that PV macro maze.
-> 
+From: Willy Tarreau <w@1wt.eu>
 
-Probably. I have found the following in my kernel:
+commit 1c9df907da83812e4f33b59d3d142c864d9da57f upstream.
 
-fffffff81540a5f <arch_local_save_flags>:
-ffffffff81540a5f:   ff 14 25 40 a4 23 82    callq  *0xffffffff8223a440
-ffffffff81540a66:   c3                      retq
+Daniel Díaz and Kees Cook independently reported that commit
+f227e3ec3b5c ("random32: update the net random state on interrupt and
+activity") broke arm64 due to a circular dependency on include files
+since the addition of percpu.h in random.h.
+
+The correct fix would definitely be to move all the prandom32 stuff out
+of random.h but for backporting, a smaller solution is preferred.
+
+This one replaces linux/percpu.h with asm/percpu.h, and this fixes the
+problem on x86_64, arm64, arm, and mips.  Note that moving percpu.h
+around didn't change anything and that removing it entirely broke
+differently.  When backporting, such options might still be considered
+if this patch fails to help.
+
+[ It turns out that an alternate fix seems to be to just remove the
+  troublesome <asm/pointer_auth.h> remove from the arm64 <asm/smp.h>
+  that causes the circular dependency.
+
+  But we might as well do the whole belt-and-suspenders thing, and
+  minimize inclusion in <linux/random.h> too. Either will fix the
+  problem, and both are good changes.   - Linus ]
+
+Reported-by: Daniel Díaz <daniel.diaz@linaro.org>
+Reported-by: Kees Cook <keescook@chromium.org>
+Tested-by: Marc Zyngier <maz@kernel.org>
+Fixes: f227e3ec3b5c
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Willy Tarreau <w@1wt.eu>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ include/linux/random.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -9,7 +9,7 @@
+ 
+ #include <linux/list.h>
+ #include <linux/once.h>
+-#include <linux/percpu.h>
++#include <asm/percpu.h>
+ 
+ #include <uapi/linux/random.h>
+ 
 
 
-Juergen
