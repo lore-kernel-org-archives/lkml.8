@@ -2,107 +2,110 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2372AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B4AC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFCE922CAF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD15E22B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:12:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596658335;
+	bh=1KGUWj0pR+2MJSTXGoe2kv9kDdmhjrT4ZUDgSPT30Lg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=heVXOW61EJA9gq5J80G552tP7u4LCYGiRKgeTsbb0RTAzU7I2gdobXhSnq3+mDQze
+	 FePvsFQhtgEkxjgxj1qdV3OTTpbeDjRvQbn+VALete8S3nfgOJZ+J5Co5q/yU2yFsl
+	 9tjNY6cLZZ64PJ3cKjYTRip9DGeUGA+vAwqUpZbY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729630AbgHEUME (ORCPT
+        id S1726799AbgHEUMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:12:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:33112 "EHLO foss.arm.com"
+        Wed, 5 Aug 2020 16:12:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726175AbgHEQ1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:27:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B31C11424;
-        Wed,  5 Aug 2020 09:21:24 -0700 (PDT)
-Received: from [192.168.178.2] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 863283F7D7;
-        Wed,  5 Aug 2020 09:21:16 -0700 (PDT)
-Subject: Re: [PATCH RFC] sched/fair: simplfy the work when reweighting entity
-To:     Jiang Biao <benbjiang@gmail.com>, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org
-Cc:     rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org, Jiang Biao <benbjiang@tencent.com>
-References: <20200804071222.31675-1-benbjiang@tencent.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <f9eab9a5-c7c2-dbf3-834b-abd9c376f92c@arm.com>
-Date:   Wed, 5 Aug 2020 18:21:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1727020AbgHEQ1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 12:27:40 -0400
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E835422B48;
+        Wed,  5 Aug 2020 10:31:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596623482;
+        bh=1KGUWj0pR+2MJSTXGoe2kv9kDdmhjrT4ZUDgSPT30Lg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DztFBbHaJmfLXguERc4iO/+C8kDCuxWxe54V2rQADelhOhyrjs+B1R02wY4g9lGwR
+         NYLc/XumwnvqUcNuDhKnkdZ5v8SfnUAb/71U87pSpdn+jnJbAj8Z4SECzowbaP3x2p
+         4EBnGi/dsVGr4fG4ZH1deIbkZeUT/FXH/6HjeH5k=
+Received: by mail-lj1-f174.google.com with SMTP id i10so12301461ljn.2;
+        Wed, 05 Aug 2020 03:31:21 -0700 (PDT)
+X-Gm-Message-State: AOAM531SQi1oBgKUQKUgQlARvMnnqBM/zjfD42hV8ifsmFIH1LdrEOow
+        AR3dNn274KWdN6Yywe4bLHRcqFSjZMT9z5zMjFk=
+X-Google-Smtp-Source: ABdhPJwzE7/C8D2eIm+yh36NJaV0W0Km5i0/HVwfBymfZU9rxA3GdNEiEf5+UTWgnJ9LTGmC2/RA9NpCIFcry1SA848=
+X-Received: by 2002:a2e:9d17:: with SMTP id t23mr1114817lji.456.1596623480201;
+ Wed, 05 Aug 2020 03:31:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200804071222.31675-1-benbjiang@tencent.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1595792274-28580-1-git-send-email-ilial@codeaurora.org>
+ <20200726194528.GC1661457@lunn.ch> <20200727.103233.2024296985848607297.davem@davemloft.net>
+ <CA+5LGR1KwePssqhCkZ6qT_W87fO2o1XPze53mJwjkTWtphiWrA@mail.gmail.com> <20200804192435.GG1919070@lunn.ch>
+In-Reply-To: <20200804192435.GG1919070@lunn.ch>
+From:   Ilia Lin <ilia.lin@kernel.org>
+Date:   Wed, 5 Aug 2020 13:31:08 +0300
+X-Gmail-Original-Message-ID: <CA+5LGR32kKvaeDnb4qpGS_f=t-U4dDCYpnVy7R9zgAQCJW6jtA@mail.gmail.com>
+Message-ID: <CA+5LGR32kKvaeDnb4qpGS_f=t-U4dDCYpnVy7R9zgAQCJW6jtA@mail.gmail.com>
+Subject: Re: [PATCH] net: dev: Add API to check net_dev readiness
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     David Miller <davem@davemloft.net>, ilial@codeaurora.org,
+        kuba@kernel.org, jiri@mellanox.com, edumazet@google.com,
+        ap420073@gmail.com, xiyou.wangcong@gmail.com, maximmi@mellanox.com,
+        Ilia Lin <ilia.lin@kernel.org>, netdev@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/08/2020 09:12, Jiang Biao wrote:
-> If a se is on_rq when reweighting entity, all we need should be
-> updating the load of cfs_rq, other dequeue/enqueue works could be
-> redundant, such as,
-> * account_numa_dequeue/account_numa_enqueue
-> * list_del/list_add from/into cfs_tasks
-> * nr_running--/nr_running++
+My comments inline.
 
-I think this could make sense. Have you spotted a code path where this
-gives you a change?
+Thanks,
+Ilia Lin
 
-I guess only for a task on the rq, so: entity_is_task(se) && se->on_rq
-
-> Just simplfy the work. Could be helpful for the hot path.
-
-IMHO hotpath is update_cfs_group() -> reweight_entity() but this is only
-called for '!entity_is_task(se)'.
-
-See
-
- 3290         if (!gcfs_rq)
- 3291                 return;
-
-in update_cfs_group().
-
-The 'entity_is_task(se)' case is
-
-set_load_weight(struct task_struct *p, ...) -> reweight_task(p, ...) ->
-reweight_entity(..., &p->se, ...)
-
-but here !se->on_rq.
-
-> Signed-off-by: Jiang Biao <benbjiang@tencent.com>
-> ---
->  kernel/sched/fair.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 04fa8dbcfa4d..18a8fc7bd0de 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -3086,7 +3086,7 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
->  		/* commit outstanding execution time */
->  		if (cfs_rq->curr == se)
->  			update_curr(cfs_rq);
-> -		account_entity_dequeue(cfs_rq, se);
-> +		update_load_sub(&cfs_rq->load, se->load.weight);
->  	}
->  	dequeue_load_avg(cfs_rq, se);
->  
-> @@ -3102,7 +3102,7 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
->  
->  	enqueue_load_avg(cfs_rq, se);
->  	if (se->on_rq)
-> -		account_entity_enqueue(cfs_rq, se);
-> +		update_load_add(&cfs_rq->load, se->load.weight);
->  
->  }
+On Tue, Aug 4, 2020 at 10:24 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Tue, Aug 04, 2020 at 08:47:18PM +0300, Ilia Lin wrote:
+> > Hi Andrew and David,
+>
+> Hi Ilia
+>
+> Please don't top post.
+>
+> >
+> > Thank you for your comments!
+> >
+> > The client driver is still work in progress, but it can be seen here:
+> > https://source.codeaurora.org/quic/la/kernel/msm-4.19/tree/drivers/platform/msm/ipa/ipa_api.c#n3842
+> >
+> > For HW performance reasons, it has to be in subsys_initcall.
+>
+> Well, until the user of this new API is ready, we will not accept the
+> patch.
+OK, but once we submit the change in the driver, is it good to go?
+>
+> You also need to explain "For HW performance reasons". Why is this
+> driver special that it can do things which no over driver does?
+There are very strict KPI requirements. E.g. automotive rear mirror
+must be online 3 sec since boot.
+>
+> And you should really be working on net-next, not this dead kernel
+> version, if you want to get merged into mainline.
+Of course, the upstream submition will be done on the mainline. I just
+gave an example of an existing product driver.
+>
+> Network drivers do not belong is drivers/platform. There is also ready
+> a drivers/net/ipa, so i assume you will move there.
+Sure, the driver in the drivers/net/ipa is the one that will be
+updated in the future.
+>
+>   Andrew
