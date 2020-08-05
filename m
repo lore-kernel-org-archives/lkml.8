@@ -3,58 +3,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E337C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF06C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2EADE22B40
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A0A02073E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:32:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgHEHb1 (ORCPT
+        id S1726956AbgHEHb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 03:31:27 -0400
-Received: from mga17.intel.com ([192.55.52.151]:23079 "EHLO mga17.intel.com"
+        Wed, 5 Aug 2020 03:31:59 -0400
+Received: from mga14.intel.com ([192.55.52.115]:21283 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbgHEHb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 03:31:26 -0400
-IronPort-SDR: kkKBkG0LDbmPQoVVAimg56fJANCVICRSQJq1iuSblLaU6tr6W0JTpZLmJ7o/2/tMI5kI0BOUIh
- nqLixw8DmIQg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="132561504"
+        id S1725904AbgHEHb6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 03:31:58 -0400
+IronPort-SDR: yURD5BosxFAKJBhmawxjnXl1s0ZRHkVS8Tp4g7JXYGpAIS1yAoBPXgx+ShzFtFygzmOo90Erkn
+ u+Vpb02UaZGg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="151707590"
 X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
-   d="scan'208";a="132561504"
+   d="scan'208";a="151707590"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 00:31:25 -0700
-IronPort-SDR: GW4Anxi1f/NU8WEZADz/uH7qx5hIpJ+P5gGguB4kYG/RLCNX+BvfeZ0JT2gA9HtRfKpz8qrZtB
- OFJWMmtfDV6Q==
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 00:31:50 -0700
+IronPort-SDR: cAQKQ/gM9GkGj0bp/sRdhsqjQeCbkuA39WZ8KPRMHDVEJEvN1TtKcAT25uFSf9+9Dh4HYlMKzu
+ rLbKRsp7Z0cg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
-   d="scan'208";a="274701390"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 05 Aug 2020 00:31:26 -0700
-Received: from [10.249.227.101] (abudanko-mobl.ccr.corp.intel.com [10.249.227.101])
-        by linux.intel.com (Postfix) with ESMTP id A5A4C580713;
-        Wed,  5 Aug 2020 00:31:22 -0700 (PDT)
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v1] perf: extend message to mention CAP_SYS_PTRACE and perf
- security doc link
-Organization: Intel Corp.
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <6f8a7425-6e7d-19aa-1605-e59836b9e2a6@linux.intel.com>
-Date:   Wed, 5 Aug 2020 10:31:20 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+   d="scan'208";a="493188709"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
+  by fmsmga005.fm.intel.com with ESMTP; 05 Aug 2020 00:31:48 -0700
+Subject: Re: [PATCH] mmc: sdhci_am654: Replace HTTP links with HTTPS ones
+To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        ulf.hansson@linaro.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200718090614.88946-1-grandmaster@al2klimov.de>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <4c5f0f0b-d530-6175-c04c-1d99c527282e@intel.com>
+Date:   Wed, 5 Aug 2020 10:31:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200718090614.88946-1-grandmaster@al2klimov.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -63,34 +58,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 18/07/20 12:06 pm, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
+> 
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+>             If both the HTTP and HTTPS versions
+>             return 200 OK and serve the same content:
+>               Replace HTTP with HTTPS.
+> 
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 
-Adjust limited access message to mention CAP_SYS_PTRACE capability
-for processes of unprivileged users. Add link to perf security
-document in the end of the section about capabilities.
-The change has been inspired by this discussion:
-https://lore.kernel.org/lkml/20200722113007.GI77866@kernel.org/
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/util/evsel.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+> ---
+>  Continuing my work started at 93431e0607e5.
+>  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
+> 
+>  If there are any URLs to be removed completely
+>  or at least not (just) HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also: https://lkml.org/lkml/2020/6/27/64
+> 
+>  If there are any valid, but yet not changed URLs:
+>  See: https://lkml.org/lkml/2020/6/26/837
+> 
+>  If you apply the patch, please let me know.
+> 
+> 
+>  drivers/mmc/host/sdhci_am654.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
+> index 061b4398a4f1..f2c89f0c0263 100644
+> --- a/drivers/mmc/host/sdhci_am654.c
+> +++ b/drivers/mmc/host/sdhci_am654.c
+> @@ -2,7 +2,7 @@
+>  /*
+>   * sdhci_am654.c - SDHCI driver for TI's AM654 SOCs
+>   *
+> - * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com
+> + * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com
+>   *
+>   */
+>  #include <linux/clk.h>
+> 
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 9aa51a65593d..e241ee773ccb 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2500,8 +2500,10 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
- 
- 		return scnprintf(msg + printed, size - printed,
- 		 "Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open\n"
--		 "access to performance monitoring and observability operations for users\n"
--		 "without CAP_PERFMON or CAP_SYS_ADMIN Linux capability.\n"
-+		 "access to performance monitoring and observability operations for processes\n"
-+		 "without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.\n"
-+		 "More information can be found at 'Perf events and tool security' document:\n"
-+		 "https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html\n"
- 		 "perf_event_paranoid setting is %d:\n"
- 		 "  -1: Allow use of (almost) all events by all users\n"
- 		 "      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK\n"
--- 
-2.24.1
