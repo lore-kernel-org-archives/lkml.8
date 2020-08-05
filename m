@@ -2,120 +2,174 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0627C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F09B8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88BE022B42
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C05AA22B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:11:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596658278;
+	bh=RMz6cKYNxMZuugoaSHv0PdWbqR1GvdDtewVaDPXuXkU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zaUeF5TXm8I0QeXMdT+YLlTBWaffBAb3Q5S2aI+1js5aPoG9JlTJ9kYHWqRw/I35P
+	 TZG9cE+yH1cDOZ9W11lDYh1UvFj2iwvg5gM+dZ4ngTMC6HUmMIxtvxu2tGJn5MDuWD
+	 JXhdc0hOKc+NzfeVOMoOfn+MGpGT3uAobm4uzf2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbgHEULL (ORCPT
+        id S1726209AbgHEULJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:11:11 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:5112 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbgHEQ1n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 16:11:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49478 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727016AbgHEQ1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:27:43 -0400
-Received: from ironmsg07-lv.qualcomm.com (HELO ironmsg07-lv.qulacomm.com) ([10.47.202.151])
-  by alexa-out.qualcomm.com with ESMTP; 05 Aug 2020 06:34:40 -0700
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg07-lv.qulacomm.com with ESMTP/TLS/AES256-SHA; 05 Aug 2020 06:34:38 -0700
-Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 05 Aug 2020 19:04:07 +0530
-Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
-        id D31433EBB; Wed,  5 Aug 2020 19:04:07 +0530 (IST)
-From:   Kalyan Thota <kalyan_t@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        dianders@chromium.org, mkrishn@codeaurora.org,
-        travitej@codeaurora.org, nganji@codeaurora.org,
-        swboyd@chromium.org, abhinavk@codeaurora.org,
-        ddavenport@chromium.org
-Subject: [v1] drm/msm/dpu: Fix reservation failures in modeset
-Date:   Wed,  5 Aug 2020 19:04:06 +0530
-Message-Id: <1596634446-1413-1-git-send-email-kalyan_t@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86AC823370;
+        Wed,  5 Aug 2020 15:52:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596642761;
+        bh=RMz6cKYNxMZuugoaSHv0PdWbqR1GvdDtewVaDPXuXkU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jJ9UF6lvlqTy8SvdrAqPq82i53ZuTWhVsh7OOpBkK8jFuNZ4VwA/mGqfx3lq74pS5
+         EuJ3NAEO3LFRCMkdEanNv42eG1SYxwffYN2yNM5cz+MDbDeRIq4UbVzzGiVPOI0Pl8
+         TjduDT/IKx4NS2A8cQm/QQWumEp5cdHZJ3LiUL1o=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Amit Klein <aksecurity@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>, Willy Tarreau <w@1wt.eu>
+Subject: [PATCH 5.4 1/9] random32: update the net random state on interrupt and activity
+Date:   Wed,  5 Aug 2020 17:52:38 +0200
+Message-Id: <20200805153507.123440513@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200805153507.053638231@linuxfoundation.org>
+References: <20200805153507.053638231@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In TEST_ONLY commit, rm global_state will duplicate the
-object and request for new reservations, once they pass
-then the new state will be swapped with the old and will
-be available for the Atomic Commit.
+From: Willy Tarreau <w@1wt.eu>
 
-This patch fixes some of missing links in the resource
-reservation sequence mentioned above.
+commit f227e3ec3b5cad859ad15666874405e8c1bbc1d4 upstream.
 
-1) Creation of a duplicate state in test_only commit (Rob)
-2) Allow resource release only during crtc_active false.
+This modifies the first 32 bits out of the 128 bits of a random CPU's
+net_rand_state on interrupt or CPU activity to complicate remote
+observations that could lead to guessing the network RNG's internal
+state.
 
-For #2
-In a modeset operation, swap state happens well before disable.
-Hence clearing reservations in disable will cause failures
-in modeset enable.
+Note that depending on some network devices' interrupt rate moderation
+or binding, this re-seeding might happen on every packet or even almost
+never.
 
-Sequence:
-    Swap state --> old, new
-    modeset disables --> virt disable
-    modeset enable --> virt modeset
+In addition, with NOHZ some CPUs might not even get timer interrupts,
+leaving their local state rarely updated, while they are running
+networked processes making use of the random state.  For this reason, we
+also perform this update in update_process_times() in order to at least
+update the state when there is user or system activity, since it's the
+only case we care about.
 
-Allow reservations to be cleared only when crtc active is false
-as in that case there wont be any modeset enable after disable.
+Reported-by: Amit Klein <aksecurity@gmail.com>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Willy Tarreau <w@1wt.eu>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/char/random.c  |    1 +
+ include/linux/random.h |    3 +++
+ kernel/time/timer.c    |    8 ++++++++
+ lib/random32.c         |    2 +-
+ 4 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 63976dc..b85a576 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -582,7 +582,7 @@ static int dpu_encoder_virt_atomic_check(
- 	dpu_kms = to_dpu_kms(priv->kms);
- 	mode = &crtc_state->mode;
- 	adj_mode = &crtc_state->adjusted_mode;
--	global_state = dpu_kms_get_existing_global_state(dpu_kms);
-+	global_state = dpu_kms_get_global_state(crtc_state->state);
- 	trace_dpu_enc_atomic_check(DRMID(drm_enc));
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -1330,6 +1330,7 @@ void add_interrupt_randomness(int irq, i
  
- 	/*
-@@ -1172,6 +1172,7 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
- 	struct msm_drm_private *priv;
- 	struct dpu_kms *dpu_kms;
- 	struct dpu_global_state *global_state;
-+	struct drm_crtc_state *crtc_state;
- 	int i = 0;
+ 	fast_mix(fast_pool);
+ 	add_interrupt_bench(cycles);
++	this_cpu_add(net_rand_state.s1, fast_pool->pool[cycles & 3]);
  
- 	if (!drm_enc) {
-@@ -1191,6 +1192,7 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
- 	priv = drm_enc->dev->dev_private;
- 	dpu_kms = to_dpu_kms(priv->kms);
- 	global_state = dpu_kms_get_existing_global_state(dpu_kms);
-+	crtc_state = drm_enc->crtc->state;
+ 	if (unlikely(crng_init == 0)) {
+ 		if ((fast_pool->count >= 64) &&
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -9,6 +9,7 @@
  
- 	trace_dpu_enc_disable(DRMID(drm_enc));
+ #include <linux/list.h>
+ #include <linux/once.h>
++#include <linux/percpu.h>
  
-@@ -1220,7 +1222,8 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
+ #include <uapi/linux/random.h>
  
- 	DPU_DEBUG_ENC(dpu_enc, "encoder disabled\n");
+@@ -117,6 +118,8 @@ struct rnd_state {
+ 	__u32 s1, s2, s3, s4;
+ };
  
--	dpu_rm_release(global_state, drm_enc);
-+	if (crtc_state->active_changed && !crtc_state->active)
-+		dpu_rm_release(global_state, drm_enc);
++DECLARE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
++
+ u32 prandom_u32_state(struct rnd_state *state);
+ void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
+ void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -43,6 +43,7 @@
+ #include <linux/sched/debug.h>
+ #include <linux/slab.h>
+ #include <linux/compat.h>
++#include <linux/random.h>
  
- 	mutex_unlock(&dpu_enc->enc_lock);
+ #include <linux/uaccess.h>
+ #include <asm/unistd.h>
+@@ -1742,6 +1743,13 @@ void update_process_times(int user_tick)
+ 	scheduler_tick();
+ 	if (IS_ENABLED(CONFIG_POSIX_TIMERS))
+ 		run_posix_cpu_timers();
++
++	/* The current CPU might make use of net randoms without receiving IRQs
++	 * to renew them often enough. Let's update the net_rand_state from a
++	 * non-constant value that's not affine to the number of calls to make
++	 * sure it's updated when there's some activity (we don't care in idle).
++	 */
++	this_cpu_add(net_rand_state.s1, rol32(jiffies, 24) + user_tick);
  }
--- 
-1.9.1
+ 
+ /**
+--- a/lib/random32.c
++++ b/lib/random32.c
+@@ -48,7 +48,7 @@ static inline void prandom_state_selftes
+ }
+ #endif
+ 
+-static DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
++DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
+ 
+ /**
+  *	prandom_u32_state - seeded pseudo-random number generator.
+
 
