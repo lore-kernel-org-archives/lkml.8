@@ -2,104 +2,96 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A98F2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55E4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 815E52312C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B680023433
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:11:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gqstTDto"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgHEQEp (ORCPT
+        id S1726221AbgHEQL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 12:04:45 -0400
-Received: from elvis.franken.de ([193.175.24.41]:35580 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbgHEPti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 11:49:38 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1k3HAl-0001HW-01; Wed, 05 Aug 2020 13:01:27 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 899DDC0C25; Wed,  5 Aug 2020 13:00:35 +0200 (CEST)
-Date:   Wed, 5 Aug 2020 13:00:35 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Ingo Molnar <mingo@redhat.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Simek <monstr@monstr.eu>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Stafford Horne <shorne@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        clang-built-linux@googlegroups.com,
-        iommu@lists.linux-foundation.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
-        openrisc@lists.librecores.org, sparclinux@vger.kernel.org,
-        uclinux-h8-devel@lists.sourceforge.jp, x86@kernel.org
-Subject: Re: [PATCH v2 12/17] arch, drivers: replace for_each_membock() with
- for_each_mem_range()
-Message-ID: <20200805110035.GB11658@alpha.franken.de>
-References: <20200802163601.8189-1-rppt@kernel.org>
- <20200802163601.8189-13-rppt@kernel.org>
+        Wed, 5 Aug 2020 12:11:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:33435 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726200AbgHEPsi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 11:48:38 -0400
+X-Greylist: delayed 723 seconds by postgrey-1.27 at vger.kernel.org; Wed, 05 Aug 2020 11:48:37 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596642331;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=2rdWMsfVYoLVMGMuU1zSO9y5DV7npaEchPj2O2QlCzs=;
+        b=gqstTDtoesNQpmIXXrmaVyp1fjVXg9pB5CuuWcQrCkV5M57coYkYX0MisWG8xrv6zUm76Y
+        KMdDB3I4PugRZrBe79JUB4o0ZGSag3tb+up3l2V4SiiopX/FWB2XYWJ3XvuT0m28UQ5ZBR
+        hXv7qG8iOnwoKf+y8HADzfyRlhvQ69E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-358-TzVqO_I0MwqTgX4ANH4PbQ-1; Wed, 05 Aug 2020 09:18:39 -0400
+X-MC-Unique: TzVqO_I0MwqTgX4ANH4PbQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DB70091270;
+        Wed,  5 Aug 2020 13:18:37 +0000 (UTC)
+Received: from epycfail.redhat.com (unknown [10.36.110.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DCBC5380;
+        Wed,  5 Aug 2020 13:18:35 +0000 (UTC)
+From:   Stefano Brivio <sbrivio@redhat.com>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org,
+        heiko.carstens@de.ibm.com, Cong Wang <xiyou.wangcong@gmail.com>
+Subject: [PATCH net-next] ip_tunnel_core: Fix build for archs without _HAVE_ARCH_IPV6_CSUM
+Date:   Wed,  5 Aug 2020 15:18:21 +0200
+Message-Id: <a85e9878716c2904488d56335320b7131613e94c.1596633316.git.sbrivio@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200802163601.8189-13-rppt@kernel.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 02, 2020 at 07:35:56PM +0300, Mike Rapoport wrote:
-> From: Mike Rapoport <rppt@linux.ibm.com>
-> 
-> There are several occurrences of the following pattern:
-> 
-> 	for_each_memblock(memory, reg) {
-> 		start = __pfn_to_phys(memblock_region_memory_base_pfn(reg);
-> 		end = __pfn_to_phys(memblock_region_memory_end_pfn(reg));
-> 
-> 		/* do something with start and end */
-> 	}
-> 
-> Using for_each_mem_range() iterator is more appropriate in such cases and
-> allows simpler and cleaner code.
-> 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->  arch/mips/cavium-octeon/dma-octeon.c     | 12 +++---
->  arch/mips/kernel/setup.c                 | 31 +++++++--------
+On architectures defining _HAVE_ARCH_IPV6_CSUM, we get
+csum_ipv6_magic() defined by means of arch checksum.h headers. On
+other architectures, we actually need to include net/ip6_checksum.h
+to be able to use it.
 
-Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Without this include, building with defconfig breaks at least for
+s390.
 
-Thomas.
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Fixes: 4cb47a8644cc ("tunnels: PMTU discovery support for directly bridged IP packets")
+Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+---
+I'm submitting this for net-next despite the fact it's closed, as
+the offending code isn't merged to net.git yet. Should I rather
+submit this to... linux-next?
 
+ net/ipv4/ip_tunnel_core.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/net/ipv4/ip_tunnel_core.c b/net/ipv4/ip_tunnel_core.c
+index 9ddee2a0c66d..75c6013ff9a4 100644
+--- a/net/ipv4/ip_tunnel_core.c
++++ b/net/ipv4/ip_tunnel_core.c
+@@ -25,6 +25,7 @@
+ #include <net/protocol.h>
+ #include <net/ip_tunnels.h>
+ #include <net/ip6_tunnel.h>
++#include <net/ip6_checksum.h>
+ #include <net/arp.h>
+ #include <net/checksum.h>
+ #include <net/dsfield.h>
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+2.27.0
+
