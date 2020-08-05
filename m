@@ -2,187 +2,150 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EADC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFF2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F04D2076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:51:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVFSImkw"
+	by mail.kernel.org (Postfix) with ESMTP id 589FC2076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:51:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596657075;
+	bh=j63MAwl01weAgVUq7FF6PNkkZ3MlN8FVYIe4cGDMSu8=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=pUhA4n6uMoGlg28AF82HQd4MFc04wA+XIrZ3FxWD95FoSBE0nVFScjkYwEFKEa+j8
+	 aN6/jB1wdF65B5YwbgRo/DryU4dk7ylQiWWxX6jpqOEyKsGdaQ07AIsX+cCyk3zRMq
+	 f8dLXleAia4WH7De/tNDP+WMyxqOVozIyd1InZ0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbgHETvH (ORCPT
+        id S1728710AbgHETvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:51:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47246 "EHLO
+        Wed, 5 Aug 2020 15:51:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728242AbgHEQxB (ORCPT
+        with ESMTP id S1728624AbgHETuo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:53:01 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB306C06179F;
-        Wed,  5 Aug 2020 03:39:52 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id l23so18421245edv.11;
-        Wed, 05 Aug 2020 03:39:52 -0700 (PDT)
+        Wed, 5 Aug 2020 15:50:44 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38296C06174A
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 12:50:44 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id x24so10192332otp.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 12:50:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qyFh0B+qFmeaq1ZmytjXM93bJReydW1Q9ZU9edq9NSw=;
-        b=bVFSImkw00AL0eXqqbm3McDE84S5/SUhPXauKRgX+RjQFLzzEOAeh1BxV0FJ3xAAJ8
-         1m9bTe46ht4zUL8tAAqdHoPyHHhXwgxz57qLRYZBkP1rOpXqwVPYcAxOgvpR3o1XZCvd
-         bKQ02Q/qe51m5JtFTL8dGAPE9LdxItd2sC82ekIWLriM37yTWvtT9wqaonMYVBxGcQsw
-         +zI+CvFrLgHWC4r5ucuH1UgeKusLtLEaaKkIAdpnL07hRj4ecHa4FRkTefDBklwy016F
-         SmZCH5u8fNVjpgNpY4T9v0gNPH7uqjlKD/oYpEbSz/QWj6hUWqWda6kBf+oHuX5ddoK0
-         OAgA==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VuI/sJKChWIgcA9YX17Vw0/G7XG/JpOM9iBt62Uihj0=;
+        b=QyMrRJ2Sdo1u1Ywbj9MGXheY1I0xnqtLQfoPR3Om141/eW9ET5BsyaqPDvXBZB4GTs
+         v0A3L/WNkHm9SCfyID7NAx9JCGgnfJfc9Go+T9kxD8QefiCVxXfGfLoezYJQYdUqjoWp
+         snrKykkM1x5AvEB4ZkAGuuGfzAjmCDL3T3xMU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=qyFh0B+qFmeaq1ZmytjXM93bJReydW1Q9ZU9edq9NSw=;
-        b=XBS4pGdKUI13EAWBJI9b4qky93AVJszjKtxtykJrhXF0Y7Am3bzhsftJioSQDO2msx
-         xRA3nCjNpNuo7emfTZM0JKWlKHPInQnTamyXs0kQkmzsUbNpJoxpBdusq3MEVlKUTePr
-         mKTQHxag0JTUtTxvCvCsjVtWCefvSO0+HyFhHCdz1BlQUtBby2UJnBTsQho9GCpNuUCi
-         6BdiGRbkShhNKOscHob/nd8DBJeIT7va5xzmEPKraXLlJE2U31usgs9RYNhY0XrWyJA0
-         HSB1INe+wXze4IPuKnjpLaZ7fmYax0m0NnpIN05c0vRMJnrXk6SEXxs9at/wVve3oCBI
-         Q9cg==
-X-Gm-Message-State: AOAM533Z6iQuredxtrVG37hAGEG/fqtZgqUDj/z3GDz0R5T6IfNkaReH
-        RXMlwOxvtc4OtLTS5tXKmT4/3VAkfYI=
-X-Google-Smtp-Source: ABdhPJy1V19vqtue79NewqfTmzf1nPJGkjGZEOewMpAdzyXd2UkFmYEa3u7VhPr+z0BqzwARa9XAKw==
-X-Received: by 2002:a05:6402:17c2:: with SMTP id s2mr2105104edy.188.1596623990966;
-        Wed, 05 Aug 2020 03:39:50 -0700 (PDT)
-Received: from localhost.localdomain (93-103-18-160.static.t-2.net. [93.103.18.160])
-        by smtp.gmail.com with ESMTPSA id ec20sm1260116ejb.61.2020.08.05.03.39.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 03:39:50 -0700 (PDT)
-From:   Uros Bizjak <ubizjak@gmail.com>
-To:     linux-crypto@vger.kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Uros Bizjak <ubizjak@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH] crypto/x86: Use CRC32 mnemonic in crc32c-intel_glue.c
-Date:   Wed,  5 Aug 2020 12:39:32 +0200
-Message-Id: <20200805103932.255524-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        bh=VuI/sJKChWIgcA9YX17Vw0/G7XG/JpOM9iBt62Uihj0=;
+        b=E6FjQWibGYUQAM+x26vGwYADNFNvr+WvO5+v8Zr5N9NB9WMv6WckZXjXBqj/0zsfm/
+         1thuxyb/ofwzYZYk21NLbILgL+arDa9A/lbXd3+rqtW63BOStcWuT14XXUpFXzocGfca
+         vpVfqXKLaP5zUS5aAj4s/cRqPjEXn8AIESRZMPedxGKVoJhKjHJOPHWHlCfvCqypxawX
+         JogfmjXoNBpLJ/MFxsj2TmxniRLz1MDGFtxcWb0mTyrz3/LRJNX9nanIRiwFH3nd/wyN
+         CRTXqkrPUedKk4P+vGAWQFh7Xq77lk2B++x58kKMUgSj/adVJsqnzpIDRpyayOP8mK1j
+         /ugA==
+X-Gm-Message-State: AOAM530h3sD0DeGZcUh74jJ2zCAnkuYo3QOGeU4J7XZXsf1rhQo+312Q
+        E/CVd/IaJpJ2eHKMEi0UOkyM5Q==
+X-Google-Smtp-Source: ABdhPJzVbpJRF9EmzEMLmBRCP07DM7eTcfR++AGDxEhQrnCm23HC8AzoYmVBFzNMocQQh1OVmG5p2g==
+X-Received: by 2002:a9d:3bb5:: with SMTP id k50mr3971985otc.361.1596657043297;
+        Wed, 05 Aug 2020 12:50:43 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id a66sm638956oob.44.2020.08.05.12.50.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Aug 2020 12:50:42 -0700 (PDT)
+Subject: Re: [PATCH] selftests: more general make nesting support
+To:     Greg Thelen <gthelen@google.com>, Shuah Khan <shuah@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200728073241.3625015-1-gthelen@google.com>
+ <CAHH2K0bU7w_rbKN_f0Fe_ZdGLtgBz_GVKS3eottTtm8P7QGoJA@mail.gmail.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <3d949545-a7f2-4057-1204-600eabfd8f28@linuxfoundation.org>
+Date:   Wed, 5 Aug 2020 13:50:41 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHH2K0bU7w_rbKN_f0Fe_ZdGLtgBz_GVKS3eottTtm8P7QGoJA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current minimum required version of binutils is 2.23,
-which supports CRC32 instruction mnemonic.
+On 8/5/20 1:36 PM, Greg Thelen wrote:
+> On Tue, Jul 28, 2020 at 12:32 AM Greg Thelen <gthelen@google.com> wrote:
+>>
+>> selftests can be built from the toplevel kernel makefile (e.g. make
+>> kselftest-all) or directly (make -C tools/testing/selftests all).
+>>
+>> The toplevel kernel makefile explicitly disables implicit rules with
+>> "MAKEFLAGS += -rR", which is passed to tools/testing/selftests.  Some
+>> selftest makefiles require implicit make rules, which is why
+>> commit 67d8712dcc70 ("selftests: Fix build failures when invoked from
+>> kselftest target") reenables implicit rules by clearing MAKEFLAGS if
+>> MAKELEVEL=1.
+>>
+>> So far so good.  However, if the toplevel makefile is called from an
+>> outer makefile then MAKELEVEL will be elevated, which breaks the
+>> MAKELEVEL equality test.
+>> Example wrapped makefile error:
+>>    $ cat ~/Makefile
+>>    all:
+>>          $(MAKE) defconfig
+>>          $(MAKE) kselftest-all
+>>    $ make -sf ~/Makefile
+>>      futex_wait_timeout.c /src/tools/testing/selftests/kselftest_harness.h   /src/tools/testing/selftests/kselftest.h ../include/futextest.h ../include/atomic.h ../include/logging.h -lpthread -lrt -o /src/tools/testing/selftests/futex/functional/futex_wait_timeout
+>>    make[4]: futex_wait_timeout.c: Command not found
+>>
+>> Rather than checking $(MAKELEVEL), check for $(LINK.c), which is a more
+>> direct side effect of "make -R".  This enables arbitrary makefile
+>> nesting.
+>>
+>> Signed-off-by: Greg Thelen <gthelen@google.com>
+>> ---
+>>   tools/testing/selftests/Makefile | 8 ++++----
+>>   1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+>> index 1195bd85af38..289a2e4b3f6f 100644
+>> --- a/tools/testing/selftests/Makefile
+>> +++ b/tools/testing/selftests/Makefile
+>> @@ -84,10 +84,10 @@ endif
+>>   # of the targets gets built.
+>>   FORCE_TARGETS ?=
+>>
+>> -# Clear LDFLAGS and MAKEFLAGS if called from main
+>> -# Makefile to avoid test build failures when test
+>> -# Makefile doesn't have explicit build rules.
+>> -ifeq (1,$(MAKELEVEL))
+>> +# Clear LDFLAGS and MAKEFLAGS when implicit rules are missing.  This provides
+>> +# implicit rules to sub-test Makefiles which avoids build failures in test
+>> +# Makefile that don't have explicit build rules.
+>> +ifeq (,$(LINK.c))
+>>   override LDFLAGS =
+>>   override MAKEFLAGS =
+>>   endif
+>> --
+>> 2.28.0.rc0.142.g3c755180ce-goog
+> 
+> Is there any feedback on this patch?  It's not high priority but something that
+> will help me make more use of selftests.
+> 
 
-Replace the byte-wise specification of CRC32 with this proper mnemonic.
-The compiler is now able to pass memory operand to the instruction,
-so there is no need for a temporary register anymore.
+No issues with the patch. I will apply it once the merge window ends.
 
-Some examples of the improvement:
-
- 12a:	48 8b 08             	mov    (%rax),%rcx
- 12d:	f2 48 0f 38 f1 f1    	crc32q %rcx,%rsi
- 133:	48 83 c0 08          	add    $0x8,%rax
- 137:	48 39 d0             	cmp    %rdx,%rax
- 13a:	75 ee                	jne    12a <crc32c_intel_update+0x1a>
-
-to:
-
- 125:	f2 48 0f 38 f1 06    	crc32q (%rsi),%rax
- 12b:	48 83 c6 08          	add    $0x8,%rsi
- 12f:	48 39 d6             	cmp    %rdx,%rsi
- 132:	75 f1                	jne    125 <crc32c_intel_update+0x15>
-
-and:
-
- 146:	0f b6 08             	movzbl (%rax),%ecx
- 149:	f2 0f 38 f0 f1       	crc32b %cl,%esi
- 14e:	48 83 c0 01          	add    $0x1,%rax
- 152:	48 39 d0             	cmp    %rdx,%rax
- 155:	75 ef                	jne    146 <crc32c_intel_update+0x36>
-
-to:
-
- 13b:	f2 0f 38 f0 02       	crc32b (%rdx),%eax
- 140:	48 83 c2 01          	add    $0x1,%rdx
- 144:	48 39 ca             	cmp    %rcx,%rdx
- 147:	75 f2                	jne    13b <crc32c_intel_update+0x2b>
-
-As the compiler has some more freedom w.r.t. register allocation,
-there is also a couple of reg-reg moves removed.
-
-There are no hidden states for CRC32 insn, so there is no need to mark
-assembly as volatile.
-
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-CC: Herbert Xu <herbert@gondor.apana.org.au>
-CC: "David S. Miller" <davem@davemloft.net>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Borislav Petkov <bp@alien8.de>
-CC: "H. Peter Anvin" <hpa@zytor.com>
----
- arch/x86/crypto/crc32c-intel_glue.c | 24 ++++++++----------------
- 1 file changed, 8 insertions(+), 16 deletions(-)
-
-diff --git a/arch/x86/crypto/crc32c-intel_glue.c b/arch/x86/crypto/crc32c-intel_glue.c
-index d2d069bd459b..3a34b2351559 100644
---- a/arch/x86/crypto/crc32c-intel_glue.c
-+++ b/arch/x86/crypto/crc32c-intel_glue.c
-@@ -27,12 +27,6 @@
- 
- #define SCALE_F	sizeof(unsigned long)
- 
--#ifdef CONFIG_X86_64
--#define REX_PRE "0x48, "
--#else
--#define REX_PRE
--#endif
--
- #ifdef CONFIG_X86_64
- /*
-  * use carryless multiply version of crc32c when buffer
-@@ -48,11 +42,8 @@ asmlinkage unsigned int crc_pcl(const u8 *buffer, int len,
- static u32 crc32c_intel_le_hw_byte(u32 crc, unsigned char const *data, size_t length)
- {
- 	while (length--) {
--		__asm__ __volatile__(
--			".byte 0xf2, 0xf, 0x38, 0xf0, 0xf1"
--			:"=S"(crc)
--			:"0"(crc), "c"(*data)
--		);
-+		asm("crc32b %1, %0"
-+		    : "+r" (crc) : "rm" (*data));
- 		data++;
- 	}
- 
-@@ -66,11 +57,12 @@ static u32 __pure crc32c_intel_le_hw(u32 crc, unsigned char const *p, size_t len
- 	unsigned long *ptmp = (unsigned long *)p;
- 
- 	while (iquotient--) {
--		__asm__ __volatile__(
--			".byte 0xf2, " REX_PRE "0xf, 0x38, 0xf1, 0xf1;"
--			:"=S"(crc)
--			:"0"(crc), "c"(*ptmp)
--		);
-+#ifdef CONFIG_X86_64
-+		asm("crc32q %1, %q0"
-+#else
-+		asm("crc32l %1, %0"
-+#endif
-+		    : "+r" (crc) : "rm" (*ptmp));
- 		ptmp++;
- 	}
- 
--- 
-2.26.2
-
+thanks,
+-- Shuah
