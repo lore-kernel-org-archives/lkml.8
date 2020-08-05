@@ -2,113 +2,88 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59953C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08984C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 389CC2075A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D647E2075A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:36:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596620203;
-	bh=4dyE5Gx6clBYi2vjUW8rhJ/Rxs/aoGQ5d4mu+Q1fSFg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h1Ls8X0RdyevdrH4pxlDWkp67AgsE8LVA1RWM4UpENBJKPnnqnaGTzsdsuoVBnvEd
-	 dYeWH5iVBS29vSXE+530YIxLzr/b2q2Xwm+nIHvNozMhOsttLc1wbCwOeA6uwzZ6Ur
-	 Yuswkc0+xGVDvy+tHj7lyzpT/jKveHjOimnjE8DQ=
+	s=default; t=1596620209;
+	bh=nr3Gwx8f0h9l3j6WBIzrsYb0QLrJrGIiARd1k+UJ2xQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zWGDQdxAUkud9LoHnKCinzoqs+GHwt1XY7FY/3DZIucycpkFYhv0UqzGUqZ85EqyV
+	 hJrRsqCfRDlEU4qG7kltw1/F9wJ+AYbJA9BCvJtv1nsmsd6wOeuVeDPKMT+x2gO3mS
+	 wtvZwU59m53NbDWLrKNVD4HMHYwv4fW0+89Jdz50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbgHEJgl convert rfc822-to-8bit (ORCPT
+        id S1728135AbgHEJgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 05:36:41 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21996 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728378AbgHEJfG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 05:35:06 -0400
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-407-db6gC643OpCV6XPvJ_8RpQ-1; Wed, 05 Aug 2020 05:35:01 -0400
-X-MC-Unique: db6gC643OpCV6XPvJ_8RpQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 5 Aug 2020 05:36:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60760 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728383AbgHEJfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 05:35:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5736918C63C1;
-        Wed,  5 Aug 2020 09:34:58 +0000 (UTC)
-Received: from krava.redhat.com (unknown [10.40.194.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D64517193A;
-        Wed,  5 Aug 2020 09:34:54 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Ian Rogers <irogers@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        David Ahern <dsahern@gmail.com>,
-        =?UTF-8?q?Genevi=C3=A8ve=20Bastien?= <gbastien@versatic.net>,
-        Wang Nan <wangnan0@huawei.com>,
-        Jeremie Galarneau <jgalar@efficios.com>
-Subject: [PATCH v2 2/7] perf tools: Add clockid_name function
-Date:   Wed,  5 Aug 2020 11:34:39 +0200
-Message-Id: <20200805093444.314999-3-jolsa@kernel.org>
-In-Reply-To: <20200805093444.314999-1-jolsa@kernel.org>
-References: <20200805093444.314999-1-jolsa@kernel.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 85F962173E;
+        Wed,  5 Aug 2020 09:35:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596620108;
+        bh=nr3Gwx8f0h9l3j6WBIzrsYb0QLrJrGIiARd1k+UJ2xQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fgMLF/rvU5muUTy7h0xQKT7+fEnUarKtAuoTDXqyFvfjiHAXfC+O3OzDcBVDcJE5s
+         6j00K2K3bx/HbxVoTMUAt6fASP15UgFEgprehRHmJNIwH9aQV7GvHlv5u98JhRffua
+         ShG0jdqdtUjlYI96pGL7KqLIw61AYluNoChEznsM=
+Date:   Wed, 5 Aug 2020 11:35:26 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.7 000/116] 5.7.13-rc3 review
+Message-ID: <20200805093526.GB1388764@kroah.com>
+References: <20200804085233.484875373@linuxfoundation.org>
+ <5770087e-992e-39ac-61c1-5fc23fdee22f@linuxfoundation.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: kernel.org
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5770087e-992e-39ac-61c1-5fc23fdee22f@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding clockid_name function to get the clock name based
-on its clockid. It will be used in following changes.
+On Tue, Aug 04, 2020 at 02:21:31PM -0600, Shuah Khan wrote:
+> On 8/4/20 2:53 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.7.13 release.
+> > There are 116 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 06 Aug 2020 08:51:59 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.13-rc3.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> 
+> Compiled and booted on my test system. No dmesg regressions.
+> 
+> Tested-by: Shuah Khan <skhan@linuxfoundation.org>
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/perf/util/clockid.c | 11 +++++++++++
- tools/perf/util/clockid.h |  2 ++
- 2 files changed, 13 insertions(+)
+Thanks for testing all of these and letting me know.
 
-diff --git a/tools/perf/util/clockid.c b/tools/perf/util/clockid.c
-index b7a08606dc3e..74365a5d99c1 100644
---- a/tools/perf/util/clockid.c
-+++ b/tools/perf/util/clockid.c
-@@ -106,3 +106,14 @@ int parse_clockid(const struct option *opt, const char *str, int unset)
- 	ui__warning("unknown clockid %s, check man page\n", ostr);
- 	return -1;
- }
-+
-+const char *clockid_name(clockid_t clk_id)
-+{
-+	const struct clockid_map *cm;
-+
-+	for (cm = clockids; cm->name; cm++) {
-+		if (cm->clockid == clk_id)
-+			return cm->name;
-+	}
-+	return "(not found)";
-+}
-diff --git a/tools/perf/util/clockid.h b/tools/perf/util/clockid.h
-index 8e567b3ebbbd..9b49b4711c76 100644
---- a/tools/perf/util/clockid.h
-+++ b/tools/perf/util/clockid.h
-@@ -6,4 +6,6 @@
- struct option;
- int parse_clockid(const struct option *opt, const char *str, int unset);
- 
-+const char *clockid_name(clockid_t clk_id);
-+
- #endif
--- 
-2.25.4
-
+greg k-h
