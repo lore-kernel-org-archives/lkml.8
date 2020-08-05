@@ -2,95 +2,104 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89610C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59F8C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5829C2177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:14:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596615257;
-	bh=tDoaZnPmAkSo26FvJN+TuPO65z2/kyma/APN7Yv1kcA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=N7rJbSWR/8ZOukvLkKLfZBc6NqEUvSufhusP4TzkouwOHNMbrM7NNua71jeZl+rJj
-	 eYs3NycAYBTkMq7Drket2d6n/LkAQCdsi7rEK2AoqPI6K85tih+grLXt2d1XYDtefl
-	 JNuua8q643NUJrkqMynyWClOFn3Bn/4QACoNgx+s=
+	by mail.kernel.org (Postfix) with ESMTP id B27E92177B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:14:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="t4mvxT1U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbgHEIOO (ORCPT
+        id S1728326AbgHEIOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 04:14:14 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51025 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbgHEINp (ORCPT
+        Wed, 5 Aug 2020 04:14:31 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:64223 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728126AbgHEIOJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 04:13:45 -0400
-Received: by mail-wm1-f66.google.com with SMTP id c80so4979540wme.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 01:13:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fV+7qezkUGkLqh8TqlDz1gqV6CXztqe5Iqf2Sfq5CX4=;
-        b=qTWdEW2CTLWS41gu8jY5jzZiUp+JJ9QDJK4pWLv6m+H+g8h2kXw12Ea4pjuFSWalkL
-         yzuGpsu04GdYl7+aZ3RTvKZ3ATf/T1zm47zYob0FKmYwOpWi6kjTBCBlnu9EsZQFNNjb
-         lLfUaf5bzDI+ls5x+aEPR1xIRCDWNd9i5xD6p8WPqekVDdaAWCsjYzeMDE95DXBDNX3q
-         4L2M+PNbt9of6zJxzoZywLJnfHms4BRXBP0ZSpsYtZ8w5lG5yk47FkxnBlpq+eGzfAR5
-         8DpoiDBd4Bz33JRoHSZPSAP4q1+XVeKT5a2sLZnrsOqilBvD92VuFMOkEj3yiLOx3eiJ
-         6Ozw==
-X-Gm-Message-State: AOAM533jM7Bb/D4EA3+VVcKxpMTO4+pqAObAbMBYVgdU1tBHGuejO8eL
-        0P0SmrvGuunhApiU2DG01yU=
-X-Google-Smtp-Source: ABdhPJzRYzfvNdARJQUbxVj+Iw+e0/hwK/uM6kqXP+/lH6odw5BXYwf4BzaAWgAGcO1aZDwanZv8xA==
-X-Received: by 2002:a1c:2d95:: with SMTP id t143mr2114025wmt.44.1596615223151;
-        Wed, 05 Aug 2020 01:13:43 -0700 (PDT)
-Received: from pi3 ([194.230.155.117])
-        by smtp.googlemail.com with ESMTPSA id l7sm2042611wrf.32.2020.08.05.01.13.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 01:13:42 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 10:13:40 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     kernel test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: ERROR: "ap_driver_register" undefined!
-Message-ID: <20200805080809.GA5268@pi3>
-References: <202008042249.EnHi1w22%lkp@intel.com>
+        Wed, 5 Aug 2020 04:14:09 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596615248; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=RyvAchXcrO4VTZmCU0JwSFO+inX8hdSk3Y5nuzEwGi8=; b=t4mvxT1Uw5fDipfxdt0FUtsHBhK6WXT/CXMHR5xv2+x/H7AXcM7yDokBYSichO4r9+T01Ijd
+ 5oNzUT+qIIY7q6uv3nbJWmzCiADx97XAHGXEiMN9FCkNYFv/EXULI/U8tADlOxwuZnWm1l5g
+ vXUqe0WcFajptJFGQ8YAo7NUlRI=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-west-2.postgun.com with SMTP id
+ 5f2a6a4fc86dbb497399862b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 05 Aug 2020 08:14:07
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 57FDCC433CA; Wed,  5 Aug 2020 08:14:07 +0000 (UTC)
+Received: from [192.168.1.12] (unknown [61.1.228.31])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 96D5DC433C9;
+        Wed,  5 Aug 2020 08:14:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 96D5DC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH 3/3] arm64: dts: sc7180: Add assigned-performance-states
+ for i2c
+To:     Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org, ulf.hansson@linaro.org
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <1596541616-27688-1-git-send-email-rnayak@codeaurora.org>
+ <1596541616-27688-4-git-send-email-rnayak@codeaurora.org>
+ <159660971183.1360974.3826701315718625693@swboyd.mtv.corp.google.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <681d8c6f-a04b-dd17-4af9-59f314b7cc60@codeaurora.org>
+Date:   Wed, 5 Aug 2020 13:44:02 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202008042249.EnHi1w22%lkp@intel.com>
+In-Reply-To: <159660971183.1360974.3826701315718625693@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 10:29:53PM +0800, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   c0842fbc1b18c7a044e6ff3e8fa78bfa822c7d1a
-> commit: e93a1695d7fb551376b1c1220a267d032b6ad159 iommu: Enable compile testing for some of drivers
-> date:   5 months ago
-> config: s390-randconfig-m031-20200804 (attached as .config)
-> compiler: s390-linux-gcc (GCC) 9.3.0
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         git checkout e93a1695d7fb551376b1c1220a267d032b6ad159
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=s390 
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
-> >> ERROR: "ap_driver_register" [drivers/s390/crypto/vfio_ap.ko] undefined!
-> >> ERROR: "ap_driver_unregister" [drivers/s390/crypto/vfio_ap.ko] undefined!
 
-I have a fix for this ready. I'll send it soon.
+On 8/5/2020 12:11 PM, Stephen Boyd wrote:
+> Quoting Rajendra Nayak (2020-08-04 04:46:56)
+>> qup-i2c devices on sc7180 are clocked with a fixed clock (19.2 Mhz)
+> 
+> s/Mhz/MHz/
+> 
+>> Though qup-i2c does not support DVFS, it still needs to vote for a
+>> performance state on 'cx' to satisfy the 19.2 Mhz clock frequency
+> 
+> Capitalize CX?
+> 
+>> requirement.
+>>
+>> Use 'assigned-performance-states' to pass this information from
+>> device tree, and also add the power-domains property to specify
+>> the cx power-domain.
+>>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> ---
+>>   arch/arm64/boot/dts/qcom/sc7180.dtsi | 24 ++++++++++++++++++++++++
+>>   1 file changed, 24 insertions(+)
+> 
+> Can you generate this patch with more context? The hunks all look the
+> same so it's really hard to see where they apply.
 
-Best regards,
-Krzysztof
+Sure, will do and also fix the others mentioned above.
 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
