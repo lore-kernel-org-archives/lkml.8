@@ -2,89 +2,180 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B45ECC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B6BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81B5922B42
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:16:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="EtnKorVp"
+	by mail.kernel.org (Postfix) with ESMTP id 4B3CF22B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:16:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729899AbgHEUQM (ORCPT
+        id S1729729AbgHEUQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:16:12 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:30906 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726305AbgHEQUC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 16:16:10 -0400
+Received: from mga01.intel.com ([192.55.52.88]:28979 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726202AbgHEQUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:20:02 -0400
-X-UUID: 95c1d7cd1f6f4b74820c363d0bba8f1a-20200805
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=OtQD/PJMlF3G2CJYqMrtaw2Ep2S+WhvIaUE5rI/Zd4g=;
-        b=EtnKorVp0b9nIT8NOQTAL1ojafuQtpdCZAD+N5fnSpE4HT6FqVc2QpMWe7+IoOxlAaBJphxp0sHVd78haT4c2TWzBLXTya7JNlXJFSGEZxzqOS3AsKzX1myxJhBFV9DXrE3VTdcz8v/1rDSMVFOucWTskUjCS3NMDvJktNMHAk0=;
-X-UUID: 95c1d7cd1f6f4b74820c363d0bba8f1a-20200805
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <qii.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 182264108; Wed, 05 Aug 2020 18:53:22 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 5 Aug 2020 18:53:19 +0800
-Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 5 Aug 2020 18:53:20 +0800
-From:   Qii Wang <qii.wang@mediatek.com>
-To:     <wsa@the-dreams.de>
-CC:     <robh+dt@kernel.org>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <qii.wang@mediatek.com>
-Subject: [PATCH v3 4/4] i2c: mediatek: Add i2c compatible for MediaTek MT8192
-Date:   Wed, 5 Aug 2020 18:52:22 +0800
-Message-ID: <1596624742-14727-5-git-send-email-qii.wang@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1596624742-14727-1-git-send-email-qii.wang@mediatek.com>
-References: <1596624742-14727-1-git-send-email-qii.wang@mediatek.com>
+IronPort-SDR: wVshM2Ol8Vg2U9I+dHLAeFm9G/HFVvD1ZkTsOUbuZLQdrcZPLL+c6jZHni6i4ePsNCz0ph8ArI
+ bE9jUSBeysbQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="170650160"
+X-IronPort-AV: E=Sophos;i="5.75,438,1589266800"; 
+   d="scan'208";a="170650160"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 08:54:19 -0700
+IronPort-SDR: Q7NbfeMyv4NMG/aVS6MzmzUFxfTUeW1A1Ya3OMdA+P+MVudymtl3L8OesjU8hFmvyyKJbVYVYL
+ H3C1asV0McGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,438,1589266800"; 
+   d="scan'208";a="292981672"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orsmga006.jf.intel.com with ESMTP; 05 Aug 2020 08:54:19 -0700
+Date:   Wed, 5 Aug 2020 08:54:01 -0700
+From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To:     Borislav Petkov <bp@suse.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Cathy Zhang <cathy.zhang@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Kyung Min Park <kyung.min.park@intel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-edac@vger.kernel.org
+Subject: Re: [PATCH v2] x86/cpu: Use SERIALIZE in sync_core() when available
+Message-ID: <20200805155401.GB25981@ranerica-svr.sc.intel.com>
+References: <20200805021059.1331-1-ricardo.neri-calderon@linux.intel.com>
+ <20200805044840.GA9127@nazgul.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200805044840.GA9127@nazgul.tnic>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIGkyYyBjb21wYXRpYmxlIGZvciBNVDgxOTIuIENvbXBhcmUgdG8gTVQ4MTgzIGkyYyBjb250
-cm9sbGVyLA0KTVQ4MTkyIHN1cHBvcnQgbW9yZSB0aGVuIDhHQiBETUEgbW9kZS4NCg0KU2lnbmVk
-LW9mZi1ieTogUWlpIFdhbmcgPHFpaS53YW5nQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMv
-aTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMgfCAxNSArKysrKysrKysrKysrKysNCiAxIGZpbGUgY2hh
-bmdlZCwgMTUgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9pMmMvYnVzc2Vz
-L2kyYy1tdDY1eHguYyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMNCmluZGV4IDQ2
-Mzg2MGUuLmU4ODlmNzQgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4
-eC5jDQorKysgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jDQpAQCAtMzg2LDYgKzM4
-NiwyMCBAQCBzdHJ1Y3QgaTJjX3NwZWNfdmFsdWVzIHsNCiAJLm1heF9kbWFfc3VwcG9ydCA9IDMz
-LA0KIH07DQogDQorc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfaTJjX2NvbXBhdGlibGUgbXQ4MTky
-X2NvbXBhdCA9IHsNCisJLnF1aXJrcyA9ICZtdDgxODNfaTJjX3F1aXJrcywNCisJLnJlZ3MgPSBt
-dF9pMmNfcmVnc192MiwNCisJLnBtaWNfaTJjID0gMCwNCisJLmRjbSA9IDAsDQorCS5hdXRvX3Jl
-c3RhcnQgPSAxLA0KKwkuYXV4X2xlbl9yZWcgPSAxLA0KKwkudGltaW5nX2FkanVzdCA9IDEsDQor
-CS5kbWFfc3luYyA9IDEsDQorCS5sdGltaW5nX2FkanVzdCA9IDEsDQorCS5hcGRtYV9zeW5jID0g
-MSwNCisJLm1heF9kbWFfc3VwcG9ydCA9IDM2LA0KK307DQorDQogc3RhdGljIGNvbnN0IHN0cnVj
-dCBvZl9kZXZpY2VfaWQgbXRrX2kyY19vZl9tYXRjaFtdID0gew0KIAl7IC5jb21wYXRpYmxlID0g
-Im1lZGlhdGVrLG10MjcxMi1pMmMiLCAuZGF0YSA9ICZtdDI3MTJfY29tcGF0IH0sDQogCXsgLmNv
-bXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2NTc3LWkyYyIsIC5kYXRhID0gJm10NjU3N19jb21wYXQg
-fSwNCkBAIC0zOTMsNiArNDA3LDcgQEAgc3RydWN0IGkyY19zcGVjX3ZhbHVlcyB7DQogCXsgLmNv
-bXBhdGlibGUgPSAibWVkaWF0ZWssbXQ3NjIyLWkyYyIsIC5kYXRhID0gJm10NzYyMl9jb21wYXQg
-fSwNCiAJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxNzMtaTJjIiwgLmRhdGEgPSAmbXQ4
-MTczX2NvbXBhdCB9LA0KIAl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE4My1pMmMiLCAu
-ZGF0YSA9ICZtdDgxODNfY29tcGF0IH0sDQorCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4
-MTkyLWkyYyIsIC5kYXRhID0gJm10ODE5Ml9jb21wYXQgfSwNCiAJe30NCiB9Ow0KIE1PRFVMRV9E
-RVZJQ0VfVEFCTEUob2YsIG10a19pMmNfb2ZfbWF0Y2gpOw0KLS0gDQoxLjkuMQ0K
+On Wed, Aug 05, 2020 at 06:48:40AM +0200, Borislav Petkov wrote:
+> On Tue, Aug 04, 2020 at 07:10:59PM -0700, Ricardo Neri wrote:
+> > The SERIALIZE instruction gives software a way to force the processor to
+> > complete all modifications to flags, registers and memory from previous
+> > instructions and drain all buffered writes to memory before the next
+> > instruction is fetched and executed. Thus, it serves the purpose of
+> > sync_core(). Use it when available.
+> > 
+> > Commit 7117f16bf460 ("objtool: Fix ORC vs alternatives") enforced stack
+> > invariance in alternatives. The iret-to-self does not comply with such
+> > invariance. Thus, it cannot be used inside alternative code. Instead, use
+> > an alternative that jumps to SERIALIZE when available.
+> > 
+> > Cc: Andy Lutomirski <luto@kernel.org>
+> > Cc: Cathy Zhang <cathy.zhang@intel.com>
+> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> > Cc: Fenghua Yu <fenghua.yu@intel.com>
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: Kyung Min Park <kyung.min.park@intel.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
+> > Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> > Cc: linux-edac@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Suggested-by: Andy Lutomirski <luto@kernel.org>
+> > Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> > ---
+> > This is a v2 from my initial submission [1]. The first three patches of
+> > the series have been merged in Linus' tree. Hence, I am submitting only
+> > this patch for review.
+> > 
+> > [1]. https://lkml.org/lkml/2020/7/27/8
+> > 
+> > Changes since v1:
+> >  * Support SERIALIZE using alternative runtime patching.
+> >    (Peter Zijlstra, H. Peter Anvin)
+> >  * Added a note to specify which version of binutils supports SERIALIZE.
+> >    (Peter Zijlstra)
+> >  * Verified that (::: "memory") is used. (H. Peter Anvin)
+> > ---
+> >  arch/x86/include/asm/special_insns.h |  2 ++
+> >  arch/x86/include/asm/sync_core.h     | 10 +++++++++-
+> >  2 files changed, 11 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
+> > index 59a3e13204c3..25cd67801dda 100644
+> > --- a/arch/x86/include/asm/special_insns.h
+> > +++ b/arch/x86/include/asm/special_insns.h
+> > @@ -10,6 +10,8 @@
+> >  #include <linux/irqflags.h>
+> >  #include <linux/jump_label.h>
+> >  
+> > +/* Instruction opcode for SERIALIZE; supported in binutils >= 2.35. */
+> > +#define __ASM_SERIALIZE ".byte 0xf, 0x1, 0xe8"
+> >  /*
+> >   * Volatile isn't enough to prevent the compiler from reordering the
+> >   * read/write functions for the control registers and messing everything up.
+> > diff --git a/arch/x86/include/asm/sync_core.h b/arch/x86/include/asm/sync_core.h
+> > index fdb5b356e59b..201ea3d9a6bd 100644
+> > --- a/arch/x86/include/asm/sync_core.h
+> > +++ b/arch/x86/include/asm/sync_core.h
+> > @@ -5,15 +5,19 @@
+> >  #include <linux/preempt.h>
+> >  #include <asm/processor.h>
+> >  #include <asm/cpufeature.h>
+> > +#include <asm/special_insns.h>
+> >  
+> >  #ifdef CONFIG_X86_32
+> >  static inline void iret_to_self(void)
+> >  {
+> >  	asm volatile (
+> > +		ALTERNATIVE("", "jmp 2f", X86_FEATURE_SERIALIZE)
+> >  		"pushfl\n\t"
+> >  		"pushl %%cs\n\t"
+> >  		"pushl $1f\n\t"
+> >  		"iret\n\t"
+> > +		"2:\n\t"
+> > +		__ASM_SERIALIZE "\n"
+> >  		"1:"
+> >  		: ASM_CALL_CONSTRAINT : : "memory");
+> >  }
+> > @@ -23,6 +27,7 @@ static inline void iret_to_self(void)
+> >  	unsigned int tmp;
+> >  
+> >  	asm volatile (
+> > +		ALTERNATIVE("", "jmp 2f", X86_FEATURE_SERIALIZE)
+> 
+> Why is this and above stuck inside the asm statement?
+> 
+> Why can't you simply do:
+> 
+> 	if (static_cpu_has(X86_FEATURE_SERIALIZE)) {
+> 		asm volatile(__ASM_SERIALIZE ::: "memory");
+> 		return;
+> 	}
+> 
+> on function entry instead of making it more unreadable for no particular
+> reason?
 
+My my first submission I had implemented it as you describe. The only
+difference was that I used boot_cpu_has() instead of static_cpu_has()
+as the latter has a comment stating that:
+	"Use static_cpu_has() only in fast paths (...) boot_cpu_has() is
+	 already fast enough for the majority of cases..."
+
+sync_core_before_usermode() already handles what I think are the
+critical paths.
+
+Thanks and BR,
+Ricardo
