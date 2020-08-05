@@ -2,73 +2,137 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7F9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF23C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 509DC22CAE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 350C82076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:48:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="LOq++iuh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgHEWrW (ORCPT
+        id S1726609AbgHEWso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 18:47:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54324 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725830AbgHEWrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 18:47:21 -0400
-Received: from localhost (173-25-40-8.client.mchsi.com [173.25.40.8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AED212076E;
-        Wed,  5 Aug 2020 22:47:20 +0000 (UTC)
-From:   Clark Williams <williams@redhat.com>
-Subject: [ANNOUNCE] 4.14.192-rt91
-Date:   Wed, 05 Aug 2020 22:45:48 -0000
-Message-ID: <159666754804.1001838.7640757787162666854@theseus.lan>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <daniel.wagner@suse.com>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Clark Williams <williams@redhat.com>
+        Wed, 5 Aug 2020 18:48:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46570 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbgHEWsl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 18:48:41 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56A9DC061575
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 15:48:41 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id t6so25611403pgq.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 15:48:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2f0chzsU8plamndGAVa0L+UE4xurrF8AKN1ix/elzeo=;
+        b=LOq++iuhI8DCPBmvAeXeK/R4Egf9sXfsO+JT+/SfxSso00VNm7Owtu/33R1IS0Wdeg
+         5cgE+2K4leqV8LFpAL8zTtFMcgIOH1TEuj2VQguyDAXEa0Fn1TvGiD5vMj9rq10q3ukx
+         xTNbJJ62lXn8Aog2ut6XDKkljIOiYrE58r4Ps=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2f0chzsU8plamndGAVa0L+UE4xurrF8AKN1ix/elzeo=;
+        b=EPFNAkFa7MIDjV+3nLENrqsblTz+zBp8f3eWfiThEIl9raeQzumkoIVMqizlh3WXr8
+         6pS1bN2Aa4lVYjaTGWQ+dABxpsA0/2vJz0+3EvL/83ED8nbW6GVOFOFg41vALF9Wbz+Q
+         qxZYDg6VnMGpv2ikUzT0Czs3tWCBSZ8sh88dz0PZ3Ksc9dqVi3MTJ+jqQphNbe8yvlHq
+         O6ZdjdZcEVx9+BV2m3o/fBUgeX8sxiCa/i83vrvIOiusgIo8KrCLzSn5t8Ue+Mts7M86
+         N9YwSwdUOxtTDSHIUb1IyBn02Fx/s0gD/JGgtIM4UqEwlSN6iEsZjwr452E8C6o1j2DT
+         z80A==
+X-Gm-Message-State: AOAM531c9bhKKOL5SA3UAB72Tl05XLBlT488CU5MPS0KrjSts46fpO+P
+        U6VjrPhPRK+8p4GXQW96QdYVEyPcS3aMxy2EQNnuw8ZFnyYnpmD3lQ/0Lfw/PY7buBg2IOgL/Jk
+        vdd1SFU5zTML+UKvVNIrzAkyyYOhJnxTCmFfdkGqk6/IQkeARgX53+zdZA4WVXYheagmfhu1inO
+        4cIGU=
+X-Google-Smtp-Source: ABdhPJyC+rZ3Bjtr0TdW+a+bIzEPmblHyS5UqJfZswoqNuslOCgYSdiV2Xf7kGGECmLcSIkxYh4bpA==
+X-Received: by 2002:a63:5349:: with SMTP id t9mr5210648pgl.204.1596667718770;
+        Wed, 05 Aug 2020 15:48:38 -0700 (PDT)
+Received: from [10.230.182.181] ([192.19.224.250])
+        by smtp.gmail.com with ESMTPSA id f3sm5378263pfj.206.2020.08.05.15.48.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Aug 2020 15:48:37 -0700 (PDT)
+Subject: Re: [PATCH v3 1/2] PCI: iproc: Set affinity mask on MSI interrupts
+To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        helgaas@kernel.org, sbranden@broadcom.com, f.fainelli@gmail.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200803035241.7737-1-mark.tomlinson@alliedtelesis.co.nz>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <00166b29-f284-984c-81c2-54d5c1e3343a@broadcom.com>
+Date:   Wed, 5 Aug 2020 15:48:36 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <20200803035241.7737-1-mark.tomlinson@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello RT-list!
-
-I'm pleased to announce the 4.14.192-rt91 stable release.
-
-This is a merge of the 4.14.192 stable release with no conflicts or
-changes to the PREEMPT_RT code.
-
-You can get this release via the git tree at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
-
-  branch: v4.14-rt
-  Head SHA1: 1bf0c78875b0ce08c56c9dbc4c147747e2e30916
-
-Or to build 4.14.192-rt91 directly, the following patches should be applied:
-
-  https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.14.tar.xz
-
-  https://www.kernel.org/pub/linux/kernel/v4.x/patch-4.14.192.xz
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.14/patch-4.14.192-rt91.patch.xz
 
 
-You can also build from 4.14.191-rt90 by applying the incremental patch:
+On 8/2/2020 8:52 PM, Mark Tomlinson wrote:
+> The core interrupt code expects the irq_set_affinity call to update the
+> effective affinity for the interrupt. This was not being done, so update
+> iproc_msi_irq_set_affinity() to do so.
+> 
+> Fixes: 3bc2b2348835 ("PCI: iproc: Add iProc PCIe MSI support")
+> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+> ---
+> changes in v2:
+>  - Patch 1/2 Added Fixes tag
+>  - Patch 2/2 Replace original change with change suggested by Bjorn
+>    Helgaas.
+> 
+> changes in v3:
+>  - Use bitfield rather than bool to save memory.
+> 
+>  drivers/pci/controller/pcie-iproc-msi.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
+> index 3176ad3ab0e5..908475d27e0e 100644
+> --- a/drivers/pci/controller/pcie-iproc-msi.c
+> +++ b/drivers/pci/controller/pcie-iproc-msi.c
+> @@ -209,15 +209,20 @@ static int iproc_msi_irq_set_affinity(struct irq_data *data,
+>  	struct iproc_msi *msi = irq_data_get_irq_chip_data(data);
+>  	int target_cpu = cpumask_first(mask);
+>  	int curr_cpu;
+> +	int ret;
+>  
+>  	curr_cpu = hwirq_to_cpu(msi, data->hwirq);
+>  	if (curr_cpu == target_cpu)
+> -		return IRQ_SET_MASK_OK_DONE;
+> +		ret = IRQ_SET_MASK_OK_DONE;
+> +	else {
+> +		/* steer MSI to the target CPU */
+> +		data->hwirq = hwirq_to_canonical_hwirq(msi, data->hwirq) + target_cpu;
+> +		ret = IRQ_SET_MASK_OK;
+> +	}
+>  
+> -	/* steer MSI to the target CPU */
+> -	data->hwirq = hwirq_to_canonical_hwirq(msi, data->hwirq) + target_cpu;
+> +	irq_data_update_effective_affinity(data, cpumask_of(target_cpu));
+>  
+> -	return IRQ_SET_MASK_OK;
+> +	return ret;
+>  }
+>  
+>  static void iproc_msi_irq_compose_msi_msg(struct irq_data *data,
+> 
 
-  https://www.kernel.org/pub/linux/kernel/projects/rt/4.14/incr/patch-4.14.191-rt90-rt91.patch.xz
+Looks good with the Fixes tag added. Thanks.
 
-Enjoy!
-Clark
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
