@@ -2,120 +2,127 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E482C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42DB0208C7
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DE6F20842
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:06:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="vI/pDyPF";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ouLLvngD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="UOzwjeP3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726724AbgHECFt (ORCPT
+        id S1726889AbgHECGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 22:05:49 -0400
-Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:42351 "EHLO
-        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725864AbgHECFs (ORCPT
+        Tue, 4 Aug 2020 22:06:43 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:56510 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725864AbgHECGm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 22:05:48 -0400
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-        by mailnew.west.internal (Postfix) with ESMTP id 12C667DB;
-        Tue,  4 Aug 2020 22:05:46 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Tue, 04 Aug 2020 22:05:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
-        5uI+CgOGOLZ1AJJ9Vgc8GyZNMIa98k0Qry6BMTVflsA=; b=vI/pDyPFyVaLOUjh
-        S54XJu0vSR/gRMAAVmEA2fikmWcZDsbt/pXPRLNN93Fao6I3mQ3ckPX2qg24i23N
-        SaeO7+J2yngmhXcGmjaVvnoPJRStUAJkhoVLLsIoCt9rrDEdSgTmev4wLuMOgb0Q
-        LIUZpFunEGlPHQqibaRgUtwCAqVc0NJ6ti6ewScGb+M5JFGuruWY5Y6L0wOwgWCA
-        egjHaClvPozvADFfOlV1FtvmCsT1a0KhQnU858N/fshuEySllxwaU9geWyeW6wVV
-        q9NnWkN17tBI2y99CrpZdW96RlE+sYDWZg1I+5ewP+FXS4XrcO1Lpd728EGJg0Ml
-        +ri9Ew==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=5uI+CgOGOLZ1AJJ9Vgc8GyZNMIa98k0Qry6BMTVfl
-        sA=; b=ouLLvngD+V9Ng+TlLUipCkfGLi80jAa8Nu+wGCQQO4u9yvpvLNPq3ISvK
-        tFFr50VYfgQm2NLuytzONd13z5BzVXMJxPEzoxlhzFPWn/8BP96kQAGRBcipgIsK
-        3I7+OM4YjJeAWvUNcLxfwOrgUrZ1rnBkaMgMyufzJ6/+IfateWEJsd6XfYn+E8qN
-        jShhZJSLQyk2gRmMB2EfY/cxWBjDZmssOeIJdHgNia6Ai/OyhpzRBAvPTKx0ZRps
-        yVQwGZuKkrrD+RuMAk3diisXDWAx3EreNJTT/cdWTXQ6XuAIZnXioHGOFglYvyhY
-        q5TVcA8kx6PMGov/en+UWA+eXXOTA==
-X-ME-Sender: <xms:-BMqX3QXRKfib0iLgy5AvWgqKdJanGbgCedmwsgtNyIF0Z9FtmcpoA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrjeejgdehhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
-    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnhepfe
-    efteetvdeguddvveefveeftedtffduudehueeihfeuvefgveehffeludeggfejnecukfhp
-    peehkedrjedrvdehhedrvddvtdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
-X-ME-Proxy: <xmx:-BMqX4xQ9uM-EnTqh0ADay4ru4lsxj0Yijcz3ALJphF1TuEm7e0nYg>
-    <xmx:-BMqX81rrvyIiFGuA_Eu6HT03EBNgUE7c4Y5wFTx_ZE08PkxKIGtOw>
-    <xmx:-BMqX3CA_bYMBJyllsSJHRXylqH7VXp5fVnPrlzVvfjsmBRqkY20XA>
-    <xmx:-RMqXzOdM8FZdVQR1AL3RkYIgxGxiai1GyEGp1pxoFGxYHj_f1Rb3XSDgy4>
-Received: from mickey.themaw.net (58-7-255-220.dyn.iinet.net.au [58.7.255.220])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 38C54328005A;
-        Tue,  4 Aug 2020 22:05:39 -0400 (EDT)
-Message-ID: <94bba6f200bb2bbf83f4945faa2ccb83fd947540.camel@themaw.net>
-Subject: Re: [PATCH 10/18] fsinfo: Provide notification overrun handling
- support [ver #21]
-From:   Ian Kent <raven@themaw.net>
-To:     Miklos Szeredi <miklos@szeredi.hu>,
-        David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
-        mszeredi@redhat.com, christian@brauner.io, jannh@google.com,
-        darrick.wong@oracle.com, kzak@redhat.com, jlayton@redhat.com,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 05 Aug 2020 10:05:36 +0800
-In-Reply-To: <20200804135641.GE32719@miu.piliscsaba.redhat.com>
-References: <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk>
-         <159646187082.1784947.4293611877413578847.stgit@warthog.procyon.org.uk>
-         <20200804135641.GE32719@miu.piliscsaba.redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 4 Aug 2020 22:06:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1596593201; x=1628129201;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-transfer-encoding;
+  bh=mr8pEVR8EM2vtCoJYlVhaVMY23O+8KAaStBjD4hUG9U=;
+  b=UOzwjeP3u11NEHuWvuztHqk1uf2wdN0hFd3uQBm7zqCRh1xTotCmTpOg
+   imuUvnGEClv12uZEDCipCXg1Nflg7VQQsgyfcmOrdp1/vpLRE4PgQVu4m
+   d2RMOwjzAr/rPilI4kfC2uQdYexp+E1Ymh/rgOkp3Pj8NY0JS2J/8ohSx
+   buNH8Xzb9xn1vC+5jVGlXwhwkSOLHsWKawn/L2QsEE0uJYTOlkGPEyBps
+   Tu4Ds8cc3JHlebp8Ygkj2Scbq9+i6SNoPpGNkzuHdxBXt/OZ98mPfNQ+K
+   sVIFbNZI5UeDiUeqbd8JbU3mGq99srXFWcmPYtBhEzh4EzmwjGrsoIpQt
+   w==;
+IronPort-SDR: 4CiEYIfPGx/er/2fMh7GgBPYbry7z7bJ9UrdZbOpTf+Bg1vBQIt7Pg7ZrCumy8cJwVD8hIADXE
+ V6khl8+rwHIEdz7sOI8Q86ldtpIacEEtP15Z+NgqL8b2tXTYAPb35C9pxggeqlh8N5pvauT0Zb
+ OngvhgJGjfHP9vdT0xnqllilVb4WXsmwFXFICOs6892h3QBz/OvgYt3alSmEdAZmqc/QjjkE1x
+ Cp8GMFlZFdu+Ji9eVfAegA6U6ayigL+qp2pG5m5485syJSBSJ4Bo9097FLKKGAPFplwaqCmkwZ
+ /sw=
+X-IronPort-AV: E=Sophos;i="5.75,436,1589212800"; 
+   d="scan'208";a="253513162"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 05 Aug 2020 10:06:41 +0800
+IronPort-SDR: dLsXiV1JFaRo4eYiVkK9KAv6/QaRoRbX8UHYUkmM1N4Yo5O3tX0CdUoRx65QsvAOpBoQZF9PQR
+ hvHqMctAApUw==
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 18:54:01 -0700
+IronPort-SDR: TLhMEyPXwBjZRTNKUDbkN/wLMnj2ldUs7WjvT7jQGs0HtUMdjyM3RdD9bF/Ed/GwnQyNTpSQEe
+ VPBQWkxZip7g==
+WDCIronportException: Internal
+Received: from unknown (HELO redsun52) ([10.149.66.28])
+  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 19:06:40 -0700
+Date:   Wed, 5 Aug 2020 03:06:36 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@wdc.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-mips@linux-mips.org,
+        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:BROADCOM BMIPS MIPS ARCHITECTURE" 
+        <linux-mips@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>
+Subject: Re: [PATCH] MIPS: BMIPS: Disable pref 30 for buggy CPUs
+In-Reply-To: <bcd3255c-bbb0-f4c0-1a33-7a16ee9f7b93@gmail.com>
+Message-ID: <alpine.LFD.2.21.2008050259550.24175@redsun52.ssa.fujisawa.hgst.com>
+References: <20200731042401.22871-1-f.fainelli@gmail.com> <21ad5472-1287-acba-5604-09f2e633c043@flygoat.com> <46de49ec-cc8b-708a-0cdd-82389b041078@gmail.com> <20200803113020.GA8958@alpha.franken.de> <bcd3255c-bbb0-f4c0-1a33-7a16ee9f7b93@gmail.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-08-04 at 15:56 +0200, Miklos Szeredi wrote:
-> On Mon, Aug 03, 2020 at 02:37:50PM +0100, David Howells wrote:
-> > Provide support for the handling of an overrun in a watch
-> > queue.  In the
-> > event that an overrun occurs, the watcher needs to be able to find
-> > out what
-> > it was that they missed.  To this end, previous patches added event
-> > counters to struct mount.
-> 
-> So this is optimizing the buffer overrun case?
-> 
-> Shoun't we just make sure that the likelyhood of overruns is low and
-> if it
-> happens, just reinitialize everthing from scratch (shouldn't be
-> *that*
-> expensive).
+On Mon, 3 Aug 2020, Florian Fainelli wrote:
 
-But maybe not possible if you are using notifications for tracking
-state in user space, you need to know when the thing you have needs
-to be synced because you missed something and it's during the
-notification processing you actually have the object that may need
-to be refreshed.
-
+> >>>> diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
+> >>>> index 19308df5f577..df0efea12611 100644
+> >>>> --- a/arch/mips/bmips/setup.c
+> >>>> +++ b/arch/mips/bmips/setup.c
+> >>>> @@ -110,6 +110,20 @@ static void bcm6368_quirks(void)
+> >>>>       bcm63xx_fixup_cpu1();
+> >>>>   }
+> >>>>   +static void bmips5000_pref30_quirk(void)
+> >>>> +{
+> >>>> +    __asm__ __volatile__(
+> >>>> +    "    li    $8, 0x5a455048\n"
+> >>>> +    "    .word    0x4088b00f\n"    /* mtc0 $8, $22, 15 */
+> >>>> +    "    nop; nop; nop\n"
+> >>>> +    "    .word    0x4008b008\n"    /* mfc0 $8, $22, 8 */
+> >>>> +    /* disable "pref 30" on buggy CPUs */
+> >>>> +    "    lui    $9, 0x0800\n"
+> >>>> +    "    or    $8, $9\n"
+> >>>> +    "    .word    0x4088b008\n"    /* mtc0 $8, $22, 8 */
+> >>>> +    : : : "$8", "$9");
+> >>>> +}
+> >>> Hi,
+> >>>
+> >>> Is there any toolchain issue blocking read_c0_**** family helpers being
+> >>> used?
+> >>>
+> >>> Use .word looks unreasonable.
+> >>
+> >> Yes, the assembler would be choking on the custom $22 selector, however
+> > 
+> > I guess you meant selector 8 and 15. If BMIPS has a 4 bit selector field
+> > it might be good to do a binutils patch supporting it.
 > 
-> Trying to find out what was missed seems like just adding complexity
-> for no good
-> reason.
-> 
+> Yes, sorry that is what I meant. I don't think an assembler patch makes
+> sense at this point given this is an isolated use, and there is not just
+> binutils these days, the Clang/LLVM integrated assembler would also need
+> to be supported, and then we would need to have the kernel say: I
+> require this minimum version to support the customer selectors, not
+> worth the trouble if you ask me.
 
+ Well, I asked for a GAS patch to add support 4.5 years ago, so by now and 
+9 binutils releases later it would have become fairly common.  And then I 
+also suggested how to handle it in a robust way.  Cf. 
+<https://www.linux-mips.org/cgi-bin/mesg.cgi?a=linux-mips&i=alpine.DEB.2.00.1602092245180.15885%40tp.orcam.me.uk>.
+
+  Maciej
