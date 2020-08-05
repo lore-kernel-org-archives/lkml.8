@@ -2,133 +2,101 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6237CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D32C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CDE02076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 205B922BF3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:42:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aO0Z1jPD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgHEGlK (ORCPT
+        id S1728072AbgHEGl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 02:41:10 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:57066 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbgHEGlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 02:41:09 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 489361A0523;
-        Wed,  5 Aug 2020 08:41:07 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 59D6B1A0514;
-        Wed,  5 Aug 2020 08:41:02 +0200 (CEST)
-Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 04060402E1;
-        Wed,  5 Aug 2020 08:40:55 +0200 (CEST)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     Frank.li@nxp.com, will@kernel.org, mark.rutland@arm.com,
-        robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] dt-bindings: perf: Convert i.MX DDR to json-schema
-Date:   Wed,  5 Aug 2020 14:36:27 +0800
-Message-Id: <1596609387-23542-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 5 Aug 2020 02:41:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37590 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727986AbgHEGly (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 02:41:54 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49B83C061756
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 23:41:54 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id d188so16062468pfd.2
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 23:41:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=ltqLz+bl5cJfWC7EYmNLCWQiWVWxzgHI/BH5Y9oslyQ=;
+        b=aO0Z1jPDvV8s5byVMzx/gWoab/lBG5ayZTHBB6BRUjMsp1YxPj1Be33sYB91VB5n02
+         RnDyHR15B0m1x3IeZVwte/0U1gzjj/FIdFfDnm+Xd+8JQjg1YdoWfUnyGfJK3DadI6+o
+         LxpKhy0Lud50qAF0DIQ5sRpkYaa4Xz8TyQN3M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=ltqLz+bl5cJfWC7EYmNLCWQiWVWxzgHI/BH5Y9oslyQ=;
+        b=InN8rIS+koQlM+eKESXiuZowkVJ0ahE74om/g20Y0w1u4LqXzXugK3US/JobHTvWKR
+         1cszh5rGx93+uEcqKVH19YPNxBGNHaI7g9M5rqcYupP4JTmbtMUdQL5vY3At6Sz+xxYl
+         UwiCueV8u3lzBeEnrS78FcLc2ma6iY6RZejNm4j84Q1WHNPXVIbufVEhU2FXb13MVO8b
+         D1X18FbgJPUy24MUivmV7B9Jjjp/qnUrAdDXdFoCWvO9IGvXvVXm3CGikU1CpULVwChI
+         CVZaSmQaj7CQaBErffpUC1OwH9YVjTNU89ayoyyt6HYQ5yWxoxuY5DG1VkUTVpafxyqL
+         JIyQ==
+X-Gm-Message-State: AOAM5320AaoEtJMqVnB/FJTJ8whybNo65O2IdPX1zHKy6uQ727YdF1hU
+        +QsviNJNXvTptVKj9U+PCei+fg==
+X-Google-Smtp-Source: ABdhPJzTj31DnR6UDAJ7nYUuV1oFzS4F7uSIHrrjTsdOzmxqP6lzTTtoxG7G22mn7a8de9Y3wO7mYw==
+X-Received: by 2002:a63:df01:: with SMTP id u1mr1574233pgg.401.1596609713589;
+        Tue, 04 Aug 2020 23:41:53 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id g23sm1659455pfo.95.2020.08.04.23.41.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Aug 2020 23:41:53 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1596541616-27688-4-git-send-email-rnayak@codeaurora.org>
+References: <1596541616-27688-1-git-send-email-rnayak@codeaurora.org> <1596541616-27688-4-git-send-email-rnayak@codeaurora.org>
+Subject: Re: [PATCH 3/3] arm64: dts: sc7180: Add assigned-performance-states for i2c
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org, ulf.hansson@linaro.org
+Date:   Tue, 04 Aug 2020 23:41:51 -0700
+Message-ID: <159660971183.1360974.3826701315718625693@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the i.MX DDR perf binding to DT schema format using json-schema.
+Quoting Rajendra Nayak (2020-08-04 04:46:56)
+> qup-i2c devices on sc7180 are clocked with a fixed clock (19.2 Mhz)
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- .../devicetree/bindings/perf/fsl-imx-ddr.txt       | 22 ------------
- .../devicetree/bindings/perf/fsl-imx-ddr.yaml      | 39 ++++++++++++++++++++++
- 2 files changed, 39 insertions(+), 22 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
- create mode 100644 Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
+s/Mhz/MHz/
 
-diff --git a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
-deleted file mode 100644
-index 7822a80..0000000
---- a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
-+++ /dev/null
-@@ -1,22 +0,0 @@
--* Freescale(NXP) IMX8 DDR performance monitor
--
--Required properties:
--
--- compatible: should be one of:
--	"fsl,imx8-ddr-pmu"
--	"fsl,imx8m-ddr-pmu"
--	"fsl,imx8mp-ddr-pmu"
--
--- reg: physical address and size
--
--- interrupts: single interrupt
--	generated by the control block
--
--Example:
--
--	ddr-pmu@5c020000 {
--		compatible = "fsl,imx8-ddr-pmu";
--		reg = <0x5c020000 0x10000>;
--		interrupt-parent = <&gic>;
--		interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
--	};
-diff --git a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
-new file mode 100644
-index 0000000..5e77854
---- /dev/null
-+++ b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
-@@ -0,0 +1,39 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/perf/fsl-imx-ddr.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale(NXP) IMX8 DDR performance monitor
-+
-+maintainers:
-+  - Frank Li <frank.li@nxp.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,imx8-ddr-pmu
-+      - fsl,imx8m-ddr-pmu
-+      - fsl,imx8mp-ddr-pmu
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    ddr-pmu@5c020000 {
-+        compatible = "fsl,imx8-ddr-pmu";
-+        reg = <0x5c020000 0x10000>;
-+        interrupt-parent = <&gic>;
-+        interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
-+    };
--- 
-2.7.4
+> Though qup-i2c does not support DVFS, it still needs to vote for a
+> performance state on 'cx' to satisfy the 19.2 Mhz clock frequency
 
+Capitalize CX?
+
+> requirement.
+>=20
+> Use 'assigned-performance-states' to pass this information from
+> device tree, and also add the power-domains property to specify
+> the cx power-domain.
+>=20
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+
+Can you generate this patch with more context? The hunks all look the
+same so it's really hard to see where they apply.
