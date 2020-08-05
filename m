@@ -2,135 +2,215 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFF5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6F82177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:50:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B88822B40
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:51:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgHEIue (ORCPT
+        id S1728174AbgHEIvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 04:50:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:56100 "EHLO foss.arm.com"
+        Wed, 5 Aug 2020 04:51:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59056 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725868AbgHEIud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 04:50:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14D5CD6E;
-        Wed,  5 Aug 2020 01:50:33 -0700 (PDT)
-Received: from [192.168.178.2] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DDF223F6CF;
-        Wed,  5 Aug 2020 01:50:30 -0700 (PDT)
-Subject: Re: [RFC PATCH] arm64: defconfig: Disable fine-grained task level IRQ
- time accounting
-To:     Valentin Schneider <valentin.schneider@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Vladimir Oltean <olteanv@gmail.com>,
-        Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>,
-        Alison Wang <alison.wang@nxp.com>, catalin.marinas@arm.com,
-        will@kernel.org, paulmck@kernel.org, mw@semihalf.com,
-        leoyang.li@nxp.com, vladimir.oltean@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <20200729033934.22349-1-alison.wang@nxp.com> <877dumbtoi.fsf@kurt>
- <20200729094943.lsmhsqlnl7rlnl6f@skbuf> <87mu3ho48v.fsf@kurt>
- <20200730082228.r24zgdeiofvwxijm@skbuf> <873654m9zi.fsf@kurt>
- <87lfiwm2bj.fsf@nanos.tec.linutronix.de>
- <20200803114112.mrcuupz4ir5uqlp6@skbuf>
- <87d047n4oh.fsf@nanos.tec.linutronix.de> <jhjh7tjivew.mognet@arm.com>
- <875z9zmt4i.fsf@nanos.tec.linutronix.de> <jhjft93i8mg.mognet@arm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <02195130-3d9a-a206-d931-fab7dc606061@arm.com>
-Date:   Wed, 5 Aug 2020 10:50:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1725868AbgHEIvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 04:51:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 30D24AC12;
+        Wed,  5 Aug 2020 08:51:24 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 066041E12CB; Wed,  5 Aug 2020 10:51:07 +0200 (CEST)
+Date:   Wed, 5 Aug 2020 10:51:07 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     stable@vger.kernel.org
+Cc:     tytso@mit.edu, adilger.kernel@dilger.ca,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wanglong19@meituan.com, heguanjun@meituan.com, jack@suse.cz,
+        Jiang Ying <jiangying8582@126.com>
+Subject: Re: [PATCH v4] ext4: fix direct I/O read error
+Message-ID: <20200805085107.GC4117@quack2.suse.cz>
+References: <1596614241-178185-1-git-send-email-jiangying8582@126.com>
 MIME-Version: 1.0
-In-Reply-To: <jhjft93i8mg.mognet@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1596614241-178185-1-git-send-email-jiangying8582@126.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/08/2020 01:59, Valentin Schneider wrote:
+Note to stable tree maintainers (summary from the rather long changelog):
+This is a non-upstream patch. It will not go upstream because the problem
+there has been fixed by converting ext4 to use iomap infrastructure.
+However that change is out of scope for stable kernels and this is a
+minimal fix for the problem that has hit real-world applications so I think
+it would be worth it to include the fix in stable trees. Thanks.
+
+								Honza
+
+On Wed 05-08-20 15:57:21, Jiang Ying wrote:
+> This patch is used to fix ext4 direct I/O read error when
+> the read size is not aligned with block size.
 > 
-> On 03/08/20 20:22, Thomas Gleixner wrote:
->> Valentin,
->>
->> Valentin Schneider <valentin.schneider@arm.com> writes:
->>> On 03/08/20 16:13, Thomas Gleixner wrote:
->>>> Vladimir Oltean <olteanv@gmail.com> writes:
->>>>>>  1) When irq accounting is disabled, RT throttling kicks in as
->>>>>>     expected.
->>>>>>
->>>>>>  2) With irq accounting the RT throttler does not kick in and the RCU
->>>>>>     stall/lockups happen.
->>>>> What is this telling us?
->>>>
->>>> It seems that the fine grained irq time accounting affects the runtime
->>>> accounting in some way which I haven't figured out yet.
->>>>
->>>
->>> With IRQ_TIME_ACCOUNTING, rq_clock_task() will always be incremented by a
->>> lesser-or-equal value than when not having the option; you start with the
->>> same delta_exec but slice some for the IRQ accounting, and leave the rest
->>> for the rq_clock_task() (+paravirt).
->>>
->>> IIUC this means that if you spend e.g. 10% of the time in IRQ and 90% of
->>> the time running the stress-ng RT tasks, despite having RT tasks hogging
->>> the entirety of the "available time" it is still only 90% runtime, which is
->>> below the 95% default and the throttling doesn't happen.
->>
->>    totaltime = irqtime + tasktime
->>
->> Ignoring irqtime and pretending that totaltime is what the scheduler
->> can control and deal with is naive at best.
->>
+> Then, I will use a test to explain the error.
 > 
-> Agreed, however AFAICT rt_time is only incremented by rq_clock_task()
-> deltas, which don't include IRQ time with IRQ_TIME_ACCOUNTING=y. That would
-> then be directly compared to the sysctl runtime.
+> (1) Make a file that is not aligned with block size:
+> 	$dd if=/dev/zero of=./test.jar bs=1000 count=3
 > 
-> Adding some prints in sched_rt_runtime_exceeded() and running this test
-> case on my Juno, I get:
->   # IRQ_TIME_ACCOUNTING=y
->   cpu=2 rt_time=713455220 runtime=950000000 rq->avg_irq.util_avg=265
->   (rt_time oscillates between [70.1e7, 75.1e7]; avg_irq between [220, 270])
+> (2) I wrote a source file named "direct_io_read_file.c" as following:
 > 
->   # IRQ_TIME_ACCOUNTING=n
->   cpu=2 rt_time=963035300 runtime=949951811
->   (rt_time oscillates between [94.1e7, 96.1e7];
+> 	#include <stdio.h>
+> 	#include <stdlib.h>
+> 	#include <unistd.h>
+> 	#include <sys/file.h>
+> 	#include <sys/types.h>
+> 	#include <sys/stat.h>
+> 	#include <string.h>
+> 	#define BUF_SIZE 1024
 > 
-> Throttling happens for IRQ_TIME_ACCOUNTING=n and doesn't for
-> IRQ_TIME_ACCOUNTING=y - clearly the accounted rt_time isn't high enough for
-> that to happen, and it does look like what is missing in rt_time (or what
-> should be subtracted from the available runtime) is there in the avg_irq.
-
-I agree that w/ IRQ_TIME_ACCOUNTING=y rt_rq->rt_time isn't high enough
-in this testcase.
-
-stress-ng-hrtim-1655 [001] 462.897733: bprint: update_curr_rt:
-rt_rq->rt_time=416716900 rt_rq->rt_runtime=950000000
-rt_b->rt_runtime=950000000
-
-The 5% reservation (1 - sched_rt_runtime_us/sched_rt_period_us) for CFS
-is massively eclipsed by irqtime.
-
-It's true that avg_irq tracks 'irq_delta + steal' time but it is meant
-to potentially reduce cpu capacity. It's also cpu and frequency
-invariant (your CPU2 is a big CPU so no issue here).
-
-Could a rq_clock(rq) derived rt_rq signal been used to compare against
-rt_runtime?
-
-BTW, DL already influences rt_rq->rt_time.
-
-[...]
+> 	int main()
+> 	{
+> 		int fd;
+> 		int ret;
+> 
+> 		unsigned char *buf;
+> 		ret = posix_memalign((void **)&buf, 512, BUF_SIZE);
+> 		if (ret) {
+> 			perror("posix_memalign failed");
+> 			exit(1);
+> 		}
+> 		fd = open("./test.jar", O_RDONLY | O_DIRECT, 0755);
+> 		if (fd < 0){
+> 			perror("open ./test.jar failed");
+> 			exit(1);
+> 		}
+> 
+> 		do {
+> 			ret = read(fd, buf, BUF_SIZE);
+> 			printf("ret=%d\n",ret);
+> 			if (ret < 0) {
+> 				perror("write test.jar failed");
+> 			}
+> 		} while (ret > 0);
+> 
+> 		free(buf);
+> 		close(fd);
+> 	}
+> 
+> (3) Compile the source file:
+> 	$gcc direct_io_read_file.c -D_GNU_SOURCE
+> 
+> (4) Run the test program:
+> 	$./a.out
+> 
+> 	The result is as following:
+> 	ret=1024
+> 	ret=1024
+> 	ret=952
+> 	ret=-1
+> 	write test.jar failed: Invalid argument.
+> 
+> I have tested this program on XFS filesystem, XFS does not have
+> this problem, because XFS use iomap_dio_rw() to do direct I/O
+> read. And the comparing between read offset and file size is done
+> in iomap_dio_rw(), the code is as following:
+> 
+> 	if (pos < size) {
+> 		retval = filemap_write_and_wait_range(mapping, pos,
+> 				pos + iov_length(iov, nr_segs) - 1);
+> 
+> 		if (!retval) {
+> 			retval = mapping->a_ops->direct_IO(READ, iocb,
+> 						iov, pos, nr_segs);
+> 		}
+> 		...
+> 	}
+> 
+> ...only when "pos < size", direct I/O can be done, or 0 will be return.
+> 
+> I have tested the fix patch on Ext4, it is up to the mustard of
+> EINVAL in man2(read) as following:
+> 	#include <unistd.h>
+> 	ssize_t read(int fd, void *buf, size_t count);
+> 
+> 	EINVAL
+> 		fd is attached to an object which is unsuitable for reading;
+> 		or the file was opened with the O_DIRECT flag, and either the
+> 		address specified in buf, the value specified in count, or the
+> 		current file offset is not suitably aligned.
+> 
+> So I think this patch can be applied to fix ext4 direct I/O error.
+> 
+> However Ext4 introduces direct I/O read using iomap infrastructure
+> on kernel 5.5, the patch is commit <b1b4705d54ab>
+> ("ext4: introduce direct I/O read using iomap infrastructure"),
+> then Ext4 will be the same as XFS, they all use iomap_dio_rw() to do direct
+> I/O read. So this problem does not exist on kernel 5.5 for Ext4.
+> 
+> From above description, we can see this problem exists on all the kernel
+> versions between kernel 3.14 and kernel 5.4. It will cause the Applications
+> to fail to read. For example, when the search service downloads a new full
+> index file, the search engine is loading the previous index file and is
+> processing the search request, it can not use buffer io that may squeeze
+> the previous index file in use from pagecache, so the serch service must
+> use direct I/O read.
+> 
+> Please apply this patch on these kernel versions, or please use the method
+> on kernel 5.5 to fix this problem.
+> 
+> Fixes: 9fe55eea7e4b ("Fix race when checking i_size on direct i/o read")
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> Co-developed-by: Wang Long <wanglong19@meituan.com>
+> Signed-off-by: Wang Long <wanglong19@meituan.com>
+> Signed-off-by: Jiang Ying <jiangying8582@126.com>
+> 
+> Changes since V3:
+> 	Add the info: this bug could break some application that use the
+> 	stable kernel releases.
+> 
+> Changes since V2:
+> 	Optimize the description of the commit message and make a variation for
+> 	the patch, e.g. with:
+> 
+> 		Before:
+> 			loff_t size;
+> 			size = i_size_read(inode);
+> 		After:
+> 			loff_t size = i_size_read(inode);
+> 
+> Changes since V1:
+> 	Signed-off use real name and add "Fixes:" flag
+> 
+> ---
+>  fs/ext4/inode.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 516faa2..a66b0ac 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -3821,6 +3821,11 @@ static ssize_t ext4_direct_IO_read(struct kiocb *iocb, struct iov_iter *iter)
+>  	struct inode *inode = mapping->host;
+>  	size_t count = iov_iter_count(iter);
+>  	ssize_t ret;
+> +	loff_t offset = iocb->ki_pos;
+> +	loff_t size = i_size_read(inode);
+> +
+> +	if (offset >= size)
+> +		return 0;
+>  
+>  	/*
+>  	 * Shared inode_lock is enough for us - it protects against concurrent
+> -- 
+> 1.8.3.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
