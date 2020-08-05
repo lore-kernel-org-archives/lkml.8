@@ -2,111 +2,88 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43546C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 04:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0703C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 04:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F9D120786
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 04:07:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mGVViYKU"
+	by mail.kernel.org (Postfix) with ESMTP id A0DBB22B40
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 04:08:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596600490;
+	bh=HdyhYkZHVvgGyG2MkTHbCiM9dx3gDrnSt8EcCs7wWzM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ghzorMMyDqmJQTOgJDcyjQ1/FlNGQ98OoKbiOQdqJXVHKcgiiqIbbEHHD2yZo1RyA
+	 k8FgY154HCSOVlJTLan7BkLWhNaDHz5/Za27REEDa8J4sTib45PPZGajSvu482Skcq
+	 eRBJvHT9xpbjlKIJKqJS5Z34St2RV5nFg9lJ/MwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726078AbgHEEHb (ORCPT
+        id S1726130AbgHEEIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 00:07:31 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42631 "EHLO ozlabs.org"
+        Wed, 5 Aug 2020 00:08:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725372AbgHEEHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 00:07:30 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725869AbgHEEII (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 00:08:08 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BLykm6cGPz9sPB;
-        Wed,  5 Aug 2020 14:07:28 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596600449;
-        bh=19CZUh/4EolYZVJrU2t0ERZd7fiXwDyl8RGnJ0Gm438=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mGVViYKUCBu397j+sg2jV4e++memNP70bphJq71Do4e5DNnAC4ZYLNkZ4ITpe7nt8
-         KwYFvemJX4ZLOjaTpZQ+Y69TvBWmxP+cc4nq4npsn0u+r+xqPoYZEw4u3tYIhYPPxh
-         03D7biPXOfLCXwnYZUPl2aUGPW0zfmxSEYyrIXXMSsybQMNUbCGjTG9ZrFXPlLgoFQ
-         8+HgrYwNBFLEoHvE5iqmacqO5H89IBQaiB2IUDWFGfoyBQ144+A8W95hPfS2+es+bH
-         7VnJ+MnPW20SzRSyQrIRhqtWm+qNINsmsxLEzl/gucLtv2r2Lme8rNCaO/zzluy7GS
-         UxWQdDKJWY0mw==
-Date:   Wed, 5 Aug 2020 14:07:28 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Leon Romanovsky <leonro@mellanox.com>
-Subject: Re: linux-next: manual merge of the kspp tree with the rdma tree
-Message-ID: <20200805140728.61834c32@canb.auug.org.au>
-In-Reply-To: <20200728184520.5634a0a0@canb.auug.org.au>
-References: <20200728184520.5634a0a0@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id AE14A206D4;
+        Wed,  5 Aug 2020 04:08:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596600488;
+        bh=HdyhYkZHVvgGyG2MkTHbCiM9dx3gDrnSt8EcCs7wWzM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oMs7/1KTc51gPYGvshIFIQ1e08bUQ/uTtfI5Efo4Zqd5Ym/JpUmkYg4gosDSP/3MI
+         lJkZf6rANjr1BiP4QPnWW6wpwHVR1FH5alIDO61CaO/GhkjWC0BUXHeEToTo+MbIxl
+         8W64+GYAMuwigKKztiO0dyMxENwMLxuHNEDHk2uI=
+Date:   Tue, 4 Aug 2020 21:08:06 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Lokesh Gidra <lokeshgidra@google.com>, viro@zeniv.linux.org.uk,
+        stephen.smalley.work@gmail.com, casey@schaufler-ca.com,
+        jmorris@namei.org, kaleshsingh@google.com, dancol@dancol.org,
+        surenb@google.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nnk@google.com, jeffv@google.com,
+        calin@google.com, kernel-team@android.com, yanfei.xu@windriver.com,
+        syzbot+75867c44841cb6373570@syzkaller.appspotmail.com
+Subject: Re: [PATCH] Userfaultfd: Avoid double free of userfault_ctx and
+ remove O_CLOEXEC
+Message-ID: <20200805040806.GB1136@sol.localdomain>
+References: <20200804203155.2181099-1-lokeshgidra@google.com>
+ <20200805034758.lrobunwdcqtknsvz@yavin.dot.cyphar.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/.fTp2_Vi3uPU2TbLo57SuUD";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200805034758.lrobunwdcqtknsvz@yavin.dot.cyphar.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/.fTp2_Vi3uPU2TbLo57SuUD
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Aug 05, 2020 at 01:47:58PM +1000, Aleksa Sarai wrote:
+> On 2020-08-04, Lokesh Gidra <lokeshgidra@google.com> wrote:
+> > when get_unused_fd_flags returns error, ctx will be freed by
+> > userfaultfd's release function, which is indirectly called by fput().
+> > Also, if anon_inode_getfile_secure() returns an error, then
+> > userfaultfd_ctx_put() is called, which calls mmdrop() and frees ctx.
+> > 
+> > Also, the O_CLOEXEC was inadvertently added to the call to
+> > get_unused_fd_flags() [1].
+> 
+> I disagree that it is "wrong" to do O_CLOEXEC-by-default (after all,
+> it's trivial to disable O_CLOEXEC, but it's non-trivial to enable it on
+> an existing file descriptor because it's possible for another thread to
+> exec() before you set the flag). Several new syscalls and fd-returning
+> facilities are O_CLOEXEC-by-default now (the most obvious being pidfds
+> and seccomp notifier fds).
 
-Hi all,
+Sure, O_CLOEXEC *should* be the default, but this is an existing syscall so it
+has to keep the existing behavior.
 
-On Tue, 28 Jul 2020 18:45:20 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->=20
-> Today's linux-next merge of the kspp tree got a conflict in:
->=20
->   drivers/infiniband/core/uverbs_cmd.c
->=20
-> between commit:
->=20
->   29f3fe1d6854 ("RDMA/uverbs: Remove redundant assignments")
->=20
-> from the rdma tree and commit:
->=20
->   3f649ab728cd ("treewide: Remove uninitialized_var() usage")
->=20
-> from the kspp tree.
->=20
-> I fixed it up (the former basically did what the latter did, so I used
-> the former version) and can carry the fix as necessary. This is now fixed
-> as far as linux-next is concerned, but any non trivial conflicts should
-> be mentioned to your upstream maintainer when your tree is submitted for
-> merging.  You may also want to consider cooperating with the maintainer
-> of the conflicting tree to minimise any particularly complex conflicts.
+> At the very least there should be a new flag added that sets O_CLOEXEC.
 
-This is now a conflict between the rdma tree and Linus' tree.
+There already is one (but these patches broke it).
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/.fTp2_Vi3uPU2TbLo57SuUD
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8qMIAACgkQAVBC80lX
-0Gykngf+MHQ7qLRwHh87wEnXjwznwd8nvBtgo9EF7flXvVxAVxYTyTXau0UhM9ua
-rYtPHy/XPDoAgFdRHeJG3bSWmle1SWok0h9rxGFnbalfLP3+Ui0fm6l1TTb45hFq
-9uEljXfq0PSrOt1G+fK9BxQ/yYevDVZteMiBRptIzuah2DMIn31iS+IYBKcaZv4/
-DzojM6WUgkszFwhGP9O18vrJuRZCo7pWVXIQNoR0Ht/3/QtVy0TdWl0Jk3zvDzzD
-sDeyLyQXD67DFL8KHvgRxdmR55/JOiOWn1xTC8fj3jtaGFzn2c+9HsFh3JG9jAQA
-BjYiDOMeGLxKa7U1Z4X9clXcdAfwtg==
-=UTdf
------END PGP SIGNATURE-----
-
---Sig_/.fTp2_Vi3uPU2TbLo57SuUD--
+- Eric
