@@ -2,85 +2,100 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF0FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2FFF22CAE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BBDC22CA0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:49:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WelewHSS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbgHECsO (ORCPT
+        id S1727858AbgHECtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 22:48:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57884 "EHLO
+        Tue, 4 Aug 2020 22:49:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgHECsO (ORCPT
+        with ESMTP id S1727817AbgHECtX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 22:48:14 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2986C06174A;
-        Tue,  4 Aug 2020 19:48:13 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k39TL-009Y7j-1q; Wed, 05 Aug 2020 02:48:07 +0000
-Date:   Wed, 5 Aug 2020 03:48:07 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     macro@wdc.com, linux-riscv@lists.infradead.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] riscv: ptrace: Use the correct API for `fcsr' access
-Message-ID: <20200805024807.GM1236603@ZenIV.linux.org.uk>
-References: <20200805020745.GL1236603@ZenIV.linux.org.uk>
- <mhng-cd1ff2e9-7d34-4d56-8d79-b2d02a239290@palmerdabbelt-glaptop1>
+        Tue, 4 Aug 2020 22:49:23 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C130C06174A;
+        Tue,  4 Aug 2020 19:49:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=U+uU3PRmVfCzzIUwZ9ypGKsWqt2bIIRQA22zMffRCbE=; b=WelewHSSGMGxLBjLqbgXDMXRbI
+        2iStCBatsAfi1MVzBC/G6GOwsxFV+X1/0pJPJ43le/fGVdV3oIAn22FyhAsEksvQbmFeL1A7H27p7
+        +VAb4Ts8feLgXJTK7a2W0RBawILH7X+Gj9ysIfdzzuuj7xGOW9CrIsLeo4Nvn6u0VrJLriMPhGJxO
+        Wtpa2fY4BNgglJm1MUZzYZvRF36jqBiFl7PnAFam0PUWVDvuuafqOIxo1p2HKK7OOC3GFqOK11oTr
+        Ve1thUgYrsVuAeF16g4dcFC8pYSqUUqs3DTsxKz/fgVZt5BgppANYhiy/lntiZJQ+nWlfaILPY1VS
+        cH1M8Tqg==;
+Received: from [2601:1c0:6280:3f0::19c2] (helo=smtpauth.infradead.org)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k39UV-0007VO-1J; Wed, 05 Aug 2020 02:49:19 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] procfs: delete duplicated words + other fixes
+Date:   Tue,  4 Aug 2020 19:49:15 -0700
+Message-Id: <20200805024915.12231-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <mhng-cd1ff2e9-7d34-4d56-8d79-b2d02a239290@palmerdabbelt-glaptop1>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 07:20:05PM -0700, Palmer Dabbelt wrote:
-> On Tue, 04 Aug 2020 19:07:45 PDT (-0700), viro@zeniv.linux.org.uk wrote:
-> > On Tue, Aug 04, 2020 at 07:01:01PM -0700, Palmer Dabbelt wrote:
-> > 
-> > > > We currently have @start_pos fixed at 0 across all calls, which works as
-> > > > a result of the implementation, in particular because we have no padding
-> > > > between the FP general registers and the FP control and status register,
-> > > > but appears not to have been the intent of the API and is not what other
-> > > > ports do, requiring one to study the copy handlers to understand what is
-> > > > going on here.
-> > 
-> > start_pos *is* fixed at 0 and it's going to go away, along with the
-> > sodding user_regset_copyout() very shortly.  ->get() is simply a bad API.
-> > See vfs.git#work.regset for replacement.  And ->put() is also going to be
-> > taken out and shot (next cycle, most likely).
-> 
-> I'm not sure I understand what you're saying, but given that branch replaces
-> all of this I guess it's best to just do nothing on our end here?
+Delete repeated words in fs/proc/.
+{the, which}
+where "which which" was changed to "with which".
 
-It doesn't replace ->put() (for now); it _does_ replace ->get() and AFAICS the
-replacement is much saner:
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+To: linux-fsdevel@vger.kernel.org
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+---
+ fs/proc/base.c     |    2 +-
+ fs/proc/proc_net.c |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-static int riscv_fpr_get(struct task_struct *target,
-                         const struct user_regset *regset,
-                         struct membuf to)
-{
-	struct __riscv_d_ext_state *fstate = &target->thread.fstate;
-
-	membuf_write(&to, fstate, offsetof(struct __riscv_d_ext_state, fcsr));
-	membuf_store(&to, fstate->fcsr);
-	return membuf_zero(&to, 4);     // explicitly pad
-}
-
-user_regset_copyout() calling conventions are atrocious and so are those of
-regset ->get().  The best thing to do with both is to take them out of their
-misery and be done with that.  Do you see any problems with riscv gdbserver
-on current linux-next?  If not, I'd rather see that "API" simply go away...
-If there are problems, I would very much prefer fixes on top of what's done
-in that branch.
+--- linux-next-20200804.orig/fs/proc/base.c
++++ linux-next-20200804/fs/proc/base.c
+@@ -2016,7 +2016,7 @@ const struct dentry_operations pid_dentr
+  * file type from dcache entry.
+  *
+  * Since all of the proc inode numbers are dynamically generated, the inode
+- * numbers do not exist until the inode is cache.  This means creating the
++ * numbers do not exist until the inode is cache.  This means creating
+  * the dcache entry in readdir is necessary to keep the inode numbers
+  * reported by readdir in sync with the inode numbers reported
+  * by stat.
+--- linux-next-20200804.orig/fs/proc/proc_net.c
++++ linux-next-20200804/fs/proc/proc_net.c
+@@ -140,7 +140,7 @@ EXPORT_SYMBOL_GPL(proc_create_net_data);
+  * @mode: The file's access mode.
+  * @parent: The parent directory in which to create.
+  * @ops: The seq_file ops with which to read the file.
+- * @write: The write method which which to 'modify' the file.
++ * @write: The write method with which to 'modify' the file.
+  * @data: Data for retrieval by PDE_DATA().
+  *
+  * Create a network namespaced proc file in the @parent directory with the
+@@ -232,7 +232,7 @@ EXPORT_SYMBOL_GPL(proc_create_net_single
+  * @mode: The file's access mode.
+  * @parent: The parent directory in which to create.
+  * @show: The seqfile show method with which to read the file.
+- * @write: The write method which which to 'modify' the file.
++ * @write: The write method with which to 'modify' the file.
+  * @data: Data for retrieval by PDE_DATA().
+  *
+  * Create a network-namespaced proc file in the @parent directory with the
