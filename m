@@ -2,124 +2,156 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A62BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB0AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04ABF22D3E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:09:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="j1Y6eOK4"
+	by mail.kernel.org (Postfix) with ESMTP id 2C626206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:10:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728526AbgHERJU (ORCPT
+        id S1728545AbgHERJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:09:20 -0400
-Received: from mout.gmx.net ([212.227.17.22]:41503 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728455AbgHEREv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:04:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1596647056;
-        bh=30nFNzwPxZmz9Y2oABIElubYun9r6VlJJIvIzFQZ2Xg=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=j1Y6eOK4/meE5OlJuq7nV5/1tZQTDbIb0WAyuTnEV9W9352mCZM3HHaq831GiceSx
-         fgLA0zs30eUwgj/z5EAxrGr9g97L+Ulxo1k83AHy0VNfGgt5sBKeIEwHFaXQzQv2bW
-         1f8xJG600QmOvgSFHH6ezeOrOkMafkMRsbtLzx2I=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [80.208.209.197] ([80.208.209.197]) by web-mail.gmx.net
- (3c-app-gmx-bap13.server.lan [172.19.172.83]) (via HTTP); Wed, 5 Aug 2020
- 15:01:52 +0200
+        Wed, 5 Aug 2020 13:09:35 -0400
+Received: from mail-pl1-f200.google.com ([209.85.214.200]:33982 "EHLO
+        mail-pl1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728495AbgHERHK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:07:10 -0400
+Received: by mail-pl1-f200.google.com with SMTP id 65so32928794plf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 10:07:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=A1AQFUtZc3oUBC+ELHd0XSkjPz6GoWRGj0v6BMelR/0=;
+        b=XcDyIO5O8JreBZId5ejSbrbD8ffOt8z2ZeSooiv0S5iIPXDc7fBbBbZEgoGGTam3K3
+         YdIZUPtxIirj0m1BujDBfy3iP9uPUIJMOYesVFp/TVsBFjajc+uDqqZFD3CX5IJnPYbV
+         7EQHfGEuI3r5m8GREJO5phT9bCT83YetKH2UlFoJaUrWLT+dXsRQzJstCnGdBjx5FP+T
+         nIfqgnm7teRlkdhrURQqVBv3M0lsBtD0afk7+xbR5dK3VxBlsm49EBNgf7jQVwTSaWxt
+         XaGQVHnPdnH2SRaV+33r26fIKVMFHbPFAWfE/0XThfXncshfxBVySLhupYTiEvzDC/bv
+         mthw==
+X-Gm-Message-State: AOAM530x3uIjtQLWmS2YTc04tCjWOQMMgq/VF8LCpF47O3CN0VpPfrF+
+        KFBChs5+QYg20rzb6CcYwyArflRN4zqW+s3RmwvOyp9qtDj/
+X-Google-Smtp-Source: ABdhPJykkigbEi+M0gISZNJMdIPXT3ju2NiFa2v2XCWKQqEk8ic4jWaTpxRf/FDS3gSAkV6njowu7TVDsJBm9V9nFFyGPEY0qALC
 MIME-Version: 1.0
-Message-ID: <trinity-9f86ac52-5249-44e7-b51d-1ee00850f544-1596632511956@3c-app-gmx-bap13>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     David Woodhouse <dwmw2@infradead.org>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        chunhui dai <chunhui.dai@mediatek.com>,
-        David Airlie <airlied@linux.ie>,
-        Sean Wang <sean.wang@mediatek.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        CK Hu <ck.hu@mediatek.com>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Frank Wunderlich <linux@fw-web.de>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Aw: [PATCH 2/3] arm: dts: mt7623: move MT7623N GPU to separate
- mt7623n.dtsi file
-Content-Type: text/plain; charset=UTF-8
-Date:   Wed, 5 Aug 2020 15:01:52 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <20200805113013.2763510-2-dwmw2@infradead.org>
-References: <8ef96e4d02ef82e171409945ee6cc0348c4fe594.camel@infradead.org>
- <20200805113013.2763510-1-dwmw2@infradead.org>
- <20200805113013.2763510-2-dwmw2@infradead.org>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:G8MRnqoV1D2B0ErxKua+b90DZKS/NUdemUbrgGRwofr3Vs3wa3sLtGJLSaIjAmckjfQuY
- N2q+Z1WAU5keJxhmjgF2SFnKLAx/+ssSg5jG4hUSN4rhMAozwVfyIJHClWHwJMkftrm1YI9Hdl3N
- N2EZp25fXiSYSNd4CgWyeh3C56OTSnt6jPqOH91UQ3q3+VeqQ8/hSKikviDmaPX5zjuc+ZoBk88W
- vF8v75+g6PyEv8XnV1zeMlKR5e7LgiTjKKDbo3QbXbuY0GPdBBboJNcu7cnHK7c5hBWoJyu0lqbH
- o0=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:eGU+7LZ5Pbw=:Sko+N8vHSN+A2ehhghqC1j
- 5MMHe1kmzGXDBBaX64keZASyrgU+qlX7o+JajiNRC6IRo9MZqvUkedHsVkSpGrYyojWGuNB5H
- 9KX1Vczr5d3J9h3acYQQxadMgAe7EIh1s+76gXgbfOKinVAl6wBWexiuVdHHlLm/S0sbjyF9Z
- VCg3ZXCpzu6fmA31EjSdFKB2pcoLxliB/Q7NPN3eooHXsaGpXjApg57qAs/HMfESeQDYciWaj
- 1UXePZmbm63g2L6/RZcFtdy6zOGcKiETn2s1FvAeli1kHSopIklGmblk7nQcKLjMajrjcOioG
- qfKDuin+bEuUmkjk4SXsLduH2DnX/+zEHre1Jesd+haC8kLTCV8+0Geripw13gnzPZ62bT6Dh
- Ed2rUps/JEPdMUhlja5BNgD62C8B3h2JUqowbeA4SaRKReeOVoAERR3HMfyi5WPouE5xhRptf
- RegBBdMk6+sDlsVu/hMMy2GrDgn/0Kei1XN+EM2Vf3JMpezFWZIxQ5CPMViCq0kJDpQo1hKVy
- PVCsWTlDGdOqvi+A2cXB31zpPAjkQ70+ArZJtecl8ubq7u0yzeuGfM7eX6oKM00njHW43ArRA
- GiHHCcgL8ITsw5cRGaoytN9wRwUhCjEXKYOSUfXL0F6iggOsgPH7w4MqxWCpNaTGH58tI1Ihz
- dpPIcjKdEbs7ykZdlqhL5i7kp+5L5wwL7znRsOMEXPWEMJnFC1v9bUxQ489+GPvW3DQA=
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a6b:b4d1:: with SMTP id d200mr3127653iof.70.1596629836200;
+ Wed, 05 Aug 2020 05:17:16 -0700 (PDT)
+Date:   Wed, 05 Aug 2020 05:17:16 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000039829c05ac205a4c@google.com>
+Subject: KMSAN: uninit-value in do_xdp_generic
+From:   syzbot <syzbot+007ef8d907f2fb6e17ca@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, glider@google.com,
+        hawk@kernel.org, john.fastabend@gmail.com, kafai@fb.com,
+        kpsingh@chromium.org, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David
+Hello,
 
-> Gesendet: Mittwoch, 05. August 2020 um 13:30 Uhr
-> Von: "David Woodhouse" <dwmw2@infradead.org>
-> From: David Woodhouse <dwmw@amazon.co.uk>
->
-> The MT7623A doesn't have a GPU; add it only for MT7623N boards.
->
-> Fixes: 1f6ed224594 ("arm: dts: mt7623: add Mali-450 device node")
-> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+syzbot found the following issue on:
 
-> diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dt=
-si
-> index 3a6b856e5b74..dcd2f5ba4e20 100644
-> --- a/arch/arm/boot/dts/mt7623.dtsi
-> +++ b/arch/arm/boot/dts/mt7623.dtsi
-> @@ -734,30 +734,6 @@ g3dsys: syscon@13000000 {
->  		#reset-cells =3D <1>;
->  	};
->
-> -	mali: gpu@13040000 {
-> -		compatible =3D "mediatek,mt7623-mali", "arm,mali-450";
-...
-> -		clocks =3D <&topckgen CLK_TOP_MMPLL>,
-> -			 <&g3dsys CLK_G3DSYS_CORE>;
-> -		clock-names =3D "bus", "core";
-> -		power-domains =3D <&scpsys MT2701_POWER_DOMAIN_MFG>;
-> -		resets =3D <&g3dsys MT2701_G3DSYS_CORE_RST>;
-> -	};
+HEAD commit:    93f54a72 instrumented.h: fix KMSAN support
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=16fa5198900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fa4f3b91169c2501
+dashboard link: https://syzkaller.appspot.com/bug?extid=007ef8d907f2fb6e17ca
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+userspace arch: i386
 
-i guess you should to move g3dsys too, and maybe the mmsys which is also d=
-rm-related?
+Unfortunately, I don't have any reproducer for this issue yet.
 
-I can add this to my series, but before i change my series, i need advice =
-from MTK/DT owners whats the preferred way ;)
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+007ef8d907f2fb6e17ca@syzkaller.appspotmail.com
 
-regards Frank
+=====================================================
+BUG: KMSAN: uninit-value in netif_receive_generic_xdp net/core/dev.c:4670 [inline]
+BUG: KMSAN: uninit-value in do_xdp_generic+0x1312/0x24f0 net/core/dev.c:4735
+CPU: 1 PID: 11582 Comm: syz-executor.1 Not tainted 5.8.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1df/0x240 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ netif_receive_generic_xdp net/core/dev.c:4670 [inline]
+ do_xdp_generic+0x1312/0x24f0 net/core/dev.c:4735
+ __netif_receive_skb_core+0x9a0/0x5890 net/core/dev.c:5107
+ __netif_receive_skb_one_core net/core/dev.c:5279 [inline]
+ __netif_receive_skb net/core/dev.c:5395 [inline]
+ netif_receive_skb_internal net/core/dev.c:5497 [inline]
+ netif_receive_skb+0x56c/0xff0 net/core/dev.c:5556
+ tun_rx_batched include/linux/skbuff.h:4327 [inline]
+ tun_get_user+0x6df8/0x72f0 drivers/net/tun.c:1972
+ tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2001
+ call_write_iter include/linux/fs.h:1908 [inline]
+ new_sync_write fs/read_write.c:503 [inline]
+ vfs_write+0xd98/0x1480 fs/read_write.c:578
+ ksys_write+0x267/0x450 fs/read_write.c:631
+ __do_sys_write fs/read_write.c:643 [inline]
+ __se_sys_write+0x92/0xb0 fs/read_write.c:640
+ __ia32_sys_write+0x4a/0x70 fs/read_write.c:640
+ do_syscall_32_irqs_on arch/x86/entry/common.c:430 [inline]
+ __do_fast_syscall_32+0x2aa/0x400 arch/x86/entry/common.c:477
+ do_fast_syscall_32+0x6b/0xd0 arch/x86/entry/common.c:505
+ do_SYSENTER_32+0x73/0x90 arch/x86/entry/common.c:554
+ entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
+RIP: 0023:0xf7f1b549
+Code: Bad RIP value.
+RSP: 002b:00000000f54910cc EFLAGS: 00000296 ORIG_RAX: 0000000000000004
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000020000240
+RDX: 000000000000000c RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+
+Uninit was created at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
+ kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:80
+ slab_alloc_node mm/slub.c:2839 [inline]
+ __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4478
+ __kmalloc_reserve net/core/skbuff.c:142 [inline]
+ pskb_expand_head+0x20b/0x1b00 net/core/skbuff.c:1627
+ netif_receive_generic_xdp net/core/dev.c:4616 [inline]
+ do_xdp_generic+0x58c/0x24f0 net/core/dev.c:4735
+ __netif_receive_skb_core+0x9a0/0x5890 net/core/dev.c:5107
+ __netif_receive_skb_one_core net/core/dev.c:5279 [inline]
+ __netif_receive_skb net/core/dev.c:5395 [inline]
+ netif_receive_skb_internal net/core/dev.c:5497 [inline]
+ netif_receive_skb+0x56c/0xff0 net/core/dev.c:5556
+ tun_rx_batched include/linux/skbuff.h:4327 [inline]
+ tun_get_user+0x6df8/0x72f0 drivers/net/tun.c:1972
+ tun_chr_write_iter+0x1f2/0x360 drivers/net/tun.c:2001
+ call_write_iter include/linux/fs.h:1908 [inline]
+ new_sync_write fs/read_write.c:503 [inline]
+ vfs_write+0xd98/0x1480 fs/read_write.c:578
+ ksys_write+0x267/0x450 fs/read_write.c:631
+ __do_sys_write fs/read_write.c:643 [inline]
+ __se_sys_write+0x92/0xb0 fs/read_write.c:640
+ __ia32_sys_write+0x4a/0x70 fs/read_write.c:640
+ do_syscall_32_irqs_on arch/x86/entry/common.c:430 [inline]
+ __do_fast_syscall_32+0x2aa/0x400 arch/x86/entry/common.c:477
+ do_fast_syscall_32+0x6b/0xd0 arch/x86/entry/common.c:505
+ do_SYSENTER_32+0x73/0x90 arch/x86/entry/common.c:554
+ entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
+=====================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
