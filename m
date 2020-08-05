@@ -4,43 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C7AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8120BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E52722D00
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AF9322CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:53:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbgHEQwb (ORCPT
+        id S1728095AbgHEQw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 12:52:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46406 "EHLO
+        Wed, 5 Aug 2020 12:52:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728078AbgHEQsi (ORCPT
+        with ESMTP id S1728014AbgHEQsi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:48:38 -0400
-Received: from magratgarlick.emantor.de (magratgarlick.emantor.de [IPv6:2a01:4f8:c17:c88::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 614ADC034606;
-        Wed,  5 Aug 2020 05:40:10 -0700 (PDT)
-Received: by magratgarlick.emantor.de (Postfix, from userid 114)
-        id 19DFB10D018; Wed,  5 Aug 2020 14:25:27 +0200 (CEST)
-Received: from localhost (200116b828fb3e0270a11fb9006029e2.dip.versatel-1u1.de [IPv6:2001:16b8:28fb:3e02:70a1:1fb9:60:29e2])
-        by magratgarlick.emantor.de (Postfix) with ESMTPSA id 241C910D014;
-        Wed,  5 Aug 2020 14:25:24 +0200 (CEST)
-From:   Rouven Czerwinski <r.czerwinski@pengutronix.de>
-To:     Boris Pismenny <borisp@mellanox.com>,
-        Aviad Yehezkel <aviadye@mellanox.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Rouven Czerwinski <r.czerwinski@pengutronix.de>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] net: tls: add compat for get/setsockopt
-Date:   Wed,  5 Aug 2020 14:25:02 +0200
-Message-Id: <20200805122501.4856-1-r.czerwinski@pengutronix.de>
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30BCEC0A8899;
+        Wed,  5 Aug 2020 06:58:36 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id BDE0A296C3D
+Received: by jupiter.universe (Postfix, from userid 1000)
+        id AFE19480115; Wed,  5 Aug 2020 15:58:26 +0200 (CEST)
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Sebastian Reichel <sre@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCHv1] ARM: dts/imx6q-bx50v3: Add IRQ support for internal switch
+Date:   Wed,  5 Aug 2020 15:58:17 +0200
+Message-Id: <20200805135817.391409-1-sebastian.reichel@collabora.com>
 X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -49,68 +50,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If compat_{s,g}etsockopt for TLS are not implemented, the TLS layer will
-never be called on a system where CONFIG_COMPAT is enabled and userspace
-is 32bit. Implement both to support CONFIG_COMPAT.
+This adds missing interrupt support for the internal Marvell
+switch, so that the kernel does not have to keep polling the
+PHYs on the bit-banged MDIO bus all the time.
 
-Signed-off-by: Rouven Czerwinski <r.czerwinski@pengutronix.de>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- net/tls/tls_main.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ arch/arm/boot/dts/imx6q-bx50v3.dtsi | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
-index ec10041c6b7d..92c5893fe692 100644
---- a/net/tls/tls_main.c
-+++ b/net/tls/tls_main.c
-@@ -450,6 +450,18 @@ static int tls_getsockopt(struct sock *sk, int level, int optname,
- 	return do_tls_getsockopt(sk, optname, optval, optlen);
- }
+diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+index 1938b04199c4..1fb67cd2b2a1 100644
+--- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
++++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+@@ -102,10 +102,15 @@ mdio0: mdio-gpio {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
  
-+static int tls_compat_getsockopt(struct sock *sk, int level, int optname,
-+				 char __user *optval, int __user *optlen)
-+{
-+	struct tls_context *ctx = tls_get_ctx(sk);
-+
-+	if (level != SOL_TLS)
-+		return ctx->sk_proto->compat_getsockopt(sk, level, optname,
-+							optval, optlen);
-+
-+	return do_tls_getsockopt(sk, optname, optval, optlen);
-+}
-+
- static int do_tls_setsockopt_conf(struct sock *sk, char __user *optval,
- 				  unsigned int optlen, int tx)
- {
-@@ -611,6 +623,18 @@ static int tls_setsockopt(struct sock *sk, int level, int optname,
- 	return do_tls_setsockopt(sk, optname, optval, optlen);
- }
+-		switch@0 {
++		switch: switch@0 {
+ 			compatible = "marvell,mv88e6085"; /* 88e6240*/
+ 			reg = <0>;
  
-+static int tls_compat_setsockopt(struct sock *sk, int level, int optname,
-+				 char __user *optval, unsigned int optlen)
-+{
-+	struct tls_context *ctx = tls_get_ctx(sk);
++			interrupt-parent = <&gpio2>;
++			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
 +
-+	if (level != SOL_TLS)
-+		return ctx->sk_proto->compat_setsockopt(sk, level, optname,
-+							optval, optlen);
-+
-+	return do_tls_setsockopt(sk, optname, optval, optlen);
-+}
-+
- struct tls_context *tls_ctx_create(struct sock *sk)
- {
- 	struct inet_connection_sock *icsk = inet_csk(sk);
-@@ -660,6 +684,10 @@ static void build_protos(struct proto prot[TLS_NUM_CONFIG][TLS_NUM_CONFIG],
- 	prot[TLS_BASE][TLS_BASE].setsockopt	= tls_setsockopt;
- 	prot[TLS_BASE][TLS_BASE].getsockopt	= tls_getsockopt;
- 	prot[TLS_BASE][TLS_BASE].close		= tls_sk_proto_close;
-+#ifdef CONFIG_COMPAT
-+	prot[TLS_BASE][TLS_BASE].compat_setsockopt	= tls_compat_setsockopt;
-+	prot[TLS_BASE][TLS_BASE].compat_getsockopt	= tls_compat_getsockopt;
-+#endif
+ 			switch_ports: ports {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+@@ -117,22 +122,32 @@ mdio {
  
- 	prot[TLS_SW][TLS_BASE] = prot[TLS_BASE][TLS_BASE];
- 	prot[TLS_SW][TLS_BASE].sendmsg		= tls_sw_sendmsg;
+ 				switchphy0: switchphy@0 {
+ 					reg = <0>;
++					interrupt-parent = <&switch>;
++					interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+ 				};
+ 
+ 				switchphy1: switchphy@1 {
+ 					reg = <1>;
++					interrupt-parent = <&switch>;
++					interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
+ 				};
+ 
+ 				switchphy2: switchphy@2 {
+ 					reg = <2>;
++					interrupt-parent = <&switch>;
++					interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
+ 				};
+ 
+ 				switchphy3: switchphy@3 {
+ 					reg = <3>;
++					interrupt-parent = <&switch>;
++					interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
+ 				};
+ 
+ 				switchphy4: switchphy@4 {
+ 					reg = <4>;
++					interrupt-parent = <&switch>;
++					interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
+ 				};
+ 			};
+ 		};
 -- 
 2.27.0
 
