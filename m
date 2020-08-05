@@ -2,72 +2,202 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB976C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB36C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0C3322B40
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 874C322B45
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:50:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v+JgvnM9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbgHEHur (ORCPT
+        id S1727891AbgHEHus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 03:50:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48078 "EHLO
+        Wed, 5 Aug 2020 03:50:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgHEHun (ORCPT
+        with ESMTP id S1727054AbgHEHuo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 03:50:43 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C4A0C061756
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 00:50:42 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1k3EC7-0003wV-G7; Wed, 05 Aug 2020 09:50:39 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1k3EC7-0007Z0-5j; Wed, 05 Aug 2020 09:50:39 +0200
-Date:   Wed, 5 Aug 2020 09:50:39 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     linux-input@vger.kernel.org, dmitry.torokhov@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: ili210x: Fix potential memory leaks
-Message-ID: <20200805075039.jptytefw3mm2d4nq@pengutronix.de>
-References: <20200804183007.117125-1-aford173@gmail.com>
+        Wed, 5 Aug 2020 03:50:44 -0400
+Received: from mail-ua1-x931.google.com (mail-ua1-x931.google.com [IPv6:2607:f8b0:4864:20::931])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C788BC06174A
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 00:50:43 -0700 (PDT)
+Received: by mail-ua1-x931.google.com with SMTP id 4so8897252uav.8
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 00:50:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gj5SkepGEW+lETvyOPuyK01bP55UQABNwY/RW5WoiJM=;
+        b=v+JgvnM94+n4xy56dO+7zH4S6cRMiq122hMjDr16960VGLHmZ9x7hZt+xMACqjtMBw
+         4YWQB/add8XR6DKbGkgxwf4IeWSfvDG97fXYpjsv6s8kkrCBjyk36UeyreoVlzByW5xo
+         iuZgIy2LwS1heLM36TwLZzcz/31dH6/hWP9MEi+k1Ls/0EqN5O34n3CRJX8Ocvy/lFRs
+         HXTyHJf8W2/InzSr1U/KB2k4Nlf6OkK27DZms+wt7Y/T20lVJycCuoHncYEVJkzfUzU0
+         KI1sxOOGmXICSsOF/eSse9NpXubA5u2xbfFPxElvM0HLwNwQySZOx2YM3JofFvAq//wo
+         qb/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gj5SkepGEW+lETvyOPuyK01bP55UQABNwY/RW5WoiJM=;
+        b=cpsY8pgcK03KQfaJwH3ljfgW4sWZ9fwYd3JH0cSVLkaFH+/tEkdJVD029PT6lTiyxj
+         coDMs805C6mF3YqGTHjmt30gQm0M4KFY6eKfJwBmfUFAj/Jim74xEsvmlxp0tLXeWRJb
+         5wpTRCk5m4shRmB0mKELOI2WnI8KircF9C1DsjqBxxxx4OQzOOhIMorf46Gdd+fmT/Dx
+         7ViEWWAe44PqLe3gt3+DhKGXvE4AR9qu+YX2mkhSJLN2x05cEShvrQGTvcBAiDK6nNg/
+         R0GSt3kT+R64BLMyYS0binn5/mRzLYPQPXCsYNxFVWsjRDYkTj2rEIIy6cSrb4WCh79Y
+         cHvw==
+X-Gm-Message-State: AOAM533P+LA+e9AycE0TSb2lMREB1IRYBmkeE3y+L3epghmQAKrFCUqz
+        9nfZgme/T486hth81vUD0S3HGhGQH9PqikMCbFWoyg==
+X-Google-Smtp-Source: ABdhPJxm66X3L3voqWv9Ix6YPW9OpTesj8g5n5syrl9ILyTi/zoy67G4hOSghhH2CNbeyn7o+bmQAWuLETdubR/svf8=
+X-Received: by 2002:ab0:1c14:: with SMTP id a20mr1150946uaj.129.1596613842255;
+ Wed, 05 Aug 2020 00:50:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200804183007.117125-1-aford173@gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:48:37 up 263 days, 23:07, 241 users,  load average: 0.14, 0.10,
- 0.05
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <fb0340aaf273be84e915214a3d8bae4ac85d7c0b.camel@ew.tq-group.com>
+ <CAPDyKFq+RiwbDj+58+W5GTcT7=ZOpZFmc02+FxjRGYwbBgA8oQ@mail.gmail.com>
+ <cfcec3df57e6dd5ef353ef3a5b4b9793c28eb401.camel@ew.tq-group.com>
+ <CAPDyKFptySRTbWto9QYWZ-feL51JvPkZDGsETJ4svz0VbV31Bw@mail.gmail.com> <4ecc41303f9232319cedf414fc466a8c4c0c6dc6.camel@ew.tq-group.com>
+In-Reply-To: <4ecc41303f9232319cedf414fc466a8c4c0c6dc6.camel@ew.tq-group.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 5 Aug 2020 09:50:06 +0200
+Message-ID: <CAPDyKFrA+P=G+LQLSJXZhPyAn_jUzv7tSfaphiKVMuenmKEs+w@mail.gmail.com>
+Subject: Re: (EXT) Re: (EXT) Re: Consistent block device references for root= cmdline
+To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Jens Axboe <axboe@kernel.dk>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adam,
+On Wed, 29 Jul 2020 at 10:43, Matthias Schiffer
+<matthias.schiffer@ew.tq-group.com> wrote:
+>
+> On Tue, 2020-07-07 at 16:14 +0200, Ulf Hansson wrote:
+> > On Thu, 11 Jun 2020 at 13:20, Matthias Schiffer
+> > <matthias.schiffer@ew.tq-group.com> wrote:
+> > >
+> > > On Wed, 2020-06-10 at 16:52 +0200, Ulf Hansson wrote:
+> > > > On Wed, 10 Jun 2020 at 15:15, Matthias Schiffer
+> > > > <matthias.schiffer@ew.tq-group.com> wrote:
+> > > > >
+> > > > > Hello all,
+> > > > >
+> > > > > there have been numerous attempts to make the numbering of
+> > > > > mmcblk
+> > > > > devices consistent, mostly by using aliases from the DTS ([1],
+> > > > > [2],
+> > > > > [3]), but all have been (rightfully) rejected. Unless I have
+> > > > > overlooked
+> > > > > a more recent development, no attempts for a different solution
+> > > > > were
+> > > > > made.
+> > > >
+> > > > According to aliases attempts, I think those have failed, mainly
+> > > > because of two reasons.
+> > > >
+> > > > 1. Arguments stating that LABELs/UUIDs are variable alternatives.
+> > > > This
+> > > > isn't the case, which I think was also concluded from the several
+> > > > earlier discussions.
+> > > > 2. Patches that tried adding support for mmc aliases, were not
+> > > > correctly coded. More precisely, what needs to be addressed is
+> > > > that
+> > > > the mmc core also preserves the same ids to be set for the host
+> > > > class
+> > > > as the block device, mmc[n] must correspond to mmcblk[n].
+> > > >
+> > > > >
+> > > > > As far as I can tell, the core of the issue seems to be the
+> > > > > following:
+> > > > >
+> > > > > The existing solutions like LABELs and UUIDs are viable
+> > > > > alternatives in
+> > > > > many cases, but in particular on embedded systems, this is not
+> > > > > quite
+> > > > > sufficient: In addition to the problem that more knowledge
+> > > > > about
+> > > > > the
+> > > > > system to boot is required in the bootloader, this approach
+> > > > > fails
+> > > > > completely when the same firmware image exists on multiple
+> > > > > devices,
+> > > > > for
+> > > > > example on an eMMC and an SD card - not an entirely uncommon
+> > > > > situation
+> > > > > during the development of embedded systems.
+> > > > >
+> > > > > With udev, I can refer to a specific partition using a path
+> > > > > like
+> > > > > /dev/disk/by-path/platform-2194000.usdhc-part2. In [4] it was
+> > > > > proposed
+> > > > > to add a way to refer to a device path/phandle from the kernel
+> > > > > command
+> > > > > line. Has there been any progress on this proposal?
+> > > >
+> > > > Lots of time during the years I have been approached, both
+> > > > publicly
+> > > > and offlist, about whether it would be possible to add support
+> > > > for
+> > > > "consistent" mmcblk devices. To me, I am fine with the aliases
+> > > > approach, as long as it gets implemented correctly.
+> > >
+> > >
+> > > It seems the principal technical problem is the one described here:
+> > >
+> > > https://www.spinics.net/lists/linux-mmc/msg26602.html
+> > >
+> > > I don't see any way to solve this completely, as there seem to be
+> > > two
+> > > fundamentally conflicting requirements:
+> > >
+> > > 1) If a mounted SD card is replaced, it must be assigned a new
+> > > /dev/mmcblkN
+> > > 2) /dev/mmcblkN should always match the configured alias IDs
+> > >
+> > > What is the reason we need 1) - is it possible to have multiple
+> > > eMMCs
+> > > or SD cards on a single bus, with detection at runtime?
+> >
+> > Yes. The mmc_bus_type holds all cards - all discovered at runtime.
+> >
+> > > Otherwise I'd
+> > > expect this to be handled like other drives with removable media
+> > > (CD,
+> > > floppy), with static device assignment.
+> > >
+> > > If we can't give up on 1) for some reason, we'll have to accept
+> > > that we
+> > > can't guarantee 2) unconditionally. As far as I can tell, the
+> > > patches
+> > > provided by Sascha and others did that in a reasonable way: The
+> > > aliases
+> > > would work in most cases - in particular for the first assignment
+> > > on
+> > > boot, which is required to find the correct rootfs.
+> >
+> > Well, if we would pre-parse the DTB to look for all "mmc block
+> > aliases" and keep a mark of those ids as being reserved, then we
+> > should be able to cope with both 1) and 2).
+>
+> Hello Ulf,
+>
+> it seems to me like Sascha's patches from 2014 do precisely that:
+>
+> https://www.spinics.net/lists/linux-mmc/msg26587.html
+> https://www.spinics.net/lists/linux-mmc/msg26588.html
+>
+> I haven't looked into porting this to a modern kernel yet, but do you
+> think that the approach is sound?
 
-On 20-08-04 13:30, Adam Ford wrote:
-> This driver requests, memory twice and requests a threaded irq, but
-> it doesn't free any of them if something fails.
+Yes, something along those lines.
 
-Free'ing is done automatically because the driver uses devres
-(identified by devm_ prepfix) functions.
-
-Regards,
-  Marco
+Kind regards
+Uffe
