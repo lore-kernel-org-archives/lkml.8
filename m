@@ -2,107 +2,101 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 684F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B13C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B6772076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 732A02076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:37:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UKCTKQ6R"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BeTK1eXO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbgHEGgM (ORCPT
+        id S1727872AbgHEGhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 02:36:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36640 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728279AbgHEGgH (ORCPT
+        Wed, 5 Aug 2020 02:37:15 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:35898 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725904AbgHEGhP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 02:36:07 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D454EC061756
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 23:36:06 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id r7so6328039vsq.5
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 23:36:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=adHOuChV0ln7Qcii+VypbIa4tc9bbGRg/egclcdTY6M=;
-        b=UKCTKQ6Rf+44txRfGkrZLCV7297R2aUCVsx3nWiQXhMF5ZNFWlwcfzZPbLwluhgr3B
-         xyn+f8EymF/Qaja5bzd4jwx4DEIy3QlOq4t56DhoPJPaRpVRv+TwSBM5O/FnscoAGDhU
-         iP5J8ERLpHHIKwXhXT7yjFb5mNmLYix5/od2SZwGGEBKytmvW2kX4Y+aM84uEeGjzBHi
-         cXcWcNV61rGotQH4ZPlE2VuUSeJ2lLIbEyBk5MykGVpPTdSvOk59oKT46elkZG4KdxQk
-         Z8gBgpeoZIi3UVehx4D21BLQTXxSF5k2n3DdByts0rhmOEFI+oWeGUvRrN3Og8XMoKfv
-         Lv9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=adHOuChV0ln7Qcii+VypbIa4tc9bbGRg/egclcdTY6M=;
-        b=YESjSroEKeOEx7dTi4iDsEj3OI073r3QQutvqa6BW6IaGb8duKeXJ+E5UCBtUAvXr5
-         GG3xjOFRVQ/axYnGWBSLDsuGJAvPPwcATOwYNRuWwVLX5lOfehrsLMKhMi6tbCOEyFQh
-         3+7IL/MatP7kozVIz12YZsGA2FDa3cF13+UbPawzv0WQZLRyq5pM/TqQVJ+eQZ6Hq1gq
-         pCk2TzI6mYZZxZIgolHqNTtvR1BGGKt4I9IuGa8ARiTO2IDYV3zxa0a6D7m7uJWc8oUU
-         ASBv2f8q/mPAzdpPgRpDkg7VZyt2+/wvXEIOav6SBOJ1gzTAzyBSsAo9MAISJSNzCi91
-         BV6Q==
-X-Gm-Message-State: AOAM530oxibQXSPmAtHLUXnKC0FmxfE6BzATwGis8V7vrCmTEXAEjmiq
-        6l7aV3i39MZupTzs9zRffry6d3Bpe/PngGqGZUrDkA==
-X-Google-Smtp-Source: ABdhPJygrLtiiua0MbANCTFcIQH0r/Qr9GTi8aEdC0lRYfpzc3p2PifXe/dU4I1dY5A2exQdMw8JAuUVMFmI1ZTUi2E=
-X-Received: by 2002:a67:e9d8:: with SMTP id q24mr882259vso.165.1596609366126;
- Tue, 04 Aug 2020 23:36:06 -0700 (PDT)
+        Wed, 5 Aug 2020 02:37:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596609433;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=62Tw1BBsMzGMC/Ik8n+g/03qKyYodUE+BoWaAV0f2HI=;
+        b=BeTK1eXOwqT2HCvJEOELRXi5yhzyTagJnLzb4aDNRXRxuE5TgTf6UkuI/+JwhcDGFfDsK1
+        9EpeZYhNZAt689kTKlcOPWSBG9j6a7N8HZ7tV70RwaC2YvrFd8fgvPG0xgFuIbMwmGrCrK
+        OfOpf9WLPeN1lOhV5GUuo3bPFP03dt4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-299-cx6-diCwOs2Uy8z-OL4piA-1; Wed, 05 Aug 2020 02:37:09 -0400
+X-MC-Unique: cx6-diCwOs2Uy8z-OL4piA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2142480183C;
+        Wed,  5 Aug 2020 06:37:08 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-13-0.pek2.redhat.com [10.72.13.0])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E474710013D7;
+        Wed,  5 Aug 2020 06:37:01 +0000 (UTC)
+Date:   Wed, 5 Aug 2020 14:36:58 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Lianbo Jiang <lijiang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+        tglx@linutronix.de, bp@alien8.de, mingo@redhat.com, x86@kernel.org,
+        hpa@zytor.com, bhe@redhat.com, k-hagio@ab.jp.nec.com,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 0/3] x86/kexec_file: Fix some corners bugs and improve
+ the crash_exclude_mem_range()
+Message-ID: <20200805063658.GA22086@dhcp-128-65.nay.redhat.com>
+References: <20200804044933.1973-1-lijiang@redhat.com>
 MIME-Version: 1.0
-References: <20200715073344.8965-1-benchuanggli@gmail.com>
-In-Reply-To: <20200715073344.8965-1-benchuanggli@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 5 Aug 2020 08:35:28 +0200
-Message-ID: <CAPDyKFr70xOEez+u_xiThtudozE6580ydc8_Vp=KVRekSrzNHw@mail.gmail.com>
-Subject: Re: [PATCH] mmc: cqhci: Fix a print format for the task descriptor
-To:     Ben Chuang <benchuanggli@gmail.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Harjani Ritesh <riteshh@codeaurora.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200804044933.1973-1-lijiang@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 Jul 2020 at 09:34, Ben Chuang <benchuanggli@gmail.com> wrote:
->
-> The format string of the task descriptor should be "%016llx".
->
-> Signed-off-by: Ben Chuang <benchuanggli@gmail.com>
+Hi Lianbo,
 
-Applied for next (a while ago), thanks!
-Kind regards
-Uffe
+Added Andrew in cc.
+On 08/04/20 at 12:49pm, Lianbo Jiang wrote:
+> This series includes the following patches, it fixes some corners bugs
+> and improves the crash_exclude_mem_range().
+> 
+> [1] [PATCH 1/3] x86/crash: Correct the address boundary of function
+>     parameters
+> [2] [PATCH 2/3] kexec: Improve the crash_exclude_mem_range() to handle
+>     the overlapping ranges
+> [3] [PATCH 3/3] kexec_file: correctly output debugging information for
+>     the PT_LOAD elf header
+> 
+> Lianbo Jiang (3):
+>   x86/crash: Correct the address boundary of function parameters
+>   kexec: Improve the crash_exclude_mem_range() to handle the overlapping
+>     ranges
+>   kexec_file: correctly output debugging information for the PT_LOAD elf
+>     header
+> 
+>  arch/x86/kernel/crash.c |  2 +-
+>  kernel/kexec_file.c     | 33 ++++++++++++++++++++++-----------
+>  2 files changed, 23 insertions(+), 12 deletions(-)
+> 
+> -- 
+> 2.17.1
 
+Looks good, thanks for the patches
 
+Acked-by: Dave Young <dyoung@redhat.com>
 
-> ---
->  drivers/mmc/host/cqhci.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
-> index 75934f3c117e..280d64d0b809 100644
-> --- a/drivers/mmc/host/cqhci.c
-> +++ b/drivers/mmc/host/cqhci.c
-> @@ -422,7 +422,7 @@ static void cqhci_prep_task_desc(struct mmc_request *mrq,
->                 CQHCI_BLK_COUNT(mrq->data->blocks) |
->                 CQHCI_BLK_ADDR((u64)mrq->data->blk_addr);
->
-> -       pr_debug("%s: cqhci: tag %d task descriptor 0x016%llx\n",
-> +       pr_debug("%s: cqhci: tag %d task descriptor 0x%016llx\n",
->                  mmc_hostname(mrq->host), mrq->tag, (unsigned long long)*data);
->  }
->
-> --
-> 2.27.0
->
+Thanks
+Dave
+
