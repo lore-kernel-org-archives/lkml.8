@@ -2,150 +2,113 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76413C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9984DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51DB92245C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:05:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="pxs8v3QZ"
+	by mail.kernel.org (Postfix) with ESMTP id 79EAD2245C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:09:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728593AbgHEHFu (ORCPT
+        id S1726627AbgHEHJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 03:05:50 -0400
-Received: from mx07-00178001.pphosted.com ([185.132.182.106]:27810 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728037AbgHEHE3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 03:04:29 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07572gFl017714;
-        Wed, 5 Aug 2020 09:04:17 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=MR0NzTVq272GJr+h7by9Bf1/nQnQ6WI6tLKx+kOBiq8=;
- b=pxs8v3QZByuCYgeM91J0267Ab1GT2GSrjSTFK+e82tgGue/Z8wfkmjK7vVod+41T/gts
- LugbCKvh297n209P/BxBHUwiV5HKYuR77dqHdYv9jFKFzh8WKuvoC48eTkjZSF4LB9D5
- epKNtqfcpeB3pLsMmhpNwmEqf5CjKFJ20MekA5t5YuHXvzaz8TKtXryXgIVYbiKBTw9o
- aXolgbVaZ12vSC7L8y0lH2V045LFpO/6FA5kApWAAhEIh5GqiaAxz9aCn8hWfrA2o6vH
- L/bVlmwYZfMb8OwWTVd5YNQSSgvNhNqplHYl4wAg9PapqsBgvLaQvo6Q2ZJ981JoM/o1 JA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32n6sb6qx2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Aug 2020 09:04:17 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EA14210003A;
-        Wed,  5 Aug 2020 09:04:16 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DCAEA2A4D8E;
-        Wed,  5 Aug 2020 09:04:16 +0200 (CEST)
-Received: from localhost (10.75.127.49) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Aug 2020 09:04:16
- +0200
-From:   Alain Volmat <alain.volmat@st.com>
-To:     <broonie@kernel.org>, <amelie.delaunay@st.com>
-CC:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <linux-spi@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
-        <alain.volmat@st.com>
-Subject: [PATCH 08/18] spi: stm32h7: fix dbg/warn/err conditions in irq handler
-Date:   Wed, 5 Aug 2020 09:02:03 +0200
-Message-ID: <1596610933-32599-9-git-send-email-alain.volmat@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1596610933-32599-1-git-send-email-alain.volmat@st.com>
-References: <1596610933-32599-1-git-send-email-alain.volmat@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-05_04:2020-08-03,2020-08-05 signatures=0
+        Wed, 5 Aug 2020 03:09:27 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:32714 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725983AbgHEHJZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 03:09:25 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BM2mc4lzhz9vD3k;
+        Wed,  5 Aug 2020 09:09:20 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id bR_5TkxUgsNW; Wed,  5 Aug 2020 09:09:20 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BM2mc3qdrz9vD3j;
+        Wed,  5 Aug 2020 09:09:20 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C5C5A8B7DF;
+        Wed,  5 Aug 2020 09:09:21 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id XwEPbxMuJEZL; Wed,  5 Aug 2020 09:09:21 +0200 (CEST)
+Received: from po16052vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 889148B75F;
+        Wed,  5 Aug 2020 09:09:21 +0200 (CEST)
+Received: by po16052vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 5186465BBD; Wed,  5 Aug 2020 07:09:21 +0000 (UTC)
+Message-Id: <cover.1596611196.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH v10 0/5] powerpc: switch VDSO to C implementation
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
+        anton@ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        arnd@arndb.de, tglx@linutronix.de, vincenzo.frascino@arm.com,
+        luto@kernel.org, linux-arch@vger.kernel.org
+Date:   Wed,  5 Aug 2020 07:09:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amelie Delaunay <amelie.delaunay@st.com>
+This is the tenth version of a series to switch powerpc VDSO to
+generic C implementation.
 
-Make spurious interrupts visible. We do not expect to receive
-them, so rise at least a warning if it happens.
+Changes since v10 are:
+- Added a comment explaining the reason for the double stack frame
+- Moved back .cfi_register lr next to mflr
 
-Don't bother repeating the suspended RX messages; to avoid RX
-overrun we have set SPI_CR1_MASRX that enables the automatic
-suspended RX so, mainly in irq mode, it's normal that we will
-receive SUSP interrupts every time the CPU is too much loaded
-or the spi speed too high and we fail to remove on-time the
-data from the RX queue. Moreover, when the CPU is overloaded
-there is a delay while serving the interrupt. This forces
-inactivity on the SPI bus between bytes. So the warning message
-"System too slow, spi speed not guaranteed" is inaccurate; the
-term "spi speed" is currently used in kernel for the toggling
-frequency of the spi CLK pin, which is driven by HW and is not
-impacted by CPU overload. The correct term should be
-"data throughput".
+Main changes since v9 are:
+- Dropped the patches which put the VDSO datapage in front of VDSO text in the mapping
+- Adds a second stack frame because the caller doesn't set one, at least on PPC64
+- Saving the TOC pointer on PPC64 (is that really needed ?)
 
-RX overrun is an error condition that signals a corrupted RX
-stream both in dma and in irq modes. Report the error and
-abort the transfer in either cases.
+This series applies on today's powerpc/merge branch.
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
----
- drivers/spi/spi-stm32.c | 19 +++++++------------
- 1 file changed, 7 insertions(+), 12 deletions(-)
+See the last patches for details on changes and performance.
 
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index 06478643855a..6731e3ff0e50 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -904,14 +904,16 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
- 	mask &= sr;
- 
- 	if (!mask) {
--		dev_dbg(spi->dev, "spurious IT (sr=0x%08x, ier=0x%08x)\n",
--			sr, ier);
-+		dev_warn(spi->dev, "spurious IT (sr=0x%08x, ier=0x%08x)\n",
-+			 sr, ier);
- 		spin_unlock_irqrestore(&spi->lock, flags);
- 		return IRQ_NONE;
- 	}
- 
- 	if (mask & STM32H7_SPI_SR_SUSP) {
--		dev_warn(spi->dev, "Communication suspended\n");
-+		dev_warn_once(spi->dev,
-+			      "System too slow is limiting data throughput\n");
-+
- 		if (!spi->cur_usedma && (spi->rx_buf && (spi->rx_len > 0)))
- 			stm32h7_spi_read_rxfifo(spi);
- 		/*
-@@ -924,15 +926,8 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
- 	}
- 
- 	if (mask & STM32H7_SPI_SR_OVR) {
--		dev_warn(spi->dev, "Overrun: received value discarded\n");
--		if (!spi->cur_usedma && (spi->rx_buf && (spi->rx_len > 0)))
--			stm32h7_spi_read_rxfifo(spi);
--		/*
--		 * If overrun is detected while using DMA, it means that
--		 * something went wrong, so stop the current transfer
--		 */
--		if (spi->cur_usedma)
--			end = true;
-+		dev_err(spi->dev, "Overrun: RX data lost\n");
-+		end = true;
- 		ifcr |= STM32H7_SPI_SR_OVR;
- 	}
- 
+Christophe Leroy (5):
+  powerpc/processor: Move cpu_relax() into asm/vdso/processor.h
+  powerpc/vdso: Prepare for switching VDSO to generic C implementation.
+  powerpc/vdso: Save and restore TOC pointer on PPC64
+  powerpc/vdso: Switch VDSO to generic C implementation.
+  powerpc/vdso: Provide __kernel_clock_gettime64() on vdso32
+
+ arch/powerpc/Kconfig                         |   2 +
+ arch/powerpc/include/asm/clocksource.h       |   7 +
+ arch/powerpc/include/asm/processor.h         |  13 +-
+ arch/powerpc/include/asm/vdso/clocksource.h  |   7 +
+ arch/powerpc/include/asm/vdso/gettimeofday.h | 197 ++++++++++++
+ arch/powerpc/include/asm/vdso/processor.h    |  23 ++
+ arch/powerpc/include/asm/vdso/vsyscall.h     |  25 ++
+ arch/powerpc/include/asm/vdso_datapage.h     |  40 +--
+ arch/powerpc/kernel/asm-offsets.c            |  49 +--
+ arch/powerpc/kernel/time.c                   |  91 +-----
+ arch/powerpc/kernel/vdso.c                   |   5 +-
+ arch/powerpc/kernel/vdso32/Makefile          |  32 +-
+ arch/powerpc/kernel/vdso32/config-fake32.h   |  34 +++
+ arch/powerpc/kernel/vdso32/gettimeofday.S    | 300 +------------------
+ arch/powerpc/kernel/vdso32/vdso32.lds.S      |   1 +
+ arch/powerpc/kernel/vdso32/vgettimeofday.c   |  35 +++
+ arch/powerpc/kernel/vdso64/Makefile          |  23 +-
+ arch/powerpc/kernel/vdso64/gettimeofday.S    | 242 +--------------
+ arch/powerpc/kernel/vdso64/vgettimeofday.c   |  29 ++
+ 19 files changed, 453 insertions(+), 702 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/clocksource.h
+ create mode 100644 arch/powerpc/include/asm/vdso/clocksource.h
+ create mode 100644 arch/powerpc/include/asm/vdso/gettimeofday.h
+ create mode 100644 arch/powerpc/include/asm/vdso/processor.h
+ create mode 100644 arch/powerpc/include/asm/vdso/vsyscall.h
+ create mode 100644 arch/powerpc/kernel/vdso32/config-fake32.h
+ create mode 100644 arch/powerpc/kernel/vdso32/vgettimeofday.c
+ create mode 100644 arch/powerpc/kernel/vdso64/vgettimeofday.c
+
 -- 
-2.7.4
+2.25.0
 
