@@ -2,117 +2,117 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1268BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3320C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D612421744
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B79AC21744
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:18:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726344AbgHEHRx (ORCPT
+        id S1726569AbgHEHS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 03:17:53 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:35755 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbgHEHRu (ORCPT
+        Wed, 5 Aug 2020 03:18:26 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:36552 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbgHEHSX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 03:17:50 -0400
-Received: from mail-qk1-f174.google.com ([209.85.222.174]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M7sYM-1k73Qk3Kmw-00540k; Wed, 05 Aug 2020 09:17:49 +0200
-Received: by mail-qk1-f174.google.com with SMTP id j187so40765678qke.11;
-        Wed, 05 Aug 2020 00:17:48 -0700 (PDT)
-X-Gm-Message-State: AOAM530WfHW5CLKTo4yzxsctC6QH7r7wv8QCakmW3YlJo1SswawijSZk
-        gL9qO9i8tQBaUEUtV0Q2+/7pX9BJSz5f8WdIZJQ=
-X-Google-Smtp-Source: ABdhPJwc875ta9ExZX1/DvTUle7thiMXYwYloLV2Wm+kT3X53apLGCRcK45f+YRn0Oge+DYC3vh8PRvw9l2wpIgcNzM=
-X-Received: by 2002:a37:6351:: with SMTP id x78mr1971924qkb.394.1596611867220;
- Wed, 05 Aug 2020 00:17:47 -0700 (PDT)
+        Wed, 5 Aug 2020 03:18:23 -0400
+Received: by mail-il1-f197.google.com with SMTP id o191so30182996ila.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 00:18:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Fa0gLd9XVcoRN25QyrKmn6yha622efdv80gtOrAX5uA=;
+        b=FPwQ5NOSh+OmabXtczBYFDIJCTz7+f7Z/yaLeHkvJEnNKuQIo6OWlPQNA2rwJGk+jU
+         SkUlxGZLxAf1DusOrDPVKsleh487K+dgFL1R2SdC1w38siiZZIIo+0pIOqwJuhW1g9X2
+         wRzyhzgvEDB9Af3e7nlZmigXysxsR1VfWviIqa3OdoSdH1Sb9Hkg/UHkjwCfsUYqaSat
+         m4abVChS9E5EtYwgILl3pq/VGi7UIcMuHnoJeJCwMUbj7BRLDST/dAFNKNJH6y4sO3V4
+         hCPIzaDdeNy8U1OrgivVC1VVWTVDRKNYRw7dMG3tRflM7zRLIGEta21F1LFP93diR21R
+         qoOQ==
+X-Gm-Message-State: AOAM533QS9Ieuu12qJH5EeZw/2a7zHRXED1IAJOrLpdpQ2YVfBIRAsVr
+        Osqb8sh7wegCS+ueNb6ZVaptt16A8nSdexLQ6pPGIqKpdtNP
+X-Google-Smtp-Source: ABdhPJx37KgKaXdMV9jxRlO8ttoO67P5NQABfCZCP2MWRuE2Mzy+hPYLLl/H4xpv1mwfNNh78hENiSdgUk2zrje3gvEUZYqE/ha4
 MIME-Version: 1.0
-References: <20200730220750.18158-1-samuel@sholland.org> <CAK8P3a2p7dWhhCqAYF_Zos-X-zBK+id-xO5hPu2fRTbNyPo9Xg@mail.gmail.com>
- <29ea8d0f-bcab-9ffd-0e2f-f022911f4bf2@sholland.org> <CAK8P3a0xSyyaLHziuv4JKimUggF96frwLPKmjQ4G9VBWRW2EMg@mail.gmail.com>
- <0bd43d61-4d9a-40cb-27c6-18aaf7f58b48@sholland.org>
-In-Reply-To: <0bd43d61-4d9a-40cb-27c6-18aaf7f58b48@sholland.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 5 Aug 2020 09:17:31 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3bPb+-i2YbHmn84MEuCe4xG_BKP15vNO1B1kTkYZ+=pg@mail.gmail.com>
-Message-ID: <CAK8P3a3bPb+-i2YbHmn84MEuCe4xG_BKP15vNO1B1kTkYZ+=pg@mail.gmail.com>
-Subject: Re: [PATCH v2] scsi: 3w-9xxx: Fix endianness issues found by sparse
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Adam Radford <aradford@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+X-Received: by 2002:a92:7010:: with SMTP id l16mr2547146ilc.91.1596611902772;
+ Wed, 05 Aug 2020 00:18:22 -0700 (PDT)
+Date:   Wed, 05 Aug 2020 00:18:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004f1bb205ac1c2dce@google.com>
+Subject: upstream test error: WARNING in ep_scan_ready_list
+From:   syzbot <syzbot+d99fcdc44745d2f54a57@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:sEjRjQxm9xe+XM3h7HubnfCYIZJq2EXLky7dI8JeDP3M7YTvX9J
- C/ih5HqEv1L0Uo5TfklkVi3joITnvMp333UU8vtykpYsRQy23jOh+Os86cMVO+hk3hr4gBW
- XQQxLZmmjfpa3w4RnBpX9Ik9UBLm+Qn04ZtjTjjcZX6/TW7/Lu1k1ZZ4FF/g3l/GM/a1QTB
- +Csbf1YFThT5RvGt9PPaQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:fQj30KgxVak=:ZGrI8ZUqpNLw6CyceElaEI
- pYwgZQlt5P8rnBDmJ1IoTVgNG7I0qA2zYy7tB4pxKs+0Weqh2/0W14iPMgxaNKzubgWVqYxap
- Re8DVWb7O/e2no1ql8mzPyNghsvP2eckx9epOgKR72cr62LJfxm/4EJSrsrMcq1MXcXNEyp/Z
- iyS64Irfcnt/ecFmbTyBXRrn3FOASnBc99me18kx2XMme67oD4EjpPnOwEZCR06xB7WmpnBDQ
- 1A1yTUWzvF7sBIVZvp6Myz5jZo4YGE7RorYfPdi8R3Gkn1d+r4WOO/QpLxWAWi6EVRQryLQhx
- vyt85V1Ffx6VndRoCMiBXpGVWV4dm2RudZyvKSLT4UU61aNZ55f0WKKLOYTxdUGzL8JGotgJt
- VueqDVM3+fBKVUt5OcCpgu5qIEz3P+y8/VklDh2y0xroq6is3q1KuIB4JfefYzFcSztKeKb6J
- F1LN8YZoxVTZsVmIVMwT4ErWcXsvAzJKTE2P/YEbCGBwUEtBcmS/YcvTphfu4kODVgU1V5ypH
- hmxEGhcbq5eGc0zFu0LoYXm9k9ogDej5ubqrQQVB2qZ8JUGCpZDXMyW45Mx9InU77eXE0q2mA
- pgPsgNdc5HFXvXZtOUogfUH6hz11mrsxI5/pztJG5w4/P7hy9/1kI3lqrHdNsUc5HtwV3sgyE
- Tc86gPpiCrjTPO+F4fVyK6394cM/OrdTTEtLlpgpNvI/5zRKX669aK9UJS95g0r+H2pYyUZH6
- sfk6bBuwLxfvogoHytUNYOD6D2kgfW+PlTD23dO0ZzLaOifcAR43jl18bTJ5INbp+/FcOIDMm
- t9dC/XTvPhESq1JgiAxggkFgQph9YyByVWQ2AoMueLbAF5OYipXoTXZZ6Ta7apqFsa8WNqR
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 3:44 AM Samuel Holland <samuel@sholland.org> wrote:
-> On 8/3/20 9:02 AM, Arnd Bergmann wrote:
-> > On Mon, Aug 3, 2020 at 5:42 AM Samuel Holland <samuel@sholland.org> wrote:
-> >> All of the command structures are packed, due to the "#pragma pack(1)" earlier
-> >> in the file. So alignment is not an issue. This dma_addr_t member _is_ the
-> >> explicit padding to make sizeof(TW_Command) -
-> >> sizeof(TW_Command.byte8_offset.{io,param}.sgl) equal TW_COMMAND_SIZE * 4. And
-> >> indeed the structure is expected to be a different size depending on
-> >> sizeof(dma_addr_t).
-> >
-> > Ah, so only the first few members are accessed by hardware and the
-> > last union is only accessed by the OS then? In that case I suppose it is
-> > all fine, but I would also suggest removing the "#pragma packed"
-> > to get somewhat more efficient access on systems that have  problems
-> > with misaligned accesses.
->
-> I don't know what part the hardware accesses; everything I know about the
-> hardware comes from reading the driver.
+Hello,
 
-I see now from your explanation below that this is a hardware-defined
-structure. I was confused by how it can be either 32 or 64 bits wide but
-found the
+syzbot found the following issue on:
 
-tw_initconnect->features |= sizeof(dma_addr_t) > 4 ? 1 : 0;
+HEAD commit:    3950e975 Merge branch 'exec-linus' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13be87cc900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c2b75627f23a2ff9
+dashboard link: https://syzkaller.appspot.com/bug?extid=d99fcdc44745d2f54a57
+compiler:       clang version 11.0.0 (https://github.com/llvm/llvm-project.git ca2dcbd030eadbf0aa9b660efe864ff08af6e18b)
 
-line now that tells the hardware about which format is used.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+d99fcdc44745d2f54a57@syzkaller.appspotmail.com
 
-> The problem with removing the "#pragma pack(1)" is that the structure is
-> inherently misaligned: byte8_offset.io.sgl starts at offset 12, but it may begin
-> with a __le64.
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 1 at fs/eventpoll.c:688 ep_scan_ready_list+0x9f/0x470 fs/eventpoll.c:688
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 1 Comm: systemd Not tainted 5.8.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x16e/0x25d lib/dump_stack.c:118
+ panic+0x20c/0x69a kernel/panic.c:231
+ __warn+0x211/0x240 kernel/panic.c:600
+ report_bug+0x153/0x1d0 lib/bug.c:198
+ handle_bug+0x4d/0x90 arch/x86/kernel/traps.c:235
+ exc_invalid_op+0x16/0x70 arch/x86/kernel/traps.c:255
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:547
+RIP: 0010:ep_scan_ready_list+0x9f/0x470 fs/eventpoll.c:688
+Code: 37 d4 c6 ff 85 db 74 1d e8 1e d0 c6 ff 40 84 ed 75 0c eb 1d e8 12 d0 c6 ff 40 84 ed 74 13 e8 08 d0 c6 ff eb 1c e8 01 d0 c6 ff <0f> 0b 40 84 ed 75 ed e8 f5 cf c6 ff 4c 89 f7 44 89 fe e8 1a 8b a5
+RSP: 0000:ffffc90000c73dc8 EFLAGS: 00010293
+RAX: ffffffff81853bff RBX: 0000000000000000 RCX: ffff88812b766040
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffffffff81853bd9 R09: 0000ffff88619eb7
+R10: 0000ffffffffffff R11: 0000000000000000 R12: 0000000000000000
+R13: ffffc90000c73de8 R14: ffff8881297af600 R15: 0000000000000000
+ ep_send_events fs/eventpoll.c:1788 [inline]
+ ep_poll fs/eventpoll.c:1944 [inline]
+ do_epoll_wait+0x55c/0x920 fs/eventpoll.c:2333
+ __do_sys_epoll_wait fs/eventpoll.c:2343 [inline]
+ __se_sys_epoll_wait fs/eventpoll.c:2340 [inline]
+ __x64_sys_epoll_wait+0x4d/0x60 fs/eventpoll.c:2340
+ do_syscall_64+0x6a/0xe0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7f310b8db303
+Code: 49 89 ca b8 e8 00 00 00 0f 05 48 3d 01 f0 ff ff 73 34 c3 48 83 ec 08 e8 0b c2 00 00 48 89 04 24 49 89 ca b8 e8 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 51 c2 00 00 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007ffdc7ffa4c0 EFLAGS: 00000293 ORIG_RAX: 00000000000000e8
+RAX: ffffffffffffffda RBX: 000055e909e78f50 RCX: 00007f310b8db303
+RDX: 0000000000000025 RSI: 00007ffdc7ffa4d0 RDI: 0000000000000004
+RBP: 00007ffdc7ffa790 R08: 846474467368a395 R09: 00000000000061c0
+R10: 00000000ffffffff R11: 0000000000000293 R12: 00007ffdc7ffa4d0
+R13: 0000000000000001 R14: ffffffffffffffff R15: 0000000000000002
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-I think a fairly clean way to handle this would be to remove the pragma
-and instead define a local type like
 
-#if IS_ENABLED(CONFIG_ARCH_DMA_ADDR_T_64BIT)
-typedef  __le64 twa_address_t __packed;
-#else
-typedef __le32 twa_addr_t;
-#endif
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-The problem with marking the entire structure as packed, rather than
-just individual members is that you end up with very inefficient bytewise
-access on some architectures (especially those without cache-coherent
-DMA or hardware unaligned access in the CPU), so I would recommend
-avoiding that in portable driver code.
-
-      Arnd
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
