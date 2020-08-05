@@ -2,131 +2,104 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FC1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57914C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2906922D2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:58:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596653923;
-	bh=JPzNQBGce2yeRBowIzU6pEVT+PgSjXh+pta/6Jv8y74=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mQ5HhARy2s8gwh2E/5pTgq1NrwY1WuYP90BuKGpy1Fj1ypHtco5uBRtF9tpDYA5RY
-	 /ZESiecZzlJCfAET3yz6EeXuzVAxYAEjQi9cGK5O79zvN/gDbi98VxiYdFMXbZSjnD
-	 buTaTWwZyiAcIKG3NHTQBdJi7PcIDiIgHjVRiKMs=
+	by mail.kernel.org (Postfix) with ESMTP id 184B922D2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:59:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DC2dgjyq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbgHES6W (ORCPT
+        id S1726078AbgHES65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 14:58:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35910 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726282AbgHESit (ORCPT
+        Wed, 5 Aug 2020 14:58:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55480 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728378AbgHES4n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 14:38:49 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4AB2C0617A0
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 11:37:39 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id v4so39167846ljd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 11:37:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nKsScY2SqSaUIDsji3DbH9vARZk9m+RN1f7vMYsfm00=;
-        b=iAliQHEzDRAQlVI4XXSIEEBg6aUSSqeUoOj5qeHelfslSrZjysk8SyFIWWp/lX6uob
-         Y8tkVHXeObZH8duByODMzQ/D2ShBAyXocCIroPsjHVj8OZ4FmcQmee7YLXFV+OzoqNW2
-         aU7z0qneabKk64K5/XBM2l0UNPBabO/B59bN8=
+        Wed, 5 Aug 2020 14:56:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596653782;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hymn0Sfg1TJ19WBAjozBxwIK1aOHio4HHWImCGmRqUw=;
+        b=DC2dgjyqrHtI8yFjA1OOHZqoBAQUWEujxddK7inq8eNMBc9DrNu83kJLUEJNbuv8NKCkjv
+        pAwRCtMqviyD/dLW4kPzCsufXVOdwjH+2kgnmjOgsk1bHYSr+yxTT5V/U0KgBgC3wEibSJ
+        zAjxh1rr9fN0zd85XBGt9fjrd5HgwaY=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-204-dlubURh1Nr6aUsMiQHK_MA-1; Wed, 05 Aug 2020 14:48:06 -0400
+X-MC-Unique: dlubURh1Nr6aUsMiQHK_MA-1
+Received: by mail-wr1-f71.google.com with SMTP id r14so1787236wrq.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 11:48:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nKsScY2SqSaUIDsji3DbH9vARZk9m+RN1f7vMYsfm00=;
-        b=RiVapZVonZRpBe0jDxvoPTC2PFu1+/A8z4l5+5RnmufPMYuhGMHsmxOiYbJ5hFctf4
-         WkqFzLcOgi+dm4kIU/2glBK8sQQd7ouaUjUD3Jx7vUaPp36LJf9j7ELaxrjOsO3st9SA
-         XomLMQnlNUJpJONNyMJmPyWUDh25VKbZJvTniaUfJqUInwyh63dOFHWkbOGZPeztkos6
-         XECdoXBvf7Xsm4PzRphneHq1dlmspa+01gM1BWR/NJS6JqD6lLfTJQ6kzsSnvHUQFNcV
-         qD+xDkdf0W1RF0AOEJSMoW3uRvSVSGp5CsyPKg7kxXW0rDFeFkko16I6zqlXBR7rLmIR
-         34Qw==
-X-Gm-Message-State: AOAM530N1xuNZkFe3vrttbLYHO0yzVsOxbk7I5tcFF2qSKJ7MLL72gA4
-        7b5wBAk/DNBozbg0qxvu12AnYKmKliA=
-X-Google-Smtp-Source: ABdhPJzXYlUR/49PQasmpk9i0vhB3xmqqxjOUPQRgOltDQaO/ywhqMslWNq8Bowbskpi8D6BzpWRWA==
-X-Received: by 2002:a2e:97da:: with SMTP id m26mr2238024ljj.9.1596652656307;
-        Wed, 05 Aug 2020 11:37:36 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id p1sm1222158lji.93.2020.08.05.11.37.33
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hymn0Sfg1TJ19WBAjozBxwIK1aOHio4HHWImCGmRqUw=;
+        b=cE8LxQbZS5aa50+5s0adJsIGZb+L4QT2s/jfrR1/3gcAuWJNlLThITwrsF/hsPt604
+         fvFet7DBrHp8m1S7v539qB3enn1jC3D607cTladWWSrhCuA9unzsTLthU5w0MU0ZlMUp
+         IqoAQTO3zJAhvsPCBRRJcVaTQ5Ltht1cpSXZnuLKGV2Oj91KpLLyhxALdrKrTCOhrXQ/
+         ELiHQrzDpEejtF+nR7pZaXiiyC8gHoNCt1Xh30bi7VzPayifzZ+v9FQJBYmMbRVsebia
+         9RxPVhY25dD6URX6YY4SkuDFojVSloQEFcL+VaM6MdpcNkvnBOToHEM9A/C1zSEGnPAc
+         plGw==
+X-Gm-Message-State: AOAM5329VNpedX0sbeaUwsWI+RDbWPnUGDIh2xNCMNezw1H0lHZ4+vIM
+        hDV+ncEQLaUFU0haAw8EJHepQzTBmuNUczWC+4QGL6/w5M7cwuAtJ2PjlB52o3mNPaPVeOD29+4
+        cazCL864/QgmY/dow9rUkYtEM
+X-Received: by 2002:a1c:286:: with SMTP id 128mr4206655wmc.37.1596653284954;
+        Wed, 05 Aug 2020 11:48:04 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxMFtqWVfa9ps/xQ0YYj/MHXx500Q/j+ugxOTprbSKK6roqR5QcQxjQa6u8ZT4SfEKfWTMCUg==
+X-Received: by 2002:a1c:286:: with SMTP id 128mr4206635wmc.37.1596653284682;
+        Wed, 05 Aug 2020 11:48:04 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:7841:78cc:18c6:1e20? ([2001:b07:6468:f312:7841:78cc:18c6:1e20])
+        by smtp.gmail.com with ESMTPSA id l18sm3776157wrm.52.2020.08.05.11.48.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2020 11:37:34 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id x9so48881032ljc.5
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 11:37:33 -0700 (PDT)
-X-Received: by 2002:a2e:b008:: with SMTP id y8mr1797749ljk.421.1596652652831;
- Wed, 05 Aug 2020 11:37:32 -0700 (PDT)
+        Wed, 05 Aug 2020 11:48:03 -0700 (PDT)
+Subject: Re: [PATCH 1/1] kvm: mmu: zap pages when zapping only parent
+To:     Ben Gardon <bgardon@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, Peter Xu <peterx@redhat.com>,
+        Peter Shier <pshier@google.com>
+References: <20200727203324.2614917-1-bgardon@google.com>
+ <20200804211444.GA31916@linux.intel.com>
+ <CANgfPd9kbnzW+eaBi+dwA1+E2VXEd6JfN4n2PstWrmh4VPRFjA@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <cf54ab19-611c-c975-8080-b49e13c966f3@redhat.com>
+Date:   Wed, 5 Aug 2020 20:48:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200805153506.978105994@linuxfoundation.org> <CA+G9fYv_aX36Kq_RD5dAL_By4AFq=-ZY_qh7VhLG=HJQv5mDzg@mail.gmail.com>
- <71a132bf-5ddb-a97a-9b65-6767fd806ee9@roeck-us.net>
-In-Reply-To: <71a132bf-5ddb-a97a-9b65-6767fd806ee9@roeck-us.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 5 Aug 2020 11:37:16 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi0WGMs6+Jz6rXbQO4mfzf8LGVc3TwmCdz0OwRtj7GgMQ@mail.gmail.com>
-Message-ID: <CAHk-=wi0WGMs6+Jz6rXbQO4mfzf8LGVc3TwmCdz0OwRtj7GgMQ@mail.gmail.com>
-Subject: Re: [PATCH 5.7 0/6] 5.7.14-rc1 review
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Marc Zyngier <maz@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Willy Tarreau <w@1wt.eu>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CANgfPd9kbnzW+eaBi+dwA1+E2VXEd6JfN4n2PstWrmh4VPRFjA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 11:24 AM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> Same with older versions of gcc. I don't see the problem with the
-> mainline kernel.
+On 05/08/20 19:10, Ben Gardon wrote:
+>>
+>> Alternatively, what about moving this logic into mmu_page_zap_pte()?  That
+>> can be done with a little massaging of FNAME(invlpg) and would avoid what is
+>> effectively redundant checks on is_shadow_present_pte() and is_last_spte().
+>> Patches attached and somewhat tested.
+> That seems like a good change to me and the patches you attached look
+> good to me. I'm happy to review them more if you want to send them to
+> the mailing list as their own series. Thanks for putting them
+> together.
+> 
 
-  https://www.youtube.com/watch?v=-b5aW08ivHU
+Thanks, I'll wait for that.
 
-> I think this is caused by more recursive includes.
-> arch/arm64/include/asm/archrandom.h includes include/linux/random.h
-> which includes arch/arm64/include/asm/archrandom.h to get the definition
-> of arch_get_random_seed_long_early (which it won't get because of
-> the recursion).
->
-> What I don't really understand is how this works with new versions
-> of gcc.
+Paolo
 
-Is that the only place it triggers?
-
-Because the trivial fix would be something like the appended, which is
-the right thing to do anyway.
-
-              Linus
-
-diff --git a/arch/arm64/kernel/kaslr.c b/arch/arm64/kernel/kaslr.c
-index 07c4c8cc4a67..9ded4237e1c1 100644
---- a/arch/arm64/kernel/kaslr.c
-+++ b/arch/arm64/kernel/kaslr.c
-@@ -11,8 +11,8 @@
- #include <linux/sched.h>
- #include <linux/types.h>
- #include <linux/pgtable.h>
-+#include <linux/random.h>
-
--#include <asm/archrandom.h>
- #include <asm/cacheflush.h>
- #include <asm/fixmap.h>
- #include <asm/kernel-pgtable.h>
