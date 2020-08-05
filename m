@@ -2,107 +2,204 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56506C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 04:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6503AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 04:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FE2922CB3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 04:55:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Jw3p35b0"
+	by mail.kernel.org (Postfix) with ESMTP id 4EB7B20842
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 04:59:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbgHEEzf (ORCPT
+        id S1726096AbgHEE7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 00:55:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbgHEEzf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 00:55:35 -0400
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01566C06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 21:55:35 -0700 (PDT)
-Received: by mail-vk1-xa43.google.com with SMTP id j7so3566153vkk.12
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 21:55:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=95VAJwuWsnt7rqYXS/THJIeTIBqbDOLU5i5b+6qdQ+U=;
-        b=Jw3p35b0ClW4Z3+m+3tlqz09EukutWPByGwtY0y89xZlkmMeL8HYM2dl2rTnzQ+AD+
-         LQ8fOVrDTiOqy+aNlBORRWWlRTMbUC9rtHXpDHCtMKtorYEWmtfq76DF1sHXgfzFsLer
-         moqhLdLms2P9haKIW0uUrHVgLLe1uiaaX5DhU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=95VAJwuWsnt7rqYXS/THJIeTIBqbDOLU5i5b+6qdQ+U=;
-        b=FYYwcr9IdSsStTHbd/K5E886gPQB7FQwNRjDnguVbV4BwzU5k/iOixCOzDTDTgMhCq
-         zqeUvZTeSThFcWzJB5KG69zTjkNx3w5vL3GrIT+xve8syyYyOMy3nwkdDnybzrzAqp8Q
-         iIFAi/ELVQafMIdlDsi0eszZ3QDBcfAsmAKxRmbNiEpvmXFQ59kBnQ56wv82vpJLRI0r
-         wsbKj0WmyOPUMiy+si6QVBSDTIVC1xX5QZ4EZdTkt3WNNEdM0y32FK6nBnWNEpO7SQX4
-         YhvL5BiM6+qme7itVb6jUv2jb7jAVikpCyilNYRNWdjUdWfILijRJb0VwLrUK8akRd4S
-         LrqQ==
-X-Gm-Message-State: AOAM533CGsl2NfrJFXC073CfUWY+sfbADNeO1V/DDzp4NXr82xUzD236
-        RDP1S/P8WL3eGbyy5tAxf+wq/5Z7i5E=
-X-Google-Smtp-Source: ABdhPJy4XL4wBRA8E7mpEw3Fvd7O7DAlvT8xovQNIApALA/16XcaRHphCqabUCWAV16VWBV+XloyKA==
-X-Received: by 2002:a1f:5986:: with SMTP id n128mr1106775vkb.93.1596603333916;
-        Tue, 04 Aug 2020 21:55:33 -0700 (PDT)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id y17sm185378vky.49.2020.08.04.21.55.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Aug 2020 21:55:32 -0700 (PDT)
-Received: by mail-ua1-f45.google.com with SMTP id g20so9089424uan.7
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 21:55:32 -0700 (PDT)
-X-Received: by 2002:ab0:44e5:: with SMTP id n92mr846587uan.121.1596603332244;
- Tue, 04 Aug 2020 21:55:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200804070837.1084024-1-swboyd@chromium.org>
-In-Reply-To: <20200804070837.1084024-1-swboyd@chromium.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 4 Aug 2020 21:55:21 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WafrkdkwnLofw_S9TYXQ9kQT_ZrMEGGzGnmKA17ypEPQ@mail.gmail.com>
-Message-ID: <CAD=FV=WafrkdkwnLofw_S9TYXQ9kQT_ZrMEGGzGnmKA17ypEPQ@mail.gmail.com>
-Subject: Re: [PATCH] regulator: Avoid grabbing regulator lock during suspend/resume
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Matthias Kaehlcke <mka@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 5 Aug 2020 00:59:02 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:36098 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725372AbgHEE7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 00:59:01 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3221F1A0403;
+        Wed,  5 Aug 2020 06:58:59 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 14BB01A04E8;
+        Wed,  5 Aug 2020 06:58:54 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 1835A40319;
+        Wed,  5 Aug 2020 06:58:48 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, galak@codeaurora.org,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/3] dt-bindings: serial: Convert i.MX uart to json-schema
+Date:   Wed,  5 Aug 2020 12:54:17 +0800
+Message-Id: <1596603259-5367-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Convert the i.MX uart binding to DT schema format using json-schema.
 
-On Tue, Aug 4, 2020 at 12:08 AM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> I see it takes about 5us per regulator to grab the lock, check that this
-> regulator isn't going to do anything for suspend, and then release the
-> lock. When that is combined with PMICs that have dozens of regulators we
-> get into a state where we spend a few miliseconds doing a bunch of
-> locking operations synchronously to figure out that there's nothing to
-> do. Let's reorganize the code here a bit so that we don't grab the lock
-> until we're actually going to do something so that suspend is a little
-> faster.
->
-> Cc: Matthias Kaehlcke <mka@chromium.org>
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->  drivers/regulator/core.c | 75 +++++++++++++++++++++++++++-------------
->  1 file changed, 51 insertions(+), 24 deletions(-)
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../devicetree/bindings/serial/fsl-imx-uart.txt    | 40 ----------
+ .../devicetree/bindings/serial/fsl-imx-uart.yaml   | 92 ++++++++++++++++++++++
+ 2 files changed, 92 insertions(+), 40 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml
 
-Looks good to me.  Agree that getting a pointer to the relevant
-"struct regulator_state" and checking whether some details about it
-and our ops should be safe to do without a lock.  Patch looks clean
-and correct.
+diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
+deleted file mode 100644
+index 9582fc2..0000000
+--- a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
++++ /dev/null
+@@ -1,40 +0,0 @@
+-* Freescale i.MX Universal Asynchronous Receiver/Transmitter (UART)
+-
+-Required properties:
+-- compatible : Should be "fsl,<soc>-uart"
+-- reg : Address and length of the register set for the device
+-- interrupts : Should contain uart interrupt
+-
+-Optional properties:
+-- fsl,dte-mode : Indicate the uart works in DTE mode. The uart works
+-                  in DCE mode by default.
+-- fsl,inverted-tx , fsl,inverted-rx : Indicate that the hardware attached
+-  to the peripheral inverts the signal transmitted or received,
+-  respectively, and that the peripheral should invert its output/input
+-  using the INVT/INVR registers.
+-- rs485-rts-delay, rs485-rts-active-low, rs485-rx-during-tx,
+-  linux,rs485-enabled-at-boot-time: see rs485.txt. Note that for RS485
+-  you must enable either the "uart-has-rtscts" or the "rts-gpios"
+-  properties. In case you use "uart-has-rtscts" the signal that controls
+-  the transceiver is actually CTS_B, not RTS_B. CTS_B is always output,
+-  and RTS_B is input, regardless of dte-mode.
+-
+-Please check Documentation/devicetree/bindings/serial/serial.yaml
+-for the complete list of generic properties.
+-
+-Note: Each uart controller should have an alias correctly numbered
+-in "aliases" node.
+-
+-Example:
+-
+-aliases {
+-	serial0 = &uart1;
+-};
+-
+-uart1: serial@73fbc000 {
+-	compatible = "fsl,imx51-uart", "fsl,imx21-uart";
+-	reg = <0x73fbc000 0x4000>;
+-	interrupts = <31>;
+-	uart-has-rtscts;
+-	fsl,dte-mode;
+-};
+diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml b/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml
+new file mode 100644
+index 0000000..cba3f83
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml
+@@ -0,0 +1,92 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/serial/fsl-imx-uart.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale i.MX Universal Asynchronous Receiver/Transmitter (UART)
++
++maintainers:
++  - Fabio Estevam <fabio.estevam@nxp.com>
++
++allOf:
++  - $ref: "serial.yaml"
++  - $ref: "rs485.yaml"
++
++properties:
++  compatible:
++    oneOf:
++      - const: fsl,imx1-uart
++      - const: fsl,imx21-uart
++      - const: fsl,imx53-uart
++      - const: fsl,imx6q-uart
++      - items:
++          - enum:
++            - fsl,imx25-uart
++            - fsl,imx27-uart
++            - fsl,imx31-uart
++            - fsl,imx35-uart
++            - fsl,imx50-uart
++            - fsl,imx51-uart
++          - const: fsl,imx21-uart
++      - items:
++          - enum:
++            - fsl,imx6sl-uart
++            - fsl,imx6sll-uart
++            - fsl,imx6sx-uart
++            - fsl,imx6ul-uart
++            - fsl,imx7d-uart
++          - const: fsl,imx6q-uart
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  fsl,dte-mode:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      Indicate the uart works in DTE mode. The uart works in DCE mode by default.
++
++  fsl,inverted-tx:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      Indicate that the hardware attached to the peripheral inverts the signal
++      transmitted, and that the peripheral should invert its output using the
++      INVT registers.
++
++  fsl,inverted-rx:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description: |
++      Indicate that the hardware attached to the peripheral inverts the signal
++      received, and that the peripheral should invert its input using the
++      INVR registers.
++
++  uart-has-rtscts: true
++
++  rs485-rts-delay: true
++  rs485-rts-active-low: true
++  rs485-rx-during-tx: true
++  linux,rs485-enabled-at-boot-time: true
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    aliases {
++        serial0 = &uart1;
++    };
++
++    uart1: serial@73fbc000 {
++        compatible = "fsl,imx51-uart", "fsl,imx21-uart";
++        reg = <0x73fbc000 0x4000>;
++        interrupts = <31>;
++        uart-has-rtscts;
++        fsl,dte-mode;
++    };
+-- 
+2.7.4
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
