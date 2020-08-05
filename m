@@ -2,94 +2,174 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 603BBC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA439C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ABF32084D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8234A2084D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:17:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="qBE/U4w5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbgHESQY (ORCPT
+        id S1729080AbgHESRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 14:16:24 -0400
-Received: from smtprelay0072.hostedemail.com ([216.40.44.72]:57264 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728631AbgHESOo (ORCPT
+        Wed, 5 Aug 2020 14:17:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60622 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728788AbgHESOw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 14:14:44 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id BA88F173085A;
-        Wed,  5 Aug 2020 18:14:40 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: pen53_200df7926fb1
-X-Filterd-Recvd-Size: 1809
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf02.hostedemail.com (Postfix) with ESMTPA;
-        Wed,  5 Aug 2020 18:14:39 +0000 (UTC)
-Message-ID: <91ea17761845500f161ab343ea6e3415d3564d7b.camel@perches.com>
-Subject: [PATCH] spelling.txt: Remove some duplicate entries
-From:   Joe Perches <joe@perches.com>
-To:     Jiri Kosina <trivial@kernel.org>
-Cc:     Colin King <colin.king@canonical.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Wed, 05 Aug 2020 11:14:38 -0700
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Wed, 5 Aug 2020 14:14:52 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CD49C061756
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 11:14:52 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id m8so16356740pfh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 11:14:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version;
+        bh=8+iseODG04wj2eQO70zdThix4Rye+QSBpwL+Z103cec=;
+        b=qBE/U4w5v3/PEh7qno2eXuu83vEsnK8s8+DJkK9G4lCqAhGKG3voGon1dgWZhwoQm0
+         tWkw6W9bk+fjUqbrxY+fI72gc4AnW2jpmUEny/lFxlaCJ7ds9KRavw+zurxz+Copl5RQ
+         caJV7uAWmexn355HzhMpRe73tGsNLid0xb3pXXdhDe3shPCqblIS2TXs+T4FTW+Zo58K
+         oDD9oQFd560qZo4dY3wViREH6z60NNDsMzEyLnp61+pJt39Cavu7W+X4J0JeDnLGuFvS
+         HOe658YI4iGOQXOCA7hXzPkvh6YQqyD6acrKDNewoXwFx1OqX1fKhIMpFUtVaoDwPOlI
+         kFnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version;
+        bh=8+iseODG04wj2eQO70zdThix4Rye+QSBpwL+Z103cec=;
+        b=EwaEUBAPxScw0JpOyqMihiO8Ixdb/zlmoKx4sPsw6leXIk+oxXNE2Xjse0Vb4NZSrs
+         72LlaNpQseZYxRjzxk36Sp9F4m4rSnQXvuoJV0NGm1jEclst7212p3UPiVjmocEsA6Cp
+         v0aijYI/Cn4H5oEdrDMvIWs7dqk1aWKOtPLMXKTofEafgEwkdyim7HTnrRaFfFCum7Yx
+         /BOnWzQiNUni6qfnXRZsi+eHKGmTVxcUjtwoJ9FIHvxb4FNxoiKj0FBncofy76CdKZOB
+         Rsd22GDax8E7fz0j6eWV5d7tZfAI6ZdzzSYu8dUv+MBFYrsKH1cw2BZtkXpaWK6LW+AE
+         10nw==
+X-Gm-Message-State: AOAM530H+cNxSX8k1D86REfe4te8YVUkAkRVvyJBATw+97y54f7tMwdI
+        YUjEMeKFUg6LQfrW3rnLT/DyJQ==
+X-Google-Smtp-Source: ABdhPJxNIX8R5bxM2jjZWyxDUzlqJE6j/Lv8pzaiJlKUmXuVOBEC9paLpU3JILYqHPiBKwUd8ETMoQ==
+X-Received: by 2002:a62:a101:: with SMTP id b1mr4279847pff.306.1596651291969;
+        Wed, 05 Aug 2020 11:14:51 -0700 (PDT)
+Received: from [10.213.170.159] (fmdmzpr04-ext.fm.intel.com. [192.55.55.39])
+        by smtp.gmail.com with ESMTPSA id z67sm4852718pfc.162.2020.08.05.11.14.49
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 05 Aug 2020 11:14:51 -0700 (PDT)
+From:   "Sean V Kelley" <sean.v.kelley@intel.com>
+To:     "Bjorn Helgaas" <helgaas@kernel.org>
+Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        rjw@rjwysocki.net, ashok.raj@intel.com, tony.luck@intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Qiuxu Zhuo" <qiuxu.zhuo@intel.com>
+Subject: Re: [PATCH V2 2/9] PCI: Extend Root Port Driver to support RCEC
+Date:   Wed, 05 Aug 2020 11:14:48 -0700
+X-Mailer: MailMate (1.13.1r5671)
+Message-ID: <E3F966D9-DBD4-4392-84FF-F012D1F16615@intel.com>
+In-Reply-To: <20200805174328.GA521293@bjorn-Precision-5520>
+References: <20200805174328.GA521293@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Found when Colin King fixed a typo for falied/failed
-and a git grep showed 2 entries in this file.
+On 5 Aug 2020, at 10:43, Bjorn Helgaas wrote:
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
+> "git log --oneline" again.
 
- scripts/spelling.txt | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/scripts/spelling.txt b/scripts/spelling.txt
-index f253681e7e2a..b703e4fd51e8 100644
---- a/scripts/spelling.txt
-+++ b/scripts/spelling.txt
-@@ -596,7 +596,6 @@ extenstion||extension
- extracter||extractor
- faied||failed
- faield||failed
--falied||failed
- faild||failed
- failded||failed
- failer||failure
-@@ -793,7 +792,6 @@ interrup||interrupt
- interrups||interrupts
- interruptted||interrupted
- interupted||interrupted
--interupt||interrupt
- intial||initial
- intialisation||initialisation
- intialised||initialised
-@@ -968,7 +966,6 @@ occurd||occurred
- occured||occurred
- occurence||occurrence
- occure||occurred
--occured||occurred
- occuring||occurring
- offser||offset
- offet||offset
-@@ -1437,7 +1434,6 @@ udpate||update
- uesd||used
- uknown||unknown
- usccess||success
--usupported||unsupported
- uncommited||uncommitted
- uncompatible||incompatible
- unconditionaly||unconditionally
-
-
+Rewording lost track of the first line.  Argh, will fix.
+>
+> On Tue, Aug 04, 2020 at 12:40:45PM -0700, Sean V Kelley wrote:
+>> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+>>
+>> If a Root Complex Integrated Endpoint (RCiEP) is implemented, errors 
+>> may
+>> optionally be sent to a corresponding Root Complex Event Collector 
+>> (RCEC).
+>> Each RCiEP must be associated with no more than one RCEC. Interface 
+>> errors
+>> are reported to the OS by RCECs.
+>>
+>> For an RCEC (technically not a Bridge), error messages "received" 
+>> from
+>> associated RCiEPs must be enabled for "transmission" in order to 
+>> cause a
+>> System Error via the Root Control register or (when the Advanced 
+>> Error
+>> Reporting Capability is present) reporting via the Root Error Command
+>> register and logging in the Root Error Status register and Error 
+>> Source
+>> Identification register.
+>>
+>> Given the commonality with Root Ports and the need to also support 
+>> AER
+>> and PME services for RCECs, extend the Root Port driver to support 
+>> RCEC
+>> devices through the addition of the RCEC Class ID to the driver
+>> structure.
+>>
+>> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
+>> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+>> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+>> ---
+>>  drivers/pci/pcie/portdrv_core.c | 8 ++++----
+>>  drivers/pci/pcie/portdrv_pci.c  | 5 ++++-
+>>  2 files changed, 8 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/pci/pcie/portdrv_core.c 
+>> b/drivers/pci/pcie/portdrv_core.c
+>> index 50a9522ab07d..5d4a400094fc 100644
+>> --- a/drivers/pci/pcie/portdrv_core.c
+>> +++ b/drivers/pci/pcie/portdrv_core.c
+>> @@ -234,11 +234,11 @@ static int get_port_device_capability(struct 
+>> pci_dev *dev)
+>>  #endif
+>>
+>>  	/*
+>> -	 * Root ports are capable of generating PME too.  Root Complex
+>> -	 * Event Collectors can also generate PMEs, but we don't handle
+>> -	 * those yet.
+>> +	 * Root ports and Root Complex Event Collectors are capable
+>> +	 * of generating PME too.
+>>  	 */
+>> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
+>> +	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+>> +	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) &&
+>>  	    (pcie_ports_native || host->native_pme)) {
+>>  		services |= PCIE_PORT_SERVICE_PME;
+>>
+>> diff --git a/drivers/pci/pcie/portdrv_pci.c 
+>> b/drivers/pci/pcie/portdrv_pci.c
+>> index 3a3ce40ae1ab..4d880679b9b1 100644
+>> --- a/drivers/pci/pcie/portdrv_pci.c
+>> +++ b/drivers/pci/pcie/portdrv_pci.c
+>> @@ -106,7 +106,8 @@ static int pcie_portdrv_probe(struct pci_dev 
+>> *dev,
+>>  	if (!pci_is_pcie(dev) ||
+>>  	    ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT) &&
+>>  	     (pci_pcie_type(dev) != PCI_EXP_TYPE_UPSTREAM) &&
+>> -	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)))
+>> +	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM) &&
+>> +	     (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)))
+>>  		return -ENODEV;
+>>
+>>  	status = pcie_port_device_register(dev);
+>> @@ -195,6 +196,8 @@ static const struct pci_device_id port_pci_ids[] 
+>> = {
+>>  	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x00), ~0) },
+>>  	/* subtractive decode PCI-to-PCI bridge, class type is 060401h */
+>>  	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x01), ~0) },
+>> +	/* handle any Root Complex Event Collector */
+>> +	{ PCI_DEVICE_CLASS(((PCI_CLASS_SYSTEM_RCEC << 8) | 0x00), ~0) },
+>>  	{ },
+>>  };
+>>
+>> -- 
+>> 2.27.0
+>>
