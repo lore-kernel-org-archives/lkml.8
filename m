@@ -2,139 +2,101 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED462C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0BCE206D4
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52DDE206D4
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:21:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596655289;
+	bh=itzMvNq8nfgP8VKXOJXPOoZfq8+Pd5YP4oo6JUWZy/Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OY66tv2GPw87uQk2RW8ZHjOKqx+RwLEFNFNNLwzsYKAuCvHk7ODMFVQqSnKfUMb3q
+	 5NIhBjHJaH91aZCIOx3Nby+9h+9hYn11sDlLncZhHTl08t0Hyugs0WnWzuB8eOMYnN
+	 DHdd/rtpCZmULVu9Z7mYfhDRkDstWdZoaNBYIcCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728898AbgHETUn (ORCPT
+        id S1728995AbgHETV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:20:43 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2580 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729004AbgHERrb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:47:31 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 4B69D483CC3B2D2041B1;
-        Wed,  5 Aug 2020 18:47:01 +0100 (IST)
-Received: from localhost (10.52.120.30) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 5 Aug 2020
- 18:47:00 +0100
-Date:   Wed, 5 Aug 2020 18:45:35 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Sean V Kelley <sean.v.kelley@intel.com>
-CC:     <bhelgaas@google.com>, <rjw@rjwysocki.net>, <ashok.raj@intel.com>,
-        <tony.luck@intel.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [PATCH V2 2/9] PCI: Extend Root Port Driver to support RCEC
-Message-ID: <20200805184535.00005711@Huawei.com>
-In-Reply-To: <20200804194052.193272-3-sean.v.kelley@intel.com>
-References: <20200804194052.193272-1-sean.v.kelley@intel.com>
-        <20200804194052.193272-3-sean.v.kelley@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Wed, 5 Aug 2020 15:21:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728977AbgHERl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:41:59 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E99452173E;
+        Wed,  5 Aug 2020 10:54:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596624860;
+        bh=itzMvNq8nfgP8VKXOJXPOoZfq8+Pd5YP4oo6JUWZy/Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=daILxyCwv0M7mQeyhNXxvi03DAUtga5jJtqn9dQXwRgrXBcNva8DPZDusD/aFamB8
+         Au9mHe9ABAS9MqqceMBsO7YPBu1LumIOWL9uh+TWE/OO/RKyxryVA4IqaKwGaUH9uK
+         2Cbco3etFIjw9O/v4cujAsyuMP3cTEND8YVamfgM=
+Date:   Wed, 5 Aug 2020 11:53:57 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Alain Volmat <alain.volmat@st.com>
+Cc:     amelie.delaunay@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+Subject: Re: [PATCH 09/18] spi: stm32h7: fix race condition at end of transfer
+Message-ID: <20200805105357.GD5556@sirena.org.uk>
+References: <1596610933-32599-1-git-send-email-alain.volmat@st.com>
+ <1596610933-32599-10-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.120.30]
-X-ClientProxiedBy: lhreml744-chm.china.huawei.com (10.201.108.194) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3Gf/FFewwPeBMqCJ"
+Content-Disposition: inline
+In-Reply-To: <1596610933-32599-10-git-send-email-alain.volmat@st.com>
+X-Cookie: Fast, cheap, good: pick two.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Aug 2020 12:40:45 -0700
-Sean V Kelley <sean.v.kelley@intel.com> wrote:
 
-> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> 
-> If a Root Complex Integrated Endpoint (RCiEP) is implemented, errors may
-> optionally be sent to a corresponding Root Complex Event Collector (RCEC).
-> Each RCiEP must be associated with no more than one RCEC. Interface errors
-> are reported to the OS by RCECs.
-> 
-> For an RCEC (technically not a Bridge), error messages "received" from
-> associated RCiEPs must be enabled for "transmission" in order to cause a
-> System Error via the Root Control register or (when the Advanced Error
-> Reporting Capability is present) reporting via the Root Error Command
-> register and logging in the Root Error Status register and Error Source
-> Identification register.
-> 
-> Given the commonality with Root Ports and the need to also support AER
-> and PME services for RCECs, extend the Root Port driver to support RCEC
-> devices through the addition of the RCEC Class ID to the driver
-> structure.
-> 
-> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
-> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-One trivial thing inline.
+--3Gf/FFewwPeBMqCJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+On Wed, Aug 05, 2020 at 09:02:04AM +0200, Alain Volmat wrote:
+> From: Antonio Borneo <antonio.borneo@st.com>
+>=20
+> The caller of stm32_spi_transfer_one(), spi_transfer_one_message(),
+> is waiting for us to call spi_finalize_current_transfer() and will
+> eventually schedule a new transfer, if available.
+> We should guarantee that the spi controller is really available
+> before calling spi_finalize_current_transfer().
+>=20
+> Move the call to spi_finalize_current_transfer() _after_ the call
+> to stm32_spi_disable().
 
+This seems like a bug fix and should therefore be at the start of the
+series so it can be sent to mainline without the new development work.
 
-> ---
->  drivers/pci/pcie/portdrv_core.c | 8 ++++----
->  drivers/pci/pcie/portdrv_pci.c  | 5 ++++-
->  2 files changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-> index 50a9522ab07d..5d4a400094fc 100644
-> --- a/drivers/pci/pcie/portdrv_core.c
-> +++ b/drivers/pci/pcie/portdrv_core.c
-> @@ -234,11 +234,11 @@ static int get_port_device_capability(struct pci_dev *dev)
->  #endif
->  
->  	/*
-> -	 * Root ports are capable of generating PME too.  Root Complex
-> -	 * Event Collectors can also generate PMEs, but we don't handle
-> -	 * those yet.
-> +	 * Root ports and Root Complex Event Collectors are capable
-> +	 * of generating PME too.
+--3Gf/FFewwPeBMqCJ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I'm not sure what the 'too' refers to.   I'd just drop it and avoid
-any possible confusion!
+-----BEGIN PGP SIGNATURE-----
 
->  	 */
-> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
-> +	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> +	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) &&
->  	    (pcie_ports_native || host->native_pme)) {
->  		services |= PCIE_PORT_SERVICE_PME;
->  
-> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-> index 3a3ce40ae1ab..4d880679b9b1 100644
-> --- a/drivers/pci/pcie/portdrv_pci.c
-> +++ b/drivers/pci/pcie/portdrv_pci.c
-> @@ -106,7 +106,8 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
->  	if (!pci_is_pcie(dev) ||
->  	    ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT) &&
->  	     (pci_pcie_type(dev) != PCI_EXP_TYPE_UPSTREAM) &&
-> -	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)))
-> +	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM) &&
-> +	     (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)))
->  		return -ENODEV;
->  
->  	status = pcie_port_device_register(dev);
-> @@ -195,6 +196,8 @@ static const struct pci_device_id port_pci_ids[] = {
->  	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x00), ~0) },
->  	/* subtractive decode PCI-to-PCI bridge, class type is 060401h */
->  	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x01), ~0) },
-> +	/* handle any Root Complex Event Collector */
-> +	{ PCI_DEVICE_CLASS(((PCI_CLASS_SYSTEM_RCEC << 8) | 0x00), ~0) },
->  	{ },
->  };
->  
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8qj8UACgkQJNaLcl1U
+h9BPMwf/SVAa/tykTrFSDmtKpWBCSoTEQyhwBfjKuq+rQf3+01Akz63PIPooThf4
+4hcsMCzyVNfFiNhOCvCyeK5ccZ3iJ6ZX+CBzIp82qadb35VN1MNxMVwHPy2kshTW
+8S+oKpDXRIFEiuKmDTBW22swtHCy8m01Ng4gQXvQPBhdjIpff4sl/kAMBxPRUFBS
+TjkRi39WPFNwmRWRBrAxa99mmyOt0+83zOs0jjLRRJADsfoIaDdkISbFGJ517Wh1
+10XUqNK0kNJC8hqj6rK7jgkgQeMW3vAQaimhlJzFbnjVOgtiW74zF03RPmxM1w6V
+R+0IRfA+AzMkXP1gTek7e+vjuBraaQ==
+=4szv
+-----END PGP SIGNATURE-----
 
-
+--3Gf/FFewwPeBMqCJ--
