@@ -8,109 +8,104 @@ X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E02F5C433EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 04:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F085C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 04:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2B1C22CA0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 04:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34084205CB
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 04:30:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OtjJ7ZSO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KH87wYJU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbgHEEaG (ORCPT
+        id S1726293AbgHEE34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 00:30:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45216 "EHLO
+        Wed, 5 Aug 2020 00:29:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbgHEEaB (ORCPT
+        with ESMTP id S1726096AbgHEE3w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 00:30:01 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F0BBC061756
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 21:30:00 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id k11so27695057ybp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 21:30:00 -0700 (PDT)
+        Wed, 5 Aug 2020 00:29:52 -0400
+Received: from mail-qk1-x74a.google.com (mail-qk1-x74a.google.com [IPv6:2607:f8b0:4864:20::74a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9A09C06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 21:29:51 -0700 (PDT)
+Received: by mail-qk1-x74a.google.com with SMTP id k142so30025863qke.7
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 21:29:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=Y00REmw7cW2Ho0KOM1NABcGJpQIr8u0gXHD6A1O7ZXc=;
-        b=OtjJ7ZSOy+P1/e1/ee1YUJbWdg+u0tTRw6B9Yl1dD1X+EXBfL8hI28LcD2xNuRVxv7
-         UO+Tg7Ldk8N4W4MYp/ciEcY6LKafeRPJJKXgMRdXWWFT4TdS0cSN9PTQKTnT6iF05IdD
-         cJBozNbmRDQdqlZgNG1KZb5uAi2w1kr8VJLa8QZTXVPR5OY3q9AvRTTEbBt3Hw78zlAn
-         rW8JVHoIrl2OUuJ7SCP3lFRx7Py2mmWxNGTuKU6KTYMQYYwPHmZGUtoCgTTr9WJJZQvZ
-         Zdh8zAzKkkws2u8fNMAzBsh4WCWBRjA4QIwuFdiesJu8oFhsAg368qSQumimvA/t52sh
-         mhBA==
+        bh=1s/fGj49wZAcV85LY6dM4ghB8ELbpKuQm5SC6WcoZ6s=;
+        b=KH87wYJUH7h4lE7GNyS9Zkc0/3HRb/qCKsvepF+wF74pNbnprxanLXxWGZSvHNat2a
+         KWa0kEHWNrd7PrwIvCVKfksv1mmUs8g8LsJsxRw8MqeCep8TI+d7HZWQeJasaU/JwQTW
+         AKpMgngEZL/m8NQmYa4KC6mczZeb/RC8JGkMGn0iRU3KSk33CpJ016RNn/IZGuOGUJL2
+         oV6vVsprw0GfpE7+M7sO/O9plsvSGD0AeS1E2y/MrYtytWkyzdyBOZguaFPwKeQ1WQqS
+         DYh72SsnIMEPVXGCBfQKMj9RN29n+3XzA7q63+xuoi/uaVbvSqOkv2MSoghGEn2bQzLj
+         N8XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=Y00REmw7cW2Ho0KOM1NABcGJpQIr8u0gXHD6A1O7ZXc=;
-        b=gJTcYuqt7K6qxc89Af0DQMeY4Mqx3oj+CMFwlCVxre9jiUoKFZ4k1seFvBHmDp0fQz
-         wSFckV2dfRdw/SOtcNGNTvdhmGxQkJk8HE/WYXZ7EnBJNG9mvMJh93kDnjTyAHFFXibI
-         3ufzKZsikk2ZYl05R2CdONAYN7jLjJcMHsRaYE9H0avn/JkUcZMv5SjHbe6Qo7qVeTa/
-         ctC9+pfJfB+uGzOHONjPYALhz5OxfwNQRnh5+k9pbmfwo98dj5c6GErpnf/aM+Q8k6IX
-         vlNaGzAc44Lq8eP2YMQ+J3p1k/wf6C1ZxMILJYq5LWUXudhHaHFcoXIHlj2uzjc//cok
-         tHCQ==
-X-Gm-Message-State: AOAM5319E5YrF+ktpLxQyRY6X+B6EFCfQZXa5Eutllk87Otd40JuSG6h
-        Fo8J7v3XllXSf3ETa+NKvoK1Fa/sX2SAbw==
-X-Google-Smtp-Source: ABdhPJxXjGFwD40kee1mNnaPkbYMTsK0NB+Nl4pE7YyjsA4sfahOk4MpuFQvMN8FFzVOGOoGSQTphyt0akERlg==
-X-Received: by 2002:a25:8411:: with SMTP id u17mr658207ybk.95.1596601799856;
- Tue, 04 Aug 2020 21:29:59 -0700 (PDT)
-Date:   Tue,  4 Aug 2020 21:29:38 -0700
+        bh=1s/fGj49wZAcV85LY6dM4ghB8ELbpKuQm5SC6WcoZ6s=;
+        b=CumZ8Bu48MFKEs9CFBfPuhUZRkkicV7y8TkdctuXWMhgJiI3Llep532sNtOVlYDbbz
+         B+fsMxq7kLbamJm0yV8jF5BDvUu2eDrfYHfOO2hoUH5rT0F4XSdUZYAzQWzNpXrkCycH
+         qpUy1cQJ9aTmBn/Rc6r0av7oHNZlrj5CNnm4rFAlk8f0zZBKAfhkaK1FG8usyHSF9Y7M
+         +OaT4t6LmkcO4S2rpwUvFQRmhfiAjTideKYBH/2UR8dgsLZM5hJxEPnD8+qY5v3nJu2l
+         18ueTtQLfdDftq4HG2Xn4uomyA6JLd0J22/6XY0q4Qa6DabxCnyqCVY/avI1Y2Eig28P
+         SI/g==
+X-Gm-Message-State: AOAM533rGbWFSorggb9Y6B2LrWcdpBQSGxAEW4qdWeeiFMgsrgCdu+Vl
+        3nnsXNy+6QAcj365irgCcuvflpca9XvLRQ==
+X-Google-Smtp-Source: ABdhPJylrtvvJBJ9f9qdqVMEdPVylXivJYIOITqT9qZY1M+5gLFwdOVxzioKQUYCPH/JukP+OFQzFLRW8FIJlw==
+X-Received: by 2002:a05:6214:1742:: with SMTP id dc2mr1836989qvb.90.1596601789643;
+ Tue, 04 Aug 2020 21:29:49 -0700 (PDT)
+Date:   Tue,  4 Aug 2020 21:29:33 -0700
 In-Reply-To: <20200805042938.2961494-1-davidgow@google.com>
-Message-Id: <20200805042938.2961494-7-davidgow@google.com>
+Message-Id: <20200805042938.2961494-2-davidgow@google.com>
 Mime-Version: 1.0
 References: <20200805042938.2961494-1-davidgow@google.com>
 X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
-Subject: [PATCH v11 6/6] mm: kasan: Do not panic if both panic_on_warn and
- kasan_multishot set
+Subject: [PATCH v11 1/6] Add KUnit Struct to Current Task
 From:   David Gow <davidgow@google.com>
 To:     trishalfonso@google.com, brendanhiggins@google.com,
         aryabinin@virtuozzo.com, dvyukov@google.com, mingo@redhat.com,
         peterz@infradead.org, juri.lelli@redhat.com,
         vincent.guittot@linaro.org, andreyknvl@google.com,
         shuah@kernel.org, akpm@linux-foundation.org
-Cc:     David Gow <davidgow@google.com>, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, kunit-dev@googlegroups.com,
-        linux-kselftest@vger.kernel.org, linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
+        linux-mm@kvack.org, David Gow <davidgow@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KASAN errors will currently trigger a panic when panic_on_warn is set.
-This renders kasan_multishot useless, as further KASAN errors won't be
-reported if the kernel has already paniced. By making kasan_multishot
-disable this behaviour for KASAN errors, we can still have the benefits
-of panic_on_warn for non-KASAN warnings, yet be able to use
-kasan_multishot.
+From: Patricia Alfonso <trishalfonso@google.com>
 
-This is particularly important when running KASAN tests, which need to
-trigger multiple KASAN errors: previously these would panic the system
-if panic_on_warn was set, now they can run (and will panic the system
-should non-KASAN warnings show up).
+In order to integrate debugging tools like KASAN into the KUnit
+framework, add KUnit struct to the current task to keep track of the
+current KUnit test.
 
-Signed-off-by: David Gow <davidgow@google.com>
-Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
+Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
 Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Signed-off-by: David Gow <davidgow@google.com>
 ---
- mm/kasan/report.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/sched.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-index e2c14b10bc81..00a53f1355ae 100644
---- a/mm/kasan/report.c
-+++ b/mm/kasan/report.c
-@@ -95,7 +95,7 @@ static void end_report(unsigned long *flags)
- 	pr_err("==================================================================\n");
- 	add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
- 	spin_unlock_irqrestore(&report_lock, *flags);
--	if (panic_on_warn) {
-+	if (panic_on_warn && !test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags)) {
- 		/*
- 		 * This thread may hit another WARN() in the panic path.
- 		 * Resetting this prevents additional WARN() from panicking the
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 27882a08163f..f3f990b82bde 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1196,6 +1196,10 @@ struct task_struct {
+ 	struct kcsan_ctx		kcsan_ctx;
+ #endif
+ 
++#if IS_ENABLED(CONFIG_KUNIT)
++	struct kunit			*kunit_test;
++#endif
++
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ 	/* Index of current stored address in ret_stack: */
+ 	int				curr_ret_stack;
 -- 
 2.28.0.163.g6104cc2f0b6-goog
 
