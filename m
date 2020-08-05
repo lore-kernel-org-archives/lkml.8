@@ -2,150 +2,105 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F43C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CCBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52E0422CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:22:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkEWqptL"
+	by mail.kernel.org (Postfix) with ESMTP id B7CA822CA0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:22:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596651746;
+	bh=I1zJy9HVZE3kXlTdCz3NimHrXDTg3aZ0bE9Ft0Nok8s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uHSaIElBOOYkf5XTloOnhldD2iLhr9owOM7mNtywdiW+RfjuRuViYFDW5Zs9kjMKT
+	 3W9ZyhIsZ+NZeeaVgUsykvlB/t5CYp0egtUhfIrLDBxH6v6nUy21w6b/veTrbT7CT6
+	 v7b4PRneoEPVNmnbEhXtXRZQkrwcifnyJQkBvbho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729060AbgHESVq (ORCPT
+        id S1729109AbgHESWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 14:21:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60080 "EHLO
+        Wed, 5 Aug 2020 14:22:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729181AbgHESLW (ORCPT
+        with ESMTP id S1728903AbgHESLu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 14:11:22 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A2CCC06138D;
-        Wed,  5 Aug 2020 11:10:32 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id s15so16744045qvv.7;
-        Wed, 05 Aug 2020 11:10:32 -0700 (PDT)
+        Wed, 5 Aug 2020 14:11:50 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32D0EC061756
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 11:11:48 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id i19so24738415lfj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 11:11:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CSOoq3zhF6z2fZ+X97MfanJIRrTuyK8BNIkdVGDMQEQ=;
-        b=WkEWqptLDy3R6ioOulhs9LCTz33DYC1YwZpUJavPXOLVGV2Oh1GCAetOfpDiAicnfC
-         bnnTTBfinXKPD8zwEhxTo3jAr1u6b1KivySeOrU9BiBn/I6UQAqhjBJCNsMKvG0hkImf
-         ALAyJ0TBul74xRJlxBK0ORqfKLnd46HXDgh18AjaR8DPqu0fHH8ldssbfQi1trX6tRB7
-         5UW7Vc1V2K2qydneRegNu1wCNbnVqa8s8SaDMEMPNS65YHhlNkvARMGJz77FYBEcMec3
-         v1SU3F9ISIdfIyZiYpIFsVgMAzZcO+5s6AMfJZRSIANi/QySkiAvuVZebvBhIVj14HNN
-         KJ6A==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uHPd0ivHK9bW5amsgeLfepexH6gYrZPkMtMTrC1KpJc=;
+        b=G6m8qZi+rIjXCmBgPmBj7032K/nQAr3NLRmvf8lYANY8VpHEqkoOUIMmt+d3pIfFAy
+         8S/32NBJn8RJ/n/l2yPIG3zMcmrEYdd6pmDQs2lDLxgnOVDIQ+3AIoH5XEELjwY5dNjh
+         HhXyJvJT3gL+HQyS6+b1R9X52DRdebGwo1/5U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CSOoq3zhF6z2fZ+X97MfanJIRrTuyK8BNIkdVGDMQEQ=;
-        b=a4Plm0h/9rXTD4DSDFG67hE/2D5IY1EAldWANby4cPctLkiqPo4Ped9khm/Z1iUGuX
-         soLEHmcfXVsL2O3zVZSsvIzjZGDrzdeJfP7kAo5cjj1UTD3u+GxwICQgQW5Ffvisjqc1
-         WMc/mS1lTjSmN7w3GcdzWX2R/14/TPkHIsuSZMj3OeCew7e96gBJCVGz9diRbEBL+I9r
-         seAheRMgxGkRCxnFvXscmqKwnljpGc83bQSouqJdjkMq/xtk7nG4wPlKZ5Vx1jYpjR/y
-         UCl/re5o8+CpdaWuAoWv4Bvs5oYxW053tWhI3oNqceyFn1dYBfAwKBLXoiaOPPnym312
-         OT4w==
-X-Gm-Message-State: AOAM530BDCfwX1T4ctGYQKfWyNjVotXgZnz12wqWqp4YweWjpH8dQfH6
-        ibluYCAoc+ODEW6S1UTe+Q==
-X-Google-Smtp-Source: ABdhPJybD0CTplQH9PaqhvAh94r4pvrJHLy/2Cb1rWWuo+HcvlxTLUJMXYleqq82a0Jy8907RV108g==
-X-Received: by 2002:ad4:438f:: with SMTP id s15mr5142142qvr.164.1596651031728;
-        Wed, 05 Aug 2020 11:10:31 -0700 (PDT)
-Received: from localhost.localdomain (146-115-88-66.s3894.c3-0.sbo-ubr1.sbo.ma.cable.rcncustomer.com. [146.115.88.66])
-        by smtp.gmail.com with ESMTPSA id i7sm2571560qtb.27.2020.08.05.11.10.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 11:10:31 -0700 (PDT)
-From:   Peilin Ye <yepeilin.cs@gmail.com>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees] [PATCH net] Bluetooth: Fix slab-out-of-bounds read in hci_le_direct_adv_report_evt()
-Date:   Wed,  5 Aug 2020 14:09:02 -0400
-Message-Id: <20200805180902.684024-1-yepeilin.cs@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uHPd0ivHK9bW5amsgeLfepexH6gYrZPkMtMTrC1KpJc=;
+        b=UvWyUl4yuBOMOtiwI4MaGfhKUPadMfr6yUy4pbwfwSMk4ffrMf3qDdXcAn3Fn2p//N
+         geT5nPf4Opjk/w5QHRc8k/PRlfTyDZ519QQWu0t+esAiBMOh3IH4uJL89RUpPDh41Mux
+         DayfoAglCTeLTzdj6ypnRJMtm9k0Bt1mguIFk0wtioGCOuhbMqNAO+P17OmKk2qv1xD6
+         KEpITbk7OGNwDMMvYbHtw66pfBx3ed1Zy6liu6sjBsD6Uwm1avfNpcrUQjoh+Cf/4U8I
+         cifOSEclvY+T/63naaYguGMLghRo8rkxqU2PO/YjRhEWcB2SDSRmnBsuA4zE4EGiZmiE
+         EEeQ==
+X-Gm-Message-State: AOAM533i3XdvgYtWdnM1YednZlXZl9hykWWw/s3WZpnr623pFoeOZu05
+        VZ5p0CczEua0kez7gJCOhNTnRFnH7QU=
+X-Google-Smtp-Source: ABdhPJzLUWqmZRtU4lgbzg3GXbajzJM0wVcH6H91xI30kqsXDWnOfnMEHK9ZSJPdHHh6vHz1oXN5bQ==
+X-Received: by 2002:ac2:530e:: with SMTP id c14mr2108964lfh.127.1596651106396;
+        Wed, 05 Aug 2020 11:11:46 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id 29sm1276673ljv.72.2020.08.05.11.11.45
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Aug 2020 11:11:45 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id v9so14283437ljk.6
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 11:11:45 -0700 (PDT)
+X-Received: by 2002:a2e:9252:: with SMTP id v18mr1882996ljg.70.1596651104717;
+ Wed, 05 Aug 2020 11:11:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <E1k3KUx-0000da-In@rmk-PC.armlinux.org.uk>
+In-Reply-To: <E1k3KUx-0000da-In@rmk-PC.armlinux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 5 Aug 2020 11:11:28 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whbLwN9GEVVt=7eYhPYk0t0Wh1xeuNEDD+xmQxBFjAQJA@mail.gmail.com>
+Message-ID: <CAHk-=whbLwN9GEVVt=7eYhPYk0t0Wh1xeuNEDD+xmQxBFjAQJA@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: update phylink/sfp keyword matching
+To:     Russell King <rmk+kernel@armlinux.org.uk>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-`num_reports` is not being properly checked. A malformed event packet with
-a large `num_reports` number makes hci_le_direct_adv_report_evt() read out
-of bounds. Fix it.
+On Wed, Aug 5, 2020 at 7:34 AM Russell King <rmk+kernel@armlinux.org.uk> wrote:
+>
+> Is this something you're willing to merge directly please?
 
-Reported-and-tested-by: syzbot+24ebd650e20bd263ca01@syzkaller.appspotmail.com
-Fixes: 2f010b55884e ("Bluetooth: Add support for handling LE Direct Advertising Report events")
-Link: https://syzkaller.appspot.com/bug?extid=24ebd650e20bd263ca01
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
----
-I moved the initialization of `ev` out of the loop and restructured the
-function a bit, since otherwise the check would look like:
+Done.
 
-	if (!num_reports || skb->len < num_reports * sizeof(struct hci_ev_le_direct_adv_info) + 1)
-		return;
+That said:
 
-Therefore I used the similar structure with hci_inquiry_result_evt() etc.
+> -K:     phylink
+> +K:     phylink\.h|struct\s+phylink|\.phylink|>phylink_|phylink_(autoneg|clear|connect|create|destroy|disconnect|ethtool|helper|mac|mii|of|set|start|stop|test|validate)
 
-hci_le_adv_report_evt() and hci_le_ext_adv_report_evt() also have the
-same issue with `num_reports`, but I'm not sure how to perform the check
-for them, since they use variable-length reports. Should we do something
-like this? (take hci_le_adv_report_evt() as example:)
+That's a very awkward pattern. I wonder if there could be better ways
+to express this (ie "only apply this pattern to these files" kind of
+thing)
 
-	if (!num_reports ||
-	    skb->len < num_reports * (sizeof(*ev) + HCI_MAX_AD_LENGTH + 1) + 1)
-		return;
+Isn't the 'F' pattern already complete enough that maybe the K pattern
+isn't even worth it?
 
-Then how about hci_le_ext_adv_report_evt()? There is no such
-`HCI_MAX_AD_LENGTH` restrictions on `ev->length` for it, I assume?
+Just a thought, no biggie.
 
-Would like to hear your opinion. Thank you!
-
- net/bluetooth/hci_event.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
-
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 4b7fc430793c..aec43ae488d1 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -5863,21 +5863,19 @@ static void hci_le_direct_adv_report_evt(struct hci_dev *hdev,
- 					 struct sk_buff *skb)
- {
- 	u8 num_reports = skb->data[0];
--	void *ptr = &skb->data[1];
-+	struct hci_ev_le_direct_adv_info *ev = (void *)&skb->data[1];
- 
--	hci_dev_lock(hdev);
-+	if (!num_reports || skb->len < num_reports * sizeof(*ev) + 1)
-+		return;
- 
--	while (num_reports--) {
--		struct hci_ev_le_direct_adv_info *ev = ptr;
-+	hci_dev_lock(hdev);
- 
-+	for (; num_reports; num_reports--, ev++)
- 		process_adv_report(hdev, ev->evt_type, &ev->bdaddr,
- 				   ev->bdaddr_type, &ev->direct_addr,
- 				   ev->direct_addr_type, ev->rssi, NULL, 0,
- 				   false);
- 
--		ptr += sizeof(*ev);
--	}
--
- 	hci_dev_unlock(hdev);
- }
- 
--- 
-2.25.1
-
+           Linus
