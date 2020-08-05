@@ -2,101 +2,122 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A8DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E84C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E412722CAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:09:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596658167;
-	bh=ysS3LGq+470SGw6FYTetlB33DoPN5s8hyLYUhLe+03M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p+smMKgofMrIHq++4cWFYpouZkrCKhmY/BO4vdOZwLVfN3EVs9p8XINJKSHDPlUCP
-	 bRtLVNDXNFqo8M5/m+NAAsobh8aUSP2X17NrsBjmKeN6KS2grXCNV1SFJIfoYzjGxS
-	 94YpuU6rmj8mAFkc2JMVIczY+r58Z6Tb73skySuI=
+	by mail.kernel.org (Postfix) with ESMTP id 08B0622CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:09:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="tAdrgRN+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729722AbgHEUJZ (ORCPT
+        id S1727828AbgHEUJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:09:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49782 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726826AbgHEQce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 16:09:30 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:44774 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726344AbgHEQce (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:32:34 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E67E233EF;
-        Wed,  5 Aug 2020 15:53:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596642813;
-        bh=ysS3LGq+470SGw6FYTetlB33DoPN5s8hyLYUhLe+03M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JllupMgGlKTLXmtpiHjPZcnaEmnCr0V+WsDeHZA9YXLMvLeqg+Wd/ROLuK4m2mJiu
-         wFOhrdYHSJCyh6GLl1Cwj53tG8YCqkVLDinsUumsJkQj7N4bpGDyzHAifJIT8iEHds
-         I5BoyQC92mRaKOYelfOhIGxp4sQPnJ0yBcqEc1Q8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 3/8] ARM: percpu.h: fix build error
-Date:   Wed,  5 Aug 2020 17:53:29 +0200
-Message-Id: <20200805153507.162602782@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200805153507.005753845@linuxfoundation.org>
-References: <20200805153507.005753845@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 33C1D20B4916;
+        Wed,  5 Aug 2020 09:21:25 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 33C1D20B4916
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1596644485;
+        bh=GzAsE7yIveqCecXCvd87U4xE2Iv3TtxhwzS/oH7sMZQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=tAdrgRN+aiLODwPD2Pu1t/IPAMRAiJp2U3MWvDjOQx4AmOIgoovl6hWOOeVMDJtJt
+         srJScwliKGlB05ubxJW3Wzi7YO2eKzS+pomSQSUqJxynjqI9F3S5cW+JA1RfOPWOoS
+         r5NxUGUp0TBH7UejIn8B1uTkrKsu2u62Nak4Higk=
+Subject: Re: [PATCH v6 0/4] LSM: Measure security module data
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>, zohar@linux.ibm.com,
+        stephen.smalley.work@gmail.com, sashal@kernel.org,
+        jmorris@namei.org, linux-integrity@vger.kernel.org,
+        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200805004331.20652-1-nramas@linux.microsoft.com>
+ <f3971f35-309d-c3e5-9126-69add7ad4c11@schaufler-ca.com>
+ <50587a3e-bcb5-c68e-c16c-41baf68b4d4a@linux.microsoft.com>
+ <c7c168f2-e30b-d2c5-abcb-1b6919197474@schaufler-ca.com>
+ <20200805154504.GB4365@sequoia>
+ <7c7a076b-6ba7-2e8d-409a-b3b4e4738c41@linux.microsoft.com>
+ <20200805161449.GC4365@sequoia>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <ae80581d-a34c-51f4-d4f9-94c1e341fd15@linux.microsoft.com>
+Date:   Wed, 5 Aug 2020 09:21:24 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200805161449.GC4365@sequoia>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+On 8/5/20 9:14 AM, Tyler Hicks wrote:
+> On 2020-08-05 09:07:48, Lakshmi Ramasubramanian wrote:
+>> On 8/5/20 8:45 AM, Tyler Hicks wrote:
+>>> On 2020-08-05 08:36:40, Casey Schaufler wrote:
+>>>> On 8/4/2020 6:14 PM, Lakshmi Ramasubramanian wrote:
+>>>>> On 8/4/20 6:04 PM, Casey Schaufler wrote:
+>>>>>> On 8/4/2020 5:43 PM, Lakshmi Ramasubramanian wrote:
+>>>>>>> Critical data structures of security modules are currently not measured.
+>>>>>>> Therefore an attestation service, for instance, would not be able to
+>>>>>>> attest whether the security modules are always operating with the policies
+>>>>>>> and configuration that the system administrator had setup. The policies
+>>>>>>> and configuration for the security modules could be tampered with by
+>>>>>>> malware by exploiting kernel vulnerabilities or modified through some
+>>>>>>> inadvertent actions on the system. Measuring such critical data would
+>>>>>>> enable an attestation service to better assess the state of the system.
+>>>>>>
+>>>>>> I still wonder why you're calling this an LSM change/feature when
+>>>>>> all the change is in IMA and SELinux. You're not putting anything
+>>>>>> into the LSM infrastructure, not are you using the LSM infrastructure
+>>>>>> to achieve your ends. Sure, you *could* support other security modules
+>>>>>> using this scheme, but you have a configuration dependency on
+>>>>>> SELinux, so that's at best going to be messy. If you want this to
+>>>>>> be an LSM "feature" you need to use the LSM hooking mechanism.
+>>>>>
+>>>>>>
+>>>>>> I'm not objecting to the feature. It adds value. But as you've
+>>>>>> implemented it it is either an IMA extension to SELinux, or an
+>>>>>> SELiux extension to IMA. Could AppArmor add hooks for this without
+>>>>>> changing the IMA code? It doesn't look like it to me.
+>>>>>
+>>>>> The check in IMA to allow the new IMA hook func LSM_STATE and LSM_POLICY when SELinux is enabled is just because SELinux is the only security module using these hooks now.
+>>>>>
+>>>>> To enable AppArmor, for instance, to use the new IMA hooks to measure state and policy would just require adding the check for CONFIG_SECURITY_APPARMOR. Other than that, there are no IMA changes needed to support AppArmor or other such security modules.
+>>>>
+>>>> This is exactly what I'm objecting to. What if a system has both SELinux
+>>>> and AppArmor compiled in? What if it has both enabled?
+>>>
+>>> The SELinux state and policy would be measured but the AppArmor
+>>> state/policy would be silently ignored. This isn't ideal as the IMA
+>>> policy author would need to read the kernel code to figure out which
+>>> LSMs are going to be measured.
+>>
+>> Tyler - I am not sure why AppArmor state\policy would be ignored when both
+>> SELinux and AppArmor are enabled. Could you please clarify?
+> 
+> I think Casey is talking about now (when AppArmor is not supported by
+> this feature) and you're talking about the future (when AppArmor may be
+> supported by this feature).
 
-commit aa54ea903abb02303bf55855fb51e3fcee135d70 upstream.
+Got it - thanks for clarifying.
 
-Fix build error for the case:
-  defined(CONFIG_SMP) && !defined(CONFIG_CPU_V6)
+But with the current code if SELinux is enabled on the system, but 
+AppArmor is not and the IMA policy contains "measure func=LSM_STATE" 
+then the policy will be rejected as "-EINVAL".
+So the policy author would get a feedback even now.
+Correct me if I am wrong.
 
-config: keystone_defconfig
-
-  CC      arch/arm/kernel/signal.o
-  In file included from ../include/linux/random.h:14,
-                    from ../arch/arm/kernel/signal.c:8:
-  ../arch/arm/include/asm/percpu.h: In function ‘__my_cpu_offset’:
-  ../arch/arm/include/asm/percpu.h:29:34: error: ‘current_stack_pointer’ undeclared (first use in this function); did you mean ‘user_stack_pointer’?
-      : "Q" (*(const unsigned long *)current_stack_pointer));
-                                     ^~~~~~~~~~~~~~~~~~~~~
-                                     user_stack_pointer
-
-Fixes: f227e3ec3b5c ("random32: update the net random state on interrupt and activity")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/arm/include/asm/percpu.h |    2 ++
- 1 file changed, 2 insertions(+)
-
---- a/arch/arm/include/asm/percpu.h
-+++ b/arch/arm/include/asm/percpu.h
-@@ -16,6 +16,8 @@
- #ifndef _ASM_ARM_PERCPU_H_
- #define _ASM_ARM_PERCPU_H_
- 
-+#include <asm/thread_info.h>
-+
- /*
-  * Same as asm-generic/percpu.h, except that we store the per cpu offset
-  * in the TPIDRPRW. TPIDRPRW only exists on V6K and V7
-
-
+  -lakshmi
