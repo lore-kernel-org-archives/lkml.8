@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 912CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD02AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68E2122B45
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A58E822CA0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:04:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="J1f16BKC"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Z3lRBcUS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgHEHEs (ORCPT
+        id S1728443AbgHEHEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 03:04:48 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:6350 "EHLO
+        Wed, 5 Aug 2020 03:04:49 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:54442 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728330AbgHEHEg (ORCPT
+        by vger.kernel.org with ESMTP id S1728333AbgHEHEh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 03:04:36 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07572Sl8030166;
-        Wed, 5 Aug 2020 09:04:19 +0200
+        Wed, 5 Aug 2020 03:04:37 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07573OoP002361;
+        Wed, 5 Aug 2020 09:04:16 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=Roy09aPqq0Q7g5lXc4K4Kk544HN7j9g4NScvr1YV+3A=;
- b=J1f16BKCszXxXEBlLK1zO7uFldHfPTA9fb1TQnWWeEehDWLArFveJLevxiy0xSGVMrbF
- BZoqM42CAN3XRe9aplMmqHR6InBk+R1CKg/zsNbao9ZPhg8x8Yilfzzh9tye/8ToB0DU
- dTbtk1nKCMBmo491MV6TV+oDdMdgNsKUA3I/ng3dJ4v6TJyLfIrZ3h2W440LoLsNnigS
- YAl6GIGFUdUNCxi8CAgDQ43Xhwo7KRpXPE+fuKAor8I9TH2jWszRf5kJnC97vHovKDHU
- +S0WUFPMq/MZb0Y3EIbQ29SfZzpPum+L0gWbsFoNi8ALr6HXgTsppZ7dzxrfmawLqiNP LQ== 
+ bh=RffTtPmKCv/Aa2h8bw9Avd3hjS+jAC1L4CxYDKOc4jw=;
+ b=Z3lRBcUSGbru34zjrzwCPy6d5YlIhLUhDUDxUKiKZ9BZuy2OxFebVV1k9G4fqn+E7Zjk
+ NVosWxv3t2aN39PHyIQLk4bu0jYqh0sxh/wcdJDG4NtTVuwDlAmsXAB+q4m+zFqgJ3YB
+ qzhm45Bogxeoyuw3KvFJpOOEKBEnIO+Fp2TbScXSoOclwrBwYfkwFIfRLAE48iAIrckw
+ SzjMV1ysL80RB2mZYzkmAD2Wxcx01d3TkcuwROaspJXQajcj5shYJP2MMenyPx8WkJax
+ Ys4MD8e8Ff2sDAfPc8fmRllFJJ0v8YAkDOC05tBiYxxYODf1z8XDyvBWvTGzZGVY3LqB pw== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 32n6hyq7ts-1
+        by mx07-00178001.pphosted.com with ESMTP id 32n6knf7du-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Aug 2020 09:04:19 +0200
+        Wed, 05 Aug 2020 09:04:16 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8E3C310002A;
-        Wed,  5 Aug 2020 09:04:18 +0200 (CEST)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2BC9D100038;
+        Wed,  5 Aug 2020 09:04:16 +0200 (CEST)
 Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 824672A4D8E;
-        Wed,  5 Aug 2020 09:04:18 +0200 (CEST)
-Received: from localhost (10.75.127.50) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Aug 2020 09:04:18
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1CEC82A4D8E;
+        Wed,  5 Aug 2020 09:04:16 +0200 (CEST)
+Received: from localhost (10.75.127.48) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Aug 2020 09:04:15
  +0200
 From:   Alain Volmat <alain.volmat@st.com>
 To:     <broonie@kernel.org>, <amelie.delaunay@st.com>
@@ -56,16 +56,16 @@ CC:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
         <alain.volmat@st.com>
-Subject: [PATCH 12/18] spi: stm32: move spi disable out of irq handler
-Date:   Wed, 5 Aug 2020 09:02:07 +0200
-Message-ID: <1596610933-32599-13-git-send-email-alain.volmat@st.com>
+Subject: [PATCH 06/18] spi: stm32h7: fix irq handler
+Date:   Wed, 5 Aug 2020 09:02:01 +0200
+Message-ID: <1596610933-32599-7-git-send-email-alain.volmat@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1596610933-32599-1-git-send-email-alain.volmat@st.com>
 References: <1596610933-32599-1-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG4NODE1.st.com (10.75.127.10) To SFHDAG3NODE2.st.com
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE2.st.com
  (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-08-05_04:2020-08-03,2020-08-05 signatures=0
@@ -74,90 +74,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antonio Borneo <antonio.borneo@st.com>
+From: Amelie Delaunay <amelie.delaunay@st.com>
 
-The spi disable could potentially require some time to finish.
-It has to be executed at the end of a transfer, but there is
-no reason to call it in the irq handler.
+Check the expected flags in irq handler instead of all flags set in
+status register and clear only flags that are not automatically cleared
+by hardware.
+In case of Full-Duplex mode, DXP flag is set when RXP and TXP flags are
+set. But to avoid 2 different handlings, just add TXP and RXP flag in
+the mask instead of DXP, and then keep the initial handling of TXP and
+RXP events.
+Also rephrase comment about EOTIE which is one of the interrupt enable
+bits. It is not triggered by any event.
 
-Simplify the irq handler by moving out the spi disable. The
-synchronization through xfer_completion is used to defer the
-execution of spi disable.
-
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
 Signed-off-by: Alain Volmat <alain.volmat@st.com>
 ---
- drivers/spi/spi-stm32.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/spi/spi-stm32.c | 40 ++++++++++++++++++++++++++--------------
+ 1 file changed, 26 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index 0eda9903e11e..1a703c4a65db 100644
+index b90367d522f2..bbda73937668 100644
 --- a/drivers/spi/spi-stm32.c
 +++ b/drivers/spi/spi-stm32.c
-@@ -874,7 +874,6 @@ static irqreturn_t stm32f4_spi_irq_thread(int irq, void *dev_id)
+@@ -131,6 +131,7 @@
+ #define STM32H7_SPI_SR_RXP		BIT(0)
+ #define STM32H7_SPI_SR_TXP		BIT(1)
+ #define STM32H7_SPI_SR_EOT		BIT(3)
++#define STM32H7_SPI_SR_TXTF		BIT(4)
+ #define STM32H7_SPI_SR_OVR		BIT(6)
+ #define STM32H7_SPI_SR_SUSP		BIT(11)
+ #define STM32H7_SPI_SR_RXPLVL		GENMASK(14, 13)
+@@ -881,7 +882,7 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
+ {
  	struct spi_master *master = dev_id;
  	struct stm32_spi *spi = spi_master_get_devdata(master);
+-	u32 sr, ier, mask;
++	u32 sr, ier, mask, ifcr;
+ 	unsigned long flags;
+ 	bool end = false;
  
--	stm32f4_spi_disable(spi);
- 	complete(&spi->xfer_completion);
+@@ -889,26 +890,31 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
  
- 	return IRQ_HANDLED;
-@@ -963,15 +962,18 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
+ 	sr = readl_relaxed(spi->base + STM32H7_SPI_SR);
+ 	ier = readl_relaxed(spi->base + STM32H7_SPI_IER);
++	ifcr = 0;
+ 
+ 	mask = ier;
+-	/* EOTIE is triggered on EOT, SUSP and TXC events. */
++	/*
++	 * EOTIE enables irq from EOT, SUSP and TXC events. We need to set
++	 * SUSP to acknowledge it later. TXC is automatically cleared
++	 */
+ 	mask |= STM32H7_SPI_SR_SUSP;
+ 	/*
+-	 * When TXTF is set, DXPIE and TXPIE are cleared. So in case of
+-	 * Full-Duplex, need to poll RXP event to know if there are remaining
+-	 * data, before disabling SPI.
++	 * DXPIE is set in Full-Duplex, one IT will be raised if TXP and RXP
++	 * are set. So in case of Full-Duplex, need to poll TXP and RXP event.
+ 	 */
+-	if (spi->rx_buf && !spi->cur_usedma)
+-		mask |= STM32H7_SPI_SR_RXP;
++	if ((spi->cur_comm == SPI_FULL_DUPLEX) && (!spi->cur_usedma))
++		mask |= STM32H7_SPI_SR_TXP | STM32H7_SPI_SR_RXP;
+ 
+-	if (!(sr & mask)) {
++	mask &= sr;
++
++	if (!mask) {
+ 		dev_dbg(spi->dev, "spurious IT (sr=0x%08x, ier=0x%08x)\n",
+ 			sr, ier);
+ 		spin_unlock_irqrestore(&spi->lock, flags);
+ 		return IRQ_NONE;
+ 	}
+ 
+-	if (sr & STM32H7_SPI_SR_SUSP) {
++	if (mask & STM32H7_SPI_SR_SUSP) {
+ 		dev_warn(spi->dev, "Communication suspended\n");
  		if (!spi->cur_usedma && (spi->rx_buf && (spi->rx_len > 0)))
- 			stm32h7_spi_read_rxfifo(spi);
- 
--	writel_relaxed(ifcr, spi->base + STM32H7_SPI_IFCR);
--
--	spin_unlock_irqrestore(&spi->lock, flags);
--
- 	if (end) {
--		stm32h7_spi_disable(spi);
-+		/* Disable interrupts and clear status flags */
-+		writel_relaxed(0, spi->base + STM32H7_SPI_IER);
-+		writel_relaxed(STM32H7_SPI_IFCR_ALL,
-+			       spi->base + STM32H7_SPI_IFCR);
-+
- 		complete(&spi->xfer_completion);
-+	} else {
-+		writel_relaxed(ifcr, spi->base + STM32H7_SPI_IFCR);
+ 			stm32h7_spi_read_rxfifo(spi, false);
+@@ -918,9 +924,10 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
+ 		 */
+ 		if (spi->cur_usedma)
+ 			end = true;
++		ifcr |= STM32H7_SPI_SR_SUSP;
  	}
  
-+	spin_unlock_irqrestore(&spi->lock, flags);
- 	return IRQ_HANDLED;
- }
- 
-@@ -1039,10 +1041,8 @@ static void stm32f4_spi_dma_tx_cb(void *data)
- {
- 	struct stm32_spi *spi = data;
- 
--	if (spi->cur_comm == SPI_SIMPLEX_TX || spi->cur_comm == SPI_3WIRE_TX) {
--		stm32f4_spi_disable(spi);
-+	if (spi->cur_comm == SPI_SIMPLEX_TX || spi->cur_comm == SPI_3WIRE_TX)
- 		complete(&spi->xfer_completion);
--	}
- }
- 
- /**
-@@ -1055,7 +1055,6 @@ static void stm32f4_spi_dma_rx_cb(void *data)
- {
- 	struct stm32_spi *spi = data;
- 
--	stm32f4_spi_disable(spi);
- 	complete(&spi->xfer_completion);
- }
- 
-@@ -1697,9 +1696,10 @@ static int stm32_spi_transfer_one(struct spi_master *master,
- 	if (!ret) {
- 		dev_err(spi->dev, "SPI transfer timeout (%u ms)\n", xfer_time);
- 		spi->xfer_status = -ETIMEDOUT;
--		spi->cfg->disable(spi);
+-	if (sr & STM32H7_SPI_SR_OVR) {
++	if (mask & STM32H7_SPI_SR_OVR) {
+ 		dev_warn(spi->dev, "Overrun: received value discarded\n");
+ 		if (!spi->cur_usedma && (spi->rx_buf && (spi->rx_len > 0)))
+ 			stm32h7_spi_read_rxfifo(spi, false);
+@@ -930,23 +937,28 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
+ 		 */
+ 		if (spi->cur_usedma)
+ 			end = true;
++		ifcr |= STM32H7_SPI_SR_OVR;
  	}
  
-+	spi->cfg->disable(spi);
+-	if (sr & STM32H7_SPI_SR_EOT) {
++	if (mask & STM32H7_SPI_SR_TXTF)
++		ifcr |= STM32H7_SPI_SR_TXTF;
 +
- 	spi_finalize_current_transfer(master);
++	if (mask & STM32H7_SPI_SR_EOT) {
+ 		if (!spi->cur_usedma && (spi->rx_buf && (spi->rx_len > 0)))
+ 			stm32h7_spi_read_rxfifo(spi, true);
+ 		end = true;
++		ifcr |= STM32H7_SPI_SR_EOT;
+ 	}
  
- 	return spi->xfer_status;
+-	if (sr & STM32H7_SPI_SR_TXP)
++	if (mask & STM32H7_SPI_SR_TXP)
+ 		if (!spi->cur_usedma && (spi->tx_buf && (spi->tx_len > 0)))
+ 			stm32h7_spi_write_txfifo(spi);
+ 
+-	if (sr & STM32H7_SPI_SR_RXP)
++	if (mask & STM32H7_SPI_SR_RXP)
+ 		if (!spi->cur_usedma && (spi->rx_buf && (spi->rx_len > 0)))
+ 			stm32h7_spi_read_rxfifo(spi, false);
+ 
+-	writel_relaxed(mask, spi->base + STM32H7_SPI_IFCR);
++	writel_relaxed(ifcr, spi->base + STM32H7_SPI_IFCR);
+ 
+ 	spin_unlock_irqrestore(&spi->lock, flags);
+ 
 -- 
 2.7.4
 
