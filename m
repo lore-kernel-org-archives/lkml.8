@@ -2,176 +2,163 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD1CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A747FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 673E322CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:15:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DEA022B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:16:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U8zkKwEx"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="Q/9XHEwd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729231AbgHEUPy (ORCPT
+        id S1726442AbgHEUP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:15:54 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21064 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726459AbgHEQUK (ORCPT
+        Wed, 5 Aug 2020 16:15:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42178 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgHEQUG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:20:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596644408;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QVpgCBuAAnsCtvrERYgdCRjC/scatHyJclE27/3mCkw=;
-        b=U8zkKwExRznM8pqplosJ/ua6azvHDRzUfAkNVSgc+Y88DP8UqFVjFQJmntB+XnLa+ZUxjz
-        jqKOC+4jPoM7eeRB5X0FTHSaRHwAm87Z7xbNk1eoUs73Lq5eUn0JEvhZXkV5BTg5wkFCQy
-        1YApHOo1iOJ2czYwcYfUbx/kuh54Weg=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-251-Oajkk616PMeyboigt-8DAw-1; Wed, 05 Aug 2020 12:02:14 -0400
-X-MC-Unique: Oajkk616PMeyboigt-8DAw-1
-Received: by mail-qt1-f197.google.com with SMTP id q19so22642053qtp.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 09:02:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=QVpgCBuAAnsCtvrERYgdCRjC/scatHyJclE27/3mCkw=;
-        b=JqBNipwRk+fg0QlpjlmLDWMJajYa8LkrzpwRYRATvHCQLErA6r93c9iWN0SRSQOpOW
-         feNm/gjgxYPJ0qWpjlLibscVr+JZQW4ebQfgUdVRSMRuoT/GPJWqWaDq90XD2FuuixBh
-         dbWIghQRQuHZtSXMDqC28ORpRc2DZe9SADT22VGyY4Zz6zgjBf8C2r6nf1f0PFONb7rR
-         rtsc8xpP0Z52/RDd2VJhvcE6KHz66wLSCd2ely9Wtx8hOr7Ib1GyuQOZknClGMSgTNFI
-         SOtFkcO4pRG/8EqQx6nidxFkJzX3310xdJUKYt8ovau1Xfy77SHHLRviWNQ5IvfXY+iF
-         cLdQ==
-X-Gm-Message-State: AOAM531HFqkgw4Jow/hbGyqFXpwZUOPH2x/hF0Q2x7m6pNv9Lut0pAKW
-        ASlls5LXQ5G4wFd6C7rqRWWhZGL9Atj5AT4C5F4p+spylBZC+UFDS03D1NKu1n9AXx4zZ4tC/cS
-        ZeeQIwkUcOnDjnkgVghdE3HLM
-X-Received: by 2002:ad4:554f:: with SMTP id v15mr4340227qvy.30.1596643333107;
-        Wed, 05 Aug 2020 09:02:13 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwCEt6SOCQIQNlgWFc2fSlY6oagtplzPU3BVLGyxoUjfFLo9zIHh0cZuAl1swq7IdMfrOOlkw==
-X-Received: by 2002:ad4:554f:: with SMTP id v15mr4340183qvy.30.1596643332734;
-        Wed, 05 Aug 2020 09:02:12 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id d46sm2548270qtk.37.2020.08.05.09.02.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2020 09:02:12 -0700 (PDT)
-Subject: Re: [PATCH 5/6] include: fpga: adi-axi-common.h: add definitions for
- supported FPGAs
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-clk@vger.kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, mdf@kernel.org,
-        Mircea Caprioru <mircea.caprioru@analog.com>
-References: <20200804110658.40911-1-alexandru.ardelean@analog.com>
- <20200804110658.40911-6-alexandru.ardelean@analog.com>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <f69c3dc7-be50-9685-b70f-8af2f7093646@redhat.com>
-Date:   Wed, 5 Aug 2020 09:02:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200804110658.40911-6-alexandru.ardelean@analog.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+        Wed, 5 Aug 2020 12:20:06 -0400
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2060f.outbound.protection.outlook.com [IPv6:2a01:111:f400:7d00::60f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D20CC0086A2;
+        Wed,  5 Aug 2020 07:41:37 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=K2abX8N/VHXCER0Sv8tTvCZ9c5O557MKSfbKelORtgHNBeR4GPnq7cZ9lgYDZS04b5vTAKJlBYVpDukYY3VrdKr3/5UV2LXZnCHSAGx2nMc6iC1dbpwJ5VEG8fsZ09LK3EK4by2wCGfSFd/xcVpkeDIkGZUsmbrPRvRgW/cX3O2Zzc3NISC4oUNydGFkCN23VkpkRwqxmWgY+OBO2srWOGWO3zG5ulhLZ98rzg9oWdoahLCYlWWyVRVV9ZL7i9DuQecrs/gfeFTtyffVAM+TNSAMQ8EdOGzs4W1hNwN4Ac6DpLntR/yEQz71G0v8QLq++0ifQbNOrBvqmDYyDTJz7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cMDOOVDbAPfNfq0gLypCFMaYRncjz22Ayr4Xky+CzvE=;
+ b=LKlRKbDmVslc13/3kS8lEi2L+qdLIrWJR6GxqIdHVQzdfWLuO7N0uhghw4fT+Ik+Om2J1dTe1dCa0xdO8pR/k6lv6110dJNrcp0KumODmwdedDPJj6mpdO+o3DOEAtVbXc11y+UJjC4Q7zrrF95VIa39slt89U1+jSoTxj2KJth3hFI569RiGGODesbBD15jpQ49FGGWfFlVAcWHBJofdSYrPdMQlzzyzZ8/yceSdTk8UAlniy+YXgCADmUyEC0tMcQbJdcisWmtb0USl3+zlk3OZTx6qlTpGQ6K7ZUPUdkOWLLI1LtdwVCAg4N+Pje3wHsIGmPK+9MP78odnjeaPg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cMDOOVDbAPfNfq0gLypCFMaYRncjz22Ayr4Xky+CzvE=;
+ b=Q/9XHEwdKM12is7GDnTzN76Sx0dG7Y/gBZQQV2xdd57oNUyLo9lGd2MA/FiHCobkOFKqeybz6NPcyQlNEUx+kghvBRPyRYSFBvnO/1tuEPansnMzu80ThxAwjdnJGzxgQZEcuJJvVNfy8QFMXi7r1e32hK1lB/NMtyRoNLj1/gI=
+Received: from VI1PR04MB4800.eurprd04.prod.outlook.com (2603:10a6:803:5a::12)
+ by VI1PR04MB6974.eurprd04.prod.outlook.com (2603:10a6:803:133::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17; Wed, 5 Aug
+ 2020 12:09:34 +0000
+Received: from VI1PR04MB4800.eurprd04.prod.outlook.com
+ ([fe80::1c58:aed8:bd10:6c9e]) by VI1PR04MB4800.eurprd04.prod.outlook.com
+ ([fe80::1c58:aed8:bd10:6c9e%3]) with mapi id 15.20.3239.022; Wed, 5 Aug 2020
+ 12:09:34 +0000
+From:   "Vabhav Sharma (OSS)" <vabhav.sharma@oss.nxp.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        B K Karthik <bkkarthik@pesu.pes.edu>
+CC:     Jiri Slaby <jirislaby@kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Vabhav Sharma (OSS)" <vabhav.sharma@oss.nxp.com>,
+        "bhuvanchandra.dv@toradex.com" <bhuvanchandra.dv@toradex.com>
+Subject: RE: [PATCH v2] tty: serial: fsl_lpuart.c: prevent a bad shift
+ operation
+Thread-Topic: [PATCH v2] tty: serial: fsl_lpuart.c: prevent a bad shift
+ operation
+Thread-Index: AQHWayFI3yg/bZUvNkSlmfbzKR6GJg==
+Date:   Wed, 5 Aug 2020 12:09:34 +0000
+Message-ID: <VI1PR04MB480018F32A080BC5CC76E3C7F34B0@VI1PR04MB4800.eurprd04.prod.outlook.com>
+References: <20200721174228.misj2mgqzcfz2lsj@pesu.pes.edu>
+ <20200729160333.GA3652767@kroah.com>
+In-Reply-To: <20200729160333.GA3652767@kroah.com>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linuxfoundation.org; dkim=none (message not signed)
+ header.d=none;linuxfoundation.org; dmarc=none action=none
+ header.from=oss.nxp.com;
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [103.49.154.17]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: af13b12b-cd4a-4ec6-6689-08d839386aa6
+x-ms-traffictypediagnostic: VI1PR04MB6974:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB697425F7F17CD9D7307A483FB24B0@VI1PR04MB6974.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2733;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8ZdgxBaeL1YeYwicLRZFZhkDSHv/Sx33eEeKn+f157t4sstfCXKuLuZhg3ajaaLtF3PvmaPPFzaOFMyz5uCU2nIkh8RHdi8048ovws6P6e+KRc4f5P0kP7usyTcEXVXPZS/FJq2k8r7rdtcjn6jzms5dWhWzIbj4UKobtXaYIZQbYsVjHgp6W3DXbdB+Rr1v/C9VBZoZKxQDWJtIjwXghmmIg1C/YglHgvzHtKYeurbQhGQZJqMElSORnrsTW3xgO//ueq8DEa0UK5HsrNb7Kbeni5sk6+O23iU4Q34e+l/FUe2l+fd7Eb1p7WwdZgQ0fyjKkIQ0mzTmJIYSlO6B7g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB4800.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(39860400002)(136003)(376002)(346002)(64756008)(478600001)(55016002)(110136005)(86362001)(76116006)(83380400001)(54906003)(66446008)(186003)(2906002)(26005)(7696005)(4326008)(8676002)(52536014)(66556008)(8936002)(9686003)(66946007)(66476007)(6506007)(316002)(53546011)(71200400001)(5660300002)(33656002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: JB+Lky7jGao1sIZExD/axQ3vb5v91aLLBp0DYI56xQUuWIdgdRtaa53BmM72ums3l4g8wcGg4VYvXMFEl2uGRfKHkpHDadfp2N5XP9UfaTZx14Y5eIVAhNhrSi9iYtiKf0DTnOlQX0CisqgJIwPBNwyYaeV+MPJYHBXy8MMlsu8CzT7/XCVh5rpRvBWXXt7TaCvhMmFSvuSByLesmgClAHgG+wYIllI0uCbLbb1jUFlWG5T24xhXn56JsENER2fo2NgaeFSqGrNH0bPTnIF7NW5WvJyeHnGslrmr19uF7tYbtGDm77Bauuhdi1dJPVHekw2INUZxhzvFD4HfhUK1KP3ejqjWc+184DRsAgaYzgjnKgzDC9ICUR5t16IXmJSaIpQqXyVipxXjqNEF79aWI1iPlPV+pNy3BHHf6IQF+fviT5V8kWJqeE2w1s6tAjZb3kNqt8NFFO4aZQl3HrWwWsS0UdvnWMBXF6jMyS7OGd4V5vchAGu9B2w270zv4rbaQ/EXER6bEsmtlejPWRFzmCxKRmsE9ph+a5i2C2O1gfKEi7uP2oSsEgiQoV4lvOBLOR4nHvVoqazcHQz2QXJ+TouUbk0dIx8aNcaMGvvjv5j8sbJUq/yAAAqcWC+S7aI5IjgLMWzvZc6cYgrmP/WdUA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB4800.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af13b12b-cd4a-4ec6-6689-08d839386aa6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2020 12:09:34.2017
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7C9GCJNILBD0WEXhjHwVjyFRyoY9XoUnVgnEFpBUJ0O7jF9v+tLDo+u05imw2AX+6s0zxjwWPneWBuvTHMpZaQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6974
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 8/4/20 4:06 AM, Alexandru Ardelean wrote:
-> From: Mircea Caprioru <mircea.caprioru@analog.com>
->
-> All (newer) FPGA IP cores supported by Analog Devices, store information in
-> the synthesized designs. This information describes various parameters,
-> including the family of boards on which this is deployed, speed-grade, and
-> so on.
->
-> Currently, some of these definitions are deployed mostly on Xilinx boards,
-> but they have been considered also for FPGA boards from other vendors.
->
-> The register definitions are described at this link:
->   https://wiki.analog.com/resources/fpga/docs/hdl/regmap
-> (the 'Base (common to all cores)' section).
->
-> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  include/linux/fpga/adi-axi-common.h | 37 +++++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->
-> diff --git a/include/linux/fpga/adi-axi-common.h b/include/linux/fpga/adi-axi-common.h
-> index 141ac3f251e6..7cca2d62cc45 100644
-> --- a/include/linux/fpga/adi-axi-common.h
-> +++ b/include/linux/fpga/adi-axi-common.h
-> @@ -13,6 +13,9 @@
->  
->  #define ADI_AXI_REG_VERSION			0x0000
->  
-> +#define ADI_AXI_REG_FPGA_INFO			0x001C
-> +#define ADI_AXI_REG_FPGA_VOLTAGE		0x0140
-> +
->  #define ADI_AXI_PCORE_VER(major, minor, patch)	\
->  	(((major) << 16) | ((minor) << 8) | (patch))
->  
-> @@ -20,4 +23,38 @@
->  #define ADI_AXI_PCORE_VER_MINOR(version)	(((version) >> 8) & 0xff)
->  #define ADI_AXI_PCORE_VER_PATCH(version)	((version) & 0xff)
->  
-> +#define ADI_AXI_INFO_FPGA_VOLTAGE(val)		((val) & 0xffff)
-> +
-> +#define ADI_AXI_INFO_FPGA_TECH(info)		(((info) >> 24) & 0xff)
-> +#define ADI_AXI_INFO_FPGA_FAMILY(info)		(((info) >> 16) & 0xff)
-> +#define ADI_AXI_INFO_FPGA_SPEED_GRADE(info)	(((info) >> 8) & 0xff)
-> +
-> +enum adi_axi_fgpa_technology {
 
-enum types are defined but not used.  It would be better to convert all of these to #defines.
+> -----Original Message-----
+> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Sent: Wednesday, July 29, 2020 9:34 PM
+> To: B K Karthik <bkkarthik@pesu.pes.edu>
+> Cc: Jiri Slaby <jirislaby@kernel.org>; linux-serial@vger.kernel.org; linu=
+x-
+> kernel@vger.kernel.org; Vabhav Sharma (OSS)
+> <vabhav.sharma@oss.nxp.com>; bhuvanchandra.dv@toradex.com
+> Subject: Re: [PATCH v2] tty: serial: fsl_lpuart.c: prevent a bad shift op=
+eration
+>=20
+> On Tue, Jul 21, 2020 at 11:12:29PM +0530, B K Karthik wrote:
+> > prevent a bad shift operation by verifying that the argument to fls is
+> > non zero.
+> >
+> > Reported-by: "Vabhav Sharma (OSS)" <vabhav.sharma@oss.nxp.com>
+> > Signed-off-by: B K Karthik <bkkarthik@pesu.pes.edu>
+> > ---
+> > v1 -> v2:
+> > 	added Reported-by tag
+> >
+> >  drivers/tty/serial/fsl_lpuart.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/tty/serial/fsl_lpuart.c
+> > b/drivers/tty/serial/fsl_lpuart.c index 7ca642249224..0cc64279cd2d
+> > 100644
+> > --- a/drivers/tty/serial/fsl_lpuart.c
+> > +++ b/drivers/tty/serial/fsl_lpuart.c
+> > @@ -1168,7 +1168,8 @@ static inline int lpuart_start_rx_dma(struct
+> lpuart_port *sport)
+> >  	 * 10ms at any baud rate.
+> >  	 */
+> >  	sport->rx_dma_rng_buf_len =3D (DMA_RX_TIMEOUT * baud /  bits /
+> 1000) * 2;
+> > -	sport->rx_dma_rng_buf_len =3D (1 << (fls(sport->rx_dma_rng_buf_len)
+> - 1));
+> > +	if (sport->rx_dma_rng_buf_len !=3D 0)
+>=20
+> How can this variable become 0?
+Condition x, taking false branch
+Explicitly returning zero=20
 
-These are only the Xilinx values. Need to add the Intel values from
-
-https://github.com/analogdevicesinc/hdl/blob/master/library/scripts/adi_intel_device_info_enc.tcl
-
-The #define names need to include XILINX or INTEL.
-
-Tom
-
-> +	ADI_AXI_FPGA_TECH_UNKNOWN = 0,
-> +	ADI_AXI_FPGA_TECH_SERIES7,
-> +	ADI_AXI_FPGA_TECH_ULTRASCALE,
-> +	ADI_AXI_FPGA_TECH_ULTRASCALE_PLUS,
-> +};
-> +
-> +enum adi_axi_fpga_family {
-> +	ADI_AXI_FPGA_FAMILY_UNKNOWN = 0,
-> +	ADI_AXI_FPGA_FAMILY_ARTIX,
-> +	ADI_AXI_FPGA_FAMILY_KINTEX,
-> +	ADI_AXI_FPGA_FAMILY_VIRTEX,
-> +	ADI_AXI_FPGA_FAMILY_ZYNQ,
-> +};
-> +
-> +enum adi_axi_fpga_speed_grade {
-> +	ADI_AXI_FPGA_SPEED_UNKNOWN	= 0,
-> +	ADI_AXI_FPGA_SPEED_1		= 10,
-> +	ADI_AXI_FPGA_SPEED_1L		= 11,
-> +	ADI_AXI_FPGA_SPEED_1H		= 12,
-> +	ADI_AXI_FPGA_SPEED_1HV		= 13,
-> +	ADI_AXI_FPGA_SPEED_1LV		= 14,
-> +	ADI_AXI_FPGA_SPEED_2		= 20,
-> +	ADI_AXI_FPGA_SPEED_2L		= 21,
-> +	ADI_AXI_FPGA_SPEED_2LV		= 22,
-> +	ADI_AXI_FPGA_SPEED_3		= 30,
-> +};
-> +
->  #endif /* ADI_AXI_COMMON_H_ */
-
+static __always_inline int fls(unsigned int x)
+{
+	return x ? sizeof(x) * 8 - __builtin_clz(x) : 0;
+}
+>=20
+> thanks,
+>=20
+> greg k-h
