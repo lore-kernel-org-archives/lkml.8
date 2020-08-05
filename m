@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A70DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D343EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 460F222CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A456C22CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:14:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="H4BNjpRf"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="j7afnAq0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgHEJOI (ORCPT
+        id S1728395AbgHEJOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 05:14:08 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:2072 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728520AbgHEJM1 (ORCPT
+        Wed, 5 Aug 2020 05:14:15 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:58952 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728534AbgHEJMm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 05:12:27 -0400
+        Wed, 5 Aug 2020 05:12:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1596618746; x=1628154746;
+  t=1596618762; x=1628154762;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=VOjgwAcvIpz+2XwKl01VpERw5XYtxTjTT5LdbafIEdA=;
-  b=H4BNjpRf8pSYyBbuvVU4GR3rhk68RCUIrJYnzgygtL9XQQ8HTFnEzO6h
-   Ur5arGn36TNc4PuA2/z3NJl+nyGyH39jwYH7zWSXJ2QwwvSUZPkBraYkk
-   Z2MHcEiSgNNKr+D0n1vSkhl+TscLznNlffbN5PEMYuasStWrWBpcZmyLe
-   o=;
-IronPort-SDR: Nn6jFpiauAN6079SSV7IVIDXPrnpIEPBmu4CQo7LfDVEBxjNTW7eAvpuepyH4FNk2LcwkK/w0/
- vRnxcj9jTklA==
+  bh=/Ae5VW+70xpnD8hTAzV/FHF1PuU2sVr8vHuAhjOfPOM=;
+  b=j7afnAq0tSyADFK7+pr1B/1m1e69LK5Kx/o7a2DpJRECjFtmd3WjaL53
+   47IF7xRVH0RsKHxvmdoPCLFycICJH2V+MmGiyPnIkEZhXzv9DjYqPqPSf
+   7zfVTOciYTdKfhcEVf11UHzXdbL2khVkX62AVxd5oHMGk8s8OiiDYCwKV
+   U=;
+IronPort-SDR: zPRus7cThy/J2lwAC75fBmtGVh5y6c8AjKvTOfmo1wa7rDpmAEqzatl69WftNAA9oV6ru/mQlA
+ dpjtjCNHzmhA==
 X-IronPort-AV: E=Sophos;i="5.75,436,1589241600"; 
-   d="scan'208";a="46247639"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-baacba05.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 05 Aug 2020 09:12:24 +0000
+   d="scan'208";a="46143680"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 05 Aug 2020 09:12:40 +0000
 Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-baacba05.us-west-2.amazon.com (Postfix) with ESMTPS id 71339A21F9;
-        Wed,  5 Aug 2020 09:12:22 +0000 (UTC)
+        by email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com (Postfix) with ESMTPS id 7FD91A189F;
+        Wed,  5 Aug 2020 09:12:38 +0000 (UTC)
 Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
  EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 5 Aug 2020 09:12:21 +0000
+ id 15.0.1497.2; Wed, 5 Aug 2020 09:12:37 +0000
 Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.248) by
  EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 5 Aug 2020 09:12:09 +0000
+ id 15.0.1497.2; Wed, 5 Aug 2020 09:12:28 +0000
 From:   Andra Paraschiv <andraprs@amazon.com>
 To:     linux-kernel <linux-kernel@vger.kernel.org>
 CC:     Anthony Liguori <aliguori@amazon.com>,
@@ -72,9 +72,9 @@ CC:     Anthony Liguori <aliguori@amazon.com>,
         kvm <kvm@vger.kernel.org>,
         ne-devel-upstream <ne-devel-upstream@amazon.com>,
         Andra Paraschiv <andraprs@amazon.com>
-Subject: [PATCH v6 10/18] nitro_enclaves: Add logic for getting the enclave image load info
-Date:   Wed, 5 Aug 2020 12:10:09 +0300
-Message-ID: <20200805091017.86203-11-andraprs@amazon.com>
+Subject: [PATCH v6 12/18] nitro_enclaves: Add logic for starting an enclave
+Date:   Wed, 5 Aug 2020 12:10:11 +0300
+Message-ID: <20200805091017.86203-13-andraprs@amazon.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20200805091017.86203-1-andraprs@amazon.com>
 References: <20200805091017.86203-1-andraprs@amazon.com>
@@ -89,57 +89,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before setting the memory regions for the enclave, the enclave image
-needs to be placed in memory. After the memory regions are set, this
-memory cannot be used anymore by the VM, being carved out.
+After all the enclave resources are set, the enclave is ready for
+beginning to run.
 
-Add ioctl command logic to get the offset in enclave memory where to
-place the enclave image. Then the user space tooling copies the enclave
-image in the memory using the given memory offset.
+Add ioctl command logic for starting an enclave after all its resources,
+memory regions and CPUs, have been set.
 
+The enclave start information includes the local channel addressing -
+vsock CID - and the flags associated with the enclave.
+
+Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
 Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
 ---
 Changelog
 
 v5 -> v6
 
-* Check for invalid enclave image load flags.
+* Check for invalid enclave start flags.
+* Update documentation to kernel-doc format.
 
 v4 -> v5
 
-* Check for the enclave not being started when invoking this ioctl call.
+* Add early exit on enclave start ioctl function call error.
+* Move sanity checks in the enclave start ioctl function, outside of the
+  switch-case block.
 * Remove log on copy_from_user() / copy_to_user() failure.
 
 v3 -> v4
 
 * Use dev_err instead of custom NE log pattern.
-* Set enclave image load offset based on flags.
 * Update the naming for the ioctl command from metadata to info.
+* Check for minimum enclave memory size.
 
 v2 -> v3
 
-* No changes.
+* Remove the WARN_ON calls.
+* Update static calls sanity checks.
 
 v1 -> v2
 
-* New in v2.
+* Add log pattern for NE.
+* Check if enclave state is init when starting an enclave.
+* Remove the BUG_ON calls.
 ---
- drivers/virt/nitro_enclaves/ne_misc_dev.c | 30 +++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ drivers/virt/nitro_enclaves/ne_misc_dev.c | 109 ++++++++++++++++++++++
+ 1 file changed, 109 insertions(+)
 
 diff --git a/drivers/virt/nitro_enclaves/ne_misc_dev.c b/drivers/virt/nitro_enclaves/ne_misc_dev.c
-index 4787bc59d39d..850e5e0ce0e9 100644
+index 88536a415246..c7eb1146a6c0 100644
 --- a/drivers/virt/nitro_enclaves/ne_misc_dev.c
 +++ b/drivers/virt/nitro_enclaves/ne_misc_dev.c
-@@ -652,6 +652,36 @@ static long ne_enclave_ioctl(struct file *file, unsigned int cmd, unsigned long
+@@ -820,6 +820,77 @@ static int ne_set_user_memory_region_ioctl(struct ne_enclave *ne_enclave,
+ 	return rc;
+ }
+ 
++/**
++ * ne_start_enclave_ioctl() - Trigger enclave start after the enclave resources,
++ *			      such as memory and CPU, have been set.
++ * @ne_enclave :		Private data associated with the current enclave.
++ * @enclave_start_info :	Enclave info that includes enclave cid and flags.
++ *
++ * Context: Process context. This function is called with the ne_enclave mutex held.
++ * Return:
++ * * 0 on success.
++ * * Negative return value on failure.
++ */
++static int ne_start_enclave_ioctl(struct ne_enclave *ne_enclave,
++	struct ne_enclave_start_info *enclave_start_info)
++{
++	struct ne_pci_dev_cmd_reply cmd_reply = {};
++	unsigned int cpu = 0;
++	struct enclave_start_req enclave_start_req = {};
++	unsigned int i = 0;
++	int rc = -EINVAL;
++
++	if (!ne_enclave->nr_mem_regions) {
++		dev_err_ratelimited(ne_misc_dev.this_device,
++				    "Enclave has no mem regions\n");
++
++		return -NE_ERR_NO_MEM_REGIONS_ADDED;
++	}
++
++	if (ne_enclave->mem_size < NE_MIN_ENCLAVE_MEM_SIZE) {
++		dev_err_ratelimited(ne_misc_dev.this_device,
++				    "Enclave memory is less than %ld\n",
++				    NE_MIN_ENCLAVE_MEM_SIZE);
++
++		return -NE_ERR_ENCLAVE_MEM_MIN_SIZE;
++	}
++
++	if (!ne_enclave->nr_vcpus) {
++		dev_err_ratelimited(ne_misc_dev.this_device,
++				    "Enclave has no vCPUs\n");
++
++		return -NE_ERR_NO_VCPUS_ADDED;
++	}
++
++	for (i = 0; i < ne_enclave->avail_cpu_cores_size; i++)
++		for_each_cpu(cpu, ne_enclave->avail_cpu_cores[i])
++			if (!cpumask_test_cpu(cpu, ne_enclave->vcpu_ids)) {
++				dev_err_ratelimited(ne_misc_dev.this_device,
++						    "Full CPU cores not used\n");
++
++				return -NE_ERR_FULL_CORES_NOT_USED;
++			}
++
++	enclave_start_req.enclave_cid = enclave_start_info->enclave_cid;
++	enclave_start_req.flags = enclave_start_info->flags;
++	enclave_start_req.slot_uid = ne_enclave->slot_uid;
++
++	rc = ne_do_request(ne_enclave->pdev, ENCLAVE_START, &enclave_start_req,
++			   sizeof(enclave_start_req), &cmd_reply, sizeof(cmd_reply));
++	if (rc < 0) {
++		dev_err_ratelimited(ne_misc_dev.this_device,
++				    "Error in enclave start [rc=%d]\n", rc);
++
++		return rc;
++	}
++
++	ne_enclave->state = NE_STATE_RUNNING;
++
++	enclave_start_info->enclave_cid = cmd_reply.enclave_cid;
++
++	return 0;
++}
++
+ /**
+  * ne_enclave_ioctl() - Ioctl function provided by the enclave file.
+  * @file:	File associated with this ioctl function.
+@@ -967,6 +1038,44 @@ static long ne_enclave_ioctl(struct file *file, unsigned int cmd, unsigned long
  		return 0;
  	}
  
-+	case NE_GET_IMAGE_LOAD_INFO: {
-+		struct ne_image_load_info image_load_info = {};
++	case NE_START_ENCLAVE: {
++		struct ne_enclave_start_info enclave_start_info = {};
++		int rc = -EINVAL;
 +
-+		if (copy_from_user(&image_load_info, (void __user *)arg, sizeof(image_load_info)))
++		if (copy_from_user(&enclave_start_info, (void __user *)arg,
++				   sizeof(enclave_start_info)))
 +			return -EFAULT;
++
++		if (enclave_start_info.flags >= NE_ENCLAVE_START_MAX_FLAG_VAL)
++			return -EINVAL;
 +
 +		mutex_lock(&ne_enclave->enclave_info_mutex);
 +
@@ -152,14 +243,17 @@ index 4787bc59d39d..850e5e0ce0e9 100644
 +			return -NE_ERR_NOT_IN_INIT_STATE;
 +		}
 +
++		rc = ne_start_enclave_ioctl(ne_enclave, &enclave_start_info);
++		if (rc < 0) {
++			mutex_unlock(&ne_enclave->enclave_info_mutex);
++
++			return rc;
++		}
++
 +		mutex_unlock(&ne_enclave->enclave_info_mutex);
 +
-+		if (image_load_info.flags == NE_EIF_IMAGE)
-+			image_load_info.memory_offset = NE_EIF_LOAD_OFFSET;
-+		else
-+			return -EINVAL;
-+
-+		if (copy_to_user((void __user *)arg, &image_load_info, sizeof(image_load_info)))
++		if (copy_to_user((void __user *)arg, &enclave_start_info,
++				 sizeof(enclave_start_info)))
 +			return -EFAULT;
 +
 +		return 0;
