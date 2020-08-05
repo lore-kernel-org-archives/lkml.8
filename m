@@ -2,208 +2,140 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B56FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C68C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CFD720842
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A043C22B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:55:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LROGuguX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728028AbgHETzA (ORCPT
+        id S1729481AbgHETzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:55:00 -0400
-Received: from mga01.intel.com ([192.55.52.88]:32825 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727945AbgHEQsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:48:11 -0400
-IronPort-SDR: nwkqXAT6CZOZ69x8LDzWCwzN33zlJckC1mY5EC5ptco192YfQkftpxb0bLRLMRp89yiItIwNGD
- CFFRomAQscsw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="170622868"
-X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
-   d="scan'208";a="170622868"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 07:36:34 -0700
-IronPort-SDR: 5s5xL7ULjjcKwA1ZbMpzVSNN1By1k0TkGC8gswbPhyywEmWjzJT3xp3c7P9Gm/qC4oSD3648GN
- nvO0VM/eQO3A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
-   d="scan'208";a="323117445"
-Received: from lkp-server02.sh.intel.com (HELO 37a337f97289) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 05 Aug 2020 07:36:30 -0700
-Received: from kbuild by 37a337f97289 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k3KWs-0000oK-7X; Wed, 05 Aug 2020 14:36:30 +0000
-Date:   Wed, 5 Aug 2020 22:35:32 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Oleksandr Andrushchenko <andr2000@gmail.com>,
-        xen-devel@lists.xenproject.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, boris.ostrovsky@oracle.com,
-        jgross@suse.com, airlied@linux.ie, daniel@ffwll.ch
-Cc:     kbuild-all@lists.01.org, intel-gfx@lists.freedesktop.org,
-        sstabellini@kernel.org, dan.carpenter@oracle.com
-Subject: Re: [Intel-gfx] [PATCH 6/6] drm/xen-front: Add support for EDID
- based configuration
-Message-ID: <202008052221.duhA3v0p%lkp@intel.com>
-References: <20200731125109.18666-7-andr2000@gmail.com>
+        Wed, 5 Aug 2020 15:55:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728081AbgHEQsi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 12:48:38 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 664BEC034620;
+        Wed,  5 Aug 2020 06:03:43 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id h3so15908107oie.11;
+        Wed, 05 Aug 2020 06:03:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ul3JxSNvbALNnsNm5N/3G9x3g0fvSkROIvPtcZ09wUQ=;
+        b=LROGuguX5eiFdK6/HlbWEokY57y9PRkvH4jrbMW7pvqEqfBl4fsI0EsSOc7HRg+t0R
+         JOs7LqFUIzCtXMZZFUIZrvgUNoSDAZljV+i4rERX/mIHAUemgFelCE2LMlgSfxg9acXt
+         S3DkWL9NDKPmWNE3ZLDgNJK2W3EdYp5m+8vcUUBVOsnHD8wJFqxFKg9Q8oKiS+zSDpOd
+         recsk89/sPpJ0Alx/5835DXnf6sEwIVJhZaK6Ji6i369xdBze0s7g7LhCYhWuuqI+JiL
+         ozNKT+azc/r7cuLp616hFleQ+jQ1S34u4nqbw3TggVuMgV0FOV1PSd1OgkAu8i+pMnxa
+         3djw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ul3JxSNvbALNnsNm5N/3G9x3g0fvSkROIvPtcZ09wUQ=;
+        b=RpBoHLl3rJJ74cUvFyBguEHK3o8zFW/Aij9lEjWrrxv4KhjzT0nAII1UlDHu6bFjxN
+         awLavYzw/5yYKe3BqHZzxAJyFF6X2PDo/+j0GR/CMbpQXpBKmjls6yiA5AxBLyqhM/cn
+         BNFduMdBxFlcwb40gnJN+rUr4kEobSV5lm2OmRdSpqavaPTp6i6LVWoMW6aVOQVDKIFq
+         xQKktzoBsemhXhM2BEhA/fEd7VSC3HtGWCNSP5LWKwFJy8WTN/lAPHmxCV2pD+40oSBQ
+         GL1xkvO9oCKHPx9x2X8i/AbyR1hebSr8MFeU3nvrGOHkyvYAbxA9SFcgqZmWzYzdZk5b
+         +Yww==
+X-Gm-Message-State: AOAM532xV3+9/DuB5wcUpVO3mlqi+Tm9CzyVQvvLvqmvbrfyIVXf+tNg
+        QsJzNcW16FWg9TP57MfHNwAqFaD6k9IY4w5z2w/TikaK
+X-Google-Smtp-Source: ABdhPJxbWangRjtzFke0pdRSrSqZfY52F1RdfyqnwFlX+c55Bg9gvfGBbpI8V3Ef7fb4pVuBjJea8Lt3bt15m1ENnpI=
+X-Received: by 2002:a54:4817:: with SMTP id j23mr2616355oij.140.1596632622694;
+ Wed, 05 Aug 2020 06:03:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200731125109.18666-7-andr2000@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200805004331.20652-1-nramas@linux.microsoft.com>
+ <20200805004331.20652-2-nramas@linux.microsoft.com> <4b9d2715d3ef3c8f915ef03867cfb1a39c0abc54.camel@linux.ibm.com>
+ <f88bf25e-37ef-7f00-6162-215838961bb0@gmail.com> <31d00876438d2652890ab8bf6ba2e80f554ca7a4.camel@linux.ibm.com>
+In-Reply-To: <31d00876438d2652890ab8bf6ba2e80f554ca7a4.camel@linux.ibm.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Wed, 5 Aug 2020 09:03:31 -0400
+Message-ID: <CAEjxPJ6X+Cqd5QtZBmNm2cujwbg-STfRF7_8i=Ny8yuc6z9BwQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/4] IMA: Add func to measure LSM state and policy
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Tyler Hicks <tyhicks@linux.microsoft.com>, sashal@kernel.org,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Oleksandr,
+On Wed, Aug 5, 2020 at 8:57 AM Mimi Zohar <zohar@linux.ibm.com> wrote:
+>
+> On Wed, 2020-08-05 at 08:46 -0400, Stephen Smalley wrote:
+> > On 8/4/20 11:25 PM, Mimi Zohar wrote:
+> >
+> > > Hi Lakshmi,
+> > >
+> > > There's still  a number of other patch sets needing to be reviewed
+> > > before my getting to this one.  The comment below is from a high level.
+> > >
+> > > On Tue, 2020-08-04 at 17:43 -0700, Lakshmi Ramasubramanian wrote:
+> > > > Critical data structures of security modules need to be measured to
+> > > > enable an attestation service to verify if the configuration and
+> > > > policies for the security modules have been setup correctly and
+> > > > that they haven't been tampered with at runtime. A new IMA policy is
+> > > > required for handling this measurement.
+> > > >
+> > > > Define two new IMA policy func namely LSM_STATE and LSM_POLICY to
+> > > > measure the state and the policy provided by the security modules.
+> > > > Update ima_match_rules() and ima_validate_rule() to check for
+> > > > the new func and ima_parse_rule() to handle the new func.
+> > > I can understand wanting to measure the in kernel LSM memory state to
+> > > make sure it hasn't changed, but policies are stored as files.  Buffer
+> > > measurements should be limited  to those things that are not files.
+> > >
+> > > Changing how data is passed to the kernel has been happening for a
+> > > while.  For example, instead of passing the kernel module or kernel
+> > > image in a buffer, the new syscalls - finit_module, kexec_file_load -
+> > > pass an open file descriptor.  Similarly, instead of loading the IMA
+> > > policy data, a pathname may be provided.
+> > >
+> > > Pre and post security hooks already exist for reading files.   Instead
+> > > of adding IMA support for measuring the policy file data, update the
+> > > mechanism for loading the LSM policy.  Then not only will you be able
+> > > to measure the policy, you'll also be able to require the policy be
+> > > signed.
+> >
+> > To clarify, the policy being measured by this patch series is a
+> > serialized representation of the in-memory policy data structures being
+> > enforced by SELinux.  Not the file that was loaded.  Hence, this
+> > measurement would detect tampering with the in-memory policy data
+> > structures after the policy has been loaded.  In the case of SELinux,
+> > one can read this serialized representation via /sys/fs/selinux/policy.
+> > The result is not byte-for-byte identical to the policy file that was
+> > loaded but can be semantically compared via sediff and other tools to
+> > determine whether it is equivalent.
+>
+> Thank you for the clarification.   Could the policy hash be included
+> with the other critical data?  Does it really need to be measured
+> independently?
 
-I love your patch! Perhaps something to improve:
-
-[auto build test WARNING on drm-exynos/exynos-drm-next]
-[also build test WARNING on drm-intel/for-linux-next tegra-drm/drm/tegra/for-next drm-tip/drm-tip linus/master v5.8 next-20200804]
-[cannot apply to xen-tip/linux-next drm/drm-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
-
-url:    https://github.com/0day-ci/linux/commits/Oleksandr-Andrushchenko/Fixes-and-improvements-for-Xen-pvdrm/20200731-205350
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos.git exynos-drm-next
-compiler: aarch64-linux-gcc (GCC) 9.3.0
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-
-cppcheck warnings: (new ones prefixed by >>)
-
->> drivers/irqchip/irq-gic.c:161:24: warning: Local variable gic_data shadows outer variable [shadowVar]
-    struct gic_chip_data *gic_data = irq_data_get_irq_chip_data(d);
-                          ^
-   drivers/irqchip/irq-gic.c:123:29: note: Shadowed declaration
-   static struct gic_chip_data gic_data[CONFIG_ARM_GIC_MAX_NR] __read_mostly;
-                               ^
-   drivers/irqchip/irq-gic.c:161:24: note: Shadow variable
-    struct gic_chip_data *gic_data = irq_data_get_irq_chip_data(d);
-                          ^
-   drivers/irqchip/irq-gic.c:167:24: warning: Local variable gic_data shadows outer variable [shadowVar]
-    struct gic_chip_data *gic_data = irq_data_get_irq_chip_data(d);
-                          ^
-   drivers/irqchip/irq-gic.c:123:29: note: Shadowed declaration
-   static struct gic_chip_data gic_data[CONFIG_ARM_GIC_MAX_NR] __read_mostly;
-                               ^
-   drivers/irqchip/irq-gic.c:167:24: note: Shadow variable
-    struct gic_chip_data *gic_data = irq_data_get_irq_chip_data(d);
-                          ^
->> drivers/irqchip/irq-gic.c:400:28: warning: Local variable gic_irq shadows outer function [shadowFunction]
-    unsigned int cascade_irq, gic_irq;
-                              ^
-   drivers/irqchip/irq-gic.c:171:28: note: Shadowed declaration
-   static inline unsigned int gic_irq(struct irq_data *d)
-                              ^
-   drivers/irqchip/irq-gic.c:400:28: note: Shadow variable
-    unsigned int cascade_irq, gic_irq;
-                              ^
->> drivers/irqchip/irq-gic.c:1507:14: warning: Local variable gic_cpu_base shadows outer function [shadowFunction]
-    phys_addr_t gic_cpu_base;
-                ^
-   drivers/irqchip/irq-gic.c:165:29: note: Shadowed declaration
-   static inline void __iomem *gic_cpu_base(struct irq_data *d)
-                               ^
-   drivers/irqchip/irq-gic.c:1507:14: note: Shadow variable
-    phys_addr_t gic_cpu_base;
-                ^
->> drivers/irqchip/irq-gic-v3.c:874:71: warning: Boolean result is used in bitwise operation. Clarify expression with parentheses. [clarifyCondition]
-    gic_data.rdists.has_direct_lpi &= (!!(typer & GICR_TYPER_DirectLPIS) |
-                                                                         ^
->> drivers/irqchip/irq-gic-v3.c:1808:6: warning: Local variable nr_redist_regions shadows outer variable [shadowVar]
-    u32 nr_redist_regions;
-        ^
-   drivers/irqchip/irq-gic-v3.c:1880:6: note: Shadowed declaration
-    u32 nr_redist_regions;
-        ^
-   drivers/irqchip/irq-gic-v3.c:1808:6: note: Shadow variable
-    u32 nr_redist_regions;
-        ^
->> drivers/irqchip/irq-gic-v3.c:2042:6: warning: Local variable maint_irq_mode shadows outer variable [shadowVar]
-    int maint_irq_mode;
-        ^
-   drivers/irqchip/irq-gic-v3.c:1884:6: note: Shadowed declaration
-    int maint_irq_mode;
-        ^
-   drivers/irqchip/irq-gic-v3.c:2042:6: note: Shadow variable
-    int maint_irq_mode;
-        ^
->> drivers/gpu/drm/xen/xen_drm_front_cfg.c:76:6: warning: Variable 'ret' is reassigned a value before the old one has been used. [redundantAssignment]
-    ret = xen_drm_front_get_edid(front_info, index, pages,
-        ^
-   drivers/gpu/drm/xen/xen_drm_front_cfg.c:61:0: note: Variable 'ret' is reassigned a value before the old one has been used.
-    int i, npages, ret = -ENOMEM;
-   ^
-   drivers/gpu/drm/xen/xen_drm_front_cfg.c:76:6: note: Variable 'ret' is reassigned a value before the old one has been used.
-    ret = xen_drm_front_get_edid(front_info, index, pages,
-        ^
-
-vim +/ret +76 drivers/gpu/drm/xen/xen_drm_front_cfg.c
-
-    54	
-    55	static void cfg_connector_edid(struct xen_drm_front_info *front_info,
-    56				       struct xen_drm_front_cfg_connector *connector,
-    57				       int index)
-    58	{
-    59		struct page **pages;
-    60		u32 edid_sz;
-    61		int i, npages, ret = -ENOMEM;
-    62	
-    63		connector->edid = vmalloc(XENDISPL_EDID_MAX_SIZE);
-    64		if (!connector->edid)
-    65			goto fail;
-    66	
-    67		npages = DIV_ROUND_UP(XENDISPL_EDID_MAX_SIZE, PAGE_SIZE);
-    68		pages = kvmalloc_array(npages, sizeof(struct page *), GFP_KERNEL);
-    69		if (!pages)
-    70			goto fail_free_edid;
-    71	
-    72		for (i = 0; i < npages; i++)
-    73			pages[i] = vmalloc_to_page((u8 *)connector->edid +
-    74						   i * PAGE_SIZE);
-    75	
-  > 76		ret = xen_drm_front_get_edid(front_info, index, pages,
-    77					     XENDISPL_EDID_MAX_SIZE, &edid_sz);
-    78	
-    79		kvfree(pages);
-    80	
-    81		if (ret < 0)
-    82			goto fail_free_edid;
-    83	
-    84		ret = -EINVAL;
-    85		if (!edid_sz || (edid_sz % EDID_LENGTH))
-    86			goto fail_free_edid;
-    87	
-    88		if (!drm_edid_is_valid(connector->edid))
-    89			goto fail_free_edid;
-    90	
-    91		DRM_INFO("Connector %s: using EDID for configuration, size %d\n",
-    92			 connector->xenstore_path, edid_sz);
-    93		return;
-    94	
-    95	fail_free_edid:
-    96		cfg_connector_free_edid(connector);
-    97	fail:
-    98		/*
-    99		 * If any error this is not critical as we can still read
-   100		 * connector settings from XenStore, so just warn.
-   101		 */
-   102		DRM_WARN("Connector %s: cannot read or wrong EDID: %d\n",
-   103			 connector->xenstore_path, ret);
-   104	}
-   105	
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+They were split into two separate functions because we wanted to be
+able to support using different templates for them (ima-buf for the
+state variables so that the measurement includes the original buffer,
+which is small and relatively fixed-size, and ima-ng for the policy
+because it is large and we just want to capture the hash for later
+comparison against known-good).  Also, the state variables are
+available for measurement always from early initialization, whereas
+the policy is only available for measurement once we have loaded an
+initial policy.
