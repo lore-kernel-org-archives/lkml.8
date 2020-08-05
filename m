@@ -2,68 +2,121 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C061C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA9CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52FDF20738
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:05:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596589514;
-	bh=V8SyMJUhTk121eZYzAmhMw82jobWxaHTOhXR1PgnYnE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Jv13THrYqjUBbhKqXda9tTpq/K5kcTafQeojTVHA/YVINZDp9IOfvQA8MKtOlYIzK
-	 nHs6rb6czVETShE8bTSEpt5Q6m/MO6QnfULEB5Tb6wBYoX03/yL/+wyOTckzYOmtxN
-	 kf4Upu3pu3/JNJLH1bDvT5X9/ot7PqmWYOXnAYEY=
+	by mail.kernel.org (Postfix) with ESMTP id 515EA20738
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:14:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EbI78P7a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgHEBFN (ORCPT
+        id S1726910AbgHEBOm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 21:05:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60212 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726831AbgHEBFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 21:05:08 -0400
-Subject: Re: [GIT PULL] dma-mapping updates for 5.9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596589508;
-        bh=V8SyMJUhTk121eZYzAmhMw82jobWxaHTOhXR1PgnYnE=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=0xo/kexh69Mx1o1AXt7z9fqmSfKd++oqctX1Lzm/2CvXBpnVEyQR2c5H17/+FQvuR
-         GqskXQ6MnPlLaebzPqSFOofnXsD8ENW7BDhkrF4zrga4SS6kU+x7cXIQG53PSXNY5z
-         hOcqfPLzrd183MhG1/VHEQjKTOHs1kWlcLZgqJ3o=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200803141547.GA752173@infradead.org>
-References: <20200803141547.GA752173@infradead.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200803141547.GA752173@infradead.org>
-X-PR-Tracked-Remote: git://git.infradead.org/users/hch/dma-mapping.git
- tags/dma-mapping-5.9
-X-PR-Tracked-Commit-Id: 274b3f7bf34415eed106e479e4815e897ce5d763
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2ed90dbbf7be3b7cd2790fc6fa946c478ab496b8
-Message-Id: <159658950828.28431.11011770511224592315.pr-tracker-bot@kernel.org>
-Date:   Wed, 05 Aug 2020 01:05:08 +0000
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+        Tue, 4 Aug 2020 21:14:42 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:42320 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725863AbgHEBOl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 21:14:41 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 7C12820B4908;
+        Tue,  4 Aug 2020 18:14:40 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7C12820B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1596590080;
+        bh=pB9tfJI+Mi5/kik0aQ3aA0nv5uOOIUeHWkkSk/Xfujo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=EbI78P7aDi5mfRJqIsbxK5gSUDMZJRJp/gj2DLzS10v74xXb4N4dR9l+KIT+gaRM5
+         CJBMkGNUsbZ+OoWuW/9qBMwGJ8DYiXCz6/6XcxRM6YrDhOn3Z0+jRiT1fQOW8LLDI5
+         EeSAg0z5plYEDTyUOIy9vOOnUMnF1ZdmyRhRk+/8=
+Subject: Re: [PATCH v6 0/4] LSM: Measure security module data
+To:     Casey Schaufler <casey@schaufler-ca.com>, zohar@linux.ibm.com,
+        stephen.smalley.work@gmail.com
+Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200805004331.20652-1-nramas@linux.microsoft.com>
+ <f3971f35-309d-c3e5-9126-69add7ad4c11@schaufler-ca.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <50587a3e-bcb5-c68e-c16c-41baf68b4d4a@linux.microsoft.com>
+Date:   Tue, 4 Aug 2020 18:14:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <f3971f35-309d-c3e5-9126-69add7ad4c11@schaufler-ca.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 3 Aug 2020 16:15:47 +0200:
+On 8/4/20 6:04 PM, Casey Schaufler wrote:
+> On 8/4/2020 5:43 PM, Lakshmi Ramasubramanian wrote:
+>> Critical data structures of security modules are currently not measured.
+>> Therefore an attestation service, for instance, would not be able to
+>> attest whether the security modules are always operating with the policies
+>> and configuration that the system administrator had setup. The policies
+>> and configuration for the security modules could be tampered with by
+>> malware by exploiting kernel vulnerabilities or modified through some
+>> inadvertent actions on the system. Measuring such critical data would
+>> enable an attestation service to better assess the state of the system.
+> 
+> I still wonder why you're calling this an LSM change/feature when
+> all the change is in IMA and SELinux. You're not putting anything
+> into the LSM infrastructure, not are you using the LSM infrastructure
+> to achieve your ends. Sure, you *could* support other security modules
+> using this scheme, but you have a configuration dependency on
+> SELinux, so that's at best going to be messy. If you want this to
+> be an LSM "feature" you need to use the LSM hooking mechanism.
 
-> git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-5.9
+> 
+> I'm not objecting to the feature. It adds value. But as you've
+> implemented it it is either an IMA extension to SELinux, or an
+> SELiux extension to IMA. Could AppArmor add hooks for this without
+> changing the IMA code? It doesn't look like it to me.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2ed90dbbf7be3b7cd2790fc6fa946c478ab496b8
+The check in IMA to allow the new IMA hook func LSM_STATE and LSM_POLICY 
+when SELinux is enabled is just because SELinux is the only security 
+module using these hooks now.
 
-Thank you!
+To enable AppArmor, for instance, to use the new IMA hooks to measure 
+state and policy would just require adding the check for 
+CONFIG_SECURITY_APPARMOR. Other than that, there are no IMA changes 
+needed to support AppArmor or other such security modules.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Please see Patch 1/4
+
++			else if (IS_ENABLED(CONFIG_SECURITY_SELINUX) &&
++				 strcmp(args[0].from, "LSM_STATE") == 0)
++				entry->func = LSM_STATE;
++			else if (IS_ENABLED(CONFIG_SECURITY_SELINUX) &&
++				 strcmp(args[0].from, "LSM_POLICY") == 0)
++				entry->func = LSM_POLICY;
+
+And, if early boot measurement is needed for AppArmor the following 
+change in IMA's Kconfig
+
+Patch 4/4
+
++config IMA_QUEUE_EARLY_BOOT_DATA
+  	bool
++	depends on SECURITY_SELINUX || (IMA_MEASURE_ASYMMETRIC_KEYS && 
+SYSTEM_TRUSTED_KEYRING)
+  	default y
+
+If you think calling this an "LSM feature" is not appropriate, please 
+suggest a better phrase.
+
+But like I said above, with minimal change in IMA other security modules 
+can be supported to measure STATE and POLICY data.
+
+  -lakshmi
+
+
