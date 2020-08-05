@@ -2,179 +2,133 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDCAC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6237CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 926912076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:39:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aGvivbAb"
+	by mail.kernel.org (Postfix) with ESMTP id 4CDE02076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:41:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbgHEGjI (ORCPT
+        id S1727964AbgHEGlK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 02:39:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728014AbgHEGjF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 02:39:05 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52D3DC061757
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 23:39:05 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id bh1so11599102plb.12
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 23:39:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=bmuyaLQZBi2uEmha54ZgdgKhFHmlcWLfKJualcCqXYk=;
-        b=aGvivbAbfB865LKL11Qmg8wlGFIIGu/j6BKLv4iR0FZn+SBKIT3qSlTrgTNjccD0PK
-         vP1JboQG4hXEjb0D8FIkbCQOnULHp9AIrDmYSlXRVI18ueUFEgeEjAUAr99oMSIMP3qj
-         Un97pDZl1B4/Hcm2AAlaRVDQbovd+j+rkQFXU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=bmuyaLQZBi2uEmha54ZgdgKhFHmlcWLfKJualcCqXYk=;
-        b=GRAe2AZa+uCwZWaD+yeDVAG2aTn221DASNV6RG690nAYaH9rrvbK56P5+9Rbw3Nvab
-         m186kjb1BjCG9ZBmTkBVPbH1NxaMCv7Nev/nG9d78+LwQ25Koj3/gS95dcLwPFG9SBxz
-         4ns+peGylrnAFhSDswyLWMC+JlTviNTXaF3OV2Z+8GibaKkIKiCpDkDw/MQvZI+MpMsW
-         Z1zNj/atIqWD5lb9kWFNlGw4V2RIb1KwqaqsF5v4E/m+Lj08PxWEbsLPdcDXiPdtXuUd
-         RNBcNlJSP7TKv/H1gMZ2ECiAmnKj/ZrLWdmojQRppBciI7/G2VAQmsFEtUyJP9Ut3Sd8
-         /Dgg==
-X-Gm-Message-State: AOAM531K6fy3PxPVEsz/9fHIE8Rh5pjxu82lMZ3y43zWfj4A2X48jvN8
-        eG0O9p11gfCTt8rIeqfUZRitOw==
-X-Google-Smtp-Source: ABdhPJwkVI9PXqaFBGmNw3AgAnGz0s6XO9J95Zk48HYQBJe4hs2a1T5PzPV6AC+KhZL1Bp8VZ8vLaQ==
-X-Received: by 2002:a17:90b:208:: with SMTP id fy8mr1705011pjb.131.1596609544417;
-        Tue, 04 Aug 2020 23:39:04 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id gi22sm1478909pjb.41.2020.08.04.23.39.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 23:39:03 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1596541616-27688-2-git-send-email-rnayak@codeaurora.org>
-References: <1596541616-27688-1-git-send-email-rnayak@codeaurora.org> <1596541616-27688-2-git-send-email-rnayak@codeaurora.org>
-Subject: Re: [PATCH 1/3] dt-bindings: power: Introduce 'assigned-performance-states' property
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org, ulf.hansson@linaro.org
-Date:   Tue, 04 Aug 2020 23:39:02 -0700
-Message-ID: <159660954201.1360974.5176671532597020049@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+        Wed, 5 Aug 2020 02:41:10 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:57066 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725920AbgHEGlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 02:41:09 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 489361A0523;
+        Wed,  5 Aug 2020 08:41:07 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 59D6B1A0514;
+        Wed,  5 Aug 2020 08:41:02 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 04060402E1;
+        Wed,  5 Aug 2020 08:40:55 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     Frank.li@nxp.com, will@kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] dt-bindings: perf: Convert i.MX DDR to json-schema
+Date:   Wed,  5 Aug 2020 14:36:27 +0800
+Message-Id: <1596609387-23542-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rajendra Nayak (2020-08-04 04:46:54)
-> While most devices within power-domains which support performance states,
-> scale the performance state dynamically, some devices might want to
-> set a static/default performance state while the device is active.
-> These devices typically would also run of a fixed clock and not support
+Convert the i.MX DDR perf binding to DT schema format using json-schema.
 
-s/of/off/
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../devicetree/bindings/perf/fsl-imx-ddr.txt       | 22 ------------
+ .../devicetree/bindings/perf/fsl-imx-ddr.yaml      | 39 ++++++++++++++++++++++
+ 2 files changed, 39 insertions(+), 22 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
+ create mode 100644 Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
 
-> dyamically scaling the device's performance, also known as DVFS technique=
-s.
+diff --git a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
+deleted file mode 100644
+index 7822a80..0000000
+--- a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.txt
++++ /dev/null
+@@ -1,22 +0,0 @@
+-* Freescale(NXP) IMX8 DDR performance monitor
+-
+-Required properties:
+-
+-- compatible: should be one of:
+-	"fsl,imx8-ddr-pmu"
+-	"fsl,imx8m-ddr-pmu"
+-	"fsl,imx8mp-ddr-pmu"
+-
+-- reg: physical address and size
+-
+-- interrupts: single interrupt
+-	generated by the control block
+-
+-Example:
+-
+-	ddr-pmu@5c020000 {
+-		compatible = "fsl,imx8-ddr-pmu";
+-		reg = <0x5c020000 0x10000>;
+-		interrupt-parent = <&gic>;
+-		interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
+-	};
+diff --git a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
+new file mode 100644
+index 0000000..5e77854
+--- /dev/null
++++ b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
+@@ -0,0 +1,39 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/perf/fsl-imx-ddr.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale(NXP) IMX8 DDR performance monitor
++
++maintainers:
++  - Frank Li <frank.li@nxp.com>
++
++properties:
++  compatible:
++    enum:
++      - fsl,imx8-ddr-pmu
++      - fsl,imx8m-ddr-pmu
++      - fsl,imx8mp-ddr-pmu
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    ddr-pmu@5c020000 {
++        compatible = "fsl,imx8-ddr-pmu";
++        reg = <0x5c020000 0x10000>;
++        interrupt-parent = <&gic>;
++        interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
++    };
+-- 
+2.7.4
 
-s/dyamically/dynamically/
-
-> Add a property 'assigned-performance-states' which client devices can
-> use to set this default performance state on their power-domains.
->=20
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
->  .../devicetree/bindings/power/power-domain.yaml    | 47 ++++++++++++++++=
-++++++
->  1 file changed, 47 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/power/power-domain.yaml b/=
-Documentation/devicetree/bindings/power/power-domain.yaml
-> index ff5936e..48e9319 100644
-> --- a/Documentation/devicetree/bindings/power/power-domain.yaml
-> +++ b/Documentation/devicetree/bindings/power/power-domain.yaml
-> @@ -66,6 +66,16 @@ properties:
->         by the given provider should be subdomains of the domain specified
->         by this binding.
-> =20
-> +  assigned-performance-states:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description:
-> +       Some devices might need to configure their power domains in a def=
-ault
-> +       performance state while the device is active. These devices typci=
-ally
-> +       would also run of a fixed clock and not support dyamically scalin=
-g the
-
-Same of and dynamically comment.
-
-> +       device's performance, also known as DVFS techniques. The list of =
-performance
-> +       state values should correspond to the list of power domains speci=
-fied as part
-> +       of the power-domains property.
-
-This is different than assigned-clock-rates. I guess that's OK because
-we don't need to assign parents with more specifiers. Maybe it should be
-worded more strongly to clearly state that each cell corresponds to one
-power domain? And that it should match the opp-level inside any OPP
-table for the power domain?
-
-> +
->  required:
->    - "#power-domain-cells"
-> =20
-> @@ -129,3 +139,40 @@ examples:
->              min-residency-us =3D <7000>;
->          };
->      };
-> +
-> +  - |
-> +    parent4: power-controller@12340000 {
-> +        compatible =3D "foo,power-controller";
-> +        reg =3D <0x12340000 0x1000>;
-> +        #power-domain-cells =3D <0>;
-> +    };
-> +
-> +    parent5: power-controller@43210000 {
-> +        compatible =3D "foo,power-controller";
-> +        reg =3D <0x43210000 0x1000>;
-> +        #power-domain-cells =3D <0>;
-> +        operating-points-v2 =3D <&power_opp_table>;
-> +
-> +        power_opp_table: opp-table {
-> +            compatible =3D "operating-points-v2";
-> +
-> +            power_opp_low: opp1 {
-> +                opp-level =3D <16>;
-> +            };
-> +
-> +            rpmpd_opp_ret: opp2 {
-> +                opp-level =3D <64>;
-> +            };
-> +
-> +            rpmpd_opp_svs: opp3 {
-> +                opp-level =3D <256>;
-> +            };
-> +        };
-> +    };
-> +
-> +    child4: consumer@12341000 {
-> +        compatible =3D "foo,consumer";
-> +        reg =3D <0x12341000 0x1000>;
-> +        power-domains =3D <&parent4>, <&parent5>;
-> +        assigned-performance-states =3D <0>, <256>;
-
-I guess <0> means don't set anything?
