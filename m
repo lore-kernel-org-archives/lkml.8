@@ -2,115 +2,130 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0D3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FC9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B85722CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAC7B22B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:09:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596658141;
-	bh=Lj/S8Vw1nYyw4Ou+vbz7LnsdC/j4JdgvaSVpWQyYUec=;
+	s=default; t=1596658145;
+	bh=sLKCC1QjgtJmAuERFbBWWP9fB/9Lhbpc7SgboYEp2z8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H0y/dTUyDVLT/apR3r9cTjRG1aReT0207yjpucGaFUMJD1cdS1aW4PdBGV5AW4bQB
-	 WSAuy2aPI5s9ZnK7Z5+2WRMzxS+EpCbJUUCdAjIwOvkB0vu+rZLgs21vupWJZAxBcA
-	 UuK3UH42Dfru+wJEJgYgEzD/ELHLoAP9x2F83aE8=
+	b=qhGnf1tVjxOiNSsSEE/EfuGzBpcdpaSeCtmq9n22xtwQNPIBRMgJB5OtdIgdw639V
+	 eKYOT9AF+8i4ZxkCAM0d13JDx6Rm3UYoeyqPGsZLpmq1VHnga1eQiJPCslRxASH0Yd
+	 Yq5GpE9piW9jxfCBYXOVd6DBoWSrFJW8OQLBjN9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728067AbgHEUIz (ORCPT
+        id S1729690AbgHEUJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:08:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49472 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 16:09:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726861AbgHEQce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726676AbgHEQce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:32:34 -0400
-Received: from localhost (router.4pisysteme.de [80.79.225.122])
+Received: from localhost (unknown [122.171.202.192])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D433D22D01;
-        Wed,  5 Aug 2020 11:17:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D03A322D71;
+        Wed,  5 Aug 2020 13:12:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596626231;
-        bh=Lj/S8Vw1nYyw4Ou+vbz7LnsdC/j4JdgvaSVpWQyYUec=;
+        s=default; t=1596633130;
+        bh=sLKCC1QjgtJmAuERFbBWWP9fB/9Lhbpc7SgboYEp2z8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1JCdrLt6M6Nh+FuzymcmpcmS2DjsdAUb1RRpBCGQskvJAa5m2HGRx3kdQ0B0IBC1Z
-         0k8BBPYxfMa7lQjqfpd0ClYYl78xbUjB/x7fZRzk7mCAFOPGjHORTR1tirRFlfaq/S
-         U4TdScLzPEAN5Ur4tgxdBTB4b13Ix7BRAGz/1aJs=
-Date:   Wed, 5 Aug 2020 13:17:09 +0200
-From:   <wsa@kernel.org>
-To:     <Codrin.Ciubotariu@microchip.com>
-Cc:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <robh+dt@kernel.org>,
-        <Ludovic.Desroches@microchip.com>, <Nicolas.Ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
-        <kamel.bouhara@bootlin.com>
-Subject: Re: Re: [PATCH 0/4] i2c: core: add generic GPIO bus recovery
-Message-ID: <20200805111709.GA16287@kunai>
-Mail-Followup-To: <wsa@kernel.org>, <Codrin.Ciubotariu@microchip.com>,
-        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <robh+dt@kernel.org>,
-        <Ludovic.Desroches@microchip.com>, <Nicolas.Ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
-        <kamel.bouhara@bootlin.com>
-References: <20200804095926.205643-1-codrin.ciubotariu@microchip.com>
- <20200805085236.GE1229@kunai>
- <a776a0b1-dcf7-0e99-7076-0fb791258058@microchip.com>
+        b=qa76cu0k9JFT6Ep1vcMTDDSxNDUx8rkcmQTEoTyj2Yfn3MNeejXJcDLWqLr/2eprq
+         LWlVGdOpwZX00VbkLmmoD0MsamOzJ0N9d1L6XIzhRmpVPel5+M9VurA4NaX0HJsSdU
+         Vt1+jO3PBNqZWNu5eQAt9Hp5muY6A1tka5hysA3E=
+Date:   Wed, 5 Aug 2020 18:42:05 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] dmaengine: iop-adma: Fix -Wint-to-pointer-cast
+ build warning
+Message-ID: <20200805131205.GY12965@vkoul-mobl>
+References: <20200803141035.45284-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="MGYHOYXEY6WxJCY8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a776a0b1-dcf7-0e99-7076-0fb791258058@microchip.com>
+In-Reply-To: <20200803141035.45284-1-yuehaibing@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 03-08-20, 22:10, YueHaibing wrote:
+> drivers/dma/iop-adma.c:447:13: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+> drivers/dma/iop-adma.c:449:4: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+> drivers/dma/iop-adma.c:1301:3: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+> 
+> Use void* for dma_desc_pool_virt, dma_addr_t for dma_desc_pool,
+> and use %pad to print dma_addr_t.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/dma/iop-adma.c | 17 ++++++++---------
+>  1 file changed, 8 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/dma/iop-adma.c b/drivers/dma/iop-adma.c
+> index 3350bffb2e93..8e17e4405959 100644
+> --- a/drivers/dma/iop-adma.c
+> +++ b/drivers/dma/iop-adma.c
+> @@ -415,7 +415,8 @@ static void iop_chan_start_null_xor(struct iop_adma_chan *iop_chan);
+>   * */
+>  static int iop_adma_alloc_chan_resources(struct dma_chan *chan)
+>  {
+> -	char *hw_desc;
+> +	void *hw_desc;
+> +	dma_addr_t dma_desc;
+>  	int idx;
+>  	struct iop_adma_chan *iop_chan = to_iop_adma_chan(chan);
+>  	struct iop_adma_desc_slot *slot = NULL;
+> @@ -436,17 +437,16 @@ static int iop_adma_alloc_chan_resources(struct dma_chan *chan)
+>  				" %d descriptor slots", idx);
+>  			break;
+>  		}
+> -		hw_desc = (char *) iop_chan->device->dma_desc_pool_virt;
+> -		slot->hw_desc = (void *) &hw_desc[idx * IOP_ADMA_SLOT_SIZE];
+> +		hw_desc = iop_chan->device->dma_desc_pool_virt;
+> +		slot->hw_desc = hw_desc + idx * IOP_ADMA_SLOT_SIZE;
 
---MGYHOYXEY6WxJCY8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+So you want to pointer arithmetic on a void pointer !
 
+Are you sure math is correct here and will work on different compilers?
 
-> > The other thing would be to convert the PXA driver and see if our
-> > generic support can help their advanced use case or if we are missing
-> > something. Codrin, do you have maybe time and interest to do that? That
-> > would be awesome!
->=20
-> Naturally, these would be the next steps. I can do this, sure, but I=20
-> don't have the HW. I'll look for some development kits. If you have any=
-=20
-> recommendations, please let me know.
+>  
+>  		dma_async_tx_descriptor_init(&slot->async_tx, chan);
+>  		slot->async_tx.tx_submit = iop_adma_tx_submit;
+>  		INIT_LIST_HEAD(&slot->tx_list);
+>  		INIT_LIST_HEAD(&slot->chain_node);
+>  		INIT_LIST_HEAD(&slot->slot_node);
+> -		hw_desc = (char *) iop_chan->device->dma_desc_pool;
+> -		slot->async_tx.phys =
+> -			(dma_addr_t) &hw_desc[idx * IOP_ADMA_SLOT_SIZE];
+> +		dma_desc = iop_chan->device->dma_desc_pool;
+> +		slot->async_tx.phys = dma_desc + idx * IOP_ADMA_SLOT_SIZE;
+>  		slot->idx = idx;
+>  
+>  		spin_lock_bh(&iop_chan->lock);
+> @@ -1296,9 +1296,8 @@ static int iop_adma_probe(struct platform_device *pdev)
+>  		goto err_free_adev;
+>  	}
+>  
+> -	dev_dbg(&pdev->dev, "%s: allocated descriptor pool virt %p phys %p\n",
+> -		__func__, adev->dma_desc_pool_virt,
+> -		(void *) adev->dma_desc_pool);
+> +	dev_dbg(&pdev->dev, "%s: allocated descriptor pool virt %p phys %pad\n",
+> +		__func__, adev->dma_desc_pool_virt, &adev->dma_desc_pool);
+>  
+>  	adev->id = plat_data->hw_id;
+>  
+> -- 
+> 2.17.1
+> 
 
-No need for HW, I think. Just do a best effort conversion, double or
-triple check it, and CC the patches also to Russell King. If he accepts
-them, we are good.
-
-Thanks for doing it!
-
-
---MGYHOYXEY6WxJCY8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8qlTEACgkQFA3kzBSg
-KbYyRA//VMk49UkMfHPopkeGQ81lmWhwtOm5OSvxYQNaTDwIaZzQQepXUaKWar3J
-sqlKl1PfSy+LmOJRgPeWLIhbkWQQQRfTV4tppBbjjKXSZ8zeZQD9+FrptIrXaQpU
-H7noRvk2tSIBrYKLQQFU98XU+c8VmJIGs3LkWPDjjC+s7LmnOSZCgosoZlJsTPQm
-9cs30EmWNu4QHb4I+3j+Doe+rObyBDElO3gpr10cRTcUQI1V4Pu9DW0SpqMzeKTg
-vHTghhMWePAIqorJapzPG2H/9uMNDzG/e2lgwG868XMru4nilrLXarPeqBAJ+wHQ
-ckdfrLVhQCymzFr0USFNa654sYL8A6S1ViNCZmJTXBtTMmYoAgQMNhVpjA/zK4g8
-EJWLI6uxhQaPYc0TVHKHz0iD27Ti7u71G/1fMDQ0k+YJZsAtwrX50Es68GLHGbKm
-X22Bx3sv4NjPTa/kpu+hgwAOIAoDTeSsdoJ1vreJyzHMyprCyVqQFF5wDVM6GU9z
-CGYYC9wl8pBMCEgRogdVmTj+1OCEhZb4b+2yT89MaogpnJP6hUPKbNXzEU3jPIDZ
-pi9cfVKh/BDMGXKQouHH37gBhp8LP0bQ36H802VidZy+0A8dOVtk3lgjSAqNLP5Z
-J0LTEHoWU5Vsur8g3LZmob91u+tEWWElOwlTe+xWzn9LI+loU+Y=
-=vVXL
------END PGP SIGNATURE-----
-
---MGYHOYXEY6WxJCY8--
+-- 
+~Vinod
