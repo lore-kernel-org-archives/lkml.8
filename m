@@ -2,102 +2,93 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41921C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42061C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E5692177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:20:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fb84QEiz"
+	by mail.kernel.org (Postfix) with ESMTP id 158C12177B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:21:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbgHERUi (ORCPT
+        id S1728706AbgHERVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:20:38 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:51030 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728714AbgHERSk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:18:40 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 075DHV9M072287;
-        Wed, 5 Aug 2020 08:17:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596633451;
-        bh=57yF68qyZ0azOmyzTIEwYs+6yRB7tuKz3qfi5lQTL2Y=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=fb84QEizh1xqIZv4YwwWKBoNcIaWNZdLEhdp8PKXmcuSz5LdjdZudXZ+ZMNZfMHp+
-         I3YuZE1CRruSM+2Cd9D/meA6KiIyju3KG+y7B2dEGuxf4+6NuubBU86ah5a8RLBs36
-         MaqnS51DCQ7/TOyrO0POqJY3nYVUcAdxjSdLfkaA=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 075DHVG9004195
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 5 Aug 2020 08:17:31 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 5 Aug
- 2020 08:17:30 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 5 Aug 2020 08:17:30 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 075DHSMg035743;
-        Wed, 5 Aug 2020 08:17:28 -0500
-Subject: Re: [PATCH] dmaengine: ti: k3-udma-glue: Fix parameters for rx ring
- pair request
-To:     Vinod Koul <vkoul@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>
-CC:     <ssantosh@kernel.org>, <santosh.shilimkar@oracle.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>
-References: <20200805112746.15475-1-peter.ujfalusi@ti.com>
- <20200805113237.GX12965@vkoul-mobl>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <3eea63fe-88f5-d6b6-433a-bb15495a839d@ti.com>
-Date:   Wed, 5 Aug 2020 16:17:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 5 Aug 2020 13:21:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:33666 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728650AbgHERSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:18:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F4401FB;
+        Wed,  5 Aug 2020 03:35:07 -0700 (PDT)
+Received: from localhost (e108754-lin.cambridge.arm.com [10.1.198.53])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B26013FA32;
+        Wed,  5 Aug 2020 03:35:06 -0700 (PDT)
+Date:   Wed, 5 Aug 2020 11:35:05 +0100
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     rjw@rjwysocki.net, dietmar.eggemann@arm.com,
+        catalin.marinas@arm.com, sudeep.holla@arm.com, will@kernel.org,
+        linux@armlinux.org.uk, mingo@redhat.com, peterz@infradead.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/7] cpufreq: set invariance scale factor on
+ transition end
+Message-ID: <20200805103452.GA4817@arm.com>
+References: <20200722093732.14297-1-ionela.voinescu@arm.com>
+ <20200722093732.14297-3-ionela.voinescu@arm.com>
+ <20200730041334.cjg5mc5xpopd2lst@vireshk-mac-ubuntu>
+ <20200803135838.GB9512@arm.com>
+ <20200804062611.6jpra73hmhybdw3i@vireshk-mac-ubuntu>
 MIME-Version: 1.0
-In-Reply-To: <20200805113237.GX12965@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200804062611.6jpra73hmhybdw3i@vireshk-mac-ubuntu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 05/08/2020 14:32, Vinod Koul wrote:
-> On 05-08-20, 14:27, Peter Ujfalusi wrote:
->> The original commit mixed up the forward and completion ring IDs for the
->> rx flow configuration.
+On Tuesday 04 Aug 2020 at 11:56:11 (+0530), Viresh Kumar wrote:
+[..]
+> > > >  - In __target_index(), cpufreq_freq_transition_end() is called only for
+> > > >    drivers that have synchronous notifications enabled. There is only one
+> > > >    driver that disables them,
+> > > > 
+> > > >    drivers/cpufreq/powernow-k8.c:1142: .flags = CPUFREQ_ASYNC_NOTIFICATION,
+> > > > 
+> > > >    which is deprecated.
+> > > 
+> > > I don't think this is deprecated.
 > 
-> Acked-By: Vinod Koul <vkoul@kernel.org>
+> Heh, maybe I misunderstood. I thought you are talking about the flag,
+> while you were talking about the driver.
 > 
->>
->> Fixes: 4927b1ab2047 ("dmaengine: ti: k3-udma: Switch to k3_ringacc_request_rings_pair")
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->> Hi Santosh, Vinod,
->>
->> the offending patch was queued via ti SoC tree.
->> Santosh, can you pick up this fix also?
+> > Sorry, possibly 'deprecated' is a strong word.
+> > 
+> > As far as I knew acpi_cpufreq was recommended more recently for K8/K10
+> > CPUs so that's why I decided not to create a special case for it, also
+> > considering that it was not supporting cpufreq-based frequency
+> > invariance to begin with.
+> > 
+> > We could support this as well by having a call to arch_set_freq_scale()
+> > on the else path in __target_index(). But given that there was only this
+> > one user of CPUFREQ_ASYNC_NOTIFICATION, I thought I'd propose this simpler
+> > version first.
+> > 
+> > Let me know if my reasoning is wrong.
+> 
+> Nevertheless, I don't think you need to mention this detail in
+> changelog for powernow-k8 as cpufreq_freq_transition_end() does get
+> called for it as well, by the driver instead of the core.
+> 
 
-Thank you Peter for catching this - it's valid issue.
-but I'd like to note that issue was discovered with private code and
-nothing is broken in Master.
+Agreed!
 
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Many thanks,
+Ionela.
 
--- 
-Best regards,
-grygorii
+> -- 
+> viresh
