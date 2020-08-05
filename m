@@ -2,113 +2,96 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A38C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D78EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E438E206D4
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3CD7206D4
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:22:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="DviZDtxx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729063AbgHETWf (ORCPT
+        id S1729067AbgHETWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:22:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55436 "EHLO
+        Wed, 5 Aug 2020 15:22:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728960AbgHERlq (ORCPT
+        with ESMTP id S1728958AbgHERlo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:41:46 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7C23C0D941F;
-        Wed,  5 Aug 2020 08:16:52 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id j16so4477021ooc.7;
-        Wed, 05 Aug 2020 08:16:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ma8XUemDPSU43scaub//Tj8SjqSjSSXU9X7SXIYVoOU=;
-        b=bmU5erMabaHnH11G4ugT3ZM+1sK5m+CgBAaNTNYXbKwghE1JcaTdfyatMzrkN6xRef
-         8EyEh25LYHNs4TS3f4pJAkWTp5YFFgNSK3ELo+H/WbG2E9LWM762Cz3tKJiSc6zm3ViG
-         J0jnPEFIfMw17vO0s7xuJmbGKFt7L9SS+jsHuGwFpussM36hCV716bIr74P5QdnjImBf
-         8PPeWstiKPeXSx2pLUCkb5rOTzSLytHTfDnEKL3NcyLBucMwnutLVMbLhkLp5FTHqF6L
-         q5Ay4BPAEamWokIyry1/VbK2ccfvRIu99e/1qHRH5hAewbZ6HLYixM6lDLnZuivkVD+j
-         +ncA==
-X-Gm-Message-State: AOAM530wFlP+DcDNIcMPIc1IHfgx/k6PtcqyB1SRwDI9Jh/fd5Et9e8T
-        sUCF2xXLhgEgbqLyA1GhX/cM4coEDBUUP1k+V88eDJD5
-X-Google-Smtp-Source: ABdhPJwe10oto1QkttDyucMJ1qGeA6Wk+Q0uDI4AF3ApXEWocJh2xeIhIPIH+vNM+BYieFqojz9wao5UdxjTIgmcZbQ=
-X-Received: by 2002:a9d:7d8c:: with SMTP id j12mr2827246otn.250.1596636279974;
- Wed, 05 Aug 2020 07:04:39 -0700 (PDT)
+        Wed, 5 Aug 2020 13:41:44 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97A27C008696;
+        Wed,  5 Aug 2020 07:34:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
+        Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:Reply-To:Content-ID
+        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
+        Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=gd1cvJcf7uborbbKx0aO1kHmrhM0AMk3ZC07sorW0mo=; b=DviZDtxx2MHlNyWGdaIVddIrjV
+        7sJq9PcnuQ4ZdiSVXe1EAuAlrE0jvzCn7CK8//Wq1vSfIkN1vGuKV473qQp451A+CsMXa7cmLdq8i
+        EKx+j5bAPfmngqlFK7fdD44UxDgf+cyAy3yJljPRuaUamb2Wu75O5ibPQuDI7JnWiwKP1459ADvbq
+        yCCSB3ey+lYFK+fUvUdESznHyu583fr2rv2dCmR/8VSGohwFQzjHR0RrUzCtkWqtw7Nwg9ZA9Xm2j
+        j2eG9/eRe+UXPbBeVvjqaa5PvHi/EuSjSmsA6ss3gtsTILcA/4P+AFdKF1DqosTFRnLlktoG0mwQX
+        9WIV39tQ==;
+Received: from e0022681537dd.dyn.armlinux.org.uk ([fd8f:7570:feb6:1:222:68ff:fe15:37dd]:53382 helo=rmk-PC.armlinux.org.uk)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <rmk@armlinux.org.uk>)
+        id 1k3KUx-0003br-SU; Wed, 05 Aug 2020 15:34:31 +0100
+Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <rmk@armlinux.org.uk>)
+        id 1k3KUx-0000da-In; Wed, 05 Aug 2020 15:34:31 +0100
+From:   Russell King <rmk+kernel@armlinux.org.uk>
+To:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     netdev@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: update phylink/sfp keyword matching
 MIME-Version: 1.0
-References: <20200728134226.27592-1-trix@redhat.com>
-In-Reply-To: <20200728134226.27592-1-trix@redhat.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 5 Aug 2020 16:04:28 +0200
-Message-ID: <CAMuHMdX-m+q-SYveM2BQyM+EoiQ1ctVviJzjs+UbTzH9cJaqMQ@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: of: reset name variable in of_gpiochip_add_hog
-To:     trix@redhat.com
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Frank Rowand <frank.rowand@sony.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <E1k3KUx-0000da-In@rmk-PC.armlinux.org.uk>
+Date:   Wed, 05 Aug 2020 15:34:31 +0100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tom,
+syzbot has revealed that the "phylink" keyword exists in non-phylink
+related contexts in the bluetooth stack. To avoid receiving
+inappropriate notifications, change the keyword matching regexp to
+something which avoids this, while still allowing changes to networking
+drivers that make use of phylink to be detected.
 
-Thanks for your patch!
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+---
+Linus,
 
-On Tue, Jul 28, 2020 at 3:42 PM <trix@redhat.com> wrote:
-> From: Tom Rix <trix@redhat.com>
->
-> Clang static analysis reports this error
->
-> gpiolib-of.c:664:9: warning: 2nd function call argument
->   is an uninitialized value [core.CallAndMessage]
->         ret = gpiod_hog(desc, name, lflags, dflags);
->
-> name is sometimes set by of_parse_own_gpio
-> name is always used by gpiod_hog
+Is this something you're willing to merge directly please?
 
-This is a false-positive: gpiod_hog() is only called if
-of_parse_own_gpio() returned success, in which case it has filled in the
-name output parameter.
+Thanks.
 
-> So it is necessary to reset name so an old value is
-> not mistakenly used by gpiod_hog.
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hence this is not needed.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4e2698cc7e23..3b11a8b84129 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15431,7 +15431,7 @@ F:	drivers/net/phy/phylink.c
+ F:	drivers/net/phy/sfp*
+ F:	include/linux/phylink.h
+ F:	include/linux/sfp.h
+-K:	phylink
++K:	phylink\.h|struct\s+phylink|\.phylink|>phylink_|phylink_(autoneg|clear|connect|create|destroy|disconnect|ethtool|helper|mac|mii|of|set|start|stop|test|validate)
+ 
+ SGI GRU DRIVER
+ M:	Dimitri Sivanich <sivanich@sgi.com>
+-- 
+2.20.1
 
-> Fixes: bc21077e084b ("gpio: of: Extract of_gpiochip_add_hog()")
-
-This is not the commit that introduced the "bug".
-
-> Signed-off-by: Tom Rix <trix@redhat.com>
-
-> --- a/drivers/gpio/gpiolib-of.c
-> +++ b/drivers/gpio/gpiolib-of.c
-> @@ -657,6 +657,7 @@ static int of_gpiochip_add_hog(struct gpio_chip *chip, struct device_node *hog)
->         int ret;
->
->         for (i = 0;; i++) {
-> +               name = NULL;
->                 desc = of_parse_own_gpio(hog, chip, i, &name, &lflags, &dflags);
->                 if (IS_ERR(desc))
->                         break;
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
