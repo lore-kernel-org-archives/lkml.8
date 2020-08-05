@@ -2,85 +2,122 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A57CC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A62C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3421622B42
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7209022B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:52:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EaHVI8Yp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ezUi9XPX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728393AbgHETwK (ORCPT
+        id S1728294AbgHETwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:52:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47302 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728188AbgHEQvk (ORCPT
+        Wed, 5 Aug 2020 15:52:15 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:23847 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728181AbgHEQvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:51:40 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5642AC0617A1;
-        Wed,  5 Aug 2020 03:42:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=T7Zf13XTlUQSe/dbrPakLq04rPma9WfTqW7+qPuHC/8=; b=EaHVI8YpmOMLdyJSiFa8b1rMZa
-        0pJMt8imbpuIDWtkEyuefvwlxGb3nV5J+pz5zWStG5j+fmTmLkA9tqg7L3p1a6WcpMKdFhV4a0DaD
-        VyPLI7JjRDuAmMRSIWaEywhQdx9uRyCg0JYiAyPE0+sP7iSJ8zVa0RAAz36CQx1kqy9rUEy0DjUEM
-        8SQ9nLZcb4IBuuGFOT5BwydR56trYSzQfkcWmmL5o5sY4LvAU9hqp4ye9W5vJrnYFflNd+9tQS/yL
-        VIzjvHwaapa6qqUpbyx+xFkwsRpbKkKHZd4+3aVr/hc5UNNtsJDfW0W/niTsXW6+ZOGBtGxeX2EU0
-        OQ+M/oAw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k3Grl-0005Zg-JH; Wed, 05 Aug 2020 10:41:51 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DEF00301A66;
-        Wed,  5 Aug 2020 12:41:46 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8CC03235CDBB2; Wed,  5 Aug 2020 12:41:46 +0200 (CEST)
-Date:   Wed, 5 Aug 2020 12:41:46 +0200
-From:   peterz@infradead.org
-To:     ren_guo@c-sky.com
-Cc:     linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
-        mathieu.desnoyers@efficios.com, Will Deacon <will@kernel.org>
-Subject: csky: smp_mb__after_spinlock
-Message-ID: <20200805104146.GP2674@hirez.programming.kicks-ass.net>
+        Wed, 5 Aug 2020 12:51:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596646294;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=r5xlMTb9c9iOlpIFXkzToRbyVMDVlpxS0zDqWUzYUZ0=;
+        b=ezUi9XPXJjjltcTQFgcIJwfZkTRdU4ckVBj8tezQOaQpkI74GGNIaLD/UYIY/oqnF+/gFl
+        +ylNV0KKbfw0ILfzkia9tvny8uDJuZfW18J+kD9EaKVSJMwtU3+q0K5L81uvu6FX6Q2vkF
+        3UtFCtjkHlTmqjIC/c2mUvh0JFpDSqU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-170-tJjPWY-gN66lMFBMVfSQzg-1; Wed, 05 Aug 2020 09:23:42 -0400
+X-MC-Unique: tJjPWY-gN66lMFBMVfSQzg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 53D62102C7E9;
+        Wed,  5 Aug 2020 13:23:41 +0000 (UTC)
+Received: from localhost (unknown [10.36.110.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D8D89712C5;
+        Wed,  5 Aug 2020 13:23:38 +0000 (UTC)
+Date:   Wed, 5 Aug 2020 15:23:34 +0200
+From:   Stefano Brivio <sbrivio@redhat.com>
+To:     Heiko Carstens <hca@linux.ibm.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>
+Subject: Re: linux-next: build failure after merge of the net-next tree
+Message-ID: <20200805152334.6b36a06d@redhat.com>
+In-Reply-To: <20200805132144.GA12227@osiris>
+References: <20200805223121.7dec86de@canb.auug.org.au>
+        <20200805150627.3351fe24@redhat.com>
+        <20200805132144.GA12227@osiris>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, 5 Aug 2020 15:21:44 +0200
+Heiko Carstens <hca@linux.ibm.com> wrote:
 
-While doing an audit of smp_mb__after_spinlock, I found that csky
-defines it, why?
+> On Wed, Aug 05, 2020 at 03:06:27PM +0200, Stefano Brivio wrote:
+> > On Wed, 5 Aug 2020 22:31:21 +1000
+> > Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >   
+> > > Hi all,
+> > > 
+> > > After merging the net-next tree, today's linux-next build (s390 defconfig)
+> > > failed like this:
+> > > 
+> > > net/ipv4/ip_tunnel_core.c:335:2: error: implicit declaration of function 'csum_ipv6_magic' [-Werror=implicit-function-declaration]
+> > > 
+> > > Caused by commit
+> > > 
+> > >   4cb47a8644cc ("tunnels: PMTU discovery support for directly bridged IP packets")  
+> > 
+> > Ouch, sorry for that.
+> > 
+> > I'm getting a few of them by the way:
+> > 
+> > ---
+> > net/core/skbuff.o: In function `skb_checksum_setup_ipv6':
+> > /home/sbrivio/net-next/net/core/skbuff.c:4980: undefined reference to `csum_ipv6_magic'
+> > net/core/netpoll.o: In function `netpoll_send_udp':
+> > /home/sbrivio/net-next/net/core/netpoll.c:419: undefined reference to `csum_ipv6_magic'
+> > net/netfilter/utils.o: In function `nf_ip6_checksum':
+> > /home/sbrivio/net-next/net/netfilter/utils.c:74: undefined reference to `csum_ipv6_magic'
+> > /home/sbrivio/net-next/net/netfilter/utils.c:84: undefined reference to `csum_ipv6_magic'
+> > net/netfilter/utils.o: In function `nf_ip6_checksum_partial':
+> > /home/sbrivio/net-next/net/netfilter/utils.c:112: undefined reference to `csum_ipv6_magic'
+> > net/ipv4/ip_tunnel_core.o:/home/sbrivio/net-next/net/ipv4/ip_tunnel_core.c:335: more undefined references to `csum_ipv6_magic' follow
+> > ---
+> > 
+> > ...checking how it should be fixed now.
+> > 
+> > Heiko, by the way, do we want to provide a s390 version similar to the
+> > existing csum_partial() implementation in
+> > arch/s390/include/asm/checksum.h right away? Otherwise, I'll just take
+> > care of the ifdeffery.  
+> 
+> You probably only need to include include/net/ip6_checksum.h which
+> contains the default implementation.
 
-CSKY only has smp_mb(), it doesn't override __atomic_acquire_fence or
-otherwise special cases it's atomic*_acquire() primitives. It has an
-explicit smp_mb() in its arch_spin_lock().
+Yes, patch already sent a couple of minutes ago, still waiting for it to
+reach the lists. Thanks!
 
----
-diff --git a/arch/csky/include/asm/spinlock.h b/arch/csky/include/asm/spinlock.h
-index 7cf3f2b34cea..22a05caf2d18 100644
---- a/arch/csky/include/asm/spinlock.h
-+++ b/arch/csky/include/asm/spinlock.h
-@@ -88,9 +88,6 @@ static inline int arch_spin_is_contended(arch_spinlock_t *lock)
- 
- #include <asm/qrwlock.h>
- 
--/* See include/linux/spinlock.h */
--#define smp_mb__after_spinlock()	smp_mb()
--
- #else /* CONFIG_QUEUED_RWLOCKS */
- 
- /*
+-- 
+Stefano
+
