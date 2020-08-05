@@ -2,105 +2,129 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B12A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F57D2076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:55:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596621356;
-	bh=YHxmFzC+i8NL+lLlcDEA7V7cryScK1yFI5iWFnAXZ7g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nhEhX4FidvfQxa3b0gw2elP1RWncro0vz4CnpoNFZtSsgVydbM5oN6/dzwh3x4Yx8
-	 4y94BCuhxKe4IckMUf15gqWQVkunOdLh+NOD3M8Pth+xXiNur34tF4BNftxAZ5wrb5
-	 JqqGvMI1X8XtSOQdTg6sXv5uh4kPymn6eXAt5L70=
+	by mail.kernel.org (Postfix) with ESMTP id 2174D2076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:57:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fjUp4EAV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbgHEJzy (ORCPT
+        id S1728034AbgHEJ5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 05:55:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38928 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727972AbgHEJy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 05:54:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D37220792;
-        Wed,  5 Aug 2020 09:54:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596621261;
-        bh=YHxmFzC+i8NL+lLlcDEA7V7cryScK1yFI5iWFnAXZ7g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yLj59uDj6wytOjCdhqd+HC6siugHCSEu23VMBzTdtUZ2EEuXshboHtaSY8l4owDyP
-         RRV3IZR/VcJQC+2VUEqg/wjBdOzqlL/dk8HbXp7xpK4BYLjJkiYKGCPJKIJT3HZKPI
-         nBWmLihJP2ftAFhii9CO7s3GybtPgKavhhEcod+o=
-Date:   Wed, 5 Aug 2020 11:54:39 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH 5.7 000/121] 5.7.13-rc2 review
-Message-ID: <20200805095439.GB1634853@kroah.com>
-References: <20200804072435.385370289@linuxfoundation.org>
- <CA+G9fYs35Eiq1QFM0MOj6Y7gC=YKaiknCPgcJpJ5NMW4Y7qnYQ@mail.gmail.com>
- <20200804082130.GA1768075@kroah.com>
- <CAHk-=whJ=shbf-guMGZkGvxh9fVmbrvUuiWO48+PDFG7J9A9qw@mail.gmail.com>
- <c32ad2216ca3dd83d6d3d740512db9de@kernel.org>
+        Wed, 5 Aug 2020 05:57:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39314 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbgHEJ5L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 05:57:11 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35A02C06174A;
+        Wed,  5 Aug 2020 02:57:11 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id c80so5253600wme.0;
+        Wed, 05 Aug 2020 02:57:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1OAmVtSarOHcu5ZEW1PVzjCPTYGRQAmrkDItGjUPpX8=;
+        b=fjUp4EAV1gNYJf5jNJEPHu/eTAq2ehsmSAeDsPHlO4hKzSThUSJ7U4GfIHYwQSX8b/
+         DFajIrYJoNyhO21WVG2iZdLL8rDz4nCsADns0oGiWk8QIUE3SeenexMDCqOs4ANqa9N2
+         72yWk7/SuyiaLZ7gz2A8rkQT3PQ/+40618j7P6tqA6Bast9aIc0e7RBLWurLhvHcVtHc
+         zNRswRMhv5bBTWJZ7ws0oP06BwsbpzfE2qayfUuS8K+Mvdj44ZsywzcGWIBErUu10MHB
+         WWLAPOapnMB1aHh73c/zgx6WvLgJ/hyAEuFP7V/Dod+6kjy4YfWxT5tlZHBPGYvb7CJn
+         Ij5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1OAmVtSarOHcu5ZEW1PVzjCPTYGRQAmrkDItGjUPpX8=;
+        b=RwKRHWtXlSE5ote94ipaFqHYoFDJlaKC/S8p1OTyTXyjGTyV1ElVlSps6Z9KTajcoQ
+         I+Ok1VHBW2xTMgGXsHt3jgzTsvo6zKY/DdI1gWZVYKjj2fM6enl3LrRtDbbhRVYX0lgy
+         LqWwNcI1pSPM6tt8bTtElzcgS9jVusrNSWjXL1Ft5KN1F1DbYWupOvqRO2D8oVHpkRJY
+         pNiFtDA1SQB1IPjzkdPoA6XTETWfNtBG4/64TTX5/GB8LXnuT6OGX65H1OjGZoiK/9sJ
+         4bK44bc5u1mTwpbpZ2SX0Ta5ANgeoeDx9xSGPmI3VQ+yca77CMd0D5E+ps2pAxfsvUnD
+         keOA==
+X-Gm-Message-State: AOAM531F/eJ24idcYBR4Nk/1eiOb90L9Eq9jS/BF85/wR40X4Fs/XTgX
+        xkks+O4fcli5O87pL14nbQG7JE2DN/laqg==
+X-Google-Smtp-Source: ABdhPJyr4pSazTF5B0tG/B7oKblc6I0+bG+S/lN546VhaOYAv89cbYuDXxavI76P0qEWi3Iaw5tRUg==
+X-Received: by 2002:a1c:24d5:: with SMTP id k204mr2459529wmk.159.1596621429826;
+        Wed, 05 Aug 2020 02:57:09 -0700 (PDT)
+Received: from luca020400-arch.lan ([2001:b07:5d33:19f:d537:6bdb:9442:dd28])
+        by smtp.googlemail.com with ESMTPSA id n24sm2164021wmi.36.2020.08.05.02.57.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 02:57:09 -0700 (PDT)
+From:   Luca Stefani <luca.stefani.ge1@gmail.com>
+Cc:     Luca Stefani <luca.stefani.ge1@gmail.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Borislav Petkov <bp@alien8.de>, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] RAS/CEC: Fix cec_init prototype
+Date:   Wed,  5 Aug 2020 11:57:08 +0200
+Message-Id: <20200805095708.83939-1-luca.stefani.ge1@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200805045955.GB9127@nazgul.tnic>
+References: <20200805045955.GB9127@nazgul.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c32ad2216ca3dd83d6d3d740512db9de@kernel.org>
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 10:23:06PM +0100, Marc Zyngier wrote:
-> On 2020-08-04 19:33, Linus Torvalds wrote:
-> > On Tue, Aug 4, 2020 at 1:21 AM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > > 
-> > > So Linus's tree is also broken here.
-> > 
-> > No, there's 835d1c3a9879 ("arm64: Drop unnecessary include from
-> > asm/smp.h") upstream.
-> 
-> My bet is that Greg ended up with this patch backported to
-> 5.7, but doesn't have 62a679cb2825 ("arm64: simplify ptrauth
-> initialization") as the latter isn't a fix.
-> 
-> I don't think any of these two patches are worth backporting,
-> to be honest.
+* late_initcall expects a function that returns an integer
+  -> Update the function signature to match.
 
-I didn't have either of those patches, so I can try applying them to see
-if the build errors go away.  But if you don't think they should be
-applied, what should I do?
+Fixes: 9554bfe403nd ("x86/mce: Convert the CEC to use the MCE notifier")
+Signed-off-by: Luca Stefani <luca.stefani.ge1@gmail.com>
+---
+ drivers/ras/cec.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-Here's what I did have queued up:
+diff --git a/drivers/ras/cec.c b/drivers/ras/cec.c
+index 569d9ad2c594..6939aa5b3dc7 100644
+--- a/drivers/ras/cec.c
++++ b/drivers/ras/cec.c
+@@ -553,20 +553,20 @@ static struct notifier_block cec_nb = {
+ 	.priority	= MCE_PRIO_CEC,
+ };
+ 
+-static void __init cec_init(void)
++static int __init cec_init(void)
+ {
+ 	if (ce_arr.disabled)
+-		return;
++		return -ENODEV;
+ 
+ 	ce_arr.array = (void *)get_zeroed_page(GFP_KERNEL);
+ 	if (!ce_arr.array) {
+ 		pr_err("Error allocating CE array page!\n");
+-		return;
++		return -ENOMEM;
+ 	}
+ 
+ 	if (create_debugfs_nodes()) {
+ 		free_page((unsigned long)ce_arr.array);
+-		return;
++		return -ENOMEM;
+ 	}
+ 
+ 	INIT_DELAYED_WORK(&cec_work, cec_work_fn);
+@@ -575,6 +575,7 @@ static void __init cec_init(void)
+ 	mce_register_decode_chain(&cec_nb);
+ 
+ 	pr_info("Correctable Errors collector initialized.\n");
++	return 0;
+ }
+ late_initcall(cec_init);
+ 
+-- 
+2.28.0
 
-f227e3ec3b5c ("random32: update the net random state on interrupt and activity")
-aa54ea903abb ("ARM: percpu.h: fix build error")
-1c9df907da83 ("random: fix circular include dependency on arm64 after addition of percpu.h")
-83bdc7275e62 ("random32: remove net_rand_state from the latent entropy gcc plugin")
-c0842fbc1b18 ("random32: move the pseudo-random 32-bit definitions to prandom.h")
-
-And that caused the builds to blow up.
-
-So, what should I do here?
-
-thanks,
-
-greg k-h
