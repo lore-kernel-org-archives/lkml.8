@@ -2,133 +2,96 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED7AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31CF020738
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:03:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C437120842
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:04:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PvUqlAvv"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="r4WFgesd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgHEBDN (ORCPT
+        id S1727070AbgHEBEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 21:03:13 -0400
-Received: from ozlabs.org ([203.11.71.1]:55287 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727032AbgHEBDM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 21:03:12 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BLtf31rXGz9sPB;
-        Wed,  5 Aug 2020 11:03:07 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596589389;
-        bh=94VQAPciLQAfl1zeYhFAE4TKPCd/11jXI0MZrbSUPhs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PvUqlAvvMVi3if2OPvkDoDXEIe+PF/9Zyu977rpf50dgJGnMbv3IY8TJnEfvESkT1
-         /aHPbEuyb9f3CCTIiFyRqsqlXwcm4JeBKr5sXK12M0tUmYgZIytTgPu70LWH9Qc0oG
-         WYMxDk/Z6U+7N5u30owbuZXMsOx5UA4kQFwEc7FZrcCM7vn/afZ5mrPBcyF9LjEfI9
-         67yTRra8r+Bfx2XCZn7VzCMV0UNV1UvA6dI2Ez+W+2lEHaPWsYRxfPYEwLW4ToX4tO
-         dYNcb0h+EFE6T5OBKGYakBQqKBaQ06/86sgIAGCh+4tWP+fDsCyFj1Pie770Qc0NLI
-         iOxxdLSOJwBTw==
-Date:   Wed, 5 Aug 2020 11:03:06 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: Re: linux-next: manual merge of the tip tree with the vfs tree
-Message-ID: <20200805110306.752b4176@canb.auug.org.au>
-In-Reply-To: <20200727153510.0996a35c@canb.auug.org.au>
-References: <20200727153510.0996a35c@canb.auug.org.au>
+        Tue, 4 Aug 2020 21:04:37 -0400
+Received: from sonic314-27.consmr.mail.ne1.yahoo.com ([66.163.189.153]:38061
+        "EHLO sonic314-27.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726831AbgHEBEh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 21:04:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1596589475; bh=15yyDM3bVAWECgKz7oLx+I/ZvqZiZU4J8rThZ2JKCCs=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=r4WFgesdP5gl/Rbe38EMe5736cYNZXnOEf02AIMJOAl6q56puEMVvpxd+h20+KNNeoBRoCoMYqqrPH1TnC4d0rP8120dKGC4QTIsS0xZQZzNhT4MDHIggo9jgrYBAs3P5ghMFOABP4pCvi4xXNkSIlBENgzYfmY108RW+w0zdGfOF6x7X8g/P7vrm5lrnlROhJkxy0Ap/WJb6ERsMCAEckgECWe7qEcN9tiDxhXTvBv6ujS92jDj+VA1VVN28xO/tMrW4aQw6GR08HYzS8L0cwpu5FRj1HykZ05PUf2pcEFrWL8OHZu5cTrLjUIlI9ppsuTCxykYwadV4fPPEU47Hw==
+X-YMail-OSG: zA7gwXAVM1k8jezbi.SsnhgWqQcQ0L8EljVIEVzgzTKlnyxWgJXTMD88rtoAkyN
+ hxX8K2pKGVFRl6x06onco_or1m.dIJExyO6Rs0eS3R7E8bam9GSJGebEoOovc1JmYk_oMmSRYboi
+ 0Oo.kpgsTEcyGWaOAvVeIoLNQwhMzlwHS6oCjQ7sGb80Z1yjgQww_AL0kOZBDfzQidpj_vbtlWLh
+ pz4zeGPL8T0PK.CTMca4K9okeZoltMiZYkTvRAot3oCo5LZVikYJ7ImMfg9hvjJZ689Bj_6AulBc
+ KEI2GbQQXkcAXIdhaoGJBVEbUEYfe.E5NMTzbpsOoRMZp8CqKMAj44kTDzpvu4ydniD0XcXvpK07
+ lhV3328lNCpwwbzW1fcktjIJeUKs8QIvfn3B3vjS1pWa18lDdSyXBwfP_UOTjCxYdTeaPJ00s6Dq
+ qO17JRo5elAYuWpvxwCnWzOKrRNk7of_hHpbekTTx71EG9vz3fdHgPWWfMAOojtbEdAK2wiHDLRw
+ p0_dAbqR5_VfTQpvKrJ5kut5nHQ.J_5FZ9ZeAjRvUs2hAoGS36NU87miFlnHbrq3ryjwoK3TUixu
+ or806SAR95qOP3HsH38iTJeKEhoEx7rsLmi2Ek8_BB1Ul4Tz4KyKXq7QKOMLjChH8j3VjgfGgWoe
+ JJlTuXO0N3jziK73PZGqb7duirK64CQBfGtPoikLMRyF47ki7iFenv7gkUdutabp0guUq7kppcFj
+ zahHSeqUaIO3YEWaDbhJYnG8.QlVtqg1NBYxWMZJTvfUZEB93M8GoHmZxep1e0e6ghfBMv26k3Gn
+ jAr8gtL3aoyVYrzoc01W1oazWGOH_OHn4cntu3_NQjrdFacHcPaWVSCigFtvFVGPDnIOHCsPaNyS
+ tKaORpP4c3a9JzEwOXmKq31ugsW5Rk4Wr_AWcl5lJXxZ5GCAtjsfaC6ATJoev.Y8PwyqUZ7wm8l1
+ 0L.pCU1aL36c51pbuskKO3F6ejHn_Gln9.PI_M2m9wYK_iV8XF3srPIeTgAzXiEjpExmBU9zJzXw
+ 8BxYSgsqIT9DTYaJHGUOEp.AQHIkyP3oc29KnwUTQLkYrElTtgD2YPPwq9LcL2aB0Uu9gj4a8kly
+ Cdzs3eXmXI4x0lcPm_j1r0H7Mr40BD8uy7TzCZoLdXpqlQoLnIbGY4RWgKncOa9urFrD8xfoa6T8
+ COcX32qRUDMtXdcTHAqcunJ825yiwe77Zd9NhekhZFoNfTyvd8Gl1RTghPaSeZVZ7JDmsbe6R5Rd
+ OIruT99L5t3xpIXim1cfm9p7snp9p79vmh.0cDDEVhgD9323lSa_ZMwTsdG1mbcnSf7KUgjwaIoI
+ Bx9K8ag1ybsFnaPtGA217CyJByrwirXFmU5_k8eyDNGb2D_LV4_h25wYw8SsejBKD
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.ne1.yahoo.com with HTTP; Wed, 5 Aug 2020 01:04:35 +0000
+Received: by smtp428.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 7f4333369d465d186f6d9a97b53e0a06;
+          Wed, 05 Aug 2020 01:04:31 +0000 (UTC)
+Subject: Re: [PATCH v6 0/4] LSM: Measure security module data
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        zohar@linux.ibm.com, stephen.smalley.work@gmail.com
+Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Casey Schaufler <casey@schaufler-ca.com>
+References: <20200805004331.20652-1-nramas@linux.microsoft.com>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Message-ID: <f3971f35-309d-c3e5-9126-69add7ad4c11@schaufler-ca.com>
+Date:   Tue, 4 Aug 2020 18:04:30 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/j0u21+z/9.U6Ugb.nps7NFo";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200805004331.20652-1-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Mailer: WebService/1.1.16436 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.7)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/j0u21+z/9.U6Ugb.nps7NFo
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 8/4/2020 5:43 PM, Lakshmi Ramasubramanian wrote:
+> Critical data structures of security modules are currently not measured.
+> Therefore an attestation service, for instance, would not be able to
+> attest whether the security modules are always operating with the policies
+> and configuration that the system administrator had setup. The policies
+> and configuration for the security modules could be tampered with by
+> malware by exploiting kernel vulnerabilities or modified through some
+> inadvertent actions on the system. Measuring such critical data would
+> enable an attestation service to better assess the state of the system.
 
-Hi all,
+I still wonder why you're calling this an LSM change/feature when
+all the change is in IMA and SELinux. You're not putting anything
+into the LSM infrastructure, not are you using the LSM infrastructure
+to achieve your ends. Sure, you *could* support other security modules
+using this scheme, but you have a configuration dependency on
+SELinux, so that's at best going to be messy. If you want this to
+be an LSM "feature" you need to use the LSM hooking mechanism.
 
-On Mon, 27 Jul 2020 15:35:10 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->=20
-> Today's linux-next merge of the tip tree got a conflict in:
->=20
->   arch/x86/include/asm/fpu/xstate.h
->=20
-> between commit:
->=20
->   c196049cc732 ("x86: switch to ->regset_get()")
->=20
-> from the vfs tree and commit:
->=20
->   ce711ea3cab9 ("perf/x86/intel/lbr: Support XSAVES/XRSTORS for LBR conte=
-xt switch")
->=20
-> from the tip tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
-> diff --cc arch/x86/include/asm/fpu/xstate.h
-> index f691ea1bc086,1559554af931..000000000000
-> --- a/arch/x86/include/asm/fpu/xstate.h
-> +++ b/arch/x86/include/asm/fpu/xstate.h
-> @@@ -71,8 -103,9 +103,9 @@@ extern void __init update_regset_xstate
->   void *get_xsave_addr(struct xregs_state *xsave, int xfeature_nr);
->   const void *get_xsave_field_ptr(int xfeature_nr);
->   int using_compacted_format(void);
-> + int xfeature_size(int xfeature_nr);
->  -int copy_xstate_to_kernel(void *kbuf, struct xregs_state *xsave, unsign=
-ed int offset, unsigned int size);
->  -int copy_xstate_to_user(void __user *ubuf, struct xregs_state *xsave, u=
-nsigned int offset, unsigned int size);
->  +struct membuf;
->  +void copy_xstate_to_kernel(struct membuf to, struct xregs_state *xsave);
->   int copy_kernel_to_xstate(struct xregs_state *xsave, const void *kbuf);
->   int copy_user_to_xstate(struct xregs_state *xsave, const void __user *u=
-buf);
->   void copy_supervisor_to_kernel(struct xregs_state *xsave);
+I'm not objecting to the feature. It adds value. But as you've
+implemented it it is either an IMA extension to SELinux, or an
+SELiux extension to IMA. Could AppArmor add hooks for this without
+changing the IMA code? It doesn't look like it to me.
+ 
 
-This is now a conflict between the vfs tree and Linus' tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/j0u21+z/9.U6Ugb.nps7NFo
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8qBUoACgkQAVBC80lX
-0GzycAgAjw5Wd6932cXC26peffItFoR/HInFLpD5H4ulbg9i11GaB96R9gZ3Ug9f
-uL6iK5aNW1YH9mLxYxDIAt2H1vTJOras5W0U9MEc6UGE/m4w8PlEdOv0Pi7Q/Zm2
-yqs7+s95zTF1vadOi1BLPjrohEWywGVDNTtc0u/ARifxTPlrX3PJaoeh6anZ1kHk
-StH21nNfyjV7kzeRr2F4U6YH4/AI/j7bm+AW7LeOC85BLAnwzHRafZbqFiu3u3tX
-n394BWD1erymqZd6KwBKZ1qvDUbdkhRGMkCTROUk/bB3XhGeSUqYE/3PCNcBw8L4
-GHIxLvIWvxun8bDJ1ZisX7pxuH/5EA==
-=klzH
------END PGP SIGNATURE-----
-
---Sig_/j0u21+z/9.U6Ugb.nps7NFo--
