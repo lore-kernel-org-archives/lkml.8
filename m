@@ -2,132 +2,146 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 029D7C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D110CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7D872084D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A08720656
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:13:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="eQY7JJqs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iVu5YmbC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbgHESLV (ORCPT
+        id S1729103AbgHESMC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 14:11:21 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:15625 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728653AbgHESGN (ORCPT
+        Wed, 5 Aug 2020 14:12:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59862 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729115AbgHESKG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 14:06:13 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f2af4df0000>; Wed, 05 Aug 2020 11:05:19 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 05 Aug 2020 11:06:08 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 05 Aug 2020 11:06:08 -0700
-Received: from [10.2.172.190] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Aug
- 2020 18:06:08 +0000
-Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
- calibration is done
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
-        <helen.koike@collabora.com>, <gregkh@linuxfoundation.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
- <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
- <20200805134600.GA3351349@ulmo>
- <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
- <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
- <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
- <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
- <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
- <1c12e40e-de7f-0599-a941-82760b4c7668@gmail.com>
- <9ef0b875-e826-43e2-207e-168d2081ff6a@nvidia.com>
- <4689cfe9-e7c4-48bf-217f-3a31b59b8bda@nvidia.com>
- <0e78c5ca-c529-1e98-891d-30351c9aae81@gmail.com>
- <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
-Message-ID: <309e3b66-9288-91ef-71b4-be73eacbbd62@nvidia.com>
-Date:   Wed, 5 Aug 2020 11:06:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 5 Aug 2020 14:10:06 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58A44C06179F;
+        Wed,  5 Aug 2020 11:09:13 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id c10so3487255pjn.1;
+        Wed, 05 Aug 2020 11:09:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x87wiamKK8IpHrYWyQZkX28BwuSCR2wXWSfYCvqc6Rg=;
+        b=iVu5YmbCMVDewJqlVtDIukhKIgmctZpLwDYBjjmVLQM1euBz+LL3Of/pjceORkGcXF
+         c7dONE40HnV+TknJtM2Tzk97+fvTlV+/t1CGUh342m0OcQFJXj3WM0uTeln70cX61qu9
+         USzcgm0fYccuXZypXeKskZxK8qIzOXDewtV0+HZtVr3fQWdBDKc4iYFVrAF7P6egb0GR
+         bqo4koVQOC1SSbnWDyviBLLNqEch7ix/IqZEB/fP5QPUzcpfpk2X+iBqi75Td6Hc40kk
+         hvRUQjHkYKlCXxoAF9Gy8JOpbx55jwzwCN39OL8vMFLiD6eYyLIlyo3Fz/LV9LgkvtuB
+         66zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=x87wiamKK8IpHrYWyQZkX28BwuSCR2wXWSfYCvqc6Rg=;
+        b=BLOuE6sH1xmXoGEOEo025t1RbqW7383coJ+TNm9u/we+TNw4t/JdiAkaXcEuuMrZ2E
+         Ich0cxkLHlJkHXQ90IVagY4ME8IsoDQ7Edxo9eRZ7pC3PzOtp8PddESOANftug9squ9T
+         rh60HEnhcWla13oD6Fkb/uWvUyXeLbeBEqXdsJfatGy83qGm4zmwzfv5scUqGnNeqDqq
+         4hUQLsp0ZLTSgzPVrgHtw1JMos339v83FSW0lRIaJOq/1yRjlePvvO9K20unKkO9Pms4
+         4IM9M96pN6pLaviyl4+Q4J9AxQ+7Hf1B7KTBdQ8lWjoRQ80MJGIK+NNdcyp7XWRXSrpd
+         wq+A==
+X-Gm-Message-State: AOAM532aiIal57tyaPlKsOu6vm2O/rq19/KrXQHJfX7iakWTFfCokAiU
+        CUlKeJILsOVIOAxG3xXBdXo=
+X-Google-Smtp-Source: ABdhPJwUy/xTCTo4J11cPRCLtgYVRxefF50v0a+BLy6A+JQtiPi2J2b5Wfa40r5V275kuWu/lnDLsg==
+X-Received: by 2002:a17:90b:4a0a:: with SMTP id kk10mr4515843pjb.30.1596650952734;
+        Wed, 05 Aug 2020 11:09:12 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.152.86])
+        by smtp.gmail.com with ESMTPSA id t63sm4977510pfb.210.2020.08.05.11.09.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 11:09:12 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Andres Salomon <dilinger@queued.net>,
+        Antonino Daplas <adaplas@gmail.com>,
+        Florian Tobias Schandinat <FlorianSchandinat@gmx.de>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-geode@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH v1 00/12] video: fbdev: use generic power management
+Date:   Wed,  5 Aug 2020 23:37:10 +0530
+Message-Id: <20200805180722.244008-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <b2098a68-d02f-b406-fc57-56e3ff5d8d1a@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1596650719; bh=ZoX9hrm5GJJtPMPXEa9EOXU4+4+PUbUewTR9eh4r2Pc=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=eQY7JJqs8giWxYBLpAllGeIBO6VWSL3ZT3xzXyGpJT8s2FrbLUiQqjpPT21H+Kl4j
-         zuI45V8UHHYBeteW6geDKS7IiAT8c3eJP86HqfmLnSWnJShdaRSuynupIIJLQ0/EDV
-         dHxAQ9yxT3Na1Bg+4zvFlAtrSeupw8MK4YMIH/d7X45IlZsupS/yuCNIyO1t6mwTHR
-         /n+QCSMgZZv7E2c99sJeAtIr2QdzCnJOvxyy7paMAq1gJTq/gFVeP4kCISR1JC4p/8
-         Xe95IPEXVgp8bEcYElD8N++I9NNBc/Vq02a2+Wx/SysCT8C4dP0s04ZueWwVQLcB1W
-         IiHGMhiA8Hm0A==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Linux Kernel Mentee: Remove Legacy Power Management.
 
-On 8/5/20 10:46 AM, Sowjanya Komatineni wrote:
->
-> On 8/5/20 10:34 AM, Dmitry Osipenko wrote:
->> 05.08.2020 20:29, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> ...
->>> UART_FST_MIPI_CAL is the clock used for calibration logic which is FSM
->>> that goes thru sequence codes and when done waits for pads to be in
->>> LP-11 to apply results.
->>>
->>> MIPI_CLK is controller gate clock which is also need to be kept enabled
->>> as incase if it sees LP-11 it updates registers so its recommended to
->>> have this clock enabled.
->>>
->>> We can cancel_calibration() in CSI only when csi/sensor stream on fails
->>> and in which case there will be no LP-11 so we can unconditionally
->>> disable MIPI_CLK.
->>>
->> There is no guarantee that the fail comes before the LP-11. For example,
->> some odd camera driver may have a complicated enable sequence which may
->> fail after enabling the hardware streaming.
->
-> MIPI_CLK to keep enable is for calibration logic to update results,=20
-> but like I said calibration logic uses UART_FST_MIPI_CAL clock. So=20
-> even in case if fail happens from sensor after having pads in LP-11=20
-> then, calibration logic will still be running but result update will=20
-> not happen with clock disabled. But HW will not stuck as this is=20
-> confirmed from HW designer.
+The purpose of this patch series is to upgrade power management in video fbdev
+drivers. This has been done by upgrading .suspend() and .resume() callbacks.
 
-If LP-11 happens from sensor stream (followed by fail) and by that time=20
-if calibration FSM is done and if calibration logic sees LP-11 then=20
-results will be applied to pads.
+The upgrade makes sure that the involvement of PCI Core does not change the
+order of operations executed in a driver. Thus, does not change its behavior.
 
-We did start of calibration before CSI stream so by the time we do=20
-sensor stream enable, calibration logic might have done with FSM and=20
-waiting for LP-11
+In general, drivers with legacy PM, .suspend() and .resume() make use of PCI
+helper functions like pci_enable/disable_device_mem(), pci_set_power_state(),
+pci_save/restore_state(), pci_enable/disable_device(), etc. to complete
+their job.
 
-Also if we see any special case, we always can use finish_calibration()=20
-instead of cancel_calibration() as well.
+The conversion requires the removal of those function calls, change the
+callbacks' definition accordingly and make use of dev_pm_ops structure.
 
-finish_calibration() has extra 250ms wait time polling done bit and we=20
-can ignore its return code during fail pathway.
+All patches are compile-tested only.
 
->
->
->
+Test tools:
+    - Compiler: gcc (GCC) 10.1.0
+    - allmodconfig build: make -j$(nproc) W=1 all
+
+Vaibhav Gupta (12):
+  fbdev: gxfb: use generic power management
+  fbdev: lxfb: use generic power management
+  fbdev: via-core: use generic power management
+  fbdev: aty: use generic power management
+  fbdev: aty128fb: use generic power management
+  fbdev: nvidia: use generic power management
+  fbdev: savagefb: use generic power management
+  fbdev: cyber2000fb: use generic power management
+  fbdev: i740fb: use generic power management
+  fbdev: vt8623fb: use generic power management
+  fbdev: s3fb: use generic power management
+  fbdev: arkfb: use generic power management
+
+ drivers/video/fbdev/arkfb.c                  | 41 ++++++-------
+ drivers/video/fbdev/aty/aty128fb.c           | 51 ++++++++++------
+ drivers/video/fbdev/aty/atyfb_base.c         | 50 ++++++++++-----
+ drivers/video/fbdev/cyber2000fb.c            | 13 ++--
+ drivers/video/fbdev/geode/gxfb.h             |  5 --
+ drivers/video/fbdev/geode/gxfb_core.c        | 36 ++++++-----
+ drivers/video/fbdev/geode/lxfb.h             |  5 --
+ drivers/video/fbdev/geode/lxfb_core.c        | 37 +++++------
+ drivers/video/fbdev/geode/lxfb_ops.c         |  4 --
+ drivers/video/fbdev/geode/suspend_gx.c       |  4 --
+ drivers/video/fbdev/i740fb.c                 | 40 +++++-------
+ drivers/video/fbdev/nvidia/nvidia.c          | 64 +++++++++++---------
+ drivers/video/fbdev/s3fb.c                   | 39 +++++-------
+ drivers/video/fbdev/savage/savagefb_driver.c | 52 ++++++++++------
+ drivers/video/fbdev/via/via-core.c           | 39 +++++-------
+ drivers/video/fbdev/vt8623fb.c               | 41 ++++++-------
+ include/linux/via-core.h                     |  2 -
+ 17 files changed, 267 insertions(+), 256 deletions(-)
+
+-- 
+2.27.0
+
