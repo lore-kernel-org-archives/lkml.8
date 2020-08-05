@@ -2,186 +2,317 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90106C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502C8C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B5442073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:33:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 284472245C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:35:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d68kUP+O"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hkbbgb9N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbgHEHdX (ORCPT
+        id S1726249AbgHEHfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 03:33:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45410 "EHLO
+        Wed, 5 Aug 2020 03:35:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgHEHdW (ORCPT
+        with ESMTP id S1725981AbgHEHfC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 03:33:22 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75805C06174A;
-        Wed,  5 Aug 2020 00:33:21 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id h12so12570288pgf.7;
-        Wed, 05 Aug 2020 00:33:21 -0700 (PDT)
+        Wed, 5 Aug 2020 03:35:02 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A7C8C061756
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 00:35:02 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id z14so8938649ljm.1
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 00:35:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6VHFh0vko2JNomHrwvJl3llHBkgB6xy1r3raHHKX4XE=;
-        b=d68kUP+O6O6E3CXbyCzCMbvOTSRN5iFrLjSS8IeRPCMjigrCTlihYZLDxM1riTVPVn
-         4s1FvvmKbUsGaMUFA+t85YpzvitCyQ2wD3kSnNhPiybSPV5KHsp4+mgn7SM9r9VF8fHK
-         xP/Y7VqJc4LNle3WYlMQeHFfZD2nGwbeDWsbM5LEAQlC02x4fgjTI2/Va4Ha1n5Toemw
-         o2Xc0qSPyZ3ms+NHNuGwZq9J/LhH+SY0EKF7KSPmgm22krRsZco/Ooy2vItEwhD+QrtA
-         VBRS5mdFvGqR2qiRqb2weZAQ/m8hlMG2RiDFIlpY7kr/HDl/FoZJnZVQnf1oNrnruNWl
-         vW8Q==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9fRPBVj60nMtWa/s2FrntXxpL29tailGK8Vk9a7Gnxg=;
+        b=hkbbgb9Nh8Ur2QAAQJhk45tBdNu0ROW3nUm3ymah+mjuvndV+8c0GFs6gS9RV0oKEs
+         TPN00wliTfZZOduKJeskawh7ar0K7rjqSDF/sRzz4tnrKob8JQjBLjqlaVtgBcCWfscL
+         XMj/mlEDx2r7Y4Bm5BCTcs5ad2DJCFJeWao3HE8gdHCShItCKIGLgEx6Wi1S136wao2M
+         cCcjn1+vOYJ32pHcUPbjlsxcYdDYktrtaFy7b9hUKlrzyOjuZJCt2M2fQ96Md2zCTIUC
+         zZmhPmQjUr0Sw9O2K0wQY65aUUNAiBf6n3A8Qi9zD4EiNSky5yPRcfFCW25TtG897Qxz
+         3xIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6VHFh0vko2JNomHrwvJl3llHBkgB6xy1r3raHHKX4XE=;
-        b=DJKvrOFWpcUilu0czbWc2iAxpBCLGuXf1xTIj875r6HjIUr5ka8CdgAIGvCMNmMn6e
-         sLiAjYhk/R9ibeOzGCzuu/ivhr70+WSwJM54NHfXfftgdZxGAxS/s41ebWvovZLhBH/K
-         WNlexOTm/Rs64BjUTK1bxM2ZXA5LisWYYQFFXqOuRf8GTXwPXgzWJN9UoO3+zFHY0SFV
-         CpwSsvaSJVaClptibSGyPxZe2P7Csj0fd14usDE0W05INXj0SDP4hm0MnoW7tLEbYu89
-         vSxljH6KriUQudjytk1OcnWfITZai+Ht+aSfkLaIhDNtgo6O1WA7f+2m/BhBMAG/87av
-         u7tg==
-X-Gm-Message-State: AOAM532ZrqCfL3XkxDOFV568z9VKD/Rb1DwSNhzxjBDxv2wNs0dkFjXv
-        i8o44Hp0tlNQXQTh2l/ishh0LFCw9SDpioAAcHo=
-X-Google-Smtp-Source: ABdhPJyCNnmLOYWZi9JFIbJ2pxRzZLSSeGnZ/mXDoD3ie5aomNvJFDei5vYV3wIm6k8yK5UYzRgnFjox1/z4gtYcmlk=
-X-Received: by 2002:a63:f24a:: with SMTP id d10mr1883033pgk.4.1596612800868;
- Wed, 05 Aug 2020 00:33:20 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9fRPBVj60nMtWa/s2FrntXxpL29tailGK8Vk9a7Gnxg=;
+        b=tm9bHbhOKu22AFFk49DtcnOOobFpzH0HVOqqjNpIXx0dJu32ABUOxROsE6GSAyx3XJ
+         dQ4IfhdVh0SB9OyVdS5/3SCM621Qf9hlyYo4oPoRljH6RCzGOz7g46wkpNtiNaO66MAX
+         cZQt6C8FoHBiMWulMZgtSxXnuOYW8WyhoSf+k+DCdxvt0IqSDEwNSxHD+btYDLHLbNud
+         cPrMdMbuXCag48+81MIoi8mOgA+LKL9w/k2eAkbwo3eOF0rvY/NnRz5DxcUj4wICH59Q
+         qfDF0I/vZc6OI9xl7oxkuyc7QzzAZCDd7vovbyp//pIFf7/beD1qSC7lY5ibac4LkxEs
+         J3yg==
+X-Gm-Message-State: AOAM530sCQ/PwzpD7DYqeneGvNTxtlJAR+BIDtLYjSyMu7zIqKdrcSb6
+        5vS5az5imHvo1REHlWaroNzY8PuMnnpy5Tbw
+X-Google-Smtp-Source: ABdhPJxyk3P8FnX/bSYK2YD11kIgnWrAd44vtnxHIg2XTGhZey+MA7HbyAt2AuOmtIhINgzZoZZsMQ==
+X-Received: by 2002:a2e:b051:: with SMTP id d17mr805630ljl.231.1596612900142;
+        Wed, 05 Aug 2020 00:35:00 -0700 (PDT)
+Received: from localhost.localdomain (h-98-128-180-79.NA.cust.bahnhof.se. [98.128.180.79])
+        by smtp.gmail.com with ESMTPSA id h21sm514864ljk.31.2020.08.05.00.34.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 00:34:58 -0700 (PDT)
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+To:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [GIT PULL] MMC and MEMSTICK updates for v5.9
+Date:   Wed,  5 Aug 2020 09:34:57 +0200
+Message-Id: <20200805073457.11906-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200804100414.39002-1-alexandru.ardelean@analog.com>
-In-Reply-To: <20200804100414.39002-1-alexandru.ardelean@analog.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 5 Aug 2020 10:33:03 +0300
-Message-ID: <CAHp75VcpOpXxb9Dz6GiixX9dQNjDUTe9ghU9QO8DUbU7h6LYfQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] iio: imu: adis16480: Add support for burst read function
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Stefan Popa <stefan.popa@analog.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 1:04 PM Alexandru Ardelean
-<alexandru.ardelean@analog.com> wrote:
+Hi Linus,
 
-> +static irqreturn_t adis16480_trigger_handler(int irq, void *p)
-> +{
-> +       struct iio_poll_func *pf = p;
-> +       struct iio_dev *indio_dev = pf->indio_dev;
-> +       struct adis16480 *st = iio_priv(indio_dev);
-> +       struct adis *adis = &st->adis;
+Here's the PR with MMC and MEMSTICK updates for v5.9. Details about the
+highlights are as usual found in the signed tag.
 
-> +       int ret, bit, offset, i = 0;
+Please pull this in!
 
-It makes it easier to understand the code if the assignment will be
-attached to the actual user, i.e. for_each_set_bit() below.
+Kind regards
+Ulf Hansson
 
-> +       __be16 data[ADIS16495_BURST_MAX_DATA], *buffer, *d;
 
-> +       if (!adis->buffer)
-> +               return -ENOMEM;
+The following changes since commit ebd4050c6144b38098d8eed34df461e5e3fa82a9:
 
-Is it possible?
+  mmc: sdhci-of-aspeed: Fix clock divider calculation (2020-07-13 12:17:34 +0200)
 
-> +       mutex_lock(&adis->state_lock);
-> +       if (adis->current_page != 0) {
-> +               adis->tx[0] = ADIS_WRITE_REG(ADIS_REG_PAGE_ID);
-> +               adis->tx[1] = 0;
-> +               spi_write(adis->spi, adis->tx, 2);
-> +       }
-> +
-> +       ret = spi_sync(adis->spi, &adis->msg);
-> +       if (ret)
+are available in the Git repository at:
 
-> +               dev_err(&adis->spi->dev, "Failed to read data: %d\n", ret);
+  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.9
 
-No bail out? Then it's dev_warn().
+for you to fetch changes up to 7f4bc2e8687ecea52177aac30fb153cc076f7022:
 
-> +       adis->current_page = 0;
-> +       mutex_unlock(&adis->state_lock);
-> +
-> +       if (!(adis->burst && adis->burst->en)) {
-> +               buffer = adis->buffer;
-> +               goto push_to_buffers;
-> +       }
-> +       /*
-> +        * After making the burst request, the response can have one or two
-> +        * "don't care" 16-bit responses, before the BURST_ID.
-> +        */
-> +       d = (__be16 *)adis->buffer;
-> +       for (offset = 0; offset < 3; offset++) {
-> +               if (d[offset] == ADIS16495_BURST_ID) {
-> +                       offset += 2; /* TEMP_OUT */
-> +                       break;
-> +               }
-> +       }
+  mmc: mediatek: make function msdc_cqe_disable() static (2020-08-05 08:28:15 +0200)
 
-So, we can end up with offset == 3 here. Is it by design?
-Otherwise, offset+=2 maybe moved out of the loop.
-And in any case comment is needed.
+----------------------------------------------------------------
+MMC core:
+ - Add a new host cap bit and a corresponding DT property, to support power
+cycling of the card by FW at system suspend/resume.
+ - Fix clock rate setting for SDIO in SDR12/SDR25 speed-mode
+ - Fix switch to 1/4-bit mode at system suspend/resume for SD-combo cards
+ - Convert the mmc-pwrseq DT bindings to the json-schema
+ - Always allow the card detect uevent to be consumed by userspace
 
-> +       for_each_set_bit(bit, indio_dev->active_scan_mask,
-> +                       indio_dev->masklength) {
-> +               /*
-> +                * When burst mode is used, temperature is the first data
-> +                * channel in the sequence, but the temperature scan index
-> +                * is 10.
-> +                */
-> +               if (bit == ADIS16480_SCAN_TEMP) {
-> +                       data[2 * i] = d[offset];
-> +               } else {
-> +                       /* The lower register data is sequenced first */
+MMC host:
+ - Convert a few DT bindings to the json-schema
+ - mtk-sd: Add support for command queue through cqhci
+ - mtk-sd: Add support for the MT6779 variant
+ - renesas_sdhi_internal_dmac: Fix dma unmapping in the error path
+ - sdhci_am654: Add support for the AM65x PG2.0 variant
+ - sdhci_am654: Extend support for phys/clocks
+ - sdhci-cadence: Drop incorrect HW tuning for SD mode
+ - sdhci-msm: Add support for interconnect bandwidth scaling
+ - sdhci-msm: Enable internal voltage control
+ - sdhci-msm: Enable low power state for pinctrls
+ - sdhci-of-at91: Ludovic Desroches handovers maintenance to Eugen Hristev
+ - sdhci-pci-gli: Improve clock handling for GL975x
+ - sdhci-pci-o2micro: Add HW tuning for SDR104 mode
+ - sdhci-pci-o2micro: Fix support for O2 host controller Seabird1
 
-> +                       data[2 * i] = d[2 * bit + offset + 2];
+----------------------------------------------------------------
+Akshu Agrawal (1):
+      mmc: sdhci-acpi: For amd device set driver type as MMC_SET_DRIVER_TYPE_A
 
-I would do ' + 0', but it's up to you.
+Ben Chuang (2):
+      mmc: cqhci: Fix a print format for the task descriptor
+      mmc: sdhci-pci-gli: Set SDR104's clock to 205MHz and enable SSC for GL975x
 
-> +                       data[2 * i + 1] = d[2 * bit + offset + 1];
-> +               }
-> +               i++;
-> +       }
-> +
-> +       buffer = data;
-> +
-> +push_to_buffers:
-> +       iio_push_to_buffers_with_timestamp(indio_dev, buffer,
-> +               pf->timestamp);
-> +
-> +       iio_trigger_notify_done(indio_dev->trig);
-> +
-> +       return IRQ_HANDLED;
-> +}
+Chuhong Yuan (1):
+      mmc: sdhci-of-arasan: Add missed checks for devm_clk_register()
 
-...
+Chun-Hung Wu (4):
+      mmc: mediatek: add MT6779 MMC driver support
+      mmc: mediatek: refine msdc timeout api
+      mmc: mediatek: command queue support
+      dt-bindings: mmc: mediatek: Add document for mt6779
 
-> +       /* If burst mode is supported, enable it by default */
-> +       if (st->chip_info->burst) {
-> +               st->adis.burst = st->chip_info->burst;
-> +               st->adis.burst_extra_len = st->chip_info->burst->extra_len;
-> +       }
+Colin Ian King (1):
+      mmc: dw_mmc-exynos: remove redundant initialization of variable 'found'
 
-You may use it directly (the sizeof struct somelike 16 bytes and one
-pointer on a 64-bit machine is 8, simply embed it into the struct and
-assign it always.
+Dan Carpenter (1):
+      mmc: sdhci: Fix a potential uninitialized variable
 
-...
+Faiz Abbas (6):
+      dt-bindings: mmc: sdhci-am654: Add ti,clkbuf-sel binding
+      mmc: sdhci_am654: Add flag for PHY calibration
+      mmc: sdhci_am654: Add Support for SR2.0
+      mmc: sdhci_am654: Fix conditions for enabling dll
+      mmc: sdhci_am654: Update delay chain configuration
+      mmc: sdhci_am654: Add support for clkbuf_sel property
 
-+       .extra_len = 12 * sizeof(u16),
+Flavio Suligoi (1):
+      mmc: sdhci-msm: Fix spelling mistake
 
-__be16 would be precise?
+Geert Uytterhoeven (1):
+      mmc: sh_mmcif: Use "kHz" for kilohertz
 
--- 
-With Best Regards,
-Andy Shevchenko
+Haibo Chen (2):
+      mmc: sdio: fix clock rate setting for SDR12/SDR25 mode
+      mmc: sdhci-esdhc-imx: dump internal IC debug status during error
+
+Hulk Robot (1):
+      mmc: sdhci-msm: Make function sdhci_msm_dump_vendor_regs() static
+
+Jisheng Zhang (1):
+      dt-bindings: mmc: Convert pwrseq to json-schema
+
+Lee Jones (15):
+      mmc: core: Mark fixups as __maybe_unused
+      mmc: core: Provide description for sdio_set_host_pm_flags()'s 'flag' arg
+      mmc: core: Add missing documetation for 'mmc' and 'ios'
+      mmc: sdhci-s3c: Provide documentation for missing struct properties
+      mmc: mtk-sd: Demote msdc_recheck_sdio_irq() function header
+      mmc: atmel-mci: Provide 2 new and correct 1 existing property description
+      mmc: core: Correct misspelling of 'mq' in mmc_init_request()'s docs
+      mmc: dw_mmc-exynos: Add kerneldoc descriptions of for 'dev' args
+      mmc: rtsx_pci_sdmmc: Remove set but unused variable 'err'
+      mmc: rtsx_usb_sdmmc: Remove set but unused variable 'err'
+      mmc: sdhci-of-arasan: Correct formatting and provide missing function arg(s)
+      mmc: sdhci-msm: Demote faux kerneldoc header down to basic comment block
+      mmc: cqhci: Demote faux kerneldoc header down to basic comment block
+      arch: arm: mach-omap2: mmc: Move omap_mmc_notify_cover_event() prototype
+      mmc: sdhci-iproc: Do not define 'struct acpi_device_id' when !CONFIG_ACPI
+
+Ludovic Barre (1):
+      mmc: mmci: add sdio datactrl mask for sdmmc revisions
+
+Ludovic Desroches (1):
+      MAINTAINERS: mmc: sdhci-of-at91: handover maintenance to Eugen Hristev
+
+Manish Narani (1):
+      mmc: sdhci-of-arasan: fix timings allocation code
+
+Masahiro Yamada (1):
+      mmc: sdhci-cadence: do not use hardware tuning for SD mode
+
+Pali Rohár (1):
+      mmc: sdio: Move SDIO IDs from rsi_sdio driver to common include file
+
+Pradeep P V K (2):
+      mmc: sdhci-msm: Add interconnect bandwidth scaling support
+      dt-bindings: mmc: sdhci-msm: Add interconnect BW scaling strings
+
+Sowjanya Komatineni (1):
+      mmc: sdhci-tegra: Add comment for PADCALIB and PAD_CONTROL NVQUIRKS
+
+Ulf Hansson (2):
+      mmc: core: Always allow the card detect uevent to be consumed
+      Merge branch 'fixes' into next
+
+Vaibhav Gupta (2):
+      memstick: jmb38x_ms: use generic power management
+      mmc: via-sdmmc: use generic power management
+
+Veerabhadrarao Badiganti (4):
+      mmc: core: Set default power mode in mmc_alloc_host()
+      mmc: sdhci-msm: Use internal voltage control
+      mmc: sdhci-msm: Set IO pins in low power state during suspend
+      mmc: sdhci: Fix potential null pointer access while accessing vqmmc
+
+Vijay Viswanath (1):
+      mmc: sdhci: Allow platform controlled voltage switching
+
+Wan Ahmad Zainie (1):
+      dt-bindings: mmc: convert arasan sdhci bindings to yaml
+
+Wei Yongjun (1):
+      mmc: mediatek: make function msdc_cqe_disable() static
+
+Yoshihiro Shimoda (6):
+      mmc: tmio: core: Add end operation into tmio_mmc_dma_ops
+      mmc: renesas_sdhi_internal_dmac: clean up the code for dma complete
+      mmc: renesas_sdhi_internal_dmac: Fix dma unmapping in error cases
+      dt-bindings: mmc: Add full-pwr-cycle-in-suspend property
+      mmc: core: Add MMC_CAP2_FULL_PWR_CYCLE_IN_SUSPEND
+      dt-bindings: mmc: renesas,sdhi: convert to YAML
+
+Yue Hu (3):
+      mmc: sdio: Return ret if sdio_disable_func() fails
+      mmc: sdio: Enable SDIO 4-bit bus if not support SD_SCR_BUS_WIDTH_4 for SD combo card
+      mmc: sdio: Fix 1-bit mode for SD-combo cards during suspend
+
+shirley her (2):
+      mmc: sdhci-pci-o2micro: Bug fix for O2 host controller Seabird1
+      mmc: sdhci-pci-o2micro: Add HW tuning for SDR104 mode
+
+ .../devicetree/bindings/mmc/arasan,sdhci.txt       | 192 -------------
+ .../devicetree/bindings/mmc/arasan,sdhci.yaml      | 299 +++++++++++++++++++++
+ .../devicetree/bindings/mmc/mmc-controller.yaml    |   5 +
+ .../devicetree/bindings/mmc/mmc-pwrseq-emmc.txt    |  25 --
+ .../devicetree/bindings/mmc/mmc-pwrseq-emmc.yaml   |  46 ++++
+ .../devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt  |  16 --
+ .../devicetree/bindings/mmc/mmc-pwrseq-sd8787.yaml |  39 +++
+ .../devicetree/bindings/mmc/mmc-pwrseq-simple.txt  |  31 ---
+ .../devicetree/bindings/mmc/mmc-pwrseq-simple.yaml |  62 +++++
+ Documentation/devicetree/bindings/mmc/mtk-sd.txt   |   1 +
+ .../devicetree/bindings/mmc/renesas,sdhi.txt       | 114 --------
+ .../devicetree/bindings/mmc/renesas,sdhi.yaml      | 191 +++++++++++++
+ .../devicetree/bindings/mmc/sdhci-am654.txt        |   1 +
+ .../devicetree/bindings/mmc/sdhci-msm.txt          |  18 ++
+ MAINTAINERS                                        |   2 +-
+ arch/arm/mach-omap2/mmc.h                          |   4 -
+ drivers/memstick/host/jmb38x_ms.c                  |  38 +--
+ drivers/mmc/core/core.c                            |  11 +-
+ drivers/mmc/core/host.c                            |   6 +
+ drivers/mmc/core/mmc.c                             |   3 +-
+ drivers/mmc/core/queue.c                           |   2 +-
+ drivers/mmc/core/quirks.h                          |   6 +-
+ drivers/mmc/core/regulator.c                       |   2 +
+ drivers/mmc/core/sdio.c                            |  64 +++--
+ drivers/mmc/core/sdio_io.c                         |   3 +-
+ drivers/mmc/host/Kconfig                           |   1 +
+ drivers/mmc/host/atmel-mci.c                       |   4 +-
+ drivers/mmc/host/cqhci.c                           |   4 +-
+ drivers/mmc/host/dw_mmc-exynos.c                   |   4 +-
+ drivers/mmc/host/mmci.c                            |   2 +
+ drivers/mmc/host/mtk-sd.c                          | 163 ++++++++++-
+ drivers/mmc/host/renesas_sdhi_internal_dmac.c      |  28 +-
+ drivers/mmc/host/rtsx_pci_sdmmc.c                  |   4 +-
+ drivers/mmc/host/rtsx_usb_sdmmc.c                  |   5 +-
+ drivers/mmc/host/sdhci-acpi.c                      |   1 +
+ drivers/mmc/host/sdhci-cadence.c                   | 123 ++++-----
+ drivers/mmc/host/sdhci-esdhc-imx.c                 |  39 +++
+ drivers/mmc/host/sdhci-iproc.c                     |   2 +
+ drivers/mmc/host/sdhci-msm.c                       | 235 +++++++++++++++-
+ drivers/mmc/host/sdhci-of-arasan.c                 |  32 ++-
+ drivers/mmc/host/sdhci-pci-gli.c                   | 220 ++++++++++++++-
+ drivers/mmc/host/sdhci-pci-o2micro.c               |  39 ++-
+ drivers/mmc/host/sdhci-s3c.c                       |   4 +
+ drivers/mmc/host/sdhci-tegra.c                     |   9 +
+ drivers/mmc/host/sdhci.c                           |  24 +-
+ drivers/mmc/host/sdhci.h                           |   1 +
+ drivers/mmc/host/sdhci_am654.c                     |  86 ++++--
+ drivers/mmc/host/sh_mmcif.c                        |   6 +-
+ drivers/mmc/host/tmio_mmc.h                        |   3 +
+ drivers/mmc/host/tmio_mmc_core.c                   |   8 +
+ drivers/mmc/host/via-sdmmc.c                       |  33 +--
+ drivers/net/wireless/rsi/rsi_91x_sdio.c            |   8 +-
+ drivers/net/wireless/rsi/rsi_sdio.h                |   4 -
+ include/linux/mmc/host.h                           |   2 +
+ include/linux/mmc/sdio_ids.h                       |   4 +
+ include/linux/platform_data/mmc-omap.h             |   3 +
+ 56 files changed, 1655 insertions(+), 627 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+ create mode 100644 Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.txt
+ create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
+ create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
+ create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
+ create mode 100644 Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
