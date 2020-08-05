@@ -2,99 +2,118 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C253C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E907C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22FD52177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 131472177B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:41:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iY9JbyNS"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kDvU3AKe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgHEDku (ORCPT
+        id S1726643AbgHEDlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 23:40:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37692 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgHEDks (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 23:40:48 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75F0EC06174A;
-        Tue,  4 Aug 2020 20:40:48 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id m8so15048379pfh.3;
-        Tue, 04 Aug 2020 20:40:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=rzzRqXjFEunIT1yZSSg1CKlJvEECBfp+MgDWsFWjUvI=;
-        b=iY9JbyNSBtjDkkcBBtYVJi6/b9GolFcvDtU5KawfaZyA0+9dTCDa1AK05EKbNQITlD
-         XTfONIbcJTPP3ZlXxb4BOXtL6LD1cZLatdjtewM/9xZyu7gJFP9niti9X8PGmvHJYE64
-         iXQCVANYc8YQwGDsJ+JxDHMKno8uNzqF/czmj2ldHbVJ5aXtDjugL+Z+QkoIlcS9X0xq
-         eZi8mAl5v78paw8vu84acHnxcbZ+nIiFJZ8khS7u56z0GW6mN5Zpxv4fhZJ1fVqX5OVD
-         q/XxF4V7t825zQNceionDeEusM3nNlgIB3dlA/JeDXfRMIkVUrClZTIjBV6NOUWRHJ0x
-         b5vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=rzzRqXjFEunIT1yZSSg1CKlJvEECBfp+MgDWsFWjUvI=;
-        b=jNy8FOZoQUWBjJmJc5T/4TZ+ccfovBxWiQFhDA5NpEVAZ22ShJa/AYhkekrJbYKa4p
-         M8R/ujcDobwBWertH4YsZsbrC7LxtD5wxJ3sSdsmU1DdDy8mlb+oNfc6KGeNCh3xv8Ul
-         AoqabSqRf7RMcr1qcRv3/zvIN1tosZZ2iwj4HBD28TcaKBpRI3SfgN872cKk5WZ8V57K
-         QuwuTWzPR6N/nsqoMJXJn4B8LSDjjSG9JSUvI2V0XH8XwhbEFKFUBWhdRJXIwZKXDeUd
-         Sirl2DDAY+vh2g35Fc21YPIv5IdHbhedn6+JYySefxeTPpeI9G8p/0CPdUU6/4Diw7lW
-         s3AA==
-X-Gm-Message-State: AOAM530e/CWrEsgAxlW4dAFTK3Rn9Vf93tTSpeFH/iFykv++SZO+aEd1
-        S+9Ixv3WD1LpNJh9FUjUqNO7+VF0ned95w==
-X-Google-Smtp-Source: ABdhPJx1HdDmTQsmnl2GToZoJYpx9vzI2MF9PZc28RwIEtemGRYvTPfbA+FHPNR1D3IEHrHbsCiJ5A==
-X-Received: by 2002:aa7:810c:: with SMTP id b12mr1449191pfi.69.1596598847760;
-        Tue, 04 Aug 2020 20:40:47 -0700 (PDT)
-Received: from localhost ([104.192.108.9])
-        by smtp.gmail.com with ESMTPSA id fh14sm810632pjb.38.2020.08.04.20.40.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 20:40:47 -0700 (PDT)
-Date:   Tue, 4 Aug 2020 20:40:42 -0700
-From:   Guoyu Huang <hgy5945@gmail.com>
-To:     axboe@kernel.dk, viro@zeniv.linux.org.uk
-Cc:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] io_uring: Fix use-after-free in io_sq_wq_submit_work()
-Message-ID: <20200805034042.GA29805@ubuntu>
+        Tue, 4 Aug 2020 23:41:45 -0400
+Received: from ozlabs.org ([203.11.71.1]:34631 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725864AbgHEDlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 23:41:44 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BLy906mQmz9sPB;
+        Wed,  5 Aug 2020 13:41:40 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1596598902;
+        bh=zCRYDnG3AKwcU6O8PIv3c/8BDVkH7Q5mSQIzIHHFPlo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=kDvU3AKeRnuAUOiZZsw/kng2x/5zFqcjnM5AnqImikpIrqAeUeGPJrhtKhzZ7U12N
+         PPb5CcawzDzgwGORoHvkMkMTbZa34ib2IIgKoJC5hpgx0q5ASTHkAszpCvE/KYlyZL
+         Su4BmQCEA282WSEbPgHsOXr5JmVRidNF8+SJNMThprEWj0oh97iXJ5aBAN16MQyEIN
+         ogSyD82dzO8qa85oOWmuIgTsua5qev4LGdDFz0p2km3XWnJiAyEuSsaMlFMDqiYfZC
+         Rs6f7oZvzUEkT2QIs2Uzw/ISbKeR4uxfPCdwz40h8a0LfV0eBwhVRnPoNTTElXodux
+         xh1Ha1DwDu5Cw==
+Date:   Wed, 5 Aug 2020 13:41:38 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Palmer Dabbelt <palmer@dabbelt.com>, greentime.hu@sifive.com
+Cc:     christian@brauner.io, Paul Walmsley <paul@pwsan.com>,
+        linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tklauser@distanz.ch
+Subject: Re: linux-next: manual merge of the pidfd tree with the risc-v tree
+Message-ID: <20200805134138.1697bf4e@canb.auug.org.au>
+In-Reply-To: <mhng-d98d39e0-9fc5-4bad-b7d2-984d0dc638eb@palmerdabbelt-glaptop1>
+References: <20200805103943.3c28da7f@canb.auug.org.au>
+        <mhng-d98d39e0-9fc5-4bad-b7d2-984d0dc638eb@palmerdabbelt-glaptop1>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: multipart/signed; boundary="Sig_/uWRSruVvNepNy.PkkcN7+DN";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-when ctx->sqo_mm is zero, io_sq_wq_submit_work() frees 'req'
-without deleting it from 'task_list'. After that, 'req' is
-accessed in io_ring_ctx_wait_and_kill() which lead to
-a use-after-free.
+--Sig_/uWRSruVvNepNy.PkkcN7+DN
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Guoyu Huang <hgy5945@gmail.com>
----
- fs/io_uring.c | 1 +
- 1 file changed, 1 insertion(+)
+Hi Palmer,
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index e0200406765c..4b5ac381c67f 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2242,6 +2242,7 @@ static void io_sq_wq_submit_work(struct work_struct *work)
- 		if (io_sqe_needs_user(sqe) && !cur_mm) {
- 			if (!mmget_not_zero(ctx->sqo_mm)) {
- 				ret = -EFAULT;
-+				goto end_req;
- 			} else {
- 				cur_mm = ctx->sqo_mm;
- 				use_mm(cur_mm);
---
-2.25.1
+On Tue, 04 Aug 2020 18:17:35 -0700 (PDT) Palmer Dabbelt <palmer@dabbelt.com=
+> wrote:
+>
+> >> diff --cc arch/riscv/Kconfig
+> >> index 76a0cfad3367,f6a3a2bea3d8..000000000000
+> >> --- a/arch/riscv/Kconfig
+> >> +++ b/arch/riscv/Kconfig
+> >> @@@ -57,9 -52,6 +57,8 @@@ config RISC
+> >>   	select HAVE_ARCH_SECCOMP_FILTER
+> >>   	select HAVE_ARCH_TRACEHOOK
+> >>   	select HAVE_ASM_MODVERSIONS
+> >>  +	select HAVE_CONTEXT_TRACKING
+> >> - 	select HAVE_COPY_THREAD_TLS
+> >>  +	select HAVE_DEBUG_KMEMLEAK
+> >>   	select HAVE_DMA_CONTIGUOUS if MMU
+> >>   	select HAVE_EBPF_JIT if MMU
+> >>   	select HAVE_FUTEX_CMPXCHG if FUTEX =20
+> >
+> > This is now a conflict between the risc-v tree and Linus' tree. =20
+>=20
+> Thanks.  I'd just pulled in some stuff and was intending on sending a PR =
+to
+> Linus tomorrow (we've got some autobuilders that run overnight that I lik=
+e to
+> give a crack at the actual commit before I send anything).  For this one I
+> think the best bet is to just mention it to Linus as a conflict to be fix=
+ed --
+> the only other thing I can think of would be to rebase my tree, which see=
+ms
+> worse at this point.
 
+Its pretty trivial, just mention it.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/uWRSruVvNepNy.PkkcN7+DN
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8qKnIACgkQAVBC80lX
+0GxGNgf/X2w6M2W8dpeoXoBk6agspg8l+sxUp+EN5mmKZSI7i5Kr72ZaL3HqaJZC
+rGtbzPEvCg4ys+u3DHr8fSZrL9Jn15kxymVQfDL27CQZWjUcL7xAdqA2IMutm9vV
+oBccOu7IJfX/i01bTUz4vIQOw64UWuLxYhzjoyd2ZTJXrZczRqFySH6oBSnue1kh
+CWQbvy1/HSWRi5wm8kshxrNtEIZ6evw45m8/sczBE7MbzlEBsT4sUjnUzxy9XtA1
+f2PzyVLJ4iR9bOr+YL65IBASRvpz3mwdDobEBUMrHlGbPXwztnuXImLYc53rnZ/H
+ic/fp6PajMLrUgzO3314rx/+y1UU6Q==
+=5ewZ
+-----END PGP SIGNATURE-----
+
+--Sig_/uWRSruVvNepNy.PkkcN7+DN--
