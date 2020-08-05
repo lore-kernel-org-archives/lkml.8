@@ -5,54 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3FDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0A5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 953382076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 595842076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:05:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596657886;
-	bh=h3F50YRu/vJdUAaf8yXaUUqx+mIxdpj9HxIcTXfF7B0=;
+	s=default; t=1596657923;
+	bh=fshGYLcQsSw3oRUdVr523hsrXJ+lrjE7n7VUtXtO3IQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zgke/EKY9jof93kdrmHsGy8OHLPeNHDV8KOzoNEXhk14rLPjMh3zVxZPf4Ck0jYBY
-	 CDRB4m3AfGoWiZj2HR3mMNO8Lwd4p4cNFAJQsxbqwshemXuN0mrj/CrXhgvwvrRaVc
-	 0MKCvzsu+63I1uLUq2I7eEY+UPxvS21swFEly78c=
+	b=l6PzGUtgUbPCpHcezXk81RFB8n+CT7Ez78iGRC5V1NlluZ55tBm/ABtgT17fUeiab
+	 m5+ovEiEwO5WxnQnZK9JUWiyndcfab6ZosIyBXaITItlohF5gStGEfniyFm4pA0Npy
+	 gij/tQ1mAaMw9Yq6zxRNZR6O5djX+vP0JwS7sfeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbgHEUEn (ORCPT
+        id S1727105AbgHEUFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:04:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50664 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 16:05:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727804AbgHEQgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:36:37 -0400
+        id S1726402AbgHEQgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 12:36:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBB22233A2;
-        Wed,  5 Aug 2020 15:53:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF2662339E;
+        Wed,  5 Aug 2020 15:53:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596642797;
-        bh=h3F50YRu/vJdUAaf8yXaUUqx+mIxdpj9HxIcTXfF7B0=;
+        s=default; t=1596642789;
+        bh=fshGYLcQsSw3oRUdVr523hsrXJ+lrjE7n7VUtXtO3IQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tEXEy2EwPqjRoexBABNw6w2M8YvntZejUJDXFT196htHUB2EIthsjSeViq3KH0flr
-         9z2QnW3b7GKefoLyCpY4pVTEG+V0JwuqgNndU7OqgLEkrx8r8pwR2FcFR3ZtlqLe76
-         sboVOYP5PQGjulFLHNqQg5M1MnxiXJkcFTnRsd6Q=
+        b=FA+cFCpJByyCLrQaA+xjz7yCg5InSp2Py9rUpYcTsCrRLCFPVpyk09wg1gZqlv0j8
+         braYbQuZUqv0MQmtrxEkHIlsPgmV9i2psI96wuJPI8XSik46ve4qcVpoX+EUBBg8Ig
+         v/YYLAiaR9ClL29w6gbr5Imu4MbmX2uum33l2hOI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Emese Revfy <re.emese@gmail.com>,
-        Kees Cook <keescook@chromium.org>, Willy Tarreau <w@1wt.eu>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 4/6] random32: remove net_rand_state from the latent entropy gcc plugin
-Date:   Wed,  5 Aug 2020 17:53:03 +0200
-Message-Id: <20200805153505.696556762@linuxfoundation.org>
+        stable@vger.kernel.org, Amit Klein <aksecurity@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>, Willy Tarreau <w@1wt.eu>
+Subject: [PATCH 4.19 1/6] random32: update the net random state on interrupt and activity
+Date:   Wed,  5 Aug 2020 17:53:00 +0200
+Message-Id: <20200805153505.558718245@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200805153505.472594546@linuxfoundation.org>
 References: <20200805153505.472594546@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,50 +67,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Willy Tarreau <w@1wt.eu>
 
-commit 83bdc7275e6206f560d247be856bceba3e1ed8f2 upstream.
+commit f227e3ec3b5cad859ad15666874405e8c1bbc1d4 upstream.
 
-It turns out that the plugin right now ends up being really unhappy
-about the change from 'static' to 'extern' storage that happened in
-commit f227e3ec3b5c ("random32: update the net random state on interrupt
-and activity").
+This modifies the first 32 bits out of the 128 bits of a random CPU's
+net_rand_state on interrupt or CPU activity to complicate remote
+observations that could lead to guessing the network RNG's internal
+state.
 
-This is probably a trivial fix for the latent_entropy plugin, but for
-now, just remove net_rand_state from the list of things the plugin
-worries about.
+Note that depending on some network devices' interrupt rate moderation
+or binding, this re-seeding might happen on every packet or even almost
+never.
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Emese Revfy <re.emese@gmail.com>
+In addition, with NOHZ some CPUs might not even get timer interrupts,
+leaving their local state rarely updated, while they are running
+networked processes making use of the random state.  For this reason, we
+also perform this update in update_process_times() in order to at least
+update the state when there is user or system activity, since it's the
+only case we care about.
+
+Reported-by: Amit Klein <aksecurity@gmail.com>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Kees Cook <keescook@chromium.org>
-Cc: Willy Tarreau <w@1wt.eu>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Willy Tarreau <w@1wt.eu>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/random.h |    2 +-
+ drivers/char/random.c  |    1 +
+ include/linux/random.h |    3 +++
+ kernel/time/timer.c    |    8 ++++++++
  lib/random32.c         |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ 4 files changed, 13 insertions(+), 1 deletion(-)
 
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -1257,6 +1257,7 @@ void add_interrupt_randomness(int irq, i
+ 
+ 	fast_mix(fast_pool);
+ 	add_interrupt_bench(cycles);
++	this_cpu_add(net_rand_state.s1, fast_pool->pool[cycles & 3]);
+ 
+ 	if (unlikely(crng_init == 0)) {
+ 		if ((fast_pool->count >= 64) &&
 --- a/include/linux/random.h
 +++ b/include/linux/random.h
-@@ -116,7 +116,7 @@ struct rnd_state {
+@@ -9,6 +9,7 @@
+ 
+ #include <linux/list.h>
+ #include <linux/once.h>
++#include <linux/percpu.h>
+ 
+ #include <uapi/linux/random.h>
+ 
+@@ -115,6 +116,8 @@ struct rnd_state {
  	__u32 s1, s2, s3, s4;
  };
  
--DECLARE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
-+DECLARE_PER_CPU(struct rnd_state, net_rand_state);
- 
++DECLARE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
++
  u32 prandom_u32_state(struct rnd_state *state);
  void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
+ void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -44,6 +44,7 @@
+ #include <linux/sched/debug.h>
+ #include <linux/slab.h>
+ #include <linux/compat.h>
++#include <linux/random.h>
+ 
+ #include <linux/uaccess.h>
+ #include <asm/unistd.h>
+@@ -1654,6 +1655,13 @@ void update_process_times(int user_tick)
+ 	scheduler_tick();
+ 	if (IS_ENABLED(CONFIG_POSIX_TIMERS))
+ 		run_posix_cpu_timers(p);
++
++	/* The current CPU might make use of net randoms without receiving IRQs
++	 * to renew them often enough. Let's update the net_rand_state from a
++	 * non-constant value that's not affine to the number of calls to make
++	 * sure it's updated when there's some activity (we don't care in idle).
++	 */
++	this_cpu_add(net_rand_state.s1, rol32(jiffies, 24) + user_tick);
+ }
+ 
+ /**
 --- a/lib/random32.c
 +++ b/lib/random32.c
 @@ -48,7 +48,7 @@ static inline void prandom_state_selftes
  }
  #endif
  
--DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
-+DEFINE_PER_CPU(struct rnd_state, net_rand_state);
+-static DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
++DEFINE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
  
  /**
   *	prandom_u32_state - seeded pseudo-random number generator.
