@@ -2,139 +2,173 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE00C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D38822B42
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 962ED22B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:07:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="q25j3yFC"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nPuQK4ea"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgHEUHQ (ORCPT
+        id S1726862AbgHEUHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:07:16 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:60878 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726925AbgHEQeG (ORCPT
+        Wed, 5 Aug 2020 16:07:24 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15177 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbgHEQeG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:34:06 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 075GM4BD038971;
-        Wed, 5 Aug 2020 16:33:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=IQLdx5abes21j8K7iHnVnBLrSGwXYmzNR4vIr2rCepI=;
- b=q25j3yFCZq1ZH0dHoKbPHv8VCIDBkrVg3ESlEMQDIO313ZVAJL3bbCVbkb87xqQrRUCm
- DfEqdeLSynhXTeQqUjffQd7tCybsxI5V6XItsOVGvoV1y/+WTHJtLq0knW7tro0lSVOv
- ERcCwS+/uwfmQsffNQvLBPBN5QgyUMIKp368IpUQlFtCrTqLx15i/WuTy6OY49J/UwbY
- w5CSyW0Sz14pqW8luVJCotpnL5HKonN2RZYUSgpi98TmDG6IeXp7/LlW6BLkbOZjVKxf
- 84uZpBM8DSraJiNmdLk98yq/t5ykat3kqPuv/ENLvgYkV7yy2uqmZTxy6lNN7rCVXC3C WA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 32n11nb3fk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 05 Aug 2020 16:33:33 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 075GJBpZ061181;
-        Wed, 5 Aug 2020 16:31:32 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 32p5gu12aq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 05 Aug 2020 16:31:30 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 075GVTHY020512;
-        Wed, 5 Aug 2020 16:31:29 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 05 Aug 2020 09:31:29 -0700
-Date:   Wed, 5 Aug 2020 09:31:26 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-xfs@vger.kernel.org, Dave Chinner <david@fromorbit.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Christoph Hellwig <hch@lst.de>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, riteshh@linux.ibm.com,
-        Goldwyn Rodrigues <rgoldwyn@suse.de>,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [GIT PULL] iomap: new code for 5.9-rc1
-Message-ID: <20200805163126.GC6107@magnolia>
-References: <20200805153214.GA6090@magnolia>
- <CAHc6FU6yMnuKdVsAXkWgwr2ViMSXJdBXksrQDvHwaaw4p8u0rQ@mail.gmail.com>
- <20200805162349.GB6107@magnolia>
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f2adf640000>; Wed, 05 Aug 2020 09:33:40 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 05 Aug 2020 09:33:53 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 05 Aug 2020 09:33:53 -0700
+Received: from [10.2.172.190] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Aug
+ 2020 16:33:53 +0000
+Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
+ calibration is done
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
+ <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
+ <20200805134600.GA3351349@ulmo>
+ <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
+ <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
+Date:   Wed, 5 Aug 2020 09:33:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200805162349.GB6107@magnolia>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9704 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
- phishscore=0 spamscore=0 adultscore=0 suspectscore=1 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008050132
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9704 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0 mlxscore=0
- suspectscore=1 mlxlogscore=999 phishscore=0 adultscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008050132
+In-Reply-To: <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596645220; bh=X5zEu6vUXobqBcWHY7aaMnj5mp+hKk0lRFA0MhBpjdw=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=nPuQK4eaWgFlwk7/vscxJYA0OVSW7M2yfsfpDKz7kRU5zT0VexC2rUVHuBsKNMUsV
+         kjRTmX9Qh/kiRlOZ0BFAmPOLDLrYCPZK8oPzS+uiksdWR36LN9Wd7EgzEuWzSKJ58y
+         lFIJOCz/EU1/0T3fhP1kX497iXKKEmizr/muMZa9Xky0yeRfrXrCKv/+IBPAMLfm67
+         qCssOIui/sHjGkL3CY/l3u/IgMsuEXPWzNT5N/6BUcN1IHykJLQkmMMQMtHw9pWTmj
+         6bzvNXbPqFmNi82DOfZ1znh0cR0C/PABI4AoX+w7KgGXK3FeidCnRFxfMSqK4qn9pD
+         eofJXi6fZl8Xw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 09:23:49AM -0700, Darrick J. Wong wrote:
-> On Wed, Aug 05, 2020 at 05:54:31PM +0200, Andreas Gruenbacher wrote:
-> > Hi Darrick,
-> > 
-> > On Wed, Aug 5, 2020 at 5:40 PM Darrick J. Wong <djwong@kernel.org> wrote:
-> > > ----------------------------------------------------------------
-> > > Andreas Gruenbacher (1):
-> > >       iomap: Make sure iomap_end is called after iomap_begin
-> > 
-> > that commit (d1b4f507d71de) contains the following garbage in the
-> > commit message:
-> > 
-> >     The message from this sender included one or more files
-> >     which could not be scanned for virus detection; do not
-> >     open these files unless you are certain of the sender's intent.
-> > 
-> >     ----------------------------------------------------------------------
-> > 
-> > How did it come to that?
-> 
-> I have no idea.  It's not in the email that I turned into a patch, but
-> golly roundtripping git patches through email and back to git sucks.
 
-Aha-- the effing Oracle email virus scanner doesn't run on mails coming
-in via mailing lists (which is the copy that I keep in my archive) but
-the copy that you sent direct to me /did/ get a virus scan, which failed
-because it's too stupid to recognize plain text, so the virus scanner
-injected its stupid warning *into the message body*, and then I git-am'd
-that without noticing.
+On 8/5/20 7:19 AM, Dmitry Osipenko wrote:
+> 05.08.2020 17:05, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> 05.08.2020 16:46, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> On Mon, Aug 03, 2020 at 08:42:24AM -0700, Sowjanya Komatineni wrote:
+>>>> With the split of MIPI calibration into tegra_mipi_calibrate() and
+>>>> tegra_mipi_wait(), MIPI clock is not kept enabled till the calibration
+>>>> is done.
+>>>>
+>>>> So, this patch skips disabling MIPI clock after triggering start of
+>>>> calibration and disables it only after waiting for done status from
+>>>> the calibration logic.
+>>>>
+>>>> This patch renames tegra_mipi_calibrate() as tegra_mipi_start_calibrat=
+ion()
+>>>> and tegra_mipi_wait() as tegra_mipi_finish_calibration() to be inline
+>>>> with their usage.
+>>>>
+>>>> As MIPI clock is left enabled and in case of any failures with CSI inp=
+ut
+>>>> streaming tegra_mipi_finish_calibration() will not get invoked.
+>>>> So added new API tegra_mipi_cancel_calibration() which disables MIPI c=
+lock
+>>>> and consumer drivers can call this in such cases.
+>>>>
+>>>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>> ---
+>>>>   drivers/gpu/drm/tegra/dsi.c |  4 ++--
+>>>>   drivers/gpu/host1x/mipi.c   | 19 ++++++++++---------
+>>>>   include/linux/host1x.h      |  5 +++--
+>>>>   3 files changed, 15 insertions(+), 13 deletions(-)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+>>>> index 3820e8d..a7864e9 100644
+>>>> --- a/drivers/gpu/drm/tegra/dsi.c
+>>>> +++ b/drivers/gpu/drm/tegra/dsi.c
+>>>> @@ -694,11 +694,11 @@ static int tegra_dsi_pad_calibrate(struct tegra_=
+dsi *dsi)
+>>>>   		DSI_PAD_PREEMP_PD(0x03) | DSI_PAD_PREEMP_PU(0x3);
+>>>>   	tegra_dsi_writel(dsi, value, DSI_PAD_CONTROL_3);
+>>>>  =20
+>>>> -	err =3D tegra_mipi_calibrate(dsi->mipi);
+>>>> +	err =3D tegra_mipi_start_calibration(dsi->mipi);
+>>>>   	if (err < 0)
+>>>>   		return err;
+>>>>  =20
+>>>> -	return tegra_mipi_wait(dsi->mipi);
+>>>> +	return tegra_mipi_finish_calibration(dsi->mipi);
+>>>>   }
+>>>>  =20
+>>>>   static void tegra_dsi_set_timeout(struct tegra_dsi *dsi, unsigned lo=
+ng bclk,
+>>>> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
+>>>> index e606464..b15ab6e 100644
+>>>> --- a/drivers/gpu/host1x/mipi.c
+>>>> +++ b/drivers/gpu/host1x/mipi.c
+>>>> @@ -293,17 +293,19 @@ int tegra_mipi_disable(struct tegra_mipi_device =
+*dev)
+>>>>   }
+>>>>   EXPORT_SYMBOL(tegra_mipi_disable);
+>>>>  =20
+>>>> -int tegra_mipi_wait(struct tegra_mipi_device *device)
+>>>> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device)
+>>>> +{
+>>>> +	clk_disable(device->mipi->clk);
+>>> Do we need to do anything with the MIPI_CAL_CTRL and MIPI_CAL_STATUS
+>>> registers here? We don't clear the START bit in the former when the
+>>> calibration has successfully finished, but I suspect that's because
+>>> the bit is self-clearing. But I wonder if we still need to clear it
+>>> upon cancellation to make sure the calibration does indeed stop.
+>> Apparently there is no way to explicitly stop calibration other than to
+>> reset MIPI calibration block, but Sowjanya says this is unnecessary.
+>>
+>> Perhaps having a fixed delay before disabling clock could be enough to
+>> ensure that calibration is stopped before the clock is disabled?
+>>
+> Actually, there is a MIPI_CAL_ACTIVE bit in the status register. Maybe
+> it needs to be polled until it's unset?
 
-S'ok, they're moving us to Exchange soon, so I expect never to hear from
-any of you ever again.
+Confirmed with HW design team during this patch update.
 
---D
+SW does not need to clear START bit and only write 1 takes effect to=20
+that bit.
 
-> 
-> Oh well, I guess I have to rebase the whole branch now.
-> 
-> Linus: please ignore this pull request.
-> 
-> --D
-> 
-> > 
-> > Thanks,
-> > Andreas
-> > 
-> 
+Also, no need to have delay or do any other register settings unclear as=20
+its FSM and there's nothing to get stuck.
+
+Also it goes thru small finite set of codes and by the time sensor=20
+programming happens for enabling streaming FSM will finish its=20
+calibration sequence much early and it will only wait for pads LP-11.
+
+So, during cancel we only need disable MIPI clock.
+
