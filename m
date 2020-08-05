@@ -2,69 +2,98 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E19C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 10:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7810DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 10:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6BA20792
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 10:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B6942250E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 10:56:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbgHEKlN (ORCPT
+        id S1728315AbgHEKvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 06:41:13 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54936 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726294AbgHEK2d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 06:28:33 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1k3GeT-0003ml-DX; Wed, 05 Aug 2020 10:28:05 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] omapfb: fix spelling mistake "propert" -> "property"
-Date:   Wed,  5 Aug 2020 11:28:05 +0100
-Message-Id: <20200805102805.15353-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0
+        Wed, 5 Aug 2020 06:51:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:57454 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726212AbgHEKrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 06:47:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 01926D6E;
+        Wed,  5 Aug 2020 03:35:33 -0700 (PDT)
+Received: from localhost (e108754-lin.cambridge.arm.com [10.1.198.53])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 97E053FA32;
+        Wed,  5 Aug 2020 03:35:32 -0700 (PDT)
+Date:   Wed, 5 Aug 2020 11:35:31 +0100
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     rjw@rjwysocki.net, dietmar.eggemann@arm.com,
+        catalin.marinas@arm.com, sudeep.holla@arm.com, will@kernel.org,
+        linux@armlinux.org.uk, mingo@redhat.com, peterz@infradead.org,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/7] cpufreq: report whether cpufreq supports
+ Frequency Invariance (FI)
+Message-ID: <20200805103531.GB4817@arm.com>
+References: <20200722093732.14297-1-ionela.voinescu@arm.com>
+ <20200722093732.14297-5-ionela.voinescu@arm.com>
+ <20200730044346.rgtaikotkgwdpc3m@vireshk-mac-ubuntu>
+ <20200803152400.GB20312@arm.com>
+ <20200804064656.h25yapthuumdxjw7@vireshk-mac-ubuntu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200804064656.h25yapthuumdxjw7@vireshk-mac-ubuntu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Tuesday 04 Aug 2020 at 12:16:56 (+0530), Viresh Kumar wrote:
+> On 03-08-20, 16:24, Ionela Voinescu wrote:
+> > Right, cpufreq_register_driver() should check that at least one of them
+> > is present
+> 
+> > (although currently cpufreq_register_driver() will return
+> > -EINVAL if .fast_switch() alone is present - something to be fixed).
+> 
+> I think it is fine as there is no guarantee from cpufreq core if
+> .fast_switch() will get called and so target/target_index must be
+> present. We can't do fast-switch today without schedutil (as only that
+> enables it) and if a notifier gets registered before the driver, then
+> we are gone again.
+> 
+> > Will do, on both accounts.
+> > 
+> > 
+> > > > +		static_branch_enable_cpuslocked(&cpufreq_set_freq_scale);
+> > > > +		pr_debug("%s: Driver %s can provide frequency invariance.",
+> > > > +			 __func__, driver->name);
+> > > 
+> > > I think a simpler print will work well too.
+> > > 
+> > >                 pr_debug("Freq invariance enabled");
+> > > 
+> > 
+> > I think the right way of reporting this support is important here.
+> 
+> Yeah, we can't say it is enabled as you explained, though I meant
+> something else here then, i.e. getting rid of driver name and
+> unimportant stuff. What about this now:
+> 
+> pr_debug("supports frequency invariance");
+> 
+> This shall get printed as this finally:
+> 
+> cpufreq: supports frequency invariance
+> 
 
-There is a spelling mistake in a pr_err message. Fix it.
+Will do!
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/video/fbdev/omap2/omapfb/dss/venc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+Ionela.
 
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/venc.c b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
-index 0b0ad20afd63..f560fa4d7786 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/venc.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
-@@ -787,7 +787,7 @@ static int venc_probe_of(struct platform_device *pdev)
- 		venc.type = OMAP_DSS_VENC_TYPE_SVIDEO;
- 		break;
- 	default:
--		dev_err(&pdev->dev, "bad channel propert '%d'\n", channels);
-+		dev_err(&pdev->dev, "bad channel property '%d'\n", channels);
- 		r = -EINVAL;
- 		goto err;
- 	}
--- 
-2.27.0
-
+> -- 
+> viresh
