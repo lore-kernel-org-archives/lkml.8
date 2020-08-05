@@ -2,127 +2,187 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0C1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DE9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4600520842
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D6282076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:53:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mOeLMqPj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729181AbgHETwm (ORCPT
+        id S1728688AbgHETxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:52:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57272 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727826AbgHEQvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:51:00 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DFA922CF7;
-        Wed,  5 Aug 2020 16:50:58 +0000 (UTC)
-Date:   Wed, 5 Aug 2020 12:50:56 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Muchun Song <songmuchun@bytedance.com>
-Cc:     naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
-        davem@davemloft.net, mhiramat@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
-        yhs@fb.com, andriin@fb.com, john.fastabend@gmail.com,
-        kpsingh@chromium.org, sfr@canb.auug.org.au, mingo@kernel.org,
-        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Chengming Zhou <zhouchengming@bytedance.com>
-Subject: Re: [PATCH v2] kprobes: fix NULL pointer dereference at
- kprobe_ftrace_handler
-Message-ID: <20200805125056.1dfe74b5@oasis.local.home>
-In-Reply-To: <20200805162713.16386-1-songmuchun@bytedance.com>
-References: <20200805162713.16386-1-songmuchun@bytedance.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 5 Aug 2020 15:53:03 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3561 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727928AbgHEQui (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 12:50:38 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f2ae2fa0000>; Wed, 05 Aug 2020 09:48:58 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 05 Aug 2020 09:50:37 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 05 Aug 2020 09:50:37 -0700
+Received: from [10.2.172.190] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 5 Aug
+ 2020 16:50:36 +0000
+Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
+ calibration is done
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <sakari.ailus@iki.fi>, <robh+dt@kernel.org>,
+        <helen.koike@collabora.com>, <gregkh@linuxfoundation.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
+ <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
+ <20200805134600.GA3351349@ulmo>
+ <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
+ <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
+ <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
+ <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <6eede805-80fd-016f-22f8-b6d25f6587af@nvidia.com>
+Date:   Wed, 5 Aug 2020 09:50:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1596646138; bh=4O8NzmpI48gB34jbxeGTk9sMJ+aJbV2Wl8WhAwCHFEs=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=mOeLMqPjDvuvccBzxqxLUuaWmqaolyNmwGtjbFI//CaS63LSk7TnL9piUBpDdzl/x
+         rWY14JW5sC565vIoU7fdDVzr7nK8spgJUzoOOEgBLNj8RRgV52h6zUHb4Oq+2MlfUf
+         kS7a5uMnc5gMII/O8cg+FmwD7CccTwpZTvAANFysHrQWyUvH5ovVasynWM77M64mPG
+         W2vQm2OKEQK5zm/G3kE6xsbXuUOhIjO81vLsNKch1+QsmiIQWyEAaD2aeBFp4p8aIJ
+         Kkf5/4lojEPV4SgAk+aNkV46Mj6rurEr0/hjXyRxUtbKmTE0YarZEQDv1E625JlH37
+         slgcAvUN039Cw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  6 Aug 2020 00:27:13 +0800
-Muchun Song <songmuchun@bytedance.com> wrote:
 
-> We found a case of kernel panic on our server. The stack trace is as
-> follows(omit some irrelevant information):
-> 
->   BUG: kernel NULL pointer dereference, address: 0000000000000080
->   RIP: 0010:kprobe_ftrace_handler+0x5e/0xe0
->   RSP: 0018:ffffb512c6550998 EFLAGS: 00010282
->   RAX: 0000000000000000 RBX: ffff8e9d16eea018 RCX: 0000000000000000
->   RDX: ffffffffbe1179c0 RSI: ffffffffc0535564 RDI: ffffffffc0534ec0
->   RBP: ffffffffc0534ec1 R08: ffff8e9d1bbb0f00 R09: 0000000000000004
->   R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
->   R13: ffff8e9d1f797060 R14: 000000000000bacc R15: ffff8e9ce13eca00
->   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->   CR2: 0000000000000080 CR3: 00000008453d0005 CR4: 00000000003606e0
->   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->   Call Trace:
->    <IRQ>
->    ftrace_ops_assist_func+0x56/0xe0
->    ftrace_call+0x5/0x34
->    tcpa_statistic_send+0x5/0x130 [ttcp_engine]
-> 
-> The tcpa_statistic_send is the function being kprobed. After analysis,
-> the root cause is that the fourth parameter regs of kprobe_ftrace_handler
-> is NULL. Why regs is NULL? We use the crash tool to analyze the kdump.
-> 
->   crash> dis tcpa_statistic_send -r  
->          <tcpa_statistic_send>: callq 0xffffffffbd8018c0 <ftrace_caller>
-> 
-> The tcpa_statistic_send calls ftrace_caller instead of ftrace_regs_caller.
-> So it is reasonable that the fourth parameter regs of kprobe_ftrace_handler
-> is NULL. In theory, we should call the ftrace_regs_caller instead of the
-> ftrace_caller. After in-depth analysis, we found a reproducible path.
-> 
->   Writing a simple kernel module which starts a periodic timer. The
->   timer's handler is named 'kprobe_test_timer_handler'. The module
->   name is kprobe_test.ko.
-> 
->   1) insmod kprobe_test.ko
->   2) bpftrace -e 'kretprobe:kprobe_test_timer_handler {}'
->   3) echo 0 > /proc/sys/kernel/ftrace_enabled
->   4) rmmod kprobe_test
->   5) stop step 2) kprobe
->   6) insmod kprobe_test.ko
->   7) bpftrace -e 'kretprobe:kprobe_test_timer_handler {}'
-> 
-> We mark the kprobe as GONE but not disarm the kprobe in the step 4).
-> The step 5) also do not disarm the kprobe when unregister kprobe. So
-> we do not remove the ip from the filter. In this case, when the module
-> loads again in the step 6), we will replace the code to ftrace_caller
-> via the ftrace_module_enable(). When we register kprobe again, we will
-> not replace ftrace_caller to ftrace_regs_caller because the ftrace is
-> disabled in the step 3). So the step 7) will trigger kernel panic. Fix
-> this problem by disarming the kprobe when the module is going away.
-> 
-> Fixes: ae6aa16fdc16 ("kprobes: introduce ftrace based optimization")
-> Acked-by: Song Liu <songliubraving@fb.com>
-> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> Co-developed-by: Chengming Zhou <zhouchengming@bytedance.com>
-> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
-> ---
-> changelogs in v2:
->  1) fix compiler warning for !CONFIG_KPROBES_ON_FTRACE.
-
-The original patch has already been pulled into the queue and tested.
-Please make a new patch that adds this update, as if your original
-patch has already been accepted.
-
-Feel free to base it off of:
-
- git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git  for-next
-
--- Steve
+On 8/5/20 9:47 AM, Dmitry Osipenko wrote:
+> 05.08.2020 19:33, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 8/5/20 7:19 AM, Dmitry Osipenko wrote:
+>>> 05.08.2020 17:05, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> 05.08.2020 16:46, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>> On Mon, Aug 03, 2020 at 08:42:24AM -0700, Sowjanya Komatineni wrote:
+>>>>>> With the split of MIPI calibration into tegra_mipi_calibrate() and
+>>>>>> tegra_mipi_wait(), MIPI clock is not kept enabled till the calibrati=
+on
+>>>>>> is done.
+>>>>>>
+>>>>>> So, this patch skips disabling MIPI clock after triggering start of
+>>>>>> calibration and disables it only after waiting for done status from
+>>>>>> the calibration logic.
+>>>>>>
+>>>>>> This patch renames tegra_mipi_calibrate() as
+>>>>>> tegra_mipi_start_calibration()
+>>>>>> and tegra_mipi_wait() as tegra_mipi_finish_calibration() to be inlin=
+e
+>>>>>> with their usage.
+>>>>>>
+>>>>>> As MIPI clock is left enabled and in case of any failures with CSI
+>>>>>> input
+>>>>>> streaming tegra_mipi_finish_calibration() will not get invoked.
+>>>>>> So added new API tegra_mipi_cancel_calibration() which disables
+>>>>>> MIPI clock
+>>>>>> and consumer drivers can call this in such cases.
+>>>>>>
+>>>>>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>> ---
+>>>>>>  =C2=A0 drivers/gpu/drm/tegra/dsi.c |=C2=A0 4 ++--
+>>>>>>  =C2=A0 drivers/gpu/host1x/mipi.c=C2=A0=C2=A0 | 19 ++++++++++-------=
+--
+>>>>>>  =C2=A0 include/linux/host1x.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=
+ 5 +++--
+>>>>>>  =C2=A0 3 files changed, 15 insertions(+), 13 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi=
+.c
+>>>>>> index 3820e8d..a7864e9 100644
+>>>>>> --- a/drivers/gpu/drm/tegra/dsi.c
+>>>>>> +++ b/drivers/gpu/drm/tegra/dsi.c
+>>>>>> @@ -694,11 +694,11 @@ static int tegra_dsi_pad_calibrate(struct
+>>>>>> tegra_dsi *dsi)
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 DSI_PAD_PREE=
+MP_PD(0x03) | DSI_PAD_PREEMP_PU(0x3);
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_dsi_writel(dsi, value, DSI_PAD=
+_CONTROL_3);
+>>>>>>  =C2=A0 -=C2=A0=C2=A0=C2=A0 err =3D tegra_mipi_calibrate(dsi->mipi);
+>>>>>> +=C2=A0=C2=A0=C2=A0 err =3D tegra_mipi_start_calibration(dsi->mipi);
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err < 0)
+>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return err;
+>>>>>>  =C2=A0 -=C2=A0=C2=A0=C2=A0 return tegra_mipi_wait(dsi->mipi);
+>>>>>> +=C2=A0=C2=A0=C2=A0 return tegra_mipi_finish_calibration(dsi->mipi);
+>>>>>>  =C2=A0 }
+>>>>>>  =C2=A0 =C2=A0 static void tegra_dsi_set_timeout(struct tegra_dsi *d=
+si,
+>>>>>> unsigned long bclk,
+>>>>>> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
+>>>>>> index e606464..b15ab6e 100644
+>>>>>> --- a/drivers/gpu/host1x/mipi.c
+>>>>>> +++ b/drivers/gpu/host1x/mipi.c
+>>>>>> @@ -293,17 +293,19 @@ int tegra_mipi_disable(struct
+>>>>>> tegra_mipi_device *dev)
+>>>>>>  =C2=A0 }
+>>>>>>  =C2=A0 EXPORT_SYMBOL(tegra_mipi_disable);
+>>>>>>  =C2=A0 -int tegra_mipi_wait(struct tegra_mipi_device *device)
+>>>>>> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device=
+)
+>>>>>> +{
+>>>>>> +=C2=A0=C2=A0=C2=A0 clk_disable(device->mipi->clk);
+>>>>> Do we need to do anything with the MIPI_CAL_CTRL and MIPI_CAL_STATUS
+>>>>> registers here? We don't clear the START bit in the former when the
+>>>>> calibration has successfully finished, but I suspect that's because
+>>>>> the bit is self-clearing. But I wonder if we still need to clear it
+>>>>> upon cancellation to make sure the calibration does indeed stop.
+>>>> Apparently there is no way to explicitly stop calibration other than t=
+o
+>>>> reset MIPI calibration block, but Sowjanya says this is unnecessary.
+>>>>
+>>>> Perhaps having a fixed delay before disabling clock could be enough to
+>>>> ensure that calibration is stopped before the clock is disabled?
+>>>>
+>>> Actually, there is a MIPI_CAL_ACTIVE bit in the status register. Maybe
+>>> it needs to be polled until it's unset?
+>> Confirmed with HW design team during this patch update.
+>>
+>> SW does not need to clear START bit and only write 1 takes effect to
+>> that bit.
+>>
+>> Also, no need to have delay or do any other register settings unclear as
+>> its FSM and there's nothing to get stuck.
+>>
+>> Also it goes thru small finite set of codes and by the time sensor
+>> programming happens for enabling streaming FSM will finish its
+>> calibration sequence much early and it will only wait for pads LP-11.
+>>
+>> So, during cancel we only need disable MIPI clock.
+>>
+> But there is no guarantee that cancel_calibration() couldn't be invoked
+> in the middle of the calibration process, hence FSM could freeze in an
+> intermediate state if it's running on the disabled MIPI clock, this
+> doesn't sound good.
+Actual calibration logic uses UART_FST_CAL clock which is always enabled
