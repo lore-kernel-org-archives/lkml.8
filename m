@@ -2,218 +2,147 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EACC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D57C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8492C22CE3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02EA822DA9
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:32:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FDcw2hYy"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="HeJ8bZXa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726517AbgHEQaB (ORCPT
+        id S1726167AbgHEQb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 12:30:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726217AbgHEQ1k (ORCPT
+        Wed, 5 Aug 2020 12:31:59 -0400
+Received: from sonic314-26.consmr.mail.ne1.yahoo.com ([66.163.189.152]:41290
+        "EHLO sonic314-26.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726996AbgHEQ03 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:27:40 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60F99C001FDF
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 09:16:35 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id w19so12525564plq.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 09:16:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=u5CgDyHZh9RmBIguTtW8MfajwzfpPjyTKuSzmrxdMU8=;
-        b=FDcw2hYy4Py5Axh/CsQVkdXe+aP99s6M7nxdI7CttWEb6+aTZkAl4+LtEgPhUg/N3D
-         q1urrsolKzUY1kbUM7OlOxtKIzD3QbqM1w1J4nVJSksUY/hoXHHDhA6h3OSl3U4tt0zs
-         ESZAK/asKRVCuVH2ut3bC7EwESYWpvmMn6+KQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=u5CgDyHZh9RmBIguTtW8MfajwzfpPjyTKuSzmrxdMU8=;
-        b=fFOoFKP95oHyQXEjyKUbTIUZqpBA/pDEFn3gHmJYkQ4hCz5Rk8J6QoT2O5E6KEV6ge
-         VozqKD7dWH2gql0SoiVKwyxdrdr3pu1m7M/J9h4qoYODTuZTMZRULa8UduuLGd4KaxLt
-         tyLeJo4V6WBiYNgWQ9GvHd5xdxjPzeyMnqiMQ3/aMTHRq9XZtMXh15QPF0nkg5Rw6sgv
-         g6OGplaio7+JRIViZILkIl5oSnies0PHo05+HDVYpgb8FtyM/hmKj1lG4Nwfr2llndyA
-         vWpbAiFvm6lTzNye0PaVFamVMTBH05uOrYs+Up3L9qB4Ev6rxmDoWGWq+Kj4UalaIIXN
-         jMwA==
-X-Gm-Message-State: AOAM5303DQLlDfXbQ+W/5JZUe9WW50g7gjm5cr8ti6gkouvQm6vaRuMR
-        Tr9KHUr6KJOMQN5LCcq8Xfdwag==
-X-Google-Smtp-Source: ABdhPJy50K2eKCG+xULNutmAaiRXfFfczTrysNIfy1hK7rGQ8HfVVR9CpYmGt/BqRTxpFl4aLLihxA==
-X-Received: by 2002:a17:902:780f:: with SMTP id p15mr3995867pll.56.1596644194594;
-        Wed, 05 Aug 2020 09:16:34 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
-        by smtp.gmail.com with ESMTPSA id f2sm4259734pfb.184.2020.08.05.09.16.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 09:16:34 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     swboyd@chromium.org, Alex Elder <elder@linaro.org>,
-        mka@chromium.org, Douglas Anderson <dianders@chromium.org>,
-        Andy Gross <agross@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] soc: qcom: aoss: Don't wait for IRQ if we might be in suspend/resume noirq
-Date:   Wed,  5 Aug 2020 09:16:10 -0700
-Message-Id: <20200805091141.1.I86b3faaecb0d82997b599b1300f879606c71e116@changeid>
-X-Mailer: git-send-email 2.28.0.163.g6104cc2f0b6-goog
+        Wed, 5 Aug 2020 12:26:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1596644748; bh=1cU3wjJlOPvRuw2818Qutqs4mQWnaGRISNeePAjFogU=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=HeJ8bZXaFWiKJIzzL3gho1AU0tgiQ1e+Kb08in02P1pufoU7rhEns/aCYmNdCZAHT4DQBoS4Cr3I8K9oxvyjxLE9gG2ed/JjWYEyiJcFEpUziw0XGGP0cuWqHvVvdTHKUoko0LrzjqtZtH8Dd7J57tZ4BodEutf0BKR6TYcd90I/3lBq5Rj6w1NLuNAzhFQm3Yn74yb/YdsG3vN1Z+OpIsg9ISa+Qc71AQS0ZkVNA2cDmJOefm7AuBtmrDG7LjBtVg4RCoaD+T0jWWAysaCkUdueq68berw3vBnA7mcncCyJhYXYz6L1cY67fKjYgZQqdaR+qzmPmR/1XMeuMozf3g==
+X-YMail-OSG: iMtRnVsVM1nBFaQ4NlnavoaLZ.x_8bBSps_sPqYvR6j1jlYcZJRhJZp65eLXgdE
+ q9ApMJrEobSvGXllUAQTERK4waFhlfC6Mw18jWRv3d4F3t_mwWDayC8PJA1Aj8dUzUjY.G1iHHsr
+ E5PU7woRCZ25BLBBFU_fCg21.oa.KU6.xTeDQsUOPd0R38DzROYXZai7oGC8j7RfILJodifwka4a
+ 9.DH1xziHMKmGpcT1UA4RkuIPvCXwQYmDqcE1JzzWD3.IiMX.tGfAnfROeYFRooiuQnG1K4BVioT
+ Tpgnv0eB4m76wEOdOnrhNMk.Yjb9swgY74lxanI5peFxYoTo2BywAn4zsR0ukS2eseA3nTQdSLLF
+ lLafs4oEPPUwKKCFesH1XAzOEUH2TFiDCnPIHGi9_6MT9rN1FNN_cwJ__4VSbt8tQOpeQ3w3sHwX
+ FaLPA7A_UtFPgw46T8PahKmjre0uyB2vklwCgwIanUt0GzDLCjYPkzoBkkj0tjnaYEXybt_nevxn
+ xrh1L9Usez8iRMlr_O0hD.D5qulo.Dp5r3ry2UQ_Z2m1S6M.g5tsbAaoms3XhMkW6JEmdN2UpD2V
+ QMDaiBQSIjE8tEIpk6gsZplzC5Z0EnIaPhcOxxJYfhr7f1KvSBOdqNW.aFnUR7JEyXkTzm3dHR.K
+ M45tNrYI2FWF4fcfLDswyAoM82xogimHXTsnvN3eDQ7EVitTcSn4DcWlWy1zhs_VORG1oiYw8K6B
+ 66NkLqxPZqAhep4hRanKfuGSXjeYsS4funYv80RXiqEyYCXFuTHXi4kVqzoS9Ao.51miCllCOLbs
+ W8IZKld99Ngl4NxhQ6yiihJRJE.3r4nyXMVrKxJ17WncVYJRm_Olq4GWGlC_odAqZ096jFP1adYp
+ 0eruq27ZgLFCqO0SG.cUnyximRlQPkETs6VvApCn9knzzt.cnpL94y2HeYYUsmhbnC4d1fLwLRr9
+ itaS6XiJsbwKiXz0rJmJ1FYUUbRLRALK5AOLNHQ9zIzs7KiiPY6Mrf2LwhFOnqw2ZRcaCAtfq1wD
+ L6Gzi36AkigAhdhYsma7_4Y7hG2JkN6k9_n9rggASFmj0DIFEMwBzyMR9HyeSc2VHDUNx3avC1a0
+ ZAmtg2kAdPOIhb4jxJvHZRuMYBcGKhiqmpsnCwSA3YlMFnH8Neq82OO_Y7yMtNxhnQzBABRIBlVk
+ UIyvHfLpuWx0X6cvEHrZB1MSQCM74nc3dLUkNAGExhF5JyLLB8eEeqyuDECr5jm50itdW0Gx1eaw
+ yliYZaSh2ALhZNFHOdo1Jv3S.9k6bFq39_YTMU1K.VzS2b7ThUAFaWbbNiYHkNQKZQ6jFzG.B0bm
+ JvjuabJA.mNyuekH95nCF46Y6YV2sWp4cQzG0g2sv21s9IlM5iyXoNtqsuA--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.ne1.yahoo.com with HTTP; Wed, 5 Aug 2020 16:25:48 +0000
+Received: by smtp417.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 05f98be0901e51aef2f5e5eae571f525;
+          Wed, 05 Aug 2020 15:36:40 +0000 (UTC)
+Subject: Re: [PATCH v6 0/4] LSM: Measure security module data
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        zohar@linux.ibm.com, stephen.smalley.work@gmail.com
+Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Casey Schaufler <casey@schaufler-ca.com>
+References: <20200805004331.20652-1-nramas@linux.microsoft.com>
+ <f3971f35-309d-c3e5-9126-69add7ad4c11@schaufler-ca.com>
+ <50587a3e-bcb5-c68e-c16c-41baf68b4d4a@linux.microsoft.com>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Message-ID: <c7c168f2-e30b-d2c5-abcb-1b6919197474@schaufler-ca.com>
+Date:   Wed, 5 Aug 2020 08:36:40 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
+In-Reply-To: <50587a3e-bcb5-c68e-c16c-41baf68b4d4a@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Mailer: WebService/1.1.16436 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.7)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Running suspend/resume tests on a sc7180-based board with a modem I
-found that both system suspend and system resume would hang for 1
-second.  These messages indicate where:
+On 8/4/2020 6:14 PM, Lakshmi Ramasubramanian wrote:
+> On 8/4/20 6:04 PM, Casey Schaufler wrote:
+>> On 8/4/2020 5:43 PM, Lakshmi Ramasubramanian wrote:
+>>> Critical data structures of security modules are currently not measured.
+>>> Therefore an attestation service, for instance, would not be able to
+>>> attest whether the security modules are always operating with the policies
+>>> and configuration that the system administrator had setup. The policies
+>>> and configuration for the security modules could be tampered with by
+>>> malware by exploiting kernel vulnerabilities or modified through some
+>>> inadvertent actions on the system. Measuring such critical data would
+>>> enable an attestation service to better assess the state of the system.
+>>
+>> I still wonder why you're calling this an LSM change/feature when
+>> all the change is in IMA and SELinux. You're not putting anything
+>> into the LSM infrastructure, not are you using the LSM infrastructure
+>> to achieve your ends. Sure, you *could* support other security modules
+>> using this scheme, but you have a configuration dependency on
+>> SELinux, so that's at best going to be messy. If you want this to
+>> be an LSM "feature" you need to use the LSM hooking mechanism.
+>
+>>
+>> I'm not objecting to the feature. It adds value. But as you've
+>> implemented it it is either an IMA extension to SELinux, or an
+>> SELiux extension to IMA. Could AppArmor add hooks for this without
+>> changing the IMA code? It doesn't look like it to me.
+>
+> The check in IMA to allow the new IMA hook func LSM_STATE and LSM_POLICY when SELinux is enabled is just because SELinux is the only security module using these hooks now.
+>
+> To enable AppArmor, for instance, to use the new IMA hooks to measure state and policy would just require adding the check for CONFIG_SECURITY_APPARMOR. Other than that, there are no IMA changes needed to support AppArmor or other such security modules.
 
-  genpd genpd:0:4080000.remoteproc: calling genpd_suspend_noirq+0x0/0x2c @ 18659, parent: none
-  genpd genpd:0:4080000.remoteproc: genpd_suspend_noirq+0x0/0x2c returned 0 after 987917 usecs
+This is exactly what I'm objecting to. What if a system has both SELinux
+and AppArmor compiled in? What if it has both enabled?
 
-Adding a printout, I found that we were working with the power domain
-where "res->pd.name" was "modem".
+>
+> Please see Patch 1/4
+>
+> +            else if (IS_ENABLED(CONFIG_SECURITY_SELINUX) &&
+> +                 strcmp(args[0].from, "LSM_STATE") == 0)
+> +                entry->func = LSM_STATE;
+> +            else if (IS_ENABLED(CONFIG_SECURITY_SELINUX) &&
+> +                 strcmp(args[0].from, "LSM_POLICY") == 0)
+> +                entry->func = LSM_POLICY;
+>
+> And, if early boot measurement is needed for AppArmor the following change in IMA's Kconfig
+>
+> Patch 4/4
+>
+> +config IMA_QUEUE_EARLY_BOOT_DATA
+>      bool
+> +    depends on SECURITY_SELINUX || (IMA_MEASURE_ASYMMETRIC_KEYS && SYSTEM_TRUSTED_KEYRING)
+>      default y
+>
+> If you think calling this an "LSM feature" is not appropriate, please suggest a better phrase.
 
-I found that we were hanging on the wait_event_interruptible_timeout()
-call in qmp_send().  Specifically we'd wait for the whole 1 second
-timeout to hit, then we'd notice that our condition was true and would
-continue on our merry way.  Sure enough, I could confirm that
-wait_event_interruptible_timeout() was returning "1" which indicates
-that the condition evaluated to true and we also timed out.
+In the code above you are under CONFIG_SECURITY_SELINUX.
+I would suggest that it's an SELinux feature, so you should
+be using SELINUX_STATE and SELINUX_POLICY, as I suggested
+before. Just because SELinux has state and policy to measure
+doesn't mean that a different module might not have other data,
+such as history, that should be covered as well.
 
-Dumping the stack at the time of the failure made the problem clear.
-Specifically the stack looked like:
-   qmp_send+0x1cc/0x210
-   qmp_pd_power_toggle+0x90/0xb8
-   qmp_pd_power_off+0x20/0x2c
-   genpd_sync_power_off+0x80/0x12c
-   genpd_finish_suspend+0xd8/0x108
-   genpd_suspend_noirq+0x20/0x2c
-   dpm_run_callback+0xe0/0x1d4
-   __device_suspend_noirq+0xfc/0x200
-   dpm_suspend_noirq+0x174/0x3bc
-   suspend_devices_and_enter+0x198/0x8a0
-   pm_suspend+0x550/0x6f4
-As you can see we're running from the "noirq" callback.  Looking at
-what was supposed to wake us up, it was qmp_intr() (our IRQ handler).
-Doh!
+I realize that IMA already has compile time dependencies to
+determine which xattrs to measure. There's no reason that
+the xattr list couldn't be determined at boot time, with
+each security module providing the XATTR_NAME values it
+uses.
 
-I believe that the correct fix here is to assume that our power_off /
-power_on functions might be called at "noirq" time and just always
-poll if we're called via that path.  Other paths can continue to wait
-for the IRQ.
-
-Fixes: 2209481409b7 ("soc: qcom: Add AOSS QMP driver")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-This problem was observed on the Chrome OS 5.4 tree which has some
-extra patches in it compared to mainline.  The top of the current
-Qualcomm tree didn't have the delay, but that's probably because
-everything isn't fully enabled there yet.  I at least confirmed that
-this patch doesn't actually _break_ anything on mainline, though.
-
- drivers/soc/qcom/qcom_aoss.c | 26 +++++++++++++++++++-------
- 1 file changed, 19 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/soc/qcom/qcom_aoss.c b/drivers/soc/qcom/qcom_aoss.c
-index ed2c687c16b3..818cdf74a267 100644
---- a/drivers/soc/qcom/qcom_aoss.c
-+++ b/drivers/soc/qcom/qcom_aoss.c
-@@ -6,6 +6,7 @@
- #include <linux/clk-provider.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-+#include <linux/iopoll.h>
- #include <linux/mailbox_client.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-@@ -215,6 +216,8 @@ static bool qmp_message_empty(struct qmp *qmp)
-  * @qmp: qmp context
-  * @data: message to be sent
-  * @len: length of the message
-+ * @noirq: If true we might have been called from the "noirq" suspend/resume
-+ *         callbacks, so fall back to polling mode for waiting for completion.
-  *
-  * Transmit @data to AOSS and wait for the AOSS to acknowledge the message.
-  * @len must be a multiple of 4 and not longer than the mailbox size. Access is
-@@ -222,11 +225,12 @@ static bool qmp_message_empty(struct qmp *qmp)
-  *
-  * Return: 0 on success, negative errno on failure
-  */
--static int qmp_send(struct qmp *qmp, const void *data, size_t len)
-+static int qmp_send(struct qmp *qmp, const void *data, size_t len, bool noirq)
- {
- 	long time_left;
- 	size_t tlen;
- 	int ret;
-+	bool is_empty;
- 
- 	if (WARN_ON(len + sizeof(u32) > qmp->size))
- 		return -EINVAL;
-@@ -245,8 +249,16 @@ static int qmp_send(struct qmp *qmp, const void *data, size_t len)
- 	tlen = readl(qmp->msgram + qmp->offset);
- 	qmp_kick(qmp);
- 
--	time_left = wait_event_interruptible_timeout(qmp->event,
--						     qmp_message_empty(qmp), HZ);
-+	/*
-+	 * We may be called from a suspend/resume "noirq" context.  In such
-+	 * a case we have no choice but to poll.
-+	 */
-+	if (noirq)
-+		time_left = readx_poll_timeout_atomic(qmp_message_empty, qmp,
-+						      is_empty, is_empty, 1U, 1000000U);
-+	else
-+		time_left = wait_event_interruptible_timeout(qmp->event,
-+							     qmp_message_empty(qmp), HZ);
- 	if (!time_left) {
- 		dev_err(qmp->dev, "ucore did not ack channel\n");
- 		ret = -ETIMEDOUT;
-@@ -267,7 +279,7 @@ static int qmp_qdss_clk_prepare(struct clk_hw *hw)
- 	static const char buf[QMP_MSG_LEN] = "{class: clock, res: qdss, val: 1}";
- 	struct qmp *qmp = container_of(hw, struct qmp, qdss_clk);
- 
--	return qmp_send(qmp, buf, sizeof(buf));
-+	return qmp_send(qmp, buf, sizeof(buf), false);
- }
- 
- static void qmp_qdss_clk_unprepare(struct clk_hw *hw)
-@@ -275,7 +287,7 @@ static void qmp_qdss_clk_unprepare(struct clk_hw *hw)
- 	static const char buf[QMP_MSG_LEN] = "{class: clock, res: qdss, val: 0}";
- 	struct qmp *qmp = container_of(hw, struct qmp, qdss_clk);
- 
--	qmp_send(qmp, buf, sizeof(buf));
-+	qmp_send(qmp, buf, sizeof(buf), false);
- }
- 
- static const struct clk_ops qmp_qdss_clk_ops = {
-@@ -321,7 +333,7 @@ static int qmp_pd_power_toggle(struct qmp_pd *res, bool enable)
- 	snprintf(buf, sizeof(buf),
- 		 "{class: image, res: load_state, name: %s, val: %s}",
- 		 res->pd.name, enable ? "on" : "off");
--	return qmp_send(res->qmp, buf, sizeof(buf));
-+	return qmp_send(res->qmp, buf, sizeof(buf), true);
- }
- 
- static int qmp_pd_power_on(struct generic_pm_domain *domain)
-@@ -438,7 +450,7 @@ static int qmp_cdev_set_cur_state(struct thermal_cooling_device *cdev,
- 			qmp_cdev->name,
- 			cdev_state ? "on" : "off");
- 
--	ret = qmp_send(qmp_cdev->qmp, buf, sizeof(buf));
-+	ret = qmp_send(qmp_cdev->qmp, buf, sizeof(buf), false);
- 
- 	if (!ret)
- 		qmp_cdev->state = cdev_state;
--- 
-2.28.0.163.g6104cc2f0b6-goog
-
+>
+> But like I said above, with minimal change in IMA other security modules can be supported to measure STATE and POLICY data.
+>
+>  -lakshmi
+>
+>
