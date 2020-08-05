@@ -3,183 +3,181 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EE8C433E0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69455C433DF
 	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3C42086A
+	by mail.kernel.org (Postfix) with ESMTP id 3FB3920792
 	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:44:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MAKSAnD0"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="FGaykwiF";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="U809+Xbe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgHEBos (ORCPT
+        id S1726198AbgHEBop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 21:44:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgHEBom (ORCPT
+        Tue, 4 Aug 2020 21:44:45 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:40233 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725904AbgHEBom (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 4 Aug 2020 21:44:42 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AFDAC06174A;
-        Tue,  4 Aug 2020 18:44:42 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 17so1407181pfw.9;
-        Tue, 04 Aug 2020 18:44:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=H7BJuPQcZ5V/7UBDAvP8UACTKplyPBFmmLy/DLb8wI8=;
-        b=MAKSAnD05LKUMQ8kuUvEdsOfKICcqnCV29ChGGtTJNnr4IpU5YOKzBryRhhhg54ib7
-         kdZeZT+5+GjlzQM6LCeSo2zj5q1kj8XS90fPAjb2tNOTt9g9C+a6VE2J98pi/bAa4xwg
-         eXwQIfGW+fr671TiIH8FcS0JKWhu2jtTpS9bBtQG6O5pPyE1jJnhvYqd+/5koSqr5iIN
-         SsO7yy6IiPv+7cEk10gBZ8m0keJpkcNGLMTqt5W+cBiY0cLfQXGrn3LK5pBzUqwyMAJa
-         6m9banQHsTzcoaKEHMvPVyhyT06LQDul29CTt2CqsXOx3PuDAqT/JLOSRDzEGi1vfbqv
-         lvdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=H7BJuPQcZ5V/7UBDAvP8UACTKplyPBFmmLy/DLb8wI8=;
-        b=gMVaLEeIsh8YSktcihiKkENv3giubhrWzuqObK16XYCUIysZ9S1lDhvGidMJVXbR6q
-         PSfNSOPtGIwYR//XOgsfJ5BINibWq2zGplJ/Y4gqG+Ihmq/9Qyuld5vkkMECFYddOelM
-         X+XmW6O33Kk0RadtgJEmYzvcCT08B1RXKbJWiWl8We/OOf2J9VhGexY+XmRQk7fnkYPA
-         HiPWghvobSko1aUGq3PCUbAYmtRHqNTKYgfa+Z7wnigXb08k2JNdgHXadawOTudO4VGv
-         rgf2R0zMuZHfxvUiiQHu2oLdK62U0nKnCdBL8uEP3OIu1w5V6MfNMH8NyAHWSKxegAt/
-         ASxA==
-X-Gm-Message-State: AOAM533zSYRhSQtIoXe2cUCt6+zY02TpTSotW+7x3l2dnjQvhY8RTdcy
-        PH9rLSpISpmTyoWdqygCJ1CSo2MO
-X-Google-Smtp-Source: ABdhPJwIk329Jse0FHZbrQnU0oOrRPnSdv1tfi6sxSo70DizzLpuKPvIUSHCr/ieY3v0WidLQkb7Kg==
-X-Received: by 2002:aa7:9e5d:: with SMTP id z29mr1127451pfq.122.1596591881763;
-        Tue, 04 Aug 2020 18:44:41 -0700 (PDT)
-Received: from ?IPv6:2404:7a87:83e0:f800:d05c:a260:d7a2:2303? ([2404:7a87:83e0:f800:d05c:a260:d7a2:2303])
-        by smtp.gmail.com with ESMTPSA id c9sm510042pjr.35.2020.08.04.18.44.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Aug 2020 18:44:41 -0700 (PDT)
-Subject: Re: [PATCH v2] exfat: integrates dir-entry getting and validation
-To:     Namjae Jeon <namjae.jeon@samsung.com>,
-        Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp
-Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
-        Motai.Hirotaka@aj.MitsubishiElectric.co.jp,
-        'Sungjong Seo' <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CGME20200715012304epcas1p23e9f45415afc551beea122e4e1bdb933@epcas1p2.samsung.com>
- <20200715012249.16378-1-kohada.t2@gmail.com>
- <015d01d6663e$1eb8c780$5c2a5680$@samsung.com>
- <TY2PR01MB287579A95A7994DE2B34E425904D0@TY2PR01MB2875.jpnprd01.prod.outlook.com>
- <001c01d669fe$8ab7cf80$a0276e80$@samsung.com>
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-Message-ID: <05c5c1e9-2ccf-203d-5e8c-1c951004a7f9@gmail.com>
-Date:   Wed, 5 Aug 2020 10:44:36 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id CDDA65C0095;
+        Tue,  4 Aug 2020 21:44:39 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Tue, 04 Aug 2020 21:44:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        subject:to:cc:references:from:message-id:date:mime-version
+        :in-reply-to:content-type:content-transfer-encoding; s=fm3; bh=u
+        06P7z6m1kNpgFr6hDrql2GLhGDNcpuRMO8kmQxO9IY=; b=FGaykwiFqALI4h2Po
+        lviK7TdIblwkKnY7+gXH8B+Bvhcs5VtlAX/uvDjTDLaqaD6EEFyJmhVYcBTHUfWx
+        NR+gB9cwXW5RnR5NRTTHkuCMHUD/WK3RwhhUjaBz2u10qp429qEpIpEBjsXiMtEd
+        uvDKrsWkcQ9A9/ervYmB9Yb9OE1hsTdH6tC6jqshe8ypRf22odD6c9xeADX3iL9z
+        SP5ePgo+9Vf0wY9b9MMFlfiGWzS7tW9jo6tChVfMJprHmaKf875C/U7e1lzX8YQb
+        QJyXBZIAFz5mjkcMUUQ7qfPcTmU2z52uZNfJQnGL6d8xqahZpS76wLGjtp/Mog8q
+        24CQg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=u06P7z6m1kNpgFr6hDrql2GLhGDNcpuRMO8kmQxO9
+        IY=; b=U809+Xbe4uwlrO6wxTgLkC2OPuDQKNYrquk4RBg9QoikXlOFSoGJyM9OW
+        ECjZtYZOI0EQ7F21ujvgXrrrPBpu7I2aOTnUSDlA7wacAeCWQQS+rhq+yu4WCxoh
+        X4X5Xfl2KWKmui3GoHRPo1Sb40f+Du4OGoO5lTbi6CgT7CEeA/HbNhBYTB0dY7vy
+        FEbASgvS2kV9cknMpu3UILjOMELA3IjfPvTp1x0XaE9kgJ09A57WgJzCivQVsh9r
+        4l5Kz6jINoPdW23BE9juF1lXGW/8xfCZ3BBwZ4/Zr7b3CFlDXTuRykQe/0DIcXsK
+        WfpasqVmb/pHtrfygwDxfcuvBzCLw==
+X-ME-Sender: <xms:Bw8qXwhWOeGDSCOwzubO2tXpMXRKk4nAIss6JAoZD5Li_ULTjSfEVA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrjeejgdehtdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefuvfhfhffkffgfgggjtgfgsehtjeertddtfeejnecuhfhrohhmpefurghmuhgv
+    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucggtf
+    frrghtthgvrhhnpefgveffteelheffjeeukedvkedviedtheevgeefkeehueeiieeuteeu
+    gfettdeggeenucfkphepjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghn
+    ugdrohhrgh
+X-ME-Proxy: <xmx:Bw8qX5DtCvBBmFz01qoxKKdyXSly1m9oRs-YJX9l6qVkL4pTQ2eAkw>
+    <xmx:Bw8qX4HeNt5vv9RqGAHuLLFuVTMj-4jgUk9d_VsuG_GmwxnM0a50qw>
+    <xmx:Bw8qXxQPFCua0ZpfuoOUvki510f8vhthjpa5O2JX_77UOEB6GMfIMw>
+    <xmx:Bw8qX4_UZ4O6_Zdd5f7kvDD_41aLKJfD-lCnUpd6qKS6_hS41nw7Og>
+Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 08CB830600A3;
+        Tue,  4 Aug 2020 21:44:39 -0400 (EDT)
+Subject: Re: [PATCH v2] scsi: 3w-9xxx: Fix endianness issues found by sparse
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Adam Radford <aradford@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200730220750.18158-1-samuel@sholland.org>
+ <CAK8P3a2p7dWhhCqAYF_Zos-X-zBK+id-xO5hPu2fRTbNyPo9Xg@mail.gmail.com>
+ <29ea8d0f-bcab-9ffd-0e2f-f022911f4bf2@sholland.org>
+ <CAK8P3a0xSyyaLHziuv4JKimUggF96frwLPKmjQ4G9VBWRW2EMg@mail.gmail.com>
+From:   Samuel Holland <samuel@sholland.org>
+Message-ID: <0bd43d61-4d9a-40cb-27c6-18aaf7f58b48@sholland.org>
+Date:   Tue, 4 Aug 2020 20:45:13 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <001c01d669fe$8ab7cf80$a0276e80$@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CAK8P3a0xSyyaLHziuv4JKimUggF96frwLPKmjQ4G9VBWRW2EMg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
->>>> +	i = 2;
->>>> +	while ((ep = exfat_get_validated_dentry(es, i++, TYPE_NAME))) {
->>> As Sungjong said, I think that TYPE_NAME seems right to be validated in exfat_get_dentry_set().
+On 8/3/20 9:02 AM, Arnd Bergmann wrote:
+> On Mon, Aug 3, 2020 at 5:42 AM Samuel Holland <samuel@sholland.org> wrote:
+>> On 7/31/20 2:29 AM, Arnd Bergmann wrote:
+>>> On Fri, Jul 31, 2020 at 12:07 AM Samuel Holland <samuel@sholland.org> wrote:
+>>>>
+>>>> The main issue observed was at the call to scsi_set_resid, where the
+>>>> byteswapped parameter would eventually trigger the alignment check at
+>>>> drivers/scsi/sd.c:2009. At that point, the kernel would continuously
+>>>> complain about an "Unaligned partial completion", and no further I/O
+>>>> could occur.
+>>>>
+>>>> This gets the controller working on big endian powerpc64.
+>>>>
+>>>> Signed-off-by: Samuel Holland <samuel@sholland.org>
+>>>> ---
+>>>>
+>>>> Changes since v1:
+>>>>  - Include changes to use __le?? types in command structures
+>>>>  - Use an object literal for the intermediate "schedulertime" value
+>>>>  - Use local "error" variable to avoid repeated byte swapping
+>>>>  - Create a local "length" variable to avoid very long lines
+>>>>  - Move byte swapping to TW_REQ_LUN_IN/TW_LUN_OUT to avoid long lines
+>>>>
+>>>
+>>> Looks much better, thanks for the update. I see one more issue here
+>>>>  /* Command Packet */
+>>>>  typedef struct TW_Command {
+>>>> -       unsigned char opcode__sgloffset;
+>>>> -       unsigned char size;
+>>>> -       unsigned char request_id;
+>>>> -       unsigned char unit__hostid;
+>>>> +       u8      opcode__sgloffset;
+>>>> +       u8      size;
+>>>> +       u8      request_id;
+>>>> +       u8      unit__hostid;
+>>>>         /* Second DWORD */
+>>>> -       unsigned char status;
+>>>> -       unsigned char flags;
+>>>> +       u8      status;
+>>>> +       u8      flags;
+>>>>         union {
+>>>> -               unsigned short block_count;
+>>>> -               unsigned short parameter_count;
+>>>> +               __le16  block_count;
+>>>> +               __le16  parameter_count;
+>>>>         } byte6_offset;
+>>>>         union {
+>>>>                 struct {
+>>>> -                       u32 lba;
+>>>> -                       TW_SG_Entry sgl[TW_ESCALADE_MAX_SGL_LENGTH];
+>>>> -                       dma_addr_t padding;
+>>>> +                       __le32          lba;
+>>>> +                       TW_SG_Entry     sgl[TW_ESCALADE_MAX_SGL_LENGTH];
+>>>> +                       dma_addr_t      padding;
+>>>
+>>>
+>>> The use of dma_addr_t here seems odd, since this is neither endian-safe nor
+>>> fixed-length. I see you replaced the dma_addr_t in TW_SG_Entry with
+>>> a variable-length fixed-endian word. I guess there is a chance that this is
+>>> correct, but it is really confusing. On top of that, it seems that there is
+>>> implied padding in the structure when built with a 64-bit dma_addr_t
+>>> on most architectures but not on x86-32 (which uses 32-bit alignment for
+>>> 64-bit integers). I don't know what the hardware definition is for TW_Command,
+>>> but ideally this would be expressed using only fixed-endian fixed-length
+>>> members and explicit padding.
 >>
->> First, it is possible to correctly determine that "Immediately follow the Stream Extension directory
->> entry as a consecutive series"
->> whether the TYPE_NAME check is implemented here or exfat_get_dentry_set().
->> It's functionally same, so it is also right to validate in either.
->>
->> Second, the current implementation does not care for NameLength field, as I replied to Sungjong.
->> If name is not terminated with zero, the name will be incorrect.(With or without my patch) I think
->> TYPE_NAME and NameLength validation should not be separated from the name extraction.
->> If validate TYPE_NAME in exfat_get_dentry_set(), NameLength validation and name extraction should also
->> be implemented there.
->> (Otherwise, a duplication check with exfat_get_dentry_set() and here.) I will add NameLength
->> validation here.
-> Okay.
+>> All of the command structures are packed, due to the "#pragma pack(1)" earlier
+>> in the file. So alignment is not an issue. This dma_addr_t member _is_ the
+>> explicit padding to make sizeof(TW_Command) -
+>> sizeof(TW_Command.byte8_offset.{io,param}.sgl) equal TW_COMMAND_SIZE * 4. And
+>> indeed the structure is expected to be a different size depending on
+>> sizeof(dma_addr_t).
+> 
+> Ah, so only the first few members are accessed by hardware and the
+> last union is only accessed by the OS then? In that case I suppose it is
+> all fine, but I would also suggest removing the "#pragma packed"
+> to get somewhat more efficient access on systems that have  problems
+> with misaligned accesses.
 
-Thank you for your understanding.
+I don't know what part the hardware accesses; everything I know about the
+hardware comes from reading the driver.
 
->> Therefore, TYPE_NAME validation here should not be omitted.
->>
->> Third, getting dentry and entry-type validation should be integrated.
->> These no longer have to be primitive.
->> The integration simplifies caller error checking.
+The problem with removing the "#pragma pack(1)" is that the structure is
+inherently misaligned: byte8_offset.io.sgl starts at offset 12, but it may begin
+with a __le64.
 
-
-
->>>> diff --git a/fs/exfat/file.c b/fs/exfat/file.c index
->>>> 6707f3eb09b5..b6b458e6f5e3 100644
->>>> --- a/fs/exfat/file.c
->>>> +++ b/fs/exfat/file.c
->>>> @@ -160,8 +160,8 @@ int __exfat_truncate(struct inode *inode, loff_t new_size)
->>>>   				ES_ALL_ENTRIES);
->>>>   		if (!es)
->>>>   			return -EIO;
->>>> -		ep = exfat_get_dentry_cached(es, 0);
->>>> -		ep2 = exfat_get_dentry_cached(es, 1);
->>>> +		ep = exfat_get_validated_dentry(es, 0, TYPE_FILE);
->>>> +		ep2 = exfat_get_validated_dentry(es, 1, TYPE_STREAM);
->>> TYPE_FILE and TYPE_STREAM was already validated in exfat_get_dentry_set().
->>> Isn't it unnecessary duplication check ?
->>
->> No, as you say.
->> Although TYPE is specified, it is not good not to check the null of ep/ep2.
->> However, with TYPE_ALL, it becomes difficult to understand what purpose ep/ep2 is used for.
->> Therefore, I proposed adding ep_file/ep_stream to es, and here
->> 	ep = es->ep_file;
->> 	ep2 = es->ep_stream;
->>
->> How about this?
-> You can factor out exfat_get_dentry_cached() from exfat_get_validated_dentry() and use it here.
-
-I actually implemented and use it, but I feel it is not so good.
-- Since there are two functions to get from es, so it's a bit confusing which one is better for use.
-- There was the same anxiety as using exfat_get_validated_dentry() in that there is no NULL check of
-   ep got with exfat_get_dentry_cached().
-
-Whichever function I use, there are places where I check the return value and where I don't.
-This will cause  missing entry-type validation or missing return value check,in the future.
-I think it's easier to use by including it as a validated object in the member of exfat_entry_set_cache.
-
-> And then, You can rename ep and ep2 to ep_file and ep_stream.
-
-I propose a slightly different approach than last.
-Add members to exfat_entry_set_cache as below.
-     struct exfat_de_file *de_file;
-     struct exfat_de_stream *de_stream;
-And, use these as below.
-     es->de_file->attr = cpu_to_le16(exfat_make_attr(inode));
-     es->de_stream->valid_size = cpu_to_le64(on_disk_size);
-
-exfat_de_file/exfat_de_stream corresponds to the file dir-entry/stream dir-enty structure in the exfat_dentry union.
-We can use the validated valid values ​​directly.
-Furthermore, these are strongly typed.
-
-
->> Or is it better to specify TYPE_ALL?
->>
->>
->> BTW
->> It's been about a month since I posted this patch.
->> In the meantime, I created a NameLength check and a checksum validation based on this patch.
->> Can you review those as well?
-> Let me see the patches.
-
-Thanks a lot.
-For now, I will create and post a V3 patch with this proposal.
-After that, I will recreate the NameLength check and a checksum validation patches based on the V3 patch and post them.
-(Should I post these as an RFC?)
-
-BR
----
-Kohada Tetsuhiro <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+Regards,
+Samuel
