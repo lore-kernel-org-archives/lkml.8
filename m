@@ -2,68 +2,93 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFFAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F75C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B19722CE3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:05:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596603920;
-	bh=OjRX/AkOYwHI3PVaNPRom5kqGEHWfam0Bnk0kuLcvUw=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Y15+9rUb5NK5PbGpepVIiMMcaOqM/aF3NqB67WKWJdk7mHy+whp3YYd1lFPQwV4g/
-	 QAlwgIjmSpvJK3wMTM3HaGFu/5O1bN7Xa1R9cMZOZbGsVJq5J+EHp6RvmHp5/43g0z
-	 YuZIlB7CRgzU0rqFC6STuZBuBntGryBcdNeWJp/0=
+	by mail.kernel.org (Postfix) with ESMTP id 61B7122CB3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:08:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="GG177QaJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbgHEFFM (ORCPT
+        id S1726128AbgHEFIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 01:05:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42698 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 01:08:35 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:43620 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbgHEFFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 01:05:09 -0400
-Subject: Re: [GIT pull] core/entry for v5.9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596603909;
-        bh=OjRX/AkOYwHI3PVaNPRom5kqGEHWfam0Bnk0kuLcvUw=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Kt00RcocfRxZrvR2qeaR10+shB9bwYxEwlW9Gnb8QKE9hr5KWGro8tBaPcy2EQvhI
-         vduQIIcs8lwLYxqF66iycaC6oxEJTeOsdi222QLRldWOOeSHOpjFTGGziOiOqzfvdx
-         kOvBICHG56MP87gHP3J5dkCpKQX3LrbUIxXa+gDQ=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <159652931338.11821.6870342948950391828.tglx@nanos.tec.linutronix.de>
-References: <159652931338.11821.6870342948950391828.tglx@nanos.tec.linutronix.de>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <159652931338.11821.6870342948950391828.tglx@nanos.tec.linutronix.de>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
- core-entry-2020-08-04
-X-PR-Tracked-Commit-Id: 3135f5b73592988af0eb1b11ccbb72a8667be201
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d25c8be67481aaaa060782d7e8b84bc0d0355922
-Message-Id: <159660390902.15119.9927779829664318147.pr-tracker-bot@kernel.org>
-Date:   Wed, 05 Aug 2020 05:05:09 +0000
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
+        id S1725372AbgHEFIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 01:08:34 -0400
+Received: from nazgul.tnic (unknown [78.130.214.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3ADE11EC011B;
+        Wed,  5 Aug 2020 07:08:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1596604113;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=1u26XeRiQkxkUBVyq1C3UUK8HOmJUYiFSDMJ8RBojNE=;
+        b=GG177QaJonWAuUC13SR3y4ds2cnXadbPEM2YBqg3gbVe4APx1/ZqJxFvqeBQ429E56gssp
+        hnXDUzgMZByTf4j+W575pNkPeQKZqZgMibU04gt1TV9zIVpPW3WqNAm3a0qlQ0W5/OorFV
+        ta4ilidH/Xn1hV0nEokEGV9fcYhEfRs=
+Date:   Wed, 5 Aug 2020 07:08:08 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     hpa@zytor.com
+Cc:     Borislav Petkov <bp@suse.de>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Cathy Zhang <cathy.zhang@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Kyung Min Park <kyung.min.park@intel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-edac@vger.kernel.org
+Subject: Re: [PATCH v2] x86/cpu: Use SERIALIZE in sync_core() when available
+Message-ID: <20200805050808.GC9127@nazgul.tnic>
+References: <20200805021059.1331-1-ricardo.neri-calderon@linux.intel.com>
+ <20200805044840.GA9127@nazgul.tnic>
+ <47A60E6A-0742-45FB-B707-175E87C58184@zytor.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <47A60E6A-0742-45FB-B707-175E87C58184@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 04 Aug 2020 08:21:53 -0000:
+On Tue, Aug 04, 2020 at 09:58:25PM -0700, hpa@zytor.com wrote:
+> Because why use an alternative to jump over one instruction?
+>
+> I personally would prefer to have the IRET put out of line
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-entry-2020-08-04
+Can't yet - SERIALIZE CPUs are a minority at the moment.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d25c8be67481aaaa060782d7e8b84bc0d0355922
+> and have the call/jmp replaced by SERIALIZE inline.
 
-Thank you!
+Well, we could do:
+
+	alternative_io("... IRET bunch", __ASM_SERIALIZE, X86_FEATURE_SERIALIZE, ...);
+
+and avoid all kinds of jumping. Alternatives get padded so there
+would be a couple of NOPs following when SERIALIZE gets patched in
+but it shouldn't be a problem. I guess one needs to look at what gcc
+generates...
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
