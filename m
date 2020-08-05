@@ -2,184 +2,150 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E249FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D34D5C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C743122CAD
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7D0022CAD
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:14:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="WP+yGyj8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbgHEJO3 (ORCPT
+        id S1728715AbgHEJOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 05:14:29 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:45882 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728602AbgHEJNV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 05:13:21 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5AFBFC84C92F2D78BBAF;
-        Wed,  5 Aug 2020 17:13:14 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.24) by
- DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 5 Aug 2020 17:13:07 +0800
-From:   Xiaofei Tan <tanxiaofei@huawei.com>
-To:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <rjw@rjwysocki.net>, <lenb@kernel.org>, <james.morse@arm.com>,
-        <tony.luck@intel.com>, <bp@alien8.de>
-CC:     <linuxarm@huawei.com>, <shiju.jose@huawei.com>,
-        <jonathan.cameron@huawei.com>, Xiaofei Tan <tanxiaofei@huawei.com>
-Subject: [PATCH v2] ACPI / APEI: do memory failure on the physical address reported by ARM processor error section
-Date:   Wed, 5 Aug 2020 17:12:11 +0800
-Message-ID: <1596618731-37623-1-git-send-email-tanxiaofei@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Wed, 5 Aug 2020 05:14:45 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:58952 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728658AbgHEJNn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 05:13:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1596618823; x=1628154823;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=PjFXOtCuwEnfKyB7ZS+LsNc46T9Vj62xWcGURLnWUrE=;
+  b=WP+yGyj8LfnY6QYhGqUcOeX2sl7q2EIxqDXlT50pI08VHcmBM7wPIOqU
+   bQ2Q5YsnfPTLVZhRRBivP4RarjSndEd7zTm4QVHDGMLuIaHdMgtE4bPw2
+   q42A8ePNwISqjSG8plpEyUI3p4T3OJoH71oN+TvXSv2TnwMLvgnBgcTeT
+   E=;
+IronPort-SDR: rzIkGJeoP5W6DZzjxGgYhooXNR5msuoi/CAiBItm/MyrkgudraV93c9qjcyZSEONnhzjFJkRl8
+ PmZV/5mpb12g==
+X-IronPort-AV: E=Sophos;i="5.75,436,1589241600"; 
+   d="scan'208";a="46143825"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 05 Aug 2020 09:13:42 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com (Postfix) with ESMTPS id 5DAC8A24DD;
+        Wed,  5 Aug 2020 09:13:39 +0000 (UTC)
+Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 5 Aug 2020 09:13:39 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.192) by
+ EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 5 Aug 2020 09:13:30 +0000
+From:   Andra Paraschiv <andraprs@amazon.com>
+To:     linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "David Duncan" <davdunc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        "David Woodhouse" <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "Karen Noel" <knoel@redhat.com>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Stefan Hajnoczi" <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        "Uwe Dannowski" <uwed@amazon.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvm <kvm@vger.kernel.org>,
+        ne-devel-upstream <ne-devel-upstream@amazon.com>,
+        Andra Paraschiv <andraprs@amazon.com>
+Subject: [PATCH v6 18/18] MAINTAINERS: Add entry for the Nitro Enclaves driver
+Date:   Wed, 5 Aug 2020 12:10:17 +0300
+Message-ID: <20200805091017.86203-19-andraprs@amazon.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+In-Reply-To: <20200805091017.86203-1-andraprs@amazon.com>
+References: <20200805091017.86203-1-andraprs@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.165.24]
-X-CFilter-Loop: Reflected
+X-Originating-IP: [10.43.160.192]
+X-ClientProxiedBy: EX13D19UWA004.ant.amazon.com (10.43.160.102) To
+ EX13D16EUB003.ant.amazon.com (10.43.166.99)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After the commit 8fcc4ae6faf8 ("arm64: acpi: Make apei_claim_sea()
-synchronise with APEI's irq work") applied, user-mode SEA is
-preferentially processed by APEI. Do memory failure to recover.
-
-But there are some problems:
-1) The function apei_claim_sea() has processed an CPER, does not
-mean that memory failure handling has done. Because the firmware-first
-RAS error is reported by both producer and consumer. Mostly SEA uses
-ARM processor error section to report as a consumer. (The producer could
-be DDRC and cache, and use memory error section and other error section
-to report). But memory failure handling for ARM processor error section
-has not been supported. This patch will add it.
-
-2) Some hardware platforms can't record physical address each time. But
-they could always have reported a firmware-first RAS error using ARM
-processor error section. Such platform should update firmware. Don't
-report the RAS error in SEA processing flow when physical address is
-not recorded.
-
-Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
+Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
 ---
- drivers/acpi/apei/ghes.c | 70 ++++++++++++++++++++++++++++++++++++------------
- 1 file changed, 53 insertions(+), 17 deletions(-)
+Changelog
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 81bf71b..aee7787 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -429,28 +429,35 @@ static void ghes_kick_task_work(struct callback_head *head)
- 	gen_pool_free(ghes_estatus_pool, (unsigned long)estatus_node, node_len);
- }
+v5 -> v6
+
+* No changes.
+
+v4 -> v5
+
+* No changes.
+
+v3 -> v4
+
+* No changes.
+
+v2 -> v3
+
+* Update file entries to be in alphabetical order.
+
+v1 -> v2
+
+* No changes.
+---
+ MAINTAINERS | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4e2698cc7e23..0d83aaad3cd4 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12127,6 +12127,19 @@ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lftan/nios2.git
+ F:	arch/nios2/
  
--static bool ghes_handle_memory_failure(struct acpi_hest_generic_data *gdata,
--				       int sev)
-+static bool ghes_do_memory_failure(u64 physical_addr, int flags)
- {
- 	unsigned long pfn;
--	int flags = -1;
--	int sec_sev = ghes_severity(gdata->error_severity);
--	struct cper_sec_mem_err *mem_err = acpi_hest_get_payload(gdata);
- 
- 	if (!IS_ENABLED(CONFIG_ACPI_APEI_MEMORY_FAILURE))
- 		return false;
- 
--	if (!(mem_err->validation_bits & CPER_MEM_VALID_PA))
--		return false;
--
--	pfn = mem_err->physical_addr >> PAGE_SHIFT;
-+	pfn = PHYS_PFN(physical_addr);
- 	if (!pfn_valid(pfn)) {
- 		pr_warn_ratelimited(FW_WARN GHES_PFX
- 		"Invalid address in generic error data: %#llx\n",
--		mem_err->physical_addr);
-+		physical_addr);
- 		return false;
- 	}
- 
-+	memory_failure_queue(pfn, flags);
-+	return true;
-+}
++NITRO ENCLAVES (NE)
++M:	Andra Paraschiv <andraprs@amazon.com>
++M:	Alexandru Vasile <lexnv@amazon.com>
++M:	Alexandru Ciobotaru <alcioa@amazon.com>
++L:	linux-kernel@vger.kernel.org
++S:	Supported
++W:	https://aws.amazon.com/ec2/nitro/nitro-enclaves/
++F:	Documentation/nitro_enclaves/
++F:	drivers/virt/nitro_enclaves/
++F:	include/linux/nitro_enclaves.h
++F:	include/uapi/linux/nitro_enclaves.h
++F:	samples/nitro_enclaves/
 +
-+static bool ghes_handle_memory_failure(struct acpi_hest_generic_data *gdata,
-+				       int sev)
-+{
-+	int flags = -1;
-+	int sec_sev = ghes_severity(gdata->error_severity);
-+	struct cper_sec_mem_err *mem_err = acpi_hest_get_payload(gdata);
-+
-+	if (!(mem_err->validation_bits & CPER_MEM_VALID_PA))
-+		return false;
-+
- 	/* iff following two events can be handled properly by now */
- 	if (sec_sev == GHES_SEV_CORRECTED &&
- 	    (gdata->flags & CPER_SEC_ERROR_THRESHOLD_EXCEEDED))
-@@ -458,14 +465,45 @@ static bool ghes_handle_memory_failure(struct acpi_hest_generic_data *gdata,
- 	if (sev == GHES_SEV_RECOVERABLE && sec_sev == GHES_SEV_RECOVERABLE)
- 		flags = 0;
- 
--	if (flags != -1) {
--		memory_failure_queue(pfn, flags);
--		return true;
--	}
-+	if (flags != -1)
-+		return ghes_do_memory_failure(mem_err->physical_addr, flags);
- 
- 	return false;
- }
- 
-+static bool ghes_handle_arm_hw_error(struct acpi_hest_generic_data *gdata, int sev)
-+{
-+	struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
-+	struct cper_arm_err_info *err_info;
-+	bool queued = false;
-+	int sec_sev, i;
-+
-+	log_arm_hw_error(err);
-+
-+	sec_sev = ghes_severity(gdata->error_severity);
-+	if (sev != GHES_SEV_RECOVERABLE || sec_sev != GHES_SEV_RECOVERABLE)
-+		return false;
-+
-+	err_info = (struct cper_arm_err_info *) (err + 1);
-+	for (i = 0; i < err->err_info_num; i++, err_info++) {
-+		if (!(err_info->validation_bits & CPER_ARM_INFO_VALID_PHYSICAL_ADDR))
-+			continue;
-+
-+		if (err_info->type != CPER_ARM_CACHE_ERROR) {
-+			pr_warn_ratelimited(FW_WARN GHES_PFX
-+			"Physical address should be invalid for %s\n",
-+			err_info->type < ARRAY_SIZE(cper_proc_error_type_strs) ?
-+			cper_proc_error_type_strs[err_info->type] : "unknown error type");
-+			continue;
-+		}
-+
-+		if (ghes_do_memory_failure(err_info->physical_fault_addr, 0))
-+			queued = true;
-+	}
-+
-+	return queued;
-+}
-+
- /*
-  * PCIe AER errors need to be sent to the AER driver for reporting and
-  * recovery. The GHES severities map to the following AER severities and
-@@ -543,9 +581,7 @@ static bool ghes_do_proc(struct ghes *ghes,
- 			ghes_handle_aer(gdata);
- 		}
- 		else if (guid_equal(sec_type, &CPER_SEC_PROC_ARM)) {
--			struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
--
--			log_arm_hw_error(err);
-+			queued = ghes_handle_arm_hw_error(gdata, sev);
- 		} else {
- 			void *err = acpi_hest_get_payload(gdata);
- 
+ NOHZ, DYNTICKS SUPPORT
+ M:	Frederic Weisbecker <fweisbec@gmail.com>
+ M:	Thomas Gleixner <tglx@linutronix.de>
 -- 
-2.8.1
+2.20.1 (Apple Git-117)
+
+
+
+
+Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in Romania. Registration number J22/2621/2005.
 
