@@ -2,149 +2,122 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5546EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3823C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 253282177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75DBC2177B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:13:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W2FufXtz"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AdpdWlhX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgHEIMR (ORCPT
+        id S1727871AbgHEINF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 04:12:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50392 "EHLO
+        Wed, 5 Aug 2020 04:13:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728160AbgHEIFn (ORCPT
+        with ESMTP id S1728332AbgHEIM4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 04:05:43 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAA56C06174A;
-        Wed,  5 Aug 2020 01:05:42 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id a34so18332386ybj.9;
-        Wed, 05 Aug 2020 01:05:42 -0700 (PDT)
+        Wed, 5 Aug 2020 04:12:56 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07943C061756
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 01:12:53 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id q76so5384579wme.4
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 01:12:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ohHs0aTHt4EN2lAERZatHD3N+Zhcsjq6lSkSQ86OZ7c=;
-        b=W2FufXtzNO1DxkIBUAjkRISlynEEA8Flpx9efpdgqFVRD50Fo+SU9567tGy/1b8ofy
-         EfDOHsbeLJb3QyN9+REBojrOasH0ogd+U2Ioq6cQYFv7A1kyYIf4CV2aR4FXa4CEzXW6
-         ybbk8t/iEG6tIlvmzCxwKkPAUw2cb1eDvg6YdB/GDuRjBzKvfPgM3N2rK2uD7t2daMHh
-         FsLvIxuUbJVtCD2m7DY0P2BLTdc2LwCXS8TGzcPxSR678DTw2rg3E6hDZpgOVfhTUmBG
-         SE8DsoYHiuebMBRJYTTSD1L9mhKdq+hQS2AwPe8mN006Ow6TnwJ2EfIKdAZmcF4JcHaH
-         8fsw==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lQpAXAKr6GTVwsUX1cbs0chy8xDobqsX5dTE8YjHl24=;
+        b=AdpdWlhXTzCcR+WzTN1v4E0OsU4J2DMIl8YWvZ3Sj9Yh7o68EKCRpwq9r+QzMLyyir
+         TnwhUmcCtmDuyIcndoKOrhe1r4agoZ3COSZO9GlnjNxXvFsi70tu1i3HdomJveoMVIl2
+         yOz6crp34Rxxq6WbaOtwjYoB/VsiHREjqs4FdJGIoR+wAdmw0Z46hKqRRmeop4RpGfEs
+         w3tGKNfgWF4wzGDa3iRVSRqHt/rv2hL87qdjHnerIOBP/alshyNwmF54PActY99ka0bu
+         u66WrEsPE3cy+d/GtaAz6i7iKyNq3QLFxTP7bPLqrk3egU+tzs7Knvn0ilnYjMdYv/Xo
+         aCuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ohHs0aTHt4EN2lAERZatHD3N+Zhcsjq6lSkSQ86OZ7c=;
-        b=fOTHv9qyPzdDY3npc+KsW1cNN9lQfpFYjcacxHdQcjjFo/Q7VmkHgE8u/dVCxD1Xiu
-         xHV7sJag61LWERBLyNvE9XPdebxLJy5P1YlmOk9hkJbPX38R2PyYCyXoAN/cDCKkFVSN
-         e9uP1WXVec5Zc0v/nrSHlJ32OBwMqxpvLOKKciFqdtXvlYZ+bA5uz6Uytpr7ltHbrZKA
-         0mVXct69UwDIylXlJ9E6/qCK6H/tFVJ+ATiFcwQ2m0EiKA+u5APoTq+rNSIBMm86+2vW
-         RP5s1qeT0yutDalEM3k3r89KHd6X/ICvSNWsCaI5ClDCJi8+pJcOQWsaA9fyDSXYC7lw
-         QERA==
-X-Gm-Message-State: AOAM532BPeCQIvjfxwp1/qMpXb8TUd78lWyW6QYbINJc5t2AmwxAqp+H
-        T/KCUUDM8oQiAADSXM98r3bU5U+Jgoq8zO+NFK4=
-X-Google-Smtp-Source: ABdhPJwaAiO/Es1VEZFBFhn7DvIyi6gk4N3vmj9czx2+RjxA1iF/Hx+bGVEFMkR82jjSBe1kh1+JIaQ+Ibc4oxITckY=
-X-Received: by 2002:a25:9186:: with SMTP id w6mr2676030ybl.401.1596614742159;
- Wed, 05 Aug 2020 01:05:42 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lQpAXAKr6GTVwsUX1cbs0chy8xDobqsX5dTE8YjHl24=;
+        b=i+y6AUYoqNYs2p6poI3r6SX0eSofQ5UVodbkmWGkfmNuZTceAm2bUAGn6ggp2FTO0X
+         3LkONqWYWNf1ngCg0UjOHV95/Sq1dJfat/PcBn2H3WNluBPkrSsKs4UrcY1benjcnUtW
+         zyBo33808GUJDypABG0KyMsXufxsKtRi11ApdhwscsbMse11nZhdHHiEJXxvkrybzHtF
+         tyGJXwvYtbCBFPZoarr3PTy+BguSpFeIV3V3z/euKkBq0YXFvS0einmU1vgzGgjZgl24
+         XvYrtQAy2GRMZ9/M+zvwlPwar9or4yI2lBX3xrVj2+glW3lv86w91EyllKvOSV6adjiy
+         /53A==
+X-Gm-Message-State: AOAM533Ox/AEU9cBveCIeJ86faV2iXHghbiPyGxto5oH4Tu2pfwNPznc
+        MEG2FUbu667hKjuZV0dHf+60Gw==
+X-Google-Smtp-Source: ABdhPJzEchxyBP3fBg8aeweqi9LZ95rwdUU2Ah+J0k/rWSDJPv5NCgO6JGaZjKSIO01Vepgvc9S+mg==
+X-Received: by 2002:a1c:9c91:: with SMTP id f139mr2302972wme.134.1596615172354;
+        Wed, 05 Aug 2020 01:12:52 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:f693:9fff:fef4:a833])
+        by smtp.gmail.com with ESMTPSA id e4sm1635863wru.55.2020.08.05.01.12.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 01:12:51 -0700 (PDT)
+Date:   Wed, 5 Aug 2020 09:12:50 +0100
+From:   Will Deacon <willdeacon@google.com>
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     catalin.marinas@arm.com, Marc Zyngier <maz@kernel.org>,
+        mark.rutland@arm.com, anup@brainfault.org, greentime.hu@sifive.com,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        aou@eecs.berkeley.edu, Paul Walmsley <paul.walmsley@sifive.com>,
+        syven.wang@sifive.com
+Subject: Re: [PATCH] riscv: Add sfence.vma after page table changed
+Message-ID: <20200805081250.GA3064472@google.com>
+References: <CAAhSdy1QbMjZxxu+wSBYr3+3oaM2Qg=_Uwj8dfQidi=ck6PV_Q@mail.gmail.com>
+ <mhng-1f7adcd7-551c-4b8a-80f5-e1230b335c6a@palmerdabbelt-glaptop1>
 MIME-Version: 1.0
-References: <1596465107-14251-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1596465107-14251-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200804081458.GC13316@paasikivi.fi.intel.com>
-In-Reply-To: <20200804081458.GC13316@paasikivi.fi.intel.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Wed, 5 Aug 2020 09:05:15 +0100
-Message-ID: <CA+V-a8sP443vzj5niegZx=UMKKM1ZEy==6PfxYLYxuZAOqwUkw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] dt-bindings: media: i2c: ov5640: Document bus-type property
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Hugues Fruchet <hugues.fruchet@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <mhng-1f7adcd7-551c-4b8a-80f5-e1230b335c6a@palmerdabbelt-glaptop1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sakari,
+On Tue, Aug 04, 2020 at 07:03:06PM -0700, Palmer Dabbelt wrote:
+> > On Tue, Aug 4, 2020 at 8:32 AM Greentime Hu <greentime.hu@sifive.com> wrote:
+> > > diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> > > index f4adb3684f3d..29b0f7108054 100644
+> > > --- a/arch/riscv/mm/init.c
+> > > +++ b/arch/riscv/mm/init.c
+> > > @@ -202,12 +202,11 @@ void __set_fixmap(enum fixed_addresses idx, phys_addr_t phys, pgprot_t prot)
+> > > 
+> > >         ptep = &fixmap_pte[pte_index(addr)];
+> > > 
+> > > -       if (pgprot_val(prot)) {
+> > > +       if (pgprot_val(prot))
+> > >                 set_pte(ptep, pfn_pte(phys >> PAGE_SHIFT, prot));
+> > > -       } else {
+> > > +       else
+> > >                 pte_clear(&init_mm, addr, ptep);
+> > > -               local_flush_tlb_page(addr);
+> > > -       }
+> > > +       local_flush_tlb_page(addr);
+> > >  }
+> 
+> arm64 appears to be upgrading all set_pte()s on valid kernel mappings to
+> include the fence.  It looks like the message from 7f0b1bf04511 ("arm64: Fix
+> barriers used for page table modifications") is out of date, as I can't find
+> create_mapping() any more.  If that was some generic kernel thing then we
+> should probably upgrade ours as well, but if it was arch/arm64/ code then this
+> approach seems fine as __set_fixmap() isn't on the hot path -- I guess this is
+> fine either way, but there may be other issues that the arm64 approach fixes.
+> 
+> Do you guys happen to remember what was going on here?
 
-Thank you for the review.
+Basically, the architecture says we need these fences in order to guarantee
+that the page-table walker sees the updated entry. Since we couldn't
+tolerate spurious faults on kernel mappings, we had to add them (for
+userspace we don't bother because in reality we don't tend to take the
+spurious fault, and it's harmless if we do).
 
-On Tue, Aug 4, 2020 at 9:15 AM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
->
-> Hi Prabhakar,
->
-> Thanks for the update.
->
-> On Mon, Aug 03, 2020 at 03:31:44PM +0100, Lad Prabhakar wrote:
-> > Document the possible bus-type's supported by the OV5640 sensor driver.
-> >
-> > Also add the bus-type in example node.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  Documentation/devicetree/bindings/media/i2c/ov5640.txt | 9 ++++++++-
-> >  1 file changed, 8 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.txt b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
-> > index c97c2f2da12d..00131dbb147e 100644
-> > --- a/Documentation/devicetree/bindings/media/i2c/ov5640.txt
-> > +++ b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
-> > @@ -36,9 +36,15 @@ Endpoint node required properties for parallel connection are:
-> >  - data-shift: shall be set to <2> for 8 bits parallel bus
-> >             (lines 9:2 are used) or <0> for 10 bits parallel bus
-> >  - hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
-> > +             (Required for bus-type 5)
-> >  - vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
-> > +             (Required for bus-type 5)
-> >  - pclk-sample: sample data on rising (1) or falling (0) edge of the pixel clock
-> > -            signal.
-> > +            signal. (Required for bus-type 5)
-> > +- bus-type: data bus type. Possible values are:
-> > +         4 - MIPI CSI-2 D-PHY
-> > +         5 - Parallel
-> > +         6 - Bt.656
->
-> This is under required parallel properties. You could document value 4
-> under CSI-2 related properties.
->
-Agreed will do that.
+But having said all that, check out 42f91093b043 ("arm64: mm: Ignore spurious
+translation faults taken from the kernel").
 
-Cheers,
-Prabhakar
-
-> >
-> >  Examples:
-> >
-> > @@ -86,6 +92,7 @@ Examples:
-> >                               hsync-active = <0>;
-> >                               vsync-active = <0>;
-> >                               pclk-sample = <1>;
-> > +                             bus-type = <5>;
-> >                       };
-> >               };
-> >       };
->
-> --
-> Regards,
->
-> Sakari Ailus
+Will
