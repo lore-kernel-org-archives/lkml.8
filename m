@@ -5,74 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CDEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4066FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB8B322D00
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1502E22D00
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:13:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HTOj9kF9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IPtCCwa6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727852AbgHERMx (ORCPT
+        id S1728163AbgHERNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:12:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43593 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728556AbgHERKL (ORCPT
+        Wed, 5 Aug 2020 13:13:07 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:32213 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728565AbgHERKO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:10:11 -0400
+        Wed, 5 Aug 2020 13:10:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596647410;
+        s=mimecast20190719; t=1596647413;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=rLyznuEr+YtS56JlIu4IevBHcH0S591inceyWkYffOs=;
-        b=HTOj9kF97KoG3UOEA5Xpn5m7cw48OcrdOO6gi4DFtJp2vwNE2y3HW6mphgWB8VaL6vpWEF
-        kbPXL4o2VKCdUbUqN9ZwVwv/njFbPID9wyBQilhPCtU9oXVQdwOQW6EOY5vUxHg1QsqKbf
-        /s3+M3kBnFo4fD06RSUPq26AcZwbOAQ=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-335-F3-4tUyCPim9ynilgnwEuw-1; Wed, 05 Aug 2020 09:43:29 -0400
-X-MC-Unique: F3-4tUyCPim9ynilgnwEuw-1
-Received: by mail-wm1-f70.google.com with SMTP id p23so2473990wmc.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:43:29 -0700 (PDT)
+        bh=kSRe7wmYN+c40TNuZd0aK8LNMOsV+g9hMYDNFujk/tc=;
+        b=IPtCCwa6LmFTew0cHgVuDnGZh+pjcuxTDimYCLo1WgZwiMHYzCqCajXh1izsbyS6E3vndP
+        D8aF5NA6TfDyEHXN2yyxULA3yaxUoRYTS7g9fqiUdz+PC1/i+0R4Bfoh9CYp5bENuCTXDN
+        6i8PR71f52VhYTeXn5ZamBRMzYbuPNw=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-288-UnXyzEaAM5OJi1x8uyekmA-1; Wed, 05 Aug 2020 09:44:22 -0400
+X-MC-Unique: UnXyzEaAM5OJi1x8uyekmA-1
+Received: by mail-wr1-f69.google.com with SMTP id 89so13594838wrr.15
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:44:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=rLyznuEr+YtS56JlIu4IevBHcH0S591inceyWkYffOs=;
-        b=UUmYW/An82M78UrIvEbmQjy43xlKDDra0mo5QnNYonrUHs2nXkO5pp05k9nMINxZmI
-         yGej1BK88QSkpeZJOy9MEsxbgnb73bi1ko2F1CLOTI9U7BFBijwna1RDZdPnEeMQOvgC
-         Taj2oPOR3qZ3Vgi86ROpz7reX6XvaA93BtO8xLE9IxOjFU62BNsOpTobte/Grdz+03VO
-         xkug28VGUF62M23M6lr08Ei4Z/QNLuvWJ8YFO/uZOEZ0C7h3bT2PfAw7EskByDvNQ9z4
-         +CygME6KuKKHTLyLfeb/0yzobPJZ6aaIKJor6QQg3mYcKliL+JaCPv2jQIhV3wgPX+1x
-         jVvg==
-X-Gm-Message-State: AOAM533F0JkxzMRXiQuvigREZ+BT9p+R6erO6WQixw/qOXI/7jFGcryv
-        oXMuBzTMWmVZnW9ymuwyGk64/BmhE6weTu/5iPiLnkGoOJ4D9a1T2lgXqdRQWAgaiSlfzflnnxh
-        45oYs5JYzzyk9j0ibuanur4VS
-X-Received: by 2002:a1c:6a05:: with SMTP id f5mr3278048wmc.162.1596635008084;
-        Wed, 05 Aug 2020 06:43:28 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy2OznmEqQQuS3Gj15cuXvaM9QXX3f4/5FduhQJ7Ds5R+28pqvqB/Ctrz8niF5YwYSRgpWi9w==
-X-Received: by 2002:a1c:6a05:: with SMTP id f5mr3278028wmc.162.1596635007890;
-        Wed, 05 Aug 2020 06:43:27 -0700 (PDT)
-Received: from redhat.com (bzq-79-178-123-8.red.bezeqint.net. [79.178.123.8])
-        by smtp.gmail.com with ESMTPSA id g25sm2752597wmh.35.2020.08.05.06.43.26
+        bh=kSRe7wmYN+c40TNuZd0aK8LNMOsV+g9hMYDNFujk/tc=;
+        b=GNEOzxpCIZdbqLRNUZF/t+3fWTTD01SCav/UyrJ00vi3LRtxOrLAduPRNzDiJt2GRT
+         vjnOu6zoitVL+LJI8+gmGMrgJtlzZPtDulKBBxP2T2SB+mmXtAuclB8rTWPuCJEfeinA
+         X+T4S201cxUGxpTPsm/qL+8/DBYpFyb8Ks7TRhKJSUeBmEbXxRxk89PqIqb2uTnCTSm2
+         mjOaxZCYq9eIx1Rx8Rj3NH9KJDeyxSLX6NAQm1Nj2JVX9n7OBvlwOCtgr/3RJUN7dX2F
+         AAUlSpq60HcDrdJ0oZYmq/ThgsMSAPU1hAZSuHNYr8Vq8mKAdIMqJVfpmRlQdivKBNWY
+         /VUQ==
+X-Gm-Message-State: AOAM530HD3VEKoejkw+z8ICNb5cK8hj6jRdVjtbxFhdnTp9qncAlhhr+
+        qdIxEngt9VLhaoc82++wrTCFMurStYFswK8XHAinD5OLJm1srRgrmtWQk7DQnQUHHzpTYFtEWlh
+        AQT4fsxXIJFHVEBTEjK+R9xad
+X-Received: by 2002:a1c:38c5:: with SMTP id f188mr3184181wma.7.1596635060870;
+        Wed, 05 Aug 2020 06:44:20 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwtu4fGrz2OcjqJ60Gx1dujnfxQ+ydCwiHL+CZ6x4QY+RWP5ctttNcCg2cu41yMIpSX3GIA4Q==
+X-Received: by 2002:a1c:38c5:: with SMTP id f188mr3184169wma.7.1596635060701;
+        Wed, 05 Aug 2020 06:44:20 -0700 (PDT)
+Received: from redhat.com ([192.117.173.58])
+        by smtp.gmail.com with ESMTPSA id f131sm2902892wme.40.2020.08.05.06.44.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 06:43:27 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 09:43:25 -0400
+        Wed, 05 Aug 2020 06:44:20 -0700 (PDT)
+Date:   Wed, 5 Aug 2020 09:44:18 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Jason Wang <jasowang@redhat.com>,
-        v9fs-developer@lists.sourceforge.net,
+Cc:     Jason Wang <jasowang@redhat.com>,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 04/38] virtio_9p: correct tags for config space fields
-Message-ID: <20200805134226.1106164-5-mst@redhat.com>
+Subject: [PATCH v3 23/38] virtio_config: cread/write cleanup
+Message-ID: <20200805134226.1106164-24-mst@redhat.com>
 References: <20200805134226.1106164-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -85,36 +80,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tag config space fields as having virtio endian-ness.
+Use vars of the correct type instead of casting.
 
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 ---
- include/uapi/linux/virtio_9p.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/virtio_config.h | 31 +++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
 
-diff --git a/include/uapi/linux/virtio_9p.h b/include/uapi/linux/virtio_9p.h
-index 277c4ad44e84..441047432258 100644
---- a/include/uapi/linux/virtio_9p.h
-+++ b/include/uapi/linux/virtio_9p.h
-@@ -25,7 +25,7 @@
-  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
-  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-  * SUCH DAMAGE. */
--#include <linux/types.h>
-+#include <linux/virtio_types.h>
- #include <linux/virtio_ids.h>
- #include <linux/virtio_config.h>
+diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
+index c68f58f3bf34..5c3b02245ecd 100644
+--- a/include/linux/virtio_config.h
++++ b/include/linux/virtio_config.h
+@@ -444,53 +444,60 @@ static inline void virtio_cwrite8(struct virtio_device *vdev,
+ static inline u16 virtio_cread16(struct virtio_device *vdev,
+ 				 unsigned int offset)
+ {
+-	u16 ret;
++	__virtio16 ret;
  
-@@ -36,7 +36,7 @@
+ 	might_sleep();
+ 	vdev->config->get(vdev, offset, &ret, sizeof(ret));
+-	return virtio16_to_cpu(vdev, (__force __virtio16)ret);
++	return virtio16_to_cpu(vdev, ret);
+ }
  
- struct virtio_9p_config {
- 	/* length of the tag name */
--	__u16 tag_len;
-+	__virtio16 tag_len;
- 	/* non-NULL terminated tag name */
- 	__u8 tag[0];
- } __attribute__((packed));
+ static inline void virtio_cwrite16(struct virtio_device *vdev,
+ 				   unsigned int offset, u16 val)
+ {
++	__virtio16 v;
++
+ 	might_sleep();
+-	val = (__force u16)cpu_to_virtio16(vdev, val);
+-	vdev->config->set(vdev, offset, &val, sizeof(val));
++	v = cpu_to_virtio16(vdev, val);
++	vdev->config->set(vdev, offset, &v, sizeof(v));
+ }
+ 
+ static inline u32 virtio_cread32(struct virtio_device *vdev,
+ 				 unsigned int offset)
+ {
+-	u32 ret;
++	__virtio32 ret;
+ 
+ 	might_sleep();
+ 	vdev->config->get(vdev, offset, &ret, sizeof(ret));
+-	return virtio32_to_cpu(vdev, (__force __virtio32)ret);
++	return virtio32_to_cpu(vdev, ret);
+ }
+ 
+ static inline void virtio_cwrite32(struct virtio_device *vdev,
+ 				   unsigned int offset, u32 val)
+ {
++	__virtio32 v;
++
+ 	might_sleep();
+-	val = (__force u32)cpu_to_virtio32(vdev, val);
+-	vdev->config->set(vdev, offset, &val, sizeof(val));
++	v = cpu_to_virtio32(vdev, val);
++	vdev->config->set(vdev, offset, &v, sizeof(v));
+ }
+ 
+ static inline u64 virtio_cread64(struct virtio_device *vdev,
+ 				 unsigned int offset)
+ {
+-	u64 ret;
++	__virtio64 ret;
++
+ 	__virtio_cread_many(vdev, offset, &ret, 1, sizeof(ret));
+-	return virtio64_to_cpu(vdev, (__force __virtio64)ret);
++	return virtio64_to_cpu(vdev, ret);
+ }
+ 
+ static inline void virtio_cwrite64(struct virtio_device *vdev,
+ 				   unsigned int offset, u64 val)
+ {
++	__virtio64 v;
++
+ 	might_sleep();
+-	val = (__force u64)cpu_to_virtio64(vdev, val);
+-	vdev->config->set(vdev, offset, &val, sizeof(val));
++	v = cpu_to_virtio64(vdev, val);
++	vdev->config->set(vdev, offset, &v, sizeof(v));
+ }
+ 
+ /* Conditional config space accessors. */
 -- 
 MST
 
