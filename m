@@ -2,190 +2,165 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00745C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9831AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF9D62075A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:37:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596620271;
-	bh=wMRQ9mK0wMo0z6jSi2jHVOchSNN2/fqzPYI2pPqer+8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=b2S1mWeOMKreVicGpRmYzeA7CHZ2rTdyQtnSRjHpzLtRv2oJUTF1pHL/pZyQCzUeK
-	 2OW1kyHUtXDyXirTTCIdxbOmim+rHM97auK9D0KeFX96ScW9SVAuoVL9yl88sASfQL
-	 Vm7x0A1LAvSqntRM7KTM9ngA4gJIaZmvV+PRkmQQ=
+	by mail.kernel.org (Postfix) with ESMTP id 719E22067C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:38:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="R9PgmfP4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbgHEJhp (ORCPT
+        id S1728478AbgHEJh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 05:37:45 -0400
-Received: from mail-oo1-f65.google.com ([209.85.161.65]:43448 "EHLO
-        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbgHEJfG (ORCPT
+        Wed, 5 Aug 2020 05:37:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36216 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728119AbgHEJgy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 05:35:06 -0400
-Received: by mail-oo1-f65.google.com with SMTP id z10so5766186ooi.10;
-        Wed, 05 Aug 2020 02:35:05 -0700 (PDT)
+        Wed, 5 Aug 2020 05:36:54 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58FD9C06174A
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 02:36:54 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id h22so3598877otq.11
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 02:36:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6QAf2r22ie0nJ9P9yn7tCrZWYCPDCIRxVkswdnQpyC0=;
+        b=R9PgmfP4r/afAuE6yEI5xwzwZqrkDG1FMSlt+zUdxWUaS4wWM+lhaaJ3udKFGIHV/W
+         Sxr3aqMHHy30L/DQSNLDdmhLhwdZ6M+XCwLD+M0bLPKXBlfV9xBmPsPg27gzv1ujq3a2
+         YgKJtw3aPeIIZqvGF1oQZ/LAv6nhBrxZ1HTv4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cknFGMTHisqsJ8S6a0tn2BBuzfV98+CKybYSpiI5/Z8=;
-        b=uQ/GtYm2wYfAJW4o6/v5aNBcOXsxUgY+OY8B/HCQCW9p1xCBdvpreOPlRLneKQuFX8
-         yjyTudK1CNVfBYOedNV5peUiE5XM2sv//UXE+rgFd70ifU0LACDSeWGFKvzgaNVYYyd8
-         Fa0cuFqsmWluaZOkvwBsJ+pkfhMLuYeWrjyD5a29f/0453H0crgECSHnMWU/i+u/73wM
-         xdzuycImOz4EbYT+CpGoX3kF7WaqT998Bpu/pLEJvZ3i7PPbb+GxQTUS2hRkgTpAh1sJ
-         p58OrQ2Q4yguCdc/3l1scZsGADZ70xvyoxun5ifMjdWNMw+JtV+yUfYto0b2nkOblH7T
-         nGBg==
-X-Gm-Message-State: AOAM532+7/06yNyVnWi24XFYm+8GSc85JwgQA4Q/mIjKLsHJOZXwm6Sv
-        fjnmuqo5bi7DQMCDLoPEM1F0WS/jcbajvymk2MI=
-X-Google-Smtp-Source: ABdhPJyTS26vEw4LN0WnWkbY3aT8Hdud9gu0wLYWUVxubNL4SszBhzLEfpxTiNiAOzfdqJ5v4qGyJstA37wfGE/DuYY=
-X-Received: by 2002:a4a:d62c:: with SMTP id n12mr1966554oon.38.1596620105003;
- Wed, 05 Aug 2020 02:35:05 -0700 (PDT)
+        bh=6QAf2r22ie0nJ9P9yn7tCrZWYCPDCIRxVkswdnQpyC0=;
+        b=VByxOfoGjYoFbAxQ3PE6B0+Lcii9d0caxVlJ7Dnf3TcIp40kU2U11CdiEJV8ZTuIHN
+         c/imBA6WlaxajqlIos2oroDytzg0rTSlxZdkSo/UcS+a2qQHJZA2KeF5qkQR4vcgVjW3
+         U5O+BZjT5TNlTACwcPU1bMLAQbcm3YZ86duQE5AgIjyjbBTHcGqWw57vwSA6AojdebxD
+         F5H4y9zO0jFewdaXKMN1a86i9171sCkJjtsqQWrRBZqCMFxh1U2ntOTS6ymeq9GmDe6/
+         8xKTvesqMtIdjP+NgJMr+x3uDP05fvwa8e02Slq5Hyt6lh6k5YRK+ATSurBtCAPhNIFs
+         cIOA==
+X-Gm-Message-State: AOAM533Wss3z91bK5SDnKPqiJH6svayoPa4+r63r0cASaa5w0LyCgsc1
+        d0X8mRbn4YApLX4ulKCgrhNZ5f3KDCd9WDnUGLvhCA==
+X-Google-Smtp-Source: ABdhPJxbvKXGNnuWD4z2BMkiilvW3CUx+kj1KpLvwjAj9AlKw4Z10kOAXFUtCEfBE2pJ5diZAjtOip4Pqm/YdXEBojM=
+X-Received: by 2002:a9d:7283:: with SMTP id t3mr1760637otj.303.1596620213781;
+ Wed, 05 Aug 2020 02:36:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <4981405.3kqTVLv5tO@kreacher> <1709487.Bxjb1zNRZM@kreacher>
- <1633168.eVXp6ieOpF@kreacher> <000d01d66a81$59326a50$0b973ef0$@net>
-In-Reply-To: <000d01d66a81$59326a50$0b973ef0$@net>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 5 Aug 2020 11:34:51 +0200
-Message-ID: <CAJZ5v0h7iKvO1-9R_JiVjM8j_a87B=LpTCoaUWRfrhXTRaMMOw@mail.gmail.com>
-Subject: Re: [PATCH v6] cpufreq: intel_pstate: Implement passive mode with HWP enabled
-To:     Doug Smythies <dsmythies@telus.net>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Documentation <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>,
-        Francisco Jerez <francisco.jerez.plata@intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>
+References: <20200805083646.4123-1-hjc@rock-chips.com>
+In-Reply-To: <20200805083646.4123-1-hjc@rock-chips.com>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Wed, 5 Aug 2020 11:36:42 +0200
+Message-ID: <CAKMK7uGmKJqZJ0ONQjjquZn6mksKbkScmcUSEA43eg1jFskmTg@mail.gmail.com>
+Subject: Re: [PATCH] drm: sysfs: Add to get current mode
+To:     Sandy Huang <hjc@rock-chips.com>
+Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Tao Huang <huangtao@rock-chips.com>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Doug,
-
-On Tue, Aug 4, 2020 at 7:07 PM Doug Smythies <dsmythies@telus.net> wrote:
+On Wed, Aug 5, 2020 at 10:37 AM Sandy Huang <hjc@rock-chips.com> wrote:
 >
-> Hi Rafael,
+> add this node to get the current true mode.
 >
-> I was just writing you about V5 when this V6 came.
+> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
+
+Uh what's this for? Since it's sysfs, I guess there's something
+parsing this, which means we'd kinda need to have that piece too.
+
+If it's just for debugging purposes, then we already have this
+information in debugfs, together with everything else that's in the
+atomic modeset state.
+-Daniel
+
+> ---
+>  drivers/gpu/drm/drm_sysfs.c | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
 >
-> On 2020.08.04 08:11 Rafael J. Wysocki wrote:
-> ...
-> > This is on top of the material already in the mainline.
+> diff --git a/drivers/gpu/drm/drm_sysfs.c b/drivers/gpu/drm/drm_sysfs.c
+> index 939f0032aab1..f39bcd34853b 100644
+> --- a/drivers/gpu/drm/drm_sysfs.c
+> +++ b/drivers/gpu/drm/drm_sysfs.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/slab.h>
 >
-> Oh, should have read that part better,
-> but did get there in the end.
-> ...
-> > v5 -> v6:
-> >    * Fix the problem with the EPP setting via sysfs not working with the
-> >      performance and powersave governors by stopping and restarting the
-> >      governor around the sysfs-based EPP updates in the passive mode.
-> >    * Because of that, use the epp_cached field just for avoiding the above
-> >      if the new EPP value for the given CPU is the same as the old one.
-> >    * Export cpufreq_start/stop_governor() from the core (for the above).
+>  #include <drm/drm_connector.h>
+> +#include <drm/drm_crtc.h>
+>  #include <drm/drm_device.h>
+>  #include <drm/drm_file.h>
+>  #include <drm/drm_modes.h>
+> @@ -236,16 +237,45 @@ static ssize_t modes_show(struct device *device,
+>         return written;
+>  }
 >
-> EPP is still not right.
-> I am not messing with it at all, just observing via my msr-decoder.
-
-If you are not touching it, then it should not change in the passive mode.
-
-> I booted without any intel_pstate related directives for the
-> kernel command line. The below is as expected (performance gov.):
-
-Note that the active mode performance scaling algorithm (which is not
-the same as the performance cpufreq governor) sets the EPP to 0 for
-all of the CPUs that it is used with and the driver sets the EPP to
-255 in ->stop_cpu.
-
-That last bit is questionable, but that's the active mode behavior
-which is not changed by the $subject patch.
-
-It would be more reasonable to restore the previous EPP when stopping
-CPUs.  Let me cut a v7 with that changed.
-
-> # /home/doug/c/msr-decoder
-> How many CPUs?: 6
-> 8.) 0x198: IA32_PERF_STATUS     : CPU 0-5 :  46 :  46 :  46 :  46 :  46 :  46 :
-> B.) 0x770: IA32_PM_ENABLE: 1 : HWP enable
-> 1.) 0x19C: IA32_THERM_STATUS: 88450000
-> 2.) 0x1AA: MSR_MISC_PWR_MGMT: 401CC0 EIST enabled Coordination enabled OOB Bit 8 reset OOB Bit 18 reset
-> 3.) 0x1B1: IA32_PACKAGE_THERM_STATUS: 88430000
-> 4.) 0x64F: MSR_CORE_PERF_LIMIT_REASONS: 0
-> A.) 0x1FC: MSR_POWER_CTL: 3C005D : C1E disable : EEO disable : RHO disable
-> 5.) 0x771: IA32_HWP_CAPABILITIES (performance): 109252E : high 46 : guaranteed 37 : efficient 9 : lowest 1
-> 6.) 0x774: IA32_HWP_REQUEST:    CPU 0-5 :
->     raw: 00002E2E : 00002E2E : 00002E2E : 00002E2E : 00002E2E : 00002E2E :
->     min:       46 :       46 :       46 :       46 :       46 :       46 :
->     max:       46 :       46 :       46 :       46 :       46 :       46 :
->     des:        0 :        0 :        0 :        0 :        0 :        0 :
->     epp:        0 :        0 :        0 :        0 :        0 :        0 :
->     act:        0 :        0 :        0 :        0 :        0 :        0 :
-> 7.) 0x777: IA32_HWP_STATUS: 4 : high 4 : guaranteed 0 : efficient 0 : lowest 0
+> +static ssize_t current_mode_show(struct device *device,
+> +                     struct device_attribute *attr,
+> +                     char *buf)
+> +{
+> +       struct drm_connector *connector = to_drm_connector(device);
+> +       struct drm_display_mode *mode;
+> +       struct drm_crtc_state *crtc_state;
+> +       bool interlaced;
+> +       int written = 0;
+> +
+> +       if (!connector->state || !connector->state->crtc)
+> +               return written;
+> +
+> +       crtc_state = connector->state->crtc->state;
+> +       if (!crtc_state)
+> +               return written;
+> +
+> +       mode = &crtc_state->mode;
+> +
+> +       interlaced = !!(mode->flags & DRM_MODE_FLAG_INTERLACE);
+> +       written += snprintf(buf + written, PAGE_SIZE - written, "%dx%d%s%d\n",
+> +                           mode->hdisplay, mode->vdisplay,
+> +                           interlaced ? "i" : "p", drm_mode_vrefresh(mode));
+> +
+> +       return written;
+> +}
+> +
+>  static DEVICE_ATTR_RW(status);
+>  static DEVICE_ATTR_RO(enabled);
+>  static DEVICE_ATTR_RO(dpms);
+>  static DEVICE_ATTR_RO(modes);
+> +static DEVICE_ATTR_RO(current_mode);
 >
-> and then switched to passive mode later. EPP is not as expected. Expect 0
-> (performance mode):
+>  static struct attribute *connector_dev_attrs[] = {
+>         &dev_attr_status.attr,
+>         &dev_attr_enabled.attr,
+>         &dev_attr_dpms.attr,
+>         &dev_attr_modes.attr,
+> +       &dev_attr_current_mode.attr,
+>         NULL
+>  };
 >
-> # /home/doug/c/msr-decoder
-> How many CPUs?: 6
-> 8.) 0x198: IA32_PERF_STATUS     : CPU 0-5 :  46 :  46 :  46 :  46 :  46 :  46 :
-> B.) 0x770: IA32_PM_ENABLE: 1 : HWP enable
-> 1.) 0x19C: IA32_THERM_STATUS: 88440000
-> 2.) 0x1AA: MSR_MISC_PWR_MGMT: 401CC0 EIST enabled Coordination enabled OOB Bit 8 reset OOB Bit 18 reset
-> 3.) 0x1B1: IA32_PACKAGE_THERM_STATUS: 88420000
-> 4.) 0x64F: MSR_CORE_PERF_LIMIT_REASONS: 0
-> A.) 0x1FC: MSR_POWER_CTL: 3C005D : C1E disable : EEO disable : RHO disable
-> 5.) 0x771: IA32_HWP_CAPABILITIES (performance): 108252E : high 46 : guaranteed 37 : efficient 8 : lowest 1
-> 6.) 0x774: IA32_HWP_REQUEST:    CPU 0-5 :
->     raw: FF002E2E : FF002E2E : FF002E2E : FF002E2E : FF002E2E : FF002E2E :
->     min:       46 :       46 :       46 :       46 :       46 :       46 :
->     max:       46 :       46 :       46 :       46 :       46 :       46 :
->     des:        0 :        0 :        0 :        0 :        0 :        0 :
->     epp:      255 :      255 :      255 :      255 :      255 :      255 :
->     act:        0 :        0 :        0 :        0 :        0 :        0 :
-> 7.) 0x777: IA32_HWP_STATUS: 4 : high 4 : guaranteed 0 : efficient 0 : lowest 0
-
-The 0xFF EPP value is what the active mode left behind and the passive
-mode doesn't touch the EPP at all.
-
-> Then switched to ondemand governor, and put 100% load on 2 CPUs.
-> EPP is not as expected, which I don't actually know what to expect,
-> but assume 128:
+> --
+> 2.17.1
 >
-> # /home/doug/c/msr-decoder
-> How many CPUs?: 6
-> 8.) 0x198: IA32_PERF_STATUS     : CPU 0-5 :  46 :  46 :  46 :  46 :  46 :  46 :
-> B.) 0x770: IA32_PM_ENABLE: 1 : HWP enable
-> 1.) 0x19C: IA32_THERM_STATUS: 883B0000
-> 2.) 0x1AA: MSR_MISC_PWR_MGMT: 401CC0 EIST enabled Coordination enabled OOB Bit 8 reset OOB Bit 18 reset
-> 3.) 0x1B1: IA32_PACKAGE_THERM_STATUS: 882B0000
-> 4.) 0x64F: MSR_CORE_PERF_LIMIT_REASONS: 0
-> A.) 0x1FC: MSR_POWER_CTL: 3C005D : C1E disable : EEO disable : RHO disable
-> 5.) 0x771: IA32_HWP_CAPABILITIES (performance): 10B252E : high 46 : guaranteed 37 : efficient 11 : lowest 1
-> 6.) 0x774: IA32_HWP_REQUEST:    CPU 0-5 :
->     raw: FF002E09 : FF002E0C : FF002E2E : FF002E08 : FF002E2E : FF002E18 :
->     min:        9 :       12 :       46 :        8 :       46 :       24 :
->     max:       46 :       46 :       46 :       46 :       46 :       46 :
->     des:        0 :        0 :        0 :        0 :        0 :        0 :
->     epp:      255 :      255 :      255 :      255 :      255 :      255 :
->     act:        0 :        0 :        0 :        0 :        0 :        0 :
-> 7.) 0x777: IA32_HWP_STATUS: 4 : high 4 : guaranteed 0 : efficient 0 : lowest 0
-
-It is still 0xFF as previously (because the passive mode doesn't
-change the EPP).
-
-> For what it's worth, Kernel:
 >
-> 78b39581ed85 (HEAD -> dtemp) cpufreq: intel_pstate: Implement passive mode with HWP enabled
-> c0842fbc1b18 (origin/master, origin/HEAD, master) random32: move the pseudo-random 32-bit definitions to prandom.h
-> 2baa85d6927d Merge tag 'acpi-5.9-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
-> 04084978003c Merge tag 'pm-5.9-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+>
 
-Thanks!
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
