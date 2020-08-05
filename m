@@ -6,47 +6,46 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BFDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 13:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FDBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 13:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2916222D75
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 13:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B1AD2312D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 13:39:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728638AbgHENO6 (ORCPT
+        id S1728901AbgHENer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 09:14:58 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:44959 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728182AbgHEMfk (ORCPT
+        Wed, 5 Aug 2020 09:34:47 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46206 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbgHEMfj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 08:35:40 -0400
-Received: by mail-ua1-f68.google.com with SMTP id x19so7653932uap.11;
-        Wed, 05 Aug 2020 05:35:20 -0700 (PDT)
+        Wed, 5 Aug 2020 08:35:39 -0400
+Received: by mail-ot1-f65.google.com with SMTP id v6so22388522ota.13;
+        Wed, 05 Aug 2020 05:30:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TiO7nzmTLhp/HssO4wueBR+pe6NyyJ3Wi4fmHclssB0=;
-        b=LBg+QNCOfml/osTc4ClibeS1wZAy99kRrbDkKMLWs58Wr3uooJ6eaifgdM3l6aEkxe
-         mZhYMMbPwOBn/XFE++nMivEqdLcBt4aWH+yuHsvnLfRbTIo6s0FKJA3zEIrUPOF5wsKr
-         AWAq1Em05wmu4PNN6eMaK0BZZZ1FZOveFsyWPRlsQ5gIWay+Z3h3M/5KC58MYlaoGF1n
-         V9OIvBtF/cOKd6+uqDjb9nPWHFYMCaOaytm9HGTdrvJzljN1XN+vWjDCRJ8+B1C68k8x
-         sKqKxfWkR3GByGhSkpynGBASAZjerV1kvzjGpzAQP8LsWGvASO0WairA2tnuzRSEyXTy
-         /CGg==
-X-Gm-Message-State: AOAM530ZpRRFvqSNeDnNV6VcRXm0cMt0KjGy0gjge+N7xZsKgDkjn3O1
-        UdaRM4kNkvfhibNFosWztj0vDCVgQnILJ5r5JqyR52Wp
-X-Google-Smtp-Source: ABdhPJwK6o7b8lq3G6CAJpeeN/eYVnhyuuPm34lifo/8pWI+ku4U2jyzPQkSzpymHd67QjfIjokNuU68r0XO2FkgnuU=
-X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr2044718ote.107.1596626105327;
- Wed, 05 Aug 2020 04:15:05 -0700 (PDT)
+        bh=GhwGBb3og4FBqTm6+fj02zyv7weIuiKRDAujBvepcdQ=;
+        b=AkCTLgRFlBR2CmRvGoQAVvX/lV7KyfhK79jyxszzJlYZan2QoNuQL4Plkk855FBko4
+         lsDPi5BQimZIkERi0758l8NgsKzJVWjMDWGDgtEE0yDCsC5dWIxJdBacmwjnC5+/WFoP
+         UzlqHjUEidFs1jkxmbEHjY+06PwJuuPTtity+3gNNtackjE8jXoo5l15LGlmJibksAU3
+         2ccjfnjkUqU08hN7HzKYQzouN3CaaaNxKSY+KFBCJ0TWwqrgO1NcicezI1dseM3llfOh
+         8s2jd78BNi4SjgLk8kaOegRrXhk8K0gtBJDiFJvK8AqURBpZqxa01GlW9u5t+KrG3s3L
+         rX/A==
+X-Gm-Message-State: AOAM532s5CWbSZ1Ul2MpUJyCG45r7V7yGxAwCJktwF0kwdI9kGW3ncQv
+        YzOBX2dDcPcfesL/Gj34bor/c2EHIzGAuyTdhwqlXQir
+X-Google-Smtp-Source: ABdhPJy6Few2JSpX34d8UWs2mHs62Jj4zoFqif/HtRZNiG9fgu0Yy1ArYH3I3/SVye0G2Oxi4tcy3VslWxu2yq+qpJs=
+X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr2025587ote.107.1596625767021;
+ Wed, 05 Aug 2020 04:09:27 -0700 (PDT)
 MIME-Version: 1.0
 References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-14-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594919915-5225-14-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594919915-5225-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 5 Aug 2020 13:14:54 +0200
-Message-ID: <CAMuHMdWU1UaL8B4EqA3qS3vebOZWL69uHMgkTBwUnoUz=z_p7Q@mail.gmail.com>
-Subject: Re: [PATCH 13/20] arm64: dts: renesas: r8a774e1: Add USB-DMAC and
- HSUSB device nodes
+Date:   Wed, 5 Aug 2020 13:09:14 +0200
+Message-ID: <CAMuHMdVTBWuDVueW4OJff5kC+=PF+Q5OnKAo5-M4+7g9WB-adA@mail.gmail.com>
+Subject: Re: [PATCH 04/20] arm64: dts: renesas: r8a774e1: Add SATA controller node
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
         Vinod Koul <vkoul@kernel.org>,
@@ -79,7 +78,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Thu, Jul 16, 2020 at 7:19 PM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add usb dmac and hsusb device nodes to the RZ/G2H SoC dtsi.
+> Add the SATA controller node to the RZ/G2H SoC specific dtsi.
 >
 > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
