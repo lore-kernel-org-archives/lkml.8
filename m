@@ -2,115 +2,88 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E45AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 588ECC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB0C222B42
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F68E22CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:06:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iIer+QW6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729118AbgHEUFr (ORCPT
+        id S1727837AbgHEUGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:05:47 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58322 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727120AbgHEQfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:35:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 1583AAEF5;
-        Wed,  5 Aug 2020 14:04:49 +0000 (UTC)
-Date:   Wed, 5 Aug 2020 16:04:30 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Prarit Bhargava <prarit@redhat.com>
-Cc:     corbet@lwn.net, rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
-        chunyan.zhang@unisoc.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, orsonzhai@gmail.com,
-        zhang.lyra@gmail.com
-Subject: Re: [PATCH V13] printk: Add monotonic, boottime, and realtime
- timestamps
-Message-ID: <20200805140430.GI24529@alley>
-References: <20200729114423.30606-1-zhang.lyra@gmail.com>
- <20200729122236.17418-1-prarit@redhat.com>
+        Wed, 5 Aug 2020 16:06:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44606 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727081AbgHEQfG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 12:35:06 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36CF4C00022F;
+        Wed,  5 Aug 2020 08:13:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=qTN3VYa4Jwjn/7oIAWkxtjMSdm7jmZvsa+Nlj8ztLXA=; b=iIer+QW6lRtaqM0e8Udd2KqWnX
+        FkZCwirmtvgF11ikUzGqk6sFjTrLaS9PPgXhNQVhrEWEbAVZjgcjrU7kNYWoHONjrl4jrTDOiiGuq
+        VryDW52i+I+Ftmqp0Vf/vXKXb+29EXrYXKXEFoB5lrTUxe2sxbqUc4KO4LQd6sYW5hDc+odOP4IX5
+        Qr1hiJl4dm9ywd0iv+vF1Vfa4fhaxEz5dI89Tvt5Re7jWIy6vAnnust8dKiyvoueobhUdaPmuT248
+        yQVWQV7f/0BitBKzqebKzKckSgjd5u/SFNpH3dPu5Jf5Om2M2XnWa1OcxA70nfMTacO/NlyLby4i0
+        rR/vtRJg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k3L5k-0000vq-1c; Wed, 05 Aug 2020 15:12:32 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A0E86301A66;
+        Wed,  5 Aug 2020 17:12:30 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4870222B957C3; Wed,  5 Aug 2020 17:12:30 +0200 (CEST)
+Date:   Wed, 5 Aug 2020 17:12:30 +0200
+From:   peterz@infradead.org
+To:     Vegard Nossum <vegard.nossum@oracle.com>
+Cc:     NeilBrown <neilb@suse.de>, Steven Rostedt <rostedt@goodmis.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Re: Minor RST rant
+Message-ID: <20200805151230.GT2674@hirez.programming.kicks-ass.net>
+References: <20200724132200.51fd2065@oasis.local.home>
+ <20200724113325.44923f75@lwn.net>
+ <20200724144234.3227b501@oasis.local.home>
+ <877dusv5lc.fsf@notabene.neil.brown.name>
+ <20200729124445.GB2638@hirez.programming.kicks-ass.net>
+ <1e60ff85-4965-92cb-e50b-8ea9ccf6788e@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200729122236.17418-1-prarit@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1e60ff85-4965-92cb-e50b-8ea9ccf6788e@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2020-07-29 08:22:36, Prarit Bhargava wrote:
->   Chunyan Zhang <zhang.lyra@gmail.com> wrote:
-> > From: Prarit Bhargava <prarit@redhat.com>
-> > 
-> > printk.time=1/CONFIG_PRINTK_TIME=1 adds a unmodified local hardware clock
-> > timestamp to printk messages.  The local hardware clock loses time each
-> > day making it difficult to determine exactly when an issue has occurred in
-> > the kernel log, and making it difficult to determine how kernel and
-> > hardware issues relate to each other in real time.
-> > 
-> > Make printk output different timestamps by adding options for no
-> > timestamp, the local hardware clock, the monotonic clock, the boottime
-> > clock, and the real clock.  Allow a user to pick one of the clocks by
-> > using the printk.time kernel parameter.  Output the type of clock in
-> > /sys/module/printk/parameters/time so userspace programs can interpret the
-> > timestamp.
-> > 
-> ISTR the reason that this was dropped was because of the a problem with
-> the way systemd read the kernel's timestamps.  It got the attention of
-> Linus, and it was then pulled from the tree.
+On Wed, Aug 05, 2020 at 04:49:50PM +0200, Vegard Nossum wrote:
+> FWIW, I *really* like how the extra markup renders in a browser, and I
+> don't think I'm the only one.
+
+The thing is, I write code in a text editor, not a browser. When a
+header file says: read Documentation/foo I do 'gf' and that file gets
+opened in a buffer.
+
+Needing a browser is a fail.
+
+> If you want to read .rst files in a terminal, I would suggest using
+> something like this:
 > 
-> I need to go back and review the entire thread as it's been several years
-> since we had the discussion although ISTR someone mentioning that doing two
-> timestamps would not be a problem for systemd.
+> $ pandoc -t plain Documentation/core-api/atomic_ops.rst | less
 
-I guess that you talk about this thread
-https://lore.kernel.org/lkml/CA+55aFwUfA__6MgMgjENnx+_RYY2ZOOLiSx2ea1AvYhSZN+78A@mail.gmail.com/
-
-> For example,
-> 
-> [48551.015086]
-> 
-> would be
-> 
-> [48551.015086] m[xxxx.xxxx]
-> 
-> for the monotonic clock timestamp, and
-> 
-> [48551.015086] b[xxxx.xxxx]
-> 
-> for the boottime clock, etc.
-
-This approach has several drawbacks:
-
-  + Too long prefix might make it hard to see the real messages
-    because of shrunken/wrapped lines.
-
-  + Too long lines are problem with slow consoles.
-
-  + More space will be necessary to store all the time stamps.
-
-  + Userspace tools would need/want to parse the format. We would
-    need to maintain it forever.
+That doesn't help me with people sending me that abysmal shite in diff
+format.
 
 
-Linus had an interesting idea to print all timestamps regularly.
-The frequency might be configurable. It might print, for example,
-the following line every 10 minutes or once a day:
-
-  [48551.015086] System alive: b[xxxx.xxxx] m[xxxx.xxxx]
-
-It might be useful in general to see when the system was still alive
-before it froze.
-
-Would it be enough to sort messages printed with different clock
-sources?
-
-Best Regards,
-Petr
