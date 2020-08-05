@@ -2,107 +2,277 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B156C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2255CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 722B021744
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:41:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596616871;
-	bh=zYySd6XvoCKRv4SDeEL7K7ZJ5mGuugPdtHM4h7nd6EU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FnngLS2b9WY3sD07GDf3o68D0StYuJrOQisDgCF3DTTSHNU1KJsuavu6qj1fWkjO0
-	 c1ftIHtHDdI9n4v+hgESDr5o5MBXQ/5MWB6iCwHUGU5ievbOcINl6vE48sQZFWeYx3
-	 njl1bBhqElivqfv4IHPslkt1Z/SLKgZbNQY4ocik=
+	by mail.kernel.org (Postfix) with ESMTP id 08CE021744
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:43:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728181AbgHEIlJ (ORCPT
+        id S1727035AbgHEInm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 04:41:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41168 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727930AbgHEIlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 04:41:05 -0400
-Received: from localhost (router.4pisysteme.de [80.79.225.122])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C403B21744;
-        Wed,  5 Aug 2020 08:41:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596616865;
-        bh=zYySd6XvoCKRv4SDeEL7K7ZJ5mGuugPdtHM4h7nd6EU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tFqSH5aV7w2H3jkGzXz/Om89ztTJ87spi1KM2Q9qU1ByZTD9gW8cgY2rUMYO6qhly
-         mipAt/F5Cu6BQulosmAV7deBKZljR+L4puT0eb3EyK7RSWwkaOD1MeyTYv1fnYQ2ao
-         mlUjQM8gR7++TyG6U/UGmJ8co9FiHUNB/Ks1JfUI=
-Date:   Wed, 5 Aug 2020 10:41:03 +0200
-From:   <wsa@kernel.org>
-To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Cc:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <robh+dt@kernel.org>,
-        <ludovic.desroches@microchip.com>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
-        <kamel.bouhara@bootlin.com>
-Subject: Re: [PATCH 4/4] i2c: at91: Move to generic GPIO bus recovery
-Message-ID: <20200805084103.GD1229@kunai>
-Mail-Followup-To: <wsa@kernel.org>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <robh+dt@kernel.org>,
-        <ludovic.desroches@microchip.com>, <nicolas.ferre@microchip.com>,
-        <alexandre.belloni@bootlin.com>, <linux@armlinux.org.uk>,
-        <kamel.bouhara@bootlin.com>
-References: <20200804095926.205643-1-codrin.ciubotariu@microchip.com>
- <20200804095926.205643-5-codrin.ciubotariu@microchip.com>
+        Wed, 5 Aug 2020 04:43:42 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40481 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbgHEInj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 04:43:39 -0400
+Received: by mail-oi1-f195.google.com with SMTP id u24so29045717oiv.7;
+        Wed, 05 Aug 2020 01:43:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fM8ErjehNEcKoArcql7QjqqKo2zQaQrOu6c6NOnLA08=;
+        b=DbrMlEHMXJSGYQVL6NCOPbLNK4II1XNhjiF64+2Wv7Cgh38/964G32Ze23r2xMLRPj
+         C064heFcwuNS9tNfMyQPLFh47p8A9G5pt8xstL6ppE1/KQobiwyhGihFMNUkh+g2b7Ck
+         gqxCEXMwgg4dvje/hZUTztRS9g7UWTpMQHtxqOaS1coarhrj3wgYWQB5P6MNi2z2Z19E
+         rQkkbRgSBxiyVxTOcMe1IS4y6aY/vcL1rYOmg2jjeu5P5DbEDyYdVGKPLEf3WGQotbA9
+         EFDAMzmZzXUxBcI4XaG/9TF+0DxnwdMd/vUuvVb8y7qejlwVedN2giUR0CknfoG+PTai
+         qbGQ==
+X-Gm-Message-State: AOAM530E8r4DN/edhot17hpkgH/k6skdWlk5f3pfIzec1dBBn/hjmDUp
+        r0sEB5QK0/HvELyKXBtqZ0unXdViH3sT/RtYQZU=
+X-Google-Smtp-Source: ABdhPJyH36Gs+ZRC4Mz5nswlwKJ9L8iEK4Ugm10ap7USQH4hj/JmuSdtjo2wgot2vxHBppEKfWg89Mcm7ZgakAg8zM4=
+X-Received: by 2002:aca:4b54:: with SMTP id y81mr1870438oia.54.1596617017115;
+ Wed, 05 Aug 2020 01:43:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zbGR4y+acU1DwHSi"
-Content-Disposition: inline
-In-Reply-To: <20200804095926.205643-5-codrin.ciubotariu@microchip.com>
+References: <1596470573-15065-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200803180618.GA2297236@oden.dyn.berto.se> <CA+V-a8sHOqM2tB-72Z-wVJjvihycCq1zLuk7Py7uKGMxzOJyaA@mail.gmail.com>
+ <20200803192801.GC2297236@oden.dyn.berto.se> <CA+V-a8v0fr9jKMEdOHfDV+DSTqd57NRyQs1phC8nPTcNLR-PfQ@mail.gmail.com>
+ <20200804100510.GA2566810@oden.dyn.berto.se> <CAMuHMdW6DtbBUdEPi1DiCUv1n6dxCjvD3b1vVY7tnJq-R+vyiw@mail.gmail.com>
+ <CA+V-a8tEdrap_kaDk+K+KuA8_WWndwn4KbqD5i9n0YPVnbJ5Tg@mail.gmail.com>
+ <CAMuHMdU2N30vn-SO-AAEf34uW81pqEjfBiCN6pBLZChNucd34g@mail.gmail.com> <CA+V-a8v+FH08mcmnR=0RnqvYTeydw4AifbsyT6_KcHxxEokp5w@mail.gmail.com>
+In-Reply-To: <CA+V-a8v+FH08mcmnR=0RnqvYTeydw4AifbsyT6_KcHxxEokp5w@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 5 Aug 2020 10:43:25 +0200
+Message-ID: <CAMuHMdXt95CSTOkWotrXad6_9+bhWrA8Q-WKA3_NdApbTTLVrA@mail.gmail.com>
+Subject: Re: [PATCH v2] media: rcar-vin: Add support to select data pins for
+ YCbCr422-8bit input
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Niklas <niklas.soderlund@ragnatech.se>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Chris Paterson <Chris.Paterson2@renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Prabhakar,
 
---zbGR4y+acU1DwHSi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Aug 5, 2020 at 10:01 AM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+> On Tue, Aug 4, 2020 at 4:32 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Tue, Aug 4, 2020 at 5:12 PM Lad, Prabhakar
+> > <prabhakar.csengg@gmail.com> wrote:
+> > > On Tue, Aug 4, 2020 at 11:17 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > On Tue, Aug 4, 2020 at 12:05 PM Niklas <niklas.soderlund@ragnatech.se> wrote:
+> > > > > On 2020-08-04 09:04:25 +0100, Lad, Prabhakar wrote:
+> > > > > > On Mon, Aug 3, 2020 at 8:28 PM Niklas <niklas.soderlund@ragnatech.se> wrote:
+> > > > > > > On 2020-08-03 20:17:54 +0100, Lad, Prabhakar wrote:
+> > > > > > > > On Mon, Aug 3, 2020 at 7:06 PM Niklas <niklas.soderlund@ragnatech.se> wrote:
+> > > > > > > > > On 2020-08-03 17:02:53 +0100, Lad Prabhakar wrote:
+> > > > > > > > > > Select the data pins for YCbCr422-8bit input format depending on
+> > > > > > > > > > bus_width and data_shift passed as part of DT.
+> > > > > > > > > >
+> > > > > > > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > > > > > > > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > > >
+> > > > > > > > > > --- a/drivers/media/platform/rcar-vin/rcar-core.c
+> > > > > > > > > > +++ b/drivers/media/platform/rcar-vin/rcar-core.c
+> > > > > > > > > > @@ -624,6 +624,11 @@ static int rvin_parallel_parse_v4l2(struct device *dev,
+> > > > > > > > > >       vin->parallel = rvpe;
+> > > > > > > > > >       vin->parallel->mbus_type = vep->bus_type;
+> > > > > > > > > >
+> > > > > > > > > > +     /* select VInDATA[15:8] pins for YCbCr422-8bit format */
+> > > > > > > > > > +     if (vep->bus.parallel.bus_width == BUS_WIDTH_8 &&
+> > > > > > > > > > +         vep->bus.parallel.data_shift == DATA_SHIFT_8)
+> > > > > > > > > > +             vin->parallel->ycbcr_8b_g = true;
+> > > > > > > > > > +
+> > > > > > > > >
+> > > > > > > > > I would store the bus_width and bus_shift values in the struct
+> > > > > > > > > rvin_parallel_entity and evaluate them in place rater then create a flag
+> > > > > > > > > for this specific use-case..
+> > > > > > > > >
+> > > > > > > > Ok will do that.
+> > > > > > > >
+> > > > > > > > > Also according to the documentation is the check correct? Do we not wish
+> > > > > > > > > to use the new mode when bus_width == 16 and bus_shift == 8. The check
+> > > > > > > > > you have here seems to describe a 8 lane bus where 0 lanes are used.
+> > > > > > > > >
+> > > > > > > > bus-width is the actual data lines used, so bus_width == 16 and
+> > > > > > > > bus_shift == 8 would mean use lines 23:8, so just check for bus_width
+> > > > > > > > == 8 and bus_shift == 8 should be sufficient.
+> > > > > > >
+> > > > > > > As you and Geert points out I was wrong, they should indeed both be 8.
+> > > > > > >
+> > > > > > > >
+> > > > > > > > > I think you should also verify that bus_shift is either 0 or 8 as that
+> > > > > > > > > is all the driver supports.
+> > > > > > > > >
+> > > > > > > > Not sure if thats correct.In that case this patch wont make sense, I
+> > > > > > > > believed we agreed upon we determine the YDS depending on both
+> > > > > > > > bus-width and bus-shift.
+> > > > > > >
+> > > > > > > I'm sorry I think I lost you :-) The driver is not capable of supporting
+> > > > > > > bus_width = 8 and bus_shift = 2 right? Maybe we are talking about
+> > > > > > > different things.
+> > > > > > >
+> > > > > > > What I tried to say (updated with the knowledge of that bus_width should
+> > > > > > > indeed be 8 and not 16) was that would it make sens to with bus_width=8
+> > > > > > > allow for a bus_shift value other then 0 or 8? What for example would
+> > > > > > > the driver do if the value was 2?
+> > > > > > >
+> > > > > > I think this should be possible but I am not sure how this will work.
+> > > > > > For example on iWave G21D-Q7 platform with 16-bit wired bus say we
+> > > > > > connect a 8-bit camera as below:
+> > > > > >
+> > > > > > bus-width = 8 and bus-shift = 2
+> > > > > > VI1_G0_B        -> Not connected
+> > > > > > VI1_G1_B        -> Not connected
+> > > > > > VI1_G2_B_16        -> Connected
+> > > > > > VI1_G3_B        -> Connected
+> > > > > > VI1_G4_B        -> Connected
+> > > > > > VI1_G5_B        -> Connected
+> > > > > > VI1_G6_B        -> Connected
+> > > > > > VI1_G7_B        -> Connected
+> > > > > > VI1_DATA7_B/VI1_B7_B_16    -> Connected
+> > > > > > VI1_DATA6_B/VI1_B6_B_16    -> Connected
+> > > > > > VI1_DATA5_B/VI1_B5_B_16    -> Not connected
+> > > > > > VI1_DATA4_B/VI1_B4_B_16    -> Not connected
+> > > > > > VI1_DATA3_B/VI1_B3_B_16    -> Not connected
+> > > > > > VI1_DATA2_B/VI1_B2_B_16    -> Not connected
+> > > > > > VI1_DATA1_B/VI1_B1_B_16    -> Not connected
+> > > > > > VI1_DATA0_B/VI1_B0_B_16    -> Not connected
+> > > > >
+> > > > > I agree this is how I would imagine bus-width = 8 and bus-shift = 2 to
+> > > > > be wired.
+> > > > >
+> > > > > > So in this case for 8-bit YCbCr422 format should YDS be set I am not
+> > > > > > sure. Or is this not a valid case at all ?
+> > > > >
+> > > > > That is my question :-)
+> > > > >
+> > > > > I can't find anything int the documentation that would allow is to do
+> > > > > anything other then bus-width = 8 together with bus-shift = 0 (do not
+> > > > > set YDS) or bus-shift = 8 (set YDS). So that is why I suggested you
+> > > > > check for this and print a warning if bus-shift is anything else :-)
+> > > > >
+> > > > > But if you can figured out how we can do a bus-shift = 2 as in your
+> > > > > example then of course the check is wrong. I have not read the docs
+> > > > > carefully enough about this to rule it out as impossible.
+> > > >
+> > > > IIUIC, this is a completely different scenario than "low" or "high" wiring
+> > > > of 8-bit YCbCr-422, hence YDS does not apply?
+> > > >
+> > > I tend to agree. We only enable YDS if bus-width = 8 and bus-shift=8
+> > > as done by this patch. (Although there isn't enough documentation to
+> > > prove it)
+> > >
+> > > > The iWave G21D-Q7 wiring seems to be 10-bit YCbCr-422 with the 2 LSB
+> > > > bits unconnected?
+> > > >
+> > > B-8bit/ BG-16 bit for VI0 and  B-8bit/ BG-16 bit for VI0
+> > >
+> > > > Interestingly, that mode is supported on all RZ/G1 SoCs, on most R-Car
+> > > > Gen3 SoCs, but only on a single R-Car Gen2 SoC (V2H).
+> > > >
+> > > YDS mode ?
+> >
+> > No, 10-bit YCbCr-422. But please forget my comment, I was looking at
+> > the wrong table.
+> >
+> > VI1_G[7:2] plus VI1_DATA[7:6] is not even a contiguous subset (I had
+> > misread the used subset to be G[1:0] and B[7:2]), so it cannot be represented
+> > using just bus-width and bus-shift properties?
+> >
+> Yes and here is my explanation.
+>
+> In Gen1 manual for YDS bit it says the below:
+> 0: Vin_B[7:0] pins
+> 1: Vin_G[7:0] pins
+>
+> And in Gen2 manual it says,
+> 0: Vin_DATA[7:0] pins
+> 1: Vin_DATA[7:0] pins
 
-On Tue, Aug 04, 2020 at 12:59:26PM +0300, Codrin Ciubotariu wrote:
-> Make the Microchip at91 driver the first to use the generic GPIO bus
-> recovery support from the I2C core and discard the driver implementation.
->=20
-> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Vin_DATA[15:8]
 
-Applied to for-next, thanks!
+The difference is due to some SoCs naming the signals R[7:0], G[7:0], B[7:0],
+while other SoCs use DATA[23:0], the latter presumably to avoid
+confusion when using non-RGB input formats.
+R-Car V2H uses a mix: D[23:16]_R[7:0], D[15:8]_G[7:0], D[7:0]_B[7:0] ;-)
 
+However, the underlying behavior is the same, which is clear from the
+RGB-666 mode, which is not using contiguous DATA[17:0], but sparse
+DATA[23:18], DATA[15:10], DATA[7:2], i.e. the 6 MSB of each color
+component.
 
---zbGR4y+acU1DwHSi
-Content-Type: application/pgp-signature; name="signature.asc"
+> On iwave platform for the VIN2 interface the following G pins are connected:
+>
+>  VI2_G0_MARK, VI2_G1_MARK,
+>  VI2_G2_MARK, VI2_G3_MARK,
+>  VI2_G4_MARK, VI2_G5_MARK,
+>  VI2_G6_MARK, VI2_G7_MARK,
+>
+> And for capture to work on this interface the YDS bit has to be set.
+>
+> Now suppose some day we have a platform with 16 bit interface where G
+> and R pins are connected:
+>
+>         VI2_G0_MARK, VI2_G1_MARK,
+>         VI2_G2_MARK, VI2_G3_MARK,
+>         VI2_G4_MARK, VI2_G5_MARK,
+>         VI2_G6_MARK, VI2_G7_MARK,
+>         /* R */
+>         VI2_R0_MARK, VI2_R1_MARK,
+>         VI2_R2_MARK, VI2_R3_MARK,
+>         VI2_R4_MARK, VI2_R5_MARK,
+>         VI2_R6_MARK, VI2_R7_MARK,
+>
+> Scenarios
+> 1: Say we connect a 8-bit camera just  with the G pins - YDS has to be
+> 1 for 8-bit YCbCr
+> 2: Say we connect a 8-bit camera just with the R pins - YDS has to be
+> 0 for 8-bit YCbCr
+> 3: Now say we use G2-G7 along with R0 and R1 pins to connect a 8 bit
+> camera - YDS has to be 1 for 8-bit camera
+>
+> And looking at the Gen1 description of YDS bit, having a combination
+> of B and G is not a valid case.
 
------BEGIN PGP SIGNATURE-----
+Scenario 3 is indeed not supported. But G[1:0] and B[7:2] (= DATA[9:2])
+could work when using 10-bit YCbCr.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8qcJ8ACgkQFA3kzBSg
-Kbb4Ww/8CYUaI2G0L1UaRzOs6sZRMSSxgHuIpUzXkRhAwfyBwCoe/4GEcccJnWYc
-j7k+A+23lrLSUHKQS4vkMve01lm9GWTcW6Wdbi2PlfIkDS+02u0A4sFvihRF/tyN
-ubAp2Hby7Px1bfCxtTLXbFkyq5lmda3Rbb4oNo9eNAlCgwQzROUFSQUgCgiqc+jK
-kucUBj7z2xazt8eFixn/XCrrJTsrBmGiFeyPINGNK6KUrUJE8wVxVBYxXLl2Xpw3
-c/Wdd/GF0X+A5OtpIggnmgvRtNsnNHNvi4vWzQyYVJ0JY/C8BwuBzc8AVecHEiGa
-B6eaXlPTPh38gseN+NKSMuZf/0MZ7uQEGq4Iwx2bbreuGOJqwJns1CYa0d3fdB2L
-flMeZypzM0QZkH9JgbeR58w8B1oI/4IgUrv8tTYMWJJWvqg+pJavIyNHR3IqW23T
-vlSKvFhUK9gwN93HjSPQohX07V3/XfIibe4KGIt1Ui5olWpmLJfAOSvmeMFSsj3T
-QgIzG8KvaGmYG9f2dJk1isww6uqoHPh5RcU2f0G0CKMeoQb78BjasYuEeVOzoPD8
-/j/LS+V+j8+7Gd/5PFK2g2krMejtJTJwdQy3wAVN+9GptvtVvHJeJJ54+ovRLYSk
-T988WCHVwtHO2FI4iZRdZVlekItXjw9K9PcvF1dITkL5h3kgfBM=
-=6HiG
------END PGP SIGNATURE-----
+> So my vote is to have a property in the endpoint to say if YDS has to
+> be enabled as done in my first version of the patch.
 
---zbGR4y+acU1DwHSi--
+"YDS" is not a generic property, "data-shift" is.
+
+Now, how do you specify in DT that RGB-666 mode is to be used?
+"bus-width = <18>"?
+That won't work with the (so far theoretical) case where both contiguous
+and sparse variants are supported by the hardware.  And "data-shift"
+won't help here.
+
+Am I overdesigning? ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
