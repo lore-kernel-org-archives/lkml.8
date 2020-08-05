@@ -2,122 +2,232 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 814B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FDBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE2F21744
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F2EF22D01
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:54:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ebgdB1vq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbgHEGyL (ORCPT
+        id S1728076AbgHEGya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 02:54:11 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:43170 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725920AbgHEGyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 02:54:11 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E04062003A2;
-        Wed,  5 Aug 2020 08:54:08 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 22B2F2011A3;
-        Wed,  5 Aug 2020 08:54:06 +0200 (CEST)
-Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5FEF54024E;
-        Wed,  5 Aug 2020 08:54:02 +0200 (CEST)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
-        o.rempel@pengutronix.de, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH] dt-bindings: nvmem: Convert snvs lpgpr to json-schema
-Date:   Wed,  5 Aug 2020 14:49:32 +0800
-Message-Id: <1596610172-30323-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 5 Aug 2020 02:54:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39508 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbgHEGya (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 02:54:30 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35E72C06174A;
+        Tue,  4 Aug 2020 23:54:29 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id x2so3103762ybf.12;
+        Tue, 04 Aug 2020 23:54:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xTEd3nRic+QB5ggRL63Pqwitnac1w25gtRmCK8xAnw4=;
+        b=ebgdB1vqchfAykMJvcS6HR3qnKAXivBJAkoLEAsfzModXNNyJ/DnIVqUt0Oc6aCLmx
+         yj6yHtZgJWyYDcjJsOZdWBVK74iijBWtRf/03km7fc8af+BSAeGP4K5Iak/Lf2DozuvR
+         w2gFFyP999cB36wVrrboDChhrQiITWFRfVvFczX+Wf+UwsSvjNEXEpNUB0yaa196Nocq
+         lGDpiPbs31+nLEW/N34LICSvf26cds8iAkvV6rmINARkA5P2IbVuLLA06JeMQJY0g9zK
+         H3uPF+RVLpQh2JPZTqWj+1EjJw1LJyAXHcJno4bmor0OjCOtrNyAIlmS5Fro32l6TrlG
+         vhwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xTEd3nRic+QB5ggRL63Pqwitnac1w25gtRmCK8xAnw4=;
+        b=KGeQSLD8Pxl7g7IfJrf0w3ow5VAHC7tu9A4yQa4zxyduFsyIoY8kvfTexYWCnivsch
+         Vo2WUCMkDoWbpXuUxiCfzRa3RP3THqrCA3auXH7GvLA9g7mz0iYH1wZ97OzCpeXB7+Rc
+         YDL2KObiCgjsbitDJilnDh/EfV9PPnuf/0ZETHhE37W0u4+9QGn2tGSEQIvHNVQQVvDg
+         GmHg/pOBMk3TuB4A7P6DoK6EYvUVlOAAaD2fjhNvDtwJgUhIGuiIyqcIfdOLxjQRZiCT
+         OV5SIirUceVdX1CtO0dw2bo6H4QlozanHAj8zSJAxblamNYb5wYju0gfdWWLKmQzgh5+
+         qcTA==
+X-Gm-Message-State: AOAM531kCfdwNqmJNcTM/g8Zsi6be++lGH9mDyruSKB+zfuNZIw7Mc4U
+        dSm33udDUFT5mLN/zgc8fmYlBVfO8J8RANS5tSw=
+X-Google-Smtp-Source: ABdhPJwG64UwA4tapOtTIu5DZTpK85i681anKVYYWCnv86aGdIppK3OxafxHP0/fIf6TxmPZq5UVyFyvBlh3uT6zUGM=
+X-Received: by 2002:a25:2ad3:: with SMTP id q202mr2539928ybq.27.1596610468393;
+ Tue, 04 Aug 2020 23:54:28 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200801084721.1812607-1-songliubraving@fb.com>
+ <20200801084721.1812607-3-songliubraving@fb.com> <CAEf4BzYp4gO1P+OrY7hGyQjdia3BuSu4DX2_z=UF6RfGNa+gkQ@mail.gmail.com>
+ <9C1285C1-ECD6-46BD-BA95-3E9E81C00EF0@fb.com> <CAEf4BzYojfFiMn6VeUkxUsdSTdFK0A4MzKQxhCCp_OowkseznQ@mail.gmail.com>
+ <5BC1D7AD-32C1-4CDC-BA99-F4DABE61EEA3@fb.com> <CAEf4BzbbCZmijrU4vfkmq2PFsMMFG+xz9qR1e4wfrdm6tF4_hA@mail.gmail.com>
+ <4DB698F2-BC51-4E96-BC3B-F478BE9AE106@fb.com>
+In-Reply-To: <4DB698F2-BC51-4E96-BC3B-F478BE9AE106@fb.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 4 Aug 2020 23:54:16 -0700
+Message-ID: <CAEf4Bza4KXkVov=UwouryG5JcqYQ=9mDG8nBoWmb97rv+_yqTw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 2/5] libbpf: support BPF_PROG_TYPE_USER programs
+To:     Song Liu <songliubraving@fb.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <Kernel-team@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Xu <dlxu@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the snvs lpgpr binding to DT schema format using json-schema.
+On Tue, Aug 4, 2020 at 11:26 PM Song Liu <songliubraving@fb.com> wrote:
+>
+>
+>
+> > On Aug 4, 2020, at 10:32 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+> >
+> > On Tue, Aug 4, 2020 at 8:59 PM Song Liu <songliubraving@fb.com> wrote:
+> >>
+> >>
+> >>
+> >>> On Aug 4, 2020, at 6:38 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+> >>>
+> >>> On Mon, Aug 3, 2020 at 6:18 PM Song Liu <songliubraving@fb.com> wrote:
+> >>>>
+> >>>>
+> >>>>
+> >>>>> On Aug 2, 2020, at 6:40 PM, Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+> >>>>>
+> >>>>> On Sat, Aug 1, 2020 at 1:50 AM Song Liu <songliubraving@fb.com> wrote:
+> >>>>>>
+> >>>>
+> >>>> [...]
+> >>>>
+> >>>>>
+> >>>>>> };
+> >>>>>>
+> >>>>>> LIBBPF_API int bpf_prog_test_run_xattr(struct bpf_prog_test_run_attr *test_attr);
+> >>>>>> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> >>>>>> index b9f11f854985b..9ce175a486214 100644
+> >>>>>> --- a/tools/lib/bpf/libbpf.c
+> >>>>>> +++ b/tools/lib/bpf/libbpf.c
+> >>>>>> @@ -6922,6 +6922,7 @@ static const struct bpf_sec_def section_defs[] = {
+> >>>>>>      BPF_PROG_SEC("lwt_out",                 BPF_PROG_TYPE_LWT_OUT),
+> >>>>>>      BPF_PROG_SEC("lwt_xmit",                BPF_PROG_TYPE_LWT_XMIT),
+> >>>>>>      BPF_PROG_SEC("lwt_seg6local",           BPF_PROG_TYPE_LWT_SEG6LOCAL),
+> >>>>>> +       BPF_PROG_SEC("user",                    BPF_PROG_TYPE_USER),
+> >>>>>
+> >>>>> let's do "user/" for consistency with most other prog types (and nice
+> >>>>> separation between prog type and custom user name)
+> >>>>
+> >>>> About "user" vs. "user/", I still think "user" is better.
+> >>>>
+> >>>> Unlike kprobe and tracepoint, user prog doesn't use the part after "/".
+> >>>> This is similar to "perf_event" for BPF_PROG_TYPE_PERF_EVENT, "xdl" for
+> >>>> BPF_PROG_TYPE_XDP, etc. If we specify "user" here, "user/" and "user/xxx"
+> >>>> would also work. However, if we specify "user/" here, programs that used
+> >>>> "user" by accident will fail to load, with a message like:
+> >>>>
+> >>>>       libbpf: failed to load program 'user'
+> >>>>
+> >>>> which is confusing.
+> >>>
+> >>> xdp, perf_event and a bunch of others don't enforce it, that's true,
+> >>> they are a bit of a legacy,
+> >>
+> >> I don't see w/o "/" is a legacy thing. BPF_PROG_TYPE_STRUCT_OPS just uses
+> >> "struct_ops".
+> >>
+> >>> unfortunately. But all the recent ones do,
+> >>> and we explicitly did that for xdp_dev/xdp_cpu, for instance.
+> >>> Specifying just "user" in the spec would allow something nonsensical
+> >>> like "userargh", for instance, due to this being treated as a prefix.
+> >>> There is no harm to require users to do "user/my_prog", though.
+> >>
+> >> I don't see why allowing "userargh" is a problem. Failing "user" is
+> >> more confusing. We can probably improve that by a hint like:
+> >>
+> >>    libbpf: failed to load program 'user', do you mean "user/"?
+> >>
+> >> But it is pretty silly. "user/something_never_used" also looks weird.
+> >
+> > "userargh" is terrible, IMO. It's a different identifier that just
+> > happens to have the first 4 letters matching "user" program type.
+> > There must be either a standardized separator (which happens to be
+> > '/') or none. See the suggestion below.
+>
+> We have no problem deal with "a different identifier that just happens
+> to have the first letters matching", like xdp vs. xdp_devmap and
+> xdp_cpumap, right?
+>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- .../devicetree/bindings/nvmem/snvs-lpgpr.txt       | 21 ---------------
- .../devicetree/bindings/nvmem/snvs-lpgpr.yaml      | 31 ++++++++++++++++++++++
- 2 files changed, 31 insertions(+), 21 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
- create mode 100644 Documentation/devicetree/bindings/nvmem/snvs-lpgpr.yaml
+xdp vs xdp_devmap is an entirely different thing. We deal with it by
+checking xdp_devmap first. What I'm saying is that user can do
+"xdpomg" and libbpf would be happy (today). And I don't think that's
+good. But further, if someone does something like "xdp_devmap_omg",
+guess which program type will be inferred? Hint: not xdp_devmap and
+libbpf won't report an error either. All because "xdp" is so lax
+today.
 
-diff --git a/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
-deleted file mode 100644
-index 3cb1708..0000000
---- a/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
-+++ /dev/null
-@@ -1,21 +0,0 @@
--Device tree bindings for Low Power General Purpose Register found in i.MX6Q/D
--and i.MX7 Secure Non-Volatile Storage.
--
--This DT node should be represented as a sub-node of a "syscon",
--"simple-mfd" node.
--
--Required properties:
--- compatible: should be one of the fallowing variants:
--	"fsl,imx6q-snvs-lpgpr" for Freescale i.MX6Q/D/DL/S
--	"fsl,imx6ul-snvs-lpgpr" for Freescale i.MX6UL
--	"fsl,imx7d-snvs-lpgpr" for Freescale i.MX7D/S
--
--Example:
--snvs: snvs@020cc000 {
--	compatible = "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
--	reg = <0x020cc000 0x4000>;
--
--	snvs_lpgpr: snvs-lpgpr {
--		compatible = "fsl,imx6q-snvs-lpgpr";
--	};
--};
-diff --git a/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.yaml b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.yaml
-new file mode 100644
-index 0000000..cbc6262
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.yaml
-@@ -0,0 +1,31 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/nvmem/snvs-lpgpr.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Low Power General Purpose Register found in i.MX Secure Non-Volatile Storage
-+
-+maintainers:
-+  - Oleksij Rempel <o.rempel@pengutronix.de>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,imx6q-snvs-lpgpr
-+      - fsl,imx6ul-snvs-lpgpr
-+      - fsl,imx7d-snvs-lpgpr
-+
-+required:
-+  - compatible
-+
-+examples:
-+  - |
-+    snvs@20cc000 {
-+        compatible = "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
-+        reg = <0x20cc000 0x4000>;
-+
-+        snvs_lpgpr: snvs-lpgpr {
-+            compatible = "fsl,imx6q-snvs-lpgpr";
-+        };
-+    };
--- 
-2.7.4
+> >>
+> >>> Alternatively, we could introduce a new convention in the spec,
+> >>> something like "user?", which would accept either "user" or
+> >>> "user/something", but not "user/" nor "userblah". We can try that as
+> >>> well.
+> >>
+> >> Again, I don't really understand why allowing "userblah" is a problem.
+> >> We already have "xdp", "xdp_devmap/", and "xdp_cpumap/", they all work
+> >> fine so far.
+> >
+> > Right, we have "xdp_devmap/" and "xdp_cpumap/", as you say. I haven't
+> > seen so much pushback against trailing forward slash with those ;)
+>
+> I haven't seen any issue with old "perf_event", "xdp" and new "struct_ops"
+> either.
+>
+> >
+> > But anyways, as part of deprecating APIs and preparing libbpf for 1.0
+> > release over this half, I think I'm going to emit warnings for names
+> > like "prog_type_whatever" or "prog_typeevenworse", etc. And asking
+> > users to normalize section names to either "prog_type" or
+> > "prog_type/something/here", whichever makes sense for a specific
+> > program type.
+>
+> Exactly, "user" makes sense here; while "kprobe/__set_task_comm" makes
+> sense for kprobe.
 
+Right, but "userblah" doesn't. It would be great if you could help
+make what I described above become true. But at least don't make it
+worse by allowing unrestricted "user" prefix. I'm OK with strict
+"user" or "user/blah", I'm not OK with "userblah", I'm sorry.
+
+>
+> > Right now libbpf doesn't allow two separate BPF programs
+> > with the same section name, so enforcing strict "user" is limiting to
+> > users. We are going to lift that restriction pretty soon, though. But
+> > for now, please stick with what we've been doing lately and mark it as
+> > "user/", later we'll allow just "user" as well.
+>
+> Since we would allow "user" later, why we have to reject it for now?
+
+Because libbpf is dumb in that regard today? And instead of migrating
+users later, I want to prevent users making bad choices right now.
+Then relax it, if necessary. Alternatively, we can fix up libbpf logic
+before the USER program type lands.
+
+> Imagine the user just compiled and booted into a new kernel with user
+> program support; and then got the following message:
+>
+>         libbpf: failed to load program 'user'
+>
+> If I were the user, I would definitely question whether the kernel was
+> correct...
+
+That's also bad, and again, we can make libbpf better. I think moving
+forward any non-recognized BPF program type should be reported by
+libbpf as an error. But we can't do it right now, we have to have a
+period in which users will get a chance to update their BPF programs.
+This will have to happen over few libbpf releases at least. So please
+join in on the fun of fixing stuff like this.
