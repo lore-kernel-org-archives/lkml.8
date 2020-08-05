@@ -2,98 +2,205 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F01CDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E95C3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0CAE20792
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:23:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596619422;
-	bh=yzbI8DMCZjB2O/BAuietvfHV7T/GKvMZyEQSWDplvUY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YHvZskEiv4XpcG1eNe0GlHlUMsAKxlEAXw9yCXl+uoj2ibOswuY/Qb8BlX9GMDfn+
-	 yMUsRHnAVIBwdW4nCyw02IqfZ5/IAc0gKz9VsR8MLgGXio3/YMLeUapox+/4zmykU6
-	 1y6RexIDYluKdARcwlRvZRNhws8+pcG+xa4jVQRY=
+	by mail.kernel.org (Postfix) with ESMTP id C104520792
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:24:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="okZSXdw6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726191AbgHEJXj (ORCPT
+        id S1728226AbgHEJX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 05:23:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58296 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727921AbgHEJWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 05:22:25 -0400
-Received: from localhost (router.4pisysteme.de [80.79.225.122])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C34420792;
-        Wed,  5 Aug 2020 09:22:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596619345;
-        bh=yzbI8DMCZjB2O/BAuietvfHV7T/GKvMZyEQSWDplvUY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NwHnmd4SPOVDRbKgPwdL8kOK1JcEay8gZYX8B1vo9QE7W6oamqYQcU9VDfRRH7FoS
-         C40teKRK0BJ58G8MX3dk7yxpqa3a9vW+9q05+ZSJgUKkuBBWuo17R+AKwUufULGS35
-         ceyTsGzcHr2az2VHjWLYaBSCO6VX8fHpHg8RgP1A=
-Date:   Wed, 5 Aug 2020 11:22:23 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     Jean Delvare <jdelvare@suse.de>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH for v5.9] i2c: Replace HTTP links with HTTPS ones
-Message-ID: <20200805092223.GJ1229@kunai>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        Jean Delvare <jdelvare@suse.de>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200719193553.61319-1-grandmaster@al2klimov.de>
- <20200721115029.5669984b@endymion>
- <b7cfd6e3-ee79-b7e2-c7f9-a58e960c3a88@al2klimov.de>
+        Wed, 5 Aug 2020 05:23:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34096 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbgHEJXD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 05:23:03 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1AD1C06174A;
+        Wed,  5 Aug 2020 02:23:02 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id v4so37180396ljd.0;
+        Wed, 05 Aug 2020 02:23:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=k3yjqFYKdJesN5lripMjBQkzUelOUOp0oDH31apSxZA=;
+        b=okZSXdw6Y0ttXICPSCmW6GXQBbfYHEVTDCOJQarVL0Y1p6OaYWConGm15iukUXTi7v
+         z6XGAoeP2We2TueeUobi5Z1hm0fx/RJA07FQbZWcZklj/XLTyO/UtfdR7OPGyPyuekiN
+         XNYHeP5aWq5NixbJosMl+3cPRJn30BEUb6+IBVYa4FFdS5uFvZWNovkJJLNkCMiZdi0D
+         5UVs/Jumc8C3tYBAJiFRMdv1Zo+vYj4N3dfealzZc92le6EHTsNpgbi4vG+XU6tNPi8j
+         MsXDUUohVqbcEttpwJvdEV8yLhKtlX+loH4y8tPBJTqsNl61orKP14NbYB30pYxRCtQf
+         oF1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=k3yjqFYKdJesN5lripMjBQkzUelOUOp0oDH31apSxZA=;
+        b=uWcZ3mXBBqQGkVFtGnB96FX86vpVXYzIzUGG1hN+jdb2kR9sgLxhl+5SHiMe2qxfgp
+         mqVbRQZMQzjm8WYAEO39jKXUdSKbLf9sfKekpepY7fZF6TvIdP24GCBU97iJ24iBr+sB
+         bQxScDaEYUnR0PXxmOsSa/+BNa9Frf3CDblwunG/p7u9opZoc6GitBJBAlh+s0+IVo+k
+         c5jju2eql9XS843+Rnc+1IlNeYWG3UyIr98gCyVXajGFnO6kb4OCu4KKOY8YOhOi95rv
+         3iS92CaqeThvzm+CoTxf0bhAR/X7Nm6YFH2k8TMMyApx5NetoDe+iFsY+KHAj+wtIB/T
+         hmlw==
+X-Gm-Message-State: AOAM5313F/TWmqev5xBOeSWRKJldCXDdAhFKv2KeY4A4a/y41rZ+k6mw
+        +BLT42yyi9VrnokWlZixa0X+PMRfrhJCuQbIj+kUcQ==
+X-Google-Smtp-Source: ABdhPJywvMDkz221y0MsWfBaVkgJOm6owKQe1lt9e2rtIOfWC9DbwWapS6yCjGQh6hGxnNByXT8lM7A+UKjCKKQF5Rw=
+X-Received: by 2002:a2e:b4e5:: with SMTP id s5mr936003ljm.153.1596619381093;
+ Wed, 05 Aug 2020 02:23:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="sT9gWZPUZYhvPS56"
-Content-Disposition: inline
-In-Reply-To: <b7cfd6e3-ee79-b7e2-c7f9-a58e960c3a88@al2klimov.de>
+References: <20200805063150.41037-1-colyli@suse.de>
+In-Reply-To: <20200805063150.41037-1-colyli@suse.de>
+From:   Jinpu Wang <jinpuwang@gmail.com>
+Date:   Wed, 5 Aug 2020 11:22:49 +0200
+Message-ID: <CAD9gYJLDPLiF+-8gjk4cpgXBROLy_Hg5zcx+rU8-Bi+jVRiz=w@mail.gmail.com>
+Subject: Re: [PATCH v3] block: check queue's limits.discard_granularity in __blkdev_issue_discard()
+To:     Coly Li <colyli@suse.de>
+Cc:     linux-block@vger.kernel.org, linux-bcache@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Enzo Matsumiya <ematsumiya@suse.com>,
+        Evan Green <evgreen@chromium.org>,
+        Hannes Reinecke <hare@suse.com>, Jens Axboe <axboe@kernel.dk>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Xiao Ni <xni@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Coly,
 
---sT9gWZPUZYhvPS56
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+one question below:
+Coly Li <colyli@suse.de> =E4=BA=8E2020=E5=B9=B48=E6=9C=885=E6=97=A5=E5=91=
+=A8=E4=B8=89 =E4=B8=8A=E5=8D=888:36=E5=86=99=E9=81=93=EF=BC=9A
+>
+> If create a loop device with a backing NVMe SSD, current loop device
+> driver doesn't correctly set its  queue's limits.discard_granularity and
+> leaves it as 0. If a discard request at LBA 0 on this loop device, in
+> __blkdev_issue_discard() the calculated req_sects will be 0, and a zero
+> length discard request will trigger a BUG() panic in generic block layer
+> code at block/blk-mq.c:563.
+>
+> [  955.565006][   C39] ------------[ cut here ]------------
+> [  955.559660][   C39] invalid opcode: 0000 [#1] SMP NOPTI
+> [  955.622171][   C39] CPU: 39 PID: 248 Comm: ksoftirqd/39 Tainted: G    =
+        E     5.8.0-default+ #40
+> [  955.622171][   C39] Hardware name: Lenovo ThinkSystem SR650 -[7X05CTO1=
+WW]-/-[7X05CTO1WW]-, BIOS -[IVE160M-2.70]- 07/17/2020
+> [  955.622175][   C39] RIP: 0010:blk_mq_end_request+0x107/0x110
+> [  955.622177][   C39] Code: 48 8b 03 e9 59 ff ff ff 48 89 df 5b 5d 41 5c=
+ e9 9f ed ff ff 48 8b 35 98 3c f4 00 48 83 c7 10 48 83 c6 19 e8 cb 56 c9 ff=
+ eb cb <0f> 0b 0f 1f 80 00 00 00 00 0f 1f 44 00 00 55 48 89 e5 41 56 41 54
+> [  955.622179][   C39] RSP: 0018:ffffb1288701fe28 EFLAGS: 00010202
+> [  955.749277][   C39] RAX: 0000000000000001 RBX: ffff956fffba5080 RCX: 0=
+000000000004003
+> [  955.749278][   C39] RDX: 0000000000000003 RSI: 0000000000000000 RDI: 0=
+000000000000000
+> [  955.749279][   C39] RBP: 0000000000000000 R08: 0000000000000000 R09: 0=
+000000000000000
+> [  955.749279][   C39] R10: ffffb1288701fd28 R11: 0000000000000001 R12: f=
+fffffffa8e05160
+> [  955.749280][   C39] R13: 0000000000000004 R14: 0000000000000004 R15: f=
+fffffffa7ad3a1e
+> [  955.749281][   C39] FS:  0000000000000000(0000) GS:ffff95bfbda00000(00=
+00) knlGS:0000000000000000
+> [  955.749282][   C39] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  955.749282][   C39] CR2: 00007f6f0ef766a8 CR3: 0000005a37012002 CR4: 0=
+0000000007606e0
+> [  955.749283][   C39] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0=
+000000000000000
+> [  955.749284][   C39] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0=
+000000000000400
+> [  955.749284][   C39] PKRU: 55555554
+> [  955.749285][   C39] Call Trace:
+> [  955.749290][   C39]  blk_done_softirq+0x99/0xc0
+> [  957.550669][   C39]  __do_softirq+0xd3/0x45f
+> [  957.550677][   C39]  ? smpboot_thread_fn+0x2f/0x1e0
+> [  957.550679][   C39]  ? smpboot_thread_fn+0x74/0x1e0
+> [  957.550680][   C39]  ? smpboot_thread_fn+0x14e/0x1e0
+> [  957.550684][   C39]  run_ksoftirqd+0x30/0x60
+> [  957.550687][   C39]  smpboot_thread_fn+0x149/0x1e0
+> [  957.886225][   C39]  ? sort_range+0x20/0x20
+> [  957.886226][   C39]  kthread+0x137/0x160
+> [  957.886228][   C39]  ? kthread_park+0x90/0x90
+> [  957.886231][   C39]  ret_from_fork+0x22/0x30
+> [  959.117120][   C39] ---[ end trace 3dacdac97e2ed164 ]---
+>
+> This is the procedure to reproduce the panic,
+>   # modprobe scsi_debug delay=3D0 dev_size_mb=3D2048 max_queue=3D1
+Why do you need scsi_debug here, it's not relevant and not used?
+>   # losetup -f /dev/nvme0n1 --direct-io=3Don
+>   # blkdiscard /dev/loop0 -o 0 -l 0x200
+>
+> This patch fixes the issue by checking q->limits.discard_granularity in
+> __blkdev_issue_discard() before composing the discard bio. If the value
+> is 0, then prints a warning oops information and returns -EOPNOTSUPP to
+> the caller to indicate that this buggy device driver doesn't support
+> discard request.
+The patch itself looks correct to me.
+>
+> Fixes: 9b15d109a6b2 ("block: improve discard bio alignment in __blkdev_is=
+sue_discard()")
+> Fixes: c52abf563049 ("loop: Better discard support for block devices")
+> Reported-and-suggested-by: Ming Lei <ming.lei@redhat.com>
+> Signed-off-by: Coly Li <colyli@suse.de>
+> Reviewed-by: Ming Lei <ming.lei@redhat.com>
+> Cc: Bart Van Assche <bvanassche@acm.org>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Enzo Matsumiya <ematsumiya@suse.com>
+> Cc: Evan Green <evgreen@chromium.org>
+> Cc: Hannes Reinecke <hare@suse.com>
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Cc: Martin K. Petersen <martin.petersen@oracle.com>
+> Cc: Xiao Ni <xni@redhat.com>
+Reviewed-by: Jack Wang <jinpu.wang@cloud.ionos.com>
 
-
-> Yes, I've chosen "the easy way" of git commit --amend:
-> Editing the patch file.
-> I this a problem?
-
-Usually, yes. It can easily create inconsitencies which make me as a
-maintainer suspicious.
-
-
---sT9gWZPUZYhvPS56
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8qek8ACgkQFA3kzBSg
-Kba6fQ//b5DB5EV9/VBgY5pTkH5g9BcBngQVJf1CQdIEY2kuWySeWj2m87j0olxH
-BucZ2cUBqZuN2LWgTS78iPx6c5Wus+jgOAqkfIoLw5Q+Rg9ynhoU2VlEyD0vllyl
-ApKMcMFIYr+hpzRaLx6AA9kDuWMhviViEJI9rWhUKhTW1PSsNaekXY7MLInOU7u3
-RA9urU1pQTBWum8dK8ck13JzEQxMQqxwc0gnXHrmLXsG1ytT/4DN7vIibAT6dRaf
-6UySyleMiWkgf9MpRgEg/N4zRQkQAwuRK36HbjN+52BqK2oVuNDC1+jwFUE03uFM
-6r8ea0SCiQMRZDwuIOH1kWbIK1R3sHstyHjm60UsV592tHD+8+zMdA+1b9jYgOmr
-hsx4PtMsFQK8McfI27bK5P/4SkQW1TJA3TOS+2OjajbjgLPO3EIpKaZmZcIQ5xOl
-BePZWaGZ5Ab/xqpVgLs3tBNPDWWReDy7mi3lFSFuTjXnYFbRtJnv6LIMxX/Iq+Us
-Ooy8uwZM04d7RTAIL9Cpp2O7gLmtZK5X4vydWMur8lIqkkH/4xf6LNlqGkgim1qj
-BJrt37mXtJz4J//LrxITkYCuaDVGeIy2aOpsZupSmpwnYeqhsLloI0o9urrv/Mbi
-55NDv5mXI7MPl424ZCVwJh4rJxxQlMHiJ06rkx8HQ2nGbMgOcj0=
-=VpnK
------END PGP SIGNATURE-----
-
---sT9gWZPUZYhvPS56--
+Thanks
+> ---
+> Changelog:
+> v3: print device name assocated with the buggy driver.
+> v2: fix typo of the wrong return error code.
+> v1: first version.
+>
+>  block/blk-lib.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/block/blk-lib.c b/block/blk-lib.c
+> index 019e09bb9c0e..d3bbb3d9fac3 100644
+> --- a/block/blk-lib.c
+> +++ b/block/blk-lib.c
+> @@ -47,6 +47,15 @@ int __blkdev_issue_discard(struct block_device *bdev, =
+sector_t sector,
+>                 op =3D REQ_OP_DISCARD;
+>         }
+>
+> +       /* In case the discard granularity isn't set by buggy device driv=
+er */
+> +       if (WARN_ON_ONCE(!q->limits.discard_granularity)) {
+> +               char dev_name[BDEVNAME_SIZE];
+> +
+> +               bdevname(bdev, dev_name);
+> +               pr_err("%s: Error: discard_granularity is 0.\n", dev_name=
+);
+> +               return -EOPNOTSUPP;
+> +       }
+> +
+>         bs_mask =3D (bdev_logical_block_size(bdev) >> 9) - 1;
+>         if ((sector | nr_sects) & bs_mask)
+>                 return -EINVAL;
+> --
+> 2.26.2
+>
