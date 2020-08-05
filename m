@@ -2,144 +2,131 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 798AAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B56CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 481AC2076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA3A42076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:57:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="DAhkOvAY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CMnzX/Bk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728345AbgHET5l (ORCPT
+        id S1729251AbgHET5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:57:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45424 "EHLO
+        Wed, 5 Aug 2020 15:57:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727976AbgHEQnt (ORCPT
+        with ESMTP id S1727865AbgHEQns (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:43:49 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 057D8C0A8894
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 06:55:33 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id p16so26623106ile.0
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:55:33 -0700 (PDT)
+        Wed, 5 Aug 2020 12:43:48 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04E86C034612;
+        Wed,  5 Aug 2020 05:46:04 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id c12so24490446qtn.9;
+        Wed, 05 Aug 2020 05:46:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google;
+        d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=T0iHC5DzypW6poy3NDVtNkEOvm1za2UqY6n/ov5xw0A=;
-        b=DAhkOvAYaZ9UtoECfWC2gAqYzdQdZu4/OTZhHotTaCMraihBeTETAb2o+tdVB+R9c/
-         fgruEjKoM8VG+YdsLo4GUZF8VaCggzTi5h3uToTV2f2Sv1hwOpZ5HvtTKuXa2Y1A6q3O
-         zX5fNDo98uB0Sok2zX9/YQGJMJ6y+B1u0vCnk=
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=th4R0mCDoEKdxtP92DcRMWCvQNUwMm704tc+tQsZ6e8=;
+        b=CMnzX/BkmrlbcfiKr7JDmYk704xsWGknJKvd+HQfxigZlMYUd2JDxLZZJ7AM4TB3Tu
+         xU1b2tTVbUxTEcVS0keHcGIOcvDbg0Mc9e44uwsdob+ZBmNGkINJPYUrbXW1+jGpvTLK
+         q6HKh3ivwm3nAHOgsJQDTdhdUercSIIvr6v7SehaOwRjst4uDAortgK+6vcDK5Dt5wZ8
+         7kUHi9Unn4E4nmWDGVLlM94Hu3Od0H2KdOl1Ckkp64W9ckafVFOmZQUWzAWqj8Ku24va
+         Sz1jmJ4MtajaF/nWDfSRh9FPkplHRF/31M1d8qwy/IO2PlKYQYUCF5z60bd5zaEURRNn
+         opGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=T0iHC5DzypW6poy3NDVtNkEOvm1za2UqY6n/ov5xw0A=;
-        b=Za+jP8TRd/y0YjnZe3RtdSUzgdbs16df2TFiS5X8njCCuxXR/VcLGsigxfqXCHYqCg
-         LxMpQDhPzEd81nj+e7JkTkWwEwclPVOzVhnanT6fcF27/HbebcmAEHWhssVszHxRHpTo
-         CAciMwgcQXCBLI1+Qtk7Gys+drDDkz0Q7ysTvqSWB7bjY18Ttz8Ge8Hh6cKtqr4ipo7V
-         4CCvqIwzQlSgfFFAwUzNTJFcvag1e9nkmSmlfk1i72O691ebfpG97BDKVEEN/updhlDm
-         SxnjoSDFqfUbwydUWMNfLpkFx9IdVV8Fb/HTe96jY2AlUOzzVOfVGiJmdXlYM0IP1nrB
-         gRUA==
-X-Gm-Message-State: AOAM533L/S4dvQ7qh+X0k/Omf9nLBSP34labvHyVaH2X1YG2KTjFkOMd
-        5mGdBSV62XpkRRWrMOv7SaQmXQ==
-X-Google-Smtp-Source: ABdhPJygRlU9l3OctXlmAVj+p1MKYQ+VT9ZvU9QPRbxWDqUzC6q+bEae4dy82QDhDGDE28iGtnJLqA==
-X-Received: by 2002:a92:c14d:: with SMTP id b13mr3548606ilh.269.1596635733090;
-        Wed, 05 Aug 2020 06:55:33 -0700 (PDT)
-Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.googlemail.com with ESMTPSA id c2sm1073796iow.6.2020.08.05.06.55.31
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=th4R0mCDoEKdxtP92DcRMWCvQNUwMm704tc+tQsZ6e8=;
+        b=PJU27bSOqH20mghqx6QETZ0jSO+leoLP6wgwFCxeCMoJxxR1avg5sGLxBV5C+cPUlc
+         DWT59RCsiIlY1lNKB2ljAAxaaye8nYTELA9ol90rCBwnZ4fRp3mypKEu4ClarcOlNlo/
+         Mj5hbDAFi2xQ1B9ayJsfebza8jQN/03qzPHK4pD58uZlkqzVokPhxZ+jiG4PctwxOjkL
+         o5GmfBbc9GkYf7yef6Jd0KTixNhiE6um2UNKuFWC7xQEfVGkC86IYOm2RJYVlOfYePhi
+         s0sT/DQyDxxqH440UK1xmxoCxUCQEtLeMFR9C2+65b5SWVkUO/2o7UierPSmAlPjdwao
+         NSuQ==
+X-Gm-Message-State: AOAM5328/6BBHHHxelk2/fXz5Nva/BZcrwv045lqswa5StGURkOzNZQl
+        DqdRMnnhaq0sKbou7glOiZG7CberAiY=
+X-Google-Smtp-Source: ABdhPJxrH4/VsLOKixqcHuZDqId9PnSjHLiReskUJRab0cl4DnJUCIsc2KvflzT6+UowANCjwPVYXw==
+X-Received: by 2002:ac8:6f51:: with SMTP id n17mr3057373qtv.233.1596631562731;
+        Wed, 05 Aug 2020 05:46:02 -0700 (PDT)
+Received: from [192.168.1.190] (pool-96-244-118-111.bltmmd.fios.verizon.net. [96.244.118.111])
+        by smtp.gmail.com with ESMTPSA id j15sm1410469qkl.63.2020.08.05.05.46.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2020 06:55:32 -0700 (PDT)
-Subject: Re: [PATCH] soc: qmi: allow user to set handle wq to hiprio
-To:     =?UTF-8?B?546L5paH6JmO?= <wenhu.wang@vivo.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     elder@kernel.org, davem@davemloft.net, kuba@kernel.org,
-        kvalo@codeaurora.org, agross@kernel.org, ohad@wizery.com,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, alsa-devel@alsa-project.org,
-        ath11k@lists.infradead.org, netdev@vger.kernel.org,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        srinivas.kandagatla@linaro.org, sibis@codeaurora.org
-References: <ADUAnwD8DVByMMSsrG-r3Kri.3.1596374087585.Hmail.wenhu.wang@vivo.com>
-From:   Alex Elder <elder@ieee.org>
-Message-ID: <5c6123f2-1a65-8615-9d5d-3bb1d25818b2@ieee.org>
-Date:   Wed, 5 Aug 2020 08:55:30 -0500
+        Wed, 05 Aug 2020 05:46:01 -0700 (PDT)
+Subject: Re: [PATCH v6 1/4] IMA: Add func to measure LSM state and policy
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        casey@schaufler-ca.com
+Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200805004331.20652-1-nramas@linux.microsoft.com>
+ <20200805004331.20652-2-nramas@linux.microsoft.com>
+ <4b9d2715d3ef3c8f915ef03867cfb1a39c0abc54.camel@linux.ibm.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Message-ID: <f88bf25e-37ef-7f00-6162-215838961bb0@gmail.com>
+Date:   Wed, 5 Aug 2020 08:46:00 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <ADUAnwD8DVByMMSsrG-r3Kri.3.1596374087585.Hmail.wenhu.wang@vivo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <4b9d2715d3ef3c8f915ef03867cfb1a39c0abc54.camel@linux.ibm.com>
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/2/20 8:14 AM, çŽ‹æ–‡è™Ž wrote:
-> 
->>> Currently the qmi_handle is initialized single threaded and strictly
->>> ordered with the active set to 1. This is pretty simple and safe but
->>> sometimes ineffency. So it is better to allow user to decide whether
->>> a high priority workqueue should be used.
+On 8/4/20 11:25 PM, Mimi Zohar wrote:
+
+> Hi Lakshmi,
+>
+> There's still  a number of other patch sets needing to be reviewed
+> before my getting to this one.  The comment below is from a high level.
+>
+> On Tue, 2020-08-04 at 17:43 -0700, Lakshmi Ramasubramanian wrote:
+>> Critical data structures of security modules need to be measured to
+>> enable an attestation service to verify if the configuration and
+>> policies for the security modules have been setup correctly and
+>> that they haven't been tampered with at runtime. A new IMA policy is
+>> required for handling this measurement.
 >>
->> Can you please describe a scenario where this is needed/desired and
->> perhaps also comment on why this is not always desired?
->>
-> 
-> Well, one scenario is that when the AP wants to check the status of the
-> subsystems and the whole QMI data path. It first sends out an indication
-> which asks the subsystems to report their status. After the subsystems send
-> responses to the AP, the responses then are queued on the workqueue of
-> the QMI handler. Actually the AP is configured to do the check in a specific
-> interval regularly. And it check the report counts within a specific delay after
-> it sends out the related indication. When the AP has been under a heavy
-> load for long, the reports are queue their without CPU resource to update
-> the report counts within the specific delay. As a result, the thread that checks
-> the report counts takes it misleadingly that the QMI data path or the subsystems
-> are crashed.
-> 
-> The patch can really resolve the problem mentioned abolve.
+>> Define two new IMA policy func namely LSM_STATE and LSM_POLICY to
+>> measure the state and the policy provided by the security modules.
+>> Update ima_match_rules() and ima_validate_rule() to check for
+>> the new func and ima_parse_rule() to handle the new func.
+> I can understand wanting to measure the in kernel LSM memory state to
+> make sure it hasn't changed, but policies are stored as files.  Buffer
+> measurements should be limited  to those things that are not files.
+>
+> Changing how data is passed to the kernel has been happening for a
+> while.  For example, instead of passing the kernel module or kernel
+> image in a buffer, the new syscalls - finit_module, kexec_file_load -
+> pass an open file descriptor.  Similarly, instead of loading the IMA
+> policy data, a pathname may be provided.
+>
+> Pre and post security hooks already exist for reading files.   Instead
+> of adding IMA support for measuring the policy file data, update the
+> mechanism for loading the LSM policy.  Then not only will you be able
+> to measure the policy, you'll also be able to require the policy be
+> signed.
 
-Is it your intention to submit code that actually does what you describe
-above?  If so, then (as David said) you should propose this change at
-the time it will be needed--which is at the time you send that new
-code out for review.
+To clarify, the policy being measured by this patch series is a 
+serialized representation of the in-memory policy data structures being 
+enforced by SELinux.  Not the file that was loaded.  Hence, this 
+measurement would detect tampering with the in-memory policy data 
+structures after the policy has been loaded.  In the case of SELinux, 
+one can read this serialized representation via /sys/fs/selinux/policy.  
+The result is not byte-for-byte identical to the policy file that was 
+loaded but can be semantically compared via sediff and other tools to 
+determine whether it is equivalent.
 
-Even in that case, I don't believe using a high priority workqueue
-would guarantee the improved behavior you think this would provide.
-
-In case it wasn't clear already, this change won't be accepted
-at this time (despite your explanation above).
-
-						-Alex
-
-> 
-> For narmal situations, it is enough to just use normal priority QMI workqueue.
-> 
->> Regards,
->> Bjorn
->>
->>>
->>> Signed-off-by: Wang Wenhu <wenhu.wang@vivo.com>
->>> ---
->>>  drivers/net/ipa/ipa_qmi.c             | 4 ++--
->>>  drivers/net/wireless/ath/ath10k/qmi.c | 2 +-
->>>  drivers/net/wireless/ath/ath11k/qmi.c | 2 +-
->>>  drivers/remoteproc/qcom_sysmon.c      | 2 +-
->>>  drivers/slimbus/qcom-ngd-ctrl.c       | 4 ++--
->>>  drivers/soc/qcom/pdr_interface.c      | 4 ++--
->>>  drivers/soc/qcom/qmi_interface.c      | 9 +++++++--
->>>  include/linux/soc/qcom/qmi.h          | 3 ++-
->>>  samples/qmi/qmi_sample_client.c       | 4 ++--
->>>  9 files changed, 20 insertions(+), 14 deletions(-)
-> 
 
