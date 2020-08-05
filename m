@@ -2,189 +2,184 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9243C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97879C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 851772084D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:19:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rSU3E4qI"
+	by mail.kernel.org (Postfix) with ESMTP id 78AC622CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:19:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729182AbgHESSM (ORCPT
+        id S1728811AbgHESTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 14:18:12 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:15727 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728825AbgHESQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 14:16:03 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1596651362; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=S5hJFYd7MMSkEoR3CdrZ7jrWlq63SZiOAFEvmVnWV/Q=;
- b=rSU3E4qIHnT1Oj4c+tpmfOBjzlFDhsU4pFzKtzGdINmB4QRSY6AnGeYagigdLUdMAaL6E0ET
- gmoxxUhsCtiRU/iZLp+EHIsFVhtlH2LK3XMUivGrktUvdxB/ZpMcD6pREmeFBT9T2i2xtAcX
- DmITxWiz+FzcJULi9cvr7g6C7j0=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n17.prod.us-east-1.postgun.com with SMTP id
- 5f2abfa7eecfc978d337cfbf (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 05 Aug 2020 14:18:15
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C623EC433C6; Wed,  5 Aug 2020 14:18:14 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kalyan_t)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EE057C433C9;
-        Wed,  5 Aug 2020 14:18:13 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+        Wed, 5 Aug 2020 14:19:03 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33162 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728665AbgHESPy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 14:15:54 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 075I6IQw022319;
+        Wed, 5 Aug 2020 14:15:30 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32qtnq5s5d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Aug 2020 14:15:30 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 075I6SBw023318;
+        Wed, 5 Aug 2020 14:15:29 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32qtnq5s4j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Aug 2020 14:15:29 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 075IAP9d012198;
+        Wed, 5 Aug 2020 18:15:27 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma04fra.de.ibm.com with ESMTP id 32n018au5x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Aug 2020 18:15:27 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 075IFOpu33489240
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 5 Aug 2020 18:15:25 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DDB2EAE051;
+        Wed,  5 Aug 2020 18:15:24 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 42453AE055;
+        Wed,  5 Aug 2020 18:15:19 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.95.205])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  5 Aug 2020 18:15:19 +0000 (GMT)
+Message-ID: <b08ae82102f35936427bf138085484f75532cff1.camel@linux.ibm.com>
+Subject: Re: [dm-devel] [RFC PATCH v5 00/11] Integrity Policy Enforcement
+ LSM (IPE)
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     James Morris <jmorris@namei.org>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Deven Bowers <deven.desai@linux.microsoft.com>,
+        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
+        snitzer@redhat.com, dm-devel@redhat.com,
+        tyhicks@linux.microsoft.com, agk@redhat.com, paul@paul-moore.com,
+        corbet@lwn.net, nramas@linux.microsoft.com, serge@hallyn.com,
+        pasha.tatashin@soleen.com, jannh@google.com,
+        linux-block@vger.kernel.org, viro@zeniv.linux.org.uk,
+        axboe@kernel.dk, mdsakib@microsoft.com,
+        linux-kernel@vger.kernel.org, eparis@redhat.com,
+        linux-security-module@vger.kernel.org, linux-audit@redhat.com,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        jaskarankhurana@linux.microsoft.com
+Date:   Wed, 05 Aug 2020 14:15:13 -0400
+In-Reply-To: <alpine.LRH.2.21.2008050934060.28225@namei.org>
+References: <20200728213614.586312-1-deven.desai@linux.microsoft.com>
+          <20200802115545.GA1162@bug> <20200802140300.GA2975990@sasha-vm>
+          <20200802143143.GB20261@amd>
+          <1596386606.4087.20.camel@HansenPartnership.com>
+          <fb35a1f7-7633-a678-3f0f-17cf83032d2b@linux.microsoft.com>
+         <1596639689.3457.17.camel@HansenPartnership.com>
+         <alpine.LRH.2.21.2008050934060.28225@namei.org>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 05 Aug 2020 19:48:13 +0530
-From:   kalyan_t@codeaurora.org
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Krishna Manikandan <mkrishn@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Raviteja Tamatam <travitej@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        nganji@codeaurora.org, Sean Paul <seanpaul@chromium.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Drew Davenport <ddavenport@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>
-Subject: Re: [Freedreno] [v1] drm/msm/dpu: update reservations in commit path
-In-Reply-To: <CAF6AEGtpPU+ALcpQMuy-MpLF_ZwjD+k=aN7gkoBFjJPq1++9qQ@mail.gmail.com>
-References: <1596540744-6902-1-git-send-email-kalyan_t@codeaurora.org>
- <CAF6AEGtpPU+ALcpQMuy-MpLF_ZwjD+k=aN7gkoBFjJPq1++9qQ@mail.gmail.com>
-Message-ID: <37bbf6e41a844f681e263bc13bd6e7ef@codeaurora.org>
-X-Sender: kalyan_t@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-05_14:2020-08-03,2020-08-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 phishscore=0 bulkscore=0 mlxlogscore=999
+ lowpriorityscore=0 suspectscore=0 spamscore=0 mlxscore=0 impostorscore=0
+ clxscore=1011 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008050141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-05 01:02, Rob Clark wrote:
-> On Tue, Aug 4, 2020 at 4:32 AM Kalyan Thota <kalyan_t@codeaurora.org> 
-> wrote:
->> 
->> DPU resources reserved in the atomic_check path gets unwinded
->> during modeset operation before commit happens in a non seamless
->> transition.
->> 
->> Update the reservations in the commit path to avoid resource
->> failures. Secondly have dummy reservations in atomic_check path
->> so that we can gracefully fail the composition if resources are
->> not available.
->> 
->> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
->> ---
->>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 15 +++++++++++----
->>  1 file changed, 11 insertions(+), 4 deletions(-)
->> 
->> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c 
->> b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->> index 63976dc..c6b8254 100644
->> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
->> @@ -565,7 +565,7 @@ static int dpu_encoder_virt_atomic_check(
->>         const struct drm_display_mode *mode;
->>         struct drm_display_mode *adj_mode;
->>         struct msm_display_topology topology;
->> -       struct dpu_global_state *global_state;
->> +       struct dpu_global_state tmp_resv_state;
->>         int i = 0;
->>         int ret = 0;
->> 
->> @@ -582,7 +582,7 @@ static int dpu_encoder_virt_atomic_check(
->>         dpu_kms = to_dpu_kms(priv->kms);
->>         mode = &crtc_state->mode;
->>         adj_mode = &crtc_state->adjusted_mode;
->> -       global_state = dpu_kms_get_existing_global_state(dpu_kms);
->> +       memset(&tmp_resv_state, 0, sizeof(tmp_resv_state));
+On Wed, 2020-08-05 at 09:59 -0700, James Morris wrote:
+> On Wed, 5 Aug 2020, James Bottomley wrote:
 > 
-> I think what you want to do is dpu_kms_get_global_state().. that will
-> clone/duplicate the existing global state (or return the already
-> duplicated global state if it is called multiple times).
+> > I'll leave Mimi to answer, but really this is exactly the question that
+> > should have been asked before writing IPE.  However, since we have the
+> > cart before the horse, let me break the above down into two specific
+> > questions.
 > 
-Thanks Rob, realized the same after posting patch. Made changes in the 
-new patch
-accordingly.
+> The question is valid and it was asked. We decided to first prototype what 
+> we needed and then evaluate if it should be integrated with IMA. We 
+> discussed this plan in person with Mimi (at LSS-NA in 2019), and presented 
+> a more mature version of IPE to LSS-NA in 2020, with the expectation that 
+> such a discussion may come up (it did not).
 
-> It is safe to modify this global state in the atomic_check() path.. in
-> fact that is the intention.  For a TEST_ONLY atomic commit, or if any
-> of the atomic_check()'s fail, this new duplicated global state is
-> discarded.  If all the checks succeed and the atomic update is
-> committed to hw, this new global state replaces the existing global
-> state.
+When we first spoke the concepts weren't fully formulated, at least to
+me.
 > 
-Posted a new change kindly review.
+> These patches are still part of this process and 'RFC' status.
+> 
+> >    1. Could we implement IPE in IMA (as in would extensions to IMA cover
+> >       everything).  I think the answers above indicate this is a "yes".
+> 
+> It could be done, if needed.
+> 
+> >    2. Should we extend IMA to implement it?  This is really whether from a
+> >       usability standpoint two seperate LSMs would make sense to cover the
+> >       different use cases.
+> 
+> One issue here is that IMA is fundamentally a measurement & appraisal 
+> scheme which has been extended to include integrity enforcement. IPE was 
+> designed from scratch to only perform integrity enforcement. As such, it 
+> is a cleaner design -- "do one thing and do it well" is a good design 
+> pattern.
+> 
+> In our use-case, we utilize _both_ IMA and IPE, for attestation and code 
+> integrity respectively. It is useful to be able to separate these 
+> concepts. They really are different:
+> 
+> - Code integrity enforcement ensures that code running locally is of known 
+> provenance and has not been modified prior to execution.
+> 
+> - Attestation is about measuring the health of a system and having that 
+> measurement validated by a remote system. (Local attestation is useless).
+> 
+> I'm not sure there is value in continuing to shoe-horn both of these into 
+> IMA.
 
-> BR,
-> -R
+True, IMA was originally limited to measurement and attestation, but
+most of the original EVM concepts were subsequently included in IMA. 
+(Remember, Reiner Sailer wrote the original IMA, which I inherited.  I
+was originially working on EVM code integrity.)  From a naming
+perspective including EVM code integrity in IMA was a mistake.  My
+thinking at the time was that as IMA was already calculating the file
+hash, instead of re-calculating the file hash for integrity, calculate
+the file hash once and re-use it for multiple things - measurement, 
+integrity, and audit.   At the same time define a single system wide
+policy.
+
+When we first started working on IMA, EVM, trusted, and encrypted keys,
+the general kernel community didn't see a need for any of it.  Thus, a
+lot of what was accomplished has been accomplished without the backing
+of the real core filesystem people.
+
+If block layer integrity was enough, there wouldn't have been a need
+for fs-verity.   Even fs-verity is limited to read only filesystems,
+which makes validating file integrity so much easier.  From the
+beginning, we've said that fs-verity signatures should be included in
+the measurement list.  (I thought someone signed on to add that support
+to IMA, but have not yet seen anything.)
+
+Going forward I see a lot of what we've accomplished being incorporated
+into the filesystems.  When IMA will be limited to defining a system
+wide policy, I'll have completed my job.
+
+Mimi
+
 > 
->>         trace_dpu_enc_atomic_check(DRMID(drm_enc));
->> 
->>         /*
->> @@ -621,7 +621,7 @@ static int dpu_encoder_virt_atomic_check(
->>                  * info may not be available to complete reservation.
->>                  */
->>                 if (drm_atomic_crtc_needs_modeset(crtc_state)) {
->> -                       ret = dpu_rm_reserve(&dpu_kms->rm, 
->> global_state,
->> +                       ret = dpu_rm_reserve(&dpu_kms->rm, 
->> &tmp_resv_state,
->>                                         drm_enc, crtc_state, 
->> topology);
->>                 }
->>         }
->> @@ -966,7 +966,7 @@ static void dpu_encoder_virt_mode_set(struct 
->> drm_encoder *drm_enc,
->>         struct dpu_hw_blk *hw_lm[MAX_CHANNELS_PER_ENC];
->>         struct dpu_hw_blk *hw_dspp[MAX_CHANNELS_PER_ENC] = { NULL };
->>         int num_lm, num_ctl, num_pp, num_dspp;
->> -       int i, j;
->> +       int i, j, rc;
->> 
->>         if (!drm_enc) {
->>                 DPU_ERROR("invalid encoder\n");
->> @@ -1006,6 +1006,13 @@ static void dpu_encoder_virt_mode_set(struct 
->> drm_encoder *drm_enc,
->> 
->>         topology = dpu_encoder_get_topology(dpu_enc, dpu_kms, 
->> adj_mode);
->> 
->> +       rc = dpu_rm_reserve(&dpu_kms->rm, global_state, drm_enc,
->> +               drm_crtc->state, topology);
->> +       if (rc) {
->> +               DPU_ERROR_ENC(dpu_enc, "Failed to reserve 
->> resources\n");
->> +               return;
->> +       }
->> +
->>         /* Query resource that have been reserved in atomic check 
->> step. */
->>         num_pp = dpu_rm_get_assigned_resources(&dpu_kms->rm, 
->> global_state,
->>                 drm_enc->base.id, DPU_HW_BLK_PINGPONG, hw_pp,
->> --
->> 1.9.1
->> 
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+> >  I've got to say the least attractive thing
+> >       about separation is the fact that you now both have a policy parser.
+> >        You've tried to differentiate yours by making it more Kconfig
+> >       based, but policy has a way of becoming user space supplied because
+> >       the distros hate config options, so I think you're going to end up
+> >       with a policy parser very like IMAs.
+
+
