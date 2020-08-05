@@ -2,117 +2,111 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF1BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A257C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 21:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C04C721D95
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C68262063A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 21:07:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZFCELN3r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oXIAtmAY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbgHEU7a (ORCPT
+        id S1726226AbgHEVHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:59:30 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46154 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725920AbgHEU72 (ORCPT
+        Wed, 5 Aug 2020 17:07:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725139AbgHEVHe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 16:59:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596661167;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=jAIXysMz+ztRK+9IphGR8JksjwMIkYoVzpw6WZkH4eA=;
-        b=ZFCELN3r8CfGVKMCC6xm4dmTk3B7ZmFqDPU9ETeLF/YZ/wL6PCIouvPMN71ZWHzlaQqzc/
-        samppKUp+Hhe/Yot0vQGT1uaV4UPbz8Y408fGD8HL8Eo5cNvFSyICjVpywSxCX0JlWwkSU
-        ZNrNjMw3gOK0/jhD4oL033wI1OXTNn0=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-329-0kcvxPAVNCOxW5vtBbPMYQ-1; Wed, 05 Aug 2020 16:59:23 -0400
-X-MC-Unique: 0kcvxPAVNCOxW5vtBbPMYQ-1
-Received: by mail-qk1-f197.google.com with SMTP id 3so31961510qkv.13
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 13:59:23 -0700 (PDT)
+        Wed, 5 Aug 2020 17:07:34 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2F05C061575
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 14:07:33 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id kr4so5412816pjb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 14:07:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t32+K6etBUX79TR2T2NSsnsirFvY4dxDRuLsVkhuHkU=;
+        b=oXIAtmAYQGlEIRzENScxODCyVYWpsOI8UmcLy2ewaSMVMAsRl/WxzQt7BkbMR01IR0
+         HlpVGPpM85H5s2aK38k7QRK9AHyvMT7IZY5Vp82s7xDqBYGmtUbUVI+HbApWYA/WX085
+         uGn41RMopWt9EZB0FxkuA4cNKY5D9gXKz/UQQSJNEs01PniJxyHRXyGZdgUmSy62Fsa/
+         8Hvn70ClApXaYpk7re2kLbWM/iYkksMPUYzVT2QjOzf20yNFmfgknf6kl9804DHhhQBZ
+         tmE92sUtJw84ox2RKvBzMT7t1PXKYjuJMB1STR+9NiCVPVCLv5wtGy277Kiiy1Qo56nm
+         q7yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=jAIXysMz+ztRK+9IphGR8JksjwMIkYoVzpw6WZkH4eA=;
-        b=dFWcr81grE7kDg0Na5rOk3EggRS4KntWElqLxSDjnX4TmZ7D6I6/7bdjwKCpHqtCSs
-         u3MycoYAQH5GXmVHdfIKs1s7diE+oRsB6cjSwkgCGBJGcnhMlqqFt7MaOyhXpmsrOqHz
-         XUY9RGwvb6K0u4YPjFiCM9fjwNCiWLnUl054FTD4iuUixZmxKkl4HyHByRs0XsIvi72M
-         lCg5+adfx/ZBirp8zT8MFteXboM656tI4KtCJGJSVuP5On3hUsqVhj/LbB/XlotBgXF/
-         ox6NcQXnayImrDi/9YSjJ3h3eH87ft/cNBYlXKlWL5v5B/SclIBiq+m4YfT/TxrhRipc
-         lhXw==
-X-Gm-Message-State: AOAM5300DShFbtOvDcNbN4acQ1g0j5Aa1Chz1Zd40nj/VKK2W/rO4/ue
-        oEsMyV55t0APyQUT0tnT3fBfXYxdLTGQFlwvr92EYspBUilc8pIPb7e4Z9y+e0c6UJZ0uSkI5P5
-        70+NiXBuDWEHsxJOHuvco0VSw
-X-Received: by 2002:a37:84c:: with SMTP id 73mr5330200qki.464.1596661163155;
-        Wed, 05 Aug 2020 13:59:23 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxMeglqrJbSFSxjPBAaJs2BV5HNNaqoHH3sQfpvvAW+bLdrzYALcTYC6CF/kqo4ivso2fbfUg==
-X-Received: by 2002:a37:84c:: with SMTP id 73mr5330186qki.464.1596661162880;
-        Wed, 05 Aug 2020 13:59:22 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id c21sm2346084qka.9.2020.08.05.13.59.21
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t32+K6etBUX79TR2T2NSsnsirFvY4dxDRuLsVkhuHkU=;
+        b=O4PVQSXpr/Ks+aq1LPbRkjp4Lq6n9x+Kkd6+m+H4m6HYKmbQAi/vliAqbmZQm47Ajb
+         j/D1LziCJxKi27l308aC+kkXohdaUkrSmBbVYBqP+4XDf31Dn5HKl/IjU8CxBwR35voR
+         xIuvnFv8b3z40wM7zYk+7EHWAG7ClV01Qpr3S+d49dsxb9Z341Ue/u5jCkWqbfu+ghkn
+         u8ajt7VIAUUz3zWz3CBIL/URwohAqCAzWKoa6w9UKQTy3jyBesaFt7P3UfoJXuWBk9kG
+         2Ijd5lWrJFTGULmeThAbNOwhCKBjayq+bFGBBOky6r04U27atV7ShtT4c7pcCFeQ/OU7
+         5k2w==
+X-Gm-Message-State: AOAM532DxnZJpZSTFnfZdayexa77jNZwIrOPZoPcbAGF07XHps+2McGZ
+        qhUIVFE6MbGAeQ8q6VqEwvz5NTpQ
+X-Google-Smtp-Source: ABdhPJxavelKRsSSNtIeBgcATfztw5zsvv8H/JH4+QBoGNkccGnpfFuLlkhSnSWrROIsYUzr6D0c0g==
+X-Received: by 2002:a17:90a:4b8c:: with SMTP id i12mr5352742pjh.83.1596661653120;
+        Wed, 05 Aug 2020 14:07:33 -0700 (PDT)
+Received: from localhost (g223.115-65-55.ppp.wakwak.ne.jp. [115.65.55.223])
+        by smtp.gmail.com with ESMTPSA id g12sm4405356pfb.190.2020.08.05.14.07.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 13:59:22 -0700 (PDT)
-From:   trix@redhat.com
-To:     patrik.r.jakobsson@gmail.com, airlied@linux.ie, daniel@ffwll.ch,
-        airlied@redhat.com, yakui.zhao@intel.com, alan@linux.intel.com
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Tom Rix <trix@redhat.com>
-Subject: [PATCH] drm/gma500: fix error check
-Date:   Wed,  5 Aug 2020 13:59:11 -0700
-Message-Id: <20200805205911.20927-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        Wed, 05 Aug 2020 14:07:31 -0700 (PDT)
+From:   Stafford Horne <shorne@gmail.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Stafford Horne <shorne@gmail.com>
+Subject: [PATCH v2 0/6] OpenRISC header and sparse warning fixes for 5.9
+Date:   Thu,  6 Aug 2020 06:07:19 +0900
+Message-Id: <20200805210725.310301-1-shorne@gmail.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+Hello,
 
-Reviewing this block of code in cdv_intel_dp_init()
+Changes since v1:
+ - in "io: Fixup defines and move include to the end" added a linux/types.h
+   include as there were compiler failurs pointed out by kbuild.
 
-ret = cdv_intel_dp_aux_native_read(gma_encoder, DP_DPCD_REV, ...
+This a series of fixes for OpenRISC sparse warnings.  The kbuild robots report
+many issues related to issues with OpenRISC headers having missing or incorrect
+sparse annotations.
 
-cdv_intel_edp_panel_vdd_off(gma_encoder);
-if (ret == 0) {
-	/* if this fails, presume the device is a ghost */
-	DRM_INFO("failed to retrieve link info, disabling eDP\n");
-	drm_encoder_cleanup(encoder);
-	cdv_intel_dp_destroy(connector);
-	goto err_priv;
-} else {
+Example kdbuild-all report:
 
-The (ret == 0) is not strict enough.
-cdv_intel_dp_aux_native_read() returns > 0 on success
-otherwise it is failure.
+  net/ipv4/ip_sockglue.c:1489:13: sparse: sparse: incorrect type in initializer (different address spaces)
 
-So change to <=
+  https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org/thread/MB6SE7BX425ENFTSIL6KAOB3CVS4WJLH/
 
-Fixes: d112a8163f83 ("gma500/cdv: Add eDP support")
+Also this includes a few cleanups which I noticed while working on the warning
+fixups.
 
-Signed-off-by: Tom Rix <trix@redhat.com>
----
- drivers/gpu/drm/gma500/cdv_intel_dp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+-Stafford
 
-diff --git a/drivers/gpu/drm/gma500/cdv_intel_dp.c b/drivers/gpu/drm/gma500/cdv_intel_dp.c
-index f41cbb753bb4..720a767118c9 100644
---- a/drivers/gpu/drm/gma500/cdv_intel_dp.c
-+++ b/drivers/gpu/drm/gma500/cdv_intel_dp.c
-@@ -2078,7 +2078,7 @@ cdv_intel_dp_init(struct drm_device *dev, struct psb_intel_mode_device *mode_dev
- 					       intel_dp->dpcd,
- 					       sizeof(intel_dp->dpcd));
- 		cdv_intel_edp_panel_vdd_off(gma_encoder);
--		if (ret == 0) {
-+		if (ret <= 0) {
- 			/* if this fails, presume the device is a ghost */
- 			DRM_INFO("failed to retrieve link info, disabling eDP\n");
- 			drm_encoder_cleanup(encoder);
+Stafford Horne (6):
+  openrisc: io: Fixup defines and move include to the end
+  openrisc: uaccess: Fix sparse address space warnings
+  openrisc: uaccess: Use static inline function in access_ok
+  openrisc: uaccess: Remove unused macro __addr_ok
+  openrisc: signal: Fix sparse address space warnings
+  openrisc: uaccess: Add user address space check to access_ok
+
+ arch/openrisc/include/asm/io.h      |  9 +++++++--
+ arch/openrisc/include/asm/uaccess.h | 21 +++++++++++----------
+ arch/openrisc/kernel/signal.c       | 14 +++++++-------
+ 3 files changed, 25 insertions(+), 19 deletions(-)
+
 -- 
-2.18.1
+2.26.2
 
