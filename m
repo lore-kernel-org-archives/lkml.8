@@ -2,167 +2,92 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D95C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 21:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 696A9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 21:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D4C12076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 21:18:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hOGXqAlm"
+	by mail.kernel.org (Postfix) with ESMTP id 42B1222CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 21:25:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbgHEVSl (ORCPT
+        id S1726398AbgHEVZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 17:18:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725139AbgHEVSk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 17:18:40 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA130C061575;
-        Wed,  5 Aug 2020 14:18:40 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id y18so30216182ilp.10;
-        Wed, 05 Aug 2020 14:18:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=47Asclv1FK7U2jk7VK/Qqzc/1uZms3QEdnET+4/Hxhw=;
-        b=hOGXqAlmNmwjcpWgNq+i7sz0gXOY45BTpoSEyZ7rQgxc8KoTFIq72+Sp3FqRmWUGch
-         BzMjQw9EsuXc1EkXuw4M/HNTKNKhWg44QfrlbEhDfVbFKVwxiTH5fO+RBDpeSKYxhAOr
-         97nXaQN3SqulrQyeviEqOelMhLmtmdfPAGHC0nT6CaFiG+qOGEZpu2Ks27v8ughOlpC1
-         us7d21TosVqDjmVTvwK4B6ovXoFxFbmAQXDdijY/4Ha+hwaSLqvZ1ShYcNjiOS3ASxsx
-         nfMOwaEzMpqofoyw6UO9W6ksT52pUAYn7Fq1VrJHLjX1Fae7VbB0QTJ/W1+55pFwDJNQ
-         CPqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=47Asclv1FK7U2jk7VK/Qqzc/1uZms3QEdnET+4/Hxhw=;
-        b=hefQ2q6qD6cboAb4CQjry3Jv0Cq3jjY/HZiqof3KHLz5NvlxNJw+ZWPoIm+GL+1iR/
-         mZxosLlM77ZOWc+N8iJn81EQClQ5qKwZPrDfV6YqHn7mP6o7jEFbiv0Ft57/MqUJYrbE
-         oN6Jkuoq1PnHRXsLs8wqGB6ody02RvlWOogwP6r2pBatFIYZeEiA9H9w8SQWR7PgGcOi
-         vbfGD0lMmcR5IHNZ0avxRUgQCBp7YQp0TlfXQ3M68Wn9pBu2Gl5Xk4EZrBWumtCJsmOx
-         6SOqF3HEMZv0ucSprOPu+vce2WlzNH/viSFYFO5vc2z6RxW1eYCmdnbEFiPpu0YzrxBm
-         Mv/A==
-X-Gm-Message-State: AOAM5309HF4k1q5TQn15WajYHkQZYb0Su/B9qpdWshiISI19SFMhdq98
-        rCIAtrh4kQCrn6aqUgdNzbMNPVWb2swvAT0ixNU=
-X-Google-Smtp-Source: ABdhPJz5HQXy+KXF8yn3h980J3l9bX6POO/8Sp49m+jlrztwg9zijubXJFLCSGZH4IRvp2PhB9SCfieVsb8nS8m+WR0=
-X-Received: by 2002:a92:bb92:: with SMTP id x18mr5788263ilk.64.1596662319442;
- Wed, 05 Aug 2020 14:18:39 -0700 (PDT)
+        Wed, 5 Aug 2020 17:25:05 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:44374 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725648AbgHEVZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 17:25:04 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1k3Qu8-008Qez-Ev; Wed, 05 Aug 2020 23:24:56 +0200
+Date:   Wed, 5 Aug 2020 23:24:56 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Joe Perches <joe@perches.com>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: update phylink/sfp keyword matching
+Message-ID: <20200805212456.GC2005851@lunn.ch>
+References: <E1k3KUx-0000da-In@rmk-PC.armlinux.org.uk>
+ <CAHk-=whbLwN9GEVVt=7eYhPYk0t0Wh1xeuNEDD+xmQxBFjAQJA@mail.gmail.com>
+ <20200805182250.GX1551@shell.armlinux.org.uk>
+ <957f48692a2f0bc4df2d83068073c4822da30eef.camel@perches.com>
 MIME-Version: 1.0
-References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com> <1595681998-19193-12-git-send-email-alex.shi@linux.alibaba.com>
-In-Reply-To: <1595681998-19193-12-git-send-email-alex.shi@linux.alibaba.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Wed, 5 Aug 2020 14:18:28 -0700
-Message-ID: <CAKgT0Udo=DSH76YF9L_qmWFNSCJW22UQaL57jHWnKstdB2wngg@mail.gmail.com>
-Subject: Re: [PATCH v17 11/21] mm/lru: move lru_lock holding in func lru_note_cost_page
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        kbuild test robot <lkp@intel.com>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Rong Chen <rong.a.chen@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <957f48692a2f0bc4df2d83068073c4822da30eef.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jul 25, 2020 at 6:00 AM Alex Shi <alex.shi@linux.alibaba.com> wrote:
->
-> It's a clean up patch w/o function changes.
->
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
+On Wed, Aug 05, 2020 at 11:47:38AM -0700, Joe Perches wrote:
+> On Wed, 2020-08-05 at 19:22 +0100, Russell King - ARM Linux admin wrote:
+> > On Wed, Aug 05, 2020 at 11:11:28AM -0700, Linus Torvalds wrote:
+> > > On Wed, Aug 5, 2020 at 7:34 AM Russell King <rmk+kernel@armlinux.org.uk> wrote:
+> > > > Is this something you're willing to merge directly please?
+> > > 
+> > > Done.
+> > > 
+> > > That said:
+> > > 
+> > > > -K:     phylink
+> > > > +K:     phylink\.h|struct\s+phylink|\.phylink|>phylink_|phylink_(autoneg|clear|connect|create|destroy|disconnect|ethtool|helper|mac|mii|of|set|start|stop|test|validate)
+> > > 
+> > > That's a very awkward pattern. I wonder if there could be better ways
+> > > to express this (ie "only apply this pattern to these files" kind of
+> > > thing)
+> > 
+> > Yes, it's extremely awkward - I spent much of the morning with perl
+> > testing it out on the drivers/ subtree.
+> 
+> There are a lot of phylink_<foo> in the kernel.
+> Are those really the only uses you want to watch?
 
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Hi Joe
 
-> ---
->  mm/memory.c     | 3 ---
->  mm/swap.c       | 2 ++
->  mm/swap_state.c | 2 --
->  mm/workingset.c | 2 --
->  4 files changed, 2 insertions(+), 7 deletions(-)
->
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 87ec87cdc1ff..dafc5585517e 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -3150,10 +3150,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
->                                  * XXX: Move to lru_cache_add() when it
->                                  * supports new vs putback
->                                  */
-> -                               spin_lock_irq(&page_pgdat(page)->lru_lock);
->                                 lru_note_cost_page(page);
-> -                               spin_unlock_irq(&page_pgdat(page)->lru_lock);
-> -
->                                 lru_cache_add(page);
->                                 swap_readpage(page, true);
->                         }
-> diff --git a/mm/swap.c b/mm/swap.c
-> index dc8b02cdddcb..b88ca630db70 100644
-> --- a/mm/swap.c
-> +++ b/mm/swap.c
-> @@ -298,8 +298,10 @@ void lru_note_cost(struct lruvec *lruvec, bool file, unsigned int nr_pages)
->
->  void lru_note_cost_page(struct page *page)
->  {
-> +       spin_lock_irq(&page_pgdat(page)->lru_lock);
->         lru_note_cost(mem_cgroup_page_lruvec(page, page_pgdat(page)),
->                       page_is_file_lru(page), hpage_nr_pages(page));
-> +       spin_unlock_irq(&page_pgdat(page)->lru_lock);
->  }
->
->  static void __activate_page(struct page *page, struct lruvec *lruvec)
-> diff --git a/mm/swap_state.c b/mm/swap_state.c
-> index 05889e8e3c97..080be52db6a8 100644
-> --- a/mm/swap_state.c
-> +++ b/mm/swap_state.c
-> @@ -440,9 +440,7 @@ struct page *__read_swap_cache_async(swp_entry_t entry, gfp_t gfp_mask,
->         }
->
->         /* XXX: Move to lru_cache_add() when it supports new vs putback */
-> -       spin_lock_irq(&page_pgdat(page)->lru_lock);
->         lru_note_cost_page(page);
-> -       spin_unlock_irq(&page_pgdat(page)->lru_lock);
->
->         /* Caller will initiate read into locked page */
->         SetPageWorkingset(page);
-> diff --git a/mm/workingset.c b/mm/workingset.c
-> index 50b7937bab32..337d5b9ad132 100644
-> --- a/mm/workingset.c
-> +++ b/mm/workingset.c
-> @@ -372,9 +372,7 @@ void workingset_refault(struct page *page, void *shadow)
->         if (workingset) {
->                 SetPageWorkingset(page);
->                 /* XXX: Move to lru_cache_add() when it supports new vs putback */
-> -               spin_lock_irq(&page_pgdat(page)->lru_lock);
->                 lru_note_cost_page(page);
-> -               spin_unlock_irq(&page_pgdat(page)->lru_lock);
->                 inc_lruvec_state(lruvec, WORKINGSET_RESTORE);
->         }
->  out:
-> --
-> 1.8.3.1
->
+I think Rusells intention here is to match on MAC drivers which make
+use of the phylink API exported to them.
+
+SFF/SFP/SFP+ MODULE SUPPORT
+M:      Russell King <linux@armlinux.org.uk>
+L:      netdev@vger.kernel.org
+S:      Maintained
+F:      drivers/net/phy/phylink.c
+F:      drivers/net/phy/sfp*
+F:      include/linux/phylink.h
+F:      include/linux/sfp.h
+K:      phylink
+
+> $ git grep -P -oh 'phylink_\w+'| sort | uniq -c
+
+Try that again, but skip files matched by the F: clauses.
+
+I suspect the matches you get then more closely approximates the K:
+Russell is suggesting.
+
+   Andrew
