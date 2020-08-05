@@ -2,141 +2,125 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FROM_LOCAL_NOVOWEL,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2024C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C5FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8A2F23130
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:20:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z16S5uzN"
+	by mail.kernel.org (Postfix) with ESMTP id 1D2B0206DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:20:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbgHEQUX (ORCPT
+        id S1726524AbgHEQUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 12:20:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41914 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgHEQSz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:18:55 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC969C001FE3
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 09:18:22 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id f9so4540626pju.4
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 09:18:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xqOtscQ7oL8M2OV7/AS+H9zd7WlGhrndY3fKEhcVkr8=;
-        b=Z16S5uzNX2DvMz74/erd60XfGe/qiJuePgZbU2/7UfhnQ/Qoymj6EdculFdgg2vGEX
-         3fTmauJt1sMneAs8tuDbHwWDS+31gQTsUEdZXymQKlE1ejSnpzSsvpc4R92U92Krqgle
-         MMowi9Pq+WB4jaAMMfguxv9c/+9o9hYNXu/eHcwKpo6AX+fFPX+Me8YYGEeQIyZrkNk3
-         KwiQexVYYlrZGJlKULnx4ClxyPM8fRrj33Rp2fmvttuvITxCIUvZFfPRc0NhPEjaXiZF
-         rgtrA3e7hjEdgOxdVYJ9v8G6rhl+QzqKUY8Va286aepOq2TtIMXP2+TIOYWIstIVYtdz
-         1vWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xqOtscQ7oL8M2OV7/AS+H9zd7WlGhrndY3fKEhcVkr8=;
-        b=X33WcmXVjr4gXuLIXy4JahybRFcGvBrMgpGRjiE0xQjNR6MyXbkU38OFjHqUi+RNQ1
-         PbuZFQL4LiRsL4cqOcjnX1kIvbW9JVDQgYYjRSpzk2YhuR6ATtBsp/TVO8d76Bq7xfVR
-         iy4xtTH1JMnoVHa5A3SHMh5hmydCOac8SyPzEJMbQXl3lF39sTpiz4rZ+rX2wB2+P4ZZ
-         t0/Ai9p4ufegVV6ptseYv3JqiZCfNqeBisy/PzTQshSeD9Zn2d8UpuB1hhSZ+V1Qw+TZ
-         pluRnT3lqAEgjQ/gLdmSXSDC7lZK2edLTKL/VZpwzAYN/qzfWNMfgySaUVDR/tvy18IV
-         TY/Q==
-X-Gm-Message-State: AOAM531XAzgEBHg7NOaq35bqBrbjDPhKlsQQ2ieNUcFmODCpdZcYUmRX
-        Uw4yN2h+M07UWeSPbAfnx7rDZNBV
-X-Google-Smtp-Source: ABdhPJxnvCWGyOLOGhyjS1AovH1VKezcgn5lf5r4MjNi2ROoheSsEQeaohrlkMnWfJWyLEVc8tmGGw==
-X-Received: by 2002:a17:902:6b03:: with SMTP id o3mr3737409plk.69.1596644300042;
-        Wed, 05 Aug 2020 09:18:20 -0700 (PDT)
-Received: from octofox.metropolis ([2607:fb90:a68f:7793:eeed:6380:da93:8dbc])
-        by smtp.gmail.com with ESMTPSA id q17sm4061261pfh.32.2020.08.05.09.18.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 09:18:19 -0700 (PDT)
-From:   Max Filippov <jcmvbkbc@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PULL 00/10] xtensa updates for v5.9
-Date:   Wed,  5 Aug 2020 09:17:13 -0700
-Message-Id: <20200805161713.7476-1-jcmvbkbc@gmail.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Wed, 5 Aug 2020 12:20:47 -0400
+Received: from gate.crashing.org ([63.228.1.57]:49182 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725969AbgHEQS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 12:18:57 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 075DZ7fT020629;
+        Wed, 5 Aug 2020 08:35:08 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id 075DZ5lG020627;
+        Wed, 5 Aug 2020 08:35:05 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Wed, 5 Aug 2020 08:35:05 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, nathanl@linux.ibm.com,
+        linux-arch@vger.kernel.org, arnd@arndb.de,
+        linux-kernel@vger.kernel.org,
+        Tulio Magno Quites Machado Filho <tuliom@linux.ibm.com>,
+        luto@kernel.org, tglx@linutronix.de, vincenzo.frascino@arm.com,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v8 5/8] powerpc/vdso: Prepare for switching VDSO to generic C implementation.
+Message-ID: <20200805133505.GN6753@gate.crashing.org>
+References: <cover.1588079622.git.christophe.leroy@c-s.fr> <2a67c333893454868bbfda773ba4b01c20272a5d.1588079622.git.christophe.leroy@c-s.fr> <878sflvbad.fsf@mpe.ellerman.id.au> <65fd7823-cc9d-c05a-0816-c34882b5d55a@csgroup.eu> <87wo2dy5in.fsf@mpe.ellerman.id.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87wo2dy5in.fsf@mpe.ellerman.id.au>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi!
 
-please pull the following Xtensa architecture updates for v5.9.
-There are trivial conflicts in the seccomp selftests with the csky
-and sh trees.
+On Wed, Aug 05, 2020 at 04:24:16PM +1000, Michael Ellerman wrote:
+> Christophe Leroy <christophe.leroy@csgroup.eu> writes:
+> > Indeed, 32-bit doesn't have a redzone, so I believe it needs a stack 
+> > frame whenever it has anything to same.
+> 
+> Yeah OK that would explain it.
+> 
+> > Here is what I have in libc.so:
+> >
+> > 000fbb60 <__clock_gettime>:
+> >     fbb60:	94 21 ff e0 	stwu    r1,-32(r1)
 
-The following changes since commit 92ed301919932f777713b9172e525674157e983d:
+This is the *only* place where you can use a negative offset from r1:
+in the stwu to extend the stack (set up a new stack frame, or make the
+current one bigger).
 
-  Linux 5.8-rc7 (2020-07-26 14:14:06 -0700)
+> > diff --git a/arch/powerpc/include/asm/vdso/gettimeofday.h 
+> > b/arch/powerpc/include/asm/vdso/gettimeofday.h
+> > index a0712a6e80d9..0b6fa245d54e 100644
+> > --- a/arch/powerpc/include/asm/vdso/gettimeofday.h
+> > +++ b/arch/powerpc/include/asm/vdso/gettimeofday.h
+> > @@ -10,6 +10,7 @@
+> >     .cfi_startproc
+> >   	PPC_STLU	r1, -STACK_FRAME_OVERHEAD(r1)
+> >   	mflr		r0
+> > +	PPC_STLU	r1, -STACK_FRAME_OVERHEAD(r1)
+> >     .cfi_register lr, r0
+> 
+> The cfi_register should come directly after the mflr I think.
 
-are available in the Git repository at:
+That is the idiomatic way to write it, and most obviously correct.  But
+as long as the value in LR at function entry is available in multiple
+places (like, in LR and in R0 here), it is fine to use either for
+unwinding.  Sometimes you can use this to optimise the unwind tables a
+bit -- not really worth it in hand-written code, it's more important to
+make it legible ;-)
 
-  git://github.com/jcmvbkbc/linux-xtensa.git tags/xtensa-20200805
+> >> There's also no code to load/restore the TOC pointer on BE, which I
+> >> think we'll need to handle.
+> >
+> > I see no code in the generated vdso64.so doing anything with r2, but if 
+> > you think that's needed, just let's do it:
+> 
+> Hmm, true.
+> 
+> The compiler will use the toc for globals (and possibly also for large
+> constants?)
 
-for you to fetch changes up to a0fc1436f1f4f84e93144480bf30e0c958d135b6:
+And anything else it bloody well wants to, yeah :-)
 
-  xtensa: add missing exclusive access state management (2020-07-31 14:15:57 -0700)
+> AFAIK there's no way to disable use of the toc, or make it a build error
+> if it's needed.
 
-----------------------------------------------------------------
-Xtensa updates for v5.9:
+Yes.
 
-- add syscall audit support
-- add seccomp filter support
-- clean up make rules under arch/xtensa/boot
-- fix state management for exclusive access opcodes
-- fix build with PMU enabled
+> At the same time it's much safer for us to just save/restore r2, and
+> probably in the noise performance wise.
 
-----------------------------------------------------------------
-Masahiro Yamada (1):
-      xtensa: add boot subdirectories build artifacts to 'targets'
+If you want a function to be able to work with ABI-compliant code safely
+(in all cases), you'll have to make it itself ABI-compliant as well,
+yes :-)
 
-Max Filippov (8):
-      xtensa: add audit support
-      xtensa: expose syscall through user_pt_regs
-      xtensa: add seccomp support
-      selftests/seccomp: add xtensa support
-      xtensa: move vmlinux.bin[.gz] to boot subdirectory
-      xtensa: add uImage and xipImage to targets
-      xtensa: fix xtensa_pmu_setup prototype
-      xtensa: add missing exclusive access state management
+> So yeah we should probably do as below.
 
-Randy Dunlap (1):
-      xtensa: initialize_mmu.h: fix a duplicated word
+[ snip ]
 
- .../features/seccomp/seccomp-filter/arch-support.txt     |  2 +-
- arch/xtensa/Kconfig                                      | 16 ++++++++++++++++
- arch/xtensa/boot/Makefile                                | 12 +++++++-----
- arch/xtensa/boot/boot-elf/Makefile                       |  5 +++--
- arch/xtensa/boot/boot-redboot/Makefile                   |  5 +++--
- arch/xtensa/include/asm/Kbuild                           |  1 +
- arch/xtensa/include/asm/initialize_mmu.h                 |  2 +-
- arch/xtensa/include/asm/thread_info.h                    | 11 ++++++++++-
- arch/xtensa/include/uapi/asm/ptrace.h                    |  3 ++-
- arch/xtensa/kernel/asm-offsets.c                         |  3 +++
- arch/xtensa/kernel/entry.S                               | 11 +++++++++++
- arch/xtensa/kernel/perf_event.c                          |  2 +-
- arch/xtensa/kernel/ptrace.c                              | 14 +++++++++++++-
- tools/testing/selftests/seccomp/seccomp_bpf.c            | 16 +++++++++++++++-
- 14 files changed, 87 insertions(+), 16 deletions(-)
+Looks good yes.
 
--- 
-Thanks.
--- Max
+
+Segher
