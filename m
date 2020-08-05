@@ -2,138 +2,172 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1875C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA84EC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AC44207FC
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B18E2207FC
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:28:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DjPjawL6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgHEG2e (ORCPT
+        id S1728018AbgHEG2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 02:28:34 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55306 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727114AbgHEG2c (ORCPT
+        Wed, 5 Aug 2020 02:28:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54160 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727962AbgHEG2f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 02:28:32 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 075613ds072016;
-        Wed, 5 Aug 2020 02:28:11 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32qkgjn5xc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Aug 2020 02:28:11 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 075617It072430;
-        Wed, 5 Aug 2020 02:28:10 -0400
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 32qkgjn5wy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Aug 2020 02:28:10 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0756H109003829;
-        Wed, 5 Aug 2020 06:28:09 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06fra.de.ibm.com with ESMTP id 32mynhag0e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Aug 2020 06:28:08 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0756S4hl10944798
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 5 Aug 2020 06:28:04 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 07AD74C040;
-        Wed,  5 Aug 2020 06:28:04 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 650D74C044;
-        Wed,  5 Aug 2020 06:28:01 +0000 (GMT)
-Received: from bangoria.ibmuc.com (unknown [9.199.33.73])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  5 Aug 2020 06:28:01 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-To:     mpe@ellerman.id.au
-Cc:     ravi.bangoria@linux.ibm.com, mikey@neuling.org, paulus@samba.org,
-        christophe.leroy@c-s.fr, naveen.n.rao@linux.vnet.ibm.com,
-        pedromfc@br.ibm.com, rogealve@br.ibm.com, jniethe5@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] powerpc/watchpoint/ptrace: Introduce PPC_DEBUG_FEATURE_DATA_BP_ARCH_31
-Date:   Wed,  5 Aug 2020 11:57:50 +0530
-Message-Id: <20200805062750.290289-3-ravi.bangoria@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200805062750.290289-1-ravi.bangoria@linux.ibm.com>
-References: <20200805062750.290289-1-ravi.bangoria@linux.ibm.com>
+        Wed, 5 Aug 2020 02:28:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596608913;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=j4EoEwZG+swIVHP0lP8YoiVbx/lrSzlRaGxj/pUTBqw=;
+        b=DjPjawL6ilC5vBQ08ElH3Ygl4Kkbf+EWbdMarqHBnbbWSQHIlYbQJUdl4vV/KSkKN8+n/3
+        MOfNlWtgopi19fVJxQA/5bbyhLzScB4WND2hG4BAab1Zbx7ElHEAedkNT4bcidbKTLoOVL
+        rVxSyYhebqkC+LaWNLbcDaAzb9pt+Us=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-163-Z6h-CcQlNsSmC0oA6Dl8uQ-1; Wed, 05 Aug 2020 02:28:31 -0400
+X-MC-Unique: Z6h-CcQlNsSmC0oA6Dl8uQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2D9F418FF662;
+        Wed,  5 Aug 2020 06:28:30 +0000 (UTC)
+Received: from [10.72.12.225] (ovpn-12-225.pek2.redhat.com [10.72.12.225])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5C97D8AC25;
+        Wed,  5 Aug 2020 06:28:24 +0000 (UTC)
+Subject: Re: [PATCH v2 03/24] virtio: allow __virtioXX, __leXX in config space
+To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     virtualization@lists.linux-foundation.org
+References: <20200803205814.540410-1-mst@redhat.com>
+ <20200803205814.540410-4-mst@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <ce85a206-45a6-da3d-45a7-06f068f3bad7@redhat.com>
+Date:   Wed, 5 Aug 2020 14:28:23 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200803205814.540410-4-mst@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-05_04:2020-08-03,2020-08-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 malwarescore=0 mlxscore=0 phishscore=0 suspectscore=1
- mlxlogscore=999 adultscore=0 spamscore=0 priorityscore=1501 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008050049
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PPC_DEBUG_FEATURE_DATA_BP_ARCH_31 can be used to determine whether
-we are running on an ISA 3.1 compliant machine. Which is needed to
-determine DAR behaviour, 512 byte boundary limit etc. This was
-requested by Pedro Miraglia Franco de Carvalho for extending
-watchpoint features in gdb. Note that availability of 2nd DAWR is
-independent of this flag and should be checked using
-ppc_debug_info->num_data_bps.
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
----
- Documentation/powerpc/ptrace.rst          | 1 +
- arch/powerpc/include/uapi/asm/ptrace.h    | 1 +
- arch/powerpc/kernel/ptrace/ptrace-noadv.c | 2 ++
- 3 files changed, 4 insertions(+)
+On 2020/8/4 上午4:58, Michael S. Tsirkin wrote:
+> Currently all config space fields are of the type __uXX.
+> This confuses people and some drivers (notably vdpa)
+> access them using CPU endian-ness - which only
+> works well for legacy or LE platforms.
+>
+> Update virtio_cread/virtio_cwrite macros to allow __virtioXX
+> and __leXX field types. Follow-up patches will convert
+> config space to use these types.
+>
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> ---
+>   include/linux/virtio_config.h | 50 +++++++++++++++++++++++++++++++++--
+>   1 file changed, 48 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
+> index 3b4eae5ac5e3..64da491936f7 100644
+> --- a/include/linux/virtio_config.h
+> +++ b/include/linux/virtio_config.h
+> @@ -6,6 +6,7 @@
+>   #include <linux/bug.h>
+>   #include <linux/virtio.h>
+>   #include <linux/virtio_byteorder.h>
+> +#include <linux/compiler_types.h>
+>   #include <uapi/linux/virtio_config.h>
+>   
+>   struct irq_affinity;
+> @@ -287,12 +288,57 @@ static inline __virtio64 cpu_to_virtio64(struct virtio_device *vdev, u64 val)
+>   	return __cpu_to_virtio64(virtio_is_little_endian(vdev), val);
+>   }
+>   
+> +/*
+> + * Only the checker differentiates between __virtioXX and __uXX types. But we
+> + * try to share as much code as we can with the regular GCC build.
+> + */
+> +#if !defined(CONFIG_CC_IS_GCC) && !defined(__CHECKER__)
+> +
+> +/* Not a checker - we can keep things simple */
+> +#define __virtio_native_typeof(x) typeof(x)
+> +
+> +#else
+> +
+> +/*
+> + * We build this out of a couple of helper macros in a vain attempt to
+> + * help you keep your lunch down while reading it.
+> + */
+> +#define __virtio_pick_value(x, type, then, otherwise)			\
+> +	__builtin_choose_expr(__same_type(x, type), then, otherwise)
+> +
+> +#define __virtio_pick_type(x, type, then, otherwise)			\
+> +	__virtio_pick_value(x, type, (then)0, otherwise)
+> +
+> +#define __virtio_pick_endian(x, x16, x32, x64, otherwise)			\
+> +	__virtio_pick_type(x, x16, __u16,					\
+> +		__virtio_pick_type(x, x32, __u32,				\
+> +			__virtio_pick_type(x, x64, __u64,			\
+> +				otherwise)))
+> +
+> +#define __virtio_native_typeof(x) typeof(					\
+> +	__virtio_pick_type(x, __u8, __u8,					\
+> +		__virtio_pick_endian(x, __virtio16, __virtio32, __virtio64,	\
+> +			__virtio_pick_endian(x, __le16, __le32, __le64,		\
+> +				__virtio_pick_endian(x, __u16, __u32, __u64,	\
+> +					/* No other type allowed */		\
+> +					(void)0)))))
+> +
+> +#endif
+> +
+> +#define __virtio_native_type(structname, member) \
+> +	__virtio_native_typeof(((structname*)0)->member)
+> +
+> +#define __virtio_typecheck(structname, member, val) \
+> +		/* Must match the member's type, and be integer */ \
+> +		typecheck(__virtio_native_type(structname, member), (val))
+> +
+> +
+>   /* Config space accessors. */
+>   #define virtio_cread(vdev, structname, member, ptr)			\
+>   	do {								\
+>   		might_sleep();						\
+>   		/* Must match the member's type, and be integer */	\
+> -		if (!typecheck(typeof((((structname*)0)->member)), *(ptr))) \
+> +		if (!__virtio_typecheck(structname, member, *(ptr)))	\
+>   			(*ptr) = 1;					\
 
-diff --git a/Documentation/powerpc/ptrace.rst b/Documentation/powerpc/ptrace.rst
-index 864d4b6dddd1..77725d69eb4a 100644
---- a/Documentation/powerpc/ptrace.rst
-+++ b/Documentation/powerpc/ptrace.rst
-@@ -46,6 +46,7 @@ features will have bits indicating whether there is support for::
-   #define PPC_DEBUG_FEATURE_DATA_BP_RANGE		0x4
-   #define PPC_DEBUG_FEATURE_DATA_BP_MASK		0x8
-   #define PPC_DEBUG_FEATURE_DATA_BP_DAWR		0x10
-+  #define PPC_DEBUG_FEATURE_DATA_BP_ARCH_31		0x20
- 
- 2. PTRACE_SETHWDEBUG
- 
-diff --git a/arch/powerpc/include/uapi/asm/ptrace.h b/arch/powerpc/include/uapi/asm/ptrace.h
-index f5f1ccc740fc..7004cfea3f5f 100644
---- a/arch/powerpc/include/uapi/asm/ptrace.h
-+++ b/arch/powerpc/include/uapi/asm/ptrace.h
-@@ -222,6 +222,7 @@ struct ppc_debug_info {
- #define PPC_DEBUG_FEATURE_DATA_BP_RANGE		0x0000000000000004
- #define PPC_DEBUG_FEATURE_DATA_BP_MASK		0x0000000000000008
- #define PPC_DEBUG_FEATURE_DATA_BP_DAWR		0x0000000000000010
-+#define PPC_DEBUG_FEATURE_DATA_BP_ARCH_31	0x0000000000000020
- 
- #ifndef __ASSEMBLY__
- 
-diff --git a/arch/powerpc/kernel/ptrace/ptrace-noadv.c b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-index bf94ab837735..d5be73ab9e74 100644
---- a/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-+++ b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-@@ -57,6 +57,8 @@ void ppc_gethwdinfo(struct ppc_debug_info *dbginfo)
- 	} else {
- 		dbginfo->features = 0;
- 	}
-+	if (cpu_has_feature(CPU_FTR_ARCH_31))
-+		dbginfo->features |= PPC_DEBUG_FEATURE_DATA_BP_ARCH_31;
- }
- 
- int ptrace_get_debugreg(struct task_struct *child, unsigned long addr,
--- 
-2.26.2
+
+A silly question,  compare to using set()/get() directly, what's the 
+value of the accessors macro here?
+
+Thanks
+
+
+>   									\
+>   		switch (sizeof(*ptr)) {					\
+> @@ -322,7 +368,7 @@ static inline __virtio64 cpu_to_virtio64(struct virtio_device *vdev, u64 val)
+>   	do {								\
+>   		might_sleep();						\
+>   		/* Must match the member's type, and be integer */	\
+> -		if (!typecheck(typeof((((structname*)0)->member)), *(ptr))) \
+> +		if (!__virtio_typecheck(structname, member, *(ptr)))	\
+>   			BUG_ON((*ptr) == 1);				\
+>   									\
+>   		switch (sizeof(*ptr)) {					\
 
