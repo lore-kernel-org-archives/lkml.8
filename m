@@ -2,177 +2,125 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD0BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA74C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E614206A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C048206A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:27:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596644875;
+	bh=Vnpavvxe8eGhapeUtR3pmJcXKQkD1enXO3mcQe6i6Dw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=pZjsF/efEQl1b6RTw/Lmoua/j1IsqLU1nkL8/gNHj9ncXzxwASiZltP7tAvW4lOsD
+	 HhrGHEPArGplVXvWI/IsQDq8mmfDsv+SnO0fLYtuIhyZn4ICh2RBvWmPosx9vk0WLA
+	 D5E2fVzYUAnHL+6Q8/GcsbQpTdoxdgEiOfmXTOq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgHEQ1q (ORCPT
+        id S1726641AbgHEQ1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 12:27:46 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51340 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726854AbgHEQZf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:25:35 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 075FCMQe159374;
-        Wed, 5 Aug 2020 11:17:32 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32qvn5wm3h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Aug 2020 11:17:31 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 075FCTrZ160219;
-        Wed, 5 Aug 2020 11:17:31 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32qvn5wm26-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Aug 2020 11:17:31 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 075FG2rA017045;
-        Wed, 5 Aug 2020 15:17:29 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 32n0184h78-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Aug 2020 15:17:28 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 075FHQA927722030
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 5 Aug 2020 15:17:26 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 65909A404D;
-        Wed,  5 Aug 2020 15:17:26 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D9037A4040;
-        Wed,  5 Aug 2020 15:17:24 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.95.205])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  5 Aug 2020 15:17:24 +0000 (GMT)
-Message-ID: <27b7772ef645e10d1fe3cbe56a02d02f42f75db5.camel@linux.ibm.com>
-Subject: Re: [PATCH v6 1/4] IMA: Add func to measure LSM state and policy
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Tyler Hicks <tyhicks@linux.microsoft.com>, sashal@kernel.org,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Wed, 05 Aug 2020 11:17:24 -0400
-In-Reply-To: <CAEjxPJ7d1yg659OCU6diXXGqegc_jSzO4ZPhkRqQtJnRn-kC0g@mail.gmail.com>
-References: <20200805004331.20652-1-nramas@linux.microsoft.com>
-         <20200805004331.20652-2-nramas@linux.microsoft.com>
-         <4b9d2715d3ef3c8f915ef03867cfb1a39c0abc54.camel@linux.ibm.com>
-         <f88bf25e-37ef-7f00-6162-215838961bb0@gmail.com>
-         <31d00876438d2652890ab8bf6ba2e80f554ca7a4.camel@linux.ibm.com>
-         <CAEjxPJ6X+Cqd5QtZBmNm2cujwbg-STfRF7_8i=Ny8yuc6z9BwQ@mail.gmail.com>
-         <b7df114e8e0d276e66575b6970a1e459d1dd4196.camel@linux.ibm.com>
-         <CAEjxPJ7d1yg659OCU6diXXGqegc_jSzO4ZPhkRqQtJnRn-kC0g@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-05_10:2020-08-03,2020-08-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- priorityscore=1501 lowpriorityscore=0 phishscore=0 malwarescore=0
- adultscore=0 suspectscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008050124
+        Wed, 5 Aug 2020 12:27:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48916 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726981AbgHEQZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 12:25:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C03DE233EA;
+        Wed,  5 Aug 2020 15:53:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596642805;
+        bh=Vnpavvxe8eGhapeUtR3pmJcXKQkD1enXO3mcQe6i6Dw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=M5I/gLV1dixpnHbCswIbHCiXzuCVG+bza169wVueh3NQFGwn4At5amKtLwBGsUqj4
+         ldgyXpT+jZnPLcYkvPQbBUfWpuvB/FOlkqZQ29UZFCfEuMFclDUZ4zqyXCySOYNQSO
+         hkhpAxw6IhzbhGaiPCf9Jqltar2Frx06K0DuVGRs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.19 0/6] 4.19.138-rc1 review
+Date:   Wed,  5 Aug 2020 17:52:59 +0200
+Message-Id: <20200805153505.472594546@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.138-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.138-rc1
+X-KernelTest-Deadline: 2020-08-07T15:35+00:00
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-08-05 at 10:27 -0400, Stephen Smalley wrote:
-> On Wed, Aug 5, 2020 at 9:20 AM Mimi Zohar <zohar@linux.ibm.com> wrote:
-> > On Wed, 2020-08-05 at 09:03 -0400, Stephen Smalley wrote:
-> > > On Wed, Aug 5, 2020 at 8:57 AM Mimi Zohar <zohar@linux.ibm.com> wrote:
-> > > > On Wed, 2020-08-05 at 08:46 -0400, Stephen Smalley wrote:
-> > > > > On 8/4/20 11:25 PM, Mimi Zohar wrote:
-> > > > > 
-> > > > > > Hi Lakshmi,
-> > > > > > 
-> > > > > > There's still  a number of other patch sets needing to be reviewed
-> > > > > > before my getting to this one.  The comment below is from a high level.
-> > > > > > 
-> > > > > > On Tue, 2020-08-04 at 17:43 -0700, Lakshmi Ramasubramanian wrote:
-> > > > > > > Critical data structures of security modules need to be measured to
-> > > > > > > enable an attestation service to verify if the configuration and
-> > > > > > > policies for the security modules have been setup correctly and
-> > > > > > > that they haven't been tampered with at runtime. A new IMA policy is
-> > > > > > > required for handling this measurement.
-> > > > > > > 
-> > > > > > > Define two new IMA policy func namely LSM_STATE and LSM_POLICY to
-> > > > > > > measure the state and the policy provided by the security modules.
-> > > > > > > Update ima_match_rules() and ima_validate_rule() to check for
-> > > > > > > the new func and ima_parse_rule() to handle the new func.
-> > > > > > I can understand wanting to measure the in kernel LSM memory state to
-> > > > > > make sure it hasn't changed, but policies are stored as files.  Buffer
-> > > > > > measurements should be limited  to those things that are not files.
-> > > > > > 
-> > > > > > Changing how data is passed to the kernel has been happening for a
-> > > > > > while.  For example, instead of passing the kernel module or kernel
-> > > > > > image in a buffer, the new syscalls - finit_module, kexec_file_load -
-> > > > > > pass an open file descriptor.  Similarly, instead of loading the IMA
-> > > > > > policy data, a pathname may be provided.
-> > > > > > 
-> > > > > > Pre and post security hooks already exist for reading files.   Instead
-> > > > > > of adding IMA support for measuring the policy file data, update the
-> > > > > > mechanism for loading the LSM policy.  Then not only will you be able
-> > > > > > to measure the policy, you'll also be able to require the policy be
-> > > > > > signed.
-> > > > > 
-> > > > > To clarify, the policy being measured by this patch series is a
-> > > > > serialized representation of the in-memory policy data structures being
-> > > > > enforced by SELinux.  Not the file that was loaded.  Hence, this
-> > > > > measurement would detect tampering with the in-memory policy data
-> > > > > structures after the policy has been loaded.  In the case of SELinux,
-> > > > > one can read this serialized representation via /sys/fs/selinux/policy.
-> > > > > The result is not byte-for-byte identical to the policy file that was
-> > > > > loaded but can be semantically compared via sediff and other tools to
-> > > > > determine whether it is equivalent.
-> > > > 
-> > > > Thank you for the clarification.   Could the policy hash be included
-> > > > with the other critical data?  Does it really need to be measured
-> > > > independently?
-> > > 
-> > > They were split into two separate functions because we wanted to be
-> > > able to support using different templates for them (ima-buf for the
-> > > state variables so that the measurement includes the original buffer,
-> > > which is small and relatively fixed-size, and ima-ng for the policy
-> > > because it is large and we just want to capture the hash for later
-> > > comparison against known-good).  Also, the state variables are
-> > > available for measurement always from early initialization, whereas
-> > > the policy is only available for measurement once we have loaded an
-> > > initial policy.
-> > 
-> > Ok, measuring the policy separately from other critical data makes
-> > sense.  Instead of measuring the policy, which is large, measure the
-> > policy hash.
-> 
-> I think that was the original approach.  However, I had concerns with
-> adding code to SELinux to compute a hash over the policy versus
-> leaving that to IMA's existing policy and mechanism.  If that's
-> preferred I guess we can do it that way but seems less flexible and
-> duplicative.
+This is the start of the stable review cycle for the 4.19.138 release.
+There are 6 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-Whether IMA or SELinux calculates the in memory policy hash, it should
-not impact the original purpose of this patch set - measuring critical
-state.  It's unclear whether this patch set needs to be limited to LSM
-critical state.
+Responses should be made by Fri, 07 Aug 2020 15:34:53 +0000.
+Anything received after that time might be too late.
 
-Measuring the in memory policy, if needed, should be a separate patch
-set.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.138-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+and the diffstat can be found below.
 
-Mimi
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.19.138-rc1
+
+Jiang Ying <jiangying8582@126.com>
+    ext4: fix direct I/O read error
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    random32: move the pseudo-random 32-bit definitions to prandom.h
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    random32: remove net_rand_state from the latent entropy gcc plugin
+
+Willy Tarreau <w@1wt.eu>
+    random: fix circular include dependency on arm64 after addition of percpu.h
+
+Grygorii Strashko <grygorii.strashko@ti.com>
+    ARM: percpu.h: fix build error
+
+Willy Tarreau <w@1wt.eu>
+    random32: update the net random state on interrupt and activity
+
+
+-------------
+
+Diffstat:
+
+ Makefile                      |  4 +--
+ arch/arm/include/asm/percpu.h |  2 ++
+ drivers/char/random.c         |  1 +
+ fs/ext4/inode.c               |  5 +++
+ include/linux/prandom.h       | 78 +++++++++++++++++++++++++++++++++++++++++++
+ include/linux/random.h        | 63 +++-------------------------------
+ kernel/time/timer.c           |  8 +++++
+ lib/random32.c                |  2 +-
+ 8 files changed, 101 insertions(+), 62 deletions(-)
+
 
