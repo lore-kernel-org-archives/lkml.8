@@ -2,75 +2,262 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E363AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 659F3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C386A22D6D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4053B22B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:16:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ti.com header.i=@ti.com header.b="T+RhXndV"
+	dkim=pass (2048-bit key) header.d=foundries-io.20150623.gappssmtp.com header.i=@foundries-io.20150623.gappssmtp.com header.b="hNmZtfw9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729905AbgHEUQ1 (ORCPT
+        id S1728040AbgHEUQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:16:27 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33610 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbgHEQS5 (ORCPT
+        Wed, 5 Aug 2020 16:16:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51366 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726346AbgHEUQb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:18:57 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 075DGWpe104587;
-        Wed, 5 Aug 2020 08:16:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596633392;
-        bh=jv05QMyNRK6yayjZc1mP1MO1HJsGqxdVtsib46m4psw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=T+RhXndV1BPGC6RiOs7bIZtzzRI4KezTc5sDYRlBrjptGzd2t5N7YZbKtslASCm69
-         b/5xu9BxUpwVFMXXDLrGZthhOepTcxE1+BIVleZU4bl43OY6PtQJNTighBMU0OqK2P
-         ZpdLH+gUqiy+MGAwAKqtJYQPm2GE/UllwhRVIMSk=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 075DGWwE068176
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 5 Aug 2020 08:16:32 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 5 Aug
- 2020 08:16:32 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 5 Aug 2020 08:16:32 -0500
-Received: from [10.250.232.88] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 075DGTr0043569;
-        Wed, 5 Aug 2020 08:16:30 -0500
-Subject: Re: [PATCH] mmc: sdhci_am654: Add workaround for card detect debounce
- timer
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-CC:     <ulf.hansson@linaro.org>
-References: <20200729234130.25056-1-faiz_abbas@ti.com>
- <2d692a90-0e58-ae69-9b5b-c9eb3ffe21ec@intel.com>
- <75b188ef-2755-b833-4756-79f0f171f8bd@ti.com>
- <c5b166c9-f9ba-e01e-b759-57ac93d99832@intel.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <3f7e85c7-b0ba-e6a8-8d9f-091413614773@ti.com>
-Date:   Wed, 5 Aug 2020 18:46:28 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 5 Aug 2020 16:16:31 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3D09C061575
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 13:16:31 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id 184so7579186wmb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 13:16:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=foundries-io.20150623.gappssmtp.com; s=20150623;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mvZaPjIJLvtOgPYXMFlMx5wZd5X7d+jAa4ldSeMhyoQ=;
+        b=hNmZtfw9e/tJMFfp21LgePx8DltnNpnr8FBE74vgHDQa3ZEWgdq3dOKzsjFaTdcQuC
+         IVdke6Bv8KWffSRpEPYckwOf4LVo7qFLJHL/BO3kBQATUcGYdiN/GRSvmGOTPR28B6dU
+         azuHtBLy6G52GZktGNjtuBcqEM3i4TlpNWZlPHyjBC4n08n4F/WZvvkxoKlLy+bIyvXM
+         +MsAakuwy8XNXNvIXjsOw28Ov4b7z4WeLrQin4hbQEWkRqMuvEM8Gx/hi7GeQVHp29EE
+         0Sbux34JbU+C15v+nnMmpGjrD28xSEZIpfNLo5AqZxW48l6PPTlH0SUaXhaCVO2eKFA9
+         u4/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mvZaPjIJLvtOgPYXMFlMx5wZd5X7d+jAa4ldSeMhyoQ=;
+        b=LdJVw8jAnObZcklcEiAqybNtxsGCG7XFsJIxjuNzbn75KcP9IGyyrwCMLmm8Pwfvhx
+         6Up8n0U/RMEjuTYao1VXHUA4bcwkUL7/fkf2+I8hOhu7Sf8DUyzB1ibEbVTkyFP4qsYs
+         iZHisc4KDOlcmfzzygeuqIzsXSRl+dhvbKIs8/WW9TVJCt9cOZu4Q/J4Uhxhf9UP+fbe
+         d21OdO8DAiFHKlBc9u3gYJabJWyWZqezxH+nAA0UTpu7b7tgVOnFjtlwiBKZZwpXoFFj
+         umnOeJS6RrXpSfFt725BbuNPclmJXVKWHKv4ygWGn+v/qeBxUMLhQzrfqvRTsl/Ci2ER
+         J48w==
+X-Gm-Message-State: AOAM532+0ckh0Dvg4MP34u1EfMj0TXbPe6Myg6J3Ywd+DaS/UPRHr82b
+        t6ibnlMjmsHdMShXD1tyh6Bigw6vhlEqcw==
+X-Google-Smtp-Source: ABdhPJypxMiLvEy3JIjRjWxtXQqYwQQdXvAIyJE7Grq1AVxGxkensdbRojbsN4BLEOzzq+XjL66ohA==
+X-Received: by 2002:a1c:1d91:: with SMTP id d139mr4933808wmd.144.1596658590287;
+        Wed, 05 Aug 2020 13:16:30 -0700 (PDT)
+Received: from trex (239.red-83-34-184.dynamicip.rima-tde.net. [83.34.184.239])
+        by smtp.gmail.com with ESMTPSA id l1sm4076167wrb.12.2020.08.05.13.16.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 05 Aug 2020 13:16:29 -0700 (PDT)
+From:   "Jorge Ramirez-Ortiz, Foundries" <jorge@foundries.io>
+X-Google-Original-From: "Jorge Ramirez-Ortiz, Foundries" <JorgeRamirez-Ortiz>
+Date:   Wed, 5 Aug 2020 22:16:28 +0200
+To:     Jens Wiklander <jens.wiklander@linaro.org>
+Cc:     "Jorge Ramirez-Ortiz, Foundries" <jorge@foundries.io>,
+        sumit.garg@linaro.org, ricardo@foundries.io, mike@foundries.io,
+        tee-dev@lists.linaro.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv6] drivers: optee: allow op-tee to access devices on the
+ i2c bus
+Message-ID: <20200805201628.GA11492@trex>
+References: <20200722212105.1798-1-jorge@foundries.io>
+ <20200805133501.GA8360@trex>
+ <20200805142404.GA550721@jade>
 MIME-Version: 1.0
-In-Reply-To: <c5b166c9-f9ba-e01e-b759-57ac93d99832@intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200805142404.GA550721@jade>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 05/08/20, Jens Wiklander wrote:
+> On Wed, Aug 05, 2020 at 03:35:01PM +0200, Jorge Ramirez-Ortiz, Foundries wrote:
+> > On 22/07/20, Jorge Ramirez-Ortiz wrote:
+> > > Some secure elements like NXP's SE050 sit on I2C buses. For OP-TEE to
+> > > control this type of cryptographic devices it needs coordinated access
+> > > to the bus, so collisions and RUNTIME_PM dont get in the way.
+> > > 
+> > > This trampoline driver allow OP-TEE to access them.
+> > > Tested on imx8mm LPDDR4
+> > > 
+> > > Signed-off-by: Jorge Ramirez-Ortiz <jorge@foundries.io>
+> > > ---
+> > >  v6: compile out if CONFIG_I2C not enabled
+> > >  v5: alphabetic order of includes
+> > >  v4: remove unnecessary extra line in optee_msg.h
+> > >  v3: use from/to msg param to support all types of memory
+> > >      modify OPTEE_MSG_RPC_CMD_I2C_TRANSFER message id
+> > >      
+> > >  drivers/tee/optee/optee_msg.h | 16 +++++++
+> > >  drivers/tee/optee/rpc.c       | 88 +++++++++++++++++++++++++++++++++++
+> > >  2 files changed, 104 insertions(+)
+> > > 
+> > > diff --git a/drivers/tee/optee/optee_msg.h b/drivers/tee/optee/optee_msg.h
+> > > index 795bc19ae17a..14b580f55356 100644
+> > > --- a/drivers/tee/optee/optee_msg.h
+> > > +++ b/drivers/tee/optee/optee_msg.h
+> > > @@ -419,4 +419,20 @@ struct optee_msg_arg {
+> > >   */
+> > >  #define OPTEE_MSG_RPC_CMD_SHM_FREE	7
+> > >  
+> > > +/*
+> > > + * Access a device on an i2c bus
+> > > + *
+> > > + * [in]  param[0].u.value.a		mode: RD(0), WR(1)
+> > > + * [in]  param[0].u.value.b		i2c adapter
+> > > + * [in]  param[0].u.value.c		i2c chip
+> > > + *
+> > > + * [in/out] memref[1]			buffer to exchange the transfer data
+> > > + *					with the secure world
+> > > + *
+> > > + * [out]  param[0].u.value.a		bytes transferred by the driver
+> > > + */
+> > > +#define OPTEE_MSG_RPC_CMD_I2C_TRANSFER 21
+> > > +#define OPTEE_MSG_RPC_CMD_I2C_TRANSFER_RD 0
+> > > +#define OPTEE_MSG_RPC_CMD_I2C_TRANSFER_WR 1
+> > > +
+> > >  #endif /* _OPTEE_MSG_H */
+> > > diff --git a/drivers/tee/optee/rpc.c b/drivers/tee/optee/rpc.c
+> > > index b4ade54d1f28..5fd5c6c93896 100644
+> > > --- a/drivers/tee/optee/rpc.c
+> > > +++ b/drivers/tee/optee/rpc.c
+> > > @@ -7,6 +7,7 @@
+> > >  
+> > >  #include <linux/delay.h>
+> > >  #include <linux/device.h>
+> > > +#include <linux/i2c.h>
+> > >  #include <linux/slab.h>
+> > >  #include <linux/tee_drv.h>
+> > >  #include "optee_private.h"
+> > > @@ -49,6 +50,90 @@ static void handle_rpc_func_cmd_get_time(struct optee_msg_arg *arg)
+> > >  	arg->ret = TEEC_ERROR_BAD_PARAMETERS;
+> > >  }
+> > >  
+> > > +#if IS_ENABLED(CONFIG_I2C)
+> > > +static void handle_rpc_func_cmd_i2c_transfer(struct tee_context *ctx,
+> > > +					     struct optee_msg_arg *arg)
+> > > +{
+> > > +	struct i2c_client client;
+> > > +	struct tee_param *params;
+> > > +	uint32_t type;
+> > > +	int i, ret;
+> > > +	size_t len;
+> > > +	char *buf;
+> > > +	uint32_t attr[] = {
+> > > +		TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT,
+> > > +		TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT,
+> > > +		TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_OUTPUT,
+> > > +	};
+> > > +
+> > > +	if (arg->num_params != ARRAY_SIZE(attr)) {
+> > > +		arg->ret = TEEC_ERROR_BAD_PARAMETERS;
+> > > +		return;
+> > > +	}
+> > > +
+> > > +	params = kmalloc_array(arg->num_params, sizeof(struct tee_param),
+> > > +			       GFP_KERNEL);
+> > > +	if (!params) {
+> > > +		arg->ret = TEEC_ERROR_OUT_OF_MEMORY;
+> > > +		return;
+> > > +	}
+> > > +
+> > > +	if (optee_from_msg_param(params, arg->num_params, arg->params))
+> > > +		goto bad;
+> > > +
+> > > +	for (i = 0; i < arg->num_params; i++) {
+> > > +		type = params[i].attr & TEE_IOCTL_PARAM_ATTR_TYPE_MASK;
+> > > +		if (type != attr[i])
+> > > +			goto bad;
+> > > +	}
+> > > +
+> > > +	client.addr = params[0].u.value.c;
+> > > +	client.adapter = i2c_get_adapter(params[0].u.value.b);
+> > > +	if (!client.adapter)
+> > > +		goto bad;
+> > > +
+> > > +	snprintf(client.name, I2C_NAME_SIZE, "i2c%d", client.adapter->nr);
+> > > +
+> > > +	buf = params[1].u.memref.shm->kaddr;
+> > > +	len = params[1].u.memref.size;
+> > > +
+> > > +	switch (params[0].u.value.a) {
+> > > +	case OPTEE_MSG_RPC_CMD_I2C_TRANSFER_RD:
+> > > +		ret = i2c_master_recv(&client, buf, len);
+> > > +		break;
+> > > +	case OPTEE_MSG_RPC_CMD_I2C_TRANSFER_WR:
+> > > +		ret = i2c_master_send(&client, buf, len);
+> > > +		break;
+> > > +	default:
+> > > +		i2c_put_adapter(client.adapter);
+> > > +		goto bad;
+> > > +	}
+> > > +
+> > > +	if (ret >= 0) {
+> > > +		params[2].u.value.a = ret;
+> > > +		arg->ret = TEEC_SUCCESS;
+> > > +	} else {
+> > > +		arg->ret = TEEC_ERROR_COMMUNICATION;
+> > > +	}
+> > > +
+> > > +	if (optee_to_msg_param(arg->params, arg->num_params, params))
+> > > +		arg->ret = TEEC_ERROR_BAD_PARAMETERS;
+> > > +
+> > > +	i2c_put_adapter(client.adapter);
+> > > +	kfree(params);
+> > > +	return;
+> > > +bad:
+> > > +	kfree(params);
+> > > +	arg->ret = TEEC_ERROR_BAD_PARAMETERS;
+> > > +}
+> > > +#else
+> > > +static void handle_rpc_func_cmd_i2c_transfer(struct tee_context *ctx,
+> > > +					     struct optee_msg_arg *arg)
+> > > +{
+> > > +	arg->ret = TEEC_ERROR_COMMUNICATION;
+> > > +}
+> > > +#endif
+> > > +
+> > >  static struct wq_entry *wq_entry_get(struct optee_wait_queue *wq, u32 key)
+> > >  {
+> > >  	struct wq_entry *w;
+> > > @@ -382,6 +467,9 @@ static void handle_rpc_func_cmd(struct tee_context *ctx, struct optee *optee,
+> > >  	case OPTEE_MSG_RPC_CMD_SHM_FREE:
+> > >  		handle_rpc_func_cmd_shm_free(ctx, arg);
+> > >  		break;
+> > > +	case OPTEE_MSG_RPC_CMD_I2C_TRANSFER:
+> > > +		handle_rpc_func_cmd_i2c_transfer(ctx, arg);
+> > > +		break;
+> > >  	default:
+> > >  		handle_rpc_supp_cmd(ctx, arg);
+> > >  	}
+> > 
+> > 
+> > any comments please?
+> 
+> As you know we're still reviewing the secure world counterpart at
+> https://github.com/OP-TEE/optee_os/pull/3905
 
+yep
+
+> Where we're sorting out the ABI. Thanks for your patience.
+
+after the initial comments on the first patch it was not clear why
+there were none on the follow up ones. but sure, thanks for taking the
+time.
+
+
+> 
+> Cheers,
+> Jens
