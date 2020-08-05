@@ -6,216 +6,100 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16909C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 002FBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E58DA2064B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB8C62064B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:07:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728622AbgHETHR (ORCPT
+        id S1728233AbgHETHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:07:17 -0400
-Received: from smtprelay0030.hostedemail.com ([216.40.44.30]:41064 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728142AbgHES6m (ORCPT
+        Wed, 5 Aug 2020 15:07:54 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:52505 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727066AbgHETHG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 14:58:42 -0400
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave01.hostedemail.com (Postfix) with ESMTP id 22B971802030C;
-        Wed,  5 Aug 2020 18:49:43 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 46CA2182CED5B;
-        Wed,  5 Aug 2020 18:47:42 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: plant09_051556b26fb1
-X-Filterd-Recvd-Size: 6422
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf10.hostedemail.com (Postfix) with ESMTPA;
-        Wed,  5 Aug 2020 18:47:41 +0000 (UTC)
-Message-ID: <957f48692a2f0bc4df2d83068073c4822da30eef.camel@perches.com>
-Subject: Re: [PATCH] MAINTAINERS: update phylink/sfp keyword matching
-From:   Joe Perches <joe@perches.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dmitry Vyukov <dvyukov@google.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>
-Date:   Wed, 05 Aug 2020 11:47:38 -0700
-In-Reply-To: <20200805182250.GX1551@shell.armlinux.org.uk>
-References: <E1k3KUx-0000da-In@rmk-PC.armlinux.org.uk>
-         <CAHk-=whbLwN9GEVVt=7eYhPYk0t0Wh1xeuNEDD+xmQxBFjAQJA@mail.gmail.com>
-         <20200805182250.GX1551@shell.armlinux.org.uk>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Wed, 5 Aug 2020 15:07:06 -0400
+Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MuUvU-1ktqiK3KZG-00ralV for <linux-kernel@vger.kernel.org>; Wed, 05 Aug
+ 2020 21:07:03 +0200
+Received: by mail-qk1-f180.google.com with SMTP id p25so2232493qkp.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 12:07:02 -0700 (PDT)
+X-Gm-Message-State: AOAM5327EMIC2+pHCnhzADtBtRjUtmqNExpKbaf1+pBPUraBz2CTZ61k
+        QQiIO0FW0Y5rYo6dIViGuBoZBX+LGwDd5MGrQGc=
+X-Google-Smtp-Source: ABdhPJxjj0wDC7OhYiMfIDd49ORNWNupSh5DH92LofMPrEqb1HOApEvRkUJlmHW3pwJQra2jfF+7R0Ek62KzxwXcbfs=
+X-Received: by 2002:a37:b942:: with SMTP id j63mr4772181qkf.138.1596654421650;
+ Wed, 05 Aug 2020 12:07:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <CAK8P3a1vFJ+uUGPGifZGhECXvxA=2u745WrGNZb08s1nHkZQ9g@mail.gmail.com>
+ <20200805172746.GC1118@bug>
+In-Reply-To: <20200805172746.GC1118@bug>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 5 Aug 2020 21:06:45 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2KnmDXYCyst15=kZWneDTMFAbz47F_TYnY_26+W4PM6A@mail.gmail.com>
+Message-ID: <CAK8P3a2KnmDXYCyst15=kZWneDTMFAbz47F_TYnY_26+W4PM6A@mail.gmail.com>
+Subject: Re: [GIT PULL 0/5] ARM: SoC: changes for v5.9
+To:     Pavel Machek <pavel@ucw.cz>
+List-Id: <soc.lore.kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        SoC Team <soc@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Konrad Dybcio <konradybcio@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:bGbsl3BEepsSAYqvdVmSXF/5nBRHuGya08h7FkJDE8Ps8OjD/Zt
+ dNGz17iV9XQ8VfQTgaKs8GoY3UN5jtHOfTDa5spYsVCY4lhtK/tgBKg/E3Yj7Uv+1m1D3wU
+ Q3+XLNogeZmIvMVKBvMieEIvzckEGy7R3QbGWGGcUQFsf0yqrg7qsLxnzjWohXgukRguvs0
+ i06gabXC3kDtoEKkP0h3w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9GPoFj7rbPA=:U5u0PWKZkePxzrGz8hAokU
+ JAMQa+rq3a6gw8M70zPBv9/SaM/DbpaVOacioq+rq04sry2/ndJkOakOytJn5dLzDI36bBBZu
+ tbgDP+QgSvNrWyAkUIoFDn0GYNFmuxiyx4tJTTKAmitvk2f35JdqMz8EX2TxoDGV2lAi47L9t
+ daRXtbFLyYx8HyqyTeayZqTHDuJP2K/RKLheucSgsXqDdsFOoQF6ix4fQ6D568ygWHwhAlVRO
+ 5YnKELMPJDC7BJ9cx3DuLh6tob7R6JtI3R5hfh6Zp9v+Mq3hYKSKpVLcFZcIQVwZPcrpSpeDX
+ ZwCHHrd0cs1IPg4oqCSUPFZegG1jtcNHZdCNqT1f/GQr8vg7e2l26JtUk4RG3Tp72Ef6prk5G
+ MGbf1F9CqFIckfHhQKjLSFxDE1die9zppRbvyz+nuWkchisu9UAvewOcIAehZ6NYuMB7Y9Y2x
+ qp3LYu2idLLZW8Cv3f+xMWl+PbWv8C01cr793FtzqzomyAXWA0pWx6T+SUBHllbj7AoFkQNTi
+ Kk6jNjpQSlXdD5XLO91WYHuOy1+MWK+yh52FluRDCByAY4peYGkEJCBdvKs20kr3wEyVfgdOS
+ hMzsFXGN6hPDTszt9a8mD5IOuXyhrXLwYC3sjrk04hbRG/OtL9yGAzuDUFfk6JvYnR9VsHYo9
+ peohmagdSqi4+MNwYDV/TnZS7UlMDcxRQHeZymmNA/a5tayoR2kjVWV5AMZkWnVwb8v6Lluzk
+ Wh2zjNtW0MD6WV2M+UZBvwQvax+4POArF2Qs6dtMFuZjIXxYWiIuqrtyVgtBUknZnnxWlYmDo
+ uURaYYjLLGQVO9PfSBQ3OYYX5yX3cZCgcCKu2cJI5jM3aM4ErZ+jbGqmAJxmqnEIXL7Dg0F
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-08-05 at 19:22 +0100, Russell King - ARM Linux admin wrote:
-> On Wed, Aug 05, 2020 at 11:11:28AM -0700, Linus Torvalds wrote:
-> > On Wed, Aug 5, 2020 at 7:34 AM Russell King <rmk+kernel@armlinux.org.uk> wrote:
-> > > Is this something you're willing to merge directly please?
-> > 
-> > Done.
-> > 
-> > That said:
-> > 
-> > > -K:     phylink
-> > > +K:     phylink\.h|struct\s+phylink|\.phylink|>phylink_|phylink_(autoneg|clear|connect|create|destroy|disconnect|ethtool|helper|mac|mii|of|set|start|stop|test|validate)
-> > 
-> > That's a very awkward pattern. I wonder if there could be better ways
-> > to express this (ie "only apply this pattern to these files" kind of
-> > thing)
-> 
-> Yes, it's extremely awkward - I spent much of the morning with perl
-> testing it out on the drivers/ subtree.
+On Wed, Aug 5, 2020 at 7:27 PM Pavel Machek <pavel@ucw.cz> wrote:
+> > 2. In the past few merge windows we have seen an increase in (usually
+> >    older) Android phones and tablets gaining mainline kernel support.
+> >    This time we get a total of eight Snapdragon phones and two Tegra
+> >    tablets. To me this indicates that we finally have sufficient driver
+> >    support, in particular on the GPU side, to make this workable.
+> >    It also shows the impact that a single hobbyist developer can have,
+> >    as most of the new support was submitted by Konrad Dybcio who only
+> >    started contributing kernel patches to mainline Linux for postmarketos
+> >    earlier this year.
+>
+> I'm happy to see that. So far, Nokia N900 is reaonably supported (basically everything
+> but Bluetooth works, voicecalls miss userland daemon for audio), and Motorola
+> Droid 4 (modem needs some more in kernel, camera will be hard).
+>
+> Is there anything with similar support coming in, or is it usual "it boots,
+> serial console works"?
 
-There are a lot of phylink_<foo> in the kernel.
-Are those really the only uses you want to watch?
+My impression is that the newly added phones are still fairly rudimentary,
+but some others that were added in the past releases have gotten
+further. I don't know any details, but I've added Konrad to Cc, he can
+comment on his work.
 
-$ git grep -P -oh 'phylink_\w+'| sort | uniq -c
+One of the missing pieces with the OMAP based phones has always
+been the GPU, and on that front I think by now almost every other GPU
+is ahead.
 
-      4 phylink_add
-      7 phylink_an_mode_str
-      4 phylink_apply_manual_flow
-      3 phylink_attach_phy
-     26 phylink_autoneg_inband
-      4 phylink_bringup_phy
-      3 phylink_change_inband_advert
-      6 phylink_clear
-      4 phylink_complete
-      2 phylink_complete_evt
-    145 phylink_config
-      3 phylink_connect
-      8 phylink_connect_phy
-     39 phylink_create
-     10 phylink_dbg
-      3 phylink_decode_c37_word
-      2 phylink_decode_sgmii_word
-     22 phylink_destroy
-     11 phylink_disable_state
-      1 phylink_disconnect
-     23 phylink_disconnect_phy
-      4 phylink_do_bit
-      2 phylink_downs
-     12 phylink_err
-      7 phylink_ethtool_get_eee
-      1 phylink_ethtool_get_eee_err
-     10 phylink_ethtool_get_pauseparam
-     11 phylink_ethtool_get_wol
-     13 phylink_ethtool_ksettings_get
-     13 phylink_ethtool_ksettings_set
-     10 phylink_ethtool_nway_reset
-      7 phylink_ethtool_set_eee
-     10 phylink_ethtool_set_pauseparam
-      9 phylink_ethtool_set_wol
-      2 phylink_fixed_poll
-      6 phylink_fixed_state
-      4 phylink_gen_key
-      5 phylink_get_eee_err
-      6 phylink_get_fixed_state
-      3 phylink_get_ksettings
-      2 phylink_handler
-     10 phylink_helper_basex_speed
-      6 phylink_info
-      4 phylink_init_eee
-      3 phylink_is_empty_linkmode
-      4 phylink_link_down
-      2 phylink_link_handler
-    168 phylink_link_state
-      2 phylink_link_up
-     11 phylink_mac_an_restart
-     19 phylink_mac_change
-     33 phylink_mac_config
-      3 phylink_mac_initial_config
-     33 phylink_mac_link_down
-     18 phylink_mac_link_state
-     28 phylink_mac_link_up
-     36 phylink_mac_ops
-      5 phylink_mac_pcs_an_restart
-     10 phylink_mac_pcs_get_state
-      4 phylink_major_config
-      2 phylink_merge_link_mode
-      4 phylink_mii_c22_pcs_an_restart
-      4 phylink_mii_c22_pcs_config
-      4 phylink_mii_c22_pcs_get_state
-      5 phylink_mii_c22_pcs_set_advertisement
-      3 phylink_mii_c45_pcs_get_state
-      3 phylink_mii_emul_read
-     13 phylink_mii_ioctl
-      2 phylink_mii_read
-      2 phylink_mii_write
-      4 phylink_node
-     19 phylink_of_phy_connect
-     16 phylink_ops
-      2 phylink_op_type
-      2 phylink_parse_fixedlink
-      2 phylink_parse_mode
-      2 phylink_pause_to_str
-     18 phylink_pcs
-      6 phylink_pcs_ops
-      5 phylink_phy_change
-      2 phylink_phy_no_inband
-      2 phylink_phy_read
-      2 phylink_phy_write
-      6 phylink_printk
-      2 phylink_register
-      2 phylink_register_sfp
-      2 phylink_resolve
-      2 phylink_resolve_flow
-      8 phylink_run_resolve
-      3 phylink_run_resolve_and_disable
-    406 phylink_set
-      5 phylink_set_pcs
-     23 phylink_set_port_modes
-      2 phylink_setup
-      2 phylink_sfp_attach
-      4 phylink_sfp_config
-      2 phylink_sfp_connect_phy
-      2 phylink_sfp_detach
-      2 phylink_sfp_disconnect_phy
-      2 phylink_sfp_link_down
-      2 phylink_sfp_link_up
-      2 phylink_sfp_module_insert
-      2 phylink_sfp_module_start
-      2 phylink_sfp_module_stop
-     11 phylink_speed_down
-      7 phylink_speed_up
-     21 phylink_start
-     23 phylink_stop
-     31 phylink_test
-      5 phylink_to_dpaa2_mac
-      7 phylink_to_port
-      2 phylink_ups
-    125 phylink_validate
-      4 phylink_warn
-      7 phylink_zero
+> Should we have some kind of linux-phones mailing list? There is quite a lot of
+> stuff common in phones.
 
-> > Isn't the 'F' pattern already complete enough that maybe the K pattern
-> > isn't even worth it?
-> 
-> Unfortunately not; I used not to have a K: line, which presented the
-> problem that we had users of phylink added to the kernel that were not
-> being reviewed.  So, the suggestion was to add a K: line.
-> 
-> However, I'm now being spammed by syzbot (I've received multiple emails
-> about the same problem) because, rather than MAINTAINERS being applied
-> to just patches, it is now being applied to entire source files.  This
-> means that the previous "K: phylink" entry matches not just on patches
-> (which can be easily ignored) but entire files, such as
-> net/bluetooth/hci_event.c which happens to contain "phylink" in a
-> function name.
-> 
-> So, when syzbot identifies there is a problem in
-> net/bluetooth/hci_event.c, it sends me a report, despite it having
-> no relevance for me.
+PostmarketOS is probably the right place to look for this.
 
-Maybe instead syzbot could ignore K: lines
-by adding --nokeywords to its command line
-for get_maintainer.pl.
-
-
+       Arnd
