@@ -2,120 +2,139 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DCDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E3CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A19C022D00
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FFF6206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:12:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EcJmCxzc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbgHERMN (ORCPT
+        id S1728623AbgHERMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:12:13 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32478 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728489AbgHERIi (ORCPT
+        Wed, 5 Aug 2020 13:12:37 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30250 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728207AbgHERIi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 13:08:38 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 075CWW3e113416;
-        Wed, 5 Aug 2020 08:38:08 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32qrr1qq47-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Aug 2020 08:38:08 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 075CWeu2113976;
-        Wed, 5 Aug 2020 08:38:07 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32qrr1qq35-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Aug 2020 08:38:07 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 075CZkxk021961;
-        Wed, 5 Aug 2020 12:38:05 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma02fra.de.ibm.com with ESMTP id 32n018amv5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 Aug 2020 12:38:04 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 075Cc2Pk20775184
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 5 Aug 2020 12:38:02 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8ED954C058;
-        Wed,  5 Aug 2020 12:38:02 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 37B504C046;
-        Wed,  5 Aug 2020 12:38:00 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.95.205])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  5 Aug 2020 12:37:59 +0000 (GMT)
-Message-ID: <3a96065c7c628be36eba99ad0da8d78cdac7dcaf.camel@linux.ibm.com>
-Subject: Re: [PATCH v6 0/4] LSM: Measure security module data
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Casey Schaufler <casey@schaufler-ca.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        stephen.smalley.work@gmail.com
-Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 05 Aug 2020 08:37:59 -0400
-In-Reply-To: <f3971f35-309d-c3e5-9126-69add7ad4c11@schaufler-ca.com>
-References: <20200805004331.20652-1-nramas@linux.microsoft.com>
-         <f3971f35-309d-c3e5-9126-69add7ad4c11@schaufler-ca.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-05_09:2020-08-03,2020-08-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- suspectscore=0 mlxscore=0 malwarescore=0 impostorscore=0
- priorityscore=1501 bulkscore=0 phishscore=0 adultscore=0 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008050102
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596647316;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=NXrvFSV+dNzT7Ew4OtdZ4sl3Tp8McXO1LQ3a/45Cy2g=;
+        b=EcJmCxzcZ7bIjzT8p2fD9r9DFXN5PtMFJjemYihJHR4uAtiKoWvBjwWqOk9kSn9ggH+S59
+        HiABS3ToP9hSmwJ272U6SN7hSZ4lurUNFMkW9KmlzWvPenZJeHiyBvLIaA/NGv5CWCKSsk
+        pFmFSBkgEdzaSe724K3ITd1F4hkxE6g=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-188-YnIaVJ4UOaeY2oKgOv63Dg-1; Wed, 05 Aug 2020 10:52:19 -0400
+X-MC-Unique: YnIaVJ4UOaeY2oKgOv63Dg-1
+Received: by mail-qt1-f197.google.com with SMTP id f59so18863326qtb.22
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 07:52:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=NXrvFSV+dNzT7Ew4OtdZ4sl3Tp8McXO1LQ3a/45Cy2g=;
+        b=KbveZxnjwaOimAORUVbBJqkvDq0bBZBRaFdrC5CgeoUYULUSvAHd3hgZIgCOzj1i73
+         pPu8YquJkoUFowNBuFB0+Z6LbZEIOt7mN+CkfHakfwzonSQ7UUeBrsfEwHfrZj4pqcXc
+         VFkJteZtEypHeg6TFDWuDEoiG9orKNyE2FJqpTGKyueyYJH5t+Hunn3lVlOsAMmCdoGa
+         wJUtpWIxlf2PxInSQi9aTpWckyvTzDvIGJ1tFWSQ9KTPbv94T7Y348eF/dAFWeKQxo/l
+         5XZr8Sg1Aam1AEmgA4H/IJDI/SgScIykr2ie2ZNKEyQh2dIhcvf25OPOlYA07N5viU+M
+         x0dw==
+X-Gm-Message-State: AOAM530shyjmOvNZ4U72fG4ZbjwYBSNuecxdEEImw3sA3c5IrGVl5YK3
+        IT+WtmQyvgxs39kaEs/iIxKNs2OgeuYfJbqPAhZVzbYbuUlZpzlGBUVg75g6OvcqpNMpTZhRp42
+        Tfrei6T03JXQtjg/hKayC2Lls
+X-Received: by 2002:ac8:4a99:: with SMTP id l25mr3768025qtq.132.1596639139243;
+        Wed, 05 Aug 2020 07:52:19 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzp5tU+SNu4wENz/P1igk4DE3nEE4fftblfRV1X1lQLG3yUmxqeZIDzwczARUE/HJu8apixFA==
+X-Received: by 2002:ac8:4a99:: with SMTP id l25mr3768003qtq.132.1596639138881;
+        Wed, 05 Aug 2020 07:52:18 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id 22sm1868301qkd.64.2020.08.05.07.52.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 07:52:17 -0700 (PDT)
+From:   trix@redhat.com
+To:     thomas@winischhofer.net, b.zolnierkie@samsung.com, akpm@osdl.org
+Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tom Rix <trix@redhat.com>
+Subject: [PATCH] video: fbdev: sis: fix null ptr dereference
+Date:   Wed,  5 Aug 2020 07:52:08 -0700
+Message-Id: <20200805145208.17727-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-08-04 at 18:04 -0700, Casey Schaufler wrote:
-> On 8/4/2020 5:43 PM, Lakshmi Ramasubramanian wrote:
-> > Critical data structures of security modules are currently not measured.
-> > Therefore an attestation service, for instance, would not be able to
-> > attest whether the security modules are always operating with the policies
-> > and configuration that the system administrator had setup. The policies
-> > and configuration for the security modules could be tampered with by
-> > malware by exploiting kernel vulnerabilities or modified through some
-> > inadvertent actions on the system. Measuring such critical data would
-> > enable an attestation service to better assess the state of the system.
-> 
-> I still wonder why you're calling this an LSM change/feature when
-> all the change is in IMA and SELinux. You're not putting anything
-> into the LSM infrastructure, not are you using the LSM infrastructure
-> to achieve your ends. Sure, you *could* support other security modules
-> using this scheme, but you have a configuration dependency on
-> SELinux, so that's at best going to be messy. If you want this to
-> be an LSM "feature" you need to use the LSM hooking mechanism.
-> 
-> I'm not objecting to the feature. It adds value. But as you've
-> implemented it it is either an IMA extension to SELinux, or an
-> SELiux extension to IMA. Could AppArmor add hooks for this without
-> changing the IMA code? It doesn't look like it to me.
+From: Tom Rix <trix@redhat.com>
 
-Agreed.  Without reviewing the patch set in depth, I'm not quite sure
-why this patch set needs to be limited to measuring just LSM critical
-data and can't be generalized.    The patch set could be titled "ima:
-measuring critical data" or "ima: measuring critical kernel data". 
-Measuring SELinux critical data would be an example of its usage.
+Clang static analysis reports this representative error
 
-For an example, refer to the ima_file_check hook, which is an example
-of IMA being called directly, not via an LSM hook.
+init.c:2501:18: warning: Array access (from variable 'queuedata') results
+  in a null pointer dereference
+      templ |= ((queuedata[i] & 0xc0) << 3);
 
-Mimi
+This is the problem block of code
+
+   if(ModeNo > 0x13) {
+      ...
+      if(SiS_Pr->ChipType == SIS_730) {
+	 queuedata = &FQBQData730[0];
+      } else {
+	 queuedata = &FQBQData[0];
+      }
+   } else {
+
+   }
+
+queuedata is not set in the else block
+
+Reviewing the old code, the arrays FQBQData730 and FQBQData were
+used directly.
+
+So hoist the setting of queuedata out of the if-else block.
+
+Fixes: 544393fe584d ("[PATCH] sisfb update")
+
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/video/fbdev/sis/init.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/video/fbdev/sis/init.c b/drivers/video/fbdev/sis/init.c
+index dfe3eb769638..fde27feae5d0 100644
+--- a/drivers/video/fbdev/sis/init.c
++++ b/drivers/video/fbdev/sis/init.c
+@@ -2428,6 +2428,11 @@ SiS_SetCRT1FIFO_630(struct SiS_Private *SiS_Pr, unsigned short ModeNo,
+ 
+    i = 0;
+ 
++	if (SiS_Pr->ChipType == SIS_730)
++		queuedata = &FQBQData730[0];
++	else
++		queuedata = &FQBQData[0];
++
+    if(ModeNo > 0x13) {
+ 
+       /* Get VCLK  */
+@@ -2445,12 +2450,6 @@ SiS_SetCRT1FIFO_630(struct SiS_Private *SiS_Pr, unsigned short ModeNo,
+       /* Get half colordepth */
+       colorth = colortharray[(SiS_Pr->SiS_ModeType - ModeEGA)];
+ 
+-      if(SiS_Pr->ChipType == SIS_730) {
+-	 queuedata = &FQBQData730[0];
+-      } else {
+-	 queuedata = &FQBQData[0];
+-      }
+-
+       do {
+ 	 templ = SiS_CalcDelay2(SiS_Pr, queuedata[i]) * VCLK * colorth;
+ 
+-- 
+2.18.1
 
