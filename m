@@ -2,75 +2,74 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B03C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9F2C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D07222B40
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6846822B40
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:48:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596610114;
+	bh=HMyvD8NsGy2u833AuNGlzuWSRw2uA7wsTK0RAPThsLI=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=vm9CkOwNXwXyNOK5R3nNPQb0neDOvd67cxJbWKoynhytNGxIhtJ18m8E1rXaXWy9i
+	 PCBtPCpk064Ds3mrwK3mtIVoPZZBAnojkBROCnvpf5cHHg2iJgdgIUhqTuffKnClBd
+	 1dbhQlEovvBan7QgiNV84o9uPcUAMxIejxQoVLCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgHEGsT (ORCPT
+        id S1728067AbgHEGsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 02:48:19 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:53444 "EHLO smtp.al2klimov.de"
+        Wed, 5 Aug 2020 02:48:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726382AbgHEGsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 02:48:18 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id A20874E2B0;
-        Wed,  5 Aug 2020 06:48:13 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     torvalds@linux-foundation.org, corbet@lwn.net,
-        geert+renesas@glider.be, ribalda@kernel.org, martink@posteo.de,
-        grandmaster@al2klimov.de, luis.f.correia@gmail.com,
-        paulburton@kernel.org, cyphar@cyphar.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] CREDITS: add myself
-Date:   Wed,  5 Aug 2020 08:48:05 +0200
-Message-Id: <20200805064805.64688-1-grandmaster@al2klimov.de>
+        id S1726382AbgHEGsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 02:48:32 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E63B2076E;
+        Wed,  5 Aug 2020 06:48:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596610111;
+        bh=HMyvD8NsGy2u833AuNGlzuWSRw2uA7wsTK0RAPThsLI=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=18qa1fuhPqZCLDqstMlypKMAv8ES/94BCJdib+oqYTSCI4iBJA+YAyZ9DuPVjN1YY
+         mMpfuXN9ceeOTd7xv8zijMYVCvXsOTjff2LE3WZvakhw9+PjJWkTwguUnVS8vFp+Ux
+         QO/FkbtdRMvyDtCjMo3X1MRYkfdfBAe2ZnI2JqxI=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <69c90a004b3f5b7ae282f5ec5ca2920a48f23e02.1596040416.git.gurus@codeaurora.org>
+References: <944856eb819081268fab783236a916257de120e4.1596040416.git.gurus@codeaurora.org> <69c90a004b3f5b7ae282f5ec5ca2920a48f23e02.1596040416.git.gurus@codeaurora.org>
+Subject: Re: [PATCH v2 2/2] thermal: qcom-spmi-temp-alarm: add support for GEN2 rev 1 PMIC peripherals
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org,
+        Guru Das Srinagesh <gurus@codeaurora.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        Guru Das Srinagesh <gurus@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
+Date:   Tue, 04 Aug 2020 23:48:30 -0700
+Message-ID: <159661011044.1360974.2399567989389491381@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-50 already merged patches of mine.
+Quoting Guru Das Srinagesh (2020-07-29 09:52:52)
+> From: David Collins <collinsd@codeaurora.org>
+>=20
+> Add support for TEMP_ALARM GEN2 PMIC peripherals with digital
+> major revision 1.  This revision utilizes a different temperature
+> threshold mapping than earlier revisions.
+>=20
+> Signed-off-by: David Collins <collinsd@codeaurora.org>
+> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> ---
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- (Let's try once more - with 50 patches instead of just 2.)
-
- See:
- git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
-
- CREDITS | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/CREDITS b/CREDITS
-index 32ee70a7562e..aaa2c20c0d86 100644
---- a/CREDITS
-+++ b/CREDITS
-@@ -1933,6 +1933,11 @@ S: Schwalbenstr. 96
- S: 85551 Ottobrunn
- S: Germany
- 
-+N: Alexander A. Klimov
-+E: grandmaster@al2klimov.de
-+W: https://github.com/Al2Klimov
-+D: documentation
-+
- N: Ian Kluft
- E: ikluft@thunder.sbay.org
- W: http://www.kluft.com/~ikluft/
--- 
-2.27.0
-
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
