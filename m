@@ -2,202 +2,113 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF8CC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A38C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF3BE2075D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E438E206D4
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729047AbgHETWb (ORCPT
+        id S1729063AbgHETWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:22:31 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2579 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728961AbgHERlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:41:49 -0400
-Received: from lhreml712-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 6699C2A264AE1F7A9CDD;
-        Wed,  5 Aug 2020 18:41:46 +0100 (IST)
-Received: from localhost (10.52.120.30) by lhreml712-chm.china.huawei.com
- (10.201.108.63) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 5 Aug 2020
- 18:41:45 +0100
-Date:   Wed, 5 Aug 2020 18:40:20 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Sean V Kelley <sean.v.kelley@intel.com>
-CC:     <bhelgaas@google.com>, <rjw@rjwysocki.net>, <ashok.raj@intel.com>,
-        <tony.luck@intel.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [PATCH V2 6/9] PCI: Add 'rcec' field to pci_dev for associated
- RCiEPs
-Message-ID: <20200805184020.00000cf3@Huawei.com>
-In-Reply-To: <20200804194052.193272-7-sean.v.kelley@intel.com>
-References: <20200804194052.193272-1-sean.v.kelley@intel.com>
-        <20200804194052.193272-7-sean.v.kelley@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Wed, 5 Aug 2020 15:22:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728960AbgHERlq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:41:46 -0400
+Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7C23C0D941F;
+        Wed,  5 Aug 2020 08:16:52 -0700 (PDT)
+Received: by mail-oo1-xc41.google.com with SMTP id j16so4477021ooc.7;
+        Wed, 05 Aug 2020 08:16:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ma8XUemDPSU43scaub//Tj8SjqSjSSXU9X7SXIYVoOU=;
+        b=bmU5erMabaHnH11G4ugT3ZM+1sK5m+CgBAaNTNYXbKwghE1JcaTdfyatMzrkN6xRef
+         8EyEh25LYHNs4TS3f4pJAkWTp5YFFgNSK3ELo+H/WbG2E9LWM762Cz3tKJiSc6zm3ViG
+         J0jnPEFIfMw17vO0s7xuJmbGKFt7L9SS+jsHuGwFpussM36hCV716bIr74P5QdnjImBf
+         8PPeWstiKPeXSx2pLUCkb5rOTzSLytHTfDnEKL3NcyLBucMwnutLVMbLhkLp5FTHqF6L
+         q5Ay4BPAEamWokIyry1/VbK2ccfvRIu99e/1qHRH5hAewbZ6HLYixM6lDLnZuivkVD+j
+         +ncA==
+X-Gm-Message-State: AOAM530wFlP+DcDNIcMPIc1IHfgx/k6PtcqyB1SRwDI9Jh/fd5Et9e8T
+        sUCF2xXLhgEgbqLyA1GhX/cM4coEDBUUP1k+V88eDJD5
+X-Google-Smtp-Source: ABdhPJwe10oto1QkttDyucMJ1qGeA6Wk+Q0uDI4AF3ApXEWocJh2xeIhIPIH+vNM+BYieFqojz9wao5UdxjTIgmcZbQ=
+X-Received: by 2002:a9d:7d8c:: with SMTP id j12mr2827246otn.250.1596636279974;
+ Wed, 05 Aug 2020 07:04:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.120.30]
-X-ClientProxiedBy: lhreml744-chm.china.huawei.com (10.201.108.194) To
- lhreml712-chm.china.huawei.com (10.201.108.63)
-X-CFilter-Loop: Reflected
+References: <20200728134226.27592-1-trix@redhat.com>
+In-Reply-To: <20200728134226.27592-1-trix@redhat.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 5 Aug 2020 16:04:28 +0200
+Message-ID: <CAMuHMdX-m+q-SYveM2BQyM+EoiQ1ctVviJzjs+UbTzH9cJaqMQ@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: of: reset name variable in of_gpiochip_add_hog
+To:     trix@redhat.com
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Frank Rowand <frank.rowand@sony.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Aug 2020 12:40:49 -0700
-Sean V Kelley <sean.v.kelley@intel.com> wrote:
+Hi Tom,
 
-> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> 
-> When attempting error recovery for an RCiEP associated with an RCEC device,
-> there needs to be a way to update the Root Error Status, the Uncorrectable
-> Error Status and the Uncorrectable Error Severity of the parent RCEC.
-> So add the 'rcec' field to the pci_dev structure and provide a hook for the
-> Root Port Driver to associate RCiEPs with their respective parent RCEC.
-> 
-> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
-> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-Hi,
+Thanks for your patch!
 
-One question in line.
+On Tue, Jul 28, 2020 at 3:42 PM <trix@redhat.com> wrote:
+> From: Tom Rix <trix@redhat.com>
+>
+> Clang static analysis reports this error
+>
+> gpiolib-of.c:664:9: warning: 2nd function call argument
+>   is an uninitialized value [core.CallAndMessage]
+>         ret = gpiod_hog(desc, name, lflags, dflags);
+>
+> name is sometimes set by of_parse_own_gpio
+> name is always used by gpiod_hog
 
-> ---
->  drivers/pci/pcie/aer.c         |  9 +++++----
->  drivers/pci/pcie/err.c         | 12 ++++++++++++
->  drivers/pci/pcie/portdrv_pci.c | 15 +++++++++++++++
->  include/linux/pci.h            |  3 +++
->  4 files changed, 35 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 87283cda3990..f658607e8e00 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1358,17 +1358,18 @@ static int aer_probe(struct pcie_device *dev)
->  static pci_ers_result_t aer_root_reset(struct pci_dev *dev)
->  {
->  	int aer = dev->aer_cap;
-> +	int rc = 0;
->  	u32 reg32;
-> -	int rc;
-> -
->  
->  	/* Disable Root's interrupt in response to error messages */
->  	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
->  	reg32 &= ~ROOT_PORT_INTR_ON_MESG_MASK;
->  	pci_write_config_dword(dev, aer + PCI_ERR_ROOT_COMMAND, reg32);
->  
-> -	rc = pci_bus_error_reset(dev);
-> -	pci_info(dev, "Root Port link has been reset\n");
-> +	if (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC) {
-> +		rc = pci_bus_error_reset(dev);
-> +		pci_info(dev, "Root Port link has been reset\n");
-> +	}
->  
->  	/* Clear Root Error Status */
->  	pci_read_config_dword(dev, aer + PCI_ERR_ROOT_STATUS, &reg32);
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index 4812aa678eff..43f1c55c76db 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -203,6 +203,12 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  		pci_walk_dev_affected(dev, report_frozen_detected, &status);
->  		if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
->  			status = flr_on_rciep(dev);
-> +			/*
-> +			 * The callback only clears the Root Error Status
-> +			 * of the RCEC (see aer.c).
-> +			 */
-> +			if (pcie_aer_is_native(dev) && dev->rcec)
-> +				reset_link(dev->rcec);
+This is a false-positive: gpiod_hog() is only called if
+of_parse_own_gpio() returned success, in which case it has filled in the
+name output parameter.
 
-I'm not sure about this pcie_aer_is_native check.
-We don't check in the normal EP path.  Perhaps we should be checking there
-as well?
+> So it is necessary to reset name so an old value is
+> not mistakenly used by gpiod_hog.
 
-I can contrive a CPER record that hits the reset_link for the normal EP on my qemu
-test setup.  Just for fun it causes a synchronous external abort that I need
-to track down but not related this patch or indeed reset_link and may just reflect
-an impossible to hit path in the e1000e driver.
+Hence this is not needed.
 
-It needs a very contrived combination of blocks that say the error is fatal
-and others that say it isn't so I'm not that worried about that.
+> Fixes: bc21077e084b ("gpio: of: Extract of_gpiochip_add_hog()")
 
+This is not the commit that introduced the "bug".
 
->  			if (status != PCI_ERS_RESULT_RECOVERED) {
->  				pci_warn(dev, "function level reset failed\n");
->  				goto failed;
-> @@ -247,7 +253,13 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->  		if (pcie_aer_is_native(dev))
->  			pcie_clear_device_status(dev);
->  		pci_aer_clear_nonfatal_status(dev);
-> +	} else if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
-> +		if (pcie_aer_is_native(dev) && dev->rcec)
-> +			pcie_clear_device_status(dev->rcec);
-> +		if (dev->rcec)
-> +			pci_aer_clear_nonfatal_status(dev->rcec);
->  	}
-> +
->  	pci_info(dev, "device recovery successful\n");
->  	return status;
->  
-> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-> index 4d880679b9b1..dff5c9e13412 100644
-> --- a/drivers/pci/pcie/portdrv_pci.c
-> +++ b/drivers/pci/pcie/portdrv_pci.c
-> @@ -90,6 +90,18 @@ static const struct dev_pm_ops pcie_portdrv_pm_ops = {
->  #define PCIE_PORTDRV_PM_OPS	NULL
->  #endif /* !PM */
->  
-> +static int pcie_hook_rcec(struct pci_dev *pdev, void *data)
-> +{
-> +	struct pci_dev *rcec = (struct pci_dev *)data;
-> +
-> +	pdev->rcec = rcec;
-> +	pci_dbg(rcec, "RCiEP(under an RCEC) %04x:%02x:%02x.%d\n",
-> +		pci_domain_nr(pdev->bus), pdev->bus->number,
-> +		PCI_SLOT(pdev->devfn), PCI_FUNC(pdev->devfn));
-> +
-> +	return 0;
-> +}
-> +
->  /*
->   * pcie_portdrv_probe - Probe PCI-Express port devices
->   * @dev: PCI-Express port device being probed
-> @@ -110,6 +122,9 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
->  	     (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)))
->  		return -ENODEV;
->  
-> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)
-> +		pcie_walk_rcec(dev, pcie_hook_rcec, dev);
-> +
->  	status = pcie_port_device_register(dev);
->  	if (status)
->  		return status;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index ee49469bd2b5..d5f7dbbf5e2f 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -326,6 +326,9 @@ struct pci_dev {
->  #ifdef CONFIG_PCIEAER
->  	u16		aer_cap;	/* AER capability offset */
->  	struct aer_stats *aer_stats;	/* AER stats for this device */
-> +#endif
-> +#ifdef CONFIG_PCIEPORTBUS
-> +	struct pci_dev	*rcec;		/* Associated RCEC device */
->  #endif
->  	u8		pcie_cap;	/* PCIe capability offset */
->  	u8		msi_cap;	/* MSI capability offset */
+> Signed-off-by: Tom Rix <trix@redhat.com>
 
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -657,6 +657,7 @@ static int of_gpiochip_add_hog(struct gpio_chip *chip, struct device_node *hog)
+>         int ret;
+>
+>         for (i = 0;; i++) {
+> +               name = NULL;
+>                 desc = of_parse_own_gpio(hog, chip, i, &name, &lflags, &dflags);
+>                 if (IS_ERR(desc))
+>                         break;
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
