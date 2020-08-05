@@ -2,124 +2,86 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F04C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 23:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B8CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 23:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CD6622CAE
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 23:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4771122CAE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 23:08:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596668935;
+	bh=AfgbVOY92Om6cAQN2okLShzei8UXh1G0FdHJs5uSP1c=;
+	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
+	b=hDzwg/8KHHYsCe4NmH1MY5xTsHehmVRizlyY8cMyOat9snDbFGOo1WOKbhdgnkx1A
+	 sIKFDE73YRpdFjlE7y9OoxVMeyF1aT/NXr20X6qzCy2ZPDeQtaneFCrlZxeV+UpY9G
+	 SBUXjN4gecabCXv8ZvJ3HOPrY/W+htS5PAPUONs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbgHEXHV (ORCPT
+        id S1726305AbgHEXIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 19:07:21 -0400
-Received: from smtprelay0164.hostedemail.com ([216.40.44.164]:33822 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726542AbgHEXHK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 19:07:10 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 8FA8418224D8E;
-        Wed,  5 Aug 2020 23:07:06 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: guide34_2308aad26fb2
-X-Filterd-Recvd-Size: 3797
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Wed,  5 Aug 2020 23:07:05 +0000 (UTC)
-Message-ID: <8a091297aef4ebb44a65ab1c683caae006acf76a.camel@perches.com>
-Subject: Re: [PATCH] MAINTAINERS: update phylink/sfp keyword matching
-From:   Joe Perches <joe@perches.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>
-Date:   Wed, 05 Aug 2020 16:07:04 -0700
-In-Reply-To: <20200805220917.GZ1551@shell.armlinux.org.uk>
-References: <E1k3KUx-0000da-In@rmk-PC.armlinux.org.uk>
-         <CAHk-=whbLwN9GEVVt=7eYhPYk0t0Wh1xeuNEDD+xmQxBFjAQJA@mail.gmail.com>
-         <20200805182250.GX1551@shell.armlinux.org.uk>
-         <957f48692a2f0bc4df2d83068073c4822da30eef.camel@perches.com>
-         <20200805220917.GZ1551@shell.armlinux.org.uk>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.3-0ubuntu1 
+        Wed, 5 Aug 2020 19:08:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57664 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725779AbgHEXIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 19:08:53 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20DCB2086A;
+        Wed,  5 Aug 2020 23:08:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596668933;
+        bh=AfgbVOY92Om6cAQN2okLShzei8UXh1G0FdHJs5uSP1c=;
+        h=Date:From:To:Cc:Subject:Reply-To:From;
+        b=jsj0bsXh6oWAI2T5hOUiH2fyjgHmhEm036VCrPHjyuC6yLPyaZ1NTDBbqxDXrXa+P
+         anzRjXGxP1EYcX8CZz/Y5nWcBhb6d3c8SV57S9FmcJiKUrI5XzVGJt2QOkD8nKKxKO
+         B7T8c2beSI/sQikZl0pgQs5uU/pNUP8zfW3Wd2os=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id F1BC83522B4B; Wed,  5 Aug 2020 16:08:52 -0700 (PDT)
+Date:   Wed, 5 Aug 2020 16:08:52 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     kcc@google.com, dvyukov@google.com, elver@google.com
+Cc:     linux-kernel@vger.kernel.org
+Subject: Finally starting on short RCU grace periods, but...
+Message-ID: <20200805230852.GA28727@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-08-05 at 23:09 +0100, Russell King - ARM Linux admin wrote:
-> On Wed, Aug 05, 2020 at 11:47:38AM -0700, Joe Perches wrote:
-> > On Wed, 2020-08-05 at 19:22 +0100, Russell King - ARM Linux admin wrote:
-> > > On Wed, Aug 05, 2020 at 11:11:28AM -0700, Linus Torvalds wrote:
-> > > > On Wed, Aug 5, 2020 at 7:34 AM Russell King <rmk+kernel@armlinux.org.uk> wrote:
-> > > > > Is this something you're willing to merge directly please?
-> > > > 
-> > > > Done.
-> > > > 
-> > > > That said:
-> > > > 
-> > > > > -K:     phylink
-> > > > > +K:     phylink\.h|struct\s+phylink|\.phylink|>phylink_|phylink_(autoneg|clear|connect|create|destroy|disconnect|ethtool|helper|mac|mii|of|set|start|stop|test|validate)
-> > > > 
-> > > > That's a very awkward pattern. I wonder if there could be better ways
-> > > > to express this (ie "only apply this pattern to these files" kind of
-> > > > thing)
-> > > 
-> > > Yes, it's extremely awkward - I spent much of the morning with perl
-> > > testing it out on the drivers/ subtree.
-> > 
-> > There are a lot of phylink_<foo> in the kernel.
-> > Are those really the only uses you want to watch?
-> 
-> It is sufficient; as I said, I've spent a morning running this:
+Hello!
 
-Cool for you, I was just asking.
+If I remember correctly, one of you asked for a way to shorten RCU
+grace periods so that KASAN would have a better chance of detecting bugs
+such as pointers being leaked out of RCU read-side critical sections.
+I am finally starting entering and testing code for this, but realized
+that I had forgotten a couple of things:
 
-How you determine what functions you're interested in
-is up to you.
+1.	I don't remember exactly who asked, but I suspect that it was
+	Kostya.  I am using his Reported-by as a placeholder for the
+	moment, but please let me know if this should be adjusted.
 
-Another mechanism might have been something like:
+2.	Although this work is necessary to detect situtions where
+	call_rcu() is used to initiate a grace period, there already
+	exists a way to make short grace periods that are initiated by
+	synchronize_rcu(), namely, the rcupdate.rcu_expedited kernel
+	boot parameter.  This will cause all calls to synchronize_rcu()
+	to act like synchronize_rcu_expedited(), resulting in about 2-3
+	orders of magnitude reduction in grace-period latency on small
+	systems (say 16 CPUs).
 
-$ git grep -Poh '(?:static\s+inline|EXPORT_SYMBOL).*phylink_[a-z]+' | \ 
-  grep -Poh 'phylink_[a-z]+' | sort | uniq
+In addition, I plan to make a few other adjustments that will
+increase the probability of KASAN spotting a pointer leak even in the
+rcupdate.rcu_expedited case.
 
-Maybe something that could be made generic in get_maintainer
-for people maintaining specific EXPORT_SYMBOL(foo) blocks.
+But if you would like to start this sort of testing on current mainline,
+rcupdate.rcu_expedited is your friend!
 
-Maybe another letter/look could be added to MAINTAINERS like:
-
-E:	symbol_regex
-
-as another similar mechanism for keywords but just for data
-or functions marked as exported symbols.
-
-For example, that E: might help minimize xdp matches as xdp
-is used by many other bits of code that aren't express data
-path uses.
-
-MAINTAINERS-XDP (eXpress Data Path)
-MAINTAINERS-M:  Alexei Starovoitov <ast@kernel.org>
-MAINTAINERS-M:  Daniel Borkmann <daniel@iogearbox.net>
-MAINTAINERS-M:  David S. Miller <davem@davemloft.net>
-MAINTAINERS-M:  Jakub Kicinski <kuba@kernel.org>
-MAINTAINERS-M:  Jesper Dangaard Brouer <hawk@kernel.org>
-MAINTAINERS-M:  John Fastabend <john.fastabend@gmail.com>
-MAINTAINERS-L:  netdev@vger.kernel.org
-MAINTAINERS-L:  bpf@vger.kernel.org
-MAINTAINERS-S:  Supported
-MAINTAINERS-F:  include/net/xdp.h
-MAINTAINERS-F:  include/trace/events/xdp.h
-MAINTAINERS-F:  kernel/bpf/cpumap.c
-MAINTAINERS-F:  kernel/bpf/devmap.c
-MAINTAINERS-F:  net/core/xdp.c
-MAINTAINERS-N:  xdp
-MAINTAINERS:K:  xdp
-
-
+							Thanx, Paul
