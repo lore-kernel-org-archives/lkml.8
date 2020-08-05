@@ -2,185 +2,192 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF74EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 185FBC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6074B2076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC6BD2076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:43:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="T+RhXndV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WX7ocpjD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbgHEWlc (ORCPT
+        id S1726344AbgHEWnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 18:41:32 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:50488 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbgHEWla (ORCPT
+        Wed, 5 Aug 2020 18:43:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45802 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725830AbgHEWnj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 18:41:30 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 075DGWpe104587;
-        Wed, 5 Aug 2020 08:16:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596633392;
-        bh=jv05QMyNRK6yayjZc1mP1MO1HJsGqxdVtsib46m4psw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=T+RhXndV1BPGC6RiOs7bIZtzzRI4KezTc5sDYRlBrjptGzd2t5N7YZbKtslASCm69
-         b/5xu9BxUpwVFMXXDLrGZthhOepTcxE1+BIVleZU4bl43OY6PtQJNTighBMU0OqK2P
-         ZpdLH+gUqiy+MGAwAKqtJYQPm2GE/UllwhRVIMSk=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 075DGWwE068176
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 5 Aug 2020 08:16:32 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 5 Aug
- 2020 08:16:32 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 5 Aug 2020 08:16:32 -0500
-Received: from [10.250.232.88] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 075DGTr0043569;
-        Wed, 5 Aug 2020 08:16:30 -0500
-Subject: Re: [PATCH] mmc: sdhci_am654: Add workaround for card detect debounce
- timer
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>
-CC:     <ulf.hansson@linaro.org>
-References: <20200729234130.25056-1-faiz_abbas@ti.com>
- <2d692a90-0e58-ae69-9b5b-c9eb3ffe21ec@intel.com>
- <75b188ef-2755-b833-4756-79f0f171f8bd@ti.com>
- <c5b166c9-f9ba-e01e-b759-57ac93d99832@intel.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <3f7e85c7-b0ba-e6a8-8d9f-091413614773@ti.com>
-Date:   Wed, 5 Aug 2020 18:46:28 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 5 Aug 2020 18:43:39 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 157EBC061574;
+        Wed,  5 Aug 2020 15:43:38 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id 77so10358677ilc.5;
+        Wed, 05 Aug 2020 15:43:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yfR6T7oCaeLyjQ9SxVMOY64V3krO/aimxcAQ4bPIbX8=;
+        b=WX7ocpjDWB4JEf5Vxc+bT7cgMR54ylfB0nbKx/qzh7bkB0tA+cJZEHy8v92TB+FSli
+         yAb8tqjCXpaKNxV3c4mVPitLtQ3GD8PsOmxbGmkwASJI3nHicBPfYsD/QCMGwO3JVlye
+         Ww5LE/35K3MqDoMsJAWFZfJwev8RbOSsDnXI8ZTFYy9lUdHnRYwb7UCucAl4RI+tZulZ
+         HCP2BE4fPKbsUQhGEXIVV4K9GsxbJ9Ut9j/UmvlFtSA8fRMx1FbumPmln8vOY+WnKQJ4
+         jIcjtWftqgCVQ9Gdd6ewkRxrIktn3qEczHiAjDFDh1Qforkax2YUAkzOni17zqB6W3bY
+         4M7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yfR6T7oCaeLyjQ9SxVMOY64V3krO/aimxcAQ4bPIbX8=;
+        b=B7GhP8sIcrdOp9hG52eo4stBDW0oOZkMMTP0EPVHXRasvG3ogGX43xTvBzs7+v4Vhu
+         6q3zT5Sgm/OhCYBdQ8hblSA6EGTFJ8K5TYECpLET6Mcf0k8aaLXkBIOM525EtVAnHzGU
+         WMsVdqGRhuVRv3duEDQjPlc5l01iff6DY03YPYYcg9rTh0DzcWW9HFoX21EYIYmYAV1y
+         KgplJGUP1iHw8EMTz88v0HtkPtbKuC+3hQkj8X8OmHbiY6u9z6ffefsgthCBjnWRRaeV
+         L5S5L3KDYNVaaT2avULiaU3+bkuJLWlUt5ZzZY9gsLyiabvy70lL3qLo7dHUSiMysgIm
+         xA8Q==
+X-Gm-Message-State: AOAM530SfJuXxhU3WURwZjspsfytpO19WwY4+TTQNzY2QgP/vllP5mjW
+        xMgBzoJZhyDoSLDP34T2BumaoGkNfIw2A2AUDHU=
+X-Google-Smtp-Source: ABdhPJy1iTjipZHLfFa2tpUoCXh3KbOtUScwfAP9RwbBuwBH2LowKi2GRFNbixTAX5YssLItPPQWb9LObtijLB7HC78=
+X-Received: by 2002:a05:6e02:143:: with SMTP id j3mr5940509ilr.97.1596667417710;
+ Wed, 05 Aug 2020 15:43:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <c5b166c9-f9ba-e01e-b759-57ac93d99832@intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1595681998-19193-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1595681998-19193-14-git-send-email-alex.shi@linux.alibaba.com> <9b906469-38fb-8a4e-9a47-d617c7669579@linux.alibaba.com>
+In-Reply-To: <9b906469-38fb-8a4e-9a47-d617c7669579@linux.alibaba.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Wed, 5 Aug 2020 15:43:26 -0700
+Message-ID: <CAKgT0Ud1+FkJcTXR0MxZYFxd7mr=opdXfXKTqkmiu4NNMyT4bg@mail.gmail.com>
+Subject: Re: [PATCH v17 13/21] mm/lru: introduce TestClearPageLRU
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        kbuild test robot <lkp@intel.com>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, cgroups@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Rong Chen <rong.a.chen@intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200805131628.oaPPHsEd3QZGRvNZD64VhAyuIiAtfjAhMwBIjlJzLpk@z>
 
-Hi Adrian,
+On Tue, Jul 28, 2020 at 8:53 PM Alex Shi <alex.shi@linux.alibaba.com> wrote:
+>
+> rewrite the commit log.
+>
+> From 9310c359b0049e3cc9827b771dc583d504bbf022 Mon Sep 17 00:00:00 2001
+> From: Alex Shi <alex.shi@linux.alibaba.com>
+> Date: Sat, 25 Apr 2020 12:03:30 +0800
+> Subject: [PATCH v17 13/23] mm/lru: introduce TestClearPageLRU
+>
+> Currently lru_lock still guards both lru list and page's lru bit, that's
+> ok. but if we want to use specific lruvec lock on the page, we need to
+> pin down the page's lruvec/memcg during locking. Just taking lruvec
+> lock first may be undermined by the page's memcg charge/migration. To
+> fix this problem, we could clear the lru bit out of locking and use
+> it as pin down action to block the page isolation in memcg changing.
+>
+> So now a standard steps of page isolation is following:
+>         1, get_page();         #pin the page avoid to be free
+>         2, TestClearPageLRU(); #block other isolation like memcg change
+>         3, spin_lock on lru_lock; #serialize lru list access
+>         4, delete page from lru list;
+> The step 2 could be optimzed/replaced in scenarios which page is
+> unlikely be accessed or be moved between memcgs.
+>
+> This patch start with the first part: TestClearPageLRU, which combines
+> PageLRU check and ClearPageLRU into a macro func TestClearPageLRU. This
+> function will be used as page isolation precondition to prevent other
+> isolations some where else. Then there are may !PageLRU page on lru
+> list, need to remove BUG() checking accordingly.
+>
+> There 2 rules for lru bit now:
+> 1, the lru bit still indicate if a page on lru list, just in some
+>    temporary moment(isolating), the page may have no lru bit when
+>    it's on lru list.  but the page still must be on lru list when the
+>    lru bit set.
+> 2, have to remove lru bit before delete it from lru list.
+>
+> Hugh Dickins pointed that when a page is in free path and no one is
+> possible to take it, non atomic lru bit clearing is better, like in
+> __page_cache_release and release_pages.
+> And no need get_page() before lru bit clear in isolate_lru_page,
+> since it '(1) Must be called with an elevated refcount on the page'.
+>
+> As Andrew Morton mentioned this change would dirty cacheline for page
+> isn't on LRU. But the lost would be acceptable with Rong Chen
+> <rong.a.chen@intel.com> report:
+> https://lkml.org/lkml/2020/3/4/173
+>
+> Suggested-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: cgroups@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> ---
+>  include/linux/page-flags.h |  1 +
+>  mm/mlock.c                 |  3 +--
+>  mm/swap.c                  |  6 ++----
+>  mm/vmscan.c                | 18 +++++++-----------
+>  4 files changed, 11 insertions(+), 17 deletions(-)
+>
 
-On 05/08/20 3:16 pm, Adrian Hunter wrote:
-> On 5/08/20 11:22 am, Faiz Abbas wrote:
->> Hi Adrian,
->>
->> On 05/08/20 1:44 pm, Adrian Hunter wrote:
->>> On 30/07/20 2:41 am, Faiz Abbas wrote:
->>>> There is a one time delay because of a card detect debounce timer in the
->>>> controller IP. This timer runs as soon as power is applied to the module
->>>> regardless of whether a card is present or not and any writes to
->>>> SDHCI_POWER_ON will return 0 before it expires. This timeout has been
->>>> measured to be about 1 second in am654x and j721e.
->>>>
->>>> Write-and-read-back in a loop on SDHCI_POWER_ON for a maximum of
->>>> 1.5 seconds to make sure that the controller actually powers on.
->>>>
->>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->>>> ---
->>>>  drivers/mmc/host/sdhci_am654.c | 21 +++++++++++++++++++++
->>>>  1 file changed, 21 insertions(+)
->>>>
->>>> diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
->>>> index 1718b9e8af63..55cff9de2f3e 100644
->>>> --- a/drivers/mmc/host/sdhci_am654.c
->>>> +++ b/drivers/mmc/host/sdhci_am654.c
->>>> @@ -272,6 +272,7 @@ static void sdhci_j721e_4bit_set_clock(struct sdhci_host *host,
->>>>  	sdhci_set_clock(host, clock);
->>>>  }
->>>>  
->>>> +#define MAX_POWER_ON_TIMEOUT	1500 /* ms */
->>>>  static void sdhci_am654_write_b(struct sdhci_host *host, u8 val, int reg)
->>>>  {
->>>>  	unsigned char timing = host->mmc->ios.timing;
->>>> @@ -291,6 +292,26 @@ static void sdhci_am654_write_b(struct sdhci_host *host, u8 val, int reg)
->>>>  	}
->>>>  
->>>>  	writeb(val, host->ioaddr + reg);
->>>> +	if (reg == SDHCI_POWER_CONTROL && (val & SDHCI_POWER_ON)) {
->>>> +		/*
->>>> +		 * Power on will not happen until the card detect debounce
->>>> +		 * timer expires. Wait at least 1.5 seconds for the power on
->>>> +		 * bit to be set
->>>> +		 */
->>>
->>> Can you use readb_poll_timeout() here?
->>>
->>
->> The loop is write -> readback -> check for set bit -> write again and so on until timeout
->> so poll_timeout() calls will not work.
-> 
-> I mentioned it because pedantically you need to check the condition
-> again after a timeout.  Alternatively, the read_poll_timeout macro
+<snip>
 
-Ideally, the timeout will never happen because the internal timer always expires at
-1 second. The actual time spent in the loop can be anything less than 1 second
-depending on when clocks were enabled
+> diff --git a/mm/swap.c b/mm/swap.c
+> index f645965fde0e..5092fe9c8c47 100644
+> --- a/mm/swap.c
+> +++ b/mm/swap.c
+> @@ -83,10 +83,9 @@ static void __page_cache_release(struct page *page)
+>                 struct lruvec *lruvec;
+>                 unsigned long flags;
+>
+> +               __ClearPageLRU(page);
+>                 spin_lock_irqsave(&pgdat->lru_lock, flags);
+>                 lruvec = mem_cgroup_page_lruvec(page, pgdat);
+> -               VM_BUG_ON_PAGE(!PageLRU(page), page);
+> -               __ClearPageLRU(page);
+>                 del_page_from_lru_list(page, lruvec, page_off_lru(page));
+>                 spin_unlock_irqrestore(&pgdat->lru_lock, flags);
+>         }
+> @@ -878,9 +877,8 @@ void release_pages(struct page **pages, int nr)
+>                                 spin_lock_irqsave(&locked_pgdat->lru_lock, flags);
+>                         }
+>
+> -                       lruvec = mem_cgroup_page_lruvec(page, locked_pgdat);
+> -                       VM_BUG_ON_PAGE(!PageLRU(page), page);
+>                         __ClearPageLRU(page);
+> +                       lruvec = mem_cgroup_page_lruvec(page, locked_pgdat);
+>                         del_page_from_lru_list(page, lruvec, page_off_lru(page));
+>                 }
+>
 
-> can be used with a function, something like below (not even compile
-> tested!)
-> 
-> static u8 write_power_on(struct sdhci_host *host, u8 val, int reg)
-> {
-> 	writeb(val, host->ioaddr + reg);
-> 	usleep_range(1000, 10000);
-> 	return readb(host->ioaddr + reg);
-> }
-> 
-> #define MAX_POWER_ON_TIMEOUT	1500000 /* us */
-> static void sdhci_am654_write_b(struct sdhci_host *host, u8 val, int reg)
-> {
-> 	unsigned char timing = host->mmc->ios.timing;
-> 	u8 pwr;
-> 
-> 	if (reg == SDHCI_HOST_CONTROL) {
-> 		switch (timing) {
-> 		/*
-> 		 * According to the data manual, HISPD bit
-> 		 * should not be set in these speed modes.
-> 		 */
-> 		case MMC_TIMING_SD_HS:
-> 		case MMC_TIMING_MMC_HS:
-> 		case MMC_TIMING_UHS_SDR12:
-> 		case MMC_TIMING_UHS_SDR25:
-> 			val &= ~SDHCI_CTRL_HISPD;
-> 		}
-> 	}
-> 
-> 	writeb(val, host->ioaddr + reg);
-> 
-> 	/*
-> 	 * Power on will not happen until the card detect debounce
-> 	 * timer expires. Wait at least 1.5 seconds for the power on
-> 	 * bit to be set
-> 	 */
-> 	if (reg == SDHCI_POWER_CONTROL && (val & SDHCI_POWER_ON) &&
-> 	    read_poll_timeout(write_power_on, pwr, (pwr & SDHCI_POWER_ON), 0,
-> 			      MAX_POWER_ON_TIMEOUT, false, host, val, reg))
-> 			dev_warn(mmc_dev(host->mmc), "Power on failed\n");
-> 			return;
-> 		}
-> 	}
-> }
-> 
-
-Looks good. Let me add this in v2.
-
-Thanks,
-Faiz
+The more I look at this piece it seems like this change wasn't really
+necessary. If anything it seems like it could catch potential bugs as
+it was testing for the PageLRU flag before and then clearing it
+manually anyway. In addition it doesn't reduce the critical path by
+any significant amount so I am not sure these changes are providing
+any benefit.
