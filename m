@@ -2,113 +2,173 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AF0C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 10:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B45C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 10:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CB0720792
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 10:00:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=eaxlabs.cz header.i=@eaxlabs.cz header.b="Iutxphsc"
+	by mail.kernel.org (Postfix) with ESMTP id 584D320792
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 10:03:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgHEKAQ (ORCPT
+        id S1726571AbgHEKDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 06:00:16 -0400
-Received: from ms9.eaxlabs.cz ([147.135.177.209]:45494 "EHLO ms9.eaxlabs.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725868AbgHEKAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 06:00:08 -0400
-X-Greylist: delayed 1894 seconds by postgrey-1.27 at vger.kernel.org; Wed, 05 Aug 2020 06:00:07 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=eaxlabs.cz; s=mail;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To; bh=t+IvbY/JQGlbvRGnvirF9n+itqwG0xol8Zk+qYQz+C0=;
-        b=IutxphscpyDm1uPQQxc980NCsxvnVNuaIn7GM8bBHHNa7ij3YY7P8MR/0AqL7wBsoq1Y5uwD/a3TvrJrlO/gnpEFXPETmLdAa3UrLCWafpZQGSOGxDWlmFe8mDLY5Op6xKRfWIhSsZN7QVzIfUXZ6ydF8peyeESio9+4Yq/tR5U=;
-Received: from [82.99.129.6] (helo=[10.76.6.116])
-        by ms9.eaxlabs.cz with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.84_2)
-        (envelope-from <devik@eaxlabs.cz>)
-        id 1k3Fia-0003zx-MN; Wed, 05 Aug 2020 11:28:18 +0200
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Martin DEVERA <devik@eaxlabs.cz>
-Subject: pinctrl: sx150x bug
-Message-ID: <f32130bf-cfd4-b1bf-538c-dbc9ee2d947a@eaxlabs.cz>
-Date:   Wed, 5 Aug 2020 11:28:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 5 Aug 2020 06:03:51 -0400
+Received: from regular1.263xmail.com ([211.150.70.202]:58882 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbgHEKDa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 06:03:30 -0400
+Received: from localhost (unknown [192.168.167.209])
+        by regular1.263xmail.com (Postfix) with ESMTP id 46CF7485;
+        Wed,  5 Aug 2020 18:03:17 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-SKE-CHECKED: 1
+X-ABS-CHECKED: 1
+Received: from [172.16.12.76] (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P12032T139957011113728S1596621795960706_;
+        Wed, 05 Aug 2020 18:03:17 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <58f15e56412951c2acfe8d69cef47c2a>
+X-RL-SENDER: hjc@rock-chips.com
+X-SENDER: hjc@rock-chips.com
+X-LOGIN-NAME: hjc@rock-chips.com
+X-FST-TO: hjc@rock-chips.com
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+Subject: Re: [PATCH] drm: sysfs: Add to get current mode
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Tao Huang <huangtao@rock-chips.com>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200805083646.4123-1-hjc@rock-chips.com>
+ <CAKMK7uGmKJqZJ0ONQjjquZn6mksKbkScmcUSEA43eg1jFskmTg@mail.gmail.com>
+From:   Huang Jiachai <hjc@rock-chips.com>
+Message-ID: <693f6555-d9d2-f255-1198-e3798c8f4fe8@rock-chips.com>
+Date:   Wed, 5 Aug 2020 18:03:15 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
+In-Reply-To: <CAKMK7uGmKJqZJ0ONQjjquZn6mksKbkScmcUSEA43eg1jFskmTg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Daniel
 
-I encountered bug in SX1502 expander driver in 5.7.7. Here is relevant 
-DTS part:
+在 2020/8/5 17:36, Daniel Vetter 写道:
+> On Wed, Aug 5, 2020 at 10:37 AM Sandy Huang <hjc@rock-chips.com> wrote:
+>> add this node to get the current true mode.
+>>
+>> Signed-off-by: Sandy Huang <hjc@rock-chips.com>
+> Uh what's this for? Since it's sysfs, I guess there's something
+> parsing this, which means we'd kinda need to have that piece too.
+>
+> If it's just for debugging purposes, then we already have this
+> information in debugfs, together with everything else that's in the
+> atomic modeset state.
+> -Daniel
 
-compatible = "semtech,sx1502q";
-gpio4_cfg_pins: gpio2-cfg {
-                         pins = "gpio5";
-                         output-high;
-     };
+yes, this is just for debug;
 
-And part of OOPS:
+and i get the information what i need from cat 
+/sys/kernel/debug/dri/0/state, thanks.
 
-[    0.673996] [<c023cfa6>] (gpiochip_get_data) from [<c023b235>] 
-(sx150x_gpio_direction_output+0xd)
-[    0.683259] [<c023b235>] (sx150x_gpio_direction_output) from 
-[<c023b363>] (sx150x_pinconf_set+0x)
-[    0.692796] [<c023b363>] (sx150x_pinconf_set) from [<c0238fef>] 
-(pinconf_apply_setting+0x39/0x7e)
-[    0.701635] [<c0238fef>] (pinconf_apply_setting) from [<c0236c77>] 
-(pinctrl_commit_state+0xa5/0x)
-[    0.710648] [<c0236c77>] (pinctrl_commit_state) from [<c0237e03>] 
-(pinctrl_enable+0xff/0x1d4)
-[    0.719139] [<c0237e03>] (pinctrl_enable) from [<c023b791>] 
-(sx150x_probe+0x1a3/0x358)
-[    0.727027] [<c023b791>] (sx150x_probe) from [<c02c38bf>] 
-(i2c_device_probe+0x1bb/0x1dc)
+>> ---
+>>   drivers/gpu/drm/drm_sysfs.c | 30 ++++++++++++++++++++++++++++++
+>>   1 file changed, 30 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/drm_sysfs.c b/drivers/gpu/drm/drm_sysfs.c
+>> index 939f0032aab1..f39bcd34853b 100644
+>> --- a/drivers/gpu/drm/drm_sysfs.c
+>> +++ b/drivers/gpu/drm/drm_sysfs.c
+>> @@ -19,6 +19,7 @@
+>>   #include <linux/slab.h>
+>>
+>>   #include <drm/drm_connector.h>
+>> +#include <drm/drm_crtc.h>
+>>   #include <drm/drm_device.h>
+>>   #include <drm/drm_file.h>
+>>   #include <drm/drm_modes.h>
+>> @@ -236,16 +237,45 @@ static ssize_t modes_show(struct device *device,
+>>          return written;
+>>   }
+>>
+>> +static ssize_t current_mode_show(struct device *device,
+>> +                     struct device_attribute *attr,
+>> +                     char *buf)
+>> +{
+>> +       struct drm_connector *connector = to_drm_connector(device);
+>> +       struct drm_display_mode *mode;
+>> +       struct drm_crtc_state *crtc_state;
+>> +       bool interlaced;
+>> +       int written = 0;
+>> +
+>> +       if (!connector->state || !connector->state->crtc)
+>> +               return written;
+>> +
+>> +       crtc_state = connector->state->crtc->state;
+>> +       if (!crtc_state)
+>> +               return written;
+>> +
+>> +       mode = &crtc_state->mode;
+>> +
+>> +       interlaced = !!(mode->flags & DRM_MODE_FLAG_INTERLACE);
+>> +       written += snprintf(buf + written, PAGE_SIZE - written, "%dx%d%s%d\n",
+>> +                           mode->hdisplay, mode->vdisplay,
+>> +                           interlaced ? "i" : "p", drm_mode_vrefresh(mode));
+>> +
+>> +       return written;
+>> +}
+>> +
+>>   static DEVICE_ATTR_RW(status);
+>>   static DEVICE_ATTR_RO(enabled);
+>>   static DEVICE_ATTR_RO(dpms);
+>>   static DEVICE_ATTR_RO(modes);
+>> +static DEVICE_ATTR_RO(current_mode);
+>>
+>>   static struct attribute *connector_dev_attrs[] = {
+>>          &dev_attr_status.attr,
+>>          &dev_attr_enabled.attr,
+>>          &dev_attr_dpms.attr,
+>>          &dev_attr_modes.attr,
+>> +       &dev_attr_current_mode.attr,
+>>          NULL
+>>   };
+>>
+>> --
+>> 2.17.1
+>>
+>>
+>>
+>
+-- 
+Best Regard
 
-The problem is that sx150x_pinconf_set uses sx150x_gpio_direction_output 
-but gpio is not
-setup yet. Patch below fixes it but I'm not sure whether is it correct:
+黄家钗
+Sandy Huang
+Addr: 福州市鼓楼区铜盘路软件大道89号福州软件园A区21号楼(350003)
+       No. 21 Building, A District, No.89,software Boulevard Fuzhou,Fujian,PRC
+Tel：+86 0591-87884919  8690
+E-mail：hjc@rock-chips.com
 
-diff --git a/drivers/pinctrl/pinctrl-sx150x.c 
-b/drivers/pinctrl/pinctrl-sx150x.c
-index 6e74bd87d959..3f5651edd336 100644
---- a/drivers/pinctrl/pinctrl-sx150x.c
-+++ b/drivers/pinctrl/pinctrl-sx150x.c
-@@ -1154,12 +1154,6 @@ static int sx150x_probe(struct i2c_client *client,
-                 return ret;
-         }
 
--       ret = pinctrl_enable(pctl->pctldev);
--       if (ret) {
--               dev_err(dev, "Failed to enable pinctrl device\n");
--               return ret;
--       }
--
-         /* Register GPIO controller */
-         pctl->gpio.base = -1;
-         pctl->gpio.ngpio = pctl->data->npins;
-@@ -1191,6 +1185,12 @@ static int sx150x_probe(struct i2c_client *client,
-         if (ret)
-                 return ret;
-
-+       ret = pinctrl_enable(pctl->pctldev);
-+       if (ret) {
-+               dev_err(dev, "Failed to enable pinctrl device\n");
-+               return ret;
-+       }
-+
-         ret = gpiochip_add_pin_range(&pctl->gpio, dev_name(dev),
-                                      0, 0, pctl->data->npins);
-         if (ret)
 
