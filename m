@@ -2,171 +2,202 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D3AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7787BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB70B20842
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 537FF20842
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:56:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZzlJ8kJo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJ7L5pli"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbgHETzx (ORCPT
+        id S1728038AbgHET4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:55:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46396 "EHLO
+        Wed, 5 Aug 2020 15:56:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728043AbgHEQqQ (ORCPT
+        with ESMTP id S1727104AbgHEQqQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:46:16 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49672C061757;
-        Wed,  5 Aug 2020 03:53:57 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id t10so19702088plz.10;
-        Wed, 05 Aug 2020 03:53:57 -0700 (PDT)
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D984AC034614
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 05:49:45 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a14so40608189wra.5
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 05:49:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=n6eJX7kP2wSPXMfsAV6wxlSNMqm5O3KWO3aWCRlizZw=;
-        b=ZzlJ8kJoS7x+Dr6GTqIhchPVuBKmZlR0zUuECW0cbKEhBrYElwE7LQ7jHTErhJ2kQl
-         HVQnpAfXI+4M6TyxQykGyIWV17dv2YXk0J5lTE69XNDRBK1LXR0ximX3GaeNG22uFydr
-         Ok3z75gZLQbISvYmmqbaV8a5heyCDdNjeOWBaKc0+opsTD+mbUh7CtRNmRPhtkIwOuMG
-         dx04lDe4XSlsBbdWF8ZOdG5ItJ0gSmBe0Pq1nnheKKv4mTaT+zeDTyaNbciggbhd/rcG
-         Lc8JSrmCjV1KbqbJi1/NV+Nm4P/P1CRcg8AemG9hRxKK2zDn99xZmgc4m5/u2GoEItk2
-         GPJQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=NGh3qV9bnhStjMJvm5/xoTqyt0oZ80U2JyhykslboTM=;
+        b=dJ7L5plirWRryjsL0w+sJdTROVivbDeTQAkwANWl4dPDxYJDMr8xmxqugElTamdk/C
+         DIp8qiSY4E3w3uk6Q/hZNyz+5z9YF/9oVzR8hMoB1YUX9JtDvk01+bBwbLwzmYgya+sT
+         fpt4pVhtNx8pzHiLR8591sACDg7U9ccxPEVTi57bFi/0vd3iT7S7IG1UjjrB9nLrPCrQ
+         0ql8jUDRfEP/FWyrgGB/Tktb9p+8Z9BQHnVBvjgwN8vjgDkpIQjJPRYsV+5DFAuo7JjC
+         vLBE2Yf/p3sAo9P8t+kXMtFUq8lpczXR0FoAZkb2nyAI5aVwXJNebMCqJVNu1k7AW45B
+         g7bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=n6eJX7kP2wSPXMfsAV6wxlSNMqm5O3KWO3aWCRlizZw=;
-        b=e5O2msKvhjNQIJGwkKYmDI9kFjPhe/fF79YhuHi5TfW1y9XEKWONSOURpUgnH3hmjo
-         ZUiXL01mhX2v9+BdB206RDWAWifm57bVoFaQqYGDCz4J4hN9n+Dh0L4H9NBAlIBmDhdl
-         dPqiQbH3HkVa/+9kWnREPDVjZx/Lr0SOoi22vnLPn5YrOfr3RIJiDMFxHawGatuo4CfS
-         3hk6hvhmPY0cN6nRr7a0tdOtsqVoW/W1OlJleJO9tsnPm0Lsvr8y/4gQo2Pf049mVdez
-         jhZcHgC4Vuocm3L86o7v/ZR44D/sUPyWwbRIELBRemL0MgGEXrYRSfBF4PEXiMbJUjaz
-         WOSw==
-X-Gm-Message-State: AOAM532skLEgb8PIog7ltvzatOmMAStVqOKgKEO1l7d0fh9OXD/wrf/U
-        /GSF7gvS+A3uCCQlsruppmhxMXqv9Tc=
-X-Google-Smtp-Source: ABdhPJx8eWt5XQbC91jHW+PQBpRVhEPK391Djy5BqFygVS6+lYLLwe83RtbnRNGUGjnUrVZMyGDKEA==
-X-Received: by 2002:a17:90a:5d15:: with SMTP id s21mr2766192pji.154.1596624835362;
-        Wed, 05 Aug 2020 03:53:55 -0700 (PDT)
-Received: from localhost ([104.192.108.10])
-        by smtp.gmail.com with ESMTPSA id n25sm2978818pff.51.2020.08.05.03.53.53
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=NGh3qV9bnhStjMJvm5/xoTqyt0oZ80U2JyhykslboTM=;
+        b=q/WzpOi6rL9qynj6MBmjLhHipe37PQq5s0Ow2bsZH+Rfr8fZXdg/RoSHuOj2yAKuNC
+         Ob7DiktZqo9ElFtCT+GYZGQqyDI8S1vfcLMkY7QDX5a0l2+bLf/LNm38ErnUI5tGfcOT
+         +7cyLzLPZFav1ZI9Ylrrm1s3PztqZyT1EgtD28+ULbYlmLHiLHwbWjBa0Q6DCJd+pkRZ
+         l7IlBx/vddrTOQM/BPgDXuxh1sDQ9RIfIIUPIR9xabhYUFNVdB6HoebX25gD3xgFiHTH
+         zPUep3Nv+331A+Eu8Yq8GRpT2AUmBcfnyEzrqNWhg9tBQXTgovIexK+OvWS5iI9VkvOl
+         FH9w==
+X-Gm-Message-State: AOAM53183zjHOrDAEVb+jKgQXuMdfy8fX365Tr8V70xYP5UgSjR3zmBA
+        f2O7vTcoFfgIC4cY+7gckyDZ5vMJ
+X-Google-Smtp-Source: ABdhPJy7mglUaNyadtCneLJtoiOr+c9efaQCWD3ufWo36Iu3UnV+qw5Tzxf4W4mHSIiRQbZqzRKXKA==
+X-Received: by 2002:a5d:494b:: with SMTP id r11mr2813496wrs.419.1596631783888;
+        Wed, 05 Aug 2020 05:49:43 -0700 (PDT)
+Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
+        by smtp.gmail.com with ESMTPSA id 33sm2713525wri.16.2020.08.05.05.49.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 03:53:54 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 03:53:50 -0700
-From:   Guoyu Huang <hgy5945@gmail.com>
-To:     viro@zeniv.linux.org.uk, axboe@kernel.dk
-Cc:     linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] io_uring: Fix NULL pointer dereference in loop_rw_write()
-Message-ID: <20200805105350.GA102801@ubuntu>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Wed, 05 Aug 2020 05:49:42 -0700 (PDT)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
+Cc:     Ofir Bitton <obitton@habana.ai>
+Subject: [PATCH 1/2] habanalabs: PCIe Advanced Error Reporting support
+Date:   Wed,  5 Aug 2020 15:49:38 +0300
+Message-Id: <20200805124939.13935-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-loop_rw_iter() does not check whether the file has a read or
-write function. This can lead to NULL pointer dereference
-when the user passes in a file descriptor that does not have
-read or write function.
+From: Ofir Bitton <obitton@habana.ai>
 
-The crash log looks like this:
+driver will now get notified upon any PCI error occurred and
+will respond according to the severity of the error.
 
-[   99.834071] BUG: kernel NULL pointer dereference, address: 0000000000000000
-[   99.835364] #PF: supervisor instruction fetch in kernel mode
-[   99.836522] #PF: error_code(0x0010) - not-present page
-[   99.837771] PGD 8000000079d62067 P4D 8000000079d62067 PUD 79d8c067 PMD 0
-[   99.839649] Oops: 0010 [#2] SMP PTI
-[   99.840591] CPU: 1 PID: 333 Comm: io_wqe_worker-0 Tainted: G      D           5.8.0 #2
-[   99.842622] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1 04/01/2014
-[   99.845140] RIP: 0010:0x0
-[   99.845840] Code: Bad RIP value.
-[   99.846672] RSP: 0018:ffffa1c7c01ebc08 EFLAGS: 00010202
-[   99.848018] RAX: 0000000000000000 RBX: ffff92363bd67300 RCX: ffff92363d461208
-[   99.849854] RDX: 0000000000000010 RSI: 00007ffdbf696bb0 RDI: ffff92363bd67300
-[   99.851743] RBP: ffffa1c7c01ebc40 R08: 0000000000000000 R09: 0000000000000000
-[   99.853394] R10: ffffffff9ec692a0 R11: 0000000000000000 R12: 0000000000000010
-[   99.855148] R13: 0000000000000000 R14: ffff92363d461208 R15: ffffa1c7c01ebc68
-[   99.856914] FS:  0000000000000000(0000) GS:ffff92363dd00000(0000) knlGS:0000000000000000
-[   99.858651] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   99.860032] CR2: ffffffffffffffd6 CR3: 000000007ac66000 CR4: 00000000000006e0
-[   99.861979] Call Trace:
-[   99.862617]  loop_rw_iter.part.0+0xad/0x110
-[   99.863838]  io_write+0x2ae/0x380
-[   99.864644]  ? kvm_sched_clock_read+0x11/0x20
-[   99.865595]  ? sched_clock+0x9/0x10
-[   99.866453]  ? sched_clock_cpu+0x11/0xb0
-[   99.867326]  ? newidle_balance+0x1d4/0x3c0
-[   99.868283]  io_issue_sqe+0xd8f/0x1340
-[   99.869216]  ? __switch_to+0x7f/0x450
-[   99.870280]  ? __switch_to_asm+0x42/0x70
-[   99.871254]  ? __switch_to_asm+0x36/0x70
-[   99.872133]  ? lock_timer_base+0x72/0xa0
-[   99.873155]  ? switch_mm_irqs_off+0x1bf/0x420
-[   99.874152]  io_wq_submit_work+0x64/0x180
-[   99.875192]  ? kthread_use_mm+0x71/0x100
-[   99.876132]  io_worker_handle_work+0x267/0x440
-[   99.877233]  io_wqe_worker+0x297/0x350
-[   99.878145]  kthread+0x112/0x150
-[   99.878849]  ? __io_worker_unuse+0x100/0x100
-[   99.879935]  ? kthread_park+0x90/0x90
-[   99.880874]  ret_from_fork+0x22/0x30
-[   99.881679] Modules linked in:
-[   99.882493] CR2: 0000000000000000
-[   99.883324] ---[ end trace 4453745f4673190b ]---
-[   99.884289] RIP: 0010:0x0
-[   99.884837] Code: Bad RIP value.
-[   99.885492] RSP: 0018:ffffa1c7c01ebc08 EFLAGS: 00010202
-[   99.886851] RAX: 0000000000000000 RBX: ffff92363acd7f00 RCX: ffff92363d461608
-[   99.888561] RDX: 0000000000000010 RSI: 00007ffe040d9e10 RDI: ffff92363acd7f00
-[   99.890203] RBP: ffffa1c7c01ebc40 R08: 0000000000000000 R09: 0000000000000000
-[   99.891907] R10: ffffffff9ec692a0 R11: 0000000000000000 R12: 0000000000000010
-[   99.894106] R13: 0000000000000000 R14: ffff92363d461608 R15: ffffa1c7c01ebc68
-[   99.896079] FS:  0000000000000000(0000) GS:ffff92363dd00000(0000) knlGS:0000000000000000
-[   99.898017] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   99.899197] CR2: ffffffffffffffd6 CR3: 000000007ac66000 CR4: 00000000000006e0
-
-Signed-off-by: Guoyu Huang <hgy5945@gmail.com>
+Signed-off-by: Ofir Bitton <obitton@habana.ai>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- fs/io_uring.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ .../misc/habanalabs/common/habanalabs_drv.c   | 76 ++++++++++++++++++-
+ 1 file changed, 75 insertions(+), 1 deletion(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 493e5047e67c..3c21e2e002b4 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2661,8 +2661,10 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
-
- 		if (req->file->f_op->read_iter)
- 			ret2 = call_read_iter(req->file, kiocb, &iter);
--		else
-+		else if (req->file->f_op->read)
- 			ret2 = loop_rw_iter(READ, req->file, kiocb, &iter);
-+		else
-+			ret2 = -EINVAL;
-
- 		/* Catch -EAGAIN return for forced non-blocking submission */
- 		if (!force_nonblock || ret2 != -EAGAIN) {
-@@ -2776,8 +2778,10 @@ static int io_write(struct io_kiocb *req, bool force_nonblock)
-
- 		if (req->file->f_op->write_iter)
- 			ret2 = call_write_iter(req->file, kiocb, &iter);
--		else
-+		else if (req->file->f_op->write)
- 			ret2 = loop_rw_iter(WRITE, req->file, kiocb, &iter);
-+		else
-+			ret2 = -EINVAL;
-
- 		if (!force_nonblock)
- 			current->signal->rlim[RLIMIT_FSIZE].rlim_cur = RLIM_INFINITY;
---
-2.25.1
+diff --git a/drivers/misc/habanalabs/common/habanalabs_drv.c b/drivers/misc/habanalabs/common/habanalabs_drv.c
+index c6b31e93fb5e..a36e33c58d37 100644
+--- a/drivers/misc/habanalabs/common/habanalabs_drv.c
++++ b/drivers/misc/habanalabs/common/habanalabs_drv.c
+@@ -11,6 +11,7 @@
+ #include "habanalabs.h"
+ 
+ #include <linux/pci.h>
++#include <linux/aer.h>
+ #include <linux/module.h>
+ 
+ #define HL_DRIVER_AUTHOR	"HabanaLabs Kernel Driver Team"
+@@ -408,6 +409,8 @@ static int hl_pci_probe(struct pci_dev *pdev,
+ 
+ 	pci_set_drvdata(pdev, hdev);
+ 
++	pci_enable_pcie_error_reporting(pdev);
++
+ 	rc = hl_device_init(hdev, hl_class);
+ 	if (rc) {
+ 		dev_err(&pdev->dev, "Fatal error during habanalabs device init\n");
+@@ -440,22 +443,93 @@ static void hl_pci_remove(struct pci_dev *pdev)
+ 		return;
+ 
+ 	hl_device_fini(hdev);
++	pci_disable_pcie_error_reporting(pdev);
+ 	pci_set_drvdata(pdev, NULL);
+-
+ 	destroy_hdev(hdev);
+ }
+ 
++/**
++ * hl_pci_err_detected - a PCI bus error detected on this device
++ *
++ * @pdev: pointer to pci device
++ * @err: PCI error type
++ *
++ * Called by the PCI subsystem whenever a non-correctable
++ * PCI bus error is detected
++ */
++static pci_ers_result_t
++hl_pci_err_detected(struct pci_dev *pdev, enum pci_channel_state state)
++{
++	struct hl_device *hdev = pci_get_drvdata(pdev);
++	enum pci_ers_result result;
++
++	switch (state) {
++	case pci_channel_io_normal:
++		return PCI_ERS_RESULT_CAN_RECOVER;
++
++	case pci_channel_io_frozen:
++		dev_warn(hdev->dev, "frozen state error detected\n");
++		result = PCI_ERS_RESULT_NEED_RESET;
++		break;
++
++	case pci_channel_io_perm_failure:
++		dev_warn(hdev->dev, "failure state error detected\n");
++		result = PCI_ERS_RESULT_DISCONNECT;
++		break;
++
++	default:
++		result = PCI_ERS_RESULT_NONE;
++	}
++
++	hdev->asic_funcs->halt_engines(hdev, true);
++
++	return result;
++}
++
++/**
++ * hl_pci_err_resume - resume after a PCI slot reset
++ *
++ * @pdev: pointer to pci device
++ *
++ */
++static void hl_pci_err_resume(struct pci_dev *pdev)
++{
++	struct hl_device *hdev = pci_get_drvdata(pdev);
++
++	dev_warn(hdev->dev, "Resuming device after PCI slot reset\n");
++	hl_device_resume(hdev);
++}
++
++/**
++ * hl_pci_err_slot_reset - a PCI slot reset has just happened
++ *
++ * @pdev: pointer to pci device
++ *
++ * Determine if the driver can recover from the PCI slot reset
++ */
++static pci_ers_result_t hl_pci_err_slot_reset(struct pci_dev *pdev)
++{
++	return PCI_ERS_RESULT_RECOVERED;
++}
++
+ static const struct dev_pm_ops hl_pm_ops = {
+ 	.suspend = hl_pmops_suspend,
+ 	.resume = hl_pmops_resume,
+ };
+ 
++static const struct pci_error_handlers hl_pci_err_handler = {
++	.error_detected = hl_pci_err_detected,
++	.slot_reset = hl_pci_err_slot_reset,
++	.resume = hl_pci_err_resume,
++};
++
+ static struct pci_driver hl_pci_driver = {
+ 	.name = HL_NAME,
+ 	.id_table = ids,
+ 	.probe = hl_pci_probe,
+ 	.remove = hl_pci_remove,
+ 	.driver.pm = &hl_pm_ops,
++	.err_handler = &hl_pci_err_handler,
+ };
+ 
+ /*
+-- 
+2.17.1
 
