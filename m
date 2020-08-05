@@ -2,211 +2,188 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD59BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 652ABC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70E1A206D4
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AD0E206D4
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:23:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="SYRrPB7x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ya3jo9QJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728527AbgHETXI (ORCPT
+        id S1728921AbgHETXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:23:08 -0400
-Received: from mga12.intel.com ([192.55.52.136]:56818 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726915AbgHETWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 15:22:48 -0400
-IronPort-SDR: QXsYcvlnddv38Qe/gpItgCcG/v+69QD7Ui2WKVYP1oabspXz3xQzre0wfk42rx+N8wBvNakzDX
- g8+vszfolvnQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="132200351"
-X-IronPort-AV: E=Sophos;i="5.75,438,1589266800"; 
-   d="scan'208";a="132200351"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 12:22:47 -0700
-IronPort-SDR: HXWh08O+eJuq1PoXY9uy78mEOdk/xl0MZVFtguxYaoXsGRv9fW0Mg+ehFT63Z9oSnuWFP7oV/k
- ZmeiwxWFCatA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,438,1589266800"; 
-   d="scan'208";a="367334163"
-Received: from fmsmsx604.amr.corp.intel.com ([10.18.126.84])
-  by orsmga001.jf.intel.com with ESMTP; 05 Aug 2020 12:22:46 -0700
-Received: from fmsmsx604.amr.corp.intel.com (10.18.126.84) by
- fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 5 Aug 2020 12:22:43 -0700
-Received: from fmsmsx124.amr.corp.intel.com (10.18.125.39) by
- fmsmsx604.amr.corp.intel.com (10.18.126.84) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 5 Aug 2020 12:22:43 -0700
-Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
- fmsmsx124.amr.corp.intel.com (10.18.125.39) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 5 Aug 2020 12:22:42 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.100)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Wed, 5 Aug 2020 12:22:42 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DqQ5luzMOQCduwwmwaP+Ms8Q5IGbp7bb6KGFEvn5C3yhUCakrp64qwS5LGKhFTCUNvbTCPkUrBXxpLAXVfGqIW/IqjoqoPuBR+r+9OIm7EYX7/9Smnb2rKopjzu3IyzDUhzIZlgCBgf3r0ecwrfcBI/ksRg4Ki4UGcsSw+iGkccIlamKihDE2O1i13hMkK3UsFNBNUNKA/FvNZWsEVbe+GVxCQS5Gl1SPso0Bem0RRb1D4+ffMgX+y2GPO4ao87qXYgGIrkW0RV3giUISJm2R3F15FCsZzoqY79136BZ3wCBx+PIgBKwXqkN7Cm2N/YZ3j9PSg5IKzgPBq4v1vmSag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B+Of4PbeAk9Z6vjCo+R39IET6hFrjRP3j/Wnf0QsYFw=;
- b=eaA5AmPIp/gKOR3sQhMCjGTiXbiDle4n4fjnlcTgiTWh48cEMqCXL4kh9rcHjAdJJIVbJzS4qNvTuwgdix6Ss5HmkvF9YVcB0BtmXAYzqnOBfJwBHwga1mSIeN/Z8NQ4GgxRfJOwA25RWeQiEw/yh21yb2gcHAPBCtErjFAphx5fn0mJL76274YzCrSrLbtdwwhpkfZN1GZj0m9V+PCM6Nzi/91UKaHI34FAu16zwyb2HzC5EclIEQnAZ/zk964D1p5Xevhw0+Bj/xKeJWl8D1sJeueRqi4yp0ZkDUjAgUU2csJIAMxs7oCWm4mfWqCU9RnMJB5dd+FayZU5e/rEvw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B+Of4PbeAk9Z6vjCo+R39IET6hFrjRP3j/Wnf0QsYFw=;
- b=SYRrPB7xrkHo16cf6iKdnkG3kLLL4N6YXd//9IRa/PbqF2VqXZGeI/OHsercVamsgEKqfbX2N3h9T34BXF71NEgkSk+Tb5GBiWLyMz3h7NdMGngyX8oJQawOiNQCKzYM/sxvKYAQDPVL7GW1lEPQsj/+0lnhm05WnhEULXPjhvM=
-Received: from MWHPR11MB1518.namprd11.prod.outlook.com (2603:10b6:301:c::10)
- by MWHPR11MB1408.namprd11.prod.outlook.com (2603:10b6:300:24::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Wed, 5 Aug
- 2020 19:22:41 +0000
-Received: from MWHPR11MB1518.namprd11.prod.outlook.com
- ([fe80::581:de6d:ee8c:ef32]) by MWHPR11MB1518.namprd11.prod.outlook.com
- ([fe80::581:de6d:ee8c:ef32%10]) with mapi id 15.20.3261.017; Wed, 5 Aug 2020
- 19:22:40 +0000
-From:   "Shaikh, Azhar" <azhar.shaikh@intel.com>
-To:     Prashant Malani <pmalani@chromium.org>
-CC:     "bleung@chromium.org" <bleung@chromium.org>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "groeck@chromium.org" <groeck@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>,
-        "Patel, Utkarsh H" <utkarsh.h.patel@intel.com>,
-        "Bowman, Casey G" <casey.g.bowman@intel.com>,
-        "Mani, Rajmohan" <rajmohan.mani@intel.com>
-Subject: RE: [PATCH v2 2/2] platform/chrome: cros_ec_typec: Avoid setting usb
- role during disconnect
-Thread-Topic: [PATCH v2 2/2] platform/chrome: cros_ec_typec: Avoid setting usb
- role during disconnect
-Thread-Index: AQHWZsWN7jOrHrKgC0yTlu91mzQVjakgvc/QgAAF9ACACSlQYA==
-Date:   Wed, 5 Aug 2020 19:22:39 +0000
-Message-ID: <MWHPR11MB151867DF25664C80E99A326D914B0@MWHPR11MB1518.namprd11.prod.outlook.com>
-References: <20200730225609.7395-1-azhar.shaikh@intel.com>
- <20200730225609.7395-3-azhar.shaikh@intel.com>
- <20200730230238.GD3145664@google.com>
- <MWHPR11MB1518178C5B2335FC02CD36AE91710@MWHPR11MB1518.namprd11.prod.outlook.com>
- <20200730232504.GG3145664@google.com>
-In-Reply-To: <20200730232504.GG3145664@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-reaction: no-action
-dlp-version: 11.5.1.3
-dlp-product: dlpe-windows
-authentication-results: chromium.org; dkim=none (message not signed)
- header.d=none;chromium.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [71.236.160.161]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1cc44918-ab6d-408a-08c7-08d83974eb54
-x-ms-traffictypediagnostic: MWHPR11MB1408:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR11MB1408A2889DFAF2B84C097E1F914B0@MWHPR11MB1408.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6Bg8b+5ADqLsHQIif9EMiE0jRgMN0vYyXj9YjOE+vHZbQ11wbPSoVV+l0/AuNetAgwoeAynAoIHUNLSiCBzrTdaL92+0s9rwckfUQCpVz5KJSYhOH75F6xitkTfmMsoBVTo7VqKo/gyb03+pyOlRp8FljroBXgJXQu+8vsRtJv+BypfvjB38u0tWrons5MGSl1LLsilf1uz9oJwh+UjwVBPcpMWWmpJE2t/F1PmxryOJciLyhew12jRLuGEjzH4q0lQAzdJawIjWr2JQ3CF6etlYOGxZr8/BUI5XaQ25fL6JBfWX4MuIwU81rAe0378Rz6pFyKUvLpibEQ3YQPXzpPY5ThBLLYrMdBD7nk+RLs5Hyw0aRPWEF3Gy40r+0qp1U5HrHGoAIzjtHh8F/DIbQw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1518.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39860400002)(396003)(366004)(136003)(346002)(186003)(54906003)(66476007)(66446008)(71200400001)(66946007)(8676002)(64756008)(76116006)(66556008)(316002)(8936002)(4326008)(2906002)(966005)(6506007)(5660300002)(26005)(86362001)(83380400001)(52536014)(55016002)(6916009)(478600001)(9686003)(33656002)(7696005)(53546011);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: NotLv2uLz4bvGrX98DBb+xh1FoPoa+IJtvTp9uRyaXqsUwB0S13nk4sTd8hN+k6eJ7D1YxUtdqB8PqzrP98OGi5WkO7XPjY6UNp7lP2xiU0/1T4FToA28nC6AydTFpl+hPvTVZTmzzOSdhLE364fQgcErcMRB9UReUMmqt6wfxv16uTmOb/OYp+Vx7qA92u/bys61qEXqVjtsU1wtIuNQqp7eav14yDAl+DuWWhqgGDoc+NVH1IZ8z+oXqWIUtib5Dqin9RvEdKOo2KsCDybbS+krNJSKeh45xGZPzz6ASF6wfzZHt1Z9e+ByrnsvPbTufR1zgwfTk0qSnmuSeKYD0iphrj6WJw4ocKTDEgkbRdOadtPLTGeFcPkVhu8ltC/3obx2BjD4bVMX6buyZaytLdxfQ1Ms9PFlSSIFLkctRocq2jCf6xFJOOQdRvzABTVNOQ0xpTrZKBJb8QBL+GcCYuIHEI6e8LLvaskYuuq8rCV4TBg0YC0TvplyAWHy53SRbTsqWlV0YS0x3x9bQm+xLR7oazGo3j/AfcLLYJ4jjhoJwQvV6rKsDS8NAGYKHWwB583dBZMeysi3I8AbY1/RXe2YVaI2Jn3bw3vp7BwPCABktNl0MUt1pL8NXqyUGLmwnbbM36rYh/n3cZd2Ecn2g==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 5 Aug 2020 15:23:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55120 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728947AbgHERju (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:39:50 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FD66C06174A
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 10:39:49 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id j8so34427724ioe.9
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 10:39:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ltXiat2Rl2Zwbogz+0r5FKwZHjDORLemXuadza+vI+Q=;
+        b=Ya3jo9QJDcOA6NffqQfhpqKparGgzal9V+JPBiYU4afxBELrAdQZJKpN77F6OHvG2j
+         0LgWLVjraEAcCbRa70iPs+xRARHMu3NwCtbyhcT0sYY4bbuXXlfMbd6q0uhG4YOBBaDf
+         GLy4rLWmBI24Wbb9KFKW1Z+hv6w0zSikRGiha05Ko6lAntvWEAuKWgy9T43+o6t5WjIK
+         OF5XQXzdU2zHIQUd6UXL/vMefBjaDUDOTx1PqHmP9p3vHmRp5F7bRqWoybKf9zM91N6a
+         UvAmoeHGvce1psyCwUAPesnydIxy8TNzzRlMkx2re4mSSw9WDW0ccl/aLKJKGSEZUDfi
+         gbxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ltXiat2Rl2Zwbogz+0r5FKwZHjDORLemXuadza+vI+Q=;
+        b=LnWCj7P5bvn1VXlg7ZsWnGGyfJZnV69u91B9WLlfzbagxbkhsbhgILDaafuCDXDXeJ
+         Megs2jxzAsrfC+bxH4k7q7O793+JFw227NkFR4aByFW1/tEZOrh+gl2kz1lyxkUvkGQf
+         4KeYZoz6seNVjVonqwBFQ+po8Y7sI+1tWRGSId3W/H58xGe7t8sZsi4GKBIlq4EzsJaT
+         o+PvbmFrCkY3Y74SE0KlYep88hg0+RnmZk3PVJ660FtlsOfj1IoSTWmiK1O1t+obHPyk
+         zR/V5k9zsdVII3SB+AXZjtP2dRd2FNXClUW06ggPfjLb1vEXmcXUlYHmiXWuoKfUJp4v
+         Xk0g==
+X-Gm-Message-State: AOAM531q6HWIWNqoHtqQJGg/jN9nBloBgLDyxpTMIA+k0ykn00XTAygM
+        l5mfO8C2I3u1OoQaB/HhkJLehbTAvAKed7m+Jd97MbWZnFvcIw==
+X-Google-Smtp-Source: ABdhPJyFew5VLDSWc3gE+0xFUlGE3hKSfOMO1eUbHLBzf9JX57Tz6MZ9GTG6hb1mgP02FR8F+uwTF+rF0OjPkL+kLVk=
+X-Received: by 2002:a5d:995a:: with SMTP id v26mr4435600ios.176.1596649188239;
+ Wed, 05 Aug 2020 10:39:48 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1518.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1cc44918-ab6d-408a-08c7-08d83974eb54
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2020 19:22:39.8968
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yJtYHQ5YPEXYxncPOJn6TN6Im8rnUhVJSSsh59gNwBdpniq2N7gDCoU/yjLjVq1IKEHkYebQAY1zm8g7GAgZHg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1408
-X-OriginatorOrg: intel.com
+References: <20200805153506.978105994@linuxfoundation.org>
+In-Reply-To: <20200805153506.978105994@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 5 Aug 2020 23:09:37 +0530
+Message-ID: <CA+G9fYv_aX36Kq_RD5dAL_By4AFq=-ZY_qh7VhLG=HJQv5mDzg@mail.gmail.com>
+Subject: Re: [PATCH 5.7 0/6] 5.7.14-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>, w@1wt.eu,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prashant,
+On Wed, 5 Aug 2020 at 21:22, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.7.14 release.
+> There are 6 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 07 Aug 2020 15:34:53 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.14-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
+> -------------
+> Pseudo-Shortlog of commits:
+>
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>     Linux 5.7.14-rc1
+>
+> Marc Zyngier <maz@kernel.org>
+>     arm64: Workaround circular dependency in pointer_auth.h
+>
+> Linus Torvalds <torvalds@linux-foundation.org>
+>     random32: move the pseudo-random 32-bit definitions to prandom.h
+>
+> Linus Torvalds <torvalds@linux-foundation.org>
+>     random32: remove net_rand_state from the latent entropy gcc plugin
+>
+> Willy Tarreau <w@1wt.eu>
+>     random: fix circular include dependency on arm64 after addition of percpu.h
+>
+> Grygorii Strashko <grygorii.strashko@ti.com>
+>     ARM: percpu.h: fix build error
+>
+> Willy Tarreau <w@1wt.eu>
+>     random32: update the net random state on interrupt and activity
+>
+
+[ sorry if it is not interesting ! ]
+
+While building with old gcc-7.3.0 the build breaks for arm64
+whereas build PASS on gcc-8, gcc-9 and gcc-10.
+
+with gcc 7.3.0 build breaks log,
+
+In file included from arch/arm64/include/asm/archrandom.h:9:0,
+                 from arch/arm64/kernel/kaslr.c:14:
+include/linux/random.h: In function 'arch_get_random_seed_long_early':
+include/linux/random.h:149:9: error: implicit declaration of function
+'arch_get_random_seed_long'; did you mean
+'arch_get_random_seed_long_early'?
+[-Werror=implicit-function-declaration]
+  return arch_get_random_seed_long(v);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~
+         arch_get_random_seed_long_early
+include/linux/random.h: In function 'arch_get_random_long_early':
+include/linux/random.h:157:9: error: implicit declaration of function
+'arch_get_random_long'; did you mean 'get_random_long'?
+[-Werror=implicit-function-declaration]
+  return arch_get_random_long(v);
+         ^~~~~~~~~~~~~~~~~~~~
+         get_random_long
+In file included from arch/arm64/kernel/kaslr.c:14:0:
+arch/arm64/include/asm/archrandom.h: At top level:
+arch/arm64/include/asm/archrandom.h:30:33: error: conflicting types
+for 'arch_get_random_long'
+ static inline bool __must_check arch_get_random_long(unsigned long *v)
+                                 ^~~~~~~~~~~~~~~~~~~~
+In file included from arch/arm64/include/asm/archrandom.h:9:0,
+                 from arch/arm64/kernel/kaslr.c:14:
+include/linux/random.h:157:9: note: previous implicit declaration of
+'arch_get_random_long' was here
+  return arch_get_random_long(v);
+         ^~~~~~~~~~~~~~~~~~~~
+In file included from arch/arm64/kernel/kaslr.c:14:0:
+arch/arm64/include/asm/archrandom.h:40:33: error: conflicting types
+for 'arch_get_random_seed_long'
+ static inline bool __must_check arch_get_random_seed_long(unsigned long *v)
+                                 ^~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from arch/arm64/include/asm/archrandom.h:9:0,
+                 from arch/arm64/kernel/kaslr.c:14:
+include/linux/random.h:149:9: note: previous implicit declaration of
+'arch_get_random_seed_long' was here
+  return arch_get_random_seed_long(v);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from arch/arm64/kernel/kaslr.c:14:0:
+arch/arm64/include/asm/archrandom.h:72:1: error: redefinition of
+'arch_get_random_seed_long_early'
+ arch_get_random_seed_long_early(unsigned long *v)
+ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from arch/arm64/include/asm/archrandom.h:9:0,
+                 from arch/arm64/kernel/kaslr.c:14:
+include/linux/random.h:146:27: note: previous definition of
+'arch_get_random_seed_long_early' was here
+ static inline bool __init arch_get_random_seed_long_early(unsigned long *v)
 
 
-> -----Original Message-----
-> From: Prashant Malani <pmalani@chromium.org>
-> Sent: Thursday, July 30, 2020 4:25 PM
-> To: Shaikh, Azhar <azhar.shaikh@intel.com>
-> Cc: bleung@chromium.org; enric.balletbo@collabora.com;
-> groeck@chromium.org; linux-kernel@vger.kernel.org;
-> heikki.krogerus@linux.intel.com; Patel, Utkarsh H
-> <utkarsh.h.patel@intel.com>; Bowman, Casey G
-> <casey.g.bowman@intel.com>; Mani, Rajmohan
-> <rajmohan.mani@intel.com>
-> Subject: Re: [PATCH v2 2/2] platform/chrome: cros_ec_typec: Avoid setting
-> usb role during disconnect
->=20
-> Hey Azhar,
->=20
-> On Thu, Jul 30, 2020 at 11:06:12PM +0000, Shaikh, Azhar wrote:
-> > Hi Prashant,
-> > >
-> > > Since this was the last switch being configured, please maintain the
-> > > same order and add this at the end of the function, after the if-else=
- if
-> block.
-> > >
-> >
-> > Please correct if my understanding is not correct here:
-> > Set the orientation , set the role, then configure the mux. Shouldn't t=
-his be
-> the order?
->=20
-> Is this documented anywhere? Kindly provide the links to that if so. I wa=
-sn't
-> aware of any ordering requirements (but I may be missing something).
-
-The configuration of the connector should always happen in the order define=
-d in the=20
-USB Type-C specification. Check ch. 2.3 (USB Type-C Spec R2.0). So that wil=
-l basically give you:
-
-1. orientation
-2. role(s)
-3. the rest.
-
-Also I see in USB Type-C Port Manager driver the above mentioned sequence b=
-eing followed
-https://elixir.bootlin.com/linux/latest/source/drivers/usb/typec/tcpm/tcpm.=
-c#L664
-
-
->=20
-> Please keep in mind that each of these switches (orientation, data-role,
-> mode-switch, or what is referred to here as "mux") can theoretically be
-> different switches, controlled independently by distinct drivers and
-> hardware.
->=20
-> We should not change what ordering is already present unless there is a
-> requirement to do so. The existing ordering was orientation switch, "mux"=
- or
-> role switch, then the data-role switch, so let us stick to that.
->=20
-> Best regards,
->=20
-> >
-> >
-> > > Best regards,
-> > >
-> > > -Prashant
-
-Regards,
-Azhar
+-- 
+Linaro LKFT
+https://lkft.linaro.org
