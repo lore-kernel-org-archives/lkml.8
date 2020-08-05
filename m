@@ -2,101 +2,117 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B13C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E512AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 732A02076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:37:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FA692076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:37:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BeTK1eXO"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cPAgIz7t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgHEGhP (ORCPT
+        id S1727920AbgHEGh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 02:37:15 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:35898 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725904AbgHEGhP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 02:37:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596609433;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=62Tw1BBsMzGMC/Ik8n+g/03qKyYodUE+BoWaAV0f2HI=;
-        b=BeTK1eXOwqT2HCvJEOELRXi5yhzyTagJnLzb4aDNRXRxuE5TgTf6UkuI/+JwhcDGFfDsK1
-        9EpeZYhNZAt689kTKlcOPWSBG9j6a7N8HZ7tV70RwaC2YvrFd8fgvPG0xgFuIbMwmGrCrK
-        OfOpf9WLPeN1lOhV5GUuo3bPFP03dt4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-299-cx6-diCwOs2Uy8z-OL4piA-1; Wed, 05 Aug 2020 02:37:09 -0400
-X-MC-Unique: cx6-diCwOs2Uy8z-OL4piA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2142480183C;
-        Wed,  5 Aug 2020 06:37:08 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-13-0.pek2.redhat.com [10.72.13.0])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E474710013D7;
-        Wed,  5 Aug 2020 06:37:01 +0000 (UTC)
-Date:   Wed, 5 Aug 2020 14:36:58 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Lianbo Jiang <lijiang@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-        tglx@linutronix.de, bp@alien8.de, mingo@redhat.com, x86@kernel.org,
-        hpa@zytor.com, bhe@redhat.com, k-hagio@ab.jp.nec.com,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 0/3] x86/kexec_file: Fix some corners bugs and improve
- the crash_exclude_mem_range()
-Message-ID: <20200805063658.GA22086@dhcp-128-65.nay.redhat.com>
-References: <20200804044933.1973-1-lijiang@redhat.com>
+        Wed, 5 Aug 2020 02:37:57 -0400
+Received: from mail-eopbgr70077.outbound.protection.outlook.com ([40.107.7.77]:46341
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725904AbgHEGhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 02:37:55 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ahCvnZqV+hayp3HFVMSgReIMqYiIHBwxYAJUst9op8qxG0Dm3Jf4djOce0Y5RuI61tLKse0KsreuNIt68ZDx+2j8N97U2H0SSXNTlIYoiKuxy7eqzEBbenmWLh2TLtC2+oxKeRRl9LQL9NEKJva0ACvnclAG7rwNA1ZdvYmMnMFNnWq0o4R/Knp6xT7x3kIunL0vBoPfpCAO74r7IN560OxI4RpnBeHUh2YnzcwrEBBM48d8RItu1qYCtnk9ZlGrnhuWFhXrSK2Z4azLiBm7C3PbG4HUZtnTlGv2boicVQvieOcoUs69lWqAP4d5UbHx544kotHI0sZeEXJqB6p8NA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZL7t92DzqzLEiC+VamPdP7IzpNB8zfOy/8gtjkoTZB0=;
+ b=LJg88MspHPM0MYymSGQ47EEq00V0SWCNf5Tze5lATCmRwlH6JdgS1zuA7795WbwyOpOy1WGjy1VjytN8a7sjwfFAD9gDwjhJO4Y2UyCMqSOXz/qcJxmJ2gIHXKuh6syRTeTuFsdq43HL88nby3AeTXaWmqAk13y7j0jnwmK6kaZvb4Cvgs48T1cscdXiI30qvLeya40LMlhpX5BUO/M70e82fTZAhfYhVA+bmHhOxLsqkSG3Ns3S58ZJaTN+MiiuyZH2IyB3bmciRFIQMtOCrGJyMF1J/VCcZN4jNr8c8/BQNjQPL0EsHHXDyjjnuWiJA6wPD7hJtbL/k0Y6sE0O4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZL7t92DzqzLEiC+VamPdP7IzpNB8zfOy/8gtjkoTZB0=;
+ b=cPAgIz7tXUdce48QA1Ni19gZ3V1OewZAxM8iJIbKI4M3/8KNG1cgSHYtMzCfsxOLNG5g8cLFgOWsUOr4QSb6czYw+HPI4S6rv2KcSV/o5FKFX3U6EI0Jsgds3uhz+N8M/h/Qd0Zu1HxiVSkq98hbbxO2pDCa9UfZHmF7vO9H0i8=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+Received: from VI1PR0402MB3342.eurprd04.prod.outlook.com
+ (2603:10a6:803:11::14) by VI1PR04MB3055.eurprd04.prod.outlook.com
+ (2603:10a6:802:9::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.16; Wed, 5 Aug
+ 2020 06:37:51 +0000
+Received: from VI1PR0402MB3342.eurprd04.prod.outlook.com
+ ([fe80::c1a:39dd:a2d5:3d2f]) by VI1PR0402MB3342.eurprd04.prod.outlook.com
+ ([fe80::c1a:39dd:a2d5:3d2f%7]) with mapi id 15.20.3261.016; Wed, 5 Aug 2020
+ 06:37:51 +0000
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/3] refine and clean code for synchronous mode
+Date:   Wed,  5 Aug 2020 14:34:10 +0800
+Message-Id: <20200805063413.4610-1-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.27.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SG2PR03CA0109.apcprd03.prod.outlook.com
+ (2603:1096:4:91::13) To VI1PR0402MB3342.eurprd04.prod.outlook.com
+ (2603:10a6:803:11::14)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200804044933.1973-1-lijiang@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from audiosh1.ap.freescale.net (119.31.174.67) by SG2PR03CA0109.apcprd03.prod.outlook.com (2603:1096:4:91::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3261.12 via Frontend Transport; Wed, 5 Aug 2020 06:37:48 +0000
+X-Mailer: git-send-email 2.27.0
+X-Originating-IP: [119.31.174.67]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 56a276af-e063-476d-96a0-08d8390a138e
+X-MS-TrafficTypeDiagnostic: VI1PR04MB3055:
+X-Microsoft-Antispam-PRVS: <VI1PR04MB3055206A33B20E7157F824C4E34B0@VI1PR04MB3055.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:352;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: dJFuQZTY48uakg2wvuVSgCJdZj2n85Mf5NZqIeYTkRAtRpIBNzxhxrZQ552SH1mpLVZoaRoYdjTbTZt0GS0qYpFZl+tbYfmjG1gFjMRAFpWMcy+sWNL9WAfmZuObZpkk7Q5Ohu6JTjiX91gGxIBPKhnGn0P4f0t/iPa4AavDai0ywB0IoPxlgpIaODZ6jQ08YaA5yMn5yjPngG0dP+mXUYaajw1kktWiqD9GfgEkAqzJEgnofKwNdWmop2BACN0jh6orpWumiW+rtJvN27CtmwJ7Ezz/NmbqNLp+hajUeNTD+fvFCFWvwBUKgxm7k8zmA0V5zu9GyqwAWvKIx1wN1nWi+72nvUaZBNxid8dLE5/PJ6fZBaRgdpP5m5qa6ouE
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3342.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(39860400002)(346002)(376002)(136003)(36756003)(2906002)(4744005)(44832011)(26005)(86362001)(6506007)(16526019)(186003)(956004)(2616005)(1076003)(5660300002)(6666004)(7416002)(6486002)(6512007)(316002)(8936002)(8676002)(52116002)(478600001)(66946007)(83380400001)(66556008)(66476007)(921003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: BbtJnnxgaECqyWqg4VOJzMUKkPgwkr4ZO/jC9QO5tQUdt+KTiZUEjxGAaNZnRwHexcIfzkla+K2ANKAy3BG3XB+GJ/aVvSICLvJTT8Z76P8tuWRGycM8ltOHGWFwqHMaE/ERLaxtCe33Yj26pazPJiPCTQhC2aB6tYq5si1bCBONbMbMpPySb8aR3u0XzEaCOu8TFeOD7Bn+IF7W2b2gKGkZk4v92h3uVZDO8aMiPKcQAeri1MVTdSD9/a22BCr6Wa2TSLTyqTyl7LkxC/DdLViSQ6mfIFFwuOnLkM/KodKWISEtTVoJNfvwURpI9D3S6d6U3tIioHrJr7PKm4O7boPmxyuE0f1FsSyBVSQzn38R8bIxzXW5HJfNM0T8xfQKWaMauseH8eAjt9WsSXP2lUjLjBWFgO2sGwIS7WGX0quyqMFmXd00cpmV3YazXwvDvr5fnrgrbkYzvLa/kMyE/YvF0En4Ze5PrOxGpdLIRx6UmPi++H0eSPf/GaxzvWMYAuxKJaWa9Kv+j4HFzykaWT+exjYyNJ5YRv1OozUm/3u2pdKfmcA+pkYmpHqwkHzvJJ2PpM9VqxRNldUj12DAbpNtBDNyMBdn0jQ0FHP4CFOp+NTKV2atdVMWJA3Pv1gic2H7d+BcgFt2e9wK9HEkrQ==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56a276af-e063-476d-96a0-08d8390a138e
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3342.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Aug 2020 06:37:51.7590
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RFdCtbOwe4DLLcCtCA2XTZdf7oRrqHU3fZeQQ4L+mSo0HZC6IdCwxCaRxgh6bDQ6j8tHfty88IY/zS0cGQzMRg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB3055
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lianbo,
+refine and clean code for synchronous mode
 
-Added Andrew in cc.
-On 08/04/20 at 12:49pm, Lianbo Jiang wrote:
-> This series includes the following patches, it fixes some corners bugs
-> and improves the crash_exclude_mem_range().
-> 
-> [1] [PATCH 1/3] x86/crash: Correct the address boundary of function
->     parameters
-> [2] [PATCH 2/3] kexec: Improve the crash_exclude_mem_range() to handle
->     the overlapping ranges
-> [3] [PATCH 3/3] kexec_file: correctly output debugging information for
->     the PT_LOAD elf header
-> 
-> Lianbo Jiang (3):
->   x86/crash: Correct the address boundary of function parameters
->   kexec: Improve the crash_exclude_mem_range() to handle the overlapping
->     ranges
->   kexec_file: correctly output debugging information for the PT_LOAD elf
->     header
-> 
->  arch/x86/kernel/crash.c |  2 +-
->  kernel/kexec_file.c     | 33 ++++++++++++++++++++++-----------
->  2 files changed, 23 insertions(+), 12 deletions(-)
-> 
-> -- 
-> 2.17.1
+Shengjiu Wang (3):
+  ASoC: fsl_sai: Refine enable/disable TE/RE sequence in trigger()
+  ASoC: fsl_sai: Drop TMR/RMR settings for synchronous mode
+  ASoC: fsl_sai: Replace synchronous check with fsl_sai_dir_is_synced
 
-Looks good, thanks for the patches
+changes in v3:
+- Add reviewed-by Nicolin
+- refine the commit log.
+- Add one more patch #3
 
-Acked-by: Dave Young <dyoung@redhat.com>
+changes in v2:
+- Split the commit
+- refine the sequence in trigger stop
 
-Thanks
-Dave
+ sound/soc/fsl/fsl_sai.c | 173 +++++++++++++++++++++++-----------------
+ 1 file changed, 102 insertions(+), 71 deletions(-)
+
+-- 
+2.27.0
 
