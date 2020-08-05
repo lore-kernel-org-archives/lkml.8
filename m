@@ -2,159 +2,113 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3455AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AF0C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 10:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 130CF2076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CB0720792
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 10:00:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="E9cCPwxj"
+	dkim=pass (1024-bit key) header.d=eaxlabs.cz header.i=@eaxlabs.cz header.b="Iutxphsc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728390AbgHEJ53 (ORCPT
+        id S1726635AbgHEKAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 05:57:29 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:40024 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbgHEJ50 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 05:57:26 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0759q1ue058669;
-        Wed, 5 Aug 2020 09:57:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=RibtCPkve4j2kefMno2VhgrpqtFMrAYMVvhuiwVWbYc=;
- b=E9cCPwxjESJrVXUFc11fTCBgS9PCfrdNi/4HLVljoXhbjwytwOZfvJcpryNB67i3KjHi
- UJ/kojGBOQn9cq6d7riX4ZVFnT92FDzz5r6WY4icYu3A/efjwk4QZrxoDHO+ZuGdNd3m
- Ne+BezfStsVJcdgGpM/LHju2hzWZkSIwOz2IIgNjcXD2zJmrGOT434kPMiuVoUXLENm5
- YFqfNMYN/0/z3c+brItkGpDMPFXT/WKc6m9PmNhDODI6hFTCn7L+8HykFf/AoWtGHLn9
- ftnw1/hAqVfPNQMJshKqyRwTr0aJ9vH7kZMOnbHhWFNfkgf4zt17bvA8EMQLw5LjsytS MQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 32qnd41cxp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 05 Aug 2020 09:57:10 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0759rkYW129012;
-        Wed, 5 Aug 2020 09:55:09 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 32njayderc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 05 Aug 2020 09:55:09 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0759t8eE028911;
-        Wed, 5 Aug 2020 09:55:08 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 05 Aug 2020 02:55:07 -0700
-Date:   Wed, 5 Aug 2020 12:55:01 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Stefan Achatz <erazor_de@users.sourceforge.net>
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] HID: roccat: add bounds checking in
- kone_sysfs_write_settings()
-Message-ID: <20200805095501.GD483832@mwanda>
+        Wed, 5 Aug 2020 06:00:16 -0400
+Received: from ms9.eaxlabs.cz ([147.135.177.209]:45494 "EHLO ms9.eaxlabs.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725868AbgHEKAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 06:00:08 -0400
+X-Greylist: delayed 1894 seconds by postgrey-1.27 at vger.kernel.org; Wed, 05 Aug 2020 06:00:07 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=eaxlabs.cz; s=mail;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To; bh=t+IvbY/JQGlbvRGnvirF9n+itqwG0xol8Zk+qYQz+C0=;
+        b=IutxphscpyDm1uPQQxc980NCsxvnVNuaIn7GM8bBHHNa7ij3YY7P8MR/0AqL7wBsoq1Y5uwD/a3TvrJrlO/gnpEFXPETmLdAa3UrLCWafpZQGSOGxDWlmFe8mDLY5Op6xKRfWIhSsZN7QVzIfUXZ6ydF8peyeESio9+4Yq/tR5U=;
+Received: from [82.99.129.6] (helo=[10.76.6.116])
+        by ms9.eaxlabs.cz with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.84_2)
+        (envelope-from <devik@eaxlabs.cz>)
+        id 1k3Fia-0003zx-MN; Wed, 05 Aug 2020 11:28:18 +0200
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Martin DEVERA <devik@eaxlabs.cz>
+Subject: pinctrl: sx150x bug
+Message-ID: <f32130bf-cfd4-b1bf-538c-dbc9ee2d947a@eaxlabs.cz>
+Date:   Wed, 5 Aug 2020 11:28:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9703 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
- mlxlogscore=999 mlxscore=0 spamscore=0 malwarescore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008050082
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9703 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 clxscore=1011 mlxscore=0
- priorityscore=1501 mlxlogscore=999 malwarescore=0 adultscore=0
- lowpriorityscore=0 spamscore=0 bulkscore=0 phishscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008050082
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the original code we didn't check if the new value for
-"settings->startup_profile" was within bounds that could possibly
-result in an out of bounds array acccess.  What we did was we checked if
-we could write the data to the firmware and it's possibly the firmware
-checks these values but there is no way to know.  It's safer and easier
-to read if we check it in the kernel as well.
+Hello,
 
-I also added a check to ensure that "settings->size" was correct.  The
-comments say that the only valid value is 36 which is sizeof(struct
-kone_settings).
+I encountered bug in SX1502 expander driver in 5.7.7. Here is relevant 
+DTS part:
 
-Fixes: 14bf62cde794 ("HID: add driver for Roccat Kone gaming mouse")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
-This isn't tested.  Checking settings->size seems like a good idea, but
-there is a slight risky because maybe invalid values used to be allowed
-and I don't want to break user space.
+compatible = "semtech,sx1502q";
+gpio4_cfg_pins: gpio2-cfg {
+                         pins = "gpio5";
+                         output-high;
+     };
 
- drivers/hid/hid-roccat-kone.c | 24 +++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+And part of OOPS:
 
-diff --git a/drivers/hid/hid-roccat-kone.c b/drivers/hid/hid-roccat-kone.c
-index 1a6e600197d0..5e8e1517f23c 100644
---- a/drivers/hid/hid-roccat-kone.c
-+++ b/drivers/hid/hid-roccat-kone.c
-@@ -294,31 +294,41 @@ static ssize_t kone_sysfs_write_settings(struct file *fp, struct kobject *kobj,
- 	struct kone_device *kone = hid_get_drvdata(dev_get_drvdata(dev));
- 	struct usb_device *usb_dev = interface_to_usbdev(to_usb_interface(dev));
- 	int retval = 0, difference, old_profile;
-+	struct kone_settings *settings = (struct kone_settings *)buf;
- 
- 	/* I need to get my data in one piece */
- 	if (off != 0 || count != sizeof(struct kone_settings))
- 		return -EINVAL;
- 
- 	mutex_lock(&kone->kone_lock);
--	difference = memcmp(buf, &kone->settings, sizeof(struct kone_settings));
-+	difference = memcmp(settings, &kone->settings,
-+			    sizeof(struct kone_settings));
- 	if (difference) {
--		retval = kone_set_settings(usb_dev,
--				(struct kone_settings const *)buf);
--		if (retval) {
--			mutex_unlock(&kone->kone_lock);
--			return retval;
-+		if (settings->size != sizeof(struct kone_settings) ||
-+		    settings->startup_profile < 1 ||
-+		    settings->startup_profile > 5) {
-+			retval = -EINVAL;
-+			goto unlock;
- 		}
- 
-+		retval = kone_set_settings(usb_dev, settings);
-+		if (retval)
-+			goto unlock;
+[    0.673996] [<c023cfa6>] (gpiochip_get_data) from [<c023b235>] 
+(sx150x_gpio_direction_output+0xd)
+[    0.683259] [<c023b235>] (sx150x_gpio_direction_output) from 
+[<c023b363>] (sx150x_pinconf_set+0x)
+[    0.692796] [<c023b363>] (sx150x_pinconf_set) from [<c0238fef>] 
+(pinconf_apply_setting+0x39/0x7e)
+[    0.701635] [<c0238fef>] (pinconf_apply_setting) from [<c0236c77>] 
+(pinctrl_commit_state+0xa5/0x)
+[    0.710648] [<c0236c77>] (pinctrl_commit_state) from [<c0237e03>] 
+(pinctrl_enable+0xff/0x1d4)
+[    0.719139] [<c0237e03>] (pinctrl_enable) from [<c023b791>] 
+(sx150x_probe+0x1a3/0x358)
+[    0.727027] [<c023b791>] (sx150x_probe) from [<c02c38bf>] 
+(i2c_device_probe+0x1bb/0x1dc)
+
+The problem is that sx150x_pinconf_set uses sx150x_gpio_direction_output 
+but gpio is not
+setup yet. Patch below fixes it but I'm not sure whether is it correct:
+
+diff --git a/drivers/pinctrl/pinctrl-sx150x.c 
+b/drivers/pinctrl/pinctrl-sx150x.c
+index 6e74bd87d959..3f5651edd336 100644
+--- a/drivers/pinctrl/pinctrl-sx150x.c
++++ b/drivers/pinctrl/pinctrl-sx150x.c
+@@ -1154,12 +1154,6 @@ static int sx150x_probe(struct i2c_client *client,
+                 return ret;
+         }
+
+-       ret = pinctrl_enable(pctl->pctldev);
+-       if (ret) {
+-               dev_err(dev, "Failed to enable pinctrl device\n");
+-               return ret;
+-       }
+-
+         /* Register GPIO controller */
+         pctl->gpio.base = -1;
+         pctl->gpio.ngpio = pctl->data->npins;
+@@ -1191,6 +1185,12 @@ static int sx150x_probe(struct i2c_client *client,
+         if (ret)
+                 return ret;
+
++       ret = pinctrl_enable(pctl->pctldev);
++       if (ret) {
++               dev_err(dev, "Failed to enable pinctrl device\n");
++               return ret;
++       }
 +
- 		old_profile = kone->settings.startup_profile;
--		memcpy(&kone->settings, buf, sizeof(struct kone_settings));
-+		memcpy(&kone->settings, settings, sizeof(struct kone_settings));
- 
- 		kone_profile_activated(kone, kone->settings.startup_profile);
- 
- 		if (kone->settings.startup_profile != old_profile)
- 			kone_profile_report(kone, kone->settings.startup_profile);
- 	}
-+unlock:
- 	mutex_unlock(&kone->kone_lock);
- 
-+	if (retval)
-+		return retval;
-+
- 	return sizeof(struct kone_settings);
- }
- static BIN_ATTR(settings, 0660, kone_sysfs_read_settings,
--- 
-2.27.0
+         ret = gpiochip_add_pin_range(&pctl->gpio, dev_name(dev),
+                                      0, 0, pctl->data->npins);
+         if (ret)
 
