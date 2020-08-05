@@ -2,174 +2,189 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA439C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9243C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8234A2084D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 851772084D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:19:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="qBE/U4w5"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rSU3E4qI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbgHESRG (ORCPT
+        id S1729182AbgHESSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 14:17:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60622 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728788AbgHESOw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 14:14:52 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CD49C061756
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 11:14:52 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id m8so16356740pfh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 11:14:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version;
-        bh=8+iseODG04wj2eQO70zdThix4Rye+QSBpwL+Z103cec=;
-        b=qBE/U4w5v3/PEh7qno2eXuu83vEsnK8s8+DJkK9G4lCqAhGKG3voGon1dgWZhwoQm0
-         tWkw6W9bk+fjUqbrxY+fI72gc4AnW2jpmUEny/lFxlaCJ7ds9KRavw+zurxz+Copl5RQ
-         caJV7uAWmexn355HzhMpRe73tGsNLid0xb3pXXdhDe3shPCqblIS2TXs+T4FTW+Zo58K
-         oDD9oQFd560qZo4dY3wViREH6z60NNDsMzEyLnp61+pJt39Cavu7W+X4J0JeDnLGuFvS
-         HOe658YI4iGOQXOCA7hXzPkvh6YQqyD6acrKDNewoXwFx1OqX1fKhIMpFUtVaoDwPOlI
-         kFnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version;
-        bh=8+iseODG04wj2eQO70zdThix4Rye+QSBpwL+Z103cec=;
-        b=EwaEUBAPxScw0JpOyqMihiO8Ixdb/zlmoKx4sPsw6leXIk+oxXNE2Xjse0Vb4NZSrs
-         72LlaNpQseZYxRjzxk36Sp9F4m4rSnQXvuoJV0NGm1jEclst7212p3UPiVjmocEsA6Cp
-         v0aijYI/Cn4H5oEdrDMvIWs7dqk1aWKOtPLMXKTofEafgEwkdyim7HTnrRaFfFCum7Yx
-         /BOnWzQiNUni6qfnXRZsi+eHKGmTVxcUjtwoJ9FIHvxb4FNxoiKj0FBncofy76CdKZOB
-         Rsd22GDax8E7fz0j6eWV5d7tZfAI6ZdzzSYu8dUv+MBFYrsKH1cw2BZtkXpaWK6LW+AE
-         10nw==
-X-Gm-Message-State: AOAM530H+cNxSX8k1D86REfe4te8YVUkAkRVvyJBATw+97y54f7tMwdI
-        YUjEMeKFUg6LQfrW3rnLT/DyJQ==
-X-Google-Smtp-Source: ABdhPJxNIX8R5bxM2jjZWyxDUzlqJE6j/Lv8pzaiJlKUmXuVOBEC9paLpU3JILYqHPiBKwUd8ETMoQ==
-X-Received: by 2002:a62:a101:: with SMTP id b1mr4279847pff.306.1596651291969;
-        Wed, 05 Aug 2020 11:14:51 -0700 (PDT)
-Received: from [10.213.170.159] (fmdmzpr04-ext.fm.intel.com. [192.55.55.39])
-        by smtp.gmail.com with ESMTPSA id z67sm4852718pfc.162.2020.08.05.11.14.49
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Aug 2020 11:14:51 -0700 (PDT)
-From:   "Sean V Kelley" <sean.v.kelley@intel.com>
-To:     "Bjorn Helgaas" <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
-        rjw@rjwysocki.net, ashok.raj@intel.com, tony.luck@intel.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Qiuxu Zhuo" <qiuxu.zhuo@intel.com>
-Subject: Re: [PATCH V2 2/9] PCI: Extend Root Port Driver to support RCEC
-Date:   Wed, 05 Aug 2020 11:14:48 -0700
-X-Mailer: MailMate (1.13.1r5671)
-Message-ID: <E3F966D9-DBD4-4392-84FF-F012D1F16615@intel.com>
-In-Reply-To: <20200805174328.GA521293@bjorn-Precision-5520>
-References: <20200805174328.GA521293@bjorn-Precision-5520>
+        Wed, 5 Aug 2020 14:18:12 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:15727 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728825AbgHESQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 14:16:03 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596651362; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=S5hJFYd7MMSkEoR3CdrZ7jrWlq63SZiOAFEvmVnWV/Q=;
+ b=rSU3E4qIHnT1Oj4c+tpmfOBjzlFDhsU4pFzKtzGdINmB4QRSY6AnGeYagigdLUdMAaL6E0ET
+ gmoxxUhsCtiRU/iZLp+EHIsFVhtlH2LK3XMUivGrktUvdxB/ZpMcD6pREmeFBT9T2i2xtAcX
+ DmITxWiz+FzcJULi9cvr7g6C7j0=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n17.prod.us-east-1.postgun.com with SMTP id
+ 5f2abfa7eecfc978d337cfbf (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 05 Aug 2020 14:18:15
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C623EC433C6; Wed,  5 Aug 2020 14:18:14 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kalyan_t)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EE057C433C9;
+        Wed,  5 Aug 2020 14:18:13 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 05 Aug 2020 19:48:13 +0530
+From:   kalyan_t@codeaurora.org
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Krishna Manikandan <mkrishn@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Raviteja Tamatam <travitej@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        nganji@codeaurora.org, Sean Paul <seanpaul@chromium.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Drew Davenport <ddavenport@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>
+Subject: Re: [Freedreno] [v1] drm/msm/dpu: update reservations in commit path
+In-Reply-To: <CAF6AEGtpPU+ALcpQMuy-MpLF_ZwjD+k=aN7gkoBFjJPq1++9qQ@mail.gmail.com>
+References: <1596540744-6902-1-git-send-email-kalyan_t@codeaurora.org>
+ <CAF6AEGtpPU+ALcpQMuy-MpLF_ZwjD+k=aN7gkoBFjJPq1++9qQ@mail.gmail.com>
+Message-ID: <37bbf6e41a844f681e263bc13bd6e7ef@codeaurora.org>
+X-Sender: kalyan_t@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5 Aug 2020, at 10:43, Bjorn Helgaas wrote:
-
-> "git log --oneline" again.
-
-Rewording lost track of the first line.  Argh, will fix.
->
-> On Tue, Aug 04, 2020 at 12:40:45PM -0700, Sean V Kelley wrote:
->> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
->>
->> If a Root Complex Integrated Endpoint (RCiEP) is implemented, errors 
->> may
->> optionally be sent to a corresponding Root Complex Event Collector 
->> (RCEC).
->> Each RCiEP must be associated with no more than one RCEC. Interface 
->> errors
->> are reported to the OS by RCECs.
->>
->> For an RCEC (technically not a Bridge), error messages "received" 
->> from
->> associated RCiEPs must be enabled for "transmission" in order to 
->> cause a
->> System Error via the Root Control register or (when the Advanced 
->> Error
->> Reporting Capability is present) reporting via the Root Error Command
->> register and logging in the Root Error Status register and Error 
->> Source
->> Identification register.
->>
->> Given the commonality with Root Ports and the need to also support 
->> AER
->> and PME services for RCECs, extend the Root Port driver to support 
->> RCEC
->> devices through the addition of the RCEC Class ID to the driver
->> structure.
->>
->> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
->> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
->> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+On 2020-08-05 01:02, Rob Clark wrote:
+> On Tue, Aug 4, 2020 at 4:32 AM Kalyan Thota <kalyan_t@codeaurora.org> 
+> wrote:
+>> 
+>> DPU resources reserved in the atomic_check path gets unwinded
+>> during modeset operation before commit happens in a non seamless
+>> transition.
+>> 
+>> Update the reservations in the commit path to avoid resource
+>> failures. Secondly have dummy reservations in atomic_check path
+>> so that we can gracefully fail the composition if resources are
+>> not available.
+>> 
+>> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
 >> ---
->>  drivers/pci/pcie/portdrv_core.c | 8 ++++----
->>  drivers/pci/pcie/portdrv_pci.c  | 5 ++++-
->>  2 files changed, 8 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/pci/pcie/portdrv_core.c 
->> b/drivers/pci/pcie/portdrv_core.c
->> index 50a9522ab07d..5d4a400094fc 100644
->> --- a/drivers/pci/pcie/portdrv_core.c
->> +++ b/drivers/pci/pcie/portdrv_core.c
->> @@ -234,11 +234,11 @@ static int get_port_device_capability(struct 
->> pci_dev *dev)
->>  #endif
->>
->>  	/*
->> -	 * Root ports are capable of generating PME too.  Root Complex
->> -	 * Event Collectors can also generate PMEs, but we don't handle
->> -	 * those yet.
->> +	 * Root ports and Root Complex Event Collectors are capable
->> +	 * of generating PME too.
->>  	 */
->> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
->> +	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
->> +	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) &&
->>  	    (pcie_ports_native || host->native_pme)) {
->>  		services |= PCIE_PORT_SERVICE_PME;
->>
->> diff --git a/drivers/pci/pcie/portdrv_pci.c 
->> b/drivers/pci/pcie/portdrv_pci.c
->> index 3a3ce40ae1ab..4d880679b9b1 100644
->> --- a/drivers/pci/pcie/portdrv_pci.c
->> +++ b/drivers/pci/pcie/portdrv_pci.c
->> @@ -106,7 +106,8 @@ static int pcie_portdrv_probe(struct pci_dev 
->> *dev,
->>  	if (!pci_is_pcie(dev) ||
->>  	    ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT) &&
->>  	     (pci_pcie_type(dev) != PCI_EXP_TYPE_UPSTREAM) &&
->> -	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)))
->> +	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM) &&
->> +	     (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)))
->>  		return -ENODEV;
->>
->>  	status = pcie_port_device_register(dev);
->> @@ -195,6 +196,8 @@ static const struct pci_device_id port_pci_ids[] 
->> = {
->>  	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x00), ~0) },
->>  	/* subtractive decode PCI-to-PCI bridge, class type is 060401h */
->>  	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x01), ~0) },
->> +	/* handle any Root Complex Event Collector */
->> +	{ PCI_DEVICE_CLASS(((PCI_CLASS_SYSTEM_RCEC << 8) | 0x00), ~0) },
->>  	{ },
->>  };
->>
->> -- 
->> 2.27.0
->>
+>>  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 15 +++++++++++----
+>>  1 file changed, 11 insertions(+), 4 deletions(-)
+>> 
+>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c 
+>> b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>> index 63976dc..c6b8254 100644
+>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
+>> @@ -565,7 +565,7 @@ static int dpu_encoder_virt_atomic_check(
+>>         const struct drm_display_mode *mode;
+>>         struct drm_display_mode *adj_mode;
+>>         struct msm_display_topology topology;
+>> -       struct dpu_global_state *global_state;
+>> +       struct dpu_global_state tmp_resv_state;
+>>         int i = 0;
+>>         int ret = 0;
+>> 
+>> @@ -582,7 +582,7 @@ static int dpu_encoder_virt_atomic_check(
+>>         dpu_kms = to_dpu_kms(priv->kms);
+>>         mode = &crtc_state->mode;
+>>         adj_mode = &crtc_state->adjusted_mode;
+>> -       global_state = dpu_kms_get_existing_global_state(dpu_kms);
+>> +       memset(&tmp_resv_state, 0, sizeof(tmp_resv_state));
+> 
+> I think what you want to do is dpu_kms_get_global_state().. that will
+> clone/duplicate the existing global state (or return the already
+> duplicated global state if it is called multiple times).
+> 
+Thanks Rob, realized the same after posting patch. Made changes in the 
+new patch
+accordingly.
+
+> It is safe to modify this global state in the atomic_check() path.. in
+> fact that is the intention.  For a TEST_ONLY atomic commit, or if any
+> of the atomic_check()'s fail, this new duplicated global state is
+> discarded.  If all the checks succeed and the atomic update is
+> committed to hw, this new global state replaces the existing global
+> state.
+> 
+Posted a new change kindly review.
+
+> BR,
+> -R
+> 
+>>         trace_dpu_enc_atomic_check(DRMID(drm_enc));
+>> 
+>>         /*
+>> @@ -621,7 +621,7 @@ static int dpu_encoder_virt_atomic_check(
+>>                  * info may not be available to complete reservation.
+>>                  */
+>>                 if (drm_atomic_crtc_needs_modeset(crtc_state)) {
+>> -                       ret = dpu_rm_reserve(&dpu_kms->rm, 
+>> global_state,
+>> +                       ret = dpu_rm_reserve(&dpu_kms->rm, 
+>> &tmp_resv_state,
+>>                                         drm_enc, crtc_state, 
+>> topology);
+>>                 }
+>>         }
+>> @@ -966,7 +966,7 @@ static void dpu_encoder_virt_mode_set(struct 
+>> drm_encoder *drm_enc,
+>>         struct dpu_hw_blk *hw_lm[MAX_CHANNELS_PER_ENC];
+>>         struct dpu_hw_blk *hw_dspp[MAX_CHANNELS_PER_ENC] = { NULL };
+>>         int num_lm, num_ctl, num_pp, num_dspp;
+>> -       int i, j;
+>> +       int i, j, rc;
+>> 
+>>         if (!drm_enc) {
+>>                 DPU_ERROR("invalid encoder\n");
+>> @@ -1006,6 +1006,13 @@ static void dpu_encoder_virt_mode_set(struct 
+>> drm_encoder *drm_enc,
+>> 
+>>         topology = dpu_encoder_get_topology(dpu_enc, dpu_kms, 
+>> adj_mode);
+>> 
+>> +       rc = dpu_rm_reserve(&dpu_kms->rm, global_state, drm_enc,
+>> +               drm_crtc->state, topology);
+>> +       if (rc) {
+>> +               DPU_ERROR_ENC(dpu_enc, "Failed to reserve 
+>> resources\n");
+>> +               return;
+>> +       }
+>> +
+>>         /* Query resource that have been reserved in atomic check 
+>> step. */
+>>         num_pp = dpu_rm_get_assigned_resources(&dpu_kms->rm, 
+>> global_state,
+>>                 drm_enc->base.id, DPU_HW_BLK_PINGPONG, hw_pp,
+>> --
+>> 1.9.1
+>> 
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
