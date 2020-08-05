@@ -2,128 +2,151 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09754C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F944C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED448207FC
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 015C7207FC
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:33:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="eDzxX2YV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbgHECaq (ORCPT
+        id S1727014AbgHECdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 22:30:46 -0400
-Received: from mga02.intel.com ([134.134.136.20]:34424 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbgHECap (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 22:30:45 -0400
-IronPort-SDR: w0R6HdRuta3wQnwHE3jloiA8hez15e7QvCTXwT1iYV7Iono22BJwauzNuQt7scD6ZhPCcYeH/v
- +fmzJhqYyU4g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="140353813"
-X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
-   d="scan'208";a="140353813"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2020 19:30:44 -0700
-IronPort-SDR: KiVfCb/EB4siU5NMnIraOgBsPLwm126019NYOkFJzcGATO/rcDIF03kIgqsbp3kaHHKEFAb8i7
- zRtwFDVWMIAQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
-   d="scan'208";a="330794387"
-Received: from kbl-ppc.sh.intel.com ([10.239.159.118])
-  by FMSMGA003.fm.intel.com with ESMTP; 04 Aug 2020 19:30:42 -0700
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH] perf record: Skip side-band event setup if HAVE_LIBBPF_SUPPORT is not set
-Date:   Wed,  5 Aug 2020 10:29:37 +0800
-Message-Id: <20200805022937.29184-1-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 4 Aug 2020 22:33:00 -0400
+Received: from mail-am6eur05on2065.outbound.protection.outlook.com ([40.107.22.65]:62273
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725864AbgHECc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 22:32:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=a8fit8cQ3vRQ2neQaei2cOtT/z9yuiQmtjOeqNKm43m7+sXys85xDxFXWto71mjLpaZbXcmv1JxhtBJz3nWrvu+yvYFpOfR5MqLYmlnZ04j68LjjY6A5iyGspW1YaNeWxTLNi+TnSqW4spRchUpFCr4WQp03vBLjiehmc2z510IXGPGKUWbwrtx4cdF+QJ/5NUQpnb6PSUkf3P+xjlv8TLZz1mRxxwPdFLkSKQf3PIde3X5ePCqVUWWv+HmtE7a+moCXqdmBNvXiwVP3+i3hWZnCFY348rHq2FndiTP/CaMnTcRWbhe5htzwwo4lwxQUBpyucHlfUJ8VqMKdbJtYMg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R+T6m1nCYaJz02jrGu3wwvzSLLRE2tbOImJW8ixg3g8=;
+ b=GRMlCfLqqG9KS5T2qW8Z+OqRI5cf9VoedAwQyTzZGVfElyc9vEunR9ou8PpjSyvMqUbxb+cp8M235QTB4mVxvS0zP0rr9K909lh9E4cRd/WEqGwZamIWVRrzRG+Yf42/vGJzcmFHpnaRyIGBH5qYbcS3bccMqh/w9wmKtwaONak7BrBz3tAu6NHbKITvCLWKo7wVm0B/tJncUlvW3+enIU/i3mu+hKJlZJQgIEL/MXOcJ4U608ejWmOSPMsDB7JwsSFTrkvLvIlaE/vnpRz1VCnSgW9ejjQQZBv1Jken55aEWkEXjX/Wd3fPa0CyajHMDWrqx5cNySmdfyAb2rdzJQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R+T6m1nCYaJz02jrGu3wwvzSLLRE2tbOImJW8ixg3g8=;
+ b=eDzxX2YVJGPv6mTu+ofhBgPOxmQGJKAMvSZ7kBYzmCZL+EjeDofli71ISqsFiJ6nk0SZirpekYq6nYjNXc2Tg8bGBqwhPRoU0MIZdWzO6oU4rz+7q8gmn0Y+dTBMbmodMTC8731pCIRXzDonebBBVsiJNfDpjgRvZBR5omBWcxA=
+Received: from VI1PR04MB5103.eurprd04.prod.outlook.com (2603:10a6:803:51::19)
+ by VI1PR04MB7103.eurprd04.prod.outlook.com (2603:10a6:800:123::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Wed, 5 Aug
+ 2020 02:32:54 +0000
+Received: from VI1PR04MB5103.eurprd04.prod.outlook.com
+ ([fe80::2c2c:20a4:38cd:73c3]) by VI1PR04MB5103.eurprd04.prod.outlook.com
+ ([fe80::2c2c:20a4:38cd:73c3%7]) with mapi id 15.20.3261.016; Wed, 5 Aug 2020
+ 02:32:54 +0000
+From:   Hongbo Wang <hongbo.wang@nxp.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        David Miller <davem@davemloft.net>
+CC:     Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>,
+        Po Liu <po.liu@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandru Marginean <alexandru.marginean@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Leo Li <leoyang.li@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "vivien.didelot@gmail.com" <vivien.didelot@gmail.com>,
+        "jiri@resnulli.us" <jiri@resnulli.us>,
+        "idosch@idosch.org" <idosch@idosch.org>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
+        "nikolay@cumulusnetworks.com" <nikolay@cumulusnetworks.com>,
+        "roopa@cumulusnetworks.com" <roopa@cumulusnetworks.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "horatiu.vultur@microchip.com" <horatiu.vultur@microchip.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
+        "ivecera@redhat.com" <ivecera@redhat.com>
+Subject: RE: [EXT] Re: [PATCH v4 2/2] net: dsa: ocelot: Add support for QinQ
+ Operation
+Thread-Topic: [EXT] Re: [PATCH v4 2/2] net: dsa: ocelot: Add support for QinQ
+ Operation
+Thread-Index: AQHWZltTjJoiQZyRB0ahxfHbav3IXakm9cqAgACG/8CAALHUgIAApDFw
+Date:   Wed, 5 Aug 2020 02:32:54 +0000
+Message-ID: <VI1PR04MB5103D05A76BE5A0F8D76F131E14B0@VI1PR04MB5103.eurprd04.prod.outlook.com>
+References: <20200730102505.27039-1-hongbo.wang@nxp.com>
+ <20200730102505.27039-3-hongbo.wang@nxp.com>
+ <20200803.145843.2285407129021498421.davem@davemloft.net>
+ <VI1PR04MB51039B32C580321D99B8DEE8E14A0@VI1PR04MB5103.eurprd04.prod.outlook.com>
+ <2906dc1e-fe37-e9d8-984d-2630549f0462@gmail.com>
+In-Reply-To: <2906dc1e-fe37-e9d8-984d-2630549f0462@gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d38a82ac-e711-40e4-8f85-08d838e7dba9
+x-ms-traffictypediagnostic: VI1PR04MB7103:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB7103C524E7FB47734468DBA2E14B0@VI1PR04MB7103.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pjUU1V8pUkt97XY/nY235+D95wjRy2njT0k7cbtIWo4wIhZtU/pYdb7y5Ew1y7O8NT+tlwv9i/rrhuh/RkDUJ3bwwnDOqglwgZnVj6WPMaYZ54ntCqsAKVkpuHID+s9WIlnH/0KAPCDrDjY0j8NHWftMnBYuv9HtM23DgdHNSk/4AXY1di1/TC7H6gYYut/eVULZXJfz1e5GkqK9ons/R41eLLpBI+YeS9wGfSSd5QHWPP6ra3Yf5+EjpbKt6Q9QAHqG0/X5KxjOWD14IrdAYbyczjGgTYxoI6VeNUGoiQYxOlf45hLNC1V00w5EqVYT9KXrDdsPVymoejvRiOMzBA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5103.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(39860400002)(396003)(366004)(346002)(26005)(8676002)(52536014)(55016002)(9686003)(66556008)(66446008)(66476007)(33656002)(76116006)(8936002)(2906002)(186003)(66946007)(64756008)(4326008)(86362001)(110136005)(83380400001)(44832011)(316002)(478600001)(5660300002)(7696005)(7416002)(6506007)(54906003)(53546011)(71200400001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: vJHUT9KRa9Qh4N+q0S8s1XpM7SIwMTWIVhdu/oCDJ98/X/nfrX0lrq91wr5NltUGKmToTlLI/KGKLKekWXtLXVzIlTIV8vAj+vC0Vl0w9mWtb3xnuL5YzoKrJUQpYjzIiEGeA3GptQP+9cz7YGrLm9cGXz5pBDp9ahnTVuNKzX/mMIByme52mLK3MoAwRTnxbtuL61d0l3bpnVFjdrRFShmFmKbjHTKieYCcy23cohXZQNRSrHYo363Q26TwUyUtgWGHdM50BF5VCtFloo4qobDnyWm53Z1rH8CASQyqCjvKiTdsR/yKfeVa39wzeE9WjmnkJsYg0QFqgiNV7F5qni/hx18lT4hqa+nPcOMkn5C7E+DXU0s+8w7iPNezGy6IF9bdzgu5mOyBj7EBmsPhu7bXuN4VoCOf3+mo93vwmhifNahBKu8FI8m4AHnMfXcbgEi+Fw+GvfkyWDU8zH6rqZxrUpLVNd42pORKP1Yg7Av93xXKg9AgyYg5G9iu/luiRFISnGABdkN5qcCb1I5HhuyM4MVQC5Fspum8DuqPpA71imq5LGu5qEnhb5v70llGdgvy647d0ylehQ6tgtck9J0MNbdIifU3OP9oIxjn56huYMzmHbPStGQJWYsH3ZzBTFun0XizoGKYmoxSLk6X7Q==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5103.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d38a82ac-e711-40e4-8f85-08d838e7dba9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2020 02:32:54.5129
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XSzRdrIhZaXQX/q6bpeu7foYDyjXFgInt9aMC/eu0mD78rvkCta0y7vSp0M5qAoRemRhjLT/5pzZ6vbqt7zUUQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We received an error report that perf-record caused 'Segmentation fault'
-on a newly system (e.g. on the new installed ubuntu).
-
- (gdb) backtrace
- #0  __read_once_size (size=4, res=<synthetic pointer>, p=0x14) at /root/0-jinyao/acme/tools/include/linux/compiler.h:139
- #1  atomic_read (v=0x14) at /root/0-jinyao/acme/tools/include/asm/../../arch/x86/include/asm/atomic.h:28
- #2  refcount_read (r=0x14) at /root/0-jinyao/acme/tools/include/linux/refcount.h:65
- #3  perf_mmap__read_init (map=map@entry=0x0) at mmap.c:177
- #4  0x0000561ce5c0de39 in perf_evlist__poll_thread (arg=0x561ce68584d0) at util/sideband_evlist.c:62
- #5  0x00007fad78491609 in start_thread (arg=<optimized out>) at pthread_create.c:477
- #6  0x00007fad7823c103 in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:95
-
-The root cause is, evlist__add_bpf_sb_event() just returns 0 if
-HAVE_LIBBPF_SUPPORT is not defined (inline function path). So it will
-not create a valid evsel for side-band event.
-
-But perf-record still creates BPF side band thread to process the
-side-band event, then the error happpens.
-
-We can reproduce this issue by removing the libelf-dev. e.g.
-1. apt-get remove libelf-dev
-2. perf record -a -- sleep 1
-
-root@test:~# ./perf record -a -- sleep 1
-perf: Segmentation fault
-Obtained 6 stack frames.
-./perf(+0x28eee8) [0x5562d6ef6ee8]
-/lib/x86_64-linux-gnu/libc.so.6(+0x46210) [0x7fbfdc65f210]
-./perf(+0x342e74) [0x5562d6faae74]
-./perf(+0x257e39) [0x5562d6ebfe39]
-/lib/x86_64-linux-gnu/libpthread.so.0(+0x9609) [0x7fbfdc990609]
-/lib/x86_64-linux-gnu/libc.so.6(clone+0x43) [0x7fbfdc73b103]
-Segmentation fault (core dumped)
-
-To fix this issue,
-
-1. We either install the missing libraries to let HAVE_LIBBPF_SUPPORT
-   be defined.
-   e.g. apt-get install libelf-dev and install other related libraries.
-
-2. Use this patch to skip the side-band event setup if HAVE_LIBBPF_SUPPORT
-   is not set.
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/builtin-record.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index b6bdccd875bc..ae97f98e2753 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1506,6 +1506,7 @@ static int record__synthesize(struct record *rec, bool tail)
- 	return err;
- }
- 
-+#ifdef HAVE_LIBBPF_SUPPORT
- static int record__process_signal_event(union perf_event *event __maybe_unused, void *data)
- {
- 	struct record *rec = data;
-@@ -1550,6 +1551,12 @@ static int record__setup_sb_evlist(struct record *rec)
- 
- 	return 0;
- }
-+#else
-+static int record__setup_sb_evlist(struct record *rec __maybe_unused)
-+{
-+	return 0;
-+}
-+#endif
- 
- static int __cmd_record(struct record *rec, int argc, const char **argv)
- {
--- 
-2.17.1
-
+PiBDYXV0aW9uOiBFWFQgRW1haWwNCj4gDQo+IE9uIDgvMy8yMDIwIDExOjM2IFBNLCBIb25nYm8g
+V2FuZyB3cm90ZToNCj4gPj4+ICsgICAgIGlmICh2bGFuLT5wcm90byA9PSBFVEhfUF84MDIxQUQp
+IHsNCj4gPj4+ICsgICAgICAgICAgICAgb2NlbG90LT5lbmFibGVfcWlucSA9IHRydWU7DQo+ID4+
+PiArICAgICAgICAgICAgIG9jZWxvdF9wb3J0LT5xaW5xX21vZGUgPSB0cnVlOw0KPiA+Pj4gKyAg
+ICAgfQ0KPiA+PiAgLi4uDQo+ID4+PiArICAgICBpZiAodmxhbi0+cHJvdG8gPT0gRVRIX1BfODAy
+MUFEKSB7DQo+ID4+PiArICAgICAgICAgICAgIG9jZWxvdC0+ZW5hYmxlX3FpbnEgPSBmYWxzZTsN
+Cj4gPj4+ICsgICAgICAgICAgICAgb2NlbG90X3BvcnQtPnFpbnFfbW9kZSA9IGZhbHNlOw0KPiA+
+Pj4gKyAgICAgfQ0KPiA+Pj4gKw0KPiA+Pg0KPiA+PiBJIGRvbid0IHVuZGVyc3RhbmQgaG93IHRo
+aXMgY2FuIHdvcmsganVzdCBieSB1c2luZyBhIGJvb2xlYW4gdG8gdHJhY2sNCj4gPj4gdGhlIHN0
+YXRlLg0KPiA+Pg0KPiA+PiBUaGlzIHdvbid0IHdvcmsgcHJvcGVybHkgaWYgeW91IGFyZSBoYW5k
+bGluZyBtdWx0aXBsZSBRaW5RIFZMQU4gZW50cmllcy4NCj4gPj4NCj4gPj4gQWxzbywgSSBuZWVk
+IEFuZHJldyBhbmQgRmxvcmlhbiB0byByZXZpZXcgYW5kIEFDSyB0aGUgRFNBIGxheWVyDQo+ID4+
+IGNoYW5nZXMgdGhhdCBhZGQgdGhlIHByb3RvY29sIHZhbHVlIHRvIHRoZSBkZXZpY2Ugbm90aWZp
+ZXIgYmxvY2suDQo+ID4NCj4gPiBIaSBEYXZpZCwNCj4gPiBUaGFua3MgZm9yIHJlcGx5Lg0KPiA+
+DQo+ID4gV2hlbiBzZXR0aW5nIGJyaWRnZSdzIFZMQU4gcHJvdG9jb2wgdG8gODAyLjFBRCBieSB0
+aGUgY29tbWFuZCAiaXAgbGluaw0KPiA+IHNldCBicjAgdHlwZSBicmlkZ2Ugdmxhbl9wcm90b2Nv
+bCA4MDIuMWFkIiwgaXQgd2lsbCBjYWxsDQo+ID4gZHNhX3NsYXZlX3ZsYW5fcnhfYWRkKGRldiwg
+cHJvdG8sIHZpZCkgZm9yIGV2ZXJ5IHBvcnQgaW4gdGhlIGJyaWRnZSwNCj4gPiB0aGUgcGFyYW1l
+dGVyIHZpZCBpcyBwb3J0J3MgcHZpZCAxLCBpZiBwdmlkJ3MgcHJvdG8gaXMgODAyLjFBRCwgSSB3
+aWxsDQo+ID4gZW5hYmxlIHN3aXRjaCdzIGVuYWJsZV9xaW5xLCBhbmQgdGhlIHJlbGF0ZWQgcG9y
+dCdzIHFpbnFfbW9kZSwNCj4gPg0KPiA+IFdoZW4gdGhlcmUgYXJlIG11bHRpcGxlIFFpblEgVkxB
+TiBlbnRyaWVzLCBJZiBvbmUgVkxBTidzIHByb3RvIGlzIDgwMi4xQUQsDQo+IEkgd2lsbCBlbmFi
+bGUgc3dpdGNoIGFuZCB0aGUgcmVsYXRlZCBwb3J0IGludG8gUWluUSBtb2RlLg0KPiANCj4gVGhl
+IGVuYWJsaW5nIGFwcGVhcnMgZmluZSwgdGhlIHByb2JsZW0gaXMgdGhlIGRpc2FibGluZywgdGhl
+IGZpcnN0IDgwMi4xQUQgVkxBTg0KPiBlbnRyeSB0aGF0IGdldHMgZGVsZXRlZCB3aWxsIGxlYWQg
+dG8gdGhlIHBvcnQgYW5kIHN3aXRjaCBubyBsb25nZXIgYmVpbmcgaW4gUWluUQ0KPiBtb2RlLCBh
+bmQgdGhpcyBkb2VzIG5vdCBsb29rIGludGVuZGVkLg0KPiAtLQ0KPiBGbG9yaWFuDQoNClRoYW5r
+cywgRmxvcmlhbg0KDQpJIHdpbGwgYWRkIHJlZmVyZW5jZSBjb3VudGVyLg0KV2hlbiBkZWxldGlu
+ZyBWTEFOIGVudHJ5LCBvbmx5IGlmIHRoZSBjb3VudGVyIGlzIHplcm8sIEkgd2lsbCBzZXQgdGhl
+IHN3aXRjaCB0byBleGl0IFFpblEgbW9kZS4NCg0KaG9uZ2JvDQoNCg==
