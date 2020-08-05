@@ -2,84 +2,108 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E24C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BAD8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5857222B42
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:09:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="Xln+P+yx";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="jZLFbTc4"
+	by mail.kernel.org (Postfix) with ESMTP id F20E722B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:10:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596658201;
+	bh=2jLFMm+CdiwmOZG/JOnONjoNi2LeTl32WhNCd1CZKsw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=C46y7EnYDjaIIsY6W2JBWo025C1SPLosLKl3cKVBIA/b2Qv7MCvJ4XvtiDqZCqJhy
+	 Cl4Z0yx0kaBKmqLaBvoVMNJIw3k7PixOTrHc639etkOtCyNQzbVyZqHqc4nW7qlrFn
+	 H2RUPwfCLdHsx7utq5mzou4XrxYXbsLvOhqgez+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbgHEUJy (ORCPT
+        id S1728981AbgHEUJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:09:54 -0400
-Received: from pb-smtp2.pobox.com ([64.147.108.71]:56962 "EHLO
-        pb-smtp2.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbgHEQ3N (ORCPT
+        Wed, 5 Aug 2020 16:09:58 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43608 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726799AbgHEQ3G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:29:13 -0400
-Received: from pb-smtp2.pobox.com (unknown [127.0.0.1])
-        by pb-smtp2.pobox.com (Postfix) with ESMTP id 3153987992;
-        Wed,  5 Aug 2020 11:13:43 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=t4fVhjQVDWtzEETmfxy67PMJ+aE=; b=Xln+P+
-        yxlSY/84uqmszJffyoR/qH2KB/720zEYc/zh05B9w6FYOZo4SNr9h8RIRD9YGwUd
-        11XTHGNxdeatYBx7fwQRKn1KMzxfvb1+tEQj7ZOISPLsts5x+dWLdNJC25uO6khI
-        B+/WIr6D7qtNubL+35i4I2hjOMe31sYeorLtc=
-Received: from pb-smtp2.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp2.pobox.com (Postfix) with ESMTP id 28FEC87991;
-        Wed,  5 Aug 2020 11:13:43 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=Cvq6oQrzezpY4LxASPSDQy3sp0oeiiOQ+kGdMlRFHB4=; b=jZLFbTc4/NjzG+eJj6EfBs0AT33scg8HOgZvS0M5ev35O9kw6hCDbVnZHJr7GRhvS4AXf1ayxSbZqCUXBnU8mD4YbXbkqVt9Qtt48z1QSieFOrL5wCXG2xJOz2hMROcuo+zeGXbk7SKI2a7+E5OMeNcaERHPAyyuHU/tojg6Kvw=
-Received: from yoda.home (unknown [24.203.50.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp2.pobox.com (Postfix) with ESMTPSA id 700B987990;
-        Wed,  5 Aug 2020 11:13:42 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id 380822DA0AA7;
-        Wed,  5 Aug 2020 11:13:41 -0400 (EDT)
-Date:   Wed, 5 Aug 2020 11:13:41 -0400 (EDT)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Conor Culhane <conor.culhane@silvaco.com>
-cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rajeev Huralikoppi <rajeev.huralikoppi@silvaco.com>
-Subject: Re: [PATCH 3/4] i3c: master: svc: Add Silvaco I3C master driver
-In-Reply-To: <BN6PR16MB1762D6CE430AB08B7A2BE5FCF14A0@BN6PR16MB1762.namprd16.prod.outlook.com>
-Message-ID: <nycvar.YSQ.7.77.849.2008051105550.1112668@knanqh.ubzr>
-References: <20200709080159.2178-1-miquel.raynal@bootlin.com> <20200709080159.2178-3-miquel.raynal@bootlin.com>,<nycvar.YSQ.7.77.849.2008031546570.1112668@knanqh.ubzr> <BN6PR16MB1762D6CE430AB08B7A2BE5FCF14A0@BN6PR16MB1762.namprd16.prod.outlook.com>
+        Wed, 5 Aug 2020 12:29:06 -0400
+Received: by mail-ot1-f66.google.com with SMTP id r21so23270791ota.10;
+        Wed, 05 Aug 2020 09:29:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B2Pl0nxbT6UouzIoo2qIhPoj7Bo+fxndZdi1tAY/F2o=;
+        b=evdsFFTQx9K0IFg7PgdGrbOMSQEld9thfsrPXZJwH03tBm4zYVMNRf8kfpDrR0SMOz
+         Vp7hWNLLeib3bZ3y0RIn2y/6d3gwAOjLEDi5yFK8xPGIq2Y74SwikqT+fTf+opgWTsCZ
+         STEYf16frTl1sHxqC4oKPcrVK0yriSLj1CxzH2cRi4CSnqqlzXvEdr1eoT9eXKmzRlC/
+         fvd9DZRrUCg2lvR7E9dEijgr6nyAb5QyT/ZS1mi7cxWbDUL7KWI2Oz8+69YxKExWj9G1
+         VZi8DrBhik2E6mgTA5KVttslVkNaA9KB2+LSBPEbnxQ38DYPidC4xTFH2yJj5GSCYOmC
+         QMOA==
+X-Gm-Message-State: AOAM530e/iFMFhMeEY/MoXMYd6YMmTv1k65lG9OCj4B14GpK3rtaydLz
+        QWGHHOuOc/O/3RhDn3T6MJGmkpJzCRXOjYDBDaE=
+X-Google-Smtp-Source: ABdhPJzOYRjlDWBGFAd8+wHpr++Fx1aamqiZW3DaWfdMtrRewVD42Wv6SvyQfxbhnME5/3h2VMvoUcmBILP+cPAm8MM=
+X-Received: by 2002:a05:6830:1c74:: with SMTP id s20mr3262615otg.167.1596644944989;
+ Wed, 05 Aug 2020 09:29:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: 3FA9ABCE-D72E-11EA-93F8-2F5D23BA3BAF-78420484!pb-smtp2.pobox.com
+References: <4981405.3kqTVLv5tO@kreacher> <1709487.Bxjb1zNRZM@kreacher>
+ <1633168.eVXp6ieOpF@kreacher> <000d01d66a81$59326a50$0b973ef0$@net>
+ <CAJZ5v0h7iKvO1-9R_JiVjM8j_a87B=LpTCoaUWRfrhXTRaMMOw@mail.gmail.com> <ff21e71060b589219c21b46b5e26b6c3aca9f951.camel@linux.intel.com>
+In-Reply-To: <ff21e71060b589219c21b46b5e26b6c3aca9f951.camel@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 5 Aug 2020 18:28:51 +0200
+Message-ID: <CAJZ5v0hfoHpBX9-W4B7cMRpoxF6a0Ci-81zJC4pwbxGpd_9fGA@mail.gmail.com>
+Subject: Re: [PATCH v6] cpufreq: intel_pstate: Implement passive mode with HWP enabled
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Doug Smythies <dsmythies@telus.net>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Documentation <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        Francisco Jerez <francisco.jerez.plata@intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Aug 2020, Conor Culhane wrote:
+On Wed, Aug 5, 2020 at 5:38 PM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
+>
+> On Wed, 2020-08-05 at 11:34 +0200, Rafael J. Wysocki wrote:
+> > Hi Doug,
+> >
+> > On Tue, Aug 4, 2020 at 7:07 PM Doug Smythies <dsmythies@telus.net>
+> > wrote:
+> > > Hi Rafael,
+> > >
+> > >
+> [...]
+>
+> > Note that the active mode performance scaling algorithm (which is not
+> > the same as the performance cpufreq governor) sets the EPP to 0 for
+> > all of the CPUs that it is used with and the driver sets the EPP to
+> > 255 in ->stop_cpu.
+> >
+> > That last bit is questionable, but that's the active mode behavior
+> > which is not changed by the $subject patch.
+> You need to set the CPU which is going offline to the lowest perf
+> settings. If not its sibling's performance can never be lowered than
+> offlined CPUs max/min/epp.
 
-> Miquel is passing 0 as the delay_us argument.
+OK, fair enough.  I'm not going to make this change after all then. :-)
 
-Good point.
+This behavior is really confusing, though, because if you change the
+status from "active" to "passive" or the other way around, the EPP
+goes to 0xFF on all CPUs and cannot be restored.
 
-> Is this still a concern?
+To fix this, we need an extra patch on top of the $subject one to
+introduce ->online and ->offline callbacks so that ->offline sets the
+EPP to 0xFF and either ->online or ->exit can restore it to the
+previous setting.
 
-Not in that case.
-
-
-Nicolas
+Cheers!
