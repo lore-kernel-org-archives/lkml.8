@@ -2,175 +2,425 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D895DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACDE22064B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 243902084D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:10:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ujxSNUSw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TMd4GERi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgHEShx (ORCPT
+        id S1728597AbgHETKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 14:37:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729119AbgHES1U (ORCPT
+        Wed, 5 Aug 2020 15:10:45 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28957 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729277AbgHESe2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 14:27:20 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98580C061575;
-        Wed,  5 Aug 2020 11:27:17 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id z5so24984194pgb.6;
-        Wed, 05 Aug 2020 11:27:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GNqXP6MnEh5m4nolFEKGmKxP/qSwA0kXzhxyqrmFooY=;
-        b=ujxSNUSwrYiDPsUjtX8N8ht53GZtmGNon9RArdMeEUOk8vWTJNFHFGmbKrO32yeuKt
-         eAmWFoCMd3GFNCv9CaJmeaTnlE2IZoY2ADmX5y2bVjGN/FGSRsSrQRmOJ3jcBoETXc9j
-         znHhreB9hzCLvKuK4nh9ugY/opKjtxl2N4UiYFTOQtAH+dFm6YQTrJiua4EPPx355i8Q
-         munE4GZKYZHmIqkXXmXblVkMpuAbwN7j10kzJW7hwkbeDn1MQ0tJb6FIPAPjtZNyEnwj
-         Y0Lu38aWQoJE3aUuN8nl+VZ94JVeoKbPx0eqpfZnT/bytVVhUF818j6EyaMyvwtz8A2E
-         KLMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=GNqXP6MnEh5m4nolFEKGmKxP/qSwA0kXzhxyqrmFooY=;
-        b=UO5phWhKNVAjizNmlag6ld7x2iWo5IjOf/cc8egyTT/1WgPN5LtGwxdoWxetRUPIu9
-         Wa6Ra4oZZNXkgAMozdTUpzk+utWneuV2C+3hXceQDt+4pvy+ty4EyIaOENYeIN/4iHlH
-         Le1G2f7nam33bYLB57CpeUvCmO8EwBEcyL2V189hOMcr3qCCHatgv9FhSPF5+1Brl/iU
-         tZE4Xf6+ejdMKMaslilfzNDQoSuXnmVK7iJEB939hX6pYILFVhs00RuLZDhNXrc50l9L
-         ZwHcCdwFypz/wzx3QRJFdv2heLhtL6YoQ1EVsKUPN/JHxUdPsxtVKU12TIiCb7BX5IQO
-         CawA==
-X-Gm-Message-State: AOAM531uWSiQL45lVhgmL4jslyl2Ttcl5o0vuJ+HHsh6vTqopxZq/cOg
-        WA1S+efiW8DP+LsDCAIo7Bo=
-X-Google-Smtp-Source: ABdhPJw8nPiWZ3KJpxExOnWcmRzAGdmaTarPQZDrOLbRtm1LSCxiyM9pJ3q1dA1xrGkfPNWJCZ9IEw==
-X-Received: by 2002:a65:438c:: with SMTP id m12mr4013211pgp.373.1596652035873;
-        Wed, 05 Aug 2020 11:27:15 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x7sm4536785pfc.209.2020.08.05.11.27.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2020 11:27:15 -0700 (PDT)
-Subject: Re: [PATCH 5.7 0/6] 5.7.14-rc1 review
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Marc Zyngier <maz@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Willy Tarreau <w@1wt.eu>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-References: <20200805153506.978105994@linuxfoundation.org>
- <CA+G9fYv_aX36Kq_RD5dAL_By4AFq=-ZY_qh7VhLG=HJQv5mDzg@mail.gmail.com>
- <CAHk-=wj1bhyhuJbA5_UbqAnbjqA_hSrmZFqCQrhJ=44P--T4vQ@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <ea90a651-9293-6837-9982-c4a988fd7a03@roeck-us.net>
-Date:   Wed, 5 Aug 2020 11:27:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 5 Aug 2020 14:34:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596652464;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=NY6yDRCEkpDg5LXNyaSXdjYfolIgk3OXFlkk/eTLcfo=;
+        b=TMd4GERiI+bEXs4rhCyW03aVqmXrWmfxAG+WgTM5wqEI7Mta5xj9a8sCnUuuvwH/7GiZKv
+        hNxEcyIOsKFdFmjQuccKCsmhKb7+PivyacDMtwQ40SpMROJP6oGJLvcT5nia825gu+Qn9A
+        YDvG5xpWA2pYiciG3M0MBT7BEIwh/MA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-39-NIBy4lHNMPuW20DwNN_t3g-1; Wed, 05 Aug 2020 14:26:09 -0400
+X-MC-Unique: NIBy4lHNMPuW20DwNN_t3g-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EA9A210059A7;
+        Wed,  5 Aug 2020 18:26:07 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 794135F202;
+        Wed,  5 Aug 2020 18:26:07 +0000 (UTC)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [GIT PULL] First batch of KVM changes for Linux 5.9
+Date:   Wed,  5 Aug 2020 14:26:06 -0400
+Message-Id: <20200805182606.12621-1-pbonzini@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wj1bhyhuJbA5_UbqAnbjqA_hSrmZFqCQrhJ=44P--T4vQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/5/20 11:01 AM, Linus Torvalds wrote:
-> On Wed, Aug 5, 2020 at 10:39 AM Naresh Kamboju
-> <naresh.kamboju@linaro.org> wrote:
->>
->> [ sorry if it is not interesting ! ]
-> 
-> It's a bit interesting only because it is so odd.
-> 
->> While building with old gcc-7.3.0 the build breaks for arm64
->> whereas build PASS on gcc-8, gcc-9 and gcc-10.
-> 
-> Can you double-check that your gcc-7.3 setup is actually building the same tree?
-> 
+Linus,
 
-I see the same problem. I built images manually, using the same source
-tree, so I am quite sure it is the same tree (at least in my case).
+The following changes since commit 8038a922cf9af5266eaff29ce996a0d1b788fc0d:
 
-> Yeah, I know that's a slightly strange thing to ask, but your build
-> log really looks very odd. There should be nothing in that error that
-> is in any way compiler version specific.
-> 
+  Merge tag 'kvmarm-fixes-5.8-3' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into kvm-master (2020-07-06 13:05:38 -0400)
 
-Same confusion here. I'll be stuck in a meeting for the next hour;
-unless someone else figures out what is going on I'll get back
-to it afterwards.
+are available in the Git repository at:
 
-Guenter
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
 
-> Sure, we may have some header that checks the compiler version and
-> does something different based on that, and I guess that could be
-> going on. Except I don't even find anything remotely like that
-> anywhere. I do find some compiler version tests, but most ofd them
-> would trigger for all those compiler versions
-> 
-> Or is there perhaps some other configuration difference?
-> 
->              Linus
-> 
+for you to fetch changes up to f3633c2683545213de4a00a9b0c3fba741321fb2:
+
+  Merge tag 'kvm-s390-next-5.9-1' of git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux into kvm-next-5.6 (2020-08-03 14:19:13 -0400)
+
+----------------------------------------------------------------
+s390: implement diag318
+
+x86:
+* Report last CPU for debugging
+* Emulate smaller MAXPHYADDR in the guest than in the host
+* .noinstr and tracing fixes from Thomas
+* nested SVM page table switching optimization and fixes
+
+Generic:
+* Unify shadow MMU cache data structures across architectures
+
+----------------------------------------------------------------
+
+There is a conflict in arch/x86/kernel/kvm.c that git will only
+partially report.  idtentry_enter_cond_rcu and idtentry_exit_cond_rcu
+have been renamed to idtentry_enter and idtentry_exit and their return
+type went from bool to idtentry_state_t.  There are two occurrences
+but git will only notice the first one (and only partly so, it misses
+the function calls altogether).
+
+The resolution is simple, but I've included it at the end of this message
+anyway.
+
+Thanks,
+
+Paolo
+
+Colin Ian King (1):
+      KVM: MIPS: fix spelling mistake "Exteneded" -> "Extended"
+
+Collin Walling (2):
+      s390/setup: diag 318: refactor struct
+      s390/kvm: diagnose 0x318 sync and reset
+
+Dan Carpenter (1):
+      KVM: SVM: Fix sev_pin_memory() error handling
+
+Haiwei Li (1):
+      KVM: Using macros instead of magic values
+
+Huacai Chen (1):
+      MIPS: KVM: Fix build error caused by 'kvm_run' cleanup
+
+Jiaxun Yang (2):
+      MIPS: KVM: Limit Trap-and-Emulate to MIPS32R2 only
+      MIPS: KVM: Remove outdated README
+
+Jim Mattson (7):
+      kvm: svm: Prefer vcpu->cpu to raw_smp_processor_id()
+      kvm: svm: Always set svm->last_cpu on VMRUN
+      kvm: vmx: Add last_cpu to struct vcpu_vmx
+      kvm: x86: Add "last CPU" to some KVM_EXIT information
+      kvm: x86: Move last_cpu into kvm_vcpu_arch as last_vmentry_cpu
+      kvm: x86: Set last_vmentry_cpu in vcpu_enter_guest
+      kvm: x86: Read PDPTEs on CR0.CD and CR0.NW changes
+
+Joerg Roedel (4):
+      KVM: SVM: Rename struct nested_state to svm_nested_state
+      KVM: SVM: Add vmcb_ prefix to mark_*() functions
+      KVM: SVM: Add svm_ prefix to set/clr/is_intercept()
+      KVM: SVM: Rename svm_nested_virtualize_tpr() to nested_svm_virtualize_tpr()
+
+John Hubbard (2):
+      KVM: SVM: fix svn_pin_memory()'s use of get_user_pages_fast()
+      KVM: SVM: convert get_user_pages() --> pin_user_pages()
+
+Krish Sadhukhan (4):
+      KVM: x86: Move the check for upper 32 reserved bits of DR6 to separate function
+      KVM: nSVM: Check that DR6[63:32] and DR7[64:32] are not set on vmrun of nested guests
+      KVM: x86: Create mask for guest CR4 reserved bits in kvm_update_cpuid()
+      KVM: nSVM: Check that MBZ bits in CR3 and CR4 are not set on vmrun of nested guests
+
+Like Xu (2):
+      kvm: x86: limit the maximum number of vPMU fixed counters to 3
+      KVM/x86: pmu: Fix #GP condition check for RDPMC emulation
+
+Maxim Levitsky (1):
+      kvm: x86: replace kvm_spec_ctrl_test_value with runtime test on the host
+
+Mohammed Gamal (5):
+      KVM: x86: Add helper functions for illegal GPA checking and page fault injection
+      KVM: x86: mmu: Move translate_gpa() to mmu.c
+      KVM: x86: mmu: Add guest physical address check in translate_gpa()
+      KVM: VMX: Add guest physical address check in EPT violation and misconfig
+      KVM: x86: Add a capability for GUEST_MAXPHYADDR < HOST_MAXPHYADDR support
+
+Paolo Bonzini (11):
+      Merge branch 'kvm-async-pf-int' into HEAD
+      Merge branch 'kvm-master' into HEAD
+      KVM: x86: report sev_pin_memory errors with PTR_ERR
+      KVM: x86: Make CR4.VMXE reserved for the guest
+      KVM: MMU: stop dereferencing vcpu->arch.mmu to get the context for MMU init
+      KVM: x86: rename update_bp_intercept to update_exception_bitmap
+      KVM: x86: update exception bitmap on CPUID changes
+      KVM: VMX: introduce vmx_need_pf_intercept
+      KVM: VMX: optimize #PF injection when MAXPHYADDR does not match
+      KVM: nSVM: remove nonsensical EXITINFO1 adjustment on nested NPF
+      Merge tag 'kvm-s390-next-5.9-1' of git://git.kernel.org/.../kvms390/linux into kvm-next-5.6
+
+Peter Xu (2):
+      KVM: X86: Move ignore_msrs handling upper the stack
+      KVM: X86: Do the same ignore_msrs check for feature msrs
+
+Sean Christopherson (46):
+      KVM: x86/mmu: Drop kvm_arch_write_log_dirty() wrapper
+      KVM: nVMX: WARN if PML emulation helper is invoked outside of nested guest
+      KVM: x86/mmu: Make .write_log_dirty a nested operation
+      KVM: nVMX: Wrap VM-Fail valid path in generic VM-Fail helper
+      KVM: x86/mmu: Avoid multiple hash lookups in kvm_get_mmu_page()
+      KVM: x86/mmu: Optimize MMU page cache lookup for fully direct MMUs
+      KVM: x86/mmu: Don't put invalid SPs back on the list of active pages
+      KVM: x86/mmu: Batch zap MMU pages when recycling oldest pages
+      KVM: x86/mmu: Batch zap MMU pages when shrinking the slab
+      KVM: x86/mmu: Exit to userspace on make_mmu_pages_available() error
+      KVM: x86/mmu: Move mmu_audit.c and mmutrace.h into the mmu/ sub-directory
+      KVM: x86/mmu: Move kvm_mmu_available_pages() into mmu.c
+      KVM: x86/mmu: Add MMU-internal header
+      KVM: x86/mmu: Make kvm_mmu_page definition and accessor internal-only
+      KVM: x86/mmu: Add sptep_to_sp() helper to wrap shadow page lookup
+      KVM: x86/mmu: Rename page_header() to to_shadow_page()
+      KVM: x86/mmu: Track the associated kmem_cache in the MMU caches
+      KVM: x86/mmu: Consolidate "page" variant of memory cache helpers
+      KVM: x86/mmu: Use consistent "mc" name for kvm_mmu_memory_cache locals
+      KVM: x86/mmu: Remove superfluous gotos from mmu_topup_memory_caches()
+      KVM: x86/mmu: Try to avoid crashing KVM if a MMU memory cache is empty
+      KVM: x86/mmu: Move fast_page_fault() call above mmu_topup_memory_caches()
+      KVM: x86/mmu: Topup memory caches after walking GVA->GPA
+      KVM: x86/mmu: Clean up the gorilla math in mmu_topup_memory_caches()
+      KVM: x86/mmu: Separate the memory caches for shadow pages and gfn arrays
+      KVM: x86/mmu: Make __GFP_ZERO a property of the memory cache
+      KVM: x86/mmu: Zero allocate shadow pages (outside of mmu_lock)
+      KVM: x86/mmu: Skip filling the gfn cache for guaranteed direct MMU topups
+      KVM: x86/mmu: Prepend "kvm_" to memory cache helpers that will be global
+      KVM: Move x86's version of struct kvm_mmu_memory_cache to common code
+      KVM: Move x86's MMU memory cache helpers to common KVM code
+      KVM: arm64: Drop @max param from mmu_topup_memory_cache()
+      KVM: arm64: Use common code's approach for __GFP_ZERO with memory caches
+      KVM: arm64: Use common KVM implementation of MMU memory caches
+      KVM: MIPS: Drop @max param from mmu_topup_memory_cache()
+      KVM: MIPS: Account pages used for GPA page tables
+      KVM: MIPS: Use common KVM implementation of MMU memory caches
+      KVM: nSVM: Correctly set the shadow NPT root level in its MMU role
+      KVM: VMX: Drop a duplicate declaration of construct_eptp()
+      KVM: x86/mmu: Add separate helper for shadow NPT root page role calc
+      KVM: VMX: Make vmx_load_mmu_pgd() static
+      KVM: x86: Pull the PGD's level from the MMU instead of recalculating it
+      KVM: VXM: Remove temporary WARN on expected vs. actual EPTP level mismatch
+      KVM: x86: Dynamically calculate TDP level from max level and MAXPHYADDR
+      KVM: x86/mmu: Rename max_page_level to max_huge_page_level
+      KVM: x86: Specify max TDP level via kvm_configure_mmu()
+
+Thomas Gleixner (7):
+      x86/kvm: Move context tracking where it belongs
+      x86/kvm/vmx: Add hardirq tracing to guest enter/exit
+      x86/kvm/svm: Add hardirq tracing on guest enter/exit
+      x86/kvm/vmx: Move guest enter/exit into .noinstr.text
+      x86/kvm/svm: Move guest enter/exit into .noinstr.text
+      x86/kvm/svm: Use uninstrumented wrmsrl() to restore GS
+      x86/kvm/vmx: Use native read/write_cr2()
+
+Tianjia Zhang (3):
+      KVM: s390: clean up redundant 'kvm_run' parameters
+      KVM: arm64: clean up redundant 'kvm_run' parameters
+      KVM: MIPS: clean up redundant 'kvm_run' parameters
+
+Uros Bizjak (1):
+      KVM: x86: Use VMCALL and VMMCALL mnemonics in kvm_para.h
+
+Vitaly Kuznetsov (13):
+      KVM: x86: Switch KVM guest to using interrupts for page ready APF delivery
+      KVM: x86: drop KVM_PV_REASON_PAGE_READY case from kvm_handle_page_fault()
+      KVM: async_pf: change kvm_setup_async_pf()/kvm_arch_setup_async_pf() return type to bool
+      KVM: x86: take as_id into account when checking PGD
+      KVM: x86: move MSR_IA32_PERF_CAPABILITIES emulation to common x86 code
+      KVM: nSVM: split kvm_init_shadow_npt_mmu() from kvm_init_shadow_mmu()
+      KVM: nSVM: reset nested_run_pending upon nested_svm_vmrun_msrpm() failure
+      KVM: nSVM: prepare to handle errors from enter_svm_guest_mode()
+      KVM: nSVM: introduce nested_svm_load_cr3()/nested_npt_enabled()
+      KVM: nSVM: move kvm_set_cr3() after nested_svm_uninit_mmu_context()
+      KVM: nSVM: implement nested_svm_load_cr3() and use it for host->guest switch
+      KVM: nSVM: use nested_svm_load_cr3() on guest->host switch
+      KVM: x86: drop superfluous mmu_check_root() from fast_pgd_switch()
+
+Wanpeng Li (1):
+      KVM: LAPIC: Set the TDCR settable bits
+
+Xiaoyao Li (9):
+      KVM: X86: Reset vcpu->arch.cpuid_nent to 0 if SET_CPUID* fails
+      KVM: X86: Go on updating other CPUID leaves when leaf 1 is absent
+      KVM: lapic: Use guest_cpuid_has() in kvm_apic_set_version()
+      KVM: X86: Move kvm_apic_set_version() to kvm_update_cpuid()
+      KVM: x86: Introduce kvm_check_cpuid()
+      KVM: x86: Extract kvm_update_cpuid_runtime() from kvm_update_cpuid()
+      KVM: x86: Rename kvm_update_cpuid() to kvm_vcpu_after_set_cpuid()
+      KVM: x86: Rename cpuid_update() callback to vcpu_after_set_cpuid()
+      KVM: x86: Move kvm_x86_ops.vcpu_after_set_cpuid() into kvm_vcpu_after_set_cpuid()
+
+Zhenzhong Duan (4):
+      Revert "KVM: X86: Fix setup the virt_spin_lock_key before static key get initialized"
+      x86/kvm: Change print code to use pr_*() format
+      x86/kvm: Add "nopvspin" parameter to disable PV spinlocks
+      xen: Mark "xen_nopvspin" parameter obsolete
+
+ Documentation/admin-guide/kernel-parameters.txt |  10 +-
+ Documentation/virt/kvm/api.rst                  |   5 +
+ arch/arm64/include/asm/kvm_coproc.h             |  12 +-
+ arch/arm64/include/asm/kvm_host.h               |  22 +-
+ arch/arm64/include/asm/kvm_mmu.h                |   2 +-
+ arch/arm64/include/asm/kvm_types.h              |   8 +
+ arch/arm64/kvm/arm.c                            |   8 +-
+ arch/arm64/kvm/handle_exit.c                    |  36 +-
+ arch/arm64/kvm/mmio.c                           |  11 +-
+ arch/arm64/kvm/mmu.c                            |  61 +---
+ arch/arm64/kvm/sys_regs.c                       |  13 +-
+ arch/mips/Kconfig                               |   1 +
+ arch/mips/include/asm/kvm_host.h                |  39 +-
+ arch/mips/include/asm/kvm_types.h               |   7 +
+ arch/mips/kvm/00README.txt                      |  31 --
+ arch/mips/kvm/Kconfig                           |   3 +-
+ arch/mips/kvm/emulate.c                         |  65 ++--
+ arch/mips/kvm/mips.c                            |  11 +-
+ arch/mips/kvm/mmu.c                             |  44 +--
+ arch/mips/kvm/trap_emul.c                       | 114 +++---
+ arch/mips/kvm/vz.c                              |  26 +-
+ arch/powerpc/include/asm/Kbuild                 |   1 +
+ arch/s390/include/asm/Kbuild                    |   1 +
+ arch/s390/include/asm/diag.h                    |   6 +-
+ arch/s390/include/asm/kvm_host.h                |   4 +-
+ arch/s390/include/uapi/asm/kvm.h                |   7 +-
+ arch/s390/kernel/setup.c                        |   3 +-
+ arch/s390/kvm/kvm-s390.c                        |  54 ++-
+ arch/s390/kvm/vsie.c                            |   1 +
+ arch/x86/Kconfig                                |   1 +
+ arch/x86/include/asm/hardirq.h                  |   4 +-
+ arch/x86/include/asm/idtentry.h                 |   4 +
+ arch/x86/include/asm/kvm_host.h                 |  95 ++---
+ arch/x86/include/asm/kvm_para.h                 |   3 +-
+ arch/x86/include/asm/kvm_types.h                |   7 +
+ arch/x86/include/asm/qspinlock.h                |   1 +
+ arch/x86/kernel/kvm.c                           | 118 ++++--
+ arch/x86/kvm/cpuid.c                            | 115 +++---
+ arch/x86/kvm/cpuid.h                            |   2 +-
+ arch/x86/kvm/lapic.c                            |  11 +-
+ arch/x86/kvm/mmu.h                              |  34 +-
+ arch/x86/kvm/mmu/mmu.c                          | 461 +++++++++++++-----------
+ arch/x86/kvm/{ => mmu}/mmu_audit.c              |  12 +-
+ arch/x86/kvm/mmu/mmu_internal.h                 |  63 ++++
+ arch/x86/kvm/{ => mmu}/mmutrace.h               |   2 +-
+ arch/x86/kvm/mmu/page_track.c                   |   2 +-
+ arch/x86/kvm/mmu/paging_tmpl.h                  |  19 +-
+ arch/x86/kvm/pmu.c                              |   5 +
+ arch/x86/kvm/pmu.h                              |   2 +
+ arch/x86/kvm/svm/avic.c                         |   2 +-
+ arch/x86/kvm/svm/nested.c                       | 142 ++++++--
+ arch/x86/kvm/svm/sev.c                          |  47 +--
+ arch/x86/kvm/svm/svm.c                          | 262 +++++++++-----
+ arch/x86/kvm/svm/svm.h                          |  32 +-
+ arch/x86/kvm/svm/vmenter.S                      |   2 +-
+ arch/x86/kvm/vmx/nested.c                       | 149 +++++---
+ arch/x86/kvm/vmx/ops.h                          |   4 +
+ arch/x86/kvm/vmx/pmu_intel.c                    |  17 -
+ arch/x86/kvm/vmx/vmenter.S                      |   5 +-
+ arch/x86/kvm/vmx/vmx.c                          | 209 ++++++-----
+ arch/x86/kvm/vmx/vmx.h                          |  12 +-
+ arch/x86/kvm/x86.c                              | 231 +++++++-----
+ arch/x86/kvm/x86.h                              |  34 +-
+ arch/x86/xen/spinlock.c                         |   4 +-
+ include/asm-generic/kvm_types.h                 |   5 +
+ include/linux/kvm_host.h                        |  12 +-
+ include/linux/kvm_types.h                       |  19 +
+ include/uapi/linux/kvm.h                        |   4 +
+ kernel/locking/qspinlock.c                      |   7 +
+ virt/kvm/async_pf.c                             |  16 +-
+ virt/kvm/kvm_main.c                             |  63 ++++
+ 71 files changed, 1633 insertions(+), 1212 deletions(-)
+ create mode 100644 arch/arm64/include/asm/kvm_types.h
+ create mode 100644 arch/mips/include/asm/kvm_types.h
+ delete mode 100644 arch/mips/kvm/00README.txt
+ create mode 100644 arch/x86/include/asm/kvm_types.h
+ rename arch/x86/kvm/{ => mmu}/mmu_audit.c (96%)
+ create mode 100644 arch/x86/kvm/mmu/mmu_internal.h
+ rename arch/x86/kvm/{ => mmu}/mmutrace.h (99%)
+ create mode 100644 include/asm-generic/kvm_types.h
+
+diff --cc arch/x86/kernel/kvm.c
+index d9995931ea18,3f78482d9496..000000000000
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@@ -34,6 -31,6 +34,7 @@@
+  #include <asm/apic.h>
+  #include <asm/apicdef.h>
+  #include <asm/hypervisor.h>
+++#include <asm/idtentry.h>
+  #include <asm/tlb.h>
+  #include <asm/cpuidle_haltpoll.h>
+  
+@@@ -235,13 -232,18 +236,13 @@@ EXPORT_SYMBOL_GPL(kvm_read_and_reset_ap
+  
+  noinstr bool __kvm_handle_async_pf(struct pt_regs *regs, u32 token)
+  {
+ -	u32 reason = kvm_read_and_reset_apf_flags();
+ +	u32 flags = kvm_read_and_reset_apf_flags();
+- 	bool rcu_exit;
++ 	idtentry_state_t state;
+  
+ -	switch (reason) {
+ -	case KVM_PV_REASON_PAGE_NOT_PRESENT:
+ -	case KVM_PV_REASON_PAGE_READY:
+ -		break;
+ -	default:
+ +	if (!flags)
+  		return false;
+ -	}
+  
+- 	rcu_exit = idtentry_enter_cond_rcu(regs);
++ 	state = idtentry_enter(regs);
+  	instrumentation_begin();
+  
+  	/*
+@@@ -266,27 -268,6 +267,27 @@@
+  	return true;
+  }
+  
+ +DEFINE_IDTENTRY_SYSVEC(sysvec_kvm_asyncpf_interrupt)
+ +{
+ +	struct pt_regs *old_regs = set_irq_regs(regs);
+ +	u32 token;
+- 	bool rcu_exit;
+++	idtentry_state_t rcu_exit;
+ +
+- 	rcu_exit = idtentry_enter_cond_rcu(regs);
+++	rcu_exit = idtentry_enter(regs);
+ +
+ +	inc_irq_stat(irq_hv_callback_count);
+ +
+ +	if (__this_cpu_read(apf_reason.enabled)) {
+ +		token = __this_cpu_read(apf_reason.token);
+ +		kvm_async_pf_task_wake(token);
+ +		__this_cpu_write(apf_reason.token, 0);
+ +		wrmsrl(MSR_KVM_ASYNC_PF_ACK, 1);
+ +	}
+ +
+- 	idtentry_exit_cond_rcu(regs, rcu_exit);
+++	idtentry_exit(regs, rcu_exit);
+ +	set_irq_regs(old_regs);
+ +}
+ +
+  static void __init paravirt_ops_setup(void)
+  {
+  	pv_info.name = "KVM";
 
