@@ -2,146 +2,157 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D354AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DA5C2073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57E3C20678
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:15:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="n4L27uZq"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ghKpDqNF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbgHEJPR (ORCPT
+        id S1728774AbgHEJPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 05:15:17 -0400
-Received: from mga17.intel.com ([192.55.52.151]:35414 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728677AbgHEJNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 05:13:47 -0400
-IronPort-SDR: Xt/dDT4sjlwDTtXCuHI9D3UokNoZYNi7IFD6j0xtC1Hr5pa9KxfaUHtF0zDGwwnUmueXLFQcLR
- RdWkqR3f9vcg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="132574549"
-X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
-   d="scan'208";a="132574549"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 02:13:47 -0700
-IronPort-SDR: V6U/5SN4492DaeBg1wOdzZtdesbnd7RdPylFknAMEzKmW9oC318nCOwrpxrhZjjNhCkM1skSRr
- RLRLow1+SNhA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
-   d="scan'208";a="315683191"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmsmga004.fm.intel.com with ESMTP; 05 Aug 2020 02:13:47 -0700
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 5 Aug 2020 02:13:46 -0700
-Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 5 Aug 2020 02:13:46 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.168)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 5 Aug 2020 02:13:46 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lsjhHjtbP/13jAYNyrBGwvNBTUgN0dwpIFVZ0uhtQWvesdSMo0MTmh1si1p5MTmVZlQkXJSTwUsaSSXFGMJ1tXSqErnv+4Ezay4bE4y25u4QuHBEV2iqwml6slkY5VNsKElRtnPXgq+hXoapUCtwbUI7n3+Jn0XIy/2/9TpNonoH2cuKBkguMgoQdc3pJgInfbNHZcaQeVUsVOc6AJau1lWzweM55XAU+e2NHxLWr0rziP4ZaqACPKuFWcautd6wY64znUDSwtOqaNK4tTLQQLbkndsvPuvN15pYmsCfUueOBhW/Bp9Orsb70nkXJfHnTJdtuWU0qEwPQmP4a1t5Tw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CphVXTqFpWsrP4hjpY5R5g+wlI4kCZd5b4ZiUC3z3n4=;
- b=VB2BAm8XhpAddNcFWjgRs1nH/cwmWA+o5kyZzx2dWzGcXuLL6qFq8SPTBTeddriMUk+C/bjqoD3lR0tqH9rWBv0046r7MWIpglxAhgnrsxhnA6EgGT3jLtmDyjEnvikYD5HlEO5qfKEi/yttm1QUgOagSKOOeQxp9h/h7AA7+R5BZYMChBB093d+f20zI2oW9D23F/PR6nSpbc7RNoM+KJxCHoLJoHY+woHHcf+El2Gk15qsoCaB+G3W44pL/0/MQPvV/3cmkaTJ7LQmvN1jp8s1j9jCqVOd/KyZBFZu4hVVPZDDfpclRZ+CUxlXmeyNl9GdEe4+2fSXPHX7zvug9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CphVXTqFpWsrP4hjpY5R5g+wlI4kCZd5b4ZiUC3z3n4=;
- b=n4L27uZqGAu2QD7v33FdeN+mzctCF4NAessxfotugb4U4v6Ber6fT05yZUrelsSgs7DrMHER9vTaEuZYBRDw3Pbd5PVmpDh6lBetDzLJA6/iJxHBoOrxWE6NPxlQmz/PsV8FobwFXNbzrd6DXDi6zbDsr3XrrJpAAZzFXVjGoEU=
-Received: from DM6PR11MB3819.namprd11.prod.outlook.com (2603:10b6:5:13f::31)
- by DM6PR11MB3322.namprd11.prod.outlook.com (2603:10b6:5:55::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.17; Wed, 5 Aug
- 2020 09:13:44 +0000
-Received: from DM6PR11MB3819.namprd11.prod.outlook.com
- ([fe80::c1c1:6930:f17d:a80a]) by DM6PR11MB3819.namprd11.prod.outlook.com
- ([fe80::c1c1:6930:f17d:a80a%4]) with mapi id 15.20.3239.022; Wed, 5 Aug 2020
- 09:13:44 +0000
-From:   "Wu, Hao" <hao.wu@intel.com>
-To:     "Xu, Yilun" <yilun.xu@intel.com>,
-        "mdf@kernel.org" <mdf@kernel.org>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "trix@redhat.com" <trix@redhat.com>,
-        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
-        "Xu, Yilun" <yilun.xu@intel.com>
-Subject: RE: [PATCH v3 1/4] fpga: dfl: change data type of feature id to u16
-Thread-Topic: [PATCH v3 1/4] fpga: dfl: change data type of feature id to u16
-Thread-Index: AQHWai4tuZLWw9qNcUyLNI3Z6SZQ1akpPMlw
-Date:   Wed, 5 Aug 2020 09:13:44 +0000
-Message-ID: <DM6PR11MB3819752BB8E7437CC6E20284854B0@DM6PR11MB3819.namprd11.prod.outlook.com>
-References: <1596524715-18038-1-git-send-email-yilun.xu@intel.com>
- <1596524715-18038-2-git-send-email-yilun.xu@intel.com>
-In-Reply-To: <1596524715-18038-2-git-send-email-yilun.xu@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-authentication-results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.55.46.36]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 12af20be-0f48-402b-dfb4-08d8391fda68
-x-ms-traffictypediagnostic: DM6PR11MB3322:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB33222FAFC396CD226E404B98854B0@DM6PR11MB3322.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KJw33si7QX4nHzVOxXhdZDpqkPzt+A/uf1bbY68M+oZuqXuuZcD75Vpg5TQjhLWeGj6wbjqbzTGw0F+oKSrCKS6SQilCUQVVnM/CR++mTfQwbdZLozdQfVspk4aIWH0I9x33r9wbOnS+wbrRa4n+DaKP577g8gnQIkJkrbmZOLSN1DhS8eH8FINDuCGxRK6KIuVaA+dBbcFCnLqySnrDi/+ao3+Bf9768XMH0Pkl2iOEsiEbl7XkZa9vk0dEQoBaNO5ijpKLJS6ik+8s15T2CnYqY5exZBBPsSTEKqXia9sTwMzDNqf8JMoH6fdP4x08TLO/ivDbAdloma7MXv8ZkQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3819.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(346002)(366004)(136003)(376002)(186003)(55016002)(8936002)(316002)(66946007)(54906003)(52536014)(76116006)(110136005)(66476007)(86362001)(8676002)(71200400001)(33656002)(478600001)(107886003)(64756008)(4326008)(9686003)(5660300002)(26005)(66446008)(66556008)(2906002)(6506007)(4744005)(7696005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: OMvMLigKNAWf3AM1FX+vwqElTb0Ez00QAmxcDn96XfBIJbUnO0vSbujkjU/10zFzqPgjdpKZKvibCgF0c5Li8Jk9DsDWiKb8bBwSVCeZab8SgIt28HROIzuR1wNHIJenbgdcAJIv78uSwAIa4NSG4q4OZLndVnAZrpHBmPnEiTh/PSY4WkAZWC8KbS4gmgpCI8j1nJOFfHCb5+GygQpjJVKU7dEMrOGakf7gDPJF0HI5sl8ananqVUI2MzwbG/pN0QKFcEGzQ9hSh8vHC/R9VsPdtbASRZzbcoDosf6Sm0CG6sTMt+EkfzEEI0d2dkjteqGyysmRnLl5VY3N93uwyp6Dis8d7V9t/gHxIp1nSmNCklRAa/uDQJKgG3hrBI6JVQTeYWe6i1Q6d6kp8nXLVPHucSIHj7qnox8qjLpsfHve5Jy32v9sCScf/VU/6SUbJ7r1x6fCCldgH9erlVOyVxvz7iKHz2RtiYWEpK4BBkbuqRmWp76Z/tXDHfISmExc9mjDk9LQqPZ8Bm0KJBnxLMSUIRKZjyM7xg4Uyp03qmklZrvTpYi/BrHl5gNk+C8cV7PVaVew/ZMgge3oZWQe3TASStLuI+ecxQ2Frd+1n+icJ6u+VV05f62L6egjJNU9umvfOXE5R4iG8PLGeVGsmg==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 5 Aug 2020 05:15:24 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:5049 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728597AbgHEJNP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 05:13:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1596618794; x=1628154794;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=O/JSVBsGdGfhCrhmMQawH7Ohbd7NM7BoNDWe9KkOdh0=;
+  b=ghKpDqNFQgRtSxt9UA3+oiWCV/hNtaM3lN8IB6mGS1dml6PccwAYlBmw
+   pipE+ZJZWHpNaHrZCwoW7ZcP+pg6WAvy3/cmcFayEtY1LT8vrUKsrzlcx
+   R9PUxZ8ddZmiOoBBQ6RTwdJhHX2oDC8L27eWX8K4tHFN+d8e5OfmmPmV/
+   A=;
+IronPort-SDR: mbw9wYdPinwL3iYKAiYGgmP9KUAmuO371IJ0+BW14473l+hwVF5GYNLhlo/w2BRuG69Z1Kswpk
+ jB/+z9qQ09dw==
+X-IronPort-AV: E=Sophos;i="5.75,436,1589241600"; 
+   d="scan'208";a="65723247"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-e7be2041.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 05 Aug 2020 09:13:12 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-e7be2041.us-west-2.amazon.com (Postfix) with ESMTPS id 33939A1DF8;
+        Wed,  5 Aug 2020 09:13:11 +0000 (UTC)
+Received: from EX13D16EUB003.ant.amazon.com (10.43.166.99) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 5 Aug 2020 09:13:11 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.192) by
+ EX13D16EUB003.ant.amazon.com (10.43.166.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 5 Aug 2020 09:13:01 +0000
+From:   Andra Paraschiv <andraprs@amazon.com>
+To:     linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        "David Duncan" <davdunc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        "David Woodhouse" <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        "Karen Noel" <knoel@redhat.com>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Stefan Hajnoczi" <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        "Uwe Dannowski" <uwed@amazon.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvm <kvm@vger.kernel.org>,
+        ne-devel-upstream <ne-devel-upstream@amazon.com>,
+        Andra Paraschiv <andraprs@amazon.com>
+Subject: [PATCH v6 15/18] nitro_enclaves: Add Makefile for the Nitro Enclaves driver
+Date:   Wed, 5 Aug 2020 12:10:14 +0300
+Message-ID: <20200805091017.86203-16-andraprs@amazon.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+In-Reply-To: <20200805091017.86203-1-andraprs@amazon.com>
+References: <20200805091017.86203-1-andraprs@amazon.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3819.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12af20be-0f48-402b-dfb4-08d8391fda68
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2020 09:13:44.2501
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /oQ2X+GnLKLBx0tYunSqKcvBpCgMJ7FJ9+m/AbbrfcGE1dOBfvj8mG3SPF81LThDRQi9K49Eeh8U/KqGg48BTw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3322
-X-OriginatorOrg: intel.com
+X-Originating-IP: [10.43.160.192]
+X-ClientProxiedBy: EX13D19UWA004.ant.amazon.com (10.43.160.102) To
+ EX13D16EUB003.ant.amazon.com (10.43.166.99)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: [PATCH v3 1/4] fpga: dfl: change data type of feature id to u16
->=20
-> The feature id is stored in a 12 bit field in DFH. So a u16 variable is
-> enough for feature id.
->=20
-> This patch changes all feature id related places to fit u16.
->=20
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> Reviewed-by: Tom Rix <trix@redhat.com>
+Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+Reviewed-by: Alexander Graf <graf@amazon.com>
+---
+Changelog
 
-Acked-by: Wu Hao <hao.wu@intel.com>
+v5 -> v6
 
-Thanks
-Hao
+* No changes.
+
+v4 -> v5
+
+* No changes.
+
+v3 -> v4
+
+* No changes.
+
+v2 -> v3
+
+* Remove the GPL additional wording as SPDX-License-Identifier is
+  already in place.
+
+v1 -> v2
+
+* Update path to Makefile to match the drivers/virt/nitro_enclaves
+  directory.
+---
+ drivers/virt/Makefile                |  2 ++
+ drivers/virt/nitro_enclaves/Makefile | 11 +++++++++++
+ 2 files changed, 13 insertions(+)
+ create mode 100644 drivers/virt/nitro_enclaves/Makefile
+
+diff --git a/drivers/virt/Makefile b/drivers/virt/Makefile
+index fd331247c27a..f28425ce4b39 100644
+--- a/drivers/virt/Makefile
++++ b/drivers/virt/Makefile
+@@ -5,3 +5,5 @@
+ 
+ obj-$(CONFIG_FSL_HV_MANAGER)	+= fsl_hypervisor.o
+ obj-y				+= vboxguest/
++
++obj-$(CONFIG_NITRO_ENCLAVES)	+= nitro_enclaves/
+diff --git a/drivers/virt/nitro_enclaves/Makefile b/drivers/virt/nitro_enclaves/Makefile
+new file mode 100644
+index 000000000000..e9f4fcd1591e
+--- /dev/null
++++ b/drivers/virt/nitro_enclaves/Makefile
+@@ -0,0 +1,11 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
++
++# Enclave lifetime management support for Nitro Enclaves (NE).
++
++obj-$(CONFIG_NITRO_ENCLAVES) += nitro_enclaves.o
++
++nitro_enclaves-y := ne_pci_dev.o ne_misc_dev.o
++
++ccflags-y += -Wall
+-- 
+2.20.1 (Apple Git-117)
+
+
+
+
+Amazon Development Center (Romania) S.R.L. registered office: 27A Sf. Lazar Street, UBC5, floor 2, Iasi, Iasi County, 700045, Romania. Registered in Romania. Registration number J22/2621/2005.
 
