@@ -2,120 +2,120 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CBDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BBAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D76312075A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:34:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596620045;
-	bh=+PVMkHow/1cTDpTZAm0fNUZhkXhy8Y97366o6wkD/AE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h/J7MJbrcz1rddrW0CutogOV+YpKLlbrG8n/Dgk0axT2bbx3IK1uMIzyV2GDoZBi9
-	 8WFkthnWLxIvohGK9MGS5Z3MndNhQ7hgmaC8ige6miFtgy8sSOD4JcbcLc0ihGMlSA
-	 pk1/tRtghHASeC1vRrQi1VFM4lSqTGB+kvcObSwc=
+	by mail.kernel.org (Postfix) with ESMTP id C53712075A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:34:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oenfg43n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbgHEJeA (ORCPT
+        id S1728345AbgHEJeW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 05:34:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725868AbgHEJdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 05:33:50 -0400
-Received: from localhost (router.4pisysteme.de [80.79.225.122])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DE4D2075A;
-        Wed,  5 Aug 2020 09:33:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596620029;
-        bh=+PVMkHow/1cTDpTZAm0fNUZhkXhy8Y97366o6wkD/AE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uld5+n9kR22gnZeVca/pluvROt16z6AmOtya7TVb6MjC7DU5KxrpqMT5M1WEYnFsq
-         ERVt39kL2w74Cdn32KGV8TUM57jhsOk3IHnmM0RoSWp0WfXUIS66PpmdYFQKf1YV4g
-         HQHBSj12KVFETrEIr67Rsha8OcMn0h5yb365wLbg=
-Date:   Wed, 5 Aug 2020 11:33:47 +0200
-From:   wsa@kernel.org
-To:     Jeffrey Lin <jeffrey@icurse.nl>
-Cc:     jdelvare@suse.com, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: i801: Register lis3lv02d I2C device on Dell
- Latitude 5480
-Message-ID: <20200805093347.GM1229@kunai>
-Mail-Followup-To: wsa@kernel.org, Jeffrey Lin <jeffrey@icurse.nl>,
-        jdelvare@suse.com, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200616234130.814499-1-jeffrey@icurse.nl>
+        Wed, 5 Aug 2020 05:34:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728119AbgHEJdv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 05:33:51 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84A98C06174A
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 02:33:50 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id q13so15379957vsn.9
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 02:33:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Zv3njctJm6+JcXZYqCty4/Sd4dBn0kL3k7iTzjdDtfw=;
+        b=oenfg43n0bbPqzDbC7M2gy1BFz6L4j5HVCwHLtU/Pd/u1lL9Q8XQe9N2tV7UufJLBo
+         MATyUl4G6KT941Gq5GWK1IRQAUrFB+lObmZPz6DsWSFZIk98PEkOpyS44op89AjF0Yhc
+         /nCPtftT2HFYYw1+IL9n60Qm0Rse1uvZQdFsSt1qycaGxhSvOLb2GrZKd3IQdGpnbER7
+         55M2mlDFMUTcf3/1WW8TpGa8ffoPYhK6NHu8G+w75fYXZQNHZYmxpY7ENGI8aJd1IqbQ
+         COcN6TjLK7eeGurWWCYgSthmkkpR2GYKwx/B6sEXmj3k30YgV+xNiFNNEZmqWstxYnmp
+         HSoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Zv3njctJm6+JcXZYqCty4/Sd4dBn0kL3k7iTzjdDtfw=;
+        b=Ocn/ZC+jAHuCthm+KXQ0Q7sX9FHQ2lYiY5AciAVVgg1DmA6Vqa3dG1+CDzktBrRbS4
+         EXu9HuIGUkHoMXfS9o85Vyvn/AqcQlQJeUuYtrBE4jO6D9VCKV+rQw3ktycoXZUBOWAx
+         cFyCp9aWZOmsoKZYeCBWPLeQmQfFbG2ka6Fhm6G5y6kau7hT3A3CbXdjpKZ2IqhqHeTe
+         y+2eUOLwhJ3WaEHlB4PZHs8s3CNV8KwNygWqWoiikGx/fM4oXVMCHJNcWeX51Z1qdxQk
+         TjG6fWFB1VfAQVs5iKSIpnh3CznlgrY319Et7ceVTerrtz+gveuZlVXxT/xxOIs0ZFUN
+         0STw==
+X-Gm-Message-State: AOAM533gNTjiYRNQYiWhRYDaaprxKMgIgFB0ZWYLQuskt6BPmpVIpR2w
+        MUK/r2cOsnSStyI/SMaSGe3HFnwjX3o=
+X-Google-Smtp-Source: ABdhPJz9DetEpr+JggdbpwnCU/0O5SB8cvNYe/SawqCatmijrG/yrCcsNGtUD81fBEMCDTWgO9nAeA==
+X-Received: by 2002:a67:e08d:: with SMTP id f13mr1225723vsl.84.1596620029433;
+        Wed, 05 Aug 2020 02:33:49 -0700 (PDT)
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com. [209.85.217.41])
+        by smtp.gmail.com with ESMTPSA id m62sm232626vsd.21.2020.08.05.02.33.48
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Aug 2020 02:33:48 -0700 (PDT)
+Received: by mail-vs1-f41.google.com with SMTP id p8so14849556vsm.12
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 02:33:48 -0700 (PDT)
+X-Received: by 2002:a05:6102:517:: with SMTP id l23mr1162285vsa.114.1596620027960;
+ Wed, 05 Aug 2020 02:33:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="37nyS7qXrnu4wN2o"
-Content-Disposition: inline
-In-Reply-To: <20200616234130.814499-1-jeffrey@icurse.nl>
+References: <20200802195046.402539-1-xie.he.0141@gmail.com>
+ <d02996f90f64d55d5c5e349560bfde46@dev.tdt.de> <CAJht_ENuzbyYesYtP0703xgRwRBTY9SySe3oXLEtkyL_H_yTSQ@mail.gmail.com>
+ <9975370f14b8ddeafc8dec7bc6c0878a@dev.tdt.de> <CAJht_EMf5i1qykEP6sZjLBcPAN9u9oQoZ34dfJ68Z5XL6rKuDQ@mail.gmail.com>
+In-Reply-To: <CAJht_EMf5i1qykEP6sZjLBcPAN9u9oQoZ34dfJ68Z5XL6rKuDQ@mail.gmail.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Wed, 5 Aug 2020 11:33:10 +0200
+X-Gmail-Original-Message-ID: <CA+FuTSf2r1eFoFHov-cGDG=5iLAUGt+Jv7Aok7EFrVo8UqkJog@mail.gmail.com>
+Message-ID: <CA+FuTSf2r1eFoFHov-cGDG=5iLAUGt+Jv7Aok7EFrVo8UqkJog@mail.gmail.com>
+Subject: Re: [net v3] drivers/net/wan/lapbether: Use needed_headroom instead
+ of hard_header_len
+To:     Xie He <xie.he.0141@gmail.com>
+Cc:     Martin Schiller <ms@dev.tdt.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux X25 <linux-x25@vger.kernel.org>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Brian Norris <briannorris@chromium.org>,
+        netdev-owner@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 5, 2020 at 10:57 AM Xie He <xie.he.0141@gmail.com> wrote:
+>
+> On Tue, Aug 4, 2020 at 10:23 PM Martin Schiller <ms@dev.tdt.de> wrote:
+> >
+> > > Adding skb_cow before these skb_push calls would indeed help
+> > > preventing kernel panics, but that might not be the essential issue
+> > > here, and it might also prevent us from discovering the real issue. (I
+> > > guess this is also the reason skb_cow is not included in skb_push
+> > > itself.)
+> >
+> > Well, you are right that the panic is "useful" to discover the real
+> > problem. But on the other hand, if it is possible to prevent a panic, I
+> > think we should do so. Maybe with adding a warning, when skb_cow() needs
+> > to reallocate memory.
+> >
+> > But this is getting a little bit off topic. For this patch I can say:
+> >
+> > LGTM.
+> >
+> > Reviewed-by: Martin Schiller <ms@dev.tdt.de>
+>
+> Thank you so much!
+>
+> Yes, it might be better to use skb_cow with a warning so that we can
+> prevent kernel panic while still being able to discover the problem.
 
---37nyS7qXrnu4wN2o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jun 16, 2020 at 07:41:30PM -0400, Jeffrey Lin wrote:
-> Value of /sys/devices/platform/lis3lv02d/position when
->     Horizontal:     (36,-108,-1152)
->     Left elevated:  (-432,-126,-1062)
->     Front elevated: (36,594,-936)
->     Upside down:    (-126,-252,1098)
->=20
-> Signed-off-by: Jeffrey Lin <jeffrey@icurse.nl>
-
-Jean?
-
-> ---
->  drivers/i2c/busses/i2c-i801.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-> index fea644921a76..d7c802e20ae6 100644
-> --- a/drivers/i2c/busses/i2c-i801.c
-> +++ b/drivers/i2c/busses/i2c-i801.c
-> @@ -1268,6 +1268,7 @@ static const struct {
->  	/*
->  	 * Additional individual entries were added after verification.
->  	 */
-> +	{ "Latitude 5480",      0x29 },
->  	{ "Vostro V131",        0x1d },
->  };
-> =20
-> --=20
-> 2.27.0
->=20
-
---37nyS7qXrnu4wN2o
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8qfPsACgkQFA3kzBSg
-KbYSkw//eQnM9kVffTP2sjG4jmvlxf+5TFmy//rhpCAaIOa/hBbOh2WmAsQvkcYq
-fvIDnl+RnCVuydZX1IKfIZWGaALJ2s/jNsXv8GwQMzsrEjD2HC9I2vN/ivn3le8K
-IpAcJUHylKUNV+1XeQZi+VtXUVkfGqLC88YV5Vz+Z9+peDvVFT9Vi8anDGOsnKUK
-gwvXAQndn0RHTyF6WdzZKIc4RhPX61EKZep66xScB1FXrxLgEchwkwStg9ZG5+Te
-80WmFMaEKzTPEaNiEWYsaIxHvEbF4Nkw8xHEu7I/nhP7+pzGHjAcBTlEOh4piowB
-e5xZZBVD8XpIMc3WJ5eoCNIxQSzDryQg4araqH/iWktW1lSJF2FnzHNTNDPTKjrs
-uCATpzPjDU9qODctW5EBCopH0aM00YWZGQOoWAT+SsvuRTcNNls3DkO5vNXe1okN
-s59hrS/atRFc1FVOs7ySPWAA1Kr8FApRcApE/Sjq6odkll5N9skVnNf7LOHbs907
-0hpr/4L6AQkF55oKRX/e5hJ7mIcsVbbKHRGO+1r1+KUW9UYxWI++dEfHsjbTz34w
-Rle+tp+Hw6T0S2zLuvhKYfAr+ypGb2NEwDNMnrgn0kIzRWGULQT5vhmMNvZUI8LF
-hYG0qCTuTCrewcIRAcq/FoYOUq9ybvPaIWIYAQSU9L0d6cA9yMQ=
-=ckP+
------END PGP SIGNATURE-----
-
---37nyS7qXrnu4wN2o--
+Let's not add defenses to work around possibly buggy code. In the long
+run that reduces code quality. Instead, fix bugs at the source.
