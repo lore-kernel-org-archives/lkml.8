@@ -2,129 +2,188 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAEEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA671C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3122322D2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90EBB22D00
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:59:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C/7XQAnb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="htbIgM+V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728296AbgHEQ7h (ORCPT
+        id S1728381AbgHEQ72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 12:59:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35232 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728363AbgHEQ56 (ORCPT
+        Wed, 5 Aug 2020 12:59:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728338AbgHEQ4b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:57:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596646676;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zyd3PzoPVBU8umiKYNKDpmG6iIok/EZRtyPBBz7RY7k=;
-        b=C/7XQAnb6Xty+oPzdAfcYxE1R3XR8clOLe85MFIlribPQqMpck4qBTlsA4gAE9ZCoZ5gLD
-        HANA7B9PdNEkmOK8trkmD/cw1JyUGK7qnw4sxaIXAxniPjgKJRRv9xKZ2z10VoP07/XID9
-        v7XW3Ae24U9O2DCBHKe9GmWnMb0CHqk=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-412-GfHkMBVBPhilVqL1dTtTXw-1; Wed, 05 Aug 2020 09:26:54 -0400
-X-MC-Unique: GfHkMBVBPhilVqL1dTtTXw-1
-Received: by mail-wr1-f72.google.com with SMTP id e14so10102035wrr.7
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:26:52 -0700 (PDT)
+        Wed, 5 Aug 2020 12:56:31 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6361AC06138E;
+        Wed,  5 Aug 2020 09:47:45 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id i10so13701615ljn.2;
+        Wed, 05 Aug 2020 09:47:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jkOdBdO08EcdjYNQvO6hnKQ7g8Bc3xOIvWMLuyvy5vA=;
+        b=htbIgM+VsC4cNSRq7tGLBRyqjtHiPvTmTR/c9jJqrTUIGns5efKfFOyvdqVQis08Nf
+         MAxixMW4yT64TM8zUrkfg7lr7Flo+2N6oJ8mZF2SRPDna/pnl1WKeluYOGze94SLRNuU
+         52n8xP99cI/MUHiyub/sY+2safSk2+sc22P0KhJF0KvW0j8S6+hq5Jk57jF6SavUrMsg
+         tKIRcmP4UiIJ48J9Gbzq8a0iEnZ6bv+5UhusUDCiDmjmjN9/n1Ze84cMUmw3UxqRHRz8
+         luqZsrk/5EDDxaSwBc+FFIUwbD91Kpu0YE7/S2Pim9sUlZyGQhuecU9RW6rdoo5O5aH9
+         qfgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zyd3PzoPVBU8umiKYNKDpmG6iIok/EZRtyPBBz7RY7k=;
-        b=ZtM7+pXY79vCLZSDX0L4XLTbgqKrleE13fhvwh15YBdFhDc9seOqcE6UBdw6UbI1JQ
-         zGMyVejyY4MYySQPs90cZI3gO6gtSfril78mlV3hvWl7mzE7+yCZjsZaLucBU00ATE27
-         lOq8t9iwXHeb9wZJ8ckeAgs56cUrz0QAk0ZpSStrkSR2fcPBSQL0QoXhlQ5zvJVOvJWk
-         MqOKmMDDWODkUP8MkZdR6TN44xqbow6qVSvgx4HmRd7Tcu9wzQhwXVerdECCM58C91GN
-         NODFi4gYuZgC8wz7oMHpiUr+IyW/2bYhkYOPhSV2VLYCZo3vW/L9dLIt4IkSDOUxfLZ2
-         /tYA==
-X-Gm-Message-State: AOAM5326jPxTjjgUuCdwgcYGyBHwM8xPX392LupcmZ7zVYASgtQ7hsha
-        0IcjQlqddsQIda9w/oi4nDfpNvPRVzs2pssAZ8KpqtxxDuou5SqdUPq8sx3SZxAcc9yefafSJF3
-        AxTeJfP/WFDPpClfMJmHurQOO
-X-Received: by 2002:a1c:1b93:: with SMTP id b141mr3365746wmb.150.1596634011543;
-        Wed, 05 Aug 2020 06:26:51 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwwZAH5oygZ0ZUZzuE41OHF5cCSmEBQ89jkVd4RBBHCf1yH6T/rbTULK4FaN2pLJbGTzixbnQ==
-X-Received: by 2002:a1c:1b93:: with SMTP id b141mr3365734wmb.150.1596634011358;
-        Wed, 05 Aug 2020 06:26:51 -0700 (PDT)
-Received: from redhat.com (bzq-79-178-123-8.red.bezeqint.net. [79.178.123.8])
-        by smtp.gmail.com with ESMTPSA id g18sm2877887wru.27.2020.08.05.06.26.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 06:26:50 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 09:26:48 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v2 14/24] virtio_net: correct tags for config space fields
-Message-ID: <20200805092621-mutt-send-email-mst@kernel.org>
-References: <20200803205814.540410-1-mst@redhat.com>
- <20200803205814.540410-15-mst@redhat.com>
- <20200804164444.5174452d.cohuck@redhat.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jkOdBdO08EcdjYNQvO6hnKQ7g8Bc3xOIvWMLuyvy5vA=;
+        b=HxsEM3lNTwdJMIhqFM/+uqG+Biessn6rtR/ccSeaiBBtNTKrP3os8Tk1lWLzuh9rBH
+         l/7C8EJk3245m/cBh6nZyt57y0hNTsWwqGHwvY6FEqYnif2IKmlU2LQqxCoHe1qlYHxO
+         lDpAtF+Pe9y+4uY0mFIuQCsJDqWfRd4tC5PUj416KtUSaq8UtN5FqxEDBfNsPnWA4pRa
+         /wKNQM+7zdU77i+0c/Eh+NT2LsttLqRPzmlAAY25JvmqOj7IUixogtp/2/xcjMzts2D8
+         lc8XCI75w3PXcdB6XZ/alvQKayLluIL0k8q44tvV4HvtK3hVnwrJN4QagFjlccP0j0T+
+         uDYg==
+X-Gm-Message-State: AOAM532TcQgBwagWJdx2iW0CqVcMMwJ0e5GpZSJyofTr7cwAyjFewhBV
+        AClHIQWSw6SwhJYMwiiPYVzMhVuq
+X-Google-Smtp-Source: ABdhPJz+wm2diUC/Yki4O/lySEHvpWaqyFiuJofLGCzO5ByOTvAiWxyGNmHmtvVOsOoK2X9E673njw==
+X-Received: by 2002:a2e:9d1a:: with SMTP id t26mr974947lji.297.1596646059174;
+        Wed, 05 Aug 2020 09:47:39 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-41-50.dynamic.spd-mgts.ru. [94.29.41.50])
+        by smtp.googlemail.com with ESMTPSA id i20sm1173416ljb.90.2020.08.05.09.47.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Aug 2020 09:47:38 -0700 (PDT)
+Subject: Re: [PATCH v8 08/10] gpu: host1x: mipi: Keep MIPI clock enabled till
+ calibration is done
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     jonathanh@nvidia.com, frankc@nvidia.com, hverkuil@xs4all.nl,
+        sakari.ailus@iki.fi, robh+dt@kernel.org, helen.koike@collabora.com,
+        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1596469346-937-1-git-send-email-skomatineni@nvidia.com>
+ <1596469346-937-9-git-send-email-skomatineni@nvidia.com>
+ <20200805134600.GA3351349@ulmo>
+ <103efe31-1abc-54f2-6004-490d7bb1b61a@gmail.com>
+ <dcd58ae7-58ed-11d1-0e10-7f522b651b30@gmail.com>
+ <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <ed80bf2f-213f-286a-59b2-fc85e4181b3d@gmail.com>
+Date:   Wed, 5 Aug 2020 19:47:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200804164444.5174452d.cohuck@redhat.com>
+In-Reply-To: <addb92e5-7c7a-6fba-117d-c7880b2d4597@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 04:44:44PM +0200, Cornelia Huck wrote:
-> On Mon, 3 Aug 2020 16:59:37 -0400
-> "Michael S. Tsirkin" <mst@redhat.com> wrote:
+05.08.2020 19:33, Sowjanya Komatineni пишет:
 > 
-> > Tag config space fields as having virtio endian-ness.
-> > 
-> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > ---
-> >  include/uapi/linux/virtio_net.h | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/include/uapi/linux/virtio_net.h b/include/uapi/linux/virtio_net.h
-> > index 19d23e5baa4e..27d996f29dd1 100644
-> > --- a/include/uapi/linux/virtio_net.h
-> > +++ b/include/uapi/linux/virtio_net.h
-> > @@ -87,19 +87,19 @@ struct virtio_net_config {
-> >  	/* The config defining mac address (if VIRTIO_NET_F_MAC) */
-> >  	__u8 mac[ETH_ALEN];
-> >  	/* See VIRTIO_NET_F_STATUS and VIRTIO_NET_S_* above */
-> > -	__u16 status;
-> > +	__virtio16 status;
-> >  	/* Maximum number of each of transmit and receive queues;
-> >  	 * see VIRTIO_NET_F_MQ and VIRTIO_NET_CTRL_MQ.
-> >  	 * Legal values are between 1 and 0x8000
-> >  	 */
-> > -	__u16 max_virtqueue_pairs;
-> > +	__virtio16 max_virtqueue_pairs;
-> >  	/* Default maximum transmit unit advice */
-> > -	__u16 mtu;
-> > +	__virtio16 mtu;
-> >  	/*
-> >  	 * speed, in units of 1Mb. All values 0 to INT_MAX are legal.
-> >  	 * Any other value stands for unknown.
-> >  	 */
-> > -	__u32 speed;
-> > +	__virtio32 speed;
+> On 8/5/20 7:19 AM, Dmitry Osipenko wrote:
+>> 05.08.2020 17:05, Dmitry Osipenko пишет:
+>>> 05.08.2020 16:46, Thierry Reding пишет:
+>>>> On Mon, Aug 03, 2020 at 08:42:24AM -0700, Sowjanya Komatineni wrote:
+>>>>> With the split of MIPI calibration into tegra_mipi_calibrate() and
+>>>>> tegra_mipi_wait(), MIPI clock is not kept enabled till the calibration
+>>>>> is done.
+>>>>>
+>>>>> So, this patch skips disabling MIPI clock after triggering start of
+>>>>> calibration and disables it only after waiting for done status from
+>>>>> the calibration logic.
+>>>>>
+>>>>> This patch renames tegra_mipi_calibrate() as
+>>>>> tegra_mipi_start_calibration()
+>>>>> and tegra_mipi_wait() as tegra_mipi_finish_calibration() to be inline
+>>>>> with their usage.
+>>>>>
+>>>>> As MIPI clock is left enabled and in case of any failures with CSI
+>>>>> input
+>>>>> streaming tegra_mipi_finish_calibration() will not get invoked.
+>>>>> So added new API tegra_mipi_cancel_calibration() which disables
+>>>>> MIPI clock
+>>>>> and consumer drivers can call this in such cases.
+>>>>>
+>>>>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>> ---
+>>>>>   drivers/gpu/drm/tegra/dsi.c |  4 ++--
+>>>>>   drivers/gpu/host1x/mipi.c   | 19 ++++++++++---------
+>>>>>   include/linux/host1x.h      |  5 +++--
+>>>>>   3 files changed, 15 insertions(+), 13 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+>>>>> index 3820e8d..a7864e9 100644
+>>>>> --- a/drivers/gpu/drm/tegra/dsi.c
+>>>>> +++ b/drivers/gpu/drm/tegra/dsi.c
+>>>>> @@ -694,11 +694,11 @@ static int tegra_dsi_pad_calibrate(struct
+>>>>> tegra_dsi *dsi)
+>>>>>           DSI_PAD_PREEMP_PD(0x03) | DSI_PAD_PREEMP_PU(0x3);
+>>>>>       tegra_dsi_writel(dsi, value, DSI_PAD_CONTROL_3);
+>>>>>   -    err = tegra_mipi_calibrate(dsi->mipi);
+>>>>> +    err = tegra_mipi_start_calibration(dsi->mipi);
+>>>>>       if (err < 0)
+>>>>>           return err;
+>>>>>   -    return tegra_mipi_wait(dsi->mipi);
+>>>>> +    return tegra_mipi_finish_calibration(dsi->mipi);
+>>>>>   }
+>>>>>     static void tegra_dsi_set_timeout(struct tegra_dsi *dsi,
+>>>>> unsigned long bclk,
+>>>>> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
+>>>>> index e606464..b15ab6e 100644
+>>>>> --- a/drivers/gpu/host1x/mipi.c
+>>>>> +++ b/drivers/gpu/host1x/mipi.c
+>>>>> @@ -293,17 +293,19 @@ int tegra_mipi_disable(struct
+>>>>> tegra_mipi_device *dev)
+>>>>>   }
+>>>>>   EXPORT_SYMBOL(tegra_mipi_disable);
+>>>>>   -int tegra_mipi_wait(struct tegra_mipi_device *device)
+>>>>> +void tegra_mipi_cancel_calibration(struct tegra_mipi_device *device)
+>>>>> +{
+>>>>> +    clk_disable(device->mipi->clk);
+>>>> Do we need to do anything with the MIPI_CAL_CTRL and MIPI_CAL_STATUS
+>>>> registers here? We don't clear the START bit in the former when the
+>>>> calibration has successfully finished, but I suspect that's because
+>>>> the bit is self-clearing. But I wonder if we still need to clear it
+>>>> upon cancellation to make sure the calibration does indeed stop.
+>>> Apparently there is no way to explicitly stop calibration other than to
+>>> reset MIPI calibration block, but Sowjanya says this is unnecessary.
+>>>
+>>> Perhaps having a fixed delay before disabling clock could be enough to
+>>> ensure that calibration is stopped before the clock is disabled?
+>>>
+>> Actually, there is a MIPI_CAL_ACTIVE bit in the status register. Maybe
+>> it needs to be polled until it's unset?
 > 
-> Hm... VIRTIO_NET_F_SPEED_DUPLEX can only be negotiated if VERSION_1 has
-> also been negotiated; I think this should be __le32?
+> Confirmed with HW design team during this patch update.
+> 
+> SW does not need to clear START bit and only write 1 takes effect to
+> that bit.
+> 
+> Also, no need to have delay or do any other register settings unclear as
+> its FSM and there's nothing to get stuck.
+> 
+> Also it goes thru small finite set of codes and by the time sensor
+> programming happens for enabling streaming FSM will finish its
+> calibration sequence much early and it will only wait for pads LP-11.
+> 
+> So, during cancel we only need disable MIPI clock.
+> 
 
-OK APIs for this are in a separate patch.
-I'll add conversion as a patch on top.
-
-
-> >  	/*
-> >  	 * 0x00 - half duplex
-> >  	 * 0x01 - full duplex
-
+But there is no guarantee that cancel_calibration() couldn't be invoked
+in the middle of the calibration process, hence FSM could freeze in an
+intermediate state if it's running on the disabled MIPI clock, this
+doesn't sound good.
