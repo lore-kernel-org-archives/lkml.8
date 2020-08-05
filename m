@@ -2,103 +2,183 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FF0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43761C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 350C522CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:08:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596665329;
-	bh=ZsUFr7FgM2XpxfbHCeXrW7JvL+WBNx4Wft3trEEd5RU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MCHETSdQHbgFpJJOvGyAhq6hgaC/wj+ZIONRKqPp6znarxEOaos2CAWkluU76TAPB
-	 QFgQI8pbpWr4LD32cvVl8hZsEpAmiEiREDM3tYQ3Swt75PddNyT9iqWjTgvAW7lu8o
-	 fXRhj2hZNxcJCbBnc398UxXwKhz+m4Th9ERgMvpE=
+	by mail.kernel.org (Postfix) with ESMTP id 1CFB620786
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:09:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="soXwZXHh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726175AbgHEWIr (ORCPT
+        id S1726536AbgHEWJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 18:08:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbgHEWIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 18:08:47 -0400
-Received: from localhost (router.4pisysteme.de [80.79.225.122])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0461E2250E;
-        Wed,  5 Aug 2020 22:08:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596665326;
-        bh=ZsUFr7FgM2XpxfbHCeXrW7JvL+WBNx4Wft3trEEd5RU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UeLnj6w40Jhp8B6cMdZcEEyuXbQtdP0eCmymnX0/SZfKSKd0zowpWbUMFZrSCeBzj
-         Z2skU+VDD/EiTSQAdEUDOXb9o8QCXVMZoUO2remy9zqeQ/WW9LyEDlhxIVZcfwhRnL
-         T0wh1MrA1+dtwZAnYgy5QqYFC/el1me+OQJbf7H8=
-Date:   Thu, 6 Aug 2020 00:08:42 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linuxppc-dev@lists.ozlabs.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] macintosh: windfarm: fix spelling mistake "detatch" ->
- "detach"
-Message-ID: <20200805220842.GC2182@kunai>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Colin King <colin.king@canonical.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linuxppc-dev@lists.ozlabs.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200805104337.16104-1-colin.king@canonical.com>
+        Wed, 5 Aug 2020 18:09:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbgHEWJU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 18:09:20 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D3C3C061575;
+        Wed,  5 Aug 2020 15:09:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=SBHrjyLZMwHHEwy1XJ0fg8T/SoluE+ttqZKDd2I3toA=; b=soXwZXHhjkb4m97fY0jjWEy2L
+        zwf1lqPIm3S4bC1kdSkIu1dWH2U9mBJUsdTLE8NzeIoTzUPSiYtQV/6D8K2o2kmkr1Q9TyLZOL1Cl
+        Jl87to4yZcvFMu+ByfmHUdCtz2Y94u7C3jPbGHN4dfuQOQZdVq4vHouzcyZ6jqL0CzgAWK/dt1N6H
+        6s2f+jDLLA5QfHonrKHQmnWlqTZdQ53Bc6cLgLEc8zU/WmELdw7sMAFaA+ZpOHgiJoX5QNX6LAwwT
+        RRBhqCOrsSouqf50jVavsZtbjXEZqkFVn7wQ2wf8vd7PkEIJh6SJ0pe1L/880bsEXTWc29elYoQyT
+        a6eJZCbXg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:48806)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1k3Rb4-0003y7-BF; Wed, 05 Aug 2020 23:09:18 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1k3Rb3-0005Ut-QK; Wed, 05 Aug 2020 23:09:17 +0100
+Date:   Wed, 5 Aug 2020 23:09:17 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Joe Perches <joe@perches.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: update phylink/sfp keyword matching
+Message-ID: <20200805220917.GZ1551@shell.armlinux.org.uk>
+References: <E1k3KUx-0000da-In@rmk-PC.armlinux.org.uk>
+ <CAHk-=whbLwN9GEVVt=7eYhPYk0t0Wh1xeuNEDD+xmQxBFjAQJA@mail.gmail.com>
+ <20200805182250.GX1551@shell.armlinux.org.uk>
+ <957f48692a2f0bc4df2d83068073c4822da30eef.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Fig2xvG2VGoz8o/s"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200805104337.16104-1-colin.king@canonical.com>
+In-Reply-To: <957f48692a2f0bc4df2d83068073c4822da30eef.camel@perches.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 05, 2020 at 11:47:38AM -0700, Joe Perches wrote:
+> On Wed, 2020-08-05 at 19:22 +0100, Russell King - ARM Linux admin wrote:
+> > On Wed, Aug 05, 2020 at 11:11:28AM -0700, Linus Torvalds wrote:
+> > > On Wed, Aug 5, 2020 at 7:34 AM Russell King <rmk+kernel@armlinux.org.uk> wrote:
+> > > > Is this something you're willing to merge directly please?
+> > > 
+> > > Done.
+> > > 
+> > > That said:
+> > > 
+> > > > -K:     phylink
+> > > > +K:     phylink\.h|struct\s+phylink|\.phylink|>phylink_|phylink_(autoneg|clear|connect|create|destroy|disconnect|ethtool|helper|mac|mii|of|set|start|stop|test|validate)
+> > > 
+> > > That's a very awkward pattern. I wonder if there could be better ways
+> > > to express this (ie "only apply this pattern to these files" kind of
+> > > thing)
+> > 
+> > Yes, it's extremely awkward - I spent much of the morning with perl
+> > testing it out on the drivers/ subtree.
+> 
+> There are a lot of phylink_<foo> in the kernel.
+> Are those really the only uses you want to watch?
 
---Fig2xvG2VGoz8o/s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It is sufficient; as I said, I've spent a morning running this:
 
-On Wed, Aug 05, 2020 at 11:43:37AM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->=20
-> There are spelling mistakes in DBG messages. Fix them.
->=20
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+#!/usr/bin/perl
+$re = 'phylink\.h|struct\s+phylink|\.phylink|>phylink_|phylink_(autoneg|clear|connect|create|destroy|disconnect|ethtool|helper|mac|mii|of|set|start|stop|test|validate)';
+foreach $f (@ARGV) {
+        open F, $f;
+        $l = 1;
+        while (<F>) {
+                chomp;
+                print "$f:$l: $_\n" if /$re/;
+                $l++;
+        }
+        close F;
+}
 
-These comments can go entirely. i2c_detach is long history. And for
-remove, we have debugging output in the driver core meanwhile.
+through:
 
+$ find drivers -type f -print0 | xargs -0 ./check.pl | diff -u pl-ref.out - |less
 
---Fig2xvG2VGoz8o/s
-Content-Type: application/pgp-signature; name="signature.asc"
+where pl-ref.out is the original K: matching of just "phylink" and
+looking at the differences to ensure I'm excluding just stuff that
+doesn't concern me, while getting a high hit rate on the stuff
+that I do want.
 
------BEGIN PGP SIGNATURE-----
+Now, I'm not saying that there isn't a better way, but this is not
+something I want to spend days on.  So I got something that works
+for me, and that's what I've sent Linus.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8rLeoACgkQFA3kzBSg
-Kbbf3A//dxQuXCMIP+fM3FpsD9xa0D6BvZJ9uye6lcytP3aB4nYwiyQH1Xa2chW4
-DJPf0EYPgesQtRj6/VeAwrjt3I/a4TJcsPrTEPh42f+5lnBtdrjRPWI71ng37Ex8
-PftsLWt0XWcveo/b1dfw3v33xLSGDq/+Ivz3perRsQjbW1+YdMXIy3WnfyxkLJDr
-ZapgqtZAjIuJNGMym3RYIe6JYzHVJHzBXyNOB5IA99IdG5CvCu0IEMsX+35bCMhD
-iCnA9Vnltejf73dv+ELfn5HjBCU2h813GxhZ/Wejl4E5sdgh+a0P+35ML6zOiq2O
-wggmD98tGLXgshqnhJE/zEukOZY5b1rLWGvE9kWT6IMn8Z80pbgUloiF7RvddnP7
-4LsG8z+soDJh0hZxDcWBZOgEg4xb97MF+7+0vS3miv8SYLqS8fwAjsJgOG/slaiC
-aRCd68ndJIC4z25jkkjDIMBbY9yDI2vxUjG4igilXMUJEIEsDFGvf81uuXyZ496I
-RBci3lH9ERyT5KW7xkd8WTfR/JxxHp39kOdD3g4NTh52J47YT5c8Io2StwQj+fxQ
-NdQGiGR9d1oXVOXHcO/k/T8qoTUMctb5uOc8rfSUYycw0v2TgMb+AwgISq4ovw6L
-2t+THEjAWKxIcej9U6b69Bj+DskSo3zoRHZZf4AukUr8awGp1NA=
-=luwO
------END PGP SIGNATURE-----
+Going through your list...
 
---Fig2xvG2VGoz8o/s--
+>       4 phylink_add
+
+Not sure what this is.  Doesn't seem to be anything to do with what
+I maintain.
+
+>       7 phylink_an_mode_str
+
+static function.
+
+>       4 phylink_apply_manual_flow
+
+static function.
+
+>       3 phylink_attach_phy
+
+static function.
+
+>      26 phylink_autoneg_inband
+
+This one public and included.
+
+>       4 phylink_bringup_phy
+
+static function.
+
+>       3 phylink_change_inband_advert
+
+static function.
+
+>       6 phylink_clear
+
+This one public and included.
+
+>       4 phylink_complete
+>       2 phylink_complete_evt
+
+Nothing to do with phylink.
+
+>     145 phylink_config
+
+Included.
+
+>       3 phylink_connect
+>       8 phylink_connect_phy
+
+Both included under one.
+
+>      39 phylink_create
+
+Included.
+
+>      10 phylink_dbg
+
+static function.
+
+... shall I go on?
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
