@@ -2,104 +2,224 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5AAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F09C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 450FF22D2C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5F1E22D2C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:09:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L31YrSDz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kleVXsE4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbgHERIg (ORCPT
+        id S1728522AbgHERJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:08:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25725 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728329AbgHERGO (ORCPT
+        Wed, 5 Aug 2020 13:09:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49668 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728466AbgHERE5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:06:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596647173;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=BJTmQpoAkIpbguLFUsJigmbm7ftZPVlO31weMkCEohw=;
-        b=L31YrSDzCl2zHFd1sJ6XsRWKZ+ibBGhncJHNbiYAMQSta4Kg5E3jSa454+/KFjRHgly5P4
-        tDuKmKUYrtIRRVLtNLn3CHHZnOzm2fC3SfZckIecSl2SmbqEfs8yX3I5cYX2wR1vIBMf1y
-        P7/bL5v3QdEeHK8SNERpiJLazce3fts=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-138-FgJlMIBBOEqWZYWlkZ1Vjw-1; Wed, 05 Aug 2020 09:39:35 -0400
-X-MC-Unique: FgJlMIBBOEqWZYWlkZ1Vjw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 390D5100A8DF;
-        Wed,  5 Aug 2020 13:39:34 +0000 (UTC)
-Received: from maya.cloud.tilaa.com (unknown [10.36.110.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EDB792DE95;
-        Wed,  5 Aug 2020 13:39:33 +0000 (UTC)
-Received: from localhost (055-041-157-037.ip-addr.inexio.net [37.157.41.55])
-        by maya.cloud.tilaa.com (Postfix) with ESMTPSA id D853F40093;
-        Wed,  5 Aug 2020 15:39:32 +0200 (CEST)
-Date:   Wed, 5 Aug 2020 15:39:31 +0200
-From:   Stefano Brivio <sbrivio@redhat.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org, heiko.carstens@de.ibm.com,
-        Cong Wang <xiyou.wangcong@gmail.com>
-Subject: [PATCH RESEND net-next] ip_tunnel_core: Fix build for archs without
- _HAVE_ARCH_IPV6_CSUM
-Message-ID: <20200805153931.50a3d518@redhat.com>
-Organization: Red Hat
+        Wed, 5 Aug 2020 13:04:57 -0400
+Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A06A7C061575
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 10:04:57 -0700 (PDT)
+Received: by mail-io1-xd30.google.com with SMTP id z6so46710549iow.6
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 10:04:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=+tKIJ4WfKtgkgJ70TYuXATNUVm3LhJghXiOd28Dg4S4=;
+        b=kleVXsE46UakXw54HJz9RI31Pm/wR5ygNm2B19l8S5/st12R9Faem7GqanY5xMSa24
+         2EPhX8Xe48UrUk/IPL5fvB+4mgiJHSdVlh/07MkzfqwEXrpz18yzuMI0ns71XkeN07x9
+         a6hymI5IWaCBTbwQrVRYUFzdmK8W+oISvCJf0MJ9AoYWPH0Lp5x+aprfy/D/uX8St6z/
+         1pnb5sW3dj5t6+W6f4Fg2yTzrAhsijWFulDLBysOY0KBM4IBXnIDpoSbAwyBna1TIIxh
+         dyv2ZQuSdjnL+cfyQbqAlCMFR8khuqvVZIxsKeGippegBPYCC6rq2LBJNH0KHJGBJZZp
+         oZEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=+tKIJ4WfKtgkgJ70TYuXATNUVm3LhJghXiOd28Dg4S4=;
+        b=Fg6EUJkVL2E3krzboGLXXk1MQUmEd/epQVrTtwGDF3gY/OYXDtCii8YZncy1jE0BfU
+         XCH+aEQTbTN0UxexoCktD75DH8PVpLUq5W8qoN5B+isxcEJzpHpS8ZArY1tiqV5lNZLc
+         kmBxk5U/Vh2RR4Q5rxUz3Fu/YRSwDZAVR4V4iubZcin/U0/OoKUmIBGVZqdA0gbZwYSW
+         wl7xv7y8a81v93bu6mGjM8lWdzB6cQ9IALhvOHuF5oTOXWNVo4hevEnWMO0ubJXST7g/
+         fMt2mVO60SyZun01XGLnYt9ISWL8J1ZQO1NNsSD0TeFTpnz8sakVTns6dWm9IM0tJaCZ
+         ICxA==
+X-Gm-Message-State: AOAM531C2JSLTe/T7F2xZE2qpHAxC5NGcdlB429gXhikDp4pE+AI1E+h
+        qJWg4NPP/yymnZsAL0PfE2mnYSCH4S3j3QOnwihMB53ZEzc1Pw==
+X-Google-Smtp-Source: ABdhPJx2ihURBb9WXEgJWBbJrLCpXYtPqeV+qPX2VxxwISq3rP1Z5pMvy/je2X/nqaRG0OTnUp7Lolp9VsEDp+rb/NY=
+X-Received: by 2002:a05:6638:1129:: with SMTP id f9mr3627080jar.35.1596647096002;
+ Wed, 05 Aug 2020 10:04:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 5 Aug 2020 22:34:44 +0530
+Message-ID: <CA+G9fYu4tshr3YUqqU-y8vXtoMVt5BgHtmFXqMUa_457_-8D-A@mail.gmail.com>
+Subject: stable rc 4.9- v4.9.232-51-g1f47445197d2 - build breaks on arm64,
+ arm, x86_64 and i386.
+To:     linux- stable <stable@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On architectures defining _HAVE_ARCH_IPV6_CSUM, we get
-csum_ipv6_magic() defined by means of arch checksum.h headers. On
-other architectures, we actually need to include net/ip6_checksum.h
-to be able to use it.
+stable rc 4.9 build breaks on arm64, arm, x86_64 and i386.
 
-Without this include, building with defconfig breaks at least for
-s390.
+Here are the build log failures on arm64.
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Fixes: 4cb47a8644cc ("tunnels: PMTU discovery support for directly bridged IP packets")
-Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
----
-I'm submitting this for net-next despite the fact it's closed, as
-the offending code isn't merged to net.git yet. Should I rather
-submit this to... linux-next?
+    git_repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-=
+stable-rc.git
+    target_arch: arm64
+    toolchain: gcc-9
+    git_short_log: 1f47445197d2 (\Linux 4.9.233-rc1\)
+    git_sha: 1f47445197d2c8eecafa2b996f635aa89851c123
+    git_describe: v4.9.232-51-g1f47445197d2
+    kernel_version: 4.9.233-rc1
 
-Re-sending as original copy seems to be stuck in some SMTP queue.
+make -sk KBUILD_BUILD_USER=3DTuxBuild -C/linux -j16 ARCH=3Darm64
+CROSS_COMPILE=3Daarch64-linux-gnu- HOSTCC=3Dgcc CC=3D"sccache
+aarch64-linux-gnu-gcc" O=3Dbuild Image
+#
+../arch/arm64/kernel/hw_breakpoint.c: In function =E2=80=98arch_bp_generic_=
+fields=E2=80=99:
+../arch/arm64/kernel/hw_breakpoint.c:352:5: note: parameter passing
+for argument of type =E2=80=98struct arch_hw_breakpoint_ctrl=E2=80=99 chang=
+ed in GCC
+9.1
+  352 | int arch_bp_generic_fields(struct arch_hw_breakpoint_ctrl ctrl,
+      |     ^~~~~~~~~~~~~~~~~~~~~~
+../fs/ext4/inode.c: In function =E2=80=98ext4_direct_IO=E2=80=99:
+../fs/ext4/inode.c:3610:9: error: redefinition of =E2=80=98offset=E2=80=99
+ 3610 |  loff_t offset =3D iocb->ki_pos;
+      |         ^~~~~~
+../fs/ext4/inode.c:3608:9: note: previous definition of =E2=80=98offset=E2=
+=80=99 was here
+ 3608 |  loff_t offset =3D iocb->ki_pos;
+      |         ^~~~~~
+make[3]: *** [../scripts/Makefile.build:304: fs/ext4/inode.o] Error 1
+make[3]: Target '__build' not remade because of errors.
+make[2]: *** [../scripts/Makefile.build:555: fs/ext4] Error 2
+../lib/vsprintf.c: In function =E2=80=98number=E2=80=99:
+../lib/vsprintf.c:399:7: note: parameter passing for argument of type
+=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
+  399 | char *number(char *buf, char *end, unsigned long long num,
+      |       ^~~~~~
+../lib/vsprintf.c: In function =E2=80=98widen_string=E2=80=99:
+../lib/vsprintf.c:562:7: note: parameter passing for argument of type
+=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
+  562 | char *widen_string(char *buf, int n, char *end, struct printf_spec =
+spec)
+      |       ^~~~~~~~~~~~
+../lib/vsprintf.c: In function =E2=80=98string=E2=80=99:
+../lib/vsprintf.c:583:7: note: parameter passing for argument of type
+=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
+  583 | char *string(char *buf, char *end, const char *s, struct
+printf_spec spec)
+      |       ^~~~~~
+../lib/vsprintf.c: In function =E2=80=98hex_string=E2=80=99:
+../lib/vsprintf.c:803:7: note: parameter passing for argument of type
+=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
+  803 | char *hex_string(char *buf, char *end, u8 *addr, struct
+printf_spec spec,
+      |       ^~~~~~~~~~
+../lib/vsprintf.c: In function =E2=80=98mac_address_string=E2=80=99:
+../lib/vsprintf.c:936:7: note: parameter passing for argument of type
+=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
+  936 | char *mac_address_string(char *buf, char *end, u8 *addr,
+      |       ^~~~~~~~~~~~~~~~~~
+../lib/vsprintf.c: In function =E2=80=98ip4_addr_string=E2=80=99:
+../lib/vsprintf.c:1137:7: note: parameter passing for argument of type
+=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
+ 1137 | char *ip4_addr_string(char *buf, char *end, const u8 *addr,
+      |       ^~~~~~~~~~~~~~~
+../lib/vsprintf.c: In function =E2=80=98uuid_string=E2=80=99:
+../lib/vsprintf.c:1305:7: note: parameter passing for argument of type
+=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
+ 1305 | char *uuid_string(char *buf, char *end, const u8 *addr,
+      |       ^~~~~~~~~~~
+../lib/vsprintf.c: In function =E2=80=98symbol_string=E2=80=99:
+../lib/vsprintf.c:668:7: note: parameter passing for argument of type
+=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
+  668 | char *symbol_string(char *buf, char *end, void *ptr,
+      |       ^~~~~~~~~~~~~
+../lib/vsprintf.c: In function =E2=80=98resource_string=E2=80=99:
+../lib/vsprintf.c:695:7: note: parameter passing for argument of type
+=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
+  695 | char *resource_string(char *buf, char *end, struct resource *res,
+      |       ^~~~~~~~~~~~~~~
+../lib/vsprintf.c: In function =E2=80=98ip6_addr_string=E2=80=99:
+../lib/vsprintf.c:1123:7: note: parameter passing for argument of type
+=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
+ 1123 | char *ip6_addr_string(char *buf, char *end, const u8 *addr,
+      |       ^~~~~~~~~~~~~~~
+../lib/vsprintf.c: In function =E2=80=98ip4_addr_string_sa=E2=80=99:
+../lib/vsprintf.c:1210:7: note: parameter passing for argument of type
+=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
+ 1210 | char *ip4_addr_string_sa(char *buf, char *end, const struct
+sockaddr_in *sa,
+      |       ^~~~~~~~~~~~~~~~~~
+../lib/vsprintf.c: In function =E2=80=98ip6_addr_string_sa=E2=80=99:
+../lib/vsprintf.c:1148:7: note: parameter passing for argument of type
+=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
+ 1148 | char *ip6_addr_string_sa(char *buf, char *end, const struct
+sockaddr_in6 *sa,
+      |       ^~~~~~~~~~~~~~~~~~
+../lib/vsprintf.c: In function =E2=80=98escaped_string=E2=80=99:
+../lib/vsprintf.c:1245:7: note: parameter passing for argument of type
+=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
+ 1245 | char *escaped_string(char *buf, char *end, u8 *addr, struct
+printf_spec spec,
+      |       ^~~~~~~~~~~~~~
+../lib/vsprintf.c: In function =E2=80=98dentry_name=E2=80=99:
+../lib/vsprintf.c:604:7: note: parameter passing for argument of type
+=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
+  604 | char *dentry_name(char *buf, char *end, const struct dentry
+*d, struct printf_spec spec,
+      |       ^~~~~~~~~~~
+../lib/vsprintf.c: In function =E2=80=98clock.isra.0=E2=80=99:
+../lib/vsprintf.c:1387:7: note: parameter passing for argument of type
+=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
+ 1387 | char *clock(char *buf, char *end, struct clk *clk, struct
+printf_spec spec,
+      |       ^~~~~
+../lib/vsprintf.c: In function =E2=80=98bitmap_list_string.isra.0=E2=80=99:
+../lib/vsprintf.c:896:7: note: parameter passing for argument of type
+=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
+  896 | char *bitmap_list_string(char *buf, char *end, unsigned long *bitma=
+p,
+      |       ^~~~~~~~~~~~~~~~~~
+../lib/vsprintf.c: In function =E2=80=98bitmap_string.isra.0=E2=80=99:
+../lib/vsprintf.c:855:7: note: parameter passing for argument of type
+=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
+  855 | char *bitmap_string(char *buf, char *end, unsigned long *bitmap,
+      |       ^~~~~~~~~~~~~
+../lib/vsprintf.c: In function =E2=80=98bdev_name.isra.0=E2=80=99:
+../lib/vsprintf.c:649:7: note: parameter passing for argument of type
+=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
+  649 | char *bdev_name(char *buf, char *end, struct block_device *bdev,
+      |       ^~~~~~~~~
+../lib/vsprintf.c: In function =E2=80=98pointer=E2=80=99:
+../lib/vsprintf.c:1571:7: note: parameter passing for argument of type
+=E2=80=98struct printf_spec=E2=80=99 changed in GCC 9.1
+ 1571 | char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+      |       ^~~~~~~
+make[2]: Target '__build' not remade because of errors.
+make[1]: *** [/linux/Makefile:1036: fs] Error 2
+make[1]: Target 'Image' not remade because of errors.
+make: *** [Makefile:152: sub-make] Error 2
+make: Target 'Image' not remade because of errors.
 
- net/ipv4/ip_tunnel_core.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/net/ipv4/ip_tunnel_core.c b/net/ipv4/ip_tunnel_core.c
-index 9ddee2a0c66d..75c6013ff9a4 100644
---- a/net/ipv4/ip_tunnel_core.c
-+++ b/net/ipv4/ip_tunnel_core.c
-@@ -25,6 +25,7 @@
- #include <net/protocol.h>
- #include <net/ip_tunnels.h>
- #include <net/ip6_tunnel.h>
-+#include <net/ip6_checksum.h>
- #include <net/arp.h>
- #include <net/checksum.h>
- #include <net/dsfield.h>
--- 
-2.27.0
-
+--=20
+Linaro LKFT
+https://lkft.linaro.org
