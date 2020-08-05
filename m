@@ -2,130 +2,151 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB60C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 00:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 773A5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 00:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FD742073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 00:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 587942073E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 00:43:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ToPQ4yP7"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mbl18OTN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbgHEAlA (ORCPT
+        id S1726688AbgHEAnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 20:41:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38414 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgHEAlA (ORCPT
+        Tue, 4 Aug 2020 20:43:37 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:38356 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbgHEAnh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 20:41:00 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1525C06174A;
-        Tue,  4 Aug 2020 17:40:59 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BLt8T4b8Vz9sPC;
-        Wed,  5 Aug 2020 10:40:57 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1596588058;
-        bh=o8lf6TdzrWFXOHnZQm2y7sn451B/oLl7VtF+Feotq/k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ToPQ4yP7+31m4kSvsm+FjGGDTX1xOU6VLIE0yrVgQXX17ojejsCHSutRIKh3DlSTp
-         SBd3fkIPL06fHLFacJnDjyK8ePzz6uuAaGnSRF8kP9QPSYjtRGRsTDAhsAVjS7mG98
-         k3uLVRXV01d06oqtxxD9MWBoVUQotkIffI4s7m2rD8ys+thpI8YGD+FGmEdrmFYe7f
-         CZv3a3WmmV/cTAILPkMXV6o/XcIu1t+TYuQ7ZxeW94d/1IXu1bmSIox7s8lwiaJ+TA
-         QNy25yH3Kvwqp8zmseHi4Ek9hsYejvRzlRFQSc75KokAMlDZ/B6gCbcBi8xQLmR8Ed
-         6sU7h9wHtwlcg==
-Date:   Wed, 5 Aug 2020 10:40:56 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christian Brauner <christian@brauner.io>,
-        Rich Felker <dalias@libc.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: linux-next: manual merge of the pidfd tree with the sh tree
-Message-ID: <20200805104056.2b1591a8@canb.auug.org.au>
-In-Reply-To: <20200722203812.6ca23e0d@canb.auug.org.au>
-References: <20200722203812.6ca23e0d@canb.auug.org.au>
+        Tue, 4 Aug 2020 20:43:37 -0400
+Received: from localhost.localdomain (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id A3C9E20B4908;
+        Tue,  4 Aug 2020 17:43:35 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A3C9E20B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1596588215;
+        bh=witi/8JgEwCGp4a82OugmSroOHn6fU6ZrDmuPHmc6HA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=mbl18OTNOVFV4KGyTveIpOvWT76NAPgnoQTp+HNsvL+V1Wh93+uDm/iPpGQQx4MOP
+         mvnPqk3lk3OLjyRIS86q00dUrKxDoFOJeS4pkvu5Ai18R5SgpHZCWwhZbg9hotxR2x
+         raeuw5fP19jFqOUzgBbpWlpWXXCY0ibLeoVokZ5w=
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     zohar@linux.ibm.com, stephen.smalley.work@gmail.com,
+        casey@schaufler-ca.com
+Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/4] LSM: Measure security module data
+Date:   Tue,  4 Aug 2020 17:43:27 -0700
+Message-Id: <20200805004331.20652-1-nramas@linux.microsoft.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/l1VvXk8FmB+J5KgBSOkdAvT";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/l1VvXk8FmB+J5KgBSOkdAvT
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Critical data structures of security modules are currently not measured.
+Therefore an attestation service, for instance, would not be able to
+attest whether the security modules are always operating with the policies
+and configuration that the system administrator had setup. The policies
+and configuration for the security modules could be tampered with by
+malware by exploiting kernel vulnerabilities or modified through some
+inadvertent actions on the system. Measuring such critical data would
+enable an attestation service to better assess the state of the system.
 
-Hi all,
+IMA subsystem measures system files, command line arguments passed to
+kexec, boot aggregate, keys, etc. It can be used to measure critical
+data structures of security modules as well.
 
-On Wed, 22 Jul 2020 20:38:12 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Today's linux-next merge of the pidfd tree got a conflict in:
->=20
->   arch/um/Kconfig
->=20
-> between commit:
->=20
->   5c77ba8aa183 ("dma-mapping: consolidate the NO_DMA definition in kernel=
-/dma/Kconfig")
->=20
-> from the sh tree and commit:
->=20
->   140c8180eb7c ("arch: remove HAVE_COPY_THREAD_TLS")
->=20
-> from the pidfd tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
-> diff --cc arch/um/Kconfig
-> index 32c1d1945033,ef69be17ff70..000000000000
-> --- a/arch/um/Kconfig
-> +++ b/arch/um/Kconfig
-> @@@ -14,8 -14,6 +14,7 @@@ config UM
->   	select HAVE_FUTEX_CMPXCHG if FUTEX
->   	select HAVE_DEBUG_KMEMLEAK
->   	select HAVE_DEBUG_BUGVERBOSE
-> - 	select HAVE_COPY_THREAD_TLS
->  +	select NO_DMA
->   	select GENERIC_IRQ_SHOW
->   	select GENERIC_CPU_DEVICES
->   	select GENERIC_CLOCKEVENTS
+This change aims to address measuring critical data structures
+of security modules when they are initialized and when they are
+updated at runtime.
 
-This is now a conflict between the sh tree and Linus' tree.
+This series is based on commit 3db0d0c276a7 ("integrity: remove
+redundant initialization of variable ret") in next-integrity
 
---=20
-Cheers,
-Stephen Rothwell
+Change log:
 
---Sig_/l1VvXk8FmB+J5KgBSOkdAvT
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+  v6:
+      => Use kvmalloc for payload data for early boot data measurement
+         since payload size may exceed the limit supported by kmalloc.
+      => Fixed IMA policy rule match error when checking for IMA hook
+         func LSM_STATE and LSM_POLICY.
+      => Enable early boot data measurement and IMA hook func
+         LSM_STATE and LSM_POLICY when SELinux is enabled.
 
------BEGIN PGP SIGNATURE-----
+  v5:
+      => Append timestamp to "event name" string in the call to
+         the IMA hooks so that LSM data is always measured by IMA.
+      => Removed workqueue patch that was handling periodic checking
+         of the LSM data. This change will be introduced as a separate
+         patch set while keeping this patch set focussed on measuring
+         the LSM data on initialization and on updates at runtime.
+      => Handle early boot measurement of LSM data.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8qABgACgkQAVBC80lX
-0Gw2mwf+JRHRrswhLl7z0Ru7fOcV9wxOoOVwg6WMrCXJuLba6v52sYpynvBt7ojW
-tclBce0LQNCetY3CiKRQ8DwxmmWTUcKk5Lacm1Z+M3wqk8kkvn6n2HcmZQb550Gh
-Xp0/40ZuJK3Se7ro4iwRr0uzPGPKkct8KSyTslWyG33nR1ph3I4FAJRsISjDalzN
-TFhHttWtnRn/l9k5Xef2DfoUNcaRLz/TxZ1jjah85/uSXnVK8D91khvJEEjO82J0
-RmTbZ0pO6V35UKPzBmNqGNFlTe0FZ/66hXYn8dCi9N1ovNk1MGbCqZDMAPjKo6GK
-u81VsdNQU/0e5D0n82b8KQmSHzCPqg==
-=XY6W
------END PGP SIGNATURE-----
+  v4:
+      => Added LSM_POLICY func and IMA hook to measure LSM policy.
+      => Pass SELinux policy data, instead of the hash of the policy,
+         to the IMA hook to measure.
+      => Include "initialized" flag in SELinux measurement.
+         Also, measure SELinux state even when initialization is not yet
+         completed. But measure SELinux policy only after initialization.
 
---Sig_/l1VvXk8FmB+J5KgBSOkdAvT--
+  v3:
+      => Loop through policy_capabilities to build the state data
+         to measure instead of hardcoding to current set of
+         policy capabilities.
+      => Added error log messages for failure conditions.
+
+  v2:
+      => Pass selinux_state struct as parameter to the function
+         that measures SELinux data.
+      => Use strings from selinux_policycap_names array for SELinux
+         state measurement.
+      => Refactored security_read_policy() to alloc kernel or user
+         virtual memory and then read the SELinux policy.
+
+  v1:
+      => Per Stephen Smalley's suggestion added selinux_state booleans
+         and hash of SELinux policy in the measured data for SELinux.
+      => Call IMA hook from the security module directly instead of
+         redirecting through the LSM.
+
+Lakshmi Ramasubramanian (4):
+  IMA: Add func to measure LSM state and policy
+  IMA: Define IMA hooks to measure LSM state and policy
+  LSM: Define SELinux function to measure state and policy
+  IMA: Handle early boot data measurement
+
+ Documentation/ABI/testing/ima_policy         |   9 +
+ include/linux/ima.h                          |  14 ++
+ security/integrity/ima/Kconfig               |   5 +-
+ security/integrity/ima/Makefile              |   2 +-
+ security/integrity/ima/ima.h                 |  45 +++--
+ security/integrity/ima/ima_api.c             |   2 +-
+ security/integrity/ima/ima_asymmetric_keys.c |   6 +-
+ security/integrity/ima/ima_init.c            |   2 +-
+ security/integrity/ima/ima_main.c            |  64 ++++++-
+ security/integrity/ima/ima_policy.c          |  36 +++-
+ security/integrity/ima/ima_queue_data.c      | 190 +++++++++++++++++++
+ security/integrity/ima/ima_queue_keys.c      | 174 -----------------
+ security/selinux/Makefile                    |   2 +
+ security/selinux/hooks.c                     |   1 +
+ security/selinux/include/security.h          |  15 ++
+ security/selinux/measure.c                   | 150 +++++++++++++++
+ security/selinux/selinuxfs.c                 |   3 +
+ security/selinux/ss/services.c               |  71 ++++++-
+ 18 files changed, 569 insertions(+), 222 deletions(-)
+ create mode 100644 security/integrity/ima/ima_queue_data.c
+ delete mode 100644 security/integrity/ima/ima_queue_keys.c
+ create mode 100644 security/selinux/measure.c
+
+-- 
+2.27.0
+
