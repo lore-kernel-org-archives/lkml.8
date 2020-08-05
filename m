@@ -6,175 +6,155 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F58C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D40122CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DEB722B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:30:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="s6cqgses"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="pcQ+CWVT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbgHEU2e (ORCPT
+        id S1726490AbgHEUaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:28:34 -0400
-Received: from mga05.intel.com ([192.55.52.43]:62028 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726155AbgHEU23 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 16:28:29 -0400
-IronPort-SDR: jt+LOXaxoIIA81zdQfI0IG5Tovpzj70fVt4C4pgVltm1urlfa1AeBDEMY8t6eFgINFgwU3+e9Z
- qutVBu6FmhOQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="237507099"
-X-IronPort-AV: E=Sophos;i="5.75,438,1589266800"; 
-   d="scan'208";a="237507099"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 13:28:28 -0700
-IronPort-SDR: 88hppxm4wL9aGr7Lwkd5tQvB/wp1cII76d2XrM/+Fb9X20oSwiXEFMRHF2MhYI9U8Hgj9bIrBI
- ZljT78AFFkQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,438,1589266800"; 
-   d="scan'208";a="331031412"
-Received: from orsmsx604.amr.corp.intel.com ([10.22.229.17])
-  by FMSMGA003.fm.intel.com with ESMTP; 05 Aug 2020 13:28:28 -0700
-Received: from orsmsx604.amr.corp.intel.com (10.22.229.17) by
- ORSMSX604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 5 Aug 2020 13:28:28 -0700
-Received: from orsmsx113.amr.corp.intel.com (10.22.240.9) by
- orsmsx604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 5 Aug 2020 13:28:28 -0700
-Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
- ORSMSX113.amr.corp.intel.com (10.22.240.9) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 5 Aug 2020 13:28:27 -0700
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.59) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Wed, 5 Aug 2020 13:28:27 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZV8SmIXut/H/Mu4ikwriZnh8ydUIrRHNIsX1FK1N7KR8Leub8FowKI/5fic4KHUvy8A40FsdJe7HvREhelaqgUie+t+vIyVog1OhyUN3Ug1Q6/S9kJd9xfDgMTWBHQt92DhHakxEmsNssG6zHDvetGY1xJIN+1UHTcFgE9qHbrsAL4VfC/hi8LyWnetalEsD0YTFknrbKIvaUUfR4hkrIiNsNLkuhUmflkWEzl0t2rSw9+OK14RXFhrf4kAcFsBL2aK9ljBWXp1NGIeS5oFKjA8168iTiOeFuGp6dPI0Zzpd7ww/1PVWwiSAA9Je8WjU9cohbA3dQ2CTtLRcH4/zsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TuJxM0D5tR2Y47ltOHD1ekrXak8S+6HAjLf8hnMTV5s=;
- b=bPvYHDtjAm4utHtg6soyLC8gKh8UPaEI9raXF2tMbFUCLbsUpyRDO/3kMjHZAQBu3+hJcQx9HBHconmjAjAPCFEbUtmzO0+c8IUVjPrdYP2aIOUHQtt11Zl9Bo29LGLswZRU5hG5f4OqC4NMHJHcqgs5wguvvBcYUmdSt+PZWlnPrjlTY4bVFIjIWyY+hAgII9em3pPHpHFXxOvoXCSdOCg4w4+nyQlU7sZAHZ5HiSIhGcKUy57fxZBJqa42e3uLA1wqBOK9YLHPeUoWZAxHWlpP9bkyghYOEB8THEcofLqpnxlTDJh59Uzy48/hsGm3vTTWLYJkF72uYAkfDkg8Rw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TuJxM0D5tR2Y47ltOHD1ekrXak8S+6HAjLf8hnMTV5s=;
- b=s6cqgsesWCSkbT7FGzKpUM6UJL/3PQi82c+pGTr66MSrGbZ2axOuTKGBCgXNyvrv92c/0nONfnGXU6pffo+MmFD+G6Qfs6Tul7yZhq2TCqc28llK+Lbc4+vguCco8hYgL4wc3+x3IETxwvK3W/RAfOSAZSHyOzrvRVbb9qyaWjY=
-Received: from MWHPR11MB1518.namprd11.prod.outlook.com (2603:10b6:301:c::10)
- by MWHPR11MB2062.namprd11.prod.outlook.com (2603:10b6:300:2a::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.15; Wed, 5 Aug
- 2020 20:28:22 +0000
-Received: from MWHPR11MB1518.namprd11.prod.outlook.com
- ([fe80::581:de6d:ee8c:ef32]) by MWHPR11MB1518.namprd11.prod.outlook.com
- ([fe80::581:de6d:ee8c:ef32%10]) with mapi id 15.20.3261.017; Wed, 5 Aug 2020
- 20:28:22 +0000
-From:   "Shaikh, Azhar" <azhar.shaikh@intel.com>
-To:     Prashant Malani <pmalani@chromium.org>
-CC:     "bleung@chromium.org" <bleung@chromium.org>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "groeck@chromium.org" <groeck@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>,
-        "Patel, Utkarsh H" <utkarsh.h.patel@intel.com>,
-        "Bowman, Casey G" <casey.g.bowman@intel.com>,
-        "Mani, Rajmohan" <rajmohan.mani@intel.com>
-Subject: RE: [PATCH v2 2/2] platform/chrome: cros_ec_typec: Avoid setting usb
- role during disconnect
-Thread-Topic: [PATCH v2 2/2] platform/chrome: cros_ec_typec: Avoid setting usb
- role during disconnect
-Thread-Index: AQHWZsWN7jOrHrKgC0yTlu91mzQVjakgvc/QgAAF9ACACSlQYIAABQUAgAALj3A=
-Date:   Wed, 5 Aug 2020 20:28:22 +0000
-Message-ID: <MWHPR11MB151843C494EAFDAD0DE6BA81914B0@MWHPR11MB1518.namprd11.prod.outlook.com>
-References: <20200730225609.7395-1-azhar.shaikh@intel.com>
- <20200730225609.7395-3-azhar.shaikh@intel.com>
- <20200730230238.GD3145664@google.com>
- <MWHPR11MB1518178C5B2335FC02CD36AE91710@MWHPR11MB1518.namprd11.prod.outlook.com>
- <20200730232504.GG3145664@google.com>
- <MWHPR11MB151867DF25664C80E99A326D914B0@MWHPR11MB1518.namprd11.prod.outlook.com>
- <CACeCKaf6WuW6XbFBQoVEW55w=OHfaVmmDn1xepiYYeRyMzZFrA@mail.gmail.com>
-In-Reply-To: <CACeCKaf6WuW6XbFBQoVEW55w=OHfaVmmDn1xepiYYeRyMzZFrA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-reaction: no-action
-dlp-version: 11.5.1.3
-dlp-product: dlpe-windows
-authentication-results: chromium.org; dkim=none (message not signed)
- header.d=none;chromium.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [71.236.160.161]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5e3ab656-1b2e-45d4-4038-08d8397e195a
-x-ms-traffictypediagnostic: MWHPR11MB2062:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR11MB20627A2D35E06D6AFF510423914B0@MWHPR11MB2062.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9egoEjVA5eF4jmRhSpsx8jU5/F/o0nILSJEYyej5V7MsVRSVlSftVhQ3EA7S+4FnuzQNg7gIogOlFWshoYoOQKsLUFeYhBBPja/Fm2mDD3hOIHiAVvSthA4KVl/Ug7ZHbdQif1AL5i0qhe/qry2DUxYvwu37GV9XWSsNjl8+fk05QkpyyzpFWuLFKlQK2Q1MifxcS30tMNj8gAu0/klTDLxXnZA5XIk3qjS4eTC9JDDg+ecs0DZBtsch7CoSiK2372omfxnwj4EkUlZ3oFTmcrlmh8xcw2RZNtS4QAPa5qs7vN4kowOEPD6ASpe2AsWEYbWmw0I049BWzG6jTgK5By7WC3Xj1FlC9oWFBJFu6Fo6kPKstdnPKVY6iLXSJ40DP+CcGWHiNdfkbdHNq7NTiQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1518.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(396003)(366004)(39860400002)(346002)(66446008)(66556008)(64756008)(7696005)(9686003)(5660300002)(66476007)(186003)(83380400001)(966005)(66946007)(26005)(71200400001)(76116006)(4326008)(86362001)(8936002)(33656002)(6916009)(8676002)(478600001)(316002)(55016002)(6506007)(2906002)(53546011)(54906003)(52536014);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: Urn1zjq6DbAnVPaFP4ENPZrI8qc2MXYvc8nCLL/Xr7KRChFobs46iRofsLK8MZ2Nz6tEPdv6R6qxqCcoS13WhXkpMyG1F7bnxWYHv+xdTzYdOzYneVlEwUaY4daWLG5s2nBhPWzpZlUIQ3NxlLdUyx8ba2n2i5BjQ99NS9OM/R3x14RSrECn4gDppAcdzTkmZNMlAMiu2nrL1uhw9HKY2FFUMzoLmIH+CGPBU5dFNecGfXyZDElW5xoSarYYF7kZWFElj/NnpL/YSOy9NnebNnyIXdvd64BRMyg7Qq7vV95VOPe3djfySKkmzUhMa4nwBNxVxT4nZaSHuOZPtAhVs37C7yeGSk8oYJHKpLR3I9M+BGeOLFnDbETvXh4AzPXQZKQVPvLnKSc971VyAQROf2sKh34ddCljcSmac3P43Ssrnjr6l/M3Zbh0XEJOJBygx19jQB4wtTlWPyov2B14dLtMT+CPnmfvgJOnXetWGeQzzWbuP3q5r3CQcW4UUtEKMes/fms1hx5zhPz7iv+MRQnVqUIs5q03FDwz2TMpq0/lp7+/hA+LrHTkMKDkWPxR52b1rpo20V2yOoXOa0hl1YBaKQcEKiWctAhX4aVmqc+TZ1q40s7s0WVpyVq/f+yD6pkSPos2wR6aH24W5uIRHw==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1518.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e3ab656-1b2e-45d4-4038-08d8397e195a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2020 20:28:22.5673
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dD8JXeDWyObYPMIIR4lp4r9hwZt/NqBQwXP3y/a4a/pZFqhPaEDgqOdBNN1vNysUW9CDhtjjxGlVqRuB1fefKA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB2062
-X-OriginatorOrg: intel.com
+        Wed, 5 Aug 2020 16:30:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53530 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbgHEUag (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 16:30:36 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4744C06174A
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 13:30:36 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id h12so13923415pgf.7
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 13:30:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=V2Jneb4UoC2fWhfkl2WuSXjrqudasBUYHmLXhIRx3sk=;
+        b=pcQ+CWVT4oLml67bVoKGdBrXiIt7brVuWQjj0LD09b+AngJInQ8Y6CUnoA0UrI3sdc
+         ZI8iC43ed5wx35fMkbBrp53kBvdkjPJtIjcUeggyZwTRh2r7RuNFjQlPC+5RSd6sLgJ2
+         wZ3XlwsC/q33UhMKsxwp/rZyd8GOr+pSHxVDkaM58gr4ji0rIY+zPXMIIL+ViJVvT1th
+         qPOge8g4RUFNaOpwFiW6SM4ukLxkwHzbpt0D4to95MnycKe7UZHeQoHQXrX//8j3ZTA7
+         HwxRIVgqQb0V/Z4HmaY+NWeZqiEGvXgxF/+ajwF4DLUUnujfTge4pW0MsiCwG7JlPO3D
+         LC4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=V2Jneb4UoC2fWhfkl2WuSXjrqudasBUYHmLXhIRx3sk=;
+        b=obPKvXYF5M8GH8pAM76rElsJzfuC7ECx49gj7rAXIuArSiXOMycFTnaf5OpIGGQD++
+         yzesSFSbquyTz5q5NU9fZiz9jGWTtQwpw/Xl/TWoG82b7Tq4wiWpO4EGAkQ1GRjOoV2B
+         4c5IGR+saXStdxee2E+jcNDPv37FzaPeG2WKPYGF8QcWDrVS1qlbCuc7Nx/qv9AKXR/3
+         l0Xac/RR6bdDtSVE4JbWkAKEFnivOH+m2Q8Tp3VLCZKH30HKZJbzVQOwEm8b14ArEddE
+         dnZBonoY0GQVJwMVLW4KnGpjmOrW+N/juvydCefxf3bzNm5AvmrPgDEjN6JmwbavB4bS
+         O6Vw==
+X-Gm-Message-State: AOAM5337VOhz9BNdB8GXx9oHO9LVkYOVPtbG9bGaZcvmCmplaKGjs46S
+        6hMfLAaGUw0q7IfU3I2oZDNuww==
+X-Google-Smtp-Source: ABdhPJzlUCR+yFWKLNVh6nLZ+fETiNYut2U9HTsD85qd8SdUH966JaRJXmA4AC5PH6GFfqQzG1tN7Q==
+X-Received: by 2002:a63:e107:: with SMTP id z7mr4413591pgh.71.1596659436077;
+        Wed, 05 Aug 2020 13:30:36 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:a84d:be3c:49a:e3a1? ([2601:646:c200:1ef2:a84d:be3c:49a:e3a1])
+        by smtp.gmail.com with ESMTPSA id js19sm3920084pjb.33.2020.08.05.13.30.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Aug 2020 13:30:35 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v2] x86/cpu: Use SERIALIZE in sync_core() when available
+Date:   Wed, 5 Aug 2020 13:30:32 -0700
+Message-Id: <AC4AC665-06C3-404A-8245-BA4F1F4C4961@amacapital.net>
+References: <20200805191126.GA27509@ranerica-svr.sc.intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, X86 ML <x86@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Cathy Zhang <cathy.zhang@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Kyung Min Park <kyung.min.park@intel.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-edac <linux-edac@vger.kernel.org>
+In-Reply-To: <20200805191126.GA27509@ranerica-svr.sc.intel.com>
+To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+X-Mailer: iPhone Mail (17G68)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUHJhc2hhbnQsDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBQ
-cmFzaGFudCBNYWxhbmkgPHBtYWxhbmlAY2hyb21pdW0ub3JnPg0KPiBTZW50OiBXZWRuZXNkYXks
-IEF1Z3VzdCA1LCAyMDIwIDEyOjM3IFBNDQo+IFRvOiBTaGFpa2gsIEF6aGFyIDxhemhhci5zaGFp
-a2hAaW50ZWwuY29tPg0KPiBDYzogYmxldW5nQGNocm9taXVtLm9yZzsgZW5yaWMuYmFsbGV0Ym9A
-Y29sbGFib3JhLmNvbTsNCj4gZ3JvZWNrQGNocm9taXVtLm9yZzsgbGludXgta2VybmVsQHZnZXIu
-a2VybmVsLm9yZzsNCj4gaGVpa2tpLmtyb2dlcnVzQGxpbnV4LmludGVsLmNvbTsgUGF0ZWwsIFV0
-a2Fyc2ggSA0KPiA8dXRrYXJzaC5oLnBhdGVsQGludGVsLmNvbT47IEJvd21hbiwgQ2FzZXkgRw0K
-PiA8Y2FzZXkuZy5ib3dtYW5AaW50ZWwuY29tPjsgTWFuaSwgUmFqbW9oYW4NCj4gPHJham1vaGFu
-Lm1hbmlAaW50ZWwuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDIvMl0gcGxhdGZvcm0v
-Y2hyb21lOiBjcm9zX2VjX3R5cGVjOiBBdm9pZCBzZXR0aW5nDQo+IHVzYiByb2xlIGR1cmluZyBk
-aXNjb25uZWN0DQo+IA0KPiBIaSBBemhhciwNCj4gDQo+IA0KPiBPbiBXZWQsIEF1ZyA1LCAyMDIw
-IGF0IDEyOjIyIFBNIFNoYWlraCwgQXpoYXIgPGF6aGFyLnNoYWlraEBpbnRlbC5jb20+DQo+IHdy
-b3RlOg0KPiA+DQo+ID4gSGkgUHJhc2hhbnQsDQo+ID4NCj4gPiA+IElzIHRoaXMgZG9jdW1lbnRl
-ZCBhbnl3aGVyZT8gS2luZGx5IHByb3ZpZGUgdGhlIGxpbmtzIHRvIHRoYXQgaWYgc28uDQo+ID4g
-PiBJIHdhc24ndCBhd2FyZSBvZiBhbnkgb3JkZXJpbmcgcmVxdWlyZW1lbnRzIChidXQgSSBtYXkg
-YmUgbWlzc2luZw0KPiBzb21ldGhpbmcpLg0KPiA+DQo+ID4gVGhlIGNvbmZpZ3VyYXRpb24gb2Yg
-dGhlIGNvbm5lY3RvciBzaG91bGQgYWx3YXlzIGhhcHBlbiBpbiB0aGUgb3JkZXINCj4gPiBkZWZp
-bmVkIGluIHRoZSBVU0IgVHlwZS1DIHNwZWNpZmljYXRpb24uIENoZWNrIGNoLiAyLjMgKFVTQiBU
-eXBlLUMgU3BlYw0KPiBSMi4wKS4gU28gdGhhdCB3aWxsIGJhc2ljYWxseSBnaXZlIHlvdToNCj4g
-Pg0KPiA+IDEuIG9yaWVudGF0aW9uDQo+ID4gMi4gcm9sZShzKQ0KPiA+IDMuIHRoZSByZXN0Lg0K
-PiANCj4gVGhhbmtzIGZvciB0aGUgbGluay4gQXJlIHlvdSByZWZlcnJpbmcgdG8gU2VjdGlvbiAy
-LjMgKENvbmZpZ3VyYXRpb24NCj4gUHJvY2VzcykgPyBJIGNvdWxkbid0IGZpbmQgYW55dGhpbmcg
-dGhlcmUgd2hpY2ggaW1wbGllZCBhbnkgcmVxdWlyZWQgb3JkZXJpbmcNCj4gKEknbSByZWFkaW5n
-IFJlbGVhc2UgMi4wLCBBdWcgMjAxOSwgc28gSSBkb24ndCBrbm93IGlmIHNvbWV0aGluZyBoYXMg
-YmVlbg0KPiBhZGRlZCBzaW5jZSkuDQo+IENvdWxkIHlvdSBraW5kbHkgcG9pbnQgbWUgdG8gdGhl
-IGFwcHJvcHJpYXRlIHN1YnNlY3Rpb24/DQoNClRoYXQgaXMgdGhlIHNlY3Rpb24gSSB3YXMgcmVm
-ZXJyaW5nIHRvLg0KDQo+IA0KPiBBZGRpdGlvbmFsbHksIEkgdGhpbmsgYW55IG9yZGVyaW5nIHJl
-cXVpcmVtZW50cyB0aGVyZSBhcmUgYWxyZWFkeSBoYW5kbGVkIGJ5DQo+IHRoZSBUQ1BNIGluIHRo
-ZSBDaHJvbWUgT1MgRUMuDQo+IA0KPiA+DQo+ID4gQWxzbyBJIHNlZSBpbiBVU0IgVHlwZS1DIFBv
-cnQgTWFuYWdlciBkcml2ZXIgdGhlIGFib3ZlIG1lbnRpb25lZA0KPiA+IHNlcXVlbmNlIGJlaW5n
-IGZvbGxvd2VkDQo+ID4gaHR0cHM6Ly9lbGl4aXIuYm9vdGxpbi5jb20vbGludXgvbGF0ZXN0L3Nv
-dXJjZS9kcml2ZXJzL3VzYi90eXBlYy90Y3BtLw0KPiA+IHRjcG0uYyNMNjY0DQo+IA0KPiBJbiBh
-ZGRpdGlvbiB0byB0aGUgYWJvdmUsIG5vdGUgdGhhdCB0aGlzIGlzIGEgVENQTSBpbXBsZW1lbnRh
-dGlvbiAob24NCj4gQ2hyb21lIE9TIHRoZSBUQ1BNIGltcGxlbWVudGF0aW9uIGlzIGluIHRoZSBF
-QyksIHNvIHdoYXQgaXMgZG9uZSB0aGVyZQ0KPiBkb2Vzbid0IG5lY2Vzc2FyaWx5IGFwcGx5IHRv
-IGNyb3MtZWMtdHlwZWMuDQo+IA0KPiBCZXN0IHJlZ2FyZHMsDQo+IA0KPiAtUHJhc2hhbnQNCj4g
-DQo+ID4NCj4gPg0KPiA+ID4gPiA+IC1QcmFzaGFudA0KPiA+DQo+ID4gUmVnYXJkcywNCj4gPiBB
-emhhcg0K
+
+
+> On Aug 5, 2020, at 12:11 PM, Ricardo Neri <ricardo.neri-calderon@linux.int=
+el.com> wrote:
+>=20
+> =EF=BB=BFOn Wed, Aug 05, 2020 at 11:28:31AM -0700, Andy Lutomirski wrote:
+>>> On Wed, Aug 5, 2020 at 10:07 AM Ricardo Neri
+>>> <ricardo.neri-calderon@linux.intel.com> wrote:
+>>>=20
+>>> On Wed, Aug 05, 2020 at 07:08:08AM +0200, Borislav Petkov wrote:
+>>>> On Tue, Aug 04, 2020 at 09:58:25PM -0700, hpa@zytor.com wrote:
+>>>>> Because why use an alternative to jump over one instruction?
+>>>>>=20
+>>>>> I personally would prefer to have the IRET put out of line
+>>>>=20
+>>>> Can't yet - SERIALIZE CPUs are a minority at the moment.
+>>>>=20
+>>>>> and have the call/jmp replaced by SERIALIZE inline.
+>>>>=20
+>>>> Well, we could do:
+>>>>=20
+>>>>      alternative_io("... IRET bunch", __ASM_SERIALIZE, X86_FEATURE_SERI=
+ALIZE, ...);
+>>>>=20
+>>>> and avoid all kinds of jumping. Alternatives get padded so there
+>>>> would be a couple of NOPs following when SERIALIZE gets patched in
+>>>> but it shouldn't be a problem. I guess one needs to look at what gcc
+>>>> generates...
+>>>=20
+>>> But the IRET-TO-SELF code has instruction which modify the stack. This
+>>> would violate stack invariance in alternatives as enforced in commit
+>>> 7117f16bf460 ("objtool: Fix ORC vs alternatives"). As a result, objtool
+>>> gives warnings as follows:
+>>>=20
+>>> arch/x86/kernel/alternative.o: warning: objtool: do_sync_core()+0xe:
+>>> alternative modifies stack
+>>>=20
+>>> Perhaps in this specific case it does not matter as the changes in the
+>>> stack will be undone by IRET. However, using alternative_io would requir=
+e
+>>> adding the macro STACK_FRAME_NON_STANDARD to functions using sync_core()=
+.
+>>> IMHO, it wouldn't look good.
+>>>=20
+>>> So maybe the best approach is to implement as you suggested using
+>>> static_cpu_has()?
+>>=20
+>> I agree.  Let's keep it simple.
+>>=20
+>> Honestly, I think the right solution is to have iret_to_self() in
+>> actual asm and invoke it from C as needed.=20
+>=20
+> Do you mean anything different from what we have already [1]? If I
+> understand your comment correctly, we have exactly that: an
+> iret_to_self() asm implementation invoked from C.
+
+I meant asm as in a .S file. But the code we have is fine for this purpose, a=
+t least for now.
+
+>=20
+> Thanks and BR,
+> Ricardo
+>=20
+> [1]. https://lore.kernel.org/lkml/20200727043132.15082-4-ricardo.neri-cald=
+eron@linux.intel.com/
+>=20
+> Thanks and BR,
+> Ricardo
