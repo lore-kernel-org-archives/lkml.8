@@ -2,126 +2,240 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A782BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E331C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79B9322D37
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:25:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WDNOHfik"
+	by mail.kernel.org (Postfix) with ESMTP id 2E13E22D07
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:26:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596648361;
+	bh=55ImbTZSiSPPA9GXLqv9nVZ5RfqFyKFAvaDtqHpltEk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hDQhMJogJo2mg/F6eyccF/w8yCsHOEOyeXgi9ZjQ5Teh0sAqYVE9yPrCHoKUPdchx
+	 aHIJvI3zy+NBlsU+teAc9aR9TH50Uc+bzTNMr3XCEff39onFEwGGc8DuuuSdqRTUdb
+	 wUBOlwl4Jw4JxrtzNWB69hUWyDC8WfhM2RYPC42U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728789AbgHERZu (ORCPT
+        id S1728209AbgHERZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:25:50 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35886 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728753AbgHERPU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:15:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596647719;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HkyF/Dj2YbQk925n8jpSxZl3WTla4XTyR2sv7xNltEE=;
-        b=WDNOHfikAl5BcY8I7Fa0zvLo4cI83xHhH4z9mmlIm5TvJRkah/h50NzM3bwf/ojj8MaOKE
-        6i8bKpk7grMlASfkmWxmCzfA5SJ2MSaCNcw8YjgeOoRD7y22QT7ka8x2rOnJ5dr3ywQByE
-        0pL5V3pEaQ3+3tizPJoP8Tf4cIwMVTM=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-230-GKLgb3AFMGuXh9t_-__wsg-1; Wed, 05 Aug 2020 09:43:25 -0400
-X-MC-Unique: GKLgb3AFMGuXh9t_-__wsg-1
-Received: by mail-wm1-f71.google.com with SMTP id u144so2739706wmu.3
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:43:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HkyF/Dj2YbQk925n8jpSxZl3WTla4XTyR2sv7xNltEE=;
-        b=DK2ZgY80a/LKLYCwGlfoX9jX1j3PMtSTq1jZcFqyka3LKVQg7gzTNDModDwNaxF4Ni
-         601LMQ7bI3vAP5ELNWlrsw4oxApRfZy5NguJEMPspGNOyLugraO8b3OUcNfbQDH26/w9
-         tANcmhILUFT2qEj/6GJ9GdBy4e1dq57giLljnMa5iUAKR1CPA438CsEIl2avi0Zcu+al
-         VerbgBlWPpSRqIyWGEV3YhtCdzRv2fCKuJ05USiyQt+xtNdzR1neAr5CiF76V+BkCFmE
-         uXuqz7DuLNEmrtE8O3gZVP25A2e8tplQcG2pVCOTln3aJhhHwTmYt5F/9JsIjgNR/zrz
-         3pqg==
-X-Gm-Message-State: AOAM530j6VdQr/+v2vThcToq1mS1S0hx2DCGvDoQBL7HbK8zMta3bFrg
-        ECIfmOZEUPjfzX4F8xajdkyA636ObTDiyR9Q4d1dV0xftf5m8gc442G6HFRcPymYeWIqx5Ugwjc
-        x8hx5b0gklpwAUmG63EfkxiUn
-X-Received: by 2002:a7b:c084:: with SMTP id r4mr3293484wmh.23.1596635002272;
-        Wed, 05 Aug 2020 06:43:22 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwj0YQv1KBlUtTVuToDSecN05nzWcafaofE4HtyHWiYNZN2DH6Gv3yeUfPj+zB811yd1PZOAA==
-X-Received: by 2002:a7b:c084:: with SMTP id r4mr3293465wmh.23.1596635002027;
-        Wed, 05 Aug 2020 06:43:22 -0700 (PDT)
-Received: from redhat.com ([192.117.173.58])
-        by smtp.gmail.com with ESMTPSA id 111sm2849048wrc.53.2020.08.05.06.43.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 06:43:21 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 09:43:19 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
+        Wed, 5 Aug 2020 13:25:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35566 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728333AbgHERPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:15:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEEF923384;
+        Wed,  5 Aug 2020 15:53:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596642782;
+        bh=55ImbTZSiSPPA9GXLqv9nVZ5RfqFyKFAvaDtqHpltEk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vJyBkVDYBpCHsPQim5eJPH5kxbTNMbTKgDz1BSe+e52w/FdKSM5r4R3p97xHvis13
+         +ll9dwhkYPoUn3xBseo3N1UMnCOteWsDX9F08QAFcZxSC76IEC3hytfsd6top7HIrX
+         sSxs0UhKh56n66M7Hsr4I1hwIAx0JyTx9VVnpuX0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 02/38] virtio_ring: sparse warning fixup
-Message-ID: <20200805134226.1106164-3-mst@redhat.com>
-References: <20200805134226.1106164-1-mst@redhat.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Lorenz Bauer <lmb@cloudflare.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: [PATCH 5.4 9/9] bpf: sockmap: Require attach_bpf_fd when detaching a program
+Date:   Wed,  5 Aug 2020 17:52:46 +0200
+Message-Id: <20200805153507.468278905@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200805153507.053638231@linuxfoundation.org>
+References: <20200805153507.053638231@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200805134226.1106164-1-mst@redhat.com>
-X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
-X-Mutt-Fcc: =sent
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-virtio_store_mb was built with split ring in mind so it accepts
-__virtio16 arguments. Packed ring uses __le16 values, so sparse
-complains.  It's just a store with some barriers so let's convert it to
-a macro, we don't loose too much type safety by doing that.
+From: Lorenz Bauer <lmb@cloudflare.com>
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Acked-by: Cornelia Huck <cohuck@redhat.com>
+commit bb0de3131f4c60a9bf976681e0fe4d1e55c7a821 upstream.
+
+The sockmap code currently ignores the value of attach_bpf_fd when
+detaching a program. This is contrary to the usual behaviour of
+checking that attach_bpf_fd represents the currently attached
+program.
+
+Ensure that attach_bpf_fd is indeed the currently attached
+program. It turns out that all sockmap selftests already do this,
+which indicates that this is unlikely to cause breakage.
+
+Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
+Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20200629095630.7933-5-lmb@cloudflare.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/linux/virtio_ring.h | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ include/linux/bpf.h   |   13 +++++++++++--
+ include/linux/skmsg.h |   13 +++++++++++++
+ kernel/bpf/syscall.c  |    4 ++--
+ net/core/sock_map.c   |   50 +++++++++++++++++++++++++++++++++++++++++++++-----
+ 4 files changed, 71 insertions(+), 9 deletions(-)
 
-diff --git a/include/linux/virtio_ring.h b/include/linux/virtio_ring.h
-index 3dc70adfe5f5..b485b13fa50b 100644
---- a/include/linux/virtio_ring.h
-+++ b/include/linux/virtio_ring.h
-@@ -46,16 +46,15 @@ static inline void virtio_wmb(bool weak_barriers)
- 		dma_wmb();
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -956,11 +956,14 @@ static inline void bpf_map_offload_map_f
+ #endif /* CONFIG_NET && CONFIG_BPF_SYSCALL */
+ 
+ #if defined(CONFIG_BPF_STREAM_PARSER)
+-int sock_map_prog_update(struct bpf_map *map, struct bpf_prog *prog, u32 which);
++int sock_map_prog_update(struct bpf_map *map, struct bpf_prog *prog,
++			 struct bpf_prog *old, u32 which);
+ int sock_map_get_from_fd(const union bpf_attr *attr, struct bpf_prog *prog);
++int sock_map_prog_detach(const union bpf_attr *attr, enum bpf_prog_type ptype);
+ #else
+ static inline int sock_map_prog_update(struct bpf_map *map,
+-				       struct bpf_prog *prog, u32 which)
++				       struct bpf_prog *prog,
++				       struct bpf_prog *old, u32 which)
+ {
+ 	return -EOPNOTSUPP;
+ }
+@@ -970,6 +973,12 @@ static inline int sock_map_get_from_fd(c
+ {
+ 	return -EINVAL;
+ }
++
++static inline int sock_map_prog_detach(const union bpf_attr *attr,
++				       enum bpf_prog_type ptype)
++{
++	return -EOPNOTSUPP;
++}
+ #endif
+ 
+ #if defined(CONFIG_XDP_SOCKETS)
+--- a/include/linux/skmsg.h
++++ b/include/linux/skmsg.h
+@@ -450,6 +450,19 @@ static inline void psock_set_prog(struct
+ 		bpf_prog_put(prog);
  }
  
--static inline void virtio_store_mb(bool weak_barriers,
--				   __virtio16 *p, __virtio16 v)
--{
--	if (weak_barriers) {
--		virt_store_mb(*p, v);
--	} else {
--		WRITE_ONCE(*p, v);
--		mb();
--	}
--}
-+#define virtio_store_mb(weak_barriers, p, v) \
-+do { \
-+	if (weak_barriers) { \
-+		virt_store_mb(*p, v); \
-+	} else { \
-+		WRITE_ONCE(*p, v); \
-+		mb(); \
-+	} \
-+} while (0) \
++static inline int psock_replace_prog(struct bpf_prog **pprog,
++				     struct bpf_prog *prog,
++				     struct bpf_prog *old)
++{
++	if (cmpxchg(pprog, old, prog) != old)
++		return -ENOENT;
++
++	if (old)
++		bpf_prog_put(old);
++
++	return 0;
++}
++
+ static inline void psock_progs_drop(struct sk_psock_progs *progs)
+ {
+ 	psock_set_prog(&progs->msg_parser, NULL);
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -2029,10 +2029,10 @@ static int bpf_prog_detach(const union b
+ 		ptype = BPF_PROG_TYPE_CGROUP_DEVICE;
+ 		break;
+ 	case BPF_SK_MSG_VERDICT:
+-		return sock_map_get_from_fd(attr, NULL);
++		return sock_map_prog_detach(attr, BPF_PROG_TYPE_SK_MSG);
+ 	case BPF_SK_SKB_STREAM_PARSER:
+ 	case BPF_SK_SKB_STREAM_VERDICT:
+-		return sock_map_get_from_fd(attr, NULL);
++		return sock_map_prog_detach(attr, BPF_PROG_TYPE_SK_SKB);
+ 	case BPF_LIRC_MODE2:
+ 		return lirc_prog_detach(attr);
+ 	case BPF_FLOW_DISSECTOR:
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -71,7 +71,42 @@ int sock_map_get_from_fd(const union bpf
+ 	map = __bpf_map_get(f);
+ 	if (IS_ERR(map))
+ 		return PTR_ERR(map);
+-	ret = sock_map_prog_update(map, prog, attr->attach_type);
++	ret = sock_map_prog_update(map, prog, NULL, attr->attach_type);
++	fdput(f);
++	return ret;
++}
++
++int sock_map_prog_detach(const union bpf_attr *attr, enum bpf_prog_type ptype)
++{
++	u32 ufd = attr->target_fd;
++	struct bpf_prog *prog;
++	struct bpf_map *map;
++	struct fd f;
++	int ret;
++
++	if (attr->attach_flags)
++		return -EINVAL;
++
++	f = fdget(ufd);
++	map = __bpf_map_get(f);
++	if (IS_ERR(map))
++		return PTR_ERR(map);
++
++	prog = bpf_prog_get(attr->attach_bpf_fd);
++	if (IS_ERR(prog)) {
++		ret = PTR_ERR(prog);
++		goto put_map;
++	}
++
++	if (prog->type != ptype) {
++		ret = -EINVAL;
++		goto put_prog;
++	}
++
++	ret = sock_map_prog_update(map, NULL, prog, attr->attach_type);
++put_prog:
++	bpf_prog_put(prog);
++put_map:
+ 	fdput(f);
+ 	return ret;
+ }
+@@ -1015,27 +1050,32 @@ static struct sk_psock_progs *sock_map_p
+ }
  
- struct virtio_device;
- struct virtqueue;
--- 
-MST
+ int sock_map_prog_update(struct bpf_map *map, struct bpf_prog *prog,
+-			 u32 which)
++			 struct bpf_prog *old, u32 which)
+ {
+ 	struct sk_psock_progs *progs = sock_map_progs(map);
++	struct bpf_prog **pprog;
+ 
+ 	if (!progs)
+ 		return -EOPNOTSUPP;
+ 
+ 	switch (which) {
+ 	case BPF_SK_MSG_VERDICT:
+-		psock_set_prog(&progs->msg_parser, prog);
++		pprog = &progs->msg_parser;
+ 		break;
+ 	case BPF_SK_SKB_STREAM_PARSER:
+-		psock_set_prog(&progs->skb_parser, prog);
++		pprog = &progs->skb_parser;
+ 		break;
+ 	case BPF_SK_SKB_STREAM_VERDICT:
+-		psock_set_prog(&progs->skb_verdict, prog);
++		pprog = &progs->skb_verdict;
+ 		break;
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
+ 
++	if (old)
++		return psock_replace_prog(pprog, prog, old);
++
++	psock_set_prog(pprog, prog);
+ 	return 0;
+ }
+ 
+
 
