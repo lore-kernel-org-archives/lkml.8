@@ -2,161 +2,129 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44260C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57494C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2901C206D4
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 270B3206D4
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:44:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596660246;
+	bh=cc3Lf4FlNVl371CkEGHgJiQ/kuJ+pE4NL0Yr8sg6rd4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=Zoy95Oap6N2RpPva1q96jO+Vi616fMHq+a1+D/Xqei9QsIORMVSh1zTPl1vecRPfI
+	 ihv5a/0iS+05ATKLL4o353azSRQLsmynZupe//auHspPZcc4gsUq2BWdih9lXqYY0n
+	 W+8pKGcvL6CK47Ez48YFxbyC5q1EABD1Bgb33dqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgHEUmn (ORCPT
+        id S1727101AbgHEUoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:42:43 -0400
-Received: from mga06.intel.com ([134.134.136.31]:34802 "EHLO mga06.intel.com"
+        Wed, 5 Aug 2020 16:44:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726282AbgHEUmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 16:42:42 -0400
-IronPort-SDR: UWNHebUhOClhNzW93MRDbsXbVxjsOQdDDmzhGrwl6LRmlG/idWMLcURgb/ilVScnY3nPpYEEpm
- ttKCLTL/fmcw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="214173893"
-X-IronPort-AV: E=Sophos;i="5.75,438,1589266800"; 
-   d="scan'208";a="214173893"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 13:42:42 -0700
-IronPort-SDR: rf5OIt9rTrYoQ9BIfcHD+a8CxPYGRCxVVYi5/QCy4AA58KTqk1mWUqZwdmyub5X8+YgwnY48Lq
- K/xz0CHNot7g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,438,1589266800"; 
-   d="scan'208";a="293074599"
-Received: from lkp-server02.sh.intel.com (HELO 37a337f97289) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 05 Aug 2020 13:42:40 -0700
-Received: from kbuild by 37a337f97289 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k3QFE-0000ud-B1; Wed, 05 Aug 2020 20:42:40 +0000
-Date:   Thu, 06 Aug 2020 04:41:57 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 49c1111a66ec558d9e831c1e6935c8a496ba4948
-Message-ID: <5f2b1995.P2aw104fDIIDoUvb%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1726282AbgHEUoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 16:44:00 -0400
+Received: from localhost (mobile-166-175-186-42.mycingular.net [166.175.186.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91D29206D4;
+        Wed,  5 Aug 2020 20:43:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596660240;
+        bh=cc3Lf4FlNVl371CkEGHgJiQ/kuJ+pE4NL0Yr8sg6rd4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ffYl8CBoOHateD8I23vIlkS5ZkG6SYIskbB4PPN6ABmomgS8J+M9py19VIj47Mbo0
+         Ux+lywAjHLF2wr8r1DMATjfYFdugdECBp4toHHPL29Jso2lwY7wCqpsv9tgXXJGVhc
+         8bFryKOLjiTvB6MBa9rQVpek4qdl0sVGsgQMwoa8=
+Date:   Wed, 5 Aug 2020 15:43:58 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
+        maz@kernel.org
+Subject: Re: [PATCH v9 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
+Message-ID: <20200805204358.GA535480@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <1592312214-9347-3-git-send-email-bharat.kumar.gogada@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: 49c1111a66ec558d9e831c1e6935c8a496ba4948  Merge branch 'WIP.x86/kaslr'
+On Tue, Jun 16, 2020 at 06:26:54PM +0530, Bharat Kumar Gogada wrote:
+> - Add support for Versal CPM as Root Port.
+> - The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
+>   block for CPM along with the integrated bridge can function
+>   as PCIe Root Port.
+> - Bridge error and legacy interrupts in Versal CPM are handled using
+>   Versal CPM specific interrupt line.
 
-elapsed time: 723m
+> +static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie_port *port)
+> +{
+> +	if (cpm_pcie_link_up(port))
+> +		dev_info(port->dev, "PCIe Link is UP\n");
+> +	else
+> +		dev_info(port->dev, "PCIe Link is DOWN\n");
+> +
+> +	/* Disable all interrupts */
+> +	pcie_write(port, ~XILINX_CPM_PCIE_IDR_ALL_MASK,
+> +		   XILINX_CPM_PCIE_REG_IMR);
+> +
+> +	/* Clear pending interrupts */
+> +	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_IDR) &
+> +		   XILINX_CPM_PCIE_IMR_ALL_MASK,
+> +		   XILINX_CPM_PCIE_REG_IDR);
+> +
+> +	/*
+> +	 * XILINX_CPM_PCIE_MISC_IR_ENABLE register is mapped to
+> +	 * CPM SLCR block.
+> +	 */
+> +	writel(XILINX_CPM_PCIE_MISC_IR_LOCAL,
+> +	       port->cpm_base + XILINX_CPM_PCIE_MISC_IR_ENABLE);
+> +	/* Enable the Bridge enable bit */
+> +	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_RPSC) |
+> +		   XILINX_CPM_PCIE_REG_RPSC_BEN,
+> +		   XILINX_CPM_PCIE_REG_RPSC);
+> +}
+> +
+> +/**
+> + * xilinx_cpm_pcie_parse_dt - Parse Device tree
+> + * @port: PCIe port information
+> + * @bus_range: Bus resource
+> + *
+> + * Return: '0' on success and error value on failure
+> + */
+> +static int xilinx_cpm_pcie_parse_dt(struct xilinx_cpm_pcie_port *port,
+> +				    struct resource *bus_range)
+> +{
+> +	struct device *dev = port->dev;
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct resource *res;
+> +
+> +	port->cpm_base = devm_platform_ioremap_resource_byname(pdev,
+> +							       "cpm_slcr");
+> +	if (IS_ERR(port->cpm_base))
+> +		return PTR_ERR(port->cpm_base);
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
+> +	if (!res)
+> +		return -ENXIO;
+> +
+> +	port->cfg = pci_ecam_create(dev, res, bus_range,
+> +				    &pci_generic_ecam_ops);
 
-configs tested: 90
-configs skipped: 5
+Aren't we passing an uninitialized pointer (bus_range) here?  This
+looks broken to me.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The kernelci build warns about it:
+https://kernelci.org/build/next/branch/master/kernel/next-20200805/
 
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                         axm55xx_defconfig
-xtensa                    xip_kc705_defconfig
-m68k                       m5475evb_defconfig
-powerpc                       holly_defconfig
-m68k                       m5249evb_defconfig
-alpha                               defconfig
-sh                        dreamcast_defconfig
-m68k                             alldefconfig
-arm                     am200epdkit_defconfig
-arm                         nhk8815_defconfig
-mips                     loongson1b_defconfig
-sh                         apsh4a3a_defconfig
-powerpc                      chrp32_defconfig
-mips                        omega2p_defconfig
-arm                            xcep_defconfig
-sh                   rts7751r2dplus_defconfig
-arm                       imx_v4_v5_defconfig
-arm                     eseries_pxa_defconfig
-arm                            pleb_defconfig
-arm                        keystone_defconfig
-arm                          collie_defconfig
-arc                        vdk_hs38_defconfig
-arm                      tct_hammer_defconfig
-powerpc                       ppc64_defconfig
-arm                             ezx_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-i386                 randconfig-a005-20200805
-i386                 randconfig-a004-20200805
-i386                 randconfig-a001-20200805
-i386                 randconfig-a003-20200805
-i386                 randconfig-a002-20200805
-i386                 randconfig-a006-20200805
-x86_64               randconfig-a013-20200805
-x86_64               randconfig-a011-20200805
-x86_64               randconfig-a012-20200805
-x86_64               randconfig-a016-20200805
-x86_64               randconfig-a015-20200805
-x86_64               randconfig-a014-20200805
-i386                 randconfig-a011-20200805
-i386                 randconfig-a012-20200805
-i386                 randconfig-a013-20200805
-i386                 randconfig-a014-20200805
-i386                 randconfig-a015-20200805
-i386                 randconfig-a016-20200805
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+  /scratch/linux/drivers/pci/controller/pcie-xilinx-cpm.c:557:39: warning: variable 'bus_range' is uninitialized when used here [-Wuninitialized]
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+I'm dropping this for now.  I can't believe this actually works.
+
+Bjorn
