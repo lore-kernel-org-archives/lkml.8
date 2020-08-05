@@ -2,199 +2,122 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 555A9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8826EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2714B2177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:23:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596648213;
-	bh=ZbssVGpllyh0qYTSG60hN7rg8nKExPvelIXE1QW1lXM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oUlUW55bLHx1l3XRG8OMbZuvnTSpQ5Dktq0h0lvZOLMQrYlRCLEo2mHYhXpts/si1
-	 4wSq1uW0jM+G89dmQZRTRxpafB4DZo5JJJEn9LJCn4ZXDIE0ir31sIldrZwtmhpG36
-	 qJG3rfMUDS25igcoeAjSK7UACdXQ+HZ8zYLcUEO0=
+	by mail.kernel.org (Postfix) with ESMTP id 58E4A2177B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:23:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tqO0M2IB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbgHERXb (ORCPT
+        id S1728820AbgHERXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:23:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728629AbgHERRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:17:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3899D233E2;
-        Wed,  5 Aug 2020 15:53:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596642802;
-        bh=ZbssVGpllyh0qYTSG60hN7rg8nKExPvelIXE1QW1lXM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aSVj0T1w+Mqr5fBbFHeFZbR4I5zNJG8rjdYwo6scHw8CvxYrvEe1xR2bQM+yTDzSQ
-         76FfIaz1LE4a4sQQC3/DuaT+Sp+708sLe9eun5TrPU9Tiw25Fbms/mRfQIOvMkumkw
-         sPo1MBo7f7NS3V3b3PoZg9unj+4alP8y/voqAHk0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Wang Long <wanglong19@meituan.com>,
-        Jiang Ying <jiangying8582@126.com>
-Subject: [PATCH 4.19 6/6] ext4: fix direct I/O read error
-Date:   Wed,  5 Aug 2020 17:53:05 +0200
-Message-Id: <20200805153505.794820436@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200805153505.472594546@linuxfoundation.org>
-References: <20200805153505.472594546@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 5 Aug 2020 13:23:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51504 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728497AbgHERQn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:16:43 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 275AEC06174A;
+        Wed,  5 Aug 2020 10:16:43 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id r4so14989193pls.2;
+        Wed, 05 Aug 2020 10:16:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=09YSKPP7Cq8VsV0IMBuxAsBm/yvKaFDSCahx4z1NFcQ=;
+        b=tqO0M2IBSkDzDHxoQDOnAATXSwqNxm90XEEAkKpFztXTwlqlHWOmv+BXv3Sa/F0jHh
+         /vpnLYSxSaj65tJfLmXqL7YNzX6DVxWM+NahlBxARrOUn5AbVv5ZbcEbTv2DLpHdBgi6
+         BvQhl13guAvmywkJ1hVNSuTK3j9oqw82tsFv+NblXgQyPJeWFL0S/velRw7rfNPtSN+0
+         Tgfsxz8lTfrxFoPy/+CVveRihaC/P17OpZJmOV4LoxkIOC/5a4SWqfQ6rHnCGWNXtL/H
+         Of6WGeC40kASrNllKhkSozfyBGoKnUB7Rx+WGuclFS/u+0RQd/8MC+y1tdL53+NH9Cm6
+         HC0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=09YSKPP7Cq8VsV0IMBuxAsBm/yvKaFDSCahx4z1NFcQ=;
+        b=AayXoPbbgsOvbdpffm97368955qIMRmjiF0V0UyEQSwk1oF9lFPJKAq9w5N2OI3vu6
+         /GMdshFvUu1Xs4nPjjDnt2Tupogv/mri4cDOrUCrmxvFXVXBEFIr4pBIluL5DLf05cKj
+         WxDmWTdJdDHSa3WH0i2vY47SdcKqOQjQckvhAi45VRC0GDI9b4dsDhb8UK4eVzmkAf3x
+         P1uiydahjPle+xnVaaclEPg+smef7QQLSxmytIAh6sUUcKvKyT0fp1A1EkvJPubLIeVy
+         +2OKRzUtSYeHqfCV+LnItFRCJUZ/YuFzIxzENK0MNVStn6eOrKwOC0pkjWu3J+W1aTSY
+         vz8w==
+X-Gm-Message-State: AOAM532/TGRn7WT/arfSF9XWi8zHAMOHtpJs28HQvxRxfXmaS34M7GKh
+        PPUDdZoEVFT0KhJn07jvn/Q=
+X-Google-Smtp-Source: ABdhPJwUGn9rRBdEQrMwQQSOgL4hqeAra8KQU6l7Yc00ExdaONKgUZjxB5Gl9xdQLixur2v9izy6Ig==
+X-Received: by 2002:a17:90b:154:: with SMTP id em20mr4496017pjb.173.1596647802631;
+        Wed, 05 Aug 2020 10:16:42 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:16b0])
+        by smtp.gmail.com with ESMTPSA id np4sm3957912pjb.4.2020.08.05.10.16.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 10:16:41 -0700 (PDT)
+Date:   Wed, 5 Aug 2020 10:16:39 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <Kernel-team@fb.com>,
+        john fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Xu <dlxu@fb.com>
+Subject: Re: [PATCH bpf-next 5/5] selftests/bpf: add benchmark for uprobe vs.
+ user_prog
+Message-ID: <20200805171639.tsqjmifd7eb3htou@ast-mbp.dhcp.thefacebook.com>
+References: <20200801084721.1812607-1-songliubraving@fb.com>
+ <20200801084721.1812607-6-songliubraving@fb.com>
+ <CAEf4BzaP4TGF7kcmZRAKsy=oWPpFA6sUGFkctpGz-fPp+YuSOQ@mail.gmail.com>
+ <DDCD362E-21D3-46BF-90A6-8F3221CBB54E@fb.com>
+ <CAEf4BzY5RYMM6w8wn3qEB3AsuKWv-TMaD5NVFj=YqbCW4DLjqA@mail.gmail.com>
+ <7384B583-EE19-4045-AC72-B6FE87C187DD@fb.com>
+ <CAEf4BzaiJnCu14AWougmxH80msGdOp4S8ZNmAiexMmtwUM_2Xg@mail.gmail.com>
+ <AF9D0E8C-0AA5-4BE4-90F4-946FABAB63FD@fb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AF9D0E8C-0AA5-4BE4-90F4-946FABAB63FD@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiang Ying <jiangying8582@126.com>
+On Wed, Aug 05, 2020 at 04:47:30AM +0000, Song Liu wrote:
+> 
+> Being able to trigger BPF program on a different CPU could enable many
+> use cases and optimizations. The use case I am looking at is to access
+> perf_event and percpu maps on the target CPU. For example:
+> 	0. trigger the program
+> 	1. read perf_event on cpu x;
+> 	2. (optional) check which process is running on cpu x;
+> 	3. add perf_event value to percpu map(s) on cpu x. 
 
-This patch is used to fix ext4 direct I/O read error when
-the read size is not aligned with block size.
-
-Then, I will use a test to explain the error.
-
-(1) Make a file that is not aligned with block size:
-	$dd if=/dev/zero of=./test.jar bs=1000 count=3
-
-(2) I wrote a source file named "direct_io_read_file.c" as following:
-
-	#include <stdio.h>
-	#include <stdlib.h>
-	#include <unistd.h>
-	#include <sys/file.h>
-	#include <sys/types.h>
-	#include <sys/stat.h>
-	#include <string.h>
-	#define BUF_SIZE 1024
-
-	int main()
-	{
-		int fd;
-		int ret;
-
-		unsigned char *buf;
-		ret = posix_memalign((void **)&buf, 512, BUF_SIZE);
-		if (ret) {
-			perror("posix_memalign failed");
-			exit(1);
-		}
-		fd = open("./test.jar", O_RDONLY | O_DIRECT, 0755);
-		if (fd < 0){
-			perror("open ./test.jar failed");
-			exit(1);
-		}
-
-		do {
-			ret = read(fd, buf, BUF_SIZE);
-			printf("ret=%d\n",ret);
-			if (ret < 0) {
-				perror("write test.jar failed");
-			}
-		} while (ret > 0);
-
-		free(buf);
-		close(fd);
-	}
-
-(3) Compile the source file:
-	$gcc direct_io_read_file.c -D_GNU_SOURCE
-
-(4) Run the test program:
-	$./a.out
-
-	The result is as following:
-	ret=1024
-	ret=1024
-	ret=952
-	ret=-1
-	write test.jar failed: Invalid argument.
-
-I have tested this program on XFS filesystem, XFS does not have
-this problem, because XFS use iomap_dio_rw() to do direct I/O
-read. And the comparing between read offset and file size is done
-in iomap_dio_rw(), the code is as following:
-
-	if (pos < size) {
-		retval = filemap_write_and_wait_range(mapping, pos,
-				pos + iov_length(iov, nr_segs) - 1);
-
-		if (!retval) {
-			retval = mapping->a_ops->direct_IO(READ, iocb,
-						iov, pos, nr_segs);
-		}
-		...
-	}
-
-...only when "pos < size", direct I/O can be done, or 0 will be return.
-
-I have tested the fix patch on Ext4, it is up to the mustard of
-EINVAL in man2(read) as following:
-	#include <unistd.h>
-	ssize_t read(int fd, void *buf, size_t count);
-
-	EINVAL
-		fd is attached to an object which is unsuitable for reading;
-		or the file was opened with the O_DIRECT flag, and either the
-		address specified in buf, the value specified in count, or the
-		current file offset is not suitably aligned.
-
-So I think this patch can be applied to fix ext4 direct I/O error.
-
-However Ext4 introduces direct I/O read using iomap infrastructure
-on kernel 5.5, the patch is commit <b1b4705d54ab>
-("ext4: introduce direct I/O read using iomap infrastructure"),
-then Ext4 will be the same as XFS, they all use iomap_dio_rw() to do direct
-I/O read. So this problem does not exist on kernel 5.5 for Ext4.
-
->From above description, we can see this problem exists on all the kernel
-versions between kernel 3.14 and kernel 5.4. It will cause the Applications
-to fail to read. For example, when the search service downloads a new full
-index file, the search engine is loading the previous index file and is
-processing the search request, it can not use buffer io that may squeeze
-the previous index file in use from pagecache, so the serch service must
-use direct I/O read.
-
-Please apply this patch on these kernel versions, or please use the method
-on kernel 5.5 to fix this problem.
-
-Fixes: 9fe55eea7e4b ("Fix race when checking i_size on direct i/o read")
-Reviewed-by: Jan Kara <jack@suse.cz>
-Co-developed-by: Wang Long <wanglong19@meituan.com>
-Signed-off-by: Wang Long <wanglong19@meituan.com>
-Signed-off-by: Jiang Ying <jiangying8582@126.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/ext4/inode.c |    5 +++++
- 1 file changed, 5 insertions(+)
-
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -3848,6 +3848,11 @@ static ssize_t ext4_direct_IO_read(struc
- 	struct inode *inode = mapping->host;
- 	size_t count = iov_iter_count(iter);
- 	ssize_t ret;
-+	loff_t offset = iocb->ki_pos;
-+	loff_t size = i_size_read(inode);
-+
-+	if (offset >= size)
-+		return 0;
- 
- 	/*
- 	 * Shared inode_lock is enough for us - it protects against concurrent
-
-
+If the whole thing is about doing the above then I don't understand why new
+prog type is needed. Can prog_test_run support existing BPF_PROG_TYPE_KPROBE?
+"enable many use cases" sounds vague. I don't think folks reading
+the patches can guess those "use cases".
+"Testing existing kprobe bpf progs" would sound more convincing to me.
+If the test_run framework can be extended to trigger kprobe with correct pt_regs.
+As part of it test_run would trigger on a given cpu with $ip pointing
+to some test fuction in test_run.c. For local test_run the stack trace
+would include bpf syscall chain. For IPI the stack trace would include
+the corresponding kernel pieces where top is our special test function.
+Sort of like pseudo kprobe where there is no actual kprobe logic,
+since kprobe prog doesn't care about mechanism. It needs correct
+pt_regs only as input context.
+The kprobe prog output (return value) has special meaning though,
+so may be kprobe prog type is not a good fit.
+Something like fentry/fexit may be better, since verifier check_return_code()
+enforces 'return 0'. So their return value is effectively "void".
+Then prog_test_run would need to gain an ability to trigger
+fentry/fexit prog on a given cpu.
