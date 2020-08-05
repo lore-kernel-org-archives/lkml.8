@@ -2,123 +2,257 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C446C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B565C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1049E22B42
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:11:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LJmwUcb4"
+	by mail.kernel.org (Postfix) with ESMTP id 1534422B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:11:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729645AbgHEULd (ORCPT
+        id S1729673AbgHEULm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:11:33 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:54964 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727008AbgHEQ1n (ORCPT
+        Wed, 5 Aug 2020 16:11:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42982 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726844AbgHEQ1m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:27:43 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 075GM4C9038919;
-        Wed, 5 Aug 2020 16:25:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=5XP8uLSK11AJnsAEQAxe44/0zKxbW/hwfIcqfufnmeE=;
- b=LJmwUcb4xXwAz+eZQ4bWBDX8nC3NpFcZDGJz9UsACTT1Buvih6AKdRste9P6dvdnpuz6
- gAXkAW+1S4jQxY+6OhBDH1RRPEhyttOeaAPeUlTQ2L81MD+5vgMhTwfdn3zaSVpPsONa
- 8o48vxS1YNJo0ADSpu6hRU99WRTEeIF7hma0EOwE4o98DpxD0OuM4Gv8Ur3b6+TURRYI
- kGJKI1GW+M7Qnfj4k6HlkJlssx0YR7KmSkpePBVuOY6FkVpoxtU/Kafde+voK3yy/t6x
- 7q4MMybU4E2EqJmXrvLK+Zo6BoZmq3u+ZgYx0/TsoF1lx3YNQlxL54esBlPSEYAsFni1 7g== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 32n11nb27j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 05 Aug 2020 16:25:56 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 075GHjwM074767;
-        Wed, 5 Aug 2020 16:23:56 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 32qyaa39tb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 05 Aug 2020 16:23:56 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 075GNq50031730;
-        Wed, 5 Aug 2020 16:23:52 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 05 Aug 2020 09:23:51 -0700
-Date:   Wed, 5 Aug 2020 09:23:49 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-xfs@vger.kernel.org, Dave Chinner <david@fromorbit.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Christoph Hellwig <hch@lst.de>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, riteshh@linux.ibm.com,
-        Goldwyn Rodrigues <rgoldwyn@suse.de>,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [GIT PULL] iomap: new code for 5.9-rc1
-Message-ID: <20200805162349.GB6107@magnolia>
-References: <20200805153214.GA6090@magnolia>
- <CAHc6FU6yMnuKdVsAXkWgwr2ViMSXJdBXksrQDvHwaaw4p8u0rQ@mail.gmail.com>
+        Wed, 5 Aug 2020 12:27:42 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EE1AC001FD6;
+        Wed,  5 Aug 2020 09:05:26 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 76749299000
+Received: by jupiter.universe (Postfix, from userid 1000)
+        id 3D506480119; Wed,  5 Aug 2020 18:05:21 +0200 (CEST)
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Ahmet Inan <inan@distec.de>,
+        Martin Fuzzey <martin.fuzzey@flowbird.group>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCHv4 2/4] Input: EXC3000: add EXC80H60 and EXC80H84 support
+Date:   Wed,  5 Aug 2020 18:05:18 +0200
+Message-Id: <20200805160520.456570-3-sebastian.reichel@collabora.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200805160520.456570-1-sebastian.reichel@collabora.com>
+References: <20200805160520.456570-1-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHc6FU6yMnuKdVsAXkWgwr2ViMSXJdBXksrQDvHwaaw4p8u0rQ@mail.gmail.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9704 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 suspectscore=1
- spamscore=0 bulkscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008050132
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9704 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0 mlxscore=0
- suspectscore=1 mlxlogscore=999 phishscore=0 adultscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008050132
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 05:54:31PM +0200, Andreas Gruenbacher wrote:
-> Hi Darrick,
-> 
-> On Wed, Aug 5, 2020 at 5:40 PM Darrick J. Wong <djwong@kernel.org> wrote:
-> > ----------------------------------------------------------------
-> > Andreas Gruenbacher (1):
-> >       iomap: Make sure iomap_end is called after iomap_begin
-> 
-> that commit (d1b4f507d71de) contains the following garbage in the
-> commit message:
-> 
->     The message from this sender included one or more files
->     which could not be scanned for virus detection; do not
->     open these files unless you are certain of the sender's intent.
-> 
->     ----------------------------------------------------------------------
-> 
-> How did it come to that?
+This adds support for EXC80H60 and EXCH84 controllers, which
+use a different event type id and have two extra bits for the
+resolution (so the maximum is 16K instead of 4K).
 
-I have no idea.  It's not in the email that I turned into a patch, but
-golly roundtripping git patches through email and back to git sucks.
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+---
+ .../input/touchscreen/eeti,exc3000.yaml       |  5 +-
+ drivers/input/touchscreen/exc3000.c           | 80 +++++++++++++++----
+ 2 files changed, 70 insertions(+), 15 deletions(-)
 
-Oh well, I guess I have to rebase the whole branch now.
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/eeti,exc3000.yaml b/Documentation/devicetree/bindings/input/touchscreen/eeti,exc3000.yaml
+index 022aa69a5dfe..7e6e23f8fa00 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/eeti,exc3000.yaml
++++ b/Documentation/devicetree/bindings/input/touchscreen/eeti,exc3000.yaml
+@@ -14,7 +14,10 @@ allOf:
+ 
+ properties:
+   compatible:
+-    const: eeti,exc3000
++    enum:
++      - eeti,exc3000
++      - eeti,exc80h60
++      - eeti,exc80h84
+   reg:
+     const: 0x2a
+   interrupts:
+diff --git a/drivers/input/touchscreen/exc3000.c b/drivers/input/touchscreen/exc3000.c
+index 555a14305cd4..b497bd2ae41d 100644
+--- a/drivers/input/touchscreen/exc3000.c
++++ b/drivers/input/touchscreen/exc3000.c
+@@ -16,6 +16,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/sizes.h>
+ #include <linux/timer.h>
+ #include <asm/unaligned.h>
+ 
+@@ -23,11 +24,43 @@
+ #define EXC3000_SLOTS_PER_FRAME		5
+ #define EXC3000_LEN_FRAME		66
+ #define EXC3000_LEN_POINT		10
+-#define EXC3000_MT_EVENT		6
++
++#define EXC3000_MT1_EVENT		0x06
++#define EXC3000_MT2_EVENT		0x18
++
+ #define EXC3000_TIMEOUT_MS		100
+ 
++static const struct i2c_device_id exc3000_id[];
++
++struct eeti_dev_info {
++	const char *name;
++	int max_xy;
++};
++
++enum eeti_dev_id {
++	EETI_EXC3000,
++	EETI_EXC80H60,
++	EETI_EXC80H84,
++};
++
++static struct eeti_dev_info exc3000_info[] = {
++	[EETI_EXC3000] = {
++		.name = "EETI EXC3000 Touch Screen",
++		.max_xy = SZ_4K - 1,
++	},
++	[EETI_EXC80H60] = {
++		.name = "EETI EXC80H60 Touch Screen",
++		.max_xy = SZ_16K - 1,
++	},
++	[EETI_EXC80H84] = {
++		.name = "EETI EXC80H84 Touch Screen",
++		.max_xy = SZ_16K - 1,
++	},
++};
++
+ struct exc3000_data {
+ 	struct i2c_client *client;
++	const struct eeti_dev_info *info;
+ 	struct input_dev *input;
+ 	struct touchscreen_properties prop;
+ 	struct timer_list timer;
+@@ -58,10 +91,15 @@ static void exc3000_timer(struct timer_list *t)
+ 	input_sync(data->input);
+ }
+ 
+-static int exc3000_read_frame(struct i2c_client *client, u8 *buf)
++static int exc3000_read_frame(struct exc3000_data *data, u8 *buf)
+ {
++	struct i2c_client *client = data->client;
++	u8 expected_event = EXC3000_MT1_EVENT;
+ 	int ret;
+ 
++	if (data->info->max_xy == SZ_16K - 1)
++		expected_event = EXC3000_MT2_EVENT;
++
+ 	ret = i2c_master_send(client, "'", 2);
+ 	if (ret < 0)
+ 		return ret;
+@@ -76,19 +114,21 @@ static int exc3000_read_frame(struct i2c_client *client, u8 *buf)
+ 	if (ret != EXC3000_LEN_FRAME)
+ 		return -EIO;
+ 
+-	if (get_unaligned_le16(buf) != EXC3000_LEN_FRAME ||
+-			buf[2] != EXC3000_MT_EVENT)
++	if (get_unaligned_le16(buf) != EXC3000_LEN_FRAME)
++		return -EINVAL;
++
++	if (buf[2] != expected_event)
+ 		return -EINVAL;
+ 
+ 	return 0;
+ }
+ 
+-static int exc3000_read_data(struct i2c_client *client,
++static int exc3000_read_data(struct exc3000_data *data,
+ 			     u8 *buf, int *n_slots)
+ {
+ 	int error;
+ 
+-	error = exc3000_read_frame(client, buf);
++	error = exc3000_read_frame(data, buf);
+ 	if (error)
+ 		return error;
+ 
+@@ -98,7 +138,7 @@ static int exc3000_read_data(struct i2c_client *client,
+ 
+ 	if (*n_slots > EXC3000_SLOTS_PER_FRAME) {
+ 		/* Read 2nd frame to get the rest of the contacts. */
+-		error = exc3000_read_frame(client, buf + EXC3000_LEN_FRAME);
++		error = exc3000_read_frame(data, buf + EXC3000_LEN_FRAME);
+ 		if (error)
+ 			return error;
+ 
+@@ -118,7 +158,7 @@ static irqreturn_t exc3000_interrupt(int irq, void *dev_id)
+ 	int slots, total_slots;
+ 	int error;
+ 
+-	error = exc3000_read_data(data->client, buf, &total_slots);
++	error = exc3000_read_data(data, buf, &total_slots);
+ 	if (error) {
+ 		/* Schedule a timer to release "stuck" contacts */
+ 		mod_timer(&data->timer,
+@@ -149,13 +189,19 @@ static int exc3000_probe(struct i2c_client *client)
+ {
+ 	struct exc3000_data *data;
+ 	struct input_dev *input;
+-	int error;
++	int error, max_xy;
+ 
+ 	data = devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+ 		return -ENOMEM;
+ 
+ 	data->client = client;
++	data->info = device_get_match_data(&client->dev);
++	if (!data->info) {
++		enum eeti_dev_id eeti_dev_id =
++			i2c_match_id(exc3000_id, client)->driver_data;
++		data->info = &exc3000_info[eeti_dev_id];
++	}
+ 	timer_setup(&data->timer, exc3000_timer, 0);
+ 
+ 	input = devm_input_allocate_device(&client->dev);
+@@ -164,11 +210,13 @@ static int exc3000_probe(struct i2c_client *client)
+ 
+ 	data->input = input;
+ 
+-	input->name = "EETI EXC3000 Touch Screen";
++	input->name = data->info->name;
+ 	input->id.bustype = BUS_I2C;
+ 
+-	input_set_abs_params(input, ABS_MT_POSITION_X, 0, 4095, 0, 0);
+-	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, 4095, 0, 0);
++	max_xy = data->info->max_xy;
++	input_set_abs_params(input, ABS_MT_POSITION_X, 0, max_xy, 0, 0);
++	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, max_xy, 0, 0);
++
+ 	touchscreen_parse_properties(input, true, &data->prop);
+ 
+ 	error = input_mt_init_slots(input, EXC3000_NUM_SLOTS,
+@@ -190,14 +238,18 @@ static int exc3000_probe(struct i2c_client *client)
+ }
+ 
+ static const struct i2c_device_id exc3000_id[] = {
+-	{ "exc3000", 0 },
++	{ "exc3000", EETI_EXC3000 },
++	{ "exc80h60", EETI_EXC80H60 },
++	{ "exc80h84", EETI_EXC80H84 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, exc3000_id);
+ 
+ #ifdef CONFIG_OF
+ static const struct of_device_id exc3000_of_match[] = {
+-	{ .compatible = "eeti,exc3000" },
++	{ .compatible = "eeti,exc3000", .data = &exc3000_info[EETI_EXC3000] },
++	{ .compatible = "eeti,exc80h60", .data = &exc3000_info[EETI_EXC80H60] },
++	{ .compatible = "eeti,exc80h84", .data = &exc3000_info[EETI_EXC80H84] },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, exc3000_of_match);
+-- 
+2.27.0
 
-Linus: please ignore this pull request.
-
---D
-
-> 
-> Thanks,
-> Andreas
-> 
