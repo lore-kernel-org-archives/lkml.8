@@ -2,200 +2,110 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93540C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 10:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3561C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 10:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F285207FC
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 10:34:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E08F20792
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 10:36:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D48Bi4O/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="I0WW5w/i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgHEKca (ORCPT
+        id S1728087AbgHEKgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 06:32:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43898 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728119AbgHEK0T (ORCPT
+        Wed, 5 Aug 2020 06:36:16 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:11277 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728170AbgHEK0U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 06:26:19 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DF9AC0617A1;
-        Wed,  5 Aug 2020 03:25:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=EgLuoy51jN5BCDfpowjvn/C6CCPgestz5KEkr0EylHg=; b=D48Bi4O/xIUdkOl8ASViOO/4Qn
-        qTmxKGEPzQYyL2+G+R9sz5mPzXIcsdpAu61JPqlqB+SqmDKLEEQLAXLqQVdirVLnZiaktVkziOmTS
-        ZODos8mb1qDk8msepdHWej00l7W9cq4Uzg02VD0hllTmrbPf4YcCaEzZCCV++O+b6W9tSsKXQ/gdd
-        xW7D8JXXHQyKUMcyJxcCI8HZWQJe1UatrpLjx5yrpREAUBHTtiE2z0TQan+2i7qBRtaCLpaqsWYSM
-        JUkgCl/kjAuG0zp0JO5/vk6gStU3hPGYul3cKadsKHW+CaujXc9qHjXXVMwNGqo0celd3rLLm8WuN
-        +37zncQg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k3GcL-0004td-Ap; Wed, 05 Aug 2020 10:25:53 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BA3A33012DC;
-        Wed,  5 Aug 2020 12:25:50 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 653F42B7C12A6; Wed,  5 Aug 2020 12:25:50 +0200 (CEST)
-Date:   Wed, 5 Aug 2020 12:25:50 +0200
-From:   peterz@infradead.org
-To:     yamada.masahiro@socionext.com
-Cc:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: [PATCH] scipts/tags.sh: Add custom sort order
-Message-ID: <20200805102550.GO2674@hirez.programming.kicks-ass.net>
+        Wed, 5 Aug 2020 06:26:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1596623179; x=1628159179;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=h/0isfh8p8B1tbntU7DOOWsRw+KNgTWlrOkmU2ux2KQ=;
+  b=I0WW5w/i3V14QLplvh4/UDH/vF6Ba6FjTz/8A1phbJgwmlB2boGC0JLx
+   3FISCo8uT71oXwhlVPANK/3C7n+y7gXzm8iK+sdnbH4qaba7POiEbEbKE
+   PeUWQmptvaphFAm+O9jMExk92gujrAlf2UzLNUQy36jyWifOl2z/d+3d1
+   GGa7kxSASH8N2YhHe/D3eprTVdCz9JZBdQNn34gBqLD5ExJzbuauonCvy
+   Xzs+0q/M4O8xwc7GY7QElASYJw63cOjA6/zLclDTbWeFHm2OoDO/w/gUW
+   Qu5NJ5rAL4zIEkq+RP3P+O/BuV2yn0F28VtUrphgM+fVtoPhc8H/qZgBI
+   Q==;
+IronPort-SDR: /tllqZmaNSf0pwVngbbkvrWa4jPFHORmq6vu9xyHDGcSsHwMl/qi4RNeuiLjTRfDbsjhW8OpW5
+ XpDoR0jI099Yp0G6vt/om2Pojc8aDZfLbMoob8LgnthK26Rb0cSfYsTVQ4Ern0hBZIR6KSwrm9
+ kPXw0Spmdy4JWwlpp9wKLil6PbUJBOBwtSzvJ1Q9EHvDltd2hSqGxudITIM9Pzo9fB2E6u2jC9
+ P5rBXhyk54OnjHb69E6cbn3W3ylV+tI3USE+3ZbUWFWzpalrEMNZiY6+7xUABrZfkQ0JFAQwrq
+ eUE=
+X-IronPort-AV: E=Sophos;i="5.75,436,1589212800"; 
+   d="scan'208";a="253548017"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 05 Aug 2020 18:25:16 +0800
+IronPort-SDR: tmI21nJS/lX63fAYjytIkd1PWsChQ6KHyBIxA5KxqlfhiOGJCJCNheH3zB+KLrZxhRCjNircE2
+ 7NeegtjBktaQ==
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 03:12:36 -0700
+IronPort-SDR: VUewrqLbnzqHz+1znrMauq+iKaQ9F6wif5BzAqHWU2V2ZT7K1lVDvG0MTfXji6pud1QgJHJ3zk
+ LoEnDGt9JhZA==
+WDCIronportException: Internal
+Received: from unknown (HELO redsun52) ([10.149.66.28])
+  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 03:25:15 -0700
+Date:   Wed, 5 Aug 2020 11:25:11 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@wdc.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv@lists.infradead.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 1/2] riscv: ptrace: Use the correct API for `fcsr'
+ access
+In-Reply-To: <20200805024807.GM1236603@ZenIV.linux.org.uk>
+Message-ID: <alpine.LFD.2.21.2008051117180.24175@redsun52.ssa.fujisawa.hgst.com>
+References: <20200805020745.GL1236603@ZenIV.linux.org.uk> <mhng-cd1ff2e9-7d34-4d56-8d79-b2d02a239290@palmerdabbelt-glaptop1> <20200805024807.GM1236603@ZenIV.linux.org.uk>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 5 Aug 2020, Al Viro wrote:
 
-One long standing annoyance I have with using vim-tags is that our tags
-file is not properly sorted. That is, the sorting exhuberant Ctags does
-is only on the tag itself.
+> > I'm not sure I understand what you're saying, but given that branch replaces
+> > all of this I guess it's best to just do nothing on our end here?
+> 
+> It doesn't replace ->put() (for now); it _does_ replace ->get() and AFAICS the
+> replacement is much saner:
+> 
+> static int riscv_fpr_get(struct task_struct *target,
+>                          const struct user_regset *regset,
+>                          struct membuf to)
+> {
+> 	struct __riscv_d_ext_state *fstate = &target->thread.fstate;
+> 
+> 	membuf_write(&to, fstate, offsetof(struct __riscv_d_ext_state, fcsr));
+> 	membuf_store(&to, fstate->fcsr);
+> 	return membuf_zero(&to, 4);     // explicitly pad
+> }
 
-The problem with that is that, for example, the tag 'mutex' appears a
-mere 505 times, 492 of those are structure members. However it is _far_
-more likely that someone wants the struct definition when looking for
-the mutex tag than any of those members. However, due to the nature of
-the sorting, the struct definition will not be first.
+ I'm glad to see the old interface go, it was cumbersome.
 
-So add a script that does a custom sort of the tags file, taking the tag
-kind into account.
+> user_regset_copyout() calling conventions are atrocious and so are those of
+> regset ->get().  The best thing to do with both is to take them out of their
+> misery and be done with that.  Do you see any problems with riscv gdbserver
+> on current linux-next?  If not, I'd rather see that "API" simply go away...
+> If there are problems, I would very much prefer fixes on top of what's done
+> in that branch.
 
-The kind ordering is roughly: 'type', 'function', 'macro', 'enum', rest.
+ I can push linux-next through regression-testing with RISC-V gdbserver 
+and/or native GDB if that would help.  This is also used with core dumps, 
+but honestly I don't know what state RISC-V support is in in the BFD/GDB's 
+core dump interpreter, as people tend to forget about the core dump 
+feature nowadays.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- scripts/sort-tags.awk | 79 +++++++++++++++++++++++++++++++++++++++++++++++++++
- scripts/tags.sh       |  8 +++++-
- 2 files changed, 86 insertions(+), 1 deletion(-)
-
-diff --git a/scripts/sort-tags.awk b/scripts/sort-tags.awk
-new file mode 100755
-index 000000000000..1eb50406c9d3
---- /dev/null
-+++ b/scripts/sort-tags.awk
-@@ -0,0 +1,79 @@
-+#!/usr/bin/awk -f
-+
-+# $ ctags --list-kinds
-+# C
-+#   c  classes
-+#   s  structure names
-+#   t  typedefs
-+#   g  enumeration names
-+#   u  union names
-+#   n  namespaces
-+
-+#   f  function definitions
-+#   p  function prototypes [off]
-+#   d  macro definitions
-+
-+#   e  enumerators (values inside an enumeration)
-+#   m  class, struct, and union members
-+#   v  variable definitions
-+
-+#   l  local variables [off]
-+#   x  external and forward variable declarations [off]
-+
-+BEGIN {
-+	FS = "\t"
-+
-+	sort = "LC_ALL=C sort"
-+
-+	# our sort order for C kinds:
-+	order["c"] = "A"
-+	order["s"] = "B"
-+	order["t"] = "C"
-+	order["g"] = "D"
-+	order["u"] = "E"
-+	order["n"] = "F"
-+	order["f"] = "G"
-+	order["p"] = "H"
-+	order["d"] = "I"
-+	order["e"] = "J"
-+	order["m"] = "K"
-+	order["v"] = "L"
-+	order["l"] = "M"
-+	order["x"] = "N"
-+}
-+
-+# pass through header
-+/^!_TAG/ {
-+	print $0
-+	next
-+}
-+
-+{
-+	# find 'kinds'
-+	for (i = 1; i <= NF; i++) {
-+		if ($i ~ /;"$/) {
-+			kind = $(i+1)
-+			break;
-+		}
-+	}
-+
-+	# create sort key
-+	if (order[kind])
-+		key = $1 order[kind];
-+	else
-+		key = $1 "Z";
-+
-+	# get it sorted
-+	print key "\t" $0 |& sort
-+}
-+
-+END {
-+	close(sort, "to")
-+	while ((sort |& getline) > 0) {
-+		# strip key
-+		sub(/[^[:space:]]*[[:space:]]*/, "")
-+		print $0
-+	}
-+	close(sort)
-+}
-+
-diff --git a/scripts/tags.sh b/scripts/tags.sh
-index 4e18ae5282a6..93d729392a7b 100755
---- a/scripts/tags.sh
-+++ b/scripts/tags.sh
-@@ -251,6 +251,8 @@ setup_regex()
- 
- exuberant()
- {
-+	rm -f tags.unsorted
-+
- 	setup_regex exuberant asm c
- 	all_target_sources | xargs $1 -a                        \
- 	-I __initdata,__exitdata,__initconst,__ro_after_init	\
-@@ -266,12 +268,16 @@ exuberant()
- 	-I DEFINE_TRACE,EXPORT_TRACEPOINT_SYMBOL,EXPORT_TRACEPOINT_SYMBOL_GPL \
- 	-I static,const						\
- 	--extra=+fq --c-kinds=+px --fields=+iaS --langmap=c:+.h \
-+	--sort=no -o tags.unsorted				\
- 	"${regex[@]}"
- 
- 	setup_regex exuberant kconfig
- 	all_kconfigs | xargs $1 -a                              \
--	--langdef=kconfig --language-force=kconfig "${regex[@]}"
-+	--langdef=kconfig --language-force=kconfig --sort=no	\
-+	-o tags.unsorted "${regex[@]}"
- 
-+	scripts/sort-tags.awk tags.unsorted > tags
-+	rm -f tags.unsorted
- }
- 
- emacs()
-
+  Maciej
