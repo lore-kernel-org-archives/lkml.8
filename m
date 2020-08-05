@@ -2,124 +2,88 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76533C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E395C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52B882177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:19:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aZ7tmdLE"
+	by mail.kernel.org (Postfix) with ESMTP id 15D6D2177B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:20:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbgHERTs (ORCPT
+        id S1728234AbgHERT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:19:48 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33145 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728404AbgHERSH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:18:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596647883;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=u6BgoSObisAMVxaJpQKxat6BIIq50UZiECX71HIFPB8=;
-        b=aZ7tmdLEVPwzcCnIg5z/chXFiwdYPYYXh1YUAkWe4dNyTansASoFm8SX/FUSs4eBu28m0u
-        CgEKFtkb8iMep2NL8PGzRBLsOsDfwuJO6GunnhW0cZ0fjVePGpp23SeOmPlX1cs2aRv0D2
-        kjRwobiwce7PFTYoCgVa9TSrKxn5WDk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-457-EMfVmt2BMeOPnRR1pJUjkQ-1; Wed, 05 Aug 2020 09:59:56 -0400
-X-MC-Unique: EMfVmt2BMeOPnRR1pJUjkQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3D27D80183C;
-        Wed,  5 Aug 2020 13:59:55 +0000 (UTC)
-Received: from gondolin (ovpn-113-4.ams2.redhat.com [10.36.113.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 943062B6D9;
-        Wed,  5 Aug 2020 13:59:50 +0000 (UTC)
-Date:   Wed, 5 Aug 2020 15:59:48 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v3 38/38] virtio_net: use LE accessors for speed/duplex
-Message-ID: <20200805155948.4869b0cc.cohuck@redhat.com>
-In-Reply-To: <20200805134226.1106164-39-mst@redhat.com>
-References: <20200805134226.1106164-1-mst@redhat.com>
-        <20200805134226.1106164-39-mst@redhat.com>
-Organization: Red Hat GmbH
+        Wed, 5 Aug 2020 13:19:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:33668 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728653AbgHERSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:18:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F37F230E;
+        Wed,  5 Aug 2020 05:36:48 -0700 (PDT)
+Received: from bogus (unknown [10.37.12.53])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E18173FA1C;
+        Wed,  5 Aug 2020 05:36:46 -0700 (PDT)
+Date:   Wed, 5 Aug 2020 13:36:43 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Lukasz Luba <lukasz.luba@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org, cristian.marussi@arm.com,
+        Sudeep Holla <sudeep.holla@arm.com>, rjw@rjwysocki.net
+Subject: Re: [PATCH 0/4] CPUFreq statistics retrieved by drivers
+Message-ID: <20200805123643.GB4818@bogus>
+References: <20200729151208.27737-1-lukasz.luba@arm.com>
+ <20200730085333.qubrsv7ufqninihd@vireshk-mac-ubuntu>
+ <20200730091014.GA13158@bogus>
+ <3b3a56e9-29ec-958f-fb3b-c689a9389d2f@arm.com>
+ <20200731155650.GC14529@bogus>
+ <ae352c39-f7c4-c69e-0113-7c810c130ee0@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ae352c39-f7c4-c69e-0113-7c810c130ee0@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Aug 2020 09:45:00 -0400
-"Michael S. Tsirkin" <mst@redhat.com> wrote:
+On Tue, Aug 04, 2020 at 10:19:23AM -0700, Florian Fainelli wrote:
+>
+>
+> On 7/31/2020 8:56 AM, Sudeep Holla wrote:
+> > On Thu, Jul 30, 2020 at 10:36:51AM +0100, Lukasz Luba wrote:
+> >>
+> >> In this case I think we would have to create debugfs.
+> >> Sudeep do you think these debugfs should be exposed from the protocol
+> >> layer:
+> >> drivers/firmware/arm_scmi/perf.c
+> >
+> > I prefer above over cpufreq as we can support for all the devices not
+> > just cpus which avoids adding similar support elsewhere(mostly devfreq)
+> >
+> >> or maybe from the cpufreq scmi driver? I would probably be safer to have
+> >> it in the cpufreq driver because we have scmi_handle there.
+> >>
+> >
+> > Cristian was thinking if we can consolidate all such debugfs under one
+> > device may be and that should eliminate your handle restriction. I would
+> > like to see how that works out in implementation but I don't have any
+> > better suggestion ATM.
+>
+> debugfs is not enabled in production kernels, and especially not with
+> Android kernels, so sticking those in sysfs like the existing cpufreq
+> subsystem statistics may be a better choice.
 
-> Speed and duplex config fields depend on VIRTIO_NET_F_SPEED_DUPLEX
-> which being 63>31 depends on VIRTIO_F_VERSION_1.
-> 
-> Accordingly, use LE accessors for these fields.
-> 
-> Reported-by: Cornelia Huck <cohuck@redhat.com>
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->  drivers/net/virtio_net.c        | 9 +++++----
->  include/uapi/linux/virtio_net.h | 2 +-
->  2 files changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> index ba38765dc490..0934b1ec5320 100644
-> --- a/drivers/net/virtio_net.c
-> +++ b/drivers/net/virtio_net.c
-> @@ -2264,12 +2264,13 @@ static void virtnet_update_settings(struct virtnet_info *vi)
->  	if (!virtio_has_feature(vi->vdev, VIRTIO_NET_F_SPEED_DUPLEX))
->  		return;
->  
-> -	speed = virtio_cread32(vi->vdev, offsetof(struct virtio_net_config,
-> -						  speed));
-> +	virtio_cread_le(vi->vdev, struct virtio_net_config, speed, &speed);
-> +
->  	if (ethtool_validate_speed(speed))
->  		vi->speed = speed;
-> -	duplex = virtio_cread8(vi->vdev, offsetof(struct virtio_net_config,
-> -						  duplex));
-> +
-> +	virtio_cread_le(vi->vdev, struct virtio_net_config, duplex, &duplex);
+Fair enough. I was suggesting that only if we can't push this into existing
+sysfs support. If we can, then we need not worry about it. If not, I don't
+want a user ABI just for SCMI for this firmware stats, I would rather keep
+it in debugfs for debug purposes. This will be useless once we start seeing
+AMU in the hardware and hence I was pushing for debugfs.
 
-Looks a bit odd for an u8, but does not really hurt.
-
-> +
->  	if (ethtool_validate_duplex(duplex))
->  		vi->duplex = duplex;
->  }
-> diff --git a/include/uapi/linux/virtio_net.h b/include/uapi/linux/virtio_net.h
-> index 27d996f29dd1..3f55a4215f11 100644
-> --- a/include/uapi/linux/virtio_net.h
-> +++ b/include/uapi/linux/virtio_net.h
-> @@ -99,7 +99,7 @@ struct virtio_net_config {
->  	 * speed, in units of 1Mb. All values 0 to INT_MAX are legal.
->  	 * Any other value stands for unknown.
->  	 */
-> -	__virtio32 speed;
-> +	__le32 speed;
->  	/*
->  	 * 0x00 - half duplex
->  	 * 0x01 - full duplex
-
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-
+--
+Regards,
+Sudeep
