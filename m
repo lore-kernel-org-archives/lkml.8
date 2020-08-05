@@ -2,74 +2,106 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5530EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D98C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23EB02075D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47DD4206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:26:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IRftECyn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbgHET0A (ORCPT
+        id S1728974AbgHET0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:26:00 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:43894 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728624AbgHERO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:14:57 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1k3JFE-008NAi-1O; Wed, 05 Aug 2020 15:14:12 +0200
-Date:   Wed, 5 Aug 2020 15:14:12 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Ilia Lin <ilia.lin@kernel.org>
-Cc:     David Miller <davem@davemloft.net>, ilial@codeaurora.org,
-        kuba@kernel.org, jiri@mellanox.com, edumazet@google.com,
-        ap420073@gmail.com, xiyou.wangcong@gmail.com, maximmi@mellanox.com,
-        netdev@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: dev: Add API to check net_dev readiness
-Message-ID: <20200805131412.GA1960434@lunn.ch>
-References: <1595792274-28580-1-git-send-email-ilial@codeaurora.org>
- <20200726194528.GC1661457@lunn.ch>
- <20200727.103233.2024296985848607297.davem@davemloft.net>
- <CA+5LGR1KwePssqhCkZ6qT_W87fO2o1XPze53mJwjkTWtphiWrA@mail.gmail.com>
- <20200804192435.GG1919070@lunn.ch>
- <CA+5LGR32kKvaeDnb4qpGS_f=t-U4dDCYpnVy7R9zgAQCJW6jtA@mail.gmail.com>
+        Wed, 5 Aug 2020 15:26:15 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59805 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728687AbgHEROC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:14:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1596647641;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yTnFp3FGNnUMIV+drG+EiP28NPY1kzNtc5gU15VKTgg=;
+        b=IRftECynq87jUiSLcCluSeDUigQgevfSUIo+31YFvyNWw7GnRHKSlxJX9Rgcgob9LAPp8y
+        tDwIVkeO/inoizwk/LsywieN9mWYkLHc+ihG3R+Rh40+ICBvLsEJVoiyWPdf94DJG1bTM/
+        3qJrLHjmS6LLj27dPcMgDAIAFwfSdDQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-404-CVKT19CpOAaHFqv9tWctXA-1; Wed, 05 Aug 2020 13:13:57 -0400
+X-MC-Unique: CVKT19CpOAaHFqv9tWctXA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3CC2D80183C;
+        Wed,  5 Aug 2020 17:13:55 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-112-32.rdu2.redhat.com [10.10.112.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 089C25D9DC;
+        Wed,  5 Aug 2020 17:13:48 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <1596555579.10158.23.camel@HansenPartnership.com>
+References: <1596555579.10158.23.camel@HansenPartnership.com> <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Jeff Layton <jlayton@kernel.org>, linux-ext4@vger.kernel.org,
+        Carlos Maiolino <cmaiolino@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-api@vger.kernel.org, torvalds@linux-foundation.org,
+        raven@themaw.net, mszeredi@redhat.com, christian@brauner.io,
+        jannh@google.com, kzak@redhat.com, jlayton@redhat.com,
+        linux-fsdevel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/18] VFS: Filesystem information [ver #21]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+5LGR32kKvaeDnb4qpGS_f=t-U4dDCYpnVy7R9zgAQCJW6jtA@mail.gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2329128.1596647628.1@warthog.procyon.org.uk>
+Date:   Wed, 05 Aug 2020 18:13:48 +0100
+Message-ID: <2329129.1596647628@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Well, until the user of this new API is ready, we will not accept the
-> > patch.
-> OK, but once we submit the change in the driver, is it good to go?
+James Bottomley <James.Bottomley@HansenPartnership.com> wrote:
 
-No. You really do need to explain why it is needed, and why it is
-safe.
+> It sort of petered out into a long winding thread about why not use
+> sysfs instead, which really doesn't look like a good idea to me.
 
-> > You also need to explain "For HW performance reasons". Why is this
-> > driver special that it can do things which no over driver does?
-> There are very strict KPI requirements. E.g. automotive rear mirror
-> must be online 3 sec since boot.
+It seemed to turn into a set of procfs symlinks that pointed at a bunch of
+sysfs stuff - or possibly some special filesystem.
 
-Which does not explain why this driver is special. What you really
-should be thinking about is having the required drivers for this use
-case built in, and the rest as modules. Get your time critical parts
-running, and then load the rest of the driver moduless and kick off
-additional user space in a second phase.
+> Could I make a suggestion about how this should be done in a way that
+> doesn't actually require the fsinfo syscall at all: it could just be
+> done with fsconfig.
 
-You are breaking all sorts of assumptions by loading network drivers
-before the stack is ready. You need to expect all sorts of nasty bugs.
-If this was just in your vendor kernel, we would not care too much, it
-is your problem to solve. But by doing this in mainline, you are
-setting a precedent for others to do it as well. And then we really do
-need to care about the broken assumptions. I doubt we are ready to
-allow this.
+I'd prefer to keep it separate.  The interface for fsconfig() is intended to
+move stuff into the kernel, not out of it.  Better to add a parallel syscall
+to go the other way (kind of like we have setxattr/getxattr, sendmsg/recvmsg).
 
-      Andrew
+Further, fsinfo() can refer directly to a file/fd/mount/whatever, but
+fsconfig() doesn't do that.  You have to use fspick() to get a context before
+you can use fsconfig().  Now, that's fine if you want to gather several pieces
+of information from a particular object, but it's not so good if you want to
+get one piece of information from each of several objects.
+
+> ... make it table configured...
+
+I did, kind of (though I didn't call it that).  Al rewrote the code to get rid
+of it.
+
+David
+
