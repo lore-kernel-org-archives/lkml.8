@@ -2,192 +2,118 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D068FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7D7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F7B622D07
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1E9F22D06
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:27:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iYFMjEox"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="H+qsmC3Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728840AbgHER0J (ORCPT
+        id S1728186AbgHER1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:26:09 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58582 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728586AbgHERZa (ORCPT
+        Wed, 5 Aug 2020 13:27:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53024 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728474AbgHER0S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:25:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596648328;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dvhF/2Uq1kX64zND5Z4WYms1vSnLsR66mXtK5h4mjnE=;
-        b=iYFMjEoxEdZFBoHaoGE3hzOhco99rfVrZHBB3ReXsCMaSLAXGdqVJkOyn93XE3hQfhICwN
-        Zern9eyP1/scIQ0swxqT3Vyl4SJfaF2alMtJtBoOFBjGi4igLtGD7Zfoitw7p4Q1Ns+KlA
-        vrUfD5glH7nzaK8mEWkoJZj2ElRY8OI=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-138-iL-hBD-FMUOvPz-BFV-jnA-1; Wed, 05 Aug 2020 07:45:51 -0400
-X-MC-Unique: iL-hBD-FMUOvPz-BFV-jnA-1
-Received: by mail-wr1-f70.google.com with SMTP id k11so12987437wrv.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 04:45:51 -0700 (PDT)
+        Wed, 5 Aug 2020 13:26:18 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97508C061575
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 10:26:18 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id o18so47241840eje.7
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 10:26:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PfhfFAEDblzsRQWrMzcI0diRWe/CNXK92mcngQaYd7Q=;
+        b=H+qsmC3Z3MgedQ/Jm+u3qVYeVXWyqQH33iCIHKK2tbGxBQbr38frgchQxuf3EzgvmP
+         MNh03Ji3AV40eKkq2AvkoWr7v+NFfyOdrJJ5S474gQ999/lCCin015tia0j+ezaTWqZV
+         /DOijvZvYoY+sBt3AM+Ygy+/Povj5zubYWXtk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=dvhF/2Uq1kX64zND5Z4WYms1vSnLsR66mXtK5h4mjnE=;
-        b=N1Wwxc8FftXuwtr7pZP8VW8ME0A6Y7FIByFhcMrw/wPPSFrDcccsjr3/7rnkj3vIqv
-         D8T76m08XISgvCZgDuR+69VMhQFAOwF+RCobOziUyb7GGXNPResW/Pa/UC66y4KKpdDA
-         e1J4PEsAdqCkBhr4vNBxN5ZtyMpo6IGuvnrJbAhPPaSI62UWPO17+yG11BD+TyZ58/BO
-         teYSpWNR1dVBAQL4bdLLfrkDL7ptK7YHq/SshYShwa7a/+rbR/FqojWZLt1XzAcO14k+
-         jX64PY/YwlMcUTDT6q2DX4YJk9/8+xc5ffe3LXa0Abgor8EJkdMX6DnCIEeuLA8sFzU3
-         mLFQ==
-X-Gm-Message-State: AOAM532u4FCzHQuktKEsPO5IeMMx9soKSR8DTLfxUrg9Nv8Yz9xtCTPF
-        UT0PvUIe42zGKEyPtgybH25xd2InSv4fjSgGaGFWtXULcInC62x8ZfN8cMDlY2fuVfRutcJ8Oqy
-        oin9h51HdKZlP/S/WjRPhRbt3
-X-Received: by 2002:a1c:a590:: with SMTP id o138mr2959634wme.4.1596627950597;
-        Wed, 05 Aug 2020 04:45:50 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxUqGQTkpCDTfa2ZGtGXUiAZzqSzaobMzIluThYVUCvwubI43LF+I4IqyX+82lokvtNLNwvgg==
-X-Received: by 2002:a1c:a590:: with SMTP id o138mr2959613wme.4.1596627950321;
-        Wed, 05 Aug 2020 04:45:50 -0700 (PDT)
-Received: from redhat.com ([192.117.173.58])
-        by smtp.gmail.com with ESMTPSA id o2sm2693544wrh.70.2020.08.05.04.45.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 04:45:49 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 07:45:46 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v2 03/24] virtio: allow __virtioXX, __leXX in config space
-Message-ID: <20200805074434-mutt-send-email-mst@kernel.org>
-References: <20200803205814.540410-1-mst@redhat.com>
- <20200803205814.540410-4-mst@redhat.com>
- <ce85a206-45a6-da3d-45a7-06f068f3bad7@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PfhfFAEDblzsRQWrMzcI0diRWe/CNXK92mcngQaYd7Q=;
+        b=eHOiryEx28VwhKRWw8GnVkb5G5acKl2w2CydCwy4RAaJ6yB/pvlp6rE8k3bmS0xC2/
+         kMek9QOzfm4HqBY59jxmUt2k3cgA1wBv0vs/h2D0Et5E4bUq4RPzRNCfe6ABzSyqqcwt
+         0/gU7pe+a2WngWcQDGvmsODGzMJxifz7psQAG9PWHCJ2+0jp1xlaoDZ059MICdHTLchL
+         5uXRVJxRZUb/C5QU2/PYbK6Vo+MmAKw+0VsEZSmWT5reUKJ5xF6LbkuYiXEba9erU25Q
+         guJAOdbKGbTZgNpO9KMAl8LeGrmN28W3vzm/55EKL6czc0kCj7cwrTly6SAeVvXe6PRm
+         jXXw==
+X-Gm-Message-State: AOAM5313p1vPOQfywfr1vWDOj1y2roEBFpodiC3mhrIar5IOfOOm4tnd
+        zZ1kbFyhKYICAjtj6mkv+XHWCcNFFlZMFxwF06rKVA==
+X-Google-Smtp-Source: ABdhPJzdEHOuUAQwwJud++YQFGRBiDh0v606aODVa0hZTrCfoTE6lVJhbEjcB37S7JrGgIPTV8fOte9EbRFoUEgvB4o=
+X-Received: by 2002:a17:906:4c46:: with SMTP id d6mr379886ejw.14.1596648377290;
+ Wed, 05 Aug 2020 10:26:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ce85a206-45a6-da3d-45a7-06f068f3bad7@redhat.com>
+References: <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk>
+ <159646187082.1784947.4293611877413578847.stgit@warthog.procyon.org.uk>
+ <20200804135641.GE32719@miu.piliscsaba.redhat.com> <2320582.1596643618@warthog.procyon.org.uk>
+In-Reply-To: <2320582.1596643618@warthog.procyon.org.uk>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Wed, 5 Aug 2020 19:26:06 +0200
+Message-ID: <CAJfpegvpjjk3JNgTfY1yOGToPLF1mXG5+UkUZqVOGDkvzEr5HQ@mail.gmail.com>
+Subject: Re: [PATCH 10/18] fsinfo: Provide notification overrun handling
+ support [ver #21]
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ian Kent <raven@themaw.net>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 02:28:23PM +0800, Jason Wang wrote:
-> 
-> On 2020/8/4 上午4:58, Michael S. Tsirkin wrote:
-> > Currently all config space fields are of the type __uXX.
-> > This confuses people and some drivers (notably vdpa)
-> > access them using CPU endian-ness - which only
-> > works well for legacy or LE platforms.
-> > 
-> > Update virtio_cread/virtio_cwrite macros to allow __virtioXX
-> > and __leXX field types. Follow-up patches will convert
-> > config space to use these types.
-> > 
-> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > ---
-> >   include/linux/virtio_config.h | 50 +++++++++++++++++++++++++++++++++--
-> >   1 file changed, 48 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
-> > index 3b4eae5ac5e3..64da491936f7 100644
-> > --- a/include/linux/virtio_config.h
-> > +++ b/include/linux/virtio_config.h
-> > @@ -6,6 +6,7 @@
-> >   #include <linux/bug.h>
-> >   #include <linux/virtio.h>
-> >   #include <linux/virtio_byteorder.h>
-> > +#include <linux/compiler_types.h>
-> >   #include <uapi/linux/virtio_config.h>
-> >   struct irq_affinity;
-> > @@ -287,12 +288,57 @@ static inline __virtio64 cpu_to_virtio64(struct virtio_device *vdev, u64 val)
-> >   	return __cpu_to_virtio64(virtio_is_little_endian(vdev), val);
-> >   }
-> > +/*
-> > + * Only the checker differentiates between __virtioXX and __uXX types. But we
-> > + * try to share as much code as we can with the regular GCC build.
-> > + */
-> > +#if !defined(CONFIG_CC_IS_GCC) && !defined(__CHECKER__)
-> > +
-> > +/* Not a checker - we can keep things simple */
-> > +#define __virtio_native_typeof(x) typeof(x)
-> > +
-> > +#else
-> > +
-> > +/*
-> > + * We build this out of a couple of helper macros in a vain attempt to
-> > + * help you keep your lunch down while reading it.
-> > + */
-> > +#define __virtio_pick_value(x, type, then, otherwise)			\
-> > +	__builtin_choose_expr(__same_type(x, type), then, otherwise)
-> > +
-> > +#define __virtio_pick_type(x, type, then, otherwise)			\
-> > +	__virtio_pick_value(x, type, (then)0, otherwise)
-> > +
-> > +#define __virtio_pick_endian(x, x16, x32, x64, otherwise)			\
-> > +	__virtio_pick_type(x, x16, __u16,					\
-> > +		__virtio_pick_type(x, x32, __u32,				\
-> > +			__virtio_pick_type(x, x64, __u64,			\
-> > +				otherwise)))
-> > +
-> > +#define __virtio_native_typeof(x) typeof(					\
-> > +	__virtio_pick_type(x, __u8, __u8,					\
-> > +		__virtio_pick_endian(x, __virtio16, __virtio32, __virtio64,	\
-> > +			__virtio_pick_endian(x, __le16, __le32, __le64,		\
-> > +				__virtio_pick_endian(x, __u16, __u32, __u64,	\
-> > +					/* No other type allowed */		\
-> > +					(void)0)))))
-> > +
-> > +#endif
-> > +
-> > +#define __virtio_native_type(structname, member) \
-> > +	__virtio_native_typeof(((structname*)0)->member)
-> > +
-> > +#define __virtio_typecheck(structname, member, val) \
-> > +		/* Must match the member's type, and be integer */ \
-> > +		typecheck(__virtio_native_type(structname, member), (val))
-> > +
-> > +
-> >   /* Config space accessors. */
-> >   #define virtio_cread(vdev, structname, member, ptr)			\
-> >   	do {								\
-> >   		might_sleep();						\
-> >   		/* Must match the member's type, and be integer */	\
-> > -		if (!typecheck(typeof((((structname*)0)->member)), *(ptr))) \
-> > +		if (!__virtio_typecheck(structname, member, *(ptr)))	\
-> >   			(*ptr) = 1;					\
-> 
-> 
-> A silly question,  compare to using set()/get() directly, what's the value
-> of the accessors macro here?
-> 
-> Thanks
+On Wed, Aug 5, 2020 at 6:07 PM David Howells <dhowells@redhat.com> wrote:
+>
+> Miklos Szeredi <miklos@szeredi.hu> wrote:
+>
+> > Shoun't we just make sure that the likelyhood of overruns is low
+>
+> That's not necessarily easy.  To avoid overruns you need a bigger buffer.  The
+> buffer is preallocated from unswappable kernel space.  Yes, you can increase
+> the size of the buffer, but it eats out of your pipe bufferage limit.
+>
+> Further, it's a *general* notifications queue, not just for a specific
+> purpose, but that means it might get connected to multiple sources, and doing
+> something like tearing down a container might generate enough notifications to
+> overrun the queue.
+>
+> > and if it happens, just reinitialize everthing from scratch (shouldn't be
+> > *that* expensive).
+>
+> If you then spend time reinitialising everything, you're increasing the
+> likelihood of racing with further events.  Further, there multiple expenses:
+> firstly, you have to tear down and discard all the data that you've spent time
+> setting up; secondly, it takes time doing all this; thirdly, it takes cpu
+> cycles away from applications.
+>
+> The reason I put the event counters in there and made it so that fsinfo()
+> could read all the mounts in a subtree and their event counters in one go is
+> to make it faster for the user to find out what changed in the event that a
+> notification is lost.
 
-get/set don't convert to the native endian, I guess that's why
-drivers use cread/cwrite. It is also nice that there's type
-safety, checking the correct integer width is used.
+That's just overdesigning it, IMO.
 
-> 
-> >   									\
-> >   		switch (sizeof(*ptr)) {					\
-> > @@ -322,7 +368,7 @@ static inline __virtio64 cpu_to_virtio64(struct virtio_device *vdev, u64 val)
-> >   	do {								\
-> >   		might_sleep();						\
-> >   		/* Must match the member's type, and be integer */	\
-> > -		if (!typecheck(typeof((((structname*)0)->member)), *(ptr))) \
-> > +		if (!__virtio_typecheck(structname, member, *(ptr)))	\
-> >   			BUG_ON((*ptr) == 1);				\
-> >   									\
-> >   		switch (sizeof(*ptr)) {					\
+If the protocol is extensible (as you state) then the counters can be
+added as needed.  And unless the above CPU cycle wastage is actually
+observed in practice, the whole thing is unnecessary.
 
+Thanks,
+Miklos
