@@ -2,322 +2,117 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D548C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10A962250E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:01:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NeztqPI2"
+	by mail.kernel.org (Postfix) with ESMTP id 3707C21D95
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 18:04:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596650694;
+	bh=fZuQ51RUJD63ksMrmW891icCVCacHJ5MjhYmzudWyGs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OGirsMvcgS1TQ1MJ0eyTRfYBoUykLHzUVD6ZpeaG5eRsL47m7uSjlvlv81lsOD1Ys
+	 ChfgkY9qMT7H0Ca00RI/z4pUInMO+M+Pebtvle5TGQD+FPSyyb6L0NW893gVDcOgnE
+	 TjFUCkeK1HKMcwXpoOYeO3zZL5HIhUlyoqLjGvDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728935AbgHER7v (ORCPT
+        id S1728434AbgHESEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:59:51 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:38660 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728704AbgHER6X (ORCPT
+        Wed, 5 Aug 2020 14:04:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58622 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729158AbgHESCD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:58:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596650298;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=2x3mgNdTSCpVK/PvsDtS076Na69D7EpUGAvTaGV+Rek=;
-        b=NeztqPI2uItGb/UxDEd+G6pKaCRCvntgYgwWHswtfJyH8R9Yw6RHDt4zBWh3iLGD2Lo3ZV
-        4+GxcgXISsi0AKhaqv2GaJsjvpjNsMZQ4dwno2rwQ/eMwitQVSFI4pO8BJQQSksYZSHi6z
-        eb0j0JydXf3Jqy+wa/QvULg3jLDrpfU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-478-EZlvipCxNui6X3CIYHErHA-1; Wed, 05 Aug 2020 13:58:16 -0400
-X-MC-Unique: EZlvipCxNui6X3CIYHErHA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2A74F81EDB7;
-        Wed,  5 Aug 2020 17:58:06 +0000 (UTC)
-Received: from gimli.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CC8441755E;
-        Wed,  5 Aug 2020 17:58:05 +0000 (UTC)
-Subject: [PATCH] vfio-pci: Avoid recursive read-lock usage
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     alex.williamson@redhat.com
-Cc:     cohuck@redhat.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 05 Aug 2020 11:58:05 -0600
-Message-ID: <159665024415.30380.4401928486051321567.stgit@gimli.home>
-User-Agent: StGit/0.19-dirty
+        Wed, 5 Aug 2020 14:02:03 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A66DEC061575
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 11:02:02 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id t23so25215874ljc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 11:02:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=i6O0Je/DALynD8xrcy5F8ovIlpP2BIIuUrwkKTqZEB0=;
+        b=TwuFz2Csj8S8tUXG01UOeW7C+pBdX/X5QDikPbQzn5Kqk/HmRDlnzqmYtwm0wssMfA
+         gZLb0FsZS8pej72cSFjZaCsvm3Q4AMV35e9TANq4fHh1wTeb4XYJPJxX/1tDKv8HMsyW
+         A7HULq4It/ZbgyWzZA3KFCar/TC7JUMoY/Vng=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=i6O0Je/DALynD8xrcy5F8ovIlpP2BIIuUrwkKTqZEB0=;
+        b=SUW6TItD6/dAPUuVUMKA5e4NH4reew1KvAJHsuojcal+eXyxOxZyO/GEDd9Zx3jCQ3
+         LC8h8SSKPa/S5aMM89nK8FztXJol0+d0Kn647PtHJwvxfjPasr/cPjJC7HZI8ckYp2Jy
+         1FhlbkbyEAGpIACK6L670uL4DTRwR3DfGtKV0+F5H8BY+Sl0UI9Db4E8i1FGgGZdzOts
+         O7FPqAVNTEPOMTujgcDWFrFbum5eRSN2/9UPDpnZc7Dw3rbyi8GGOIWhfw8h9+Ty0QXK
+         KRrKeT1JDBZ14WCRshny/SgqlYEii0RrwEPMr97h+1bJKVFrvkfghdfyfMSTnZ/G0lpH
+         LA5g==
+X-Gm-Message-State: AOAM532RkgDovUgrwulXlDQFw8oN43juWAdgn3EZ+B9D5sGQm3/GN+9O
+        7psJO0C0dzVMmgXQhQGFZdTVKwsXp3M=
+X-Google-Smtp-Source: ABdhPJwDi+Sjo+Nyi8vEVohaS5EH2jkO9r80LQL6fVXl3tjCZ8ZOGVtJTyezU8atKI7g53hc0xsY0A==
+X-Received: by 2002:a2e:9913:: with SMTP id v19mr1860871lji.292.1596650518731;
+        Wed, 05 Aug 2020 11:01:58 -0700 (PDT)
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
+        by smtp.gmail.com with ESMTPSA id z22sm1413444lfb.93.2020.08.05.11.01.57
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Aug 2020 11:01:57 -0700 (PDT)
+Received: by mail-lj1-f170.google.com with SMTP id x9so48760481ljc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 11:01:57 -0700 (PDT)
+X-Received: by 2002:a2e:7615:: with SMTP id r21mr1889320ljc.371.1596650516525;
+ Wed, 05 Aug 2020 11:01:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200805153506.978105994@linuxfoundation.org> <CA+G9fYv_aX36Kq_RD5dAL_By4AFq=-ZY_qh7VhLG=HJQv5mDzg@mail.gmail.com>
+In-Reply-To: <CA+G9fYv_aX36Kq_RD5dAL_By4AFq=-ZY_qh7VhLG=HJQv5mDzg@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 5 Aug 2020 11:01:40 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj1bhyhuJbA5_UbqAnbjqA_hSrmZFqCQrhJ=44P--T4vQ@mail.gmail.com>
+Message-ID: <CAHk-=wj1bhyhuJbA5_UbqAnbjqA_hSrmZFqCQrhJ=44P--T4vQ@mail.gmail.com>
+Subject: Re: [PATCH 5.7 0/6] 5.7.14-rc1 review
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Marc Zyngier <maz@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>, Willy Tarreau <w@1wt.eu>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A down_read on memory_lock is held when performing read/write accesses
-to MMIO BAR space, including across the copy_to/from_user() callouts
-which may fault.  If the user buffer for these copies resides in an
-mmap of device MMIO space, the mmap fault handler will acquire a
-recursive read-lock on memory_lock.  Avoid this by reducing the lock
-granularity.  Sequential accesses requiring multiple ioread/iowrite
-cycles are expected to be rare, therefore typical accesses should not
-see additional overhead.
+On Wed, Aug 5, 2020 at 10:39 AM Naresh Kamboju
+<naresh.kamboju@linaro.org> wrote:
+>
+> [ sorry if it is not interesting ! ]
 
-VGA MMIO accesses are expected to be non-fatal regardless of the PCI
-memory enable bit to allow legacy probing, this behavior remains with
-a comment added.  ioeventfds are now included in memory access testing,
-with writes dropped while memory space is disabled.
+It's a bit interesting only because it is so odd.
 
-Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
----
- drivers/vfio/pci/vfio_pci_private.h |    2 +
- drivers/vfio/pci/vfio_pci_rdwr.c    |  120 ++++++++++++++++++++++++++++-------
- 2 files changed, 98 insertions(+), 24 deletions(-)
+> While building with old gcc-7.3.0 the build breaks for arm64
+> whereas build PASS on gcc-8, gcc-9 and gcc-10.
 
-diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
-index 86a02aff8735..61ca8ab165dc 100644
---- a/drivers/vfio/pci/vfio_pci_private.h
-+++ b/drivers/vfio/pci/vfio_pci_private.h
-@@ -33,12 +33,14 @@
- 
- struct vfio_pci_ioeventfd {
- 	struct list_head	next;
-+	struct vfio_pci_device	*vdev;
- 	struct virqfd		*virqfd;
- 	void __iomem		*addr;
- 	uint64_t		data;
- 	loff_t			pos;
- 	int			bar;
- 	int			count;
-+	bool			test_mem;
- };
- 
- struct vfio_pci_irq_ctx {
-diff --git a/drivers/vfio/pci/vfio_pci_rdwr.c b/drivers/vfio/pci/vfio_pci_rdwr.c
-index 916b184df3a5..9e353c484ace 100644
---- a/drivers/vfio/pci/vfio_pci_rdwr.c
-+++ b/drivers/vfio/pci/vfio_pci_rdwr.c
-@@ -37,17 +37,70 @@
- #define vfio_ioread8	ioread8
- #define vfio_iowrite8	iowrite8
- 
-+#define VFIO_IOWRITE(size) \
-+static int vfio_pci_iowrite##size(struct vfio_pci_device *vdev,		\
-+			bool test_mem, u##size val, void __iomem *io)	\
-+{									\
-+	if (test_mem) {							\
-+		down_read(&vdev->memory_lock);				\
-+		if (!__vfio_pci_memory_enabled(vdev)) {			\
-+			up_read(&vdev->memory_lock);			\
-+			return -EIO;					\
-+		}							\
-+	}								\
-+									\
-+	vfio_iowrite##size(val, io);					\
-+									\
-+	if (test_mem)							\
-+		up_read(&vdev->memory_lock);				\
-+									\
-+	return 0;							\
-+}
-+
-+VFIO_IOWRITE(8)
-+VFIO_IOWRITE(16)
-+VFIO_IOWRITE(32)
-+#ifdef iowrite64
-+VFIO_IOWRITE(64)
-+#endif
-+
-+#define VFIO_IOREAD(size) \
-+static int vfio_pci_ioread##size(struct vfio_pci_device *vdev,		\
-+			bool test_mem, u##size *val, void __iomem *io)	\
-+{									\
-+	if (test_mem) {							\
-+		down_read(&vdev->memory_lock);				\
-+		if (!__vfio_pci_memory_enabled(vdev)) {			\
-+			up_read(&vdev->memory_lock);			\
-+			return -EIO;					\
-+		}							\
-+	}								\
-+									\
-+	*val = vfio_ioread##size(io);					\
-+									\
-+	if (test_mem)							\
-+		up_read(&vdev->memory_lock);				\
-+									\
-+	return 0;							\
-+}
-+
-+VFIO_IOREAD(8)
-+VFIO_IOREAD(16)
-+VFIO_IOREAD(32)
-+
- /*
-  * Read or write from an __iomem region (MMIO or I/O port) with an excluded
-  * range which is inaccessible.  The excluded range drops writes and fills
-  * reads with -1.  This is intended for handling MSI-X vector tables and
-  * leftover space for ROM BARs.
-  */
--static ssize_t do_io_rw(void __iomem *io, char __user *buf,
-+static ssize_t do_io_rw(struct vfio_pci_device *vdev, bool test_mem,
-+			void __iomem *io, char __user *buf,
- 			loff_t off, size_t count, size_t x_start,
- 			size_t x_end, bool iswrite)
- {
- 	ssize_t done = 0;
-+	int ret;
- 
- 	while (count) {
- 		size_t fillable, filled;
-@@ -66,9 +119,15 @@ static ssize_t do_io_rw(void __iomem *io, char __user *buf,
- 				if (copy_from_user(&val, buf, 4))
- 					return -EFAULT;
- 
--				vfio_iowrite32(val, io + off);
-+				ret = vfio_pci_iowrite32(vdev, test_mem,
-+							 val, io + off);
-+				if (ret)
-+					return ret;
- 			} else {
--				val = vfio_ioread32(io + off);
-+				ret = vfio_pci_ioread32(vdev, test_mem,
-+							&val, io + off);
-+				if (ret)
-+					return ret;
- 
- 				if (copy_to_user(buf, &val, 4))
- 					return -EFAULT;
-@@ -82,9 +141,15 @@ static ssize_t do_io_rw(void __iomem *io, char __user *buf,
- 				if (copy_from_user(&val, buf, 2))
- 					return -EFAULT;
- 
--				vfio_iowrite16(val, io + off);
-+				ret = vfio_pci_iowrite16(vdev, test_mem,
-+							 val, io + off);
-+				if (ret)
-+					return ret;
- 			} else {
--				val = vfio_ioread16(io + off);
-+				ret = vfio_pci_ioread16(vdev, test_mem,
-+							&val, io + off);
-+				if (ret)
-+					return ret;
- 
- 				if (copy_to_user(buf, &val, 2))
- 					return -EFAULT;
-@@ -98,9 +163,15 @@ static ssize_t do_io_rw(void __iomem *io, char __user *buf,
- 				if (copy_from_user(&val, buf, 1))
- 					return -EFAULT;
- 
--				vfio_iowrite8(val, io + off);
-+				ret = vfio_pci_iowrite8(vdev, test_mem,
-+							val, io + off);
-+				if (ret)
-+					return ret;
- 			} else {
--				val = vfio_ioread8(io + off);
-+				ret = vfio_pci_ioread8(vdev, test_mem,
-+						       &val, io + off);
-+				if (ret)
-+					return ret;
- 
- 				if (copy_to_user(buf, &val, 1))
- 					return -EFAULT;
-@@ -178,14 +249,6 @@ ssize_t vfio_pci_bar_rw(struct vfio_pci_device *vdev, char __user *buf,
- 
- 	count = min(count, (size_t)(end - pos));
- 
--	if (res->flags & IORESOURCE_MEM) {
--		down_read(&vdev->memory_lock);
--		if (!__vfio_pci_memory_enabled(vdev)) {
--			up_read(&vdev->memory_lock);
--			return -EIO;
--		}
--	}
--
- 	if (bar == PCI_ROM_RESOURCE) {
- 		/*
- 		 * The ROM can fill less space than the BAR, so we start the
-@@ -213,7 +276,8 @@ ssize_t vfio_pci_bar_rw(struct vfio_pci_device *vdev, char __user *buf,
- 		x_end = vdev->msix_offset + vdev->msix_size;
- 	}
- 
--	done = do_io_rw(io, buf, pos, count, x_start, x_end, iswrite);
-+	done = do_io_rw(vdev, res->flags & IORESOURCE_MEM, io, buf, pos,
-+			count, x_start, x_end, iswrite);
- 
- 	if (done >= 0)
- 		*ppos += done;
-@@ -221,9 +285,6 @@ ssize_t vfio_pci_bar_rw(struct vfio_pci_device *vdev, char __user *buf,
- 	if (bar == PCI_ROM_RESOURCE)
- 		pci_unmap_rom(pdev, io);
- out:
--	if (res->flags & IORESOURCE_MEM)
--		up_read(&vdev->memory_lock);
--
- 	return done;
- }
- 
-@@ -278,7 +339,12 @@ ssize_t vfio_pci_vga_rw(struct vfio_pci_device *vdev, char __user *buf,
- 		return ret;
- 	}
- 
--	done = do_io_rw(iomem, buf, off, count, 0, 0, iswrite);
-+	/*
-+	 * VGA MMIO is a legacy, non-BAR resource that hopefully allows
-+	 * probing, so we don't currently worry about access in relation
-+	 * to the memory enable bit in the command register.
-+	 */
-+	done = do_io_rw(vdev, false, iomem, buf, off, count, 0, 0, iswrite);
- 
- 	vga_put(vdev->pdev, rsrc);
- 
-@@ -296,17 +362,21 @@ static int vfio_pci_ioeventfd_handler(void *opaque, void *unused)
- 
- 	switch (ioeventfd->count) {
- 	case 1:
--		vfio_iowrite8(ioeventfd->data, ioeventfd->addr);
-+		vfio_pci_iowrite8(ioeventfd->vdev, ioeventfd->test_mem,
-+				  ioeventfd->data, ioeventfd->addr);
- 		break;
- 	case 2:
--		vfio_iowrite16(ioeventfd->data, ioeventfd->addr);
-+		vfio_pci_iowrite16(ioeventfd->vdev, ioeventfd->test_mem,
-+				   ioeventfd->data, ioeventfd->addr);
- 		break;
- 	case 4:
--		vfio_iowrite32(ioeventfd->data, ioeventfd->addr);
-+		vfio_pci_iowrite32(ioeventfd->vdev, ioeventfd->test_mem,
-+				   ioeventfd->data, ioeventfd->addr);
- 		break;
- #ifdef iowrite64
- 	case 8:
--		vfio_iowrite64(ioeventfd->data, ioeventfd->addr);
-+		vfio_pci_iowrite64(ioeventfd->vdev, ioeventfd->test_mem,
-+				   ioeventfd->data, ioeventfd->addr);
- 		break;
- #endif
- 	}
-@@ -378,11 +448,13 @@ long vfio_pci_ioeventfd(struct vfio_pci_device *vdev, loff_t offset,
- 		goto out_unlock;
- 	}
- 
-+	ioeventfd->vdev = vdev;
- 	ioeventfd->addr = vdev->barmap[bar] + pos;
- 	ioeventfd->data = data;
- 	ioeventfd->pos = pos;
- 	ioeventfd->bar = bar;
- 	ioeventfd->count = count;
-+	ioeventfd->test_mem = vdev->pdev->resource[bar].flags & IORESOURCE_MEM;
- 
- 	ret = vfio_virqfd_enable(ioeventfd, vfio_pci_ioeventfd_handler,
- 				 NULL, NULL, &ioeventfd->virqfd, fd);
+Can you double-check that your gcc-7.3 setup is actually building the same tree?
 
+Yeah, I know that's a slightly strange thing to ask, but your build
+log really looks very odd. There should be nothing in that error that
+is in any way compiler version specific.
+
+Sure, we may have some header that checks the compiler version and
+does something different based on that, and I guess that could be
+going on. Except I don't even find anything remotely like that
+anywhere. I do find some compiler version tests, but most ofd them
+would trigger for all those compiler versions
+
+Or is there perhaps some other configuration difference?
+
+             Linus
