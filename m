@@ -2,123 +2,198 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC44C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 283E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA244204EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:33:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u+hjsVhI"
+	by mail.kernel.org (Postfix) with ESMTP id 0B71F204EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:33:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbgHEGdD (ORCPT
+        id S1728117AbgHEGdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 02:33:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35898 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728126AbgHEGc5 (ORCPT
+        Wed, 5 Aug 2020 02:33:41 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60984 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725904AbgHEGdl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 02:32:57 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4648C06179E
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 23:32:56 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id p8so14677350vsm.12
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 23:32:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3i8XFESZihDO6mc3/4tfcR56mY/Nrg7Lzf+GDZhYM0g=;
-        b=u+hjsVhIDKbvRcozTis1DkPn0ESZP+Sd8wJOYW7WIDQKDcD7a4CcJkAWutLduFx1Ac
-         2jOZERHr/wrMd0HMCF3FNsxtJxv3fiLLKPX4kzcT9AOdYmXNV68G2Qzcjxj1YffFf50R
-         2xg3/w5dyp8w+Dbj3V1/VawrbYwILC569f3qDEjI0SFAak1NcLF9cMesEXGrZ+XP3Xry
-         WBn4lK7J2UIPYRV2SZtBvzCcdSQlRsWQo2/DuhaLoKYe/JQ7SM30i00eYs12UP0YBniE
-         yl0hpANKnYMyu9U8yCOpAbgs+p5G3lAxsa2PEMhfyT2+RVpnQL4tDH5uxTswkKlYq0ky
-         IcNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3i8XFESZihDO6mc3/4tfcR56mY/Nrg7Lzf+GDZhYM0g=;
-        b=NVz3Hn7xWbdoyZ0O3jJN16Qaw8hiQDw0RAsHu8bnujQgsD48ePgnOm6WCzdRQ/xOQm
-         ntRUev7mpmGA1sfK8IBDh0HRqwqOmfBPM7pjMVFaDq6yQKExZqRb9WzY1s2eUSxrFTMn
-         kGoy9iyQWwlbmo7sqUp27d+XbCOJe1oluaNomSVyqTwDnV4+/PpSWMaGFbC06bouORi6
-         t3jaiTatK2sQSvW5Nk4F9Iy98zPU5OsOVo3FKZfyXAeFAL/qFG9F8KrsR0opBLeaNyfG
-         6NmWCu8tiOK3qzcbyKrAcqZcPBXbFskIxku13ih4rMEtWUGc2iYHnyIzkThnYoqrSf0f
-         BCxQ==
-X-Gm-Message-State: AOAM5307h47uaz5nP92OmT5ZvPDfuabhTUcLSpvy7F/7anaI89TMOYck
-        dROOnQz2stw418zU70y3PiCp4yaS+2RqMxQMq9r1fA==
-X-Google-Smtp-Source: ABdhPJwRtcGnWnSrfLNC1GRoMPhliXQgGipO4zbcYB0cTmrrdPOh4Q7PwFb5o1O0BAF8kY6G3DlVTaO3sR41MJVFDyg=
-X-Received: by 2002:a05:6102:382:: with SMTP id m2mr883411vsq.34.1596609175004;
- Tue, 04 Aug 2020 23:32:55 -0700 (PDT)
+        Wed, 5 Aug 2020 02:33:41 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0756UsTo155366;
+        Wed, 5 Aug 2020 02:33:36 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 32qkgjna1m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Aug 2020 02:33:35 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0756U9kZ030194;
+        Wed, 5 Aug 2020 06:33:34 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04ams.nl.ibm.com with ESMTP id 32n0184309-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Aug 2020 06:33:34 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0756XVgc20316616
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 5 Aug 2020 06:33:32 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BF1BF4204B;
+        Wed,  5 Aug 2020 06:33:31 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8583B42047;
+        Wed,  5 Aug 2020 06:33:31 +0000 (GMT)
+Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed,  5 Aug 2020 06:33:31 +0000 (GMT)
+From:   Sven Schnelle <svens@linux.ibm.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        hca@linux.ibm.com
+Subject: Re: [PATCH v3 3/3] s390: convert to GENERIC_VDSO
+References: <20200804150124.41692-1-svens@linux.ibm.com>
+        <20200804150124.41692-4-svens@linux.ibm.com>
+        <87tuxikuub.fsf@nanos.tec.linutronix.de>
+Date:   Wed, 05 Aug 2020 08:33:31 +0200
+In-Reply-To: <87tuxikuub.fsf@nanos.tec.linutronix.de> (Thomas Gleixner's
+        message of "Tue, 04 Aug 2020 22:41:00 +0200")
+Message-ID: <yt9d8setsitg.fsf@linux.ibm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-References: <1594230511-24790-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594230511-24790-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594230511-24790-5-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 5 Aug 2020 08:32:18 +0200
-Message-ID: <CAPDyKFqeiEUeajprG=Bx3Nion8bGpVrDOuM7q6-kLDpOMY-QbQ@mail.gmail.com>
-Subject: Re: [PATCH 4/8] dt-bindings: mmc: renesas,sdhi: Add r8a774e1 support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-serial@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-05_04:2020-08-03,2020-08-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 malwarescore=0 mlxscore=0 phishscore=0 suspectscore=0
+ mlxlogscore=999 adultscore=0 spamscore=0 priorityscore=1501 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008050054
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 Jul 2020 at 19:48, Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+Hi Thomas,
+
+Thomas Gleixner <tglx@linutronix.de> writes:
+
+> Sven Schnelle <svens@linux.ibm.com> writes:
+>> --- /dev/null
+>> +++ b/arch/s390/include/asm/vdso/data.h
+>> @@ -0,0 +1,13 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#ifndef __S390_ASM_VDSO_DATA_H
+>> +#define __S390_ASM_VDSO_DATA_H
+>> +
+>> +#include <linux/types.h>
+>> +#include <vdso/datapage.h>
 >
-> Document SDHI controller for RZ/G2H (R8A774E1) SoC, which is compatible
-> with R-Car Gen3 SoC family.
+> I don't think this header needs vdso/datapage.h
+
+Agreed.
+
+>> +struct arch_vdso_data {
+>> +	__u64 tod_steering_delta;
+>> +	__u64 tod_steering_end;
+>> +};
+>> +
+>> +#endif /* __S390_ASM_VDSO_DATA_H */
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-
-Sorry, but this doesn't apply as the DT doc has been converted to
-YAML. Can you please rebase and respin.
-
-Kind regards
-Uffe
-
-
-
-> ---
->  Documentation/devicetree/bindings/mmc/renesas,sdhi.txt | 1 +
->  1 file changed, 1 insertion(+)
+>> --- /dev/null
+>> +++ b/arch/s390/include/asm/vdso/gettimeofday.h
 >
-> diff --git a/Documentation/devicetree/bindings/mmc/renesas,sdhi.txt b/Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
-> index 0ca9a622cce0..779e484fa3ef 100644
-> --- a/Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
-> +++ b/Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
-> @@ -14,6 +14,7 @@ Required properties:
->                 "renesas,sdhi-r8a774a1" - SDHI IP on R8A774A1 SoC
->                 "renesas,sdhi-r8a774b1" - SDHI IP on R8A774B1 SoC
->                 "renesas,sdhi-r8a774c0" - SDHI IP on R8A774C0 SoC
-> +               "renesas,sdhi-r8a774e1" - SDHI IP on R8A774E1 SoC
->                 "renesas,sdhi-r8a77470" - SDHI IP on R8A77470 SoC
->                 "renesas,sdhi-mmc-r8a77470" - SDHI/MMC IP on R8A77470 SoC
->                 "renesas,sdhi-r8a7778" - SDHI IP on R8A7778 SoC
-> --
-> 2.17.1
+>> +static inline u64 __arch_get_hw_counter(s32 clock_mode)
+>> +{
+>> +	const struct vdso_data *vdso = __arch_get_vdso_data();
 >
+> If you go and implement time namespace support for VDSO then this
+> becomes a problem. See do_hres_timens().
+>
+> As we did not expect that this function needs vdso_data we should just
+> add a vdso_data pointer argument to __arch_get_hw_counter(). And while
+> looking at it you're not the first one. MIPS already uses it and because
+> it does not support time namespaces so far nobody noticed yet.
+>
+> That's fine for all others because the compiler will optimize it
+> out when it's unused. If the compiler fails to do so, then this is the
+> least of our worries :)
+>
+> As there is no new VDSO conversion pending in next, I can just queue
+> that (see below) along with #1 and #2 of this series and send it to
+> Linus by end of the week.
+
+Fine with me.
+
+>> +	u64 adj, now;
+>> +
+>> +	now = get_tod_clock();
+>> +	adj = vdso->arch.tod_steering_end - now;
+>> +	if (unlikely((s64) adj > 0))
+>> +		now += (vdso->arch.tod_steering_delta < 0) ? (adj >> 15) : -(adj >> 15);
+>> +	return now;
+>> +}
+>
+>
+>> --- /dev/null
+>> +++ b/arch/s390/include/asm/vdso/processor.h
+>> @@ -0,0 +1,5 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +#ifndef __ASM_VDSO_PROCESSOR_H
+>> +#define __ASM_VDSO_PROCESSOR_H
+>> +
+>> +#endif /* __ASM_VDSO_PROCESSOR_H */
+>
+> The idea of this file was to provide cpu_relax() self contained without
+> pulling in tons of other things from asm/processor.h.
+
+Thanks, i'll add that.
+
+>> diff --git a/arch/s390/include/asm/vdso/vdso.h b/arch/s390/include/asm/vdso/vdso.h
+>> new file mode 100644
+>> index 000000000000..e69de29bb2d1
+>> diff --git a/arch/s390/include/asm/vdso/vsyscall.h b/arch/s390/include/asm/vdso/vsyscall.h
+>> new file mode 100644
+>> index 000000000000..6c67c08cefdd
+>> --- /dev/null
+>> +++ b/arch/s390/include/asm/vdso/vsyscall.h
+>> @@ -0,0 +1,26 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#ifndef __ASM_VDSO_VSYSCALL_H
+>> +#define __ASM_VDSO_VSYSCALL_H
+>> +
+>> +#ifndef __ASSEMBLY__
+>> +
+>> +#include <linux/hrtimer.h>
+>> +#include <linux/timekeeper_internal.h>
+>
+> I know you copied that from x86 or some other architecture, but thinking
+> about the above these two includes are not required for building VDSO
+> itself. Only the kernel update side needs them and they are included
+> already there. I'm going to remove them from x86 as well.
+
+Thanks, i removed them from my patch.
+
+>> @@ -443,9 +396,8 @@ static void clock_sync_global(unsigned long long delta)
+>>  		panic("TOD clock sync offset %lli is too large to drift\n",
+>>  		      tod_steering_delta);
+>>  	tod_steering_end = now + (abs(tod_steering_delta) << 15);
+>> -	vdso_data->ts_dir = (tod_steering_delta < 0) ? 0 : 1;
+>> -	vdso_data->ts_end = tod_steering_end;
+>> -	vdso_data->tb_update_count++;
+>> +	vdso_data->arch.tod_steering_end = tod_steering_end;
+>
+> Leftover from the previous version. Should be arch_data.tod....
+
+Oops, indeed.
+
+> Heiko, do you consider this 5.9 material or am I right to assume that
+> this targets 5.10?
+
+I talked to Heiko yesterday and we agreed that it's to late for 5.9, so
+we target 5.10.
+
+Thanks,
+Sven
