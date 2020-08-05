@@ -2,98 +2,101 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 538BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3522B206B6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2316F2075A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:43:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596649413;
+	bh=E48uURU/e4C3y5TjlfnNrUSBQnpVCadc+z+Vd9h/kdU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=C5nDb1AnXWz6RKPaDnvpuyIeqzuoKhVe/ySVo/WmX7qDWSkq76F9dclyRBnvO4/sy
+	 AjoUGKdzuB6BrAH36aZrV3gFWojwZUPtPF8BqwSn6oPT1j7LVixXHYPRKaYzT5S9gv
+	 hIyNyzFe25+mPQMrrdj4Toq99W6snzWDyhrGFTUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728964AbgHERlu (ORCPT
+        id S1728615AbgHERnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:41:50 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43119 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728707AbgHERdc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:33:32 -0400
-Received: by mail-ot1-f68.google.com with SMTP id r21so23438915ota.10;
-        Wed, 05 Aug 2020 10:33:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nGe/Je8IarDkuCxG/u56QffSTYctpnR0YPw4MQUjy6A=;
-        b=rST3AuFgwVSXUW3gEpFnjQUuP+b9s0ZTn6PGbKOKO0OK/j1Bz2VXk0llZOWxlZuVO0
-         9oIMGAghTHl7Je5+n5+2DXDu/GznsnJ4YNQOMq5PtIygh1yiaj8pArkwAmdJGmw8t7vV
-         y8yVoeNhoS3DYIqAsy4Gt6Y1yh5ITWzLCzU1shD/pXIGj70jEE7glN6xEDbz2IORtivs
-         WWjD+NIisqKh2drx89yWWNp/pgChSLiBCf9nJaimJgGRP2okuj6v03kDhH2XQucahukI
-         6ZDcExgwrTEUAt5FKxmlIh2ncsblVHaIKbyGltSkjVye87qelLo/EG/OHkS4skdvIjpS
-         +5RQ==
-X-Gm-Message-State: AOAM530uffkeniOlIrjfH8CawBS6dbRM7pQSfv6ViYuOMMS6DLOMtgfK
-        /66F6f4Ls6S2Wp3IhNdRu6md7VSYEPbJdtBJFCPm8E5j
-X-Google-Smtp-Source: ABdhPJy6BJnijQ4U9574JZCK6kDHqx7/zV93wpejrM8Eh19/YBjLybIlzjjbGdFEBSswTARB1GJ4M2QmhRRIOA+7jHM=
-X-Received: by 2002:a9d:1b0d:: with SMTP id l13mr2076468otl.145.1596625795521;
- Wed, 05 Aug 2020 04:09:55 -0700 (PDT)
+        Wed, 5 Aug 2020 13:43:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42146 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728900AbgHERkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:40:21 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1020622CAE;
+        Wed,  5 Aug 2020 11:01:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596625308;
+        bh=E48uURU/e4C3y5TjlfnNrUSBQnpVCadc+z+Vd9h/kdU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vjiEPe14+OtcSgTUe6IvKe9v7YtFnMHcqLyu1+yzJV2lHJlinrgdZttz+o/8wF2Pn
+         kjWCfnTxkN2Yt08lbE1MOKOyiYlxVVYDwGj7fNWqJoh2bRTgpr9ZnCA1QsL5FJRKXD
+         2Qe0hIMyvTa1JtLSs+tAhtngoaoynx1LzvqEakcg=
+Date:   Wed, 5 Aug 2020 12:01:25 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Alain Volmat <alain.volmat@st.com>
+Cc:     amelie.delaunay@st.com, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        fabrice.gasnier@st.com
+Subject: Re: [PATCH 12/18] spi: stm32: move spi disable out of irq handler
+Message-ID: <20200805110125.GG5556@sirena.org.uk>
+References: <1596610933-32599-1-git-send-email-alain.volmat@st.com>
+ <1596610933-32599-13-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594919915-5225-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 5 Aug 2020 13:09:43 +0200
-Message-ID: <CAMuHMdWhmQS56j4vkZhK94qQVkVhCA1eceZRNW1XipX-Sr6+8A@mail.gmail.com>
-Subject: Re: [PATCH 06/20] arm64: dts: renesas: r8a774e1: Add USB2.0 phy and
- host (EHCI/OHCI) device nodes
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="KR/qxknboQ7+Tpez"
+Content-Disposition: inline
+In-Reply-To: <1596610933-32599-13-git-send-email-alain.volmat@st.com>
+X-Cookie: Fast, cheap, good: pick two.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 7:19 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add USB2.0 phy and host (EHCI/OHCI) device nodes on RZ/G2H SoC dtsi.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.10.
+--KR/qxknboQ7+Tpez
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Gr{oetje,eeting}s,
+On Wed, Aug 05, 2020 at 09:02:07AM +0200, Alain Volmat wrote:
+> From: Antonio Borneo <antonio.borneo@st.com>
+>=20
+> The spi disable could potentially require some time to finish.
+> It has to be executed at the end of a transfer, but there is
+> no reason to call it in the irq handler.
+>=20
+> Simplify the irq handler by moving out the spi disable. The
+> synchronization through xfer_completion is used to defer the
+> execution of spi disable.
 
-                        Geert
+Should this be an unprepare_transfer_hardware() operation?  That would
+allow the framework to take care of scheduling this in an appropriate
+context with the added advantage of not needing to do it when there's
+another message scheduled immediately.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+--KR/qxknboQ7+Tpez
+Content-Type: application/pgp-signature; name="signature.asc"
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8qkYUACgkQJNaLcl1U
+h9Amcwf/Z9jbsoaJGZe0lTnEB+ZN1x7Xo629kRG1It/WXDUx01vXa/0BIFFomSB8
+5z4skhqGXkfncS+6lCZzBW1dJjVMTxJTXztD4zCbb45cYbGA+rjWIn2JPMvHLLxO
+swSm5Poy0PDGddU6aVh9PrZgMJXe6z5+hogGuIfxuPIdDi0gudqZ6mxH1N7emcQh
+52kzLDjvPtfeYESQYhtaCyD/MDbrAvSPC/946BHXzIcDWpWeHJIsdNUQCghTUHHg
+D3dpBhZhYrJfaE8Iv81hlGdlEbzrRDsmdJLi918xEECHBPWEoKItosC0DRKFVo2q
+/gSifjQBt0a6jA65RbRP4i8WXRUTNA==
+=6vOj
+-----END PGP SIGNATURE-----
+
+--KR/qxknboQ7+Tpez--
