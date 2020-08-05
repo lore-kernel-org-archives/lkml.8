@@ -2,155 +2,224 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C785CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 21:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67820C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 21:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA5EB2076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 21:30:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 422B622CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 21:33:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgHEV37 (ORCPT
+        id S1726398AbgHEVdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 17:29:59 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:44266 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725648AbgHEV37 (ORCPT
+        Wed, 5 Aug 2020 17:33:35 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:52298 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbgHEVde (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 17:29:59 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1k3Qyy-0003M0-97; Wed, 05 Aug 2020 21:29:56 +0000
-Subject: Re: [PATCH] drm/amdgpu: fix spelling mistake "Falied" -> "Failed"
-To:     Alex Deucher <alexdeucher@gmail.com>, Joe Perches <joe@perches.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200805113510.18277-1-colin.king@canonical.com>
- <CADnq5_NA9f2N3xkH4WAdDEP+0-5W0LkmTRy3yXqFdnWQmfsVmQ@mail.gmail.com>
- <a8ab7d75ef9df54bd193fc88e0670b30026e7e67.camel@perches.com>
- <CADnq5_P9hfv=Zt9+m47sFC0z202x+q-Otifv7a5z4afJamtQ2Q@mail.gmail.com>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <33a45674-fd15-918f-31bf-d54f9925abb6@canonical.com>
-Date:   Wed, 5 Aug 2020 22:29:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 5 Aug 2020 17:33:34 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 4333A1C0BD2; Wed,  5 Aug 2020 23:33:30 +0200 (CEST)
+Date:   Wed, 5 Aug 2020 23:33:29 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org
+Subject: [GIT PULL] LEDs changes for v5.9-rc1
+Message-ID: <20200805213329.GA15090@duo.ucw.cz>
 MIME-Version: 1.0
-In-Reply-To: <CADnq5_P9hfv=Zt9+m47sFC0z202x+q-Otifv7a5z4afJamtQ2Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/08/2020 22:27, Alex Deucher wrote:
-> On Wed, Aug 5, 2020 at 4:53 PM Joe Perches <joe@perches.com> wrote:
->>
->> On Wed, 2020-08-05 at 16:01 -0400, Alex Deucher wrote:
->>> On Wed, Aug 5, 2020 at 7:35 AM Colin King <colin.king@canonical.com> wrote:
->>>> From: Colin Ian King <colin.king@canonical.com>
->>>>
->>>> There is a spelling mistake in a DRM_ERROR message. Fix it.
->>>>
->>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->>>
->>> This is already fixed.
->>
->> This fix is not in today's -next.
->>
->> Perhaps whatever tree it's fixed in should be in -next.
->>
-> 
-> Weird.  It's in the drm-next tree as:
-> 
-> commit 4afaa61db9cf5250b5734c2531b226e7b3a3d691
-> Author: Colin Ian King <colin.king@canonical.com>
-> Date:   Fri Jul 10 09:37:58 2020 +0100
-> 
->     drm/amdgpu: fix spelling mistake "Falied" -> "Failed"
-> 
->     There is a spelling mistake in a DRM_ERROR error message. Fix it.
-> 
->     Signed-off-by: Colin Ian King <colin.king@canonical.com>
->     Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-> 
-> Alex
-> 
->>
->> $ git show --oneline -s
->> d15fe4ec0435 (HEAD, tag: next-20200805, origin/master, origin/HEAD) Add linux-next specific files for 20200805
->>
->> $ git grep -i falied drivers
->> drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c:                DRM_ERROR("Falied to terminate tmr\n");
->>
->>>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_psp.c
->> []
->>>> @@ -2010,7 +2010,7 @@ static int psp_suspend(void *handle)
->>>>
->>>>         ret = psp_tmr_terminate(psp);
->>>>         if (ret) {
->>>> -               DRM_ERROR("Falied to terminate tmr\n");
->>>> +               DRM_ERROR("Failed to terminate tmr\n");
->>>>                 return ret;
->>>>         }
->>
->>
 
-Somehow I omitted adding this to my tracking list and forgot that I sent
-this already. Apologies for patch deja-vu.
+--vtzGhvizbBRQ85DL
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Colin
+The following changes since commit 48778464bb7d346b47157d21ffde2af6b2d39110:
+
+  Linux 5.8-rc2 (2020-06-21 15:45:29 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git/ tags/=
+leds-5.9-rc1
+
+for you to fetch changes up to bba37471de2d7733b0deef57e03c47fa97a284a7:
+
+  MAINTAINERS: Remove myself as LED subsystem maintainer (2020-08-05 23:27:=
+51 +0200)
+
+----------------------------------------------------------------
+LEDs changes for 5.9-rc1.
+
+Okay, so... this one is interesting. RGB LEDs are very common, and we
+need to have some kind of support for them. Multicolor is for
+arbitrary set of LEDs in one package, RGB is for LEDs that can produce
+full range of colors. We do not have real multicolor LED that is not
+RGB in the pipeline, so that one is disabled for now.
+
+You can expect this saga to continue with next pull requests.
+
+Thank Jacek for all the good work you did maintaining LEDs over the years!=
+=20
+
+----------------------------------------------------------------
+Alexander A. Klimov (1):
+      leds: Replace HTTP links with HTTPS ones
+
+Arnd Bergmann (1):
+      leds: lm355x: avoid enum conversion warning
+
+Dan Murphy (10):
+      leds: lp55xx: Fix file permissions to use DEVICE_ATTR macros
+      leds: lp5523: Fix various formatting issues in the code
+      dt: bindings: Add multicolor class dt bindings documention
+      leds: Add multicolor ID to the color ID list
+      leds: multicolor: Introduce a multicolor class definition
+      dt-bindings: leds: Convert leds-lp55xx to yaml
+      leds: lp55xx: Convert LED class registration to devm_*
+      leds: lp55xx: Add multicolor framework support to lp55xx
+      leds: lp5523: Update the lp5523 code to add multicolor brightness fun=
+ction
+      leds: lp5521: Add multicolor framework multicolor brightness support
+
+Flavio Suligoi (2):
+      dt-bindings: leds: fix macro names for pca955x
+      leds: fix spelling mistake
+
+Gustavo A. R. Silva (2):
+      leds: ns2: Use struct_size() in devm_kzalloc()
+      leds: gpio: Use struct_size() in devm_kzalloc()
+
+Jacek Anaszewski (1):
+      MAINTAINERS: Remove myself as LED subsystem maintainer
+
+Jan Kiszka (1):
+      leds: trigger: gpio: Avoid warning on update of inverted
+
+Johan Hovold (6):
+      leds: 88pm860x: fix use-after-free on unbind
+      leds: da903x: fix use-after-free on unbind
+      leds: lm3533: fix use-after-free on unbind
+      leds: lm36274: fix use-after-free on unbind
+      leds: wm831x-status: fix use-after-free on unbind
+      leds: drop redundant struct-device pointer casts
+
+Kai-Heng Feng (1):
+      leds: core: Flush scheduled work for system suspend
+
+Linus Walleij (3):
+      leds: lp55xx: Convert to use GPIO descriptors
+      leds: pca955x: Include the right GPIO header
+      leds: gpio: Fix semantic error
+
+Marek Beh=FAn (4):
+      leds: trigger: add support for LED-private device triggers
+      dt-bindings: leds: add cznic,turris-omnia-leds binding
+      leds: initial support for Turris Omnia LEDs
+      Documentation: ABI: leds-turris-omnia: document sysfs attribute
+
+Pavel Machek (3):
+      leds: pattern trigger -- check pattern for validity
+      leds: add RGB color option, as that is different from multicolor.
+      leds: disallow /sys/class/leds/*:multi:* for now
+
+Randy Dunlap (1):
+      Make LEDS_LP55XX_COMMON depend on I2C to fix build errors:
+
+=C1lvaro Fern=E1ndez Rojas (1):
+      leds-bcm6328: support second hw blinking interval
+
+ .../testing/sysfs-class-led-driver-turris-omnia    |  14 +
+ .../ABI/testing/sysfs-class-led-multicolor         |  35 +++
+ .../bindings/leds/cznic,turris-omnia-leds.yaml     |  90 +++++++
+ .../bindings/leds/leds-class-multicolor.yaml       |  37 +++
+ .../devicetree/bindings/leds/leds-lm3532.txt       |   2 +-
+ .../devicetree/bindings/leds/leds-lm3601x.txt      |   4 +-
+ .../devicetree/bindings/leds/leds-lm36274.txt      |   2 +-
+ .../devicetree/bindings/leds/leds-lm3692x.txt      |   2 +-
+ .../devicetree/bindings/leds/leds-lm3697.txt       |   2 +-
+ .../devicetree/bindings/leds/leds-lp55xx.txt       | 228 ----------------
+ .../devicetree/bindings/leds/leds-lp55xx.yaml      | 220 +++++++++++++++
+ .../devicetree/bindings/leds/leds-lp8860.txt       |   2 +-
+ .../devicetree/bindings/leds/leds-pca955x.txt      |   6 +-
+ Documentation/leds/index.rst                       |   1 +
+ Documentation/leds/leds-class-multicolor.rst       |  86 ++++++
+ MAINTAINERS                                        |   2 -
+ drivers/leds/Kconfig                               |  33 ++-
+ drivers/leds/Makefile                              |   2 +
+ drivers/leds/led-class-multicolor.c                | 203 ++++++++++++++
+ drivers/leds/led-class.c                           |   1 +
+ drivers/leds/led-core.c                            |   6 +
+ drivers/leds/led-triggers.c                        |  28 +-
+ drivers/leds/leds-88pm860x.c                       |  14 +-
+ drivers/leds/leds-bcm6328.c                        |  97 +++++--
+ drivers/leds/leds-da903x.c                         |  14 +-
+ drivers/leds/leds-gpio.c                           |  15 +-
+ drivers/leds/leds-lm3532.c                         |   4 +-
+ drivers/leds/leds-lm3533.c                         |  12 +-
+ drivers/leds/leds-lm355x.c                         |  16 +-
+ drivers/leds/leds-lm3601x.c                        |   2 +-
+ drivers/leds/leds-lm36274.c                        |  17 +-
+ drivers/leds/leds-lm3642.c                         |   9 +-
+ drivers/leds/leds-lm3692x.c                        |   2 +-
+ drivers/leds/leds-lm3697.c                         |   2 +-
+ drivers/leds/leds-lp5521.c                         |  43 ++-
+ drivers/leds/leds-lp5523.c                         |  62 +++--
+ drivers/leds/leds-lp5562.c                         |  22 +-
+ drivers/leds/leds-lp55xx-common.c                  | 239 ++++++++++++-----
+ drivers/leds/leds-lp55xx-common.h                  |  16 +-
+ drivers/leds/leds-lp8501.c                         |  23 +-
+ drivers/leds/leds-ns2.c                            |   9 +-
+ drivers/leds/leds-pca955x.c                        |   2 +-
+ drivers/leds/leds-turris-omnia.c                   | 295 +++++++++++++++++=
+++++
+ drivers/leds/leds-wm831x-status.c                  |  14 +-
+ drivers/leds/trigger/ledtrig-gpio.c                |   3 +-
+ drivers/leds/trigger/ledtrig-pattern.c             |   6 +-
+ include/dt-bindings/leds/common.h                  |   5 +-
+ include/linux/led-class-multicolor.h               | 121 +++++++++
+ include/linux/leds.h                               |  10 +
+ include/linux/platform_data/leds-lp55xx.h          |  13 +-
+ 50 files changed, 1640 insertions(+), 453 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-driver-turris=
+-omnia
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+ create mode 100644 Documentation/devicetree/bindings/leds/cznic,turris-omn=
+ia-leds.yaml
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multi=
+color.yaml
+ delete mode 100644 Documentation/devicetree/bindings/leds/leds-lp55xx.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
+ create mode 100644 Documentation/leds/leds-class-multicolor.rst
+ create mode 100644 drivers/leds/led-class-multicolor.c
+ create mode 100644 drivers/leds/leds-turris-omnia.c
+ create mode 100644 include/linux/led-class-multicolor.h
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--vtzGhvizbBRQ85DL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXyslqQAKCRAw5/Bqldv6
+8sVKAKC3jd6pP570E6RNoz3DdEruooKYnQCfaJ5m6nKe1uhIdaB26643WpDg2+s=
+=YXL1
+-----END PGP SIGNATURE-----
+
+--vtzGhvizbBRQ85DL--
