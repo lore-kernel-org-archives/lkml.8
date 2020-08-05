@@ -2,602 +2,983 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B196C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C18FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 299FD2245C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EDB022B45
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:39:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nGAmX3Ye"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lF8z6qf5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgHEHj2 (ORCPT
+        id S1727897AbgHEHjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 03:39:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46338 "EHLO
+        Wed, 5 Aug 2020 03:39:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbgHEHj1 (ORCPT
+        with ESMTP id S1725904AbgHEHjj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 03:39:27 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FB56C06174A;
-        Wed,  5 Aug 2020 00:39:27 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id i92so2764730pje.0;
-        Wed, 05 Aug 2020 00:39:27 -0700 (PDT)
+        Wed, 5 Aug 2020 03:39:39 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6ECDC06174A;
+        Wed,  5 Aug 2020 00:39:38 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id f9so3826021pju.4;
+        Wed, 05 Aug 2020 00:39:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=EAu4Xv5+GEzBUioolMyaF0uukE3fe4YKQVPhRE7ah24=;
-        b=nGAmX3YexnKwR0dre7CSxOmgRr45TO/L2YtUfAFAFwj/0mN5ymzzqgrHgyktLPeJnK
-         sTNqI8DYE3op7kX+WVRV7iLs6gWkcKm19DmZDFXlnR4v0p1+YfW05EWbSOWMsrKmYHkQ
-         U3c91bTajpXfmZUicwHDlMzD1zpXtKs87lo/bSHTChseMOqc8AIKc7KdwnTw+cfW7FXt
-         VU01u7Ci+349Qq5L1dr5szLg6tJxsVvpw5dQmtzuiA/pEHvW4eFsyivNdDPjJjusrTQx
-         TGuFZHE/4L1CmSalrxCTV0dyD5NlY92imgMy71xaQGOa1sqLMrm/JEKi26bBqWG24oLy
-         I93A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B4iSl4GOQe7yqzUsO2b0elqNIrt6o9frYY9LmhtrpsM=;
+        b=lF8z6qf5LXVXUw0LmWCcWxZ0uzdGZ7F+EKz0DPyDiqjTCe5q9E/s/z08VGN4rocTi5
+         WDeDsAtzJnAYXQbi7OTzM+x98rEgQXmtqcLgs+7Eu0emchMM1AsboB0TyvDe6+2npq0U
+         sf9HgTtCEgpEKylmE0HxynqmAeE88gqbzHa6K88yfAnf38H6E0P5YJwyfve00w4XswDL
+         ZhEodjis2Us8xrM3Z1Kt8L+ne8vuHYerNN0FKcoX1Pb34KqOnIVav/8VKMxVP2BmyAAR
+         LX7WqKLRLyMYkEdO8uDC83xwlkuAl5/jtCTibIUMOrblcqyaI4J49Iguhbp3/obiV39e
+         d4gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=EAu4Xv5+GEzBUioolMyaF0uukE3fe4YKQVPhRE7ah24=;
-        b=A2jgn7vf5bB8lYP6kxY5dnqBVWHC2d3UCixgKc2OUDC9j/nN5pyeks2UT5R9/gckxb
-         2g99jAqcRPaNnoA/JIsy9tBNYOVLaIN+nFxZ/tEFjrUbndlNcCZTfphXYLSedkGwJmmr
-         QdVnG5W9ChiTbisqdbUQEhq4Hj7Azvbu1RjXze8wBMHKbVqLDl3YNuu9jdU1Hjq+1Rn+
-         G2sJYERXAuAPAQrutdR2KsG8PkHekVqAXRzX4iAtCKHCbF15TW4uWYM/OPBAOH1Z0fgF
-         6RzhNViSOF3smnDQmoXZPPc7AH16xDvY/1fIXAhgcdbarrlYhJyfR5ZsnkmnezR2557E
-         G74w==
-X-Gm-Message-State: AOAM533Jywm5j3+OYYQj3WrXstpnDuLj69zN335kQWSR01BoyOeFnNTM
-        PLilAUhVJYSY3p0X05LthUw=
-X-Google-Smtp-Source: ABdhPJxQKMiQqG88q+KKAXhHtCViMVeE+F+k2Qu6X+edHLHitZVnuk83bQuvyhV+2FvktxRcg/2Qqw==
-X-Received: by 2002:a17:902:6904:: with SMTP id j4mr1973184plk.198.1596613166499;
-        Wed, 05 Aug 2020 00:39:26 -0700 (PDT)
-Received: from yangdongdo-OptiPlex-9010.mioffice.cn ([43.224.245.179])
-        by smtp.gmail.com with ESMTPSA id r28sm1972871pfg.158.2020.08.05.00.39.22
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 05 Aug 2020 00:39:25 -0700 (PDT)
-From:   Dongdong Yang <contribute.kernel@gmail.com>
-To:     gregkh@linuxfoundation.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-pm@vger.kernel.org, yangdongdong@xiaomi.com,
-        yanziily@xiaomi.com, rocking@linux.alibaba.com
-Subject: [PATCH v5] sched: Provide USF for the portable equipment.
-Date:   Wed,  5 Aug 2020 15:36:21 +0800
-Message-Id: <3bbd9a487176a05588e33ff660d4e58efa1fdb10.1596612536.git.yangdongdong@xiaomi.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1596612536.git.yangdongdong@xiaomi.com>
-References: <cover.1596612536.git.yangdongdong@xiaomi.com>
-In-Reply-To: <cover.1596612536.git.yangdongdong@xiaomi.com>
-References: <cover.1596612536.git.yangdongdong@xiaomi.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B4iSl4GOQe7yqzUsO2b0elqNIrt6o9frYY9LmhtrpsM=;
+        b=FZZCLB0z4kSvVbpBI+WGQtvktCDMiociPxKEdIe74R5mix9sSC8zAOOj7shmrgmmdm
+         DEjSeFYjpjkX6IJYpsrIerkSbGxtqIgUHnzQezGqNE5glbUsWS3FKl6JphhDymXhecmt
+         QG96bwAoJp/8LjXxieM725zQSwRpvaT4ul8gZPEePftJxgPxZ/1VMumS/LrFR7pZRs0z
+         UqfYg3BXsmL0a+qY9yVVLk47lTB2BCqGj2TOJrCp+ZGpDv1R5padoPvd4cK0ZjJF1CtD
+         Or2sWWfaTxkdapS7obP5ocly8HMN+jRH3TeR8T3J7Vn5bk2I0upSSCJGE2AqAiUTVA+O
+         ZORQ==
+X-Gm-Message-State: AOAM532ERXV/cs82BRwpGE6Y5hFMzrb5ZtcSiZts3aZ0Q6aihcVSrDmp
+        A034zjhyHAwZQdOLgZeSpJTmLZTfy9C0VkZe1yk=
+X-Google-Smtp-Source: ABdhPJxgYLBpsqaTi49bR65U9CoIQ1U4R1pl9Vgyv1qvAyArqlIHd+uGovzVp0Ipp7eVz65mvr+7JJBDNscpOIEya7c=
+X-Received: by 2002:a17:902:8491:: with SMTP id c17mr1871988plo.262.1596613178145;
+ Wed, 05 Aug 2020 00:39:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200805055744.31909-1-ceggers@arri.de> <20200805055744.31909-3-ceggers@arri.de>
+In-Reply-To: <20200805055744.31909-3-ceggers@arri.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 5 Aug 2020 10:39:20 +0300
+Message-ID: <CAHp75Vf5-id3MbMc9nOZsZLe-PtVr0hFpxz-WOuiRu9Xq31Qkg@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] iio: light: as73211: New driver
+To:     Christian Eggers <ceggers@arri.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongdong Yang <yangdongdong@xiaomi.com>
+On Wed, Aug 5, 2020 at 9:00 AM Christian Eggers <ceggers@arri.de> wrote:
+>
+> Support for AMS AS73211 JENCOLOR(R) Digital XYZ Sensor.
+>
+> This driver has no built-in trigger. In order for making triggered
+> measurements, an external (software) trigger driver like
+> iio-trig-hrtimer or iio-trig-sysfs is required.
+>
+> The sensor supports single and continuous measurement modes. The latter
+> is not used by design as this would require tight timing synchronization
+> between hardware and driver without much benefit.
+>
 
-The power consumption and UI response are more cared for by the portable
-equipment users. USF(User Sensitive Feedback factor) auxiliary cpufreq
-governor is providing more util adjustment settings to the high level
-by scenario identification.
+FWIW,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-From the view of portable equipment, screen off status usually stands
-for no request from the user, however, the kernel is still expected to
-notify the user in time on modem, network or powerkey events occur. In
-some scenarios, such as listening to music, low power processors, such
-as DSP, take more actions and CPU load requirements cut down.  It would
-bring more power consumption benefit if high level have interfaces to
-adjust utils according to the current scenario and load.
+> Datasheet: https://ams.com/documents/20143/36005/AS73211_DS000556_3-01.pdf
+> Signed-off-by: Christian Eggers <ceggers@arri.de>
+> ---
+>  MAINTAINERS                 |   7 +
+>  drivers/iio/light/Kconfig   |  15 +
+>  drivers/iio/light/Makefile  |   1 +
+>  drivers/iio/light/as73211.c | 801 ++++++++++++++++++++++++++++++++++++
+>  4 files changed, 824 insertions(+)
+>  create mode 100644 drivers/iio/light/as73211.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 068d6e94122b..673570414147 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -934,6 +934,13 @@ S: Supported
+>  F:     arch/arm64/boot/dts/amd/amd-seattle-xgbe*.dtsi
+>  F:     drivers/net/ethernet/amd/xgbe/
+>
+> +AMS AS73211 DRIVER
+> +M:     Christian Eggers <ceggers@arri.de>
+> +L:     linux-iio@vger.kernel.org
+> +S:     Maintained
+> +F:     Documentation/devicetree/bindings/iio/light/ams,as73211.yaml
+> +F:     drivers/iio/light/as73211.c
+> +
+>  ANALOG DEVICES INC AD5686 DRIVER
+>  M:     Michael Hennerich <Michael.Hennerich@analog.com>
+>  L:     linux-pm@vger.kernel.org
+> diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
+> index 182bd18c4bb2..cade6dc0305b 100644
+> --- a/drivers/iio/light/Kconfig
+> +++ b/drivers/iio/light/Kconfig
+> @@ -86,6 +86,21 @@ config APDS9960
+>           To compile this driver as a module, choose M here: the
+>           module will be called apds9960
+>
+> +config AS73211
+> +       tristate "AMS AS73211 XYZ color sensor"
+> +       depends on I2C
+> +       select IIO_BUFFER
+> +       select IIO_TRIGGERED_BUFFER
+> +       help
+> +        If you say yes here you get support for the AMS AS73211
+> +        JENCOLOR(R) Digital XYZ Sensor.
+> +
+> +        For triggered measurements, you will need an additional trigger driver
+> +        like IIO_HRTIMER_TRIGGER or IIO_SYSFS_TRIGGER.
+> +
+> +        This driver can also be built as a module.  If so, the module
+> +        will be called as73211.
+> +
+>  config BH1750
+>         tristate "ROHM BH1750 ambient light sensor"
+>         depends on I2C
+> diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
+> index d1c8aa30b9a8..ea376deaca54 100644
+> --- a/drivers/iio/light/Makefile
+> +++ b/drivers/iio/light/Makefile
+> @@ -11,6 +11,7 @@ obj-$(CONFIG_AL3010)          += al3010.o
+>  obj-$(CONFIG_AL3320A)          += al3320a.o
+>  obj-$(CONFIG_APDS9300)         += apds9300.o
+>  obj-$(CONFIG_APDS9960)         += apds9960.o
+> +obj-$(CONFIG_AS73211)          += as73211.o
+>  obj-$(CONFIG_BH1750)           += bh1750.o
+>  obj-$(CONFIG_BH1780)           += bh1780.o
+>  obj-$(CONFIG_CM32181)          += cm32181.o
+> diff --git a/drivers/iio/light/as73211.c b/drivers/iio/light/as73211.c
+> new file mode 100644
+> index 000000000000..3383aaacbf52
+> --- /dev/null
+> +++ b/drivers/iio/light/as73211.c
+> @@ -0,0 +1,801 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Support for AMS AS73211 JENCOLOR(R) Digital XYZ Sensor
+> + *
+> + * Author: Christian Eggers <ceggers@arri.de>
+> + *
+> + * Copyright (c) 2020 ARRI Lighting
+> + *
+> + * Color light sensor with 16-bit channels for x, y, z and temperature);
+> + * 7-bit I2C slave address 0x74 .. 0x77.
+> + *
+> + * Datasheet: https://ams.com/documents/20143/36005/AS73211_DS000556_3-01.pdf
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/completion.h>
+> +#include <linux/delay.h>
+> +#include <linux/i2c.h>
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/pm.h>
+> +
+> +#define HZ_PER_KHZ 1000
+> +
+> +#define AS73211_DRV_NAME "as73211"
+> +
+> +/* AS73211 configuration registers */
+> +#define AS73211_REG_OSR    0x0
+> +#define AS73211_REG_AGEN   0x2
+> +#define AS73211_REG_CREG1  0x6
+> +#define AS73211_REG_CREG2  0x7
+> +#define AS73211_REG_CREG3  0x8
+> +
+> +/* AS73211 output register bank */
+> +#define AS73211_OUT_OSR_STATUS    0
+> +#define AS73211_OUT_TEMP          1
+> +#define AS73211_OUT_MRES1         2
+> +#define AS73211_OUT_MRES2         3
+> +#define AS73211_OUT_MRES3         4
+> +
+> +#define AS73211_OSR_SS            BIT(7)
+> +#define AS73211_OSR_PD            BIT(6)
+> +#define AS73211_OSR_SW_RES        BIT(3)
+> +#define AS73211_OSR_DOS_MASK      GENMASK(2, 0)
+> +#define AS73211_OSR_DOS_CONFIG    FIELD_PREP(AS73211_OSR_DOS_MASK, 0x2)
+> +#define AS73211_OSR_DOS_MEASURE   FIELD_PREP(AS73211_OSR_DOS_MASK, 0x3)
+> +
+> +#define AS73211_AGEN_DEVID_MASK   GENMASK(7, 4)
+> +#define AS73211_AGEN_DEVID(x)     FIELD_PREP(AS73211_AGEN_DEVID_MASK, (x))
+> +#define AS73211_AGEN_MUT_MASK     GENMASK(3, 0)
+> +#define AS73211_AGEN_MUT(x)       FIELD_PREP(AS73211_AGEN_MUT_MASK, (x))
+> +
+> +#define AS73211_CREG1_GAIN_MASK   GENMASK(7, 4)
+> +#define AS73211_CREG1_GAIN_1      13
+> +#define AS73211_CREG1_TIME_MASK   GENMASK(3, 0)
+> +
+> +#define AS73211_CREG3_CCLK_MASK   GENMASK(1, 0)
+> +
+> +#define AS73211_OSR_STATUS_OUTCONVOF  BIT(15)
+> +#define AS73211_OSR_STATUS_MRESOF     BIT(14)
+> +#define AS73211_OSR_STATUS_ADCOF      BIT(13)
+> +#define AS73211_OSR_STATUS_LDATA      BIT(12)
+> +#define AS73211_OSR_STATUS_NDATA      BIT(11)
+> +#define AS73211_OSR_STATUS_NOTREADY   BIT(10)
+> +
+> +#define AS73211_SAMPLE_FREQ_BASE      1024000
+> +
+> +#define AS73211_SAMPLE_TIME_NUM       15
+> +#define AS73211_SAMPLE_TIME_MAX_MS    BIT(AS73211_SAMPLE_TIME_NUM - 1)
+> +
+> +/* Available sample frequencies are 1.024MHz multiplied by powers of two. */
+> +static const int as73211_samp_freq_avail[] = {
+> +       AS73211_SAMPLE_FREQ_BASE * 1,
+> +       AS73211_SAMPLE_FREQ_BASE * 2,
+> +       AS73211_SAMPLE_FREQ_BASE * 4,
+> +       AS73211_SAMPLE_FREQ_BASE * 8,
+> +};
+> +
+> +static const int as73211_hardwaregain_avail[] = {
+> +       1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048,
+> +};
+> +
+> +/**
+> + * struct as73211_data - Instance data for one AS73211
+> + * @client: I2C client.
+> + * @osr:    Cached Operational State Register.
+> + * @creg1:  Cached Configuration Register 1.
+> + * @creg2:  Cached Configuration Register 2.
+> + * @creg3:  Cached Configuration Register 3.
+> + * @mutex:  Keeps cached registers in sync with the device.
+> + * @completion: Completion to wait for interrupt.
+> + * @int_time_avail: Available integration times (depend on sampling frequency).
+> + */
+> +struct as73211_data {
+> +       struct i2c_client *client;
+> +       u8 osr;
+> +       u8 creg1;
+> +       u8 creg2;
+> +       u8 creg3;
+> +       struct mutex mutex;
+> +       struct completion completion;
+> +       int int_time_avail[AS73211_SAMPLE_TIME_NUM * 2];
+> +};
+> +
+> +#define AS73211_COLOR_CHANNEL(_color, _si, _addr) { \
+> +       .type = IIO_INTENSITY, \
+> +       .modified = 1, \
+> +       .info_mask_separate = BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE), \
+> +       .info_mask_shared_by_type = \
+> +               BIT(IIO_CHAN_INFO_SAMP_FREQ) | \
+> +               BIT(IIO_CHAN_INFO_HARDWAREGAIN) | \
+> +               BIT(IIO_CHAN_INFO_INT_TIME), \
+> +       .info_mask_shared_by_type_available = \
+> +               BIT(IIO_CHAN_INFO_SAMP_FREQ) | \
+> +               BIT(IIO_CHAN_INFO_HARDWAREGAIN) | \
+> +               BIT(IIO_CHAN_INFO_INT_TIME), \
+> +       .channel2 = IIO_MOD_##_color, \
+> +       .address = _addr, \
+> +       .scan_index = _si, \
+> +       .scan_type = { \
+> +               .sign = 'u', \
+> +               .realbits = 16, \
+> +               .storagebits = 16, \
+> +               .endianness = IIO_LE, \
+> +       }, \
+> +}
+> +
+> +#define AS73211_OFFSET_TEMP_INT    (-66)
+> +#define AS73211_OFFSET_TEMP_MICRO  900000
+> +#define AS73211_SCALE_TEMP_INT     0
+> +#define AS73211_SCALE_TEMP_MICRO   50000
+> +
+> +#define AS73211_SCALE_X 277071108  /* nW/m^2 */
+> +#define AS73211_SCALE_Y 298384270  /* nW/m^2 */
+> +#define AS73211_SCALE_Z 160241927  /* nW/m^2 */
+> +
+> +/* Channel order MUST match devices result register order */
+> +#define AS73211_SCAN_INDEX_TEMP 0
+> +#define AS73211_SCAN_INDEX_X    1
+> +#define AS73211_SCAN_INDEX_Y    2
+> +#define AS73211_SCAN_INDEX_Z    3
+> +#define AS73211_SCAN_INDEX_TS   4
+> +
+> +#define AS73211_SCAN_MASK_COLOR ( \
+> +       BIT(AS73211_SCAN_INDEX_X) |   \
+> +       BIT(AS73211_SCAN_INDEX_Y) |   \
+> +       BIT(AS73211_SCAN_INDEX_Z))
+> +
+> +#define AS73211_SCAN_MASK_ALL (    \
+> +       BIT(AS73211_SCAN_INDEX_TEMP) | \
+> +       AS73211_SCAN_MASK_COLOR)
+> +
+> +static const struct iio_chan_spec as73211_channels[] = {
+> +       {
+> +               .type = IIO_TEMP,
+> +               .info_mask_separate =
+> +                       BIT(IIO_CHAN_INFO_RAW) |
+> +                       BIT(IIO_CHAN_INFO_OFFSET) |
+> +                       BIT(IIO_CHAN_INFO_SCALE),
+> +               .address = AS73211_OUT_TEMP,
+> +               .scan_index = AS73211_SCAN_INDEX_TEMP,
+> +               .scan_type = {
+> +                       .sign = 'u',
+> +                       .realbits = 16,
+> +                       .storagebits = 16,
+> +                       .endianness = IIO_LE,
+> +               }
+> +       },
+> +       AS73211_COLOR_CHANNEL(X, AS73211_SCAN_INDEX_X, AS73211_OUT_MRES1),
+> +       AS73211_COLOR_CHANNEL(Y, AS73211_SCAN_INDEX_Y, AS73211_OUT_MRES2),
+> +       AS73211_COLOR_CHANNEL(Z, AS73211_SCAN_INDEX_Z, AS73211_OUT_MRES3),
+> +       IIO_CHAN_SOFT_TIMESTAMP(AS73211_SCAN_INDEX_TS),
+> +};
+> +
+> +static unsigned int as73211_integration_time_1024cyc(struct as73211_data *data)
+> +{
+> +       /*
+> +        * Return integration time in units of 1024 clock cycles. Integration time
+> +        * in CREG1 is in powers of 2 (x 1024 cycles).
+> +        */
+> +       return BIT(FIELD_GET(AS73211_CREG1_TIME_MASK, data->creg1));
+> +}
+> +
+> +static unsigned int as73211_integration_time_us(struct as73211_data *data,
+> +                                                unsigned int integration_time_1024cyc)
+> +{
+> +       /*
+> +        * f_samp is configured in CREG3 in powers of 2 (x 1.024 MHz)
+> +        * t_cycl is configured in CREG1 in powers of 2 (x 1024 cycles)
+> +        * t_int_us = 1 / (f_samp) * t_cycl * US_PER_SEC
+> +        *          = 1 / (2^CREG3_CCLK * 1,024,000) * 2^CREG1_CYCLES * 1,024 * US_PER_SEC
+> +        *          = 2^(-CREG3_CCLK) * 2^CREG1_CYCLES * 1,000
+> +        * In order to get rid of negative exponents, we extend the "fraction"
+> +        * by 2^3 (CREG3_CCLK,max = 3)
+> +        * t_int_us = 2^(3-CREG3_CCLK) * 2^CREG1_CYCLES * 125
+> +        */
+> +       return BIT(3 - FIELD_GET(AS73211_CREG3_CCLK_MASK, data->creg3)) *
+> +               integration_time_1024cyc * 125;
+> +}
+> +
+> +static void as73211_integration_time_calc_avail(struct as73211_data *data)
+> +{
+> +       int i;
+> +
+> +       for (i = 0; i < ARRAY_SIZE(data->int_time_avail); i++) {
+> +               unsigned int time_us = as73211_integration_time_us(data, BIT(i));
+> +
+> +               data->int_time_avail[i * 2 + 0] = time_us / USEC_PER_SEC;
+> +               data->int_time_avail[i * 2 + 1] = time_us % USEC_PER_SEC;
+> +       }
+> +}
+> +
+> +static unsigned int as73211_gain(struct as73211_data *data)
+> +{
+> +       /* gain can be calculated from CREG1 as 2^(13 - CREG1_GAIN) */
+> +       return BIT(AS73211_CREG1_GAIN_1 - FIELD_GET(AS73211_CREG1_GAIN_MASK, data->creg1));
+> +}
+> +
+> +/* must be called with as73211_data::mutex held. */
+> +static int as73211_req_data(struct as73211_data *data)
+> +{
+> +       unsigned int time_us = as73211_integration_time_us(data,
+> +                                                           as73211_integration_time_1024cyc(data));
+> +       struct device *dev = &data->client->dev;
+> +       union i2c_smbus_data smbus_data;
+> +       u16 osr_status;
+> +       int ret;
+> +
+> +       if (data->client->irq)
+> +               reinit_completion(&data->completion);
+> +
+> +       /*
+> +        * During measurement, there should be no traffic on the i2c bus as the
+> +        * electrical noise would disturb the measurement process.
+> +        */
+> +       i2c_lock_bus(data->client->adapter, I2C_LOCK_SEGMENT);
+> +
+> +       data->osr &= ~AS73211_OSR_DOS_MASK;
+> +       data->osr |= AS73211_OSR_DOS_MEASURE | AS73211_OSR_SS;
+> +
+> +       smbus_data.byte = data->osr;
+> +       ret = __i2c_smbus_xfer(data->client->adapter, data->client->addr,
+> +                       data->client->flags, I2C_SMBUS_WRITE,
+> +                       AS73211_REG_OSR, I2C_SMBUS_BYTE_DATA, &smbus_data);
+> +       if (ret < 0) {
+> +               i2c_unlock_bus(data->client->adapter, I2C_LOCK_SEGMENT);
+> +               return ret;
+> +       }
+> +
+> +       /*
+> +        * Reset AS73211_OSR_SS (is self clearing) in order to avoid unintentional
+> +        * triggering of further measurements later.
+> +        */
+> +       data->osr &= ~AS73211_OSR_SS;
+> +
+> +       /*
+> +        * Add some extra margin for the timeout. sensor timing is not as precise
+> +        * as our one ...
+> +        */
+> +       time_us += time_us / 8;
+> +       if (data->client->irq) {
+> +               ret = wait_for_completion_timeout(&data->completion, usecs_to_jiffies(time_us));
+> +               if (!ret) {
+> +                       dev_err(dev, "timeout waiting for READY IRQ\n");
+> +                       i2c_unlock_bus(data->client->adapter, I2C_LOCK_SEGMENT);
+> +                       return -ETIMEDOUT;
+> +               }
+> +       } else {
+> +               /* Wait integration time */
+> +               usleep_range(time_us, 2 * time_us);
+> +       }
+> +
+> +       i2c_unlock_bus(data->client->adapter, I2C_LOCK_SEGMENT);
+> +
+> +       ret = i2c_smbus_read_word_data(data->client, AS73211_OUT_OSR_STATUS);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       osr_status = ret;
+> +       if (osr_status != (AS73211_OSR_DOS_MEASURE | AS73211_OSR_STATUS_NDATA)) {
+> +               if (osr_status & AS73211_OSR_SS) {
+> +                       dev_err(dev, "%s() Measurement has not stopped\n", __func__);
+> +                       return -ETIME;
+> +               }
+> +               if (osr_status & AS73211_OSR_STATUS_NOTREADY) {
+> +                       dev_err(dev, "%s() Data is not ready\n", __func__);
+> +                       return -ENODATA;
+> +               }
+> +               if (!(osr_status & AS73211_OSR_STATUS_NDATA)) {
+> +                       dev_err(dev, "%s() No new data available\n", __func__);
+> +                       return -ENODATA;
+> +               }
+> +               if (osr_status & AS73211_OSR_STATUS_LDATA) {
+> +                       dev_err(dev, "%s() Result buffer overrun\n", __func__);
+> +                       return -ENOBUFS;
+> +               }
+> +               if (osr_status & AS73211_OSR_STATUS_ADCOF) {
+> +                       dev_err(dev, "%s() ADC overflow\n", __func__);
+> +                       return -EOVERFLOW;
+> +               }
+> +               if (osr_status & AS73211_OSR_STATUS_MRESOF) {
+> +                       dev_err(dev, "%s() Measurement result overflow\n", __func__);
+> +                       return -EOVERFLOW;
+> +               }
+> +               if (osr_status & AS73211_OSR_STATUS_OUTCONVOF) {
+> +                       dev_err(dev, "%s() Timer overflow\n", __func__);
+> +                       return -EOVERFLOW;
+> +               }
+> +               dev_err(dev, "%s() Unexpected status value\n", __func__);
+> +               return -EIO;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int as73211_read_raw(struct iio_dev *indio_dev, struct iio_chan_spec const *chan,
+> +                            int *val, int *val2, long mask)
+> +{
+> +       struct as73211_data *data = iio_priv(indio_dev);
+> +
+> +       switch (mask) {
+> +       case IIO_CHAN_INFO_RAW: {
+> +               int ret;
+> +
+> +               ret = iio_device_claim_direct_mode(indio_dev);
+> +               if (ret < 0)
+> +                       return ret;
+> +
+> +               ret = as73211_req_data(data);
+> +               if (ret < 0) {
+> +                       iio_device_release_direct_mode(indio_dev);
+> +                       return ret;
+> +               }
+> +
+> +               ret = i2c_smbus_read_word_data(data->client, chan->address);
+> +               iio_device_release_direct_mode(indio_dev);
+> +               if (ret < 0)
+> +                       return ret;
+> +
+> +               *val = ret;
+> +               return IIO_VAL_INT;
+> +       }
+> +       case IIO_CHAN_INFO_OFFSET:
+> +               *val = AS73211_OFFSET_TEMP_INT;
+> +               *val2 = AS73211_OFFSET_TEMP_MICRO;
+> +               return IIO_VAL_INT_PLUS_MICRO;
+> +
+> +       case IIO_CHAN_INFO_SCALE:
+> +               switch (chan->type) {
+> +               case IIO_TEMP:
+> +                       *val = AS73211_SCALE_TEMP_INT;
+> +                       *val2 = AS73211_SCALE_TEMP_MICRO;
+> +                       return IIO_VAL_INT_PLUS_MICRO;
+> +
+> +               case IIO_INTENSITY: {
+> +                       unsigned int scale;
+> +
+> +                       switch (chan->channel2) {
+> +                       case IIO_MOD_X:
+> +                               scale = AS73211_SCALE_X;
+> +                               break;
+> +                       case IIO_MOD_Y:
+> +                               scale = AS73211_SCALE_Y;
+> +                               break;
+> +                       case IIO_MOD_Z:
+> +                               scale = AS73211_SCALE_Z;
+> +                               break;
+> +                       default:
+> +                               return -EINVAL;
+> +                       }
+> +                       scale /= as73211_gain(data);
+> +                       scale /= as73211_integration_time_1024cyc(data);
+> +                       *val = scale;
+> +                       return IIO_VAL_INT;
+> +
+> +               default:
+> +                       return -EINVAL;
+> +               }}
+> +
+> +       case IIO_CHAN_INFO_SAMP_FREQ:
+> +               /* f_samp is configured in CREG3 in powers of 2 (x 1.024 MHz) */
+> +               *val = BIT(FIELD_GET(AS73211_CREG3_CCLK_MASK, data->creg3)) *
+> +                       AS73211_SAMPLE_FREQ_BASE;
+> +               return IIO_VAL_INT;
+> +
+> +       case IIO_CHAN_INFO_HARDWAREGAIN:
+> +               *val = as73211_gain(data);
+> +               return IIO_VAL_INT;
+> +
+> +       case IIO_CHAN_INFO_INT_TIME: {
+> +               unsigned int time_us;
+> +
+> +               mutex_lock(&data->mutex);
+> +               time_us = as73211_integration_time_us(data, as73211_integration_time_1024cyc(data));
+> +               mutex_unlock(&data->mutex);
+> +               *val = time_us / USEC_PER_SEC;
+> +               *val2 = time_us % USEC_PER_SEC;
+> +               return IIO_VAL_INT_PLUS_MICRO;
+> +
+> +       default:
+> +               return -EINVAL;
+> +       }}
+> +}
+> +
+> +static int as73211_read_avail(struct iio_dev *indio_dev, struct iio_chan_spec const *chan,
+> +                              const int **vals, int *type, int *length, long mask)
+> +{
+> +       struct as73211_data *data = iio_priv(indio_dev);
+> +
+> +       switch (mask) {
+> +       case IIO_CHAN_INFO_SAMP_FREQ:
+> +               *length = ARRAY_SIZE(as73211_samp_freq_avail);
+> +               *vals = as73211_samp_freq_avail;
+> +               *type = IIO_VAL_INT;
+> +               return IIO_AVAIL_LIST;
+> +
+> +       case IIO_CHAN_INFO_HARDWAREGAIN:
+> +               *length = ARRAY_SIZE(as73211_hardwaregain_avail);
+> +               *vals = as73211_hardwaregain_avail;
+> +               *type = IIO_VAL_INT;
+> +               return IIO_AVAIL_LIST;
+> +
+> +       case IIO_CHAN_INFO_INT_TIME:
+> +               *length = ARRAY_SIZE(data->int_time_avail);
+> +               *vals = data->int_time_avail;
+> +               *type = IIO_VAL_INT_PLUS_MICRO;
+> +               return IIO_AVAIL_LIST;
+> +
+> +       default:
+> +               return -EINVAL;
+> +       }
+> +}
+> +
+> +static int _as73211_write_raw(struct iio_dev *indio_dev,
+> +                              struct iio_chan_spec const *chan __always_unused,
+> +                              int val, int val2, long mask)
+> +{
+> +       struct as73211_data *data = iio_priv(indio_dev);
+> +       int ret;
+> +
+> +       switch (mask) {
+> +       case IIO_CHAN_INFO_SAMP_FREQ: {
+> +               int reg_bits, freq_kHz = val / HZ_PER_KHZ;  /* 1024, 2048, ... */
+> +
+> +               /* val must be 1024 * 2^x */
+> +               if (val < 0 || (freq_kHz * HZ_PER_KHZ) != val ||
+> +                               !is_power_of_2(freq_kHz) || val2)
+> +                       return -EINVAL;
+> +
+> +               /* f_samp is configured in CREG3 in powers of 2 (x 1.024 MHz (=2^10)) */
+> +               reg_bits = ilog2(freq_kHz) - 10;
+> +               if (!FIELD_FIT(AS73211_CREG3_CCLK_MASK, reg_bits))
+> +                       return -EINVAL;
+> +
+> +               data->creg3 &= ~AS73211_CREG3_CCLK_MASK;
+> +               data->creg3 |= FIELD_PREP(AS73211_CREG3_CCLK_MASK, reg_bits);
+> +               as73211_integration_time_calc_avail(data);
+> +
+> +               ret = i2c_smbus_write_byte_data(data->client, AS73211_REG_CREG3, data->creg3);
+> +               if (ret < 0)
+> +                       return ret;
+> +
+> +               return 0;
+> +       }
+> +       case IIO_CHAN_INFO_HARDWAREGAIN: {
+> +               unsigned int reg_bits;
+> +
+> +               if (val < 0 || !is_power_of_2(val) || val2)
+> +                       return -EINVAL;
+> +
+> +               /* gain can be calculated from CREG1 as 2^(13 - CREG1_GAIN) */
+> +               reg_bits = AS73211_CREG1_GAIN_1 - ilog2(val);
+> +               if (!FIELD_FIT(AS73211_CREG1_GAIN_MASK, reg_bits))
+> +                       return -EINVAL;
+> +
+> +               data->creg1 &= ~AS73211_CREG1_GAIN_MASK;
+> +               data->creg1 |= FIELD_PREP(AS73211_CREG1_GAIN_MASK, reg_bits);
+> +
+> +               ret = i2c_smbus_write_byte_data(data->client, AS73211_REG_CREG1, data->creg1);
+> +               if (ret < 0)
+> +                       return ret;
+> +
+> +               return 0;
+> +       }
+> +       case IIO_CHAN_INFO_INT_TIME: {
+> +               int val_us = val * USEC_PER_SEC + val2;
+> +               int time_ms;
+> +               int reg_bits;
+> +
+> +               /* f_samp is configured in CREG3 in powers of 2 (x 1.024 MHz) */
+> +               int f_samp_1_024mhz = BIT(FIELD_GET(AS73211_CREG3_CCLK_MASK, data->creg3));
+> +
+> +               /*
+> +                * time_ms = time_us * US_PER_MS * f_samp_1_024mhz / MHZ_PER_HZ
+> +                *         = time_us * f_samp_1_024mhz / 1000
+> +                */
+> +               time_ms = (val_us * f_samp_1_024mhz) / 1000;  /* 1 ms, 2 ms, ... (power of two) */
+> +               if (time_ms < 0 || !is_power_of_2(time_ms) || time_ms > AS73211_SAMPLE_TIME_MAX_MS)
+> +                       return -EINVAL;
+> +
+> +               reg_bits = ilog2(time_ms);
+> +               if (!FIELD_FIT(AS73211_CREG1_TIME_MASK, reg_bits))
+> +                       return -EINVAL;  /* not possible due to previous tests */
+> +
+> +               data->creg1 &= ~AS73211_CREG1_TIME_MASK;
+> +               data->creg1 |= FIELD_PREP(AS73211_CREG1_TIME_MASK, reg_bits);
+> +
+> +               ret = i2c_smbus_write_byte_data(data->client, AS73211_REG_CREG1, data->creg1);
+> +               if (ret < 0)
+> +                       return ret;
+> +
+> +               return 0;
+> +
+> +       default:
+> +               return -EINVAL;
+> +       }}
+> +}
+> +
+> +static int as73211_write_raw(struct iio_dev *indio_dev, struct iio_chan_spec const *chan,
+> +                             int val, int val2, long mask)
+> +{
+> +       struct as73211_data *data = iio_priv(indio_dev);
+> +       int ret;
+> +
+> +       mutex_lock(&data->mutex);
+> +
+> +       ret = iio_device_claim_direct_mode(indio_dev);
+> +       if (ret < 0)
+> +               goto error_unlock;
+> +
+> +       /* Need to switch to config mode ... */
+> +       if ((data->osr & AS73211_OSR_DOS_MASK) != AS73211_OSR_DOS_CONFIG) {
+> +               data->osr &= ~AS73211_OSR_DOS_MASK;
+> +               data->osr |= AS73211_OSR_DOS_CONFIG;
+> +
+> +               ret = i2c_smbus_write_byte_data(data->client, AS73211_REG_OSR, data->osr);
+> +               if (ret < 0)
+> +                       goto error_release;
+> +       }
+> +
+> +       ret = _as73211_write_raw(indio_dev, chan, val, val2, mask);
+> +
+> +error_release:
+> +       iio_device_release_direct_mode(indio_dev);
+> +error_unlock:
+> +       mutex_unlock(&data->mutex);
+> +       return ret;
+> +}
+> +
+> +static irqreturn_t as73211_ready_handler(int irq __always_unused, void *priv)
+> +{
+> +       struct as73211_data *data = iio_priv(priv);
+> +
+> +       complete(&data->completion);
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t as73211_trigger_handler(int irq __always_unused, void *p)
+> +{
+> +       struct iio_poll_func *pf = p;
+> +       struct iio_dev *indio_dev = pf->indio_dev;
+> +       struct as73211_data *data = iio_priv(indio_dev);
+> +       struct {
+> +               __le16 chan[4];
+> +               s64 ts __aligned(8);
+> +       } scan;
+> +       int data_result, ret;
+> +
+> +       mutex_lock(&data->mutex);
+> +
+> +       data_result = as73211_req_data(data);
+> +       if (data_result < 0 && data_result != -EOVERFLOW)
+> +               goto done;  /* don't push any data for errors other than EOVERFLOW */
+> +
+> +       if (*indio_dev->active_scan_mask == AS73211_SCAN_MASK_ALL) {
+> +               /* Optimization for reading all (color + temperature) channels */
+> +               u8 addr = as73211_channels[0].address;
+> +               struct i2c_msg msgs[] = {
+> +                       {
+> +                               .addr = data->client->addr,
+> +                               .flags = 0,
+> +                               .len = 1,
+> +                               .buf = &addr,
+> +                       },
+> +                       {
+> +                               .addr = data->client->addr,
+> +                               .flags = I2C_M_RD,
+> +                               .len = sizeof(scan.chan),
+> +                               .buf = (u8 *)&scan.chan,
+> +                       },
+> +               };
+> +
+> +               ret = i2c_transfer(data->client->adapter, msgs, ARRAY_SIZE(msgs));
+> +               if (ret < 0)
+> +                       goto done;
+> +       } else {
+> +               /* Optimization for reading only color channels */
+> +
+> +               /* AS73211 starts reading at address 2 */
+> +               ret = i2c_master_recv(data->client,
+> +                               (char *)&scan.chan[1], 3 * sizeof(scan.chan[1]));
+> +               if (ret < 0)
+> +                       goto done;
+> +       }
+> +
+> +       if (data_result) {
+> +               /*
+> +                * Saturate all channels (in case of overflows). Temperature channel
+> +                * is not affected by overflows.
+> +                */
+> +               scan.chan[1] = cpu_to_le16(U16_MAX);
+> +               scan.chan[2] = cpu_to_le16(U16_MAX);
+> +               scan.chan[3] = cpu_to_le16(U16_MAX);
+> +       }
+> +
+> +       iio_push_to_buffers_with_timestamp(indio_dev, &scan, iio_get_time_ns(indio_dev));
+> +
+> +done:
+> +       mutex_unlock(&data->mutex);
+> +       iio_trigger_notify_done(indio_dev->trig);
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static const struct iio_info as73211_info = {
+> +       .read_raw = as73211_read_raw,
+> +       .read_avail = as73211_read_avail,
+> +       .write_raw = as73211_write_raw,
+> +};
+> +
+> +static int as73211_power(struct iio_dev *indio_dev, bool state)
+> +{
+> +       struct as73211_data *data = iio_priv(indio_dev);
+> +       int ret;
+> +
+> +       mutex_lock(&data->mutex);
+> +
+> +       if (state)
+> +               data->osr &= ~AS73211_OSR_PD;
+> +       else
+> +               data->osr |= AS73211_OSR_PD;
+> +
+> +       ret = i2c_smbus_write_byte_data(data->client, AS73211_REG_OSR, data->osr);
+> +
+> +       mutex_unlock(&data->mutex);
+> +
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       return 0;
+> +}
+> +
+> +static void as73211_power_disable(void *data)
+> +{
+> +       struct iio_dev *indio_dev = data;
+> +
+> +       as73211_power(indio_dev, false);
+> +}
+> +
+> +static int as73211_probe(struct i2c_client *client)
+> +{
+> +       struct device *dev = &client->dev;
+> +       struct as73211_data *data;
+> +       struct iio_dev *indio_dev;
+> +       int ret;
+> +
+> +       indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
+> +       if (!indio_dev)
+> +               return -ENOMEM;
+> +
+> +       data = iio_priv(indio_dev);
+> +       i2c_set_clientdata(client, indio_dev);
+> +       data->client = client;
+> +
+> +       mutex_init(&data->mutex);
+> +       init_completion(&data->completion);
+> +
+> +       indio_dev->info = &as73211_info;
+> +       indio_dev->name = AS73211_DRV_NAME;
+> +       indio_dev->channels = as73211_channels;
+> +       indio_dev->num_channels = ARRAY_SIZE(as73211_channels);
+> +       indio_dev->modes = INDIO_DIRECT_MODE;
+> +
+> +       ret = i2c_smbus_read_byte_data(data->client, AS73211_REG_OSR);
+> +       if (ret < 0)
+> +               return ret;
+> +       data->osr = ret;
+> +
+> +       /* reset device */
+> +       data->osr |= AS73211_OSR_SW_RES;
+> +       ret = i2c_smbus_write_byte_data(data->client, AS73211_REG_OSR, data->osr);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       ret = i2c_smbus_read_byte_data(data->client, AS73211_REG_OSR);
+> +       if (ret < 0)
+> +               return ret;
+> +       data->osr = ret;
+> +
+> +       /*
+> +        * Reading AGEN is only possible after reset (AGEN is not available if
+> +        * device is in measurement mode).
+> +        */
+> +       ret = i2c_smbus_read_byte_data(data->client, AS73211_REG_AGEN);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       /* At the time of writing this driver, only DEVID 2 and MUT 1 are known. */
+> +       if ((ret & AS73211_AGEN_DEVID_MASK) != AS73211_AGEN_DEVID(2) ||
+> +           (ret & AS73211_AGEN_MUT_MASK) != AS73211_AGEN_MUT(1))
+> +               return -ENODEV;
+> +
+> +       ret = i2c_smbus_read_byte_data(data->client, AS73211_REG_CREG1);
+> +       if (ret < 0)
+> +               return ret;
+> +       data->creg1 = ret;
+> +
+> +       ret = i2c_smbus_read_byte_data(data->client, AS73211_REG_CREG2);
+> +       if (ret < 0)
+> +               return ret;
+> +       data->creg2 = ret;
+> +
+> +       ret = i2c_smbus_read_byte_data(data->client, AS73211_REG_CREG3);
+> +       if (ret < 0)
+> +               return ret;
+> +       data->creg3 = ret;
+> +       as73211_integration_time_calc_avail(data);
+> +
+> +       ret = as73211_power(indio_dev, true);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       ret = devm_add_action_or_reset(dev, as73211_power_disable, indio_dev);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL, as73211_trigger_handler, NULL);
+> +       if (ret)
+> +               return ret;
+> +
+> +       if (client->irq) {
+> +               ret = devm_request_threaded_irq(&client->dev, client->irq,
+> +                               NULL,
+> +                               as73211_ready_handler,
+> +                               IRQF_ONESHOT,
+> +                               client->name, indio_dev);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       return devm_iio_device_register(dev, indio_dev);
+> +}
+> +
+> +static int __maybe_unused as73211_suspend(struct device *dev)
+> +{
+> +       struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
+> +
+> +       return as73211_power(indio_dev, false);
+> +}
+> +
+> +static int __maybe_unused as73211_resume(struct device *dev)
+> +{
+> +       struct iio_dev *indio_dev = i2c_get_clientdata(to_i2c_client(dev));
+> +
+> +       return as73211_power(indio_dev, true);
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(as73211_pm_ops, as73211_suspend, as73211_resume);
+> +
+> +static const struct of_device_id as73211_of_match[] = {
+> +       { .compatible = "ams,as73211" },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(of, as73211_of_match);
+> +
+> +static const struct i2c_device_id as73211_id[] = {
+> +       { "as73211", 0 },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, as73211_id);
+> +
+> +static struct i2c_driver as73211_driver = {
+> +       .driver = {
+> +               .name           = AS73211_DRV_NAME,
+> +               .of_match_table = as73211_of_match,
+> +               .pm             = &as73211_pm_ops,
+> +       },
+> +       .probe_new  = as73211_probe,
+> +       .id_table   = as73211_id,
+> +};
+> +module_i2c_driver(as73211_driver);
+> +
+> +MODULE_AUTHOR("Christian Eggers <ceggers@arri.de>");
+> +MODULE_DESCRIPTION("AS73211 XYZ True Color Sensor driver");
+> +MODULE_LICENSE("GPL");
+> --
+> Christian Eggers
+> Embedded software developer
+>
+> Arnold & Richter Cine Technik GmbH & Co. Betriebs KG
+> Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRA 57918
+> Persoenlich haftender Gesellschafter: Arnold & Richter Cine Technik GmbH
+> Sitz: Muenchen - Registergericht: Amtsgericht Muenchen - Handelsregisternummer: HRB 54477
+> Geschaeftsfuehrer: Dr. Michael Neuhaeuser; Stephan Schenk; Walter Trauninger; Markus Zeiler
+>
 
-In addition, the portable equipment user usually heavily interact with
-devices by touch, and other peripherals. The boost preemptive counts
-are marking the load requirement urgent, vice versa. If such feedback
-factor could be set to high level according to the scenario, it would
-contribute to the power consumption and UI response.
 
-If no USF sysfs inode is set, and no screen on or off event,
-adjust_pred_demand shall not be invoked. Once up_l0_r down_r or non_ux_r
-be set, adjust_pred_demand shall be called back to update settings
-according to high level scenario identification.
-
-We can get about 17% mean power consumption save at listening to music
-with speaker on "screen off" scenario, as below statistical data from
-7766 XiaoMi devices for two weeks with non_ux_r be set:
-
-        day1         day2         day3         day4
-count   7766.000000  7766.000000  7766.000000  7766.000000
-mean    88.035525    85.500282    83.829305    86.054997
-std     111.049980   108.258834   107.562583   108.558240
-min     0.099000     0.037000     0.067000     0.045000
-25%     34.765500    34.021750    34.101500    34.423000
-50%     54.950000    55.286500    54.189500    54.248500
-75%     95.954000    93.942000    91.738000    94.0592500
-80%     114.675000   107.430000   106.378000   108.673000
-85%     137.851000   129.511000   127.156500   131.750750
-90%     179.669000   170.208500   164.027000   172.348000
-95%     272.395000   257.845500   247.750500   263.275750
-98%     399.034500   412.170400   391.484000   402.835600
-
-        day5         day6        day7         day8
-count   7766.000000  7766.00000  7766.000000  7766.000000
-mean    82.532677    79.21923    77.611380    81.075081
-std     104.870079   101.34819   103.140037   97.506221
-min     0.051000     0.02900     0.007000     0.068000
-25%     32.873000    33.44400    31.965500    33.863500
-50%     52.180500    51.56550    50.806500    53.080000
-75%     90.905750    86.82625    83.859250    89.973000
-80%     105.455000   99.64700    97.271000    104.225000
-85%     128.300000   118.47825   116.570250   126.648250
-90%     166.647500   149.18000   150.649500   161.087000
-95%     247.208500   224.36050   226.380000   245.291250
-98%     393.002000   347.92060   369.791800   378.778600
-
-        day9         day10        day11        day12
-count   7766.000000  7766.000000  7766.000000  7766.000000
-mean    79.989170    83.859417    78.032930    77.060542
-std     104.226122   108.893043   102.561715   99.844276
-min     0.118000     0.017000     0.028000     0.039000
-25%     32.056250    33.454500    31.176250    30.897750
-50%     51.506000    54.056000    48.969500    49.069000
-75%     88.513500    92.953500    83.506750    84.096000
-80%     102.876000   107.845000   97.717000    98.073000
-85%     124.363000   128.288000   118.366500   116.869250
-90%     160.557000   167.084000   154.342500   148.187500
-95%     231.149000   242.925750   236.759000   228.131250
-98%     367.206600   388.619100   385.269100   376.541600
-
-        day13        day14
-count   7766.000000  7766.000000
-mean    75.528036    73.702878
-std     90.750594    86.796016
-min     0.066000     0.054000
-25%     31.170500    31.608500
-50%     48.758500    49.215000
-75%     84.522750    83.053000
-80%     97.879000    94.875000
-85%     116.680250   113.573750
-90%     149.083500   144.089500
-95%     226.177750   211.488750
-98%     347.011100   331.317100
-
-Signed-off-by: Dongdong Yang <yangdongdong@xiaomi.com>
-Co-developed-by: Jun Tao <taojun@xiaomi.com>
-Co-developed-by: Qiwu Huang <huangqiwu@xiaomi.com>
-Co-developed-by: Peng Wang <rocking@linux.alibaba.com>
-Signed-off-by: Dongdong Yang <yangdongdong@xiaomi.com>
----
- Documentation/ABI/testing/sysfs-devices-system-cpu |  31 ++
- drivers/cpufreq/Kconfig                            |  11 +
- kernel/sched/Makefile                              |   1 +
- kernel/sched/cpufreq_schedutil.c                   |   5 +
- kernel/sched/usf.c                                 | 314 +++++++++++++++++++++
- 5 files changed, 362 insertions(+)
- create mode 100644 kernel/sched/usf.c
-
-diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
-index b555df8..e9a4cfd 100644
---- a/Documentation/ABI/testing/sysfs-devices-system-cpu
-+++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
-@@ -614,3 +614,34 @@ Description:	SPURR ticks for cpuX when it was idle.
- 
- 		This sysfs interface exposes the number of SPURR ticks
- 		for cpuX when it was idle.
-+
-+What:		/sys/devices/system/cpu/sched_usf
-+		/sys/devices/system/cpu/sched_usf/non_ux_r
-+		/sys/devices/system/cpu/sched_usf/up_l0_r
-+		/sys/devices/system/cpu/sched_usf/down_r
-+Date:		Aug 2020
-+Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
-+Description:	User Sensitive Feedback factor auxiliary scheduling which
-+		is providing more util adjustment settings based on schedutil
-+		governor to the high level by scenario identification on
-+		portable equipment.
-+		non_ux_r:
-+			The default value is 0.	The range is [-100 , 0].
-+			If it falls into [-50, 0), the half of utils, which
-+			calculates cpufreq, shall be cut down on screen off.
-+			If it falls into [-100, -50), only a quarter of utils
-+			are left to continue to calculate cpufreq on screen off.
-+
-+		up_l0_r:
-+			The default value is 0.	The range is [0 , 100].
-+			If it falls into (0, 50], a quarter of extra utils,
-+			which calculate cpufreq, shall be added on screen on.
-+			If it falls into (50, 100], the half of extra utils are
-+			added to continue to calculate cpufreq on screen on.
-+
-+		down_r:
-+			The default value is 0.	The range is [-100 , 0].
-+			If it falls into [-50, 0), the half of utils, which
-+			calculate cpufreq, shall be  cut down on screen on.
-+			If it falls into [-100, -50), only a quarter of utils
-+			are left to continue to calculate cpufreq on screen on.
-diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
-index e917501..a21c6ad 100644
---- a/drivers/cpufreq/Kconfig
-+++ b/drivers/cpufreq/Kconfig
-@@ -224,6 +224,17 @@ config CPUFREQ_DT_PLATDEV
- 
- 	  If in doubt, say N.
- 
-+config SCHED_USF
-+	bool "User Sensitive Factors for Scheduler"
-+	depends on CPU_FREQ_GOV_SCHEDUTIL && FB
-+	help
-+	  Select this option to enable the adjustment on the cpufreq with
-+	  the user sensitive factors on schedule. It is special for mobile
-+	  devices which more power care and quick response requirement on
-+	  screen on.
-+
-+	  If unsure, say N.
-+
- if X86
- source "drivers/cpufreq/Kconfig.x86"
- endif
-diff --git a/kernel/sched/Makefile b/kernel/sched/Makefile
-index 5fc9c9b..58a0e7b 100644
---- a/kernel/sched/Makefile
-+++ b/kernel/sched/Makefile
-@@ -36,3 +36,4 @@ obj-$(CONFIG_CPU_FREQ_GOV_SCHEDUTIL) += cpufreq_schedutil.o
- obj-$(CONFIG_MEMBARRIER) += membarrier.o
- obj-$(CONFIG_CPU_ISOLATION) += isolation.o
- obj-$(CONFIG_PSI) += psi.o
-+obj-$(CONFIG_SCHED_USF) += usf.o
-diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index 7fbaee2..6f9cb6c 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -289,12 +289,17 @@ unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
- 	return min(max, util);
- }
- 
-+void (*adjust_pred_demand_p)(int cpuid, unsigned long *util,
-+			     struct rq *rq) = NULL;
-+
- static unsigned long sugov_get_util(struct sugov_cpu *sg_cpu)
- {
- 	struct rq *rq = cpu_rq(sg_cpu->cpu);
- 	unsigned long util = cpu_util_cfs(rq);
- 	unsigned long max = arch_scale_cpu_capacity(sg_cpu->cpu);
- 
-+	if (unlikely(adjust_pred_demand_p))
-+		adjust_pred_demand_p(sg_cpu->cpu, &util, rq);
- 	sg_cpu->max = max;
- 	sg_cpu->bw_dl = cpu_bw_dl(rq);
- 
-diff --git a/kernel/sched/usf.c b/kernel/sched/usf.c
-new file mode 100644
-index 0000000..f3183f1
---- /dev/null
-+++ b/kernel/sched/usf.c
-@@ -0,0 +1,314 @@
-+/*
-+ * Copyright (C) 2020 XiaoMi Inc.
-+ * Author: Yang Dongdong <yangdongdong@xiaomi.com>
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-+ * See http://www.gnu.org/licenses/gpl-2.0.html for more details.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/platform_device.h>
-+#include <linux/kthread.h>
-+#include <linux/cpu.h>
-+#include <linux/sysfs.h>
-+#include <linux/kthread.h>
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/kallsyms.h>
-+#include <linux/fb.h>
-+#include <linux/notifier.h>
-+#include "sched.h"
-+
-+#define BOOST_MIN_V -100
-+#define BOOST_MAX_V 100
-+#define LEVEL_TOP 3
-+
-+extern void (*adjust_pred_demand_p)(int cpuid,
-+			unsigned long *util, struct rq *rq);
-+DEFINE_PER_CPU(unsigned long[PID_MAX_DEFAULT], task_hist_nivcsw);
-+
-+static struct {
-+	bool is_enabled;
-+	bool is_screen_on;
-+	int sysctl_up_l0;
-+	int sysctl_down;
-+	int sysctl_non_ux;
-+	int usf_up_l0;
-+	int usf_down;
-+	int usf_non_ux;
-+} usf_vdev;
-+
-+void adjust_pred_demand(int cpuid,
-+			unsigned long *util,
-+			struct rq *rq)
-+{
-+	/*
-+	 * The initial value of bl_sw_num is the ratio of
-+	 * sysctl_sched_latency/sysctl_sched_min_granularity.
-+	 * It stands for the basic acceptable fluency.
-+	 */
-+	u32 bl_sw_num = 3;
-+
-+	if (!usf_vdev.is_enabled || !rq || !rq->curr ||
-+		(rq->curr->pid >= PID_MAX_DEFAULT))
-+		return;
-+	/*
-+	 * usf_non_ux:
-+	 *	It comes from non_ux_r, which is the ratio of utils
-+	 *	cut down on screen off. There are 3 levels. The default
-+	 *	value is 0, which no util is adjusted on calculating
-+	 *	utils to select cpufreq. If non_ux_r falls into [-50, 0),
-+	 *	usf_non_ux equals 1, and a half of utils, which calculates
-+	 *	cpufreq, shall be cut down. If non_ux_r falls into
-+	 *	[-100, -50), usf_non_ux equals to 2, only a quarter of
-+	 *	utils are left to continue to calculate cpufreq.
-+	 *
-+	 * usf_up_l0:
-+	 *	It comes from sysfs up_l0, which is the ratio of utils
-+	 *	boost up on screen on. There are 3 levels. The default
-+	 *	value is 0, which no util is adjusted when cpufreq be
-+	 *	calculated according it. If up_l0 falls into (0, 50],
-+	 *	usf_up_l0 equals to 2. And a quarter of extra utils,
-+	 *	which calculate cpufreq, shall be added. If up_l0 falls
-+	 *	into (50, 100], usf_up_l0 equals to 1. And the half of
-+	 *	extra utils are added to continue to calculate cpufreq.
-+	 *
-+	 * usf_down:
-+	 *	It comes from down_r, which is the ratio of utils cut
-+	 *	down on screen on. There are 3 levels. The default value
-+	 *	is 0, which no util is adjusted on calculating utils to
-+	 *	select cpufreq. If down_r falls into [-50, 0), usf_down
-+	 *	equals to 1, and a half of utils, which calculate cpufreq
-+	 *	shall be  cut down. If down_r falls into [-100, -50)
-+	 *	usf_down equals to 2, and only a quarter of utils are
-+	 *	left to continue to calculate cpufreq.
-+	 */
-+	if (usf_vdev.is_screen_on) {
-+		if (rq->curr->nivcsw >
-+		    (per_cpu(task_hist_nivcsw, cpuid)[rq->curr->pid]
-+		     + bl_sw_num + 1)) {
-+			(*util) += (*util) >> usf_vdev.usf_up_l0;
-+		} else if (rq->curr->nivcsw <
-+			   (per_cpu(task_hist_nivcsw, cpuid)[rq->curr->pid]
-+			    + bl_sw_num - 1) && (rq->nr_running < bl_sw_num)) {
-+			(*util) >>= usf_vdev.usf_down;
-+		}
-+		per_cpu(task_hist_nivcsw, cpuid)[rq->curr->pid] =
-+		    rq->curr->nivcsw;
-+	} else if (rq->curr->mm) {
-+		(*util) >>= usf_vdev.usf_non_ux;
-+	}
-+}
-+
-+static int usf_lcd_notifier(struct notifier_block *nb,
-+			    unsigned long val, void *data)
-+{
-+	struct fb_event *evdata = data;
-+	unsigned int blank;
-+
-+	if (!evdata)
-+		return 0;
-+
-+	if (val != FB_EVENT_BLANK)
-+		return 0;
-+
-+	if (evdata->data && val == FB_EVENT_BLANK) {
-+		blank = *(int *)(evdata->data);
-+
-+		switch (blank) {
-+		case FB_BLANK_POWERDOWN:
-+			usf_vdev.is_screen_on = false;
-+			if (usf_vdev.sysctl_non_ux != 0)
-+				adjust_pred_demand_p = adjust_pred_demand;
-+			else
-+				adjust_pred_demand_p = NULL;
-+
-+			break;
-+
-+		case FB_BLANK_UNBLANK:
-+			usf_vdev.is_screen_on = true;
-+			if (usf_vdev.sysctl_up_l0 != 0 ||
-+			    usf_vdev.sysctl_down != 0)
-+				adjust_pred_demand_p = adjust_pred_demand;
-+			else
-+				adjust_pred_demand_p = NULL;
-+			break;
-+		default:
-+			break;
-+		}
-+
-+		usf_vdev.is_enabled = true;
-+		pr_info("%s : usf_vdev.is_screen_on:%b\n",
-+				     __func__, usf_vdev.is_screen_on);
-+	}
-+	return NOTIFY_OK;
-+}
-+
-+static struct notifier_block usf_lcd_nb = {
-+	.notifier_call = usf_lcd_notifier,
-+	.priority = INT_MAX,
-+};
-+
-+static ssize_t up_l0_r_store(struct device *kobj,
-+			     struct device_attribute *attr,
-+			     const char *buf, size_t count)
-+{
-+	int val = 0;
-+	int ret = 0;
-+
-+	ret = kstrtoint(buf, 0, &val);
-+	if (ret)
-+		return ret;
-+
-+	if (val == 0) {
-+		usf_vdev.sysctl_up_l0 = val;
-+		usf_vdev.usf_up_l0 = 0;
-+	} else if ((val > 0) && (val <= BOOST_MAX_V)) {
-+		usf_vdev.sysctl_up_l0 = val;
-+		usf_vdev.usf_up_l0 = LEVEL_TOP -
-+				DIV_ROUND_UP(val, BOOST_MAX_V / 2);
-+		ret = count;
-+	} else {
-+		pr_err("USF BUG: %d should fall into [%d %d]",
-+		       val, 0, BOOST_MAX_V);
-+		ret = -EINVAL;
-+	}
-+	if ((usf_vdev.sysctl_up_l0 == 0) &&
-+	    (usf_vdev.sysctl_down == 0))
-+		adjust_pred_demand_p = NULL;
-+	else
-+		adjust_pred_demand_p = adjust_pred_demand;
-+
-+	return ret;
-+}
-+
-+static ssize_t down_r_store(struct device *kobj,
-+			    struct device_attribute *attr,
-+			    const char *buf, size_t count)
-+{
-+	int val = 0;
-+	int ret = 0;
-+
-+	ret = kstrtoint(buf, 0, &val);
-+	if (ret)
-+		return ret;
-+
-+	if ((val >= BOOST_MIN_V) && (val <= 0)) {
-+		usf_vdev.sysctl_down = val;
-+		usf_vdev.usf_down = DIV_ROUND_UP(-val, -BOOST_MIN_V / 2);
-+		ret = count;
-+	} else {
-+		pr_err("USF BUG: %d should fall into [%d %d]",
-+		       val, BOOST_MIN_V, 0);
-+		ret = -EINVAL;
-+	}
-+	if ((usf_vdev.sysctl_up_l0 == 0) &&
-+	    (usf_vdev.sysctl_down == 0))
-+		adjust_pred_demand_p = NULL;
-+	else
-+		adjust_pred_demand_p = adjust_pred_demand;
-+
-+	return ret;
-+}
-+
-+static ssize_t non_ux_r_store(struct device *kobj,
-+			      struct device_attribute *attr,
-+			      const char *buf, size_t count)
-+{
-+	int val = 0;
-+	int ret = 0;
-+
-+	ret = kstrtoint(buf, 0, &val);
-+	if (ret)
-+		return ret;
-+
-+	if ((val >= BOOST_MIN_V) && (val <= 0)) {
-+		usf_vdev.sysctl_non_ux = val;
-+		usf_vdev.usf_non_ux = DIV_ROUND_UP(-val, -BOOST_MIN_V / 2);
-+		ret = count;
-+	} else {
-+		pr_err("USF BUG: %d should fall into [%d %d]",
-+		       val, BOOST_MIN_V, 0);
-+		ret = -EINVAL;
-+	}
-+	if (usf_vdev.sysctl_non_ux == 0)
-+		adjust_pred_demand_p = NULL;
-+	else
-+		adjust_pred_demand_p = adjust_pred_demand;
-+
-+	return ret;
-+}
-+
-+#define usf_attr_rw(_name)						\
-+static struct device_attribute _name =					\
-+__ATTR_RW(_name)
-+
-+#define usf_show_node(_name, _value)					\
-+static ssize_t _name##_show						\
-+(struct device *kobj, struct device_attribute *attr,  char *buf)		\
-+{									\
-+	return sprintf(buf, "%d", usf_vdev.sysctl_##_value);		\
-+}
-+
-+usf_show_node(up_l0_r, up_l0);
-+usf_show_node(down_r, down);
-+usf_show_node(non_ux_r, non_ux);
-+
-+usf_attr_rw(up_l0_r);
-+usf_attr_rw(down_r);
-+usf_attr_rw(non_ux_r);
-+
-+static struct attribute *sched_usf_attrs[] = {
-+	&up_l0_r.attr,
-+	&down_r.attr,
-+	&non_ux_r.attr,
-+	NULL,
-+};
-+
-+ATTRIBUTE_GROUPS(sched_usf);
-+
-+static int __init intera_monitor_init(void)
-+{
-+	int res = -1;
-+	struct device *dev;
-+
-+	res = fb_register_client(&usf_lcd_nb);
-+	if (res < 0) {
-+		pr_err("Failed to register usf_lcd_nb!\n");
-+		return res;
-+	}
-+
-+	/*
-+	 * create a sched_usf in cpu_subsys:
-+	 * /sys/devices/system/cpu/sched_usf/...
-+	 */
-+	dev = cpu_subsys.dev_root;
-+	res = sysfs_create_group(&dev->kobj, &sched_usf_group);
-+	if (res) {
-+		fb_unregister_client(&usf_lcd_nb);
-+		return res;
-+	}
-+
-+	return res;
-+}
-+
-+module_init(intera_monitor_init);
-+
-+static void __exit intera_monitor_exit(void)
-+{
-+	struct device *dev;
-+
-+	dev = cpu_subsys.dev_root;
-+	sysfs_remove_group(&dev->kobj, &sched_usf_group);
-+	fb_unregister_client(&usf_lcd_nb);
-+	adjust_pred_demand_p = NULL;
-+}
-+
-+module_exit(intera_monitor_exit);
 -- 
-2.7.4
-
+With Best Regards,
+Andy Shevchenko
