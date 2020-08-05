@@ -2,204 +2,124 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA138C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1921CC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8FA22CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECB0322CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:54:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mGGnDTpN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbgHEQyQ (ORCPT
+        id S1728190AbgHEQyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 12:54:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37568 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728150AbgHEQtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:49:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 17CC9AC23;
-        Wed,  5 Aug 2020 16:50:06 +0000 (UTC)
-Subject: Re: [PATCH v3] block: check queue's limits.discard_granularity in
- __blkdev_issue_discard()
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-block@vger.kernel.org, linux-bcache@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Enzo Matsumiya <ematsumiya@suse.com>,
-        Evan Green <evgreen@chromium.org>,
-        Hannes Reinecke <hare@suse.com>, Jens Axboe <axboe@kernel.dk>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Xiao Ni <xni@redhat.com>
-References: <20200805063150.41037-1-colyli@suse.de>
- <20200805154843.GB191798@magnolia>
-From:   Coly Li <colyli@suse.de>
-Autocrypt: addr=colyli@suse.de; keydata=
- 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
-Message-ID: <f018ad35-9b1c-4a31-1499-3da16cd8001b@suse.de>
-Date:   Thu, 6 Aug 2020 00:49:43 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200805154843.GB191798@magnolia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 5 Aug 2020 12:54:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46396 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728139AbgHEQtq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 12:49:46 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76992C0A8938;
+        Wed,  5 Aug 2020 07:11:20 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id t6so24510493pgq.1;
+        Wed, 05 Aug 2020 07:11:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=gnq2bYcLCYbS7fB6hPJYIGySV/efaN7joodM7bHp3HM=;
+        b=mGGnDTpNY8ZF+dLJA+3RJn/hk+73NVX1GPiWuFeKj+prG1T5Q8RHEnAe34YY7ukHRh
+         C9nNFsKDK339IwgGBO4ithBKkz6AQSgtkyiJzTUXPPI+SF9/zjSlJ3GmJQbHhepK72cs
+         i0nwwk1P6k9gGvDitoQ5lD+4hQDzmYv49X2pGW/d3uNqLhLzH0wO4oPzqwI1Fs1Vpi01
+         OWCldIcCxihrBnDzIWcJaNL9kjCR6ErUPUQ6nDigCLnEbr0ObGtSWZ76VyZxhFTo4Obl
+         vqQr+3waWg9fZ/qrUl/4lfkLv1DAwOJAZCzyMehir3PlK6cc9umER0w/WUJNmlSUS9qZ
+         7CYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=gnq2bYcLCYbS7fB6hPJYIGySV/efaN7joodM7bHp3HM=;
+        b=ll40ktqYFkDll/eFP8oNlInzcdHl8eaC5GWXDhOk97yeEinYji2P7l33r3BiDv7kWG
+         9lIDsDXcJGPgTpNd+C2rm6cXgQrSSG5mou+c2dR8ckFzS8CvZxgasiapIA8fspNJMo7/
+         b/pMHlvLJCND0FHsJvaeb3MIj+pWZphqZWSFTnOhPgjX6FqWXh5oF2odcA+Hgotur6w1
+         HbyZMHTTQ92CQwSSApG+yfVMK0ZRYWuscLeqfX7FzpqIwH0Y29Ri7fiRi+7/23F8LvTA
+         kHAKg2mzrB3rBNveqNBkt/ItRFHlbYNGzcS88Uf1tjw1yzhaGOcYlQ3gPrWVcXbXLD/6
+         2icA==
+X-Gm-Message-State: AOAM531cJHyPvxK3dL2+Oidd+9anwJeLPQJTOKwWBE2h0sg/NzQXMKyF
+        7eNdYiGwbL5qwQJ1u6OVP0s=
+X-Google-Smtp-Source: ABdhPJy77TbI6/Hga9l/DBSuyThrNPQZmn3Gth7qz6s8qSxdXr8BWBae5Rt5ikEaEgOlo8d1yiB2zg==
+X-Received: by 2002:a63:4c22:: with SMTP id z34mr3191367pga.370.1596636680035;
+        Wed, 05 Aug 2020 07:11:20 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.56])
+        by smtp.gmail.com with ESMTPSA id z29sm3898453pfj.182.2020.08.05.07.11.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 07:11:19 -0700 (PDT)
+From:   Yulei Zhang <yulei.kernel@gmail.com>
+To:     pbonzini@redhat.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sean.j.christopherson@intel.com, jmattson@google.com,
+        vkuznets@redhat.com, xiaoguangrong.eric@gmail.com,
+        kernellwp@gmail.com, lihaiwei.kernel@gmail.com,
+        Yulei Zhang <yuleixzhang@tencent.com>
+Subject: [RFC 0/9] KVM:x86/mmu:Introduce parallel memory virtualization to boost performance
+Date:   Wed,  5 Aug 2020 22:12:02 +0800
+Message-Id: <20200805141202.8641-1-yulei.kernel@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/5 23:48, Darrick J. Wong wrote:
-> On Wed, Aug 05, 2020 at 02:31:50PM +0800, Coly Li wrote:
->> If create a loop device with a backing NVMe SSD, current loop device
->> driver doesn't correctly set its  queue's limits.discard_granularity and
->> leaves it as 0. If a discard request at LBA 0 on this loop device, in
->> __blkdev_issue_discard() the calculated req_sects will be 0, and a zero
->> length discard request will trigger a BUG() panic in generic block layer
->> code at block/blk-mq.c:563.
->>
->> [  955.565006][   C39] ------------[ cut here ]------------
->> [  955.559660][   C39] invalid opcode: 0000 [#1] SMP NOPTI
->> [  955.622171][   C39] CPU: 39 PID: 248 Comm: ksoftirqd/39 Tainted: G            E     5.8.0-default+ #40
->> [  955.622171][   C39] Hardware name: Lenovo ThinkSystem SR650 -[7X05CTO1WW]-/-[7X05CTO1WW]-, BIOS -[IVE160M-2.70]- 07/17/2020
->> [  955.622175][   C39] RIP: 0010:blk_mq_end_request+0x107/0x110
->> [  955.622177][   C39] Code: 48 8b 03 e9 59 ff ff ff 48 89 df 5b 5d 41 5c e9 9f ed ff ff 48 8b 35 98 3c f4 00 48 83 c7 10 48 83 c6 19 e8 cb 56 c9 ff eb cb <0f> 0b 0f 1f 80 00 00 00 00 0f 1f 44 00 00 55 48 89 e5 41 56 41 54
->> [  955.622179][   C39] RSP: 0018:ffffb1288701fe28 EFLAGS: 00010202
->> [  955.749277][   C39] RAX: 0000000000000001 RBX: ffff956fffba5080 RCX: 0000000000004003
->> [  955.749278][   C39] RDX: 0000000000000003 RSI: 0000000000000000 RDI: 0000000000000000
->> [  955.749279][   C39] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
->> [  955.749279][   C39] R10: ffffb1288701fd28 R11: 0000000000000001 R12: ffffffffa8e05160
->> [  955.749280][   C39] R13: 0000000000000004 R14: 0000000000000004 R15: ffffffffa7ad3a1e
->> [  955.749281][   C39] FS:  0000000000000000(0000) GS:ffff95bfbda00000(0000) knlGS:0000000000000000
->> [  955.749282][   C39] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [  955.749282][   C39] CR2: 00007f6f0ef766a8 CR3: 0000005a37012002 CR4: 00000000007606e0
->> [  955.749283][   C39] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->> [  955.749284][   C39] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->> [  955.749284][   C39] PKRU: 55555554
->> [  955.749285][   C39] Call Trace:
->> [  955.749290][   C39]  blk_done_softirq+0x99/0xc0
->> [  957.550669][   C39]  __do_softirq+0xd3/0x45f
->> [  957.550677][   C39]  ? smpboot_thread_fn+0x2f/0x1e0
->> [  957.550679][   C39]  ? smpboot_thread_fn+0x74/0x1e0
->> [  957.550680][   C39]  ? smpboot_thread_fn+0x14e/0x1e0
->> [  957.550684][   C39]  run_ksoftirqd+0x30/0x60
->> [  957.550687][   C39]  smpboot_thread_fn+0x149/0x1e0
->> [  957.886225][   C39]  ? sort_range+0x20/0x20
->> [  957.886226][   C39]  kthread+0x137/0x160
->> [  957.886228][   C39]  ? kthread_park+0x90/0x90
->> [  957.886231][   C39]  ret_from_fork+0x22/0x30
->> [  959.117120][   C39] ---[ end trace 3dacdac97e2ed164 ]---
->>
->> This is the procedure to reproduce the panic,
->>   # modprobe scsi_debug delay=0 dev_size_mb=2048 max_queue=1
->>   # losetup -f /dev/nvme0n1 --direct-io=on
->>   # blkdiscard /dev/loop0 -o 0 -l 0x200
->>
->> This patch fixes the issue by checking q->limits.discard_granularity in
->> __blkdev_issue_discard() before composing the discard bio. If the value
->> is 0, then prints a warning oops information and returns -EOPNOTSUPP to
->> the caller to indicate that this buggy device driver doesn't support
->> discard request.
->>
->> Fixes: 9b15d109a6b2 ("block: improve discard bio alignment in __blkdev_issue_discard()")
->> Fixes: c52abf563049 ("loop: Better discard support for block devices")
->> Reported-and-suggested-by: Ming Lei <ming.lei@redhat.com>
->> Signed-off-by: Coly Li <colyli@suse.de>
->> Reviewed-by: Ming Lei <ming.lei@redhat.com>
->> Cc: Bart Van Assche <bvanassche@acm.org>
->> Cc: Christoph Hellwig <hch@lst.de>
->> Cc: Enzo Matsumiya <ematsumiya@suse.com>
->> Cc: Evan Green <evgreen@chromium.org>
->> Cc: Hannes Reinecke <hare@suse.com>
->> Cc: Jens Axboe <axboe@kernel.dk>
->> Cc: Martin K. Petersen <martin.petersen@oracle.com>
->> Cc: Xiao Ni <xni@redhat.com>
->> ---
->> Changelog:
->> v3: print device name assocated with the buggy driver.
->> v2: fix typo of the wrong return error code.
->> v1: first version.
->>
->>  block/blk-lib.c | 9 +++++++++
->>  1 file changed, 9 insertions(+)
->>
->> diff --git a/block/blk-lib.c b/block/blk-lib.c
->> index 019e09bb9c0e..d3bbb3d9fac3 100644
->> --- a/block/blk-lib.c
->> +++ b/block/blk-lib.c
->> @@ -47,6 +47,15 @@ int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
->>  		op = REQ_OP_DISCARD;
->>  	}
->>  
->> +	/* In case the discard granularity isn't set by buggy device driver */
->> +	if (WARN_ON_ONCE(!q->limits.discard_granularity)) {
->> +		char dev_name[BDEVNAME_SIZE];
->> +
->> +		bdevname(bdev, dev_name);
->> +		pr_err("%s: Error: discard_granularity is 0.\n", dev_name);
-> 
-> Hm, you might want to ratelimit this, before some buggy device +
-> careless program flood dmesg.
-> 
+From: Yulei Zhang <yuleixzhang@tencent.com>
 
-Sure, I will use pr_err_ratelimit() in next version.
+Currently in KVM memory virtulization we relay on mmu_lock to synchronize
+the memory mapping update, which make vCPUs work in serialize mode and
+slow down the execution, especially after migration to do substantial
+memory mapping setup, and performance get worse if increase vCPU numbers
+and guest memories.
+  
+The idea we present in this patch set is to mitigate the issue with
+pre-constructed memory mapping table. We will fast pin the guest memory
+to build up a global memory mapping table according to the guest memslots
+changes and apply it to cr3, so that after guest starts up all the vCPUs
+would be able to update the memory concurrently, thus the performance 
+improvement is expected.
 
-> Also, why is it necessary to WARN_ON_ONCE /and/ pr_err the same
-> condition?
-> 
+And after test the initial patch with memory dirty pattern workload, we
+have seen positive results even with huge page enabled. For example,
+guest with 32 vCPUs and 64G memories, in 2M/1G huge page mode we would get
+more than 50% improvement. 
 
-The WARN_ON_ONCE() just though the warning message, but does not point
-out which device is buggy. Indeed this is a serious problem, so current
-kernel message is a warning oops info and followed by "loop: Error:
-discard_granularity is 0."
 
-Thanks.
+Yulei Zhang (9):
+  Introduce new fields in kvm_arch/vcpu_arch struct for direct build EPT
+    support
+  Introduce page table population function for direct build EPT feature
+  Introduce page table remove function for direct build EPT feature
+  Add release function for direct build ept when guest VM exit
+  Modify the page fault path to meet the direct build EPT requirement
+  Apply the direct build EPT according to the memory slots change
+  Add migration support when using direct build EPT
+  Introduce kvm module parameter global_tdp to turn on the direct build
+    EPT mode
+  Handle certain mmu exposed functions properly while turn on direct
+    build EPT mode
 
-Coly Li
+ arch/mips/kvm/mips.c            |  13 +
+ arch/powerpc/kvm/powerpc.c      |  13 +
+ arch/s390/kvm/kvm-s390.c        |  13 +
+ arch/x86/include/asm/kvm_host.h |  13 +-
+ arch/x86/kvm/mmu/mmu.c          | 537 ++++++++++++++++++++++++++++++--
+ arch/x86/kvm/svm/svm.c          |   2 +-
+ arch/x86/kvm/vmx/vmx.c          |  17 +-
+ arch/x86/kvm/x86.c              |  55 ++--
+ include/linux/kvm_host.h        |   7 +-
+ virt/kvm/kvm_main.c             |  43 ++-
+ 10 files changed, 648 insertions(+), 65 deletions(-)
+
+-- 
+2.17.1
+
