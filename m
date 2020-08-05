@@ -2,97 +2,94 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD308C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22925C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8120022B45
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E16C022B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:01:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596607256;
-	bh=CsXLdv7LTePRUnfL6+n/depwnNE1A57OJTDYyhAFZq8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LgoD1CWExZaEae9LsmKqkunV4N/iQoRHM1L+PfN6ji5KVZpIdz/ByPlysXZJzJVWz
-	 4+EpjSm/8eid4izZ3uONDNsrOQUx6vV63JlxW4Pto986K1pe9Sa4fivL3fYnEBy88y
-	 jSJcZr+Wp2R62DkJIuUK9jKj5H30s2r3BpXsFCoc=
+	s=default; t=1596607269;
+	bh=GwODHQP5f3m1ZPOaXoOR2GBwrPzaDHh5wSknqwF8wIM=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=u4bLI/UKSzUU6YDCbl7H9TLTjQybL7aoUlWvavQqqgyO5Ml35wrITNj5reqv9rh6p
+	 YVzikIgEY2CVY/0sbCLuyoRgERUzCwETboLaDaA40apRt5sE123IwIamLgy2qWeU32
+	 Rkr2oLNVHmq/pDVcIEsjr8HvlWnbD+/NzFmrTNKA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgHEGAz (ORCPT
+        id S1727957AbgHEGBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 02:00:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726382AbgHEGAx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 02:00:53 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F4F2C06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 23:00:53 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id s16so31043200ljc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 23:00:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4amqNobMnQskrRNh+ZQN5FQ7A/kozEUHT++fPm020d8=;
-        b=E0lc3CXjKOyhFJ8W5SEzXm17LIcj0Xxh/4gZmYN6Fezg6JlIZ9gTkiO10Hu6Y8A5Fl
-         jlT/crgqUtTel97HkTyRgKllCCY+pt6rFE4bdSoDo+TFnWyGyu/i+DiKDUsLgpECvr52
-         sZfUtg5J0QJEbFGMKhvT9jbLdvhnmouDo5bdA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4amqNobMnQskrRNh+ZQN5FQ7A/kozEUHT++fPm020d8=;
-        b=jCfpGnkkgA0xUHb+m3GXlmMxc/jS7IG308INZ1v5B4EeHEIkdce6JaLy1YJsO8Dw8S
-         WYtKJS+aCIaaRDXRD130nJKee/Omi6/iBJgGlVaJsiK5f3KzVr9lXm1APySEHfBppKm1
-         JAZTJ0ZoAVe9hy0xKqiyt4LwEseuA1Uc3ny/hXc+YzkZTSt43ulADP0Wy4CPAXC4MLjZ
-         nS+lyvNrGvZ0h9nAc7THVKmQUhhwZfQqdU+MgfZBSsmugltzW+rjbbuFKjHIjJlD/o4q
-         OBp3PL1PCPh3nnoOFyz5OWgsoIJ3LD3+2E7bjryykzUEKoz/8JXVyWXjOlDjcZi6Ll8c
-         9sPQ==
-X-Gm-Message-State: AOAM531tjjCxyS0/YBDLV5biPCysmg8saF9KWGMj1GyDwuoWhqyMKQcU
-        Qj3Yf7XC0sgNbnEQlZYvQtGYu8ATfsU=
-X-Google-Smtp-Source: ABdhPJwtcyNNCv3xibO55VvWkxIh7NSGC8SFg6Ygeix5/BzA0SFTHRfxT2rC/L0yKjQ0ir0I+ihFHQ==
-X-Received: by 2002:a2e:98d5:: with SMTP id s21mr571906ljj.59.1596607251275;
-        Tue, 04 Aug 2020 23:00:51 -0700 (PDT)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id c4sm419797ljk.70.2020.08.04.23.00.49
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Aug 2020 23:00:49 -0700 (PDT)
-Received: by mail-lj1-f170.google.com with SMTP id x9so46306479ljc.5
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 23:00:49 -0700 (PDT)
-X-Received: by 2002:a2e:7615:: with SMTP id r21mr593746ljc.371.1596607249414;
- Tue, 04 Aug 2020 23:00:49 -0700 (PDT)
+        Wed, 5 Aug 2020 02:01:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53776 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726382AbgHEGBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 02:01:02 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 327A020842;
+        Wed,  5 Aug 2020 06:01:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596607262;
+        bh=GwODHQP5f3m1ZPOaXoOR2GBwrPzaDHh5wSknqwF8wIM=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=R7sn2dyDd5RQkvjd02GllD6XEFhU/fWt1RyrqkPk7FXA3d8GUX+nL8YqafM92yU4R
+         7gcrKWgqfj52viL9XuEU+zze7w0QZ1hF1m/K7T9xdmP53NjhNsfom6oswJIzSO7wNU
+         9eDfZKv8ytYNuD8zDfkXPi6xpZjohJdWmjtdnfAc=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <0e3a9c1f-7ac6-33e2-ed11-5a56659fc5f7@linuxfoundation.org>
-In-Reply-To: <0e3a9c1f-7ac6-33e2-ed11-5a56659fc5f7@linuxfoundation.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 4 Aug 2020 23:00:33 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi4iDwuazgXQ-1yvM_JMTBepi9rc-zfSMeyjfDgSS2fgA@mail.gmail.com>
-Message-ID: <CAHk-=wi4iDwuazgXQ-1yvM_JMTBepi9rc-zfSMeyjfDgSS2fgA@mail.gmail.com>
-Subject: Re: [GIT PULL] Kselftest update for Linux 5.9-rc1
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200804204745.987648-6-brendanhiggins@google.com>
+References: <20200804204745.987648-1-brendanhiggins@google.com> <20200804204745.987648-6-brendanhiggins@google.com>
+Subject: Re: [PATCH v6 5/5] Documentation: kunit: add a brief blurb about kunit_test_suite
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     gregkh@linuxfoundation.org, logang@deltatee.com, mcgrof@kernel.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Brendan Higgins <brendanhiggins@google.com>
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        akpm@linux-foundation.org, alan.maguire@oracle.com,
+        anton.ivanov@cambridgegreys.com, arnd@arndb.de,
+        davidgow@google.com, frowand.list@gmail.com, jdike@addtoit.com,
+        keescook@chromium.org, richard@nod.at, rppt@linux.ibm.com,
+        skhan@linuxfoundation.org, yzaikin@google.com
+Date:   Tue, 04 Aug 2020 23:01:01 -0700
+Message-ID: <159660726105.1360974.11438808412702251122@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 4, 2020 at 2:56 PM Shuah Khan <skhan@linuxfoundation.org> wrote:
->
-> Please pull the following Kselftest update for Linux 5.9-rc1.
+Quoting Brendan Higgins (2020-08-04 13:47:45)
+> Add a brief blurb saying how and when the kunit_test_suite() macro
+> works to the usage documentation.
+>=20
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> ---
+>  Documentation/dev-tools/kunit/usage.rst | 5 +++++
+>  1 file changed, 5 insertions(+)
+>=20
+> diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-=
+tools/kunit/usage.rst
+> index 3c3fe8b5feccf..961d3ea3ca19a 100644
+> --- a/Documentation/dev-tools/kunit/usage.rst
+> +++ b/Documentation/dev-tools/kunit/usage.rst
+> @@ -211,6 +211,11 @@ KUnit test framework.
+>  .. note::
+>     A test case will only be run if it is associated with a test suite.
+> =20
+> +``kunit_test_suite(...)`` is a macro which tells the linker to put the s=
+pecified
+> +test suite in a special linker section so that it can be run by KUnit ei=
+ther
+> +after late_init, or when the test module is loaded (depending on whether=
+ the
 
-Shortlog? diffstat? And the actual git address to pull from?
+"late_init" probably needs some italics or something, but otherwise.
 
-I see the attached diff, and I'm sure I could guess what branch you
-want me to pull from, but please do a proper pull request.
-
-            Linus
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
