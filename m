@@ -7,210 +7,213 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DABC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2594C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C436206A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5D172073E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:52:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596649678;
-	bh=fXD2fR/RGwBYKiJMF1H9ViC4OoYV0aXNwZ09RnmahuI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=sPAm4BLVeMiqs2i4dzL5hAgO9wLWwNEdk8EyqDHRn1PmHOwJl0ByeoRWOSZN3aU5w
-	 B6V82dtG5VOCXwU2drssyQiP1Qe56BCyxg+UW/ViNChOzlsvZ0WwKRySD3AexsBRvo
-	 PwgqaDVkqM2jeCyKQZmLbTjwqezsQR0BVCWfZFcA=
+	s=default; t=1596649920;
+	bh=OKbo9x6qSIBQ+EfDdXTGM4gIuWDJ2f+ftbIIZeCVXCk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=SHD/CKO3/StKdDcO0izLrwrHmTTGKDBDi9q3ilYYI+Dl7M2cGC5Xn2YeHWQ3j9UZv
+	 ScGJtFOt8Uj07V1efDLpuscuHtnoGlkRnbRoyNhDFETv2Jqf8FYm0pYkW55IFvXYIP
+	 XC8aRQfHCy08Bl/r831AqE7ENFAt9jCCQPI8mT/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728933AbgHERoR (ORCPT
+        id S1729041AbgHERvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:44:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42154 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 13:51:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728920AbgHERkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:40:21 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        id S1728849AbgHERoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:44:03 -0400
+Received: from localhost (mobile-166-175-186-42.mycingular.net [166.175.186.42])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F277E22D02;
-        Wed,  5 Aug 2020 11:20:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F69D206B6;
+        Wed,  5 Aug 2020 17:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596626401;
-        bh=fXD2fR/RGwBYKiJMF1H9ViC4OoYV0aXNwZ09RnmahuI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Y5HHTjlLlzfak9r9LcLb6wTR5NtiJUSKbCqxqk3VLQHkDClW3hNKZJT/6qd1uflgk
-         P2EQc9cr6Vf/9hrbk0UMp32tAoWqeU+geilo+ZfFb47ws6HDoRp7KOOrx+iV/6gHCF
-         +T5CsfMpupS3UjTlB3NWN02gyz02XSfyWSGshCKU=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k3HSh-0001Dy-5B; Wed, 05 Aug 2020 12:19:59 +0100
+        s=default; t=1596649383;
+        bh=OKbo9x6qSIBQ+EfDdXTGM4gIuWDJ2f+ftbIIZeCVXCk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=aKzXNSdu1daPVOFgu4auDzWADIYSal/8inG0/vKAIW9Bipkv6UBJUj0mwiTpkTrOU
+         YcP89Hh9pAsyZRo8nox76aKV7Otca6B/iBcrn6WdfkSHYd1XuDT/9d3kNQu8wqqUvm
+         6tnv3J54L3HNhIlwe1waQoXzbFQFEg1BDQeCQe/Q=
+Date:   Wed, 5 Aug 2020 12:43:01 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sean V Kelley <sean.v.kelley@intel.com>
+Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        rjw@rjwysocki.net, ashok.raj@intel.com, tony.luck@intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Subject: Re: [PATCH V2 3/9] PCI/portdrv: Add pcie_walk_rcec() to walk RCiEPs
+ associated with RCEC
+Message-ID: <20200805174301.GA514577@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 05 Aug 2020 12:19:58 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH 5.7 000/121] 5.7.13-rc2 review
-In-Reply-To: <20200805095439.GB1634853@kroah.com>
-References: <20200804072435.385370289@linuxfoundation.org>
- <CA+G9fYs35Eiq1QFM0MOj6Y7gC=YKaiknCPgcJpJ5NMW4Y7qnYQ@mail.gmail.com>
- <20200804082130.GA1768075@kroah.com>
- <CAHk-=whJ=shbf-guMGZkGvxh9fVmbrvUuiWO48+PDFG7J9A9qw@mail.gmail.com>
- <c32ad2216ca3dd83d6d3d740512db9de@kernel.org>
- <20200805095439.GB1634853@kroah.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <813c64c8dbe037b9d84763f56c4dbb7d@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: gregkh@linuxfoundation.org, torvalds@linux-foundation.org, naresh.kamboju@linaro.org, linux-kernel@vger.kernel.org, akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org, stable@vger.kernel.org, arnd@arndb.de, will@kernel.org, catalin.marinas@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200804194052.193272-4-sean.v.kelley@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-05 10:54, Greg Kroah-Hartman wrote:
-> On Tue, Aug 04, 2020 at 10:23:06PM +0100, Marc Zyngier wrote:
->> On 2020-08-04 19:33, Linus Torvalds wrote:
->> > On Tue, Aug 4, 2020 at 1:21 AM Greg Kroah-Hartman
->> > <gregkh@linuxfoundation.org> wrote:
->> > >
->> > > So Linus's tree is also broken here.
->> >
->> > No, there's 835d1c3a9879 ("arm64: Drop unnecessary include from
->> > asm/smp.h") upstream.
->> 
->> My bet is that Greg ended up with this patch backported to
->> 5.7, but doesn't have 62a679cb2825 ("arm64: simplify ptrauth
->> initialization") as the latter isn't a fix.
->> 
->> I don't think any of these two patches are worth backporting,
->> to be honest.
+On Tue, Aug 04, 2020 at 12:40:46PM -0700, Sean V Kelley wrote:
+> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 > 
-> I didn't have either of those patches, so I can try applying them to 
-> see
-> if the build errors go away.  But if you don't think they should be
-> applied, what should I do?
+> When an RCEC device signals error(s) to a CPU core, the CPU core
+> needs to walk all the RCiEPs associated with that RCEC to check
+> errors. So add the function pcie_walk_rcec() to walk all RCiEPs
+> associated with the RCEC device.
 > 
-> Here's what I did have queued up:
+> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
+> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  drivers/pci/pcie/portdrv.h      |  2 +
+>  drivers/pci/pcie/portdrv_core.c | 82 +++++++++++++++++++++++++++++++++
+>  2 files changed, 84 insertions(+)
 > 
-> f227e3ec3b5c ("random32: update the net random state on interrupt and 
-> activity")
-> aa54ea903abb ("ARM: percpu.h: fix build error")
-> 1c9df907da83 ("random: fix circular include dependency on arm64 after
-> addition of percpu.h")
-> 83bdc7275e62 ("random32: remove net_rand_state from the latent entropy
-> gcc plugin")
-> c0842fbc1b18 ("random32: move the pseudo-random 32-bit definitions to
-> prandom.h")
+> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
+> index af7cf237432a..c11d5ecbad76 100644
+> --- a/drivers/pci/pcie/portdrv.h
+> +++ b/drivers/pci/pcie/portdrv.h
+> @@ -116,6 +116,8 @@ void pcie_port_service_unregister(struct pcie_port_service_driver *new);
+>  
+>  extern struct bus_type pcie_port_bus_type;
+>  int pcie_port_device_register(struct pci_dev *dev);
+> +void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
+> +		    void *userdata);
+>  #ifdef CONFIG_PM
+>  int pcie_port_device_suspend(struct device *dev);
+>  int pcie_port_device_resume_noirq(struct device *dev);
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> index 5d4a400094fc..daa2dfa83a0b 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/pm_runtime.h>
+>  #include <linux/string.h>
+>  #include <linux/slab.h>
+> +#include <linux/bitops.h>
+>  #include <linux/aer.h>
+>  
+>  #include "../pci.h"
+> @@ -365,6 +366,87 @@ int pcie_port_device_register(struct pci_dev *dev)
+>  	return status;
+>  }
+>  
+> +static int pcie_walk_rciep_devfn(struct pci_bus *pbus, int (*cb)(struct pci_dev *, void *),
 
-Not what I expected, then. I stand corrected.
+In drivers/pci, the typical name for a "struct pci_bus *" is "bus",
+and for a "struct pci_dev *" is "dev" (below).
 
-> And that caused the builds to blow up.
+> +				 void *userdata, unsigned long bitmap)
+
+Use "u32 bitmap" so the width is explicit.  Looks like this would also
+get rid of the cast in the caller.  So maybe you used "unsigned long"
+here for some reason?
+
+> +{
+> +	unsigned int dev, fn;
+> +	struct pci_dev *pdev;
+> +	int retval;
+> +
+> +	for_each_set_bit(dev, &bitmap, 32) {
+> +		for (fn = 0; fn < 8; fn++) {
+> +			pdev = pci_get_slot(pbus, PCI_DEVFN(dev, fn));
+
+This needs a matching pci_dev_put(), according to the pci_get_slot()
+function comment.
+
+> +
+> +			if (!pdev || pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_END)
+> +				continue;
+> +
+> +			retval = cb(pdev, userdata);
+> +			if (retval)
+> +				return retval;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * pcie_walk_rcec - Walk RCiEP devices associating with RCEC and call callback.
+> + * @rcec     RCEC whose RCiEP devices should be walked.
+> + * @cb       Callback to be called for each RCiEP device found.
+> + * @userdata Arbitrary pointer to be passed to callback.
+> + *
+> + * Walk the given RCEC. Call the provided callback on each RCiEP device found.
+> + *
+> + * We check the return of @cb each time. If it returns anything
+> + * other than 0, we break out.
+> + */
+> +void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
+> +		    void *userdata)
+> +{
+> +	u32 pos, bitmap, hdr, busn;
+> +	u8 ver, nextbusn, lastbusn;
+> +	struct pci_bus *pbus;
+> +	unsigned int bnr;
+> +
+> +	pos = pci_find_ext_capability(rcec, PCI_EXT_CAP_ID_RCEC);
+> +	if (!pos)
+> +		return;
+
+I think all the registers you care about here are read-only.  If so, we
+should find the capability, read the registers (bitmap & bus numbers),
+and save them at enumeration-time, e.g., in pci_init_capabilities().
+I hope we don't have to dig all this out every time we process an
+error.
+
+> +	pbus = pci_find_bus(pci_domain_nr(rcec->bus), rcec->bus->number);
+> +	if (!pbus)
+> +		return;
+
+This seems like a really complicated way to write:
+
+  pbus = rcec->bus;
+
+"rcec->bus" cannot be NULL, so there's no need to check.
+
+> +	pci_read_config_dword(rcec, pos + PCI_RCEC_RCIEP_BITMAP, &bitmap);
+> +
+> +	/* Find RCiEP devices on the same bus as the RCEC */
+> +	if (pcie_walk_rciep_devfn(pbus, cb, userdata, (unsigned long)bitmap))
+> +		return;
+> +
+> +	/* Check whether RCEC BUSN register is present */
+> +	pci_read_config_dword(rcec, pos, &hdr);
+> +	ver = PCI_EXT_CAP_VER(hdr);
+> +	if (ver < PCI_RCEC_BUSN_REG_VER)
+> +		return;
+> +
+> +	pci_read_config_dword(rcec, pos + PCI_RCEC_BUSN, &busn);
+> +	nextbusn = PCI_RCEC_BUSN_NEXT(busn);
+> +	lastbusn = PCI_RCEC_BUSN_LAST(busn);
+> +
+> +	/* All RCiEP devices are on the same bus as the RCEC */
+> +	if (nextbusn == 0xff && lastbusn == 0x00)
+> +		return;
+> +
+> +	for (bnr = nextbusn; bnr <= lastbusn; bnr++) {
+> +		pbus = pci_find_bus(pci_domain_nr(rcec->bus), bnr);
+> +		if (!pbus)
+> +			continue;
+> +
+> +		/* Find RCiEP devices on the given bus */
+> +		if (pcie_walk_rciep_devfn(pbus, cb, userdata, 0xffffffff))
+> +			return;
+> +	}
+> +}
+> +
+>  #ifdef CONFIG_PM
+>  typedef int (*pcie_pm_callback_t)(struct pcie_device *);
+>  
+> -- 
+> 2.27.0
 > 
-> So, what should I do here?
-
-OK, this is getting hairy. I solved it by grabbing:
-
-d0055da5266a ("arm64: remove ptrauth_keys_install_kernel sync arg")
-62a679cb2825 ("arm64: simplify ptrauth initialization")
-
-and at which point you might as well take 835d1c3a9879 despite
-everything I said earlier. And backporting that further down the
-line is fraught with danger.
-
-I came up with yet another "quality" hack, which gets the job done,
-see below. It is obviously much simpler, but also terribly ugly.
-
-         M.
-
- From 34ee193a4a84718689cffd13f976b7f31e4c5ad4 Mon Sep 17 00:00:00 2001
- From: Marc Zyngier <maz@kernel.org>
-Date: Wed, 5 Aug 2020 12:10:44 +0100
-Subject: [PATCH] arm64: Workaround circular dependency in pointer_auth.h
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-With the backport of f227e3ec3b5c ("random32: update the net random
-state on interrupt and activity") and its associated fixes, the
-arm64 build explodes early:
-
-In file included from ../include/linux/smp.h:67,
-                  from ../include/linux/percpu.h:7,
-                  from ../include/linux/prandom.h:12,
-                  from ../include/linux/random.h:118,
-                  from ../arch/arm64/include/asm/pointer_auth.h:6,
-                  from ../arch/arm64/include/asm/processor.h:39,
-                  from ../include/linux/mutex.h:19,
-                  from ../include/linux/kernfs.h:12,
-                  from ../include/linux/sysfs.h:16,
-                  from ../include/linux/kobject.h:20,
-                  from ../include/linux/of.h:17,
-                  from ../include/linux/irqdomain.h:35,
-                  from ../include/linux/acpi.h:13,
-                  from ../include/acpi/apei.h:9,
-                  from ../include/acpi/ghes.h:5,
-                  from ../include/linux/arm_sdei.h:8,
-                  from ../arch/arm64/kernel/asm-offsets.c:10:
-../arch/arm64/include/asm/smp.h:100:29: error: field ‘ptrauth_key’ has
-incomplete type
-
-This is due to struct ptrauth_keys_kernel not being defined before
-we transitively include asm/smp.h from linux/random.h.
-
-Paper over it by moving the inclusion of linux/random.h *after* the
-type has been defined.
-
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
-  arch/arm64/include/asm/pointer_auth.h | 8 +++++++-
-  1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/include/asm/pointer_auth.h 
-b/arch/arm64/include/asm/pointer_auth.h
-index c6b4f0603024..be7f853738e6 100644
---- a/arch/arm64/include/asm/pointer_auth.h
-+++ b/arch/arm64/include/asm/pointer_auth.h
-@@ -3,7 +3,6 @@
-  #define __ASM_POINTER_AUTH_H
-
-  #include <linux/bitops.h>
--#include <linux/random.h>
-
-  #include <asm/cpufeature.h>
-  #include <asm/memory.h>
-@@ -34,6 +33,13 @@ struct ptrauth_keys_kernel {
-  	struct ptrauth_key apia;
-  };
-
-+/*
-+ * Only include random.h once ptrauth_keys_* structures are defined
-+ * to avoid yet another circular include hell (random.h * ends up
-+ * including asm/smp.h, which requires ptrauth_keys_kernel).
-+ */
-+#include <linux/random.h>
-+
-  static inline void ptrauth_keys_init_user(struct ptrauth_keys_user 
-*keys)
-  {
-  	if (system_supports_address_auth()) {
--- 
-2.27.0
-
-
--- 
-Jazz is not dead. It just smells funny...
