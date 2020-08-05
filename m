@@ -2,167 +2,490 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4101C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8DEC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2C1C22B40
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE2B922BF3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:48:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ufbKqNkj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbgHEIsS (ORCPT
+        id S1728233AbgHEIs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 04:48:18 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:51250 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbgHEIsO (ORCPT
+        Wed, 5 Aug 2020 04:48:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726635AbgHEIsW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 04:48:14 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1k3F5o-0001rR-5K; Wed, 05 Aug 2020 08:48:12 +0000
-Subject: Re: [PATCH] selftests/net: skip msg_zerocopy test if we have less
- than 4 CPUs
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Shuah Khan <shuah@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kernel-janitors@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200804123012.378750-1-colin.king@canonical.com>
- <b99004ea-cd9d-bec3-5f9f-82dcb00a6284@gmail.com>
- <CA+FuTSd9K+s1rXUFpb_RWEC-uAgwU1Vz44zaUPaZK0cfsX4kwA@mail.gmail.com>
- <fc66cf3c-b4be-f098-3a2b-aef36b90835d@canonical.com>
- <CA+FuTSfVOPiiBi2AcyiyNHoOpbKg4dPWCNvjg=-UuP+GA2c5FA@mail.gmail.com>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <914695bd-7896-777d-fa8e-182b247e3b77@canonical.com>
-Date:   Wed, 5 Aug 2020 09:48:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Wed, 5 Aug 2020 04:48:22 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CE1DC06174A;
+        Wed,  5 Aug 2020 01:48:22 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id d188so16236554pfd.2;
+        Wed, 05 Aug 2020 01:48:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=ibmLRXjE4KxMV8+SFfi6CzR1R7EzkJW8xQzGmy3IU+g=;
+        b=ufbKqNkjSPpsvtOZBu6tXJNFfezOmnnNhgiiN/i2TgTHMPq296fbDZqgzXe0KrZjw0
+         qz4hzfZzi+yYJk1E3mPKwpgD1Y/ZBjptEXnrxjXGQ7OxSXU5HRa0JTxSVT7yiRVcZVtm
+         j6z12lzjZaKrkuJag6t8dI3su8DCc8RtmBLBGbW5BKFVEHlXjzrE0QevxLLD1RAp8+UU
+         M2XYY+dKhi+FHT4/crjLy/OGOhi70Cs/8eay9FQE4th82gQBcaoAM7rhBOqeeESvXoqs
+         0ZnfgVxoVeW6MZPwtYZxFd+aSW7UWmgN8ca0obThVwyDKsGJ1/D9YWPUlaALfWGB+jLe
+         PkxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=ibmLRXjE4KxMV8+SFfi6CzR1R7EzkJW8xQzGmy3IU+g=;
+        b=FaxQoCasJZdgYhlH0G0I0zKfngnpGMjY8Q6OPANJ1Sp+nrrpBlgMYwa1TImif+KIFN
+         EGGwMgeUt10wkR693YB98QDD+aQVnDJzPwWktKEw6MN10TM92khSj21UPJePcS+hx4K1
+         ZjQOa9IUzrDN6PBDN8ZoszYeWA60irKeGMlzsqmuDFoDF1ikTSkIW5f0sWkjOQOvmIi1
+         Qg10ENnHuWID/c2Pl27g29EbSSwKIYBSEzBK8cM9wB0wVArTf0qqv64pLFp6IiUILB3x
+         VLjxqzlqIlZcpISptvUVmBPYXgVv1xLjPyoAwl/qTlAl5uRfpfUArFM/3KJFU6PnkXrk
+         o0Zw==
+X-Gm-Message-State: AOAM5315D2ydEr8DW+fJtxGqhT4IjEWgfWomZcGVNPELWJ9dv/UQslQe
+        44cDQ8KqIfNdmQC84jXcBjbbG0j2rF8=
+X-Google-Smtp-Source: ABdhPJzM6WkA0bYWknK8DlAdmK1EBYy3bBYgde5yDakcEsYtaePaBgFFTXUD5B2o/P5NkwhX7H2wAw==
+X-Received: by 2002:a62:d40a:: with SMTP id a10mr2325946pfh.135.1596617300294;
+        Wed, 05 Aug 2020 01:48:20 -0700 (PDT)
+Received: from [127.0.0.1] ([203.205.141.45])
+        by smtp.gmail.com with ESMTPSA id k125sm2432419pga.48.2020.08.05.01.48.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Aug 2020 01:48:19 -0700 (PDT)
+Subject: Re: [PATCH v2 2/3] ext4: limit the length of per-inode prealloc list
+To:     Andreas Dilger <adilger@dilger.ca>
+Cc:     Theodore Ts'o <tytso@mit.edu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>
+References: <bb8be35a-ba56-44f6-b492-c3244f667a30@gmail.com>
+ <EEA00B35-CC71-4E81-B5DB-596EE3B0AB56@dilger.ca>
+From:   brookxu <brookxu.cn@gmail.com>
+Message-ID: <122e445c-ba91-c07c-1f76-4248548e8649@gmail.com>
+Date:   Wed, 5 Aug 2020 16:48:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <CA+FuTSfVOPiiBi2AcyiyNHoOpbKg4dPWCNvjg=-UuP+GA2c5FA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <EEA00B35-CC71-4E81-B5DB-596EE3B0AB56@dilger.ca>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/08/2020 09:44, Willem de Bruijn wrote:
-> On Wed, Aug 5, 2020 at 10:22 AM Colin Ian King <colin.king@canonical.com> wrote:
->>
->> On 05/08/2020 09:06, Willem de Bruijn wrote:
->>> On Wed, Aug 5, 2020 at 2:54 AM Eric Dumazet <eric.dumazet@gmail.com> wrote:
->>>>
->>>>
->>>>
->>>> On 8/4/20 5:30 AM, Colin King wrote:
->>>>> From: Colin Ian King <colin.king@canonical.com>
->>>>>
->>>>> The current test will exit with a failure if it cannot set affinity on
->>>>> specific CPUs which is problematic when running this on single CPU
->>>>> systems. Add a check for the number of CPUs and skip the test if
->>>>> the CPU requirement is not met.
->>>>>
->>>>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->>>>> ---
->>>>>  tools/testing/selftests/net/msg_zerocopy.sh | 5 +++++
->>>>>  1 file changed, 5 insertions(+)
->>>>>
->>>>> diff --git a/tools/testing/selftests/net/msg_zerocopy.sh b/tools/testing/selftests/net/msg_zerocopy.sh
->>>>> index 825ffec85cea..97bc527e1297 100755
->>>>> --- a/tools/testing/selftests/net/msg_zerocopy.sh
->>>>> +++ b/tools/testing/selftests/net/msg_zerocopy.sh
->>>>> @@ -21,6 +21,11 @@ readonly DADDR6='fd::2'
->>>>>
->>>>>  readonly path_sysctl_mem="net.core.optmem_max"
->>>>>
->>>>> +if [[ $(nproc) -lt 4 ]]; then
->>>>> +     echo "SKIP: test requires at least 4 CPUs"
->>>>> +     exit 4
->>>>> +fi
->>>>> +
->>>>>  # No arguments: automated test
->>>>>  if [[ "$#" -eq "0" ]]; then
->>>>>       $0 4 tcp -t 1
->>>>>
->>>>
->>>> Test explicitly uses CPU 2 and 3, right ?
->>>>
->>>> nproc could be 500, yet cpu 2 or 3 could be offline
->>>>
->>>> # cat /sys/devices/system/cpu/cpu3/online
->>>> 0
->>>> # echo $(nproc)
->>>> 71
->>>
->>> The cpu affinity is only set to bring some stability across runs.
->>>
->>> The test does not actually verify that a run with zerocopy is some
->>> factor faster than without, as that factor is hard to choose across
->>> all platforms. As a result the automated run mainly gives code coverage.
->>>
->>> It's preferable to always run. And on sched_setaffinity failure log a
->>> message about possible jitter and continue. I can send that patch, if
->>> the approach sounds good.
->>>
->> That's sounds preferable to my bad fix for sure :-)
-> 
-> Certainly not a bad fix! Thanks for addressing the issue. Alternative
-> approach at
-> 
-> http://patchwork.ozlabs.org/project/netdev/patch/20200805084045.1549492-1-willemdebruijn.kernel@gmail.com/
-> 
-Thanks, you solution is good for my testing requirements
+Thx for your reply~. In our application scenario, we format an ext3
+file system, and then create a daemon to write data to a sparse file.
+During the business operation, we found that the sys of some cpu is
+very high. Using the crash tool, we observe that the length of the
+prealloc list of the inode is 200K. In general, the inode prealloc
+list is released on truncate, puch hole, release file, da, abnormal
+block allocation path, etc. But in our scenario, none of the above
+paths have been reached, which causes the length of the prealloc
+list to get out of control.
 
-Acked-by: Colin Ian King <colin.king@canonical.com>
+We create a test process that continuously writes sparse file, and
+bind the test process to 0 core, and then record the CPU usage of 0
+core. On unrepaired kernel, cpu usage as follows: 
+
+CPU      %usr     %nice      %sys   %iowait    %idle
+  0      0.00      0.00     17.17      0.00    82.83
+  0      0.00      0.00     48.96      0.00    51.04
+  0      0.00      0.00     62.89      0.00    37.11
+  0      0.00      0.00     69.39      0.00    30.61
+  0      0.00      0.00     73.00      0.00    27.00
+  0      0.00      0.00     76.00      0.00    24.00
+  0      0.00      0.00     76.09      0.00    23.91
+  0      0.00      0.00     79.59      0.00    20.41
+  0      0.00      0.00     81.19      0.00    18.81
+
+We can see that the CPU usage rate is increasing, mainly due to the
+increasing length of the prealloc queue. On repaired kernel, cpu
+usage as follows:
+
+CPU      %usr     %nice      %sys   %iowait     %idle
+  0      0.00      0.00     15.84      1.98     82.18
+  0      0.00      0.00     22.22      2.02     75.76
+  0      0.00      0.00     20.41      3.06     76.53
+  0      0.00      0.00     20.62      2.06     77.32
+  0      1.01      0.00     21.21      2.02     75.76
+  0      8.16      0.00     25.51      4.08     62.24
+  0      0.00      0.00     21.21      2.02     76.77
+  0      0.00      0.00     20.41      4.08     75.51
+  0      1.04      0.00     18.75      4.17     76.04
+ 
+cpu sys has dropped, and system throughput has also increased.
+
+thanks.
+
+Andreas Dilger wrote on 2020/8/5 12:53:
+> On Aug 4, 2020, at 7:02 PM, brookxu <brookxu.cn@gmail.com> wrote:
+>> In the scenario of writing sparse files, the Per-inode prealloc list may
+>> be very long, resulting in high overhead for ext4_mb_use_preallocated().
+>> To circumvent this problem, we limit the maximum length of per-inode
+>> prealloc list to 512 and allow users to modify it.
+>>
+>> Signed-off-by: Chunguang Xu <brookxu@tencent.com>
+> Do you have any kind of measurements that show the benefit of this patch?
+> For example performance improvement, memory or CPU usage before and after?
+> How long is "very long"?
+>
+> Cheers, Andreas
+>
+>> ---
+>>  fs/ext4/ext4.h        |  3 ++-
+>>  fs/ext4/extents.c     | 10 ++++-----
+>>  fs/ext4/file.c        |  2 +-
+>>  fs/ext4/indirect.c    |  2 +-
+>>  fs/ext4/inode.c       |  6 +++---
+>>  fs/ext4/ioctl.c       |  2 +-
+>>  fs/ext4/mballoc.c     | 57 +++++++++++++++++++++++++++++++++++++++++++++++----
+>>  fs/ext4/mballoc.h     |  4 ++++
+>>  fs/ext4/move_extent.c |  4 ++--
+>>  fs/ext4/super.c       |  2 +-
+>>  fs/ext4/sysfs.c       |  2 ++
+>>  11 files changed, 75 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+>> index 42f5060..68e0ebe 100644
+>> --- a/fs/ext4/ext4.h
+>> +++ b/fs/ext4/ext4.h
+>> @@ -1501,6 +1501,7 @@ struct ext4_sb_info {
+>>      unsigned int s_mb_stats;
+>>      unsigned int s_mb_order2_reqs;
+>>      unsigned int s_mb_group_prealloc;
+>> +    unsigned int s_mb_max_inode_prealloc;
+>>      unsigned int s_max_dir_size_kb;
+>>      /* where last allocation was done - for stream allocation */
+>>      unsigned long s_mb_last_group;
+>> @@ -2651,7 +2652,7 @@ extern int ext4_init_inode_table(struct super_block *sb,
+>>  extern ext4_fsblk_t ext4_mb_new_blocks(handle_t *,
+>>                  struct ext4_allocation_request *, int *);
+>>  extern int ext4_mb_reserve_blocks(struct super_block *, int);
+>> -extern void ext4_discard_preallocations(struct inode *);
+>> +extern void ext4_discard_preallocations(struct inode *, unsigned int);
+>>  extern int __init ext4_init_mballoc(void);
+>>  extern void ext4_exit_mballoc(void);
+>>  extern void ext4_free_blocks(handle_t *handle, struct inode *inode,
+>> diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
+>> index 221f240..a40f928 100644
+>> --- a/fs/ext4/extents.c
+>> +++ b/fs/ext4/extents.c
+>> @@ -100,7 +100,7 @@ static int ext4_ext_trunc_restart_fn(struct inode *inode, int *dropped)
+>>       * i_mutex. So we can safely drop the i_data_sem here.
+>>       */
+>>      BUG_ON(EXT4_JOURNAL(inode) == NULL);
+>> -    ext4_discard_preallocations(inode);
+>> +    ext4_discard_preallocations(inode, 0);
+>>      up_write(&EXT4_I(inode)->i_data_sem);
+>>      *dropped = 1;
+>>      return 0;
+>> @@ -4272,7 +4272,7 @@ int ext4_ext_map_blocks(handle_t *handle, struct inode *inode,
+>>               * not a good idea to call discard here directly,
+>>               * but otherwise we'd need to call it every free().
+>>               */
+>> -            ext4_discard_preallocations(inode);
+>> +            ext4_discard_preallocations(inode, 0);
+>>              if (flags & EXT4_GET_BLOCKS_DELALLOC_RESERVE)
+>>                  fb_flags = EXT4_FREE_BLOCKS_NO_QUOT_UPDATE;
+>>              ext4_free_blocks(handle, inode, NULL, newblock,
+>> @@ -5299,7 +5299,7 @@ static int ext4_collapse_range(struct inode *inode, loff_t offset, loff_t len)
+>>      }
+>>
+>>      down_write(&EXT4_I(inode)->i_data_sem);
+>> -    ext4_discard_preallocations(inode);
+>> +    ext4_discard_preallocations(inode, 0);
+>>
+>>      ret = ext4_es_remove_extent(inode, punch_start,
+>>                      EXT_MAX_BLOCKS - punch_start);
+>> @@ -5313,7 +5313,7 @@ static int ext4_collapse_range(struct inode *inode, loff_t offset, loff_t len)
+>>          up_write(&EXT4_I(inode)->i_data_sem);
+>>          goto out_stop;
+>>      }
+>> -    ext4_discard_preallocations(inode);
+>> +    ext4_discard_preallocations(inode, 0);
+>>
+>>      ret = ext4_ext_shift_extents(inode, handle, punch_stop,
+>>                       punch_stop - punch_start, SHIFT_LEFT);
+>> @@ -5445,7 +5445,7 @@ static int ext4_insert_range(struct inode *inode, loff_t offset, loff_t len)
+>>          goto out_stop;
+>>
+>>      down_write(&EXT4_I(inode)->i_data_sem);
+>> -    ext4_discard_preallocations(inode);
+>> +    ext4_discard_preallocations(inode, 0);
+>>
+>>      path = ext4_find_extent(inode, offset_lblk, NULL, 0);
+>>      if (IS_ERR(path)) {
+>> diff --git a/fs/ext4/file.c b/fs/ext4/file.c
+>> index 2a01e31..e3ab8ea 100644
+>> --- a/fs/ext4/file.c
+>> +++ b/fs/ext4/file.c
+>> @@ -148,7 +148,7 @@ static int ext4_release_file(struct inode *inode, struct file *filp)
+>>                  !EXT4_I(inode)->i_reserved_data_blocks)
+>>      {
+>>          down_write(&EXT4_I(inode)->i_data_sem);
+>> -        ext4_discard_preallocations(inode);
+>> +        ext4_discard_preallocations(inode, 0);
+>>          up_write(&EXT4_I(inode)->i_data_sem);
+>>      }
+>>      if (is_dx(inode) && filp->private_data)
+>> diff --git a/fs/ext4/indirect.c b/fs/ext4/indirect.c
+>> index be2b66e..ec6b930 100644
+>> --- a/fs/ext4/indirect.c
+>> +++ b/fs/ext4/indirect.c
+>> @@ -696,7 +696,7 @@ static int ext4_ind_trunc_restart_fn(handle_t *handle, struct inode *inode,
+>>       * i_mutex. So we can safely drop the i_data_sem here.
+>>       */
+>>      BUG_ON(EXT4_JOURNAL(inode) == NULL);
+>> -    ext4_discard_preallocations(inode);
+>> +    ext4_discard_preallocations(inode, 0);
+>>      up_write(&EXT4_I(inode)->i_data_sem);
+>>      *dropped = 1;
+>>      return 0;
+>> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+>> index 10dd470..bb9e1cd 100644
+>> --- a/fs/ext4/inode.c
+>> +++ b/fs/ext4/inode.c
+>> @@ -383,7 +383,7 @@ void ext4_da_update_reserve_space(struct inode *inode,
+>>       */
+>>      if ((ei->i_reserved_data_blocks == 0) &&
+>>          !inode_is_open_for_write(inode))
+>> -        ext4_discard_preallocations(inode);
+>> +        ext4_discard_preallocations(inode, 0);
+>>  }
+>>
+>>  static int __check_block_validity(struct inode *inode, const char *func,
+>> @@ -4056,7 +4056,7 @@ int ext4_punch_hole(struct inode *inode, loff_t offset, loff_t length)
+>>      if (stop_block > first_block) {
+>>
+>>          down_write(&EXT4_I(inode)->i_data_sem);
+>> -        ext4_discard_preallocations(inode);
+>> +        ext4_discard_preallocations(inode, 0);
+>>
+>>          ret = ext4_es_remove_extent(inode, first_block,
+>>                          stop_block - first_block);
+>> @@ -4211,7 +4211,7 @@ int ext4_truncate(struct inode *inode)
+>>
+>>      down_write(&EXT4_I(inode)->i_data_sem);
+>>
+>> -    ext4_discard_preallocations(inode);
+>> +    ext4_discard_preallocations(inode, 0);
+>>
+>>      if (ext4_test_inode_flag(inode, EXT4_INODE_EXTENTS))
+>>          err = ext4_ext_truncate(handle, inode);
+>> diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
+>> index 999cf6a..a5fcc23 100644
+>> --- a/fs/ext4/ioctl.c
+>> +++ b/fs/ext4/ioctl.c
+>> @@ -202,7 +202,7 @@ static long swap_inode_boot_loader(struct super_block *sb,
+>>      reset_inode_seed(inode);
+>>      reset_inode_seed(inode_bl);
+>>
+>> -    ext4_discard_preallocations(inode);
+>> +    ext4_discard_preallocations(inode, 0);
+>>
+>>      err = ext4_mark_inode_dirty(handle, inode);
+>>      if (err < 0) {
+>> diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
+>> index 4f21f34..28a139f 100644
+>> --- a/fs/ext4/mballoc.c
+>> +++ b/fs/ext4/mballoc.c
+>> @@ -2736,6 +2736,7 @@ int ext4_mb_init(struct super_block *sb)
+>>      sbi->s_mb_stats = MB_DEFAULT_STATS;
+>>      sbi->s_mb_stream_request = MB_DEFAULT_STREAM_THRESHOLD;
+>>      sbi->s_mb_order2_reqs = MB_DEFAULT_ORDER2_REQS;
+>> +    sbi->s_mb_max_inode_prealloc = MB_DEFAULT_MAX_INODE_PREALLOC;
+>>      /*
+>>       * The default group preallocation is 512, which for 4k block
+>>       * sizes translates to 2 megabytes.  However for bigalloc file
+>> @@ -4103,7 +4104,7 @@ static void ext4_mb_new_preallocation(struct ext4_allocation_context *ac)
+>>   *
+>>   * FIXME!! Make sure it is valid at all the call sites
+>>   */
+>> -void ext4_discard_preallocations(struct inode *inode)
+>> +void ext4_discard_preallocations(struct inode *inode, unsigned int needed)
+>>  {
+>>      struct ext4_inode_info *ei = EXT4_I(inode);
+>>      struct super_block *sb = inode->i_sb;
+>> @@ -4121,15 +4122,18 @@ void ext4_discard_preallocations(struct inode *inode)
+>>
+>>      mb_debug(sb, "discard preallocation for inode %lu\n",
+>>           inode->i_ino);
+>> -    trace_ext4_discard_preallocations(inode);
+>> +    trace_ext4_discard_preallocations(inode,  needed);
+>>
+>>      INIT_LIST_HEAD(&list);
+>>
+>> +    if (needed == 0)
+>> +        needed = UINT_MAX;
+>> +
+>>  repeat:
+>>      /* first, collect all pa's in the inode */
+>>      spin_lock(&ei->i_prealloc_lock);
+>> -    while (!list_empty(&ei->i_prealloc_list)) {
+>> -        pa = list_entry(ei->i_prealloc_list.next,
+>> +    while (!list_empty(&ei->i_prealloc_list) && needed) {
+>> +        pa = list_entry(ei->i_prealloc_list.prev,
+>>                  struct ext4_prealloc_space, pa_inode_list);
+>>          BUG_ON(pa->pa_obj_lock != &ei->i_prealloc_lock);
+>>          spin_lock(&pa->pa_lock);
+>> @@ -4150,6 +4154,7 @@ void ext4_discard_preallocations(struct inode *inode)
+>>              spin_unlock(&pa->pa_lock);
+>>              list_del_rcu(&pa->pa_inode_list);
+>>              list_add(&pa->u.pa_tmp_list, &list);
+>> +            needed--;
+>>              continue;
+>>          }
+>>
+>> @@ -4549,10 +4554,42 @@ static void ext4_mb_add_n_trim(struct ext4_allocation_context *ac)
+>>  }
+>>
+>>  /*
+>> + * if per-inode prealloc list is too long, trim some PA
+>> + */
+>> +static void
+>> +ext4_mb_trim_inode_pa(struct inode *inode)
+>> +{
+>> +    struct ext4_inode_info *ei = EXT4_I(inode);
+>> +    struct ext4_sb_info *sbi = EXT4_SB(inode->i_sb);
+>> +    struct ext4_prealloc_space *pa;
+>> +    int count = 0, delta;
+>> +
+>> +    rcu_read_lock();
+>> +    list_for_each_entry_rcu(pa, &ei->i_prealloc_list, pa_inode_list) {
+>> +        spin_lock(&pa->pa_lock);
+>> +        if (pa->pa_deleted) {
+>> +            spin_unlock(&pa->pa_lock);
+>> +            continue;
+>> +        }
+>> +        count++;
+>> +        spin_unlock(&pa->pa_lock);
+>> +    }
+>> +    rcu_read_unlock();
+>> +
+>> +    delta = (sbi->s_mb_max_inode_prealloc >> 2) + 1;
+>> +    if (count > sbi->s_mb_max_inode_prealloc + delta) {
+>> +        count -= sbi->s_mb_max_inode_prealloc;
+>> +        ext4_discard_preallocations(inode, count);
+>> +    }
+>> +}
+>> +
+>> +/*
+>>   * release all resource we used in allocation
+>>   */
+>>  static int ext4_mb_release_context(struct ext4_allocation_context *ac)
+>>  {
+>> +    struct inode *inode = ac->ac_inode;
+>> +    struct ext4_inode_info *ei = EXT4_I(inode);
+>>      struct ext4_sb_info *sbi = EXT4_SB(ac->ac_sb);
+>>      struct ext4_prealloc_space *pa = ac->ac_pa;
+>>      if (pa) {
+>> @@ -4578,6 +4615,17 @@ static int ext4_mb_release_context(struct ext4_allocation_context *ac)
+>>                  ext4_mb_add_n_trim(ac);
+>>              }
+>>          }
+>> +
+>> +        if (pa->pa_type == MB_INODE_PA) {
+>> +            /*
+>> +             * treat per-inode prealloc list as a lru list, then try
+>> +             * to trim the least recently used PA.
+>> +             */
+>> +            spin_lock(pa->pa_obj_lock);
+>> +            list_move(&ei->i_prealloc_list, &pa->pa_inode_list);
+>> +            spin_unlock(pa->pa_obj_lock);
+>> +        }
+>> +
+>>          ext4_mb_put_pa(ac, ac->ac_sb, pa);
+>>      }
+>>      if (ac->ac_bitmap_page)
+>> @@ -4587,6 +4635,7 @@ static int ext4_mb_release_context(struct ext4_allocation_context *ac)
+>>      if (ac->ac_flags & EXT4_MB_HINT_GROUP_ALLOC)
+>>          mutex_unlock(&ac->ac_lg->lg_mutex);
+>>      ext4_mb_collect_stats(ac);
+>> +    ext4_mb_trim_inode_pa(inode);
+>>      return 0;
+>>  }
+>>
+>> diff --git a/fs/ext4/mballoc.h b/fs/ext4/mballoc.h
+>> index 6b4d17c..e75b474 100644
+>> --- a/fs/ext4/mballoc.h
+>> +++ b/fs/ext4/mballoc.h
+>> @@ -73,6 +73,10 @@
+>>   */
+>>  #define MB_DEFAULT_GROUP_PREALLOC    512
+>>
+>> +/*
+>> + * maximum length of inode prealloc list
+>> + */
+>> +#define MB_DEFAULT_MAX_INODE_PREALLOC    512
+>>
+>>  struct ext4_free_data {
+>>      /* this links the free block information from sb_info */
+>> diff --git a/fs/ext4/move_extent.c b/fs/ext4/move_extent.c
+>> index 1ed86fb..0d601b8 100644
+>> --- a/fs/ext4/move_extent.c
+>> +++ b/fs/ext4/move_extent.c
+>> @@ -686,8 +686,8 @@
+>>
+>>  out:
+>>      if (*moved_len) {
+>> -        ext4_discard_preallocations(orig_inode);
+>> -        ext4_discard_preallocations(donor_inode);
+>> +        ext4_discard_preallocations(orig_inode, 0);
+>> +        ext4_discard_preallocations(donor_inode, 0);
+>>      }
+>>
+>>      ext4_ext_drop_refs(path);
+>> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+>> index 330957e..8ce61f3 100644
+>> --- a/fs/ext4/super.c
+>> +++ b/fs/ext4/super.c
+>> @@ -1216,7 +1216,7 @@ void ext4_clear_inode(struct inode *inode)
+>>  {
+>>      invalidate_inode_buffers(inode);
+>>      clear_inode(inode);
+>> -    ext4_discard_preallocations(inode);
+>> +    ext4_discard_preallocations(inode, 0);
+>>      ext4_es_remove_extent(inode, 0, EXT_MAX_BLOCKS);
+>>      dquot_drop(inode);
+>>      if (EXT4_I(inode)->jinode) {
+>> diff --git a/fs/ext4/sysfs.c b/fs/ext4/sysfs.c
+>> index 6c9fc9e..92f04e9 100644
+>> --- a/fs/ext4/sysfs.c
+>> +++ b/fs/ext4/sysfs.c
+>> @@ -215,6 +215,7 @@ static ssize_t journal_task_show(struct ext4_sb_info *sbi, char *buf)
+>>  EXT4_RW_ATTR_SBI_UI(mb_order2_req, s_mb_order2_reqs);
+>>  EXT4_RW_ATTR_SBI_UI(mb_stream_req, s_mb_stream_request);
+>>  EXT4_RW_ATTR_SBI_UI(mb_group_prealloc, s_mb_group_prealloc);
+>> +EXT4_RW_ATTR_SBI_UI(mb_max_inode_prealloc, s_mb_max_inode_prealloc);
+>>  EXT4_RW_ATTR_SBI_UI(extent_max_zeroout_kb, s_extent_max_zeroout_kb);
+>>  EXT4_ATTR(trigger_fs_error, 0200, trigger_test_error);
+>>  EXT4_RW_ATTR_SBI_UI(err_ratelimit_interval_ms, s_err_ratelimit_state.interval);
+>> @@ -257,6 +258,7 @@ static ssize_t journal_task_show(struct ext4_sb_info *sbi, char *buf)
+>>      ATTR_LIST(mb_order2_req),
+>>      ATTR_LIST(mb_stream_req),
+>>      ATTR_LIST(mb_group_prealloc),
+>> +    ATTR_LIST(mb_max_inode_prealloc),
+>>      ATTR_LIST(max_writeback_mb_bump),
+>>      ATTR_LIST(extent_max_zeroout_kb),
+>>      ATTR_LIST(trigger_fs_error),
+>>
+>> --
+>> 1.8.3.1
+>>
+>
+> Cheers, Andreas
+>
+>
+>
+>
+>
