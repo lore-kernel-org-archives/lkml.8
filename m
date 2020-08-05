@@ -2,101 +2,215 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 538BCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DABC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2316F2075A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:43:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C436206A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596649413;
-	bh=E48uURU/e4C3y5TjlfnNrUSBQnpVCadc+z+Vd9h/kdU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C5nDb1AnXWz6RKPaDnvpuyIeqzuoKhVe/ySVo/WmX7qDWSkq76F9dclyRBnvO4/sy
-	 AjoUGKdzuB6BrAH36aZrV3gFWojwZUPtPF8BqwSn6oPT1j7LVixXHYPRKaYzT5S9gv
-	 hIyNyzFe25+mPQMrrdj4Toq99W6snzWDyhrGFTUY=
+	s=default; t=1596649678;
+	bh=fXD2fR/RGwBYKiJMF1H9ViC4OoYV0aXNwZ09RnmahuI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sPAm4BLVeMiqs2i4dzL5hAgO9wLWwNEdk8EyqDHRn1PmHOwJl0ByeoRWOSZN3aU5w
+	 B6V82dtG5VOCXwU2drssyQiP1Qe56BCyxg+UW/ViNChOzlsvZ0WwKRySD3AexsBRvo
+	 PwgqaDVkqM2jeCyKQZmLbTjwqezsQR0BVCWfZFcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbgHERnA (ORCPT
+        id S1728933AbgHERoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:43:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42146 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 13:44:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728900AbgHERkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728920AbgHERkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 13:40:21 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1020622CAE;
-        Wed,  5 Aug 2020 11:01:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F277E22D02;
+        Wed,  5 Aug 2020 11:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596625308;
-        bh=E48uURU/e4C3y5TjlfnNrUSBQnpVCadc+z+Vd9h/kdU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vjiEPe14+OtcSgTUe6IvKe9v7YtFnMHcqLyu1+yzJV2lHJlinrgdZttz+o/8wF2Pn
-         kjWCfnTxkN2Yt08lbE1MOKOyiYlxVVYDwGj7fNWqJoh2bRTgpr9ZnCA1QsL5FJRKXD
-         2Qe0hIMyvTa1JtLSs+tAhtngoaoynx1LzvqEakcg=
-Date:   Wed, 5 Aug 2020 12:01:25 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Alain Volmat <alain.volmat@st.com>
-Cc:     amelie.delaunay@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-Subject: Re: [PATCH 12/18] spi: stm32: move spi disable out of irq handler
-Message-ID: <20200805110125.GG5556@sirena.org.uk>
-References: <1596610933-32599-1-git-send-email-alain.volmat@st.com>
- <1596610933-32599-13-git-send-email-alain.volmat@st.com>
+        s=default; t=1596626401;
+        bh=fXD2fR/RGwBYKiJMF1H9ViC4OoYV0aXNwZ09RnmahuI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Y5HHTjlLlzfak9r9LcLb6wTR5NtiJUSKbCqxqk3VLQHkDClW3hNKZJT/6qd1uflgk
+         P2EQc9cr6Vf/9hrbk0UMp32tAoWqeU+geilo+ZfFb47ws6HDoRp7KOOrx+iV/6gHCF
+         +T5CsfMpupS3UjTlB3NWN02gyz02XSfyWSGshCKU=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k3HSh-0001Dy-5B; Wed, 05 Aug 2020 12:19:59 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="KR/qxknboQ7+Tpez"
-Content-Disposition: inline
-In-Reply-To: <1596610933-32599-13-git-send-email-alain.volmat@st.com>
-X-Cookie: Fast, cheap, good: pick two.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Wed, 05 Aug 2020 12:19:58 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH 5.7 000/121] 5.7.13-rc2 review
+In-Reply-To: <20200805095439.GB1634853@kroah.com>
+References: <20200804072435.385370289@linuxfoundation.org>
+ <CA+G9fYs35Eiq1QFM0MOj6Y7gC=YKaiknCPgcJpJ5NMW4Y7qnYQ@mail.gmail.com>
+ <20200804082130.GA1768075@kroah.com>
+ <CAHk-=whJ=shbf-guMGZkGvxh9fVmbrvUuiWO48+PDFG7J9A9qw@mail.gmail.com>
+ <c32ad2216ca3dd83d6d3d740512db9de@kernel.org>
+ <20200805095439.GB1634853@kroah.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <813c64c8dbe037b9d84763f56c4dbb7d@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: gregkh@linuxfoundation.org, torvalds@linux-foundation.org, naresh.kamboju@linaro.org, linux-kernel@vger.kernel.org, akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org, stable@vger.kernel.org, arnd@arndb.de, will@kernel.org, catalin.marinas@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-08-05 10:54, Greg Kroah-Hartman wrote:
+> On Tue, Aug 04, 2020 at 10:23:06PM +0100, Marc Zyngier wrote:
+>> On 2020-08-04 19:33, Linus Torvalds wrote:
+>> > On Tue, Aug 4, 2020 at 1:21 AM Greg Kroah-Hartman
+>> > <gregkh@linuxfoundation.org> wrote:
+>> > >
+>> > > So Linus's tree is also broken here.
+>> >
+>> > No, there's 835d1c3a9879 ("arm64: Drop unnecessary include from
+>> > asm/smp.h") upstream.
+>> 
+>> My bet is that Greg ended up with this patch backported to
+>> 5.7, but doesn't have 62a679cb2825 ("arm64: simplify ptrauth
+>> initialization") as the latter isn't a fix.
+>> 
+>> I don't think any of these two patches are worth backporting,
+>> to be honest.
+> 
+> I didn't have either of those patches, so I can try applying them to 
+> see
+> if the build errors go away.  But if you don't think they should be
+> applied, what should I do?
+> 
+> Here's what I did have queued up:
+> 
+> f227e3ec3b5c ("random32: update the net random state on interrupt and 
+> activity")
+> aa54ea903abb ("ARM: percpu.h: fix build error")
+> 1c9df907da83 ("random: fix circular include dependency on arm64 after
+> addition of percpu.h")
+> 83bdc7275e62 ("random32: remove net_rand_state from the latent entropy
+> gcc plugin")
+> c0842fbc1b18 ("random32: move the pseudo-random 32-bit definitions to
+> prandom.h")
 
---KR/qxknboQ7+Tpez
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Not what I expected, then. I stand corrected.
 
-On Wed, Aug 05, 2020 at 09:02:07AM +0200, Alain Volmat wrote:
-> From: Antonio Borneo <antonio.borneo@st.com>
->=20
-> The spi disable could potentially require some time to finish.
-> It has to be executed at the end of a transfer, but there is
-> no reason to call it in the irq handler.
->=20
-> Simplify the irq handler by moving out the spi disable. The
-> synchronization through xfer_completion is used to defer the
-> execution of spi disable.
+> And that caused the builds to blow up.
+> 
+> So, what should I do here?
 
-Should this be an unprepare_transfer_hardware() operation?  That would
-allow the framework to take care of scheduling this in an appropriate
-context with the added advantage of not needing to do it when there's
-another message scheduled immediately.
+OK, this is getting hairy. I solved it by grabbing:
 
---KR/qxknboQ7+Tpez
-Content-Type: application/pgp-signature; name="signature.asc"
+d0055da5266a ("arm64: remove ptrauth_keys_install_kernel sync arg")
+62a679cb2825 ("arm64: simplify ptrauth initialization")
 
------BEGIN PGP SIGNATURE-----
+and at which point you might as well take 835d1c3a9879 despite
+everything I said earlier. And backporting that further down the
+line is fraught with danger.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8qkYUACgkQJNaLcl1U
-h9Amcwf/Z9jbsoaJGZe0lTnEB+ZN1x7Xo629kRG1It/WXDUx01vXa/0BIFFomSB8
-5z4skhqGXkfncS+6lCZzBW1dJjVMTxJTXztD4zCbb45cYbGA+rjWIn2JPMvHLLxO
-swSm5Poy0PDGddU6aVh9PrZgMJXe6z5+hogGuIfxuPIdDi0gudqZ6mxH1N7emcQh
-52kzLDjvPtfeYESQYhtaCyD/MDbrAvSPC/946BHXzIcDWpWeHJIsdNUQCghTUHHg
-D3dpBhZhYrJfaE8Iv81hlGdlEbzrRDsmdJLi918xEECHBPWEoKItosC0DRKFVo2q
-/gSifjQBt0a6jA65RbRP4i8WXRUTNA==
-=6vOj
------END PGP SIGNATURE-----
+I came up with yet another "quality" hack, which gets the job done,
+see below. It is obviously much simpler, but also terribly ugly.
 
---KR/qxknboQ7+Tpez--
+         M.
+
+ From 34ee193a4a84718689cffd13f976b7f31e4c5ad4 Mon Sep 17 00:00:00 2001
+ From: Marc Zyngier <maz@kernel.org>
+Date: Wed, 5 Aug 2020 12:10:44 +0100
+Subject: [PATCH] arm64: Workaround circular dependency in pointer_auth.h
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+With the backport of f227e3ec3b5c ("random32: update the net random
+state on interrupt and activity") and its associated fixes, the
+arm64 build explodes early:
+
+In file included from ../include/linux/smp.h:67,
+                  from ../include/linux/percpu.h:7,
+                  from ../include/linux/prandom.h:12,
+                  from ../include/linux/random.h:118,
+                  from ../arch/arm64/include/asm/pointer_auth.h:6,
+                  from ../arch/arm64/include/asm/processor.h:39,
+                  from ../include/linux/mutex.h:19,
+                  from ../include/linux/kernfs.h:12,
+                  from ../include/linux/sysfs.h:16,
+                  from ../include/linux/kobject.h:20,
+                  from ../include/linux/of.h:17,
+                  from ../include/linux/irqdomain.h:35,
+                  from ../include/linux/acpi.h:13,
+                  from ../include/acpi/apei.h:9,
+                  from ../include/acpi/ghes.h:5,
+                  from ../include/linux/arm_sdei.h:8,
+                  from ../arch/arm64/kernel/asm-offsets.c:10:
+../arch/arm64/include/asm/smp.h:100:29: error: field ‘ptrauth_key’ has
+incomplete type
+
+This is due to struct ptrauth_keys_kernel not being defined before
+we transitively include asm/smp.h from linux/random.h.
+
+Paper over it by moving the inclusion of linux/random.h *after* the
+type has been defined.
+
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+  arch/arm64/include/asm/pointer_auth.h | 8 +++++++-
+  1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/include/asm/pointer_auth.h 
+b/arch/arm64/include/asm/pointer_auth.h
+index c6b4f0603024..be7f853738e6 100644
+--- a/arch/arm64/include/asm/pointer_auth.h
++++ b/arch/arm64/include/asm/pointer_auth.h
+@@ -3,7 +3,6 @@
+  #define __ASM_POINTER_AUTH_H
+
+  #include <linux/bitops.h>
+-#include <linux/random.h>
+
+  #include <asm/cpufeature.h>
+  #include <asm/memory.h>
+@@ -34,6 +33,13 @@ struct ptrauth_keys_kernel {
+  	struct ptrauth_key apia;
+  };
+
++/*
++ * Only include random.h once ptrauth_keys_* structures are defined
++ * to avoid yet another circular include hell (random.h * ends up
++ * including asm/smp.h, which requires ptrauth_keys_kernel).
++ */
++#include <linux/random.h>
++
+  static inline void ptrauth_keys_init_user(struct ptrauth_keys_user 
+*keys)
+  {
+  	if (system_supports_address_auth()) {
+-- 
+2.27.0
+
+
+-- 
+Jazz is not dead. It just smells funny...
