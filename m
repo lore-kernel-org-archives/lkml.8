@@ -2,187 +2,159 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1518DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8FBC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAEE42075D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18E272075D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:23:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F9Qkqm4W"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ghcoPHMA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729090AbgHETXZ (ORCPT
+        id S1728933AbgHETXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:23:25 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:53919 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728882AbgHERb1 (ORCPT
+        Wed, 5 Aug 2020 15:23:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53806 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728813AbgHERbU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:31:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596648685;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6Wdsv5NGZyVonagnzh6lv+hK8JZ33+nOyMh4yKpcewg=;
-        b=F9Qkqm4Wvvm59b/z8WSic9nU7h0MN1jLAq4vqR0qS17lhAfrFTjNm46RtPajSxfnXNcu8f
-        WP+EwqQy69pfJ8YRnfhUIVS6I8h7SEMkJhmncZIZyRSselT1EIcpKCpRtEYtGifs8usk+d
-        dNP6kh1dLh3wWDpR41KShHbFx1IlvsQ=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-95-wPSdAVBKMCmQ9bGB_y3_yw-1; Wed, 05 Aug 2020 08:06:32 -0400
-X-MC-Unique: wPSdAVBKMCmQ9bGB_y3_yw-1
-Received: by mail-wr1-f71.google.com with SMTP id w7so13561485wrt.9
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 05:06:32 -0700 (PDT)
+        Wed, 5 Aug 2020 13:31:20 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DE37C06174A
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 10:31:20 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id j7so23926882oij.9
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 10:31:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=S/ISdwGRB2GCE/7Xam1/dQaAy+/JGNh8/9LD5lfT6Q8=;
+        b=ghcoPHMA4uw28WgOVzXRPP0CmnoExCjAxOo/7KmxGQsjS8zBNBAhAMXWxKfLFYlEDg
+         32FCEyDWyRpnraHu8yP5qT6szaA6vANpE0TJ2lZkz+udUIHLqORuu6tzjUgpt1ZADOMO
+         /vqB53nnWRUMh0ukvafMsEeOTfOP5ky5VJw/RAWqyVEa27dZFHxOBog2urmrHqb3fw0r
+         F7u/hjaWxzcyXBDXXJc+jAKlLsVzcpzZ72geF7iTiRYzb84u9vAkxi7B2kpJ6PI/Xng1
+         aCjYtkP89x85/C/aFifUNRBkQEQr80jm/p2ZXzqzIUsJiaLCDm1MuhlkPXDZC6zBtjlE
+         jatQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=6Wdsv5NGZyVonagnzh6lv+hK8JZ33+nOyMh4yKpcewg=;
-        b=LpvQXWTrLkJ+NuSGCJVNl4doVKRwxwY8BXHteHXkrgKye+tnBfUUE27bLtGwH4h93p
-         YS5dHDdmdUus+Qk/j3HFHePugWi4Enk5k3B8gdsmKghE0OU+fKfm9ZWN5IqVU+8jc2d/
-         6Yw6JPEjN/A5zmqxuyBNt0jD02YnpX3Ah4HrpAi1jWEK0CgjIuiG9P8sH19LEy5tdRnH
-         y5DnIbkChqe79LbKKhV3LZeDtVVilibKPyWzQZLM5A2dv5RwiETbxCNBPZlk2uCl9zoA
-         D5+wxSM5mrTOntu0VQuSSwFA5v/sQ9r/MVdh7Th4i2WjHuEODMPX6enRnbDm3pHRrczV
-         8gVg==
-X-Gm-Message-State: AOAM530w8AxxfJWxULAO/8c4QRPlF80R1gwN7yvztajFNnqpfh8roE24
-        XBIrbRBL5nMJEiPPH6scxkxNSRaRQm9Qe1iy9WVh0dDyQ1U806QlxsCwJFllmL2PNYY+tAzO3W9
-        tSHRgHsOF7EI16MSLTCpXUF9L
-X-Received: by 2002:a5d:5383:: with SMTP id d3mr2542595wrv.42.1596629190864;
-        Wed, 05 Aug 2020 05:06:30 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzZuhkjYyykrKtOumF/F3YP5RrGgyXQ0BRm0Jfqs17/ihVgE1clIPp9LTPQCR4244U4NhuYQw==
-X-Received: by 2002:a5d:5383:: with SMTP id d3mr2542578wrv.42.1596629190605;
-        Wed, 05 Aug 2020 05:06:30 -0700 (PDT)
-Received: from redhat.com (bzq-79-178-123-8.red.bezeqint.net. [79.178.123.8])
-        by smtp.gmail.com with ESMTPSA id h7sm2543166wmf.43.2020.08.05.05.06.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 05:06:29 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 08:06:27 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v2 22/24] vdpa_sim: fix endian-ness of config space
-Message-ID: <20200805080434-mutt-send-email-mst@kernel.org>
-References: <20200803205814.540410-1-mst@redhat.com>
- <20200803205814.540410-23-mst@redhat.com>
- <dd24f2e6-4aef-4a26-374c-2349fe1e6a66@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=S/ISdwGRB2GCE/7Xam1/dQaAy+/JGNh8/9LD5lfT6Q8=;
+        b=JTlKq92U91r3Oo0J3g9ch4vimlHCWTcrHLb4sTXshHa/nVqDBdzsSfzFll/DpZQ+dZ
+         IR5PeUv8/+fAYMyGFSyC47Tk2P3zXESHHeox4lwGzARmD0H9pixcGDryb1/jTaJb6bAE
+         c4hDpPWMfn2DfZXAkeTVpUXcI2vwjM4LOFJ7VOEH4eMBeFkJfsu9eRd3qEcWOpbglnnt
+         XnZQ6BA0b+DPmYGXw0pQaOKSsN6kREXYw6AGXrSog+5/iwxpDML483y0z13YVuqCB1Y9
+         6u8bAO+V/L8vmyig1nT8aG/JHOSNBcmc3/7cWoXo1EVcH6sqiEYlZzOtA2Tn7HTwzbZy
+         cLPQ==
+X-Gm-Message-State: AOAM532dFPFDkwpkic3Oq50PfR54KVd+CqBdDTDjNjoctW4F1VD6JXWr
+        VOzekPEPgLcbQBt2Edhege1pd8EEQxIehMzc+pNa9A==
+X-Google-Smtp-Source: ABdhPJxiDkkic07fV/je3DdhbKQK5XhAfGjN5TMoqNesvJMpBh1CdI81IbcTegAoQDR7HPruFH4dXQnd4r8PoGavTmc=
+X-Received: by 2002:aca:d4d5:: with SMTP id l204mr3765321oig.70.1596648678688;
+ Wed, 05 Aug 2020 10:31:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dd24f2e6-4aef-4a26-374c-2349fe1e6a66@redhat.com>
+References: <0000000000007d3b2d05ac1c303e@google.com> <20200805132629.GA87338@elver.google.com>
+ <20200805134232.GR2674@hirez.programming.kicks-ass.net> <20200805135940.GA156343@elver.google.com>
+ <20200805141237.GS2674@hirez.programming.kicks-ass.net> <20200805141709.GD35926@hirez.programming.kicks-ass.net>
+ <CANpmjNN6FWZ+MsAn3Pj+WEez97diHzqF8hjONtHG15C2gSpSgw@mail.gmail.com>
+In-Reply-To: <CANpmjNN6FWZ+MsAn3Pj+WEez97diHzqF8hjONtHG15C2gSpSgw@mail.gmail.com>
+From:   Marco Elver <elver@google.com>
+Date:   Wed, 5 Aug 2020 19:31:07 +0200
+Message-ID: <CANpmjNNy3XKQqgrjGPPKKvXhAoF=mae7dk8hmoS4k4oNnnB=KA@mail.gmail.com>
+Subject: Re: [PATCH] x86/paravirt: Add missing noinstr to arch_local*() helpers
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        fenghua.yu@intel.com, "H. Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>, yu-cheng.yu@intel.com,
+        jgross@suse.com, sdeep@vmware.com,
+        virtualization@lists.linux-foundation.org,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        syzbot <syzbot+8db9e1ecde74e590a657@syzkaller.appspotmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 02:21:07PM +0800, Jason Wang wrote:
-> 
-> On 2020/8/4 上午5:00, Michael S. Tsirkin wrote:
-> > VDPA sim accesses config space as native endian - this is
-> > wrong since it's a modern device and actually uses LE.
-> > 
-> > It only supports modern guests so we could punt and
-> > just force LE, but let's use the full virtio APIs since people
-> > tend to copy/paste code, and this is not data path anyway.
-> > 
-> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > ---
-> >   drivers/vdpa/vdpa_sim/vdpa_sim.c | 31 ++++++++++++++++++++++++++-----
-> >   1 file changed, 26 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-> > index a9bc5e0fb353..fa05e065ff69 100644
-> > --- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
-> > +++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-> > @@ -24,6 +24,7 @@
-> >   #include <linux/etherdevice.h>
-> >   #include <linux/vringh.h>
-> >   #include <linux/vdpa.h>
-> > +#include <linux/virtio_byteorder.h>
-> >   #include <linux/vhost_iotlb.h>
-> >   #include <uapi/linux/virtio_config.h>
-> >   #include <uapi/linux/virtio_net.h>
-> > @@ -72,6 +73,23 @@ struct vdpasim {
-> >   	u64 features;
-> >   };
-> > +/* TODO: cross-endian support */
-> > +static inline bool vdpasim_is_little_endian(struct vdpasim *vdpasim)
-> > +{
-> > +	return virtio_legacy_is_little_endian() ||
-> > +		(vdpasim->features & (1ULL << VIRTIO_F_VERSION_1));
-> > +}
-> > +
-> > +static inline u16 vdpasim16_to_cpu(struct vdpasim *vdpasim, __virtio16 val)
-> > +{
-> > +	return __virtio16_to_cpu(vdpasim_is_little_endian(vdpasim), val);
-> > +}
-> > +
-> > +static inline __virtio16 cpu_to_vdpasim16(struct vdpasim *vdpasim, u16 val)
-> > +{
-> > +	return __cpu_to_virtio16(vdpasim_is_little_endian(vdpasim), val);
-> > +}
-> > +
-> >   static struct vdpasim *vdpasim_dev;
-> >   static struct vdpasim *vdpa_to_sim(struct vdpa_device *vdpa)
-> > @@ -306,7 +324,6 @@ static const struct vdpa_config_ops vdpasim_net_config_ops;
-> >   static struct vdpasim *vdpasim_create(void)
-> >   {
-> > -	struct virtio_net_config *config;
-> >   	struct vdpasim *vdpasim;
-> >   	struct device *dev;
-> >   	int ret = -ENOMEM;
-> > @@ -331,10 +348,7 @@ static struct vdpasim *vdpasim_create(void)
-> >   	if (!vdpasim->buffer)
-> >   		goto err_iommu;
-> > -	config = &vdpasim->config;
-> > -	config->mtu = 1500;
-> > -	config->status = VIRTIO_NET_S_LINK_UP;
-> > -	eth_random_addr(config->mac);
-> > +	eth_random_addr(vdpasim->config.mac);
-> >   	vringh_set_iotlb(&vdpasim->vqs[0].vring, vdpasim->iommu);
-> >   	vringh_set_iotlb(&vdpasim->vqs[1].vring, vdpasim->iommu);
-> > @@ -448,6 +462,7 @@ static u64 vdpasim_get_features(struct vdpa_device *vdpa)
-> >   static int vdpasim_set_features(struct vdpa_device *vdpa, u64 features)
-> >   {
-> >   	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
-> > +	struct virtio_net_config *config = &vdpasim->config;
-> >   	/* DMA mapping must be done by driver */
-> >   	if (!(features & (1ULL << VIRTIO_F_ACCESS_PLATFORM)))
-> > @@ -455,6 +470,12 @@ static int vdpasim_set_features(struct vdpa_device *vdpa, u64 features)
-> >   	vdpasim->features = features & vdpasim_features;
-> > +	/* We only know whether guest is using the legacy interface here, so
-> > +	 * that's the earliest we can set config fields.
-> > +	 */
-> 
-> 
-> We check whether or not ACCESS_PLATFORM is set before which is probably a
-> hint that only modern device is supported. So I wonder just force LE and
-> fail if VERSION_1 is not set is better?
-> 
-> Thanks
+On Wed, 5 Aug 2020 at 16:36, Marco Elver <elver@google.com> wrote:
+>
+> On Wed, 5 Aug 2020 at 16:17, <peterz@infradead.org> wrote:
+> >
+> > On Wed, Aug 05, 2020 at 04:12:37PM +0200, peterz@infradead.org wrote:
+> > > On Wed, Aug 05, 2020 at 03:59:40PM +0200, Marco Elver wrote:
+> > > > On Wed, Aug 05, 2020 at 03:42PM +0200, peterz@infradead.org wrote:
+> > >
+> > > > > Shouldn't we __always_inline those? They're going to be really small.
+> > > >
+> > > > I can send a v2, and you can choose. For reference, though:
+> > > >
+> > > >     ffffffff86271ee0 <arch_local_save_flags>:
+> > > >     ffffffff86271ee0:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
+> > > >     ffffffff86271ee5:       48 83 3d 43 87 e4 01    cmpq   $0x0,0x1e48743(%rip)        # ffffffff880ba630 <pv_ops+0x120>
+> > > >     ffffffff86271eec:       00
+> > > >     ffffffff86271eed:       74 0d                   je     ffffffff86271efc <arch_local_save_flags+0x1c>
+> > > >     ffffffff86271eef:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
+> > > >     ffffffff86271ef4:       ff 14 25 30 a6 0b 88    callq  *0xffffffff880ba630
+> > > >     ffffffff86271efb:       c3                      retq
+> > > >     ffffffff86271efc:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
+> > > >     ffffffff86271f01:       0f 0b                   ud2
+> > >
+> > > >     ffffffff86271a90 <arch_local_irq_restore>:
+> > > >     ffffffff86271a90:       53                      push   %rbx
+> > > >     ffffffff86271a91:       48 89 fb                mov    %rdi,%rbx
+> > > >     ffffffff86271a94:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
+> > > >     ffffffff86271a99:       48 83 3d 97 8b e4 01    cmpq   $0x0,0x1e48b97(%rip)        # ffffffff880ba638 <pv_ops+0x128>
+> > > >     ffffffff86271aa0:       00
+> > > >     ffffffff86271aa1:       74 11                   je     ffffffff86271ab4 <arch_local_irq_restore+0x24>
+> > > >     ffffffff86271aa3:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
+> > > >     ffffffff86271aa8:       48 89 df                mov    %rbx,%rdi
+> > > >     ffffffff86271aab:       ff 14 25 38 a6 0b 88    callq  *0xffffffff880ba638
+> > > >     ffffffff86271ab2:       5b                      pop    %rbx
+> > > >     ffffffff86271ab3:       c3                      retq
+> > > >     ffffffff86271ab4:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
+> > > >     ffffffff86271ab9:       0f 0b                   ud2
+> > >
+> > >
+> > > Blergh, that's abysmall. In part I suspect because you have
+> > > CONFIG_PARAVIRT_DEBUG, let me try and untangle that PV macro maze.
+> >
+> > Yeah, look here:
+> >
+> > 0000 0000000000462149 <arch_local_save_flags>:
+> > 0000   462149:  ff 14 25 00 00 00 00    callq  *0x0
+> > 0003                    46214c: R_X86_64_32S    pv_ops+0x120
+> > 0007   462150:  c3                      retq
+> >
+> >
+> > That's exactly what I was expecting.
+>
+> Ah, for some reason the __always_inline version does *not* work with
+> KCSAN -- I'm getting various warnings, including the same lockdep
+> warning. I think there is some weirdness when this stuff gets inlined
+> into instrumented functions. At least with KCSAN, when any accesses
+> here are instrumented, and then KCSAN disable/enables interrupts,
+> things break. So, these functions should never be instrumented,
+> noinstr or not. Marking them 'inline noinstr' seems like the safest
+> option. Without CONFIG_PARAVIRT_DEBUG, any compiler should hopefully
+> inline them?
 
-So how about I add a comment along the lines of
+Oh well, it seems that KCSAN on syzbot still crashes even with this
+"fix". It's harder to reproduce though, and I don't have a clear
+reproducer other than "fuzz the kernel" right now. I think the new IRQ
+state tracking code is still not compatible with KCSAN, even though we
+thought it would be. Most likely there are still ways to get recursion
+lockdep->KCSAN. An alternative would be to deal with the recursion
+like we did before, instead of trying to squash all of it. I'll try to
+investigate -- Peter, if you have ideas, help is appreciated.
 
-/*
- * vdpasim ATM requires VIRTIO_F_ACCESS_PLATFORM, so we don't need to
- * support legacy guests. Keep transitional device code around for
- * the benefit of people who might copy-and-paste this into transitional
- * device code.
- */
-
-
-> 
-> > +
-> > +	config->mtu = cpu_to_vdpasim16(vdpasim, 1500);
-> > +	config->status = cpu_to_vdpasim16(vdpasim, VIRTIO_NET_S_LINK_UP);
-> >   	return 0;
-> >   }
-
+Thanks,
+-- Marco
