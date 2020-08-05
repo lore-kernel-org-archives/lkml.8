@@ -2,85 +2,67 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEBCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 195A4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35EDC22B42
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:31:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S70ZBaYy"
+	by mail.kernel.org (Postfix) with ESMTP id D334E22CB3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:33:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596659587;
+	bh=2IhhKQbR9zpTPqGSXZpVNEIF3V+h1PoBkoxRQo/ziOA=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=okAxoqRQAm0izEW3TRTAkCGNQsMx0REiN1zo2w+7t+iF8aFlO/HFWfdPZr+9140L4
+	 sMsjKQzmezEZtd4fdVV4Jt/4jUkvBjK/z4etduQxj80JJlCQiF2j9HVZZXDZlQ2MK2
+	 kTYE5TcczbmuuAMahDBKbPIQBP5Rj9+ZZRLpsTsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbgHEUbw (ORCPT
+        id S1726481AbgHEUdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:31:52 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35732 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726078AbgHEUbu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 16:31:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596659509;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=8B67PlklxUGzIOZVHxF/ayR8w2AByyTls0ffTVLHi6c=;
-        b=S70ZBaYy9hx4LDPAnyAXZe0/vyZ1VqUNf5eX8XMQbV6vYdObGshJ+eO55wm/YN28R4Xr3U
-        iXR91M44KJlonwG9f/qhzuNzjJl/UUdp/dWxrOwEF7mZwAreVXuC8T7IE+NFSH1v5vYvPU
-        Js/0dPyleWQBqObm6mOtLOExlbJzyZA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-41-fg4jNGiPMd6zoITUhJ1LtQ-1; Wed, 05 Aug 2020 16:31:45 -0400
-X-MC-Unique: fg4jNGiPMd6zoITUhJ1LtQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 731D580BCAB;
-        Wed,  5 Aug 2020 20:31:44 +0000 (UTC)
-Received: from pauld.bos.com (dhcp-17-51.bos.redhat.com [10.18.17.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0917610013D7;
-        Wed,  5 Aug 2020 20:31:39 +0000 (UTC)
-From:   Phil Auld <pauld@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Qais Yousef <qais.yousef@arm.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH] sched: Fix use of count for nr_running tracepoint
-Date:   Wed,  5 Aug 2020 16:31:38 -0400
-Message-Id: <20200805203138.1411-1-pauld@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Wed, 5 Aug 2020 16:33:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725771AbgHEUdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 16:33:05 -0400
+Subject: Re: [GIT PULL] hwmon updates for v5.9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596659584;
+        bh=2IhhKQbR9zpTPqGSXZpVNEIF3V+h1PoBkoxRQo/ziOA=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=I1mkXCTUenDT7+EA76kQOytX2Xm4u82Ab8Y6Le97I3FxJvS6GqNP8JQw5Qlki5ln+
+         TMUBrvVjy7FUq6qT/beG+WGp8sYSXWkz6OZ7AsDo1OwfVJ9Kfhps5SQBxPoHz4ZULy
+         LtDCTpCKhT7urlhJO7y9AVrBBKmwNTOjFUg/uv/M=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200804233002.230586-1-linux@roeck-us.net>
+References: <20200804233002.230586-1-linux@roeck-us.net>
+X-PR-Tracked-List-Id: <linux-hwmon.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200804233002.230586-1-linux@roeck-us.net>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v5.9
+X-PR-Tracked-Commit-Id: e2f75e6b5d766195d2ca584d92995a0dfe467fc7
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 9aebd3254c184fb6c731548b8347193bf882b6f7
+Message-Id: <159665958467.13939.13689839474841609937.pr-tracker-bot@kernel.org>
+Date:   Wed, 05 Aug 2020 20:33:04 +0000
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The count field is meant to tell if an update to nr_running
-is an add or a subtract. Make it do so by adding the missing
-minus sign.
+The pull request you sent on Tue,  4 Aug 2020 16:30:02 -0700:
 
-Fixes: 9d246053a691 ("sched: Add a tracepoint to track rq->nr_running")
-Signed-off-by: Phil Auld <pauld@redhat.com>
----
- kernel/sched/sched.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v5.9
 
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 3fd283892761..28709f6b0975 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1999,7 +1999,7 @@ static inline void sub_nr_running(struct rq *rq, unsigned count)
- {
- 	rq->nr_running -= count;
- 	if (trace_sched_update_nr_running_tp_enabled()) {
--		call_trace_sched_update_nr_running(rq, count);
-+		call_trace_sched_update_nr_running(rq, -count);
- 	}
- 
- 	/* Check if we still need preemption */
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9aebd3254c184fb6c731548b8347193bf882b6f7
+
+Thank you!
+
 -- 
-2.26.2
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
