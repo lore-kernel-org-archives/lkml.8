@@ -2,108 +2,92 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC00C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAF5C20792
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:54:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rYobUMFB"
+	by mail.kernel.org (Postfix) with ESMTP id 9FB832173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:55:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596621314;
+	bh=Eqk7MjvnWxQK1x/nn99iki3wP79uGrG2FxYKqg58rEc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wHpAz2L4C/hQNKvTloBzfkTZLMsBEhA1wKIlapCxrjfZEm2Vw9QCr7XbkrlMLLJ2A
+	 eDbY8To4QdsqmezfP3K2qWh7vt5gyl5PqMgc6sxys1i5v0e74i4Vjbh3F2Lr3OIlZa
+	 QxwFpYtkQv6JySOn9GoZ8LFPl1wUV4GcVqbl/CrQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbgHEJyA (ORCPT
+        id S1727801AbgHEJzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 05:54:00 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:54984 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbgHEJvl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 05:51:41 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0759m3pf153911;
-        Wed, 5 Aug 2020 09:51:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=MT1IenkERUHhaKZWvKrpivkl0Eede+Swc2LRUTtH294=;
- b=rYobUMFBIajWJ2Q3kT+ueBPxDbpnt6r65crxNIHkm86jJe8yu4zrlDJaaB6efWydeyYF
- Yc43ZrX01JQADrs7MeUI/vnIA9pERmT5v3K0wsh+EATP7b2qlIWR3JTiGChB4QBBJjQe
- 5+MyixKOQvWiHYHmoRkdqViK3OPXQFQun5n8O6InmizgsAMs93/RtWa1pJzRQ+AEUa4b
- L/uSXBlwzevqTm/9Pz48WSxQauRREnP1T0Ds98p4oPTKwDdcXGWiapPPoIGvrrfSwD0o
- DjpR1LQyaAID8c9oYbbAZhp7cv2sOr+NYHOt5cmI3nX+1t6NzYsbnj6KdNJ8GrHKQNCj vA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 32n11n92f3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 05 Aug 2020 09:51:17 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0759n4Kb132827;
-        Wed, 5 Aug 2020 09:51:17 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 32pdhdxk3r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 05 Aug 2020 09:51:17 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0759pD60018117;
-        Wed, 5 Aug 2020 09:51:16 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 05 Aug 2020 02:51:12 -0700
-Date:   Wed, 5 Aug 2020 12:51:05 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Oded Gabbay <oded.gabbay@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Omer Shpigelman <oshpigelman@habana.ai>,
-        Ofir Bitton <obitton@habana.ai>,
-        Tomer Tayar <ttayar@habana.ai>, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] habanalabs: Fix a loop in gaudi_extract_ecc_info()
-Message-ID: <20200805095105.GA483832@mwanda>
+        Wed, 5 Aug 2020 05:55:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726550AbgHEJvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 05:51:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C5732173E;
+        Wed,  5 Aug 2020 09:51:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596621112;
+        bh=Eqk7MjvnWxQK1x/nn99iki3wP79uGrG2FxYKqg58rEc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hGaHdttDj4rGsig6k6PFI/0xrX/Oya19Ddh3RNXrG25Z36vB16NIJIXKUv7914Gas
+         WKe6TW6tKh+ny13k2jD+AHF63SyDmdrJWQ99GGAufbuAMCcTG5DQJ+lBLnc38Xa02N
+         JuwNWIGBUbUo1upZg05Ld7gLBavXHJl0Hc+G3yB0=
+Date:   Wed, 5 Aug 2020 11:52:02 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        yanaijie <yanaijie@huawei.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Ewan Milne <emilne@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Tomas Henzl <thenzl@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Hannes Reinecke <hare@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.14 01/51] scsi: libsas: direct call probe and destruct
+Message-ID: <20200805095202.GA1634853@kroah.com>
+References: <20200803121849.488233135@linuxfoundation.org>
+ <20200803121849.564535738@linuxfoundation.org>
+ <8743227b-adb3-ed1f-3559-e562555ac045@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9703 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
- bulkscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008050081
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9703 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 malwarescore=0 spamscore=0 mlxscore=0
- suspectscore=0 mlxlogscore=999 phishscore=0 adultscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008050081
+In-Reply-To: <8743227b-adb3-ed1f-3559-e562555ac045@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The condition was reversed.  It should have been less than instead of
-greater than.  The result is that we never enter the loop.
+On Mon, Aug 03, 2020 at 01:57:14PM +0100, John Garry wrote:
+> On 03/08/2020 13:19, Greg Kroah-Hartman wrote:
+> > From: Jason Yan <yanaijie@huawei.com>
+> > 
+> > [ Upstream commit 0558f33c06bb910e2879e355192227a8e8f0219d ]
+> > 
+> 
+> Hi Greg,
+> 
+> This patch was one of a series from Jason to fix this WARN issue, below:
+> 
+> https://lore.kernel.org/linux-scsi/8f6e3763-2b04-23e8-f1ec-8ed3c58f55d3@huawei.com/
+> 
+> I'm doubtful that it should be taken in isolation. Maybe 1 or 2 other
+> patches are required.
+> 
+> The WARN was really annoying, so we could spend a bit of time to test a
+> backport of what is strictly required. Let us know.
 
-Fixes: fcc6a4e60678 ("habanalabs: Extract ECC information from FW")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/misc/habanalabs/gaudi/gaudi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Ok, I'll drop this for now, if you want to submit the patch series fully
+backported, we will be glad to review it.
 
-diff --git a/drivers/misc/habanalabs/gaudi/gaudi.c b/drivers/misc/habanalabs/gaudi/gaudi.c
-index 00a0a7238d81..de2f81b80ced 100644
---- a/drivers/misc/habanalabs/gaudi/gaudi.c
-+++ b/drivers/misc/habanalabs/gaudi/gaudi.c
-@@ -5215,7 +5215,7 @@ static int gaudi_extract_ecc_info(struct hl_device *hdev,
- 	*memory_wrapper_idx = 0xFF;
- 
- 	/* Iterate through memory wrappers, a single bit must be set */
--	for (i = 0 ; i > num_mem_regs ; i++) {
-+	for (i = 0 ; i < num_mem_regs ; i++) {
- 		err_addr += i * 4;
- 		err_word = RREG32(err_addr);
- 		if (err_word) {
--- 
-2.27.0
+thanks,
 
+greg k-h
