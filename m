@@ -2,182 +2,118 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB344C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A209AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2DEB22B40
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8655522CB1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:01:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596596492;
+	bh=8AH4/eUPZDsQ+fVW4NopE/hRdVe2VxDxDVRNG3gh8Hw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=sSRFzFlUPwGVGrzmF1Y4MCo+dP0ZcrHS2hSO025bnu2wTOmnurzEMU8yq71O2QPMK
+	 /ycDmoGopVJo5zH0seBcPVdnIneoLjaqGUHtqtwj0/oYr0q3uOll7zvN7gNUnRx7jL
+	 2Dhkfl6ZUuJ01WnjdxlEJMNkx/GWdz1HcRYhiffg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbgHEDAE (ORCPT
+        id S1727109AbgHEDBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 23:00:04 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57464 "EHLO mx2.suse.de"
+        Tue, 4 Aug 2020 23:01:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbgHEDAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 23:00:03 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id CA740ABEF;
-        Wed,  5 Aug 2020 03:00:17 +0000 (UTC)
-Subject: Re: [PATCH] block: check queue's limits.discard_granularity in
- __blkdev_issue_discard()
-To:     linux-block@vger.kernel.org
-Cc:     linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ming Lei <ming.lei@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Enzo Matsumiya <ematsumiya@suse.com>,
-        Evan Green <evgreen@chromium.org>,
-        Hannes Reinecke <hare@suse.com>, Jens Axboe <axboe@kernel.dk>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Xiao Ni <xni@redhat.com>
-References: <20200805025026.36758-1-colyli@suse.de>
-From:   Coly Li <colyli@suse.de>
-Autocrypt: addr=colyli@suse.de; keydata=
- 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
-Message-ID: <f1cd039c-fdbf-a8bb-363a-df22a7418b6a@suse.de>
-Date:   Wed, 5 Aug 2020 10:59:56 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        id S1725904AbgHEDBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 23:01:30 -0400
+Received: from localhost (mobile-166-175-186-42.mycingular.net [166.175.186.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0A50206D4;
+        Wed,  5 Aug 2020 03:01:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596596490;
+        bh=8AH4/eUPZDsQ+fVW4NopE/hRdVe2VxDxDVRNG3gh8Hw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Ox4surQWFDCe/f1T3HysFeGsbODxhzyEL1Bad7uxlpfViYeKLxBCjlg2DFvgIcC4D
+         SlXbND10xcRebErpP9UcAfNCIF9IDNdk+0OzOv59IaP0KpMNa7pWzR/gvoyfC5q3s0
+         DzRPmTNkMjcd0vdXGjsPkB5e41W+FP1lSeW0YhgE=
+Date:   Tue, 4 Aug 2020 22:01:28 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sean V Kelley <sean.v.kelley@intel.com>
+Cc:     bhelgaas@google.com, Jonathan.Cameron@huawei.com,
+        rjw@rjwysocki.net, ashok.raj@intel.com, tony.luck@intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Subject: Re: [PATCH V2 1/9] pci_ids: Add class code and extended capability
+ for RCEC
+Message-ID: <20200805030128.GA470966@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <20200805025026.36758-1-colyli@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200804194052.193272-2-sean.v.kelley@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/5 10:50, Coly Li wrote:
-> If create a loop device with a backing NVMe SSD, current loop device
-> driver doesn't correctly set its  queue's limits.discard_granularity and
-> leaves it as 0. If a discard request at LBA 0 on this loop device, in
-> __blkdev_issue_discard() the calculated req_sects will be 0, and a zero
-> length discard request will trigger a BUG() panic in generic block layer
-> code at block/blk-mq.c:563.
+On Tue, Aug 04, 2020 at 12:40:44PM -0700, Sean V Kelley wrote:
+> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 > 
-> [  955.565006][   C39] ------------[ cut here ]------------
-> [  955.559660][   C39] invalid opcode: 0000 [#1] SMP NOPTI
-> [  955.622171][   C39] CPU: 39 PID: 248 Comm: ksoftirqd/39 Tainted: G            E     5.8.0-default+ #40
-> [  955.622171][   C39] Hardware name: Lenovo ThinkSystem SR650 -[7X05CTO1WW]-/-[7X05CTO1WW]-, BIOS -[IVE160M-2.70]- 07/17/2020
-> [  955.622175][   C39] RIP: 0010:blk_mq_end_request+0x107/0x110
-> [  955.622177][   C39] Code: 48 8b 03 e9 59 ff ff ff 48 89 df 5b 5d 41 5c e9 9f ed ff ff 48 8b 35 98 3c f4 00 48 83 c7 10 48 83 c6 19 e8 cb 56 c9 ff eb cb <0f> 0b 0f 1f 80 00 00 00 00 0f 1f 44 00 00 55 48 89 e5 41 56 41 54
-> [  955.622179][   C39] RSP: 0018:ffffb1288701fe28 EFLAGS: 00010202
-> [  955.749277][   C39] RAX: 0000000000000001 RBX: ffff956fffba5080 RCX: 0000000000004003
-> [  955.749278][   C39] RDX: 0000000000000003 RSI: 0000000000000000 RDI: 0000000000000000
-> [  955.749279][   C39] RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-> [  955.749279][   C39] R10: ffffb1288701fd28 R11: 0000000000000001 R12: ffffffffa8e05160
-> [  955.749280][   C39] R13: 0000000000000004 R14: 0000000000000004 R15: ffffffffa7ad3a1e
-> [  955.749281][   C39] FS:  0000000000000000(0000) GS:ffff95bfbda00000(0000) knlGS:0000000000000000
-> [  955.749282][   C39] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  955.749282][   C39] CR2: 00007f6f0ef766a8 CR3: 0000005a37012002 CR4: 00000000007606e0
-> [  955.749283][   C39] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [  955.749284][   C39] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [  955.749284][   C39] PKRU: 55555554
-> [  955.749285][   C39] Call Trace:
-> [  955.749290][   C39]  blk_done_softirq+0x99/0xc0
-> [  957.550669][   C39]  __do_softirq+0xd3/0x45f
-> [  957.550677][   C39]  ? smpboot_thread_fn+0x2f/0x1e0
-> [  957.550679][   C39]  ? smpboot_thread_fn+0x74/0x1e0
-> [  957.550680][   C39]  ? smpboot_thread_fn+0x14e/0x1e0
-> [  957.550684][   C39]  run_ksoftirqd+0x30/0x60
-> [  957.550687][   C39]  smpboot_thread_fn+0x149/0x1e0
-> [  957.886225][   C39]  ? sort_range+0x20/0x20
-> [  957.886226][   C39]  kthread+0x137/0x160
-> [  957.886228][   C39]  ? kthread_park+0x90/0x90
-> [  957.886231][   C39]  ret_from_fork+0x22/0x30
-> [  959.117120][   C39] ---[ end trace 3dacdac97e2ed164 ]---
+> A PCIe Root Complex Event Collector(RCEC) has the base class 0x08,
+> sub-class 0x07, and programming interface 0x00. Add the class code
+> 0x0807 to identify RCEC devices and add the defines for the RCEC
+> Endpoint Association Extended Capability.
 > 
-> This is the procedure to reproduce the panic,
->   # modprobe scsi_debug delay=0 dev_size_mb=2048 max_queue=1
->   # losetup -f /dev/nvme0n1 --direct-io=on
->   # blkdiscard /dev/loop0 -o 0 -l 0x200
+> See PCI Express Base Specification, version 5.0-1, section "1.3.4
+> Root Complex Event Collector" and section "7.9.10 Root Complex
+> Event Collector Endpoint Association Extended Capability"
 > 
-> This patch fixes the issue by checking q->limits.discard_granularity in
-> __blkdev_issue_discard() before composing the discard bio. If the value
-> is 0, then prints a warning oops information and returns -EOPNOTSUPP to
-> the caller to indicate that this buggy device driver doesn't support
-> discard request.
-> 
-> Fixes: 9b15d109a6b2 ("block: improve discard bio alignment in __blkdev_issue_discard()")
-> Fixes: c52abf563049 ("loop: Better discard support for block devices")
-> Reported-and-suggested-by: Ming Lei <ming.lei@redhat.com>
-> Signed-off-by: Coly Li <colyli@suse.de>
-> Cc: Bart Van Assche <bvanassche@acm.org>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Enzo Matsumiya <ematsumiya@suse.com>
-> Cc: Evan Green <evgreen@chromium.org>
-> Cc: Hannes Reinecke <hare@suse.com>
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: Martin K. Petersen <martin.petersen@oracle.com>
-> Cc: Ming Lei <ming.lei@redhat.com>
-> Cc: Xiao Ni <xni@redhat.com>
+> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+1) "git log --oneline include/linux/pci_ids.h".  Match it.  Mention
+the most important words, like "RCEC", early in the subject.
+
+2) https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst#n555
+
 > ---
->  block/blk-lib.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  include/linux/pci_ids.h       | 1 +
+>  include/uapi/linux/pci_regs.h | 7 +++++++
+>  2 files changed, 8 insertions(+)
 > 
-> diff --git a/block/blk-lib.c b/block/blk-lib.c
-> index 019e09bb9c0e..fca4f1f0c8c8 100644
-> --- a/block/blk-lib.c
-> +++ b/block/blk-lib.c
-> @@ -47,6 +47,10 @@ int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
->  		op = REQ_OP_DISCARD;
->  	}
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 5c709a1450b1..bc6d1a4ca02d 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -81,6 +81,7 @@
+>  #define PCI_CLASS_SYSTEM_RTC		0x0803
+>  #define PCI_CLASS_SYSTEM_PCI_HOTPLUG	0x0804
+>  #define PCI_CLASS_SYSTEM_SDHCI		0x0805
+> +#define PCI_CLASS_SYSTEM_RCEC		0x0807
+>  #define PCI_CLASS_SYSTEM_OTHER		0x0880
 >  
-> +	/* In case the discard granularity isn't set by buggy device driver */
-> +	if (WARN_ON_ONCE(!q->limits.discard_granularity))
-> +		return -EINVAL;
+>  #define PCI_BASE_CLASS_INPUT		0x09
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index f9701410d3b5..f335f65f65d6 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -828,6 +828,13 @@
+>  #define  PCI_PWR_CAP_BUDGET(x)	((x) & 1)	/* Included in system budget */
+>  #define PCI_EXT_CAP_PWR_SIZEOF	16
+>  
+> +/* Root Complex Event Collector Endpoint Association  */
+> +#define PCI_RCEC_RCIEP_BITMAP	4	/* Associated Bitmap for RCiEPs */
+> +#define PCI_RCEC_BUSN		8	/* RCEC Associated Bus Numbers */
+> +#define  PCI_RCEC_BUSN_REG_VER	0x02	/* Least capability version that BUSN present */
+> +#define  PCI_RCEC_BUSN_NEXT(x)	(((x) >> 8) & 0xff)
+> +#define  PCI_RCEC_BUSN_LAST(x)	(((x) >> 16) & 0xff)
 > +
-
-Here -EINVAL should be -EOPNOTSUPP to indicate the problem is from
-driver not discard request, this typo is from an partial git rebase.
-I will post a v2 version to fix the typo.
-
-Coly Li
+>  /* Vendor-Specific (VSEC, PCI_EXT_CAP_ID_VNDR) */
+>  #define PCI_VNDR_HEADER		4	/* Vendor-Specific Header */
+>  #define  PCI_VNDR_HEADER_ID(x)	((x) & 0xffff)
+> -- 
+> 2.27.0
+> 
