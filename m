@@ -2,129 +2,95 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B190BC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1024BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 944AC2075D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E76E72075D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 01:19:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="D3gZ60Oy"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="G/h5pSbr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgHEBRj (ORCPT
+        id S1727793AbgHEBTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 21:17:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43984 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgHEBRh (ORCPT
+        Tue, 4 Aug 2020 21:19:54 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:51846 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726891AbgHEBTu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 21:17:37 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED795C06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 18:17:36 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id w19so11359111plq.3
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 18:17:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2AOGkiNTffjyxOtPLoc4ZEcdEbmpmadV+kYe/cYkEjM=;
-        b=D3gZ60OyZwbyd09ShybcvvMYw6LzhZaX6TWjzSCqN3OgpxJG7N3ySA31Z6+N2snajO
-         vBzQPBhqPDxx+fC3bswYNrRV8CPOwXzELiybXXGafU5PewQqD5ST+ZueQNRqfBa/jJDP
-         zND15xoFN1+u3FeBksQsWIns1zdrOHDk3KQtlYTbRBgWwM7ca1+ezfQJI8PEovOWMdF/
-         9QlZ9/jrea2i5UZqOPL52wNrL/PQvGG+4xX8/sGBoLtrAV4Y0P9IP6PnAoX6oZ7BrHMl
-         hXGTXpiABsIcdS1sTBzlPKlCvF5K8SSKCWOhGUxpra37layH4diEspSs8w8RZ8/nHWO7
-         m+dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=2AOGkiNTffjyxOtPLoc4ZEcdEbmpmadV+kYe/cYkEjM=;
-        b=AhAF5L++pIbx3F3whUntzUfOc5tFH/zV5NU7/HZ41a3ju1lfleNNk/9L2eubn749PL
-         QAEPIUK8jplGHiQmhYTQz03hnYZWnrNxOXW7JHRLmXHvI4HZbrBoGpa85V2JVMWYSbaA
-         uYDVWQ2QUJeo3Pt0uty0yxByarNZJeOMkaO7BU08L3U0Am1NdEqspboPPl1DGSGtaEcx
-         +//AzD/4+I0x5G0IpSswUQjZ7GHITBXnUyQwik5wSPuVVp+0qxriEd2CUGsLUgjzQfwY
-         C6kBT630yqAx67OaIgt/ou0zFxuwxMAxaQyQ12dbjdKF6i+UWyuthNN6b2m2JZ50PFIc
-         Dj1A==
-X-Gm-Message-State: AOAM5336AnoGPbEYcOI5kaZOfYJc8sxCiObtji0YhMYrwHi3cbZHcXof
-        Xs5s/bAdWf3bPb/wmKCUKBxft/zpxQk=
-X-Google-Smtp-Source: ABdhPJz4vm6iZW7xaPR7FTRcls9YtW05RQnx34nH4eSh5XI22o/MlIx8A2Zojix7gTB/adp227PEGw==
-X-Received: by 2002:a17:902:988f:: with SMTP id s15mr969507plp.14.1596590256310;
-        Tue, 04 Aug 2020 18:17:36 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id z9sm531081pgh.94.2020.08.04.18.17.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 18:17:35 -0700 (PDT)
-Date:   Tue, 04 Aug 2020 18:17:35 -0700 (PDT)
-X-Google-Original-Date: Tue, 04 Aug 2020 18:17:33 PDT (-0700)
-Subject:     Re: linux-next: manual merge of the pidfd tree with the risc-v tree
-In-Reply-To: <20200805103943.3c28da7f@canb.auug.org.au>
-CC:     christian@brauner.io, Paul Walmsley <paul@pwsan.com>,
-        linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
-        greentime.hu@sifive.com, tklauser@distanz.ch
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Message-ID: <mhng-d98d39e0-9fc5-4bad-b7d2-984d0dc638eb@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 4 Aug 2020 21:19:50 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0751Hl1r179278;
+        Wed, 5 Aug 2020 01:19:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=22G/+yy8Bfbyplrrau9tUI/no15T53YqU4Sb75YuVss=;
+ b=G/h5pSbro8vbhNJNpDrSnc60DEvHBZypmyeyDHBiWi/j2glRktaSnUwxniw56YeGf/Gd
+ Ch95gBOP3f8tdHkhM7H8MYEvTMFqjdAomrID3foRkLE/Tdd4aIU3ozS51RQA+xW9t0tv
+ cEMHgKPqISe1gh5GAIDkfyuAl47fVKW+b+6fjGwVA2OgJVaF7UrzMxFRZgIji8kJvZDB
+ GWmc2PmklTBxVtdzJtnFOdRBstQuVgsMjvUGpRJUAVGBINM/NUT52nHUjlXhq8IZvX82
+ OQiQZyKRaplsawoAZS0eDCn6/jYzrW4yUHFHcUXj4k5INR83metLgpfOBcMF4YMt8kLT bQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 32pdnqap3p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 05 Aug 2020 01:19:41 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 075198LD088130;
+        Wed, 5 Aug 2020 01:17:40 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 32p5gt1mwc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 05 Aug 2020 01:17:40 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0751HdHl013730;
+        Wed, 5 Aug 2020 01:17:39 GMT
+Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 04 Aug 2020 18:17:38 -0700
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     dick.kennedy@broadcom.com, jejb@linux.ibm.com,
+        james.smart@broadcom.com, Jing Xiangfeng <jingxiangfeng@huawei.com>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+Subject: Re: [PATCH] scsi: lpfc: Add the missed misc_deregister() for lpfc_init()
+Date:   Tue,  4 Aug 2020 21:17:31 -0400
+Message-Id: <159659019689.15726.17823455104976058315.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200731065639.190646-1-jingxiangfeng@huawei.com>
+References: <20200731065639.190646-1-jingxiangfeng@huawei.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9703 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
+ phishscore=0 spamscore=0 adultscore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008050008
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9703 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxscore=0
+ suspectscore=0 clxscore=1015 priorityscore=1501 bulkscore=0 adultscore=0
+ malwarescore=0 phishscore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008050009
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 04 Aug 2020 17:39:43 PDT (-0700), Stephen Rothwell wrote:
-> Hi all,
->
-> On Mon, 13 Jul 2020 16:58:46 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->>
->> Today's linux-next merge of the pidfd tree got a conflict in:
->> 
->>   arch/riscv/Kconfig
->> 
->> between commit:
->> 
->>   95ce6c73da3b ("riscv: Enable context tracking")
->>   929f6a183839 ("riscv: Add kmemleak support")
->> 
->> from the risc-v tree and commit:
->> 
->>   140c8180eb7c ("arch: remove HAVE_COPY_THREAD_TLS")
->> 
->> from the pidfd tree.
->> 
->> I fixed it up (see below) and can carry the fix as necessary. This
->> is now fixed as far as linux-next is concerned, but any non trivial
->> conflicts should be mentioned to your upstream maintainer when your tree
->> is submitted for merging.  You may also want to consider cooperating
->> with the maintainer of the conflicting tree to minimise any particularly
->> complex conflicts.
->> 
->> diff --cc arch/riscv/Kconfig
->> index 76a0cfad3367,f6a3a2bea3d8..000000000000
->> --- a/arch/riscv/Kconfig
->> +++ b/arch/riscv/Kconfig
->> @@@ -57,9 -52,6 +57,8 @@@ config RISC
->>   	select HAVE_ARCH_SECCOMP_FILTER
->>   	select HAVE_ARCH_TRACEHOOK
->>   	select HAVE_ASM_MODVERSIONS
->>  +	select HAVE_CONTEXT_TRACKING
->> - 	select HAVE_COPY_THREAD_TLS
->>  +	select HAVE_DEBUG_KMEMLEAK
->>   	select HAVE_DMA_CONTIGUOUS if MMU
->>   	select HAVE_EBPF_JIT if MMU
->>   	select HAVE_FUTEX_CMPXCHG if FUTEX
->
-> This is now a conflict between the risc-v tree and Linus' tree.
+On Fri, 31 Jul 2020 14:56:39 +0800, Jing Xiangfeng wrote:
 
-Thanks.  I'd just pulled in some stuff and was intending on sending a PR to
-Linus tomorrow (we've got some autobuilders that run overnight that I like to
-give a crack at the actual commit before I send anything).  For this one I
-think the best bet is to just mention it to Linus as a conflict to be fixed --
-the only other thing I can think of would be to rebase my tree, which seems
-worse at this point.
+> lpfc_init() misses to call misc_deregister() in an error path. Add a
+> label 'unregister' to fix it.
 
-LMK if anyone has a better idea, otherwise I'll send it out.
+Applied to 5.9/scsi-queue, thanks!
+
+[1/1] scsi: lpfc: Add missing misc_deregister() for lpfc_init()
+      https://git.kernel.org/mkp/scsi/c/1eaff53649b8
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
