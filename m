@@ -2,185 +2,367 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDAAC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97EAFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0418D2067C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:38:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="pqRKHVVu"
+	by mail.kernel.org (Postfix) with ESMTP id 6B7C62067C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:38:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596620308;
+	bh=cdWHlxlJQuvCfxMa5RkWSxqtQvYT3i5ovAbwBm5uDIM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YsWSwolXsGg4vwhtSvlCVW2H7jE9+t+eFib5qaUq00S7MFcSURu2Z2zx2Xs3mVYUE
+	 eS+ErMqK5aEZGFDvRiWf1iQxvD7kRPdW72ehcBtQAhLKE0j2N52phV9dHztvywsPw3
+	 1XGoEXVbWUPZ6Krp9dNadP2ykZ8mIWVXm/m1X9Iw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbgHEJiW (ORCPT
+        id S1728514AbgHEJi0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 05:38:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36304 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbgHEJhr (ORCPT
+        Wed, 5 Aug 2020 05:38:26 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39501 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728423AbgHEJfa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 05:37:47 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5511CC061757
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 02:37:26 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id x5so5198227wmi.2
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 02:37:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sa5qXdemmtPrCWAxdmJHhP03xcaLaJDyrq3fN/vAu4U=;
-        b=pqRKHVVurNL9xDGPRzkBqZKrsvlm6ebrdoTbuCmUbHaR2igYkNqOTrIraIk2xK9bfX
-         TichTCfgIeuOXRE8tgE+68RKy1i/mJ/3BMxiYvvhFbidZi3wX0AxO+u7zDclOKZHxTYQ
-         div7bohh2QkW6VYS10xA6cLHdzbthzAO2RWe8vzWPV6vhyuM7aguyEblWQwyJZKvNA86
-         fA+/ZDxNUVrQM5nPu5QLKNhhPoJV10CnEeQjrTdpyxqMswPzD6UEHEr9K6bVPBaXVaKp
-         V0VaYjFQ5LHtBdnQDQF1KGTFuOjztEngxG+sZe1Irj0/uB8n1qEfYxJ3T//RKOZXGXdi
-         y2WQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sa5qXdemmtPrCWAxdmJHhP03xcaLaJDyrq3fN/vAu4U=;
-        b=d5CsQKwZ16SR7RNbYXSGbkLxvH9FAQhbxAuv1H78ckWQ/dmNyCtUG3bH43iE8iwOrI
-         8atyHhYQckPWhnwmWReDBtIXDLlREtmUeMWFT55S07Iob+wAEN1FymI8BUdOrG3hZRhf
-         nsscBR0Yuyg4ApQ+VEa1iP5Pge7rpuXLCC6u1886d6ZppJcXhkY2sAgCrT8p7JGnTsrC
-         cUm4lpTavw9XukcVflwJf1tFyMlcAEds060/PIFDnZNA7xQ8/Iwvf+V1ffv5mdGyhvwQ
-         Yjf3FiSNvMIAu4xQrP/+e7LYwXorMzWgutc19Q5xw8TppHI4JmjTbFNcFJuX3MLSI8zi
-         TLXQ==
-X-Gm-Message-State: AOAM533Z+ciYNTrOsQnsUdT1bREHEsMEejZo2T3L6gnacMPFN8z5C0W2
-        ALVKq2mxm8CPWFSGIGrcMezWpEYf8ejJ/7ugmkwZbQ==
-X-Google-Smtp-Source: ABdhPJyrfugmunkVBA6Tq7v4TZjnpR1y3YD1khUpx+jbC4LaW34FDjfZSGZdsHD8cnc/wODH4xvSTWE9kR1//gQ7KvY=
-X-Received: by 2002:a1c:6689:: with SMTP id a131mr2349662wmc.157.1596620244449;
- Wed, 05 Aug 2020 02:37:24 -0700 (PDT)
+        Wed, 5 Aug 2020 05:35:30 -0400
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-447-y0P2Dls-O0mTW2M-3s0o-g-1; Wed, 05 Aug 2020 05:35:23 -0400
+X-MC-Unique: y0P2Dls-O0mTW2M-3s0o-g-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0326158;
+        Wed,  5 Aug 2020 09:35:21 +0000 (UTC)
+Received: from krava.redhat.com (unknown [10.40.194.15])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 11872726A5;
+        Wed,  5 Aug 2020 09:35:17 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     David Ahern <dsahern@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        =?UTF-8?q?Genevi=C3=A8ve=20Bastien?= <gbastien@versatic.net>,
+        Wang Nan <wangnan0@huawei.com>,
+        Jeremie Galarneau <jgalar@efficios.com>
+Subject: [PATCH v2 7/7] perf script: Add tod field to display time of day
+Date:   Wed,  5 Aug 2020 11:34:44 +0200
+Message-Id: <20200805093444.314999-8-jolsa@kernel.org>
+In-Reply-To: <20200805093444.314999-1-jolsa@kernel.org>
+References: <20200805093444.314999-1-jolsa@kernel.org>
 MIME-Version: 1.0
-References: <20200724071822.126758-1-anup.patel@wdc.com> <mhng-54a5823f-7fa3-42c9-ad28-ee5a4d28c726@palmerdabbelt-glaptop1>
-In-Reply-To: <mhng-54a5823f-7fa3-42c9-ad28-ee5a4d28c726@palmerdabbelt-glaptop1>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Wed, 5 Aug 2020 15:07:03 +0530
-Message-ID: <CAAhSdy1cR8aBkiyR3ErmTBECm_cgRtd9KNb=91LhPEte0QOGBA@mail.gmail.com>
-Subject: Re: [PATCH v6 0/4] Dedicated CLINT timer driver
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: kernel.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 7:17 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
->
-> On Fri, 24 Jul 2020 00:18:18 PDT (-0700), Anup Patel wrote:
-> > The current RISC-V timer driver is convoluted and implements two
-> > distinct timers:
-> >  1. S-mode timer: This is for Linux RISC-V S-mode with MMU. The
-> >     clocksource is implemented using TIME CSR and clockevent device
-> >     is implemented using SBI Timer calls.
-> >  2. M-mode timer: This is for Linux RISC-V M-mode without MMU. The
-> >     clocksource is implemented using CLINT MMIO time register and
-> >     clockevent device is implemented using CLINT MMIO timecmp registers.
-> >
-> > This patchset removes clint related code from RISC-V timer driver and
-> > arch/riscv directory. Instead, the series adds a dedicated MMIO based
-> > CLINT driver under drivers/clocksource directory which can be used by
-> > Linux RISC-V M-mode (i.e NoMMU Linux RISC-V).
-> >
-> > The patchset is based up Linux-5.8-rc6 and can be found at riscv_clint_v6
-> > branch of: https://github.com/avpatel/linux.git
-> >
-> > This series is tested on:
-> >  1. QEMU RV64 virt machine using Linux RISC-V S-mode
-> >  2. QEMU RV32 virt machine using Linux RISC-V S-mode
-> >  3. QEMU RV64 virt machine using Linux RISC-V M-mode (i.e. NoMMU)
-> >
-> > Changes since v5:
-> >  - Fixed order of compatible strings in PATCH4
-> >  - Added "additionalProperties: false" in PATCH4
-> >  - Fixed register space size for example DT node in PATCH4
-> >
-> > Changes since v4:
-> >  - Rebased series on Linux-5.8-rc6
-> >  - Updated Kconfig option as suggested by Daniel in PATCH2
-> >  - Removed per-CPU registered flag in PATCH2
-> >  - Addressed nit comments from Atish in PATCH2
-> >
-> > Changes since v3:
-> >  - Updated commit description of PATCH2
-> >  - Use clint_get_cycles64() in clint_rdtime() of PATCH2
-> >  - Call clockevents_config_and_register() only once for each CPU in
-> >    clint_timer_starting_cpu of PATCH2
-> >  - Select CLINT timer driver from platform Kconfig in PATCH3
-> >  - Fixed 'make dt_binding_check' for PATCH4
-> >
-> > Changes since v2:
-> >  - Rebased series on Linux-5.8-rc5
-> >  - Squashed PATCH3 onto PATCH2 to preserve GIT bisectability
-> >  - Moved PATCH4 before PATCH2 to preserve GIT bisectability
-> >  - Replaced CLINT dt-bindings text document with YAML schema
-> >  - Use SiFive CLINT compatible string as per SiFive IP block versioning
-> >
-> > Changes since v1:
-> >  - Rebased series on Linux-5.8-rc2
-> >  - Added pr_warn() for case where ipi_ops not available in PATCH1
-> >  - Updated ipi_inject() prototype to use "struct cpumask *" in PATCH1
-> >  - Updated CLINT_TIMER kconfig option to depend on RISCV_M_MODE in PATCH4
-> >  - Added riscv,clint0 compatible string in DT bindings document
-> >
-> > Anup Patel (4):
-> >   RISC-V: Add mechanism to provide custom IPI operations
-> >   clocksource/drivers: Add CLINT timer driver
-> >   RISC-V: Remove CLINT related code from timer and arch
-> >   dt-bindings: timer: Add CLINT bindings
-> >
-> >  .../bindings/timer/sifive,clint.yaml          |  60 +++++
-> >  arch/riscv/Kconfig                            |   2 +-
-> >  arch/riscv/Kconfig.socs                       |   2 +
-> >  arch/riscv/configs/nommu_virt_defconfig       |   7 +-
-> >  arch/riscv/include/asm/clint.h                |  39 ---
-> >  arch/riscv/include/asm/smp.h                  |  19 ++
-> >  arch/riscv/include/asm/timex.h                |  28 +--
-> >  arch/riscv/kernel/Makefile                    |   2 +-
-> >  arch/riscv/kernel/clint.c                     |  44 ----
-> >  arch/riscv/kernel/sbi.c                       |  14 ++
-> >  arch/riscv/kernel/setup.c                     |   2 -
-> >  arch/riscv/kernel/smp.c                       |  44 ++--
-> >  arch/riscv/kernel/smpboot.c                   |   4 +-
-> >  drivers/clocksource/Kconfig                   |  12 +-
-> >  drivers/clocksource/Makefile                  |   1 +
-> >  drivers/clocksource/timer-clint.c             | 226 ++++++++++++++++++
-> >  drivers/clocksource/timer-riscv.c             |  17 +-
-> >  include/linux/cpuhotplug.h                    |   1 +
-> >  18 files changed, 371 insertions(+), 153 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.yaml
-> >  delete mode 100644 arch/riscv/include/asm/clint.h
-> >  delete mode 100644 arch/riscv/kernel/clint.c
-> >  create mode 100644 drivers/clocksource/timer-clint.c
->
-> Thanks, this is way cleaner.  Patchwork is still broken but IIRC we reached
-> consensus on these.  I'm not going to include these in my first 5.9 PR, as I
-> want to get that out tomorrow to avoid more merge conflicts, but assuming
-> there's reviews from the other maintainers I'd like to take this for my second
-> 5.9 merge window PR.
->
-> Assuming you've been collecting reviews and acks, do you mind posting another
-> version with them?  If not I have some scripts to dig them out, so it's not a
-> big deal.
+Adding tod field to display time of day column with
+time of date (wallclock) time.
 
-Most of the Reviewed-by and Ack-by are already there, except yours and
-Rob Herring's Reviewed-by. I will post v7 based on Linux-5.9-rc1
+  # perf record -k CLOCK_MONOTONIC kill
+  kill: not enough arguments
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.033 MB perf.data (8 samples) ]
 
-Regards,
-Anup
+  # perf script
+            perf 261340 152919.481538:          1 cycles:  ffffffff8106d104 ...
+            perf 261340 152919.481543:          1 cycles:  ffffffff8106d104 ...
+            perf 261340 152919.481545:          7 cycles:  ffffffff8106d104 ...
+  ...
+
+  # perf script --ns
+            perf 261340 152919.481538922:          1 cycles:  ffffffff8106d ...
+            perf 261340 152919.481543286:          1 cycles:  ffffffff8106d ...
+            perf 261340 152919.481545397:          7 cycles:  ffffffff8106d ...
+  ...
+
+  # perf script -F+tod
+            perf 261340 2020-07-13 18:26:55.620971 152919.481538:           ...
+            perf 261340 2020-07-13 18:26:55.620975 152919.481543:           ...
+            perf 261340 2020-07-13 18:26:55.620978 152919.481545:           ...
+  ...
+
+  # perf script -F+tod --ns
+            perf 261340 2020-07-13 18:26:55.620971621 152919.481538922:     ...
+            perf 261340 2020-07-13 18:26:55.620975985 152919.481543286:     ...
+            perf 261340 2020-07-13 18:26:55.620978096 152919.481545397:     ...
+  ...
+
+It's available only for recording with clockid specified,
+because it's the only case where we can get reference time
+to wallclock time. It's can't do that with perf clock yet.
+
+Error is display if you want to use --tod on data without
+clockid specified:
+
+  # perf script -F+tod
+  Can't provide 'tod' time, missing clock data. Please record with -k/--clockid option.
+
+Original-patch-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/perf/builtin-script.c | 131 +++++++++++++++++++++++++++---------
+ 1 file changed, 98 insertions(+), 33 deletions(-)
+
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index eb45f678dc2f..484ce6067d23 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -114,6 +114,32 @@ enum perf_output_field {
+ 	PERF_OUTPUT_MISC            = 1ULL << 29,
+ 	PERF_OUTPUT_SRCCODE	    = 1ULL << 30,
+ 	PERF_OUTPUT_IPC             = 1ULL << 31,
++	PERF_OUTPUT_TOD             = 1ULL << 32,
++};
++
++struct perf_script {
++	struct perf_tool	tool;
++	struct perf_session	*session;
++	bool			show_task_events;
++	bool			show_mmap_events;
++	bool			show_switch_events;
++	bool			show_namespace_events;
++	bool			show_lost_events;
++	bool			show_round_events;
++	bool			show_bpf_events;
++	bool			show_cgroup_events;
++	bool			show_text_poke_events;
++	bool			allocated;
++	bool			per_event_dump;
++	bool			stitch_lbr;
++	struct evswitch		evswitch;
++	struct perf_cpu_map	*cpus;
++	struct perf_thread_map *threads;
++	int			name_width;
++	const char              *time_str;
++	struct perf_time_interval *ptime_range;
++	int			range_size;
++	int			range_num;
+ };
+ 
+ struct output_option {
+@@ -152,6 +178,7 @@ struct output_option {
+ 	{.str = "misc", .field = PERF_OUTPUT_MISC},
+ 	{.str = "srccode", .field = PERF_OUTPUT_SRCCODE},
+ 	{.str = "ipc", .field = PERF_OUTPUT_IPC},
++	{.str = "tod", .field = PERF_OUTPUT_TOD},
+ };
+ 
+ enum {
+@@ -502,6 +529,7 @@ static void set_print_ip_opts(struct perf_event_attr *attr)
+  */
+ static int perf_session__check_output_opt(struct perf_session *session)
+ {
++	bool tod = false;
+ 	unsigned int j;
+ 	struct evsel *evsel;
+ 
+@@ -528,6 +556,7 @@ static int perf_session__check_output_opt(struct perf_session *session)
+ 			continue;
+ 
+ 		set_print_ip_opts(&evsel->core.attr);
++		tod |= output[j].fields & PERF_OUTPUT_TOD;
+ 	}
+ 
+ 	if (!no_callchain) {
+@@ -568,13 +597,17 @@ static int perf_session__check_output_opt(struct perf_session *session)
+ 		}
+ 	}
+ 
++	if (tod && !session->header.env.clock.enabled) {
++		pr_err("Can't provide 'tod' time, missing clock data. "
++		       "Please record with -k/--clockid option.\n");
++		return -1;
++	}
+ out:
+ 	return 0;
+ }
+ 
+ static int perf_sample__fprintf_regs(struct regs_dump *regs, uint64_t mask,
+-				     FILE *fp
+-)
++				     FILE *fp)
+ {
+ 	unsigned i = 0, r;
+ 	int printed = 0;
+@@ -592,6 +625,56 @@ static int perf_sample__fprintf_regs(struct regs_dump *regs, uint64_t mask,
+ 	return printed;
+ }
+ 
++#define DEFAULT_TOD_FMT "%F %H:%M:%S"
++
++static char*
++tod_scnprintf(struct perf_script *script, char *buf, int buflen,
++	     u64 timestamp)
++{
++	u64 tod_ns, clockid_ns;
++	struct perf_env *env;
++	unsigned long nsec;
++	struct tm ltime;
++	char date[64];
++	time_t sec;
++
++	buf[0] = '\0';
++	if (buflen < 64 || !script)
++		return buf;
++
++	env = &script->session->header.env;
++	if (!env->clock.enabled) {
++		scnprintf(buf, buflen, "disabled");
++		return buf;
++	}
++
++	clockid_ns = env->clock.clockid_ns;
++	tod_ns     = env->clock.tod_ns;
++
++	if (timestamp > clockid_ns)
++		tod_ns += timestamp - clockid_ns;
++	else
++		tod_ns -= clockid_ns - timestamp;
++
++	sec  = (time_t) (tod_ns / NSEC_PER_SEC);
++	nsec = tod_ns - sec * NSEC_PER_SEC;
++
++	if (localtime_r(&sec, &ltime) == NULL) {
++		scnprintf(buf, buflen, "failed");
++	} else {
++		strftime(date, sizeof(date), DEFAULT_TOD_FMT, &ltime);
++
++		if (symbol_conf.nanosecs) {
++			snprintf(buf, buflen, "%s.%09lu", date, nsec);
++		} else {
++			snprintf(buf, buflen, "%s.%06lu",
++				 date, nsec / NSEC_PER_USEC);
++		}
++	}
++
++	return buf;
++}
++
+ static int perf_sample__fprintf_iregs(struct perf_sample *sample,
+ 				      struct perf_event_attr *attr, FILE *fp)
+ {
+@@ -606,7 +689,8 @@ static int perf_sample__fprintf_uregs(struct perf_sample *sample,
+ 					 attr->sample_regs_user, fp);
+ }
+ 
+-static int perf_sample__fprintf_start(struct perf_sample *sample,
++static int perf_sample__fprintf_start(struct perf_script *script,
++				      struct perf_sample *sample,
+ 				      struct thread *thread,
+ 				      struct evsel *evsel,
+ 				      u32 type, FILE *fp)
+@@ -615,6 +699,7 @@ static int perf_sample__fprintf_start(struct perf_sample *sample,
+ 	unsigned long secs;
+ 	unsigned long long nsecs;
+ 	int printed = 0;
++	char tstr[128];
+ 
+ 	if (PRINT_FIELD(COMM)) {
+ 		if (latency_format)
+@@ -683,6 +768,11 @@ static int perf_sample__fprintf_start(struct perf_sample *sample,
+ 		printed += ret;
+ 	}
+ 
++	if (PRINT_FIELD(TOD)) {
++		tod_scnprintf(script, tstr, sizeof(tstr), sample->time);
++		printed += fprintf(fp, "%s ", tstr);
++	}
++
+ 	if (PRINT_FIELD(TIME)) {
+ 		u64 t = sample->time;
+ 		if (reltime) {
+@@ -1667,31 +1757,6 @@ static int perf_sample__fprintf_synth(struct perf_sample *sample,
+ 	return 0;
+ }
+ 
+-struct perf_script {
+-	struct perf_tool	tool;
+-	struct perf_session	*session;
+-	bool			show_task_events;
+-	bool			show_mmap_events;
+-	bool			show_switch_events;
+-	bool			show_namespace_events;
+-	bool			show_lost_events;
+-	bool			show_round_events;
+-	bool			show_bpf_events;
+-	bool			show_cgroup_events;
+-	bool			show_text_poke_events;
+-	bool			allocated;
+-	bool			per_event_dump;
+-	bool			stitch_lbr;
+-	struct evswitch		evswitch;
+-	struct perf_cpu_map	*cpus;
+-	struct perf_thread_map *threads;
+-	int			name_width;
+-	const char              *time_str;
+-	struct perf_time_interval *ptime_range;
+-	int			range_size;
+-	int			range_num;
+-};
+-
+ static int evlist__max_name_len(struct evlist *evlist)
+ {
+ 	struct evsel *evsel;
+@@ -1739,7 +1804,7 @@ static void script_print_metric(struct perf_stat_config *config __maybe_unused,
+ 
+ 	if (!fmt)
+ 		return;
+-	perf_sample__fprintf_start(mctx->sample, mctx->thread, mctx->evsel,
++	perf_sample__fprintf_start(NULL, mctx->sample, mctx->thread, mctx->evsel,
+ 				   PERF_RECORD_SAMPLE, mctx->fp);
+ 	fputs("\tmetric: ", mctx->fp);
+ 	if (color)
+@@ -1754,7 +1819,7 @@ static void script_new_line(struct perf_stat_config *config __maybe_unused,
+ {
+ 	struct metric_ctx *mctx = ctx;
+ 
+-	perf_sample__fprintf_start(mctx->sample, mctx->thread, mctx->evsel,
++	perf_sample__fprintf_start(NULL, mctx->sample, mctx->thread, mctx->evsel,
+ 				   PERF_RECORD_SAMPLE, mctx->fp);
+ 	fputs("\tmetric: ", mctx->fp);
+ }
+@@ -1865,7 +1930,7 @@ static void process_event(struct perf_script *script,
+ 
+ 	++es->samples;
+ 
+-	perf_sample__fprintf_start(sample, thread, evsel,
++	perf_sample__fprintf_start(script, sample, thread, evsel,
+ 				   PERF_RECORD_SAMPLE, fp);
+ 
+ 	if (PRINT_FIELD(PERIOD))
+@@ -2174,7 +2239,7 @@ static int print_event_with_time(struct perf_tool *tool,
+ 		thread = machine__findnew_thread(machine, pid, tid);
+ 
+ 	if (thread && evsel) {
+-		perf_sample__fprintf_start(sample, thread, evsel,
++		perf_sample__fprintf_start(script, sample, thread, evsel,
+ 					   event->header.type, stdout);
+ 	}
+ 
+@@ -3439,7 +3504,7 @@ int cmd_script(int argc, const char **argv)
+ 		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,"
+ 		     "addr,symoff,srcline,period,iregs,uregs,brstack,"
+ 		     "brstacksym,flags,bpf-output,brstackinsn,brstackoff,"
+-		     "callindent,insn,insnlen,synth,phys_addr,metric,misc,ipc",
++		     "callindent,insn,insnlen,synth,phys_addr,metric,misc,ipc,tod",
+ 		     parse_output_fields),
+ 	OPT_BOOLEAN('a', "all-cpus", &system_wide,
+ 		    "system-wide collection from all CPUs"),
+-- 
+2.25.4
+
