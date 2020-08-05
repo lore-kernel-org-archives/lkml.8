@@ -2,99 +2,89 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2285C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFF8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACCA022D2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:37:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596649026;
-	bh=0b0E6WKbiQlBVu/fGFXi0So5DhXTlE8qcVrcu7H76Qg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FHe6yDwkWhhDhMYoUlMEy9kAw8ZTDLuhZr4Z2fiRBMX8jnqKgDhq7SEXd8YpHHOP1
-	 wlwzEVbQatAAcxvOFkV5wJT9hoK2uT5ox943ovrRozTQhsoUDuXyTzKsqTEb4zJ2Ob
-	 hwLY7f997ENw43MptqqcqDaHkvsjQO/XPJjnNqa4=
+	by mail.kernel.org (Postfix) with ESMTP id 6272122D6D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:37:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SNRJxYhc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728830AbgHERhC (ORCPT
+        id S1728895AbgHERhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:37:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54030 "EHLO
+        Wed, 5 Aug 2020 13:37:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728535AbgHERdC (ORCPT
+        with ESMTP id S1728893AbgHERfG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:33:02 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB5E5C061757
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 10:32:46 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id b30so24690322lfj.12
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 10:32:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0O/A2cezVuB/QMtGDV0w8M/cQpgej4IbeFVmCUBKN34=;
-        b=g2z0q3DehVGOj6+EVJm4x/hwlkqyBJ+6sjjEolBgDgmrVojA82SWGyPYplXGk6nZz4
-         tBDDsgA5D3E9t07YwgHjqIhce2JrBaqR24SLIZ9H7iaBBCDQfXGPdagobUmPf8h2MrgL
-         A7vpzsGgHrnqUu6WLBssX3eI8MTOw2kBAKj0I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0O/A2cezVuB/QMtGDV0w8M/cQpgej4IbeFVmCUBKN34=;
-        b=s2DACMfZuU9qs+VSTcwfx5xIt9tcSjfqaKWWrg6wgSKh4aib/EcxzYJZeNeibcFN6w
-         eV74mSKVs+Zjs8E97DnE+lA74AIdUNLOT/nqzamBWRBUMJqbI+dNAfHeMpM/BMJD9P54
-         l1/Hrm1gEKlzP3jn/lfALeKNaBvNlpXNKtbiM1wzLUV+J21dCAA7ATkUhd5RdTHWd/U5
-         zA0acvlHU3wxz+erlEXfsSfWo3PbqPwZxroljQSlUdoPkZ4LR+6LSUbywIRHOLOvBWYd
-         fgIp9CfTzNb/S+QGcqYGHlpj1TNHac7UTZmuUhF8kGstC9IwpNP8IMW9A068TuVN5lYs
-         ug8w==
-X-Gm-Message-State: AOAM532wIkBk8BXFjzQkFyATBVP92tmLGEsABDl0X41R/IYEeGGl7ZBr
-        zNYKUng8a11ReaE95vYoNab/9yg8Qqg=
-X-Google-Smtp-Source: ABdhPJyNmFdmwnm3KHe9UwHdiHFOc3/NnoFvD3/05v89UKKsTk/d/hGID1NAQPskyBE3e2pEhgFcTA==
-X-Received: by 2002:a19:6d1e:: with SMTP id i30mr2072975lfc.104.1596648764163;
-        Wed, 05 Aug 2020 10:32:44 -0700 (PDT)
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
-        by smtp.gmail.com with ESMTPSA id k12sm1378843lfe.68.2020.08.05.10.32.42
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2020 10:32:42 -0700 (PDT)
-Received: by mail-lj1-f172.google.com with SMTP id v9so14151255ljk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 10:32:42 -0700 (PDT)
-X-Received: by 2002:a2e:545:: with SMTP id 66mr2031802ljf.285.1596648762224;
- Wed, 05 Aug 2020 10:32:42 -0700 (PDT)
+        Wed, 5 Aug 2020 13:35:06 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15536C001FC2
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 08:31:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ihXFtoBSuvtLohh/RvNeAjifvCivLgmoMzFjTemcXXU=; b=SNRJxYhcymyueDueAlAmzlc+wu
+        mTrx+TaefdMhYPmbw3mUXokg5Svh3p2wlp9zpr0FcUX0wH2Mz/TsKW/6dndyvKP+Eii5XHUMdnQr2
+        tDK7+CM8aOaxmoAdFcZ9UZKdsbeYM5uDJVfLQ4kxzYsUHYrkAUuXSK+fkrsIER12IM/0eIeprk76r
+        mLjwDUZU6E7zGtmBtF5zfDvPJ815weh5P7ydY9i5qUPDbmrXWdDHadj1s7uB7KB6phhuuMZJ7Eal4
+        DzCgaE1nAqa3+pJ06Rhmh532fUOyRbKO4BADXpJacMZu2i+iapPcW6TV+GvKGkM2gBSWX2Gebh3TA
+        3WYhVMMQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k3LO1-0001kt-22; Wed, 05 Aug 2020 15:31:25 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 04026301A66;
+        Wed,  5 Aug 2020 17:31:20 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B77A922B957E9; Wed,  5 Aug 2020 17:31:20 +0200 (CEST)
+Date:   Wed, 5 Aug 2020 17:31:20 +0200
+From:   peterz@infradead.org
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>,
+        Alison Wang <alison.wang@nxp.com>, catalin.marinas@arm.com,
+        will@kernel.org, paulmck@kernel.org, mw@semihalf.com,
+        leoyang.li@nxp.com, vladimir.oltean@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>
+Subject: Re: [RFC PATCH] arm64: defconfig: Disable fine-grained task level
+ IRQ time accounting
+Message-ID: <20200805153120.GU2674@hirez.programming.kicks-ass.net>
+References: <87mu3ho48v.fsf@kurt>
+ <20200730082228.r24zgdeiofvwxijm@skbuf>
+ <873654m9zi.fsf@kurt>
+ <87lfiwm2bj.fsf@nanos.tec.linutronix.de>
+ <20200803114112.mrcuupz4ir5uqlp6@skbuf>
+ <87d047n4oh.fsf@nanos.tec.linutronix.de>
+ <jhjh7tjivew.mognet@arm.com>
+ <875z9zmt4i.fsf@nanos.tec.linutronix.de>
+ <20200805134002.GQ2674@hirez.programming.kicks-ass.net>
+ <jhja6z9i4bi.mognet@arm.com>
 MIME-Version: 1.0
-References: <0e3a9c1f-7ac6-33e2-ed11-5a56659fc5f7@linuxfoundation.org>
- <CAHk-=wi4iDwuazgXQ-1yvM_JMTBepi9rc-zfSMeyjfDgSS2fgA@mail.gmail.com> <8d894cb3-83ac-66bc-48ec-dc273d1afcbe@linuxfoundation.org>
-In-Reply-To: <8d894cb3-83ac-66bc-48ec-dc273d1afcbe@linuxfoundation.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 5 Aug 2020 10:32:25 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiKe_rBFthfttj1fM3cwqaArSUN0Dz1KhARdMNo1a2F=A@mail.gmail.com>
-Message-ID: <CAHk-=wiKe_rBFthfttj1fM3cwqaArSUN0Dz1KhARdMNo1a2F=A@mail.gmail.com>
-Subject: Re: [GIT PULL] Kselftest update for Linux 5.9-rc1
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <jhja6z9i4bi.mognet@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 7:13 AM Shuah Khan <skhan@linuxfoundation.org> wrote:
->
-> Please pull the following Kselftest update for Linux 5.9-rc1.
+On Wed, Aug 05, 2020 at 02:56:49PM +0100, Valentin Schneider wrote:
 
-Ok, it worked fine this time, although now you lost the note about the
-conflict ;)
+> I've been tempted to say the test case is a bit bogus, but am not familiar
+> enough with the RT throttling details to stand that ground. That said, from
+> both looking at the execution and the stress-ng source code, it seems to
+> unconditionally spawn 32 FIFO-50 tasks (there's even an option to make
+> these FIFO-99!!!), which is quite a crowd on monoCPU systems.
 
-I took the version from the seccomp tree that seemed to be the
-slightly cleaned-up one.
-
-            Linus
+Oh, so it's a case of: we do stupid without tuning and the system falls
+over. I can live with that.
