@@ -2,109 +2,75 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBCA5C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5666C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91AD722D2B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B950B22D2B
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:36:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O/GHeGm/"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ti.com header.i=@ti.com header.b="O90REE9d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728822AbgHERfy (ORCPT
+        id S1728853AbgHERgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:35:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728413AbgHERdK (ORCPT
+        Wed, 5 Aug 2020 13:36:15 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:49706 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728754AbgHERdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:33:10 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10E17C06179E;
-        Wed,  5 Aug 2020 10:33:10 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id d19so1288056pgl.10;
-        Wed, 05 Aug 2020 10:33:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ubC/V5WUzoZj5xfHrYdi+jL75ehDvyw9uS6rHF+Jq8U=;
-        b=O/GHeGm/gQtbGK1llGngflGpM9k6g4L5179tZ8xre02/XuGvGMRFHUAsC6AXqIh3lN
-         lWrz38BERBpyJUHI4TBNvyZadqoPsBKXhNDzGhAiA3CRKyYK6Kci0sUEvRD+kUW8fkFf
-         v+ochFEQzfRkpRJmVj+OCCMjL313jypzYHQjt8rTuvov8DMPYexlXfxATyTvI8dvShCY
-         UUjtojLaQiVDwXokabVt5tKckoG51WXOGIuH6yhGiRXH+xRK1NlLGgVqDZ+6zoU0F7yg
-         BRFMf3BTuwrQrymB1Fkm7PLVGrksZUGir2siyZYXQTtKfOygYakI0e63P5vZPBZWbumQ
-         GNGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ubC/V5WUzoZj5xfHrYdi+jL75ehDvyw9uS6rHF+Jq8U=;
-        b=cuaqYK4puvEWhN5QUEX5GKShZmWo9TR8fqBpipfccHI+h3j8BF6ra7plQlV2ycuVCV
-         7CiXZOYvUxmafYduvGTt2v/m0rH46gv75oj17kjW1YIhTuXm7daR5wUcEehMYEq+MUhP
-         lEqwiyrl0dShKbysxjN5zjJXtLvIArRERpd1uiv4FFUtIjrA2+F3eCshaN+cxqUzmvDF
-         ToJoRRm94k68h+4jrtOJNSsYxDxPzGDggXABsJcuWNQSmU767q8FVGAjvSRw1LIMXHhl
-         AdTO5nuB4aGvUluHdIZ3FUjge3122qyMAqRFYvd0UPiF2WD/DaZdE8LXc1nmGz88uyXF
-         t8WA==
-X-Gm-Message-State: AOAM533Rgma0wiKw+6wBxX3voqe7VfGlAxjZ9ayt9ZGIs9EGydQaa8qy
-        zsdHoGAk99w7JbLiE9Nvhsc=
-X-Google-Smtp-Source: ABdhPJyE+3mIJw7JiYtikhouQKcIpFH/TIV61KDAmqsI8WELrTzl/wETy8tPvwFa1sbu+JKrAcXM1w==
-X-Received: by 2002:a62:1782:: with SMTP id 124mr4246256pfx.204.1596648789558;
-        Wed, 05 Aug 2020 10:33:09 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id mj6sm3777559pjb.15.2020.08.05.10.33.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2020 10:33:08 -0700 (PDT)
-Subject: Re: [PATCH 0/4] CPUFreq statistics retrieved by drivers
-To:     Sudeep Holla <sudeep.holla@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        cristian.marussi@arm.com, rjw@rjwysocki.net
-References: <20200729151208.27737-1-lukasz.luba@arm.com>
- <a3354ae8-f40f-83f2-d6eb-7f588af75e97@gmail.com>
- <119ce268-18dc-7a4c-b0b2-3a66ff9ff4b0@arm.com>
- <20200805130436.3d2g7z2rsdoesuuk@vireshk-mac-ubuntu>
- <20200805160312.GC4818@bogus>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <4962aa3c-2b56-5232-c5d7-286ca1363446@gmail.com>
-Date:   Wed, 5 Aug 2020 10:33:02 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.10.0
+        Wed, 5 Aug 2020 13:33:09 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 075BjXds061534;
+        Wed, 5 Aug 2020 06:45:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1596627933;
+        bh=oLXOtVGM0XldeErZ7lnDxDWT67udBtkfwHx5aUoMNbM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=O90REE9dvBBeRL3oeN+FvYeFbekVdTViw1Uo2UfwrOrorIcFFqlRZPLtTde2wOXII
+         ZG//xv3T3axRuyxgvSPsXQHvK0+1uZv++K1ep+BN+8AUbHUxcaRyRHZcC1IvaLw2Ul
+         eDD25IQdOFw2pbsu+nO3H+XdWzY8FVkdcrMEpHW4=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 075BjXW3063923
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 5 Aug 2020 06:45:33 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 5 Aug
+ 2020 06:45:33 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 5 Aug 2020 06:45:33 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 075BjViD085971;
+        Wed, 5 Aug 2020 06:45:31 -0500
+Subject: Re: [PATCH] drm/omap: fix spelling mistake "propert" -> "property"
+To:     Colin King <colin.king@canonical.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        <dri-devel@lists.freedesktop.org>
+CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200805102015.14891-1-colin.king@canonical.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <ad33a2ea-3596-0b4c-35ae-ca8eb76d1a3f@ti.com>
+Date:   Wed, 5 Aug 2020 14:45:31 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200805160312.GC4818@bogus>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200805102015.14891-1-colin.king@canonical.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-
-On 8/5/2020 9:03 AM, Sudeep Holla wrote:
-> On Wed, Aug 05, 2020 at 06:34:36PM +0530, Viresh Kumar wrote:
->> On 05-08-20, 12:04, Lukasz Luba wrote:
->>> I know that Viresh is going to develop patches and improve these
->>> cpufreq stats framework. Maybe he also had this 'aggregation' in mind.
->>> I will leave it him.
->>
->> I am only going to look at cpufreq's view of stats independently from
->> the firmware.
->>
-> 
-> +1, I agree with that. Kernel must avoid any logic to aggregate or
-> interpret the data in a generic way. The userspace tools can manage that
-> especially if this tend to be platform specific.
-
-We can probably standardize on how to expose the firmware maintained
-statistics such that these tools do not have to widely vary from
-platform to platform, right?
--- 
-Florian
