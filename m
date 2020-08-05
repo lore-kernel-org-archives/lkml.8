@@ -2,100 +2,93 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC57C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B02B9C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA69322CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7864A22B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:08:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596658125;
+	bh=jWj0WeLI2bTZqXoSzm4YiO4duySDXE/ANme0mZDkCFY=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=PYRK/GhYYvyHVvjfAbrwNqcZWTH08TESL4LEfKkq9CB6+vRvSd96KMl37+BHpDiVg
+	 iF/hsSiqnXdwmpqyR9DJvg9AVU/TuGjDAFqvCPGhZGbp4Q+t2bfln4tuB7W3dv7KK8
+	 NGdzBXlj7eMGskHSbrMDSUEG0a/+sBp/YA1o2bJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbgHEUIb (ORCPT
+        id S1729242AbgHEUIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:08:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43802 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727064AbgHEQce (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 16:08:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49780 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726869AbgHEQce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:32:34 -0400
-Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EC18C008691;
-        Wed,  5 Aug 2020 07:33:09 -0700 (PDT)
-Received: by mail-oo1-xc42.google.com with SMTP id x1so6635989oox.6;
-        Wed, 05 Aug 2020 07:33:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tpO2xc5Co4QKfwe/fUkQqUFFAe1WeeGtz1oyCqUMySo=;
-        b=LhYz9i6I5AM4ZFtxHd+I9u1ASrO4rAxTxI/t4siugm6WhxTGylbyg693lSH2SkAJZg
-         IIGDv8cuq2Atkg6a/memP/3ZxkHNwXGhTlhzGgql3a+l8cb4BSqpY41/FoS2Dey738US
-         HNY7oS82tp4qxK0zU5KSG+5wR25XkLh17nddtBS+6isamMTdOSpgHAG7z+Dv3ZLvYKSj
-         WGny2c2fiRFPZvJ/1bYdsySXuQgp4q5b00waN4/XfIO6UGXfbhT3GB3aIdI6DdpTqwQf
-         PttRBBuebLldZ7pofLVcvbU+u/4I905HPTm1+H9J+KjyGphDBVlO8Qd1DI2oAJ/StVAp
-         dTsA==
-X-Gm-Message-State: AOAM533LjPC09EQ93J7+rqUEO7o2QGimyEUznlys74pspdXXuJB5yAAR
-        UXzpdrWWpUaJ+hWv1tXbOuarwbxyZUyw1hXSS06MMhU6
-X-Google-Smtp-Source: ABdhPJxign8Uk2fIcUs7RpIodong0uS1bWU72pwITdrYewzbK7L9StNz09TcvScLc02ZC/yaUnpVr8Fq/+75ppivh0g=
-X-Received: by 2002:a4a:9d19:: with SMTP id w25mr2320144ooj.11.1596626166283;
- Wed, 05 Aug 2020 04:16:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-16-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594919915-5225-16-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 5 Aug 2020 13:15:54 +0200
-Message-ID: <CAMuHMdWzwQpjhOeVDkj1b1L7mJuxnLpVMO-3WMMLF3oJMzgAmg@mail.gmail.com>
-Subject: Re: [PATCH 15/20] arm64: dts: renesas: r8a774e1: Add audio support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Received: from localhost.localdomain (unknown [194.230.155.117])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FE192245C;
+        Wed,  5 Aug 2020 15:51:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596642663;
+        bh=jWj0WeLI2bTZqXoSzm4YiO4duySDXE/ANme0mZDkCFY=;
+        h=From:To:Subject:Date:From;
+        b=FuyXtPOokL9dq42pPtPfpND3C18XqEmSHiQOVmG3R63oIyrvLDa7yESzWRa/Z071N
+         Fa89RISm272D1o+zizen/LZR8qqA7JH4v4Zu+6b4Y1mwWCEJK23UM/KRQV7/lbifxO
+         /f7VoKAnW8uqTMY3eC33gWgTx9Mgo8r8mPcpuqfY=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] s390/Kconfig: add missing ZCRYPT dependency to VFIO_AP
+Date:   Wed,  5 Aug 2020 17:50:53 +0200
+Message-Id: <20200805155053.3739-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 7:20 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add sound support for the RZ/G2H SoC (a.k.a. R8A774E1).
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+The VFIO_AP uses ap_driver_register() (and deregister) functions
+implemented in ap_bus.c (compiled into ap.o).  However the ap.o will be
+built only if CONFIG_ZCRYPT is selected.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.10.
+This was not visible before commit e93a1695d7fb ("iommu: Enable compile
+testing for some of drivers") because the CONFIG_VFIO_AP depends on
+CONFIG_S390_AP_IOMMU which depends on the missing CONFIG_ZCRYPT.  After
+adding COMPILE_TEST, it is possible to select a configuration with
+VFIO_AP and S390_AP_IOMMU but without the ZCRYPT.
 
-Gr{oetje,eeting}s,
+Add proper dependency to the VFIO_AP to fix build errors:
 
-                        Geert
+ERROR: modpost: "ap_driver_register" [drivers/s390/crypto/vfio_ap.ko] undefined!
+ERROR: modpost: "ap_driver_unregister" [drivers/s390/crypto/vfio_ap.ko] undefined!
 
+Reported-by: kernel test robot <lkp@intel.com>
+Fixes: e93a1695d7fb ("iommu: Enable compile testing for some of drivers")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/s390/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index 8c0b52940165..2a31a5e74e42 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -766,6 +766,7 @@ config VFIO_AP
+ 	def_tristate n
+ 	prompt "VFIO support for AP devices"
+ 	depends on S390_AP_IOMMU && VFIO_MDEV_DEVICE && KVM
++	depends on ZCRYPT
+ 	help
+ 		This driver grants access to Adjunct Processor (AP) devices
+ 		via the VFIO mediated device interface.
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.17.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
