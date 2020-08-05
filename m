@@ -2,317 +2,257 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 502C8C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4BAC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 284472245C
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E99D42245C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:35:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hkbbgb9N"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="JVMl5thL";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="PQHLuIJg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726249AbgHEHfD (ORCPT
+        id S1726829AbgHEHfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 03:35:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45666 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbgHEHfC (ORCPT
+        Wed, 5 Aug 2020 03:35:34 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:65066 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbgHEHfd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 03:35:02 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A7C8C061756
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 00:35:02 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id z14so8938649ljm.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 00:35:02 -0700 (PDT)
+        Wed, 5 Aug 2020 03:35:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1596612932; x=1628148932;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=J+z1I8ZPMmGYjymyRZfVPw5uHnrMEV2dueD1zGfq5Z8=;
+  b=JVMl5thLJSxozDOqCHWCOI9ZKpcRiXUDQzZJc1P3D+pB69/HZ6fXb54c
+   inifkM/vz1zLgitL/CvkhB+PXXC692Gj4W1j4jbYYt/m+nSYa3W0ywxKK
+   NTjug0Z9Q/7FRtQ4FrwSVTrOzJqggZtvkqi9AmCOFW+yp34Ao2pZOU8UV
+   12t+0ilkLhr5njlhlbjxhVDghkvfadXKHzmY6pdPfQt/gordUPZCQI0nK
+   gmWUm/Z53mq6hHvjEtmlf30Mw2FvBoeV4zrlWzRU6Eo6u8E2iQryXKpNi
+   CuJC88G7ll+P0ycWoWOUPUpZZx40oiTvwohXi/iCQNQSQNOYP8SKF/P/9
+   A==;
+IronPort-SDR: PrDjXGuBNoL9LNnDIQa3rEKCTt3Ynw1P0FMHf0wmCYu1Dl0jPQLkpuhygyRIFsPDOo1VGElf8s
+ v+Nf/yLB/XosUscWu8DhbVUSbN6kJQg2AvvTPGBp00P/v9HY8FwckHXeytPJu5V/lX6e3JYy8i
+ VWn7ULfa/Xiql81KtMiKvb9ECnp2KQ0u97mrVS8NMR18aBOHIMKsvLEwv1z5CJjI6cbfKszlpX
+ krlcbzdZC+5bfY8RhwVT10uZRqNAH6568lqIcaALJhQKtbSeWagJCsuggYXr8taV8kgRLCsn45
+ HgI=
+X-IronPort-AV: E=Sophos;i="5.75,436,1589212800"; 
+   d="scan'208";a="148494169"
+Received: from mail-bn8nam11lp2171.outbound.protection.outlook.com (HELO NAM11-BN8-obe.outbound.protection.outlook.com) ([104.47.58.171])
+  by ob1.hgst.iphmx.com with ESMTP; 05 Aug 2020 15:35:30 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iM0Mv9JB7sKepbzK96eaFV0pyacLkNBKbqTtUPQV0SJORhlaX/ZnC7AU3SnPc4dFuGr+bcb2bit/dRruHWfd8NA++jG/NcusrCeowhtiWKAgSOcsGxbRNIvKsHyUCIyoQVOKA0Ake9VMu+VP+rNyTXFSQkDZ77vspPPB/2p6xxIkbRhoJds+6KDA5y/Oofw6nKXnvQh84x4nhXE+Yt8B8Mu4UhoDAUr+NnUkqYIJbT6cZqWYt6rVHAAdme2HPoAKJG6dEl2B6LyiPDGrOUKBsAbJKBX3IcsyqqDS8jO5Kd6hI59bZ0pYpzDlSx4AQH/khiLlYn3+5ssnbPP7HpFOag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eXVU9EEOq/oaekqqkXSh+ZD1Jtgh5ixXb2crzHYN3oA=;
+ b=Edp5dgYmqcAs8eWhDGocN0wGvpYcaXsZA+8culSEldxXHQhjCl6pcIElOKZK/wFuJMxIezdcKNqZwYExaSZxo8g/WtoG9lI+FAWjVVLuAYhudLUVQ2Zi3iPhI4fFOKu8AUteTFJR3kZ7gstlWWcw9uc/yf+DqxdcHL7rtt26EylRWgzeN3/CM7Ibc3eS+34zh3Y/6tvoCbkOV+ddckKRWY6RzKXCVAPBLmLrfdfII44EC2biUYdQj8BiTVwyJo9ul3Gnr/0YsOzLCBXGtRm9mpgbYEzCyURvVoR8arw0OFq3JP7g4TRZrqRkuWjPlb8hFN9AMYZZ78oghLrdUtpTAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9fRPBVj60nMtWa/s2FrntXxpL29tailGK8Vk9a7Gnxg=;
-        b=hkbbgb9Nh8Ur2QAAQJhk45tBdNu0ROW3nUm3ymah+mjuvndV+8c0GFs6gS9RV0oKEs
-         TPN00wliTfZZOduKJeskawh7ar0K7rjqSDF/sRzz4tnrKob8JQjBLjqlaVtgBcCWfscL
-         XMj/mlEDx2r7Y4Bm5BCTcs5ad2DJCFJeWao3HE8gdHCShItCKIGLgEx6Wi1S136wao2M
-         cCcjn1+vOYJ32pHcUPbjlsxcYdDYktrtaFy7b9hUKlrzyOjuZJCt2M2fQ96Md2zCTIUC
-         zZmhPmQjUr0Sw9O2K0wQY65aUUNAiBf6n3A8Qi9zD4EiNSky5yPRcfFCW25TtG897Qxz
-         3xIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9fRPBVj60nMtWa/s2FrntXxpL29tailGK8Vk9a7Gnxg=;
-        b=tm9bHbhOKu22AFFk49DtcnOOobFpzH0HVOqqjNpIXx0dJu32ABUOxROsE6GSAyx3XJ
-         dQ4IfhdVh0SB9OyVdS5/3SCM621Qf9hlyYo4oPoRljH6RCzGOz7g46wkpNtiNaO66MAX
-         cZQt6C8FoHBiMWulMZgtSxXnuOYW8WyhoSf+k+DCdxvt0IqSDEwNSxHD+btYDLHLbNud
-         cPrMdMbuXCag48+81MIoi8mOgA+LKL9w/k2eAkbwo3eOF0rvY/NnRz5DxcUj4wICH59Q
-         qfDF0I/vZc6OI9xl7oxkuyc7QzzAZCDd7vovbyp//pIFf7/beD1qSC7lY5ibac4LkxEs
-         J3yg==
-X-Gm-Message-State: AOAM530sCQ/PwzpD7DYqeneGvNTxtlJAR+BIDtLYjSyMu7zIqKdrcSb6
-        5vS5az5imHvo1REHlWaroNzY8PuMnnpy5Tbw
-X-Google-Smtp-Source: ABdhPJxyk3P8FnX/bSYK2YD11kIgnWrAd44vtnxHIg2XTGhZey+MA7HbyAt2AuOmtIhINgzZoZZsMQ==
-X-Received: by 2002:a2e:b051:: with SMTP id d17mr805630ljl.231.1596612900142;
-        Wed, 05 Aug 2020 00:35:00 -0700 (PDT)
-Received: from localhost.localdomain (h-98-128-180-79.NA.cust.bahnhof.se. [98.128.180.79])
-        by smtp.gmail.com with ESMTPSA id h21sm514864ljk.31.2020.08.05.00.34.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 00:34:58 -0700 (PDT)
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-To:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [GIT PULL] MMC and MEMSTICK updates for v5.9
-Date:   Wed,  5 Aug 2020 09:34:57 +0200
-Message-Id: <20200805073457.11906-1-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.20.1
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eXVU9EEOq/oaekqqkXSh+ZD1Jtgh5ixXb2crzHYN3oA=;
+ b=PQHLuIJgjU57UlMNHABnQCaHs+HETK1Q0W2FdBZ6obLT7yc/8KOBh+14wCh0eUPuHZgtFHeV6ayNpJ0QrZe5fDexwJLAmxiXY9DTx6l2KFYpZMeJ7S2lADDlMUKI/T/Txuk9yqWuIy8vmRcLTMdrw/Vtq9F1uK1JD16kR1AN2B4=
+Received: from CY4PR04MB3751.namprd04.prod.outlook.com (2603:10b6:903:ec::14)
+ by CY1PR04MB2316.namprd04.prod.outlook.com (2a01:111:e400:c618::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Wed, 5 Aug
+ 2020 07:35:28 +0000
+Received: from CY4PR04MB3751.namprd04.prod.outlook.com
+ ([fe80::7d15:9936:4b3b:f8a2]) by CY4PR04MB3751.namprd04.prod.outlook.com
+ ([fe80::7d15:9936:4b3b:f8a2%12]) with mapi id 15.20.3239.022; Wed, 5 Aug 2020
+ 07:35:28 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     "hch@infradead.org" <hch@infradead.org>
+CC:     Kanchan Joshi <joshiiitr@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Kanchan Joshi <joshi.k@samsung.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "bcrl@kvack.org" <bcrl@kvack.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        SelvaKumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>,
+        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>
+Subject: Re: [PATCH v4 6/6] io_uring: add support for zone-append
+Thread-Topic: [PATCH v4 6/6] io_uring: add support for zone-append
+Thread-Index: AQHWYdbcc0q15qREKECGO7brHi6zEg==
+Date:   Wed, 5 Aug 2020 07:35:28 +0000
+Message-ID: <CY4PR04MB37517D633920E4D31AC6EA0DE74B0@CY4PR04MB3751.namprd04.prod.outlook.com>
+References: <CA+1E3rKxZk2CatTuPcQq5d14vXL9_9LVb2_+AfR2m9xn2WTZdg@mail.gmail.com>
+ <MWHPR04MB3758DC08EA17780E498E9EC0E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+ <20200731064526.GA25674@infradead.org>
+ <MWHPR04MB37581344328A42EA7F5ED13EE74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+ <CA+1E3rLM4G4SwzD6RWsK6Ssp7NmhiPedZDjrqN3kORQr9fxCtw@mail.gmail.com>
+ <MWHPR04MB375863C20C1EF2CB27E62703E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+ <20200731091416.GA29634@infradead.org>
+ <MWHPR04MB37586D39CA389296CE0252A4E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+ <20200731094135.GA4104@infradead.org>
+ <MWHPR04MB3758A4B2967DB1FABAAD9265E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+ <20200731125110.GA11500@infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: infradead.org; dkim=none (message not signed)
+ header.d=none;infradead.org; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [129.253.182.57]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 7c5ee32e-3e2b-4cd0-19a8-08d83912202f
+x-ms-traffictypediagnostic: CY1PR04MB2316:
+x-ld-processed: b61c8803-16f3-4c35-9b17-6f65f441df86,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY1PR04MB2316F28B05308E886B8B0B55E74B0@CY1PR04MB2316.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1mhJCBUHxv+a7bC+ikN2LluOEd9E0Sp8YCBO5OXbLfQj9ZFqaildWPh4H6TuPA9awi+t6AHp6HcETYMHTjIKCb3ZUH9bZXluUvCFbTWkxs1d2e0m4yn0eVhZJ7n0D6j0aaEKYiyDy8/yvrPCRHI1DOGWkVVT5S385RHOBX3gkLj0SB66m3+AEwRS9+vPsGSBoZs/+VyjZoegVHN+64IxlwVmkE9q2zguZqFJ4KGx81ghnITmpKA2FZy0k419z3x5ugy6UD/FKCQ4JxOWXREWqf0VruT7aOCoSASU3QwB/1iR3UtvIz9MMXFiheO+acU1AjxGaGIAufMDzOkYvAM4Ug==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR04MB3751.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(376002)(39860400002)(136003)(366004)(91956017)(5660300002)(7416002)(55016002)(76116006)(33656002)(26005)(6506007)(53546011)(86362001)(8936002)(8676002)(6916009)(83380400001)(186003)(316002)(71200400001)(52536014)(66946007)(4326008)(478600001)(7696005)(2906002)(66446008)(66476007)(64756008)(66556008)(54906003)(9686003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: e/tPt+QkjW8ESmtNwREqozt7A9IWoLXTCKmtB05H3ZWWrMXGMwhRB6zUGUri7Rqwggp+ZDTf+aWImA8+IIncxn40+EVCSsSApCMR3VxMCdfTYIYTCreeNucPP4/gXY9sH01x7Jw9ytGS4rrdcP1vZMtvODYdU7HX1aO9O6U5OyWQ9AUdTI19tbQtkOOYxuwOMMsn/9+rHrHoIEmy3IKlut2EyH91QPlTNq5pCSWvOE3Jxh8hAIjJRsk2pfEdj8GkUUZTlTo5Ctyy5bypOhiCQjoqqaxCyUpLyG6In0v2edpDaadU3CbBzFnHr9+dynVAf9ZZHfmBX9cSOburm/rqazvboabnivcvqRRoIubUOIT0jlJmEiRbJzffHo+iNYVzRumGdTpAaKY1AUM3BWSrzg5bZH/ta7pKM3dlhNZ42DYDNiyKwoGgiMTZC1McNCA2bTC10tkU2SUakkFr4BuZfQHf4/omvQeQpWW2/LwWVXikPvfwFGJjIF1F56KR617aiJ7DDdqaTAOm2xUd5src5cBipl52KVyiejIhFAUirXWUsLUfSuwvaIo/NXVdh8b8OvqkTkALei1Q0ES0izzEX6iFRg2Ggawrbd0gIQ9GPjva4FLPJWUGJvaYJ59/W4EfHlPyrVefqrMetiQkmeOjwg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CY4PR04MB3751.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c5ee32e-3e2b-4cd0-19a8-08d83912202f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2020 07:35:28.4097
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BMpuCMfCv6xEvP9Wgnv2LeoOeK49oqnYXjEUrTXs8ol6jdDZh5ePnHtQ8euwoBHj6wJbj84ST4qzW2TIh3E9dA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1PR04MB2316
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
-
-Here's the PR with MMC and MEMSTICK updates for v5.9. Details about the
-highlights are as usual found in the signed tag.
-
-Please pull this in!
-
-Kind regards
-Ulf Hansson
-
-
-The following changes since commit ebd4050c6144b38098d8eed34df461e5e3fa82a9:
-
-  mmc: sdhci-of-aspeed: Fix clock divider calculation (2020-07-13 12:17:34 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.9
-
-for you to fetch changes up to 7f4bc2e8687ecea52177aac30fb153cc076f7022:
-
-  mmc: mediatek: make function msdc_cqe_disable() static (2020-08-05 08:28:15 +0200)
-
-----------------------------------------------------------------
-MMC core:
- - Add a new host cap bit and a corresponding DT property, to support power
-cycling of the card by FW at system suspend/resume.
- - Fix clock rate setting for SDIO in SDR12/SDR25 speed-mode
- - Fix switch to 1/4-bit mode at system suspend/resume for SD-combo cards
- - Convert the mmc-pwrseq DT bindings to the json-schema
- - Always allow the card detect uevent to be consumed by userspace
-
-MMC host:
- - Convert a few DT bindings to the json-schema
- - mtk-sd: Add support for command queue through cqhci
- - mtk-sd: Add support for the MT6779 variant
- - renesas_sdhi_internal_dmac: Fix dma unmapping in the error path
- - sdhci_am654: Add support for the AM65x PG2.0 variant
- - sdhci_am654: Extend support for phys/clocks
- - sdhci-cadence: Drop incorrect HW tuning for SD mode
- - sdhci-msm: Add support for interconnect bandwidth scaling
- - sdhci-msm: Enable internal voltage control
- - sdhci-msm: Enable low power state for pinctrls
- - sdhci-of-at91: Ludovic Desroches handovers maintenance to Eugen Hristev
- - sdhci-pci-gli: Improve clock handling for GL975x
- - sdhci-pci-o2micro: Add HW tuning for SDR104 mode
- - sdhci-pci-o2micro: Fix support for O2 host controller Seabird1
-
-----------------------------------------------------------------
-Akshu Agrawal (1):
-      mmc: sdhci-acpi: For amd device set driver type as MMC_SET_DRIVER_TYPE_A
-
-Ben Chuang (2):
-      mmc: cqhci: Fix a print format for the task descriptor
-      mmc: sdhci-pci-gli: Set SDR104's clock to 205MHz and enable SSC for GL975x
-
-Chuhong Yuan (1):
-      mmc: sdhci-of-arasan: Add missed checks for devm_clk_register()
-
-Chun-Hung Wu (4):
-      mmc: mediatek: add MT6779 MMC driver support
-      mmc: mediatek: refine msdc timeout api
-      mmc: mediatek: command queue support
-      dt-bindings: mmc: mediatek: Add document for mt6779
-
-Colin Ian King (1):
-      mmc: dw_mmc-exynos: remove redundant initialization of variable 'found'
-
-Dan Carpenter (1):
-      mmc: sdhci: Fix a potential uninitialized variable
-
-Faiz Abbas (6):
-      dt-bindings: mmc: sdhci-am654: Add ti,clkbuf-sel binding
-      mmc: sdhci_am654: Add flag for PHY calibration
-      mmc: sdhci_am654: Add Support for SR2.0
-      mmc: sdhci_am654: Fix conditions for enabling dll
-      mmc: sdhci_am654: Update delay chain configuration
-      mmc: sdhci_am654: Add support for clkbuf_sel property
-
-Flavio Suligoi (1):
-      mmc: sdhci-msm: Fix spelling mistake
-
-Geert Uytterhoeven (1):
-      mmc: sh_mmcif: Use "kHz" for kilohertz
-
-Haibo Chen (2):
-      mmc: sdio: fix clock rate setting for SDR12/SDR25 mode
-      mmc: sdhci-esdhc-imx: dump internal IC debug status during error
-
-Hulk Robot (1):
-      mmc: sdhci-msm: Make function sdhci_msm_dump_vendor_regs() static
-
-Jisheng Zhang (1):
-      dt-bindings: mmc: Convert pwrseq to json-schema
-
-Lee Jones (15):
-      mmc: core: Mark fixups as __maybe_unused
-      mmc: core: Provide description for sdio_set_host_pm_flags()'s 'flag' arg
-      mmc: core: Add missing documetation for 'mmc' and 'ios'
-      mmc: sdhci-s3c: Provide documentation for missing struct properties
-      mmc: mtk-sd: Demote msdc_recheck_sdio_irq() function header
-      mmc: atmel-mci: Provide 2 new and correct 1 existing property description
-      mmc: core: Correct misspelling of 'mq' in mmc_init_request()'s docs
-      mmc: dw_mmc-exynos: Add kerneldoc descriptions of for 'dev' args
-      mmc: rtsx_pci_sdmmc: Remove set but unused variable 'err'
-      mmc: rtsx_usb_sdmmc: Remove set but unused variable 'err'
-      mmc: sdhci-of-arasan: Correct formatting and provide missing function arg(s)
-      mmc: sdhci-msm: Demote faux kerneldoc header down to basic comment block
-      mmc: cqhci: Demote faux kerneldoc header down to basic comment block
-      arch: arm: mach-omap2: mmc: Move omap_mmc_notify_cover_event() prototype
-      mmc: sdhci-iproc: Do not define 'struct acpi_device_id' when !CONFIG_ACPI
-
-Ludovic Barre (1):
-      mmc: mmci: add sdio datactrl mask for sdmmc revisions
-
-Ludovic Desroches (1):
-      MAINTAINERS: mmc: sdhci-of-at91: handover maintenance to Eugen Hristev
-
-Manish Narani (1):
-      mmc: sdhci-of-arasan: fix timings allocation code
-
-Masahiro Yamada (1):
-      mmc: sdhci-cadence: do not use hardware tuning for SD mode
-
-Pali Rohár (1):
-      mmc: sdio: Move SDIO IDs from rsi_sdio driver to common include file
-
-Pradeep P V K (2):
-      mmc: sdhci-msm: Add interconnect bandwidth scaling support
-      dt-bindings: mmc: sdhci-msm: Add interconnect BW scaling strings
-
-Sowjanya Komatineni (1):
-      mmc: sdhci-tegra: Add comment for PADCALIB and PAD_CONTROL NVQUIRKS
-
-Ulf Hansson (2):
-      mmc: core: Always allow the card detect uevent to be consumed
-      Merge branch 'fixes' into next
-
-Vaibhav Gupta (2):
-      memstick: jmb38x_ms: use generic power management
-      mmc: via-sdmmc: use generic power management
-
-Veerabhadrarao Badiganti (4):
-      mmc: core: Set default power mode in mmc_alloc_host()
-      mmc: sdhci-msm: Use internal voltage control
-      mmc: sdhci-msm: Set IO pins in low power state during suspend
-      mmc: sdhci: Fix potential null pointer access while accessing vqmmc
-
-Vijay Viswanath (1):
-      mmc: sdhci: Allow platform controlled voltage switching
-
-Wan Ahmad Zainie (1):
-      dt-bindings: mmc: convert arasan sdhci bindings to yaml
-
-Wei Yongjun (1):
-      mmc: mediatek: make function msdc_cqe_disable() static
-
-Yoshihiro Shimoda (6):
-      mmc: tmio: core: Add end operation into tmio_mmc_dma_ops
-      mmc: renesas_sdhi_internal_dmac: clean up the code for dma complete
-      mmc: renesas_sdhi_internal_dmac: Fix dma unmapping in error cases
-      dt-bindings: mmc: Add full-pwr-cycle-in-suspend property
-      mmc: core: Add MMC_CAP2_FULL_PWR_CYCLE_IN_SUSPEND
-      dt-bindings: mmc: renesas,sdhi: convert to YAML
-
-Yue Hu (3):
-      mmc: sdio: Return ret if sdio_disable_func() fails
-      mmc: sdio: Enable SDIO 4-bit bus if not support SD_SCR_BUS_WIDTH_4 for SD combo card
-      mmc: sdio: Fix 1-bit mode for SD-combo cards during suspend
-
-shirley her (2):
-      mmc: sdhci-pci-o2micro: Bug fix for O2 host controller Seabird1
-      mmc: sdhci-pci-o2micro: Add HW tuning for SDR104 mode
-
- .../devicetree/bindings/mmc/arasan,sdhci.txt       | 192 -------------
- .../devicetree/bindings/mmc/arasan,sdhci.yaml      | 299 +++++++++++++++++++++
- .../devicetree/bindings/mmc/mmc-controller.yaml    |   5 +
- .../devicetree/bindings/mmc/mmc-pwrseq-emmc.txt    |  25 --
- .../devicetree/bindings/mmc/mmc-pwrseq-emmc.yaml   |  46 ++++
- .../devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt  |  16 --
- .../devicetree/bindings/mmc/mmc-pwrseq-sd8787.yaml |  39 +++
- .../devicetree/bindings/mmc/mmc-pwrseq-simple.txt  |  31 ---
- .../devicetree/bindings/mmc/mmc-pwrseq-simple.yaml |  62 +++++
- Documentation/devicetree/bindings/mmc/mtk-sd.txt   |   1 +
- .../devicetree/bindings/mmc/renesas,sdhi.txt       | 114 --------
- .../devicetree/bindings/mmc/renesas,sdhi.yaml      | 191 +++++++++++++
- .../devicetree/bindings/mmc/sdhci-am654.txt        |   1 +
- .../devicetree/bindings/mmc/sdhci-msm.txt          |  18 ++
- MAINTAINERS                                        |   2 +-
- arch/arm/mach-omap2/mmc.h                          |   4 -
- drivers/memstick/host/jmb38x_ms.c                  |  38 +--
- drivers/mmc/core/core.c                            |  11 +-
- drivers/mmc/core/host.c                            |   6 +
- drivers/mmc/core/mmc.c                             |   3 +-
- drivers/mmc/core/queue.c                           |   2 +-
- drivers/mmc/core/quirks.h                          |   6 +-
- drivers/mmc/core/regulator.c                       |   2 +
- drivers/mmc/core/sdio.c                            |  64 +++--
- drivers/mmc/core/sdio_io.c                         |   3 +-
- drivers/mmc/host/Kconfig                           |   1 +
- drivers/mmc/host/atmel-mci.c                       |   4 +-
- drivers/mmc/host/cqhci.c                           |   4 +-
- drivers/mmc/host/dw_mmc-exynos.c                   |   4 +-
- drivers/mmc/host/mmci.c                            |   2 +
- drivers/mmc/host/mtk-sd.c                          | 163 ++++++++++-
- drivers/mmc/host/renesas_sdhi_internal_dmac.c      |  28 +-
- drivers/mmc/host/rtsx_pci_sdmmc.c                  |   4 +-
- drivers/mmc/host/rtsx_usb_sdmmc.c                  |   5 +-
- drivers/mmc/host/sdhci-acpi.c                      |   1 +
- drivers/mmc/host/sdhci-cadence.c                   | 123 ++++-----
- drivers/mmc/host/sdhci-esdhc-imx.c                 |  39 +++
- drivers/mmc/host/sdhci-iproc.c                     |   2 +
- drivers/mmc/host/sdhci-msm.c                       | 235 +++++++++++++++-
- drivers/mmc/host/sdhci-of-arasan.c                 |  32 ++-
- drivers/mmc/host/sdhci-pci-gli.c                   | 220 ++++++++++++++-
- drivers/mmc/host/sdhci-pci-o2micro.c               |  39 ++-
- drivers/mmc/host/sdhci-s3c.c                       |   4 +
- drivers/mmc/host/sdhci-tegra.c                     |   9 +
- drivers/mmc/host/sdhci.c                           |  24 +-
- drivers/mmc/host/sdhci.h                           |   1 +
- drivers/mmc/host/sdhci_am654.c                     |  86 ++++--
- drivers/mmc/host/sh_mmcif.c                        |   6 +-
- drivers/mmc/host/tmio_mmc.h                        |   3 +
- drivers/mmc/host/tmio_mmc_core.c                   |   8 +
- drivers/mmc/host/via-sdmmc.c                       |  33 +--
- drivers/net/wireless/rsi/rsi_91x_sdio.c            |   8 +-
- drivers/net/wireless/rsi/rsi_sdio.h                |   4 -
- include/linux/mmc/host.h                           |   2 +
- include/linux/mmc/sdio_ids.h                       |   4 +
- include/linux/platform_data/mmc-omap.h             |   3 +
- 56 files changed, 1655 insertions(+), 627 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
- create mode 100644 Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml
- delete mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.txt
- create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-emmc.yaml
- delete mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
- create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.yaml
- delete mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.txt
- create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-simple.yaml
- delete mode 100644 Documentation/devicetree/bindings/mmc/renesas,sdhi.txt
- create mode 100644 Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
+On 2020/07/31 21:51, hch@infradead.org wrote:=0A=
+> On Fri, Jul 31, 2020 at 10:16:49AM +0000, Damien Le Moal wrote:=0A=
+>>>=0A=
+>>> Let's keep semantics and implementation separate.  For the case=0A=
+>>> where we report the actual offset we need a size imitation and no=0A=
+>>> short writes.=0A=
+>>=0A=
+>> OK. So the name of the flag confused me. The flag name should reflect "D=
+o zone=0A=
+>> append and report written offset", right ?=0A=
+> =0A=
+> Well, we already have O_APPEND, which is the equivalent to append to=0A=
+> the write pointer.  The only interesting addition is that we also want=0A=
+> to report where we wrote.  So I'd rather have RWF_REPORT_OFFSET or so.=0A=
+=0A=
+That works for me. But that rules out having the same interface for raw blo=
+ck=0A=
+devices since O_APPEND has no meaning in that case. So for raw block device=
+s, it=0A=
+will have to be through zonefs. That works for me, and I think it was your =
+idea=0A=
+all along. Can you confirm please ?=0A=
+=0A=
+>> But I think I am starting to see the picture you are drawing here:=0A=
+>> 1) Introduce a fcntl() to get "maximum size for atomic append writes"=0A=
+>> 2) Introduce an aio flag specifying "Do atomic append write and report w=
+ritten=0A=
+>> offset"=0A=
+> =0A=
+> I think we just need the 'report written offset flag', in fact even for=
+=0A=
+> zonefs with the right locking we can handle unlimited write sizes, just=
+=0A=
+> with lower performance.  E.g.=0A=
+> =0A=
+> 1) check if the write size is larger than the zone append limit=0A=
+> =0A=
+> if no:=0A=
+> =0A=
+>  - take the shared lock  and issue a zone append, done=0A=
+> =0A=
+> if yes:=0A=
+> =0A=
+>  - take the exclusive per-inode (zone) lock and just issue either normal=
+=0A=
+>    writes or zone append at your choice, relying on the lock to=0A=
+>    serialize other writers.  For the async case this means we need a=0A=
+>    lock than can be release in a different context than it was acquired,=
+=0A=
+>    which is a little ugly but can be done.=0A=
+=0A=
+Yes, that would be possible. But likely, this will also need calls to=0A=
+inode_dio_wait() to avoid ending up with a mix of regular write and zone ap=
+pend=0A=
+writes in flight (which likely would result in the regular write failing as=
+ the=0A=
+zone append writes would go straight to the device without waiting for the =
+zone=0A=
+write lock like regular writes do).=0A=
+=0A=
+This all sound sensible to me. One last point though, specific to zonefs: i=
+f the=0A=
+user opens a zone file with O_APPEND, I do want to have that necessarily me=
+an=0A=
+"use zone append". And same for the "RWF_REPORT_OFFSET". The point here is =
+that=0A=
+both O_APPEND and RWF_REPORT_OFFSET can be used with both regular writes an=
+d=0A=
+zone append writes, but none of them actually clearly specify if the=0A=
+application/user tolerates writing data to disk in a different order than t=
+he=0A=
+issuing order... So another flag to indicate "atomic out-of-order writes" (=
+=3D=3D=0A=
+zone append) ?=0A=
+=0A=
+Without a new flag, we can only have these cases to enable zone append:=0A=
+=0A=
+1) No O_APPEND: ignore RWF_REPORT_OFFSET and use regular writes using ->aio=
+_ofst=0A=
+=0A=
+2) O_APPEND without RWF_REPORT_OFFSET: use regular write with file size as=
+=0A=
+->aio_ofst (as done today already), do not report the write offset on compl=
+etion.=0A=
+=0A=
+3) O_APPEND with RWF_REPORT_OFFSET: use zone append, implying potentially o=
+ut of=0A=
+order writes.=0A=
+=0A=
+And case (3) is not nice. I would rather prefer something like:=0A=
+=0A=
+3) O_APPEND with RWF_REPORT_OFFSET: use regular write with file size as=0A=
+->aio_ofst (as done today already), report the write offset on completion.=
+=0A=
+=0A=
+4) O_APPEND with RWF_ATOMIC_APPEND: use zone append writes, do not report t=
+he=0A=
+write offset on completion.=0A=
+=0A=
+5) O_APPEND with RWF_ATOMIC_APPEND+RWF_REPORT_OFFSET: use zone append write=
+s,=0A=
+report the write offset on completion.=0A=
+=0A=
+RWF_ATOMIC_APPEND could also always imply RWF_REPORT_OFFSET. ANy aio with=
+=0A=
+RWF_ATOMIC_APPEND that is too large would be failed.=0A=
+=0A=
+Thoughts ?=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
