@@ -2,122 +2,139 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8826EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D2DC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58E4A2177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:23:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tqO0M2IB"
+	by mail.kernel.org (Postfix) with ESMTP id 313E422D71
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:23:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbgHERXs (ORCPT
+        id S1728836AbgHERX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:23:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728497AbgHERQn (ORCPT
+        Wed, 5 Aug 2020 13:23:57 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:45990 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728524AbgHERQJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:16:43 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 275AEC06174A;
-        Wed,  5 Aug 2020 10:16:43 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id r4so14989193pls.2;
-        Wed, 05 Aug 2020 10:16:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=09YSKPP7Cq8VsV0IMBuxAsBm/yvKaFDSCahx4z1NFcQ=;
-        b=tqO0M2IBSkDzDHxoQDOnAATXSwqNxm90XEEAkKpFztXTwlqlHWOmv+BXv3Sa/F0jHh
-         /vpnLYSxSaj65tJfLmXqL7YNzX6DVxWM+NahlBxARrOUn5AbVv5ZbcEbTv2DLpHdBgi6
-         BvQhl13guAvmywkJ1hVNSuTK3j9oqw82tsFv+NblXgQyPJeWFL0S/velRw7rfNPtSN+0
-         Tgfsxz8lTfrxFoPy/+CVveRihaC/P17OpZJmOV4LoxkIOC/5a4SWqfQ6rHnCGWNXtL/H
-         Of6WGeC40kASrNllKhkSozfyBGoKnUB7Rx+WGuclFS/u+0RQd/8MC+y1tdL53+NH9Cm6
-         HC0w==
+        Wed, 5 Aug 2020 13:16:09 -0400
+Received: by mail-ua1-f66.google.com with SMTP id p27so9758806uaa.12;
+        Wed, 05 Aug 2020 10:16:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=09YSKPP7Cq8VsV0IMBuxAsBm/yvKaFDSCahx4z1NFcQ=;
-        b=AayXoPbbgsOvbdpffm97368955qIMRmjiF0V0UyEQSwk1oF9lFPJKAq9w5N2OI3vu6
-         /GMdshFvUu1Xs4nPjjDnt2Tupogv/mri4cDOrUCrmxvFXVXBEFIr4pBIluL5DLf05cKj
-         WxDmWTdJdDHSa3WH0i2vY47SdcKqOQjQckvhAi45VRC0GDI9b4dsDhb8UK4eVzmkAf3x
-         P1uiydahjPle+xnVaaclEPg+smef7QQLSxmytIAh6sUUcKvKyT0fp1A1EkvJPubLIeVy
-         +2OKRzUtSYeHqfCV+LnItFRCJUZ/YuFzIxzENK0MNVStn6eOrKwOC0pkjWu3J+W1aTSY
-         vz8w==
-X-Gm-Message-State: AOAM532/TGRn7WT/arfSF9XWi8zHAMOHtpJs28HQvxRxfXmaS34M7GKh
-        PPUDdZoEVFT0KhJn07jvn/Q=
-X-Google-Smtp-Source: ABdhPJwUGn9rRBdEQrMwQQSOgL4hqeAra8KQU6l7Yc00ExdaONKgUZjxB5Gl9xdQLixur2v9izy6Ig==
-X-Received: by 2002:a17:90b:154:: with SMTP id em20mr4496017pjb.173.1596647802631;
-        Wed, 05 Aug 2020 10:16:42 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:16b0])
-        by smtp.gmail.com with ESMTPSA id np4sm3957912pjb.4.2020.08.05.10.16.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 10:16:41 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 10:16:39 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
-        john fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Xu <dlxu@fb.com>
-Subject: Re: [PATCH bpf-next 5/5] selftests/bpf: add benchmark for uprobe vs.
- user_prog
-Message-ID: <20200805171639.tsqjmifd7eb3htou@ast-mbp.dhcp.thefacebook.com>
-References: <20200801084721.1812607-1-songliubraving@fb.com>
- <20200801084721.1812607-6-songliubraving@fb.com>
- <CAEf4BzaP4TGF7kcmZRAKsy=oWPpFA6sUGFkctpGz-fPp+YuSOQ@mail.gmail.com>
- <DDCD362E-21D3-46BF-90A6-8F3221CBB54E@fb.com>
- <CAEf4BzY5RYMM6w8wn3qEB3AsuKWv-TMaD5NVFj=YqbCW4DLjqA@mail.gmail.com>
- <7384B583-EE19-4045-AC72-B6FE87C187DD@fb.com>
- <CAEf4BzaiJnCu14AWougmxH80msGdOp4S8ZNmAiexMmtwUM_2Xg@mail.gmail.com>
- <AF9D0E8C-0AA5-4BE4-90F4-946FABAB63FD@fb.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AXKpgsbLcw7z2C6ljXHBYtvVN+NDPtHizk0roOICInI=;
+        b=HDxvQeBHBH6wHy2UhDpdh7Ye5pVuATgudTrV0WGoTKTtsB3KmrmihTUKbNbD0yrdDO
+         dHVa3LL4WMOVGQA52EuDPmV6DSLYnCHQHie11WNUCa523R2vtlAY3QCvzd1MkEHJTrkv
+         2DunOy3wZpxELNXhwogS+tMhpNgkznSi4FYNuP01t5INSR+nrzI9ay6aahOW4VN0mTVi
+         xIGVm1agQrl0VdPuKd6SccG/1OGT4MdFbbztZmJqeVsYnSLpoul3oRmY7TQi8C8ltqFo
+         DKn2AxAOyG37mcw1iV3mNalzmTa22t/ipLkSLfpcNlnJOuXqWN8UBPGVutfCUMcQ3VnE
+         YJPg==
+X-Gm-Message-State: AOAM530DutCgMwXmD0tg9LxU/xBiukDGat3oRtPSkCwIz6TjfKhV20Pm
+        QzJrAvBOTfTj+UvCIbucaEXV4vKNPPV4ixWH7bPld1gx
+X-Google-Smtp-Source: ABdhPJwV3n8tOAcfpMHynj9j+mQfpTpf9DYt0YtMCyg/CBd6L07ZVwpSWSi6SSwkA6/AmBSX9QS/9q9S3w/0cDUPDdY=
+X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr2057730ote.107.1596626350552;
+ Wed, 05 Aug 2020 04:19:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AF9D0E8C-0AA5-4BE4-90F4-946FABAB63FD@fb.com>
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-21-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594919915-5225-21-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 5 Aug 2020 13:18:59 +0200
+Message-ID: <CAMuHMdVriWnPK8-=w=0mq8yj9+1jbsg9yH8aV=ygyHsQ0f-CQQ@mail.gmail.com>
+Subject: Re: [PATCH 20/20] arm64: dts: renesas: r8a774e1: Add VIN and CSI-2 nodes
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 04:47:30AM +0000, Song Liu wrote:
-> 
-> Being able to trigger BPF program on a different CPU could enable many
-> use cases and optimizations. The use case I am looking at is to access
-> perf_event and percpu maps on the target CPU. For example:
-> 	0. trigger the program
-> 	1. read perf_event on cpu x;
-> 	2. (optional) check which process is running on cpu x;
-> 	3. add perf_event value to percpu map(s) on cpu x. 
+Hi Prabhakar,
 
-If the whole thing is about doing the above then I don't understand why new
-prog type is needed. Can prog_test_run support existing BPF_PROG_TYPE_KPROBE?
-"enable many use cases" sounds vague. I don't think folks reading
-the patches can guess those "use cases".
-"Testing existing kprobe bpf progs" would sound more convincing to me.
-If the test_run framework can be extended to trigger kprobe with correct pt_regs.
-As part of it test_run would trigger on a given cpu with $ip pointing
-to some test fuction in test_run.c. For local test_run the stack trace
-would include bpf syscall chain. For IPI the stack trace would include
-the corresponding kernel pieces where top is our special test function.
-Sort of like pseudo kprobe where there is no actual kprobe logic,
-since kprobe prog doesn't care about mechanism. It needs correct
-pt_regs only as input context.
-The kprobe prog output (return value) has special meaning though,
-so may be kprobe prog type is not a good fit.
-Something like fentry/fexit may be better, since verifier check_return_code()
-enforces 'return 0'. So their return value is effectively "void".
-Then prog_test_run would need to gain an ability to trigger
-fentry/fexit prog on a given cpu.
+On Thu, Jul 16, 2020 at 7:20 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add VIN and CSI-2 nodes to RZ/G2H (R8A774E1) SoC dtsi.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+However, before I queue this in renesas-devel for v5.10, I'd like to
+have some clarification about the issue below.
+
+> --- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
+
+> +               vin4: video@e6ef4000 {
+> +                       compatible = "renesas,vin-r8a774e1";
+> +                       reg = <0 0xe6ef4000 0 0x1000>;
+> +                       interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> +                       clocks = <&cpg CPG_MOD 807>;
+> +                       power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
+> +                       resets = <&cpg 807>;
+> +                       renesas,id = <4>;
+> +                       status = "disabled";
+> +
+> +                       ports {
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               port@1 {
+> +                                       #address-cells = <1>;
+> +                                       #size-cells = <0>;
+
+"make dtbs W=1" says:
+
+    arch/arm64/boot/dts/renesas/r8a774e1.dtsi:1562.12-1572.7: Warning
+(graph_child_address): /soc/video@e6ef4000/ports/port@1: graph node
+has single child node 'endpoint@0', #address-cells/#size-cells are not
+necessary
+
+(same for vin5-7 below)
+
+> +
+> +                                       reg = <1>;
+> +
+> +                                       vin4csi20: endpoint@0 {
+> +                                               reg = <0>;
+> +                                               remote-endpoint = <&csi20vin4>;
+> +                                       };
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
