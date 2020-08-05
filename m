@@ -5,71 +5,72 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF5DC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA39C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 695492075D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6194C2075D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:28:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X2QSvo1k"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L00RFt4h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728882AbgHET2o (ORCPT
+        id S1728919AbgHET2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:28:44 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:54014 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728605AbgHERL1 (ORCPT
+        Wed, 5 Aug 2020 15:28:48 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54994 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728599AbgHERL0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:11:27 -0400
+        Wed, 5 Aug 2020 13:11:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
         s=mimecast20190719; t=1596647485;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=Q6OJqxU8Sp5UYmolvKk955VfeDV9wjAzILoG6EGszAQ=;
-        b=X2QSvo1knRCdrU+oVOHEcfYhlFGx6p/P4jjGjdNS2Kj5kaWnkV58U3TjUW8TcSB7B5k2Lq
-        U8zkAYl+oPN3xCtgjwKkoRs2js6C6TgxNReqjgTeA0IIY1cBB5a6yCV3QZ8Y0vM6A2ULfU
-        GOr/85HTNOkcTDHtGsYWIp53VL1NkBk=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-344-5I6XDiUGNPy3F1r9jT2Dmg-1; Wed, 05 Aug 2020 09:44:52 -0400
-X-MC-Unique: 5I6XDiUGNPy3F1r9jT2Dmg-1
-Received: by mail-wr1-f70.google.com with SMTP id 89so13595366wrr.15
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:44:52 -0700 (PDT)
+        bh=nsePUp5bwDzPkeGMt9DhuoyzhxlPvsYKTxQ+QKtzY8M=;
+        b=L00RFt4hyZphKEkzOLKgLtwumDIYN0ka0yiSzXi3Lxkxo0DUCDZZ6eKg3TGRf6zfhXvtWR
+        7gKepz9QStTnZtbGqHcA+9dtlFWmw3DOgS1X9FDgfroL9Vz2G3Aanpvhw7LL70/NH0wb8d
+        n/mECgc9MFl+7dZNNT+mCUELluNK8hg=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-167-qXjyYV8GOJ63X808JCdliQ-1; Wed, 05 Aug 2020 09:45:04 -0400
+X-MC-Unique: qXjyYV8GOJ63X808JCdliQ-1
+Received: by mail-wr1-f72.google.com with SMTP id b13so10876161wrq.19
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:45:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Q6OJqxU8Sp5UYmolvKk955VfeDV9wjAzILoG6EGszAQ=;
-        b=Zbpp7UefLOICElj/8Lh9BjwLnNNetKE2QCN847X0Y/F1E+ppgaWxs1cWDp/f2k0his
-         bHBn7rKliDfw0B5MC/hHHMOthtFbR6GvL1yl/vI3UzEOonxU602zFo27k5TaoEj+CEfD
-         W35y2dMLzrjNQ4JRwmhfZZJ0HAwZZ8bOLQ4koHqMqAbWTyL9ATbYWfTMl+tpuB3j5Oix
-         Hz4BsMdGsfzCRn6efkRxfeDIEaxjPBEgeC3EK7HxniCvL4UV25ykcaXcIW6QI3duOb+I
-         bMq+3xch6z6sx4L8Vjyq2LHLhi7005Jag1jN217qyO94dy/BLRk216FCVyMdhfOvvkt2
-         8cxA==
-X-Gm-Message-State: AOAM530FxrAwW1R3x21Am26Te90Wz20tPz99AZZAoI8iAYB/UgsB7+NB
-        wpQaJqC7HQyoDnHX5OGO8TcVBo2L4qvMdrBKDpHrpROWPrBxdVg05CdGybHwWdkRpLl5Q40fkSi
-        eBlDS4OV40o3sdzYlYAHOhm1I
-X-Received: by 2002:a7b:c24e:: with SMTP id b14mr3637831wmj.128.1596635091102;
-        Wed, 05 Aug 2020 06:44:51 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxIP5APlUbJFDt9cc/+rC2+q+FdTyHsKg7qMGdbwa6FJ2pprZGU/KyCZL+3OX8oaPf4PHL5Hg==
-X-Received: by 2002:a7b:c24e:: with SMTP id b14mr3637816wmj.128.1596635090938;
-        Wed, 05 Aug 2020 06:44:50 -0700 (PDT)
+        bh=nsePUp5bwDzPkeGMt9DhuoyzhxlPvsYKTxQ+QKtzY8M=;
+        b=dJLeetCIT4mmlidH0LsgEQG4gbOUXaLw0e/e/vr9EwxkWUGAXEGkCVCYq8wrS9Ow4j
+         KzTd7T9FayoZB7Db+LO3XtozH+mgpTamIjaeDW/USAvBtckaQvK4B7ZTwUC7YglrqIKx
+         hMVdsQ4cVvmLQap+JeDQN7c6KQHWOUvULsdUoIKhTsPElikuv49GfU5IWYfgIzOdAPnI
+         wTO78MZjFnmLUNd6nSlJ2sqLL02+9VATxEzDQi8bvSx8ioHlILzHeewx0WiWdXDWgqlE
+         pC1tNUOsFgcEqstXHcKjiL8p3vC4Xr0cYbZBcC9NFEwwxN+6U1i+26myo5YEejQhwCTI
+         TjMw==
+X-Gm-Message-State: AOAM533ziHBw5S1Ct5sKP+IEhx1WA2kq/i9ERs1thcxgM3DAqKSpDq9T
+        LvhmQz9j/6VxBiwdRA9nhkR1dCmS1grCt3dNiWVeaQoqDBW5EuNt0+UmmfPaV/jfCCJgU12e+2y
+        jZ2xI0/dAzGM1+Iyr+tHWpxxy
+X-Received: by 2002:a1c:96c5:: with SMTP id y188mr3540959wmd.72.1596635102978;
+        Wed, 05 Aug 2020 06:45:02 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyhLoRx7IzuivQlViG9F0fDgIgMdjMVV9PC0dBe4LfMZpIiYNNk/XwHbeS7FyfdebXIBXrqkg==
+X-Received: by 2002:a1c:96c5:: with SMTP id y188mr3540940wmd.72.1596635102770;
+        Wed, 05 Aug 2020 06:45:02 -0700 (PDT)
 Received: from redhat.com (bzq-79-178-123-8.red.bezeqint.net. [79.178.123.8])
-        by smtp.gmail.com with ESMTPSA id x4sm3352368wru.81.2020.08.05.06.44.49
+        by smtp.gmail.com with ESMTPSA id e16sm2907812wrx.30.2020.08.05.06.45.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 06:44:50 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 09:44:48 -0400
+        Wed, 05 Aug 2020 06:45:02 -0700 (PDT)
+Date:   Wed, 5 Aug 2020 09:45:00 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     David Airlie <airlied@linux.ie>, Gerd Hoffmann <kraxel@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 34/38] drm/virtio: convert to LE accessors
-Message-ID: <20200805134226.1106164-35-mst@redhat.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: [PATCH v3 38/38] virtio_net: use LE accessors for speed/duplex
+Message-ID: <20200805134226.1106164-39-mst@redhat.com>
 References: <20200805134226.1106164-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -82,61 +83,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Virtgpu is modern-only. Use LE accessors for config space.
+Speed and duplex config fields depend on VIRTIO_NET_F_SPEED_DUPLEX
+which being 63>31 depends on VIRTIO_F_VERSION_1.
 
+Accordingly, use LE accessors for these fields.
+
+Reported-by: Cornelia Huck <cohuck@redhat.com>
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- drivers/gpu/drm/virtio/virtgpu_kms.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/net/virtio_net.c        | 9 +++++----
+ include/uapi/linux/virtio_net.h | 2 +-
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
-index 0a5c8cf409fb..4d944a0dff3e 100644
---- a/drivers/gpu/drm/virtio/virtgpu_kms.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
-@@ -39,8 +39,8 @@ static void virtio_gpu_config_changed_work_func(struct work_struct *work)
- 	u32 events_read, events_clear = 0;
+diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+index ba38765dc490..0934b1ec5320 100644
+--- a/drivers/net/virtio_net.c
++++ b/drivers/net/virtio_net.c
+@@ -2264,12 +2264,13 @@ static void virtnet_update_settings(struct virtnet_info *vi)
+ 	if (!virtio_has_feature(vi->vdev, VIRTIO_NET_F_SPEED_DUPLEX))
+ 		return;
  
- 	/* read the config space */
--	virtio_cread(vgdev->vdev, struct virtio_gpu_config,
--		     events_read, &events_read);
-+	virtio_cread_le(vgdev->vdev, struct virtio_gpu_config,
-+			events_read, &events_read);
- 	if (events_read & VIRTIO_GPU_EVENT_DISPLAY) {
- 		if (vgdev->has_edid)
- 			virtio_gpu_cmd_get_edids(vgdev);
-@@ -49,8 +49,8 @@ static void virtio_gpu_config_changed_work_func(struct work_struct *work)
- 		drm_helper_hpd_irq_event(vgdev->ddev);
- 		events_clear |= VIRTIO_GPU_EVENT_DISPLAY;
- 	}
--	virtio_cwrite(vgdev->vdev, struct virtio_gpu_config,
--		      events_clear, &events_clear);
-+	virtio_cwrite_le(vgdev->vdev, struct virtio_gpu_config,
-+			 events_clear, &events_clear);
+-	speed = virtio_cread32(vi->vdev, offsetof(struct virtio_net_config,
+-						  speed));
++	virtio_cread_le(vi->vdev, struct virtio_net_config, speed, &speed);
++
+ 	if (ethtool_validate_speed(speed))
+ 		vi->speed = speed;
+-	duplex = virtio_cread8(vi->vdev, offsetof(struct virtio_net_config,
+-						  duplex));
++
++	virtio_cread_le(vi->vdev, struct virtio_net_config, duplex, &duplex);
++
+ 	if (ethtool_validate_duplex(duplex))
+ 		vi->duplex = duplex;
  }
- 
- static void virtio_gpu_init_vq(struct virtio_gpu_queue *vgvq,
-@@ -165,8 +165,8 @@ int virtio_gpu_init(struct drm_device *dev)
- 	}
- 
- 	/* get display info */
--	virtio_cread(vgdev->vdev, struct virtio_gpu_config,
--		     num_scanouts, &num_scanouts);
-+	virtio_cread_le(vgdev->vdev, struct virtio_gpu_config,
-+			num_scanouts, &num_scanouts);
- 	vgdev->num_scanouts = min_t(uint32_t, num_scanouts,
- 				    VIRTIO_GPU_MAX_SCANOUTS);
- 	if (!vgdev->num_scanouts) {
-@@ -176,8 +176,8 @@ int virtio_gpu_init(struct drm_device *dev)
- 	}
- 	DRM_INFO("number of scanouts: %d\n", num_scanouts);
- 
--	virtio_cread(vgdev->vdev, struct virtio_gpu_config,
--		     num_capsets, &num_capsets);
-+	virtio_cread_le(vgdev->vdev, struct virtio_gpu_config,
-+			num_capsets, &num_capsets);
- 	DRM_INFO("number of cap sets: %d\n", num_capsets);
- 
- 	virtio_gpu_modeset_init(vgdev);
+diff --git a/include/uapi/linux/virtio_net.h b/include/uapi/linux/virtio_net.h
+index 27d996f29dd1..3f55a4215f11 100644
+--- a/include/uapi/linux/virtio_net.h
++++ b/include/uapi/linux/virtio_net.h
+@@ -99,7 +99,7 @@ struct virtio_net_config {
+ 	 * speed, in units of 1Mb. All values 0 to INT_MAX are legal.
+ 	 * Any other value stands for unknown.
+ 	 */
+-	__virtio32 speed;
++	__le32 speed;
+ 	/*
+ 	 * 0x00 - half duplex
+ 	 * 0x01 - full duplex
 -- 
 MST
 
