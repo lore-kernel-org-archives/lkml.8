@@ -2,101 +2,108 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D32C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC602C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 205B922BF3
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:42:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aO0Z1jPD"
+	by mail.kernel.org (Postfix) with ESMTP id BDC1522B40
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:46:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596609967;
+	bh=b/ISxBJkxTj71SxW9Fvr39ExmksIlTwwn0gnSM6clBk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bBm1oCAl9al9ASrfffBvFfE36eDZ5ZBqQw/o8wPDhM4n5HnfhK1CA0Y0I215Y7GSB
+	 3w7amrRxoKSDWei5znHCBKsY+UuoWNlyGScfWJramLbijis3Uhgf6xaaeuWiF1ssF+
+	 3Az5GTbBHHlJRyclbVqy21YGc/GaNxY6bRpHjvnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgHEGl5 (ORCPT
+        id S1726713AbgHEGqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 02:41:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37590 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727986AbgHEGly (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 02:41:54 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49B83C061756
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 23:41:54 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id d188so16062468pfd.2
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 23:41:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=ltqLz+bl5cJfWC7EYmNLCWQiWVWxzgHI/BH5Y9oslyQ=;
-        b=aO0Z1jPDvV8s5byVMzx/gWoab/lBG5ayZTHBB6BRUjMsp1YxPj1Be33sYB91VB5n02
-         RnDyHR15B0m1x3IeZVwte/0U1gzjj/FIdFfDnm+Xd+8JQjg1YdoWfUnyGfJK3DadI6+o
-         LxpKhy0Lud50qAF0DIQ5sRpkYaa4Xz8TyQN3M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=ltqLz+bl5cJfWC7EYmNLCWQiWVWxzgHI/BH5Y9oslyQ=;
-        b=InN8rIS+koQlM+eKESXiuZowkVJ0ahE74om/g20Y0w1u4LqXzXugK3US/JobHTvWKR
-         1cszh5rGx93+uEcqKVH19YPNxBGNHaI7g9M5rqcYupP4JTmbtMUdQL5vY3At6Sz+xxYl
-         UwiCueV8u3lzBeEnrS78FcLc2ma6iY6RZejNm4j84Q1WHNPXVIbufVEhU2FXb13MVO8b
-         D1X18FbgJPUy24MUivmV7B9Jjjp/qnUrAdDXdFoCWvO9IGvXvVXm3CGikU1CpULVwChI
-         CVZaSmQaj7CQaBErffpUC1OwH9YVjTNU89ayoyyt6HYQ5yWxoxuY5DG1VkUTVpafxyqL
-         JIyQ==
-X-Gm-Message-State: AOAM5320AaoEtJMqVnB/FJTJ8whybNo65O2IdPX1zHKy6uQ727YdF1hU
-        +QsviNJNXvTptVKj9U+PCei+fg==
-X-Google-Smtp-Source: ABdhPJzTj31DnR6UDAJ7nYUuV1oFzS4F7uSIHrrjTsdOzmxqP6lzTTtoxG7G22mn7a8de9Y3wO7mYw==
-X-Received: by 2002:a63:df01:: with SMTP id u1mr1574233pgg.401.1596609713589;
-        Tue, 04 Aug 2020 23:41:53 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id g23sm1659455pfo.95.2020.08.04.23.41.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 23:41:53 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Wed, 5 Aug 2020 02:46:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725904AbgHEGqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 02:46:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCFD52076E;
+        Wed,  5 Aug 2020 06:46:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596609965;
+        bh=b/ISxBJkxTj71SxW9Fvr39ExmksIlTwwn0gnSM6clBk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I4QzF2WN1uR4Z537dtQAMIrYpcpzFg0eobJFDRxiG8CMXTUzn6O2xUrDeRIpkwYGE
+         J1OZMNIVH4lX5U5RxyUXDJqYRQlslQwwvb6WPmhr+pIPJ3UxRe2gSoRi2P/Ja/zkwS
+         nBFUh5NAzgcfQU0SCyVDB+kYTD5d9Ca1CezbuyvI=
+Date:   Wed, 5 Aug 2020 08:46:22 +0200
+From:   gregkh <gregkh@linuxfoundation.org>
+To:     "Eads, Gage" <gage.eads@intel.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Karlsson, Magnus" <magnus.karlsson@intel.com>,
+        "Topel, Bjorn" <bjorn.topel@intel.com>
+Subject: Re: [PATCH 04/20] dlb2: add device ioctl layer and first 4 ioctls
+Message-ID: <20200805064622.GA608152@kroah.com>
+References: <20200712134331.8169-1-gage.eads@intel.com>
+ <20200712134331.8169-5-gage.eads@intel.com>
+ <CAK8P3a2OmSPGNghM+Y9ThH7hgKJKVSKRPaSPN17gUVRUh_o3bQ@mail.gmail.com>
+ <SN6PR11MB2574422442C26A41FBC89DA1F64A0@SN6PR11MB2574.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1596541616-27688-4-git-send-email-rnayak@codeaurora.org>
-References: <1596541616-27688-1-git-send-email-rnayak@codeaurora.org> <1596541616-27688-4-git-send-email-rnayak@codeaurora.org>
-Subject: Re: [PATCH 3/3] arm64: dts: sc7180: Add assigned-performance-states for i2c
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Rajendra Nayak <rnayak@codeaurora.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org, ulf.hansson@linaro.org
-Date:   Tue, 04 Aug 2020 23:41:51 -0700
-Message-ID: <159660971183.1360974.3826701315718625693@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR11MB2574422442C26A41FBC89DA1F64A0@SN6PR11MB2574.namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rajendra Nayak (2020-08-04 04:46:56)
-> qup-i2c devices on sc7180 are clocked with a fixed clock (19.2 Mhz)
+On Tue, Aug 04, 2020 at 10:20:47PM +0000, Eads, Gage wrote:
+> > > +/* [7:0]: device revision, [15:8]: device version */
+> > > +#define DLB2_SET_DEVICE_VERSION(ver, rev) (((ver) << 8) | (rev))
+> > > +
+> > > +static int dlb2_ioctl_get_device_version(struct dlb2_dev *dev,
+> > > +                                        unsigned long user_arg,
+> > > +                                        u16 size)
+> > > +{
+> > > +       struct dlb2_get_device_version_args arg;
+> > > +       struct dlb2_cmd_response response;
+> > > +       int ret;
+> > > +
+> > > +       dev_dbg(dev->dlb2_device, "Entering %s()\n", __func__);
+> > > +
+> > > +       response.status = 0;
+> > > +       response.id = DLB2_SET_DEVICE_VERSION(2, DLB2_REV_A0);
+> > > +
+> > > +       ret = dlb2_copy_from_user(dev, user_arg, size, &arg, sizeof(arg));
+> > > +       if (ret)
+> > > +               return ret;
+> > > +
+> > > +       ret = dlb2_copy_resp_to_user(dev, arg.response, &response);
+> > 
+> > Better avoid any indirect pointers. As you always return a constant
+> > here, I think the entire ioctl command can be removed until you
+> > actually need it. If you have an ioctl command that needs both
+> > input and output, use _IOWR() to define it and put all arguments
+> > into the same structure.
+> 
+> I should've caught this in my earlier response, sorry. The device version
+> command is intentionally the first in the user interface enum. My
+> goal is for all device versions (e.g. DLB 1.0 in the future) to be accessible
+> through a /dev/dlb%d node. To allow this, all drivers would support the same
+> device-version command as command 0, then the subsequent commands can be
+> tailored to that particular device. User-space would query the version first
+> to determine which set of ioctl commands it needs to use.
+> 
+> So even though the response is constant (for now), it must occupy command 0 for
+> this design to work.
 
-s/Mhz/MHz/
+"versions" for ioctls just do not work, please don't go down that path,
+they should not be needed.  See the many different discussions about
+this topic on lkml for other subsystem submissions if you are curious.
 
-> Though qup-i2c does not support DVFS, it still needs to vote for a
-> performance state on 'cx' to satisfy the 19.2 Mhz clock frequency
+thanks,
 
-Capitalize CX?
-
-> requirement.
->=20
-> Use 'assigned-performance-states' to pass this information from
-> device tree, and also add the power-domains property to specify
-> the cx power-domain.
->=20
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-
-Can you generate this patch with more context? The hunks all look the
-same so it's really hard to see where they apply.
+greg k-h
