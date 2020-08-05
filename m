@@ -2,154 +2,151 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE300C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 21:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C907C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 21:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB55D2086A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 21:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6974722CAE
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 21:50:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kali.org header.i=@kali.org header.b="I5SvK1oz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CJwQDpWV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726291AbgHEVrl (ORCPT
+        id S1726339AbgHEVuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 17:47:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37226 "EHLO
+        Wed, 5 Aug 2020 17:50:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725996AbgHEVrj (ORCPT
+        with ESMTP id S1725996AbgHEVt7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 17:47:39 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADD10C061757
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 14:47:38 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id v13so24354848oiv.13
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 14:47:38 -0700 (PDT)
+        Wed, 5 Aug 2020 17:49:59 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9A80C061575
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 14:49:58 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id df16so17294983edb.9
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 14:49:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kali.org; s=google;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=iS1HIzC2VQtRzbEvLhI4Xg8Nj2mavELVrx/H/VkP64k=;
-        b=I5SvK1ozfyQMTOos6/OHD9zLqGGZTErZKvjtYOxfeUWvVKhkj3s8uesaPhZeQi1s7t
-         R2B1ccRmYfRdEGnpD8aPB5KNFlt9ZkRA/RPIPt94h9kv9Uz8fOz6hQsLAP2oFMjwvayx
-         SmtjMLrhVXxrX+Y+wCwl4YAavbjzBXMLXIELo7p/Fdy3g7Qzw1w6u7Yhr4FT2ro46TS2
-         jqzfOxUOImlDLNcjQ+GaQMz7Hy0ufGg9E7qVYDH/TA6MYoaj1nlixYl2a5SpnsFZCtZC
-         6bO4mXkwFrDryDduRDBXg4jyp138x9bhWGSG6nu4cC3O7esBdNHPBxzAg2dUhYQIk0D2
-         5Xxg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vJ9PmFgHy+mjnk3jwf45tHLYYDcmg6ohwuwx1D1TvHM=;
+        b=CJwQDpWVKAL+0tGtjAO+XWAFvRzU9QTjUClssnaocAIa6TcBKK4/vVSgBeczWa/SCD
+         MO3rI4WJu20SYZnOcfyTwBjk8ngCL+Ku8SYOGfAxaMbIW5zzqgqyUFGhLVdRfaJWZjxZ
+         6EHN4yMaXHLR3ehvhbVqeqF3zZWEBFkopyGUXz8ks0I0t5wMTjLFEs2q1eFVvcmw/qB+
+         zrD/75c9AwmuO40JCASBKEDw9TARMy5GsbgzoDMX/AZun95JK+QWcjRZ9JOzE0610dPn
+         qBGvqwU5Hmp5M7LktaNOjhJSUaCYvvZPRGC375QEUCTa9okEtjggNmv3ODGqHfT/CoVL
+         fsAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=iS1HIzC2VQtRzbEvLhI4Xg8Nj2mavELVrx/H/VkP64k=;
-        b=XpfHeX4eMosJ5S4X1SsOZBXYVJFpg5ls+wQvRITnWzmURm/xmbYn9l/MHPaTAbswGI
-         AWddVdff/oGUQQTpNXd5hLmwl+xqFI63nAgfOI8xcjY5qJlImWBMjmyMR6JT/MbvZbPA
-         DnH40xzCiOXnJQ4Ra6PLZKXMWXWYqVI5EHnxaA0ARRc2q8kmmFHj6zzSAOxf/NlKdRXB
-         KJugcYfcL8I2SDm/AhzjWQhN9MvYDAUqb0fwBAhBzYVq+fyUo6IjJE38+h03cvasPxPE
-         vg/i+U3J9kNtZ8EAEsWzPdNDxVsFrX6M1IWW3RHIheYlxSfZXw57tBpikNBRD3k6PJXd
-         ebTA==
-X-Gm-Message-State: AOAM530ZcaJx9lqebd7POmHwO2TFZ7s5AMltIJr+Cs003s2+0WG3a8Bk
-        BP6uPYzB8YQIwdBTyEx8KV2xvw==
-X-Google-Smtp-Source: ABdhPJzwG1Nuz0e+TG+qiJWstZZqXx4zRnncD8qI2Md0QHQfWUH0wUB/FqqLOT6Chto/xq+frey9aQ==
-X-Received: by 2002:aca:6c6:: with SMTP id 189mr4314977oig.134.1596664058026;
-        Wed, 05 Aug 2020 14:47:38 -0700 (PDT)
-Received: from Steevs-MBP.hackershack.net (cpe-173-175-113-3.satx.res.rr.com. [173.175.113.3])
-        by smtp.gmail.com with ESMTPSA id 90sm666015oty.9.2020.08.05.14.47.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2020 14:47:37 -0700 (PDT)
-Subject: Re: [PATCH v3 2/4] irqchip/qcom-pdc: Switch to using
- IRQCHIP_PLATFORM_DRIVER helper macros
-From:   Steev Klimaszewski <steev@kali.org>
-To:     Saravana Kannan <saravanak@google.com>,
-        John Stultz <john.stultz@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Hanks Chen <hanks.chen@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>
-References: <20200718000637.3632841-1-saravanak@google.com>
- <20200718000637.3632841-3-saravanak@google.com>
- <CALAqxLVZ+rFE+hM9OtQ46NqpTHeLu6oKLNWKstLv1U5zbwyq7g@mail.gmail.com>
- <CAGETcx_rkK3-bKhDP_N4n_WyXLXFPoaUV9rbY_Y+H1Joj=dCyw@mail.gmail.com>
- <f314b687-11a9-5a5e-e79e-c46dd2f16c6f@kali.org>
-Message-ID: <78ad0914-6173-f753-9eba-b7cbfbb51fd6@kali.org>
-Date:   Wed, 5 Aug 2020 16:47:35 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vJ9PmFgHy+mjnk3jwf45tHLYYDcmg6ohwuwx1D1TvHM=;
+        b=qBpujILTeIjFN3NW9kLrAkTStVrQAHLDoVhorivsfwXdBQaArsigayL+gQ6Eocjf3j
+         mlISuYSUvs/r9GBUnf1RBNqYmsE4bFrvyhr/MTecIEAoemXe3yY+v/B4QopV6aLxsY24
+         QbWcirxskLu0hgkz3VxLkQRdCpZMRO3guVZEiYcblcXNyvRF79tZX96AKWdStxun55nw
+         HgwM8v6PTPjnrAlk0zWUxTHDC8f2Tvlnfg6F3CrG8aqYWMbf668NVYqBSCS1z8GxdpYt
+         6Vc9ilCWDwWw8gHHC38rvc1ToPVrhd7CIK3CDzC0MKWmZRk2hzcpn+C2jG59gI/EzxCD
+         h92w==
+X-Gm-Message-State: AOAM533LlcoXtKevYG9cP5BKbfTzmXsiCwr2GW7Tq8fMCvE/K5j7XIBx
+        laRfgoDRFufc1Bw436sxYC+c0jbf
+X-Google-Smtp-Source: ABdhPJz5r8QPoURKmAsVxCLJTnRnz1Ap5frEF0F7Vnx3oFTkXmayzOykaYWbVMWiacVt4lI2dYI0yg==
+X-Received: by 2002:a50:a2e6:: with SMTP id 93mr1198873edm.147.1596664196721;
+        Wed, 05 Aug 2020 14:49:56 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id gl20sm2345174ejb.86.2020.08.05.14.49.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 05 Aug 2020 14:49:56 -0700 (PDT)
+Date:   Wed, 5 Aug 2020 21:49:55 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>
+Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, david@redhat.com
+Subject: Re: [Patch v2] mm/sparse: only sub-section aligned range would be
+ populated
+Message-ID: <20200805214955.ds7y3nwjoz2ms37h@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20200703031828.14645-1-richard.weiyang@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <f314b687-11a9-5a5e-e79e-c46dd2f16c6f@kali.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200703031828.14645-1-richard.weiyang@linux.alibaba.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 8/5/20 4:16 PM, Steev Klimaszewski wrote:
-> On 8/5/20 3:19 PM, Saravana Kannan wrote:
->> On Wed, Aug 5, 2020 at 12:44 AM John Stultz <john.stultz@linaro.org> wrote:
->>> <sigh>
->>> So this is where I bashfully admit I didn't get a chance to try this
->>> patch series out, as I had success with a much older version of
->>> Saravana's macro magic.
->>>
->>> But unfortunately, now that this has landed in mainline, I'm seeing
->>> boot regressions on db845c. :( This is in the non-modular case,
->>> building the driver in.
->> Does that mean the modular version is working? Or you haven't tried
->> that yet? I'll wait for your reply before I try to fix it. I don't
->> have the hardware, but it should be easy to guess this issue looking
->> at the code delta.
-> For what it's worth, I saw this too on the Lenovo C630 (started on -next
-> around 20200727, but I didn't track it down as, well, there's less way
-> to get debug output on the C630.
+On Fri, Jul 03, 2020 at 11:18:28AM +0800, Wei Yang wrote:
+>There are two code path which invoke __populate_section_memmap()
 >
-> In my testing, module or built-in doesn't matter, but reverting does
-> allow me to boot again.
+>  * sparse_init_nid()
+>  * sparse_add_section()
 >
-Actually - I spoke too soon - QCOM_PDC built-in with the commit reverted
-boots, however, module (on the c630 at least) doesn't boot whether it's
-a module or built-in.
+>For both case, we are sure the memory range is sub-section aligned.
+>
+>  * we pass PAGES_PER_SECTION to sparse_init_nid()
+>  * we check range by check_pfn_span() before calling
+>    sparse_add_section()
+>
+>Also, the counterpart of __populate_section_memmap(), we don't do such
+>calculation and check since the range is checked by check_pfn_span() in
+>__remove_pages().
+>
+>Clear the calculation and check to keep it simple and comply with its
+>counterpart.
+>
+>Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+>
 
+Hi, Andrew,
 
->> The only significant change from what your probe function is doing is
->> this snippet. But it'd be surprising if this only affects the builtin
->> case.
->>
->> + if (par_np == np)
->> +         par_np = NULL;
->> +
->> + /*
->> + * If there's a parent interrupt controller and  none of the parent irq
->> + * domains have been registered, that means the parent interrupt
->> + * controller has not been initialized yet.  it's not time for this
->> + * interrupt controller to initialize. So, defer probe of this
->> + * interrupt controller. The actual initialization callback of this
->> + * interrupt controller can check for specific domains as necessary.
->> + */
->> + if (par_np && !irq_find_matching_host(np, DOMAIN_BUS_ANY))
->> +         return -EPROBE_DEFER;
->>
->>> I managed to bisect it down to this patch, and reverting it avoids the
->>> issue. I don't see what is wrong right off, but I really need to get
->>> to bed, so I'll dig further tomorrow.
->>>
->>> Saravana: Apologies for not getting around to testing this beforehand!
->> No worries. Apologies for breaking it accidentally.
->>
->> -Saravana
+Is this one picked up?
+
+>---
+>v2:
+>  * add a warn on once for unaligned range, suggested by David
+>---
+> mm/sparse-vmemmap.c | 20 ++++++--------------
+> 1 file changed, 6 insertions(+), 14 deletions(-)
+>
+>diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+>index 0db7738d76e9..8d3a1b6287c5 100644
+>--- a/mm/sparse-vmemmap.c
+>+++ b/mm/sparse-vmemmap.c
+>@@ -247,20 +247,12 @@ int __meminit vmemmap_populate_basepages(unsigned long start,
+> struct page * __meminit __populate_section_memmap(unsigned long pfn,
+> 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+> {
+>-	unsigned long start;
+>-	unsigned long end;
+>-
+>-	/*
+>-	 * The minimum granularity of memmap extensions is
+>-	 * PAGES_PER_SUBSECTION as allocations are tracked in the
+>-	 * 'subsection_map' bitmap of the section.
+>-	 */
+>-	end = ALIGN(pfn + nr_pages, PAGES_PER_SUBSECTION);
+>-	pfn &= PAGE_SUBSECTION_MASK;
+>-	nr_pages = end - pfn;
+>-
+>-	start = (unsigned long) pfn_to_page(pfn);
+>-	end = start + nr_pages * sizeof(struct page);
+>+	unsigned long start = (unsigned long) pfn_to_page(pfn);
+>+	unsigned long end = start + nr_pages * sizeof(struct page);
+>+
+>+	if (WARN_ON_ONCE(!IS_ALIGNED(pfn, PAGES_PER_SUBSECTION) ||
+>+		!IS_ALIGNED(nr_pages, PAGES_PER_SUBSECTION)))
+>+		return NULL;
+> 
+> 	if (vmemmap_populate(start, end, nid, altmap))
+> 		return NULL;
+>-- 
+>2.20.1 (Apple Git-117)
+
+-- 
+Wei Yang
+Help you, Help me
