@@ -2,110 +2,69 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3561C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 10:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E19C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 10:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E08F20792
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 10:36:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="I0WW5w/i"
+	by mail.kernel.org (Postfix) with ESMTP id 5C6BA20792
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 10:42:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbgHEKgQ (ORCPT
+        id S1726209AbgHEKlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 06:36:16 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:11277 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728170AbgHEK0U (ORCPT
+        Wed, 5 Aug 2020 06:41:13 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54936 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbgHEK2d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 06:26:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1596623179; x=1628159179;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=h/0isfh8p8B1tbntU7DOOWsRw+KNgTWlrOkmU2ux2KQ=;
-  b=I0WW5w/i3V14QLplvh4/UDH/vF6Ba6FjTz/8A1phbJgwmlB2boGC0JLx
-   3FISCo8uT71oXwhlVPANK/3C7n+y7gXzm8iK+sdnbH4qaba7POiEbEbKE
-   PeUWQmptvaphFAm+O9jMExk92gujrAlf2UzLNUQy36jyWifOl2z/d+3d1
-   GGa7kxSASH8N2YhHe/D3eprTVdCz9JZBdQNn34gBqLD5ExJzbuauonCvy
-   Xzs+0q/M4O8xwc7GY7QElASYJw63cOjA6/zLclDTbWeFHm2OoDO/w/gUW
-   Qu5NJ5rAL4zIEkq+RP3P+O/BuV2yn0F28VtUrphgM+fVtoPhc8H/qZgBI
-   Q==;
-IronPort-SDR: /tllqZmaNSf0pwVngbbkvrWa4jPFHORmq6vu9xyHDGcSsHwMl/qi4RNeuiLjTRfDbsjhW8OpW5
- XpDoR0jI099Yp0G6vt/om2Pojc8aDZfLbMoob8LgnthK26Rb0cSfYsTVQ4Ern0hBZIR6KSwrm9
- kPXw0Spmdy4JWwlpp9wKLil6PbUJBOBwtSzvJ1Q9EHvDltd2hSqGxudITIM9Pzo9fB2E6u2jC9
- P5rBXhyk54OnjHb69E6cbn3W3ylV+tI3USE+3ZbUWFWzpalrEMNZiY6+7xUABrZfkQ0JFAQwrq
- eUE=
-X-IronPort-AV: E=Sophos;i="5.75,436,1589212800"; 
-   d="scan'208";a="253548017"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 05 Aug 2020 18:25:16 +0800
-IronPort-SDR: tmI21nJS/lX63fAYjytIkd1PWsChQ6KHyBIxA5KxqlfhiOGJCJCNheH3zB+KLrZxhRCjNircE2
- 7NeegtjBktaQ==
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 03:12:36 -0700
-IronPort-SDR: VUewrqLbnzqHz+1znrMauq+iKaQ9F6wif5BzAqHWU2V2ZT7K1lVDvG0MTfXji6pud1QgJHJ3zk
- LoEnDGt9JhZA==
-WDCIronportException: Internal
-Received: from unknown (HELO redsun52) ([10.149.66.28])
-  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 03:25:15 -0700
-Date:   Wed, 5 Aug 2020 11:25:11 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@wdc.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-riscv@lists.infradead.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] riscv: ptrace: Use the correct API for `fcsr'
- access
-In-Reply-To: <20200805024807.GM1236603@ZenIV.linux.org.uk>
-Message-ID: <alpine.LFD.2.21.2008051117180.24175@redsun52.ssa.fujisawa.hgst.com>
-References: <20200805020745.GL1236603@ZenIV.linux.org.uk> <mhng-cd1ff2e9-7d34-4d56-8d79-b2d02a239290@palmerdabbelt-glaptop1> <20200805024807.GM1236603@ZenIV.linux.org.uk>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Wed, 5 Aug 2020 06:28:33 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1k3GeT-0003ml-DX; Wed, 05 Aug 2020 10:28:05 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] omapfb: fix spelling mistake "propert" -> "property"
+Date:   Wed,  5 Aug 2020 11:28:05 +0100
+Message-Id: <20200805102805.15353-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Aug 2020, Al Viro wrote:
+From: Colin Ian King <colin.king@canonical.com>
 
-> > I'm not sure I understand what you're saying, but given that branch replaces
-> > all of this I guess it's best to just do nothing on our end here?
-> 
-> It doesn't replace ->put() (for now); it _does_ replace ->get() and AFAICS the
-> replacement is much saner:
-> 
-> static int riscv_fpr_get(struct task_struct *target,
->                          const struct user_regset *regset,
->                          struct membuf to)
-> {
-> 	struct __riscv_d_ext_state *fstate = &target->thread.fstate;
-> 
-> 	membuf_write(&to, fstate, offsetof(struct __riscv_d_ext_state, fcsr));
-> 	membuf_store(&to, fstate->fcsr);
-> 	return membuf_zero(&to, 4);     // explicitly pad
-> }
+There is a spelling mistake in a pr_err message. Fix it.
 
- I'm glad to see the old interface go, it was cumbersome.
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/video/fbdev/omap2/omapfb/dss/venc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> user_regset_copyout() calling conventions are atrocious and so are those of
-> regset ->get().  The best thing to do with both is to take them out of their
-> misery and be done with that.  Do you see any problems with riscv gdbserver
-> on current linux-next?  If not, I'd rather see that "API" simply go away...
-> If there are problems, I would very much prefer fixes on top of what's done
-> in that branch.
+diff --git a/drivers/video/fbdev/omap2/omapfb/dss/venc.c b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
+index 0b0ad20afd63..f560fa4d7786 100644
+--- a/drivers/video/fbdev/omap2/omapfb/dss/venc.c
++++ b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
+@@ -787,7 +787,7 @@ static int venc_probe_of(struct platform_device *pdev)
+ 		venc.type = OMAP_DSS_VENC_TYPE_SVIDEO;
+ 		break;
+ 	default:
+-		dev_err(&pdev->dev, "bad channel propert '%d'\n", channels);
++		dev_err(&pdev->dev, "bad channel property '%d'\n", channels);
+ 		r = -EINVAL;
+ 		goto err;
+ 	}
+-- 
+2.27.0
 
- I can push linux-next through regression-testing with RISC-V gdbserver 
-and/or native GDB if that would help.  This is also used with core dumps, 
-but honestly I don't know what state RISC-V support is in in the BFD/GDB's 
-core dump interpreter, as people tend to forget about the core dump 
-feature nowadays.
-
-  Maciej
