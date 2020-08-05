@@ -2,172 +2,195 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA84EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 236DAC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B18E2207FC
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E83B62245C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 06:29:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DjPjawL6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r5o0dmdE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgHEG2g (ORCPT
+        id S1728038AbgHEG3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 02:28:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54160 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727962AbgHEG2f (ORCPT
+        Wed, 5 Aug 2020 02:29:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35376 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbgHEG3k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 02:28:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596608913;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=j4EoEwZG+swIVHP0lP8YoiVbx/lrSzlRaGxj/pUTBqw=;
-        b=DjPjawL6ilC5vBQ08ElH3Ygl4Kkbf+EWbdMarqHBnbbWSQHIlYbQJUdl4vV/KSkKN8+n/3
-        MOfNlWtgopi19fVJxQA/5bbyhLzScB4WND2hG4BAab1Zbx7ElHEAedkNT4bcidbKTLoOVL
-        rVxSyYhebqkC+LaWNLbcDaAzb9pt+Us=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-163-Z6h-CcQlNsSmC0oA6Dl8uQ-1; Wed, 05 Aug 2020 02:28:31 -0400
-X-MC-Unique: Z6h-CcQlNsSmC0oA6Dl8uQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2D9F418FF662;
-        Wed,  5 Aug 2020 06:28:30 +0000 (UTC)
-Received: from [10.72.12.225] (ovpn-12-225.pek2.redhat.com [10.72.12.225])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5C97D8AC25;
-        Wed,  5 Aug 2020 06:28:24 +0000 (UTC)
-Subject: Re: [PATCH v2 03/24] virtio: allow __virtioXX, __leXX in config space
-To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     virtualization@lists.linux-foundation.org
-References: <20200803205814.540410-1-mst@redhat.com>
- <20200803205814.540410-4-mst@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <ce85a206-45a6-da3d-45a7-06f068f3bad7@redhat.com>
-Date:   Wed, 5 Aug 2020 14:28:23 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 5 Aug 2020 02:29:40 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DF9BC06174A
+        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 23:29:40 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id t15so35853974iob.3
+        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 23:29:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=m8dK0+V4abSKlsPa58jCyCNjedUT5VXE4QlX9AqSskE=;
+        b=r5o0dmdEbdtbADvVVpFkO4xCXH7PjpMNvYyY+1Tb5RnD40Ia+Ufu9ubRv01CVDwpjv
+         ZPAy+1OeY7z6to3fGLZ1YnzOQFC7XKpqrAUKU6YXOMNLvZGOdVVRH7C8Zml1+zt5lDKu
+         qDUIrwMJwLizPls5CaTncOP/rOiay2Nsk0VYnzSZVgkxfYN75PKMoq7CNp6DZHWt4vTC
+         HkLleYyvnmIRnWVy0N9BsNVcuzdzY5oeSDICoajulDXB+Iz7XMXIEk3OodnL0oK1ZYaS
+         p7jUrXjhcf1nbPJy/t2bsdcqUgpSy65TORV0YBae/PHPZRHGgtvKzoVD3Mpq5fvprHcc
+         9I5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=m8dK0+V4abSKlsPa58jCyCNjedUT5VXE4QlX9AqSskE=;
+        b=goEK3PxYGWAONvmpX5/08A/RH1j0QxSlx/L+VGTbnyl1h1Nz0CU6v1xtoDZetD+BRn
+         E3pEkU6ylpIZa3eOLZ4Dgatmt+yt3HNTK+POiG4cfYrSANKnTU77P9sW/ikrJgAjIiCV
+         TkCNRxrGRJ0RlQbdNXe7QdbppyHQ7YJJmD6chJCIdkHvQn4Pg51qKrMc4PGmpNdMfZl1
+         mBfmdStrn3c8dcBg6/760Ixlimc7aElJekm64K7JIw1iBndYaMNrBuceOUmXG18oD/JT
+         9ThExSszJCaTmtOSo7CEfUl9ZGadU1gKmQ81fDJhC9UmU3QwxhzKJj/Anq24RDwaYhCy
+         jg0w==
+X-Gm-Message-State: AOAM532CTucrZqV2XE6ZQThcoupzOBDxr48yW3KQqvsnPToyTWntJyX9
+        eRE9uTPnK5BixmKrLXpydS9g1iV8vNPzicVA4CcESw==
+X-Google-Smtp-Source: ABdhPJyLOpEtlnX4/38c5wfB2sk6MHF4YYfO2LNTVEJpA5blGiR+WUWL/Qsll2+a+ntDba+DrhP6QzQ8fmEl38Tm9e0=
+X-Received: by 2002:a05:6602:2c08:: with SMTP id w8mr1882103iov.129.1596608979439;
+ Tue, 04 Aug 2020 23:29:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200803205814.540410-4-mst@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <20200804085225.402560650@linuxfoundation.org>
+In-Reply-To: <20200804085225.402560650@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 5 Aug 2020 11:59:28 +0530
+Message-ID: <CA+G9fYvDsJv7A5VNeGChcpPUuYPs5vm6h6q6cfww+G9u74iSOA@mail.gmail.com>
+Subject: Re: [PATCH 5.4 00/86] 5.4.56-rc3 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2020/8/4 上午4:58, Michael S. Tsirkin wrote:
-> Currently all config space fields are of the type __uXX.
-> This confuses people and some drivers (notably vdpa)
-> access them using CPU endian-ness - which only
-> works well for legacy or LE platforms.
+On Tue, 4 Aug 2020 at 14:24, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> Update virtio_cread/virtio_cwrite macros to allow __virtioXX
-> and __leXX field types. Follow-up patches will convert
-> config space to use these types.
+> This is the start of the stable review cycle for the 5.4.56 release.
+> There are 86 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->   include/linux/virtio_config.h | 50 +++++++++++++++++++++++++++++++++--
->   1 file changed, 48 insertions(+), 2 deletions(-)
+> Responses should be made by Thu, 06 Aug 2020 08:51:59 +0000.
+> Anything received after that time might be too late.
 >
-> diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
-> index 3b4eae5ac5e3..64da491936f7 100644
-> --- a/include/linux/virtio_config.h
-> +++ b/include/linux/virtio_config.h
-> @@ -6,6 +6,7 @@
->   #include <linux/bug.h>
->   #include <linux/virtio.h>
->   #include <linux/virtio_byteorder.h>
-> +#include <linux/compiler_types.h>
->   #include <uapi/linux/virtio_config.h>
->   
->   struct irq_affinity;
-> @@ -287,12 +288,57 @@ static inline __virtio64 cpu_to_virtio64(struct virtio_device *vdev, u64 val)
->   	return __cpu_to_virtio64(virtio_is_little_endian(vdev), val);
->   }
->   
-> +/*
-> + * Only the checker differentiates between __virtioXX and __uXX types. But we
-> + * try to share as much code as we can with the regular GCC build.
-> + */
-> +#if !defined(CONFIG_CC_IS_GCC) && !defined(__CHECKER__)
-> +
-> +/* Not a checker - we can keep things simple */
-> +#define __virtio_native_typeof(x) typeof(x)
-> +
-> +#else
-> +
-> +/*
-> + * We build this out of a couple of helper macros in a vain attempt to
-> + * help you keep your lunch down while reading it.
-> + */
-> +#define __virtio_pick_value(x, type, then, otherwise)			\
-> +	__builtin_choose_expr(__same_type(x, type), then, otherwise)
-> +
-> +#define __virtio_pick_type(x, type, then, otherwise)			\
-> +	__virtio_pick_value(x, type, (then)0, otherwise)
-> +
-> +#define __virtio_pick_endian(x, x16, x32, x64, otherwise)			\
-> +	__virtio_pick_type(x, x16, __u16,					\
-> +		__virtio_pick_type(x, x32, __u32,				\
-> +			__virtio_pick_type(x, x64, __u64,			\
-> +				otherwise)))
-> +
-> +#define __virtio_native_typeof(x) typeof(					\
-> +	__virtio_pick_type(x, __u8, __u8,					\
-> +		__virtio_pick_endian(x, __virtio16, __virtio32, __virtio64,	\
-> +			__virtio_pick_endian(x, __le16, __le32, __le64,		\
-> +				__virtio_pick_endian(x, __u16, __u32, __u64,	\
-> +					/* No other type allowed */		\
-> +					(void)0)))))
-> +
-> +#endif
-> +
-> +#define __virtio_native_type(structname, member) \
-> +	__virtio_native_typeof(((structname*)0)->member)
-> +
-> +#define __virtio_typecheck(structname, member, val) \
-> +		/* Must match the member's type, and be integer */ \
-> +		typecheck(__virtio_native_type(structname, member), (val))
-> +
-> +
->   /* Config space accessors. */
->   #define virtio_cread(vdev, structname, member, ptr)			\
->   	do {								\
->   		might_sleep();						\
->   		/* Must match the member's type, and be integer */	\
-> -		if (!typecheck(typeof((((structname*)0)->member)), *(ptr))) \
-> +		if (!__virtio_typecheck(structname, member, *(ptr)))	\
->   			(*ptr) = 1;					\
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.56-rc3.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
+
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 5.4.56-rc3
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.4.y
+git commit: 47b594b8993f9c5a04eaed3d5a9f9ed77be876f5
+git describe: v5.4.55-87-g47b594b8993f
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
+ld/v5.4.55-87-g47b594b8993f
+
+No regressions (compared to build v5.4.55)
+
+No fixes (compared to build v5.4.55)
 
 
-A silly question,  compare to using set()/get() directly, what's the 
-value of the accessors macro here?
+Ran 35082 total tests in the following environments and test suites.
 
-Thanks
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
 
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* libhugetlbfs
+* linux-log-parser
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-controllers-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-sched-tests
+* perf
+* v4l2-compliance
+* kvm-unit-tests
+* ltp-cap_bounds-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-ipc-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* igt-gpu-tools
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* ssuite
 
->   									\
->   		switch (sizeof(*ptr)) {					\
-> @@ -322,7 +368,7 @@ static inline __virtio64 cpu_to_virtio64(struct virtio_device *vdev, u64 val)
->   	do {								\
->   		might_sleep();						\
->   		/* Must match the member's type, and be integer */	\
-> -		if (!typecheck(typeof((((structname*)0)->member)), *(ptr))) \
-> +		if (!__virtio_typecheck(structname, member, *(ptr)))	\
->   			BUG_ON((*ptr) == 1);				\
->   									\
->   		switch (sizeof(*ptr)) {					\
-
+--=20
+Linaro LKFT
+https://lkft.linaro.org
