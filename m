@@ -2,137 +2,141 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 257F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E822C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7BE522B42
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 742EC22B42
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:13:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YXy8/EmR"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="AwFBpkUn";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lGi918tC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729840AbgHEUNs (ORCPT
+        id S1729679AbgHEUNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:13:48 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:4853 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726778AbgHEQX0 (ORCPT
+        Wed, 5 Aug 2020 16:13:53 -0400
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:37003 "EHLO
+        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726629AbgHEQX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:23:26 -0400
-X-UUID: 6c99506808a94693880c95551ac8f399-20200805
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=JXjGlkK/YIWf9M/m8rQeaHnLeFDyiE8gIxUc5tlncsU=;
-        b=YXy8/EmRpseEQohslA8ZYPUMskFBa/FlYEWQ4fVzp2cpgJMVKCWfLvBLVVjn6C6vE2PmUyerT7NbvCWH8dEkM/xj2og+Ru1jqPhOfEVB5dOzCFOgRgnbyoT3ZYM6l8/TekRcl3ZjRvkxSG+5eUEiytm5AcFdnDmYFMG4l+JpjRc=;
-X-UUID: 6c99506808a94693880c95551ac8f399-20200805
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <qii.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1347454479; Wed, 05 Aug 2020 18:53:21 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 5 Aug 2020 18:53:17 +0800
-Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 5 Aug 2020 18:53:17 +0800
-From:   Qii Wang <qii.wang@mediatek.com>
-To:     <wsa@the-dreams.de>
-CC:     <robh+dt@kernel.org>, <linux-i2c@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <qii.wang@mediatek.com>
-Subject: [PATCH v3 1/4] i2c: mediatek: Add apdma sync in i2c driver
-Date:   Wed, 5 Aug 2020 18:52:19 +0800
-Message-ID: <1596624742-14727-2-git-send-email-qii.wang@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1596624742-14727-1-git-send-email-qii.wang@mediatek.com>
-References: <1596624742-14727-1-git-send-email-qii.wang@mediatek.com>
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailnew.west.internal (Postfix) with ESMTP id 37C75970;
+        Wed,  5 Aug 2020 07:36:16 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Wed, 05 Aug 2020 07:36:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
+        TV/ywlemDl0JIUauxpySAysG0pozcgKEtLbmEq/dGCI=; b=AwFBpkUnA5Q3eZVP
+        GUBhoB/ilhwXI9VqrBWf6R5OCpprqNbp8Idwbc0ORpfdwf9XRzKHxTAwASOBHloP
+        C8kELv06f6HkCdmM7o/reWrBy3ZFHjtS93RPzrtwzpS9px9u0fikYwf5UfAk8BZ5
+        RcJHbvLqHaFZmmEjgxmdm0rRJiF6rzz0BWYeVdJTPAjS1R2mxJunWX3eTVWhiAW/
+        6Ap9JaHp1kY6tvHneM1y6nxLkgmPIl/GLPbviB/kmezKdXUMUKBQ6umnfBH0G58f
+        uP7AT57ilb7hRJHyP0HqrNRGP3Aw+xdw/wbrLXYX5oE44K2eyZIzhipL3rbEpcmc
+        S1RKug==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=TV/ywlemDl0JIUauxpySAysG0pozcgKEtLbmEq/dG
+        CI=; b=lGi918tCPuQclchc60ZkZQcFuFeLnuEaz5oFvKYw47Yf6N9duODX99vQ0
+        v2wjcf/SgbslZcfvhprEmRgqBL19HB/1eb/JYzoYuP5jz2HFYgT/ak9IDUfwnhAJ
+        YkJIqH/75jxgyxwt67ZoBjpJqUEoP+E/n89yydB8voI+I/O7zCc7QhLrKKOuLxd8
+        vDlll4NR2YcE16zazVrfdI/a8y3gt5FGnB5CxQbKvQx0Q1/68uU+NYGdXE8gcVBZ
+        bHzmSNEbRP2lrp6vbGU5+8EiHmA2mQO1uyjzA/m5uW9PHXNgxKUgFedSPlxBTu5F
+        R1D43CcSiAfHDm04i23VAV+1VwUBw==
+X-ME-Sender: <xms:rpkqXxIM464vxKzxo1Ps1E1MNcoGOyyXu-byRxZmcehu1oS4oiPbAg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrjeekgdeggecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnhepfe
+    efteetvdeguddvveefveeftedtffduudehueeihfeuvefgveehffeludeggfejnecukfhp
+    peehkedrjedrvdehhedrvddvtdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:rpkqX9JrEnjQ0a_60B4dCHApSvALGVOSkJ8Sxj0D243ONHuAEjv0JQ>
+    <xmx:rpkqX5vsriW3o_YwMp5QeyhNrGEqZvM_FMb5gGXkEH6Kldth5k2SAw>
+    <xmx:rpkqXyZs1QHUmAvW5-dnVwWP92AJYBeyrGhvLg8ZW4Z58zFbXsHgqw>
+    <xmx:r5kqX0T5XKAiop0pugkIzJKNdw90x3nEoU89eXDiXzbLMU5kcLe6uaYBMNU>
+Received: from mickey.themaw.net (58-7-255-220.dyn.iinet.net.au [58.7.255.220])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1578A30600B1;
+        Wed,  5 Aug 2020 07:36:08 -0400 (EDT)
+Message-ID: <013e9bb3cb1536c73a5b58c5ff000b3b00629561.camel@themaw.net>
+Subject: Re: [PATCH 13/17] watch_queue: Implement mount topology and
+ attribute change notifications [ver #5]
+From:   Ian Kent <raven@themaw.net>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>, andres@anarazel.de,
+        Jeff Layton <jlayton@redhat.com>, dray@redhat.com,
+        Karel Zak <kzak@redhat.com>, keyrings@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 05 Aug 2020 19:36:05 +0800
+In-Reply-To: <CAJfpegvxKTy+4Zk6banvxQ83PeFV7Xnt2Qv=kkOg57rxFKqVEg@mail.gmail.com>
+References: <158454378820.2863966.10496767254293183123.stgit@warthog.procyon.org.uk>
+         <158454391302.2863966.1884682840541676280.stgit@warthog.procyon.org.uk>
+         <CAJfpegspWA6oUtdcYvYF=3fij=Bnq03b8VMbU9RNMKc+zzjbag@mail.gmail.com>
+         <1293241.1595501326@warthog.procyon.org.uk>
+         <CAJfpeguvLMCw1H8+DPsfZE_k0sEiRtA17pD9HjnceSsAvqqAZw@mail.gmail.com>
+         <43c061d26ddef2aa3ca1ac726da7db9ab461e7be.camel@themaw.net>
+         <CAJfpeguFkDDhz7+70pSUv_j=xY5L08ESpaE+jER9vE5p+ZmfFw@mail.gmail.com>
+         <c558fc4af785f62a2751be3b297d1ccbbfcfa969.camel@themaw.net>
+         <CAJfpegvxKTy+4Zk6banvxQ83PeFV7Xnt2Qv=kkOg57rxFKqVEg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V2l0aCB0aGUgYXBkbWEgcmVtb3ZlIGhhbmQtc2hha2Ugc2lnbmFsLCBpdCBuZWVkIHRvIGtlZXAg
-aTJjIGFuZA0KYXBkbWEgaW4gc3luYyBtYW51YWxseS4NCg0KUmV2aWV3ZWQtYnk6IFlpbmdqb2Ug
-Q2hlbiA8eWluZ2pvZS5jaGVuQG1lZGlhdGVrLmNvbT4NClJldmlld2VkLWJ5OiBNYXR0aGlhcyBC
-cnVnZ2VyIDxtYXR0aGlhcy5iZ2dAZ21haWwuY29tPg0KU2lnbmVkLW9mZi1ieTogUWlpIFdhbmcg
-PHFpaS53YW5nQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2
-NXh4LmMgfCAyMyArKysrKysrKysrKysrKysrKysrKy0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCAyMCBp
-bnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9pMmMv
-YnVzc2VzL2kyYy1tdDY1eHguYyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4LmMNCmlu
-ZGV4IGRlZWY2OWUuLmU2Yjk4NGEgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2kyYy9idXNzZXMvaTJj
-LW10NjV4eC5jDQorKysgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jDQpAQCAtNDgs
-NiArNDgsOSBAQA0KIA0KICNkZWZpbmUgSTJDX0RNQV9DT05fVFgJCQkweDAwMDANCiAjZGVmaW5l
-IEkyQ19ETUFfQ09OX1JYCQkJMHgwMDAxDQorI2RlZmluZSBJMkNfRE1BX0FTWU5DX01PREUJCTB4
-MDAwNA0KKyNkZWZpbmUgSTJDX0RNQV9TS0lQX0NPTkZJRwkJMHgwMDEwDQorI2RlZmluZSBJMkNf
-RE1BX0RJUl9DSEFOR0UJCTB4MDIwMA0KICNkZWZpbmUgSTJDX0RNQV9TVEFSVF9FTgkJMHgwMDAx
-DQogI2RlZmluZSBJMkNfRE1BX0lOVF9GTEFHX05PTkUJCTB4MDAwMA0KICNkZWZpbmUgSTJDX0RN
-QV9DTFJfRkxBRwkJMHgwMDAwDQpAQCAtMjA1LDYgKzIwOCw3IEBAIHN0cnVjdCBtdGtfaTJjX2Nv
-bXBhdGlibGUgew0KIAl1bnNpZ25lZCBjaGFyIHRpbWluZ19hZGp1c3Q6IDE7DQogCXVuc2lnbmVk
-IGNoYXIgZG1hX3N5bmM6IDE7DQogCXVuc2lnbmVkIGNoYXIgbHRpbWluZ19hZGp1c3Q6IDE7DQor
-CXVuc2lnbmVkIGNoYXIgYXBkbWFfc3luYzogMTsNCiB9Ow0KIA0KIHN0cnVjdCBtdGtfaTJjX2Fj
-X3RpbWluZyB7DQpAQCAtMzExLDYgKzMxNSw3IEBAIHN0cnVjdCBpMmNfc3BlY192YWx1ZXMgew0K
-IAkudGltaW5nX2FkanVzdCA9IDEsDQogCS5kbWFfc3luYyA9IDAsDQogCS5sdGltaW5nX2FkanVz
-dCA9IDAsDQorCS5hcGRtYV9zeW5jID0gMCwNCiB9Ow0KIA0KIHN0YXRpYyBjb25zdCBzdHJ1Y3Qg
-bXRrX2kyY19jb21wYXRpYmxlIG10NjU3N19jb21wYXQgPSB7DQpAQCAtMzI0LDYgKzMyOSw3IEBA
-IHN0cnVjdCBpMmNfc3BlY192YWx1ZXMgew0KIAkudGltaW5nX2FkanVzdCA9IDAsDQogCS5kbWFf
-c3luYyA9IDAsDQogCS5sdGltaW5nX2FkanVzdCA9IDAsDQorCS5hcGRtYV9zeW5jID0gMCwNCiB9
-Ow0KIA0KIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2kyY19jb21wYXRpYmxlIG10NjU4OV9jb21w
-YXQgPSB7DQpAQCAtMzM3LDYgKzM0Myw3IEBAIHN0cnVjdCBpMmNfc3BlY192YWx1ZXMgew0KIAku
-dGltaW5nX2FkanVzdCA9IDAsDQogCS5kbWFfc3luYyA9IDAsDQogCS5sdGltaW5nX2FkanVzdCA9
-IDAsDQorCS5hcGRtYV9zeW5jID0gMCwNCiB9Ow0KIA0KIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRr
-X2kyY19jb21wYXRpYmxlIG10NzYyMl9jb21wYXQgPSB7DQpAQCAtMzUwLDYgKzM1Nyw3IEBAIHN0
-cnVjdCBpMmNfc3BlY192YWx1ZXMgew0KIAkudGltaW5nX2FkanVzdCA9IDAsDQogCS5kbWFfc3lu
-YyA9IDAsDQogCS5sdGltaW5nX2FkanVzdCA9IDAsDQorCS5hcGRtYV9zeW5jID0gMCwNCiB9Ow0K
-IA0KIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2kyY19jb21wYXRpYmxlIG10ODE3M19jb21wYXQg
-PSB7DQpAQCAtMzYyLDYgKzM3MCw3IEBAIHN0cnVjdCBpMmNfc3BlY192YWx1ZXMgew0KIAkudGlt
-aW5nX2FkanVzdCA9IDAsDQogCS5kbWFfc3luYyA9IDAsDQogCS5sdGltaW5nX2FkanVzdCA9IDAs
-DQorCS5hcGRtYV9zeW5jID0gMCwNCiB9Ow0KIA0KIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2ky
-Y19jb21wYXRpYmxlIG10ODE4M19jb21wYXQgPSB7DQpAQCAtMzc1LDYgKzM4NCw3IEBAIHN0cnVj
-dCBpMmNfc3BlY192YWx1ZXMgew0KIAkudGltaW5nX2FkanVzdCA9IDEsDQogCS5kbWFfc3luYyA9
-IDEsDQogCS5sdGltaW5nX2FkanVzdCA9IDEsDQorCS5hcGRtYV9zeW5jID0gMCwNCiB9Ow0KIA0K
-IHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG10a19pMmNfb2ZfbWF0Y2hbXSA9IHsN
-CkBAIC03OTgsNiArODA4LDcgQEAgc3RhdGljIGludCBtdGtfaTJjX2RvX3RyYW5zZmVyKHN0cnVj
-dCBtdGtfaTJjICppMmMsIHN0cnVjdCBpMmNfbXNnICptc2dzLA0KIAl1MTYgc3RhcnRfcmVnOw0K
-IAl1MTYgY29udHJvbF9yZWc7DQogCXUxNiByZXN0YXJ0X2ZsYWcgPSAwOw0KKwl1MTYgZG1hX3N5
-bmMgPSAwOw0KIAl1MzIgcmVnXzRnX21vZGU7DQogCXU4ICpkbWFfcmRfYnVmID0gTlVMTDsNCiAJ
-dTggKmRtYV93cl9idWYgPSBOVUxMOw0KQEAgLTg1MSwxMCArODYyLDE2IEBAIHN0YXRpYyBpbnQg
-bXRrX2kyY19kb190cmFuc2ZlcihzdHJ1Y3QgbXRrX2kyYyAqaTJjLCBzdHJ1Y3QgaTJjX21zZyAq
-bXNncywNCiAJCW10a19pMmNfd3JpdGV3KGkyYywgbnVtLCBPRkZTRVRfVFJBTlNBQ19MRU4pOw0K
-IAl9DQogDQorCWlmIChpMmMtPmRldl9jb21wLT5hcGRtYV9zeW5jKSB7DQorCQlkbWFfc3luYyA9
-IEkyQ19ETUFfU0tJUF9DT05GSUcgfCBJMkNfRE1BX0FTWU5DX01PREU7DQorCQlpZiAoaTJjLT5v
-cCA9PSBJMkNfTUFTVEVSX1dSUkQpDQorCQkJZG1hX3N5bmMgfD0gSTJDX0RNQV9ESVJfQ0hBTkdF
-Ow0KKwl9DQorDQogCS8qIFByZXBhcmUgYnVmZmVyIGRhdGEgdG8gc3RhcnQgdHJhbnNmZXIgKi8N
-CiAJaWYgKGkyYy0+b3AgPT0gSTJDX01BU1RFUl9SRCkgew0KIAkJd3JpdGVsKEkyQ19ETUFfSU5U
-X0ZMQUdfTk9ORSwgaTJjLT5wZG1hYmFzZSArIE9GRlNFVF9JTlRfRkxBRyk7DQotCQl3cml0ZWwo
-STJDX0RNQV9DT05fUlgsIGkyYy0+cGRtYWJhc2UgKyBPRkZTRVRfQ09OKTsNCisJCXdyaXRlbChJ
-MkNfRE1BX0NPTl9SWCB8IGRtYV9zeW5jLCBpMmMtPnBkbWFiYXNlICsgT0ZGU0VUX0NPTik7DQog
-DQogCQlkbWFfcmRfYnVmID0gaTJjX2dldF9kbWFfc2FmZV9tc2dfYnVmKG1zZ3MsIDEpOw0KIAkJ
-aWYgKCFkbWFfcmRfYnVmKQ0KQEAgLTg3Nyw3ICs4OTQsNyBAQCBzdGF0aWMgaW50IG10a19pMmNf
-ZG9fdHJhbnNmZXIoc3RydWN0IG10a19pMmMgKmkyYywgc3RydWN0IGkyY19tc2cgKm1zZ3MsDQog
-CQl3cml0ZWwobXNncy0+bGVuLCBpMmMtPnBkbWFiYXNlICsgT0ZGU0VUX1JYX0xFTik7DQogCX0g
-ZWxzZSBpZiAoaTJjLT5vcCA9PSBJMkNfTUFTVEVSX1dSKSB7DQogCQl3cml0ZWwoSTJDX0RNQV9J
-TlRfRkxBR19OT05FLCBpMmMtPnBkbWFiYXNlICsgT0ZGU0VUX0lOVF9GTEFHKTsNCi0JCXdyaXRl
-bChJMkNfRE1BX0NPTl9UWCwgaTJjLT5wZG1hYmFzZSArIE9GRlNFVF9DT04pOw0KKwkJd3JpdGVs
-KEkyQ19ETUFfQ09OX1RYIHwgZG1hX3N5bmMsIGkyYy0+cGRtYWJhc2UgKyBPRkZTRVRfQ09OKTsN
-CiANCiAJCWRtYV93cl9idWYgPSBpMmNfZ2V0X2RtYV9zYWZlX21zZ19idWYobXNncywgMSk7DQog
-CQlpZiAoIWRtYV93cl9idWYpDQpAQCAtOTAwLDcgKzkxNyw3IEBAIHN0YXRpYyBpbnQgbXRrX2ky
-Y19kb190cmFuc2ZlcihzdHJ1Y3QgbXRrX2kyYyAqaTJjLCBzdHJ1Y3QgaTJjX21zZyAqbXNncywN
-CiAJCXdyaXRlbChtc2dzLT5sZW4sIGkyYy0+cGRtYWJhc2UgKyBPRkZTRVRfVFhfTEVOKTsNCiAJ
-fSBlbHNlIHsNCiAJCXdyaXRlbChJMkNfRE1BX0NMUl9GTEFHLCBpMmMtPnBkbWFiYXNlICsgT0ZG
-U0VUX0lOVF9GTEFHKTsNCi0JCXdyaXRlbChJMkNfRE1BX0NMUl9GTEFHLCBpMmMtPnBkbWFiYXNl
-ICsgT0ZGU0VUX0NPTik7DQorCQl3cml0ZWwoSTJDX0RNQV9DTFJfRkxBRyB8IGRtYV9zeW5jLCBp
-MmMtPnBkbWFiYXNlICsgT0ZGU0VUX0NPTik7DQogDQogCQlkbWFfd3JfYnVmID0gaTJjX2dldF9k
-bWFfc2FmZV9tc2dfYnVmKG1zZ3MsIDEpOw0KIAkJaWYgKCFkbWFfd3JfYnVmKQ0KLS0gDQoxLjku
-MQ0K
+On Wed, 2020-08-05 at 09:43 +0200, Miklos Szeredi wrote:
+> On Wed, Aug 5, 2020 at 3:54 AM Ian Kent <raven@themaw.net> wrote:
+> > > > It's way more useful to have these in the notification than
+> > > > obtainable
+> > > > via fsinfo() IMHO.
+> > > 
+> > > What is it useful for?
+> > 
+> > Only to verify that you have seen all the notifications.
+> > 
+> > If you have to grab that info with a separate call then the count
+> > isn't necessarily consistent because other notifications can occur
+> > while you grab it.
+> 
+> No, no no.   The watch queue will signal an overflow, without any
+> additional overhead for the normal case.  If you think of this as a
+> protocol stack, then the overflow detection happens on the transport
+> layer, instead of the application layer.  The application layer is
+> responsible for restoring state in case of a transport layer error,
+> but detection of that error is not the responsibility of the
+> application layer.
+
+I can see in the kernel code that an error is returned if the message
+buffer is full when trying to add a message, I just can't see where
+to get it in the libmount code.
+
+That's not really a communication protocol problem.
+
+Still I need to work out how to detect it, maybe it is seen by
+the code in libmount already and I simply can't see what I need
+to do to recognise it ...
+
+So I'm stuck wanting to verify I have got everything that was
+sent and am having trouble moving on from that.
+
+Ian
 
