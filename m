@@ -2,273 +2,127 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D515C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0C1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAB6822B42
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:52:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nRpAf3O3"
+	by mail.kernel.org (Postfix) with ESMTP id 4600520842
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbgHETwa (ORCPT
+        id S1729181AbgHETwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:52:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728178AbgHEQvb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:51:31 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 536DDC0617A2;
-        Wed,  5 Aug 2020 03:44:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=R/Fw/YwT0RaCutX0cUSbcxCGxSzZ/4+guyO4MYB9PIE=; b=nRpAf3O3LK1l4VUhcqT0kTJOAy
-        QUGaGE2bguJ2MZd5wtNj+IcN3W5iFfOPC9jXpuR+uNhrbITi4EvGOChS261HzgvS4YYR6P4nwJW2d
-        Mpgp8KCGE7C23wCNyNaqRg+zJrx892AoVWlRDV6Pi/2h1vbN9yFQM2lqyYvbXOCFffWnc5BkpM8qb
-        YDqptN46ty1/meiD+lbJ+IfCu27GxXg1LYEBqSRk7Srl2pl1lCNpwxPzqGKadW0GyVBVWAM3PETwf
-        dwyd5oFGBJV4ClSiiPlJ0NloA65GZZFgFa9XHS4cS5AiCXHsyk9jwUP8P69xbwB5z+qBslrk+b16c
-        m8DKuvuA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k3Gu7-0005ei-La; Wed, 05 Aug 2020 10:44:16 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Wed, 5 Aug 2020 15:52:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57272 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727826AbgHEQvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 12:51:00 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2B83C301E02;
-        Wed,  5 Aug 2020 12:44:15 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 17BAB22281192; Wed,  5 Aug 2020 12:44:15 +0200 (CEST)
-Date:   Wed, 5 Aug 2020 12:44:15 +0200
-From:   peterz@infradead.org
-To:     ren_guo@c-sky.com
-Cc:     linux-kernel@vger.kernel.org, linux-csky@vger.kernel.org,
-        mathieu.desnoyers@efficios.com, Will Deacon <will@kernel.org>
-Subject: Re: csky: smp_mb__after_spinlock
-Message-ID: <20200805104415.GA35926@hirez.programming.kicks-ass.net>
-References: <20200805104146.GP2674@hirez.programming.kicks-ass.net>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DFA922CF7;
+        Wed,  5 Aug 2020 16:50:58 +0000 (UTC)
+Date:   Wed, 5 Aug 2020 12:50:56 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Muchun Song <songmuchun@bytedance.com>
+Cc:     naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
+        davem@davemloft.net, mhiramat@kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
+        yhs@fb.com, andriin@fb.com, john.fastabend@gmail.com,
+        kpsingh@chromium.org, sfr@canb.auug.org.au, mingo@kernel.org,
+        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Chengming Zhou <zhouchengming@bytedance.com>
+Subject: Re: [PATCH v2] kprobes: fix NULL pointer dereference at
+ kprobe_ftrace_handler
+Message-ID: <20200805125056.1dfe74b5@oasis.local.home>
+In-Reply-To: <20200805162713.16386-1-songmuchun@bytedance.com>
+References: <20200805162713.16386-1-songmuchun@bytedance.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200805104146.GP2674@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 12:41:46PM +0200, peterz@infradead.org wrote:
-> Hi,
-> 
-> While doing an audit of smp_mb__after_spinlock, I found that csky
-> defines it, why?
-> 
-> CSKY only has smp_mb(), it doesn't override __atomic_acquire_fence or
-> otherwise special cases it's atomic*_acquire() primitives. It has an
-> explicit smp_mb() in its arch_spin_lock().
+On Thu,  6 Aug 2020 00:27:13 +0800
+Muchun Song <songmuchun@bytedance.com> wrote:
 
-Also, why have two implementations of all the locking ?
+> We found a case of kernel panic on our server. The stack trace is as
+> follows(omit some irrelevant information):
+> 
+>   BUG: kernel NULL pointer dereference, address: 0000000000000080
+>   RIP: 0010:kprobe_ftrace_handler+0x5e/0xe0
+>   RSP: 0018:ffffb512c6550998 EFLAGS: 00010282
+>   RAX: 0000000000000000 RBX: ffff8e9d16eea018 RCX: 0000000000000000
+>   RDX: ffffffffbe1179c0 RSI: ffffffffc0535564 RDI: ffffffffc0534ec0
+>   RBP: ffffffffc0534ec1 R08: ffff8e9d1bbb0f00 R09: 0000000000000004
+>   R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+>   R13: ffff8e9d1f797060 R14: 000000000000bacc R15: ffff8e9ce13eca00
+>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>   CR2: 0000000000000080 CR3: 00000008453d0005 CR4: 00000000003606e0
+>   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>   Call Trace:
+>    <IRQ>
+>    ftrace_ops_assist_func+0x56/0xe0
+>    ftrace_call+0x5/0x34
+>    tcpa_statistic_send+0x5/0x130 [ttcp_engine]
+> 
+> The tcpa_statistic_send is the function being kprobed. After analysis,
+> the root cause is that the fourth parameter regs of kprobe_ftrace_handler
+> is NULL. Why regs is NULL? We use the crash tool to analyze the kdump.
+> 
+>   crash> dis tcpa_statistic_send -r  
+>          <tcpa_statistic_send>: callq 0xffffffffbd8018c0 <ftrace_caller>
+> 
+> The tcpa_statistic_send calls ftrace_caller instead of ftrace_regs_caller.
+> So it is reasonable that the fourth parameter regs of kprobe_ftrace_handler
+> is NULL. In theory, we should call the ftrace_regs_caller instead of the
+> ftrace_caller. After in-depth analysis, we found a reproducible path.
+> 
+>   Writing a simple kernel module which starts a periodic timer. The
+>   timer's handler is named 'kprobe_test_timer_handler'. The module
+>   name is kprobe_test.ko.
+> 
+>   1) insmod kprobe_test.ko
+>   2) bpftrace -e 'kretprobe:kprobe_test_timer_handler {}'
+>   3) echo 0 > /proc/sys/kernel/ftrace_enabled
+>   4) rmmod kprobe_test
+>   5) stop step 2) kprobe
+>   6) insmod kprobe_test.ko
+>   7) bpftrace -e 'kretprobe:kprobe_test_timer_handler {}'
+> 
+> We mark the kprobe as GONE but not disarm the kprobe in the step 4).
+> The step 5) also do not disarm the kprobe when unregister kprobe. So
+> we do not remove the ip from the filter. In this case, when the module
+> loads again in the step 6), we will replace the code to ftrace_caller
+> via the ftrace_module_enable(). When we register kprobe again, we will
+> not replace ftrace_caller to ftrace_regs_caller because the ftrace is
+> disabled in the step 3). So the step 7) will trigger kernel panic. Fix
+> this problem by disarming the kprobe when the module is going away.
+> 
+> Fixes: ae6aa16fdc16 ("kprobes: introduce ftrace based optimization")
+> Acked-by: Song Liu <songliubraving@fb.com>
+> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> Co-developed-by: Chengming Zhou <zhouchengming@bytedance.com>
+> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+> ---
+> changelogs in v2:
+>  1) fix compiler warning for !CONFIG_KPROBES_ON_FTRACE.
 
----
-diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
-index bd31ab12f77d..332738e93e57 100644
---- a/arch/csky/Kconfig
-+++ b/arch/csky/Kconfig
-@@ -7,7 +7,7 @@ config CSKY
- 	select ARCH_HAS_SYNC_DMA_FOR_CPU
- 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
- 	select ARCH_USE_BUILTIN_BSWAP
--	select ARCH_USE_QUEUED_RWLOCKS if NR_CPUS>2
-+	select ARCH_USE_QUEUED_RWLOCKS
- 	select ARCH_WANT_FRAME_POINTERS if !CPU_CK610
- 	select COMMON_CLK
- 	select CLKSRC_MMIO
-diff --git a/arch/csky/include/asm/spinlock.h b/arch/csky/include/asm/spinlock.h
-index 7cf3f2b34cea..69f5aa249c5f 100644
---- a/arch/csky/include/asm/spinlock.h
-+++ b/arch/csky/include/asm/spinlock.h
-@@ -6,8 +6,6 @@
- #include <linux/spinlock_types.h>
- #include <asm/barrier.h>
- 
--#ifdef CONFIG_QUEUED_RWLOCKS
--
- /*
-  * Ticket-based spin-locking.
-  */
-@@ -88,169 +86,4 @@ static inline int arch_spin_is_contended(arch_spinlock_t *lock)
- 
- #include <asm/qrwlock.h>
- 
--/* See include/linux/spinlock.h */
--#define smp_mb__after_spinlock()	smp_mb()
--
--#else /* CONFIG_QUEUED_RWLOCKS */
--
--/*
-- * Test-and-set spin-locking.
-- */
--static inline void arch_spin_lock(arch_spinlock_t *lock)
--{
--	u32 *p = &lock->lock;
--	u32 tmp;
--
--	asm volatile (
--		"1:	ldex.w		%0, (%1) \n"
--		"	bnez		%0, 1b   \n"
--		"	movi		%0, 1    \n"
--		"	stex.w		%0, (%1) \n"
--		"	bez		%0, 1b   \n"
--		: "=&r" (tmp)
--		: "r"(p)
--		: "cc");
--	smp_mb();
--}
--
--static inline void arch_spin_unlock(arch_spinlock_t *lock)
--{
--	smp_mb();
--	WRITE_ONCE(lock->lock, 0);
--}
--
--static inline int arch_spin_trylock(arch_spinlock_t *lock)
--{
--	u32 *p = &lock->lock;
--	u32 tmp;
--
--	asm volatile (
--		"1:	ldex.w		%0, (%1) \n"
--		"	bnez		%0, 2f   \n"
--		"	movi		%0, 1    \n"
--		"	stex.w		%0, (%1) \n"
--		"	bez		%0, 1b   \n"
--		"	movi		%0, 0    \n"
--		"2:				 \n"
--		: "=&r" (tmp)
--		: "r"(p)
--		: "cc");
--
--	if (!tmp)
--		smp_mb();
--
--	return !tmp;
--}
--
--#define arch_spin_is_locked(x)	(READ_ONCE((x)->lock) != 0)
--
--/*
-- * read lock/unlock/trylock
-- */
--static inline void arch_read_lock(arch_rwlock_t *lock)
--{
--	u32 *p = &lock->lock;
--	u32 tmp;
--
--	asm volatile (
--		"1:	ldex.w		%0, (%1) \n"
--		"	blz		%0, 1b   \n"
--		"	addi		%0, 1    \n"
--		"	stex.w		%0, (%1) \n"
--		"	bez		%0, 1b   \n"
--		: "=&r" (tmp)
--		: "r"(p)
--		: "cc");
--	smp_mb();
--}
--
--static inline void arch_read_unlock(arch_rwlock_t *lock)
--{
--	u32 *p = &lock->lock;
--	u32 tmp;
--
--	smp_mb();
--	asm volatile (
--		"1:	ldex.w		%0, (%1) \n"
--		"	subi		%0, 1    \n"
--		"	stex.w		%0, (%1) \n"
--		"	bez		%0, 1b   \n"
--		: "=&r" (tmp)
--		: "r"(p)
--		: "cc");
--}
--
--static inline int arch_read_trylock(arch_rwlock_t *lock)
--{
--	u32 *p = &lock->lock;
--	u32 tmp;
--
--	asm volatile (
--		"1:	ldex.w		%0, (%1) \n"
--		"	blz		%0, 2f   \n"
--		"	addi		%0, 1    \n"
--		"	stex.w		%0, (%1) \n"
--		"	bez		%0, 1b   \n"
--		"	movi		%0, 0    \n"
--		"2:				 \n"
--		: "=&r" (tmp)
--		: "r"(p)
--		: "cc");
--
--	if (!tmp)
--		smp_mb();
--
--	return !tmp;
--}
--
--/*
-- * write lock/unlock/trylock
-- */
--static inline void arch_write_lock(arch_rwlock_t *lock)
--{
--	u32 *p = &lock->lock;
--	u32 tmp;
--
--	asm volatile (
--		"1:	ldex.w		%0, (%1) \n"
--		"	bnez		%0, 1b   \n"
--		"	subi		%0, 1    \n"
--		"	stex.w		%0, (%1) \n"
--		"	bez		%0, 1b   \n"
--		: "=&r" (tmp)
--		: "r"(p)
--		: "cc");
--	smp_mb();
--}
--
--static inline void arch_write_unlock(arch_rwlock_t *lock)
--{
--	smp_mb();
--	WRITE_ONCE(lock->lock, 0);
--}
--
--static inline int arch_write_trylock(arch_rwlock_t *lock)
--{
--	u32 *p = &lock->lock;
--	u32 tmp;
--
--	asm volatile (
--		"1:	ldex.w		%0, (%1) \n"
--		"	bnez		%0, 2f   \n"
--		"	subi		%0, 1    \n"
--		"	stex.w		%0, (%1) \n"
--		"	bez		%0, 1b   \n"
--		"	movi		%0, 0    \n"
--		"2:				 \n"
--		: "=&r" (tmp)
--		: "r"(p)
--		: "cc");
--
--	if (!tmp)
--		smp_mb();
--
--	return !tmp;
--}
--
--#endif /* CONFIG_QUEUED_RWLOCKS */
- #endif /* __ASM_CSKY_SPINLOCK_H */
+The original patch has already been pulled into the queue and tested.
+Please make a new patch that adds this update, as if your original
+patch has already been accepted.
+
+Feel free to base it off of:
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git  for-next
+
+-- Steve
