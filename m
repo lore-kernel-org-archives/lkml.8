@@ -2,96 +2,75 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D687C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7109BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 157D922CA0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3885122B40
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 09:04:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596618258;
+	bh=QPLG5ZgVtxfAcgI2IMlcl38QZKfiBDdcZJQT1y1XdjQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QBKhJOUMbGtXD/vHiYZVFzTuC8Tdl47KEVu5LSM3IQv1jsTziTf3FjNpnUGst1CXx
+	 Q2BmvIZgH5xw58ma1rmvPY0hFee2teJjyilo4o1ceNqXgnI4XtXhygODahFKqyytA1
+	 6yg3p2qnphqGCkeQbQYNOmBmqyNINnTqdk7auh0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbgHEJD7 (ORCPT
+        id S1728344AbgHEJEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 05:03:59 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41589 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbgHEJDw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 05:03:52 -0400
-Received: by mail-ot1-f68.google.com with SMTP id a65so23605701otc.8;
-        Wed, 05 Aug 2020 02:03:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+U8+4Hl6vkW6q5H3Mn8yh7PKkJ8AzP5y5V/lYaSvu1o=;
-        b=onr85kyPK9LarnT3RFyOX85WdbN46Vg1iYZr2LLlQhrc7B+ZKvUVsbSIre7E3gunKs
-         VBH0NQ81AFBFmnO6ymZ/4VxzLfYvaNvPOFHWKmhvNY58dD6Dj7V6Te8meBRIvIebvDcC
-         HPJpiZVKSrHTLyycAoxdSBCyU1fcxxCn/LWoNptDBrSVKtee+lJrOOTU73L7+bL3aaa/
-         RQIBv57TBXGmw1AV1XLvDsoJi8JYOQZee5CAa1u4u9Zmm96m31kyZJFZ4K/sBE4a1B0G
-         YBniXCTSHcX4QXLN0pPnlMOESt1Rd1yfElTK5jhlHWqMu9ap9Sz9IJweuDLLIbNTPfi0
-         NkmA==
-X-Gm-Message-State: AOAM533aZA29AmCtFnFzMm3gYSioU4kRt+JeR8ST0JtyzBpzIYtSkBKL
-        NMZIwfnFUHd3e4fE8y5QMICrj1LeN+MQJumyb5U=
-X-Google-Smtp-Source: ABdhPJxfFB1hHoa5BXIYGVzYY67VoOT3jTLbs48GTCpZQYZnuP5JqIwGmhxVtRFSbWsP+vfLaRmRzFfm+5MdaHUY6CM=
-X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr1670667ote.107.1596618231704;
- Wed, 05 Aug 2020 02:03:51 -0700 (PDT)
+        Wed, 5 Aug 2020 05:04:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50008 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725963AbgHEJEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 05:04:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5078D22B40;
+        Wed,  5 Aug 2020 09:04:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596618249;
+        bh=QPLG5ZgVtxfAcgI2IMlcl38QZKfiBDdcZJQT1y1XdjQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AzikWSLYGBy/+9k8QenQ0XIlFAllIQ9BBNHnVaNr6JA3sBITKOG1GBNLkVqyLOTJ6
+         th7OGbBLVepzILFrgnkP5iMs4SesbLqd17YOd8Q3xq7Z5QVR48u/6WGC074q8NJeoG
+         FTugKa72K/lxQxDegw4oXIJQSI1IJvYho+AC5vDM=
+Date:   Wed, 5 Aug 2020 11:04:25 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Tomer Samara <tomersamara98@gmail.com>
+Cc:     jerome.pouiller@silabs.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: wfx: refactor to avoid duplication at hif_tx.c
+Message-ID: <20200805090425.GA655071@kroah.com>
+References: <20200805085608.GA100079@tsnow>
 MIME-Version: 1.0
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-13-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594919915-5225-13-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 5 Aug 2020 11:03:40 +0200
-Message-ID: <CAMuHMdV1A3SZSukFcO9YHGveJGXkUHm4VG2wBgThh+xV939Wew@mail.gmail.com>
-Subject: Re: [PATCH 12/20] dt-bindings: dma: renesas,usb-dmac: Add binding for r8a774e1
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200805085608.GA100079@tsnow>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 7:19 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add binding for R8A774E1 SoC (RZ/G2H).
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+On Wed, Aug 05, 2020 at 11:56:08AM +0300, Tomer Samara wrote:
+> Add functions wfx_full_send(), wfx_full_send_no_reply_async(),
+> wfx_full_send_no_reply() and wfx_full_send_no_reply_free()
+> which works as follow:
+> wfx_full_send() - simple wrapper for both wfx_fill_header()
+>                   and wfx_cmd_send().
+> wfx_full_send_no_reply_async() - wrapper for both but with
+>                                  NULL as reply and size zero.
+> wfx_full_send_no_reply() - same as wfx_full_send_no_reply_async()
+>                            but with false async value
+> wfx_full_send_no_reply_free() - same as wfx_full_send_no_reply()
+>                                 but also free the struct hif_msg.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Please only do one-thing-per-patch.  Why shouldn't this be a 4 patch
+series?
 
-Gr{oetje,eeting}s,
+thanks,
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+greg k-h
