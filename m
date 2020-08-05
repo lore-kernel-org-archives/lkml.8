@@ -5,273 +5,352 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FA3C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A88732076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:59:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4087520842
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:59:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YyYLES4l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IhlpHhK2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729783AbgHET7a (ORCPT
+        id S1729616AbgHET72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:59:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45438 "EHLO
+        Wed, 5 Aug 2020 15:59:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727923AbgHEQmM (ORCPT
+        with ESMTP id S1727858AbgHEQmM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 12:42:12 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E27DC0086CC;
-        Wed,  5 Aug 2020 07:14:06 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id kr4so4596050pjb.2;
-        Wed, 05 Aug 2020 07:14:06 -0700 (PDT)
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93EF1C034628;
+        Wed,  5 Aug 2020 06:12:17 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id g8so5773068wmk.3;
+        Wed, 05 Aug 2020 06:12:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=E6c0vghDkgEJ0a17A5+nuiHJ8D+179IgnQgcYz9dqaY=;
-        b=YyYLES4lVVS0AwqF8KdFgvecU0rZ54MrgMfyenfeLVgPDjqeuE0TXmuAwbL39GI83J
-         +brndbF+IwazD77a1klVuX3ccA7g93HF0Jhw/5QZqelQ5ejP+7SdCxbEgepXRveNIakf
-         fWKicNGvCF+nNVi7kGy87yWOaspd6wZV4f+I0fSYIzNQ30POtG1mhkdMsTWz0ymGOJNa
-         PouGZ2f5APwS3hygkDzHtxk9sZGHV9Z/3LWxkzdAkEkX+7jfsU2yKEMQhxZFcJpwKaMG
-         Y2Vhxv/9VGGTXx695Mr4MizLST/MMzRNNimq54cwCS2JUY2tFJTiiCNGa9Cb7ypzWOXR
-         L3lw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=srwZS6E/0l7r/CgA4LVzOC1aG7HFShqrxzVtGGn4WfA=;
+        b=IhlpHhK2ckI5iP3DR3Jc6ldpkD8CmAjPZTHUAW0bm2yyP0h8jZZL1Cwmm0rebZq5HY
+         N84wbmNf9VB+gkr02sY06yDaBylKW5lLewRlFqssJW1IrUTESb+nGM2wxEZzdD2bI7sB
+         jZa9Z7ULgpjdOot2LLfvmdA4txiDD6pUbV6+6WT4ODiBf8QxHH+ZLoTya+tOp7GAbiT/
+         cPuSvb3bxjixGgGiCsgwtpiYGVLSC+EEsj0V6mu8+D2F4ZJ5ivLO70wsL+2S3DTVXDXC
+         cpBkG3eYtaZqE0d/+XQxYuxBtdh5o+iICsy4sv6szYBmj4jC+QGh4KRlg0qkCsXReCJP
+         o2JQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=E6c0vghDkgEJ0a17A5+nuiHJ8D+179IgnQgcYz9dqaY=;
-        b=kG6jjb2MlMARf54JssL0VErD5V8l4e1RviW8DNLtBKN3xHNt2oVmcDj0ymdkXoZ1gS
-         c/imZo/mBb87jqPoghozo1JJhjO5Lanj4tOzsfuMi3Gp3AIbQzXg6UxFsMrtPRxmKabv
-         mNYKufABxbb+Z0hQrV0MYbn/jU6pT4Rz+8CA/1xjvPwSZkvl9s+3PeM0dmkTfwfyrUVN
-         /Ta/UVOgPzsZFIISP/r2fisrCLKS9JuB2BLCF8E7jLbNCCRRuVVE5pCzeVZkidapI+s+
-         Dn0MpugDv5lDlAkWWBdTLDbtjqfWeyUwW/JH/gJvdXDAwS+KTU6bLk0mSshti5lW4X1T
-         6TbQ==
-X-Gm-Message-State: AOAM530hFfA6lZYiIivb/SE96OTJTJ3bnRNekdOsN80wLQgthdhOWSBH
-        9Sfn+B9uPpL25GYZfpFFFS8u7BeW
-X-Google-Smtp-Source: ABdhPJzGOtBj5jUOCmkzH/oXkJ+Jepgq3ah12aPXmimlVn1IaRS0eaGFAJXfoQebV2bsdecMhUPtWQ==
-X-Received: by 2002:a17:90a:3d02:: with SMTP id h2mr3432297pjc.15.1596636845691;
-        Wed, 05 Aug 2020 07:14:05 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.62])
-        by smtp.gmail.com with ESMTPSA id p20sm3141184pjz.49.2020.08.05.07.14.02
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=srwZS6E/0l7r/CgA4LVzOC1aG7HFShqrxzVtGGn4WfA=;
+        b=EVpEbHgsZ63cZGAMFsWeVYGLKLNft7Ae0NbtpJWlC7JkseR1eSM74rnx7IeZe45gET
+         ht4+2AiSZtEFnBH4eeUll+TGpzUnfxm6uXPHwuJwFdQ7edn692jHzx+CDyXN3zGjE/sn
+         Jz3t1Cnxxbb93pUfSUlEJWq+TgWlwepZtyuHlbzPnsTaV/GARx+RLJL6tSkNgu3qtXAX
+         39/BvtW6V6r542j7+4QDsrjqvD81MH2HTIwDXBkFwgZKPL/16FzHbGQ6kQLDqzM7j+jx
+         9xRwFH3yih7GFAcvDS7WzEz54wpWMD4XAGWHTGHcW8wZkJp+HVheqvg3RXjyv0b2OKxL
+         C5zg==
+X-Gm-Message-State: AOAM532K4YnYMHfPih9OFYzFC8bf1gxU/rlyJ9DocGr6n9gSwZkLLsx6
+        5Sjopei0RP3aNSGZmBuoUG4=
+X-Google-Smtp-Source: ABdhPJxm1X+NfSbrsfJom3DeI6LYmR18lUrtAYEvScy+F1e1NLhYLoOcq8zV+jdTkdA51trnYfDmbw==
+X-Received: by 2002:a7b:cb17:: with SMTP id u23mr3347935wmj.79.1596633134379;
+        Wed, 05 Aug 2020 06:12:14 -0700 (PDT)
+Received: from Ansuel-XPS.localdomain (host-95-251-1-48.retail.telecomitalia.it. [95.251.1.48])
+        by smtp.googlemail.com with ESMTPSA id j11sm2669756wrq.69.2020.08.05.06.12.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 07:14:04 -0700 (PDT)
-From:   Yulei Zhang <yulei.kernel@gmail.com>
-To:     pbonzini@redhat.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sean.j.christopherson@intel.com, jmattson@google.com,
-        vkuznets@redhat.com, xiaoguangrong.eric@gmail.com,
-        kernellwp@gmail.com, lihaiwei.kernel@gmail.com,
-        Yulei Zhang <yuleixzhang@tencent.com>
-Subject: [RFC 6/9] Apply the direct build EPT according to the memory slots change
-Date:   Wed,  5 Aug 2020 22:14:56 +0800
-Message-Id: <20200805141456.9234-1-yulei.kernel@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 05 Aug 2020 06:12:13 -0700 (PDT)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 1/2] cpufreq: qcom: Add Krait Cache Scaling support
+Date:   Wed,  5 Aug 2020 15:11:58 +0200
+Message-Id: <20200805131200.3234-2-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200805131200.3234-1-ansuelsmth@gmail.com>
+References: <20200805131200.3234-1-ansuelsmth@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yulei Zhang <yuleixzhang@tencent.com>
+Qcom Krait CPUs use the generic cpufreq-dt driver and doesn't actually
+scale the Cache frequency when the CPU frequency is changed. This
+companion driver register with the cpu notifier and scale the Cache
+based on the max Freq across all core as the CPU cache is shared across
+all of them. If provided this also scale the voltage of the regulator
+attached to the CPU cache. The scaling logic is based on the CPU freq
+and the 3 scaling interval are set by the device dts.
 
-Construct the direct build ept when guest memory slots have been
-changed, and issue mmu_reload request to update the CR3 so that
-guest could use the pre-constructed EPT without page fault.
-
-Signed-off-by: Yulei Zhang <yuleixzhang@tencent.com>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 ---
- arch/mips/kvm/mips.c       | 13 +++++++++++++
- arch/powerpc/kvm/powerpc.c | 13 +++++++++++++
- arch/s390/kvm/kvm-s390.c   | 13 +++++++++++++
- arch/x86/kvm/mmu/mmu.c     | 33 ++++++++++++++++++++++++++-------
- include/linux/kvm_host.h   |  3 +++
- virt/kvm/kvm_main.c        | 13 +++++++++++++
- 6 files changed, 81 insertions(+), 7 deletions(-)
+ drivers/cpufreq/Kconfig.arm   |   9 ++
+ drivers/cpufreq/Makefile      |   1 +
+ drivers/cpufreq/krait-cache.c | 218 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 228 insertions(+)
+ create mode 100644 drivers/cpufreq/krait-cache.c
 
-diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
-index 8f05dd0a0f4e..7e5608769696 100644
---- a/arch/mips/kvm/mips.c
-+++ b/arch/mips/kvm/mips.c
-@@ -257,6 +257,19 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 	}
- }
+diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+index c6cbfc8baf72..4ed5e73051df 100644
+--- a/drivers/cpufreq/Kconfig.arm
++++ b/drivers/cpufreq/Kconfig.arm
+@@ -126,6 +126,15 @@ config ARM_OMAP2PLUS_CPUFREQ
+ 	depends on ARCH_OMAP2PLUS
+ 	default ARCH_OMAP2PLUS
  
-+int kvm_direct_tdp_populate_page_table(struct kvm *kvm, struct kvm_memory_slot *slot)
++config ARM_QCOM_KRAIT_CACHE_SCALE
++	tristate "Scaling support for Krait CPU Cache"
++	depends on ARCH_QCOM || COMPILE_TEST
++	help
++	  This adds the Scaling support for the Krait CPU Cache shared by
++	  all cores.
++
++	  If in doubt, say N.
++
+ config ARM_QCOM_CPUFREQ_NVMEM
+ 	tristate "Qualcomm nvmem based CPUFreq"
+ 	depends on ARCH_QCOM
+diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+index f6670c4abbb0..eee53d7e8b09 100644
+--- a/drivers/cpufreq/Makefile
++++ b/drivers/cpufreq/Makefile
+@@ -61,6 +61,7 @@ obj-$(CONFIG_MACH_MVEBU_V7)		+= mvebu-cpufreq.o
+ obj-$(CONFIG_ARM_OMAP2PLUS_CPUFREQ)	+= omap-cpufreq.o
+ obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+= pxa2xx-cpufreq.o
+ obj-$(CONFIG_PXA3xx)			+= pxa3xx-cpufreq.o
++obj-$(CONFIG_ARM_QCOM_KRAIT_CACHE_SCALE) += krait-cache.o
+ obj-$(CONFIG_ARM_QCOM_CPUFREQ_HW)	+= qcom-cpufreq-hw.o
+ obj-$(CONFIG_ARM_QCOM_CPUFREQ_NVMEM)	+= qcom-cpufreq-nvmem.o
+ obj-$(CONFIG_ARM_RASPBERRYPI_CPUFREQ) 	+= raspberrypi-cpufreq.o
+diff --git a/drivers/cpufreq/krait-cache.c b/drivers/cpufreq/krait-cache.c
+new file mode 100644
+index 000000000000..77cdd2cb22fc
+--- /dev/null
++++ b/drivers/cpufreq/krait-cache.c
+@@ -0,0 +1,218 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/cpufreq.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/clk.h>
++#include <linux/slab.h>
++#include <linux/regulator/consumer.h>
++
++struct krait_data {
++	struct clk *l2_clk; /* L2 clock */
++	unsigned int l2_volt_tol; /* L2 voltage tolerance */
++
++	struct regulator *l2_regulator; /* L2 supply */
++	unsigned int l2_rate[3]; /* L2 bus clock rate */
++	bool l2_rate_set;
++
++	unsigned int l2_cpufreq[3]; /* L2 target CPU frequency */
++	unsigned int l2_volt[3]; /* L2 voltage array */
++
++	unsigned long curr_l2_freq;
++	unsigned long curr_l2_volt;
++
++	struct notifier_block nb;
++};
++
++static int krait_cache_notifier(struct notifier_block *nb, unsigned long cmd,
++				void *v)
 +{
-+	return 0;
-+}
++	struct cpufreq_freqs *freqs = (struct cpufreq_freqs *)v;
++	unsigned long l2_freq, target_l2_freq;
++	unsigned long l2_vol, target_l2_volt;
++	struct regulator *l2_regulator;
++	struct krait_data *data;
++	struct clk *l2_clk;
++	int ret = 0;
 +
-+void kvm_direct_tdp_remove_page_table(struct kvm *kvm, struct kvm_memory_slot *slot)
-+{
-+}
++	data = container_of(nb, struct krait_data, nb);
 +
-+void kvm_direct_tdp_release_global_root(struct kvm *kvm)
-+{
-+}
++	if (cmd == CPUFREQ_PRECHANGE) {
++		unsigned int target_freq = freqs->new;
++		int cpu, cur_cpu = freqs->policy->cpu, l2_index, tol = 0;
 +
- static inline void dump_handler(const char *symbol, void *start, void *end)
- {
- 	u32 *p;
-diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
-index ad2f172c26a6..93066393e09d 100644
---- a/arch/powerpc/kvm/powerpc.c
-+++ b/arch/powerpc/kvm/powerpc.c
-@@ -712,6 +712,19 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 	kvmppc_core_commit_memory_region(kvm, mem, old, new, change);
- }
- 
-+int kvm_direct_tdp_populate_page_table(struct kvm *kvm, struct kvm_memory_slot *slot)
-+{
-+	return 0;
-+}
++		l2_clk = data->l2_clk;
 +
-+void kvm_direct_tdp_remove_page_table(struct kvm *kvm, struct kvm_memory_slot *slot)
-+{
-+}
++		/* find the max freq across all core */
++		for_each_present_cpu(cpu)
++			if (cpu != cur_cpu)
++				target_freq = max(target_freq,
++						  cpufreq_quick_get(cpu));
 +
-+void kvm_direct_tdp_release_global_root(struct kvm *kvm)
-+{
-+}
++		/* find l2_freq and l2_volt  */
++		for (l2_index = 0;
++		     l2_index < 2 && target_freq <= data->l2_cpufreq[l2_index];
++		     l2_index++)
++			break;
 +
- void kvm_arch_flush_shadow_memslot(struct kvm *kvm,
- 				   struct kvm_memory_slot *slot)
- {
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index d05bb040fd42..594c38a7cc9f 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -5008,6 +5008,19 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 	return;
- }
- 
-+int kvm_direct_tdp_populate_page_table(struct kvm *kvm, struct kvm_memory_slot *slot)
-+{
-+	return 0;
-+}
++		l2_freq = data->curr_l2_freq;
++		target_l2_freq = data->l2_rate[l2_index];
 +
-+void kvm_direct_tdp_remove_page_table(struct kvm *kvm, struct kvm_memory_slot *slot)
-+{
-+}
++		/* scale only if needed */
++		if (l2_freq != target_l2_freq) {
++			/*
++			 * Set to idle bin if switching from normal to high bin
++			 * or vice versa. It has been notice that a bug is triggered
++			 * in cache scaling when more than one bin is scaled, to fix
++			 * this we first need to transition to the base rate and then
++			 * to target rate
++			 */
++			if ((l2_index == 2 && l2_freq == data->l2_rate[1]) ||
++			    (l2_index == 1 && l2_freq == data->l2_rate[2])) {
++				ret = clk_set_rate(l2_clk, data->l2_rate[0]);
++				if (ret)
++					goto exit;
++			}
 +
-+void kvm_direct_tdp_release_global_root(struct kvm *kvm)
-+{
-+}
++			ret = clk_set_rate(l2_clk, target_l2_freq);
++			if (ret)
++				goto exit;
 +
- static inline unsigned long nonhyp_mask(int i)
- {
- 	unsigned int nonhyp_fai = (sclp.hmfai << i * 2) >> 30;
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index b59a4502d1f6..33252e432c1b 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -5203,13 +5203,20 @@ int kvm_mmu_load(struct kvm_vcpu *vcpu)
- {
- 	int r;
- 
--	r = mmu_topup_memory_caches(vcpu);
--	if (r)
--		goto out;
--	r = mmu_alloc_roots(vcpu);
--	kvm_mmu_sync_roots(vcpu);
--	if (r)
--		goto out;
-+	if (vcpu->kvm->arch.global_root_hpa) {
-+		vcpu->arch.direct_build_tdp = true;
-+		vcpu->arch.mmu->root_hpa = vcpu->kvm->arch.global_root_hpa;
-+	}
++			data->curr_l2_freq = target_l2_freq;
 +
-+	if (!vcpu->arch.direct_build_tdp) {
-+		r = mmu_topup_memory_caches(vcpu);
-+		if (r)
-+			goto out;
-+		r = mmu_alloc_roots(vcpu);
-+		kvm_mmu_sync_roots(vcpu);
-+		if (r)
-+			goto out;
-+	}
- 	kvm_mmu_load_pgd(vcpu);
- 	kvm_x86_ops.tlb_flush(vcpu, true);
- out:
-@@ -6438,6 +6445,17 @@ int direct_build_mapping_level(struct kvm *kvm, struct kvm_memory_slot *slot, gf
- 	return host_level;
- }
- 
-+static void kvm_make_direct_build_update(struct kvm *kvm)
-+{
-+	int i;
-+	struct kvm_vcpu *vcpu;
++			l2_regulator = data->l2_regulator;
++			if (l2_regulator) {
++				l2_vol = data->curr_l2_volt;
++				target_l2_volt = data->l2_volt[l2_index];
 +
-+	kvm_for_each_vcpu(i, vcpu, kvm) {
-+		kvm_make_request(KVM_REQ_MMU_RELOAD, vcpu);
-+		kvm_vcpu_kick(vcpu);
-+	}
-+}
++				if (l2_vol != target_l2_volt) {
++					tol = target_l2_volt *
++					      data->l2_volt_tol / 100;
++					ret = regulator_set_voltage_tol(
++						l2_regulator, target_l2_volt,
++						tol);
++					if (ret)
++						goto exit;
 +
- int kvm_direct_tdp_populate_page_table(struct kvm *kvm, struct kvm_memory_slot *slot)
- {
- 	gfn_t gfn;
-@@ -6472,6 +6490,7 @@ int kvm_direct_tdp_populate_page_table(struct kvm *kvm, struct kvm_memory_slot *
- 		direct_build_tdp_map(kvm, slot, gfn, pfn, host_level);
- 	}
- 
-+	kvm_make_direct_build_update(kvm);
- 	return 0;
- }
- 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index d1f75ad5038b..767e5c4ed295 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -693,6 +693,9 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 				struct kvm_memory_slot *old,
- 				const struct kvm_memory_slot *new,
- 				enum kvm_mr_change change);
-+int kvm_direct_tdp_populate_page_table(struct kvm *kvm, struct kvm_memory_slot *slot);
-+void kvm_direct_tdp_remove_page_table(struct kvm *kvm, struct kvm_memory_slot *slot);
-+void kvm_direct_tdp_release_global_root(struct kvm *kvm);
- void mark_page_dirty_in_slot(struct kvm_memory_slot *memslot, gfn_t gfn);
- /* flush all memory translations */
- void kvm_arch_flush_shadow_all(struct kvm *kvm);
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 46217b1c8353..eb0f6ad2f369 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -820,6 +820,7 @@ static void kvm_destroy_vm(struct kvm *kvm)
- #endif
- 	kvm_arch_destroy_vm(kvm);
- 	kvm_destroy_devices(kvm);
-+	kvm_direct_tdp_release_global_root(kvm);
- 	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++)
- 		kvm_free_memslots(kvm, __kvm_memslots(kvm, i));
- 	cleanup_srcu_struct(&kvm->irq_srcu);
-@@ -1139,6 +1140,10 @@ static int kvm_set_memslot(struct kvm *kvm,
- 		 * in the freshly allocated memslots, not in @old or @new.
- 		 */
- 		slot = id_to_memslot(slots, old->id);
-+		/* Remove pre-constructed page table */
-+		if (!as_id)
-+			kvm_direct_tdp_remove_page_table(kvm, slot);
-+
- 		slot->flags |= KVM_MEMSLOT_INVALID;
- 
- 		/*
-@@ -1166,6 +1171,14 @@ static int kvm_set_memslot(struct kvm *kvm,
- 	update_memslots(slots, new, change);
- 	slots = install_new_memslots(kvm, as_id, slots);
- 
-+	if ((change == KVM_MR_CREATE) || (change == KVM_MR_MOVE)) {
-+		if (!as_id) {
-+			r = kvm_direct_tdp_populate_page_table(kvm, new);
-+			if (r)
-+				goto out_slots;
++					data->curr_l2_volt = target_l2_volt;
++				}
++			}
 +		}
 +	}
 +
- 	kvm_arch_commit_memory_region(kvm, mem, old, new, change);
- 
- 	kvfree(slots);
++exit:
++	return notifier_from_errno(ret);
++}
++
++static int krait_cache_probe(struct platform_device *pdev)
++{
++	int ret;
++	struct clk *l2_clk;
++	struct device_node *vdd;
++	struct krait_data *data;
++	struct regulator *l2_regulator;
++	struct device *dev = &pdev->dev;
++	struct device_node *node = dev->of_node;
++
++	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	data->l2_clk = clk_get(dev, "l2");
++	if (IS_ERR(l2_clk)) {
++		ret = PTR_ERR(l2_clk);
++		goto err;
++	}
++
++	of_property_read_u32(node, "voltage-tolerance", &data->l2_volt_tol);
++
++	of_property_read_u32_array(node, "l2-rates", data->l2_rate, 3);
++	if (data->l2_rate[0] && data->l2_rate[1] && data->l2_rate[2]) {
++		data->l2_rate_set = true;
++		of_property_read_u32_array(node, "l2-cpufreq", data->l2_cpufreq,
++					   3);
++		of_property_read_u32_array(node, "l2-volt", data->l2_volt, 3);
++	} else {
++		dev_warn(dev, "failed to parse L2 rates\n");
++	}
++
++	if (!data->l2_cpufreq[0] && !data->l2_cpufreq[1] &&
++	    !data->l2_cpufreq[2] && data->l2_rate_set) {
++		int i;
++
++		dev_warn(dev,
++			 "failed to parse target cpu freq, using defaults\n");
++		for (i = 0; i < 3; i++)
++			data->l2_cpufreq[i] = data->l2_rate[i];
++	}
++
++	if (data->l2_volt[0] && data->l2_volt[1] && data->l2_volt[2] &&
++	    data->l2_rate_set) {
++		vdd = of_parse_phandle(node, "l2-supply", 0);
++
++		if (vdd) {
++			l2_regulator = devm_regulator_get(dev, vdd->name);
++			if (!IS_ERR(l2_regulator)) {
++				data->l2_regulator = l2_regulator;
++			} else {
++				dev_err(dev,
++					"failed to get l2 supply, error=%pe\n",
++					l2_regulator);
++			}
++
++			of_node_put(vdd);
++		}
++	}
++
++	platform_set_drvdata(pdev, data);
++
++	data->nb.notifier_call = krait_cache_notifier;
++	cpufreq_register_notifier(&data->nb, CPUFREQ_TRANSITION_NOTIFIER);
++
++	return 0;
++
++err:
++	kfree(data);
++	return ret;
++}
++
++static int krait_cache_remove(struct platform_device *pdev)
++{
++	struct krait_data *data = platform_get_drvdata(pdev);
++
++	cpufreq_unregister_notifier(&data->nb, CPUFREQ_TRANSITION_NOTIFIER);
++
++	return 0;
++}
++
++static const struct of_device_id krait_cache_match_table[] = {
++	{ .compatible = "qcom,krait-cache" },
++	{}
++};
++
++static struct platform_driver krait_cache_driver = {
++	.probe		= krait_cache_probe,
++	.remove		= krait_cache_remove,
++	.driver		= {
++		.name   = "krait-cache-scaling",
++		.of_match_table = krait_cache_match_table,
++	},
++};
++
++static int __init krait_cache_init(void)
++{
++	return platform_driver_register(&krait_cache_driver);
++}
++late_initcall(krait_cache_init);
++
++static void __exit krait_cache_exit(void)
++{
++	platform_driver_unregister(&krait_cache_driver);
++}
++module_exit(krait_cache_exit);
++
++MODULE_DESCRIPTION("Krait CPU Cache Scaling driver");
++MODULE_LICENSE("GPL v2");
 -- 
-2.17.1
+2.27.0
 
