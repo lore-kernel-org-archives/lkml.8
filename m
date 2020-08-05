@@ -2,142 +2,103 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB16C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FF0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D88C206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:03:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 350C522CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 22:08:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596665016;
-	bh=Ncm5hiPJc/HOuv0nFOVakcl+rCZYoGezKcLaU+H/NDo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=ZCECGj5uAgUfBHTri3Hyzf2P231LccD4SiFXgceHdRot2/xr2pw1DdYr+aGw6z3Yj
-	 WsQwm6LIhqX+yUOUmLoWM3G/Rei40TrUMWM92LxAkicDM54682Vv7NSB1pP0kVLGtb
-	 67jJhnr95cY7OZSof2rNhWhmCTp1YydMxLYlHjSU=
+	s=default; t=1596665329;
+	bh=ZsUFr7FgM2XpxfbHCeXrW7JvL+WBNx4Wft3trEEd5RU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MCHETSdQHbgFpJJOvGyAhq6hgaC/wj+ZIONRKqPp6znarxEOaos2CAWkluU76TAPB
+	 QFgQI8pbpWr4LD32cvVl8hZsEpAmiEiREDM3tYQ3Swt75PddNyT9iqWjTgvAW7lu8o
+	 fXRhj2hZNxcJCbBnc398UxXwKhz+m4Th9ERgMvpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726459AbgHEWDf (ORCPT
+        id S1726175AbgHEWIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 18:03:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42976 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 18:08:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726071AbgHEWD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 18:03:29 -0400
-Received: from localhost (mobile-166-175-186-42.mycingular.net [166.175.186.42])
+        id S1725730AbgHEWIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 18:08:47 -0400
+Received: from localhost (router.4pisysteme.de [80.79.225.122])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84351206F6;
-        Wed,  5 Aug 2020 22:03:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0461E2250E;
+        Wed,  5 Aug 2020 22:08:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596665009;
-        bh=Ncm5hiPJc/HOuv0nFOVakcl+rCZYoGezKcLaU+H/NDo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=uwpOeHXI+8dKbaV+jaelZC+chGd9htHtQ7gr4eBRyoO5ZnKvcgNkE4q1ywS4Rxn8n
-         Dn2w4kaQBZsEslDGVUxjOmLJG4/H9HISAmuq9YVBfidjMiv+gMQEyk4VQaKcfBWTKy
-         efGkS+RiiGdFMxgWGP6ZdpuYu4enEWOfaRbRDiLU=
-Date:   Wed, 5 Aug 2020 17:03:26 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bhelgaas@google.com, robh@kernel.org, maz@kernel.org
-Subject: Re: [PATCH v9 2/2] PCI: xilinx-cpm: Add Versal CPM Root Port driver
-Message-ID: <20200805220326.GA550962@bjorn-Precision-5520>
+        s=default; t=1596665326;
+        bh=ZsUFr7FgM2XpxfbHCeXrW7JvL+WBNx4Wft3trEEd5RU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UeLnj6w40Jhp8B6cMdZcEEyuXbQtdP0eCmymnX0/SZfKSKd0zowpWbUMFZrSCeBzj
+         Z2skU+VDD/EiTSQAdEUDOXb9o8QCXVMZoUO2remy9zqeQ/WW9LyEDlhxIVZcfwhRnL
+         T0wh1MrA1+dtwZAnYgy5QqYFC/el1me+OQJbf7H8=
+Date:   Thu, 6 Aug 2020 00:08:42 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linuxppc-dev@lists.ozlabs.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] macintosh: windfarm: fix spelling mistake "detatch" ->
+ "detach"
+Message-ID: <20200805220842.GC2182@kunai>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+        Colin King <colin.king@canonical.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linuxppc-dev@lists.ozlabs.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200805104337.16104-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Fig2xvG2VGoz8o/s"
 Content-Disposition: inline
-In-Reply-To: <20200805213928.GA1029@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20200805104337.16104-1-colin.king@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 10:39:28PM +0100, Lorenzo Pieralisi wrote:
-> On Wed, Aug 05, 2020 at 03:43:58PM -0500, Bjorn Helgaas wrote:
-> > On Tue, Jun 16, 2020 at 06:26:54PM +0530, Bharat Kumar Gogada wrote:
-> > > - Add support for Versal CPM as Root Port.
-> > > - The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
-> > >   block for CPM along with the integrated bridge can function
-> > >   as PCIe Root Port.
-> > > - Bridge error and legacy interrupts in Versal CPM are handled using
-> > >   Versal CPM specific interrupt line.
-> > 
-> > > +static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie_port *port)
-> > > +{
-> > > +	if (cpm_pcie_link_up(port))
-> > > +		dev_info(port->dev, "PCIe Link is UP\n");
-> > > +	else
-> > > +		dev_info(port->dev, "PCIe Link is DOWN\n");
-> > > +
-> > > +	/* Disable all interrupts */
-> > > +	pcie_write(port, ~XILINX_CPM_PCIE_IDR_ALL_MASK,
-> > > +		   XILINX_CPM_PCIE_REG_IMR);
-> > > +
-> > > +	/* Clear pending interrupts */
-> > > +	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_IDR) &
-> > > +		   XILINX_CPM_PCIE_IMR_ALL_MASK,
-> > > +		   XILINX_CPM_PCIE_REG_IDR);
-> > > +
-> > > +	/*
-> > > +	 * XILINX_CPM_PCIE_MISC_IR_ENABLE register is mapped to
-> > > +	 * CPM SLCR block.
-> > > +	 */
-> > > +	writel(XILINX_CPM_PCIE_MISC_IR_LOCAL,
-> > > +	       port->cpm_base + XILINX_CPM_PCIE_MISC_IR_ENABLE);
-> > > +	/* Enable the Bridge enable bit */
-> > > +	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_RPSC) |
-> > > +		   XILINX_CPM_PCIE_REG_RPSC_BEN,
-> > > +		   XILINX_CPM_PCIE_REG_RPSC);
-> > > +}
-> > > +
-> > > +/**
-> > > + * xilinx_cpm_pcie_parse_dt - Parse Device tree
-> > > + * @port: PCIe port information
-> > > + * @bus_range: Bus resource
-> > > + *
-> > > + * Return: '0' on success and error value on failure
-> > > + */
-> > > +static int xilinx_cpm_pcie_parse_dt(struct xilinx_cpm_pcie_port *port,
-> > > +				    struct resource *bus_range)
-> > > +{
-> > > +	struct device *dev = port->dev;
-> > > +	struct platform_device *pdev = to_platform_device(dev);
-> > > +	struct resource *res;
-> > > +
-> > > +	port->cpm_base = devm_platform_ioremap_resource_byname(pdev,
-> > > +							       "cpm_slcr");
-> > > +	if (IS_ERR(port->cpm_base))
-> > > +		return PTR_ERR(port->cpm_base);
-> > > +
-> > > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cfg");
-> > > +	if (!res)
-> > > +		return -ENXIO;
-> > > +
-> > > +	port->cfg = pci_ecam_create(dev, res, bus_range,
-> > > +				    &pci_generic_ecam_ops);
-> > 
-> > Aren't we passing an uninitialized pointer (bus_range) here?  This
-> > looks broken to me.
-> > 
-> > The kernelci build warns about it:
-> > https://kernelci.org/build/next/branch/master/kernel/next-20200805/
-> > 
-> >   /scratch/linux/drivers/pci/controller/pcie-xilinx-cpm.c:557:39: warning: variable 'bus_range' is uninitialized when used here [-Wuninitialized]
-> > 
-> > I'm dropping this for now.  I can't believe this actually works.
-> 
-> It is caused by my rebase to fix -next after the rework in pci/misc
-> (I had to drop the call to pci_parse_request_of_pci_ranges()).
-> 
-> I will look into this tomorrow if Rob does not beat me to it.
-> 
-> Apologies, it is a new driver that was based on an interface
-> that is being reworked, for good reasons, in pci/misc.
 
-Oh, yep, I think I see what happened.  I'll try to fix this in hopes
-of making linux-next tonight.
+--Fig2xvG2VGoz8o/s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Bjorn
+On Wed, Aug 05, 2020 at 11:43:37AM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>=20
+> There are spelling mistakes in DBG messages. Fix them.
+>=20
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+
+These comments can go entirely. i2c_detach is long history. And for
+remove, we have debugging output in the driver core meanwhile.
+
+
+--Fig2xvG2VGoz8o/s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8rLeoACgkQFA3kzBSg
+Kbbf3A//dxQuXCMIP+fM3FpsD9xa0D6BvZJ9uye6lcytP3aB4nYwiyQH1Xa2chW4
+DJPf0EYPgesQtRj6/VeAwrjt3I/a4TJcsPrTEPh42f+5lnBtdrjRPWI71ng37Ex8
+PftsLWt0XWcveo/b1dfw3v33xLSGDq/+Ivz3perRsQjbW1+YdMXIy3WnfyxkLJDr
+ZapgqtZAjIuJNGMym3RYIe6JYzHVJHzBXyNOB5IA99IdG5CvCu0IEMsX+35bCMhD
+iCnA9Vnltejf73dv+ELfn5HjBCU2h813GxhZ/Wejl4E5sdgh+a0P+35ML6zOiq2O
+wggmD98tGLXgshqnhJE/zEukOZY5b1rLWGvE9kWT6IMn8Z80pbgUloiF7RvddnP7
+4LsG8z+soDJh0hZxDcWBZOgEg4xb97MF+7+0vS3miv8SYLqS8fwAjsJgOG/slaiC
+aRCd68ndJIC4z25jkkjDIMBbY9yDI2vxUjG4igilXMUJEIEsDFGvf81uuXyZ496I
+RBci3lH9ERyT5KW7xkd8WTfR/JxxHp39kOdD3g4NTh52J47YT5c8Io2StwQj+fxQ
+NdQGiGR9d1oXVOXHcO/k/T8qoTUMctb5uOc8rfSUYycw0v2TgMb+AwgISq4ovw6L
+2t+THEjAWKxIcej9U6b69Bj+DskSo3zoRHZZf4AukUr8awGp1NA=
+=luwO
+-----END PGP SIGNATURE-----
+
+--Fig2xvG2VGoz8o/s--
