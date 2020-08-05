@@ -2,112 +2,186 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF06C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90106C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A0A02073E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B5442073E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 07:33:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d68kUP+O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgHEHb7 (ORCPT
+        id S1726987AbgHEHdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 03:31:59 -0400
-Received: from mga14.intel.com ([192.55.52.115]:21283 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbgHEHb6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 03:31:58 -0400
-IronPort-SDR: yURD5BosxFAKJBhmawxjnXl1s0ZRHkVS8Tp4g7JXYGpAIS1yAoBPXgx+ShzFtFygzmOo90Erkn
- u+Vpb02UaZGg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9703"; a="151707590"
-X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
-   d="scan'208";a="151707590"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 00:31:50 -0700
-IronPort-SDR: cAQKQ/gM9GkGj0bp/sRdhsqjQeCbkuA39WZ8KPRMHDVEJEvN1TtKcAT25uFSf9+9Dh4HYlMKzu
- rLbKRsp7Z0cg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,436,1589266800"; 
-   d="scan'208";a="493188709"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
-  by fmsmga005.fm.intel.com with ESMTP; 05 Aug 2020 00:31:48 -0700
-Subject: Re: [PATCH] mmc: sdhci_am654: Replace HTTP links with HTTPS ones
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        ulf.hansson@linaro.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200718090614.88946-1-grandmaster@al2klimov.de>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <4c5f0f0b-d530-6175-c04c-1d99c527282e@intel.com>
-Date:   Wed, 5 Aug 2020 10:31:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 5 Aug 2020 03:33:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45410 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbgHEHdW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 03:33:22 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75805C06174A;
+        Wed,  5 Aug 2020 00:33:21 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id h12so12570288pgf.7;
+        Wed, 05 Aug 2020 00:33:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6VHFh0vko2JNomHrwvJl3llHBkgB6xy1r3raHHKX4XE=;
+        b=d68kUP+O6O6E3CXbyCzCMbvOTSRN5iFrLjSS8IeRPCMjigrCTlihYZLDxM1riTVPVn
+         4s1FvvmKbUsGaMUFA+t85YpzvitCyQ2wD3kSnNhPiybSPV5KHsp4+mgn7SM9r9VF8fHK
+         xP/Y7VqJc4LNle3WYlMQeHFfZD2nGwbeDWsbM5LEAQlC02x4fgjTI2/Va4Ha1n5Toemw
+         o2Xc0qSPyZ3ms+NHNuGwZq9J/LhH+SY0EKF7KSPmgm22krRsZco/Ooy2vItEwhD+QrtA
+         VBRS5mdFvGqR2qiRqb2weZAQ/m8hlMG2RiDFIlpY7kr/HDl/FoZJnZVQnf1oNrnruNWl
+         vW8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6VHFh0vko2JNomHrwvJl3llHBkgB6xy1r3raHHKX4XE=;
+        b=DJKvrOFWpcUilu0czbWc2iAxpBCLGuXf1xTIj875r6HjIUr5ka8CdgAIGvCMNmMn6e
+         sLiAjYhk/R9ibeOzGCzuu/ivhr70+WSwJM54NHfXfftgdZxGAxS/s41ebWvovZLhBH/K
+         WNlexOTm/Rs64BjUTK1bxM2ZXA5LisWYYQFFXqOuRf8GTXwPXgzWJN9UoO3+zFHY0SFV
+         CpwSsvaSJVaClptibSGyPxZe2P7Csj0fd14usDE0W05INXj0SDP4hm0MnoW7tLEbYu89
+         vSxljH6KriUQudjytk1OcnWfITZai+Ht+aSfkLaIhDNtgo6O1WA7f+2m/BhBMAG/87av
+         u7tg==
+X-Gm-Message-State: AOAM532ZrqCfL3XkxDOFV568z9VKD/Rb1DwSNhzxjBDxv2wNs0dkFjXv
+        i8o44Hp0tlNQXQTh2l/ishh0LFCw9SDpioAAcHo=
+X-Google-Smtp-Source: ABdhPJyCNnmLOYWZi9JFIbJ2pxRzZLSSeGnZ/mXDoD3ie5aomNvJFDei5vYV3wIm6k8yK5UYzRgnFjox1/z4gtYcmlk=
+X-Received: by 2002:a63:f24a:: with SMTP id d10mr1883033pgk.4.1596612800868;
+ Wed, 05 Aug 2020 00:33:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200718090614.88946-1-grandmaster@al2klimov.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200804100414.39002-1-alexandru.ardelean@analog.com>
+In-Reply-To: <20200804100414.39002-1-alexandru.ardelean@analog.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 5 Aug 2020 10:33:03 +0300
+Message-ID: <CAHp75VcpOpXxb9Dz6GiixX9dQNjDUTe9ghU9QO8DUbU7h6LYfQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] iio: imu: adis16480: Add support for burst read function
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Stefan Popa <stefan.popa@analog.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/07/20 12:06 pm, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
-> 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-> 	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
->             If both the HTTP and HTTPS versions
->             return 200 OK and serve the same content:
->               Replace HTTP with HTTPS.
-> 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+On Tue, Aug 4, 2020 at 1:04 PM Alexandru Ardelean
+<alexandru.ardelean@analog.com> wrote:
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> +static irqreturn_t adis16480_trigger_handler(int irq, void *p)
+> +{
+> +       struct iio_poll_func *pf = p;
+> +       struct iio_dev *indio_dev = pf->indio_dev;
+> +       struct adis16480 *st = iio_priv(indio_dev);
+> +       struct adis *adis = &st->adis;
 
-> ---
->  Continuing my work started at 93431e0607e5.
->  See also: git log --oneline '--author=Alexander A. Klimov <grandmaster@al2klimov.de>' v5.7..master
-> 
->  If there are any URLs to be removed completely
->  or at least not (just) HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also: https://lkml.org/lkml/2020/6/27/64
-> 
->  If there are any valid, but yet not changed URLs:
->  See: https://lkml.org/lkml/2020/6/26/837
-> 
->  If you apply the patch, please let me know.
-> 
-> 
->  drivers/mmc/host/sdhci_am654.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-> index 061b4398a4f1..f2c89f0c0263 100644
-> --- a/drivers/mmc/host/sdhci_am654.c
-> +++ b/drivers/mmc/host/sdhci_am654.c
-> @@ -2,7 +2,7 @@
->  /*
->   * sdhci_am654.c - SDHCI driver for TI's AM654 SOCs
->   *
-> - * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com
-> + * Copyright (C) 2018 Texas Instruments Incorporated - https://www.ti.com
->   *
->   */
->  #include <linux/clk.h>
-> 
+> +       int ret, bit, offset, i = 0;
 
+It makes it easier to understand the code if the assignment will be
+attached to the actual user, i.e. for_each_set_bit() below.
+
+> +       __be16 data[ADIS16495_BURST_MAX_DATA], *buffer, *d;
+
+> +       if (!adis->buffer)
+> +               return -ENOMEM;
+
+Is it possible?
+
+> +       mutex_lock(&adis->state_lock);
+> +       if (adis->current_page != 0) {
+> +               adis->tx[0] = ADIS_WRITE_REG(ADIS_REG_PAGE_ID);
+> +               adis->tx[1] = 0;
+> +               spi_write(adis->spi, adis->tx, 2);
+> +       }
+> +
+> +       ret = spi_sync(adis->spi, &adis->msg);
+> +       if (ret)
+
+> +               dev_err(&adis->spi->dev, "Failed to read data: %d\n", ret);
+
+No bail out? Then it's dev_warn().
+
+> +       adis->current_page = 0;
+> +       mutex_unlock(&adis->state_lock);
+> +
+> +       if (!(adis->burst && adis->burst->en)) {
+> +               buffer = adis->buffer;
+> +               goto push_to_buffers;
+> +       }
+> +       /*
+> +        * After making the burst request, the response can have one or two
+> +        * "don't care" 16-bit responses, before the BURST_ID.
+> +        */
+> +       d = (__be16 *)adis->buffer;
+> +       for (offset = 0; offset < 3; offset++) {
+> +               if (d[offset] == ADIS16495_BURST_ID) {
+> +                       offset += 2; /* TEMP_OUT */
+> +                       break;
+> +               }
+> +       }
+
+So, we can end up with offset == 3 here. Is it by design?
+Otherwise, offset+=2 maybe moved out of the loop.
+And in any case comment is needed.
+
+> +       for_each_set_bit(bit, indio_dev->active_scan_mask,
+> +                       indio_dev->masklength) {
+> +               /*
+> +                * When burst mode is used, temperature is the first data
+> +                * channel in the sequence, but the temperature scan index
+> +                * is 10.
+> +                */
+> +               if (bit == ADIS16480_SCAN_TEMP) {
+> +                       data[2 * i] = d[offset];
+> +               } else {
+> +                       /* The lower register data is sequenced first */
+
+> +                       data[2 * i] = d[2 * bit + offset + 2];
+
+I would do ' + 0', but it's up to you.
+
+> +                       data[2 * i + 1] = d[2 * bit + offset + 1];
+> +               }
+> +               i++;
+> +       }
+> +
+> +       buffer = data;
+> +
+> +push_to_buffers:
+> +       iio_push_to_buffers_with_timestamp(indio_dev, buffer,
+> +               pf->timestamp);
+> +
+> +       iio_trigger_notify_done(indio_dev->trig);
+> +
+> +       return IRQ_HANDLED;
+> +}
+
+...
+
+> +       /* If burst mode is supported, enable it by default */
+> +       if (st->chip_info->burst) {
+> +               st->adis.burst = st->chip_info->burst;
+> +               st->adis.burst_extra_len = st->chip_info->burst->extra_len;
+> +       }
+
+You may use it directly (the sizeof struct somelike 16 bytes and one
+pointer on a 64-bit machine is 8, simply embed it into the struct and
+assign it always.
+
+...
+
++       .extra_len = 12 * sizeof(u16),
+
+__be16 would be precise?
+
+-- 
+With Best Regards,
+Andy Shevchenko
