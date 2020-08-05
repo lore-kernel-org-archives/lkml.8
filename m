@@ -2,128 +2,134 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D27EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14887C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7B102084D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5FC82073E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:54:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iYNRhBUE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbgHERyJ (ORCPT
+        id S1729024AbgHERtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:54:09 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2582 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728936AbgHERxZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:53:25 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 21B0DB8CEC8AF97E1437;
-        Wed,  5 Aug 2020 18:53:24 +0100 (IST)
-Received: from localhost (10.52.120.30) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Wed, 5 Aug 2020
- 18:53:23 +0100
-Date:   Wed, 5 Aug 2020 18:51:58 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Sean V Kelley <sean.v.kelley@intel.com>
-CC:     <bhelgaas@google.com>, <rjw@rjwysocki.net>, <ashok.raj@intel.com>,
-        <tony.luck@intel.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [PATCH V2 8/9] PCI/PME: Add RCEC PME handling
-Message-ID: <20200805185158.00001196@Huawei.com>
-In-Reply-To: <20200804194052.193272-9-sean.v.kelley@intel.com>
-References: <20200804194052.193272-1-sean.v.kelley@intel.com>
-        <20200804194052.193272-9-sean.v.kelley@intel.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Wed, 5 Aug 2020 13:49:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55902 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728986AbgHERoo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:44:44 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ED6AC061756
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 10:44:43 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id bh1so12583302plb.12
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 10:44:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OeVarHB8PyC/4WrdMH1wOnZuquqBZq7uGaYiqaJ/H2s=;
+        b=iYNRhBUE6a6QRqZgvap/7b6HfFiE6nn5SF6u9BZ45g4hcY5ly0Tddjzei52onqC+ua
+         nPE6GMic/x8EdXYFlIZDbKtcad+icJvGX3GCSblD8YJnipnUimix3w1YUBEqJF7uNKIQ
+         SyMZMMX9um2AZK0j+y258RYcKICG+Kr3q7aUuCTm8kL/G7cH+vGSy6AXxstJxKZCKiEA
+         Avsvi2T6+glTOJKwv4M3c2hK/bf+NloSXGW66axtsQ6nRrPp0h0BKvQQFuA7UvBsSgCE
+         2aXiKHiI/CVmpPlQN/pXwGB34/FyJBOpUQve7SYpYzOxBHlc/Uo6JETHMS2C1CWmXvzg
+         9jtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OeVarHB8PyC/4WrdMH1wOnZuquqBZq7uGaYiqaJ/H2s=;
+        b=K4TTn9UcLLyS1BeuWvNS7USiT7S+SjS8DWCZc7ciytTyHvNh8ncwZzaaL4EWwj9GEb
+         kk/tw4IJfIN8yQnNr4gHMdvgaOU3IQEH65RZTUYk4madwZgRsYybZHvMNYWepxAUTRgE
+         2i9K0x2KnLrOrA1DQCOs1hZJhP2fX7mdbrWwFw7yHnfXvAMnAOZOq7z/Eugy0iq2Vgr1
+         xU8V3TiB/sMOVrhZOD2lpOx/t3Q3FrBu8hHU8ufJn1JE/pv4wns+Xi01qb/u7A6DW+m8
+         ex+RN6Yo7EHVnr3X8gqfuquCuZXQdIJ39bNZqVosTW/DUGwuCRkMsPp53QDnRLQ456Qt
+         +Z5w==
+X-Gm-Message-State: AOAM5327Y4P2xPzACh4VTsxweqDZ+2SvmkJ0JDpr5g07Z59fgJotaBNQ
+        AVv6VvbS5UYBE/Q/Jp4FnGAenFjPOD5opiXRGkoAlg==
+X-Google-Smtp-Source: ABdhPJxYIH4X/KPPSVLO3TPfmhVajNLyAm6evVBVZ4ZWeH0jRb4W3Vq6aFy+xQJKcALm/osgPRjKbK+HjbIGlOk2hTY=
+X-Received: by 2002:a17:90a:3ad1:: with SMTP id b75mr4123456pjc.25.1596649482146;
+ Wed, 05 Aug 2020 10:44:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.120.30]
-X-ClientProxiedBy: lhreml744-chm.china.huawei.com (10.201.108.194) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <20200708230402.1644819-1-ndesaulniers@google.com>
+ <CAKwvOdmXtFo8YoNd7pgBnTQEwTZw0nGx-LypDiFKRR_HzZm9aA@mail.gmail.com>
+ <CAKwvOdkGmgdh6-4VRUGkd1KRC-PgFcGwP5vKJvO9Oj3cB_Qh6Q@mail.gmail.com>
+ <20200720.163458.475401930020484350.davem@davemloft.net> <CAKwvOdmU+Eh0BF+o4yqSBFRXkokLOzvy-Qni27DcXOSKv5KOtQ@mail.gmail.com>
+In-Reply-To: <CAKwvOdmU+Eh0BF+o4yqSBFRXkokLOzvy-Qni27DcXOSKv5KOtQ@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 5 Aug 2020 10:44:30 -0700
+Message-ID: <CAKwvOd=YBL_igN-Z1V9bePdt9+GOqkKq-H4Wg8GBZvBsdOHeOw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2 net] bitfield.h cleanups
+To:     David Miller <davem@davemloft.net>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>, oss-drivers@netronome.com,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alex Elder <elder@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Aug 2020 12:40:51 -0700
-Sean V Kelley <sean.v.kelley@intel.com> wrote:
+On Thu, Jul 30, 2020 at 3:37 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Mon, Jul 20, 2020 at 4:35 PM David Miller <davem@davemloft.net> wrote:
+> >
+> > From: Nick Desaulniers <ndesaulniers@google.com>
+> > Date: Mon, 20 Jul 2020 12:48:38 -0700
+> >
+> > > Hi David, bumping for review.
+> >
+> > If it's not active in my networking patchwork you can't just bump your original
+> > submission like this.
+> >
+> > You have to submit your series entirely again.
+> >
+> > And if it is in patchwork, such "bumping" is %100 unnecessary.  It's
+> > in my queue, it is not lost, and I will process it when I have the
+> > time.
+> >
+> > Thank you.
+>
+> Hi David,
+> Sorry, I'm not familiar with your workflow.  By patchwork, are you
+> referring to patchwork.ozlabs.org?  If so, I guess filtering on
+> Delegate=davem
+> (https://patchwork.ozlabs.org/project/netdev/list/?series=&submitter=&state=&q=&archive=&delegate=34)
+> is your queue?  I don't see my patches in the above query, but I do
+> see my series here:
+> https://patchwork.ozlabs.org/project/netdev/list/?series=188486&state=*
+> but they're marked "Not Applicable".  What does that mean?
 
-> The Root Complex Event Collectors(RCEC) appear as peers of Root Ports
-> and also have the PME capability. So add RCEC support to the current PME
-> service driver and attach the PME service driver to the RCEC device.
-> 
-> Co-developed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Hi David,
+I read through https://www.kernel.org/doc/html/latest/networking/netdev-FAQ.html#q-how-often-do-changes-from-these-trees-make-it-to-the-mainline-linus-tree
+and noticed http://vger.kernel.org/~davem/net-next.html.  Since the
+merge window just opened, it sounds like I'll need to wait 2 weeks for
+it to close before resending? Is that correct? Based on:
 
-I'm not particularly familiar with the PME side of things, but from the
-stand point of it does what I'd expect to see...
+> IMPORTANT: Do not send new net-next content to netdev during the period during which net-next tree is closed.
 
-FWIW:
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Then based on the next section in the doc, it sounds like I was
+missing which tree to put the patch in, in the subject? I believe
+these patches should target net-next (not net) since they're not
+addressing regressions from the most recent cycle.
 
-> ---
->  drivers/pci/pcie/pme.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
-> index 6a32970bb731..87799166c96a 100644
-> --- a/drivers/pci/pcie/pme.c
-> +++ b/drivers/pci/pcie/pme.c
-> @@ -310,7 +310,10 @@ static int pcie_pme_can_wakeup(struct pci_dev *dev, void *ign)
->  static void pcie_pme_mark_devices(struct pci_dev *port)
->  {
->  	pcie_pme_can_wakeup(port, NULL);
-> -	if (port->subordinate)
-> +
-> +	if (pci_pcie_type(port) == PCI_EXP_TYPE_RC_EC)
-> +		pcie_walk_rcec(port, pcie_pme_can_wakeup, NULL);
-> +	else if (port->subordinate)
->  		pci_walk_bus(port->subordinate, pcie_pme_can_wakeup, NULL);
->  }
->  
-> @@ -320,10 +323,15 @@ static void pcie_pme_mark_devices(struct pci_dev *port)
->   */
->  static int pcie_pme_probe(struct pcie_device *srv)
->  {
-> -	struct pci_dev *port;
-> +	struct pci_dev *port = srv->port;
->  	struct pcie_pme_service_data *data;
->  	int ret;
->  
-> +	/* Limit to Root Ports or Root Complex Event Collectors */
-> +	if ((pci_pcie_type(port) != PCI_EXP_TYPE_RC_EC) &&
-> +	    (pci_pcie_type(port) != PCI_EXP_TYPE_ROOT_PORT))
-> +		return -ENODEV;
-> +
->  	data = kzalloc(sizeof(*data), GFP_KERNEL);
->  	if (!data)
->  		return -ENOMEM;
-> @@ -333,7 +341,6 @@ static int pcie_pme_probe(struct pcie_device *srv)
->  	data->srv = srv;
->  	set_service_data(srv, data);
->  
-> -	port = srv->port;
->  	pcie_pme_interrupt_enable(port, false);
->  	pcie_clear_root_pme_status(port);
->  
-> @@ -445,7 +452,7 @@ static void pcie_pme_remove(struct pcie_device *srv)
->  
->  static struct pcie_port_service_driver pcie_pme_driver = {
->  	.name		= "pcie_pme",
-> -	.port_type	= PCI_EXP_TYPE_ROOT_PORT,
-> +	.port_type	= PCIE_ANY_PORT,
->  	.service	= PCIE_PORT_SERVICE_PME,
->  
->  	.probe		= pcie_pme_probe,
-
-
+Do I have all that right?
+-- 
+Thanks,
+~Nick Desaulniers
