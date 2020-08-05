@@ -5,22 +5,22 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0BDC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF22BC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B5C9206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:29:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73579206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:29:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QlV5//eg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a5Eddpxt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbgHET3G (ORCPT
+        id S1728975AbgHET3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:29:06 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58146 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728508AbgHERL0 (ORCPT
+        Wed, 5 Aug 2020 15:29:10 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31589 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728600AbgHERL0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 13:11:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
@@ -28,46 +28,48 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=atxIzRxbT9FOuFO2CvHZA+vE3tCMe4mwfA9uGPPCf/o=;
-        b=QlV5//egNjqtTFYg2w8PuGMZhp8PmKeuIGAigotEg9qFjWKXsg2oNW/qX+nUZHtO0OeGy+
-        pfeAqW0lA/i7ayhBu/WBuyJFgR8GzP14TJ1vFZXkX+l4tzQs4hvdZkeEcQNG5uQ3ZtpM/p
-        5zNVXaqmm2tSiTEbiH92QdQXSeIqVGg=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-204-a_j_3ljVMmiBjFtudKSGGA-1; Wed, 05 Aug 2020 09:45:01 -0400
-X-MC-Unique: a_j_3ljVMmiBjFtudKSGGA-1
-Received: by mail-wm1-f71.google.com with SMTP id a5so2741587wmj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:45:01 -0700 (PDT)
+        bh=WBH1LHbCDthOlF25HB1GNrSGXvGdUkDAo8hvALVyXYI=;
+        b=a5EddpxtHP7+z7ZF57sbRi26q+kBhi5brAZOh7MUltxeXQk+vceBmvs1JmbN7YVkOG+ZhP
+        3cLu/AlY44F8rrllAtiHzAMzPmORhCKQaNTZmJ8ogGEEHN40P1SGY0RWcYLHRNtWWSf+KU
+        NAuL2cS9wnS9fcK9eLgzJdaf/+hVCac=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-465-GQs2M6jdNSKNYkH-_rLlYA-1; Wed, 05 Aug 2020 09:44:49 -0400
+X-MC-Unique: GQs2M6jdNSKNYkH-_rLlYA-1
+Received: by mail-wr1-f69.google.com with SMTP id r14so1529621wrq.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:44:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=atxIzRxbT9FOuFO2CvHZA+vE3tCMe4mwfA9uGPPCf/o=;
-        b=OirF39JF6jY/74aa6JMgLoeCMgBFmlv3jEFIg4A8D4tXDSAzaKfCeM6rPUS2cAcBrF
-         N+4mrAiAoeUH+D4DOx79j4K9jCq18RcrNVCwwKAOv6YGAEs4A5f5tzXjELVrAcie48Yc
-         LK2P/Tbq91/kJ8Uoutklh/4EmqiWrz52FfvtE2/d/e7xREg7G7x/aTByf+jrX9ZNDK3S
-         c6BQul9XWO9UcHin42RN3y/J0rrzMvm8KFwAQxWQg5UML43YiM6VfMcFkYc+Whs+e0Fo
-         zMp3Kl2gOSXAa6sheuWsTu5f7oBq5USUQaD6J/ZI1FoA6jGRjBaOWEF6jzhZXjYa9frc
-         OmBg==
-X-Gm-Message-State: AOAM530lW0U2Gc4ylxgSmxmhhpN41iTjsAEFDoe2lC4AJE1tClqwmS/G
-        4A6T+EKYDndrI3ALNjfNf2YJS1EBX/jnYi29wnBx7HMYspDSkccniFwJPXXfTiPa4dDn4MGVg7m
-        TOG4o+lsop1x3i1RfFS2LJQv1
-X-Received: by 2002:a1c:2095:: with SMTP id g143mr3259120wmg.113.1596635100200;
-        Wed, 05 Aug 2020 06:45:00 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwi486zYfcrRq7SJ5KWTOvEIp6eSofJ8hVOMn9kJixY7f4ly7cOd7mIjGAtKnLyQE6YgYvPbA==
-X-Received: by 2002:a1c:2095:: with SMTP id g143mr3259106wmg.113.1596635100023;
-        Wed, 05 Aug 2020 06:45:00 -0700 (PDT)
-Received: from redhat.com ([192.117.173.58])
-        by smtp.gmail.com with ESMTPSA id v15sm2904117wrm.23.2020.08.05.06.44.58
+        bh=WBH1LHbCDthOlF25HB1GNrSGXvGdUkDAo8hvALVyXYI=;
+        b=Le3E5KG4eYbKqKvK0mu4Dl/njgm1m34Vv2mhxpYtwjyLeKQ/G8KSSRk2+4buU/4JGb
+         hrC92s5Tuw80XEJajKOrmZVIsyWS3yuIqjS+mjV3c9SAOPHtQib0UEGFhJkeY4BfJm+I
+         nr20sEZluApV0jr5jGYSarEJlkUQP8gRY7+FmKWh6S2H9Vm/ZdGCBA1/8dYHj7mR5mQn
+         iONg1S+C0UMpr3hdDm5yaL+a9fb2yoKAuZ8EZWBYZyoZRm+eLCRLlf608WL0Ga/l6krC
+         T50wV9sg1gYm+ITpT4Ps9sgulgx8cdv3IZwD0JlO3bE2dEYWUY4FnhJChg9/prS8T24z
+         cR5w==
+X-Gm-Message-State: AOAM533mX15TlS3DUQXLPZvxw4aKyYupHNGPgjfFGIwA0xFvCdgOOSOA
+        Iwv8APvo9QBnGPOu3K1PQ/ouRWbTjf6fDbemAdAKrEtuiVrcyQVpKreNUQRkZUtPTyiR2zw7Y+l
+        eNUVzMGLtVzYZ4NFKNvhw8Q2C
+X-Received: by 2002:adf:ab0d:: with SMTP id q13mr2728305wrc.134.1596635087919;
+        Wed, 05 Aug 2020 06:44:47 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxc8ukE7mtzF0Xw22J8QjnJI7RUP7Alfizi2qIlpwN9G61AnzGldaFn2ZneBCQ7Es9dgmyqZg==
+X-Received: by 2002:adf:ab0d:: with SMTP id q13mr2728292wrc.134.1596635087769;
+        Wed, 05 Aug 2020 06:44:47 -0700 (PDT)
+Received: from redhat.com (bzq-79-178-123-8.red.bezeqint.net. [79.178.123.8])
+        by smtp.gmail.com with ESMTPSA id n24sm2989133wmi.36.2020.08.05.06.44.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 06:44:59 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 09:44:56 -0400
+        Wed, 05 Aug 2020 06:44:47 -0700 (PDT)
+Date:   Wed, 5 Aug 2020 09:44:45 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v3 37/38] virtio_config: drop LE option from config space
-Message-ID: <20200805134226.1106164-38-mst@redhat.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, linux-nvdimm@lists.01.org
+Subject: [PATCH v3 33/38] virtio_pmem: convert to LE accessors
+Message-ID: <20200805134226.1106164-34-mst@redhat.com>
 References: <20200805134226.1106164-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -80,61 +82,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All drivers now use virtio_cread/write_le for LE config
-space fields. Drop LE option from virtio_cread/write, only leaving
-the option to access transitional fields.
+Virtio pmem is modern-only. Use LE accessors for config space.
 
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 ---
- include/linux/virtio_config.h | 28 ++--------------------------
- 1 file changed, 2 insertions(+), 26 deletions(-)
+ drivers/nvdimm/virtio_pmem.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
-index cc7a2b1fd7b2..ecb166c824bb 100644
---- a/include/linux/virtio_config.h
-+++ b/include/linux/virtio_config.h
-@@ -293,19 +293,7 @@ static inline __virtio64 cpu_to_virtio64(struct virtio_device *vdev, u64 val)
- 		__u8: (x), \
- 		__virtio16: virtio16_to_cpu((vdev), (x)), \
- 		__virtio32: virtio32_to_cpu((vdev), (x)), \
--		__virtio64: virtio64_to_cpu((vdev), (x)), \
--		/*
--		 * Why define a default? checker can distinguish between
--		 * e.g. __u16, __le16 and __virtio16, but GCC can't so
--		 * attempts to define variants for both look like a duplicate
--		 * variant to it.
--		 */ \
--		default: _Generic((x), \
--				 __u8: (x), \
--				 __le16: virtio16_to_cpu((vdev), (__force __virtio16)(x)), \
--				 __le32: virtio32_to_cpu((vdev), (__force __virtio32)(x)), \
--				 __le64: virtio64_to_cpu((vdev), (__force __virtio64)(x)) \
--				 ) \
-+		__virtio64: virtio64_to_cpu((vdev), (x)) \
- 		)
+diff --git a/drivers/nvdimm/virtio_pmem.c b/drivers/nvdimm/virtio_pmem.c
+index 5e3d07b47e0c..726c7354d465 100644
+--- a/drivers/nvdimm/virtio_pmem.c
++++ b/drivers/nvdimm/virtio_pmem.c
+@@ -58,9 +58,9 @@ static int virtio_pmem_probe(struct virtio_device *vdev)
+ 		goto out_err;
+ 	}
  
- #define cpu_to_virtio(vdev, x, m) \
-@@ -313,19 +301,7 @@ static inline __virtio64 cpu_to_virtio64(struct virtio_device *vdev, u64 val)
- 		__u8: (x), \
- 		__virtio16: cpu_to_virtio16((vdev), (x)), \
- 		__virtio32: cpu_to_virtio32((vdev), (x)), \
--		__virtio64: cpu_to_virtio64((vdev), (x)), \
--		/*
--		 * Why define a default? checker can distinguish between
--		 * e.g. __u16, __le16 and __virtio16, but GCC can't so
--		 * attempts to define variants for both look like a duplicate
--		 * variant to it.
--		 */ \
--		default: _Generic((m), \
--				 __u8: (x), \
--				 __le16: (__force __le16)cpu_to_virtio16((vdev), (x)), \
--				 __le32: (__force __le32)cpu_to_virtio32((vdev), (x)), \
--				 __le64: (__force __le64)cpu_to_virtio64((vdev), (x)) \
--				 ) \
-+		__virtio64: cpu_to_virtio64((vdev), (x)) \
- 		)
+-	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
++	virtio_cread_le(vpmem->vdev, struct virtio_pmem_config,
+ 			start, &vpmem->start);
+-	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
++	virtio_cread_le(vpmem->vdev, struct virtio_pmem_config,
+ 			size, &vpmem->size);
  
- #define __virtio_native_type(structname, member) \
+ 	res.start = vpmem->start;
 -- 
 MST
 
