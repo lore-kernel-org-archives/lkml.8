@@ -2,159 +2,121 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A705BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C05C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87F252076E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C239D2076E
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:57:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XroRQzFh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wWnLh0O7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729248AbgHET51 (ORCPT
+        id S1729203AbgHET5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:57:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45428 "EHLO
+        Wed, 5 Aug 2020 15:57:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727977AbgHEQny (ORCPT
+        with ESMTP id S1727911AbgHEQoB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:43:54 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D210C0A893C;
-        Wed,  5 Aug 2020 07:12:56 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id u185so22789067pfu.1;
-        Wed, 05 Aug 2020 07:12:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Z1dq08rcyRAJKP6YZL/SMfPNJkj3TPNkHN01IYY4yWs=;
-        b=XroRQzFhX23GOwnvJ+TMAohKF4jLXddbL2pj4Vw71Fv6+fTlsOQL75TwEX/IfhoZXu
-         MbkZ02tnwmXDdaJDdqD4378pi9AHy0egPbJGYx/AQ/Qb8zdVOVi5tJAfYkNmTmqyS3k8
-         6pmcLeJx6DSR8ghJB/OopLM6Z5YioxqNN1KVrsvbvD69FeKQ7yMg1V4ifrnk4rhuG5I5
-         ATi3LOotF/G5kthGiBTZOa+vWCsr97uArQGw/gBUCBzvp18H5F9IWL9fTy6LrnfGFG7u
-         LxwozEMlqFzTIzquuHwh3hHdW+HKviD7rvsng85PoalKziVwuQ9ZIXskHGS1Xj5/LQYz
-         /0Pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Z1dq08rcyRAJKP6YZL/SMfPNJkj3TPNkHN01IYY4yWs=;
-        b=sBQ6KALId60/sBtnDB+n9oMqT+Cka/o3NGrCBxhNyKBV4DZre85LgMeyTASQXBxrEB
-         o58TGZ2/2M1PwcaPqW0K468SB8yI+T11zdg2eJ1gcR0/1YvnKruk+pXZXB3AdR9L1rBy
-         GnPw6RT3t1DT+TfrvhXazQRpU0W9YDi4pQ6QhkUnargnYiRZ2/WO8a900gM7ixjt/Q8O
-         bak957wByQLI23MWUKTwHE33Ff9zEpreynf6vwDcsx3xqmSj7pHM66GZOA4G0ozDJTnx
-         Yt7nRygquMci4cyTMO5vai5VVU/qTC3jLMYGMpvQ/479KUhqRYbsEDQriAmCgssG9Uiy
-         XxLw==
-X-Gm-Message-State: AOAM533oHVRqiytEHj6DzgYMar1wXQ9NDOR+DZHDs+f1P7yveATNE0Wp
-        g/XchM9OvZ7EczcCIMg2PNg=
-X-Google-Smtp-Source: ABdhPJz1faKwYcoCClSYPrpjo3JT+/DAOCDHY/ELu1FrfqxIH1TxDBCpCnDmYm3YXUnuHrmTGX2ONw==
-X-Received: by 2002:a65:5502:: with SMTP id f2mr3017228pgr.375.1596636775668;
-        Wed, 05 Aug 2020 07:12:55 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.56])
-        by smtp.gmail.com with ESMTPSA id b185sm3726551pfg.71.2020.08.05.07.12.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 07:12:55 -0700 (PDT)
-From:   Yulei Zhang <yulei.kernel@gmail.com>
-To:     pbonzini@redhat.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sean.j.christopherson@intel.com, jmattson@google.com,
-        vkuznets@redhat.com, xiaoguangrong.eric@gmail.com,
-        kernellwp@gmail.com, lihaiwei.kernel@gmail.com,
-        Yulei Zhang <yuleixzhang@tencent.com>
-Subject: [RFC 4/9] Add release function for direct build ept when guest VM exit
-Date:   Wed,  5 Aug 2020 22:13:43 +0800
-Message-Id: <20200805141344.9038-1-yulei.kernel@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 5 Aug 2020 12:44:01 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00821C0086D1
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 07:17:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=0+DiSUHCj5Hv8PjpoaXrRSduwxZW9oCImFLTKQ6/8Jw=; b=wWnLh0O7rFXKxWGqPJd5SoHYuD
+        2vMXg3u9S5hoo3qfSQrgXEZvq1mGtp1Nen6Y8RHkIJvQRWGtgnV+hT7YVirF4gy6SDhQrXThQRGQn
+        HbGmvddK515aoc2nF5VIzL4fX+d9OS6+mbHwbQOnp74Uwa8U2HmGkspr6ZwmmLR3Ao0lJaDfdLbds
+        ACFvkkz/L4y72ld6OpBNV4MAez/SKW8TzSgm9B6tQ2p6M+IHFy8/tymqy3+z8W/OrYU72F9k9RIXA
+        +R1/cXA/1UdqHfIu1Ve9f6ArFsrtq3CjAyie7E84H44Yng6OtkE3ejISNitOdjY3FQ1wraPd66up6
+        BbYJtHNg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k3KEB-0006vw-3r; Wed, 05 Aug 2020 14:17:11 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2FE9D301A66;
+        Wed,  5 Aug 2020 16:17:10 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0A7E022B957D0; Wed,  5 Aug 2020 16:17:10 +0200 (CEST)
+Date:   Wed, 5 Aug 2020 16:17:09 +0200
+From:   peterz@infradead.org
+To:     Marco Elver <elver@google.com>
+Cc:     bp@alien8.de, dave.hansen@linux.intel.com, fenghua.yu@intel.com,
+        hpa@zytor.com, linux-kernel@vger.kernel.org, mingo@redhat.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        tony.luck@intel.com, x86@kernel.org, yu-cheng.yu@intel.com,
+        jgross@suse.com, sdeep@vmware.com,
+        virtualization@lists.linux-foundation.org,
+        kasan-dev@googlegroups.com,
+        syzbot <syzbot+8db9e1ecde74e590a657@syzkaller.appspotmail.com>
+Subject: Re: [PATCH] x86/paravirt: Add missing noinstr to arch_local*()
+ helpers
+Message-ID: <20200805141709.GD35926@hirez.programming.kicks-ass.net>
+References: <0000000000007d3b2d05ac1c303e@google.com>
+ <20200805132629.GA87338@elver.google.com>
+ <20200805134232.GR2674@hirez.programming.kicks-ass.net>
+ <20200805135940.GA156343@elver.google.com>
+ <20200805141237.GS2674@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200805141237.GS2674@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yulei Zhang <yuleixzhang@tencent.com>
+On Wed, Aug 05, 2020 at 04:12:37PM +0200, peterz@infradead.org wrote:
+> On Wed, Aug 05, 2020 at 03:59:40PM +0200, Marco Elver wrote:
+> > On Wed, Aug 05, 2020 at 03:42PM +0200, peterz@infradead.org wrote:
+> 
+> > > Shouldn't we __always_inline those? They're going to be really small.
+> > 
+> > I can send a v2, and you can choose. For reference, though:
+> > 
+> > 	ffffffff86271ee0 <arch_local_save_flags>:
+> > 	ffffffff86271ee0:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
+> > 	ffffffff86271ee5:       48 83 3d 43 87 e4 01    cmpq   $0x0,0x1e48743(%rip)        # ffffffff880ba630 <pv_ops+0x120>
+> > 	ffffffff86271eec:       00
+> > 	ffffffff86271eed:       74 0d                   je     ffffffff86271efc <arch_local_save_flags+0x1c>
+> > 	ffffffff86271eef:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
+> > 	ffffffff86271ef4:       ff 14 25 30 a6 0b 88    callq  *0xffffffff880ba630
+> > 	ffffffff86271efb:       c3                      retq
+> > 	ffffffff86271efc:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
+> > 	ffffffff86271f01:       0f 0b                   ud2
+> 
+> > 	ffffffff86271a90 <arch_local_irq_restore>:
+> > 	ffffffff86271a90:       53                      push   %rbx
+> > 	ffffffff86271a91:       48 89 fb                mov    %rdi,%rbx
+> > 	ffffffff86271a94:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
+> > 	ffffffff86271a99:       48 83 3d 97 8b e4 01    cmpq   $0x0,0x1e48b97(%rip)        # ffffffff880ba638 <pv_ops+0x128>
+> > 	ffffffff86271aa0:       00
+> > 	ffffffff86271aa1:       74 11                   je     ffffffff86271ab4 <arch_local_irq_restore+0x24>
+> > 	ffffffff86271aa3:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
+> > 	ffffffff86271aa8:       48 89 df                mov    %rbx,%rdi
+> > 	ffffffff86271aab:       ff 14 25 38 a6 0b 88    callq  *0xffffffff880ba638
+> > 	ffffffff86271ab2:       5b                      pop    %rbx
+> > 	ffffffff86271ab3:       c3                      retq
+> > 	ffffffff86271ab4:       0f 1f 44 00 00          nopl   0x0(%rax,%rax,1)
+> > 	ffffffff86271ab9:       0f 0b                   ud2
+> 
+> 
+> Blergh, that's abysmall. In part I suspect because you have
+> CONFIG_PARAVIRT_DEBUG, let me try and untangle that PV macro maze.
 
-Release the pre-pinned memory in direct build ept when guest VM
-exit.
+Yeah, look here:
 
-Signed-off-by: Yulei Zhang <yuleixzhang@tencent.com>
----
- arch/x86/kvm/mmu/mmu.c | 39 ++++++++++++++++++++++++++++++---------
- 1 file changed, 30 insertions(+), 9 deletions(-)
+0000 0000000000462149 <arch_local_save_flags>:
+0000   462149:  ff 14 25 00 00 00 00    callq  *0x0
+0003                    46214c: R_X86_64_32S    pv_ops+0x120
+0007   462150:  c3                      retq
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 539974183653..df703deac928 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4360,8 +4360,11 @@ static void __kvm_mmu_new_cr3(struct kvm_vcpu *vcpu, gpa_t new_cr3,
- 
- void kvm_mmu_new_cr3(struct kvm_vcpu *vcpu, gpa_t new_cr3, bool skip_tlb_flush)
- {
--	__kvm_mmu_new_cr3(vcpu, new_cr3, kvm_mmu_calc_root_page_role(vcpu),
--			  skip_tlb_flush);
-+	if (!vcpu->arch.direct_build_tdp)
-+		__kvm_mmu_new_cr3(vcpu, new_cr3, kvm_mmu_calc_root_page_role(vcpu),
-+				  skip_tlb_flush);
-+	else
-+		vcpu->arch.mmu->root_hpa = INVALID_PAGE;
- }
- EXPORT_SYMBOL_GPL(kvm_mmu_new_cr3);
- 
-@@ -5204,10 +5207,16 @@ EXPORT_SYMBOL_GPL(kvm_mmu_load);
- 
- void kvm_mmu_unload(struct kvm_vcpu *vcpu)
- {
--	kvm_mmu_free_roots(vcpu, &vcpu->arch.root_mmu, KVM_MMU_ROOTS_ALL);
--	WARN_ON(VALID_PAGE(vcpu->arch.root_mmu.root_hpa));
--	kvm_mmu_free_roots(vcpu, &vcpu->arch.guest_mmu, KVM_MMU_ROOTS_ALL);
--	WARN_ON(VALID_PAGE(vcpu->arch.guest_mmu.root_hpa));
-+
-+	if (!vcpu->arch.direct_build_tdp) {
-+		kvm_mmu_free_roots(vcpu, &vcpu->arch.root_mmu, KVM_MMU_ROOTS_ALL);
-+		WARN_ON(VALID_PAGE(vcpu->arch.root_mmu.root_hpa));
-+		kvm_mmu_free_roots(vcpu, &vcpu->arch.guest_mmu, KVM_MMU_ROOTS_ALL);
-+		WARN_ON(VALID_PAGE(vcpu->arch.guest_mmu.root_hpa));
-+	}
-+
-+	vcpu->arch.direct_build_tdp = false;
-+	vcpu->arch.mmu->root_hpa = INVALID_PAGE;
- }
- EXPORT_SYMBOL_GPL(kvm_mmu_unload);
- 
-@@ -6510,6 +6519,14 @@ void kvm_direct_tdp_remove_page_table(struct kvm *kvm, struct kvm_memory_slot *s
- 	kvm_flush_remote_tlbs(kvm);
- }
- 
-+void kvm_direct_tdp_release_global_root(struct kvm *kvm)
-+{
-+	if (kvm->arch.global_root_hpa)
-+		__kvm_walk_global_page(kvm, kvm->arch.global_root_hpa, kvm_x86_ops.get_tdp_level(NULL));
-+
-+	return;
-+}
-+
- /*
-  * Calculate mmu pages needed for kvm.
-  */
-@@ -6536,9 +6553,13 @@ unsigned long kvm_mmu_calculate_default_mmu_pages(struct kvm *kvm)
- 
- void kvm_mmu_destroy(struct kvm_vcpu *vcpu)
- {
--	kvm_mmu_unload(vcpu);
--	free_mmu_pages(&vcpu->arch.root_mmu);
--	free_mmu_pages(&vcpu->arch.guest_mmu);
-+	if (vcpu->arch.direct_build_tdp) {
-+		vcpu->arch.mmu->root_hpa = INVALID_PAGE;
-+	} else {
-+		kvm_mmu_unload(vcpu);
-+		free_mmu_pages(&vcpu->arch.root_mmu);
-+		free_mmu_pages(&vcpu->arch.guest_mmu);
-+	}
- 	mmu_free_memory_caches(vcpu);
- }
- 
--- 
-2.17.1
 
+That's exactly what I was expecting.
