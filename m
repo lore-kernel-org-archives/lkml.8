@@ -5,54 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB3FC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0577C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D996E22CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2F5B22CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:06:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596657993;
-	bh=POF6DDiHm8atPTslFXz0sLdllxBBkRKfAFe2q0FnobE=;
+	s=default; t=1596657996;
+	bh=HrvJqWxAxGdusoTYSWh08BbdfEKW1Pjx1faih+n9pW4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WMRRp7kT0Z4SZSme2sB+dLptCUFYVW7a+O30lqbKXXYBpZYb993jExB+pnTg0YOyY
-	 EFEkQITe68Hh5C0z1v20w7ScfkhoRwESNcRtAj7Jk8Aeg1KW8cLhaT7Megh6NS397D
-	 w4Xp2aYamXXOFb0TyUhmHAejG8khGe7fwSBrMj0Q=
+	b=QG9CJqr2kMXpcMh0x6oXkPhCwkaEfDG+5aZjGTmHk64CF5D8suvPV2EnOGWQhzl4k
+	 W4IwiI0uMGFYXBGrwsHUizg63JJcI9tGsiBTEA13bIdyk+/byr/CqTkhSTx0inYPK4
+	 3M4Stm4kBInhec8wyr/qTyR0qAxk3wtesAtAJ82g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729757AbgHEUGc (ORCPT
+        id S1728575AbgHEUGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:06:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49790 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 16:06:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726987AbgHEQel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:34:41 -0400
+        id S1726933AbgHEQeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 12:34:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6BF823382;
-        Wed,  5 Aug 2020 15:52:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73D7F233EB;
+        Wed,  5 Aug 2020 15:53:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596642779;
-        bh=POF6DDiHm8atPTslFXz0sLdllxBBkRKfAFe2q0FnobE=;
+        s=default; t=1596642809;
+        bh=HrvJqWxAxGdusoTYSWh08BbdfEKW1Pjx1faih+n9pW4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gg+itV+r90Y6NJdDD0QLTkJ1Kak0FRXZ1l7TGvxe1R8a9uw9RgtkSHAPofHqaJw/Y
-         1kfFJYrMLT50fYMskW4NFimBq87Cw1pu+F4LC7g7AYzxmbGq/dzaG39dOw2fBK0ZxZ
-         0/Hc0BV0vhJVkOApRnPkaVwf8x0y2Q6nM4bXMomU=
+        b=TpMvmrbxLiRWM3ILp9a4WR9aDcgY+e+l7LNkxHEpjdSaET70g41H/x0yDNcmLfJYb
+         1GpEZ8Opct3Zi2b0WKDGbvbMbN5BnAO550Gbovb55cHr/kooeQCCQFhWJAxsuSPO2i
+         qbNmpMBWC0xA1iwAah3wBThOvLA4GhPbLlYb6n8o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
-        Lorenz Bauer <lmb@cloudflare.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Sitnicki <jakub@cloudflare.com>
-Subject: [PATCH 5.4 8/9] selftests: bpf: Fix detach from sockmap tests
-Date:   Wed,  5 Aug 2020 17:52:45 +0200
-Message-Id: <20200805153507.423308944@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Yan <yanaijie@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Ewan Milne <emilne@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Tomas Henzl <thenzl@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Hannes Reinecke <hare@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 1/8] Revert "scsi: libsas: direct call probe and destruct"
+Date:   Wed,  5 Aug 2020 17:53:27 +0200
+Message-Id: <20200805153507.066432283@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200805153507.053638231@linuxfoundation.org>
-References: <20200805153507.053638231@linuxfoundation.org>
+In-Reply-To: <20200805153507.005753845@linuxfoundation.org>
+References: <20200805153507.005753845@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,75 +68,246 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenz Bauer <lmb@cloudflare.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit f43cb0d672aa8eb09bfdb779de5900c040487d1d upstream.
+This reverts commit 3a156abd24346a3188eb7e88cf86386a409e0d02 which is
+commit 0558f33c06bb910e2879e355192227a8e8f0219d upstream.
 
-Fix sockmap tests which rely on old bpf_prog_dispatch behaviour.
-In the first case, the tests check that detaching without giving
-a program succeeds. Since these are not the desired semantics,
-invert the condition. In the second case, the clean up code doesn't
-supply the necessary program fds.
+John writes:
+	This patch was one of a series from Jason to fix this WARN issue, below:
 
-Fixes: bb0de3131f4c ("bpf: sockmap: Require attach_bpf_fd when detaching a program")
-Reported-by: Martin KaFai Lau <kafai@fb.com>
-Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
-Link: https://lore.kernel.org/bpf/20200709115151.75829-1-lmb@cloudflare.com
+	https://lore.kernel.org/linux-scsi/8f6e3763-2b04-23e8-f1ec-8ed3c58f55d3@huawei.com/
+
+	I'm doubtful that it should be taken in isolation. Maybe 1 or 2 other
+	patches are required.
+
+	The WARN was really annoying, so we could spend a bit of time to test a
+	backport of what is strictly required. Let us know.
+
+Cc: Jason Yan <yanaijie@huawei.com>
+CC: John Garry <john.garry@huawei.com>
+CC: Johannes Thumshirn <jthumshirn@suse.de>
+CC: Ewan Milne <emilne@redhat.com>
+CC: Christoph Hellwig <hch@lst.de>
+CC: Tomas Henzl <thenzl@redhat.com>
+CC: Dan Williams <dan.j.williams@intel.com>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- tools/testing/selftests/bpf/test_maps.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/scsi/libsas/sas_ata.c      |    1 +
+ drivers/scsi/libsas/sas_discover.c |   32 ++++++++++++++------------------
+ drivers/scsi/libsas/sas_expander.c |    8 +++++---
+ drivers/scsi/libsas/sas_internal.h |    1 -
+ drivers/scsi/libsas/sas_port.c     |    3 ---
+ include/scsi/libsas.h              |    3 ++-
+ include/scsi/scsi_transport_sas.h  |    1 -
+ 7 files changed, 22 insertions(+), 27 deletions(-)
 
---- a/tools/testing/selftests/bpf/test_maps.c
-+++ b/tools/testing/selftests/bpf/test_maps.c
-@@ -793,19 +793,19 @@ static void test_sockmap(unsigned int ta
+--- a/drivers/scsi/libsas/sas_ata.c
++++ b/drivers/scsi/libsas/sas_ata.c
+@@ -730,6 +730,7 @@ int sas_discover_sata(struct domain_devi
+ 	if (res)
+ 		return res;
+ 
++	sas_discover_event(dev->port, DISCE_PROBE);
+ 	return 0;
+ }
+ 
+--- a/drivers/scsi/libsas/sas_discover.c
++++ b/drivers/scsi/libsas/sas_discover.c
+@@ -221,9 +221,13 @@ void sas_notify_lldd_dev_gone(struct dom
+ 	}
+ }
+ 
+-static void sas_probe_devices(struct asd_sas_port *port)
++static void sas_probe_devices(struct work_struct *work)
+ {
+ 	struct domain_device *dev, *n;
++	struct sas_discovery_event *ev = to_sas_discovery_event(work);
++	struct asd_sas_port *port = ev->port;
++
++	clear_bit(DISCE_PROBE, &port->disc.pending);
+ 
+ 	/* devices must be domain members before link recovery and probe */
+ 	list_for_each_entry(dev, &port->disco_list, disco_list_node) {
+@@ -299,6 +303,7 @@ int sas_discover_end_dev(struct domain_d
+ 	res = sas_notify_lldd_dev_found(dev);
+ 	if (res)
+ 		return res;
++	sas_discover_event(dev->port, DISCE_PROBE);
+ 
+ 	return 0;
+ }
+@@ -357,9 +362,13 @@ static void sas_unregister_common_dev(st
+ 	sas_put_device(dev);
+ }
+ 
+-void sas_destruct_devices(struct asd_sas_port *port)
++static void sas_destruct_devices(struct work_struct *work)
+ {
+ 	struct domain_device *dev, *n;
++	struct sas_discovery_event *ev = to_sas_discovery_event(work);
++	struct asd_sas_port *port = ev->port;
++
++	clear_bit(DISCE_DESTRUCT, &port->disc.pending);
+ 
+ 	list_for_each_entry_safe(dev, n, &port->destroy_list, disco_list_node) {
+ 		list_del_init(&dev->disco_list_node);
+@@ -370,16 +379,6 @@ void sas_destruct_devices(struct asd_sas
+ 	}
+ }
+ 
+-static void sas_destruct_ports(struct asd_sas_port *port)
+-{
+-	struct sas_port *sas_port, *p;
+-
+-	list_for_each_entry_safe(sas_port, p, &port->sas_port_del_list, del_list) {
+-		list_del_init(&sas_port->del_list);
+-		sas_port_delete(sas_port);
+-	}
+-}
+-
+ void sas_unregister_dev(struct asd_sas_port *port, struct domain_device *dev)
+ {
+ 	if (!test_bit(SAS_DEV_DESTROY, &dev->state) &&
+@@ -394,6 +393,7 @@ void sas_unregister_dev(struct asd_sas_p
+ 	if (!test_and_set_bit(SAS_DEV_DESTROY, &dev->state)) {
+ 		sas_rphy_unlink(dev->rphy);
+ 		list_move_tail(&dev->disco_list_node, &port->destroy_list);
++		sas_discover_event(dev->port, DISCE_DESTRUCT);
+ 	}
+ }
+ 
+@@ -499,8 +499,6 @@ static void sas_discover_domain(struct w
+ 		port->port_dev = NULL;
  	}
  
- 	err = bpf_prog_detach(fd, BPF_SK_SKB_STREAM_PARSER);
--	if (err) {
-+	if (!err) {
- 		printf("Failed empty parser prog detach\n");
- 		goto out_sockmap;
- 	}
+-	sas_probe_devices(port);
+-
+ 	SAS_DPRINTK("DONE DISCOVERY on port %d, pid:%d, result:%d\n", port->id,
+ 		    task_pid_nr(current), error);
+ }
+@@ -534,10 +532,6 @@ static void sas_revalidate_domain(struct
+ 		    port->id, task_pid_nr(current), res);
+  out:
+ 	mutex_unlock(&ha->disco_mutex);
+-
+-	sas_destruct_devices(port);
+-	sas_destruct_ports(port);
+-	sas_probe_devices(port);
+ }
  
- 	err = bpf_prog_detach(fd, BPF_SK_SKB_STREAM_VERDICT);
--	if (err) {
-+	if (!err) {
- 		printf("Failed empty verdict prog detach\n");
- 		goto out_sockmap;
- 	}
+ /* ---------- Events ---------- */
+@@ -593,8 +587,10 @@ void sas_init_disc(struct sas_discovery
+ 	static const work_func_t sas_event_fns[DISC_NUM_EVENTS] = {
+ 		[DISCE_DISCOVER_DOMAIN] = sas_discover_domain,
+ 		[DISCE_REVALIDATE_DOMAIN] = sas_revalidate_domain,
++		[DISCE_PROBE] = sas_probe_devices,
+ 		[DISCE_SUSPEND] = sas_suspend_devices,
+ 		[DISCE_RESUME] = sas_resume_devices,
++		[DISCE_DESTRUCT] = sas_destruct_devices,
+ 	};
  
- 	err = bpf_prog_detach(fd, BPF_SK_MSG_VERDICT);
--	if (err) {
-+	if (!err) {
- 		printf("Failed empty msg verdict prog detach\n");
- 		goto out_sockmap;
+ 	disc->pending = 0;
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -1946,8 +1946,7 @@ static void sas_unregister_devs_sas_addr
+ 		sas_port_delete_phy(phy->port, phy->phy);
+ 		sas_device_set_phy(found, phy->port);
+ 		if (phy->port->num_phys == 0)
+-			list_add_tail(&phy->port->del_list,
+-				&parent->port->sas_port_del_list);
++			sas_port_delete(phy->port);
+ 		phy->port = NULL;
  	}
-@@ -1094,19 +1094,19 @@ static void test_sockmap(unsigned int ta
- 		assert(status == 0);
- 	}
+ }
+@@ -2157,7 +2156,7 @@ int sas_ex_revalidate_domain(struct doma
+ 	struct domain_device *dev = NULL;
  
--	err = bpf_prog_detach(map_fd_rx, __MAX_BPF_ATTACH_TYPE);
-+	err = bpf_prog_detach2(parse_prog, map_fd_rx, __MAX_BPF_ATTACH_TYPE);
- 	if (!err) {
- 		printf("Detached an invalid prog type.\n");
- 		goto out_sockmap;
- 	}
+ 	res = sas_find_bcast_dev(port_dev, &dev);
+-	if (res == 0 && dev) {
++	while (res == 0 && dev) {
+ 		struct expander_device *ex = &dev->ex_dev;
+ 		int i = 0, phy_id;
  
--	err = bpf_prog_detach(map_fd_rx, BPF_SK_SKB_STREAM_PARSER);
-+	err = bpf_prog_detach2(parse_prog, map_fd_rx, BPF_SK_SKB_STREAM_PARSER);
- 	if (err) {
- 		printf("Failed parser prog detach\n");
- 		goto out_sockmap;
+@@ -2169,6 +2168,9 @@ int sas_ex_revalidate_domain(struct doma
+ 			res = sas_rediscover(dev, phy_id);
+ 			i = phy_id + 1;
+ 		} while (i < ex->num_phys);
++
++		dev = NULL;
++		res = sas_find_bcast_dev(port_dev, &dev);
  	}
+ 	return res;
+ }
+--- a/drivers/scsi/libsas/sas_internal.h
++++ b/drivers/scsi/libsas/sas_internal.h
+@@ -98,7 +98,6 @@ int sas_try_ata_reset(struct asd_sas_phy
+ void sas_hae_reset(struct work_struct *work);
  
--	err = bpf_prog_detach(map_fd_rx, BPF_SK_SKB_STREAM_VERDICT);
-+	err = bpf_prog_detach2(verdict_prog, map_fd_rx, BPF_SK_SKB_STREAM_VERDICT);
- 	if (err) {
- 		printf("Failed parser prog detach\n");
- 		goto out_sockmap;
+ void sas_free_device(struct kref *kref);
+-void sas_destruct_devices(struct asd_sas_port *port);
+ 
+ #ifdef CONFIG_SCSI_SAS_HOST_SMP
+ extern void sas_smp_host_handler(struct bsg_job *job, struct Scsi_Host *shost);
+--- a/drivers/scsi/libsas/sas_port.c
++++ b/drivers/scsi/libsas/sas_port.c
+@@ -66,7 +66,6 @@ static void sas_resume_port(struct asd_s
+ 		rc = sas_notify_lldd_dev_found(dev);
+ 		if (rc) {
+ 			sas_unregister_dev(port, dev);
+-			sas_destruct_devices(port);
+ 			continue;
+ 		}
+ 
+@@ -220,7 +219,6 @@ void sas_deform_port(struct asd_sas_phy
+ 
+ 	if (port->num_phys == 1) {
+ 		sas_unregister_domain_devices(port, gone);
+-		sas_destruct_devices(port);
+ 		sas_port_delete(port->port);
+ 		port->port = NULL;
+ 	} else {
+@@ -325,7 +323,6 @@ static void sas_init_port(struct asd_sas
+ 	INIT_LIST_HEAD(&port->dev_list);
+ 	INIT_LIST_HEAD(&port->disco_list);
+ 	INIT_LIST_HEAD(&port->destroy_list);
+-	INIT_LIST_HEAD(&port->sas_port_del_list);
+ 	spin_lock_init(&port->phy_list_lock);
+ 	INIT_LIST_HEAD(&port->phy_list);
+ 	port->ha = sas_ha;
+--- a/include/scsi/libsas.h
++++ b/include/scsi/libsas.h
+@@ -87,8 +87,10 @@ enum discover_event {
+ 	DISCE_DISCOVER_DOMAIN   = 0U,
+ 	DISCE_REVALIDATE_DOMAIN = 1,
+ 	DISCE_PORT_GONE         = 2,
++	DISCE_PROBE		= 3,
+ 	DISCE_SUSPEND		= 4,
+ 	DISCE_RESUME		= 5,
++	DISCE_DESTRUCT		= 6,
+ 	DISC_NUM_EVENTS		= 7,
+ };
+ 
+@@ -267,7 +269,6 @@ struct asd_sas_port {
+ 	struct list_head dev_list;
+ 	struct list_head disco_list;
+ 	struct list_head destroy_list;
+-	struct list_head sas_port_del_list;
+ 	enum   sas_linkrate linkrate;
+ 
+ 	struct sas_work work;
+--- a/include/scsi/scsi_transport_sas.h
++++ b/include/scsi/scsi_transport_sas.h
+@@ -156,7 +156,6 @@ struct sas_port {
+ 
+ 	struct mutex		phy_list_mutex;
+ 	struct list_head	phy_list;
+-	struct list_head	del_list; /* libsas only */
+ };
+ 
+ #define dev_to_sas_port(d) \
 
 
