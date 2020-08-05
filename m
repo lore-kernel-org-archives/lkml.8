@@ -2,95 +2,143 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A048C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A58DC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C9A720792
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:20:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="mImzrEAl"
+	by mail.kernel.org (Postfix) with ESMTP id 5172320792
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 02:23:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgHECUK (ORCPT
+        id S1726862AbgHECXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 22:20:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53590 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgHECUH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 22:20:07 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3162AC06174A
-        for <linux-kernel@vger.kernel.org>; Tue,  4 Aug 2020 19:20:06 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id d4so3460782pjx.5
-        for <linux-kernel@vger.kernel.org>; Tue, 04 Aug 2020 19:20:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=01MxYpKFXDZaXCcX+RooTiv/T8V3zULRixPU7jN/r44=;
-        b=mImzrEAl0d6G/+6l8JJFXutcAF+pXD6CTUNLi9RPwj9e2tKa9TUK80JAu1WHnV5yBW
-         RuwBsp8YYqdgi2IEqeS+lCkvkEe4YlVfelQe9AOa/Czl8Cu3vYTzrmPB0fJZGQ4O33eA
-         P1q6ixfFAlVA1xzkpocndvzWTSh2e1J+VqbGA/R84QHadggRQ1PugQqLyiNx5n92DPqp
-         jqhgnuYwFWk+smjVTIS5/9YaU6v1p3Ub7hCuBQZL6xuxJV6oCbOjx+eFKe0c4AW8vozQ
-         CrP4ymyoAYHrzo0s1skjUfgRL26M+Z6JuSLN9+gcCGaHZIOCYjoE3QG62oHl0blm55b3
-         hkhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=01MxYpKFXDZaXCcX+RooTiv/T8V3zULRixPU7jN/r44=;
-        b=s2iqD6VNS3pBAlbjHnmFccAgC3NIt13LRtQT+LYcxJ6JPHWuP1kp2lWvrdyX4ZzMMr
-         l0HjKR915ujaXYKBkpevkNEUjkEZEf3/dvXkpo87tqvo4Nh6BPv5jzHI7kk6b9C2g8uz
-         kZF1B5h2UExPqpt7pRYg948B8W0fjbg+qEsSK6qsNxZN8Qidg0z11c05u7Jljx+8V7Nu
-         CAErbfbBl5QuBsfNbn9nqx58l3swODK5oGMWp+XKrhg265WIGAVpeiInqSDKs820eXry
-         PBGcQrX1ZkD1QwJZD67o0K6yALGdOJT+lX5+WQAfRrvTnRfOD+bnJEmupCNmk5CaWLcs
-         rhew==
-X-Gm-Message-State: AOAM532zlSEhxtSQQhJn0zgADmzA2IMqT1ZGM6w58lwv0FZc45jvoFju
-        7ZV3GDUOKvchM+WyI2TGIr3t+A==
-X-Google-Smtp-Source: ABdhPJyEtXmvM6xJHC6ANpTYfrSoC3v9n1iu0e+qTUYSwlXsTq02/bh0EUkORzHX/tsNdyc24vBIXg==
-X-Received: by 2002:a17:902:a40f:: with SMTP id p15mr1012253plq.221.1596594006023;
-        Tue, 04 Aug 2020 19:20:06 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id d17sm582843pjr.40.2020.08.04.19.20.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 19:20:05 -0700 (PDT)
-Date:   Tue, 04 Aug 2020 19:20:05 -0700 (PDT)
-X-Google-Original-Date: Tue, 04 Aug 2020 19:20:03 PDT (-0700)
-Subject:     Re: [PATCH 1/2] riscv: ptrace: Use the correct API for `fcsr' access
-In-Reply-To: <20200805020745.GL1236603@ZenIV.linux.org.uk>
-CC:     macro@wdc.com, linux-riscv@lists.infradead.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     viro@zeniv.linux.org.uk
-Message-ID: <mhng-cd1ff2e9-7d34-4d56-8d79-b2d02a239290@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 4 Aug 2020 22:23:30 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:53722 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725864AbgHECXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 22:23:30 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 20BF45C884C4A241AFA3;
+        Wed,  5 Aug 2020 10:23:24 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.214) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Wed, 5 Aug 2020
+ 10:23:18 +0800
+Subject: Re: [PATCH] ubi: check kthread_should_stop() after the setting of
+ task state
+To:     Richard Weinberger <richard.weinberger@gmail.com>
+CC:     <linux-mtd@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        "zhangyi (F)" <yi.zhang@huawei.com>
+References: <20200601091231.3794350-1-chengzhihao1@huawei.com>
+ <CAFLxGvwLSvYsQ+OPi85VS8aQ2uge_JqQRD2C8h=XMORvCej3Sw@mail.gmail.com>
+ <211afcd0-d5b3-5ac0-1fd1-dc789634a858@huawei.com>
+ <CAFLxGvwRDfB4mqxJhOLwWvoZ3yzpVY-kuAiovYLf8T7WwJqaTg@mail.gmail.com>
+ <9caa4860-975c-70bb-c8b9-737d1db9ead4@huawei.com>
+ <CAFLxGvycs7DNu5o5QY1WwTPfS6cTTykTh-91n9TQZ7yP_ADr4A@mail.gmail.com>
+From:   Zhihao Cheng <chengzhihao1@huawei.com>
+Message-ID: <2086f822-e67a-43e4-76d8-5339eaccd3ac@huawei.com>
+Date:   Wed, 5 Aug 2020 10:23:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <CAFLxGvycs7DNu5o5QY1WwTPfS6cTTykTh-91n9TQZ7yP_ADr4A@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.179.214]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 04 Aug 2020 19:07:45 PDT (-0700), viro@zeniv.linux.org.uk wrote:
-> On Tue, Aug 04, 2020 at 07:01:01PM -0700, Palmer Dabbelt wrote:
+在 2020/8/5 5:56, Richard Weinberger 写道:
+> On Tue, Aug 4, 2020 at 4:58 AM Zhihao Cheng <chengzhihao1@huawei.com> wrote:
+>> Oh, you're thinking about influence by schedule(), I get it. But I think
+>> it still works. Because the ubi_thread is still on runqueue, it will be
+>> scheduled to execute later anyway.
+> It will not get woken. This is the problem.
 >
->> > We currently have @start_pos fixed at 0 across all calls, which works as
->> > a result of the implementation, in particular because we have no padding
->> > between the FP general registers and the FP control and status register,
->> > but appears not to have been the intent of the API and is not what other
->> > ports do, requiring one to study the copy handlers to understand what is
->> > going on here.
+>> op                                                    state of
+>> ubi_thread           on runqueue
+>> set_current_state(TASK_INTERRUPTIBLE) TASK_INTERRUPTIBLE              Yes
+>> if (kthread_should_stop()) // not satisfy
+>> TASK_INTERRUPTIBLE              Yes
+>> kthread_stop:
+>>     wake_up_process
+>>       ttwu_queue
+>>         ttwu_do_activate
+>>           ttwu_do_wakeup TASK_RUNNING                       Yes
+>> schedule
+>>     __schedule(false)
+>>
+>>    // prev->state is TASK_RUNNING, so we cannot move it from runqueue by
+>> deactivate_task(). So just pick next task to execute, ubi_thread is
+>> still on runqueue and will be scheduled to execute later.
+> It will be in state TASK_RUNNING only if your check is reached.
 >
-> start_pos *is* fixed at 0 and it's going to go away, along with the
-> sodding user_regset_copyout() very shortly.  ->get() is simply a bad API.
-> See vfs.git#work.regset for replacement.  And ->put() is also going to be
-> taken out and shot (next cycle, most likely).
+> If kthread_stop() is called *before* your code:
+> +                       if (kthread_should_stop()) {
+> +                               set_current_state(TASK_RUNNING);
+> +                               break;
+> +                       }
+>
+> ...everything is fine.
+> But there is still a race window between your if
+> (kthread_should_stop()) and schedule() in the next line.
+> So if kthread_stop() is called right *after* the if and *before*
+> schedule(), the task state is still TASK_INTERRUPTIBLE
+> --> schedule() will not return unless the task is explicitly woken,
+> which does not happen.
+Er, I can't get the point. I can list two possible situations, did I 
+miss other situations?
 
-I'm not sure I understand what you're saying, but given that branch replaces
-all of this I guess it's best to just do nothing on our end here?
+P1:ubi_thread
+   set_current_state(TASK_INTERRUPTIBLE)
+   if (kthread_should_stop()) {
+     set_current_state(TASK_RUNNING)
+     break
+   }
+   schedule()                            -> don't *remove* task from 
+runqueue if *TASK_RUNNING*, removing operation is protected by rq_lock
+
+P2:kthread_stop
+   set_bit(KTHREAD_SHOULD_STOP, &kthread->flags)
+   wake_up_process(k)             -> enqueue task & set *TASK_RUNNING*, 
+these two operations are protected by rq_lock
+   wait_for_completion(&kthread->exited)
+
+
+Situation 1:
+P1_set_current_state               on-rq, TASK_RUNNING -> TASK_INTERRUPTIBLE
+P1_kthread_should_stop        on-rq, TASK_INTERRUPTIBLE
+P2_set_bit                               on-rq, TASK_INTERRUPTIBLE , 
+KTHREAD_SHOULD_STOP
+P2_wake_up_process             on-rq, TASK_INTERRUPTIBLE -> TASK_RUNNING 
+, KTHREAD_SHOULD_STOP
+P1_schedule                           on-rq, TASK_RUNNING , 
+KTHREAD_SHOULD_STOP
+P2_wait_for_completion        // wait for P1 exit
+
+Situation 2:
+P1_set_current_state             on-rq, TASK_RUNNING -> TASK_INTERRUPTIBLE
+P1_kthread_should_stop       on-rq, TASK_INTERRUPTIBLE
+P2_set_bit                             on-rq, TASK_INTERRUPTIBLE , 
+KTHREAD_SHOULD_STOP
+P1_schedule                          off-rq, TASK_INTERRUPTIBLE , 
+KTHREAD_SHOULD_STOP
+P2_wake_up_process             on-rq, TASK_INTERRUPTIBLE -> TASK_RUNNING 
+, KTHREAD_SHOULD_STOP
+P2_wait_for_completion       // wait for P1 exit
+> Before your patch, the race window was much larger, I fully agree, but
+> your patch does not cure the problem
+> it just makes it harder to hit.
+>
+> And using mdelay() to verify such a thing is also tricky because
+> mdelay() will influence the task state.
+>
+
+
