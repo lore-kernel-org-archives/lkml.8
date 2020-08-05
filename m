@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 418AAC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22300C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC2520842
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0015520842
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:51:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgHEDu7 (ORCPT
+        id S1727773AbgHEDvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 23:50:59 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9333 "EHLO huawei.com"
+        Tue, 4 Aug 2020 23:51:06 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9334 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726233AbgHEDu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 23:50:56 -0400
+        id S1726971AbgHEDvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 4 Aug 2020 23:51:04 -0400
 Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id BF35688112AD7C521FA6;
+        by Forcepoint Email with ESMTP id C4FF1D4A86073B67D193;
         Wed,  5 Aug 2020 11:50:53 +0800 (CST)
 Received: from localhost.localdomain (10.175.112.70) by
  DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Wed, 5 Aug 2020 11:50:48 +0800
+ id 14.3.487.0; Wed, 5 Aug 2020 11:50:49 +0800
 From:   Zhang Changzhong <zhangchangzhong@huawei.com>
 To:     <robin@protonic.nl>, <linux@rempel-privat.de>,
         <kernel@pengutronix.de>, <socketcan@hartkopp.net>,
         <mkl@pengutronix.de>, <davem@davemloft.net>, <kuba@kernel.org>
 CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH net 1/4] can: j1939: fix support for multipacket broadcast message
-Date:   Wed, 5 Aug 2020 11:50:22 +0800
-Message-ID: <1596599425-5534-2-git-send-email-zhangchangzhong@huawei.com>
+Subject: [PATCH net 3/4] can: j1939: abort multipacket broadcast session when timeout occurs
+Date:   Wed, 5 Aug 2020 11:50:24 +0800
+Message-ID: <1596599425-5534-4-git-send-email-zhangchangzhong@huawei.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1596599425-5534-1-git-send-email-zhangchangzhong@huawei.com>
 References: <1596599425-5534-1-git-send-email-zhangchangzhong@huawei.com>
@@ -47,72 +47,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently j1939_tp_im_involved_anydir() in j1939_tp_recv() check the
-previously set flags J1939_ECU_LOCAL_DST and J1939_ECU_LOCAL_SRC of
-incoming skb, thus multipacket broadcast message was aborted by
-receive side because it may come from remote ECUs and have no exact
-dst address. Similarly, j1939_tp_cmd_recv() and j1939_xtp_rx_dat()
-didn't process broadcast message.
+If timeout occurs, j1939_tp_rxtimer() first calls hrtimer_start() to
+restart rxtimer, and then calls __j1939_session_cancel() to set
+session->state = J1939_SESSION_WAITING_ABORT. At next timeout
+expiration, because of the J1939_SESSION_WAITING_ABORT session state
+j1939_tp_rxtimer() will call j1939_session_deactivate_activate_next()
+to deactivate current session, and rxtimer won't be set.
 
-So fix it by checking and process broadcast message in j1939_tp_recv(),
-j1939_tp_cmd_recv() and j1939_xtp_rx_dat().
+But for multipacket broadcast session, __j1939_session_cancel() don't
+set session->state = J1939_SESSION_WAITING_ABORT, thus current session
+won't be deactivate and hrtimer_start() is called to start new
+rxtimer again and again.
+
+So fix it by moving session->state = J1939_SESSION_WAITING_ABORT out of
+if (!j1939_cb_is_broadcast(&session->skcb)) statement.
 
 Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
 Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
 ---
- net/can/j1939/transport.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ net/can/j1939/transport.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
-index 9f99af5..e5188ac 100644
+index dd6a120..5757f9f 100644
 --- a/net/can/j1939/transport.c
 +++ b/net/can/j1939/transport.c
-@@ -1651,8 +1651,12 @@ static void j1939_xtp_rx_rts(struct j1939_priv *priv, struct sk_buff *skb,
- 			return;
- 		}
- 		session = j1939_xtp_rx_rts_session_new(priv, skb);
--		if (!session)
-+		if (!session) {
-+			if (cmd == J1939_TP_CMD_BAM && j1939_sk_recv_match(priv, skcb))
-+				netdev_info(priv->ndev, "%s: failed to create TP BAM session\n",
-+					    __func__);
- 			return;
-+		}
- 	} else {
- 		if (j1939_xtp_rx_rts_session_active(session, skb)) {
- 			j1939_session_put(session);
-@@ -1829,6 +1833,13 @@ static void j1939_xtp_rx_dat(struct j1939_priv *priv, struct sk_buff *skb)
- 		else
- 			j1939_xtp_rx_dat_one(session, skb);
- 	}
-+
-+	if (j1939_cb_is_broadcast(skcb)) {
-+		session = j1939_session_get_by_addr(priv, &skcb->addr, false,
-+						    false);
-+		if (session)
-+			j1939_xtp_rx_dat_one(session, skb);
-+	}
- }
+@@ -1055,9 +1055,9 @@ static void __j1939_session_cancel(struct j1939_session *session,
+ 	lockdep_assert_held(&session->priv->active_session_list_lock);
  
- /* j1939 main intf */
-@@ -1920,7 +1931,7 @@ static void j1939_tp_cmd_recv(struct j1939_priv *priv, struct sk_buff *skb)
- 		if (j1939_tp_im_transmitter(skcb))
- 			j1939_xtp_rx_rts(priv, skb, true);
- 
--		if (j1939_tp_im_receiver(skcb))
-+		if (j1939_tp_im_receiver(skcb) || j1939_cb_is_broadcast(skcb))
- 			j1939_xtp_rx_rts(priv, skb, false);
- 
- 		break;
-@@ -1984,7 +1995,7 @@ int j1939_tp_recv(struct j1939_priv *priv, struct sk_buff *skb)
- {
- 	struct j1939_sk_buff_cb *skcb = j1939_skb_to_cb(skb);
- 
--	if (!j1939_tp_im_involved_anydir(skcb))
-+	if (!j1939_tp_im_involved_anydir(skcb) && !j1939_cb_is_broadcast(skcb))
- 		return 0;
- 
- 	switch (skcb->addr.pgn) {
+ 	session->err = j1939_xtp_abort_to_errno(priv, err);
++	session->state = J1939_SESSION_WAITING_ABORT;
+ 	/* do not send aborts on incoming broadcasts */
+ 	if (!j1939_cb_is_broadcast(&session->skcb)) {
+-		session->state = J1939_SESSION_WAITING_ABORT;
+ 		j1939_xtp_tx_abort(priv, &session->skcb,
+ 				   !session->transmission,
+ 				   err, session->skcb.addr.pgn);
 -- 
 2.9.5
 
