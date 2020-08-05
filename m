@@ -2,159 +2,91 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8D1C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B65C1C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79E9721744
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:23:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ddFRLq8L"
+	by mail.kernel.org (Postfix) with ESMTP id 8E6EB21744
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 05:23:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726335AbgHEFXG (ORCPT
+        id S1726609AbgHEFX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 01:23:06 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:64254 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbgHEFXG (ORCPT
+        Wed, 5 Aug 2020 01:23:58 -0400
+Received: from host-88-217-225-28.customer.m-online.net ([88.217.225.28]:7309
+        "EHLO mail.dev.tdt.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725372AbgHEFX5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 01:23:06 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200805052302epoutp01182cf93d7098aa5fcd1de85ffb037f8e~oR8XDbl590089800898epoutp01D
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 05:23:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200805052302epoutp01182cf93d7098aa5fcd1de85ffb037f8e~oR8XDbl590089800898epoutp01D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1596604982;
-        bh=Vv6SM1wYGRvFEWv4+K3CiduycYOby04MPbyseFMmwbw=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=ddFRLq8Lp6CitecZFJDlsijZNyYSXaWrX4RQQqXTqix3DSLC3Hp63oDdEHN28YHmt
-         MubRmbQCCd9kNkvjQA0ArSLb3H6FeWnBxVH5D+xDVF2vG64V8EV5R2++vbjkjeMZ6f
-         6vyle+W3KwCLfhK7vSGz7KqaiWZnDcJauDemm2hM=
-Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p4.samsung.com
-        (KnoxPortal) with ESMTP id
-        20200805052302epcas1p415ad979a6bba89eeb879f1a386352722~oR8WgAHpN0237402374epcas1p49;
-        Wed,  5 Aug 2020 05:23:02 +0000 (GMT)
-Mime-Version: 1.0
-Subject: [PATCH v7 1/4] scsi: ufs: Add UFS feature related parameter
-Reply-To: daejun7.park@samsung.com
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     Daejun Park <daejun7.park@samsung.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <231786897.01596600181895.JavaMail.epsvc@epcpadp2>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <231786897.01596604981993.JavaMail.epsvc@epcpadp2>
-Date:   Wed, 05 Aug 2020 13:58:48 +0900
-X-CMS-MailID: 20200805045848epcms2p57f67844bf334f1b3a5014ec0d98fddf0
+        Wed, 5 Aug 2020 01:23:57 -0400
+Received: from mail.dev.tdt.de (localhost [IPv6:::1])
+        by mail.dev.tdt.de (Postfix) with ESMTP id 424792005F;
+        Wed,  5 Aug 2020 05:23:55 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20200805033750epcms2p3fd74b94500593df38d50e1bf426c2347
-References: <231786897.01596600181895.JavaMail.epsvc@epcpadp2>
-        <CGME20200805033750epcms2p3fd74b94500593df38d50e1bf426c2347@epcms2p5>
+Date:   Wed, 05 Aug 2020 07:23:55 +0200
+From:   Martin Schiller <ms@dev.tdt.de>
+To:     Xie He <xie.he.0141@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux X25 <linux-x25@vger.kernel.org>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Brian Norris <briannorris@chromium.org>,
+        netdev-owner@vger.kernel.org
+Subject: Re: [net v3] drivers/net/wan/lapbether: Use needed_headroom instead
+ of hard_header_len
+Organization: TDT AG
+In-Reply-To: <CAJht_ENuzbyYesYtP0703xgRwRBTY9SySe3oXLEtkyL_H_yTSQ@mail.gmail.com>
+References: <20200802195046.402539-1-xie.he.0141@gmail.com>
+ <d02996f90f64d55d5c5e349560bfde46@dev.tdt.de>
+ <CAJht_ENuzbyYesYtP0703xgRwRBTY9SySe3oXLEtkyL_H_yTSQ@mail.gmail.com>
+Message-ID: <9975370f14b8ddeafc8dec7bc6c0878a@dev.tdt.de>
+X-Sender: ms@dev.tdt.de
+User-Agent: Roundcube Webmail/1.1.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a patch for parameters to be used for UFS features layer and HPB
-module.
+On 2020-08-04 21:20, Xie He wrote:
+> On Tue, Aug 4, 2020 at 5:43 AM Martin Schiller <ms@dev.tdt.de> wrote:
+>> 
+>> I'm not an expert in the field, but after reading the commit message 
+>> and
+>> the previous comments, I'd say that makes sense.
+> 
+> Thanks!
+> 
+>> Shouldn't this kernel panic be intercepted by a skb_cow() before the
+>> skb_push() in lapbeth_data_transmit()?
+> 
+> When a skb is passing down a protocol stack for transmission, there
+> might be several different skb_push calls to prepend different
+> headers. It would be the best (in terms of performance) if we can
+> allocate the needed header space in advance, so that we don't need to
+> reallocate the skb every time a new header needs to be prepended.
 
-Reviewed-by: Can Guo <cang@codeaurora.org>
-Tested-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Daejun Park <daejun7.park@samsung.com>
----
- drivers/scsi/ufs/ufs.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Yes, I agree.
 
-diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-index f8ab16f30fdc..ae557b8d3eba 100644
---- a/drivers/scsi/ufs/ufs.h
-+++ b/drivers/scsi/ufs/ufs.h
-@@ -122,6 +122,7 @@ enum flag_idn {
- 	QUERY_FLAG_IDN_WB_EN                            = 0x0E,
- 	QUERY_FLAG_IDN_WB_BUFF_FLUSH_EN                 = 0x0F,
- 	QUERY_FLAG_IDN_WB_BUFF_FLUSH_DURING_HIBERN8     = 0x10,
-+	QUERY_FLAG_IDN_HPB_RESET                        = 0x11,
- };
- 
- /* Attribute idn for Query requests */
-@@ -195,6 +196,9 @@ enum unit_desc_param {
- 	UNIT_DESC_PARAM_PHY_MEM_RSRC_CNT	= 0x18,
- 	UNIT_DESC_PARAM_CTX_CAPABILITIES	= 0x20,
- 	UNIT_DESC_PARAM_LARGE_UNIT_SIZE_M1	= 0x22,
-+	UNIT_DESC_HPB_LU_MAX_ACTIVE_REGIONS	= 0x23,
-+	UNIT_DESC_HPB_LU_PIN_REGION_START_OFFSET	= 0x25,
-+	UNIT_DESC_HPB_LU_NUM_PIN_REGIONS	= 0x27,
- 	UNIT_DESC_PARAM_WB_BUF_ALLOC_UNITS	= 0x29,
- };
- 
-@@ -235,6 +239,8 @@ enum device_desc_param {
- 	DEVICE_DESC_PARAM_PSA_MAX_DATA		= 0x25,
- 	DEVICE_DESC_PARAM_PSA_TMT		= 0x29,
- 	DEVICE_DESC_PARAM_PRDCT_REV		= 0x2A,
-+	DEVICE_DESC_PARAM_HPB_VER		= 0x40,
-+	DEVICE_DESC_PARAM_HPB_CONTROL		= 0x42,
- 	DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP	= 0x4F,
- 	DEVICE_DESC_PARAM_WB_PRESRV_USRSPC_EN	= 0x53,
- 	DEVICE_DESC_PARAM_WB_TYPE		= 0x54,
-@@ -283,6 +289,10 @@ enum geometry_desc_param {
- 	GEOMETRY_DESC_PARAM_ENM4_MAX_NUM_UNITS	= 0x3E,
- 	GEOMETRY_DESC_PARAM_ENM4_CAP_ADJ_FCTR	= 0x42,
- 	GEOMETRY_DESC_PARAM_OPT_LOG_BLK_SIZE	= 0x44,
-+	GEOMETRY_DESC_HPB_REGION_SIZE		= 0x48,
-+	GEOMETRY_DESC_HPB_NUMBER_LU		= 0x49,
-+	GEOMETRY_DESC_HPB_SUBREGION_SIZE	= 0x4A,
-+	GEOMETRY_DESC_HPB_DEVICE_MAX_ACTIVE_REGIONS	= 0x4B,
- 	GEOMETRY_DESC_PARAM_WB_MAX_ALLOC_UNITS	= 0x4F,
- 	GEOMETRY_DESC_PARAM_WB_MAX_WB_LUNS	= 0x53,
- 	GEOMETRY_DESC_PARAM_WB_BUFF_CAP_ADJ	= 0x54,
-@@ -327,6 +337,7 @@ enum {
- 
- /* Possible values for dExtendedUFSFeaturesSupport */
- enum {
-+	UFS_DEV_HPB_SUPPORT		= BIT(7),
- 	UFS_DEV_WRITE_BOOSTER_SUP	= BIT(8),
- };
- 
-@@ -537,6 +548,7 @@ struct ufs_dev_info {
- 	u8 *model;
- 	u16 wspecversion;
- 	u32 clk_gating_wait_us;
-+	u8 b_ufs_feature_sup;
- 	u32 d_ext_ufs_feature_sup;
- 	u8 b_wb_buffer_type;
- 	u32 d_wb_alloc_units;
--- 
-2.17.1
+> Adding skb_cow before these skb_push calls would indeed help
+> preventing kernel panics, but that might not be the essential issue
+> here, and it might also prevent us from discovering the real issue. (I
+> guess this is also the reason skb_cow is not included in skb_push
+> itself.)
 
+Well, you are right that the panic is "useful" to discover the real
+problem. But on the other hand, if it is possible to prevent a panic, I
+think we should do so. Maybe with adding a warning, when skb_cow() needs
+to reallocate memory.
+
+But this is getting a little bit off topic. For this patch I can say:
+
+LGTM.
+
+Reviewed-by: Martin Schiller <ms@dev.tdt.de>
 
