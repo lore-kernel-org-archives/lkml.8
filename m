@@ -5,72 +5,71 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB68C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF16C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31AFB206F6
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6384E206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:14:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cAKB4VBi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JMUdIc1Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728661AbgHERNv (ORCPT
+        id S1728694AbgHEROG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:13:51 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51064 "EHLO
+        Wed, 5 Aug 2020 13:14:06 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51041 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728582AbgHERKg (ORCPT
+        with ESMTP id S1728575AbgHERKg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 13:10:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1596647428;
+        s=mimecast20190719; t=1596647419;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=X64Xsc1z0L/QmYHsVcy3UgDLuv0e4itd0R0ewdQxVFs=;
-        b=cAKB4VBiWGsWoVdhTQEmJMGXUZaHU7yOmJB6Dj59PjBlD7drjLWv6SiBGULhdbsLekF8sL
-        Raqv9iMpJF+B55JRm1YCe90L7e1vTvbXJqCQ47xzZ4DtIH7ZjNFuOUNFU0KB9Ih73ZPf+B
-        NaiXW/IEaEXCg8qw2lk+J33HZBJivNI=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-485-8A0H6pRlM7y9Qd_YLgNwIQ-1; Wed, 05 Aug 2020 09:43:41 -0400
-X-MC-Unique: 8A0H6pRlM7y9Qd_YLgNwIQ-1
-Received: by mail-wr1-f69.google.com with SMTP id m7so13584862wrb.20
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:43:40 -0700 (PDT)
+        bh=4NE75uN6dBbbPR8XQJColAeceo7jKLXuooc66ABTACY=;
+        b=JMUdIc1ZNu86nIuhwVOqZt6eHlE0190mrBuRjN60yeyd7eTt8FyseHcA2xaqeAgOxSc8TG
+        VyamUcW6+HREIqGkjMJ/jhU91UDXsE5Kv37wkRlgYOQuZkgttPQ7XdFSQvDmOIYq9Ugir1
+        kfrmCCSZTMqMyDZ26lPFRDbihjPjLNI=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-285-9B4J6hGUNOWmKgqkAPFrDw-1; Wed, 05 Aug 2020 09:43:54 -0400
+X-MC-Unique: 9B4J6hGUNOWmKgqkAPFrDw-1
+Received: by mail-wm1-f69.google.com with SMTP id c124so2474453wme.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 06:43:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=X64Xsc1z0L/QmYHsVcy3UgDLuv0e4itd0R0ewdQxVFs=;
-        b=aRBp9jvR44ybCE2Cib4QR9pgbbECRSKQOQ/EV1zvdFSKw/J4Vs3j4iviXtEkgd11ci
-         i68qGVdvc4zSo7ByM4XJuKLqi7LMgp4m/yR3XjzfL58e/9wIJjqbhBcD2uFneR4Mam6i
-         tGqF4UUVPSKtmAYrDmG8mBLT9SB+TvdS2A9ld4shDg2zB/aQl8aUhEZ8unuQPS/UXvM2
-         TuTsvKi5txNLM6oc/bPZ6dYxWWuI89BpC7tox9Rjg+fKU12ifzTxv0CTSqMq8NdIhUHz
-         f/GYyUf42Qi6QmUt5Dd8tyDfUslxVP4U1ftbb7TP89urr3G7vGFWQrzL9M7qiwDxMHnI
-         0KMA==
-X-Gm-Message-State: AOAM5324vx93wzeGCFnwOyipbuxUIGKQDNOHnFvkeZ7DOxMtUmb8xoEN
-        Jd6U/496pTYiJPk3+TbbGnEjiVeJ9S4ZLX/ZuyDsJ21gC9AKaBSlPmSLZnDSZfc5vOqzFaj8lFE
-        4t+1GVlftc4E0o+bAV31wwuH0
-X-Received: by 2002:a1c:750f:: with SMTP id o15mr3524221wmc.182.1596635019142;
-        Wed, 05 Aug 2020 06:43:39 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx7HPK5kJbXhcBrmG1OonTHBBSwSvqaL+QYwUQafnUdvO/7RhWcIcON1LYaynur3bpXqN2OHA==
-X-Received: by 2002:a1c:750f:: with SMTP id o15mr3524205wmc.182.1596635018970;
-        Wed, 05 Aug 2020 06:43:38 -0700 (PDT)
+        bh=4NE75uN6dBbbPR8XQJColAeceo7jKLXuooc66ABTACY=;
+        b=Hp2xfbZsakt7Yugdw8w8nWZpFR9yJ9riAv/vhzbbfQ3D4C8LZsoCW17yo+CE1vwK9p
+         UYcgvEWKc3OD5BDsib6PHIlPIQxxS+HdABE6msb7gPUh51LOwMIUaavPKBU0ifHk68JN
+         OHZ4IfV8uC1PoZzguCLfN1RMk556Q+tO+L16pkdOv/XcgGCfESNHXSyOjCZnY49ajENl
+         gBOta2O4o4gmx7WR9UM2tUxoB9lB5FG04CjiZYUPs6kxZTn4HwLmpF5rJggQEotfDvxw
+         oBISNRNcG0OTB6YE1QMKUY++mGMiITXQx/1PSCW0kT2yda6EhoC3IIB7G3WIYD9IOdEF
+         HYLQ==
+X-Gm-Message-State: AOAM530HXY8x9hDeQrvquHew4/R8nvC3xAWAPy51xtVMx1vGDPAg/aq7
+        jNWMzQ1BeFanBwSFmT1p0+XSKl2nrR3RqpFFivQkSRI88VqaH2hfnW04tMu2hhtqJ6YdRNzoyV/
+        4vV/Z1ve24N+tCMu1E2xlpLZI
+X-Received: by 2002:a1c:a9ce:: with SMTP id s197mr3306815wme.58.1596635033279;
+        Wed, 05 Aug 2020 06:43:53 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxvbf5VBxq2UIHSD8lBlCOsb0tG11fiC9qNl08h72rxXtyKWMb6SnWrzJs0vLKD2J9n9C6/Ag==
+X-Received: by 2002:a1c:a9ce:: with SMTP id s197mr3306801wme.58.1596635033054;
+        Wed, 05 Aug 2020 06:43:53 -0700 (PDT)
 Received: from redhat.com (bzq-79-180-0-181.red.bezeqint.net. [79.180.0.181])
-        by smtp.gmail.com with ESMTPSA id x204sm13094657wmg.2.2020.08.05.06.43.37
+        by smtp.gmail.com with ESMTPSA id j145sm3206544wmj.12.2020.08.05.06.43.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 06:43:38 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 09:43:36 -0400
+        Wed, 05 Aug 2020 06:43:52 -0700 (PDT)
+Date:   Wed, 5 Aug 2020 09:43:50 -0400
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Gonglei <arei.gonglei@huawei.com>,
+Cc:     David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
         Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-crypto@vger.kernel.org
-Subject: [PATCH v3 08/38] virtio_crypto: correct tags for config space fields
-Message-ID: <20200805134226.1106164-9-mst@redhat.com>
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v3 13/38] virtio_mem: correct tags for config space fields
+Message-ID: <20200805134226.1106164-14-mst@redhat.com>
 References: <20200805134226.1106164-1-mst@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -83,66 +82,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since crypto is a modern-only device,
+Since this is a modern-only device,
 tag config space fields as having little endian-ness.
 
+TODO: check other uses of __virtioXX types in this header,
+should probably be __leXX.
+
 Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Acked-by: David Hildenbrand <david@redhat.com>
 Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 ---
- include/uapi/linux/virtio_crypto.h | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ include/uapi/linux/virtio_mem.h | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/include/uapi/linux/virtio_crypto.h b/include/uapi/linux/virtio_crypto.h
-index 50cdc8aebfcf..a03932f10565 100644
---- a/include/uapi/linux/virtio_crypto.h
-+++ b/include/uapi/linux/virtio_crypto.h
-@@ -414,33 +414,33 @@ struct virtio_crypto_op_data_req {
+diff --git a/include/uapi/linux/virtio_mem.h b/include/uapi/linux/virtio_mem.h
+index a9ffe041843c..70e01c687d5e 100644
+--- a/include/uapi/linux/virtio_mem.h
++++ b/include/uapi/linux/virtio_mem.h
+@@ -185,27 +185,27 @@ struct virtio_mem_resp {
  
- struct virtio_crypto_config {
- 	/* See VIRTIO_CRYPTO_OP_* above */
--	__u32  status;
-+	__le32  status;
- 
+ struct virtio_mem_config {
+ 	/* Block size and alignment. Cannot change. */
+-	__u64 block_size;
++	__le64 block_size;
+ 	/* Valid with VIRTIO_MEM_F_ACPI_PXM. Cannot change. */
+-	__u16 node_id;
++	__le16 node_id;
+ 	__u8 padding[6];
+ 	/* Start address of the memory region. Cannot change. */
+-	__u64 addr;
++	__le64 addr;
+ 	/* Region size (maximum). Cannot change. */
+-	__u64 region_size;
++	__le64 region_size;
  	/*
- 	 * Maximum number of data queue
+ 	 * Currently usable region size. Can grow up to region_size. Can
+ 	 * shrink due to VIRTIO_MEM_REQ_UNPLUG_ALL (in which case no config
+ 	 * update will be sent).
  	 */
--	__u32  max_dataqueues;
-+	__le32  max_dataqueues;
- 
+-	__u64 usable_region_size;
++	__le64 usable_region_size;
  	/*
- 	 * Specifies the services mask which the device support,
- 	 * see VIRTIO_CRYPTO_SERVICE_* above
+ 	 * Currently used size. Changes due to plug/unplug requests, but no
+ 	 * config updates will be sent.
  	 */
--	__u32 crypto_services;
-+	__le32 crypto_services;
- 
- 	/* Detailed algorithms mask */
--	__u32 cipher_algo_l;
--	__u32 cipher_algo_h;
--	__u32 hash_algo;
--	__u32 mac_algo_l;
--	__u32 mac_algo_h;
--	__u32 aead_algo;
-+	__le32 cipher_algo_l;
-+	__le32 cipher_algo_h;
-+	__le32 hash_algo;
-+	__le32 mac_algo_l;
-+	__le32 mac_algo_h;
-+	__le32 aead_algo;
- 	/* Maximum length of cipher key */
--	__u32 max_cipher_key_len;
-+	__le32 max_cipher_key_len;
- 	/* Maximum length of authenticated key */
--	__u32 max_auth_key_len;
--	__u32 reserve;
-+	__le32 max_auth_key_len;
-+	__le32 reserve;
- 	/* Maximum size of each crypto request's content */
--	__u64 max_size;
-+	__le64 max_size;
+-	__u64 plugged_size;
++	__le64 plugged_size;
+ 	/* Requested size. New plug requests cannot exceed it. Can change. */
+-	__u64 requested_size;
++	__le64 requested_size;
  };
  
- struct virtio_crypto_inhdr {
+ #endif /* _LINUX_VIRTIO_MEM_H */
 -- 
 MST
 
