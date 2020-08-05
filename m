@@ -2,347 +2,163 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B67C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B140C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72D6720842
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44F1920842
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:13:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WItl9UdE"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="sligP+Ml"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728914AbgHETMD (ORCPT
+        id S1728802AbgHETNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:12:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34714 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729240AbgHESaT (ORCPT
+        Wed, 5 Aug 2020 15:13:37 -0400
+Received: from sonic304-27.consmr.mail.ne1.yahoo.com ([66.163.191.153]:35749
+        "EHLO sonic304-27.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729034AbgHES0s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 14:30:19 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED207C061757
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 11:29:53 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id j8so34590113ioe.9
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 11:29:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=SARuME9J10v3sen/Xni7v/xI7rOWv9gm7Kfl7nu9RLM=;
-        b=WItl9UdE0b5ZGEHl6FjMKa0TRpIq4jGrjQhEgOYt0YHvs9S5QQiQGmiNiMibXYZytI
-         GlLaeTtgReLvgxx7eFCaUDO97I7kX3GxfsEGfCW8jK1xTXKGGXoDchsKQXrHRm7zD97O
-         FwrRkSbLKze3NLeC8B/aDYLbtdZxP39VNzEpqMAbIBPpVyzlsaej1GiNOGlMNZZvM1Nl
-         5vtKO6OXlX4yDKKesarf6WlOoBq+mpke9JtvhHDVXX/wz1jOsLyf3tlHPUSt7WzUmSTA
-         WuulOuN2AySeK690OH2U7Ya0L5v7hjAuauIfjr3AcMB+rgJWNEAn2oR4OwHP6ZVGxv3u
-         Nq3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SARuME9J10v3sen/Xni7v/xI7rOWv9gm7Kfl7nu9RLM=;
-        b=dT2/iugvoFu52cnHAyfTl+G1tZ0UGRJb/0LSOfaWEVK0FLH1SilPYrujdjbG7SlPQG
-         vU+9+pHHzWkE3zSoOia7qtVKN4fci0zZTg+UDsbHB0+mwiM7u5kjoD2I1+QR4ubR/H/o
-         rBDDq14fcuXVVsMTpv5jxdKNqfuuFZhLrJak4phldYaxSxkPgO8wSA1bePXNIHaJ6y+C
-         TNtEugX2PORoNvb4qiOK0WyHYVXh0XGKLJAU8BcCDILLGOuY7MwPiqa8CVVGgC1o2tIH
-         WkKnXj2ca5828CQghDsWQHcZQQqsJlDJR03i+pOkpC0U8LQZ0DlV+sTXEVsVUVt11N6T
-         vXfA==
-X-Gm-Message-State: AOAM533qheTaDVGj5fr90HeR8sNRevwC77FVNLyvxGcPKpJ+h/gtSiM5
-        R6j+D1ob9GrFtmyBR/Z2Ggxd8o+ogWYoBVdOSXZoXg==
-X-Google-Smtp-Source: ABdhPJw1/ZX6Zxh2XqOSuKBSOqZgN3PrB8R6jBBj96SVyIceT6wdrGYeKyoldLvl1/EFlU0fL4yHu4e2fd8Q3Pyy6+I=
-X-Received: by 2002:a6b:4e0e:: with SMTP id c14mr4490564iob.8.1596652193001;
- Wed, 05 Aug 2020 11:29:53 -0700 (PDT)
+        Wed, 5 Aug 2020 14:26:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1596651945; bh=FOt0zwyHrJWGV8EAmJgJDEq7xIcxGCYOB9lxPGye2YQ=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=sligP+Ml+0zuo/I/JfvSiHtxUKTMcEpvND0H95NeiDHvw2DSGx1zLe+2lArdHgJMKDRDWQIktPA1qeQl0A15IDLuRv2uhxj69lX241Sx65eaJJFTuO2ubMsS/X+Pd3fV2eSfpRytARw8MoE86QP1KuWHlNSrnftOZuQH+508PPx9XvAjBofb0VuSqdQvn/gLnoKhJ/CsvRBfT6XACVqYU/pCQ9f0FhzIdcBAhz0ho0U2ZoTjvoZQLrH+Syn+l507Riw794LdT8xga0ooLTmZxS8T9YWetudDjcl6CzomiW9291uxEq4Kt+tndWJbFjhEClJ6g4atHvZYNW5WOYqfmg==
+X-YMail-OSG: oN35ZiMVM1mfYW44uLsECdJwf7aD1ebBeTnN47QhSKpbA7H7q0Ta45_XoY7Kxk0
+ xRjvrj75awjVybWRzEYlkQqAg45ISZEVAfMkKYDi_XF__mUx5lwC9ueVSvW_Twy.88xSKQUysr9Y
+ E7brLsol0w7WOUw4yuyfX6IlxhhN7fCImvnue0cfi.rj05KqrVhqrv1FBU5BBp8gbsZU4SjqpnPY
+ UdVQLQfUJzYPvvSP9X3yTyTda5.PP1goC2KLANQ18Xk_zH8ezbsTw0e6mwF455n.7AUZ6lSVQtwx
+ AhALXcD0ZOkTYrxFIItbGTi5XVkwdRyZ639sUMf1lskNosHAA0OUWGETOZ3hUErwTUfoxx.3okAG
+ WggPQUXdxskaPZmPUM1GP3lUcFyFkA7mK0GmeHyedUXkiBuOvaju0xfCKlfo2k10.8lDazlgvQnY
+ RYczWa.58pSBZ0Eha2JLmD6yHtYawj2WbLgC0O0P9hdk3nuK2iyh0_Q3tb8X8OrELC7.zO94HAf.
+ 4u2bUphuWWJulV2f_voWaWwe34ebnkJ_hEu58OoG_xI9MkolsISXrzm9eWqe56tDp3AmkRJE_la0
+ GthSM4.GjUd3m1VIQ5y58cHlTRzjLiF.8S2H.8W_jZqd2N4DD4sW0Ap_QT_vi39MrOil7o_u6eX9
+ IlAwQzRZkGdDFU_UvbRxX6KGtCY5C4cqwJuxU3bA.wxUxZ8junCY4LHlbZguoL_ml2Ko8xCm0p7y
+ lBXzF5MTevox7HjcnvlKVcolNY1PB_l8d42XNjldN.4wIO.sGfhPWURdlYn0CnOdWD40gsvKjxTJ
+ 2y9kznja8hJWE1z8XGwU13S7nAHC_JKrgDzYiYTtuvo.pCwir4BF9EBjQHFq4qCLRH_jhuYL868C
+ u7DBHPQdFhDSD10r7Snc3bYEmoiLYAEnnLBwALxU_nOB768bcT5Ppv8Kk5Yb0TeT601.QOo5KkHD
+ AvDUdu1hgNLKXvwf1zL4EfV7RHAj203PLRRHTgJYMJ8FiINWOINsvyxlsXGkkKZMg2LwiEH6VO1D
+ 79fHSkZRKUPGx5dJWi4x_qjN2u3C72zPeWDymvlbLhkYlphEPaKwPLyjd_vCbo5wTMAvsnl13dwQ
+ YnIpL4vuo0i_Xt5SFphPU0pDe_0WnXFpl0etDBb3fYPKGBqC_KYGfj0gPpdUxc.N3ko.ScZU_iV6
+ oPV1DjWZVXATDpSYk82s6k_hlgFH61VIik95J2gTxRcexi3EdmVZub5vQNjbCoTPLULut5vo.9XN
+ 7YzU5BpMpMHc9Qiet3.LUhNtYZnxjBR41WDdFB6TfHTkncBh0c8JftZAiKL7fMPhmQfI_kTcP5nU
+ LlsKcjv8N1KPTj8tXQM4_0c_CvAnj6M44bRS8GcARpKK7z5EohGgkdnXuP40V7zrhXyk-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.ne1.yahoo.com with HTTP; Wed, 5 Aug 2020 18:25:45 +0000
+Received: by smtp410.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID a204618d0e4212a8de77f50ea77d7c86;
+          Wed, 05 Aug 2020 18:25:40 +0000 (UTC)
+Subject: Re: [PATCH v6 0/4] LSM: Measure security module data
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Tyler Hicks <tyhicks@linux.microsoft.com>
+Cc:     stephen.smalley.work@gmail.com, sashal@kernel.org,
+        jmorris@namei.org, linux-integrity@vger.kernel.org,
+        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Casey Schaufler <casey@schaufler-ca.com>
+References: <20200805004331.20652-1-nramas@linux.microsoft.com>
+ <f3971f35-309d-c3e5-9126-69add7ad4c11@schaufler-ca.com>
+ <50587a3e-bcb5-c68e-c16c-41baf68b4d4a@linux.microsoft.com>
+ <c7c168f2-e30b-d2c5-abcb-1b6919197474@schaufler-ca.com>
+ <20200805154504.GB4365@sequoia>
+ <69810007161e689ac817099fb1c6df21962963e4.camel@linux.ibm.com>
+ <9ad079ff-1bd4-1302-e6fb-25a7396ef12f@linux.microsoft.com>
+ <ecc97f59-c2cc-0b23-6199-925ba0d6358b@schaufler-ca.com>
+ <50f00ace-8d46-01c2-bf0f-d5484aafd95c@linux.microsoft.com>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Message-ID: <5570a4d8-8779-6efe-b208-f7efa8ba9488@schaufler-ca.com>
+Date:   Wed, 5 Aug 2020 11:25:39 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <cover.1588711355.git.ashish.kalra@amd.com> <20200518190708.GA7929@ashkalra_ubuntu_server>
- <CABayD+eJm43rc0Db1aATXut_kpRwKjsOCkZ_Q+NteFnP7d25hg@mail.gmail.com> <20200603221428.GA6511@ashkalra_ubuntu_server>
-In-Reply-To: <20200603221428.GA6511@ashkalra_ubuntu_server>
-From:   Steve Rutherford <srutherford@google.com>
-Date:   Wed, 5 Aug 2020 11:29:17 -0700
-Message-ID: <CABayD+emF_kWf7UbvGhMmUpV9CAyPtEgFL9ocanumZu54aHSBQ@mail.gmail.com>
-Subject: Re: [PATCH v8 00/18] Add AMD SEV guest live migration support
-To:     Ashish Kalra <ashish.kalra@amd.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
-        Borislav Petkov <bp@suse.de>,
-        Tom Lendacky <Thomas.Lendacky@amd.com>,
-        X86 ML <x86@kernel.org>, KVM list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Venu Busireddy <venu.busireddy@oracle.com>,
-        Brijesh Singh <brijesh.singh@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <50f00ace-8d46-01c2-bf0f-d5484aafd95c@linux.microsoft.com>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Mailer: WebService/1.1.16436 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.7)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Are these likely to get merged into 5.9?
+On 8/5/2020 11:08 AM, Lakshmi Ramasubramanian wrote:
+> On 8/5/20 10:57 AM, Casey Schaufler wrote:
+>> On 8/5/2020 10:25 AM, Lakshmi Ramasubramanian wrote:
+>>> On 8/5/20 10:03 AM, Mimi Zohar wrote:
+>>>> On Wed, 2020-08-05 at 10:45 -0500, Tyler Hicks wrote:
+>>>>
+>>>>> In addition to SELINUX_STATE and SELINUX_POLICY, we should also consider
+>>>>> the proposed LSM_STATE and LSM_POLICY func values but require an "lsm"
+>>>>> rule conditional.
+>>>>>
+>>>>> So the current proposed rules:
+>>>>>
+>>>>> ? measure func=LSM_STATE
+>>>>> ? measure func=LSM_POLICY
+>>>>>
+>>>>> Would become:
+>>>>>
+>>>>> ? measure func=LSM_STATE lsm=selinux
+>>>>> ? measure func=LSM_POLICY lsm=selinux
+>>>>>
+>>>>> The following rules would be rejected:
+>>>>>
+>>>>> ? measure func=LSM_STATE
+>>>>> ? measure func=LSM_POLICY
+>>>>> ? measure func=LSM_STATE lsm=apparmor
+>>>>> ? measure func=LSM_POLICY lsm=smack
+>>>>
+>>>> Kees is cleaning up the firmware code which differentiated between how
+>>>> firmware was loaded.?? There will be a single firmware enumeration.
+>>>>
+>>>> Similarly, the new IMA hook to measure critical state may be placed in
+>>>> multiple places.? Is there really a need from a policy perspective for
+>>>> differentiating the source of the critical state being measurind??? The
+>>>> data being measured should include some identifying information.
+>>>
+>>> Yes Mimi - SELinux is including the identifying information in the "event name" field. Please see a sample measurement of STATE and POLICY for SELinux below:
+>>>
+>>> 10 e32e...5ac3 ima-buf sha256:86e8...4594 selinux-state-1595389364:287899386 696e697469616c697a65643d313b656e61626c65643d313b656e666f7263696e673d303b636865636b72657170726f743d313b6e6574776f726b5f706565725f636f6e74726f6c733d313b6f70656e5f7065726d733d313b657874656e6465645f736f636b65745f636c6173733d313b616c776179735f636865636b5f6e6574776f726b3d303b6367726f75705f7365636c6162656c3d313b6e6e705f6e6f737569645f7472616e736974696f6e3d313b67656e66735f7365636c6162656c5f73796d6c696e6b733d303
+>>>
+>>> 10 f4a7...9408 ima-ng sha256:8d1d...1834 selinux-policy-hash-1595389353:863934271
+>>>
+>>>>
+>>>> I think moving away from the idea that measuring "critical" data should
+>>>> be limited to LSMs, will clarify this.
+>>>>
+>>>
+>>> Are you suggesting that instead of calling the hooks LSM_STATE and LSM_POLICY, we should keep it more generic so that it can be utilized by any subsystem to measure their "critical data"?
+>>
+>> Policy, state, history or whim, it should be up to the security module
+>> to determine what data it cares about, and how it should be measured.
+>> Smack does not keep its policy in a single blob of data, it uses lists
+>> which can be modified at will. Your definition of the behavior for
+>> LSM_POLICY wouldn't work for Smack. That doesn't mean that there isn't
+>> a viable way to measure the Smack policy, it just means that IMA isn't
+>> the place for it. If SELinux wants its data measured, SELinux should be
+>> providing the mechanism to do it.
+>>
+>> I guess that I'm agreeing with you in part. If you want a generic measurement
+>> of "critical data", you don't need to assign a type to it, you have the
+>> caller (a security module, a device driver or whatever) identify itself and
+>> how it is going to deal with the data. That's very different from what you've
+>> done to date.
+>
+> Agree.
+>
+> Like Stephen had stated earlier, the reason we kept separate hooks (STATE and POLICY) is because the data for state is usually small and therefore we measure the entire data. Whereas, policy data is usually quite large (a few MB) and hence we measure a hash of the policy.
 
+SELinux should determine how it wants its data measured.
+SELinux, not IMA, should determine if some "critical data"
+be measured in total, by its hash or as a count of policy
+rules. It would be handy for IMA to supply functions to do
+data blobs and hashes, but it should be up to the caller to
+decide if they meet their needs.
 
-On Wed, Jun 3, 2020 at 3:14 PM Ashish Kalra <ashish.kalra@amd.com> wrote:
 >
-> Hello Steve,
+> If change to a generic measurement of "critical data", at the least IMA should provide a way to measure "data" and "hash(data)".
 >
-> On Mon, Jun 01, 2020 at 01:02:23PM -0700, Steve Rutherford wrote:
-> > On Mon, May 18, 2020 at 12:07 PM Ashish Kalra <ashish.kalra@amd.com> wr=
-ote:
-> > >
-> > > Hello All,
-> > >
-> > > Any other feedback, review or comments on this patch-set ?
-> > >
-> > > Thanks,
-> > > Ashish
-> > >
-> > > On Tue, May 05, 2020 at 09:13:49PM +0000, Ashish Kalra wrote:
-> > > > From: Ashish Kalra <ashish.kalra@amd.com>
-> > > >
-> > > > The series add support for AMD SEV guest live migration commands. T=
-o protect the
-> > > > confidentiality of an SEV protected guest memory while in transit w=
-e need to
-> > > > use the SEV commands defined in SEV API spec [1].
-> > > >
-> > > > SEV guest VMs have the concept of private and shared memory. Privat=
-e memory
-> > > > is encrypted with the guest-specific key, while shared memory may b=
-e encrypted
-> > > > with hypervisor key. The commands provided by the SEV FW are meant =
-to be used
-> > > > for the private memory only. The patch series introduces a new hype=
-rcall.
-> > > > The guest OS can use this hypercall to notify the page encryption s=
-tatus.
-> > > > If the page is encrypted with guest specific-key then we use SEV co=
-mmand during
-> > > > the migration. If page is not encrypted then fallback to default.
-> > > >
-> > > > The patch adds new ioctls KVM_{SET,GET}_PAGE_ENC_BITMAP. The ioctl =
-can be used
-> > > > by the qemu to get the page encrypted bitmap. Qemu can consult this=
- bitmap
-> > > > during the migration to know whether the page is encrypted.
-> > > >
-> > > > This section descibes how the SEV live migration feature is negotia=
-ted
-> > > > between the host and guest, the host indicates this feature support=
- via
-> > > > KVM_FEATURE_CPUID. The guest firmware (OVMF) detects this feature a=
-nd
-> > > > sets a UEFI enviroment variable indicating OVMF support for live
-> > > > migration, the guest kernel also detects the host support for this
-> > > > feature via cpuid and in case of an EFI boot verifies if OVMF also
-> > > > supports this feature by getting the UEFI enviroment variable and i=
-f it
-> > > > set then enables live migration feature on host by writing to a cus=
-tom
-> > > > MSR, if not booted under EFI, then it simply enables the feature by
-> > > > again writing to the custom MSR. The host returns error as part of
-> > > > SET_PAGE_ENC_BITMAP ioctl if guest has not enabled live migration.
-> > > >
-> > > > A branch containing these patches is available here:
-> > > > https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2=
-Fgithub.com%2FAMDESE%2Flinux%2Ftree%2Fsev-migration-v8&amp;data=3D02%7C01%7=
-Cashish.kalra%40amd.com%7Cb7da54c6f7784a548ed208d80666c99b%7C3dd8961fe4884e=
-608e11a82d994e183d%7C0%7C0%7C637266386411473155&amp;sdata=3DigztZXTZl1i18e5=
-T4DTlNJw07h6z3aBNCAD6%2BE7r9Ik%3D&amp;reserved=3D0
-> > > >
-> > > > [1] https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%=
-2F%2Fdeveloper.amd.com%2Fwp-content%2Fresources%2F55766.PDF&amp;data=3D02%7=
-C01%7Cashish.kalra%40amd.com%7Cb7da54c6f7784a548ed208d80666c99b%7C3dd8961fe=
-4884e608e11a82d994e183d%7C0%7C0%7C637266386411473155&amp;sdata=3DGBgV6HAd2A=
-XZzjK3hp%2F396tDaHlYtN%2FL3Zfny3GaSoU%3D&amp;reserved=3D0
-> > > >
-> > > > Changes since v7:
-> > > > - Removed the hypervisor specific hypercall/paravirt callback for
-> > > >   SEV live migration and moved back to calling kvm_sev_hypercall3
-> > > >   directly.
-> > > > - Fix build errors as
-> > > >   Reported-by: kbuild test robot <lkp@intel.com>, specifically fixe=
-d
-> > > >   build error when CONFIG_HYPERVISOR_GUEST=3Dy and
-> > > >   CONFIG_AMD_MEM_ENCRYPT=3Dn.
-> > > > - Implicitly enabled live migration for incoming VM(s) to handle
-> > > >   A->B->C->... VM migrations.
-> > > > - Fixed Documentation as per comments on v6 patches.
-> > > > - Fixed error return path in sev_send_update_data() as per comments
-> > > >   on v6 patches.
-> > > >
-> > > > Changes since v6:
-> > > > - Rebasing to mainline and refactoring to the new split SVM
-> > > >   infrastructre.
-> > > > - Move to static allocation of the unified Page Encryption bitmap
-> > > >   instead of the dynamic resizing of the bitmap, the static allocat=
-ion
-> > > >   is done implicitly by extending kvm_arch_commit_memory_region() c=
-allack
-> > > >   to add svm specific x86_ops which can read the userspace provided=
- memory
-> > > >   region/memslots and calculate the amount of guest RAM managed by =
-the KVM
-> > > >   and grow the bitmap.
-> > > > - Fixed KVM_SET_PAGE_ENC_BITMAP ioctl to set the whole bitmap inste=
-ad
-> > > >   of simply clearing specific bits.
-> > > > - Removed KVM_PAGE_ENC_BITMAP_RESET ioctl, which is now performed u=
-sing
-> > > >   KVM_SET_PAGE_ENC_BITMAP.
-> > > > - Extended guest support for enabling Live Migration feature by add=
-ing a
-> > > >   check for UEFI environment variable indicating OVMF support for L=
-ive
-> > > >   Migration feature and additionally checking for KVM capability fo=
-r the
-> > > >   same feature. If not booted under EFI, then we simply check for K=
-VM
-> > > >   capability.
-> > > > - Add hypervisor specific hypercall for SEV live migration by addin=
-g
-> > > >   a new paravirt callback as part of x86_hyper_runtime.
-> > > >   (x86 hypervisor specific runtime callbacks)
-> > > > - Moving MSR handling for MSR_KVM_SEV_LIVE_MIG_EN into svm/sev code
-> > > >   and adding check for SEV live migration enabled by guest in the
-> > > >   KVM_GET_PAGE_ENC_BITMAP ioctl.
-> > > > - Instead of the complete __bss_decrypted section, only specific va=
-riables
-> > > >   such as hv_clock_boot and wall_clock are marked as decrypted in t=
-he
-> > > >   page encryption bitmap
-> > > >
-> > > > Changes since v5:
-> > > > - Fix build errors as
-> > > >   Reported-by: kbuild test robot <lkp@intel.com>
-> > > >
-> > > > Changes since v4:
-> > > > - Host support has been added to extend KVM capabilities/feature bi=
-ts to
-> > > >   include a new KVM_FEATURE_SEV_LIVE_MIGRATION, which the guest can
-> > > >   query for host-side support for SEV live migration and a new cust=
-om MSR
-> > > >   MSR_KVM_SEV_LIVE_MIG_EN is added for guest to enable the SEV live
-> > > >   migration feature.
-> > > > - Ensure that _bss_decrypted section is marked as decrypted in the
-> > > >   page encryption bitmap.
-> > > > - Fixing KVM_GET_PAGE_ENC_BITMAP ioctl to return the correct bitmap
-> > > >   as per the number of pages being requested by the user. Ensure th=
-at
-> > > >   we only copy bmap->num_pages bytes in the userspace buffer, if
-> > > >   bmap->num_pages is not byte aligned we read the trailing bits
-> > > >   from the userspace and copy those bits as is. This fixes guest
-> > > >   page(s) corruption issues observed after migration completion.
-> > > > - Add kexec support for SEV Live Migration to reset the host's
-> > > >   page encryption bitmap related to kernel specific page encryption
-> > > >   status settings before we load a new kernel by kexec. We cannot
-> > > >   reset the complete page encryption bitmap here as we need to
-> > > >   retain the UEFI/OVMF firmware specific settings.
-> > > >
-> > > > Changes since v3:
-> > > > - Rebasing to mainline and testing.
-> > > > - Adding a new KVM_PAGE_ENC_BITMAP_RESET ioctl, which resets the
-> > > >   page encryption bitmap on a guest reboot event.
-> > > > - Adding a more reliable sanity check for GPA range being passed to
-> > > >   the hypercall to ensure that guest MMIO ranges are also marked
-> > > >   in the page encryption bitmap.
-> > > >
-> > > > Changes since v2:
-> > > >  - reset the page encryption bitmap on vcpu reboot
-> > > >
-> > > > Changes since v1:
-> > > >  - Add support to share the page encryption between the source and =
-target
-> > > >    machine.
-> > > >  - Fix review feedbacks from Tom Lendacky.
-> > > >  - Add check to limit the session blob length.
-> > > >  - Update KVM_GET_PAGE_ENC_BITMAP icotl to use the base_gfn instead=
- of
-> > > >    the memory slot when querying the bitmap.
-> > > >
-> > > > Ashish Kalra (7):
-> > > >   KVM: SVM: Add support for static allocation of unified Page Encry=
-ption
-> > > >     Bitmap.
-> > > >   KVM: x86: Introduce new KVM_FEATURE_SEV_LIVE_MIGRATION feature &
-> > > >     Custom MSR.
-> > > >   EFI: Introduce the new AMD Memory Encryption GUID.
-> > > >   KVM: x86: Add guest support for detecting and enabling SEV Live
-> > > >     Migration feature.
-> > > >   KVM: x86: Mark _bss_decrypted section variables as decrypted in p=
-age
-> > > >     encryption bitmap.
-> > > >   KVM: x86: Add kexec support for SEV Live Migration.
-> > > >   KVM: SVM: Enable SEV live migration feature implicitly on Incomin=
-g
-> > > >     VM(s).
-> > > >
-> > > > Brijesh Singh (11):
-> > > >   KVM: SVM: Add KVM_SEV SEND_START command
-> > > >   KVM: SVM: Add KVM_SEND_UPDATE_DATA command
-> > > >   KVM: SVM: Add KVM_SEV_SEND_FINISH command
-> > > >   KVM: SVM: Add support for KVM_SEV_RECEIVE_START command
-> > > >   KVM: SVM: Add KVM_SEV_RECEIVE_UPDATE_DATA command
-> > > >   KVM: SVM: Add KVM_SEV_RECEIVE_FINISH command
-> > > >   KVM: x86: Add AMD SEV specific Hypercall3
-> > > >   KVM: X86: Introduce KVM_HC_PAGE_ENC_STATUS hypercall
-> > > >   KVM: x86: Introduce KVM_GET_PAGE_ENC_BITMAP ioctl
-> > > >   mm: x86: Invoke hypercall when page encryption status is changed
-> > > >   KVM: x86: Introduce KVM_SET_PAGE_ENC_BITMAP ioctl
-> > > >
-> > > >  .../virt/kvm/amd-memory-encryption.rst        | 120 +++
-> > > >  Documentation/virt/kvm/api.rst                |  71 ++
-> > > >  Documentation/virt/kvm/cpuid.rst              |   5 +
-> > > >  Documentation/virt/kvm/hypercalls.rst         |  15 +
-> > > >  Documentation/virt/kvm/msr.rst                |  10 +
-> > > >  arch/x86/include/asm/kvm_host.h               |   7 +
-> > > >  arch/x86/include/asm/kvm_para.h               |  12 +
-> > > >  arch/x86/include/asm/mem_encrypt.h            |  11 +
-> > > >  arch/x86/include/asm/paravirt.h               |  10 +
-> > > >  arch/x86/include/asm/paravirt_types.h         |   2 +
-> > > >  arch/x86/include/uapi/asm/kvm_para.h          |   5 +
-> > > >  arch/x86/kernel/kvm.c                         |  90 +++
-> > > >  arch/x86/kernel/kvmclock.c                    |  12 +
-> > > >  arch/x86/kernel/paravirt.c                    |   1 +
-> > > >  arch/x86/kvm/svm/sev.c                        | 732 ++++++++++++++=
-+++-
-> > > >  arch/x86/kvm/svm/svm.c                        |  21 +
-> > > >  arch/x86/kvm/svm/svm.h                        |   9 +
-> > > >  arch/x86/kvm/vmx/vmx.c                        |   1 +
-> > > >  arch/x86/kvm/x86.c                            |  35 +
-> > > >  arch/x86/mm/mem_encrypt.c                     |  68 +-
-> > > >  arch/x86/mm/pat/set_memory.c                  |   7 +
-> > > >  include/linux/efi.h                           |   1 +
-> > > >  include/linux/psp-sev.h                       |   8 +-
-> > > >  include/uapi/linux/kvm.h                      |  52 ++
-> > > >  include/uapi/linux/kvm_para.h                 |   1 +
-> > > >  25 files changed, 1297 insertions(+), 9 deletions(-)
-> > > >
-> > > > --
-> > > > 2.17.1
-> > > >
-> >
-> > Hey all,
-> > These patches look pretty reasonable at this point. What's the next
-> > step for getting them merged?
+> And, with the caller providing the identifying information, there would be no need to call it "LSM_STATE" or "SELINUX_STATE" or such.
 >
-> I believe i have incorporated all your main comments and feedback, for
-> example, no more dynamic resizing of the page encryption bitmap and
-> static allocation of the same, fixing SET_PAGE_ENC_BITMAP ioctl to set
-> the whole bitmap and also merging RESET_PAGE_ENC_BITMAP ioctl into it
-> and other stuff like kexec support, etc.
+> ?-lakshmi
 >
-> I know you have some additional comments and i am waiting for some more
-> feedback and comments from others on the mailing list.
 >
-> But otherwise i believe these patches are fully ready to be merged at
-> this point and i am looking forward to the same.
->
-> Thanks,
-> Ashish
->
-> > Thanks,
-> > Steve
