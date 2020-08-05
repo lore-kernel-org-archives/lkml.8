@@ -2,116 +2,100 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 245CBC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE6DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03DA221D95
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2871A21D95
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:46:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H0ISPGpL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d99BKyoG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729618AbgHETqC (ORCPT
+        id S1729425AbgHETqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:46:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46424 "EHLO
+        Wed, 5 Aug 2020 15:46:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729019AbgHETpG (ORCPT
+        with ESMTP id S1729079AbgHETdZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 15:45:06 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9DDEC06179E;
-        Wed,  5 Aug 2020 12:38:28 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id bh1so12893554plb.12;
-        Wed, 05 Aug 2020 12:38:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5TXcgEgAs4Nu34HXfjY3jbM5apQONV+NnIX864cNQWg=;
-        b=H0ISPGpLRV3y9tQ4W937aoZMWeGxz3wG5Byk04+BMcfetPTwhgVMR7//+YNlxmBPGR
-         Chyn7D6Hd51R/+LTW5MElsg4IUtIBfT7dNVom/CTGrj9xocK0ZmtEpCj4wANYO/Rjqwr
-         k1KMM/MM5xBsFiLKcPsctFreRvhT+efxV80jXwk3o/mcogbdnN5yqe9RQHghMcGsMIO5
-         YZ88bzfzzIeKWCTaGZ/NJJmttlOGkIzHhF8jVVUgNv6U0icjx+Rs61YQ1xGsKX87m+0c
-         hL7YiEJgmsudK2dy/zLWc6lcH+3eKJkIzuTC5tjKvhx/qKkRyflkKumSws07RuWwtRXZ
-         mOcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5TXcgEgAs4Nu34HXfjY3jbM5apQONV+NnIX864cNQWg=;
-        b=PKxwphHtgF/QSPPykjIsvaE9+Fv4qe9w+FjmC+fvElivSO4w1+t0R3XrwkTeVZoDuS
-         UipHIKMYYstZK9QPGxDfGwKjLgVs/Cx2KhRg2Bjn5OCDL59Qpe6vbCSr/Qiyp3E6LWW/
-         1t/iDDaqWrfnB1K5k2kEa2M6RyTw7JUUBBBYmZF8HvziLI8Ycjud5oC1Ju5hYZpnVFs5
-         La42vhESB4ye7YJqlZDE2xKCtw/FYetLGQJkPC0mQMJlTbNUyCanBjZc8q1kKMm+wvOD
-         SsGYnFdF8xqmoYjd881TWM6XC+OzqddRKpuZAwEq3VUm4HZhCXnBBZQjcilExAUVUNgF
-         i1xQ==
-X-Gm-Message-State: AOAM530yvyo0uDtnZqrO4Fr3uwaiFmPogGPaYiveY+ioRHo/kidRa9Tk
-        f0FmV4hMpMUzkpcFEMMEWh8lPRNB3WT9mA==
-X-Google-Smtp-Source: ABdhPJxpsNBrfC/tIWMSvSdeG5I8GbtN42x6d7YwWee5C39MithTk79rmmNir6Zz8cbOfIUAOW+IOw==
-X-Received: by 2002:a17:90a:3268:: with SMTP id k95mr4854944pjb.153.1596656306933;
-        Wed, 05 Aug 2020 12:38:26 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.152.86])
-        by smtp.gmail.com with ESMTPSA id f20sm4901764pfk.36.2020.08.05.12.38.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2020 12:38:26 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>,
-        Tomoya MORINAGA <tomoya.rohm@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH v2 0/2] i2c: eg20t: Power management upgrade and clean-ups
-Date:   Thu,  6 Aug 2020 01:06:14 +0530
-Message-Id: <20200805193616.384313-1-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200805165611.GA516242@bjorn-Precision-5520>
-References: <20200805165611.GA516242@bjorn-Precision-5520>
+        Wed, 5 Aug 2020 15:33:25 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09B86C061575;
+        Wed,  5 Aug 2020 12:33:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=BjUxyEqkYiqtsdR/KvRwz6ZbXTHnw0kNXap/n+8pwLc=; b=d99BKyoGx9hy4YcJdLSUMJqThT
+        5nqIKVLtODQNoljLBcp8S5Qe51texKqOh2lHfYRF6oE9Eennni9qvKXvoNCBo1BmBItdODcTP8rr0
+        d9fwQtJqhR7ZefvrgjrymVDmQgC18lF3oe0V6z2N2edcUvDcRkE+9XOUCafaUKs24HosE1ZjfNpyP
+        orzIgTlu+kNLZ8DcTbs9SzVLlHxhTCkbT8b6BA/62VFAu20gPM6e4dugjgbyb55pQ8ZyZvQxTDPzk
+        tMeIVEAdm2vkbkv0U8ueOK/GHFSZ2Sv4iPAT4k3TV9OgjyznmX+JjL+tR/NszZzvUQ9KYpokZ96xB
+        mE2m1QXA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k3P9r-0005s8-TN; Wed, 05 Aug 2020 19:33:03 +0000
+Date:   Wed, 5 Aug 2020 20:33:03 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ian Kent <raven@themaw.net>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Karel Zak <kzak@redhat.com>, Jeff Layton <jlayton@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        LSM <linux-security-module@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 06/18] fsinfo: Add a uniquifier ID to struct mount [ver
+ #21]
+Message-ID: <20200805193303.GM23808@casper.infradead.org>
+References: <CAJfpegtOguKOGWxv-sA_C9eSWG_3Srnj_k=oW-wSHNprCipFVg@mail.gmail.com>
+ <159646178122.1784947.11705396571718464082.stgit@warthog.procyon.org.uk>
+ <159646183662.1784947.5709738540440380373.stgit@warthog.procyon.org.uk>
+ <20200804104108.GC32719@miu.piliscsaba.redhat.com>
+ <2306029.1596636828@warthog.procyon.org.uk>
+ <2315925.1596641410@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2315925.1596641410@warthog.procyon.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linux Kernel Mentee: Remove Legacy Power Management.
+On Wed, Aug 05, 2020 at 04:30:10PM +0100, David Howells wrote:
+> Miklos Szeredi <miklos@szeredi.hu> wrote:
+> 
+> > idr_alloc_cyclic() seems to be a good template for doing the lower
+> > 32bit allocation, and we can add code to increment the high 32bit on
+> > wraparound.
+> > 
+> > Lots of code uses idr_alloc_cyclic() so I guess it shouldn't be too
+> > bad in terms of memory use or performance.
+> 
+> It's optimised for shortness of path and trades memory for performance.  It's
+> currently implemented using an xarray, so memory usage is dependent on the
+> sparseness of the tree.  Each node in the tree is 576 bytes and in the worst
+> case, each one node will contain one mount - and then you have to backfill the
+> ancestry, though for lower memory costs.
+> 
+> Systemd makes life more interesting since it sets up a whole load of
+> propagations.  Each mount you make may cause several others to be created, but
+> that would likely make the tree more efficient.
 
-The purpose of this patch series is to upgrade power management in i2c-eg20t
-driver. This has been done by upgrading .suspend() and .resume() callbacks.
+I would recommend using xa_alloc and ignoring the ID assigned from
+xa_alloc.  Looking up by unique ID is then a matter of iterating every
+mount (xa_for_each()) looking for a matching unique ID in the mount
+struct.  That's O(n) search, but it's faster than a linked list, and we
+don't have that many mounts in a system.
 
-The upgrade makes sure that the involvement of PCI Core does not change the
-order of operations executed in a driver. Thus, does not change its behavior.
-
-Also, before upgrading PM, some cleanup is required. Both .suspend() and
-.resume() invoke pci_enable_wake() just to disable wakeup. This is not
-required as if .suspend() does not want to enable-wake the device, PCI core
-takes care of the required operations.
-
-v2 : An additional patch had to be added in v1 to drop PCI wakeup calls.
-
-All patches are compile-tested only.
-
-Test tools:
-    - Compiler: gcc (GCC) 10.1.0
-    - allmodconfig build: make -j$(nproc) W=1 all
-
-Vaibhav Gupta (2):
-  i2c: eg20t: Drop PCI wakeup calls from .suspend/.resume
-  i2c: eg20t: use generic power management
-
- drivers/i2c/busses/i2c-eg20t.c | 39 ++++++----------------------------
- 1 file changed, 7 insertions(+), 32 deletions(-)
-
--- 
-2.27.0
-
+The maple tree will handle this case more effectively, but I can't
+recommend waiting for that to be ready.
