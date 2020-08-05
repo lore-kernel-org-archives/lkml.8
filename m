@@ -2,132 +2,103 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D34C8C433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D036C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9DFC2070A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7DC82070A
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 03:08:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CjSuj/T9"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gmiGWcmv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbgHEDGs (ORCPT
+        id S1727118AbgHEDIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 4 Aug 2020 23:06:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60730 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725950AbgHEDGs (ORCPT
+        Tue, 4 Aug 2020 23:08:39 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:41094 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725904AbgHEDIi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 4 Aug 2020 23:06:48 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2586CC06174A;
-        Tue,  4 Aug 2020 20:06:48 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id w19so11477525plq.3;
-        Tue, 04 Aug 2020 20:06:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QDticxdTQ9ZAvE93eIeivxOMm0CMx+gyMo4J8Uikmss=;
-        b=CjSuj/T9LnSckPWebwCnf9GF+adDQErajAn/Yw4Qdsqzr2cLaBAdBnRC2yg1eIs6Jb
-         N0uzMimMaWwEA+3xMdB6LACohl+M+IlDaTEaohQRdbxNpOtP4c0QySQle2GnZfl04g26
-         baKg6nuIWqgf3X3+cfMqDOvGpg/5t2lycubePKHLTiMYPu841Ma9lj0XkZJMAxmRlQLf
-         m8W03WPdjMyfpbYIGvUKtMjvXUIt08NTV3izDIa23M89eTuquGhsoHa5unP0CjrEPjly
-         r1Gkm+APKi6rZExSNlnH/ABMwHtz7woIColQFphOTSyZWOufumFuq+KiYqULzCRSLRGX
-         +R1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QDticxdTQ9ZAvE93eIeivxOMm0CMx+gyMo4J8Uikmss=;
-        b=EFCBDllPlTTj1Xe4RXIioD7QmLQQe7VDk56OORdtD4I46O2LCmi7ov3svlhrNrAtrr
-         QFgyA+vghJMcZqCdPxFXphYjgEq0qdencBdkoCcn69CqnVDvNCGl2VeqfgprLO4tVH42
-         Q83KINAyETU/OCFix6ceIvbz0cKc0htS8b0uNtDT13+fUke0Rq92P5Aqxsoq9CXWivZn
-         dZGlLl2EPC7GGBhpg6O4Rl+HHSYAgh3i5h9hiRmcMd0n20axHRzBjXD4jZ8FsHddYEBk
-         09YmXVeG+5X4oF2XEN2cNx/190Zsb5EfnQlvAgADRBHZg//rXR3TUKbqpkQSbowuAQLu
-         nSyQ==
-X-Gm-Message-State: AOAM533DNuamdh7Cu2qygy0ypjfpg1ukJK6RmklaNZOAxXtaZANLlbP7
-        AD+i2U8UcQypeA/djyHZvgQ=
-X-Google-Smtp-Source: ABdhPJzhUhNs6E6jD1OHzwKsR1Cqd8X6240dyoyVAGW6WF8RqRLORWmt3A4SYsfE+XMqHel5xV3Ssg==
-X-Received: by 2002:a17:902:10e:: with SMTP id 14mr1103007plb.297.1596596807515;
-        Tue, 04 Aug 2020 20:06:47 -0700 (PDT)
-Received: from sol (106-69-185-93.dyn.iinet.net.au. [106.69.185.93])
-        by smtp.gmail.com with ESMTPSA id d81sm793398pfd.174.2020.08.04.20.06.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Aug 2020 20:06:46 -0700 (PDT)
-Date:   Wed, 5 Aug 2020 11:06:42 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 05/18] gpiolib: cdev: support GPIO_GET_LINE_IOCTL and
- GPIOLINE_GET_VALUES_IOCTL
-Message-ID: <20200805030642.GA119030@sol>
-References: <20200725041955.9985-1-warthog618@gmail.com>
- <20200725041955.9985-6-warthog618@gmail.com>
- <CAHp75VcKtATPDKGAViWqjOJDqukDrgZ13aTU6rTJ1jEeB3vmVw@mail.gmail.com>
- <20200726011244.GA6587@sol>
- <CAMpxmJWaEVwjXSFHTYmwdfA+88upVkJ4ePSQf_ziSOa1YdOUKQ@mail.gmail.com>
- <20200802033158.GA13174@sol>
- <CAMpxmJWZpMFbrMBkLiR9q7chdamVnjw0geDf-pgKrz=AWD8mNg@mail.gmail.com>
- <20200803230118.GA3650@sol>
- <CAMpxmJXv2Ruo-yJTm9bjyj90jWMA_BWHuNyVwyXkzxqmzoHoHA@mail.gmail.com>
+        Tue, 4 Aug 2020 23:08:38 -0400
+X-UUID: 310caa36ea58438fa2ce3caa603d3b01-20200805
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Y0nPay/vVeRwMMhJxIGsmWx8SurAeCIZx8d8IAlzBDs=;
+        b=gmiGWcmvj/7dkNQmbY+fk+bw/DaM4gZcIUyKfuNPIzzwktDwOlFhCwILpkxYHY8taNvnb3yNbarNjBVVHJivOiAfmYsJlRO8DeAS/GWHLynC3NjURBoFV0pZPutxkxrwd/begOHZ9OfyzqhkMSi4pEEfDjSYlLEk3W3zyywj0cs=;
+X-UUID: 310caa36ea58438fa2ce3caa603d3b01-20200805
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <yingjoe.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 612147722; Wed, 05 Aug 2020 11:08:35 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 5 Aug 2020 11:08:31 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 5 Aug 2020 11:08:31 +0800
+Message-ID: <1596596913.31794.5.camel@mtksdaap41>
+Subject: Re: [v2,3/6] dt-binding: reset-controller: ti: add generic-reset to
+ compatible
+From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+CC:     Crystal Guo <crystal.guo@mediatek.com>, <robh+dt@kernel.org>,
+        <matthias.bgg@gmail.com>, <srv_heupstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <seiya.wang@mediatek.com>,
+        <stanley.chu@mediatek.com>, <fan.chen@mediatek.com>,
+        <yong.liang@mediatek.com>, <devicetree@vger.kernel.org>
+Date:   Wed, 5 Aug 2020 11:08:33 +0800
+In-Reply-To: <053da16ed682cc016b0a66a834fb58d4d9410dc2.camel@pengutronix.de>
+References: <20200803061511.29555-1-crystal.guo@mediatek.com>
+         <20200803061511.29555-4-crystal.guo@mediatek.com>
+         <053da16ed682cc016b0a66a834fb58d4d9410dc2.camel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJXv2Ruo-yJTm9bjyj90jWMA_BWHuNyVwyXkzxqmzoHoHA@mail.gmail.com>
+X-TM-SNTS-SMTP: 2A6D8B52AF94AFBD67EFCEA916BD1A5F6C364466DC6EC0F8CE75C27692907B962000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 07:47:43PM +0200, Bartosz Golaszewski wrote:
-> On Tue, Aug 4, 2020 at 1:01 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> 
-> [snip]
-> 
-> >
-> > > Also: I just started going through the patches - nice idea with the
-> > > GPIO attributes, I really like it. Although I need to give it a longer
-> > > thought tomorrow - I'm wondering if we can maybe unify them and the
-> > > flags.
-> > >
-> >
-> > I had an earlier draft that did just that - and that is partially why
-> > the loop is last in wins - I was using slot 0 as the default flags.
-> > But the default flags cover a lot of use cases, including all of v1, and
-> > it was simple and cheap to provide a default - and it simplified the
-> > initial port of libgpiod to v2...
-> >
-> 
-> If porting libgpiod to v2 is the only concern then I wouldn't stress
-> about it. At the same time I'm wondering - is there any use-case where
-> we wouldn't need the flags attribute for at least some lines? Because
-> if it's always required than maybe having a default isn't that bad.
-> 
+T24gVHVlLCAyMDIwLTA4LTA0IGF0IDEwOjE1ICswMjAwLCBQaGlsaXBwIFphYmVsIHdyb3RlOg0K
+PiBPbiBNb24sIDIwMjAtMDgtMDMgYXQgMTQ6MTUgKzA4MDAsIENyeXN0YWwgR3VvIHdyb3RlOg0K
+PiA+IFRoZSBUSSBzeXNjb24gcmVzZXQgY29udHJvbGxlciBwcm92aWRlcyBhIGNvbW1vbiByZXNl
+dCBtYW5hZ2VtZW50LA0KPiA+IGFuZCBzaG91bGQgYmUgc3VpdGFibGUgZm9yIG90aGVyIFNPQ3Mu
+IEFkZCBjb21wYXRpYmxlICJnZW5lcmljLXJlc2V0IiwNCj4gPiB3aGljaCBkZW5vdGVzIHRvIHVz
+ZSBhIGNvbW1vbiByZXNldC1jb250cm9sbGVyIGRyaXZlci4NCj4gPiANCj4gPiBTaWduZWQtb2Zm
+LWJ5OiBDcnlzdGFsIEd1byA8Y3J5c3RhbC5ndW9AbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+
+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXQvdGktc3lzY29uLXJlc2V0
+LnR4dCB8IDEgKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gPiANCj4g
+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2V0L3Rp
+LXN5c2Nvbi1yZXNldC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVz
+ZXQvdGktc3lzY29uLXJlc2V0LnR4dA0KPiA+IGluZGV4IGQ1NTExNjFhZTc4NS4uZTM2ZDM2MzFl
+YWIyIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9y
+ZXNldC90aS1zeXNjb24tcmVzZXQudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3Jlc2V0L3RpLXN5c2Nvbi1yZXNldC50eHQNCj4gPiBAQCAtMjUsNiArMjUs
+NyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICAJCQkgICAgInRpLGsybC1wc2Nyc3QiDQo+
+ID4gIAkJCSAgICAidGksazJoay1wc2Nyc3QiDQo+ID4gIAkJCSAgICAidGksc3lzY29uLXJlc2V0
+Ig0KPiA+ICsJCQkgICAgImdlbmVyaWMtcmVzZXQiLCAidGksc3lzY29uLXJlc2V0Ig0KPiA+ICAg
+LSAjcmVzZXQtY2VsbHMJCTogU2hvdWxkIGJlIDEuIFBsZWFzZSBzZWUgdGhlIHJlc2V0IGNvbnN1
+bWVyIG5vZGUgYmVsb3cNCj4gPiAgCQkJICBmb3IgdXNhZ2UgZGV0YWlscw0KPiA+ICAgLSB0aSxy
+ZXNldC1iaXRzCTogQ29udGFpbnMgdGhlIHJlc2V0IGNvbnRyb2wgcmVnaXN0ZXIgaW5mb3JtYXRp
+b24NCj4gPiAtLSANCj4gPiAyLjE4LjANCj4gDQo+IE15IHVuZGVyc3RhbmRpbmcgaXMgdGhhdCBp
+dCB3b3VsZCBiZSBiZXR0ZXIgdG8gYWRkIGEgbXRrIHNwZWNpZmljDQo+IGNvbXBhdGlibGUgaW5z
+dGVhZCBvZiBhZGRpbmcgdGhpcyAiZ2VuZXJpYy1yZXNldCIsIGVzcGVjaWFsbHkgc2luY2Ugd2UN
+Cj4gY2FuJ3QgZ3VhcmFudGVlIHRoaXMgYmluZGluZyB3aWxsIGJlIGNvbnNpZGVyZWQgZ2VuZXJp
+YyBpbiB0aGUgZnV0dXJlLg0KPiBJIHRoaW5rIHRoZXJlIGlzIG5vdGhpbmcgd3Jvbmcgd2l0aCBz
+cGVjaWZ5aW5nDQo+IAljb21wYXRpYmxlID0gIm10ayx5b3VyLWNvbXBhdGlibGUiLCAidGksc3lz
+Y29uLXJlc2V0IjsNCj4gaW4geW91ciBkZXZpY2UgdHJlZSBpZiB5b3VyIGhhcmR3YXJlIGlzIGlu
+ZGVlZCBjb21wYXRpYmxlIHdpdGggdGhlDQo+IHNwZWNpZmllZCAidGksc3lzY29uLXJlc2V0IiBi
+aW5kaW5nLCBidXQgSSBtYXkgYmUgd3Jvbmc6IFRoZXJlZm9yZSwNCj4gcGxlYXNlIGFkZCBkZXZp
+Y2V0cmVlQHZnZXIua2VybmVsLm9yZyB0byBDYzogZm9yIGJpbmRpbmcgY2hhbmdlcy4NCj4gDQoN
+CkhpIFBoaWxpcHAsDQoNClRoaXMgd291bGQgd29yay4NCkJ1dCBoYXZpbmcgInRpIiBpbiBtdGsg
+ZHRzIHJhaXNlIGFsYXJtIGZvciBzb21lIHBlb3BsZSBpbnNpZGUgYW5kDQpvdXRzaWRlIG9mIE1U
+Sy4gSXQgd291bGQgc2F2ZSB1cyBzb21lIGV4cGxhbmF0aW9uIGlmIHdlIGNvdWxkIHVzZSBhIG1v
+cmUNCmdlbmVyaWMgbmFtZS4NCg0KSm9lLkMNCg0K
 
-The only case where flags are not required is an AS-IS request. I
-have no idea what that use case is useful for, but it is in v1 and
-therefore supported by v2 for backward compatibility.
-
-So there is almost always a flags attribute, and I didn't want to
-waste an attribute slot on it.
-
-Supporting the default in the kernel is trivial - it is literally just
-the default return in gpioline_config_flags:
-
-+	}
-+	return lc->flags;
-+}
-
-which would otherwise be 0.
-
-Cheers,
-Kent.
