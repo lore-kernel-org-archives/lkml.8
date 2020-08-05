@@ -3,91 +3,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF05AC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB45BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBB4C2177B
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA2DE22B40
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 08:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgHEIxy convert rfc822-to-8bit (ORCPT
+        id S1728297AbgHEIyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 04:53:54 -0400
-Received: from mx1.emlix.com ([188.40.240.192]:45754 "EHLO mx1.emlix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726104AbgHEIxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 04:53:53 -0400
-Received: from mailer.emlix.com (unknown [81.20.119.6])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1.emlix.com (Postfix) with ESMTPS id DB9D65F98C;
-        Wed,  5 Aug 2020 10:53:51 +0200 (CEST)
-From:   Rolf Eike Beer <eb@emlix.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     Ralf Baechle <ralf@linux-mips.org>
-Subject: binfmt_elf: simplify error handling in load_elf_phdrs()
-Date:   Wed, 05 Aug 2020 10:53:51 +0200
-Message-ID: <3284126.HYjqi5uYoC@devpool35>
-Organization: emlix GmbH
-In-Reply-To: <6469675.ETGqQKjL3G@devpool35>
-References: <6469675.ETGqQKjL3G@devpool35>
+        Wed, 5 Aug 2020 04:54:15 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:33874 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbgHEIyO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 04:54:14 -0400
+Received: by mail-oi1-f196.google.com with SMTP id z22so8349748oid.1;
+        Wed, 05 Aug 2020 01:54:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o0Tmid+tnSvnAJzyNVALQOzFYE2lj4sH4UY2VIcOcWw=;
+        b=evPoqX7eLG1mRt4koFTUvjnzAIFzDLe1bmplBva7C2fYQ7MaTka1iYdpHfkHxQf3WN
+         5hJzboRrBjKRWzr+pNki8T0qfoDhghIuR/JUO+xkaqFJtNF0xxpQT4yTXrsqNg1k5FgY
+         UK/QTBBTgsKbFKbGr97V7L+1WmC46206kuqMeXDvGLcCYyLID4Gm+poz4IzRrwrdSbIW
+         WihGhuAVKNJ9oW8Ly1e+wgPGD8tCUuFr8D0WFppvz4q2C2fixbmm7FVj52oGbbvGhBch
+         0OuGalGMCVtZmcNy8av9Yt6kSHtXkPtD0prfipbbdD5DVty0m6YCdwTkgmMHFdt8BCi4
+         N4OQ==
+X-Gm-Message-State: AOAM533clIkVIDNYM7TamPpI0ofGD6MtboMC55H9LCAGjUKHr7BEwpFl
+        qzNAFweShSfyFF7H4RqnKGx8wuabt9PqzgQLlYU=
+X-Google-Smtp-Source: ABdhPJyljuIryu/u0UTk9F1+3SAnb1XU9mLUVZAv+khu6lPUjs8xyfZNkmrvKtA0yRGPniH4ZpNEEROFWOcNB2m+oEA=
+X-Received: by 2002:aca:adc4:: with SMTP id w187mr1794266oie.153.1596617653246;
+ Wed, 05 Aug 2020 01:54:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
+References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594919915-5225-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594919915-5225-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 5 Aug 2020 10:54:02 +0200
+Message-ID: <CAMuHMdWebnd8yxLccaQtfaz8UJW3vkTr==2n_ZxT_tjYkBMSiA@mail.gmail.com>
+Subject: Re: [PATCH 05/20] dt-bindings: phy: renesas,usb2-phy: Add r8a774e1 support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
+        dmaengine <dmaengine@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
----
- fs/binfmt_elf.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+On Thu, Jul 16, 2020 at 7:19 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Document SoC specific bindings for RZ/G2H (r8a774e1) SoC.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 251298d25c8c..64b4b47448af 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -434,7 +434,7 @@ static struct elf_phdr *load_elf_phdrs(const struct elfhdr *elf_ex,
- 				       struct file *elf_file)
- {
- 	struct elf_phdr *elf_phdata = NULL;
--	int retval, err = -1;
-+	int retval = -1;
- 	unsigned int size;
- 
- 	/*
-@@ -456,15 +456,9 @@ static struct elf_phdr *load_elf_phdrs(const struct elfhdr *elf_ex,
- 
- 	/* Read in the program headers */
- 	retval = elf_read(elf_file, elf_phdata, size, elf_ex->e_phoff);
--	if (retval < 0) {
--		err = retval;
--		goto out;
--	}
- 
--	/* Success! */
--	err = 0;
- out:
--	if (err) {
-+	if (retval) {
- 		kfree(elf_phdata);
- 		elf_phdata = NULL;
- 	}
--- 
-2.28.0
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Rolf Eike Beer, emlix GmbH, http://www.emlix.com
-Fon +49 551 30664-0, Fax +49 551 30664-11
-Gothaer Platz 3, 37083 Göttingen, Germany
-Sitz der Gesellschaft: Göttingen, Amtsgericht Göttingen HR B 3160
-Geschäftsführung: Heike Jordan, Dr. Uwe Kracke – Ust-IdNr.: DE 205 198 055
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-emlix - smart embedded open source
-
-
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
