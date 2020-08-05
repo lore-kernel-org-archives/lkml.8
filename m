@@ -2,117 +2,93 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B72EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C00C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 945192075A
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 257D021D95
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:50:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AMi6K8LK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbgHEUt7 (ORCPT
+        id S1727014AbgHEUu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:49:59 -0400
-Received: from out28-74.mail.aliyun.com ([115.124.28.74]:59095 "EHLO
-        out28-74.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbgHEUt5 (ORCPT
+        Wed, 5 Aug 2020 16:50:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56570 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726155AbgHEUu1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 16:49:57 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1063297|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.100094-0.014619-0.885287;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03268;MF=zhouyu@wanyeetech.com;NM=1;PH=DS;RN=13;RT=13;SR=0;TI=SMTPD_---.ID03Ai1_1596660592;
-Received: from 192.168.10.205(mailfrom:zhouyu@wanyeetech.com fp:SMTPD_---.ID03Ai1_1596660592)
-          by smtp.aliyun-inc.com(10.147.41.121);
-          Thu, 06 Aug 2020 04:49:53 +0800
-Subject: Re: [PATCH] MIPS: Provide Kconfig option for default IEEE754
- conformance mode
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        "Maciej W. Rozycki" <macro@wdc.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Serge Semin <fancer.lancer@gmail.com>, linux-mips@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Zhou Yanjie <zhouyanjie@zoho.com>,
-        =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>,
-        Liangliang Huang <huanglllzu@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        "Maciej W. Rozycki" <macro@linux-mips.org>
-References: <20200731041018.1381642-1-jiaxun.yang@flygoat.com>
- <20200731061702.fxdfyxpvd6qrhoql@mobilestation>
- <alpine.LFD.2.21.2008022213500.24175@redsun52.ssa.fujisawa.hgst.com>
- <ceb71bef-b3e6-68ce-df80-bcff92085e66@flygoat.com>
-From:   Zhou Yanjie <zhouyu@wanyeetech.com>
-Message-ID: <ca13783f-ec52-0e39-a408-2a01393fa22d@wanyeetech.com>
-Date:   Thu, 6 Aug 2020 04:49:52 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Wed, 5 Aug 2020 16:50:27 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DCCBC061575
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 13:50:27 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id i92so3679191pje.0
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 13:50:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=IX9XrPUzOcyKkpmBN/wRczSmpUnTjA2wU4ML+y9lkZ8=;
+        b=AMi6K8LKX1VQCBDo+8/FHHEO12L0113YiFMtxUoRuvYnMXNOau5IOsAMJBeoHyUPvz
+         syaxTLjdh0s5hixSX2+615yeJbMX/icq96mS0El/s59+/3aYS6wjSZ9cpm/gCZWiUtLP
+         wCNGlh9BDMAoEeOqKiBE7ODo4wL8f+Cmx1wIQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IX9XrPUzOcyKkpmBN/wRczSmpUnTjA2wU4ML+y9lkZ8=;
+        b=Fxs347Iz8wFvTrAk+iMYftFmZ/dN0Yp6G3/CeRI/hX7dpYbCuSLx8Q1mCATSJV8yLH
+         9JchNjsb338bli/Wdx1d3fkcJOjtmeHjLOlmsDYpqy0gL84Vn9MHA0KqD0HNRomkzdpZ
+         KqyU3QAuKYTPejUQOR9AiHdhl2BvUmWLEs/jUVn/pBFjajL1bCCVUO9cadvn5OVf6yEq
+         pqbU5x5fujX+uDuimhZwiHzRCA65Vj/jbQGqu/J8hdtObbQHrMWIHfGRTd+nZvXi6/tE
+         Tv8N56ifYiMBKoLeFKfaeR9RCl09lw6TgrbZW3FmokMDgU+THLOcRqka5jQ0oac6QHlJ
+         96/w==
+X-Gm-Message-State: AOAM532ox4KvqMmp9wKNNPD0C8EoWh45BT98Vl/oi15yBo9K5EKuuyLW
+        SDhspQuCCGc1QnP44+BQjj3R6A==
+X-Google-Smtp-Source: ABdhPJxyidMPujgN2fn9cGhCwYoULrrcvpnTqk0YBB0eSUmdPS1OzUXvCVsfSSkTOPx8c3h7OefOiA==
+X-Received: by 2002:a17:90a:f012:: with SMTP id bt18mr4586168pjb.63.1596660625999;
+        Wed, 05 Aug 2020 13:50:25 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y65sm4787621pfb.155.2020.08.05.13.50.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2020 13:50:25 -0700 (PDT)
+Date:   Wed, 5 Aug 2020 13:50:24 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        Segher Boessenkool <segher@kernel.crashing.org>
+Subject: Re: [RFC] saturate check_*_overflow() output?
+Message-ID: <202008051349.553E49E12@keescook>
+References: <202008031118.36756FAD04@keescook>
+ <f177a821-74a3-e868-81d3-55accfb5b161@rasmusvillemoes.dk>
+ <202008041137.02D231B@keescook>
+ <6d190601-68f1-c086-97ac-2ee1c08f5a34@rasmusvillemoes.dk>
 MIME-Version: 1.0
-In-Reply-To: <ceb71bef-b3e6-68ce-df80-bcff92085e66@flygoat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6d190601-68f1-c086-97ac-2ee1c08f5a34@rasmusvillemoes.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 05, 2020 at 01:38:58PM +0200, Rasmus Villemoes wrote:
+> Anyway, we don't need to apply it to the last expression inside ({}), we
+> can just pass the whole ({}) to must_check_overflow() as in
+> 
+> -#define check_sub_overflow(a, b, d) ({         \
+> +#define check_sub_overflow(a, b, d) must_check_overflow(({             \
 
-在 2020/8/3 下午5:01, Jiaxun Yang 写道:
->
->
-> 在 2020/8/3 上午5:46, Maciej W. Rozycki 写道:
->> On Fri, 31 Jul 2020, Serge Semin wrote:
->>
->>>> Requested by downstream distros, a Kconfig option for default
->>>> IEEE754 conformance mode allows them to set their mode to
->>>> relaxed by default.
->>> That's what should have been here in the first place. Thanks!
->>   Well, originally plans were there to have NaN interlinking implemented
->> and no such mess or desire for hacks like one here would result.  Cf.:
->>
->> <https://gcc.gnu.org/ml/gcc/2015-11/msg00068.html>,
->> <https://gcc.gnu.org/ml/gcc/2016-05/msg00137.html>,
->>
->> and then:
->>
->> <https://lkml.org/lkml/2015/11/16/386>,
->> <https://sourceware.org/ml/libc-alpha/2015-11/msg00485.html>,
->> <https://sourceware.org/ml/binutils/2015-11/msg00170.html>,
->> <https://gcc.gnu.org/ml/gcc-patches/2015-11/msg03241.html>.
->>
->> You could well pick this work up and complete it if you like. Final
->> conclusions for further work were made here:
->>
->> <https://gcc.gnu.org/ml/gcc/2016-11/msg00027.html>,
->> <https://gcc.gnu.org/ml/gcc/2017-08/msg00260.html>,
->> <https://gcc.gnu.org/ml/gcc/2017-10/msg00142.html>.
->>
->>   In the relaxed mode math programs may produce wrong results unless you
->> rebuild all your software for the correct NaN mode for the hardware used
->
-> Unfortunately most of the hardware guys didn't understood the 
-> difficulty here.
-> They decided to implement their hardware (P5600 & LS3A4000) as NaN2008 
-> only.
->
+Oh! Yes, of course. I was blinded by looking inside the macro and not
+wanting to spoil the type magic. Yes, that's perfect. I will spin a
+patch...
 
-All SoCs based on Ingenic XBurst2 CPU core are also NaN2008 only.
-
-
-> I was thinking about let Kernel drop SIGFPE exception was caused by 
-> mismatched NaN,
-> as most applications don't rely on signaling NaN, but it is still a 
-> dirty hack. Not a good
-> idea in general.
->
-> Thanks.
->
-> - Jiaxun
->
->> (in which case you don't need the relaxed setting in the first place).
->
->>
->>    Maciej
+-- 
+Kees Cook
