@@ -2,61 +2,113 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A841C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA41C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A92223106
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A026E22D2C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 17:35:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbgHEReZ convert rfc822-to-8bit (ORCPT
+        id S1728923AbgHEReh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 13:34:25 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:36646 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728068AbgHER1i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 13:27:38 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 343591C0BDE; Wed,  5 Aug 2020 19:27:36 +0200 (CEST)
-Date:   Wed, 5 Aug 2020 19:27:35 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: Remove myself as LED subsystem maintainer
-Message-ID: <20200805172735.GB1118@bug>
-References: <20200804101525.7235-1-jacek.anaszewski@gmail.com>
+        Wed, 5 Aug 2020 13:34:37 -0400
+Received: from foss.arm.com ([217.140.110.172]:33806 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728629AbgHER1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:27:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE2281063;
+        Wed,  5 Aug 2020 05:41:33 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A34A93FA1C;
+        Wed,  5 Aug 2020 05:41:31 -0700 (PDT)
+Date:   Wed, 5 Aug 2020 13:41:29 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Dongdong Yang <contribute.kernel@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <Dietmar.Eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Benjamin Segall <bsegall@google.com>,
+        "mgorman@suse.de" <mgorman@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "yangdongdong@xiaomi.com" <yangdongdong@xiaomi.com>,
+        "yanziily@xiaomi.com" <yanziily@xiaomi.com>,
+        "rocking@linux.alibaba.com" <rocking@linux.alibaba.com>
+Subject: Re: [PATCH v4] sched: Provide USF for the portable equipment.
+Message-ID: <20200805124128.kfx7uofqnrtk6kux@e107158-lin.cambridge.arm.com>
+References: <cover.1596526941.git.yangdongdong@xiaomi.com>
+ <820a185b6765d6246ac34f612faedeb35189487c.1596526941.git.yangdongdong@xiaomi.com>
+ <20200804104331.6vphb2iclwz3buig@e107158-lin.cambridge.arm.com>
+ <CADhdXfpxWqYEL_cWVtEAxg-3OWgVZuZ5sLzNm6G+k484kG3HRw@mail.gmail.com>
+ <20200805095341.cmoxmy47ts3ntxee@e107158-lin.cambridge.arm.com>
+ <CADhdXfqJhE6F9q2dhnRhZGQvgJ0GSWXG1AmgL9i+rYqAwxvZDw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200804101525.7235-1-jacek.anaszewski@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CADhdXfqJhE6F9q2dhnRhZGQvgJ0GSWXG1AmgL9i+rYqAwxvZDw@mail.gmail.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On 08/05/20 19:13, Dongdong Yang wrote:
+> Appreciate Qais for your clamp implementation. I would like to add traces
+> for uclamp_rq_util_with and feedback you if I run into any issues.
 
-> It don't have enough time for reviewing patches and thus don't
-> want to be listed as regular LED maintainer. Nonetheless I may still
-> give a review from time to time.
+Thanks.
 
-Thanks for all the good work you did maintaining LEDs over the years!
+FYI, top posting in LKML is frowned upon. Please put your answer underneath the
+quoted text.
 
-> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> 
+> The util would not be adjusted as soon as FB screen on notification be
+> received by USF from kernel level if it is set by sched_usf_non_ux, no
+> matter whether screen on or off. However, sched_util_clamp_min/max have not
+> been recovered until user space screen on detection. The screen on response
+> would not be in time for the sensitive user when many background tasks are
+> running.  Whether the kernel module could also
+> set sched_util_clamp_min/max?
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
+For boosting, are you just changing the sysctl or are you actively using
+sched_setattr() to boost tasks too?
 
-(I'm not sure what the process is here, do I take it through the LED tree?)
+Please have a look at the documentation for the sysctl interface.
 
-Best regards,
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+	https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/tree/Documentation/admin-guide/sysctl/kernel.rst?h=sched/core#n1065
+
+In summary, they just control the _allowed_ levels. So you can use it to
+cap/throttle the maximum performance level the system is running at. But you
+can't use it to boost the whole system. You must use the sched_setattr() to
+boost important tasks individually or if all the tasks are in a cgroup you
+can use that. For cgroup interface there's a caveat. If you want to use it
+let me know so I can explain how boosting would work there.
+
+I advise to use the sched_setattr() interface to target and boost those
+important tasks only. You can as well be smart and target all the background
+tasks to cap them via sched_setattr(). In this case you wouldn't have to modify
+the sysctl_sched_util_clamp_min/max.
+
+I don't see uclamp being a suitable interface for in-kernel users. PM_QOS is
+more suitable in my opinion for in-kernel users if you want to impact the
+overall system performance.
+
+I might have misunderstood what you were saying above. If so, can you please
+rephrase?
+
+Thanks
+
+--
+Qais Yousef
