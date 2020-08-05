@@ -2,94 +2,68 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0960CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB520C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA9912173E
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9ECD2075D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:30:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596655846;
+	bh=5M+gIJ19P44QYs1U1XmTj6x/vB8UeMrW40QQKXTx5Sc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=VWLhxYVGQoswhdv5SRUf68YPSxwkUbxzIPWpypqee1rAuP+urgGi5epgCaFqbmSjp
+	 Xz3vX9YHaiBvF75q/XhbtlrcEPcKImElk+2BmxUxvEka4cnMgHxwwvxgUbv0A3FVKT
+	 p7Vs/RjOeUl8IPcRGoDs7XbFGjZX+u9Vj09EYXng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgHETaQ (ORCPT
+        id S1727915AbgHETap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:30:16 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:44408 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728990AbgHETaF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 15:30:05 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 7EDF61C0BD2; Wed,  5 Aug 2020 21:30:01 +0200 (CEST)
-Date:   Wed, 5 Aug 2020 21:30:01 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ksummit <ksummit-discuss@lists.linuxfoundation.org>
-Subject: Re: [Ksummit-discuss] [TECH TOPIC] Planning code obsolescence
-Message-ID: <20200805193001.nebwdutcek53pnit@duo.ucw.cz>
-References: <CAK8P3a2PK_bC5=3wcWm43=y5xk-Dq5-fGPExJMnOrNfGfB1m1A@mail.gmail.com>
- <20200805172629.GA1040@bug>
- <CAMuHMdV20tZSu5gGsjf8h334+0xr1f=N9NvOoxHQGq42GYsj4g@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="2as7iuittmdh4m5a"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdV20tZSu5gGsjf8h334+0xr1f=N9NvOoxHQGq42GYsj4g@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+        Wed, 5 Aug 2020 15:30:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726695AbgHETa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 15:30:27 -0400
+Subject: Re: [GIT PULL] Char/Misc driver patches for 5.9-rc1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1596655822;
+        bh=5M+gIJ19P44QYs1U1XmTj6x/vB8UeMrW40QQKXTx5Sc=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=MjPe0Azd0PxoY3kChPDCfsRjTV1dUUTmTUj+CuysvOJukhu8VjJI6z/b826IxSib7
+         E4d0HmxgpxMROKzEko46bJ1QmApV935Lwdf9xoNnxwh7zaAGkRsGWnFkKUl9IhfoPq
+         y0kVHX1y5r2GE/6AV9wkvrNoXvRPywJBz6Lm44EE=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200804173711.GA513530@kroah.com>
+References: <20200804173711.GA513530@kroah.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200804173711.GA513530@kroah.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-5.9-rc1
+X-PR-Tracked-Commit-Id: 22362aa30bad6f03b5bcbbeee3cdc61950d40086
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 1785d116124fc33f2c265243f3f59da3dc2a2576
+Message-Id: <159665582289.8842.575082694115488573.pr-tracker-bot@kernel.org>
+Date:   Wed, 05 Aug 2020 19:30:22 +0000
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The pull request you sent on Tue, 4 Aug 2020 19:37:11 +0200:
 
---2as7iuittmdh4m5a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-5.9-rc1
 
-On Wed 2020-08-05 20:50:43, Geert Uytterhoeven wrote:
-> Hi Pavel,
->=20
-> On Wed, Aug 5, 2020 at 7:26 PM Pavel Machek <pavel@ucw.cz> wrote:
-> > > I have submitted the below as a topic for the linux/arch/* MC that Mi=
-ke
-> > > and I run, but I suppose it also makes sense to discuss it on the
-> > > ksummit-discuss mailing list (cross-posted to linux-arch and lkml) as=
- well
-> > > even if we don't discuss it at the main ksummit track.
-> >
-> > > * Latest kernel in which it was known to have worked
-> >
-> > For some old hardware, I started collecting kernel version, .config and=
- dmesg from
-> > successful boots. github.com/pavelmachek, click on "missy".
->=20
-> You mean your complete hardware collection doesn't boot v5.8? ;-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/1785d116124fc33f2c265243f3f59da3dc2a2576
 
-I need to do some pushing, and yes, maybe some more testing.
+Thank you!
 
-But I was wondering if someone sees this as useful and wants to
-contribute more devices? :-).
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---2as7iuittmdh4m5a
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXysIuQAKCRAw5/Bqldv6
-8ne8AKCzcy8jflTVvnbaGcu03o4XWep3TgCgiOYXuMl+/WCzPV9BgoTFu+rV6qA=
-=rLGV
------END PGP SIGNATURE-----
-
---2as7iuittmdh4m5a--
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
