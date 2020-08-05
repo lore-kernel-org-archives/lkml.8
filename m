@@ -2,218 +2,93 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4904EC433E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0A22068F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A4FB2068F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:19:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbgHETTF convert rfc822-to-8bit (ORCPT
+        id S1727066AbgHETTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:19:05 -0400
-Received: from mga06.intel.com ([134.134.136.31]:25621 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726386AbgHETSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 15:18:46 -0400
-IronPort-SDR: G9zt/VUL2z3CtH1on6OKpniqUk2TCzWtOjUgmQF1oaZzeSDkUFx2H4PvEDqW2i8wR9BaXbF3Ci
- zltPsqZC1/dw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="214158511"
-X-IronPort-AV: E=Sophos;i="5.75,438,1589266800"; 
-   d="scan'208";a="214158511"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 12:18:45 -0700
-IronPort-SDR: D0Vk6xev7JAvmeUfynzY+1BEcxv9Z8Bxnl7g4j/s5Q2ig5FW8QRbtY+zFR2Ns5n3z4J95TIZGX
- WJv71hfu1s4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,438,1589266800"; 
-   d="scan'208";a="467570191"
-Received: from orsmsx604.amr.corp.intel.com ([10.22.229.17])
-  by orsmga005.jf.intel.com with ESMTP; 05 Aug 2020 12:18:41 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX604.amr.corp.intel.com (10.22.229.17) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 5 Aug 2020 12:18:41 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 5 Aug 2020 12:18:40 -0700
-Received: from orsmsx612.amr.corp.intel.com ([10.22.229.25]) by
- ORSMSX612.amr.corp.intel.com ([10.22.229.25]) with mapi id 15.01.1713.004;
- Wed, 5 Aug 2020 12:18:40 -0700
-From:   "Dey, Megha" <megha.dey@intel.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>, Marc Zyngier <maz@kernel.org>
-CC:     "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: RE: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
- irq domain
-Thread-Topic: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
- irq domain
-Thread-Index: AQHWX3hgWhQMXvQig0qc4n40fOCoeakUaOyAgAASsgCAFXzAsA==
-Date:   Wed, 5 Aug 2020 19:18:39 +0000
-Message-ID: <96a1eb5ccc724790b5404a642583919d@intel.com>
-References: <159534667974.28840.2045034360240786644.stgit@djiang5-desk3.ch.intel.com>
- <159534734833.28840.10067945890695808535.stgit@djiang5-desk3.ch.intel.com>
- <878sfbxtzi.wl-maz@kernel.org> <20200722195928.GN2021248@mellanox.com>
-In-Reply-To: <20200722195928.GN2021248@mellanox.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.5.1.3
-x-originating-ip: [10.22.254.132]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 5 Aug 2020 15:19:36 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:39312 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728952AbgHER5v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:57:51 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1k3IkV-0004vS-Cw; Wed, 05 Aug 2020 12:42:27 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/gma500: fix spelling mistake "pannel" -> "panel"
+Date:   Wed,  5 Aug 2020 13:42:27 +0100
+Message-Id: <20200805124227.20005-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jason,
+From: Colin Ian King <colin.king@canonical.com>
 
-> -----Original Message-----
-> From: Jason Gunthorpe <jgg@mellanox.com>
-> Sent: Wednesday, July 22, 2020 12:59 PM
-> To: Marc Zyngier <maz@kernel.org>
-> Cc: Jiang, Dave <dave.jiang@intel.com>; vkoul@kernel.org; Dey, Megha
-> <megha.dey@intel.com>; bhelgaas@google.com; rafael@kernel.org;
-> gregkh@linuxfoundation.org; tglx@linutronix.de; hpa@zytor.com;
-> alex.williamson@redhat.com; Pan, Jacob jun <jacob.jun.pan@intel.com>; Raj,
-> Ashok <ashok.raj@intel.com>; Liu, Yi L <yi.l.liu@intel.com>; Lu, Baolu
-> <baolu.lu@intel.com>; Tian, Kevin <kevin.tian@intel.com>; Kumar, Sanjay K
-> <sanjay.k.kumar@intel.com>; Luck, Tony <tony.luck@intel.com>; Lin, Jing
-> <jing.lin@intel.com>; Williams, Dan J <dan.j.williams@intel.com>;
-> kwankhede@nvidia.com; eric.auger@redhat.com; parav@mellanox.com;
-> Hansen, Dave <dave.hansen@intel.com>; netanelg@mellanox.com;
-> shahafs@mellanox.com; yan.y.zhao@linux.intel.com; pbonzini@redhat.com;
-> Ortiz, Samuel <samuel.ortiz@intel.com>; Hossain, Mona
-> <mona.hossain@intel.com>; dmaengine@vger.kernel.org; linux-
-> kernel@vger.kernel.org; x86@kernel.org; linux-pci@vger.kernel.org;
-> kvm@vger.kernel.org
-> Subject: Re: [PATCH RFC v2 02/18] irq/dev-msi: Add support for a new DEV_MSI
-> irq domain
-> 
-> On Wed, Jul 22, 2020 at 07:52:33PM +0100, Marc Zyngier wrote:
-> 
-> > Which is exactly what platform-MSI already does. Why do we need
-> > something else?
-> 
-> It looks to me like all the code is around managing the
-> dev->msi_domain of the devices.
-> 
-> The intended use would have PCI drivers create children devices using mdev or
-> virtbus and those devices wouldn't have a msi_domain from the platform. Looks
-> like platform_msi_alloc_priv_data() fails immediately because dev->msi_domain
-> will be NULL for these kinds of devices.
-> 
-> Maybe that issue should be handled directly instead of wrappering
-> platform_msi_*?
-> 
-> For instance a trivial addition to the platform_msi API:
-> 
->   platform_msi_assign_domain(struct_device *newly_created_virtual_device,
->                              struct device *physical_device);
-> 
-> Which could set the msi_domain of new device using the topology of
-> physical_device to deduce the correct domain?
-> 
-> Then the question is how to properly create a domain within the hardware
-> topology of physical_device with the correct parameters for the platform.
-> 
-> Why do we need a dummy msi_domain anyhow? Can this just use
-> physical_device->msi_domain directly? (I'm at my limit here of how much of this
-> I remember, sorry)
-> 
-> If you solve that it should solve the remapping problem too, as the
-> physical_device is already assigned by the platform to a remapping irq domain if
-> that is what the platform wants.
+There a handful of spelling mistakes. fix them.
 
-Yeah most of what you said is right. For the most part, we are simply introducing a new IRQ domain
-which provides specific domain info ops for the classes of devices which want to provide custom
-mask/unmask callbacks..
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/gma500/mdfld_dsi_output.c | 4 ++--
+ drivers/gpu/drm/gma500/psb_intel_sdvo.c   | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-Also, from your other comments, I've realized the same IRQ domain can be used when interrupt
-remapping is enabled/disabled.
+diff --git a/drivers/gpu/drm/gma500/mdfld_dsi_output.c b/drivers/gpu/drm/gma500/mdfld_dsi_output.c
+index f350ac1ead18..2f3486f32fed 100644
+--- a/drivers/gpu/drm/gma500/mdfld_dsi_output.c
++++ b/drivers/gpu/drm/gma500/mdfld_dsi_output.c
+@@ -366,7 +366,7 @@ static enum drm_mode_status mdfld_dsi_connector_mode_valid(struct drm_connector
+ 	/**
+ 	 * FIXME: current DC has no fitting unit, reject any mode setting
+ 	 * request
+-	 * Will figure out a way to do up-scaling(pannel fitting) later.
++	 * Will figure out a way to do up-scaling(panel fitting) later.
+ 	 **/
+ 	if (fixed_mode) {
+ 		if (mode->hdisplay != fixed_mode->hdisplay)
+@@ -531,7 +531,7 @@ void mdfld_dsi_output_init(struct drm_device *dev,
+ 	dsi_config->connector = dsi_connector;
+ 
+ 	if (!dsi_config->fixed_mode) {
+-		DRM_ERROR("No pannel fixed mode was found\n");
++		DRM_ERROR("No panel fixed mode was found\n");
+ 		goto dsi_init_err0;
+ 	}
+ 
+diff --git a/drivers/gpu/drm/gma500/psb_intel_sdvo.c b/drivers/gpu/drm/gma500/psb_intel_sdvo.c
+index 06e44f47e73e..907f966d6f22 100644
+--- a/drivers/gpu/drm/gma500/psb_intel_sdvo.c
++++ b/drivers/gpu/drm/gma500/psb_intel_sdvo.c
+@@ -125,7 +125,7 @@ struct psb_intel_sdvo {
+ 	bool is_lvds;
+ 
+ 	/**
+-	 * This is sdvo fixed pannel mode pointer
++	 * This is sdvo fixed panel mode pointer
+ 	 */
+ 	struct drm_display_mode *sdvo_lvds_fixed_mode;
+ 
+-- 
+2.27.0
 
-Hence we will only have one create_dev_msi_domain which can be called by any device driver that
-wants to use the dev-msi IRQ domain to alloc/free IRQs. It would be the responsibility of the device
-driver to provide the correct device and update the dev->msi_domain.
-  
-> 
-> >> +	parent = irq_get_default_host();
-> > Really? How is it going to work once you have devices sending their
-> > MSIs to two different downstream blocks? This looks rather
-> > short-sighted.
-> 
-> .. and fix this too, the parent domain should be derived from the topology of the
-> physical_device which is originating the interrupt messages.
-> 
-Yes
-
-> > On the other hand, masking an interrupt is an irqchip operation, and
-> > only concerns the irqchip level. Here, you seem to be making it an
-> > end-point operation, which doesn't really make sense to me. Or is this
-> > device its own interrupt controller as well? That would be extremely
-> > surprising, and I'd expect some block downstream of the device to be
-> > able to control the masking of the interrupt.
-> 
-> These are message interrupts so they originate directly from the device and
-> generally travel directly to the CPU APIC. On the wire there is no difference
-> between a MSI, MSI-X and a device using the dev-msi approach.
-> 
-> IIRC on Intel/AMD at least once a MSI is launched it is not maskable.
-> 
-> So the model for MSI is always "mask at source". The closest mapping to the
-> Linux IRQ model is to say the end device has a irqchip that encapsulates the
-> ability of the device to generate the MSI in the first place.
-> 
-> It looks like existing platform_msi drivers deal with "masking"
-> implicitly by halting the device interrupt generation before releasing the
-> interrupt and have no way for the generic irqchip layer to mask the interrupt.
-> 
-> I suppose the motivation to make it explicit is related to vfio using the generic
-> mask/unmask functionality?
-> 
-> Explicit seems better, IMHO.
-
-I don't think I understand this fully, ive still kept the device specific mask/unmask calls in the next
-patch series, please let me know if it needs further modifications.
-> 
-> Jason
