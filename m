@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AF3C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69475C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 317D822CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B10422CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:25:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgHEUZY (ORCPT
+        id S1726963AbgHEUZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:25:24 -0400
-Received: from mga06.intel.com ([134.134.136.31]:32779 "EHLO mga06.intel.com"
+        Wed, 5 Aug 2020 16:25:26 -0400
+Received: from mga06.intel.com ([134.134.136.31]:32770 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726769AbgHEUZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726722AbgHEUZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 5 Aug 2020 16:25:14 -0400
-IronPort-SDR: G6+dO4kpxug0mYeI2KplAKvena/nnF/+AMrR4zjDepCdkP8bKqWQl7xsJGnT1iNAvwjg2rwFYM
- 8QT9SF/1RNww==
-X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="214171514"
+IronPort-SDR: 1V4cGhKT9YRrZ5z/AIsVKq9VkYk3LYV8kvX7Om1NiuE0mXPhodSrWa1HJzqr1Z3yQNifArGCDo
+ pIOVXtdS0AIA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="214171507"
 X-IronPort-AV: E=Sophos;i="5.75,438,1589266800"; 
-   d="scan'208";a="214171514"
+   d="scan'208";a="214171507"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 13:25:13 -0700
-IronPort-SDR: p2TYnDiDjOO0kDKJiHYPIC2vqtClXY1/NFqI9yvVfhiZ9FiHGseJHHMTmiiTeSQa7aHaoJYxIH
- yhueZNxSilpA==
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 13:25:11 -0700
+IronPort-SDR: 5XIFxfmdCG2MgaiGEiwJEQRWDhvr0zRCGaN0TcPk8imEighTgEhbTAPHHNNVcTRGnw8oQm4i7I
+ tuuBC58+ToyA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,438,1589266800"; 
-   d="scan'208";a="332958450"
+   d="scan'208";a="332958440"
 Received: from otc-lr-04.jf.intel.com ([10.54.39.143])
-  by orsmga007.jf.intel.com with ESMTP; 05 Aug 2020 13:25:13 -0700
+  by orsmga007.jf.intel.com with ESMTP; 05 Aug 2020 13:25:11 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, mingo@redhat.com,
         linux-kernel@vger.kernel.org
 Cc:     bhelgaas@google.com, eranian@google.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2 5/6] perf/x86/intel/uncore: Generic support for the PCI sub driver
-Date:   Wed,  5 Aug 2020 13:24:10 -0700
-Message-Id: <1596659051-95759-6-git-send-email-kan.liang@linux.intel.com>
+Subject: [PATCH V2 3/6] perf/x86/intel/uncore: Factor out uncore_pci_pmu_register()
+Date:   Wed,  5 Aug 2020 13:24:08 -0700
+Message-Id: <1596659051-95759-4-git-send-email-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1596659051-95759-1-git-send-email-kan.liang@linux.intel.com>
 References: <1596659051-95759-1-git-send-email-kan.liang@linux.intel.com>
@@ -54,157 +54,129 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Some uncore counters may be located in the configuration space of a PCI
-device, which already has a bonded driver. Currently, the uncore driver
-cannot register a PCI uncore PMU for these counters, because, to
-register a PCI uncore PMU, the uncore driver must be bond to the device.
-However, one device can only have one bonded driver.
+The PMU registration in the uncore PCI sub driver is similar as the
+normal PMU registration for a PCI device. The codes to register a PCI
+PMU can be shared.
 
-Add an uncore PCI sub driver to support such kind of devices.
+Factor out uncore_pci_pmu_register(), which will be used later.
 
-The sub driver doesn't own the device. In initialization, the sub
-driver searches the device via pci_get_device(), and register the
-corresponding PMU for the device. In the meantime, the sub driver
-registeris a PCI bus notifier, which is used to notify the sub driver
-once the device is removed. The sub driver can unregister the PMU
-accordingly.
+The pci_set_drvdata() is not included in uncore_pci_pmu_register(). The
+uncore PCI sub driver doesn't own the PCI device. It will not touch the
+private driver data pointer for the device.
 
-The sub driver only searches the devices defined in its id table. The
-id table varies on different platforms, which will be implemented in the
-following platform-specific patch.
-
-Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- arch/x86/events/intel/uncore.c | 81 ++++++++++++++++++++++++++++++++++++++++++
- arch/x86/events/intel/uncore.h |  1 +
- 2 files changed, 82 insertions(+)
+ arch/x86/events/intel/uncore.c | 82 ++++++++++++++++++++++++++----------------
+ 1 file changed, 51 insertions(+), 31 deletions(-)
 
 diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 428a2c0..9283478 100644
+index f6ff1b9..a884747 100644
 --- a/arch/x86/events/intel/uncore.c
 +++ b/arch/x86/events/intel/uncore.c
-@@ -12,6 +12,8 @@ struct intel_uncore_type **uncore_mmio_uncores = empty_uncore;
- 
- static bool pcidrv_registered;
- struct pci_driver *uncore_pci_driver;
-+/* The PCI driver for the device which the uncore doesn't own. */
-+struct pci_driver *uncore_pci_sub_driver;
- /* pci bus to socket mapping */
- DEFINE_RAW_SPINLOCK(pci2phy_map_lock);
- struct list_head pci2phy_map_head = LIST_HEAD_INIT(pci2phy_map_head);
-@@ -1186,6 +1188,80 @@ static void uncore_pci_remove(struct pci_dev *pdev)
- 	uncore_pci_pmu_unregister(pmu, phys_id, die);
+@@ -1040,13 +1040,61 @@ uncore_pci_find_dev_pmu(struct pci_dev *pdev, const struct pci_device_id *ids)
  }
  
-+static int uncore_bus_notify(struct notifier_block *nb,
-+			     unsigned long action, void *data)
+ /*
++ * Register the PMU for a PCI device
++ * @pdev: The PCI device.
++ * @type: The corresponding PMU type of the device.
++ * @pmu: The corresponding PMU of the device.
++ * @phys_id: The physical socket id which the device maps to.
++ * @die: The die id which the device maps to.
++ */
++static int uncore_pci_pmu_register(struct pci_dev *pdev,
++				   struct intel_uncore_type *type,
++				   struct intel_uncore_pmu *pmu,
++				   int phys_id, int die)
 +{
-+	struct device *dev = data;
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	struct intel_uncore_pmu *pmu;
-+	int phys_id, die;
++	struct intel_uncore_box *box;
++	int ret;
 +
-+	/* Unregister the PMU when the device is going to be deleted. */
-+	if (action != BUS_NOTIFY_DEL_DEVICE)
-+		return NOTIFY_DONE;
++	if (WARN_ON_ONCE(pmu->boxes[die] != NULL))
++		return -EINVAL;
 +
-+	pmu = uncore_pci_find_dev_pmu(pdev, uncore_pci_sub_driver->id_table);
-+	if (!pmu)
-+		return NOTIFY_DONE;
++	box = uncore_alloc_box(type, NUMA_NO_NODE);
++	if (!box)
++		return -ENOMEM;
 +
-+	if (uncore_pci_get_dev_die_info(pdev, &phys_id, &die))
-+		return NOTIFY_DONE;
++	if (pmu->func_id < 0)
++		pmu->func_id = pdev->devfn;
++	else
++		WARN_ON_ONCE(pmu->func_id != pdev->devfn);
 +
-+	uncore_pci_pmu_unregister(pmu, phys_id, die);
++	atomic_inc(&box->refcnt);
++	box->pci_phys_id = phys_id;
++	box->dieid = die;
++	box->pci_dev = pdev;
++	box->pmu = pmu;
++	uncore_box_init(box);
 +
-+	return NOTIFY_OK;
-+}
++	pmu->boxes[die] = box;
++	if (atomic_inc_return(&pmu->activeboxes) > 1)
++		return 0;
 +
-+static struct notifier_block uncore_notifier = {
-+	.notifier_call = uncore_bus_notify,
-+};
-+
-+static void uncore_pci_sub_driver_init(void)
-+{
-+	const struct pci_device_id *ids = uncore_pci_sub_driver->id_table;
-+	struct intel_uncore_type *type;
-+	struct intel_uncore_pmu *pmu;
-+	struct pci_dev *pci_sub_dev;
-+	bool notify = false;
-+	unsigned int devfn;
-+	int phys_id, die;
-+
-+	while (ids && ids->vendor) {
-+		pci_sub_dev = NULL;
-+		type = uncore_pci_uncores[UNCORE_PCI_DEV_TYPE(ids->driver_data)];
-+		/*
-+		 * Search the available device, and register the
-+		 * corresponding PMU.
-+		 */
-+		while ((pci_sub_dev = pci_get_device(PCI_VENDOR_ID_INTEL,
-+						     ids->device, pci_sub_dev))) {
-+			devfn = PCI_DEVFN(UNCORE_PCI_DEV_DEV(ids->driver_data),
-+					  UNCORE_PCI_DEV_FUNC(ids->driver_data));
-+			if (devfn != pci_sub_dev->devfn)
-+				continue;
-+
-+			pmu = &type->pmus[UNCORE_PCI_DEV_IDX(ids->driver_data)];
-+			if (!pmu)
-+				continue;
-+
-+			if (uncore_pci_get_dev_die_info(pci_sub_dev,
-+							&phys_id, &die))
-+				continue;
-+
-+			if (!uncore_pci_pmu_register(pci_sub_dev, type, pmu,
-+						     phys_id, die))
-+				notify = true;
-+		}
-+		ids++;
++	/* First active box registers the pmu */
++	ret = uncore_pmu_register(pmu);
++	if (ret) {
++		pmu->boxes[die] = NULL;
++		uncore_box_exit(box);
++		kfree(box);
 +	}
-+
-+	if (notify && bus_register_notifier(&pci_bus_type, &uncore_notifier))
-+		notify = false;
-+
-+	if (!notify)
-+		uncore_pci_sub_driver = NULL;
++	return ret;
 +}
 +
- static int __init uncore_pci_init(void)
++/*
+  * add a pci uncore device
+  */
+ static int uncore_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
  {
- 	size_t size;
-@@ -1209,6 +1285,9 @@ static int __init uncore_pci_init(void)
- 	if (ret)
- 		goto errtype;
+ 	struct intel_uncore_type *type;
+ 	struct intel_uncore_pmu *pmu = NULL;
+-	struct intel_uncore_box *box;
+ 	int phys_id, die, ret;
  
-+	if (uncore_pci_sub_driver)
-+		uncore_pci_sub_driver_init();
-+
- 	pcidrv_registered = true;
- 	return 0;
+ 	ret = uncore_pci_get_dev_die_info(pdev, &phys_id, &die);
+@@ -1082,38 +1130,10 @@ static int uncore_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id
+ 		pmu = &type->pmus[UNCORE_PCI_DEV_IDX(id->driver_data)];
+ 	}
  
-@@ -1226,6 +1305,8 @@ static void uncore_pci_exit(void)
- {
- 	if (pcidrv_registered) {
- 		pcidrv_registered = false;
-+		if (uncore_pci_sub_driver)
-+			bus_unregister_notifier(&pci_bus_type, &uncore_notifier);
- 		pci_unregister_driver(uncore_pci_driver);
- 		uncore_types_exit(uncore_pci_uncores);
- 		kfree(uncore_extra_pci_dev);
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index 105fdc6..df544bc 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -552,6 +552,7 @@ extern struct intel_uncore_type **uncore_msr_uncores;
- extern struct intel_uncore_type **uncore_pci_uncores;
- extern struct intel_uncore_type **uncore_mmio_uncores;
- extern struct pci_driver *uncore_pci_driver;
-+extern struct pci_driver *uncore_pci_sub_driver;
- extern raw_spinlock_t pci2phy_map_lock;
- extern struct list_head pci2phy_map_head;
- extern struct pci_extra_dev *uncore_extra_pci_dev;
+-	if (WARN_ON_ONCE(pmu->boxes[die] != NULL))
+-		return -EINVAL;
+-
+-	box = uncore_alloc_box(type, NUMA_NO_NODE);
+-	if (!box)
+-		return -ENOMEM;
++	ret = uncore_pci_pmu_register(pdev, type, pmu, phys_id, die);
+ 
+-	if (pmu->func_id < 0)
+-		pmu->func_id = pdev->devfn;
+-	else
+-		WARN_ON_ONCE(pmu->func_id != pdev->devfn);
++	pci_set_drvdata(pdev, pmu->boxes[die]);
+ 
+-	atomic_inc(&box->refcnt);
+-	box->pci_phys_id = phys_id;
+-	box->dieid = die;
+-	box->pci_dev = pdev;
+-	box->pmu = pmu;
+-	uncore_box_init(box);
+-	pci_set_drvdata(pdev, box);
+-
+-	pmu->boxes[die] = box;
+-	if (atomic_inc_return(&pmu->activeboxes) > 1)
+-		return 0;
+-
+-	/* First active box registers the pmu */
+-	ret = uncore_pmu_register(pmu);
+-	if (ret) {
+-		pci_set_drvdata(pdev, NULL);
+-		pmu->boxes[die] = NULL;
+-		uncore_box_exit(box);
+-		kfree(box);
+-	}
+ 	return ret;
+ }
+ 
 -- 
 2.7.4
 
