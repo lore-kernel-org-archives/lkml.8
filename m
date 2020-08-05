@@ -2,192 +2,134 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B089C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB3FC433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35A4122CA1
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D996E22CA1
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 20:06:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596657988;
-	bh=A3fBP2F0oTnzghrQINF7bdDyAwWTRiVsMOyIPbS9fnI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=hZo+ulaPDx4/4Q2DoOKgx7V7dNbBtwWMIZVMBgCpvdVLzTdHo+Qn8qZbfRoEv4Sna
-	 IbQ54imdjTFm2cqJlmmtqOpOTzwJispQ/97Eq39HRJ5S8jNVP9mfqyYm7WwgVvLDnU
-	 S0Ho0OoDoZTJZmLL/MjdonJ7I46+nxlkr/Micr7Y=
+	s=default; t=1596657993;
+	bh=POF6DDiHm8atPTslFXz0sLdllxBBkRKfAFe2q0FnobE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WMRRp7kT0Z4SZSme2sB+dLptCUFYVW7a+O30lqbKXXYBpZYb993jExB+pnTg0YOyY
+	 EFEkQITe68Hh5C0z1v20w7ScfkhoRwESNcRtAj7Jk8Aeg1KW8cLhaT7Megh6NS397D
+	 w4Xp2aYamXXOFb0TyUhmHAejG8khGe7fwSBrMj0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729735AbgHEUG0 (ORCPT
+        id S1729757AbgHEUGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 16:06:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50734 "EHLO mail.kernel.org"
+        Wed, 5 Aug 2020 16:06:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726351AbgHEQev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:34:51 -0400
-Received: from localhost (mobile-166-175-186-42.mycingular.net [166.175.186.42])
+        id S1726987AbgHEQel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 12:34:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B83BD2333D;
-        Wed,  5 Aug 2020 15:28:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6BF823382;
+        Wed,  5 Aug 2020 15:52:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596641314;
-        bh=A3fBP2F0oTnzghrQINF7bdDyAwWTRiVsMOyIPbS9fnI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Jn3hU4c1pYpI0XdlIq4C3LPHy/seX54M6XHzJdjok72coYQfH0cempWUpzwY/1x1C
-         GLBitKtQx8rX4Rx4W6NC8Kwwta3z9ctGwV8hdZcT6s9FyVsoV9nSlSpNZ0ehRSakFN
-         vFlc8OEtJI2NPZAE1hqWB2ILz853HevbhrOXacCY=
-Date:   Wed, 5 Aug 2020 10:28:32 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>,
-        Tomoya MORINAGA <tomoya.rohm@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: Re: [PATCH v1] i2c: eg20t: use generic power management
-Message-ID: <20200805152832.GA511823@bjorn-Precision-5520>
+        s=default; t=1596642779;
+        bh=POF6DDiHm8atPTslFXz0sLdllxBBkRKfAFe2q0FnobE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gg+itV+r90Y6NJdDD0QLTkJ1Kak0FRXZ1l7TGvxe1R8a9uw9RgtkSHAPofHqaJw/Y
+         1kfFJYrMLT50fYMskW4NFimBq87Cw1pu+F4LC7g7AYzxmbGq/dzaG39dOw2fBK0ZxZ
+         0/Hc0BV0vhJVkOApRnPkaVwf8x0y2Q6nM4bXMomU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
+        Lorenz Bauer <lmb@cloudflare.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Sitnicki <jakub@cloudflare.com>
+Subject: [PATCH 5.4 8/9] selftests: bpf: Fix detach from sockmap tests
+Date:   Wed,  5 Aug 2020 17:52:45 +0200
+Message-Id: <20200805153507.423308944@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200805153507.053638231@linuxfoundation.org>
+References: <20200805153507.053638231@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200805152331.GA510793@bjorn-Precision-5520>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[update Linus's address, drop Qi's (bounced)]
+From: Lorenz Bauer <lmb@cloudflare.com>
 
-On Wed, Aug 05, 2020 at 10:23:31AM -0500, Bjorn Helgaas wrote:
-> [+cc Tomoya, Linus, Qi, Ben from e9bc8fa5df1c]
-> 
-> On Mon, Jul 20, 2020 at 07:30:32PM +0530, Vaibhav Gupta wrote:
-> > Drivers using legacy PM have to manage PCI states and device's PM states
-> > themselves. They also need to take care of configuration registers.
-> > 
-> > With improved and powerful support of generic PM, PCI Core takes care of
-> > above mentioned, device-independent, jobs.
-> > 
-> > This driver makes use of PCI helper functions like
-> > pci_save/restore_state(), pci_enable/disable_device(),
-> > pci_enable_wake() and pci_set_power_state() to do required operations. In
-> > generic mode, they are no longer needed.
-> > 
-> > Change function parameter in both .suspend() and .resume() to
-> > "struct device*" type. Use to_pci_dev() and dev_get_drvdata() to get
-> > "struct pci_dev*" variable and drv data.
-> > 
-> > Compile-tested only.
-> > 
-> > Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
-> > ---
-> >  drivers/i2c/busses/i2c-eg20t.c | 39 ++++++++--------------------------
-> >  1 file changed, 9 insertions(+), 30 deletions(-)
-> > 
-> > diff --git a/drivers/i2c/busses/i2c-eg20t.c b/drivers/i2c/busses/i2c-eg20t.c
-> > index 73f139690e4e..c0ddc4cc2ce7 100644
-> > --- a/drivers/i2c/busses/i2c-eg20t.c
-> > +++ b/drivers/i2c/busses/i2c-eg20t.c
-> > @@ -846,11 +846,10 @@ static void pch_i2c_remove(struct pci_dev *pdev)
-> >  	kfree(adap_info);
-> >  }
-> >  
-> > -#ifdef CONFIG_PM
-> > -static int pch_i2c_suspend(struct pci_dev *pdev, pm_message_t state)
-> > +static int __maybe_unused pch_i2c_suspend(struct device *dev)
-> >  {
-> > -	int ret;
-> >  	int i;
-> > +	struct pci_dev *pdev = to_pci_dev(dev);
-> >  	struct adapter_info *adap_info = pci_get_drvdata(pdev);
-> 
-> Why don't you use "adap_info = dev_get_drvdata(dev)" as you did below,
-> so you don't need to_pci_dev()?
-> 
-> >  	void __iomem *p = adap_info->pch_data[0].pch_base_address;
-> >  
-> > @@ -872,34 +871,17 @@ static int pch_i2c_suspend(struct pci_dev *pdev, pm_message_t state)
-> >  		ioread32(p + PCH_I2CSR), ioread32(p + PCH_I2CBUFSTA),
-> >  		ioread32(p + PCH_I2CESRSTA));
-> >  
-> > -	ret = pci_save_state(pdev);
-> > -
-> > -	if (ret) {
-> > -		pch_pci_err(pdev, "pci_save_state\n");
-> > -		return ret;
-> > -	}
-> > -
-> > -	pci_enable_wake(pdev, PCI_D3hot, 0);
-> > -	pci_disable_device(pdev);
-> > -	pci_set_power_state(pdev, pci_choose_state(pdev, state));
-> > +	device_wakeup_disable(dev);
-> >  
-> >  	return 0;
-> >  }
-> >  
-> > -static int pch_i2c_resume(struct pci_dev *pdev)
-> > +static int __maybe_unused pch_i2c_resume(struct device *dev)
-> >  {
-> >  	int i;
-> > -	struct adapter_info *adap_info = pci_get_drvdata(pdev);
-> > -
-> > -	pci_set_power_state(pdev, PCI_D0);
-> > -	pci_restore_state(pdev);
-> > +	struct adapter_info *adap_info = dev_get_drvdata(dev);
-> >  
-> > -	if (pci_enable_device(pdev) < 0) {
-> > -		pch_pci_err(pdev, "pch_i2c_resume:pci_enable_device FAILED\n");
-> > -		return -EIO;
-> > -	}
-> > -
-> > -	pci_enable_wake(pdev, PCI_D3hot, 0);
-> > +	device_wakeup_disable(dev);
-> 
-> It *looks* wrong to disable wakeup in both suspend and resume.  I
-> think the usual pattern is to enable wakeup in suspend and disable it
-> in resume.
-> 
-> But it looks like it's been that way since the driver was added by
-> e9bc8fa5df1c ("i2c-eg20t: add driver for Intel EG20T").
-> 
-> If the device doesn't support wakeup, I would not expect the driver to
-> mention wakeup at all.
-> 
-> In any case, I think it's the right thing for *this* patch to preserve
-> the previous wakeup behavior.  Maybe we want a follow-up patch to just
-> remove both device_wakeup_disable() calls?
-> 
-> >  	for (i = 0; i < adap_info->ch_num; i++)
-> >  		pch_i2c_init(&adap_info->pch_data[i]);
-> > @@ -908,18 +890,15 @@ static int pch_i2c_resume(struct pci_dev *pdev)
-> >  
-> >  	return 0;
-> >  }
-> > -#else
-> > -#define pch_i2c_suspend NULL
-> > -#define pch_i2c_resume NULL
-> > -#endif
-> > +
-> > +static SIMPLE_DEV_PM_OPS(pch_i2c_pm_ops, pch_i2c_suspend, pch_i2c_resume);
-> >  
-> >  static struct pci_driver pch_pcidriver = {
-> >  	.name = KBUILD_MODNAME,
-> >  	.id_table = pch_pcidev_id,
-> >  	.probe = pch_i2c_probe,
-> >  	.remove = pch_i2c_remove,
-> > -	.suspend = pch_i2c_suspend,
-> > -	.resume = pch_i2c_resume
-> > +	.driver.pm = &pch_i2c_pm_ops,
-> >  };
-> >  
-> >  module_pci_driver(pch_pcidriver);
-> > -- 
-> > 2.27.0
-> > 
+commit f43cb0d672aa8eb09bfdb779de5900c040487d1d upstream.
+
+Fix sockmap tests which rely on old bpf_prog_dispatch behaviour.
+In the first case, the tests check that detaching without giving
+a program succeeds. Since these are not the desired semantics,
+invert the condition. In the second case, the clean up code doesn't
+supply the necessary program fds.
+
+Fixes: bb0de3131f4c ("bpf: sockmap: Require attach_bpf_fd when detaching a program")
+Reported-by: Martin KaFai Lau <kafai@fb.com>
+Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
+Link: https://lore.kernel.org/bpf/20200709115151.75829-1-lmb@cloudflare.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ tools/testing/selftests/bpf/test_maps.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+--- a/tools/testing/selftests/bpf/test_maps.c
++++ b/tools/testing/selftests/bpf/test_maps.c
+@@ -793,19 +793,19 @@ static void test_sockmap(unsigned int ta
+ 	}
+ 
+ 	err = bpf_prog_detach(fd, BPF_SK_SKB_STREAM_PARSER);
+-	if (err) {
++	if (!err) {
+ 		printf("Failed empty parser prog detach\n");
+ 		goto out_sockmap;
+ 	}
+ 
+ 	err = bpf_prog_detach(fd, BPF_SK_SKB_STREAM_VERDICT);
+-	if (err) {
++	if (!err) {
+ 		printf("Failed empty verdict prog detach\n");
+ 		goto out_sockmap;
+ 	}
+ 
+ 	err = bpf_prog_detach(fd, BPF_SK_MSG_VERDICT);
+-	if (err) {
++	if (!err) {
+ 		printf("Failed empty msg verdict prog detach\n");
+ 		goto out_sockmap;
+ 	}
+@@ -1094,19 +1094,19 @@ static void test_sockmap(unsigned int ta
+ 		assert(status == 0);
+ 	}
+ 
+-	err = bpf_prog_detach(map_fd_rx, __MAX_BPF_ATTACH_TYPE);
++	err = bpf_prog_detach2(parse_prog, map_fd_rx, __MAX_BPF_ATTACH_TYPE);
+ 	if (!err) {
+ 		printf("Detached an invalid prog type.\n");
+ 		goto out_sockmap;
+ 	}
+ 
+-	err = bpf_prog_detach(map_fd_rx, BPF_SK_SKB_STREAM_PARSER);
++	err = bpf_prog_detach2(parse_prog, map_fd_rx, BPF_SK_SKB_STREAM_PARSER);
+ 	if (err) {
+ 		printf("Failed parser prog detach\n");
+ 		goto out_sockmap;
+ 	}
+ 
+-	err = bpf_prog_detach(map_fd_rx, BPF_SK_SKB_STREAM_VERDICT);
++	err = bpf_prog_detach2(verdict_prog, map_fd_rx, BPF_SK_SKB_STREAM_VERDICT);
+ 	if (err) {
+ 		printf("Failed parser prog detach\n");
+ 		goto out_sockmap;
+
+
