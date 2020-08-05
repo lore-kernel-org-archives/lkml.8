@@ -2,128 +2,100 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A809BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02073C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 872DF20842
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4FBB2084D
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:14:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596654847;
+	bh=GS+/d4Ux7f5KySR64sVX9NErnoZYC3TJhkfC+uca/OI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=oJ8blGdyb5yKhOx0lVVRfwPWdeEaDIIISpB/QVkOGaSLXUwQ904mA7882sLiDU0VH
+	 yFWKPP6N5X620Esvn1WSldjxoeFaZegRkpFw0RQhDPJuecAsIurTNznSP7eOGFa09N
+	 s08YIibFgsdACqWtx4ej6pzzkZk589+BlO4lE5mM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728893AbgHETN4 (ORCPT
+        id S1728710AbgHESIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:13:56 -0400
-Received: from mga17.intel.com ([192.55.52.151]:40671 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727915AbgHETLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 15:11:46 -0400
-IronPort-SDR: qKX/ElW97fakr3JPsGtRORLgay4GLsxsHmianTeKpbmcvse2HSjsa2LrUTsaFSiJQq52pY06wl
- BHzHcCNgLGvA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9704"; a="132713644"
-X-IronPort-AV: E=Sophos;i="5.75,438,1589266800"; 
-   d="scan'208";a="132713644"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Aug 2020 12:11:45 -0700
-IronPort-SDR: gMtDv2wkDCrBFAxkgWEqDl3k5FFjBnx432Tkp7OHaGlY0qBEc7kSWXLpFuba6aQYFJUUSHKTnj
- sNu4wS1fmExQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,438,1589266800"; 
-   d="scan'208";a="289026130"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orsmga003.jf.intel.com with ESMTP; 05 Aug 2020 12:11:44 -0700
-Date:   Wed, 5 Aug 2020 12:11:26 -0700
-From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, X86 ML <x86@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Cathy Zhang <cathy.zhang@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Kyung Min Park <kyung.min.park@intel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-edac <linux-edac@vger.kernel.org>
-Subject: Re: [PATCH v2] x86/cpu: Use SERIALIZE in sync_core() when available
-Message-ID: <20200805191126.GA27509@ranerica-svr.sc.intel.com>
-References: <20200805021059.1331-1-ricardo.neri-calderon@linux.intel.com>
- <20200805044840.GA9127@nazgul.tnic>
- <47A60E6A-0742-45FB-B707-175E87C58184@zytor.com>
- <20200805050808.GC9127@nazgul.tnic>
- <20200805170717.GB26661@ranerica-svr.sc.intel.com>
- <CALCETrWByBugaunKPz52sdOGJpEdNNMK2kcp-wXgjFpFZuoOmQ@mail.gmail.com>
+        Wed, 5 Aug 2020 14:08:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729070AbgHESFl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 14:05:41 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A086FC061756
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 11:05:27 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id v9so14261348ljk.6
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 11:05:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SJLLgIEjQbsi/SjTfRAATLA+9JTrjXUP0jdNW6WmMgI=;
+        b=eaY7NtzotzWV/MnsZjfDao9T2g2eCy+3wm499kvwu1wBI+Vd7me0Jx1vxfPwpDDz2e
+         +1s5SmJEh1SEzTbjd/vRaoC7ncNiNL4Lkyg2YumYQ4UA7w+AEcfjLokkCNp9gUuGZSuL
+         cWA3tsPtGDQzsow/KN0TSz2gkofo5VDhkb9Kk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SJLLgIEjQbsi/SjTfRAATLA+9JTrjXUP0jdNW6WmMgI=;
+        b=l36RRZ0Tr7noRgEjxe7zP3GJilceKenoNL9FFecDqV27oYrAkXryk7Bhp9zFGSrbrF
+         mR56NdULvcqdvj4pkVcYPSnCv3dBvYErfpJjGuQeG2ovPVXsB0Lrbkg+ozF/sjIGZZR+
+         f8tOFsbfbZXU+eky9iItPNHi7rsv+L7tLi0XWE4jxtIqBBInFXjcBnPn7Xu1k989ighU
+         TlGWsf3aIZyhf7/YlvTopKER3admGbeHIKZO/AJpdapnnAS2bWphXd6CjdeuPNlzgco5
+         ulGEhh4cT+5OEtaAs85RXrMZbOWhgO+FRbDDTdZQEN0eL24ovYYAKcRZgnnIoSkWsmiw
+         SZbg==
+X-Gm-Message-State: AOAM5334DzwbpWEEuk0QMuFbluUIA5nJyjQwV9IwWsH8GrH4xr49OOKp
+        L7cA9zzv9u0U8mr2phMTVW8+CoZj8dE=
+X-Google-Smtp-Source: ABdhPJxDv2YJIThf/IFG7b54Dzk+Px82xuzn+nZs25PjChZwmR4ijviRC86YGzQEVVZb7lcJXn3X3g==
+X-Received: by 2002:a2e:96d9:: with SMTP id d25mr2162879ljj.408.1596650725832;
+        Wed, 05 Aug 2020 11:05:25 -0700 (PDT)
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
+        by smtp.gmail.com with ESMTPSA id t10sm1189266ljg.60.2020.08.05.11.05.24
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Aug 2020 11:05:24 -0700 (PDT)
+Received: by mail-lj1-f173.google.com with SMTP id v9so14261243ljk.6
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 11:05:24 -0700 (PDT)
+X-Received: by 2002:a2e:9252:: with SMTP id v18mr1872739ljg.70.1596650724308;
+ Wed, 05 Aug 2020 11:05:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrWByBugaunKPz52sdOGJpEdNNMK2kcp-wXgjFpFZuoOmQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200805090653.GI23458@shao2-debian>
+In-Reply-To: <20200805090653.GI23458@shao2-debian>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 5 Aug 2020 11:05:08 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiuF-0JSmiDe-A--+Z4UbEWQxQ40ftm88aKwSi0FLvM+g@mail.gmail.com>
+Message-ID: <CAHk-=wiuF-0JSmiDe-A--+Z4UbEWQxQ40ftm88aKwSi0FLvM+g@mail.gmail.com>
+Subject: Re: [mm] 2a9127fcf2: vm-scalability.throughput 130.0% improvement
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Hugh Dickins <hughd@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 11:28:31AM -0700, Andy Lutomirski wrote:
-> On Wed, Aug 5, 2020 at 10:07 AM Ricardo Neri
-> <ricardo.neri-calderon@linux.intel.com> wrote:
-> >
-> > On Wed, Aug 05, 2020 at 07:08:08AM +0200, Borislav Petkov wrote:
-> > > On Tue, Aug 04, 2020 at 09:58:25PM -0700, hpa@zytor.com wrote:
-> > > > Because why use an alternative to jump over one instruction?
-> > > >
-> > > > I personally would prefer to have the IRET put out of line
-> > >
-> > > Can't yet - SERIALIZE CPUs are a minority at the moment.
-> > >
-> > > > and have the call/jmp replaced by SERIALIZE inline.
-> > >
-> > > Well, we could do:
-> > >
-> > >       alternative_io("... IRET bunch", __ASM_SERIALIZE, X86_FEATURE_SERIALIZE, ...);
-> > >
-> > > and avoid all kinds of jumping. Alternatives get padded so there
-> > > would be a couple of NOPs following when SERIALIZE gets patched in
-> > > but it shouldn't be a problem. I guess one needs to look at what gcc
-> > > generates...
-> >
-> > But the IRET-TO-SELF code has instruction which modify the stack. This
-> > would violate stack invariance in alternatives as enforced in commit
-> > 7117f16bf460 ("objtool: Fix ORC vs alternatives"). As a result, objtool
-> > gives warnings as follows:
-> >
-> > arch/x86/kernel/alternative.o: warning: objtool: do_sync_core()+0xe:
-> > alternative modifies stack
-> >
-> > Perhaps in this specific case it does not matter as the changes in the
-> > stack will be undone by IRET. However, using alternative_io would require
-> > adding the macro STACK_FRAME_NON_STANDARD to functions using sync_core().
-> > IMHO, it wouldn't look good.
-> >
-> > So maybe the best approach is to implement as you suggested using
-> > static_cpu_has()?
-> 
-> I agree.  Let's keep it simple.
-> 
-> Honestly, I think the right solution is to have iret_to_self() in
-> actual asm and invoke it from C as needed. 
+W00t!
 
-Do you mean anything different from what we have already [1]? If I
-understand your comment correctly, we have exactly that: an
-iret_to_self() asm implementation invoked from C.
+Usually I think these kinds of big changes are likely outright bugs,
+but this time I'll take it, because that improvement was the point and
+aim of the change even if I didn't have numbers to back up my BS.
 
-Thanks and BR,
-Ricardo
+              Linus
 
-[1]. https://lore.kernel.org/lkml/20200727043132.15082-4-ricardo.neri-calderon@linux.intel.com/
-
-Thanks and BR,
-Ricardo
+On Wed, Aug 5, 2020 at 2:07 AM kernel test robot <rong.a.chen@intel.com> wrote:
+>
+> Greeting,
+>
+> FYI, we noticed a 130.0% improvement of vm-scalability.throughput due to commit:
+>
+> commit: 2a9127fcf2296674d58024f83981f40b128fffea ("mm: rewrite wait_on_page_bit_common() logic")
