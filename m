@@ -2,169 +2,126 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FC9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 503C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1957D22D00
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:58:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K30Jpi+u"
+	by mail.kernel.org (Postfix) with ESMTP id 265A322D2C
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:58:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1596646722;
+	bh=s4M9z0PpUaC78g2FBmcWjmoek0lH37PmXjd+aXtbWdU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qamyQzfhjI3K8/R+p9ks1jmUHuBWUHsBLxhDyaplH58yq8CGOaX/GleI5l+p2MUW3
+	 JNWnNh+LAidmSglpxvVNoSTUYsBX+ODBDR5O5+gbfcdlREhpKD0kDw4kcWdPYmCYVX
+	 HxJNAm2MjgPzkJTAqStUplWVo36Qhqqq47q4HQsM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgHEQ6M (ORCPT
+        id S1728277AbgHEQ6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 12:58:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47274 "EHLO
+        Wed, 5 Aug 2020 12:58:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728322AbgHEQzP (ORCPT
+        with ESMTP id S1728349AbgHEQ4s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:55:15 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7856C001FCA;
-        Wed,  5 Aug 2020 08:47:51 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id di22so25717997edb.12;
-        Wed, 05 Aug 2020 08:47:51 -0700 (PDT)
+        Wed, 5 Aug 2020 12:56:48 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87B0CC061757
+        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 09:51:32 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id t23so24970448ljc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 09:51:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+thVhnOzocq+PgCFY0tda78F/9CHLw5tyXEyW5ctJ0o=;
-        b=K30Jpi+unvD+CodHrimHJBJOgIBKD2vORRRsNDdnxowxbqvNqWmkAuS87xxPAvIxSE
-         ePsUbOvmJ2NJ/xZNYGM9PJaoNcn/9NN9lsFvOaM2shMUcbTCUbYb86NythE2JhhhJNZQ
-         IPzpttIxwWgZMBIpbgr3qu+/sQaRlEc9o+gOa6sbnKflX3vw5+Qyq+5+Ts4dZtEaZoIB
-         r7bRtoTPTc7S494vAZzE1jsYQXemBVLfNJfQpUKxqDPcxayazZStrgobE4jw9ZObecr+
-         UKlUHS8s2PCiYg+N0X5gslQEfsQEMKsjRSifBnzyqFxNyjtFjnSSOtvmPkfGyBskiDbl
-         BVZw==
+        bh=yKgJ87tlQurrZfrQYEXodAO8OzBfJ9TRYjwrwCi61/U=;
+        b=Olb3V+ArUyt0OGqFt/v2uUo/5e1lC5R9fiJfpnbkZ/1hkrUJuQ9U+awiv/FWz0zxRU
+         QLt5Xjiyk5jNC0IE5H2855C1ZLlcXbu4to/gW3c03vbsYmHn9d8pcxIdlUAc4Km2VHWa
+         fGVwwxbiecbT2soul1jwPZgwNIkYwmYIK46Mo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+thVhnOzocq+PgCFY0tda78F/9CHLw5tyXEyW5ctJ0o=;
-        b=s0mIlclpL3+TdiGf3d9+AhofQqABHMrsq3YaVAOv7Hpyf1hxuXoA68/5admcysEYZ6
-         IH8CL3rNK/EmB1Q+lnV2ASxvrRJkXeeFwg61WQb3pVlD6xWFwozSsRWwLa1mGboghe9N
-         JA7RhAAmmAg5yTu5DmdIkmyO/1dV+t782aniKUxW5hZzGwOFn+T3oe7yD4ZQt352OU5C
-         291yHgS9Nw8braywlZzBCqKHAl5C3uPxVyXEpU45m+bl4TiX1PitYma3qAVNOZjyCbSm
-         THG9oGzYglMfms3ZEMIOj/H76H4bkijgGFmCUvNt8YoPtLclHl+mztxNBOd5Nj3dN53R
-         BIlg==
-X-Gm-Message-State: AOAM531SbDZUtlZI9iMECw9kpQgqCg6LRsA7jrzoD6ynH5p6J3tkdSgX
-        kuUfCaE1tOxDopXfULzdHkyReJJ02NbkATQw0vpQ87/nwQg=
-X-Google-Smtp-Source: ABdhPJwWW0KOvBhVO5pikas+uaQ+9Bi+oT+23iSZ47+Y2ckg0AYW5ATvLjA/5bzvEOv35sFXN/1aBcuO1YWaqys/Vi4=
-X-Received: by 2002:a05:6402:a5b:: with SMTP id bt27mr3476095edb.120.1596642470596;
- Wed, 05 Aug 2020 08:47:50 -0700 (PDT)
+        bh=yKgJ87tlQurrZfrQYEXodAO8OzBfJ9TRYjwrwCi61/U=;
+        b=Hm0gqXCwU7Bm/5bf9oRypEIyHv4zFQZ7q9a0+N6+yO5ObYCo8ul5p+ckFP+Zun5sDP
+         EWouBmPA26RqTf/mbh2Z9yhwd5fNyv74UlmGKqJS9e81Pg02vjVr5TZ54BHUMIRs68RP
+         xnhRSJqTK0cSrjjgAlSXa+RDLaczvuiY4GiNSN4GsiCozvR7N5HVCmnPFoOdht86A/jC
+         G/avxPxsYzDDGYymcPmEHmi8hqsGfRdpqCXj2+HgR7zqWo6JmHOOYmAkaATA7PuGa9mD
+         dvZs39i2BwYDnKNlO1To5vcano85/VJNpsTGZrLi5R8JK47w/j8x1orsdTZEfkyCfYAe
+         3Kpg==
+X-Gm-Message-State: AOAM533f7Ert+JWUIRw7nhm9KsPclpCjpoBYUaGfe3bKbQJbH6OVkpFH
+        d0ibO/XrWfhdfBKJ87Cd7APPivdx+Zg=
+X-Google-Smtp-Source: ABdhPJwsOrtBMuyTe74k32fC2wedbdBmYhztLBWFnc62gWVz3eFBjqZdNQ9ShugJI042w70RcqIdog==
+X-Received: by 2002:a2e:b175:: with SMTP id a21mr1806724ljm.423.1596646289189;
+        Wed, 05 Aug 2020 09:51:29 -0700 (PDT)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id m20sm1426285lfb.72.2020.08.05.09.51.27
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Aug 2020 09:51:27 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id h19so48487952ljg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 09:51:27 -0700 (PDT)
+X-Received: by 2002:a2e:9a11:: with SMTP id o17mr1821083lji.314.1596646286874;
+ Wed, 05 Aug 2020 09:51:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <1596634446-1413-1-git-send-email-kalyan_t@codeaurora.org>
-In-Reply-To: <1596634446-1413-1-git-send-email-kalyan_t@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Wed, 5 Aug 2020 08:48:34 -0700
-Message-ID: <CAF6AEGtWNDGDsUBVk-Ud5OpretHA4qKDKtE+3mS=C8DAa=+Heg@mail.gmail.com>
-Subject: Re: [v1] drm/msm/dpu: Fix reservation failures in modeset
-To:     Kalyan Thota <kalyan_t@codeaurora.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Krishna Manikandan <mkrishn@codeaurora.org>,
-        Raviteja Tamatam <travitej@codeaurora.org>,
-        nganji@codeaurora.org, Stephen Boyd <swboyd@chromium.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Drew Davenport <ddavenport@chromium.org>
+References: <20200804072435.385370289@linuxfoundation.org> <CA+G9fYs35Eiq1QFM0MOj6Y7gC=YKaiknCPgcJpJ5NMW4Y7qnYQ@mail.gmail.com>
+ <20200804082130.GA1768075@kroah.com> <CAHk-=whJ=shbf-guMGZkGvxh9fVmbrvUuiWO48+PDFG7J9A9qw@mail.gmail.com>
+ <c32ad2216ca3dd83d6d3d740512db9de@kernel.org> <20200805095439.GB1634853@kroah.com>
+ <813c64c8dbe037b9d84763f56c4dbb7d@kernel.org>
+In-Reply-To: <813c64c8dbe037b9d84763f56c4dbb7d@kernel.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 5 Aug 2020 09:51:10 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiUEonP7tyAfYv=dja4i3b1oBtHL=KY=j8x55x3AFoZZw@mail.gmail.com>
+Message-ID: <CAHk-=wiUEonP7tyAfYv=dja4i3b1oBtHL=KY=j8x55x3AFoZZw@mail.gmail.com>
+Subject: Re: [PATCH 5.7 000/121] 5.7.13-rc2 review
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 5, 2020 at 6:34 AM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
+On Wed, Aug 5, 2020 at 4:20 AM Marc Zyngier <maz@kernel.org> wrote:
 >
-> In TEST_ONLY commit, rm global_state will duplicate the
-> object and request for new reservations, once they pass
-> then the new state will be swapped with the old and will
-> be available for the Atomic Commit.
->
-> This patch fixes some of missing links in the resource
-> reservation sequence mentioned above.
->
-> 1) Creation of a duplicate state in test_only commit (Rob)
-> 2) Allow resource release only during crtc_active false.
->
-> For #2
-> In a modeset operation, swap state happens well before disable.
-> Hence clearing reservations in disable will cause failures
-> in modeset enable.
->
-> Sequence:
->     Swap state --> old, new
->     modeset disables --> virt disable
->     modeset enable --> virt modeset
->
-> Allow reservations to be cleared only when crtc active is false
-> as in that case there wont be any modeset enable after disable.
->
-> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> index 63976dc..b85a576 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-> @@ -582,7 +582,7 @@ static int dpu_encoder_virt_atomic_check(
->         dpu_kms = to_dpu_kms(priv->kms);
->         mode = &crtc_state->mode;
->         adj_mode = &crtc_state->adjusted_mode;
-> -       global_state = dpu_kms_get_existing_global_state(dpu_kms);
-> +       global_state = dpu_kms_get_global_state(crtc_state->state);
->         trace_dpu_enc_atomic_check(DRMID(drm_enc));
->
->         /*
-> @@ -1172,6 +1172,7 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
->         struct msm_drm_private *priv;
->         struct dpu_kms *dpu_kms;
->         struct dpu_global_state *global_state;
-> +       struct drm_crtc_state *crtc_state;
->         int i = 0;
->
->         if (!drm_enc) {
-> @@ -1191,6 +1192,7 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
->         priv = drm_enc->dev->dev_private;
->         dpu_kms = to_dpu_kms(priv->kms);
->         global_state = dpu_kms_get_existing_global_state(dpu_kms);
-> +       crtc_state = drm_enc->crtc->state;
->
->         trace_dpu_enc_disable(DRMID(drm_enc));
->
-> @@ -1220,7 +1222,8 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
->
->         DPU_DEBUG_ENC(dpu_enc, "encoder disabled\n");
->
-> -       dpu_rm_release(global_state, drm_enc);
-> +       if (crtc_state->active_changed && !crtc_state->active)
-> +               dpu_rm_release(global_state, drm_enc);
+> I came up with yet another "quality" hack, which gets the job done,
+> see below. It is obviously much simpler, but also terribly ugly.
 
-I still think releasing the state in the atomic_commit() path is the
-wrong thing to do.  In the commit path, the various state objects
-should be immutable.. ie. in the atomic_test() path you derive the new
-hw state (including assignment/release of resources), and
-atomic_commit() is simply pushing the state down to the hw.
+This is effectively what the approach of commit c0842fbc1b18
+("random32: move the pseudo-random 32-bit definitions to prandom.h")
+was too. It has the prandom include in the middle of random.h - which
+makes sense in the context of that patch (because it's where all the
+prandom stuff used to live there), but the real secret is that as it
+does that, it basically moves the percpu.h include down there too.
 
-Otherwise, this looks better than v1.
+This mess has caused me to seriously look at making sparse generate a
+"defined here, used here" list, and do a topo-sort on it all, and warn
+about unused includes but also about stupidities like this.
 
-BR,
--R
+But I won't have time to do that until after the merge window, and it
+may turn out nastier than expected. But I did add all the include
+chaining information to the sparse position logic recently in a fairly
+easy to digest form, so my gut feel is that something that doesn't try
+to actually optimize or solve the problem - just point out the obvious
+errors - might be more reasonably doable than doing something that is
+theoretically the RightThing(tm) to do.
 
->
->         mutex_unlock(&dpu_enc->enc_lock);
->  }
-> --
-> 1.9.1
->
+IOW, a tool only to help find and figure these things out, rather than
+a tool to do all the minimization for you automatically.
+
+We'll see. No promises. And if somebody else beats me to it, I won't complain.
+
+            Linus
