@@ -2,105 +2,85 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB96CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD61C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDA122068F
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 705962068F
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:16:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rWRwla7T"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vPk4QJQM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728726AbgHETPw (ORCPT
+        id S1728291AbgHETQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:15:52 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:56882 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbgHESGB (ORCPT
+        Wed, 5 Aug 2020 15:16:04 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:16575 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729050AbgHESDi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 14:06:01 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 075BQODj042353;
-        Wed, 5 Aug 2020 06:26:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1596626784;
-        bh=ptD3hGzWwT8Vq2gSquJN4k9oJHMA8CvoI0Kiq0So7lw=;
-        h=From:To:CC:Subject:Date;
-        b=rWRwla7T/new3KgGWmbnNQqJZngYGytA2IVU4/3oUmp0CNNi6zALaUaoK+GEEBGSH
-         x3lyNisfVC4liC0+qf/jb4j14wFX8WYk4NxXicaL0YvVy0sz9ItDBRWKd/q1TP5WGG
-         GAOx6UqOG3Q0NOkJV5aWqDRAjLDe6RhEU55fQ6vI=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 075BQOJE114460;
-        Wed, 5 Aug 2020 06:26:24 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 5 Aug
- 2020 06:26:23 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 5 Aug 2020 06:26:23 -0500
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 075BQL5i053178;
-        Wed, 5 Aug 2020 06:26:22 -0500
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <ssantosh@kernel.org>, <santosh.shilimkar@oracle.com>
-CC:     <linux-arm-kernel@lists.infradead.org>, <grygorii.strashko@ti.com>,
-        <linux-kernel@vger.kernel.org>, <vkoul@kernel.org>,
-        <dmaengine@vger.kernel.org>
-Subject: [PATCH] dmaengine: ti: k3-udma-glue: Fix parameters for rx ring pair request
-Date:   Wed, 5 Aug 2020 14:27:46 +0300
-Message-ID: <20200805112746.15475-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.28.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 5 Aug 2020 14:03:38 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1596650580; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=wDrn6qZ0UEY+b7/V0j8agr4SjPY1RYQe65RUiGn653k=; b=vPk4QJQM2aRePokrCxCtqbItzO8H3qB4R7flgIg9jbUMZqtrdZFbczeYo/VJWXwAUH9RkAVl
+ iEdheg6scPisa5Jk6Eyw4bNoYpjCoLuxRaiu34NfjgeKopfRnfNXA1QW0R1ppNXVHLUaems6
+ 3XM1K0b7fikqkgZI4t19LL+SDGE=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n16.prod.us-west-2.postgun.com with SMTP id
+ 5f2af44d5a221ff37b3f5414 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 05 Aug 2020 18:02:53
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3297CC433CA; Wed,  5 Aug 2020 18:02:53 +0000 (UTC)
+Received: from kathirav-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kathirav)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 778BAC433C6;
+        Wed,  5 Aug 2020 18:02:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 778BAC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kathirav@codeaurora.org
+From:   Kathiravan T <kathirav@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     kathirav@codeaurora.org
+Subject: [PATCH] arm64: dts: ipq8074: Use the A53 PMU compatible
+Date:   Wed,  5 Aug 2020 23:32:41 +0530
+Message-Id: <1596650561-11312-1-git-send-email-kathirav@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200805112746.uiXM5idddyF3rCd4LcnnnKl-1I8Kh76_XlKwkm2VDBc@z>
 
-The original commit mixed up the forward and completion ring IDs for the
-rx flow configuration.
+IPQ8074 has A53 cores, so lets use the corresponding PMU compatible.
 
-Fixes: 4927b1ab2047 ("dmaengine: ti: k3-udma: Switch to k3_ringacc_request_rings_pair")
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
 ---
-Hi Santosh, Vinod,
-
-the offending patch was queued via ti SoC tree.
-Santosh, can you pick up this fix also?
-
-Regards,
-Peter
-
- drivers/dma/ti/k3-udma-glue.c | 2 +-
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/ti/k3-udma-glue.c b/drivers/dma/ti/k3-udma-glue.c
-index 3a5d33ea5ebe..12da38a92218 100644
---- a/drivers/dma/ti/k3-udma-glue.c
-+++ b/drivers/dma/ti/k3-udma-glue.c
-@@ -579,8 +579,8 @@ static int k3_udma_glue_cfg_rx_flow(struct k3_udma_glue_rx_channel *rx_chn,
+diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+index 96a5ec89b5f0..e4859c7f6208 100644
+--- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+@@ -67,7 +67,7 @@
+ 	};
  
- 	/* request and cfg rings */
- 	ret =  k3_ringacc_request_rings_pair(rx_chn->common.ringacc,
--					     flow_cfg->ring_rxq_id,
- 					     flow_cfg->ring_rxfdq0_id,
-+					     flow_cfg->ring_rxq_id,
- 					     &flow->ringrxfdq,
- 					     &flow->ringrx);
- 	if (ret) {
+ 	pmu {
+-		compatible = "arm,armv8-pmuv3";
++		compatible = "arm,cortex-a53-pmu";
+ 		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 	};
+ 
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
