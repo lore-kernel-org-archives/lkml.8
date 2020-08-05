@@ -2,101 +2,102 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CD1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61198C433E0
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54F672067D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:41:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1596645676;
-	bh=ysS3LGq+470SGw6FYTetlB33DoPN5s8hyLYUhLe+03M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UPc0PDYmXw+h21rdfk6C9WkN8i0NrnQg16aCLzm9wIEiBKGFIbPyBdDxSIJzclf9z
-	 SjxWnMJPazjqLEVoooUb6zEAe4e0U/geJAyDxXqr1dqeBnLWiKIyPc/qsgi5hQlAIB
-	 zoWNThEJrD2ZpRVaE6JRBE3zXUkpeIRjBCZqepXA=
+	by mail.kernel.org (Postfix) with ESMTP id 3F64C22D00
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 16:42:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gVqWoW0G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgHEQlB (ORCPT
+        id S1727781AbgHEQlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 12:41:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727815AbgHEQgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 12:36:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B30792339F;
-        Wed,  5 Aug 2020 15:53:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596642792;
-        bh=ysS3LGq+470SGw6FYTetlB33DoPN5s8hyLYUhLe+03M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2UfwlHvkookgB6Y2e+b1KMuEgg30sdabQZHiYHQEe2JVaLykjCwTG526jAm4ZymUI
-         XOJbBbSbO7pt6rFjVCjOFd0fro59w03EmlGMNAT32/pdI6/+fpH2Icu7oIGtAy/lKL
-         51WZYPLX+Kvl4Gmyf2LqR0moaTseHksyBZRxuAf8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 2/6] ARM: percpu.h: fix build error
-Date:   Wed,  5 Aug 2020 17:53:01 +0200
-Message-Id: <20200805153505.599534194@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200805153505.472594546@linuxfoundation.org>
-References: <20200805153505.472594546@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 5 Aug 2020 12:41:39 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:52080 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727115AbgHEQii (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 12:38:38 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 075BS1Fh028001;
+        Wed, 5 Aug 2020 11:34:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=7pIsLGqMjIgL87suiIaeNB75q2taIqw/jMzR5b9gh7E=;
+ b=gVqWoW0GUND4SXsTdTj42hKtT0Igc/eqPZHKXy9+Scve/pr7PhCMgzFgeQI5cpBodBpv
+ 9kDGVgtNjb5MQCGBVcPm1yOR16evziikZafORHUebh4NXuNDy/zcWyx45GA72fWeMtkP
+ 80mlyaQRUR+Bvz1kVB6AB7NI+8F/1o5vrLQl5IkMQkb9SPt4pnU3s4irs7nb2eP7jjw4
+ SDHe2I5M0ATO2MW3KMNrJqQg/Jyjc8FFepZotFa3aK5K/TGExTwZ0ThJ2W2Iw1aG3hTg
+ NTgV/wRElZ0Ils+pFAPXe0vnrNxKtp43x+54g8EJWhWxn/otPhiQDpQYgfKEvJvvKsad Ow== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 32qnd41rw0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 05 Aug 2020 11:34:08 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 075BSswc034976;
+        Wed, 5 Aug 2020 11:34:08 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 32pdnt2jk4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 05 Aug 2020 11:34:07 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 075BY3U2012723;
+        Wed, 5 Aug 2020 11:34:03 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 05 Aug 2020 04:34:02 -0700
+Date:   Wed, 5 Aug 2020 14:33:51 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Dongdong Yang <contribute.kernel@gmail.com>, juri.lelli@redhat.com,
+        peterz@infradead.org, bsegall@google.com, gulinghua@xiaomi.com,
+        duhui@xiaomi.com, rocking@linux.alibaba.com,
+        devel@driverdev.osuosl.org, vincent.guittot@linaro.org,
+        tanggeliang@xiaomi.com, mingo@redhat.com, yangdongdong@xiaomi.com,
+        mgorman@suse.de, linux-pm@vger.kernel.org, rostedt@goodmis.org,
+        fengwei@xiaomi.com, taojun@xiaomi.com, dietmar.eggemann@arm.com,
+        huangqiwu@xiaomi.com, gregkh@linuxfoundation.org,
+        rjw@rjwysocki.net, linux-kernel@vger.kernel.org,
+        zhangguoquan@xiaomi.com
+Subject: Re: [PATCH v3] Provide USF for the portable equipment.
+Message-ID: <20200805113351.GE1793@kadam>
+References: <cover.1596464894.git.yangdongdong@xiaomi.com>
+ <20200804054728.ojudxu5fmd54lar5@vireshk-mac-ubuntu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200804054728.ojudxu5fmd54lar5@vireshk-mac-ubuntu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9703 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 mlxscore=0
+ bulkscore=0 adultscore=0 phishscore=0 malwarescore=0 mlxlogscore=987
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008050096
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9703 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 clxscore=1015 mlxscore=0
+ priorityscore=1501 mlxlogscore=999 malwarescore=0 adultscore=0
+ lowpriorityscore=0 spamscore=0 bulkscore=0 phishscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008050096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+On Tue, Aug 04, 2020 at 11:17:28AM +0530, Viresh Kumar wrote:
+> Sending updated patchset for this isn't going to help you my friend. You need
+> people (maintainers) to agree on the idea here first.
 
-commit aa54ea903abb02303bf55855fb51e3fcee135d70 upstream.
+It doesn't take much work to make the code look nice.  Writing pretty
+code is always a good idea because then people assume you know what
+you're doing.
 
-Fix build error for the case:
-  defined(CONFIG_SMP) && !defined(CONFIG_CPU_V6)
-
-config: keystone_defconfig
-
-  CC      arch/arm/kernel/signal.o
-  In file included from ../include/linux/random.h:14,
-                    from ../arch/arm/kernel/signal.c:8:
-  ../arch/arm/include/asm/percpu.h: In function ‘__my_cpu_offset’:
-  ../arch/arm/include/asm/percpu.h:29:34: error: ‘current_stack_pointer’ undeclared (first use in this function); did you mean ‘user_stack_pointer’?
-      : "Q" (*(const unsigned long *)current_stack_pointer));
-                                     ^~~~~~~~~~~~~~~~~~~~~
-                                     user_stack_pointer
-
-Fixes: f227e3ec3b5c ("random32: update the net random state on interrupt and activity")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/arm/include/asm/percpu.h |    2 ++
- 1 file changed, 2 insertions(+)
-
---- a/arch/arm/include/asm/percpu.h
-+++ b/arch/arm/include/asm/percpu.h
-@@ -16,6 +16,8 @@
- #ifndef _ASM_ARM_PERCPU_H_
- #define _ASM_ARM_PERCPU_H_
- 
-+#include <asm/thread_info.h>
-+
- /*
-  * Same as asm-generic/percpu.h, except that we store the per cpu offset
-  * in the TPIDRPRW. TPIDRPRW only exists on V6K and V7
-
+regards,
+dan carpenter
 
