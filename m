@@ -2,135 +2,215 @@ Return-Path: <SRS0=MXgo=BP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13111C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D13D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6F432075D
-	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:26:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QpAeZz4Z"
+	by mail.kernel.org (Postfix) with ESMTP id A8C80206F6
+	for <linux-kernel@archiver.kernel.org>; Wed,  5 Aug 2020 19:26:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbgHET0h (ORCPT
+        id S1728544AbgHET0s convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Aug 2020 15:26:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43574 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728183AbgHET0a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Aug 2020 15:26:30 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4507C061575
-        for <linux-kernel@vger.kernel.org>; Wed,  5 Aug 2020 12:26:29 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id z22so10051643oid.1
-        for <linux-kernel@vger.kernel.org>; Wed, 05 Aug 2020 12:26:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=r9p1250UjzzVY01/1Vj9Qr0UbfbQH5yUpRo8ZxWHA8Y=;
-        b=QpAeZz4ZcD3ILEIVu1SjzSNPjeiCdcwiT3e+D1LCoTOp0piHaCyb0xtpHwZkV3Xu/L
-         mRuUkva02Hndsc+r6kMiGL91YtTmqh5ePG1dy3SiUpUERbp8eHDXAm6pLqfcRtPXvL75
-         3HAW9FY0D8QzTI4wbv4wK67+YcFE3wq8k2hEJ0onqfGCj3iinkKt+x7JAPg1rKIp8bFq
-         pcGAiJ3vUf1X+eIjB98q5xYR+mP3ykzwngmbTLtx5Vxe5DEBvrJwTcOPLh3g975lXXla
-         QoFlpAWwjdTY18smAdBgtZmcLtjn8YLcJ9iK3tDTDhoW2cG5jzp/L+AZh0cZ/MugDR7L
-         znxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=r9p1250UjzzVY01/1Vj9Qr0UbfbQH5yUpRo8ZxWHA8Y=;
-        b=X0Qh3F5vhrEBiWdzPZHjbrFE5s3R0JD5VSVr/NgFtSQdt1qCnz9m00EU+ph/6KcGBg
-         OVN2e5bFF9yiwvJx6jnR3V0cFHrJGxyKuOIY8p5CG4TkY3hLz9UQqK08zHZjI4InJRWK
-         jEj5KWfdVoum0OelGpdsiZi+9HnS0fz5bm4LkWsyi1WIXha8MPoWi/PPaqtsk472Ehsr
-         0zwIjrw3Hc+zaVP0f+BKgJy3CVgsePPCjHedPeEQRVrQ1RwI9G4LYUKMuJURGcps+YzP
-         dDWoKYVb+lrQfib3Wd2qlMIUYi34AxDUxVIuwGxIJLngxEls+vK0/rslV08b6VQPZMdr
-         e2zg==
-X-Gm-Message-State: AOAM530gM20RI4O84pb7Khozpb6uDRJjejig6/NIL9V4K+2LL6xByMAm
-        C8PClx33h4yDshf8Gc93KIculPlXNjHvHivGOtQQZQ==
-X-Google-Smtp-Source: ABdhPJwQolivwzQqwYsBl8BkZIC8nT+MZuLOcgYHMkZ7hjp3wCdDDEAhpCkdYwFFvpke05AvqNAwhcvRkmltYtDXbRY=
-X-Received: by 2002:aca:d595:: with SMTP id m143mr3883997oig.11.1596655589299;
- Wed, 05 Aug 2020 12:26:29 -0700 (PDT)
+        Wed, 5 Aug 2020 15:26:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46798 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728512AbgHERNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Aug 2020 13:13:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id A1A44B626;
+        Wed,  5 Aug 2020 14:37:13 +0000 (UTC)
+Date:   Wed, 5 Aug 2020 16:36:55 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: VAIO EEPROM support in at24
+Message-ID: <20200805163655.6cfa6e17@endymion>
+In-Reply-To: <CAMRc=Mdoh5Sk3iS_CO4+++SG2jJOy1qrG4q2zOzbeYYMdJR0VA@mail.gmail.com>
+References: <20200317151409.7940926c@endymion>
+        <CAMRc=Mdoh5Sk3iS_CO4+++SG2jJOy1qrG4q2zOzbeYYMdJR0VA@mail.gmail.com>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-References: <20200805153506.978105994@linuxfoundation.org> <CA+G9fYv_aX36Kq_RD5dAL_By4AFq=-ZY_qh7VhLG=HJQv5mDzg@mail.gmail.com>
- <71a132bf-5ddb-a97a-9b65-6767fd806ee9@roeck-us.net> <CAHk-=wi0WGMs6+Jz6rXbQO4mfzf8LGVc3TwmCdz0OwRtj7GgMQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wi0WGMs6+Jz6rXbQO4mfzf8LGVc3TwmCdz0OwRtj7GgMQ@mail.gmail.com>
-From:   =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
-Date:   Wed, 5 Aug 2020 14:26:17 -0500
-Message-ID: <CAEUSe78hB1-FtRVagj_pVFAbrAgXdzHas5ub7Rf-Qf8O+_0NWA@mail.gmail.com>
-Subject: Re: [PATCH 5.7 0/6] 5.7.14-rc1 review
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        patches@kernelci.org, lkft-triage@lists.linaro.org,
-        open list <linux-kernel@vger.kernel.org>,
-        linux- stable <stable@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, Willy Tarreau <w@1wt.eu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Hi Bartosz,
 
-On Wed, 5 Aug 2020 at 13:37, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> On Wed, Aug 5, 2020 at 11:24 AM Guenter Roeck <linux@roeck-us.net> wrote:
-> >
-> > Same with older versions of gcc. I don't see the problem with the
-> > mainline kernel.
->
->   https://www.youtube.com/watch?v=3D-b5aW08ivHU
->
-> > I think this is caused by more recursive includes.
-> > arch/arm64/include/asm/archrandom.h includes include/linux/random.h
-> > which includes arch/arm64/include/asm/archrandom.h to get the definitio=
-n
-> > of arch_get_random_seed_long_early (which it won't get because of
-> > the recursion).
-> >
-> > What I don't really understand is how this works with new versions
-> > of gcc.
->
-> Is that the only place it triggers?
+On Tue, 17 Mar 2020 15:32:56 +0100, Bartosz Golaszewski wrote:
+> wt., 17 mar 2020 o 15:14 Jean Delvare <jdelvare@suse.de> napisał(a):
+> > Before I start implementing the idea above, I would like to know if
+> > anyone objects to it, or has a better idea?
+> 
+> Sounds good to me in general but isn't it something we could
+> generalize a bit more?
+> 
+> For instance we could make at24_chip_data struct look something like this:
+> 
+> struct at24_chip_data {
+>     u32 byte_len;
+>     u8 flags;
+>     struct resource masked;
+> };
+> 
+> And we could introduce a new macro called AT24_CHIP_DATA_MASKED that
+> would automacially set the AT24_FLAG_MASKED_RANGE flag and take
+> another argument that would contain the address and size of the masked
+> register range (we'd put it into the "masked" resource)?
+> 
+> Other ideas are welcome too. I just think that making it
+> SONY_VAIO-specific may be a bit limiting in the future.
 
-Yes
+I finally found the time to give it a try. Here's what my (tested)
+prototype looks like:
 
-> Because the trivial fix would be something like the appended, which is
-> the right thing to do anyway.
->
->               Linus
->
-> diff --git a/arch/arm64/kernel/kaslr.c b/arch/arm64/kernel/kaslr.c
-> index 07c4c8cc4a67..9ded4237e1c1 100644
-> --- a/arch/arm64/kernel/kaslr.c
-> +++ b/arch/arm64/kernel/kaslr.c
-> @@ -11,8 +11,8 @@
->  #include <linux/sched.h>
->  #include <linux/types.h>
->  #include <linux/pgtable.h>
-> +#include <linux/random.h>
->
-> -#include <asm/archrandom.h>
->  #include <asm/cacheflush.h>
->  #include <asm/fixmap.h>
->  #include <asm/kernel-pgtable.h>
+--- a/drivers/misc/eeprom/at24.c
++++ b/drivers/misc/eeprom/at24.c
+@@ -8,9 +8,11 @@
+ 
+ #include <linux/acpi.h>
+ #include <linux/bitops.h>
++#include <linux/capability.h>
+ #include <linux/delay.h>
+ #include <linux/i2c.h>
+ #include <linux/init.h>
++#include <linux/ioport.h>
+ #include <linux/jiffies.h>
+ #include <linux/kernel.h>
+ #include <linux/mod_devicetable.h>
+@@ -38,6 +40,8 @@
+ #define AT24_FLAG_MAC		BIT(2)
+ /* Does not auto-rollover reads to the next slave address. */
+ #define AT24_FLAG_NO_RDROL	BIT(1)
++/* Contains an area that should not be exposed to non-root users */
++#define AT24_FLAG_MASKED_RANGE	BIT(0)
+ 
+ /*
+  * I2C EEPROMs from most vendors are inexpensive and mostly interchangeable.
+@@ -87,6 +91,7 @@ struct at24_data {
+ 	u16 page_size;
+ 	u8 flags;
+ 
++	struct resource masked;
+ 	struct nvmem_device *nvmem;
+ 	struct regulator *vcc_reg;
+ 
+@@ -121,6 +126,7 @@ MODULE_PARM_DESC(at24_write_timeout, "Ti
+ struct at24_chip_data {
+ 	u32 byte_len;
+ 	u8 flags;
++	struct resource masked;
+ };
+ 
+ #define AT24_CHIP_DATA(_name, _len, _flags)				\
+@@ -128,6 +134,16 @@ struct at24_chip_data {
+ 		.byte_len = _len, .flags = _flags,			\
+ 	}
+ 
++#define AT24_CHIP_DATA_MASKED(_name, _len, _flags, _mstart, _mlen)	\
++	static const struct at24_chip_data _name = {			\
++		.byte_len = _len,					\
++		.flags = _flags | AT24_FLAG_MASKED_RANGE,		\
++		.masked = {						\
++			.start = _mstart,				\
++			.end = _mstart + _mlen - 1,			\
++		},							\
++	}
++
+ /* needs 8 addresses as A0-A2 are ignored */
+ AT24_CHIP_DATA(at24_data_24c00, 128 / 8, AT24_FLAG_TAKE8ADDR);
+ /* old variants can't be handled with this generic entry! */
+@@ -144,6 +160,9 @@ AT24_CHIP_DATA(at24_data_24mac602, 64 /
+ /* spd is a 24c02 in memory DIMMs */
+ AT24_CHIP_DATA(at24_data_spd, 2048 / 8,
+ 	AT24_FLAG_READONLY | AT24_FLAG_IRUGO);
++/* vaio is a 24c02 on some Sony laptops */
++AT24_CHIP_DATA_MASKED(at24_data_vaio, 2048 / 8,
++	AT24_FLAG_READONLY | AT24_FLAG_IRUGO, 0x00, 14);
+ AT24_CHIP_DATA(at24_data_24c04, 4096 / 8, 0);
+ AT24_CHIP_DATA(at24_data_24cs04, 16,
+ 	AT24_FLAG_SERIAL | AT24_FLAG_READONLY);
+@@ -177,6 +196,7 @@ static const struct i2c_device_id at24_i
+ 	{ "24mac402",	(kernel_ulong_t)&at24_data_24mac402 },
+ 	{ "24mac602",	(kernel_ulong_t)&at24_data_24mac602 },
+ 	{ "spd",	(kernel_ulong_t)&at24_data_spd },
++	{ "eeprom-vaio",(kernel_ulong_t)&at24_data_vaio },
+ 	{ "24c04",	(kernel_ulong_t)&at24_data_24c04 },
+ 	{ "24cs04",	(kernel_ulong_t)&at24_data_24cs04 },
+ 	{ "24c08",	(kernel_ulong_t)&at24_data_24c08 },
+@@ -389,6 +409,9 @@ static int at24_read(void *priv, unsigne
+ 	struct device *dev;
+ 	char *buf = val;
+ 	int ret;
++	unsigned int orig_off = off;
++	char *orig_buf = buf;
++	size_t orig_count = count;
+ 
+ 	at24 = priv;
+ 	dev = at24_base_client_dev(at24);
+@@ -427,6 +450,15 @@ static int at24_read(void *priv, unsigne
+ 
+ 	pm_runtime_put(dev);
+ 
++	if ((at24->flags & AT24_FLAG_MASKED_RANGE) && !capable(CAP_SYS_ADMIN)) {
++		int i;
++
++		for (i = orig_off; i < orig_off + orig_count; i++) {
++			if (i >= at24->masked.start && i <= at24->masked.end)
++				orig_buf[i] = 0x00;
++		}
++	}
++
+ 	return 0;
+ }
+ 
+@@ -654,6 +686,7 @@ static int at24_probe(struct i2c_client
+ 	at24->byte_len = byte_len;
+ 	at24->page_size = page_size;
+ 	at24->flags = flags;
++	at24->masked = cdata->masked;
+ 	at24->num_addresses = num_addresses;
+ 	at24->offset_adj = at24_get_offset_adj(flags, byte_len);
+ 	at24->client[0].client = client;
 
-Tested-by: Daniel D=C3=ADaz <daniel.diaz@linaro.org>
+Comments welcome. I already have my own comments/questions:
 
-This patch works fine. Built with gcc 7.3.0 and glibc 2.27.
+1* Do we actually need to use a struct resource? With the current
+   requirements, that looks overkill to me. We really only need the
+   start and end offsets of the masked area (or start and length). Or
+   do you plan to ever support multiple masked ranges, and
+   resource.child would be used to daisy-chain these ranges? Personally
+   I would wait until the need exists.
 
-Greetings!
+   Note that if we would just store mstart and mlen in struct
+   at24_chip_data then we could even get rid of AT24_FLAG_MASKED_RANGE,
+   as mlen > 0 would imply a masked range.
 
-Daniel D=C3=ADaz
-daniel.diaz@linaro.org
+2* I chose the name "eeprom-vaio" because "vaio" would be too generic.
+   I'm open to suggestions if you don't like that name.
+
+3* at24_read() was pretty elegant before my changes, but with the need
+   to remember the original value of many parameters, it no longer is.
+   I'm considering rewriting it in a way that does not modify the
+   parameters needed to process the masked range, either as part of
+   this patch or as a subsequent clean-up patch. That would hopefully
+   make the code elegant again.
+
+4* I made the masking active only for non-root users as this is what
+   the legacy eeprom driver was doing. I hope that's OK with you.
+
+Thanks,
+-- 
+Jean Delvare
+SUSE L3 Support
